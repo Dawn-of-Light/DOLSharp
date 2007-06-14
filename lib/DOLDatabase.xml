@@ -2375,7 +2375,7 @@ public static MySqlDataAdapter CreateCustomerAdapter(MySqlConnection conn)
         </member>
         <member name="P:DOL.Database.Mob.RespawnInterval">
             <summary>
-            The Mob's Respawn Interval
+            The Mob's Respawn Interval in seconds
             </summary>
         </member>
         <member name="P:DOL.Database.Mob.FactionID">
@@ -2391,6 +2391,16 @@ public static MySqlDataAdapter CreateCustomerAdapter(MySqlConnection conn)
         <member name="P:DOL.Database.Mob.HouseNumber">
             <summary>
             The mob's current house
+            </summary>
+        </member>
+        <member name="P:DOL.Database.Mob.Brain">
+            <summary>
+            The Mob's Brain
+            </summary>
+        </member>
+        <member name="P:DOL.Database.Mob.PathID">
+            <summary>
+            The Mob's path
             </summary>
         </member>
         <member name="T:DOL.Database.DBLootTemplate">

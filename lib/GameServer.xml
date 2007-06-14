@@ -3684,6 +3684,11 @@
             Gets sets the currentwaypoint that npc has to wander to
             </summary>
         </member>
+        <member name="P:DOL.GS.GameNPC.IsReturningHome">
+            <summary>
+            Is the NPC returning home, if so, we don't want it to think
+            </summary>
+        </member>
         <member name="P:DOL.GS.GameNPC.IsMovingOnPath">
             <summary>
             Gets if npc moving on path
@@ -28066,6 +28071,31 @@
             Gets the effect remaining time, decreased every interval
             </summary>
         </member>
+        <member name="T:DOL.GS.DatabaseConverters.Version005">
+            <summary>
+            Converts the database format to the version 5
+            </summary>
+        </member>
+        <member name="T:DOL.GS.DatabaseConverters.IDatabaseConverter">
+            <summary>
+            Interface for all database format converters
+            </summary>
+        </member>
+        <member name="M:DOL.GS.DatabaseConverters.IDatabaseConverter.ConvertDatabase">
+            <summary>
+            Converts the database to new version specified in attribute
+            </summary>
+        </member>
+        <member name="F:DOL.GS.DatabaseConverters.Version005.log">
+            <summary>
+            Defines a logger for this class.
+            </summary>
+        </member>
+        <member name="M:DOL.GS.DatabaseConverters.Version005.ConvertDatabase">
+            <summary>
+            we need to make use of the new poison fields
+            </summary>
+        </member>
         <member name="T:DOL.GS.Trainer.WarriorTrainer">
             <summary>
             Warrior Trainer
@@ -30505,16 +30535,6 @@
         <member name="T:DOL.GS.DatabaseConverters.Version004">
             <summary>
             Converts the database format to the version 3
-            </summary>
-        </member>
-        <member name="T:DOL.GS.DatabaseConverters.IDatabaseConverter">
-            <summary>
-            Interface for all database format converters
-            </summary>
-        </member>
-        <member name="M:DOL.GS.DatabaseConverters.IDatabaseConverter.ConvertDatabase">
-            <summary>
-            Converts the database to new version specified in attribute
             </summary>
         </member>
         <member name="F:DOL.GS.DatabaseConverters.Version004.log">
@@ -33103,6 +33123,11 @@
         <member name="F:DOL.GS.ServerProperties.Properties.LOG_ALL_GM_COMMANDS">
             <summary>
             Log All GM commands
+            </summary>
+        </member>
+        <member name="F:DOL.GS.ServerProperties.Properties.BAN_HACKERS">
+            <summary>
+            Ban Hackers
             </summary>
         </member>
         <member name="M:DOL.GS.ServerProperties.Properties.Load(DOL.GS.ServerProperties.ServerPropertyAttribute)">
@@ -36907,6 +36932,13 @@
             if no target go to saved pathpoint to continue the round
             </summary>
             <returns>the best target</returns>
+        </member>
+        <member name="M:DOL.AI.Brain.GuardBrain.CalculateAggroLevelToTarget(DOL.GS.GameLiving)">
+            <summary>
+            We override this because we want guards to attack even gray npcs
+            </summary>
+            <param name="target"></param>
+            <returns></returns>
         </member>
     </members>
 </doc>

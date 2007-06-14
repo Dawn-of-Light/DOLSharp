@@ -26,10 +26,10 @@ Crafting.CheckTool.AlchemyKit:				Alchimiekasten
 Crafting.CheckTool.FindAlchemyTable:			Ihr müsst dafür erstmal einen Alchimietisch finden!
 Crafting.CheckTool.FindForge:				Ihr müsst dafür erstmal eine Schmiede finden!
 Crafting.CheckTool.FindLathe:				Ihr müsst dafür erstmal eine Werkbank finden!
-Crafting.CheckTool.FindPlaningTool:			Ihr benödigt noch einen Hobel!
-Crafting.CheckTool.FindSewingKit:			Ihr benödigt noch ein Nähset!
-Crafting.CheckTool.FindSmithTool:			Ihr benödigt noch einen Schmiedehammer!
-Crafting.CheckTool.FindSpellcraftKit:			Ihr benödigt noch einen Bannzauberkasten!
+Crafting.CheckTool.FindPlaningTool:			Ihr benötigt noch einen Hobel!
+Crafting.CheckTool.FindSewingKit:			Ihr benötigt noch ein Nähset!
+Crafting.CheckTool.FindSmithTool:			Ihr benötigt noch einen Schmiedehammer!
+Crafting.CheckTool.FindSpellcraftKit:			Ihr benötigt noch einen Bannzauberkasten!
 Crafting.CheckTool.MortarAndPestle:			Mörser mit Pistill
 Crafting.CheckTool.NotHaveTools:			Euch fehlen die nötigen Werkzeuge, {0} lässt sich nicht so herstellen.
 Crafting.CheckTool.PlaningTool:				Hobel
@@ -47,7 +47,7 @@ AbstractCraftingSkill.BuildCraftedItem.BackpackFull:	Euer Rucksack ist voll. {0}
 AbstractCraftingSkill.BuildCraftedItem.Masterpiece:	Gratulation! Das war ein Meisterstück.
 AbstractCraftingSkill.BuildCraftedItem.Successfully:	Ihr habt es geschafft, {0} wurde erfolgreich hergestellt. ({1})
 AbstractCraftingSkill.CheckRawMaterial.NoIngredients:	Ihr könnt nicht anfangen, {0} erfordert Rohstoffe.
-AbstractCraftingSkill.CheckRawMaterial.YouAreMissing:	Ihr benödigt:
+AbstractCraftingSkill.CheckRawMaterial.YouAreMissing:	Ihr benötigt:
 
 AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoClothworkingSkill:		Ihr habt im Bereich "Stoffhandwerk" weniger als ({0}) Erfahrungspunkte, {1} konnte nicht hergestellt werden!
 AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoLeathercraftingSkill:	Ihr habt im Bereich "Lederhandwerk" weniger als ({0}) Erfahrungspunkte, {1} konnte nicht hergestellt werden!
@@ -142,8 +142,8 @@ GamePlayer.Attack.Location.Torso:			Eure Brust
 GamePlayer.Attack.Miss:					Ihr habt nicht getroffen!
 GamePlayer.Attack.Missed:				{0} greift Euch an, trifft aber nicht!	
 GamePlayer.Attack.MustSelectQuiver:			Ihr müsst einen Köcherslot auswählen, aus dem Ihr ziehen wollt!		
-GamePlayer.Attack.NeedRepair:				Euer {0} benödigt eine Reparatur.	
-GamePlayer.Attack.NeedRepairDire:			Euer {0} benödigt dringend eine Reparatur.		
+GamePlayer.Attack.NeedRepair:				Euer {0} benötigt eine Reparatur.	
+GamePlayer.Attack.NeedRepairDire:			Euer {0} benötigt dringend eine Reparatur.		
 GamePlayer.Attack.NeedTarget:				Ihr braucht ein Ziel um anzugreifen!	
 GamePlayer.Attack.NotInView:				{0} ist nicht in Sichtweite!	
 GamePlayer.Attack.Parried:				{0} parriert Euren Angriff!	
@@ -418,7 +418,7 @@ StyleProcessor.TryToUseStyle.CantCombatMode:		Ihr könnt Euch nicht kampfbereit m
 StyleProcessor.TryToUseStyle.CantMeleeCombat:		Ihr könnt Euch nicht in den Nahkampf stürzen mit einer Schusswaffe!
 StyleProcessor.TryToUseStyle.DualWielding:		You must be dual wielding to use this style!
 StyleProcessor.TryToUseStyle.Fatigued:			Ihr seid zu erschöpft, um diesen Kampfstil einzusetzen!
-StyleProcessor.TryToUseStyle.MustHaveTarget:		Ihr benödigt ein Ziel für Euren nächsten Kampstil!
+StyleProcessor.TryToUseStyle.MustHaveTarget:		Ihr benötigt ein Ziel für Euren nächsten Kampstil!
 StyleProcessor.TryToUseStyle.NoLongerPreparing:		Ihr bereitet den Kampfstil "{0}" nicht mehr vor!
 StyleProcessor.TryToUseStyle.PerformStyleBefore:	Vor diesem Kampfstil müsst Ihr erst den Kampfstil "{0}" einsetzen!
 StyleProcessor.TryToUseStyle.PreparePerform:		Ihr bereitet den Kampfstil "{0}" vor!
