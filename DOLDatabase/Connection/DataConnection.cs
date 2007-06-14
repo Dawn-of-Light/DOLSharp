@@ -248,13 +248,16 @@ namespace DOL.Database.Connection
 			if (socketException != null)
 			{
 				// Handle socket exception. Error codes:
+				// http://msdn2.microsoft.com/en-us/library/ms740668.aspx
 				// 10052 = Network dropped connection on reset.
+				// 10053 = Software caused connection abort.
 				// 10054 = Connection reset by peer.
 				// 10057 = Socket is not connected.
 				// 10058 = Cannot send after socket shutdown.
 				switch (socketException.ErrorCode)
 				{
 					case 10052:
+					case 10053:
 					case 10054:
 					case 10057:
 					case 10058:
