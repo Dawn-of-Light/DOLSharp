@@ -139,7 +139,9 @@ namespace DOL.GS.GameEvents
 				//need more details in memory usage
 				//GC.Collect();
 
-				long time = DateTime.Now.Ticks - m_lastMeasureTick;
+				long newTick = DateTime.Now.Ticks;
+				long time = newTick - m_lastMeasureTick;
+				m_lastMeasureTick = newTick;
 				time /= 10000000L;
 				if (time < 1)
 				{

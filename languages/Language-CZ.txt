@@ -21,7 +21,6 @@ System.ReleaseTimer:						Cas do oziveni
 
 # CRAFTING
 # (All)
-Crafting.CheckTool.SewingKit:      souprava k siti
 
 # /AbstractCraftingSkill
 AbstractCraftingSkill.BuildCraftedItem.Successfully:   Uspesne jsi vyrobil {0}! ({1})

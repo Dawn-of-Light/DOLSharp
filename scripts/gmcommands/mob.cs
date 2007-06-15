@@ -469,6 +469,7 @@ namespace DOL.GS.Scripts
 						mob.AddToWorld();
 						mob.SaveIntoDatabase();
 						client.Out.SendMessage("Mob created: OID=" + mob.ObjectID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage("The mob has been created with the peace flag, so it can't be attacked, to remove type /mob peace", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					}
 					break;
 				case "model":

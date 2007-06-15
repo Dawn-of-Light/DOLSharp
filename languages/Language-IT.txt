@@ -22,13 +22,19 @@ System.ReleaseTimer:						Release Timer
 
 # CRAFTING
 # (All)
-Crafting.CheckTool.AlchemyKit:				attrezzatura per alchimia
-Crafting.CheckTool.MortarAndPestle:			mortaio e pestello
+Crafting.CheckTool.FindAlchemyTable:			Devi trovare una alchemy table!
+Crafting.CheckTool.FindForge:				Devi trovare una forge!
+Crafting.CheckTool.FindLathe:				Devi trovare un lathe!
+Crafting.CheckTool.FindPlaningTool:			Devi trovare un planing tool!
+Crafting.CheckTool.FindSewingKit:			Devi trovare un sewing kit!
+Crafting.CheckTool.FindSmithTool:			Devi trovare uno smith tool!
+Crafting.CheckTool.FindSpellcraftKit:			Devi trovare uno spellcraft kit!
 Crafting.CheckTool.NotHaveTools:			Non hai gli strumenti per creare il {0}.
-Crafting.CheckTool.PlaningTool:				strumento per piallare
-Crafting.CheckTool.SewingKit:				attrezzatura per cucire
-Crafting.CheckTool.SmithsHammer:			martello del fabbro
-Crafting.CheckTool.SpellcraftKit:			attrezzatura per spellcraft
+Crafting.GainCraftingSkillPoints.RaiseArmorcraft:	Devi recarti dal tuo allenatore per aumentare ancora Armorcraft!
+Crafting.GainCraftingSkillPoints.RaiseFletching:	Devi recarti dal tuo allenatore per aumentare ancora Fletching!
+Crafting.GainCraftingSkillPoints.RaiseSpellcraft:	Devi recarti dal tuo allenatore per aumentare ancora Spellcraft!
+Crafting.GainCraftingSkillPoints.RaiseTailoring:	Devi recarti dal tuo allenatore per aumentare ancora Tailoring!
+Crafting.GainCraftingSkillPoints.RaiseWeaponcraft:	Devi recarti dal tuo allenatore per aumentare ancora Weaponcraft!
 
 # /AbstractCraftingSkill
 AbstractCraftingSkill.BuildCraftedItem.Masterpiece:	Congratulazioni, hai creato un capolavoro !

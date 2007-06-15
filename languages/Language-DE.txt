@@ -22,7 +22,6 @@ System.ReleaseTimer:					Automatischer Release
 
 # CRAFTING
 # (All)
-Crafting.CheckTool.AlchemyKit:				Alchimiekasten
 Crafting.CheckTool.FindAlchemyTable:			Ihr müsst dafür erstmal einen Alchimietisch finden!
 Crafting.CheckTool.FindForge:				Ihr müsst dafür erstmal eine Schmiede finden!
 Crafting.CheckTool.FindLathe:				Ihr müsst dafür erstmal eine Werkbank finden!
@@ -30,12 +29,7 @@ Crafting.CheckTool.FindPlaningTool:			Ihr benötigt noch einen Hobel!
 Crafting.CheckTool.FindSewingKit:			Ihr benötigt noch ein Nähset!
 Crafting.CheckTool.FindSmithTool:			Ihr benötigt noch einen Schmiedehammer!
 Crafting.CheckTool.FindSpellcraftKit:			Ihr benötigt noch einen Bannzauberkasten!
-Crafting.CheckTool.MortarAndPestle:			Mörser mit Pistill
 Crafting.CheckTool.NotHaveTools:			Euch fehlen die nötigen Werkzeuge, {0} lässt sich nicht so herstellen.
-Crafting.CheckTool.PlaningTool:				Hobel
-Crafting.CheckTool.SewingKit:				Nähset
-Crafting.CheckTool.SmithsHammer:			Schmiedehammer
-Crafting.CheckTool.SpellcraftKit:			Bannzauberkasten
 Crafting.GainCraftingSkillPoints.RaiseArmorcraft:	Ihr müsst Euch zu Eurem Ausbilder begeben, um Eure Fertigkeiten als Rüstungsschmied zu verbessern!
 Crafting.GainCraftingSkillPoints.RaiseFletching:	Ihr müsst Euch zu Eurem Ausbilder begeben, um Eure Fertigkeiten als Pfeilhersteller zu verbessern!
 Crafting.GainCraftingSkillPoints.RaiseSpellcraft:	Ihr müsst Euch zu Eurem Ausbilder begeben, um Eure Fertigkeiten als Bannzauberer zu verbessern!

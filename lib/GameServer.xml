@@ -6262,7 +6262,12 @@
         </member>
         <member name="T:DOL.GS.Effects.TheEmptyMindEffect">
             <summary>
-            The helper class for the SavageCrush ability
+            The Empty Mind Effect
+            </summary>
+        </member>
+        <member name="T:DOL.GS.Effects.TimedEffect">
+            <summary>
+            base for all effects that are timed and should stop on itself
             </summary>
         </member>
         <member name="T:DOL.GS.Effects.StaticEffect">
@@ -6355,81 +6360,52 @@
             unique id for identification in effect list
             </summary>
         </member>
-        <member name="F:DOL.GS.Effects.TheEmptyMindEffect.delveString">
-            <summary>
-            The ability description
-            </summary>
-        </member>
-        <member name="F:DOL.GS.Effects.TheEmptyMindEffect.m_player">
-            <summary>
-            The owner of the effect
-            </summary>
-        </member>
-        <member name="F:DOL.GS.Effects.TheEmptyMindEffect.m_expireTimer">
+        <member name="F:DOL.GS.Effects.TimedEffect.m_expireTimer">
             <summary>
             The timer that will cancel the effect
             </summary>
         </member>
-        <member name="F:DOL.GS.Effects.TheEmptyMindEffect.m_ability">
+        <member name="M:DOL.GS.Effects.TimedEffect.#ctor(System.Int32)">
             <summary>
-            The used ability
+            create timed effect that will last the given timespan in milliseconds
+            </summary>
+            <param name="timespan"></param>
+        </member>
+        <member name="M:DOL.GS.Effects.TimedEffect.Start(DOL.GS.GameLiving)">
+            <summary>
+            Start the timed effect on target
+            </summary>
+            <param name="target">The effect target</param>
+        </member>
+        <member name="M:DOL.GS.Effects.TimedEffect.Stop">
+            <summary>
+            Stop the timed effect on owner
+            </summary>
+        </member>
+        <member name="P:DOL.GS.Effects.TimedEffect.RemainingTime">
+            <summary>
+            Remaining Time of the effect in milliseconds
             </summary>
         </member>
         <member name="M:DOL.GS.Effects.TheEmptyMindEffect.#ctor">
             <summary>
-            Creates a new SavageCrush effect
+            Constructs a new Empty Mind Effect
             </summary>
         </member>
-        <member name="M:DOL.GS.Effects.TheEmptyMindEffect.Start(DOL.GS.GamePlayer,DOL.GS.Ability)">
+        <member name="M:DOL.GS.Effects.TheEmptyMindEffect.Start(DOL.GS.GameLiving)">
             <summary>
-            Start the SavageCrush on a player
+            Starts the effect on the living
             </summary>
+            <param name="living"></param>
         </member>
         <member name="M:DOL.GS.Effects.TheEmptyMindEffect.Cancel(System.Boolean)">
             <summary>
             Called when effect must be canceled
             </summary>
         </member>
-        <member name="M:DOL.GS.Effects.TheEmptyMindEffect.StartTimers">
-            <summary>
-            Starts the timers for this effect
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Effects.TheEmptyMindEffect.StopTimers">
-            <summary>
-            Stops the timers for this effect
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Effects.TheEmptyMindEffect.ExpiredCallback(DOL.GS.RegionTimer)">
-            <summary>
-            The callback method when the effect expires
-            </summary>
-            <param name="callingTimer">the regiontimer of the effect</param>
-            <returns>the new intervall (0) </returns>
-        </member>
-        <member name="F:DOL.GS.Effects.TheEmptyMindEffect.m_id">
-            <summary>
-            Stores the internal effect ID
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.TheEmptyMindEffect.Name">
-            <summary>
-            Name of the effect
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.TheEmptyMindEffect.RemainingTime">
-            <summary>
-            Remaining Time of the effect in milliseconds
-            </summary>
-        </member>
         <member name="P:DOL.GS.Effects.TheEmptyMindEffect.Icon">
             <summary>
             Icon to show on players, can be id
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.TheEmptyMindEffect.InternalID">
-            <summary>
-            unique id for identification in effect list
             </summary>
         </member>
         <member name="P:DOL.GS.Effects.TheEmptyMindEffect.DelveInfo">
@@ -7682,11 +7658,6 @@
             <param name="sender">The group</param>
             <param name="args"></param>
         </member>
-        <member name="F:DOL.GS.Effects.InterceptEffect.m_id">
-            <summary>
-            Holds unique id for identification in effect list
-            </summary>
-        </member>
         <member name="P:DOL.GS.Effects.InterceptEffect.InterceptSource">
             <summary>
             Gets the interceptor
@@ -7707,19 +7678,9 @@
             Name of the effect
             </summary>
         </member>
-        <member name="P:DOL.GS.Effects.InterceptEffect.RemainingTime">
-            <summary>
-            Remaining Time of the effect in milliseconds
-            </summary>
-        </member>
         <member name="P:DOL.GS.Effects.InterceptEffect.Icon">
             <summary>
             Icon to show on players, can be id
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.InterceptEffect.InternalID">
-            <summary>
-            Gets or Sets unique id for identification in effect list
             </summary>
         </member>
         <member name="P:DOL.GS.Effects.InterceptEffect.DelveInfo">
@@ -9409,38 +9370,6 @@
             Adrenaline Rush
             </summary>
         </member>
-        <member name="T:DOL.GS.Effects.TimedEffect">
-            <summary>
-            base for all effects that are timed and should stop on itself
-            </summary>
-        </member>
-        <member name="F:DOL.GS.Effects.TimedEffect.m_expireTimer">
-            <summary>
-            The timer that will cancel the effect
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Effects.TimedEffect.#ctor(System.Int32)">
-            <summary>
-            create timed effect that will last the given timespan in milliseconds
-            </summary>
-            <param name="timespan"></param>
-        </member>
-        <member name="M:DOL.GS.Effects.TimedEffect.Start(DOL.GS.GameLiving)">
-            <summary>
-            Start the timed effect on target
-            </summary>
-            <param name="target">The effect target</param>
-        </member>
-        <member name="M:DOL.GS.Effects.TimedEffect.Stop">
-            <summary>
-            Stop the timed effect on owner
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.TimedEffect.RemainingTime">
-            <summary>
-            Remaining Time of the effect in milliseconds
-            </summary>
-        </member>
         <member name="T:DOL.GS.Effects.CombatAwarenessEffect">
             <summary>
             Adrenaline Rush
@@ -9456,42 +9385,15 @@
             Default constructor for MasteryofConcentrationEffect
             </summary>
         </member>
-        <member name="M:DOL.GS.Effects.MasteryofConcentrationEffect.Start(DOL.GS.GamePlayer)">
-            <summary>
-            Called when effect is to be started
-            </summary>
-            <param name="player">The player to start the effect for</param>
-        </member>
         <member name="M:DOL.GS.Effects.MasteryofConcentrationEffect.Cancel(System.Boolean)">
             <summary>
             Called when effect is to be cancelled
             </summary>
             <param name="playerCancel">Whether or not effect is player cancelled</param>
         </member>
-        <member name="M:DOL.GS.Effects.MasteryofConcentrationEffect.StartTimers">
-            <summary>
-            Starts the timers for this effect
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Effects.MasteryofConcentrationEffect.StopTimers">
-            <summary>
-            Stops the timers for this effect
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Effects.MasteryofConcentrationEffect.ExpiredCallback(DOL.GS.RegionTimer)">
-            <summary>
-            The callback for when the effect expires
-            </summary>
-            <param name="timer">The ObjectTimerCallback object</param>
-        </member>
         <member name="P:DOL.GS.Effects.MasteryofConcentrationEffect.Name">
             <summary>
             Name of the effect
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.MasteryofConcentrationEffect.RemainingTime">
-            <summary>
-            Remaining time of the effect in milliseconds
             </summary>
         </member>
         <member name="P:DOL.GS.Effects.MasteryofConcentrationEffect.Icon">
@@ -9499,27 +9401,22 @@
             Icon ID
             </summary>
         </member>
-        <member name="P:DOL.GS.Effects.MasteryofConcentrationEffect.InternalID">
-            <summary>
-            Unique ID for identification in the effect list
-            </summary>
-        </member>
         <member name="P:DOL.GS.Effects.MasteryofConcentrationEffect.DelveInfo">
             <summary>
             Delve information
             </summary>
         </member>
-        <member name="T:DOL.GS.Effects.BedazzlingAuraEffect">
+        <member name="T:DOL.GS.RealmAbilities.BedazzlingAuraEffect">
             <summary>
             Effect handler for Barrier Of Fortitude
             </summary>
         </member>
-        <member name="M:DOL.GS.Effects.BedazzlingAuraEffect.#ctor">
+        <member name="M:DOL.GS.RealmAbilities.BedazzlingAuraEffect.#ctor">
             <summary>
             Default constructor for AmelioratingMelodiesEffect
             </summary>
         </member>
-        <member name="M:DOL.GS.Effects.BedazzlingAuraEffect.Start(DOL.GS.GamePlayer,System.Int32,System.Int32)">
+        <member name="M:DOL.GS.RealmAbilities.BedazzlingAuraEffect.Start(DOL.GS.GameLiving,System.Int32)">
             <summary>
             Called when effect is to be started
             </summary>
@@ -9527,7 +9424,7 @@
             <param name="duration">The effectduration in secounds</param>
             <param name="value">The percentage additional value for all magic resis</param>
         </member>
-        <member name="M:DOL.GS.Effects.BedazzlingAuraEffect.PlayerLeftWorld(DOL.Events.DOLEvent,System.Object,System.EventArgs)">
+        <member name="M:DOL.GS.RealmAbilities.BedazzlingAuraEffect.PlayerLeftWorld(DOL.Events.DOLEvent,System.Object,System.EventArgs)">
             <summary>
             Called when a player leaves the game
             </summary>
@@ -9535,49 +9432,23 @@
             <param name="sender">Sender of the event</param>
             <param name="args">EventArgs associated with the event</param>
         </member>
-        <member name="M:DOL.GS.Effects.BedazzlingAuraEffect.Cancel(System.Boolean)">
+        <member name="M:DOL.GS.RealmAbilities.BedazzlingAuraEffect.Cancel(System.Boolean)">
             <summary>
             Called when effect is to be cancelled
             </summary>
             <param name="playerCancel">Whether or not effect is player cancelled</param>
         </member>
-        <member name="M:DOL.GS.Effects.BedazzlingAuraEffect.StartTimers">
-            <summary>
-            Starts the timers for this effect
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Effects.BedazzlingAuraEffect.StopTimers">
-            <summary>
-            Stops the timers for this effect
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Effects.BedazzlingAuraEffect.ExpireCallback(DOL.GS.RegionTimer)">
-            <summary>
-            The callback for when the effect expires
-            </summary>
-            <param name="timer">The ObjectTimerCallback object</param>
-        </member>
-        <member name="P:DOL.GS.Effects.BedazzlingAuraEffect.Name">
+        <member name="P:DOL.GS.RealmAbilities.BedazzlingAuraEffect.Name">
             <summary>
             Name of the effect
             </summary>
         </member>
-        <member name="P:DOL.GS.Effects.BedazzlingAuraEffect.RemainingTime">
-            <summary>
-            Remaining time of the effect in milliseconds
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.BedazzlingAuraEffect.Icon">
+        <member name="P:DOL.GS.RealmAbilities.BedazzlingAuraEffect.Icon">
             <summary>
             Icon ID
             </summary>
         </member>
-        <member name="P:DOL.GS.Effects.BedazzlingAuraEffect.InternalID">
-            <summary>
-            Unique ID for identification in the effect list
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.BedazzlingAuraEffect.DelveInfo">
+        <member name="P:DOL.GS.RealmAbilities.BedazzlingAuraEffect.DelveInfo">
             <summary>
             Delve information
             </summary>
@@ -14721,12 +14592,11 @@
             Effect handler for Barrier Of Fortitude
             </summary> 
         </member>
-        <member name="M:DOL.GS.Effects.SpeedOfSoundEffect.Start(DOL.GS.GamePlayer,System.Int32)">
+        <member name="M:DOL.GS.Effects.SpeedOfSoundEffect.Start(DOL.GS.GameLiving)">
             <summary>
             Called when effect is to be started
             </summary>
-            <param name="player">The player to start the effect for</param>
-            <param name="duration">The effectduration in secounds</param>
+            <param name="living">The living to start the effect for</param>
         </member>
         <member name="M:DOL.GS.Effects.SpeedOfSoundEffect.AttackFinished(DOL.Events.DOLEvent,System.Object,System.EventArgs)">
             <summary>
@@ -14742,40 +14612,14 @@
             </summary>
             <param name="playerCancel">Whether or not effect is player cancelled</param>
         </member>
-        <member name="M:DOL.GS.Effects.SpeedOfSoundEffect.StartTimers">
-            <summary>
-            Starts the timers for this effect
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Effects.SpeedOfSoundEffect.StopTimers">
-            <summary>
-            Stops the timers for this effect
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Effects.SpeedOfSoundEffect.ExpireCallback(DOL.GS.RegionTimer)">
-            <summary>
-            The callback for when the effect expires
-            </summary>
-            <param name="timer">The ObjectTimerCallback object</param>
-        </member>
         <member name="P:DOL.GS.Effects.SpeedOfSoundEffect.Name">
             <summary>
             Name of the effect
             </summary>
         </member>
-        <member name="P:DOL.GS.Effects.SpeedOfSoundEffect.RemainingTime">
-            <summary>
-            Remaining time of the effect in milliseconds
-            </summary>
-        </member>
         <member name="P:DOL.GS.Effects.SpeedOfSoundEffect.Icon">
             <summary>
             Icon ID
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.SpeedOfSoundEffect.InternalID">
-            <summary>
-            Unique ID for identification in the effect list
             </summary>
         </member>
         <member name="P:DOL.GS.Effects.SpeedOfSoundEffect.DelveInfo">
@@ -15569,11 +15413,6 @@
             
             </summary>
         </member>
-        <member name="F:DOL.GS.Spells.PrimerSpellHandler.log">
-            <summary>
-            Defines a logger for this class.
-            </summary>
-        </member>
         <member name="M:DOL.GS.Spells.PrimerSpellHandler.FinishSpellCast(DOL.GS.GameLiving)">
             <summary>
             Cast Powerless
@@ -15594,11 +15433,6 @@
             </summary>
             <param name="target"></param>
             <returns></returns>
-        </member>
-        <member name="F:DOL.GS.Spells.BeFriendSpellHandler.log">
-            <summary>
-            Defines a logger for this class.
-            </summary>
         </member>
         <member name="M:DOL.GS.Spells.BeFriendSpellHandler.StartSpell(DOL.GS.GameLiving)">
             <summary>
@@ -16578,88 +16412,30 @@
             The helper class for the stag ability
             </summary>
         </member>
-        <member name="F:DOL.GS.Effects.StagEffect.delveString">
-            <summary>
-            The ability description
-            </summary>
-        </member>
-        <member name="F:DOL.GS.Effects.StagEffect.m_player">
-            <summary>
-            The ability owner
-            </summary>
-        </member>
-        <member name="F:DOL.GS.Effects.StagEffect.m_ability">
-            <summary>
-            The used ability
-            </summary>
-        </member>
         <member name="F:DOL.GS.Effects.StagEffect.m_amount">
             <summary>
             The amount of max health gained
             </summary>
         </member>
-        <member name="F:DOL.GS.Effects.StagEffect.m_expireTimer">
-            <summary>
-            The timer that expires the ability
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Effects.StagEffect.#ctor">
+        <member name="M:DOL.GS.Effects.StagEffect.#ctor(System.Int32)">
             <summary>
             Creates a new stag effect
             </summary>
         </member>
-        <member name="M:DOL.GS.Effects.StagEffect.Start(DOL.GS.GamePlayer,DOL.GS.Ability)">
+        <member name="M:DOL.GS.Effects.StagEffect.Start(DOL.GS.GameLiving)">
             <summary>
             Start the stag on player
             </summary>
-            <param name="player">The player starting new effect</param>
-            <param name="ab">The ability used to start new effect</param>
+            <param name="living">The living object the effect is being started on</param>
         </member>
         <member name="M:DOL.GS.Effects.StagEffect.Cancel(System.Boolean)">
             <summary>
             Called when effect must be canceled
             </summary>
         </member>
-        <member name="M:DOL.GS.Effects.StagEffect.StartTimers">
-            <summary>
-            Starts the timers for this effect
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Effects.StagEffect.StopTimers">
-            <summary>
-            Stops the timers for this effect
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Effects.StagEffect.ExpiredCallback(DOL.GS.RegionTimer)">
-            <summary>
-            The callback method when the effect expires
-            </summary>
-            <param name="callingTimer">the gametimer of the effect</param>
-            <returns>the new intervall (0) </returns>
-        </member>
-        <member name="F:DOL.GS.Effects.StagEffect.m_id">
-            <summary>
-            The internal unique effect ID
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.StagEffect.Name">
-            <summary>
-            Name of the effect
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.StagEffect.RemainingTime">
-            <summary>
-            Remaining Time of the effect in milliseconds
-            </summary>
-        </member>
         <member name="P:DOL.GS.Effects.StagEffect.Icon">
             <summary>
             Icon to show on players, can be id
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.StagEffect.InternalID">
-            <summary>
-            unique id for identification in effect list
             </summary>
         </member>
         <member name="P:DOL.GS.Effects.StagEffect.DelveInfo">
@@ -17772,54 +17548,33 @@
             Mastery of Concentration
             </summary>
         </member>
-        <member name="T:DOL.GS.Effects.DivineInterventionEffect">
+        <member name="T:DOL.GS.RealmAbilities.DivineInterventionEffect">
             <summary>
             
             </summary>
         </member>
-        <member name="M:DOL.GS.Effects.DivineInterventionEffect.Cancel(System.Boolean)">
+        <member name="M:DOL.GS.RealmAbilities.DivineInterventionEffect.Start(DOL.GS.GameLiving)">
+            <summary>
+            Start the effect on a living target
+            </summary>
+            <param name="living"></param>
+        </member>
+        <member name="M:DOL.GS.RealmAbilities.DivineInterventionEffect.Cancel(System.Boolean)">
             <summary>
             Called when effect must be canceled
             </summary>
         </member>
-        <member name="M:DOL.GS.Effects.DivineInterventionEffect.StartTimers">
-            <summary>
-            Starts the timers for this effect
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Effects.DivineInterventionEffect.StopTimers">
-            <summary>
-            Stops the timers for this effect
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Effects.DivineInterventionEffect.ExpiredCallback(DOL.GS.RegionTimer)">
-            <summary>
-            The callback method when the effect expires
-            </summary>
-            <param name="timer">the gametimer of the effect</param>
-            <returns>the new intervall (0) </returns>
-        </member>
-        <member name="P:DOL.GS.Effects.DivineInterventionEffect.Name">
+        <member name="P:DOL.GS.RealmAbilities.DivineInterventionEffect.Name">
             <summary>
             Name of the effect
             </summary>
         </member>
-        <member name="P:DOL.GS.Effects.DivineInterventionEffect.RemainingTime">
-            <summary>
-            Remaining time of the effect in milliseconds
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.DivineInterventionEffect.Icon">
+        <member name="P:DOL.GS.RealmAbilities.DivineInterventionEffect.Icon">
             <summary>
             Icon to show on players, can be id
             </summary>
         </member>
-        <member name="P:DOL.GS.Effects.DivineInterventionEffect.InternalID">
-            <summary>
-            unique id for identification in effect list
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.DivineInterventionEffect.DelveInfo">
+        <member name="P:DOL.GS.RealmAbilities.DivineInterventionEffect.DelveInfo">
             <summary>
             Delve Info
             </summary>
@@ -18659,11 +18414,6 @@
             
             </summary>
         </member>
-        <member name="F:DOL.GS.Spells.ChamberSpellHandler.log">
-            <summary>
-            Defines a logger for this class.
-            </summary>
-        </member>
         <member name="M:DOL.GS.Spells.ChamberSpellHandler.FinishSpellCast(DOL.GS.GameLiving)">
             <summary>
             Fire bolt
@@ -19142,25 +18892,23 @@
             </summary>
             <param name="living"></param>
         </member>
-        <member name="T:DOL.GS.Effects.AdrenalineRushEffect">
+        <member name="T:DOL.GS.RealmAbilities.AdrenalineRushEffect">
             <summary>
             Effect handler for Barrier Of Fortitude
             </summary>
         </member>
-        <member name="M:DOL.GS.Effects.AdrenalineRushEffect.#ctor">
+        <member name="M:DOL.GS.RealmAbilities.AdrenalineRushEffect.#ctor(System.Int32,System.Int32)">
             <summary>
             Default constructor for AmelioratingMelodiesEffect
             </summary>
         </member>
-        <member name="M:DOL.GS.Effects.AdrenalineRushEffect.Start(DOL.GS.GamePlayer,System.Int32,System.Int32)">
+        <member name="M:DOL.GS.RealmAbilities.AdrenalineRushEffect.Start(DOL.GS.GameLiving)">
             <summary>
             Called when effect is to be started
             </summary>
-            <param name="player">The player to start the effect for</param>
-            <param name="duration">The effectduration in secounds</param>
-            <param name="value">The percentage additional value for melee absorb</param>
+            <param name="living">The living to start the effect for</param>
         </member>
-        <member name="M:DOL.GS.Effects.AdrenalineRushEffect.PlayerLeftWorld(DOL.Events.DOLEvent,System.Object,System.EventArgs)">
+        <member name="M:DOL.GS.RealmAbilities.AdrenalineRushEffect.PlayerLeftWorld(DOL.Events.DOLEvent,System.Object,System.EventArgs)">
             <summary>
             Called when a player leaves the game
             </summary>
@@ -19168,49 +18916,23 @@
             <param name="sender">Sender of the event</param>
             <param name="args">EventArgs associated with the event</param>
         </member>
-        <member name="M:DOL.GS.Effects.AdrenalineRushEffect.Cancel(System.Boolean)">
+        <member name="M:DOL.GS.RealmAbilities.AdrenalineRushEffect.Cancel(System.Boolean)">
             <summary>
             Called when effect is to be cancelled
             </summary>
             <param name="playerCancel">Whether or not effect is player cancelled</param>
         </member>
-        <member name="M:DOL.GS.Effects.AdrenalineRushEffect.StartTimers">
-            <summary>
-            Starts the timers for this effect
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Effects.AdrenalineRushEffect.StopTimers">
-            <summary>
-            Stops the timers for this effect
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Effects.AdrenalineRushEffect.ExpireCallback(DOL.GS.RegionTimer)">
-            <summary>
-            The callback for when the effect expires
-            </summary>
-            <param name="timer">The ObjectTimerCallback object</param>
-        </member>
-        <member name="P:DOL.GS.Effects.AdrenalineRushEffect.Name">
+        <member name="P:DOL.GS.RealmAbilities.AdrenalineRushEffect.Name">
             <summary>
             Name of the effect
             </summary>
         </member>
-        <member name="P:DOL.GS.Effects.AdrenalineRushEffect.RemainingTime">
-            <summary>
-            Remaining time of the effect in milliseconds
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.AdrenalineRushEffect.Icon">
+        <member name="P:DOL.GS.RealmAbilities.AdrenalineRushEffect.Icon">
             <summary>
             Icon ID
             </summary>
         </member>
-        <member name="P:DOL.GS.Effects.AdrenalineRushEffect.InternalID">
-            <summary>
-            Unique ID for identification in the effect list
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.AdrenalineRushEffect.DelveInfo">
+        <member name="P:DOL.GS.RealmAbilities.AdrenalineRushEffect.DelveInfo">
             <summary>
             Delve information
             </summary>
@@ -19720,55 +19442,25 @@
             The helper effect for sure shot
             </summary>
         </member>
-        <member name="F:DOL.GS.Effects.RapidFireEffect.m_player">
-            <summary>
-            The effect owner
-            </summary>
-        </member>
         <member name="M:DOL.GS.Effects.RapidFireEffect.#ctor">
             <summary>
             Creates a new sure shot effect
             </summary>
         </member>
-        <member name="M:DOL.GS.Effects.RapidFireEffect.Start(DOL.GS.GamePlayer)">
+        <member name="M:DOL.GS.Effects.RapidFireEffect.Start(DOL.GS.GameLiving)">
             <summary>
             Start the effect on player
             </summary>
-            <param name="player">The effect target</param>
-        </member>
-        <member name="M:DOL.GS.Effects.RapidFireEffect.Cancel(System.Boolean)">
-            <summary>
-            Called when effect must be canceled
-            </summary>
-        </member>
-        <member name="F:DOL.GS.Effects.RapidFireEffect.m_id">
-            <summary>
-            unique id for identification in effect list
-            </summary>
+            <param name="living">The effect target</param>
         </member>
         <member name="P:DOL.GS.Effects.RapidFireEffect.Name">
             <summary>
             Name of the effect
             </summary>
         </member>
-        <member name="P:DOL.GS.Effects.RapidFireEffect.RemainingTime">
-            <summary>
-            Remaining Time of the effect in seconds
-            </summary>
-        </member>
         <member name="P:DOL.GS.Effects.RapidFireEffect.Icon">
             <summary>
             Icon to show on players, can be id
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.RapidFireEffect.InternalID">
-            <summary>
-            unique id for identification in effect list
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.RapidFireEffect.DelveInfo">
-            <summary>
-            Delve Info
             </summary>
         </member>
         <member name="T:DOL.GS.Effects.EngageEffect">
@@ -19806,11 +19498,6 @@
             Called when effect must be canceled
             </summary>
         </member>
-        <member name="F:DOL.GS.Effects.EngageEffect.m_id">
-            <summary>
-            Stores the internal effect ID
-            </summary>
-        </member>
         <member name="P:DOL.GS.Effects.EngageEffect.EngageSource">
             <summary>
             Gets the player that defends the target
@@ -19826,19 +19513,9 @@
             Name of the effect
             </summary>
         </member>
-        <member name="P:DOL.GS.Effects.EngageEffect.RemainingTime">
-            <summary>
-            Remaining Time of the effect in milliseconds
-            </summary>
-        </member>
         <member name="P:DOL.GS.Effects.EngageEffect.Icon">
             <summary>
             Icon to show on players, can be id
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.EngageEffect.InternalID">
-            <summary>
-            unique id for identification in effect list
             </summary>
         </member>
         <member name="P:DOL.GS.Effects.EngageEffect.DelveInfo">
@@ -23004,11 +22681,6 @@
         <member name="T:DOL.GS.Spells.UninterruptableSpellHandler">
             <summary>
             
-            </summary>
-        </member>
-        <member name="F:DOL.GS.Spells.UninterruptableSpellHandler.log">
-            <summary>
-            Defines a logger for this class.
             </summary>
         </member>
         <member name="M:DOL.GS.Spells.UninterruptableSpellHandler.CalculateNeededPower(DOL.GS.GameLiving)">
@@ -26650,29 +26322,14 @@
             The helper class for the berserk ability
             </summary>
         </member>
-        <member name="F:DOL.GS.Effects.BerserkEffect.delveString">
-            <summary>
-            The ability description
-            </summary>
-        </member>
-        <member name="F:DOL.GS.Effects.BerserkEffect.m_player">
-            <summary>
-            The owner of the effect
-            </summary>
-        </member>
-        <member name="F:DOL.GS.Effects.BerserkEffect.m_expireTimer">
-            <summary>
-            The timer that will cancel the effect
-            </summary>
-        </member>
         <member name="M:DOL.GS.Effects.BerserkEffect.#ctor">
             <summary>
             Creates a new berserk effect
             </summary>
         </member>
-        <member name="M:DOL.GS.Effects.BerserkEffect.Start(DOL.GS.GamePlayer)">
+        <member name="M:DOL.GS.Effects.BerserkEffect.Start(DOL.GS.GameLiving)">
             <summary>
-            Start the berserk on a player
+            Start the berserk on a living
             </summary>
         </member>
         <member name="M:DOL.GS.Effects.BerserkEffect.Cancel(System.Boolean)">
@@ -26680,47 +26337,15 @@
             Called when effect must be canceled
             </summary>
         </member>
-        <member name="M:DOL.GS.Effects.BerserkEffect.StartTimers">
-            <summary>
-            Starts the timers for this effect
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Effects.BerserkEffect.StopTimers">
-            <summary>
-            Stops the timers for this effect
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Effects.BerserkEffect.ExpiredCallback(DOL.GS.RegionTimer)">
-            <summary>
-            The callback method when the effect expires
-            </summary>
-            <param name="callingTimer">the regiontimer of the effect</param>
-            <returns>the new intervall (0) </returns>
-        </member>
-        <member name="F:DOL.GS.Effects.BerserkEffect.m_id">
-            <summary>
-            Stores the internal effect ID
-            </summary>
-        </member>
         <member name="P:DOL.GS.Effects.BerserkEffect.Name">
             <summary>
             Name of the effect
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.BerserkEffect.RemainingTime">
-            <summary>
-            Remaining Time of the effect in milliseconds
             </summary>
         </member>
         <member name="P:DOL.GS.Effects.BerserkEffect.Icon">
             <summary>
             Icon to show on players, can be id
             TODO find correct icon for berserk
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.BerserkEffect.InternalID">
-            <summary>
-            unique id for identification in effect list
             </summary>
         </member>
         <member name="P:DOL.GS.Effects.BerserkEffect.DelveInfo">
@@ -28531,6 +28156,16 @@
         <member name="F:DOL.GS.Behaviour.eTextType.Read">
             <summary>
             READ : open a description (bracket) windows saying what is written on the item
+            </summary>
+        </member>
+        <member name="F:DOL.GS.Behaviour.eTextType.Say">
+            <summary>
+            NPC says something
+            </summary>
+        </member>
+        <member name="F:DOL.GS.Behaviour.eTextType.Yell">
+            <summary>
+            NPC yells something
             </summary>
         </member>
         <member name="T:DOL.GS.Behaviour.eActionType">
@@ -33130,6 +32765,11 @@
             Ban Hackers
             </summary>
         </member>
+        <member name="F:DOL.GS.ServerProperties.Properties.ALLOW_ALL_REALMS_DF">
+            <summary>
+            Allow all realms access to DF
+            </summary>
+        </member>
         <member name="M:DOL.GS.ServerProperties.Properties.Load(DOL.GS.ServerProperties.ServerPropertyAttribute)">
             <summary>
             This method loads the property from the database and returns
@@ -34691,7 +34331,7 @@
             <param name="text"></param>
             <returns></returns>
         </member>
-        <member name="F:DOL.GS.Spells.ValkyrieOffensiveProcSpellHandler.SINGLE_WEAPON_BASE_CHANCE">
+        <member name="M:DOL.GS.Spells.ValkyrieOffensiveProcSpellHandler.OnEffectStart(DOL.GS.Effects.GameSpellEffect)">
             <summary>
             Constants data change this to modify chance increase or decrease
             </summary>
