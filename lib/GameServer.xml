@@ -443,6 +443,14 @@
             </summary>
             <returns>conlevel</returns>
         </member>
+        <member name="M:DOL.GS.GameObject.GetLevelFromCon(System.Int32,System.Double)">
+            <summary>
+            Calculate a level based on source level and a con level
+            </summary>
+            <param name="level"></param>
+            <param name="con"></param>
+            <returns></returns>
+        </member>
         <member name="M:DOL.GS.GameObject.GetPlayersInRadius(System.UInt16)">
             <summary>
             Gets all players close to this object inside a certain radius
