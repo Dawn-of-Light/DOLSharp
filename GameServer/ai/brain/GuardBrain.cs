@@ -28,11 +28,22 @@ namespace DOL.AI.Brain
 			ThinkInterval = 3000;
 		}
 
+		public override int AggroLevel
+		{
+			get { return 90; }
+		}
+
+		public override int AggroRange
+		{
+			get { return 750; }
+		}
+
 		protected override void CheckPlayerAggro()
 		{
 			//Check if we are already attacking, return if yes
 			if (Body.AttackState)
 				return;
+
 			foreach (GamePlayer player in Body.GetPlayersInRadius((ushort)AggroRange))
 			{
 				if (m_aggroTable.ContainsKey(player))
@@ -50,6 +61,10 @@ namespace DOL.AI.Brain
 
 		protected override void CheckNPCAggro()
 		{
+			//Check if we are already attacking, return if yes
+			if (Body.AttackState)
+				return;
+
 			foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)AggroRange))
 			{
 				if (GameServer.ServerRules.IsAllowedToAttack(Body, npc, true))
@@ -66,6 +81,11 @@ namespace DOL.AI.Brain
 			}
 		}
 
+		/// <summary>
+		/// We override this because we want guards to attack even gray npcs
+		/// </summary>
+		/// <param name="target"></param>
+		/// <returns></returns>
 		public override int CalculateAggroLevelToTarget(GameLiving target)
 		{
 			if (GameServer.ServerRules.IsSameRealm(Body, target, true)) return 0;

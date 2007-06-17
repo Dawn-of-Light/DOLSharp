@@ -329,30 +329,49 @@ namespace DOL.GS.PacketHandler.Client.v168
 							builder.Append(" IP=");
 							builder.Append(client.TcpEndpoint);
 							GameServer.Instance.LogCheatAction(builder.ToString());
-							/*
 							if ((client.Account.PrivLevel == 1) && SHcount >= 20) // ~5-10 sec SH
 							{
+								if (ServerProperties.Properties.BAN_HACKERS)
+								{
+									DBBannedAccount b = new DBBannedAccount();
+									b.Author = "SERVER";
+									b.Ip = client.TcpEndpoint;
+									b.Account = client.Account.Name;
+									b.DateBan = DateTime.Now;
+									b.Type = "B";
+									b.Reason = string.Format("Autoban SH:({0},{1}) on player:{2}", SHcount, EnvironmentTick - SHlastTick, client.Player.Name);
+									GameServer.Database.AddNewObject(b);
+									GameServer.Database.SaveObject(b);
+
+									for (int i = 0; i < 8; i++)
+									{
+										string message = "You have been auto kicked and banned for speed hacking!";
+										client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+										client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
+									}
+
+									client.Out.SendPlayerQuit(true);
+									client.Player.SaveIntoDatabase();
+									client.Player.Quit(true);
+								}
+								else
+								{
+									for (int i = 0; i < 8; i++)
+									{
+										string message = "You have been auto kicked for speed hacking!";
+										client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+										client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
+									}
+
+									client.Out.SendPlayerQuit(true);
+									client.Player.SaveIntoDatabase();
+									client.Player.Quit(true);
+								}
 								Account accountToBan = client.Account;
 								client.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "1 hour Ban for SpeedHack!");
 								client.Out.SendMessage("Ban 1 hour and disconnect after SpeedHack using.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-
-								DateTime banDuration = DateTime.Now;
-								banDuration = banDuration.AddHours(1);
-								accountToBan.BanDuration = banDuration;
-								accountToBan.BanAuthor = "SH check";
-								accountToBan.BanReason = string.Format("Autoban SH:({0},{1}) on player:{2}", SHcount, EnvironmentTick - SHlastTick, client.Player.Name); ;
-								GameServer.Database.SaveObject(accountToBan);
 								return 1;
 							}
-							*//*
-							string message = "Speed Hack Detected!!!";
-							for (int i = 0; i < 6; i++)
-							{
-								client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_ChatWindow);
-							}
-							client.Out.SendPlayerQuit(true);
-							client.Disconnect();*/
 						}
 					}
 					else

@@ -1700,7 +1700,8 @@ namespace DOL.GS
 			set
 			{
 				//DOLConsole.WriteSystem("Health="+value);
-				value = Math.Min( value, MaxHealth);
+				value = Math.Min(value, MaxHealth);
+				value = Math.Max(value, 0);
 				//If it is already set, don't do anything
 				if (Health == value)
 				{
@@ -1780,7 +1781,8 @@ namespace DOL.GS
 			get { return PlayerCharacter != null ? PlayerCharacter.Mana : base.Mana; }
 			set
 			{
-				value = Math.Min( value, MaxMana);
+				value = Math.Min(value, MaxMana);
+				value = Math.Max(value, 0);
 				//If it is already set, don't do anything
 				if (Mana == value)
 				{
@@ -1825,7 +1827,8 @@ namespace DOL.GS
 			get { return PlayerCharacter != null ? PlayerCharacter.Endurance : base.Endurance; }
 			set
 			{
-				value = Math.Min( value, MaxEndurance);
+				value = Math.Min(value, MaxEndurance);
+				value = Math.Max(value, 0);
 				//If it is already set, don't do anything
 				if (Endurance == value)
 				{
@@ -6474,6 +6477,7 @@ namespace DOL.GS
 								{
 									Spell cloneSpell = spell.Copy();
 									cloneSpell.CostPower = false;
+									cloneSpell.InChamber = true;
 									cloneSpell.OverrideRange = chamber.PrimarySpell.Range;
 									chamber.SecondarySpell = cloneSpell;
 									chamber.SecondarySpellLine = line;

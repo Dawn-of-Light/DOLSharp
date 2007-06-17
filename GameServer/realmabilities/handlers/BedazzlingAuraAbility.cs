@@ -14,7 +14,6 @@ namespace DOL.GS.RealmAbilities
 		public const string BofBaSb = "RA_DAMAGE_DECREASE";
 
 		int m_range = 1500;
-		int m_duration = 30;
 		int m_value = 0;
 
 		public override void Execute(GameLiving living)
@@ -55,7 +54,7 @@ namespace DOL.GS.RealmAbilities
 				if (success)
 					if (target != null)
 					{
-						new BedazzlingAuraEffect().Start(target, m_duration, m_value);
+						new BedazzlingAuraEffect().Start(target, m_value);
 					}
 			}
 

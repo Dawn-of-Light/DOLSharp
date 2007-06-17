@@ -15,7 +15,6 @@ namespace DOL.GS.Scripts
 	public class PlayerStatistic
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-		private static bool m_loggingEnabled = true;
 		private static string PLAYER_STATISTICS_PROPERTY = "PLAYER_STATISTICS_PROPERTY";
 
 		protected GamePlayer m_Player = null;

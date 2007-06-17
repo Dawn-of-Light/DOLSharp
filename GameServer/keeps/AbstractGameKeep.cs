@@ -669,7 +669,7 @@ namespace DOL.GS.Keeps
 			m_changeLevelTimer.Callback = new RegionTimerCallback(ChangeLevelTimerCallback);
 			m_claimTimer = new RegionTimer(CurrentRegion.TimeManager);
 			m_claimTimer.Callback = new RegionTimerCallback(ClaimCallBack);
-			m_claimTimer.Interval = 60 * 60 * 1000;
+			m_claimTimer.Interval = CLAIM_CALLBACK_INTERVAL;
 		}
 
 		private void UnloadTimers()

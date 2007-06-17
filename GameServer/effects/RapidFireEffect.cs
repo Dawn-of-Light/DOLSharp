@@ -27,69 +27,34 @@ namespace DOL.GS.Effects
 	/// </summary>
 	public class RapidFireEffect : StaticEffect, IGameEffect
 	{
-		/// <summary>
-		/// The effect owner
-		/// </summary>
-		GamePlayer m_player;
 
 		/// <summary>
 		/// Creates a new sure shot effect
 		/// </summary>
 		public RapidFireEffect()
+			: base()
 		{
 		}
 
 		/// <summary>
 		/// Start the effect on player
 		/// </summary>
-		/// <param name="player">The effect target</param>
-		public void Start(GamePlayer player)
+		/// <param name="living">The effect target</param>
+		public override void Start(GameLiving living)
 		{
-			m_player = player;
-			m_player.EffectList.Add(this);
-			m_player.Out.SendMessage("You switch to rapid fire mode!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-		}
-
-		/// <summary>
-		/// Called when effect must be canceled
-		/// </summary>
-		public void Cancel(bool playerCancel) 
-		{
-			m_player.EffectList.Remove(this);
+			base.Start(living);
+			if (living is GamePlayer)
+				(living as GamePlayer).Out.SendMessage("You switch to rapid fire mode!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-		public string Name { get { return "Rapid Fire"; } }
-
-		/// <summary>
-		/// Remaining Time of the effect in seconds
-		/// </summary>
-		public int RemainingTime { get { return 0; } }
+		public override string Name { get { return "Rapid Fire"; } }
 
 		/// <summary>
 		/// Icon to show on players, can be id
 		/// </summary>
-		public ushort Icon { get { return 484; } }
-
-		/// <summary>
-		/// unique id for identification in effect list
-		/// </summary>
-		private ushort m_id;
-
-		/// <summary>
-		/// unique id for identification in effect list
-		/// </summary>
-		public ushort InternalID
-		{
-			get { return m_id; }
-			set { m_id = value; }
-		}
-
-		/// <summary>
-		/// Delve Info
-		/// </summary>
-		public IList DelveInfo { get { return new ArrayList(0); } }
+		public override ushort Icon { get { return 484; } }
 	}
 }

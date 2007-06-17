@@ -35,24 +35,6 @@ namespace DOL.Database
 		private string	m_account;
         private DateTime m_dateban;
 		private string	m_reason;
-		
-        /*
-		/// <summary>
-		/// Create Banned account or IP
-		/// </summary>
-		[PrimaryKey]
-		public string IDBan
-		{
-			get
-			{
-				return m_idban;
-			}
-			set
-			{
-				m_idban = value;
-			}
-		}
-        */
 
 		/// <summary>
 		/// Who have ban player

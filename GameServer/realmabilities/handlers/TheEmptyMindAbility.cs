@@ -20,23 +20,19 @@ namespace DOL.GS.RealmAbilities
 		public override void Execute(GameLiving living)
 		{
 			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
-			GamePlayer player = living as GamePlayer;
 
-			foreach (GamePlayer t_player in player.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+			foreach (GamePlayer t_player in living.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 			{
-				if (t_player == player)
+				if (t_player == living && living is GamePlayer)
 				{
-					player.Out.SendMessage("You clear your mind and become more resistant to magic damage!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+					(living as GamePlayer).Out.SendMessage("You clear your mind and become more resistant to magic damage!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 				}
 				else
 				{
-					t_player.Out.SendMessage(player.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+					t_player.Out.SendMessage(living.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 				}
 			}
-			if (player != null)
-			{
-				new TheEmptyMindEffect().Start(player, this);
-			}
+			new TheEmptyMindEffect().Start(living);
 			DisableSkill(living);
 		}
 

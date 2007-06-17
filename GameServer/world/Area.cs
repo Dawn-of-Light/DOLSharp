@@ -331,6 +331,7 @@ namespace DOL.GS
 			public BindArea()
 				: base()
 			{
+				m_displayMessage = false;
 			}
 
 			public BindArea(string desc, BindPoint dbBindPoint)

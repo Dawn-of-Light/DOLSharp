@@ -802,6 +802,11 @@ namespace DOL.GS
 			m_propertyTypes[(int)eProperty.Skill_Scythe] = ePropertyType.Skill | ePropertyType.SkillMeleeWeapon;
 			m_propertyTypes[(int)eProperty.Skill_Thrown_Weapons] = ePropertyType.Skill | ePropertyType.SkillMeleeWeapon;
 			m_propertyTypes[(int)eProperty.Skill_HandToHand] = ePropertyType.Skill | ePropertyType.SkillMeleeWeapon;
+			m_propertyTypes[(int)eProperty.Skill_FistWraps] = ePropertyType.Skill | ePropertyType.SkillMeleeWeapon;
+            m_propertyTypes[(int)eProperty.Skill_MaulerStaff] = ePropertyType.Skill | ePropertyType.SkillMeleeWeapon;
+			m_propertyTypes[(int)eProperty.Skill_Power_Strikes] = ePropertyType.Skill | ePropertyType.SkillMagical;
+            m_propertyTypes[(int)eProperty.Skill_Magnetism] = ePropertyType.Skill | ePropertyType.SkillMagical;
+            m_propertyTypes[(int)eProperty.Skill_Aura_Manipulation] = ePropertyType.Skill | ePropertyType.SkillMagical;
 
 			m_propertyTypes[(int)eProperty.Skill_Body] = ePropertyType.Skill | ePropertyType.SkillMagical;
 			m_propertyTypes[(int)eProperty.Skill_Chants] = ePropertyType.Skill | ePropertyType.SkillMagical;
@@ -1747,6 +1752,8 @@ namespace DOL.GS
 				m_specToSkill[Specs.Envenom] = eProperty.Skill_Envenom;
 				m_specToSkill[Specs.Parry] = eProperty.Skill_Parry;
 				m_specToSkill[Specs.ShortBow] = eProperty.Skill_ShortBow;
+				m_specToSkill[Specs.Mauler_Staff] = eProperty.Skill_MaulerStaff;
+				m_specToSkill[Specs.Fist_Wraps] = eProperty.Skill_FistWraps;
 
 				#endregion
 			}

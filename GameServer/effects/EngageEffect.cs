@@ -64,6 +64,7 @@ namespace DOL.GS.Effects
 		/// Creates a new engage effect
 		/// </summary>
 		public EngageEffect()
+			: base()
 		{
 		}
 
@@ -98,20 +99,19 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Called when effect must be canceled
 		/// </summary>
-		public void Cancel(bool playerCancel)
+		public override void Cancel(bool playerCancel)
 		{
+			base.Cancel(playerCancel);
 			if(playerCancel)
 				m_engageSource.Out.SendMessage("You no longer concentrate on blocking the blows!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			else
 				m_engageSource.Out.SendMessage("You are no longer attempting to engage a target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-			m_engageSource.EffectList.Remove(this);
 		}
 
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-		public string Name
+		public override string Name
 		{
 			get
 			{
@@ -122,29 +122,14 @@ namespace DOL.GS.Effects
 		}
 
 		/// <summary>
-		/// Remaining Time of the effect in milliseconds
-		/// </summary>
-		public int RemainingTime { get { return 0; } }
-
-		/// <summary>
 		/// Icon to show on players, can be id
 		/// </summary>
-		public ushort Icon { get { return 421; } }
-
-		/// <summary>
-		/// Stores the internal effect ID
-		/// </summary>
-		ushort m_id;
-
-		/// <summary>
-		/// unique id for identification in effect list
-		/// </summary>
-		public ushort InternalID { get { return m_id; } set { m_id = value; } }
+		public override ushort Icon { get { return 421; } }
 
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public IList DelveInfo
+		public override IList DelveInfo
 		{
 			get
 			{

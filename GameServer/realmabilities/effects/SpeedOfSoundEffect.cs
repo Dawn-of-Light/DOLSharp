@@ -10,13 +10,11 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// Effect handler for Barrier Of Fortitude
 	/// </summary> 
-	public class SpeedOfSoundEffect : StaticEffect, IGameEffect
+	public class SpeedOfSoundEffect : TimedEffect, IGameEffect
 	{
-		private const String m_delveString = "Gives immunity to stun/snare/root and mesmerize spells and provides unbreakeable speed.";
-		private GamePlayer m_player;
-		private Int32 m_effectDuration;
-		private RegionTimer m_expireTimer;
-		private UInt16 m_id;
+		public SpeedOfSoundEffect(int duration)
+			: base(duration)
+		{ }
 
 		DOLEventHandler m_attackFinished = new DOLEventHandler(AttackFinished);
 
@@ -24,21 +22,16 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Called when effect is to be started
 		/// </summary>
-		/// <param name="player">The player to start the effect for</param>
-		/// <param name="duration">The effectduration in secounds</param>
-		public void Start(GamePlayer player, int duration)
+		/// <param name="living">The living to start the effect for</param>
+		public override void Start(GameLiving living)
 		{
-			m_player = player;
-			m_effectDuration = duration;
-
-			StartTimers();
-			m_player.TempProperties.setProperty("Charging", true);
-			GameEventMgr.AddHandler(m_player, GameLivingEvent.AttackFinished, m_attackFinished);
-			GameEventMgr.AddHandler(m_player, GameLivingEvent.CastFinished, m_attackFinished);
-			m_player.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, PropertyCalc.MaxSpeedCalculator.SPEED4);		
-			m_player.Out.SendUpdateMaxSpeed();
-
-			m_player.EffectList.Add(this);
+			base.Start(living);
+			living.TempProperties.setProperty("Charging", true);
+			GameEventMgr.AddHandler(living, GameLivingEvent.AttackFinished, m_attackFinished);
+			GameEventMgr.AddHandler(living, GameLivingEvent.CastFinished, m_attackFinished);
+			living.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, PropertyCalc.MaxSpeedCalculator.SPEED4);		
+			if (living is GamePlayer)
+				(living as GamePlayer).Out.SendUpdateMaxSpeed();
 		}
 
 		/// <summary>
@@ -47,7 +40,7 @@ namespace DOL.GS.Effects
 		/// <param name="e">The event which was raised</param>
 		/// <param name="sender">Sender of the event</param>
 		/// <param name="args">EventArgs associated with the event</param>
-		private  static void AttackFinished(DOLEvent e, object sender, EventArgs args)
+		private static void AttackFinished(DOLEvent e, object sender, EventArgs args)
 		{
 			GamePlayer player = (GamePlayer)sender;
 			if (e == GameLivingEvent.CastFinished)
@@ -91,59 +84,22 @@ namespace DOL.GS.Effects
 			}
 		}
 
-		/// <summary>
-		/// Called when effect is to be cancelled
-		/// </summary>
-		/// <param name="playerCancel">Whether or not effect is player cancelled</param>
-		public void Cancel(bool playerCancel)
+		public override void Stop()
 		{
-			StopTimers();
-			m_player.TempProperties.removeProperty("Charging");
-			m_player.BuffBonusMultCategory1.Remove((int)eProperty.MaxSpeed, this);
-			m_player.Out.SendUpdateMaxSpeed();
-			m_player.EffectList.Remove(this);
-			GameEventMgr.RemoveHandler(m_player, GameLivingEvent.AttackFinished, m_attackFinished);
-			GameEventMgr.RemoveHandler(m_player, GameLivingEvent.CastFinished, m_attackFinished);
-		}
-
-		/// <summary>
-		/// Starts the timers for this effect
-		/// </summary>
-		private void StartTimers()
-		{
-			StopTimers();
-			m_expireTimer = new RegionTimer(m_player, new RegionTimerCallback(ExpireCallback), m_effectDuration * 1000);
-		}
-
-		/// <summary>
-		/// Stops the timers for this effect
-		/// </summary>
-		private void StopTimers()
-		{
-
-			if (m_expireTimer != null)
-			{
-				m_expireTimer.Stop();
-				m_expireTimer = null;
-			}
-		}
-
-		/// <summary>
-		/// The callback for when the effect expires
-		/// </summary>
-		/// <param name="timer">The ObjectTimerCallback object</param>
-		private int ExpireCallback(RegionTimer timer)
-		{
-			Cancel(false);
-
-			return 0;
+			base.Stop();
+			m_owner.TempProperties.removeProperty("Charging");
+			m_owner.BuffBonusMultCategory1.Remove((int)eProperty.MaxSpeed, this);
+			if (m_owner is GamePlayer)
+				(m_owner as GamePlayer).Out.SendUpdateMaxSpeed();
+			GameEventMgr.RemoveHandler(m_owner, GameLivingEvent.AttackFinished, m_attackFinished);
+			GameEventMgr.RemoveHandler(m_owner, GameLivingEvent.CastFinished, m_attackFinished);
 		}
 
 
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-		public string Name
+		public override string Name
 		{
 			get
 			{
@@ -152,23 +108,9 @@ namespace DOL.GS.Effects
 		}
 
 		/// <summary>
-		/// Remaining time of the effect in milliseconds
-		/// </summary>
-		public Int32 RemainingTime
-		{
-			get
-			{
-				RegionTimer timer = m_expireTimer;
-				if (timer == null || !timer.IsAlive)
-					return 0;
-				return timer.TimeUntilElapsed;
-			}
-		}
-
-		/// <summary>
 		/// Icon ID
 		/// </summary>
-		public UInt16 Icon
+		public override UInt16 Icon
 		{
 			get
 			{
@@ -177,29 +119,14 @@ namespace DOL.GS.Effects
 		}
 
 		/// <summary>
-		/// Unique ID for identification in the effect list
-		/// </summary>
-		public UInt16 InternalID
-		{
-			get
-			{
-				return m_id;
-			}
-			set
-			{
-				m_id = value;
-			}
-		}
-
-		/// <summary>
 		/// Delve information
 		/// </summary>
-		public IList DelveInfo
+		public override IList DelveInfo
 		{
 			get
 			{
 				IList delveInfoList = new ArrayList(10);
-				delveInfoList.Add(m_delveString);
+				delveInfoList.Add("Gives immunity to stun/snare/root and mesmerize spells and provides unbreakeable speed.");
 				delveInfoList.Add(" ");
 
 				int seconds = (int)(RemainingTime / 1000);

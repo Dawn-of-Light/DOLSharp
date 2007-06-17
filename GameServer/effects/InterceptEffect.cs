@@ -29,8 +29,6 @@ namespace DOL.GS.Effects
 	/// </summary>
 	public class InterceptEffect : StaticEffect, IGameEffect
 	{
-		protected const String delveString = "Ability that if successful will intercept an attack meant for the ability's target. You will take damage in the target's place.";
-
 		/// <summary>
 		/// Holds the interceptor
 		/// </summary>
@@ -77,6 +75,7 @@ namespace DOL.GS.Effects
 		/// Creates a new intercept effect
 		/// </summary>
 		public InterceptEffect()
+			: base()
 		{
 		}
 
@@ -118,7 +117,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Called when effect must be canceled
 		/// </summary>
-		public void Cancel(bool playerCancel)
+		public override void Cancel(bool playerCancel)
 		{
 			if (InterceptSource is GamePlayer && InterceptTarget is GamePlayer)
 			{
@@ -155,7 +154,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-		public string Name
+		public override string Name
 		{
 			get
 			{
@@ -166,47 +165,28 @@ namespace DOL.GS.Effects
 		}
 
 		/// <summary>
-		/// Remaining Time of the effect in milliseconds
-		/// </summary>
-		public int RemainingTime
-		{
-			get { return 0; }
-		}
-
-		private ushort m_icon = 410;
-
-		/// <summary>
 		/// Icon to show on players, can be id
 		/// </summary>
-		public ushort Icon
+		public override ushort Icon
 		{
-			get { return m_icon; }
-			set { m_icon = value; }
-		}
-
-		/// <summary>
-		/// Holds unique id for identification in effect list
-		/// </summary>
-		private ushort m_id;
-
-		/// <summary>
-		/// Gets or Sets unique id for identification in effect list
-		/// </summary>
-		public ushort InternalID
-		{
-			get { return m_id; }
-			set { m_id = value; }
+			get
+			{
+				//let's not display this icon on NPC's because i use this for spiritmasters
+				if (m_owner is GameNPC)
+					return 0;
+				return 410;
+			}
 		}
 
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public IList DelveInfo
+		public override IList DelveInfo
 		{
 			get
 			{
 				IList delveInfoList = new ArrayList(3);
-				delveInfoList.Add(delveString);
+				delveInfoList.Add("Ability that if successful will intercept an attack meant for the ability's target. You will take damage in the target's place.");
 				delveInfoList.Add(" ");
 				delveInfoList.Add(InterceptSource.GetName(0, true) + " is intercepting for " + InterceptTarget.GetName(0, false));
 				return delveInfoList;
