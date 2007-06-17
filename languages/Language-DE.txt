@@ -398,12 +398,6 @@ StyleProcessor.ExecuteStyle.ExecuteFail:		Ihr führt den Kampfstil "{0}" nicht ri
 StyleProcessor.ExecuteStyle.PerformPerfectly:		Ihr führt den Kampfstil "{0}" perfekt aus.{1}
 StyleProcessor.ExecuteStyle.PerformsPerfectly:		Your {0} performs {1} perfectly! {2}
 
-# ---->	Anpassung ---					---Muss mit dem Namen in der Styles-Tabelle übereinstimmen!---
-StyleProcessor.ExecuteStyle.StyleNameBackstab:		Backstab
-StyleProcessor.ExecuteStyle.StyleNameBackstabII:	BackstabII
-StyleProcessor.ExecuteStyle.StyleNamePerforateArtery:	Perforate Artery
-# <----
-
 StyleProcessor.ExecuteStyle.ThroatStrike:		You inflict a critical strike in the throat of your target 
 StyleProcessor.TryToUseStyle.AlreadyPreparing:		Ihr bereitet bereits einen Kampfstil vor! Gebt /cancelstyle ein, um den Kampfstil-Abbruch zu aktivieren.
 StyleProcessor.TryToUseStyle.AlreadySelectedStyles:	Ihr habt bereits Eure Kampfstile für diese Runde ausgewählt!

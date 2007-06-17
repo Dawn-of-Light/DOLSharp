@@ -397,9 +397,6 @@ StyleProcessor.ExecuteStyle.BackStrike:			Infliggi un colpo critico alle spalle 
 StyleProcessor.ExecuteStyle.ExecuteFail:		Non sei riuscito ad eseguire {0} perfettamente!
 StyleProcessor.ExecuteStyle.PerformPerfectly:		Esegui {0} perfettamente! {1}
 StyleProcessor.ExecuteStyle.PerformsPerfectly:		Il tuo {0} esegue {1} perfettamente! {2}
-StyleProcessor.ExecuteStyle.StyleNameBackstab:		Backstab
-StyleProcessor.ExecuteStyle.StyleNameBackstabII:	BackstabII
-StyleProcessor.ExecuteStyle.StyleNamePerforateArtery:	Perforate Artery
 StyleProcessor.ExecuteStyle.ThroatStrike:		Infliggi un colpo critico nella gola del tuo bersaglio 
 StyleProcessor.TryToUseStyle.AlreadyPreparing:		Ti stai gia' preparando ad usare questo stile! Digita /cancelstyle per abilitare l'annullamento dello stile.
 StyleProcessor.TryToUseStyle.AlreadySelectedStyles:	Hai gia' scelto lo stile per questo turno!

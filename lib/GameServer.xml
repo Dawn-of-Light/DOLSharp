@@ -6406,11 +6406,6 @@
             </summary>
             <param name="living"></param>
         </member>
-        <member name="M:DOL.GS.Effects.TheEmptyMindEffect.Cancel(System.Boolean)">
-            <summary>
-            Called when effect must be canceled
-            </summary>
-        </member>
         <member name="P:DOL.GS.Effects.TheEmptyMindEffect.Icon">
             <summary>
             Icon to show on players, can be id
@@ -9439,12 +9434,6 @@
             <param name="e">The event which was raised</param>
             <param name="sender">Sender of the event</param>
             <param name="args">EventArgs associated with the event</param>
-        </member>
-        <member name="M:DOL.GS.RealmAbilities.BedazzlingAuraEffect.Cancel(System.Boolean)">
-            <summary>
-            Called when effect is to be cancelled
-            </summary>
-            <param name="playerCancel">Whether or not effect is player cancelled</param>
         </member>
         <member name="P:DOL.GS.RealmAbilities.BedazzlingAuraEffect.Name">
             <summary>
@@ -16430,11 +16419,6 @@
             </summary>
             <param name="living">The living object the effect is being started on</param>
         </member>
-        <member name="M:DOL.GS.Effects.StagEffect.Cancel(System.Boolean)">
-            <summary>
-            Called when effect must be canceled
-            </summary>
-        </member>
         <member name="P:DOL.GS.Effects.StagEffect.Icon">
             <summary>
             Icon to show on players, can be id
@@ -17560,11 +17544,6 @@
             Start the effect on a living target
             </summary>
             <param name="living"></param>
-        </member>
-        <member name="M:DOL.GS.RealmAbilities.DivineInterventionEffect.Cancel(System.Boolean)">
-            <summary>
-            Called when effect must be canceled
-            </summary>
         </member>
         <member name="P:DOL.GS.RealmAbilities.DivineInterventionEffect.Name">
             <summary>
@@ -18917,12 +18896,6 @@
             <param name="e">The event which was raised</param>
             <param name="sender">Sender of the event</param>
             <param name="args">EventArgs associated with the event</param>
-        </member>
-        <member name="M:DOL.GS.RealmAbilities.AdrenalineRushEffect.Cancel(System.Boolean)">
-            <summary>
-            Called when effect is to be cancelled
-            </summary>
-            <param name="playerCancel">Whether or not effect is player cancelled</param>
         </member>
         <member name="P:DOL.GS.RealmAbilities.AdrenalineRushEffect.Name">
             <summary>
@@ -32765,6 +32738,11 @@
         <member name="F:DOL.GS.ServerProperties.Properties.ALLOW_ALL_REALMS_DF">
             <summary>
             Allow all realms access to DF
+            </summary>
+        </member>
+        <member name="F:DOL.GS.ServerProperties.Properties.DB_LANGUAGE">
+            <summary>
+            Is the database translated
             </summary>
         </member>
         <member name="M:DOL.GS.ServerProperties.Properties.Load(DOL.GS.ServerProperties.ServerPropertyAttribute)">
