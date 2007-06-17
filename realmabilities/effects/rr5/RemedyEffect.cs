@@ -44,13 +44,17 @@ namespace DOL.GS.Effects
 
 		public override void Stop()
 		{
+			if (!owner.IsAlive)
+			{
+				base.Stop();
+				return;
+			}
 			int heal = owner.MaxHealth - owner.Health;
 			if (heal > healthdrain)
 				heal = healthdrain;
 			owner.Health += healthdrain;
-
 			base.Stop();
-		}
+		} 
 
 		public int SpellEffectiveness
 		{

@@ -37,10 +37,6 @@ namespace DOL.GS.Spells
 	public class ChamberSpellHandler : SpellHandler
 	{
         public const string CHAMBER_USE_TICK = "ChamberUseTick";
-        /// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		private Spell m_primaryspell = null;
 		private SpellLine m_primaryspellline = null;

@@ -119,7 +119,8 @@ namespace DOL.GS
 			{
 				base.Level = value;
 				//MaxHealth = (ushort)(value * 20 + 20);	// MaxHealth depends from mob level
-				m_health = MaxHealth;
+				if (!InCombat)
+					m_health = MaxHealth;
 				if (ObjectState == eObjectState.Active)
 				{
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
@@ -591,6 +592,13 @@ namespace DOL.GS
 		/// Property entry on follow timer, wether the follow target is in range
 		/// </summary>
 		protected static readonly string FOLLOW_TARGET_IN_RANGE = "FollowTargetInRange";
+		
+		private string m_pathID;
+		public string PathID
+		{
+			get { return m_pathID; }
+			set { m_pathID = value; }
+		}
 
 		/// <summary>
 		/// Recalculates position addition values of this living
@@ -814,6 +822,11 @@ namespace DOL.GS
 				npc.m_arriveAtTargetAction = null;
 				npc.StopMoving();
 				npc.Notify(GameNPCEvent.ArriveAtTarget, npc);
+				if (npc.IsReturningHome
+					&& npc.X == npc.SpawnX
+					&& npc.Y == npc.SpawnY
+					&& npc.Z == npc.SpawnZ)
+					npc.IsReturningHome = false;
 			}
 		}
 
@@ -944,6 +957,7 @@ namespace DOL.GS
 			StopAttack();
 			StopFollow();
 			//			WalkTo(SpawnX+Random(750)-350, SpawnY+Random(750)-350, SpawnZ, MaxSpeed/3);
+			m_isReturningHome = true;
 			WalkTo(SpawnX, SpawnY, SpawnZ, (int)(MaxSpeed / 2.5));
 		}
 
@@ -1009,6 +1023,7 @@ namespace DOL.GS
 			}
 			//This broadcasts an update!
 			CurrentSpeed = 0;
+			m_isReturningHome = false;
 		}
 		/// <summary>
 		/// Follow given object
@@ -1211,6 +1226,18 @@ namespace DOL.GS
         /// </summary>
         protected int m_pathingNormalSpeed;
         */
+
+		/// <summary>
+		/// Is the NPC returning home, if so, we don't want it to think
+		/// </summary>
+		public bool IsReturningHome
+		{
+			get { return m_isReturningHome; }
+			set { m_isReturningHome = value; }
+		}
+
+		protected bool m_isReturningHome = false;
+
         /// <summary>
         /// Gets if npc moving on path
         /// </summary>
@@ -1448,7 +1475,33 @@ namespace DOL.GS
 			if (npc.RespawnInterval == -1)
 				npc.RespawnInterval = 0;
 			m_respawnInterval = npc.RespawnInterval * 1000;
-
+			
+			m_pathID = npc.PathID;
+			
+			if (npc.Brain != "")
+			{
+				ABrain brain = null;
+				try
+				{
+					brain = (ABrain)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(npc.Brain, false);
+				}
+				catch (Exception e)
+				{
+				}
+				if (brain == null)
+				{
+					try
+					{
+						brain = (ABrain)Assembly.GetExecutingAssembly().CreateInstance(npc.Brain, false);
+					}
+					catch (Exception e)
+					{
+					}
+				}
+				if (brain != null)
+					SetOwnBrain(brain);
+			}
+			
 			IAggressiveBrain aggroBrain = Brain as IAggressiveBrain;
 			if (aggroBrain != null)
 			{
@@ -1517,6 +1570,8 @@ namespace DOL.GS
 			mob.Speed = MaxSpeedBase;
 			mob.RespawnInterval = m_respawnInterval / 1000;
 			mob.HouseNumber = HouseNumber;
+			if (Brain.GetType().FullName != typeof(StandardMobBrain).FullName)
+				mob.Brain = Brain.GetType().FullName;
 			IAggressiveBrain aggroBrain = Brain as IAggressiveBrain;
 			if (aggroBrain != null)
 			{
@@ -1529,6 +1584,7 @@ namespace DOL.GS
 			mob.MeleeDamageType = (int)MeleeDamageType;
 			if (NPCTemplate != null)
 				mob.NPCTemplateID = NPCTemplate.TemplateId;
+			mob.PathID = PathID;
 
 			if (InternalID == null)
 			{
@@ -3417,9 +3473,7 @@ namespace DOL.GS
 								{
 									if (EffectList.GetOfType(typeof(InterceptEffect)) == null)
 									{
-										InterceptEffect effect = new InterceptEffect();
-										effect.Icon = 0;
-										effect.Start(this, (this.Brain as IControlledBrain).Owner);
+										new InterceptEffect().Start(this, (this.Brain as IControlledBrain).Owner);
 									}
 									break;
 								}

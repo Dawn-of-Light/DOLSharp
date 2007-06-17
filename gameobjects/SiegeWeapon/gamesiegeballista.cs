@@ -76,7 +76,6 @@ namespace DOL.GS
 				}
 			}*/
 		}
-		private ISpellHandler m_spellHandler;
 
 		public override void DoDamage()
 		{

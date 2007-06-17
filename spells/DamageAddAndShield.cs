@@ -296,8 +296,11 @@ namespace DOL.GS.Spells
 			Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, true)), chatType, effect.Owner);
 			GameEventMgr.AddHandler(effect.Owner, EventType, new DOLEventHandler(EventHandler));
 			GameEventMgr.AddHandlerUnique(effect.Owner, GameNPCEvent.Dying, new DOLEventHandler(CancelPetDmgShieldCallBack));
-			GameEventMgr.AddHandlerUnique(Caster, GamePlayerEvent.Moving, new DOLEventHandler(CancelPetDmgShieldCallBack));
-			GameEventMgr.AddHandlerUnique(Caster, GamePlayerEvent.CommandNpcRelease, new DOLEventHandler(CancelPetDmgShieldCallBack));
+			if (Caster is GamePlayer)
+			{
+				GameEventMgr.AddHandlerUnique(Caster, GamePlayerEvent.Moving, new DOLEventHandler(CancelPetDmgShieldCallBack));
+				GameEventMgr.AddHandlerUnique(Caster, GamePlayerEvent.CommandNpcRelease, new DOLEventHandler(CancelPetDmgShieldCallBack));
+			}
 		}
 
 		public void CancelPetDmgShieldCallBack(DOLEvent ev, object sender, EventArgs args)

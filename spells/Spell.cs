@@ -127,7 +127,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				if (m_overriderange != 0)
+				if (m_overriderange != 0 && m_range != 0)
 					return m_overriderange;
 				else
 					return m_range;

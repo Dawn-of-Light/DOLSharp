@@ -37,11 +37,6 @@ namespace DOL.GS.Spells
     public class PrimerSpellHandler : SpellHandler
 	{
 		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
 		/// Cast Powerless
 		/// </summary>
 		/// <param name="target"></param>

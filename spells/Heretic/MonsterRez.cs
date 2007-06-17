@@ -67,7 +67,6 @@ namespace DOL.GS.Spells
 		private Spell m_monsterspell2 = null;
 		private SpellLine m_monsterspellline = null;
 		private GamePlayer m_owner = null;
-		private int m_pulsecount = 0;
 
 		public static ushort MonsterModel
 		{

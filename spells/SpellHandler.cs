@@ -2079,7 +2079,7 @@ namespace DOL.GS.Spells
 			if (player != null)
 			{
 				//Relic bonus is calculated before ra bonus
-				RelicDmg = RelicMgr.GetRelicBonusModifier(player.Realm, eRelicType.Magic) * 0.01;
+				RelicDmg = RelicMgr.GetRelicBonusModifier(player.Realm, eRelicType.Magic);
 			}
 			effectiveness += RelicDmg;
 			if (player != null)
@@ -2099,17 +2099,7 @@ namespace DOL.GS.Spells
 				hitChance = 100;
 
 			}
-			/*
 
-			double TOADmg = 1 + m_caster.GetModified(eProperty.SpellDamage) * 0.01;
-			double RelicDmg = 0;
-			if (living is GamePlayer)
-			{
-				//Relic bonus is calculated before ra bonus
-				RelicDmg = RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Magic);
-			}
-
-			*/
 			// apply effectiveness
 			finalDamage = (int)(finalDamage * effectiveness);
 			if ((m_caster is GamePlayer || (m_caster is GameNPC && (m_caster as GameNPC).Brain is IControlledBrain && m_caster.Realm != 0)) && target is GamePlayer)

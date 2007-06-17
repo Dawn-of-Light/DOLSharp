@@ -680,15 +680,15 @@ namespace DOL
 					return false;
 
 				//---------------------------------------------------------------
-				//Load the relic manager
-				if (!InitComponent(RelicMgr.Init(), "Relic Manager"))
-					return false;
-
-				//---------------------------------------------------------------
 				//Try to initialize the WorldMgr
 				if (!InitComponent(WorldMgr.Init(regionsData), "World Manager Initialization"))
 					return false;
 				regionsData = null;
+
+				//---------------------------------------------------------------
+				//Load the relic manager
+				if (!InitComponent(RelicMgr.Init(), "Relic Manager"))
+					return false;
 
 				//---------------------------------------------------------------
 				//Load all weather managers

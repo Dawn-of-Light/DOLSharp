@@ -282,6 +282,8 @@ namespace DOL.GS.ServerRules
 				case eObjectType.GenericWeapon   : return true;
 				case eObjectType.Staff           : abilityCheck = Abilities.Weapon_Staves; break;
 				case eObjectType.Fired           : abilityCheck = Abilities.Weapon_Shortbows; break;
+				case eObjectType.FistWraps		 : abilityCheck = Abilities.Weapon_FistWraps; break;
+				case eObjectType.MaulerStaff	 : abilityCheck = Abilities.Weapon_MaulerStaff; break;
 
 					//alb
 				case eObjectType.CrushingWeapon  : abilityCheck = Abilities.Weapon_Crushing; break;

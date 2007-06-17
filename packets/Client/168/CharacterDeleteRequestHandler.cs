@@ -45,7 +45,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						client.ActiveCharIndex = -1;
 
 					if (log.IsInfoEnabled)
-						log.Info(String.Format("IP {1} is Deleting character {0} from account {2}!", charName, client.LocalIP, client.Account.Name));
+						log.Info(String.Format("IP {1} is Deleting character {0} from account {2}!", charName, client.TcpEndpoint, client.Account.Name));
 					//Fire the deletion event before removing the char
 					GameEventMgr.Notify(DatabaseEvent.CharacterDeleted, null, new CharacterEventArgs(chars[i], client));
 					//EventMgr.FireCharacterDeletion(chars[i]);

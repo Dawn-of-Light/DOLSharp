@@ -35,9 +35,9 @@ namespace DOL.GS.RealmAbilities
 
 			switch (Level)
 			{
-				case 1: m_duration = 10; break;
-				case 2: m_duration = 30; break;
-				case 3: m_duration = 60; break;
+				case 1: m_duration = 1000; break;
+				case 2: m_duration = 3000; break;
+				case 3: m_duration = 6000; break;
 				default: return;
 			}
 
@@ -68,7 +68,7 @@ namespace DOL.GS.RealmAbilities
 					GameSpellEffect speed = Spells.SpellHandler.FindEffectOnTarget(target, "SpeedEnhancement");
 					if (speed != null)
 						speed.Cancel(false);
-					new SpeedOfSoundEffect().Start(target, m_duration);
+					new SpeedOfSoundEffect(m_duration).Start(target);
 				}
 			}
 
