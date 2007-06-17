@@ -356,6 +356,18 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("log_all_gm_commands", "Log all GM commands on the server", false)]
 		public static readonly bool LOG_ALL_GM_COMMANDS;
+
+		/// <summary>
+		/// Ban Hackers
+		/// </summary>
+		[ServerProperty("ban_hackers", "Should we ban hackers, if set to true, bans will be done, if set to false, kicks will be done", false)]
+		public static readonly bool BAN_HACKERS;
+
+		/// <summary>
+		/// Allow all realms access to DF
+		/// </summary>
+		[ServerProperty("allow_all_realms_df", "Should we allow all realms access to DF", false)]
+		public static readonly bool ALLOW_ALL_REALMS_DF;
 		
 		/// <summary>
 		/// This method loads the property from the database and returns

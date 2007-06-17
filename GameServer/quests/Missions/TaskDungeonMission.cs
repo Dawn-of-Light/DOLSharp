@@ -9,7 +9,7 @@ namespace DOL.GS.Quests
 {
 	public class TaskDungeonMission : AbstractMission
 	{
-		public enum eMissionType : int
+		public enum eTDMissionType : int
 		{
 			Clear = 0,
 			Boss = 1,
@@ -28,8 +28,8 @@ namespace DOL.GS.Quests
 			get { return m_dungeonType; }
 		}
 
-		private eMissionType m_missionType;
-		public eMissionType MissionType
+		private eTDMissionType m_missionType;
+		public eTDMissionType TDMissionType
 		{
 			get { return m_missionType; }
 		}
@@ -111,15 +111,15 @@ namespace DOL.GS.Quests
 			}
 
 			if (Util.Chance(50) && m_bossName != "")
-				m_missionType = eMissionType.Boss;
+				m_missionType = eTDMissionType.Boss;
 			else if (Util.Chance(20) && m_targetName != "")
 			{
-				m_missionType = eMissionType.Specific;
+				m_missionType = eTDMissionType.Specific;
 				m_total = specificCount;
 			}
 			else
 			{
-				m_missionType = eMissionType.Clear;
+				m_missionType = eTDMissionType.Clear;
 				m_total = mobCount;
 			}
 		}
@@ -192,13 +192,13 @@ namespace DOL.GS.Quests
 
 			switch (m_missionType)
 			{
-				case eMissionType.Boss:
+				case eTDMissionType.Boss:
 					{
 						if (eargs.Target.Name == m_bossName)
 							FinishMission();
 						break;
 					}
-				case eMissionType.Specific:
+				case eTDMissionType.Specific:
 					{
 						if (eargs.Target.Name == m_targetName)
 						{
@@ -223,7 +223,7 @@ namespace DOL.GS.Quests
 						}
 						break;
 					}
-				case eMissionType.Clear:
+				case eTDMissionType.Clear:
 					{
 						m_current++;
 						UpdateMission();
@@ -261,9 +261,9 @@ namespace DOL.GS.Quests
 			{
 				switch (m_missionType)
 				{
-					case eMissionType.Boss: return "You have been asked to kill " + m_bossName + " in the nearby caves.";
-					case eMissionType.Specific: return "You have been asked to kill " + m_total + " " + m_targetName + " in the nearby caves.";
-					case eMissionType.Clear:
+					case eTDMissionType.Boss: return "You have been asked to kill " + m_bossName + " in the nearby caves.";
+					case eTDMissionType.Specific: return "You have been asked to kill " + m_total + " " + m_targetName + " in the nearby caves.";
+					case eTDMissionType.Clear:
 						{
 							if (m_owner is GamePlayer && (m_owner as GamePlayer).CurrentRegion != m_taskRegion)
 							{
@@ -297,9 +297,9 @@ namespace DOL.GS.Quests
 			{
 				switch (m_missionType)
 				{
-					case eMissionType.Clear: return 75;
-					case eMissionType.Boss:
-					case eMissionType.Specific: return 50;
+					case eTDMissionType.Clear: return 75;
+					case eTDMissionType.Boss:
+					case eTDMissionType.Specific: return 50;
 				}
 				return 0;
 			}

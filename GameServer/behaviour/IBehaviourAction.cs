@@ -49,6 +49,14 @@ namespace DOL.GS.Behaviour
         /// READ : open a description (bracket) windows saying what is written on the item
         /// </summary>
         Read = 0x05,
+		/// <summary>
+		/// NPC says something
+		/// </summary>
+		Say = 0x06,
+		/// <summary>
+		/// NPC yells something
+		/// </summary>
+		Yell = 0x07,
     }
 
     /// <summary>

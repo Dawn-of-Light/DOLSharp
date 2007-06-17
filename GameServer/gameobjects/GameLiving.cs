@@ -1361,7 +1361,8 @@ namespace DOL.GS
 			}
 
 			//Check if the target is in front of attacker
-			if (this is GamePlayer && !IsObjectInFront(ad.Target, 120))
+			if (ad.AttackType != AttackData.eAttackType.Ranged && this is GamePlayer &&
+!(ad.Target is GameKeepComponent) && !(IsObjectInFront(ad.Target, 120, true) && TargetInView))
 			{
 				ad.AttackResult = eAttackResult.TargetNotVisible;
 				return ad;
@@ -1374,9 +1375,8 @@ namespace DOL.GS
 				return ad;
 			}
 			//We have no attacking distance!
-			if (!WorldMgr.CheckDistance(this, ad.Target, AttackRange))
+			if (!WorldMgr.CheckDistance(this, ad.Target, ad.Target.ActiveWeaponSlot == eActiveWeaponSlot.Standard ? Math.Max(AttackRange, ad.Target.AttackRange) : AttackRange))
 			{
-				//DOLConsole.LogLine(this.Name+"("+X+","+Y+","+Z+") attacks but "+ad.Target.Name+"("+ad.Target.X+","+ad.Target.Y+","+ad.Target.Z+") out of range "+dist+" > "+AttackRange);
 				ad.AttackResult = eAttackResult.OutOfRange;
 				return ad;
 			}
@@ -2416,8 +2416,14 @@ namespace DOL.GS
 				}
 
 				// poison
+
 				if (weapon.PoisonSpellID != 0)
 				{
+					if (ad.Target.EffectList.GetOfType(typeof(RemedyEffect)) != null)
+					{
+						((GamePlayer)this).Out.SendMessage("Your target is protected against your poison by a magical effect.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						return;
+					} 
 					SpellLine poisonLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mundane_Poisons);
 					if (poisonLine != null)
 					{

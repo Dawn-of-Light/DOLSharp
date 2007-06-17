@@ -41,6 +41,11 @@ namespace DOL.GS.Scripts
 			m_tertiaryStat = eStat.QUI;
 		}
 
+		public override bool CanUseLefthandedWeapon(GamePlayer player)
+		{
+			return true;
+		}
+
 		public override eClassType ClassType
 		{
 			get { return eClassType.PureTank; }

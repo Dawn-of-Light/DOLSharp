@@ -8,7 +8,7 @@ namespace DOL.GS.RealmAbilities
     public class DivineInterventionAbility : TimedRealmAbility
 	{
         public DivineInterventionAbility(DBAbility dba, int level) : base(dba, level) { }
-		public const int poolDuration = 1200; // 20 minutes
+		public const int poolDuration = 1200000; // 20 minutes
 
         public override void Execute(GameLiving living)
         {

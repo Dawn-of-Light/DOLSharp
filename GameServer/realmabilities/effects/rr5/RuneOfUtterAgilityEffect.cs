@@ -10,7 +10,6 @@ namespace DOL.GS.Effects
 	/// </summary>
 	public class RuneOfUtterAgilityEffect : TimedEffect
 	{
-		int m_effectiveness;
 		private GameLiving owner;
 
 		public RuneOfUtterAgilityEffect()
@@ -45,17 +44,12 @@ namespace DOL.GS.Effects
 
 		public override ushort Icon { get { return 7074; } }
 
-		public int SpellEffectiveness
-		{
-			get { return m_effectiveness; }
-		}
-
 		public override System.Collections.IList DelveInfo
 		{
 			get
 			{
 				ArrayList list = new ArrayList();
-				list.Add("Increases your evade chance up to " + SpellEffectiveness + "% for 30 seconds.");
+				list.Add("Increases your evade chance up to 90% for 30 seconds.");
 				return list;
 			}
 		}

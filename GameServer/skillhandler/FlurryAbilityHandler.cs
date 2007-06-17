@@ -123,9 +123,8 @@ namespace DOL.GS.SkillHandler
 			target.TakeDamage(player, eDamageType.Slash, damage, 0);
 
 			//sending spell effect
-			//      spellhitID 5988
 			foreach (GamePlayer effPlayer in target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-				effPlayer.Out.SendSpellEffectAnimation(player, target, 5988, 0, false, 0x01);
+				effPlayer.Out.SendSpellEffectAnimation(player, target, 7103, 0, false, 0x01);
 
 			player.Out.SendMessage("You hit " + target.GetName(0, false) + " for " + damage + " damage!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 			if (target is GamePlayer)

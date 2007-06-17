@@ -72,8 +72,8 @@ namespace DOL.AI.Brain
 			if (!Body.IsCasting && Body.Spells != null && Body.Spells.Count > 0)
 				CheckSpells();
 
-			//If the npc is moving, we don't need to think.
-			if (Body.IsMoving)
+			//If the npc is returning home, we don't need to think.
+			if (Body.IsReturningHome)
 				return;
 
 			//If the npc is not in combat, we remove the last attack data temporary property
@@ -81,14 +81,14 @@ namespace DOL.AI.Brain
 				Body.TempProperties.removeProperty(GameLiving.LAST_ATTACK_DATA);
 
 			//If we have an aggrolevel above 0, we check for players and npcs in the area to attack
-			if (AggroLevel > 0)
+			if (!Body.AttackState && AggroLevel > 0)
 			{
 				CheckPlayerAggro();
 				CheckNPCAggro();
 			}
 
 			//If this NPC can randomly walk around, we allow it to walk around
-			if (CanRandomWalk)
+			if (!Body.AttackState && CanRandomWalk)
 			{
 				IPoint3D target = CalcRandomWalkTarget();
 				if (target != null)

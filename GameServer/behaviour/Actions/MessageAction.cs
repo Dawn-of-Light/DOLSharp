@@ -50,12 +50,18 @@ namespace DOL.GS.Behaviour.Actions
                     player.Out.SendCustomDialog(message, null);
                     break;
                 case eTextType.Emote:
-                    player.Out.SendMessage(message, eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(message, eChatType.CT_Emote, eChatLoc.CL_ChatWindow);
                     break;
+				case eTextType.Say:
+					player.Out.SendMessage(message, eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+					break;
+				case eTextType.Yell:
+					player.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
+					break;
                 case eTextType.Broadcast:
                     foreach (GameClient clientz in WorldMgr.GetAllPlayingClients())
                     {
-                        clientz.Player.Out.SendMessage(message, eChatType.CT_Broadcast, eChatLoc.CL_SystemWindow);
+                        clientz.Player.Out.SendMessage(message, eChatType.CT_Broadcast, eChatLoc.CL_ChatWindow);
                     }
                     break;
                 case eTextType.Read:

@@ -38,7 +38,7 @@ namespace DOL.AI.Brain
 		public override bool Start()
 		{
 			if (!base.Start()) return false;
-			Body.CurrentWayPoint = MovementMgr.LoadPath(Body.InternalID + " Rounds");
+			Body.CurrentWayPoint = MovementMgr.LoadPath(Body.PathID != "" ? Body.PathID : Body.InternalID + " Rounds");
 			Body.MoveOnPath(Body.MaxSpeed);
 			return true;
 		}

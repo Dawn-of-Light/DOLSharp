@@ -9,19 +9,19 @@ namespace DOL.GS.Effects
 	/// </summary>
 	public class CamouflageEffect : StaticEffect, IGameEffect
 	{
-		GamePlayer player;
 		
 		public override void Start(GameLiving target)
 		{
-			player = target as GamePlayer;
 			base.Start(target);
-			player.Out.SendMessage("You are now camouflaged!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+			if (target is GamePlayer)
+				(target as GamePlayer).Out.SendMessage("You are now camouflaged!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 		}
 
 		public override void Stop()
 		{
 			base.Stop();
-			player.Out.SendMessage("Your camouflage is gone.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			if (m_owner is GamePlayer)
+				(m_owner as GamePlayer).Out.SendMessage("Your camouflage is gone.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 		
 		public override string Name

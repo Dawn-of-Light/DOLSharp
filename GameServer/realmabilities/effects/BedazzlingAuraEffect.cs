@@ -4,26 +4,22 @@ using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
 using DOL.GS.PropertyCalc;
 using DOL.Events;
+using DOL.GS.Effects;
 
-namespace DOL.GS.Effects
+namespace DOL.GS.RealmAbilities
 {
 	/// <summary>
 	/// Effect handler for Barrier Of Fortitude
 	/// </summary>
-	public class BedazzlingAuraEffect : StaticEffect, IGameEffect
+	public class BedazzlingAuraEffect : TimedEffect, IGameEffect
 	{
-		private const String m_delveString = "Grants the group increased resistance to magical damage (Does not stack with Soldier's Barricade or Barrier of Fortitude).";
-		private GamePlayer m_player;
-		private Int64 m_startTick;
-		private Int32 m_effectDuration;
-		private RegionTimer m_expireTimer;
-		private UInt16 m_id;
 		private int m_value;
 
 		/// <summary>
 		/// Default constructor for AmelioratingMelodiesEffect
 		/// </summary>
 		public BedazzlingAuraEffect()
+			: base(30000)
 		{
 
 		}
@@ -34,28 +30,28 @@ namespace DOL.GS.Effects
 		/// <param name="player">The player to start the effect for</param>
 		/// <param name="duration">The effectduration in secounds</param>
 		/// <param name="value">The percentage additional value for all magic resis</param>
-		public void Start(GamePlayer player, int duration, int value)
+		public void Start(GameLiving living, int value)
 		{
-			m_player = player;
-			m_effectDuration = duration;
 			m_value = value;
 
-			if (player.TempProperties.getProperty(RealmAbilities.BarrierOfFortitudeAbility.BofBaSb, false))
+			if (living.TempProperties.getProperty(RealmAbilities.BarrierOfFortitudeAbility.BofBaSb, false))
 				return;
 
-			StartTimers();
+			base.Start(living);
 
-			GameEventMgr.AddHandler(m_player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+			living.AbilityBonus[(int)eProperty.Resist_Body] += m_value;
+			living.AbilityBonus[(int)eProperty.Resist_Cold] += m_value;
+			living.AbilityBonus[(int)eProperty.Resist_Energy] += m_value;
+			living.AbilityBonus[(int)eProperty.Resist_Heat] += m_value;
+			living.AbilityBonus[(int)eProperty.Resist_Matter] += m_value;
+			living.AbilityBonus[(int)eProperty.Resist_Spirit] += m_value;
 
-			m_player.AbilityBonus[(int)eProperty.Resist_Body] += m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Cold] += m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Energy] += m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Heat] += m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Matter] += m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Spirit] += m_value;
-			m_player.Out.SendCharResistsUpdate();
-			m_player.EffectList.Add(this);
-			player.TempProperties.setProperty(RealmAbilities.BarrierOfFortitudeAbility.BofBaSb, true);
+			if (living is GamePlayer)
+			{
+				GameEventMgr.AddHandler(living, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+				(living as GamePlayer).Out.SendCharResistsUpdate();
+			}
+			living.TempProperties.setProperty(RealmAbilities.BarrierOfFortitudeAbility.BofBaSb, true);
 		}
 
 		/// <summary>
@@ -75,65 +71,29 @@ namespace DOL.GS.Effects
 			}
 		}
 
-		/// <summary>
-		/// Called when effect is to be cancelled
-		/// </summary>
-		/// <param name="playerCancel">Whether or not effect is player cancelled</param>
-		public void Cancel(bool playerCancel)
+		public override void Stop()
 		{
+			base.Stop();
 
-			StopTimers();
-			m_player.AbilityBonus[(int)eProperty.Resist_Body] -= m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Cold] -= m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Energy] -= m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Heat] -= m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Matter] -= m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Spirit] -= m_value;
-			m_player.Out.SendCharResistsUpdate();
-			m_player.EffectList.Remove(this);
-			GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
-			m_player.TempProperties.removeProperty(RealmAbilities.BarrierOfFortitudeAbility.BofBaSb);
-
-		}
-
-		/// <summary>
-		/// Starts the timers for this effect
-		/// </summary>
-		private void StartTimers()
-		{
-			StopTimers();
-			m_expireTimer = new RegionTimer(m_player, new RegionTimerCallback(ExpireCallback), m_effectDuration * 1000);
-		}
-
-		/// <summary>
-		/// Stops the timers for this effect
-		/// </summary>
-		private void StopTimers()
-		{
-
-			if (m_expireTimer != null)
+			m_owner.AbilityBonus[(int)eProperty.Resist_Body] -= m_value;
+			m_owner.AbilityBonus[(int)eProperty.Resist_Cold] -= m_value;
+			m_owner.AbilityBonus[(int)eProperty.Resist_Energy] -= m_value;
+			m_owner.AbilityBonus[(int)eProperty.Resist_Heat] -= m_value;
+			m_owner.AbilityBonus[(int)eProperty.Resist_Matter] -= m_value;
+			m_owner.AbilityBonus[(int)eProperty.Resist_Spirit] -= m_value;
+			if (m_owner is GamePlayer)
 			{
-				m_expireTimer.Stop();
-				m_expireTimer = null;
+				(m_owner as GamePlayer).Out.SendCharResistsUpdate();
+				GameEventMgr.RemoveHandler(m_owner, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 			}
-		}
-
-		/// <summary>
-		/// The callback for when the effect expires
-		/// </summary>
-		/// <param name="timer">The ObjectTimerCallback object</param>
-		private int ExpireCallback(RegionTimer timer)
-		{
-			Cancel(false);
-
-			return 0;
+			m_owner.TempProperties.removeProperty(RealmAbilities.BarrierOfFortitudeAbility.BofBaSb);
 		}
 
 
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-		public string Name
+		public override string Name
 		{
 			get
 			{
@@ -142,23 +102,9 @@ namespace DOL.GS.Effects
 		}
 
 		/// <summary>
-		/// Remaining time of the effect in milliseconds
-		/// </summary>
-		public Int32 RemainingTime
-		{
-			get
-			{
-				RegionTimer timer = m_expireTimer;
-				if (timer == null || !timer.IsAlive)
-					return 0;
-				return timer.TimeUntilElapsed;
-			}
-		}
-
-		/// <summary>
 		/// Icon ID
 		/// </summary>
-		public UInt16 Icon
+		public override UInt16 Icon
 		{
 			get
 			{
@@ -167,29 +113,14 @@ namespace DOL.GS.Effects
 		}
 
 		/// <summary>
-		/// Unique ID for identification in the effect list
-		/// </summary>
-		public UInt16 InternalID
-		{
-			get
-			{
-				return m_id;
-			}
-			set
-			{
-				m_id = value;
-			}
-		}
-
-		/// <summary>
 		/// Delve information
 		/// </summary>
-		public IList DelveInfo
+		public override IList DelveInfo
 		{
 			get
 			{
 				IList delveInfoList = new ArrayList(10);
-				delveInfoList.Add(m_delveString);
+				delveInfoList.Add("Grants the group increased resistance to magical damage (Does not stack with Soldier's Barricade or Barrier of Fortitude).");
 				delveInfoList.Add(" ");
 				delveInfoList.Add("Value: " + m_value + "%");
 

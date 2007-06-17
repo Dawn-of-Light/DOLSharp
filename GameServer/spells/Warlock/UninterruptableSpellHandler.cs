@@ -37,12 +37,6 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("Uninterruptable")]
 	public class UninterruptableSpellHandler : PrimerSpellHandler
 	{
-
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		/// <summary>
 		/// Calculates the power to cast the spell
 		/// </summary>
