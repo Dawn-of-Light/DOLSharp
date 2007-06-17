@@ -14614,12 +14614,6 @@
             <param name="sender">Sender of the event</param>
             <param name="args">EventArgs associated with the event</param>
         </member>
-        <member name="M:DOL.GS.Effects.SpeedOfSoundEffect.Cancel(System.Boolean)">
-            <summary>
-            Called when effect is to be cancelled
-            </summary>
-            <param name="playerCancel">Whether or not effect is player cancelled</param>
-        </member>
         <member name="P:DOL.GS.Effects.SpeedOfSoundEffect.Name">
             <summary>
             Name of the effect
@@ -26338,11 +26332,6 @@
         <member name="M:DOL.GS.Effects.BerserkEffect.Start(DOL.GS.GameLiving)">
             <summary>
             Start the berserk on a living
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Effects.BerserkEffect.Cancel(System.Boolean)">
-            <summary>
-            Called when effect must be canceled
             </summary>
         </member>
         <member name="P:DOL.GS.Effects.BerserkEffect.Name">
