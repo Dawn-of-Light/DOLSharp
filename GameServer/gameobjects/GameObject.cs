@@ -816,6 +816,18 @@ namespace DOL.GS
 			return 1.0 - leveldiff * stepping;
 		}
 
+		/// <summary>
+		/// Calculate a level based on source level and a con level
+		/// </summary>
+		/// <param name="level"></param>
+		/// <param name="con"></param>
+		/// <returns></returns>
+		public static int GetLevelFromCon(int level, double con)
+		{
+			int constep = Math.Max(1, (level + 10) / 10);
+			return Math.Max((int)0, (int)(level + constep * con));
+		}
+
 		#endregion
 
 		#region Notify

@@ -22,6 +22,7 @@ using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Events;
+using DOL.GS.RealmAbilities;
 
 namespace DOL.GS.Spells
 {
@@ -111,6 +112,21 @@ namespace DOL.GS.Spells
 			return 60000;
 		}
 
+		protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
+		{
+			double duration = base.CalculateEffectDuration(target, effectiveness);
+			double mocFactor = 1.0;
+			Effects.MasteryofConcentrationEffect moc = (Effects.MasteryofConcentrationEffect)Caster.EffectList.GetOfType(typeof(Effects.MasteryofConcentrationEffect));
+			if (moc != null)
+			{
+				RealmAbility ra = Caster.GetAbility(typeof(MasteryofConcentrationAbility)) as RealmAbility;
+				if (ra != null)
+					mocFactor = System.Math.Round((double)ra.Level * 25 / 100, 2);
+				duration = (double)Math.Round(duration * mocFactor);
+			}
+			return (int)duration;
+		}
+
 		/// <summary>
 		/// Constructor
 		/// </summary>
@@ -161,7 +177,6 @@ namespace DOL.GS.Spells
 		{
 			double duration = base.CalculateEffectDuration(target, effectiveness);
 			duration *= target.GetModified(eProperty.MesmerizeDuration) * 0.01;
-
 			if (duration < 1)
 				duration = 1;
 			else if (duration > (Spell.Duration * 4))

@@ -27,7 +27,7 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// The helper class for the stag ability
 	/// </summary>
-	public class StagEffect : StaticEffect, IGameEffect
+	public class StagEffect : TimedEffect, IGameEffect
 	{
 		/*
         1.42
@@ -49,192 +49,92 @@ namespace DOL.GS.Effects
 		// some time after a lurikeen model was added for luri's
 
 		/// <summary>
-		/// The ability description
-		/// </summary>
-		protected const String delveString = "Hero-only ability, that transforms a player into a stag-headed Huntsman. This lasts 30 seconds, and gives the player a burst in hitpoints. May be used once every 30 minutes. Initiate = 20% bonus to hitpoints. Member =30%, Leader = 40%, Master = 50%";
-
-		/// <summary>
-		/// The ability owner
-		/// </summary>
-		protected GamePlayer m_player;
-
-		/// <summary>
-		/// The used ability
-		/// </summary>
-		protected Ability m_ability;
-
-		/// <summary>
 		/// The amount of max health gained
 		/// </summary>
 		protected int m_amount;
 
-		/// <summary>
-		/// The timer that expires the ability
-		/// </summary>
-		protected RegionTimer m_expireTimer;
+		protected ushort m_originalModel;
+
+		protected int m_level;
 
 		/// <summary>
 		/// Creates a new stag effect
 		/// </summary>
-		public StagEffect()
+		public StagEffect(int level)
+			: base(StagAbilityHandler.DURATION)
 		{
+			m_level = level;
 		}
 
 		/// <summary>
 		/// Start the stag on player
 		/// </summary>
-		/// <param name="player">The player starting new effect</param>
-		/// <param name="ab">The ability used to start new effect</param>
-		public void Start(GamePlayer player, Ability ab)
+		/// <param name="living">The living object the effect is being started on</param>
+		public override void Start(GameLiving living)
 		{
-			m_ability = ab;
-			m_player = player;
+			base.Start(living);
 
-			if (!(player.IsAlive))
+			m_originalModel = living.Model;
+
+			if (living is GamePlayer)
 			{
-				player.Out.SendMessage("You cannot use this ability while Dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
-			if (player.IsMezzed)
+				if ((living as GamePlayer).Race == (int)eRace.Lurikeen)
+					living.Model = 859;
+				else living.Model = 583;
+			}			
+
+
+			double m_amountPercent = (m_level + 0.5 + Util.RandomDouble()) / 10; //+-5% random
+			if (living is GamePlayer)
+				m_amount = (int)((living as GamePlayer).CalculateMaxHealth(living.Level, living.GetModified(eProperty.Constitution)) * m_amountPercent);
+			else m_amount = (int)(living.MaxHealth * m_amountPercent);
+
+			living.BuffBonusCategory1[(int)eProperty.MaxHealth] += m_amount;
+			living.Health += (int)(living.GetModified(eProperty.MaxHealth) * m_amountPercent);
+			if (living.Health > living.MaxHealth) living.Health = living.MaxHealth;
+
+			living.Emote(eEmote.StagFrenzy);
+
+			if (living is GamePlayer)
 			{
-				player.Out.SendMessage("You cannot use this ability while Mezzed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
-			if (player.IsStunned)
-			{
-				player.Out.SendMessage("You cannot use this ability while Stunned!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
-			if (player.IsSitting)
-			{
-				player.Out.SendMessage("You cannot use this ability while Sitting!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
-
-			if (m_player.Race == (int)eRace.Lurikeen) m_player.Model = 859;
-			else m_player.Model = 583;
-
-			double m_amountPercent = (ab.Level + 0.5 + Util.RandomDouble()) / 10; //+-5% random
-			m_amount = (int)(player.CalculateMaxHealth(player.Level, player.GetModified(eProperty.Constitution)) * m_amountPercent);
-
-			m_player.BuffBonusCategory1[(int)eProperty.MaxHealth] += m_amount;
-			m_player.Health += (int)(m_player.GetModified(eProperty.MaxHealth) * m_amountPercent);
-			if (m_player.Health > m_player.MaxHealth) m_player.Health = m_player.MaxHealth;
-			m_player.Out.SendUpdatePlayer();
-
-			foreach (GamePlayer visiblePlayer in m_player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-			{
-				visiblePlayer.Out.SendEmoteAnimation(m_player, eEmote.StagFrenzy);
-			}
-
-			StartTimers();
-
-			m_player.Out.SendMessage("You channel the spirit of the Hunt!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-			m_player.EffectList.Add(this);
-		}
-
-		/// <summary>
-		/// Called when effect must be canceled
-		/// </summary>
-		public void Cancel(bool playerCancel)
-		{
-			StopTimers();
-
-			m_player.Model = (ushort)m_player.PlayerCharacter.CreationModel;
-
-			double m_amountPercent = m_amount / m_player.GetModified(eProperty.MaxHealth);
-			int playerHealthPercent = m_player.HealthPercent;
-			m_player.BuffBonusCategory1[(int)eProperty.MaxHealth] -= m_amount;
-			if (m_player.IsAlive)
-				m_player.Health = (int)Math.Max(1, 0.01 * m_player.MaxHealth * playerHealthPercent);
-			m_player.Out.SendUpdatePlayer();
-
-			// there is no animation on end of the effect
-			m_player.EffectList.Remove(this);
-			m_player.Out.SendMessage("Your Spirit of the Hunt ends.", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-		}
-
-		/// <summary>
-		/// Starts the timers for this effect
-		/// </summary>
-		protected virtual void StartTimers()
-		{
-			StopTimers();
-
-			m_expireTimer = new RegionTimer(m_player, new RegionTimerCallback(ExpiredCallback), StagAbilityHandler.DURATION);
-		}
-
-		/// <summary>
-		/// Stops the timers for this effect
-		/// </summary>
-		protected virtual void StopTimers()
-		{
-			if (m_expireTimer != null)
-			{
-				//DOLConsole.WriteLine("effect stop expire on "+Owner.Name+" "+this.InternalID);
-				m_expireTimer.Stop();
-				m_expireTimer = null;
+				(living as GamePlayer).Out.SendUpdatePlayer();
+				(living as GamePlayer).Out.SendMessage("You channel the spirit of the Hunt!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 			}
 		}
 
-		/// <summary>
-		/// The callback method when the effect expires
-		/// </summary>
-		/// <param name="callingTimer">the gametimer of the effect</param>
-		/// <returns>the new intervall (0) </returns>
-		protected virtual int ExpiredCallback(RegionTimer callingTimer)
+		public override void Stop()
 		{
-			Cancel(false);
-			return 0;
-		}
+			base.Stop();
+			m_owner.Model = m_originalModel;
 
-		/// <summary>
-		/// Name of the effect
-		/// </summary>
-		public string Name { get { return m_ability.Name; } }
+			double m_amountPercent = m_amount / m_owner.GetModified(eProperty.MaxHealth);
+			int playerHealthPercent = m_owner.HealthPercent;
+			m_owner.BuffBonusCategory1[(int)eProperty.MaxHealth] -= m_amount;
+			if (m_owner.IsAlive)
+				m_owner.Health = (int)Math.Max(1, 0.01 * m_owner.MaxHealth * playerHealthPercent);
 
-		/// <summary>
-		/// Remaining Time of the effect in milliseconds
-		/// </summary>
-		public int RemainingTime
-		{
-			get
+			if (m_owner is GamePlayer)
 			{
-				RegionTimer timer = m_expireTimer;
-				if (timer == null || !timer.IsAlive)
-					return 0;
-				return timer.TimeUntilElapsed;
+				(m_owner as GamePlayer).Out.SendUpdatePlayer();
+				// there is no animation on end of the effect
+				(m_owner as GamePlayer).Out.SendMessage("Your Spirit of the Hunt ends.", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 			}
 		}
 
 		/// <summary>
 		/// Icon to show on players, can be id
 		/// </summary>
-		public ushort Icon { get { return 480; } }
-
-		/// <summary>
-		/// The internal unique effect ID
-		/// </summary>
-		private ushort m_id;
-
-		/// <summary>
-		/// unique id for identification in effect list
-		/// </summary>
-		public ushort InternalID
-		{
-			get { return m_id; }
-			set { m_id = value; }
-		}
+		public override ushort Icon { get { return 480; } }
 
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public IList DelveInfo
+		public override IList DelveInfo
 		{
 			get
 			{
 				IList delveInfoList = new ArrayList(4);
-				delveInfoList.Add(delveString);
+				delveInfoList.Add("Hero-only ability, that transforms a player into a stag-headed Huntsman. This lasts 30 seconds, and gives the player a burst in hitpoints. May be used once every 30 minutes. Initiate = 20% bonus to hitpoints. Member =30%, Leader = 40%, Master = 50%");
 
 				int seconds = RemainingTime / 1000;
 				if (seconds > 0)

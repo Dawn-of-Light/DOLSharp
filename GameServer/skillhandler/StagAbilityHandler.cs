@@ -67,7 +67,7 @@ namespace DOL.GS.SkillHandler
 			}
 			player.DisableSkill(ab, REUSE_TIMER);
 
-			new StagEffect().Start(player, ab);
+			new StagEffect(ab.Level).Start(player);
 		}
 	}
 }

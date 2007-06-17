@@ -15,8 +15,6 @@ namespace DOL.GS.Spells
         /// <summary>
         /// Constants data change this to modify chance increase or decrease
         /// </summary>
-        private static int SINGLE_WEAPON_BASE_CHANCE = 25;
-        private static int DUAL_WEAPON_BASE_CHANCE = 15;
         public override void OnEffectStart(GameSpellEffect effect)
         {
             base.OnEffectStart(effect);

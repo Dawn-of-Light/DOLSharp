@@ -427,7 +427,7 @@ namespace DOL.GS.Scripts
 							}
 
 							string guildId = "";
-							byte guildRank = 1;
+							ushort guildRank = 9;
 							string plyName = "";
 							GamePlayer ply = obj as GamePlayer;
 							Character ch = obj as Character;
@@ -435,7 +435,8 @@ namespace DOL.GS.Scripts
 							{
 								plyName = ply.Name;
 								guildId = ply.GuildID;
-								guildRank = ply.GuildRank.RankLevel;
+								if (ply.GuildRank != null)
+									guildRank = ply.GuildRank.RankLevel;
 							}
 							else
 							{
@@ -828,7 +829,7 @@ namespace DOL.GS.Scripts
 							}
 
 							string guildId = "";
-							ushort guildRank = 1;
+							ushort guildRank = 9;
 							string plyName = "";
 							GamePlayer ply = obj as GamePlayer;
 							Character ch = obj as Character;
@@ -836,7 +837,8 @@ namespace DOL.GS.Scripts
 							{
 								plyName = ply.Name;
 								guildId = ply.GuildID;
-								guildRank = ply.GuildRank.RankLevel;
+								if (ply.GuildRank != null)
+									guildRank = ply.GuildRank.RankLevel;
 							}
 							else
 							{
@@ -930,7 +932,8 @@ namespace DOL.GS.Scripts
 							{
 								plyName = ply.Name;
 								guildId = ply.GuildID;
-								guildRank = ply.GuildRank.RankLevel;
+								if (ply.GuildRank != null)
+									guildRank = ply.GuildRank.RankLevel;
 							}
 							else
 							{

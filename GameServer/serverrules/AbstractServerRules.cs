@@ -415,6 +415,10 @@ namespace DOL.GS.ServerRules
 				case eObjectType.Staff: twoHandCheck = new string[] { Abilities.Weapon_Staves }; break;
 				case eObjectType.Fired: otherCheck = new string[] { Abilities.Weapon_Shortbows }; break;
 
+				//generic
+				case eObjectType.FistWraps: oneHandCheck = new string[] { Abilities.Weapon_FistWraps }; break;
+				case eObjectType.MaulerStaff: twoHandCheck = new string[] { Abilities.Weapon_MaulerStaff }; break;
+
 				//alb
 				case eObjectType.CrushingWeapon: oneHandCheck = new string[] { Abilities.Weapon_Crushing, Abilities.Weapon_Blunt, Abilities.Weapon_Hammers }; break;
 				case eObjectType.SlashingWeapon: oneHandCheck = new string[] { Abilities.Weapon_Slashing, Abilities.Weapon_Blades, Abilities.Weapon_Swords, Abilities.Weapon_Axes }; break;
@@ -634,6 +638,7 @@ namespace DOL.GS.ServerRules
 
 				float totalDamage = 0;
 				Hashtable plrGrpExp = new Hashtable();
+				GamePlayer highestPlayer = null;
 				//Collect the total damage
 				foreach (DictionaryEntry de in killedNPC.XPGainers)
 				{
@@ -650,6 +655,8 @@ namespace DOL.GS.ServerRules
 						else
 							plrGrpExp[player.PlayerGroup] = 1;
 					}
+					if (highestPlayer != null && player.Level > highestPlayer.Level)
+						highestPlayer = player;
 				}
 
 				long npcExpValue = killedNPC.ExperienceValue;
@@ -719,6 +726,26 @@ namespace DOL.GS.ServerRules
 
 					// exp cap
 					long expCap = (long)(living.ExperienceValue * 1.25);
+					//let's check the con, for example if a level 50 kills a green, we want our level 1 to get green xp too
+					/*
+					 * http://www.camelotherald.com/more/110.shtml
+					 * All group experience is divided evenly amongst group members, if they are in the same level range. What's a level range? One color range. If everyone in the group cons yellow to each other (or high blue, or low orange), experience will be shared out exactly evenly, with no leftover points. How can you determine a color range? Simple - Level divided by ten plus one. So, to a level 40 player (40/10 + 1), 36-40 is yellow, 31-35 is blue, 26-30 is green, and 25-less is gray.
+					 * But for everyone in the group to get the maximum amount of experience possible, the encounter must be a challenge to the group.
+					 * If the group has two people, the monster must at least be (con) yellow to the highest level member. If the group has four people, the monster must at least be orange. If the group has eight, the monster must at least be red.
+					 * 
+					 * If "challenge code" has been activated, then the experience is divided roughly like so in a group of two (adjust the colors up if the group is bigger): If the monster was blue to the highest level player, each lower level group member will ROUGHLY receive experience as if they soloed a blue monster. Ditto for green. As everyone knows, a monster that cons gray to the highest level player will result in no exp for anyone. If the monster was high blue, challenge code may not kick in. It could also kick in if the monster is low yellow to the high level player, depending on the group strength of the pair. 
+					 * How can you determine a color range? Simple - Level divided by ten plus one. So, to a level 40 player (40/10 + 1), 36-40 is yellow, 31-35 is blue, 26-30 is green, and 25-less is gray.
+					 */
+					//xp challenge
+					if (highestPlayer != null && highestPlayer.PlayerGroup != null)
+					{
+						int conLevel = (int)(highestPlayer.GetConLevel(killedNPC) + 1)  - highestPlayer.PlayerGroup.PlayerCount;
+						if (conLevel < 0)
+						{
+							//challenge success, the xp needs to be reduced to the proper con
+							expCap = GameServer.ServerRules.GetExperienceForLiving(GameObject.GetLevelFromCon(living.Level, conLevel));
+						}
+					}
 					if (xpReward > expCap)
 						xpReward = expCap;
 

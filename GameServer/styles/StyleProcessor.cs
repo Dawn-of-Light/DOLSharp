@@ -420,19 +420,19 @@ namespace DOL.GS.Styles
 					//PA: 75 + (CSSkill * 9) + Damage Cap 
 					//BSII: 45 + (CSSkill * 6) + Damage Cap 
 					//BS: 5 + (CSSkill * 14 / 3) + Damage Cap
-					if (attackData.Style.Name == (LanguageMgr.GetTranslation(player.Client, "StyleProcessor.ExecuteStyle.StyleNameBackstab")))
+					if (attackData.Style.Name == (LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "StyleProcessor.ExecuteStyle.StyleNameBackstab")))
 					{
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.ExecuteStyle.BackStrike"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "StyleProcessor.ExecuteStyle.BackStrike"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 						attackData.Damage += 5 + (player.GetModifiedSpecLevel(Specs.Critical_Strike) * 14 / 3);
 					}
-					else if (attackData.Style.Name == (LanguageMgr.GetTranslation(player.Client, "StyleProcessor.ExecuteStyle.StyleNameBackstabII")))
+					else if (attackData.Style.Name == (LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "StyleProcessor.ExecuteStyle.StyleNameBackstabII")))
 					{
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.ExecuteStyle.BackStrike"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "StyleProcessor.ExecuteStyle.BackStrike"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 						attackData.Damage += 45 + (player.GetModifiedSpecLevel(Specs.Critical_Strike) * 6);
 					}
-					else if (attackData.Style.Name == (LanguageMgr.GetTranslation(player.Client, "StyleProcessor.ExecuteStyle.StyleNamePerforateArtery")))
+					else if (attackData.Style.Name == (LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "StyleProcessor.ExecuteStyle.StyleNamePerforateArtery")))
 					{
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.ExecuteStyle.ThroatStrike"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "StyleProcessor.ExecuteStyle.ThroatStrike"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 						attackData.Damage += 75 + (player.GetModifiedSpecLevel(Specs.Critical_Strike) * 9);
 					}
 

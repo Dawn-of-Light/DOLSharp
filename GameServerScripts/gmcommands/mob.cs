@@ -26,6 +26,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.Utils;
 using DOL.GS.Quests;
 using DOL.GS.Housing;
+using DOL.GS.Movement;
 
 namespace DOL.GS.Scripts
 {
@@ -72,7 +73,8 @@ namespace DOL.GS.Scripts
 		"'/mob viewloot' to view the selected mob's loot table",
 		"'/mob removeloot <ItemTemplateID>' to remove loot from the mob's unique drop table",
 		"'/mob copy' copies a mob exactly and places it at your location",
-	    "'/mob npctemplate <NPCTemplateID>' creates a mob with npc template, or modifies target"
+		"'/mob npctemplate <NPCTemplateID>' creates a mob with npc template, or modifies target",
+		"'/mob path <PathID>' associate the mob to the specified path"
 		)]
 	public class MobCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
@@ -294,6 +296,7 @@ namespace DOL.GS.Scripts
 						info.Add(" + Equipment Template ID: " + targetMob.EquipmentTemplateID);
 						info.Add(" + Inventory: " + targetMob.Inventory);
 						info.Add(" + CanGiveQuest: " + targetMob.QuestListToGive.Count);
+						info.Add(" + Path: " + targetMob.PathID);
 
 						client.Out.SendCustomTextWindow("[ " + targetMob.Name + " ]", info);
 					}
@@ -466,6 +469,7 @@ namespace DOL.GS.Scripts
 						mob.AddToWorld();
 						mob.SaveIntoDatabase();
 						client.Out.SendMessage("Mob created: OID=" + mob.ObjectID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage("The mob has been created with the peace flag, so it can't be attacked, to remove type /mob peace", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					}
 					break;
 				case "model":
@@ -642,6 +646,31 @@ namespace DOL.GS.Scripts
 								return 0;
 							}
 							targetMob.SetOwnBrain(brain);
+							targetMob.SaveIntoDatabase();
+						}
+						catch
+						{
+							DisplayError(client, "Type /mob for command overview.");
+							return 1;
+						}
+					}
+					break;
+				
+				case "path":
+					{
+						try
+						{
+							string pathname = String.Join(" ", args, 2, args.Length - 2);
+							if (MovementMgr.LoadPath(pathname) == null)
+								client.Out.SendMessage("The specified path does not exist", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							else
+							{
+								targetMob.PathID = pathname;
+								targetMob.SaveIntoDatabase();
+								if (targetMob.Brain.Stop())
+									targetMob.Brain.Start();
+								client.Out.SendMessage("The path has been assigned to this mob", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
 						}
 						catch
 						{

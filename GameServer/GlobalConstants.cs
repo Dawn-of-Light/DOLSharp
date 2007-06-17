@@ -549,7 +549,13 @@ namespace DOL.GS
 		Skill_Cursing = 106,
 		Skill_Hexing = 107,
 		Skill_Witchcraft = 108,
-		Skill_Last = 108,
+		Skill_MaulerStaff = 109,
+		Skill_FistWraps = 110,
+		Skill_Power_Strikes = 111,
+		Skill_Magnetism = 112,
+		Skill_Aura_Manipulation = 113,
+		Skill_SpectralGuard = 114,
+		Skill_Last = 114,
 
 		// Classic Focii
 		Focus_Darkness = 120,
@@ -861,7 +867,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static bool IsWeapon(int objectTypeID)
 		{
-			if ((objectTypeID >= 1 && objectTypeID <= 26) || objectTypeID == (int)eObjectType.Shield) return true;
+			if ((objectTypeID >= 1 && objectTypeID <= 28) || objectTypeID == (int)eObjectType.Shield) return true;
 			return false;
 		}
 		/// <summary>
@@ -992,6 +998,8 @@ namespace DOL.GS
 				case 24: return "flexible (weapon)";
 				case 25: return "hand to hand (weapon)";
 				case 26: return "scythe (weapon)";
+				case 27: return "Fist Wraps (weapon)";
+				case 28: return "Mauler Staff (weapon)";
 				case 31: return "generic (armor)";
 				case 32: return "cloth (armor)";
 				case 33: return "leather (armor)";
@@ -1457,6 +1465,8 @@ namespace DOL.GS
 				case Specs.Witchcraft: return 0x8C;
 				case Specs.Cursing: return 0x8D;
 				case Specs.Hexing: return 0x8E;
+				case Specs.Fist_Wraps: return 0x90;
+				case Specs.Mauler_Staff: return 0x9A;
 				default: return 0;
 			}
 		}

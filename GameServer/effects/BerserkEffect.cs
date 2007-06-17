@@ -27,142 +27,61 @@ namespace DOL.GS.Effects
 	/// <summary>
 	/// The helper class for the berserk ability
 	/// </summary>
-	public class BerserkEffect : StaticEffect, IGameEffect
+	public class BerserkEffect : TimedEffect, IGameEffect
 	{
-		/// <summary>
-		/// The ability description
-		/// </summary>
-		protected const String delveString = "This ability transforms the player into a Vendo beast and makes each hit that lands a critical hit, at the expense of any defensive abilities. It can be used one every seven minutes.";
-
-		/// <summary>
-		/// The owner of the effect
-		/// </summary>
-		GamePlayer m_player;
-
-		/// <summary>
-		/// The timer that will cancel the effect
-		/// </summary>
-		protected RegionTimer m_expireTimer;
-
+		protected ushort m_startModel = 0;
 		/// <summary>
 		/// Creates a new berserk effect
 		/// </summary>
 		public BerserkEffect()
+			: base(BerserkAbilityHandler.DURATION)
 		{
 		}
 
 		/// <summary>
-		/// Start the berserk on a player
+		/// Start the berserk on a living
 		/// </summary>
-		public void Start(GamePlayer player)
+		public override void Start(GameLiving living)
 		{
-			m_player = player;
-			m_player.Model = 582; // vendo Man
+			base.Start(living);
+			m_startModel = living.Model;
+			living.Model = 582;
+			living.Emote(eEmote.MidgardFrenzy);
 
-			StartTimers(); // start the timers before adding to the list!
-			m_player.EffectList.Add(this);
+			if (living is GamePlayer)
+				(living as GamePlayer).Out.SendMessage("You go into a berserker frenzy!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+		}
 
-			foreach (GamePlayer visiblePlayer in m_player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-			{
-				visiblePlayer.Out.SendEmoteAnimation(m_player, eEmote.MidgardFrenzy);
-			}
-
-			m_player.Out.SendMessage("You go into a berserker frenzy!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-		}	
-
-		/// <summary>
-		/// Called when effect must be canceled
-		/// </summary>
-		public void Cancel(bool playerCancel) {
-			StopTimers();
-
-			m_player.EffectList.Remove(this);
-
-			// TODO add proper transform animation
-			m_player.Model = (ushort)m_player.PlayerCharacter.CreationModel;			
+		public override void Stop()
+		{
+			base.Stop();
+			m_owner.Model = m_startModel;
 
 			// there is no animation on end of the effect
-			m_player.Out.SendMessage("Your berserker frenzy ends.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-		}
-
-		/// <summary>
-		/// Starts the timers for this effect
-		/// </summary>
-		protected virtual void StartTimers()
-		{
-			StopTimers();
-
-			m_expireTimer = new RegionTimer(m_player, new RegionTimerCallback(ExpiredCallback), BerserkAbilityHandler.DURATION);
-		}
-
-		/// <summary>
-		/// Stops the timers for this effect
-		/// </summary>
-		protected virtual void StopTimers()
-		{
-			if(m_expireTimer != null)
-			{
-				//DOLConsole.WriteLine("effect stop expire on "+Owner.Name+" "+this.InternalID);
-				m_expireTimer.Stop();
-				m_expireTimer = null;
-			}
-		}
-
-		/// <summary>
-		/// The callback method when the effect expires
-		/// </summary>
-		/// <param name="callingTimer">the regiontimer of the effect</param>
-		/// <returns>the new intervall (0) </returns>
-		protected virtual int ExpiredCallback(RegionTimer callingTimer)
-		{
-			Cancel(false);
-			return 0;
+			if (m_owner is GamePlayer)
+				(m_owner as GamePlayer).Out.SendMessage("Your berserker frenzy ends.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-		public string Name { get { return "Berserk"; } }
-
-		/// <summary>
-		/// Remaining Time of the effect in milliseconds
-		/// </summary>
-		public int RemainingTime
-		{
-			get
-			{
-				RegionTimer timer = m_expireTimer;
-				if (timer == null || !timer.IsAlive)
-					return 0;
-				return timer.TimeUntilElapsed;
-			}
-		}
+		public override string Name { get { return "Berserk"; } }
 
 		/// <summary>
 		/// Icon to show on players, can be id
 		/// TODO find correct icon for berserk
 		/// </summary>
-		public ushort Icon { get { return 479; } }
-
-		/// <summary>
-		/// Stores the internal effect ID
-		/// </summary>
-		ushort m_id;
-
-		/// <summary>
-		/// unique id for identification in effect list
-		/// </summary>
-		public ushort InternalID { get { return m_id; } set { m_id = value; } }
+		public override ushort Icon { get { return 479; } }
 
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public IList DelveInfo
+		public override IList DelveInfo
 		{
 			get
 			{
 				IList delveInfoList = new ArrayList(4);
-				delveInfoList.Add(delveString);
+				delveInfoList.Add("This ability transforms the player into a Vendo beast and makes each hit that lands a critical hit, at the expense of any defensive abilities. It can be used one every seven minutes.");
 
 				int seconds = RemainingTime / 1000;
 				if (seconds > 0)

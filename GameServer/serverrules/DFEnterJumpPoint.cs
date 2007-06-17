@@ -42,6 +42,8 @@ namespace DOL.GS.ServerRules
 		{
 			if (GameServer.Instance.Configuration.ServerType != eGameServerType.GST_Normal)
 				return true;
+			if (ServerProperties.Properties.ALLOW_ALL_REALMS_DF)
+				return true;
 			return (player.Realm == (byte) DarknessFallOwner);
 		}
 

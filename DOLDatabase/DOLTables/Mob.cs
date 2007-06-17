@@ -58,6 +58,9 @@ namespace DOL.Database
 		private int m_bodyType;
 
 		private int m_inHouse;
+		
+		private string m_brain;
+		private string m_pathID;
 
 		static bool m_autoSave;
 
@@ -75,6 +78,8 @@ namespace DOL.Database
 			m_guild = "";
 			m_bodyType = 0;
 			m_inHouse = -1;
+			m_brain = "";
+			m_pathID = "";
 		}
 
 		/// <summary>
@@ -446,6 +451,40 @@ namespace DOL.Database
 		{
 			get { return m_inHouse; }
 			set { Dirty = true; m_inHouse = value; }
+		}
+
+		/// <summary>
+		/// The Mob's Brain
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public string Brain
+		{
+			get
+			{
+				return m_brain;
+			}
+			set
+			{
+				Dirty = true;
+				m_brain = value;
+			}
+		}
+
+		/// <summary>
+		/// The Mob's path
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public string PathID
+		{
+			get
+			{
+				return m_pathID;
+			}
+			set
+			{
+				Dirty = true;
+				m_pathID = value;
+			}
 		}
 	}
 }
