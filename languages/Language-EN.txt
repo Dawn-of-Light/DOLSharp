@@ -326,6 +326,7 @@ GamePlayer.Sit.YouStandUp:				You stand up.
 GamePlayer.Spell.NotEnoughPowerful:			You are not powerful enough to use this item's spell.		
 GamePlayer.Spell.NotImplemented:			{0} ({1}) not implemented yet on this server.		
 GamePlayer.Spell.Proc.NotImplemented:			Reactive effect ID {0} is not implemented yet on this server.		
+GamePlayer.Spell.ResurrectionIllness:			Resurrection Illness
 GamePlayer.Sprint.CantSprintDead:			You can't sprint when dead!		
 GamePlayer.Sprint.CantSprintHidden:			You can't sprint while you are hidden!		
 GamePlayer.Sprint.NoLongerReady:			You are no longer ready to sprint.		
