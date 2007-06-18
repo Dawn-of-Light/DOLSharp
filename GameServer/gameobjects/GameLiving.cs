@@ -1031,6 +1031,10 @@ namespace DOL.GS
 				Region region = CurrentRegion;
 				if (region == null)
 					return false;
+
+				if (LastCombatTick == 0)
+					return false;
+
 				return LastCombatTick + 10000 >= region.Time;
 			}
 		}
@@ -1610,6 +1614,11 @@ namespace DOL.GS
 
 			// start interrupt timer for casting victims
 			ad.Target.StartInterruptTimer(interruptDuration, ad.AttackType, this);
+
+			if (ad.Target is GamePlayer && (ad.Target as GamePlayer).CharacterClass is ClassMauler)
+			{
+				ad.Target.Mana += (7 * ad.Target.MaxMana) / 100;
+			}
 
 			//Return the result
 			return ad;

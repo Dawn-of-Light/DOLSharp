@@ -43,15 +43,18 @@ namespace DOL.GS.Scripts
 			base.OnLevelUp(player);
 
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Piercing));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Blades));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Stealth));
+			if (this is ClassVampiir == false)
+			{
+				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Blades));
+				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Stealth));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Blades));
+			}
 
 			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
 			player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Leather));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Blades));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Piercing));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
 		}
 	}
 }
