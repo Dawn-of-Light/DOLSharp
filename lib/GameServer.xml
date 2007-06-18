@@ -32745,6 +32745,11 @@
             Is the database translated
             </summary>
         </member>
+        <member name="F:DOL.GS.ServerProperties.Properties.MAX_CAMP_BONUS">
+            <summary>
+            Max camp bonus
+            </summary>
+        </member>
         <member name="M:DOL.GS.ServerProperties.Properties.Load(DOL.GS.ServerProperties.ServerPropertyAttribute)">
             <summary>
             This method loads the property from the database and returns
