@@ -54,7 +54,7 @@ namespace DOL.GS.Effects
 				heal = healthdrain;
 			owner.Health += healthdrain;
 			base.Stop();
-		} 
+		}
 
 		public int SpellEffectiveness
 		{

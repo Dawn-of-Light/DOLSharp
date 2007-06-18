@@ -3645,7 +3645,14 @@ namespace DOL.GS
 
 			//xp rate modifier
 			if (allowMultiply)
+			{
+				//we only want to modify the base rate, not the group or camp bonus
+				expTotal -= expGroupBonus;
+				expTotal -= expCampBonus;
 				expTotal = (long)(expTotal * ServerProperties.Properties.XP_RATE);
+				expTotal += expGroupBonus;
+				expTotal += expCampBonus;
+			}
 
 			//catacombs characters get 50% boost if they are elligable for slash level
 			switch ((eCharacterClass)CharacterClass.ID)
@@ -4744,14 +4751,13 @@ namespace DOL.GS
 					{
 						// vampiir
 						if (CharacterClass is ClassVampiir
-							&& target is GameKeepComponent == false 
+							&& target is GameKeepComponent == false
 							&& target is GameKeepDoor == false
 							&& target is GameSiegeWeapon == false)
 						{
 							this.Mana += (7 * this.MaxMana) / 100;
-							if (this.Mana > this.MaxMana)
-								this.Mana = this.MaxMana;
 						}
+
 						//only miss when strafing when attacking a player
 						//30% chance to miss
 						if (IsStrafing && ad.Target is GamePlayer && Util.Chance(30))

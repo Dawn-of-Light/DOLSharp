@@ -67,13 +67,6 @@ namespace DOL.GS.Scripts
 		{
 			base.OnLevelUp(player);
 
-			player.RemoveSpecialization(Specs.Blades);
-			player.RemoveSpecialization(Specs.Stealth);
-			player.RemoveAbility(Abilities.Evade);
-			player.RemoveAbility(Abilities.Weapon_Blades);
-			player.RemoveAbility(Abilities.Weapon_Staves);
-
-
 			if (player.Level >= 5)
 			{
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Piercing));
