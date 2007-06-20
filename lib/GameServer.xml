@@ -19448,11 +19448,6 @@
             The ability description
             </summary>
         </member>
-        <member name="F:DOL.GS.Effects.EngageEffect.m_engageSource">
-            <summary>
-            The player that defends the target
-            </summary>
-        </member>
         <member name="F:DOL.GS.Effects.EngageEffect.m_engageTarget">
             <summary>
             The player that is defended by the engage source
@@ -19463,7 +19458,7 @@
             Creates a new engage effect
             </summary>
         </member>
-        <member name="M:DOL.GS.Effects.EngageEffect.Start(DOL.GS.GamePlayer,DOL.GS.GameLiving)">
+        <member name="M:DOL.GS.Effects.EngageEffect.Start(DOL.GS.GameLiving)">
             <summary>
             Start the berserk on player
             </summary>
@@ -19471,11 +19466,6 @@
         <member name="M:DOL.GS.Effects.EngageEffect.Cancel(System.Boolean)">
             <summary>
             Called when effect must be canceled
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.EngageEffect.EngageSource">
-            <summary>
-            Gets the player that defends the target
             </summary>
         </member>
         <member name="P:DOL.GS.Effects.EngageEffect.EngageTarget">
