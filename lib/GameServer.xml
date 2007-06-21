@@ -32465,6 +32465,11 @@
             The Experience Rate
             </summary>
         </member>
+        <member name="F:DOL.GS.ServerProperties.Properties.RvR_XP_RATE">
+            <summary>
+            RvR Zones XP Rate
+            </summary>
+        </member>
         <member name="F:DOL.GS.ServerProperties.Properties.RP_RATE">
             <summary>
             The Realm Points Rate
