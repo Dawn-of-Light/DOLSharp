@@ -367,9 +367,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									client.Player.SaveIntoDatabase();
 									client.Player.Quit(true);
 								}
-								Account accountToBan = client.Account;
-								client.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "1 hour Ban for SpeedHack!");
-								client.Out.SendMessage("Ban 1 hour and disconnect after SpeedHack using.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+								client.Disconnect();
 								return 1;
 							}
 						}
@@ -403,17 +401,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 				builder.Append(client.TcpEndpoint);
 				GameServer.Instance.LogCheatAction(builder.ToString());
 				{
-					/*
-					Account accountToBan = client.Account;
-					client.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "Ban account for hack client!");
-					client.Out.SendMessage("Ban accout for hack client", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-					DateTime banDuration = DateTime.Now;
-					banDuration = banDuration.AddDays(30);
-					accountToBan.BanDuration = banDuration;
-					accountToBan.BanAuthor = "Fly check";
-					accountToBan.BanReason = string.Format("Autoban Fly hack on player:{0}", client.Player.Name);
-					GameServer.Database.SaveObject(accountToBan);
-					 */
+					if (ServerProperties.Properties.BAN_HACKERS)
+					{
+						DBBannedAccount b = new DBBannedAccount();
+						b.Author = "SERVER";
+						b.Ip = client.TcpEndpoint;
+						b.Account = client.Account.Name;
+						b.DateBan = DateTime.Now;
+						b.Type = "B";
+						b.Reason = string.Format("Autoban flying hack: on player:{0}", client.Player.Name);
+						GameServer.Database.AddNewObject(b);
+						GameServer.Database.SaveObject(b);
+					}
 					string message = "Client Hack Detected!!!";
 					for (int i = 0; i < 6; i++)
 					{

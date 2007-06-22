@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net;
 using System.Reflection;
@@ -2749,6 +2750,10 @@ namespace DOL.GS.PacketHandler
 		{
 		}
 		public virtual void SendWarmapBonuses()
+		{
+		}
+
+		public virtual void SendWarmapDetailUpdate(List<List<byte>> fights, List<List<byte>> groups)
 		{
 		}
 

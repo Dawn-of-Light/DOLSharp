@@ -212,6 +212,24 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Gets or sets the no help flag for this player
+		/// </summary>
+		public bool NoHelp
+		{
+			get { return PlayerCharacter != null ? PlayerCharacter.NoHelp : false; }
+			set { if (PlayerCharacter != null) PlayerCharacter.NoHelp = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the show guild logins flag for this player
+		/// </summary>
+		public bool ShowGuildLogins
+		{
+			get { return PlayerCharacter != null ? PlayerCharacter.ShowGuildLogins : false; }
+			set { if (PlayerCharacter != null) PlayerCharacter.ShowGuildLogins = value; }
+		}
+
+		/// <summary>
 		/// Gets or sets the gain XP flag for this player
 		/// (delegate to property in PlayerCharacter)
 		/// </summary>
@@ -687,8 +705,19 @@ namespace DOL.GS
 			{
 				if (!IsMoving)
 				{
+					eEmote bindEmote = eEmote.Bind;
+					switch (this.Realm)
+					{
+						case 1: bindEmote = eEmote.BindAlb; break;
+						case 2: bindEmote = eEmote.BindMid; break;
+						case 3: bindEmote = eEmote.BindHib; break;
+					}
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-						player.Out.SendEmoteAnimation(this, eEmote.Bind);
+					{
+						if ((int)player.Client.Version < (int)GameClient.eClientVersion.Version187)
+							bindEmote = eEmote.Bind;
+						player.Out.SendEmoteAnimation(this, bindEmote);
+					}
 				}
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.Bound"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
@@ -1342,7 +1371,7 @@ namespace DOL.GS
 				if (spells == null) return;
 				foreach (Spell spell in spells)
 				{
-					if (spell.Name == "Resurrection Illness")
+					if (spell.Name == LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GamePlayer.Spell.ResurrectionIllness"))
 					{
 						ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(player, spell, Line);
 						if (spellHandler == null)
@@ -3649,7 +3678,9 @@ namespace DOL.GS
 				//we only want to modify the base rate, not the group or camp bonus
 				expTotal -= expGroupBonus;
 				expTotal -= expCampBonus;
-				expTotal = (long)(expTotal * ServerProperties.Properties.XP_RATE);
+				if (this.CurrentRegion.IsRvR)
+					expTotal = (long)(expTotal * ServerProperties.Properties.RvR_XP_RATE);
+				else expTotal = (long)(expTotal * ServerProperties.Properties.XP_RATE);
 				expTotal += expGroupBonus;
 				expTotal += expCampBonus;
 			}
@@ -5418,6 +5449,7 @@ namespace DOL.GS
 					case eObjectType.RecurvedBow:
 					case eObjectType.Thrown:
 					case eObjectType.Shield:
+					case eObjectType.FistWraps:
 						return GetModified(eProperty.Dexterity);
 
 					// STR+DEX modifier
@@ -5426,6 +5458,7 @@ namespace DOL.GS
 					case eObjectType.Spear:
 					case eObjectType.Flexible:
 					case eObjectType.HandToHand:
+					case eObjectType.MaulerStaff:
 						return (GetModified(eProperty.Strength) + GetModified(eProperty.Dexterity)) >> 1;
 				}
 			}
@@ -7852,6 +7885,15 @@ namespace DOL.GS
 
 				if (this.IsUnderwater)
 					this.IsDiving = true;
+
+				if (ControlledNpc != null &&
+					ControlledNpc.WalkState != eWalkState.Stay
+					&& WorldMgr.CheckDistance(this, ControlledNpc.Body, 1000))
+				{
+					int tx, ty;
+					GetSpotFromHeading(64, out tx, out ty);
+					ControlledNpc.Body.MoveTo(CurrentRegionID, tx, ty, Z, ((ushort)((this.Heading + 2048) % 4096)));
+				}
 			}
 			return true;
 		}

@@ -59,11 +59,14 @@ namespace DOL.GS.SkillHandler
 			}
 
 			//Cancel old engage effects on player
-			EngageEffect engage = (EngageEffect)player.EffectList.GetOfType(typeof(EngageEffect));
-			if (engage != null)
+			if (player.IsEngaging)
 			{
-				engage.Cancel(false);
-				return;
+				EngageEffect engage = (EngageEffect)player.EffectList.GetOfType(typeof(EngageEffect));
+				if (engage != null)
+				{
+					engage.Cancel(false);
+					return;
+				}
 			}
 
 			if (!player.IsAlive)
@@ -104,7 +107,7 @@ namespace DOL.GS.SkillHandler
 				return;
 			}
 
-			new EngageEffect().Start(player, target);
+			new EngageEffect().Start(player);
 		}
 	}
 }

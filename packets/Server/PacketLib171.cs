@@ -304,7 +304,7 @@ namespace DOL.GS.PacketHandler
 
 			ushort time = 0;
 			//time is in minutes
-			time = (ushort)((7 * 24 * 60) - t.TotalMinutes);
+			time = (ushort)((ServerProperties.Properties.FREELEVEL_DAYS * 24 * 60) - t.TotalMinutes);
 
 			//flag 1 = above level, 2 = elligable, 3= time until, 4 = level and time until, 5 = level until
 			pak.WriteByte(flag); //flag

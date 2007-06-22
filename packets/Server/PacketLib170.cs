@@ -20,6 +20,7 @@
 using System;
 using System.Reflection;
 using System.Collections;
+using System.Collections.Generic;
 
 using DOL.GS.Keeps;
 using DOL.GS.Quests;
@@ -409,6 +410,67 @@ namespace DOL.GS.PacketHandler
 			byte relics = (byte)(magic << 4 | strength);
 			pak.WriteByte(relics);
 			pak.WriteByte((byte)OwnerDF);
+			SendTCP(pak);
+		}
+
+		public override void SendWarmapDetailUpdate(List<List<byte>> fights, List<List<byte>> groups)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.WarMapDetailUpdate));
+			pak.WriteByte((byte)fights.Count);// count - Fights (Byte)
+			pak.WriteByte((byte)groups.Count);// count - Groups (Byte)
+			// order first fights after than groups
+
+			// zoneid  - byte // zoneid from zones.xml
+			//			- A7 - Mid	- left			-	10100111		Map: Midgard
+			//			- A8 - Mid	- middle		-	10101000			| X	|
+			//			- A9 - Mid	- right			-	10101001		|x	  x		x	|
+			//			- AA - Mid	- middle  - top	-	10101010
+			//
+			//			- AB - Hib	- top			-	10101011	171		Map: Hibernia
+			//			- AC - Hib	- middle		-	10101100				|X		|
+			//			- AD - Hib	- middle -left	-	10101101			|x	 x		|
+			//			- AE - Hib	- bottom		-	10101110				|x		|
+
+			//			- AF - Alb	- bottom		-	10101111			Map: Albion
+			//			- B0 - Alb	- middle -right	-	10110000			|X	|
+			//			- B1 - Alb	- middle -left	-	10110001			|x	 x	|
+			//			- B2 - Alb	- top			-	10110010	178		|X	|
+
+			// position   x/y offset  x<<4,y
+
+			foreach (List<byte> obj in fights)
+			{
+				pak.WriteByte(obj[0]);// zoneid
+				pak.WriteByte((byte)((obj[1] << 4) | (obj[2] & 0x0f))); // position
+				pak.WriteByte(obj[3]);// color - ( Fights:  0x00 - Grey , 0x01 - RedBlue , 0x02 - RedGreen , 0x03 - GreenBlue )
+				pak.WriteByte(obj[4]);// type  - ( Fights:  Size 0x00 - small  0x01 - medium  0x02 - big 0x03 - huge )
+			}
+
+			foreach (List<byte> obj in groups)
+			{
+				pak.WriteByte(obj[0]);// zoneid
+				pak.WriteByte((byte)(obj[1] << 4 | obj[2])); // position
+				byte realm = obj[3];
+
+				pak.WriteByte((byte)((realm == 3) ? 0x04 : (realm == 2) ? 0x02 : 0x01));//	color   ( Groups:  0x01 - Alb  , 0x02 - Mid , 0x04 - Hib	
+				switch ((eRealm)obj[3])
+				{
+					//	type    ( Groups:	Alb:	type	   0x03,0x02,0x01	& 0x03
+					//						Mid:	type << 2  0x0C,0x08,0x04 	& 0x03
+					//						Hib:	type << 4  0x30,0x20,0x10	& 0x03  )
+					case eRealm.Albion:
+					default:
+						pak.WriteByte(obj[4]);
+						break;
+					case eRealm.Midgard:
+						pak.WriteByte((byte)(obj[4] << 2));
+						break;
+					case eRealm.Hibernia:
+						pak.WriteByte((byte)(obj[4] << 4));
+						break;
+				}
+			}
+
 			SendTCP(pak);
 		}
 	}
