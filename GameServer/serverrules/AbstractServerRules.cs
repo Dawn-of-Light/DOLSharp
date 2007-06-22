@@ -26,6 +26,7 @@ using DOL.GS;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.GS.ServerProperties;
+using DOL.Language;
 
 using log4net;
 
@@ -564,6 +565,9 @@ namespace DOL.GS.ServerRules
 				m_compatibleObjectTypes[(int)eObjectType.Staff] = new eObjectType[] { eObjectType.Staff };
 				m_compatibleObjectTypes[(int)eObjectType.Fired] = new eObjectType[] { eObjectType.Fired };
 
+				m_compatibleObjectTypes[(int)eObjectType.FistWraps] = new eObjectType[] { eObjectType.FistWraps };
+				m_compatibleObjectTypes[(int)eObjectType.MaulerStaff] = new eObjectType[] { eObjectType.MaulerStaff };
+
 				//alb
 				m_compatibleObjectTypes[(int)eObjectType.CrushingWeapon] = new eObjectType[] { eObjectType.CrushingWeapon, eObjectType.Blunt, eObjectType.Hammer };
 				m_compatibleObjectTypes[(int)eObjectType.SlashingWeapon] = new eObjectType[] { eObjectType.SlashingWeapon, eObjectType.Blades, eObjectType.Sword, eObjectType.Axe };
@@ -655,7 +659,7 @@ namespace DOL.GS.ServerRules
 						else
 							plrGrpExp[player.PlayerGroup] = 1;
 					}
-					if (highestPlayer != null && player.Level > highestPlayer.Level)
+					if (highestPlayer == null || (highestPlayer != null && player.Level > highestPlayer.Level))
 						highestPlayer = player;
 				}
 
@@ -720,7 +724,7 @@ namespace DOL.GS.ServerRules
 					long xpReward = (long)(npcExpValue * damagePercent); // exp for damage percent
 
 					// camp bonus
-					const double fullCampBonus = 2.0;
+					double fullCampBonus = ServerProperties.Properties.MAX_CAMP_BONUS;
 					const double fullCampBonusTicks = (1000 * 60 * 60); //1 hour (in ms) = full 100%
 					long livingLifeSpan = killedNPC.CurrentRegion.Time - killedNPC.SpawnTick;
 
@@ -737,14 +741,11 @@ namespace DOL.GS.ServerRules
 					 * How can you determine a color range? Simple - Level divided by ten plus one. So, to a level 40 player (40/10 + 1), 36-40 is yellow, 31-35 is blue, 26-30 is green, and 25-less is gray.
 					 */
 					//xp challenge
-					if (highestPlayer != null && highestPlayer.PlayerGroup != null)
+					if (highestPlayer != null && highestPlayer.GetConLevel(living) < 0)
 					{
-						int conLevel = (int)(highestPlayer.GetConLevel(killedNPC) + 1)  - highestPlayer.PlayerGroup.PlayerCount;
-						if (conLevel < 0)
-						{
-							//challenge success, the xp needs to be reduced to the proper con
-							expCap = GameServer.ServerRules.GetExperienceForLiving(GameObject.GetLevelFromCon(living.Level, conLevel));
-						}
+						double conLevel = highestPlayer.GetConLevel(killedNPC);
+						//challenge success, the xp needs to be reduced to the proper con
+						expCap = GameServer.ServerRules.GetExperienceForLiving(GameObject.GetLevelFromCon(living.Level, conLevel));
 					}
 					if (xpReward > expCap)
 						xpReward = expCap;
@@ -1252,97 +1253,119 @@ namespace DOL.GS.ServerRules
 			ArrayList stat = new ArrayList();
 			int total = 0;
 			#region Players Killed
-			stat.Add("Kill report");
-			switch ((eRealm)player.Realm)
+			//only show if there is a kill [by Suncheck]
+			if ((player.KillsAlbionPlayers + player.KillsMidgardPlayers + player.KillsHiberniaPlayers) > 0)
 			{
-				case eRealm.Albion:
-					stat.Add("Midgard Players Killed: " + player.KillsMidgardPlayers.ToString("N0"));
-					stat.Add("Hibernia Players Killed: " + player.KillsHiberniaPlayers.ToString("N0"));
-					total = player.KillsMidgardPlayers + player.KillsHiberniaPlayers;
-					break;
-				case eRealm.Midgard:
-					stat.Add("Albion Players Killed: " + player.KillsAlbionPlayers.ToString("N0"));
-					stat.Add("Hibernia Players Killed: " + player.KillsHiberniaPlayers.ToString("N0"));
-					total = player.KillsAlbionPlayers + player.KillsHiberniaPlayers;
-					break;
-				case eRealm.Hibernia:
-					stat.Add("Albion Players Killed: " + player.KillsAlbionPlayers.ToString("N0"));
-					stat.Add("Midgard Players Killed: " + player.KillsMidgardPlayers.ToString("N0"));
-					total = player.KillsMidgardPlayers + player.KillsAlbionPlayers;
-					break;
+				stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Kill.Title"));
+				switch ((eRealm)player.Realm)
+				{
+					case eRealm.Albion:
+						if (player.KillsMidgardPlayers > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Kill.MidgardPlayer") + ": " + player.KillsMidgardPlayers.ToString("N0"));
+						if (player.KillsHiberniaPlayers > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Kill.HiberniaPlayer") + ": " + player.KillsHiberniaPlayers.ToString("N0"));
+						total = player.KillsMidgardPlayers + player.KillsHiberniaPlayers;
+						break;
+					case eRealm.Midgard:
+						if (player.KillsAlbionPlayers > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Kill.AlbionPlayer") + ": " + player.KillsAlbionPlayers.ToString("N0"));
+						if (player.KillsHiberniaPlayers > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Kill.HiberniaPlayer") + ": " + player.KillsHiberniaPlayers.ToString("N0"));
+						total = player.KillsAlbionPlayers + player.KillsHiberniaPlayers;
+						break;
+					case eRealm.Hibernia:
+						if (player.KillsAlbionPlayers > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Kill.AlbionPlayer") + ": " + player.KillsAlbionPlayers.ToString("N0"));
+						if (player.KillsMidgardPlayers > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Kill.MidgardPlayer") + ": " + player.KillsMidgardPlayers.ToString("N0"));
+						total = player.KillsMidgardPlayers + player.KillsAlbionPlayers;
+						break;
+				}
+				stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Kill.TotalPlayers") + ": " + total.ToString("N0"));
 			}
-			stat.Add("Total Players Killed: " + total.ToString("N0"));
 			#endregion
 			stat.Add(" ");
 			#region Players Deathblows
-			total = 0;
-			switch ((eRealm)player.Realm)
+			//only show if there is a kill [by Suncheck]
+			if ((player.KillsAlbionDeathBlows + player.KillsMidgardDeathBlows + player.KillsHiberniaDeathBlows) > 0)
 			{
-				case eRealm.Albion:
-					stat.Add("Midgard Deathblows: " + player.KillsMidgardDeathBlows.ToString("N0"));
-					stat.Add("Hibernia Deathblows: " + player.KillsHiberniaDeathBlows.ToString("N0"));
-					total = player.KillsMidgardDeathBlows + player.KillsHiberniaDeathBlows;
-					break;
-				case eRealm.Midgard:
-					stat.Add("Albion Deathblows: " + player.KillsAlbionDeathBlows.ToString("N0"));
-					stat.Add("Hibernia Deathblows: " + player.KillsHiberniaDeathBlows.ToString("N0"));
-					total = player.KillsAlbionDeathBlows + player.KillsHiberniaDeathBlows;
-					break;
-				case eRealm.Hibernia:
-					stat.Add("Albion Deathblows: " + player.KillsAlbionDeathBlows.ToString("N0"));
-					stat.Add("Midgard Deathblows: " + player.KillsMidgardDeathBlows.ToString("N0"));
-					total = player.KillsMidgardDeathBlows + player.KillsAlbionDeathBlows;
-					break;
+				total = 0;
+				switch ((eRealm)player.Realm)
+				{
+					case eRealm.Albion:
+						if (player.KillsMidgardDeathBlows > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Deathblows.MidgardPlayer") + ": " + player.KillsMidgardDeathBlows.ToString("N0"));
+						if (player.KillsHiberniaDeathBlows > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Deathblows.HiberniaPlayer") + ": " + player.KillsHiberniaDeathBlows.ToString("N0"));
+						total = player.KillsMidgardDeathBlows + player.KillsHiberniaDeathBlows;
+						break;
+					case eRealm.Midgard:
+						if (player.KillsAlbionDeathBlows > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Deathblows.AlbionPlayer") + ": " + player.KillsAlbionDeathBlows.ToString("N0"));
+						if (player.KillsHiberniaDeathBlows > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Deathblows.HiberniaPlayer") + ": " + player.KillsHiberniaDeathBlows.ToString("N0"));
+						total = player.KillsAlbionDeathBlows + player.KillsHiberniaDeathBlows;
+						break;
+					case eRealm.Hibernia:
+						if (player.KillsAlbionDeathBlows > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Deathblows.AlbionPlayer") + ": " + player.KillsAlbionDeathBlows.ToString("N0"));
+						if (player.KillsMidgardDeathBlows > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Deathblows.MidgardPlayer") + ": " + player.KillsMidgardDeathBlows.ToString("N0"));
+						total = player.KillsMidgardDeathBlows + player.KillsAlbionDeathBlows;
+						break;
+				}
+				stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Deathblows.TotalPlayers") + ": " + total.ToString("N0"));
 			}
-			stat.Add("Total Deathblows: " + total.ToString("N0"));
 			#endregion
 			stat.Add(" ");
 			#region Players Solo Kills
-			total = 0;
-			switch ((eRealm)player.Realm)
+			//only show if there is a kill [by Suncheck]
+			if ((player.KillsAlbionSolo + player.KillsMidgardSolo + player.KillsHiberniaSolo) > 0)
 			{
-				case eRealm.Albion:
-					stat.Add("Midgard Solo Kills: " + player.KillsMidgardSolo.ToString("N0"));
-					stat.Add("Hibernia Solo Kills: " + player.KillsHiberniaSolo.ToString("N0"));
-					total = player.KillsMidgardSolo + player.KillsHiberniaSolo;
-					break;
-				case eRealm.Midgard:
-					stat.Add("Albion Solo Kills: " + player.KillsAlbionSolo.ToString("N0"));
-					stat.Add("Hibernia Solo Kills: " + player.KillsHiberniaSolo.ToString("N0"));
-					total = player.KillsAlbionSolo + player.KillsHiberniaSolo;
-					break;
-				case eRealm.Hibernia:
-					stat.Add("Albion Solo Kills: " + player.KillsAlbionSolo.ToString("N0"));
-					stat.Add("Midgard Solo Kills: " + player.KillsMidgardSolo.ToString("N0"));
-					total = player.KillsMidgardSolo + player.KillsAlbionSolo;
-					break;
+				total = 0;
+				switch ((eRealm)player.Realm)
+				{
+					case eRealm.Albion:
+						if (player.KillsMidgardSolo > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Solo.MidgardPlayer") + ": " + player.KillsMidgardSolo.ToString("N0"));
+						if (player.KillsHiberniaSolo > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Solo.HiberniaPlayer") + ": " + player.KillsHiberniaSolo.ToString("N0"));
+						total = player.KillsMidgardSolo + player.KillsHiberniaSolo;
+						break;
+					case eRealm.Midgard:
+						if (player.KillsAlbionSolo > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Solo.AlbionPlayer") + ": " + player.KillsAlbionSolo.ToString("N0"));
+						if (player.KillsHiberniaSolo > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Solo.HiberniaPlayer") + ": " + player.KillsHiberniaSolo.ToString("N0"));
+						total = player.KillsAlbionSolo + player.KillsHiberniaSolo;
+						break;
+					case eRealm.Hibernia:
+						if (player.KillsAlbionSolo > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Solo.AlbionPlayer") + ": " + player.KillsAlbionSolo.ToString("N0"));
+						if (player.KillsMidgardSolo > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Solo.MidgardPlayer") + ": " + player.KillsMidgardSolo.ToString("N0"));
+						total = player.KillsMidgardSolo + player.KillsAlbionSolo;
+						break;
+				}
+				stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Solo.TotalPlayers") + ": " + total.ToString("N0"));
 			}
-			stat.Add("Total Solo Kills: " + total.ToString("N0"));
 			#endregion
 			stat.Add(" ");
 			#region Keeps
-			stat.Add("Capture Report");
-			//stat.Add("Relics Taken: " + player.RelicsTaken.ToString("N0"));
-			//stat.Add("Albion Keeps Captured: " + player.CapturedAlbionKeeps.ToString("N0"));
-			//stat.Add("Midgard Keeps Captured: " + player.CapturedMidgardKeeps.ToString("N0"));
-			//stat.Add("Hibernia Keeps Captured: " + player.CapturedHiberniaKeeps.ToString("N0"));
-			stat.Add("Total Keeps Captured: " + player.CapturedKeeps.ToString("N0"));
-			//stat.Add("Keep Lords Slain: " + player.KeepLordsSlain.ToString("N0"));
-			//stat.Add("Albion Towers Captured: " + player.CapturedAlbionTowers.ToString("N0"));
-			//stat.Add("Midgard Towers Captured: " + player.CapturedMidgardTowers.ToString("N0"));
-			//stat.Add("Hibernia Towers Captured: " + player.CapturedHiberniaTowers.ToString("N0"));
-			stat.Add("Total Towers Captured: " + player.CapturedTowers.ToString("N0"));
-			//stat.Add("Tower Captains Slain: " + player.TowerCaptainsSlain.ToString("N0"));
-			//stat.Add("Realm Guard Kills Albion: " + player.RealmGuardTotalKills.ToString("N0"));
-			//stat.Add("Realm Guard Kills Midgard: " + player.RealmGuardTotalKills.ToString("N0"));
-			//stat.Add("Realm Guard Kills Hibernia: " + player.RealmGuardTotalKills.ToString("N0"));
-			//stat.Add("Total Realm Guard Kills: " + player.RealmGuardTotalKills.ToString("N0"));
+			//only show if there is a capture [by Suncheck]
+			if ((player.CapturedKeeps + player.CapturedTowers) > 0)
+			{
+				stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Capture.Title"));
+				//stat.Add("Relics Taken: " + player.RelicsTaken.ToString("N0"));
+				//stat.Add("Albion Keeps Captured: " + player.CapturedAlbionKeeps.ToString("N0"));
+				//stat.Add("Midgard Keeps Captured: " + player.CapturedMidgardKeeps.ToString("N0"));
+				//stat.Add("Hibernia Keeps Captured: " + player.CapturedHiberniaKeeps.ToString("N0"));
+				if (player.CapturedKeeps > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Capture.Keeps") + ": " + player.CapturedKeeps.ToString("N0"));
+				//stat.Add("Keep Lords Slain: " + player.KeepLordsSlain.ToString("N0"));
+				//stat.Add("Albion Towers Captured: " + player.CapturedAlbionTowers.ToString("N0"));
+				//stat.Add("Midgard Towers Captured: " + player.CapturedMidgardTowers.ToString("N0"));
+				//stat.Add("Hibernia Towers Captured: " + player.CapturedHiberniaTowers.ToString("N0"));
+				if (player.CapturedTowers > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Capture.Towers") + ": " + player.CapturedTowers.ToString("N0"));
+				//stat.Add("Tower Captains Slain: " + player.TowerCaptainsSlain.ToString("N0"));
+				//stat.Add("Realm Guard Kills Albion: " + player.RealmGuardTotalKills.ToString("N0"));
+				//stat.Add("Realm Guard Kills Midgard: " + player.RealmGuardTotalKills.ToString("N0"));
+				//stat.Add("Realm Guard Kills Hibernia: " + player.RealmGuardTotalKills.ToString("N0"));
+				//stat.Add("Total Realm Guard Kills: " + player.RealmGuardTotalKills.ToString("N0"));
+			}
 			#endregion
 			stat.Add(" ");
 			#region PvE
-			stat.Add("PvE Report");
-			stat.Add("Dragon Kills: " + player.KillsDragon.ToString("N0"));
-			#endregion 
+			//only show if there is a kill [by Suncheck]
+			if ((player.KillsDragon + player.KillsEpicBoss + player.KillsLegion) > 0)
+			{
+				stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.PvE.Title"));
+				if (player.KillsDragon > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.PvE.KillsDragon") + ": " + player.KillsDragon.ToString("N0"));
+				if (player.KillsEpicBoss > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.PvE.KillsEpic") + ": " + player.KillsEpicBoss.ToString("N0"));
+				if (player.KillsLegion > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.PvE.KillsLegion") + ": " + player.KillsLegion.ToString("N0"));
+			}
+			#endregion
 			return stat;
 		}
 

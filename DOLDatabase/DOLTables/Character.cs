@@ -163,6 +163,8 @@ namespace DOL
 			private int m_lastfreeLevel;
 			private DateTime m_lastfreeleveled;
 			private bool m_showXFireInfo;
+			private bool m_noHelp;
+			private bool m_showGuildLogins;
 
 			private string m_guildNote = "";
 
@@ -198,6 +200,8 @@ namespace DOL
 				m_gainRP = true;
 				m_autoloot = true;
 				m_showXFireInfo = false;
+				m_noHelp = false;
+				m_showGuildLogins = false;
 			}
 
 			/// <summary>
@@ -1931,6 +1935,20 @@ namespace DOL
 					Dirty = true;
 					m_showXFireInfo = value;
 				}
+			}
+
+			[DataElement(AllowDbNull = true)]
+			public bool NoHelp
+			{
+				get { return m_noHelp; }
+				set { Dirty = true; m_noHelp = value; }
+			}
+
+			[DataElement(AllowDbNull = true)]
+			public bool ShowGuildLogins
+			{
+				get { return m_showGuildLogins; }
+				set { Dirty = true; m_showGuildLogins = value; }
 			}
 		}
 	}

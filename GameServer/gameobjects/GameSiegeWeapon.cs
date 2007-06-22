@@ -275,6 +275,13 @@ namespace DOL.GS
 				return;
 			}
 
+			//let's check if we are trying to move too close to a door, if we are, don't move
+			foreach (IDoor door in DoorMgr.getDoorsCloseToSpot(CurrentRegionID, Owner.GroundTarget.X, Owner.GroundTarget.Y, Owner.GroundTarget.Z, AttackRange - 50))
+			{
+				if (door is GameKeepDoor)
+					return;
+			}
+
 			//unarmed siege weapon
 			CurrentState &= ~eState.Armed;
 			WalkTo(Owner.GroundTarget, 100);

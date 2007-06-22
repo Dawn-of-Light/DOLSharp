@@ -230,9 +230,12 @@ namespace DOL.GS.Spells
 			}
 
 			// cancel engage effect if exist
-			EngageEffect effect = (EngageEffect)Caster.EffectList.GetOfType(typeof(EngageEffect));
-			if (effect != null)
-				effect.Cancel(false);
+			if (m_caster.IsEngaging)
+			{
+				EngageEffect effect = (EngageEffect)Caster.EffectList.GetOfType(typeof(EngageEffect));
+				if (effect != null)
+					effect.Cancel(false);
+			}
 
 			m_interrupted = false;
 			GameLiving target = Caster.TargetObject as GameLiving;
@@ -533,10 +536,13 @@ namespace DOL.GS.Spells
 			}
 
 			// Cancel engage if user starts attack
-			EngageEffect engage = (EngageEffect)m_caster.EffectList.GetOfType(typeof(EngageEffect));
-			if (engage != null)
+			if (m_caster.IsEngaging)
 			{
-				engage.Cancel(false);
+				EngageEffect engage = (EngageEffect)m_caster.EffectList.GetOfType(typeof(EngageEffect));
+				if (engage != null)
+				{
+					engage.Cancel(false);
+				}
 			}
 
 			return true;
@@ -1324,23 +1330,26 @@ namespace DOL.GS.Spells
 				target = Caster;
 			IList targets = SelectTargets(target);
 
-			foreach (GameLiving t in targets)
+			double effectiveness = 1.0;
+			if (Caster.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) != null)
 			{
-				double effectiveness = 1.0;
-				if (Caster.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) != null)
-				{
-					GamePlayer playerCaster = Caster as GamePlayer;
-					RealmAbility ra = playerCaster.GetAbility(typeof(MasteryofConcentrationAbility)) as RealmAbility;
-					if (ra != null)
-						effectiveness = System.Math.Round((double)ra.Level * 25 / 100, 2);
-				}
-				// warlock
+				RealmAbility ra = Caster.GetAbility(typeof(MasteryofConcentrationAbility)) as RealmAbility;
+				if (ra != null)
+					effectiveness = System.Math.Round((double)ra.Level * 25 / 100, 2);
+			}
+			// warlock
+			if (Caster is GamePlayer && (Caster as GamePlayer).CharacterClass.ID == (int)eCharacterClass.Warlock)
+			{
 				GameSpellEffect affect = SpellHandler.FindEffectOnTarget(Caster, "Uninterruptable");
 				if (affect != null)
 				{
 					int nerf = (int)(Spell.LifeDrainReturn * .01);
 					effectiveness *= nerf;
 				}
+			}
+
+			foreach (GameLiving t in targets)
+			{
 				if (Util.Chance(CalculateSpellResistChance(t)))
 				{
 					OnSpellResisted(t);

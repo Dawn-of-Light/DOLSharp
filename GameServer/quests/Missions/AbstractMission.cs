@@ -200,6 +200,11 @@ namespace DOL.GS.Quests
 		{
 			foreach (GamePlayer player in Targets)
 			{
+				if (m_owner is PlayerGroup)
+				{
+					if (!WorldMgr.CheckDistance(player, (m_owner as PlayerGroup).Leader, WorldMgr.MAX_EXPFORKILL_DISTANCE))
+						continue;
+				}
 				if (RewardXP > 0)
 					player.GainExperience(RewardXP);
 

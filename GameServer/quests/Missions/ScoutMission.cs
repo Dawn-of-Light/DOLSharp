@@ -95,5 +95,13 @@ namespace DOL.GS.Quests
 				else return "Scout the area around " + m_keep.Name;
 			}
 		}
+
+		public override long RewardRealmPoints
+		{
+			get
+			{
+				return 250;
+			}
+		}
 	}
 }

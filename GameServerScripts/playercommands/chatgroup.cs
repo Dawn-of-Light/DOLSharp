@@ -318,17 +318,17 @@ namespace DOL.GS.Scripts
 						}
 						if (!mychatgroup.IsPublic)
 						{
-							if (args.Length == 4)
+							if (args.Length == 4 && args[3] == mychatgroup.Password)
 							{
-								if (args[3] == mychatgroup.Password)
-								{
-									mychatgroup.AddPlayer(client.Player, false);
-								}
+								mychatgroup.AddPlayer(client.Player, false);
 							}
-							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.NotPublic"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							else
+							{
+								client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.NotPublic"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
 						}
-						mychatgroup.AddPlayer(client.Player, false);
+						else
+							mychatgroup.AddPlayer(client.Player, false);
 					}
 					break;
 				case "password":

@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
 using DOL.AI.Brain;
@@ -194,6 +195,7 @@ namespace DOLGameServerConsole
 		public void SendRentReminder(House house) { }
 		public void SendMovingObjectCreate(GameMovingObject obj) { }
 		public void SendWarmapUpdate(IList list) { }
+		public void SendWarmapDetailUpdate(List<List<byte>> fights, List<List<byte>> groups) { }
 		public void SendWarmapBonuses() { }
 		public void SendCheckLOS(GameObject Checker, GameObject Target, DOL.GS.PacketHandler.CheckLOSResponse callback) { }
 		public void SendLivingDataUpdate(GameLiving living, bool updateStrings) { }
