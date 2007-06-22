@@ -55,6 +55,7 @@ namespace DOL.GS.Scripts
 		//help:
 		//"/who  Can be modified with [playername], [class], [#] level, [location], [##] [##] level range",
 		"/WHO ALL lists all players online",
+		"/WHO NF lists all players online in New Frontiers",
 		// "/WHO CSR lists all Customer Service Representatives currently online",
 		// "/WHO DEV lists all Development Team Members currently online",
 		// "/WHO QTA lists all Quest Team Assistants currently online",
@@ -147,6 +148,12 @@ namespace DOL.GS.Scripts
 					{
 						filters = new ArrayList(1);
 						filters.Add(new ChatGroupFilter());
+						break;
+					}
+				case "nf":
+					{
+						filters = new ArrayList(1);
+						filters.Add(new NewFrontiersFilter());
 						break;
 					}
 				default:
@@ -250,7 +257,7 @@ namespace DOL.GS.Scripts
 					log.Error("no currentzone in who commandhandler for player " + player.Name);
 			}
 			ChatGroup mychatgroup = (ChatGroup) player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
-			if (mychatgroup != null && (mychatgroup.Members.Contains(player) || mychatgroup.IsPublic))
+			if (mychatgroup != null && (mychatgroup.Members.Contains(player) || mychatgroup.IsPublic && (bool)mychatgroup.Members[player] == true))
 			{
 				result.Append(" [CG]");
 			}
@@ -391,9 +398,7 @@ namespace DOL.GS.Scripts
 
 			public bool ApplyFilter(GamePlayer player)
 			{
-				if (player.Level != m_level)
-					return false;
-				return true;
+				return player.Level == m_level;
 			}
 		}
 
@@ -440,6 +445,14 @@ namespace DOL.GS.Scripts
 					return true;
 
 				return false;
+			}
+		}
+
+		private class NewFrontiersFilter : IWhoFilter
+		{
+			public bool ApplyFilter(GamePlayer player)
+			{
+				return player.CurrentRegionID == 163;
 			}
 		}
 

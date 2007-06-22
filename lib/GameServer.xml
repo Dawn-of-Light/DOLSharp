@@ -25131,6 +25131,16 @@
             (delegate to property in PlayerCharacter)
             </summary>
         </member>
+        <member name="P:DOL.GS.GamePlayer.NoHelp">
+            <summary>
+            Gets or sets the no help flag for this player
+            </summary>
+        </member>
+        <member name="P:DOL.GS.GamePlayer.ShowGuildLogins">
+            <summary>
+            Gets or sets the show guild logins flag for this player
+            </summary>
+        </member>
         <member name="P:DOL.GS.GamePlayer.GainXP">
             <summary>
             Gets or sets the gain XP flag for this player
