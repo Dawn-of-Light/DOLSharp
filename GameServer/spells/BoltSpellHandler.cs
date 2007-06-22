@@ -200,31 +200,35 @@ namespace DOL.GS.Spells
 							double blockchance = ((player.Dexterity*2)-100)/40.0 + shield + (0*3) + 5;
 							blockchance -= target.GetConLevel(caster) * 5;
 							if (blockchance >= 100) blockchance = 99;
-							if (blockchance <= 0) blockchance = 1;	
-				
-							EngageEffect engage = (EngageEffect)target.EffectList.GetOfType(typeof(EngageEffect));
-							if (engage!=null && target.AttackState && engage.EngageTarget == caster)
-							{	
-								// Engage raised block change to 85% if attacker is engageTarget and player is in attackstate							
-								// You cannot engage a mob that was attacked within the last X seconds...
-								if (engage.EngageTarget.LastAttackedByEnemyTick > engage.EngageTarget.CurrentRegion.Time - EngageAbilityHandler.ENGAGE_ATTACK_DELAY_TICK) 
-								{
-									engage.EngageSource.Out.SendMessage(engage.EngageTarget.GetName(0,true)+" has been attacked recently and you are unable to engage.", eChatType.CT_System, eChatLoc.CL_SystemWindow);									
-								}  // Check if player has enough endurance left to engage
-								else if (engage.EngageSource.Endurance < EngageAbilityHandler.ENGAGE_DURATION_LOST)
-								{
-									engage.Cancel(false); // if player ran out of endurance cancel engage effect
-								} 
-								else 
-								{
-									engage.EngageSource.Endurance -= EngageAbilityHandler.ENGAGE_DURATION_LOST;
-									engage.EngageSource.Out.SendMessage("You concentrate on blocking the blow!", eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+							if (blockchance <= 0) blockchance = 1;
 
-									if (blockchance<85)
-										blockchance = 85;
+							if (target.IsEngaging)
+							{
+								EngageEffect engage = (EngageEffect)target.EffectList.GetOfType(typeof(EngageEffect));
+								if (engage != null && target.AttackState && engage.EngageTarget == caster)
+								{
+									// Engage raised block change to 85% if attacker is engageTarget and player is in attackstate							
+									// You cannot engage a mob that was attacked within the last X seconds...
+									if (engage.EngageTarget.LastAttackedByEnemyTick > engage.EngageTarget.CurrentRegion.Time - EngageAbilityHandler.ENGAGE_ATTACK_DELAY_TICK)
+									{
+										if (engage.Owner is GamePlayer)
+											(engage.Owner as GamePlayer).Out.SendMessage(engage.EngageTarget.GetName(0, true) + " has been attacked recently and you are unable to engage.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									}  // Check if player has enough endurance left to engage
+									else if (engage.Owner.Endurance < EngageAbilityHandler.ENGAGE_DURATION_LOST)
+									{
+										engage.Cancel(false); // if player ran out of endurance cancel engage effect
+									}
+									else
+									{
+										engage.Owner.Endurance -= EngageAbilityHandler.ENGAGE_DURATION_LOST;
+										if (engage.Owner is GamePlayer)
+											(engage.Owner as GamePlayer).Out.SendMessage("You concentrate on blocking the blow!", eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+
+										if (blockchance < 85)
+											blockchance = 85;
+									}
 								}
 							}
-
 
 							if (blockchance >= Util.Random(1, 100)) 
 							{

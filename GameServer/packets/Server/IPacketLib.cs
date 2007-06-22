@@ -17,6 +17,7 @@
  *
  */
 using System.Collections;
+using System.Collections.Generic;
 using DOL.AI.Brain;
 using DOL.GS;
 using DOL.GS.Housing;
@@ -54,6 +55,7 @@ namespace DOL.GS.PacketHandler
 		GameOpenReply = 0x2D,
 		UDPInitReply = 0x2F,
 		WarMapClaimedKeeps = 0x49,
+		WarMapDetailUpdate = 0x4A,
 		PlayerCreate172 = 0x4B,
 		VisualEffect = 0x4C,
 		ControlledHorse = 0x4E,
@@ -327,7 +329,10 @@ namespace DOL.GS.PacketHandler
 		Kowtow = 0x44,
 		PlayerPrepare = 0x45,
 		PlayerPickup = 0x46,
-		PlayerListen = 0x47,
+		PlayerListen = 0x47, 
+		BindAlb = 0x49,
+		BindMid = 0x4a,
+		BindHib = 0x4b,	
 		Worship = 68,
 	};
 
@@ -542,6 +547,7 @@ namespace DOL.GS.PacketHandler
 		void SendClearKeepComponentHookPoint(GameKeepComponent component,int selectedHookPointIndex);
 		void SendHookPointStore(GameKeepHookPoint hookPoint);
 		void SendWarmapUpdate(IList list);
+		void SendWarmapDetailUpdate(List<List<byte>> fights, List<List<byte>> groups);
 		void SendWarmapBonuses();
 		//housing
 		void SendHouse(House house);

@@ -33,20 +33,6 @@ namespace DOL.GS.Effects
 		protected const String delveString = "Endurance is drained in return for a significantly increased blocking rate. Engage can only be used at range, or while closing to attack. Once you attack, it is disabled.";
 
 		/// <summary>
-		/// The player that defends the target
-		/// </summary>
-		GamePlayer m_engageSource;
-
-		/// <summary>
-		/// Gets the player that defends the target
-		/// </summary>
-		public GamePlayer EngageSource
-		{
-			get { return m_engageSource; }
-			set { m_engageSource = value; }
-		}
-
-		/// <summary>
 		/// The player that is defended by the engage source
 		/// </summary>
 		GameLiving m_engageTarget;
@@ -71,26 +57,24 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Start the berserk on player
 		/// </summary>
-		public void Start(GamePlayer engageSource, GameLiving engageTarget)
+		public override void Start(GameLiving engageSource)
 		{
-			m_engageSource = engageSource;
-			m_engageSource.EffectList.Add(this);
+			base.Start(engageSource);
 
-			m_engageTarget = engageTarget;
+			m_engageTarget = engageSource.TargetObject as GameLiving;
+			engageSource.IsEngaging = true;
 
-			m_engageSource.Out.SendMessage("You concentrate on blocking the blows of "+m_engageTarget.GetName(0,false)+"!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-			// if player isn't already attacking attack.
-//			if (!m_engageSource.AttackState)
-//				m_engageSource.StartAttack(m_engageTarget);
+			if (m_owner is GamePlayer)
+				(m_owner as GamePlayer).Out.SendMessage("You concentrate on blocking the blows of " + m_engageTarget.GetName(0, false) + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			// only emulate attack mode so it works more like on live servers
 			// entering real attack mode while engaging someone stops engage
 			// other players will see attack mode after pos update packet is sent
-			if (!m_engageSource.AttackState)
+			if (!m_owner.AttackState)
 			{
-				m_engageSource.StartAttack(engageTarget);
-				m_engageSource.Out.SendAttackMode(true);
+				m_owner.StartAttack(m_engageTarget);
+				if (m_owner is GamePlayer)
+					(m_owner as GamePlayer).Out.SendAttackMode(true);
 				//m_engageSource.Out.SendMessage("You enter combat mode to engage your target!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				//m_engageSource.Out.SendMessage("You enter combat mode and target ["+engageTarget.GetName(0, false)+"]", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 			}
@@ -102,10 +86,19 @@ namespace DOL.GS.Effects
 		public override void Cancel(bool playerCancel)
 		{
 			base.Cancel(playerCancel);
-			if(playerCancel)
-				m_engageSource.Out.SendMessage("You no longer concentrate on blocking the blows!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			else
-				m_engageSource.Out.SendMessage("You are no longer attempting to engage a target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			if (m_owner is GamePlayer)
+			{
+				if (playerCancel)
+					(m_owner as GamePlayer).Out.SendMessage("You no longer concentrate on blocking the blows!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				else
+					(m_owner as GamePlayer).Out.SendMessage("You are no longer attempting to engage a target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+		}
+
+		public override void Stop()
+		{
+			base.Stop();
+			m_owner.IsEngaging = false;
 		}
 
 		/// <summary>
@@ -136,7 +129,7 @@ namespace DOL.GS.Effects
 				IList delveInfoList = new ArrayList(3);
 				delveInfoList.Add(delveString);
 				delveInfoList.Add(" ");
-				delveInfoList.Add(m_engageSource.GetName(0, true) + " engages " + m_engageTarget.GetName(0, false));
+				delveInfoList.Add(m_owner.GetName(0, true) + " engages " + m_engageTarget.GetName(0, false));
 				return delveInfoList;
 			}
 		}

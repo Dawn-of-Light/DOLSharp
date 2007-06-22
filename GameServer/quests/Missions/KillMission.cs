@@ -68,5 +68,17 @@ namespace DOL.GS.Quests
 				return "Kill " + m_total + " " + m_desc + ", you have killed " + m_current + ".";
 			}
 		}
+
+		public override long RewardRealmPoints
+		{
+			get
+			{
+				if (m_targetType == typeof(Keeps.GameKeepGuard))
+					return 500;
+				else if (m_targetType == typeof(GamePlayer))
+					return 750;
+				return 0;
+			}
+		}
 	}
 }

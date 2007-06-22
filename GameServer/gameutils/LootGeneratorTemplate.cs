@@ -57,9 +57,6 @@ namespace DOL.GS
 		/// </summary>
 		protected static HybridDictionary m_mobXLootTemplates = null;
 
-		// affecting difference between mob and item level where drop is still possible.		
-		protected const double LEVEL_RANGE_FACTOR = 2.0;
-
 		/// <summary>
 		/// Constrcut a new templategenerate and load it's values from database.
 		/// </summary>
@@ -195,8 +192,7 @@ namespace DOL.GS
 			if (lootTemplates != null)
 			{
 				int moblvl = mob.Level - 3;
-				int itemlvl, chance, levelDiff;
-				double levelBasedFactor = 0.0;
+				int itemlvl, chance;
 				foreach (DBLootTemplate lootTemplate in lootTemplates)
 				{
 					// formula for chance of adding items to our loot based on item level and mob level **						
