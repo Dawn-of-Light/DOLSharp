@@ -1596,6 +1596,9 @@ namespace DOL.GS
 				m_objectTypeToSpec[(int)eObjectType.Staff] = Specs.Staff;
 				m_objectTypeToSpec[(int)eObjectType.Fired] = Specs.ShortBow;
 
+				m_objectTypeToSpec[(int)eObjectType.FistWraps] = Specs.Fist_Wraps;
+				m_objectTypeToSpec[(int)eObjectType.MaulerStaff] = Specs.Mauler_Staff;
+
 				//alb
 				m_objectTypeToSpec[(int)eObjectType.CrushingWeapon] = Specs.Crush;
 				m_objectTypeToSpec[(int)eObjectType.SlashingWeapon] = Specs.Slash;
@@ -1754,6 +1757,9 @@ namespace DOL.GS
 				m_specToSkill[Specs.ShortBow] = eProperty.Skill_ShortBow;
 				m_specToSkill[Specs.Mauler_Staff] = eProperty.Skill_MaulerStaff;
 				m_specToSkill[Specs.Fist_Wraps] = eProperty.Skill_FistWraps;
+				m_specToSkill[Specs.Aura_Manipulation] = eProperty.Skill_Aura_Manipulation;
+				m_specToSkill[Specs.Magnetism] = eProperty.Skill_Magnetism;
+				m_specToSkill[Specs.Power_Strikes] = eProperty.Skill_Power_Strikes;
 
 				#endregion
 			}

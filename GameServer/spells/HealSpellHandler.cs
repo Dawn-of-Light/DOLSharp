@@ -97,6 +97,20 @@ namespace DOL.GS.Spells
 				MessageToCaster(target.GetName(0, true) + " is dead!", eChatType.CT_SpellResisted);
 				return false;
 			}
+
+			if (target is GamePlayer && (target as GamePlayer).NoHelp && Caster is GamePlayer)
+			{
+				//player not grouped, anyone else
+				//player grouped, different group
+				if ((target as GamePlayer).PlayerGroup == null ||
+					(Caster as GamePlayer).PlayerGroup == null ||
+					(Caster as GamePlayer).PlayerGroup != (target as GamePlayer).PlayerGroup)
+				{
+					MessageToCaster("That player does not want assistance", eChatType.CT_SpellResisted);
+					return false;
+				}
+			}
+
 			amount = (int)(amount * 1.00);
 			//moc heal decrease
 			double mocFactor = 1.0;

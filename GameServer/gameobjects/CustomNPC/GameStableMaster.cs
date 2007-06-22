@@ -75,7 +75,7 @@ namespace DOL.GS
 						eRace user_race = (eRace)player.Race;
 						foreach (GameNPC npc in GetNPCsInRadius(400))
 						{ // Allow for SI mounts -Echostorm
-							if (npc.Name == LanguageMgr.GetTranslation(player.Client, "GameStableMaster.HorseName")
+							if (npc.Name == LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameStableMaster.HorseName")
 								|| npc.Name == "Dragon Fly" || npc.Name == "Ampheretere" || npc.Name == "Gryphon")
 							{
 								horse.Model = npc.Model;

@@ -54,8 +54,18 @@ namespace DOL.AI.Brain
 					continue; //do not attack players on steed
 				if (!GameServer.ServerRules.IsAllowedToAttack(Body, player, true))
 					continue;
+				if (!WorldMgr.CheckDistance(player, Body, AggroRange))
+					continue;
+
+				switch (Body.Realm)
+				{
+					case 1: Body.Say("Have at thee, fiend!"); break;
+					case 2: Body.Say("Death to the intruders!"); break;
+					case 3: Body.Say("The wicked shall be scourned!"); break;
+				}
 
 				AddToAggroList(player, player.EffectiveLevel << 1);
+				return;
 			}
 		}
 
@@ -67,17 +77,24 @@ namespace DOL.AI.Brain
 
 			foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)AggroRange))
 			{
-				if (GameServer.ServerRules.IsAllowedToAttack(Body, npc, true))
+				if (m_aggroTable.ContainsKey(npc))
+					continue; // add only new npcs
+				if ((npc.Flags & (uint)GameNPC.eFlags.FLYING) != 0)
+					continue; // let's not try to attack flying mobs
+				if (!GameServer.ServerRules.IsAllowedToAttack(Body, npc, true))
+					continue;
+				if (!WorldMgr.CheckDistance(npc, Body, AggroRange))
+					continue;
+
+				switch (Body.Realm)
 				{
-					switch (Body.Realm)
-					{
-						case 1: Body.Say("Have at thee, fiend!"); break;
-						case 2: Body.Say("Death to the intruders!"); break;
-						case 3: Body.Say("The wicked shall be scourned!"); break;
-					}
-					AddToAggroList(npc, npc.Level << 1);
-					return;
+					case 1: Body.Say("Have at thee, fiend!"); break;
+					case 2: Body.Say("Death to the intruders!"); break;
+					case 3: Body.Say("The wicked shall be scourned!"); break;
 				}
+
+				AddToAggroList(npc, npc.Level << 1);
+				return;
 			}
 		}
 

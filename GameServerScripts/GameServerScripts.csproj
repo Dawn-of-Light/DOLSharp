@@ -337,6 +337,7 @@
     <Compile Include="playercommands\cmdhelp.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="playercommands\nohelp.cs" />
     <Compile Include="playercommands\houseface.cs" />
     <Compile Include="playercommands\house.cs" />
     <Compile Include="playercommands\housepoints.cs" />
@@ -495,35 +496,37 @@
     <Compile Include="playercommands\yell.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="playertitles\BaneOfAlbionTitle.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playertitles\BaneOfHiberniaTitle.cs" />
-    <Compile Include="playertitles\BaneOfMidgardTitle.cs" />
-    <Compile Include="playertitles\BattleEnforcerTitle.cs" />
-    <Compile Include="playertitles\DemonBaneTitle.cs" />
-    <Compile Include="playertitles\DemonScourgeTitle.cs" />
-    <Compile Include="playertitles\DemonSlayerTitle.cs" />
-    <Compile Include="playertitles\DragonFoeTitle.cs" />
-    <Compile Include="playertitles\DragonScourgeTitle.cs" />
-    <Compile Include="playertitles\DragonSlayerTitle.cs" />
-    <Compile Include="playertitles\DreadVanquisherTitle.cs" />
-    <Compile Include="playertitles\ElderTitle.cs" />
-    <Compile Include="playertitles\EpicChallengerTitle.cs" />
-    <Compile Include="playertitles\EpicVictorTitle.cs" />
-    <Compile Include="playertitles\FrontierChallengerTitle.cs" />
-    <Compile Include="playertitles\FrontierVindicatorTitle.cs" />
-    <Compile Include="playertitles\Level20Title.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playertitles\LoneEnforcerTitle.cs" />
-    <Compile Include="playertitles\MasterEnforcerTitle.cs" />
-    <Compile Include="playertitles\MasterSoldierTitle.cs" />
-    <Compile Include="playertitles\StrongholdChiefTitle.cs" />
-    <Compile Include="playertitles\StrongholdSoldierTitle.cs" />
-    <Compile Include="playertitles\VeteranTitle.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="playertitles\claim\frontier\FrontierChallengerTitle.cs" />
+    <Compile Include="playertitles\claim\frontier\FrontierVindicatorTitle.cs" />
+    <Compile Include="playertitles\claim\stronghold\StrongholdChiefTitle.cs" />
+    <Compile Include="playertitles\claim\stronghold\StrongholdSoldierTitle.cs" />
+    <Compile Include="playertitles\deathblows\BattleEnforcerTitle.cs" />
+    <Compile Include="playertitles\deathblows\BattleMasterTitle.cs" />
+    <Compile Include="playertitles\kills\albion\BaneOfAlbionTitle.cs" />
+    <Compile Include="playertitles\kills\albion\ScourgeOfAlbionTitle.cs" />
+    <Compile Include="playertitles\kills\all\MaserAssassineTitle.cs" />
+    <Compile Include="playertitles\kills\all\MasterEnforcerTitle.cs" />
+    <Compile Include="playertitles\kills\all\MasterSoldierTitle.cs" />
+    <Compile Include="playertitles\kills\demon\DemonBaneTitle.cs" />
+    <Compile Include="playertitles\kills\demon\DemonScourgeTitle.cs" />
+    <Compile Include="playertitles\kills\demon\DemonSlayerTitle.cs" />
+    <Compile Include="playertitles\kills\demon\DreadVanquisherTitle.cs" />
+    <Compile Include="playertitles\kills\dragon\DragonFoeTitle.cs" />
+    <Compile Include="playertitles\kills\dragon\DragonScourgeTitle.cs" />
+    <Compile Include="playertitles\kills\dragon\DragonSlayerTitle.cs" />
+    <Compile Include="playertitles\kills\epicmob\EpicChallengerTitle.cs" />
+    <Compile Include="playertitles\kills\epicmob\EpicVictorTitle.cs" />
+    <Compile Include="playertitles\kills\hibernia\BaneOfHiberniaTitle.cs" />
+    <Compile Include="playertitles\kills\hibernia\ScourgeOfHiberniaTitle.cs" />
+    <Compile Include="playertitles\kills\midgard\BaneOfMidgardTitle.cs" />
+    <Compile Include="playertitles\kills\midgard\ScourgeOfMidgardTitle.cs" />
+    <Compile Include="playertitles\level\Level20Title.cs" />
+    <Compile Include="playertitles\privlevel\AdministratorTitle.cs" />
+    <Compile Include="playertitles\privlevel\GamemasterTitle.cs" />
+    <Compile Include="playertitles\solokills\DuelMasterTitle.cs" />
+    <Compile Include="playertitles\solokills\LoneEnforcerTitle.cs" />
+    <Compile Include="playertitles\time\account\ElderTitle.cs" />
+    <Compile Include="playertitles\time\char\VeteranTitle.cs" />
     <Compile Include="quests\albion\AFewRepairs.cs" />
     <Compile Include="quests\albion\AgainstTheGrain.cs">
       <SubType>Code</SubType>

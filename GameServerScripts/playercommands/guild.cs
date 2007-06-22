@@ -1721,6 +1721,20 @@ namespace DOL.GS.Scripts
 							client.Out.SendMessage("You set your guild note to:" + note, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							break;
 						}
+					case "logins":
+						{
+							client.Player.ShowGuildLogins = !client.Player.ShowGuildLogins;
+
+							if (client.Player.ShowGuildLogins)
+							{
+								client.Out.SendMessage("You will once again be notified of guild members logging in, type /gc logins to stop receiving notifications.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							}
+							else
+							{
+								client.Out.SendMessage("You will no longer be notified of guild members logging in, type /gc logins to start receiving notifications.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							}
+							break;
+						}
 					default:
 						{
 							client.Out.SendMessage("Unknown command \"" + args[1] + "\", please type /gc for a command list.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -1763,6 +1777,7 @@ namespace DOL.GS.Scripts
 				client.Out.SendMessage("'/gc invite ' to invite targeted player to join the guild", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				client.Out.SendMessage("'/gc who' to show all player in your guild", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				client.Out.SendMessage("'/gc list' to show all guild in your realm", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("'/gc logins' to receive notifications when guild members come online", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 0;
 			}
 		}

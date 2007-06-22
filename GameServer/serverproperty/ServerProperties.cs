@@ -52,6 +52,12 @@ namespace DOL.GS.ServerProperties
 		public static readonly double XP_RATE;
 
 		/// <summary>
+		/// RvR Zones XP Rate
+		/// </summary>
+		[ServerProperty("rvr_zones_xp_rate", "The RvR zones Experience Points Rate Modifier", 1.0)]
+		public static readonly double RvR_XP_RATE;
+
+		/// <summary>
 		/// The Realm Points Rate
 		/// </summary>
 		[ServerProperty("rp_rate", "The Realm Points Rate Modifier - Edit this to change the rate at which you gain realm points e.g 1.5 is 50% more 2.0 is twice the amount (100%) 0.5 is half the amount (50%)", 1.0)]
@@ -368,6 +374,18 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("allow_all_realms_df", "Should we allow all realms access to DF", false)]
 		public static readonly bool ALLOW_ALL_REALMS_DF;
+
+		/// <summary>
+		/// Is the database translated
+		/// </summary>
+		[ServerProperty("db_language", "What language is the DB", "EN")]
+		public static readonly string DB_LANGUAGE;
+
+		/// <summary>
+		/// Max camp bonus
+		/// </summary>
+		[ServerProperty("max_camp_bonus", "Max camp bonus", 2.0)]
+		public static readonly double MAX_CAMP_BONUS;
 		
 		/// <summary>
 		/// This method loads the property from the database and returns

@@ -207,12 +207,24 @@ namespace DOL.GS
 			{
 				if(!m_guildMembers.Contains(member))
 				{
+					if (!member.IsAnonymous)
+						NotifyGuildMembers(member);
 					m_guildMembers.Add(member);
 					return true;
 				}
 			}
 
 			return false;
+		}
+
+		private void NotifyGuildMembers(GamePlayer member)
+		{
+			foreach (GamePlayer player in m_guildMembers)
+			{
+				if (player == member) continue;
+				if (player.ShowGuildLogins)
+					player.Out.SendMessage("Guild member " + member.Name + " has logged in!", DOL.GS.PacketHandler.eChatType.CT_System, DOL.GS.PacketHandler.eChatLoc.CL_SystemWindow);
+			}
 		}
 
 		/// <summary>

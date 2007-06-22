@@ -668,6 +668,13 @@ namespace DOL.GS
 			get { return m_diseasedCount > 0; }
 		}
 
+		protected bool m_isEngaging = false;
+		public virtual bool IsEngaging
+		{
+			get { return m_isEngaging; }
+			set { m_isEngaging = value; }
+		}
+
 		/// <summary>
 		/// Holds the turning disabled counter
 		/// </summary>
@@ -1822,8 +1829,7 @@ namespace DOL.GS
 				}
 
 				// Don't attack if gameliving is engaging
-				EngageEffect engage = (EngageEffect)owner.EffectList.GetOfType(typeof(EngageEffect));
-				if (engage != null && engage.EngageSource == owner)
+				if (owner.IsEngaging)
 				{
 					Interval = owner.AttackSpeed(owner.AttackWeapon); // while gameliving is engageing it doesn't attack.
 					return;
@@ -2482,11 +2488,14 @@ namespace DOL.GS
 			m_attackState = true;
 
 			// cancel engage effect if exist
-			EngageEffect effect = (EngageEffect)EffectList.GetOfType(typeof(EngageEffect));
-			if (effect != null && effect.EngageSource == this)
+			if (IsEngaging)
 			{
-				return;
-				//effect.Cancel(false);
+				EngageEffect effect = (EngageEffect)EffectList.GetOfType(typeof(EngageEffect));
+				if (effect != null)
+				{
+					return;
+					//effect.Cancel(false);
+				}
 			}
 
 			InventoryItem weapon = AttackWeapon;
@@ -2541,9 +2550,12 @@ namespace DOL.GS
 		public virtual void StopAttack()
 		{
 			// cancel engage effect if exist
-			EngageEffect effect = (EngageEffect)EffectList.GetOfType(typeof(EngageEffect));
-			if (effect != null && effect.EngageSource == this)
-				effect.Cancel(false);
+			if (IsEngaging)
+			{
+				EngageEffect effect = (EngageEffect)EffectList.GetOfType(typeof(EngageEffect));
+				if (effect != null)
+					effect.Cancel(false);
+			}
 
 			m_attackState = false;
 			if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
@@ -2803,13 +2815,15 @@ namespace DOL.GS
 						// You cannot engage a mob that was attacked within the last X seconds...
 						if (engage.EngageTarget.LastAttackedByEnemyTick > engage.EngageTarget.CurrentRegion.Time - EngageAbilityHandler.ENGAGE_ATTACK_DELAY_TICK)
 						{
-							engage.EngageSource.Out.SendMessage(engage.EngageTarget.GetName(0, true) + " has been attacked recently and you are unable to engage.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							if (engage.Owner is GamePlayer)
+								(engage.Owner as GamePlayer).Out.SendMessage(engage.EngageTarget.GetName(0, true) + " has been attacked recently and you are unable to engage.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						// Check if player has enough endurance left to engage
-						else if (engage.EngageSource.Endurance >= EngageAbilityHandler.ENGAGE_DURATION_LOST)
+						else if (engage.Owner.Endurance >= EngageAbilityHandler.ENGAGE_DURATION_LOST)
 						{
-							engage.EngageSource.Endurance -= EngageAbilityHandler.ENGAGE_DURATION_LOST;
-							engage.EngageSource.Out.SendMessage("You concentrate on blocking the blow!", eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+							engage.Owner.Endurance -= EngageAbilityHandler.ENGAGE_DURATION_LOST;
+							if (engage.Owner is GamePlayer)
+								(engage.Owner as GamePlayer).Out.SendMessage("You concentrate on blocking the blow!", eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
 
 							if (blockChance < 0.85)
 								blockChance = 0.85;
@@ -5108,10 +5122,13 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			if (spellhandler != null)
 			{
 				// If played is engage when casting cancel engage
-				EngageEffect engage = (EngageEffect)EffectList.GetOfType(typeof(EngageEffect));
-				if (engage != null)
+				if (IsEngaging)
 				{
-					engage.Cancel(false);
+					EngageEffect engage = (EngageEffect)EffectList.GetOfType(typeof(EngageEffect));
+					if (engage != null)
+					{
+						engage.Cancel(false);
+					}
 				}
 
 				m_runningSpellHandler = spellhandler;

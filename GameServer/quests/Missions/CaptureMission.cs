@@ -122,5 +122,17 @@ namespace DOL.GS.Quests
 				else return "Capture " + m_keep.Name;
 			}
 		}
+
+		public override long RewardRealmPoints
+		{
+			get
+			{
+				if (m_keep is GameKeep)
+					return 1500;
+				else if (m_keep is GameKeepTower)
+					return 250 + (m_keep.Level * 50);
+				else return 0;
+			}
+		}
 	}
 }
