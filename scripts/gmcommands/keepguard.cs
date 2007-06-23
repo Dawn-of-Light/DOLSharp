@@ -17,12 +17,14 @@
  *
  */
 using System;
+using System.Collections;
 
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
+using DOL.GS.Movement;
 
 namespace DOL.GS.Scripts
 {
@@ -112,6 +114,19 @@ namespace DOL.GS.Scripts
 								{
 									guard = new MissionMaster();
 									break;
+								}
+							case "patrol":
+								{
+									if (client.Player.TargetObject is GameKeepComponent == false)
+									{
+										DisplayError(client, "You need to target a keep component to create a patrol!", new object[] { });
+										return 1;
+									}
+									GameKeepComponent c = client.Player.TargetObject as GameKeepComponent;;
+									Patrol p = new Patrol(c);
+									p.SpawnPosition = PositionMgr.CreatePatrolPosition(p.PatrolID, c, client.Player);
+									p.InitialiseGuards();
+									return 1;
 								}
 						}
 						if (guard == null)
@@ -213,9 +228,129 @@ namespace DOL.GS.Scripts
 						DisplayMessage(client, "Guard position removed", new object[] { });
 						break;
 					}
+				case "path":
+					{
+						switch (args[2].ToLower())
+						{
+							case "create":
+								{
+									//Remove old temp objects
+									RemoveAllTempPathObjects(client);
+
+									PathPoint startpoint = new PathPoint(client.Player.X, client.Player.Y, client.Player.Z, 100000, ePathType.Once);
+									client.Player.TempProperties.setProperty(TEMP_PATH_FIRST, startpoint);
+									client.Player.TempProperties.setProperty(TEMP_PATH_LAST, startpoint);
+									client.Player.Out.SendMessage("Path creation started! You can add new pathpoints via /keepguard path add now!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									CreateTempPathObject(client, startpoint, "TMP PP 1");
+									break;
+								}
+							case "add":
+								{
+									PathPoint path = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
+									if (path == null)
+									{
+										DisplayError(client, "No path created yet! Use /keepguard path create first!");
+										return 0;
+									}
+
+									int speedlimit = 1000;
+									if (args.Length > 3)
+									{
+										try
+										{
+											speedlimit = int.Parse(args[3]);
+										}
+										catch
+										{
+											DisplayError(client, "No valid speedlimit '{0}'!", args[2]);
+											return 0;
+										}
+									}
+									PathPoint newpp = new PathPoint(client.Player.X, client.Player.Y, client.Player.Z, speedlimit, path.Type);
+									path.Next = newpp;
+									newpp.Prev = path;
+									client.Player.TempProperties.setProperty(TEMP_PATH_LAST, newpp);
+
+									int len = 0;
+									while (path.Prev != null)
+									{
+										len++;
+										path = path.Prev;
+									}
+									len += 2;
+									CreateTempPathObject(client, newpp, "TMP PP " + len);
+									DisplayMessage(client, "Pathpoint added. Current pathlength = {0}", len);
+									break;
+								}
+							case "save":
+								{
+									PathPoint path = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
+									if (args.Length < 3)
+									{
+										DisplayError(client, "Usage: /keepguard path save");
+										return 0;
+									}
+									if (path == null)
+									{
+										DisplayError(client, "No path created yet! Use /keepguard path create first!");
+										return 0;
+									}
+									GameKeepGuard guard = client.Player.TargetObject as GameKeepGuard;
+									if (guard == null || guard.PatrolGroup == null)
+									{
+										DisplayError(client, "Target a patrol guard first");
+										return 0;
+									}
+
+									path.Type = ePathType.Loop;
+									PositionMgr.SavePatrolPath(guard.TemplateID, path, guard.Component);
+									DisplayMessage(client, "Path saved");
+									RemoveAllTempPathObjects(client);
+									break;
+								}
+						}
+						break;
+					}
 			}
 
 			return 1;
+		}
+
+		protected string TEMP_PATH_FIRST = "TEMP_PATH_FIRST";
+		protected string TEMP_PATH_LAST = "TEMP_PATH_LAST";
+		protected string TEMP_PATH_OBJS = "TEMP_PATH_OBJS";
+
+		private void CreateTempPathObject(GameClient client, PathPoint pp, string name)
+		{
+			//Create a new object
+			GameStaticItem obj = new GameStaticItem();
+			//Fill the object variables
+			obj.X = pp.X;
+			obj.Y = pp.Y;
+			obj.Z = pp.Z;
+			obj.CurrentRegion = client.Player.CurrentRegion;
+			obj.Heading = client.Player.Heading;
+			obj.Name = name;
+			obj.Model = 488;
+			obj.Emblem = 0;
+			obj.AddToWorld();
+
+			ArrayList objs = (ArrayList)client.Player.TempProperties.getObjectProperty(TEMP_PATH_OBJS, null);
+			if (objs == null)
+				objs = new ArrayList();
+			objs.Add(obj);
+			client.Player.TempProperties.setProperty(TEMP_PATH_OBJS, objs);
+		}
+
+		private void RemoveAllTempPathObjects(GameClient client)
+		{
+			ArrayList objs = (ArrayList)client.Player.TempProperties.getObjectProperty(TEMP_PATH_OBJS, null);
+			if (objs == null)
+				return;
+
+			foreach (GameStaticItem obj in objs)
+				obj.Delete();
+			client.Player.TempProperties.setProperty(TEMP_PATH_OBJS, null);
 		}
 	}
 }

@@ -5918,6 +5918,11 @@
             List of all banners
             </summary>
         </member>
+        <member name="P:DOL.GS.Keeps.AbstractGameKeep.Patrols">
+            <summary>
+            List of all patrols
+            </summary>
+        </member>
         <member name="P:DOL.GS.Keeps.AbstractGameKeep.CurrentRegion">
             <summary>
             region of the keep
@@ -6267,6 +6272,33 @@
             </summary>
             <param name="ab"></param>
             <param name="player"></param>
+        </member>
+        <member name="M:DOL.GS.RealmAbilities.TimedRealmAbility.SendCasterSpellEffectAndCastMessage(DOL.GS.GameLiving,System.UInt16,System.Boolean)">
+            <summary>
+            Send spell effect animation on caster and send messages
+            </summary>
+            <param name="caster"></param>
+            <param name="spellEffect"></param>
+            <param name="success"></param>
+        </member>
+        <member name="M:DOL.GS.RealmAbilities.TimedRealmAbility.SendCastMessage(DOL.GS.GameLiving)">
+            <summary>
+            Sends cast message to environment
+            </summary>
+        </member>
+        <member name="M:DOL.GS.RealmAbilities.TimedRealmAbility.CheckPreconditions(DOL.GS.GameLiving,System.Int64)">
+            <summary>
+            Checks for any of the given conditions and returns true if there was any
+            prints messages
+            </summary>
+            <param name="living"></param>
+            <param name="bitmask"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DOL.GS.RealmAbilities.ChainLightningAbilityHandler.Execute(DOL.GS.GameLiving)">
+            <summary>
+            Execute engage ability
+            </summary>
         </member>
         <member name="T:DOL.GS.Effects.TheEmptyMindEffect">
             <summary>
@@ -9346,28 +9378,6 @@
             Gets the inventory weight
             </summary>
         </member>
-        <member name="M:DOL.GS.RealmAbilities.TimedRealmAbility.SendCasterSpellEffectAndCastMessage(DOL.GS.GameLiving,System.UInt16,System.Boolean)">
-            <summary>
-            Send spell effect animation on caster and send messages
-            </summary>
-            <param name="caster"></param>
-            <param name="spellEffect"></param>
-            <param name="success"></param>
-        </member>
-        <member name="M:DOL.GS.RealmAbilities.TimedRealmAbility.SendCastMessage(DOL.GS.GameLiving)">
-            <summary>
-            Sends cast message to environment
-            </summary>
-        </member>
-        <member name="M:DOL.GS.RealmAbilities.TimedRealmAbility.CheckPreconditions(DOL.GS.GameLiving,System.Int64)">
-            <summary>
-            Checks for any of the given conditions and returns true if there was any
-            prints messages
-            </summary>
-            <param name="living"></param>
-            <param name="bitmask"></param>
-            <returns></returns>
-        </member>
         <member name="T:DOL.GS.Effects.FerociousWillEffect">
             <summary>
             Adrenaline Rush
@@ -10122,6 +10132,15 @@
             <summary>
             Change guild of guard (emblem on equipment) when keep is claimed
             </summary>
+        </member>
+        <member name="M:DOL.GS.Keeps.GameKeepGuard.WalkTo(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Adding special handling for walking to a point for patrol guards to be in a formation
+            </summary>
+            <param name="tx"></param>
+            <param name="ty"></param>
+            <param name="tz"></param>
+            <param name="speed"></param>
         </member>
         <member name="P:DOL.GS.Keeps.GameKeepGuard.Level">
             <summary>
@@ -14614,6 +14633,53 @@
             </summary>
         </member>
         <member name="P:DOL.GS.Effects.SpeedOfSoundEffect.DelveInfo">
+            <summary>
+            Delve information
+            </summary>
+        </member>
+        <member name="T:DOL.GS.Effects.BadgeOfValorEffect">
+            <summary>
+            Effect handler for Arms Length
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Effects.BadgeOfValorEffect.#ctor">
+            <summary>
+            Default constructor for AmelioratingMelodiesEffect
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Effects.BadgeOfValorEffect.Start(DOL.GS.GameLiving)">
+            <summary>
+            Called when effect is to be started
+            </summary>
+            <param name="player">The player to start the effect for</param>
+            <param name="duration">The effectduration in secounds</param>
+            <param name="value">The percentage additional value for melee absorb</param>
+        </member>
+        <member name="M:DOL.GS.Effects.BadgeOfValorEffect.AttackFinished(DOL.Events.DOLEvent,System.Object,System.EventArgs)">
+            <summary>
+            Called when a player is inflicted in an combat action
+            </summary>
+            <param name="e">The event which was raised</param>
+            <param name="sender">Sender of the event</param>
+            <param name="args">EventArgs associated with the event</param>
+        </member>
+        <member name="M:DOL.GS.Effects.BadgeOfValorEffect.Stop">
+            <summary>
+            Called when effect is to be cancelled
+            </summary>
+            <param name="playerCancel">Whether or not effect is player cancelled</param>
+        </member>
+        <member name="P:DOL.GS.Effects.BadgeOfValorEffect.Name">
+            <summary>
+            Name of the effect
+            </summary>
+        </member>
+        <member name="P:DOL.GS.Effects.BadgeOfValorEffect.Icon">
+            <summary>
+            Icon ID
+            </summary>
+        </member>
+        <member name="P:DOL.GS.Effects.BadgeOfValorEffect.DelveInfo">
             <summary>
             Delve information
             </summary>
@@ -29866,6 +29932,65 @@
             The spell that Hibernian Guards use to heal small amounts
             </summary>
         </member>
+        <member name="T:DOL.GS.Keeps.Patrol">
+            <summary>
+            Class for a Guard Patrol
+            </summary>
+        </member>
+        <member name="F:DOL.GS.Keeps.Patrol.PatrolID">
+            <summary>
+            The Patrol ID, consider this a template ID
+            </summary>
+        </member>
+        <member name="F:DOL.GS.Keeps.Patrol.GuardTypes">
+            <summary>
+            The Guard Types that make up the Patrol
+            </summary>
+        </member>
+        <member name="F:DOL.GS.Keeps.Patrol.PatrolGuards">
+            <summary>
+            An ArrayList of all the Guards
+            </summary>
+        </member>
+        <member name="F:DOL.GS.Keeps.Patrol.PatrolPath">
+            <summary>
+            The Patrol Path
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Keeps.Patrol.InitialiseGuards">
+            <summary>
+            Method to Initialise the Guards
+            
+            Here we create the instances of the guard
+            We add to the local array of guards
+            We assign a Guard ID which is the Patrol ID
+            We assign the guards component
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Keeps.Patrol.ChangePatrolLevel">
+            <summary>
+            Method to Change a Patrol's Level
+            
+            This method handles the add and removing of guards
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Keeps.Patrol.StartPatrol">
+            <summary>
+            Method to start a Patrol patroling
+            It sets a patrol leader
+            And starts moving on Patrol
+            </summary>
+        </member>
+        <member name="P:DOL.GS.Keeps.Patrol.SpawnPosition">
+            <summary>
+            The Position object the guards are assigned to
+            </summary>
+        </member>
+        <member name="P:DOL.GS.Keeps.Patrol.Component">
+            <summary>
+            The Component object the guards are assigned to
+            </summary>
+        </member>
         <member name="T:DOL.GS.Keeps.GuardLord">
             <summary>
             Class for the Lord Guard
@@ -32755,6 +32880,26 @@
             Max camp bonus
             </summary>
         </member>
+        <member name="F:DOL.GS.ServerProperties.Properties.DISABLE_INSTANCES">
+            <summary>
+            Disable Instances
+            </summary>
+        </member>
+        <member name="F:DOL.GS.ServerProperties.Properties.HEALTH_REGEN_RATE">
+            <summary>
+            Health Regen Rate
+            </summary>
+        </member>
+        <member name="F:DOL.GS.ServerProperties.Properties.ENDURANCE_REGEN_RATE">
+            <summary>
+            Health Regen Rate
+            </summary>
+        </member>
+        <member name="F:DOL.GS.ServerProperties.Properties.MANA_REGEN_RATE">
+            <summary>
+            Health Regen Rate
+            </summary>
+        </member>
         <member name="M:DOL.GS.ServerProperties.Properties.Load(DOL.GS.ServerProperties.ServerPropertyAttribute)">
             <summary>
             This method loads the property from the database and returns
@@ -34005,6 +34150,16 @@
             Loads the loottemplates
             </summary>
             <returns></returns>
+        </member>
+        <member name="T:DOL.GS.Spells.ChainBoltSpellHandler">
+            <summary>
+            Spell Handler for firing bolts
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.ChainBoltSpellHandler.StartSpell(DOL.GS.GameLiving)">
+            <summary>
+            called when spell effect has to be started and applied to targets
+            </summary>
         </member>
         <member name="T:DOL.GS.Effects.RestorativeMindEffect">
             <summary>

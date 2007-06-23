@@ -40,20 +40,20 @@ namespace DOL.GS.Scripts
         /// </summary>
         /// <param name="player">The title owner.</param>
         /// <returns>The title description.</returns>
-        public override string GetDescription(GamePlayer player)
-        {
-            return LanguageMgr.GetTranslation(player.Client, "Titles.Claim.Stronghold.StrongholdSoldier");
-        }
+		public override string GetDescription(GamePlayer player)
+		{
+			return LanguageMgr.GetTranslation(player.Client, "Titles.Kills.All.MasterAssassine");
+		}
 
-        /// <summary>
-        /// The title value, shown over player's head.
-        /// </summary>
-        /// <param name="player">The title owner.</param>
-        /// <returns>The title value.</returns>
-        public override string GetValue(GamePlayer player)
-        {
-            return LanguageMgr.GetTranslation(player.Client, "Titles.Claim.Stronghold.StrongholdSoldier");
-        }
+		/// <summary>
+		/// The title value, shown over player's head.
+		/// </summary>
+		/// <param>The title owner.</param>
+		/// <returns>The title value.</returns>
+		public override string GetValue(GamePlayer player)
+		{
+			return LanguageMgr.GetTranslation(player.Client, "Titles.Kills.All.MasterAssassine");
+		} 
 
 
         /// <summary>
