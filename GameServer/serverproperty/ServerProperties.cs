@@ -386,6 +386,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("max_camp_bonus", "Max camp bonus", 2.0)]
 		public static readonly double MAX_CAMP_BONUS;
+
+		/// <summary>
+		/// Disable Instances
+		/// </summary>
+		[ServerProperty("disable_instances", "Enable or disable instances on the server", false)]
+		public static readonly bool DISABLE_INSTANCES;
 		
 		/// <summary>
 		/// This method loads the property from the database and returns
