@@ -302,6 +302,9 @@ namespace DOL.GS
 		{
 			get
 			{
+				if (ServerProperties.Properties.DISABLE_INSTANCES)
+					return false;
+
 				foreach (Region r in WorldMgr.Regions.Values)
 				{
 					if (r.ID != ID && r.Description == Description)
