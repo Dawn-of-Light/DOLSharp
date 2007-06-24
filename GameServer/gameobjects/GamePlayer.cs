@@ -7086,7 +7086,7 @@ namespace DOL.GS
 					}
 					if ((type < 2 && useItem.SpellID > 0 && useItem.Charges < 1) || (type == 2 && useItem.SpellID1 > 0 && useItem.Charges1 < 1) || (useItem.PoisonSpellID > 0 && useItem.PoisonCharges < 1))
 					{
-						Out.SendMessage("The " + useItem.Name + " is out of charges.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.OutOfCharges", useItem.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;
 					}
 					else

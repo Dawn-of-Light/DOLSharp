@@ -103,6 +103,18 @@ GameNPC.GetExamineMessages.YouExamine:			Es interessiert Euch {0}. {1} steht Euc
 
 # GAMEOBJECT
 GameObject.GetExamineMessages.YouTarget:		Es wird {0} als Ziel erfasst.
+GameObject.GetName.Article1:				{0}
+GameObject.GetName.Article2:				{0}
+GameObject.GetName.Article3:				{0}
+GameObject.GetName.Article4:				{0}
+GameObject.GetName.Article5:				{0}
+GameObject.GetName.Article6:				{0}
+GameObject.GetPronoun.Pronoun1:				Man
+GameObject.GetPronoun.Pronoun2:				man
+GameObject.GetPronoun.Pronoun3:				Man ist
+GameObject.GetPronoun.Pronoun4:				man ist
+GameObject.GetPronoun.Pronoun5:				Man
+GameObject.GetPronoun.Pronoun6:				man
 GameObject.Interact.TooFarAway:				{0} ist zu weit entfernt.
 
 # GAMEPLAYER
@@ -121,7 +133,7 @@ GamePlayer.Attack.CantCritical:				Ihr könnt keinen kritischen Schuss auf Euer Z
 GamePlayer.Attack.CantSeeTarget:			Ihr könnt Euer Ziel nicht sehen!		
 GamePlayer.Attack.CantUseQuiver:			Ihr könnt den ausgewählten Köcher nicht mit Eurer Waffe benutzen!		
 GamePlayer.Attack.CouldRepair:				Euer {0} sollte repariert werden.	
-GamePlayer.Attack.Critical:				Ihr trefft {0} kritisch mit zusätzlich {1} Schaden!	
+GamePlayer.Attack.Critical:				Ihr trefft {0} kritisch mit zusätzlich {1} Punkte Schaden!	
 GamePlayer.Attack.Evade:				{0} greift Euch an, doch Ihr könnt ausweichen!	
 GamePlayer.Attack.Evaded:				{0} weicht Eurem Angriff aus!	
 GamePlayer.Attack.Fumble:				Ihr stolpert, verhaspelt Euch beim Angriff und braucht ein paar Augenblicke, um wieder in Kampfposition zu kommen!	
@@ -373,9 +385,14 @@ GamePlayer.UseSlot.IllegalSourceObject:			In dieser Position({0}) tragt Ihr nich
 GamePlayer.UseSlot.MustDismountBefore:			Ihr müsst vorher absteigen.		
 GamePlayer.UseSlot.NoAutoReleaseShotReload:		Eurer Schuss wird nun nicht länger automatisch nachgeladen und freigegeben.			
 GamePlayer.UseSlot.NotEnouthPower:			Ihr seit nicht mächtig genug, um den Zauber dieses Gegenstandes anwenden zu können.		
+GamePlayer.UseSlot.OutOfCharges:			{0} hat keine Ladungen mehr.
 GamePlayer.UseSlot.StopCallingMount:			Ihr ruft nicht mehr nach Eurem Pferd.		
 GamePlayer.UseSlot.WhistleMount:			Ihr pfeift nach Eurem Pferd.		
-GamePlayer.Whisper.SelectTarget:			Wählt jemanden aus, dem Ihr etwas zuflüstern wollt!		
+GamePlayer.Whisper.SelectTarget:			Wählt jemanden aus, dem Ihr etwas zuflüstern wollt!
+
+# GAMESTAICITEM
+GameStaticItem.GetName.Article1:			{0}
+GameStaticItem.GetName.Article2:			{0}		
 
 # HOUSING
 HouseEnterLeave.TooFarAway:				Ihr seid zu weit von diesem Haus entfernt, um es zu betreten!
