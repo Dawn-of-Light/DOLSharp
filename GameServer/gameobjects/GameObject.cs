@@ -477,9 +477,9 @@ namespace DOL.GS
 				if (article == 0)
 				{
 					if (firstLetterUppercase)
-						return "The " + Name;
+						return LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameObject.GetName.Article1", Name);
 					else
-						return "the " + Name;
+						return LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameObject.GetName.Article2", Name);
 				}
 				else
 				{
@@ -487,16 +487,16 @@ namespace DOL.GS
 					if (m_vowels.IndexOf(Name[0]) != -1)
 					{
 						if (firstLetterUppercase)
-							return "An " + Name;
+							return LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameObject.GetName.Article3", Name);
 						else
-							return "an " + Name;
+							return LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameObject.GetName.Article4", Name);
 					}
 					else
 					{
 						if (firstLetterUppercase)
-							return "A " + Name;
+							return LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameObject.GetName.Article5", Name);
 						else
-							return "a " + Name;
+							return LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameObject.GetName.Article6", Name);
 					}
 				}
 		}
@@ -514,19 +514,19 @@ namespace DOL.GS
 			{
 				default: // Subjective
 					if (firstLetterUppercase)
-						return "It";
+						return LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameObject.GetPronoun.Pronoun1");
 					else
-						return "it";
+						return LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameObject.GetPronoun.Pronoun2");
 				case 1: // Possessive
 					if (firstLetterUppercase)
-						return "Its";
+						return LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameObject.GetPronoun.Pronoun3");
 					else
-						return "its";
+						return LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameObject.GetPronoun.Pronoun4");
 				case 2: // Objective
 					if (firstLetterUppercase)
-						return "It";
+						return LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameObject.GetPronoun.Pronoun5");
 					else
-						return "it";
+						return LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameObject.GetPronoun.Pronoun6");
 			}
 		}
 
@@ -750,7 +750,7 @@ namespace DOL.GS
 		{
 			if (player.Client.Account.PrivLevel == 1 && !WorldMgr.CheckDistance(this, player, WorldMgr.INTERACT_DISTANCE))
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameObject.GetExamineMessages.YouTarget", GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameObject.Interact.TooFarAway", GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			Notify(GameObjectEvent.Interact, this, new InteractEventArgs(player));
