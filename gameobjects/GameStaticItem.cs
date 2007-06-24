@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using DOL.Database;
+using DOL.Language;
 
 namespace DOL.GS
 {
@@ -103,7 +104,10 @@ namespace DOL.GS
 			if(char.IsUpper(Name[0]))
 			{
 				// proper name
-				if(firstLetterUppercase) return "The "+Name; else return "the "+Name;
+				if (firstLetterUppercase)
+					return LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameStaticItem.GetName.Article1", Name);
+				else
+					return LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameStaticItem.GetName.Article2", Name);
 			}
 			else
 			{
