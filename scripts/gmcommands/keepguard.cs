@@ -125,6 +125,7 @@ namespace DOL.GS.Scripts
 									GameKeepComponent c = client.Player.TargetObject as GameKeepComponent;;
 									Patrol p = new Patrol(c);
 									p.SpawnPosition = PositionMgr.CreatePatrolPosition(p.PatrolID, c, client.Player);
+									p.PatrolID = p.SpawnPosition.TemplateID;
 									p.InitialiseGuards();
 									return 1;
 								}

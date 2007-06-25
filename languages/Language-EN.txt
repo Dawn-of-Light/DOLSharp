@@ -101,9 +101,20 @@ GameNPC.GetAggroLevelString.Neutral2:			Neutral
 GameNPC.GetAggroLevelString.TowardsYou:			{0} towards you
 GameNPC.GetExamineMessages.YouExamine:			You examine {0}. {1} is {2}.
 
-
 # GAMEOBJECT
 GameObject.GetExamineMessages.YouTarget:		You target [{0}].
+GameObject.GetName.Article1:				The {0}
+GameObject.GetName.Article2:				the {0}
+GameObject.GetName.Article3:				An {0}
+GameObject.GetName.Article4:				an {0}
+GameObject.GetName.Article5:				A {0}
+GameObject.GetName.Article6:				a {0}
+GameObject.GetPronoun.Pronoun1:				It
+GameObject.GetPronoun.Pronoun2:				it
+GameObject.GetPronoun.Pronoun3:				Its
+GameObject.GetPronoun.Pronoun4:				its
+GameObject.GetPronoun.Pronoun5:				It
+GameObject.GetPronoun.Pronoun6:				it
 GameObject.Interact.TooFarAway:				You are too far away to interact with {0}.
 
 # GAMEPLAYER
@@ -375,9 +386,14 @@ GamePlayer.UseSlot.IllegalSourceObject:			Illegal source object. Readied {0}.
 GamePlayer.UseSlot.MustDismountBefore:			You must to dismount before.		
 GamePlayer.UseSlot.NoAutoReleaseShotReload:		You will no longer automatically release your shot or reload.			
 GamePlayer.UseSlot.NotEnouthPower:			You are not powerful enough to use this item's spell.		
+GamePlayer.UseSlot.OutOfCharges:			The {0} is out of charges.
 GamePlayer.UseSlot.StopCallingMount:			You stop calling your mount.		
 GamePlayer.UseSlot.WhistleMount:			You whistle for your mount.		
 GamePlayer.Whisper.SelectTarget:			Select a target to whisper to!
+
+# GAMESTAICITEM
+GameStaticItem.GetName.Article1:			The {0}
+GameStaticItem.GetName.Article2:			the {0}
 					
 # HOUSING
 HouseEnterLeave.TooFarAway:				You are too far away to enter house {0}.
