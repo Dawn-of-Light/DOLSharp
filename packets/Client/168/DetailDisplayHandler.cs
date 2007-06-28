@@ -22,6 +22,7 @@ using System.Collections.Specialized;
 using System.Reflection;
 
 using DOL.Database;
+using DOL.Language;
 using DOL.GS.Effects;
 using DOL.GS.RealmAbilities;
 using DOL.GS.Scripts;
@@ -73,7 +74,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (item.CrafterName != null && item.CrafterName != "")
 						{
 							objectInfo.Add(" ");//empty line
-							objectInfo.Add("Crafter : " + item.CrafterName);
+							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CrafterName", item.CrafterName));
 						}
 
 						//**********************************
@@ -174,12 +175,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 							objectInfo.Add(" ");//empty line
 						if (!item.IsDropable)
 						{
-							objectInfo.Add("Cannot be dropped or put in your bank");
-							objectInfo.Add("Cannot be sold to merchants.");
+							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CannotDropped"));
+							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CannotSold"));
 						}
 						if (!item.IsPickable)
-							objectInfo.Add("Cannot be traded to other players.");
-						//				objectInfo.Add("Cannot be destroyed.");
+							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CannotTraded"));
+						//	objectInfo.Add("Cannot be destroyed.");
 
 						//Add admin info
 						if (client.Account.PrivLevel > 1)
@@ -315,7 +316,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							objectInfo.Add(" ");//empty line
 							objectInfo.Add(" ");//empty line
-							objectInfo.Add(" - Requires: Champion Level " + item.Level);
+							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.ChampionLevel", item.Level));
 						}
 
 						//**********************************
@@ -431,26 +432,41 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 
 						caption = style.Name;
-						objectInfo.Add("Weapon Type: " + style.GetRequiredWeaponName());
-						temp = "Opening: ";
+						objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.WeaponType", style.GetRequiredWeaponName()));
+						temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Opening");
 						if (Style.eOpening.Offensive == style.OpeningRequirementType)
 						{
 							//attacker action result is opening
 							switch (style.AttackResultRequirement)
 							{
-								case Style.eAttackResult.Hit: temp += "You Hit"; break;
-								case Style.eAttackResult.Miss: temp += "You Miss"; break;
-								case Style.eAttackResult.Parry: temp += "Target Parrys"; break;
-								case Style.eAttackResult.Block: temp += "Target Blocks"; break;
-								case Style.eAttackResult.Evade: temp += "Target Evades"; break;
-								case Style.eAttackResult.Fumble: temp += "You Fumble"; break;
+								case Style.eAttackResult.Hit:
+									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.YouHit");
+									break;
+								case Style.eAttackResult.Miss:
+									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.YouMiss");
+									break;
+								case Style.eAttackResult.Parry:
+									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.TargetParrys");
+									break;
+								case Style.eAttackResult.Block:
+									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.TargetBlocks");
+									break;
+								case Style.eAttackResult.Evade:
+									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.TargetEvades");
+									break;
+								case Style.eAttackResult.Fumble:
+									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.YouFumble");
+									break;
+
 								case Style.eAttackResult.Style:
 									Style reqStyle = SkillBase.GetStyleByID(style.OpeningRequirementValue, client.Player.CharacterClass.ID);
-									temp = "Opening Style: ";
+									temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.OpeningStyle");
 									if (reqStyle == null) temp += "(style not found " + style.OpeningRequirementValue + ")";
 									else temp += reqStyle.Name;
 									break;
-								default: temp += "Any"; break;
+								default:
+									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Any");
+									break;
 							}
 						}
 						else if (Style.eOpening.Defensive == style.OpeningRequirementType)
@@ -458,25 +474,48 @@ namespace DOL.GS.PacketHandler.Client.v168
 							//defender action result is opening
 							switch (style.AttackResultRequirement)
 							{
-								case Style.eAttackResult.Miss: temp += "Target Misses"; break;
-								case Style.eAttackResult.Hit: temp += "Target Hits"; break;
-								case Style.eAttackResult.Parry: temp += "You Parry"; break;
-								case Style.eAttackResult.Block: temp += "You Block"; break;
-								case Style.eAttackResult.Evade: temp += "You Evade"; break;
-								case Style.eAttackResult.Fumble: temp += "Target Fumbles"; break;
-								case Style.eAttackResult.Style: temp += "Target Style"; break;
-								default: temp += "Any"; break;
+								case Style.eAttackResult.Miss:
+									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.TargetMisses");
+									break;
+								case Style.eAttackResult.Hit:
+									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.TargetHits");
+									break;
+								case Style.eAttackResult.Parry:
+									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.YouParry");
+									break;
+								case Style.eAttackResult.Block:
+									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.YouBlock");
+									break;
+								case Style.eAttackResult.Evade:
+									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.YouEvade");
+									break;
+								case Style.eAttackResult.Fumble:
+									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.TargetFumbles");
+									break;
+								case Style.eAttackResult.Style:
+									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.TargetStyle");
+									break;
+								default:
+									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Any");
+									break;
 							}
 						}
 						else if (Style.eOpening.Positional == style.OpeningRequirementType)
 						{
 							//attacker position to target is opening
-							temp += "Positional ";
+							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Positional");
 							switch (style.OpeningRequirementValue)
 							{
-								case (int)Style.eOpeningPosition.Front: temp += "(Front)"; break;
-								case (int)Style.eOpeningPosition.Back: temp += "(Back)"; break;
-								case (int)Style.eOpeningPosition.Side: temp += "(Side)"; break;
+								case (int)Style.eOpeningPosition.Front:
+									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Front");
+									break;
+								case (int)Style.eOpeningPosition.Back:
+									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Back");
+									break;
+								case (int)Style.eOpeningPosition.Side:
+									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Side");
+									break;
+							
 							}
 						}
 						objectInfo.Add(temp);
@@ -485,55 +524,73 @@ namespace DOL.GS.PacketHandler.Client.v168
 						foreach (Style st in SkillBase.GetStyleList(style.Spec, client.Player.CharacterClass.ID))
 						{
 							if (st.AttackResultRequirement == Style.eAttackResult.Style && st.OpeningRequirementValue == style.ID)
-								temp = (temp == "" ? st.Name : temp + " or " + st.Name);
+								temp = (temp == "" ? st.Name : temp +
+									LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Or", st.Name));
 						}
 						if (temp != "")
-							objectInfo.Add("Followup Style: " + temp);
-
-						temp = "Fatigue Cost: ";
-						if (style.EnduranceCost < 5) temp += "Very Low";
-						else if (style.EnduranceCost < 10) temp += "Low";
-						else if (style.EnduranceCost < 15) temp += "Medium";
-						else if (style.EnduranceCost < 20) temp += "High";
-						else temp += "Very High";
+							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.FollowupStyle", temp));
+						temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.FatigueCost");
+						if (style.EnduranceCost < 5)
+							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryLow");
+						else if	(style.EnduranceCost < 10)
+							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Low");
+						else if (style.EnduranceCost < 15)
+							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Medium");
+						else if (style.EnduranceCost < 20)
+							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.High");
+						else temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryHigh");												
 						objectInfo.Add(temp);
 
-						temp = "Damage: ";
-						if (style.GrowthRate == 0) temp += "No Bonus";
+						temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Damage");
+						if (style.GrowthRate == 0)
+							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoBonus");
 						else temp += style.GrowthRate;
+
 						objectInfo.Add(temp);
 
-						temp = "To Hit: ";
-						if (style.BonusToHit <= -20) temp += "Very High Penalty";
-						else if (style.BonusToHit <= -15) temp += "High Penalty";
-						else if (style.BonusToHit <= -10) temp += "Medium Penalty";
-						else if (style.BonusToHit <= -5) temp += "Low Penalty";
-						else if (style.BonusToHit < 0) temp += "Very Low Penalty";
-						else if (style.BonusToHit == 0) temp += "No Bonus";
-						else if (style.BonusToHit < 5) temp += "Very Low Bonus";
-						else if (style.BonusToHit < 10) temp += "Low Bonus";
-						else if (style.BonusToHit < 15) temp += "Medium Bonus";
-						else if (style.BonusToHit < 20) temp += "High Bonus";
-						else temp += "Very High Bonus";
+						temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.ToHit");
+						if (style.BonusToHit <= -20)
+							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryHighPenalty");
+						else if (style.BonusToHit <= -15)
+							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.HighPenalty");
+						else if (style.BonusToHit <= -10)
+							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.MediumPenalty");
+						else if (style.BonusToHit <= -5)
+							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.LowPenalty");
+						else if (style.BonusToHit < 0)
+							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryLowPenalty");
+						else if (style.BonusToHit == 0)
+							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoBonus");
+						else if (style.BonusToHit < 5)
+							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryLowBonus");
+						else if (style.BonusToHit < 10)
+							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.LowBonus");
+						else if (style.BonusToHit < 15)
+							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.MediumBonus");
+						else if (style.BonusToHit < 20)
+							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.HighBonus");
+						else temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryHighBonus");
+
 						objectInfo.Add(temp);
 
-						temp = "Defense: ";
-						if (style.BonusToDefense <= -20) temp += "Very High Penalty";
-						else if (style.BonusToDefense <= -15) temp += "High Penalty";
-						else if (style.BonusToDefense <= -10) temp += "Medium Penalty";
-						else if (style.BonusToDefense <= -5) temp += "Low Penalty";
-						else if (style.BonusToDefense < 0) temp += "Very Low Penalty";
-						else if (style.BonusToDefense == 0) temp += "No Bonus";
-						else if (style.BonusToDefense < 5) temp += "Very Low Bonus";
-						else if (style.BonusToDefense < 10) temp += "Low Bonus";
-						else if (style.BonusToDefense < 15) temp += "Medium Bonus";
-						else if (style.BonusToDefense < 20) temp += "High Bonus";
-						else temp += "Very High Bonus";
+						temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Defense");
+						if (style.BonusToDefense <= -20) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryHighPenalty");
+						else if (style.BonusToDefense <= -15) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.HighPenalty");
+						else if (style.BonusToDefense <= -10) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.MediumPenalty");
+						else if (style.BonusToDefense <= -5) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.LowPenalty");
+						else if (style.BonusToDefense < 0) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryLowPenalty");
+						else if (style.BonusToDefense == 0) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoBonus");
+						else if (style.BonusToDefense < 5) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryLowBonus");
+						else if (style.BonusToDefense < 10) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.LowBonus");
+						else if (style.BonusToDefense < 15) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.MediumBonus");
+						else if (style.BonusToDefense < 20) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.HighBonus");
+						else temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryHighBonus");
+						
 						objectInfo.Add(temp);
 
 						if (style.Procs.Count > 0)
 						{
-							temp = "Target Effect: ";
+							temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.TargetEffect");
 							objectInfo.Add(temp);
 
 							SpellLine styleLine = SkillBase.GetSpellLine(GlobalSpellsLines.Combat_Styles_Effect);
@@ -596,7 +653,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							objectInfo.Add(" ");//empty line
 							objectInfo.Add(" ");//empty line
-							objectInfo.Add(" - Requires: Champion Level " + item.Level);
+							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.ChampionLevel", item.Level));
 						}
 						//**********************************
 						//show info for all types of weapons
@@ -808,7 +865,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							break;
 						}
 
-						objectInfo.Add("Lev   Name");
+						objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.LevName"));
 						foreach (Style style in styles)
 						{
 							//						objectInfo.Add(" ");
@@ -827,10 +884,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
 						if (item == null) return 1;
-						string str = client.Player.Name + "/Item: \"" + GetShortItemInfo(item, client) + '"';
+						string str = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Item", client.Player.Name, GetShortItemInfo(item, client));
 						if (client.Player.PlayerGroup == null)
 						{
-							client.Out.SendMessage("You are not part of a group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 1;
 						}
 						client.Player.PlayerGroup.SendMessageToGroupMembers(null, str);
@@ -842,15 +899,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
 						if (item == null) return 1;
-						string str = "[Guild] " + client.Player.Name + "/Item: \"" + GetShortItemInfo(item, client) + '"';
+						string str = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.GuildItem", client.Player.Name, GetShortItemInfo(item, client));
 						if (client.Player.Guild == null)
 						{
-							client.Out.SendMessage("You don't belong to a player guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.DontBelongGuild"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 1;
 						}
 						if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.GcSpeak))
 						{
-							client.Out.SendMessage("You don't have permission to speak on the on guild line.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoPermissionToSpeak"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 1;
 						}
 						foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers())
@@ -870,15 +927,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (mychatgroup == null)
 						{
-							client.Player.Out.SendMessage("You must be in a chat group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.MustBeInChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 1;
 						}
 						if (mychatgroup.Listen == true && (((bool)mychatgroup.Members[client.Player]) == false))
 						{
-							client.Player.Out.SendMessage("Only moderator can talk on this chat group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.OnlyModerator"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 1;
 						}
-						string str = "[Chat] " + client.Player.Name + "/Item: \"" + GetShortItemInfo(item, client) + '"';
+						string str = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.ChatItem", client.Player.Name, GetShortItemInfo(item, client));
 						foreach (GamePlayer ply in mychatgroup.Members.Keys)
 						{
 							ply.Out.SendMessage(str, eChatType.CT_Friend, eChatLoc.CL_ChatWindow);
@@ -896,7 +953,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						else
 						{
-							client.Out.SendMessage("It's very strange, i cant recognise this item.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryStrange"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						return 1;
 					}
@@ -911,7 +968,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						else
 						{
-							client.Out.SendMessage("It's very strange, i cant recognise this item.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryStrange"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						return 1;
 					}
@@ -926,13 +983,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						else
 						{
-							client.Out.SendMessage("It's very strange, i cant recognise this item.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryStrange"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						return 1;
 					}
 				#endregion
 				default:
-					client.Out.SendMessage("No special information!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoInformation"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 1;
 			}
 
@@ -1059,7 +1116,9 @@ Type    Description           Id
 			if (item.CrafterName != null && item.CrafterName != "")
 			{
 				objectInfo.Add(" ");//empty line
-				objectInfo.Add("Crafter : " + item.CrafterName);
+				objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.GetShortItemInfo.CrafterName", item.CrafterName));
+
+				//LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryStrange")
 			}
 			if (item.Object_Type == (int)eObjectType.Poison)
 			{
@@ -1071,11 +1130,11 @@ Type    Description           Id
 
 			if (!item.IsDropable)
 			{
-				objectInfo.Add(" No Drop.");
-				objectInfo.Add(" No Sell.");
+				objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.GetShortItemInfo.NoDrop"));
+				objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.GetShortItemInfo.NoSell"));
 			}
 			if (!item.IsPickable)
-				objectInfo.Add(" No Trade.");
+				objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.GetShortItemInfo.NoTrade"));
 
 			foreach (string s in objectInfo)
 				str += " " + s;
@@ -1106,31 +1165,32 @@ Type    Description           Id
 
 			output.Add(" ");
 			output.Add(" ");
-			output.Add("Damage Modifiers:");
+			output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicWeaponInfos.DamageMod"));
 			if (itemDPS != 0)
 			{
-				output.Add("- " + itemDPS.ToString("0.0") + " Base DPS");
-				output.Add("- " + clampedDPS.ToString("0.0") + " Clamped DPS");
+				output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicWeaponInfos.BaseDPS", itemDPS.ToString("0.0")));
+				output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicWeaponInfos.ClampDPS", clampedDPS.ToString("0.0")));
 			}
 
 			if (item.SPD_ABS >= 0)
 			{
-				output.Add("- " + itemSPD.ToString("0.0") + " Weapon Speed");
+				output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicWeaponInfos.SPD", itemSPD.ToString("0.0")));
 			}
 
 			if (item.Quality != 0)
 			{
-				output.Add("- " + item.Quality + "% Quality");
+				output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicWeaponInfos.Quality", item.Quality));
 			}
 			if (item.Condition != 0)
 			{
-				output.Add("- " + item.ConditionPercent + "% Condition");
+				output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicWeaponInfos.Condition", item.ConditionPercent));
 			}
 
-			output.Add("Damage Type: " + (item.Type_Damage == 0 ? "None" : GlobalConstants.WeaponDamageTypeToName(item.Type_Damage)));
+			output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicWeaponInfos.DamageType",
+				(item.Type_Damage == 0 ? "None" : GlobalConstants.WeaponDamageTypeToName(item.Type_Damage))));
 			output.Add(" ");
 
-			output.Add("Effective Damage:");
+			output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicWeaponInfos.EffDamage"));
 			if (itemDPS != 0)
 			{
 				output.Add("- " + effectiveDPS.ToString("0.0") + " DPS");
@@ -1140,7 +1200,7 @@ Type    Description           Id
 		{
 			if (item.AllowedClasses == "" || item.AllowedClasses == null)
 				return;
-			output.Add("Usable by: ");
+			output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteUsableClasses.UsableBy"));
 			string[] allowedclasses = item.AllowedClasses.Split(';');
 			foreach (string allowed in allowedclasses)
 			{
@@ -1166,24 +1226,24 @@ Type    Description           Id
 
 			output.Add(" ");
 			output.Add(" ");
-			output.Add("Damage Modifiers (when used with shield styles):");
+			output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.DamageMod"));
 			if (itemDPS != 0)
 			{
-				output.Add("- " + itemDPS.ToString("0.0") + " Base DPS");
-				output.Add("- " + clampedDPS.ToString("0.0") + " Clamped DPS");
+				output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.BaseDPS", itemDPS.ToString("0.0")));
+				output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.ClampDPS", clampedDPS.ToString("0.0")));
 			}
 			if (item.SPD_ABS >= 0)
 			{
-				output.Add("- " + itemSPD.ToString("0.0") + " Shield Speed");
+				output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.SPD", itemSPD.ToString("0.0")));
 			}
 
 			output.Add(" ");
 
 			switch (item.Type_Damage)
 			{
-				case 1: output.Add("- Shield Size : Small"); break;
-				case 2: output.Add("- Shield Size : Medium"); break;
-				case 3: output.Add("- Shield Size : Large"); break;
+				case 1: output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.Small")); break;
+				case 2: output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.Medium")); break;
+				case 3: output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.Large")); break;
 			}
 		}
 
@@ -1205,10 +1265,10 @@ Type    Description           Id
 		{
 			output.Add(" ");
 			output.Add(" ");
-			output.Add("Armor Modifiers:");
+			output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicArmorInfos.ArmorMod"));
 			if (item.DPS_AF != 0)
 			{
-				output.Add("- " + item.DPS_AF + " Base Factor");
+				output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicArmorInfos.BaseFactor", item.DPS_AF));
 			}
 			double AF = 0;
 			if (item.DPS_AF != 0)
@@ -1221,28 +1281,28 @@ Type    Description           Id
 
 				AF = Math.Min(afCap, item.DPS_AF);
 
-				output.Add("- " + (int)AF + " Clamped Factor");
+				output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicArmorInfos.ClampFact", (int)AF));
 			}
 			if (item.SPD_ABS >= 0)
 			{
-				output.Add("- " + item.SPD_ABS + "% Absorption");
+				output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicArmorInfos.Absorption", item.SPD_ABS));
 			}
 			if (item.Quality != 0)
 			{
-				output.Add("- " + item.Quality + "% Quality");
+				output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicArmorInfos.Quality", item.Quality));
 			}
 			if (item.Condition != 0)
 			{
-				output.Add("- " + item.ConditionPercent + "% Condition");
+				output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicArmorInfos.Condition", item.ConditionPercent));
 			}
 			output.Add(" ");
 
-			output.Add("Effective Armor:");
+			output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicArmorInfos.EffArmor"));
 			double EAF = 0;
 			if (item.DPS_AF != 0)
 			{
 				EAF = AF * item.Quality / 100.0 * item.Condition / item.MaxCondition * (1 + item.SPD_ABS / 100.0);
-				output.Add("- " + (int)EAF + " Factor");
+				output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicArmorInfos.Factor"));
 			}
 
 		}
@@ -1266,7 +1326,7 @@ Type    Description           Id
 			if (output.Count > oldCount)
 			{
 				output.Add(" ");
-				output.Insert(oldCount, "Magical Bonuses:");
+				output.Insert(oldCount, LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MagicBonus"));
 				output.Insert(oldCount, " ");
 			}
 
@@ -1287,7 +1347,7 @@ Type    Description           Id
 			if (output.Count > oldCount)
 			{
 				output.Add(" ");
-				output.Insert(oldCount, "Focus Bonuses:");
+				output.Insert(oldCount, LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.FocusBonus"));
 				output.Insert(oldCount, " ");
 			}
 
@@ -1298,14 +1358,14 @@ Type    Description           Id
 				{
 					string spellNote = "";
 					output.Add(" ");
-					output.Add("Magical Ability:");
+					output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MagicAbility"));
 					if (GlobalConstants.IsWeapon(item.Object_Type))
 					{
-						spellNote = "- Spell has a chance of casting when this weapon strikes an enemy.";
+						spellNote = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.StrikeEnemy");
 					}
 					else if (GlobalConstants.IsArmor(item.Object_Type))
 					{
-						spellNote = "- Spell has a chance of casting when enemy strikes at this armor.";
+						spellNote = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.StrikeArmor");
 					}
 
 					SpellLine line = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
@@ -1319,8 +1379,8 @@ Type    Description           Id
 								if (spl.ID == item.ProcSpellID)
 								{
 									output.Add(" ");
-									output.Add("Level Requirement:");
-									output.Add("- " + spl.Level + " Level");
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired"));
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
 									output.Add(" ");
 									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, line);
 									if (spellHandler != null)
@@ -1345,14 +1405,14 @@ Type    Description           Id
 				{
 					string spellNote = "";
 					output.Add(" ");
-					output.Add("Magical Ability:");
+					output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MagicAbility"));
 					if (GlobalConstants.IsWeapon(item.Object_Type))
 					{
-						spellNote = "- Spell has a chance of casting when this weapon strikes an enemy.";
+						spellNote = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.StrikeEnemy");
 					}
 					else if (GlobalConstants.IsArmor(item.Object_Type))
 					{
-						spellNote = "- Spell has a chance of casting when enemy strikes at this armor.";
+						spellNote = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.StrikeArmor");
 					}
 
 					SpellLine line = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
@@ -1366,8 +1426,8 @@ Type    Description           Id
 								if (spl.ID == item.ProcSpellID1)
 								{
 									output.Add(" ");
-									output.Add("Level Requirement:");
-									output.Add("- " + spl.Level + " Level");
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired"));
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
 									output.Add(" ");
 									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, line);
 									if (spellHandler != null)
@@ -1401,12 +1461,12 @@ Type    Description           Id
 								if (spl.ID == item.SpellID)
 								{
 									output.Add(" ");
-									output.Add("Level Requirement:");
-									output.Add("- " + spl.Level + " Level");
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired"));
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
 									output.Add(" ");
-									output.Add("Charged Magic Ability:");
-									output.Add("- " + item.Charges + " Charges");
-									output.Add("- " + item.MaxCharges + " Max");
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic"));
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Charges", item.Charges));
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", item.MaxCharges));
 									output.Add(" ");
 
 									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, chargeEffectsLine);
@@ -1419,7 +1479,7 @@ Type    Description           Id
 									{
 										output.Add("-" + spl.Name + "(Not implemented yet)");
 									}
-									output.Add("- Spell has a chance of casting when this item is used.");
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.UsedItem"));
 									break;
 								}
 							}
@@ -1441,12 +1501,12 @@ Type    Description           Id
 								if (spl.ID == item.SpellID1)
 								{
 									output.Add(" ");
-									output.Add("Level Requirement:");
-									output.Add("- " + spl.Level + " Level");
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired"));
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
 									output.Add(" ");
-									output.Add("Charged Magic Ability:");
-									output.Add("- " + item.Charges1 + " Charges");
-									output.Add("- " + item.MaxCharges1 + " Max");
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic"));
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Charges", item.Charges1));
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", item.MaxCharges1));
 									output.Add(" ");
 
 									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, chargeEffectsLine);
@@ -1459,7 +1519,7 @@ Type    Description           Id
 									{
 										output.Add("-" + spl.Name + "(Not implemented yet)");
 									}
-									output.Add("- Spell has a chance of casting when this item is used.");
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.UsedItem"));
 									break;
 								}
 							}
@@ -1483,12 +1543,12 @@ Type    Description           Id
 									if (spl.ID == item.PoisonSpellID)
 									{
 										output.Add(" ");
-										output.Add("Level Requirement:");
-										output.Add("- " + spl.Level + " Level");
+										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired"));
+										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
 										output.Add(" ");
-										output.Add("Charged Magic Ability:");
-										output.Add("- " + item.PoisonCharges + " Charges");
-										output.Add("- " + item.PoisonMaxCharges + " Max");
+										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic"));
+										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Charges", item.PoisonCharges));
+										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", item.PoisonMaxCharges));
 										output.Add(" ");
 
 										ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, poisonLine);
@@ -1501,7 +1561,7 @@ Type    Description           Id
 										{
 											output.Add("-" + spl.Name + "(Not implemented yet)");
 										}
-										output.Add("- Spell has a chance of casting when this weapon strikes an enemy.");
+										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.StrikeEnemy"));
 										return;
 									}
 								}
@@ -1520,18 +1580,18 @@ Type    Description           Id
 								if (spl.ID == item.SpellID)
 								{
 									output.Add(" ");
-									output.Add("Level Requirement:");
-									output.Add("- " + spl.Level + " Level");
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired"));
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
 									output.Add(" ");
 									if (item.MaxCharges > 0)
 									{
-										output.Add("Charged Magic Ability:");
-										output.Add("- " + item.Charges + " Charges");
-										output.Add("- " + item.MaxCharges + " Max");
+										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic"));
+										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Charges", item.Charges));
+										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", item.MaxCharges));
 									}
 									else
 									{
-										output.Add("Magical Ability:");
+										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MagicAbility"));
 									}
 									output.Add(" ");
 
@@ -1545,17 +1605,17 @@ Type    Description           Id
 									{
 										output.Add("-" + spl.Name + "(Not implemented yet)");
 									}
-									output.Add("- Spell has a chance of casting when this item is used.");
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.UsedItem"));
 									output.Add(" ");
 									if (spl.RecastDelay > 0)
-										output.Add("Can use item every: " + Util.FormatTime(spl.RecastDelay / 1000));
+										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.UseItem1", Util.FormatTime(spl.RecastDelay / 1000)));
 									else
-										output.Add("Can use item every: 3:00 min");
+										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.UseItem2"));
 									long lastChargedItemUseTick = client.Player.TempProperties.getLongProperty(GamePlayer.LAST_CHARGED_ITEM_USE_TICK, 0L);
 									long changeTime = client.Player.CurrentRegion.Time - lastChargedItemUseTick;
 									long recastDelay = (spl.RecastDelay > 0) ? spl.RecastDelay : 60000 * 3;
 									if (changeTime < recastDelay) //3 minutes reuse timer
-										output.Add("Can use again in: " + Util.FormatTime((recastDelay - changeTime) / 1000));
+										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.UseItem3", Util.FormatTime((recastDelay - changeTime) / 1000)));
 									return;
 								}
 							}
@@ -1605,30 +1665,30 @@ Type    Description           Id
 			list.Add(" ");
 			if (item.Level <= 35)
 			{
-				list.Add("This is a basic horse.");
-				list.Add("(+35% speed)");
+				list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteHorseInfo.BasicHorse"));
+				list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteHorseInfo.Speed1"));
 				list.Add(" ");
-				list.Add("To make this horse your active mount, place this icon in the appropriate slot of your Mount window.");
+				list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteHorseInfo.MountWindow"));
 				list.Add(" ");
-				list.Add("To summon this horse, from your Mount window drag the horse icon to your quickbar, and summon by using the quickbar icon.");
+				list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteHorseInfo.Quickbar"));
 				list.Add(" ");
-				list.Add("Can't be summoned in RvR zones.");
+				list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteHorseInfo.RvRZzones"));
 			}
 			else
 			{
-				list.Add("This is an advanced horse.");
-				list.Add("(+45% speed)");
+				list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteHorseInfo.AdvancedHorse"));
+				list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteHorseInfo.Speed2"));
 				list.Add(" ");
 				list.Add(" ");
-				list.Add("Click this icon in your quickbar to summon (or dismount) your horse.");
+				list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteHorseInfo.Summon"));
 				list.Add(" ");
-				list.Add("- Name: " + ((horseName == null || horseName == "") ? "None" : horseName) + ".");
-				list.Add("  (Use /namemount to name your horse.)");
+				list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteHorseInfo.Name", ((horseName == null || horseName == "") ? "None" : horseName)));
+				list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteHorseInfo.NameMount"));
 			}
 			list.Add(" ");
-			list.Add("- Armor: " + (item.DPS_AF == 0 ? "None" : item.DPS_AF.ToString()));
-			list.Add("- Barding: None");
-			list.Add("- Favorite food: Hay and the occasional apple");
+			list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteHorseInfo.Armor", (item.DPS_AF == 0 ? "None" : item.DPS_AF.ToString())));
+			list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteHorseInfo.Barding"));
+			list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteHorseInfo.Food"));
 		}
 
 		protected void WritePoisonInfo(ArrayList list, ItemTemplate item, GameClient client)
@@ -1646,12 +1706,12 @@ Type    Description           Id
 							if (spl.ID == item.PoisonSpellID)
 							{
 								list.Add(" ");
-								list.Add("Level Requirement:");
-								list.Add("- " + spl.Level + " Level");
+								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePoisonInfo.LevelRequired"));
+								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePoisonInfo.Level", spl.Level));
 								list.Add(" ");
-								list.Add("Offensive Proc Ability:");
-								list.Add("- " + item.PoisonCharges + " Charges");
-								list.Add("- " + item.PoisonMaxCharges + " Max");
+								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePoisonInfo.ProcAbility"));
+								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePoisonInfo.Charges", item.PoisonCharges));
+								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePoisonInfo.MaxCharges", item.PoisonMaxCharges));
 								list.Add(" ");
 
 								ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, poisonLine);
@@ -1686,27 +1746,27 @@ Type    Description           Id
 							if (spl.ID == item.SpellID)
 							{
 								list.Add(" ");
-								list.Add("Level Requirement:");
-								list.Add("- " + spl.Level + " Level");
+								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.LevelRequired"));
+								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Level", spl.Level));
 								list.Add(" ");
-								list.Add("Charged Magic Ability:");
-								list.Add("- " + item.Charges + " Charges");
-								list.Add("- " + item.MaxCharges + " Max");
+								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.ChargedMagic"));
+								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Charges", item.Charges));
+								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.MaxCharges", item.MaxCharges));
 								list.Add(" ");
 
 								ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, potionLine);
 								if (spellHandler != null)
 									list.AddRange(spellHandler.DelveInfo);
 								list.Add(" ");
-								list.Add("Can use item every: 1:00 min");
+								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.UseItem2"));
 								long lastPotionItemUseTick = client.Player.TempProperties.getLongProperty(GamePlayer.LAST_POTION_ITEM_USE_TICK, 0L);
 								long changeTime = client.Player.CurrentRegion.Time - lastPotionItemUseTick;
 								if (changeTime < 60000) //1 minutes reuse timer
-									list.Add("Can use again in: " + Util.FormatTime((60000 - changeTime) / 1000));
+									list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.UseItem3", Util.FormatTime((60000 - changeTime) / 1000)));
 								if (spl.CastTime > 0)
 								{
 									list.Add(" ");
-									list.Add("Cannot be used in combat");
+									list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.NoUseInCombat"));
 								}
 								else
 								{

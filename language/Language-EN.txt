@@ -465,6 +465,136 @@ GameStableMaster.HorseName:				horse
 GameStableMaster.UnknownWay:				My horse doesn't know the way to {0} yet.
 
 # /packets/Client/168
+# /DetailDisplayHandler
+DetailDisplayHandler.GetShortItemInfo.CrafterName:	Crafter : {0}
+DetailDisplayHandler.GetShortItemInfo.NoDrop:		 No Drop.
+DetailDisplayHandler.GetShortItemInfo.NoSell:		 No Sell.
+DetailDisplayHandler.GetShortItemInfo.NoTrade:		 No Trade.
+DetailDisplayHandler.HandlePacket.Any:			Any
+DetailDisplayHandler.HandlePacket.Back:			(Back)
+DetailDisplayHandler.HandlePacket.CannotDropped:	Cannot be dropped or put in your bank.
+DetailDisplayHandler.HandlePacket.CannotSold:		Cannot be sold to merchants.
+DetailDisplayHandler.HandlePacket.CannotTraded:		Cannot be traded to other players.
+DetailDisplayHandler.HandlePacket.ChampionLevel:	 - Requires: Champion Level {0}
+DetailDisplayHandler.HandlePacket.ChatItem:		[Chat] {0}/Item: "{1}"
+DetailDisplayHandler.HandlePacket.CrafterName:		Crafter : {0}
+DetailDisplayHandler.HandlePacket.Damage:		Damage: 
+DetailDisplayHandler.HandlePacket.Defense:		Defense: 
+DetailDisplayHandler.HandlePacket.DontBelongGuild:	You don't belong to a player guild.
+DetailDisplayHandler.HandlePacket.FatigueCost:		Fatigue Cost: 
+DetailDisplayHandler.HandlePacket.FollowupStyle:	Followup Style: {0}
+DetailDisplayHandler.HandlePacket.Front:		(Front)	
+DetailDisplayHandler.HandlePacket.GuildItem:		[Guild] {0}/Item: "{1}"
+DetailDisplayHandler.HandlePacket.High:			High
+DetailDisplayHandler.HandlePacket.HighBonus:		High Bonus
+DetailDisplayHandler.HandlePacket.HighPenalty:		High Penalty
+DetailDisplayHandler.HandlePacket.Item:			{0}/Item: "{1}
+DetailDisplayHandler.HandlePacket.LevName:		Lev   Name
+DetailDisplayHandler.HandlePacket.Low:			Low
+DetailDisplayHandler.HandlePacket.LowBonus:		Low Bonus
+DetailDisplayHandler.HandlePacket.LowPenalty:		Low Penalty
+DetailDisplayHandler.HandlePacket.Medium:		Medium
+DetailDisplayHandler.HandlePacket.MediumBonus:		Medium Bonus
+DetailDisplayHandler.HandlePacket.MediumPenalty:	Medium Penalty
+DetailDisplayHandler.HandlePacket.MustBeInChatGroup:	You must be in a chat group.
+DetailDisplayHandler.HandlePacket.NoBonus:		No Bonus
+DetailDisplayHandler.HandlePacket.NoGroup:		You are not part of a group.
+DetailDisplayHandler.HandlePacket.NoInformation:	No special information!
+DetailDisplayHandler.HandlePacket.NoPermissionToSpeak:	You don't have permission to speak on the on guild line.	
+DetailDisplayHandler.HandlePacket.OnlyModerator:	Only moderator can talk on this chat group.
+DetailDisplayHandler.HandlePacket.Opening:		Opening: 
+DetailDisplayHandler.HandlePacket.OpeningStyle:		Opening Style: 
+DetailDisplayHandler.HandlePacket.Or:			 or {0}
+DetailDisplayHandler.HandlePacket.Positional:		Positional 
+DetailDisplayHandler.HandlePacket.Side:			(Side)
+DetailDisplayHandler.HandlePacket.TargetBlocks:		Target Blocks
+DetailDisplayHandler.HandlePacket.TargetEffect:		Target Effect: 
+DetailDisplayHandler.HandlePacket.TargetEvades:		Target Evades
+DetailDisplayHandler.HandlePacket.TargetFumbles:	Target Fumbles
+DetailDisplayHandler.HandlePacket.TargetHits:		Target Hits
+DetailDisplayHandler.HandlePacket.TargetMisses:		Target Misses
+DetailDisplayHandler.HandlePacket.TargetParrys:		Target Parrys
+DetailDisplayHandler.HandlePacket.TargetStyle:		Target Style
+DetailDisplayHandler.HandlePacket.ToHit:		To Hit: 
+DetailDisplayHandler.HandlePacket.VeryHigh:		Very High
+DetailDisplayHandler.HandlePacket.VeryHighBonus:	Very High Bonus	
+DetailDisplayHandler.HandlePacket.VeryHighPenalty:	Very High Penalty
+DetailDisplayHandler.HandlePacket.VeryLow:		Very Low
+DetailDisplayHandler.HandlePacket.VeryLowBonus:		Very Low Bonus
+DetailDisplayHandler.HandlePacket.VeryLowPenalty:	Very Low Penalty
+DetailDisplayHandler.HandlePacket.VeryStrange:		It's very strange, i cant recognise this item.
+DetailDisplayHandler.HandlePacket.WeaponType:		Weapon Type: {0}
+DetailDisplayHandler.HandlePacket.YouBlock:		You Block
+DetailDisplayHandler.HandlePacket.YouEvade:		You Evade
+DetailDisplayHandler.HandlePacket.YouFumble:		You Fumble
+DetailDisplayHandler.HandlePacket.YouHit:		You Hit
+DetailDisplayHandler.HandlePacket.YouMiss:		You Miss
+DetailDisplayHandler.HandlePacket.YouParry:		You Parry
+DetailDisplayHandler.WriteClassicArmorInfos.Absorption:	- {0}% Absorption
+DetailDisplayHandler.WriteClassicArmorInfos.ArmorMod:	Armor Modifiers:
+DetailDisplayHandler.WriteClassicArmorInfos.BaseFactor:	- {0} Base Factor
+DetailDisplayHandler.WriteClassicArmorInfos.ClampFact:	- {0} Clamped Factor
+DetailDisplayHandler.WriteClassicArmorInfos.Condition:	- {0}% Condition
+DetailDisplayHandler.WriteClassicArmorInfos.EffArmor:	Effective Armor:
+DetailDisplayHandler.WriteClassicArmorInfos.Factor:	- {0} Factor
+DetailDisplayHandler.WriteClassicArmorInfos.Quality:	- {0}% Quality
+DetailDisplayHandler.WriteClassicShieldInfos.BaseDPS:	- {0} Base DPS
+DetailDisplayHandler.WriteClassicShieldInfos.ClampDPS:	- {0} Clamped DPS
+DetailDisplayHandler.WriteClassicShieldInfos.DamageMod:	Damage Modifiers (when used with shield styles):
+DetailDisplayHandler.WriteClassicShieldInfos.Large:	- Shield Size : Large
+DetailDisplayHandler.WriteClassicShieldInfos.Medium:	- Shield Size : Medium
+DetailDisplayHandler.WriteClassicShieldInfos.Small:	- Shield Size : Small
+DetailDisplayHandler.WriteClassicShieldInfos.SPD:	- {0} Shield Speed
+DetailDisplayHandler.WriteClassicWeaponInfos.BaseDPS:	- {0} Base DPS
+DetailDisplayHandler.WriteClassicWeaponInfos.ClampDPS:	- {0} Clamped DPS
+DetailDisplayHandler.WriteClassicWeaponInfos.Condition:	- {0}% Condition
+DetailDisplayHandler.WriteClassicWeaponInfos.DamageMod:	Damage Modifiers:
+DetailDisplayHandler.WriteClassicWeaponInfos.DamageType:Damage Type: {0}
+DetailDisplayHandler.WriteClassicWeaponInfos.EffDamage:	Effective Damage:
+DetailDisplayHandler.WriteClassicWeaponInfos.Quality:	- {0}% Quality
+DetailDisplayHandler.WriteClassicWeaponInfos.SPD:	- {0} Weapon Speed
+DetailDisplayHandler.WriteHorseInfo.AdvancedHorse:	This is an advanced horse.
+DetailDisplayHandler.WriteHorseInfo.Armor:		- Armor: {0}
+DetailDisplayHandler.WriteHorseInfo.Barding:		- Barding: None
+DetailDisplayHandler.WriteHorseInfo.BasicHorse:		This is a basic horse.
+DetailDisplayHandler.WriteHorseInfo.Food:		- Favorite food: Hay and the occasional apple
+DetailDisplayHandler.WriteHorseInfo.MountWindow:	To make this horse your active mount, place this icon in the appropriate slot of your Mount window.
+DetailDisplayHandler.WriteHorseInfo.Name:		- Name: {0}.
+DetailDisplayHandler.WriteHorseInfo.NameMount:		  (Use /namemount to name your horse.)
+DetailDisplayHandler.WriteHorseInfo.Quickbar:		To summon this horse, from your Mount window drag the horse icon to your quickbar, and summon by using the quickbar icon.
+DetailDisplayHandler.WriteHorseInfo.RvRZzones:		Can't be summoned in RvR zones.
+DetailDisplayHandler.WriteHorseInfo.Speed1:		(+35% speed)
+DetailDisplayHandler.WriteHorseInfo.Speed2:		(+45% speed)
+DetailDisplayHandler.WriteHorseInfo.Summon:		Click this icon in your quickbar to summon (or dismount) your horse.
+DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic:	Charged Magic Ability:
+DetailDisplayHandler.WriteMagicalBonuses.Charges:	- {0} Charges
+DetailDisplayHandler.WriteMagicalBonuses.FocusBonus:	Focus Bonuses:
+DetailDisplayHandler.WriteMagicalBonuses.Level:		- {0} Level
+DetailDisplayHandler.WriteMagicalBonuses.LevelRequired:	Level Requirement
+DetailDisplayHandler.WriteMagicalBonuses.MagicAbility:	Magical Ability:
+DetailDisplayHandler.WriteMagicalBonuses.MagicBonus:	Magical Bonuses:
+DetailDisplayHandler.WriteMagicalBonuses.MaxCharges:	- {0} Max
+DetailDisplayHandler.WriteMagicalBonuses.StrikeArmor:	- Spell has a chance of casting when enemy strikes at this armor.
+DetailDisplayHandler.WriteMagicalBonuses.StrikeEnemy:	- Spell has a chance of casting when this weapon strikes an enemy.
+DetailDisplayHandler.WriteMagicalBonuses.UsedItem:	- Spell has a chance of casting when this item is used.
+DetailDisplayHandler.WriteMagicalBonuses.UseItem1:	Can use item every: {0}
+DetailDisplayHandler.WriteMagicalBonuses.UseItem2:	Can use item every: 3:00 min.
+DetailDisplayHandler.WriteMagicalBonuses.UseItem3:	Can use again in: {0}.
+DetailDisplayHandler.WritePoisonInfo.Charges:		- {0} Charges
+DetailDisplayHandler.WritePoisonInfo.Level:		- {0} Level
+DetailDisplayHandler.WritePoisonInfo.LevelRequired:	Level Requirement:
+DetailDisplayHandler.WritePoisonInfo.MaxCharges:	- {0} Max
+DetailDisplayHandler.WritePoisonInfo.ProcAbility:	Offensive Proc Ability:
+DetailDisplayHandler.WritePotionInfo.ChargedMagic:	Charged Magic Ability:
+DetailDisplayHandler.WritePotionInfo.Charges:		- {0} Charges
+DetailDisplayHandler.WritePotionInfo.Level:		- {0} Level
+DetailDisplayHandler.WritePotionInfo.LevelRequired:	Level Requirement:
+DetailDisplayHandler.WritePotionInfo.MaxCharges:	- {0} Max
+DetailDisplayHandler.WritePotionInfo.NoUseInCombat:	Cannot be used in combat
+DetailDisplayHandler.WritePotionInfo.UseItem2:		Can use item every: 1:00 min
+DetailDisplayHandler.WritePotionInfo.UseItem3:		Can use again in: {0}.
+DetailDisplayHandler.WriteUsableClasses.UsableBy:	Usable by: 
+
 # /DoorRequestHandler.cs
 DoorRequestHandler.OnTick.TooFarAway:			The {0} is too far away!
 
