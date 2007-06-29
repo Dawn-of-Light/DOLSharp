@@ -1302,7 +1302,7 @@ Type    Description           Id
 			if (item.DPS_AF != 0)
 			{
 				EAF = AF * item.Quality / 100.0 * item.Condition / item.MaxCondition * (1 + item.SPD_ABS / 100.0);
-				output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicArmorInfos.Factor"));
+				output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicArmorInfos.Factor", (int)EAF));
 			}
 
 		}
