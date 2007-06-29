@@ -244,7 +244,7 @@ GamePlayer.OnSkillTrained.YouHave:			Ihr habt {0} Punkte übrig.
 GamePlayer.OnSkillTrained.YouSpend:			Ihr verteilt {0} Punkte und spezialisiert Euch weiter im Bereich "{1}".		
 GamePlayer.OpenSelfCraft.AlreadySelfCrafting:		Ihr seid gerade beim Arbeiten.			
 GamePlayer.OpenSelfCraft.CanOnlyCraftBackpack:		Ihr könnt nur Gegenstände in Eurem Inventar bearbeiten!			
-GamePlayer.PickupObject.Autosplit:			(Automatisch) {0} bekommt {1}.
+GamePlayer.PickupObject.Autosplit:			(Beuteteilung) {0} bekommt {1}.
 GamePlayer.PickupObject.BackpackFull:			Euer Rucksack ist voll. Ihr solltet erst etwas weglegen.		
 GamePlayer.PickupObject.CantGetThat:			Ihr könnt das nicht bekommen!		
 GamePlayer.PickupObject.GroupMemberPicksUp:		{0} hebt {1} auf.
@@ -470,6 +470,136 @@ GameStableMaster.HorseName:				Reitpferd
 GameStableMaster.UnknownWay:				Tut mir leid, dieses Ticket nach {0} ist hier nicht gültig.
 
 # /packets/Client/168
+# /DetailDisplayHandler
+DetailDisplayHandler.GetShortItemInfo.CrafterName:	Crafter : {0}
+DetailDisplayHandler.GetShortItemInfo.NoDrop:		 No Drop.
+DetailDisplayHandler.GetShortItemInfo.NoSell:		 No Sell.
+DetailDisplayHandler.GetShortItemInfo.NoTrade:		 No Trade.
+DetailDisplayHandler.HandlePacket.Any:			Egal
+DetailDisplayHandler.HandlePacket.Back:			(von Hinten)
+DetailDisplayHandler.HandlePacket.CannotDropped:	Kann nicht abgelegt oder beim Schatzhüter hinterlegt werden.
+DetailDisplayHandler.HandlePacket.CannotSold:		Kann nicht an Händler verkauft werden.
+DetailDisplayHandler.HandlePacket.CannotTraded:		Kann nicht gehandelt werden.
+DetailDisplayHandler.HandlePacket.ChampionLevel:	- Benötigt: Championstufe {0}
+DetailDisplayHandler.HandlePacket.ChatItem:		[Chat] {0}/Item: "{1}"
+DetailDisplayHandler.HandlePacket.CrafterName:		Crafter : {0}
+DetailDisplayHandler.HandlePacket.Damage:		Schaden: 
+DetailDisplayHandler.HandlePacket.Defense:		Defensiv: 
+DetailDisplayHandler.HandlePacket.DontBelongGuild:	Ihr gehört keiner Gilde an.
+DetailDisplayHandler.HandlePacket.FatigueCost:		Erschöpfungskosten: 
+DetailDisplayHandler.HandlePacket.FollowupStyle:	Folgekampfstil: {0}
+DetailDisplayHandler.HandlePacket.Front:		(von Vorne)	
+DetailDisplayHandler.HandlePacket.GuildItem:		[Guild] {0}/Item: "{1}"
+DetailDisplayHandler.HandlePacket.High:			Hoch
+DetailDisplayHandler.HandlePacket.HighBonus:		Hoher Bonus
+DetailDisplayHandler.HandlePacket.HighPenalty:		Hoher Abzug
+DetailDisplayHandler.HandlePacket.Item:			{0}/Item: "{1}
+DetailDisplayHandler.HandlePacket.LevName:		Stufe   Name
+DetailDisplayHandler.HandlePacket.Low:			Niedrig
+DetailDisplayHandler.HandlePacket.LowBonus:		Niedriger Bonus
+DetailDisplayHandler.HandlePacket.LowPenalty:		Niedriger Abzug
+DetailDisplayHandler.HandlePacket.Medium:		Normal
+DetailDisplayHandler.HandlePacket.MediumBonus:		Normaler Bonus
+DetailDisplayHandler.HandlePacket.MediumPenalty:	Normaler Abzug
+DetailDisplayHandler.HandlePacket.MustBeInChatGroup:	Ihr müsst in einer Chatgruppe sein.
+DetailDisplayHandler.HandlePacket.NoBonus:		Kein Bonus
+DetailDisplayHandler.HandlePacket.NoGroup:		Ihr seit kein Mitglied einer Gruppe.
+DetailDisplayHandler.HandlePacket.NoInformation:	Keine besonderen Informationen!
+DetailDisplayHandler.HandlePacket.NoPermissionToSpeak:	Ihr habt nicht das Recht um mit der Gilde zu reden.	
+DetailDisplayHandler.HandlePacket.OnlyModerator:	Nur der Moderator darf in dieser Chatgruppe reden.
+DetailDisplayHandler.HandlePacket.Opening:		Benötigt: 
+DetailDisplayHandler.HandlePacket.OpeningStyle:		Eröffnungskampfstil: 
+DetailDisplayHandler.HandlePacket.Or:			 oder {0}
+DetailDisplayHandler.HandlePacket.Positional:		Positionsabhängig 
+DetailDisplayHandler.HandlePacket.Side:			(von der Seite)
+DetailDisplayHandler.HandlePacket.TargetBlocks:		Ziel blockt ab
+DetailDisplayHandler.HandlePacket.TargetEffect:		Zieleffekt: 
+DetailDisplayHandler.HandlePacket.TargetEvades:		Ziel weicht aus
+DetailDisplayHandler.HandlePacket.TargetFumbles:	Ziel verstolpert
+DetailDisplayHandler.HandlePacket.TargetHits:		Ziel trifft
+DetailDisplayHandler.HandlePacket.TargetMisses:		Ziel trifft nicht
+DetailDisplayHandler.HandlePacket.TargetParrys:		Ziel pariert
+DetailDisplayHandler.HandlePacket.TargetStyle:		Ziel Style
+DetailDisplayHandler.HandlePacket.ToHit:		Trefferchance: 
+DetailDisplayHandler.HandlePacket.VeryHigh:		Sehr Hoch
+DetailDisplayHandler.HandlePacket.VeryHighBonus:	Sehr hoher Bonus	
+DetailDisplayHandler.HandlePacket.VeryHighPenalty:	Sehr hoher Abzug
+DetailDisplayHandler.HandlePacket.VeryLow:		Sehr Niedrig
+DetailDisplayHandler.HandlePacket.VeryLowBonus:		Sehr niedriger Bonus
+DetailDisplayHandler.HandlePacket.VeryLowPenalty:	Sehr niedriger Abzug
+DetailDisplayHandler.HandlePacket.VeryStrange:		It's very strange, i cant recognise this item.
+DetailDisplayHandler.HandlePacket.WeaponType:		Waffentyp: {0}
+DetailDisplayHandler.HandlePacket.YouBlock:		Ihr blockt ab
+DetailDisplayHandler.HandlePacket.YouEvade:		Ihr weicht aus
+DetailDisplayHandler.HandlePacket.YouFumble:		Ihr verstolpert
+DetailDisplayHandler.HandlePacket.YouHit:		Ihr trefft
+DetailDisplayHandler.HandlePacket.YouMiss:		Ihr trefft nicht
+DetailDisplayHandler.HandlePacket.YouParry:		Ihr pariert
+DetailDisplayHandler.WriteClassicArmorInfos.Absorption:	- {0}% Absorption
+DetailDisplayHandler.WriteClassicArmorInfos.ArmorMod:	Rüstungsmodifikator:
+DetailDisplayHandler.WriteClassicArmorInfos.BaseFactor:	- RF {0} Ausgangswert
+DetailDisplayHandler.WriteClassicArmorInfos.ClampFact:	- RF {0} für Euch nutzbar
+DetailDisplayHandler.WriteClassicArmorInfos.Condition:	- {0}% Zustand
+DetailDisplayHandler.WriteClassicArmorInfos.EffArmor:	Effektive Rüstung:
+DetailDisplayHandler.WriteClassicArmorInfos.Factor:	- {0} Rüstfaktor
+DetailDisplayHandler.WriteClassicArmorInfos.Quality:	- {0}% Qualität
+DetailDisplayHandler.WriteClassicShieldInfos.BaseDPS:	- {0} DPS Ausgangswert
+DetailDisplayHandler.WriteClassicShieldInfos.ClampDPS:	- {0} DPS für Euch nutzbar
+DetailDisplayHandler.WriteClassicShieldInfos.DamageMod:	Schadensmodifikator (bei Verwendung von Schildstilen):
+DetailDisplayHandler.WriteClassicShieldInfos.Large:	- Schildgröße: Groß
+DetailDisplayHandler.WriteClassicShieldInfos.Medium:	- Schildgröße Mittel
+DetailDisplayHandler.WriteClassicShieldInfos.Small:	- Schildgröße Klein
+DetailDisplayHandler.WriteClassicShieldInfos.SPD:	- {0} Schildgeschwindigkeit
+DetailDisplayHandler.WriteClassicWeaponInfos.BaseDPS:	- {0} DPS Ausgangswert
+DetailDisplayHandler.WriteClassicWeaponInfos.ClampDPS:	- {0} DPS für Euch nutzbar
+DetailDisplayHandler.WriteClassicWeaponInfos.Condition:	- {0}% Zustand
+DetailDisplayHandler.WriteClassicWeaponInfos.DamageMod:	Schadensmodifikator:
+DetailDisplayHandler.WriteClassicWeaponInfos.DamageType:Schadensart: {0}
+DetailDisplayHandler.WriteClassicWeaponInfos.EffDamage:	Effektiver Schaden:
+DetailDisplayHandler.WriteClassicWeaponInfos.Quality:	- {0}% Qualität
+DetailDisplayHandler.WriteClassicWeaponInfos.SPD:	- {0} Waffengeschwindigkeit
+DetailDisplayHandler.WriteHorseInfo.AdvancedHorse:	This is an advanced horse.
+DetailDisplayHandler.WriteHorseInfo.Armor:		- Rüstung: {0}
+DetailDisplayHandler.WriteHorseInfo.Barding:		- Barding: None
+DetailDisplayHandler.WriteHorseInfo.BasicHorse:		Das ist ein einfaches Pferd.
+DetailDisplayHandler.WriteHorseInfo.Food:		- Lieblingsfutter: Heu und gelegentlich Äpfel
+DetailDisplayHandler.WriteHorseInfo.MountWindow:	To make this horse your active mount, place this icon in the appropriate slot of your Mount window.
+DetailDisplayHandler.WriteHorseInfo.Name:		- Name: {0}.
+DetailDisplayHandler.WriteHorseInfo.NameMount:		  (Verwendet /namemount um Eurem Pferd einen Namen zu geben.)
+DetailDisplayHandler.WriteHorseInfo.Quickbar:		To summon this horse, from your Mount window drag the horse icon to your quickbar, and summon by using the quickbar icon.
+DetailDisplayHandler.WriteHorseInfo.RvRZzones:		Can't be summoned in RvR zones.
+DetailDisplayHandler.WriteHorseInfo.Speed1:		(+35% Geschwindigkeit)
+DetailDisplayHandler.WriteHorseInfo.Speed2:		(+45% Geschwindigkeit)
+DetailDisplayHandler.WriteHorseInfo.Summon:		Click this icon in your quickbar to summon (or dismount) your horse.
+DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic:	Charged Magic Fähigkeit:
+DetailDisplayHandler.WriteMagicalBonuses.Charges:	- {0} Ladungen
+DetailDisplayHandler.WriteMagicalBonuses.FocusBonus:	Fokusboni:
+DetailDisplayHandler.WriteMagicalBonuses.Level:		- Stufe {0}
+DetailDisplayHandler.WriteMagicalBonuses.LevelRequired:	Benötigte Erfahrung:
+DetailDisplayHandler.WriteMagicalBonuses.MagicAbility:	Magiefähigkeit:
+DetailDisplayHandler.WriteMagicalBonuses.MagicBonus:	Magieboni:
+DetailDisplayHandler.WriteMagicalBonuses.MaxCharges:	- {0} Max
+DetailDisplayHandler.WriteMagicalBonuses.StrikeArmor:	- Zauber wird aktiv, wenn enemy strikes at this armor.
+DetailDisplayHandler.WriteMagicalBonuses.StrikeEnemy:	- Zauber wird aktiv, wenn this weapon strikes an enemy.
+DetailDisplayHandler.WriteMagicalBonuses.UsedItem:	- Zauber wird aktiv, wenn der Gegenstand benutzt wird.
+DetailDisplayHandler.WriteMagicalBonuses.UseItem1:	Wiederverwendbar alle {0} Minuten.
+DetailDisplayHandler.WriteMagicalBonuses.UseItem2:	Wiederverwendbar alle 3:00 Minuten.
+DetailDisplayHandler.WriteMagicalBonuses.UseItem3:	Kann wieder verwendet werden in: {0}.
+DetailDisplayHandler.WritePoisonInfo.Charges:		- {0} Ladungen
+DetailDisplayHandler.WritePoisonInfo.Level:		- Stufe {0}
+DetailDisplayHandler.WritePoisonInfo.LevelRequired:	Benötigte Erfahrung:
+DetailDisplayHandler.WritePoisonInfo.MaxCharges:	- {0} Max
+DetailDisplayHandler.WritePoisonInfo.ProcAbility:	Offensive Proc Fähigkeit:
+DetailDisplayHandler.WritePotionInfo.ChargedMagic:	Charged Magic Fähigkeit:
+DetailDisplayHandler.WritePotionInfo.Charges:		- {0} Ladungen
+DetailDisplayHandler.WritePotionInfo.Level:		- Stufe {0}
+DetailDisplayHandler.WritePotionInfo.LevelRequired:	Benötigte Erfahrung:
+DetailDisplayHandler.WritePotionInfo.MaxCharges:	- {0} Max
+DetailDisplayHandler.WritePotionInfo.NoUseInCombat:	Kann nicht im Kampf verwendet werden.
+DetailDisplayHandler.WritePotionInfo.UseItem2:		Wiederverwendbar jede Minute.
+DetailDisplayHandler.WritePotionInfo.UseItem3:		Kann wieder verwendet werden in: {0}.
+DetailDisplayHandler.WriteUsableClasses.UsableBy:	Geeignet für: 
+
 # /DoorRequestHandler.cs
 DoorRequestHandler.OnTick.TooFarAway:			Ihr seid zu weit weg von [{0}]!
 
