@@ -60,7 +60,7 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// Global Constant for all quests to define wether npcs and items should be saved in db or not.
 		/// </summary>
-		public static bool SAVE_INTO_DATABASE = true;
+		public static bool SAVE_INTO_DATABASE = ServerProperties.Properties.SAVE_QUESTITEMS_INTO_DATABASE;
 
 		public static Queue m_sayTimerQueue = new Queue();
 		public static Queue m_sayObjectQueue = new Queue();
