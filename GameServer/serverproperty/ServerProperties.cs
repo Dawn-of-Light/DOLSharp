@@ -392,7 +392,13 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("disable_instances", "Enable or disable instances on the server", false)]
 		public static readonly bool DISABLE_INSTANCES;
-		
+
+		/// <summary>
+		/// Save QuestItems into Database
+		/// </summary>
+		[ServerProperty("save_questitems_into_database", "set false if you don't want this", true)]
+		public static readonly bool SAVE_QUESTITEMS_INTO_DATABASE;
+
 		/// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
