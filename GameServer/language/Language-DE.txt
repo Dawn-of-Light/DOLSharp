@@ -547,8 +547,8 @@ DetailDisplayHandler.WriteClassicShieldInfos.BaseDPS:	- {0} DPS Ausgangswert
 DetailDisplayHandler.WriteClassicShieldInfos.ClampDPS:	- {0} DPS für Euch nutzbar
 DetailDisplayHandler.WriteClassicShieldInfos.DamageMod:	Schadensmodifikator (bei Verwendung von Schildstilen):
 DetailDisplayHandler.WriteClassicShieldInfos.Large:	- Schildgröße: Groß
-DetailDisplayHandler.WriteClassicShieldInfos.Medium:	- Schildgröße Mittel
-DetailDisplayHandler.WriteClassicShieldInfos.Small:	- Schildgröße Klein
+DetailDisplayHandler.WriteClassicShieldInfos.Medium:	- Schildgröße: Mittel
+DetailDisplayHandler.WriteClassicShieldInfos.Small:	- Schildgröße: Klein
 DetailDisplayHandler.WriteClassicShieldInfos.SPD:	- {0} Schildgeschwindigkeit
 DetailDisplayHandler.WriteClassicWeaponInfos.BaseDPS:	- {0} DPS Ausgangswert
 DetailDisplayHandler.WriteClassicWeaponInfos.ClampDPS:	- {0} DPS für Euch nutzbar
