@@ -1485,18 +1485,14 @@ namespace DOL.GS
 				{
 					brain = (ABrain)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(npc.Brain, false);
 				}
-				catch (Exception e)
-				{
-				}
+				catch (Exception) {}
 				if (brain == null)
 				{
 					try
 					{
 						brain = (ABrain)Assembly.GetExecutingAssembly().CreateInstance(npc.Brain, false);
 					}
-					catch (Exception e)
-					{
-					}
+					catch (Exception) {}
 				}
 				if (brain != null)
 					SetOwnBrain(brain);

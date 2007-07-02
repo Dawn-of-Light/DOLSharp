@@ -1151,7 +1151,7 @@ namespace DOL.GS
 					}
 					catch (Exception e)
 					{
-						log.Error("GetArea exception.Area count " + m_ZoneAreasCount[zoneIndex]);
+						log.Error("GetArea exception.Area count " + m_ZoneAreasCount[zoneIndex], e);
 					}
 				}
 				return areas;
@@ -1178,7 +1178,7 @@ namespace DOL.GS
 					}
 					catch (Exception e)
 					{
-						log.Error("GetArea exception.Area count " + m_ZoneAreasCount[zoneIndex]);
+						log.Error("GetArea exception.Area count " + m_ZoneAreasCount[zoneIndex], e);
 					}
 				}
 				return areas;

@@ -536,7 +536,7 @@ namespace DOL.GS.PacketHandler
 //			log.FatalFormat("Send UDP: {0}", isForced);
 
 			//No udp available, send via TCP instead!
-			bool flagLostUDP = false;
+			//bool flagLostUDP = false;
 			if (m_client.UDPEndPoint == null || !(isForced || m_client.UDPConfirm))
 			{
 //				log.FatalFormat("UDP sent over TCP");
@@ -552,7 +552,7 @@ namespace DOL.GS.PacketHandler
 			{
 				if ((DateTime.Now.Ticks - m_client.UDPPingTime) > 500000000L) // really 24s, not 50s
 				{
-					flagLostUDP = true;
+					//flagLostUDP = true;
 					m_client.UDPConfirm = false;
 				}
 			}
@@ -904,7 +904,7 @@ namespace DOL.GS.PacketHandler
 			{
 				log.ErrorFormat("Received packet code is outside of m_packetHandlers array bounds! "+m_client.ToString());
 				log.Error(Marshal.ToHexDump(
-					String.Format("===> <{2}> Packet 0x{0:X2} (0x{1:X2}) length: {3} (ThreadId={4})", code, code ^ 168, (m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint, packet.PacketSize, AppDomain.GetCurrentThreadId()),
+					String.Format("===> <{2}> Packet 0x{0:X2} (0x{1:X2}) length: {3} (ThreadId={4})", code, code ^ 168, (m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint, packet.PacketSize, Thread.CurrentThread.ManagedThreadId),
 					packet.ToArray()));
 			}
 
@@ -912,7 +912,7 @@ namespace DOL.GS.PacketHandler
 			//if (packet.ID != (0x12^168) && packet.ID != (0x0b^168) && packet.ID != (0x01^168)) {
 			if (log.IsDebugEnabled)
 				log.Debug(Marshal.ToHexDump(
-					String.Format("===> <{2}> Packet 0x{0:X2} (0x{1:X2}) length: {3} handled by {4} (ThreadId={5})", code, code ^ 168, (m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint, packet.PacketSize, packetHandler, AppDomain.GetCurrentThreadId()),
+					String.Format("===> <{2}> Packet 0x{0:X2} (0x{1:X2}) length: {3} handled by {4} (ThreadId={5})", code, code ^ 168, (m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint, packet.PacketSize, packetHandler, Thread.CurrentThread.ManagedThreadId),
 					packet.ToArray()));
 
 			if (packetHandler != null)
@@ -924,7 +924,7 @@ namespace DOL.GS.PacketHandler
 					{
 						monitorTimer = new Timer(10000);
 						m_activePacketHandler = packetHandler;
-						m_handlerThreadID = AppDomain.GetCurrentThreadId();
+						m_handlerThreadID = Thread.CurrentThread.ManagedThreadId;
 						monitorTimer.Elapsed += new ElapsedEventHandler(HandlePacketTimeout);
 						monitorTimer.Start();
 					}
@@ -980,7 +980,7 @@ namespace DOL.GS.PacketHandler
 				{
 					string source = ((m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint);
 					if (log.IsWarnEnabled)
-						log.Warn("(" + source + ") Handle packet Thread " + AppDomain.GetCurrentThreadId() + " " + packetHandler + " took " + timeUsed + "ms!");
+						log.Warn("(" + source + ") Handle packet Thread " + Thread.CurrentThread.ManagedThreadId + " " + packetHandler + " took " + timeUsed + "ms!");
 				}
 			}
 		}

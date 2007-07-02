@@ -787,7 +787,7 @@ namespace DOL.GS.ServerRules
 							outpostXP = (xpReward / 100) * bonus;
 						}
 
-#warning this is a guess, I do not know the real way this is applied
+						//FIXME: [WARN] this is a guess, I do not know the real way this is applied
 						//apply the keep bonus for experience
 						if (Keeps.KeepBonusMgr.RealmHasBonus(eKeepBonusType.Experience_5, (eRealm)living.Realm))
 							outpostXP += (xpReward / 100) * 5;
@@ -1077,7 +1077,7 @@ namespace DOL.GS.ServerRules
 					if (bountyPoints > bpCap)
 						bountyPoints = bpCap;
 
-#warning this is guessed, i do not believe this is the right way, we will most likely need special messages to be sent
+					//FIXME: [WARN] this is guessed, i do not believe this is the right way, we will most likely need special messages to be sent
 					//apply the keep bonus for bounty points
 					if (killer != null)
 					{

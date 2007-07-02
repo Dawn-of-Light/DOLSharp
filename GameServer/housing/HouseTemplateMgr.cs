@@ -136,16 +136,16 @@ namespace DOL.GS.Housing
 			CheckItemTemplate("lathe", "lathe", 1496, (int)eObjectType.HouseInteriorObject, 10000000, 0, 0, 0, 0, 0);
 
 			//indoor bindstone
-#warning not used
+			//TODO: [WARN] not used
 			CheckItemTemplate("Albion bindstone", "alb_bindstone", 1488, (int)eObjectType.HouseBindstone, 10000000, 0, 0, 0, 0, 1);
-#warning not used
+			//TODO: [WARN] not used
 			CheckItemTemplate("Midgard bindstone", "mid_bindstone", 1492, (int)eObjectType.HouseBindstone, 10000000, 0, 0, 0, 0, 2);
 			CheckItemTemplate("Hibernia bindstone", "hib_bindstone", 1490, (int)eObjectType.HouseBindstone, 10000000, 0, 0, 0, 0, 3);
 
 			//indoor vault
-#warning not used
+			//TODO: [WARN] not used
 			CheckItemTemplate("Albion vault", "alb_vault", 1489, (int)eObjectType.HouseVault, 10000000, 0, 0, 0, 0, 1);
-#warning not used
+			//TODO: [WARN] not used
 			CheckItemTemplate("Midgard vault", "mid_vault", 1493, (int)eObjectType.HouseVault, 10000000, 0, 0, 0, 0, 2);
 			CheckItemTemplate("Hibernia vault", "hib_vault", 1491, (int)eObjectType.HouseVault, 10000000, 0, 0, 0, 0, 3);
 		}
@@ -243,39 +243,39 @@ namespace DOL.GS.Housing
 			//Recharger
 			CheckNPCTemplate(505, "DOL.GS.Scripts.Recharger", "Recharger", "50", "");
 			//Teleporter
-#warning TODO
+			//TODO: [WARN] CheckNPCTemplate( ... Teleporter ... )
 			CheckNPCTemplate(506, "DOL.GS.GameNPC", "Teleporter", "50", "");
 			//Apprentice Merchant
-#warning TODO merchant list
+			//TODO: [WARN] merchant list
 			CheckNPCTemplate(507, "DOL.GS.GameMerchant", "Merchant", "50", "");
 			//Grandmaster Merchant
-#warning TODO merchant list
+			//TODO: [WARN] merchant list
 			CheckNPCTemplate(508, "DOL.GS.GameMerchant", "Merchant", "50", "");
 			//Incantation Merchant
-#warning TODO merchant list
+			//TODO: [WARN] merchant list
 			CheckNPCTemplate(509, "DOL.GS.GameMerchant", "Merchant", "50", "");
 			//Poison and Dye Supplies
-#warning TODO merchant list
+			//TODO: [WARN] merchant list
 			CheckNPCTemplate(510, "DOL.GS.GameMerchant", "Merchant", "50", "");
 			//Potion, Tincture, and Enchantment Supplies
-#warning TODO merchant list
+			//TODO: [WARN] merchant list
 			CheckNPCTemplate(511, "DOL.GS.GameMerchant", "Merchant", "50", "");
 			//Poison and Potion Supplies
-#warning TODO merchant list
+			//TODO: [WARN] merchant list
 			CheckNPCTemplate(512, "DOL.GS.GameMerchant", "Merchant", "50", "");
 			//Dye, Tincture, and Enchantment Supplies
-#warning TODO merchant list
+			//TODO: [WARN] merchant list
 			CheckNPCTemplate(513, "DOL.GS.GameMerchant", "Merchant", "50", "");
 			//Taxidermy Supplies
-#warning TODO merchant list
+			//TODO: [WARN] merchant list
 			CheckNPCTemplate(514, "DOL.GS.GameMerchant", "Merchant", "50", "");
 			//Siegecraft Supplies
-#warning TODO merchant list
+			//TODO: [WARN] merchant list
 			CheckNPCTemplate(515, "DOL.GS.GameMerchant", "Merchant", "50", "");
 			//Hibernia Vault Keeper
 			CheckNPCTemplate(516, "DOL.GS.Scripts.GameVaultKeeper", "Vault Keeper", "50", "");
 			//Dye Supply Master
-#warning TODO merchant list
+			//TODO: [WARN] merchant list
 			CheckNPCTemplate(517, "DOL.GS.GameMerchant", "Merchant", "50", "");
 			#endregion
 		}

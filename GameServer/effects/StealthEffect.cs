@@ -32,10 +32,14 @@ namespace DOL.GS.Effects
 		/// </summary>
 		GamePlayer m_player;
 
+		//VaNaTiC->
+		/*
 		/// <summary>
 		/// The internal unique effect ID
 		/// </summary>
 		ushort m_id;
+		*/
+		//VaNaTiC<-		
 
 		/// <summary>
 		/// Creates a new stealth effect
@@ -56,7 +60,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Stop the effect on target
 		/// </summary>
-		public void Stop()
+		public override void Stop()
 		{
 			if (m_player.HasAbility(Abilities.Camouflage))
 			{
@@ -70,7 +74,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Called when effect must be canceled
 		/// </summary>
-		public void Cancel(bool playerCancel)
+		public override void Cancel(bool playerCancel)
 		{
 			m_player.Stealth(false);
 		}
@@ -78,26 +82,30 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-		public string Name { get { return "Hidden"; } }
+		public override string Name { get { return "Hidden"; } }
 
 		/// <summary>
 		/// Remaining Time of the effect in milliseconds
 		/// </summary>
-		public int RemainingTime { get { return 0; } }
+		public override int RemainingTime { get { return 0; } }
 
 		/// <summary>
 		/// Icon to show on players, can be id
 		/// </summary>
-		public ushort Icon { get { return 0x193; } }
+		public override ushort Icon { get { return 0x193; } }
 
+		//VaNaTiC->
+		/*
 		/// <summary>
 		/// unique id for identification in effect list
 		/// </summary>
 		public ushort InternalID { get { return m_id; } set { m_id = value; } }
+		*/
+		//VaNaTiC<-
 
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public IList DelveInfo { get { return new ArrayList(0); } }
+		public override IList DelveInfo { get { return new ArrayList(0); } }
 	}
 }

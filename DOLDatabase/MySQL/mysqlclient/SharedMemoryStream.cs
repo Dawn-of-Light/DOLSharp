@@ -65,12 +65,14 @@ namespace MySql.Data.MySqlClient
 		private void GetConnectNumber(int timeOut)
 		{
 			AutoResetEvent connectRequest = new AutoResetEvent(false);
-			connectRequest.Handle = OpenEvent( EVENT_ALL_ACCESS, false, 
-				memoryName + "_" + "CONNECT_REQUEST" );
+			connectRequest.SafeWaitHandle = new Microsoft.Win32.SafeHandles.SafeWaitHandle(
+				OpenEvent( EVENT_ALL_ACCESS, false, memoryName + "_" + "CONNECT_REQUEST" ),
+				true);
 
 			AutoResetEvent connectAnswer = new AutoResetEvent(false);
-			connectAnswer.Handle = OpenEvent( EVENT_ALL_ACCESS, false, 
-				memoryName + "_" + "CONNECT_ANSWER" );
+			connectAnswer.SafeWaitHandle = new Microsoft.Win32.SafeHandles.SafeWaitHandle(
+				OpenEvent( EVENT_ALL_ACCESS, false, memoryName + "_" + "CONNECT_ANSWER" ),
+				true);
 
 			IntPtr connectFileMap = OpenFileMapping( FILE_MAP_WRITE, false,
 				memoryName + "_" + "CONNECT_DATA" );
@@ -94,20 +96,24 @@ namespace MySql.Data.MySqlClient
 			dataView = MapViewOfFile( dataMap, FILE_MAP_WRITE, 0, 0, (UIntPtr)(uint)BUFFERLENGTH );
 
 			serverWrote = new AutoResetEvent(false);
-			serverWrote.Handle = OpenEvent( EVENT_ALL_ACCESS, false, 
-				dataMemoryName + "_SERVER_WROTE" );
+			serverWrote.SafeWaitHandle =  new Microsoft.Win32.SafeHandles.SafeWaitHandle(
+				OpenEvent( EVENT_ALL_ACCESS, false, dataMemoryName + "_SERVER_WROTE" ),
+				true);
 
 			serverRead = new AutoResetEvent(false);
-			serverRead.Handle = OpenEvent( EVENT_ALL_ACCESS, false, 
-				dataMemoryName + "_SERVER_READ" );
+			serverRead.SafeWaitHandle =  new Microsoft.Win32.SafeHandles.SafeWaitHandle(
+				OpenEvent( EVENT_ALL_ACCESS, false, dataMemoryName + "_SERVER_READ" ),
+				true);
 
 			clientWrote = new AutoResetEvent(false);
-			clientWrote.Handle = OpenEvent( EVENT_ALL_ACCESS, false, 
-				dataMemoryName + "_CLIENT_WROTE" );
+			clientWrote.SafeWaitHandle =  new Microsoft.Win32.SafeHandles.SafeWaitHandle(
+				OpenEvent( EVENT_ALL_ACCESS, false, dataMemoryName + "_CLIENT_WROTE" ),
+				true);
 
 			clientRead = new AutoResetEvent(false);
-			clientRead.Handle = OpenEvent( EVENT_ALL_ACCESS, false, 
-				dataMemoryName + "_CLIENT_READ" );
+			clientRead.SafeWaitHandle =  new Microsoft.Win32.SafeHandles.SafeWaitHandle(
+				OpenEvent( EVENT_ALL_ACCESS, false, dataMemoryName + "_CLIENT_READ" ),
+				true);
 
 			// tell the server we are ready
 			serverRead.Set();

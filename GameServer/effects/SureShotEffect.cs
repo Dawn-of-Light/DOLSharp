@@ -53,7 +53,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Called when effect must be canceled
 		/// </summary>
-		public void Cancel(bool playerCancel) 
+		public override void Cancel(bool playerCancel) 
 		{
 			m_player.EffectList.Remove(this);
 		}
@@ -61,18 +61,20 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-		public string Name { get { return "Sure Shot"; } }
+		public override string Name { get { return "Sure Shot"; } }
 
 		/// <summary>
 		/// Remaining Time of the effect in seconds
 		/// </summary>
-		public int RemainingTime { get { return 0; } }
+		public override int RemainingTime { get { return 0; } }
 
 		/// <summary>
 		/// Icon to show on players, can be id
 		/// </summary>
-		public ushort Icon { get { return 485; } }
+		public override ushort Icon { get { return 485; } }
 
+		//VaNaTiC->
+		/*
 		/// <summary>
 		/// unique id for identification in effect list
 		/// </summary>
@@ -86,10 +88,12 @@ namespace DOL.GS.Effects
 			get { return m_id; }
 			set { m_id = value; }
 		}
+		*/
+		//VaNaTiC<-
 
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public IList DelveInfo { get { return new ArrayList(0); } }
+		public override IList DelveInfo { get { return new ArrayList(0); } }
 	}
 }
