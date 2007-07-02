@@ -105,7 +105,8 @@ namespace DOL.GS.Keeps
 					}
 				case "tower raize":
 					{
-						break;
+						#warning VaNaTiC: commented out a strange break, verify is needed!
+						//break;
 						if (player.PlayerGroup == null)
 						{
 							SayTo(player, "You are not in a group!");
@@ -224,7 +225,8 @@ namespace DOL.GS.Keeps
 							return false;
 						}
 						SayTo(player, "This type of mission is not yet implemented");
-						break;
+						#warning VaNaTiC: commented out a strange break, verify is needed!
+						//break;
 						SayTo(player, "Outstanding, we can always use help from organized guilds. Would you like to press the attack on the realm of [Albion] or the realm of [Hibernia].");
 						break;
 					}

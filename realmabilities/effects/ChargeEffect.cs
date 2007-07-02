@@ -13,7 +13,6 @@ namespace DOL.GS.Effects
 		GamePlayer m_player;
 		protected long m_startTick;
 		protected RegionTimer m_expireTimer;
-		private UInt16 m_id;
 
 		public void Start(GamePlayer player)
 		{
@@ -45,7 +44,7 @@ namespace DOL.GS.Effects
 			m_player.EffectList.Add(this);
 		}
 
-		public void Cancel(bool playerCancel)
+		public override void Cancel(bool playerCancel)
 		{
 			m_player.TempProperties.removeProperty("Charging");
 			m_player.EffectList.Remove(this);
@@ -82,13 +81,13 @@ namespace DOL.GS.Effects
 
 
 		// Name of the effect
-		public string Name { get { return "Charge"; } }
+		public override string Name { get { return "Charge"; } }
 
 
 		/// <summary>
 		/// Remaining time of the effect in milliseconds
 		/// </summary>
-		public Int32 RemainingTime
+		public override Int32 RemainingTime
 		{
 			get
 			{
@@ -101,15 +100,10 @@ namespace DOL.GS.Effects
 
 
 		// Icon to show on players, can be id
-		public ushort Icon { get { return 457; } }
-
-
-		// unique id for identification in effect list
-		public ushort InternalID { get { return m_id; } set { m_id = value; } }
-
+		public override ushort Icon { get { return 457; } }
 
 		// Delve Info
-		public IList DelveInfo
+		public override IList DelveInfo
 		{
 			get
 			{

@@ -204,7 +204,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Start the berserk on a player
 		/// </summary>
-		public void Start(GameLiving living)
+		public override void Start(GameLiving living)
 		{
 			m_player = living;
 			//    log.Debug("Effect Started from DT detrimental effect on " + m_player.Name);
@@ -222,7 +222,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Called when effect must be canceled
 		/// </summary>
-		public void Cancel(bool playerCancel)
+		public override void Cancel(bool playerCancel)
 		{
 			if (playerCancel) // not cancelable by teh player
 				return;
@@ -271,12 +271,12 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-		public string Name { get { return "Dirty Tricks"; } }
+		public override string Name { get { return "Dirty Tricks"; } }
 
 		/// <summary>
 		/// Remaining Time of the effect in milliseconds
 		/// </summary>
-		public int RemainingTime
+		public override int RemainingTime
 		{
 			get
 			{
@@ -290,22 +290,12 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Icon to show on players, can be id
 		/// </summary>
-		public ushort Icon { get { return 478; } }
-
-		/// <summary>
-		/// Stores the internal effect ID
-		/// </summary>
-		ushort m_id;
-
-		/// <summary>
-		/// unique id for identification in effect list
-		/// </summary>
-		public ushort InternalID { get { return m_id; } set { m_id = value; } }
+		public override ushort Icon { get { return 478; } }
 
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public IList DelveInfo
+		public override IList DelveInfo
 		{
 			get
 			{

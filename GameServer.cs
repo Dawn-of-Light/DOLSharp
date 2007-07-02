@@ -1210,7 +1210,7 @@ namespace DOL
 					if (log.IsInfoEnabled)
 						log.Info("Saving database...");
 					if (log.IsDebugEnabled)
-						log.Debug("Save ThreadId=" + AppDomain.GetCurrentThreadId());
+						log.Debug("Save ThreadId=" + Thread.CurrentThread.ManagedThreadId);
 					int saveCount = 0;
 					if (m_database != null)
 					{

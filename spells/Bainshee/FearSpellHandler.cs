@@ -12,10 +12,14 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("Fear")]
 	public class FearSpellHandler : SpellHandler 
 	{
+		//VaNaTiC->
+		/*
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		*/
+		//VaNaTiC<-
 
 		public override void FinishSpellCast(GameLiving target)
 		{

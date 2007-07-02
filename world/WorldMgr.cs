@@ -476,7 +476,7 @@ namespace DOL.GS
 
 		private static void RelocateRegions()
 		{
-			log.InfoFormat("started RelocateRegions() thread ID:{0}", AppDomain.GetCurrentThreadId());
+			log.InfoFormat("started RelocateRegions() thread ID:{0}", Thread.CurrentThread.ManagedThreadId);
 			while (m_relocationThread != null && m_relocationThread.IsAlive)
 			{
 				try
@@ -511,7 +511,7 @@ namespace DOL.GS
 					log.Error(e.ToString());
 				}
 			}
-			log.InfoFormat("stopped RelocateRegions() thread ID:{0}", AppDomain.GetCurrentThreadId());
+			log.InfoFormat("stopped RelocateRegions() thread ID:{0}", Thread.CurrentThread.ManagedThreadId);
 		}
 
 		/// <summary>
@@ -577,7 +577,7 @@ namespace DOL.GS
 		{
 			bool running = true;
 			if (log.IsDebugEnabled)
-				log.Debug("NPCUpdateThread ThreadId=" + AppDomain.GetCurrentThreadId());
+				log.Debug("NPCUpdateThread ThreadId=" + Thread.CurrentThread.ManagedThreadId);
 			while (running)
 			{
 				try

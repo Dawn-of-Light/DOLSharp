@@ -16,7 +16,6 @@ namespace DOL.GS.Effects
 		private GamePlayer m_player;
 		private Int32 m_effectDuration;
 		private RegionTimer m_expireTimer;
-		private UInt16 m_id;
 		private int m_value;
 
 		/// <summary>
@@ -81,7 +80,7 @@ namespace DOL.GS.Effects
 		/// Called when effect is to be cancelled
 		/// </summary>
 		/// <param name="playerCancel">Whether or not effect is player cancelled</param>
-		public void Cancel(bool playerCancel)
+		public override void Cancel(bool playerCancel)
 		{
 
 			StopTimers();
@@ -138,7 +137,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-		public string Name
+		public override string Name
 		{
 			get
 			{
@@ -149,7 +148,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Remaining time of the effect in milliseconds
 		/// </summary>
-		public Int32 RemainingTime
+		public override Int32 RemainingTime
 		{
 			get
 			{
@@ -163,7 +162,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Icon ID
 		/// </summary>
-		public UInt16 Icon
+		public override UInt16 Icon
 		{
 			get
 			{
@@ -171,6 +170,8 @@ namespace DOL.GS.Effects
 			}
 		}
 
+		//VaNaTiC->
+		/*
 		/// <summary>
 		/// Unique ID for identification in the effect list
 		/// </summary>
@@ -184,12 +185,13 @@ namespace DOL.GS.Effects
 			{
 				m_id = value;
 			}
-		}
+		}*/
+		//VaNaTiC<-
 
 		/// <summary>
 		/// Delve information
 		/// </summary>
-		public IList DelveInfo
+		public override IList DelveInfo
 		{
 			get
 			{
