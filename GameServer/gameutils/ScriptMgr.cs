@@ -63,10 +63,12 @@ namespace DOL
 				/// <summary>
 				/// All commands will be stored in this hashtable
 				/// </summary>
-				private static Hashtable m_cmds = new Hashtable(
-					CaseInsensitiveHashCodeProvider.DefaultInvariant,
-					CaseInsensitiveComparer.DefaultInvariant
-					);
+				private static Hashtable m_cmds = 
+					//VaNaTiC->
+					//new Hashtable(CaseInsensitiveHashCodeProvider.DefaultInvariant, CaseInsensitiveComparer.DefaultInvariant);
+					new Hashtable(StringComparer.InvariantCultureIgnoreCase);
+					//VaNaTiC<-
+
 
 				/// <summary>
 				/// Gets the scripts assemblies

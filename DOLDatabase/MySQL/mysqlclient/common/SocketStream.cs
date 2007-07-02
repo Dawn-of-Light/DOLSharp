@@ -141,7 +141,7 @@ namespace MySql.Data.Common
 
 		#region IDisposable Members
 
-		public void Dispose()
+		public new void Dispose()
 		{
 			if (socket == null) return;
 
@@ -163,7 +163,7 @@ namespace MySql.Data.Common
 
 		public bool Connect(EndPoint remoteEP, int timeout)
 		{
-			int err;
+			//int err;
 			// set the socket to non blocking
 			socket.Blocking = false;
 

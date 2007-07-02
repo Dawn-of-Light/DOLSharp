@@ -329,8 +329,10 @@ namespace MySql.Data.MySqlClient
 			defaults = base.GetDefaultValues();
 			if (defaults == null)
 			{
-				defaults = new Hashtable(new CaseInsensitiveHashCodeProvider(), 
-					new CaseInsensitiveComparer());
+				//VaNaTiC->
+				//defaults = new Hashtable(new CaseInsensitiveHashCodeProvider(), new CaseInsensitiveComparer());
+				defaults = new Hashtable(StringComparer.OrdinalIgnoreCase);
+				//VaNaTiC<-
 				defaults["host"] = String.Empty;
 				defaults["connect lifetime"] = 0;
 				defaults["user id"] = String.Empty;

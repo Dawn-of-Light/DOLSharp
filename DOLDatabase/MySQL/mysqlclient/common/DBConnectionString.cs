@@ -35,8 +35,10 @@ namespace MySql.Data.Common
 
 		public DBConnectionString()
 		{	
-			keyValues = new Hashtable(new CaseInsensitiveHashCodeProvider(), 
-				new CaseInsensitiveComparer());
+			//VaNaTiC->
+			//keyValues = new Hashtable(new CaseInsensitiveHashCodeProvider(), new CaseInsensitiveComparer());
+			keyValues = new Hashtable(StringComparer.OrdinalIgnoreCase);
+			//VaNaTiC<-
 		}
 
 		public void LoadDefaultValues()

@@ -51,7 +51,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Stop the effect on target
 		/// </summary>
-		public void Stop()
+		public override void Stop()
 		{
 //			m_player.Out.SendMessage("You Stop effect.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			m_player.EffectList.Remove(this);
@@ -60,7 +60,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Called when effect must be canceled
 		/// </summary>
-		public void Cancel(bool playerCancel) {
+		public override void Cancel(bool playerCancel) {
 //			m_player.Out.SendMessage("You Cancel effect.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			m_player.Shade(false);
 		}
@@ -68,18 +68,20 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-		public string Name { get { return "Shade"; } }
+		public override string Name { get { return "Shade"; } }
 
 		/// <summary>
 		/// Remaining Time of the effect in seconds
 		/// </summary>
-		public int RemainingTime { get { return 0; } }
+		public override int RemainingTime { get { return 0; } }
 
 		/// <summary>
 		/// Icon to show on players, can be id
 		/// </summary>
-		public ushort Icon { get { return 0x193; } }
+		public override ushort Icon { get { return 0x193; } }
 
+		//VaNaTiC->
+		/*
 		/// <summary>
 		/// unique id for identification in effect list
 		/// </summary>
@@ -93,10 +95,12 @@ namespace DOL.GS.Effects
 			get { return m_id; }
 			set { m_id = value; }
 		}
-
+		*/
+		//VaNaTiC<-
+		
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public IList DelveInfo { get { return new ArrayList(0); } }
+		public override IList DelveInfo { get { return new ArrayList(0); } }
 	}
 }

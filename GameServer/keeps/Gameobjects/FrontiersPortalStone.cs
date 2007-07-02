@@ -25,7 +25,7 @@ namespace DOL.GS.Keeps
 {
 	public class FrontiersPortalStone : GameStaticItem, IKeepItem
 	{
-		private string m_templateID;
+		private string m_templateID = string.Empty;
 		public string TemplateID
 		{
 			get { return m_templateID; }

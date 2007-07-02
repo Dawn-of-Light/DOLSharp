@@ -299,7 +299,7 @@ namespace DOL.GS
 		/// <returns>true if successfull</returns>
 		public static bool Load()
 		{
-#warning ideally we'd want this read from the region table instead of hardcoding which regions should produce storms
+			//FIXME: [WARN] ideally we'd want this read from the region table instead of hardcoding which regions should produce storms
 			lock (m_weathers)
 			{
 				foreach (RegionEntry region in DOL.GS.WorldMgr.GetRegionList())
