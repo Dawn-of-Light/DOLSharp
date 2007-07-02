@@ -126,7 +126,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Called when effect must be canceled
 		/// </summary>
-		public void Cancel(bool playerCancel)
+		public override void Cancel(bool playerCancel)
 		{
 			GameEventMgr.RemoveHandler(m_playerGroup, PlayerGroupEvent.PlayerDisbanded, new DOLEventHandler(GroupDisbandCallback));
 			m_guardSource.EffectList.Remove(this);
@@ -141,7 +141,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-		public string Name
+		public override string Name
 		{
 			get
 			{
@@ -154,7 +154,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Remaining Time of the effect in milliseconds
 		/// </summary>
-		public int RemainingTime
+		public override int RemainingTime
 		{
 			get { return 0; }
 		}
@@ -162,15 +162,17 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Icon to show on players, can be id
 		/// </summary>
-		public ushort Icon
+		public override ushort Icon
 		{
 			get { return 412; }
 		}
 
+		//VaNaTiC->
+		/*
 		/// <summary>
 		/// The internal unique effect ID
 		/// </summary>
-		private ushort m_id;
+		ushort m_id;
 
 		/// <summary>
 		/// unique id for identification in effect list
@@ -180,11 +182,14 @@ namespace DOL.GS.Effects
 			get { return m_id; }
 			set { m_id = value; }
 		}
+		*/
+		//VaNaTiC<-
+
 
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public IList DelveInfo
+		public override IList DelveInfo
 		{
 			get
 			{

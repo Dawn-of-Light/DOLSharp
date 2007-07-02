@@ -33,10 +33,14 @@ namespace DOL.GS.Spells
 	/// </summary>
 	public abstract class BaseProcSpellHandler : SpellHandler
 	{
+		//VaNaTiC->
+		/*
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		*/
+		//VaNaTiC<-
 
 		/// <summary>
 		/// Constructs new proc spell handler

@@ -757,7 +757,7 @@ namespace DOL.GS
 			/// </summary>
 			private void TimeThread()
 			{
-				log.InfoFormat("started timer thread {0} (ID:{1})", m_name, AppDomain.GetCurrentThreadId());
+				log.InfoFormat("started timer thread {0} (ID:{1})", m_name, Thread.CurrentThread.ManagedThreadId);
 
 				int timeBalance = 0;
 				uint workStart, workEnd;
@@ -1042,7 +1042,7 @@ namespace DOL.GS
 					}
 				}
 
-				log.InfoFormat("stopped timer thread {0} (ID:{1})", m_name, AppDomain.GetCurrentThreadId());
+				log.InfoFormat("stopped timer thread {0} (ID:{1})", m_name, Thread.CurrentThread.ManagedThreadId);
 			}
 		}
 

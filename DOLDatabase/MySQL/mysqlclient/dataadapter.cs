@@ -23,6 +23,10 @@ using System.Data;
 using System.Data.Common;
 using System.ComponentModel;
 
+//VaNaTiC->disabling warning "cref-attribut: ..."
+#pragma warning disable 419
+//VaNaTiC<-
+
 namespace MySql.Data.MySqlClient
 {
 	/// <include file='docs/MySqlDataAdapter.xml' path='docs/class/*'/>
@@ -78,7 +82,7 @@ namespace MySql.Data.MySqlClient
 
 		/// <include file='docs/MySqlDataAdapter.xml' path='docs/DeleteCommand/*'/>
 		[Description("Used during Update for deleted rows in Dataset.")]
-		public MySqlCommand DeleteCommand 
+		public new MySqlCommand DeleteCommand 
 		{
 			get { return m_deleteCommand; }
 			set { m_deleteCommand = value; }
@@ -92,7 +96,7 @@ namespace MySql.Data.MySqlClient
 
 		/// <include file='docs/MySqlDataAdapter.xml' path='docs/InsertCommand/*'/>
 		[Description("Used during Update for new rows in Dataset.")]
-		public MySqlCommand InsertCommand 
+		public new MySqlCommand InsertCommand 
 		{
 			get { return m_insertCommand; }
 			set { m_insertCommand = value; }
@@ -107,7 +111,7 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/MySqlDataAdapter.xml' path='docs/SelectCommand/*'/>
 		[Description("Used during Fill/FillSchema")]
 		[Category("Fill")]
-		public MySqlCommand SelectCommand 
+		public new MySqlCommand SelectCommand 
 		{
 			get { return m_selectCommand; }
 			set { m_selectCommand = value; }
@@ -121,7 +125,7 @@ namespace MySql.Data.MySqlClient
 
 		/// <include file='docs/MySqlDataAdapter.xml' path='docs/UpdateCommand/*'/>
 		[Description("Used during Update for modified rows in Dataset.")]
-		public MySqlCommand UpdateCommand 
+		public new MySqlCommand UpdateCommand 
 		{
 			get { return m_updateCommand; }
 			set { m_updateCommand = value; }

@@ -580,7 +580,7 @@ namespace DOL.FTP
 		{
 			int aPort = GetPortNumber();
 			SetDataPort(aPort);
-			IPAddress ipAddress = Dns.Resolve("localhost").AddressList[0];
+			IPAddress ipAddress = Dns.GetHostEntry("localhost").AddressList[0];
 
 			TcpListener aListner = new TcpListener(ipAddress, aPort);
 			return aListner; 
@@ -794,7 +794,7 @@ namespace DOL.FTP
 
 		private IPAddress[] GetLocalAddressList()
 		{
-			return Dns.Resolve(Dns.GetHostName()).AddressList;
+			return Dns.GetHostEntry(Dns.GetHostName()).AddressList;
 		}
 
 		private void LockTcpClient()

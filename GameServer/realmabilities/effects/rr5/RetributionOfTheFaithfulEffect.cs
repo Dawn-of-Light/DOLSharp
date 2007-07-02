@@ -120,7 +120,7 @@ namespace DOL.GS.Effects
             if (args == null) return;
             if (args.AttackData == null) return;
             if (!args.AttackData.IsMeleeAttack) return;
-#warning this has been commented out, it should be handled somewhere
+			//FIXME: [WARN] this has been commented out, it should be handled somewhere
             //if (args.AttackData.Attacker.HasCrowdControlImmunity) return; 
             if (WorldMgr.GetDistance(owner,args.AttackData.Attacker) > 300) return;
             if (Util.Chance(10))

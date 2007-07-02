@@ -4012,7 +4012,7 @@ namespace DOL.GS
 			}
 
 			SkillSpecialtyPoints += specpoints;
-#warning here we reset the death count because the character has mini dinged he will restart his con loss and xp penalties, is this correct?
+//TODO: here we reset the death count because the character has mini dinged he will restart his con loss and xp penalties, is this correct?
 			if ( PlayerCharacter != null )
 				PlayerCharacter.DeathCount = 0;
 
@@ -8474,10 +8474,10 @@ namespace DOL.GS
 
 		public void Diving(waterBreath state)
 		{
-			bool changeSpeed = false;
+			//bool changeSpeed = false;
 			if (m_currentWaterBreathState != state)
 			{
-				changeSpeed = true;
+				//changeSpeed = true;
 				Out.SendCloseTimerWindow();
 			}
 
@@ -8516,8 +8516,8 @@ namespace DOL.GS
 					break;
 			}
 			m_currentWaterBreathState = state;
-			//			if (changeSpeed)
-			//				Out.SendUpdateMaxSpeed();
+			//if (changeSpeed)
+			//	Out.SendUpdateMaxSpeed();
 		}
 
 		/// <summary>

@@ -23,6 +23,10 @@ using System.Data;
 using System.Collections;
 using MySql.Data.Types;
 
+//VaNaTiC->disabling warning "cref-attribut: ..."
+#pragma warning disable 419
+//VaNaTiC<-
+
 namespace MySql.Data.MySqlClient
 {
 	/// <summary>

@@ -22,7 +22,7 @@ namespace DOL.GS.Quests
 			Ranged = 1,
 		}
 
-		private eDungeonType m_dungeonType;
+		private eDungeonType m_dungeonType = eDungeonType.Melee;
 		public eDungeonType DungeonType
 		{
 			get { return m_dungeonType; }
@@ -162,7 +162,7 @@ namespace DOL.GS.Quests
 
 		private static ushort GetRegionFromLevel(byte level, byte realm)
 		{
-#warning TODO, fill this properly for all levels
+			//TODO: fill this properly for all levels
 			//if (level <= 10)
 			{
 				switch (realm)

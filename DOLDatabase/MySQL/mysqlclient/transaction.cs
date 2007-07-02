@@ -21,6 +21,10 @@
 using System;
 using System.Data;
 
+//VaNaTiC->disabling warning "cref-attribut: ..."
+#pragma warning disable 419
+//VaNaTiC<-
+
 namespace MySql.Data.MySqlClient
 {
 	/// <include file='docs/MySqlTransaction.xml' path='docs/Class/*'/>
