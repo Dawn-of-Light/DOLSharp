@@ -911,22 +911,26 @@ PlayerStatistic.Kill.AlbionPlayer:			Albion Players Killed
 PlayerStatistic.Kill.HiberniaPlayer:			Hibernia Players Killed
 PlayerStatistic.Kill.MidgardPlayer:			Midgard Players Killed
 PlayerStatistic.Kill.TotalPlayers:			Total Players Killed
+
 # /Deathblows
 PlayerStatistic.Deathblows.AlbionPlayer:		Albion Deathblows
 PlayerStatistic.Deathblows.HiberniaPlayer:		Hibernia Deathblows
 PlayerStatistic.Deathblows.MidgardPlayer:		Midgard Deathblows
 PlayerStatistic.Deathblows.TotalPlayers:		Total Deathblows
+
 # /Solo
 PlayerStatistic.Solo.AlbionPlayer:			Albion Solo Killed
 PlayerStatistic.Solo.HiberniaPlayer:			Hibernia Solo Killed
 PlayerStatistic.Solo.MidgardPlayer:			Midgard Solo Killed
 PlayerStatistic.Solo.TotalPlayers:			Total Solo Killed
+
 # /Capture
-PlayerStatistic.Capture.Title				Capture Report
-PlayerStatistic.Capture.Keeps				Total Towers Captured
-PlayerStatistic.Capture.Towers				Total Keeps Captured
+PlayerStatistic.Capture.Title:				Capture Report
+PlayerStatistic.Capture.Keeps:				Total Towers Captured
+PlayerStatistic.Capture.Towers:				Total Keeps Captured
+
 # /PvE
-PlayerStatistic.PvE.Title				PvE Report
-PlayerStatistic.PvE.KillsDragon				Dragon Kills
-PlayerStatistic.PvE.KillsEpic				Epic Boss Kills
-PlayerStatistic.PvE.KillsLegion				Legion Kills
+PlayerStatistic.PvE.Title:				PvE Report
+PlayerStatistic.PvE.KillsDragon:			Dragon Kills
+PlayerStatistic.PvE.KillsEpic:				Epic Boss Kills
+PlayerStatistic.PvE.KillsLegion:			Legion Kills
