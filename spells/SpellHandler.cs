@@ -1414,7 +1414,8 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		protected virtual GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
 		{
-			return new GameSpellEffect(this, CalculateEffectDuration(target, effectiveness), 0, effectiveness);
+			int freq = Spell != null ? Spell.Frequency : 0;
+			return new GameSpellEffect(this, CalculateEffectDuration(target, effectiveness), freq, effectiveness);
 		}
 
 		/// <summary>
