@@ -937,12 +937,12 @@ PlayerStatistic.Solo.MidgardPlayer:			Einzelkills Midgard
 PlayerStatistic.Solo.TotalPlayers:			Insgesamt
 
 # /Capture
-#PlayerStatistic.Capture.Title				Capture Report
-PlayerStatistic.Capture.Keeps				Türme erobert
-PlayerStatistic.Capture.Towers				Festungen erobert
+PlayerStatistic.Capture.Title:				Eroberungs-Report
+PlayerStatistic.Capture.Keeps:				Türme erobert
+PlayerStatistic.Capture.Towers:				Festungen erobert
 
 # /PvE
-#PlayerStatistic.PvE.Title				PvE Report
-PlayerStatistic.PvE.KillsDragon				Drachen getötet
-PlayerStatistic.PvE.KillsEpic				Epischer Boss getötet
-PlayerStatistic.PvE.KillsLegion				Legion getötet
+PlayerStatistic.PvE.Title:				PvE-Report
+PlayerStatistic.PvE.KillsDragon:			Drachen getötet
+PlayerStatistic.PvE.KillsEpic:				Epischer Boss getötet
+PlayerStatistic.PvE.KillsLegion:			Legion getötet
