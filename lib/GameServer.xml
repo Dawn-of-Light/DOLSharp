@@ -6442,7 +6442,7 @@
             Remaining Time of the effect in milliseconds
             </summary>
         </member>
-        <member name="M:DOL.GS.Effects.TheEmptyMindEffect.#ctor">
+        <member name="M:DOL.GS.Effects.TheEmptyMindEffect.#ctor(System.Int32)">
             <summary>
             Constructs a new Empty Mind Effect
             </summary>
@@ -15506,6 +15506,64 @@
             <param name="target"></param>
             <returns></returns>
         </member>
+        <member name="T:DOL.GS.Spells.OmniLifedrainSpellHandler">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:DOL.GS.Spells.DirectDamageSpellHandler">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.DirectDamageSpellHandler.FinishSpellCast(DOL.GS.GameLiving)">
+            <summary>
+            Execute direct damage spell
+            </summary>
+            <param name="target"></param>
+        </member>
+        <member name="M:DOL.GS.Spells.DirectDamageSpellHandler.OnDirectEffect(DOL.GS.GameLiving,System.Double)">
+            <summary>
+            execute direct effect
+            </summary>
+            <param name="target">target that gets the damage</param>
+            <param name="effectiveness">factor from 0..1 (0%-100%)</param>
+        </member>
+        <member name="M:DOL.GS.Spells.DirectDamageSpellHandler.CalculateSpellResistChance(DOL.GS.GameLiving)">
+            <summary>
+            Calculates chance of spell getting resisted
+            </summary>
+            <param name="target">the target of the spell</param>
+            <returns>chance that spell will be resisted for specific target</returns>
+        </member>
+        <member name="M:DOL.GS.Spells.OmniLifedrainSpellHandler.OnDirectEffect(DOL.GS.GameLiving,System.Double)">
+            <summary>
+            execute direct effect
+            </summary>
+            <param>target that gets the damage</param>
+            <param>factor from 0..1 (0%-100%)</param>
+        </member>
+        <member name="M:DOL.GS.Spells.OmniLifedrainSpellHandler.StealLife(DOL.GS.AttackData)">
+            <summary>
+            Uses percent of damage to heal the caster
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.OmniLifedrainSpellHandler.StealEndo(DOL.GS.AttackData)">
+            <summary>
+            Uses percent of damage to renew endurance
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.OmniLifedrainSpellHandler.StealPower(DOL.GS.AttackData)">
+            <summary>
+            Uses percent of damage to replenish power
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Spells.OmniLifedrainSpellHandler.CalculateDamageBase">
+            <summary>
+            Calculates the base 100% spell damage which is then modified by damage variance factors
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:DOL.GS.Spells.BeFriendSpellHandler.StartSpell(DOL.GS.GameLiving)">
             <summary>
             called when spell effect has to be started and applied to targets
@@ -16887,31 +16945,6 @@
             <summary>
             
             </summary>
-        </member>
-        <member name="T:DOL.GS.Spells.DirectDamageSpellHandler">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Spells.DirectDamageSpellHandler.FinishSpellCast(DOL.GS.GameLiving)">
-            <summary>
-            Execute direct damage spell
-            </summary>
-            <param name="target"></param>
-        </member>
-        <member name="M:DOL.GS.Spells.DirectDamageSpellHandler.OnDirectEffect(DOL.GS.GameLiving,System.Double)">
-            <summary>
-            execute direct effect
-            </summary>
-            <param name="target">target that gets the damage</param>
-            <param name="effectiveness">factor from 0..1 (0%-100%)</param>
-        </member>
-        <member name="M:DOL.GS.Spells.DirectDamageSpellHandler.CalculateSpellResistChance(DOL.GS.GameLiving)">
-            <summary>
-            Calculates chance of spell getting resisted
-            </summary>
-            <param name="target">the target of the spell</param>
-            <returns>chance that spell will be resisted for specific target</returns>
         </member>
         <member name="M:DOL.GS.Spells.LifedrainSpellHandler.OnDirectEffect(DOL.GS.GameLiving,System.Double)">
             <summary>
@@ -30463,11 +30496,6 @@
             Base class for proc spell handler
             </summary>
         </member>
-        <member name="F:DOL.GS.Spells.BaseProcSpellHandler.log">
-            <summary>
-            Defines a logger for this class.
-            </summary>
-        </member>
         <member name="M:DOL.GS.Spells.BaseProcSpellHandler.#ctor(DOL.GS.GameLiving,DOL.GS.Spell,DOL.GS.SpellLine)">
             <summary>
             Constructs new proc spell handler
@@ -30589,11 +30617,6 @@
         <member name="M:DOL.GS.Spells.PetConversionSpellHandler.StartSpell(DOL.GS.GameLiving)">
             <summary>
             Execute pet conversion spell
-            </summary>
-        </member>
-        <member name="F:DOL.GS.Spells.FearSpellHandler.log">
-            <summary>
-            Defines a logger for this class.
             </summary>
         </member>
         <member name="M:DOL.GS.Spells.FearSpellHandler.StartSpell(DOL.GS.GameLiving)">
@@ -31040,11 +31063,6 @@
             Icon ID
             </summary>
         </member>
-        <member name="P:DOL.GS.Effects.SoldiersBarricadeEffect.InternalID">
-            <summary>
-            Unique ID for identification in the effect list
-            </summary>
-        </member>
         <member name="P:DOL.GS.Effects.SoldiersBarricadeEffect.DelveInfo">
             <summary>
             Delve information
@@ -31413,11 +31431,6 @@
             The owner of the effect
             </summary>
         </member>
-        <member name="F:DOL.GS.Effects.StealthEffect.m_id">
-            <summary>
-            The internal unique effect ID
-            </summary>
-        </member>
         <member name="M:DOL.GS.Effects.StealthEffect.#ctor">
             <summary>
             Creates a new stealth effect
@@ -31451,11 +31464,6 @@
         <member name="P:DOL.GS.Effects.StealthEffect.Icon">
             <summary>
             Icon to show on players, can be id
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.StealthEffect.InternalID">
-            <summary>
-            unique id for identification in effect list
             </summary>
         </member>
         <member name="P:DOL.GS.Effects.StealthEffect.DelveInfo">
@@ -31884,11 +31892,6 @@
             <param name="callingTimer">the regiontimer of the effect</param>
             <returns>the new intervall (0) </returns>
         </member>
-        <member name="F:DOL.GS.Effects.DTdetrimentalEffect.m_id">
-            <summary>
-            Stores the internal effect ID
-            </summary>
-        </member>
         <member name="P:DOL.GS.Effects.DTdetrimentalEffect.Name">
             <summary>
             Name of the effect
@@ -31902,11 +31905,6 @@
         <member name="P:DOL.GS.Effects.DTdetrimentalEffect.Icon">
             <summary>
             Icon to show on players, can be id
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.DTdetrimentalEffect.InternalID">
-            <summary>
-            unique id for identification in effect list
             </summary>
         </member>
         <member name="P:DOL.GS.Effects.DTdetrimentalEffect.DelveInfo">
@@ -32908,6 +32906,11 @@
             Load Hookpoints
             </summary>
         </member>
+        <member name="F:DOL.GS.ServerProperties.Properties.SAVE_QUESTITEMS_INTO_DATABASE">
+            <summary>
+            Save QuestItems into Database
+            </summary>
+        </member>
         <member name="M:DOL.GS.ServerProperties.Properties.Load(DOL.GS.ServerProperties.ServerPropertyAttribute)">
             <summary>
             This method loads the property from the database and returns
@@ -33043,11 +33046,6 @@
         <member name="P:DOL.GS.Effects.BarrierOfFortitudeEffect.Icon">
             <summary>
             Icon ID
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.BarrierOfFortitudeEffect.InternalID">
-            <summary>
-            Unique ID for identification in the effect list
             </summary>
         </member>
         <member name="P:DOL.GS.Effects.BarrierOfFortitudeEffect.DelveInfo">
@@ -35365,11 +35363,6 @@
             Called when effect must be canceled
             </summary>
         </member>
-        <member name="F:DOL.GS.Effects.SureShotEffect.m_id">
-            <summary>
-            unique id for identification in effect list
-            </summary>
-        </member>
         <member name="P:DOL.GS.Effects.SureShotEffect.Name">
             <summary>
             Name of the effect
@@ -35383,11 +35376,6 @@
         <member name="P:DOL.GS.Effects.SureShotEffect.Icon">
             <summary>
             Icon to show on players, can be id
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.SureShotEffect.InternalID">
-            <summary>
-            unique id for identification in effect list
             </summary>
         </member>
         <member name="P:DOL.GS.Effects.SureShotEffect.DelveInfo">
@@ -35426,11 +35414,6 @@
             Called when effect must be canceled
             </summary>
         </member>
-        <member name="F:DOL.GS.Effects.ShadeEffect.m_id">
-            <summary>
-            unique id for identification in effect list
-            </summary>
-        </member>
         <member name="P:DOL.GS.Effects.ShadeEffect.Name">
             <summary>
             Name of the effect
@@ -35444,11 +35427,6 @@
         <member name="P:DOL.GS.Effects.ShadeEffect.Icon">
             <summary>
             Icon to show on players, can be id
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.ShadeEffect.InternalID">
-            <summary>
-            unique id for identification in effect list
             </summary>
         </member>
         <member name="P:DOL.GS.Effects.ShadeEffect.DelveInfo">
@@ -35584,11 +35562,6 @@
             Called when effect must be canceled
             </summary>
         </member>
-        <member name="F:DOL.GS.Effects.ProtectEffect.m_id">
-            <summary>
-            The internal unique ID
-            </summary>
-        </member>
         <member name="P:DOL.GS.Effects.ProtectEffect.ProtectSource">
             <summary>
             Gets the player protecting the target
@@ -35612,11 +35585,6 @@
         <member name="P:DOL.GS.Effects.ProtectEffect.Icon">
             <summary>
             Icon to show on players, can be id
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.ProtectEffect.InternalID">
-            <summary>
-            unique id for identification in effect list
             </summary>
         </member>
         <member name="P:DOL.GS.Effects.ProtectEffect.DelveInfo">
@@ -35674,11 +35642,6 @@
             Called when effect must be canceled
             </summary>
         </member>
-        <member name="F:DOL.GS.Effects.GuardEffect.m_id">
-            <summary>
-            The internal unique effect ID
-            </summary>
-        </member>
         <member name="P:DOL.GS.Effects.GuardEffect.GuardSource">
             <summary>
             Gets guarder
@@ -35702,11 +35665,6 @@
         <member name="P:DOL.GS.Effects.GuardEffect.Icon">
             <summary>
             Icon to show on players, can be id
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.GuardEffect.InternalID">
-            <summary>
-            unique id for identification in effect list
             </summary>
         </member>
         <member name="P:DOL.GS.Effects.GuardEffect.DelveInfo">
@@ -36748,6 +36706,63 @@
             </summary>
             <param name="target"></param>
             <returns></returns>
+        </member>
+        <member name="T:DOL.GS.RealmAbilities.DreamweaverAbility">
+            <summary>
+            Arms Length Realm Ability
+            </summary>
+        </member>
+        <member name="M:DOL.GS.RealmAbilities.DreamweaverAbility.Execute(DOL.GS.GameLiving)">
+            <summary>
+            Action
+            </summary>
+            <param></param>
+        </member>
+        <member name="T:DOL.GS.Effects.DreamweaverEffect">
+            <summary>
+            Helper for charge realm ability
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Effects.DreamweaverEffect.#ctor">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Effects.DreamweaverEffect.Start(DOL.GS.GameLiving)">
+            <summary>
+            Start the effect on player
+            </summary>
+            <param>The effect target</param>
+        </member>
+        <member name="P:DOL.GS.Effects.DreamweaverEffect.Name">
+            <summary>
+            Name of the effect
+            </summary>
+        </member>
+        <member name="P:DOL.GS.Effects.DreamweaverEffect.Icon">
+            <summary>
+            Icon to show on players, can be id
+            </summary>
+        </member>
+        <member name="P:DOL.GS.Effects.DreamweaverEffect.DelveInfo">
+            <summary>
+            Delve Info
+            </summary>
+        </member>
+        <member name="T:DOL.GS.RealmAbilities.BladeBarrierAbility">
+            <summary>
+            Blade Barrier
+            </summary>
+        </member>
+        <member name="M:DOL.GS.RealmAbilities.BladeBarrierAbility.Execute(DOL.GS.GameLiving)">
+            <summary>
+            Action
+            </summary>
+            <param></param>
+        </member>
+        <member name="T:DOL.GS.Effects.BladeBarrierEffect">
+            <summary>
+            Blade Barrier
+            </summary>
         </member>
     </members>
 </doc>

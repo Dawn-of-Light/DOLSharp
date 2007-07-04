@@ -41,9 +41,10 @@ namespace DOL.GS.Scripts
 	public class DynCodeCommandHandler : ICommandHandler
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-		public static bool ExecuteCode(GameClient client, string code)
+		public static bool ExecuteCode(GameClient client, string code)		
 		{
-			ICodeCompiler cc = new CSharpCodeProvider().CreateCompiler();
+			CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp"); 
+			if ( provider == null ) return false; 
 			CompilerParameters cp = new CompilerParameters();
 			StringBuilder text = new StringBuilder();
 			text.Append("using System;\n");
@@ -79,7 +80,7 @@ namespace DOL.GS.Scripts
 				cp.ReferencedAssemblies.Add(param); //includes
 			cp.ReferencedAssemblies.Add("GameServerScripts.dll");
 			cp.CompilerOptions = @"/lib:." + Path.DirectorySeparatorChar + "lib";
-			CompilerResults cr = cc.CompileAssemblyFromSource(cp, text.ToString());
+			CompilerResults cr = provider.CompileAssemblyFromSource(cp, text.ToString());
 
 			if (cr.Errors.HasErrors)
 			{
