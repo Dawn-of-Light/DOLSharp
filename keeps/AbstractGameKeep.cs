@@ -178,6 +178,16 @@ namespace DOL.GS.Keeps
 			set	{ m_banners = value; }
 		}
 
+		private Hashtable m_patrols;
+		/// <summary>
+		/// List of all patrols
+		/// </summary>
+		public Hashtable Patrols
+		{
+			get { return m_patrols; }
+			set { m_patrols = value; }
+		}
+
 		/// <summary>
 		/// region of the keep
 		/// </summary>
@@ -409,6 +419,7 @@ namespace DOL.GS.Keeps
 			m_keepComponents = new ArrayList(1);
 			m_banners = new Hashtable();
 			m_doors = new Hashtable();
+			m_patrols = new Hashtable();
 		}
 
 		#region LOAD/UNLOAD
@@ -751,6 +762,12 @@ namespace DOL.GS.Keeps
 			{
 				TemplateMgr.SetGuardLevel(guard);
 			}
+
+			foreach (Patrol p in this.Patrols.Values)
+			{
+				p.ChangePatrolLevel();
+			}
+
 			foreach (GameKeepComponent comp in this.KeepComponents)
 			{
 				comp.UpdateLevel();
@@ -775,6 +792,8 @@ namespace DOL.GS.Keeps
 		/// <param name="targetLevel">The target level</param>
 		public void StartChangeLevel(byte targetLevel)
 		{
+			//deactivate upgrades for now
+			return;
 			if (this.Level == targetLevel)
 				return;
 			this.TargetLevel = targetLevel;
@@ -935,6 +954,11 @@ namespace DOL.GS.Keeps
 			{
 				if (!component.IsRaized)
 					component.Repair(component.MaxHealth - component.Health);
+				foreach (GameKeepHookPoint hp in component.HookPoints.Values)
+				{
+					if (hp.Object != null)
+						hp.Object.Die(null);
+				}
 			}
 			//change realm
 			foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegion.ID))

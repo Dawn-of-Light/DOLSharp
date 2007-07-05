@@ -35,9 +35,9 @@ namespace DOL.GS.RealmAbilities
 
 			switch (Level)
 			{
-				case 1: m_duration = 1000; break;
-				case 2: m_duration = 3000; break;
-				case 3: m_duration = 6000; break;
+				case 1: m_duration = 10000; break;
+				case 2: m_duration = 30000; break;
+				case 3: m_duration = 60000; break;
 				default: return;
 			}
 

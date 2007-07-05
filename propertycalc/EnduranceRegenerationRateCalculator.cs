@@ -47,7 +47,7 @@ namespace DOL.GS.PropertyCalc
 				debuff = -debuff;
 
 			// buffs allow to regenerate endurance even in combat and while moving
-			int regen =
+			double regen =
 				 living.BuffBonusCategory1[(int)property]
 				+living.ItemBonus[(int)property];
 
@@ -66,7 +66,16 @@ namespace DOL.GS.PropertyCalc
 			if (regen < 0)
 				regen = 0;
 
-			return regen;
+			if (regen != 0 && ServerProperties.Properties.ENDURANCE_REGEN_RATE != 1)
+				regen *= ServerProperties.Properties.ENDURANCE_REGEN_RATE;
+
+			double decimals = regen - (int)regen;
+			if (Util.ChanceDouble(decimals))
+			{
+				regen += 1;	// compensate int rounding error
+			}
+
+			return (int)regen;
 		}
 	}
 }

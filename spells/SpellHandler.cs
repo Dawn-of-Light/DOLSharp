@@ -1998,7 +1998,7 @@ namespace DOL.GS.Spells
 		{
 			double spellDamage = Spell.Damage;
 			GamePlayer player = Caster as GamePlayer;
-			if (player != null && player.CharacterClass.ManaStat != eStat.UNDEFINED)
+			if (player != null && (player.CharacterClass.ManaStat != eStat.UNDEFINED && player.CharacterClass.ID != (int)eCharacterClass.Vampiir))
 			{
 				int manaStatValue = player.GetModified((eProperty)player.CharacterClass.ManaStat);
 				spellDamage *= (manaStatValue + 200) / 275.0;

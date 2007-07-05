@@ -750,63 +750,26 @@ namespace DOL.GS.PacketHandler.Client.v168
 				#endregion
 				#region Ability
 				case 8://abilities
+				{
+					int id = objectID - 100;
+					IList skillList = client.Player.GetNonTrainableSkillList();
+					Ability abil = (Ability)skillList[id];
+					if (abil != null)
 					{
-						objectInfo.Add("Delving on abilities is not yet supported!");
-						break;
-						/*
-						int index = objectID - 100;
-						IList skillList = client.Player.GetNonTrainableSkillList();
-						Ability ab = (Ability)skillList[index];
-
-						if (ab != null)
+						IList allabilitys = client.Player.GetAllAbilities();
+						foreach (Ability checkab in allabilitys)
 						{
-							caption = ab.Name;
-
-							IAbilityActionHandler handler = SkillBase.GetAbilityActionHandler(ab.KeyName);
-							if (handler is BaseCastingAbilityHandler)
+							if (checkab.Name == abil.Name)
 							{
-								int spellID = ((BaseCastingAbilityHandler)handler).GetSpellID(client.Player.GetAbilityLevel(ab.KeyName));
-								SpellLine spline = SkillBase.GetSpellLine(((BaseCastingAbilityHandler)handler).GetAbilitiesSpellLine());
-								Spell abSpell = null;
-								if (spline != null)
-								{
-									IList spells = SkillBase.GetSpellList(spline.KeyName);
-									if (spells != null)
-									{
-										foreach (Spell spell in spells)
-										{
-											if (spell.ID == spellID)
-											{
-												abSpell = spell;
-												break;
-											}
-										}
-									}
-								}
-
-								if (abSpell == null)
-									return 1;
-
-								ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, abSpell, spline);
-								if (spellHandler == null)
-								{
-									objectInfo.Add(" ");
-									objectInfo.Add("Spell type (" + abSpell.SpellType + ") is not implemented.");
-								}
+								if (checkab.DelveInfo.Count > 0)
+									objectInfo.AddRange(checkab.DelveInfo);
 								else
-								{
-									objectInfo.AddRange(spellHandler.DelveInfo);
-								}
-								break;
-
-							}
-							else
-							{
-								objectInfo.Add(ab.Description);
+									objectInfo.Add("There is no special information.");
 							}
 						}
-						break;*/
 					}
+					break;
+				}
 				#endregion
 				#region Trainer
 				case 9: //trainer window "info" button
@@ -822,8 +785,20 @@ namespace DOL.GS.PacketHandler.Client.v168
 							//realm abilities
 							if (objectID >= 50)
 							{
-								IList ra_list = SkillBase.GetClassRealmAbilities(client.Player.CharacterClass.ID);
+								int clientclassID = client.Player.CharacterClass.ID;
+								IList ra_list = SkillBase.GetClassRealmAbilities(clientclassID);
+								Ability rr5abil = SkillBase.getClassRealmAbility(clientclassID);
 								RealmAbility ab = (RealmAbility)ra_list[objectID - 50];
+								if (rr5abil != null)
+								{
+									for (int i = 0; i <= (objectID - 50); i++)
+									{
+										RealmAbility rrabil = (RealmAbility)ra_list[i];
+										if (rrabil.KeyName == ab.KeyName)
+											ab = (RealmAbility)ra_list[objectID - 49];
+									}
+
+								}
 								if (ab != null)
 								{
 									caption = ab.Name;
@@ -835,7 +810,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 							objectInfo.Add("that specialization is not found, id=" + objectID);
 							break;
 						}
-
 
 						IList styles = SkillBase.GetStyleList(spec.KeyName, client.Player.CharacterClass.ID);
 						IList playerSpells = client.Player.GetSpellLines();

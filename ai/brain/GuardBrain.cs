@@ -57,13 +57,6 @@ namespace DOL.AI.Brain
 				if (!WorldMgr.CheckDistance(player, Body, AggroRange))
 					continue;
 
-				switch (Body.Realm)
-				{
-					case 1: Body.Say("Have at thee, fiend!"); break;
-					case 2: Body.Say("Death to the intruders!"); break;
-					case 3: Body.Say("The wicked shall be scourned!"); break;
-				}
-
 				AddToAggroList(player, player.EffectiveLevel << 1);
 				return;
 			}
@@ -85,13 +78,6 @@ namespace DOL.AI.Brain
 					continue;
 				if (!WorldMgr.CheckDistance(npc, Body, AggroRange))
 					continue;
-
-				switch (Body.Realm)
-				{
-					case 1: Body.Say("Have at thee, fiend!"); break;
-					case 2: Body.Say("Death to the intruders!"); break;
-					case 3: Body.Say("The wicked shall be scourned!"); break;
-				}
 
 				AddToAggroList(npc, npc.Level << 1);
 				return;

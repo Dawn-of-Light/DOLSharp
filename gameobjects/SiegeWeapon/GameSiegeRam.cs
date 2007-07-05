@@ -184,8 +184,8 @@ namespace DOL.GS
 			{
 				switch (Level)
 				{
-					case 0: return 250;
-					case 1:
+					case 0: return 300;
+					case 1: return 400;
 					case 2:
 					case 3: return 500;
 					default: return 500;

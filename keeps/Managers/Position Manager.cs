@@ -194,7 +194,7 @@ namespace DOL.GS.Keeps
 		{
 			DBKeepPosition pos = CreatePosition(guardID, component, player);
 			pos.Height = 0;
-			pos.ClassType = "DOL.AreaCapture.Patrol";
+			pos.ClassType = "DOL.GS.Keeps.Patrol";
 			GameServer.Database.AddNewObject(pos);
 			return pos;
 		}
@@ -329,11 +329,6 @@ namespace DOL.GS.Keeps
 				}
 				prev = p;
 			}
-			/*if (pathType == ePathType.Loop )
-			{
-				prev.Next = first;
-				first.Prev = prev;
-			}*/
 			return first;
 		}
 

@@ -31,10 +31,18 @@ namespace DOL.GS.Keeps
 	/// </summary>
 	public class GameKeepGuard : GameNPC, IKeepItem
 	{
+		private Patrol m_Patrol = null;
+		public Patrol PatrolGroup
+		{
+			get { return m_Patrol; }
+			set { m_Patrol = value; }
+		}
+
 		private string m_templateID = "";
 		public string TemplateID
 		{
 			get { return m_templateID; }
+			set { m_templateID = value; }
 		}
 
 		private GameKeepComponent m_component;
@@ -412,6 +420,8 @@ namespace DOL.GS.Keeps
 			if (killer != this)
 				GuardSpam(this);
 			base.Die(killer);
+			if (RespawnInterval == -1)
+				Delete();
 		}
 
 		#region Guard Spam
@@ -477,6 +487,12 @@ namespace DOL.GS.Keeps
 			if (!base.AddToWorld())
 				return false;
 			GameEventMgr.AddHandler(this, GameNPCEvent.AttackFinished, new DOLEventHandler(AttackFinished));
+
+			if (PatrolGroup != null)
+			{
+				CurrentWayPoint = PatrolGroup.PatrolPath;
+				MoveOnPath(Patrol.PATROL_SPEED);
+			}
 			return true;
 		}
 
@@ -679,6 +695,21 @@ namespace DOL.GS.Keeps
 			if (cloak != null)
 				cloak.Emblem = emblem;
 			this.UpdateNPCEquipmentAppearance();
+		}
+
+		/// <summary>
+		/// Adding special handling for walking to a point for patrol guards to be in a formation
+		/// </summary>
+		/// <param name="tx"></param>
+		/// <param name="ty"></param>
+		/// <param name="tz"></param>
+		/// <param name="speed"></param>
+		public override void WalkTo(int tx, int ty, int tz, int speed)
+		{
+			int offX = 0; int offY = 0;
+			if (IsMovingOnPath && PatrolGroup != null)
+				PatrolGroup.GetMovementOffset(this, out offX, out offY);
+			base.WalkTo(tx - offX, ty - offY, tz, speed);
 		}
 	}
 }

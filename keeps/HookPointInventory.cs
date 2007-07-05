@@ -63,6 +63,17 @@ namespace DOL.GS.Keeps
 			return hookpointItemList[slot] as HookPointItem;
 		}
 
+		public virtual HookPointItem GetItem(string classType)
+		{
+			foreach (HookPointItem item in hookpointItemList)
+			{
+				if (item.GameObjectType == classType)
+					return item;
+			}
+
+			return null;
+		}
+
 		/// <summary>
 		/// add the item to the slot
 		/// </summary>
@@ -220,30 +231,76 @@ namespace DOL.GS.Keeps
 			//hookPointObj.LoadFromDatabase(this.ObjectTemplate);
 			hookPointObj.CurrentRegion = player.CurrentRegion;
 			hookPointObj.Realm = (byte)hookpoint.Component.Keep.Realm;
-			hookPointObj.Heading = hookpoint.Component.Heading;
+
 			if (hookPointObj is GameSiegeWeapon)
 				((GameSiegeWeapon)hookPointObj).EnableToMove = false;
-			//TODO find good hp place from id and type of  component
 			hookPointObj.X = hookpoint.X;
 			hookPointObj.Y = hookpoint.Y;
 			hookPointObj.Z = hookpoint.Z;
+			hookPointObj.Heading = hookpoint.Heading;
+
 			if (hookPointObj is GameSiegeWeapon)
 				(hookPointObj as GameSiegeWeapon).HookPoint = hookpoint;
 			if (hookPointObj is IKeepItem)
 				(hookPointObj as IKeepItem).Component = component;
+			if (hookPointObj is GameSiegeCauldron)
+				(hookPointObj as GameSiegeCauldron).Component = component;
 			if (hookPointObj is GameKeepGuard)
 			{
 				(hookPointObj as GameKeepGuard).HookPoint = hookpoint;
 				Keeps.TemplateMgr.RefreshTemplate(hookPointObj as GameKeepGuard);
-				(hookPointObj as GameKeepGuard).Component.Keep.Guards.Add(hookPointObj.ObjectID, hookPointObj);
 			}
 			if (hookPointObj is GameNPC)
-				((GameNPC)hookPointObj).RespawnInterval = 0;//do not respawn
+				((GameNPC)hookPointObj).RespawnInterval = -1;//do not respawn
 			hookPointObj.AddToWorld();
+			if (hookPointObj is GameKeepGuard)
+				(hookPointObj as GameKeepGuard).Component.Keep.Guards.Add(hookPointObj.ObjectID, hookPointObj);
+			hookpoint.Object = hookPointObj;
+
+			//create the db entry
+			Database.DBKeepHookPointItem item = new DOL.Database.DBKeepHookPointItem(component.Keep.KeepID, component.ID, hookpoint.ID, GameObjectType);
+			GameServer.Database.AddNewObject(item);
+		}
+
+		public static void Invoke(GameKeepHookPoint hookpoint, string objectType)
+		{
+			if (!hookpoint.IsFree)
+				return;
+
+			GameLiving hookPointObj = CreateHPInstance(objectType);
+			if (hookPointObj == null) return;
+			//use default value so no need to load
+			//hookPointObj.LoadFromDatabase(this.ObjectTemplate);
+			hookPointObj.CurrentRegion = hookpoint.Component.CurrentRegion;
+			hookPointObj.Realm = (byte)hookpoint.Component.Keep.Realm;
+
+			if (hookPointObj is GameSiegeWeapon)
+				((GameSiegeWeapon)hookPointObj).EnableToMove = false;
+			hookPointObj.X = hookpoint.X;
+			hookPointObj.Y = hookpoint.Y;
+			hookPointObj.Z = hookpoint.Z;
+			hookPointObj.Heading = hookpoint.Heading;
+
+			if (hookPointObj is GameSiegeWeapon)
+				(hookPointObj as GameSiegeWeapon).HookPoint = hookpoint;
+			if (hookPointObj is IKeepItem)
+				(hookPointObj as IKeepItem).Component = hookpoint.Component;
+			if (hookPointObj is GameSiegeCauldron)
+				(hookPointObj as GameSiegeCauldron).Component = hookpoint.Component;
+			if (hookPointObj is GameKeepGuard)
+			{
+				(hookPointObj as GameKeepGuard).HookPoint = hookpoint;
+				Keeps.TemplateMgr.RefreshTemplate(hookPointObj as GameKeepGuard);
+			}
+			if (hookPointObj is GameNPC)
+				((GameNPC)hookPointObj).RespawnInterval = -1;//do not respawn
+			hookPointObj.AddToWorld();
+			if (hookPointObj is GameKeepGuard)
+				(hookPointObj as GameKeepGuard).Component.Keep.Guards.Add(hookPointObj.ObjectID, hookPointObj);
 			hookpoint.Object = hookPointObj;
 		}
 
-		private GameLiving CreateHPInstance(string objTypeName)
+		private static GameLiving CreateHPInstance(string objTypeName)
 		{
 			if (objTypeName != "")
 			{

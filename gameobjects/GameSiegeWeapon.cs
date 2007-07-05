@@ -276,10 +276,13 @@ namespace DOL.GS
 			}
 
 			//let's check if we are trying to move too close to a door, if we are, don't move
-			foreach (IDoor door in DoorMgr.getDoorsCloseToSpot(CurrentRegionID, Owner.GroundTarget.X, Owner.GroundTarget.Y, Owner.GroundTarget.Z, AttackRange - 50))
+			foreach (IDoor door in Owner.CurrentRegion.GetDoorsInRadius(Owner.GroundTarget.X, Owner.GroundTarget.Y, Owner.GroundTarget.Z, (ushort)(AttackRange - 50), false))
 			{
 				if (door is GameKeepDoor)
+				{
+					Owner.Out.SendMessage("You can't move a ram that close to a door!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
+				}
 			}
 
 			//unarmed siege weapon

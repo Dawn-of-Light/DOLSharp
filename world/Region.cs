@@ -1273,6 +1273,9 @@ namespace DOL.GS
 						case Zone.eGameObjectType.PLAYER:
 							tmp = new PlayerDistanceEnumerator(x, y, z, res);
 							break;
+						case Zone.eGameObjectType.DOOR:
+							tmp = new DoorDistanceEnumerator(x, y, z, res);
+							break;
 						default:
 							tmp = new EmptyEnumerator();
 							break;
@@ -1373,9 +1376,23 @@ namespace DOL.GS
 		/// <param name="radius">radius around origin</param>
 		/// <param name="withDistance">Get an ObjectDistance enumerator</param>
 		/// <returns>IEnumerable to be used with foreach</returns>
-		public IEnumerable GetPlayerInRadius(int x, int y, int z, ushort radius, bool withDistance)
+		public IEnumerable GetPlayersInRadius(int x, int y, int z, ushort radius, bool withDistance)
 		{
 			return GetInRadius(Zone.eGameObjectType.PLAYER, x, y, z, radius, withDistance);
+		}
+
+		/// <summary>
+		/// Gets Doors in a radius around a spot
+		/// </summary>
+		/// <param name="x">origin X</param>
+		/// <param name="y">origin Y</param>
+		/// <param name="z">origin Z</param>
+		/// <param name="radius">radius around origin</param>
+		/// <param name="withDistance">Get an ObjectDistance enumerator</param>
+		/// <returns>IEnumerable to be used with foreach</returns>
+		public IEnumerable GetDoorsInRadius(int x, int y, int z, ushort radius, bool withDistance)
+		{
+			return GetInRadius(Zone.eGameObjectType.DOOR, x, y, z, radius, withDistance);
 		}
 
 		#endregion
@@ -1588,6 +1605,26 @@ namespace DOL.GS
 			}
 		}
 
+		/// <summary>
+		/// This enumerator returns the object and the distance towards the object
+		/// </summary>
+		public class DoorDistanceEnumerator : DistanceEnumerator
+		{
+			public DoorDistanceEnumerator(int x, int y, int z, ArrayList elements)
+				: base(x, y, z, elements)
+			{
+			}
+
+			public override object Current
+			{
+				get
+				{
+					IDoor obj = (IDoor)m_currentObj;
+					return new DoorDistEntry(obj, WorldMgr.GetDistance(obj.X, obj.Y, obj.Z, m_X, m_Y, m_Z));
+				}
+			}
+		}
+
 		#endregion
 
 		#endregion
@@ -1655,6 +1692,21 @@ namespace DOL.GS
 		}
 
 		public GameStaticItem Item;
+		public int Distance;
+	}
+
+	/// <summary>
+	/// Holds a Object and it's distance towards the center
+	/// </summary>
+	public class DoorDistEntry
+	{
+		public DoorDistEntry(IDoor d, int distance)
+		{
+			Door = d;
+			Distance = distance;
+		}
+
+		public IDoor Door;
 		public int Distance;
 	}
 
