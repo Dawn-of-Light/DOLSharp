@@ -12,11 +12,13 @@ namespace DOL.GS.Effects
 	{
 
 		private RegionTimer ticktimer;
-		private int absorb;
+		private int absorb = 0;
+		private int m_currentBonus = 0;
+
 		public FerociousWillEffect()
 			: base(30000)
 		{
-			;
+			
 		}
 
 		private GameLiving owner;
@@ -33,7 +35,7 @@ namespace DOL.GS.Effects
 					p.Out.SendSpellEffectAnimation(player, player, Icon, 0, false, 1);
 				}
 			}
-			absorb = 0;
+			m_currentBonus = 0;
 			ticktimer = new RegionTimer(target);
 			ticktimer.Callback = new RegionTimerCallback(OnTick);
 			ticktimer.Start(5000);
@@ -43,10 +45,11 @@ namespace DOL.GS.Effects
 
 		private int OnTick(RegionTimer timer)
 		{
-			if (absorb < 25)
+			if (m_currentBonus >= 25)
 			{
-				owner.BuffBonusCategory1[(int)eProperty.ArmorAbsorbtion] += 5;
-				absorb += 5;
+				owner.BuffBonusCategory1[(int)eProperty.ArmorAbsorbtion] -= m_currentBonus;
+				m_currentBonus += 5;
+				owner.BuffBonusCategory1[(int)eProperty.ArmorAbsorbtion] += m_currentBonus;
 				return 5000;
 			}
 			return 0;
@@ -59,7 +62,7 @@ namespace DOL.GS.Effects
 
 		public override void Stop()
 		{
-			owner.BuffBonusCategory1[(int)eProperty.ArmorAbsorbtion] -= absorb;
+			owner.BuffBonusCategory1[(int)eProperty.ArmorAbsorbtion] -= m_currentBonus;
 			base.Stop();
 		}
 

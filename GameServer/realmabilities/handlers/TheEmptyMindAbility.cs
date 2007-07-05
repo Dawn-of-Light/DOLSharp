@@ -32,7 +32,7 @@ namespace DOL.GS.RealmAbilities
 					t_player.Out.SendMessage(living.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 				}
 			}
-			new TheEmptyMindEffect().Start(living);
+			new TheEmptyMindEffect(this.Level).Start(living);
 			DisableSkill(living);
 		}
 

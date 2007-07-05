@@ -29,12 +29,29 @@ namespace DOL.GS.Effects
 	/// </summary>
 	public class TheEmptyMindEffect : TimedEffect, IGameEffect
 	{
+		private int m_level = 0;
+		private int Value
+		{
+			get
+			{
+				switch (m_level)
+				{
+					case 1: return 10;
+					case 2: return 20;
+					case 3: return 30;
+					default: return 0;
+				}
+			}
+		}
+
+		private int m_value = 0;
 		/// <summary>
 		/// Constructs a new Empty Mind Effect
 		/// </summary>
-		public TheEmptyMindEffect()
+		public TheEmptyMindEffect(int level)
 			: base(RealmAbilities.TheEmptyMindAbility.m_duration)
 		{
+			m_level = level;
 		}
 
 		/// <summary>
@@ -43,19 +60,38 @@ namespace DOL.GS.Effects
 		/// <param name="living"></param>
 		public override void Start(GameLiving living)
 		{
+			base.Start(living);
+			m_value = Value;
+			m_owner.AbilityBonus[(int)eProperty.Resist_Body] += m_value;
+			m_owner.AbilityBonus[(int)eProperty.Resist_Cold] += m_value;
+			m_owner.AbilityBonus[(int)eProperty.Resist_Energy] += m_value;
+			m_owner.AbilityBonus[(int)eProperty.Resist_Heat] += m_value;
+			m_owner.AbilityBonus[(int)eProperty.Resist_Matter] += m_value;
+			m_owner.AbilityBonus[(int)eProperty.Resist_Spirit] += m_value;
+			if (m_owner is GamePlayer)
+				(m_owner as GamePlayer).Out.SendCharResistsUpdate(); 
+
 			foreach (GamePlayer visiblePlayer in living.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 				visiblePlayer.Out.SendSpellEffectAnimation(living, living, 1197, 0, false, 1);
 			}
-
-			base.Start(living);
 		}
-		
+
 		public override void Stop()
 		{
-			base.Stop();
+			m_owner.AbilityBonus[(int)eProperty.Resist_Body] -= m_value;
+			m_owner.AbilityBonus[(int)eProperty.Resist_Cold] -= m_value;
+			m_owner.AbilityBonus[(int)eProperty.Resist_Energy] -= m_value;
+			m_owner.AbilityBonus[(int)eProperty.Resist_Heat] -= m_value;
+			m_owner.AbilityBonus[(int)eProperty.Resist_Matter] -= m_value;
+			m_owner.AbilityBonus[(int)eProperty.Resist_Spirit] -= m_value;
 			if (m_owner is GamePlayer)
+			{
+				(m_owner as GamePlayer).Out.SendCharResistsUpdate();
 				(m_owner as GamePlayer).Out.SendMessage("Your clearheaded state leaves you.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+
+			base.Stop();
 		}
 
 		/// <summary>

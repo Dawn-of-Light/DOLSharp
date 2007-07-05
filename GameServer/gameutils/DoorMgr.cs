@@ -79,38 +79,5 @@ namespace DOL.GS
 		{
 			return m_doors[id] as IDoor;
 		}
-
-		/// <summary>
-		/// This function get the door close to spot
-		/// </summary>
-		/// <returns>array of door</returns>
-		public static IEnumerable getDoorsCloseToSpot(ushort regionid, IPoint3D point3d, int radius)
-		{
-			return getDoorsCloseToSpot(regionid, point3d.X, point3d.Y, point3d.Z, radius); 
-		}
-
-		/// <summary>
-		/// This function get the door close to spot
-		/// </summary>
-		/// <returns>array of door</returns>
-		public static IEnumerable getDoorsCloseToSpot(ushort regionid, int x, int y, int z, int radius)
-		{
-			ArrayList mydoors = new ArrayList();
-			int radiussqrt = radius * radius;
-			lock (m_doors.SyncRoot)
-			{
-				foreach(GameObject door in m_doors.Values)//door inerite from GameObject and IDoor
-				{
-					if (door.CurrentRegionID != regionid)
-						continue;
-					int xdiff = door.X - x;
-					int ydiff = door.Y - y;
-					int range = xdiff * xdiff + ydiff * ydiff ;
-					if (range < radiussqrt)
-						mydoors.Add(door);
-				}
-			}
-			return mydoors;
-		}
 	}
 }

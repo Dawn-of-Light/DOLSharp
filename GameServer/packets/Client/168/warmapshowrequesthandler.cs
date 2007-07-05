@@ -45,7 +45,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 				//teleport
 				case 2:
 					{
-						AbstractGameKeep keep = KeepMgr.getKeepByID(keepId);
+						AbstractGameKeep keep = null;
+						if (keepId > 6)
+							keep = KeepMgr.getKeepByID(keepId);
 						if (keep == null && keepId > 6) return 1;
 
 						//we redo our checks here

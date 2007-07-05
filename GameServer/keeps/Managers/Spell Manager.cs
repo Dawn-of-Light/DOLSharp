@@ -394,7 +394,7 @@ namespace DOL.GS.Keeps
 					spell.CastTime = 1;
 					spell.ClientEffect = 2430;
 					spell.Icon = 2430;
-					spell.Value = 120;
+					spell.Value = 190;
 					spell.Name = "Speed of the Realm";
 					spell.Range = 0;
 					spell.SpellID = 2430;

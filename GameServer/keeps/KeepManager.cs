@@ -155,6 +155,22 @@ namespace DOL.GS.Keeps
 					component.HookPoints.Add(129, new GameKeepHookPoint(0x81, component));
 				}
 			}
+
+			Logger.Info("Loading HookPoint items");
+
+			//fill existing hookpoints with objects
+			foreach (AbstractGameKeep keep in m_keeps.Values)
+			{
+				foreach (GameKeepComponent component in keep.KeepComponents)
+				{
+					foreach (GameKeepHookPoint hp in component.HookPoints.Values)
+					{
+						DBKeepHookPointItem item = (DBKeepHookPointItem)GameServer.Database.SelectObject(typeof(DBKeepHookPointItem), "KeepID = '" + component.Keep.KeepID + "' AND ComponentID = '" + component.ID + "' AND HookPointID = '" + hp.ID + "'");
+						if (item != null)
+							HookPointItem.Invoke(component.HookPoints[hp.ID] as GameKeepHookPoint, item.ClassType);
+					}
+				}
+			}
 		}
 
 		/// <summary>

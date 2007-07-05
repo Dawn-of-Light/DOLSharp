@@ -98,7 +98,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						return 0;
 					}
 
-					client.Player.Notify(GamePlayerEvent.GiveItem, client.Player, new GiveItemEventArgs(client.Player, obj, item));
+					if (obj is GameNPC == false || item.Count == 1)
+						client.Player.Notify(GamePlayerEvent.GiveItem, client.Player, new GiveItemEventArgs(client.Player, obj, item));
 
 					//If the item has been removed by the event handlers, return;
 					//item = client.Player.Inventory.GetItem((eInventorySlot)fromSlot);

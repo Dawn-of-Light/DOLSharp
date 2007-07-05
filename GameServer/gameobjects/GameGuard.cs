@@ -24,5 +24,17 @@ namespace DOL.GS
 			list.Add("You examine the " + GetName(0, true) + ". " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and is a guard.");
 			return list;
 		}
+
+		public override void StartAttack(GameObject attackTarget)
+		{
+			base.StartAttack(attackTarget);
+
+			switch (Realm)
+			{
+				case 1: Say("Have at thee, fiend!"); break;
+				case 2: Say("Death to the intruders!"); break;
+				case 3: Say("The wicked shall be scourned!"); break;
+			}
+		}
 	}
 }

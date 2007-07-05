@@ -1974,7 +1974,7 @@ namespace DOL.GS.Scripts
 						if (radius > 0)
 							k.Area.ChangeRadius(radius);
 
-						foreach (IDoor door in DoorMgr.getDoorsCloseToSpot((ushort)keep.Region, keep.X, keep.Y, keep.Z, 3000))
+						foreach (IDoor door in client.Player.GetDoorsInRadius(3000))
 						{
 							(door as GameObject).RemoveFromWorld();
 							GameKeepDoor d = new GameKeepDoor();

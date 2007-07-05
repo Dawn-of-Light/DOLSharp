@@ -76,25 +76,34 @@ namespace DOL.GS.RealmAbilities
 		{
 			TakeDamageEventArgs targs = args as TakeDamageEventArgs;
 			GamePlayer player = sender as GamePlayer;
+
 			if (!WorldMgr.CheckDistance(player, m_owner, 2300))
 				return;
+
 			if (targs.DamageType == eDamageType.Falling) return;
+
 			if (!player.IsAlive) return;
-			if (player.HealthPercent >= 75) return;
+
 			int dmgamount = player.MaxHealth - player.Health;
-			if (dmgamount <= 0) return;
+
+			if (dmgamount <= 0 || player.HealthPercent >= 75) return;
+
 			int healamount = 0;
+
+
 			if (poolValue <= 0)
 				Cancel(false);
-			if (!(player.IsAlive))
+
+			if (!player.IsAlive)
 				return;
+
 			if (poolValue - dmgamount > 0)
 			{
 				healamount = dmgamount;
 			}
 			else
 			{
-				healamount = poolValue;
+				healamount = dmgamount - poolValue;
 			}
 			foreach (GamePlayer t_player in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
@@ -103,6 +112,7 @@ namespace DOL.GS.RealmAbilities
 			player.Out.SendMessage("You are healed by the pool of healing for " + healamount + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 			player.ChangeHealth(m_owner, GameLiving.eHealthChangeType.Spell, healamount);
 			poolValue -= dmgamount;
+
 			if (poolValue <= 0)
 				Cancel(false);
 		}

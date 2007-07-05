@@ -117,7 +117,21 @@ namespace DOL.GS.SkillHandler
 			else
 			{ damage = (int)(target.MaxHealth / 100 * specc / 3.6); } //works fine
 
-			//final variance...damage += Util.Random(100) - 50; to much variation
+			#region Resists
+			int primaryResistModifier = target.GetResist(eDamageType.Slash);
+
+			//Using the resist BuffBonusCategory2 - its unused in ResistCalculator
+			int secondaryResistModifier = target.BuffBonusCategory2[(int)eProperty.Resist_Slash];
+
+			int resistModifier = 0;
+			//primary resists
+			resistModifier += (int)(damage * (double)primaryResistModifier * -0.01);
+			//secondary resists
+			resistModifier += (int)((damage + (double)resistModifier) * (double)secondaryResistModifier * -0.01);
+			//apply resists
+			damage += resistModifier;
+
+			#endregion
 
 			//flurry is slash damage
 			target.TakeDamage(player, eDamageType.Slash, damage, 0);

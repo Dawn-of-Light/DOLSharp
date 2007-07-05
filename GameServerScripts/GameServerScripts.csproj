@@ -169,6 +169,7 @@
     <Compile Include="customnpc\VaultKeeper.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="gameevents\CardMgr.cs" />
     <Compile Include="gameevents\DOLTestServer.cs" />
     <Compile Include="gameevents\StartupGuilds.cs" />
     <Compile Include="gameevents\FightingNPC.cs">
@@ -337,6 +338,9 @@
     <Compile Include="playercommands\cmdhelp.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="playercommands\deal.cs" />
+    <Compile Include="playercommands\discard.cs" />
+    <Compile Include="playercommands\held.cs" />
     <Compile Include="playercommands\nohelp.cs" />
     <Compile Include="playercommands\houseface.cs" />
     <Compile Include="playercommands\house.cs" />
@@ -461,6 +465,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="playercommands\setwho.cs" />
+    <Compile Include="playercommands\show.cs" />
+    <Compile Include="playercommands\shuffle.cs" />
     <Compile Include="playercommands\sprint.cs">
       <SubType>Code</SubType>
     </Compile>

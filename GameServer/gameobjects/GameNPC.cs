@@ -1208,24 +1208,6 @@ namespace DOL.GS
             get { return m_currentWayPoint; }
             set { m_currentWayPoint = value; }
         }
-        /*
-        /// <summary>
-        /// Stores the currentwaypoint that npc has to wander to
-        /// </summary>
-        protected PathPoint m_currentWayPoint = null;
-        /// <summary>
-        /// Gets sets the speed for traveling on path
-        /// </summary>
-        public int PathingNormalSpeed
-        {
-            get { return m_pathingNormalSpeed; }
-            set { m_pathingNormalSpeed = value; }
-        }
-        /// <summary>
-        /// Stores the speed for traveling on path
-        /// </summary>
-        protected int m_pathingNormalSpeed;
-        */
 
 		/// <summary>
 		/// Is the NPC returning home, if so, we don't want it to think
@@ -1285,6 +1267,7 @@ namespace DOL.GS
                 GameEventMgr.AddHandler(this, GameNPCEvent.CloseToTarget, new DOLEventHandler(OnCloseToWaypoint));
                 WalkTo(CurrentWayPoint, Math.Min(speed, CurrentWayPoint.MaxSpeed));
                 m_IsMovingOnPath = true;
+				Notify(GameNPCEvent.PathMoveStarts, this);
             }
             else
             {
@@ -1356,9 +1339,12 @@ namespace DOL.GS
                 {
                     switch (npc.CurrentWayPoint.Type)
                     {
-                        case ePathType.Loop:
-                            npc.CurrentWayPoint = MovementMgr.FindFirstPathPoint(npc.CurrentWayPoint);
-                            break;
+						case ePathType.Loop:
+							{
+								npc.CurrentWayPoint = MovementMgr.FindFirstPathPoint(npc.CurrentWayPoint);
+								npc.Notify(GameNPCEvent.PathMoveStarts, npc);
+								break;
+							}
                         case ePathType.Once:
                             npc.CurrentWayPoint = null;//to stop
                             break;
@@ -1477,22 +1463,18 @@ namespace DOL.GS
 			m_respawnInterval = npc.RespawnInterval * 1000;
 			
 			m_pathID = npc.PathID;
-			
+
 			if (npc.Brain != "")
 			{
+				ArrayList asms = new ArrayList();
+				asms.Add(typeof(GameServer).Assembly);
+				asms.AddRange(Scripts.ScriptMgr.Scripts);
 				ABrain brain = null;
-				try
+				foreach (Assembly asm in asms)
 				{
-					brain = (ABrain)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(npc.Brain, false);
-				}
-				catch (Exception) {}
-				if (brain == null)
-				{
-					try
-					{
-						brain = (ABrain)Assembly.GetExecutingAssembly().CreateInstance(npc.Brain, false);
-					}
-					catch (Exception) {}
+					brain = (ABrain)asm.CreateInstance(npc.Brain, false);
+					if (brain != null)
+						break;
 				}
 				if (brain != null)
 					SetOwnBrain(brain);
@@ -2126,8 +2108,12 @@ namespace DOL.GS
 			{
 				log.Info("NPC '" + Name + "' added to house N°" + m_houseNumber);
 				CurrentHouse = HouseMgr.GetHouse(m_houseNumber);
-				log.Info("Confirmed number: "+CurrentHouse.HouseNumber.ToString());
+				if (CurrentHouse == null)
+					log.Warn("House " + CurrentHouse + " for NPC " + Name + " doesn't exist !!!");
+				else
+					log.Info("Confirmed number: " + CurrentHouse.HouseNumber.ToString());
 			}
+
 			return true;
 		}
 
@@ -2137,6 +2123,8 @@ namespace DOL.GS
 		/// <returns>true if the npc has been successfully removed</returns>
 		public override bool RemoveFromWorld()
 		{
+			if (IsMovingOnPath)
+				StopMoveOnPath();
 			if (MAX_PASSENGERS > 0)
 			{
 				foreach (GamePlayer player in CurrentRiders)
@@ -2158,6 +2146,36 @@ namespace DOL.GS
 			}
 			EffectList.CancelAll();
 			return true;
+		}
+
+		public bool MoveTo(ushort regionID, int x, int y, int z, ushort heading, bool petMove)
+		{
+			if (!petMove)
+				return base.MoveTo(regionID, x, y, z, heading);
+
+			if (m_ObjectState != eObjectState.Active)
+				return false;
+
+			Region rgn = WorldMgr.GetRegion(regionID);
+			if (rgn == null)
+				return false;
+			if (rgn.GetZone(x, y) == null)
+				return false;
+
+			Notify(GameObjectEvent.MoveTo, this, new MoveToEventArgs(regionID, x, y, z, heading));
+
+			if (ObjectState == eObjectState.Active)
+			{
+				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+					player.Out.SendObjectRemove(this);
+			}
+			base.RemoveFromWorld();
+			m_X = x;
+			m_Y = y;
+			m_Z = z;
+			m_Heading = heading;
+			CurrentRegionID = regionID;
+			return AddToWorld();
 		}
 
 		/// <summary>
@@ -2536,6 +2554,7 @@ namespace DOL.GS
 			{
 				if ((this.Brain as IControlledBrain).AggressionState == eAggressionState.Passive)
 					return;
+				(this.Brain as IControlledBrain).Owner.Stealth(false);
 			}
 
 			TargetObject = attackTarget;

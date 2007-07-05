@@ -1509,7 +1509,7 @@ namespace DOL.GS
 			Region reg = GetRegion(regionid);
 			if (reg == null)
 				return new Region.EmptyEnumerator();
-			return reg.GetPlayerInRadius(x, y, z, radiusToCheck, withDistance);
+			return reg.GetPlayersInRadius(x, y, z, radiusToCheck, withDistance);
 		}
 
 		/// <summary>
@@ -1537,7 +1537,7 @@ namespace DOL.GS
 		[Obsolete("Use GameObject.GetPlayersInRadius instead!", false)]
 		public static IEnumerable GetPlayersCloseToObject(GameObject obj, ushort radiusToCheck, bool withDistance)
 		{
-			return obj.CurrentRegion.GetPlayerInRadius(obj.X, obj.Y, obj.Z, radiusToCheck, withDistance);
+			return obj.CurrentRegion.GetPlayersInRadius(obj.X, obj.Y, obj.Z, radiusToCheck, withDistance);
 		}
 
 		/// <summary>
