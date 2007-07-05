@@ -43,7 +43,18 @@ namespace DOL.GS.Spells
 
 			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(m_caster, castSpell, line);
 			spellhandler.StartSpell(living);
+		}
 
+		protected override void ResurrectResponceHandler(GamePlayer player, byte response)
+		{
+			base.ResurrectResponceHandler(player, response);
+			if (response == 1)
+			{
+				Spell castSpell = SkillBase.GetSpellByID(14078);
+
+				ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(m_caster, castSpell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+				spellhandler.StartSpell(player);
+			}
 		}
 
 

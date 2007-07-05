@@ -567,6 +567,7 @@
     <Compile Include="keeps\Gameobjects\Guards\Hastener.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Healer.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Lord.cs" />
+    <Compile Include="keeps\Gameobjects\Guards\Patrol.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Static Archer.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Static Caster.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Stealther.cs" />
@@ -793,8 +794,11 @@
     <Compile Include="realmabilities\effects\JuggernautEffect.cs" />
     <Compile Include="realmabilities\effects\MasteryOfConcentrationEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\ArmsLengthEffect.cs" />
+    <Compile Include="realmabilities\effects\rr5\BadgeOfValorEffect.cs" />
+    <Compile Include="realmabilities\effects\rr5\BladeBarrierEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\BlindingDustEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\CombatAwarenessEffect.cs" />
+    <Compile Include="realmabilities\effects\rr5\DreamWeaverEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\EntwiningSnakesEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\FerociousWillEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\FuryOfNatureEffect.cs" />
@@ -823,8 +827,13 @@
     <Compile Include="realmabilities\handlers\IchorOfTheDeepAbility.cs" />
     <Compile Include="realmabilities\handlers\L3RAPropertyEnhancerAbilities.cs" />
     <Compile Include="realmabilities\handlers\rr5\ArmsLengthAbility.cs" />
+    <Compile Include="realmabilities\handlers\rr5\BadgeOfValorAbilityHandler.cs" />
+    <Compile Include="realmabilities\handlers\rr5\BladeBarrierAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\BlindingDustAbility.cs" />
+    <Compile Include="realmabilities\handlers\rr5\ChainBoltSpellHandler.cs" />
+    <Compile Include="realmabilities\handlers\rr5\ChainLightningAbilityHandler.cs" />
     <Compile Include="realmabilities\handlers\rr5\CombatAwarenessAbility.cs" />
+    <Compile Include="realmabilities\handlers\rr5\DreamWeaverAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\EntwiningSnakesAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\EpiphanyAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\FerociousWillAbility.cs" />
@@ -840,6 +849,7 @@
     <Compile Include="realmabilities\handlers\rr5\SoulQuenchAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\SputinsLegacyAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\TestudoAbilty.cs" />
+    <Compile Include="realmabilities\handlers\rr5\WallOfFlameAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\WhirlingStaffAbility.cs" />
     <Compile Include="realmabilities\handlers\WildMinionAbility.cs" />
     <Compile Include="realmabilities\handlers\LifterAbility.cs" />
@@ -1545,6 +1555,7 @@
     <Compile Include="spells\Heretic\HereticSpeedDecrease.cs" />
     <Compile Include="spells\Heretic\MonsterRez.cs" />
     <Compile Include="spells\NoVarianceSpells.cs" />
+    <Compile Include="spells\OmniLifedrainSpellHandler.cs" />
     <Compile Include="spells\PetMesmerizeSpellHandler.cs" />
     <Compile Include="spells\PowerHealSpellHandler.cs" />
     <Compile Include="spells\StyleTaunt.cs" />

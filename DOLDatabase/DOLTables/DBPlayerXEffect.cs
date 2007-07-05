@@ -172,7 +172,7 @@ namespace DOL
 				}
 			}
 
-			[DataElement(AllowDbNull = true)]
+			[DataElement(AllowDbNull = true, Index = true)]
 			public string ChardID
 			{
 				get

@@ -51,7 +51,8 @@ namespace DOL.GS.Keeps
 					}
 			}*/
 			BroadcastMessage(message, eRealm.None);
-			NewsMgr.CreateNews(message, keep.Realm, eNewsType.RvRGlobal, false);
+			if (keep.DBKeep.BaseLevel == 50)
+				NewsMgr.CreateNews(message, keep.Realm, eNewsType.RvRGlobal, false);
 		}
 
 		/// <summary>

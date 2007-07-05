@@ -330,6 +330,17 @@ namespace DOL.GS.Keeps
 							if (this.Keep.TeleportStone == null)
 								create = true;
 						}
+						else if (position.ClassType == "DOL.GS.Keeps.Patrol")
+						{
+							if (this.Keep.Patrols[position.TemplateID] == null)
+							{
+								Patrol p = new Patrol(this);
+								p.SpawnPosition = position;
+								p.PatrolID = position.TemplateID;
+								p.InitialiseGuards();
+							}
+							continue;
+						}
 						else
 						{
 							if (this.Keep.Guards[position.TemplateID] == null)
@@ -374,6 +385,8 @@ namespace DOL.GS.Keeps
 
 			foreach (GameKeepGuard guard in this.Keep.Guards.Values)
 			{
+				if (guard.PatrolGroup != null)
+					continue;
 				if (guard.HookPoint != null) continue;
 				if (guard.Position == null) continue;
 				if (guard.Position.Height > guard.Component.Height)
@@ -532,7 +545,6 @@ namespace DOL.GS.Keeps
 					Health = MaxHealth;
 				}
 				m_oldMaxHealth = MaxHealth;
-
 			}
 		}
 

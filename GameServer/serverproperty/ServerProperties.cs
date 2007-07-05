@@ -394,6 +394,30 @@ namespace DOL.GS.ServerProperties
 		public static readonly bool DISABLE_INSTANCES;
 
 		/// <summary>
+		/// Health Regen Rate
+		/// </summary>
+		[ServerProperty("health_regen_rate", "Health regen rate", 1.0)]
+		public static readonly double HEALTH_REGEN_RATE;
+
+		/// <summary>
+		/// Health Regen Rate
+		/// </summary>
+		[ServerProperty("endurance_regen_rate", "Endurance regen rate", 1.0)]
+		public static readonly double ENDURANCE_REGEN_RATE;
+
+		/// <summary>
+		/// Health Regen Rate
+		/// </summary>
+		[ServerProperty("mana_regen_rate", "Mana regen rate", 1.0)]
+		public static readonly double MANA_REGEN_RATE;
+
+		/// <summary>
+		/// Load Hookpoints
+		/// </summary>
+		[ServerProperty("load_hookpoints", "Load keep hookpoints", true)]
+		public static readonly bool LOAD_HOOKPOINTS;
+		
+		/// <summary>
 		/// Save QuestItems into Database
 		/// </summary>
 		[ServerProperty("save_questitems_into_database", "set false if you don't want this", true)]

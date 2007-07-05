@@ -79,7 +79,8 @@ namespace DOL.GS
 		{
 			ITEM = 0,
 			NPC = 1,
-			PLAYER = 2
+			PLAYER = 2,
+			DOOR = 3,
 		}
 
 		/// <summary>
@@ -219,7 +220,7 @@ namespace DOL.GS
 			if (m_initialized) return;
 			for (int i = 0; i < SUBZONE_NBR; i++)
 			{
-				m_subZoneElements[i] = new SubNodeElement[3];
+				m_subZoneElements[i] = new SubNodeElement[4];
 				for (int k = 0; k < m_subZoneElements[i].Length; k++)
 				{
 					m_subZoneElements[i][k] = new SubNodeElement();
@@ -518,6 +519,8 @@ namespace DOL.GS
 					type = (int)eGameObjectType.NPC;
 				else if (p_Obj is GameStaticItem)
 					type = (int)eGameObjectType.ITEM;
+				else if (p_Obj is IDoor)
+					type = (int)eGameObjectType.DOOR;
 
 				if (type == -1)
 					return;

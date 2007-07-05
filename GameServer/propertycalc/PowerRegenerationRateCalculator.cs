@@ -42,6 +42,9 @@ namespace DOL.GS.PropertyCalc
 				regen += ((living.Level-15) * 0.05);
 			}
 
+			if (regen != 0 && ServerProperties.Properties.MANA_REGEN_RATE != 1)
+				regen *= ServerProperties.Properties.MANA_REGEN_RATE;
+
 			double decimals = regen - (int)regen;
 			if (Util.ChanceDouble(decimals)) 
 			{
