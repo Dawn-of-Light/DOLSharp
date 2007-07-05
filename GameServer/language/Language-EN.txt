@@ -926,9 +926,8 @@ PlayerStatistic.Solo.TotalPlayers:			Total Solo Killed
 
 # /Capture
 PlayerStatistic.Capture.Title:				Capture Report
-PlayerStatistic.Capture.Keeps:				Total Towers Captured
-PlayerStatistic.Capture.Towers:				Total Keeps Captured
-
+PlayerStatistic.Capture.Keeps:				Total Keeps Captured
+PlayerStatistic.Capture.Towers:				Total Towers Captured
 # /PvE
 PlayerStatistic.PvE.Title:				PvE Report
 PlayerStatistic.PvE.KillsDragon:			Dragon Kills

@@ -938,8 +938,8 @@ PlayerStatistic.Solo.TotalPlayers:			Insgesamt
 
 # /Capture
 PlayerStatistic.Capture.Title:				Eroberungs-Report
-PlayerStatistic.Capture.Keeps:				Türme erobert
-PlayerStatistic.Capture.Towers:				Festungen erobert
+PlayerStatistic.Capture.Keeps:				Festungen erobert
+PlayerStatistic.Capture.Towers:				Türme erobert
 
 # /PvE
 PlayerStatistic.PvE.Title:				PvE-Report

@@ -113,9 +113,9 @@ namespace DOL.GS.Spells
             GamePlayer player = (GamePlayer)m_caster;
             long ChamberUseTick = player.TempProperties.getLongProperty(CHAMBER_USE_TICK, 0L);
             long changeTime = player.CurrentRegion.Time - ChamberUseTick;
-            if (changeTime < 2000)
+            if (changeTime < 3000)
             {
-                MessageToCaster("You must wait " + ((2000 - changeTime) / 1000).ToString() + " more second to attempt to use a chamber!", eChatType.CT_System);
+                MessageToCaster("You must wait " + ((3000 - changeTime) / 1000).ToString() + " more second to attempt to use a chamber!", eChatType.CT_System);
                 return;
             }
             player.TempProperties.setProperty(CHAMBER_USE_TICK, player.CurrentRegion.Time);

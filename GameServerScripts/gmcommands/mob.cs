@@ -280,9 +280,10 @@ namespace DOL.GS.Scripts
 						{
 							info.Add(" + Not aggressive brain");
 						}
-						string respawn = targetMob.RespawnInterval.ToString();
-
-						info.Add(" + Respawn: " + respawn + " (Position: X=" + targetMob.SpawnX + " Y=" + targetMob.SpawnY + " Z=" + targetMob.SpawnZ + ")");
+						TimeSpan respawn = TimeSpan.FromMilliseconds(targetMob.RespawnInterval);
+						if (targetMob.RespawnInterval <= 0)
+							info.Add(" + Respawn: NPC will not respawn");
+						else info.Add(" + Respawn: " + respawn.Minutes + " minutes " + respawn.Seconds + " seconds (Position: X=" + targetMob.SpawnX + " Y=" + targetMob.SpawnY + " Z=" + targetMob.SpawnZ + ")");
 
 						info.Add(" + Damage type: " + targetMob.MeleeDamageType);
 						info.Add(" + Position: X=" + targetMob.X + " Y=" + targetMob.Y + " Z=" + targetMob.Z);

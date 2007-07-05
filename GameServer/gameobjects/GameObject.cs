@@ -1088,7 +1088,7 @@ namespace DOL.GS
 			if (CurrentRegion != null)
 			{
 				//return m_oirData.GetInRadius(this, CurrentRegion, Zone.eGameObjectType.PLAYER, X, Y, Z, radiusToCheck, withDistance, useCache);
-				return CurrentRegion.GetPlayerInRadius(X, Y, Z, radiusToCheck, withDistance);
+				return CurrentRegion.GetPlayersInRadius(X, Y, Z, radiusToCheck, withDistance);
 			}
 			return new Region.EmptyEnumerator();
 			/***************************************************************/
@@ -1179,6 +1179,31 @@ namespace DOL.GS
 			}
 			return new Region.EmptyEnumerator();
 			/***************************************************************/
+		}
+
+		/// <summary>
+		/// Gets all doors close to this object inside a certain radius
+		/// </summary>
+		/// <param name="radiusToCheck">the radius to check</param>
+		/// <returns>An enumerator</returns>
+		public IEnumerable GetDoorsInRadius(ushort radiusToCheck)
+		{
+			return GetDoorsInRadius(radiusToCheck, false);
+		}
+
+		/// <summary>
+		/// Gets all doors close to this object inside a certain radius
+		/// </summary>
+		/// <param name="radiusToCheck">the radius to check</param>
+		/// <param name="withDistance">if the objects are to be returned with distance</param>
+		/// <returns>An enumerator</returns>
+		public IEnumerable GetDoorsInRadius(ushort radiusToCheck, bool withDistance)
+		{
+			if (CurrentRegion != null)
+			{
+				return CurrentRegion.GetDoorsInRadius(X, Y, Z, radiusToCheck, withDistance);
+			}
+			return new Region.EmptyEnumerator();
 		}
 		#endregion
 

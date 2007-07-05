@@ -147,6 +147,7 @@
     <Compile Include="DOLTables\DBHousepointItem.cs" />
     <Compile Include="DOLTables\DBHouseCharsXPerms.cs" />
     <Compile Include="DOLTables\DBHousePermissions.cs" />
+    <Compile Include="DOLTables\DBKeepHookPointItem.cs" />
     <Compile Include="DOLTables\DBKeepPosition.cs" />
     <Compile Include="DOLTables\DBNews.cs" />
     <Compile Include="DOLTables\DBRelic.cs" />

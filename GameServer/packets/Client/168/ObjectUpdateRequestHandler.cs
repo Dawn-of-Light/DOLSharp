@@ -38,7 +38,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				client.Out.SendObjectCreate(item);
 			}
-			foreach (IDoor door in DoorMgr.getDoorsCloseToSpot(client.Player.CurrentRegionID, client.Player, WorldMgr.OBJ_UPDATE_DISTANCE))
+			foreach (IDoor door in client.Player.GetDoorsInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
 			{
 				client.Out.SendObjectCreate(door as GameObject);
 				client.Out.SendDoorState(door);

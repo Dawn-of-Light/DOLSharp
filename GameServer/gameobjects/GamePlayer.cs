@@ -715,8 +715,8 @@ namespace DOL.GS
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
 						if ((int)player.Client.Version < (int)GameClient.eClientVersion.Version187)
-							bindEmote = eEmote.Bind;
-						player.Out.SendEmoteAnimation(this, bindEmote);
+							player.Out.SendEmoteAnimation(this, eEmote.Bind);
+						else player.Out.SendEmoteAnimation(this, bindEmote);
 					}
 				}
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.Bound"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -2382,11 +2382,12 @@ namespace DOL.GS
 				return;
 			}
 
-			if (CharacterClass.ID != 4 &&
-					CharacterClass.ID != 9 &&
-					CharacterClass.ID != 49 &&
-					CharacterClass.ID != 23 &&
-					ability.KeyName == Abilities.ClimbWalls)
+			if (CharacterClass.ID != 4
+					&& CharacterClass.ID != 9
+					&& CharacterClass.ID != 49
+					&& CharacterClass.ID != 23
+					&& CharacterClass.ID != 58
+					&& ability.KeyName == Abilities.ClimbWalls)
 			{
 				return;
 			}
@@ -7892,7 +7893,7 @@ namespace DOL.GS
 				{
 					int tx, ty;
 					GetSpotFromHeading(64, out tx, out ty);
-					ControlledNpc.Body.MoveTo(CurrentRegionID, tx, ty, Z, ((ushort)((this.Heading + 2048) % 4096)));
+					ControlledNpc.Body.MoveTo(CurrentRegionID, tx, ty, Z, (ushort)((this.Heading + 2048) % 4096), true);
 				}
 			}
 			return true;
@@ -8706,6 +8707,7 @@ namespace DOL.GS
 		/// <param name="sit">True if sitting, otherwise false</param>
 		public virtual void Sit(bool sit)
 		{
+			Sprint(false);
 			if (IsSummoningMount)
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Sit.InterruptCallMount"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
