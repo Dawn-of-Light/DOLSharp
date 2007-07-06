@@ -100,8 +100,9 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public void ChangePatrolLevel()
 		{
-			//deactivated for now
+			#warning Etaew: deactivated for now
 			return;
+			/* Please comment out in this way
 			byte level = (byte)(Component.Keep.Level / 2);
 			for (int i = 0; i < 5; i++)
 			{
@@ -114,6 +115,7 @@ namespace DOL.GS.Keeps
 					guard.RemoveFromWorld();
 				}
 			}
+			*/
 		}
 
 		/// <summary>

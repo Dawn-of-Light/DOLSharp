@@ -105,6 +105,9 @@ namespace DOL.GS.PropertyCalc
 					IControlledBrain brain = ((GameNPC)living).Brain as IControlledBrain;
 					if (brain != null && brain.Owner == brain.Body.CurrentFollowTarget)
 						speed *= 1.25;
+					// additional 30% speed if Owner is sprinting (thats Owners bonus)
+					if (brain != null && brain.Owner.IsSprinting ) 
+					   speed *= 1.3;
 				}
 				double healthPercent = living.Health / (double)living.MaxHealth;
 				if (healthPercent < 0.33)

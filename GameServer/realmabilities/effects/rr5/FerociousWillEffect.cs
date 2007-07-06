@@ -12,7 +12,7 @@ namespace DOL.GS.Effects
 	{
 
 		private RegionTimer ticktimer;
-		private int absorb = 0;
+		//private int absorb = 0;
 		private int m_currentBonus = 0;
 
 		public FerociousWillEffect()

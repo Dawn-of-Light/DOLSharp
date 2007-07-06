@@ -510,7 +510,7 @@
     <Compile Include="playertitles\deathblows\BattleMasterTitle.cs" />
     <Compile Include="playertitles\kills\albion\BaneOfAlbionTitle.cs" />
     <Compile Include="playertitles\kills\albion\ScourgeOfAlbionTitle.cs" />
-    <Compile Include="playertitles\kills\all\MaserAssassineTitle.cs" />
+    <Compile Include="playertitles\kills\all\MasterAssassineTitle.cs" />
     <Compile Include="playertitles\kills\all\MasterEnforcerTitle.cs" />
     <Compile Include="playertitles\kills\all\MasterSoldierTitle.cs" />
     <Compile Include="playertitles\kills\demon\DemonBaneTitle.cs" />
