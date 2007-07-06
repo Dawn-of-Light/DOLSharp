@@ -76,7 +76,7 @@ namespace DOL.GS.Spells
             {
                 m_effetiveness -= 0.1;   
                 //fetch next target
-                foreach (GamePlayer pl in WorldMgr.GetPlayersCloseToObject(m_currentSource, 500))
+                foreach (GamePlayer pl in m_currentSource.GetPlayersInRadius(500))
                 {
                     if (GameServer.ServerRules.IsAllowedToAttack(Caster,pl,true)){
                         StartSpell(pl);
