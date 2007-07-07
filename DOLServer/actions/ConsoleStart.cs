@@ -73,6 +73,7 @@ namespace DOL.DOLServer.Actions
 		{
 			Console.WriteLine("Starting GameServer ... please wait a moment!");
 			FileInfo configFile;
+			FileInfo currentAssembly = null;
 			if (parameters["-config"] != null)
 			{
 				Console.WriteLine("Using config file: " + parameters["-config"]);
@@ -80,7 +81,7 @@ namespace DOL.DOLServer.Actions
 			}
 			else
 			{
-				FileInfo currentAssembly = new FileInfo(Assembly.GetEntryAssembly().Location);
+				currentAssembly = new FileInfo(Assembly.GetEntryAssembly().Location);
 				configFile = new FileInfo(currentAssembly.DirectoryName + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "serverconfig.xml");
 			}
 
@@ -93,6 +94,12 @@ namespace DOL.DOLServer.Actions
 			{
 				if (!configFile.Directory.Exists)
 					configFile.Directory.Create();
+				if (File.Exists(currentAssembly.DirectoryName + Path.DirectorySeparatorChar + "DOLConfig.exe"))
+				{
+					Console.WriteLine("No config file found, launching DOLConfig.exe...");
+					System.Diagnostics.Process.Start(currentAssembly.DirectoryName + Path.DirectorySeparatorChar + "DOLConfig.exe");
+					return;
+				}
 				config.SaveToXMLFile(configFile);
 			}
 
