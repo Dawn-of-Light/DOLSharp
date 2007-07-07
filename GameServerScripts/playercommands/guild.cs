@@ -1140,14 +1140,17 @@ namespace DOL.GS.Scripts
 								{
 									foreach (Guild guild in client.Player.Guild.alliance.Guilds)
 									{
-										foreach (GamePlayer ply in guild.ListOnlineMembers())
+										lock (guild.ListOnlineMembers())
 										{
-											if (ply.Client.IsPlaying && !ply.IsAnonymous)
+											foreach (GamePlayer ply in guild.ListOnlineMembers())
 											{
-												ind++;
-												string zoneName = (ply.CurrentZone == null ? "(null)" : ply.CurrentZone.Description);
-												string mesg = ind + ") " + ply.Name + " <guild=" + guild.Name + "> the Level " + ply.Level + " " + ply.CharacterClass.Name + " in " + zoneName;
-												client.Out.SendMessage(mesg, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+												if (ply.Client.IsPlaying && !ply.IsAnonymous)
+												{
+													ind++;
+													string zoneName = (ply.CurrentZone == null ? "(null)" : ply.CurrentZone.Description);
+													string mesg = ind + ") " + ply.Name + " <guild=" + guild.Name + "> the Level " + ply.Level + " " + ply.CharacterClass.Name + " in " + zoneName;
+													client.Out.SendMessage(mesg, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+												}
 											}
 										}
 									}
