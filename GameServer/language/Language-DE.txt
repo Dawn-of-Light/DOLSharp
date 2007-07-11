@@ -294,7 +294,7 @@ GamePlayer.RefreshSpec.TargetHits:			Dieser Stil ist am Besten, wenn der letzte 
 GamePlayer.RefreshSpec.TargetMisses:			Dieser Stil ist am Besten, wenn der letzte Angriff Eures Gegners fehl geschlagen ist.		
 GamePlayer.RefreshSpec.TargetParried:			Dieser Stil ist am Besten, wenn Ihr den letzten Angriff Eures Gegners parriert habt.		
 GamePlayer.RefreshSpec.TargetStyle:			Dieser Stil ist am Besten, wenn der letzte Angriff Eures Gegners ein Kampstil war.		
-GamePlayer.RefreshSpec.YouLearn:			Ihr erlernt den "{0}"-Kampfstil!		
+GamePlayer.RefreshSpec.YouLearn:			Ihr erlernt den "{0}"-Kampfstil!
 GamePlayer.Release.CantReleaseDuel:			You can't alter your release on a duel death!		
 GamePlayer.Release.GraveErected:			Es wurde ein Grabstein an der Stelle Eures Todes errichtet.		
 GamePlayer.Release.LostConstitution:			Ihr habt einen Teil Eurer Konstitution verloren. Geht zu einen Heiler, um diese wieder herzustellen!		
@@ -416,7 +416,7 @@ HousingPlaceItemHandler.PutMoney:			Ihr leistet eine Anzahlung auf Euer Haus.
 
 # Styles
 # /StyleProcessor
-StyleProcessor.ExecuteStyle.BackStrike:			You inflict a critical strike in the back of your target 
+StyleProcessor.ExecuteStyle.BackStrike:			Ihr führt einen kritischen Schlag auf den Rücken Eures Zieles aus.
 StyleProcessor.ExecuteStyle.ExecuteFail:		Ihr führt den Kampfstil "{0}" nicht richtig aus!
 StyleProcessor.ExecuteStyle.PerformPerfectly:		Ihr führt den Kampfstil "{0}" perfekt aus.{1}
 StyleProcessor.ExecuteStyle.PerformsPerfectly:		Your {0} performs {1} perfectly! {2}
@@ -427,7 +427,7 @@ StyleProcessor.ExecuteStyle.StyleNameBackstabII:	Backstab II
 StyleProcessor.ExecuteStyle.StyleNamePerforateArtery:	Perforate Artery
 # <----
 
-StyleProcessor.ExecuteStyle.ThroatStrike:		You inflict a critical strike in the throat of your target 
+StyleProcessor.ExecuteStyle.ThroatStrike:		Ihr führt einen kritischen Schlag auf den Hals Eures Zieles aus.
 StyleProcessor.TryToUseStyle.AlreadyPreparing:		Ihr bereitet bereits einen Kampfstil vor! Gebt /cancelstyle ein, um den Kampfstil-Abbruch zu aktivieren.
 StyleProcessor.TryToUseStyle.AlreadySelectedStyles:	Ihr habt bereits Eure Kampfstile für diese Runde ausgewählt!
 StyleProcessor.TryToUseStyle.BackupStyle:		Ihr bereitet nun den Kampfstil "{0}" als Reserve für den Kampstil "{1}" vor!
@@ -472,9 +472,9 @@ GameStableMaster.UnknownWay:				Tut mir leid, dieses Ticket nach {0} ist hier ni
 # /packets/Client/168
 # /DetailDisplayHandler
 DetailDisplayHandler.GetShortItemInfo.CrafterName:	Crafter : {0}
-DetailDisplayHandler.GetShortItemInfo.NoDrop:		 No Drop.
-DetailDisplayHandler.GetShortItemInfo.NoSell:		 No Sell.
-DetailDisplayHandler.GetShortItemInfo.NoTrade:		 No Trade.
+DetailDisplayHandler.GetShortItemInfo.NoDrop:		 Nicht ablegbar.
+DetailDisplayHandler.GetShortItemInfo.NoSell:		 Nicht verkaufbar.
+DetailDisplayHandler.GetShortItemInfo.NoTrade:		 Nicht handelbar.
 DetailDisplayHandler.HandlePacket.Any:			Egal
 DetailDisplayHandler.HandlePacket.Back:			(von Hinten)
 DetailDisplayHandler.HandlePacket.CannotDropped:	Kann nicht abgelegt oder beim Schatzhüter hinterlegt werden.
@@ -563,14 +563,14 @@ DetailDisplayHandler.WriteHorseInfo.Armor:		- Rüstung: {0}
 DetailDisplayHandler.WriteHorseInfo.Barding:		- Barding: None
 DetailDisplayHandler.WriteHorseInfo.BasicHorse:		Das ist ein einfaches Pferd.
 DetailDisplayHandler.WriteHorseInfo.Food:		- Lieblingsfutter: Heu und gelegentlich Äpfel
-DetailDisplayHandler.WriteHorseInfo.MountWindow:	To make this horse your active mount, place this icon in the appropriate slot of your Mount window.
+DetailDisplayHandler.WriteHorseInfo.MountWindow:	Um dieses Pferd zum aktiven Reittier zu machen, müsst Ihr das Symbol in den entsprechenden Slot Eures Reittierfensters legen.
 DetailDisplayHandler.WriteHorseInfo.Name:		- Name: {0}.
 DetailDisplayHandler.WriteHorseInfo.NameMount:		  (Verwendet /namemount um Eurem Pferd einen Namen zu geben.)
-DetailDisplayHandler.WriteHorseInfo.Quickbar:		To summon this horse, from your Mount window drag the horse icon to your quickbar, and summon by using the quickbar icon.
-DetailDisplayHandler.WriteHorseInfo.RvRZzones:		Can't be summoned in RvR zones.
+DetailDisplayHandler.WriteHorseInfo.Quickbar:		Um dieses Pferd zu rufen, zieht das Pferdesymbol aus Eurem Reittierfenster in Eure Schnellstartleiste und ruft es dann von dort aus auf.
+DetailDisplayHandler.WriteHorseInfo.RvRZzones:		Dieses Reittier könnt Ihr nicht in einer RvR-Zone rufen.
 DetailDisplayHandler.WriteHorseInfo.Speed1:		(+35% Geschwindigkeit)
 DetailDisplayHandler.WriteHorseInfo.Speed2:		(+45% Geschwindigkeit)
-DetailDisplayHandler.WriteHorseInfo.Summon:		Click this icon in your quickbar to summon (or dismount) your horse.
+DetailDisplayHandler.WriteHorseInfo.Summon:		Klickt auf das Symbol in Eurer Schnellstartleiste um Euer Pferd zu rufen.
 DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic:	Charged Magic Fähigkeit:
 DetailDisplayHandler.WriteMagicalBonuses.Charges:	- {0} Ladungen
 DetailDisplayHandler.WriteMagicalBonuses.FocusBonus:	Fokusboni:
@@ -601,7 +601,7 @@ DetailDisplayHandler.WritePotionInfo.UseItem3:		Kann wieder verwendet werden in:
 DetailDisplayHandler.WriteUsableClasses.UsableBy:	Geeignet für: 
 
 # /DoorRequestHandler.cs
-DoorRequestHandler.OnTick.TooFarAway:			Ihr seid zu weit weg von [{0}]!
+DoorRequestHandler.OnTick.TooFarAway:			Ihr seid zu weit weg von {0}!
 
 # /PlayerInitRequestHandler
 PlayerInitRequestHandler.AllianceMessage:		Allianznachricht: {0}
