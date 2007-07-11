@@ -163,7 +163,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Maulers Staff Weapons
 		/// </summary>
-		public const string Weapon_MaulerStaff = "Weaponry: Staff";
+		public const string Weapon_MaulerStaff = "Weaponry: Mauler Staff";
 		/// <summary>
 		/// Fist Wraps Weapons
 		/// </summary>
