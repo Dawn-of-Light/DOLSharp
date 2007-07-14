@@ -12889,6 +12889,17 @@
             </summary>
             <param name="living"></param>
         </member>
+        <member name="T:DOL.GS.RealmAbilities.DreamweaverAbility">
+            <summary>
+            Arms Length Realm Ability
+            </summary>
+        </member>
+        <member name="M:DOL.GS.RealmAbilities.DreamweaverAbility.Execute(DOL.GS.GameLiving)">
+            <summary>
+            Action
+            </summary>
+            <param></param>
+        </member>
         <member name="T:DOL.GS.Quests.Requirements.QuestPendingRequirement">
             <summary>
             Requirements describe what must be true to allow a QuestAction to fire.
@@ -14650,6 +14661,36 @@
         <member name="P:DOL.GS.Effects.SpeedOfSoundEffect.DelveInfo">
             <summary>
             Delve information
+            </summary>
+        </member>
+        <member name="T:DOL.GS.Effects.DreamweaverEffect">
+            <summary>
+            Helper for charge realm ability
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Effects.DreamweaverEffect.#ctor">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:DOL.GS.Effects.DreamweaverEffect.Start(DOL.GS.GameLiving)">
+            <summary>
+            Start the effect on player
+            </summary>
+            <param>The effect target</param>
+        </member>
+        <member name="P:DOL.GS.Effects.DreamweaverEffect.Name">
+            <summary>
+            Name of the effect
+            </summary>
+        </member>
+        <member name="P:DOL.GS.Effects.DreamweaverEffect.Icon">
+            <summary>
+            Icon to show on players, can be id
+            </summary>
+        </member>
+        <member name="P:DOL.GS.Effects.DreamweaverEffect.DelveInfo">
+            <summary>
+            Delve Info
             </summary>
         </member>
         <member name="T:DOL.GS.Effects.BadgeOfValorEffect">
@@ -20594,6 +20635,11 @@
         <member name="T:DOL.GS.Effects.RemedyEffect">
             <summary>
             Adrenaline Rush
+            </summary>
+        </member>
+        <member name="T:DOL.GS.Effects.BladeBarrierEffect">
+            <summary>
+            Blade Barrier
             </summary>
         </member>
         <member name="T:DOL.GS.Behaviour.Triggers.ItemUsedTrigger">
@@ -29668,6 +29714,17 @@
             Returns the number of players online inside this guild
             </summary>
         </member>
+        <member name="T:DOL.GS.RealmAbilities.BladeBarrierAbility">
+            <summary>
+            Blade Barrier
+            </summary>
+        </member>
+        <member name="M:DOL.GS.RealmAbilities.BladeBarrierAbility.Execute(DOL.GS.GameLiving)">
+            <summary>
+            Action
+            </summary>
+            <param></param>
+        </member>
         <member name="T:DOL.GS.RealmAbilities.ArmsLengthAbility">
             <summary>
             Arms Length Realm Ability
@@ -30900,7 +30957,7 @@
             associates the correct LootGenerator with a given Mob
             </summary>
         </member>
-        <member name="F:DOL.GS.LootMgr.Logger">
+        <member name="F:DOL.GS.LootMgr.log">
             <summary>
             Defines a logger for this class.
             </summary>
@@ -36706,63 +36763,6 @@
             </summary>
             <param name="target"></param>
             <returns></returns>
-        </member>
-        <member name="T:DOL.GS.RealmAbilities.DreamweaverAbility">
-            <summary>
-            Arms Length Realm Ability
-            </summary>
-        </member>
-        <member name="M:DOL.GS.RealmAbilities.DreamweaverAbility.Execute(DOL.GS.GameLiving)">
-            <summary>
-            Action
-            </summary>
-            <param></param>
-        </member>
-        <member name="T:DOL.GS.Effects.DreamweaverEffect">
-            <summary>
-            Helper for charge realm ability
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Effects.DreamweaverEffect.#ctor">
-            <summary>
-            </summary>
-        </member>
-        <member name="M:DOL.GS.Effects.DreamweaverEffect.Start(DOL.GS.GameLiving)">
-            <summary>
-            Start the effect on player
-            </summary>
-            <param>The effect target</param>
-        </member>
-        <member name="P:DOL.GS.Effects.DreamweaverEffect.Name">
-            <summary>
-            Name of the effect
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.DreamweaverEffect.Icon">
-            <summary>
-            Icon to show on players, can be id
-            </summary>
-        </member>
-        <member name="P:DOL.GS.Effects.DreamweaverEffect.DelveInfo">
-            <summary>
-            Delve Info
-            </summary>
-        </member>
-        <member name="T:DOL.GS.RealmAbilities.BladeBarrierAbility">
-            <summary>
-            Blade Barrier
-            </summary>
-        </member>
-        <member name="M:DOL.GS.RealmAbilities.BladeBarrierAbility.Execute(DOL.GS.GameLiving)">
-            <summary>
-            Action
-            </summary>
-            <param></param>
-        </member>
-        <member name="T:DOL.GS.Effects.BladeBarrierEffect">
-            <summary>
-            Blade Barrier
-            </summary>
         </member>
     </members>
 </doc>
