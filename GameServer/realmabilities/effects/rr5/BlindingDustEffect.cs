@@ -37,7 +37,7 @@ namespace DOL.GS.Effects
 
 		public override string Name { get { return "Blinding Dust"; } }
 
-		public override ushort Icon { get { return 7040; } }
+		public override ushort Icon { get { return 3039; } }
 
 		public override void Stop()
 		{

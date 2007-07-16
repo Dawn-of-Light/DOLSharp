@@ -61,6 +61,7 @@ namespace DOL.Database
 		
 		private string m_brain;
 		private string m_pathID;
+		private int m_maxdistance;
 
 		static bool m_autoSave;
 
@@ -80,6 +81,7 @@ namespace DOL.Database
 			m_inHouse = -1;
 			m_brain = "";
 			m_pathID = "";
+			m_maxdistance = 0;			
 		}
 
 		/// <summary>
@@ -484,6 +486,26 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_pathID = value;
+			}
+		}
+
+		/// <summary>
+		/// The Mob's max distance from its spawn before return automatically
+		/// if MaxDistance > 0 ... the amount is the normal value
+		/// if MaxDistance = 0 ... no maxdistance check
+		/// if MaxDistance < 0 ... the amount is calculated in procent of the value and the aggrorange (in StandardMobBrain)
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public int MaxDistance
+		{
+			get
+			{
+				return m_maxdistance;
+			}
+			set
+			{
+				Dirty = true;
+				m_maxdistance = value;
 			}
 		}
 	}

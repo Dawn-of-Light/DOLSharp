@@ -45,7 +45,7 @@ namespace DOL.GS.Effects
 
 		public override string Name { get { return "Combat Awareness"; } }
 
-		public override ushort Icon { get { return 7068; } }
+		public override ushort Icon { get { return 3090; } }
 
 		public override void Stop()
 		{

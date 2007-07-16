@@ -66,7 +66,7 @@ namespace DOL.GS.Effects
 
 		public override string Name { get { return "Shield of Immunity"; } }
 
-		public override ushort Icon { get { return 7048; } }
+		public override ushort Icon { get { return 3047; } }
 
 
 		public override System.Collections.IList DelveInfo

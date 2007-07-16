@@ -48,7 +48,7 @@ namespace DOL.GS.Effects
         /// <summary>
         /// Icon to show on players, can be id
         /// </summary>
-        public override ushort Icon { get { return 7070; } }
+        public override ushort Icon { get { return 3069; } }
 
         /// <summary>
         /// Delve Info

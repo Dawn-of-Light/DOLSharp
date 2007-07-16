@@ -3182,18 +3182,8 @@ namespace DOL.GS.PacketHandler
 			 * item.name = ReadPascalString(); // max length = 0x2F ?
 			 */
 			GSTCPPacketOut pak = new GSTCPPacketOut((byte)ePackets.MarketExplorerWindow);
-			//VaNaTiC->
-			#warning VaNaTiC: what means the outcommented code???
-			//if (true)
-			//{
-				pak.WriteByte(255);
-				pak.Fill(0, 3);
-			//}
-			//else
-			//{
-			//	pak.Fill(0, 4);
-			//}
-			//VaNaTiC<-
+			pak.WriteByte(255);
+			pak.Fill(0, 3);
 			SendTCP(pak);
 		}
 

@@ -79,7 +79,7 @@ namespace DOL.GS.Effects
 
 		public override string Name { get { return "Natures Womb"; } }
 
-		public override ushort Icon { get { return 7053; } }
+		public override ushort Icon { get { return 3052; } }
 
 		public override void Stop()
 		{

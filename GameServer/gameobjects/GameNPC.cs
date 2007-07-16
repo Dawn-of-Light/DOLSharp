@@ -544,6 +544,19 @@ namespace DOL.GS
 			}
 		}
 
+		protected int m_maxdistance;
+		/// <summary>
+		/// The Mob's max distance from its spawn before return automatically
+		/// if MaxDistance > 0 ... the amount is the normal value
+		/// if MaxDistance = 0 ... no maxdistance check
+		/// if MaxDistance < 0 ... the amount is calculated in procent of the value and the aggrorange (in StandardMobBrain)
+		/// </summary>
+		public int MaxDistance
+		{
+			get { return m_maxdistance; }
+			set { m_maxdistance = value; }
+		}
+		
 		#endregion
 		#region Movement
 		/// <summary>
@@ -954,11 +967,19 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void WalkToSpawn()
 		{
+			WalkToSpawn((int)(MaxSpeed / 2.5));
+		}
+
+		/// <summary>
+		/// Walk to the spawn point with specified speed
+		/// </summary>
+		public virtual void WalkToSpawn(int speed)
+		{
 			StopAttack();
 			StopFollow();
-			//			WalkTo(SpawnX+Random(750)-350, SpawnY+Random(750)-350, SpawnZ, MaxSpeed/3);
+			//WalkTo(SpawnX+Random(750)-350, SpawnY+Random(750)-350, SpawnZ, MaxSpeed/3);
 			m_isReturningHome = true;
-			WalkTo(SpawnX, SpawnY, SpawnZ, (int)(MaxSpeed / 2.5));
+			WalkTo(SpawnX, SpawnY, SpawnZ, speed);
 		}
 
 		/// <summary>
@@ -1504,6 +1525,7 @@ namespace DOL.GS
 			}
 			m_bodyType = npc.BodyType;
 			m_houseNumber = npc.HouseNumber;
+			m_maxdistance = npc.MaxDistance;
 		}
 
 		/// <summary>
@@ -1563,6 +1585,7 @@ namespace DOL.GS
 			if (NPCTemplate != null)
 				mob.NPCTemplateID = NPCTemplate.TemplateId;
 			mob.PathID = PathID;
+			mob.MaxDistance = m_maxdistance;
 
 			if (InternalID == null)
 			{
@@ -1615,6 +1638,7 @@ namespace DOL.GS
 			}
 			this.Level = level;
 
+			this.MaxDistance = template.MaxDistance;
 			this.BodyType = template.BodyType;
 			this.MaxSpeedBase = template.MaxSpeed;
 			this.Flags = template.Flags;
@@ -3605,6 +3629,7 @@ namespace DOL.GS
 			m_followMinDist = 100;
 			m_followMaxDist = 3000;
 			m_flags = 0;
+			m_maxdistance = 0;
 			//m_factionName = "";
 			LinkedFactions = new ArrayList(1);
 			if (m_ownBrain == null)
