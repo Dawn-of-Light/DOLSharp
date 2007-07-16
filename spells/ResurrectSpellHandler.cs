@@ -17,10 +17,11 @@
  *
  */
 using System;
-using System.Collections.Specialized;
-using DOL.GS.PacketHandler;
-using DOL.Events;
 using System.Collections;
+using System.Collections.Specialized;
+using DOL.Events;
+using DOL.GS.Effects;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
@@ -117,7 +118,24 @@ namespace DOL.GS.Spells
 				}
 				else
 				{
-					if (response == 1) ResurrectLiving(player); //accepted
+					if (response == 1)
+					{
+						ResurrectLiving(player); //accepted
+						//VaNaTiC->
+						#warning VaNaTiC: add this in GamePlayer.OnRevive with my RevivedEventArgs
+						// Patch 1.56: Resurrection sickness now goes from 100% to 50% when doing a "full rez" on another player. 
+						// We have do to this here, cause we dont have any other chance to get
+						// an object-relation between the casted spell of the rezzer (here) and
+						// the produced illness for the player (OnRevive()).
+						// -> any better solution -> post :)
+						if ( Spell.ResurrectHealth == 100 )
+						{
+							GameSpellEffect effect = SpellHandler.FindEffectOnTarget(player, "PveResurrectionIllness");
+				            if ( effect != null )
+				            	effect.Overwrite(new GameSpellEffect(effect.SpellHandler, effect.Duration/2, effect.PulseFreq));
+						}
+						//VaNaTiC<-
+					}
 					else
 					{
 						player.Out.SendMessage("You decline to be resurrected.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -161,7 +179,7 @@ namespace DOL.GS.Spells
 				player.Out.SendPlayerRevive(player);
 				player.UpdatePlayerStatus();
 				player.Out.SendMessage("You have been resurrected by " + m_caster.GetName(0, false) + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				player.Notify(GamePlayerEvent.Revive, player);
+				player.Notify(GamePlayerEvent.Revive, player, new RevivedEventArgs(Caster, Spell));
 
 				IList attackers;
 				lock (player.Attackers.SyncRoot) { attackers = (IList)(player.Attackers as ArrayList).Clone(); }

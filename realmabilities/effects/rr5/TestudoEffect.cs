@@ -117,7 +117,7 @@ namespace DOL.GS.Effects
 
 		public override string Name { get { return "Testudo"; } }
 
-		public override ushort Icon { get { return 7068; } }
+		public override ushort Icon { get { return 3067; } }
 
 
 		public override System.Collections.IList DelveInfo

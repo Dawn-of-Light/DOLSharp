@@ -58,7 +58,7 @@ namespace DOL.GS.Effects
 
 		public override string Name { get { return "Ferocious Will"; } }
 
-		public override ushort Icon { get { return 7065; } }
+		public override ushort Icon { get { return 3064; } }
 
 		public override void Stop()
 		{

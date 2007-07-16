@@ -49,7 +49,7 @@ namespace DOL.GS.Effects
 
         public override string Name { get { return "Retribution Of The Faithful"; } }
 
-        public override ushort Icon { get { return 7042; } }
+        public override ushort Icon { get { return 3041; } }
 
         public override void Stop()
         {

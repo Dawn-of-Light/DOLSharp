@@ -40,7 +40,7 @@ namespace DOL.GS.Effects
 
 		public override string Name { get { return "Remedy"; } }
 
-		public override ushort Icon { get { return 7060; } }
+		public override ushort Icon { get { return 3059; } }
 
 		public override void Stop()
 		{

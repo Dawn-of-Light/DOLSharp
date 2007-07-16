@@ -96,7 +96,7 @@ namespace DOL.GS.Effects
         {
             get
             {
-                return 7057;
+                return 3056;
             }
         }
 
