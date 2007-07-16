@@ -80,6 +80,15 @@ namespace DOL.AI.Brain
 			if (!Body.InCombat)
 				Body.TempProperties.removeProperty(GameLiving.LAST_ATTACK_DATA);
 
+			// check for returning to home if to far away
+			if ( Body.MaxDistance != 0 )
+			{
+				int distance = WorldMgr.GetDistance(Body.SpawnX,Body.SpawnY,Body.SpawnZ, Body.X,Body.Y,Body.Z);
+				int maxdistance = Body.MaxDistance > 0 ? Body.MaxDistance : -Body.MaxDistance * AggroRange / 100;
+				if ( maxdistance > 0 && distance > maxdistance )
+					Body.WalkToSpawn(Body.MaxSpeed*2);
+			}
+			
 			//If we have an aggrolevel above 0, we check for players and npcs in the area to attack
 			if (!Body.AttackState && AggroLevel > 0)
 			{

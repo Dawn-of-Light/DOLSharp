@@ -44,6 +44,7 @@ namespace DOL.GS.Scripts
 		"'/mob guild <newMobGuild>' to set the mob guildname to newMobGuild",
 		"'/mob aggro <level>' set mob aggro level 0..100%",
 		"'/mob range <distance>' set mob aggro range",
+		"'/mob distance <maxdistance>' set mob max distance from its spawn (>0=real, 0=no check, <0=procent)",
 		"'/mob damagetype <eDamageType>' set mob damage type",
 		"'/mob movehere'",
 		"'/mob remove' to remove this mob from the DB",
@@ -275,6 +276,11 @@ namespace DOL.GS.Scripts
 						{
 							info.Add(" + Aggro level: " + aggroBrain.AggroLevel);
 							info.Add(" + Aggro range: " + aggroBrain.AggroRange);
+							if ( targetMob.MaxDistance < 0 )
+								info.Add(" + MaxDistance: " + -targetMob.MaxDistance*aggroBrain.AggroRange/100);
+							else
+								info.Add(" + MaxDistance: " + targetMob.MaxDistance);
+								
 						}
 						else
 						{
@@ -578,6 +584,23 @@ namespace DOL.GS.Scripts
 						catch
 						{
 							DisplayError(client, "Type /mob for command overview.");
+							return 1;
+						}
+					}
+					break;
+
+				case "distance":
+					{
+						try
+						{
+							int distance = Convert.ToInt32(args[2]);
+							targetMob.MaxDistance = distance;
+							targetMob.SaveIntoDatabase();
+							client.Out.SendMessage("Mob max distance changed to: " + distance, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						catch (Exception)
+						{
+							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 1;
 						}
 					}

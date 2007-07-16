@@ -18,8 +18,11 @@
  */
 using System;
 using System.Reflection;
+using System.Collections;
 using DOL.Events;
 using DOL.GS;
+using DOL.GS.Spells;
+using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -356,6 +359,29 @@ namespace DOL.AI.Brain
 					return m_orderAttackTarget;
 				m_orderAttackTarget = null;
 			}
+
+			//VaNaTiC->
+            lock (m_aggroTable.SyncRoot) 
+            { 
+               IDictionaryEnumerator aggros = m_aggroTable.GetEnumerator(); 
+                while ( aggros.MoveNext() )
+                { 
+                    GameLiving living = (GameLiving)aggros.Key;
+                    // 1st we check only if living is mezzed,
+                    // cause if so there is no need to look
+                    // through all effects for a root
+                    if ( living.IsMezzed )
+                        RemoveFromAggroList(living);
+                    else
+                    {
+                        // no mezz was found, then we have to look if living is rooted
+                        GameSpellEffect root = SpellHandler.FindEffectOnTarget(living, "SpeedDecrease"); 
+                        if ( root != null && root.Spell.Value == 99 )
+                            RemoveFromAggroList(living);
+                    }
+                } 
+            }
+			//VaNaTiC<-
 
 			return base.CalculateNextAttackTarget();
 		}

@@ -70,7 +70,7 @@ namespace DOL.GS.Effects
 
 		public override string Name { get { return "Entwining Snakes"; } }
 
-		public override ushort Icon { get { return 7072; } }
+		public override ushort Icon { get { return 3071; } }
 
 		public int SpellEffectiveness
 		{

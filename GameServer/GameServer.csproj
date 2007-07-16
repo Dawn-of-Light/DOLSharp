@@ -362,6 +362,7 @@
     <Compile Include="events\gameobjects\PlayerPromotedEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="events\gameobjects\RevivedEventArgs.cs" />
     <Compile Include="events\gameobjects\QuestEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>

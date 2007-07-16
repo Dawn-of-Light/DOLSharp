@@ -655,6 +655,13 @@ Scripts.GM.Ban.IBanned:					Die IP-Adresse {0} wurde gesperrt.
 Scripts.GM.Ban.MustTarget:				Ihr müsst erst ein Ziel auswählen!
 
 # PlayerCommands
+# /GC
+Scripts.Players.Guild.AllianceInfo:             Allianzinformation für {0}:
+Scripts.Players.Guild.AllianceNoLeader:         Kein Allianzanführer
+Scripts.Players.Guild.AllianceLeader:           Allianzanführer {0}
+Scripts.Players.Guild.AllianceMembers:          Allianzmitglieder:
+Scripts.Players.Guild.AllianceMember:           {0} - {1}
+
 # /Advice
 Scripts.Players.Advice.Advice:				[Anfrage{0}] {1}: "{2}"
 Scripts.Players.Advice.AdvicersOn:			Es sind {0} Ratgeber online!

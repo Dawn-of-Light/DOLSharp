@@ -85,7 +85,7 @@ namespace DOL.GS.Effects
 
 		public override string Name { get { return "Restorative Mind"; } }
 
-		public override ushort Icon { get { return 7071; } }
+		public override ushort Icon { get { return 3070; } }
 
 
 

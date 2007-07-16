@@ -68,6 +68,7 @@ namespace DOL.GS
 		protected byte m_aggroLevel;
 		protected int m_aggroRange;
 		protected int m_bodyType;
+		protected int m_maxdistance;
 
 		/// <summary>
 		/// Constructs a new NpcTemplate
@@ -162,6 +163,7 @@ namespace DOL.GS
 			m_aggroLevel = data.AggroLevel;
 			m_aggroRange = data.AggroRange;
 			m_bodyType = data.BodyType;
+			m_maxdistance = data.MaxDistance;
 		}
 
 		public NpcTemplate(GameNPC mob)
@@ -196,6 +198,7 @@ namespace DOL.GS
 				m_aggroRange = brain.AggroRange;
 			}
 			m_bodyType = mob.BodyType;
+			m_maxdistance = mob.MaxDistance;
 		}
 
 		public NpcTemplate()
@@ -422,6 +425,24 @@ namespace DOL.GS
 			set { m_bodyType = value; }
 		}
 
+		/// <summary>
+		/// The Mob's max distance from its spawn before return automatically
+		/// if MaxDistance > 0 ... the amount is the normal value
+		/// if MaxDistance = 0 ... no maxdistance check
+		/// if MaxDistance < 0 ... the amount is calculated in procent of the value and the aggrorange (in StandardMobBrain)
+		/// </summary>
+		public int MaxDistance
+		{
+			get
+			{
+				return m_maxdistance;
+			}
+			set
+			{
+				m_maxdistance = value;
+			}
+		}
+		
 		public virtual void SaveIntoDatabase()
 		{
 			DBNpcTemplate tmp = tmp = (DBNpcTemplate)GameServer.Database.FindObjectByKey(typeof(DBNpcTemplate), TemplateId);
@@ -453,6 +474,7 @@ namespace DOL.GS
 			tmp.Charisma = Charisma;
 			tmp.AggroRange = AggroRange;
 			tmp.AggroLevel = AggroLevel;
+			tmp.MaxDistance = MaxDistance;
 			if (add)
 				GameServer.Database.AddNewObject(tmp);
 			else GameServer.Database.SaveObject(tmp);

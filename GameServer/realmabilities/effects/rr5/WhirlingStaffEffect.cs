@@ -37,7 +37,7 @@ namespace DOL.GS.Effects
 
 		public override string Name { get { return "Whirling Staff"; } }
 
-		public override ushort Icon { get { return 7043; } }
+		public override ushort Icon { get { return 3042; } }
 
 		public override void Stop()
 		{
