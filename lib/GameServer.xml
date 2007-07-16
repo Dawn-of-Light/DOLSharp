@@ -3021,6 +3021,11 @@
             Walk to the spawn point
             </summary>
         </member>
+        <member name="M:DOL.GS.GameNPC.WalkToSpawn(System.Int32)">
+            <summary>
+            Walk to the spawn point with specified speed
+            </summary>
+        </member>
         <member name="M:DOL.GS.GameNPC.Walk(System.Int32)">
             <summary>
             This function is used to start the mob walking. It will
@@ -3672,6 +3677,7 @@
             The stealth state of this NPC
             </summary>
         </member>
+        <!-- Badly formed XML comment ignored for member "P:DOL.GS.GameNPC.MaxDistance" -->
         <member name="P:DOL.GS.GameNPC.TargetX">
             <summary>
             Gets or sets the TargetX
@@ -6288,6 +6294,11 @@
             <param name="ab"></param>
             <param name="player"></param>
         </member>
+        <member name="T:DOL.GS.RealmAbilities.DesperateBowmanAbility">
+            <summary>
+            Mastery of Concentration RA
+            </summary>
+        </member>
         <member name="M:DOL.GS.RealmAbilities.TimedRealmAbility.SendCasterSpellEffectAndCastMessage(DOL.GS.GameLiving,System.UInt16,System.Boolean)">
             <summary>
             Send spell effect animation on caster and send messages
@@ -6309,6 +6320,12 @@
             <param name="living"></param>
             <param name="bitmask"></param>
             <returns></returns>
+        </member>
+        <member name="M:DOL.GS.RealmAbilities.DesperateBowmanAbility.Execute(DOL.GS.GameLiving)">
+            <summary>
+            Action
+            </summary>
+            <param name="living"></param>
         </member>
         <member name="M:DOL.GS.RealmAbilities.ChainLightningAbilityHandler.Execute(DOL.GS.GameLiving)">
             <summary>
@@ -11093,6 +11110,13 @@
             <param name="minLevel">The maximum level of the NPC</param>
             <returns>The NPC</returns>
         </member>
+        <member name="M:DOL.GS.Zone.GetNPCsOfZone(DOL.GS.PacketHandler.eRealm)">
+            <summary>
+            Gets all NPC's in zone
+            </summary>
+            <param name="realm"></param>
+            <returns></returns>
+        </member>
         <member name="P:DOL.GS.Zone.ZoneRegion">
             <summary>
             Returns the region of this zone
@@ -12745,6 +12769,7 @@
             Gets the body type of the npc
             </summary>
         </member>
+        <!-- Badly formed XML comment ignored for member "P:DOL.GS.INpcTemplate.MaxDistance" -->
         <member name="T:DOL.GS.GamePlayerInventory">
             <summary>
             This class represents a full player inventory
@@ -15980,6 +16005,11 @@
             </summary>
         </member>
         <member name="T:DOL.GS.Effects.RetributionOfTheFaithfulStunEffect">
+            <summary>
+            Adrenaline Rush
+            </summary>
+        </member>
+        <member name="T:DOL.GS.Effects.DesperateBowmanDisarmEffect">
             <summary>
             Adrenaline Rush
             </summary>
@@ -26110,6 +26140,11 @@
             Release to your bind point
             </summary>
         </member>
+        <member name="F:DOL.GS.GamePlayer.eReleaseType.RvR">
+            <summary>
+            Release in a battleground or the frontiers
+            </summary>
+        </member>
         <member name="T:DOL.GS.GamePlayer.PrayAction">
             <summary>
             The timed pray action
@@ -27521,6 +27556,26 @@
         <member name="P:DOL.Events.WalkEventArgs.Speed">
             <summary>
             Gets the walk speed
+            </summary>
+        </member>
+        <member name="T:DOL.Events.RevivedEventArgs">
+            <summary>
+            Holds the arguments for the Revived event of GamePlayer
+            </summary>
+        </member>
+        <member name="F:DOL.Events.RevivedEventArgs.m_source">
+            <summary>
+            The source of revive (rezzer) or null
+            </summary>
+        </member>
+        <member name="F:DOL.Events.RevivedEventArgs.m_spell">
+            <summary>
+            The spell if one used, else null
+            </summary>
+        </member>
+        <member name="M:DOL.Events.RevivedEventArgs.#ctor(DOL.GS.GameObject,DOL.GS.Spell)">
+            <summary>
+            Constructs a new Revived event args
             </summary>
         </member>
         <member name="T:DOL.Events.MoveToEventArgs">
@@ -32984,6 +33039,17 @@
             </summary>
             <param name="type">The type to analyze</param>
         </member>
+        <member name="T:DOL.GS.RealmAbilities.ValeDefenseAbility">
+            <summary>
+            Arms Length Realm Ability
+            </summary>
+        </member>
+        <member name="M:DOL.GS.RealmAbilities.ValeDefenseAbility.Execute(DOL.GS.GameLiving)">
+            <summary>
+            Action
+            </summary>
+            <param></param>
+        </member>
         <member name="T:DOL.GS.RealmAbilities.ShieldOfImmunityAbility">
             <summary>
             Mastery of Concentration RA
@@ -34914,6 +34980,7 @@
             Gets the template npc Abilities
             </summary>
         </member>
+        <!-- Badly formed XML comment ignored for member "P:DOL.GS.NpcTemplate.MaxDistance" -->
         <member name="T:DOL.GS.Message">
             <summary>
             This class helps sending messages to other players

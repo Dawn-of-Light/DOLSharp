@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Reflection;
 
 using DOL.Database;
+using DOL.Language;
 using DOL.GS.Keeps;
 using DOL.GS.ServerProperties;
 using DOL.GS.PacketHandler;
@@ -42,9 +43,9 @@ namespace DOL.GS.Scripts
 	public class GuildCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		/// <summary>
-		/// Contains all characters that are valid in a guild name.
+		/// Contains all characters that are valid in a guild name. non case sensitive
 		/// </summary>
-		public static string AllowedGuildNameChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ αινσϊΑΙΝΣΪ";
+		public static string AllowedGuildNameChars = "abcdefghijklmnopqrstuvwxyz αινσϊφδό";
 
 		/// <summary>
 		/// Defines a logger for this class.
@@ -60,7 +61,7 @@ namespace DOL.GS.Scripts
 		{
 			foreach (char c in guildName)
 			{
-				if (AllowedGuildNameChars.IndexOf(c) < 0)
+				if (AllowedGuildNameChars.IndexOf(char.ToLower(c)) < 0)
 				{
 					return false;
 				}
@@ -113,6 +114,7 @@ namespace DOL.GS.Scripts
 					client.Out.SendMessage("'/gc invite [name]' to invite targeted player to join the guild", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendMessage("'/gc who' to show all player in your guild", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendMessage("'/gc list' to show all guild in your realm", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage("'/gc alliance' to show information on the alliance", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendMessage("'/gc aaccept' to accept an alliance invitation", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendMessage("'/gc acancel' to cancel an alliance invitation", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendMessage("'/gc adecline' to decline an alliance invitation", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -1412,6 +1414,31 @@ namespace DOL.GS.Scripts
 							GameServer.Database.SaveObject(client.Player.Guild.theGuildDB);
 						}
 						break;
+					// --------------------------------------------------------------------------------
+					// ALLIANCE
+					// --------------------------------------------------------------------------------
+					case "alliance":
+						{
+							if ( client.Player.Guild == null )
+							    return DisplayError(client, "You have to be a member of a guild, before you can use any of the commands!");
+                            Alliance A = client.Player.Guild.alliance;
+							if ( A == null )
+							    return DisplayError(client, "Your guild is not a member of an alliance!");
+							
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Guild.AllianceInfo", A.Dballiance.AllianceName));
+							DBGuild leader = A.Dballiance.DBguildleader;
+							if ( leader != null )
+    							DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Guild.AllianceLeader", leader.GuildName));
+						    else
+							    DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Guild.AllianceNoLeader"));
+						    
+						    DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Guild.AllianceMembers"));
+						    int i = 0;
+						    foreach ( DBGuild guild in A.Dballiance.DBguilds )
+						        if ( guild != null )
+    						        DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Guild.AllianceMember", i++, guild.GuildName));
+							return 1;
+						}
 					// --------------------------------------------------------------------------------
 					// AINVITE
 					// --------------------------------------------------------------------------------

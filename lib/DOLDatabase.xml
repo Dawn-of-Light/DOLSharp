@@ -640,6 +640,7 @@
             Styles
             </summary>
         </member>
+        <!-- Badly formed XML comment ignored for member "P:DOL.Database.DBNpcTemplate.MaxDistance" -->
         <member name="T:DOL.Database.DBHouseOutdoorItem">
             <summary>
             The Database Entry for an Outdoor Housing Item
@@ -2403,6 +2404,7 @@ public static MySqlDataAdapter CreateCustomerAdapter(MySqlConnection conn)
             The Mob's path
             </summary>
         </member>
+        <!-- Badly formed XML comment ignored for member "P:DOL.Database.Mob.MaxDistance" -->
         <member name="T:DOL.Database.DBLootTemplate">
             <summary>
             Database Storage of Tasks
