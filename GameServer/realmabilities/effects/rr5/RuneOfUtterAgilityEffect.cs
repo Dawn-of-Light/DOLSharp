@@ -42,7 +42,7 @@ namespace DOL.GS.Effects
 
 		public override string Name { get { return "Rune Of Utter Agility"; } }
 
-		public override ushort Icon { get { return 7074; } }
+		public override ushort Icon { get { return 3073; } }
 
 		public override System.Collections.IList DelveInfo
 		{

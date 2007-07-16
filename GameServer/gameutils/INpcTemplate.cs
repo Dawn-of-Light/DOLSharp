@@ -168,5 +168,14 @@ namespace DOL.GS
 		/// Gets the body type of the npc
 		/// </summary>
 		int BodyType { get;}
+		
+		/// <summary>
+		/// The Mob's max distance from its spawn before return automatically
+		/// if MaxDistance > 0 ... the amount is the normal value
+		/// if MaxDistance = 0 ... no maxdistance check
+		/// if MaxDistance < 0 ... the amount is calculated in procent of the value and the aggrorange (in StandardMobBrain)
+		/// </summary>
+		int MaxDistance { get;}
+		
 	}
 }

@@ -64,6 +64,7 @@ namespace DOL.Database
 		private byte m_aggroLevel = 0;
 		private int m_aggroRange = 0;
 		private int m_bodyType = 0;
+		private int m_maxdistance = 0;
 
 		private static bool m_autoSave;
 
@@ -453,5 +454,26 @@ namespace DOL.Database
 				m_bodyType = value;
 			}
 		}
+		
+		/// <summary>
+		/// The Mob's max distance from its spawn before return automatically
+		/// if MaxDistance > 0 ... the amount is the normal value
+		/// if MaxDistance = 0 ... no maxdistance check
+		/// if MaxDistance < 0 ... the amount is calculated in procent of the value and the aggrorange (in StandardMobBrain)
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public int MaxDistance
+		{
+			get
+			{
+				return m_maxdistance;
+			}
+			set
+			{
+				Dirty = true;
+				m_maxdistance = value;
+			}
+		}
+		
 	}
 }

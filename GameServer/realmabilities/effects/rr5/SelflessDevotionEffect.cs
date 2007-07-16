@@ -37,7 +37,7 @@ namespace DOL.GS.Effects
 
 		public override string Name { get { return "Selfless Devotion"; } }
 
-		public override ushort Icon { get { return 7039; } }
+		public override ushort Icon { get { return 3038; } }
 
 		public override void Stop()
 		{

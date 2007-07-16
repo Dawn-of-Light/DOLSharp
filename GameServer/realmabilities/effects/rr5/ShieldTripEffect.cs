@@ -32,7 +32,7 @@ namespace DOL.GS.Effects
 
 		public override string Name { get { return "Shield Trip"; } }
 
-		public override ushort Icon { get { return 7046; } }
+		public override ushort Icon { get { return 3045; } }
 
 		public override void Stop()
 		{

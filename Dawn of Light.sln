@@ -1,5 +1,7 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C# Express 2005
+# Visual Studio 2005
+# SharpDevelop 2.1.0.2429
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOLBase", "DOLBase\DOLBase.csproj", "{A4A0FB22-124C-45CA-A653-2887DE0CC3E0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOLDatabase", "DOLDatabase\DOLDatabase.csproj", "{43BFC675-13B7-4AA8-97F6-6109948849CC}"
@@ -50,6 +52,7 @@ Global
 		{D526C207-AD6F-4811-906B-E8FC9858661D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D526C207-AD6F-4811-906B-E8FC9858661D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D526C207-AD6F-4811-906B-E8FC9858661D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{564E8F20-3834-4F3D-B5F3-2981C1FC8300}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
