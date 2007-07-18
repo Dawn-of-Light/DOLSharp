@@ -199,9 +199,12 @@ GamePlayer.DrowningTimerCallback.CannotBreath:		You cannot breathe underwater an
 GamePlayer.DrowningTimerCallback.Take5%Damage:		You take 5% of your max hits in damage.			
 GamePlayer.DuelStop.DuelEnds:				Your duel ends!	
 GamePlayer.GainBountyPoints.YouGet:			You get {0} bounty points!		
+GamePlayer.GainExperience.CampBonus:			({0} camp bonus)
 GamePlayer.GainExperience.CannotRaise:			You cannot raise to the 6th level until you join an advanced guild!		
+GamePlayer.GainExperience.GroupBonus:			({0} group bonus)
+GamePlayer.GainExperience.OutpostBonus:			({0} outpost bonus)
 GamePlayer.GainExperience.TalkToTrainer:		Talk to your trainer for more information.			
-GamePlayer.GainExperience.YouGet:			You get {0} experience points.		
+GamePlayer.GainExperience.YouGet:			You get {0} experience points.
 GamePlayer.GainRealmPoints.Earned:			{0} has earned 1,000,000 realm points in {1}		
 GamePlayer.GainRealmPoints.GainBonus:			You gain a +{0} bonus to all specializations!		
 GamePlayer.GainRealmPoints.GainedLevel:			You have gained a realm level!		
@@ -451,13 +454,12 @@ GameTrainer.ReceiveItem.RespecFull:			A nice {0}! I added a full respec to use /
 GameTrainer.ReceiveItem.RespecRealm:			Thanks, I added a realm respec to use /respec realm.
 GameTrainer.ReceiveItem.RespecSingle:			Thanks, I added a single spec respec to use /respec <linename>
 
-# /PlayerPositionUpdateHandler
-PlayerPositionUpdateHandler.Endurance:			You lose endurance!
-PlayerPositionUpdateHandler.Entered:			You have entered {0}.
-PlayerPositionUpdateHandler.FallingDamage:		You take falling damage!
-PlayerPositionUpdateHandler.FallPercent:		You take {0}% of your max hits in damage.
-PlayerPositionUpdateHandler.SafeFall:			The damage was lessened by your Safe Fall ability!
-PlayerPositionUpdateHandler.UnknownZone:		Unknown zone, moving to bind point.
+# /EnchanterTrainer
+EnchanterTrainer.Interact.PathOfEssence:		{0} says, "Do you choose to train as an Enchanter and follow the Path of Essence? Life as an [Enchanter] is as rewarding as it is dangerous, but it is yours for the asking."
+EnchanterTrainer.Interact.QuickStudy:			{0} says, "You are a quick study, {1}. But do not be too hasty. There is always more to learn."
+EnchanterTrainer.Interact.SeekElsewhere:		{0} says, "You must seek elsewhere for your training."
+EnchanterTrainer.WhisperReceive.CaseEnchanter:		Enchanter
+EnchanterTrainer.WhisperReceive.Welcome:		Welcome, {0}. From this day forth you shall be known as an Enchanter. Here, {0}. Take this gift to aid you on your path.
 
 # /gameobjects/CustomNPC
 # /GameStableMaster
@@ -609,6 +611,14 @@ PlayerInitRequestHandler.SaferLocation:			This area isn't currently secure and y
 # /PlayerMoveItemRequestHandler
 PlayerMoveItemRequestHandler.TooFarAway:		You are too far away to give anything to {0}.
 
+# /PlayerPositionUpdateHandler
+PlayerPositionUpdateHandler.Endurance:			You lose endurance!
+PlayerPositionUpdateHandler.Entered:			You have entered {0}.
+PlayerPositionUpdateHandler.FallingDamage:		You take falling damage!
+PlayerPositionUpdateHandler.FallPercent:		You take {0}% of your max hits in damage.
+PlayerPositionUpdateHandler.SafeFall:			The damage was lessened by your Safe Fall ability!
+PlayerPositionUpdateHandler.UnknownZone:		Unknown zone, moving to bind point.
+
 # /world
 # AbstractArea
 AbstractArea.Entered:					(Region) You have entered {0}!
@@ -650,13 +660,6 @@ Scripts.GM.Ban.IBanned:					IP {0} has been banned.
 Scripts.GM.Ban.MustTarget:				You must select a target!
 
 # PlayerCommands
-# /GC
-Scripts.Players.Guild.AllianceInfo:             Alliance info for {0}:
-Scripts.Players.Guild.AllianceNoLeader:         No alliance leader
-Scripts.Players.Guild.AllianceLeader:           Alliance leader {0}
-Scripts.Players.Guild.AllianceMembers:          Alliance members:
-Scripts.Players.Guild.AllianceMember:           {0} - {1}
-
 # /Advice
 Scripts.Players.Advice.Advice:				[ADVICE{0}] {1}: "{2}"
 Scripts.Players.Advice.AdvicersOn:			There are {0} advisors online!
@@ -798,6 +801,13 @@ Scripts.Players.Duel.YouInCombat:			You are in combat.
 Scripts.Players.Duel.YouInDuel:				You are already in a duel.
 Scripts.Players.Duel.YouInGroup:			You are in a group.
 Scripts.Players.Duel.YouSurrender:			You surrender to {0}!
+
+# /GC
+Scripts.Players.Guild.AllianceInfo:			Alliance info for {0}:
+Scripts.Players.Guild.AllianceLeader:			Alliance leader {0}
+Scripts.Players.Guild.AllianceMembers:			Alliance members:
+Scripts.Players.Guild.AllianceMember:			{0} - {1}
+Scripts.Players.Guild.AllianceNoLeader:			No alliance leader
 
 # /Language
 Scripts.Players.Language.Current:			Your language is currently set to: {0}.

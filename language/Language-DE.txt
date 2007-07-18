@@ -198,8 +198,11 @@ GamePlayer.Die.YouKilled:				Ihr habt gerade {0} getötet !
 GamePlayer.DrowningTimerCallback.CannotBreath:		Ihr könnt unter Wasser nicht atmen und nehmt deshalb Schaden!			
 GamePlayer.DrowningTimerCallback.Take5%Damage:		Ihr verliert 5% Eurer Trefferpunkte durch Schaden.			
 GamePlayer.DuelStop.DuelEnds:				Euer Duell ist beendet!	
-GamePlayer.GainBountyPoints.YouGet:			Ihr bekommt {0} Kopfgeldpunkte!		
+GamePlayer.GainBountyPoints.YouGet:			Ihr bekommt {0} Kopfgeldpunkte!
+GamePlayer.GainExperience.CampBonus:			({0} Lagerbonus)
 GamePlayer.GainExperience.CannotRaise:			Ihr könnt nicht zur Stufe 6 aufsteigen, bevor Ihr nicht einen Beruf gewählt habt!		
+GamePlayer.GainExperience.GroupBonus:			({0} Gruppenbonus)
+GamePlayer.GainExperience.OutpostBonus:			({0} Außenpostenbonus)
 GamePlayer.GainExperience.TalkToTrainer:		Sprecht mit Eurem Ausbilder für mehr Informationen.			
 GamePlayer.GainExperience.YouGet:			Ihr erhaltet {0} Erfahrungspunkte.		
 GamePlayer.GainRealmPoints.Earned:			{0} hat 1.000.000 Reichspunkte in {1} verdient!		
@@ -454,13 +457,12 @@ GameTrainer.ReceiveItem.RespecFull:			Ein schöner {0}! Ich gewähre Euch eine vol
 GameTrainer.ReceiveItem.RespecRealm:			Danke, ich gewähre Euch eine Reichsfähigkeitenrespezialisierung. Gebt "/respec realm" ein.
 GameTrainer.ReceiveItem.RespecSingle:			Danke, ich gewähre Euch eine einzelne Fähigkeitsrespezialisierung. Gebt "/respec <Zauberlinie>"
 
-# /PlayerPositionUpdateHandler
-PlayerPositionUpdateHandler.Endurance:			Ihr verliert Ausdauer!
-PlayerPositionUpdateHandler.Entered:			Ihr befindet Euch nun {0}.
-PlayerPositionUpdateHandler.FallingDamage:		Ihr erleidet Sturzschaden!
-PlayerPositionUpdateHandler.FallPercent:		Ihr erleidet Schaden und verliert {0}% Eurer Trefferpunkte.
-PlayerPositionUpdateHandler.SafeFall:			Der Schaden wurde durch Eure Fallschutz-Fähigkeit vermindert!
-PlayerPositionUpdateHandler.UnknownZone:		Unbekannte Zone! Ihr werdet zu Eurem letzten Bindepunkt gebracht.
+# /EnchanterTrainer
+EnchanterTrainer.Interact.PathOfEssence:		{0} sagt: "Wollt Ihr als Beschwörer trainieren und dem Pfad der Essenz folgen? Das Leben als [Beschwörer] ist so lohnend wie gefährlich, aber es ist an Euch."
+EnchanterTrainer.Interact.QuickStudy:			{0} sagt: "Ihr lernt rasch, {1}. Ihr solltet es jedoch nicht überhasten. Es gibt noch soviel zu lernen."
+EnchanterTrainer.Interact.SeekElsewhere:		{0} sagt: "Ich kann Euch leider nicht ausbilden."
+EnchanterTrainer.WhisperReceive.CaseEnchanter:		Beschwörer
+EnchanterTrainer.WhisperReceive.Welcome:		Willkommen, {0}. Von diesem Tage an gehört Ihr zu den Reihen der Beschwörer. Hier, {0}. Nehmt dies als Geschenk. Es soll Euch auf dem Weg beistehen.
 
 # /gameobjects/CustomNPC
 # /GameStableMaster
@@ -614,6 +616,14 @@ PlayerInitRequestHandler.SaferLocation:			Diese Gegend ist im Moment nicht siche
 # /PlayerMoveItemRequestHandler
 PlayerMoveItemRequestHandler.TooFarAway:		Ihr seit zu weit weg, um {0} etwas zu geben.
 
+# /PlayerPositionUpdateHandler
+PlayerPositionUpdateHandler.Endurance:			Ihr verliert Ausdauer!
+PlayerPositionUpdateHandler.Entered:			Ihr befindet Euch nun {0}.
+PlayerPositionUpdateHandler.FallingDamage:		Ihr erleidet Sturzschaden!
+PlayerPositionUpdateHandler.FallPercent:		Ihr erleidet Schaden und verliert {0}% Eurer Trefferpunkte.
+PlayerPositionUpdateHandler.SafeFall:			Der Schaden wurde durch Eure Fallschutz-Fähigkeit vermindert!
+PlayerPositionUpdateHandler.UnknownZone:		Unbekannte Zone! Ihr werdet zu Eurem letzten Bindepunkt gebracht.
+
 # /world
 # AbstractArea
 AbstractArea.Entered:					(Region) Ihr seid nun {0}!
@@ -655,13 +665,6 @@ Scripts.GM.Ban.IBanned:					Die IP-Adresse {0} wurde gesperrt.
 Scripts.GM.Ban.MustTarget:				Ihr müsst erst ein Ziel auswählen!
 
 # PlayerCommands
-# /GC
-Scripts.Players.Guild.AllianceInfo:             Allianzinformation für {0}:
-Scripts.Players.Guild.AllianceNoLeader:         Kein Allianzanführer
-Scripts.Players.Guild.AllianceLeader:           Allianzanführer {0}
-Scripts.Players.Guild.AllianceMembers:          Allianzmitglieder:
-Scripts.Players.Guild.AllianceMember:           {0} - {1}
-
 # /Advice
 Scripts.Players.Advice.Advice:				[Anfrage{0}] {1}: "{2}"
 Scripts.Players.Advice.AdvicersOn:			Es sind {0} Ratgeber online!
@@ -803,6 +806,13 @@ Scripts.Players.Duel.YouInCombat:			Ihr befindet Euch in einem Kampf.
 Scripts.Players.Duel.YouInDuel:				Ihr befindet Euch schon in einem Duell.
 Scripts.Players.Duel.YouInGroup:			Ihr seit Mitglied einer Gruppe.
 Scripts.Players.Duel.YouSurrender:			Ihr ergebt Euch {0}!
+
+# /GC
+Scripts.Players.Guild.AllianceInfo:			Allianzinformation für {0}:
+Scripts.Players.Guild.AllianceLeader:			Allianzanführer {0}
+Scripts.Players.Guild.AllianceMembers:			Allianzmitglieder:
+Scripts.Players.Guild.AllianceMember:			{0} - {1}
+Scripts.Players.Guild.AllianceNoLeader:			Kein Allianzanführer
 
 # /Language
 Scripts.Players.Language.Current:			Die aktuell auf dem Server angezeigte Sprache ist: {0}.

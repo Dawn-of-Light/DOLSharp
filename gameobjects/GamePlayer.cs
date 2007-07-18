@@ -3733,15 +3733,15 @@ namespace DOL.GS
 
 				if (expCampBonus > 0)
 				{
-					expCampBonusStr = " (" + expCampBonus.ToString("N0", format) + " camp bonus)";
+					expCampBonusStr = LanguageMgr.GetTranslation(Client, "GamePlayer.GainExperience.CampBonus", expCampBonus.ToString("N0", format));
 				}
 				if (expGroupBonus > 0)
 				{
-					expGroupBonusStr = " (" + expGroupBonus.ToString("N0", format) + " group bonus)";
+					expGroupBonusStr = LanguageMgr.GetTranslation(Client, "GamePlayer.GainExperience.GroupBonus", expGroupBonus.ToString("N0", format));
 				}
 				if (expOutpostBonus > 0)
 				{
-					expOutpostBonusStr = " (" + expOutpostBonus.ToString("NO", format) + " outpost bonus)";
+					expOutpostBonusStr = LanguageMgr.GetTranslation(Client, "GamePlayer.GainExperience.OutpostBonus", expOutpostBonus.ToString("N0", format));
 				}
 
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainExperience.YouGet", totalExpStr) + expCampBonusStr + expGroupBonusStr, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
