@@ -17,6 +17,7 @@
  *
  */
 using System;
+using DOL.Language;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Trainer
@@ -48,21 +49,22 @@ namespace DOL.GS.Trainer
  			if (!base.Interact(player)) return false;
 								
 			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Enchanter) {
-
+			if (player.CharacterClass.ID == (int) eCharacterClass.Enchanter)
+			{
 				// popup the training window
 				player.Out.SendTrainerWindow();
-				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);												
-				player.Out.SendMessage(this.Name + " says, \"You are a quick study, " + player.Name + ". But do not be too hasty. There is always more to learn.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
-
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "EnchanterTrainer.Interact.QuickStudy", this.Name, player.Name), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			} 
 			else 
 			{
 				// perhaps player can be promoted
-				if (CanPromotePlayer(player)) {
-					player.Out.SendMessage(this.Name + " says, \"Do you choose to train as an Enchanter and follow the Path of Essence? Life as an [Enchanter] is as rewarding as it is dangerous, but it is yours for the asking.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-				} else {
-					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
+				if (CanPromotePlayer(player))
+				{
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "EnchanterTrainer.Interact.PathOfEssence", this.Name), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				}
+				else
+				{
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "EnchanterTrainer.Interact.SeekElsewhere", this.Name), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 				}
 			}
 			return true;
@@ -87,16 +89,16 @@ namespace DOL.GS.Trainer
 		public override bool WhisperReceive(GameLiving source, string text)
 		{				
 			if (!base.WhisperReceive(source, text)) return false;			
-			GamePlayer player = source as GamePlayer;			
-	
-			switch (text) {
-			case "Enchanter":
+			GamePlayer player = source as GamePlayer;
+
+			if (text == LanguageMgr.GetTranslation(player.Client, "EnchanterTrainer.WhisperReceive.CaseEnchanter"))
+			{
 				// promote player to other class
-				if (CanPromotePlayer(player)) {
-					PromotePlayer(player, (int)eCharacterClass.Enchanter, "Welcome, " + source.GetName(0, false) + ". From this day forth you shall be known as an Enchanter. Here, " + source.GetName(0, false) + ". Take this gift to aid you on your path.", null);
-					player.ReceiveItem(this,WEAPON_ID1);
+				if (CanPromotePlayer(player))
+				{
+					PromotePlayer(player, (int)eCharacterClass.Enchanter, LanguageMgr.GetTranslation(player.Client, "EnchanterTrainer.WhisperReceive.Welcome", source.GetName(0, false)), null);
+					player.ReceiveItem(this, WEAPON_ID1);
 				}
-				break;
 			}
 			return true;		
 		}
