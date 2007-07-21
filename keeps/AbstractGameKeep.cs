@@ -78,7 +78,7 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				return ((this is GameKeepTower && this.KeepComponents.Count > 1) || this.DBKeep.BaseLevel == 255);
+				return ((this is GameKeepTower && this.KeepComponents.Count > 1) || this.BaseLevel >= 100);
 			}
 		}
 

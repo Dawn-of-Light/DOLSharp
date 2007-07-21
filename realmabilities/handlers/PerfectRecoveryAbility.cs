@@ -72,7 +72,7 @@ namespace DOL.GS.RealmAbilities
 			resurrectedPlayer.Out.SendPlayerRevive(resurrectedPlayer);
 			resurrectedPlayer.UpdatePlayerStatus();
 
-			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(resurrectedPlayer, "PvEResurrectionIllness");
+			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(resurrectedPlayer, GlobalSpells.PvERessurectionIllnessSpellType);
 			if (effect != null)
 				effect.Cancel(false);
 			resurrectedPlayer.Out.SendMessage("You have been resurrected by " + rezzer.GetName(0, false) + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);

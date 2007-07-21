@@ -789,6 +789,10 @@ namespace DOL.GS
 			/// Release to your bind point
 			/// </summary>
 			Bind,
+			/// <summary>
+			/// Release in a battleground or the frontiers
+			/// </summary>
+			RvR,
 		}
 
 		/// <summary>
@@ -892,6 +896,11 @@ namespace DOL.GS
 								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.WillReleaseAutoCity", diff / 1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
+						case eReleaseType.RvR:
+							{
+								Out.SendMessage(LanguageMgr.GetTranslation(Client, "You will now release to the nearest border or portal keep in {0} more seconds!", diff / 1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
 					}
 				}
 			}
@@ -937,6 +946,27 @@ namespace DOL.GS
 							relZ = 8256;
 						}
 						relHeading = 2048;
+						break;
+					}
+				case eReleaseType.RvR:
+					{
+						foreach (AbstractGameKeep keep in KeepMgr.GetKeepsOfRegion(CurrentRegionID))
+						{
+							if (keep.IsPortalKeep && (byte)keep.OriginalRealm == Realm)
+							{
+								relRegion = keep.CurrentRegion.ID;
+								relX = keep.X;
+								relY = keep.Y;
+								relZ = keep.Z;
+							}
+						}
+
+						//if we aren't releasing anywhere, release to the border keeps
+						if (relX == 0)
+						{
+							relRegion = CurrentRegion.ID;
+							KeepMgr.GetBorderKeepLocation((Realm * 2) / 1, out relX, out relY, out relZ, out relHeading);
+						}
 						break;
 					}
 				default:
@@ -1367,20 +1397,8 @@ namespace DOL.GS
 			{
 				SpellLine Line = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
 				if (Line == null) return;
-				IList spells = SkillBase.GetSpellList(Line.KeyName);
-				if (spells == null) return;
-				foreach (Spell spell in spells)
-				{
-					if (spell.Name == LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GamePlayer.Spell.ResurrectionIllness"))
-					{
-						ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(player, spell, Line);
-						if (spellHandler == null)
-							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GamePlayer.Spell.NotImplemented", spell.Name, spell.SpellType), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						else
-							spellHandler.StartSpell(player);
-						break;
-					}
-				}
+				ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(player, GlobalSpells.PvERezIllness, Line);
+				spellHandler.StartSpell(player);
 			}
 			GameEventMgr.RemoveHandler(this, GamePlayerEvent.Revive, new DOLEventHandler(OnRevive));
 		}
@@ -2101,6 +2119,16 @@ namespace DOL.GS
 			get { return PlayerCharacter != null ? PlayerCharacter.RespecAmountRealmSkill : 0; }
 			set { if ( PlayerCharacter != null ) PlayerCharacter.RespecAmountRealmSkill = value; }
 		}
+		
+		/// <summary>
+		/// Gets/Sets amount of DOL respecs
+		/// (delegate to PlayerCharacter)
+		/// </summary>
+		public int RespecAmountDOL
+		{
+			get { return PlayerCharacter != null ? PlayerCharacter.RespecAmountDOL : 0; }
+			set { if ( PlayerCharacter != null ) PlayerCharacter.RespecAmountDOL = value; }
+		}
 
 		/// <summary>
 		/// Gets/Sets level respec usage flag
@@ -2202,6 +2230,17 @@ namespace DOL.GS
 			int specPoints = RespecAllLines(); // Wipe skills and styles.
 
 			RespecAmountAllSkill--; // Decriment players respecs available.
+
+			if (Level == 5)
+				IsLevelRespecUsed = true;
+			return specPoints;
+		}
+		
+		public int RespecDOL()
+		{
+			int specPoints = RespecAllLines(); // Wipe skills and styles.
+
+			RespecAmountDOL--; // Decriment players respecs available.
 
 			if (Level == 5)
 				IsLevelRespecUsed = true;
