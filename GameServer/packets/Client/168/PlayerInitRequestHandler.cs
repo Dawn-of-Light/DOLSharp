@@ -230,19 +230,22 @@ namespace DOL.GS.PacketHandler.Client.v168
 					player.MoveTo((ushort)player.PlayerCharacter.BindRegion, player.PlayerCharacter.BindXpos, player.PlayerCharacter.BindYpos, player.PlayerCharacter.BindZpos, (ushort)player.PlayerCharacter.BindHeading);
 				}
 
-				IList list = KeepMgr.GetKeepsOfRegion(player.CurrentRegionID);
-				
-				if (player.Client.Account.PrivLevel == 1 && list.Count > 0)
+				if (player.CurrentRegion.IsRvR && player.CurrentRegionID != 163)
 				{
-					foreach (AbstractGameKeep k in list)
-					{
-						if (k.DBKeep.BaseLevel >= 50) continue;
+					IList list = KeepMgr.GetKeepsOfRegion(player.CurrentRegionID);
 
-						if (player.Level > k.DBKeep.BaseLevel)
+					if (player.Client.Account.PrivLevel == 1 && list.Count > 0)
+					{
+						foreach (AbstractGameKeep k in list)
 						{
-							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.LevelCap"), eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
-							player.MoveTo((ushort)player.PlayerCharacter.BindRegion, player.PlayerCharacter.BindXpos, player.PlayerCharacter.BindYpos, player.PlayerCharacter.BindZpos, (ushort)player.PlayerCharacter.BindHeading);
-							break;
+							if (k.BaseLevel >= 50) continue;
+
+							if (player.Level > k.BaseLevel)
+							{
+								player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.LevelCap"), eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
+								player.MoveTo((ushort)player.PlayerCharacter.BindRegion, player.PlayerCharacter.BindXpos, player.PlayerCharacter.BindYpos, player.PlayerCharacter.BindZpos, (ushort)player.PlayerCharacter.BindHeading);
+								break;
+							}
 						}
 					}
 				}

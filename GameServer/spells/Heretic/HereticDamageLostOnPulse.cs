@@ -109,16 +109,19 @@ namespace DOL.GS.Spells
             if (m_caster.Mana < Spell.PulsePower)
             {
                 RemoveEffect();
+				return;
             }
 
-            if (!m_caster.IsAlive)
-            {
-                RemoveEffect();
-            }
+			if (!m_caster.IsAlive || !effect.Owner.IsAlive || m_caster.Mana < Spell.PulsePower || WorldMgr.GetDistance(m_caster, effect.Owner) > Spell.Range || m_caster.IsMezzed || m_caster.IsStunned || (m_caster.TargetObject is GameLiving ? effect.Owner != m_caster.TargetObject as GameLiving : true))
+			{
+				RemoveEffect();
+				return;
+			}
 
             if (WorldMgr.GetDistance(m_caster, effect.Owner) > Spell.Range)
             {
-                RemoveEffect();
+				RemoveEffect();
+				return;
             }
 
             base.OnEffectPulse(effect);

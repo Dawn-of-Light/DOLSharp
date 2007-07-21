@@ -25,6 +25,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 
@@ -1315,6 +1316,47 @@ namespace DOL.GS
 			} while ((randomNPC != null) && (currentSubZoneIndex != startSubZoneIndex));
 
 			return randomNPC;
+		}
+
+		/// <summary>
+		/// Gets all NPC's in zone
+		/// </summary>
+		/// <param name="realm"></param>
+		/// <returns></returns>
+		public List<GameNPC> GetNPCsOfZone(eRealm realm)
+		{
+			List<GameNPC> list = new List<GameNPC>();
+			if (!m_initialized) InitializeZone();
+			// select random starting subzone and iterate over all objects in subzone than in all subzone...
+			int currentSubZoneIndex = Util.Random(SUBZONE_NBR);
+			int startSubZoneIndex = currentSubZoneIndex;
+			GameNPC currentNPC = null;
+			do
+			{
+				SubNodeElement startElement = m_subZoneElements[currentSubZoneIndex][(int)eGameObjectType.NPC];
+				lock (startElement)
+				{
+					// if list is not empty
+					if (startElement != startElement.next)
+					{
+						SubNodeElement curElement = startElement.next;
+						do
+						{
+							currentNPC = (GameNPC)curElement.data;
+							if ((eRealm)currentNPC.Realm == realm)
+								list.Add(currentNPC);
+
+							curElement = curElement.next;
+						} while (curElement != startElement);
+					}
+				}
+					if (++currentSubZoneIndex >= SUBZONE_NBR)
+					{
+						currentSubZoneIndex = 0;
+					}
+			} while (currentSubZoneIndex != startSubZoneIndex);
+
+			return list;
 		}
 
 		#endregion

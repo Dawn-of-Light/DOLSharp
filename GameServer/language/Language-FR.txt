@@ -13,11 +13,55 @@ System.LanguagesName.French:					Français
 System.LanguagesName.German:					Allemand
 System.LanguagesName.Spanish:					Espagnol
 System.LanguagesName.Czech:						Tchèque
+System.LanguagesName.Italian:					Italien 
 
 # SYSTEM
 System.NoSense:									Cela n'aurait aucun sens !
 System.MustSelectTarget:						Vous devez selectionner une cible !
 System.ReleaseTimer:							Délai de résurrection
+
+# CRAFTING
+# (Tous)
+Crafting.CheckTool.AlchemyKit:            Kit d'alchimie
+Crafting.CheckTool.FindAlchemyTable:         Vous devez trouver une table d'alchimie !
+Crafting.CheckTool.FindForge:            Vous devez trouver une forge !
+Crafting.CheckTool.FindLathe:            Vous devez trouver une lathe !
+Crafting.CheckTool.FindPlaningTool:         Vous devez trouver un outil de rabotage !
+Crafting.CheckTool.FindSewingKit:         Vous devez trouver un kit de couture !
+Crafting.CheckTool.FindSmithTool:         Vous devez trouver des outils de forgeron !
+Crafting.CheckTool.FindSpellcraftKit:         Vous devez trouver un kit de spellcraft !
+Crafting.CheckTool.MortarAndPestle:         mortier et pilon
+Crafting.CheckTool.NotHaveTools:         Vous n'avez pas les outils pour le {0}.
+Crafting.CheckTool.PlaningTool:            outil de rabotage
+Crafting.CheckTool.SewingKit:            kit de couture
+Crafting.CheckTool.SmithsHammer:         le marteau du forgeron
+Crafting.CheckTool.SpellcraftKit:         Kit de spellcraft
+Crafting.GainCraftingSkillPoints.RaiseArmorcraft:   Vous devez voir votre entraîneur pour augmenter votre niveau en Armorcraft pour allez plus loin!
+Crafting.GainCraftingSkillPoints.RaiseFletching:   Vous devez voir votre entraîneur pour augmenter votre niveau en Fletching pour allez plus loin!
+Crafting.GainCraftingSkillPoints.RaiseSpellcraft:   Vous devez voir votre entraîneur pour augmenter votre niveau en Spellcraft pour allez plus loin!
+Crafting.GainCraftingSkillPoints.RaiseTailoring:   Vous devez voir votre entraîneur pour augmenter votre niveau en Tailoring pour allez plus loin!
+Crafting.GainCraftingSkillPoints.RaiseWeaponcraft:   Vous devez voir votre entraîneur pour augmenter votre niveau en Weaponcraft pour allez plus loin!
+
+AbstractCraftingSkill.BuildCraftedItem.BackpackFull:   Votre Sac est plein. {0} est cree sur le sol.
+AbstractCraftingSkill.BuildCraftedItem.Masterpiece:   Bravo, Vous avez Crée un chez-d'oeuvre !
+AbstractCraftingSkill.BuildCraftedItem.Successfully:   Vous avez correctement fabriquer {0}! ({1})
+AbstractCraftingSkill.CheckRawMaterial.NoIngredients:   Vous n'avez pas les ingredients pour faire le {0}.
+AbstractCraftingSkill.CheckRawMaterial.YouAreMissing:   Il vous manque :
+
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoClothworkingSkill:      Vous n'avez pas le neccessaire minimum  Clothworking skill ({0}) Pour fabriquer le {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoLeathercraftingSkill:   Vous n'avez pas le neccessaire minimum  Leathercrafting skill ({0}) Pour fabriquer le {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoMetalworkingSkill:      Vous n'avez pas le neccessaire minimum  Metalworking skill ({0}) Pour fabriquer le {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoWoodworkingSkill:      Vous n'avez pas le neccessaire minimum  Woodworking skill ({0}) Pour fabriquer le {1}!
+
+AbstractCraftingSkill.CraftItem.BeginWork:      Vous commencez a travailler sur le {0} ({1}%).
+AbstractCraftingSkill.CraftItem.ChanceToGainPoint:   Chance de gagner des point sur votre competence primaire {0}%.
+AbstractCraftingSkill.CraftItem.CurrentlyMaking:   En train de faire: {0}
+AbstractCraftingSkill.CraftItem.MoveAndInterrupt:   vous bougez et interomper votre travail.
+AbstractCraftingSkill.CraftItem.StopWork:      Vous arretez votre travail.
+AbstractCraftingSkill.LooseRawMaterial.Count:      Vous perdez ({0}) {1}.
+AbstractCraftingSkill.LooseRawMaterial.Materials:   Vous n'arriver pas a faire le {0}, et perdez du materiel!
+AbstractCraftingSkill.MakeItem.LoseNoMaterials:      Vous n'arriver pas a faire le {0} mais ne perdez pas de materiel!
+AbstractCraftingSkill.MakeItem.NotAllMaterials:      Vous n'avez pas tout les composants demander pour cree cette objet.
 
 # GAMELIVING
 GameLiving.ReceiveItem:							{0} ne veut pas de cet item !
@@ -328,6 +372,29 @@ GamePlayer.UseSlot.StopCallingMount:		Vous arrêtez d'appeler votre monture.
 GamePlayer.UseSlot.WhistleMount:			Vous sifflez votre monture.
 GamePlayer.Whisper.SelectTarget:			Sélectionnez une cible à qui chuchoter.
 
+# Styles
+# /StyleProcessor
+StyleProcessor.ExecuteStyle.BackStrike:         Vous infligez un coups critique dans le dos de votre cible
+StyleProcessor.ExecuteStyle.ExecuteFail:      Vous de parvenez pas a effectuez votre {0} Parfaitement!
+StyleProcessor.ExecuteStyle.PerformPerfectly:      Vous effectuez votre {0} Parfaitement! {1}
+StyleProcessor.ExecuteStyle.PerformsPerfectly:      Votre {0} effectue {1} Parfaitement! {2}
+StyleProcessor.ExecuteStyle.StyleNameBackstab:      Backstab
+StyleProcessor.ExecuteStyle.StyleNameBackstabII:   Backstab II
+StyleProcessor.ExecuteStyle.StyleNamePerforateArtery:   Perfore artère
+StyleProcessor.ExecuteStyle.ThroatStrike:      Vous infligez un coups critique dans le throat de votre cible
+StyleProcessor.TryToUseStyle.AlreadyPreparing:      Vous etes deja en train de preparer cette attaquer! tapez /cancelstyle pour arreter l'attaque en cours.
+StyleProcessor.TryToUseStyle.AlreadySelectedStyles:   Vous avez deja choisis votre attaque pour ce tour!
+StyleProcessor.TryToUseStyle.BackupStyle:      Vous vous preparer maintenant a executer un {0} attaque a la place de {1}!
+StyleProcessor.TryToUseStyle.CantCombatMode:      Vous ne pouvez pas entrer en mode combat tout en etant assis!
+StyleProcessor.TryToUseStyle.CantMeleeCombat:      Vous ne pouvez pas entrer en combat de melee avec une arme a distance!
+StyleProcessor.TryToUseStyle.DualWielding:      Vous devez etre en deux mains Pour utiliser cette attaque!
+StyleProcessor.TryToUseStyle.Fatigued:         Vous etes trop fatigué pour utiliser cette attaque!
+StyleProcessor.TryToUseStyle.MustHaveTarget:      Vous devez avoir une cible pour executer votre prochaine attaque!
+StyleProcessor.TryToUseStyle.NoLongerPreparing:      Vous ne preparez plus votre {0}!
+StyleProcessor.TryToUseStyle.PerformStyleBefore:   Vous devez executer Votre {0} Avant celle ci!
+StyleProcessor.TryToUseStyle.PreparePerform:      Vous vous preparé a executer {0}!
+StyleProcessor.TryToUseStyle.StyleRequires:      Cette attaque Require une {0} arme! 
+
 # HOUSING
 HouseEnterLeave.TooFarAway:					Vous êtes trop loin pour entrer dans la maison {0}.
 HouseEnterLeave.CantEnter:					Vous ne pouvez pas entrer dans la maison {0}.
@@ -570,3 +637,85 @@ Scripts.Players.Duel.YouSurrender:			Vous vous rendez à {0}!
 # /Language
 Scripts.Players.Language.Set:				Vous changez la langue d'affichage du serveur en {0}.
 Scripts.Players.Language.Current:			La langue d'affichage est actuellement: {0}.
+
+# TITLES
+# /Claim
+Titles.Claim.Frontier.FrontierChallenger: Défenseur des Frontieres
+Titles.Claim.Frontier.FrontierVindicator: Gardien des Frontières
+Titles.Claim.Stronghold.StrongholdChief: Meneur de Siège
+Titles.Claim.Stronghold.StrongholdSoldier: Assiégeant de Forts
+# /Deathblows
+Titles.Deathblows.BattleEnforcer: Combattant redoutable
+Titles.Deathblows.BattleMaster: Maître des batailles
+# /Kills
+Titles.Kills.Albion.BaneOfAlbion: Fléau d’Albion
+Titles.Kills.Albion.ScourgeOfAlbion: Calamité d'Albion
+Titles.Kills.All.MasterAssassine: Master Assassin
+Titles.Kills.All.MasterEnforcer: Maître Commandant
+Titles.Kills.All.MasterSoldier: Maître Assaillant
+Titles.Kills.Demon.DemonBane: Menace des Démons
+Titles.Kills.Demon.DemonScourge: Tueur de Démons
+Titles.Kills.Demon.DemonSlayer: Chasseur de Démons
+Titles.Kills.Demon.DreadVanquisher: Terreur des Démons
+Titles.Kills.Dragon.DragonFoe: Chasseur de Dragons
+Titles.Kills.Dragon.DragonScourge: Menace des Dragons
+Titles.Kills.Dragon.DragonSlayer: Tueur de Dragons
+Titles.Kills.Epic.EpicChallenger: Chasseur de Légendes
+Titles.Kills.Epic.EpicVictor: Donjon epiques
+Titles.Kills.Hibernia.BaneOfHibernia: Fléau d'Hibernia
+Titles.Kills.Hibernia.ScourgeOfHibernia: Calamité d'Hibernia
+Titles.Kills.Midgard.BaneOfMidgard: Fléau de Midgard
+Titles.Kills.Midgard.ScourgeOfMidgard: Calamité de Midgard
+# /Level
+Titles.Level.Level20Info: Level 20+
+Titles.Level.Level20: Level {0}
+# /PrivLevel
+Titles.PrivLevel.Administrator: Administrateur
+Titles.PrivLevel.Gamemaster: Maître des jeux
+# /Solokills
+Titles.Solokills.DuelMaster: Duel Master
+Titles.Solokills.LoneEnforcer: Aventurier Solitaire
+# /Time
+Titles.Time.Account.ElderTitle: Elder
+Titles.Time.Character.Veteran: Vétèran
+# /CL
+Titles.CL.Level1: Emissaire du Roy
+Titles.CL.Level2: Main du Roy
+Titles.CL.Level3: Protecteur du Roy
+Titles.CL.Level4: Flambeau du Roy
+Titles.CL.Level5: Pourfendeur du Mal
+Titles.CL.Level6: Allié des Minotaures
+Titles.CL.Level7: Champion Légendaire
+Titles.CL.Level8: Champion Vénéré
+Titles.CL.Level9: Champion Éternel
+Titles.CL.Level10: Héros Suprême
+
+# PLAYER STATISTIC
+# /Kills
+PlayerStatistic.Kill.Title: Enemies tués
+PlayerStatistic.Kill.AlbionPlayer: Albionnais tués
+PlayerStatistic.Kill.HiberniaPlayer: Hiberniens tués
+PlayerStatistic.Kill.MidgardPlayer: Midgardiens tués
+PlayerStatistic.Kill.TotalPlayers: Total d'ennemies tués
+
+# /Deathblows
+PlayerStatistic.Deathblows.AlbionPlayer: Coups fatals,Albion
+PlayerStatistic.Deathblows.HiberniaPlayer: Coups fatals,Hibernia
+PlayerStatistic.Deathblows.MidgardPlayer: Coups fatals,Midgard
+PlayerStatistic.Deathblows.TotalPlayers: Total Coups fatals
+
+# /Solo
+PlayerStatistic.Solo.AlbionPlayer: Albionnais tués seul
+PlayerStatistic.Solo.HiberniaPlayer: Hiberniens tués seul
+PlayerStatistic.Solo.MidgardPlayer: Midgardiens tués seul
+PlayerStatistic.Solo.TotalPlayers: Total d'ennemies tués seul
+
+# /Capture
+PlayerStatistic.Capture.Title: Captures de fort
+PlayerStatistic.Capture.Keeps: Forts capturés
+PlayerStatistic.Capture.Towers: Tours capturées
+# /PvE
+PlayerStatistic.PvE.Title: Reports PvE
+PlayerStatistic.PvE.KillsDragon: Nombre de Dragons tués
+PlayerStatistic.PvE.KillsEpic: Nombre de Boss épiques tués
+PlayerStatistic.PvE.KillsLegion: Nombre de Legion tués

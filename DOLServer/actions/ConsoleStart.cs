@@ -94,13 +94,13 @@ namespace DOL.DOLServer.Actions
 			{
 				if (!configFile.Directory.Exists)
 					configFile.Directory.Create();
+				config.SaveToXMLFile(configFile);
 				if (File.Exists(currentAssembly.DirectoryName + Path.DirectorySeparatorChar + "DOLConfig.exe"))
 				{
 					Console.WriteLine("No config file found, launching DOLConfig.exe...");
 					System.Diagnostics.Process.Start(currentAssembly.DirectoryName + Path.DirectorySeparatorChar + "DOLConfig.exe");
 					return;
 				}
-				config.SaveToXMLFile(configFile);
 			}
 
 			GameServer.CreateInstance(config);
