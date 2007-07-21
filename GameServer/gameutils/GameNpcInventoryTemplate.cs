@@ -330,6 +330,7 @@ namespace DOL.GS
 								npcItem.Model = item.Model;
 								npcItem.Color = item.Color;
 								npcItem.Effect = item.Effect;
+								npcItem.Extension = item.Extension;
 								GameServer.Database.SaveObject(npcItem);
 							}
 							foundInDB = true;
@@ -343,6 +344,7 @@ namespace DOL.GS
 							npcItem.Color = item.Color;
 							npcItem.Effect = item.Effect;
 							npcItem.TemplateID = templateID;
+							npcItem.Extension = item.Extension;
 							GameServer.Database.AddNewObject(npcItem);
 						}
 					}

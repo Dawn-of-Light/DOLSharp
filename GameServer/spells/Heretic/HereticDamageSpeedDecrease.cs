@@ -109,7 +109,7 @@ namespace DOL.GS.Spells
                 RemoveEffect();
             }
 
-            if (!m_caster.IsAlive)
+			if (!m_caster.IsAlive || !effect.Owner.IsAlive || m_caster.Mana < Spell.PulsePower || WorldMgr.GetDistance(m_caster, effect.Owner) > Spell.Range || m_caster.IsMezzed || m_caster.IsStunned || (m_caster.TargetObject is GameLiving ? effect.Owner != m_caster.TargetObject as GameLiving : true))
             {
                 RemoveEffect();
             }

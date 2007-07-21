@@ -83,6 +83,12 @@ namespace DOL.GS
 								log.Error("Tried to load an item in invalid slot, ignored. Item id=" + item.ObjectId);
 							continue;
 						}
+						if (m_items[item.SlotPosition] != null)
+						{
+							if (log.IsErrorEnabled)
+								log.Error("Error loading " + m_player.Name + "'s inventory OwnerID " + inventoryID + " slot " + item.SlotPosition + " duplicate item found, skipping!");
+							continue;
+						}
 						m_items.Add(item.SlotPosition, item);
 						if (GlobalConstants.IsWeapon(item.Object_Type)
 							&& item.Type_Damage == 0

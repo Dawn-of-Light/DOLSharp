@@ -141,6 +141,7 @@ namespace DOL
 			private int m_respecAmountAllSkill;  // full Respecs.
 			private int m_respecAmountSingleSkill; // Single-Line Respecs
 			private int m_respecAmountRealmSkill; //realm respecs
+			private int m_respecAmountDOL; // Patch 1.84 /respec Mythic
 			private bool m_isLevelRespecUsed;
 			private bool m_safetyFlag;
 			private int m_craftingPrimarySkill = 0;
@@ -191,6 +192,8 @@ namespace DOL
 				m_respecAmountAllSkill = 0;
 				m_respecAmountSingleSkill = 0;
 				m_respecAmountRealmSkill = 0;
+				m_respecAmountDOL = 0;
+				
 				m_isLevelRespecUsed = true;
 				m_safetyFlag = true;
 				m_craftingPrimarySkill = 0;
@@ -1426,6 +1429,24 @@ namespace DOL
 					m_respecAmountRealmSkill = value;
 				}
 			}
+			
+			/// <summary>
+			/// Gets/Sets the characters DOL respecs available
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public int RespecAmountDOL
+			{
+				get
+				{
+					return m_respecAmountDOL;
+				}
+				set
+				{
+					Dirty = true;
+					m_respecAmountDOL = value;
+				}
+			}
+			
 
 			/// <summary>
 			/// Gets/Sets level respec flag

@@ -22,7 +22,6 @@
           <fileset basedir="./GameServer/config">
             <include name="*.xml" />
           </fileset>
-        </copy>
-        <copy file="./history.txt" tofile="./debug/history.txt" /> 		
+        </copy>		
     	</target>
     </project>

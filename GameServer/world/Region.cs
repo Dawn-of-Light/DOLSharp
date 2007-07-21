@@ -520,7 +520,7 @@ namespace DOL.GS
 		{
 			Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
 			WorldObject[] staticObjs = (WorldObject[])GameServer.Database.SelectObjects(typeof(WorldObject), "Region = " + ID);
-			BindPoint[] bindPoints = (BindPoint[])GameServer.Database.SelectObjects(typeof(BindPoint), "Region = "  + ID);
+			BindPoint[] bindPoints = (BindPoint[])GameServer.Database.SelectObjects(typeof(BindPoint), "Region = " + ID);
 			int count = mobObjs.Length + staticObjs.Length;
 			if (count > 0) PreAllocateRegionSpace(count + 100);
 			int myItemCount = staticObjs.Length;
@@ -1035,6 +1035,24 @@ namespace DOL.GS
 			if (z == null)
 				return 0;
 			return y - z.YOffset;
+		}
+
+		/// <summary>
+		/// Check if this region is a capital city
+		/// </summary>
+		/// <returns>True, if region is a capital city, else false</returns>
+		public bool IsCapitalCity
+		{
+			get
+			{
+				switch (this.ID)
+				{
+					case 10: return true; // Camelot City
+					case 101: return true; // Jordheim
+					case 201: return true; // Tir na Nog
+					default: return false;
+				}
+			}
 		}
 		#endregion
 

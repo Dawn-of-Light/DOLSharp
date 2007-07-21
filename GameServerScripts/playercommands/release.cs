@@ -28,6 +28,12 @@ namespace DOL.GS.Scripts
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
+			if (client.Player.CurrentRegion.IsRvR && !client.Player.CurrentRegion.IsDungeon)
+			{
+				client.Player.Release(GamePlayer.eReleaseType.RvR, false);
+				return 1;
+			}
+
 			if (args.Length > 1)
 			{
 				if ((GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP
