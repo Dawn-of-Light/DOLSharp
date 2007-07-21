@@ -1485,7 +1485,10 @@ namespace DOL.GS
 								((GamePlayer)target).Out.SendMessage(string.Format("{0} blocks you from {1}'s attack!", ad.Target.GetName(0, true), ad.Attacker.GetName(0, false)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 							// blocked for another player
 							if (ad.Target is GamePlayer)
+							{
 								((GamePlayer)ad.Target).Out.SendMessage(string.Format("You block {0}'s attack against {1}!", ad.Attacker.GetName(0, false), target.GetName(0, false)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+								((GamePlayer)ad.Target).Stealth(false); 
+							}
 						}
 						else if (ad.Target is GamePlayer)
 						{

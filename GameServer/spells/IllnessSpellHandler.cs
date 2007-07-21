@@ -27,7 +27,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Pve Resurrection Illness
 	/// </summary>
-	[SpellHandler("PveResurrectionIllness")]
+	[SpellHandler(GlobalSpells.PvERessurectionIllnessSpellType)]
 	public class PveResurrectionIllness : AbstractIllnessSpellHandler
 	{
 		/// <summary>

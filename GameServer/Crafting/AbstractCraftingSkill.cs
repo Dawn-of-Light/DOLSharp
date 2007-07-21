@@ -685,18 +685,29 @@ namespace DOL.GS
 			int con = GetItemCon(player.GetCraftingSkillValue(m_eskill), item.CraftingLevel);
 			if (con < -3) con = -3;
 			if (con > 3) con = 3;
+			int chance = 0;
 
 			switch (con)
 			{
 				case -3: return 0;
-				case -2: return 15;
-				case -1: return 30;
-				case 0: return 45;
-				case 1: return 55;
-				case 2: return 45;
+				case -2: chance = 15; break;
+				case -1: chance = 30; break;
+				case 0: chance = 45; break;
+				case 1: chance = 55; break;
+				case 2: chance = 45; break;
 				case 3: return 0;
 				default: return 0;
 			}
+
+			// In capital cities bonuses to crafting apply (patch 1.86)
+			if (player.CurrentRegion.IsCapitalCity)
+			{
+				chance += Properties.CAPITAL_CITY_CRAFTING_SKILL_GAIN_BONUS;
+				if (chance < 0) chance = 0;
+				if (chance > 100) chance = 100;
+			}
+
+			return chance;
 		}
 
 		/// <summary>
@@ -736,10 +747,19 @@ namespace DOL.GS
 				case 2: mod = 1.0; break;
 				case 3: mod = 1.0; break;
 			}
+
 			craftingTime = (int)(craftingTime * mod);
 
-			if (craftingTime < 1) craftingTime = 1;
+			// In capital cities bonuses to crafting apply (patch 1.86)
+			if (player.CurrentRegion.IsCapitalCity)
+			{
+				double speedbonus = (100.0 - Properties.CAPITAL_CITY_CRAFTING_SPEED_BONUS) / 100.0;
+				if (speedbonus < 0) speedbonus = 0.0;
+				if (speedbonus > 1) speedbonus = 1.0;
+				craftingTime = (int)(craftingTime * speedbonus);
+			}
 
+			if (craftingTime < 1) craftingTime = 1;
 			return craftingTime;
 		}
 

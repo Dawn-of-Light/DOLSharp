@@ -1471,4 +1471,32 @@ namespace DOL.GS
 			}
 		}
 	}
+
+	public class GlobalSpells
+	{
+		public const string PvERessurectionIllnessSpellType = "PveResurrectionIllness";
+		private static Spell m_PvERezIllness = null;
+		public static Spell PvERezIllness
+		{
+			get
+			{
+				if (m_PvERezIllness == null)
+				{
+					DBSpell spell = new DBSpell();
+					spell.AutoSave = false;
+					spell.CastTime = 0;
+					spell.ClientEffect = 2435;
+					spell.Icon = 2435;
+					spell.SpellID = 2435;
+					spell.Name = Language.LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GamePlayer.Spell.ResurrectionIllness");
+					spell.Range = 0;
+					spell.Target = "Self";
+					spell.Type = PvERessurectionIllnessSpellType;
+					spell.Description = "The player's effectiveness is greatly reduced due to being recently resurrected.";
+					m_PvERezIllness = new Spell(spell, 50);
+				}
+				return m_PvERezIllness;
+			}
+		}
+	}
 }

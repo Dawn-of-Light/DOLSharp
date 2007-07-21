@@ -43,9 +43,9 @@ namespace DOL.GS.Scripts
 	public class GuildCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		/// <summary>
-		/// Contains all characters that are valid in a guild name.
+		/// Contains all characters that are valid in a guild name. non case sensitive
 		/// </summary>
-		public static string AllowedGuildNameChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ αινσϊΑΙΝΣΪ";
+		public static string AllowedGuildNameChars = "abcdefghijklmnopqrstuvwxyz αινσϊφδό";
 
 		/// <summary>
 		/// Defines a logger for this class.
@@ -61,7 +61,7 @@ namespace DOL.GS.Scripts
 		{
 			foreach (char c in guildName)
 			{
-				if (AllowedGuildNameChars.IndexOf(c) < 0)
+				if (AllowedGuildNameChars.IndexOf(char.ToLower(c)) < 0)
 				{
 					return false;
 				}

@@ -47,6 +47,7 @@ namespace DOL.GS.Scripts
 		const string RA_RESPEC = "realm_respec";
 		const string ALL_RESPEC = "all_respec";
 		const string LINE_RESPEC = "line_respec";
+		const string DOL_RESPEC = "dol_respec";
 
 		public int OnCommand(GameClient client, string[] args)
 		{
@@ -55,6 +56,7 @@ namespace DOL.GS.Scripts
 				// Check for respecs.
 				if (client.Player.RespecAmountAllSkill < 1
 					&& client.Player.RespecAmountSingleSkill < 1
+					&& client.Player.RespecAmountDOL <1
 					&& client.Player.RespecAmountRealmSkill < 1)
 				{
 					client.Out.SendMessage("You don't seem to have any respecs available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -75,6 +77,11 @@ namespace DOL.GS.Scripts
 				{
 					client.Out.SendMessage("You have " + client.Player.RespecAmountRealmSkill + " realm skill respecs available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendMessage("Target any trainer and use /respec REALM", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+				if (client.Player.RespecAmountDOL > 0)
+				{
+					client.Out.SendMessage("You have " + client.Player.RespecAmountDOL + " DOL ( full skill ) respecs available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage("Target any trainer and use /respec DOL", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				return 1;
 			}
@@ -99,6 +106,19 @@ namespace DOL.GS.Scripts
 
 						client.Out.SendCustomDialog("CAUTION: All Respec changes are final with no 2nd chance. Proceed Carefully!", new CustomDialogResponse(RespecDialogResponse));
 						client.Player.TempProperties.setProperty(ALL_RESPEC, true);
+						break;
+					}
+				case "dol":
+					{
+						// Check for DOL respecs.
+						if (client.Player.RespecAmountDOL < 1)
+						{
+							client.Out.SendMessage("You don't seem to have any DOL respecs available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 1;
+						}
+
+						client.Out.SendCustomDialog("CAUTION: All Respec changes are final with no 2nd chance. Proceed Carefully!", new CustomDialogResponse(RespecDialogResponse));
+						client.Player.TempProperties.setProperty(DOL_RESPEC, true);
 						break;
 					}
 				case "realm":
@@ -155,6 +175,11 @@ namespace DOL.GS.Scripts
 			{
 				specPoints = player.RespecAll();
 				player.TempProperties.removeProperty(ALL_RESPEC);
+			}
+			if (player.TempProperties.getProperty(DOL_RESPEC, false))
+			{
+				specPoints = player.RespecDOL();
+				player.TempProperties.removeProperty(DOL_RESPEC);
 			}
 			if (player.TempProperties.getProperty(RA_RESPEC, false))
 			{

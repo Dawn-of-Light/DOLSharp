@@ -341,6 +341,7 @@
     <Compile Include="playercommands\deal.cs" />
     <Compile Include="playercommands\discard.cs" />
     <Compile Include="playercommands\held.cs" />
+    <Compile Include="playercommands\horse.cs" />
     <Compile Include="playercommands\nohelp.cs" />
     <Compile Include="playercommands\houseface.cs" />
     <Compile Include="playercommands\house.cs" />

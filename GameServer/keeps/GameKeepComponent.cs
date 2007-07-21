@@ -221,6 +221,11 @@ namespace DOL.GS.Keeps
 			}
 		}
 
+		public override int AttackRange
+		{
+			get { return 1000; }
+		}
+
 		/// <summary>
 		/// do not regen
 		/// </summary>

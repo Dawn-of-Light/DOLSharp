@@ -218,7 +218,7 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("load_examples", "should the server load the example scripts", true)]
 		public static readonly bool LOAD_EXAMPLES;
-		
+
 		/// <summary>
 		/// A serialised list of disabled RegionIDs
 		/// </summary>
@@ -416,12 +416,30 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("load_hookpoints", "Load keep hookpoints", true)]
 		public static readonly bool LOAD_HOOKPOINTS;
-		
+
 		/// <summary>
 		/// Save QuestItems into Database
 		/// </summary>
 		[ServerProperty("save_questitems_into_database", "set false if you don't want this", true)]
 		public static readonly bool SAVE_QUESTITEMS_INTO_DATABASE;
+
+		/// <summary>
+		/// Crafting skill gain bonus in capital cities
+		/// </summary>
+		[ServerProperty("capital_city_crafting_skill_gain_bonus", "Crafting skill gain bonus in capital cities", 5)]
+		public static readonly int CAPITAL_CITY_CRAFTING_SKILL_GAIN_BONUS;
+
+		/// <summary>
+		/// Crafting speed bonus in capital cities
+		/// </summary>
+		[ServerProperty("capital_city_crafting_speed_bonus", "Crafting speed bonus in capital cities", 10)]
+		public static readonly int CAPITAL_CITY_CRAFTING_SPEED_BONUS;
+
+		/// <summary>
+		/// Allow Bounty Points to be gained in Battlegrounds
+		/// </summary>
+		[ServerProperty("allow_bps_in_bgs", "Allow bounty points to be gained in battlegrounds", false)]
+		public static readonly bool ALLOW_BPS_IN_BGS;
 
 		/// <summary>
 		/// This method loads the property from the database and returns
@@ -452,7 +470,7 @@ namespace DOL.GS.ServerProperties
 				IFormatProvider provider = myCIintl.NumberFormat;
 				return Convert.ChangeType(property.Value, attrib.DefaultValue.GetType(), provider);
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				log.Error("Exception in ServerProperties Load: ", e);
 				return null;

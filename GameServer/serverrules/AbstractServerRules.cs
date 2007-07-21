@@ -1003,13 +1003,17 @@ namespace DOL.GS.ServerRules
 				playerExpValue = (long)(playerExpValue * ServerProperties.Properties.XP_RATE);
 				int playerRPValue = killedPlayer.RealmPointsValue;
 				int playerBPValue = 0;
+
 				bool BG = false;
-				foreach (AbstractGameKeep keep in KeepMgr.GetKeepsOfRegion(killedPlayer.CurrentRegionID))
+				if (!ServerProperties.Properties.ALLOW_BPS_IN_BGS)
 				{
-					if (keep.DBKeep.BaseLevel < 50)
+					foreach (AbstractGameKeep keep in KeepMgr.GetKeepsOfRegion(killedPlayer.CurrentRegionID))
 					{
-						BG = true;
-						break;
+						if (keep.DBKeep.BaseLevel < 50)
+						{
+							BG = true;
+							break;
+						}
 					}
 				}
 				if (!BG)

@@ -46,6 +46,7 @@ namespace DOL.GS.Scripts
 		}
 
 		#region Examine/Interact Message
+		protected const string MOVEMENT = "movement"; 
 
 		/// <summary>
 		/// Adds messages to ArrayList which are sent when object is targeted
@@ -69,6 +70,27 @@ namespace DOL.GS.Scripts
 			CastSpell(SpellMgr.HastenerSpell, SpellMgr.GuardSpellLine);
 			return true;
 		}
+
+
+		public override bool WhisperReceive(GameLiving source, string text)
+		{
+			if (!base.WhisperReceive(source, text))
+				return false;
+			if (source is GamePlayer == false)
+				return true;
+			GamePlayer player = (GamePlayer)source;
+
+			switch (text)
+			{
+				case MOVEMENT:
+					TurnTo(player, 5000);
+
+					CastSpell(SpellMgr.HastenerSpell, SpellMgr.GuardSpellLine);
+					break;
+			}
+
+			return true;
+		} 
 		#endregion Examine/Interact Message
 	}
 }

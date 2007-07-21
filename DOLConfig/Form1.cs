@@ -23,7 +23,6 @@ namespace DOLConfig
 		private void saveButton_Click(object sender, EventArgs e)
 		{
 			Program.SaveSettings();
-			MessageBox.Show("Settings saved!");
 		}
 
 		private void serverTypeComboBox_MouseEnter(object sender, EventArgs e)
