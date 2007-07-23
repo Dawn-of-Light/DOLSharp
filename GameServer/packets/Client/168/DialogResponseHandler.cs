@@ -211,7 +211,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								{
 									return;
 								}
-								if (player.InCombat && !player.CurrentRegion.IsRvR)
+								if (player.InCombatPvE)
 								{
 									player.Out.SendMessage("You can't join a group while in combat!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;

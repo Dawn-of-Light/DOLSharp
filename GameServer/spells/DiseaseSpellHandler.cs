@@ -54,8 +54,16 @@ namespace DOL.GS.Spells
 		{
 			base.OnEffectStart(effect);
 
-			Caster.LastAttackTick = Caster.CurrentRegion.Time;
-			effect.Owner.LastAttackedByEnemyTick = effect.Owner.CurrentRegion.Time;
+			if (effect.Owner.Realm == 0 || Caster.Realm == 0)
+			{
+				effect.Owner.LastAttackedByEnemyTickPvE = effect.Owner.CurrentRegion.Time;
+				Caster.LastAttackTickPvE = Caster.CurrentRegion.Time;
+			}
+			else
+			{
+				effect.Owner.LastAttackedByEnemyTickPvP = effect.Owner.CurrentRegion.Time;
+				Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
+			}
 
 			effect.Owner.Disease(true);
 			effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 1.0 - 0.15);

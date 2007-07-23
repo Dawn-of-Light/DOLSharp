@@ -86,7 +86,7 @@ namespace DOL.GS.RealmAbilities
 				}
 			}
 			DisableSkill(living);
-			player.LastAttackTick = player.CurrentRegion.Time;
+			player.LastAttackTickPvP = player.CurrentRegion.Time;
 		}
 
         public override int GetReUseDelay(int level)

@@ -159,5 +159,15 @@ namespace DOL.GS
 			Delete();
 			return 0;
 		}
+
+		public override bool Interact(GamePlayer player)
+		{
+			if (player.InCombat)
+			{
+				player.Out.SendMessage("You cannot board a boat when in combat!", DOL.GS.PacketHandler.eChatType.CT_System, DOL.GS.PacketHandler.eChatLoc.CL_SystemWindow);
+				return false;
+			}
+			return base.Interact(player);
+		}
 	}
 }

@@ -208,40 +208,33 @@ namespace DOL
 
 				Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
 
-				if (car.ClassType != null && car.ClassType.Length > 0)
+				try
 				{
-					try
+					player = (GamePlayer)gasm.CreateInstance(ServerProperties.Properties.PLAYER_CLASS, false, BindingFlags.CreateInstance, null, new object[] { this, m_account.Characters[m_activeCharIndex] }, null, null);
+				}
+				catch (Exception e)
+				{
+					if (log.IsErrorEnabled)
+						log.Error("LoadPlayer", e);
+				}
+				if (player == null)
+				{
+					foreach (Assembly asm in DOL.GS.Scripts.ScriptMgr.Scripts)
 					{
-						player = (GamePlayer)gasm.CreateInstance(car.ClassType, false, BindingFlags.CreateInstance, null, new object[] { this, m_account.Characters[m_activeCharIndex] }, null, null);
-					}
-					catch (Exception e)
-					{
-						if (log.IsErrorEnabled)
-							log.Error("LoadPlayer", e);
-					}
-					if (player == null)
-					{
-						foreach (Assembly asm in DOL.GS.Scripts.ScriptMgr.Scripts)
+						try
 						{
-							try
-							{
-								player = (GamePlayer)asm.CreateInstance(car.ClassType, false, BindingFlags.CreateInstance, null, new object[] { this, m_account.Characters[m_activeCharIndex] }, null, null);
-							}
-							catch (Exception e)
-							{
-								if (log.IsErrorEnabled)
-									log.Error("LoadPlayer", e);
-							}
-							if (player != null)
-								break;
+							player = (GamePlayer)asm.CreateInstance(ServerProperties.Properties.PLAYER_CLASS, false, BindingFlags.CreateInstance, null, new object[] { this, m_account.Characters[m_activeCharIndex] }, null, null);
 						}
-					}
-					if (player == null)
-					{
-						player = new GamePlayer(this, m_account.Characters[m_activeCharIndex]);
+						catch (Exception e)
+						{
+							if (log.IsErrorEnabled)
+								log.Error("LoadPlayer", e);
+						}
+						if (player != null)
+							break;
 					}
 				}
-				else
+				if (player == null)
 				{
 					player = new GamePlayer(this, m_account.Characters[m_activeCharIndex]);
 				}

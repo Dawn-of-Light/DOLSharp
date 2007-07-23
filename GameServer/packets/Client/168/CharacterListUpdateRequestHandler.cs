@@ -116,7 +116,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 						Account account = client.Account;
 						//TODO new db framework
 						Character ch = new Character();
-						ch.ClassType = ServerProperties.Properties.PLAYER_CLASS;
 						ch.AccountName = account.Name;
 						ch.Name = charname;
 

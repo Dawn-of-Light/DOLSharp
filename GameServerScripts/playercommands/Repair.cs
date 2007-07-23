@@ -78,7 +78,7 @@ namespace DOL.GS.Scripts
 
 			if ((obj as GameLiving).InCombat)
 			{
-				player.Out.SendMessage("The can't repair object while it under attack!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You can't repair object while it under attack!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
@@ -86,7 +86,7 @@ namespace DOL.GS.Scripts
 			{
 				if (obj.CurrentRegion.Time - obj.LastAttackedByEnemyTick <= 60 * 1000)
 				{
-					player.Out.SendMessage("The can't repair the keep component while it under attack!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage("You can't repair the keep component while it under attack!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 			}
