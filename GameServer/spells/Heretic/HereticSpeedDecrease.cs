@@ -37,8 +37,16 @@ namespace DOL.GS.Spells
 		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-			Caster.LastAttackTick = Caster.CurrentRegion.Time;
-			target.LastAttackedByEnemyTick = target.CurrentRegion.Time;
+			if (target.Realm == 0 || Caster.Realm == 0)
+			{
+				target.LastAttackedByEnemyTickPvE = target.CurrentRegion.Time;
+				Caster.LastAttackTickPvE = Caster.CurrentRegion.Time;
+			}
+			else
+			{
+				target.LastAttackedByEnemyTickPvP = target.CurrentRegion.Time;
+				Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
+			}
             if (target.HasAbility(Abilities.CCImmunity))
             {
                 MessageToCaster(target.Name + " is immune to this effect!", eChatType.CT_SpellResisted);

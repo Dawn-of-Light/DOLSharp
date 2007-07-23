@@ -40,7 +40,6 @@ namespace DOL
 			//The following structure was directly taken
 			//from the 0x57/0x55 Packets
 			//
-			private string m_type;
 			private string m_name;			//24 Bytes
 			//0x00					//24 bytes empty 
 			//Locationstring		//24 bytes empty when sent
@@ -178,7 +177,6 @@ namespace DOL
 			{
 				m_creationDate = DateTime.Now;
 				m_autoSave = false;
-				m_type = "DOL.GS.Scripts.DOLPlayer";
 				m_concentration = 100;
 				m_exp = 0;
 				m_bntyPts = 0;
@@ -576,23 +574,6 @@ namespace DOL
 				set
 				{
 					m_autoSave = value;
-					Dirty = true;
-				}
-			}
-
-			/// <summary>
-			/// type of class inherited of gameplayer to invoke
-			/// </summary>
-			[DataElement(AllowDbNull = true)]
-			public string ClassType
-			{
-				get
-				{
-					return m_type;
-				}
-				set
-				{
-					m_type = value;
 					Dirty = true;
 				}
 			}

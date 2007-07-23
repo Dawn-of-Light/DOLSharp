@@ -345,8 +345,11 @@ namespace DOL.GS
 			{
 				if (m_quitTimer == null)
 				{
-					if (CurrentRegion.Time - LastAttackTick > 40000)
-						LastAttackTick = CurrentRegion.Time - 40000; // dirty trick ;-) (20sec min quit time)
+					// dirty trick ;-) (20sec min quit time)
+					if (CurrentRegion.Time - LastAttackTickPvP > 40000)
+						LastAttackTickPvP = CurrentRegion.Time - 40000;
+					if (CurrentRegion.Time - LastAttackTickPvE > 40000)
+						LastAttackTickPvE = CurrentRegion.Time - 40000;
 				}
 				long lastCombatAction = LastAttackTick;
 				if (lastCombatAction < LastAttackedByEnemyTick)
@@ -385,12 +388,12 @@ namespace DOL.GS
 		#region Combat timer
 		RegionTimer noCombatTimer = null;
 
-		public override long LastAttackedByEnemyTick
+		public override long LastAttackedByEnemyTickPvE
 		{
 			set
 			{
 				bool wasInCombat = InCombat;
-				base.LastAttackedByEnemyTick = value;
+				base.LastAttackedByEnemyTickPvE = value;
 				if (!wasInCombat && InCombat)
 				{
 					Out.SendUpdateMaxSpeed();
@@ -399,12 +402,12 @@ namespace DOL.GS
 			}
 		}
 
-		public override long LastAttackTick
+		public override long LastAttackTickPvE
 		{
 			set
 			{
 				bool wasInCombat = InCombat;
-				base.LastAttackTick = value;
+				base.LastAttackTickPvE = value;
 				if (!wasInCombat && InCombat)
 				{
 					Out.SendUpdateMaxSpeed();
@@ -5090,7 +5093,7 @@ namespace DOL.GS
 						if (hitLocName != null)
 							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.HitsYour", ad.Attacker.GetName(0, true), hitLocName, ad.Damage, modmessage), eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
 						else
-							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.HitsYou", ad.Attacker.GetName(0, true), ad.Damage, modmessage), eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
+							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.HitsYou", ad.Attacker.IsAlive ? ad.Attacker.GetName(0, true): "A dead enemy", ad.Damage, modmessage), eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
 
 						if (ad.CriticalDamage > 0)
 							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.HitsYouCritical", ad.Attacker.GetName(0, true), ad.CriticalDamage), eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
@@ -5755,7 +5758,7 @@ namespace DOL.GS
 							case 2: range *= 1.15; break; //doesn't exist on live
 							case 3: range *= 1.25; break; //Flight +25%
 						}
-					if (livingTarget != null) range += (Z - livingTarget.Z) / 2.0;
+					if (livingTarget != null) range += Math.Min((Z - livingTarget.Z) / 2.0, 500);
 					if (range < 32) range = 32;
 
 					return (int)(range);
@@ -9979,7 +9982,6 @@ namespace DOL.GS
 			{
 				SaveSkillsToCharacter();
 				SaveCraftingSkills();
-				my_character.ClassType = this.GetType().ToString();
 				my_character.PlayedTime = PlayedTime;  //We have to set the PlayedTime on the character before setting the LastPlayed
 				my_character.LastPlayed = DateTime.Now;
 				my_character.ActiveWeaponSlot = (byte)((byte)ActiveWeaponSlot | (byte)ActiveQuiverSlot);

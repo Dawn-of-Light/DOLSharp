@@ -1102,7 +1102,9 @@ namespace DOL.GS
 			//sirru
 			else if (m_attackers.Count == 0 && this.Spells.Count > 0 && this.TargetObject != null && GameServer.ServerRules.IsAllowedToAttack(this, (this.TargetObject as GameLiving), true))
 			{
-				m_lastAttackTick = m_CurrentRegion.Time;
+				if (TargetObject.Realm == 0 || Realm == 0)
+					m_lastAttackTickPvE = m_CurrentRegion.Time;
+				else m_lastAttackTickPvP = m_CurrentRegion.Time;
 				if (this.CurrentRegion.Time - LastAttackedByEnemyTick > 10 * 1000)
 				{
 					if (StartSpellAttack(this.TargetObject))
@@ -1167,8 +1169,8 @@ namespace DOL.GS
 				if (AttackState && brain != null && followLiving != null)
 				{
 					long seconds = 20 + ((brain.GetAggroAmountForLiving(followLiving) / (MaxHealth + 1)) * 100);
-					long lastattacked = m_lastAttackTick;
-					long lasthit = m_lastAttackedByEnemyTick;
+					long lastattacked = LastAttackTick;
+					long lasthit = LastAttackedByEnemyTick;
 					if (CurrentRegion.Time - lastattacked > seconds * 1000 && CurrentRegion.Time - lasthit > seconds * 1000)
 					{
 						StopFollow();
@@ -2582,7 +2584,9 @@ namespace DOL.GS
 			}
 
 			TargetObject = attackTarget;
-			m_lastAttackTick = m_CurrentRegion.Time;
+			if (TargetObject.Realm == 0 || Realm == 0)
+				m_lastAttackTickPvE = m_CurrentRegion.Time;
+			else m_lastAttackTickPvP = m_CurrentRegion.Time;
 			if (m_attackers.Count == 0 && this.Spells.Count > 0 && this.CurrentRegion.Time - LastAttackedByEnemyTick > 10 * 1000)
 			{
 				if (StartSpellAttack(attackTarget))
