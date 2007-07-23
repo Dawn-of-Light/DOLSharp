@@ -59,14 +59,18 @@ namespace DOL.GS.PropertyCalc
 					component = (living as GameKeepDoor).Component;
 				if (living is GameKeepComponent)
 					component = living as GameKeepComponent;
-				return component.Keep.BaseLevel * 40;
+
+				int amount = component.Keep.BaseLevel;
+				if (component.Keep is GameKeep)
+					return amount;
+				else return amount / 2;
 			}
 			else
 			{
-				return (int)( (1+(living.Level/170.0))*(living.Level<<1)*4.67 )
-				+living.BuffBonusCategory2[(int)property]
-				-living.BuffBonusCategory3[(int)property]
-				+living.BuffBonusCategory4[(int)property];
+				return (int)((1 + (living.Level / 170.0)) * (living.Level << 1) * 4.67)
+				+ living.BuffBonusCategory2[(int)property]
+				- living.BuffBonusCategory3[(int)property]
+				+ living.BuffBonusCategory4[(int)property];
 			}
 		}
 	}

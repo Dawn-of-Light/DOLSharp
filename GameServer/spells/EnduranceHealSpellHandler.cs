@@ -115,7 +115,7 @@ namespace DOL.GS.Spells
 				MessageToCaster("You restore " + target.GetName(0, false) + " for " + heal + " ednurance points!", eChatType.CT_Spell);
 				MessageToLiving(target, "Your endurance was restored by " + m_caster.GetName(0, false) + " for " + heal + " points.", eChatType.CT_Spell);
 				if (heal < amount)
-					MessageToCaster(target.GetName(0, true) + " ednuracne is full.", eChatType.CT_Spell);
+					MessageToCaster(target.GetName(0, true) + " endurance is full.", eChatType.CT_Spell);
 			}
 			return true;
 		}
@@ -137,6 +137,16 @@ namespace DOL.GS.Spells
 			}
 			min = max = (int)(spellValue);
 			return;
+		}
+
+		public override bool CheckBeginCast(GameLiving selectedTarget)
+		{
+			if (selectedTarget.EndurancePercent >= 90)
+			{
+				MessageToCaster("You cannot cast an endurance heal the target has above 90% endurance!", eChatType.CT_SpellResisted);
+				return false;
+			}
+			return base.CheckBeginCast(selectedTarget);
 		}
 	}
 }

@@ -18,8 +18,7 @@ namespace DOL.GS.Effects
 		{
 			m_player = player;
 			m_player.Out.SendMessage("You begin to charge wildly!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-
-
+			
 			m_startTick = player.CurrentRegion.Time;
 			foreach (GamePlayer t_player in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
@@ -27,7 +26,7 @@ namespace DOL.GS.Effects
 			}
 
 			//sets player into combat mode
-			player.LastAttackTick = player.CurrentRegion.Time;
+			player.LastAttackTickPvP = m_startTick;
 			ArrayList speedSpells = new ArrayList();
 			foreach (IGameEffect effect in player.EffectList)
 			{
