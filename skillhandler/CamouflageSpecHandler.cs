@@ -67,7 +67,7 @@ namespace DOL.GS.SkillHandler
 				camouflage.Cancel(false);
 				return;
 			}
-			long changeTime = player.CurrentRegion.Time - player.LastAttackTick;
+			long changeTime = player.CurrentRegion.Time - player.LastAttackTickPvP;
 			if (player.CurrentRegion.IsRvR && changeTime < DISABLE_DURATION)
 			{
 				player.Out.SendMessage("You must wait " + ((DISABLE_DURATION - changeTime) / 1000) + " more second to attempt to use camouflage!", eChatType.CT_System, eChatLoc.CL_SystemWindow);

@@ -51,7 +51,10 @@ namespace DOL.GS.Spells
 			if (target == null || !target.IsAlive)
 				return;
 
-			target.LastAttackedByEnemyTick = target.CurrentRegion.Time; //have to do it here because OnAttackedByEnemy is not called to not get aggro
+			//have to do it here because OnAttackedByEnemy is not called to not get aggro
+			if (target.Realm == 0 || Caster.Realm == 0)
+				target.LastAttackedByEnemyTickPvE = target.CurrentRegion.Time;
+			else target.LastAttackedByEnemyTickPvP = target.CurrentRegion.Time;
 			SendEffectAnimation(target, 0, false, 1);
 
 			if (target is GamePlayer)

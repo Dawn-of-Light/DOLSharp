@@ -144,8 +144,8 @@ namespace DOL.GS.SkillHandler
 			if (target is GamePlayer)
 				(target as GamePlayer).Out.SendMessage(player.Name + " flurry hits you for " + damage + " damage!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 
-			player.LastAttackTick = player.CurrentRegion.Time;
-			target.LastAttackedByEnemyTick = target.CurrentRegion.Time;
+			player.LastAttackTickPvP = player.CurrentRegion.Time;
+			target.LastAttackedByEnemyTickPvP = target.CurrentRegion.Time;
 
 			player.DisableSkill(ab, REUSE_TIMER);
 

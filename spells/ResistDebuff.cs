@@ -64,8 +64,16 @@ namespace DOL.GS.Spells
 
 			base.ApplyEffectOnTarget(target, effectiveness);
 
-			target.LastAttackedByEnemyTick = target.CurrentRegion.Time;
-			Caster.LastAttackTick = Caster.CurrentRegion.Time;
+			if (target.Realm == 0 || Caster.Realm == 0)
+			{
+				target.LastAttackedByEnemyTickPvE = target.CurrentRegion.Time;
+				Caster.LastAttackTickPvE = Caster.CurrentRegion.Time;
+			}
+			else
+			{
+				target.LastAttackedByEnemyTickPvP = target.CurrentRegion.Time;
+				Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
+			}
 			if(target is GameNPC) 
 			{
 				IAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IAggressiveBrain;

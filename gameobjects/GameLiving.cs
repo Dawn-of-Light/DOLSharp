@@ -319,10 +319,6 @@ namespace DOL.GS
 		/// </summary>
 		public const string LAST_ENEMY_ATTACK_RESULT = "LastEnemyAttackResult";
 		/// <summary>
-		/// Holds the property for game tick of last attack
-		/// </summary>
-		protected const string LAST_ATTACK_TICK = "LastAttackTick";
-		/// <summary>
 		/// The result of an attack
 		/// </summary>
 		public enum eAttackResult : int
@@ -742,64 +738,151 @@ namespace DOL.GS
 				return m_xpGainers;
 			}
 		}
+
 		/// <summary>
-		/// last attack tick
-		/// </summary>
-		protected long m_lastAttackTick;
-		/// <summary>
-		/// gets/sets gametick when this living has attacked its target
+		/// last attack tick in either pve or pvp
 		/// </summary>
 		public virtual long LastAttackTick
 		{
-			get { return m_lastAttackTick; }
+			get
+			{
+				if (m_lastAttackTickPvE > m_lastAttackTickPvP)
+					return m_lastAttackTickPvE;
+				return m_lastAttackTickPvP;
+			}
+		}
+
+		/// <summary>
+		/// last attack tick for pve
+		/// </summary>
+		protected long m_lastAttackTickPvE;
+		/// <summary>
+		/// gets/sets gametick when this living has attacked its target in pve
+		/// </summary>
+		public virtual long LastAttackTickPvE
+		{
+			get { return m_lastAttackTickPvE; }
 			set
 			{
-				m_lastAttackTick = value;
+				m_lastAttackTickPvE = value;
 				if (this is GameNPC)
 				{
 					if ((this as GameNPC).Brain is IControlledBrain)
 					{
-						((this as GameNPC).Brain as IControlledBrain).Owner.LastAttackTick = value;
+						((this as GameNPC).Brain as IControlledBrain).Owner.LastAttackTickPvE = value;
 					}
 				}
 			}
 		}
 
 		/// <summary>
-		/// gets the last attack or attackedbyenemy tick
+		/// last attack tick for pvp
 		/// </summary>
-		public long LastCombatTick
+		protected long m_lastAttackTickPvP;
+		/// <summary>
+		/// gets/sets gametick when this living has attacked its target in pvp
+		/// </summary>
+		public virtual long LastAttackTickPvP
+		{
+			get { return m_lastAttackTickPvP; }
+			set
+			{
+				m_lastAttackTickPvP = value;
+				if (this is GameNPC)
+				{
+					if ((this as GameNPC).Brain is IControlledBrain)
+					{
+						((this as GameNPC).Brain as IControlledBrain).Owner.LastAttackTickPvP = value;
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// gets the last attack or attackedbyenemy tick in pvp
+		/// </summary>
+		public long LastCombatTickPvP
 		{
 			get
 			{
-				if (m_lastAttackTick > m_lastAttackedByEnemyTick)
-					return m_lastAttackTick;
-				else return m_lastAttackedByEnemyTick;
+				if (m_lastAttackTickPvP > m_lastAttackedByEnemyTickPvP)
+					return m_lastAttackTickPvP;
+				else return m_lastAttackedByEnemyTickPvP;
 			}
 		}
 
 		/// <summary>
-		/// last attacked by enemy tick
+		/// gets the last attack or attackedbyenemy tick in pve
 		/// </summary>
-		protected long m_lastAttackedByEnemyTick;
+		public long LastCombatTickPvE
+		{
+			get
+			{
+				if (m_lastAttackTickPvE > m_lastAttackedByEnemyTickPvE)
+					return m_lastAttackTickPvE;
+				else return m_lastAttackedByEnemyTickPvE;
+			}
+		}
+
 		/// <summary>
-		/// gets/sets gametick when this living was last time attacked by an enemy
+		/// last attacked by enemy tick in either pvp or pve
 		/// </summary>
 		public virtual long LastAttackedByEnemyTick
 		{
-			get { return m_lastAttackedByEnemyTick; }
+			get
+			{
+				if (m_lastAttackedByEnemyTickPvP > m_lastAttackedByEnemyTickPvE)
+					return m_lastAttackedByEnemyTickPvP;
+				return m_lastAttackedByEnemyTickPvE;
+			}
+		}
+
+		/// <summary>
+		/// last attacked by enemy tick in pve
+		/// </summary>
+		protected long m_lastAttackedByEnemyTickPvE;
+		/// <summary>
+		/// gets/sets gametick when this living was last time attacked by an enemy in pve
+		/// </summary>
+		public virtual long LastAttackedByEnemyTickPvE
+		{
+			get { return m_lastAttackedByEnemyTickPvE; }
 			set
 			{
-				m_lastAttackedByEnemyTick = value;
+				m_lastAttackedByEnemyTickPvE = value;
 				if (this is GameNPC)
 				{
 					if ((this as GameNPC).Brain is IControlledBrain)
 					{
-						((this as GameNPC).Brain as IControlledBrain).Owner.LastAttackedByEnemyTick = value;
+						((this as GameNPC).Brain as IControlledBrain).Owner.LastAttackedByEnemyTickPvE = value;
 					}
 				}
 			}
 		}
+
+		/// <summary>
+		/// last attacked by enemy tick in pve
+		/// </summary>
+		protected long m_lastAttackedByEnemyTickPvP;
+		/// <summary>
+		/// gets/sets gametick when this living was last time attacked by an enemy in pvp
+		/// </summary>
+		public virtual long LastAttackedByEnemyTickPvP
+		{
+			get { return m_lastAttackedByEnemyTickPvP; }
+			set
+			{
+				m_lastAttackedByEnemyTickPvP = value;
+				if (this is GameNPC)
+				{
+					if ((this as GameNPC).Brain is IControlledBrain)
+					{
+						((this as GameNPC).Brain as IControlledBrain).Owner.LastAttackedByEnemyTickPvP = value;
+					}
+				}
+			}
+		}
+
 		/// <summary>
 		/// Gets the swing time left
 		/// </summary>
@@ -1035,14 +1118,43 @@ namespace DOL.GS
 		{
 			get
 			{
+				return InCombatPvE || InCombatPvP;
+			}
+		}
+
+		/// <summary>
+		/// checks if the living is involved in pvp combat
+		/// </summary>
+		public virtual bool InCombatPvP
+		{
+			get
+			{
 				Region region = CurrentRegion;
 				if (region == null)
 					return false;
 
-				if (LastCombatTick == 0)
+				if (LastCombatTickPvP == 0)
 					return false;
 
-				return LastCombatTick + 10000 >= region.Time;
+				return LastCombatTickPvP + 10000 >= region.Time;
+			}
+		}
+
+		/// <summary>
+		/// checks if the living is involved in pve combat
+		/// </summary>
+		public virtual bool InCombatPvE
+		{
+			get
+			{
+				Region region = CurrentRegion;
+				if (region == null)
+					return false;
+
+				if (LastCombatTickPvE == 0)
+					return false;
+
+				return LastCombatTickPvE + 10000 >= region.Time;
 			}
 		}
 
@@ -3112,8 +3224,16 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 					((GameNPC)this).SwitchToMelee(ad.Attacker);
 
 				AddAttacker(ad.Attacker);
-				LastAttackedByEnemyTick = CurrentRegion.Time;
-				ad.Attacker.LastAttackTick = CurrentRegion.Time;
+				if (ad.Attacker.Realm == 0 || this.Realm == 0)
+				{
+					LastAttackedByEnemyTickPvE = CurrentRegion.Time;
+					ad.Attacker.LastAttackTickPvE = CurrentRegion.Time;
+				}
+				else
+				{
+					LastAttackedByEnemyTickPvP = CurrentRegion.Time;
+					ad.Attacker.LastAttackTickPvP = CurrentRegion.Time;
+				}
 			}
 		}
 
