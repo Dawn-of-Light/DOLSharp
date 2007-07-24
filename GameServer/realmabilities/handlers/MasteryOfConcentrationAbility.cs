@@ -46,6 +46,26 @@ namespace DOL.GS.RealmAbilities
 				MoCEffect.Cancel(false);
 				return;
 			}
+			
+			// Check for the RA5L on the Sorceror: he cannot cast MoC when the other is up
+			ShieldOfImmunityEffect ra5l = null;
+			lock (player.EffectList)
+			{
+				foreach (object effect in player.EffectList)
+				{
+					if (effect is ShieldOfImmunityEffect)
+					{
+						ra5l = effect as ShieldOfImmunityEffect;
+						break;
+					}
+				}
+			}
+			if (ra5l != null)
+			{
+				player.Out.SendMessage("You cannot currently use this ability", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+				return;
+			}
+			
 			SendCasterSpellEffectAndCastMessage(living, 7007, true);
 			foreach (GamePlayer t_player in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
