@@ -1,5 +1,6 @@
 using System;
 using DOL.Database;
+using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 
 namespace DOL.GS.RealmAbilities
@@ -19,15 +20,33 @@ namespace DOL.GS.RealmAbilities
 		{
 			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
 
-
-
 			GamePlayer player = living as GamePlayer;
-			if (player != null)
+			if (player == null)
+				return;
+			
+			// Check for MoC on the Sorceror: he cannot cast RA5L when the other is up
+			MasteryofConcentrationEffect ra5l = null;
+			lock (player.EffectList)
 			{
-				SendCasterSpellEffectAndCastMessage(player, 7048, true);
-				ShieldOfImmunityEffect effect = new ShieldOfImmunityEffect();
-				effect.Start(player);
+				foreach (object effect in player.EffectList)
+				{
+					if (effect is MasteryofConcentrationEffect)
+					{
+						ra5l = effect as MasteryofConcentrationEffect;
+						break;
+					}
+				}
 			}
+			if (ra5l != null)
+			{
+				player.Out.SendMessage("You cannot currently use this ability", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+				return;
+			}
+			
+			SendCasterSpellEffectAndCastMessage(player, 7048, true);
+			ShieldOfImmunityEffect raEffect = new ShieldOfImmunityEffect();
+			raEffect.Start(player);
+			
 			DisableSkill(living);
 		}
 
