@@ -279,55 +279,56 @@ namespace DOL.GS.Scripts
 		{
 			try
 			{
-				DataConnection con = new DataConnection(ConnectionType.DATABASE_XML, "."+Path.DirectorySeparatorChar+"webui"+Path.DirectorySeparatorChar+"generated");
-				ObjectDatabase db = new ObjectDatabase(con);
+# warning TODO get right number
+				//DataConnection con = new DataConnection(ConnectionType.DATABASE_XML, "."+Path.DirectorySeparatorChar+"webui"+Path.DirectorySeparatorChar+"generated");
+				//ObjectDatabase db = new ObjectDatabase(con);
 
-				db.RegisterDataObject(typeof (ServerInfo));
-				db.RegisterDataObject(typeof (PlayerInfo));
+				//db.RegisterDataObject(typeof (ServerInfo));
+				//db.RegisterDataObject(typeof (PlayerInfo));
 
-				ServerInfo si = new ServerInfo();
+				//ServerInfo si = new ServerInfo();
 
-				si.Time = DateTime.Now.ToString();
-				si.ServerName = GameServer.Instance.Configuration.ServerName;
-				si.NumClients = GameServer.Instance.ClientCount;
-				si.NumAccounts = GameServer.Database.GetObjectCount(typeof (DOL.Database.Account));
-				si.NumMobs = GameServer.Database.GetObjectCount(typeof (DOL.Database.Mob));
-				si.NumInventoryItems = GameServer.Database.GetObjectCount(typeof (DOL.Database.InventoryItem));
-				si.NumPlayerChars = GameServer.Database.GetObjectCount(typeof (DOL.Database.Character));
-				si.NumMerchantItems = GameServer.Database.GetObjectCount(typeof (DOL.Database.MerchantItem));
-				si.NumItemTemplates = GameServer.Database.GetObjectCount(typeof (DOL.Database.ItemTemplate));
-				si.NumWorldObjects = GameServer.Database.GetObjectCount(typeof (DOL.Database.WorldObject));
-				si.ServerType = GameServer.Instance.Configuration.ServerType.ToString();
-				si.ServerStatus = GameServer.Instance.ServerStatus.ToString();
-				si.AAC = GameServer.Instance.Configuration.AutoAccountCreation ? "enabled" : "disabled";
+				//si.Time = DateTime.Now.ToString();
+				//si.ServerName = GameServer.Instance.Configuration.ServerName;
+				//si.NumClients = GameServer.Instance.ClientCount;
+				//si.NumAccounts = GameServer.Database.GetObjectCount(typeof (DOL.Database.Account));
+				//si.NumMobs = GameServer.Database.GetObjectCount(typeof (DOL.Database.Mob));
+				//si.NumInventoryItems = GameServer.Database.GetObjectCount(typeof (DOL.Database.InventoryItem));
+				//si.NumPlayerChars = GameServer.Database.GetObjectCount(typeof (DOL.Database.Character));
+				//si.NumMerchantItems = GameServer.Database.GetObjectCount(typeof (DOL.Database.MerchantItem));
+				//si.NumItemTemplates = GameServer.Database.GetObjectCount(typeof (DOL.Database.ItemTemplate));
+				//si.NumWorldObjects = GameServer.Database.GetObjectCount(typeof (DOL.Database.WorldObject));
+				//si.ServerType = GameServer.Instance.Configuration.ServerType.ToString();
+				//si.ServerStatus = GameServer.Instance.ServerStatus.ToString();
+				//si.AAC = GameServer.Instance.Configuration.AutoAccountCreation ? "enabled" : "disabled";
 
-				db.AddNewObject(si);
+				//db.AddNewObject(si);
 
-				PlayerInfo pi = new PlayerInfo();
+				//PlayerInfo pi = new PlayerInfo();
 
-				foreach (GameClient client in WorldMgr.GetAllPlayingClients())
-				{
-					GamePlayer plr = client.Player;
+				//foreach (GameClient client in WorldMgr.GetAllPlayingClients())
+				//{
+				//    GamePlayer plr = client.Player;
 
-					pi.Name = plr.Name;
-					pi.LastName = plr.LastName;
-					pi.Class = plr.CharacterClass.Name;
-					pi.Race = plr.RaceName;
-					pi.Guild = plr.GuildName;
-					pi.Level = plr.Level;
-					pi.Alive = plr.IsAlive ? "yes" : "no";
-					pi.Realm = ((eRealm) plr.Realm).ToString();
-					pi.Region = plr.CurrentRegion.Name;
-					pi.X = plr.X;
-					pi.Y = plr.Y;
-				}
+				//    pi.Name = plr.Name;
+				//    pi.LastName = plr.LastName;
+				//    pi.Class = plr.CharacterClass.Name;
+				//    pi.Race = plr.RaceName;
+				//    pi.Guild = plr.GuildName;
+				//    pi.Level = plr.Level;
+				//    pi.Alive = plr.IsAlive ? "yes" : "no";
+				//    pi.Realm = ((eRealm) plr.Realm).ToString();
+				//    pi.Region = plr.CurrentRegion.Name;
+				//    pi.X = plr.X;
+				//    pi.Y = plr.Y;
+				//}
 
-				db.WriteDatabaseTables();
-				con = null;
-				db = null;
+				//db.WriteDatabaseTables();
+				//con = null;
+				//db = null;
 
-				if (log.IsInfoEnabled)
-					log.Info("WebUI Generation initialized");
+				//if (log.IsInfoEnabled)
+				//    log.Info("WebUI Generation initialized");
 			}
 			catch (Exception e)
 			{

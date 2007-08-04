@@ -31,12 +31,14 @@ namespace DOL.Database
 	{
 		static bool		m_autoSave;
 
-		private string m_guildid; //Unique id for this guild
+#warning what the hell it is we already have a unique id, the objectid ??
+//		private string m_guildid; //Unique id for this guild
+
 		private string	m_guildname;
 		private string	m_motd;
 		private string	m_omotd;//officier motd
 
-		private string m_allianceID;
+		private uint m_allianceID;
 		private int m_emblem;
 		private long m_realmPoints;
 		private long m_bountyPoints;
@@ -72,22 +74,23 @@ namespace DOL.Database
 			}
 		}
 
-		/// <summary>
-		/// A uniq ID for the guild
-		/// </summary>
-		[DataElement(AllowDbNull = true, Index=true, Unique=true)]
-		public string GuildID
-		{
-			get
-			{
-				return m_guildid;
-			}
-			set
-			{
-				Dirty = true;
-				m_guildid = value;
-			}
-		}		
+#warning what the hell it is we already have a unique id, the objectid ??
+		///// <summary>
+		///// A uniq ID for the guild
+		///// </summary>
+		//[DataElement(AllowDbNull = true, Index=true, Unique=true)]
+		//public string GuildID
+		//{
+		//    get
+		//    {
+		//        return m_guildid;
+		//    }
+		//    set
+		//    {
+		//        Dirty = true;
+		//        m_guildid = value;
+		//    }
+		//}		
 
 		/// <summary>
 		/// Name of guild
@@ -144,7 +147,7 @@ namespace DOL.Database
 		/// alliance id when guild join an alliance
 		/// </summary>
 		[DataElement(AllowDbNull = true, Index=true)]
-		public string AllianceID
+		public uint AllianceID
 		{
 			get
 			{
@@ -247,7 +250,7 @@ namespace DOL.Database
 		/// <summary>
 		/// rank rules
 		/// </summary>
-		[Relation(LocalField = "GuildID", RemoteField = "GuildID", AutoLoad = true, AutoDelete=true)]
+		[Relation(LocalField = "ObjectId" /*"Guild_ID"*/, RemoteField = "GuildID", AutoLoad = true, AutoDelete=true)]
 		public DBRank[] Ranks;
 	}
 }

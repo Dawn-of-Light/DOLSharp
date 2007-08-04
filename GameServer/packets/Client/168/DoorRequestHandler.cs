@@ -188,7 +188,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 
 					DBDoor door = new DBDoor();
-					door.ObjectId = null;
+					door.ObjectId = 0;
 					door.InternalID = m_doorId;
 					door.X = player.X;
 					door.Y = player.Y;

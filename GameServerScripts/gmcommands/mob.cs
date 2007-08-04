@@ -843,12 +843,13 @@ namespace DOL.GS.Scripts
 								try
 								{
 									GameNpcInventoryTemplate load = new GameNpcInventoryTemplate();
-									if (!load.LoadFromDatabase(args[3]))
+# warning TODO what's wrong here ?? args[3] or args[2] 
+									if (!load.LoadFromDatabase(UInt32.Parse(args[3])))
 									{
 										client.Out.SendMessage("Error loading equipment template \"" + args[2] + "\"", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 										return 1;
 									}
-									targetMob.EquipmentTemplateID = args[3];
+									targetMob.EquipmentTemplateID = UInt32.Parse(args[3]);
 									targetMob.Inventory = load;
 									targetMob.SaveIntoDatabase();
 									targetMob.UpdateNPCEquipmentAppearance();
@@ -970,7 +971,7 @@ namespace DOL.GS.Scripts
 							case "clear":
 								{
 									targetMob.Inventory = null;
-									targetMob.EquipmentTemplateID = null;
+									targetMob.EquipmentTemplateID = 0;
 									targetMob.SaveIntoDatabase();
 									client.Out.SendMessage("Mob equipment removed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								}
@@ -986,12 +987,12 @@ namespace DOL.GS.Scripts
 											client.Out.SendMessage("Template with name '" + args[3] + "' already exists. Use 'replace' flag if you want to overwrite it.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 											return 1;
 										}
-										if (!targetMob.Inventory.SaveIntoDatabase(args[3]))
+										if (!targetMob.Inventory.SaveIntoDatabase(UInt32.Parse(args[3])))
 										{
 											client.Out.SendMessage("Error saving template with name " + args[3], eChatType.CT_System, eChatLoc.CL_SystemWindow);
 											return 1;
 										}
-										targetMob.EquipmentTemplateID = args[3];
+										targetMob.EquipmentTemplateID = UInt32.Parse(args[3]);
 										targetMob.SaveIntoDatabase();
 										client.Out.SendMessage("Target mob equipment template is saved as '" + args[3] + "'", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 										return 1;

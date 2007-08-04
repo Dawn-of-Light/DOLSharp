@@ -53,7 +53,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					// delete items
 					try
 					{
-						DataObject[] objs = GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + GameServer.Database.Escape(chars[i].ObjectId) + "'");
+						DataObject[] objs = GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + /*GameServer.Database.Escape(*/chars[i].ObjectId/*)*/ + "'");
 						foreach (InventoryItem item in objs)
 						{
 							GameServer.Database.DeleteObject(item);

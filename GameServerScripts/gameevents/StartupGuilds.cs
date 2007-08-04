@@ -77,9 +77,12 @@ namespace DOL.GS.GameEvents
 				Guild newguild = new Guild();
 				newguild.theGuildDB = new DBGuild();
 				newguild.Name = guildName;
-				newguild.GuildID = System.Guid.NewGuid().ToString(); //Assume this is unique, which I don't like, but it seems to be commonly used elsewhere in the code.				
-				newguild.theGuildDB.GuildID = newguild.GuildID;
+				//newguild.GuildID = System.Guid.NewGuid().ToString(); //Assume this is unique, which I don't like, but it seems to be commonly used elsewhere in the code.				
+				//newguild.theGuildDB.GuildID = newguild.GuildID;
 				newguild.theGuildDB.GuildName = guildName;
+				// we add the guild to the database so we can have a guild id
+				GameServer.Database.AddNewObject(newguild.theGuildDB);
+				newguild.GuildID = newguild.theGuildDB.ObjectId;
 				GuildMgr.CreateRanks(newguild);
 				newguild.theGuildDB.Ranks[8].OcHear = true;
 
@@ -103,7 +106,8 @@ namespace DOL.GS.GameEvents
 				}
 
 				GuildMgr.AddGuild(newguild);
-				GameServer.Database.AddNewObject(newguild.theGuildDB);
+				//GameServer.Database.AddNewObject(newguild.theGuildDB);
+				GameServer.Database.SaveObject(newguild.theGuildDB);
 			}
 		}
 	}

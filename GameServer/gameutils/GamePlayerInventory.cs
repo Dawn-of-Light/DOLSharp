@@ -68,13 +68,13 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="inventoryID">The inventory ID</param>
 		/// <returns>success</returns>
-		public override bool LoadFromDatabase(string inventoryID)
+		public override bool LoadFromDatabase(uint inventoryID)
 		{
 			lock (m_items.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				try
 				{
-					DataObject[] items = GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + GameServer.Database.Escape(inventoryID) + "'");
+					DataObject[] items = GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + inventoryID + "'");
 					foreach (InventoryItem item in items)
 					{
 						if (GetValidInventorySlot((eInventorySlot)item.SlotPosition) == eInventorySlot.Invalid)
@@ -125,7 +125,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="inventoryID">The inventory ID</param>
 		/// <returns>success</returns>
-		public override bool SaveIntoDatabase(string inventoryID)
+		public override bool SaveIntoDatabase(uint inventoryID)
 		{
 			lock (m_items.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
@@ -145,7 +145,7 @@ namespace DOL.GS
 							}
 							if (currentItem.OwnerID != m_player.InternalID)
 							{
-								string itemOwner = (currentItem.OwnerID == null ? "(null)" : currentItem.OwnerID);
+								uint itemOwner = (currentItem.OwnerID == 0 ? 0 : currentItem.OwnerID);
 								if (log.IsErrorEnabled)
 									log.Error("item owner id (" + itemOwner + ") not equals player ID (" + m_player.InternalID + "); item ID=" + currentItem.ObjectId);
 								continue;
@@ -212,7 +212,7 @@ namespace DOL.GS
 			if (item.OwnerID != m_player.InternalID)
 			{
 				if (log.IsErrorEnabled)
-					log.Error(m_player.Name + ": PlayerInventory -> tried to remove item with wrong owner (" + (item.OwnerID ?? "null") + ")\n\n" + Environment.StackTrace);
+					log.Error(m_player.Name + ": PlayerInventory -> tried to remove item with wrong owner (" + (item.OwnerID/* ?? "null"*/) + ")\n\n" + Environment.StackTrace);
 				return false;
 			}
 

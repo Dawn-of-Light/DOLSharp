@@ -425,7 +425,7 @@ namespace DOL.GS.Keeps
 		{
 			DBKeepComponent obj = null;
 			bool New = false;
-			if (InternalID != null)
+			if (InternalID != 0)
 				obj = (DBKeepComponent)GameServer.Database.FindObjectByKey(typeof(DBKeepComponent), InternalID);
 			if (obj == null)
 			{
@@ -495,7 +495,7 @@ namespace DOL.GS.Keeps
 			StopHealthRegeneration();
 			base.Delete();
 			DBKeepComponent obj = null;
-			if (this.InternalID != null)
+			if (this.InternalID != 0)
 				obj = (DBKeepComponent)GameServer.Database.FindObjectByKey(typeof(DBKeepComponent), this.InternalID);
 			if (obj != null)
 				GameServer.Database.DeleteObject(obj);

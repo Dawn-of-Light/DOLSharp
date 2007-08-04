@@ -58,7 +58,7 @@ namespace DOL.GS
 		{
 			m_item = item;
 			m_item.SlotPosition = 0;
-			m_item.OwnerID = null;
+			m_item.OwnerID = 0;
 			this.Level = (byte)item.Level;
 			this.Model = (ushort)item.Model;
 			this.Name = item.Name;
@@ -98,7 +98,7 @@ namespace DOL.GS
 
 			invItem.m_item = new InventoryItem();
 			invItem.m_item.SlotPosition = 0;
-			invItem.m_item.OwnerID = null;
+			invItem.m_item.OwnerID = 0;
 
 			invItem.Level = (byte)template.Level;
 			invItem.Model = (ushort)template.Model;

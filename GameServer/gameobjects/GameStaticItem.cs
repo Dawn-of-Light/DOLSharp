@@ -200,7 +200,7 @@ namespace DOL.GS
 		public override void SaveIntoDatabase()
 		{
 			WorldObject obj = null;
-			if(InternalID != null)
+			if(InternalID != 0)
 				obj = (WorldObject) GameServer.Database.FindObjectByKey(typeof(WorldObject), InternalID);
 			if(obj == null)
 			  obj = new WorldObject();
@@ -214,7 +214,7 @@ namespace DOL.GS
 			obj.Z = Z;
 			obj.ClassType = this.GetType().ToString();
 
-			if(InternalID == null)
+			if(InternalID == 0)
 			{
 				GameServer.Database.AddNewObject(obj);
 				InternalID = obj.ObjectId;
@@ -228,13 +228,13 @@ namespace DOL.GS
 		/// </summary>
 		public override void DeleteFromDatabase()
 		{
-			if(InternalID != null)
+			if(InternalID != 0)
 			{
 				WorldObject obj = (WorldObject) GameServer.Database.FindObjectByKey(typeof(WorldObject), InternalID);
 				if(obj != null)
 				  GameServer.Database.DeleteObject(obj);
 			}
-			InternalID = null;
+			InternalID = 0;
 		}
 
 		/// <summary>

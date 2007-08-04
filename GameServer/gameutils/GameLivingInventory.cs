@@ -114,7 +114,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="id"></param>
 		/// <returns></returns>
-		public virtual bool LoadFromDatabase(string id)
+		public virtual bool LoadFromDatabase(uint id)
 		{
 			return false;
 		}
@@ -123,7 +123,7 @@ namespace DOL.GS
 		/// SaveIntoDatabase
 		/// </summary>
 		/// <returns></returns>
-		public virtual bool SaveIntoDatabase(string id)
+		public virtual bool SaveIntoDatabase(uint id)
 		{
 			return false;
 		}
@@ -499,9 +499,13 @@ namespace DOL.GS
 				}
 				m_items.Add((int)slot, item);
 				item.SlotPosition=(int)slot;
-				if (item.OwnerID != null)
+				//if (item.OwnerID != null)
+				//{
+				//    item.OwnerID = null; // owner ID for NPC
+				//}
+				if (item.OwnerID != 0)
 				{
-					item.OwnerID = null; // owner ID for NPC
+					item.OwnerID = 0; // owner ID for NPC
 				}
 
 				if (!m_changedSlots.Contains((int)slot))
@@ -529,7 +533,7 @@ namespace DOL.GS
 					if (!m_changedSlots.Contains(item.SlotPosition))
 						m_changedSlots.Add(item.SlotPosition);
 
-					item.OwnerID = null;
+					item.OwnerID = 0;
 					item.SlotPosition = (int)eInventorySlot.Invalid;
 
 					if (m_changesCounter <= 0)

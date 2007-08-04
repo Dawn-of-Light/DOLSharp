@@ -105,7 +105,7 @@ namespace DOL.GS
 				{
 					if ( (lootOTD.MinLevel < player.Level))
 					{
-						DataObject obj = GameServer.Database.SelectObject(typeof(DBOTDXCharacter), "CharacterName = '" + GameServer.Database.Escape(player.Name) + "' AND LootOTD_ID = '" + GameServer.Database.Escape(lootOTD.ObjectId) + "'");
+						DataObject obj = GameServer.Database.SelectObject(typeof(DBOTDXCharacter), "CharacterName = '" + GameServer.Database.Escape(player.Name) + "' AND LootOTD_ID = '" + /*GameServer.Database.Escape(*/lootOTD.ObjectId/*)*/ + "'");
 						if (obj != null) continue;
 
 						string[] sclass = lootOTD.SerializedClassAllowed.Split(',');

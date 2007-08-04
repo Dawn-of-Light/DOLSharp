@@ -32,7 +32,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Equipment Template ID
 		/// </summary>
-		protected string	m_templateID;
+		protected uint	m_templateID;
 		/// <summary>
 		/// The Item Slot
 		/// </summary>
@@ -83,7 +83,7 @@ namespace DOL.Database
 		/// Template ID
 		/// </summary>
 		[DataElement(AllowDbNull=false)]
-		public string TemplateID
+		public uint TemplateID
 		{
 			get
 			{

@@ -78,7 +78,7 @@ namespace DOL.GS
 		/// <summary>
 		/// unique id of the guild
 		/// </summary>
-		protected string m_guildid;
+		protected uint m_guildid;
 
 		/// <summary>
 		/// the name of the guild
@@ -134,7 +134,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the constant guild id
 		/// </summary>
-		public string GuildID
+		public uint GuildID
 		{
 			get	{	return m_guildid; }
 			set	{	m_guildid = value; }
@@ -325,7 +325,7 @@ namespace DOL.GS
 				RemoveOnlineMember(member);
 				member.GuildName = "";
 				member.GuildNote = "";
-				member.GuildID = "";
+				member.GuildID = 0;
 				member.GuildRank = null;
 				member.Guild = null;
 				member.SaveIntoDatabase();
@@ -577,7 +577,7 @@ namespace DOL.GS
 				return;
 
 			m_DBguild = (DBGuild)obj;
-			m_guildid = m_DBguild.GuildID;			
+			m_guildid = m_DBguild.ObjectId;			
 			m_name = m_DBguild.GuildName;
 			m_realmPoints = m_DBguild.RealmPoints;
 			m_bountyPoints = m_DBguild.BountyPoints;

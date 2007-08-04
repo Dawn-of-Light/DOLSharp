@@ -165,7 +165,7 @@ namespace DOL.GS.Scripts
 							playingclient.Disconnect();
 						}
 
-						cha.AccountName = acc.Name;
+						cha.AccountID = acc.ObjectId;
 						cha.AccountSlot = freeslot;
 
 						GameServer.Database.SaveObject(cha);
@@ -269,7 +269,10 @@ namespace DOL.GS.Scripts
 			//Return database object
 			Character ch = (Character) GameServer.Database.SelectObject(typeof (Character), "Name='" + GameServer.Database.Escape(charname) + "'");
 			if (ch != null)
-				return ch.AccountName;
+			{
+				Account acc = (Account)GameServer.Database.SelectObject(typeof(Account), "='" + ch.AccountID + "'");
+				return acc.Name;
+			}
 			else
 				return null;
 		}

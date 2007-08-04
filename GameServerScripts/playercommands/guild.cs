@@ -428,7 +428,7 @@ namespace DOL.GS.Scripts
 								return 1;
 							}
 
-							string guildId = "";
+							uint guildId = 0;
 							ushort guildRank = 9;
 							string plyName = "";
 							GamePlayer ply = obj as GamePlayer;
@@ -461,7 +461,7 @@ namespace DOL.GS.Scripts
 								client.Player.Guild.RemovePlayer(client.Player.Name, ply);
 							else
 							{
-								ch.GuildID = "";
+								ch.GuildID = 0;
 								ch.GuildRank = 9;
 								GameServer.Database.SaveObject(ch);
 							}
@@ -493,7 +493,7 @@ namespace DOL.GS.Scripts
 							
 							string playername = String.Join(" ", args, 2, args.Length - 2);
 							// Patch 1.84: look for offline players
-							Character[] chs = (Character[])GameServer.Database.SelectObjects(typeof(Character), "AccountName='" + GameServer.Database.Escape(playername) + "' AND GuildID='" + GameServer.Database.Escape(client.Player.GuildID) + "'");
+							Character[] chs = (Character[])GameServer.Database.SelectObjects(typeof(Character), "AccountName='" + GameServer.Database.Escape(playername) + "' AND GuildID='" + /*GameServer.Database.Escape(*/client.Player.GuildID/*)*/ + "'");
 							if (chs != null && chs.GetLength(0) > 0)
 							{
 								GameClient myclient = WorldMgr.GetClientByAccountName(playername, false);
@@ -506,7 +506,7 @@ namespace DOL.GS.Scripts
 										client.Player.Guild.RemovePlayer(client.Player.Name, myclient.Player);
 									else
 									{
-										ch.GuildID = "";
+										ch.GuildID = 0;
 										ch.GuildRank = 9;
 										GameServer.Database.SaveObject(ch);
 									}
@@ -830,7 +830,7 @@ namespace DOL.GS.Scripts
 								return 1;
 							}
 
-							string guildId = "";
+							uint guildId = 0;
 							ushort guildRank = 9;
 							string plyName = "";
 							GamePlayer ply = obj as GamePlayer;
@@ -925,7 +925,7 @@ namespace DOL.GS.Scripts
 								return 1;
 							}
 							
-							string guildId = "";
+							uint guildId = 0;
 							ushort guildRank = 1;
 							string plyName = "";
 							GamePlayer ply = obj as GamePlayer;
@@ -1003,8 +1003,8 @@ namespace DOL.GS.Scripts
 								if (showOffline)
 								{
 									List<Character> chars = new List<Character>();
-									chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(Character), "GuildID = '" + GameServer.Database.Escape(client.Player.GuildID) + "'"));
-									chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(CharacterArchive), "GuildID = '" + GameServer.Database.Escape(client.Player.GuildID) + "'"));
+									chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(Character), "GuildID = '" + /*GameServer.Database.Escape(*/client.Player.GuildID/*)*/ + "'"));
+									chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(CharacterArchive), "GuildID = '" + /*GameServer.Database.Escape(*/client.Player.GuildID/*)*/ + "'"));
 
 									foreach (Character ply in chars)
 									{
@@ -1279,14 +1279,15 @@ namespace DOL.GS.Scripts
 
 							if (args.Length == 4 && args[3].ToLower() == "account")
 							{
+#warning how can player name  !=  account if args[3] = account ?
 								string playername = args[3];
-								string accountname = "";
+								uint accountId = 0;
 
 								GameClient targetClient = WorldMgr.GetClientByPlayerName(args[3], false, true);
 								if (targetClient != null)
 								{
 									OnCommand(client, new string[] { "gc", "remove", args[3] });
-									accountname = targetClient.Account.Name;
+									accountId = targetClient.Account.ObjectId;
 								}
 								else
 								{
@@ -1300,15 +1301,15 @@ namespace DOL.GS.Scripts
 										return 1;
 									}
 
-									accountname = c.AccountName;
+									accountId = c.AccountID;
 								}
 								List<Character> chars = new List<Character>();
-								chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(Character), "AccountName = '" + GameServer.Database.Escape(accountname) + "'"));
-								chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(CharacterArchive), "AccountName = '" + GameServer.Database.Escape(accountname) + "'"));
+								chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(Character), "AccountID = '" + accountId + "'"));
+								chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(CharacterArchive), "AccountID = '" + accountId + "'"));
 
 								foreach (Character ply in chars)
 								{
-									ply.GuildID = "";
+									ply.GuildID = 0;
 									ply.GuildRank = 0;
 									GameServer.Database.SaveObject(ply);
 								}
@@ -1338,7 +1339,7 @@ namespace DOL.GS.Scripts
 									}
 									else
 									{
-										c.GuildID = "";
+										c.GuildID = 0;
 										c.GuildRank = 0;
 										GameServer.Database.SaveObject(c);
 									}

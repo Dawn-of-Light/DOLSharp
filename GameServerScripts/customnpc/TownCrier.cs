@@ -32,7 +32,7 @@ namespace DOL.GS.Scripts
 		public class TownCrierMessage : DataObject
 		{
 			private string m_msg;
-			private string m_id;
+			private uint m_id;
 			private static bool autoSave;
 
 			public TownCrierMessage()
@@ -47,7 +47,7 @@ namespace DOL.GS.Scripts
 			}
 
 			[PrimaryKey]
-			public string TownCrierID
+			public uint TownCrierID
 			{
 				get { return m_id; }
 				set
@@ -164,7 +164,7 @@ namespace DOL.GS.Scripts
 
 		public override void DeleteFromDatabase()
 		{
-			if (InternalID != null && GameServer.Database != null)
+			if (InternalID != /*null*/0 && GameServer.Database != null)
 			{
 				TownCrierMessage tcmsg = (TownCrierMessage) GameServer.Database.FindObjectByKey(typeof (TownCrierMessage), InternalID);
 

@@ -29,7 +29,7 @@ namespace DOL.Database
 	/// </summary>
 	public abstract class DataObject : ICloneable
 	{
-		private string objectId;
+		private uint objectId;
 
 		private bool dirty;
 
@@ -41,7 +41,7 @@ namespace DOL.Database
 		/// </summary>
 		public DataObject()
 		{
-			objectId = IdGenerator.generateId();
+			objectId = 0;
 			dirty = false;
 			valid = false;
 		}
@@ -142,7 +142,7 @@ namespace DOL.Database
 		/// Index of the object in his table
 		/// </summary>
 		[Browsable(false)]
-		public string ObjectId
+		public uint ObjectId
 		{
 			get
 			{
@@ -178,7 +178,7 @@ namespace DOL.Database
 		public object Clone()
 		{
 			DataObject obj = (DataObject)MemberwiseClone();
-			obj.ObjectId = IdGenerator.generateId();
+			obj.ObjectId = 0;
 			return obj;
 		}
 

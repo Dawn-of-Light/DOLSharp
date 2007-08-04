@@ -116,7 +116,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						Account account = client.Account;
 						//TODO new db framework
 						Character ch = new Character();
-						ch.AccountName = account.Name;
+						ch.AccountID = account.ObjectId;
 						ch.Name = charname;
 
 						if (packet.ReadByte() == 0x01)
@@ -141,7 +141,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						packet.Skip(24); //Location String
 						ch.LastName = "";
-						ch.GuildID = "";
+						ch.GuildID = 0;
 						packet.Skip(24); //Skip class name
 						packet.Skip(24); //Skip race name
 						ch.Level = packet.ReadByte(); //not safe!
@@ -200,7 +200,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							invalidChar = true;
 							if (log.IsWarnEnabled)
-								log.Warn(ch.AccountName + " tried to create invalid character:" +
+								log.Warn(account.Name + " (acc id #" + ch.AccountID + ") tried to create invalid character:" +
 								"\nchar name=" + ch.Name + ", race=" + ch.Race + ", realm=" + ch.Realm + ", class=" + ch.Class + ", region=" + ch.Region +
 								"\nstr=" + ch.Strength + ", con=" + ch.Constitution + ", dex=" + ch.Dexterity + ", qui=" + ch.Quickness + ", int=" + ch.Intelligence + ", pie=" + ch.Piety + ", emp=" + ch.Empathy + ", chr=" + ch.Charisma);
 							continue;
@@ -339,7 +339,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								default: break;
 							}
 
-							if (ch.GuildID != "")
+							if (ch.GuildID != 0)
 								ch.GuildRank = 8;
 						}
 
@@ -377,6 +377,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						//Save the character in the database
 						GameServer.Database.AddNewObject(ch);
+						log.Error("New char added " + ch.ObjectId);
 						//Fire the character creation event
 						GameEventMgr.Notify(DatabaseEvent.CharacterCreated, null, new CharacterEventArgs(ch, client));
 						//write changes

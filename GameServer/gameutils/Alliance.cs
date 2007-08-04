@@ -81,7 +81,7 @@ namespace DOL.GS
 			{
 				myguild.alliance = null;
 				Guilds.Remove(myguild);
-				myguild.theGuildDB.AllianceID = "";
+				myguild.theGuildDB.AllianceID = 0;
 				m_dballiance.DBguilds = null;
 				GameServer.Database.SaveObject(m_dballiance);
 				GameServer.Database.FillObjectRelations(m_dballiance);
@@ -97,7 +97,7 @@ namespace DOL.GS
 				foreach (Guild guild in Guilds)
 				{
 					guild.alliance = null;
-					guild.theGuildDB.AllianceID = "";
+					guild.theGuildDB.AllianceID = 0;
 					//sirru 23.12.06 save changes to db
 					guild.SaveIntoDatabase();
 				}

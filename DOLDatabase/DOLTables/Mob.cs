@@ -50,7 +50,7 @@ namespace DOL.Database
 		private int m_respawnInterval;
 		private int m_faction;
 
-		private string m_equipmentTemplateID;
+		private uint m_equipmentTemplateID;
 
 		private string m_itemsListTemplateID;
 
@@ -72,7 +72,7 @@ namespace DOL.Database
 		{
 			m_autoSave = false;
 			m_type = "DOL.GS.GameNPC";
-			m_equipmentTemplateID = "";
+			m_equipmentTemplateID = 0;
 			m_npcTemplateID = -1;
 			m_meleeDamageType = 2; // slash by default
 			m_respawnInterval = -1; // randow respawn by default
@@ -324,7 +324,7 @@ namespace DOL.Database
 		/// The Mob's Equipment Template ID
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
-		public string EquipmentTemplateID
+		public uint EquipmentTemplateID
 		{
 			get
 			{

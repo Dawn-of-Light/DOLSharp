@@ -421,7 +421,7 @@ namespace DOL.GS
 			m_dbRelic.Y = Y;
 			m_dbRelic.Z = Z;
 
-			if (InternalID == null)
+			if (InternalID == 0)
 			{
 				GameServer.Database.AddNewObject(m_dbRelic);
 				InternalID = m_dbRelic.ObjectId;

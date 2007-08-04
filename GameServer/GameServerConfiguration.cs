@@ -204,23 +204,24 @@ namespace DOL.GS
 			string db = root["Server"]["DBType"].GetString("XML");
 			switch (db.ToLower())
 			{
-				case "xml":
-					m_dbType = ConnectionType.DATABASE_XML;
-					break;
+				//case "xml":
+				//    m_dbType = ConnectionType.DATABASE_XML;
+				//    break;
 				case "mysql":
 					m_dbType = ConnectionType.DATABASE_MYSQL;
 					break;
-				case "mssql":
-					m_dbType = ConnectionType.DATABASE_MSSQL;
-					break;
-				case "odbc":
-					m_dbType = ConnectionType.DATABASE_ODBC;
-					break;
-				case "oledb":
-					m_dbType = ConnectionType.DATABASE_OLEDB;
-					break;
+				//case "mssql":
+				//    m_dbType = ConnectionType.DATABASE_MSSQL;
+				//    break;
+				//case "odbc":
+				//    m_dbType = ConnectionType.DATABASE_ODBC;
+				//    break;
+				//case "oledb":
+				//    m_dbType = ConnectionType.DATABASE_OLEDB;
+				//    break;
 				default:
-					m_dbType = ConnectionType.DATABASE_XML;
+					//m_dbType = ConnectionType.DATABASE_XML;
+					m_dbType = ConnectionType.DATABASE_MYSQL;
 					break;
 			}
 			m_dbConnectionString = root["Server"]["DBConnectionString"].GetString(m_dbConnectionString);
@@ -297,27 +298,29 @@ namespace DOL.GS
 			root["Server"]["GMActionLoggerName"].Set(m_gmActionsLoggerName);
 			root["Server"]["InvalidNamesFile"].Set(m_invalidNamesFile);
 
-			string db = "XML";
+			//string db = "XML";
+			string db = "MySQL";
 			
 			switch (m_dbType)
 			{
-			case ConnectionType.DATABASE_XML:
-				db = "XML";
-					break;
+			//case ConnectionType.DATABASE_XML:
+			//    db = "XML";
+			//        break;
 			case ConnectionType.DATABASE_MYSQL:
 				db = "MYSQL";
 					break;
-			case ConnectionType.DATABASE_MSSQL:
-				db = "MSSQL";
-					break;
-			case ConnectionType.DATABASE_ODBC:
-				db = "ODBC";
-					break;
-			case ConnectionType.DATABASE_OLEDB:
-				db = "OLEDB";
-					break;
+			//case ConnectionType.DATABASE_MSSQL:
+			//    db = "MSSQL";
+			//        break;
+			//case ConnectionType.DATABASE_ODBC:
+			//    db = "ODBC";
+			//        break;
+			//case ConnectionType.DATABASE_OLEDB:
+			//    db = "OLEDB";
+			//        break;
 				default:
-					m_dbType = ConnectionType.DATABASE_XML;
+					//m_dbType = ConnectionType.DATABASE_XML;
+					m_dbType = ConnectionType.DATABASE_MYSQL;
 					break;
 			}
 			root["Server"]["DBType"].Set(db);
@@ -360,8 +363,10 @@ namespace DOL.GS
 			m_gmActionsLoggerName = "gmactions";
 			m_invalidNamesFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "invalidnames.txt";
 
-			m_dbType = ConnectionType.DATABASE_XML;
-			m_dbConnectionString = m_rootDirectory+Path.DirectorySeparatorChar+"xml_db";
+			//m_dbType = ConnectionType.DATABASE_XML;
+			m_dbType = ConnectionType.DATABASE_MYSQL;
+			m_dbConnectionString = "Server=localhost; Database=test; User ID=root; Password=";
+			//m_dbConnectionString = m_rootDirectory+Path.DirectorySeparatorChar+"xml_db";
 			m_autoSave = true;
 			m_saveInterval = 10;
 			m_maxClientCount = 500;

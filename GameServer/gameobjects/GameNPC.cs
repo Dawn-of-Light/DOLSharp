@@ -1413,10 +1413,10 @@ namespace DOL.GS
 		/// Loads the equipment template of this npc
 		/// </summary>
 		/// <param name="equipmentTemplateID">The template id</param>
-		public virtual void LoadEquipmentTemplateFromDatabase(string equipmentTemplateID)
+		public virtual void LoadEquipmentTemplateFromDatabase(uint equipmentTemplateID)
 		{
 			EquipmentTemplateID = equipmentTemplateID;
-			if (EquipmentTemplateID != null && EquipmentTemplateID.Length > 0)
+			if (EquipmentTemplateID != 0 /*null && EquipmentTemplateID.Length > 0*/)
 			{
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				if (template.LoadFromDatabase(EquipmentTemplateID))
@@ -1535,7 +1535,7 @@ namespace DOL.GS
 		/// </summary>
 		public override void DeleteFromDatabase()
 		{
-			if (InternalID != null)
+			if (InternalID != /*null*/0)
 			{
 				Mob mob = (Mob)GameServer.Database.FindObjectByKey(typeof(Mob), InternalID);
 				if (mob != null)
@@ -1550,7 +1550,7 @@ namespace DOL.GS
 		public override void SaveIntoDatabase()
 		{
 			Mob mob = null;
-			if (InternalID != null)
+			if (InternalID != /*null*/0)
 				mob = (Mob)GameServer.Database.FindObjectByKey(typeof(Mob), InternalID);
 			if (mob == null)
 				mob = new Mob();
@@ -1589,7 +1589,7 @@ namespace DOL.GS
 			mob.PathID = PathID;
 			mob.MaxDistance = m_maxdistance;
 
-			if (InternalID == null)
+			if (InternalID == 0)
 			{
 				GameServer.Database.AddNewObject(mob);
 				InternalID = mob.ObjectId;
@@ -1739,11 +1739,11 @@ namespace DOL.GS
 		/// <summary>
 		/// Equipment templateID
 		/// </summary>
-		protected string m_equipmentTemplateID;
+		protected uint m_equipmentTemplateID;
 		/// <summary>
 		/// The equipment template id of this npc
 		/// </summary>
-		public string EquipmentTemplateID
+		public uint EquipmentTemplateID
 		{
 			get { return m_equipmentTemplateID; }
 			set { m_equipmentTemplateID = value; }

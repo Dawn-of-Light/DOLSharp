@@ -559,7 +559,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The internalID. This is the unique ID of the object in the DB!
 		/// </summary>
-		protected string m_InternalID;
+		protected uint m_InternalID;
 
 		/// <summary>
 		/// Gets or Sets the current ObjectID of the Object
@@ -580,7 +580,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or Sets the internal ID (DB ID) of the Object
 		/// </summary>
-		public string InternalID
+		public uint InternalID
 		{
 			get { return m_InternalID; }
 			set { m_InternalID = value; }

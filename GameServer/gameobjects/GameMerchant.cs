@@ -337,7 +337,7 @@ namespace DOL.GS
 		public override void SaveIntoDatabase()
 		{
 			Mob merchant = null;
-			if (InternalID != null)
+			if (InternalID != 0)
 				merchant = (Mob)GameServer.Database.FindObjectByKey(typeof(Mob), InternalID);
 			if (merchant == null)
 				merchant = new Mob();
@@ -372,7 +372,7 @@ namespace DOL.GS
 				merchant.ItemsListTemplateID = m_tradeItems.ItemsListID;
 			}
 
-			if (InternalID == null)
+			if (InternalID == 0)
 			{
 				GameServer.Database.AddNewObject(merchant);
 				InternalID = merchant.ObjectId;
@@ -388,13 +388,13 @@ namespace DOL.GS
 		/// </summary>
 		public override void DeleteFromDatabase()
 		{
-			if (InternalID != null)
+			if (InternalID != 0)
 			{
 				Mob merchant = (Mob)GameServer.Database.FindObjectByKey(typeof(Mob), InternalID);
 				if (merchant != null)
 					GameServer.Database.DeleteObject(merchant);
 			}
-			InternalID = null;
+			InternalID = 0;
 		}
 
 		#endregion

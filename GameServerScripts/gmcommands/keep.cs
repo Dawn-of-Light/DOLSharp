@@ -1836,7 +1836,7 @@ namespace DOL.GS.Scripts
 						client.Player.TempProperties.setProperty(TEMP_KEEP_LAST, keep);
 						foreach (GameKeepComponent comp in keep.KeepComponents)
 						{
-							if (comp.InternalID != null)
+							if (comp.InternalID != 0)
 								client.Out.SendMessage("CompID=" + comp.InternalID + ";KeepID = " + comp.Keep.KeepID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						client.Out.SendMessage("You have created a keep.", eChatType.CT_System, eChatLoc.CL_SystemWindow);

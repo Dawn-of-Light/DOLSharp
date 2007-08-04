@@ -126,7 +126,7 @@ namespace DOL.GS.Scripts
 
 
 			if (item == null || item.SlotPosition == (int)eInventorySlot.Ground
-				|| item.OwnerID == null || item.OwnerID != player.InternalID)
+				|| item.OwnerID == /*null*/0 || item.OwnerID != player.InternalID)
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.InvalidItem"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;

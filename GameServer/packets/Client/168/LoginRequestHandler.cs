@@ -179,13 +179,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 					else
 					{
-						playerAccount = (Account)GameServer.Database.FindObjectByKey(typeof(Account), userName);
+						//playerAccount = (Account)GameServer.Database.FindObjectByKey(typeof(Account), userName);
+						playerAccount = (Account)GameServer.Database.SelectObject(typeof(Account), "Name = '" + GameServer.Database.Escape(userName) + "'");
 
 						//if we cant find the account, lets check the archive
 						if (playerAccount == null)
 						{
 							log.Debug("Cannot find account in normal table, trying archive table");
-							playerAccount = (AccountArchive)GameServer.Database.FindObjectByKey(typeof(AccountArchive), userName);
+							//playerAccount = (AccountArchive)GameServer.Database.FindObjectByKey(typeof(AccountArchive), userName);
+							playerAccount = (AccountArchive)GameServer.Database.SelectObject(typeof(AccountArchive), "Name = '" + GameServer.Database.Escape(userName) + "'");
 							//if we found the account in the archive, reactivate it
 							if (playerAccount != null)
 							{
@@ -193,10 +195,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 								GameServer.Database.MoveObject(typeof(Account), typeof(AccountArchive), "WHERE `Name` = '" + GameServer.Database.Escape(playerAccount.Name) + "'");
 
 								log.Debug("Reactivating characters for " + playerAccount.Name + "...");
-								GameServer.Database.MoveObject(typeof(Character), typeof(CharacterArchive), "WHERE `AccountName` = '" + GameServer.Database.Escape(playerAccount.Name) + "'");
+								GameServer.Database.MoveObject(typeof(Character), typeof(CharacterArchive), "WHERE `AccountID` = '" + playerAccount.ObjectId + "'");
 
 								log.Debug("Reactivating inventory for " + playerAccount.Name + "...");
-								Character[] chars = (Character[])GameServer.Database.SelectObjects(typeof(Character), "`AccountName` = '" + GameServer.Database.Escape(playerAccount.Name) + "'");
+								Character[] chars = (Character[])GameServer.Database.SelectObjects(typeof(Character), "`AccountID` = '" + playerAccount.ObjectId + "'");
 								foreach (Character c in chars)
 								{
 									GameServer.Database.MoveObject(typeof(InventoryItem), typeof(InventoryItemArchive), "WHERE `OwnerID` = '" + c.ObjectId + "'");

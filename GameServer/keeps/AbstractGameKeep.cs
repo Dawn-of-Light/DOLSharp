@@ -383,11 +383,11 @@ namespace DOL.GS.Keeps
 			get	{ return (eRealm)DBKeep.OriginalRealm; }
 		}
 
-		private string m_InternalID;
+		private uint m_InternalID;
 		/// <summary>
 		/// The Keep Internal ID
 		/// </summary>
-		public string InternalID
+		public uint InternalID
 		{
 			get { return m_InternalID; }
 			set { m_InternalID = value; }
@@ -538,7 +538,7 @@ namespace DOL.GS.Keeps
 				m_dbkeep.ClaimedGuildName = m_guild.Name;
 			else
 				m_dbkeep.ClaimedGuildName = "";
-			if(InternalID == null)
+			if(InternalID == 0)
 			{
 				GameServer.Database.AddNewObject(m_dbkeep);
 				InternalID = m_dbkeep.ObjectId;

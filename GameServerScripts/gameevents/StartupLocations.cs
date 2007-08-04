@@ -123,7 +123,7 @@ namespace DOL.GS.GameEvents
 
 				if (loc == null)
 				{
-					log.Warn("startup location not found: account=" + ch.AccountName + "; char name=" + ch.Name + "; region=" + ch.Region + "; realm=" + ch.Realm + "; class=" + ch.Class + " (" + (eCharacterClass) ch.Class + "); race=" + ch.Race + " (" + (eRace)ch.Race + ")");
+					log.Warn("startup location not found: account=" + ch.AccountID + "; char name=" + ch.Name + "; region=" + ch.Region + "; realm=" + ch.Realm + "; class=" + ch.Class + " (" + (eCharacterClass) ch.Class + "); race=" + ch.Race + " (" + (eRace)ch.Race + ")");
 				}
 				else
 				{
@@ -139,7 +139,7 @@ namespace DOL.GS.GameEvents
 			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
-					log.Error("StartupLocations script: error changing location. account=" + ch.AccountName + "; char name=" + ch.Name + "; region=" + ch.Region + "; realm=" + ch.Realm + "; class=" + ch.Class + " (" + (eCharacterClass) ch.Class + "); race=" + ch.Race + " (" + (eRace)ch.Race + ")", e);
+					log.Error("StartupLocations script: error changing location. account=" + ch.AccountID + "; char name=" + ch.Name + "; region=" + ch.Region + "; realm=" + ch.Realm + "; class=" + ch.Class + " (" + (eCharacterClass) ch.Class + "); race=" + ch.Race + " (" + (eRace)ch.Race + ")", e);
 			}
 		}
 

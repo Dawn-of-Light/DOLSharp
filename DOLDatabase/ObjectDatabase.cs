@@ -53,7 +53,6 @@ namespace DOL.Database
 		{
 			tableDatasets = new Hashtable();
 			connection = Connection;
-
 		}
 
 		public string[] GetTableNameList()
@@ -63,7 +62,7 @@ namespace DOL.Database
 			int index = 0;
 			while (iter.MoveNext())
 			{
-				ar[index] = (string) iter.Key;
+				ar[index] = (string)iter.Key;
 				++index;
 			}
 
@@ -81,7 +80,8 @@ namespace DOL.Database
 			{
 				if (log.IsInfoEnabled)
 					log.Info("Loading table " + i.Key);
-				connection.LoadDataSet((string) i.Key, GetDataSet((string) i.Key));
+#warning TODO this has no effect with mysql database
+				connection.LoadDataSet((string)i.Key, GetDataSet((string)i.Key));
 			}
 
 		}
@@ -92,8 +92,9 @@ namespace DOL.Database
 
 			while (i.MoveNext())
 			{
-				connection.LoadDataSet((string) i.Key, GetDataSet((string) i.Key));
-				ReloadCache((string) i.Key);
+#warning TODO this has no effect with mysql database
+				connection.LoadDataSet((string)i.Key, GetDataSet((string)i.Key));
+				ReloadCache((string)i.Key);
 			}
 		}
 
@@ -106,14 +107,15 @@ namespace DOL.Database
 					log.Info("Saving table " + i.Key);
 				try
 				{
-					connection.SaveDataSet((string) i.Key, GetDataSet((string) i.Key));
-					if(log.IsInfoEnabled)
+#warning TODO this has no effect with mysql database
+					connection.SaveDataSet((string)i.Key, GetDataSet((string)i.Key));
+					if (log.IsInfoEnabled)
 						log.Info("Table " + i.Key + " saved");
 				}
 				catch (Exception e)
 				{
-					if(log.IsErrorEnabled)
-						log.Error("Error saving table " + i.Key,e);
+					if (log.IsErrorEnabled)
+						log.Error("Error saving table " + i.Key, e);
 				}
 			}
 		}
@@ -123,17 +125,18 @@ namespace DOL.Database
 			ThreadPriority oldprio = Thread.CurrentThread.Priority;
 			Thread.CurrentThread.Priority = ThreadPriority.Lowest;
 			string tableName = DataObject.GetTableName(objectType);
-			if(log.IsInfoEnabled)
+			if (log.IsInfoEnabled)
 				log.Info("Saving single table " + tableName);
 			try
 			{
+#warning TODO this has no effect with mysql database
 				connection.SaveDataSet(tableName, GetDataSet(tableName));
-				if(log.IsInfoEnabled)
+				if (log.IsInfoEnabled)
 					log.Info("Single Table " + tableName + " saved");
 			}
 			catch (Exception e)
 			{
-				if(log.IsErrorEnabled)
+				if (log.IsErrorEnabled)
 					log.Error("Error saving table " + tableName, e);
 			}
 			finally
@@ -145,6 +148,7 @@ namespace DOL.Database
 		public void ReloadDatabaseTable(Type objectType)
 		{
 			string tableName = DataObject.GetTableName(objectType);
+#warning TODO this has no effect with mysql database
 			LoadDatabaseTable(objectType);
 			ReloadCache(tableName);
 		}
@@ -152,6 +156,7 @@ namespace DOL.Database
 		public void LoadDatabaseTable(Type objectType)
 		{
 			string tableName = DataObject.GetTableName(objectType);
+#warning TODO this has no effect with mysql database
 			connection.LoadDataSet(tableName, GetDataSet(tableName));
 		}
 
@@ -163,134 +168,35 @@ namespace DOL.Database
 		public int GetObjectCount(Type objectType, string where)
 		{
 			string tableName = DataObject.GetTableName(objectType);
-			if (connection.IsSQLConnection)
-			{
-				string query = "SELECT COUNT(*) FROM " + tableName;
-				if (where != "")
-					query += " WHERE " + where;
-				object count = connection.ExecuteScalar(query);
-				if (count is Int64)
-					return (int)((Int64)count);
-				return (int)count;
-			}
-			return 0;
+
+			string query = "SELECT COUNT(*) FROM " + tableName;
+			if (where != "")
+				query += " WHERE " + where;
+			object count = connection.ExecuteScalar(query);
+			if (count is Int64)
+				return (int)((Int64)count);
+			return (int)count;
 		}
 
-		private void SQLAddNewObject(DataObject dataObject)
-		{
-			try
-			{
-				string tableName = dataObject.TableName;
-
-				if (dataObject.ObjectId == null)
-				{
-					dataObject.ObjectId = IdGenerator.generateId();
-				}
-				StringBuilder columns = new StringBuilder();
-				StringBuilder values = new StringBuilder();
-
-				MemberInfo[] objMembers = dataObject.GetType().GetMembers();
-				bool hasRelations = false;
-				string dateFormat = connection.GetDBDateFormat();
-
-				columns.Append("`" + tableName + "_ID`");
-				values.Append("'" + Escape(dataObject.ObjectId) + "'");
-
-				for (int i = 0; i < objMembers.Length; i++)
-				{
-					if (!hasRelations)
-					{
-						object[] relAttrib = GetRelationAttributes(objMembers[i]);
-						hasRelations = relAttrib.Length > 0;
-					}
-					object[] keyAttrib = objMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.PrimaryKey), true);
-					object[] attrib = objMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.DataElement), true);
-					if (attrib.Length > 0 || keyAttrib.Length > 0)
-					{
-						object val = null;
-						if (objMembers[i] is PropertyInfo)
-						{
-							val = ((PropertyInfo) objMembers[i]).GetValue(dataObject, null);
-						}
-						else if (objMembers[i] is FieldInfo)
-						{
-							val = ((FieldInfo) objMembers[i]).GetValue(dataObject);
-						}
-
-						columns.Append(", ");
-						values.Append(", ");
-						columns.Append("`" + objMembers[i].Name + "`");
-						if (val is bool)
-						{
-							val = ((bool) val) ? (byte) 1 : (byte) 0;
-						}
-						else if (val is DateTime)
-						{
-							val = ((DateTime) val).ToString(dateFormat);
-						}
-						else if (val is float)
-						{
-							val = ((float)val).ToString(nfi);
-						}
-						else if (val is double)
-						{
-							val = ((double)val).ToString(nfi);
-						}
-						else if (val is string)
-						{
-							val = Escape(val.ToString());
-						}
-						values.Append('\'');
-						values.Append(val);
-						values.Append('\'');
-					}
-				}
-
-				string sql = "INSERT INTO `" + tableName + "` (" + columns.ToString() + ") VALUES (" + values.ToString() + ")";
-				if(log.IsDebugEnabled)
-					log.Debug(sql);
-				int res = connection.ExecuteNonQuery(sql);
-				if (res == 0)
-				{
-					if (log.IsErrorEnabled)
-						log.Error("Error adding object into " + dataObject.TableName + " ID=" + dataObject.ObjectId + "Query = " + sql);
-					return;
-				}
-
-				if (hasRelations)
-				{
-					SaveObjectRelations(dataObject);
-				}
-
-				dataObject.Dirty = false;
-				PutObjectInCache(tableName, dataObject);
-				dataObject.IsValid = true;
-
-			}
-			catch (Exception e)
-			{
-				if(log.IsErrorEnabled)
-					log.Error("Error while adding dataobject " + dataObject.TableName + " " + dataObject.ObjectId,e);
-			}
-		}
-
+#warning TODO do we need this, I don't like it
 		public void ArchiveTables()
 		{
-			if (!connection.IsSQLConnection)
-				return;
+			//if (!connection.IsSQLConnection)
+			//    return;
 			log.Info("Archiving Tables...");
 
 			//we do it in this order, because if we move account first, the rest of the queries fail
-			MoveObject(typeof(InventoryItemArchive), typeof(InventoryItem), "INNER JOIN `DOLCharacters` dc ON i.OwnerId = dc.DOLCharacters_ID INNER JOIN `Account` ac ON dc.AccountName = ac.Name WHERE DATE_SUB(CURDATE(), INTERVAL 30 DAY) > ac.LastLogin");
-			MoveObject(typeof(CharacterArchive), typeof(Character), "INNER JOIN `Account` ac ON d.AccountName = ac.Name WHERE DATE_SUB(CURDATE(), INTERVAL 30 DAY) > ac.LastLogin");
+			MoveObject(typeof(InventoryItemArchive), typeof(InventoryItem), "INNER JOIN `DOLCharacters` dc ON i.OwnerId = dc.DOLCharacters_ID INNER JOIN `Account` ac ON dc.AccountID = ac.Account_ID WHERE DATE_SUB(CURDATE(), INTERVAL 30 DAY) > ac.LastLogin");
+			MoveObject(typeof(CharacterArchive), typeof(Character), "INNER JOIN `Account` ac ON d.AccountID = ac.Account_ID WHERE DATE_SUB(CURDATE(), INTERVAL 30 DAY) > ac.LastLogin");
 			MoveObject(typeof(AccountArchive), typeof(Account), "WHERE DATE_SUB(CURDATE(), INTERVAL 30 DAY) > `LastLogin`");
 			log.Info("Archiving Complete!");
 		}
 
+#warning TODO do we need this, I don't like it
 		public void MoveObject(Type targetType, Type sourceType, string query)
 		{
-			if (!connection.IsSQLConnection)
-				return;
+			//if (!connection.IsSQLConnection)
+			//    return;
 
 			string targetTableName = DataObject.GetTableName(targetType);
 			string sourceTableName = DataObject.GetTableName(sourceType);
@@ -349,56 +255,117 @@ namespace DOL.Database
 		/// <param name="dataObject"></param>
 		public void AddNewObject(DataObject dataObject)
 		{
-			if (connection.IsSQLConnection)
-			{
-				SQLAddNewObject(dataObject);
-				return;
-			}
-
-			DataTable table = null;
-			DataRow row = null;
-
 			try
 			{
 				string tableName = dataObject.TableName;
 
-				DataSet dataset = GetDataSet(tableName);
-				table = dataset.Tables[tableName];
+#warning TODO
+				//if (dataObject.ObjectId == null)
+				//{
+				//    dataObject.ObjectId = IdGenerator.generateId();
+				//}
+				StringBuilder columns = new StringBuilder();
+				StringBuilder values = new StringBuilder();
 
-				lock (dataset) // lock dataset before making any changes to it
+				MemberInfo[] objMembers = dataObject.GetType().GetMembers();
+				bool hasRelations = false;
+				string dateFormat = connection.GetDBDateFormat();
+
+				columns.Append("`" + tableName + "_ID`");
+				//values.Append("'" + /*Escape(dataObject.ObjectId) +*/ "'");
+				values.Append("NULL");
+
+				for (int i = 0; i < objMembers.Length; i++)
 				{
-					row = table.NewRow();
-					FillRowWithObject(dataObject, row);
-					table.Rows.Add(row);
+					if (!hasRelations)
+					{
+						object[] relAttrib = GetRelationAttributes(objMembers[i]);
+						hasRelations = relAttrib.Length > 0;
+					}
+					object[] keyAttrib = objMembers[i].GetCustomAttributes(typeof(DOL.Database.Attributes.PrimaryKey), true);
+					object[] attrib = objMembers[i].GetCustomAttributes(typeof(DOL.Database.Attributes.DataElement), true);
+					if (attrib.Length > 0 || keyAttrib.Length > 0)
+					{
+						object val = null;
+						if (objMembers[i] is PropertyInfo)
+						{
+							val = ((PropertyInfo)objMembers[i]).GetValue(dataObject, null);
+						}
+						else if (objMembers[i] is FieldInfo)
+						{
+							val = ((FieldInfo)objMembers[i]).GetValue(dataObject);
+						}
+
+						columns.Append(", ");
+						values.Append(", ");
+						columns.Append("`" + objMembers[i].Name + "`");
+						if (val is bool)
+						{
+							val = ((bool)val) ? (byte)1 : (byte)0;
+						}
+						else if (val is DateTime)
+						{
+							val = ((DateTime)val).ToString(dateFormat);
+						}
+						else if (val is float)
+						{
+							val = ((float)val).ToString(nfi);
+						}
+						else if (val is double)
+						{
+							val = ((double)val).ToString(nfi);
+						}
+						else if (val is string)
+						{
+							val = Escape(val.ToString());
+						}
+						values.Append('\'');
+						values.Append(val);
+						values.Append('\'');
+					}
 				}
 
-				if (dataObject.ObjectId == null)
-					dataObject.ObjectId = IdGenerator.generateId();
-				dataObject.ObjectId = row[tableName + "_ID"].ToString();
+				string sql = "INSERT INTO `" + tableName + "` (" + columns.ToString() + ") VALUES (" + values.ToString() + ")";
+				if (log.IsDebugEnabled)
+					log.Debug(sql);
 
-				if (dataObject.AutoSave == true)
-					WriteDatabaseTable(dataObject.GetType());
+				uint insertedId;
+
+				int res = connection.ExecuteNonQuery(sql, out insertedId);
+				if (res == 0)
+				{
+					if (log.IsErrorEnabled)
+						log.Error("Error adding object into " + dataObject.TableName + " ID=" + dataObject.ObjectId + "Query = " + sql);
+					return;
+				}
+
+				log.Error("SELECT LAST_INSERT_ID(); return " + insertedId);
+				dataObject.ObjectId = insertedId;
+				log.Error("dataObject.ObjectId set to  " + dataObject.ObjectId);
+
+				if (hasRelations)
+				{
+					SaveObjectRelations(dataObject);
+				}
 
 				dataObject.Dirty = false;
 				PutObjectInCache(tableName, dataObject);
 				dataObject.IsValid = true;
-				return;
-			}
 
+			}
 			catch (Exception e)
 			{
-				if(log.IsErrorEnabled)
-					log.Error("AddNewObject",e);
-
-				if (row != null && table != null)
-				{
-					table.Rows.Remove(row);
-				}
-				throw new DatabaseException("Adding Databaseobject failed !", e);
+				if (log.IsErrorEnabled)
+					log.Error("Error while adding dataobject " + dataObject.TableName + " " + dataObject.ObjectId, e);
 			}
 		}
 
-		private void SQLSaveObject(DataObject dataObject)
+		/// <summary>
+		/// saves an object to db in memory and when autosave is activated 
+		/// it saves immediately persistent to database
+		/// </summary>
+		/// <param name="dataObject"></param>
+		public void SaveObject(DataObject dataObject)
 		{
 			try
 			{
@@ -425,11 +392,11 @@ namespace DOL.Database
 						object val = null;
 						if (bind.Member is PropertyInfo)
 						{
-							val = ((PropertyInfo) bind.Member).GetValue(dataObject, null);
+							val = ((PropertyInfo)bind.Member).GetValue(dataObject, null);
 						}
 						else if (bind.Member is FieldInfo)
 						{
-							val = ((FieldInfo) bind.Member).GetValue(dataObject);
+							val = ((FieldInfo)bind.Member).GetValue(dataObject);
 						}
 						else
 						{
@@ -472,14 +439,15 @@ namespace DOL.Database
 					}
 				}
 
-				sb.Append(" WHERE `" + tableName + "_ID` = '" + Escape(dataObject.ObjectId) + "'");
+				sb.Append(" WHERE `" + tableName + "_ID` = '" + /*Escape(*/dataObject.ObjectId/*)*/ + "'");
 				string sql = sb.ToString();
-				if(log.IsDebugEnabled)
+				if (log.IsDebugEnabled)
 					log.Debug(sql);
+
 				int res = connection.ExecuteNonQuery(sql);
 				if (res == 0)
 				{
-					if(log.IsErrorEnabled)
+					if (log.IsErrorEnabled)
 						log.Error("Error modifying object " + dataObject.TableName + " ID=" + dataObject.ObjectId + " --- keyvalue changed?");
 					return;
 				}
@@ -495,51 +463,8 @@ namespace DOL.Database
 			}
 			catch (Exception e)
 			{
-				if(log.IsErrorEnabled)
+				if (log.IsErrorEnabled)
 					log.Error("Error while adding dataobject " + dataObject.TableName + " " + dataObject.ObjectId, e);
-			}
-		}
-
-		/// <summary>
-		/// saves an object to db in memory and when autosave is activated 
-		/// it saves immediately persistent to database
-		/// </summary>
-		/// <param name="dataObject"></param>
-		public void SaveObject(DataObject dataObject)
-		{
-			if (connection.IsSQLConnection)
-			{
-				SQLSaveObject(dataObject);
-				return;
-			}
-			try
-			{
-				if (dataObject.Dirty == false)
-					return;
-
-				DataSet dataset = GetDataSet(dataObject.TableName);
-
-				lock (dataset) // lock the dataset before changing any values!
-				{
-					DataRow row = FindRowByKey(dataObject);
-					if (row == null)
-					{
-						throw new DatabaseException("Saving Databaseobject failed (Keyvalue Changed ?)!");
-					}
-					FillRowWithObject(dataObject, row);
-				}
-
-				if (dataObject.AutoSave == true)
-					WriteDatabaseTable(dataObject.GetType());
-
-				dataObject.Dirty = false;
-				dataObject.IsValid = true;
-
-				return;
-			}
-			catch (Exception e)
-			{
-				throw new DatabaseException("Saving Database object failed!", e);
 			}
 		}
 
@@ -575,55 +500,28 @@ namespace DOL.Database
 		/// <param name="dataObject"></param>
 		public void DeleteObject(DataObject dataObject)
 		{
-			try
+			string sql = "DELETE FROM `" + dataObject.TableName + "` WHERE `" + dataObject.TableName + "_ID` = '" + /*Escape(*/dataObject.ObjectId/*)*/ + "'";
+			if (log.IsDebugEnabled)
+				log.Debug(sql);
+			int res = connection.ExecuteNonQuery(sql);
+			if (res == 0)
 			{
-				if (connection.IsSQLConnection)
-				{
-					string sql = "DELETE FROM `" + dataObject.TableName + "` WHERE `" + dataObject.TableName + "_ID` = '" + Escape(dataObject.ObjectId) + "'";
-					if(log.IsDebugEnabled)
-						log.Debug(sql);
-					int res = connection.ExecuteNonQuery(sql);
-					if (res == 0)
-					{
-						if(log.IsErrorEnabled)
-							log.Error("Deleting " + dataObject.TableName + " object failed! ID=" + dataObject.ObjectId);
-					}
-				}
-				else
-				{
-					DataSet dataset = GetDataSet(dataObject.TableName);
-					if (dataset == null)
-					{
-						throw new DatabaseException("Deleting Databaseobject failed, no dataset!");
-					}
-					lock (dataset) // lock dataset before making changes to it
-					{
-						DataRow row = FindRowByKey(dataObject);
-						if (row == null)
-						{
-							throw new DatabaseException("Deleting Databaseobject failed !");
-						}
-						row.Delete();
-					}
-					if (dataObject.AutoSave == true)
-						WriteDatabaseTable(dataObject.GetType());
-				}
-
-				dataObject.IsValid = false;
-				DeleteObjectInCache(dataObject.TableName, dataObject);
-				DeleteObjectInPreCache(dataObject.TableName, dataObject);
-				DeleteObjectRelations(dataObject);
-			}
-			catch (Exception e)
-			{
-				throw new DatabaseException("Deleting Databaseobject failed !", e);
+				if (log.IsErrorEnabled)
+					log.Error("Deleting " + dataObject.TableName + " object failed! ID=" + dataObject.ObjectId);
 			}
 		}
 
-		private DataObject SQLFindObjectByKey(Type objectType, object key)
+		public DataObject FindObjectByKey(Type objectType, object key)
 		{
+			if (Activator.CreateInstance(objectType) is ItemTemplate)
+			{
+				//return FindObjectByIndex(objectType, key);
+				return SelectObject(objectType, "Id_Nb = '" + key.ToString() + "'");
+			}
+
+
 			MemberInfo[] members = objectType.GetMembers();
-			DataObject ret = (DataObject) Activator.CreateInstance(objectType);
+			DataObject ret = (DataObject)Activator.CreateInstance(objectType);
 			string tableName = ret.TableName;
 			DataTableHandler dth = tableDatasets[tableName] as DataTableHandler;
 			string whereClause = null;
@@ -637,10 +535,10 @@ namespace DOL.Database
 
 			// Escape PK value
 			key = Escape(key.ToString());
-			
+
 			for (int i = 0; i < members.Length; i++)
 			{
-				object[] keyAttrib = members[i].GetCustomAttributes(typeof (DOL.Database.Attributes.PrimaryKey), true);
+				object[] keyAttrib = members[i].GetCustomAttributes(typeof(DOL.Database.Attributes.PrimaryKey), true);
 				if (keyAttrib.Length > 0)
 				{
 					whereClause = "`" + members[i].Name + "` = '" + key.ToString() + "'";
@@ -651,7 +549,7 @@ namespace DOL.Database
 			{
 				whereClause = "`" + ret.TableName + "_ID` = '" + key.ToString() + "'";
 			}
-			DataObject[] objs = SQLSelectObjects(objectType, whereClause);
+			DataObject[] objs = SelectObjects(objectType, whereClause);
 			if (objs.Length > 0)
 			{
 				dth.SetPreCachedObject(key, objs[0]);
@@ -661,28 +559,7 @@ namespace DOL.Database
 				return null;
 		}
 
-		public DataObject FindObjectByKey(Type objectType, object key)
-		{
-			if (connection.IsSQLConnection)
-			{
-				return SQLFindObjectByKey(objectType, key);
-			}
-			DataObject ret = (DataObject) Activator.CreateInstance(objectType);
-			String tableName = ret.TableName;
-			DataRow row;
-			DataTable table = GetDataSet(tableName).Tables[tableName];
-			row = table.Rows.Find(key);
-			if (row != null)
-			{
-				FillObjectWithRow(ref ret, row, false);
-				return ret;
-			}
-
-
-			return null;
-		}
-
-
+#warning TODO do we need it ?
 		private string ReplaceSpecialCharsInWhereClause(string whereClause)
 		{
 			return whereClause;
@@ -697,34 +574,47 @@ namespace DOL.Database
 			return whereClause;*/
 		}
 
-
 		private BindingInfo[] GetBindingInfo(Type objectType)
 		{
-			BindingInfo[] bindingInfos = (BindingInfo[]) m_bindingInfos[objectType];
+			BindingInfo[] bindingInfos = (BindingInfo[])m_bindingInfos[objectType];
 			if (bindingInfos == null)
 			{
 				ArrayList list = new ArrayList();
 				MemberInfo[] objMembers = objectType.GetMembers();
 				for (int i = 0; i < objMembers.Length; i++)
 				{
-					object[] keyAttrib = objMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.PrimaryKey), true);
-					object[] attrib = objMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.DataElement), true);
+					object[] keyAttrib = objMembers[i].GetCustomAttributes(typeof(DOL.Database.Attributes.PrimaryKey), true);
+					object[] attrib = objMembers[i].GetCustomAttributes(typeof(DOL.Database.Attributes.DataElement), true);
 					object[] relAttrib = GetRelationAttributes(objMembers[i]);
 
 					if (attrib.Length > 0 || keyAttrib.Length > 0 || relAttrib.Length > 0)
 					{
-						BindingInfo info = new BindingInfo(objMembers[i], keyAttrib.Length > 0, relAttrib.Length > 0, (attrib.Length > 0) ? (DataElement) attrib[0] : null);
+						BindingInfo info = new BindingInfo(objMembers[i], keyAttrib.Length > 0, relAttrib.Length > 0, (attrib.Length > 0) ? (DataElement)attrib[0] : null);
 						list.Add(info);
 					}
 				}
-				bindingInfos = (BindingInfo[]) list.ToArray(typeof (BindingInfo));
+				bindingInfos = (BindingInfo[])list.ToArray(typeof(BindingInfo));
 				m_bindingInfos[objectType] = bindingInfos;
 			}
 			return bindingInfos;
 		}
 
+		/// <summary>
+		/// Selects a single object, if more than
+		/// one exist, the first is returned
+		/// </summary>
+		/// <param name="objectType">the type of the object</param>
+		/// <param name="statement">the select statement</param>
+		/// <returns>the object or null if none found</returns>
+		public DataObject SelectObject(Type objectType, string statement)
+		{
+			DataObject[] objs = SelectObjects(objectType, statement);
+			if (objs.Length > 0)
+				return objs[0];
+			return null;
+		}
 
-		private DataObject[] SQLSelectObjects(Type objectType, string whereClause)
+		public DataObject[] SelectObjects(Type objectType, string whereClause)
 		{
 			string tableName = DataObject.GetTableName(objectType);
 			ArrayList dataObjects = new ArrayList(500);
@@ -761,11 +651,11 @@ namespace DOL.Database
 			// read data and fill objects
 			connection.ExecuteSelect(sql, delegate(MySqlDataReader reader)
 				{
-					object [] data = new object [reader.FieldCount];
+					object[] data = new object[reader.FieldCount];
 					while (reader.Read())
 					{
 						reader.GetValues(data);
-						string id = (string)data [0];
+						uint id = (uint)data[0];
 						DataObject cache = GetObjectInCache(tableName, id);
 
 						if (cache != null)
@@ -781,7 +671,7 @@ namespace DOL.Database
 							int field = 1; // we can use hard index access because we iterate the same order here
 							for (int i = 0; i < bindingInfo.Length; i++)
 							{
-								BindingInfo bind = bindingInfo [i];
+								BindingInfo bind = bindingInfo[i];
 								if (!hasRelations)
 								{
 									hasRelations = bind.HasRelation;
@@ -789,7 +679,7 @@ namespace DOL.Database
 
 								if (!bind.HasRelation)
 								{
-									object val = data [field++];
+									object val = data[field++];
 									if (val != null && !val.GetType().IsInstanceOfType(DBNull.Value))
 									{
 										if (bind.Member is PropertyInfo)
@@ -847,94 +737,15 @@ namespace DOL.Database
 					}
 				}
 			);
-			return (DataObject[]) dataObjects.ToArray(objectType);
+			return (DataObject[])dataObjects.ToArray(objectType);
 		}
-
-		/// <summary>
-		/// Selects a single object, if more than
-		/// one exist, the first is returned
-		/// </summary>
-		/// <param name="objectType">the type of the object</param>
-		/// <param name="statement">the select statement</param>
-		/// <returns>the object or null if none found</returns>
-		public DataObject SelectObject(Type objectType, string statement)
-		{
-			DataObject[] objs = SelectObjects(objectType, statement);
-			if (objs.Length > 0)
-				return objs[0];
-			return null;
-		}
-
-		public DataObject[] SelectObjects(Type objectType, string statement)
-		{
-			if (connection.IsSQLConnection)
-			{
-				return SQLSelectObjects(objectType, statement);
-			}
-
-			string tableName = DataObject.GetTableName(objectType);
-			if (log.IsDebugEnabled)
-				log.Debug("1. select objects " + tableName + " " + statement);
-			DataSet ds = GetDataSet(tableName);
-			if (ds != null)
-			{
-				DataTable table = ds.Tables[tableName];
-				if (log.IsDebugEnabled)
-					log.Debug("2. " + tableName + " " + statement);
-				DataRow[] rows = table.Select(statement);
-				if (log.IsDebugEnabled)
-					log.Debug("3. " + tableName + " " + statement);
-
-				int count = rows.Length;
-				DataObject[] objs = (DataObject[]) Array.CreateInstance(objectType, count);
-				for (int i = 0; i < count; i++)
-				{
-					DataObject remap = (DataObject) (Activator.CreateInstance(objectType));
-					FillObjectWithRow(ref remap, rows[i], false);
-					objs[i] = remap;
-				}
-				if (log.IsDebugEnabled)
-					log.Debug("4. select objects " + tableName + " " + statement);
-				return objs;
-			}
-			return (DataObject[]) Array.CreateInstance(objectType, 0);
-		}
-
 
 		public DataObject[] SelectAllObjects(Type objectType)
 		{
-			if (connection.IsSQLConnection)
-			{
-				return SQLSelectObjects(objectType, null);
-			}
-
-			string tableName = DataObject.GetTableName(objectType);
-			if (log.IsDebugEnabled)
-				log.Debug("1. select all " + tableName);
-			DataSet ds = GetDataSet(tableName);
-
-			if (ds != null)
-			{
-				DataTable table = ds.Tables[tableName];
-				DataRow[] rows = table.Select();
-
-				int count = rows.Length;
-				//Create an array of our destination objects
-				DataObject[] objs = (DataObject[]) Array.CreateInstance(objectType, count);
-				for (int i = 0; i < count; i++)
-				{
-					DataObject remap = (DataObject) (Activator.CreateInstance(objectType));
-					FillObjectWithRow(ref remap, rows[i], false);
-					objs[i] = remap;
-				}
-				if (log.IsDebugEnabled)
-					log.Debug("2. select all " + tableName);
-				return objs;
-			}
-
-			return (DataObject[]) Array.CreateInstance(objectType, 0);
+			return SelectObjects(objectType, null);
 		}
 
+#warning TODO find a better handling system
 		public void RegisterDataObject(Type dataObjectType)
 		{
 			bool primary = false;
@@ -944,7 +755,7 @@ namespace DOL.Database
 			string TableName = DataObject.GetTableName(dataObjectType);
 			DataSet ds = new DataSet();
 			DataTable table = new DataTable(TableName);
-			table.Columns.Add(TableName + "_ID", typeof (string));
+			table.Columns.Add(TableName + "_ID", typeof(string));
 			MemberInfo[] myMembers = dataObjectType.GetMembers();
 
 			for (int i = 0; i < myMembers.Length; i++)
@@ -952,15 +763,15 @@ namespace DOL.Database
 				//object[] myAttributes = myMembers[i].GetCustomAttributes(true);
 				//object[] myAttributes = myMembers[i].GetCustomAttributes(typeof(DOL.Database.Attributes.DataElement), true);
 
-				object[] myAttributes = myMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.PrimaryKey), true);
+				object[] myAttributes = myMembers[i].GetCustomAttributes(typeof(DOL.Database.Attributes.PrimaryKey), true);
 
 				if (myAttributes.Length > 0)
 				{
 					primary = true;
 					if (myMembers[i] is PropertyInfo)
-						table.Columns.Add(myMembers[i].Name, ((PropertyInfo) myMembers[i]).PropertyType);
+						table.Columns.Add(myMembers[i].Name, ((PropertyInfo)myMembers[i]).PropertyType);
 					else
-						table.Columns.Add(myMembers[i].Name, ((FieldInfo) myMembers[i]).FieldType);
+						table.Columns.Add(myMembers[i].Name, ((FieldInfo)myMembers[i]).FieldType);
 
 					DataColumn[] index = new DataColumn[1];
 					index[0] = table.Columns[myMembers[i].Name];
@@ -969,7 +780,7 @@ namespace DOL.Database
 					continue;
 				}
 
-				myAttributes = myMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.DataElement), true);
+				myAttributes = myMembers[i].GetCustomAttributes(typeof(DOL.Database.Attributes.DataElement), true);
 
 				if (myAttributes.Length > 0)
 				{
@@ -977,19 +788,19 @@ namespace DOL.Database
 					//{
 					if (myMembers[i] is PropertyInfo)
 					{
-						table.Columns.Add(myMembers[i].Name, ((PropertyInfo) myMembers[i]).PropertyType);
+						table.Columns.Add(myMembers[i].Name, ((PropertyInfo)myMembers[i]).PropertyType);
 					}
 					else
 					{
-						table.Columns.Add(myMembers[i].Name, ((FieldInfo) myMembers[i]).FieldType);
+						table.Columns.Add(myMembers[i].Name, ((FieldInfo)myMembers[i]).FieldType);
 					}
 
-					table.Columns[myMembers[i].Name].AllowDBNull = ((Attributes.DataElement) myAttributes[0]).AllowDbNull;
-					if (((Attributes.DataElement) myAttributes[0]).Unique)
+					table.Columns[myMembers[i].Name].AllowDBNull = ((Attributes.DataElement)myAttributes[0]).AllowDbNull;
+					if (((Attributes.DataElement)myAttributes[0]).Unique)
 					{
 						table.Constraints.Add(new UniqueConstraint("UNIQUE_" + myMembers[i].Name, table.Columns[myMembers[i].Name]));
 					}
-					if (((Attributes.DataElement) myAttributes[0]).Index)
+					if (((Attributes.DataElement)myAttributes[0]).Index)
 					{
 						table.Columns[myMembers[i].Name].ExtendedProperties.Add("INDEX", true);
 					}
@@ -1011,10 +822,10 @@ namespace DOL.Database
 				table.PrimaryKey = index;
 			}
 
-			if (connection.IsSQLConnection)
-			{
-				connection.CheckOrCreateTable(table);
-			}
+			//if (connection.IsSQLConnection)
+			//{
+			connection.CheckOrCreateTable(table);
+			//}
 
 			ds.DataSetName = TableName;
 			ds.EnforceConstraints = true;
@@ -1027,11 +838,12 @@ namespace DOL.Database
 
 			tableDatasets.Add(TableName, dth);
 
-			if (dth.UsesPreCaching && connection.IsSQLConnection)
+			if (dth.UsesPreCaching /*&& connection.IsSQLConnection*/)
 			{ // not useful for xml connection
 				if (log.IsDebugEnabled)
 					log.Debug("Precaching of " + table.TableName + "...");
-				DataObject[] objects = SQLSelectObjects(dataObjectType, null);
+
+				DataObject[] objects = SelectObjects(dataObjectType, null);
 				object key;
 				for (int i = 0; i < objects.Length; i++)
 				{
@@ -1044,11 +856,11 @@ namespace DOL.Database
 					{
 						if (primaryIndexMember is PropertyInfo)
 						{
-							key = ((PropertyInfo) primaryIndexMember).GetValue(objects[i], null);
+							key = ((PropertyInfo)primaryIndexMember).GetValue(objects[i], null);
 						}
 						else if (primaryIndexMember is FieldInfo)
 						{
-							key = ((FieldInfo) primaryIndexMember).GetValue(objects[i]);
+							key = ((FieldInfo)primaryIndexMember).GetValue(objects[i]);
 						}
 					}
 					if (key != null)
@@ -1067,10 +879,9 @@ namespace DOL.Database
 			}
 		}
 
-
 		public DataSet GetDataSet(string TableName)
 		{
-			DataTableHandler handler = (DataTableHandler) tableDatasets[TableName];
+			DataTableHandler handler = (DataTableHandler)tableDatasets[TableName];
 			return handler.DataSet;
 		}
 
@@ -1080,7 +891,7 @@ namespace DOL.Database
 
 			string tableName = DataObject.TableName;
 			Type myType = DataObject.GetType();
-			string id = row[tableName + "_ID"].ToString();
+			uint id = (uint)row[tableName + "_ID"];
 			DataObject cacheObj = GetObjectInCache(tableName, id);
 
 			if (cacheObj != null)
@@ -1106,8 +917,8 @@ namespace DOL.Database
 				}
 				else
 				{
-					object[] keyAttrib = myMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.PrimaryKey), true);
-					myAttributes = myMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.DataElement), true);
+					object[] keyAttrib = myMembers[i].GetCustomAttributes(typeof(DOL.Database.Attributes.PrimaryKey), true);
+					myAttributes = myMembers[i].GetCustomAttributes(typeof(DOL.Database.Attributes.DataElement), true);
 					if (myAttributes.Length > 0 || keyAttrib.Length > 0)
 					{
 						object val = row[myMembers[i].Name];
@@ -1115,11 +926,11 @@ namespace DOL.Database
 						{
 							if (myMembers[i] is PropertyInfo)
 							{
-								((PropertyInfo) myMembers[i]).SetValue(DataObject, val, null);
+								((PropertyInfo)myMembers[i]).SetValue(DataObject, val, null);
 							}
 							if (myMembers[i] is FieldInfo)
 							{
-								((FieldInfo) myMembers[i]).SetValue(DataObject, val);
+								((FieldInfo)myMembers[i]).SetValue(DataObject, val);
 							}
 						}
 					}
@@ -1142,17 +953,18 @@ namespace DOL.Database
 			DataObject.IsValid = true;
 		}
 
-//		private DataObject GetObjectInPreCache(string TableName, object key)
-//		{
-//			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
-//			return handler.GetPreCachedObject(key);
-//		}
-//
-//		private void PutObjectInPreCache(string TableName, object key, DataObject obj)
-//		{
-//			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
-//			handler.SetPreCachedObject(key, obj);
-//		}
+#warning TODO remove this
+		//		private DataObject GetObjectInPreCache(string TableName, object key)
+		//		{
+		//			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
+		//			return handler.GetPreCachedObject(key);
+		//		}
+		//
+		//		private void PutObjectInPreCache(string TableName, object key, DataObject obj)
+		//		{
+		//			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
+		//			handler.SetPreCachedObject(key, obj);
+		//		}
 
 		private void DeleteObjectInPreCache(string TableName, DataObject obj)
 		{
@@ -1160,23 +972,26 @@ namespace DOL.Database
 			handler.SetCacheObject(obj.ObjectId, null);
 		}
 
-		private DataObject GetObjectInCache(string TableName, string id)
+#warning TODO remove this
+		private DataObject GetObjectInCache(string TableName, uint id)
 		{
-//			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
-//			return handler.GetCacheObject(id);
+			//			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
+			//			return handler.GetCacheObject(id);
 			return null;
 		}
 
+#warning TODO remove this
 		private void PutObjectInCache(string TableName, DataObject obj)
 		{
-//			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
-//			handler.SetCacheObject(obj.ObjectId, obj);
+			//			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
+			//			handler.SetCacheObject(obj.ObjectId, obj);
 		}
 
+#warning TODO remove this
 		private void DeleteObjectInCache(string TableName, DataObject obj)
 		{
-//			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
-//			handler.SetCacheObject(obj.ObjectId, null);
+			//			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
+			//			handler.SetCacheObject(obj.ObjectId, null);
 		}
 
 		private void FillRowWithObject(DataObject DataObject, DataRow row)
@@ -1203,18 +1018,18 @@ namespace DOL.Database
 				}
 				else
 				{
-					myAttributes = myMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.DataElement), true);
-					object[] keyAttrib = myMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.PrimaryKey), true);
+					myAttributes = myMembers[i].GetCustomAttributes(typeof(DOL.Database.Attributes.DataElement), true);
+					object[] keyAttrib = myMembers[i].GetCustomAttributes(typeof(DOL.Database.Attributes.PrimaryKey), true);
 
 					if (myAttributes.Length > 0 || keyAttrib.Length > 0)
 					{
 						if (myMembers[i] is PropertyInfo)
 						{
-							val = ((PropertyInfo) myMembers[i]).GetValue(DataObject, null);
+							val = ((PropertyInfo)myMembers[i]).GetValue(DataObject, null);
 						}
 						if (myMembers[i] is FieldInfo)
 						{
-							val = ((FieldInfo) myMembers[i]).GetValue(DataObject);
+							val = ((FieldInfo)myMembers[i]).GetValue(DataObject);
 						}
 						if (val != null)
 						{
@@ -1252,9 +1067,9 @@ namespace DOL.Database
 				object val = null;
 
 				if (keymember[0] is PropertyInfo)
-					val = ((PropertyInfo) keymember[0]).GetValue(DataObject, null);
+					val = ((PropertyInfo)keymember[0]).GetValue(DataObject, null);
 				if (keymember[0] is FieldInfo)
-					val = ((FieldInfo) keymember[0]).GetValue(DataObject);
+					val = ((FieldInfo)keymember[0]).GetValue(DataObject);
 
 				if (val != null)
 					row = table.Rows.Find(val);
@@ -1292,9 +1107,9 @@ namespace DOL.Database
 						Type type;
 
 						if (myMembers[i] is PropertyInfo)
-							type = ((PropertyInfo) myMembers[i]).PropertyType;
+							type = ((PropertyInfo)myMembers[i]).PropertyType;
 						else
-							type = ((FieldInfo) myMembers[i]).FieldType;
+							type = ((FieldInfo)myMembers[i]).FieldType;
 
 						if (type.HasElementType)
 						{
@@ -1308,11 +1123,11 @@ namespace DOL.Database
 						{
 							if (myMembers[i] is PropertyInfo)
 							{
-								val = ((PropertyInfo) myMembers[i]).GetValue(DataObject, null);
+								val = ((PropertyInfo)myMembers[i]).GetValue(DataObject, null);
 							}
 							if (myMembers[i] is FieldInfo)
 							{
-								val = ((FieldInfo) myMembers[i]).GetValue(DataObject);
+								val = ((FieldInfo)myMembers[i]).GetValue(DataObject);
 							}
 							if (val is Array)
 							{
@@ -1334,9 +1149,9 @@ namespace DOL.Database
 						else
 						{
 							if (myMembers[i] is PropertyInfo)
-								val = ((PropertyInfo) myMembers[i]).GetValue(DataObject, null);
+								val = ((PropertyInfo)myMembers[i]).GetValue(DataObject, null);
 							if (myMembers[i] is FieldInfo)
-								val = ((FieldInfo) myMembers[i]).GetValue(DataObject);
+								val = ((FieldInfo)myMembers[i]).GetValue(DataObject);
 							if (val != null && val is DataObject)
 								SaveObject(val as DataObject);
 						}
@@ -1375,9 +1190,9 @@ namespace DOL.Database
 						Type type;
 
 						if (myMembers[i] is PropertyInfo)
-							type = ((PropertyInfo) myMembers[i]).PropertyType;
+							type = ((PropertyInfo)myMembers[i]).PropertyType;
 						else
-							type = ((FieldInfo) myMembers[i]).FieldType;
+							type = ((FieldInfo)myMembers[i]).FieldType;
 
 						if (type.HasElementType)
 						{
@@ -1391,11 +1206,11 @@ namespace DOL.Database
 						{
 							if (myMembers[i] is PropertyInfo)
 							{
-								val = ((PropertyInfo) myMembers[i]).GetValue(DataObject, null);
+								val = ((PropertyInfo)myMembers[i]).GetValue(DataObject, null);
 							}
 							if (myMembers[i] is FieldInfo)
 							{
-								val = ((FieldInfo) myMembers[i]).GetValue(DataObject);
+								val = ((FieldInfo)myMembers[i]).GetValue(DataObject);
 							}
 							if (val is Array)
 							{
@@ -1417,9 +1232,9 @@ namespace DOL.Database
 						else
 						{
 							if (myMembers[i] is PropertyInfo)
-								val = ((PropertyInfo) myMembers[i]).GetValue(DataObject, null);
+								val = ((PropertyInfo)myMembers[i]).GetValue(DataObject, null);
 							if (myMembers[i] is FieldInfo)
-								val = ((FieldInfo) myMembers[i]).GetValue(DataObject);
+								val = ((FieldInfo)myMembers[i]).GetValue(DataObject);
 							if (val != null && val is DataObject)
 								DeleteObject(val as DataObject);
 						}
@@ -1474,9 +1289,9 @@ namespace DOL.Database
 						Type type;
 
 						if (myMembers[i] is PropertyInfo)
-							type = ((PropertyInfo) myMembers[i]).PropertyType;
+							type = ((PropertyInfo)myMembers[i]).PropertyType;
 						else
-							type = ((FieldInfo) myMembers[i]).FieldType;
+							type = ((FieldInfo)myMembers[i]).FieldType;
 
 						if (type.HasElementType)
 						{
@@ -1494,6 +1309,10 @@ namespace DOL.Database
 						if (field != null)
 							val = field.GetValue(DataObject);
 
+						// work around
+						//if (DataObject is Account)
+						//    val = DataObject.ObjectId;
+
 						if (val != null)
 							Elements = SelectObjects(type, remote + " = '" + Escape(val.ToString()) + "'");
 
@@ -1506,21 +1325,21 @@ namespace DOL.Database
 							{
 								if (myMembers[i] is PropertyInfo)
 								{
-									((PropertyInfo) myMembers[i]).SetValue(DataObject, Elements, null);
+									((PropertyInfo)myMembers[i]).SetValue(DataObject, Elements, null);
 								}
 								if (myMembers[i] is FieldInfo)
 								{
-									FieldInfo currentField = (FieldInfo) myMembers[i];
+									FieldInfo currentField = (FieldInfo)myMembers[i];
 									ConstructorInfo constructor = (ConstructorInfo)m_constructorByFieldType[currentField.FieldType];
 									if (constructor == null)
 									{
-										constructor = currentField.FieldType.GetConstructor(new Type[] {typeof(int)});
+										constructor = currentField.FieldType.GetConstructor(new Type[] { typeof(int) });
 										m_constructorByFieldType[currentField.FieldType] = constructor;
 									}
 
-									object[] args = {Elements.Length};
+									object[] args = { Elements.Length };
 									object t = constructor.Invoke(args);
-									object[] test = (object[]) t;
+									object[] test = (object[])t;
 
 									for (int m = 0; m < Elements.Length; m++)
 										test[m] = Elements[m];
@@ -1531,9 +1350,9 @@ namespace DOL.Database
 							else
 							{
 								if (myMembers[i] is PropertyInfo)
-									((PropertyInfo) myMembers[i]).SetValue(DataObject, Elements[0], null);
+									((PropertyInfo)myMembers[i]).SetValue(DataObject, Elements[0], null);
 								if (myMembers[i] is FieldInfo)
-									((FieldInfo) myMembers[i]).SetValue(DataObject, Elements[0]);
+									((FieldInfo)myMembers[i]).SetValue(DataObject, Elements[0]);
 							}
 						}
 						//}
@@ -1589,7 +1408,7 @@ namespace DOL.Database
 			if (rel != null)
 				return rel;
 
-			rel = (Relation[])info.GetCustomAttributes(typeof (DOL.Database.Attributes.Relation), true);
+			rel = (Relation[])info.GetCustomAttributes(typeof(DOL.Database.Attributes.Relation), true);
 			m_relationAttributes[info] = rel;
 
 			return rel;

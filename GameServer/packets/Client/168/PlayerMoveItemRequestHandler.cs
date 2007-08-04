@@ -103,7 +103,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 					//If the item has been removed by the event handlers, return;
 					//item = client.Player.Inventory.GetItem((eInventorySlot)fromSlot);
-					if (item == null || item.OwnerID == null)
+					if (item == null || item.OwnerID == 0/*null*/)
 					{
 						client.Out.SendInventorySlotsUpdate(new int[] { fromSlot });
 						return 0;

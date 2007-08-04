@@ -145,12 +145,14 @@ namespace DOL.GS
 				newguild.theGuildDB = new DBGuild();
 				newguild.Name = guildName;
 				newguild.theGuildDB.GuildName = guildName;
-				newguild.GuildID = System.Guid.NewGuid().ToString(); //Assume this is unique, which I don't like, but it seems to be commonly used elsewhere in the code.
-				newguild.theGuildDB.GuildID = newguild.GuildID;
+				// we save the guild so we can have a guild id.
+				GameServer.Database.AddNewObject(newguild.theGuildDB);
+				//newguild.GuildID = System.Guid.NewGuid().ToString(); //Assume this is unique, which I don't like, but it seems to be commonly used elsewhere in the code.
+				//newguild.theGuildDB.GuildID = newguild.GuildID;
 				CreateRanks(newguild);
 				
 				AddGuild(newguild);				
-				GameServer.Database.AddNewObject(newguild.theGuildDB);
+				//GameServer.Database.AddNewObject(newguild.theGuildDB);
 				return newguild;
 			}
 			catch (Exception e)
@@ -260,8 +262,8 @@ namespace DOL.GS
 				DBGuild[] guilds = (DBGuild[])GameServer.Database.SelectObjects(typeof(DBGuild), "GuildName='" + GameServer.Database.Escape(guildName) + "'");
 				foreach (DBGuild guild in guilds)
 				{
-					foreach (Character cha in GameServer.Database.SelectObjects(typeof(Character), "GuildID = '" + GameServer.Database.Escape(guild.GuildID) + "'"))
-						cha.GuildID = "";
+					foreach (Character cha in GameServer.Database.SelectObjects(typeof(Character), "GuildID = '" + guild.ObjectId + "'"))
+						cha.GuildID = 0;
 					GameServer.Database.DeleteObject(guild);
 				}
 
@@ -270,7 +272,7 @@ namespace DOL.GS
 					foreach (GamePlayer ply in removeGuild.ListOnlineMembers())
 					{
 						ply.Guild = null;
-						ply.GuildID = "";
+						ply.GuildID = 0;
 						ply.GuildName = "";
 						ply.GuildRank = null;
 					}
@@ -305,9 +307,9 @@ namespace DOL.GS
 		/// Returns a guild according to the matching database ID.
 		/// </summary>
 		/// <returns>Guild</returns>
-		public static Guild GetGuildByGuildID(string guildid)
+		public static Guild GetGuildByGuildID(uint guildid)
 		{
-			if(guildid == null) return null;
+			if(guildid == 0) return null;
 			
 			lock (m_guildids.SyncRoot)
 			{
@@ -324,11 +326,11 @@ namespace DOL.GS
 		/// Returns a database ID for a matching guild name.
 		/// </summary>
 		/// <returns>Guild</returns>
-		public static string GuildNameToGuildID(string guildName)
+		public static uint GuildNameToGuildID(string guildName)
 		{
 			Guild g = GetGuildByName(guildName);
 			if (g == null)
-				return "";
+				return 0;
 			return g.GuildID;
 		}
 

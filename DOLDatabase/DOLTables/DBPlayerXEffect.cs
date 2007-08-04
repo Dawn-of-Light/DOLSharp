@@ -13,7 +13,7 @@ namespace DOL
 		[DataTable(TableName = "PlayerXEffect")]
 		public class PlayerXEffect : DataObject
 		{
-			private string m_charid;
+			private uint m_charid;
 			private string m_effecttype;
 			private bool m_ishandler;
 			private int m_duration;
@@ -173,7 +173,7 @@ namespace DOL
 			}
 
 			[DataElement(AllowDbNull = true, Index = true)]
-			public string ChardID
+			public uint ChardID
 			{
 				get
 				{

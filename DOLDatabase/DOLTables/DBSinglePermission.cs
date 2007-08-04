@@ -28,12 +28,12 @@ namespace DOL.Database
 	{
 		static bool		m_autoSave;
 
-		private string	m_playerID;
+		private uint	m_playerID;
 		private string	m_command;
 
 		public DBSinglePermission()
 		{
-			m_playerID = "";
+			m_playerID = 0;
 			m_command = "";
 			m_autoSave=false;
 		}
@@ -51,7 +51,7 @@ namespace DOL.Database
 		}
 
 		[DataElement(AllowDbNull = false, Index=true)]
-		public string PlayerID
+		public uint PlayerID
 		{
 			get
 			{

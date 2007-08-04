@@ -179,8 +179,8 @@ namespace DOL.GS.Quests.Midgard
 
 				//annark.AddNPCEquipment((byte)eEquipmentItems.TORSO, 798, 0, 0, 0);
 				//annark.AddNPCEquipment((byte)eEquipmentItems.RIGHT_HAND, 19, 0, 0, 0);
-
-				annark.EquipmentTemplateID = "5100090";
+# warning TODO get right number
+				//annark.EquipmentTemplateID = "5100090";
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -226,7 +226,8 @@ namespace DOL.GS.Quests.Midgard
 
 				idora.Heading = 1558;
 				idora.MaxSpeedBase = 200;
-				idora.EquipmentTemplateID = "200292";
+# warning TODO get right number
+				//idora.EquipmentTemplateID = "200292";
 
 				StandardMobBrain brain = new StandardMobBrain();
 				brain.AggroLevel = 0;

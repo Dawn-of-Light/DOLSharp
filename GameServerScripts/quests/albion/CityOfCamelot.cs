@@ -173,7 +173,8 @@ namespace DOL.GS.Quests.Albion
 				lordUrqhart.Y = 23857;
 				lordUrqhart.Z = 8751;
 				lordUrqhart.Heading = 603;
-				lordUrqhart.EquipmentTemplateID = "1707104";
+# warning TODO get right number
+				//lordUrqhart.EquipmentTemplateID = "1707104";
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database

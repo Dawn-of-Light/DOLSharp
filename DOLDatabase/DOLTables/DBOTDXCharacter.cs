@@ -31,7 +31,7 @@ namespace DOL
 		[DataTable(TableName="OTDXCharacter")]
 		public class DBOTDXCharacter : DataObject 
 		{
-			private string m_lootOTD_ID;
+			private uint m_lootOTD_ID;
 			private string m_CharacterName;
 			
 			private static bool m_autoSave;
@@ -41,7 +41,7 @@ namespace DOL
 			/// </summary>
 			public DBOTDXCharacter() 
 			{
-				m_lootOTD_ID = "";
+				m_lootOTD_ID = 0;
 				m_CharacterName = "";
 				m_autoSave = false;
 			}
@@ -82,7 +82,7 @@ namespace DOL
 			/// The object id of the DBLootOtd
 			/// </summary>
 			[DataElement(AllowDbNull=false)]
-			public string LootOTD_ID
+			public uint LootOTD_ID
 			{
 				get
 				{

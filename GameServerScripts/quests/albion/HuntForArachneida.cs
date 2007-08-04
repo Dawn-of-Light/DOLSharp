@@ -171,8 +171,8 @@ namespace DOL.GS.Quests.Albion
 				kealan.Y = 593089;
 				kealan.Z = 1797;
 				kealan.Heading = 830;
-
-				kealan.EquipmentTemplateID = "11704675";
+# warning TODO get right number
+				//kealan.EquipmentTemplateID = "11704675";
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -204,8 +204,8 @@ namespace DOL.GS.Quests.Albion
 				arachneida.Y = 609656;
 				arachneida.Z = 2456;
 				arachneida.Heading = 2080;
-
-				arachneida.EquipmentTemplateID = "2";
+# warning TODO get right number
+				//arachneida.EquipmentTemplateID = "2";
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following

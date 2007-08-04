@@ -246,7 +246,7 @@ namespace DOL.Database
 	[DataTable(TableName = "InventoryItem")]
 	public class InventoryItem : ItemTemplate
 	{
-		protected string m_ownerID;
+		protected uint m_ownerID;
 		protected int m_slot_pos;
 		protected string craftername;
 
@@ -311,7 +311,7 @@ namespace DOL.Database
 		}
 
 		[DataElement(AllowDbNull = false, Index = true)]
-		public string OwnerID
+		public uint OwnerID
 		{
 			get
 			{
@@ -377,7 +377,7 @@ namespace DOL.Database
 
 		public void CopyFrom(ItemTemplate template)
 		{
-			OwnerID = null;
+			OwnerID = 0;
 			SlotPosition = 0;
 			Bonus = template.Bonus;
 			Bonus1 = template.Bonus1;

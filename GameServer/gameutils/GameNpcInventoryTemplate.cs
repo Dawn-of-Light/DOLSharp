@@ -250,13 +250,14 @@ namespace DOL.GS
 		/// Loads the inventory template from the Database
 		/// </summary>
 		/// <returns>success</returns>
-		public override bool LoadFromDatabase(string templateID)
+		public override bool LoadFromDatabase(uint templateID)
 		{
 			lock (m_items.SyncRoot)
 			{
 				try
 				{
-					if (templateID == null)
+#warning TODO change exception
+					if (templateID == 0)
 						throw new ArgumentNullException("templateID");
 
 					if (m_npcEquipmentCache == null) {
@@ -299,16 +300,17 @@ namespace DOL.GS
 		/// Save the inventory template to Database
 		/// </summary>
 		/// <returns>success</returns>
-		public override bool SaveIntoDatabase(string templateID)
+		public override bool SaveIntoDatabase(uint templateID)
 		{
 			lock (m_items.SyncRoot)
 			{
 				try
 				{
-					if (templateID == null)
+#warning TODO chnange exception
+					if (templateID == 0)
 						throw new ArgumentNullException("templateID");
 
-					DataObject[] npcEquipment = GameServer.Database.SelectObjects(typeof(NPCEquipment), "TemplateID = '" + GameServer.Database.Escape(templateID) + "'");
+					DataObject[] npcEquipment = GameServer.Database.SelectObjects(typeof(NPCEquipment), "TemplateID = '" + /*GameServer.Database.Escape(*/templateID/*)*/ + "'");
 
 					// delete removed item templates
 					foreach (NPCEquipment npcItem in npcEquipment)

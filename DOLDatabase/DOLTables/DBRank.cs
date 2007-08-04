@@ -31,7 +31,7 @@ namespace DOL.Database
 	{
 		static bool		m_autoSave;
 
-		private string	m_guildid;
+		private uint	m_guildid;
 		private string	m_title;
 		private byte	m_ranklevel;
 				
@@ -56,7 +56,7 @@ namespace DOL.Database
 		/// </summary>
 		public DBRank()
 		{
-			m_guildid = "";
+			m_guildid = 0;
 			m_title = "";
 			m_ranklevel = 0; 
 			m_autoSave=false;
@@ -92,7 +92,7 @@ namespace DOL.Database
 		/// ID of guild
 		/// </summary>
 		[DataElement(AllowDbNull = true, Index=true)]
-		public string GuildID
+		public uint GuildID
 		{
 			get
 			{

@@ -167,7 +167,8 @@ namespace DOL.Database
 			m_autoSave = false;
 		}
 
-		[PrimaryKey]
+		//[PrimaryKey]
+		[DataElement(Unique = true)]
 		public virtual string Id_nb
 		{
 			get

@@ -35,7 +35,7 @@ namespace DOL.Database.Connection
 	/// Called after mysql query.
 	/// </summary>
 	/// <param name="reader">The reader.</param>
-	public delegate void QueryCallback (MySqlDataReader reader);
+	public delegate void QueryCallback(MySqlDataReader reader);
 
 	/// <summary>
 	/// Class for Handling the Connection to the ADO.Net Layer of the Databases.
@@ -50,48 +50,18 @@ namespace DOL.Database.Connection
 
 		private string connString;
 		private ConnectionType connType;
-	
+
 		/// <summary>
 		/// Constructor to set up a Database
 		/// </summary>
 		/// <param name="connType">Connection-Type the Database should use</param>
 		/// <param name="connString">Connection-String to indicate the Parameters of the Datasource.
-		///     XML = Directory where the XML-Files sould be stored
 		///     MYSQL = ADO.NET ConnectionString 
-		///     MSSQL = ADO.NET ConnectionString 
-		///     OLEDB = ADO.NET ConnectionString 
-		///     ODBC = ADO.NET ConnectionString 
 		/// </param>
 		public DataConnection(ConnectionType connType, string connString)
 		{
 			this.connType = connType;
 			this.connString = connString;
-
-			//if Directory has no trailing \ than append it ;-)
-			if (connType == ConnectionType.DATABASE_XML)
-			{
-				if (connString[connString.Length - 1] != Path.DirectorySeparatorChar)
-					this.connString = connString + Path.DirectorySeparatorChar;
-
-				if (!Directory.Exists(connString))
-				{
-					try
-					{
-						Directory.CreateDirectory(connString);
-					}
-					catch (Exception)
-					{
-					}
-				}
-			}
-		}
-
-		/// <summary>
-		/// Check if SQL connection
-		/// </summary>
-		public bool IsSQLConnection
-		{
-			get { return connType == ConnectionType.DATABASE_MYSQL; }
 		}
 
 		/// <summary>
@@ -109,18 +79,11 @@ namespace DOL.Database.Connection
 		/// <returns>the string with escaped character</returns>
 		public string Escape(string s)
 		{
-			if (!IsSQLConnection)
-			{
-				s = s.Replace("'", "''");
-			}
-			else
-			{
-				s = s.Replace("\\", "\\\\");
-				s = s.Replace("\"", "\\\"");
-				s = s.Replace("'", "\\'");
-				s = s.Replace("’", "\\’");
-				//s = s.Replace("’", "\\’");//have it now in the mysqlstring object
-			}
+			s = s.Replace("\\", "\\\\");
+			s = s.Replace("\"", "\\\"");
+			s = s.Replace("'", "\\'");
+			s = s.Replace("’", "\\’");
+
 			return s;
 		}
 
@@ -163,7 +126,6 @@ namespace DOL.Database.Connection
 			return conn;
 		}
 
-
 		/// <summary>
 		/// Releases the connection to connection pool.
 		/// </summary>
@@ -175,7 +137,7 @@ namespace DOL.Database.Connection
 				m_connectionPool.Enqueue(conn);
 			}
 		}
-		
+
 		/// <summary>
 		/// Execute a non query like update or delete
 		/// </summary>
@@ -183,52 +145,97 @@ namespace DOL.Database.Connection
 		/// <returns>number of rows affected</returns>
 		public int ExecuteNonQuery(string sqlcommand)
 		{
-			if (connType == ConnectionType.DATABASE_MYSQL)
+			if (log.IsDebugEnabled)
 			{
-				if (log.IsDebugEnabled)
-				{
-					log.Debug("SQL: " + sqlcommand);
-				}
-
-				int affected = 0;
-				bool repeat = false;
-				do
-				{
-					bool isNewConnection;
-					MySqlConnection conn = GetMySqlConnection(out isNewConnection);
-					MySqlCommand cmd = new MySqlCommand(sqlcommand, conn);
-
-					try
-					{
-						long start = Environment.TickCount;
-						affected = cmd.ExecuteNonQuery();
-
-						if (log.IsDebugEnabled)
-							log.Debug("SQL NonQuery exec time " + (Environment.TickCount - start) + "ms");
-						else if (Environment.TickCount - start > 500 && log.IsWarnEnabled)
-							log.Warn("SQL NonQuery took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
-
-						ReleaseConnection(conn);
-
-						repeat = false;
-					}
-					catch (Exception e)
-					{
-						conn.Close();
-
-						if (!HandleException(e) || isNewConnection)
-						{
-							throw;
-						}
-						repeat = true;
-					}
-				} while (repeat);
-				
-				return affected;
+				log.Debug("SQL: " + sqlcommand);
 			}
-			if (log.IsWarnEnabled)
-				log.Warn("SQL NonQuery's not supported for this connection type");
-			return 0;
+
+			int affected = 0;
+			bool repeat = false;
+			do
+			{
+				bool isNewConnection;
+				MySqlConnection conn = GetMySqlConnection(out isNewConnection);
+				MySqlCommand cmd = new MySqlCommand(sqlcommand, conn);
+
+				try
+				{
+					long start = Environment.TickCount;
+					affected = cmd.ExecuteNonQuery();
+
+					if (log.IsDebugEnabled)
+						log.Debug("SQL NonQuery exec time " + (Environment.TickCount - start) + "ms");
+					else if (Environment.TickCount - start > 500 && log.IsWarnEnabled)
+						log.Warn("SQL NonQuery took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
+
+					ReleaseConnection(conn);
+
+					repeat = false;
+				}
+				catch (Exception e)
+				{
+					conn.Close();
+
+					if (!HandleException(e) || isNewConnection)
+					{
+						throw;
+					}
+					repeat = true;
+				}
+			} while (repeat);
+
+			return affected;
+		}
+
+		/// <summary>
+		/// Execute a non query like update or delete
+		/// </summary>
+		/// <param name="sqlcommand"></param>
+		/// <returns>number of rows affected</returns>
+		public int ExecuteNonQuery(string sqlcommand, out uint insertId)
+		{
+			if (log.IsDebugEnabled)
+			{
+				log.Debug("SQL: " + sqlcommand);
+			}
+
+			int affected = 0;
+			bool repeat = false;
+			do
+			{
+				bool isNewConnection;
+				MySqlConnection conn = GetMySqlConnection(out isNewConnection);
+				MySqlCommand cmd = new MySqlCommand(sqlcommand, conn);
+				MySqlCommand lastId = new MySqlCommand("SELECT LAST_INSERT_ID();", conn);
+
+				try
+				{
+					long start = Environment.TickCount;
+					affected = cmd.ExecuteNonQuery();
+					insertId = (uint)(long)lastId.ExecuteScalar();
+					log.Error("INSERTED ID = " + insertId);
+					if (log.IsDebugEnabled)
+						log.Debug("SQL NonQuery exec time " + (Environment.TickCount - start) + "ms");
+					else if (Environment.TickCount - start > 500 && log.IsWarnEnabled)
+						log.Warn("SQL NonQuery took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
+
+					ReleaseConnection(conn);
+
+					repeat = false;
+				}
+				catch (Exception e)
+				{
+					conn.Close();
+					insertId = 0;
+					if (!HandleException(e) || isNewConnection)
+					{
+						throw;
+					}
+					repeat = true;
+				}
+			} while (repeat);
+
+			return affected;
 		}
 
 		/// <summary>
@@ -238,7 +245,7 @@ namespace DOL.Database.Connection
 		/// <returns><code>true</code> if operation should be repeated, <code>false</code> otherwise.</returns>
 		private static bool HandleException(Exception e)
 		{
-			bool			ret = false;
+			bool ret = false;
 			SocketException socketException = e.InnerException == null ? null : e.InnerException.InnerException as SocketException;
 			if (socketException == null)
 			{
@@ -261,10 +268,10 @@ namespace DOL.Database.Connection
 					case 10054:
 					case 10057:
 					case 10058:
-					{
-						ret = true;
-						break;
-					}
+						{
+							ret = true;
+							break;
+						}
 				}
 				log.WarnFormat("Socket exception: ({0}) {1}; repeat: {2}", socketException.ErrorCode, socketException.Message, ret);
 			}
@@ -279,58 +286,58 @@ namespace DOL.Database.Connection
 		/// <returns></returns>
 		public void ExecuteSelect(string sqlcommand, QueryCallback callback)
 		{
-			if (connType == ConnectionType.DATABASE_MYSQL)
+			if (log.IsDebugEnabled)
 			{
-				if (log.IsDebugEnabled)
+				log.Debug("SQL: " + sqlcommand);
+			}
+			bool repeat = false;
+			MySqlConnection conn = null;
+			do
+			{
+				bool isNewConnection = true;
+				try
 				{
-					log.Debug("SQL: " + sqlcommand);
+					conn = GetMySqlConnection(out isNewConnection);
+
+					long start = Environment.TickCount;
+
+					MySqlCommand cmd = new MySqlCommand(sqlcommand, conn);
+					MySqlDataReader reader = cmd.ExecuteReader( /*CommandBehavior.CloseConnection*/);
+					callback(reader);
+
+					reader.Close();
+
+					if (log.IsDebugEnabled)
+						log.Debug("SQL Select exec time " + (Environment.TickCount - start) + "ms");
+					else if (Environment.TickCount - start > 500 && log.IsWarnEnabled)
+						log.Warn("SQL Select took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
+
+					ReleaseConnection(conn);
+
+					repeat = false;
 				}
-				bool repeat = false;
-				MySqlConnection conn = null;
-				do
+				catch (Exception e)
 				{
-					bool isNewConnection = true;
-					try
+					if (conn != null)
 					{
-						conn = GetMySqlConnection(out isNewConnection);
-
-						long start = Environment.TickCount;
-
-						MySqlCommand cmd = new MySqlCommand(sqlcommand, conn);
-						MySqlDataReader reader = cmd.ExecuteReader( /*CommandBehavior.CloseConnection*/);
-						callback(reader);
-
-						reader.Close();
-
-						if (log.IsDebugEnabled)
-							log.Debug("SQL Select exec time " + (Environment.TickCount - start) + "ms");
-						else if (Environment.TickCount - start > 500 && log.IsWarnEnabled)
-							log.Warn("SQL Select took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
-
-						ReleaseConnection(conn);
-
-						repeat = false;
+						conn.Close();
 					}
-					catch (Exception e)
+					if (!HandleException(e) || isNewConnection)
 					{
-						if (conn != null)
-						{
-							conn.Close();
-						}
-						if (!HandleException(e) || isNewConnection)
+						if (!sqlcommand.Contains("DESCRIBE"))
 						{
 							if (log.IsErrorEnabled)
 								log.Error("ExecuteSelect: \"" + sqlcommand + "\"\n", e);
-							throw;
 						}
-						repeat = true;
+						//if (log.IsErrorEnabled)
+						//    log.Error("ExecuteSelect: \"" + sqlcommand + "\"\n", e);
+						throw;
 					}
-				} while (repeat);
-				
-				return;
-			}
-			if (log.IsWarnEnabled)
-				log.Warn("SQL Selects not supported for this connection type");
+					repeat = true;
+				}
+			} while (repeat);
+
+			return;
 		}
 
 		/// <summary>
@@ -338,263 +345,274 @@ namespace DOL.Database.Connection
 		/// </summary>
 		/// <param name="sqlcommand"></param>
 		/// <returns></returns>
-		public object ExecuteScalar (string sqlcommand)
+		public object ExecuteScalar(string sqlcommand)
 		{
-			if (connType == ConnectionType.DATABASE_MYSQL)
+			if (log.IsDebugEnabled)
 			{
-				if (log.IsDebugEnabled)
-				{
-					log.Debug("SQL: " + sqlcommand);
-				}
-
-				object obj = null;
-				bool repeat = false;
-				MySqlConnection conn = null;
-				do
-				{
-					bool isNewConnection = true;
-					try
-					{
-						conn = GetMySqlConnection(out isNewConnection);
-						MySqlCommand cmd = new MySqlCommand(sqlcommand, conn);
-
-						long start = Environment.TickCount;
-						obj = cmd.ExecuteScalar();
-
-						ReleaseConnection(conn);
-
-						if (log.IsDebugEnabled)
-							log.Debug("SQL Select exec time " + (Environment.TickCount - start) + "ms");
-						else if (Environment.TickCount - start > 500 && log.IsWarnEnabled)
-							log.Warn("SQL Select took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
-
-						repeat = false;
-					}
-					catch (Exception e)
-					{
-						if (conn != null)
-						{
-							conn.Close();
-						}
-						if (!HandleException(e) || isNewConnection)
-						{
-							if (log.IsErrorEnabled)
-								log.Error("ExecuteSelect: \"" + sqlcommand + "\"\n", e);
-							throw;
-						}
-						repeat = true;
-					}
-				} while (repeat);
-				return obj;
+				log.Debug("SQL: " + sqlcommand);
 			}
-			if (log.IsWarnEnabled)
-				log.Warn("SQL Scalar not supported for this connection type");
-			return null;
+
+			object obj = null;
+			bool repeat = false;
+			MySqlConnection conn = null;
+			do
+			{
+				bool isNewConnection = true;
+				try
+				{
+					conn = GetMySqlConnection(out isNewConnection);
+					MySqlCommand cmd = new MySqlCommand(sqlcommand, conn);
+
+					long start = Environment.TickCount;
+					obj = cmd.ExecuteScalar();
+
+					ReleaseConnection(conn);
+
+					if (log.IsDebugEnabled)
+						log.Debug("SQL Select exec time " + (Environment.TickCount - start) + "ms");
+					else if (Environment.TickCount - start > 500 && log.IsWarnEnabled)
+						log.Warn("SQL Select took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
+
+					repeat = false;
+				}
+				catch (Exception e)
+				{
+					if (conn != null)
+					{
+						conn.Close();
+					}
+					if (!HandleException(e) || isNewConnection)
+					{
+						if (log.IsErrorEnabled)
+							log.Error("ExecuteSelect: \"" + sqlcommand + "\"\n", e);
+						throw;
+					}
+					repeat = true;
+				}
+			} while (repeat);
+
+			return obj;
 		}
 
 		/// <summary>
 		/// Create the table in mysql
 		/// </summary>
 		/// <param name="table">the table to create</param>
+#warning This do not provide the optimized mysql field value
 		public void CheckOrCreateTable(DataTable table)
 		{
-			if (connType == ConnectionType.DATABASE_MYSQL)
+			ArrayList currentTableColumns = new ArrayList();
+			try
 			{
-				ArrayList currentTableColumns = new ArrayList();
-				try
+				ExecuteSelect("DESCRIBE `" + table.TableName + "`", delegate(MySqlDataReader reader)
 				{
-					ExecuteSelect("DESCRIBE `" + table.TableName + "`", delegate(MySqlDataReader reader)
+					while (reader.Read())
 					{
-						while (reader.Read())
-						{
-							currentTableColumns.Add(reader.GetString(0).ToLower());
-							log.Debug(reader.GetString(0).ToLower());
-						}
-						if (log.IsDebugEnabled)
-							log.Debug(currentTableColumns.Count + " in table");
-					});
-				}
-				catch (Exception e)
-				{
+						currentTableColumns.Add(reader.GetString(0).ToLower());
+						log.Debug(reader.GetString(0).ToLower());
+					}
 					if (log.IsDebugEnabled)
-                        log.Debug(e.ToString());
+						log.Debug(currentTableColumns.Count + " in table");
+				});
+			}
+			catch (Exception e)
+			{
+				//if (log.IsDebugEnabled)
+				//    log.Debug(e.ToString());
 
-                    if (log.IsWarnEnabled)
-                        log.Warn("Table " + table.TableName + " doesn't exist, creating it...");
-				}
+				if (log.IsWarnEnabled)
+					log.Warn("Table " + table.TableName + " doesn't exist, creating it...");
+			}
 
-				StringBuilder sb = new StringBuilder();
-				Hashtable primaryKeys = new Hashtable();
-				for (int i = 0; i < table.PrimaryKey.Length; i++)
+			StringBuilder sb = new StringBuilder();
+			Hashtable primaryKeys = new Hashtable();
+			for (int i = 0; i < table.PrimaryKey.Length; i++)
+			{
+				primaryKeys[table.PrimaryKey[i].ColumnName] = table.PrimaryKey[i];
+			}
+
+			ArrayList columnDefs = new ArrayList();
+			ArrayList alterAddColumnDefs = new ArrayList();
+			for (int i = 0; i < table.Columns.Count; i++)
+			{
+				Type systype = table.Columns[i].DataType;
+
+				string column = "";
+
+				column += "`" + table.Columns[i].ColumnName + "` ";
+				if (systype == typeof(System.Char))
 				{
-					primaryKeys[table.PrimaryKey[i].ColumnName] = table.PrimaryKey[i];
+					column += "SMALLINT UNSIGNED";
 				}
-
-				ArrayList columnDefs = new ArrayList();
-				ArrayList alterAddColumnDefs = new ArrayList();
-				for (int i = 0; i < table.Columns.Count; i++)
+				else if (systype == typeof(DateTime))
 				{
-					Type systype = table.Columns[i].DataType;
-
-					string column = "";
-
-					column += "`" + table.Columns[i].ColumnName + "` ";
-					if (systype == typeof(System.Char))
+					column += "DATETIME";
+				}
+				else if (systype == typeof(System.SByte))
+				{
+					column += "TINYINT";
+				}
+				else if (systype == typeof(System.Int16))
+				{
+					column += "SMALLINT";
+				}
+				else if (systype == typeof(System.Int32))
+				{
+					column += "INT";
+				}
+				else if (systype == typeof(System.Int64))
+				{
+					column += "BIGINT";
+				}
+				else if (systype == typeof(System.Byte))
+				{
+					column += "TINYINT UNSIGNED";
+				}
+				else if (systype == typeof(System.UInt16))
+				{
+					column += "SMALLINT UNSIGNED";
+				}
+				else if (systype == typeof(System.UInt32))
+				{
+					column += "INT UNSIGNED";
+				}
+				else if (systype == typeof(System.UInt64))
+				{
+					column += "BIGINT UNSIGNED";
+				}
+				else if (systype == typeof(System.Single))
+				{
+					column += "FLOAT";
+				}
+				else if (systype == typeof(System.Double))
+				{
+					column += "DOUBLE";
+				}
+				else if (systype == typeof(System.Boolean))
+				{
+					column += "TINYINT(1)";
+				}
+				//else if (systype == typeof(System.String))
+				//{
+				//    if (primaryKeys[table.Columns[i].ColumnName] != null ||
+				//        table.Columns[i].ExtendedProperties.ContainsKey("INDEX") ||
+				//        table.Columns[i].Unique)
+				//    {
+				//        column += "VARCHAR(255)";
+				//    }
+				//    else
+				//    {
+				//        column += "TEXT";
+				//    }
+				//}
+				else if (systype == typeof(System.String))
+				{
+					if (primaryKeys[table.Columns[i].ColumnName] != null)
 					{
-						column += "SMALLINT UNSIGNED";
-					}
-					else if (systype == typeof(DateTime))
-					{
-						column += "DATETIME";
-					}
-					else if (systype == typeof(System.SByte))
-					{
-						column += "TINYINT";
-					}
-					else if (systype == typeof(System.Int16))
-					{
-						column += "SMALLINT";
-					}
-					else if (systype == typeof(System.Int32))
-					{
-						column += "INT";
-					}
-					else if (systype == typeof(System.Int64))
-					{
-						column += "BIGINT";
-					}
-					else if (systype == typeof(System.Byte))
-					{
-						column += "TINYINT UNSIGNED";
-					}
-					else if (systype == typeof(System.UInt16))
-					{
-						column += "SMALLINT UNSIGNED";
-					}
-					else if (systype == typeof(System.UInt32))
-					{
-						column += "INT UNSIGNED";
-					}
-					else if (systype == typeof(System.UInt64))
-					{
-						column += "BIGINT UNSIGNED";
-					}
-					else if (systype == typeof(System.Single))
-					{
-						column += "FLOAT";
-					}
-					else if (systype == typeof(System.Double))
-					{
-						column += "DOUBLE";
-					}
-					else if (systype == typeof(System.Boolean))
-					{
-						column += "TINYINT(1)";
-					}
-					else if (systype == typeof(System.String))
-					{
-						if (primaryKeys[table.Columns[i].ColumnName] != null ||
-							table.Columns[i].ExtendedProperties.ContainsKey("INDEX") ||
-							table.Columns[i].Unique)
-						{
-							column += "VARCHAR(255)";
-						}
-						else
-						{
-							column += "TEXT";
-						}
+						//column += "VARCHAR(255)";
+						column += "INT UNSIGNED auto_increment";
 					}
 					else
 					{
-						column += "BLOB";
-					}
-					if (!table.Columns[i].AllowDBNull)
-					{
-						column += " NOT NULL";
-					}
+						if (table.Columns[i].ExtendedProperties.ContainsKey("INDEX") ||
+							table.Columns[i].Unique)
 
-					columnDefs.Add(column);
+							column += "VARCHAR(255)";
 
-					// if the column doesnt exist but the table, then alter table
-					if (currentTableColumns.Count > 0 && !currentTableColumns.Contains(table.Columns[i].ColumnName.ToLower()))
-					{
-						log.Debug("added for alteration " + table.Columns[i].ColumnName.ToLower());
-						alterAddColumnDefs.Add(column);
-					}
-				}
-
-				string columndef = string.Join(", ", (string[])columnDefs.ToArray(typeof(string)));
-
-				// create primary keys
-				if (table.PrimaryKey.Length > 0)
-				{
-					columndef += ", PRIMARY KEY (";
-					bool first = true;
-					for (int i = 0; i < table.PrimaryKey.Length; i++)
-					{
-						if (!first)
-						{
-							columndef += ", ";
-						}
 						else
-						{
-							first = false;
-						}
-						columndef += "`" + table.PrimaryKey[i].ColumnName + "`";
+							column += "TEXT";
 					}
-					columndef += ")";
 				}
-
-				// unique indexes				
-				for (int i = 0; i < table.Columns.Count; i++)
+				else
 				{
-					if (table.Columns[i].Unique && primaryKeys[table.Columns[i].ColumnName] == null)
-					{
-						columndef += ", UNIQUE INDEX (`" + table.Columns[i].ColumnName + "`)";
-					}
+					column += "BLOB";
 				}
-
-				// indexes
-				for (int i = 0; i < table.Columns.Count; i++)
+				if (!table.Columns[i].AllowDBNull)
 				{
-					if (table.Columns[i].ExtendedProperties.ContainsKey("INDEX")
-						&& primaryKeys[table.Columns[i].ColumnName] == null
-						&& !table.Columns[i].Unique)
-					{
-						columndef += ", INDEX (`" + table.Columns[i].ColumnName + "`)";
-					}
+					column += " NOT NULL";
 				}
-				sb.Append("CREATE TABLE IF NOT EXISTS `" + table.TableName + "` (" + columndef + ")");
 
+				columnDefs.Add(column);
+
+				// if the column doesnt exist but the table, then alter table
+				if (currentTableColumns.Count > 0 && !currentTableColumns.Contains(table.Columns[i].ColumnName.ToLower()))
+				{
+					log.Debug("added for alteration " + table.Columns[i].ColumnName.ToLower());
+					alterAddColumnDefs.Add(column);
+				}
+			}
+
+			string columndef = string.Join(", ", (string[])columnDefs.ToArray(typeof(string)));
+
+			// create primary keys
+			if (table.PrimaryKey.Length > 0)
+			{
+				columndef += ", PRIMARY KEY (";
+				bool first = true;
+				for (int i = 0; i < table.PrimaryKey.Length; i++)
+				{
+					if (!first)
+					{
+						columndef += ", ";
+					}
+					else
+					{
+						first = false;
+					}
+					columndef += "`" + table.PrimaryKey[i].ColumnName + "`";
+				}
+				columndef += ")";
+			}
+
+			// unique indexes				
+			for (int i = 0; i < table.Columns.Count; i++)
+			{
+				if (table.Columns[i].Unique && primaryKeys[table.Columns[i].ColumnName] == null)
+				{
+					columndef += ", UNIQUE INDEX (`" + table.Columns[i].ColumnName + "`)";
+				}
+			}
+
+			// indexes
+			for (int i = 0; i < table.Columns.Count; i++)
+			{
+				if (table.Columns[i].ExtendedProperties.ContainsKey("INDEX")
+					&& primaryKeys[table.Columns[i].ColumnName] == null
+					&& !table.Columns[i].Unique)
+				{
+					columndef += ", INDEX (`" + table.Columns[i].ColumnName + "`)";
+				}
+			}
+			sb.Append("CREATE TABLE IF NOT EXISTS `" + table.TableName + "` (" + columndef + ")");
+
+			try
+			{
+				if (log.IsDebugEnabled)
+					log.Debug(sb.ToString());
+				ExecuteNonQuery(sb.ToString());
+			}
+			catch (Exception e)
+			{
+				if (log.IsErrorEnabled)
+					log.Error("Error while creating table " + table.TableName, e);
+			}
+
+
+			// alter table if needed
+			if (alterAddColumnDefs.Count > 0)
+			{
+				columndef = string.Join(", ", (string[])alterAddColumnDefs.ToArray(typeof(string)));
+				string alterTable = "ALTER TABLE `" + table.TableName + "` ADD (" + columndef + ")";
 				try
 				{
 					if (log.IsDebugEnabled)
-						log.Debug(sb.ToString());
-					ExecuteNonQuery(sb.ToString());
+						log.Debug(alterTable);
+					ExecuteNonQuery(alterTable);
 				}
 				catch (Exception e)
 				{
 					if (log.IsErrorEnabled)
-						log.Error("Error while creating table " + table.TableName, e);
-				}
-
-
-				// alter table if needed
-				if (alterAddColumnDefs.Count > 0)
-				{
-					columndef = string.Join(", ", (string[])alterAddColumnDefs.ToArray(typeof(string)));
-					string alterTable = "ALTER TABLE `" + table.TableName + "` ADD (" + columndef + ")";
-					try
-					{
-						if (log.IsDebugEnabled)
-							log.Debug(alterTable);
-						ExecuteNonQuery(alterTable);
-					}
-					catch (Exception e)
-					{
-						if (log.IsErrorEnabled)
-							log.Error("Error while altering table table " + table.TableName, e);
-					}
+						log.Error("Error while altering table table " + table.TableName, e);
 				}
 			}
 		}
@@ -605,11 +623,6 @@ namespace DOL.Database.Connection
 		/// <returns></returns>
 		public string GetDBDateFormat()
 		{
-			switch (connType)
-			{
-				case ConnectionType.DATABASE_MYSQL:
-					return "yyyy-MM-dd HH:mm:ss";
-			}
 			return "yyyy-MM-dd HH:mm:ss";
 		}
 
@@ -619,71 +632,72 @@ namespace DOL.Database.Connection
 		/// <param name="tableName">Name of the Table to Load in the DataSet</param>
 		/// <param name="dataSet">DataSet that sould be filled</param>
 		/// <exception cref="DatabaseException"></exception>
+#warning TODO do we need this ?
 		public void LoadDataSet(string tableName, DataSet dataSet)
 		{
 			dataSet.Clear();
 			switch (connType)
 			{
-				case ConnectionType.DATABASE_XML:
-					{
-						string filename = connString + tableName + ".xml";
-						try
-						{
-							dataSet.ReadXmlSchema(connString + tableName + ".xsd");
-							dataSet.ReadXml(filename, XmlReadMode.IgnoreSchema);
-							dataSet.AcceptChanges();
-						}
-						catch (System.IO.FileNotFoundException)
-						{
-							try
-							{
-								dataSet.WriteXml(filename);
-								dataSet.WriteXmlSchema(connString + tableName + ".xsd");
-							}
-							catch (Exception ex)
-							{
-								throw new DatabaseException("Could not create XML-Databasefiles (Directory present ?)", ex);
-							}
-						}
-						catch (System.Data.ConstraintException e)
-						{
-							if (log.IsErrorEnabled)
-								log.Error("At least one item in the table \"" + tableName + "\" violated a constraint (non-null, unique or foreign-key)!", e);
-							throw e;
-						}
-						break;
-					}
-				case ConnectionType.DATABASE_MSSQL:
-					{
-						try
-						{
-							SqlConnection conn = new SqlConnection(connString);
-							SqlDataAdapter adapter = new SqlDataAdapter("SELECT * from " + tableName, conn);
+				//case ConnectionType.DATABASE_XML:
+				//    {
+				//        string filename = connString + tableName + ".xml";
+				//        try
+				//        {
+				//            dataSet.ReadXmlSchema(connString + tableName + ".xsd");
+				//            dataSet.ReadXml(filename, XmlReadMode.IgnoreSchema);
+				//            dataSet.AcceptChanges();
+				//        }
+				//        catch (System.IO.FileNotFoundException)
+				//        {
+				//            try
+				//            {
+				//                dataSet.WriteXml(filename);
+				//                dataSet.WriteXmlSchema(connString + tableName + ".xsd");
+				//            }
+				//            catch (Exception ex)
+				//            {
+				//                throw new DatabaseException("Could not create XML-Databasefiles (Directory present ?)", ex);
+				//            }
+				//        }
+				//        catch (System.Data.ConstraintException e)
+				//        {
+				//            if (log.IsErrorEnabled)
+				//                log.Error("At least one item in the table \"" + tableName + "\" violated a constraint (non-null, unique or foreign-key)!", e);
+				//            throw e;
+				//        }
+				//        break;
+				//    }
+				//case ConnectionType.DATABASE_MSSQL:
+				//    {
+				//        try
+				//        {
+				//            SqlConnection conn = new SqlConnection(connString);
+				//            SqlDataAdapter adapter = new SqlDataAdapter("SELECT * from " + tableName, conn);
 
-							adapter.Fill(dataSet.Tables[tableName]);
-						}
-						catch (Exception ex)
-						{
-							throw new DatabaseException("Could not load the Database-Table", ex);
-						}
+				//            adapter.Fill(dataSet.Tables[tableName]);
+				//        }
+				//        catch (Exception ex)
+				//        {
+				//            throw new DatabaseException("Could not load the Database-Table", ex);
+				//        }
 
-						break;
-					}
-				case ConnectionType.DATABASE_ODBC:
-					{
-						try
-						{
-							OdbcConnection conn = new OdbcConnection(connString);
-							OdbcDataAdapter adapter = new OdbcDataAdapter("SELECT * from " + tableName, conn);
+				//        break;
+				//    }
+				//case ConnectionType.DATABASE_ODBC:
+				//    {
+				//        try
+				//        {
+				//            OdbcConnection conn = new OdbcConnection(connString);
+				//            OdbcDataAdapter adapter = new OdbcDataAdapter("SELECT * from " + tableName, conn);
 
-							adapter.Fill(dataSet.Tables[tableName]);
-						}
-						catch (Exception ex)
-						{
-							throw new DatabaseException("Could not load the Database-Table", ex);
-						}
-						break;
-					}
+				//            adapter.Fill(dataSet.Tables[tableName]);
+				//        }
+				//        catch (Exception ex)
+				//        {
+				//            throw new DatabaseException("Could not load the Database-Table", ex);
+				//        }
+				//        break;
+				//    }
 				case ConnectionType.DATABASE_MYSQL:
 					{
 						return; // not needed anymore
@@ -701,21 +715,21 @@ namespace DOL.Database.Connection
 					}
 					break;*/
 					}
-				case ConnectionType.DATABASE_OLEDB:
-					{
-						try
-						{
-							OleDbConnection conn = new OleDbConnection(connString);
-							OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT * from " + tableName, conn);
+				//case ConnectionType.DATABASE_OLEDB:
+				//    {
+				//        try
+				//        {
+				//            OleDbConnection conn = new OleDbConnection(connString);
+				//            OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT * from " + tableName, conn);
 
-							adapter.Fill(dataSet.Tables[tableName]);
-						}
-						catch (Exception ex)
-						{
-							throw new DatabaseException("Could not load the Database-Table", ex);
-						}
-						break;
-					}
+				//            adapter.Fill(dataSet.Tables[tableName]);
+				//        }
+				//        catch (Exception ex)
+				//        {
+				//            throw new DatabaseException("Could not load the Database-Table", ex);
+				//        }
+				//        break;
+				//    }
 			}
 		}
 
@@ -725,6 +739,7 @@ namespace DOL.Database.Connection
 		/// <param name="tableName">Name of the Table to update</param>
 		/// <param name="dataSet">DataSet set contains the Changes that sould be written</param>
 		/// <exception cref="DatabaseException"></exception>
+#warning TODO do we need this ?
 		public void SaveDataSet(string tableName, DataSet dataSet)
 		{
 			if (dataSet.HasChanges() == false)
@@ -732,81 +747,81 @@ namespace DOL.Database.Connection
 
 			switch (connType)
 			{
-				case ConnectionType.DATABASE_XML:
-					{
-						try
-						{
-							dataSet.WriteXml(connString + tableName + ".xml");
-							dataSet.AcceptChanges();
-							dataSet.WriteXmlSchema(connString + tableName + ".xsd");
-						}
-						catch (Exception e)
-						{
-							throw new DatabaseException("Could not save Databases in XML-Files!", e);
-						}
+				//case ConnectionType.DATABASE_XML:
+				//    {
+				//        try
+				//        {
+				//            dataSet.WriteXml(connString + tableName + ".xml");
+				//            dataSet.AcceptChanges();
+				//            dataSet.WriteXmlSchema(connString + tableName + ".xsd");
+				//        }
+				//        catch (Exception e)
+				//        {
+				//            throw new DatabaseException("Could not save Databases in XML-Files!", e);
+				//        }
 
-						break;
-					}
-				case ConnectionType.DATABASE_MSSQL:
-					{
-						try
-						{
-							SqlConnection conn = new SqlConnection(connString);
-							SqlDataAdapter adapter = new SqlDataAdapter("SELECT * from " + tableName, conn);
-							SqlCommandBuilder builder = new SqlCommandBuilder(adapter);
+				//        break;
+				//    }
+				//case ConnectionType.DATABASE_MSSQL:
+				//    {
+				//        try
+				//        {
+				//            SqlConnection conn = new SqlConnection(connString);
+				//            SqlDataAdapter adapter = new SqlDataAdapter("SELECT * from " + tableName, conn);
+				//            SqlCommandBuilder builder = new SqlCommandBuilder(adapter);
 
-							adapter.DeleteCommand = builder.GetDeleteCommand();
-							adapter.UpdateCommand = builder.GetUpdateCommand();
-							adapter.InsertCommand = builder.GetInsertCommand();
+				//            adapter.DeleteCommand = builder.GetDeleteCommand();
+				//            adapter.UpdateCommand = builder.GetUpdateCommand();
+				//            adapter.InsertCommand = builder.GetInsertCommand();
 
-							DataSet changes;
-							lock (dataSet) // lock dataset to prevent changes to it
-							{
-								adapter.ContinueUpdateOnError = true;
-								changes = dataSet.GetChanges();
-								adapter.Update(changes, tableName);
-								PrintDatasetErrors(changes);
-								dataSet.AcceptChanges();
-							}
-							conn.Close();
-						}
-						catch (Exception ex)
-						{
-							throw new DatabaseException("Could not save the Table " + tableName, ex);
-						}
+				//            DataSet changes;
+				//            lock (dataSet) // lock dataset to prevent changes to it
+				//            {
+				//                adapter.ContinueUpdateOnError = true;
+				//                changes = dataSet.GetChanges();
+				//                adapter.Update(changes, tableName);
+				//                PrintDatasetErrors(changes);
+				//                dataSet.AcceptChanges();
+				//            }
+				//            conn.Close();
+				//        }
+				//        catch (Exception ex)
+				//        {
+				//            throw new DatabaseException("Could not save the Table " + tableName, ex);
+				//        }
 
-						break;
-					}
-				case ConnectionType.DATABASE_ODBC:
-					{
-						try
-						{
-							OdbcConnection conn = new OdbcConnection(connString);
-							OdbcDataAdapter adapter = new OdbcDataAdapter("SELECT * from " + tableName, conn);
-							OdbcCommandBuilder builder = new OdbcCommandBuilder(adapter);
+				//        break;
+				//    }
+				//case ConnectionType.DATABASE_ODBC:
+				//    {
+				//        try
+				//        {
+				//            OdbcConnection conn = new OdbcConnection(connString);
+				//            OdbcDataAdapter adapter = new OdbcDataAdapter("SELECT * from " + tableName, conn);
+				//            OdbcCommandBuilder builder = new OdbcCommandBuilder(adapter);
 
-							adapter.DeleteCommand = builder.GetDeleteCommand();
-							adapter.UpdateCommand = builder.GetUpdateCommand();
-							adapter.InsertCommand = builder.GetInsertCommand();
+				//            adapter.DeleteCommand = builder.GetDeleteCommand();
+				//            adapter.UpdateCommand = builder.GetUpdateCommand();
+				//            adapter.InsertCommand = builder.GetInsertCommand();
 
-							DataSet changes;
-							lock (dataSet) // lock dataset to prevent changes to it
-							{
-								adapter.ContinueUpdateOnError = true;
-								changes = dataSet.GetChanges();
-								adapter.Update(changes, tableName);
-								dataSet.AcceptChanges();
-							}
-							PrintDatasetErrors(changes);
-							conn.Close();
-						}
-						catch (Exception ex)
-						{
-							throw new DatabaseException("Could not save the Database-Table", ex);
-						}
+				//            DataSet changes;
+				//            lock (dataSet) // lock dataset to prevent changes to it
+				//            {
+				//                adapter.ContinueUpdateOnError = true;
+				//                changes = dataSet.GetChanges();
+				//                adapter.Update(changes, tableName);
+				//                dataSet.AcceptChanges();
+				//            }
+				//            PrintDatasetErrors(changes);
+				//            conn.Close();
+				//        }
+				//        catch (Exception ex)
+				//        {
+				//            throw new DatabaseException("Could not save the Database-Table", ex);
+				//        }
 
-						break;
-					}
+				//        break;
+				//    }
 				case ConnectionType.DATABASE_MYSQL:
 					{
 						return; // not needed anymore
@@ -864,35 +879,35 @@ namespace DOL.Database.Connection
 
 											break;*/
 					}
-				case ConnectionType.DATABASE_OLEDB:
-					{
-						try
-						{
-							OleDbConnection conn = new OleDbConnection(connString);
-							OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT * from " + tableName, conn);
-							OleDbCommandBuilder builder = new OleDbCommandBuilder(adapter);
+				//case ConnectionType.DATABASE_OLEDB:
+				//    {
+				//        try
+				//        {
+				//            OleDbConnection conn = new OleDbConnection(connString);
+				//            OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT * from " + tableName, conn);
+				//            OleDbCommandBuilder builder = new OleDbCommandBuilder(adapter);
 
-							adapter.DeleteCommand = builder.GetDeleteCommand();
-							adapter.UpdateCommand = builder.GetUpdateCommand();
-							adapter.InsertCommand = builder.GetInsertCommand();
+				//            adapter.DeleteCommand = builder.GetDeleteCommand();
+				//            adapter.UpdateCommand = builder.GetUpdateCommand();
+				//            adapter.InsertCommand = builder.GetInsertCommand();
 
-							DataSet changes;
-							lock (dataSet) // lock dataset to prevent changes to it
-							{
-								adapter.ContinueUpdateOnError = true;
-								changes = dataSet.GetChanges();
-								adapter.Update(changes, tableName);
-								dataSet.AcceptChanges();
-							}
-							PrintDatasetErrors(changes);
-							conn.Close();
-						}
-						catch (Exception ex)
-						{
-							throw new DatabaseException("Could not save the Database-Table", ex);
-						}
-						break;
-					}
+				//            DataSet changes;
+				//            lock (dataSet) // lock dataset to prevent changes to it
+				//            {
+				//                adapter.ContinueUpdateOnError = true;
+				//                changes = dataSet.GetChanges();
+				//                adapter.Update(changes, tableName);
+				//                dataSet.AcceptChanges();
+				//            }
+				//            PrintDatasetErrors(changes);
+				//            conn.Close();
+				//        }
+				//        catch (Exception ex)
+				//        {
+				//            throw new DatabaseException("Could not save the Database-Table", ex);
+				//        }
+				//        break;
+				//    }
 			}
 		}
 

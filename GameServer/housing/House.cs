@@ -86,7 +86,7 @@ namespace DOL.GS.Housing
 			set { m_databaseItem.Name = value; }
 		}
 
-		public string OwnerIDs
+		public uint OwnerIDs
 		{
 			get { return m_databaseItem.OwnerIDs; }
 			set { m_databaseItem.OwnerIDs = value; }

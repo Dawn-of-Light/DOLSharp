@@ -31,7 +31,7 @@ namespace DOL
 		[DataTable(TableName = "DOLCharacters")]
 		public class Character : DataObject
 		{
-			private string m_accountName;
+			private uint m_accountId;
 			private int m_accountSlot;
 
 			private DateTime m_creationDate;
@@ -43,7 +43,7 @@ namespace DOL
 			private string m_name;			//24 Bytes
 			//0x00					//24 bytes empty 
 			//Locationstring		//24 bytes empty when sent
-			private string m_guildid;		//not sent in 0x55/0x57		
+			private uint m_guildid;		//not sent in 0x55/0x57		
 			private string m_lastName;		//not sent in 0x55/0x57		
 			private int m_race;
 			private int m_gender;
@@ -582,16 +582,16 @@ namespace DOL
 			/// Account name of account which own this character
 			/// </summary>
 			[DataElement(AllowDbNull = false, Index = true)]
-			public string AccountName
+			public uint AccountID
 			{
 				get
 				{
-					return m_accountName;
+					return m_accountId;
 				}
 				set
 				{
 					Dirty = true;
-					m_accountName = value;
+					m_accountId = value;
 				}
 			}
 
@@ -684,7 +684,7 @@ namespace DOL
 			/// ID of the guild this character is in
 			/// </summary>
 			[DataElement(AllowDbNull = true, Index = true)]
-			public string GuildID
+			public uint GuildID
 			{
 				get
 				{

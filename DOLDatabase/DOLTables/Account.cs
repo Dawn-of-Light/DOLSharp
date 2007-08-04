@@ -76,7 +76,8 @@ namespace DOL
 			/// <summary>
 			/// The name of the account (login)
 			/// </summary>
-			[PrimaryKey]
+			//[PrimaryKey]
+			[DataElement(Unique = true)]
 			public string Name
 			{
 				get
@@ -216,7 +217,7 @@ namespace DOL
 			/// <summary>
 			/// List of charcter the account own
 			/// </summary>
-			[Relation(LocalField = "Name", RemoteField = "AccountName", AutoLoad = true, AutoDelete=true)]
+			[Relation(LocalField = "ObjectId" /*"Account_ID"*/, RemoteField = "AccountID", AutoLoad = true, AutoDelete=true)]
 			public Character[] Characters;
 		}
 	}
