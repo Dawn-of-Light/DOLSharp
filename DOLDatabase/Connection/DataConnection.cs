@@ -213,7 +213,7 @@ namespace DOL.Database.Connection
 					long start = Environment.TickCount;
 					affected = cmd.ExecuteNonQuery();
 					insertId = (uint)(long)lastId.ExecuteScalar();
-					log.Error("INSERTED ID = " + insertId);
+					//log.Debug("INSERTED ID = " + insertId);
 					if (log.IsDebugEnabled)
 						log.Debug("SQL NonQuery exec time " + (Environment.TickCount - start) + "ms");
 					else if (Environment.TickCount - start > 500 && log.IsWarnEnabled)

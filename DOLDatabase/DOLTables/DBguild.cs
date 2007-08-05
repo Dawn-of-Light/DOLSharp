@@ -31,9 +31,6 @@ namespace DOL.Database
 	{
 		static bool		m_autoSave;
 
-#warning what the hell it is we already have a unique id, the objectid ??
-//		private string m_guildid; //Unique id for this guild
-
 		private string	m_guildname;
 		private string	m_motd;
 		private string	m_omotd;//officier motd
@@ -72,25 +69,7 @@ namespace DOL.Database
 			{
 				m_autoSave = value;
 			}
-		}
-
-#warning what the hell it is we already have a unique id, the objectid ??
-		///// <summary>
-		///// A uniq ID for the guild
-		///// </summary>
-		//[DataElement(AllowDbNull = true, Index=true, Unique=true)]
-		//public string GuildID
-		//{
-		//    get
-		//    {
-		//        return m_guildid;
-		//    }
-		//    set
-		//    {
-		//        Dirty = true;
-		//        m_guildid = value;
-		//    }
-		//}		
+		}	
 
 		/// <summary>
 		/// Name of guild
@@ -250,7 +229,7 @@ namespace DOL.Database
 		/// <summary>
 		/// rank rules
 		/// </summary>
-		[Relation(LocalField = "ObjectId" /*"Guild_ID"*/, RemoteField = "GuildID", AutoLoad = true, AutoDelete=true)]
+		[Relation(LocalField = "ObjectId", RemoteField = "GuildID", AutoLoad = true, AutoDelete=true)]
 		public DBRank[] Ranks;
 	}
 }

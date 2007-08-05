@@ -108,7 +108,7 @@ namespace DOL.GS.Scripts
 			InventoryItem item = (InventoryItem) itemWeak.Target;
 
 			if (item == null || item.SlotPosition == (int) eInventorySlot.Ground
-				|| item.OwnerID == /*null*/0 || item.OwnerID != player.InternalID)
+				|| item.OwnerID == 0 || item.OwnerID != player.InternalID)
 			{
 				player.Out.SendMessage("Invalid item.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;

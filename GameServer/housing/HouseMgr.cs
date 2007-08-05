@@ -220,7 +220,7 @@ namespace DOL.GS.Housing
 		public static bool IsOwner(DBHouse house, GamePlayer player)
 		{
 			if (house == null || player == null) return false;
-			if (/*house.OwnerIDs == null ||*/ house.OwnerIDs == 0) return false;
+			if (house.OwnerIDs == 0) return false;
 
 			//return (house.OwnerIDs.IndexOf(player.PlayerCharacter.ObjectId) >= 0);
 			return house.OwnerIDs == player.PlayerCharacter.ObjectId;
@@ -228,7 +228,7 @@ namespace DOL.GS.Housing
 		public static void AddOwner(DBHouse house, GamePlayer player)
 		{
 			if (house == null || player == null) return;
-			if (/*house.OwnerIDs != null &&*/ house.OwnerIDs != 0)
+			if (house.OwnerIDs != 0)
 			{
 				//if (house.OwnerIDs.IndexOf(player.InternalID) < 0)
 				if (house.OwnerIDs != player.InternalID)
@@ -242,7 +242,7 @@ namespace DOL.GS.Housing
 		public static void DeleteOwner(DBHouse house, GamePlayer player)
 		{
 			if (house == null || player == null) return;
-			if (/*house.OwnerIDs == null ||*/ house.OwnerIDs == 0) return;
+			if (house.OwnerIDs == 0) return;
 
 			//house.OwnerIDs = house.OwnerIDs.Replace(player.InternalID + ";", "");
 			house.OwnerIDs = 0;
@@ -256,7 +256,7 @@ namespace DOL.GS.Housing
 				foreach (DictionaryEntry Entry in (Hashtable)(regs.Value))
 				{
 					House house = (House)Entry.Value;
-					if (house.OwnerIDs == 0/*null*/)
+					if (house.OwnerIDs == 0)
 						continue;
 					if (house.IsOwner(p))
 						return house.HouseNumber;
@@ -289,17 +289,14 @@ namespace DOL.GS.Housing
 		public static ArrayList GetOwners(DBHouse house)
 		{
 			if (house == null) return null;
-			if (/*house.OwnerIDs == null ||*/ house.OwnerIDs == 0) return null;
+			if (house.OwnerIDs == 0) return null;
 
 			ArrayList owners = new ArrayList();
-			//string[] ids = house.OwnerIDs.Split(';');
 
-			//foreach (string id in ids)
-			//{
-				Character character = (Character)GameServer.Database.FindObjectByKey(typeof(Character), house.OwnerIDs);
-				if (character != null) /*== null) continue;*/
+			Character character = (Character)GameServer.Database.FindObjectByKey(typeof(Character), house.OwnerIDs);
+			if (character != null)
 				owners.Add(character);
-			//}
+
 			return owners;
 		}
 
@@ -326,7 +323,7 @@ namespace DOL.GS.Housing
 				foreach (DictionaryEntry Entry in (Hashtable)(regs.Value))
 				{
 					House house = (House)Entry.Value;
-					if ((/*house.OwnerIDs == null &&*/ house.OwnerIDs == 0) || house.NoPurge) // Replaced OR by AND to fix table problems due to old method bugs
+					if ((house.OwnerIDs == 0) || house.NoPurge) // Replaced OR by AND to fix table problems due to old method bugs
 						continue;
 					Diff = DateTime.Now - house.LastPaid;
 					if (Diff.Days >= 7)

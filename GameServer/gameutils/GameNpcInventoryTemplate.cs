@@ -310,7 +310,7 @@ namespace DOL.GS
 					if (templateID == 0)
 						throw new ArgumentNullException("templateID");
 
-					DataObject[] npcEquipment = GameServer.Database.SelectObjects(typeof(NPCEquipment), "TemplateID = '" + /*GameServer.Database.Escape(*/templateID/*)*/ + "'");
+					DataObject[] npcEquipment = GameServer.Database.SelectObjects(typeof(NPCEquipment), "TemplateID = '" + templateID + "'");
 
 					// delete removed item templates
 					foreach (NPCEquipment npcItem in npcEquipment)

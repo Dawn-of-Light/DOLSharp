@@ -41,12 +41,6 @@ namespace DOL.GS.DatabaseConverters
 		{
 			log.Info("Database Version 4 Convert Started");
 
-			//if (GameServer.Instance.Configuration.DBType == DOL.Database.Connection.ConnectionType.DATABASE_XML)
-			//{
-			//    log.Info("You have an XML database loaded, this converter will only work with MySQL, skipping");
-			//    return;
-			//}
-
 			Mob[] mobs = (Mob[])GameServer.Database.SelectObjects(typeof(Mob), "`ClassType` = 'DOL.GS.GameMob'");
 
 			int count = 0;

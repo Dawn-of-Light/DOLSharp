@@ -339,9 +339,9 @@ namespace DOL.Database
 					return;
 				}
 
-				log.Error("SELECT LAST_INSERT_ID(); return " + insertedId);
+				log.Debug("SELECT LAST_INSERT_ID(); return " + insertedId);
 				dataObject.ObjectId = insertedId;
-				log.Error("dataObject.ObjectId set to  " + dataObject.ObjectId);
+				log.Debug("dataObject.ObjectId set to  " + dataObject.ObjectId);
 
 				if (hasRelations)
 				{

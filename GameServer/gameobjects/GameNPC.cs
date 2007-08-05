@@ -1416,7 +1416,7 @@ namespace DOL.GS
 		public virtual void LoadEquipmentTemplateFromDatabase(uint equipmentTemplateID)
 		{
 			EquipmentTemplateID = equipmentTemplateID;
-			if (EquipmentTemplateID != 0 /*null && EquipmentTemplateID.Length > 0*/)
+			if (EquipmentTemplateID != 0)
 			{
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				if (template.LoadFromDatabase(EquipmentTemplateID))
@@ -1427,7 +1427,7 @@ namespace DOL.GS
 				{
 					if (log.IsDebugEnabled)
 					{
-						//log.Warn("Error loading NPC inventory: InventoryID="+EquipmentTemplateID+", NPC name="+Name+".");
+						log.Warn("Error loading NPC inventory: InventoryID #" + EquipmentTemplateID + ", NPC name : " + Name + ", Id #" + InternalID);
 					}
 				}
 				if (Inventory != null)

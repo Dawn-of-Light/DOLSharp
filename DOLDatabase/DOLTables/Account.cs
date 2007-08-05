@@ -28,8 +28,8 @@ namespace DOL
 		/// <summary>
 		/// Account table
 		/// </summary>
-		[DataTable(TableName="Account")]
-		public class Account : DataObject 
+		[DataTable(TableName = "Account")]
+		public class Account : DataObject
 		{
 			private string m_name;
 			private string m_password;
@@ -41,13 +41,13 @@ namespace DOL
 			private String m_mail;
 			private string m_lastLoginIP;
 			private string m_language;
-			
+
 			private static bool m_autoSave;
 
 			/// <summary>
 			/// Create account row in DB
 			/// </summary>
-			public Account() 
+			public Account()
 			{
 				m_name = null;
 				m_password = null;
@@ -61,7 +61,7 @@ namespace DOL
 			/// <summary>
 			/// Auto save this table
 			/// </summary>
-			override public  bool AutoSave
+			override public bool AutoSave
 			{
 				get
 				{
@@ -76,7 +76,6 @@ namespace DOL
 			/// <summary>
 			/// The name of the account (login)
 			/// </summary>
-			//[PrimaryKey]
 			[DataElement(Unique = true)]
 			public string Name
 			{
@@ -85,7 +84,7 @@ namespace DOL
 					return m_name;
 				}
 				set
-				{   
+				{
 					Dirty = true;
 					m_name = value;
 				}
@@ -94,7 +93,7 @@ namespace DOL
 			/// <summary>
 			/// The password of this account encode in MD5 or clear when start with ##
 			/// </summary>
-			[DataElement(AllowDbNull=false)]
+			[DataElement(AllowDbNull = false)]
 			public string Password
 			{
 				get
@@ -102,7 +101,7 @@ namespace DOL
 					return m_password;
 				}
 				set
-				{   
+				{
 					Dirty = true;
 					m_password = value;
 				}
@@ -111,7 +110,7 @@ namespace DOL
 			/// <summary>
 			/// The date of creation of this account
 			/// </summary>
-			[DataElement(AllowDbNull=false)]
+			[DataElement(AllowDbNull = false)]
 			public DateTime CreationDate
 			{
 				get
@@ -119,7 +118,7 @@ namespace DOL
 					return m_creationDate;
 				}
 				set
-				{   
+				{
 					m_creationDate = value;
 					Dirty = true;
 				}
@@ -128,7 +127,7 @@ namespace DOL
 			/// <summary>
 			/// The date of last login of this account
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public DateTime LastLogin
 			{
 				get
@@ -136,7 +135,7 @@ namespace DOL
 					return m_lastLogin;
 				}
 				set
-				{   
+				{
 					Dirty = true;
 					m_lastLogin = value;
 				}
@@ -145,7 +144,7 @@ namespace DOL
 			/// <summary>
 			/// The realm of this account
 			/// </summary>
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull = true)]
 			public int Realm
 			{
 				get
@@ -153,7 +152,7 @@ namespace DOL
 					return m_realm;
 				}
 				set
-				{   
+				{
 					Dirty = true;
 					m_realm = value;
 				}
@@ -175,12 +174,13 @@ namespace DOL
 					Dirty = true;
 				}
 			}
-			
+
 			/// <summary>
 			/// Status of this account
 			/// </summary>
 			[DataElement(AllowDbNull = true)]
-			public int Status {
+			public int Status
+			{
 				get { return m_state; }
 				set { Dirty = true; m_state = value; }
 			}
@@ -189,7 +189,8 @@ namespace DOL
 			/// The mail of this account
 			/// </summary>
 			[DataElement(AllowDbNull = true)]
-			public string Mail {
+			public string Mail
+			{
 				get { return m_mail; }
 				set { Dirty = true; m_mail = value; }
 			}
@@ -213,11 +214,11 @@ namespace DOL
 				get { return m_language; }
 				set { Dirty = true; m_language = value; }
 			}
-			
+
 			/// <summary>
 			/// List of charcter the account own
 			/// </summary>
-			[Relation(LocalField = "ObjectId" /*"Account_ID"*/, RemoteField = "AccountID", AutoLoad = true, AutoDelete=true)]
+			[Relation(LocalField = "ObjectId", RemoteField = "AccountID", AutoLoad = true, AutoDelete = true)]
 			public Character[] Characters;
 		}
 	}

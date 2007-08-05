@@ -287,7 +287,7 @@ namespace DOL.GS.PacketHandler
 						if (characters[j].AccountSlot == i)
 						{
 							pak.FillString(characters[j].Name, 24);
-							items = (InventoryItem[])GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + /*GameServer.Database.Escape(*/characters[j].ObjectId/*)*/ + "' AND SlotPosition >='10' AND SlotPosition <= '37'");
+							items = (InventoryItem[])GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + characters[j].ObjectId + "' AND SlotPosition >='10' AND SlotPosition <= '37'");
 							byte ExtensionTorso = 0;
 							byte ExtensionGloves = 0;
 							byte ExtensionBoots = 0;

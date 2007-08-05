@@ -182,6 +182,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//playerAccount = (Account)GameServer.Database.FindObjectByKey(typeof(Account), userName);
 						playerAccount = (Account)GameServer.Database.SelectObject(typeof(Account), "Name = '" + GameServer.Database.Escape(userName) + "'");
 
+#warning not a good idea, try reviewing the database schema
 						//if we cant find the account, lets check the archive
 						if (playerAccount == null)
 						{

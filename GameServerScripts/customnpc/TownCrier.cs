@@ -164,7 +164,7 @@ namespace DOL.GS.Scripts
 
 		public override void DeleteFromDatabase()
 		{
-			if (InternalID != /*null*/0 && GameServer.Database != null)
+			if (InternalID != 0 && GameServer.Database != null)
 			{
 				TownCrierMessage tcmsg = (TownCrierMessage) GameServer.Database.FindObjectByKey(typeof (TownCrierMessage), InternalID);
 

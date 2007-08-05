@@ -47,7 +47,7 @@ namespace DOL.GS
 		/// Holds the log configuration file path
 		/// </summary>
 		protected string m_regionConfigFile;
-		
+
 		/// <summary>
 		/// Holds the log configuration file path
 		/// </summary>
@@ -92,7 +92,7 @@ namespace DOL.GS
 		/// The count of server cpu
 		/// </summary>
 		protected int m_cpuCount;
-		
+
 		/// <summary>
 		/// The max client count.
 		/// </summary>
@@ -145,7 +145,7 @@ namespace DOL.GS
 
 		#endregion
 		#region Load/Save
-		
+
 		/// <summary>
 		/// Loads the config values from a specific config element
 		/// </summary>
@@ -155,7 +155,7 @@ namespace DOL.GS
 			base.LoadFromConfig(root);
 
 			// Removed to not confuse users
-//			m_rootDirectory = root["Server"]["RootDirectory"].GetString(m_rootDirectory);
+			//			m_rootDirectory = root["Server"]["RootDirectory"].GetString(m_rootDirectory);
 
 			m_logConfigFile = root["Server"]["LogConfigFile"].GetString(m_logConfigFile);
 			m_regionConfigFile = root["Server"]["RegionConfigFile"].GetString(m_regionConfigFile);
@@ -204,23 +204,10 @@ namespace DOL.GS
 			string db = root["Server"]["DBType"].GetString("XML");
 			switch (db.ToLower())
 			{
-				//case "xml":
-				//    m_dbType = ConnectionType.DATABASE_XML;
-				//    break;
 				case "mysql":
 					m_dbType = ConnectionType.DATABASE_MYSQL;
 					break;
-				//case "mssql":
-				//    m_dbType = ConnectionType.DATABASE_MSSQL;
-				//    break;
-				//case "odbc":
-				//    m_dbType = ConnectionType.DATABASE_ODBC;
-				//    break;
-				//case "oledb":
-				//    m_dbType = ConnectionType.DATABASE_OLEDB;
-				//    break;
 				default:
-					//m_dbType = ConnectionType.DATABASE_XML;
 					m_dbType = ConnectionType.DATABASE_MYSQL;
 					break;
 			}
@@ -231,12 +218,12 @@ namespace DOL.GS
 			m_cpuCount = root["Server"]["CpuCount"].GetInt(m_cpuCount);
 			if (m_cpuCount < 1)
 				m_cpuCount = 1;
-			
+
 			// Parse UDP out endpoint
-			IPAddress	address = null;
-			int			port = -1;
-			string		addressStr = root["Server"]["UDPOutIP"].GetString(string.Empty);
-			string		portStr = root["Server"]["UDPOutPort"].GetString(string.Empty);
+			IPAddress address = null;
+			int port = -1;
+			string addressStr = root["Server"]["UDPOutIP"].GetString(string.Empty);
+			string portStr = root["Server"]["UDPOutPort"].GetString(string.Empty);
 			if (IPAddress.TryParse(addressStr, out address)
 				&& int.TryParse(portStr, out port)
 				&& IPEndPoint.MaxPort >= port
@@ -256,7 +243,7 @@ namespace DOL.GS
 			root["Server"]["ServerName"].Set(m_ServerName);
 			root["Server"]["ServerNameShort"].Set(m_ServerNameShort);
 			// Removed to not confuse users
-//			root["Server"]["RootDirectory"].Set(m_rootDirectory);
+			//			root["Server"]["RootDirectory"].Set(m_rootDirectory);
 			root["Server"]["LogConfigFile"].Set(m_logConfigFile);
 			root["Server"]["RegionConfigFile"].Set(m_regionConfigFile);
 			root["Server"]["ZoneConfigFile"].Set(m_zoneConfigFile);
@@ -298,28 +285,14 @@ namespace DOL.GS
 			root["Server"]["GMActionLoggerName"].Set(m_gmActionsLoggerName);
 			root["Server"]["InvalidNamesFile"].Set(m_invalidNamesFile);
 
-			//string db = "XML";
 			string db = "MySQL";
-			
+
 			switch (m_dbType)
 			{
-			//case ConnectionType.DATABASE_XML:
-			//    db = "XML";
-			//        break;
-			case ConnectionType.DATABASE_MYSQL:
-				db = "MYSQL";
+				case ConnectionType.DATABASE_MYSQL:
+					db = "MySQL";
 					break;
-			//case ConnectionType.DATABASE_MSSQL:
-			//    db = "MSSQL";
-			//        break;
-			//case ConnectionType.DATABASE_ODBC:
-			//    db = "ODBC";
-			//        break;
-			//case ConnectionType.DATABASE_OLEDB:
-			//    db = "OLEDB";
-			//        break;
 				default:
-					//m_dbType = ConnectionType.DATABASE_XML;
 					m_dbType = ConnectionType.DATABASE_MYSQL;
 					break;
 			}
@@ -340,11 +313,12 @@ namespace DOL.GS
 		/// <summary>
 		/// Constructs a server configuration with default values
 		/// </summary>
-		public GameServerConfiguration() : base()
+		public GameServerConfiguration()
+			: base()
 		{
 			m_ServerName = "Dawn Of Light";
 			m_ServerNameShort = "DOLSERVER";
-			if(Assembly.GetEntryAssembly()!=null)
+			if (Assembly.GetEntryAssembly() != null)
 				m_rootDirectory = new FileInfo(Assembly.GetEntryAssembly().Location).DirectoryName;
 			else
 				m_rootDirectory = new FileInfo(Assembly.GetAssembly(typeof(GameServer)).Location).DirectoryName;
@@ -354,7 +328,7 @@ namespace DOL.GS
 			m_zoneConfigFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "zones.xml";
 			m_languageFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "GameServer.lng";
 
-			m_scriptCompilationTarget = "."+Path.DirectorySeparatorChar+"lib"+Path.DirectorySeparatorChar+"GameServerScripts.dll";
+			m_scriptCompilationTarget = "." + Path.DirectorySeparatorChar + "lib" + Path.DirectorySeparatorChar + "GameServerScripts.dll";
 			m_scriptAssemblies = "DOLBase.dll,GameServer.dll,DOLDatabase.dll,System.dll,log4net.dll,System.Xml.dll";
 			m_autoAccountCreation = true;
 			m_serverType = eGameServerType.GST_Normal;
@@ -363,14 +337,12 @@ namespace DOL.GS
 			m_gmActionsLoggerName = "gmactions";
 			m_invalidNamesFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "invalidnames.txt";
 
-			//m_dbType = ConnectionType.DATABASE_XML;
 			m_dbType = ConnectionType.DATABASE_MYSQL;
 			m_dbConnectionString = "Server=localhost; Database=test; User ID=root; Password=";
-			//m_dbConnectionString = m_rootDirectory+Path.DirectorySeparatorChar+"xml_db";
 			m_autoSave = true;
 			m_saveInterval = 10;
 			m_maxClientCount = 500;
-			
+
 			try
 			{
 				m_cpuCount = int.Parse(Environment.GetEnvironmentVariable("NUMBER_OF_PROCESSORS"));
@@ -398,7 +370,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				if(Path.IsPathRooted(m_logConfigFile))
+				if (Path.IsPathRooted(m_logConfigFile))
 					return m_logConfigFile;
 				else
 					return Path.Combine(m_rootDirectory, m_logConfigFile);
@@ -411,9 +383,9 @@ namespace DOL.GS
 		/// </summary>
 		public string RegionConfigFile
 		{
-			get 
-			{ 
-				if(Path.IsPathRooted(m_regionConfigFile))
+			get
+			{
+				if (Path.IsPathRooted(m_regionConfigFile))
 					return m_regionConfigFile;
 				else
 					return Path.Combine(m_rootDirectory, m_regionConfigFile);
@@ -428,7 +400,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				if(Path.IsPathRooted(m_zoneConfigFile))
+				if (Path.IsPathRooted(m_zoneConfigFile))
 					return m_zoneConfigFile;
 				else
 					return Path.Combine(m_rootDirectory, m_zoneConfigFile);
@@ -443,7 +415,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				if(Path.IsPathRooted(m_languageFile))
+				if (Path.IsPathRooted(m_languageFile))
 					return m_languageFile;
 				else
 					return Path.Combine(m_rootDirectory, m_languageFile);
@@ -530,7 +502,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				if(Path.IsPathRooted(m_invalidNamesFile))
+				if (Path.IsPathRooted(m_invalidNamesFile))
 					return m_invalidNamesFile;
 				else
 					return Path.Combine(m_rootDirectory, m_invalidNamesFile);
@@ -582,7 +554,7 @@ namespace DOL.GS
 			get { return m_cpuCount; }
 			set { m_cpuCount = value; }
 		}
-		
+
 		/// <summary>
 		/// Gets or sets the max cout of clients allowed
 		/// </summary>
@@ -591,7 +563,7 @@ namespace DOL.GS
 			get { return m_maxClientCount; }
 			set { m_maxClientCount = value; }
 		}
-		
+
 		/// <summary>
 		/// Gets or sets UDP address and port to send UDP packets from.
 		/// If <code>null</code> then <see cref="Socket"/> decides where to bind.

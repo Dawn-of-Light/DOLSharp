@@ -493,7 +493,7 @@ namespace DOL.GS.Scripts
 							
 							string playername = String.Join(" ", args, 2, args.Length - 2);
 							// Patch 1.84: look for offline players
-							Character[] chs = (Character[])GameServer.Database.SelectObjects(typeof(Character), "AccountName='" + GameServer.Database.Escape(playername) + "' AND GuildID='" + /*GameServer.Database.Escape(*/client.Player.GuildID/*)*/ + "'");
+							Character[] chs = (Character[])GameServer.Database.SelectObjects(typeof(Character), "AccountName='" + GameServer.Database.Escape(playername) + "' AND GuildID='" + client.Player.GuildID + "'");
 							if (chs != null && chs.GetLength(0) > 0)
 							{
 								GameClient myclient = WorldMgr.GetClientByAccountName(playername, false);
@@ -1002,9 +1002,10 @@ namespace DOL.GS.Scripts
 
 								if (showOffline)
 								{
+#warning TODO remove archive
 									List<Character> chars = new List<Character>();
-									chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(Character), "GuildID = '" + /*GameServer.Database.Escape(*/client.Player.GuildID/*)*/ + "'"));
-									chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(CharacterArchive), "GuildID = '" + /*GameServer.Database.Escape(*/client.Player.GuildID/*)*/ + "'"));
+									chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(Character), "GuildID = '" + client.Player.GuildID + "'"));
+									chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(CharacterArchive), "GuildID = '" + client.Player.GuildID + "'"));
 
 									foreach (Character ply in chars)
 									{

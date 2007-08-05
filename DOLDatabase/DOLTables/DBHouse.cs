@@ -55,6 +55,7 @@ namespace DOL
 			private bool m_outdoorguildshield;
 			private bool m_outdoorguildbanner;
 			private bool m_porch;
+			// does a house can have more than one owner ?
 			private uint m_ownerids;
 			private DateTime m_lastpaid;
 			private long m_keptmoney;
@@ -406,6 +407,7 @@ namespace DOL
 				}
 			}
 
+			// does a house can have more than one owner ?
 			[DataElement(AllowDbNull=true)]
 			public uint OwnerIDs
 			{

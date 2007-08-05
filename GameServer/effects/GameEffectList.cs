@@ -157,7 +157,7 @@ namespace DOL.GS.Effects
 			GamePlayer player = m_owner as GamePlayer;
 			if (player == null || player.PlayerCharacter == null || GameServer.Database == null)
 				return;
-			PlayerXEffect[] effs = (PlayerXEffect[])GameServer.Database.SelectObjects(typeof(PlayerXEffect), "ChardID = '" + /*GameServer.Database.Escape(*/player.PlayerCharacter.ObjectId/*)*/ + "'");
+			PlayerXEffect[] effs = (PlayerXEffect[])GameServer.Database.SelectObjects(typeof(PlayerXEffect), "ChardID = '" + player.PlayerCharacter.ObjectId + "'");
 			if (effs == null)
 				return;
 			ArrayList targets = new ArrayList();

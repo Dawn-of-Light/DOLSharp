@@ -499,10 +499,7 @@ namespace DOL.GS
 				}
 				m_items.Add((int)slot, item);
 				item.SlotPosition=(int)slot;
-				//if (item.OwnerID != null)
-				//{
-				//    item.OwnerID = null; // owner ID for NPC
-				//}
+
 				if (item.OwnerID != 0)
 				{
 					item.OwnerID = 0; // owner ID for NPC
