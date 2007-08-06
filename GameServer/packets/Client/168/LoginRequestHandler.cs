@@ -184,7 +184,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 #warning not a good idea, try reviewing the database schema
 						//if we cant find the account, lets check the archive
-						if (playerAccount == null)
+						/*if (playerAccount == null)
 						{
 							log.Debug("Cannot find account in normal table, trying archive table");
 							//playerAccount = (AccountArchive)GameServer.Database.FindObjectByKey(typeof(AccountArchive), userName);
@@ -209,7 +209,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 								playerAccount = (Account)GameServer.Database.FindObjectByKey(typeof(Account), userName);
 							}
-						}
+						}*/
 
 						client.PingTime = DateTime.Now.Ticks;
 

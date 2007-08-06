@@ -27,7 +27,7 @@ namespace DOL.Database
 	public class ZonePoint : DataObject
 	{
 
-		private ushort	m_id;
+		private ushort	m_id; // TODO use uid
 		private int	m_x;
 		private int	m_y;
 		private int	m_z;

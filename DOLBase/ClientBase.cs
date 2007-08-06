@@ -120,7 +120,7 @@ namespace DOL
 			{
 				Socket s = m_sock;
 				if (s != null && s.Connected && s.RemoteEndPoint != null)
-					return s.RemoteEndPoint.ToString();
+					return ((IPEndPoint)s.RemoteEndPoint).Address.ToString();
 				return "not connected";
 			}
 		}

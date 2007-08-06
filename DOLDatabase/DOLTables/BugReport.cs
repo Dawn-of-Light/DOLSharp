@@ -26,7 +26,7 @@ namespace DOL.Database
 	[DataTable(TableName = "bug_report")]
 	public class BugReport : DataObject
 	{
-		private int m_reportID;
+		private int m_reportID; // TODO use uid
 		private string m_message;
 		private string m_submitter;
 		private DateTime m_dateSubmitted;

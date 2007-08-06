@@ -179,7 +179,7 @@ namespace DOL.Database
 		}
 
 #warning TODO do we need this, I don't like it
-		public void ArchiveTables()
+		/*public void ArchiveTables()
 		{
 			//if (!connection.IsSQLConnection)
 			//    return;
@@ -247,7 +247,7 @@ namespace DOL.Database
 			string deleteQuery = "DELETE " + shortName + " FROM `" + sourceTableName + "` " + shortName + " " + query;
 			connection.ExecuteNonQuery(deleteQuery);
 		}
-
+		*/
 		/// <summary>
 		/// insert a new object into the db
 		/// and save it if its autosave=true
@@ -271,7 +271,8 @@ namespace DOL.Database
 				bool hasRelations = false;
 				string dateFormat = connection.GetDBDateFormat();
 
-				columns.Append("`" + tableName + "_ID`");
+				//columns.Append("`" + tableName + "_ID`");
+				columns.Append("`uid`");
 				//values.Append("'" + /*Escape(dataObject.ObjectId) +*/ "'");
 				values.Append("NULL");
 
@@ -439,7 +440,8 @@ namespace DOL.Database
 					}
 				}
 
-				sb.Append(" WHERE `" + tableName + "_ID` = '" + /*Escape(*/dataObject.ObjectId/*)*/ + "'");
+				//sb.Append(" WHERE `" + tableName + "_ID` = '" + /*Escape(*/dataObject.ObjectId/*)*/ + "'");
+				sb.Append(" WHERE `uid` = '" + dataObject.ObjectId + "'");
 				string sql = sb.ToString();
 				if (log.IsDebugEnabled)
 					log.Debug(sql);
@@ -500,7 +502,8 @@ namespace DOL.Database
 		/// <param name="dataObject"></param>
 		public void DeleteObject(DataObject dataObject)
 		{
-			string sql = "DELETE FROM `" + dataObject.TableName + "` WHERE `" + dataObject.TableName + "_ID` = '" + /*Escape(*/dataObject.ObjectId/*)*/ + "'";
+			//string sql = "DELETE FROM `" + dataObject.TableName + "` WHERE `" + dataObject.TableName + "_ID` = '" + /*Escape(*/dataObject.ObjectId/*)*/ + "'";
+			string sql = "DELETE FROM `" + dataObject.TableName + "` WHERE `uid` = '" + dataObject.ObjectId + "'";
 			if (log.IsDebugEnabled)
 				log.Debug(sql);
 			int res = connection.ExecuteNonQuery(sql);
@@ -547,7 +550,8 @@ namespace DOL.Database
 			}
 			if (whereClause == null)
 			{
-				whereClause = "`" + ret.TableName + "_ID` = '" + key.ToString() + "'";
+				//whereClause = "`" + ret.TableName + "_ID` = '" + key.ToString() + "'";
+				whereClause = "`uid` = '" + key.ToString() + "'";
 			}
 			DataObject[] objs = SelectObjects(objectType, whereClause);
 			if (objs.Length > 0)
@@ -620,7 +624,8 @@ namespace DOL.Database
 			ArrayList dataObjects = new ArrayList(500);
 
 			// build sql command
-			StringBuilder sb = new StringBuilder("SELECT `" + tableName + "_ID`, ");
+			//StringBuilder sb = new StringBuilder("SELECT `" + tableName + "_ID`, ");
+			StringBuilder sb = new StringBuilder("SELECT `uid`, ");
 			bool first = true;
 			BindingInfo[] bindingInfo = GetBindingInfo(objectType);
 			for (int i = 0; i < bindingInfo.Length; i++)
@@ -755,7 +760,8 @@ namespace DOL.Database
 			string TableName = DataObject.GetTableName(dataObjectType);
 			DataSet ds = new DataSet();
 			DataTable table = new DataTable(TableName);
-			table.Columns.Add(TableName + "_ID", typeof(string));
+			//table.Columns.Add(TableName + "_ID", typeof(string));
+			table.Columns.Add("uid", typeof(string));
 			MemberInfo[] myMembers = dataObjectType.GetMembers();
 
 			for (int i = 0; i < myMembers.Length; i++)
@@ -818,7 +824,8 @@ namespace DOL.Database
 			if (primary == false)
 			{
 				DataColumn[] index = new DataColumn[1];
-				index[0] = table.Columns[TableName + "_ID"];
+				//index[0] = table.Columns[TableName + "_ID"];
+				index[0] = table.Columns["uid"];
 				table.PrimaryKey = index;
 			}
 
@@ -891,7 +898,8 @@ namespace DOL.Database
 
 			string tableName = DataObject.TableName;
 			Type myType = DataObject.GetType();
-			uint id = (uint)row[tableName + "_ID"];
+			//uint id = (uint)row[tableName + "_ID"];
+			uint id = (uint)row["uid"];
 			DataObject cacheObj = GetObjectInCache(tableName, id);
 
 			if (cacheObj != null)
@@ -1000,7 +1008,8 @@ namespace DOL.Database
 
 			Type myType = DataObject.GetType();
 
-			row[DataObject.TableName + "_ID"] = DataObject.ObjectId;
+			//row[DataObject.TableName + "_ID"] = DataObject.ObjectId;
+			row["uid"] = DataObject.ObjectId;
 
 			MemberInfo[] myMembers = myType.GetMembers();
 
@@ -1058,7 +1067,8 @@ namespace DOL.Database
 
 			string key = table.PrimaryKey[0].ColumnName;
 
-			if (key.Equals(tableName + "_ID"))
+			//if (key.Equals(tableName + "_ID"))
+			if (key.Equals("uid"))
 				row = table.Rows.Find(DataObject.ObjectId);
 			else
 			{
