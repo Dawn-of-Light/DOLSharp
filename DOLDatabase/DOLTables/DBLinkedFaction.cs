@@ -25,7 +25,7 @@ namespace DOL.Database
 	/// <summary>
 	/// Factions object for database
 	/// </summary>
-	[DataTable(TableName="LinkedFaction")]
+	[DataTable(TableName="linked_faction")]
 	public class DBLinkedFaction : DataObject
 	{
 		private int	m_factionID;

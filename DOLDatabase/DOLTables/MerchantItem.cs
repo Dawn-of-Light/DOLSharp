@@ -25,7 +25,8 @@ namespace DOL
 {
 	namespace Database
 	{
-		[DataTable(TableName="MerchantItem")]
+#warning TODO comments
+		[DataTable(TableName="merchant_item")]
 		public class MerchantItem : DataObject
 		{
 			static bool m_autoSave;

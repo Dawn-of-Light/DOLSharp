@@ -26,7 +26,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The character the account own. it store GamePlayer in DB
 		/// </summary>
-		[DataTable(TableName = "DOLCharacters_Archive")]
+		[DataTable(TableName = "character_archive")]
 		public class CharacterArchive : Character
 		{ }
 }

@@ -28,7 +28,7 @@ namespace DOL
 		/// <summary>
 		/// character which have already drop otd is in this table
 		/// </summary>
-		[DataTable(TableName="OTDXCharacter")]
+		[DataTable(TableName="otd_x_character")]
 		public class DBOTDXCharacter : DataObject 
 		{
 			private uint m_lootOTD_ID;

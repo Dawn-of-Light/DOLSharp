@@ -26,7 +26,7 @@ namespace DOL.Database
 	/// <summary>
 	/// Database Storage of Tasks
 	/// </summary>
-	[DataTable(TableName = "LootGenerator")]
+	[DataTable(TableName = "loot_generator")]
 	public class DBLootGenerator : DataObject
 	{
 		/// <summary>

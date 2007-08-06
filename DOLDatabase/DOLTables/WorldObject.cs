@@ -26,7 +26,8 @@ namespace DOL.Database
 	/// <summary>
 	/// Objects as Tables, Lights, Bags non static in Game.
 	/// </summary>
-	[DataTable(TableName="WorldObject")]
+#warning TODO comments
+	[DataTable(TableName="world_object")]
 	public class WorldObject : DataObject
 	{
 		private string		m_type;

@@ -28,7 +28,7 @@ namespace DOL
 		/// <summary>
 		/// The character the account own. it store GamePlayer in DB
 		/// </summary>
-		[DataTable(TableName = "DOLCharacters")]
+		[DataTable(TableName = "character")]
 		public class Character : DataObject
 		{
 			private uint m_accountId;

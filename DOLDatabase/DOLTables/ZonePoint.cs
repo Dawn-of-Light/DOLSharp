@@ -22,7 +22,8 @@ using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	[DataTable(TableName="ZonePoint")]
+#warning TODO comments
+	[DataTable(TableName="zone_point")]
 	public class ZonePoint : DataObject
 	{
 

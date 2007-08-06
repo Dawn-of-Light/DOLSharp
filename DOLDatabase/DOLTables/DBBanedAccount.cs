@@ -26,7 +26,7 @@ namespace DOL.Database
 	/// <summary>
 	/// Bans table
 	/// </summary>
-	[DataTable(TableName="Ban")]
+	[DataTable(TableName="ban")]
 	public class DBBannedAccount : DataObject
 	{
 		private string	m_author;

@@ -32,7 +32,7 @@ namespace DOL.Database
 	/// <summary>
 	/// DataTable class for NPC Templates
 	/// </summary>
-	[DataTable(TableName = "NpcTemplate")]
+	[DataTable(TableName = "npc_template")]
 	public class DBNpcTemplate : DataObject
 	{
 		private int m_templateId;

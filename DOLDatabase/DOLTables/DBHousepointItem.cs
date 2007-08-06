@@ -27,7 +27,8 @@ using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	[DataTable(TableName = "housepointitem")]
+#warning TODO comments
+	[DataTable(TableName = "house_point_item")]
 	public class DBHousepointItem : DataObject
 	{
 		private int m_houseID; // the number of the house

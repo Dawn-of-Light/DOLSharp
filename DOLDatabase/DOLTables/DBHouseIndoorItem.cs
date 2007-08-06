@@ -29,7 +29,8 @@ namespace DOL
 {
 	namespace Database
 	{
-		[DataTable(TableName="DBIndoorItem")]
+#warning TODO comments
+		[DataTable(TableName="indoor_item")]
 		public class DBHouseIndoorItem : DataObject
 		{
 			//important data

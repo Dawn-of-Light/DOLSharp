@@ -27,7 +27,7 @@ namespace DOL.Database
 	/// <summary>
 	/// The database side of GameMob
 	/// </summary>
-	[DataTable(TableName = "Mob")]
+	[DataTable(TableName = "mob")]
 	public class Mob : DataObject
 	{
 		private string m_type;

@@ -26,7 +26,8 @@ namespace DOL
 {
 	namespace Database
 	{
-		[DataTable(TableName="DBHouse")]
+#warning TODO comments
+		[DataTable(TableName="house")]
 		public class DBHouse : DataObject
 		{
 			private int m_housenumber;

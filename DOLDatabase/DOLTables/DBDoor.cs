@@ -24,7 +24,7 @@ namespace DOL.Database
 	/// <summary>
 	/// DBDoor is database of door with state of door and X,Y,Z
 	/// </summary>
-	[DataTable(TableName = "Door")]
+	[DataTable(TableName = "door")]
 	public class DBDoor : DataObject
 	{
 		static bool m_autoSave;

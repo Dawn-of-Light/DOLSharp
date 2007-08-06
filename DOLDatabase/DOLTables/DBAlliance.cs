@@ -31,7 +31,7 @@ namespace DOL.Database
 	/// <summary>
 	/// DBalliance is table for alliance of guild
 	/// </summary>
-	[DataTable(TableName="GuildAlliance")]
+	[DataTable(TableName="guild_alliance")]
 	public class DBAlliance : DataObject
 	{
 		static bool		m_autoSave;

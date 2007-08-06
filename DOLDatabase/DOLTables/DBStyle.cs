@@ -24,7 +24,8 @@ namespace DOL.Database
 	/// <summary>
 	/// TODO: add neccessary fields for styles
 	/// </summary>
-	[DataTable(TableName = "Style")]
+#warning Nice commented file, isn't it ?^^
+	[DataTable(TableName = "style")]
 	public class DBStyle : DataObject
 	{
 		/// <summary>

@@ -26,7 +26,8 @@ namespace DOL.Database
 	/// <summary>
 	/// 
 	/// </summary>
-	[DataTable(TableName="Quest")]
+#warning TODO comments
+	[DataTable(TableName="character_quest")]
 	public class DBQuest : DataObject
 	{
 		private string		m_name;

@@ -23,7 +23,8 @@ using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	[DataTable(TableName = "ServerProperty")]
+#warning TODO comments
+	[DataTable(TableName = "server_property")]
 	public class ServerProperty: DataObject
 	{
 		private string m_key;

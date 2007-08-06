@@ -26,7 +26,7 @@ namespace DOL.Database
 	/// <summary>
 	/// Archive table for Inventory item
 	/// </summary>
-	[DataTable(TableName = "InventoryItem_Archive")]
+	[DataTable(TableName = "inventory_item_archive")]
 	public class InventoryItemArchive : InventoryItem
 	{ }
 }

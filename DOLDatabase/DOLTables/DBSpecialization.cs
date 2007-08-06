@@ -24,7 +24,8 @@ namespace DOL.Database
 	/// <summary>
 	/// 
 	/// </summary>
-	[DataTable(TableName="Specialization")]
+#warning TODO comments
+	[DataTable(TableName="specialization")]
 	public class DBSpecialization : DataObject
 	{
 		protected string m_keyName;

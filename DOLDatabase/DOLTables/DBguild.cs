@@ -26,7 +26,7 @@ namespace DOL.Database
 	/// <summary>
 	/// Guild table
 	/// </summary>
-	[DataTable(TableName="Guild")]
+	[DataTable(TableName="guild")]
 	public class DBGuild : DataObject
 	{
 		static bool		m_autoSave;

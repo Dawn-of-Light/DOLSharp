@@ -28,7 +28,7 @@ namespace DOL
 		/// <summary>
 		/// Account table
 		/// </summary>
-		[DataTable(TableName = "Account")]
+		[DataTable(TableName = "account")]
 		public class Account : DataObject
 		{
 			private string m_name;

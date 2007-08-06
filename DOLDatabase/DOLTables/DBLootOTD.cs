@@ -28,7 +28,8 @@ namespace DOL
 		/// <summary>
 		/// Account table
 		/// </summary>
-		[DataTable(TableName="LootOTD")]
+#warning TODO comments
+		[DataTable(TableName="loot_otd")]
 		public class DBLootOTD : DataObject 
 		{
 			private string m_itemTemplateID;

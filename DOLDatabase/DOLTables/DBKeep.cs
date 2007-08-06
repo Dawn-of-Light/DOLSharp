@@ -24,7 +24,7 @@ namespace DOL.Database
 	/// <summary>
 	/// DB Keep is database of keep
 	/// </summary>
-	[DataTable(TableName = "Keep", PreCache = true)]
+	[DataTable(TableName = "keep", PreCache = true)]
 	public class DBKeep : DataObject
 	{
 		static bool m_autoSave;

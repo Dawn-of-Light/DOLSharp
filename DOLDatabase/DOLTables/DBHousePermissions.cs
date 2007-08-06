@@ -26,7 +26,8 @@ namespace DOL
 {
 	namespace Database
 	{
-		[DataTable(TableName = "DBHousePermissions")]
+#warning TODO comments
+		[DataTable(TableName = "house_permission")]
 		public class DBHousePermissions : DataObject
 		{
 			//important data

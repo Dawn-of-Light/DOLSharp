@@ -24,7 +24,8 @@ namespace DOL.Database
 	/// <summary>
 	/// 
 	/// </summary>
-	[DataTable(TableName="SpellLine")]
+#warning TODO comments
+	[DataTable(TableName="spell_line")]
 	public class DBSpellLine : DataObject
 	{
 		protected string m_name="unknown";

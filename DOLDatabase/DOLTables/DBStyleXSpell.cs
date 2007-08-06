@@ -24,7 +24,7 @@ namespace DOL.Database
     /// <summary>
     /// (procs) Database Storage of StyleXSpell
     /// </summary>
-    [DataTable(TableName = "StyleXSpell")]
+    [DataTable(TableName = "style_x_spell")]
     public class DBStyleXSpell : DataObject
     {
         static bool m_autoSave = false;

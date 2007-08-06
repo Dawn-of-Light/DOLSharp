@@ -26,7 +26,7 @@ namespace DOL.Database
 	/// keep hook point in DB
 	/// </summary>
 	/// 
-	[DataTable(TableName="KeepHookPoint")]
+	[DataTable(TableName="keep_hook_point")]
 	public class DBKeepHookPoint : DataObject
 	{
 		private int m_x;

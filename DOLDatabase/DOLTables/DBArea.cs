@@ -4,7 +4,7 @@ using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	[DataTable(TableName = "Area")]
+	[DataTable(TableName = "area")]
 	public class DBArea : DataObject
 	{
 		private string m_description;

@@ -7,7 +7,7 @@ namespace DOL.Database
 	/// <summary>
 	/// Table to hold positions of various Keep objects
 	/// </summary>
-	[DataTable(TableName = "KeepPosition")]
+	[DataTable(TableName = "keep_position")]
 	public class DBKeepPosition : DataObject
 	{
 		private int m_componentSkin;

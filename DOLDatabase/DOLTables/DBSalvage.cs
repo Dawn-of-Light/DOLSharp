@@ -24,7 +24,7 @@ namespace DOL.Database
 	/// <summary>
 	/// The salvage table
 	/// </summary>
-	[DataTable(TableName="Salvage")]
+	[DataTable(TableName="salvage")]
 	public class DBSalvage : DataObject
 	{
 		private int m_objectType;

@@ -26,7 +26,8 @@ namespace DOL.Database
 	/// <summary>
 	/// Account table
 	/// </summary>
-	[DataTable(TableName = "News")]
+#warning TODO comments
+	[DataTable(TableName = "news")]
 	public class DBNews : DataObject
 	{
 		private DateTime m_creationDate;

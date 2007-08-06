@@ -26,7 +26,7 @@ namespace DOL.Database
 	/// <summary>
 	/// Rank rules in guild
 	/// </summary>
-	[DataTable(TableName="GuildRank")]
+	[DataTable(TableName="guild_rank")]
 	public class DBRank : DataObject
 	{
 		static bool		m_autoSave;

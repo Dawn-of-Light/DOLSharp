@@ -32,7 +32,7 @@ namespace DOL.Database
 	/// <summary>
 	/// Database Storage of Tasks
 	/// </summary>
-	[DataTable(TableName="LootTemplate")]
+	[DataTable(TableName="loot_template")]
 	public class DBLootTemplate : DataObject
 	{
 		protected string	m_TemplateName = "";

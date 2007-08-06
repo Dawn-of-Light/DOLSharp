@@ -23,7 +23,7 @@ namespace DOL.Database
 	/// <summary>
 	/// Table of BindPoint where player pop when they die and released
 	/// </summary>
-	[DataTable(TableName="BindPoint")]
+	[DataTable(TableName="bind_point")]
 	public class BindPoint : DataObject
 	{
 		//This needs to be uint and ushort!

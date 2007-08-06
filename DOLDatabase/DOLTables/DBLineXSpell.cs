@@ -24,7 +24,7 @@ namespace DOL.Database
 	/// <summary>
 	/// 
 	/// </summary>
-	[DataTable(TableName="LineXSpell")]
+	[DataTable(TableName="line_x_spell")]
 	public class DBLineXSpell : DataObject
 	{
 		protected string m_line_name;

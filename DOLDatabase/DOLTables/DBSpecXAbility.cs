@@ -24,7 +24,8 @@ namespace DOL.Database
 	/// <summary>
 	/// defines what abilities are available at what speclevels
 	/// </summary>
-	[DataTable(TableName="SpecXAbility")]
+#warning TODO comments
+	[DataTable(TableName="spec_x_ability")]
 	public class DBSpecXAbility : DataObject
 	{
 		protected string m_spec;

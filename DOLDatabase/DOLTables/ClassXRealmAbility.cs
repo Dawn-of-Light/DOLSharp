@@ -6,7 +6,7 @@ namespace DOL.Database
 	/// <summary>
 	/// Class => Realm abilities collection
 	/// </summary>
-	[DataTable(TableName = "ClassXRealmAbility")]
+	[DataTable(TableName = "class_x_realm_ability")]
 	public class ClassXRealmAbility : DataObject
 	{
 		static bool m_autoSave;

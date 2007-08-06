@@ -21,7 +21,8 @@ using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	[DataTable(TableName = "KeepHookPointItem")]
+#warning TODO comments
+	[DataTable(TableName = "keep_hook_point_item")]
 	public class DBKeepHookPointItem : DataObject
 	{
 		private int m_keepID;

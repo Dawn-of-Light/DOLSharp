@@ -26,8 +26,8 @@ namespace DOL
 {
 	namespace Database
 	{
-
-		[DataTable(TableName = "DBHouseCharsXPerms")]
+#warning TODO comments
+		[DataTable(TableName = "house_char_perms")]
 		public class DBHouseCharsXPerms : DataObject
 		{
 			//important data

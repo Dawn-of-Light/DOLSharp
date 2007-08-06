@@ -30,7 +30,8 @@ namespace DOL.Database
 	/// <summary>
 	/// The Database Entry for an Outdoor Housing Item
 	/// </summary>
-	[DataTable(TableName = "DBOutdoorItem")]
+#warning TODO better comments
+	[DataTable(TableName = "outdoor_item")]
 	public class DBHouseOutdoorItem : DataObject
 	{
 		private int m_housenumber;

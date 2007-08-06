@@ -24,10 +24,11 @@ namespace DOL.Database
 	/// <summary>
 	/// 
 	/// </summary>
-	[DataTable(TableName = "Spell")]
+#warning TODO comments
+	[DataTable(TableName = "spell")]
 	public class DBSpell : DataObject
 	{
-		protected string m_id_unique;
+		protected string m_id_unique; // ???
 		protected int m_spellid;
 		protected int m_effectid;
 		protected int m_icon;

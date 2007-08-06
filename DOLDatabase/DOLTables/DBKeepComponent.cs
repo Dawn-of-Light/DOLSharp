@@ -24,7 +24,7 @@ namespace DOL.Database
 	/// <summary>
 	/// DB Keep component is database of keep
 	/// </summary>
-	[DataTable(TableName="KeepComponent")]
+	[DataTable(TableName="keep_component")]
 	public class DBKeepComponent : DataObject
 	{
 		static bool	m_autoSave;

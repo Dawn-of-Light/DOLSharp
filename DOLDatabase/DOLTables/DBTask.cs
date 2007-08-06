@@ -32,7 +32,8 @@ namespace DOL.Database
 	/// <summary>
 	/// Database Storage of Tasks
 	/// </summary>
-	[DataTable(TableName="Task")]
+#warning TODO comments
+	[DataTable(TableName="character_task")]
 	public class DBTask : DataObject
 	{
 		protected string	m_charName = "Empty";		

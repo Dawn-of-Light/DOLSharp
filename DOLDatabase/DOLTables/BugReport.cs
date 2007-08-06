@@ -23,7 +23,7 @@ using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	[DataTable(TableName = "BugReport")]
+	[DataTable(TableName = "bug_report")]
 	public class BugReport : DataObject
 	{
 		private int m_reportID;

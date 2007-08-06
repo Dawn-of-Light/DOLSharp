@@ -23,7 +23,7 @@ namespace DOL.Database
 	/// <summary>
 	/// DB relic is database of relic
 	/// </summary>
-	[DataTable(TableName = "Relic", PreCache = true)]
+	[DataTable(TableName = "relic", PreCache = true)]
 	public class DBRelic : DataObject
 	{
 		static bool m_autoSave;

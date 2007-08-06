@@ -24,7 +24,7 @@ namespace DOL.Database
 	/// <summary>
 	/// The ability table
 	/// </summary>
-	[DataTable(TableName="Ability")]
+	[DataTable(TableName="ability")]
 	public class DBAbility : DataObject
 	{
 		protected string m_keyName;

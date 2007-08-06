@@ -24,7 +24,7 @@ namespace DOL.Database
 	/// <summary>
 	/// Faction table
 	/// </summary>
-	[DataTable(TableName = "Faction")]
+	[DataTable(TableName = "faction")]
 	public class DBFaction : DataObject
 	{
 		private bool m_autoSave;

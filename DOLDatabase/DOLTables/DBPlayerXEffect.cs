@@ -10,7 +10,9 @@ namespace DOL
 		/// <summary>
 		/// Account table
 		/// </summary>
-		[DataTable(TableName = "PlayerXEffect")]
+#warning TODO comments
+		//[DataTable(TableName = "PlayerXEffect")]
+		[DataTable(TableName = "character_effect")]
 		public class PlayerXEffect : DataObject
 		{
 			private uint m_charid;

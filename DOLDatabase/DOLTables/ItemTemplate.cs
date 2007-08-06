@@ -24,7 +24,8 @@ using System.Collections;
 
 namespace DOL.Database
 {
-	[DataTable(TableName = "ItemTemplate", PreCache = true)]
+#warning TODO comments
+	[DataTable(TableName = "item_template", PreCache = true)]
 	public class ItemTemplate : DataObject
 	{
 		protected string m_id_nb;

@@ -26,7 +26,7 @@ namespace DOL.Database
 	/// The NPCEqupment table holds standard equipment
 	/// templates that npcs may wear!
 	/// </summary>
-	[DataTable(TableName="NPCEquipment")]
+	[DataTable(TableName="npc_equipment")]
 	public class NPCEquipment : DataObject
 	{
 		/// <summary>

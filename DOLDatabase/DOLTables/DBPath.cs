@@ -31,7 +31,7 @@ namespace DOL.Database
 	/// <summary>
 	/// 
 	/// </summary>
-	[DataTable(TableName="Path")]
+	[DataTable(TableName="path")]
 	public class DBPath : DataObject
 	{
 		protected string m_pathID = "invalid";

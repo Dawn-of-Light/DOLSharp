@@ -26,7 +26,7 @@ namespace DOL.Database
 	/// <summary>
 	/// Archive Account table
 	/// </summary>
-	[DataTable(TableName = "Account_Archive")]
+	[DataTable(TableName = "account_archive")]
 	public class AccountArchive : Account
 	{ }
 }

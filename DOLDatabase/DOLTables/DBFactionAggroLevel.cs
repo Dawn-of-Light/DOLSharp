@@ -27,7 +27,7 @@ namespace DOL.Database
 	/// Aggro level of faction against character
 	/// </summary>
 	/// 
-	[DataTable(TableName="FactionAggroLevel")]
+	[DataTable(TableName="faction_aggro_level")]
 	public class DBFactionAggroLevel : DataObject
 	{
 		private string     m_characterID;

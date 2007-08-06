@@ -23,7 +23,8 @@ using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	[DataTable(TableName="SinglePermission")]
+#warning TODO comments
+	[DataTable(TableName="single_permission")]
 	public class DBSinglePermission : DataObject
 	{
 		static bool		m_autoSave;

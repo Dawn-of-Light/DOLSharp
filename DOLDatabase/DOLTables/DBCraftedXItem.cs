@@ -27,7 +27,7 @@ namespace DOL
 		/// <summary>
 		/// raw materials for craft item
 		/// </summary>
-		[DataTable(TableName="CraftedXItem")]
+		[DataTable(TableName="crafted_x_item")]
 		public class DBCraftedXItem : DataObject
 		{
 			static bool	m_autoSave;

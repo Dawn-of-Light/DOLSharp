@@ -243,7 +243,8 @@ namespace DOL.Database
 	/// ItemTemplate table and also some more values that
 	/// are neccessary to store the inventory position
 	/// </summary>
-	[DataTable(TableName = "InventoryItem")]
+#warning TODO comments
+	[DataTable(TableName = "inventory_item")]
 	public class InventoryItem : ItemTemplate
 	{
 		protected uint m_ownerID;
