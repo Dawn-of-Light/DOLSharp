@@ -1005,7 +1005,7 @@ namespace DOL.GS.Scripts
 #warning TODO remove archive
 									List<Character> chars = new List<Character>();
 									chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(Character), "GuildID = '" + client.Player.GuildID + "'"));
-									chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(CharacterArchive), "GuildID = '" + client.Player.GuildID + "'"));
+									//chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(CharacterArchive), "GuildID = '" + client.Player.GuildID + "'"));
 
 									foreach (Character ply in chars)
 									{
@@ -1293,8 +1293,8 @@ namespace DOL.GS.Scripts
 								else
 								{
 									Character c = (Character)GameServer.Database.SelectObject(typeof(Character), "Name = '" + GameServer.Database.Escape(playername) + "'");
-									if (c == null)
-										c = (Character)GameServer.Database.SelectObject(typeof(CharacterArchive), "Name = '" + GameServer.Database.Escape(playername) + "'");
+									//if (c == null)
+										//c = (Character)GameServer.Database.SelectObject(typeof(CharacterArchive), "Name = '" + GameServer.Database.Escape(playername) + "'");
 
 									if (c == null)
 									{
@@ -1306,7 +1306,7 @@ namespace DOL.GS.Scripts
 								}
 								List<Character> chars = new List<Character>();
 								chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(Character), "AccountID = '" + accountId + "'"));
-								chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(CharacterArchive), "AccountID = '" + accountId + "'"));
+								//chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(CharacterArchive), "AccountID = '" + accountId + "'"));
 
 								foreach (Character ply in chars)
 								{
@@ -1326,8 +1326,8 @@ namespace DOL.GS.Scripts
 								else
 								{
 									Character c = (Character)GameServer.Database.SelectObject(typeof(Character), "Name = '" + GameServer.Database.Escape(args[2]) + "'");
-									if (c == null)
-										c = (Character)GameServer.Database.SelectObject(typeof(CharacterArchive), "Name = '" + GameServer.Database.Escape(args[2]) + "'");
+									//if (c == null)
+									//    c = (Character)GameServer.Database.SelectObject(typeof(CharacterArchive), "Name = '" + GameServer.Database.Escape(args[2]) + "'");
 									if (c == null)
 									{
 										client.Out.SendMessage(c.Name + " does not exist.", eChatType.CT_System, eChatLoc.CL_SystemWindow);

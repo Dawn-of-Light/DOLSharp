@@ -60,12 +60,12 @@ namespace DOL.GS.Keeps
 					if (WorldMgr.GetRegion((ushort)datakeep.Region) == null)
 						continue;
 					AbstractGameKeep keep;
-					if ((datakeep.KeepID >> 8) != 0)
+					if ((datakeep.ObjectId >> 8) != 0)
 						keep = new GameKeepTower();
 					else
 						keep = new GameKeep();
 					keep.Load(datakeep);
-					m_keeps.Add(datakeep.KeepID, keep);
+					m_keeps.Add((int)datakeep.ObjectId, keep);
 				}
 				foreach (AbstractGameKeep keep in m_keeps.Values)
 				{

@@ -90,7 +90,9 @@ namespace DOL.GS
 			if (template == null)
 			{
 				if (log.IsWarnEnabled)
-					log.Warn("Item Creation: Template not found!\n"+Environment.StackTrace);
+					log.Warn("Item Creation: Template : " + templateID + " not found!"/*\n"/*+Environment.StackTrace*/);
+				if (log.IsDebugEnabled)
+					log.Debug(Environment.StackTrace);
 				return null;
 			}
 

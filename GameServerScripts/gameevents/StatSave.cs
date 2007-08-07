@@ -180,7 +180,7 @@ namespace DOL.Database
 	/// <summary>
 	/// Database Storage of ServerStats
 	/// </summary>
-	[DataTable(TableName = "serverstats")]
+	[DataTable(TableName = "server_stats")]
 	public class DBServerStats : DataObject
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

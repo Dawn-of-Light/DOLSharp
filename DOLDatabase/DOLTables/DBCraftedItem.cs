@@ -30,7 +30,7 @@ namespace DOL
 		[DataTable(TableName="crafted_item")]
 		public class DBCraftedItem : DataObject
 		{
-			private string m_craftedItemID;
+			//private string m_craftedItemID;//use uid
 			private int m_craftinglevel;
 			private string m_id_nb;
 			private int m_craftingSkillType;
@@ -62,19 +62,19 @@ namespace DOL
 			/// <summary>
 			/// Crafting id of item to craft
 			/// </summary>
-			[PrimaryKey]
-			public string CraftedItemID
-			{
-				get
-				{
-					return m_craftedItemID;
-				}
-				set
-				{
-					Dirty = true;
-					m_craftedItemID = value;
-				}
-			}
+			//[PrimaryKey]
+			//public string CraftedItemID
+			//{
+			//    get
+			//    {
+			//        return m_craftedItemID;
+			//    }
+			//    set
+			//    {
+			//        Dirty = true;
+			//        m_craftedItemID = value;
+			//    }
+			//}
 
 			/// <summary>
 			/// Index of item to craft

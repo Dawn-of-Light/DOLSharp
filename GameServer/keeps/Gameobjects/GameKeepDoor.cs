@@ -455,7 +455,7 @@ namespace DOL.GS.Keeps
 			m_state = eDoorState.Closed;
 
 			DoorMgr.Doors[m_doorID] = this;
-			this.AddToWorld();
+			//this.AddToWorld();
 
 			foreach (AbstractArea area in this.CurrentAreas)
 			{
@@ -468,7 +468,7 @@ namespace DOL.GS.Keeps
 					break;
 				}
 			}
-
+			this.AddToWorld();
 			m_health = MaxHealth;
 			StartHealthRegeneration();
 		}

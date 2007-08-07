@@ -36,7 +36,7 @@ namespace DOL.Database
 		private int m_heading;
 		private byte m_realm;
 		private byte m_level;
-		private int m_keepID;
+		//private int m_keepID; use uid
 		private string m_guildName;
 		private int m_albionDifficultyLevel;
 		private int m_midgardDifficultyLevel;
@@ -73,22 +73,22 @@ namespace DOL.Database
 			}
 		}
 
-		/// <summary>
-		/// Index of keep
-		/// </summary>
-		[PrimaryKey]
-		public int KeepID
-		{
-			get
-			{
-				return m_keepID;
-			}
-			set
-			{
-				Dirty = true;
-				m_keepID = value;
-			}
-		}
+		///// <summary>
+		///// Index of keep
+		///// </summary>
+		//[PrimaryKey]
+		//public int KeepID
+		//{
+		//    get
+		//    {
+		//        return m_keepID;
+		//    }
+		//    set
+		//    {
+		//        Dirty = true;
+		//        m_keepID = value;
+		//    }
+		//}
 
 		/// <summary>
 		/// Name of keep

@@ -134,7 +134,6 @@
     <Compile Include="DOLTables\Account.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\Account_Archive.cs" />
     <Compile Include="DOLTables\BindPoint.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -142,7 +141,6 @@
     <Compile Include="DOLTables\Character.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\Character_Archive.cs" />
     <Compile Include="DOLTables\ClassXRealmAbility.cs" />
     <Compile Include="DOLTables\DBHousepointItem.cs" />
     <Compile Include="DOLTables\DBHouseCharsXPerms.cs" />
@@ -155,7 +153,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DOLTables\DBPlayerXEffect.cs" />
-    <Compile Include="DOLTables\InventoryItem_Archive.cs" />
     <Compile Include="DOLTables\ServerProperty.cs" />
     <Compile Include="DOLTables\DBAbility.cs">
       <SubType>Code</SubType>

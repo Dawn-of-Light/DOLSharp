@@ -81,7 +81,7 @@ namespace DOL.GS
 			{
 				if (rawmaterial.ItemTemplate == null)
 				{
-					log.Error("rawmaterial " + rawmaterial.IngredientId_nb + " for recipe " + craftItemData.CraftedItemID + " cannot find the itemtemplate to match");
+					log.Error("rawmaterial " + rawmaterial.IngredientId_nb + " for recipe " + craftItemData.ObjectId + " cannot find the itemtemplate to match");
 					continue;
 				}
 				if(rawmaterial.ItemTemplate.Model == 519) // metal bar

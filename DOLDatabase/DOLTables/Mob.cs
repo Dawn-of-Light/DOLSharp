@@ -52,7 +52,7 @@ namespace DOL.Database
 
 		private uint m_equipmentTemplateID;
 
-		private string m_itemsListTemplateID;
+		private uint m_itemsListTemplateID;
 
 		private int m_npcTemplateID;
 		private int m_bodyType;
@@ -341,7 +341,7 @@ namespace DOL.Database
 		/// The Mob's Items List Template ID
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
-		public string ItemsListTemplateID
+		public uint ItemsListTemplateID
 		{
 			get
 			{

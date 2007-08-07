@@ -1881,7 +1881,7 @@ namespace DOL.GS.Scripts
 
 						DBKeep keep = new DBKeep();
 						keep.Name = String.Join(" ", args, 4, args.Length - 4);
-						keep.KeepID = keepid;
+						keep.ObjectId = (uint)keepid;
 						keep.Level = 0;
 						keep.Region = client.Player.CurrentRegionID;
 						keep.X = client.Player.X;
@@ -1891,7 +1891,7 @@ namespace DOL.GS.Scripts
 						keep.BaseLevel = baseLevel;
 						GameServer.Database.AddNewObject(keep);
 
-						DBKeepComponent towerComponent = new DBKeepComponent(1, (int)GameKeepComponent.eComponentSkin.Tower, 0, 0, 0, 0, 100, keep.KeepID);
+						DBKeepComponent towerComponent = new DBKeepComponent(1, (int)GameKeepComponent.eComponentSkin.Tower, 0, 0, 0, 0, 100, (int)keep.ObjectId);
 						GameServer.Database.AddNewObject(towerComponent);
 
 						GameKeepTower k = new GameKeepTower();
@@ -1958,7 +1958,7 @@ namespace DOL.GS.Scripts
 
 						DBKeep keep = new DBKeep();
 						keep.Name = String.Join(" ", args, 5, args.Length - 5);
-						keep.KeepID = keepid;
+						keep.ObjectId = (uint)keepid;
 						keep.Level = 0;
 						keep.Region = client.Player.CurrentRegionID;
 						keep.X = client.Player.X;

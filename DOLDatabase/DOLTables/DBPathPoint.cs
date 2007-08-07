@@ -25,7 +25,7 @@ namespace DOL.Database
 	/// 
 	/// </summary>
 #warning TODO comments
-	[DataTable(TableName="path_points")]
+	[DataTable(TableName="path_point")]
 	public class DBPathPoint : DataObject
 	{
 		protected string m_pathID = "invalid";

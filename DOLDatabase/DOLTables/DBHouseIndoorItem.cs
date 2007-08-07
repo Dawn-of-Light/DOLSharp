@@ -30,7 +30,7 @@ namespace DOL
 	namespace Database
 	{
 #warning TODO comments
-		[DataTable(TableName="indoor_item")]
+		[DataTable(TableName="house_indoor_item")]
 		public class DBHouseIndoorItem : DataObject
 		{
 			//important data

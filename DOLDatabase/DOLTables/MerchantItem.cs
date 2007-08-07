@@ -31,7 +31,7 @@ namespace DOL
 		{
 			static bool m_autoSave;
 
-			private string		m_item_list_ID;
+			private uint		m_item_list_ID;
 			private string		m_id_nb;
 			private int			m_page_number;
 			private int			m_slot_pos;
@@ -55,7 +55,7 @@ namespace DOL
 			}
 
 			[DataElement(AllowDbNull=false, Index=true)]
-			public string ItemListID
+			public uint ItemListID
 			{
 				get
 				{

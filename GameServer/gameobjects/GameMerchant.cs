@@ -327,7 +327,7 @@ namespace DOL.GS
 			base.LoadFromDatabase(merchantobject);
 			if (!(merchantobject is Mob)) return;
 			Mob merchant = (Mob)merchantobject;
-			if (merchant.ItemsListTemplateID != null && merchant.ItemsListTemplateID.Length > 0)
+			if (merchant.ItemsListTemplateID != 0)
 				m_tradeItems = new MerchantTradeItems(merchant.ItemsListTemplateID);
 		}
 
@@ -365,7 +365,7 @@ namespace DOL.GS
 			merchant.EquipmentTemplateID = EquipmentTemplateID;
 			if (m_tradeItems == null)
 			{
-				merchant.ItemsListTemplateID = null;
+				merchant.ItemsListTemplateID = 0;
 			}
 			else
 			{

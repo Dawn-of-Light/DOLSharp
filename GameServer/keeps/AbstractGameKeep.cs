@@ -271,8 +271,8 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public int KeepID
 		{
-			get	{ return DBKeep.KeepID; }
-			set	{ DBKeep.KeepID = value; }
+			get	{ return (int)DBKeep.ObjectId; }
+			set	{ DBKeep.ObjectId = (uint) value; }
 		}
 
 		/// <summary>

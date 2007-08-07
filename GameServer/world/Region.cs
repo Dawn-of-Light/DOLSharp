@@ -541,7 +541,7 @@ namespace DOL.GS
 							try
 							{
 								Type[] constructorParams;
-								if (mob.NPCTemplateID != -1)
+								if (mob.NPCTemplateID != 0)
 								{
 									constructorParams = new Type[] { typeof(INpcTemplate) };
 									ConstructorInfo handlerConstructor = typeof(GameNPC).GetConstructor(constructorParams);

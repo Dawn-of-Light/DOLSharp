@@ -156,7 +156,7 @@ namespace DOL.GS.Scripts
 						{
 							try
 							{
-								string templateID = args[2];
+								uint templateID = UInt32.Parse(args[2]);
 								targetMerchant.TradeItems = new MerchantTradeItems(templateID);
 								targetMerchant.SaveIntoDatabase();
 								client.Out.SendMessage("Merchant articles list loaded!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -225,7 +225,7 @@ namespace DOL.GS.Scripts
 												return 1;
 											}
 
-											MerchantItem item = (MerchantItem)GameServer.Database.SelectObject(typeof(MerchantItem), "ItemListID = '" + GameServer.Database.Escape(targetMerchant.TradeItems.ItemsListID) + "' AND PageNumber = '" + page + "' AND SlotPosition = '" + slot + "'");
+											MerchantItem item = (MerchantItem)GameServer.Database.SelectObject(typeof(MerchantItem), "ItemListID = '" + targetMerchant.TradeItems.ItemsListID + "' AND PageNumber = '" + page + "' AND SlotPosition = '" + slot + "'");
 											if (item == null)
 											{
 												item = new MerchantItem();
@@ -282,7 +282,7 @@ namespace DOL.GS.Scripts
 												return 1;
 											}
 
-											MerchantItem item = (MerchantItem)GameServer.Database.SelectObject(typeof(MerchantItem), "ItemListID = '" + GameServer.Database.Escape(targetMerchant.TradeItems.ItemsListID) + "' AND PageNumber = '" + page + "' AND SlotPosition = '" + slot + "'");
+											MerchantItem item = (MerchantItem)GameServer.Database.SelectObject(typeof(MerchantItem), "ItemListID = '" + targetMerchant.TradeItems.ItemsListID + "' AND PageNumber = '" + page + "' AND SlotPosition = '" + slot + "'");
 											if (item == null)
 											{
 												client.Out.SendMessage("Slot " + slot + " in page " + page + " is already empty.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -317,7 +317,7 @@ namespace DOL.GS.Scripts
 											}
 											client.Out.SendMessage("Deleting articles list template ...", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-											MerchantItem[] merchantitems = (MerchantItem[])GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemsListID = '" + GameServer.Database.Escape(targetMerchant.TradeItems.ItemsListID) + "'");
+											MerchantItem[] merchantitems = (MerchantItem[])GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemsListID = '" + targetMerchant.TradeItems.ItemsListID + "'");
 											if (merchantitems.Length > 0)
 											{
 												foreach (MerchantItem item in merchantitems)

@@ -300,7 +300,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 
-			njiedi.TradeItems = new MerchantTradeItems(null);
+			njiedi.TradeItems = new MerchantTradeItems(0);
 			if (!njiedi.TradeItems.AddTradeItem(1, eMerchantWindowSlot.FirstEmptyInPage, ticketToSvasudFaste))
 				if (log.IsWarnEnabled)
 					log.Warn("ticketToSvasudFaste not added");

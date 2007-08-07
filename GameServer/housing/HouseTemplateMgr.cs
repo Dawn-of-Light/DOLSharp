@@ -77,19 +77,19 @@ namespace DOL.GS.Housing
 
 		static void LoadItemLists()
 		{
-			AlbionLotMarkerItems = new MerchantTradeItems("alb_lotmarker");
-			MidgardLotMarkerItems = new MerchantTradeItems("mid_lotmarker");
-			HiberniaLotMarkerItems = new MerchantTradeItems("hib_lotmarker");
+			AlbionLotMarkerItems = new MerchantTradeItems(100000/*"alb_lotmarker"*/);
+			MidgardLotMarkerItems = new MerchantTradeItems(100001/*"mid_lotmarker"*/);
+			HiberniaLotMarkerItems = new MerchantTradeItems(100002/*"hib_lotmarker"*/);
 
-			IndoorMenuItems = new MerchantTradeItems("housing_indoor_menu");
-			IndoorShopItems = new MerchantTradeItems("housing_indoor_shop");
-			OutdoorMenuItems = new MerchantTradeItems("housing_outdoor_menu");
-			OutdoorShopItems = new MerchantTradeItems("housing_outdoor_shop");
+			IndoorMenuItems = new MerchantTradeItems(100003/*"housing_indoor_menu"*/);
+			IndoorShopItems = new MerchantTradeItems(100004/*"housing_indoor_shop"*/);
+			OutdoorMenuItems = new MerchantTradeItems(100005/*"housing_outdoor_menu"*/);
+			OutdoorShopItems = new MerchantTradeItems(100006/*"housing_outdoor_shop"*/);
 
-			IndoorNPCMenuItems = new MerchantTradeItems("housing_indoor_npc");
-			IndoorVaultMenuItems = new MerchantTradeItems("housing_indoor_vault");
-			IndoorCraftMenuItems = new MerchantTradeItems("housing_indoor_craft");
-			IndoorBindstoneMenuItems = new MerchantTradeItems("housing_indoor_bindstone");
+			IndoorNPCMenuItems = new MerchantTradeItems(100007/*"housing_indoor_npc"*/);
+			IndoorVaultMenuItems = new MerchantTradeItems(100008/*"housing_indoor_vault"*/);
+			IndoorCraftMenuItems = new MerchantTradeItems(100009/*"housing_indoor_craft"*/);
+			IndoorBindstoneMenuItems = new MerchantTradeItems(100010/*"housing_indoor_bindstone"*/);
 		}
 
 		static void CheckItemTemplates()
@@ -154,26 +154,26 @@ namespace DOL.GS.Housing
 		{
 			//lot markers
 			string[] alblotmarkeritems = {"alb_cottage_deed", "alb_house_deed", "alb_villa_deed", "alb_mansion_deed", "porch_deed", "porch_remove_deed"};
-			CheckMerchantItems("alb_lotmarker", alblotmarkeritems);
+			CheckMerchantItems(100000/*"alb_lotmarker"*/, alblotmarkeritems);
 			string[] midlotmarkeritems = {"mid_cottage_deed", "mid_house_deed", "mid_villa_deed", "mid_mansion_deed", "porch_deed", "porch_remove_deed"};
-			CheckMerchantItems("mid_lotmarker", midlotmarkeritems);
+			CheckMerchantItems(100001/*"mid_lotmarker"*/, midlotmarkeritems);
 			string[] hiblotmarkeritems = {"hib_cottage_deed", "hib_house_deed", "hib_villa_deed", "hib_mansion_deed", "porch_deed", "porch_remove_deed"};
-			CheckMerchantItems("hib_lotmarker", hiblotmarkeritems);
+			CheckMerchantItems(100002/*"hib_lotmarker"*/, hiblotmarkeritems);
 
 			//hookpoints
 			string[] indoornpc = { "hastener", "smith", "enchanter", "emblemeer", "healer", "recharger", "hib_teleporter", "apprentice_merchant", "grandmaster_merchant", "incantation_merchant", "poison_dye_supplies", "potion_tincture_enchantment_supplies", "poison_potion_supplies", "taxidermy_supplies", "siegecraft_supplies", "hib_vault_keeper", "dye_supply_master" };
-			CheckMerchantItems("housing_indoor_npc", indoornpc);
+			CheckMerchantItems(100007/*"housing_indoor_npc"*/, indoornpc);
 			string[] indoorbindstone = { "hib_bindstone" };
-			CheckMerchantItems("housing_indoor_bindstone", indoorbindstone);
+			CheckMerchantItems(100010/*"housing_indoor_bindstone"*/, indoorbindstone);
 			string[] indoorcraft = { "alchemy_table", "forge", "lathe" };
-			CheckMerchantItems("housing_indoor_craft", indoorcraft);
+			CheckMerchantItems(100009/*"housing_indoor_craft"*/, indoorcraft);
 			string[] indoorvault = { "hib_vault" };
-			CheckMerchantItems("housing_indoor_vault", indoorvault);
+			CheckMerchantItems(100008/*"housing_indoor_vault"*/, indoorvault);
 		}
 
-		static void CheckMerchantItems(string merchantid, string[] itemids)
+		static void CheckMerchantItems(/*string*/ uint merchantid, string[] itemids)
 		{
-			DataObject[] merchantitems = GameServer.Database.SelectObjects(typeof (MerchantItem), "ItemListID=\'" + GameServer.Database.Escape(merchantid) + "\'");
+			DataObject[] merchantitems = GameServer.Database.SelectObjects(typeof (MerchantItem), "ItemListID=\'" + merchantid + "\'");
 			int slot = 0;
 			foreach (string itemid in itemids)
 			{
