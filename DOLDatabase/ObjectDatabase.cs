@@ -516,10 +516,11 @@ namespace DOL.Database
 
 		public DataObject FindObjectByKey(Type objectType, object key)
 		{
+#warning TODO
 			if (Activator.CreateInstance(objectType) is ItemTemplate)
 			{
 				//return FindObjectByIndex(objectType, key);
-				return SelectObject(objectType, "Id_Nb = '" + key.ToString() + "'");
+				return SelectObject(objectType, "Id_Nb = '" + connection.Escape(key.ToString()) + "'");
 			}
 
 
