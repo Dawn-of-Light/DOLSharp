@@ -26,7 +26,6 @@ namespace DOL.Database
 	/// <summary>
 	/// 
 	/// </summary>
-#warning TODO comments
 	[DataTable(TableName="character_quest")]
 	public class DBQuest : DataObject
 	{

@@ -396,7 +396,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 			else
 			{
-				GameServer.Database.WriteDatabaseTable(typeof(Character));
+#warning it doesn't do anything with mysql database
+				//GameServer.Database.WriteDatabaseTable(typeof(Character));
 				GameServer.Database.FillObjectRelations(client.Account);
 			}
 			return 1;

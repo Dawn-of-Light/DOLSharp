@@ -69,96 +69,96 @@ namespace DOL.Database
 			return ar;
 		}
 
-		/// <summary>
-		/// Loads the tables from all datasets
-		/// </summary>
-		public void LoadDatabaseTables()
-		{
-			IDictionaryEnumerator i = tableDatasets.GetEnumerator();
+//        /// <summary>
+//        /// Loads the tables from all datasets
+//        /// </summary>
+//        public void LoadDatabaseTables()
+//        {
+//            IDictionaryEnumerator i = tableDatasets.GetEnumerator();
 
-			while (i.MoveNext())
-			{
-				if (log.IsInfoEnabled)
-					log.Info("Loading table " + i.Key);
-#warning TODO this has no effect with mysql database
-				connection.LoadDataSet((string)i.Key, GetDataSet((string)i.Key));
-			}
+//            while (i.MoveNext())
+//            {
+//                if (log.IsInfoEnabled)
+//                    log.Info("Loading table " + i.Key);
+//#warning TODO this has no effect with mysql database
+//                connection.LoadDataSet((string)i.Key, GetDataSet((string)i.Key));
+//            }
 
-		}
+//        }
 
-		public void ReloadDatabaseTables()
-		{
-			IDictionaryEnumerator i = tableDatasets.GetEnumerator();
+//        public void ReloadDatabaseTables()
+//        {
+//            IDictionaryEnumerator i = tableDatasets.GetEnumerator();
 
-			while (i.MoveNext())
-			{
-#warning TODO this has no effect with mysql database
-				connection.LoadDataSet((string)i.Key, GetDataSet((string)i.Key));
-				ReloadCache((string)i.Key);
-			}
-		}
+//            while (i.MoveNext())
+//            {
+//#warning TODO this has no effect with mysql database
+//                connection.LoadDataSet((string)i.Key, GetDataSet((string)i.Key));
+//                ReloadCache((string)i.Key);
+//            }
+//        }
 
-		public void WriteDatabaseTables()
-		{
-			IDictionaryEnumerator i = tableDatasets.GetEnumerator();
-			while (i.MoveNext())
-			{
-				if (log.IsInfoEnabled)
-					log.Info("Saving table " + i.Key);
-				try
-				{
-#warning TODO this has no effect with mysql database
-					connection.SaveDataSet((string)i.Key, GetDataSet((string)i.Key));
-					if (log.IsInfoEnabled)
-						log.Info("Table " + i.Key + " saved");
-				}
-				catch (Exception e)
-				{
-					if (log.IsErrorEnabled)
-						log.Error("Error saving table " + i.Key, e);
-				}
-			}
-		}
+//        public void WriteDatabaseTables()
+//        {
+//            IDictionaryEnumerator i = tableDatasets.GetEnumerator();
+//            while (i.MoveNext())
+//            {
+//                if (log.IsInfoEnabled)
+//                    log.Info("Saving table " + i.Key);
+//                try
+//                {
+//#warning TODO this has no effect with mysql database
+//                    connection.SaveDataSet((string)i.Key, GetDataSet((string)i.Key));
+//                    if (log.IsInfoEnabled)
+//                        log.Info("Table " + i.Key + " saved");
+//                }
+//                catch (Exception e)
+//                {
+//                    if (log.IsErrorEnabled)
+//                        log.Error("Error saving table " + i.Key, e);
+//                }
+//            }
+//        }
 
-		public void WriteDatabaseTable(Type objectType)
-		{
-			ThreadPriority oldprio = Thread.CurrentThread.Priority;
-			Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-			string tableName = DataObject.GetTableName(objectType);
-			if (log.IsInfoEnabled)
-				log.Info("Saving single table " + tableName);
-			try
-			{
-#warning TODO this has no effect with mysql database
-				connection.SaveDataSet(tableName, GetDataSet(tableName));
-				if (log.IsInfoEnabled)
-					log.Info("Single Table " + tableName + " saved");
-			}
-			catch (Exception e)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("Error saving table " + tableName, e);
-			}
-			finally
-			{
-				Thread.CurrentThread.Priority = oldprio;
-			}
-		}
+//        public void WriteDatabaseTable(Type objectType)
+//        {
+//            ThreadPriority oldprio = Thread.CurrentThread.Priority;
+//            Thread.CurrentThread.Priority = ThreadPriority.Lowest;
+//            string tableName = DataObject.GetTableName(objectType);
+//            if (log.IsInfoEnabled)
+//                log.Info("Saving single table " + tableName);
+//            try
+//            {
+//#warning TODO this has no effect with mysql database
+//                connection.SaveDataSet(tableName, GetDataSet(tableName));
+//                if (log.IsInfoEnabled)
+//                    log.Info("Single Table " + tableName + " saved");
+//            }
+//            catch (Exception e)
+//            {
+//                if (log.IsErrorEnabled)
+//                    log.Error("Error saving table " + tableName, e);
+//            }
+//            finally
+//            {
+//                Thread.CurrentThread.Priority = oldprio;
+//            }
+//        }
 
-		public void ReloadDatabaseTable(Type objectType)
-		{
-			string tableName = DataObject.GetTableName(objectType);
-#warning TODO this has no effect with mysql database
-			LoadDatabaseTable(objectType);
-			ReloadCache(tableName);
-		}
+//        public void ReloadDatabaseTable(Type objectType)
+//        {
+//            string tableName = DataObject.GetTableName(objectType);
+//#warning TODO this has no effect with mysql database
+//            LoadDatabaseTable(objectType);
+//            ReloadCache(tableName);
+//        }
 
-		public void LoadDatabaseTable(Type objectType)
-		{
-			string tableName = DataObject.GetTableName(objectType);
-#warning TODO this has no effect with mysql database
-			connection.LoadDataSet(tableName, GetDataSet(tableName));
-		}
+//        public void LoadDatabaseTable(Type objectType)
+//        {
+//            string tableName = DataObject.GetTableName(objectType);
+//#warning TODO this has no effect with mysql database
+//            connection.LoadDataSet(tableName, GetDataSet(tableName));
+//        }
 
 		public int GetObjectCount(Type objectType)
 		{
@@ -178,7 +178,7 @@ namespace DOL.Database
 			return (int)count;
 		}
 
-#warning TODO do we need this, I don't like it
+//#warning TODO do we need this, I don't like it
 		/*public void ArchiveTables()
 		{
 			//if (!connection.IsSQLConnection)
@@ -259,7 +259,7 @@ namespace DOL.Database
 			{
 				string tableName = dataObject.TableName;
 
-#warning TODO
+//#warning TODO
 				//if (dataObject.ObjectId == null)
 				//{
 				//    dataObject.ObjectId = IdGenerator.generateId();
@@ -350,7 +350,8 @@ namespace DOL.Database
 				}
 
 				dataObject.Dirty = false;
-				PutObjectInCache(tableName, dataObject);
+#warning it doesn't do anything
+				//PutObjectInCache(tableName, dataObject);
 				dataObject.IsValid = true;
 
 			}
@@ -564,20 +565,20 @@ namespace DOL.Database
 				return null;
 		}
 
-#warning TODO do we need it ?
-		private string ReplaceSpecialCharsInWhereClause(string whereClause)
-		{
-			return whereClause;
-			/*int i = 0;
-			do {
-				i = whereClause.IndexOf("\'", i+1);
-				if (i>0 && i<whereClause.Length-1 && whereClause[i-1]!=' ' && whereClause[i+1]!=' ' && whereClause[i+1]!='=' && whereClause[i+1]!='<' && whereClause[i+1]!='>') {
-					whereClause = whereClause.Insert(i, "\\");
-					i++;
-				}
-			} while (i>=0);
-			return whereClause;*/
-		}
+//#warning TODO do we need it ?
+//        private string ReplaceSpecialCharsInWhereClause(string whereClause)
+//        {
+//            return whereClause;
+//            /*int i = 0;
+//            do {
+//                i = whereClause.IndexOf("\'", i+1);
+//                if (i>0 && i<whereClause.Length-1 && whereClause[i-1]!=' ' && whereClause[i+1]!=' ' && whereClause[i+1]!='=' && whereClause[i+1]!='<' && whereClause[i+1]!='>') {
+//                    whereClause = whereClause.Insert(i, "\\");
+//                    i++;
+//                }
+//            } while (i>=0);
+//            return whereClause;*/
+//        }
 
 		private BindingInfo[] GetBindingInfo(Type objectType)
 		{
@@ -647,7 +648,8 @@ namespace DOL.Database
 			sb.Append(" FROM `" + tableName + "`");
 			if (whereClause != null && whereClause.Trim().Length > 0)
 			{
-				sb.Append(" WHERE " + ReplaceSpecialCharsInWhereClause(whereClause));
+#warning it doesn't do anything
+				sb.Append(" WHERE " + /*ReplaceSpecialCharsInWhereClause(*/whereClause/*)*/);
 			}
 			string sql = sb.ToString();
 
@@ -662,7 +664,8 @@ namespace DOL.Database
 					{
 						reader.GetValues(data);
 						uint id = (uint)data[0];
-						DataObject cache = GetObjectInCache(tableName, id);
+#warning GetObjectInCache always return null
+						DataObject cache = null /*GetObjectInCache(tableName, id)*/;
 
 						if (cache != null)
 						{
@@ -737,7 +740,8 @@ namespace DOL.Database
 							{
 								FillLazyObjectRelations(obj, true);
 							}
-							PutObjectInCache(tableName, obj);
+#warning it doesn't do anything
+							//PutObjectInCache(tableName, obj);
 							obj.IsValid = true;
 						}
 					}
@@ -901,7 +905,8 @@ namespace DOL.Database
 			Type myType = DataObject.GetType();
 			//uint id = (uint)row[tableName + "_ID"];
 			uint id = (uint)row["uid"];
-			DataObject cacheObj = GetObjectInCache(tableName, id);
+#warning GetObjectInCache always return null
+			DataObject cacheObj = null /*GetObjectInCache(tableName, id)*/;
 
 			if (cacheObj != null)
 			{
@@ -956,13 +961,14 @@ namespace DOL.Database
 
 			if (reload == false)
 			{
-				PutObjectInCache(tableName, DataObject);
+#warning it doesn't do anything
+				//PutObjectInCache(tableName, DataObject);
 			}
 
 			DataObject.IsValid = true;
 		}
 
-#warning TODO remove this
+//#warning TODO remove this
 		//		private DataObject GetObjectInPreCache(string TableName, object key)
 		//		{
 		//			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
@@ -981,27 +987,27 @@ namespace DOL.Database
 			handler.SetCacheObject(obj.ObjectId, null);
 		}
 
-#warning TODO remove this
-		private DataObject GetObjectInCache(string TableName, uint id)
-		{
-			//			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
-			//			return handler.GetCacheObject(id);
-			return null;
-		}
+//#warning TODO remove this
+//        private DataObject GetObjectInCache(string TableName, uint id)
+//        {
+//            //			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
+//            //			return handler.GetCacheObject(id);
+//            return null;
+//        }
 
-#warning TODO remove this
-		private void PutObjectInCache(string TableName, DataObject obj)
-		{
-			//			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
-			//			handler.SetCacheObject(obj.ObjectId, obj);
-		}
+//#warning TODO remove this
+//        private void PutObjectInCache(string TableName, DataObject obj)
+//        {
+//            //			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
+//            //			handler.SetCacheObject(obj.ObjectId, obj);
+//        }
 
-#warning TODO remove this
-		private void DeleteObjectInCache(string TableName, DataObject obj)
-		{
-			//			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
-			//			handler.SetCacheObject(obj.ObjectId, null);
-		}
+//#warning TODO remove this
+//        private void DeleteObjectInCache(string TableName, DataObject obj)
+//        {
+//            //			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
+//            //			handler.SetCacheObject(obj.ObjectId, null);
+//        }
 
 		private void FillRowWithObject(DataObject DataObject, DataRow row)
 		{

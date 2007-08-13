@@ -283,7 +283,8 @@ namespace DOL.Database
 			{
 				log.Info("DATABASE ServerStats LOADED");
 				GameServer.Database.RegisterDataObject(typeof(DBServerStats));
-				GameServer.Database.LoadDatabaseTable(typeof(DBServerStats));
+#warning it doesn't do anything with mysql database
+				//GameServer.Database.LoadDatabaseTable(typeof(DBServerStats));
 				m_init = true;
 			}
 		}

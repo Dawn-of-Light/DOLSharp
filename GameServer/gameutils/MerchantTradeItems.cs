@@ -217,7 +217,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets a copy of all intems in trade window
+		/// Gets a copy of all items in trade window
 		/// </summary>
 		/// <returns>A list where key is the slot position and value is the ItemTemplate</returns>
 		public virtual IDictionary GetAllItems()
@@ -225,7 +225,7 @@ namespace DOL.GS
 			try
 			{
 				Hashtable allItems = new Hashtable();
-				if (m_itemsListID != null)
+				if (m_itemsListID != 0)
 				{
 					DataObject[] itemList = GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemListID = '" + m_itemsListID + "'");
 					foreach (MerchantItem merchantitem in itemList)

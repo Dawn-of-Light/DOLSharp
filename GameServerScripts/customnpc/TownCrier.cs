@@ -89,7 +89,8 @@ namespace DOL.GS.Scripts
 			if (!m_init && GameServer.Database != null)
 			{
 				GameServer.Database.RegisterDataObject(typeof (TownCrierMessage));
-				GameServer.Database.LoadDatabaseTable(typeof (TownCrierMessage));
+#warning it doesn't do anything with mysql database
+				//GameServer.Database.LoadDatabaseTable(typeof (TownCrierMessage));
 				m_init = true;
 			}
 		}

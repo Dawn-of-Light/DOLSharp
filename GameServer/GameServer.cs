@@ -1007,7 +1007,8 @@ namespace DOL
 				//Save the database
 				if (m_database != null)
 				{
-					m_database.WriteDatabaseTables();
+#warning it doesn't do anything with mysql database
+					//m_database.WriteDatabaseTables();
 					//move inactive accounts, characters, quests TODO and inventoryitems to archive
 #warning TODO remove server property
 					//if (ServerProperties.Properties.USE_ARCHIVING)
@@ -1173,17 +1174,17 @@ namespace DOL
 							log.Error("Error registering Tables", e);
 						return false;
 					}
-
-					try
-					{
-						m_database.LoadDatabaseTables();
-					}
-					catch (DatabaseException e)
-					{
-						if (log.IsErrorEnabled)
-							log.Error("Error loading Database", e);
-						return false;
-					}
+#warning it doesn't do anything with mysql database
+					//try
+					//{
+					//    m_database.LoadDatabaseTables();
+					//}
+					//catch (DatabaseException e)
+					//{
+					//    if (log.IsErrorEnabled)
+					//        log.Error("Error loading Database", e);
+					//    return false;
+					//}
 				}
 				if (log.IsInfoEnabled)
 					log.Info("Database Initialization: true");
@@ -1195,8 +1196,9 @@ namespace DOL
 			/// </summary>
 			public void SaveDatabase()
 			{
-				if (m_database != null)
-					m_database.WriteDatabaseTables();
+#warning it doesn't do anything with mysql database
+				//if (m_database != null)
+					//m_database.WriteDatabaseTables();
 			}
 
 			/// <summary>
@@ -1228,8 +1230,8 @@ namespace DOL
 						GuildMgr.SaveAllGuilds();
 
 						FactionMgr.SaveAllAggroToFaction();
-
-						m_database.WriteDatabaseTables();
+#warning it doesn't do anything with mysql database
+						//m_database.WriteDatabaseTables();
 						Thread.CurrentThread.Priority = oldprio;
 					}
 					if (log.IsInfoEnabled)

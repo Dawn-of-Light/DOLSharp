@@ -58,7 +58,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							GameServer.Database.DeleteObject(item);
 						}
-						GameServer.Database.WriteDatabaseTable(typeof (InventoryItem));
+#warning it doesn't do anything with mysql database
+						//GameServer.Database.WriteDatabaseTable(typeof (InventoryItem));
 					}
 					catch (Exception e)
 					{
@@ -74,7 +75,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							GameServer.Database.DeleteObject(quest);
 						}
-						GameServer.Database.WriteDatabaseTable(typeof (DBQuest));
+#warning it doesn't do anything with mysql database
+						//GameServer.Database.WriteDatabaseTable(typeof (DBQuest));
 					}
 					catch (Exception e)
 					{
@@ -83,7 +85,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 
 					GameServer.Database.DeleteObject(chars[i]);
-					GameServer.Database.WriteDatabaseTable(typeof (Character));
+#warning it doesn't do anything with mysql database
+					//GameServer.Database.WriteDatabaseTable(typeof (Character));
 					client.Account.Characters = null;
 					GameServer.Database.FillObjectRelations(client.Account);
 					client.Player = null;
@@ -96,7 +99,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//the realm again!
 						client.Account.Realm = 0;
 						GameServer.Database.SaveObject(client.Account);
-						GameServer.Database.WriteDatabaseTable(typeof (Account));
+#warning it doesn't do anything with mysql database
+						//GameServer.Database.WriteDatabaseTable(typeof (Account));
 					}
 					break;
 				}
