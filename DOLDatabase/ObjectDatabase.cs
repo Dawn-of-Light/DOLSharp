@@ -73,6 +73,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Loads the tables from all datasets
 		/// </summary>
+		[Obsolete("This doesn't do anything with MySQL Database")]
 		public void LoadDatabaseTables()
 		{
 			IDictionaryEnumerator i = tableDatasets.GetEnumerator();
@@ -86,6 +87,7 @@ namespace DOL.Database
 
 		}
 
+		[Obsolete("This doesn't do anything with MySQL Database")]
 		public void ReloadDatabaseTables()
 		{
 			IDictionaryEnumerator i = tableDatasets.GetEnumerator();
@@ -93,10 +95,12 @@ namespace DOL.Database
 			while (i.MoveNext())
 			{
 				connection.LoadDataSet((string) i.Key, GetDataSet((string) i.Key));
+#warning cache is disabled
 				ReloadCache((string) i.Key);
 			}
 		}
 
+		[Obsolete("This doesn't do anything with MySQL Database")]
 		public void WriteDatabaseTables()
 		{
 			IDictionaryEnumerator i = tableDatasets.GetEnumerator();
@@ -118,6 +122,7 @@ namespace DOL.Database
 			}
 		}
 
+		[Obsolete("This doesn't do anything with MySQL Database")]
 		public void WriteDatabaseTable(Type objectType)
 		{
 			ThreadPriority oldprio = Thread.CurrentThread.Priority;
@@ -142,13 +147,16 @@ namespace DOL.Database
 			}
 		}
 
+		[Obsolete("This doesn't do anything with MySQL Database")]
 		public void ReloadDatabaseTable(Type objectType)
 		{
 			string tableName = DataObject.GetTableName(objectType);
 			LoadDatabaseTable(objectType);
+#warning cache is disabled
 			ReloadCache(tableName);
 		}
 
+		[Obsolete("This doesn't do anything with MySQL Database")]
 		public void LoadDatabaseTable(Type objectType)
 		{
 			string tableName = DataObject.GetTableName(objectType);
@@ -682,7 +690,7 @@ namespace DOL.Database
 			return null;
 		}
 
-
+		[Obsolete("This doesn't do anything")]
 		private string ReplaceSpecialCharsInWhereClause(string whereClause)
 		{
 			return whereClause;
@@ -1160,6 +1168,8 @@ namespace DOL.Database
 			handler.SetCacheObject(obj.ObjectId, null);
 		}
 
+#warning cache is disabled
+		[Obsolete("Cache is disabled")]
 		private DataObject GetObjectInCache(string TableName, string id)
 		{
 //			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
@@ -1167,12 +1177,16 @@ namespace DOL.Database
 			return null;
 		}
 
+#warning cache is disabled
+		[Obsolete("Cache is disabled")]
 		private void PutObjectInCache(string TableName, DataObject obj)
 		{
 //			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
 //			handler.SetCacheObject(obj.ObjectId, obj);
 		}
 
+#warning cache is disabled
+		[Obsolete("Cache is disabled")]
 		private void DeleteObjectInCache(string TableName, DataObject obj)
 		{
 //			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
