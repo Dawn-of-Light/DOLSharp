@@ -31,6 +31,7 @@ using MySql.Data.Types;
 using DataTable = System.Data.DataTable;
 using MySql.Data.MySqlClient;
 using System.Globalization;
+using System.Collections.Generic;
 
 namespace DOL.Database
 {
@@ -46,119 +47,41 @@ namespace DOL.Database
 
 		private static NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
 
-		private Hashtable tableDatasets;
+		private Dictionary<string, DataTableHandler> tableDatasets;
 		private DataConnection connection;
 
 		public ObjectDatabase(DataConnection Connection)
 		{
-			tableDatasets = new Hashtable();
+			tableDatasets = new Dictionary<string, DataTableHandler>();
 			connection = Connection;
 		}
 
 		public string[] GetTableNameList()
 		{
-			string[] ar = new string[tableDatasets.Count];
-			IDictionaryEnumerator iter = tableDatasets.GetEnumerator();
-			int index = 0;
-			while (iter.MoveNext())
+			List<string> tableList = new List<string>();
+			foreach (KeyValuePair<string, DataTableHandler> kvp in tableDatasets)
 			{
-				ar[index] = (string)iter.Key;
-				++index;
+				tableList.Add(kvp.Key);
 			}
 
-			return ar;
+			return tableList.ToArray();
 		}
 
-//        /// <summary>
-//        /// Loads the tables from all datasets
-//        /// </summary>
-//        public void LoadDatabaseTables()
-//        {
-//            IDictionaryEnumerator i = tableDatasets.GetEnumerator();
+		[Obsolete("Cache is disabled.")]
+		public void ReloadDatabaseTables()
+		{
+			foreach (KeyValuePair<string, DataTableHandler> kvp in tableDatasets)
+			{
+				ReloadCache(kvp.Key);
+			}
+		}
 
-//            while (i.MoveNext())
-//            {
-//                if (log.IsInfoEnabled)
-//                    log.Info("Loading table " + i.Key);
-//#warning TODO this has no effect with mysql database
-//                connection.LoadDataSet((string)i.Key, GetDataSet((string)i.Key));
-//            }
-
-//        }
-
-//        public void ReloadDatabaseTables()
-//        {
-//            IDictionaryEnumerator i = tableDatasets.GetEnumerator();
-
-//            while (i.MoveNext())
-//            {
-//#warning TODO this has no effect with mysql database
-//                connection.LoadDataSet((string)i.Key, GetDataSet((string)i.Key));
-//                ReloadCache((string)i.Key);
-//            }
-//        }
-
-//        public void WriteDatabaseTables()
-//        {
-//            IDictionaryEnumerator i = tableDatasets.GetEnumerator();
-//            while (i.MoveNext())
-//            {
-//                if (log.IsInfoEnabled)
-//                    log.Info("Saving table " + i.Key);
-//                try
-//                {
-//#warning TODO this has no effect with mysql database
-//                    connection.SaveDataSet((string)i.Key, GetDataSet((string)i.Key));
-//                    if (log.IsInfoEnabled)
-//                        log.Info("Table " + i.Key + " saved");
-//                }
-//                catch (Exception e)
-//                {
-//                    if (log.IsErrorEnabled)
-//                        log.Error("Error saving table " + i.Key, e);
-//                }
-//            }
-//        }
-
-//        public void WriteDatabaseTable(Type objectType)
-//        {
-//            ThreadPriority oldprio = Thread.CurrentThread.Priority;
-//            Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-//            string tableName = DataObject.GetTableName(objectType);
-//            if (log.IsInfoEnabled)
-//                log.Info("Saving single table " + tableName);
-//            try
-//            {
-//#warning TODO this has no effect with mysql database
-//                connection.SaveDataSet(tableName, GetDataSet(tableName));
-//                if (log.IsInfoEnabled)
-//                    log.Info("Single Table " + tableName + " saved");
-//            }
-//            catch (Exception e)
-//            {
-//                if (log.IsErrorEnabled)
-//                    log.Error("Error saving table " + tableName, e);
-//            }
-//            finally
-//            {
-//                Thread.CurrentThread.Priority = oldprio;
-//            }
-//        }
-
-//        public void ReloadDatabaseTable(Type objectType)
-//        {
-//            string tableName = DataObject.GetTableName(objectType);
-//#warning TODO this has no effect with mysql database
-//            LoadDatabaseTable(objectType);
-//            ReloadCache(tableName);
-//        }
-
-//        public void LoadDatabaseTable(Type objectType)
-//        {
-//            string tableName = DataObject.GetTableName(objectType);
-//#warning TODO this has no effect with mysql database
-//            connection.LoadDataSet(tableName, GetDataSet(tableName));
-//        }
+		[Obsolete("Cache is disabled.")]
+		public void ReloadDatabaseTable(Type objectType)
+		{
+			string tableName = DataObject.GetTableName(objectType);
+			ReloadCache(tableName);
+		}
 
 		public int GetObjectCount(Type objectType)
 		{
@@ -178,76 +101,6 @@ namespace DOL.Database
 			return (int)count;
 		}
 
-//#warning TODO do we need this, I don't like it
-		/*public void ArchiveTables()
-		{
-			//if (!connection.IsSQLConnection)
-			//    return;
-			log.Info("Archiving Tables...");
-
-			//we do it in this order, because if we move account first, the rest of the queries fail
-			MoveObject(typeof(InventoryItemArchive), typeof(InventoryItem), "INNER JOIN `DOLCharacters` dc ON i.OwnerId = dc.DOLCharacters_ID INNER JOIN `Account` ac ON dc.AccountID = ac.Account_ID WHERE DATE_SUB(CURDATE(), INTERVAL 30 DAY) > ac.LastLogin");
-			MoveObject(typeof(CharacterArchive), typeof(Character), "INNER JOIN `Account` ac ON d.AccountID = ac.Account_ID WHERE DATE_SUB(CURDATE(), INTERVAL 30 DAY) > ac.LastLogin");
-			MoveObject(typeof(AccountArchive), typeof(Account), "WHERE DATE_SUB(CURDATE(), INTERVAL 30 DAY) > `LastLogin`");
-			log.Info("Archiving Complete!");
-		}
-
-#warning TODO do we need this, I don't like it
-		public void MoveObject(Type targetType, Type sourceType, string query)
-		{
-			//if (!connection.IsSQLConnection)
-			//    return;
-
-			string targetTableName = DataObject.GetTableName(targetType);
-			string sourceTableName = DataObject.GetTableName(sourceType);
-
-			DataTableHandler targetHandler = tableDatasets[targetTableName] as DataTableHandler;
-			DataTableHandler sourceHandler = tableDatasets[sourceTableName] as DataTableHandler;
-
-			DataTable targetTable = targetHandler.DataSet.Tables[0] as DataTable;
-			DataTable sourceTable = sourceHandler.DataSet.Tables[0] as DataTable;
-
-			//column names
-			string insertQuery = "INSERT INTO `" + targetTableName + "` (";
-
-			for (int i = 0; i < targetTable.Columns.Count; i++)
-			{
-				DataColumn targetColumn = targetTable.Columns[i] as DataColumn;
-				if (i == 0)
-					insertQuery += "`" + targetTableName + "_ID`";
-				else
-					insertQuery += "`" + targetColumn.ColumnName + "`";
-				if (i + 1 < targetTable.Columns.Count)
-					insertQuery += ",";
-			}
-
-			insertQuery += ") SELECT ";
-
-			//column values
-
-
-			string shortName = sourceTableName.Substring(0, 1).ToLower();
-
-			for (int i = 0; i < targetTable.Columns.Count; i++)
-			{
-				DataColumn targetColumn = targetTable.Columns[i] as DataColumn;
-				if (i == 0)
-					insertQuery += shortName + "." + sourceTableName + "_ID";
-				else
-					insertQuery += shortName + "." + targetColumn.ColumnName;
-				if (i + 1 < targetTable.Columns.Count)
-					insertQuery += ",";
-			}
-
-			insertQuery += " FROM `" + sourceTableName + "` " + shortName + " " + query;
-
-			//connection.ExecuteNonQuery("INSERT INTO `" + targetTableName + "` SELECT * FROM `" + sourceTableName + "` WHERE " + query);
-			connection.ExecuteNonQuery(insertQuery);
-
-			string deleteQuery = "DELETE " + shortName + " FROM `" + sourceTableName + "` " + shortName + " " + query;
-			connection.ExecuteNonQuery(deleteQuery);
-		}
-		*/
 		/// <summary>
 		/// insert a new object into the db
 		/// and save it if its autosave=true
@@ -259,11 +112,10 @@ namespace DOL.Database
 			{
 				string tableName = dataObject.TableName;
 
-//#warning TODO
-				//if (dataObject.ObjectId == null)
-				//{
-				//    dataObject.ObjectId = IdGenerator.generateId();
-				//}
+				if (dataObject.ObjectId != 0)
+				{
+					log.Warn("ObjectId is not equals to 0 for " + dataObject.TableName + "objectId #" + dataObject.ObjectId + " " + dataObject.ToString());
+				}
 				StringBuilder columns = new StringBuilder();
 				StringBuilder values = new StringBuilder();
 
@@ -271,9 +123,7 @@ namespace DOL.Database
 				bool hasRelations = false;
 				string dateFormat = connection.GetDBDateFormat();
 
-				//columns.Append("`" + tableName + "_ID`");
 				columns.Append("`uid`");
-				//values.Append("'" + /*Escape(dataObject.ObjectId) +*/ "'");
 				values.Append("NULL");
 
 				for (int i = 0; i < objMembers.Length; i++)
@@ -350,8 +200,7 @@ namespace DOL.Database
 				}
 
 				dataObject.Dirty = false;
-#warning it doesn't do anything
-				//PutObjectInCache(tableName, dataObject);
+				PutObjectInCache(tableName, dataObject);
 				dataObject.IsValid = true;
 
 			}
@@ -441,7 +290,6 @@ namespace DOL.Database
 					}
 				}
 
-				//sb.Append(" WHERE `" + tableName + "_ID` = '" + /*Escape(*/dataObject.ObjectId/*)*/ + "'");
 				sb.Append(" WHERE `uid` = '" + dataObject.ObjectId + "'");
 				string sql = sb.ToString();
 				if (log.IsDebugEnabled)
@@ -451,7 +299,7 @@ namespace DOL.Database
 				if (res == 0)
 				{
 					if (log.IsErrorEnabled)
-						log.Error("Error modifying object " + dataObject.TableName + " ID=" + dataObject.ObjectId + " --- keyvalue changed?");
+						log.Error("Error modifying object " + dataObject.TableName + " uid = " + dataObject.ObjectId + " --- keyvalue changed?");
 					return;
 				}
 
@@ -503,7 +351,6 @@ namespace DOL.Database
 		/// <param name="dataObject"></param>
 		public void DeleteObject(DataObject dataObject)
 		{
-			//string sql = "DELETE FROM `" + dataObject.TableName + "` WHERE `" + dataObject.TableName + "_ID` = '" + /*Escape(*/dataObject.ObjectId/*)*/ + "'";
 			string sql = "DELETE FROM `" + dataObject.TableName + "` WHERE `uid` = '" + dataObject.ObjectId + "'";
 			if (log.IsDebugEnabled)
 				log.Debug(sql);
@@ -511,7 +358,7 @@ namespace DOL.Database
 			if (res == 0)
 			{
 				if (log.IsErrorEnabled)
-					log.Error("Deleting " + dataObject.TableName + " object failed! ID=" + dataObject.ObjectId);
+					log.Error("Deleting " + dataObject.TableName + " object failed! uid = " + dataObject.ObjectId);
 			}
 		}
 
@@ -528,7 +375,7 @@ namespace DOL.Database
 			MemberInfo[] members = objectType.GetMembers();
 			DataObject ret = (DataObject)Activator.CreateInstance(objectType);
 			string tableName = ret.TableName;
-			DataTableHandler dth = tableDatasets[tableName] as DataTableHandler;
+			DataTableHandler dth = tableDatasets[tableName];
 			string whereClause = null;
 
 			if (dth.UsesPreCaching)
@@ -552,7 +399,6 @@ namespace DOL.Database
 			}
 			if (whereClause == null)
 			{
-				//whereClause = "`" + ret.TableName + "_ID` = '" + key.ToString() + "'";
 				whereClause = "`uid` = '" + key.ToString() + "'";
 			}
 			DataObject[] objs = SelectObjects(objectType, whereClause);
@@ -564,21 +410,6 @@ namespace DOL.Database
 			else
 				return null;
 		}
-
-//#warning TODO do we need it ?
-//        private string ReplaceSpecialCharsInWhereClause(string whereClause)
-//        {
-//            return whereClause;
-//            /*int i = 0;
-//            do {
-//                i = whereClause.IndexOf("\'", i+1);
-//                if (i>0 && i<whereClause.Length-1 && whereClause[i-1]!=' ' && whereClause[i+1]!=' ' && whereClause[i+1]!='=' && whereClause[i+1]!='<' && whereClause[i+1]!='>') {
-//                    whereClause = whereClause.Insert(i, "\\");
-//                    i++;
-//                }
-//            } while (i>=0);
-//            return whereClause;*/
-//        }
 
 		private BindingInfo[] GetBindingInfo(Type objectType)
 		{
@@ -623,10 +454,9 @@ namespace DOL.Database
 		public DataObject[] SelectObjects(Type objectType, string whereClause)
 		{
 			string tableName = DataObject.GetTableName(objectType);
-			ArrayList dataObjects = new ArrayList(500);
+			List<DataObject> dataObjects = new List<DataObject>(500);
 
 			// build sql command
-			//StringBuilder sb = new StringBuilder("SELECT `" + tableName + "_ID`, ");
 			StringBuilder sb = new StringBuilder("SELECT `uid`, ");
 			bool first = true;
 			BindingInfo[] bindingInfo = GetBindingInfo(objectType);
@@ -648,8 +478,7 @@ namespace DOL.Database
 			sb.Append(" FROM `" + tableName + "`");
 			if (whereClause != null && whereClause.Trim().Length > 0)
 			{
-#warning it doesn't do anything
-				sb.Append(" WHERE " + /*ReplaceSpecialCharsInWhereClause(*/whereClause/*)*/);
+				sb.Append(" WHERE " + whereClause);
 			}
 			string sql = sb.ToString();
 
@@ -664,8 +493,8 @@ namespace DOL.Database
 					{
 						reader.GetValues(data);
 						uint id = (uint)data[0];
-#warning GetObjectInCache always return null
-						DataObject cache = null /*GetObjectInCache(tableName, id)*/;
+
+						DataObject cache = GetObjectInCache(tableName, id);
 
 						if (cache != null)
 						{
@@ -740,14 +569,13 @@ namespace DOL.Database
 							{
 								FillLazyObjectRelations(obj, true);
 							}
-#warning it doesn't do anything
-							//PutObjectInCache(tableName, obj);
+							PutObjectInCache(tableName, obj);
 							obj.IsValid = true;
 						}
 					}
 				}
 			);
-			return (DataObject[])dataObjects.ToArray(objectType);
+			return dataObjects.ToArray();
 		}
 
 		public DataObject[] SelectAllObjects(Type objectType)
@@ -765,14 +593,11 @@ namespace DOL.Database
 			string TableName = DataObject.GetTableName(dataObjectType);
 			DataSet ds = new DataSet();
 			DataTable table = new DataTable(TableName);
-			//table.Columns.Add(TableName + "_ID", typeof(string));
 			table.Columns.Add("uid", typeof(string));
 			MemberInfo[] myMembers = dataObjectType.GetMembers();
 
 			for (int i = 0; i < myMembers.Length; i++)
 			{
-				//object[] myAttributes = myMembers[i].GetCustomAttributes(true);
-				//object[] myAttributes = myMembers[i].GetCustomAttributes(typeof(DOL.Database.Attributes.DataElement), true);
 
 				object[] myAttributes = myMembers[i].GetCustomAttributes(typeof(DOL.Database.Attributes.PrimaryKey), true);
 
@@ -795,8 +620,7 @@ namespace DOL.Database
 
 				if (myAttributes.Length > 0)
 				{
-					//if(myAttributes[0] is Attributes.DataElement)
-					//{
+
 					if (myMembers[i] is PropertyInfo)
 					{
 						table.Columns.Add(myMembers[i].Name, ((PropertyInfo)myMembers[i]).PropertyType);
@@ -815,10 +639,9 @@ namespace DOL.Database
 					{
 						table.Columns[myMembers[i].Name].ExtendedProperties.Add("INDEX", true);
 					}
-					//if(myAttributes[0] is Attributes.PrimaryKey)
+
 					myAttributes = GetRelationAttributes(myMembers[i]);
 
-					//if(myAttributes[0] is Attributes.Relation)
 					if (myAttributes.Length > 0)
 					{
 						relations = true;
@@ -829,15 +652,11 @@ namespace DOL.Database
 			if (primary == false)
 			{
 				DataColumn[] index = new DataColumn[1];
-				//index[0] = table.Columns[TableName + "_ID"];
 				index[0] = table.Columns["uid"];
 				table.PrimaryKey = index;
 			}
 
-			//if (connection.IsSQLConnection)
-			//{
 			connection.CheckOrCreateTable(table);
-			//}
 
 			ds.DataSetName = TableName;
 			ds.EnforceConstraints = true;
@@ -850,8 +669,8 @@ namespace DOL.Database
 
 			tableDatasets.Add(TableName, dth);
 
-			if (dth.UsesPreCaching /*&& connection.IsSQLConnection*/)
-			{ // not useful for xml connection
+			if (dth.UsesPreCaching)
+			{
 				if (log.IsDebugEnabled)
 					log.Debug("Precaching of " + table.TableName + "...");
 
@@ -893,7 +712,7 @@ namespace DOL.Database
 
 		public DataSet GetDataSet(string TableName)
 		{
-			DataTableHandler handler = (DataTableHandler)tableDatasets[TableName];
+			DataTableHandler handler = tableDatasets[TableName];
 			return handler.DataSet;
 		}
 
@@ -903,10 +722,9 @@ namespace DOL.Database
 
 			string tableName = DataObject.TableName;
 			Type myType = DataObject.GetType();
-			//uint id = (uint)row[tableName + "_ID"];
 			uint id = (uint)row["uid"];
-#warning GetObjectInCache always return null
-			DataObject cacheObj = null /*GetObjectInCache(tableName, id)*/;
+
+			DataObject cacheObj = GetObjectInCache(tableName, id);
 
 			if (cacheObj != null)
 			{
@@ -924,10 +742,7 @@ namespace DOL.Database
 
 				if (myAttributes.Length > 0)
 				{
-					//if(myAttributes[0] is Attributes.Relation)
-					//{
 					relation = true;
-					//}
 				}
 				else
 				{
@@ -961,53 +776,52 @@ namespace DOL.Database
 
 			if (reload == false)
 			{
-#warning it doesn't do anything
-				//PutObjectInCache(tableName, DataObject);
+				PutObjectInCache(tableName, DataObject);
 			}
 
 			DataObject.IsValid = true;
 		}
 
-//#warning TODO remove this
-		//		private DataObject GetObjectInPreCache(string TableName, object key)
-		//		{
-		//			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
-		//			return handler.GetPreCachedObject(key);
-		//		}
-		//
-		//		private void PutObjectInPreCache(string TableName, object key, DataObject obj)
-		//		{
-		//			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
-		//			handler.SetPreCachedObject(key, obj);
-		//		}
+#warning TODO remove this
+		/*private DataObject GetObjectInPreCache(string TableName, object key)
+		{
+			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
+			return handler.GetPreCachedObject(key);
+		}
+
+		private void PutObjectInPreCache(string TableName, object key, DataObject obj)
+		{
+			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
+			handler.SetPreCachedObject(key, obj);
+		}*/
 
 		private void DeleteObjectInPreCache(string TableName, DataObject obj)
 		{
-			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
+			DataTableHandler handler = tableDatasets[TableName];
 			handler.SetCacheObject(obj.ObjectId, null);
 		}
 
-//#warning TODO remove this
-//        private DataObject GetObjectInCache(string TableName, uint id)
-//        {
-//            //			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
-//            //			return handler.GetCacheObject(id);
-//            return null;
-//        }
+		[Obsolete("Cache is disabled")]
+		private DataObject GetObjectInCache(string TableName, uint id)
+		{
+			//			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
+			//			return handler.GetCacheObject(id);
+			return null;
+		}
 
-//#warning TODO remove this
-//        private void PutObjectInCache(string TableName, DataObject obj)
-//        {
-//            //			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
-//            //			handler.SetCacheObject(obj.ObjectId, obj);
-//        }
+		[Obsolete("Cache is disabled")]
+		private void PutObjectInCache(string TableName, DataObject obj)
+		{
+			//			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
+			//			handler.SetCacheObject(obj.ObjectId, obj);
+		}
 
-//#warning TODO remove this
-//        private void DeleteObjectInCache(string TableName, DataObject obj)
-//        {
-//            //			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
-//            //			handler.SetCacheObject(obj.ObjectId, null);
-//        }
+		[Obsolete("Cache is disabled")]
+		private void DeleteObjectInCache(string TableName, DataObject obj)
+		{
+			//			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
+			//			handler.SetCacheObject(obj.ObjectId, null);
+		}
 
 		private void FillRowWithObject(DataObject DataObject, DataRow row)
 		{
@@ -1015,7 +829,6 @@ namespace DOL.Database
 
 			Type myType = DataObject.GetType();
 
-			//row[DataObject.TableName + "_ID"] = DataObject.ObjectId;
 			row["uid"] = DataObject.ObjectId;
 
 			MemberInfo[] myMembers = myType.GetMembers();
@@ -1023,11 +836,8 @@ namespace DOL.Database
 			for (int i = 0; i < myMembers.Length; i++)
 			{
 				object[] myAttributes = GetRelationAttributes(myMembers[i]);
-				//if (myAttributes.Length > 0) 
-				//{
 				object val = null;
 
-				//if(myAttributes[0] is Attributes.Relation)
 				if (myAttributes.Length > 0)
 				{
 					relation = true;
@@ -1053,7 +863,6 @@ namespace DOL.Database
 						}
 					}
 				}
-				//}
 			}
 			if (relation == true)
 			{
@@ -1074,7 +883,6 @@ namespace DOL.Database
 
 			string key = table.PrimaryKey[0].ColumnName;
 
-			//if (key.Equals(tableName + "_ID"))
 			if (key.Equals("uid"))
 				row = table.Rows.Find(DataObject.ObjectId);
 			else
@@ -1117,8 +925,6 @@ namespace DOL.Database
 					Relation[] myAttributes = GetRelationAttributes(myMembers[i]);
 					if (myAttributes.Length > 0)
 					{
-						//if(myAttributes[0] is Attributes.Relation)
-						//{
 						bool array = false;
 
 						Type type;
@@ -1173,7 +979,6 @@ namespace DOL.Database
 								SaveObject(val as DataObject);
 						}
 					}
-					//}
 				}
 			}
 			catch (Exception e)
@@ -1197,8 +1002,6 @@ namespace DOL.Database
 					Relation[] myAttributes = GetRelationAttributes(myMembers[i]);
 					if (myAttributes.Length > 0)
 					{
-						//if(myAttributes[0] is Attributes.Relation)
-						//{
 						if (myAttributes[0].AutoDelete == false)
 							continue;
 
@@ -1255,7 +1058,6 @@ namespace DOL.Database
 							if (val != null && val is DataObject)
 								DeleteObject(val as DataObject);
 						}
-						//}
 					}
 				}
 			}
@@ -1286,8 +1088,6 @@ namespace DOL.Database
 					Relation[] myAttributes = GetRelationAttributes(myMembers[i]);
 					if (myAttributes.Length > 0)
 					{
-						//if(myAttributes[0] is Attributes.Relation)
-						//{
 						bool array = false;
 
 						Relation rel = myAttributes[0];
@@ -1325,10 +1125,6 @@ namespace DOL.Database
 							val = prop.GetValue(DataObject, null);
 						if (field != null)
 							val = field.GetValue(DataObject);
-
-						// work around
-						//if (DataObject is Account)
-						//    val = DataObject.ObjectId;
 
 						if (val != null)
 							Elements = SelectObjects(type, remote + " = '" + Escape(val.ToString()) + "'");
@@ -1372,7 +1168,6 @@ namespace DOL.Database
 									((FieldInfo)myMembers[i]).SetValue(DataObject, Elements[0]);
 							}
 						}
-						//}
 					}
 				}
 			}
@@ -1384,7 +1179,7 @@ namespace DOL.Database
 
 		private void ReloadCache(string TableName)
 		{
-			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
+			DataTableHandler handler = tableDatasets[TableName];
 
 			ICache cache = handler.Cache;
 

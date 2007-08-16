@@ -107,7 +107,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 						// save the choice
 						client.Account.Realm = (int)chosenRealm;
 						GameServer.Database.SaveObject(client.Account);
-#warning it doesn't do anything with mysql database
 						//GameServer.Database.WriteDatabaseTable(typeof (Account));
 					}
 				}
