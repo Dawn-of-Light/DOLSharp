@@ -49,7 +49,7 @@ namespace DOL.Language
 		private static bool LoadLanguage(Langs l, string abrev, string longname)
 		{
 			string[] lines;
-			string FilePath = ".\\Languages\\Language-";
+			string FilePath = "." + Path.DirectorySeparatorChar + "languages" + Path.DirectorySeparatorChar + "Language-";
 			FilePath += abrev;
 			FilePath += ".txt";
 			LangsSentences[(int)l] = new Hashtable();
