@@ -80,7 +80,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//**********************************
 						//show info for all types of weapons
 						//**********************************
-						if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type <= (int)eObjectType.Scythe) ||
+						if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type <= (int)eObjectType.MaulerStaff) ||
 							item.Object_Type == (int)eObjectType.Instrument)
 						{
 							WriteUsableClasses(objectInfo, item, client);
@@ -322,7 +322,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//**********************************
 						//show info for all weapons
 						//**********************************
-						if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type <= (int)eObjectType.Scythe) ||
+						if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type <= (int)eObjectType.MaulerStaff) ||
 							item.Object_Type == (int)eObjectType.Instrument)
 						{
 							WriteUsableClasses(objectInfo, item, client);
@@ -658,7 +658,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//**********************************
 						//show info for all types of weapons
 						//**********************************
-						if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type <= (int)eObjectType.Scythe) ||
+						if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type <= (int)eObjectType.MaulerStaff) ||
 							item.Object_Type == (int)eObjectType.Instrument)
 						{
 
@@ -1067,7 +1067,7 @@ Type    Description           Id
 			string str = "- [" + item.Name + "]: " + GlobalConstants.ObjectTypeToName(item.Object_Type);
 			ArrayList objectInfo = new ArrayList();
 
-			if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type <= (int)eObjectType.Scythe))
+			if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type <= (int)eObjectType.MaulerStaff))
 			{
 				WriteMagicalBonuses(objectInfo, item, client, true);
 				WriteClassicWeaponInfos(objectInfo, item, client);

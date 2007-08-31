@@ -1465,8 +1465,8 @@ namespace DOL.GS
 				case Specs.Witchcraft: return 0x8C;
 				case Specs.Cursing: return 0x8D;
 				case Specs.Hexing: return 0x8E;
-				case Specs.Fist_Wraps: return 0x90;
-				case Specs.Mauler_Staff: return 0x9A;
+				case Specs.Fist_Wraps: return 0x93;
+				case Specs.Mauler_Staff: return 0x94;
 				default: return 0;
 			}
 		}
