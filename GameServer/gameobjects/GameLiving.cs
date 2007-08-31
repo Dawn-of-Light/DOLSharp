@@ -3474,12 +3474,13 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			// cancel all left effects
 			EffectList.CancelAll();
 
+			//Reduce health to zero
+			Health = 0;
+
+			// Stop the regeneration timers
 			StopHealthRegeneration();
 			StopPowerRegeneration();
 			StopEnduranceRegeneration();
-
-			//Reduce health to zero
-			Health = 0;
 		}
 
 		/// <summary>
