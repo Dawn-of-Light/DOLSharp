@@ -1087,7 +1087,8 @@ namespace DOL.GS.Scripts
 								return 0;
 							}
 						}
-
+						if (args.Length < 3)
+							return 1;
 						switch (args[2])
 						{
 

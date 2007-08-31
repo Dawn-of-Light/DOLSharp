@@ -274,10 +274,15 @@ namespace DOL.GS.PacketHandler
 				modStats[i] = m_gameClient.Player.GetModified((eProperty)updateStats[i]);
 				if (updateStats[i] == eStat.CON)
 					modStats[i] += m_gameClient.Player.TotalConstitutionLostAtDeath; // not included in debuffs
+				int abilityBonus = m_gameClient.Player.AbilityBonus[(int)updateStats[i]];
 				int acuityItemBonus = 0;
-				if (m_gameClient.Player.CharacterClass.ClassType == eClassType.ListCaster && (int)(eProperty)updateStats[i] == (int)m_gameClient.Player.CharacterClass.ManaStat)
-					acuityItemBonus = m_gameClient.Player.ItemBonus[(int)eProperty.Acuity];
-				int buff = modStats[i] - baseStats[i] - Math.Min(itemCaps[i], m_gameClient.Player.ItemBonus[(int)updateStats[i]] + acuityItemBonus) - m_gameClient.Player.AbilityBonus[(int)updateStats[i]];
+				if ((int)(eProperty)updateStats[i] == (int)m_gameClient.Player.CharacterClass.ManaStat)
+				{
+					abilityBonus += m_gameClient.Player.AbilityBonus[(int)eProperty.Acuity];
+					if (m_gameClient.Player.CharacterClass.ClassType == eClassType.ListCaster)
+						acuityItemBonus = m_gameClient.Player.ItemBonus[(int)eProperty.Acuity];
+				}
+				int buff = modStats[i] - baseStats[i] - Math.Min(itemCaps[i], m_gameClient.Player.ItemBonus[(int)updateStats[i]] + acuityItemBonus) - abilityBonus;
 
 				pak.WriteShort((ushort)buff);
 			}
