@@ -3474,13 +3474,13 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			// cancel all left effects
 			EffectList.CancelAll();
 
-			//Reduce health to zero
-			Health = 0;
-
 			// Stop the regeneration timers
 			StopHealthRegeneration();
 			StopPowerRegeneration();
 			StopEnduranceRegeneration();
+
+			//Reduce health to zero
+			Health = 0;
 		}
 
 		/// <summary>
@@ -3583,6 +3583,34 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		{
 			get { return m_isCloakHoodUp; }
 			set { m_isCloakHoodUp = value; }
+		}
+
+		/// <summary>
+		/// Holds the living's cloak hood state
+		/// </summary>
+		protected bool m_IsCloakInvisible = false;
+
+		/// <summary>
+		/// Sets/gets the living's cloak visible state
+		/// </summary>
+		public virtual bool IsCloakInvisible
+		{
+			get { return m_IsCloakInvisible; }
+			set { m_IsCloakInvisible = value; }
+		}
+
+		/// <summary>
+		/// Holds the living's helm visible state
+		/// </summary>
+		protected bool m_IsHelmInvisible = false;
+
+		/// <summary>
+		/// Sets/gets the living's cloak hood state
+		/// </summary>
+		public virtual bool IsHelmInvisible
+		{
+			get { return m_IsHelmInvisible; }
+			set { m_IsHelmInvisible = value; }
 		}
 
 		/// <summary>
