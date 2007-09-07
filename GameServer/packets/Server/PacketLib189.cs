@@ -43,35 +43,34 @@ namespace DOL.GS.PacketHandler
 		{
 
 		}
+
 		public override void SendLivingEquipmentUpdate(GameLiving living)
 		{
-			if (m_gameClient.Player == null || living.CurrentHouse != m_gameClient.Player.CurrentHouse || living.CurrentRegion != m_gameClient.Player.CurrentRegion)
-				return;
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.EquipmentUpdate));
 			ICollection items = null;
 			if (living.Inventory != null)
 				items = living.Inventory.VisibleItems;
 
 			pak.WriteShort((ushort)living.ObjectID);
-			pak.WriteByte((byte)((living.IsCloakHoodUp ? 0x01 : 0x00) | (int)living.ActiveQuiverSlot)); //bit0 is hood up bit4 to 7 is active quiver
-
 			pak.WriteByte((byte)living.VisibleActiveWeaponSlots);
+			pak.WriteByte(0); // new in 189b+, show shield in left hand ? 
+			pak.WriteByte((byte)((living.IsCloakInvisible ? 0x01 : 0x00) | (living.IsHelmInvisible ? 0x02 : 0x00))); // new in 189b+, cloack/helm visibility 
+			pak.WriteByte((byte)((living.IsCloakHoodUp ? 0x01 : 0x00) | (int)living.ActiveQuiverSlot)); //bit0 is hood up bit4 to 7 is active quiver 
+
 			if (items != null)
 			{
-				//2 new empty bytes in 1.89
-				pak.WriteByte(0x00);
-				pak.WriteByte(0x00);
 				pak.WriteByte((byte)items.Count);
 				foreach (InventoryItem item in items)
 				{
 					ushort model = (ushort)(item.Model & 0x1FFF);
 					int slot = item.SlotPosition;
+					//model = GetModifiedModel(model);
 					int texture = item.Color;
 					if (item.Emblem != 0)
 					{
 						texture = (ushort)item.Emblem;
-						if (item.SlotPosition == Slot.LEFTHAND || item.SlotPosition == Slot.CLOAK) // for test only cloack and shield
-							slot = slot | ((item.Emblem & 0x010000) >> 9); // slot & 0x80 if new emblem
+						if (item.SlotPosition == Slot.LEFTHAND || item.SlotPosition == Slot.CLOAK) // for test only cloack and shield 
+							slot = slot | ((item.Emblem & 0x010000) >> 9); // slot & 0x80 if new emblem 
 					}
 					pak.WriteByte((byte)slot);
 					if ((texture & ~0xFF) != 0)
@@ -100,16 +99,19 @@ namespace DOL.GS.PacketHandler
 			}
 			SendTCP(pak);
 		}
+
 		protected override void SendInventorySlotsUpdateBase(ICollection slots, byte preAction)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.InventoryUpdate));
 			pak.WriteByte((byte)(slots == null ? 0 : slots.Count));
+			pak.WriteByte(0); // new in 189b+, show shield in left hand 
+			pak.WriteByte((byte)((m_gameClient.Player.IsCloakInvisible ? 0x01 : 0x00) | (m_gameClient.Player.IsHelmInvisible ? 0x02 : 0x00))); // new in 189b+, cloack/helm visibility 
 			pak.WriteByte((byte)((m_gameClient.Player.IsCloakHoodUp ? 0x01 : 0x00) | (int)m_gameClient.Player.ActiveQuiverSlot)); //bit0 is hood up bit4 to 7 is active quiver
+			// ^ in 1.89b+, 0 bit - showing hooded cloack, if not hooded not show cloack at all ? 
 			pak.WriteByte((byte)m_gameClient.Player.VisibleActiveWeaponSlots);
-			pak.WriteByte(preAction); //preAction (0x00 - Do nothing)
-			// 2 new bytes in 1.89 seem to be 0x00
-			pak.WriteByte(0x00);
-			pak.WriteByte(0x00);
+			pak.WriteByte(preAction); //preAction (0x00 - Do nothing)	
+			//pak.WriteByte(0x00);
+			//pak.WriteByte(0x00);
 			if (slots != null)
 			{
 				foreach (int updatedSlot in slots)

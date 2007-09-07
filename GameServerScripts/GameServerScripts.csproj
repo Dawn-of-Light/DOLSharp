@@ -335,12 +335,14 @@
     <Compile Include="playercommands\chatgroup.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="playercommands\cloak.cs" />
     <Compile Include="playercommands\cmdhelp.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="playercommands\deal.cs" />
     <Compile Include="playercommands\discard.cs" />
     <Compile Include="playercommands\held.cs" />
+    <Compile Include="playercommands\helm.cs" />
     <Compile Include="playercommands\horse.cs" />
     <Compile Include="playercommands\nohelp.cs" />
     <Compile Include="playercommands\houseface.cs" />
