@@ -214,6 +214,10 @@ GamePlayer.GetExamineMessages.YouExamine:		Esamini {0}.
 GamePlayer.GetExamineMessages.YourGuildMember:		Esamini {0}. {1} e' un membro della classe {2} nella tua gilda.
 GamePlayer.IsCloakHoodUp.NowWear:			Abbassi il cappuccio sul tuo capo.
 GamePlayer.IsCloakHoodUp.NoLongerWear:		Alzi il cappuccio dal tuo capo.
+GamePlayer.IsCloakInvisible.Visible:			Ora vedrai il tuo mantello.
+GamePlayer.IsCloakInvisible.Invisible:			Ora non vedrai il tuo mantello.
+GamePlayer.IsHelmInvisible.Visible:			Ora vedrai il tuo elmo.
+GamePlayer.IsHelmInvisible.Invisible:			Ora non vedrai il tuo elmo.
 GamePlayer.IsOnHorse.DismountSteed:			Smonti dalla cavalcatura.
 GamePlayer.IsOnHorse.MountSteed:			Monti sulla cavalcatura.
 GamePlayer.OnItemEquipped.Magic:			La magia di {0} scorre dentro di te.

@@ -1075,7 +1075,7 @@ namespace DOL.GS.Scripts
 							if (player.IsAlive)
 							{
 
-								player.Die(client.Player);
+								KillPlayer(client.Player, player);
 								client.Out.SendMessage("You killed " + player.Name + " successfully!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 								player.Out.SendMessage(client.Player.Name + " has killed you!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
@@ -1100,7 +1100,7 @@ namespace DOL.GS.Scripts
 
 										if (aplayer.Player.IsAlive && aplayer.Account.PrivLevel == 1)
 										{
-											aplayer.Player.Die(client.Player);
+											KillPlayer(client.Player, aplayer.Player);
 										}
 									}
 								}
@@ -1114,7 +1114,7 @@ namespace DOL.GS.Scripts
 
 										if (mplayer.Player.IsAlive && mplayer.Account.PrivLevel == 1)
 										{
-											mplayer.Player.Die(client.Player);
+											KillPlayer(client.Player, mplayer.Player);
 										}
 									}
 								}
@@ -1128,7 +1128,7 @@ namespace DOL.GS.Scripts
 
 										if (hplayer.Player.IsAlive && hplayer.Account.PrivLevel == 1)
 										{
-											hplayer.Player.Die(client.Player);
+											KillPlayer(client.Player, hplayer.Player);
 										}
 									}
 								}
@@ -1146,7 +1146,7 @@ namespace DOL.GS.Scripts
 									}
 									else
 									{
-										selfplayer.Die(selfplayer);
+										KillPlayer(client.Player, client.Player);
 										client.Out.SendMessage("Good bye cruel world!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 									}
 								}
@@ -1159,7 +1159,7 @@ namespace DOL.GS.Scripts
 									{
 										if (allplayer.Player.IsAlive && allplayer.Account.PrivLevel == 1)
 										{
-											allplayer.Player.Die(client.Player);
+											KillPlayer(client.Player, allplayer.Player);
 										}
 									}
 								}
@@ -1430,6 +1430,13 @@ namespace DOL.GS.Scripts
 					nearPlayer.Out.SendSpellEffectAnimation(target, target, 7011, 0, false, 0);
 				}
 			}
+		}
+		
+		private static void KillPlayer (GameLiving killer, GamePlayer player)
+		{
+			int damage = player.Health;
+			if (damage > 0)
+				player.TakeDamage(killer, eDamageType.Natural, damage, 0);
 		}
 	}
 }

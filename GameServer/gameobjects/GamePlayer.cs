@@ -4180,6 +4180,62 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Sets/gets the living's cloak visible state
+		/// (delegate to PlayerCharacter)
+		/// </summary>
+		public override bool IsCloakInvisible
+		{
+			get
+			{
+				return PlayerCharacter != null ? PlayerCharacter.IsCloakInvisible : base.IsCloakInvisible;
+			}
+			set
+			{
+				PlayerCharacter.IsCloakInvisible = value;
+
+				Out.SendInventoryItemsUpdate(null);
+				UpdateEquipmentAppearance();
+
+				if (value)
+				{
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.IsCloakInvisible.Invisible"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+				else
+				{
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.IsCloakInvisible.Visible"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Sets/gets the living's helm visible state
+		/// (delegate to PlayerCharacter)
+		/// </summary>
+		public override bool IsHelmInvisible
+		{
+			get
+			{
+				return PlayerCharacter != null ? PlayerCharacter.IsHelmInvisible : base.IsHelmInvisible;
+			}
+			set
+			{
+				PlayerCharacter.IsHelmInvisible = value;
+
+				Out.SendInventoryItemsUpdate(null);
+				UpdateEquipmentAppearance();
+
+				if (value)
+				{
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.IsHelmInvisible.Invisible"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+				else
+				{
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.IsHelmInvisible.Visible"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets the players SpellQueue option
 		/// (delegate to PlayerCharacter)
 		/// </summary>

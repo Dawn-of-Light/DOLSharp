@@ -77,6 +77,8 @@ namespace DOL
 
 			private byte m_activeWeaponSlot;
 			private bool m_isCloakHoodUp;
+			private bool m_isCloakInvisible;
+			private bool m_isHelmInvisible;
 			private bool m_spellQueue;
 			private int m_copper;
 			private int m_silver;
@@ -1253,6 +1255,34 @@ namespace DOL
 				set
 				{
 					m_isCloakHoodUp = value;
+					Dirty = true;
+				}
+			}
+
+			/// <summary>
+			/// Is cloak hood up
+			/// </summary>
+			[DataElement(AllowDbNull = false)]
+			public bool IsCloakInvisible
+			{
+				get { return m_isCloakInvisible; }
+				set
+				{
+					m_isCloakInvisible = value;
+					Dirty = true;
+				}
+			}
+
+			/// <summary>
+			/// Is cloak hood up
+			/// </summary>
+			[DataElement(AllowDbNull = false)]
+			public bool IsHelmInvisible
+			{
+				get { return m_isHelmInvisible; }
+				set
+				{
+					m_isHelmInvisible = value;
 					Dirty = true;
 				}
 			}
