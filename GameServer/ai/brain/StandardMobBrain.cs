@@ -26,6 +26,7 @@ using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
 using DOL.GS.Spells;
+using DOL.GS.RealmAbilities;
 using log4net;
 
 namespace DOL.AI.Brain
@@ -69,8 +70,10 @@ namespace DOL.AI.Brain
 		public override void Think()
 		{
 			//If the npc is not casting, and we have spells, we run a check to see if we should cast any of them
-			if (!Body.IsCasting && Body.Spells != null && Body.Spells.Count > 0)
-				CheckSpells();
+			//if (!Body.IsCasting && Body.Spells != null && Body.Spells.Count > 0)
+			//Instead - lets just let CheckSpells() make all the checks for us
+			//Check for just positive spells
+			CheckSpells(true);
 
 			//If the npc is returning home, we don't need to think.
 			if (Body.IsReturningHome)
@@ -94,6 +97,7 @@ namespace DOL.AI.Brain
 			{
 				CheckPlayerAggro();
 				CheckNPCAggro();
+				AttackMostWanted();
 			}
 
 			//If this NPC can randomly walk around, we allow it to walk around
@@ -176,6 +180,17 @@ namespace DOL.AI.Brain
 		public override int ThinkInterval
 		{
 			get { return Math.Max(1500, 10000 - AggroLevel * 100); }
+		}
+
+		/// <summary>
+		/// If this brain is part of a formation, it edits it's values accordingly.
+		/// </summary>
+		/// <param name="x">The x-coordinate to refer to and change</param>
+		/// <param name="y">The x-coordinate to refer to and change</param>
+		/// <param name="z">The x-coordinate to refer to and change</param>
+		public virtual bool CheckFormation(ref int x, ref int y, ref int z)
+		{
+			return false;
 		}
 
 		#endregion
@@ -315,7 +330,9 @@ namespace DOL.AI.Brain
 					}
 				}
 
-				AttackMostWanted();
+				//This shouldn't be called here either.  Just let a function do exactly
+				//what it says.  We can call this after the function call if we want.
+				//AttackMostWanted();
 			}
 		}
 
@@ -346,7 +363,9 @@ namespace DOL.AI.Brain
 			{
 				m_aggroTable.Remove(living);
 			}
-			AttackMostWanted();
+			//This makes no sense to put here - this function just removes something from a list.
+			//It shouldn't make the thing start attacking something.
+			//AttackMostWanted();
 		}
 
 		/// <summary>
@@ -384,7 +403,8 @@ namespace DOL.AI.Brain
 			{
 				if (!Body.AttackState || target != Body.TargetObject)
 				{
-					Body.StartAttack(target);
+					if (!CheckSpells(false))
+						Body.StartAttack(target);
 				}
 			}
 			else
@@ -711,173 +731,378 @@ namespace DOL.AI.Brain
 		#endregion
 
 		#region Spells
+
 		/// <summary>
-		/// Checks the Spells list the NPC has for useable spells and casts them
+		/// Checks if any spells need casting
 		/// </summary>
-		protected void CheckSpells()
+		/// <param name="Positive">whether to check positive (true) spells or negative (false) spells</param>
+		/// <remarks>Specify whether we should check for positive (buffs, heals, etc) or negative (damages, taunts, stuns, etc).</remarks>
+		public virtual bool CheckSpells(bool Positive)
 		{
-			//buffing is always a priority
-			Body.Buff();
-			//if attacking we check instant spells and abilities
-			if (Body.AttackState)
+			//Make sure owns a body, has spells, and isn't casting
+			//By checking IsCasting here - we should be able to save a lot of processor time
+			//doing worthless checks just to find out the body is casting
+			if (this.Body != null && this.Body.Spells != null && this.Body.Spells.Count > 0 && !Body.IsCasting)
 			{
-				CheckInstantSpells();
-				CheckAbilities();
+				bool casted = false;
+				if (Positive)
+				{
+
+					foreach (Spell spell in Body.Spells)
+					{
+						//Maybe Body.InCombat?
+						if (!Body.AttackState)
+						{
+							if (CheckPositiveSpells(spell))
+								casted = true;
+						}
+					}
+				}
+				else
+				{
+					foreach (Spell spell in Body.Spells)
+					{
+						if (spell.CastTime > 0)
+						{
+							if (Body.CurrentRegion.Time - Body.LastAttackedByEnemyTick > 10 * 1000)
+								if (CheckNegativeSpells(spell))
+									casted = true;
+						}
+						else
+							CheckInstantSpells(spell);
+					}
+				}
+				if (this is IControlledBrain && !Body.AttackState)
+					((IControlledBrain)this).Follow(((IControlledBrain)this).Owner);
+				return casted;
 			}
-			//otherwise we check casting spells which are positive
-			//negative ones are handled in GameNPC.StartSpellAttack
-			else
-			{
-				CheckPositiveCastingSpells();
-			}
+			return false;
 		}
 
 		/// <summary>
-		/// Checks for positive spells which need casting
+		/// Checks the Positive Spells.  Handles buffs, heals, etc.
 		/// </summary>
-		protected void CheckPositiveCastingSpells()
+		protected virtual bool CheckPositiveSpells(Spell spell)
 		{
-			//heals
-			//heal self
-			if (Body.HealthPercent < 100)
-				CheckSpellsByType("Heal");
-			if (Body.IsDiseased)
-				CheckSpellsByType("CureDisease");
-			//cure poison
-
-			//heal owner
-			if (this is IControlledBrain)
+			GameObject lastTarget = Body.TargetObject;
+			Body.TargetObject = null;
+			switch (spell.SpellType)
 			{
-				GamePlayer player = (this as IControlledBrain).Owner;
-				if (player.HealthPercent < 50)
-					CheckSpellsByType("Heal", player);
-
-				if (player.PlayerGroup != null)
-				{
-					foreach (GamePlayer gplayer in player.PlayerGroup.GetPlayersInTheGroup())
+				#region Buffs
+				case "StrengthConstitutionBuff":
+				case "DexterityQuicknessBuff":
+				case "StrengthBuff":
+				case "DexterityBuff":
+				case "ConstitutionBuff":
+				case "ArmorFactorBuff":
+				case "ArmorAbsorbtionBuff":
+				case "CombatSpeedBuff":
+				case "MeleeDamageBuff":
+				case "AcuityBuff":
+				case "HealthRegenBuff":
+				case "DamageAdd":
+				case "DamageShield":
+				case "BodyResistBuff":
+				case "ColdResistBuff":
+				case "EnergyResistBuff":
+				case "HeatResistBuff":
+				case "MatterResistBuff":
+				case "SpiritResistBuff":
+				case "BodySpiritEnergyBuff":
+				case "HeatColdMatterBuff":
+				case "CrushSlashThrustBuff":
+				case "OffensiveProc":
+				case "DefensiveProc":
+				case "Bladeturn":
 					{
-						if (gplayer.HealthPercent < 50)
-							CheckSpellsByType("Heal", gplayer);
+						//Buff self
+						if (!LivingHasEffect(Body, spell))
+						{
+							Body.TargetObject = Body;
+							break;
+						}
 
+						//ControlledNpc now overrides this part
+						//if (spell.Target == "Realm" && this is IControlledBrain)
+						//{
+						//    GameLiving owner = (this as IControlledBrain).Owner;
+						//    GamePlayer player = null;
+						//    //Buff owner
+						//    if (!LivingHasEffect(owner, spell))
+						//    {
+						//        Body.TargetObject = owner;
+						//        break;
+						//    }
+
+						//    if (owner is GameNPC)
+						//    {
+						//        //Buff other minions
+						//        foreach (IControlledBrain icb in ((GameNPC)owner).ControlledNpcList)
+						//        {
+						//            if (icb == null)
+						//                continue;
+						//            if (!LivingHasEffect(icb.Body, spell))
+						//            {
+						//                Body.TargetObject = icb.Body;
+						//                break;
+						//            }
+						//        }
+						//        player = (GamePlayer)((IControlledBrain)((GameNPC)owner).Brain).Owner;
+						//    }
+						//    else
+						//        player = (GamePlayer)owner;
+
+						//    //Buff player
+						//    if (player != null)
+						//    {
+						//        if (!LivingHasEffect(player, spell))
+						//        {
+						//            Body.TargetObject = player;
+						//            break;
+						//        }
+
+						//        ////Buff group
+						//        //if (player.PlayerGroup != null)
+						//        //{
+						//        //    foreach (GamePlayer gplayer in player.PlayerGroup.GetPlayersInTheGroup())
+						//        //    {
+						//        //        if (!HasEffect(gplayer, spell))
+						//        //        {
+						//        //            this.TargetObject = gplayer;
+						//        //            this.CastSpell(spell, spellline);
+						//        //            this.TargetObject = lastTarget;
+						//        //            return;
+						//        //        }
+						//        //    }
+						//        //}
+						//    }
+						//}
+						break;
+					}
+				#endregion
+
+				#region Disease Cure/Poison Cure/Summon
+				case "CureDisease":
+					if (!Body.IsDiseased)
+						break;
+					Body.TargetObject = Body;
+					break;
+				case "Summon":
+					Body.TargetObject = Body;
+					break;
+				case "SummonMinion":
+					//If the list is null, lets make sure it gets initialized!
+					if (Body.ControlledNpcList == null)
+						Body.InitControlledNpc(2);
+					else
+					{
+						//Let's check to see if the list is full - if it is, we can't cast another minion.
+						//If it isn't, let them cast.
+						IControlledBrain[] icb = Body.ControlledNpcList;
+						int numberofpets = 0;
+						for (int i = 0; i < icb.Length; i++)
+						{
+							if (icb[i] != null)
+								numberofpets++;
+						}
+						if (numberofpets >= icb.Length)
+							break;
+					}
+					Body.TargetObject = Body;
+					break;
+				#endregion
+
+				#region Heals
+				case "Heal":
+					//Heal self
+					if (Body.HealthPercent < 75)
+					{
+						Body.TargetObject = Body;
+						break;
+					}
+
+					//ControlledNpc now overrides this part
+					//if (this is IControlledBrain)
+					//{
+					//    //Heal owner
+					//    GameLiving owner = (this as IControlledBrain).Owner;
+					//    if (owner.HealthPercent < 75)
+					//    {
+					//        Body.TargetObject = owner;
+					//        break;
+					//    }
+
+					//    GamePlayer player;
+					//    //Get the minion's GamePlayer
+					//    if (owner is GamePlayer)
+					//        player = (GamePlayer)owner;
+					//    else
+					//        player = (GamePlayer)((IControlledBrain)((GameNPC)owner).Brain).Owner;
+
+					//    //If minion, heal player and other minions
+					//    if (Body.IsMinion)
+					//    {
+					//        if (player.HealthPercent < 75)
+					//        {
+					//            Body.TargetObject = player;
+					//            break;
+					//        }
+
+					//        if (owner is GameNPC)
+					//        {
+					//            //Heal other minions
+					//            foreach (IControlledBrain icb in ((GameNPC)owner).ControlledNpcList)
+					//            {
+					//                if (icb == null)
+					//                    continue;
+					//                if (icb.Body.HealthPercent < 75)
+					//                {
+					//                    Body.TargetObject = icb.Body;
+					//                    break;
+					//                }
+					//            }
+					//        }
+					//        //Heal group
+					//        /*
+					//        if (player.PlayerGroup != null)
+					//        {
+					//            foreach (GamePlayer gplayer in player.PlayerGroup.GetPlayersInTheGroup())
+					//            {
+					//                if (gplayer.HealthPercent < 75)
+					//                    CheckSpellsByType("Heal", gplayer);
+
+					//            }
+					//        }*/
+					//    }
+
+					//    if (player.PlayerGroup != null && player.CharacterClass.ID == (int)eCharacterClass.Enchanter)
+					//    {
+					//        foreach (GamePlayer gplayer in player.PlayerGroup.GetPlayersInTheGroup())
+					//        {
+					//            if (gplayer.HealthPercent < 75)
+					//            {
+					//                Body.TargetObject = gplayer;
+					//                break;
+					//            }
+					//        }
+					//    }
+					//}
+					break;
+				#endregion
+			}
+			if (Body.TargetObject != null)
+			{
+				if (Body.IsMoving)
+					Body.StopFollow();
+				Body.TurnTo(Body.TargetObject);
+				Body.CastSpell(spell, m_mobSpellLine);
+				Body.TargetObject = lastTarget;
+				return true;
+			}
+			Body.TargetObject = lastTarget;
+			return false;
+		}
+
+		/// <summary>
+		/// Checks the Negative Spells.  Handles dds, debuffs, etc.
+		/// </summary>
+		protected virtual bool CheckNegativeSpells(Spell spell)
+		{
+			if (spell.Target != "Enemy" && spell.Target != "Area")
+				return false;
+			if (Body.TargetObject != null)
+			{
+				if (LivingHasEffect((GameLiving)Body.TargetObject, spell))
+					return false;
+				if (Body.IsMoving)
+					Body.StopFollow();
+				Body.TurnTo(Body.TargetObject);
+				Body.CastSpell(spell, m_mobSpellLine);
+				return true;
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Checks Instant Spells.  Handles Taunts, shouts, stuns, etc.
+		/// </summary>
+		protected virtual bool CheckInstantSpells(Spell spell)
+		{
+			GameObject lastTarget = Body.TargetObject;
+			Body.TargetObject = null;
+			switch (spell.SpellType)
+			{
+				#region Enemy Spells
+				case "DirectDamage":
+				case "Lifedrain":
+				case "DamageOverTime":
+				case "Disease":
+				case "Stun":
+				case "Mez":
+				case "Taunt":
+					Body.TargetObject = lastTarget;
+					break;
+				#endregion
+
+				#region Combat Spells
+				case "ComabtHeal":
+				case "DamageAdd":
+				case "ArmorFactorBuff":
+				case "EnduranceRegenBuff":
+				case "CombatSpeedBuff":
+				case "AblativeArmor":
+				case "Bladeturn":
+					Body.TargetObject = Body;
+					//if(LivingHasEffect(Body, spell))
+					//    return false;
+					break;
+				#endregion
+			}
+			//This will take care of any thing with "debuff" in its name
+			if (Body.TargetObject == null && this.Body.CanFight && spell.SpellType.ToLower().Contains("debuff"))
+				Body.TargetObject = lastTarget;
+
+			if (Body.TargetObject != null)
+			{
+				if (LivingHasEffect((GameLiving)Body.TargetObject, spell))
+					return false;
+				Body.CastSpell(spell, m_mobSpellLine);
+				Body.TargetObject = lastTarget;
+				return true;
+			}
+			Body.TargetObject = lastTarget;
+			return false;
+		}
+
+		/// <summary>
+		/// Checks the Abilities
+		/// </summary>
+		public virtual void CheckAbilities()
+		{
+			//load up abilities
+			if (Body.Abilities != null && Body.Abilities.Count > 0)
+			{
+				foreach (Ability ab in Body.Abilities.Values)
+				{
+					switch (ab.KeyName)
+					{
+						case Abilities.Intercept:
+							//Intercept for ControlledBrain: is there any cases for other types?  Maybe are there
+							//any ML trials that send out an 'Intercept' like effect that blocks players from attacks?
+							if (this is IControlledBrain)
+							{
+								if (Body.EffectList.GetOfType(typeof(InterceptEffect)) == null)
+								{
+									new InterceptEffect().Start(Body, (this as IControlledBrain).Owner);
+								}
+							}
+							break;
 					}
 				}
 			}
-
-			//heal group
-
-			//single bladeturn
-			CheckSpellsByType("Bladeturn");
-
-
-			//Summon a pet
-			//summon and buff pet if needed
-			//if (Body.ControlledNPC == null)
-			CheckSpellsByType("Summon");
 		}
 
-		/// <summary>
-		/// Checks for instant spells, both positive and negative
-		/// </summary>
-		protected void CheckInstantSpells()
-		{
-			//negative shouts
-			CheckSpellsByType("DirectDamage");
-			CheckSpellsByType("Lifedrain");
-			CheckSpellsByType("DamageOverTime");
-			CheckSpellsByType("Disease");
-			//stun shout
-			CheckSpellsByType("Stun");
-			//mez shout
-			CheckSpellsByType("Mez");
-			//snare shout
-			//instant debuffs
-
-			//chants
-			//heal chant
-			if (Body.HealthPercent < 100)
-				CheckSpellsByType("CombatHeal");
-			//damage add chant
-			CheckSpellsByType("DamageAdd");
-			//armor factor chant
-			CheckSpellsByType("ArmorFactorBuff");
-			//endurance chant
-			CheckSpellsByType("EnduranceRegenBuff");
-			//melee haste chant
-			CheckSpellsByType("CombatSpeedBuff");
-			//resist chants
-			//ablative chant
-			CheckSpellsByType("AblativeArmor");
-			//pulsing blade turn chant
-			CheckSpellsByType("Bladeturn");
-		}
-
-		/// <summary>
-		/// Checks for Abilities the NPC can use
-		/// </summary>
-		protected void CheckAbilities()
-		{
-			//Berserk
-			//Stag
-		}
-
-		private static SpellLine spellline = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
-
-		private void CheckSpellsByType(string type)
-		{
-			CheckSpellsByType(type, Body);
-		}
-
-		private void CheckSpellsByType(string type, GameLiving target)
-		{
-			//if no spells exist, return
-			if (Body.Spells.Count == 0)
-				return;
-			//currently this stops all spells after a pulsing spell is called
-			//i need to find a way to cancel the pulsing spells properly
-			//or even allow casting during a pulsing spell
-			if (Body.IsCasting)
-				return;
-
-			foreach (Spell spell in this.Body.Spells)
-			{
-				if (spell.SpellType != type)
-					continue;
-
-				//instant spells are handled by GameNPC.Buff
-				/* 
-				 * at some stage id like to change this,
-				 * for example if creating a minstrel npc, it would need to
-				 * intelligently use it's direct damage shouts, they are not
-				 * offensive procs
-				 */
-				if (spell.CastTime == 0)
-					continue;
-
-				//if we are attacking, we don't want spells with a cast time
-				if (Body.AttackState)
-					continue;
-
-				//if we are not attacking, we don't want the pulsing bladeturn spell
-				if (!Body.AttackState && spell.SpellType == "Bladeturn")
-					continue;
-
-				//check if the effect is already active
-				if (LivingHasEffect(target, spell))
-					continue;
-
-				//if the spell is friendly
-				if (spell.Target != "Enemy")
-					Body.TargetObject = target;
-				if (spell.Target == "Enemy" && Body.TargetObject == Body)
-					Body.TargetObject = CalculateNextAttackTarget();
-
-				if (Body.IsMoving)
-					Body.StopFollow();
-
-				Body.CastSpell(spell, spellline);
-				break;
-			}
-		}
+		protected static SpellLine m_mobSpellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
 
 		/// <summary>
 		/// Checks if the living target has a spell effect
@@ -885,7 +1110,7 @@ namespace DOL.AI.Brain
 		/// <param name="target">The target living object</param>
 		/// <param name="spell">The spell to check</param>
 		/// <returns>True if the living has the effect</returns>
-		private bool LivingHasEffect(GameLiving target, Spell spell)
+		protected bool LivingHasEffect(GameLiving target, Spell spell)
 		{
 			if (target == null)
 				return true;

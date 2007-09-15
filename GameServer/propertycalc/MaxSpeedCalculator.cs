@@ -100,15 +100,37 @@ namespace DOL.GS.PropertyCalc
 			else if (living is GameNPC)
 			{
 				// 125% speed if following owner
-				if (speed == 1.0 && !living.InCombat)
+				if (!living.InCombat)
 				{
 					IControlledBrain brain = ((GameNPC)living).Brain as IControlledBrain;
-					if (brain != null && brain.Owner == brain.Body.CurrentFollowTarget)
-						speed *= 1.25;
-					// additional 30% speed if Owner is sprinting (thats Owners bonus)
-					if (brain != null && brain.Owner.IsSprinting ) 
-					   speed *= 1.3;
+					
+					if (brain != null)
+					{
+						//Get the root player of the pet
+						GamePlayer playerowner = brain.GetPlayerOwner();
+						//Get the pet's immediate owner
+						GameLiving owner = brain.Owner;
+						if (playerowner != null && owner != null)
+						{
+							//If no speed enhancements - add follow and horse bonus
+							if (speed == 1.0)
+							{
+								//Pets should always follow their immediate owner
+								if (owner == brain.Body.CurrentFollowTarget)
+									speed *= 1.25;
+								if (playerowner.IsOnHorse)
+									speed *= 1.45;
+								//Should this bonus really be added?
+								if (playerowner.IsOnHorse && playerowner.IsSprinting)
+									speed *= 1.7;
+							}
+							//Add in sprinting bonus
+							if (playerowner.IsSprinting)
+								speed *= 1.3;
+						}
+					}
 				}
+
 				double healthPercent = living.Health / (double)living.MaxHealth;
 				if (healthPercent < 0.33)
 				{

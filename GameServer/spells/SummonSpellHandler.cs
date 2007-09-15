@@ -19,14 +19,11 @@
 
 using System;
 using System.Collections;
-using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Events;
 using DOL.GS;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using DOL.GS.SkillHandler;
-using log4net;
 
 namespace DOL.GS.Spells
 {
@@ -81,8 +78,7 @@ namespace DOL.GS.Spells
 		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-			GamePlayer player = Caster as GamePlayer;
-			if (player == null)
+			if (Caster == null)
 			{
 				return;
 			}
@@ -98,11 +94,31 @@ namespace DOL.GS.Spells
 
 			int x, y;
 			GameSpellEffect effect = CreateSpellEffect(target, effectiveness);
-			if (Spell.Duration < 65535)
+			//Duration is in milliseconds. 65535 is in seconds.  Lets multiply in order to avoid
+			//dividing.
+			if (Spell.Duration < ushort.MaxValue * 1000)
 			{
-				Caster.GetSpotFromHeading(64, out x, out y);
+				if (Spell.Target.ToLower() == "area")
+				{
+					int dist = WorldMgr.GetDistance(Caster, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z);
+					if (Caster.GroundTargetInView && (dist <= Spell.Range))
+					{
+						x = Caster.GroundTarget.X;
+						y = Caster.GroundTarget.Y;
+					}
+					else
+					{
+						if (dist > Spell.Range)
+							MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
+						else
+							MessageToCaster("Your area target is not in view.", eChatType.CT_SpellResisted);
+						return;
+					}
+				}
+				else
+					Caster.GetSpotFromHeading(64, out x, out y);
 
-				ControlledNpc controlledBrain = new ControlledNpc(player);
+				ControlledNpc controlledBrain = new ControlledNpc(Caster);
 
 				GameNPC summoned = new GameNPC(template);
 				controlledBrain.WalkState = eWalkState.Stay;
@@ -111,7 +127,8 @@ namespace DOL.GS.Spells
 				summoned.Y = y;
 				summoned.Z = Caster.Z;
 				summoned.CurrentRegion = Caster.CurrentRegion;
-				summoned.Heading = (ushort)((Caster.Heading + 2048) % 4096);
+				//summoned.Heading = (ushort)((Caster.Heading + 2048) % 4096);
+				summoned.Heading = Caster.Heading;
 				summoned.Realm = Caster.Realm;
 				summoned.CurrentSpeed = 0;
 				if (Spell.Damage < 0) summoned.Level = (byte)(Caster.Level * Spell.Damage * -0.01);
@@ -119,17 +136,19 @@ namespace DOL.GS.Spells
 				if (summoned.Level > Spell.Value) summoned.Level = (byte)Spell.Value;
 				summoned.AddToWorld();
 				effect.Start(summoned);
-				controlledBrain.Body.Buff();
+				//Check for buffs
+				controlledBrain.CheckSpells(true);
 				controlledBrain.Attack(target);
 			}
 			else
 			{
 				target.GetSpotFromHeading(64, out x, out y);
 
-				ControlledNpc controlledBrain = new ControlledNpc(player);
+				ControlledNpc controlledBrain = new ControlledNpc(Caster);
 
 				GameNPC summoned = new GameNPC(template);
 				summoned.SetOwnBrain(controlledBrain);
+
 				summoned.X = x;
 				summoned.Y = y;
 				summoned.Z = target.Z;
@@ -140,10 +159,44 @@ namespace DOL.GS.Spells
 				if (Spell.Damage < 0) summoned.Level = (byte)(target.Level * Spell.Damage * -0.01);
 				else summoned.Level = (byte)Spell.Damage;
 				if (summoned.Level > Spell.Value) summoned.Level = (byte)Spell.Value;
+				//Determines the ammount of minions each commander can have
+				if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ID == (int)eCharacterClass.Bonedancer)
+				{
+					switch (summoned.Name.ToLower())
+					{
+						case "returned commander":
+						case "decayed commander":
+							summoned.InitControlledNpc(0);
+							break;
+						case "skeletal commander":
+							summoned.InitControlledNpc(1);
+							break;
+						case "bone commander":
+							summoned.InitControlledNpc(2);
+							break;
+						case "dread commander":
+						case "dread guardian":
+						case "dread lich":
+						case "dread archer":
+							summoned.InitControlledNpc(3);
+							break;
+					}
+					if (summoned.Inventory != null)
+					{
+						if (summoned.Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
+							summoned.SwitchWeapon(GameLiving.eActiveWeaponSlot.Distance);
+						else if (summoned.Inventory.GetItem(eInventorySlot.RightHandWeapon) != null)
+							summoned.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
+						else if (summoned.Inventory.GetItem(eInventorySlot.TwoHandWeapon) != null)
+							summoned.SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded);
+					}
+				}
 				summoned.AddToWorld();
 
-				GameEventMgr.AddHandler(player, GamePlayerEvent.CommandNpcRelease, new DOLEventHandler(OnNpcReleaseCommand));
-				player.SetControlledNpc(controlledBrain);
+				GameEventMgr.AddHandler(Caster, GamePlayerEvent.CommandNpcRelease, new DOLEventHandler(OnNpcReleaseCommand));
+				GameEventMgr.AddHandler(summoned, GameLivingEvent.WhisperReceive, new DOLEventHandler(OnWhisperReceive));
+
+				Caster.SetControlledNpc(controlledBrain);
 				effect.Start(summoned);
 			}
 		}
@@ -183,10 +236,242 @@ namespace DOL.GS.Spells
 
 			player.SetControlledNpc(null);
 			GameEventMgr.RemoveHandler(player, GamePlayerEvent.CommandNpcRelease, new DOLEventHandler(OnNpcReleaseCommand));
+			GameEventMgr.RemoveHandler(npc.Body, GameLivingEvent.WhisperReceive, new DOLEventHandler(OnWhisperReceive));
 
 			GameSpellEffect effect = FindEffectOnTarget(npc.Body, this);
 			if (effect != null)
 				effect.Cancel(false);
+		}
+
+		/// <summary>
+		/// Called when owner sends a whisper to the pet
+		/// </summary>
+		/// <param name="e"></param>
+		/// <param name="sender"></param>
+		/// <param name="arguments"></param>
+		protected virtual void OnWhisperReceive(DOLEvent e, object sender, EventArgs arguments)
+		{
+			GameNPC body = sender as GameNPC;
+			if (body == null) return;
+			if (!(arguments is WhisperReceiveEventArgs)) return;
+			GamePlayer player = (GamePlayer)((WhisperReceiveEventArgs)arguments).Source;
+			if (player == null) return;
+
+			string[] strargs = ((WhisperReceiveEventArgs)arguments).Text.ToLower().Split(' ');
+
+			if (player.CharacterClass.ID == (int)eCharacterClass.Bonedancer)
+			{
+				for (int i = 0; i < strargs.Length; i++)
+				{
+					String str = strargs[i];
+					string text = null;
+					switch (str.ToLower())
+					{
+						case "commander":
+							if (body.Name == "dread guardian")
+								text = "The dread guardian says, \"As one of Bogdar's chosen guardians, I have mastered the ability to [harm] his enemies and [empower] myself with extra defenses.  I also have various [combat] tactics at your disposal.\"";
+							else if (body.Name == "dread lich")
+								text = "The dread lich says, \"As one of Bogdar's mystics, I have mastered many dark [spells].  I also have the means to [empower] my spells to be more effective.  I also have various [combat] tactics at your disposal.\"";
+							else if (body.Name == "dread archer")
+								text = "The dread archer says, \"As one of Bogdar's favored archers, you can [empower] me to be more effective with my bow.  I also have various [combat] tactics at your disposal.\"";
+							else if (body.Name == "dread commander" || body.Name == "decayed commander" || body.Name == "returned commander" || body.Name == "skeletal commander" || body.Name == "bone commander")
+								text = "The " + body.Name + " says, \"As one of Bogdar's commanders, I have mastered many of the fossil [weapons] within his bone army.  Which weapon shall I wield for you?  I also have various [combat] tactics at your disposal.\"";
+							break;
+						case "spells":
+							if (body.Name != "dread lich") return;
+							text = "The dread lich says, \"My arsenal consists of [snare], [debilitating], and pure [damage] spells.  I cast debilitating spells when first summoned but you can command me to cast a particular type of spells if you so desire.\"";
+							break;
+						case "empower":
+							if (body.Name == "dread guardian" || body.Name == "dread lich" || body.Name == "dread archer")
+							{
+								foreach (Spell spell in body.Spells)
+								{
+									if (spell.Name == "Empower")
+									{
+										body.CastSpell(spell, null);
+										break;
+									}
+								}
+							}
+							break;
+						case "combat":
+							text = "The " + body.Name + " says, \"From the start I order the minions under my control to [assist] me with a target your choose for me to kill.  Issuing the command again will make them cease assisting.  I am also able to [taunt] your enemies so that they will focus on me instead of you.\"";
+							break;
+						case "snares":
+							break;
+						case "debilitating":
+							break;
+						case "damage":
+							break;
+						case "assist":
+							//TODO: implement this - I have no idea how to do that...
+							break;
+						case "taunt":
+							bool found = false;
+							foreach (Spell spell in body.Spells)
+							{
+								//If the taunt spell's ID is changed - this needs to be changed
+								if (spell.ID == 60127)
+								{
+									body.Spells.Remove(spell);
+									player.Out.SendMessage("Your commander will no long taunt its enemies!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+									found = true;
+									break;
+								}
+							}
+							if (found) break;
+							//TODO: change this so it isn't hardcoded
+							Spell tauntspell = SkillBase.GetSpellByID(60127);
+							player.Out.SendMessage("Your commander will start to taunt its enemies!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+							if (tauntspell != null)
+								body.Spells.Add(tauntspell);
+							else
+								Console.WriteLine("Couldn't find BD pet's taunt spell");
+							break;
+						case "weapons":
+							if (body.Name != "dread commander" && body.Name != "decayed commander" && body.Name != "returned commander" && body.Name != "skeletal commander" && body.Name != "bone commander") break;
+							text = "The " + body.Name + " says, \"I have mastered the [one handed sword], the [two handed sword], the [one handed hammer], the [two handed hammer], the [one handed axe] and the [two handed axe].\"";
+							break;
+						case "one":
+							i++;
+							if (i + 1 >= strargs.Length)
+								return;
+							GameNPCInventory inven = body.Inventory as GameNPCInventory;
+							switch (strargs[++i])
+							{
+								case "sword":
+									if (inven != null)
+									{
+										if (inven.GetItem(eInventorySlot.RightHandWeapon) != null)
+										{
+											if (inven.GetItem(eInventorySlot.RightHandWeapon).Model == 3463) break;
+											inven.RemoveItem(inven.GetItem(eInventorySlot.RightHandWeapon));
+										}
+										Database.InventoryItem newItem = new Database.InventoryItem();
+										newItem.Model = 3463;
+										newItem.Object_Type = (int)eObjectType.Sword;
+										newItem.Hand = (int)eInventorySlot.RightHandWeapon;
+										inven.AddItem(eInventorySlot.RightHandWeapon, newItem);
+										body.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
+										body.MeleeDamageType = eDamageType.Thrust;
+										body.UpdateNPCEquipmentAppearance();
+									}
+									break;
+								case "hammer":
+									if (inven != null)
+									{
+										if (inven.GetItem(eInventorySlot.RightHandWeapon) != null)
+										{
+											if (inven.GetItem(eInventorySlot.RightHandWeapon).Model == 3466) break;
+											inven.RemoveItem(inven.GetItem(eInventorySlot.RightHandWeapon));
+										}
+										Database.InventoryItem newItem = new Database.InventoryItem();
+										newItem.Model = 3466;
+										newItem.Object_Type = (int)eObjectType.Hammer;
+										newItem.Hand = (int)eInventorySlot.RightHandWeapon;
+										body.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
+										body.MeleeDamageType = eDamageType.Crush;
+										body.UpdateNPCEquipmentAppearance();
+									}
+									break;
+								case "axe":
+									if (inven != null)
+									{
+										if (inven.GetItem(eInventorySlot.RightHandWeapon) != null)
+										{
+											if (inven.GetItem(eInventorySlot.RightHandWeapon).Model == 3469) break;
+											inven.RemoveItem(inven.GetItem(eInventorySlot.RightHandWeapon));
+										}
+										Database.InventoryItem newItem = new Database.InventoryItem();
+										newItem.Model = 3469;
+										newItem.Object_Type = (int)eObjectType.Axe;
+										newItem.Hand = (int)eInventorySlot.RightHandWeapon;
+										inven.AddItem(eInventorySlot.RightHandWeapon, newItem);
+										body.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
+										body.MeleeDamageType = eDamageType.Slash;
+										body.UpdateNPCEquipmentAppearance();
+									}
+									break;
+							}
+							break;
+						case "two":
+							i++;
+							if (i + 1 >= strargs.Length)
+								return;
+							inven = body.Inventory as GameNPCInventory;
+							switch (strargs[++i])
+							{
+								case "sword":
+									if (inven != null)
+									{
+										if (inven.GetItem(eInventorySlot.TwoHandWeapon) != null)
+										{
+											if (inven.GetItem(eInventorySlot.TwoHandWeapon).Model == 3462) break;
+											inven.RemoveItem(inven.GetItem(eInventorySlot.TwoHandWeapon));
+										}
+										Database.InventoryItem newItem = new Database.InventoryItem();
+										newItem.Model = 3462;
+										newItem.Object_Type = (int)eObjectType.TwoHandedWeapon;
+										newItem.Hand = (int)eInventorySlot.TwoHandWeapon;
+										inven.AddItem(eInventorySlot.TwoHandWeapon, newItem);
+										body.SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded);
+										body.MeleeDamageType = eDamageType.Thrust;
+										body.UpdateNPCEquipmentAppearance();
+									}
+									break;
+								case "hammer":
+									if (inven != null)
+									{
+										if (inven.GetItem(eInventorySlot.TwoHandWeapon) != null)
+										{
+											if (inven.GetItem(eInventorySlot.TwoHandWeapon).Model == 3465) break;
+											inven.RemoveItem(inven.GetItem(eInventorySlot.TwoHandWeapon));
+										}
+										Database.InventoryItem newItem = new Database.InventoryItem();
+										newItem.Model = 3465;
+										newItem.Object_Type = (int)eObjectType.TwoHandedWeapon;
+										newItem.Hand = (int)eInventorySlot.TwoHandWeapon;
+										inven.AddItem(eInventorySlot.TwoHandWeapon, newItem);
+										body.SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded);
+										body.MeleeDamageType = eDamageType.Crush;
+										body.UpdateNPCEquipmentAppearance();
+									}
+									break;
+								case "axe":
+									if (inven != null)
+									{
+										if (inven.GetItem(eInventorySlot.TwoHandWeapon) != null)
+										{
+											if (inven.GetItem(eInventorySlot.TwoHandWeapon).Model == 3468) break;
+											inven.RemoveItem(inven.GetItem(eInventorySlot.TwoHandWeapon));
+										}
+										Database.InventoryItem newItem = new Database.InventoryItem();
+										newItem.Model = 3468;
+										newItem.Object_Type = (int)eObjectType.TwoHandedWeapon;
+										newItem.Hand = (int)eInventorySlot.TwoHandWeapon;
+										inven.AddItem(eInventorySlot.TwoHandWeapon, newItem);
+										body.SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded);
+										body.MeleeDamageType = eDamageType.Slash;
+										body.UpdateNPCEquipmentAppearance();
+									}
+									break;
+							}
+							break;
+						case "harm":
+							if (body.Name != "dread guardian") return;
+							text = "The dread guardian says, \"Bogdar has granted me with the ability to [drain] the life of our enemies or to [suppress] and hurt their spirit.  I cast spirit damaging spells when first summoned but you can command me to cast a particular type of spell if you so desire.\"";
+							break;
+						case "drain":
+							break;
+						case "suppress":
+							break;
+						default:
+							return;
+					}
+					if (text == null) return;
+					player.Out.SendMessage(text, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+				}
+			}
 		}
 
 		/// <summary>

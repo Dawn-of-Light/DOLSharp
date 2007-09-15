@@ -67,7 +67,10 @@ namespace DOL.GS.Effects
 		{
 			get
 			{
-				return 50;
+				if (InterceptSource.Name.ToLower().Contains("brittle guard"))
+					return 100;
+				else
+					return 50;
 			}
 		}
 

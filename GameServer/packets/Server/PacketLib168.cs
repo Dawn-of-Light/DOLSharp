@@ -920,7 +920,11 @@ namespace DOL.GS.PacketHandler
 			{
 				IControlledBrain brain = npc.Brain as IControlledBrain;
 				if (brain != null)
-					SendObjectGuildID(npc, brain.Owner.Guild); //used for nearest friendly/enemy object buttons and name colors on PvP server
+				{
+					GamePlayer playerowner = brain.GetPlayerOwner();
+					if (playerowner != null)
+						SendObjectGuildID(npc, playerowner.Guild); //used for nearest friendly/enemy object buttons and name colors on PvP server
+				}
 			}
 		}
 

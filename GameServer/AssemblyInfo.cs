@@ -18,4 +18,4 @@
  */
 using System.Reflection;
 [assembly: AssemblyTitle("Dawn of Light Game Server")]
-[assembly: AssemblyVersion("1.9.0")]
+[assembly: AssemblyVersion("1.9.0.1")]
