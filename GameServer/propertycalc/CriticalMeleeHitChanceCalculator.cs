@@ -51,7 +51,7 @@ namespace DOL.GS.PropertyCalc
 
 			if (living is GameNPC && (living as GameNPC).Brain is AI.Brain.IControlledBrain)
 			{
-				GamePlayer player = ((living as GameNPC).Brain as AI.Brain.IControlledBrain).Owner;
+				GamePlayer player = ((living as GameNPC).Brain as AI.Brain.IControlledBrain).GetPlayerOwner();
 				if (player != null)
 				{
 					RealmAbilities.WildMinionAbility ab = player.GetAbility(typeof(RealmAbilities.WildMinionAbility)) as RealmAbilities.WildMinionAbility;

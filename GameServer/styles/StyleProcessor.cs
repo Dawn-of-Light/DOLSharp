@@ -450,10 +450,15 @@ namespace DOL.GS.Styles
 					if (living is GameNPC)
 					{
 						ControlledNpc brain = ((GameNPC)living).Brain as ControlledNpc;
-						if (brain != null && brain.Owner != null && brain.Owner.ControlledNpc == living)
+
+						if (brain != null)
 						{
-							string damageAmount = (attackData.StyleDamage > 0) ? " (+" + attackData.StyleDamage + ")" : "";
-							brain.Owner.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.ExecuteStyle.PerformsPerfectly", living.Name, attackData.Style.Name, damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+							GamePlayer owner = brain.GetPlayerOwner();
+							if (owner != null)
+							{
+								string damageAmount = (attackData.StyleDamage > 0) ? " (+" + attackData.StyleDamage + ")" : "";
+								owner.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.ExecuteStyle.PerformsPerfectly", living.Name, attackData.Style.Name, damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+							}
 						}
 					}
 

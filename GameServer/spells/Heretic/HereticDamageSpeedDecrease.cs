@@ -184,7 +184,7 @@ namespace DOL.GS.Spells
                 IControlledBrain brain = ((GameNPC)target).Brain as IControlledBrain;
                 if (brain != null)
                 {
-                    GamePlayer owner = brain.Owner;
+                    GamePlayer owner = brain.GetPlayerOwner();
                     if (owner != null && owner.ControlledNpc != null && target == owner.ControlledNpc.Body)
                     {
                         MessageToLiving(owner, "Your " + target.Name + " resists the effect!", eChatType.CT_SpellResisted);

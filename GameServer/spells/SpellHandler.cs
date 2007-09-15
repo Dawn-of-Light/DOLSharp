@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
@@ -83,7 +84,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// The duration for the spell interrupt duration
 		/// </summary>
-		protected const int SPELL_INTERRUPT_DURATION = 2000; //2 sec for all spells?
+		protected const int SPELL_INTERRUPT_DURATION = 3000; //3 sec for all spells!
 
 		/// <summary>
 		/// The CastingCompleteEvent
@@ -508,7 +509,7 @@ namespace DOL.GS.Spells
 				}
 			}
 
-			if (m_caster.Mana < CalculateNeededPower(selectedTarget))
+			if (m_caster is GamePlayer && m_caster.Mana < CalculateNeededPower(selectedTarget))
 			{
 				MessageToCaster("You don't have enough power to cast that!", eChatType.CT_SpellResisted);
 				return false;
@@ -842,8 +843,9 @@ namespace DOL.GS.Spells
 				m_castTimer = null;
 				if (m_caster is GamePlayer)
 					((GamePlayer)m_caster).ClearSpellQueue();
-				else if (m_caster is GameNPC)
-					((GameNPC)m_caster).StopSpellAttack();
+				//This was called in OnAfterSpellCastSequence anyways for GameNPCs
+				//else if (m_caster is GameNPC)
+				//    ((GameNPC)m_caster).StopSpellAttack();
 			}
 			OnAfterSpellCastSequence();
 		}
@@ -961,7 +963,8 @@ namespace DOL.GS.Spells
 			{
 				percent = 1.0 - ((dex - 60) * 0.15 + (dex - 250) * 0.05) * 0.01;
 			}
-			percent *= 1.0 - m_caster.GetModified(eProperty.CastingSpeed) * 0.01;
+			if (player != null)
+				percent *= 1.0 - m_caster.GetModified(eProperty.CastingSpeed) * 0.01;
 			ticks = (int)(ticks * Math.Max(0.4, percent));
 			if (ticks < 1)
 				ticks = 1; // at least 1 tick
@@ -1096,12 +1099,19 @@ namespace DOL.GS.Spells
 			// disable spells with recasttimer (Disables group of same type with same delay)
 			if (m_spell.RecastDelay > 0 && m_startReuseTimer)
 			{
-				foreach (Spell sp in SkillBase.GetSpellList(m_spellLine.KeyName))
+				if (m_caster is GamePlayer)
 				{
-					if (sp.SpellType == m_spell.SpellType && sp.RecastDelay == m_spell.RecastDelay && sp.Group == m_spell.Group)
+					foreach (Spell sp in SkillBase.GetSpellList(m_spellLine.KeyName))
 					{
-						m_caster.DisableSkill(sp, sp.RecastDelay);
+						if (sp.SpellType == m_spell.SpellType && sp.RecastDelay == m_spell.RecastDelay && sp.Group == m_spell.Group)
+						{
+							m_caster.DisableSkill(sp, sp.RecastDelay);
+						}
 					}
+				}
+				else if (m_caster is GameNPC)
+				{
+					m_caster.DisableSkill(m_spell, m_spell.RecastDelay);
 				}
 			}
 
@@ -1139,6 +1149,8 @@ namespace DOL.GS.Spells
 							}
 						}
 					}
+					else if (target == Caster)
+						list.Add(target);
 					break;
 
 				case "corpse":
@@ -1146,17 +1158,27 @@ namespace DOL.GS.Spells
 						list.Add(target);
 					break;
 
+				//This buffs the first pet in the tree - commander, abomination, etc
 				case "pet":
-					if (Caster is GamePlayer)
+					IControlledBrain icb = Caster.ControlledNpc;
+					if (icb != null)
+						list.Add(icb.Body);
+					break;
+
+				//This buffs all pets, minions, subpets, etc.  Anything down the pet tree!
+				case "allpet":
+					GameNPC npcCaster;
+					if (Caster is GamePlayer && Caster.ControlledNpc != null)
 					{
-						IControlledBrain npc = ((GamePlayer)Caster).ControlledNpc;
-						if (npc != null)
-							list.Add(npc.Body);
+						list.Add(Caster.ControlledNpc.Body);
+						npcCaster = Caster.ControlledNpc.Body;
 					}
 					else
-					{
-						// ...
-					}
+						npcCaster = Caster as GameNPC;
+					List<GameNPC> pets = npcCaster.GetAllPets();
+					if (pets != null)
+						list.AddRange(pets);
+
 					break;
 
 				case "enemy":
@@ -1637,7 +1659,7 @@ namespace DOL.GS.Spells
 				IControlledBrain brain = ((GameNPC)target).Brain as IControlledBrain;
 				if (brain != null)
 				{
-					GamePlayer owner = brain.Owner;
+					GamePlayer owner = brain.GetPlayerOwner();
 					if (owner != null && owner.ControlledNpc != null && target == owner.ControlledNpc.Body)
 					{
 						MessageToLiving(owner, "Your " + target.Name + " resist the effect!", eChatType.CT_SpellResisted);
@@ -1699,7 +1721,12 @@ namespace DOL.GS.Spells
 			}
 			else if (m_caster is GameNPC && (m_caster as GameNPC).Brain is IControlledBrain && type == eChatType.CT_YouHit)
 			{
-				((m_caster as GameNPC).Brain as IControlledBrain).Owner.Out.SendMessage(message, type, eChatLoc.CL_SystemWindow);
+				GamePlayer playerowner = ((IControlledBrain)((GameNPC)m_caster).Brain).GetPlayerOwner();
+
+				if (playerowner != null)
+				{
+					playerowner.Out.SendMessage(message, type, eChatLoc.CL_SystemWindow);
+				}
 			}
 		}
 
@@ -1968,6 +1995,18 @@ namespace DOL.GS.Spells
 			}
 
 			int speclevel = 1;
+
+			if (m_caster is GameNPC && ((GameNPC)m_caster).Brain is IControlledBrain)
+			{
+				//TODO: add variance depending on owner's spec level
+				//Mobs seem to cast Mob Spells spellline
+				//if (((GameNPC)m_caster).IsMinion)
+				//    speclevel = ((GamePlayer)((IControlledBrain)((GameNPC)((IControlledBrain)((GameNPC)m_caster).Brain).Owner).Brain).Owner).GetModifiedSpecLevel(m_spellLine.Spec);
+				//else
+				//    speclevel = ((GamePlayer)((IControlledBrain)((GameNPC)m_caster).Brain).Owner).GetModifiedSpecLevel(m_spellLine.Spec);
+				//Temporary fix
+				speclevel = 50;
+			}
 			if (m_caster is GamePlayer)
 			{
 				speclevel = ((GamePlayer)m_caster).GetModifiedSpecLevel(m_spellLine.Spec);
@@ -1988,8 +2027,21 @@ namespace DOL.GS.Spells
 			}
 
 			// add level mod
-			min += GetLevelModFactor() * (m_caster.Level - target.Level);
-			max += GetLevelModFactor() * (m_caster.Level - target.Level);
+			if (m_caster is GamePlayer)
+			{
+				min += GetLevelModFactor() * (m_caster.Level - target.Level);
+				max += GetLevelModFactor() * (m_caster.Level - target.Level);
+			}
+			else if (m_caster is GameNPC && ((GameNPC)m_caster).Brain is IControlledBrain)
+			{
+				//Get the root owner
+				GamePlayer owner = ((IControlledBrain)((GameNPC)m_caster).Brain).GetPlayerOwner();
+				if (owner != null)
+				{
+					min += GetLevelModFactor() * (owner.Level - owner.Level);
+					max += GetLevelModFactor() * (owner.Level - owner.Level);
+				}
+			}
 			if (max < 0.25)
 				max = 0.25;
 			if (min > max)
@@ -2244,8 +2296,10 @@ namespace DOL.GS.Spells
 				modmessage = " (+" + ad.Modifier + ")";
 			if (ad.Modifier < 0)
 				modmessage = " (" + ad.Modifier + ")";
-
-			MessageToCaster(string.Format("You hit {0} for {1}{2} damage!", ad.Target.GetName(0, false), ad.Damage, modmessage), eChatType.CT_YouHit);
+			if (Caster is GamePlayer)
+				MessageToCaster(string.Format("You hit {0} for {1}{2} damage!", ad.Target.GetName(0, false), ad.Damage, modmessage), eChatType.CT_YouHit);
+			else if (Caster is GameNPC)
+				MessageToCaster(string.Format("Your " + Caster.Name + " hits {0} for {1}{2} damage!", ad.Target.GetName(0, false), ad.Damage, modmessage), eChatType.CT_YouHit);
 			if (ad.CriticalDamage > 0)
 				MessageToCaster("You critical hit for an additional " + ad.CriticalDamage + " damage!", eChatType.CT_YouHit);
 		}
