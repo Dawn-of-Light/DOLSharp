@@ -17,12 +17,13 @@ namespace DOL.GS.Keeps
 			if (target == null || target.IsAlive == false)
 				return;
 
+#warning StartSpellAttack doesn't work any more - use SpellTimer
 			if (CanUseRanged)
 				StartSpellAttack(attackTarget);
 			else base.StartAttack(attackTarget);
 		}
 
-		public override bool StartSpellAttack(GameObject attackTarget)
+		public bool StartSpellAttack(GameObject attackTarget)
 		{
 			if (attackTarget is GameLiving == false)
 				return false;

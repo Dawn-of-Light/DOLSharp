@@ -96,8 +96,13 @@ namespace DOL.AI.Brain
 				if (npc.Brain is IControlledBrain == false)
 					continue;
 				if (npc is GameKeepGuard) continue;
+
+				GamePlayer player;
+				if ((player = (npc.Brain as ControlledNpc).GetPlayerOwner()) == null)
+					continue;
+
 				if (GameServer.ServerRules.IsAllowedToAttack(Body, npc, false)
-					&& KeepMgr.IsEnemy(Body as GameKeepGuard, (npc.Brain as IControlledBrain).Owner))
+					&& KeepMgr.IsEnemy(Body as GameKeepGuard, player))
 				{
 					Body.StartAttack(npc);
 					AddToAggroList(npc, (npc.Level + 1) << 1);
@@ -130,9 +135,9 @@ namespace DOL.AI.Brain
 		{
 			GamePlayer checkPlayer = null;
 			if (target is GameNPC && (target as GameNPC).Brain is IControlledBrain)
-				checkPlayer = ((target as GameNPC).Brain as IControlledBrain).Owner;
+				checkPlayer = ((target as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
 			if (target is GamePlayer)
-				checkPlayer = target as GamePlayer; ;
+				checkPlayer = target as GamePlayer;
 			if (checkPlayer == null)
 				return 0;
 			if (KeepMgr.IsEnemy(Body as GameKeepGuard, checkPlayer))

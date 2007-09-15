@@ -493,8 +493,10 @@ namespace DOL.GS.ServerRules
 			}
 			else if (killer is GameNPC && (killer as GameNPC).Brain is IControlledBrain)
 			{
-				GamePlayer player = ((killer as GameNPC).Brain as IControlledBrain).Owner;
-				PlayerGroup group = player.PlayerGroup;
+				GamePlayer player = ((killer as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
+				PlayerGroup group = null;
+				if (player != null)
+					group = player.PlayerGroup;
 				if (group != null)
 					realm = (eRealm)group.Leader.Realm;
 				else realm = (eRealm)killer.Realm;

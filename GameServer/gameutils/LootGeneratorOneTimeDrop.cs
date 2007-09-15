@@ -99,7 +99,7 @@ namespace DOL.GS
 				{
 					IControlledBrain brain = ((GameNPC)gainer).Brain as IControlledBrain;
 					if (brain != null)
-						player = brain.Owner;
+						player = brain.GetPlayerOwner();
 				}
 				if ( player != null)
 				{

@@ -187,6 +187,10 @@ namespace DOL.GS
 		/// </summary>
 		public const string Intercept = "Intercept";
 		/// <summary>
+		/// Intercept Ability
+		/// </summary>
+		public const string ChargeAbility = "Charge";
+		/// <summary>
 		/// Flurry Ability
 		/// </summary>
 		public const string Flurry = "Flurry";
@@ -603,9 +607,9 @@ namespace DOL.GS
 		/// </summary>
 		public const string Arboreal_Path = "Arboreal Path"; //Forester
 		/// <summary>
-		/// Bonedancing Magic Spec
+		/// BoneArmy Magic Spec
 		/// </summary>
-		public const string Bonedancing   = "Bonedancing"; //Bonedancer
+		public const string BoneArmy   = "Bone Army"; //Bonedancer
 		/// <summary>
 		/// Creeping Path Magic Spec
 		/// </summary>

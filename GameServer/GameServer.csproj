@@ -1563,6 +1563,7 @@
     <Compile Include="spells\PetMesmerizeSpellHandler.cs" />
     <Compile Include="spells\PowerHealSpellHandler.cs" />
     <Compile Include="spells\StyleTaunt.cs" />
+    <Compile Include="spells\SummonMinionHandler.cs" />
     <Compile Include="spells\Valkyrie\ValkyrieProc.cs" />
     <Compile Include="spells\Vampiir\VampArmorDebuff.cs">
       <SubType>Code</SubType>

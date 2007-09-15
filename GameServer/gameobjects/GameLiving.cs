@@ -318,6 +318,9 @@ namespace DOL.GS
 		/// Holds the property for the result the last enemy
 		/// </summary>
 		public const string LAST_ENEMY_ATTACK_RESULT = "LastEnemyAttackResult";
+
+		#region enums
+
 		/// <summary>
 		/// The result of an attack
 		/// </summary>
@@ -378,7 +381,19 @@ namespace DOL.GS
 			/// <summary>
 			/// The attack was fumbled
 			/// </summary>
-			Fumbled = 15
+			Fumbled = 15,
+			/// <summary>
+			/// The attack was Bodyguarded
+			/// </summary>
+			Bodyguarded = 16,
+			/// <summary>
+			/// The attack was Phaseshiftet
+			/// </summary>
+			Phaseshift = 17,
+			/// <summary>
+			/// The attack was Grappled
+			/// </summary>
+			Grappled = 18
 		}
 
 		/// <summary>
@@ -441,33 +456,6 @@ namespace DOL.GS
 			/// A rapid shot is attempted
 			/// </summary>
 			RapidFire,
-		}
-
-		/// <summary>
-		/// The state of the ranged attack
-		/// </summary>
-		protected eRangeAttackState m_rangeAttackState;
-		/// <summary>
-		/// The gtype of the ranged attack
-		/// </summary>
-		protected eRangeAttackType m_rangeAttackType;
-
-		/// <summary>
-		/// Gets or Sets the state of a ranged attack
-		/// </summary>
-		public eRangeAttackState RangeAttackState
-		{
-			get { return m_rangeAttackState; }
-			set { m_rangeAttackState = value; }
-		}
-
-		/// <summary>
-		/// Gets or Sets the type of a ranged attack
-		/// </summary>
-		public eRangeAttackType RangeAttackType
-		{
-			get { return m_rangeAttackType; }
-			set { m_rangeAttackType = value; }
 		}
 
 		/// <summary>
@@ -583,6 +571,35 @@ namespace DOL.GS
 			/// Fourth quiver slot
 			/// </summary>
 			Fourth = 0x80,
+		}
+
+		#endregion
+
+		/// <summary>
+		/// The state of the ranged attack
+		/// </summary>
+		protected eRangeAttackState m_rangeAttackState;
+		/// <summary>
+		/// The gtype of the ranged attack
+		/// </summary>
+		protected eRangeAttackType m_rangeAttackType;
+
+		/// <summary>
+		/// Gets or Sets the state of a ranged attack
+		/// </summary>
+		public eRangeAttackState RangeAttackState
+		{
+			get { return m_rangeAttackState; }
+			set { m_rangeAttackState = value; }
+		}
+
+		/// <summary>
+		/// Gets or Sets the type of a ranged attack
+		/// </summary>
+		public eRangeAttackType RangeAttackType
+		{
+			get { return m_rangeAttackType; }
+			set { m_rangeAttackType = value; }
 		}
 
 		/// <summary>
@@ -966,6 +983,7 @@ namespace DOL.GS
 				//TODO dragon, big mobs etc...
 				return 200;
 			}
+
 			set { }
 		}
 
@@ -1026,7 +1044,6 @@ namespace DOL.GS
 				}
 				return null;
 			}
-			set { }
 		}
 
 		/// <summary>
@@ -1192,6 +1209,8 @@ namespace DOL.GS
 		{
 			get { return 0; }
 		}
+
+		#region XP array
 
 		/// <summary>
 		/// Holds pre calculated experience values of the living for special levels
@@ -1362,6 +1381,8 @@ namespace DOL.GS
 			34,		//for level 49
 			35,		//for level 50
 		};
+
+		#endregion
 
 		/// <summary>
 		/// Checks whether object is grey con to this living
@@ -1651,7 +1672,7 @@ namespace DOL.GS
 				IControlledBrain brain = ((GameNPC)ad.Attacker).Brain as IControlledBrain;
 				if (brain != null)
 				{
-					GamePlayer owner = brain.Owner;
+					GamePlayer owner = brain.GetPlayerOwner();
 					//theurgists and animists need the following commented out
 					if (owner != null /*&& owner.ControlledNpc != null && ad.Attacker == owner.ControlledNpc.Body*/)
 					{
@@ -1685,7 +1706,7 @@ namespace DOL.GS
 				IControlledBrain brain = ((GameNPC)ad.Target).Brain as IControlledBrain;
 				if (brain != null)
 				{
-					GamePlayer owner = brain.Owner;
+					GamePlayer owner = brain.GetPlayerOwner();
 					excludes.Add(owner);
 					if (owner != null && owner.ControlledNpc != null && ad.Target == owner.ControlledNpc.Body)
 					{
@@ -3156,7 +3177,6 @@ namespace DOL.GS
 				IControlledBrain brain = ((GameNPC)source).Brain as IControlledBrain;
 				if (brain != null)
 					source = brain.Owner;
-				damageDealt *= 0.75;
 			}
 
 			GamePlayer attackerPlayer = source as GamePlayer;
@@ -5197,6 +5217,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			StopEnduranceRegeneration();
 
 			if (m_attackAction != null) m_attackAction.Stop();
+			if (this is GameNPC && ((GameNPC)this).SpellTimer != null) ((GameNPC)this).SpellTimer.Stop();
 			if (m_healthRegenerationTimer != null) m_healthRegenerationTimer.Stop();
 			if (m_powerRegenerationTimer != null) m_powerRegenerationTimer.Stop();
 			if (m_enduRegenerationTimer != null) m_enduRegenerationTimer.Stop();
@@ -5340,6 +5361,127 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 				return false;
 			}
 		}
+		#endregion
+		#region ControlledNpc
+
+		/// <summary>
+		/// Holds the controlled object
+		/// </summary>
+		protected IControlledBrain[] m_controlledNpc = null;
+
+		/// <summary>
+		/// Initializes the ControlledNpcs for the GameLiving class
+		/// </summary>
+		/// <param name="num">Number of places to allocate.  If negative, sets to null.</param>
+		public void InitControlledNpc(int num)
+		{
+			if (num > 0)
+				m_controlledNpc = new IControlledBrain[num];
+			else
+			{
+				m_controlledNpc = null;
+				return;
+			}
+			//for (int i = 0; i < num; i++)
+			//{
+			//    m_controlledNpc[i] = null;
+			//}
+		}
+
+		/// <summary>
+		/// Gets the controlled object of this player
+		/// </summary>
+		public virtual IControlledBrain ControlledNpc
+		{
+			get
+			{
+				if (m_controlledNpc == null) return null;
+				return m_controlledNpc[0];
+			}
+		}
+
+		/// <summary>
+		/// Sets the controlled object for this player
+		/// </summary>
+		/// <param name="controlledNpc"></param>
+		public virtual void SetControlledNpc(IControlledBrain controlledNpc)
+		{
+		}
+
+		/// <summary>
+		/// Checks if player controls a brain and send any needed messages
+		/// </summary>
+		/// <param name="npc">The Npc from local var to avoid changes but other threads</param>
+		/// <returns>success</returns>
+		protected bool CheckControlledNpc(IControlledBrain npc)
+		{
+			return npc != null;
+		}
+
+		/// <summary>
+		/// Commands controlled object to attack
+		/// </summary>
+		public virtual void CommandNpcAttack()
+		{
+		}
+
+		/// <summary>
+		/// Releases controlled object
+		/// </summary>
+		public virtual void CommandNpcRelease()
+		{
+			//TODO: implement this for .Stop() on ControlledNpc
+		}
+
+		/// <summary>
+		/// Commands controlled object to follow
+		/// </summary>
+		public virtual void CommandNpcFollow()
+		{
+		}
+
+		/// <summary>
+		/// Commands controlled object to stay where it is
+		/// </summary>
+		public virtual void CommandNpcStay()
+		{
+		}
+
+		/// <summary>
+		/// Commands controlled object to go to players location
+		/// </summary>
+		public virtual void CommandNpcComeHere()
+		{
+		}
+
+		/// <summary>
+		/// Commands controlled object to go to target
+		/// </summary>
+		public virtual void CommandNpcGoTarget()
+		{
+		}
+
+		/// <summary>
+		/// Changes controlled object state to passive
+		/// </summary>
+		public virtual void CommandNpcPassive()
+		{
+		}
+
+		/// <summary>
+		/// Changes controlled object state to aggressive
+		/// </summary>
+		public virtual void CommandNpcAgressive()
+		{
+		}
+
+		/// <summary>
+		/// Changes controlled object state to defensive
+		/// </summary>
+		public virtual void CommandNpcDefensive()
+		{
+		}
+
 		#endregion
 
 		/// <summary>

@@ -33,6 +33,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
 using DOL.GS.Utils;
 using DOL.GS.Housing;
+using DOL.GS.RealmAbilities;
 using log4net;
 
 namespace DOL.GS
@@ -48,6 +49,62 @@ namespace DOL.GS
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		#region Formations/Spacing
+
+		//Space/Offsets used in formations
+		// Normal = 1
+		// Big = 2
+		// Huge = 3
+		private int m_FormationSpacing = 1;
+
+		/// <summary>
+		/// The Minions's x-offset from it's commander
+		/// </summary>
+		public int FormationSpacing
+		{
+			get { return m_FormationSpacing; }
+			set
+			{
+				//BD range values vary from 1 to 3.  It is more appropriate to just ignore the
+				//incorrect values than throw an error since this isn't a very important area.
+				if (value > 0 && value < 4)
+					m_FormationSpacing = value;
+			}
+		}
+
+		/// <summary>
+		/// Used for that formation type if a GameNPC has a formation
+		/// </summary>
+		public enum eFormationType
+		{
+			// M = owner
+			// x = following npcs
+			//Line formation
+			// M x x x
+			Line,
+			//Triangle formation
+			//		x
+			// M x
+			//		x
+			Triangle,
+			//Protect formation
+			//		 x
+			// x  M
+			//		 x
+			Protect,
+		}
+
+		private eFormationType m_formation = eFormationType.Line;
+		/// <summary>
+		/// How the minions line up with the commander
+		/// </summary>
+		public eFormationType Formation
+		{
+			get { return m_formation; }
+			set { m_formation = value; }
+		}
+
+		#endregion
 		#region Sizes/Properties
 		/// <summary>
 		/// Holds the size of the NPC
@@ -1107,8 +1164,10 @@ namespace DOL.GS
 				else m_lastAttackTickPvP = m_CurrentRegion.Time;
 				if (this.CurrentRegion.Time - LastAttackedByEnemyTick > 10 * 1000)
 				{
-					if (StartSpellAttack(this.TargetObject))
-						return;
+					//Check for negatively casting spells
+					StandardMobBrain stanBrain = (StandardMobBrain)Brain;
+					if (stanBrain != null)
+						((StandardMobBrain)stanBrain).CheckSpells(false);
 				}
 			}
 
@@ -1161,24 +1220,38 @@ namespace DOL.GS
 				this.WalkToSpawn();
 				return 0;
 			}
+			int newX, newY, newZ;
 
-			//if the npc hasn't hit or been hit in a while, stop following and return home
-			if (this.Brain is StandardMobBrain && this.Brain is IControlledBrain == false)
+			 //Check for any formations
+			if (this.Brain is StandardMobBrain)
 			{
 				StandardMobBrain brain = this.Brain as StandardMobBrain;
-				if (AttackState && brain != null && followLiving != null)
+				//if the npc hasn't hit or been hit in a while, stop following and return home
+				if (!(Brain is IControlledBrain))
 				{
-					long seconds = 20 + ((brain.GetAggroAmountForLiving(followLiving) / (MaxHealth + 1)) * 100);
-					long lastattacked = LastAttackTick;
-					long lasthit = LastAttackedByEnemyTick;
-					if (CurrentRegion.Time - lastattacked > seconds * 1000 && CurrentRegion.Time - lasthit > seconds * 1000)
+					if (AttackState && brain != null && followLiving != null)
 					{
-						StopFollow();
-						Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
-						brain.ClearAggroList();
-						this.WalkToSpawn();
-						return 0;
+						long seconds = 20 + ((brain.GetAggroAmountForLiving(followLiving) / (MaxHealth + 1)) * 100);
+						long lastattacked = LastAttackTick;
+						long lasthit = LastAttackedByEnemyTick;
+						if (CurrentRegion.Time - lastattacked > seconds * 1000 && CurrentRegion.Time - lasthit > seconds * 1000)
+						{
+							StopFollow();
+							Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
+							brain.ClearAggroList();
+							this.WalkToSpawn();
+							return 0;
+						}
 					}
+				}
+				//If we're part of a formation, we can get out early.
+				newX = followTarget.X;
+				newY = followTarget.Y;
+				newZ = followTarget.Z;
+				if (brain.CheckFormation(ref newX, ref newY, ref newZ))
+				{
+					WalkTo(newX, newY, (ushort)newZ, MaxSpeed);
+					return FOLLOWCHECKTICKS;
 				}
 			}
 
@@ -1202,9 +1275,9 @@ namespace DOL.GS
 
 			//Subtract the offset from the target's position to get
 			//our target position
-			int newX = (int)(followTarget.X - diffx);
-			int newY = (int)(followTarget.Y - diffy);
-			int newZ = (int)(followTarget.Z - diffz);
+			newX = (int)(followTarget.X - diffx);
+			newY = (int)(followTarget.Y - diffy);
+			newZ = (int)(followTarget.Z - diffz);
 			WalkTo(newX, newY, (ushort)newZ, MaxSpeed);
 			return FOLLOWCHECKTICKS;
 		}
@@ -2560,6 +2633,17 @@ namespace DOL.GS
 		#endregion
 		#region Combat
 
+		private bool m_canFight = true;
+
+		/// <summary>
+		/// Can this NPC engage in melee
+		/// </summary>
+		public bool CanFight
+		{
+			get { return m_canFight; }
+			set { m_canFight = value; }
+		}
+
 		/// <summary>
 		/// The property that holds charmed tick if any
 		/// </summary>
@@ -2576,21 +2660,30 @@ namespace DOL.GS
 		/// <param name="attackTarget">The object to attack</param>
 		public override void StartAttack(GameObject attackTarget)
 		{
+			if (!CanFight) return;
+
 			if (this.Brain is IControlledBrain)
 			{
 				if ((this.Brain as IControlledBrain).AggressionState == eAggressionState.Passive)
 					return;
-				(this.Brain as IControlledBrain).Owner.Stealth(false);
+				GamePlayer playerowner = null;
+				if ((playerowner = ((IControlledBrain)Brain).GetPlayerOwner()) != null)
+					playerowner.Stealth(false);
 			}
 
 			TargetObject = attackTarget;
 			if (TargetObject.Realm == 0 || Realm == 0)
 				m_lastAttackTickPvE = m_CurrentRegion.Time;
-			else m_lastAttackTickPvP = m_CurrentRegion.Time;
-			if (m_attackers.Count == 0 && this.Spells.Count > 0 && this.CurrentRegion.Time - LastAttackedByEnemyTick > 10 * 1000)
+			else
+				m_lastAttackTickPvP = m_CurrentRegion.Time;
+
+			//These checks are now handled in CheckSpells inside a spell action.  We need an attacking mob to have a SpellAction timer
+			if (m_attackers.Count == 0 /*&& this.Spells.Count > 0 && this.CurrentRegion.Time - LastAttackedByEnemyTick > 10 * 1000*/)
 			{
-				if (StartSpellAttack(attackTarget))
-					return;
+				if (SpellTimer == null)
+					SpellTimer = new SpellAction(this);
+				if (!SpellTimer.IsAlive)
+					SpellTimer.Start(1);
 			}
 			base.StartAttack(attackTarget);
 
@@ -3262,226 +3355,14 @@ namespace DOL.GS
 			get { return m_abilities; }
 		}
 
-		private RegionTimer m_retrySpellAttackTimer = null;
-		
+		private SpellAction m_spellaction = null;
 		/// <summary>
-		/// Timer used for the spell casting sequence
+		/// The timer that controls an npc's spell casting
 		/// </summary>
-		private RegionTimer m_sequenceSpellAttackTimer = null;
-		/// <summary>
-		/// The next spell
-		/// </summary>
-		protected int m_nextSpellIndex = -1;
-		/// <summary>
-		/// The next spell
-		/// </summary>
-		protected Spell m_nextSpell;
-		/// <summary>
-		/// The next spell line
-		/// </summary>
-		protected SpellLine m_nextSpellLine;
-		public Spell NextSpell
+		public SpellAction SpellTimer
 		{
-			get
-			{
-				if (this.Spells.Count == 0)
-					return null;
-				else
-				{
-					if ((m_nextSpellIndex == -1 || m_nextSpellIndex == this.Spells.Count - 1))
-						m_nextSpellIndex = 0;
-					else
-						m_nextSpellIndex++;
-					Spell nextSpell = null;
-					for (int i = m_nextSpellIndex; i < this.Spells.Count; i++)
-					{
-						Spell spell = this.Spells[i] as Spell;
-						if (spell.CastTime == 0) continue;
-						if (spell.Damage > 0)
-						{
-							nextSpell = spell;
-							break;
-						}
-					}
-					if (nextSpell == null && m_nextSpellIndex > 0)
-					{
-						for (int i = 0; i < m_nextSpellIndex; i++)
-						{
-							Spell spell = this.Spells[i] as Spell;
-							if (spell.CastTime == 0) continue;
-							if (spell.Damage > 0)
-							{
-								nextSpell = spell;
-								break;
-							}
-						}
-					}
-					return nextSpell;
-				}
-			}
-		}
-
-		/// <summary>
-		/// start to cast spell attack in continue until takken melee damage
-		/// </summary>
-		/// <param name="attackTarget"></param>
-		/// <returns></returns>
-		public virtual bool StartSpellAttack(GameObject attackTarget)
-		{
-			if (Spells == null || Spells.Count < 1)
-			{
-				StopSpellAttack();
-				return false;
-			}
-			if (this == null || this.ObjectState != eObjectState.Active || !this.IsAlive || attackTarget == null || attackTarget.ObjectState != eObjectState.Active || (attackTarget is GameLiving && !(attackTarget as GameLiving).IsAlive))
-			{
-				StopSpellAttack();
-				return false;
-			}
-
-			if (!WorldMgr.CheckDistance(attackTarget, this, AttackRange))
-			{
-				if (this.Brain is IControlledBrain)
-				{
-					if (!IsCasting)
-					{
-						Spell nextSpell = NextSpell;
-						if (nextSpell == null)
-							return false;
-						this.TargetObject = attackTarget;
-						if (WorldMgr.GetDistance(this, attackTarget) > nextSpell.Range)
-						{
-							Follow(attackTarget, nextSpell.Range - 5, 5000);
-							StartRetrySpellAttackTimer();
-							return true;
-						}
-						else
-						{
-							LaunchSpell(nextSpell, m_nextSpellLine);
-							return true;
-						}
-					}
-					return true;
-				}
-				else
-				{
-					foreach (Spell spell in this.Spells)
-					{
-						if (spell.CastTime == 0) continue;
-						if (spell.Damage > 0)
-						{
-							this.TargetObject = attackTarget;
-
-							if (WorldMgr.GetDistance(this, attackTarget) > spell.Range)
-							{
-								Follow(attackTarget, spell.Range, 5000);
-								StartRetrySpellAttackTimer();
-							}
-							else
-							{
-								StopRetrySpellAttackTimer();
-								StopMoving();
-								TurnTo(this.TargetObject);
-								SpellLine spellline = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
-								this.CastSpell(spell, spellline);
-							}
-							return true;
-						}
-					}
-				}
-			}
-			return false;
-		}
-
-		/// <summary>
-		/// Method to launch a spell
-		/// </summary>
-		/// <param name="spellLevel">The spell level</param>
-		/// <param name="spellLineName">The spell line</param>
-		/// <param name="guard">The guard caster</param>
-		public void LaunchSpell(Spell castSpell, SpellLine castLine)
-		{
-			StopRetrySpellAttackTimer();
-			if (this.TargetObject == null)
-				return;
-			if (this.AttackState)
-				this.StopAttack();
-			if (this.IsMoving)
-				this.StopFollow();
-			this.TurnTo(this.TargetObject);
-			this.CastSpell(castSpell, castLine);
-		}
-
-		private void StartRetrySpellAttackTimer()
-		{
-			if (m_retrySpellAttackTimer == null)
-			{
-				m_retrySpellAttackTimer = new RegionTimer(this);
-				m_retrySpellAttackTimer.Interval = 500;
-				m_retrySpellAttackTimer.Callback = new RegionTimerCallback(RetrySpellAttackCallback);
-				m_retrySpellAttackTimer.Start(500);
-			}
-		}
-
-		private void StopRetrySpellAttackTimer()
-		{
-			if (m_retrySpellAttackTimer != null && m_retrySpellAttackTimer.IsAlive)
-				m_retrySpellAttackTimer.Stop();
-			m_retrySpellAttackTimer = null;
-		}
-
-		private int RetrySpellAttackCallback(RegionTimer callingTimer)
-		{
-			StartAttack(this.TargetObject);
-			return callingTimer.Interval;
-		}
-
-		/// <summary>
-		/// stop the spell attack
-		/// </summary>
-		public virtual void StopSpellAttack()
-		{
-			StopRetrySpellAttackTimer();
-			StopSequenceSpellAttackTimer();
-			if (m_runningSpellHandler != null)
-			{
-				//prevent from relaunch
-				m_runningSpellHandler.CastingCompleteEvent -= new CastingCompleteCallback(OnAfterSpellCastSequence);
-				m_runningSpellHandler = null;
-			}
-		}
-		private void StartSequenceSpellAttackTimer ()
-		{
-			if (m_sequenceSpellAttackTimer == null)
-			{
-				m_sequenceSpellAttackTimer = new RegionTimer(this);
-				m_sequenceSpellAttackTimer.Interval = 10;
-				m_sequenceSpellAttackTimer.Callback = new RegionTimerCallback(CastSequenceSpellAttackCallback);
-				m_sequenceSpellAttackTimer.Start(10);
-			}
-		}
-		private void StopSequenceSpellAttackTimer()
-		{
-			if (m_sequenceSpellAttackTimer != null && m_sequenceSpellAttackTimer.IsAlive)
-				m_sequenceSpellAttackTimer.Stop();
-			m_sequenceSpellAttackTimer = null;
-		}
-		private int CastSequenceSpellAttackCallback (RegionTimer callingTimer)
-		{
-			Spell nextSpell = NextSpell;
-			if (nextSpell != null && this.CurrentRegion.Time - LastAttackedByEnemyTick > 10 * 1000)
-			{
-				if (WorldMgr.GetDistance(this, this.TargetObject) > nextSpell.Range)
-				{
-					Follow(this.TargetObject, nextSpell.Range - 5, 5000);
-					StartRetrySpellAttackTimer();
-				}
-				else
-				{
-					LaunchSpell(nextSpell, m_nextSpellLine);
-				}
-			}
-			return 0;
+			get { return m_spellaction; }
+			set { m_spellaction = value; }
 		}
 
 		/// <summary>
@@ -3490,104 +3371,90 @@ namespace DOL.GS
 		/// <param name="handler"></param>
 		public override void OnAfterSpellCastSequence(ISpellHandler handler)
 		{
-			StopSpellAttack();
-			if (this == null || this.ObjectState != eObjectState.Active || !this.IsAlive || this.TargetObject == null || (this.TargetObject is GameLiving && this.TargetObject.ObjectState != eObjectState.Active || !(this.TargetObject as GameLiving).IsAlive))
-				return;
-			if (this.Brain is IControlledBrain)
-				StartSequenceSpellAttackTimer();
+			if (SpellTimer != null)
+			{
+				if (this == null || this.ObjectState != eObjectState.Active || !this.IsAlive || this.TargetObject == null || (this.TargetObject is GameLiving && this.TargetObject.ObjectState != eObjectState.Active || !(this.TargetObject as GameLiving).IsAlive))
+					SpellTimer.Stop();
+				else
+					SpellTimer.Start(1);
+			}
+			if (m_runningSpellHandler != null)
+			{
+				//prevent from relaunch
+				m_runningSpellHandler.CastingCompleteEvent -= new CastingCompleteCallback(OnAfterSpellCastSequence);
+				m_runningSpellHandler = null;
+			}
+		}
+
+		//Checks if the target already has the effect
+		private bool HasEffect(GameLiving target, Spell spell)
+		{
+			foreach (IGameEffect effect in target.EffectList)
+			{
+				if (effect is GameSpellEffect)
+				{
+					GameSpellEffect speffect = effect as GameSpellEffect;
+					if (speffect.Spell.SpellType == spell.SpellType
+						&& speffect.Spell.EffectGroup == spell.EffectGroup)
+					{
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 
 		/// <summary>
-		///
+		/// The spell action of this living
 		/// </summary>
-		public void Buff()
+		public class SpellAction : RegionAction
 		{
-			//load up abilities
-			if (this.Abilities != null && this.Abilities.Count > 0)
+			/// <summary>
+			/// Constructs a new attack action
+			/// </summary>
+			/// <param name="owner">The action source</param>
+			public SpellAction(GameLiving owner)
+				: base(owner)
 			{
-				//trigger abilities on a certain target like intercept require being controlled
-				if (this.Brain is IControlledBrain)
-				{
-					foreach (Ability ab in this.Abilities.Values)
-					{
-						switch (ab.KeyName)
-						{
-							case GS.Abilities.Intercept:
-								{
-									if (EffectList.GetOfType(typeof(InterceptEffect)) == null)
-									{
-										new InterceptEffect().Start(this, (this.Brain as IControlledBrain).Owner);
-									}
-									break;
-								}
-						}
-					}
-				}
 			}
 
-			if (this.Spells != null && this.Spells.Count > 0)
+			/// <summary>
+			/// Called on every timer tick
+			/// </summary>
+			protected override void OnTick()
 			{
-
-				foreach (Spell spell in this.Spells)
+				GameNPC owner = null;
+				if (m_actionSource != null && m_actionSource is GameNPC)
+					owner = (GameNPC)m_actionSource;
+				else
 				{
-					//todo find a way to get it by inherit of PropertyChangingSpell or not
-					switch (spell.SpellType)
-					{
-						case "StrengthConstitutionBuff":
-						case "DexterityQuicknessBuff":
-						case "StrengthBuff":
-						case "DexterityBuff":
-						case "ConstitutionBuff":
-						case "ArmorFactorBuff":
-						case "ArmorAbsorbtionBuff":
-						case "CombatSpeedBuff":
-						case "MeleeDamageBuff":
-						case "AcuityBuff":
-						case "HealthRegenBuff":
-						case "DamageAdd":
-						case "DamageShield":
-						case "BodyResistBuff":
-						case "ColdResistBuff":
-						case "EnergyResistBuff":
-						case "HeatResistBuff":
-						case "MatterResistBuff":
-						case "SpiritResistBuff":
-						case "BodySpiritEnergyBuff":
-						case "HeatColdMatterBuff":
-						case "CrushSlashThrustBuff":
-						case "OffensiveProc":
-						case "DefensiveProc":
-							{
-								if (this.AttackState && spell.CastTime > 0)
-									continue;
-
-								bool already = false;
-								foreach (IGameEffect effect in this.EffectList)
-								{
-									if (effect is GameSpellEffect)
-									{
-										GameSpellEffect speffect = effect as GameSpellEffect;
-										if (speffect.Spell.SpellType == spell.SpellType
-											&& speffect.Spell.EffectGroup == spell.EffectGroup)
-										{
-											already = true;
-											break;
-										}
-									}
-								}
-								if (already)
-									continue;
-								GameObject lastTarget = this.TargetObject;
-								this.TargetObject = this;
-								SpellLine spellline = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
-								this.CastSpell(spell, spellline);
-								this.TargetObject = lastTarget;
-								return;
-							}
-					}
+					Stop();
+					return;
 				}
+
+				if (owner.TargetObject == null || !owner.AttackState)
+				{
+					Stop();
+					return;
+				}
+
+				//If we started casting a spell, stop the timer and wait for
+				//GameNPC.OnAfterSpellSequenceCast to start again
+				if (((StandardMobBrain)owner.Brain).CheckSpells(false))
+				{
+					Stop();
+					return;
+				}
+				else
+				{
+					//If we aren't a distance NPC, lets make sure we are in range to attack the target!
+					if (WorldMgr.GetDistance(owner, owner.TargetObject) > 90)
+						((GameNPC)owner).Follow(owner.TargetObject, 90, 5000);
+				}
+				Interval = 500;
 			}
 		}
+
 		#endregion
 		#region Notify
 
@@ -3604,6 +3471,294 @@ namespace DOL.GS
 			ABrain brain = Brain;
 			if (brain != null)
 				brain.Notify(e, sender, args);
+		}
+
+		#endregion
+		#region ControlledNPCs
+
+		private int pet_count = 0;
+
+		/// <summary>
+		/// Gets the pet count for the player
+		/// </summary>
+		public int PetCounter
+		{
+			get { return pet_count; }
+			set { pet_count = value; }
+		}
+
+		/// <summary>
+		/// Gets all the minions/subpets of this NPC - uses recursion to find all of its
+		/// pet's pets
+		/// </summary>
+		/// <returns>List of all pets</returns>
+		public List<GameNPC> GetAllPets()
+		{
+			//No pets, return null
+			if (ControlledNpcList == null)
+				return null;
+
+			List<GameNPC> pets = new List<GameNPC>();
+
+			foreach (IControlledBrain icb in ControlledNpcList)
+			{
+				//Is this really a necessary check?
+				if (icb == null)
+					continue;
+				//Add this pet
+				pets.Add(icb.Body);
+				//Add this pet's pets
+				List<GameNPC> petsSubPets = icb.Body.GetAllPets();
+				if (petsSubPets != null)
+					pets.AddRange(petsSubPets);
+			}
+			return pets;
+		}
+
+		/// <summary>
+		/// Gets the controlled object of this NPC
+		/// </summary>
+		public override IControlledBrain ControlledNpc
+		{
+			get { return m_controlledNpc[0]; }
+		}
+
+		/// <summary>
+		/// Gets the controlled array of this NPC
+		/// </summary>
+		public IControlledBrain[] ControlledNpcList
+		{
+			get { return m_controlledNpc; }
+		}
+
+		/// <summary>
+		/// Gets the controlled object of this player at the position in the array
+		/// </summary>
+		/// <param name="pet_position"></param>
+		public IControlledBrain ControlledMinion(int pet_position)
+		{
+			return m_controlledNpc[pet_position];
+		}
+
+		/// <summary>
+		/// Adds a pet to the current array of pets
+		/// </summary>
+		/// <param name="controlledNpc">The brain to add to the list</param>
+		/// <returns>Whether the pet was added or not</returns>
+		public bool AddControlledNpc(IControlledBrain controlledNpc)
+		{
+			IControlledBrain[] brainlist = ControlledNpcList;
+			foreach (IControlledBrain icb in brainlist)
+			{
+				if (icb == controlledNpc)
+					return false;
+			}
+
+			if (controlledNpc.Owner != this)
+				throw new ArgumentException("ControlledNpc with wrong owner is set (player=" + Name + ", owner=" + controlledNpc.Owner.Name + ")", "controlledNpc");
+			//Find the next spot for this new pet
+			int i = 0;
+			for (; i < m_controlledNpc.Length; i++)
+			{
+				if (ControlledMinion(i) == null)
+					break;
+			}
+			//If we didn't find a spot return false
+			if (i >= m_controlledNpc.Length)
+				return false;
+			m_controlledNpc[i] = controlledNpc;
+			PetCounter++;
+			return true;
+		}
+
+		/// <summary>
+		/// Removes the brain from 
+		/// </summary>
+		/// <param name="controlledNpc">The brain to find and remove</param>
+		/// <returns>Whether the pet was removed</returns>
+		public bool RemoveControlledNpc(IControlledBrain controlledNpc)
+		{
+			if (controlledNpc == null) return false;
+			IControlledBrain[] brainlist = ControlledNpcList;
+			int i = 0;
+			bool found = false;
+			//Try to find the minion in the list
+			for (; i < brainlist.Length; i++)
+			{
+				//Found it
+				if (brainlist[i] == controlledNpc)
+				{
+					found = true;
+					break;
+				}
+			}
+			lock (ControlledNpcList)
+			{
+				//Found it, lets remove it
+				if (found)
+				{
+					//TODO: this prints two messages - what's a better way to do this
+					if (m_controlledNpc[i].Body.IsAlive)
+						m_controlledNpc[i].Body.Die(this);
+					m_controlledNpc[i] = null;
+
+					//Only decrement, we just lost one pet
+					PetCounter--;
+				}
+			}
+
+			return found;
+		}
+
+		///// <summary>
+		///// Sets the controlled minions for the player's commander
+		///// </summary>
+		///// <remarks>This function should only be used for making minions</remarks>
+		///// <param name="controlledNpc"></param>
+		///// <param name="pet_position">When a pet dies, we need to know which one</param>
+		//public bool SetControlledNpc(IControlledBrain controlledNpc, int pet_position)
+		//{
+		//    if (pet_position >= m_controlledNpc.Length || pet_position < 0) return false;
+		//    if (controlledNpc == ControlledMinion(pet_position)) return false;
+		//    if (controlledNpc == null)
+		//    {
+		//        if (m_controlledNpc[pet_position] == null)
+		//            return false;
+		//        if(m_controlledNpc[pet_position].Body.IsAlive)
+		//            m_controlledNpc[pet_position].Body.Die(this);
+		//        m_controlledNpc[pet_position] = null;
+
+		//        //Only decrement, we just lost one pet
+		//        PetCounter--;
+		//        return true;
+		//    }
+		//    else
+		//    {
+		//        if (controlledNpc.Owner != this)
+		//            throw new ArgumentException("ControlledNpc with wrong owner is set (player=" + Name + ", owner=" + controlledNpc.Owner.Name + ")", "controlledNpc");
+		//        //Find the next spot for this new pet
+		//        int i = 0;
+		//        for (; i < m_controlledNpc.Length; i++)
+		//        {
+		//            if (ControlledMinion(i) == null)
+		//                break;
+		//        }
+		//        //If we didn't find a spot return false
+		//        if (i >= m_controlledNpc.Length)
+		//            return false;
+		//        m_controlledNpc[i] = controlledNpc;
+		//        PetCounter++;
+		//        return true;
+		//    }
+		//}
+
+		/// <summary>
+		/// Commands controlled object to attack
+		/// </summary>
+		public override void CommandNpcAttack()
+		{
+			if (Brain is IControlledBrain)
+			{
+				//edit for BD
+				//Make the minion's attack
+				if (!CanFight) return;
+				if (WorldMgr.GetDistance(TargetObject, this) >= 500)
+				{
+					ChargeAbility charge;
+					if ((charge = (ChargeAbility)GetAbility(typeof(ChargeAbility))) != null && GetSkillDisabledDuration(charge) == 0)
+					{
+						charge.Execute(this);
+						//Out.SendMessage("Your " + icb.Body.Name + " begins to charge " + target.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+				}
+				((IControlledBrain)Brain).Attack(TargetObject);
+			}
+		}
+
+		/// <summary>
+		/// Releases controlled object
+		/// </summary>
+		/// <remarks>This works differently than GamePlayer's.  Since an npc can have more than one pet,
+		/// we don't call owner.CommandNpcRelease().  Instead we call a body.CommandNpcRelease(), it gets its owner, finds its place in the array and then removes ITSELF!</remarks>
+		public override void CommandNpcRelease()
+		{
+			IControlledBrain npc = Brain as IControlledBrain;
+			//This method shouldn't be called if this is the player's main pet.  Only minions and subpets
+			//should call this method.
+			if (npc == null || !npc.IsMinion) return;
+			GameNPC owner = (GameNPC)npc.Owner;
+
+			//Added function in GameNPC to kill the pet for us
+			owner.RemoveControlledNpc(npc);
+
+			Notify(GamePlayerEvent.CommandNpcRelease, this);
+		}
+
+		/// <summary>
+		/// Commands controlled object to follow
+		/// </summary>
+		public override void CommandNpcFollow()
+		{
+			if (Brain is IControlledBrain)
+				((IControlledBrain)Brain).Follow(((IControlledBrain)Brain).Owner);
+		}
+
+		/// <summary>
+		/// Commands controlled object to stay where it is
+		/// </summary>
+		public override void CommandNpcStay()
+		{
+			if (Brain is IControlledBrain)
+				((IControlledBrain)Brain).Follow(((IControlledBrain)Brain).Owner);
+		}
+
+		/// <summary>
+		/// Commands controlled object to go to players location
+		/// </summary>
+		public override void CommandNpcComeHere()
+		{
+			if (Brain is IControlledBrain)
+				((IControlledBrain)Brain).Follow(((IControlledBrain)Brain).Owner);
+		}
+
+		/// <summary>
+		/// Commands controlled object to go to target
+		/// </summary>
+		public override void CommandNpcGoTarget()
+		{
+			if (Brain is IControlledBrain)
+				((IControlledBrain)Brain).Follow(((IControlledBrain)Brain).Owner);
+		}
+
+		/// <summary>
+		/// Changes controlled object state to passive
+		/// </summary>
+		public override void CommandNpcPassive()
+		{
+			if (Brain is IControlledBrain)
+			{
+				((IControlledBrain)Brain).AggressionState = eAggressionState.Passive;
+				StopAttack();
+				StopCurrentSpellcast();
+			}
+		}
+
+		/// <summary>
+		/// Changes controlled object state to aggressive
+		/// </summary>
+		public override void CommandNpcAgressive()
+		{
+			if (Brain is IControlledBrain && Brain.Body.CanFight)
+				((IControlledBrain)Brain).AggressionState = eAggressionState.Aggressive;
+		}
+
+		/// <summary>
+		/// Changes controlled object state to defensive
+		/// </summary>
+		public override void CommandNpcDefensive()
+		{
+			if (Brain is IControlledBrain && Brain.Body.CanFight)
+				((IControlledBrain)Brain).AggressionState = eAggressionState.Defensive;
 		}
 
 		#endregion
@@ -3641,8 +3796,6 @@ namespace DOL.GS
 				m_ownBrain = new StandardMobBrain();
 				m_ownBrain.Body = this;
 			}
-
-			m_nextSpellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
 		}
 
 		/// <summary>

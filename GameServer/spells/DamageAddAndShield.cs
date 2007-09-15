@@ -97,7 +97,7 @@ namespace DOL.GS.Spells
 				IControlledBrain brain = ((GameNPC)ad.Attacker).Brain as IControlledBrain;
 				if (brain != null)
 				{
-					GamePlayer owner = brain.Owner;
+					GamePlayer owner = brain.GetPlayerOwner();
 					if (owner != null && owner.ControlledNpc != null && ad.Attacker == owner.ControlledNpc.Body)
 					{
 						MessageToLiving(owner, String.Format("Your {0} hit {1} for {2} damage!", ad.Attacker.Name, target.GetName(0, false), ad.Damage), eChatType.CT_Spell);
@@ -186,7 +186,7 @@ namespace DOL.GS.Spells
 				IControlledBrain brain = ((GameNPC)ad.Attacker).Brain as IControlledBrain;
 				if (brain != null)
 				{
-					GamePlayer owner = brain.Owner;
+					GamePlayer owner = brain.GetPlayerOwner();
 					if (owner != null && owner.ControlledNpc != null && ad.Attacker == owner.ControlledNpc.Body)
 					{
 						MessageToLiving(owner, String.Format("Your {0} hit {1} for {2} damage!", ad.Attacker.Name, target.GetName(0, false), ad.Damage), eChatType.CT_Spell);

@@ -1711,7 +1711,7 @@ namespace DOL.GS
 				m_specToSkill[Specs.Suppression] = eProperty.Skill_Suppression;
 				m_specToSkill[Specs.Runecarving] = eProperty.Skill_Runecarving;
 				m_specToSkill[Specs.Summoning] = eProperty.Skill_Summoning;
-				m_specToSkill[Specs.Bonedancing] = eProperty.Skill_BoneArmy;
+				m_specToSkill[Specs.BoneArmy] = eProperty.Skill_BoneArmy;
 				m_specToSkill[Specs.Mending] = eProperty.Skill_Mending;
 				m_specToSkill[Specs.Augmentation] = eProperty.Skill_Augmentation;
 				m_specToSkill[Specs.Pacification] = eProperty.Skill_Pacification;
@@ -1805,7 +1805,7 @@ namespace DOL.GS
 				m_specToFocus[Specs.Mentalism] = eProperty.Focus_Mentalism;
 				m_specToFocus[Specs.Summoning] = eProperty.Focus_Summoning;
 				// SI
-				m_specToFocus[Specs.Bonedancing] = eProperty.Focus_BoneArmy;
+				m_specToFocus[Specs.BoneArmy] = eProperty.Focus_BoneArmy;
 				m_specToFocus[Specs.Painworking] = eProperty.Focus_PainWorking;
 				m_specToFocus[Specs.Deathsight] = eProperty.Focus_DeathSight;
 				m_specToFocus[Specs.Death_Servant] = eProperty.Focus_DeathServant;

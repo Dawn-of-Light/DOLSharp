@@ -341,6 +341,7 @@
     </Compile>
     <Compile Include="playercommands\deal.cs" />
     <Compile Include="playercommands\discard.cs" />
+    <Compile Include="playercommands\Formation.cs" />
     <Compile Include="playercommands\held.cs" />
     <Compile Include="playercommands\helm.cs" />
     <Compile Include="playercommands\horse.cs" />
@@ -470,6 +471,7 @@
     <Compile Include="playercommands\setwho.cs" />
     <Compile Include="playercommands\show.cs" />
     <Compile Include="playercommands\shuffle.cs" />
+    <Compile Include="playercommands\spacing.cs" />
     <Compile Include="playercommands\sprint.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -733,6 +735,7 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>xcopy "$(ProjectDir)*.cs" "$(SolutionDir)\$(ConfigurationName)\scripts" /y /s /q /i</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(ProjectDir)*.cs" "$(SolutionDir)\$(ConfigurationName)\scripts" /y /s /q /i
+xcopy "$(ProjectDir)*.cs" "$(SolutionDir)\DOLServer\$(OutDir)\scripts" /y /s /q /i</PostBuildEvent>
   </PropertyGroup>
 </Project>
