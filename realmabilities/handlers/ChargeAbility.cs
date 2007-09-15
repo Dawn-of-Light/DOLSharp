@@ -14,8 +14,8 @@ namespace DOL.GS.RealmAbilities
 
 		public override void Execute(GameLiving living)
 		{
+			if (living == null) return;
 			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
-			GamePlayer player = living as GamePlayer;
 
 			/* 0_o
 			if (player.IsSpeedWarped)
@@ -24,24 +24,23 @@ namespace DOL.GS.RealmAbilities
 				return;
 			}*/
 
-			if (player != null)
+			if (living.TempProperties.getProperty("Charging", false)
+				|| living.EffectList.CountOfType(typeof(SpeedOfSoundEffect)) > 0
+				|| living.EffectList.CountOfType(typeof(ArmsLengthEffect)) > 0
+				|| living.EffectList.CountOfType(typeof(ChargeEffect)) > 0)
 			{
-				if (player.TempProperties.getProperty("Charging", false)
-					|| player.EffectList.CountOfType(typeof(SpeedOfSoundEffect)) > 0
-					|| player.EffectList.CountOfType(typeof(ArmsLengthEffect)) > 0
-					|| player.EffectList.CountOfType(typeof(ChargeEffect)) > 0)
-				{
-					player.Out.SendMessage("You already an effect of that type!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-					return;
-				}
-
-				ChargeEffect charge = (ChargeEffect)player.EffectList.GetOfType(typeof(ChargeEffect));
-				if (charge != null)
-					charge.Cancel(false);
-				player.Out.SendUpdateMaxSpeed();
-
-				new ChargeEffect().Start(player);
+				if (living is GamePlayer)
+					((GamePlayer)living).Out.SendMessage("You already an effect of that type!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+				return;
 			}
+
+			ChargeEffect charge = (ChargeEffect)living.EffectList.GetOfType(typeof(ChargeEffect));
+			if (charge != null)
+				charge.Cancel(false);
+			if (living is GamePlayer)
+				((GamePlayer)living).Out.SendUpdateMaxSpeed();
+
+			new ChargeEffect().Start(living);
 			DisableSkill(living);
 		}
 

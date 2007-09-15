@@ -88,7 +88,8 @@ namespace DOL.GS.Spells
 				if (npc.Brain is ControlledNpc)
 				{
 					//it's a pet.
-					if (((ControlledNpc)(npc.Brain)).Owner.CharacterClass.ID == (int)eCharacterClass.Theurgist)
+					GamePlayer playerowner = ((ControlledNpc)npc.Brain).GetPlayerOwner();
+					if (playerowner != null && playerowner.CharacterClass.ID == (int)eCharacterClass.Theurgist)
 					{
 						//Theurgist pets die.
 						npc.Die(Caster);

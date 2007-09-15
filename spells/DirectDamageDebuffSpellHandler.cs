@@ -66,7 +66,7 @@ namespace DOL.GS.Spells
 					else if (Caster is GameNPC && (Caster as GameNPC).Brain is AI.Brain.IControlledBrain)
 					{
 						AI.Brain.IControlledBrain brain = (Caster as GameNPC).Brain as AI.Brain.IControlledBrain;
-						player = brain.Owner;
+						player = brain.GetPlayerOwner();
 					}
 				}
 				if (player != null)

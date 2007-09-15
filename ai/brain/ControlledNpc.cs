@@ -19,11 +19,13 @@
 using System;
 using System.Reflection;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.Events;
 using DOL.GS;
 using DOL.GS.Spells;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
+using DOL.GS.RealmAbilities;
 using log4net;
 
 namespace DOL.AI.Brain
@@ -50,7 +52,7 @@ namespace DOL.AI.Brain
 		/// <summary>
 		/// Holds the controlling player of this brain
 		/// </summary>
-		private readonly GamePlayer m_owner;
+		readonly GameLiving m_owner;
 
 		/// <summary>
 		/// Holds the walk state of the brain
@@ -66,7 +68,7 @@ namespace DOL.AI.Brain
 		/// Constructs new controlled npc brain
 		/// </summary>
 		/// <param name="owner"></param>
-		public ControlledNpc(GamePlayer owner)
+		public ControlledNpc(GameLiving owner)
 			: base()
 		{
 			if (owner == null)
@@ -78,7 +80,7 @@ namespace DOL.AI.Brain
 			m_aggroLevel = 99;
 			m_aggroMaxRange = 1500;
 		}
-		
+
 		/// <summary>
 		/// Checks if this NPC is a permanent/charmed or timed pet
 		/// </summary>
@@ -90,7 +92,7 @@ namespace DOL.AI.Brain
 				if (summon == null)
 					return true;
 				else
-					return (summon.Duration >= 65535);
+					return (summon.Duration >= ushort.MaxValue);
 			}
 		}
 
@@ -111,14 +113,56 @@ namespace DOL.AI.Brain
 			get { return 1500; }
 		}
 
+		private bool m_isMinion = false;
+
+		/// <summary>
+		/// Gets/Sets whether this NPC is a minion
+		/// </summary>
+		public bool IsMinion
+		{
+			get { return m_isMinion; }
+			set { m_isMinion = value; }
+		}
+
 		#region Control
 
 		/// <summary>
 		/// Gets the controlling owner of the brain
 		/// </summary>
-		public GamePlayer Owner
+		public GameLiving Owner
 		{
 			get { return m_owner; }
+		}
+
+		/// <summary>
+		/// Find the player owner of the pets at the top of the tree
+		/// </summary>
+		/// <returns>Player owner at the top of the tree.  If there was no player, then return null.</returns>
+		public GamePlayer GetPlayerOwner()
+		{
+			GameLiving owner = Owner;
+			int i = 0;
+			while (owner is GameNPC && owner != null)
+			{
+				i++;
+				if (i > 50)
+					throw new Exception("GetPlayerOwner() from " + Owner.Name + "caused a cyclical loop.");
+				//If this is a pet, get its owner
+				if (((GameNPC)owner).Brain is IControlledBrain)
+					owner = ((IControlledBrain)((GameNPC)owner).Brain).Owner;
+				//This isn't a pet, that means it's at the top of the tree.  This case will only happen if
+				//owner is not a GamePlayer
+				else
+					break;
+			}
+			//Return if we found the gameplayer
+			if (owner is GamePlayer)
+				return (GamePlayer)owner;
+			//If the root owner was not a player or npc then make sure we know that something went wrong!
+			if (!(owner is GameNPC))
+				throw new Exception("Unrecognized owner: " + owner.GetType().FullName);
+			//No GamePlayer at the top of the tree
+			return null;
 		}
 
 		/// <summary>
@@ -155,7 +199,6 @@ namespace DOL.AI.Brain
 						Body.WalkTo(m_tempX, m_tempY, m_tempZ, Body.MaxSpeed);
 				}
 				AttackMostWanted();
-				UpdatePetWindow();
 			}
 		}
 
@@ -165,10 +208,15 @@ namespace DOL.AI.Brain
 		/// <param name="target"></param>
 		public void Attack(GameObject target)
 		{
-			if (AggressionState == eAggressionState.Passive)
-				AggressionState = eAggressionState.Defensive;
-			m_orderAttackTarget = target as GameLiving;
-			AttackMostWanted();
+			//Get out as soon as possible
+			if (this.Body.CanFight)
+			{
+				if (AggressionState == eAggressionState.Passive)
+					AggressionState = eAggressionState.Defensive;
+				m_orderAttackTarget = target as GameLiving;
+
+				AttackMostWanted();
+			}
 		}
 
 		/// <summary>
@@ -225,7 +273,8 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public void UpdatePetWindow()
 		{
-			m_owner.Out.SendPetWindow(m_body, ePetWindowAction.Update, m_aggressionState, m_walkState);
+			if (m_owner is GamePlayer)
+				((GamePlayer)m_owner).Out.SendPetWindow(m_body, ePetWindowAction.Update, m_aggressionState, m_walkState);
 		}
 
 		/// <summary>
@@ -256,7 +305,14 @@ namespace DOL.AI.Brain
 			if (!base.Start()) return false;
 			if (WalkState == eWalkState.Follow)
 				FollowOwner();
-			GameEventMgr.AddHandler(Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnOwnerAttacked));
+			//we don't need handlers if the minion/pet can't attack
+			if (this.Body.CanFight)
+			{
+				GameEventMgr.AddHandler(Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnOwnerAttacked));
+				//edit for BD - If this is a minion, make sure we add a handler if the BD gets attacked
+				if (IsMinion)
+					GameEventMgr.AddHandler(((IControlledBrain)((GameNPC)Owner).Brain).Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnOwnerAttacked));
+			}
 			return true;
 		}
 
@@ -267,8 +323,16 @@ namespace DOL.AI.Brain
 		public override bool Stop()
 		{
 			if (!base.Stop()) return false;
-			GameEventMgr.RemoveHandler(Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnOwnerAttacked));
+			if (this.Body.CanFight)
+			{
+				GameEventMgr.RemoveHandler(Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnOwnerAttacked));
+				//If this is a minion, make sure we remove the handler
+				if (IsMinion)
+					GameEventMgr.RemoveHandler(((IControlledBrain)((GameNPC)Owner).Brain).Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnOwnerAttacked));
+			}
 			Owner.CommandNpcRelease();
+			//Posibily add support for this
+			//Body.CommandNpcRelease();
 			return true;
 		}
 
@@ -277,22 +341,255 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public override void Think()
 		{
-			if (!Owner.CurrentUpdateArray[Body.ObjectID - 1])
+			//edit for BD
+			GamePlayer playerowner = GetPlayerOwner();
+			if (!playerowner.CurrentUpdateArray[Body.ObjectID - 1])
 			{
-				Owner.Out.SendObjectUpdate(Body);
-				Owner.CurrentUpdateArray[Body.ObjectID - 1] = true;
+				playerowner.Out.SendObjectUpdate(Body);
+				playerowner.CurrentUpdateArray[Body.ObjectID - 1] = true;
 			}
 
+			//See if the pet is too far away, if so release it!
 			if (!WorldMgr.CheckDistance(Body, Owner, MAX_OWNER_FOLLOW_DIST))
-				Owner.CommandNpcRelease();
+			{
+				if (Owner is GamePlayer)
+					((GamePlayer)Owner).CommandNpcRelease();
+				else
+					//Remember, this works differently than a gameplayer's CommandNpcRelease().  Since npcs can control more than one
+					//pet we call the CommandNpcRelease() from the pet, not the pet's owner.
+					Body.CommandNpcRelease();
+			}
 
-			if (!Body.IsCasting && Body.Spells.Count > 0)
-				CheckSpells();
+			//Check for buffs, heals, etc
+			CheckSpells(true);
 
-			if (AggressionState == eAggressionState.Aggressive)
+			if (AggressionState == eAggressionState.Aggressive && this.Body.CanFight)
 			{
 				CheckPlayerAggro();
 				CheckNPCAggro();
+				AttackMostWanted();
+			}
+		}
+
+		/// <summary>
+		/// Checks the Positive Spells.  Handles buffs, heals, etc.
+		/// </summary>
+		protected override bool CheckPositiveSpells(Spell spell)
+		{
+			GameObject lastTarget = Body.TargetObject;
+			Body.TargetObject = null;
+			GamePlayer player = null;
+			GameLiving owner = null;
+			switch (spell.SpellType)
+			{
+				#region Buffs
+				case "StrengthConstitutionBuff":
+				case "DexterityQuicknessBuff":
+				case "StrengthBuff":
+				case "DexterityBuff":
+				case "ConstitutionBuff":
+				case "ArmorFactorBuff":
+				case "ArmorAbsorbtionBuff":
+				case "CombatSpeedBuff":
+				case "MeleeDamageBuff":
+				case "AcuityBuff":
+				case "HealthRegenBuff":
+				case "DamageAdd":
+				case "DamageShield":
+				case "BodyResistBuff":
+				case "ColdResistBuff":
+				case "EnergyResistBuff":
+				case "HeatResistBuff":
+				case "MatterResistBuff":
+				case "SpiritResistBuff":
+				case "BodySpiritEnergyBuff":
+				case "HeatColdMatterBuff":
+				case "CrushSlashThrustBuff":
+				case "OffensiveProc":
+				case "DefensiveProc":
+				case "Bladeturn":
+					{
+						//Buff self
+						if (!LivingHasEffect(Body, spell))
+						{
+							Body.TargetObject = Body;
+							break;
+						}
+
+						if (spell.Target == "Realm")
+						{
+							owner = (this as IControlledBrain).Owner;
+							player = null;
+							//Buff owner
+							if (!LivingHasEffect(owner, spell))
+							{
+								Body.TargetObject = owner;
+								break;
+							}
+
+							if (owner is GameNPC)
+							{
+								//Buff other minions
+								foreach (IControlledBrain icb in ((GameNPC)owner).ControlledNpcList)
+								{
+									if (icb == null)
+										continue;
+									if (!LivingHasEffect(icb.Body, spell))
+									{
+										Body.TargetObject = icb.Body;
+										break;
+									}
+								}
+							}
+							player = GetPlayerOwner();
+
+							//Buff player
+							if (player != null)
+							{
+								if (!LivingHasEffect(player, spell))
+								{
+									Body.TargetObject = player;
+									break;
+								}
+
+								////Buff group
+								//if (player.PlayerGroup != null)
+								//{
+								//    foreach (GamePlayer gplayer in player.PlayerGroup.GetPlayersInTheGroup())
+								//    {
+								//        if (!HasEffect(gplayer, spell))
+								//        {
+								//            this.TargetObject = gplayer;
+								//            this.CastSpell(spell, spellline);
+								//            this.TargetObject = lastTarget;
+								//            return;
+								//        }
+								//    }
+								//}
+							}
+						}
+						break;
+					}
+				#endregion
+
+				#region Disease Cure/Poison Cure/Summon
+				case "CureDisease":
+					if (!Body.IsDiseased)
+						break;
+					Body.TargetObject = Body;
+					break;
+				case "Summon":
+					Body.TargetObject = Body;
+					break;
+				#endregion
+
+				#region Heals
+				case "Heal":
+					//Heal self
+					if (Body.HealthPercent < 75)
+					{
+						Body.TargetObject = Body;
+						break;
+					}
+
+					//Heal owner
+					owner = (this as IControlledBrain).Owner;
+					if (owner.HealthPercent < 75)
+					{
+						Body.TargetObject = owner;
+						break;
+					}
+
+					player = GetPlayerOwner();
+
+					//If minion, heal player and other minions
+					if (IsMinion)
+					{
+						if (player.HealthPercent < 75)
+						{
+							Body.TargetObject = player;
+							break;
+						}
+
+						if (owner is GameNPC)
+						{
+							//Heal other minions
+							foreach (IControlledBrain icb in ((GameNPC)owner).ControlledNpcList)
+							{
+								if (icb == null)
+									continue;
+								if (icb.Body.HealthPercent < 75)
+								{
+									Body.TargetObject = icb.Body;
+									break;
+								}
+							}
+						}
+						//Heal group
+						/*
+						if (player.PlayerGroup != null)
+						{
+							foreach (GamePlayer gplayer in player.PlayerGroup.GetPlayersInTheGroup())
+							{
+								if (gplayer.HealthPercent < 75)
+									CheckSpellsByType("Heal", gplayer);
+
+							}
+						}*/
+					}
+
+					if (player.PlayerGroup != null && player.CharacterClass.ID == (int)eCharacterClass.Enchanter)
+					{
+						foreach (GamePlayer gplayer in player.PlayerGroup.GetPlayersInTheGroup())
+						{
+							if (gplayer.HealthPercent < 75)
+							{
+								Body.TargetObject = gplayer;
+								break;
+							}
+						}
+					}
+					break;
+				#endregion
+			}
+			if (Body.TargetObject != null)
+			{
+				if (Body.IsMoving)
+					Body.StopFollow();
+				Body.TurnTo(Body.TargetObject);
+				Body.CastSpell(spell, m_mobSpellLine);
+				Body.TargetObject = lastTarget;
+				return true;
+			}
+			Body.TargetObject = lastTarget;
+			return base.CheckPositiveSpells(spell); ;
+		}
+
+		/// <summary>
+		/// Checks the Abilities
+		/// </summary>
+		public override void CheckAbilities()
+		{
+			//load up abilities
+			if (Body.Abilities != null && Body.Abilities.Count > 0)
+			{
+				foreach (Ability ab in Body.Abilities.Values)
+				{
+					switch (ab.KeyName)
+					{
+						//Commander/minion charge ability
+						case Abilities.ChargeAbility:
+							if (WorldMgr.GetDistance(Body.TargetObject, Body) >= 500)
+							{
+								ChargeAbility charge = Body.GetAbility(typeof(ChargeAbility)) as ChargeAbility;
+								if (charge != null && Body.GetSkillDisabledDuration(charge) == 0)
+								{
+									charge.Execute(Body);
+								}
+							}
+							break;
+					}
+				}
 			}
 		}
 
@@ -325,7 +622,10 @@ namespace DOL.AI.Brain
 		{
 			if (target == Owner)
 			{
-				Owner.CommandNpcRelease();
+				if (Owner is GamePlayer)
+					Owner.CommandNpcRelease();
+				else
+					Body.CommandNpcRelease();
 				return;
 			}
 
@@ -361,26 +661,35 @@ namespace DOL.AI.Brain
 			}
 
 			//VaNaTiC->
-            lock (m_aggroTable.SyncRoot) 
-            { 
-               IDictionaryEnumerator aggros = m_aggroTable.GetEnumerator(); 
-                while ( aggros.MoveNext() )
-                { 
-                    GameLiving living = (GameLiving)aggros.Key;
-                    // 1st we check only if living is mezzed,
-                    // cause if so there is no need to look
-                    // through all effects for a root
-                    if ( living.IsMezzed )
-                        RemoveFromAggroList(living);
-                    else
-                    {
-                        // no mezz was found, then we have to look if living is rooted
-                        GameSpellEffect root = SpellHandler.FindEffectOnTarget(living, "SpeedDecrease"); 
-                        if ( root != null && root.Spell.Value == 99 )
-                            RemoveFromAggroList(living);
-                    }
-                } 
-            }
+			lock (m_aggroTable.SyncRoot)
+			{
+				IDictionaryEnumerator aggros = m_aggroTable.GetEnumerator();
+				List<GameLiving> removable = new List<GameLiving>();
+				while (aggros.MoveNext())
+				{
+					GameLiving living = (GameLiving)aggros.Key;
+					// 1st we check only if living is mezzed,
+					// cause if so there is no need to look
+					// through all effects for a root
+					if (living.IsMezzed)
+					{
+						removable.Add(living);
+					}
+					else
+					{
+						// no mezz was found, then we have to look if living is rooted
+						GameSpellEffect root = SpellHandler.FindEffectOnTarget(living, "SpeedDecrease");
+						if (root != null && root.Spell.Value == 99)
+						{
+							removable.Add(living);
+						}
+					}
+				}
+				foreach (GameLiving living in removable)
+				{
+					RemoveFromAggroList(living);
+				}
+			}
 			//VaNaTiC<-
 
 			return base.CalculateNextAttackTarget();
@@ -391,7 +700,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		protected override void AttackMostWanted()
 		{
-			if (!IsActive)
+			if (!IsActive || !Body.CanFight)
 				return;
 			GameLiving target = CalculateNextAttackTarget();
 
@@ -399,14 +708,16 @@ namespace DOL.AI.Brain
 			{
 				if (!Body.AttackState || target != Body.TargetObject)
 				{
-					if (!Body.StartSpellAttack(target))
-						Body.StartAttack(target);
+					Body.StartAttack(target);
 				}
 			}
 			else
 			{
 				if (Body.AttackState)
 					Body.StopAttack();
+
+				if (Body.SpellTimer != null && Body.SpellTimer.IsAlive)
+					Body.SpellTimer.Stop();
 
 				if (WalkState == eWalkState.Follow)
 					FollowOwner();
@@ -424,7 +735,8 @@ namespace DOL.AI.Brain
 		protected virtual void OnOwnerAttacked(DOLEvent e, object sender, EventArgs arguments)
 		{
 			// theurgist pets don't help their owner
-			if (Owner.CharacterClass.ID == (int)eCharacterClass.Theurgist)
+			//edit for BD - possibly add support for Theurgist GameNPCs
+			if (Owner is GamePlayer && ((GamePlayer)Owner).CharacterClass.ID == (int)eCharacterClass.Theurgist)
 				return;
 
 			AttackedByEnemyEventArgs args = arguments as AttackedByEnemyEventArgs;
@@ -444,11 +756,73 @@ namespace DOL.AI.Brain
 					AddToAggroList(args.AttackData.Attacker, args.AttackData.Attacker.EffectiveLevel + args.AttackData.Damage + args.AttackData.CriticalDamage);
 					break;
 			}
+			AttackMostWanted();
 		}
 
 		protected override void BringFriends(AttackData ad)
 		{
 			// don't
+		}
+
+		public override bool CheckFormation(ref int x, ref int y, ref int z)
+		{
+			if (IsMinion && !Body.AttackState)
+			{
+				GameNPC commander = (GameNPC)Owner;
+				double heading = ((double)commander.Heading) / GameLiving.HEADING_CONST;
+				//Get which place we should put minion
+				int i = 0;
+				//How much do we want to slide back and left/right
+				int perp_slide = 0;
+				int par_slide = 0;
+				for (; i < commander.ControlledNpcList.Length; i++)
+				{
+					if (commander.ControlledMinion(i) == this)
+						break;
+				}
+				switch (commander.Formation)
+				{
+					case GameNPC.eFormationType.Triangle:
+						par_slide = 100;
+						perp_slide = 100;
+						if (i != 0)
+							par_slide = 200;
+						break;
+					case GameNPC.eFormationType.Line:
+						par_slide = 100 * (i + 1);
+						break;
+					case GameNPC.eFormationType.Protect:
+						switch (i)
+						{
+							case 0:
+								par_slide = -200;
+								break;
+							case 1:
+							case 2:
+								par_slide = -100;
+								perp_slide = 100;
+								break;
+						}
+						break;
+				}
+				//Slide backwards - every pet will need to do this anyways
+				x += (int)(((double)commander.FormationSpacing * par_slide) * Math.Cos(heading - Math.PI / 2));
+				y += (int)(((double)commander.FormationSpacing * par_slide) * Math.Sin(heading - Math.PI / 2));
+				//In addition with sliding backwards, slide the other two pets sideways
+				switch (i)
+				{
+					case 1:
+						x += (int)(((double)commander.FormationSpacing * perp_slide) * Math.Cos(heading - Math.PI));
+						y += (int)(((double)commander.FormationSpacing * perp_slide) * Math.Sin(heading - Math.PI));
+						break;
+					case 2:
+						x += (int)(((double)commander.FormationSpacing * perp_slide) * Math.Cos(heading));
+						y += (int)(((double)commander.FormationSpacing * perp_slide) * Math.Sin(heading));
+						break;
+				}
+				return true;
+			}
+			return false;
 		}
 
 		#endregion

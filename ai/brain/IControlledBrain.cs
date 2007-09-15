@@ -65,12 +65,14 @@ namespace DOL.AI.Brain
 		eWalkState WalkState { get; }
 		eAggressionState AggressionState { get; set; }
 		GameNPC Body { get; }
-		GamePlayer Owner { get; }
+		GameLiving Owner { get; }
 		void Attack(GameObject target);
 		void Follow(GameObject target);
 		void Stay();
 		void ComeHere();
 		void Goto(GameObject target);
 		void UpdatePetWindow();
+		GamePlayer GetPlayerOwner();
+		bool IsMinion { get; set; }
 	}
 }

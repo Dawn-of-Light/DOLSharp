@@ -59,7 +59,7 @@ namespace DOL.GS.Scripts
 
 		
 			// Specializations
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Bonedancing));			
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.BoneArmy));			
 
 			// Spell lines
 			player.AddSpellLine(SkillBase.GetSpellLine("Bone Army"));
