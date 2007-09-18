@@ -756,8 +756,23 @@ namespace DOL.GS.Spells
 		{
 			// warlock
 			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(m_caster, "Powerless");
-			if (effect != null)
+			if (effect != null && !m_spell.IsPrimary)
 				return 0;
+
+            // Apply Valkyrie RA5L effect
+            ValhallasBlessingEffect ValhallasBlessing = (ValhallasBlessingEffect)m_caster.EffectList.GetOfType(typeof(ValhallasBlessingEffect));
+            if (ValhallasBlessing != null)
+            {
+                // I'm not sure of the %chance, maybe reduce it
+                if (Util.ChanceDouble(25 * 0.0001)) return 0;
+            }
+
+            // Apply Animist RA5L effect
+            FungalUnionEffect FungalUnion = (FungalUnionEffect)m_caster.EffectList.GetOfType(typeof(FungalUnionEffect));
+            {
+                if (FungalUnion != null && Util.Chance(10))
+                    return 0;
+            }
 
 			double basepower = m_spell.Power; //<== defined a basevar first then modified this base-var to tell %-costs from absolut-costs
 
@@ -924,10 +939,10 @@ namespace DOL.GS.Spells
 			{
 				return ticks;
 			}
-			// warlocks !
 			GamePlayer player = m_caster as GamePlayer;
 			if (player != null)
 			{
+                // Warlock stuff
 				if (player.CharacterClass.ID == (int)eCharacterClass.Warlock)
 				{
 					if (!(Spell.SpellType == "Uninterruptable" || Spell.SpellType == "Range" || Spell.SpellType == "Powerless"))
@@ -935,7 +950,17 @@ namespace DOL.GS.Spells
 						return ticks;
 					}
 				}
-			}
+
+                // Necromancer RA5L effect
+                if (player.CharacterClass.ID == (int)eCharacterClass.Necromancer)
+                {
+                    // Edit here the spelltype depending on how you implemented the pet			
+                    if (Spell.SpellType == "PET" && m_caster.EffectList.GetOfType(typeof(CallOfDarknessEffect)) != null)
+                    {
+                        return 3000; //always 3 sec
+                    }
+                }
+            }
 			double percent = 1.0;
 			int dex = m_caster.GetModified(eProperty.Dexterity);
 

@@ -515,7 +515,15 @@ namespace DOL.GS.Styles
 		/// <returns>Endurance needed to use style</returns>
 		public static int CalculateEnduranceCost(GameLiving living, Style style, int weaponSpd)
 		{
-			int fatCost = weaponSpd * style.EnduranceCost / 40;
+            // Apply Valkyrie RA5L effect
+            ValhallasBlessingEffect ValhallasBlessing = (ValhallasBlessingEffect)living.EffectList.GetOfType(typeof(ValhallasBlessingEffect));
+            if (ValhallasBlessing != null)
+            {
+                // I'm not sure of the %chance, maybe reduce it
+                if (Util.ChanceDouble(25 * 0.0001)) return 0;
+            }
+            
+            int fatCost = weaponSpd * style.EnduranceCost / 40;
 			if (weaponSpd < 40)
 				fatCost++;
 			fatCost = (int)Math.Ceiling(fatCost * living.GetModified(eProperty.FatigueConsumption) * 0.01);
