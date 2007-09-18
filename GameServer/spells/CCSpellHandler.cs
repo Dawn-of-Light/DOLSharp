@@ -127,6 +127,33 @@ namespace DOL.GS.Spells
 			return (int)duration;
 		}
 
+        public override int CalculateSpellResistChance(GameLiving target)
+        {
+            int resistvalue = 0;
+            int resist = 0;
+            GameSpellEffect fury = SpellHandler.FindEffectOnTarget(target, "Fury");
+            if (fury != null)
+            {
+                resist += 50;
+            }
+            if (target.EffectList.GetOfType(typeof(AllureofDeathEffect)) != null)
+            {
+                resist += 75;
+            }
+            if (m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect)
+                return 0;
+            if (HasPositiveEffect)
+                return 0;
+            //Calculate the Resistchance
+            resistvalue = (100 - CalculateToHitChance(target) + resist);
+            if (resistvalue > 100)
+                resistvalue = 100;
+            //always 1% resistchance!
+            if (resistvalue < 1)
+                resistvalue = 1;
+            return resistvalue;
+        }
+
 		/// <summary>
 		/// Constructor
 		/// </summary>
