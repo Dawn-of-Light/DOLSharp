@@ -23,6 +23,7 @@ using System.Reflection;
 
 using DOL.Database;
 using DOL.GS;
+using DOL.GS.Effects;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.GS.ServerProperties;
@@ -209,6 +210,21 @@ namespace DOL.GS.ServerRules
 					return false;
 				}
 			}
+
+            // Apply Mentalist RA5L
+            if (playerDefender != null)
+            {
+                SelectiveBlindnessEffect SelectiveBlindness = (SelectiveBlindnessEffect)playerDefender.EffectList.GetOfType(typeof(SelectiveBlindnessEffect));
+                if (SelectiveBlindness != null)
+                {
+                    GamePlayer EffectOwner = (GamePlayer)(playerDefender.TempProperties.getObjectProperty("SelectiveBlindnessOwner", null));
+                    if (EffectOwner == playerAttacker)
+                    {
+                        MessageToLiving(attacker, defender.Name + " is invisible to you!");
+                        return false;
+                    }
+                }
+            }
 
 			// PEACE NPCs can't be attacked/attack
 			if (attacker is GameNPC)
