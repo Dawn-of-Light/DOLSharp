@@ -9219,7 +9219,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="slot_pos">SlotPosition to drop</param>
 		/// <returns>true if dropped</returns>
-		public bool DropItem(eInventorySlot slot_pos)
+        public virtual bool DropItem(eInventorySlot slot_pos)
 		{
 			GameInventoryItem tempItem;
 			return DropItem(slot_pos, out tempItem);
@@ -9232,7 +9232,7 @@ namespace DOL.GS
 		/// <param name="slot_pos">SlotPosition to drop</param>
 		/// <param name="droppedItem">out GameItem that was created</param>
 		/// <returns>true if dropped</returns>
-		public bool DropItem(eInventorySlot slot_pos, out GameInventoryItem droppedItem)
+        public virtual bool DropItem(eInventorySlot slot_pos, out GameInventoryItem droppedItem)
 		{
 			droppedItem = null;
 			if (slot_pos >= eInventorySlot.FirstBackpack && slot_pos <= eInventorySlot.LastBackpack)
@@ -9260,7 +9260,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="item">the item to create on the ground</param>
 		/// <returns>the GameInventoryItem on the ground</returns>
-		public GameInventoryItem CreateItemOnTheGround(InventoryItem item)
+        public virtual GameInventoryItem CreateItemOnTheGround(InventoryItem item)
 		{
 			if (IsSwimming && CurrentZone.GetRealm() == (eRealm)Realm)
 			{
@@ -9313,7 +9313,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="floorObject">GameItem on the floor</param>
 		/// <returns>true if picked up</returns>
-		public bool PickupObject(GameObject floorObject, bool checkRange)
+        public virtual bool PickupObject(GameObject floorObject, bool checkRange)
 		{
 			if (floorObject == null)
 			{

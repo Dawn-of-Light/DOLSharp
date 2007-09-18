@@ -3182,6 +3182,16 @@ namespace DOL.GS
 			GamePlayer attackerPlayer = source as GamePlayer;
 			if (attackerPlayer != null && attackerPlayer != this)
 			{
+                // Apply Mauler RA5L
+                GiftOfPerizorEffect GiftOfPerizor = (GiftOfPerizorEffect)this.EffectList.GetOfType(typeof(GiftOfPerizorEffect));
+                if (GiftOfPerizor == null)
+                {
+                    int difference = (int)(0.25 * damageDealt);
+                    damageDealt -= difference;
+                    GamePlayer TheMauler = (GamePlayer)(this.TempProperties.getObjectProperty("GiftOfPerizorOwner", null));
+                    if (TheMauler != null && TheMauler.IsAlive) TheMauler.ChangeMana(source, GameLiving.eManaChangeType.Spell, difference);
+                }
+
 				PlayerGroup attackerGroup = attackerPlayer.PlayerGroup;
 				if (attackerGroup != null)
 				{

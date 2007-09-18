@@ -807,6 +807,7 @@
     <Compile Include="realmabilities\effects\rr5\DreamWeaverEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\EntwiningSnakesEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\FerociousWillEffect.cs" />
+    <Compile Include="realmabilities\effects\rr5\FungalUnionEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\FuryOfNatureEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\GiftOfPerizorEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\MinionRescueEffect.cs" />
@@ -854,6 +855,7 @@
     <Compile Include="realmabilities\handlers\rr5\EntwiningSnakesAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\EpiphanyAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\FerociousWillAbility.cs" />
+    <Compile Include="realmabilities\handlers\rr5\FungalUnionAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\FuryOfNatureAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\GiftOfPerizorAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\MinionRescueAbility.cs" />
