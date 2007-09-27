@@ -374,7 +374,7 @@ namespace DOL.AI.Brain
 		/// <summary>
 		/// Checks the Positive Spells.  Handles buffs, heals, etc.
 		/// </summary>
-		protected override bool CheckPositiveSpells(Spell spell)
+		protected override bool CheckDefensiveSpells(Spell spell)
 		{
 			GameObject lastTarget = Body.TargetObject;
 			Body.TargetObject = null;
@@ -562,7 +562,7 @@ namespace DOL.AI.Brain
 				return true;
 			}
 			Body.TargetObject = lastTarget;
-			return base.CheckPositiveSpells(spell); ;
+			return base.CheckDefensiveSpells(spell); ;
 		}
 
 		/// <summary>
