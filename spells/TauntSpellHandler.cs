@@ -58,7 +58,9 @@ namespace DOL.GS.Spells
 			ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
 			target.OnAttackedByEnemy(ad);
 
-			target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
+			// Interrupt only if target is actually casting
+			if (target.IsCasting)
+				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
 			if (target is GameNPC)
 			{
 				GameNPC npc = (GameNPC)target;
