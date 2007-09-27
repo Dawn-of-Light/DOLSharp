@@ -97,7 +97,7 @@ namespace DOL.AI.Brain
 			{
 				CheckPlayerAggro();
 				CheckNPCAggro();
-				AttackMostWanted();
+				if (IsAggroing) AttackMostWanted(); // Only start an attack if there actually is something to attack
 			}
 
 			//If this NPC can randomly walk around, we allow it to walk around
@@ -226,6 +226,22 @@ namespace DOL.AI.Brain
 		{
 			get { return m_aggroMaxRange; }
 			set { m_aggroMaxRange = value; }
+		}
+
+		/// <summary>
+		/// Checks whether living has someone on its aggrolist		
+		/// </summary>
+		public bool IsAggroing
+		{
+			get
+			{
+				bool aggroing = false;
+				lock (m_aggroTable.SyncRoot)
+				{
+					aggroing = (m_aggroTable.Count > 0);
+				}
+				return aggroing;
+			}    
 		}
 
 		/// <summary>
@@ -398,6 +414,7 @@ namespace DOL.AI.Brain
 		{
 			if (!IsActive)
 				return;
+
 			GameLiving target = CalculateNextAttackTarget();
 			if (target != null)
 			{
@@ -737,25 +754,30 @@ namespace DOL.AI.Brain
 		/// </summary>
 		/// <param name="Positive">whether to check positive (true) spells or negative (false) spells</param>
 		/// <remarks>Specify whether we should check for positive (buffs, heals, etc) or negative (damages, taunts, stuns, etc).</remarks>
-		public virtual bool CheckSpells(bool Positive)
+		public virtual bool CheckSpells(bool Defensive)
 		{
 			//Make sure owns a body, has spells, and isn't casting
 			//By checking IsCasting here - we should be able to save a lot of processor time
 			//doing worthless checks just to find out the body is casting
-			if (this.Body != null && this.Body.Spells != null && this.Body.Spells.Count > 0 && !Body.IsCasting)
+			//Prevent mob from casting if an interrupt action is running (saves CPU time and makes
+			//the mob look less daft)
+			if (this.Body != null && this.Body.Spells != null && this.Body.Spells.Count > 0 && !Body.IsCasting && !Body.IsBeingInterrupted)
 			{
 				bool casted = false;
-				if (Positive)
+				if (Defensive)
 				{
-
 					foreach (Spell spell in Body.Spells)
 					{
-						//Maybe Body.InCombat?
-						if (!Body.AttackState)
+						// Why wouldn't a healer type mob try to save his ass even when in melee?
+						// Allow defensive spells
+						//if (!Body.AttackState)
+						//{
+						if (CheckDefensiveSpells(spell))
 						{
-							if (CheckPositiveSpells(spell))
-								casted = true;
+							casted = true;
+							break;
 						}
+						//}
 					}
 				}
 				else
@@ -764,9 +786,12 @@ namespace DOL.AI.Brain
 					{
 						if (spell.CastTime > 0)
 						{
-							if (Body.CurrentRegion.Time - Body.LastAttackedByEnemyTick > 10 * 1000)
-								if (CheckNegativeSpells(spell))
-									casted = true;
+							//if (Body.CurrentRegion.Time - Body.LastAttackedByEnemyTick > 10 * 1000)
+							if (CheckOffensiveSpells(spell))
+							{
+								casted = true;
+								break;
+							}
 						}
 						else
 							CheckInstantSpells(spell);
@@ -780,9 +805,9 @@ namespace DOL.AI.Brain
 		}
 
 		/// <summary>
-		/// Checks the Positive Spells.  Handles buffs, heals, etc.
+		/// Checks defensive spells.  Handles buffs, heals, etc.
 		/// </summary>
-		protected virtual bool CheckPositiveSpells(Spell spell)
+		protected virtual bool CheckDefensiveSpells(Spell spell)
 		{
 			GameObject lastTarget = Body.TargetObject;
 			Body.TargetObject = null;
@@ -815,8 +840,8 @@ namespace DOL.AI.Brain
 				case "DefensiveProc":
 				case "Bladeturn":
 					{
-						//Buff self
-						if (!LivingHasEffect(Body, spell))
+						// Buff self, if not in melee
+						if (!LivingHasEffect(Body, spell) && !Body.AttackState)
 						{
 							Body.TargetObject = Body;
 							break;
@@ -914,8 +939,8 @@ namespace DOL.AI.Brain
 
 				#region Heals
 				case "Heal":
-					//Heal self
-					if (Body.HealthPercent < 75)
+					// Heal self when dropping below 30%
+					if (Body.HealthPercent < 30)
 					{
 						Body.TargetObject = Body;
 						break;
@@ -1004,15 +1029,17 @@ namespace DOL.AI.Brain
 		}
 
 		/// <summary>
-		/// Checks the Negative Spells.  Handles dds, debuffs, etc.
+		/// Checks offensive spells.  Handles dds, debuffs, etc.
 		/// </summary>
-		protected virtual bool CheckNegativeSpells(Spell spell)
+		protected virtual bool CheckOffensiveSpells(Spell spell)
 		{
 			if (spell.Target != "Enemy" && spell.Target != "Area")
 				return false;
 			if (Body.TargetObject != null)
 			{
-				if (LivingHasEffect((GameLiving)Body.TargetObject, spell))
+				if (LivingHasEffect((GameLiving)Body.TargetObject, spell))  // Target already has that effect
+					return false;
+				if (Body.GetSkillDisabledDuration(spell) > 0)   // Spell on cooldown
 					return false;
 				if (Body.IsMoving)
 					Body.StopFollow();
@@ -1146,7 +1173,7 @@ namespace DOL.AI.Brain
 				if (Body.MaxSpeedBase == 0)
 					return false;
 				if (Body.InCombat || Body.IsMoving || Body.IsCasting)
-					return false;
+					return false; 
 				if (Body.Realm != 0)
 					return false;
 				if (Body.Name == "horse")

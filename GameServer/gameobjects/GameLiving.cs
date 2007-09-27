@@ -1755,8 +1755,11 @@ namespace DOL.GS
 				Message.SystemToArea(ad.Attacker, message, eChatType.CT_OthersCombat, (GameObject[])excludes.ToArray(typeof(GameObject)));
 			}
 
-			// start interrupt timer for casting victims
-			ad.Target.StartInterruptTimer(interruptDuration, ad.AttackType, this);
+			// Melee has a 100% chance to interrupt players, but only a 25% chance
+			// to interrupt anything else (like NPCs) - call it a hunch :)
+			int interruptChance = (ad.Target is GamePlayer) ? 100 : 25;
+			if (Util.Chance(interruptChance)) 
+				ad.Target.StartInterruptTimer(interruptDuration, ad.AttackType, this);
 
 			if (ad.Target is GamePlayer && (ad.Target as GamePlayer).CharacterClass is ClassMauler)
 			{
@@ -1775,6 +1778,11 @@ namespace DOL.GS
 		/// <param name="attacker">The source of interrupts</param>
 		public virtual void StartInterruptTimer(int duration, AttackData.eAttackType attackType, GameLiving attacker)
 		{
+			// Can't be interrupted if living is not casting
+			if (!IsCasting)
+				return;
+
+			IsBeingInterrupted = true;
 			new InterruptAction(this, attacker, duration, attackType).Start(1);
 		}
 
@@ -1823,6 +1831,7 @@ namespace DOL.GS
 				if (!target.IsAlive || target.ObjectState != eObjectState.Active)
 				{
 					Stop();
+					target.IsBeingInterrupted = false;
 					return;
 				}
 
@@ -1834,7 +1843,23 @@ namespace DOL.GS
 					target.CurrentSpellHandler.CasterIsAttacked(m_attacker);
 				if (target.AttackState && target.ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 					target.OnInterruptTick(m_attacker, m_attackType);
+				if (Interval == 0)
+					target.IsBeingInterrupted = false;
 			}
+		}
+
+		/// <summary>
+		/// Keeps track of an interrupt action running on this living.
+		/// </summary>
+		protected bool m_isBeingInterrupted = false;
+
+		/// <summary>
+		/// Yields true if interrupt action is running on this living.
+		/// </summary>
+		public bool IsBeingInterrupted
+		{
+			get { return m_isBeingInterrupted; }
+			protected set { m_isBeingInterrupted = value; }
 		}
 
 		/// <summary>
@@ -4555,6 +4580,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 				RecalculatePostionAddition();
 			}
 		}
+
 		/// <summary>
 		/// Gets the maxspeed of this living
 		/// </summary>

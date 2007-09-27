@@ -577,7 +577,7 @@ namespace DOL.GS.Spells
 				return;
 			if ((response & 0x100) == 0x100) // In view ?
 				return;
-			MessageToLiving(player, "Your can't see target now.", eChatType.CT_SpellResisted);
+			MessageToLiving(player, "You can't see your target!", eChatType.CT_SpellResisted);
 			InterruptCasting(); // break;
 		}
 
@@ -594,7 +594,7 @@ namespace DOL.GS.Spells
 			if ((response & 0x100) == 0x100) // In view ?
 
 				return;
-			MessageToLiving(player, "Your pet can't see target.", eChatType.CT_SpellResisted);
+			MessageToLiving(player, "Your pet can't see the target!", eChatType.CT_SpellResisted);
 			InterruptCasting(); // break;
 		}
 
@@ -1687,7 +1687,7 @@ namespace DOL.GS.Spells
 					GamePlayer owner = brain.GetPlayerOwner();
 					if (owner != null && owner.ControlledNpc != null && target == owner.ControlledNpc.Body)
 					{
-						MessageToLiving(owner, "Your " + target.Name + " resist the effect!", eChatType.CT_SpellResisted);
+						MessageToLiving(owner, "Your " + target.Name + " resists the effect!", eChatType.CT_SpellResisted);
 					}
 				}
 			}
