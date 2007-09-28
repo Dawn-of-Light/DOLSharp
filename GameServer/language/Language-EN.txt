@@ -423,6 +423,54 @@ HousingPlaceItemHandler.IndoorObjectPlaced:		Indoor Object placed. {0} slots rem
 HousingPlaceItemHandler.NoHookpoint:			No hookpoints now !
 HousingPlaceItemHandler.PutMoney:			You put money in your house.
 
+# /Housing
+Scripts.Player.Housing.HouseUseMaterial: You need to hold shift+right-click on your house to change those materials.
+Scripts.Player.Housing.HouseUseMaterial: You need to hold shift+right-click on your house to change your carpets.
+Scripts.Player.Housing.InteriorBannersRemoved: Your interior guild banners have been removed.
+Scripts.Player.Housing.InteriorShieldsRemoved: Your interior guild shields have been removed.
+Scripts.Player.Housing.InteriorBannersAdded: Your interior guild banners have been changed.
+Scripts.Player.Housing.InteriorShieldsAdded: Your interior guild shields have been changed.
+Scripts.Player.Housing.OutdoorBannersAdded: Your outdoor guild banners have been changed.
+Scripts.Player.Housing.OutdoorShieldsAdded: Your outdoor guild shields have been changed.
+Scripts.Player.Housing.OutdoorBannersRemoved: Your outdoor guild banners have been removed.
+Scripts.Player.Housing.OutdoorShieldsRemoved: Your outdoor guild shields have been removed.
+Scripts.Player.Housing.BadShieldBanner: That is not a valid shield or banner object.
+Scripts.Player.Housing.CarpetsRemoved: Your carpets have been removed.
+Scripts.Player.Housing.GardenMaxObjects: You have already placed 30 objects in your garden. You cannot place more.
+Scripts.Player.Housing.GardenItemPlaced: Garden object placed. {0} slots remaining.
+Scripts.Player.Housing.GardenItemPlacedName: You have placed {0} in your garden.
+Scripts.Player.Housing.NotWallObject: This item cannot be placed on a wall!
+Scripts.Player.Housing.NotFloorObject: This item cannot be placed on the floor!
+Scripts.Player.Housing.NotHookPoint: This item cannot be placed on a hookpoint!
+Scripts.Player.Housing.IndoorMaxItems: You have already placed {0} in your house. You cannot place more.
+Scripts.Player.Housing.IndoorItemPlaced: Indoor item placed. {0} slots remaining.
+Scripts.Player.Housing.IndoorFloorPlaced: You have placed {0} on the floor of your house.
+Scripts.Player.Housing.IndoorWallPlaced: You have placed {0} onto the wall of your house.
+Scripts.Player.Housing.PorchAlready: This house already has a porch!
+Scripts.Player.Housing.PorchNone: This house does not have a porch!
+Scripts.Player.Housing.PorchNotItem: This is not a porch item!
+Scripts.Player.Housing.HookPointID: The hookpoint ID is: {0}
+Scripts.Player.Housing.HookPointCloser: Stand as close to the housepoint as possible and face the proper direction and press accept.
+Scripts.Player.Housing.HookPointLogLoc: Log this housepoint location?
+Scripts.Player.Housing.HookPointAdded: That item has been added to your house.
+Scripts.Player.Housing.HookPointNot: That is not a hookpoint item!
+Scripts.Player.Housing.HookPointLogged: Logged hookpoint position {0} in error.log!
+Scripts.Player.Housing.EnteredHouse: You have entered house number {0}.
+Scripts.Player.Housing.LeftHouse: You have exited house number {0}.
+Scripts.Player.Housing.PaidChanges: You have paid {0} for your changes.
+Scripts.Player.Housing.PaidNotEnough: You do not have enough money to do that!
+Scripts.Player.Housing.LotTargeted: You target lot number {0}.
+Scripts.Player.Housing.LotCost: It can be bought for {0}.
+Scripts.Player.Housing.LotOffer: Do you wish to buy this lot? It costs {0}.
+Scripts.Player.Housing.LotNotYours: You do not own this lot!
+Scripts.Player.Housing.LotAlready: You already own another lot or house (Number {0})
+Scripts.Player.Housing.LotBought: You just bought this lot for {0}!
+Scripts.Player.Housing.LotNotItem: That is not a valid house deed.
+Scripts.Player.Housing.CantBeSold: This item cannot be sold!
+Scripts.Player.Housing.TransferToGuild: Do you want to transfer this house to {0}?
+Scripts.Player.Housing.GuildNowOwns: [Guild] {0} now owns a guild house from {1}!
+Scripts.Player.Housing.HookPointNotPlaced: That hookpoint item was not placed.
+
 # Styles
 # /StyleProcessor
 StyleProcessor.ExecuteStyle.BackStrike:			You inflict a critical strike in the back of your target 

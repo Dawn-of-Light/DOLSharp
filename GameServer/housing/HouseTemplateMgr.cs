@@ -109,6 +109,7 @@ namespace DOL.GS.Housing
 			CheckItemTemplate("Hibernia mansion deed", "hib_mansion_deed", 499, 0, 1000000000, 0, 0, 0, 0, 3);
 			CheckItemTemplate("Porch deed", "porch_deed", 499, 0, 5000000, 0, 0, 0, 0, 0);
 			CheckItemTemplate("Porch remove deed", "porch_remove_deed", 499, 0, 100, 0, 0, 0, 0, 0);
+            CheckItemTemplate("deed of guild transfer", "deed_of_guild_transfer", 499, 0, 50000000, 0, 0, 0, 0, 0);
 
 			//indoor npc
 			CheckItemTemplate("Hastener", "hastener", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 500, 0, 0);
@@ -118,7 +119,9 @@ namespace DOL.GS.Housing
 			CheckItemTemplate("Healer", "healer", 593, (int)eObjectType.HouseNPC, 30000000, 0, 0, 504, 0, 0);
 			CheckItemTemplate("Recharger", "recharger", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 505, 0, 0);
 			CheckItemTemplate("Hibernia Teleporter", "hib_teleporter", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 506, 0, 0);
-			CheckItemTemplate("Apprentice Merchant", "apprentice_merchant", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 507, 0, 0);
+            CheckItemTemplate("Albion Teleporter", "alb_teleporter", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 506, 0, 0);
+            CheckItemTemplate("Midgard Teleporter", "mid_teleporter", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 506, 0, 0);
+            CheckItemTemplate("Apprentice Merchant", "apprentice_merchant", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 507, 0, 0);
 			CheckItemTemplate("Grandmaster Merchant", "grandmaster_merchant", 593, (int)eObjectType.HouseNPC, 5000000, 0, 0, 508, 0, 0);
 			CheckItemTemplate("Incantation Merchant", "incantation_merchant", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 509, 0, 0);
 			CheckItemTemplate("Poison and Dye Supplies", "poison_dye_supplies", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 510, 0, 0);
@@ -136,16 +139,12 @@ namespace DOL.GS.Housing
 			CheckItemTemplate("lathe", "lathe", 1496, (int)eObjectType.HouseInteriorObject, 10000000, 0, 0, 0, 0, 0);
 
 			//indoor bindstone
-			//TODO: [WARN] not used
 			CheckItemTemplate("Albion bindstone", "alb_bindstone", 1488, (int)eObjectType.HouseBindstone, 10000000, 0, 0, 0, 0, 1);
-			//TODO: [WARN] not used
 			CheckItemTemplate("Midgard bindstone", "mid_bindstone", 1492, (int)eObjectType.HouseBindstone, 10000000, 0, 0, 0, 0, 2);
 			CheckItemTemplate("Hibernia bindstone", "hib_bindstone", 1490, (int)eObjectType.HouseBindstone, 10000000, 0, 0, 0, 0, 3);
 
 			//indoor vault
-			//TODO: [WARN] not used
 			CheckItemTemplate("Albion vault", "alb_vault", 1489, (int)eObjectType.HouseVault, 10000000, 0, 0, 0, 0, 1);
-			//TODO: [WARN] not used
 			CheckItemTemplate("Midgard vault", "mid_vault", 1493, (int)eObjectType.HouseVault, 10000000, 0, 0, 0, 0, 2);
 			CheckItemTemplate("Hibernia vault", "hib_vault", 1491, (int)eObjectType.HouseVault, 10000000, 0, 0, 0, 0, 3);
 		}
@@ -153,21 +152,21 @@ namespace DOL.GS.Housing
 		static void CheckMerchantItemTemplates()
 		{
 			//lot markers
-			string[] alblotmarkeritems = {"alb_cottage_deed", "alb_house_deed", "alb_villa_deed", "alb_mansion_deed", "porch_deed", "porch_remove_deed"};
+            string[] alblotmarkeritems = { "alb_cottage_deed", "alb_house_deed", "alb_villa_deed", "alb_mansion_deed", "porch_deed", "porch_remove_deed", "deed_of_guild_transfer" };
 			CheckMerchantItems("alb_lotmarker", alblotmarkeritems);
-			string[] midlotmarkeritems = {"mid_cottage_deed", "mid_house_deed", "mid_villa_deed", "mid_mansion_deed", "porch_deed", "porch_remove_deed"};
+            string[] midlotmarkeritems = { "mid_cottage_deed", "mid_house_deed", "mid_villa_deed", "mid_mansion_deed", "porch_deed", "porch_remove_deed", "deed_of_guild_transfer" };
 			CheckMerchantItems("mid_lotmarker", midlotmarkeritems);
-			string[] hiblotmarkeritems = {"hib_cottage_deed", "hib_house_deed", "hib_villa_deed", "hib_mansion_deed", "porch_deed", "porch_remove_deed"};
+            string[] hiblotmarkeritems = { "hib_cottage_deed", "hib_house_deed", "hib_villa_deed", "hib_mansion_deed", "porch_deed", "porch_remove_deed", "deed_of_guild_transfer" };
 			CheckMerchantItems("hib_lotmarker", hiblotmarkeritems);
 
 			//hookpoints
-			string[] indoornpc = { "hastener", "smith", "enchanter", "emblemeer", "healer", "recharger", "hib_teleporter", "apprentice_merchant", "grandmaster_merchant", "incantation_merchant", "poison_dye_supplies", "potion_tincture_enchantment_supplies", "poison_potion_supplies", "taxidermy_supplies", "siegecraft_supplies", "hib_vault_keeper", "dye_supply_master" };
+			string[] indoornpc = { "hastener", "smith", "enchanter", "emblemeer", "healer", "recharger", "hib_teleporter", "alb_teleporter", "mid_teleporter", "apprentice_merchant", "grandmaster_merchant", "incantation_merchant", "poison_dye_supplies", "potion_tincture_enchantment_supplies", "poison_potion_supplies", "taxidermy_supplies", "siegecraft_supplies", "hib_vault_keeper", "mid_vault_keeper", "alb_vault_keeper", "dye_supply_master" };
 			CheckMerchantItems("housing_indoor_npc", indoornpc);
-			string[] indoorbindstone = { "hib_bindstone" };
+			string[] indoorbindstone = { "hib_bindstone", "mid_bindstone", "alb_bindstone" };
 			CheckMerchantItems("housing_indoor_bindstone", indoorbindstone);
 			string[] indoorcraft = { "alchemy_table", "forge", "lathe" };
 			CheckMerchantItems("housing_indoor_craft", indoorcraft);
-			string[] indoorvault = { "hib_vault" };
+			string[] indoorvault = { "hib_vault", "mid_vault", "alb_vault" };
 			CheckMerchantItems("housing_indoor_vault", indoorvault);
 		}
 
