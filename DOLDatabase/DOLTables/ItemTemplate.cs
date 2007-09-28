@@ -82,6 +82,7 @@ namespace DOL.Database
 		protected int m_maxCount;
 		protected int m_packSize;
 		protected int m_spellID;
+        protected int m_artiID;
 		protected int m_procSpellID;
 		protected int m_maxCharges;
 		protected int m_charges;
@@ -924,10 +925,6 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		/// Charge of item when he have some charge of a spell
-		/// </summary>
-
-		/// <summary>
 		/// Max charge of item when he have some charge of a spell
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
@@ -979,6 +976,18 @@ namespace DOL.Database
 				m_spellID = value;
 			}
 		}
+
+        //checks for artifacts
+        [DataElement(AllowDbNull = true)]
+        public int ArtiID
+        {
+            get { return m_artiID; }
+            set
+            {
+                Dirty = true;
+                m_artiID = value;
+            }
+        }
 
 		/// <summary>
 		/// Spell id for items with charge
@@ -1066,7 +1075,7 @@ namespace DOL.Database
 		/// <summary>
 		/// the serialized allowed classes of item
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public string AllowedClasses
 		{
 			get { return m_allowedClasses; }
