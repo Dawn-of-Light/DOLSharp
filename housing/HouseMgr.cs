@@ -22,6 +22,7 @@ using System.Collections;
 using System.Reflection;
 using System.Threading;
 using DOL.Database;
+using DOL.Language;
 using DOL.GS.PacketHandler;
 using DOL.GS.Housing;
 using log4net;
@@ -183,6 +184,7 @@ namespace DOL.GS.Housing
 			house.Model = 0;
             house.DatabaseItem.CreationTime = DateTime.MinValue;
             house.DatabaseItem.LastPaid = DateTime.MinValue;
+            house.DatabaseItem.GuildHouse = false;
 
             #region Remove indoor/outdoor items & permissions
             DataObject[] objs;
@@ -283,7 +285,57 @@ namespace DOL.GS.Housing
 			return null; // no house
 		}
 
-		public static ArrayList GetOwners(DBHouse house)
+        public static bool IsGuildHouse(House house)
+        {
+            Hashtable hash = (Hashtable)m_houselists[house.RegionID];
+            if (hash == null) return false;
+
+            return house.DatabaseItem.GuildHouse;
+        }
+        public static string GetOwningGuild(House house)
+        {
+            Hashtable hash = (Hashtable)m_houselists[house.RegionID];
+            if (hash == null) return "";
+
+            return house.DatabaseItem.GuildName;
+        }
+        public static void SetGuildHouse(House house, bool guildowns, string owningGuild)
+        {
+            Hashtable hash = (Hashtable)m_houselists[house.RegionID];
+            if (hash == null)
+                return;
+
+            house.DatabaseItem.GuildHouse = guildowns;
+            house.DatabaseItem.GuildName = owningGuild;
+        }
+        public static void HouseTransferToGuild(GamePlayer plr)
+        {
+            if (plr.Guild != null && plr.Guild.GuildOwnsHouse())
+                return;
+
+            plr.Out.SendCustomDialog(LanguageMgr.GetTranslation(plr.Client, "Scripts.Player.Housing.TransferToGuild", plr.Guild.Name), new CustomDialogResponse(MakeGuildLot));
+            return;
+        }
+        protected static void MakeGuildLot(GamePlayer player, byte response)
+        {
+            if (response != 0x01) return;
+            House house = GetHouse((GetHouseNumberByPlayer(player)));
+            GamePlayer GuildLeader = player.Guild.GetGuildLeader(player);
+            house.DatabaseItem.Name = player.Guild.Name;
+            HouseMgr.DeleteOwner(house.DatabaseItem, player);
+            house.DatabaseItem.OwnerIDs = "";
+            HouseMgr.AddOwner(house.DatabaseItem, GuildLeader);
+            player.Guild.SetGuildHouse(true);
+            player.Guild.SetGuildHouseNumber(house.HouseNumber);
+            player.Guild.SendMessageToGuildMembers(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Housing.GuildNowOwns", player.Guild.Name, player.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            HouseMgr.SetGuildHouse(house, true, player.GuildName);
+            player.Guild.SaveIntoDatabase();
+            player.Guild.UpdateGuildWindow();
+            house.SaveIntoDatabase();
+            house.SendUpdate();
+        }
+        
+        public static ArrayList GetOwners(DBHouse house)
 		{
 			if (house == null) return null;
 			if (house.OwnerIDs == null || house.OwnerIDs == "") return null;

@@ -454,6 +454,15 @@ namespace DOL.GS.ServerProperties
         public static bool NEW_GUILD_DUES;
 
         /// <summary>
+        /// Sets the max allowed items inside/outside a house.
+        /// If Outdoor is increased past 30, they vanish. It seems to be hardcoded in client
+        /// </summary>
+        [ServerProperty("max_indoor_house_items", "Max number of items allowed inside a players house.", 40)]
+        public static readonly int MAX_INDOOR_HOUSE_ITEMS;
+        [ServerProperty("max_outdoor_house_items", "Max number of items allowed in a players garden.", 30)]
+        public static readonly int MAX_OUTDOOR_HOUSE_ITEMS;
+
+        /// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
 		/// type of the default value
