@@ -74,5 +74,6 @@ namespace DOL.AI.Brain
 		void UpdatePetWindow();
 		GamePlayer GetPlayerOwner();
 		bool IsMinion { get; set; }
+        bool IsMainPet { get; set; }
 	}
 }

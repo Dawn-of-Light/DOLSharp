@@ -146,7 +146,6 @@
     <Compile Include="GameServer\world\RegionOidAllocation.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="XMLWebUIGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="GameServer\gameobjects\" />
