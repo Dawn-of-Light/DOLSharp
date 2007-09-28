@@ -808,6 +808,41 @@ Scripts.Players.Battlegroup.UsageInvite:			Usage: /bg invite <playername>"
 Scripts.Players.Battlegroup.BattlegroupTreasurerIsYou: You have been made treasuerer of the battlegroup.
 Scripts.Players.Battlegroup.BattlegroupTreasurerIs: The treasurer of the battlegroup has been changed to {0}.
 
+# Boats
+Scripts.Player.Boat.Usage: Usage:
+Scripts.Player.Boat.Help.Summon: '/boat summon' - Summons your boat.
+Scripts.Player.Boat.Help.Unsummon: '/boat unsummon' - Unsummons your targeted boat.
+Scripts.Player.Boat.Help.Follow: '/boat follow' - Orders your boat to follow your selected target.
+Scripts.Player.Boat.Help.StopFollow: '/boat stopfollow' - Orders your boat to stop following its target.
+Scripts.Player.Boat.Help.Board: '/boat board' - Boards the targeted boat.
+Scripts.Player.Boat.Help.Delete: '/boat delete' - Gives a confirmation dialog to delete your current boat !!permanantly!!
+Scripts.Player.Boat.Help.Boot: '/boat boot' - Boots the selected player from your boat.
+Scripts.Player.Boat.UnknownCommand: That is not a valid boat command. /boat for help.
+Scripts.Player.Boat.MoveFollow: Your boat begins to follow {0}.
+Scripts.Player.Boat.FullBoat: The boat is currently full.
+Scripts.Player.Boat.YouBoard: You board the {0}.
+Scripts.Player.Boat.Unsummoned: Your {0} has been unsummoned.
+Scripts.Player.Boat.Summoned: Your {0} has been summoned.
+Scripts.Player.Boat.NotInWater: You must be in the water before you can summon your boat!
+Scripts.Player.Boat.NotOwnBoat: You do not own a boat.
+Scripts.Player.Boat.NoBoatSelected: You must select a boat first!
+Scripts.Player.Boat.BootedBy: You have been kicked off the boat by {0}.
+Scripts.Player.Boat.BootedTarget: You have booted {0} from the boat.
+Scripts.Player.Boat.OwnerNotOn: The owner of that boat is not online.
+Scripts.Player.Boat.BoardingRequest: {0} is trying to board your boat. Accept?
+Scripts.Player.Boat.TargetNotInBoat: {0} is not in your boat.
+Scripts.Player.Boat.NoPlayerSelected: You need to select a player first.
+Scripts.Player.Boat.InviteNoSelf: You cannot invite yourself!
+Scripts.Player.Boat.AlreadyOnBoat: That player is already on the boat!
+Scripts.Player.Boat.PlayerIsDead: You cannot interact with a dead player!
+Scripts.Player.Boat.InviteSent: You have invited {0} to join you on your boat.
+Scripts.Player.Boat.InviteRecieved: {0} has invited you to join them on their boat.
+Scripts.Player.Boat.BoatTooFar: {0} is too far away for you to board.
+Scripts.Player.Boat.DeleteConfirmation: Do you really want to delete your boat {0}?
+Scripts.Player.Boat.BoardingDenied: Your request to board {0} was denied.
+Scripts.Player.Boat.BoardingGranted: You accepted the boarding request.
+Scripts.Player.Boat.StopFollow: You bring your boat to a halt.
+
 # /Boot
 Scripts.Players.Boot.InHouseError:			You have to be in your house to use this command!
 Scripts.Players.Boot.NoHouseError:			You don't own a house!

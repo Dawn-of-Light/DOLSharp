@@ -149,7 +149,19 @@ namespace DOL.GS
 			}
 		}
 
-		/// <summary>
+        /// <summary>
+        /// Gets or sets the owner of this npc
+        /// </summary>
+        public string BoatOwnerID
+        {
+            get { return m_boatowner_id; }
+            set
+            {
+                m_boatowner_id = value;
+            }
+        }
+        
+        /// <summary>
 		/// Gets or sets the heading of this NPC
 		/// </summary>
 		public override ushort Heading
@@ -3763,7 +3775,8 @@ namespace DOL.GS
 
 		#endregion
 
-		/// <summary>
+        private string m_boatowner_id;
+        /// <summary>
 		/// Constructs a NPC
 		/// </summary>
 		public GameNPC()
@@ -3789,6 +3802,7 @@ namespace DOL.GS
 			m_followMaxDist = 3000;
 			m_flags = 0;
 			m_maxdistance = 0;
+            m_boatowner_id = "";
 			//m_factionName = "";
 			LinkedFactions = new ArrayList(1);
 			if (m_ownBrain == null)
@@ -3806,6 +3820,7 @@ namespace DOL.GS
 			: this()
 		{
 			LoadTemplate(template);
+            m_boatowner_id = "";
 		}
 	}
 }

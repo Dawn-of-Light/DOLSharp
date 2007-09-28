@@ -74,36 +74,45 @@ namespace DOL.GS.PacketHandler.Client.v168
 				m_flag = flag;
 			}
 
-			/// <summary>
-			/// Called on every timer tick
-			/// </summary>
-			protected override void OnTick()
-			{
-				GamePlayer player = (GamePlayer)m_actionSource;
-				player.GroundTargetInView = ((m_flag & 0x100) != 0);
-				player.SetGroundTarget(m_x, m_y, (ushort)m_z);
+            /// <summary>
+            /// Called on every timer tick
+            /// </summary>
+            protected override void OnTick()
+            {
+                GamePlayer player = (GamePlayer)m_actionSource;
+                player.GroundTargetInView = ((m_flag & 0x100) != 0);
+                player.SetGroundTarget(m_x, m_y, (ushort)m_z);
 
-				if(!player.GroundTargetInView)
-					player.Out.SendMessage("Your ground target is not visible!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+                if (!player.GroundTargetInView)
+                    player.Out.SendMessage("Your ground target is not visible!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-				if (player.SiegeWeapon != null)
-				{
-					player.SiegeWeapon.Move();
-					return;
-				}
-				if (player.Steed != null && player.Steed.MAX_PASSENGERS > 1)
-				{
-					if (player.Steed is GameHorseBoat) return;
-					if (player.Steed is GameBoat && player.GroundTarget.Z > player.CurrentZone.ZoneRegion.WaterLevel) return;
-					if (player.Steed.MAX_PASSENGERS > 8 && player.Steed.CurrentRiders.Length < player.Steed.REQUIRED_PASSENGERS)
-					{
-						player.Out.SendMessage("The " + player.Steed.Name + " does not yet have enough passengers to move!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return;
-					}
-					player.Steed.WalkTo(player.GroundTarget, player.Steed.MaxSpeed);
-					return;
-				}
-			}
+                if (player.SiegeWeapon != null)
+                {
+                    player.SiegeWeapon.Move();
+                    return;
+                }
+                if (player.Steed != null && player.Steed.MAX_PASSENGERS >= 1)
+                {
+                    if (player.Steed is GameHorseBoat) return;
+                    if (player.Steed is GameBoat)// Ichi - && player.GroundTarget.Z > player.CurrentZone.ZoneRegion.WaterLevel) return;
+                    {
+                        if (player.Steed.BoatOwnerID == player.InternalID)
+                        {
+                            player.Out.SendMessage("You usher your boat forward.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            player.Steed.WalkTo(player.GroundTarget, player.Steed.MaxSpeed);
+                            return;
+                        }
+                    }
+
+                    if (player.Steed.MAX_PASSENGERS > 8 && player.Steed.CurrentRiders.Length < player.Steed.REQUIRED_PASSENGERS)
+                    {
+                        player.Out.SendMessage("The " + player.Steed.Name + " does not yet have enough passengers to move!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        return;
+                    }
+                    player.Steed.WalkTo(player.GroundTarget, player.Steed.MaxSpeed);
+                    return;
+                }
+            }
 		}
 	}
 }

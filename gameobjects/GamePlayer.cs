@@ -9271,37 +9271,6 @@ namespace DOL.GS
 		/// <returns>the GameInventoryItem on the ground</returns>
         public virtual GameInventoryItem CreateItemOnTheGround(InventoryItem item)
 		{
-			if (IsSwimming && CurrentZone.GetRealm() == (eRealm)Realm)
-			{
-				byte boatType = 255;
-				switch (item.Model)
-				{
-					case 2648: boatType = 0; break;
-					case 2646: boatType = 1; break;
-					case 2647: boatType = 2; break;
-				}
-
-				if (boatType != 255)
-				{
-					Out.SendMessage("You drop the " + item.Name + " in the water!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					GameBoat boat = new GameBoat(boatType);
-
-					int tx, ty;
-					GetSpotFromHeading(30, out tx, out ty);
-					boat.X = tx;
-					boat.Y = ty;
-					boat.Z = Z;
-					boat.Heading = Heading;
-					boat.CurrentRegionID = CurrentRegionID;
-					boat.Realm = Realm;
-					if (Guild != null)
-						boat.Emblem = (ushort)Guild.theGuildDB.Emblem;
-
-					boat.AddToWorld();
-					return null;
-				}
-			}
-
 			GameInventoryItem gameItem = new GameInventoryItem(item); // fixed
 
 			int x, y;
@@ -9447,50 +9416,66 @@ namespace DOL.GS
                 return true;
             }
             else if (floorObject is GameMoney)
-			{
-				GameMoney moneyObject = floorObject as GameMoney;
-				lock (moneyObject)
-				{
-					if (moneyObject.ObjectState != eObjectState.Active)
-						return false;
+            {
+                GameMoney moneyObject = floorObject as GameMoney;
+                lock (moneyObject)
+                {
+                    if (moneyObject.ObjectState != eObjectState.Active)
+                        return false;
 
-					PlayerGroup group = PlayerGroup;
-					if (group != null && group.AutosplitCoins)
-					{
-						//Spread the money in the group
-						ArrayList eligibleMembers = new ArrayList(8);
-						lock (group)
-						{
-							foreach (GamePlayer ply in group)
-							{
-								if (ply.IsAlive
-								   && (ply.CurrentRegionID == CurrentRegionID)
-								   && (ply.ObjectState == eObjectState.Active))
-								{
-									eligibleMembers.Add(ply);
-								}
-							}
-						}
-						if (eligibleMembers.Count <= 0)
-						{
-							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.NoOneGroupWantsMoney"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return false;
-						}
+                    PlayerGroup group = PlayerGroup;
+                    if (group != null && group.AutosplitCoins)
+                    {
+                        //Spread the money in the group
+                        ArrayList eligibleMembers = new ArrayList(8);
+                        lock (group)
+                        {
+                            foreach (GamePlayer ply in group)
+                            {
+                                if (ply.IsAlive
+                                    && ply.CanSeeObject(ply, floorObject)
+                                    && (ply.ObjectState == eObjectState.Active))
+                                {
+                                    eligibleMembers.Add(ply);
+                                }
+                            }
+                        }
+                        if (eligibleMembers.Count <= 0)
+                        {
+                            Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.NoOneGroupWantsMoney"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return false;
+                        }
 
-						foreach (GamePlayer eligibleMember in eligibleMembers)
-						{
-							eligibleMember.AddMoney(moneyObject.TotalCopper / eligibleMembers.Count, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YourLootShare", Money.GetString(moneyObject.TotalCopper / eligibleMembers.Count)));
-						}
-					}
-					else
-					{
-						//Add money only to picking player
-						AddMoney(moneyObject.TotalCopper, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YouPickUp", Money.GetString(moneyObject.TotalCopper)));
-					}
-					moneyObject.Delete();
-					return true;
-				}
-			}
+                        foreach (GamePlayer eligibleMember in eligibleMembers)
+                        {
+                            if (eligibleMember.Guild != null && eligibleMember.Guild.IsGuildDuesOn())
+                            {
+                                double moneyToGuild = moneyObject.TotalCopper / eligibleMembers.Count * eligibleMember.Guild.GetGuildDuesPercent() / 100;
+                                long moneyToPlayer = (moneyObject.TotalCopper / eligibleMembers.Count) - (long)moneyToGuild;
+                                eligibleMember.Guild.SetGuildBank(eligibleMember, moneyToGuild);
+                                eligibleMember.AddMoney(moneyToPlayer, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YourLootShare", Money.GetString(moneyObject.TotalCopper / eligibleMembers.Count)));
+                            }
+                            else
+                                eligibleMember.AddMoney(moneyObject.TotalCopper / eligibleMembers.Count, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YourLootShare", Money.GetString(moneyObject.TotalCopper / eligibleMembers.Count)));
+                        }
+                    }
+                    else
+                    {
+                        //Add money only to picking player
+                        if (this != null && Guild != null && Guild.IsGuildDuesOn())
+                        {
+                            double moneyToGuild = moneyObject.TotalCopper * Client.Player.Guild.GetGuildDuesPercent() / 100;
+                            long MoneyToPlayer = moneyObject.TotalCopper - (long)moneyToGuild;
+                            Client.Player.Guild.SetGuildBank(Client.Player, moneyToGuild);
+                            Client.Player.AddMoney(MoneyToPlayer, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YourLootShare", MoneyToPlayer.ToString()));
+                        }
+                        else
+                            AddMoney(moneyObject.TotalCopper, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YouPickUp", Money.GetString(moneyObject.TotalCopper)));
+                    }
+                    moneyObject.Delete();
+                    return true;
+                }
+            }
 			else if (floorObject is GameBoat)
 			{
 				if (!WorldMgr.CheckDistance(this, floorObject, 1000))

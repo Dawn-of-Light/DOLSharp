@@ -552,6 +552,7 @@
     </Compile>
     <Compile Include="gameutils\ArtifactManager.cs" />
     <Compile Include="gameutils\BattleGroup.cs" />
+    <Compile Include="gameutils\BoatMgr.cs" />
     <Compile Include="gameutils\ChatGroup.cs">
       <SubType>Code</SubType>
     </Compile>
