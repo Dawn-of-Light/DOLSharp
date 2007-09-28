@@ -321,6 +321,7 @@
     <Compile Include="playercommands\assist.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="playercommands\autoloot.cs" />
     <Compile Include="playercommands\autosplit.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -328,6 +329,7 @@
     <Compile Include="playercommands\bind.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="playercommands\Boat.cs" />
     <Compile Include="playercommands\bountyrent.cs" />
     <Compile Include="playercommands\broadcast.cs">
       <SubType>Code</SubType>
@@ -497,6 +499,7 @@
     <Compile Include="playercommands\version.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="playercommands\ViewReports.cs" />
     <Compile Include="playercommands\where.cs">
       <SubType>Code</SubType>
     </Compile>
