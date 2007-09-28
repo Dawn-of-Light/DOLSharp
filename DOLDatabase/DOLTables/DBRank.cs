@@ -50,6 +50,9 @@ namespace DOL.Database
 		private bool	m_claim;
 		private bool	m_upgrade;
 		private bool	m_release;
+        private bool m_buff;
+        private bool m_dues;
+        private bool m_withdraw;
 
 		/// <summary>
 		/// create rank rules
@@ -71,7 +74,10 @@ namespace DOL.Database
 			m_invite  = false;
 			m_promote = false;
 			m_remove  = false;
-		}
+            m_buff = false;
+            m_dues = false;
+            m_withdraw = false;
+        }
 
 		/// <summary>
 		/// autosave table
@@ -173,7 +179,20 @@ namespace DOL.Database
 			}
 		}
 
-		/// <summary>
+        [DataElement(AllowDbNull = true)]
+        public bool Buff
+        {
+            get
+            {
+                return m_buff;
+            }
+            set
+            {
+                Dirty = true;
+                m_buff = value;
+            }
+        }
+        /// <summary>
 		/// Can player with this rank hear guild chat
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
@@ -393,5 +412,31 @@ namespace DOL.Database
 				m_release = value;
 			}
 		}
-	}
+        [DataElement(AllowDbNull = true)]
+        public bool Dues
+        {
+            get
+            {
+                return m_dues;
+            }
+            set
+            {
+                Dirty = true;
+                m_dues = value;
+            }
+        }
+        [DataElement(AllowDbNull = true)]
+        public bool Withdraw
+        {
+            get
+            {
+                return m_withdraw;
+            }
+            set
+            {
+                Dirty = true;
+                m_withdraw = value;
+            }
+        }
+    }
 }

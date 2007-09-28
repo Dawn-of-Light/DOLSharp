@@ -20,8 +20,12 @@ using System.Collections;
 using System;
 using System.Reflection;
 using DOL.Database;
+using DOL.Language;
 using DOL.GS.Keeps;
+using DOL.Regiment;
 using log4net;
+using DOL.GS.Housing;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
@@ -46,7 +50,10 @@ namespace DOL.GS
 		View,
 		Claim,
 		Upgrade,
-		Release
+		Release,
+        Buff,
+        Dues,
+        Withdraw
 	}
 	/// <summary>
 	/// Summary description for a Guild inside the game.
@@ -105,7 +112,116 @@ namespace DOL.GS
 		/// </summary>
 		protected AbstractGameKeep m_claimedKeep;
 
-		/// <summary>
+        protected double m_guildBank;
+        protected bool guildDues;
+        protected long guildDuesPercent;
+        protected bool haveGuildHouse;
+        protected int GuildHouseNumber;
+
+        public int GetGuildHouseNumber()
+        {
+            return GuildHouseNumber;
+        }
+        public bool GuildOwnsHouse()
+        {
+            return haveGuildHouse;
+        }
+        public double GetGuildBank()
+        {
+            return m_guildBank;
+        }
+        public bool IsGuildDuesOn()
+        {
+            return guildDues;
+        }
+        public long GetGuildDuesPercent()
+        {
+            return guildDuesPercent;
+        }
+
+        public void SetGuildHouseNumber(int num)
+        {
+            GuildHouseNumber = num;
+            m_DBguild.GuildHouseNumber = GuildHouseNumber;
+        }
+        public void SetGuildHouse(bool owns)
+        {
+            haveGuildHouse = owns;
+            m_DBguild.HaveGuildHouse = haveGuildHouse;
+        }
+        public void SetGuildDues(bool dues)
+        {
+            if (dues == true)
+            {
+                guildDues = true;
+            }
+            else
+            {
+                guildDues = false;
+            }
+            m_DBguild.Dues = guildDues;
+        }
+        public void SetGuildDuesPercent(long dues)
+        {
+            if (IsGuildDuesOn() == true)
+            {
+                guildDuesPercent = dues;
+            }
+            else
+            {
+                guildDuesPercent = 0;
+            }
+            m_DBguild.DuesPercent = guildDuesPercent;
+        }
+        /// <summary>
+        /// Set guild bank command 
+        /// </summary>
+        /// <param name="donating"></param>
+        /// <param name="ammount"></param>
+        /// <returns></returns>
+        public void SetGuildBank(GamePlayer donating, double ammount)
+        {
+            if (ammount < 0)
+            {
+                donating.Out.SendMessage(LanguageMgr.GetTranslation(donating.Client, "Scripts.Player.Guild.DepositInvalid"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                return;
+            }
+            else if (donating.Guild.GetGuildBank() >= 1000000001)
+            {
+                donating.Out.SendMessage(LanguageMgr.GetTranslation(donating.Client, "Scripts.Player.Guild.DepositFull"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                return;
+            }
+
+            donating.Out.SendMessage(LanguageMgr.GetTranslation(donating.Client, "Scripts.Player.Guild.DepositAmmount", ammount), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            if (m_guildBank == 0)
+                m_guildBank = ammount;
+            else
+                m_guildBank = m_guildBank + ammount;
+
+            donating.Guild.UpdateGuildWindow();
+            m_DBguild.Bank = m_guildBank;
+            return;
+        }
+        public void WithdrawGuildBank(GamePlayer withdraw, double ammount)
+        {
+            if (ammount < 0)
+            {
+                withdraw.Out.SendMessage(LanguageMgr.GetTranslation(withdraw.Client, "Scripts.Player.Guild.WithdrawInvalid"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                return;
+            }
+            else if (withdraw.Guild.GetGuildBank() >= 1000000001)
+            {
+                withdraw.Out.SendMessage(LanguageMgr.GetTranslation(withdraw.Client, "Scripts.Player.Guild.WithdrawTooMuch"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                return;
+            }
+
+            withdraw.Out.SendMessage(LanguageMgr.GetTranslation(withdraw.Client, "Scripts.Player.Guild.WithdrawAmmount", ammount), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            m_guildBank = m_guildBank - ammount;
+            withdraw.Guild.UpdateGuildWindow();
+            m_DBguild.Bank = m_guildBank;
+            return;
+        }
+        /// <summary>
 		/// Creates an empty Guild. Don't use this, use
 		/// GuildMgr.CreateGuild() to create a guild
 		/// </summary>
@@ -113,7 +229,18 @@ namespace DOL.GS
 		{
 		}
 
-		/// <summary>
+        protected bool m_guildBanner;
+
+        public bool GuildBanner
+        {
+            get { return m_guildBanner; }
+            set
+            {
+                m_guildBanner = value;
+                theGuildDB.GuildBanner = value;
+            }
+        }
+        /// <summary>
 		/// Gets or sets the guild db
 		/// </summary>
 		public DBGuild theGuildDB
@@ -437,10 +564,22 @@ namespace DOL.GS
 						{
 							return member.GuildRank.Upgrade;
 						} 
+                        case eGuildRank.Dues:
+                        {
+                            return member.GuildRank.Dues;
+                        }
+                        case eGuildRank.Withdraw:
+                        {
+                            return member.GuildRank.Withdraw;
+                        }
 						case eGuildRank.Leader: 
 						{
 							return (member.GuildRank.RankLevel == 0);
-						} 
+						}
+                        case eGuildRank.Buff:
+                        {
+                            return member.GuildRank.Buff;
+                        }
 						default : 
 						{
 							if (log.IsWarnEnabled)
@@ -581,14 +720,244 @@ namespace DOL.GS
 			m_name = m_DBguild.GuildName;
 			m_realmPoints = m_DBguild.RealmPoints;
 			m_bountyPoints = m_DBguild.BountyPoints;
+            m_BuffTime = m_DBguild.BuffTime;
+            m_BuffType = m_DBguild.BuffType;
+            m_GuildLevel = m_DBguild.GuildLevel;
+            guildDues = m_DBguild.Dues;
+            m_guildBank = m_DBguild.Bank;
+            m_meritPoints = m_DBguild.MeritPoints;
+            guildDuesPercent = m_DBguild.DuesPercent;
+            bannerStatus = "None";
 		}
 
-		/// <summary>
+        /// <summary>
+        /// Gets or sets the guild merit points
+        /// </summary>
+        public long MeritPoints
+        {
+            get { return m_meritPoints; }
+            set { m_meritPoints = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the guildlevel
+        /// </summary>
+        public long GuildLevel
+        {
+            get { return m_GuildLevel; }
+            set { m_GuildLevel = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the guild buff type
+        /// </summary>
+        public long BuffType
+        {
+            get { return m_BuffType; }
+            set { m_BuffType = value; }
+        }
+
+        //First time run this QRY -> update guild set BuffTime=NOW(); to set the bufftime properly
+        /// <summary>
+        /// Gets or sets the guild buff time
+        /// </summary>
+        public DateTime BuffTime
+        {
+            get { return m_BuffTime; }
+            set { m_BuffTime = value; }
+        }
+
+        /// <summary>
+        /// Called when this guild gains merit points
+        /// </summary>
+        /// <param name="amount">The amount of bounty points gained</param>
+        public virtual void GainMeritPoints(long amount)
+        {
+            MeritPoints += amount;
+            m_DBguild.MeritPoints = MeritPoints;
+            UpdateGuildWindow();
+        }
+
+        /// <summary>
+        /// Called when this guild loose bounty points
+        /// </summary>
+        /// <param name="amount">The amount of bounty points gained</param>
+        public virtual bool RemoveMeritPoints(long amount)
+        {
+            if (amount > MeritPoints)
+                amount = MeritPoints;
+
+            MeritPoints -= amount;
+            m_DBguild.MeritPoints = MeritPoints;
+            UpdateGuildWindow();
+            return true;
+        }
+
+        /// <summary>
+        /// Called when this guild gains a level
+        /// </summary>
+        /// <param name="amount">The amount of bounty points gained</param>
+        public virtual void GainGuildLevel(int amount)
+        {
+            GuildLevel += amount;
+            m_DBguild.GuildLevel = GuildLevel;
+            UpdateGuildWindow();
+        }
+
+        /// <summary>
+        /// Holds the guild merit points
+        /// </summary>
+        protected long m_meritPoints;
+
+        /// <summary>
+        /// Holds the guild level
+        /// </summary>
+        private long m_GuildLevel;
+
+        /// <summary>
+        /// Holds the guild buff type
+        /// </summary>
+        private long m_BuffType;
+
+        /// <summary>
+        /// Holds the guild buff time
+        /// </summary>
+        private DateTime m_BuffTime;
+
+        /// <summary>
 		/// Saves this guild to database
 		/// </summary>
 		public void SaveIntoDatabase()
 		{
 			GameServer.Database.SaveObject(theGuildDB);
 		}
-	}
+        public GamePlayer GetGuildLeader(GamePlayer plr)
+        {
+    		if (!m_guildMembers.Contains(plr))
+	    		return null;
+            
+            for (int i = 0; i < m_guildMembers.Count; i++)
+            {
+                if (((GamePlayer)m_guildMembers[i]).Guild.GotAccess(((GamePlayer)m_guildMembers[i]), eGuildRank.Leader) && ((GamePlayer)m_guildMembers[i]).IsAlive)
+                    return ((GamePlayer)m_guildMembers[i]);
+            }
+            return null;
+        }
+
+        private string bannerStatus;
+        public string GuildBannerStatus(GamePlayer player)
+        {
+            if (player.Guild != null)
+            {
+                if (player.Guild.GuildBanner)
+                {
+                    foreach (GamePlayer plr in player.Guild.ListOnlineMembers())
+                    {
+                        if (plr.IsCarryingGuildBanner)
+                        {
+                            bannerStatus = "Summoned";
+                        }
+                    }
+                    if (bannerStatus == "None")
+                    {
+                        bannerStatus = "Not Summoned";
+                    }
+                    return bannerStatus;
+                }
+            }
+            return bannerStatus;
+        }
+        public void UpdateMember(GamePlayer player)
+        {
+            if (player.Guild != this)
+                return;
+            int housenum;
+            if (player.Guild.GuildOwnsHouse())
+            {
+                housenum = player.Guild.GetGuildHouseNumber();
+            }
+            else
+                housenum = 0;
+
+            string mes = "I";
+            mes += ',' + player.Guild.GuildLevel.ToString(); // Guild Level
+            mes += ',' + player.Guild.GetGuildBank().ToString(); // Guild Bank money
+            mes += ',' + player.Guild.GetGuildDuesPercent().ToString(); // Guild Dues enable/disable
+            mes += ',' + player.Guild.BountyPoints.ToString(); // Guild Bounty
+            mes += ',' + player.Guild.RealmPoints.ToString(); // Guild Experience
+            mes += ',' + player.Guild.MeritPoints.ToString(); // Guild Merit Points
+            mes += ',' + housenum.ToString(); // Guild houseLot ?
+            mes += ',' + (player.Guild.MemberOnlineCount + 1).ToString(); // online Guild member ?
+            mes += ',' + player.Guild.GuildBannerStatus(player); //"Banner available for purchase", "Missing banner buying permissions"
+            mes += ",\"" + player.Guild.theGuildDB.Motd + '\"'; // Guild Motd
+            mes += ",\"" + player.Guild.theGuildDB.oMotd + '\"'; // Guild oMotd
+            player.Out.SendMessage(mes, eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+            player.Guild.SaveIntoDatabase();
+        }
+
+        public void UpdateGuildWindow()
+        {
+            lock (m_guildMembers)
+            {
+                long newgLevel;
+                if (GuildLevel < SocialEventHandler.REALMPOINTS_FOR_GUILDLEVEL.Length - 1)
+                {
+                    newgLevel = CalculateGuildLevelFromRPs(RealmPoints);
+
+                    if (newgLevel > 0 || newgLevel < 120)
+                    {
+                        if (newgLevel > GuildLevel)
+                        {
+                            GuildLevel = newgLevel;
+                            foreach (GamePlayer player in ListOnlineMembers())
+                            {
+                                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Guild.LevelUp", GuildLevel), eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
+                            }
+                        }
+                    }
+                    else if (newgLevel > 120)
+                    {
+                        GuildLevel = 120;
+                    }
+                }
+
+                foreach (GamePlayer player in m_guildMembers)
+                {
+                    player.Guild.UpdateMember(player);
+                }
+            }
+        }
+
+        public virtual long CalculateRPsFromGuildLevel(long realmLevel)
+        {
+            if (realmLevel < SocialEventHandler.REALMPOINTS_FOR_GUILDLEVEL.Length)
+                return SocialEventHandler.REALMPOINTS_FOR_GUILDLEVEL[realmLevel];
+
+            // thanks to Linulo from http://daoc.foren.4players.de/viewtopic.php?t=40839&postdays=0&postorder=asc&start=0
+            return (long)(25.0 / 3.0 * (realmLevel * realmLevel * realmLevel) - 25.0 / 2.0 * (realmLevel * realmLevel) + 25.0 / 6.0 * realmLevel);
+        }
+
+        public virtual long CalculateGuildLevelFromRPs(long rps)
+        {
+            if (rps == 0)
+                return 0;
+
+            int i = SocialEventHandler.REALMPOINTS_FOR_GUILDLEVEL.Length - 1;
+            for (; i > 0; i--)
+            {
+                if (SocialEventHandler.REALMPOINTS_FOR_GUILDLEVEL[i] <= rps)
+                    break;
+            }
+
+            if (i > 120)
+                return 120;
+            return i;
+
+
+            // thanks to Linulo from http://daoc.foren.4players.de/viewtopic.php?t=40839&postdays=0&postorder=asc&start=30
+            //			double z = Math.Pow(1620.0 * realmPoints + 15.0 * Math.Sqrt(-1875.0 + 11664.0 * realmPoints*realmPoints), 1.0/3.0);
+            //			double rr = z / 30.0 + 5.0 / 2.0 / z + 0.5;
+            //			return Math.Min(99, (int)rr);
+        }
+    }
 }
