@@ -126,6 +126,7 @@
     <Compile Include="ai\brain\StandardMobBrain.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ai\brain\TurretBrain.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1558,6 +1559,7 @@
     <Compile Include="spells\BoltSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="spells\BomberSpellHandler.cs" />
     <Compile Include="spells\BuffShear.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1592,6 +1594,7 @@
     <Compile Include="spells\PowerHealSpellHandler.cs" />
     <Compile Include="spells\StyleTaunt.cs" />
     <Compile Include="spells\SummonMinionHandler.cs" />
+    <Compile Include="spells\TurretSpellHandler.cs" />
     <Compile Include="spells\Valkyrie\ValkyrieProc.cs" />
     <Compile Include="spells\Vampiir\VampArmorDebuff.cs">
       <SubType>Code</SubType>

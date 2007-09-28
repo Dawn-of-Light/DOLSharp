@@ -3487,18 +3487,6 @@ namespace DOL.GS
 
 		#endregion
 		#region ControlledNPCs
-
-		private int pet_count = 0;
-
-		/// <summary>
-		/// Gets the pet count for the player
-		/// </summary>
-		public int PetCounter
-		{
-			get { return pet_count; }
-			set { pet_count = value; }
-		}
-
 		/// <summary>
 		/// Gets all the minions/subpets of this NPC - uses recursion to find all of its
 		/// pet's pets

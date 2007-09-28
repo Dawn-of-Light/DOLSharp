@@ -442,6 +442,24 @@ namespace DOL.GS.ServerProperties
 		public static readonly bool ALLOW_BPS_IN_BGS;
 
         /// <summary>
+        /// Sets the Cap for Player Turrets
+        /// </summary>
+        [ServerProperty("turret_player_cap_count", "Sets the cap of turrets for a Player", 5)]
+        public static readonly int TURRET_PLAYER_CAP_COUNT;
+
+        /// <summary>
+        /// Sets the Area Cap for Turrets
+        /// </summary>
+        [ServerProperty("turret_area_cap_count", "Sets the cap of the Area for turrets", 10)]
+        public static readonly int TURRET_AREA_CAP_COUNT;
+
+        /// <summary>
+        /// Sets the Circle of the Area to check for Turrets
+        /// </summary>
+        [ServerProperty("turret_area_cap_radius", "Sets the Radius which is checked for the turretareacap", 1000)]
+        public static readonly int TURRET_AREA_CAP_RADIUS;
+
+        /// <summary>
         /// This specifies the max ammount of people in one battlegroup.
         /// </summary>
         [ServerProperty("battlegroup_max_member", "Max number of members allowed in a battlegroup.", 64)]
@@ -462,7 +480,7 @@ namespace DOL.GS.ServerProperties
         [ServerProperty("max_outdoor_house_items", "Max number of items allowed in a players garden.", 30)]
         public static readonly int MAX_OUTDOOR_HOUSE_ITEMS;
 
-        /// <summary>
+	        /// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
 		/// type of the default value
