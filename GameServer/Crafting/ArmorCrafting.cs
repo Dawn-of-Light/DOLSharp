@@ -52,8 +52,8 @@ namespace DOL.GS
 			bool result = false;
 			foreach (GameStaticItem item in player.GetItemsInRadius(CRAFT_DISTANCE))
 			{
-				if(item.Model == 478) // Forge
-				{
+                if (item.Name == "forge" || item.Model == 478) // Forge
+                {
 					result = true;
 					break;
 				}

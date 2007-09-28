@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using DOL.Database;
+using DOL.Language;
 using DOL.GS.Housing;
 using System.Reflection;
 using log4net;
@@ -79,7 +80,74 @@ namespace DOL.GS.PacketHandler.Client.v168
 			InventoryItem orgitem = client.Player.Inventory.GetItem((eInventorySlot)slot);
 			if (orgitem == null) return 1;
 
-			int pos;
+            if (orgitem.Name == "deed of guild transfer" 
+                && client.Player.Guild != null && !client.Player.Guild.GuildOwnsHouse() 
+                && house.IsOwner(client.Player))
+            {
+                HouseMgr.HouseTransferToGuild(client.Player);
+                client.Player.Inventory.RemoveItem(orgitem);
+                client.Player.Guild.UpdateGuildWindow();
+                return 0;
+            }
+            if (orgitem.Name == "interior banner removal")
+            {
+                house.IndoorGuildBanner = false;
+                client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.InteriorBannersRemoved"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return 0;
+            }
+            if (orgitem.Name == "interior shield removal")
+            {
+                house.IndoorGuildShield = false;
+                client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.InteriorShieldsRemoved"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return 0;
+            }
+            if (orgitem.Name == "exterior banner removal")
+            {
+                house.OutdoorGuildBanner = false;
+                client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.OutdoorBannersRemoved"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return 0;
+            }
+            if (orgitem.Name == "exterior shield removal")
+            {
+                house.OutdoorGuildShield = false;
+                client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.OutdoorShieldsRemoved"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return 0;
+            }
+            if (orgitem.Name == "carpet removal")
+            {
+                house.Rug1Color = 0;
+                house.Rug2Color = 0;
+                house.Rug3Color = 0;
+                house.Rug4Color = 0;
+                client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.CarpetsRemoved"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return 0;
+            }
+
+            if (orgitem.Object_Type == 49) // Garden items 
+                method = 1;
+            else if (orgitem.Id_nb == "porch_deed" || orgitem.Id_nb == "porch_remove_deed")
+                method = 4;
+            else if (orgitem.Object_Type == 50) // Indoor wall items
+                method = 2;
+            else if (orgitem.Object_Type == 51) // Indoor floor items
+                method = 3;
+            else if (orgitem.Object_Type >= 59 && orgitem.Object_Type <= 64) // Outdoor Roof/Wall/Door/Porch/Wood/Shutter/awning Material item type
+            {
+                client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HouseUseMaterials"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return 1;
+            }
+            else if (orgitem.Object_Type == 56 || orgitem.Object_Type == 52 || (orgitem.Object_Type >= 69 && orgitem.Object_Type <= 71)) // Indoor carpets 1-4
+            {
+                client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HouseUseCarpets"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return 1;
+            }
+            else if (orgitem.Object_Type == 57 || orgitem.Object_Type == 58  // Exterior banner/shield
+                || orgitem.Object_Type == 66 || orgitem.Object_Type == 67) // Interior banner/shield
+                method = 6;
+            else if (orgitem.Object_Type == 53 || orgitem.Object_Type == 54 || orgitem.Object_Type == 55 || orgitem.Object_Type == 68)
+                method = 5;
+
+            int pos;
 			switch (method)
 			{
 				case 1:
@@ -88,34 +156,34 @@ namespace DOL.GS.PacketHandler.Client.v168
 						client.Out.SendInventorySlotsUpdate(new int[] { slot });
 						return 1;
 					}
-					if (house.OutdoorItems.Count >= 30)
+					if (house.OutdoorItems.Count >= ServerProperties.Properties.MAX_OUTDOOR_HOUSE_ITEMS)
 					{
-						client.Player.Out.SendMessage("You have already placed 30 objects. You can't place more.", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-						client.Out.SendInventorySlotsUpdate(new int[] { slot });
+                        client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.GardenMaxObjects"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        client.Out.SendInventorySlotsUpdate(new int[] { slot });
 						return 1;
 					}
-					pos = GetFirstFreeSlot(house.OutdoorItems);
-					client.Player.Inventory.RemoveItem(orgitem);
 
-					OutdoorItem oitem = new OutdoorItem();
-					oitem.Model = orgitem.Model;
-					oitem.BaseItem = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), orgitem.Id_nb);
-					oitem.Position = Convert.ToByte(position);
+                    OutdoorItem oitem = new OutdoorItem();
+                    oitem.BaseItem = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), orgitem.Id_nb);
+                    oitem.Model = orgitem.Model;
+                    oitem.Position = Convert.ToByte(position);
 					oitem.Rotation = Convert.ToByte(rotation);
 
 					//add item in db
-					DBHouseOutdoorItem odbitem = oitem.CreateDBOutdoorItem(housenumber);
+                    pos = GetFirstFreeSlot(house.OutdoorItems);
+                    DBHouseOutdoorItem odbitem = oitem.CreateDBOutdoorItem(housenumber);
 					oitem.DatabaseItem = odbitem;
 					GameServer.Database.AddNewObject(odbitem);
 
-					//add item to outdooritems
+                    client.Player.Inventory.RemoveItem(orgitem);
+                    //add item to outdooritems
 					house.OutdoorItems.Add(pos, oitem);
-					client.Player.Out.SendMessage(string.Format("Garden Object placed. {0} slots remaining.", (30 - house.OutdoorItems.Count)), eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-					client.Player.Out.SendMessage(string.Format("You drop the {0} onto your garden !", orgitem.Name), eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+                    client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.GardenItemPlaced", (ServerProperties.Properties.MAX_OUTDOOR_HOUSE_ITEMS - house.OutdoorItems.Count)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.GardenItemPlacedName", orgitem.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 					foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot((ushort) house.RegionID, house.X, house.Y, house.Z, WorldMgr.OBJ_UPDATE_DISTANCE))
 						player.Out.SendGarden(house);
-
+                    house.SaveIntoDatabase();
 					break;
 
 				case 2:
@@ -127,21 +195,21 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 					if (orgitem.Object_Type != 50 && method == 2)
 					{
-						client.Player.Out.SendMessage("This object can't be placed on a wall !", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-						client.Out.SendInventorySlotsUpdate(new int[] { slot });
+                        client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.NotWallObject"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        client.Out.SendInventorySlotsUpdate(new int[] { slot });
 						return 1;
 					}
 					if (orgitem.Object_Type != 51 && method == 3)
 					{
-						client.Player.Out.SendMessage("This object can't be placed on the floor !", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-						client.Out.SendInventorySlotsUpdate(new int[] { slot });
+                        client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.NotFloorObject"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        client.Out.SendInventorySlotsUpdate(new int[] { slot });
 						return 1;
 					}
 
-					if (house.IndoorItems.Count >= 40)
+					if (house.IndoorItems.Count >= ServerProperties.Properties.MAX_INDOOR_HOUSE_ITEMS)
 					{
-						client.Player.Out.SendMessage("You have already placed 40 objects. You can't place more.", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-						client.Out.SendInventorySlotsUpdate(new int[] { slot });
+                        client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.IndoorMaxItems", ServerProperties.Properties.MAX_INDOOR_HOUSE_ITEMS), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        client.Out.SendInventorySlotsUpdate(new int[] { slot });
 						return 1;
 					}
 					IndoorItem iitem = new IndoorItem();
@@ -149,7 +217,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 					iitem.Color = orgitem.Color;
 					iitem.X = xpos;
 					iitem.Y = ypos;
-		            iitem.Rotation = 0;
+
+                    int ProperRotation = client.Player.Heading / 10;
+                    if (ProperRotation > 360)
+                    {
+                        ProperRotation = 360;
+                    }
+                    else if (ProperRotation < 0)
+                    {
+                        ProperRotation = 0;
+                    }
+                    iitem.Rotation = ProperRotation;
 
 					iitem.Size = 100; //? dont know how this is defined. maybe DPS_AF or something.
 					iitem.Position = position;
@@ -168,56 +246,58 @@ namespace DOL.GS.PacketHandler.Client.v168
 					iitem.DatabaseItem = idbitem;
 					GameServer.Database.AddNewObject(idbitem);
 					house.IndoorItems.Add(pos, iitem);
-					client.Player.Out.SendMessage(string.Format("Indoor Object placed. {0} slots remaining.", (40 - house.IndoorItems.Count)), eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+                    client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.IndoorItemPlaced", (ServerProperties.Properties.MAX_INDOOR_HOUSE_ITEMS - house.IndoorItems.Count)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 					switch (method)
 					{
 						case 2:
-							client.Player.Out.SendMessage(string.Format("You drop the {0} onto the wall of your house !", orgitem.Name), eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-							break;
+                            client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.IndoorWallPlaced", orgitem.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            break;
 						case 3:
-							client.Player.Out.SendMessage(string.Format("You drop the {0} onto the floor of your house !", orgitem.Name), eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-							break;
+                            client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.IndoorFloorPlaced", orgitem.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            break;
 					}
 					foreach (GamePlayer plr in house.GetAllPlayersInHouse())
 						plr.Out.SendFurniture(house, pos);
 
 					break;
 
-				case 4:
-                    if (!house.IsOwner(client.Player) && !house.CanAddGarden(client.Player))
-					{
-						client.Out.SendInventorySlotsUpdate(new int[] { slot });
-						return 1;
-					}
-					switch (orgitem.Id_nb)
-					{
-						case "porch_deed":
-							if (house.EditPorch(true))
-								client.Player.Inventory.RemoveItem(orgitem);
-							else
-							{
-								client.Player.Out.SendMessage("This house already has a porch !", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-								client.Out.SendInventorySlotsUpdate(new int[] { slot });
-							}
-							return 1;
+                case 4:
+                    {
+                        if (!house.IsOwner(client.Player) && !house.CanAddGarden(client.Player))
+                        {
+                            client.Out.SendInventorySlotsUpdate(new int[] { slot });
+                            return 1;
+                        }
+                        switch (orgitem.Id_nb)
+                        {
+                            case "porch_deed":
+                                if (house.EditPorch(true))
+                                    client.Player.Inventory.RemoveItem(orgitem);
+                                else
+                                {
+                                    client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.PorchAlready"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    client.Out.SendInventorySlotsUpdate(new int[] { slot });
+                                }
+                                return 1;
 
-						case "porch_remove_deed":
-							if (house.EditPorch(false))
-								client.Player.Inventory.RemoveItem(orgitem);
-							else
-							{
-								client.Player.Out.SendMessage("This house has no porch !", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-								client.Out.SendInventorySlotsUpdate(new int[] { slot });
-							}
-							return 1;
+                            case "porch_remove_deed":
+                                if (house.EditPorch(false))
+                                    client.Player.Inventory.RemoveItem(orgitem);
+                                else
+                                {
+                                    client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.PorchNone"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    client.Out.SendInventorySlotsUpdate(new int[] { slot });
+                                }
+                                return 1;
 
-						default:
-							client.Player.Out.SendMessage("That would make no sense!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-							client.Out.SendInventorySlotsUpdate(new int[] { slot });
-							return 1;
+                            default:
+                                client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.PorchNotItem"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                client.Out.SendInventorySlotsUpdate(new int[] { slot });
+                                return 1;
 
-					}
+                        }
+                    }
 
 				case 5:
 					{
@@ -227,36 +307,70 @@ namespace DOL.GS.PacketHandler.Client.v168
 							return 1;
 						}
 
-						if (orgitem.Object_Type != (int)eObjectType.HouseNPC
-							&& orgitem.Object_Type != (int)eObjectType.HouseBindstone
-							&& orgitem.Object_Type != (int)eObjectType.HouseVault
-							&& orgitem.Object_Type != (int)eObjectType.HouseInteriorObject)
-						{
-							client.Player.Out.SendMessage("This object can't be placed on a house hookpoint !", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-							client.Out.SendInventorySlotsUpdate(new int[] { slot });
-							return 1;
-						}
-
-						DBHousepointItem point = new DBHousepointItem();
-						point.HouseID = house.HouseNumber;
-						point.ItemTemplateID = orgitem.Id_nb;
-						point.Position = (uint)position;
-
-						GameServer.Database.AddNewObject(point);
-
-						house.FillHookpoint(orgitem, (uint)position, orgitem.Id_nb);
-						house.HousepointItems[point.Position] = point;
-
-						client.Player.Inventory.RemoveItem(orgitem);
-
 						if (house.GetHookpointLocation((uint)position) == null)
 						{
-							client.Player.Out.SendMessage("The housepoint ID is: " + position, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-							client.Player.Out.SendMessage("Stand as close to the housepoint as possible and face the proper direction and press accept", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-							client.Player.Out.SendCustomDialog("Log this housepoint location?", new CustomDialogResponse(LogLocation));
-						}
+                            client.Player.Inventory.RemoveItem(orgitem);
+                            client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointID", + position), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointCloser"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            client.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointLogLoc"), new CustomDialogResponse(LogLocation));
+                        }
+                        else if (house.GetHookpointLocation((uint)position) != null)
+                        {
+                            DBHousepointItem point = new DBHousepointItem();
+                            point.HouseID = house.HouseNumber;
+                            point.ItemTemplateID = orgitem.Id_nb;
+                            point.Position = (uint)position;
+
+                            GameServer.Database.AddNewObject(point);
+
+                            house.FillHookpoint(orgitem, (uint)position, orgitem.Id_nb);
+                            house.HousepointItems[point.Position] = point;
+                            client.Player.Inventory.RemoveItem(orgitem);
+                            client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointAdded"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            house.SaveIntoDatabase();
+                        }
+                        else
+                            client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointNot"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+                        house.SendUpdate();
 						break;
 					}
+                case 6: 
+                    if (!house.CanEditAppearance(client.Player))
+                    {
+                        client.Out.SendInventorySlotsUpdate(new int[] { slot });
+                        return 1;
+                    }
+                    if (orgitem.Object_Type == 57) // We have outdoor banner
+                    {
+                        house.OutdoorGuildBanner = true;
+                        client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.OutdoorBannersAdded"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        client.Player.Inventory.RemoveItem(orgitem);
+                    }
+                    else if (orgitem.Object_Type == 58) // We have outdoor shield
+                    {
+                        house.OutdoorGuildShield = true;
+                        client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.OutdoorShieldsAdded"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        client.Player.Inventory.RemoveItem(orgitem);
+                    }
+                    else if (orgitem.Object_Type == 66) // We have indoor banner
+                    {
+                        house.IndoorGuildBanner = true;
+                        client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.InteriorBannersAdded"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        client.Player.Inventory.RemoveItem(orgitem);
+                    }
+                    else if (orgitem.Object_Type == 67) // We have indoor shield
+                    {
+                        house.IndoorGuildShield = true;
+                        client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.InteriorShieldsAdded"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        client.Player.Inventory.RemoveItem(orgitem);
+                    }
+                    else
+                        client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.BadShieldBanner"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+                    house.SaveIntoDatabase();
+                    house.SendUpdate();
+                    break;
 				default:
 					break;
 			}
@@ -286,7 +400,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			log.Error("Position: " + position + " Offset: " + (player.X - player.CurrentHouse.X) + ", " + (player.Y - player.CurrentHouse.Y) + ", " + (player.Z - 25000) + ", " + (player.Heading - player.CurrentHouse.Heading));
 
-			player.Out.SendMessage("Logged housepoint position " + position + " in error.log!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-		}
+            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Housing.HookPointLogged", position), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+        }
 	}
 }

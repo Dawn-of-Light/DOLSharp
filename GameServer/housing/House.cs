@@ -288,7 +288,7 @@ namespace DOL.GS.Housing
 		{
 			if (Porch == add_porch) //we cannot remove if removed, or add if added
 				return false;
-			Porch = add_porch;
+            Porch = add_porch;
 			this.SendUpdate();
 			this.SaveIntoDatabase();
 			
@@ -312,7 +312,9 @@ namespace DOL.GS.Housing
 		{
 			if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
 				return true;
-			foreach (DBHousePermissions perm in HouseAccess)
+            if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName && p.Guild.GotAccess(p, eGuildRank.Leader))
+                return true;
+            foreach (DBHousePermissions perm in HouseAccess)
 			{
 				if (perm.PayRent == 0)// optim
 					continue;
@@ -330,7 +332,9 @@ namespace DOL.GS.Housing
 		{
 			if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
 				return true;
-			foreach (DBHousePermissions perm in HouseAccess)
+            if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName)
+                return true;
+            foreach (DBHousePermissions perm in HouseAccess)
 			{
 				if (perm.Enter == 0)// optim
 					continue;
@@ -348,7 +352,9 @@ namespace DOL.GS.Housing
 		{
 			if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
 				return true;
-			foreach (DBHousePermissions perm in HouseAccess)
+            if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName && p.Guild.GotAccess(p, eGuildRank.Leader))
+                return true;
+            foreach (DBHousePermissions perm in HouseAccess)
 			{
 				if ((perm.Interior & 0x01) == 0)// optim
 					continue;
@@ -366,7 +372,9 @@ namespace DOL.GS.Housing
 		{
 			if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
 				return true;
-			foreach (DBHousePermissions perm in HouseAccess)
+            if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName && p.Guild.GotAccess(p, eGuildRank.Leader))
+                return true;
+            foreach (DBHousePermissions perm in HouseAccess)
 			{
 				if ((perm.Interior & 0x02) == 0)// optim
 					continue;
@@ -384,7 +392,9 @@ namespace DOL.GS.Housing
 		{
 			if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
 				return true;
-			foreach (DBHousePermissions perm in HouseAccess)
+            if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName && p.Guild.GotAccess(p, eGuildRank.Leader))
+                return true;
+            foreach (DBHousePermissions perm in HouseAccess)
 			{
 				if ((perm.Garden & 0x01) == 0)// optim
 					continue;
@@ -402,7 +412,9 @@ namespace DOL.GS.Housing
 		{
 			if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
 				return true;
-			foreach (DBHousePermissions perm in HouseAccess)
+            if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName && p.Guild.GotAccess(p, eGuildRank.Leader))
+                return true;
+            foreach (DBHousePermissions perm in HouseAccess)
 			{
 				if ((perm.Garden & 0x02) == 0)// optim
 					continue;
@@ -420,7 +432,9 @@ namespace DOL.GS.Housing
 		{
 			if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
 				return true;
-			foreach (DBHousePermissions perm in HouseAccess)
+            if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName && p.Guild.GotAccess(p, eGuildRank.Leader))
+                return true;
+            foreach (DBHousePermissions perm in HouseAccess)
 			{
 				if (perm.Appearance == 0)// optim
 					continue;
@@ -438,7 +452,9 @@ namespace DOL.GS.Housing
 		{
 			if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
 				return true;
-			foreach (DBHousePermissions perm in HouseAccess)
+            if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName && p.Guild.GotAccess(p, eGuildRank.Leader))
+                return true;
+            foreach (DBHousePermissions perm in HouseAccess)
 			{
 				if (perm.Vault1 == 0)// optim
 					continue;
@@ -456,7 +472,9 @@ namespace DOL.GS.Housing
 		{
 			if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
 				return true;
-			foreach (DBHousePermissions perm in HouseAccess)
+            if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName && p.Guild.GotAccess(p, eGuildRank.Leader))
+                return true;
+            foreach (DBHousePermissions perm in HouseAccess)
 			{
 				if (perm.Vault1 == 0)// optim
 					continue;
