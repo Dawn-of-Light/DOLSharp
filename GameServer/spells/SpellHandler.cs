@@ -939,17 +939,22 @@ namespace DOL.GS.Spells
 			{
 				return ticks;
 			}
-			GamePlayer player = m_caster as GamePlayer;
-			if (player != null)
-			{
-                // Warlock stuff
-				if (player.CharacterClass.ID == (int)eCharacterClass.Warlock)
-				{
-					if (!(Spell.SpellType == "Uninterruptable" || Spell.SpellType == "Range" || Spell.SpellType == "Powerless"))
-					{
-						return ticks;
-					}
-				}
+            GamePlayer player = m_caster as GamePlayer;
+            if (player != null)
+            {
+                //Fix for Warlock castingtime
+                if (player.CharacterClass.ID == (int)eCharacterClass.Warlock)
+                {
+                    if (Spell.SpellType == "Chamber")
+                        return ticks;
+
+                    if ((m_spellLine.KeyName == "Cursing" 
+                        || m_spellLine.KeyName == "Cursing Spec")
+                        && (Spell.SpellType != "ArmorFactorBuff"
+                        && Spell.SpellType != "Bladeturn"
+                        && Spell.SpellType != "ArmorAbsorbtionBuff"))
+                        return ticks;
+                }
 
                 // Necromancer RA5L effect
                 if (player.CharacterClass.ID == (int)eCharacterClass.Necromancer)
@@ -1097,7 +1102,7 @@ namespace DOL.GS.Spells
 			StartSpell(target); // and action
 
 			//Subspells
-			if (m_spell.SubSpellID > 0)
+			if (m_spell.SubSpellID > 0 && Spell.SpellType.ToLower() != "bomber" && Spell.SpellType.ToLower() != "turret")
 			{
 				Spell spell = SkillBase.GetSpellByID(m_spell.SubSpellID);
 				//we need subspell ID to be 0, we don't want spells linking off the subspell
@@ -1384,16 +1389,16 @@ namespace DOL.GS.Spells
 				if (ra != null)
 					effectiveness = System.Math.Round((double)ra.Level * 25 / 100, 2);
 			}
-			// warlock
-			if (Caster is GamePlayer && (Caster as GamePlayer).CharacterClass.ID == (int)eCharacterClass.Warlock)
-			{
-				GameSpellEffect affect = SpellHandler.FindEffectOnTarget(Caster, "Uninterruptable");
-				if (affect != null)
-				{
-					int nerf = (int)(Spell.LifeDrainReturn * .01);
-					effectiveness *= nerf;
-				}
-			}
+            // warlock - fixed by Dinberg, thx
+            if (Caster is GamePlayer && (Caster as GamePlayer).CharacterClass.ID == (int)eCharacterClass.Warlock && m_spell.IsSecondary)
+            {
+                GameSpellEffect affect = SpellHandler.FindEffectOnTarget(Caster, "Uninterruptable");
+                if (affect != null)
+                {
+                    int nerf = (int)(affect.Spell.LifeDrainReturn);
+                    effectiveness *= (1 - (nerf * 0.01));
+                }
+            }
 
 			foreach (GameLiving t in targets)
 			{
@@ -1407,12 +1412,12 @@ namespace DOL.GS.Spells
 				{
 					ApplyEffectOnTarget(t, effectiveness);
 				}
-				else if (Spell.Target == "Area")
+				else if (Spell.Target.ToLower() == "area")
 				{
 					int dist = WorldMgr.GetDistance(t, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z);
 					if (dist >= 0)
 					{
-						ApplyEffectOnTarget(t, (1 - dist / (double)Spell.Radius));
+						ApplyEffectOnTarget(t, (effectiveness - dist / (double)Spell.Radius));
 					}
 				}
 				else
@@ -1420,7 +1425,7 @@ namespace DOL.GS.Spells
 					int dist = WorldMgr.GetDistance(target, t);
 					if (dist >= 0)
 					{
-						ApplyEffectOnTarget(t, (1 - dist / (double)Spell.Radius));
+						ApplyEffectOnTarget(t, (effectiveness - dist / (double)Spell.Radius));
 					}
 				}
 			}
@@ -1482,7 +1487,7 @@ namespace DOL.GS.Spells
 			if (effectiveness <= 0)
 				return; // no effect
 
-			if ((Spell.Duration > 0 && Spell.Target != "Area") || Spell.Concentration > 0)
+			if ((Spell.Duration > 0 && Spell.Target.ToLower() != "area") || Spell.Concentration > 0)
 			{
 				if (!target.IsAlive)
 					return;

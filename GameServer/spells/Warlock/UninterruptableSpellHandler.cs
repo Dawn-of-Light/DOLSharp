@@ -37,16 +37,27 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("Uninterruptable")]
 	public class UninterruptableSpellHandler : PrimerSpellHandler
 	{
-		/// <summary>
-		/// Calculates the power to cast the spell
-		/// </summary>
-		/// <param name="target"></param>
-		/// <returns></returns>
-		public override int CalculateNeededPower(GameLiving target)
-		{
-			double power = (Caster.MaxMana*m_spell.Value);
-			return (int) power;
-		}
+        /// <summary>
+        /// Calculates the power to cast the spell
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public override int CalculateNeededPower(GameLiving target)
+        { 
+            double basepower = m_spell.Power; //<== defined a basevar first then modified this base-var to tell %-costs from absolut-costs
+
+            // percent of maxPower if less than zero
+            if (basepower < 0)
+                if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ManaStat != eStat.UNDEFINED)
+                {
+                    GamePlayer player = Caster as GamePlayer;
+                    basepower = player.CalculateMaxMana(player.Level, player.GetBaseStat(player.CharacterClass.ManaStat)) * basepower * -0.01;
+                }
+                else
+                    basepower = Caster.MaxMana * basepower * -0.01;
+            return (int) basepower;
+        }
+
 
 		public override bool CasterIsAttacked(GameLiving attacker)
 		{

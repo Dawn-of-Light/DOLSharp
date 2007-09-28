@@ -81,20 +81,16 @@ namespace DOL.AI.Brain
 			m_aggroMaxRange = 1500;
 		}
 
-		/// <summary>
-		/// Checks if this NPC is a permanent/charmed or timed pet
-		/// </summary>
-		public bool CanReceiveOrder
-		{
-			get
-			{
-				DOL.GS.Effects.GameSpellEffect summon = DOL.GS.Spells.SpellHandler.FindEffectOnTarget(this.Body, "Summon");
-				if (summon == null)
-					return true;
-				else
-					return (summon.Duration >= ushort.MaxValue);
-			}
-		}
+        private bool m_ismainpet = true;
+
+        /// <summary>
+        /// Checks if this NPC is a permanent/charmed or timed pet
+        /// </summary>
+        public bool IsMainPet
+        {
+            get { return m_ismainpet; }
+            set { m_ismainpet = value; }
+        }
 
 		/// <summary>
 		/// The number of seconds/10 this brain will stay active even when no player is close
@@ -277,15 +273,20 @@ namespace DOL.AI.Brain
 				((GamePlayer)m_owner).Out.SendPetWindow(m_body, ePetWindowAction.Update, m_aggressionState, m_walkState);
 		}
 
-		/// <summary>
-		/// Start following the owner
-		/// </summary>
-		protected void FollowOwner()
-		{
-			Body.StopAttack();
-			if (CanReceiveOrder)
-				Body.Follow(Owner, MIN_OWNER_FOLLOW_DIST, MAX_OWNER_FOLLOW_DIST);
-		}
+        /// <summary>
+        /// Start following the owner
+        /// </summary>
+        public virtual void FollowOwner()
+        {
+            Body.StopAttack();
+            if (Owner is GamePlayer
+                && IsMainPet
+                && ((GamePlayer)Owner).CharacterClass.ID != (int)eCharacterClass.Animist
+                && ((GamePlayer)Owner).CharacterClass.ID != (int)eCharacterClass.Theurgist)
+                Body.Follow(Owner, MIN_OWNER_FOLLOW_DIST, MAX_OWNER_FOLLOW_DIST);
+            else if (Owner is GameNPC)
+                Body.Follow(Owner, MIN_OWNER_FOLLOW_DIST, MAX_OWNER_FOLLOW_DIST);
+        }
 
 		#endregion
 
@@ -330,7 +331,8 @@ namespace DOL.AI.Brain
 				if (IsMinion)
 					GameEventMgr.RemoveHandler(((IControlledBrain)((GameNPC)Owner).Brain).Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnOwnerAttacked));
 			}
-			Owner.CommandNpcRelease();
+            if (IsMainPet)
+                Owner.CommandNpcRelease();
 			//Posibily add support for this
 			//Body.CommandNpcRelease();
 			return true;
@@ -349,16 +351,16 @@ namespace DOL.AI.Brain
 				playerowner.CurrentUpdateArray[Body.ObjectID - 1] = true;
 			}
 
-			//See if the pet is too far away, if so release it!
-			if (!WorldMgr.CheckDistance(Body, Owner, MAX_OWNER_FOLLOW_DIST))
-			{
-				if (Owner is GamePlayer)
-					((GamePlayer)Owner).CommandNpcRelease();
-				else
-					//Remember, this works differently than a gameplayer's CommandNpcRelease().  Since npcs can control more than one
-					//pet we call the CommandNpcRelease() from the pet, not the pet's owner.
-					Body.CommandNpcRelease();
-			}
+            //See if the pet is too far away, if so release it!
+            if (!WorldMgr.CheckDistance(Body, Owner, MAX_OWNER_FOLLOW_DIST))
+            {
+                if (Owner is GamePlayer && IsMainPet)
+                    ((GamePlayer)Owner).CommandNpcRelease();
+                else
+                    //Remember, this works differently than a gameplayer's CommandNpcRelease().  Since npcs can control more than one
+                    //pet we call the CommandNpcRelease() from the pet, not the pet's owner.
+                    Body.CommandNpcRelease();
+            }
 
 			//Check for buffs, heals, etc
 			CheckSpells(true);

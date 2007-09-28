@@ -41,6 +41,8 @@ namespace DOL.GS.Spells
 	[SpellHandler("Summon")]
 	public class SummonSpellHandler : SpellHandler
 	{
+        protected int x, y, z;
+
 		public SummonSpellHandler(GameLiving caster, Spell spell, SpellLine line)
 			: base(caster, spell, line)
 		{
@@ -63,11 +65,36 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
-			if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledNpc != null)
-			{
-				MessageToCaster("You already have a charmed creature, release it first!", eChatType.CT_SpellResisted);
-				return false;
-			}
+            //Theurgist Petcap
+            if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ID == (int)eCharacterClass.Theurgist && ((GamePlayer)Caster).PetCounter >= 16)
+            {
+                MessageToCaster("You have to many controlled Creatures!", eChatType.CT_SpellResisted);
+                return false;
+            }
+
+            if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledNpc != null)
+            {
+                MessageToCaster("You already have a charmed creature, release it first!", eChatType.CT_SpellResisted);
+                return false;
+            }
+
+            if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ID == (int)eCharacterClass.Animist && Caster.GroundTarget == null)
+            {
+                MessageToCaster("You have to set a Areatarget for this Spell.", eChatType.CT_SpellResisted);
+                return false;
+            }
+
+            if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ID == (int)eCharacterClass.Animist && !Caster.GroundTargetInView)
+            {
+                MessageToCaster("Your Areatarget is not in view.", eChatType.CT_SpellResisted);
+                return false;
+            }
+
+            if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ID == (int)eCharacterClass.Animist && !WorldMgr.CheckDistance(Caster, Caster.GroundTarget, CalculateSpellRange()))
+            {
+                MessageToCaster("You have to select a closer Areatarget.", eChatType.CT_SpellResisted);
+                return false;
+            }
 			return base.CheckBeginCast(selectedTarget);
 		}
 
@@ -92,42 +119,32 @@ namespace DOL.GS.Spells
 				return;
 			}
 
-			int x, y;
 			GameSpellEffect effect = CreateSpellEffect(target, effectiveness);
 			//Duration is in milliseconds. 65535 is in seconds.  Lets multiply in order to avoid
 			//dividing.
+            if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ID == (int)eCharacterClass.Animist)
+            {
+                x = Caster.GroundTarget.X;
+                y = Caster.GroundTarget.Y;
+                z = Caster.GroundTarget.Z;
+            }
+            else
+            {
+                Caster.GetSpotFromHeading(64, out x, out y);
+                z = Caster.Z;
+            }
 			if (Spell.Duration < ushort.MaxValue * 1000)
 			{
-				if (Spell.Target.ToLower() == "area")
-				{
-					int dist = WorldMgr.GetDistance(Caster, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z);
-					if (Caster.GroundTargetInView && (dist <= Spell.Range))
-					{
-						x = Caster.GroundTarget.X;
-						y = Caster.GroundTarget.Y;
-					}
-					else
-					{
-						if (dist > Spell.Range)
-							MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
-						else
-							MessageToCaster("Your area target is not in view.", eChatType.CT_SpellResisted);
-						return;
-					}
-				}
-				else
-					Caster.GetSpotFromHeading(64, out x, out y);
-
 				ControlledNpc controlledBrain = new ControlledNpc(Caster);
 
 				GameNPC summoned = new GameNPC(template);
 				controlledBrain.WalkState = eWalkState.Stay;
+                controlledBrain.IsMainPet = false;
 				summoned.SetOwnBrain(controlledBrain);
 				summoned.X = x;
 				summoned.Y = y;
-				summoned.Z = Caster.Z;
+				summoned.Z = z;
 				summoned.CurrentRegion = Caster.CurrentRegion;
-				//summoned.Heading = (ushort)((Caster.Heading + 2048) % 4096);
 				summoned.Heading = Caster.Heading;
 				summoned.Realm = Caster.Realm;
 				summoned.CurrentSpeed = 0;
@@ -139,6 +156,9 @@ namespace DOL.GS.Spells
 				//Check for buffs
 				controlledBrain.CheckSpells(true);
 				controlledBrain.Attack(target);
+                //Initialize the Theurgist Petcap
+                if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ID == (int)eCharacterClass.Theurgist)
+                    ((GamePlayer)Caster).PetCounter++;
 			}
 			else
 			{
@@ -210,6 +230,9 @@ namespace DOL.GS.Spells
 		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
+            //Remove Theurgist Pets
+            if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ID == (int)eCharacterClass.Theurgist)
+                ((GamePlayer)Caster).PetCounter--;
 			effect.Owner.Health = 0; // to send proper remove packet
 			effect.Owner.Delete();
 			return 0;
