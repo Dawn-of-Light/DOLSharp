@@ -59,6 +59,8 @@ namespace DOL
 			private DateTime m_lastpaid;
 			private long m_keptmoney;
 			private bool m_nopurge;
+            private bool m_guildHouse;
+            private string m_guildName;
 
 			static bool m_autoSave;
 
@@ -462,7 +464,32 @@ namespace DOL
 				}
 			}
 
-			//[Relation(LocalField = "HouseNumber", RemoteField = "HouseNumber", AutoLoad = true, AutoDelete=true)]
+            [DataElement(AllowDbNull = true)]
+            public bool GuildHouse
+            {
+                get
+                {
+                    return m_guildHouse;
+                }
+                set
+                {
+                    Dirty = true;
+                    m_guildHouse = value;
+                }
+            }
+            [DataElement(AllowDbNull = true)]
+            public string GuildName
+            {
+                get
+                {
+                    return m_guildName;
+                }
+                set
+                {
+                    Dirty = true;
+                    m_guildName = value;
+                }
+            }			//[Relation(LocalField = "HouseNumber", RemoteField = "HouseNumber", AutoLoad = true, AutoDelete=true)]
 			//public DBHouseIndoorItem[] IndoorItems;
 
 			//[Relation(LocalField = "HouseNumber", RemoteField = "HouseNumber", AutoLoad = true, AutoDelete=true)]
