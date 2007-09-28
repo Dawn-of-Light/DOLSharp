@@ -43,6 +43,12 @@ namespace DOL.Database
 
 		private string m_webpage;
 		private string m_email;
+        private bool m_guildBanner;
+        private bool m_guildDues;
+        private double m_guildBank;
+        private long m_guildDuesPercent;
+        private bool m_guildHouse;
+        private int m_guildHouseNumber;
 
 		/// <summary>
 		/// Create a guild
@@ -55,9 +61,84 @@ namespace DOL.Database
 			Ranks = new DBRank[10];
 			m_webpage = "";
 			m_email = "";
-		}
+            m_guildBanner = false;
+            m_guildDues = false;
+            m_guildBank = 0;
+            m_guildDuesPercent = 0;
+            m_guildHouse = false;
+            m_guildHouseNumber = 0;
+        }
 
-		/// <summary>
+        #region guild level/buff
+        private long m_GuildLevel;
+        private long m_BuffType;
+        private DateTime m_BuffTime;
+        private long m_meritPoints;
+        /// <summary>
+        /// Guild level
+        /// </summary>
+        [DataElement(AllowDbNull = true)]
+        public long GuildLevel
+        {
+            get
+            {
+                return m_GuildLevel;
+            }
+            set
+            {
+                Dirty = true;
+                m_GuildLevel = value;
+            }
+        }
+
+        /// <summary>
+        /// Buff flag of guild // BUFFTYPE
+        /// </summary>
+        [DataElement(AllowDbNull = true)]
+        public long BuffType
+        {
+            get
+            {
+                return m_BuffType;
+            }
+            set
+            {
+                Dirty = true;
+                m_BuffType = value;
+            }
+        }
+
+        /// <summary>
+        /// Buff flag of guild // BUFFTIME
+        /// </summary>
+        [DataElement(AllowDbNull = false)]
+        public DateTime BuffTime
+        {
+            get
+            {
+                return m_BuffTime;
+            }
+            set
+            {
+                Dirty = true;
+                m_BuffTime = value;
+            }
+        }
+        [DataElement(AllowDbNull = false)]
+        public long MeritPoints
+        {
+            get
+            {
+                return m_meritPoints;
+            }
+            set
+            {
+                Dirty = true;
+                m_meritPoints = value;
+            }
+        }
+        #endregion
+        /// <summary>
 		/// Autosave table
 		/// </summary>
 		override public bool AutoSave
@@ -105,8 +186,21 @@ namespace DOL.Database
 				m_guildname = value;
 			}
 		}
-		
-		/// <summary>
+
+        [DataElement(AllowDbNull = true)] // can be primary too
+        public bool GuildBanner
+        {
+            get
+            {
+                return m_guildBanner;
+            }
+            set
+            {
+                Dirty = true;
+                m_guildBanner = value;
+            }
+        }
+        /// <summary>
 		/// Message of the day of the guild
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
@@ -236,7 +330,57 @@ namespace DOL.Database
 			}
 		}
 
-		/*
+        [DataElement(AllowDbNull = true)]
+        public bool Dues
+        {
+            get { return m_guildDues; }
+            set
+            {
+                Dirty = true;
+                m_guildDues = value;
+            }
+        }
+        [DataElement(AllowDbNull = true)]
+        public double Bank
+        {
+            get { return m_guildBank; }
+            set
+            {
+                Dirty = true;
+                m_guildBank = value;
+            }
+        }
+        [DataElement(AllowDbNull = true)]
+        public long DuesPercent
+        {
+            get { return m_guildDuesPercent; }
+            set
+            {
+                Dirty = true;
+                m_guildDuesPercent = value;
+            }
+        }
+        [DataElement(AllowDbNull = false)]
+        public bool HaveGuildHouse
+        {
+            get { return m_guildHouse; }
+            set
+            {
+                Dirty = true;
+                m_guildHouse = value;
+            }
+        }
+        [DataElement(AllowDbNull = false)]
+        public int GuildHouseNumber
+        {
+            get { return m_guildHouseNumber; }
+            set
+            {
+                Dirty = true;
+                m_guildHouseNumber = value;
+            }
+        }        
+        /*
 		/// <summary>
 		/// characters in guild
 		/// </summary>
