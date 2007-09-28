@@ -128,7 +128,23 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						}
 
-						//***********************************
+                        if (ArtifactManager.IsArtifact(item))
+                        {
+                            long level = ArtifactManager.GetArtifactLevel(item);
+                            objectInfo.Add(" ");
+                            if (ArtifactManager.IsActivated(item))
+                            {
+                                objectInfo.Add(" - Artifact Information -");
+                                objectInfo.Add("      Artifact Level: " + level);
+                                objectInfo.Add(" Artifact Experience: " + item.Experience);
+                            }
+                            else
+                            {
+                                objectInfo.Add(" - Artifact Information -");
+                                objectInfo.Add("  Artifact Not Activated ");
+                            }
+                        }
+                        //***********************************
 						//shows info for Shields			*
 						//***********************************
 						if (item.Object_Type == (int)eObjectType.Shield)
@@ -349,7 +365,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						}
 
-						//***********************************
+                        //***********************************
 						//shows info for Shields			*
 						//***********************************
 						if (item.Object_Type == (int)eObjectType.Shield)
