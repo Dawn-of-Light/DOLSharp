@@ -5400,6 +5400,17 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		#endregion
 		#region ControlledNpc
 
+        private int pet_count = 0;
+
+        /// <summary>
+        /// Gets the pet count for the player
+        /// </summary>
+        public int PetCounter
+        {
+            get { return pet_count; }
+            set { pet_count = value; }
+        }
+
 		/// <summary>
 		/// Holds the controlled object
 		/// </summary>
