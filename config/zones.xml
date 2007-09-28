@@ -4122,6 +4122,15 @@
 		<offsetx>1</offsetx>
 		<regionID>488</regionID>
 	</Zone488>
+	<Zone489> 
+		<description>Demons breach</description> 
+		<width>8</width> 
+		<zoneID>489</zoneID> 
+		<height>8</height> 
+		<offsety>1</offsety> 
+		<offsetx>1</offsetx> 
+		<regionID>489</regionID> 
+	</Zone489> 
 	<Zone491>
 		<description>Maze of Madness</description>
 		<width>8</width>

@@ -962,7 +962,32 @@ namespace DOL.GS.PacketHandler.Client.v168
 						return 1;
 					}
 				#endregion
-				default:
+                #region BattleGroup
+                case 103: // Item info to battle group
+                    {
+                        InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
+                        if (item == null) return 1;
+
+                        BattleGroup mybattlegroup = (BattleGroup)client.Player.TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
+                        if (mybattlegroup == null)
+                        {
+                            client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.MustBeInBattleGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                        if (mybattlegroup.Listen == true && (((bool)mybattlegroup.Members[client.Player]) == false))
+                        {
+                            client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.OnlyModerator"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                        string str = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.ChatItem", client.Player.Name, GetShortItemInfo(item, client));
+                        foreach (GamePlayer ply in mybattlegroup.Members.Keys)
+                        {
+                            ply.Out.SendMessage(str, eChatType.CT_Friend, eChatLoc.CL_ChatWindow);
+                        }
+                        return 1;
+                    }
+                #endregion
+                default:
 					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoInformation"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 1;
 			}

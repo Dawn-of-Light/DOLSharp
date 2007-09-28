@@ -441,7 +441,13 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("allow_bps_in_bgs", "Allow bounty points to be gained in battlegrounds", false)]
 		public static readonly bool ALLOW_BPS_IN_BGS;
 
-		/// <summary>
+        /// <summary>
+        /// This specifies the max ammount of people in one battlegroup.
+        /// </summary>
+        [ServerProperty("battlegroup_max_member", "Max number of members allowed in a battlegroup.", 64)]
+        public static readonly int BATTLEGROUP_MAX_MEMBER;
+        
+        /// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
 		/// type of the default value

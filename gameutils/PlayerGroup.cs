@@ -18,6 +18,7 @@
  */
 using System;
 using System.Reflection;
+using System.Text;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -274,7 +275,62 @@ namespace DOL.GS
 			return false;
 		}
 
-		/// <summary>
+        /// <summary>
+        ///  This is NOT to be used outside of Battelgroup code.
+        /// </summary>
+        /// <param name="player">Input from battlegroups</param>
+        /// <returns>A string of group members</returns>
+        public string GroupMemberString(GamePlayer player)
+        {
+            lock (m_groupMembers)
+            {
+                StringBuilder text = new StringBuilder(64); //create the string builder
+                text.Length = 0;
+                BattleGroup mybattlegroup = (BattleGroup)player.TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
+                foreach (GamePlayer plr in m_groupMembers)
+                {
+                    if (mybattlegroup.IsInTheBattleGroup(plr))
+                    {
+                        if ((bool)mybattlegroup.Members[plr] == true)
+                        {
+                            text.Append("<Leader> ");
+                        }
+                        text.Append("(I)");
+                    }
+                    text.Append(plr.Name + " ");
+                }
+                return text.ToString();
+            }
+        }
+
+        /// <summary>
+        ///  This is NOT to be used outside of Battelgroup code.
+        /// </summary>
+        /// <param name="player">Input from battlegroups</param>
+        /// <returns>A string of group members</returns>
+        public string GroupMemberClassString(GamePlayer player)
+        {
+            lock (m_groupMembers)
+            {
+                StringBuilder text = new StringBuilder(64); //create the string builder
+                text.Length = 0;
+                BattleGroup mybattlegroup = (BattleGroup)player.TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
+                foreach (GamePlayer plr in m_groupMembers)
+                {
+                    if (mybattlegroup.IsInTheBattleGroup(plr))
+                    {
+                        if ((bool)mybattlegroup.Members[plr] == true)
+                        {
+                            text.Append("<Leader> ");
+                        }
+                    }
+                    text.Append("(" + plr.CharacterClass.Name + ")");
+                    text.Append(plr.Name + " ");
+                }
+                return text.ToString();
+            }
+        }
+        /// <summary>
 		/// Gets or sets the group's autosplit loot flag
 		/// </summary>
 		public bool AutosplitLoot
