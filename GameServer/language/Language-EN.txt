@@ -264,6 +264,7 @@ GamePlayer.PickupObject.TooFarFromBoat:			You are too far from the boat to board
 GamePlayer.PickupObject.YouGet:				You get {0} and put it in your backpack.
 GamePlayer.PickupObject.YouPickUp:			You pick up {0}.
 GamePlayer.PickupObject.YourLootShare:			Your share of the loot is {0}.
+GamePlayer.PickupObject.ItemBelowBGThreshold: That item is below your battlegroups lootlevel.
 GamePlayer.Pray.AlreadyPraying:				You are already praying!	
 GamePlayer.Pray.Begin:					You begin your prayers!
 GamePlayer.Pray.CantPrayNow:				You can't pray now!	
@@ -503,6 +504,7 @@ DetailDisplayHandler.HandlePacket.Medium:		Medium
 DetailDisplayHandler.HandlePacket.MediumBonus:		Medium Bonus
 DetailDisplayHandler.HandlePacket.MediumPenalty:	Medium Penalty
 DetailDisplayHandler.HandlePacket.MustBeInChatGroup:	You must be in a chat group.
+DetailDisplayHandler.HandlePacket.MustBeInBattleGroup:	You must be in a battle group.
 DetailDisplayHandler.HandlePacket.NoBonus:		No Bonus
 DetailDisplayHandler.HandlePacket.NoGroup:		You are not part of a group.
 DetailDisplayHandler.HandlePacket.NoInformation:	No special information!
@@ -701,6 +703,62 @@ Scripts.Players.Autosplit.Loot:				The leader switched
 Scripts.Players.Autosplit.Off:				The leader switched off the autosplit.
 Scripts.Players.Autosplit.On:				The leader switched on the autosplit.
 Scripts.Players.Autosplit.Self:				{0} switched 
+
+# /Battlegroup
+Scripts.Players.Battlegroup.Help.Help:			/bg help - Displays all battle group commands
+Scripts.Players.Battlegroup.Help.Invite:			/bg invite [playername] - Invites the specified player to the battle group
+Scripts.Players.Battlegroup.Help.JoinPrivate:		/bg join [moderator name] [password] - Join a private battle group which has a password set	
+Scripts.Players.Battlegroup.Help.JoinPublic:		/bg join [moderator name] - Join a public battle group by name of the moderator	
+Scripts.Players.Battlegroup.Help.Leader:			/bg promote <name> - Declare another member of the battle group as leader; This player can invite other players into the battle group and speak when the battle group is on listen mode.
+Scripts.Players.Battlegroup.Help.Leave:			/bg leave - Remove oneself from the battle group
+Scripts.Players.Battlegroup.Help.Listen:			/bg listen - Puts the battle group on listen mode; only the moderator and leaders can speak
+Scripts.Players.Battlegroup.Help.PasswordClear:		/bg password clear - Clears the current password (moderator only)	
+Scripts.Players.Battlegroup.Help.PasswordDisplay:		/bg password - Display the current password for the battle group (moderator only)	
+Scripts.Players.Battlegroup.Help.PasswordNew:		/bg password [new password]	
+Scripts.Players.Battlegroup.Help.Private:			/bg private - The battle group is invite or password-only
+Scripts.Players.Battlegroup.Help.Public:			/bg public - The battle group is public and anyone can join by typing /bg join
+Scripts.Players.Battlegroup.Help.Remove:			/bg remove [playername] - Removes the specified player from the battle group
+Scripts.Players.Battlegroup.Help.Usage:			/bg usage:
+Scripts.Players.Battlegroup.Help.Who:			/bg who - Lists all members of the battle group
+Scripts.Players.Battlegroup.Help.Count:         /bg count - Counts the number of members in the battle group
+Scripts.Players.Battlegroup.Help.Groups:        /bg groups - Displays the battlegroup members with their groups
+Scripts.Players.Battlegroup.Help.Loot:        /bg loot (normal/treasurer) - Sets battlegroup looting to normal or a treasurer
+Scripts.Players.Battlegroup.Help.Treasurer:        /bg treasurer (player name) - Sets the battlegroup treasurer.
+Scripts.Players.Battlegroup.Help.Status:	/bg status - Returns the number of members in your battlegroup.
+Scripts.Players.Battlegroup.Help.LootLevel: /bg lootlevel (level) - Sets the lootlevel for your battlegroup.
+Scripts.Players.Battlegroup.Help.GroupClass: /bg groupclass - Shows the class makeup of each of the groups in the battlegroup.
+Scripts.Players.Battlegroup.Help.Credit: /bg credit - Displays credit for Battlegroup Master Level encounters that have been completed within the last 10 minutes.  
+Scripts.Players.Battlegroup.Help.GrantCredit: /bg grantcredit (masterlevel) (playername) - Allows Batttlegroup Leader to grant credit for completed Master Level steps.
+Scripts.Players.Battlegroup.BattlegroupLootThresholdOff: The battlegroup lootlevel is currently off.
+Scripts.Players.Battlegroup.BattlegroupLootThresholdOn: The battlegroup lootlevel is currently {0}.
+Scripts.Players.Battlegroup.BattleGroupLootNormal:	 The battlegroup loot type is set to normal.	
+Scripts.Players.Battlegroup.BattleGroupLootTreasurer: The battlegroup loot type is set to go to the treasurer.
+Scripts.Players.Battlegroup.BattlegroupTreasurerOn: You have change the treasurer of the Battlegroup to: {0}.
+Scripts.Players.Battlegroup.BattlegroupTreasurerOff: The battlegroup does not currently  have a treasurer.
+Scripts.Players.Battlegroup.BattlegroupStatus: The current status of your battlegroup is {0}.
+Scripts.Players.Battlegroup.BattlegroupCount: There are currently {0} members in your battlegroup.
+Scripts.Players.Battlegroup.InBattleGroup:			You must be in a battle group to use this command.
+Scripts.Players.Battlegroup.InviteYourself:		You cannot invite yourself to a battlegroup.	
+Scripts.Players.Battlegroup.JoinBattleGroup:		Do you want to join {0}'s battlegroup?	
+Scripts.Players.Battlegroup.LeaderCommand:		You must be a leader of the battle group to use this command.	
+Scripts.Players.Battlegroup.LeaderInvite:			You must be the leader to invite a player to join the battle group.
+Scripts.Players.Battlegroup.ListenMode:			The listen mode of battlegroup is switch 
+Scripts.Players.Battlegroup.Moderator:			{0} becomes a moderator.
+Scripts.Players.Battlegroup.NoPlayer:			There is no player with this name.
+Scripts.Players.Battlegroup.NotBattleGroupLeader:		This player is not a leader of a battlegroup.	
+Scripts.Players.Battlegroup.NotBattleGroupMember:		This player is not a member of a battlegroup.	
+Scripts.Players.Battlegroup.NotPublic:			This battlegroup is not public.
+Scripts.Players.Battlegroup.OnlyModerator:		Only moderator can talk on this battle group.	
+Scripts.Players.Battlegroup.OwnBattleGroup:			You cannot join your own battlegroup.
+Scripts.Players.Battlegroup.Password:			Password of battlegroup: {0}.
+Scripts.Players.Battlegroup.PasswordChanged:		You have change the password of Battlegroup to: {0}.	
+Scripts.Players.Battlegroup.PlayerInBattlegroup:		{0} is already in a battlegroup.	
+Scripts.Players.Battlegroup.Private:			The battlegroup is now private.
+Scripts.Players.Battlegroup.Public:			The battlegroup is now public.
+Scripts.Players.Battlegroup.Usage:			Usage: /bc <text>
+Scripts.Players.Battlegroup.UsageInvite:			Usage: /bg invite <playername>"
+Scripts.Players.Battlegroup.BattlegroupTreasurerIsYou: You have been made treasuerer of the battlegroup.
+Scripts.Players.Battlegroup.BattlegroupTreasurerIs: The treasurer of the battlegroup has been changed to {0}.
 
 # /Boot
 Scripts.Players.Boot.InHouseError:			You have to be in your house to use this command!

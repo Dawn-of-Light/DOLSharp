@@ -504,6 +504,7 @@ DetailDisplayHandler.HandlePacket.Medium:		Normal
 DetailDisplayHandler.HandlePacket.MediumBonus:		Normaler Bonus
 DetailDisplayHandler.HandlePacket.MediumPenalty:	Normaler Abzug
 DetailDisplayHandler.HandlePacket.MustBeInChatGroup:	Ihr müsst in einer Chatgruppe sein.
+DetailDisplayHandler.HandlePacket.MustBeInBattleGroup:	Ihr müsst in einer Battlegruppe sein.
 DetailDisplayHandler.HandlePacket.NoBonus:		Kein Bonus
 DetailDisplayHandler.HandlePacket.NoGroup:		Ihr seit kein Mitglied einer Gruppe.
 DetailDisplayHandler.HandlePacket.NoInformation:	Keine besonderen Informationen!
@@ -702,6 +703,60 @@ Scripts.Players.Autosplit.Loot:				Der Leiter ändert
 Scripts.Players.Autosplit.Off:				Der Leiter hat den Autosplit-Status auf AUS gesetzt.
 Scripts.Players.Autosplit.On:				Der Leiter hat den Autosplit-Status auf EIN gesetzt.
 Scripts.Players.Autosplit.Self:				{0} ändert 
+
+# /battlegroup
+Scripts.Players.Battlegroup.Help.Help:			/bg help - Zeigt die Hilfe zur Befehlsformulierung an
+Scripts.Players.Battlegroup.Help.Invite:			/bg invite <Name> - Lädt einen Spieler in die ankämpfendgruppe ein. Ist dies eine öffentliche ankämpfendgruppe, kann der Befehl von jedem ankämpfendgruppenmitglied benutzt werden, ansonsten nur vom ankämpfendgruppenleiter.
+Scripts.Players.Battlegroup.Help.JoinPrivate:		/bg join <Leitername> <Passwort> - Ihr tretet einer öffentlichen, passwortgeschützten battlegruppe bei.
+Scripts.Players.Battlegroup.Help.JoinPublic:		/bg join <Leitername> - Ihr tretet einer öffentlichen battlegruppe bei.
+Scripts.Players.Battlegroup.Help.Leader:			/bg promote <name> - Schaltet einen Spieler als Leiter der battlegruppe. (Nur Leiter)
+Scripts.Players.Battlegroup.Help.Leave:			/bg leave - Ihr verlasst die battlegruppe.
+Scripts.Players.Battlegroup.Help.Listen:			/bg listen - Schaltet die ankämpfendgruppe auf "Nur lesen". Nur noch der ankämpfendgruppenleiter und die Moderatoren können etwas schreiben. (Nur Leiter)
+Scripts.Players.Battlegroup.Help.PasswordClear:		/bg password clear - Löscht das aktuelle Passwort (Nur Leiter)
+Scripts.Players.Battlegroup.Help.PasswordDisplay:		/bg password - Zeigt das aktuelle Passwort (Nur dem Leiter)
+Scripts.Players.Battlegroup.Help.PasswordNew:		/bg password <Neues Passwort> - Setz ein (neues) Passwort für die ankämpfendgruppe. (Nur Leiter)
+Scripts.Players.Battlegroup.Help.Private:			/bg private - Schaltet die ankämpfendgruppe auf Nicht-Öffentlich. Man muss das Passwort oder von einem Leiter eingeladen werden um beizutreten. (Nur Leiter)
+Scripts.Players.Battlegroup.Help.Public:			/bg public - Schaltet die ankämpfendgruppe "Öffentlich". Dann kann jeder mit "/cg join <Leitername>" der ankämpfendgruppe beitreten. Ausserdem ist sie dann unter "/who CG" finden. (Nur Leiter)
+Scripts.Players.Battlegroup.Help.Remove:			/bg remove <Name> - Wirft einen Spieler aus der ankämpfendgruppe. (Nur Leiter)
+Scripts.Players.Battlegroup.Help.Usage:			Befehle für "/bg" sind:
+Scripts.Players.Battlegroup.Help.Who:			/bg who - Zeigt alle Mitglieder der ankämpfendgruppe.
+Scripts.Players.Battlegroup.Help.Count:         /bg count - Zählt alle Mitstreiter in der Kampfgruppe. 
+Scripts.Players.Battlegroup.Help.Groups:        /bg groups - Alle Mitstreiter und  Gruppen in der Kampfgruppe werden aufgelistet.
+Scripts.Players.Battlegroup.Help.GroupClass: /bg groupclass -
+Scripts.Players.Battlegroup.Help.Loot:        /bg loot (normal/treasurer) – Setzt das Kampfgruppenlooting auf Normal oder Schatzmeister 
+Scripts.Players.Battlegroup.Help.LootLevel: /bg lootlevel (level) -
+Scripts.Players.Battlegroup.Help.Treasurer:        /bg treasurer (leitername) – Setzt den Kampfgruppen Schatzmeister. 
+Scripts.Players.Battelgroup.Help.Status: /bg status -
+Scripts.Players.Battlegroup.Help.Credit: /bg credit -
+Scripts.Players.Battlegroup.Help.GrantCredit: /bg grantcredit (masterlevel) (leitername) -
+Scripts.Players.Battlegroup.BattleGroupLootNormal:    Der loottyp der Kampfgruppe wurde auf normal gesetzt.    
+Scripts.Players.Battlegroup.BattleGroupLootTreasurer: Der loottyp der Kampfgruppe wurde auf Schatzmeister gesetzt. 
+Scripts.Players.Battlegroup.BattlegroupTreasurerOn: Du hast den Schatzmeister der Kampfgruppe auf {0} gesetzt. 
+Scripts.Players.Battlegroup.BattlegroupTreasurerOff: Die Kampfgruppe hat momentan keinen schatzmeister. 
+Scripts.Players.Battlegroup.BattlegroupStatus: Der momentane Status der Kampfgruppe ist: {0}. 
+Scripts.Players.Battlegroup.BattlegroupCount: Im moment sind {1} Mitglieder in der Kampfgruppe. 
+Scripts.Players.Battlegroup.BattlegroupLootThresholdOff: Das Lootlevel der Kampfgruppe ist momentan ausgeschaltet.
+Scripts.Players.Battlegroup.BattlegroupLootThresholdOn: Das Lootlevel der Kampfgruppe ist momentan {0}.
+Scripts.Players.Battlegroup.InBattleGroup:			Ihr seid zur Zeit in keiner ankämpfend-Gruppe!
+Scripts.Players.Battlegroup.InviteYourself:		Ihr könnt Euch nicht selber einladen.	
+Scripts.Players.Battlegroup.JoinBattleGroup:		Wollt Ihr der ankämpfend-Gruppe von {0} beitreten?	
+Scripts.Players.Battlegroup.LeaderCommand:		Diesen Befehl kann nur der Leiter der ankämpfend-Gruppe geben.	
+Scripts.Players.Battlegroup.LeaderInvite:			Ihr müsst der Leiter der ankämpfend-Gruppe sein, um einen Spieler einladen zukönnen.
+Scripts.Players.Battlegroup.ListenMode:			Der "Nur Lesen"-Status der ankämpfend-Gruppe wurde geändert auf 
+Scripts.Players.Battlegroup.Moderator:			{0} ist Moderator geworden.
+Scripts.Players.Battlegroup.NoPlayer:			Ein Spieler mit diesem Namen ist zur Zeit nicht im Spiel oder gehört einem anderen Reich an.
+Scripts.Players.Battlegroup.NotBattleGroupLeader:		Dieser Spieler ist kein Leiter einer ankämpfend-Gruppe.	
+Scripts.Players.Battlegroup.NotBattleGroupMember:		Dieser Spieler gehört keiner ankämpfend-Gruppe an.	
+Scripts.Players.Battlegroup.NotPublic:			Das ist keine öffentliche ankämpfend-Gruppe.
+Scripts.Players.Battlegroup.OnlyModerator:		Nur der Leiter oder ein Moderator kann in dieser ankämpfend-Gruppe sprechen.	
+Scripts.Players.Battlegroup.OwnBattleGroup:			Eurer eigenen ankämpfend-Gruppe könnt Ihr nicht beitreten.
+Scripts.Players.Battlegroup.Password:			Das Passwort der ankämpfend-Gruppe lautet: {0}.
+Scripts.Players.Battlegroup.PasswordChanged:		Ihr habt das Passwort der ankämpfend-Gruppe geändert in: {0}.	
+Scripts.Players.Battlegroup.PlayerInBattlegroup:		{0} ist bereits Mitglied einer ankämpfend-Gruppe.	
+Scripts.Players.Battlegroup.Private:			Das ist nun eine private ankämpfend-Gruppe.
+Scripts.Players.Battlegroup.Public:			Das ist nun eine öffentliche ankämpfend-Gruppe.
+Scripts.Players.Battlegroup.Usage:			Verwendet: /bc <text>
+Scripts.Players.Battlegroup.UsageInvite:			Verwendet: /bg invite <playername>
 
 # /Boot
 Scripts.Players.Boot.InHouseError:			Ihr müsst Euch in Eurem Haus befinden, um diesen Befehl verwenden zu können!
