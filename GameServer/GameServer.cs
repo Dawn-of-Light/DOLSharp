@@ -664,7 +664,12 @@ namespace DOL
 				if (log.IsInfoEnabled)
 					log.Info("World save timer: true");
 
-				//---------------------------------------------------------------
+                //---------------------------------------------------------------
+                //Load all boats
+                if (!InitComponent(BoatMgr.LoadAllBoats(), "Boat Manager"))
+                    return false;
+                
+                //---------------------------------------------------------------
 				//Load all guilds
 				if (!InitComponent(GuildMgr.LoadAllGuilds(), "Guild Manager"))
 					return false;
@@ -1225,6 +1230,7 @@ namespace DOL
 						//WorldMgr.SaveToDatabase();
 
 						GuildMgr.SaveAllGuilds();
+                        BoatMgr.SaveAllBoats();
 
 						FactionMgr.SaveAllAggroToFaction();
 

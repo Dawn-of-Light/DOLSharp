@@ -616,7 +616,10 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void DeleteFromDatabase()
 		{
-		}
+            GameBoat boat = BoatMgr.GetBoatByOwner(InternalID);
+            if (boat != null)
+                boat.DeleteFromDatabase();
+        }
 
 		#endregion
 
@@ -1292,6 +1295,22 @@ namespace DOL.GS
 			m_saveInDB = false;
 			m_Name = "";
 			m_ObjectState = eObjectState.Inactive;
+            m_boat_ownerid = "";
 		}
-	}
+        public static bool PlayerHasItem(GamePlayer player, string str)
+        {
+            InventoryItem item = player.Inventory.GetFirstItemByID(str, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv);
+            if (item != null)
+                return true;
+            return false;
+        }
+        private static string m_boat_ownerid;
+        public static string ObjectHasOwner()
+        {
+            if (m_boat_ownerid == "")
+                return "";
+            else
+                return m_boat_ownerid;
+        }
+    }
 }
