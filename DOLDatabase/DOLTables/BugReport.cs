@@ -49,7 +49,7 @@ namespace DOL.Database
 			set { m_autoSave = value; }
 		}
 
-		[DataElement(AllowDbNull = false, Unique = true)]
+		[PrimaryKey]//DataElement(AllowDbNull = false, Unique = true)]
 		public int ID
 		{
 			get { return m_reportID; }

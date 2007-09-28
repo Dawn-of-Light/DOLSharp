@@ -62,6 +62,7 @@ namespace DOL.Database
 		private string m_brain;
 		private string m_pathID;
 		private int m_maxdistance;
+        private string m_boat_ownerid;
 
 		static bool m_autoSave;
 
@@ -82,6 +83,7 @@ namespace DOL.Database
 			m_brain = "";
 			m_pathID = "";
 			m_maxdistance = 0;			
+            m_boat_ownerid = "";
 		}
 
 		/// <summary>
@@ -508,6 +510,22 @@ namespace DOL.Database
 				m_maxdistance = value;
 			}
 		}
-	}
+        /// <summary>
+        /// The Mob's owner if mob is boat
+        /// </summary>
+        [DataElement(AllowDbNull = false)]
+        public string BoatOwnerID
+        {
+            get
+            {
+                return m_boat_ownerid;
+            }
+            set
+            {
+                Dirty = true;
+                m_boat_ownerid = value;
+            }
+        }
+    }
 }
 

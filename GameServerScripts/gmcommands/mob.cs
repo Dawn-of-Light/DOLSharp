@@ -304,6 +304,10 @@ namespace DOL.GS.Scripts
 						info.Add(" + Inventory: " + targetMob.Inventory);
 						info.Add(" + CanGiveQuest: " + targetMob.QuestListToGive.Count);
 						info.Add(" + Path: " + targetMob.PathID);
+                        if (targetMob.BoatOwnerID != null)
+                        {
+                            info.Add(" + Boat OwnerID: " + targetMob.BoatOwnerID);
+                        }
 
 						client.Out.SendCustomTextWindow("[ " + targetMob.Name + " ]", info);
 					}
