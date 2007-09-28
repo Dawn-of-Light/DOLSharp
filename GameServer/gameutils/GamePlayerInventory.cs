@@ -70,7 +70,8 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public override bool LoadFromDatabase(string inventoryID)
 		{
-			lock (m_items.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+            ArtifactManager.LoadArtifacts(); //loading artifacts
+            lock (m_items.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				try
 				{
@@ -83,7 +84,44 @@ namespace DOL.GS
 								log.Error("Tried to load an item in invalid slot, ignored. Item id=" + item.ObjectId);
 							continue;
 						}
-						if (m_items[item.SlotPosition] != null)
+                        //add to artifact collection
+                        if (ArtifactManager.IsArtifact(item))
+                        {
+                            InventoryItem aitem = ArtifactManager.AssignArtifactBonuses(item);
+                            item.Bonus1 = aitem.Bonus1;
+                            item.Bonus1Type = aitem.Bonus1Type;
+                            item.Bonus2 = aitem.Bonus2;
+                            item.Bonus2Type = aitem.Bonus2Type;
+                            item.Bonus3 = aitem.Bonus3;
+                            item.Bonus3Type = aitem.Bonus3Type;
+                            item.Bonus4 = aitem.Bonus4;
+                            item.Bonus4Type = aitem.Bonus4Type;
+                            item.Bonus5 = aitem.Bonus5;
+                            item.Bonus5Type = aitem.Bonus5Type;
+                            item.Bonus6 = aitem.Bonus6;
+                            item.Bonus6Type = aitem.Bonus6Type;
+                            item.Bonus7 = aitem.Bonus7;
+                            item.Bonus7Type = aitem.Bonus7Type;
+                            item.Bonus8 = aitem.Bonus8;
+                            item.Bonus8Type = aitem.Bonus8Type;
+                            item.Bonus9 = aitem.Bonus9;
+                            item.Bonus9Type = aitem.Bonus9Type;
+                            item.Bonus10 = aitem.Bonus10;
+                            item.Bonus10Type = aitem.Bonus10Type;
+                            item.SpellID = aitem.SpellID;
+                            item.Charges = aitem.Charges;
+                            item.MaxCharges = aitem.MaxCharges;
+                            item.ProcSpellID = aitem.ProcSpellID;
+                            item.SpellID1 = aitem.SpellID1;
+                            item.Charges1 = aitem.Charges1;
+                            item.MaxCharges1 = aitem.MaxCharges1;
+                            item.ProcSpellID1 = aitem.ProcSpellID1;
+
+                            Artifacts.Add(item);
+                            //Dinberg - reset artifact reuse timers on login/out to prevent abuse.
+                            Player.TempProperties.setProperty("artifactuse" + item.Id_nb, Player.CurrentRegion.Time);
+                        }
+                        if (m_items[item.SlotPosition] != null)
 						{
 							if (log.IsErrorEnabled)
 								log.Error("Error loading " + m_player.Name + "'s inventory OwnerID " + inventoryID + " slot " + item.SlotPosition + " duplicate item found, skipping!");
@@ -194,7 +232,11 @@ namespace DOL.GS
 			item.OwnerID = m_player.InternalID;
 			GameServer.Database.AddNewObject(item);
 
-			if (IsEquippedSlot((eInventorySlot)item.SlotPosition))
+            //artifact
+            if (ArtifactManager.IsArtifact(item) && !Artifacts.Contains(item))
+                Artifacts.Add(item);
+            
+            if (IsEquippedSlot((eInventorySlot)item.SlotPosition))
 				Player.Notify(PlayerInventoryEvent.ItemEquipped, this, new ItemEquippedArgs(item, (int)eInventorySlot.Invalid));
 			return true;
 		}
@@ -222,7 +264,11 @@ namespace DOL.GS
 
 			GameServer.Database.DeleteObject(item);
 
-			ITradeWindow window = m_player.TradeWindow;
+            //artifact
+            if (ArtifactManager.IsArtifact(item) && Artifacts.Contains(item))
+                Artifacts.Remove(item);
+            
+            ITradeWindow window = m_player.TradeWindow;
 			if (window != null)
 				window.RemoveItemToTrade(item);
 
@@ -928,7 +974,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="slot">The slot to check</param>
 		/// <returns>true if slot is one of equipment slots and should add magical bonuses</returns>
-		protected virtual bool IsEquippedSlot(eInventorySlot slot)
+		public virtual bool IsEquippedSlot(eInventorySlot slot)
 		{
 			// skip weapons. only active weapons should fire equip event, done in player.SwitchWeapon
 			if (slot > eInventorySlot.DistanceWeapon || slot < eInventorySlot.RightHandWeapon)
@@ -1109,5 +1155,10 @@ namespace DOL.GS
 		}
 
 		#endregion
-	}
+        #region Artifacts
+
+        public ArrayList Artifacts = new ArrayList();
+
+        #endregion
+    }
 }

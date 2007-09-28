@@ -249,12 +249,15 @@ namespace DOL.Database
 		protected string m_ownerID;
 		protected int m_slot_pos;
 		protected string craftername;
+        protected long item_exp;
+        protected bool item_activated;
 
 		/// <summary>
 		/// The count of items (for stack!)
 		/// </summary>
 		protected int m_count;
 		static bool m_autoSave;
+        protected string m_internalID;
 
 		public InventoryItem()
 			: base()
@@ -262,6 +265,8 @@ namespace DOL.Database
 			m_autoSave = false;
 			m_id_nb = "default";
 			m_count = 1;
+            m_internalID = this.ObjectId;
+            item_activated = false;
 		}
 
 		/// <summary>
@@ -272,7 +277,9 @@ namespace DOL.Database
 			: this()
 		{
 			CopyFrom(itemTemplate);
-		}
+            m_internalID = this.ObjectId;
+            item_activated = false;
+        }
 
 		/// <summary>
 		/// Creates a new Inventoryitem based on the given ItemTemplate
@@ -282,7 +289,9 @@ namespace DOL.Database
 			: this()
 		{
 			CopyFrom(inventoryItem);
-		}
+            m_internalID = this.ObjectId;
+            item_activated = false;
+        }
 
 		override public bool AutoSave
 		{
@@ -366,7 +375,27 @@ namespace DOL.Database
 			}
 		}
 
-		public void CopyFrom(InventoryItem template)
+        [DataElement(AllowDbNull = false)]
+        public long Experience
+        {
+            get { return item_exp; }
+            set
+            {
+                Dirty = true;
+                item_exp = value;
+            }
+        }
+        [DataElement(AllowDbNull = false)]
+        public bool IsActivated
+        {
+            get { return item_activated; }
+            set
+            {
+                Dirty = true;
+                item_activated = value;
+            }
+        }
+        public void CopyFrom(InventoryItem template)
 		{
 			OwnerID = template.OwnerID;
 			Count = template.Count;
@@ -445,6 +474,7 @@ namespace DOL.Database
 			PoisonMaxCharges = template.PoisonMaxCharges;
 			Realm = template.Realm;
 			AllowedClasses = template.AllowedClasses;
+            ArtiID = template.ArtiID;
 		}
 	}
 }

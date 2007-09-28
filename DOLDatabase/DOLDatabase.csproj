@@ -135,6 +135,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DOLTables\Account_Archive.cs" />
+    <Compile Include="DOLTables\ArtifactBonus.cs" />
+    <Compile Include="DOLTables\ArtifactLevel.cs" />
     <Compile Include="DOLTables\BindPoint.cs">
       <SubType>Code</SubType>
     </Compile>
