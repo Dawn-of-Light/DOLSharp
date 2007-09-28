@@ -550,6 +550,7 @@
     <Compile Include="gameutils\Alliance.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="gameutils\ArtifactManager.cs" />
     <Compile Include="gameutils\BattleGroup.cs" />
     <Compile Include="gameutils\ChatGroup.cs">
       <SubType>Code</SubType>
