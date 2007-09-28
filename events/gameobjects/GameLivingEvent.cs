@@ -95,7 +95,8 @@ namespace DOL.Events
 		/// The GainRealmPoints event is fired whenever the living gains realm points
 		/// </summary>
 		public static readonly GameLivingEvent GainedRealmPoints = new GameLivingEvent("GameLiving.GainedRealmPoints");
-		/// <summary>
+        public static readonly GameLivingEvent GainedBountyPoints = new GameLivingEvent("GameLiving.GainedBountyPoints");
+        /// <summary>
 		/// The Dying event is fired just before the living died
 		/// </summary>
 		public static readonly GameLivingEvent Dying = new GameLivingEvent("GameLiving.Dying");

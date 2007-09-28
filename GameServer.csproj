@@ -558,6 +558,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="gameutils\GameNPCInventory.cs" />
+    <Compile Include="gameutils\GuildBanner.cs" />
+    <Compile Include="gameutils\GuildEvents.cs" />
     <Compile Include="gameutils\MailMgr.cs" />
     <Compile Include="gameutils\NewsMgr.cs" />
     <Compile Include="gameutils\PlayerStatistics.cs" />

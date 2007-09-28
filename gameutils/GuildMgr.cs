@@ -184,59 +184,62 @@ namespace DOL.GS
 				rank.Title = "";
 				rank.Upgrade = false;
 				rank.View = false;
+                rank.View = false;
+                rank.Dues = false;
 
-				if (i < 9)
-				{
-					rank.GcSpeak = true;
-					rank.View = true;
-					if (i < 8)
-					{
-						rank.Emblem = true;
-						if (i < 7)
-						{
-							rank.AcHear = true;
-							if (i < 6)
-							{
-								rank.AcSpeak = true;
-								if (i < 5)
-								{
-									rank.OcHear = true;
-									if (i < 4)
-									{
-										rank.OcSpeak = true;
-										if (i < 3)
-										{
-											rank.Invite = true;
-											rank.Promote = true;
+                if (i < 9)
+                {
+                    rank.GcSpeak = true;
+                    rank.View = true;
+                    if (i < 8)
+                    {
+                        rank.Emblem = true;
+                        if (i < 7)
+                        {
+                            rank.AcHear = true;
+                            if (i < 6)
+                            {
+                                rank.AcSpeak = true;
+                                if (i < 5)
+                                {
+                                    rank.OcHear = true;
+                                    if (i < 4)
+                                    {
+                                        rank.OcSpeak = true;
+                                        if (i < 3)
+                                        {
+                                            rank.Invite = true;
+                                            rank.Promote = true;
 
-											if (i < 2)
-											{
-												rank.Release = true;
-												rank.Upgrade = true;
-												rank.Claim = true;
-												if (i < 1)
-												{
-													rank.Remove = true;
-													rank.Alli = true;
+                                            if (i < 2)
+                                            {
+                                                rank.Release = true;
+                                                rank.Upgrade = true;
+                                                rank.Claim = true;
+                                                if (i < 1)
+                                                {
+                                                    rank.Remove = true;
+                                                    rank.Alli = true;
+                                                    rank.Dues = true;
+                                                    rank.Withdraw = true;
+                                                }
 
-												}
+                                            }
 
-											}
+                                        }
 
-										}
+                                    }
 
-									}
+                                }
 
-								}
+                            }
 
-							}
+                        }
 
-						}
+                    }
 
-					}
-
-				}
-				GameServer.Database.AddNewObject(rank);
+                }
+                GameServer.Database.AddNewObject(rank);
 				GameServer.Database.SaveObject(rank);
 				newguild.theGuildDB.Ranks[i] = rank;
 			}
