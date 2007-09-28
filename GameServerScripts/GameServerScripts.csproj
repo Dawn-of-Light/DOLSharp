@@ -322,6 +322,7 @@
     <Compile Include="playercommands\autosplit.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="playercommands\battlegroup.cs" />
     <Compile Include="playercommands\bind.cs">
       <SubType>Code</SubType>
     </Compile>

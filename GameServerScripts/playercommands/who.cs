@@ -261,7 +261,12 @@ namespace DOL.GS.Scripts
 			{
 				result.Append(" [CG]");
 			}
-			if (player.IsAnonymous)
+            BattleGroup mybattlegroup = (BattleGroup)player.TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
+            if (mybattlegroup != null && (mybattlegroup.Members.Contains(player) || mybattlegroup.IsPublic && (bool)mybattlegroup.Members[player] == true))
+            {
+                result.Append(" [BG]");
+            }
+            if (player.IsAnonymous)
 			{
 				result.Append(" <ANON>");
 			}
