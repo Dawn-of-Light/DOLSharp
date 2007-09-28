@@ -1268,7 +1268,34 @@ namespace DOL.GS.Scripts
 								break;
 
 
+                            case "bg":
+                                {
+                                    short count = 0;
 
+                                    foreach (GameClient pname in WorldMgr.GetAllPlayingClients())
+                                    {
+                                        string name = args[3];
+
+                                        if (name == null)
+                                        {
+                                            return DisplaySyntax(client);
+                                        }
+                                        BattleGroup cg = (BattleGroup)pname.Player.TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
+
+                                        if (name == pname.Player.Name)
+                                        {
+                                            foreach (GamePlayer cgplayers in cg.Members.Keys)
+                                            {
+
+                                                cgplayers.MoveTo(client.Player.CurrentRegionID, client.Player.X, client.Player.Y, client.Player.Z, client.Player.Heading);
+                                                count++;
+                                            }
+                                        }
+                                    }
+
+                                    client.Out.SendMessage(count + " players jumped!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                                }
+                                break;
 							default:
 								{
 									client.Out.SendMessage("'" + args[2] + "' is not a valid arguement.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);

@@ -3187,6 +3187,15 @@
 		<expansion>3</expansion>
 		<instance>True</instance>
 	</Region488>
+	<Region489> 
+		<description>Demons breach</description> 
+		<isDivingEnabled>False</isDivingEnabled> 
+		<waterLevel>0</waterLevel> 
+		<id>489</id> 
+		<port>10400</port> 
+		<ip>127.0.0.1</ip> 
+		<expansion>3</expansion> 
+	</Region489> 
 	<Region491>
 		<description>Maze of Madness</description>
 		<isDivingEnabled>False</isDivingEnabled>

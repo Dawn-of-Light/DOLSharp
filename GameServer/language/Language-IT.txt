@@ -493,6 +493,7 @@ DetailDisplayHandler.HandlePacket.Medium:		Medio
 DetailDisplayHandler.HandlePacket.MediumBonus:		Medio Bonus
 DetailDisplayHandler.HandlePacket.MediumPenalty:	Media Penalita'
 DetailDisplayHandler.HandlePacket.MustBeInChatGroup:	Devi essere in una chat.
+DetailDisplayHandler.HandlePacket.MustBeInBattleGroup:	Devi essere in una battle.
 DetailDisplayHandler.HandlePacket.NoBonus:		Nessun bonus Bonus
 DetailDisplayHandler.HandlePacket.NoGroup:		Non fai parte di un gruppo.
 DetailDisplayHandler.HandlePacket.NoInformation:	Nessuna informazione speciale!
