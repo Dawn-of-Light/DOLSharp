@@ -40,6 +40,16 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("StrengthConstitutionBuff")]
 	public class StrengthConBuff : DualStatBuff
 	{
+        public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+        {
+            if (target.HasAbility(Abilities.VampiirStrength)
+        	   || target.HasAbility(Abilities.VampiirConstitution))
+            {
+                MessageToCaster("Your target already has an effect of that type!", eChatType.CT_Spell);
+                return;
+            }
+            base.ApplyEffectOnTarget(target, effectiveness);
+        }
 		public override eProperty Property1 { get { return eProperty.Strength; } }	
 		public override eProperty Property2 { get { return eProperty.Constitution; } }	
 
@@ -53,6 +63,16 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("DexterityQuicknessBuff")]
 	public class DexterityQuiBuff : DualStatBuff
 	{
+        public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+        {
+            if (target.HasAbility(Abilities.VampiirDexterity)
+        	   || target.HasAbility(Abilities.VampiirQuickness))
+            {
+                MessageToCaster("Your target already has an effect of that type!", eChatType.CT_Spell);
+                return;
+            }
+            base.ApplyEffectOnTarget(target, effectiveness);
+        }
 		public override eProperty Property1 { get { return eProperty.Dexterity; } }	
 		public override eProperty Property2 { get { return eProperty.Quickness; } }	
 

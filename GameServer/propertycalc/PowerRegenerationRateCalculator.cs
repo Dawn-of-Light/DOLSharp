@@ -56,6 +56,9 @@ namespace DOL.GS.PropertyCalc
 				debuff = -debuff;
 
 			regen += living.BuffBonusCategory1[(int)property] - debuff;
+			
+			// Apply RA bonus
+			regen += living.AbilityBonus[(int)property];
 
 			if (regen < 1)
 				regen = 1;

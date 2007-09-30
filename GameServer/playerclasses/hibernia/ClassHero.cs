@@ -62,6 +62,7 @@ namespace DOL.GS.Scripts
 
 			if (player.Level >= 5) 
 			{
+				player.AddAbility(SkillBase.GetAbility(Abilities.TauntingShout));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Medium));
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
 
@@ -85,6 +86,7 @@ namespace DOL.GS.Scripts
 			}
 			if (player.Level >= 15) 
 			{
+				player.AddAbility(SkillBase.GetAbility(Abilities.MetalGuard));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Shortbows));
 				player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Scale));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Stag, 1));
@@ -102,14 +104,27 @@ namespace DOL.GS.Scripts
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 3));
 			}
+			if (player.Level >= 30)
+			{
+				player.AddAbility(SkillBase.GetAbility(Abilities.BolsteringRoar));
+			}
 			if (player.Level >= 35) 
 			{
+				player.AddAbility(SkillBase.GetAbility(Abilities.MemoriesOfWar));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Stag, 3));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Stoicism));
+			}
+			if (player.Level >= 40)
+			{
+				player.AddAbility(SkillBase.GetAbility(Abilities.Rampage));
 			}
 			if (player.Level >= 45) 
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Stag, 4));
+			}
+			if (player.Level >= 50)
+			{
+				player.AddAbility(SkillBase.GetAbility(Abilities.Fury));
 			}
 		}
 	}
