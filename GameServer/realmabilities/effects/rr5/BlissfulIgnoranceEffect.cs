@@ -40,7 +40,7 @@ namespace DOL.GS.Effects
                 EffectOwner = target as GamePlayer;
                 foreach (GamePlayer p in target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
                 {
-                    p.Out.SendSpellEffectAnimation(EffectOwner, EffectOwner, 7069, 0, false, 1);
+                    p.Out.SendSpellEffectAnimation(EffectOwner, p, 7069, 0, false, 1);
                 }
                 GameEventMgr.AddHandler(EffectOwner, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
             }
@@ -59,13 +59,9 @@ namespace DOL.GS.Effects
         /// <param name="e">The event which was raised</param>
         /// <param name="sender">Sender of the event</param>
         /// <param name="args">EventArgs associated with the event</param>
-        private static void PlayerLeftWorld(DOLEvent e, object sender, EventArgs args)
+        protected void PlayerLeftWorld(DOLEvent e, object sender, EventArgs args)
         {
-            GamePlayer player = sender as GamePlayer;
-
-            BlissfulIgnoranceEffect BlissfulIgnorance = (BlissfulIgnoranceEffect)player.EffectList.GetOfType(typeof(BlissfulIgnoranceEffect));
-            if (BlissfulIgnorance != null)
-                BlissfulIgnorance.Cancel(false);
+ 			Cancel(false);
         }
 
         public override string Name { get { return "Blissful Ignorance"; } }

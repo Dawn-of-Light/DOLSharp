@@ -5915,6 +5915,7 @@ namespace DOL.GS
 			if (weapon == null)
 				return 0;
 
+			double effectiveness = 1.00;
 			double damage = WeaponDamage(weapon) * weapon.SPD_ABS * 0.1;
 
 			if (weapon.Hand == 1) // two-hand
@@ -5937,15 +5938,15 @@ namespace DOL.GS
 						case 3: damage *= 1.25; break; //Broadhead (X-heavy) +25%
 					}
 				}
-
-				//Ranged damage buff and debuff
-				damage = damage * GetModified(eProperty.RangedDamage) * 0.01;
+				//Ranged damage buff,debuff,Relic,RA
+				effectiveness += GetModified(eProperty.RangedDamage) * 0.01;
 			}
 			else if (weapon.Item_Type == Slot.RIGHTHAND || weapon.Item_Type == Slot.LEFTHAND || weapon.Item_Type == Slot.TWOHAND)
 			{
-				//Melee damage buff and debuff
-				damage = damage * GetModified(eProperty.MeleeDamage) * 0.01;
+				//Melee damage buff,debuff,Relic,RA
+				effectiveness += GetModified(eProperty.MeleeDamage) * 0.01;
 			}
+			damage *= effectiveness;
 			return damage;
 		}
 
@@ -6564,7 +6565,7 @@ namespace DOL.GS
 								else if (m_runningSpellHandler is RangeSpellHandler)
 								{
 									cloneSpell = spell.Copy();
-									cloneSpell.CostPower = false;
+									cloneSpell.CostPower = true;
 									cloneSpell.OverrideRange = m_runningSpellHandler.Spell.Range;
 									m_nextSpell = cloneSpell;
 									m_nextSpellLine = line;
@@ -6572,7 +6573,7 @@ namespace DOL.GS
 								else if (m_runningSpellHandler is UninterruptableSpellHandler)
 								{
 									cloneSpell = spell.Copy();
-									cloneSpell.CostPower = false;
+									cloneSpell.CostPower = true;
 									m_nextSpell = cloneSpell;
 									m_nextSpellLine = line;
 								}
@@ -9258,6 +9259,7 @@ namespace DOL.GS
 					if (!Inventory.RemoveItem(item)) return false;
 
 					droppedItem = CreateItemOnTheGround(item);
+					Notify(PlayerInventoryEvent.ItemDropped,this, new ItemDroppedEventArgs(item,droppedItem));
 					return true;
 				}
 			}
@@ -11895,6 +11897,20 @@ namespace DOL.GS
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the count of captured relics.
+		/// (delegate to PlayerCharacter)
+		/// </summary>
+		public int CapturedRelics
+		{
+			get { return PlayerCharacter != null ? PlayerCharacter.CapturedRelics : 0; }
+			set
+			{
+				if ( PlayerCharacter != null ) PlayerCharacter.CapturedRelics = value;
+				Notify(GamePlayerEvent.CapturedRelicsChanged, this); 
+			}			
+		}
+		
 		/// <summary>
 		/// Gets or sets the count of dragons killed.
 		/// (delegate to PlayerCharacter)

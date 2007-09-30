@@ -59,13 +59,9 @@ namespace DOL.GS.Effects
         /// <param name="e">The event which was raised</param>
         /// <param name="sender">Sender of the event</param>
         /// <param name="args">EventArgs associated with the event</param>
-        private static void PlayerLeftWorld(DOLEvent e, object sender, EventArgs args)
+        protected void PlayerLeftWorld(DOLEvent e, object sender, EventArgs args)
         {
-            GamePlayer player = sender as GamePlayer;
-
-            CallOfDarknessEffect CallOfDarkness = (CallOfDarknessEffect)player.EffectList.GetOfType(typeof(CallOfDarknessEffect));
-            if (CallOfDarkness != null)
-                CallOfDarkness.Cancel(false);
+ 			Cancel(false);
         }
 
         public override string Name { get { return "Call Of Darkness"; } }

@@ -16,39 +16,46 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
 using System;
 using System.Collections;
 using DOL.Events;
 
 namespace DOL.GS.Effects
 {
-
-    public class ValhallasBlessingEffect : TimedEffect
+    /// <summary>
+    /// Effect handler for Fanatacism
+    /// </summary>
+    public class FanatacismEffect : TimedEffect
     {
-        private GamePlayer EffectOwner;
+ 		private GamePlayer EffectOwner;
+ 		
+        public FanatacismEffect()
+            : base(RealmAbilities.FanatacismAbility.DURATION)
+        { }    
 
-        public ValhallasBlessingEffect()
-            : base(RealmAbilities.ValhallasBlessingAbility.DURATION)
-        { }
-
-        public override void Start(GameLiving target)
+         public override void Start(GameLiving target)
         {
-            base.Start(target);
+        	base.Start(target);
             if (target is GamePlayer)
             {
                 EffectOwner = target as GamePlayer;
                 foreach (GamePlayer p in target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
                 {
-                    p.Out.SendSpellEffectAnimation(target, target, 7087, 0, false, 1);
+                    p.Out.SendSpellEffectAnimation(EffectOwner, p, 7088, 0, false, 1);
                 }
                 GameEventMgr.AddHandler(EffectOwner, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+            	EffectOwner.BuffBonusCategory1[(int)eProperty.MagicAbsorbtion] += RealmAbilities.FanatacismAbility.VALUE;
             }
         }
+
         public override void Stop()
         {
             if (EffectOwner != null)
+            {
+            	EffectOwner.BuffBonusCategory1[(int)eProperty.MagicAbsorbtion] -= RealmAbilities.FanatacismAbility.VALUE;
                 GameEventMgr.RemoveHandler(EffectOwner, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+            }
+            
             base.Stop();
         }
 
@@ -60,11 +67,11 @@ namespace DOL.GS.Effects
         /// <param name="args">EventArgs associated with the event</param>
         protected void PlayerLeftWorld(DOLEvent e, object sender, EventArgs args)
         {
- 			Cancel(false);
+  			Cancel(false);
         }
 
-        public override string Name { get { return "Valhalla's Blessing"; } }
-        public override ushort Icon { get { return 7087; } }
+        public override string Name { get { return "Fanatacism"; } }
+        public override ushort Icon { get { return 7088; } }
 
         // Delve Info
         public override IList DelveInfo
@@ -72,7 +79,7 @@ namespace DOL.GS.Effects
             get
             {
                 ArrayList list = new ArrayList();
-                list.Add("Spells/Styles have has a chance of not costing power or endurance.");
+                list.Add("Grants a reduction in all spell damage taken for 45 seconds.");
                 return list;
             }
         }

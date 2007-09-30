@@ -150,14 +150,13 @@ namespace DOL.GS
 				/* Increasing of CapturedRelics */
 				//select targets to increase CapturedRelics
 				//TODO increase stats
-				/*
+				
 				ArrayList targets = new ArrayList();
 				if (relic.CurrentCarrier.PlayerGroup != null)
 					targets.AddRange(relic.CurrentCarrier.PlayerGroup.GetPlayersInTheGroup());
 				else targets.Add(relic.CurrentCarrier);
 				foreach (GamePlayer target in targets)
 					target.CapturedRelics++;
-				 */
 
 				Notify(RelicPadEvent.RelicMounted, this, new RelicPadEventArgs(relic.CurrentCarrier, relic));
 			}
