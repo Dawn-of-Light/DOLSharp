@@ -943,17 +943,19 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual double AttackDamage(InventoryItem weapon)
 		{
-			double damage = (1.0 + Level / 3.7 + Level * Level / 175.0) * AttackSpeed(weapon) * 0.001;
+			double effectiveness = 1.00;
+			double damage = (1.0 + Level / 3.7 + Level * Level / 175.0) * AttackSpeed(weapon) * 0.001;			
 			if (weapon == null || weapon.Item_Type == Slot.RIGHTHAND || weapon.Item_Type == Slot.LEFTHAND || weapon.Item_Type == Slot.TWOHAND)
 			{
-				//Melee damage buff and debuff
-				damage *= GetModified(eProperty.MeleeDamage) * 0.01;
+				//Melee damage buff,debuff,RA
+				effectiveness += GetModified(eProperty.MeleeDamage) * 0.01;
 			}
 			else if (weapon.Item_Type == Slot.RANGED)
 			{
-				//Ranged damage buff and debuff
-				damage *= GetModified(eProperty.RangedDamage) * 0.01;
+				//Ranged damage buff,debuff,RA
+				effectiveness += GetModified(eProperty.RangedDamage) * 0.01;				
 			}
+			damage *= effectiveness;
 			return damage;
 		}
 
@@ -3211,10 +3213,15 @@ namespace DOL.GS
                 GiftOfPerizorEffect GiftOfPerizor = (GiftOfPerizorEffect)this.EffectList.GetOfType(typeof(GiftOfPerizorEffect));
                 if (GiftOfPerizor == null)
                 {
-                    int difference = (int)(0.25 * damageDealt);
-                    damageDealt -= difference;
+                    int difference = (int)(0.25 * damageDealt); // RA absorb 25% damage
+                    damageDealt -= difference;                    
                     GamePlayer TheMauler = (GamePlayer)(this.TempProperties.getObjectProperty("GiftOfPerizorOwner", null));
-                    if (TheMauler != null && TheMauler.IsAlive) TheMauler.ChangeMana(source, GameLiving.eManaChangeType.Spell, difference);
+                    if (TheMauler != null && TheMauler.IsAlive)
+                    {
+                    	// Calculate mana using %. % is calculated with target maxhealth and damage difference, apply this % to mauler maxmana
+                    	double manareturned = (difference / this.MaxHealth * TheMauler.MaxMana);
+                    	TheMauler.ChangeMana(source, GameLiving.eManaChangeType.Spell, (int)manareturned);
+                    }
                 }
 
 				PlayerGroup attackerGroup = attackerPlayer.PlayerGroup;

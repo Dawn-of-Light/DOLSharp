@@ -161,6 +161,10 @@ namespace DOL.Events
 		/// </summary>
 		public static readonly GamePlayerEvent CapturedTowersChanged = new GamePlayerEvent("GamePlayer.CapturedTowersChanged");
 		/// <summary>
+		/// The CapturedRelicsChanged event is fired when CapturedRelics properties changes.
+		/// </summary>
+		public static readonly GamePlayerEvent CapturedRelicsChanged = new GamePlayerEvent("GamePlayer.CapturedRelicsChanged");
+		/// <summary>
 		/// The KillsDragonChanged event is fired when KillsDragon properties changes.
 		/// </summary>
 		public static readonly GamePlayerEvent KillsDragonChanged = new GamePlayerEvent("GamePlayer.KillsDragonChanged");

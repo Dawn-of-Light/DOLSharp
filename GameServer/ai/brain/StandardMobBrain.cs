@@ -424,10 +424,10 @@ namespace DOL.AI.Brain
 						Body.StartAttack(target);
 				}
 			}
-			else
-			{
-				Body.WalkToSpawn();
-			}
+			else if(Body.X != Body.SpawnX 
+				   || Body.Y != Body.SpawnY 
+				   || Body.Z != Body.SpawnZ)				
+					Body.WalkToSpawn();
 		}
 
 		/// <summary>

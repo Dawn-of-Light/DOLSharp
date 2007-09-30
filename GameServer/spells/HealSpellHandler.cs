@@ -125,23 +125,15 @@ namespace DOL.GS.Spells
 			}
 
 			int criticalvalue = 0;
-
-			RAPropertyEnhancer critRA = Caster.GetAbility(typeof(WildHealingAbility)) as RAPropertyEnhancer;
-			int criticalchance = 0;
-			if (critRA != null)
-				criticalchance += critRA.Amount;
-
-			critRA = Caster.GetAbility(typeof(DualThreatAbility)) as RAPropertyEnhancer;
-			if (critRA != null)
-				criticalchance += critRA.Amount;
-
+			int criticalchance = Caster.GetModified(eProperty.CriticalHealHitChance);
+			double effectiveness = 1.00 + Caster.GetModified(eProperty.HealingEffectiveness) * 0.01;
+			amount *= (int)effectiveness;
+			
 			if (Util.Chance(criticalchance))
 				criticalvalue = Util.Random(amount / 10, amount / 2 + 1);
 
 			amount += criticalvalue;
-			int mod = amount * Caster.GetModified(eProperty.HealingEffectiveness) / 100;
-			amount += mod;
-
+			
 			int heal = target.ChangeHealth(Caster, GameLiving.eHealthChangeType.Spell, amount);
 
 			if (heal == 0)

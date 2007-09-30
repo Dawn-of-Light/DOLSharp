@@ -36,6 +36,7 @@ namespace DOL.GS.PropertyCalc
 	{
 		public override int CalcValue(GameLiving living, eProperty property) 
 		{
+			//hardcap at 25%
 			return Math.Min( 25 , living.ItemBonus[(int)property] 
 				- living.BuffBonusCategory3[(int)property]);
 		}
@@ -47,6 +48,7 @@ namespace DOL.GS.PropertyCalc
 	{
 		public override int CalcValue(GameLiving living, eProperty property) 
 		{
+			//hardcap at 25%
 			return Math.Min( 25 , living.ItemBonus[(int)property] 
 				- living.BuffBonusCategory3[(int)property]);
 		}
@@ -58,19 +60,19 @@ namespace DOL.GS.PropertyCalc
 	{
 		public override int CalcValue(GameLiving living, eProperty property) 
 		{
-			int percent = living.BuffBonusCategory1[(int)property]
-				- living.BuffBonusCategory3[(int)property]
-				+ living.ItemBonus[(int)property]
-				+ living.AbilityBonus[(int)property];
-
-			if (living is GamePlayer)
-			{
-				//Relic bonnus is calculated before ra bonus
-				percent = (int)(percent * RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Magic));
-			}
-
 			//hardcap at 25%
-			return Math.Min(25, percent);
+			int percent = Math.Min(25, living.BuffBonusCategory1[(int)property]
+				- living.BuffBonusCategory3[(int)property]
+				+ living.ItemBonus[(int)property]);
+
+			// Relic bonus calculated before RA bonuses
+			if (living is GamePlayer)
+				percent = (int)(percent * (1.00 + RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Magic)));
+
+			// Add RA bonus
+			percent += living.AbilityBonus[(int)property];
+	
+			return percent;
 		}
 	}
 
@@ -81,6 +83,7 @@ namespace DOL.GS.PropertyCalc
 	{
 		public override int CalcValue(GameLiving living, eProperty property) 
 		{
+			//hardcap at 10%
 			return Math.Min( 10 , living.ItemBonus[(int)property] 
 				- living.BuffBonusCategory3[(int)property]);
 		}
@@ -92,6 +95,7 @@ namespace DOL.GS.PropertyCalc
 	{
 		public override int CalcValue(GameLiving living, eProperty property) 
 		{
+			//hardcap at 25%
 			return Math.Min( 25 , living.ItemBonus[(int)property] 
 				- living.BuffBonusCategory3[(int)property]);
 		}
@@ -103,10 +107,19 @@ namespace DOL.GS.PropertyCalc
 	{
 		public override int CalcValue(GameLiving living, eProperty property) 
 		{
-			return Math.Min(10, living.BuffBonusCategory1[(int)property] 
+			//hardcap at 10%
+			int percent = Math.Min(10, living.BuffBonusCategory1[(int)property] 
 				+ living.ItemBonus[(int)property]
-				- living.BuffBonusCategory3[(int)property]) 
-				+ living.AbilityBonus[(int)property];
+				- living.BuffBonusCategory3[(int)property]);
+			
+			// Relic bonus calculated before RA bonuses
+			if (living is GamePlayer)
+				percent = (int)(percent * (1.00 + RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Magic)));
+			
+			// Add RA bonus
+			percent += living.AbilityBonus[(int)property];
+			
+			return percent;
 		}
 	}
 }

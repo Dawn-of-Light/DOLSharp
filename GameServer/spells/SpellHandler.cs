@@ -2175,13 +2175,7 @@ namespace DOL.GS.Spells
 			if (m_caster is GamePlayer)
 				player = m_caster as GamePlayer;
 			effectiveness += m_caster.GetModified(eProperty.SpellDamage) * 0.01;
-			double RelicDmg = 0;
-			if (player != null)
-			{
-				//Relic bonus is calculated before ra bonus
-				RelicDmg = RelicMgr.GetRelicBonusModifier(player.Realm, eRelicType.Magic);
-			}
-			effectiveness += RelicDmg;
+
 			if (player != null)
 				spellDamage *= player.PlayerEffectiveness;
 			int finalDamage = Util.Random((int)(minVariance * spellDamage), (int)(maxVariance * spellDamage));

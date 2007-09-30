@@ -122,7 +122,7 @@ namespace DOL.GS
 				return false;
 			}
 
-			if (player.Realm == Realm)
+			if (IsMounted && player.Realm == Realm)
 			{
 				player.Out.SendMessage("You cannot pickup " + GetName(0, false) + ". It is owned by your realm.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
@@ -141,8 +141,8 @@ namespace DOL.GS
 		public virtual void RelicPadTakesOver(GameRelicPad pad)
 		{
 			m_currentRelicPad = pad;
-			pad.MountRelic(this);
 			Realm = pad.Realm;
+			pad.MountRelic(this);
 			CurrentRegionID = pad.CurrentRegionID;
 			PlayerLoosesRelic(true);
 			X = pad.X;
@@ -334,6 +334,7 @@ namespace DOL.GS
 		}
 		protected void PlayerAbsence(DOLEvent e, object sender, EventArgs args)
 		{
+			Realm=0;
 			if (e == PlayerInventoryEvent.ItemDropped)
 			{
 				ItemDroppedEventArgs idArgs = args as ItemDroppedEventArgs;

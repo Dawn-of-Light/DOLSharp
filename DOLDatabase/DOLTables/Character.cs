@@ -1701,6 +1701,7 @@ namespace DOL
 			private int m_killsHiberniaSolo;
 			private int m_capturedKeeps;
 			private int m_capturedTowers;
+			private int m_capturedRelics;
 			private int m_killsDragon;
 			private int m_deathsPvP;
 
@@ -1814,6 +1815,16 @@ namespace DOL
 				set { m_capturedTowers = value; Dirty = true; }
 			}
 
+			/// <summary>
+			/// Amount of Relics Captured
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public int CapturedRelics
+			{
+				get { return m_capturedRelics; }
+				set { m_capturedRelics = value; Dirty = true; }
+			}
+			
 			/// <summary>
 			/// Amount of Dragons Killed
 			/// </summary>

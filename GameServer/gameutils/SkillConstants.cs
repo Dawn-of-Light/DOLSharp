@@ -313,6 +313,26 @@ namespace DOL.GS
 		/// Snapshot Ability
 		/// </summary>
 		public const string Snapshot = "Snapshot";
+		/// <summary>
+		/// Rampage Ability
+		/// </summary>		
+        public const string Rampage = "Rampage";
+		/// <summary>
+		/// Metal guard Ability
+		/// </summary>	
+        public const string MetalGuard = "Metal Guard";
+		/// <summary>
+		/// Fury Ability
+		/// </summary>	        
+        public const string Fury = "Fury";
+		/// <summary>
+		/// Bolstering Roar Ability
+		/// </summary>	        
+        public const string BolsteringRoar = "Bolstering Roar";
+ 		/// <summary>
+		/// Taunting Shout Ability
+		/// </summary>	        
+        public const string TauntingShout = "Taunting Shout";
 		//NPC only abilities
 		/// <summary>
 		/// Crowd Control Immunity - NPC Only ability
