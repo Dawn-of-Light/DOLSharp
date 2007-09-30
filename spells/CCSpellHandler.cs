@@ -134,7 +134,7 @@ namespace DOL.GS.Spells
             GameSpellEffect fury = SpellHandler.FindEffectOnTarget(target, "Fury");
             if (fury != null)
             {
-                resist += 50;
+            	resist += (int)fury.Spell.Value;
             }
             if (target.EffectList.GetOfType(typeof(AllureofDeathEffect)) != null)
             {

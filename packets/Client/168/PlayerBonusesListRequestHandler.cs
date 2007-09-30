@@ -135,11 +135,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			double meleeRelicBonus = RelicMgr.GetRelicBonusModifier(client.Player.Realm, eRelicType.Strength);
 			double magicRelicBonus = RelicMgr.GetRelicBonusModifier(client.Player.Realm, eRelicType.Magic);
 
-			if (meleeRelicBonus > 0.1) info.Add("Melee bonus: " + (magicRelicBonus * 100) + "%");
-			if (magicRelicBonus > 0.1) info.Add("Magic bonus: " + (magicRelicBonus * 100) + "%");
-
-			if (meleeRelicBonus == 0.1 && magicRelicBonus == 0.1)
-				info.Add(" none");
+ 			info.Add("Melee bonus: " + (meleeRelicBonus * 100) + "%");
+			info.Add("Magic bonus: " + (magicRelicBonus * 100) + "%");
 
 			info.Add(" ");
 			info.Add("Outpost Bonuses");

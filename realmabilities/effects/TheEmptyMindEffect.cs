@@ -99,7 +99,7 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public override ushort Icon
 		{
-			get { return 7008; }
+			get { return 3007; }
 		}
 
 		/// <summary>

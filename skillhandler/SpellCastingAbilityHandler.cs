@@ -23,32 +23,13 @@ namespace DOL.GS.SkillHandler
 
 			m_ability = ab;
 
-			if (!CheckPreconditions(player, Preconditions))
-				return;
+			if (CheckPreconditions(player, Preconditions)) return;
 
 			SpellLine spline = SkillBase.GetSpellLine(GlobalSpellsLines.Character_Abilities);
-			if (spline != null)
-			{
-				IList spells = SkillBase.GetSpellList(spline.KeyName);
-				if (spells != null)
-				{
-					Spell abSpell = null;
-					foreach (Spell spell in spells)
-					{
-						if (spell.ID == SpellID)
-						{
-							abSpell = spell;
-							break;
-						}
-					}
-					if (abSpell == null) return;
-					GameLiving target = player.TargetObject as GameLiving;
-					if (GameServer.ServerRules.IsAllowedToCastSpell(player, target, abSpell, spline))
-					{
-						player.CastSpell(abSpell, spline);
-					}
-				}
-			}
+ 			Spell abSpell = SkillBase.GetSpellByID(SpellID);
+ 
+			if (spline != null && abSpell != null)
+				player.CastSpell(abSpell, spline);
 		}
 
 		/// <summary>
@@ -58,7 +39,7 @@ namespace DOL.GS.SkillHandler
 		/// <param name="living"></param>
 		/// <param name="bitmask"></param>
 		/// <returns></returns>
-		public bool CheckPreconditions(GameLiving living, long bitmask)
+		public virtual bool CheckPreconditions(GameLiving living, long bitmask)
 		{
 			GamePlayer player = living as GamePlayer;
 			if ((bitmask & DEAD) != 0 && !living.IsAlive)
