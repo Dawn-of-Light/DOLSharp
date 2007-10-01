@@ -4213,9 +4213,11 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <param name="selfRegenerationTimer">timer calling this function</param>
 		protected virtual int PowerRegenerationTimerCallback(RegionTimer selfRegenerationTimer)
 		{
-			if (this is GamePlayer && (((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Vampiir 
-				|| ((GamePlayer)this).CharacterClass is ClassMauler))
-			{
+			if (this is GamePlayer && (((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Vampiir
+                || (((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Mauler_Alb)
+                || (((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Mauler_Hib)
+                || (((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Mauler_Mid)))
+            {
 				double MinMana = MaxMana * 0.15;
 				if (Mana < MinMana) return 0;
 				else ChangeMana(this, eManaChangeType.Regenerate, -1 * GetModified(eProperty.PowerRegenerationRate));
@@ -4386,9 +4388,9 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 				if (IsAlive && (m_mana < maxmana ||
 					(this is GamePlayer && (
 						((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Vampiir
-						|| ((GamePlayer)this).CharacterClass is ClassMauler)
-					)
-				))
+						|| (this is GamePlayer && ((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Mauler_Alb)
+                        || (this is GamePlayer && ((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Mauler_Hib)
+                        || (this is GamePlayer && ((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Mauler_Mid)))))
 				{
 					StartPowerRegeneration();
 				}

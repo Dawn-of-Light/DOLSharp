@@ -85,24 +85,42 @@ namespace DOL.GS.Scripts
 				player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_MaulerStaff));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_FistWraps));
-				switch (player.Realm)
-				{
-					case 1:
-						{
-							player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Leather));
-							break;
-						}
-					case 2:
-						{
-							player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Leather));
-							break;
-						}
-					case 3:
-						{
-							player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Leather));
-							break;
-						}
-				}
+                switch (player.Realm)
+                {
+                    case 1:
+                        {
+                            player.RemoveSpecialization(Specs.Slash);
+                            player.RemoveSpecialization(Specs.Thrust);
+                            player.RemoveSpecialization(Specs.Parry);
+                            player.RemoveSpecialization(Specs.Crush);
+                            player.RemoveAllStyles();
+                            player.RemoveAbility(Abilities.AlbArmor);
+                            player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Leather));
+                            break;
+                        }
+                    case 2:
+                        {
+                            player.RemoveSpecialization(Specs.Sword);
+                            player.RemoveSpecialization(Specs.Hammer);
+                            player.RemoveSpecialization(Specs.Axe);
+                            player.RemoveSpecialization(Specs.Parry);
+                            player.RemoveAllStyles();
+                            player.RemoveAbility(Abilities.MidArmor);
+                            player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Leather));
+                            break;
+                        }
+                    case 3:
+                        {
+                            player.RemoveSpecialization(Specs.Blades);
+                            player.RemoveSpecialization(Specs.Piercing);
+                            player.RemoveSpecialization(Specs.Parry);
+                            player.RemoveSpecialization(Specs.Blunt);
+                            player.RemoveAllStyles();
+                            player.RemoveAbility(Abilities.HibArmor);
+                            player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Leather));
+                            break;
+                        }
+                }
 
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
 
