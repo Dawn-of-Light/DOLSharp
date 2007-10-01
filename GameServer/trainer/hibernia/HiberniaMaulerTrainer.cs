@@ -46,7 +46,7 @@ namespace DOL.GS.Trainer
             if (!base.Interact(player)) return false;
 
             // check if class matches.				
-            if (player.CharacterClass.ID == (int)eCharacterClass.Mauler_Hib)
+            if (player.CharacterClass.ID > 59 || player.CharacterClass.ID < 63)
             {
 
                 // popup the training window
@@ -97,7 +97,8 @@ namespace DOL.GS.Trainer
                     // promote player to other class
                     if (CanPromotePlayer(player))
                     {
-                        PromotePlayer(player, (int)eCharacterClass.Mauler_Hib, "Welcome young Mauler. May your time in Hibernia be rewarding.", null);
+                        // Mauler_Hib = 62
+                        PromotePlayer(player, 62, "Welcome young Mauler. May your time in Hibernia be rewarding.", null);
                     }
                     break;
             }
