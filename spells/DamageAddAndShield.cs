@@ -295,26 +295,6 @@ namespace DOL.GS.Spells
 			MessageToLiving(effect.Owner, Spell.Message1, chatType);
 			Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, true)), chatType, effect.Owner);
 			GameEventMgr.AddHandler(effect.Owner, EventType, new DOLEventHandler(EventHandler));
-			GameEventMgr.AddHandlerUnique(effect.Owner, GameNPCEvent.Dying, new DOLEventHandler(CancelPetDmgShieldCallBack));
-			if (Caster is GamePlayer)
-			{
-				GameEventMgr.AddHandlerUnique(Caster, GamePlayerEvent.Moving, new DOLEventHandler(CancelPetDmgShieldCallBack));
-				GameEventMgr.AddHandlerUnique(Caster, GamePlayerEvent.CommandNpcRelease, new DOLEventHandler(CancelPetDmgShieldCallBack));
-			}
-		}
-
-		public void CancelPetDmgShieldCallBack(DOLEvent ev, object sender, EventArgs args)
-		{
-			if (Spell.SpellType.Equals("DamageShield") && Spell.Target.ToLower().Equals("pet"))
-			{
-				if (Spell.Pulse != 0 && CancelPulsingSpell(Caster, Spell.SpellType))
-				{
-					MessageToCaster(String.Format("{0} was cancelled !", Spell.Name), eChatType.CT_SpellExpires);
-				}
-			}
-			GameEventMgr.RemoveHandler(GamePlayerEvent.Moving, new DOLEventHandler(CancelPetDmgShieldCallBack));
-			GameEventMgr.RemoveHandler(GameNPCEvent.Dying, new DOLEventHandler(CancelPetDmgShieldCallBack));
-			GameEventMgr.RemoveHandler(GamePlayerEvent.CommandNpcRelease, new DOLEventHandler(CancelPetDmgShieldCallBack));
 		}
 
 		/// <summary>
