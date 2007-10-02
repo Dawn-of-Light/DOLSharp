@@ -86,6 +86,11 @@ namespace DOL.GS.Spells
         /// </summary>
         protected const int SPELL_INTERRUPT_DURATION = 3000; //3 sec for all spells!
 
+		/// <summary>
+		/// The property key for focus spells
+		/// </summary>
+		protected const string FOCUS_SPELL = "FOCUSING_A_SPELL";      
+        
         /// <summary>
         /// The CastingCompleteEvent
         /// </summary>
@@ -775,11 +780,8 @@ namespace DOL.GS.Spells
 
             // Apply Valkyrie RA5L effect
             ValhallasBlessingEffect ValhallasBlessing = (ValhallasBlessingEffect)m_caster.EffectList.GetOfType(typeof(ValhallasBlessingEffect));
-            if (ValhallasBlessing != null)
-            {
-                // I'm not sure of the %chance, maybe reduce it
-                if (Util.Chance(25)) return 0;
-            }
+            if (ValhallasBlessing != null && Util.Chance(10))
+  				return 0;
 
             // Apply Animist RA5L effect
             FungalUnionEffect FungalUnion = (FungalUnionEffect)m_caster.EffectList.GetOfType(typeof(FungalUnionEffect));
@@ -1457,7 +1459,7 @@ namespace DOL.GS.Spells
 							if (player == (GamePlayer)Caster)
 								continue;
 
-							if (!m_caster.IsObjectInFront(player, 100))
+							if (!m_caster.IsObjectInFront(player, (double)(Spell.Radius!=0 ? Spell.Radius : 100)))
 								continue;
 
 							if (!GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
@@ -1468,7 +1470,7 @@ namespace DOL.GS.Spells
 
 						foreach (GameNPC npc in target.GetNPCsInRadius((ushort)Spell.Range))
 						{
-							if (!m_caster.IsObjectInFront(npc, 100))
+							if (!m_caster.IsObjectInFront(npc, (double)(Spell.Radius!=0 ? Spell.Radius : 100)))
 								continue;
 
 							if (!GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
@@ -1761,6 +1763,15 @@ namespace DOL.GS.Spells
         {
             if (Spell.Pulse == 0)
                 SendEffectAnimation(effect.Owner, 0, false, 1);
+     		if (Spell.IsFocus) // Add Event handlers for focus spell
+			{
+				Caster.TempProperties.setProperty(FOCUS_SPELL, effect);
+	            GameEventMgr.AddHandler(Caster, GameLivingEvent.AttackFinished, new DOLEventHandler(EventAction));
+	            GameEventMgr.AddHandler(Caster, GameLivingEvent.CastSpell, new DOLEventHandler(EventAction));
+	            GameEventMgr.AddHandler(Caster, GameLivingEvent.Moving, new DOLEventHandler(EventAction));
+	            GameEventMgr.AddHandler(Caster, GameLivingEvent.Dying, new DOLEventHandler(EventAction));
+	            GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.Dying, new DOLEventHandler(EventAction));				
+			}    
         }
 
         /// <summary>
@@ -1908,7 +1919,40 @@ namespace DOL.GS.Spells
                 ((GamePlayer)living).Out.SendMessage(message, type, eChatLoc.CL_SystemWindow);
             }
         }
+		
+		/// <summary>
+		/// Hold events for focus spells
+		/// </summary>
+		/// <param name="living"></param>
+		/// <param name="message"></param>
+		/// <param name="type"></param>		
+        private void EventAction(DOLEvent e, object sender, EventArgs args)
+        {
+            GameLiving living = sender as GameLiving;
+            if (living == null) return;
 
+            GameSpellEffect currentEffect = (GameSpellEffect)living.TempProperties.getObjectProperty(FOCUS_SPELL, null);
+            if (currentEffect == null) return;  
+  
+            if (args is CastSpellEventArgs)
+            {
+                if ((args as CastSpellEventArgs).SpellHandler.Caster != Caster)
+                    return;
+                if ((args as CastSpellEventArgs).SpellHandler.Spell.SpellType == currentEffect.Spell.SpellType)
+                	return;
+            }          
+            
+	        GameEventMgr.RemoveHandler(Caster, GameLivingEvent.AttackFinished, new DOLEventHandler(EventAction));
+	        GameEventMgr.RemoveHandler(Caster, GameLivingEvent.CastSpell, new DOLEventHandler(EventAction));
+	        GameEventMgr.RemoveHandler(Caster, GameLivingEvent.Moving, new DOLEventHandler(EventAction));
+	        GameEventMgr.RemoveHandler(Caster, GameLivingEvent.Dying, new DOLEventHandler(EventAction));
+	        GameEventMgr.RemoveHandler(currentEffect.Owner, GameLivingEvent.Dying, new DOLEventHandler(EventAction));
+			Caster.TempProperties.removeProperty(FOCUS_SPELL);       
+  
+            if(currentEffect.Spell.Pulse != 0) CancelPulsingSpell(Caster, currentEffect.Spell.SpellType);
+            else currentEffect.Cancel(false);
+            MessageToCaster(String.Format("{0} was cancelled !", currentEffect.Spell.Name), eChatType.CT_SpellExpires);
+        }
         #endregion
 
         /// <summary>
@@ -2017,6 +2061,8 @@ namespace DOL.GS.Spells
                     list.Add("Radius: " + Spell.Radius);
                 if (Spell.DamageType != eDamageType.Natural)
                     list.Add("Damage: " + GlobalConstants.DamageTypeToName(Spell.DamageType));
+				if (Spell.IsFocus)
+					list.Add("This is a focus spell. Cancels if you do any action.");
 
                 return list;
             }

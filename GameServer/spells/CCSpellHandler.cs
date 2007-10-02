@@ -59,7 +59,7 @@ namespace DOL.GS.Spells
 		/// <param name="effect"></param>
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
-			SendEffectAnimation(effect.Owner, 0, false, 1);
+			base.OnEffectStart(effect);
 
 			MessageToLiving(effect.Owner, Spell.Message1, eChatType.CT_Spell);
 			MessageToCaster(Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, true)), eChatType.CT_Spell);

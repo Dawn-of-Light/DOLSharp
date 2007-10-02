@@ -103,6 +103,7 @@ namespace DOL.GS.Spells
 			if (player != null)
 			{
 				player.Out.SendCharResistsUpdate();
+				player.UpdatePlayerStatus();
 			}
 		}
 		// constructor

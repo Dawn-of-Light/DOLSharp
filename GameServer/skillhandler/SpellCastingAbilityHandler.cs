@@ -29,7 +29,10 @@ namespace DOL.GS.SkillHandler
  			Spell abSpell = SkillBase.GetSpellByID(SpellID);
  
 			if (spline != null && abSpell != null)
+			{
 				player.CastSpell(abSpell, spline);
+				player.DisableSkill(ab, (abSpell.RecastDelay==0 ? 3 : abSpell.RecastDelay));
+			}
 		}
 
 		/// <summary>

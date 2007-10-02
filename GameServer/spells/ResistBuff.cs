@@ -34,6 +34,12 @@ namespace DOL.GS.Spells
 		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
+             if (SpellHandler.FindEffectOnTarget(target, "VampiirMagicResistance") != null 
+                || SpellHandler.FindEffectOnTarget(target, "VampiirMeleeResistance") != null)
+            {
+                MessageToLiving(target, "You did not receive the buff because you already have resists active!", eChatType.CT_SpellResisted);
+                return;
+            }
 			base.ApplyEffectOnTarget(target, 1);
 		}
 

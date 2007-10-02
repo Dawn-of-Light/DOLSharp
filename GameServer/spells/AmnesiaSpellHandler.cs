@@ -50,6 +50,9 @@ namespace DOL.GS.Spells
 			base.OnDirectEffect(target, effectiveness);
 			if (target == null || !target.IsAlive)
 				return;
+			
+			if (Caster.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) != null)
+				return;
 
 			//have to do it here because OnAttackedByEnemy is not called to not get aggro
 			if (target.Realm == 0 || Caster.Realm == 0)
