@@ -46,7 +46,7 @@ namespace DOL.GS.Trainer
             if (!base.Interact(player)) return false;
 
             // check if class matches.				
-            if (player.CharacterClass.ID > 59 || player.CharacterClass.ID < 63)
+            if (player.CharacterClass.ID > 59 && player.CharacterClass.ID < 63)
             {
 
                 // popup the training window
