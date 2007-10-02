@@ -77,7 +77,9 @@ namespace DOL.GS.Spells
 		protected override void OnSpellResisted(GameLiving target)
 		{
 			base.OnSpellResisted(target);
-			if (Spell.Damage == 0 && Spell.CastTime == 0)
+
+			// Interrupt only if target is actually casting
+			if (Spell.Damage == 0 && Spell.CastTime == 0 && IsCasting)
 				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
 		}
 
