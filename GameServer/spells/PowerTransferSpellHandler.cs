@@ -24,14 +24,14 @@ namespace DOL.GS.Spells
 {
 	/// <summary>
 	/// Based on HealSpellHandler.cs
-	/// Spell calculates a percentage of the caster's health.
-	/// Heals target for the full amount, Caster loses half that amount in health.
+	/// Spell calculates a percentage of the caster's power.
+	/// Heals target for the full amount, Caster loses half that amount in power.
 	/// </summary>
-	[SpellHandlerAttribute("LifeTransfer")]
-	public class LifeTransferSpellHandler : SpellHandler
+	[SpellHandlerAttribute("PowerTransfer")]
+	public class PowerTransferSpellHandler : SpellHandler
 	{
 		// constructor
-		public LifeTransferSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+		public PowerTransferSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
 		/// <summary>
 		/// Execute lifetransfer spell
@@ -45,39 +45,32 @@ namespace DOL.GS.Spells
 			int transferHeal;
 			double spellValue = m_spell.Value;
 
-			transferHeal = (int)(Caster.MaxHealth / 100 * Math.Abs(spellValue));
-
+			transferHeal = (int)(Caster.MaxMana / 100 * Math.Abs(spellValue));
+			
 			//Needed to prevent divide by zero error
 			if (transferHeal <= 0)
 				transferHeal = 0; 
 			else
 			{
 				//Remaining health is used if caster does not have enough health, leaving caster at 1 hitpoint
-				if ( (transferHeal >> 1) >= Caster.Health )
-					transferHeal = ( (Caster.Health - 1) << 1);
+				if ( (transferHeal >> 1) >= Caster.Mana )
+					transferHeal = ( (Caster.Mana - 1) << 1);
 			}
 
 
 
 			foreach(GameLiving healTarget in targets)
 			{
-				if (target.IsDiseased)
-				{
-					MessageToCaster("Your target is diseased!", eChatType.CT_SpellResisted);
-					healed |= HealTarget(healTarget, ( transferHeal >>= 1 ));	
-				}
-
-				else healed |= HealTarget(healTarget, transferHeal);
+				healed |= HealTarget(healTarget, transferHeal);
 			}
-
 			if (!healed && Spell.Target == "Realm")
 			{
-				m_caster.Mana -= CalculateNeededPower(target) >> 1;	// only 1/2 power if no heal
+				Caster.Mana -= CalculateNeededPower(target) >> 1;	// only 1/2 power if no heal
 			}
 			else
 			{
-				m_caster.Mana -= CalculateNeededPower(target);
-				m_caster.Health -= transferHeal >> 1;
+				Caster.Mana -= CalculateNeededPower(target);
+				Caster.Mana -= transferHeal >> 1;
 			}
 
 			// send animation for non pulsing spells only
@@ -115,34 +108,34 @@ namespace DOL.GS.Spells
 
 			if (m_caster == target)
 			{
-				MessageToCaster("You cannot transfer life to yourself.", eChatType.CT_SpellResisted);
+				MessageToCaster("You cannot transfer power to yourself.", eChatType.CT_SpellResisted);
 				return false;
 			}
 			
-			if (amount <= 0) //Player does not have enough health to transfer
+			if (amount <= 0)
 			{
-				MessageToCaster("You do not have enough health to transfer.", eChatType.CT_SpellResisted);
+				MessageToCaster("You do not have enough power to transfer.", eChatType.CT_SpellResisted);
 				return false;  
 			}
 
 
-			int heal = target.ChangeHealth(Caster, GameLiving.eHealthChangeType.Spell, amount);			
+			int heal = target.ChangeMana(Caster, GameLiving.eManaChangeType.Spell, amount);			
 
 			if (heal == 0) 
 			{
 				if (Spell.Pulse == 0)
 				{
-					MessageToCaster(target.GetName(0, true)+" is fully healed.", eChatType.CT_SpellResisted);
+					MessageToCaster(target.GetName(0, true)+" is fully powered.", eChatType.CT_SpellResisted);
 				}
 
 				return false;
 			}
 
 			
-			MessageToCaster("You heal " + target.GetName(0, false) + " for " + heal + " hit points!", eChatType.CT_Spell);
-			MessageToLiving(target, "You are healed by " + m_caster.GetName(0, false) + " for " + heal + " hit points.", eChatType.CT_Spell);
+			MessageToCaster("You heal " + target.GetName(0, false) + " for " + heal + " power points!", eChatType.CT_Spell);
+			MessageToLiving(target, "You are healed by " + m_caster.GetName(0, false) + " for " + heal + " power points.", eChatType.CT_Spell);
 			if(heal < amount)
-					MessageToCaster(target.GetName(0, true)+" is fully healed.", eChatType.CT_Spell);
+					MessageToCaster(target.GetName(0, true)+" is fully powered.", eChatType.CT_Spell);
 
 			return true;
 		}
