@@ -3763,6 +3763,36 @@ namespace DOL.GS
 
 		#endregion
 
+		/// <summary>
+		/// Whether this NPC is available to add on a fight.
+		/// </summary>
+		public bool IsAvailable
+		{
+			get { return !(Brain is IControlledBrain) && !InCombat; }
+		}
+
+		/// <summary>
+		/// Whether this NPC is aggressive.
+		/// </summary>
+		public bool IsAggressive
+		{
+			get
+			{
+				ABrain brain = Brain;
+				return (brain == null) ? false : (brain is IAggressiveBrain);
+			}
+		}
+
+		/// <summary>
+		/// Whether this NPC is a friend or not.
+		/// </summary>
+		/// <param name="npc">The NPC that is checked against.</param>
+		/// <returns></returns>
+		public bool IsFriend(GameNPC npc)
+		{
+			return (npc.Faction == Faction);
+		}
+
         private string m_boatowner_id;
         /// <summary>
 		/// Constructs a NPC
