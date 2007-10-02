@@ -80,6 +80,7 @@ namespace DOL.GS.Spells
                 controlledBrain.WalkState = eWalkState.Stay;
                 controlledBrain.IsMainPet = false;
                 GameNPC turret = new GameNPC();
+                turret.HealthMultiplicator = true;
                 turret.SetOwnBrain(controlledBrain);
                 turret.X = x;
                 turret.Y = y;

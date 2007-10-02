@@ -23,7 +23,6 @@ using System.Reflection;
 
 using DOL.Database;
 using DOL.GS;
-using DOL.GS.Effects;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.GS.ServerProperties;
@@ -135,6 +134,7 @@ namespace DOL.GS.ServerRules
 					{
 						Account account = objs[0] as Account;
 						if (account.PrivLevel > 1) return true;
+                        if (account.Status > 0) return true; //VIP
 					}
 
 					// Normal Players will not be allowed over the max
@@ -211,21 +211,6 @@ namespace DOL.GS.ServerRules
 				}
 			}
 
-            // Apply Mentalist RA5L
-            if (playerDefender != null)
-            {
-                SelectiveBlindnessEffect SelectiveBlindness = (SelectiveBlindnessEffect)playerDefender.EffectList.GetOfType(typeof(SelectiveBlindnessEffect));
-                if (SelectiveBlindness != null)
-                {
-                    GamePlayer EffectOwner = (GamePlayer)(playerDefender.TempProperties.getObjectProperty("SelectiveBlindnessOwner", null));
-                    if (EffectOwner == playerAttacker)
-                    {
-                        MessageToLiving(attacker, defender.Name + " is invisible to you!");
-                        return false;
-                    }
-                }
-            }
-
 			// PEACE NPCs can't be attacked/attack
 			if (attacker is GameNPC)
 				if ((((GameNPC)attacker).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
@@ -245,14 +230,17 @@ namespace DOL.GS.ServerRules
 				if (!area.IsSafeArea)
 					continue;
 
-				if (quiet == false) MessageToLiving(attacker, "You can't attack someone in a safe area!");
-				return false;
+                if (defender is GamePlayer)
+                {
+                    if (quiet == false) MessageToLiving(attacker, "You can't attack someone in a safe area!");
+                    return false;
+                }
 			}
 
 			//safe area support for attacker
 			foreach (AbstractArea area in attacker.CurrentAreas)
 			{
-				if (area.IsSafeArea)
+				if ((area.IsSafeArea) && (defender is GamePlayer) && (attacker is GamePlayer))
 				{
 					if (quiet == false) MessageToLiving(attacker, "You can't attack someone in a safe area!");
 					return false;
@@ -443,7 +431,7 @@ namespace DOL.GS.ServerRules
 				case eObjectType.Flexible: oneHandCheck = new string[] { Abilities.Weapon_Flexible }; break;
 				case eObjectType.TwoHandedWeapon: twoHandCheck = new string[] { Abilities.Weapon_TwoHanded, Abilities.Weapon_LargeWeapons }; break;
 				case eObjectType.PolearmWeapon: twoHandCheck = new string[] { Abilities.Weapon_Polearms, Abilities.Weapon_CelticSpear, Abilities.Weapon_Spears }; break;
-				case eObjectType.Longbow: otherCheck = new string[] { Abilities.Weapon_Longbows }; break;
+                case eObjectType.Longbow: otherCheck = new string[] { Abilities.Weapon_Longbows, Abilities.Weapon_Archery }; break;
 				case eObjectType.Crossbow: otherCheck = new string[] { Abilities.Weapon_Crossbow }; break;
 
 				//mid
@@ -453,7 +441,7 @@ namespace DOL.GS.ServerRules
 				case eObjectType.Axe: oneHandCheck = new string[] { Abilities.Weapon_Axes, Abilities.Weapon_Slashing, Abilities.Weapon_Blades }; twoHandCheck = new string[] { Abilities.Weapon_Axes }; break;
 				case eObjectType.HandToHand: oneHandCheck = new string[] { Abilities.Weapon_HandToHand }; break;
 				case eObjectType.Spear: twoHandCheck = new string[] { Abilities.Weapon_Spears, Abilities.Weapon_CelticSpear, Abilities.Weapon_Polearms }; break;
-				case eObjectType.CompositeBow: otherCheck = new string[] { Abilities.Weapon_CompositeBows }; break;
+                case eObjectType.CompositeBow: otherCheck = new string[] { Abilities.Weapon_CompositeBows, Abilities.Weapon_Archery }; break;
 				case eObjectType.Thrown: otherCheck = new string[] { Abilities.Weapon_Thrown }; break;
 
 				//hib
@@ -463,12 +451,12 @@ namespace DOL.GS.ServerRules
 				case eObjectType.LargeWeapons: twoHandCheck = new string[] { Abilities.Weapon_LargeWeapons, Abilities.Weapon_TwoHanded }; break;
 				case eObjectType.CelticSpear: twoHandCheck = new string[] { Abilities.Weapon_CelticSpear, Abilities.Weapon_Spears, Abilities.Weapon_Polearms }; break;
 				case eObjectType.Scythe: twoHandCheck = new string[] { Abilities.Weapon_Scythe }; break;
-				case eObjectType.RecurvedBow: otherCheck = new string[] { Abilities.Weapon_RecurvedBows }; break;
+				case eObjectType.RecurvedBow: otherCheck = new string[] { Abilities.Weapon_RecurvedBows, Abilities.Weapon_Archery }; break;
 
 				//misc
 				case eObjectType.Magical: return true;
 				case eObjectType.Shield: return living.GetAbilityLevel(Abilities.Shield) >= item.Type_Damage;
-				case eObjectType.Arrow: otherCheck = new string[] { Abilities.Weapon_CompositeBows, Abilities.Weapon_Longbows, Abilities.Weapon_RecurvedBows, Abilities.Weapon_Shortbows }; break;
+                case eObjectType.Arrow: otherCheck = new string[] { Abilities.Weapon_CompositeBows, Abilities.Weapon_Longbows, Abilities.Weapon_RecurvedBows, Abilities.Weapon_Shortbows, Abilities.Weapon_Archery }; break;
 				case eObjectType.Bolt: otherCheck = new string[] { Abilities.Weapon_Crossbow }; break;
 				case eObjectType.Poison: return living.GetModifiedSpecLevel(Specs.Envenom) > 0;
 				case eObjectType.Instrument: return living.HasAbility(Abilities.Weapon_Instruments);
@@ -823,6 +811,15 @@ namespace DOL.GS.ServerRules
 						}
 
 						xpReward += (long)campBonus + groupExp + outpostXP;
+
+						//Ryan: 75% if has a pet
+						if (living is GamePlayer)
+						{
+							GamePlayer player = living as GamePlayer;
+							if (player.ControlledNpc != null)
+								xpReward = (long)(xpReward * 0.75);
+						}
+
 						if (!living.IsAlive)//Dead living gets 25% exp only
 							xpReward = (long)(xpReward * 0.25);
 						living.GainExperience(xpReward, (long)campBonus, groupExp, outpostXP, true, false);
@@ -1149,12 +1146,17 @@ namespace DOL.GS.ServerRules
 					living.GainExperience(xpReward);
 
 					//gold
-					if (living is GamePlayer)
-					{
-						long money = (long)(playerMoneyValue * damagePercent);
-						//long money = (long)(Money.GetMoney(0, 0, 17, 85, 0) * damagePercent * killedPlayer.Level / 50);
-						((GamePlayer)living).AddMoney(money, "You recieve {0}");
-					}
+                    if (living is GamePlayer)
+                    {
+                        long money = (long)(playerMoneyValue * damagePercent);
+                        GamePlayer player = living as GamePlayer;
+                        if (player.GetSpellLine("Spymaster") != null)
+                        {
+                            money += 20 * money / 100;
+                        }
+                        //long money = (long)(Money.GetMoney(0, 0, 17, 85, 0) * damagePercent * killedPlayer.Level / 50);
+                        ((GamePlayer)living).AddMoney(money, "You recieve {0}");
+                    }
 					
 					if (killedPlayer.ReleaseType != GamePlayer.eReleaseType.Duel && expGainPlayer != null)
 					{
@@ -1219,10 +1221,23 @@ namespace DOL.GS.ServerRules
 		/// <param name="source">The "looking" player</param>
 		/// <param name="target">The considered player</param>
 		/// <returns>The name of the target</returns>
-		public virtual string GetPlayerName(GamePlayer source, GamePlayer target)
-		{
-			return target.Name;
-		}
+        public virtual string GetPlayerName(GamePlayer source, GamePlayer target)
+        {
+            return target.Name;
+        }
+
+        /// <summary>
+        /// Gets the player Realmrank 12 or 13 title
+        /// </summary>
+        /// <param name="source">The "looking" player</param>
+        /// <param name="target">The considered player</param>
+        /// <returns>The Realmranktitle of the target</returns>
+        public virtual string GetPlayerPrefixName(GamePlayer source, GamePlayer target)
+        {
+            if (IsSameRealm(source, target, true))
+                return target.PrefixName;
+            return string.Empty;
+        } 
 
 		/// <summary>
 		/// Gets the player last name based on server type

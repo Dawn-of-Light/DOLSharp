@@ -43,75 +43,75 @@ namespace DOL.GS.PacketHandler
 		{
 
 		}
+		
+        public override void SendLivingEquipmentUpdate(GameLiving living)
+        {
+            GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.EquipmentUpdate));
+            ICollection items = null;
+            if (living.Inventory != null)
+                items = living.Inventory.VisibleItems;
 
-		public override void SendLivingEquipmentUpdate(GameLiving living)
-		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.EquipmentUpdate));
-			ICollection items = null;
-			if (living.Inventory != null)
-				items = living.Inventory.VisibleItems;
+            pak.WriteShort((ushort)living.ObjectID);
+            pak.WriteByte((byte)living.VisibleActiveWeaponSlots);
+            pak.WriteByte(0); // new in 189b+, show shield in left hand ? 
+            pak.WriteByte((byte)((living.IsCloakInvisible ? 0x01 : 0x00) | (living.IsHelmInvisible ? 0x02 : 0x00))); // new in 189b+, cloack/helm visibility 
+            pak.WriteByte((byte)((living.IsCloakHoodUp ? 0x01 : 0x00) | (int)living.ActiveQuiverSlot)); //bit0 is hood up bit4 to 7 is active quiver 
 
-			pak.WriteShort((ushort)living.ObjectID);
-			pak.WriteByte((byte)living.VisibleActiveWeaponSlots);
-			pak.WriteByte(0); // new in 189b+, show shield in left hand ? 
-			pak.WriteByte((byte)((living.IsCloakInvisible ? 0x01 : 0x00) | (living.IsHelmInvisible ? 0x02 : 0x00))); // new in 189b+, cloack/helm visibility 
-			pak.WriteByte((byte)((living.IsCloakHoodUp ? 0x01 : 0x00) | (int)living.ActiveQuiverSlot)); //bit0 is hood up bit4 to 7 is active quiver 
+            if (items != null)
+            {
+                pak.WriteByte((byte)items.Count);
+                foreach (InventoryItem item in items)
+                {
+                    ushort model = (ushort)(item.Model & 0x1FFF);
+                    int slot = item.SlotPosition;
+                    //model = GetModifiedModel(model);
+                    int texture = item.Color;
+                    if (item.Emblem != 0)
+                    {
+                        texture = (ushort)item.Emblem;
+                        if (item.SlotPosition == Slot.LEFTHAND || item.SlotPosition == Slot.CLOAK) // for test only cloack and shield 
+                            slot = slot | ((item.Emblem & 0x010000) >> 9); // slot & 0x80 if new emblem 
+                    }
+                    pak.WriteByte((byte)slot);
+                    if ((texture & ~0xFF) != 0)
+                        model |= 0x8000;
+                    else if ((texture & 0xFF) != 0)
+                        model |= 0x4000;
+                    if (item.Effect != 0)
+                        model |= 0x2000;
 
-			if (items != null)
-			{
-				pak.WriteByte((byte)items.Count);
-				foreach (InventoryItem item in items)
-				{
-					ushort model = (ushort)(item.Model & 0x1FFF);
-					int slot = item.SlotPosition;
-					//model = GetModifiedModel(model);
-					int texture = item.Color;
-					if (item.Emblem != 0)
-					{
-						texture = (ushort)item.Emblem;
-						if (item.SlotPosition == Slot.LEFTHAND || item.SlotPosition == Slot.CLOAK) // for test only cloack and shield 
-							slot = slot | ((item.Emblem & 0x010000) >> 9); // slot & 0x80 if new emblem 
-					}
-					pak.WriteByte((byte)slot);
-					if ((texture & ~0xFF) != 0)
-						model |= 0x8000;
-					else if ((texture & 0xFF) != 0)
-						model |= 0x4000;
-					if (item.Effect != 0)
-						model |= 0x2000;
+                    pak.WriteShort(model);
 
-					pak.WriteShort(model);
+                    if (item.SlotPosition > Slot.RANGED || item.SlotPosition < Slot.RIGHTHAND)
+                        pak.WriteByte((byte)item.Extension);
 
-					if (item.SlotPosition > Slot.RANGED || item.SlotPosition < Slot.RIGHTHAND)
-						pak.WriteByte((byte)item.Extension);
-
-					if ((texture & ~0xFF) != 0)
-						pak.WriteShort((ushort)texture);
-					else if ((texture & 0xFF) != 0)
-						pak.WriteByte((byte)texture);
-					if (item.Effect != 0)
-						pak.WriteByte((byte)item.Effect);
-				}
-			}
-			else
-			{
-				pak.WriteByte(0x00);
-			}
-			SendTCP(pak);
+                    if ((texture & ~0xFF) != 0)
+                        pak.WriteShort((ushort)texture);
+                    else if ((texture & 0xFF) != 0)
+                        pak.WriteByte((byte)texture);
+                    if (item.Effect != 0)
+                        pak.WriteByte((byte)item.Effect);
+                }
+            }
+            else
+            {
+                pak.WriteByte(0x00);
+            }
+            SendTCP(pak);
 		}
 
 		protected override void SendInventorySlotsUpdateBase(ICollection slots, byte preAction)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.InventoryUpdate));
 			pak.WriteByte((byte)(slots == null ? 0 : slots.Count));
-			pak.WriteByte(0); // new in 189b+, show shield in left hand 
-			pak.WriteByte((byte)((m_gameClient.Player.IsCloakInvisible ? 0x01 : 0x00) | (m_gameClient.Player.IsHelmInvisible ? 0x02 : 0x00))); // new in 189b+, cloack/helm visibility 
+            pak.WriteByte(0); // new in 189b+, show shield in left hand 
+            pak.WriteByte((byte)((m_gameClient.Player.IsCloakInvisible ? 0x01 : 0x00) | (m_gameClient.Player.IsHelmInvisible ? 0x02 : 0x00))); // new in 189b+, cloack/helm visibility 
 			pak.WriteByte((byte)((m_gameClient.Player.IsCloakHoodUp ? 0x01 : 0x00) | (int)m_gameClient.Player.ActiveQuiverSlot)); //bit0 is hood up bit4 to 7 is active quiver
-			// ^ in 1.89b+, 0 bit - showing hooded cloack, if not hooded not show cloack at all ? 
-			pak.WriteByte((byte)m_gameClient.Player.VisibleActiveWeaponSlots);
-			pak.WriteByte(preAction); //preAction (0x00 - Do nothing)	
-			//pak.WriteByte(0x00);
-			//pak.WriteByte(0x00);
+            // ^ in 1.89b+, 0 bit - showing hooded cloack, if not hooded not show cloack at all ? 
+            pak.WriteByte((byte)m_gameClient.Player.VisibleActiveWeaponSlots);
+            pak.WriteByte(preAction); //preAction (0x00 - Do nothing) 
+            //pak.WriteByte(0x00);
+            //pak.WriteByte(0x00);
 			if (slots != null)
 			{
 				foreach (int updatedSlot in slots)

@@ -46,15 +46,18 @@ namespace DOL.GS.Spells
                 bomber.SetOwnBrain(controlledBrain);
                 int x, y;
                 Caster.GetSpotFromHeading(64, out x, out y);
+                bomber.HealthMultiplicator = true;
                 bomber.X = x;
                 bomber.Y = y;
                 bomber.Z = Caster.Z;
                 bomber.CurrentRegion = Caster.CurrentRegion;
                 bomber.Realm = Caster.Realm;
-                //Temporaly fix
                 bomber.Flags |= (uint)GameNPC.eFlags.PEACE;
+                //bomber.MaxSpeedBase = 400;
+                //bomber.Model = 966;
                 bomber.Level = Caster.Level;
                 bomber.Name = Spell.Name;
+                //bomber.Abilities.Add(Abilities.CCImmunity, Abilities.CCImmunity);
                 bomber.AddToWorld();
 
                 if (m_spell.Duration > 0)
@@ -115,8 +118,11 @@ namespace DOL.GS.Spells
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
             GameEventMgr.RemoveHandler(effect.Owner, GameNPCEvent.ArriveAtTarget, new DOLEventHandler(BomberArriveAtTarget));
-            effect.Owner.Health = 0;
-            effect.Owner.Delete();
+            if (effect.Owner.IsAlive)
+            {
+                effect.Owner.Health = 0;
+                effect.Owner.Delete();
+            }
             return 0;
         }
 

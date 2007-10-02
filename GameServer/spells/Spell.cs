@@ -57,6 +57,7 @@ namespace DOL.GS
 		protected readonly int m_spellGroup = 0;
 		protected readonly int m_effectGroup = 0;
 		protected readonly int m_subSpellID = 0;
+        protected readonly int m_sharedtimergroup = 0; 
 		protected readonly bool m_moveCast = false;
 		protected readonly bool m_uninterruptible = false;
 		protected readonly int m_healthPenalty = 0;
@@ -117,6 +118,11 @@ namespace DOL.GS
 		{
 			get { return m_description; }
 		}
+
+        public int SharedTimerGroup
+        {
+            get { return m_sharedtimergroup; }
+        }
 
 		public string Target
 		{
@@ -333,6 +339,7 @@ namespace DOL.GS
 			m_isprimary = dbspell.IsPrimary;
 			m_issecondary = dbspell.IsSecondary;
 			m_allowbolt = dbspell.AllowBolt;
+            m_sharedtimergroup = dbspell.SharedTimerGroup;
 		}
 		// add for warlocks
 		public virtual Spell Copy()

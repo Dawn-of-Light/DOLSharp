@@ -43,11 +43,7 @@ namespace DOL.GS.Spells
 	{
         protected int x, y, z;
 
-		public SummonSpellHandler(GameLiving caster, Spell spell, SpellLine line)
-			: base(caster, spell, line)
-		{
-
-		}
+		public SummonSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
 		/// <summary>
 		/// called after normal spell cast is completed and effect has to be started
@@ -103,25 +99,20 @@ namespace DOL.GS.Spells
 		/// </summary>
 		/// <param name="target">target that gets the effect</param>
 		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
-		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
-		{
-			if (Caster == null)
-			{
-				return;
-			}
+        public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+        {
+            GamePlayer player = Caster as GamePlayer;
+            INpcTemplate template = NpcTemplateMgr.GetTemplate(Spell.LifeDrainReturn);
+            if (template == null)
+            {
+                if (log.IsWarnEnabled)
+                    log.WarnFormat("NPC template {0} not found! Spell: {1}", Spell.LifeDrainReturn, Spell.ToString());
+                MessageToCaster("NPC template " + Spell.LifeDrainReturn + " not found!", eChatType.CT_System);
+                return;
+            }
 
-			INpcTemplate template = NpcTemplateMgr.GetTemplate(Spell.LifeDrainReturn);
-			if (template == null)
-			{
-				if (log.IsWarnEnabled)
-					log.WarnFormat("NPC template {0} not found! Spell: {1}", Spell.LifeDrainReturn, Spell.ToString());
-				MessageToCaster("NPC template " + Spell.LifeDrainReturn + " not found!", eChatType.CT_System);
-				return;
-			}
+            GameSpellEffect effect = CreateSpellEffect(target, effectiveness);
 
-			GameSpellEffect effect = CreateSpellEffect(target, effectiveness);
-			//Duration is in milliseconds. 65535 is in seconds.  Lets multiply in order to avoid
-			//dividing.
             if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ID == (int)eCharacterClass.Animist)
             {
                 x = Caster.GroundTarget.X;
@@ -133,14 +124,15 @@ namespace DOL.GS.Spells
                 Caster.GetSpotFromHeading(64, out x, out y);
                 z = Caster.Z;
             }
-			if (Spell.Duration < ushort.MaxValue * 1000)
-			{
-				ControlledNpc controlledBrain = new ControlledNpc(Caster);
+            if (Spell.Duration < ushort.MaxValue)
+            {
+                ControlledNpc controlledBrain = new ControlledNpc(Caster);
 
-				GameNPC summoned = new GameNPC(template);
-				controlledBrain.WalkState = eWalkState.Stay;
+                GameNPC summoned = new GameNPC(template);
+                controlledBrain.WalkState = eWalkState.Stay;
                 controlledBrain.IsMainPet = false;
 				summoned.SetOwnBrain(controlledBrain);
+                summoned.HealthMultiplicator = true;
 				summoned.X = x;
 				summoned.Y = y;
 				summoned.Z = z;
@@ -159,67 +151,65 @@ namespace DOL.GS.Spells
                 //Initialize the Theurgist Petcap
                 if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ID == (int)eCharacterClass.Theurgist)
                     ((GamePlayer)Caster).PetCounter++;
-			}
-			else
-			{
-				target.GetSpotFromHeading(64, out x, out y);
+            }
+            else
+            {
+                ControlledNpc controlledBrain = new ControlledNpc(Caster);
 
-				ControlledNpc controlledBrain = new ControlledNpc(Caster);
+                GameNPC summoned = new GameNPC(template);
+                summoned.SetOwnBrain(controlledBrain);
+                summoned.X = x;
+                summoned.Y = y;
+                summoned.Z = z;
+                summoned.CurrentRegion = target.CurrentRegion;
+                summoned.Heading = (ushort)((target.Heading + 2048) % 4096);
+                summoned.Realm = target.Realm;
+                summoned.CurrentSpeed = 0;
+                if (Spell.Damage < 0) summoned.Level = (byte)(target.Level * Spell.Damage * -0.01);
+                else summoned.Level = (byte)Spell.Damage;
+                if (summoned.Level > Spell.Value) summoned.Level = (byte)Spell.Value;
+                //TODO: add in here based on summoned.Level how many minions can be summoned
+                if (Caster is GamePlayer && player.CharacterClass.ID == (int)eCharacterClass.Bonedancer)
+                {
+                    switch (summoned.Name.ToLower())
+                    {
+                        case "returned commander":
+                        case "decayed commander":
+                            summoned.InitControlledNpc(0);
+                            break;
+                        case "skeletal commander":
+                            summoned.InitControlledNpc(1);
+                            break;
+                        case "bone commander":
+                            summoned.InitControlledNpc(2);
+                            break;
+                        case "dread commander":
+                        case "dread guardian":
+                        case "dread lich":
+                        case "dread archer":
+                            summoned.InitControlledNpc(3);
+                            break;
+                    }
+                    if (summoned.Inventory != null)
+                    {
+                        if (summoned.Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
+                            summoned.SwitchWeapon(GameLiving.eActiveWeaponSlot.Distance);
+                        else if (summoned.Inventory.GetItem(eInventorySlot.RightHandWeapon) != null)
+                            summoned.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
+                        else if (summoned.Inventory.GetItem(eInventorySlot.TwoHandWeapon) != null)
+                            summoned.SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded);
+                    }
+                }
+                summoned.AddToWorld();
+                if (Caster is GamePlayer)
+                    GameEventMgr.AddHandler(player, GamePlayerEvent.CommandNpcRelease, new DOLEventHandler(OnNpcReleaseCommand));
+                GameEventMgr.AddHandler(summoned, GameLivingEvent.WhisperReceive, new DOLEventHandler(OnWhisperReceive));
 
-				GameNPC summoned = new GameNPC(template);
-				summoned.SetOwnBrain(controlledBrain);
-
-				summoned.X = x;
-				summoned.Y = y;
-				summoned.Z = target.Z;
-				summoned.CurrentRegion = target.CurrentRegion;
-				summoned.Heading = (ushort)((target.Heading + 2048) % 4096);
-				summoned.Realm = target.Realm;
-				summoned.CurrentSpeed = 0;
-				if (Spell.Damage < 0) summoned.Level = (byte)(target.Level * Spell.Damage * -0.01);
-				else summoned.Level = (byte)Spell.Damage;
-				if (summoned.Level > Spell.Value) summoned.Level = (byte)Spell.Value;
-				//Determines the ammount of minions each commander can have
-				if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ID == (int)eCharacterClass.Bonedancer)
-				{
-					switch (summoned.Name.ToLower())
-					{
-						case "returned commander":
-						case "decayed commander":
-							summoned.InitControlledNpc(0);
-							break;
-						case "skeletal commander":
-							summoned.InitControlledNpc(1);
-							break;
-						case "bone commander":
-							summoned.InitControlledNpc(2);
-							break;
-						case "dread commander":
-						case "dread guardian":
-						case "dread lich":
-						case "dread archer":
-							summoned.InitControlledNpc(3);
-							break;
-					}
-					if (summoned.Inventory != null)
-					{
-						if (summoned.Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
-							summoned.SwitchWeapon(GameLiving.eActiveWeaponSlot.Distance);
-						else if (summoned.Inventory.GetItem(eInventorySlot.RightHandWeapon) != null)
-							summoned.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
-						else if (summoned.Inventory.GetItem(eInventorySlot.TwoHandWeapon) != null)
-							summoned.SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded);
-					}
-				}
-				summoned.AddToWorld();
-
-				GameEventMgr.AddHandler(Caster, GamePlayerEvent.CommandNpcRelease, new DOLEventHandler(OnNpcReleaseCommand));
-				GameEventMgr.AddHandler(summoned, GameLivingEvent.WhisperReceive, new DOLEventHandler(OnWhisperReceive));
-
-				Caster.SetControlledNpc(controlledBrain);
-				effect.Start(summoned);
-			}
-		}
+                if (Caster is GamePlayer)
+                    player.SetControlledNpc(controlledBrain);
+                effect.Start(summoned);
+            }
+        }
 
 		/// <summary>
 		/// When an applied effect expires.
