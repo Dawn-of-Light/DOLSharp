@@ -1763,12 +1763,12 @@ namespace DOL.GS
 			if (Util.Chance(interruptChance)) 
 				ad.Target.StartInterruptTimer(interruptDuration, ad.AttackType, this);
 
-			if (ad.Target is GamePlayer && (ad.Target as GamePlayer).CharacterClass is ClassMauler)
-			{
-				ad.Target.Mana += (7 * ad.Target.MaxMana) / 100;
-			}
-
-			//Return the result
+            if (ad.Target is GamePlayer && ad.Damage > 0
+                && ((ad.Target as GamePlayer).CharacterClass.ID > 59 && (ad.Target as GamePlayer).CharacterClass.ID > 63))
+            {
+                ad.Target.Mana += (7 * ad.Target.MaxMana) / 100;
+            }
+            //Return the result
 			return ad;
 		}
 
@@ -4214,9 +4214,9 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		protected virtual int PowerRegenerationTimerCallback(RegionTimer selfRegenerationTimer)
 		{
 			if (this is GamePlayer && (((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Vampiir
-                || (((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Mauler_Alb)
-                || (((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Mauler_Hib)
-                || (((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Mauler_Mid)))
+                || (((GamePlayer)this).CharacterClass.ID > 59 && ((GamePlayer)this).CharacterClass.ID < 63)))
+            //|| (((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Mauler_Hib)
+            // || (((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Mauler_Mid)))
             {
 				double MinMana = MaxMana * 0.15;
 				if (Mana < MinMana) return 0;
@@ -4383,15 +4383,13 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 				int maxmana = MaxMana;
 				m_mana = Math.Min(value, maxmana);
 				m_mana = Math.Max(m_mana, 0);
-				
-				//if (IsAlive && m_mana < maxmana)
-				if (IsAlive && (m_mana < maxmana ||
-					(this is GamePlayer && (
-						((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Vampiir
-						|| (this is GamePlayer && ((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Mauler_Alb)
-                        || (this is GamePlayer && ((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Mauler_Hib)
-                        || (this is GamePlayer && ((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Mauler_Mid)))))
-				{
+
+                //if (IsAlive && m_mana < maxmana)
+                if (IsAlive && (m_mana < maxmana || (this is GamePlayer && ((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Vampiir)
+                        || (this is GamePlayer && ((GamePlayer)this).CharacterClass.ID > 59 && ((GamePlayer)this).CharacterClass.ID < 63)))
+                // || (this is GamePlayer && ((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Mauler_Hib)
+                // || (this is GamePlayer && ((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Mauler_Mid)))
+                {
 					StartPowerRegeneration();
 				}
 			}
