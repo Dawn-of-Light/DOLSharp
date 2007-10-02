@@ -40,7 +40,6 @@ namespace DOL.AI.Brain
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		public const int MAX_AGGRO_DISTANCE = 3600;
 
 		/// <summary>
@@ -231,7 +230,7 @@ namespace DOL.AI.Brain
 		/// <summary>
 		/// Checks whether living has someone on its aggrolist		
 		/// </summary>
-		public bool IsAggroing
+		public virtual bool IsAggroing
 		{
 			get
 			{
@@ -652,97 +651,170 @@ namespace DOL.AI.Brain
 			}
 		}
 
-		protected virtual void BringFriends(AttackData ad)
+		#endregion
+
+		#region Bring a Friend
+
+		/// <summary>
+		/// Mobs within this range will be called upon to add on a group
+		/// of players inside of a dungeon.
+		/// </summary>
+		protected static ushort m_BAFReinforcementsRange = 2000;
+
+		/// <summary>
+		/// Players within this range around the puller will be subject
+		/// to attacks from adds.
+		/// </summary>
+		protected static ushort m_BAFTargetPlayerRange = 3000;
+
+		/// <summary>
+		/// BAF range for adds close to the pulled mob.
+		/// </summary>
+		public virtual ushort BAFCloseRange
 		{
-			// some experimental code workaround for bring a friend
-			/////////////////////////////////////////////////////////////
-			if (ad.Attacker is GamePlayer)
+			get { return (ushort) ((AggroRange * 2) / 5); }
+		}
+
+		/// <summary>
+		/// BAF range for group adds in dungeons.
+		/// </summary>
+		public virtual ushort BAFReinforcementsRange
+		{
+			get { return m_BAFReinforcementsRange; }
+			set { m_BAFReinforcementsRange = (value > 0) ? (ushort) value : (ushort) 0; }
+		}
+
+		/// <summary>
+		/// Range for potential targets around the puller.
+		/// </summary>
+		public virtual ushort BAFTargetPlayerRange
+		{
+			get { return m_BAFTargetPlayerRange; }
+			set { m_BAFTargetPlayerRange = (value > 0) ? (ushort) value : (ushort) 0; }
+		}
+
+		/// <summary>
+		/// Bring friends when this living is attacked. There are 2
+		/// different mechanisms for BAF:
+		/// 1) Any mobs of the same faction within a certain (short) range
+		///    around the pulled mob will add on the puller, anywhere.
+		/// 2) In dungeons, group size is taken into account as well, the
+		///    bigger the group, the more adds will come, even if they are
+		///    not close to the pulled mob.
+		/// </summary>
+		/// <param name="attackData">The data associated with the puller's attack.</param>
+		protected virtual void BringFriends(AttackData attackData)
+		{
+			// Only add on players.
+
+			GameLiving attacker = attackData.Attacker;
+			if (attacker is GamePlayer)
 			{
-				GamePlayer player = (GamePlayer)ad.Attacker;
-				ArrayList nearPlayers = new ArrayList();
-				foreach (GamePlayer p in ad.Attacker.GetPlayersInRadius(500))
-				{
-					if (p != player)
-					{
-						nearPlayers.Add(p);
-					}
-				}
-				ArrayList inRangeGroupPlayers = new ArrayList();
-				if (player.PlayerGroup != null)
-				{
-					foreach (GamePlayer p in ad.Attacker.GetPlayersInRadius(1500))
-					{
-						if (p.PlayerGroup == player.PlayerGroup && p != player)
-						{
-							inRangeGroupPlayers.Add(p);
-						}
-					}
-				}
-				GamePlayer victim = null;
-				GamePlayer victim2 = null;
-				if (nearPlayers.Count >= 3)
-				{
+				BringCloseFriends(attackData);
+				if (attacker.CurrentRegion.IsDungeon)
+					BringReinforcements(attackData);
+			}
+		}
 
-					// roulette selection
-					int i = DOL.GS.Util.Random(nearPlayers.Count - 1);
-					victim = (GamePlayer)nearPlayers[i];
-					if (nearPlayers.Count >= 6)
-					{
-						nearPlayers.RemoveAt(i);
-						i = DOL.GS.Util.Random(nearPlayers.Count - 1);
-						victim2 = (GamePlayer)nearPlayers[i];
-					}
+		/// <summary>
+		/// Get mobs close to the pulled mob to add on the puller and his
+		/// group as well.
+		/// </summary>
+		/// <param name="attackData">The data associated with the puller's attack.</param>
+		protected virtual void BringCloseFriends(AttackData attackData)
+		{
+			// Have every friend within close range add on the attacker's
+			// group.
 
-				}
-				else if (player.PlayerGroup != null && player.PlayerGroup.PlayerCount >= 4 && inRangeGroupPlayers.Count > 0)
+			GamePlayer attacker = (GamePlayer) attackData.Attacker;
+
+			foreach (GameNPC npc in Body.GetNPCsInRadius(BAFCloseRange))
+			{
+				if (npc.IsFriend(Body) && npc.IsAvailable && npc.IsAggressive)
 				{
-
-					// roulette selection
-					int i = DOL.GS.Util.Random(inRangeGroupPlayers.Count - 1);
-					victim = (GamePlayer)inRangeGroupPlayers[i];
-					if (player.PlayerGroup.PlayerCount >= 7 && inRangeGroupPlayers.Count > 1)
-					{
-						inRangeGroupPlayers.RemoveAt(i);
-						i = DOL.GS.Util.Random(inRangeGroupPlayers.Count - 1);
-						victim2 = (GamePlayer)inRangeGroupPlayers[i];
-					}
-
-				}
-
-				// find a friend to attack selected player
-				if (victim != null)
-				{
-					GameNPC npc = FindFriendForAttack();
-					if (npc != null)
-					{
-						npc.StartAttack(victim);
-						if (victim2 != null)
-						{
-							npc = FindFriendForAttack();
-							if (npc != null)
-							{
-								npc.StartAttack(victim2);
-							}
-						}
-					}
+					StandardMobBrain brain = (StandardMobBrain) npc.Brain;
+					brain.AddToAggroList(PickTarget(attacker), 1);
+					brain.AttackMostWanted();
 				}
 			}
 		}
 
 		/// <summary>
-		/// searches for a friend to group for combat
+		/// Get mobs to add on the puller's group, their numbers depend on the 
+		/// group's size.
 		/// </summary>
-		/// <returns></returns>
-		protected GameNPC FindFriendForAttack()
+		/// <param name="attackData">The data associated with the puller's attack.</param>
+		protected virtual void BringReinforcements(AttackData attackData)
 		{
-			foreach (GameNPC npc in Body.GetNPCsInRadius(600))
+			// Determine how many friends to bring, as a rule of thumb, allow for
+			// max 2 players dealing with 1 mob. Only players from the group the
+			// original attacker is in will be taken into consideration.
+			// Example: A group of 3 or 4 players will get 1 add, a group of 7 or 8
+			// players will get 3 adds.
+
+			GamePlayer attacker = (GamePlayer) attackData.Attacker;
+			PlayerGroup attackerGroup = attacker.PlayerGroup;
+			int numAttackers = (attackerGroup == null) ? 1 : attackerGroup.PlayerCount;
+			int maxAdds = (numAttackers + 1) / 2 - 1;
+			if (maxAdds > 0)
 			{
-				if (npc.Name == Body.Name && !npc.InCombat && npc.Brain is IControlledBrain == false)
+				// Bring friends, try mobs in the neighbourhood first. If there
+				// aren't any, try getting some from farther away.
+
+				int numAdds = 0;
+				ushort range = 250;
+
+				while (numAdds < maxAdds && range <= BAFReinforcementsRange)
 				{
-					return npc;
+					foreach (GameNPC npc in Body.GetNPCsInRadius(range))
+					{
+						if (numAdds >= maxAdds) break;
+
+						// If it's a friend, have it attack a random target in the 
+						// attacker's group.
+
+						if (npc.IsFriend(Body) && npc.IsAggressive && npc.IsAvailable)
+						{
+							StandardMobBrain brain = (StandardMobBrain) npc.Brain;
+							brain.AddToAggroList(PickTarget(attacker), 1);
+							brain.AttackMostWanted();
+							++numAdds;
+						}
+					}
+
+					// Increase the range for finding friends to join the fight.
+
+					range *= 2;
 				}
 			}
-			return null;
+		}
+
+		/// <summary>
+		/// Pick a random target from the attacker's group that is within a certain
+		/// range of the original puller.
+		/// </summary>
+		/// <param name="attacker">The original attacker.</param>
+		/// <returns></returns>
+		protected virtual GamePlayer PickTarget(GamePlayer attacker)
+		{
+			PlayerGroup attackerGroup = attacker.PlayerGroup;
+
+			// If no group, pick the attacker himself.
+
+			if (attackerGroup == null) return attacker;
+
+			// Make a list of all players in the attacker's group within
+			// a certain range around the puller.
+
+			ArrayList attackersInRange = new ArrayList();
+
+			foreach (GamePlayer player in attackerGroup)
+				if (WorldMgr.CheckDistance(attacker, player, BAFTargetPlayerRange))
+					attackersInRange.Add(player);
+
+			// Pick a random player from the list.
+
+			return (GamePlayer) (attackersInRange[Util.Random(1, attackersInRange.Count) - 1]);
 		}
 
 		#endregion
@@ -772,7 +844,7 @@ namespace DOL.AI.Brain
 						// Allow defensive spells
 						//if (!Body.AttackState)
 						//{
-						if (CheckDefensiveSpells(spell))
+						if (CheckDefensiveSpells(spell) && Util.Chance(50))
 						{
 							casted = true;
 							break;
@@ -840,8 +912,9 @@ namespace DOL.AI.Brain
 				case "DefensiveProc":
 				case "Bladeturn":
 					{
-						// Buff self, if not in melee
-						if (!LivingHasEffect(Body, spell) && !Body.AttackState)
+						// Buff self, if not in melee, but not each and every mob
+						// at the same time, because it looks silly.
+						if (!LivingHasEffect(Body, spell) && !Body.AttackState && Util.Chance(40))
 						{
 							Body.TargetObject = Body;
 							break;
@@ -939,7 +1012,7 @@ namespace DOL.AI.Brain
 
 				#region Heals
 				case "Heal":
-					// Heal self when dropping below 30%
+					// Heal self when dropping below 30%.
 					if (Body.HealthPercent < 30)
 					{
 						Body.TargetObject = Body;

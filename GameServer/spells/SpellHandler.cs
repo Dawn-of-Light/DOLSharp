@@ -1678,12 +1678,16 @@ namespace DOL.GS.Spells
 		}
 
 		/// <summary>
-		/// When spell was resisted
+		/// Invoked when a spell was resisted.
 		/// </summary>
-		/// <param name="target">the target that resisted the spell</param>
+		/// <param name="target">The target that resisted the spell.</param>
 		protected virtual void OnSpellResisted(GameLiving target)
 		{
 			SendEffectAnimation(target, 0, false, 0);
+
+			// Deliver message to the target, if the target is a pet, to its
+			// owner instead.
+
 			if (target is GameNPC)
 			{
 				IControlledBrain brain = ((GameNPC)target).Brain as IControlledBrain;
@@ -1700,30 +1704,31 @@ namespace DOL.GS.Spells
 			{
 				MessageToLiving(target, "You resist the effect!", eChatType.CT_SpellResisted);
 			}
+
+			// Deliver message to the caster as well.
+
 			MessageToCaster(target.GetName(0, true) + " resists the effect!", eChatType.CT_SpellResisted);
 
-			if (Spell.Damage != 0)
+			// Report resisted spell attack data to any type of living object, no need
+			// to decide here what to do. For example, NPCs will use their brain.
+			// "Just the facts, ma'am, just the facts."
+
+			AttackData ad = new AttackData();
+			ad.Attacker = Caster;
+			ad.Target = target;
+			ad.AttackType = AttackData.eAttackType.Spell;
+			ad.AttackResult = GameLiving.eAttackResult.Missed;
+			target.OnAttackedByEnemy(ad);
+
+			// Spells that would have caused damage or are not instant will still
+			// interrupt a casting player.
+
+			if (target is GamePlayer)
 			{
-				// notify target about missed attack for spells with damage
-				AttackData ad = new AttackData();
-				ad.Attacker = Caster;
-				ad.Target = target;
-				ad.AttackType = AttackData.eAttackType.Spell;
-				ad.AttackResult = GameLiving.eAttackResult.Missed;
-				target.OnAttackedByEnemy(ad);
-				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
-			}
-			else if (Spell.CastTime > 0)
-			{
-				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+				if (target.IsCasting && (Spell.Damage > 0 || Spell.CastTime > 0))
+					target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
 			}
 
-			if (target is GameNPC)
-			{
-				IAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IAggressiveBrain;
-				if (aggroBrain != null)
-					aggroBrain.AddToAggroList(Caster, 1);
-			}
 			if (target.Realm == 0 || Caster.Realm == 0)
 			{
 				target.LastAttackedByEnemyTickPvE = target.CurrentRegion.Time;
