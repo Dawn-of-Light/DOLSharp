@@ -1,43 +1,44 @@
-/*
+ /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+#define NOENCRYPTION
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
+using log4net;
+using DOL.GS.Quests;
+using System.Reflection;
 
-namespace DOL.GS.Spells
+namespace DOL.GS.PacketHandler
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	[SpellHandlerAttribute("CurePoison")]
-	public class CurePoisonSpellHandler : RemoveSpellEffectHandler
+	[PacketLib(190, GameClient.eClientVersion.Version190)]
+	public class PacketLib190 : PacketLib189
 	{
-		// constructor
-		public CurePoisonSpellHandler(GameLiving caster, Spell spell, SpellLine line)
-			: base(caster, spell, line)
+		/// <summary>
+		/// Defines a logger for this class.
+		/// </summary>
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		/// <summary>
+		/// Constructs a new PacketLib for Version 1.88 clients
+		/// </summary>
+		/// <param name="client">the gameclient this lib is associated with</param>
+		public PacketLib190(GameClient client)
+			: base(client)
 		{
-			// RR4: now it's a list
-			m_spellTypesToRemove = new List<string>();
-			m_spellTypesToRemove.Add("DamageOverTime");
-            m_spellTypesToRemove.Add("StyleBleeding");
-		} 
+		}
 	}
 }

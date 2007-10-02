@@ -47,9 +47,7 @@ namespace DOL.GS.Spells
 
 			bool spellOK = true;
 			//cone spells
-			if (Spell.Target == "Frontal" ||
-				//pbaoe
-				(Spell.Target == "Enemy" && Spell.Radius > 0 && Spell.Range == 0))
+			if (Spell.Target == "Frontal" || (Spell.Target == "Enemy" && Spell.Radius > 0 && Spell.Range == 0))
 				spellOK = false;
 
 			if (!spellOK || CheckLOS(Caster))
@@ -66,7 +64,11 @@ namespace DOL.GS.Spells
 					else if (Caster is GameNPC && (Caster as GameNPC).Brain is AI.Brain.IControlledBrain)
 					{
 						AI.Brain.IControlledBrain brain = (Caster as GameNPC).Brain as AI.Brain.IControlledBrain;
-						player = brain.GetPlayerOwner();
+						//Ryan: edit for BD
+						if (brain.Owner is GamePlayer)
+							player = (GamePlayer)brain.Owner;
+						else
+							player = (GamePlayer)((AI.Brain.IControlledBrain)((GameNPC)brain.Owner).Brain).Owner;
 					}
 				}
 				if (player != null)

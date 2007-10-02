@@ -132,7 +132,7 @@ namespace DOL.GS.Spells
 						{
 							GameSpellEffect effect = SpellHandler.FindEffectOnTarget(player, GlobalSpells.PvERessurectionIllnessSpellType);
 				            if ( effect != null )
-				            	effect.Overwrite(new GameSpellEffect(effect.SpellHandler, effect.Duration/2, effect.PulseFreq));
+				            	effect.Overwrite(new GameSpellEffect(effect.SpellHandler, effect.Duration / 2, effect.PulseFreq));
 						}
 						//VaNaTiC<-
 					}

@@ -617,7 +617,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// say if player is stun or not
+		/// say if player is stunned or not
 		/// </summary>
 		protected bool m_stunned;
 		/// <summary>
@@ -629,7 +629,7 @@ namespace DOL.GS
 			set { m_stunned = value; }
 		}
 		/// <summary>
-		/// say if player is mez or not
+		/// say if player is mezzed or not
 		/// </summary>
 		protected bool m_mezzed;
 		/// <summary>
@@ -1499,6 +1499,69 @@ namespace DOL.GS
 				return ad;
 			}
 
+            if (target is GamePlayer && ActiveWeaponSlot != eActiveWeaponSlot.Distance)
+            {
+                foreach (BodyguardEffect bg in ((GamePlayer)target).EffectList.GetAllOfType(typeof(BodyguardEffect)))
+                {
+                    if (bg.GuardTarget == target && bg != null)
+                    {
+                        if ((!WorldMgr.CheckDistance(bg.GuardTarget, bg.GuardSource, BodyguardAbilityHandler.BODYGUARD_DISTANCE) || (bg.GuardSource.IsCasting) || (((GamePlayer)target).IsMoving)))
+                            break;
+                        else if (ad.Attacker is GameNPC)
+                        {
+                            GameNPC npc = ad.Attacker as GameNPC;
+                            if (npc.Brain is ControlledNpc)
+                            {
+                                ad.AttackResult = eAttackResult.Bodyguarded;
+                                bg.GuardTarget.Out.SendMessage("You were protected by" + bg.GuardSource.Name + " from the attack from " + ad.Attacker.Name + "!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+                                bg.GuardSource.Out.SendMessage("You have proteced " + bg.GuardTarget.Name + " from the attack from " + ad.Attacker.Name + "!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+                                return ad;
+                            }
+                        }
+                        else if (ad.Attacker is GamePlayer)
+                        {
+                            ad.AttackResult = eAttackResult.Bodyguarded;
+                            bg.GuardTarget.Out.SendMessage("You were protected by" + bg.GuardSource.Name + " from the attack from " + ad.Attacker.Name + "!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+                            bg.GuardSource.Out.SendMessage("You have proteced " + bg.GuardTarget.Name + " from the attack from " + ad.Attacker.Name + "!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+                            return ad;
+                        }
+                    }
+                }
+            }
+
+            /*foreach (GameSpellEffect effect in ad.Target.EffectList)
+            {
+                if (effect.SpellHandler.Spell != null)
+                {
+                    switch (effect.SpellHandler.Spell.SpellType)
+                    {
+                        case "Grapple": ad.AttackResult = eAttackResult.Grappled; return ad;
+                        case "Phaseshift": ad.AttackResult = eAttackResult.Phaseshift; return ad;
+                    }
+                }
+            }*/
+
+            GameSpellEffect Phaseshift = SpellHandler.FindEffectOnTarget(this, "Phaseshift");
+            if (Phaseshift != null)
+            {
+                ad.AttackResult = eAttackResult.Phaseshift;
+                return ad;
+            }
+
+            GameSpellEffect grapple = SpellHandler.FindEffectOnTarget(ad.Target, "Grapple");
+            if (grapple != null)
+            {
+                ad.AttackResult = eAttackResult.Grappled;
+                return ad;
+            }
+
+            GameSpellEffect phaseshit = SpellHandler.FindEffectOnTarget(ad.Target, "Phaseshift");
+            if (phaseshit != null)
+            {
+                ad.AttackResult = eAttackResult.Missed;
+                return ad;
+            }
+
 			// check region
 			if (ad.Target.CurrentRegionID != CurrentRegionID || ad.Target.ObjectState != eObjectState.Active)
 			{
@@ -1508,7 +1571,7 @@ namespace DOL.GS
 
 			//Check if the target is in front of attacker
 			if (ad.AttackType != AttackData.eAttackType.Ranged && this is GamePlayer &&
-!(ad.Target is GameKeepComponent) && !(IsObjectInFront(ad.Target, 120, true) && TargetInView))
+            !(ad.Target is GameKeepComponent) && !(IsObjectInFront(ad.Target, 120, true) && TargetInView))
 			{
 				ad.AttackResult = eAttackResult.TargetNotVisible;
 				return ad;
@@ -1555,13 +1618,29 @@ namespace DOL.GS
 				lowerboundary = Math.Max(lowerboundary, 75);
 				lowerboundary = Math.Min(lowerboundary, 125);
 				damage *= (GetWeaponSkill(weapon) + 90.68) / (ad.Target.GetArmorAF(ad.ArmorHitLocation) + 20 * 4.67);
-				damage *= 1.0 - Math.Min(0.85, ad.Target.GetArmorAbsorb(ad.ArmorHitLocation));
-				damage *= (lowerboundary + Util.Random(50)) * 0.01;
+
+                // Badge Of Valor Calculation 1+ absorb or 1- absorb
+                if (ad.Attacker.EffectList.GetOfType(typeof(BadgeOfValorEffect)) != null)
+                {
+                    damage *= 1.0 + Math.Min(0.85, ad.Target.GetArmorAbsorb(ad.ArmorHitLocation));
+                }
+                else
+                {
+                    damage *= 1.0 - Math.Min(0.85, ad.Target.GetArmorAbsorb(ad.ArmorHitLocation));
+                }
+                damage *= (lowerboundary + Util.Random(50)) * 0.01;
 				ad.Modifier = (int)(damage * (ad.Target.GetResist(ad.DamageType) + SkillBase.GetArmorResist(armor, ad.DamageType)) * -0.01);
 				damage += ad.Modifier;
 				// RA resist check
 				int resist = (int)(damage * ad.Target.GetDamageResist(GetResistTypeForDamage(ad.DamageType)) * -0.01);
+                
+                eProperty property = ad.Target.GetResistTypeForDamage(ad.DamageType);
+                int secondaryResistModifier = ad.Target.BuffBonusCategory2[(int)property];
+                int resistModifier = 0;
+                resistModifier += (int)((ad.Damage + (double)resistModifier) * (double)secondaryResistModifier * -0.01);
+
 				damage += resist;
+                damage += resistModifier;
 				ad.Modifier += resist;
 				ad.Damage = (int)damage;
 
@@ -1667,6 +1746,49 @@ namespace DOL.GS
 				default: broadcast = false; break;
 			}
 
+            #region Prevent Flight
+            if (ad.Attacker is GamePlayer)
+            {
+                GamePlayer attacker = ad.Attacker as GamePlayer;
+                if (attacker.HasAbility(Abilities.PreventFlight) && Util.Chance(10))
+                {
+                    if (IsObjectInFront(ad.Target, 120) && ad.Target.IsMoving)
+                    {
+                        bool preCheck = false;
+                        if (ad.Target is GamePlayer) //only start if we are behind the player
+                        {
+                            float angle = ad.Target.GetAngleToTarget(ad.Attacker);
+                            if (angle >= 150 && angle < 210) preCheck = true;
+                        }
+                        else preCheck = true;
+
+                        if (preCheck)
+                        {
+                            SpellLine abilityLine = SkillBase.GetSpellLine(GlobalSpellsLines.Character_Abilities);
+                            if (abilityLine != null)
+                            {
+                                IList spells = SkillBase.GetSpellList(abilityLine.KeyName);
+                                if (spells != null)
+                                {
+                                    foreach (Spell spell in spells)
+                                    {
+                                        if (spell.ID == 7083)  // Prevent Flight
+                                        {
+                                            ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, abilityLine);
+                                            if (spellHandler != null)
+                                            {
+                                                spellHandler.StartSpell(ad.Target);
+                                            }
+                                        } break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            #endregion
+
 			#region controlled messages
 
 			if (ad.Attacker is GameNPC)
@@ -1763,10 +1885,9 @@ namespace DOL.GS
 			if (Util.Chance(interruptChance)) 
 				ad.Target.StartInterruptTimer(interruptDuration, ad.AttackType, this);
 
-            if (ad.Target is GamePlayer && ad.Damage > 0
-                && ((ad.Target as GamePlayer).CharacterClass.ID > 59 && (ad.Target as GamePlayer).CharacterClass.ID > 63))
+            if (ad.Target is GamePlayer && (ad.Target as GamePlayer).CharacterClass is ClassMauler && ad.Damage > 0)
             {
-                ad.Target.Mana += (7 * ad.Target.MaxMana) / 100;
+                ad.Target.Mana += ad.Damage / 5;
             }
             //Return the result
 			return ad;
@@ -2630,6 +2751,13 @@ namespace DOL.GS
 							}
 						}
 					}
+                    // spymaster enduring poison
+                    if (ad.Attacker is GamePlayer)
+                    {
+                        GamePlayer PlayerAttacker = ad.Attacker as GamePlayer;
+                        if (PlayerAttacker.GetSpellLine("Spymaster") != null)
+                            if (Util.ChanceDouble((double)(15 * 0.0001))) return;
+                    }
 					weapon.PoisonCharges--;
 					if (weapon.PoisonCharges <= 0) { weapon.PoisonMaxCharges = 0; weapon.PoisonSpellID = 0; }
 				}
@@ -2769,6 +2897,7 @@ namespace DOL.GS
 			//http://daoc.catacombs.com/forum.cfm?ThreadKey=511&DefMessage=681444&forum=DAOCMainForum#Defense
 
 			GuardEffect guard = null;
+            DashingDefenseEffect dashing = null;
 			InterceptEffect intercept = null;
 			GameSpellEffect bladeturn = null;
 			EngageEffect engage = null;
@@ -2786,6 +2915,7 @@ namespace DOL.GS
 				foreach (IGameEffect effect in EffectList)
 				{
 					if (guard == null && effect is GuardEffect && ((GuardEffect)effect).GuardTarget == this) guard = (GuardEffect)effect;
+                    if (dashing == null && effect is DashingDefenseEffect && ((DashingDefenseEffect)effect).GuardTarget == this) dashing = (DashingDefenseEffect)effect; //Dashing
 					if (bladeturn == null && effect is GameSpellEffect && ((GameSpellEffect)effect).Spell.SpellType == "Bladeturn") bladeturn = (GameSpellEffect)effect;
 					if (effect is BerserkEffect) defenceDisabled = true;
 					if (engage == null && effect is EngageEffect) engage = (EngageEffect)effect;
@@ -2836,40 +2966,47 @@ namespace DOL.GS
 			{
 				// Evade
 				// 1. A: It isn't possible to give a simple answer. The formula includes such elements as your level, your target's level, your level of evade, your QUI, your DEX, your buffs to QUI and DEX, the number of people attacking you, your target's weapon level, your target's spec in the weapon he is wielding, the kind of attack (DW, range, etc), attack radius, angle of attack, the style you used most recently, target's offensive RA, debuffs, and a few others. (The type of weapon - large, 1H, etc - doesn't matter.) ...."
-				double evadeChance = double.MinValue;
-				GamePlayer player = this as GamePlayer;
-				if (player != null)
-				{
-					if (IsObjectInFront(ad.Attacker, 180) || player.HasAbility(Abilities.Advanced_Evade) || player.EffectList.GetOfType(typeof(CombatAwarenessEffect)) != null)
-						evadeChance = GetModified(eProperty.EvadeChance);
-				}
-				else if (IsObjectInFront(ad.Attacker, 180))
-				{
-					int res = GetModified(eProperty.EvadeChance);
-					if (res != 0)
-						evadeChance = res;
-				}
-				if (evadeChance != double.MinValue && (evadeChance > 0 || this.HasAbility(Abilities.Evade)))
-				{
-					evadeChance *= 0.001;
-					evadeChance += 0.01 * attackerConLevel; // 1% per con level distance multiplied by evade level
-					if (lastAD != null && lastAD.Style != null)
-					{
-						evadeChance += lastAD.Style.BonusToDefense * 0.01;
-					}
-					if (m_attackers.Count > 1) evadeChance -= (m_attackers.Count - 1) * 0.03;
-					if (evadeChance < 0.01) evadeChance = 0.01;
-					else if (evadeChance > 0.5 && ad.Attacker is GamePlayer && ad.Target is GamePlayer)
-						evadeChance = 0.5; //50% evade cap RvR only; http://www.camelotherald.com/more/664.shtml
-					else if (evadeChance > 1.0) evadeChance = 1.0;
+                double evadeChance = 0;
+                GamePlayer player = this as GamePlayer;
+                GameSpellEffect evade = SpellHandler.FindEffectOnTarget(this, "EvadeBuff");
+                GameSpellEffect parry = SpellHandler.FindEffectOnTarget(this, "ParryBuff");
+                if (this is GamePlayer && player != null)
+                {
+                    if (player.HasAbility(Abilities.Advanced_Evade) || player.EffectList.GetOfType(typeof(CombatAwarenessEffect)) != null || player.EffectList.GetOfType(typeof(RuneOfUtterAgilityEffect)) != null)
+                        evadeChance = GetModified(eProperty.EvadeChance);
 
-					if (ad.AttackType == AttackData.eAttackType.Ranged) evadeChance /= 5.0;
+                    else if (IsObjectInFront(ad.Attacker, 180))
+                    {
+                        if (evade != null || player.HasAbility(Abilities.Evade))
+                        {
+                            int res = GetModified(eProperty.EvadeChance);
+                            if (res > 0)
+                                evadeChance = res;
+                        }
+                    }
+                }
+                else if (this is GameNPC && IsObjectInFront(ad.Attacker, 180))
+                    evadeChance = GetModified(eProperty.EvadeChance);
 
-					if (Util.ChanceDouble(evadeChance))
-					{
-						return eAttackResult.Evaded;
-					}
-				}
+                if (evadeChance > 0)
+                {
+                    evadeChance *= 0.001;
+                    evadeChance += 0.01 * attackerConLevel; // 1% per con level distance multiplied by evade level
+                    if (lastAD != null && lastAD.Style != null)
+                    {
+                        evadeChance += lastAD.Style.BonusToDefense * 0.01;
+                    }
+                    if (m_attackers.Count > 1) evadeChance -= (m_attackers.Count - 1) * 0.03;
+                    if (evadeChance < 0.01) evadeChance = 0.01;
+                    else if (evadeChance > 0.5 && ad.Attacker is GamePlayer && ad.Target is GamePlayer)
+                        evadeChance = 0.5; //50% evade cap RvR only; http://www.camelotherald.com/more/664.shtml
+                    else if (evadeChance > 1.0) evadeChance = 1.0;
+
+                    if (ad.AttackType == AttackData.eAttackType.Ranged) evadeChance /= 5.0;
+
+                    if (Util.ChanceDouble(evadeChance))
+                        return eAttackResult.Evaded;
+                }
 
 				// Parry
 				//1.  Dual wielding does not grant more chances to parry than a single weapon. – Grab Bag 9/12/03
@@ -2885,36 +3022,34 @@ namespace DOL.GS
 				//
 				//http://www.camelotherald.com/more/453.php
 				//Also, before this comparison happens, the game looks to see if your opponent is in your forward arc – to determine that arc, make a 120 degree angle, and put yourself at the point.
-				if (ad.IsMeleeAttack)
-				{
-					double parryChance = double.MinValue;
-					if (player != null)
-					{
-						if (IsObjectInFront(ad.Attacker, 120) && AttackWeapon != null)
-						{
-							parryChance = GetModified(eProperty.ParryChance);
-						}
-					}
-					else if (IsObjectInFront(ad.Attacker, 120))
-					{
-						int res = GetModified(eProperty.ParryChance);
-						if (res != 0)
-							parryChance = res;
-					}
-					if (parryChance != double.MinValue)
-					{
-						parryChance *= 0.001;
-						parryChance += 0.05 * attackerConLevel;
-						if (parryChance < 0.01) parryChance = 0.01;
-						if (parryChance > 0.99) parryChance = 0.99;
+                if (ad.IsMeleeAttack)
+                {
+                    double parryChance = 0;
+                    if (this is GamePlayer && player != null)
+                    {
+                        if (IsObjectInFront(ad.Attacker, 120))
+                        {
+                            if ((player.HasSpecialization(Specs.Parry) || parry != null) && (AttackWeapon != null))
+                                parryChance = GetModified(eProperty.ParryChance);
+                        }
+                        else if (player.EffectList.GetOfType(typeof(BladeBarrierEffect)) != null)
+                            parryChance = GetModified(eProperty.ParryChance);
+                    }
+                    else if (this is GameNPC && IsObjectInFront(ad.Attacker, 120))
+                        parryChance = GetModified(eProperty.ParryChance);
 
-						if (m_attackers.Count > 1) parryChance /= m_attackers.Count / 2;
-						if (Util.ChanceDouble(parryChance))
-						{
-							return eAttackResult.Parried;
-						}
-					}
-				}
+                    if (parryChance > 0 && IsObjectInFront(ad.Attacker, 120))
+                    {
+                        parryChance *= 0.001;
+                        parryChance += 0.05 * attackerConLevel;
+                        if (parryChance < 0.01) parryChance = 0.01;
+                        if (parryChance > 0.99) parryChance = 0.99;
+
+                        if (m_attackers.Count > 1) parryChance /= m_attackers.Count / 2;
+                        if (Util.ChanceDouble(parryChance))
+                            return eAttackResult.Parried;
+                    }
+                }
 
 				// Block
 				//1.Quality does not affect the chance to block at this time. – Grab Bag 3/7/03
@@ -2935,74 +3070,67 @@ namespace DOL.GS
 				//http://www.camelotherald.com/more/453.php
 				//Also, before this comparison happens, the game looks to see if your opponent is in your forward arc – to determine that arc, make a 120 degree angle, and put yourself at the point.
 				//your friend is most likely using a player crafted shield. The quality of the player crafted item will make a significant difference – try it and see.
+                double blockChance = 0;
+                InventoryItem lefthand = null;
+                if (this is GamePlayer && player != null && IsObjectInFront(ad.Attacker, 120) && player.HasAbility(Abilities.Shield))
+                {
+                    lefthand = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
+                    if (lefthand != null && (player.AttackWeapon == null || player.AttackWeapon.Item_Type == Slot.RIGHTHAND || player.AttackWeapon.Item_Type == Slot.LEFTHAND))
+                    {
+                        if (lefthand.Object_Type == (int)eObjectType.Shield && IsObjectInFront(ad.Attacker, 120))
+                            blockChance = GetModified(eProperty.BlockChance) * lefthand.Quality * 0.01;
+                    }
+                }
+                else if (this is GameNPC && IsObjectInFront(ad.Attacker, 120))
+                {
+                    int res = GetModified(eProperty.BlockChance);
+                    if (res != 0)
+                        blockChance = res;
+                }
+                if (blockChance > 0 && IsObjectInFront(ad.Attacker, 120))
+                {
+                    blockChance *= 0.001;
+                    // no chance bonus with ranged attacks?
+                    //					if (ad.Attacker.ActiveWeaponSlot == GameLiving.eActiveWeaponSlot.Distance)
+                    //						blockChance += 0.25;
+                    blockChance += attackerConLevel * 0.05;
+                    if (blockChance > 0.99) blockChance = 0.99;
+                    if (blockChance < 0.01) blockChance = 0.01;
 
-				double blockChance = double.MinValue;
-				InventoryItem lefthand = null;
-				if (player != null)
-				{
-					lefthand = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
-					if (lefthand != null && (player.AttackWeapon == null || player.AttackWeapon.Item_Type == Slot.RIGHTHAND || player.AttackWeapon.Item_Type == Slot.LEFTHAND))
-					{
-						if (lefthand.Object_Type == (int)eObjectType.Shield && IsObjectInFront(ad.Attacker, 120))
-						{
-							blockChance = GetModified(eProperty.BlockChance) * lefthand.Quality * 0.01;
-						}
-					}
-				}
-				else if (IsObjectInFront(ad.Attacker, 120))
-				{
-					int res = GetModified(eProperty.BlockChance);
-					if (res != 0)
-						blockChance = res;
-				}
-				if (blockChance != double.MinValue)
-				{
-					blockChance *= 0.001;
-					// no chance bonus with ranged attacks?
-					//					if (ad.Attacker.ActiveWeaponSlot == GameLiving.eActiveWeaponSlot.Distance)
-					//						blockChance += 0.25;
-					blockChance += attackerConLevel * 0.05;
-					if (blockChance > 0.99) blockChance = 0.99;
-					if (blockChance < 0.01) blockChance = 0.01;
+                    // Reduce block chance if the shield used is too small (valable only for player because npc inventory does not store the shield size but only the model of item)
+                    int shieldSize = 0;
+                    if (lefthand != null)
+                        shieldSize = lefthand.Type_Damage;
+                    if (player != null && m_attackers.Count > shieldSize)
+                        blockChance /= (m_attackers.Count - shieldSize + 1);
 
-					// Reduce block chance if the shield used is too small (valable only for player because npc inventory does not store the shield size but only the model of item)
-					int shieldSize = 0;
-					if (lefthand != null)
-						shieldSize = lefthand.Type_Damage;
-					if (player != null && m_attackers.Count > shieldSize)
-						blockChance /= (m_attackers.Count - shieldSize + 1);
+                    // Engage raised block change to 85% if attacker is engageTarget and player is in attackstate
+                    if (engage != null && AttackState && engage.EngageTarget == ad.Attacker)
+                    {
+                        // You cannot engage a mob that was attacked within the last X seconds...
+                        if (engage.EngageTarget.LastAttackedByEnemyTick > engage.EngageTarget.CurrentRegion.Time - EngageAbilityHandler.ENGAGE_ATTACK_DELAY_TICK)
+                        {
+                            if (engage.Owner is GamePlayer)
+                                (engage.Owner as GamePlayer).Out.SendMessage(engage.EngageTarget.GetName(0, true) + " has been attacked recently and you are unable to engage.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        }
+                        // Check if player has enough endurance left to engage
+                        else if (engage.Owner.Endurance >= EngageAbilityHandler.ENGAGE_DURATION_LOST)
+                        {
+                            engage.Owner.Endurance -= EngageAbilityHandler.ENGAGE_DURATION_LOST;
+                            if (engage.Owner is GamePlayer)
+                                (engage.Owner as GamePlayer).Out.SendMessage("You concentrate on blocking the blow!", eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
 
-					// Engage raised block change to 85% if attacker is engageTarget and player is in attackstate
-					if (engage != null && AttackState && engage.EngageTarget == ad.Attacker)
-					{
-						// You cannot engage a mob that was attacked within the last X seconds...
-						if (engage.EngageTarget.LastAttackedByEnemyTick > engage.EngageTarget.CurrentRegion.Time - EngageAbilityHandler.ENGAGE_ATTACK_DELAY_TICK)
-						{
-							if (engage.Owner is GamePlayer)
-								(engage.Owner as GamePlayer).Out.SendMessage(engage.EngageTarget.GetName(0, true) + " has been attacked recently and you are unable to engage.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						}
-						// Check if player has enough endurance left to engage
-						else if (engage.Owner.Endurance >= EngageAbilityHandler.ENGAGE_DURATION_LOST)
-						{
-							engage.Owner.Endurance -= EngageAbilityHandler.ENGAGE_DURATION_LOST;
-							if (engage.Owner is GamePlayer)
-								(engage.Owner as GamePlayer).Out.SendMessage("You concentrate on blocking the blow!", eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+                            if (blockChance < 0.85)
+                                blockChance = 0.85;
+                        }
+                        // if player ran out of endurance cancel engage effect
+                        else
+                            engage.Cancel(false);
+                    }
 
-							if (blockChance < 0.85)
-								blockChance = 0.85;
-						}
-						// if player ran out of endurance cancel engage effect
-						else
-						{
-							engage.Cancel(false);
-						}
-					}
-
-					if (Util.ChanceDouble(blockChance))
-					{
-						return eAttackResult.Blocked;
-					}
-				}
+                    if (Util.ChanceDouble(blockChance))
+                        return eAttackResult.Blocked;
+                }
 			}
 
 
@@ -3049,7 +3177,84 @@ namespace DOL.GS
 					}
 				}
 			}
+            
+            //Dashing Defense
+            if (dashing != null &&
+                dashing.GuardSource.ObjectState == eObjectState.Active &&
+                dashing.GuardSource.IsStunned == false &&
+                dashing.GuardSource.IsMezzed == false &&
+                dashing.GuardSource.ActiveWeaponSlot != eActiveWeaponSlot.Distance &&
+                dashing.GuardSource.IsAlive &&
+                !stealthStyle)
+            {
+                // check distance
+                if (WorldMgr.CheckDistance(dashing.GuardSource, dashing.GuardTarget, DashingDefenseEffect.GUARD_DISTANCE))
+                {
+                    // check player is wearing shield and NO two handed weapon
+                    InventoryItem leftHand = dashing.GuardSource.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
+                    InventoryItem rightHand = dashing.GuardSource.AttackWeapon;
+                    InventoryItem twoHand = dashing.GuardSource.Inventory.GetItem(eInventorySlot.TwoHandWeapon);
+                    if ((rightHand == null || rightHand.Hand != 1) && leftHand != null && leftHand.Object_Type == (int)eObjectType.Shield)
+                    {
+                        int guardLevel = dashing.GuardSource.GetAbilityLevel(Abilities.Guard); // multiply by 3 to be a bit qorse than block (block woudl be 5 since you get guard I with shield 5, guard II with shield 10 and guard III with shield 15)
+                        double guardchance = dashing.GuardSource.GetModified(eProperty.BlockChance) * leftHand.Quality * 0.00001;
+                        guardchance *= guardLevel * 0.25 + 0.05;
+                        guardchance += attackerConLevel * 0.05;
 
+                        if (guardchance > 0.99) guardchance = 0.99;
+                        if (guardchance < 0.01) guardchance = 0.01;
+
+                        int shieldSize = 0;
+                        if (leftHand != null)
+                            shieldSize = leftHand.Type_Damage;
+                        if (m_attackers.Count > shieldSize)
+                            guardchance /= (m_attackers.Count - shieldSize + 1);
+                        if (ad.AttackType == AttackData.eAttackType.MeleeDualWield) guardchance /= 2;
+
+                        double parrychance = double.MinValue;
+                        parrychance = dashing.GuardSource.GetModified(eProperty.ParryChance);
+                        if (parrychance != double.MinValue)
+                        {
+                            parrychance *= 0.001;
+                            parrychance += 0.05 * attackerConLevel;
+                            if (parrychance > 0.99) parrychance = 0.99;
+                            if (parrychance < 0.01) parrychance = 0.01;
+                            if (m_attackers.Count > 1) parrychance /= m_attackers.Count / 2;
+                        }
+
+                        if (Util.ChanceDouble(guardchance))
+                        {
+                            ad.Target = dashing.GuardSource;
+                            return eAttackResult.Blocked;
+                        }
+                        else if (Util.ChanceDouble(parrychance))
+                        {
+                            ad.Target = dashing.GuardSource;
+                            return eAttackResult.Parried;
+                        }
+                    }
+                    //Check if Player is wearing Twohanded Weapon or nothing in the lefthand slot
+                    else
+                    {
+                        double parrychance = double.MinValue;
+                        parrychance = dashing.GuardSource.GetModified(eProperty.ParryChance);
+                        if (parrychance != double.MinValue)
+                        {
+                            parrychance *= 0.001;
+                            parrychance += 0.05 * attackerConLevel;
+                            if (parrychance > 0.99) parrychance = 0.99;
+                            if (parrychance < 0.01) parrychance = 0.01;
+                            if (m_attackers.Count > 1) parrychance /= m_attackers.Count / 2;
+                        }
+                        if (Util.ChanceDouble(parrychance))
+                        {
+                            ad.Target = dashing.GuardSource;
+                            return eAttackResult.Parried;
+                        }
+                    }
+                }
+            }
+            
 			// Missrate
 			int missrate = (ad.Attacker is GamePlayer) ? 20 : 25; //player vs player tests show 20% miss on any level
 			missrate -= ad.Attacker.GetModified(eProperty.ToHitBonus);
@@ -3138,6 +3343,21 @@ namespace DOL.GS
 				}
 			}
 
+            //Misschance
+            if (ad.IsMeleeAttack)
+            {
+                double missChance = ad.Target.GetModified(eProperty.MissHit);
+                missChance *= 0.001;
+
+                if (missChance > 0.99) missChance = 0.99;
+                if (missChance < 0) missChance = 0;
+
+                if (Util.ChanceDouble(missChance))
+                {
+                    return eAttackResult.Missed;
+                }
+            }
+
 
 			// Bladeturn
 			// TODO: high level mob attackers penetrate bt, players are tested and do not penetrate (lv30 vs lv20)
@@ -3181,6 +3401,9 @@ namespace DOL.GS
 					return eAttackResult.Missed;
 				}
 			}
+
+            if (this is GamePlayer && ((GamePlayer)this).IsOnHorse)
+                ((GamePlayer)this).IsOnHorse = false;
 
 			return eAttackResult.HitUnstyled;
 		}
@@ -3572,6 +3795,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <param name="amount"></param>
 		public virtual void GainBountyPoints(long amount)
 		{
+            Notify(GameLivingEvent.GainedBountyPoints, this, new GainedBountyPointsEventArgs(amount));
 		}
 		/// <summary>
 		/// Called when the living is gaining experience
@@ -5479,13 +5703,13 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		{
 		}
 
-		/// <summary>
-		/// Releases controlled object
-		/// </summary>
-		public virtual void CommandNpcRelease()
-		{
-			//TODO: implement this for .Stop() on ControlledNpc
-		}
+        /// <summary>
+        /// Releases controlled object
+        /// </summary>
+        public virtual void CommandNpcRelease()
+        {
+            //TODO: implement this for .Stop() on ControlledNpc
+        }
 
 		/// <summary>
 		/// Commands controlled object to follow

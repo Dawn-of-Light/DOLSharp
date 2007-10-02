@@ -19,6 +19,7 @@ namespace DOL.GS.Spells
 			m_spellTypesToRemove.Add("DamageOverTime");
 			m_spellTypesToRemove.Add("Nearsight");
 			m_spellTypesToRemove.Add("Disease");
+            m_spellTypesToRemove.Add("StyleBleeding");
 		}
 	}
 }

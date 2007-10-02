@@ -682,6 +682,8 @@ namespace DOL.GS
 		CriticalHealHitChance = 221,
 		WaterSpeed = 217,
 		SpellLevel = 218,
+        MissHit = 219,
+        KeepDamage = 220,
 		MaxProperty = 255,
 	}
 

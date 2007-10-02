@@ -26,6 +26,7 @@ using DOL.GS.Spells;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
+using DOL.GS.SkillHandler;
 using log4net;
 
 namespace DOL.AI.Brain
@@ -373,6 +374,48 @@ namespace DOL.AI.Brain
 			}
 		}
 
+        /// <summary>
+        /// Checks the Abilities
+        /// </summary>
+        public override void CheckAbilities()
+        {
+            ////load up abilities
+            if (Body.Abilities != null && Body.Abilities.Count > 0)
+            {
+                //trigger abilities on a certain target like intercept require being controlled
+                if (this is IControlledBrain && Owner is GamePlayer)
+                {
+                    foreach (Ability ab in Body.Abilities.Values)
+                    {
+                        switch (ab.KeyName)
+                        {
+                            case GS.Abilities.Intercept:
+                                {
+                                    GamePlayer player = Owner as GamePlayer;
+                                    if (player.EffectList.GetOfType(typeof(InterceptEffect)) == null)
+                                    {
+                                        new InterceptEffect().Start(Body, player);
+                                    }
+                                    break;
+                                }
+                            case Abilities.ChargeAbility:
+                                {
+                                    if (WorldMgr.GetDistance(Body.TargetObject, Body) >= 500)
+                                    {
+                                        ChargeAbility charge = Body.GetAbility(typeof(ChargeAbility)) as ChargeAbility;
+                                        if (charge != null && Body.GetSkillDisabledDuration(charge) == 0)
+                                        {
+                                            charge.Execute(Body);
+                                        }
+                                    }
+                                    break;
+                                }
+                        }
+                    }
+                }
+            }
+        }
+
 		/// <summary>
 		/// Checks the Positive Spells.  Handles buffs, heals, etc.
 		/// </summary>
@@ -565,34 +608,6 @@ namespace DOL.AI.Brain
 			}
 			Body.TargetObject = lastTarget;
 			return base.CheckDefensiveSpells(spell); ;
-		}
-
-		/// <summary>
-		/// Checks the Abilities
-		/// </summary>
-		public override void CheckAbilities()
-		{
-			//load up abilities
-			if (Body.Abilities != null && Body.Abilities.Count > 0)
-			{
-				foreach (Ability ab in Body.Abilities.Values)
-				{
-					switch (ab.KeyName)
-					{
-						//Commander/minion charge ability
-						case Abilities.ChargeAbility:
-							if (WorldMgr.GetDistance(Body.TargetObject, Body) >= 500)
-							{
-								ChargeAbility charge = Body.GetAbility(typeof(ChargeAbility)) as ChargeAbility;
-								if (charge != null && Body.GetSkillDisabledDuration(charge) == 0)
-								{
-									charge.Execute(Body);
-								}
-							}
-							break;
-					}
-				}
-			}
 		}
 
 		/// <summary>

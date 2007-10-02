@@ -208,6 +208,7 @@
     <Compile Include="effects\BerserkEffect.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="effects\BodyguardEffect.cs" />
     <Compile Include="effects\CamouflageEffect.cs" />
     <Compile Include="effects\EngageEffect.cs">
       <SubType>Code</SubType>
@@ -699,7 +700,6 @@
     <Compile Include="packets\Server\PacketLibAttribute.cs" />
     <Compile Include="packets\Server\PacketProcessor.cs" />
     <Compile Include="playerclasses\ClassMauler.cs" />
-    <Compile Include="propertycalc\CriticalHealHitChanceCalculator.cs" />
     <Compile Include="propertycalc\CriticalSpellHitChanceCalculator.cs" />
     <Compile Include="propertycalc\CriticalArcheryHitChanceCalculator.cs" />
     <Compile Include="propertycalc\CriticalMeleeHitChanceCalculator.cs" />
@@ -798,6 +798,7 @@
     <Compile Include="realmabilities\effects\BarrierOfFortitudeEffect.cs" />
     <Compile Include="realmabilities\effects\BedazzlingAuraEffect.cs" />
     <Compile Include="realmabilities\effects\ChargeEffect.cs" />
+    <Compile Include="realmabilities\effects\DashingDefenseEffect.cs" />
     <Compile Include="realmabilities\effects\DivineInterventionEffect.cs" />
     <Compile Include="realmabilities\effects\JuggernautEffect.cs" />
     <Compile Include="realmabilities\effects\MasteryOfConcentrationEffect.cs" />
@@ -845,6 +846,7 @@
     <Compile Include="realmabilities\handlers\ArrowSummoningAbility.cs" />
     <Compile Include="realmabilities\handlers\BarrierOfFortitudeAbility.cs" />
     <Compile Include="realmabilities\handlers\BedazzlingAuraAbility.cs" />
+    <Compile Include="realmabilities\handlers\DashingDefenseAbility.cs" />
     <Compile Include="realmabilities\handlers\DecimationTrap.cs" />
     <Compile Include="realmabilities\handlers\IchorOfTheDeepAbility.cs" />
     <Compile Include="realmabilities\handlers\L3RAPropertyEnhancerAbilities.cs" />
@@ -894,6 +896,7 @@
     <Compile Include="realmabilities\handlers\LifterAbility.cs" />
     <Compile Include="realmabilities\handlers\VeilRecoveryAbility.cs" />
     <Compile Include="serverrules\TaskDungeonJumpPoint.cs" />
+    <Compile Include="skillhandler\BodyguardAbilityHandler.cs" />
     <Compile Include="skillhandler\BolsteringRoarAbilityHandler.cs" />
     <Compile Include="skillhandler\CamouflageSpecHandler.cs" />
     <Compile Include="realmabilities\handlers\ChargeAbility.cs" />
@@ -1601,6 +1604,15 @@
     <Compile Include="spells\Heretic\HereticPiercingMagic.cs" />
     <Compile Include="spells\Heretic\HereticSpeedDecrease.cs" />
     <Compile Include="spells\Heretic\MonsterRez.cs" />
+    <Compile Include="spells\Masterlevel\Banelord.cs" />
+    <Compile Include="spells\Masterlevel\Battlemaster.cs" />
+    <Compile Include="spells\Masterlevel\Convoker.cs" />
+    <Compile Include="spells\Masterlevel\MasterLevelBase.cs" />
+    <Compile Include="spells\Masterlevel\Perfecter.cs" />
+    <Compile Include="spells\Masterlevel\Sojourner.cs" />
+    <Compile Include="spells\Masterlevel\Spymaster.cs" />
+    <Compile Include="spells\Masterlevel\Stormlord.cs" />
+    <Compile Include="spells\Masterlevel\Warlord.cs" />
     <Compile Include="spells\MetalGuardSpellHandler.cs" />
     <Compile Include="spells\NoVarianceSpells.cs" />
     <Compile Include="spells\OmniLifedrainSpellHandler.cs" />

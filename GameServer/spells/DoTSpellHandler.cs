@@ -70,10 +70,13 @@ namespace DOL.GS.Spells
 		public override AttackData CalculateDamageToTarget(GameLiving target, double effectiveness)
 		{
 			AttackData ad = base.CalculateDamageToTarget(target, effectiveness);
-			RealmAbilities.L3RAPropertyEnhancer ra = Caster.GetAbility(typeof(RealmAbilities.ViperAbility)) as RealmAbilities.L3RAPropertyEnhancer;
-			if (ra != null)
-				ad.Damage *= 1 + (ra.Amount / 100);
-			ad.CriticalDamage = 0;
+            if (this.SpellLine.KeyName == GlobalSpellsLines.Mundane_Poisons)
+            {
+                RealmAbilities.L3RAPropertyEnhancer ra = Caster.GetAbility(typeof(RealmAbilities.ViperAbility)) as RealmAbilities.L3RAPropertyEnhancer;
+                if (ra != null)
+                    ad.Damage *= 1 + (ra.Amount / 100);
+            }
+            ad.CriticalDamage = 0;
 			return ad;
 		}
 
@@ -144,7 +147,7 @@ namespace DOL.GS.Spells
 		protected override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
 		{
 			// damage is not reduced with distance
-			return new GameSpellEffect(this, m_spell.Duration, m_spellLine.IsBaseLine ? 5000 : 4000, 1);
+            return new GameSpellEffect(this, m_spell.Duration, m_spellLine.IsBaseLine ? 2500 : 2000, effectiveness);
 		}
 
 		public override void OnEffectStart(GameSpellEffect effect)
