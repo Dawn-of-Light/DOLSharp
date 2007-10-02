@@ -5284,7 +5284,13 @@ namespace DOL.GS
 						break;
 					}
 			}
-			// vampiir
+			// Mauler
+            if (CharacterClass.ID > 59 && CharacterClass.ID < 63)
+            {
+                this.Mana += (7 * this.MaxMana) / 100;
+            }
+            
+            // vampiir
 			if (CharacterClass is ClassVampiir)
 			{
 				GameSpellEffect removeEffect = SpellHandler.FindEffectOnTarget(this, "VampiirSpeedEnhancement");

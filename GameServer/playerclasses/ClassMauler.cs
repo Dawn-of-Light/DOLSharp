@@ -39,6 +39,7 @@ namespace DOL.GS.Scripts
 			m_primaryStat = eStat.STR;
 			m_secondaryStat = eStat.CON;
 			m_tertiaryStat = eStat.QUI;
+            m_manaStat = eStat.STR;
 		}
 
 		public override bool CanUseLefthandedWeapon(GamePlayer player)
@@ -48,7 +49,7 @@ namespace DOL.GS.Scripts
 
 		public override eClassType ClassType
 		{
-			get { return eClassType.PureTank; }
+			get { return eClassType.Hybrid; }
 		}
 
 		public override string GetTitle(int level)
