@@ -65,6 +65,14 @@ namespace DOL.GS.Spells
 			target.StopCurrentSpellcast(); //stop even if MoC or QC
 			MessageToLiving (target, "Your mind goes blank and you forget what you were doing!", eChatType.CT_Spell);
 
+            GameSpellEffect effect;
+            effect = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+            if (effect != null)
+            {
+                effect.Cancel(false);
+                return;
+            }
+
 			if (target is GameNPC)
 			{
 				GameNPC npc = (GameNPC)target;

@@ -21,6 +21,7 @@ using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.GS.RealmAbilities;
+using DOL.GS.Spells;
 
 namespace DOL.GS.PropertyCalc
 {
@@ -99,38 +100,42 @@ namespace DOL.GS.PropertyCalc
 			}
 			else if (living is GameNPC)
 			{
+				//Ryan: edit for BD
 				// 125% speed if following owner
-				if (!living.InCombat)
+				if (speed == 1.0 && !living.InCombat)
 				{
 					IControlledBrain brain = ((GameNPC)living).Brain as IControlledBrain;
-					
 					if (brain != null)
 					{
-						//Get the root player of the pet
-						GamePlayer playerowner = brain.GetPlayerOwner();
-						//Get the pet's immediate owner
-						GameLiving owner = brain.Owner;
-						if (playerowner != null && owner != null)
+						GamePlayer owner = brain.GetPlayerOwner();
+						if (owner != null)
 						{
-							//If no speed enhancements - add follow and horse bonus
-							if (speed == 1.0)
-							{
-								//Pets should always follow their immediate owner
-								if (owner == brain.Body.CurrentFollowTarget)
-									speed *= 1.25;
-								if (playerowner.IsOnHorse)
-									speed *= 1.45;
-								//Should this bonus really be added?
-								if (playerowner.IsOnHorse && playerowner.IsSprinting)
-									speed *= 1.7;
-							}
-							//Add in sprinting bonus
-							if (playerowner.IsSprinting)
+							if (owner == brain.Body.CurrentFollowTarget)
+								speed *= 1.25;
+							if (owner.IsSprinting)
 								speed *= 1.3;
+							if (owner.IsOnHorse)
+								speed *= 1.45;
+							if (owner.IsOnHorse && owner.IsSprinting)
+								speed *= 1.7;
 						}
 					}
 				}
+                else if (!living.InCombat)
+                {
+                    IControlledBrain brain = ((GameNPC)living).Brain as IControlledBrain;
 
+					if (brain != null)
+					{
+						//Ryan: edit for BD
+						GamePlayer owner = brain.GetPlayerOwner();
+						if (owner != null)
+						{
+							if (brain != null && owner.IsSprinting)
+								speed *= 1.3;
+						}				
+					}
+                }
 				double healthPercent = living.Health / (double)living.MaxHealth;
 				if (healthPercent < 0.33)
 				{
@@ -139,6 +144,10 @@ namespace DOL.GS.PropertyCalc
 			}
 
 			speed = living.MaxSpeedBase * speed + 0.5; // 0.5 is to fix the rounding error when converting to int so root results in speed 2 (191*0.01=1.91+0.5=2.41)
+
+            GameSpellEffect iConvokerEffect = SpellHandler.FindEffectOnTarget(living, "SpeedWrap");
+            if (iConvokerEffect != null && speed > 191 && living.EffectList.GetOfType(typeof(ChargeEffect)) == null)
+                return 191;
 
 			if (speed < 0)
 				return 0;

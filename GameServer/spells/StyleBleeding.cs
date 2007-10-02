@@ -133,6 +133,7 @@ namespace DOL.GS.Spells
 		/// Determines wether this spell is better than given one
 		/// </summary>
 		/// <param name="oldeffect"></param>
+		/// <param name="neweffect"></param>
 		/// <returns>true if this spell is better version than compare spell</returns>
 		public override bool IsNewEffectBetter(GameSpellEffect oldeffect, GameSpellEffect neweffect)
 		{

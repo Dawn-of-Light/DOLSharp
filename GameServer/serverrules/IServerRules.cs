@@ -244,6 +244,14 @@ namespace DOL.GS.ServerRules
 		/// <returns>The guild name of the target</returns>
 		string GetPlayerGuildName(GamePlayer source, GamePlayer target);
 
+        /// <summary>
+        /// Gets the player Realmrank 12 or 13 title
+        /// </summary>
+        /// <param name="source">The "looking" player</param>
+        /// <param name="target">The considered player</param>
+        /// <returns>The Realmranktitle of the target</returns>
+        string GetPlayerPrefixName(GamePlayer source, GamePlayer target); 
+
 		/// <summary>
 		/// Gets the server type color handling scheme
 		/// 

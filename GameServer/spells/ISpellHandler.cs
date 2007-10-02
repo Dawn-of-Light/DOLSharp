@@ -71,6 +71,13 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		bool HasPositiveEffect { get; }
 
+        /// <summary>
+        /// Gets wether this spellis Purgeable or not
+        /// important for Masterlevels since they aren't purgeable
+        /// </summary>
+        /// <returns></returns>
+        bool IsUnPurgeAble { get; }
+
 		/// <summary>
 		/// Determines wether new spell is better than existing one
 		/// important for overwriting

@@ -68,6 +68,7 @@ namespace DOL.AI.Brain
 		GameLiving Owner { get; }
 		void Attack(GameObject target);
 		void Follow(GameObject target);
+        void FollowOwner();
 		void Stay();
 		void ComeHere();
 		void Goto(GameObject target);

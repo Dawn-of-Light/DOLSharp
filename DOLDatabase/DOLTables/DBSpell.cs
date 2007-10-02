@@ -64,6 +64,7 @@ namespace DOL.Database
 		protected bool m_moveCast = false;
 		protected bool m_uninterruptible = false;
 		protected int m_healthPenalty = 0;
+        protected int m_sharedtimergroup; 
 		// warlock
 		protected bool m_isprimary;
 		protected bool m_issecondary;
@@ -554,6 +555,20 @@ namespace DOL.Database
 				m_healthPenalty = value;
 			}
 		}
+
+        [DataElement(AllowDbNull = true)]
+        public int SharedTimerGroup
+        {
+            get
+            {
+                return m_sharedtimergroup;
+            }
+            set
+            {
+                Dirty = true;
+                m_sharedtimergroup = value;
+            }
+        }
 
 		#region warlock
 		[DataElement(AllowDbNull = true)]

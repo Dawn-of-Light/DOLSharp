@@ -51,7 +51,11 @@ namespace DOL.GS.Spells
 				//restrictions
 				if (this is PropertyChangingSpell
 					&& this is ArmorFactorBuff == false
-					&& this is CombatSpeedBuff == false)
+					&& this is CombatSpeedBuff == false
+                    && this is AbstractResistBuff == false
+                    && this is EnduranceRegenSpellHandler == false
+                    && this is EvadeChanceBuff == false
+                    && this is ParryChanceBuff == false)
 				{
 					GamePlayer caster = m_caster as GamePlayer;
 					if (caster != null)
@@ -62,6 +66,30 @@ namespace DOL.GS.Spells
 					return;
 				}
 			}
+
+            if (vampiir != null && this is HeatColdMatterBuff)
+            {
+                GameSpellEffect Slash = FindEffectOnTarget(vampiir, "MatterResistBuff");
+                GameSpellEffect Crush = FindEffectOnTarget(vampiir, "ColdResistBuff");
+                GameSpellEffect Thrust = FindEffectOnTarget(vampiir, "HeatResistBuff");
+                if (Slash != null || Crush != null || Thrust != null)
+                {
+                    MessageToCaster(target.Name + " already has this effect", eChatType.CT_SpellResisted);
+                    return;
+                }
+            }
+
+            if (vampiir != null && this is BodySpiritEnergyBuff)
+            {
+                GameSpellEffect Body = FindEffectOnTarget(vampiir, "BodyResistBuff");
+                GameSpellEffect Spirit = FindEffectOnTarget(vampiir, "SpiritResistBuff");
+                GameSpellEffect Energy = FindEffectOnTarget(vampiir, "EnergyResistBuff");
+                if (Body != null || Spirit != null || Energy != null)
+                {
+                    MessageToCaster(target.Name + " already has this effect", eChatType.CT_SpellResisted);
+                    return;
+                }
+            }
 			base.ApplyEffectOnTarget(target, effectiveness);
 		}
 		/// <summary>

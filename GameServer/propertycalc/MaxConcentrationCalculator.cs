@@ -46,9 +46,8 @@ namespace DOL.GS.PropertyCalc
 			if (living is GamePlayer) 
 			{
 				GamePlayer player = living as GamePlayer;
-				if (player.CharacterClass.ManaStat == eStat.UNDEFINED) {
-					return 0;
-				}
+				if (player.CharacterClass.ManaStat == eStat.UNDEFINED) 
+                    return 1000000;
 
 				int concBase = (int)((player.Level * 4) * 2.2);
 				int stat = player.GetModified((eProperty)player.CharacterClass.ManaStat);
@@ -62,6 +61,9 @@ namespace DOL.GS.PropertyCalc
 						log.WarnFormat(living.Name+": concentration is less than zerro (conc:{0} eff:{1:R} concBase:{2} stat:{3} factor:{4})", conc, player.PlayerEffectiveness, concBase, stat, factor);
 					conc = 0;
 				}
+
+                if (player.GetSpellLine("Perfecter") != null)
+                    conc += (20 * conc / 100);
 
 				return conc;
 			} 

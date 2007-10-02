@@ -1489,6 +1489,20 @@ namespace DOL.GS
 			}
 		}
 
+        /// <summary>
+        /// The prefix for RR 12/13 players
+        /// </summary>
+        public string PrefixName
+        {
+            get
+            {
+                if (RealmLevel >= 110)
+                    return RealmTitle;
+                else
+                    return string.Empty;
+            }
+        }
+
 		/// <summary>
 		/// Sets or gets the model of the player. If the player is
 		/// active in the world, the modelchange will be visible
@@ -5603,11 +5617,11 @@ namespace DOL.GS
 
 			eaf += GetModified(eProperty.ArmorFactor);
 
-			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, typeof(VampiirArmorDebuff));
+			/*GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, typeof(VampiirArmorDebuff));
 			if (effect != null && slot == (effect.SpellHandler as VampiirArmorDebuff).Slot)
 			{
 				eaf -= (int)(effect.SpellHandler as VampiirArmorDebuff).Spell.Value;
-			}
+			}*/
 			return eaf;
 		}
 
@@ -5623,11 +5637,11 @@ namespace DOL.GS
 			if (item == null) return 0;
 			// vampiir random armor debuff change ~
 			double eaf = (item.SPD_ABS + GetModified(eProperty.ArmorAbsorbtion)) * 0.01;
-			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, typeof(VampiirArmorDebuff));
+			/*GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, typeof(VampiirArmorDebuff));
 			if (effect != null && slot == (effect.SpellHandler as VampiirArmorDebuff).Slot)
 			{
 				eaf -= (int)(effect.SpellHandler as VampiirArmorDebuff).Spell.Value;
-			}
+			}*/
 			return eaf; 
 		}
 
@@ -6505,251 +6519,268 @@ namespace DOL.GS
 			}
 		}
 
-		/// <summary>
-		/// Cast a specific spell from given spell line
-		/// </summary>
-		/// <param name="spell">spell to cast</param>
-		/// <param name="line">Spell line of the spell (for bonus calculations)</param>
-		public override void CastSpell(Spell spell, SpellLine line)
-		{
-			if (IsStunned)
-			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.CantCastStunned"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-				return;
-			}
-			if (IsMezzed)
-			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.CantCastMezzed"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-				return;
-			}
+        public override void CastSpell(Spell spell, SpellLine line)
+        {
+            if (spell.SpellType == "StyleHandler")
+            {
+                Style style = SkillBase.GetStyleByID((int)spell.Value, CharacterClass.ID);
+                if (style != null)
+                {
+                    StyleProcessor.TryToUseStyle(this, style);
+                }
+                else { Out.SendMessage("That style is not implemented!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow); }
+            }
+            else if (spell.SpellType == "BodyguardHandler")
+            {
+                Ability ab = SkillBase.GetAbility("Bodyguard");
+                IAbilityActionHandler handler = SkillBase.GetAbilityActionHandler(ab.KeyName);
+                if (handler != null)
+                {
+                    handler.Execute(ab, this);
+                    return;
+                }
+            }
+            else
+            {
+                if (IsStunned)
+                {
+                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.CantCastStunned"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                    return;
+                }
+                if (IsMezzed)
+                {
+                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.CantCastMezzed"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                    return;
+                }
 
-			if (IsSilenced)
-			{
-				Out.SendMessage("You are fumbling for your words, and cannot cast!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-				return;
-			}
+                if (IsSilenced)
+                {
+                    Out.SendMessage("You are fumbling for your words, and cannot cast!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+                    return;
+                }
 
-			lock (m_spellQueueAccessMonitor)
-			{
-				// warlock queue stuff
-				if (m_runningSpellHandler != null)
-				{
-					if (spell.CastTime > 0 && !(m_runningSpellHandler is ChamberSpellHandler) && spell.SpellType != "Chamber")
-					{
-						if (m_runningSpellHandler.Spell.InstrumentRequirement != 0)
-						{
-							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyPlaySong"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-							return;
-						}
-						if (SpellQueue)
-						{
-							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyCastFollow"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-							m_nextSpell = spell;
-							m_nextSpellLine = line;
-						}
-						else Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyCastNoQueue"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-						return;
-					}
-					else if (m_runningSpellHandler is PrimerSpellHandler)
-					{
-						if (!spell.IsSecondary)
-						{
-							Out.SendMessage("Only a secondary spell can follow up the spell your are casting!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-						}
-						else
-						{
-							if (SpellQueue && !(m_runningSpellHandler is ChamberSpellHandler))
-							{
-								Spell cloneSpell = null;
-								if (m_runningSpellHandler is PowerlessSpellHandler)
-								{
-									cloneSpell = spell.Copy();
-									cloneSpell.CostPower = false;
-									m_nextSpell = cloneSpell;
-									m_nextSpellLine = line;
-								}
-								else if (m_runningSpellHandler is RangeSpellHandler)
-								{
-									cloneSpell = spell.Copy();
-									cloneSpell.CostPower = true;
-									cloneSpell.OverrideRange = m_runningSpellHandler.Spell.Range;
-									m_nextSpell = cloneSpell;
-									m_nextSpellLine = line;
-								}
-								else if (m_runningSpellHandler is UninterruptableSpellHandler)
-								{
-									cloneSpell = spell.Copy();
-									cloneSpell.CostPower = true;
-									m_nextSpell = cloneSpell;
-									m_nextSpellLine = line;
-								}
-								Out.SendMessage("You prepare a secondary spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-							}
-							return;
-						}
-					}
-					else if (m_runningSpellHandler is ChamberSpellHandler)
-					{
-						ChamberSpellHandler chamber = (ChamberSpellHandler)m_runningSpellHandler;
-						if (IsMoving || IsStrafing)
-						{
-							m_runningSpellHandler = null;
-							return;
-						}
-						if (spell.IsPrimary)
-						{
-							if (spell.SpellType == "Bolt" && !chamber.Spell.AllowBolt)
-							{
-								Out.SendMessage("This spell cannot be stored in this chamber.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							if (chamber.PrimarySpell == null)
-							{
-								Spell cloneSpell = spell.Copy();
-								cloneSpell.InChamber = true;
-								cloneSpell.CostPower = false;
-								chamber.PrimarySpell = cloneSpell;
-								chamber.PrimarySpellLine = line;
-								Out.SendMessage("You load " + spell.Name + " into your " + ((ChamberSpellHandler)m_runningSpellHandler).Spell.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								Out.SendMessage("Select the second spell for your " + ((ChamberSpellHandler)m_runningSpellHandler).Spell.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							}
-							else
-							{
-								Out.SendMessage("This spell cannot be stored in this chamber.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-							}
-						}
-						else if (spell.IsSecondary)
-						{
-							if (chamber.PrimarySpell != null)
-							{
-								if (chamber.SecondarySpell == null)
-								{
-									Spell cloneSpell = spell.Copy();
-									cloneSpell.CostPower = false;
-									cloneSpell.InChamber = true;
-									cloneSpell.OverrideRange = chamber.PrimarySpell.Range;
-									chamber.SecondarySpell = cloneSpell;
-									chamber.SecondarySpellLine = line;
-									Out.SendMessage("You load " + spell.Name + " into your " + ((ChamberSpellHandler)m_runningSpellHandler).Spell.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                lock (m_spellQueueAccessMonitor)
+                {
+                    // warlock queue stuff
+                    if (m_runningSpellHandler != null)
+                    {
+                        if (spell.CastTime > 0 && !(m_runningSpellHandler is ChamberSpellHandler) && spell.SpellType != "Chamber")
+                        {
+                            if (m_runningSpellHandler.Spell.InstrumentRequirement != 0)
+                            {
+                                Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyPlaySong"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                                return;
+                            }
+                            if (SpellQueue)
+                            {
+                                Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyCastFollow"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                                m_nextSpell = spell;
+                                m_nextSpellLine = line;
+                            }
+                            else Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyCastNoQueue"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                            return;
+                        }
+                        else if (m_runningSpellHandler is PrimerSpellHandler)
+                        {
+                            if (!spell.IsSecondary)
+                            {
+                                Out.SendMessage("Only a secondary spell can follow up the spell your are casting!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                            }
+                            else
+                            {
+                                if (SpellQueue && !(m_runningSpellHandler is ChamberSpellHandler))
+                                {
+                                    Spell cloneSpell = null;
+                                    if (m_runningSpellHandler is PowerlessSpellHandler)
+                                    {
+                                        cloneSpell = spell.Copy();
+                                        cloneSpell.CostPower = false;
+                                        m_nextSpell = cloneSpell;
+                                        m_nextSpellLine = line;
+                                    }
+                                    else if (m_runningSpellHandler is RangeSpellHandler)
+                                    {
+                                        cloneSpell = spell.Copy();
+                                        cloneSpell.CostPower = false;
+                                        cloneSpell.OverrideRange = m_runningSpellHandler.Spell.Range;
+                                        m_nextSpell = cloneSpell;
+                                        m_nextSpellLine = line;
+                                    }
+                                    else if (m_runningSpellHandler is UninterruptableSpellHandler)
+                                    {
+                                        cloneSpell = spell.Copy();
+                                        cloneSpell.CostPower = false;
+                                        m_nextSpell = cloneSpell;
+                                        m_nextSpellLine = line;
+                                    }
+                                    Out.SendMessage("You prepare a secondary spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                                }
+                                return;
+                            }
+                        }
+                        else if (m_runningSpellHandler is ChamberSpellHandler)
+                        {
+                            ChamberSpellHandler chamber = (ChamberSpellHandler)m_runningSpellHandler;
+                            if (IsMoving || IsStrafing)
+                            {
+                                m_runningSpellHandler = null;
+                                return;
+                            }
+                            if (spell.IsPrimary)
+                            {
+                                if (spell.SpellType == "Bolt" && !chamber.Spell.AllowBolt)
+                                {
+                                    Out.SendMessage("This spell cannot be stored in this chamber.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                                    return;
+                                }
+                                if (chamber.PrimarySpell == null)
+                                {
+                                    Spell cloneSpell = spell.Copy();
+                                    cloneSpell.InChamber = true;
+                                    cloneSpell.CostPower = false;
+                                    chamber.PrimarySpell = cloneSpell;
+                                    chamber.PrimarySpellLine = line;
+                                    Out.SendMessage("You load " + spell.Name + " into your " + ((ChamberSpellHandler)m_runningSpellHandler).Spell.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    Out.SendMessage("Select the second spell for your " + ((ChamberSpellHandler)m_runningSpellHandler).Spell.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                }
+                                else
+                                {
+                                    Out.SendMessage("This spell cannot be stored in this chamber.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                                }
+                            }
+                            else if (spell.IsSecondary)
+                            {
+                                if (chamber.PrimarySpell != null)
+                                {
+                                    if (chamber.SecondarySpell == null)
+                                    {
+                                        Spell cloneSpell = spell.Copy();
+                                        cloneSpell.CostPower = false;
+                                        cloneSpell.InChamber = true;
+                                        cloneSpell.OverrideRange = chamber.PrimarySpell.Range;
+                                        chamber.SecondarySpell = cloneSpell;
+                                        chamber.SecondarySpellLine = line;
+                                        Out.SendMessage("You load " + spell.Name + " into your " + ((ChamberSpellHandler)m_runningSpellHandler).Spell.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-								}
-								else
-								{
-									Out.SendMessage("You have already chosen your spells for this chamber.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                                    }
+                                    else
+                                    {
+                                        Out.SendMessage("You have already chosen your spells for this chamber.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 
-								}
-							}
-							else
-							{
-								Out.SendMessage("You must store a primary spell first!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                                    }
+                                }
+                                else
+                                {
+                                    Out.SendMessage("You must store a primary spell first!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 
-							}
-						}
+                                }
+                            }
 
-					}
-					else if (!(m_runningSpellHandler is ChamberSpellHandler) && spell.SpellType == "Chamber")
-					{
-						Out.SendMessage("You may not ready this spell as a followup!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-						return;
-					}
-				}
-			}
-			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(this, spell, line);
-			if (spellhandler != null)
-			{
-				if (spell.CastTime > 0)
-				{
-					GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, "Chamber", spell.Name);
+                        }
+                        else if (!(m_runningSpellHandler is ChamberSpellHandler) && spell.SpellType == "Chamber")
+                        {
+                            Out.SendMessage("You may not ready this spell as a followup!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                            return;
+                        }
+                    }
+                }
+                ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(this, spell, line);
+                if (spellhandler != null)
+                {
+                    if (spell.CastTime > 0)
+                    {
+                        GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, "Chamber", spell.Name);
 
-					if (effect != null && spell.Name == effect.Spell.Name)
-					{
-						spellhandler.CastSpell();
-					}
-					else
-					{
-						if (spellhandler is ChamberSpellHandler && m_runningSpellHandler == null)
-						{
-							((ChamberSpellHandler)spellhandler).EffectSlot = ChamberSpellHandler.GetEffectSlot(spellhandler.Spell.Name);
-							m_runningSpellHandler = spellhandler;
-							m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
-							spellhandler.CastSpell();
-						}
-						else if (m_runningSpellHandler == null)
-						{
-							m_runningSpellHandler = spellhandler;
-							m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
-							spellhandler.CastSpell();
-						}
-					}
-				}
-				else
-				{
-					if (spell.IsSecondary)
-					{
-						GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, "Powerless");
-						if (effect == null)
-							effect = SpellHandler.FindEffectOnTarget(this, "Range");
-						if (effect == null)
-							effect = SpellHandler.FindEffectOnTarget(this, "Uninterruptable");
+                        if (effect != null && spell.Name == effect.Spell.Name)
+                        {
+                            spellhandler.CastSpell();
+                        }
+                        else
+                        {
+                            if (spellhandler is ChamberSpellHandler && m_runningSpellHandler == null)
+                            {
+                                ((ChamberSpellHandler)spellhandler).EffectSlot = ChamberSpellHandler.GetEffectSlot(spellhandler.Spell.Name);
+                                m_runningSpellHandler = spellhandler;
+                                m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
+                                spellhandler.CastSpell();
+                            }
+                            else if (m_runningSpellHandler == null)
+                            {
+                                m_runningSpellHandler = spellhandler;
+                                m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
+                                spellhandler.CastSpell();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (spell.IsSecondary)
+                        {
+                            GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, "Powerless");
+                            if (effect == null)
+                                effect = SpellHandler.FindEffectOnTarget(this, "Range");
+                            if (effect == null)
+                                effect = SpellHandler.FindEffectOnTarget(this, "Uninterruptable");
 
-						if (m_runningSpellHandler == null && effect == null)
-							Out.SendMessage("You cannot cast this spell directly!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-						else if (m_runningSpellHandler != null)
-						{
-							if (m_runningSpellHandler.Spell.IsPrimary)
-							{
-								lock (m_spellQueueAccessMonitor)
-								{
-									if (SpellQueue && !(m_runningSpellHandler is ChamberSpellHandler))
-									{
-										Out.SendMessage("You prepare this as a secondary spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-										m_nextSpell = spell;
-										m_nextSpellLine = line;
-									}
-								}
-							}
-							else if (!(m_runningSpellHandler is ChamberSpellHandler))
-								Out.SendMessage("You cannot cast this spell directly!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-						}
-						else if (effect != null)
-						{
-							Spell cloneSpell = null;
-							if (effect.SpellHandler is PowerlessSpellHandler)
-							{
-								cloneSpell = spell.Copy();
-								cloneSpell.CostPower = false;
-								spellhandler = ScriptMgr.CreateSpellHandler(this, cloneSpell, line);
-								spellhandler.CastSpell();
-								effect.Cancel(false);
-							}
-							else if (effect.SpellHandler is RangeSpellHandler)
-							{
-								cloneSpell = spell.Copy();
-								cloneSpell.CostPower = false;
-								cloneSpell.OverrideRange = effect.Spell.Range;
-								spellhandler = ScriptMgr.CreateSpellHandler(this, cloneSpell, line);
-								spellhandler.CastSpell();
-								effect.Cancel(false);
-							}
-							else if (effect.SpellHandler is UninterruptableSpellHandler)
-							{
-								cloneSpell = spell.Copy();
-								cloneSpell.CostPower = false;
-								spellhandler = ScriptMgr.CreateSpellHandler(this, cloneSpell, line);
-								spellhandler.CastSpell();
-								effect.Cancel(false);
-							}
-						}
-					}
-					else
-						spellhandler.CastSpell();
-				}
-			}
-			else
-			{
-				Out.SendMessage(spell.Name + " not implemented yet (" + spell.SpellType + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			}
-		}
+                            if (m_runningSpellHandler == null && effect == null)
+                                Out.SendMessage("You cannot cast this spell directly!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                            else if (m_runningSpellHandler != null)
+                            {
+                                if (m_runningSpellHandler.Spell.IsPrimary)
+                                {
+                                    lock (m_spellQueueAccessMonitor)
+                                    {
+                                        if (SpellQueue && !(m_runningSpellHandler is ChamberSpellHandler))
+                                        {
+                                            Out.SendMessage("You prepare this as a secondary spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                                            m_nextSpell = spell;
+                                            m_nextSpellLine = line;
+                                        }
+                                    }
+                                }
+                                else if (!(m_runningSpellHandler is ChamberSpellHandler))
+                                    Out.SendMessage("You cannot cast this spell directly!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                            }
+                            else if (effect != null)
+                            {
+                                Spell cloneSpell = null;
+                                if (effect.SpellHandler is PowerlessSpellHandler)
+                                {
+                                    cloneSpell = spell.Copy();
+                                    cloneSpell.CostPower = false;
+                                    spellhandler = ScriptMgr.CreateSpellHandler(this, cloneSpell, line);
+                                    spellhandler.CastSpell();
+                                    effect.Cancel(false);
+                                }
+                                else if (effect.SpellHandler is RangeSpellHandler)
+                                {
+                                    cloneSpell = spell.Copy();
+                                    cloneSpell.CostPower = false;
+                                    cloneSpell.OverrideRange = effect.Spell.Range;
+                                    spellhandler = ScriptMgr.CreateSpellHandler(this, cloneSpell, line);
+                                    spellhandler.CastSpell();
+                                    effect.Cancel(false);
+                                }
+                                else if (effect.SpellHandler is UninterruptableSpellHandler)
+                                {
+                                    cloneSpell = spell.Copy();
+                                    cloneSpell.CostPower = false;
+                                    spellhandler = ScriptMgr.CreateSpellHandler(this, cloneSpell, line);
+                                    spellhandler.CastSpell();
+                                    effect.Cancel(false);
+                                }
+                            }
+                        }
+                        else
+                            spellhandler.CastSpell();
+                    }
+                }
+                else
+                {
+                    Out.SendMessage(spell.Name + " not implemented yet (" + spell.SpellType + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                }
+            }
+        }
 
 		#endregion
 
@@ -6998,390 +7029,451 @@ namespace DOL.GS
 			return true;
 		}
 
-		/// <summary>
-		/// Called when the player uses an inventory in a slot
-		/// eg. by clicking on the icon in the qickbar dragged from a slot
-		/// </summary>
-		/// <param name="slot"></param>
-		/// <param name="type">Which /use command was used (0=simple click on icon, 1=use, 2=/use2)</param>
-		public virtual void UseSlot(int slot, int type)
-		{
-			if (!IsAlive)
-			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantFire"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
+        /// <summary>
+        /// Called when the player uses an inventory in a slot
+        /// eg. by clicking on the icon in the qickbar dragged from a slot
+        /// </summary>
+        /// <param name="slot"></param>
+        /// <param name="type">Which /use command was used (0=simple click on icon, 1=use, 2=/use2)</param>
+        public virtual void UseSlot(int slot, int type)
+        {
+            if (!IsAlive)
+            {
+                Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantFire"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
 
-			lock (Inventory)
-			{
-				InventoryItem useItem = Inventory.GetItem((eInventorySlot)slot);
-				if (useItem == null)
-				{
-					if ((slot >= Slot.FIRSTQUIVER) && (slot <= Slot.FOURTHQUIVER))
-					{
-						Out.SendMessage("The quiver slot " + (slot - (Slot.FIRSTQUIVER) + 1) + " is empty!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					}
-					else
-					{
-						// don't allow using empty slots
-						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.IllegalSourceObject", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					}
-					return;
-				}
-				if (useItem.Item_Type != Slot.RANGED && (slot != Slot.HORSE || type != 0))
-				{
-					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.AttemptToUse", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
+            lock (Inventory)
+            {
+                InventoryItem useItem = Inventory.GetItem((eInventorySlot)slot);
+                if (useItem == null)
+                {
+                    if ((slot >= Slot.FIRSTQUIVER) && (slot <= Slot.FOURTHQUIVER))
+                    {
+                        Out.SendMessage("The quiver slot " + (slot - (Slot.FIRSTQUIVER) + 1) + " is empty!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    }
+                    else
+                    {
+                        // don't allow using empty slots
+                        Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.IllegalSourceObject", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    }
+                    return;
+                }
+                if (useItem.Item_Type != Slot.RANGED && (slot != Slot.HORSE || type != 0))
+                {
+                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.AttemptToUse", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                }
 
-				switch (slot)
-				{
-					case Slot.HORSEARMOR:
-					case Slot.HORSEBARDING:
-						return;
-					case Slot.HORSE:
-						if (type == 0)
-						{
-							if (IsOnHorse)
-								IsOnHorse = false;
-							else
-							{
-								if (Level < useItem.Level)
-								{
-									Out.SendMessage("You must have " + useItem.Level + " level for summon this horse", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
-								if (!IsAlive)
-								{
-									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountWhileDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
-								if (Steed != null)
-								{
-									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.MustDismountBefore"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
-								if (CurrentRegion.IsRvR && !ActiveHorse.IsSummonRvR)
-								{
-									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantSummonRvR"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
-								if (IsMoving)
-								{
-									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountMoving"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
-								if (IsSitting)
-								{
-									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantCallMountSeated"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
-								if (IsStealthed)
-								{
-									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountSteath"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
-								if (InCombat)
-								{
-									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
-								if (IsSummoningMount)
-								{
-									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.StopCallingMount"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									StopWhistleTimers();
-									return;
-								}
-								Out.SendTimerWindow("Summoning Mount", 5);
-								foreach (GamePlayer plr in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-									plr.Out.SendEmoteAnimation(this, eEmote.Horse_whistle);
-								// vampiir ~
-								GameSpellEffect effects = SpellHandler.FindEffectOnTarget(this, "VampiirSpeedEnhancement");
-								GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, "SpeedEnhancement");
-								if (effects != null)
-									effects.Cancel(false);
-								if (effect != null)
-									effect.Cancel(false);
-								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.WhistleMount"), eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
-								m_whistleMountTimer = new RegionTimer(this);
-								m_whistleMountTimer.Callback = new RegionTimerCallback(WhistleMountTimerCallback);
-								m_whistleMountTimer.Start(5000);
-							}
-						}
-						break;
-					case Slot.RIGHTHAND:
-					case Slot.LEFTHAND:
-						if (ActiveWeaponSlot == eActiveWeaponSlot.Standard)
-							break;
-						SwitchWeapon(eActiveWeaponSlot.Standard);
-						Notify(GamePlayerEvent.UseSlot, this, new UseSlotEventArgs(slot, type));
-						return;
+                switch (slot)
+                {
+                    case Slot.HORSEARMOR:
+                    case Slot.HORSEBARDING:
+                        return;
+                    case Slot.HORSE:
+                        if (type == 0)
+                        {
+                            if (IsOnHorse)
+                                IsOnHorse = false;
+                            else
+                            {
+                                if (Level < useItem.Level)
+                                {
+                                    Out.SendMessage("You must have " + useItem.Level + " level for summon this horse", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    return;
+                                }
+                                if (!IsAlive)
+                                {
+                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountWhileDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    return;
+                                }
+                                if (Steed != null)
+                                {
+                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.MustDismountBefore"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    return;
+                                }
+                                if (CurrentRegion.IsRvR && !ActiveHorse.IsSummonRvR)
+                                {
+                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantSummonRvR"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    return;
+                                }
+                                if (IsMoving)
+                                {
+                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountMoving"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    return;
+                                }
+                                if (IsSitting)
+                                {
+                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantCallMountSeated"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    return;
+                                }
+                                if (IsStealthed)
+                                {
+                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountSteath"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    return;
+                                }
+                                if (InCombat)
+                                {
+                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    return;
+                                }
+                                if (IsSummoningMount)
+                                {
+                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.StopCallingMount"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    StopWhistleTimers();
+                                    return;
+                                }
+                                Out.SendTimerWindow("Summoning Mount", 5);
+                                foreach (GamePlayer plr in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                                    plr.Out.SendEmoteAnimation(this, eEmote.Horse_whistle);
+                                // vampiir ~
+                                GameSpellEffect effects = SpellHandler.FindEffectOnTarget(this, "VampiirSpeedEnhancement");
+                                GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, "SpeedEnhancement");
+                                if (effects != null)
+                                    effects.Cancel(false);
+                                if (effect != null)
+                                    effect.Cancel(false);
+                                Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.WhistleMount"), eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
+                                m_whistleMountTimer = new RegionTimer(this);
+                                m_whistleMountTimer.Callback = new RegionTimerCallback(WhistleMountTimerCallback);
+                                m_whistleMountTimer.Start(5000);
+                            }
+                        }
+                        break;
+                    case Slot.RIGHTHAND:
+                    case Slot.LEFTHAND:
+                        if (ActiveWeaponSlot == eActiveWeaponSlot.Standard)
+                            break;
+                        SwitchWeapon(eActiveWeaponSlot.Standard);
+                        Notify(GamePlayerEvent.UseSlot, this, new UseSlotEventArgs(slot, type));
+                        return;
 
-					case Slot.TWOHAND:
-						if (ActiveWeaponSlot == eActiveWeaponSlot.TwoHanded)
-							break;
-						SwitchWeapon(eActiveWeaponSlot.TwoHanded);
-						Notify(GamePlayerEvent.UseSlot, this, new UseSlotEventArgs(slot, type));
-						return;
+                    case Slot.TWOHAND:
+                        if (ActiveWeaponSlot == eActiveWeaponSlot.TwoHanded)
+                            break;
+                        SwitchWeapon(eActiveWeaponSlot.TwoHanded);
+                        Notify(GamePlayerEvent.UseSlot, this, new UseSlotEventArgs(slot, type));
+                        return;
 
-					case Slot.RANGED:
-						bool newAttack = false;
-						if (ActiveWeaponSlot != eActiveWeaponSlot.Distance)
-						{
-							SwitchWeapon(eActiveWeaponSlot.Distance);
-						}
-						else if (!AttackState)
-						{
-							StartAttack(TargetObject);
-							newAttack = true;
-						}
+                    case Slot.RANGED:
+                        bool newAttack = false;
+                        if (ActiveWeaponSlot != eActiveWeaponSlot.Distance)
+                        {
+                            SwitchWeapon(eActiveWeaponSlot.Distance);
+                        }
+                        else if (!AttackState)
+                        {
+                            StartAttack(TargetObject);
+                            newAttack = true;
+                        }
 
-						//Clean up range attack state/type if we are not in combat mode
-						//anymore
-						if (!AttackState)
-						{
-							RangeAttackState = eRangeAttackState.None;
-							RangeAttackType = eRangeAttackType.Normal;
-						}
-						if (!newAttack && RangeAttackState != eRangeAttackState.None)
-						{
-							if (RangeAttackState == eRangeAttackState.ReadyToFire)
-							{
-								RangeAttackState = eRangeAttackState.Fire;
-								m_attackAction.Start(1);
-							}
-							else if (RangeAttackState == eRangeAttackState.Aim)
-							{
-								if (!TargetInView)
-								{
-									// Don't store last target if it's not visible
-									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantSeeTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								}
-								else
-								{
-									if (m_rangeAttackTarget.Target == null)
-									{
-										//set new target only if there was no target before
-										RangeAttackTarget = TargetObject;
-									}
+                        //Clean up range attack state/type if we are not in combat mode
+                        //anymore
+                        if (!AttackState)
+                        {
+                            RangeAttackState = eRangeAttackState.None;
+                            RangeAttackType = eRangeAttackType.Normal;
+                        }
+                        if (!newAttack && RangeAttackState != eRangeAttackState.None)
+                        {
+                            if (RangeAttackState == eRangeAttackState.ReadyToFire)
+                            {
+                                RangeAttackState = eRangeAttackState.Fire;
+                                m_attackAction.Start(1);
+                            }
+                            else if (RangeAttackState == eRangeAttackState.Aim)
+                            {
+                                if (!TargetInView)
+                                {
+                                    // Don't store last target if it's not visible
+                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantSeeTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                }
+                                else
+                                {
+                                    if (m_rangeAttackTarget.Target == null)
+                                    {
+                                        //set new target only if there was no target before
+                                        RangeAttackTarget = TargetObject;
+                                    }
 
-									RangeAttackState = eRangeAttackState.AimFire;
-									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.AutoReleaseShot"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								}
-							}
-							else if (RangeAttackState == eRangeAttackState.AimFire)
-							{
-								RangeAttackState = eRangeAttackState.AimFireReload;
-								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.AutoReleaseShotReload"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							}
-							else if (RangeAttackState == eRangeAttackState.AimFireReload)
-							{
-								RangeAttackState = eRangeAttackState.Aim;
-								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.NoAutoReleaseShotReload"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							}
-						}
-						break;
-					case Slot.FIRSTQUIVER: SwitchQuiver(eActiveQuiverSlot.First, false); break;
-					case Slot.SECONDQUIVER: SwitchQuiver(eActiveQuiverSlot.Second, false); break;
-					case Slot.THIRDQUIVER: SwitchQuiver(eActiveQuiverSlot.Third, false); break;
-					case Slot.FOURTHQUIVER: SwitchQuiver(eActiveQuiverSlot.Fourth, false); break;
-				}
+                                    RangeAttackState = eRangeAttackState.AimFire;
+                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.AutoReleaseShot"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                }
+                            }
+                            else if (RangeAttackState == eRangeAttackState.AimFire)
+                            {
+                                RangeAttackState = eRangeAttackState.AimFireReload;
+                                Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.AutoReleaseShotReload"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            }
+                            else if (RangeAttackState == eRangeAttackState.AimFireReload)
+                            {
+                                RangeAttackState = eRangeAttackState.Aim;
+                                Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.NoAutoReleaseShotReload"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            }
+                        }
+                        break;
+                    case Slot.FIRSTQUIVER: SwitchQuiver(eActiveQuiverSlot.First, false); break;
+                    case Slot.SECONDQUIVER: SwitchQuiver(eActiveQuiverSlot.Second, false); break;
+                    case Slot.THIRDQUIVER: SwitchQuiver(eActiveQuiverSlot.Third, false); break;
+                    case Slot.FOURTHQUIVER: SwitchQuiver(eActiveQuiverSlot.Fourth, false); break;
+                }
+                if (useItem.SpellID != 0 || useItem.SpellID1 != 0 || useItem.PoisonSpellID != 0) // don't return without firing events
+                {
+                    if (IsSitting)
+                    {
+                        Out.SendMessage("You can't use an item while sitting!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        return;
+                    }
+
+                    if (useItem.ArtiID > 0)
+                    {
+                        long artifactusetick = TempProperties.getLongProperty("artifactuse" + useItem.Id_nb, 0L);
+                        long changeTime = CurrentRegion.Time - artifactusetick;
+                        //Console.WriteLine("changetime is :" + changeTime);
+                        long delay = (long)useItem.ArtiID * 1000;
+                        long lastChargedItemUseTick = TempProperties.getLongProperty(LAST_CHARGED_ITEM_USE_TICK, 0L);
+                        long changeTime1 = CurrentRegion.Time - lastChargedItemUseTick;
+                        long delay1 = TempProperties.getLongProperty(ITEM_USE_DELAY, 0L);
+                        if (Client.Account.PrivLevel == 1 && changeTime < delay)
+                        {
+                            Out.SendMessage("You must wait " + (delay - changeTime) / 1000 + " more seconds before discharging that artifact!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return;
+                        }
+                        else if (Client.Account.PrivLevel == 1 && changeTime1 < delay1)
+                        {
+                            Out.SendMessage("You must wait " + (delay1 - changeTime1) / 1000 + " more second before discharge another object!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return;
+                        }
+                        else
+                        {
+                            SpellLine chargeEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+                            if (chargeEffectLine != null)
+                            {
+                                if (type == 1) //use1
+                                {
+                                    Spell spell = SkillBase.GetSpellByID(useItem.SpellID);
+                                    if (spell.Level <= Level)
+                                    {
+                                        ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
+                                        if (spellHandler != null)
+                                        {
+                                            if (IsOnHorse && !spellHandler.HasPositiveEffect)
+                                                IsOnHorse = false;
+                                            Stealth(false);
+                                            spellHandler.CastSpell();
+                                            TempProperties.setProperty("artifactuse" + useItem.Id_nb, CurrentRegion.Time);
+                                            TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
+                                            TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 1));
+                                        }
+                                        else
+                                        {
+                                            Out.SendMessage("Charge effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+                                        }
+                                    }
+                                    else
+                                        Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    return;
+                                }
+                                else if (type == 2) //use2
+                                {
+                                    Spell spell = SkillBase.GetSpellByID(useItem.SpellID1);
+                                    if (spell.Level <= Level)
+                                    {
+                                        ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
+                                        if (spellHandler != null)
+                                        {
+                                            if (IsOnHorse && !spellHandler.HasPositiveEffect)
+                                                IsOnHorse = false;
+                                            Stealth(false);
+                                            spellHandler.CastSpell();
+                                            TempProperties.setProperty("artifactuse" + useItem.Id_nb, CurrentRegion.Time);
+                                            TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
+                                            TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 1));
+                                        }
+                                        else
+                                        {
+                                            Out.SendMessage("Charge effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+                                        }
+                                    }
+                                    else
+                                        Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+                                }
+                            }
+                        }
+                        return;
+                    }
+
+                    if ((type < 2 && useItem.SpellID > 0 && useItem.Charges < 1) || (type == 2 && useItem.SpellID1 > 0 && useItem.Charges1 < 1) || (useItem.PoisonSpellID > 0 && useItem.PoisonCharges < 1))
+                    {
+                        Out.SendMessage("The " + useItem.Name + " is out of charges.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        return;
+                    }
+                    else if (useItem.ArtiID == 0)
+                    {
+                        if (useItem.Object_Type == (int)eObjectType.Poison)
+                        {
+                            InventoryItem mainHand = AttackWeapon;
+                            InventoryItem leftHand = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
+                            if (mainHand != null && mainHand.PoisonSpellID == 0)
+                            {
+                                ApplyPoison(useItem, mainHand);
+                            }
+                            else if (leftHand != null && leftHand.PoisonSpellID == 0)
+                            {
+                                ApplyPoison(useItem, leftHand);
+                            }
+                        }
+                        else if (useItem.Object_Type == (int)eObjectType.Magical &&
+                            (useItem.Item_Type == (int)eInventorySlot.FirstBackpack || useItem.Item_Type == 41))
+                        {
+                            long lastPotionItemUseTick = TempProperties.getLongProperty(LAST_POTION_ITEM_USE_TICK, 0L);
+                            long changeTime = CurrentRegion.Time - lastPotionItemUseTick;
+                            if (Client.Account.PrivLevel == 1 && changeTime < 60000) //1 minutes reuse timer
+                            {
+                                Out.SendMessage("You must wait " + (60000 - changeTime) / 1000 + " more second before use potion!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                return;
+                            }
+                            else
+                            {
+                                SpellLine potionEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Potions_Effects);
+                                if (useItem.Item_Type == 41)
+                                    potionEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+
+                                if (potionEffectLine != null)
+                                {
+                                    IList spells = SkillBase.GetSpellList(potionEffectLine.KeyName);
+                                    if (spells != null)
+                                    {
+                                        foreach (Spell spell in spells)
+                                        {
+                                            if (spell.ID == useItem.SpellID)
+                                            {
+                                                if (spell.Level <= Level)
+                                                {
+                                                    if (spell.CastTime > 0 && AttackState)
+                                                    {
+                                                        Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantUseInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                                    }
+                                                    else
+                                                    {
+                                                        ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, potionEffectLine);
+                                                        if (spellHandler != null)
+                                                        {
+                                                            Stealth(false);
+                                                            if (useItem.Item_Type == 40)
+                                                                Emote(eEmote.Drink);
+                                                            spellHandler.StartSpell(TargetObject as GameLiving);
+                                                            if (useItem.Count > 1)
+                                                                Inventory.RemoveCountFromStack(useItem, 1);
+                                                            else
+                                                            {
+                                                                useItem.Charges--;
+                                                                if (useItem.Charges < 1) Inventory.RemoveCountFromStack(useItem, 1);
+                                                            }
+                                                            Out.SendMessage(useItem.GetName(0, false) + " has been used.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                                            TempProperties.setProperty(LAST_POTION_ITEM_USE_TICK, CurrentRegion.Time);
+                                                        }
+                                                        else
+                                                        {
+                                                            Out.SendMessage("Potion effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.NotEnouthPower"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else if (type > 0)
+                        {
+                            if (!(new ArrayList(Inventory.EquippedItems).Contains(useItem)))
+                            {
+                                Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.Can'tUseFromBackpack"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            }
+                            else
+                            {
+                                long lastChargedItemUseTick = TempProperties.getLongProperty(LAST_CHARGED_ITEM_USE_TICK, 0L);
+                                long changeTime = CurrentRegion.Time - lastChargedItemUseTick;
+                                long delay = TempProperties.getLongProperty(ITEM_USE_DELAY, 0L);
+                                if (Client.Account.PrivLevel == 1 && changeTime < delay) //2 minutes reuse timer
+                                {
+                                    Out.SendMessage("You must wait " + (delay - changeTime) / 1000 + " more second before discharge another object!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    return;
+                                }
+                                else
+                                {
+                                    SpellLine chargeEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+
+                                    if (chargeEffectLine != null)
+                                    {
+                                        if (type == 1) //use1
+                                        {
+                                            Spell spell = SkillBase.GetSpellByID(useItem.SpellID);
+                                            if (spell.Level <= Level)
+                                            {
+                                                ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
+                                                if (spellHandler != null)
+                                                {
+                                                    if (IsOnHorse && !spellHandler.HasPositiveEffect)
+                                                        IsOnHorse = false;
+                                                    Stealth(false);
+                                                    spellHandler.CastSpell();
+                                                    if (useItem.MaxCharges > 0)
+                                                        useItem.Charges--;
+                                                    TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
+                                                    TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 2));
+                                                }
+                                                else
+                                                {
+                                                    Out.SendMessage("Charge effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                                }
+                                            }
+                                            else
+                                                Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 
-				if (useItem.SpellID != 0 || useItem.SpellID1 != 0 || useItem.PoisonSpellID != 0) // don't return without firing events
-				{
-					if (IsSitting)
-					{
-						Out.SendMessage("You can't use an item while sitting!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return;
-					}
-					if ((type < 2 && useItem.SpellID > 0 && useItem.Charges < 1) || (type == 2 && useItem.SpellID1 > 0 && useItem.Charges1 < 1) || (useItem.PoisonSpellID > 0 && useItem.PoisonCharges < 1))
-					{
-						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.OutOfCharges", useItem.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return;
-					}
-					else
-					{
-						if (useItem.Object_Type == (int)eObjectType.Poison)
-						{
-							InventoryItem mainHand = AttackWeapon;
-							InventoryItem leftHand = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
-							if (mainHand != null && mainHand.PoisonSpellID == 0)
-							{
-								ApplyPoison(useItem, mainHand);
-							}
-							else if (leftHand != null && leftHand.PoisonSpellID == 0)
-							{
-								ApplyPoison(useItem, leftHand);
-							}
-						}
-						else if (useItem.Object_Type == (int)eObjectType.Magical &&
-							(useItem.Item_Type == (int)eInventorySlot.FirstBackpack || useItem.Item_Type == 41))
-						{
-							long lastPotionItemUseTick = TempProperties.getLongProperty(LAST_POTION_ITEM_USE_TICK, 0L);
-							long changeTime = CurrentRegion.Time - lastPotionItemUseTick;
-							if (Client.Account.PrivLevel == 1 && changeTime < 60000) //1 minutes reuse timer
-							{
-								Out.SendMessage("You must wait " + (60000 - changeTime) / 1000 + " more second before use potion!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							else
-							{
-								SpellLine potionEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Potions_Effects);
-								if (useItem.Item_Type == 41)
-									potionEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-
-								if (potionEffectLine != null)
-								{
-									IList spells = SkillBase.GetSpellList(potionEffectLine.KeyName);
-									if (spells != null)
-									{
-										foreach (Spell spell in spells)
-										{
-											if (spell.ID == useItem.SpellID)
-											{
-												if (spell.Level <= Level)
-												{
-													if (spell.CastTime > 0 && AttackState)
-													{
-														Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantUseInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-													}
-													else
-													{
-														ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, potionEffectLine);
-														if (spellHandler != null)
-														{
-															Stealth(false);
-															if (useItem.Item_Type == 40)
-																Emote(eEmote.Drink);
-															spellHandler.StartSpell(TargetObject as GameLiving);
-															if (useItem.Count > 1)
-																Inventory.RemoveCountFromStack(useItem, 1);
-															else
-															{
-																useItem.Charges--;
-																if (useItem.Charges < 1) Inventory.RemoveCountFromStack(useItem, 1);
-															}
-															Out.SendMessage(useItem.GetName(0, false) + " has been used.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-															TempProperties.setProperty(LAST_POTION_ITEM_USE_TICK, CurrentRegion.Time);
-														}
-														else
-														{
-															Out.SendMessage("Potion effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-														}
-													}
-												}
-												else
-													Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.NotEnouthPower"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-												break;
-											}
-										}
-									}
-								}
-							}
-						}
-						else if (type > 0)
-						{
-							if (!(new ArrayList(Inventory.EquippedItems).Contains(useItem)))
-							{
-								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.Can'tUseFromBackpack"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							}
-							else
-							{
-								long lastChargedItemUseTick = TempProperties.getLongProperty(LAST_CHARGED_ITEM_USE_TICK, 0L);
-								long changeTime = CurrentRegion.Time - lastChargedItemUseTick;
-								long delay = TempProperties.getLongProperty(ITEM_USE_DELAY, 0L);
-								if (Client.Account.PrivLevel == 1 && changeTime < delay) //3 minutes reuse timer
-								{
-									Out.SendMessage("You must wait " + (delay - changeTime) / 1000 + " more second before discharge another object!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
-								else
-								{
-									SpellLine chargeEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-									if (chargeEffectLine != null)
-									{
-										IList spells = SkillBase.GetSpellList(chargeEffectLine.KeyName);
-										if (spells != null)
-										{
-											if (type == 1) //use1
-											{
-												foreach (Spell spell in spells)
-												{
-													if (spell.ID == useItem.SpellID)
-													{
-														if (spell.Level <= Level)
-														{
-															ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
-															if (spellHandler != null)
-															{
-																if (IsOnHorse && !spellHandler.HasPositiveEffect)
-																	IsOnHorse = false;
-																Stealth(false);
-																spellHandler.CastSpell();
-																if (useItem.MaxCharges > 0)
-																	useItem.Charges--;
-																TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
-																if (spell.RecastDelay > 0)
-																	TempProperties.setProperty(ITEM_USE_DELAY, (long)spell.RecastDelay);
-																else
-																	TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 3));
-															}
-															else
-															{
-																Out.SendMessage("Charge effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-															}
-														}
-														else
-															Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-														break;
-													}
-												}
-											}
-											else if (type == 2) //use2
-											{
-												foreach (Spell spell in spells)
-												{
-													if (spell.ID == useItem.SpellID1)
-													{
-														if (spell.Level <= Level)
-														{
-															ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
-															if (spellHandler != null)
-															{
-																if (IsOnHorse && !spellHandler.HasPositiveEffect)
-																	IsOnHorse = false;
-																Stealth(false);
-																spellHandler.CastSpell();
-																if (useItem.MaxCharges1 > 0)
-																	useItem.Charges1--;
-																TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
-																if (spell.RecastDelay > 0)
-																	TempProperties.setProperty(ITEM_USE_DELAY, (long)spell.RecastDelay);
-																else
-																	TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 3));
-															}
-															else
-															{
-																Out.SendMessage("Charge effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-															}
-														}
-														else
-															Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-														break;
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-				// notify event handlers about used slot
-				Notify(GamePlayerEvent.UseSlot, this, new UseSlotEventArgs(slot, type));
-			}
-		}
+                                        }
+                                        else if (type == 2) //use2
+                                        {
+                                            Spell spell = SkillBase.GetSpellByID(useItem.SpellID1);
+                                            if (spell.Level <= Level)
+                                            {
+                                                ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
+                                                if (spellHandler != null)
+                                                {
+                                                    if (IsOnHorse && !spellHandler.HasPositiveEffect)
+                                                        IsOnHorse = false;
+                                                    Stealth(false);
+                                                    spellHandler.CastSpell();
+                                                    if (useItem.MaxCharges1 > 0)
+                                                        useItem.Charges1--;
+                                                    TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
+                                                    TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 2));
+                                                }
+                                                else
+                                                {
+                                                    Out.SendMessage("Charge effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                                }
+                                            }
+                                            else
+                                                Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                // notify event handlers about used slot
+                Notify(GamePlayerEvent.UseSlot, this, new UseSlotEventArgs(slot, type));
+            }
+        }
 
 		/// <summary>
 		/// Apply poison to weapon
@@ -10508,91 +10600,91 @@ namespace DOL.GS
 			}
 		}
 
-		/// <summary>
-		/// Checks whether this player can detect stealthed enemy
-		/// </summary>
-		/// <param name="enemy"></param>
-		/// <returns>true if enemy can be detected</returns>
-		public virtual bool CanDetect(GamePlayer enemy)
-		{
-			if (enemy.CurrentRegionID != CurrentRegionID)
-				return false;
-			if (!IsAlive)
-				return false;
-			if (enemy.EffectList.GetOfType(typeof(VanishEffect)) != null)
-				return false;
-			if (this.Client.Account.PrivLevel > 1)
-				return true;
-			if (enemy.Client.Account.PrivLevel > 1)
-				return false;
+        /// <summary>
+        /// Checks whether this player can detect stealthed enemy
+        /// </summary>
+        /// <param name="enemy"></param>
+        /// <returns>true if enemy can be detected</returns>
+        public virtual bool CanDetect(GamePlayer enemy)
+        {
+            if (enemy.CurrentRegionID != CurrentRegionID)
+                return false;
+            if (!IsAlive)
+                return false;
+            if (enemy.EffectList.GetOfType(typeof(VanishEffect)) != null)
+                return false;
+            if (this.Client.Account.PrivLevel > 1)
+                return true;
+            if (enemy.Client.Account.PrivLevel > 1)
+                return false;
 
-			/*
-			 * http://www.critshot.com/forums/showthread.php?threadid=3142
-			 * The person doing the looking has a chance to find them based on their level, minus the stealthed person's stealth spec.
-			 *
-			 * -Normal detection range = (enemy lvl  your stealth spec) * 20 + 125
-			 * -Detect Hidden Range = (enemy lvl  your stealth spec) * 50 + 250
-			 * -See Hidden range = 2700 - (38 * your stealth spec)
-			 */
+            /*
+             * http://www.critshot.com/forums/showthread.php?threadid=3142
+             * The person doing the looking has a chance to find them based on their level, minus the stealthed person's stealth spec.
+             *
+             * -Normal detection range = (enemy lvl  your stealth spec) * 20 + 125
+             * -Detect Hidden Range = (enemy lvl  your stealth spec) * 50 + 250
+             * -See Hidden range = 2700 - (38 * your stealth spec)
+             */
 
-			int EnemyStealthLevel = enemy.GetModifiedSpecLevel(Specs.Stealth);
-			if (EnemyStealthLevel > 50)
-				EnemyStealthLevel = 50;
-			int levelDiff = this.Level - EnemyStealthLevel;
-			if (levelDiff < 0) levelDiff = 0;
+            int EnemyStealthLevel = enemy.GetModifiedSpecLevel(Specs.Stealth);
+            if (EnemyStealthLevel > 50)
+                EnemyStealthLevel = 50;
+            int levelDiff = this.Level - EnemyStealthLevel;
+            if (levelDiff < 0) levelDiff = 0;
 
-			int range;
-			if (!(HasAbility(Abilities.DetectHidden) && enemy.HasAbility(Abilities.DetectHidden))) // not both have DetectHidden
-			{
-				bool enemyHasCamouflage = enemy.EffectList.GetOfType(typeof(CamouflageEffect)) != null;
+            int range;
+            bool enemyHasCamouflage = enemy.EffectList.GetOfType(typeof(CamouflageEffect)) != null;
+            if (HasAbility(Abilities.DetectHidden) && !enemy.HasAbility(Abilities.DetectHidden) && !enemyHasCamouflage)
+            {
+                // we have detect hidden and enemy don't = higher range
+                range = levelDiff * 50 + 250; // Detect Hidden advantage
+            }
+            else
+            {
+                range = levelDiff * 20 + 125; // Normal detection range
+            }
 
-				// we have detect hidden and enemy don't = higher range
-				if (HasAbility(Abilities.DetectHidden) && !enemyHasCamouflage)
-				{
-					range = levelDiff * 50 + 250;
-				}
-				else
-				{
-					range = levelDiff * 20 + 125;
-				}
+            // Mastery of Stealth Bonus
+            RAPropertyEnhancer mos = GetAbility(typeof(MasteryOfStealthAbility)) as RAPropertyEnhancer;
+            if (mos != null && !enemyHasCamouflage)
+            {
+                range += mos.GetAmountForLevel(mos.Level);
+            }
 
-				if (!enemyHasCamouflage)
-				{
-					RAPropertyEnhancer mos = GetAbility(typeof(MasteryOfStealthAbility)) as RAPropertyEnhancer;
-					if (mos != null)
-					{
-						range += mos.GetAmountForLevel(mos.Level);
-					}
-				}
-			}
-			else
-			{
-				// normal detect range
-				range = levelDiff * 20 + 125;
-			}
+            range += BuffBonusCategory1[(int)eProperty.Skill_Stealth];
 
-			range += BuffBonusCategory1[(int)eProperty.Skill_Stealth];
+            // Apply Blanket of camouflage effect
+            GameSpellEffect iSpymasterEffect1 = SpellHandler.FindEffectOnTarget((GameLiving)enemy, "BlanketOfCamouflage");
+            if (iSpymasterEffect1 != null)
+            {
+                range -= (int)iSpymasterEffect1.Spell.Value;
+                if (range < 0) range = 0;
+            }
 
-			/*
-			if (HasAbility(Abilities.MasteryofStealth) && enemy.EffectList.GetOfType(typeof(CamouflageEffect)) == null)
-			{
-				if (HasAbility(Abilities.DetectHidden) && enemy.HasAbility(Abilities.DetectHidden))
-					range = range;//Assasin vs assasin has no effects from MoS
-				else
-				{
-					int plrmoslvl = GetAbilityLevel(Abilities.MasteryofStealth);
-					range += GetMoSRange(plrmoslvl);
-				}
-			}
-			*/
+            // Apply Lookout effect
+            GameSpellEffect iSpymasterEffect2 = SpellHandler.FindEffectOnTarget((GameLiving)this, "Loockout");
+            if (iSpymasterEffect2 != null)
+                range += (int)iSpymasterEffect2.Spell.Value;
 
-			//Hard cap is 1900
-			if (range > 1900)
-				range = 1900;
-			// vampiir stealth range, uncomment when add eproperty stealthrange i suppose
-			//range += GetModified(eProperty.StealthRange);
-			return WorldMgr.CheckDistance(this, enemy, range);
-		}
+            // Apply Prescience node effect
+            GameSpellEffect iConvokerEffect = SpellHandler.FindEffectOnTarget((GameLiving)this, "Prescience");
+            if (iConvokerEffect != null)
+                range += (int)iConvokerEffect.Spell.Value;
+
+            //Hard cap is 1900
+            if (range > 1900)
+                range = 1900;
+            //Possibilité de voir les membres du groupes fufutés .... pour tout le monde
+            else if (enemy.PlayerGroup != null && PlayerGroup != null && enemy.PlayerGroup == PlayerGroup)
+            {
+                range = 2500;
+            }
+
+            // Fin
+            // vampiir stealth range, uncomment when add eproperty stealthrange i suppose
+            return WorldMgr.CheckDistance(this, enemy, range);
+        }
 
 		#endregion
 
@@ -12217,54 +12309,55 @@ namespace DOL.GS
 
 		#endregion
 
-		#region Bainshee
-		protected bool m_InWraithForm = false;
+        #region Bainshee
+        protected bool m_InWraithForm = false;
 
-		public bool InWraithForm
-		{
-			get { return m_InWraithForm; }
-			set {
-				m_InWraithForm = value;
-				if (m_InWraithForm)
-				{
-					switch (Race)
-					{
-						case 9: Model = 1883; break; //Celt   
-						case 11: Model = 1885; break; //Elf
-						case 12: Model = 1884; break; //Lurikeen
+        public bool InWraithForm
+        {
+            get { return m_InWraithForm; }
+            set
+            {
+                m_InWraithForm = value;
+                if (m_InWraithForm)
+                {
+                    switch (Race)
+                    {
+                        case 9: Model = 1883; break; //Celt   
+                        case 11: Model = 1885; break; //Elf
+                        case 12: Model = 1884; break; //Lurikeen
 
-					}
-					WraithFormTime();
-				}
-				else
-				{
-					Model = (ushort)m_client.Account.Characters[m_client.ActiveCharIndex].CreationModel;
-				}
-			}
-		}
+                    }
+                    WraithFormTime();
+                }
+                else
+                {
+                    Model = (ushort)m_client.Account.Characters[m_client.ActiveCharIndex].CreationModel;
+                }
+            }
+        }
 
-		protected RegionTimer WraithTimer;
+        protected RegionTimer WraithTimer;
 
-		protected virtual int WraithForm(RegionTimer timer)
-		{
-			InWraithForm = false;
+        protected virtual int WraithForm(RegionTimer timer)
+        {
+            InWraithForm = false;
 
-			timer.Stop();
-			timer = null;
-			return 0;
-		}
+            timer.Stop();
+            timer = null;
+            return 0;
+        }
 
 
-		protected void WraithFormTime()
-		{
-			if (WraithTimer != null)
-			{
-				WraithTimer.Stop();
-			}
-			WraithTimer = null;
-			WraithTimer = new RegionTimer(this, new RegionTimerCallback(WraithForm), 30000);
-		}
-		#endregion
+        protected void WraithFormTime()
+        {
+            if (WraithTimer != null)
+            {
+                WraithTimer.Stop();
+            }
+            WraithTimer = null;
+            WraithTimer = new RegionTimer(this, new RegionTimerCallback(WraithForm), 30000);
+        }
+        #endregion
 
 		/// <summary>
 		/// Returns the string representation of the GamePlayer
