@@ -40,8 +40,6 @@ namespace DOL.GS.Spells
 			base.FinishSpellCast(target);
 		}
 
-		#region LOS on Keeps
-
 		private const string LOSEFFECTIVENESS = "LOS Effectivness";
 
 		/// <summary>
@@ -55,7 +53,7 @@ namespace DOL.GS.Spells
 
 			bool spellOK = true;
 			//cone spells
-			if (Spell.Target == "Frontal" ||
+			if (Spell.Target == "cone" ||
 				//pbaoe
 				(Spell.Target == "Enemy" && Spell.Radius > 0 && Spell.Range == 0))
 				spellOK = false;
@@ -74,7 +72,12 @@ namespace DOL.GS.Spells
 					else if (Caster is GameNPC && (Caster as GameNPC).Brain is IControlledBrain)
 					{
 						IControlledBrain brain = (Caster as GameNPC).Brain as IControlledBrain;
+						//Ryan: edit for BD
 						player = brain.GetPlayerOwner();
+						//if (brain.Owner is GamePlayer)
+						//    player = (GamePlayer)brain.Owner;
+						//else
+						//    player = (GamePlayer)((IControlledBrain)((GameNPC)brain.Owner).Brain).Owner;
 					}
 				}
 				if (player != null)
@@ -167,7 +170,6 @@ namespace DOL.GS.Spells
 		{
 			base.OnSpellResisted(target);
 		}
-		#endregion
 
 		/// <summary>
 		/// Calculates chance of spell getting resisted

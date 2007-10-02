@@ -245,6 +245,13 @@ namespace DOL.GS
 			}
 		}
 
+        protected bool m_HealthMultiplicator = false;
+        public bool HealthMultiplicator
+        {
+            get { return m_HealthMultiplicator; }
+            set { m_HealthMultiplicator = value; }
+        }
+
 		/// <summary>
 		/// Gets or sets the name of this npc
 		/// </summary>
@@ -2113,7 +2120,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual int MAX_PASSENGERS
 		{
-			get { return 0; }
+			get { return 1; }
 		}
 
 		/// <summary>
@@ -2214,6 +2221,16 @@ namespace DOL.GS
 			else if (Mana > 0 && MaxMana > 0)
 				StartPowerRegeneration();
 
+            //If the Mob has a Path assigned he will now walk on it!
+            if (MaxSpeedBase > 0 && CurrentSpellHandler == null && !IsMoving
+                && !AttackState && !InCombat && !IsMovingOnPath && !IsReturningHome
+                //Check everything otherwise the Server will crash
+                && PathID != null && PathID != "" && PathID != "NULL")
+            {
+                PathPoint path = MovementMgr.LoadPath(PathID);
+                CurrentWayPoint = path;
+                MoveOnPath(path.MaxSpeed);
+            }
 
 			if (m_houseNumber > 0)
 			{
@@ -2673,6 +2690,9 @@ namespace DOL.GS
 		public override void StartAttack(GameObject attackTarget)
 		{
 			if (!CanFight) return;
+
+            if (IsMovingOnPath)
+                StopMoveOnPath();
 
 			if (this.Brain is IControlledBrain)
 			{

@@ -60,6 +60,10 @@ namespace DOL.GS
 		/// Staves / Staff weapons
 		/// </summary>
 		public const string Weapon_Staves = "Weaponry: Staves";
+        /// <summary>
+        /// Staves / Staff weapons
+        /// </summary>
+        public const string Weapon_Archery = "Weaponry: Archery";
 		/// <summary>
 		/// Slashing Weapons
 		/// </summary>
@@ -325,6 +329,10 @@ namespace DOL.GS
 		/// Fury Ability
 		/// </summary>	        
         public const string Fury = "Fury";
+        /// <summary>
+        /// Fury Ability
+        /// </summary>	        
+        public const string Bodyguard = "Bodyguard";
 		/// <summary>
 		/// Bolstering Roar Ability
 		/// </summary>	        

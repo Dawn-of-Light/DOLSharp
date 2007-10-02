@@ -90,9 +90,7 @@ namespace DOL.GS.Spells
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
 			if (Caster == null)
-			{
 				return;
-			}
 
 			GameNPC pet = ((GameLiving)Caster).ControlledNpc.Body;
 			//Lets let NPC's able to cast minions.  Here we make sure that the Caster is a GameNPC

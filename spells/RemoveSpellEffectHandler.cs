@@ -35,6 +35,16 @@ namespace DOL.GS.Spells
 			base.FinishSpellCast(target);
 		}
 
+        protected override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
+        {
+            return new GameSpellEffect(this, CalculateEffectDuration(target, effectiveness), Spell.Frequency, effectiveness);
+        }
+
+        public override void OnEffectPulse(GameSpellEffect effect)
+        {
+            base.OnEffectPulse(effect);
+            OnDirectEffect(effect.Owner, effect.Effectiveness);
+        }
 		/// <summary>
 		/// execute non duration spell effect on target
 		/// </summary>

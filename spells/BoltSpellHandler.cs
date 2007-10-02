@@ -55,7 +55,7 @@ namespace DOL.GS.Spells
 		{
 			foreach (GameLiving targ in SelectTargets(target))
 			{
-				if (targ is GamePlayer && Spell.Target == "Frontal" && CheckLOS(Caster))
+				if (targ is GamePlayer && Spell.Target.ToLower() == "cone" && CheckLOS(Caster))
 				{
 					GamePlayer player = targ as GamePlayer;
 					player.Out.SendCheckLOS(Caster, player, new CheckLOSResponse(DealDamageCheckLOS));
@@ -120,6 +120,7 @@ namespace DOL.GS.Spells
 			/// </summary>
 			/// <param name="actionSource">The action source</param>
 			/// <param name="boltTarget">The bolt target</param>
+			/// <param name="spellHandler"></param>
 			public BoltOnTargetAction(GameLiving actionSource, GameLiving boltTarget, BoltSpellHandler spellHandler) : base(actionSource)
 			{
 				if (boltTarget == null)
@@ -198,6 +199,7 @@ namespace DOL.GS.Spells
 							// TODO: 30% chance to block arrows/bolts
 							double shield = 0.5 * player.GetModifiedSpecLevel(Specs.Shields);
 							double blockchance = ((player.Dexterity*2)-100)/40.0 + shield + (0*3) + 5;
+                            blockchance += 30;
 							blockchance -= target.GetConLevel(caster) * 5;
 							if (blockchance >= 100) blockchance = 99;
 							if (blockchance <= 0) blockchance = 1;

@@ -37,6 +37,18 @@ namespace DOL.GS.Spells
 		public override string ShearSpellType { get	{ return "StrengthBuff"; } }
 		public override string DelveSpellType { get { return "Strength"; } }
 
+        public override void OnDirectEffect(GameLiving target, double effectiveness)
+        {
+            base.OnDirectEffect(target, effectiveness);
+            GameSpellEffect effect;
+            effect = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+            if (effect != null)
+            {
+                effect.Cancel(false);
+                return;
+            }
+        }
+
 		// constructor
 		public StrengthShear(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
@@ -49,6 +61,18 @@ namespace DOL.GS.Spells
 	{
 		public override string ShearSpellType { get	{ return "DexterityBuff"; } }
 		public override string DelveSpellType { get { return "Dexterity"; } }
+
+        public override void OnDirectEffect(GameLiving target, double effectiveness)
+        {
+            base.OnDirectEffect(target, effectiveness);
+            GameSpellEffect effect;
+            effect = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+            if (effect != null)
+            {
+                effect.Cancel(false);
+                return;
+            }
+        }
 
 		// constructor
 		public DexterityShear(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
@@ -63,6 +87,18 @@ namespace DOL.GS.Spells
 		public override string ShearSpellType { get	{ return "ConstitutionBuff"; } }
 		public override string DelveSpellType { get { return "Constitution"; } }
 
+        public override void OnDirectEffect(GameLiving target, double effectiveness)
+        {
+            base.OnDirectEffect(target, effectiveness);
+            GameSpellEffect effect;
+            effect = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+            if (effect != null)
+            {
+                effect.Cancel(false);
+                return;
+            }
+        }
+
 		// constructor
 		public ConstitutionShear(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
@@ -75,6 +111,18 @@ namespace DOL.GS.Spells
 	{
 		public override string ShearSpellType { get	{ return "AcuityBuff"; } }
 		public override string DelveSpellType { get { return "Acuity"; } }
+
+        public override void OnDirectEffect(GameLiving target, double effectiveness)
+        {
+            base.OnDirectEffect(target, effectiveness);
+            GameSpellEffect effect;
+            effect = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+            if (effect != null)
+            {
+                effect.Cancel(false);
+                return;
+            }
+        }
 
 		// constructor
 		public AcuityShear(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
@@ -89,6 +137,18 @@ namespace DOL.GS.Spells
 		public override string ShearSpellType { get	{ return "StrengthConstitutionBuff"; } }
 		public override string DelveSpellType { get { return "Str/Con"; } }
 
+        public override void OnDirectEffect(GameLiving target, double effectiveness)
+        {
+            base.OnDirectEffect(target, effectiveness);
+            GameSpellEffect effect;
+            effect = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+            if (effect != null)
+            {
+                effect.Cancel(false);
+                return;
+            }
+        }
+
 		// constructor
 		public StrengthConstitutionShear(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
@@ -101,6 +161,18 @@ namespace DOL.GS.Spells
 	{
 		public override string ShearSpellType { get	{ return "DexterityQuicknessBuff"; } }
 		public override string DelveSpellType { get { return "Dex/Qui"; } }
+
+        public override void OnDirectEffect(GameLiving target, double effectiveness)
+        {
+            base.OnDirectEffect(target, effectiveness);
+            GameSpellEffect effect;
+            effect = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+            if (effect != null)
+            {
+                effect.Cancel(false);
+                return;
+            }
+        }
 
 		// constructor
 		public DexterityQuicknessShear(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}

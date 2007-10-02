@@ -20,106 +20,123 @@ using System;
 
 namespace DOL.GS.PropertyCalc
 {
-	/// <summary>
-	/// The Spell Range bonus percent calculator
-	/// 
-	/// BuffBonusCategory1 unused
-	/// BuffBonusCategory2 unused
-	/// BuffBonusCategory3 is used for debuff
-	/// BuffBonusCategory4 unused
-	/// BuffBonusMultCategory1 unused
-	/// </summary>
-	 
-	//Debuff Effectivness
-	[PropertyCalculator(eProperty.DebuffEffectivness)]
-	public class DebuffEffectivnessPercentCalculator : PropertyCalculator
-	{
-		public override int CalcValue(GameLiving living, eProperty property) 
-		{
-			//hardcap at 25%
-			return Math.Min( 25 , living.ItemBonus[(int)property] 
-				- living.BuffBonusCategory3[(int)property]);
-		}
-	}
+    /// <summary>
+    /// The Spell Range bonus percent calculator
+    /// 
+    /// BuffBonusCategory1 unused
+    /// BuffBonusCategory2 unused
+    /// BuffBonusCategory3 is used for debuff
+    /// BuffBonusCategory4 unused
+    /// BuffBonusMultCategory1 unused
+    /// </summary>
 
-	//Buff Effectivness
-	[PropertyCalculator(eProperty.BuffEffectiveness)]
-	public class BuffEffectivenessPercentCalculator : PropertyCalculator
-	{
-		public override int CalcValue(GameLiving living, eProperty property) 
-		{
-			//hardcap at 25%
-			return Math.Min( 25 , living.ItemBonus[(int)property] 
-				- living.BuffBonusCategory3[(int)property]);
-		}
-	}
+    //Debuff Effectivness
+    [PropertyCalculator(eProperty.DebuffEffectivness)]
+    public class DebuffEffectivnessPercentCalculator : PropertyCalculator
+    {
+        public override int CalcValue(GameLiving living, eProperty property)
+        {
+            //hardcap at 25%
+            return Math.Min(25, living.ItemBonus[(int)property]
+                - living.BuffBonusCategory3[(int)property]);
+        }
+    }
 
-	// Healing Effectivness
-	[PropertyCalculator(eProperty.HealingEffectiveness)]
-	public class HealingEffectivenessPercentCalculator : PropertyCalculator
-	{
-		public override int CalcValue(GameLiving living, eProperty property) 
-		{
-			//hardcap at 25%
-			int percent = Math.Min(25, living.BuffBonusCategory1[(int)property]
-				- living.BuffBonusCategory3[(int)property]
-				+ living.ItemBonus[(int)property]);
+    //Buff Effectivness
+    [PropertyCalculator(eProperty.BuffEffectiveness)]
+    public class BuffEffectivenessPercentCalculator : PropertyCalculator
+    {
+        public override int CalcValue(GameLiving living, eProperty property)
+        {
+            //hardcap at 25%
+            return Math.Min(25, living.ItemBonus[(int)property]
+                - living.BuffBonusCategory3[(int)property]);
+        }
+    }
 
-			// Relic bonus calculated before RA bonuses
-			if (living is GamePlayer)
-				percent = (int)(percent * (1.00 + RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Magic)));
+    // Healing Effectivness
+    [PropertyCalculator(eProperty.HealingEffectiveness)]
+    public class HealingEffectivenessPercentCalculator : PropertyCalculator
+    {
+        public override int CalcValue(GameLiving living, eProperty property)
+        {
+            //hardcap at 25%
+            int percent = Math.Min(25, living.BuffBonusCategory1[(int)property]
+                - living.BuffBonusCategory3[(int)property]
+                + living.ItemBonus[(int)property]);
+            // Add RA bonus
+            percent += living.AbilityBonus[(int)property];
 
-			// Add RA bonus
-			percent += living.AbilityBonus[(int)property];
-	
-			return percent;
-		}
-	}
+            // Relic bonus calculated before RA bonuses
+            if (living is GamePlayer)
+                percent = (int)(percent * (1.00 + RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Magic)));
 
+            return percent;
+        }
+    }
 
-	//Cast Speed
-	[PropertyCalculator(eProperty.CastingSpeed)]
-	public class SpellCastSpeedPercentCalculator : PropertyCalculator
-	{
-		public override int CalcValue(GameLiving living, eProperty property) 
-		{
-			//hardcap at 10%
-			return Math.Min( 10 , living.ItemBonus[(int)property] 
-				- living.BuffBonusCategory3[(int)property]);
-		}
-	}
+    /// <summary>
+    /// The critical heal chance calculator. Returns 0 .. 100 chance.
+    /// 
+    /// Crit propability is capped to 50%
+    /// </summary>
+    [PropertyCalculator(eProperty.CriticalHealHitChance)]
+    public class CriticalHealHitChanceCalculator : PropertyCalculator
+    {
+        public CriticalHealHitChanceCalculator() { }
 
-	//Spell Duration
-	[PropertyCalculator(eProperty.SpellDuration)]
-	public class SpellDurationPercentCalculator : PropertyCalculator
-	{
-		public override int CalcValue(GameLiving living, eProperty property) 
-		{
-			//hardcap at 25%
-			return Math.Min( 25 , living.ItemBonus[(int)property] 
-				- living.BuffBonusCategory3[(int)property]);
-		}
-	}
+        public override int CalcValue(GameLiving living, eProperty property)
+        {
+            int percent = living.AbilityBonus[(int)property];
 
-	//Spell Damage
-	[PropertyCalculator(eProperty.SpellDamage)]
-	public class SpellDamagePercentCalculator : PropertyCalculator
-	{
-		public override int CalcValue(GameLiving living, eProperty property) 
-		{
-			//hardcap at 10%
-			int percent = Math.Min(10, living.BuffBonusCategory1[(int)property] 
-				+ living.ItemBonus[(int)property]
-				- living.BuffBonusCategory3[(int)property]);
-			
-			// Relic bonus calculated before RA bonuses
-			if (living is GamePlayer)
-				percent = (int)(percent * (1.00 + RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Magic)));
-			
-			// Add RA bonus
-			percent += living.AbilityBonus[(int)property];
-			
-			return percent;
-		}
-	}
+            // hardcap at 50%
+            return Math.Min(50, percent);
+        }
+    }
+
+    //Cast Speed
+    [PropertyCalculator(eProperty.CastingSpeed)]
+    public class SpellCastSpeedPercentCalculator : PropertyCalculator
+    {
+        public override int CalcValue(GameLiving living, eProperty property)
+        {
+            //hardcap at 10%
+            return Math.Min(10, living.ItemBonus[(int)property]
+                - living.BuffBonusCategory3[(int)property]);
+        }
+    }
+
+    //Spell Duration
+    [PropertyCalculator(eProperty.SpellDuration)]
+    public class SpellDurationPercentCalculator : PropertyCalculator
+    {
+        public override int CalcValue(GameLiving living, eProperty property)
+        {
+            //hardcap at 25%
+            return Math.Min(25, living.ItemBonus[(int)property]
+                - living.BuffBonusCategory3[(int)property]);
+        }
+    }
+
+    //Spell Damage
+    [PropertyCalculator(eProperty.SpellDamage)]
+    public class SpellDamagePercentCalculator : PropertyCalculator
+    {
+        public override int CalcValue(GameLiving living, eProperty property)
+        {
+            //hardcap at 10%
+            int percent = Math.Min(10, living.BuffBonusCategory1[(int)property]
+                + living.ItemBonus[(int)property]
+                - living.BuffBonusCategory3[(int)property]);
+
+            // Relic bonus calculated before RA bonuses
+            if (living is GamePlayer)
+                percent = (int)(percent * (1.00 + RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Magic)));
+
+            // Add RA bonus
+            percent += living.AbilityBonus[(int)property];
+
+            return percent;
+        }
+    }
 }
