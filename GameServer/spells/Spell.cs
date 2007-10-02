@@ -61,6 +61,7 @@ namespace DOL.GS
 		protected readonly bool m_moveCast = false;
 		protected readonly bool m_uninterruptible = false;
 		protected readonly int m_healthPenalty = 0;
+		protected readonly bool m_isfocus = false;
 		// warlocks
 		protected readonly bool m_isprimary = false;
 		protected readonly bool m_issecondary = false;
@@ -282,7 +283,11 @@ namespace DOL.GS
 		{
 			get { return m_healthPenalty; }
 		}
-
+		
+		public bool IsFocus
+		{
+			get { return m_isfocus; }
+		}
 		#endregion
 
 		/// <summary>
@@ -335,6 +340,7 @@ namespace DOL.GS
 			m_moveCast = dbspell.MoveCast;
 			m_uninterruptible = dbspell.Uninterruptible;
 			m_healthPenalty = dbspell.HealthPenalty;
+			m_isfocus = dbspell.IsFocus;
 			// warlocks
 			m_isprimary = dbspell.IsPrimary;
 			m_issecondary = dbspell.IsSecondary;

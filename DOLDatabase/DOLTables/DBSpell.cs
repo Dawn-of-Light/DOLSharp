@@ -64,7 +64,9 @@ namespace DOL.Database
 		protected bool m_moveCast = false;
 		protected bool m_uninterruptible = false;
 		protected int m_healthPenalty = 0;
-        protected int m_sharedtimergroup; 
+		protected bool m_isfocus = false;
+        	protected int m_sharedtimergroup; 
+        
 		// warlock
 		protected bool m_isprimary;
 		protected bool m_issecondary;
@@ -555,7 +557,17 @@ namespace DOL.Database
 				m_healthPenalty = value;
 			}
 		}
-
+		
+		[DataElement(AllowDbNull = true)]
+		public bool IsFocus
+		{
+			get { return m_isfocus; }
+			set
+			{
+				Dirty = true;
+				m_isfocus = value;
+			}
+		}
         [DataElement(AllowDbNull = true)]
         public int SharedTimerGroup
         {
