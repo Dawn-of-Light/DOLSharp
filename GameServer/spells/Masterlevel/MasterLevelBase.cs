@@ -1046,6 +1046,7 @@ namespace DOL.GS.Spells
         protected bool ApplyOnNPC = false;
         protected bool ApplyOnCombat = false;
         protected bool Friendly = true;
+        protected ushort sRadius = 350;
 
         public override bool IsOverwritable(GameSpellEffect compare)
         {
@@ -1068,7 +1069,7 @@ namespace DOL.GS.Spells
             }
 
             if (heal == null || s == null) return;
-            foreach (GamePlayer player in font.GetPlayersInRadius((ushort)s.Range))
+            foreach (GamePlayer player in font.GetPlayersInRadius(sRadius))
             {
                 if (!Friendly
                     && player.IsAlive
@@ -1080,7 +1081,7 @@ namespace DOL.GS.Spells
                     heal.StartSpell((GameLiving)player);
             }
             if (!ApplyOnNPC) return;
-            foreach (GameNPC npc in font.GetNPCsInRadius((ushort)s.Range))
+            foreach (GameNPC npc in font.GetNPCsInRadius(sRadius))
             {
                 if (!Friendly && npc.IsAlive && GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true) && (!npc.InCombat || ApplyOnCombat))
                     heal.StartSpell((GameLiving)npc);
@@ -1112,7 +1113,8 @@ namespace DOL.GS.Spells
         protected SpellLine sl;
         protected bool Unstealth = true;
         protected bool DestroyOnEffect = true;
-
+        protected ushort sRadius = 350;
+        
         public override bool IsOverwritable(GameSpellEffect compare)
         {
             return false;
@@ -1127,7 +1129,7 @@ namespace DOL.GS.Spells
 
             if (trap == null || s == null) return;
             bool wasstealthed = ((GamePlayer)Caster).IsStealthed;
-            foreach (GamePlayer player in mine.GetPlayersInRadius((ushort)s.Range))
+            foreach (GamePlayer player in mine.GetPlayersInRadius(sRadius))
             {
                 if (player.IsAlive && GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
                 {
@@ -1173,6 +1175,7 @@ namespace DOL.GS.Spells
         protected Spell s;
         protected SpellLine sl;
         protected ISpellHandler tempest;
+        protected ushort sRadius = 350;
 
         public override void OnEffectPulse(GameSpellEffect effect)
         {
@@ -1185,7 +1188,7 @@ namespace DOL.GS.Spells
             {
                 return;
             }
-            foreach (GamePlayer player in storm.GetPlayersInRadius((ushort)s.Range))
+            foreach (GamePlayer player in storm.GetPlayersInRadius(sRadius))
             {
                 if (player.IsAlive) tempest.StartSpell(player);
             }
@@ -1331,7 +1334,7 @@ namespace DOL.GS
         }
         public override int MaxHealth
         {
-            get { return 100; }
+            get { return 1000; }
         }
 
         public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
