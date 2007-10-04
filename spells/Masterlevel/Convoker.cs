@@ -77,7 +77,8 @@ namespace DOL.GS.Spells
             dbs.LifeDrainReturn = spell.LifeDrainReturn;
             dbs.Power = 0;
             dbs.CastTime = 0;
-            dbs.Range = 2000;
+            dbs.Range = WorldMgr.VISIBILITY_DISTANCE;
+            sRadius = 2000;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
             heal = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
@@ -93,7 +94,7 @@ namespace DOL.GS.Spells
 
         public override bool HasPositiveEffect
         {
-            get { return true; }
+            get { return false; }
         }
 
         public override void OnEffectStart(GameSpellEffect effect)
@@ -150,7 +151,8 @@ namespace DOL.GS.Spells
             dbs.LifeDrainReturn = spell.LifeDrainReturn;
             dbs.Power = 0;
             dbs.CastTime = 0;
-            dbs.Range = 350;
+            dbs.Range = WorldMgr.VISIBILITY_DISTANCE;
+            sRadius = 350;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
             trap = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
@@ -199,7 +201,8 @@ namespace DOL.GS.Spells
             dbs.LifeDrainReturn = spell.LifeDrainReturn;
             dbs.Power = 0;
             dbs.CastTime = 0;
-            dbs.Range = 1000;
+            dbs.Range = WorldMgr.VISIBILITY_DISTANCE;
+            sRadius = 1000;
             dbs.SpellGroup = 9;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
@@ -422,7 +425,8 @@ namespace DOL.GS.Spells
             dbs.LifeDrainReturn = spell.LifeDrainReturn;
             dbs.Power = 0;
             dbs.CastTime = 0;
-            dbs.Range = 350;
+            dbs.Range = WorldMgr.VISIBILITY_DISTANCE;
+            sRadius = 350;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
             trap = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
@@ -492,6 +496,7 @@ namespace DOL.GS.Spells
                 summoned.AddToWorld();
                 controlledBrain.AggressionState = eAggressionState.Passive;
                 effect.Start(summoned);
+                Caster.EffectList.Add(effect);
             }
         }
 
@@ -513,11 +518,12 @@ namespace DOL.GS.Spells
 
     #region Convoker-9
     [SpellHandlerAttribute("SummonMastery")]
-    public class Convoker9Handler : MasterlevelBuffHandling
+    public class Convoker9Handler : MasterlevelHandling
+    //public class Convoker9Handler : MasterlevelBuffHandling
     {
         private GameNPC m_living;
 
-        public override eProperty Property1 { get { return eProperty.MeleeDamage; } }
+        //public override eProperty Property1 { get { return eProperty.MeleeDamage; } }
 
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
@@ -525,7 +531,7 @@ namespace DOL.GS.Spells
             {
                 if (jg != null)
                 {
-                    MessageToCaster("Your Pet already has a Ability of this active", eChatType.CT_SpellResisted);
+                    MessageToCaster("Your Pet already has an ability of this type active", eChatType.CT_SpellResisted);
                     return;
                 }
             }
@@ -537,13 +543,15 @@ namespace DOL.GS.Spells
             GamePlayer player = Caster as GamePlayer;
 
             m_living = player.ControlledNpc.Body;
-            m_living.Size += 50;
+            m_living.Level += 20;
+            m_living.Size += 40;
             base.OnEffectStart(effect);
         }
 
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
-            m_living.Size -= 50;
+        	m_living.Level -= 20;
+            m_living.Size -= 40;
             return base.OnEffectExpires(effect, noMessages);
         }
 
@@ -556,7 +564,9 @@ namespace DOL.GS.Spells
     public class Convoker10SpellHandler : MasterlevelHandling
     {
         private int x, y, z;
-
+		GameNPC summoned = null;
+		RegionTimer m_growTimer;
+		
         public Convoker10SpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
         public override bool CheckBeginCast(GameLiving selectedTarget)
@@ -622,7 +632,7 @@ namespace DOL.GS.Spells
                 TitanBrain controlledBrain = new TitanBrain(player);
                 controlledBrain.IsMainPet = false;
                 controlledBrain.WalkState = eWalkState.Stay;
-                GameNPC summoned = new GameNPC(template);
+                summoned = new GameNPC(template);
                 summoned.SetOwnBrain(controlledBrain);
                 summoned.X = x;
                 summoned.Y = y;
@@ -631,13 +641,45 @@ namespace DOL.GS.Spells
                 summoned.Heading = (ushort)((Caster.Heading + 2048) % 4096);
                 summoned.Realm = target.Realm;
                 summoned.CurrentSpeed = 0;
+                summoned.Size = 10;
                 summoned.Level = 100;
+                summoned.Flags |= (uint)GameNPC.eFlags.PEACE;
                 summoned.AddToWorld();
                 controlledBrain.AggressionState = eAggressionState.Aggressive;
                 effect.Start(summoned);
+                StartTimers();
             }
         }
-
+        // Start grow timer
+        private void StartTimers()
+        {
+            StopTimers();
+            m_growTimer = new RegionTimer((GameObject)m_caster, new RegionTimerCallback(TitanGrows), 2 * 1000);
+        }
+        // Stop Grow timer
+        private void StopTimers()
+        {
+            if (m_growTimer != null)
+            {
+                m_growTimer.Stop();
+                m_growTimer = null;
+            }
+        }
+        // Make titan growing, and activate it on completition
+        private int TitanGrows(RegionTimer timer)
+        {
+        	if(summoned!=null && summoned.Size!=60)
+        	{
+        		summoned.Size+=10;
+        		StartTimers();
+        	}
+        	else
+        	{
+        		summoned.Flags = 0;
+        		StopTimers();
+        	}
+            return 0;
+        }
         /// <summary>
         /// When an applied effect expires.
         /// Duration spells only.

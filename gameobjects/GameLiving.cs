@@ -1499,69 +1499,6 @@ namespace DOL.GS
 				return ad;
 			}
 
-            if (target is GamePlayer && ActiveWeaponSlot != eActiveWeaponSlot.Distance)
-            {
-                foreach (BodyguardEffect bg in ((GamePlayer)target).EffectList.GetAllOfType(typeof(BodyguardEffect)))
-                {
-                    if (bg.GuardTarget == target && bg != null)
-                    {
-                        if ((!WorldMgr.CheckDistance(bg.GuardTarget, bg.GuardSource, BodyguardAbilityHandler.BODYGUARD_DISTANCE) || (bg.GuardSource.IsCasting) || (((GamePlayer)target).IsMoving)))
-                            break;
-                        else if (ad.Attacker is GameNPC)
-                        {
-                            GameNPC npc = ad.Attacker as GameNPC;
-                            if (npc.Brain is ControlledNpc)
-                            {
-                                ad.AttackResult = eAttackResult.Bodyguarded;
-                                bg.GuardTarget.Out.SendMessage("You were protected by" + bg.GuardSource.Name + " from the attack from " + ad.Attacker.Name + "!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
-                                bg.GuardSource.Out.SendMessage("You have proteced " + bg.GuardTarget.Name + " from the attack from " + ad.Attacker.Name + "!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
-                                return ad;
-                            }
-                        }
-                        else if (ad.Attacker is GamePlayer)
-                        {
-                            ad.AttackResult = eAttackResult.Bodyguarded;
-                            bg.GuardTarget.Out.SendMessage("You were protected by" + bg.GuardSource.Name + " from the attack from " + ad.Attacker.Name + "!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
-                            bg.GuardSource.Out.SendMessage("You have proteced " + bg.GuardTarget.Name + " from the attack from " + ad.Attacker.Name + "!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
-                            return ad;
-                        }
-                    }
-                }
-            }
-
-            /*foreach (GameSpellEffect effect in ad.Target.EffectList)
-            {
-                if (effect.SpellHandler.Spell != null)
-                {
-                    switch (effect.SpellHandler.Spell.SpellType)
-                    {
-                        case "Grapple": ad.AttackResult = eAttackResult.Grappled; return ad;
-                        case "Phaseshift": ad.AttackResult = eAttackResult.Phaseshift; return ad;
-                    }
-                }
-            }*/
-
-            GameSpellEffect Phaseshift = SpellHandler.FindEffectOnTarget(this, "Phaseshift");
-            if (Phaseshift != null)
-            {
-                ad.AttackResult = eAttackResult.Phaseshift;
-                return ad;
-            }
-
-            GameSpellEffect grapple = SpellHandler.FindEffectOnTarget(ad.Target, "Grapple");
-            if (grapple != null)
-            {
-                ad.AttackResult = eAttackResult.Grappled;
-                return ad;
-            }
-
-            GameSpellEffect phaseshit = SpellHandler.FindEffectOnTarget(ad.Target, "Phaseshift");
-            if (phaseshit != null)
-            {
-                ad.AttackResult = eAttackResult.Missed;
-                return ad;
-            }
-
 			// check region
 			if (ad.Target.CurrentRegionID != CurrentRegionID || ad.Target.ObjectState != eObjectState.Active)
 			{
@@ -1600,6 +1537,12 @@ namespace DOL.GS
 				ad.AttackResult = eAttackResult.NotAllowed_ServerRules;
 				return ad;
 			}
+			
+            if (SpellHandler.FindEffectOnTarget(this, "Phaseshift")!=null)
+            {
+                ad.AttackResult = eAttackResult.Phaseshift;
+                return ad;
+            }  
 
 			//Calculate our attack result and attack damage
 			ad.AttackResult = ad.Target.CalculateEnemyAttackResult(ad, weapon);
@@ -2901,6 +2844,12 @@ namespace DOL.GS
 			InterceptEffect intercept = null;
 			GameSpellEffect bladeturn = null;
 			EngageEffect engage = null;
+			// ML effects
+			BodyguardEffect bodyguard = null;
+			GameSpellEffect phaseshift = null;
+			GameSpellEffect grapple = null;		
+			GameSpellEffect briddleguard = null;		
+			
 			AttackData lastAD = (AttackData)TempProperties.getObjectProperty(LAST_ATTACK_DATA, null);
 			bool defenceDisabled = ad.Target.IsMezzed | ad.Target.IsStunned | ad.Target.IsSitting;
 
@@ -2920,6 +2869,11 @@ namespace DOL.GS
 					if (effect is BerserkEffect) defenceDisabled = true;
 					if (engage == null && effect is EngageEffect) engage = (EngageEffect)effect;
 					if (intercept != null) continue; // already found
+					// ML effects
+					if (bodyguard == null && effect is BodyguardEffect && ((BodyguardEffect)effect).GuardTarget == this) bodyguard = (BodyguardEffect)effect;
+					if (phaseshift == null && effect is GameSpellEffect && ((GameSpellEffect)effect).Spell.SpellType == "Phaseshift") phaseshift = (GameSpellEffect)effect;
+					if (grapple == null && effect is GameSpellEffect && ((GameSpellEffect)effect).Spell.SpellType == "Grapple") grapple = (GameSpellEffect)effect;					
+					if (briddleguard == null && effect is GameSpellEffect && ((GameSpellEffect)effect).Spell.SpellType == "BriddleGuard") briddleguard = (GameSpellEffect)effect;					
 
 					// We check if interceptor can intercept
 
@@ -2947,6 +2901,49 @@ namespace DOL.GS
 				defenceDisabled = true;
 			}
 
+			// Bodyguard
+			if(bodyguard!=null  
+			   && ad.Attacker.ActiveWeaponSlot != eActiveWeaponSlot.Distance
+			   && WorldMgr.CheckDistance(bodyguard.GuardTarget, bodyguard.GuardSource, BodyguardAbilityHandler.BODYGUARD_DISTANCE) 
+               && !bodyguard.GuardSource.IsCasting
+               && !bodyguard.GuardSource.IsStunned
+               && !bodyguard.GuardSource.IsMezzed
+               && !bodyguard.GuardTarget.IsMoving)
+            {
+               bool livingcondition = false;
+               if (ad.Attacker is GameNPC)
+               	if(((GameNPC)ad.Attacker).Brain!=null
+               	   && ((GameNPC)ad.Attacker).Brain is ControlledNpc)
+               		livingcondition = true;
+               else if (ad.Attacker is GamePlayer)
+               	livingcondition = true;
+  
+               if (livingcondition)
+               {
+               		ad.Target = bodyguard.GuardSource;
+                    bodyguard.GuardTarget.Out.SendMessage("You were protected by" + bodyguard.GuardSource.Name + " from the attack from " + ad.Attacker.Name + "!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+                    bodyguard.GuardSource.Out.SendMessage("You have protected " + bodyguard.GuardTarget.Name + " from the attack from " + ad.Attacker.Name + "!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+                    return eAttackResult.Bodyguarded;
+               }
+            }
+
+            // PhaseShift
+            if (phaseshift != null)
+                return eAttackResult.Missed;
+            
+            // Grapple
+            if(grapple!=null)
+                return eAttackResult.Grappled;           	
+            
+            // Briddle Guard
+            if (briddleguard != null)
+            {            	
+				if (this is GamePlayer) ((GamePlayer)this).Out.SendMessage("The blow was intercepted by Briddle Guard!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+				if (ad.Attacker is GamePlayer) ((GamePlayer)ad.Attacker).Out.SendMessage("Your strike was intercepted by a Briddle Guard!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                briddleguard.Cancel(false);
+                return eAttackResult.Missed;
+            }           
+			
 			// Intercept
 			if (intercept != null && !stealthStyle)
 			{
