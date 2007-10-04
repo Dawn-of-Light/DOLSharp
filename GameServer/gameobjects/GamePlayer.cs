@@ -9033,6 +9033,11 @@ namespace DOL.GS
 				RAPropertyEnhancer ab = GetAbility(typeof(LifterAbility)) as RAPropertyEnhancer;
 				if (ab != null)
 					enc *= 1 + ((double)ab.Amount / 100);
+				
+				GameSpellEffect iBaneLordEffect = SpellHandler.FindEffectOnTarget((GameLiving)this, "Oppression");
+				if (iBaneLordEffect != null)
+					enc *= 1 - ((double)iBaneLordEffect.Spell.Value / 100);
+				
 				return (int)enc;
 			}
 		}
@@ -10668,7 +10673,7 @@ namespace DOL.GS
                 range += (int)iSpymasterEffect2.Spell.Value;
 
             // Apply Prescience node effect
-            GameSpellEffect iConvokerEffect = SpellHandler.FindEffectOnTarget((GameLiving)this, "Prescience");
+            GameSpellEffect iConvokerEffect = SpellHandler.FindEffectOnTarget((GameLiving)enemy, "Prescience");
             if (iConvokerEffect != null)
                 range += (int)iConvokerEffect.Spell.Value;
 

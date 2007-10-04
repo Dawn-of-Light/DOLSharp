@@ -179,7 +179,8 @@ namespace DOL.GS.Spells
             dbs.LifeDrainReturn = spell.LifeDrainReturn;
             dbs.Power = 0;
             dbs.CastTime = 0;
-            dbs.Range = 350;
+            dbs.Range = WorldMgr.VISIBILITY_DISTANCE;
+            sRadius = 350;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
             trap = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
@@ -227,7 +228,8 @@ namespace DOL.GS.Spells
             dbs.LifeDrainReturn = spell.LifeDrainReturn;
             dbs.Power = 0;
             dbs.CastTime = 0;
-            dbs.Range = 350;
+            dbs.Range = WorldMgr.VISIBILITY_DISTANCE;
+            sRadius = 350;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
             trap = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
@@ -365,7 +367,8 @@ namespace DOL.GS.Spells
             dbs.LifeDrainReturn = spell.LifeDrainReturn;
             dbs.Power = 0;
             dbs.CastTime = 0;
-            dbs.Range = 350;
+            dbs.Range = WorldMgr.VISIBILITY_DISTANCE;
+            sRadius = 350;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
             trap = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
