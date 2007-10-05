@@ -2912,11 +2912,13 @@ namespace DOL.GS
             {
                bool livingcondition = false;
                if (ad.Attacker is GameNPC)
-               	if(((GameNPC)ad.Attacker).Brain!=null
-               	   && ((GameNPC)ad.Attacker).Brain is ControlledNpc)
-               		livingcondition = true;
+               {
+               		if(((GameNPC)ad.Attacker).Brain!=null
+               	   		&& ((GameNPC)ad.Attacker).Brain is ControlledNpc)
+               			livingcondition = true;
+               }
                else if (ad.Attacker is GamePlayer)
-               	livingcondition = true;
+               		livingcondition = true;
   
                if (livingcondition)
                {
