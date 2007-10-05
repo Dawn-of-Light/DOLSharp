@@ -438,6 +438,8 @@ namespace DOL.GS.Spells
     [SpellHandler("BriddleGuard")]
     public class BriddleGuardSpellHandler : MasterlevelHandling
     {
+    	GameNPC summoned = null;
+    	GameSpellEffect beffect = null;
         public BriddleGuardSpellHandler(GameLiving caster, Spell spell, SpellLine line)
             : base(caster, spell, line)
         {
@@ -476,13 +478,13 @@ namespace DOL.GS.Spells
             }
 
             int x, y;
-            GameSpellEffect effect = CreateSpellEffect(target, effectiveness);
+            beffect = CreateSpellEffect(target, effectiveness);
             {
                 target.GetSpotFromHeading(64, out x, out y);
 
                 BriddleBrain controlledBrain = new BriddleBrain(player);
                 controlledBrain.IsMainPet = false;
-                GameNPC summoned = new GameNPC(template);
+                summoned = new GameNPC(template);
                 summoned.SetOwnBrain(controlledBrain);
                 summoned.HealthMultiplicator = true;
                 summoned.X = x;
@@ -495,11 +497,19 @@ namespace DOL.GS.Spells
                 summoned.Level = 1;
                 summoned.AddToWorld();
                 controlledBrain.AggressionState = eAggressionState.Passive;
-                effect.Start(summoned);
-                Caster.EffectList.Add(effect);
+                GameEventMgr.AddHandler(summoned, GameLivingEvent.Dying, new DOLEventHandler(GuardDie));
+                beffect.Start(Caster);     
             }
         }
-
+        private void GuardDie(DOLEvent e, object sender, EventArgs args)
+        {
+        	GameNPC bguard = sender as GameNPC;
+        	if(bguard==summoned)
+        	{
+        		GameEventMgr.RemoveHandler(summoned, GameLivingEvent.Dying, new DOLEventHandler(GuardDie));
+				beffect.Cancel(false);
+        	}				
+        }
         /// <summary>
         /// When an applied effect expires.
         /// Duration spells only.
@@ -508,10 +518,13 @@ namespace DOL.GS.Spells
         /// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
         /// <returns>immunity duration in milliseconds</returns>
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
-        {
-            effect.Owner.Health = 0; // to send proper remove packet
-            effect.Owner.Delete();
-            return 0;
+        {       
+        	if(summoned!=null)
+        	{
+           		summoned.Health = 0; // to send proper remove packet
+            	summoned.Delete();
+        	}
+            return base.OnEffectExpires(effect, noMessages);
         }
     }
     #endregion
