@@ -296,7 +296,7 @@ namespace DOL.GS
 			}
 		}
 
-		private Faction m_faction;
+		private Faction m_faction = null;
 		/// <summary>
 		/// Gets the Faction of the NPC
 		/// </summary>
@@ -3803,18 +3803,18 @@ namespace DOL.GS
 			}
 		}
 
-		/// <summary>
-		/// Whether this NPC is a friend or not.
-		/// </summary>
-		/// <param name="npc">The NPC that is checked against.</param>
-		/// <returns></returns>
-		public bool IsFriend(GameNPC npc)
-		{
-            if (Faction == null || npc.Faction == null)
-                return false;
+        /// <summary>
+        /// Whether this NPC is a friend or not.
+        /// </summary>
+        /// <param name="npc">The NPC that is checked against.</param>
+        /// <returns></returns>
+        public bool IsFriend(GameNPC npc)
+        {
+            if (npc.Faction != null && Faction != null && npc.Faction == Faction)
+                return true;
             else
-                return (npc.Faction == Faction || Faction.FriendFactions.Contains(npc.Faction));
-		}
+                return false;
+        }
 
         private string m_boatowner_id;
         /// <summary>
