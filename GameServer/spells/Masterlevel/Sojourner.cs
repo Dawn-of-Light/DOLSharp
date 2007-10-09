@@ -216,7 +216,8 @@ namespace DOL.GS.Spells
         protected virtual int ExpiredCallback(RegionTimer callingTimer)
         {
             m_target.IsStunned = false;
-            m_target.IsSilenced = false;
+            //m_target.IsSilenced = false;
+            m_target.BuffBonusCategory3[(int)eProperty.SpellFumbleChance]-=100;
             GameEventMgr.RemoveHandler(m_target, GamePlayerEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
             m_npc.StopMoving();
             m_npc.RemoveFromWorld();
@@ -270,7 +271,8 @@ namespace DOL.GS.Spells
             if (!player.IsAlive) return;
 
             player.IsStunned = true;
-            player.IsSilenced = true;
+            //player.IsSilenced = true;
+            player.BuffBonusCategory3[(int)eProperty.SpellFumbleChance]+=100;
             player.StopAttack();
             player.StopCurrentSpellcast();
             player.MountSteed(npc, true);

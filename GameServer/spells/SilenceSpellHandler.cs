@@ -17,35 +17,31 @@
  *
  */
 using System;
-using DOL.GS.Spells;
 using DOL.GS.Effects;
+using DOL.GS.PacketHandler;
 
-namespace DOL.GS.PropertyCalc
+namespace DOL.GS.Spells
 {
 	/// <summary>
-	/// The Spell Range bonus percent calculator
-	/// 
-	/// BuffBonusCategory1 unused
-	/// BuffBonusCategory2 unused
-	/// BuffBonusCategory3 is used for debuff
-	/// BuffBonusCategory4 unused
-	/// BuffBonusMultCategory1 unused
+	/// Reduce range needed to cast the sepll
 	/// </summary>
-	[PropertyCalculator(eProperty.SpellRange)]
-	public class SpellRangePercentCalculator : PropertyCalculator
+	[SpellHandler("Silence")]
+	public class SilenceSpellHandler : SingleStatDebuff
 	{
-		public override int CalcValue(GameLiving living, eProperty property) 
+		public override eProperty Property1 { get { return eProperty.SpellFumbleChance; } }
+		
+		/// <summary>
+		/// Apply effect on target or do spell action if non duration spell
+		/// </summary>
+		/// <param name="target">target that gets the effect</param>
+		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
+		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-			int debuff = living.BuffBonusCategory3[(int)property];
-			if(debuff > 0)
-			{
-				GameSpellEffect nsreduction = SpellHandler.FindEffectOnTarget(living, "NearsightReduction");
-				if(nsreduction!=null) debuff *= (int)(1.00 - nsreduction.Spell.Value * 0.01);
-			}
-			
-			return Math.Max(0, 100
-				+Math.Min(10,living.ItemBonus[(int)property])
-				-debuff);
+			base.ApplyEffectOnTarget(target, effectiveness);
+			target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
 		}
+
+		// constructor
+		public SilenceSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
 	}
 }
