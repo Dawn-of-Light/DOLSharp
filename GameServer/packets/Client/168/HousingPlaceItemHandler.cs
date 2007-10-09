@@ -321,6 +321,16 @@ namespace DOL.GS.PacketHandler.Client.v168
                             point.ItemTemplateID = orgitem.Id_nb;
                             point.Position = (uint)position;
 
+                            // If we already have soemthing here, do not place more
+                            foreach (DBHousepointItem hpitem in GameServer.Database.SelectObjects(typeof(DBHousepointItem), "HouseID = '" + house.HouseNumber + "'"))
+                            {
+                                if (hpitem.Position == point.Position)
+                                {
+                                    client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointAlready"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    return 1;
+                                }
+                            }
+
                             GameServer.Database.AddNewObject(point);
 
                             house.FillHookpoint(orgitem, (uint)position, orgitem.Id_nb);
@@ -402,5 +412,5 @@ namespace DOL.GS.PacketHandler.Client.v168
 
             player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Housing.HookPointLogged", position), eChatType.CT_System, eChatLoc.CL_SystemWindow);
         }
-	}
+    }
 }

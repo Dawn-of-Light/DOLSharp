@@ -1,5 +1,8 @@
 # Language file for DOL
 # Language used : FRENCH / FRANCAIS
+# Create by DOL
+# Edit by the french player
+# Finish by heretoc
 #
 # #-Beginning and Empty lines are ignored
 # TABS are ignored at the left of ':' too.
@@ -12,7 +15,7 @@ System.LanguagesName.English:					Anglais
 System.LanguagesName.French:					Français
 System.LanguagesName.German:					Allemand
 System.LanguagesName.Spanish:					Espagnol
-System.LanguagesName.Czech:						Tchèque
+System.LanguagesName.Czech:					Tchèque
 System.LanguagesName.Italian:					Italien 
 
 # SYSTEM
@@ -48,10 +51,10 @@ AbstractCraftingSkill.BuildCraftedItem.Successfully:   Vous avez correctement fa
 AbstractCraftingSkill.CheckRawMaterial.NoIngredients:   Vous n'avez pas les ingredients pour faire le {0}.
 AbstractCraftingSkill.CheckRawMaterial.YouAreMissing:   Il vous manque :
 
-AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoClothworkingSkill:      Vous n'avez pas le niveau minimum dans la compétence  Tailleur ({0}) Pour confectionner le {1}!
-AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoLeathercraftingSkill:   Vous n'avez pas le niveau minimum dans la compétence  Leathercrafting skill ({0}) Pour confectionner le {1}!
-AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoMetalworkingSkill:      Vous n'avez pas le niveau minimum dans la compétence  Ingénierie ({0}) Pour confectionner le {1}!
-AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoWoodworkingSkill:      Vous n'avez pas le niveau minimum dans la compétence  Woodworking skill ({0}) Pour confectionner le {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoClothworkingSkill:      Vous n'avez pas le niveau minimum dans la compétence en Armurie ({0}) Pour confectionner le {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoLeathercraftingSkill:   Vous n'avez pas le niveau minimum dans la compétence  en Couture ({0}) Pour confectionner le {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoMetalworkingSkill:      Vous n'avez pas le niveau minimum dans la compétence  en Ingénierie ({0}) Pour confectionner le {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoWoodworkingSkill:      Vous n'avez pas le niveau minimum dans la compétence  en Forge ({0}) Pour confectionner le {1}!
 
 AbstractCraftingSkill.CraftItem.BeginWork:      Vous commencez a travailler sur le {0} ({1}%).
 AbstractCraftingSkill.CraftItem.ChanceToGainPoint:   Chance de gagner des points sur votre compétence primaire {0}%.
@@ -78,11 +81,11 @@ GameMerchant.OnPlayerBuy.Bought2:				Vous venez d'acheter {0} pour {1} {2}.
 GameMerchant.OnPlayerBuy.BoughtBP:				Vous venez d'acheter {0} pour {1} points de mérite.
 GameMerchant.OnPlayerBuy.BoughtPieces:			Vous venez d'acheter {0} piéces de {1} pour {2}.
 GameMerchant.OnPlayerBuy.BoughtPieces2:			Vous venez d'acheter {0} piéces de {1} pour {2} {3].
-GameMerchant.OnPlayerBuy.BoughtPiecesBP:		Vous venez d'acheter {0} piéces de {1} pour {0} BPs.
+GameMerchant.OnPlayerBuy.BoughtPiecesBP:		Vous venez d'acheter {0} piéces de {1} pour {0} primes de royaume.
 GameMerchant.OnPlayerBuy.NotInventorySpace:		Pas assez de place dans votre inventaire pour acheter cela.
 GameMerchant.OnPlayerBuy.YouNeed:				Vous avez besoin de {0} pour acheter cela.
 GameMerchant.OnPlayerBuy.YouNeed2:				Vous avez besoin de {0} {1} pour acheter cela.
-GameMerchant.OnPlayerBuy.YouNeedBP:				Vous avez besoin de {0} BPs pour acheter cela.
+GameMerchant.OnPlayerBuy.YouNeedBP:				Vous avez besoin de {0} primes de royaume pour acheter cela.
 GameMerchant.OnPlayerSell.CantBeSold:			Votre objet ne peut être vendu.
 GameMerchant.OnPlayerSell.GivesYou:				{0} vous donne {1} pour {2}.
 GameMerchant.OnPlayerSell.IsntInterested:		{0} n'est pas interessé par {1}.
@@ -1139,32 +1142,6 @@ Scripts.Players.Duel.YouSurrender:			Vous vous rendez à {0}!
 Scripts.Players.Language.Set:				Vous changez la langue d'affichage du serveur en {0}.
 Scripts.Players.Language.Current:			La langue d'affichage est actuellement: {0}.
 
-# PARTNER
-Scripts.Player.Partner.Help.Usage: Utilisation:
-Scripts.Player.Partner.Help.Fire: '/partner fire' - Supprime votre partenaire (permanent!)
-Scripts.Player.Partner.Help.Name: '/partner name <new name>' - Renomme votre partenaire actuel.
-Scripts.Player.Partner.Help.Summon: '/partner summon' - Invoque votre partenaire si vous en possédez un.
-Scripts.Player.Partner.Help.Unsummon: '/partner unsummon' - Révoque votre partenaire si vous en avez un.
-Scripts.Player.Partner.Help: '/partner help' - Affiche le menu d'aide du partenaire.
-Scripts.Player.Partner.UnknownCommand: Ceci n'est pas une commande valide. Tapez /partner pour accéder à l'aide.
-Scripts.Player.Partner.NoTarget: Vous devez sélectionner un partenaire avec cela!
-Scripts.Player.Partner.LetGo: Vous avez laisser partir votre partenaire {0}.
-Scripts.Player.Partner.PartnerLetGo: A bientôt, {0}. Ce fut un plaisir de faire des affaires avec vous.
-Scripts.Player.Partner.DoesntWant: {0} vous regarde bizarrement. Apparement, cet objet ne les intéresse pas.
-Scripts.Player.Partner.ReplaceItem: {0} porte ses nouveaux(elles) {1}.
-Scripts.Player.Partner.RaisedLevel: Votre partenaire vient de gagner un niveau!
-Scripts.Player.Partner.PartnerOffer: Vous pouvez posséder un [Partenaire Guerrier], un [Partenaire Mage] ou bien un [Partenaire Soigneur] pour {0} pièces de cuivre par heure.
-Scripts.Player.Partner.AlreadyPartner: Vous possédez déjà un partenaire!
-Scripts.Player.Partner.CantAfford: Vous n'avez pas assez d'argent pour vous offrir un partenaire!
-Scripts.Player.Partner.GroupedAlready: Vous êtes déjà groupé, vous n'avez pas besoin d'un partenaire!
-Scripts.Player.Partner.Purchased: Vous venez de prendre une sage décision! Prennez plaisir avec votre partenaire.
-Scripts.Player.Partner.Greeting: Vous n'allez pas être déçu, {0}. Je suis à votre service.
-Scripts.Player.Partner.NameChanged: Vous venez de changer le nom de votre partenaire en: {0}
-Scripts.Player.Partner.KilledBy: Je suis désolé mon ami. Apparement, {0} était trop fort pour moi.
-Scripts.Player.Partner.NoPartner: Vous ne semblez pas avoir de partenaire. Pourquoi ne pas aller en chercher un?
-Scripts.Player.Partner.Summoned: Votre partenaire vient d'être invoqué.
-Scripts.Player.Partner.Unsummoned: Votre partenaire vient d'être renvoyé.
-Scripts.Player.Partner.BadZone: Ceci est une zone sans partenaire. Vous ne pouvez donc pas appeller votre partenaire ici.
 
 # /Range
 Scripts.Players.Range.InvalidObject:			Cette commande fonctionne uniquement sur les objets.

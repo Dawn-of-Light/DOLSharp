@@ -315,6 +315,7 @@ GamePlayer.Release.WillReleaseAuto:			You will now release automatically in {0} 
 GamePlayer.Release.WillReleaseAutoCity:			You will now release automatically to your home city in {0} more seconds!		
 GamePlayer.Release.WillReleaseIn:			You will autorelease in {0} seconds.		
 GamePlayer.Release.YouRelease:				You release your corpse unto death.	
+GamePlayer.Release.ReleaseToPortalKeep: You will now release to the nearest border or portal keep in {0} more seconds!
 GamePlayer.RemoveAbility.YouLose:			You lose the {0} ability!		
 GamePlayer.RemoveSpecialization.YouLose:		You lose the {0} skill!			
 GamePlayer.RemoveSpellLine.YouLose:			You lose the {0} spell line!		
@@ -439,6 +440,9 @@ Scripts.Player.Housing.HookPointLogged:			Logged hookpoint position {0} in error
 Scripts.Player.Housing.HookPointLogLoc:			Log this housepoint location?
 Scripts.Player.Housing.HookPointNot:			That is not a hookpoint item!
 Scripts.Player.Housing.HookPointNotPlaced:		That hookpoint item was not placed.
+Scripts.Player.Housing.HookPointAlready: That HookPoint already has an item!
+Scripts.Player.Housing.ClearHookPoint: Would you like to clear the current hookpoint?
+Scripts.Player.Housing.HookPointCleared: That HookPoint has been cleared.
 Scripts.Player.Housing.HouseUseMaterial:		You need to hold shift+right-click on your house to change those materials.
 Scripts.Player.Housing.HouseUseMaterial:		You need to hold shift+right-click on your house to change your carpets.
 Scripts.Player.Housing.IndoorFloorPlaced:		You have placed {0} on the floor of your house.
@@ -1302,3 +1306,12 @@ PlayerStatistic.PvE.Title:				PvE Report
 PlayerStatistic.PvE.KillsDragon:			Dragon Kills
 PlayerStatistic.PvE.KillsEpic:				Epic Boss Kills
 PlayerStatistic.PvE.KillsLegion:			Legion Kills
+
+# VIEWREPORTS
+Scripts.Player.VeiwReport.Usage: Usage:
+Scripts.Player.ViewReport.Help.Close: '/viewreport close <report #>' Will close the report of id #.
+Scripts.Player.ViewReport.Help.Delete: '/viewreport delete <report #' Deletes a report of id #.
+Scripts.Player.ViewReport.InvalidReport: That is not a valid report.
+Scripts.Player.ViewReport.UnknownCommand: That is not a valid command.
+Scripts.Player.ViewReport.ReportDeleted: Report {0} has been deleted.
+Scripts.Player.ViewReport.NoPriv: You do not have the privilages to edit reports.
