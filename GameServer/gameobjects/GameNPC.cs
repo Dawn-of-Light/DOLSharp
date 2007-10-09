@@ -3810,10 +3810,10 @@ namespace DOL.GS
         /// <returns></returns>
         public bool IsFriend(GameNPC npc)
         {
-            if (npc.Faction != null && Faction != null && npc.Faction == Faction)
-                return true;
-            else
+            if (Faction == null || npc.Faction == null)
                 return false;
+            else
+                return (npc.Faction == Faction || Faction.FriendFactions.Contains(npc.Faction));
         }
 
         private string m_boatowner_id;
