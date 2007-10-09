@@ -97,9 +97,9 @@ namespace DOL.AI.Brain
             {
                 CheckPlayerAggro();
                 CheckNPCAggro();
-                if (IsAggroing) 
-                    AttackMostWanted(); // Only start an attack if there actually is something to attack
             }
+            if (IsAggroing)
+                AttackMostWanted(); // Only start an attack if there actually is something to attack
 
             //Mob will now always walk on their path
             if (Body.MaxSpeedBase > 0 && Body.CurrentSpellHandler == null && !Body.IsMoving
@@ -164,6 +164,18 @@ namespace DOL.AI.Brain
                 return;
             foreach (GamePlayer player in Body.GetPlayersInRadius((ushort)AggroRange))
             {
+                 int aggrolevel = 0;  
+     
+                 if (Body.Faction != null)  
+                 {  
+                     aggrolevel = Body.Faction.GetAggroToFaction(player);  
+                     if (aggrolevel < 0)  
+                         aggrolevel = 0;  
+                 }  
+     
+                 if (aggrolevel <= 0 && AggroLevel <= 0)  
+                     return;  
+
                 if (m_aggroTable.ContainsKey(player))
                     continue; // add only new players
                 if (!player.IsAlive || player.ObjectState != GameObject.eObjectState.Active || player.IsStealthed)
