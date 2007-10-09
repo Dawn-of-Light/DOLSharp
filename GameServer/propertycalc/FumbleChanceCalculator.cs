@@ -38,4 +38,12 @@ namespace DOL.GS.PropertyCalc
 			return Math.Max(51 - living.Level, (10 * living.BuffBonusCategory3[(int)property]) + (10 * living.AbilityBonus[(int)property]));
 		}
 	}
+	[PropertyCalculator(eProperty.SpellFumbleChance)]
+	public class SpellFumbleChanceCalculator : PropertyCalculator
+	{
+		public override int CalcValue(GameLiving living, eProperty property)
+		{
+			return Math.Min(100, living.BuffBonusCategory3[(int)property]);
+		}
+	}
 }

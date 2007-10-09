@@ -17,7 +17,7 @@
  *
  */
 using System;
-
+using DOL.GS.Spells;
 using DOL.GS.Effects;
 
 namespace DOL.GS.PropertyCalc
@@ -36,8 +36,15 @@ namespace DOL.GS.PropertyCalc
 	{
 		public override int CalcValue(GameLiving living, eProperty property)
 		{
+			int debuff = living.BuffBonusCategory3[(int)property];
+			if(debuff > 0)
+			{
+				GameSpellEffect nsreduction = SpellHandler.FindEffectOnTarget(living, "NearsightReduction");
+				if(nsreduction!=null) debuff *= (int)(1.00 - nsreduction.Spell.Value * 0.01);
+			}
+			
 			int item = Math.Max(0, 100
-				- living.BuffBonusCategory3[(int)property]
+				- debuff
 				+ Math.Min(10, living.ItemBonus[(int)property]));// http://www.camelotherald.com/more/1325.shtml
 
 			int ra = 0;

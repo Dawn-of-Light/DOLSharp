@@ -6552,12 +6552,23 @@ namespace DOL.GS
                     Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.CantCastMezzed"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
                     return;
                 }
-
+				/*
                 if (IsSilenced)
                 {
                     Out.SendMessage("You are fumbling for your words, and cannot cast!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
                     return;
                 }
+                */            
+				double fumbleChance = GetModified(eProperty.SpellFumbleChance);
+				fumbleChance *= 0.01;
+				if (fumbleChance > 0)
+				{
+					if (Util.ChanceDouble(fumbleChance))
+					{
+                   		Out.SendMessage("You are fumbling for your words, and cannot cast!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+                    	return;
+					}
+				}
 
                 lock (m_spellQueueAccessMonitor)
                 {

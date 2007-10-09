@@ -42,6 +42,7 @@ namespace DOL.GS.Spells
 	public class SummonSpellHandler : SpellHandler
 	{
         protected int x, y, z;
+        public GameNPC summoned=null;
 
 		public SummonSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
@@ -128,7 +129,7 @@ namespace DOL.GS.Spells
             {
                 ControlledNpc controlledBrain = new ControlledNpc(Caster);
 
-                GameNPC summoned = new GameNPC(template);
+                summoned = new GameNPC(template);
                 controlledBrain.WalkState = eWalkState.Stay;
                 controlledBrain.IsMainPet = false;
 				summoned.SetOwnBrain(controlledBrain);
@@ -156,7 +157,7 @@ namespace DOL.GS.Spells
             {
                 ControlledNpc controlledBrain = new ControlledNpc(Caster);
 
-                GameNPC summoned = new GameNPC(template);
+                summoned = new GameNPC(template);
                 summoned.SetOwnBrain(controlledBrain);
                 summoned.X = x;
                 summoned.Y = y;
