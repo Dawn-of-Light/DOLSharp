@@ -905,7 +905,7 @@ namespace DOL.GS
 							}
 						case eReleaseType.RvR:
 							{
-								Out.SendMessage(LanguageMgr.GetTranslation(Client, "You will now release to the nearest border or portal keep in {0} more seconds!", diff / 1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.ReleaseToPortalKeep", diff / 1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
 					}
