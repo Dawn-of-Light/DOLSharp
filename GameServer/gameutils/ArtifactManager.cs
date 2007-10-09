@@ -201,31 +201,40 @@ namespace DOL.GS
         /// <param name="player">the player</param>
         public static void UpdateArtifact(InventoryItem olditem, InventoryItem newitem, GamePlayer player)
         {
-            if (olditem.Bonus1 != 0) player.ItemBonus[olditem.Bonus1Type] -= olditem.Bonus1;
-            if (olditem.Bonus2 != 0) player.ItemBonus[olditem.Bonus2Type] -= olditem.Bonus2;
-            if (olditem.Bonus3 != 0) player.ItemBonus[olditem.Bonus3Type] -= olditem.Bonus3;
-            if (olditem.Bonus4 != 0) player.ItemBonus[olditem.Bonus4Type] -= olditem.Bonus4;
-            if (olditem.Bonus5 != 0) player.ItemBonus[olditem.Bonus5Type] -= olditem.Bonus5;
-            if (olditem.Bonus6 != 0) player.ItemBonus[olditem.Bonus6Type] -= olditem.Bonus6;
-            if (olditem.Bonus7 != 0) player.ItemBonus[olditem.Bonus7Type] -= olditem.Bonus7;
-            if (olditem.Bonus8 != 0) player.ItemBonus[olditem.Bonus8Type] -= olditem.Bonus8;
-            if (olditem.Bonus9 != 0) player.ItemBonus[olditem.Bonus9Type] -= olditem.Bonus9;
-            if (olditem.Bonus10 != 0) player.ItemBonus[olditem.Bonus10Type] -= olditem.Bonus10;
-            if (olditem.ExtraBonus != 0) player.ItemBonus[olditem.ExtraBonusType] -= olditem.ExtraBonus;
-            log.Info("Info: removed old bonuses objectid: " + olditem.ObjectId + " id_nb: " + olditem.Id_nb);
+            // Remove all old bonuses
+            player.ItemBonus[olditem.Bonus1] = 0;
+            player.ItemBonus[olditem.Bonus1Type] = 0;
+            player.ItemBonus[olditem.Bonus2] = 0;
+            player.ItemBonus[olditem.Bonus2Type] = 0;
+            player.ItemBonus[olditem.Bonus3] = 0;
+            player.ItemBonus[olditem.Bonus3Type] = 0;
+            player.ItemBonus[olditem.Bonus4] = 0;
+            player.ItemBonus[olditem.Bonus4Type] = 0;
+            player.ItemBonus[olditem.Bonus5] = 0;
+            player.ItemBonus[olditem.Bonus5Type] = 0;
+            player.ItemBonus[olditem.Bonus6] = 0;
+            player.ItemBonus[olditem.Bonus6Type] = 0;
+            player.ItemBonus[olditem.Bonus7] = 0;
+            player.ItemBonus[olditem.Bonus7Type] = 0;
+            player.ItemBonus[olditem.Bonus8] = 0;
+            player.ItemBonus[olditem.Bonus8Type] = 0;
+            player.ItemBonus[olditem.Bonus9] = 0;
+            player.ItemBonus[olditem.Bonus9Type] = 0;
+            player.ItemBonus[olditem.Bonus10] = 0;
+            player.ItemBonus[olditem.Bonus10Type] = 0;
 
-            if (newitem.Bonus1 != 0) player.ItemBonus[newitem.Bonus1Type] += newitem.Bonus1;
-            if (newitem.Bonus2 != 0) player.ItemBonus[newitem.Bonus2Type] += newitem.Bonus2;
-            if (newitem.Bonus3 != 0) player.ItemBonus[newitem.Bonus3Type] += newitem.Bonus3;
-            if (newitem.Bonus4 != 0) player.ItemBonus[newitem.Bonus4Type] += newitem.Bonus4;
-            if (newitem.Bonus5 != 0) player.ItemBonus[newitem.Bonus5Type] += newitem.Bonus5;
-            if (newitem.Bonus6 != 0) player.ItemBonus[newitem.Bonus6Type] += newitem.Bonus6;
-            if (newitem.Bonus7 != 0) player.ItemBonus[newitem.Bonus7Type] += newitem.Bonus7;
-            if (newitem.Bonus8 != 0) player.ItemBonus[newitem.Bonus8Type] += newitem.Bonus8;
-            if (newitem.Bonus9 != 0) player.ItemBonus[newitem.Bonus9Type] += newitem.Bonus9;
-            if (newitem.Bonus10 != 0) player.ItemBonus[newitem.Bonus10Type] += newitem.Bonus10;
-            if (newitem.ExtraBonus != 0) player.ItemBonus[newitem.ExtraBonusType] += newitem.ExtraBonus;
-            log.Info("Info: added new bonuses objectid: " + newitem.ObjectId + " id_nb: " + newitem.Id_nb);
+            // Add new bonuses
+            player.ItemBonus[newitem.Bonus1Type] = newitem.Bonus1;
+            player.ItemBonus[newitem.Bonus2Type] = newitem.Bonus2;
+            player.ItemBonus[newitem.Bonus3Type] = newitem.Bonus3;
+            player.ItemBonus[newitem.Bonus4Type] = newitem.Bonus4;
+            player.ItemBonus[newitem.Bonus5Type] = newitem.Bonus5;
+            player.ItemBonus[newitem.Bonus6Type] = newitem.Bonus6;
+            player.ItemBonus[newitem.Bonus7Type] = newitem.Bonus7;
+            player.ItemBonus[newitem.Bonus8Type] = newitem.Bonus8;
+            player.ItemBonus[newitem.Bonus9Type] = newitem.Bonus9;
+            player.ItemBonus[newitem.Bonus10Type] = newitem.Bonus10;
+            player.ItemBonus[newitem.ExtraBonusType] = newitem.ExtraBonus;
 
             if (player.ObjectState == DOL.GS.GameObject.eObjectState.Active)
             {
@@ -288,7 +297,6 @@ namespace DOL.GS
                 if (!(player.Inventory as GamePlayerInventory).IsEquippedSlot((eInventorySlot)iitem.SlotPosition))
                 {
                     log.Info("Info: Artifact not equipped");
-                    return;
                 }
                 else if (IsArtifact(iitem) && IsActivated(iitem))
                 {
@@ -336,7 +344,6 @@ namespace DOL.GS
 
                         player.Out.SendMessage("Your " + iitem.Name + " has gained experience.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                     }
-                    //GameServer.Database.AddNewObject(axitem);
                 }
 
                 if (leveledArtis.Count > 0)
