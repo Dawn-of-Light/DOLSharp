@@ -1008,23 +1008,33 @@ namespace DOL.GS.Housing
 			}
 		}
 
-		public void EmptyHookpoint(GamePlayer player, GameObject obj)
-		{
+        public void EmptyHookpoint(GamePlayer player, GameObject obj)
+        {
 
-			//get the item template
-			ItemTemplate template = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "Name = '" + GameServer.Database.Escape(obj.Name) + "'");
-			if (template == null)
-				return;
+            //get the item template
+            ItemTemplate template = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "Name = '" + GameServer.Database.Escape(obj.Name) + "'");
+            if (template == null)
+                return;
 
-			//get the housepoint item
-			DBHousepointItem item = (DBHousepointItem)GameServer.Database.SelectObject(typeof(DBHousepointItem), "ItemTemplateID = '" + GameServer.Database.Escape(template.Id_nb) + "'");
-			if (item == null)
-				return;
+            //get the housepoint item
+            DBHousepointItem item = (DBHousepointItem)GameServer.Database.SelectObject(typeof(DBHousepointItem), "ItemTemplateID = '" + GameServer.Database.Escape(template.Id_nb) + "'");
+            if (item == null)
+                return;
 
-			obj.Delete();
-			GameServer.Database.DeleteObject(item);
-			player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, new InventoryItem(template));
-		}
+            obj.Delete();
+            GameServer.Database.DeleteObject(item);
+
+            // Need to clear the current house points so we can replace items
+            player.CurrentHouse.HousepointItems.Clear();
+            foreach (DBHousepointItem hpitem in GameServer.Database.SelectObjects(typeof(DBHousepointItem), "HouseID = '" + player.CurrentHouse.HouseNumber + "'"))
+            {
+                FillHookpoint(null, hpitem.Position, hpitem.ItemTemplateID);
+                this.HousepointItems[hpitem.Position] = hpitem;
+            }
+            player.CurrentHouse.SendUpdate();
+
+            player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, new InventoryItem(template));
+        }
 
 		public House(DBHouse house)
 		{
