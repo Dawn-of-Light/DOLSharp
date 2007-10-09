@@ -7224,7 +7224,7 @@ namespace DOL.GS
                         return;
                     }
 
-                    if (useItem.ArtiID > 0)
+                    if (ArtifactManager.IsArtifact(useItem))
                     {
                         long artifactusetick = TempProperties.getLongProperty("artifactuse" + useItem.Id_nb, 0L);
                         long changeTime = CurrentRegion.Time - artifactusetick;
@@ -7310,7 +7310,7 @@ namespace DOL.GS
                         Out.SendMessage("The " + useItem.Name + " is out of charges.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                         return;
                     }
-                    else if (useItem.ArtiID == 0)
+                    else if (ArtifactManager.IsArtifact(useItem))
                     {
                         if (useItem.Object_Type == (int)eObjectType.Poison)
                         {
@@ -9161,17 +9161,21 @@ namespace DOL.GS
 
 			Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Magic", item.GetName(0, false))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-			if (item.Bonus1 != 0) ItemBonus[item.Bonus1Type] += item.Bonus1;
-			if (item.Bonus2 != 0) ItemBonus[item.Bonus2Type] += item.Bonus2;
-			if (item.Bonus3 != 0) ItemBonus[item.Bonus3Type] += item.Bonus3;
-			if (item.Bonus4 != 0) ItemBonus[item.Bonus4Type] += item.Bonus4;
-			if (item.Bonus5 != 0) ItemBonus[item.Bonus5Type] += item.Bonus5;
-			if (item.Bonus6 != 0) ItemBonus[item.Bonus6Type] += item.Bonus6;
-			if (item.Bonus7 != 0) ItemBonus[item.Bonus7Type] += item.Bonus7;
-			if (item.Bonus8 != 0) ItemBonus[item.Bonus8Type] += item.Bonus8;
-			if (item.Bonus9 != 0) ItemBonus[item.Bonus9Type] += item.Bonus9;
-			if (item.Bonus10 != 0) ItemBonus[item.Bonus10Type] += item.Bonus10;
-			if (item.ExtraBonus != 0) ItemBonus[item.ExtraBonusType] += item.ExtraBonus;
+            // Do not apply bonuses to Arti's let assignArtifactbonuses() do it.
+            if (!ArtifactManager.IsArtifact(item))
+            {
+                if (item.Bonus1 != 0) ItemBonus[item.Bonus1Type] += item.Bonus1;
+                if (item.Bonus2 != 0) ItemBonus[item.Bonus2Type] += item.Bonus2;
+                if (item.Bonus3 != 0) ItemBonus[item.Bonus3Type] += item.Bonus3;
+                if (item.Bonus4 != 0) ItemBonus[item.Bonus4Type] += item.Bonus4;
+                if (item.Bonus5 != 0) ItemBonus[item.Bonus5Type] += item.Bonus5;
+                if (item.Bonus6 != 0) ItemBonus[item.Bonus6Type] += item.Bonus6;
+                if (item.Bonus7 != 0) ItemBonus[item.Bonus7Type] += item.Bonus7;
+                if (item.Bonus8 != 0) ItemBonus[item.Bonus8Type] += item.Bonus8;
+                if (item.Bonus9 != 0) ItemBonus[item.Bonus9Type] += item.Bonus9;
+                if (item.Bonus10 != 0) ItemBonus[item.Bonus10Type] += item.Bonus10;
+                if (item.ExtraBonus != 0) ItemBonus[item.ExtraBonusType] += item.ExtraBonus;
+            }
 
 			if (ObjectState == eObjectState.Active)
 			{
@@ -9252,17 +9256,21 @@ namespace DOL.GS
 
 			if (!item.IsMagical) return;
 
-			if (item.Bonus1 != 0) ItemBonus[item.Bonus1Type] -= item.Bonus1;
-			if (item.Bonus2 != 0) ItemBonus[item.Bonus2Type] -= item.Bonus2;
-			if (item.Bonus3 != 0) ItemBonus[item.Bonus3Type] -= item.Bonus3;
-			if (item.Bonus4 != 0) ItemBonus[item.Bonus4Type] -= item.Bonus4;
-			if (item.Bonus5 != 0) ItemBonus[item.Bonus5Type] -= item.Bonus5;
-			if (item.Bonus6 != 0) ItemBonus[item.Bonus6Type] -= item.Bonus6;
-			if (item.Bonus7 != 0) ItemBonus[item.Bonus7Type] -= item.Bonus7;
-			if (item.Bonus8 != 0) ItemBonus[item.Bonus8Type] -= item.Bonus8;
-			if (item.Bonus9 != 0) ItemBonus[item.Bonus9Type] -= item.Bonus9;
-			if (item.Bonus10 != 0) ItemBonus[item.Bonus10Type] -= item.Bonus10;
-			if (item.ExtraBonus != 0) ItemBonus[item.ExtraBonusType] -= item.ExtraBonus;
+            // Do not apply bonuses to Arti's let assignArtifactbonuses() do it.
+            if (!ArtifactManager.IsArtifact(item))
+            {
+                if (item.Bonus1 != 0) ItemBonus[item.Bonus1Type] -= item.Bonus1;
+                if (item.Bonus2 != 0) ItemBonus[item.Bonus2Type] -= item.Bonus2;
+                if (item.Bonus3 != 0) ItemBonus[item.Bonus3Type] -= item.Bonus3;
+                if (item.Bonus4 != 0) ItemBonus[item.Bonus4Type] -= item.Bonus4;
+                if (item.Bonus5 != 0) ItemBonus[item.Bonus5Type] -= item.Bonus5;
+                if (item.Bonus6 != 0) ItemBonus[item.Bonus6Type] -= item.Bonus6;
+                if (item.Bonus7 != 0) ItemBonus[item.Bonus7Type] -= item.Bonus7;
+                if (item.Bonus8 != 0) ItemBonus[item.Bonus8Type] -= item.Bonus8;
+                if (item.Bonus9 != 0) ItemBonus[item.Bonus9Type] -= item.Bonus9;
+                if (item.Bonus10 != 0) ItemBonus[item.Bonus10Type] -= item.Bonus10;
+                if (item.ExtraBonus != 0) ItemBonus[item.ExtraBonusType] -= item.ExtraBonus;
+            }
 
 			if (ObjectState == eObjectState.Active)
 			{

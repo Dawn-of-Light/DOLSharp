@@ -87,36 +87,6 @@ namespace DOL.GS
                         //add to artifact collection
                         if (ArtifactManager.IsArtifact(item))
                         {
-                            InventoryItem aitem = ArtifactManager.AssignArtifactBonuses(item);
-                            item.Bonus1 = aitem.Bonus1;
-                            item.Bonus1Type = aitem.Bonus1Type;
-                            item.Bonus2 = aitem.Bonus2;
-                            item.Bonus2Type = aitem.Bonus2Type;
-                            item.Bonus3 = aitem.Bonus3;
-                            item.Bonus3Type = aitem.Bonus3Type;
-                            item.Bonus4 = aitem.Bonus4;
-                            item.Bonus4Type = aitem.Bonus4Type;
-                            item.Bonus5 = aitem.Bonus5;
-                            item.Bonus5Type = aitem.Bonus5Type;
-                            item.Bonus6 = aitem.Bonus6;
-                            item.Bonus6Type = aitem.Bonus6Type;
-                            item.Bonus7 = aitem.Bonus7;
-                            item.Bonus7Type = aitem.Bonus7Type;
-                            item.Bonus8 = aitem.Bonus8;
-                            item.Bonus8Type = aitem.Bonus8Type;
-                            item.Bonus9 = aitem.Bonus9;
-                            item.Bonus9Type = aitem.Bonus9Type;
-                            item.Bonus10 = aitem.Bonus10;
-                            item.Bonus10Type = aitem.Bonus10Type;
-                            item.SpellID = aitem.SpellID;
-                            item.Charges = aitem.Charges;
-                            item.MaxCharges = aitem.MaxCharges;
-                            item.ProcSpellID = aitem.ProcSpellID;
-                            item.SpellID1 = aitem.SpellID1;
-                            item.Charges1 = aitem.Charges1;
-                            item.MaxCharges1 = aitem.MaxCharges1;
-                            item.ProcSpellID1 = aitem.ProcSpellID1;
-
                             Artifacts.Add(item);
                             //Dinberg - reset artifact reuse timers on login/out to prevent abuse.
                             Player.TempProperties.setProperty("artifactuse" + item.Id_nb, Player.CurrentRegion.Time);
