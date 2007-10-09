@@ -17,35 +17,23 @@
  *
  */
 using System;
-using DOL.GS.Spells;
 using DOL.GS.Effects;
+using DOL.GS.PacketHandler;
 
-namespace DOL.GS.PropertyCalc
+namespace DOL.GS.Spells
 {
 	/// <summary>
-	/// The Spell Range bonus percent calculator
-	/// 
-	/// BuffBonusCategory1 unused
-	/// BuffBonusCategory2 unused
-	/// BuffBonusCategory3 is used for debuff
-	/// BuffBonusCategory4 unused
-	/// BuffBonusMultCategory1 unused
+	/// Style combat speed debuff effect spell handler
 	/// </summary>
-	[PropertyCalculator(eProperty.SpellRange)]
-	public class SpellRangePercentCalculator : PropertyCalculator
+	[SpellHandler("StylePowerDrain")]
+	public class StylePowerDrain : DamageToPowerSpellHandler
 	{
-		public override int CalcValue(GameLiving living, eProperty property) 
+		public override int CalculateSpellResistChance(GameLiving target)
 		{
-			int debuff = living.BuffBonusCategory3[(int)property];
-			if(debuff > 0)
-			{
-				GameSpellEffect nsreduction = SpellHandler.FindEffectOnTarget(living, "NearsightReduction");
-				if(nsreduction!=null) debuff *= (int)(1.00 - nsreduction.Spell.Value * 0.01);
-			}
-			
-			return Math.Max(0, 100
-				+Math.Min(10,living.ItemBonus[(int)property])
-				-debuff);
+			return 0;
 		}
+
+		// constructor
+		public StylePowerDrain(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
 }

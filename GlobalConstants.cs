@@ -626,6 +626,7 @@ namespace DOL.GS
 		ParryChance = 171,
 		FatigueConsumption = 172,
 		FumbleChance = 175,
+		SpellFumbleChance = 223,
 
 		MeleeDamage = 173,
 		RangedDamage = 174,
@@ -679,7 +680,7 @@ namespace DOL.GS
 		CriticalMeleeHitChance = 214,
 		CriticalArcheryHitChance = 215,
 		CriticalSpellHitChance = 216,
-		CriticalHealHitChance = 221,
+		CriticalHealHitChance = 222,
 		WaterSpeed = 217,
 		SpellLevel = 218,
         MissHit = 219,

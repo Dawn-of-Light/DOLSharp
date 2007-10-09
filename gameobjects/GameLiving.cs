@@ -1116,7 +1116,7 @@ namespace DOL.GS
 		{
 			get { return Health > 0; }
 		}
-
+		/*
 		protected bool m_silenced = false;
 		/// <summary>
 		/// Is the living silenced
@@ -1129,6 +1129,7 @@ namespace DOL.GS
 				m_silenced = value;
 			}
 		}
+		*/
 
 		/// <summary>
 		/// Check this flag to see wether this living is involved in combat

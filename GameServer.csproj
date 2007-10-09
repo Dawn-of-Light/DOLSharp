@@ -1562,6 +1562,9 @@
     <Compile Include="spells\AmnesiaSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="spells\Artifacts\bracerofzo.cs" />
+    <Compile Include="spells\Artifacts\DreamSphere.cs" />
+    <Compile Include="spells\Artifacts\TraitorsDagger.cs" />
     <Compile Include="spells\Bainshee\BainsheePulseDmgSpellHandler.cs" />
     <Compile Include="spells\Bainshee\BeFriendSpellHandler.cs" />
     <Compile Include="spells\Bainshee\FearBrain.cs" />
@@ -1595,6 +1598,7 @@
     <Compile Include="spells\ConvertPet.cs" />
     <Compile Include="spells\CureAllSpellHandler.cs" />
     <Compile Include="spells\DamageToPowerSpellHandler.cs" />
+    <Compile Include="spells\DisarmSpellHandler.cs" />
     <Compile Include="spells\EnduranceHealSpellHandler.cs" />
     <Compile Include="spells\Fury.cs" />
     <Compile Include="spells\HealthToFatigue.cs" />
@@ -1622,6 +1626,8 @@
     <Compile Include="spells\PowerTransferSpellHandler.cs" />
     <Compile Include="spells\RampageSpellHandler.cs" />
     <Compile Include="spells\SavageBuff.cs" />
+    <Compile Include="spells\SilenceSpellHandler.cs" />
+    <Compile Include="spells\StyleDamageToPower.cs" />
     <Compile Include="spells\StyleTaunt.cs" />
     <Compile Include="spells\SummonMinionHandler.cs" />
     <Compile Include="spells\TurretSpellHandler.cs" />
@@ -2016,6 +2022,9 @@
     <Content Include="language\Language-ES.txt" />
     <Content Include="language\Language-FR.txt" />
     <Content Include="language\Language-IT.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="spells\Artifacts" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
