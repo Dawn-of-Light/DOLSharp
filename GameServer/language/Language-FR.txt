@@ -36,32 +36,32 @@ Crafting.CheckTool.PlaningTool:            outil de rabotage
 Crafting.CheckTool.SewingKit:            kit de couture
 Crafting.CheckTool.SmithsHammer:         le marteau du forgeron
 Crafting.CheckTool.SpellcraftKit:         Kit de spellcraft
-Crafting.GainCraftingSkillPoints.RaiseArmorcraft:   Vous devez voir votre entraîneur pour augmenter votre niveau en Armorcraft pour allez plus loin!
-Crafting.GainCraftingSkillPoints.RaiseFletching:   Vous devez voir votre entraîneur pour augmenter votre niveau en Fletching pour allez plus loin!
-Crafting.GainCraftingSkillPoints.RaiseSpellcraft:   Vous devez voir votre entraîneur pour augmenter votre niveau en Spellcraft pour allez plus loin!
-Crafting.GainCraftingSkillPoints.RaiseTailoring:   Vous devez voir votre entraîneur pour augmenter votre niveau en Tailoring pour allez plus loin!
-Crafting.GainCraftingSkillPoints.RaiseWeaponcraft:   Vous devez voir votre entraîneur pour augmenter votre niveau en Weaponcraft pour allez plus loin!
+Crafting.GainCraftingSkillPoints.RaiseArmorcraft:   Vous devez voir votre entraîneur pour augmenter votre niveau en Armurerie pour allez plus loin!
+Crafting.GainCraftingSkillPoints.RaiseFletching:   Vous devez voir votre entraîneur pour augmenter votre niveau en Empennage pour allez plus loin!
+Crafting.GainCraftingSkillPoints.RaiseSpellcraft:   Vous devez voir votre entraîneur pour augmenter votre niveau en Alchimie pour allez plus loin!
+Crafting.GainCraftingSkillPoints.RaiseTailoring:   Vous devez voir votre entraîneur pour augmenter votre niveau en Couture pour allez plus loin!
+Crafting.GainCraftingSkillPoints.RaiseWeaponcraft:   Vous devez voir votre entraîneur pour augmenter votre niveau en Forge pour allez plus loin!
 
-AbstractCraftingSkill.BuildCraftedItem.BackpackFull:   Votre Sac est plein. {0} est cree sur le sol.
-AbstractCraftingSkill.BuildCraftedItem.Masterpiece:   Bravo, Vous avez Crée un chez-d'oeuvre !
+AbstractCraftingSkill.BuildCraftedItem.BackpackFull:   Votre sac est plein. {0} est déposer sur le sol.
+AbstractCraftingSkill.BuildCraftedItem.Masterpiece:   Bravo, Vous avez crée un chez-d'oeuvre !
 AbstractCraftingSkill.BuildCraftedItem.Successfully:   Vous avez correctement fabriquer {0}! ({1})
 AbstractCraftingSkill.CheckRawMaterial.NoIngredients:   Vous n'avez pas les ingredients pour faire le {0}.
 AbstractCraftingSkill.CheckRawMaterial.YouAreMissing:   Il vous manque :
 
-AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoClothworkingSkill:      Vous n'avez pas le neccessaire minimum  Clothworking skill ({0}) Pour fabriquer le {1}!
-AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoLeathercraftingSkill:   Vous n'avez pas le neccessaire minimum  Leathercrafting skill ({0}) Pour fabriquer le {1}!
-AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoMetalworkingSkill:      Vous n'avez pas le neccessaire minimum  Metalworking skill ({0}) Pour fabriquer le {1}!
-AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoWoodworkingSkill:      Vous n'avez pas le neccessaire minimum  Woodworking skill ({0}) Pour fabriquer le {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoClothworkingSkill:      Vous n'avez pas le niveau minimum dans la compétence  Tailleur ({0}) Pour confectionner le {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoLeathercraftingSkill:   Vous n'avez pas le niveau minimum dans la compétence  Leathercrafting skill ({0}) Pour confectionner le {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoMetalworkingSkill:      Vous n'avez pas le niveau minimum dans la compétence  Ingénierie ({0}) Pour confectionner le {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoWoodworkingSkill:      Vous n'avez pas le niveau minimum dans la compétence  Woodworking skill ({0}) Pour confectionner le {1}!
 
 AbstractCraftingSkill.CraftItem.BeginWork:      Vous commencez a travailler sur le {0} ({1}%).
-AbstractCraftingSkill.CraftItem.ChanceToGainPoint:   Chance de gagner des point sur votre competence primaire {0}%.
+AbstractCraftingSkill.CraftItem.ChanceToGainPoint:   Chance de gagner des points sur votre compétence primaire {0}%.
 AbstractCraftingSkill.CraftItem.CurrentlyMaking:   En train de faire: {0}
-AbstractCraftingSkill.CraftItem.MoveAndInterrupt:   vous bougez et interomper votre travail.
+AbstractCraftingSkill.CraftItem.MoveAndInterrupt:   vous bougez et interromper votre travail.
 AbstractCraftingSkill.CraftItem.StopWork:      Vous arretez votre travail.
 AbstractCraftingSkill.LooseRawMaterial.Count:      Vous perdez ({0}) {1}.
-AbstractCraftingSkill.LooseRawMaterial.Materials:   Vous n'arriver pas a faire le {0}, et perdez du materiel!
-AbstractCraftingSkill.MakeItem.LoseNoMaterials:      Vous n'arriver pas a faire le {0} mais ne perdez pas de materiel!
-AbstractCraftingSkill.MakeItem.NotAllMaterials:      Vous n'avez pas tout les composants demander pour cree cette objet.
+AbstractCraftingSkill.LooseRawMaterial.Materials:   Vous n'arriver pas à faire le {0}, et perdez du matériel!
+AbstractCraftingSkill.MakeItem.LoseNoMaterials:      Vous n'arriver pas à faire le {0} mais ne perdez pas de matériel!
+AbstractCraftingSkill.MakeItem.NotAllMaterials:      Vous n'avez pas tout les composants nécessaire à la confection de cette objet.
 
 # GAMELIVING
 GameLiving.ReceiveItem:							{0} ne veut pas de cet item !
@@ -75,15 +75,15 @@ GameMerchant.GetExamineMessages.YouExamine:		Vous observez {0}. C'est un marchan
 GameMerchant.OnPlayerAppraise.Offers:			{0} vous offre {1} pour {2}.
 GameMerchant.OnPlayerBuy.Bought:				Vous venez d'acheter {0} pour {1}.
 GameMerchant.OnPlayerBuy.Bought2:				Vous venez d'acheter {0} pour {1} {2}.
-GameMerchant.OnPlayerBuy.BoughtBP:				Vous venez d'acheter {0} pour {1} BPs.
-GameMerchant.OnPlayerBuy.BoughtPieces:			Vous venez d'acheter {0} pieces de {1} pour {2}.
-GameMerchant.OnPlayerBuy.BoughtPieces2:			Vous venez d'acheter {0} pieces de {1} pour {2} {3].
-GameMerchant.OnPlayerBuy.BoughtPiecesBP:		Vous venez d'acheter {0} pieces de {1} pour {0} BPs.
+GameMerchant.OnPlayerBuy.BoughtBP:				Vous venez d'acheter {0} pour {1} points de mérite.
+GameMerchant.OnPlayerBuy.BoughtPieces:			Vous venez d'acheter {0} piéces de {1} pour {2}.
+GameMerchant.OnPlayerBuy.BoughtPieces2:			Vous venez d'acheter {0} piéces de {1} pour {2} {3].
+GameMerchant.OnPlayerBuy.BoughtPiecesBP:		Vous venez d'acheter {0} piéces de {1} pour {0} BPs.
 GameMerchant.OnPlayerBuy.NotInventorySpace:		Pas assez de place dans votre inventaire pour acheter cela.
 GameMerchant.OnPlayerBuy.YouNeed:				Vous avez besoin de {0} pour acheter cela.
 GameMerchant.OnPlayerBuy.YouNeed2:				Vous avez besoin de {0} {1} pour acheter cela.
 GameMerchant.OnPlayerBuy.YouNeedBP:				Vous avez besoin de {0} BPs pour acheter cela.
-GameMerchant.OnPlayerSell.CantBeSold:			Cet item ne peut être vendu.
+GameMerchant.OnPlayerSell.CantBeSold:			Votre objet ne peut être vendu.
 GameMerchant.OnPlayerSell.GivesYou:				{0} vous donne {1} pour {2}.
 GameMerchant.OnPlayerSell.IsntInterested:		{0} n'est pas interessé par {1}.
 GameMerchant.OnPlayerSell.TooFarAway:			{0} est trop loin !
@@ -91,28 +91,40 @@ GameMerchant.OnPlayerSell.TooFarAway:			{0} est trop loin !
 # GAMENPC
 GameNPC.GetAggroLevelString.Aggressive1:		aggressif
 GameNPC.GetAggroLevelString.Aggressive2:		Aggressif
-GameNPC.GetAggroLevelString.Friendly1:			amical
-GameNPC.GetAggroLevelString.Friendly2:			Amical
+GameNPC.GetAggroLevelString.Friendly1:			amicale
+GameNPC.GetAggroLevelString.Friendly2:			Amicale
 GameNPC.GetAggroLevelString.Hostile1:			hostile
 GameNPC.GetAggroLevelString.Hostile2:			Hostile
 GameNPC.GetAggroLevelString.Neutral1:			neutre
 GameNPC.GetAggroLevelString.Neutral2:			Neutre
 GameNPC.GetAggroLevelString.TowardsYou:			{0} envers vous
-GameNPC.GetExamineMessages.YouExamine:			Vous observez {0}. Il est {2}.
+GameNPC.GetExamineMessages.YouExamine:			Vous examinez {0}. Il se trouve être {2}.
 
 
 # GAMEOBJECT
 GameObject.GetExamineMessages.YouTarget:		Vous ciblez [{0}].
-GameObject.Interact.TooFarAway:					Vous êtes trop loin pour interagir avec {0}.
+GameObject.GetName.Article1:				Le {0}
+GameObject.GetName.Article2:				le {0}
+GameObject.GetName.Article3:				Un {0}
+GameObject.GetName.Article4:				un {0}
+GameObject.GetName.Article5:				A {0}
+GameObject.GetName.Article6:				a {0}
+GameObject.GetPronoun.Pronoun1:				Cela
+GameObject.GetPronoun.Pronoun2:				cela
+GameObject.GetPronoun.Pronoun3:				Son
+GameObject.GetPronoun.Pronoun4:				son
+GameObject.GetPronoun.Pronoun5:				Cela
+GameObject.GetPronoun.Pronoun6:				cela
+GameObject.Interact.TooFarAway:					Vous êtes trop loin pour interragir avec {0}.
 
 # GAMEPLAYER
 GamePlayer.AddAbility.YouLearn:					Vous apprenez l'abilité {0} !
-GamePlayer.AddSpecialisation.YouLearn:			Vous apprenez la competence {0} !
+GamePlayer.AddSpecialisation.YouLearn:			Vous apprenez la compétence {0} !
 GamePlayer.AddSpellLine.YouLearn:				Vous apprenez la liste de sort {0} !		
 GamePlayer.ApplyPoison.CantApplyRecentCombat:	Vous avez été en combat recemment et ne pouvez pas appliquer de poison pour le moment.
-GamePlayer.ApplyPoison.CantPoisonWeapon:		Vous ne pouvez pas empoisonner cette arme.
+GamePlayer.ApplyPoison.CantPoisonWeapon:		Vous ne pouvez pas utiliser du poison sur cette arme.
 GamePlayer.ApplyPoison.CantUsePoison:			Vous ne pouvez pas utiliser ce poison.
-GamePlayer.ApplyPoison.CantUsePoisons:			Vous ne pouvez pas utiliser les poisons.
+GamePlayer.ApplyPoison.CantUsePoisons:			Vous ne pouvez pas utiliser ces poisons.
 GamePlayer.ApplyPoison.PoisonsAppliedWeapons:	Les poisons ne peuvent être appliqués que sur des armes.
 GamePlayer.Attack.AlreadyDead:				{0} est déjà mort !
 GamePlayer.Attack.Blocked:					{0} bloque votre attaque !
@@ -157,20 +169,20 @@ GamePlayer.Attack.Type.Throw:				jet
 GamePlayer.Attack.WithYour:					avec votre
 GamePlayer.Attack.YouAttack:				Vous attaquez
 GamePlayer.Attack.YouShot:					Vous tirez
-GamePlayer.Bind.Bound:						Vous êtes maintenant lié à cet endroit.
-GamePlayer.Bind.CantBindDead:				Vous ne pouvez pas vous lier etant mort !	
-GamePlayer.Bind.CantHere:					Vous ne pouvez pas vous lier ici !
-GamePlayer.Bind.LastBindPoint:				Dernier point de liaison : {0}.
-GamePlayer.Bind.MustWait:					Vous devez attendre {0} secondes pour vous lier à nouveau !
-GamePlayer.CastSpell.AlreadyCastFollow:		Vous incanter déja un sort ! Vous vous preparez à incanter celui-ci à la suite.
-GamePlayer.CastSpell.AlreadyCastNoQueue:	Vous incanter déja un sort, pour activer la suite de sort, utilisez '/noqueue'.
+GamePlayer.Bind.Bound:						Votre esprit et maintenant lié à cette Pierre des Ames.
+GamePlayer.Bind.CantBindDead:				La mort vous empêche de lier votre esprit à la Pierre des Ames!	
+GamePlayer.Bind.CantHere:					Il n'y a pas de Pierre des Ames à proximité pour pouvoir lier votre esprit !
+GamePlayer.Bind.LastBindPoint:				Localisation de la dernière Pierre des Ames : {0}.
+GamePlayer.Bind.MustWait:					Vous devez attendre {0} secondes de plus avant de vous lier à nouveau !
+GamePlayer.CastSpell.AlreadyCastFollow:		Vous êtes déjà entrain de lancer un sort ! Ce sort est mis sur liste d'attente.
+GamePlayer.CastSpell.AlreadyCastNoQueue:	Vous êtes déjà entrain de lancer un sort, pour activer le system de mise en attente des sorts, utilisez '/noqueue'.
 GamePlayer.CastSpell.AlreadyPlaySong:		Vous jouez déja un morceau !
-GamePlayer.CastSpell.CantCastMezzed:		Vous ne pouvez pas incanter lorsque vous êtes endormi !
-GamePlayer.CastSpell.CantCastStunned:		Vous ne pouvez pas incanter lorsque vous êtes assomé !
+GamePlayer.CastSpell.CantCastMezzed:		Vous ne pouvez pas incanter lorsque vous êtes hypnotisez !
+GamePlayer.CastSpell.CantCastStunned:		Vous ne pouvez pas incanter lorsque vous êtes étourdit !
 GamePlayer.CommandNpcAttack.TooFarAwayForPet:			Votre cible est trop loin pour être attaquée par votre familier.
 GamePlayer.CommandNpcGoTarget.MustSelectDestination:	Vous devez selectionner une destination pour votre créature.
-GamePlayer.CraftItem.DontHaveAbilityMake:	Vous n'avez pas l'abilité pour faire cet item.
-GamePlayer.CurrentTitle.TitleCleared:		Vous n'avez plus de titre.
+GamePlayer.CraftItem.DontHaveAbilityMake:	Vous n'avez pas compétence nécessaire pour la confection de cet objet.
+GamePlayer.CurrentTitle.TitleCleared:		Votre titre a été annuler.
 GamePlayer.Die.CorpseLies:					{0} est mort. {1} corps gît sur le sol.
 GamePlayer.Die.DeadRVR:						Vous êtes mort au combat pour votre royaume et ne perdez aucune expérience !
 GamePlayer.Die.DeathN1:						Ceci est votre première mort pour ce niveau. Vos pertes d'expérience et de constitutions sont grandement réduites.
@@ -203,14 +215,14 @@ GamePlayer.GetExamineMessages.OtherGuildMember:	Vous observez {0}. {1} est membr
 GamePlayer.GetExamineMessages.RealmMember:		Vous observez {0}. {1} est un membre de la classe {2} de votre royaume.
 GamePlayer.GetExamineMessages.YouExamine:		Vous observez {0}.
 GamePlayer.GetExamineMessages.YourGuildMember:	Vous observez {0}. {1} est un membre de la classe {2} de votre guilde.
-GamePlayer.IsCloakHoodUp.NowWear:			Vous mettez votre capuche.
-GamePlayer.IsCloakHoodUp.NoLongerWear:		Vous retirez votre capuche.
-GamePlayer.IsOnHorse.DismountSteed:			Vous descendez de votre cheval.
-GamePlayer.IsOnHorse.MountSteed:			Vous montez sur votre cheval.
+GamePlayer.IsCloakHoodUp.NowWear:			Vous portez maintenant votre capuche relevée.
+GamePlayer.IsCloakHoodUp.NoLongerWear:		Vous portez maintenant votre capuche abaissée.
+GamePlayer.IsOnHorse.DismountSteed:			Vous descendez de votre monture.
+GamePlayer.IsOnHorse.MountSteed:			Vous montez sur votre monture.
 GamePlayer.OnItemEquipped.Magic:			La magie de {0} coule dans vos veines.
-GamePlayer.OnItemEquipped.WieldBothHands:	Vous maniez {0} de vos deux mains.
-GamePlayer.OnItemEquipped.WieldLeftHand:	Vous maniez {0} de votre main gauche.
-GamePlayer.OnItemEquipped.WieldRightHand:	Vous maniez {0} de votre main droite.
+GamePlayer.OnItemEquipped.WieldBothHands:	Vous tenez votre {0} à deux mains.
+GamePlayer.OnItemEquipped.WieldLeftHand:	Vous tenez votre  {0} dans votre main gauche.
+GamePlayer.OnItemEquipped.WieldRightHand:	Vous tenez votre  {0} dans votre main droite.
 GamePlayer.OnItemUnequipped.BothHandsFree:	Vous rengainez {0}. Vous mains sont desormais libres.
 GamePlayer.OnItemUnequipped.LeftHandFree:	Vous rengainez {0} de votre main gauche.
 GamePlayer.OnItemUnequipped.RightHandFree:	Vous rengainez {0} de votre main droite.
@@ -245,6 +257,7 @@ GamePlayer.PickupObject.TooFarFromBoat:			Vous êtes trop loin du bateau pour emb
 GamePlayer.PickupObject.YouGet:					Vous ramassez {0} et le mettez dans votre sac.
 GamePlayer.PickupObject.YouPickUp:				Vous ramassez {0}.
 GamePlayer.PickupObject.YourLootShare:			votre part du butin est {0}.
+GamePlayer.PickupObject.ItemBelowBGThreshold: Cet objet est inférieur au niveau de votre groupe de combat.
 GamePlayer.Pray.AlreadyPraying:				Vous priez déjà !
 GamePlayer.Pray.Begin:						Vous commencez vos prières.
 GamePlayer.Pray.CantPrayNow:				Vous ne pouvez pas prier maintenant !
@@ -260,12 +273,12 @@ GamePlayer.Pronoun.Male.Objective:			lui
 GamePlayer.Pronoun.Male.Possessive:			son
 GamePlayer.Pronoun.Male.Subjective:			il
 GamePlayer.Quit.CantQuitCrafting:			Vous ne pouvez pas quitter pendant une fabrication.
-GamePlayer.Quit.CantQuitDead:				Vous ne pouvez pas quitter maintenant, vous êtes mort !  Tapez '/release' pour ressusciter.
-GamePlayer.Quit.CantQuitMount:				Vous devez descendre de votre monture avant de quitter.
+GamePlayer.Quit.CantQuitDead:				Vous ne pouvez pas quitter suite à votre mort soudaine !  Tapez '/release' pour ressusciter.
+GamePlayer.Quit.CantQuitMount:				Vous ne pouvez pas quitter tout en étant à cheval.
 GamePlayer.Quit.CantQuitStanding:			Vous devez être immobile pour quitter.
 GamePlayer.Quit.RecentlyInCombat:			Vous étiez récemment en combat, vous devez attendre plus longtemps pour quitter.
-GamePlayer.Quit.YouWillQuit1:				Vous quitterez en restant assis après {0} secondes.	
-GamePlayer.Quit.YouWillQuit2:				Vous quitterez en restant assis après {0} secondes.  Tapez '/stand' ou bougez pour ne pas quitter.
+GamePlayer.Quit.YouWillQuit1:				Vous allez quitter le jeux au bout de {0} secondes.	
+GamePlayer.Quit.YouWillQuit2:				Vous allez quitter le jeux au bout de {0} secondes.  Tapez '/stand' ou deplacer-vous pour annuler la procédure.
 GamePlayer.RealmTitle.UnknownRealm:			Royaume inconnu
 GamePlayer.ReceiveTradeItem.CantTrade:			Vous ne pouvez pas échanger cet objet !
 GamePlayer.ReceiveTradeItem.StillSelfcrafting:	Vous êtes encore en train d'enchanter.
@@ -284,8 +297,8 @@ GamePlayer.RefreshSpec.TargetEvaded:		Ce style est mieux utilisé après que la de
 GamePlayer.RefreshSpec.TargetFumbles:		Ce style est mieux utilisé après que la dernière attaque de votre cible soit complètement ratée.
 GamePlayer.RefreshSpec.TargetStyle:			Ce style est mieux utilisé après que la dernière attaque de votre cible soit un style.
 GamePlayer.Release.CantReleaseDuel:			Vous ne pouvez altérer votre résurrection pour une mort en duel!
-GamePlayer.Release.GraveErected:			Une pierre tombale a été érigée à l'endroit de votre mort.
-GamePlayer.Release.LostConstitution:		Vous avez perdu un peu de constitution, allez voir un guérisseur pour la restaurer.
+GamePlayer.Release.GraveErected:			Une tombe est apparue sur le lieu de votre mort.
+GamePlayer.Release.LostConstitution:		Vous avez perdu des points de constitutions. Allez voir un guérisseur pour la restaurer.
 GamePlayer.Release.NoLongerReleaseAuto:		Vous ne ressusciterez plus automatiquement ({0} secondes restantes)
 GamePlayer.Release.NotDead:					Vous n'êtes pas mort !
 GamePlayer.Release.NoValidBindpoint:		Vous n'êtes lié à aucune pierre des âmes valide, vous ressucitez donc ici !
@@ -372,6 +385,142 @@ GamePlayer.UseSlot.StopCallingMount:		Vous arrêtez d'appeler votre monture.
 GamePlayer.UseSlot.WhistleMount:			Vous sifflez votre monture.
 GamePlayer.Whisper.SelectTarget:			Sélectionnez une cible à qui chuchoter.
 
+# /packets/Client/168
+# /DetailDisplayHandler
+DetailDisplayHandler.GetShortItemInfo.CrafterName:	Artisant : {0}
+DetailDisplayHandler.GetShortItemInfo.NoDrop:		 Ne peut être jeter.
+DetailDisplayHandler.GetShortItemInfo.NoSell:		 Ne peut être vendu.
+DetailDisplayHandler.GetShortItemInfo.NoTrade:		 Ne peut être échanger.
+DetailDisplayHandler.HandlePacket.Any:			Tous
+DetailDisplayHandler.HandlePacket.Back:			(Dos)
+DetailDisplayHandler.HandlePacket.CannotDropped:	Ne peut être jeté ou mis au coffre.
+DetailDisplayHandler.HandlePacket.CannotSold:		Ne peut être venu.
+DetailDisplayHandler.HandlePacket.CannotTraded:		Ne peut être échangé.
+DetailDisplayHandler.HandlePacket.ChampionLevel:	 - Requis: Niveau de Champion {0}
+DetailDisplayHandler.HandlePacket.ChatItem:		[Chat] {0}/Objet: "{1}"
+DetailDisplayHandler.HandlePacket.CrafterName:		Artisant : {0}
+DetailDisplayHandler.HandlePacket.Damage:		Dégats: 
+DetailDisplayHandler.HandlePacket.Defense:		Défense: 
+DetailDisplayHandler.HandlePacket.DontBelongGuild:	Cela apartien à un joueur.
+DetailDisplayHandler.HandlePacket.FatigueCost:		Coût en endurance: 
+DetailDisplayHandler.HandlePacket.FollowupStyle:	Style de suite: {0}
+DetailDisplayHandler.HandlePacket.Front:		(Face)	
+DetailDisplayHandler.HandlePacket.GuildItem:		[Guilde] {0}/Objet: "{1}"
+DetailDisplayHandler.HandlePacket.High:			Haut
+DetailDisplayHandler.HandlePacket.HighBonus:		Haut bonus
+DetailDisplayHandler.HandlePacket.HighPenalty:		Haute pénalité
+DetailDisplayHandler.HandlePacket.Item:			{0}/objet: "{1}
+DetailDisplayHandler.HandlePacket.LevName:		Niv   Non
+DetailDisplayHandler.HandlePacket.Low:			Bas
+DetailDisplayHandler.HandlePacket.LowBonus:		Bonus bas
+DetailDisplayHandler.HandlePacket.LowPenalty:		Basse pénalité
+DetailDisplayHandler.HandlePacket.Medium:		Moyen
+DetailDisplayHandler.HandlePacket.MediumBonus:		Bonus moyen
+DetailDisplayHandler.HandlePacket.MediumPenalty:	Pénalité moyenne
+DetailDisplayHandler.HandlePacket.MustBeInChatGroup:	Vous devez être dans un groupe de discussion.
+DetailDisplayHandler.HandlePacket.MustBeInBattleGroup:	Vous devez être dans un groupe de combat.
+DetailDisplayHandler.HandlePacket.NoBonus:		Aucun Bonus
+DetailDisplayHandler.HandlePacket.NoGroup:		Vous ne faites pas partie d'un groupe.
+DetailDisplayHandler.HandlePacket.NoInformation:	Aucune information spéciale!
+DetailDisplayHandler.HandlePacket.NoPermissionToSpeak:	Vous n'avez pas les droits pour parler sur le canal de guilde.	
+DetailDisplayHandler.HandlePacket.OnlyModerator:	Seuls les modérateurs peuvent parler sur ce canal.
+DetailDisplayHandler.HandlePacket.Opening:		Ouverture: 
+DetailDisplayHandler.HandlePacket.OpeningStyle:		Style d'ouverture: 
+DetailDisplayHandler.HandlePacket.Or:			 ou {0}
+DetailDisplayHandler.HandlePacket.Positional:		Positionnel
+DetailDisplayHandler.HandlePacket.Side:			(côté)
+DetailDisplayHandler.HandlePacket.TargetBlocks:		La cible bloque
+DetailDisplayHandler.HandlePacket.TargetEffect:		Target Effect: 
+DetailDisplayHandler.HandlePacket.TargetEvades:		La cible esquive
+DetailDisplayHandler.HandlePacket.TargetFumbles:	La cible rate lamentablement
+DetailDisplayHandler.HandlePacket.TargetHits:		La cible touche
+DetailDisplayHandler.HandlePacket.TargetMisses:		La cible loupe
+DetailDisplayHandler.HandlePacket.TargetParrys:		La cible parre
+DetailDisplayHandler.HandlePacket.TargetStyle:		La cible exécute un style
+DetailDisplayHandler.HandlePacket.ToHit:		Toucher: 
+DetailDisplayHandler.HandlePacket.VeryHigh:		Très haut
+DetailDisplayHandler.HandlePacket.VeryHighBonus:	Très haut Bonus	
+DetailDisplayHandler.HandlePacket.VeryHighPenalty:	Très haute pénalité
+DetailDisplayHandler.HandlePacket.VeryLow:		Très bas
+DetailDisplayHandler.HandlePacket.VeryLowBonus:		Très bas Bonus
+DetailDisplayHandler.HandlePacket.VeryLowPenalty:	Très basse pénalité
+DetailDisplayHandler.HandlePacket.VeryStrange:		C'est très étrange, je ne reconnais pas ce type d'objets.
+DetailDisplayHandler.HandlePacket.WeaponType:		Type d'arme: {0}
+DetailDisplayHandler.HandlePacket.YouBlock:		Vous bloquez
+DetailDisplayHandler.HandlePacket.YouEvade:		Vous esquivez
+DetailDisplayHandler.HandlePacket.YouFumble:		Vous loupez lamentablement
+DetailDisplayHandler.HandlePacket.YouHit:		Vous touchez
+DetailDisplayHandler.HandlePacket.YouMiss:		Vous loupez
+DetailDisplayHandler.HandlePacket.YouParry:		Vous parrez
+DetailDisplayHandler.WriteClassicArmorInfos.Absorption:	- {0}% Absorption
+DetailDisplayHandler.WriteClassicArmorInfos.ArmorMod:	Modificateurs d'armure:
+DetailDisplayHandler.WriteClassicArmorInfos.BaseFactor:	- {0} Armure de base
+DetailDisplayHandler.WriteClassicArmorInfos.ClampFact:	- {0} Armure réelle
+DetailDisplayHandler.WriteClassicArmorInfos.Condition:	- {0}% Condition
+DetailDisplayHandler.WriteClassicArmorInfos.EffArmor:	Armure:
+DetailDisplayHandler.WriteClassicArmorInfos.Factor:	- {0} Armure
+DetailDisplayHandler.WriteClassicArmorInfos.Quality:	- {0}% Qualité
+DetailDisplayHandler.WriteClassicShieldInfos.BaseDPS:	- {0} DPS de base
+DetailDisplayHandler.WriteClassicShieldInfos.ClampDPS:	- {0} DPS Réel
+DetailDisplayHandler.WriteClassicShieldInfos.DamageMod:	Modificateurs de dégats (quand utilisé avec les styles Bouclier):
+DetailDisplayHandler.WriteClassicShieldInfos.Large:	- Taille du Bouclier : Grand
+DetailDisplayHandler.WriteClassicShieldInfos.Medium:	- Taille du Bouclier : Moyen
+DetailDisplayHandler.WriteClassicShieldInfos.Small:	- Taille du Bouclier : Petit
+DetailDisplayHandler.WriteClassicShieldInfos.SPD:	- {0} Vitesse du bouclier
+DetailDisplayHandler.WriteClassicWeaponInfos.BaseDPS:	- {0} DPS de base
+DetailDisplayHandler.WriteClassicWeaponInfos.ClampDPS:	- {0} DPS Réel
+DetailDisplayHandler.WriteClassicWeaponInfos.Condition:	- {0}% Condition
+DetailDisplayHandler.WriteClassicWeaponInfos.DamageMod:	Modificateur de dégats:
+DetailDisplayHandler.WriteClassicWeaponInfos.DamageType:Type de dégats: {0}
+DetailDisplayHandler.WriteClassicWeaponInfos.EffDamage:	Dégats effectifs:
+DetailDisplayHandler.WriteClassicWeaponInfos.Quality:	- {0}% Qualité
+DetailDisplayHandler.WriteClassicWeaponInfos.SPD:	- {0} Vitesse de l'arme
+DetailDisplayHandler.WriteHorseInfo.AdvancedHorse:	C'est une monture avancée.
+DetailDisplayHandler.WriteHorseInfo.Armor:		- Armure: {0}
+DetailDisplayHandler.WriteHorseInfo.Barding:		- Barding: Aucun
+DetailDisplayHandler.WriteHorseInfo.BasicHorse:		C'est une monture classique.
+DetailDisplayHandler.WriteHorseInfo.Food:		- Nourriture favorite: Foin, et occasionnellement une pomme
+DetailDisplayHandler.WriteHorseInfo.MountWindow:	Pour faire de cette monture votre monture active, déplacez cette icôe dans l'emplacement dédié de votre fenêtre de monture.
+DetailDisplayHandler.WriteHorseInfo.Name:		- Nom: {0}.
+DetailDisplayHandler.WriteHorseInfo.NameMount:		  (Utilisez /namemount pour donner un nom à votre monture.)
+DetailDisplayHandler.WriteHorseInfo.Quickbar:		Pour invoquer cette monture, depuis la fenêtre de monter déplacez l'icône sur votre barre de lancement rapide, et cliquez sur le bouton créé.
+DetailDisplayHandler.WriteHorseInfo.RvRZzones:		Ne peut être invoqué en zone RVR.
+DetailDisplayHandler.WriteHorseInfo.Speed1:		(+35% vitesse)
+DetailDisplayHandler.WriteHorseInfo.Speed2:		(+45% vitesse)
+DetailDisplayHandler.WriteHorseInfo.Summon:		Cliquez sur cette icône dans votre barre de lancement pour invoquer (ou renvoyer) votre monture.
+DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic:	Charged Magic Ability:
+DetailDisplayHandler.WriteMagicalBonuses.Charges:	- {0} Charges
+DetailDisplayHandler.WriteMagicalBonuses.FocusBonus:	Bonus au focus:
+DetailDisplayHandler.WriteMagicalBonuses.Level:		- {0} Niveau
+DetailDisplayHandler.WriteMagicalBonuses.LevelRequired:	Niveau requis
+DetailDisplayHandler.WriteMagicalBonuses.MagicAbility:	Bonus Magiques:
+DetailDisplayHandler.WriteMagicalBonuses.MagicBonus:	Bonus Magiques:
+DetailDisplayHandler.WriteMagicalBonuses.MaxCharges:	- {0} Max
+DetailDisplayHandler.WriteMagicalBonuses.StrikeArmor:	- Le sort a une chance d'être lancé quand un ennemi touche cette armure.
+DetailDisplayHandler.WriteMagicalBonuses.StrikeEnemy:	- Le sort a une chance d'être lancé quand cette arme touche un ennemi.
+DetailDisplayHandler.WriteMagicalBonuses.UsedItem:	- Le sort a une chance d'être lancé quand l'objet est utilisé.
+DetailDisplayHandler.WriteMagicalBonuses.UseItem1:	Pout être utilisté toutes les: {0}
+DetailDisplayHandler.WriteMagicalBonuses.UseItem2:	Pout être utilisté toutes les: 3:00 min.
+DetailDisplayHandler.WriteMagicalBonuses.UseItem3:	Peut être réutilisé dans: {0}.
+DetailDisplayHandler.WritePoisonInfo.Charges:		- {0} Charges
+DetailDisplayHandler.WritePoisonInfo.Level:		- {0} Niveau
+DetailDisplayHandler.WritePoisonInfo.LevelRequired:	Niveau requis:
+DetailDisplayHandler.WritePoisonInfo.MaxCharges:	- {0} Max
+DetailDisplayHandler.WritePoisonInfo.ProcAbility:	Effet offensif:
+DetailDisplayHandler.WritePotionInfo.ChargedMagic:	Effet magique:
+DetailDisplayHandler.WritePotionInfo.Charges:		- {0} Charges
+DetailDisplayHandler.WritePotionInfo.Level:		- {0} Niveau
+DetailDisplayHandler.WritePotionInfo.LevelRequired:	Niveau requis:
+DetailDisplayHandler.WritePotionInfo.MaxCharges:	- {0} Max
+DetailDisplayHandler.WritePotionInfo.NoUseInCombat:	Ne peut être utilisé en combat.
+DetailDisplayHandler.WritePotionInfo.UseItem2:		Pout être utilisté toutes les: 1:00 min
+DetailDisplayHandler.WritePotionInfo.UseItem3:		Peut être réutilisé dans: {0}.
+DetailDisplayHandler.WriteUsableClasses.UsableBy:	Utilisable par: 
+
+# GAMESTAICITEM
+GameStaticItem.GetName.Article1:			Le {0}
+GameStaticItem.GetName.Article2:			le {0}
+
 # Styles
 # /StyleProcessor
 StyleProcessor.ExecuteStyle.BackStrike:         Vous infligez un coups critique dans le dos de votre cible
@@ -415,6 +564,54 @@ HousingPlaceItemHandler.IndoorObjectPlaced:	Objet interieur placé. {0} places re
 HousingPlaceItemHandler.NoHookpoint:		Il n'y a plus de point d'ancrage !
 HousingPlaceItemHandler.PutMoney:			Vous déposez de l'argent sur le compte de votre maison.
 
+# /Housing
+Scripts.Player.Housing.BadShieldBanner:			Ce n'est pas un objet ou une baniere valide.
+Scripts.Player.Housing.CantBeSold:			Cet objet ne peut être vendu!
+Scripts.Player.Housing.CarpetsRemoved:			Votre tapis à été retirer.
+Scripts.Player.Housing.EnteredHouse:			Entrée dans la maison numéro {0}.
+Scripts.Player.Housing.GardenItemPlaced:		Objets du jardin placer. {0} places restante.
+Scripts.Player.Housing.GardenItemPlacedName:		Vous déposez l'objet {0} dans votre jardin.
+Scripts.Player.Housing.GardenMaxObjects:		Vous avez déposer un nombre de 30 objets dans votre jardin. Vous n'avez plus de place.
+Scripts.Player.Housing.GuildNowOwns:			[Guild] {0} posséde maintenant une maison de guilde de {1}!
+Scripts.Player.Housing.HookPointAdded:			Cet objet a été ajouter à votre maison.
+Scripts.Player.Housing.HookPointCloser:			Tenez vous le plus prêt possible du lot désirer et appuyez sur "accepter".
+Scripts.Player.Housing.HookPointID:			L'id du point d'ancrage est: {0}
+Scripts.Player.Housing.HookPointLogged:			La position du point d'ancrage {0} est dans error.log!
+Scripts.Player.Housing.HookPointLogLoc:			Afficher les points d'ancrage?
+Scripts.Player.Housing.HookPointNot:			Ce n'est pas un item utilisable sur les ancrages!
+Scripts.Player.Housing.HookPointNotPlaced:		L'objet n'a pas était placer sur cet ancrage.
+Scripts.Player.Housing.HouseUseMaterial:		Utiliez shift+clic-droit dans votre maison pour changer l'apparence de votre maison.
+Scripts.Player.Housing.HouseUseMaterial:		Utiliez shift+clic-droit dans votre maison pour changer vos tapis.
+Scripts.Player.Housing.IndoorFloorPlaced:		Vous avez placer {0} dans l'étage de votre maison.
+Scripts.Player.Housing.IndoorItemPlaced:		Objet interieure placer. {0} places restante.
+Scripts.Player.Housing.IndoorMaxItems:			Vous avez actuellement placer {0} objets dans votre maison. Vous ne pouvez plus en placer.
+Scripts.Player.Housing.IndoorWallPlaced:		Vous vennez de placer {0} sur le mur de votre maison.
+Scripts.Player.Housing.InteriorBannersAdded:		Votre banniére de guilde interieure a été changer.
+Scripts.Player.Housing.InteriorBannersRemoved:		Votre banniére de guilde interieure a été retirer.
+Scripts.Player.Housing.InteriorShieldsAdded:		Votre emblème de guilde interieure a été changer.
+Scripts.Player.Housing.InteriorShieldsRemoved:		Votre emblème de guilde interieure a été retirer.
+Scripts.Player.Housing.LeftHouse:			Sortie de la maison {0}.
+Scripts.Player.Housing.LotAlready:			Vous possédez déjà un autre lot ou une maison (numero {0})
+Scripts.Player.Housing.LotBought:			Vous vennez d'acheter ce lot pour {0}!
+Scripts.Player.Housing.LotCost:				Il peut être acheté pour {0}.
+Scripts.Player.Housing.LotNotItem:			Ce n'est pas un acte de propriété valide.
+Scripts.Player.Housing.LotNotYours:			Vous ne possédez pas ce lot!
+Scripts.Player.Housing.LotOffer:			Voulez-vous acheter ce lot? Il coûte {0}.
+Scripts.Player.Housing.LotTargeted:			Vous selectionnez le lot numero {0}.
+Scripts.Player.Housing.NotFloorObject:			Cet objet ne peut pas être placé à l'étage!
+Scripts.Player.Housing.NotHookPoint:			Cet objet ne peut pas être placé sur l'ancrage!
+Scripts.Player.Housing.NotWallObject:			Cet objet ne peut pas être placé sur le mur!
+Scripts.Player.Housing.OutdoorBannersAdded:		Votre banniére de guilde extérieure a été changer.
+Scripts.Player.Housing.OutdoorBannersRemoved:		Votre banniére de guilde extérieure a été retirer.
+Scripts.Player.Housing.OutdoorShieldsAdded:		Votre emblème de guilde extérieure a été changer.
+Scripts.Player.Housing.OutdoorShieldsRemoved:		Votre emblème de guilde extérieure a été retirer.
+Scripts.Player.Housing.PaidChanges:			Vous payez {0} pour effectuer les changements.
+Scripts.Player.Housing.PaidNotEnough:			Vous n'avez pas assez d'argent pour faire cela!
+Scripts.Player.Housing.PorchAlready:			Cette maison a déjà un porche!
+Scripts.Player.Housing.PorchNone:			Cette maison ne contient pas de porche!
+Scripts.Player.Housing.PorchNotItem:			Ce n'est pas un item pour le porche!
+Scripts.Player.Housing.TransferToGuild:			Vous voulez transférer cette maison à {0}?
+
 # TRAINER
 # /GameTrainer
 GameTrainer.AddGift.NotEnoughSpace:			Plus de place dans votre inventaire pour recevoir votre cadeau. Faites de la place !
@@ -428,6 +625,13 @@ GameTrainer.ReceiveItem.RespecFull:			Un superbe {0}! J'ai recu une possibilité 
 GameTrainer.ReceiveItem.RespecRealm:		Merci, j'ai recu une possibilité de respécialisation de royaume. Pour utiliser: /respec realm.
 GameTrainer.ReceiveItem.RespecSingle:		Merci, j'ai recu une possibilité de respécialisation simple. Pour utiliser: /respec <linename>
 
+# /EnchanterTrainer
+EnchanterTrainer.Interact.PathOfEssence:		{0} dit, "Voulez-vous vous devenir un Enchanteur et suivre la voix des magiciens?  La vie d'un [Enchanteur] en vaut la peine mais elle est dangereuse, mais cela est votre demande."
+EnchanterTrainer.Interact.QuickStudy:			{0} dit, "Vous êtes un bon élève, {1}. Mais ne soyez pas trop rapide dans votre approche du combat. Il y a toujours plus pour apprendre."
+EnchanterTrainer.Interact.SeekElsewhere:		{0} dit, "Vous devez allez ailleurs pour votre entraînement."
+EnchanterTrainer.WhisperReceive.CaseEnchanter:		Enchanteur
+EnchanterTrainer.WhisperReceive.Welcome:		Bienvenue, {0}. À partir de ce jour, vous serez connus comme un Enchanteur. Ici {0}. Prenez ce cadeau pour vous aider dans votre aventure.
+
 # /PlayerPositionUpdateHandler
 PlayerPositionUpdateHandler.Endurance:		Vous perdez de l'endurance !
 PlayerPositionUpdateHandler.Entered:		Vous êtes entré dans {0}.
@@ -439,7 +643,7 @@ PlayerPositionUpdateHandler.UnknownZone:	Zone inconnue, retour à votre bind.
 # /gameobjects/CustomNPC
 # /GameStableMaster
 GameStableMaster.HorseName:					horse
-GameStableMaster.UnknownWay:				Mon cheval ne connait pas la route vers {0}.
+GameStableMaster.UnknownWay:				Votre monture ne connait pas la route vers {0}.
 
 # /Blacksmith
 Scripts.Blacksmith.CantRepairStacked:		{0} ne peut pas réparer d'objets empilés.
@@ -475,6 +679,205 @@ PlayerMoveItemRequestHandler.TooFarAway:	Vous êtes trop loin pour donner quoi qu
 # AbstractArea
 AbstractArea.Entered:						(Region) Vous êtes entrés dans {0}!
 AbstractArea.Left:							(Region) Vous avez quitté {0}!
+
+# /Guilds
+Scripts.Player.Guild.AccountRemoved:			{0} a été retirer par {1} de la guilde.	
+Scripts.Player.Guild.ActiveBuff:			Votre guilde posséde déjà un sort d'amélioration. Vous devez attendre que le sort expire pour le relancer.	
+Scripts.Player.Guild.AllianceAlreadyOther:		Cette guilde posséde déjà une alliance.	
+Scripts.Player.Guild.AllianceAnsCancel:			L'offre d'alliance a été annulée.	
+Scripts.Player.Guild.AllianceDeclined:			Vous décliner la proposition d'alliance.
+Scripts.Player.Guild.AllianceDeclinedOther:		L'offre d'alliance a été annulée	
+Scripts.Player.Guild.AllianceDisabled:			Les Alliances ne sont pas actif sur ce serveur.	
+Scripts.Player.Guild.AllianceIndexNotVal:		La valeur de l'alliance n'est pas un nombre valide.	
+Scripts.Player.Guild.AllianceInfo:			Information d'alliance sur {0}:
+Scripts.Player.Guild.AllianceInvite:			Vous avez invité une guilde à rejoindre votre alliance.
+Scripts.Player.Guild.AllianceInvited:			Vous avez été invités à rejoindre l'alliance de {0}.	
+Scripts.Player.Guild.AllianceLeader:			Chef d'alliance {0}	
+Scripts.Player.Guild.AllianceMax:			Vous êtes incapables d'inviter cette guilde à votre alliance, car votre alliance contient déjà le nombre de maximum de guildes.	
+Scripts.Player.Guild.AllianceMember:			{0} - {1}	
+Scripts.Player.Guild.AllianceMembers:			Membres de l'alliance:	
+Scripts.Player.Guild.AllianceMemNotSel:			Vous devez choisir un joueur parmi la même alliance.	
+Scripts.Player.Guild.AllianceNoGMSelected:		Vous devez choisir un Maître de guilde que vous voulez inviter.	
+Scripts.Player.Guild.AllianceNoLeader:			Pas de chef d'alliance
+Scripts.Player.Guild.AllianceNotLeader:			Vous devez être la guilde de chef de l'alliance, avant de pouvoir enlever une guilde de l'alliance.	
+Scripts.Player.Guild.AllianceNotMember:			Vous devez être dans une alliance pour le faire.	
+Scripts.Player.Guild.AlreadyInGuild:			{0} est un membre de votre guilde.	
+Scripts.Player.Guild.AlreadyInGuild:			Ils sont déjà un membre d'une guilde.	
+Scripts.Player.Guild.AMotdSet:				Vous avez mis le message d'alliance à jour.	
+Scripts.Player.Guild.BannerAlready:			Votre guilde posséde déjà une bannière.	
+Scripts.Player.Guild.BannerBought:			Vous avez acheter une bannière de guilde pour {0} points de mérite.	
+Scripts.Player.Guild.BannerGroupSummoned:		Quelqu'un dans votre groupe a déjà invoqué la bannière de guilde
+Scripts.Player.Guild.BannerGuildSummoned:		Quelqu'un dans votre guilde a déjà invoqué la bannière de guilde.
+Scripts.Player.Guild.BannerNoGroup:			Vous avez besoin d'un groupe pour invoquer une bannière.	
+Scripts.Player.Guild.BannerNone:			Votre guilde ne possède pas de bannière de guilde.	
+Scripts.Player.Guild.BannerNotAfford:			Vous avez besoin de 50,000 points de mérite pour acheter une bannière de guilde!
+Scripts.Player.Guild.BannerSummoned:			Vous avez invoqué votre bannière de guilde.	
+Scripts.Player.Guild.BannerUnsummoned:			Vous avez retiré votre bannière de guilde.	
+Scripts.Player.Guild.BuffActivated:			[Guild Buff] {0} a utilisé  1000 Points de Mérite de Guilde et a activé une Amélioration de Guilde!	
+Scripts.Player.Guild.BuffBountyPoints:			Votre guilde gagnera maintenant 5 % aux primes de royaumes de plus pendant 24 heures!	
+Scripts.Player.Guild.BuffBPActivated:			[Guild Buff] Votre guilde recevra un bonus aux primes de royaumes pendant 24 heures!	
+Scripts.Player.Guild.BuffMPActivated:			[Guild Buff] Votre guilde recevra un bonus aux points de mérite de guilde pendant 24 heures!	
+Scripts.Player.Guild.BuffRealmPoints:			Votre guilde gagnera maintenant 5 % aux points de royaumes de plus pendant 24 heures!	
+Scripts.Player.Guild.ClaimNotNear:			Vous devez être près du Lord pour réclamer se fort.	
+Scripts.Player.Guild.ConfirmLeave:			Voulez-vous vraiment partir {0}?
+Scripts.Player.Guild.DemotedHigherThanPlayer:		Vous pouvez seulement rétrograder les grades au-dessous du votre.	
+Scripts.Player.Guild.DemotedOther:			{0} a rétrograder au rang {1}.	
+Scripts.Player.Guild.DemotedSelf:			Vous avez été rétrogradés au rang {0}.	
+Scripts.Player.Guild.DepositAmmount:			Vous déposez {0} dans la caisse de guilde.	
+Scripts.Player.Guild.DepositFull:			La caisse de guilde semble être pleine.	
+Scripts.Player.Guild.DepositInvalid:			Ce n'est pas un dépôt valide.	
+Scripts.Player.Guild.DuesOff:				La cotisation de guilde est actuellement pas fonctionnel.	
+Scripts.Player.Guild.DuesOn:				La cotisation de guilde est de  {0} pourcent.	
+Scripts.Player.Guild.EmailSet:				L'email de guilde est maintenant fixer: {0}.	
+Scripts.Player.Guild.EmblemAlready:			Votre guilde a déjà un emblème mais vous pouvez le changer pour 100 piéces d'or. Vous devez choisir l'EmblemNPC de nouveau pour effectuer cette proceedure.
+Scripts.Player.Guild.EmblemNeedGold:			Vous devez avoir 200 piéces d'or pour changer de nouveau votre embleme de guilde.	
+Scripts.Player.Guild.EmblemNeedNPC:			Vous devez selectionner l'EmblemNPC.	
+Scripts.Player.Guild.EmblemNPCNotSelected:		Vous devez selectionner l'EmblemNPC.	
+Scripts.Player.Guild.EmblemRedo:			Vous voulez refaire votre emblème pour 100 piéces d'or?	
+Scripts.Player.Guild.FormNoGroup:			Vous devez être dans un groupe pour former une guilde.	
+Scripts.Player.Guild.FormNoMembers:			Vous avez besoin de {0} membres dans votre groupe pour créer une guilde.	
+Scripts.Player.Guild.GuildCreated:			La guilde {0} vient d'être créer avec {1} comme chef.	
+Scripts.Player.Guild.GuildExists:			Cette guilde ne peut être créer car elle existe déjà.	
+Scripts.Player.Guild.GuildForceLeave:			{0} est retirer de la guilde par {1}.	
+Scripts.Player.Guild.GuildLeave:			Vous vennez de quitter la guilde.	
+Scripts.Player.Guild.GuildLevelReq:			Votre guilde n'est assez haut niveau pour cette commande.	
+Scripts.Player.Guild.GuildNotExist:			Cette guilde n'existe pas.	
+Scripts.Player.Guild.Help.GuildACancel:			'/gc acancel' Annule une invitation au sein d'une alliance	
+Scripts.Player.Guild.Help.GuildAccept:			'/gc aaccept' Accepte une invitation au sein d'une alliance	
+Scripts.Player.Guild.Help.GuildAccept:			'/gc accept ' Accepte une invitation au sein d'une guilde	
+Scripts.Player.Guild.Help.GuildADecline:		'/gc adecline' Décline une invitation au sein d'une alliance	
+Scripts.Player.Guild.Help.GuildAInvite:			'/gc ainvite' Invite une autre guilde à rejoindre l'alliance	
+Scripts.Player.Guild.Help.GuildAlli:			'/gc alliance' Affiche l'alliance dont la guilde fait partie
+Scripts.Player.Guild.Help.GuildAMotd:			'/gc amotd <text>' Affecte le message du jour de l'alliance	
+Scripts.Player.Guild.Help.GuildARemove:			'/gc aremove' Expulse la guilde sélectionner de l'alliance	
+Scripts.Player.Guild.Help.GuildARemoveAlli:		'/gc aremove alliance [#]' Expulse la guilde spécifié de l'alliance (énuméré par un nombre)	
+Scripts.Player.Guild.Help.GuildAutoRemove:		'/gc autoremove <Nom du joueur>' Expulse un personnage de la guilde	
+Scripts.Player.Guild.Help.GuildAutoRemoveAcc:		'/gc autoremove account <Nom du joueur>'Expulse de la guilde tous les personnages d'un compte
+Scripts.Player.Guild.Help.GuildBannerSummon:		'/gc summon' Invoque la bannière de guilde.	
+Scripts.Player.Guild.Help.GuildBuff:			'/gc buff <realmpoints/bountypoints>' Achète un bonus de mérite de guilde
+Scripts.Player.Guild.Help.GuildBuyBanner:		'/gc buybanner' - Achéte une bannière de guilde.	
+Scripts.Player.Guild.Help.GuildCancel:			'/gc cancel <option> [value]' Annule une invitation à rejoindre la guilde	
+Scripts.Player.Guild.Help.GuildClaim:			'/gc claim' Réclame une tour ou un fort pour la guilde
+Scripts.Player.Guild.Help.GuildDecline:			'/gc decline' Décline une invitation à rejoindre la guilde
+Scripts.Player.Guild.Help.GuildDemote:			'/gc demote <rank#> [name]' Rétrograde le joueur indiqué au rang désiré
+Scripts.Player.Guild.Help.GuildDeposit:			'/gc deposit <ammount>' Dépose une somme dans la caisse de guilde.	
+Scripts.Player.Guild.Help.GuildDues:			'/gc dues <ammount>' Active ou désactive le système de taxation de la guilde (2% de l'argent gagné sur des monstres)
+Scripts.Player.Guild.Help.GuildEdit:			'/gc edit' Listes les parties modifiables de la structure de guilde
+Scripts.Player.Guild.Help.GuildEditACHear:		'/gc edit <ranknum> achear <y/n>' Permet à un rang de pouvoir lire le canal d'alliance	
+Scripts.Player.Guild.Help.GuildEditACSpeak:		'/gc edit <ranknum> acspeak <y/n>' Permet à un rang de pouvoir parler sur le canal alliance	
+Scripts.Player.Guild.Help.GuildEditAlli:		'/gc edit <ranknum> alli <y/n>'  Permet au chef de guilde d'accorder à un rang la possibilité d'intégrer ou quitter une alliance
+Scripts.Player.Guild.Help.GuildEditClaim:		'/gc edit <ranknum> claim <y/n>'  Permet au chef de guilde d'accorder à un rang la possibilité de capturer un fort ou une tour pour la guilde	
+Scripts.Player.Guild.Help.GuildEditDues:		'/gc edit <ranknum> dues <y/n>'  Permet de changer la valeur de la taxation de guilde
+Scripts.Player.Guild.Help.GuildEditEmblem:		'/gc edit <ranknum> emblem <y/n>' Permet à un rang de pouvoir porter la l'emblème de la guilde
+Scripts.Player.Guild.Help.GuildEditGCHear:		'/gc edit <ranknum> gchear <y/n>' Permet à un rang de pouvoir lire le canal de guilde	
+Scripts.Player.Guild.Help.GuildEditGCSpeak:		'/gc edit <ranknum> gcspeak <y/n>' Permet à un rang de pouvoir parler sur le canal guilde
+Scripts.Player.Guild.Help.GuildEditInvite:		'/gc edit <ranknum> invite <y/n>' Permet au chef de guilde d'accorder à un rang la possibilité d'inviter de nouveau membres
+Scripts.Player.Guild.Help.GuildEditOCHear:		'/gc edit <ranknum> ochear <y/n>' Permet à un rang de pouvoir lire le canal Officer	
+Scripts.Player.Guild.Help.GuildEditOCSpeak:		'/gc edit <ranknum> ocspeak <y/n>' Permet à un rang de pouvoir parler sur le canal Officer
+Scripts.Player.Guild.Help.GuildEditPromote:		'/gc edit <ranknum> promote <y/n>' Permet de grader ou rétrograder le joueur sélectionner	
+Scripts.Player.Guild.Help.GuildEditRankLevel:		'/gc edit <ranknum> ranklevel <level>' 
+Scripts.Player.Guild.Help.GuildEditRelease:		'/gc edit <ranknum> release <y/n>'  Libére le controle de la tour/fort de guilde	
+Scripts.Player.Guild.Help.GuildEditRemove:		'/gc edit <ranknum> remove <y/n>' Permet de pouvoir retirer le joueur sélectionner de la guilde	
+Scripts.Player.Guild.Help.GuildEditTitle:		'/gc edit <ranknum> title <text>' Crée un titre au rang choisi <#> pour la guilde	
+Scripts.Player.Guild.Help.GuildEditUpgrade:		'/gc edit <ranknum> upgrade <y/n>'  Permet au chef de guilde d'accorder à un rang la possibilité d'intégrer ou quitter une alliance
+Scripts.Player.Guild.Help.GuildEditView:		'/gc edit <ranknum> view <y/n>'  Permet au rang choisi de pouvoir voir les membres de l'alliance
+Scripts.Player.Guild.Help.GuildEditWithdraw:		'/gc edit <ranknum> withdraw <y/n>'  Permet de donné l'autorisation de retirer les fonds de votre caisse de guilde	
+Scripts.Player.Guild.Help.GuildEmail:			'/gc email <contact@guildpage.com>' Affiche l'adresse internet des contactes au sein de la guilde.
+Scripts.Player.Guild.Help.GuildEmblem:			'/gc emblem' Présentation des Emblèmes	
+Scripts.Player.Guild.Help.GuildForm:			'/gc form <Nom de guilde>' Création d'une guilde (8 joueurs requis dans le groupe)	
+Scripts.Player.Guild.Help.GuildGMAddPlayer:		'/gc addplayer <player> to <guild>' Ajoute un joueur à la guilde	
+Scripts.Player.Guild.Help.GuildGMCommands:		Game Master commandes:	
+Scripts.Player.Guild.Help.GuildGMCreate:		'/gc create <Name>' Créer une guilde et désigne le joueur sélectionner comme chef	
+Scripts.Player.Guild.Help.GuildGMPurge:			'/gc purge <Name>' Purge complétement une guilde	
+Scripts.Player.Guild.Help.GuildGMRemovePlayer:		'/gc removeplayer <player> from <guild>' Retire un joueur de la guilde	
+Scripts.Player.Guild.Help.GuildGMRename:		'/gc rename <OldName> to <NewName' Renomme une guilde <ancien nom> <nouveau nom>	
+Scripts.Player.Guild.Help.GuildInfo:			'/gc info' Liste des informations de cette guilde	
+Scripts.Player.Guild.Help.GuildInvite:			'/gc invite [joueur]' Invite un joueur à rejoindre la guilde	
+Scripts.Player.Guild.Help.GuildLeader:			'/gc leader [joueur]' Choisi le nouveau chef de guilde	
+Scripts.Player.Guild.Help.GuildList:			'/gc list' Informe le joueur de toutes les guildes sur le royaume	
+Scripts.Player.Guild.Help.GuildMotd:			'/gc motd <text>' Modifie le message du jour de la guilde	
+Scripts.Player.Guild.Help.GuildNoteSelf:		'/gc noteself <note>' Créé une note à votre propos
+Scripts.Player.Guild.Help.GuildOMotd:			'/gc omotd <text>' Définie le message du jour des officier de votre guilde	
+Scripts.Player.Guild.Help.GuildPromote:			'/gc promote <rank#> [name]' Promeu  le personnage indiqué au rang désiré	
+Scripts.Player.Guild.Help.GuildQuit:			'/gc quit' Pour quitter une guilde	
+Scripts.Player.Guild.Help.GuildRanks:			'/gc ranks' Affiche les rangs de la guilde. Les chefs de guilde peuvent aussi utiliser cette commande pour modifier les rang
+Scripts.Player.Guild.Help.GuildRemAccount:		'/gc removeaccount <accountname>' Retire d'une guilde tous les personnages du compte sur lequel se trouve le personnage sélectionner.	
+Scripts.Player.Guild.Help.GuildRemove:			'/gc remove <Nom du joueur>' Retire le joueur de la guilde	
+Scripts.Player.Guild.Help.GuildUsage:			Usage:	
+Scripts.Player.Guild.Help.GuildWebpage:			'/gc webpage <la.pagedeguilde.fr>' Option non obligatoire qui permet d'indiquer le site de guilde aux membres et sur le herald officiel .	
+Scripts.Player.Guild.Help.GuildWho:			'/gc who' Montre les joueurs de la guilde connectés	
+Scripts.Player.Guild.Help.GuildWithdraw:		'/gc withdraw <ammount>' Retire les fonds de votre caisse de guilde.
+Scripts.Player.Guild.InCombat:				Vous ne pouvez pas invoquer la bannière de guilde en combat!	
+Scripts.Player.Guild.InfoAMotd:				Message de l'alliance: {0}	
+Scripts.Player.Guild.InfoCEmail:			Contacte Email: {0}	
+Scripts.Player.Guild.InfoGDuesBank:			Taxe: {0} Banque de guilde: {1} pieces de cuivre.	
+Scripts.Player.Guild.InfoGuild:				Guild Info for {0}:	
+Scripts.Player.Guild.InfoGuildLevel:			Guild Level: {0}	
+Scripts.Player.Guild.InfoMotd:				Message:  {0}	
+Scripts.Player.Guild.InfoOMotd:				Message des officiers: {0}	
+Scripts.Player.Guild.InfoRPBPMP:			Points de Royaume: {0} Primes de Royaume: {1} Points de Mérite: {2}	
+Scripts.Player.Guild.InfoWebpage:			Webpage: {0}	
+Scripts.Player.Guild.InvalidLetters:			Les lettres mises sont invalide.	
+Scripts.Player.Guild.InvalidRank:			Ce n'est pas un rang valide.	
+Scripts.Player.Guild.InviteDead:			Vous ne pouvez pas inviter un joueur mort à rejoindre la guilde.	
+Scripts.Player.Guild.InviteNoSelected:			Vous devez selectionner un joueur.	
+Scripts.Player.Guild.InviteNoSelf:			Vous pouvez pas vous inviter.	
+Scripts.Player.Guild.InviteNotThis:			Ce membre ne peut être inviter.
+Scripts.Player.Guild.InviteRecieved:			{0} vous invite à rejoindre la guilde.	
+Scripts.Player.Guild.InviteSent:			Vous lancez l'invitation pour {0} rejoindre la guilde.	
+Scripts.Player.Guild.Keep:				Votre guilde posséde déjà un fort {0}.	
+Scripts.Player.Guild.LevelUp:				[Guild] Votre guilde à atteint le niveau {0}!	
+Scripts.Player.Guild.LoginsOff:				Vous avez désactiver la fonction qui vous permet de voir les membres de la guilde se connecté, tapper /gc logins pour activer la fonction.	
+Scripts.Player.Guild.LoginsOn:				Vous avez activer la fonction qui vous permet de voir les membres de la guilde se connecté, tapper /gc logins pour désactiver la fonction.
+Scripts.Player.Guild.MadeLeader:			Vous éttes désormer le chef de {0}.	
+Scripts.Player.Guild.MadeLeaderOther:			{0} à promu {1} comme nouveau chef de guilde.	
+Scripts.Player.Guild.MemberLogin:			{0} est maintenant connecté.	
+Scripts.Player.Guild.MemberLogoff:			{0} est maintenant déconnecté.	
+Scripts.Player.Guild.MemberRemoved:			{0} a retirer {1} de la guilde.	
+Scripts.Player.Guild.MeritPointReq:			Votre guilde ne posséde pas les points de mérite nécéssaire à cette action.	
+Scripts.Player.Guild.MotdSet:				Vous changez le message de jour de guilde.	
+Scripts.Player.Guild.NoKeep:				Vous n'avez pas actuellement de fort pour utiliser cette commande.
+Scripts.Player.Guild.NoPlayerSelected:			Sélectionner un joueur.	
+Scripts.Player.Guild.NoPlayersInAcc:			Il n'y a pas de joueur du compte demander dans votre guilde.	
+Scripts.Player.Guild.NoPrivilages:			Votre rang de guilde ne posséde pas assez de privilége pour utiliser cette commande.	
+Scripts.Player.Guild.NoteSet:				La note de guilde est: {0}	
+Scripts.Player.Guild.NotInYourGuild:			Ce joueur n'est pas dans la guilde.	
+Scripts.Player.Guild.NotMember:				Vous devez être dans une guilde pour utiliser cette commande.	
+Scripts.Player.Guild.OMotdSet:				le message des officiers est maintenant actualiser.	
+Scripts.Player.Guild.PlayerNotFound:			Ce joueur n'est pas en ligne ou se trouve sur un autre royaume.	
+Scripts.Player.Guild.PromotedOther:			{0} est promue au rang {1}.	
+Scripts.Player.Guild.PromotedSelf:			Vous éttes promus au rang {0}.	
+Scripts.Player.Guild.PromoteHigherThanPlayer:		Vous pouvez seulement grader un joueur à un rang inférieure au votre.	
+Scripts.Player.Guild.Purged:				{0} est purger.	
+Scripts.Player.Guild.RankACHearSet:			Vous avez {0} l'accé à ACHear au rang {1}.	
+Scripts.Player.Guild.RankACSpeakSet:			Vous avez {0} l'ACSpeak au rang {1}.	
+Scripts.Player.Guild.RankAlliSet:			Vous avez {0} l'Alliance au rang {1}.	
+Scripts.Player.Guild.RankClaimSet:			Vous avez {0} les captures de fort au rang {1}.	
+Scripts.Player.Guild.RankDuesSet:			Vous avez {0} la taxe de guilde au rang {1}.	
+Scripts.Player.Guild.RankEmblemSet:			Vous avez {0} l'emblème au rang {1}.	
+Scripts.Player.Guild.RankGCHearSet:			Vous avez {0} le GCHear au rang {1}.	
+Scripts.Player.Guild.RankGCSpeakSet:			Vous avez {0} the GCSpeak au rang {1}.	
+Scripts.Player.Guild.RankInviteSet:			Vous avez {0} les invitations au rang {1}.	
+Scripts.Player.Guild.RankLevelSet:			Vous avez choisi le niveau de guilde au rang to {0}.	
+Scripts.Player.Guild.RankOCHearSet:			Vous avez {0} le OCHear au rang {1}.	
+Scripts.Player.Guild.RankOCSpeakSet:			Vous avez {0} le OCSpeak au rang {1}.	
+Scripts.Player.Guild.RankPromoteSet:			Vous avez {0} les grades/rétrogradation au rang {1}.	
+Scripts.Player.Guild.RankReleaseSet:			Vous avez {0} le relachement du contrôle des forts au rang {1}.	
+Scripts.Player.Guild.RankRemoveSet:			Vous avez {0} le Remove au rang {1}.	
+Scripts.Player.Guild.RankTitleSet:			Vous avez pour changer les titres de rang de guilde au rang {0}.	
+Scripts.Player.Guild.RankUpgradeSet:			Vous avez {0} les mise à jour des forts au rang {1}.	
+Scripts.Player.Guild.RankViewSet:			Vous avez {0} l'apperçu de la guilde au rang {1}.	
+Scripts.Player.Guild.RankWithdrawSet:			Vous avez {0} la caisse de guilde au rang {1}.
+Scripts.Player.Guild.ThirdArgNotNum:			Cette argument n'est pas un nombre valide.	
+Scripts.Player.Guild.UnableToCreate:			La guilde {0} vient d'être créer.	
+Scripts.Player.Guild.UnableToCreateLead:		La guilde {0} vient d'être créer, {1} est le chef de guilde.	
+Scripts.Player.Guild.UnknownCommand:			Commande Inconnue. Tappez /gc help pour les informations.	
+Scripts.Player.Guild.UpgradeNoLevel:			Vous devez spécifier un niveau pour les améliorations de des tours/forts.	
+Scripts.Player.Guild.UpgradeScndArg:			Le deuxieme argument doit être un nombre.	
+Scripts.Player.Guild.WebpageSet:			Vous avez définie la page internet de la guilde comme {0}.	
+Scripts.Player.Guild.WithdrawAmmount:			Votre taxe est de {0} vont dans la caisse de guilde.	
+Scripts.Player.Guild.WithdrawInvalid:			Ce n'est pas un montant valide.	
+Scripts.Player.Guild.WithdrawTooMuch:			Vous ne pouvez plus ajouter de d'argent dans la caisse de guilde.
 
 # SCRIPTS
 # GameEvents
@@ -533,50 +936,95 @@ Scripts.Players.Autosplit.On:				Le chef de groupe a activé l'autosplit.
 Scripts.Players.Autosplit.Self:				{0} switched
 
 # /Battlegroup
-Scripts.Players.Battlegroup.Help.Help:			/bg help - Affiche toutes les commandes du groupe de bataille
-Scripts.Players.Battlegroup.Help.Invite:			/bg invite [nom du joueur] - Invite le joueur spécifié à rejoindre le groupe de bataille
-Scripts.Players.Battlegroup.Help.JoinPrivate:		/bg join [moderateur] [mot de passe] - Rejoindre un groupe de bataille protégé par un mot de passe	
-Scripts.Players.Battlegroup.Help.JoinPublic:		/bg join [moderateur] - Rejoindre un groupe de bataille
-Scripts.Players.Battlegroup.Help.Leader:			/bg promote <nom> - Promouvoir un autre joueur comme chef du groupe de bataille; Ce joueur peut inviter d'autre joueurs à rejoindre le canal et peut parler quand le canal est en mode écoute.
-Scripts.Players.Battlegroup.Help.Leave:			/bg leave - Quitter le groupe de bataille
-Scripts.Players.Battlegroup.Help.Listen:			/bg listen - Mettre le groupe de bataille en mode écoute; seul le modérateur et les leads peuvent parler
+Scripts.Players.Battlegroup.Help.Help:			/bg help - Affiche toutes les commandes du groupe de combat
+Scripts.Players.Battlegroup.Help.Invite:			/bg invite [nom du joueur] - Invite le joueur spécifié à rejoindre le groupe de combat
+Scripts.Players.Battlegroup.Help.JoinPrivate:		/bg join [moderateur] [mot de passe] - Rejoindre un groupe de combat protégé par un mot de passe	
+Scripts.Players.Battlegroup.Help.JoinPublic:		/bg join [moderateur] - Rejoindre un groupe de combat
+Scripts.Players.Battlegroup.Help.Leader:			/bg promote <nom> - Promouvoir un autre joueur comme chef du groupe de combat; Ce joueur peut inviter d'autre joueurs à rejoindre le canal et peut parler quand le canal est en mode écoute.
+Scripts.Players.Battlegroup.Help.Leave:			/bg leave - Quitter le groupe de combat
+Scripts.Players.Battlegroup.Help.Listen:			/bg listen - Mettre le groupe de combat en mode écoute; seul le modérateur et les leads peuvent parler
 Scripts.Players.Battlegroup.Help.PasswordClear:	/bg password clear - Efface le mot de passe actuel (moderateur uniquement)	
 Scripts.Players.Battlegroup.Help.PasswordDisplay:	/bg password - Affiche le mot de passe actuel (moderateur uniquement)	
 Scripts.Players.Battlegroup.Help.PasswordNew:		/bg password [nouveau mot de passe]	- Change le mot de passe actuel
-Scripts.Players.Battlegroup.Help.Private:			/bg private - Définir le groupe de bataille comme étant privé
-Scripts.Players.Battlegroup.Help.Public:			/bg public - Définir le groupe de bataille comme étant publique, tout le monde peut rejoindre
-Scripts.Players.Battlegroup.Help.Remove:			/bg remove [nom du joueur] - Ejecte le joueur spécifié du groupe de bataille
+Scripts.Players.Battlegroup.Help.Private:			/bg private - Définir le groupe de combat comme étant privé
+Scripts.Players.Battlegroup.Help.Public:			/bg public - Définir le groupe de combat comme étant publique, tout le monde peut rejoindre
+Scripts.Players.Battlegroup.Help.Remove:			/bg remove [nom du joueur] - Ejecte le joueur spécifié du groupe de combat
 Scripts.Players.Battlegroup.Help.Usage:			/bg usage:
-Scripts.Players.Battlegroup.Help.Who:				/bg who - Liste tous les membres du groupe de bataille
-Scripts.Players.Battlegroup.Help.Count:         /bg count - 
-Scripts.Players.Battlegroup.Help.Groups:        /bg groups -
+Scripts.Players.Battlegroup.Help.Who:				/bg who - Liste tous les membres du groupe de combat
+Scripts.Players.Battlegroup.Help.Count:         /bg count - Compte le nombre de membres dans le groupe de combat
+Scripts.Players.Battlegroup.Help.Groups:        /bg groups - Affiche les membres du groupe de battaille avec leur groupes
 Scripts.Players.Battlegroup.Help.GroupClass: /bg groupclass -
-Scripts.Players.Battlegroup.Help.Loot:        /bg loot (normal/treasurer) - 
-Scripts.Players.Battlegroup.Help.LootLevel: /bg lootlevel (level) - 
-Scripts.Players.Battlegroup.Help.Treasurer:        /bg treasurer (player name) - 
-Scripts.Players.Battlegroup.Help.Status:	/bg status - 
+Scripts.Players.Battlegroup.Help.Loot:        /bg loot (normal/treasurer) - Définis le ramassage d’objet du group de bataille sur normal ou sur trésor.
+Scripts.Players.Battlegroup.Help.LootLevel: /bg lootlevel (level) - Définis le niveau d’objet(loot) pour votre groupe de combat
+Scripts.Players.Battlegroup.Help.Treasurer:        /bg treasurer (player name) - Définis le trésorier du groupe de combat.
+Scripts.Players.Battlegroup.Help.Status:	/bg status - Renvoie le nombre de membres dans votre groupe de combat.
 Scripts.Players.Battlegroup.Help.Credit: /bg credit
 Scripts.Players.Battlegroup.Help.GrantCredit: /bg grantcredit (masterlevel) (playername) -
-Scripts.Players.Battlegroup.InBattleGroup:			Vous devez être dans un groupe de bataille pour utiliser cette commande.
-Scripts.Players.Battlegroup.InviteYourself:		Vous ne pouvez pas vous inviter vous même dans un groupe de bataille.	
-Scripts.Players.Battlegroup.JoinBattleGroup:		Voulez vous rejoindre le groupe de bataille de {0} ?	
-Scripts.Players.Battlegroup.LeaderCommand:		Vous devez être le modérateur du groupe de bataille pour utiliser cette commande.	
-Scripts.Players.Battlegroup.LeaderInvite:			Vous devez être le modérateur du groupe de bataille pour inviter un joueur à le rejoindre.
+Scripts.Players.Battlegroup.InBattleGroup:			Vous devez être dans un groupe de combat pour utiliser cette commande.
+Scripts.Players.Battlegroup.InviteYourself:		Vous ne pouvez pas vous inviter vous même dans un groupe de combat.	
+Scripts.Players.Battlegroup.JoinBattleGroup:		Voulez vous rejoindre le groupe de combat de {0} ?	
+Scripts.Players.Battlegroup.LeaderCommand:		Vous devez être le modérateur du groupe de combat pour utiliser cette commande.	
+Scripts.Players.Battlegroup.LeaderInvite:			Vous devez être le modérateur du groupe de combat pour inviter un joueur à le rejoindre.
 Scripts.Players.Battlegroup.ListenMode:			The listen mode of Battlegroup is switch 
-Scripts.Players.Battlegroup.Moderator:			{0} est maintenant moderateur du groupe de bataille.
+Scripts.Players.Battlegroup.Moderator:			{0} est maintenant moderateur du groupe de combat.
 Scripts.Players.Battlegroup.NoPlayer:				Il n'y a pas de joueur de ce nom.
-Scripts.Players.Battlegroup.NotBattleGroupLeader:	Ce joueur n'est pas modérateur d'un groupe de bataille.	
-Scripts.Players.Battlegroup.NotBattleGroupMember:	Ce joueur n'est pas membre d'un groupe de bataille.	
-Scripts.Players.Battlegroup.NotPublic:			Ce groupe de bataille n'est pas publique.
-Scripts.Players.Battlegroup.OnlyModerator:		Seul le modérateur peut parler dans ce groupe de bataille.	
-Scripts.Players.Battlegroup.OwnBattleGroup:			Vous ne pouvez pas rejoindre votre propre groupe de bataille.
-Scripts.Players.Battlegroup.Password:				Mot de passe de ce groupe de bataille: {0}.
-Scripts.Players.Battlegroup.PasswordChanged:		Nouveau mot de passe du groupe de bataille: {0}.	
-Scripts.Players.Battlegroup.PlayerInBattlegroup:	{0} est déjà membre d'un groupe de bataille.	
-Scripts.Players.Battlegroup.Private:				Le groupe de bataille est maintenant privé.
-Scripts.Players.Battlegroup.Public:				Le groupe de bataille est maintenant publique.
+Scripts.Players.Battlegroup.NotBattleGroupLeader:	Ce joueur n'est pas modérateur d'un groupe de combat.	
+Scripts.Players.Battlegroup.NotBattleGroupMember:	Ce joueur n'est pas membre d'un groupe de combat.	
+Scripts.Players.Battlegroup.NotPublic:			Ce groupe de combat n'est pas publique.
+Scripts.Players.Battlegroup.OnlyModerator:		Seul le modérateur peut parler dans ce groupe de combat.	
+Scripts.Players.Battlegroup.OwnBattleGroup:			Vous ne pouvez pas rejoindre votre propre groupe de combat.
+Scripts.Players.Battlegroup.Password:				Mot de passe de ce groupe de combat: {0}.
+Scripts.Players.Battlegroup.PasswordChanged:		Nouveau mot de passe du groupe de combat: {0}.	
+Scripts.Players.Battlegroup.PlayerInBattlegroup:	{0} est déjà membre d'un groupe de combat.	
+Scripts.Players.Battlegroup.Private:				Le groupe de combat est maintenant privé.
+Scripts.Players.Battlegroup.Public:				Le groupe de combat est maintenant publique.
 Scripts.Players.Battlegroup.Usage:				Usage: /bc <texte>
 Scripts.Players.Battlegroup.UsageInvite:			Usage: /bg invite <nom du joueur>
+Scripts.Players.Battlegroup.BattlegroupLootThresholdOff: Le niveau de loot du groupe de combat est actuellement sur off. 
+Scripts.Players.Battlegroup.BattlegroupLootThresholdOn: Le niveau de loot du group de bataille est actuellement {0}
+Scripts.Players.Battlegroup.BattleGroupLootNormal: Le type de loot du groupe de combat est définis a normal.
+Scripts.Players.Battlegroup.BattleGroupLootTreasurer: Le type de loot du group de bataille est définis pour aller au trésorier.
+Scripts.Players.Battlegroup.BattlegroupTreasurerOn: Vous avez changez le trésorier du groupe de combat a :{0}.
+Scripts.Players.Battlegroup.BattlegroupTreasurerOff: Le group de bataille n’as actuellement plus de trésorier.
+Scripts.Players.Battlegroup.BattlegroupStatus: Le statut actuel de votre group de bataille est {0}.
+Scripts.Players.Battlegroup.BattlegroupCount: Il y as actuellement {0} membres dans votre groupe de combat.
+Scripts.Players.Battlegroup.BattlegroupTreasurerIsYou: Vous avez été définis en tant que trésorier de votre groupe de combat.
+Scripts.Players.Battlegroup.BattlegroupTreasurerIs: Le trésorier de votre groupe de combat a été définis à {0}
+
+# Boats
+Scripts.Player.Boat.AlreadyOnBoat:			Ce joueur est déjà sur le bateau!
+Scripts.Player.Boat.BoardingDenied:			Votre demande pour {0} est refuser.
+Scripts.Player.Boat.BoardingGranted:			Vous avez accepté la demande de contrôle du navire.
+Scripts.Player.Boat.BoardingRequest:			{0} essaye de prendre controle de votre bateau. Accepter?
+Scripts.Player.Boat.BoatTooFar:				{0} est trop loin de vous.
+Scripts.Player.Boat.BootedBy:				Vous vennez de vous faire sortire du bateau par {0}.
+Scripts.Player.Boat.BootedTarget:			Vous avez fait sortire {0} du bateau.
+Scripts.Player.Boat.DeleteConfirmation:			Vous voulez vraiment retirer votre bateau {0}?
+Scripts.Player.Boat.FullBoat:				Le navire est actuellement plein.
+Scripts.Player.Boat.Help.Board:				'/boat board' - Face au bateau cibler.
+Scripts.Player.Boat.Help.Boot:				'/boat boot' - Sort du bateau le joueur sélectionner.
+Scripts.Player.Boat.Help.Delete:			'/boat delete' - Donne la confirmation pour effacer votre bateau !!permanent!!
+Scripts.Player.Boat.Help.Follow:			'/boat follow' - Donne l'ordre a votre navire de suivre votre cible.
+Scripts.Player.Boat.Help.StopFollow:			'/boat stopfollow' - Donne l'ordre a votre navire d'arreter de suivre votre cible.
+Scripts.Player.Boat.Help.Summon:			'/boat summon' - Mais à l'eau votre bateau.
+Scripts.Player.Boat.Help.Unsummon:			'/boat unsummon' - Range votre bateau.
+Scripts.Player.Boat.InviteNoSelf:			Vous ne pouvez pas vous inviter!
+Scripts.Player.Boat.InviteRecieved:			{0} est inviter à joindre le navire.
+Scripts.Player.Boat.InviteSent:				Vous avez inviter {0} à rejoindre le bateau.
+Scripts.Player.Boat.MoveFollow:				Votre navire suis maintenant {0}.
+Scripts.Player.Boat.NoBoatSelected:			Vous devez choisir un bateau!
+Scripts.Player.Boat.NoPlayerSelected:			Vous devez selectionner un joueur.
+Scripts.Player.Boat.NotInWater:				Vous devez être dans l'eau pour invoquer votre navire!
+Scripts.Player.Boat.NotOwnBoat:				Vous ne possédez pas de bateau.
+Scripts.Player.Boat.OwnerNotOn:				Le propriétaire de ce bateau n'est pas en ligne.
+Scripts.Player.Boat.PlayerIsDead:			Vous ne pouvez pas faire cela avec un joueur mort!
+Scripts.Player.Boat.StopFollow:				Vous arretez votre bateau.
+Scripts.Player.Boat.Summoned:				Votre {0} a été mis à l'eau.
+Scripts.Player.Boat.TargetNotInBoat:			{0} n'est pas dans votre bateau.
+Scripts.Player.Boat.UnknownCommand:			Ce n'est pas une commande valide pour les navires. /boat pour de l'aide.
+Scripts.Player.Boat.Unsummoned:				Votre {0} a été ranger.
+Scripts.Player.Boat.Usage:				Utilisation:
+Scripts.Player.Boat.YouBoard:				Votre bateau le {0}.
 
 # /Boot
 Scripts.Players.Boot.InHouseError:			Vous devez être dans votre maison pour utiliser cette commande!
@@ -633,6 +1081,13 @@ Scripts.Players.Chatgroup.Public:				Le groupe de discussion est maintenant publ
 Scripts.Players.Chatgroup.Usage:				Usage: /c <texte>
 Scripts.Players.Chatgroup.UsageInvite:			Usage: /cg invite <nom du joueur>"
 
+# /GC
+Scripts.Players.Guild.AllianceInfo:			Information d'Alliance pour {0}:
+Scripts.Players.Guild.AllianceLeader:			Chef d'Alliance {0}
+Scripts.Players.Guild.AllianceMembers:			Membres de l'Alliance:
+Scripts.Players.Guild.AllianceMember:			{0} - {1}
+Scripts.Players.Guild.AllianceNoLeader:			Pas de chef d'Alliance
+
 # /Cmdhelp
 Scripts.Players.Cmdhelp.NoCommand:			La commande {0} n'existe pas.
 Scripts.Players.Cmdhelp.PlvlCommands:		<----------Commandes disponibles pour le niveau de privilège {0}---------->
@@ -683,6 +1138,40 @@ Scripts.Players.Duel.YouSurrender:			Vous vous rendez à {0}!
 # /Language
 Scripts.Players.Language.Set:				Vous changez la langue d'affichage du serveur en {0}.
 Scripts.Players.Language.Current:			La langue d'affichage est actuellement: {0}.
+
+# PARTNER
+Scripts.Player.Partner.Help.Usage: Utilisation:
+Scripts.Player.Partner.Help.Fire: '/partner fire' - Supprime votre partenaire (permanent!)
+Scripts.Player.Partner.Help.Name: '/partner name <new name>' - Renomme votre partenaire actuel.
+Scripts.Player.Partner.Help.Summon: '/partner summon' - Invoque votre partenaire si vous en possédez un.
+Scripts.Player.Partner.Help.Unsummon: '/partner unsummon' - Révoque votre partenaire si vous en avez un.
+Scripts.Player.Partner.Help: '/partner help' - Affiche le menu d'aide du partenaire.
+Scripts.Player.Partner.UnknownCommand: Ceci n'est pas une commande valide. Tapez /partner pour accéder à l'aide.
+Scripts.Player.Partner.NoTarget: Vous devez sélectionner un partenaire avec cela!
+Scripts.Player.Partner.LetGo: Vous avez laisser partir votre partenaire {0}.
+Scripts.Player.Partner.PartnerLetGo: A bientôt, {0}. Ce fut un plaisir de faire des affaires avec vous.
+Scripts.Player.Partner.DoesntWant: {0} vous regarde bizarrement. Apparement, cet objet ne les intéresse pas.
+Scripts.Player.Partner.ReplaceItem: {0} porte ses nouveaux(elles) {1}.
+Scripts.Player.Partner.RaisedLevel: Votre partenaire vient de gagner un niveau!
+Scripts.Player.Partner.PartnerOffer: Vous pouvez posséder un [Partenaire Guerrier], un [Partenaire Mage] ou bien un [Partenaire Soigneur] pour {0} pièces de cuivre par heure.
+Scripts.Player.Partner.AlreadyPartner: Vous possédez déjà un partenaire!
+Scripts.Player.Partner.CantAfford: Vous n'avez pas assez d'argent pour vous offrir un partenaire!
+Scripts.Player.Partner.GroupedAlready: Vous êtes déjà groupé, vous n'avez pas besoin d'un partenaire!
+Scripts.Player.Partner.Purchased: Vous venez de prendre une sage décision! Prennez plaisir avec votre partenaire.
+Scripts.Player.Partner.Greeting: Vous n'allez pas être déçu, {0}. Je suis à votre service.
+Scripts.Player.Partner.NameChanged: Vous venez de changer le nom de votre partenaire en: {0}
+Scripts.Player.Partner.KilledBy: Je suis désolé mon ami. Apparement, {0} était trop fort pour moi.
+Scripts.Player.Partner.NoPartner: Vous ne semblez pas avoir de partenaire. Pourquoi ne pas aller en chercher un?
+Scripts.Player.Partner.Summoned: Votre partenaire vient d'être invoqué.
+Scripts.Player.Partner.Unsummoned: Votre partenaire vient d'être renvoyé.
+Scripts.Player.Partner.BadZone: Ceci est une zone sans partenaire. Vous ne pouvez donc pas appeller votre partenaire ici.
+
+# /Range
+Scripts.Players.Range.InvalidObject:			Cette commande fonctionne uniquement sur les objets.
+Scripts.Players.Range.NeedTarget:			Distance de la cible: Vous n'avez pas un cible valide sélectionnée.
+Scripts.Players.Range.NotVisible:			 (Cible hors champ de vision)
+Scripts.Players.Range.Result:				Distance de la cible: {0} units. {1}
+
 
 # TITLES
 # /Claim
@@ -765,3 +1254,13 @@ PlayerStatistic.PvE.Title: Reports PvE
 PlayerStatistic.PvE.KillsDragon: Nombre de Dragons tués
 PlayerStatistic.PvE.KillsEpic: Nombre de Boss épiques tués
 PlayerStatistic.PvE.KillsLegion: Nombre de Legion tués
+
+# VIEWREPORTS
+Scripts.Player.VeiwReport.Usage: Usage:
+Scripts.Player.ViewReport.Help.Close: '/viewreport close <report #>' Ferme le report de bug d'id #.
+Scripts.Player.ViewReport.Help.Delete: '/viewreport delete <report #' Efface les reports d'id #.
+Scripts.Player.ViewReport.InvalidReport: Ce n'est pas un report de bug valide.
+Scripts.Player.ViewReport.UnknownCommand: Ce n'est pas une commande valide.
+Scripts.Player.ViewReport.ReportDeleted: Report {0} est maintenant effacer.
+Scripts.Player.ViewReport.NoPriv: Vous n'avez pas les privilége pour edit les reports.
+
