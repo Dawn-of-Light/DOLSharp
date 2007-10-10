@@ -98,6 +98,7 @@ namespace DOL.GS.Spells
 				damageAbsorbed = ablativehp;
 			ablativehp -= damageAbsorbed;
 			ad.Damage -= damageAbsorbed;
+			OnDamageAbsorbed(ad, damageAbsorbed);
 
 			//TODO correct messages
 			MessageToLiving(ad.Target, string.Format("Your melee buffer absorbs {0} damage!", damageAbsorbed), eChatType.CT_Spell);
@@ -115,6 +116,10 @@ namespace DOL.GS.Spells
 			}
 		}
 
+		protected virtual void OnDamageAbsorbed(AttackData ad, int DamageAmount)
+		{
+		}
+		
 		public override PlayerXEffect getSavedEffect(GameSpellEffect e)
 		{
 			if ( //VaNaTiC-> this cannot work, cause PulsingSpellEffect is derived from object and only implements IConcEffect

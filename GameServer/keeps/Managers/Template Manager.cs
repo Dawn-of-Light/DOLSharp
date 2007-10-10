@@ -73,7 +73,8 @@ namespace DOL.GS.Keeps
 				int bonusLevel = 0;
 				if (guard.Component != null)
 					bonusLevel = guard.Component.Keep.Level;
-				guard.Level = (byte)(GetBaseLevel(guard) + bonusLevel);
+				//guard.Level = (byte)(GetBaseLevel(guard) + bonusLevel);
+				guard.Level = (byte)(GetBaseLevel(guard) + (bonusLevel*1.5));
 			}
 		}
 
