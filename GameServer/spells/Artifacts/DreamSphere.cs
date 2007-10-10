@@ -29,30 +29,18 @@ namespace DOL.GS.Spells
     /// The DoT proc is a subspell, affects only caster
     /// </summary>
     [SpellHandlerAttribute("DreamMorph")]
-    public class DreamMorph : SpellHandler
+    public class DreamMorph : Morph
     {
     	private GameSpellEffect m_effect = null;
         public override void OnEffectStart(GameSpellEffect effect)
         {
          	m_effect = effect;    
         	base.OnEffectStart(effect);
-            GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.TakeDamage, new DOLEventHandler(LivingTakeDamage));       	
-            GamePlayer player = effect.Owner as GamePlayer;
-            if (player != null) 
-            {
-            	player.Model = (ushort)Spell.LifeDrainReturn; // 104 offcicial morph
-            	player.Out.SendUpdatePlayer();
-            }           
+            GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.TakeDamage, new DOLEventHandler(LivingTakeDamage));       	       
         }
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
-            GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.TakeDamage, new DOLEventHandler(LivingTakeDamage));            	     
-            GamePlayer player = effect.Owner as GamePlayer;
-            if (player != null)
-            {
- 				player.Model = (ushort)player.Client.Account.Characters[player.Client.ActiveCharIndex].CreationModel;
-            	player.Out.SendUpdatePlayer();
-            }                      
+            GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.TakeDamage, new DOLEventHandler(LivingTakeDamage));            	                         
             return base.OnEffectExpires(effect, noMessages);
         }
         // Event : player takes damage, effect cancels

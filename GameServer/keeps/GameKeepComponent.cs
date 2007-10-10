@@ -162,7 +162,8 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				return (byte)(40 + Keep.Level);
+				//return (byte)(40 + Keep.Level);
+				return (byte)(Keep.BaseLevel-10 + (Keep.Level * 3));
 			}
 		}
 
