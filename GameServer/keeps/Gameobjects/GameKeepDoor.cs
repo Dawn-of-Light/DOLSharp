@@ -129,7 +129,11 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public override byte Level
 		{
-			get { return (byte)this.Component.Keep.Level; }
+			get 
+			{
+				//return (byte)this.Component.Keep.Level;
+				return (byte)this.Component.Level; 
+			}
 		}
 
 		public void UpdateLevel()

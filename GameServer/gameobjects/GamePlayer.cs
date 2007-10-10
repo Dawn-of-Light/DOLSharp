@@ -8593,7 +8593,7 @@ namespace DOL.GS
 			{
 				if (value == m_swimming) return;
 				m_swimming = value;
-				//TODO notify some event of this
+				Notify(GamePlayerEvent.SwimmingStatus, this);
 			}
 		}
 
