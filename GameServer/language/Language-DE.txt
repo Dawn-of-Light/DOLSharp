@@ -309,6 +309,7 @@ GamePlayer.Release.LostConstitution:			Ihr habt einen Teil Eurer Konstitution ve
 GamePlayer.Release.NoLongerReleaseAuto:			Ihr werdet nicht länger automatisch wieder auferstehen. ({0} Sekunden)		
 GamePlayer.Release.NotDead:				Ihr seid nicht tot!	
 GamePlayer.Release.NoValidBindpoint:			Es gibt keinen Ort, an dem Ihr Euch gebunden habt und seit stattdessen hier wiederauferstanden!		
+GamePlayer.Release.ReleaseToPortalKeep:			You will now release to the nearest border or portal keep in {0} more seconds!
 GamePlayer.Release.ReturnToPray:			Betet an Eurem Grabstein, um einen Teil Eurer verlorenen Erfahrungspunkte zurück zu erhalten.		
 GamePlayer.Release.SurroundingChange:			Auf einen Schlag verändert sich Eure Umgebung!		
 GamePlayer.Release.WillReleaseAuto:			Ihr werdet automatisch in {0} Sekunden wiederauferstehen!		
@@ -427,12 +428,15 @@ HousingPlaceItemHandler.PutMoney:			Ihr leistet eine Anzahlung auf Euer Haus.
 Scripts.Player.Housing.BadShieldBanner:			That is not a valid shield or banner object.
 Scripts.Player.Housing.CantBeSold:			This item cannot be sold!
 Scripts.Player.Housing.CarpetsRemoved:			Your carpets have been removed.
+Scripts.Player.Housing.ClearHookPoint:			Would you like to clear the current hookpoint?
 Scripts.Player.Housing.EnteredHouse:			You have entered house number {0}.
 Scripts.Player.Housing.GardenItemPlaced:		Garden object placed. {0} slots remaining.
 Scripts.Player.Housing.GardenItemPlacedName:		You have placed {0} in your garden.
 Scripts.Player.Housing.GardenMaxObjects:		You have already placed 30 objects in your garden. You cannot place more.
 Scripts.Player.Housing.GuildNowOwns:			[Guild] {0} now owns a guild house from {1}!
 Scripts.Player.Housing.HookPointAdded:			That item has been added to your house.
+Scripts.Player.Housing.HookPointAlready:		That HookPoint already has an item!
+Scripts.Player.Housing.HookPointCleared:		That HookPoint has been cleared.
 Scripts.Player.Housing.HookPointCloser:			Stand as close to the housepoint as possible and face the proper direction and press accept.
 Scripts.Player.Housing.HookPointID:			The hookpoint ID is: {0}
 Scripts.Player.Housing.HookPointLogged:			Logged hookpoint position {0} in error.log!
@@ -470,6 +474,15 @@ Scripts.Player.Housing.PorchAlready:			This house already has a porch!
 Scripts.Player.Housing.PorchNone:			This house does not have a porch!
 Scripts.Player.Housing.PorchNotItem:			This is not a porch item!
 Scripts.Player.Housing.TransferToGuild:			Do you want to transfer this house to {0}?
+
+# VIEWREPORTS 
+Scripts.Player.ViewReport.Help.Close:			'/viewreport close <report #>' Will close the report of id #. 
+Scripts.Player.ViewReport.Help.Delete:			'/viewreport delete <report #' Deletes a report of id #. 
+Scripts.Player.ViewReport.InvalidReport:		That is not a valid report. 
+Scripts.Player.ViewReport.NoPriv:			You do not have the privilages to edit reports 
+Scripts.Player.ViewReport.ReportDeleted:		Report {0} has been deleted. 
+Scripts.Player.ViewReport.UnknownCommand:		That is not a valid command. 
+Scripts.Player.VeiwReport.Usage:			Usage: 
 
 # Styles
 # /StyleProcessor
