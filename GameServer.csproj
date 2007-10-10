@@ -1562,8 +1562,17 @@
     <Compile Include="spells\AmnesiaSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="spells\Artifacts\AlvarusLeggings.cs" />
     <Compile Include="spells\Artifacts\bracerofzo.cs" />
+    <Compile Include="spells\Artifacts\CeremonialBracer.cs" />
+    <Compile Include="spells\Artifacts\CommonArtifactSpells.cs" />
     <Compile Include="spells\Artifacts\DreamSphere.cs" />
+    <Compile Include="spells\Artifacts\MaddeningScalars.cs" />
+    <Compile Include="spells\Artifacts\MaliceAxe.cs" />
+    <Compile Include="spells\Artifacts\ScarabVest.cs" />
+    <Compile Include="spells\Artifacts\BandofStars.cs" />
+    <Compile Include="spells\Artifacts\snakecharmer.cs" />
+    <Compile Include="spells\Artifacts\TartarosGift.cs" />
     <Compile Include="spells\Artifacts\TraitorsDagger.cs" />
     <Compile Include="spells\Bainshee\BainsheePulseDmgSpellHandler.cs" />
     <Compile Include="spells\Bainshee\BeFriendSpellHandler.cs" />

@@ -125,6 +125,10 @@ namespace DOL.Events
 		/// The RLLevelUp event is fired whenever the player gains a realm level
 		/// </summary>
 		public static readonly GamePlayerEvent RLLevelUp = new GamePlayerEvent("GamePlayer.RLLevelUp");
+		/// <summary>
+		/// The SwimmingStatus event is fired whenever the player IsSwimming flag changes
+		/// </summary>
+		public static readonly GamePlayerEvent SwimmingStatus = new GamePlayerEvent("GamePlayer.SwimmingStatus");
 
 		#region Statistics
 

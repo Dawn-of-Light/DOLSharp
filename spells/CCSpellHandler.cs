@@ -193,7 +193,19 @@ namespace DOL.GS.Spells
 			effect.Owner.DisableTurning(false);
 			return base.OnEffectExpires(effect,noMessages);
 		}
-
+		
+        public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+        {
+            GameSpellEffect mezblock = SpellHandler.FindEffectOnTarget(target, "CeremonialBracerMez");
+            if (mezblock != null)
+            {
+                mezblock.Cancel(false);
+                if (target is GamePlayer)
+                    (target as GamePlayer).Out.SendMessage("Your item effect intercepts the mesmerization spell and fades!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                return;
+            }
+            base.ApplyEffectOnTarget(target, effectiveness);
+        }
 		/// <summary>
 		/// Calculates the effect duration in milliseconds
 		/// </summary>
@@ -288,6 +300,19 @@ namespace DOL.GS.Spells
 			return base.OnEffectExpires(effect,noMessages);
 		}
 
+        public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+        {
+            GameSpellEffect stunblock = SpellHandler.FindEffectOnTarget(target, "CeremonialBracerStun");
+            if (stunblock != null)
+            {
+                stunblock.Cancel(false);
+                if (target is GamePlayer)
+                    (target as GamePlayer).Out.SendMessage("Your item effect intercepts the stun spell and fades!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                return;
+            }
+            base.ApplyEffectOnTarget(target, effectiveness);
+        }
+        
 		/// <summary>
 		/// Calculates the effect duration in milliseconds
 		/// </summary>
