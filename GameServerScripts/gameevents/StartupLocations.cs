@@ -296,7 +296,7 @@ namespace DOL.GS.GameEvents
 				ShroudedIslesLocations[(int) eRace.Highlander][(int) eCharacterClass.AlbionRogue] = new StartLocation(ZoneToRegion(42034, 60), ZoneToRegion(55725, 60), 4800, LocDirectionToHeading(236));
 				ShroudedIslesLocations[(int) eRace.Highlander][(int) eCharacterClass.Fighter] = new StartLocation(ZoneToRegion(45234, 60), ZoneToRegion(56900, 60), 4800, LocDirectionToHeading(79));
 				ShroudedIslesLocations[(int) eRace.Inconnu][(int) eCharacterClass.AlbionRogue] = new StartLocation(ZoneToRegion(42034, 60), ZoneToRegion(55725, 60), 4800, LocDirectionToHeading(236));
-				ShroudedIslesLocations[(int) eRace.Inconnu][(int) eCharacterClass.Disciple] = new StartLocation(ZoneToRegion(41383, 60), ZoneToRegion(58253, 60), 4800, LocDirectionToHeading(312));
+				ShroudedIslesLocations[(int) eRace.Inconnu][(int) eCharacterClass.Disciple] = new StartLocation(ZoneToRegion(43786, 60), ZoneToRegion(57553, 60), 4800, LocDirectionToHeading(95));
 				ShroudedIslesLocations[(int) eRace.Inconnu][(int) eCharacterClass.Fighter] = new StartLocation(ZoneToRegion(45234, 60), ZoneToRegion(56900, 60), 4800, LocDirectionToHeading(79));
 				ShroudedIslesLocations[(int) eRace.Inconnu][(int) eCharacterClass.Mage] = new StartLocation(ZoneToRegion(43786, 60), ZoneToRegion(57553, 60), 4800, LocDirectionToHeading(95));
 				ShroudedIslesLocations[(int) eRace.Kobold][(int) eCharacterClass.MidgardRogue] = new StartLocation(ZoneToRegion(43183, 30), ZoneToRegion(44381, 38), 3866, LocDirectionToHeading(232));

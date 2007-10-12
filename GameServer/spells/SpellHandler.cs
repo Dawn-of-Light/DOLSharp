@@ -548,7 +548,14 @@ namespace DOL.GS.Spells
                     return false;
                 }
             }
-
+            // We have a mauler - Take power when a spell is used
+            if (Caster is GamePlayer)
+            {
+                if ((Caster as GamePlayer).CharacterClass.ID > 59 && (Caster as GamePlayer).CharacterClass.ID < 63)
+                {
+                    (Caster as GamePlayer).ChangeMana((Caster as GamePlayer), GameLiving.eManaChangeType.Spell, -m_spell.Power);
+                }
+            }
             if (m_spell.HealthPenalty > 0 && m_caster.HealthPercent < 10 + m_spell.HealthPenalty)
             {
                 MessageToCaster("You don't have enought health to cast this spell!", eChatType.CT_SpellResisted);

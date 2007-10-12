@@ -1,11 +1,18 @@
+using System.Reflection;
 using DOL.GS;
 using DOL.GS.Quests;
+using log4net;
 
 namespace DOL.GS.Scripts
 {
 	public class TaskMaster : GameNPC
 	{
-		public override bool Interact(GamePlayer player)
+        /// <summary>
+        /// Defines a logger for this class.
+        /// </summary>
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        
+        public override bool Interact(GamePlayer player)
 		{
 			if (!base.Interact(player))
 				return false;
@@ -44,6 +51,7 @@ namespace DOL.GS.Scripts
 				case "long corridors":
 				case "labyrinthine dungeons":
 					{
+                        log.Info("INFO: TaskMaster Labyrinthine Dungeons activated");                
 						TaskDungeonMission mission = new TaskDungeonMission(player);
 						player.Mission = mission;
 						/*
