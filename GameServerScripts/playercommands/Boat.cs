@@ -349,6 +349,7 @@ namespace DOL.GS.Scripts
                                     client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Boat.NotOwnBoat"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                                     return 1;
                                 }
+                                BoatMgr.SaveAllBoats();
                             }
                             else if (boatFound == 1)
                             {

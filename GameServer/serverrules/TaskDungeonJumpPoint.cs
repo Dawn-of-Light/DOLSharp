@@ -47,13 +47,6 @@ namespace DOL.GS.ServerRules
 				return false;
 			}
 
-			//make sure the dungeon is the right one
-			if (mission.TaskRegion.Description != WorldMgr.GetRegion(targetPoint.Region).Description)
-			{
-				player.Out.SendMessage("This is not the right area for your mission!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
-
 			//get the proper location
 			ZonePoint zp = (ZonePoint)GameServer.Database.SelectObject(typeof(ZonePoint), "`Region` = '" + mission.TaskRegion.ID + "'");
 			if (zp != null)
