@@ -110,6 +110,7 @@ namespace DOL.GS.Housing
 			CheckItemTemplate("Porch deed", "porch_deed", 499, 0, 5000000, 0, 0, 0, 0, 0);
 			CheckItemTemplate("Porch remove deed", "porch_remove_deed", 499, 0, 100, 0, 0, 0, 0, 0);
             CheckItemTemplate("deed of guild transfer", "deed_of_guild_transfer", 499, 0, 50000000, 0, 0, 0, 0, 0);
+            CheckItemTemplate("House removal deed", "house_removal_deed", 499, 0, 50000000, 0, 0, 0, 0, 0);
 
 			//indoor npc
 			CheckItemTemplate("Hastener", "hastener", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 500, 0, 0);

@@ -98,7 +98,6 @@ namespace DOL.GS
             {
                 if (abonus.Level <= level)
                     applyingBonus.Add(abonus);
-
             }
             log.Info("Info: Found " + applyingBonus.Count + " bonuses that apply to artifact at given level objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
 
@@ -245,7 +244,6 @@ namespace DOL.GS
                 player.Out.SendEncumberance();
                 player.Out.SendUpdatePlayerSkills();
                 player.UpdatePlayerStatus();
-                log.Info("Info: sent updates to player objectid: " + player.ObjectID + " name: " + player.Name);
 
                 if (player.IsAlive)
                 {

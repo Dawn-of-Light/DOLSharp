@@ -80,6 +80,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 			InventoryItem orgitem = client.Player.Inventory.GetItem((eInventorySlot)slot);
 			if (orgitem == null) return 1;
 
+            if (orgitem.Name == "House removal deed")
+            {
+                client.Player.Inventory.RemoveItem(orgitem);
+                client.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HouseRemoveOffer"), new CustomDialogResponse(HouseRemovalDialogue));
+                return 0;
+            }
             if (orgitem.Name == "deed of guild transfer" 
                 && client.Player.Guild != null && !client.Player.Guild.GuildOwnsHouse() 
                 && house.IsOwner(client.Player))
@@ -280,7 +286,6 @@ namespace DOL.GS.PacketHandler.Client.v168
                                     client.Out.SendInventorySlotsUpdate(new int[] { slot });
                                 }
                                 return 1;
-
                             case "porch_remove_deed":
                                 if (house.EditPorch(false))
                                     client.Player.Inventory.RemoveItem(orgitem);
@@ -290,7 +295,6 @@ namespace DOL.GS.PacketHandler.Client.v168
                                     client.Out.SendInventorySlotsUpdate(new int[] { slot });
                                 }
                                 return 1;
-
                             default:
                                 client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.PorchNotItem"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 client.Out.SendInventorySlotsUpdate(new int[] { slot });
@@ -411,6 +415,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 			log.Error("Position: " + position + " Offset: " + (player.X - player.CurrentHouse.X) + ", " + (player.Y - player.CurrentHouse.Y) + ", " + (player.Z - 25000) + ", " + (player.Heading - player.CurrentHouse.Heading));
 
             player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Housing.HookPointLogged", position), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+        }
+        protected static void HouseRemovalDialogue(GamePlayer player, byte response)
+        {
+            if (response != 0x01)
+                return;
+
+            House house = HouseMgr.GetHouse((HouseMgr.GetHouseNumberByPlayer(player)));
+            HouseMgr.RemoveHouse(house);
+            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Housing.HouseRemoved"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
         }
     }
 }

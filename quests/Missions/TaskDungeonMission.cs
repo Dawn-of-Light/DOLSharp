@@ -1,15 +1,21 @@
 using System;
 using System.Collections;
+using System.Reflection;
 
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using log4net;
 
 namespace DOL.GS.Quests
 {
 	public class TaskDungeonMission : AbstractMission
 	{
-		public enum eTDMissionType : int
+        /// <summary>
+        /// Defines a logger for this class.
+        /// </summary>
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        public enum eTDMissionType : int
 		{
 			Clear = 0,
 			Boss = 1,
@@ -67,6 +73,7 @@ namespace DOL.GS.Quests
 		public TaskDungeonMission(object owner)
 			: base(owner)
 		{
+            log.Info("INFO: Successfully entered TaskDungeonMission!");
 			GamePlayer player = owner as GamePlayer;
 
 			if (owner is PlayerGroup)
