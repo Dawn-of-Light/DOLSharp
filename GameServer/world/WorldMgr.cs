@@ -1260,7 +1260,25 @@ namespace DOL.GS
 			return targetClients;
 		}
 
-		/// <summary>
+        /// <summary>
+        /// Find a GameClient by the Player's ID
+        /// Case-insensitive, make sure you use returned Player.Name instead of what player typed.
+        /// </summary>
+        /// <param name="playerID">ID to search</param>
+        /// <param name="exactMatch">true if AccountName match exactly</param>
+        /// <param name="activeRequired"></param>
+        /// <returns>The found GameClient or null</returns>
+        public static GameClient GetClientByPlayerID(string playerID, bool exactMatch, bool activeRequired)
+        {
+            foreach (GameClient client in WorldMgr.GetAllPlayingClients())
+            {
+                if (client.Player.InternalID == playerID)
+                    return client;
+            }
+            return null;
+        }
+        
+        /// <summary>
 		/// Finds a GameClient by the AccountName
 		/// </summary>
 		/// <param name="accountName">AccountName to search</param>

@@ -55,6 +55,11 @@ namespace DOL.GS.Housing
 			{
 				return false;
 			}
+            if (HouseMgr.GetHouseNumberByPlayer(player) != 0)
+            {
+                player.Out.SendMessage("You already own a house!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return false;
+            }
 			if (DatabaseItem.OwnerIDs == null || DatabaseItem.OwnerIDs == "")
 			{
 				player.Out.SendCustomDialog("Do you want to buy this lot?\r\n It costs " + Money.GetString(HouseTemplateMgr.GetLotPrice(DatabaseItem)) + "!", new CustomDialogResponse(BuyLot));
@@ -142,7 +147,7 @@ namespace DOL.GS.Housing
 					case "hib_mansion_deed":
 						CreateHouse(player, 12);
 						break;
-					default:
+                    default:
 						player.Out.SendMessage("That would make no sense!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
@@ -243,5 +248,5 @@ namespace DOL.GS.Housing
 			}
 			obj.AddToWorld();
 		}
-	}
+    }
 }

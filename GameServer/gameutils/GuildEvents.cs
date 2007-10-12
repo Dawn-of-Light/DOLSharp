@@ -231,7 +231,7 @@ namespace DOL.Regiment
             {
                 int newRR = 0;
                 newRR = ((player.RealmLevel / 10) + 1);
-                if (player.Guild != null)
+                if (player.Guild != null && player.RealmLevel > 45)
                 {
                     int a = (int)Math.Pow((3 * (newRR - 1)), 2);
                     player.Guild.GainMeritPoints(a);

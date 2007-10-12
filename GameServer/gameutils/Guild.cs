@@ -22,9 +22,9 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Language;
 using DOL.GS.Keeps;
-using DOL.Regiment;
 using log4net;
 using DOL.GS.Housing;
+using DOL.Regiment;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
