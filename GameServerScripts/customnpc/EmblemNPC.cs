@@ -22,7 +22,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
 {
-	[NPCGuildScript("Guild Emblemeer")]
+	[NPCGuildScript("Guild Emblemer")]
 	public class EmblemNPC : GameNPC
 	{
 		public const long EMBLEM_COST = 50000;
@@ -34,7 +34,7 @@ namespace DOL.GS.Scripts
 				return false;
 
 			TurnTo(player, 5000);
-			SayTo(player, eChatLoc.CL_ChatWindow, "For a 5 gold, I can put the emblem of your guild on the item. Just hand me the item.");
+			SayTo(player, eChatLoc.CL_ChatWindow, "For 5 gold, I can put the emblem of your guild on the item. Just hand me the item.");
 
 			return true;
 		}
