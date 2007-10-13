@@ -116,7 +116,7 @@ namespace DOL.GS.Housing
 			CheckItemTemplate("Hastener", "hastener", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 500, 0, 0);
 			CheckItemTemplate("Smith", "smith", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 501, 0, 0);
 			CheckItemTemplate("Enchanter", "enchanter", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 502, 0, 0);
-			CheckItemTemplate("Emblemeer", "emblemeer", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 503, 0, 0);
+			CheckItemTemplate("Emblemer", "emblemer", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 503, 0, 0);
 			CheckItemTemplate("Healer", "healer", 593, (int)eObjectType.HouseNPC, 30000000, 0, 0, 504, 0, 0);
 			CheckItemTemplate("Recharger", "recharger", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 505, 0, 0);
 			CheckItemTemplate("Hibernia Teleporter", "hib_teleporter", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 506, 0, 0);
@@ -237,7 +237,7 @@ namespace DOL.GS.Housing
 			//Enchanter
 			CheckNPCTemplate(502, "DOL.GS.Scripts.Enchanter", "Enchanter", "50", "");
 			//Emblemeer
-			CheckNPCTemplate(503, "DOL.GS.Scripts.EmblemNPC", "Emblemeer", "50", "");
+			CheckNPCTemplate(503, "DOL.GS.Scripts.EmblemNPC", "Emblemer", "50", "");
 			//Healer
 			CheckNPCTemplate(504, "DOL.GS.Scripts.GameHealer", "Healer", "50", "");
 			//Recharger
