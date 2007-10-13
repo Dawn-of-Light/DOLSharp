@@ -107,6 +107,7 @@
     <Compile Include="ai\brain\ControlledNpc.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ai\brain\DragonBrain.cs" />
     <Compile Include="ai\brain\GuardBrain.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -123,6 +124,7 @@
     <Compile Include="ai\brain\RoundsBrain.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ai\brain\ScoutMobBrain.cs" />
     <Compile Include="ai\brain\StandardMobBrain.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -465,6 +467,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="gameobjects\CustomNPC\GameBoatStableMaster.cs" />
+    <Compile Include="gameobjects\CustomNPC\GameDragon.cs" />
+    <Compile Include="gameobjects\CustomNPC\Gjalpinulva.cs" />
+    <Compile Include="gameobjects\CustomNPC\Golestandt.cs" />
     <Compile Include="gameobjects\GameBoat.cs" />
     <Compile Include="gameobjects\GameHorseBoat.cs" />
     <Compile Include="gameobjects\CustomNPC\CraftNPC.cs">

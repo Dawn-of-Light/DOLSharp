@@ -957,6 +957,10 @@ namespace DOL.GS
 		/// <param name="speed">walk speed</param>
 		public virtual void WalkTo(int tx, int ty, int tz, int speed)
 		{
+            // Walking to the spot we're already at will only get us into trouble.
+            if (tx == X && ty == Y && tz == Z)
+                return;
+
 			if (IsTurningDisabled)
 				return; // can't walk when turning is disabled
 
@@ -1189,7 +1193,6 @@ namespace DOL.GS
 						((StandardMobBrain)stanBrain).CheckSpells(false);
 				}
 			}
-
 		}
 
 		/// <summary>
@@ -1204,6 +1207,8 @@ namespace DOL.GS
 
 			GameObject followTarget = (GameObject)m_followTarget.Target;
 			GameLiving followLiving = followTarget as GameLiving;
+
+			//Stop following if target living is dead
 			if (followLiving != null && !followLiving.IsAlive)
 			{
 				StopFollow();
@@ -1277,7 +1282,7 @@ namespace DOL.GS
 			//Are we in range yet?
 			if (distance <= m_followMinDist)
 			{
-				//StopMoving();
+				StopMoving();
 				TurnTo(followTarget);
 				if (!wasInRange)
 				{
