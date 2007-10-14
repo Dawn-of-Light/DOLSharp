@@ -118,18 +118,18 @@ namespace DOL.GS
 			// Spawn nasty adds.
 
 			if (m_retrieverList.Contains(sender))
-				SpawnAdds(Util.Random(10, 20), sender.X, sender.Y);
+                SpawnDrakulvs(Util.Random(10, 20), sender.X, sender.Y);
 		}
 
 		/// <summary>
-		/// Spawn some (10-20) nasty level 60-65 drakulvs around the spot the
+		/// Spawn some (10-20) nasty level 62-68 drakulvs around the spot the
 		/// retriever has reported back from, then make these spawns aggro the
 		/// raid inside the lair.
 		/// </summary>
 		/// <param name="numAdds"></param>
 		/// <param name="x"></param>
 		/// <param name="y"></param>
-		private void SpawnAdds(int numAdds, int x, int y)
+		private void SpawnDrakulvs(int numAdds, int x, int y)
 		{
 			GameNPC drakulv;
 			bool isDisciple = false;
