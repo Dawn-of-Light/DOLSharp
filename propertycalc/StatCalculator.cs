@@ -98,22 +98,58 @@ namespace DOL.GS.PropertyCalc
 			}
 			else
 			{
-				//str for mobs
-				int statBase = 50;
-				if (property == eProperty.Strength)
-				{
-					statBase += living.Level * 3 + (living.Level * 3 * living.Level / 50);
-				}
-				else //TODO: other stats
-				{
-				}
-				return (int)((statBase +
-					+living.BuffBonusCategory1[(int)property]
-					+ living.BuffBonusCategory2[(int)property]
-					- living.BuffBonusCategory3[(int)property]
-					+ living.BuffBonusCategory4[(int)property])
-					* living.BuffBonusMultCategory1.Get((int)property));
-			}
+                GameNPC npc = living as GameNPC;
+                int baseStat = npc.GetBaseStat((eStat)property);
+                int itemBonus = living.ItemBonus[(int)property];
+                int abilityBonus = living.AbilityBonus[(int)property];
+                int singleStatBonus = living.BuffBonusCategory1[(int)property];
+                int dualStatBonus = living.BuffBonusCategory2[(int)property];
+                int debuff = living.BuffBonusCategory3[(int)property];
+                int acuityBonus = 0;
+
+                int itemcap = (int)(living.Level * 1.5);
+                int singlecap = (int)(living.Level * 1.25);
+                int dualcap = (int)(living.Level * 1.25 * 1.5);
+                int overcapMax = living.Level / 2 + 1;
+                int overcapbonus = living.ItemBonus[(int)(eProperty.StatCapBonus_First - eProperty.Stat_First + property)];
+
+                if (property == (eProperty)npc.Intelligence)
+                {
+                    overcapbonus += living.ItemBonus[(int)eProperty.AcuCapBonus];
+                    itemBonus += living.ItemBonus[(int)eProperty.Acuity];
+                    abilityBonus += living.AbilityBonus[(int)eProperty.Acuity];
+                    //if (player.CharacterClass.ClassType == eClassType.ListCaster)
+                       // acuityBonus = living.BuffBonusCategory1[(int)eProperty.Acuity];
+                }
+
+                overcapbonus = Math.Min(overcapbonus, overcapMax);
+                if (itemBonus > itemcap + overcapbonus)
+                {
+                    itemBonus = itemcap + overcapbonus;
+                }
+                if (singleStatBonus > singlecap)
+                {
+                    singleStatBonus = singlecap;
+                }
+                if (dualStatBonus > dualcap)
+                {
+                    dualStatBonus = dualcap;
+                }
+                if (debuff < 0)
+                {
+                    debuff = -debuff;
+                }
+                int stat = singleStatBonus + dualStatBonus - debuff + acuityBonus + living.BuffBonusCategory4[(int)property];
+                //50% debuff effectiveness for item and base stats
+                if (stat < 0)
+                    stat >>= 1;
+                stat += baseStat + itemBonus + abilityBonus;
+                stat = (int)(stat * living.BuffBonusMultCategory1.Get((int)property));
+
+                if (stat < 1) stat = 1;	// at least 1
+
+                return stat;
+            }
 		}
 	}
 }
