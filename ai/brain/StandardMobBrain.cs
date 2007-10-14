@@ -270,6 +270,23 @@ namespace DOL.AI.Brain
         }
 
         /// <summary>
+        /// Add aggro table of this brain to that of another living.
+        /// </summary>
+        /// <param name="brain">The target brain.</param>
+        public void AddAggroListTo(StandardMobBrain brain)
+        {
+            // TODO: This should actually be the other way round, but access
+            // to m_aggroTable is restricted and needs to be threadsafe.
+
+            lock (m_aggroTable.SyncRoot)
+            {
+				IDictionaryEnumerator dictEnum = m_aggroTable.GetEnumerator();
+				while (dictEnum.MoveNext())
+					brain.AddToAggroList((GameLiving)dictEnum.Key, Util.Random(1, 50));
+            }
+        }
+
+        /// <summary>
         /// Add living to the aggrolist
         /// aggroamount can be negative to lower amount of aggro		
         /// </summary>

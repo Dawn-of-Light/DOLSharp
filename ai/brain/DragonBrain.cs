@@ -76,7 +76,6 @@ namespace DOL.AI.Brain
  
             if (CheckTether())
             {
-				log.Info(String.Format("{0} beyond its tether", Body.Name));
                 Body.StopFollow();
                 ClearAggroList();
                 Body.WalkToSpawn();
@@ -97,32 +96,41 @@ namespace DOL.AI.Brain
 		public override void Notify(DOL.Events.DOLEvent e, object sender, EventArgs args)
 		{
 			base.Notify(e, sender, args);
-			GameDragon dragon = sender as GameDragon;
-			if (dragon == null) return;
-
-			if (e == GameObjectEvent.TakeDamage)
+			if (sender == Body)
 			{
-				if (CheckHealth()) return;
+				GameDragon dragon = sender as GameDragon;
+				if (e == GameObjectEvent.TakeDamage)
+				{
+					if (CheckHealth()) return;
 
-				// Someone hit the dragon. If the attacker is in melee range, there
-				// is a chance the dragon will cast a debuff specific to melee
-				// classes on him, if not, well, dragon will try to get its Glare off...
+					// Someone hit the dragon. If the attacker is in melee range, there
+					// is a chance the dragon will cast a debuff specific to melee
+					// classes on him, if not, well, dragon will try to get its Glare off...
 
-				GameObject source = (args as TakeDamageEventArgs).DamageSource;
-				if (WorldMgr.CheckDistance(dragon, source, dragon.AttackRange)) 
-					dragon.CheckMeleeDebuff(source as GamePlayer);
-				else dragon.CheckGlare(source as GamePlayer);
+					GameObject source = (args as TakeDamageEventArgs).DamageSource;
+					if (WorldMgr.CheckDistance(dragon, source, dragon.AttackRange))
+						dragon.CheckMeleeDebuff(source as GamePlayer);
+					else dragon.CheckGlare(source as GamePlayer);
+				}
+				else if (e == GameLivingEvent.EnemyHealed)
+				{
+					// Someone healed an enemy. If the healer is in melee range, there
+					// is a chance the dragon will cast a debuff specific to ranged
+					// classes on him, if not, there's still Glare...
+
+					GameObject source = (args as EnemyHealedEventArgs).HealSource;
+					if (WorldMgr.CheckDistance(dragon, source, dragon.AttackRange))
+						dragon.CheckRangedDebuff(source as GamePlayer);
+					else dragon.CheckGlare(source as GamePlayer);
+				}
 			}
-			else if (e == GameLivingEvent.EnemyHealed)
+			else if (e == GameNPCEvent.ArriveAtTarget && sender != null)
 			{
-				// Someone healed an enemy. If the healer is in melee range, there
-				// is a chance the dragon will cast a debuff specific to ranged
-				// classes on him, if not, there's still Glare...
+				// Message from another NPC, such as a retriever,
+				// for example.
 
-				GameObject source = (args as EnemyHealedEventArgs).HealSource;
-				if (WorldMgr.CheckDistance(dragon, source, dragon.AttackRange)) 
-					dragon.CheckRangedDebuff(source as GamePlayer);
-				else dragon.CheckGlare(source as GamePlayer);
+				log.Info(String.Format("DragonBrain.Notify: ArriveAtTarget({0})", (sender as GameObject).Name));
+				(Body as GameDragon).OnRetrieverArrived(sender as GameNPC);
 			}
         }
 
@@ -182,8 +190,8 @@ namespace DOL.AI.Brain
 
 				switch (healthNow)
 				{
-					case 4:
-					case 1: if (dragon.CheckAddSpawns())
+					case 5:
+					case 3: if (dragon.CheckAddSpawns())
 							return true;
 						break;
 				}

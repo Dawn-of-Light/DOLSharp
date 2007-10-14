@@ -24,6 +24,7 @@ using DOL.Events;
 using log4net;
 using System.Reflection;
 using System.Collections;
+using DOL.AI.Brain;
 
 
 namespace DOL.GS
@@ -37,24 +38,47 @@ namespace DOL.GS
 
 		#region Add Spawns
 
+		private ArrayList m_retrieverList = new ArrayList();
+
 		/// <summary>
-		/// Spawn adds that will despawn again after 30 seconds.
-		/// For Gjalpinulva, these will be level 40-45 GameNPCs and 
-		/// their numbers will depend on the number of players inside 
-		/// the lair.
+		/// Spawn dogs that will despawn again after 60 seconds; there is
+		/// a 25% chance that a retriever will spawn.
 		/// </summary>
-		/// <returns>Whether or not any adds were spawned.</returns>
+		/// <returns>Whether or not any retrievers were spawned.</returns>
 		public override bool CheckAddSpawns()
 		{
 			base.CheckAddSpawns();	// In order to reset HealthPercentOld.
 
-			int numAdds = Math.Max(1, PlayersInLair / 2);
-			numAdds = 10; // TEST
-			GameNPC spawn;
-			for (int add = 1; add <= numAdds; ++add)
+			Yell("Come to me my babies!");
+
+			GameNPC dogSpawn;
+			bool isRetriever = false;
+			m_retrieverList.Clear();
+
+			// Spawn 10 adds, in most cases (75% chance) these adds will be level 
+			// 37 and con green (decoys), in some cases (25%) they will be
+			// retrievers, who will try to get out of the lair and, if successful,
+			// cause Gjalpinulva to spawn 10-20 deep purple adds.
+
+			for (int add = 1; add <= 10; ++add)
 			{
-				spawn = SpawnTimedAdd(610, Util.Random(40, 45), 30);		// scaled retriever lvl 40-45
-				spawn.WalkTo(GetExitCoordinates(Util.Random(1, 4)), 200);	// Pick 1 out of 4 possible exits.
+				isRetriever = Util.Chance(25);
+				dogSpawn = SpawnTimedAdd((isRetriever) ? 610 : 611, 
+					(isRetriever) ? Util.Random(50, 55) : 37, 
+					X + Util.Random(300, 600), Y + Util.Random(300, 600), 60);
+
+				// We got a retriever, tell it who its master is and which exit
+				// to run to.
+
+				if (isRetriever)
+				{
+					if (dogSpawn.Brain is RetrieverMobBrain)
+					{
+						(dogSpawn.Brain as RetrieverMobBrain).Master = this;
+						m_retrieverList.Add(dogSpawn);
+						dogSpawn.WalkTo(GetExitCoordinates(Util.Random(1, 4)), 200);	// Pick 1 out of 4 possible exits.
+					}
+				}
 			}
 			return true;
 		}
@@ -79,6 +103,43 @@ namespace DOL.GS
 				case 3: return new Point3D(SpawnX + dx, SpawnY + dy, SpawnZ);
 				case 4: return new Point3D(SpawnX + dx, SpawnY - dy, SpawnZ);
 				default: return new Point3D(SpawnX, SpawnY, SpawnZ);
+			}
+		}
+
+		/// <summary>
+		/// Invoked when retriever type mob has reached its target location.
+		/// </summary>
+		/// <param name="sender">The retriever mob.</param>
+		public override void OnRetrieverArrived(GameNPC sender)
+		{
+			base.OnRetrieverArrived(sender);
+			if (sender == null || sender == this) return;
+
+			// Spawn nasty adds.
+
+			if (m_retrieverList.Contains(sender))
+				SpawnAdds(Util.Random(10, 20), sender.X, sender.Y);
+		}
+
+		/// <summary>
+		/// Spawn some (10-20) nasty level 60-65 drakulvs around the spot the
+		/// retriever has reported back from, then make these spawns aggro the
+		/// raid inside the lair.
+		/// </summary>
+		/// <param name="numAdds"></param>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		private void SpawnAdds(int numAdds, int x, int y)
+		{
+			GameNPC drakulv;
+			bool isDisciple = false;
+			for (int add = 0; add < numAdds; ++add)
+			{
+				isDisciple = Util.Chance(25);
+				drakulv = SpawnTimedAdd((isDisciple) ? 613 : 612, Util.Random(62, 68), 
+					x + Util.Random(250), y + Util.Random(250), 120);
+				if (drakulv.Brain is StandardMobBrain && this.Brain is DragonBrain)
+					(Brain as DragonBrain).AddAggroListTo(drakulv.Brain as StandardMobBrain);
 			}
 		}
 
@@ -133,7 +194,7 @@ namespace DOL.GS
 					spell.AutoSave = false;
 					spell.CastTime = 0;
 					spell.Uninterruptible = true;
-					spell.ClientEffect = 4568;
+					spell.ClientEffect = 208;
 					spell.Description = "Nuke";
 					spell.Name = "Dragon Nuke";
 					spell.Range = 700;
