@@ -121,6 +121,7 @@
     <Compile Include="ai\brain\IControlledBrain.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ai\brain\RetrieverMobBrain.cs" />
     <Compile Include="ai\brain\RoundsBrain.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -2036,9 +2037,6 @@
     <Content Include="language\Language-ES.txt" />
     <Content Include="language\Language-FR.txt" />
     <Content Include="language\Language-IT.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="spells\Artifacts" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
