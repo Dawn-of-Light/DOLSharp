@@ -291,7 +291,19 @@ namespace DOL.GS.Scripts
 							info.Add(" + Respawn: NPC will not respawn");
 						else info.Add(" + Respawn: " + respawn.Minutes + " minutes " + respawn.Seconds + " seconds (Position: X=" + targetMob.SpawnX + " Y=" + targetMob.SpawnY + " Z=" + targetMob.SpawnZ + ")");
 
-						info.Add(" + Damage type: " + targetMob.MeleeDamageType);
+                        info.Add(" ");
+                        info.Add(" + Mob Stats:");
+                        info.Add(" + Constitution: " + targetMob.Constitution);
+                        info.Add(" + Dexterity: " + targetMob.Dexterity);
+                        info.Add(" + Strength: " + targetMob.Strength);
+                        info.Add(" + Quickness: " + targetMob.Quickness);
+                        info.Add(" + Intelligence: " + targetMob.Intelligence);
+                        info.Add(" + Piety: " + targetMob.Piety);
+                        info.Add(" + Empathy: " + targetMob.Empathy);
+                        info.Add(" + Charisma: " + targetMob.Charisma);
+                        info.Add(" ");
+
+                        info.Add(" + Damage type: " + targetMob.MeleeDamageType);
 						info.Add(" + Position: X=" + targetMob.X + " Y=" + targetMob.Y + " Z=" + targetMob.Z);
 						info.Add(" + Guild: " + targetMob.GuildName);
 						info.Add(" + Model: " + targetMob.Model + " sized to " + targetMob.Size);
@@ -1213,7 +1225,7 @@ namespace DOL.GS.Scripts
 						client.Out.SendMessage("Mob created: OID=" + mob.ObjectID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						break;
 					}
-				case "npctemplate":
+                case "npctemplate":
 					{
 						if (args.Length < 3)
 						{
