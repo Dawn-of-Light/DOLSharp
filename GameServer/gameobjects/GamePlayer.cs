@@ -7321,7 +7321,7 @@ namespace DOL.GS
                         Out.SendMessage("The " + useItem.Name + " is out of charges.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                         return;
                     }
-                    else if (ArtifactManager.IsArtifact(useItem))
+                    else if (!ArtifactManager.IsArtifact(useItem))
                     {
                         if (useItem.Object_Type == (int)eObjectType.Poison)
                         {

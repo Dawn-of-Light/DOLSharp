@@ -49,6 +49,14 @@ namespace DOL.Database
 		private int m_meleeDamageType;
 		private int m_respawnInterval;
 		private int m_faction;
+        private int m_Constitution;
+        private int m_Dexterity;
+        private int m_Strength;
+        private int m_Quickness;
+        private int m_Intelligence;
+        private int m_Piety;
+        private int m_Empathy;
+        private int m_Charisma;
 
 		private string m_equipmentTemplateID;
 
@@ -83,6 +91,14 @@ namespace DOL.Database
 			m_brain = "";
 			m_pathID = "";
 			m_maxdistance = 0;			
+            m_Constitution = 30;
+            m_Dexterity = 30;
+            m_Strength = 30;
+            m_Quickness = 30;
+            m_Intelligence = 30;
+            m_Piety = 30;
+            m_Empathy = 30;
+            m_Charisma = 30;
             m_boat_ownerid = "";
 		}
 
@@ -288,7 +304,143 @@ namespace DOL.Database
 			}
 		}
 
-		/// <summary>
+        /// <summary>
+        /// The Mob's Strength
+        /// </summary>
+        [DataElement(AllowDbNull = false)]
+        public int Strength
+        {
+            get
+            {
+                return m_Strength;
+            }
+            set
+            {
+                Dirty = true;
+                m_Strength = value;
+            }
+        }
+        /// <summary>
+        /// The Mob's Con
+        /// </summary>
+        [DataElement(AllowDbNull = false)]
+        public int Constitution
+        {
+            get
+            {
+                return m_Constitution;
+            }
+            set
+            {
+                Dirty = true;
+                m_Constitution = value;
+            }
+        }
+
+        /// <summary>
+        /// The Mob's Dexterity
+        /// </summary>
+        [DataElement(AllowDbNull = false)]
+        public int Dexterity
+        {
+            get
+            {
+                return m_Dexterity;
+            }
+            set
+            {
+                Dirty = true;
+                m_Dexterity = value;
+            }
+        }
+
+        /// <summary>
+        /// The Mob's Quickness
+        /// </summary>
+        [DataElement(AllowDbNull = false)]
+        public int Quickness
+        {
+            get
+            {
+                return m_Quickness;
+            }
+            set
+            {
+                Dirty = true;
+                m_Quickness = value;
+            }
+        }
+
+        /// <summary>
+        /// The Mob's Int
+        /// </summary>
+        [DataElement(AllowDbNull = false)]
+        public int Intelligence
+        {
+            get
+            {
+                return m_Intelligence;
+            }
+            set
+            {
+                Dirty = true;
+                m_Intelligence = value;
+            }
+        }
+
+        /// <summary>
+        /// The Mob's Piety
+        /// </summary>
+        [DataElement(AllowDbNull = false)]
+        public int Piety
+        {
+            get
+            {
+                return m_Piety;
+            }
+            set
+            {
+                Dirty = true;
+                m_Piety = value;
+            }
+        }
+
+
+        /// <summary>
+        /// The Mob's Empathy
+        /// </summary>
+        [DataElement(AllowDbNull = false)]
+        public int Empathy
+        {
+            get
+            {
+                return m_Empathy;
+            }
+            set
+            {
+                Dirty = true;
+                m_Empathy = value;
+            }
+        }
+
+        /// <summary>
+        /// The Mob's Charisma
+        /// </summary>
+        [DataElement(AllowDbNull = false)]
+        public int Charisma
+        {
+            get
+            {
+                return m_Charisma;
+            }
+            set
+            {
+                Dirty = true;
+                m_Charisma = value;
+            }
+        } 
+       
+        /// <summary>
 		/// The Mob's Level
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
@@ -528,4 +680,5 @@ namespace DOL.Database
         }
     }
 }
+
 

@@ -37,12 +37,15 @@ namespace DOL.GS.PropertyCalc
 
 		public override int CalcValue(GameLiving living, eProperty property)
 		{
-			int intProperty = (int)property;
-			int itemBonus = living.ItemBonus[intProperty];
-			int abilityBonus = living.AbilityBonus[intProperty];
-			int buffBonus = living.BuffBonusCategory1[intProperty];
-			int debuff = living.BuffBonusCategory3[intProperty];
-			if (debuff < 0)
+            int intProperty = (int)property;
+            // item cap 26%
+            int itemBonus = Math.Min(26, living.ItemBonus[intProperty]);
+            int abilityBonus = living.AbilityBonus[intProperty];
+            // base 24% buff + 5% decap lotm 
+            int buffBonus = Math.Min(29, living.BuffBonusCategory1[intProperty]);
+            int debuff = living.BuffBonusCategory3[intProperty]; 
+            
+            if (debuff < 0)
 			{
 				debuff = -debuff;
 			}
@@ -71,7 +74,7 @@ namespace DOL.GS.PropertyCalc
 			if (buffBonus < 0)
 				buffBonus /= 2;
 
-			return res + itemBonus + buffBonus + abilityBonus;
+			return Math.Min(70, res + itemBonus + buffBonus + abilityBonus);
 		}
 	}
 }
