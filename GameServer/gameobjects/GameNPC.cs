@@ -349,7 +349,118 @@ namespace DOL.GS
 			set { m_houseNumber = value; }
 		}
 		#endregion
-		#region Flags/Position/SpawnPosition/UpdateTick
+        #region Stats
+
+        /// <summary>
+        /// Change a stat value
+        /// (delegate to GameNPC)
+        /// </summary>
+        /// <param name="stat">The stat to change</param>
+        /// <param name="val">The new value</param>
+        public override void ChangeBaseStat(eStat stat, short val)
+        {
+            int oldstat = GetBaseStat(stat);
+            base.ChangeBaseStat(stat, val);
+            int newstat = GetBaseStat(stat);
+            GameNPC npc = this;
+            if (this != null && oldstat != newstat)
+            {
+                switch (stat)
+                {
+                    case eStat.STR: npc.Strength = newstat; break;
+                    case eStat.DEX: npc.Dexterity = newstat; break;
+                    case eStat.CON: npc.Constitution = newstat; break;
+                    case eStat.QUI: npc.Quickness = newstat; break;
+                    case eStat.INT: npc.Intelligence = newstat; break;
+                    case eStat.PIE: npc.Piety = newstat; break;
+                    case eStat.EMP: npc.Empathy = newstat; break;
+                    case eStat.CHR: npc.Charisma = newstat; break;
+                }
+            }
+        }
+
+        private int m_npcConstitution;
+        private int m_npcDexterity;
+        private int m_npcStrength;
+        private int m_npcQuickness;
+        private int m_npcIntelligence;
+        private int m_npcPiety;
+        private int m_npcEmpathy;
+        private int m_npcCharisma;
+
+        /// <summary>
+        /// Gets NPC's constitution
+        /// </summary>
+        public int Constitution
+        {
+            get { return m_npcConstitution; }
+            set { m_npcConstitution = value; }
+        }
+
+        /// <summary>
+        /// Gets NPC's dexterity
+        /// </summary>
+        public int Dexterity
+        {
+            get { return m_npcDexterity; }
+            set { m_npcDexterity = value; }
+        }
+
+        /// <summary>
+        /// Gets NPC's strength
+        /// </summary>
+        public int Strength
+        {
+            get { return m_npcStrength; }
+            set { m_npcStrength = value; }
+        }
+
+        /// <summary>
+        /// Gets NPC's quickness
+        /// </summary>
+        public int Quickness
+        {
+            get { return m_npcQuickness; }
+            set { m_npcQuickness = value; }
+        }
+
+        /// <summary>
+        /// Gets NPC's intelligence
+        /// </summary>
+        public int Intelligence
+        {
+            get { return m_npcIntelligence; }
+            set { m_npcIntelligence = value; }
+        }
+
+        /// <summary>
+        /// Gets NPC's piety
+        /// </summary>
+        public int Piety
+        {
+            get { return m_npcPiety; }
+            set { m_npcPiety = value; }
+        }
+
+        /// <summary>
+        /// Gets NPC's empathy
+        /// </summary>
+        public int Empathy
+        {
+            get { return m_npcEmpathy; }
+            set { m_npcEmpathy = value; }
+        }
+
+        /// <summary>
+        /// Gets NPC's charisma
+        /// </summary>
+        public int Charisma
+        {
+            get { return m_npcCharisma; }
+            set { m_npcCharisma = value; }
+        }
+        #endregion
+        #region Flags/Position/SpawnPosition/UpdateTick
 		/// <summary>
 		/// Various flags for this npc
 		/// </summary>
@@ -1567,7 +1678,18 @@ namespace DOL.GS
 			Size = npc.Size;
 			Level = npc.Level;	// health changes when GameNPC.Level changes
 			Flags = npc.Flags;
-			MeleeDamageType = (eDamageType)npc.MeleeDamageType;
+            
+            // Stats
+            m_npcConstitution = npc.Constitution;
+            m_npcDexterity = npc.Dexterity;
+            m_npcStrength = npc.Strength;
+            m_npcQuickness = npc.Quickness;
+            m_npcIntelligence = npc.Intelligence;
+            m_npcPiety = npc.Piety;
+            m_npcEmpathy = npc.Empathy;
+            m_npcCharisma = npc.Charisma;
+
+            MeleeDamageType = (eDamageType)npc.MeleeDamageType;
 			if (MeleeDamageType == 0)
 			{
 				MeleeDamageType = eDamageType.Slash;
@@ -1664,6 +1786,17 @@ namespace DOL.GS
 			mob.Model = Model;
 			mob.Size = Size;
 			mob.Level = Level;
+
+            // Stats
+            mob.Constitution = m_npcConstitution;
+            mob.Dexterity = m_npcDexterity;
+            mob.Strength = m_npcStrength;
+            mob.Quickness = m_npcQuickness;
+            mob.Intelligence = m_npcIntelligence;
+            mob.Piety = m_npcPiety;
+            mob.Empathy = m_npcEmpathy;
+            mob.Charisma = m_npcCharisma;
+
 			mob.ClassType = this.GetType().ToString();
 			mob.Flags = Flags;
 			mob.Speed = MaxSpeedBase;
@@ -1737,7 +1870,17 @@ namespace DOL.GS
 			}
 			this.Level = level;
 
-			this.MaxDistance = template.MaxDistance;
+            // Stats
+            this.Constitution = template.Constitution;
+            this.Dexterity = template.Dexterity;
+            this.Strength = template.Strength;
+            this.Quickness = template.Quickness;
+            this.Intelligence = template.Intelligence;
+            this.Piety = template.Piety;
+            this.Empathy = template.Empathy;
+            this.Charisma = template.Charisma;
+
+            this.MaxDistance = template.MaxDistance;
 			this.BodyType = template.BodyType;
 			this.MaxSpeedBase = template.MaxSpeed;
 			this.Flags = template.Flags;
@@ -3851,6 +3994,14 @@ namespace DOL.GS
 			m_flags = 0;
 			m_maxdistance = 0;
 			m_boatowner_id = "";
+            m_npcConstitution = 30;
+            m_npcDexterity = 30;
+            m_npcStrength = 30;
+            m_npcQuickness = 30;
+            m_npcIntelligence = 30;
+            m_npcPiety = 30;
+            m_npcEmpathy = 30;
+            m_npcCharisma = 30;
 			//m_factionName = "";
 			LinkedFactions = new ArrayList(1);
 			if (m_ownBrain == null)
@@ -3867,8 +4018,16 @@ namespace DOL.GS
 		public GameNPC(INpcTemplate template)
 			: this()
 		{
-			LoadTemplate(template);
+            m_npcConstitution = 30;
+            m_npcDexterity = 30;
+            m_npcStrength = 30;
+            m_npcQuickness = 30;
+            m_npcIntelligence = 30;
+            m_npcPiety = 30;
+            m_npcEmpathy = 30;
+            m_npcCharisma = 30;
+            LoadTemplate(template);
             m_boatowner_id = "";
-		}
+        }
 	}
 }

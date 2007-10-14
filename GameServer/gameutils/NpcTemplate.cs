@@ -183,13 +183,13 @@ namespace DOL.GS
 			m_blockChance = mob.BlockChance;
 			m_leftHandSwingChance = mob.LeftHandSwingChance;
 			//Now for mob stats			
-			m_strength = 30;
-			m_constitution = 30;
-			m_quickness = 30;
-			m_intelligence = 30;
-			m_piety = 30;
-			m_charisma = 30;
-			m_empathy = 30;
+			m_strength = mob.Strength;
+			m_constitution = mob.Constitution;
+			m_quickness = mob.Quickness;
+			m_intelligence = mob.Intelligence;
+			m_piety = mob.Piety;
+			m_charisma = mob.Charisma;
+			m_empathy = mob.Empathy;
 			m_meleeDamageType = (eDamageType)mob.MeleeDamageType;
 			AI.Brain.StandardMobBrain brain = mob.Brain as AI.Brain.StandardMobBrain;
 			if (brain != null)
