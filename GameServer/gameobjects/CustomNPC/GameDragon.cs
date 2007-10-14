@@ -382,9 +382,9 @@ namespace DOL.GS
 					add.CurrentRegion = this.CurrentRegion;
 					add.Heading = (ushort)(Util.Random(0, 4095));
 					add.Realm = 0;
-					add.X = this.X + Util.Random(300, 600);
-					add.Y = this.Y + Util.Random(300, 600);
-					add.Z = this.Z;
+					add.X = x;
+					add.Y = y;
+					add.Z = 0;
 					add.CurrentSpeed = 0;
 					add.Level = (byte)level;
 					add.RespawnInterval = -1;
