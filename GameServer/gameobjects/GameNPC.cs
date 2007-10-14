@@ -1813,7 +1813,9 @@ namespace DOL.GS
 			BuffBonusCategory4[(int)eStat.EMP] += template.Empathy;
 			BuffBonusCategory4[(int)eStat.CHR] += template.Charisma;
 
-			m_ownBrain = new StandardMobBrain();
+			m_ownBrain = (Name.EndsWith("retriever")) // Don't like this hack, but can't specify a brain in npctemplate at the moment
+				? new RetrieverMobBrain()
+				: new StandardMobBrain();
 			m_ownBrain.Body = this;
 			(m_ownBrain as StandardMobBrain).AggroLevel = template.AggroLevel;
 			(m_ownBrain as StandardMobBrain).AggroRange = template.AggroRange;
@@ -3848,7 +3850,7 @@ namespace DOL.GS
 			m_followMaxDist = 3000;
 			m_flags = 0;
 			m_maxdistance = 0;
-            m_boatowner_id = "";
+			m_boatowner_id = "";
 			//m_factionName = "";
 			LinkedFactions = new ArrayList(1);
 			if (m_ownBrain == null)

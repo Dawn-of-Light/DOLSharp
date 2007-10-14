@@ -34,8 +34,8 @@ namespace DOL.GS
 	/// and override some of the methods and properties provided in this abstract
 	/// class.
 	/// </summary>
-    public abstract class GameDragon : GameNPC
-    {
+	public abstract class GameDragon : GameNPC
+	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
@@ -49,27 +49,27 @@ namespace DOL.GS
 		protected String[] m_deathAnnounce;
 
 		/// <summary>
-        /// Creates a new instance of GameDragon.
-        /// </summary>
+		/// Creates a new instance of GameDragon.
+		/// </summary>
 		public GameDragon()
-            : base()
-        {
+			: base()
+		{
 			// Put announcements in here, should make localisation easier. Write your own
 			// default constructor if you need to change these.
 
-            m_breathAnnounce = new String[] { "You feel a rush of air flow past you as {0} inhales deeply!", 
-	            "{0} takes another powerful breath as he prepares to unleash a raging inferno upon you!", 
-			    "{0} bellows in rage and glares at all of the creatures attacking him.", 
-			    "{0} noticeably winces from his wounds as he attempts to prepare for yet another life-threatening attack!" };
+			m_breathAnnounce = new String[] { "You feel a rush of air flow past you as {0} inhales deeply!", 
+				"{0} takes another powerful breath as he prepares to unleash a raging inferno upon you!", 
+				"{0} bellows in rage and glares at all of the creatures attacking him.", 
+				"{0} noticeably winces from his wounds as he attempts to prepare for yet another life-threatening attack!" };
 			m_glareAnnounce = "{0} glares at {1}!";
 			m_deathAnnounce = new String[] { "The earth lurches beneath your feet as {0} staggers and topples to the ground.",
 				"A glowing light begins to form on the mound that served as {0}'s lair." };
 		}
 
 		/// <summary>
-		/// Diameter of the lair.
+		/// Radius of the lair.
 		/// </summary>
-		public ushort LairDiameter
+		public ushort LairRadius
 		{
 			get { return 2000; }
 		}
@@ -82,7 +82,7 @@ namespace DOL.GS
 		{
 			base.LoadFromDatabase(obj);
 			WorldMgr.GetRegion(CurrentRegionID).AddArea(new Area.Circle(String.Format("{0}'s Lair", Name),
-				X, Y, 0, LairDiameter + 200));
+				X, Y, 0, LairRadius + 200));
 		}
 
 		/// <summary>
@@ -134,10 +134,10 @@ namespace DOL.GS
 			}
 		}
 
-        /// <summary>
+		/// <summary>
 		/// The dragon's maximum health.
-        /// </summary>
-        public override int MaxHealth
+		/// </summary>
+		public override int MaxHealth
 		{
 			get
 			{
@@ -145,11 +145,11 @@ namespace DOL.GS
 			}
 		}
 
-        /// <summary>
-        /// The damage this dragon deals on an attack.
-        /// </summary>
-        /// <param name="weapon"></param>
-        /// <returns></returns>
+		/// <summary>
+		/// The damage this dragon deals on an attack.
+		/// </summary>
+		/// <param name="weapon"></param>
+		/// <returns></returns>
 		public override double AttackDamage(InventoryItem weapon)
 		{
 			return base.AttackDamage(weapon) * 1.0;
@@ -235,46 +235,46 @@ namespace DOL.GS
 		#region Tether
 
 		/// <summary>
-        /// Return to spawn point, dragon can't be attacked while it's
-        /// on it's way.
-        /// </summary>
-        public override void WalkToSpawn()
-        {
-            EvadeChance = 100;
-            base.WalkToSpawn();
-        }
+		/// Return to spawn point, dragon can't be attacked while it's
+		/// on it's way.
+		/// </summary>
+		public override void WalkToSpawn()
+		{
+			EvadeChance = 100;
+			base.WalkToSpawn();
+		}
 
-        /// <summary>
-        /// Handle event notifications.
-        /// </summary>
-        /// <param name="e">The event that occured.</param>
-        /// <param name="sender">The sender of the event.</param>
-        public override void Notify(DOLEvent e, object sender)
-        {
-            base.Notify(e, sender);
+		/// <summary>
+		/// Handle event notifications.
+		/// </summary>
+		/// <param name="e">The event that occured.</param>
+		/// <param name="sender">The sender of the event.</param>
+		public override void Notify(DOLEvent e, object sender)
+		{
+			base.Notify(e, sender);
 
-            // When dragon arrives at its spawn point, make it vulnerable again.
+			// When dragon arrives at its spawn point, make it vulnerable again.
 
-            if (e == GameNPCEvent.ArriveAtTarget)
-                EvadeChance = 0;
-        }
+			if (e == GameNPCEvent.ArriveAtTarget)
+				EvadeChance = 0;
+		}
 
-        private const int m_tetherRange = 2500;
+		private const int m_tetherRange = 2500;
 
-        /// <summary>
-        /// The dragon's tether range. If it is pulled beyond this
-        /// distance it will return to its spawn point.
-        /// </summary>
-        public int TetherRange
-        {
-            get { return m_tetherRange; }
-        }
+		/// <summary>
+		/// The dragon's tether range. If it is pulled beyond this
+		/// distance it will return to its spawn point.
+		/// </summary>
+		public int TetherRange
+		{
+			get { return m_tetherRange; }
+		}
 
-        #endregion
+		#endregion
 
-        #region Health
+		#region Health
 
-        private int m_healthPercentOld = 100;
+		private int m_healthPercentOld = 100;
 
 		/// <summary>
 		/// The amount of health before the most recent attack.
@@ -283,33 +283,33 @@ namespace DOL.GS
 		{
 			get { return m_healthPercentOld; }
 			protected set { m_healthPercentOld = value; }
-        }
+		}
 
-        #endregion
+		#endregion
 
-        #region Custom Methods
+		#region Custom Methods
 
-        /// <summary>
-        /// Broadcast relevant messages to the raid.
-        /// </summary>
-        /// <param name="message">The message to be broadcast.</param>
-        public void BroadcastMessage(String message)
-        {
-            foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE + 1500))
-                player.Out.SendMessage(message, eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-        }
+		/// <summary>
+		/// Broadcast relevant messages to the raid.
+		/// </summary>
+		/// <param name="message">The message to be broadcast.</param>
+		public void BroadcastMessage(String message)
+		{
+			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE + 1500))
+				player.Out.SendMessage(message, eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+		}
 
-        /// <summary>
-        /// Post a message in the server news and award a dragon kill point for
-        /// every XP gainer in the raid.
-        /// </summary>
-        /// <param name="killer">The living that got the killing blow.</param>
-        protected void ReportNews(GameObject killer)
-        {
+		/// <summary>
+		/// Post a message in the server news and award a dragon kill point for
+		/// every XP gainer in the raid.
+		/// </summary>
+		/// <param name="killer">The living that got the killing blow.</param>
+		protected void ReportNews(GameObject killer)
+		{
 			int numPlayers = AwardDragonKillPoint();
-            String message = String.Format("{0} has been slain by a force of {1} warriors from the realm of {2}",
+			String message = String.Format("{0} has been slain by a force of {1} warriors from the realm of {2}",
 				Name, numPlayers, GlobalConstants.RealmToName((eRealm)killer.Realm));
-            NewsMgr.CreateNews(message, killer.Realm, eNewsType.PvE, true);
+			NewsMgr.CreateNews(message, killer.Realm, eNewsType.PvE, true);
 		}
 
 		/// <summary>
@@ -340,11 +340,11 @@ namespace DOL.GS
 		#region Add Spawns
 
 		/// <summary>
-        /// Spawn adds that will despawn again after 30 seconds. 
+		/// Spawn adds that will despawn again after some time has passed.
 		/// For your own implementation call SpawnTimedAdd with your own
 		/// template ID (which could, in turn, use a different mob class than 
 		/// GameNPC and thus have a different brain implementation) and mob level.
-        /// </summary>
+		/// </summary>
 		public virtual bool CheckAddSpawns()
 		{
 			// Prevent brain from doing this over and over.
@@ -355,20 +355,20 @@ namespace DOL.GS
 
 		private INpcTemplate m_addTemplate;
 
-        /// <summary>
-        /// Create an add from the specified template.
-        /// </summary>
-        /// <param name="templateID">The template ID to be used for the spawn.</param>
-        /// <param name="level">The level of the spawned add.</param>
+		/// <summary>
+		/// Create an add from the specified template.
+		/// </summary>
+		/// <param name="templateID">The template ID to be used for the spawn.</param>
+		/// <param name="level">The level of the spawned add.</param>
 		/// <param name="uptime">The time in seconds after which this mob will despawn.</param>
 		/// <returns>A reference to the spawned NPC.</returns>
-		protected GameNPC SpawnTimedAdd(int templateID, int level, int uptime)
+		protected GameNPC SpawnTimedAdd(int templateID, int level, int x, int y, int uptime)
 		{
 			GameNPC add = null;
 
 			try
 			{
-				if (m_addTemplate == null)
+				if (m_addTemplate == null || m_addTemplate.TemplateId != templateID)
 				{
 					m_addTemplate = NpcTemplateMgr.GetTemplate(templateID);
 				}
@@ -399,10 +399,10 @@ namespace DOL.GS
 			return add;
 		}
 
-        /// <summary>
-        /// Provides a timer to remove an NPC from the world after some
-        /// time has passed.
-        /// </summary>
+		/// <summary>
+		/// Provides a timer to remove an NPC from the world after some
+		/// time has passed.
+		/// </summary>
 		protected class DespawnTimer : GameTimer
 		{
 			private GameNPC m_npc;
@@ -435,7 +435,7 @@ namespace DOL.GS
 			}
 		}
 
-        /// <summary>
+		/// <summary>
 		/// The number of players in the dragon's lair.
 		/// </summary>
 		public int PlayersInLair
@@ -443,13 +443,21 @@ namespace DOL.GS
 			get
 			{
 				int count = 0;
-				foreach (GamePlayer player in GetPlayersInRadius(LairDiameter))
+				foreach (GamePlayer player in GetPlayersInRadius(LairRadius))
 					count++;
 				return count;
 			}
-        }
+		}
 
-        #endregion
+		/// <summary>
+		/// Invoked when retriever type mob has reached its target location.
+		/// </summary>
+		/// <param name="sender">The retriever mob.</param>
+		public virtual void OnRetrieverArrived(GameNPC sender)
+		{
+		}
+
+		#endregion
 
 		#region Breath & Resist Debuff
 
@@ -715,42 +723,42 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-        /// Hurl a player into the air.
-        /// </summary>
-        /// <param name="target">The player to hurl into the air.</param>
-        private void ThrowPlayer(GamePlayer target)
-        {
-            BroadcastMessage(String.Format("{0} is hurled into the air!", target.Name));
-            
-            // Face the target, then push it 750 units up and 300-500 units backwards.
+		/// Hurl a player into the air.
+		/// </summary>
+		/// <param name="target">The player to hurl into the air.</param>
+		private void ThrowPlayer(GamePlayer target)
+		{
+			BroadcastMessage(String.Format("{0} is hurled into the air!", target.Name));
+			
+			// Face the target, then push it 600 units up and 400-600 units backwards.
 
-            TurnTo(target);
-            Point3D targetPosition = TargetPosition(target.X, target.Y, target.Z, 600, Heading, 
+			TurnTo(target);
+			Point3D targetPosition = TargetPosition(target.X, target.Y, target.Z, 600, Heading, 
 				Util.Random(400, 600));
-            target.MoveTo(target.CurrentRegionID,
-                targetPosition.X,
-                targetPosition.Y,
-                targetPosition.Z,
-                target.Heading);
+			target.MoveTo(target.CurrentRegionID,
+				targetPosition.X,
+				targetPosition.Y,
+				targetPosition.Z,
+				target.Heading);
 		}
 
 		/// <summary>
-        /// Calculate the target position with given height and displacement.
-        /// </summary>
-        /// <param name="x">Current object X position.</param>
-        /// <param name="y">Current object Y position.</param>
-        /// <param name="z">Current object Z position.</param>
-        /// <param name="height">Height the object is to be lifted to.</param>
-        /// <param name="heading">The direction the object is displaced in.</param>
-        /// <param name="displacement">The amount the object is displaced by.</param>
-        /// <returns></returns>
-        private Point3D TargetPosition(int x, int y, int z, int height, int heading, int displacement)
-        {
-            float h = (float) (heading / HEADING_CONST);  // Angle in radians, const is equivalent to 4096 / (2*PI)
-            x -= (int) (Math.Sin(h) * displacement);
-            y += (int) (Math.Cos(h) * displacement);
-            z += height;
-            return new Point3D(x, y, z);
+		/// Calculate the target position with given height and displacement.
+		/// </summary>
+		/// <param name="x">Current object X position.</param>
+		/// <param name="y">Current object Y position.</param>
+		/// <param name="z">Current object Z position.</param>
+		/// <param name="height">Height the object is to be lifted to.</param>
+		/// <param name="heading">The direction the object is displaced in.</param>
+		/// <param name="displacement">The amount the object is displaced by.</param>
+		/// <returns></returns>
+		private Point3D TargetPosition(int x, int y, int z, int height, int heading, int displacement)
+		{
+			float h = (float) (heading / HEADING_CONST);  // Angle in radians, const is equivalent to 4096 / (2*PI)
+			x -= (int) (Math.Sin(h) * displacement);
+			y += (int) (Math.Cos(h) * displacement);
+			z += height;
+			return new Point3D(x, y, z);
 		}
 
 		#endregion
@@ -823,19 +831,19 @@ namespace DOL.GS
 		}
 
 		private void PrepareToStun()
-        {
-            // No announcement for this seemingly.
-            new RegionTimer(this, new RegionTimerCallback(CastStun), 5000);
-        }
+		{
+			// No announcement for this seemingly.
+			new RegionTimer(this, new RegionTimerCallback(CastStun), 5000);
+		}
 
-        /// <summary>
-        /// Start the 5 second timer for the stun.
-        /// </summary>
-        private int CastStun(RegionTimer timer)
-        {
-            CastSpell(Stun, SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells));
-            return 0;
-        }
+		/// <summary>
+		/// Start the 5 second timer for the stun.
+		/// </summary>
+		private int CastStun(RegionTimer timer)
+		{
+			CastSpell(Stun, SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells));
+			return 0;
+		}
 
 		#endregion		
 	}
