@@ -176,6 +176,14 @@ namespace DOL.GS
 		/// if MaxDistance < 0 ... the amount is calculated in procent of the value and the aggrorange (in StandardMobBrain)
 		/// </summary>
 		int MaxDistance { get;}
+
+		/// <summary>
+		/// The mob's tether range; if mob is pulled farther than this distance
+		/// it will return to its spawn point.
+		/// if TetherRange > 0 ... the amount is the normal value
+		/// if TetherRange less or equal 0 ... no tether check
+		/// </summary>
+		int TetherRange { get; }
 		
 	}
 }
