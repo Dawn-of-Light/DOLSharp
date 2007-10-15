@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Text;
 using System.Collections;
 using DOL.AI.Brain;
 using DOL.Database;
@@ -106,6 +107,11 @@ namespace DOL.GS
 				player.PlayerCharacter.LastFreeLeveled = DateTime.Now;
 				player.Out.SendPlayerFreeLevelUpdate();
 			}
+
+            if (player.Level == 5)
+            {
+                player.Out.SendMessage(String.Format("{0} says, \" {1}, if you wish, I can undo the training you've done so far and give you the ability to train again. This would allow you to [respecialize] your skills. If you are interested, you must simply let me know.\"", this.Name, player.Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+            }
 			
 			// Turn to face player
 			TurnTo(player, 10000);
@@ -124,6 +130,39 @@ namespace DOL.GS
 			if (!base.WhisperReceive(source, text)) return false;
 			GamePlayer player = source as GamePlayer;
 			if (player == null) return false;
+
+            switch (text)
+            {
+                //level respec for players
+                case "respecialize":
+                    if (player.Level == 5  && !player.IsLevelRespecUsed)
+                    {
+                        int specPoints = 0;
+
+                        specPoints = player.RespecAll();
+                        player.RespecAmountAllSkill++;
+
+                        // Assign full points returned
+                        if (specPoints > 0)
+                        {
+                            player.SkillSpecialtyPoints += specPoints;
+                            lock (player.GetStyleList().SyncRoot)
+                            {
+                                player.GetStyleList().Clear(); // Kill styles
+                            }
+                            player.UpdateSpellLineLevels(false);
+                            player.Out.SendMessage("You regain " + specPoints + " specialization points!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        }
+                        player.RefreshSpecDependantSkills(false);
+                        // Notify Player of points
+                        player.Out.SendUpdatePlayerSkills();
+                        player.Out.SendUpdatePoints();
+                        player.Out.SendUpdatePlayer();
+                        player.Out.SendTrainerWindow();
+                        player.SaveIntoDatabase();
+                    }
+                    break;
+            }
 
 			//Now we turn the npc into the direction of the person
 			TurnTo(player, 10000);
