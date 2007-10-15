@@ -69,6 +69,16 @@ namespace DOL.AI.Brain
         /// </summary>
         public override void Think()
         {
+            // If the NPC is tethered and has been pulled too far it will
+            // de-aggro and return to its spawn point.
+            if (Body.IsOutOfTetherRange)
+            {
+                Body.StopFollow();
+                ClearAggroList();
+                Body.WalkToSpawn();
+                return;
+            }
+
             //If the npc is not casting, and we have spells, we run a check to see if we should cast any of them
             //if (!Body.IsCasting && Body.Spells != null && Body.Spells.Count > 0)
             //Instead - lets just let CheckSpells() make all the checks for us

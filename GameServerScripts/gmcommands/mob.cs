@@ -75,7 +75,8 @@ namespace DOL.GS.Scripts
 		"'/mob removeloot <ItemTemplateID>' to remove loot from the mob's unique drop table",
 		"'/mob copy' copies a mob exactly and places it at your location",
 		"'/mob npctemplate <NPCTemplateID>' creates a mob with npc template, or modifies target",
-		"'/mob path <PathID>' associate the mob to the specified path"
+		"'/mob path <PathID>' associate the mob to the specified path",
+		"'/mob tether <tether range>' set mob tether range (>0=check, 0=no check, <0=no check)"
 		)]
 	public class MobCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
@@ -286,6 +287,7 @@ namespace DOL.GS.Scripts
 						{
 							info.Add(" + Not aggressive brain");
 						}
+						info.Add(" + Tether Range: " + targetMob.TetherRange);
 						TimeSpan respawn = TimeSpan.FromMilliseconds(targetMob.RespawnInterval);
 						if (targetMob.RespawnInterval <= 0)
 							info.Add(" + Respawn: NPC will not respawn");
@@ -613,6 +615,24 @@ namespace DOL.GS.Scripts
 							targetMob.MaxDistance = distance;
 							targetMob.SaveIntoDatabase();
 							client.Out.SendMessage("Mob max distance changed to: " + distance, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						catch (Exception)
+						{
+							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 1;
+						}
+					}
+					break;
+
+				case "tether":
+					{
+						try
+						{
+							int tether = Convert.ToInt32(args[2]);
+							targetMob.TetherRange = tether;
+							//targetMob.SaveIntoDatabase();
+							client.Out.SendMessage("Mob tether range changed to: " + tether, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage("Keep in mind that this setting is volatile, it needs to be set in this NPC's template to become permanent.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						catch (Exception)
 						{

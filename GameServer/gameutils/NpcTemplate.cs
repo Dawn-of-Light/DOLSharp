@@ -69,6 +69,7 @@ namespace DOL.GS
 		protected int m_aggroRange;
 		protected int m_bodyType;
 		protected int m_maxdistance;
+		protected int m_tetherRange;
 
 		/// <summary>
 		/// Constructs a new NpcTemplate
@@ -159,11 +160,12 @@ namespace DOL.GS
 			if (data.MeleeDamageType == 0)
 				m_meleeDamageType = eDamageType.Slash;
 
-            m_inventory = data.EquipmentTemplateID;
+			m_inventory = data.EquipmentTemplateID;
 			m_aggroLevel = data.AggroLevel;
 			m_aggroRange = data.AggroRange;
 			m_bodyType = data.BodyType;
 			m_maxdistance = data.MaxDistance;
+			m_tetherRange = data.TetherRange;
 		}
 
 		public NpcTemplate(GameNPC mob)
@@ -199,6 +201,7 @@ namespace DOL.GS
 			}
 			m_bodyType = mob.BodyType;
 			m_maxdistance = mob.MaxDistance;
+			m_tetherRange = mob.TetherRange;
 		}
 
 		public NpcTemplate()
@@ -442,7 +445,18 @@ namespace DOL.GS
 				m_maxdistance = value;
 			}
 		}
-		
+
+		/// <summary>
+		/// The mob's tether range; if mob is pulled farther than this distance
+		/// it will return to its spawn point.
+		/// if TetherRange > 0 ... the amount is the normal value
+		/// if TetherRange less or equal 0 ... no tether check
+		public int TetherRange
+		{
+			get { return m_tetherRange; }
+			set { m_tetherRange = value; }
+		}
+
 		public virtual void SaveIntoDatabase()
 		{
 			DBNpcTemplate tmp = tmp = (DBNpcTemplate)GameServer.Database.FindObjectByKey(typeof(DBNpcTemplate), TemplateId);
