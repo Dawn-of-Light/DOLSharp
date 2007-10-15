@@ -460,7 +460,7 @@ namespace DOL.GS
             set { m_npcCharisma = value; }
         }
         #endregion
-        #region Flags/Position/SpawnPosition/UpdateTick
+        #region Flags/Position/SpawnPosition/UpdateTick/Tether
 		/// <summary>
 		/// Various flags for this npc
 		/// </summary>
@@ -743,7 +743,35 @@ namespace DOL.GS
 			get { return m_maxdistance; }
 			set { m_maxdistance = value; }
 		}
-		
+
+		protected int m_tetherRange;
+
+		/// <summary>
+		/// The mob's tether range; if mob is pulled farther than this distance
+		/// it will return to its spawn point.
+		/// if TetherRange > 0 ... the amount is the normal value
+		/// if TetherRange less or equal 0 ... no tether check
+		/// </summary>
+		public int TetherRange
+		{
+			get { return m_tetherRange; }
+			set { m_tetherRange = value; }
+		}
+
+		/// <summary>
+		/// True, if NPC is out of tether range, false otherwise; if no tether
+		/// range is specified, this will always return false.
+		/// </summary>
+		public bool IsOutOfTetherRange
+		{
+			get
+			{
+				return (TetherRange > 0)
+					? !WorldMgr.CheckDistance(this, SpawnX, SpawnY, SpawnZ, TetherRange)
+					: false;
+			}
+		}
+
 		#endregion
 		#region Movement
 		/// <summary>
@@ -1881,6 +1909,7 @@ namespace DOL.GS
             this.Charisma = template.Charisma;
 
             this.MaxDistance = template.MaxDistance;
+            this.TetherRange = template.TetherRange;
 			this.BodyType = template.BodyType;
 			this.MaxSpeedBase = template.MaxSpeed;
 			this.Flags = template.Flags;
