@@ -65,6 +65,7 @@ namespace DOL.Database
 		private int m_aggroRange = 0;
 		private int m_bodyType = 0;
 		private int m_maxdistance = 0;
+		private int m_tetherRange = 0;
 
 		private static bool m_autoSave;
 
@@ -474,6 +475,25 @@ namespace DOL.Database
 				m_maxdistance = value;
 			}
 		}
-		
+
+		/// <summary>
+		/// The mob's tether range; if mob is pulled farther than this distance
+		/// it will return to its spawn point.
+		/// if TetherRange > 0 ... the amount is the normal value
+		/// if TetherRange <= 0 ... no tether check
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public int TetherRange
+		{
+			get
+			{
+				return m_tetherRange;
+			}
+			set
+			{
+				Dirty = true;
+				m_tetherRange = value;
+			}
+		}
 	}
 }
