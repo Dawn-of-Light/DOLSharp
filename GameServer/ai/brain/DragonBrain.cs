@@ -58,6 +58,11 @@ namespace DOL.AI.Brain
 
 			if (Body.IsReturningHome) return;
 
+			// When dragon regenerates to full health reset stage to 10.
+
+			if (Body.HealthPercent == 100 && Stage < 10)
+				Stage = 10;
+
 			// If we aren't already aggroing something, look out for
 			// someone we can aggro on and attack right away.
 
@@ -151,6 +156,20 @@ namespace DOL.AI.Brain
 
         #region Health Check
 
+		private int m_stage = 10;
+
+		/// <summary>
+		/// This keeps track of the stage the encounter is in, so players
+		/// don't have to go through all the PBAoE etc. again, just because
+		/// the dragon regains a small amount of health. Starts at 10 (full
+		/// health) and drops to 0.
+		/// </summary>
+		public int Stage
+		{
+			get { return m_stage; }
+			set { if (value >= 0 && value <= 10) m_stage = value; }
+		}
+
         /// <summary>
 		/// Actions to be taken into consideration when health drops.
 		/// </summary>
@@ -171,8 +190,10 @@ namespace DOL.AI.Brain
 					return true;
 			}
 
-			if (healthNow < healthOld)
+			if (healthNow < healthOld && Stage > healthNow)
 			{
+				Stage = healthNow;
+
 				// Breathe at 89%/79%/69%/49% and 9%.
 
 				switch (healthNow)
