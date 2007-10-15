@@ -90,18 +90,17 @@ namespace DOL.GS
 		/// <returns>Coordinates.</returns>
 		private Point3D GetExitCoordinates(int exitNo)
 		{
-			// Get target coordinates about 3500 units away from dragon
-			// spawn point, this is not correct, because the exits don't
-			// lie exactly to the northwest etc., but it will have to do
-			// for the time being.
+			// Get target coordinates (hardcoded). Yeah I know, this is
+			// ugly, but to get this right NPC pathing is a must; as it
+			// is at the moment, there is no way of knowing where the exits 
+			// are (from the PoV of an NPC).
 
-			int dx = 2475, dy = 2475;
 			switch (exitNo)
 			{
-				case 1: return new Point3D(SpawnX - dx, SpawnY - dy, SpawnZ);
-				case 2: return new Point3D(SpawnX - dx, SpawnY + dy, SpawnZ);
-				case 3: return new Point3D(SpawnX + dx, SpawnY + dy, SpawnZ);
-				case 4: return new Point3D(SpawnX + dx, SpawnY - dy, SpawnZ);
+				case 1: return new Point3D(707026, 1019564, 0);
+				case 2: return new Point3D(706924, 1023596, 0);
+				case 3: return new Point3D(711441, 1023175, 0);
+				case 4: return new Point3D(710708, 1018894, 0);
 				default: return new Point3D(SpawnX, SpawnY, SpawnZ);
 			}
 		}
@@ -118,7 +117,7 @@ namespace DOL.GS
 			// Spawn nasty adds.
 
 			if (m_retrieverList.Contains(sender))
-                SpawnDrakulvs(Util.Random(10, 20), sender.X, sender.Y);
+                SpawnDrakulvs(Util.Random(7, 10), sender.X, sender.Y);
 		}
 
 		/// <summary>
