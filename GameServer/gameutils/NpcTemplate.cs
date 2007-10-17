@@ -429,10 +429,10 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// The Mob's max distance from its spawn before return automatically
-		/// if MaxDistance > 0 ... the amount is the normal value
-		/// if MaxDistance = 0 ... no maxdistance check
-		/// if MaxDistance < 0 ... the amount is calculated in procent of the value and the aggrorange (in StandardMobBrain)
+        /// The Mob's max distance from its spawn before return automatically
+        /// if MaxDistance > 0 ... the amount is the normal value
+        /// if MaxDistance = 0 ... no maxdistance check
+        /// if MaxDistance less than 0 ... the amount is calculated in procent of the value and the aggrorange (in StandardMobBrain)
 		/// </summary>
 		public int MaxDistance
 		{
@@ -447,10 +447,11 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// The mob's tether range; if mob is pulled farther than this distance
-		/// it will return to its spawn point.
-		/// if TetherRange > 0 ... the amount is the normal value
-		/// if TetherRange less or equal 0 ... no tether check
+        /// The mob's tether range; if mob is pulled farther than this distance
+        /// it will return to its spawn point.
+        /// if TetherRange > 0 ... the amount is the normal value
+        /// if TetherRange less or equal 0 ... no tether check
+		/// </summary>
 		public int TetherRange
 		{
 			get { return m_tetherRange; }

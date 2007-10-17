@@ -81,12 +81,12 @@ namespace DOL.GS.Behaviour
         }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AbstractAction<>"/> class.
+        /// Initializes a new instance of the AbstractAction class.
 		/// </summary>
-		/// <param name="npc">The default NPC.</param>		
-		/// <param name="actionType">Type of the action.</param>
-		/// <param name="p">The parameter p.</param>
-		/// <param name="q">The parameter q.</param>
+		/// <param name="npc"></param>
+		/// <param name="actionType"></param>
+		/// <param name="p"></param>
+		/// <param name="q"></param>
 		public AbstractAction(GameNPC npc, eActionType actionType, Object p, Object q) : this (npc,actionType)
 		{		
             ActionAttribute attr = BehaviourMgr.GetActionAttribute(this.GetType());
@@ -159,10 +159,9 @@ namespace DOL.GS.Behaviour
         /// Action performed 
         /// Can be used in subclasses to define special behaviour of actions
         /// </summary>
-        /// <param name="e">DolEvent of notify call</param>
-        /// <param name="sender">Sender of notify call</param>
-        /// <param name="args">EventArgs of notify call</param>
-        /// <param name="player">GamePlayer this call is related to, can be null</param>        
+        /// <param name="e"></param>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         public abstract void Perform(DOLEvent e, object sender, EventArgs args);
         
     }

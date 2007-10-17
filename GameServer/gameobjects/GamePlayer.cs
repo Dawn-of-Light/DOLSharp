@@ -2426,9 +2426,10 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Adds a new Ability to the player
+        /// Adds a new Ability to the player
 		/// </summary>
 		/// <param name="ability"></param>
+		/// <param name="sendUpdates"></param>
 		public void AddAbility(Ability ability, bool sendUpdates)
 		{
 			if (ability == null)
@@ -3256,9 +3257,11 @@ namespace DOL.GS
 			return RemoveBountyPoints(amount, null);
 		}
 		/// <summary>
-		/// Called when this living buy something with realm points
+        /// Called when this living buy something with realm points
 		/// </summary>
-		/// <param name="amount">The amount of realm points loosed</param>
+		/// <param name="amount"></param>
+		/// <param name="str"></param>
+		/// <returns></returns>
 		public bool RemoveBountyPoints(long amount, string str)
 		{
 			return RemoveBountyPoints(amount, str, eChatType.CT_Say, eChatLoc.CL_SystemWindow);
@@ -3709,25 +3712,27 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Called whenever this player gains experience
+        /// Called whenever this player gains experience
 		/// </summary>
-		/// <param name="expTotal">amount of xp to gain</param>
-		/// <param name="expCampBonus">camp bonus to included in total exp</param>
-		/// <param name="expGroupBonus">group bonus included in total exp</param>
-		/// <param name="sendMessage">should exp gain message be sent</param>
+		/// <param name="expTotal"></param>
+		/// <param name="expCampBonus"></param>
+		/// <param name="expGroupBonus"></param>
+		/// <param name="expOutpostBonus"></param>
+		/// <param name="sendMessage"></param>
 		public void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, long expOutpostBonus, bool sendMessage)
 		{
 			GainExperience(expTotal, expCampBonus, expGroupBonus,  expOutpostBonus, sendMessage, true);
 		}
 
 		/// <summary>
-		/// Called whenever this player gains experience
+        /// Called whenever this player gains experience
 		/// </summary>
-		/// <param name="expTotal">amount of xp to gain</param>
-		/// <param name="expCampBonus">camp bonus to included in total exp</param>
-		/// <param name="expGroupBonus">group bonus included in total exp</param>
-		/// <param name="sendMessage">should exp gain message be sent</param>
-		/// <param name="allowMultiply">should the xp amount be multiplied</param>
+		/// <param name="expTotal"></param>
+		/// <param name="expCampBonus"></param>
+		/// <param name="expGroupBonus"></param>
+		/// <param name="expOutpostBonus"></param>
+		/// <param name="sendMessage"></param>
+		/// <param name="allowMultiply"></param>
 		public override void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, long expOutpostBonus, bool sendMessage, bool allowMultiply)
 		{
 			if (!GainXP && expTotal > 0)
@@ -4598,9 +4603,10 @@ namespace DOL.GS
 
 
 		/// <summary>
-		/// Switches the active quiver slot to another one
+        /// Switches the active quiver slot to another one
 		/// </summary>
-		/// <param name="slot">the new eActiveWeaponSlot</param>
+		/// <param name="slot"></param>
+		/// <param name="forced"></param>
 		public virtual void SwitchQuiver(eActiveQuiverSlot slot, bool forced)
 		{
 			if (slot != eActiveQuiverSlot.None)
@@ -4867,13 +4873,15 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Called whenever a single attack strike is made
+        /// Called whenever a single attack strike is made
 		/// </summary>
-		/// <param name="target">the target of attack</param>
-		/// <param name="weapon">the weapon to use for attack</param>
-		/// <param name="style">the style to use for attack</param>
-		/// <param name="effectiveness">damage effectiveness (0..1)</param>
-		/// <returns>the object where we collect and modifiy all parameters about the attack</returns>
+		/// <param name="target"></param>
+		/// <param name="weapon"></param>
+		/// <param name="style"></param>
+		/// <param name="effectiveness"></param>
+		/// <param name="interruptDuration"></param>
+		/// <param name="dualWield"></param>
+		/// <returns></returns>
 		protected override AttackData MakeAttack(GameObject target, InventoryItem weapon, Style style, double effectiveness, int interruptDuration, bool dualWield)
 		{
 			AttackData ad = base.MakeAttack(target, weapon, style, effectiveness * PlayerEffectiveness, interruptDuration, dualWield);
@@ -9411,10 +9419,11 @@ namespace DOL.GS
 			return gameItem;
 		}
 		/// <summary>
-		/// Called when the player picks up an item from the ground
+        /// Called when the player picks up an item from the ground
 		/// </summary>
-		/// <param name="floorObject">GameItem on the floor</param>
-		/// <returns>true if picked up</returns>
+		/// <param name="floorObject"></param>
+		/// <param name="checkRange"></param>
+		/// <returns></returns>
         public virtual bool PickupObject(GameObject floorObject, bool checkRange)
 		{
 			if (floorObject == null)
@@ -10945,10 +10954,11 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Add a new crafting skill to the player
+        /// Add a new crafting skill to the player
 		/// </summary>
-		/// <param name="skill">the crafting skill to add</param>
-		/// <returns>true if the skill correctly added and false if not</returns>
+		/// <param name="skill"></param>
+		/// <param name="startValue"></param>
+		/// <returns></returns>
 		public virtual bool AddCraftingSkill(eCraftingSkill skill, int startValue)
 		{
 			if (skill == eCraftingSkill.NoCrafting) return false;
@@ -11735,9 +11745,10 @@ namespace DOL.GS
 			private readonly InvulnerabilityExpiredCallback m_callback;
 
 			/// <summary>
-			/// Constructs a new InvulnerabilityTimer
+            /// Constructs a new InvulnerabilityTimer
 			/// </summary>
-			/// <param name="actionSource">The action source</param>
+			/// <param name="actionSource"></param>
+			/// <param name="callback"></param>
 			public InvulnerabilityTimer(GamePlayer actionSource, InvulnerabilityExpiredCallback callback)
 				: base(actionSource)
 			{

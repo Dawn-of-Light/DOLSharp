@@ -168,12 +168,14 @@ namespace DOL.GS.Keeps
 		}
 
 		/// <summary>
-		/// Creates a position
+        /// Creates a position
 		/// </summary>
-		/// <param name="type">The Type of the object which occupies the position</param>
-		/// <param name="height">The height that the position is assigned to</param>
-		/// <param name="player">The player object</param>
-		/// <returns>The position object</returns>
+		/// <param name="type"></param>
+		/// <param name="height"></param>
+		/// <param name="player"></param>
+		/// <param name="guardID"></param>
+		/// <param name="component"></param>
+		/// <returns></returns>
 		public static DBKeepPosition CreatePosition(Type type, int height, GamePlayer player, string guardID, GameKeepComponent component)
 		{
 			DBKeepPosition pos = CreatePosition(guardID, component, player);
@@ -333,10 +335,11 @@ namespace DOL.GS.Keeps
 		}
 
 		/// <summary>
-		/// Method to save the Patrol Path using the Patrol ID and the Component
+        /// Method to save the Patrol Path using the Patrol ID and the Component
 		/// </summary>
-		/// <param name="pathID">The path ID, which is the Patrol ID</param>
-		/// <param name="path">The Path object</param>
+		/// <param name="pathID"></param>
+		/// <param name="path"></param>
+		/// <param name="component"></param>
 		public static void SavePatrolPath(string pathID, PathPoint path, GameKeepComponent component)
 		{
 			if (path == null)

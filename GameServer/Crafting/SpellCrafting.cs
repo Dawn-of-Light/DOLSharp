@@ -528,9 +528,10 @@ namespace DOL.GS
 		#region Calcul functions
 
 		/// <summary>
-		/// Get the sucess chance to overcharge the item
+        ///  Get the sucess chance to overcharge the item
 		/// </summary>
 		/// <param name="player"></param>
+		/// <param name="item"></param>
 		/// <param name="maxBonusLevel"></param>
 		/// <param name="bonusLevel"></param>
 		/// <returns></returns>
@@ -688,9 +689,10 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Get the chance to preserve item while overcharging
+        /// Get the chance to preserve item while overcharging
 		/// </summary>
 		/// <param name="player"></param>
+		/// <param name="item"></param>
 		/// <param name="maxBonusLevel"></param>
 		/// <param name="bonusLevel"></param>
 		/// <returns></returns>

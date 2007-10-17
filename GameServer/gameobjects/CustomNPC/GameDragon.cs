@@ -356,12 +356,14 @@ namespace DOL.GS
 		private INpcTemplate m_addTemplate;
 
 		/// <summary>
-		/// Create an add from the specified template.
+        /// Create an add from the specified template.
 		/// </summary>
-		/// <param name="templateID">The template ID to be used for the spawn.</param>
-		/// <param name="level">The level of the spawned add.</param>
-		/// <param name="uptime">The time in seconds after which this mob will despawn.</param>
-		/// <returns>A reference to the spawned NPC.</returns>
+		/// <param name="templateID"></param>
+		/// <param name="level"></param>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="uptime"></param>
+		/// <returns></returns>
 		protected GameNPC SpawnTimedAdd(int templateID, int level, int x, int y, int uptime)
 		{
 			GameNPC add = null;
@@ -848,4 +850,5 @@ namespace DOL.GS
 		#endregion		
 	}
 }
+
 

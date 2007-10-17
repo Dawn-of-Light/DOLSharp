@@ -235,12 +235,13 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Starts the storm in the region
+        /// Starts the storm in the region
 		/// </summary>
-		/// <param name="x">The starting line of the storm in coordinates</param>
-		/// <param name="duration">The cloude width in coordinates</param>
-		/// <param name="speed">The speed of the storm in coordinates/second</param>
-		/// <param name="intensity">The intensity of the storm</param>
+		/// <param name="x"></param>
+		/// <param name="duration"></param>
+		/// <param name="speed"></param>
+		/// <param name="fog"></param>
+		/// <param name="intensity"></param>
 		public void StartStorm(uint x, uint duration, ushort speed, ushort fog, ushort intensity)
 		{
 			m_startX = x;

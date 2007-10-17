@@ -231,9 +231,10 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// get relic count by realm and relictype
+        /// get relic count by realm and relictype
 		/// </summary>
 		/// <param name="realm"></param>
+		/// <param name="type"></param>
 		/// <returns></returns>
 		public static int GetRelicCount(byte realm, eRelicType type)
 		{

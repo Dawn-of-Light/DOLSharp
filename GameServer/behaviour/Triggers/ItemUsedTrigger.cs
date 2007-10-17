@@ -38,18 +38,22 @@ namespace DOL.GS.Behaviour.Triggers
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
-		/// Creates a new questtrigger and does some simple triggertype parameter compatibility checking
-		/// </summary>		
-		/// <param name="k">keyword (K), meaning depends on triggertype</param>
-		/// <param name="i">variable (I), meaning depends on triggertype</param>
+        /// Creates a new questtrigger and does some simple triggertype parameter compatibility checking
+		/// </summary>
+		/// <param name="defaultNPC"></param>
+		/// <param name="notifyHandler"></param>
+		/// <param name="k"></param>
+		/// <param name="i"></param>
         public ItemUsedTrigger(GameNPC defaultNPC, DOLEventHandler notifyHandler,  Object k, Object i)
             : base(defaultNPC, notifyHandler, eTriggerType.ItemUsed, k, i)
         { }
 
         /// <summary>
         /// Creates a new questtrigger and does some simple triggertype parameter compatibility checking
-        /// </summary>        
-        /// <param name="i">variable (I), meaning depends on triggertype</param>
+        /// </summary>
+        /// <param name="defaultNPC"></param>
+        /// <param name="notifyHandler"></param>
+        /// <param name="i"></param>
         public ItemUsedTrigger(GameNPC defaultNPC, DOLEventHandler notifyHandler, ItemTemplate i)
             : this(defaultNPC,notifyHandler, (object)null,(object) i)
         { }

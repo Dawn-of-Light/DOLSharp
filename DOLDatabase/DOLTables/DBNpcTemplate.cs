@@ -460,7 +460,7 @@ namespace DOL.Database
 		/// The Mob's max distance from its spawn before return automatically
 		/// if MaxDistance > 0 ... the amount is the normal value
 		/// if MaxDistance = 0 ... no maxdistance check
-		/// if MaxDistance < 0 ... the amount is calculated in procent of the value and the aggrorange (in StandardMobBrain)
+		/// if MaxDistance less than 0 ... the amount is calculated in procent of the value and the aggrorange (in StandardMobBrain)
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
 		public int MaxDistance
@@ -480,7 +480,7 @@ namespace DOL.Database
 		/// The mob's tether range; if mob is pulled farther than this distance
 		/// it will return to its spawn point.
 		/// if TetherRange > 0 ... the amount is the normal value
-		/// if TetherRange <= 0 ... no tether check
+		/// if TetherRange less than or equal to 0 ... no tether check
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
 		public int TetherRange
