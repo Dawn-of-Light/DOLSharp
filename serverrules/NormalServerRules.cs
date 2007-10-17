@@ -201,7 +201,7 @@ namespace DOL.GS.ServerRules
 				if ((((GameNPC)source).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
 					return true;
 
-			if(source.Realm != target.Realm) return false;
+			if(source.Realm > 0 && source.Realm != target.Realm) return false;
 			return true;
 		}
 

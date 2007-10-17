@@ -292,7 +292,7 @@ namespace DOL.AI.Brain
             {
 				IDictionaryEnumerator dictEnum = m_aggroTable.GetEnumerator();
 				while (dictEnum.MoveNext())
-					brain.AddToAggroList((GameLiving)dictEnum.Key, Util.Random(1, 50));
+					brain.AddToAggroList((GameLiving)dictEnum.Key, Body.MaxHealth);
             }
         }
 

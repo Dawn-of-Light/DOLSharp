@@ -55,12 +55,12 @@ namespace DOL.GS
 			bool isRetriever = false;
 			m_retrieverList.Clear();
 
-			// Spawn 10 adds, in most cases (75% chance) these adds will be level 
+			// Spawn dogs, in most cases (75% chance) these dogs will be level 
 			// 37 and con green (decoys), in some cases (25%) they will be
 			// retrievers, who will try to get out of the lair and, if successful,
-			// cause Gjalpinulva to spawn 10-20 deep purple adds.
+			// cause Gjalpinulva to spawn a couple of deep purple adds.
 
-			for (int add = 1; add <= 10; ++add)
+			for (int dog = 1; dog <= 10; ++dog)
 			{
 				isRetriever = Util.Chance(25);
 				dogSpawn = SpawnTimedAdd((isRetriever) ? 610 : 611, 
