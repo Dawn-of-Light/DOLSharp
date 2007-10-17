@@ -3749,7 +3749,11 @@ namespace DOL.GS
 		/// </summary>
 		public override IControlledBrain ControlledNpc
 		{
-			get { return m_controlledNpc[0]; }
+			get 
+			{
+				if (m_controlledNpc == null) return null;
+				return m_controlledNpc[0];
+			}
 		}
 
 		/// <summary>

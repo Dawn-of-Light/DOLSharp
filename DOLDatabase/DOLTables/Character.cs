@@ -143,6 +143,7 @@ namespace DOL
 			private int m_respecAmountSingleSkill; // Single-Line Respecs
 			private int m_respecAmountRealmSkill; //realm respecs
 			private int m_respecAmountDOL; // Patch 1.84 /respec Mythic
+			private int m_respecAmountChampionSkill; // CL Respecs
 			private bool m_isLevelRespecUsed;
 			private bool m_safetyFlag;
 			private int m_craftingPrimarySkill = 0;
@@ -169,7 +170,21 @@ namespace DOL
 			private bool m_showGuildLogins;
 
 			private string m_guildNote = "";
-
+			
+            //CLs
+            private bool m_cl;
+            private long m_clExperience;
+            private int m_clLevel;
+            private int m_clSpecPoints;
+            private string m_clSpells;
+			
+            // MLs
+            private byte m_ml;
+            private long m_mlExperience;
+            private int m_mlLevel;
+            private int m_mlStep;
+            private bool m_mlGranted;
+			
 			static bool m_autoSave;
 
 			/// <summary>
@@ -1458,7 +1473,22 @@ namespace DOL
 				}
 			}
 			
-
+			/// <summary>
+			/// Gets/sets the characters single-line respecs available
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public int RespecAmountChampionSkill
+			{
+				get
+				{
+					return m_respecAmountChampionSkill;
+				}
+				set
+				{
+					Dirty = true;
+					m_respecAmountChampionSkill = value;
+				}
+			}
 			/// <summary>
 			/// Gets/Sets level respec flag
 			/// </summary>
@@ -1992,7 +2022,168 @@ namespace DOL
 			{
 				get { return m_showGuildLogins; }
 				set { Dirty = true; m_showGuildLogins = value; }
+			}	
+			
+			/// <summary>
+			/// Is Champion level activated
+			/// </summary>	           
+            [DataElement(AllowDbNull = true)]
+            public bool Champion
+            {
+                get
+                {
+                    return m_cl;
+                }
+                set
+                {
+                    m_cl = value;
+                    Dirty = true;
+                }
+            } 
+ 			/// <summary>
+			/// Champion level
+			/// </summary>		           
+            [DataElement(AllowDbNull = true)]
+            public int ChampionLevel
+            {
+                get
+                {
+                    return m_clLevel;
+                }
+                set
+                {
+                    m_clLevel = value;
+                    Dirty = true;
+                }
+            }             
+			/// <summary>
+			/// Champion Available speciality points
+			/// </summary>			
+            [DataElement(AllowDbNull = true)]
+            public int ChampionSpecialtyPoints
+            {
+                get
+                {
+                    return m_clSpecPoints;
+                }
+                set
+                {
+                    m_clSpecPoints = value;
+                    Dirty = true;
+                }
+            }
+ 			/// <summary>
+			/// Champion Experience
+			/// </summary>		           
+            [DataElement(AllowDbNull = true)]
+            public long ChampionExperience
+            { 
+                get
+                {
+                    return m_clExperience;
+                }
+                set
+                {
+                    m_clExperience = value;
+                    Dirty = true;
+                }
+            }   
+			/// <summary>
+			/// Champion Spells
+			/// </summary>		           
+            [DataElement(AllowDbNull = true)]
+            public string ChampionSpells
+            { 
+                get
+                {
+                    return m_clSpells;
+                }
+                set
+                {
+                    m_clSpells = value;
+                    Dirty = true;
+                }
+            }               
+ 			/// <summary>
+			/// ML Line
+			/// </summary>
+			[DataElement(AllowDbNull = false)]
+			public byte ML
+			{
+				get
+				{
+					return m_ml;
+				}
+				set
+				{
+					Dirty = true;
+					m_ml = value;
+				}
 			}
+			/// <summary>
+			/// ML Experience of this character
+			/// </summary>
+			[DataElement(AllowDbNull = false)]
+			public long MLExperience
+			{
+				get
+				{
+					return m_mlExperience;
+				}
+				set
+				{
+					Dirty = true;
+					m_mlExperience = value;
+				}
+			}
+			/// <summary>
+			/// ML Level of this character
+			/// </summary>
+			[DataElement(AllowDbNull = false)]
+			public int MLLevel
+			{
+				get
+				{
+					return m_mlLevel;
+				}
+				set
+				{
+					Dirty = true;
+					m_mlLevel = value;
+				}
+			}
+			/// <summary>
+			/// ML Step of this character
+			/// </summary>
+			[DataElement(AllowDbNull = false)]
+			public int MLStep
+			{
+				get
+				{
+					return m_mlStep;
+				}
+				set
+				{
+					Dirty = true;
+					m_mlStep = value;
+				}
+			}			
+			/// <summary>
+			/// ML step is granted to this character
+			/// </summary>
+			[DataElement(AllowDbNull = false)]
+			public bool MLGranted
+			{
+				get
+				{
+					return m_mlGranted;
+				}
+				set
+				{
+					Dirty = true;
+					m_mlGranted = value;
+				}
+			}        
 		}
 	}
 }

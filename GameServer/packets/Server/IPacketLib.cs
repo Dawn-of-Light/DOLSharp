@@ -505,6 +505,7 @@ namespace DOL.GS.PacketHandler
 		void SendRemoveFriends(string[] friendNames);
 		void SendTimerWindow(string title, int seconds);
 		void SendCloseTimerWindow();
+        void SendChampionTrainerWindow(int type);
 		void SendTrainerWindow();
 		void SendInterruptAnimation(GameLiving living);
 		void SendDisableSkill(Skill skill, int duration);

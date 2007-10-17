@@ -1201,6 +1201,11 @@ namespace DOL.GS
 		{
 			m_specsByName[spec.KeyName] = spec;
 		}
+		
+		public static void UnRegisterSpellLine(string LineKeyName)
+		{
+			m_spellLinesByName.Remove(LineKeyName);
+		}
 
 		/// <summary>
 		/// returns level 1 instantiated realm abilities, only for readonly use!
@@ -1285,7 +1290,33 @@ namespace DOL.GS
 			return new SpellLine(keyname, "?" + keyname, "", true);
 		}
 
-
+       // FOR CHAMPION ABILITIES :D
+        public static void AddSpellToList(string spellLineID, int SpellID)
+        {
+            ArrayList spell_list = new ArrayList();
+            int insertpos = 0;
+            IList list = (IList)m_spellLists[spellLineID];
+            Spell spl = GetSpellByID(SpellID);
+            if (list != null)
+            {
+                foreach (Spell spell in list)
+                {
+                	if(spell.Name==spl.Name) return;
+                }          
+                foreach (Spell spell in list)
+                {                	
+                    // find right position for insert
+                    for (insertpos = 1; insertpos <= spell_list.Count; insertpos++)
+                    {
+                        if (spell.Level < ((Spell)spell_list[insertpos-1]).Level)
+                            break;
+                    }
+                    spell_list.Insert(insertpos-1, spell);
+                }
+            }     
+            spell_list.Insert(insertpos, spl);
+            m_spellLists[spellLineID] = spell_list;
+        }
 		/// <summary>
 		///
 		/// </summary>

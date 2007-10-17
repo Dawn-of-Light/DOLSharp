@@ -2334,6 +2334,44 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(0);
 			SendTCP(pak);
 		}
+		
+        public virtual void SendChampionTrainerWindow(int type)
+        {
+            GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.TrainerWindow));
+            pak.WriteByte((byte)type);
+            pak.WriteByte((byte)m_gameClient.Player.ChampionSpecialtyPoints);
+            pak.WriteByte((byte)2);
+            pak.WriteByte((byte)0);
+            pak.WriteByte((byte)6);
+
+            for (int skillindex = 1; skillindex < 7; skillindex++)
+            {
+                IList specs = ChampSpecMgr.GetAbilityForIndex(type, skillindex);
+                pak.WriteByte((byte)skillindex);
+                pak.WriteByte((byte)specs.Count);
+
+                foreach (ChampSpec spec in specs)
+                {
+                    pak.WriteByte((byte)spec.Index);
+                    Spell spell = SkillBase.GetSpellByID(spec.SpellID);
+                    if (spell.SpellType == "StyleHandler")
+                    {
+                        pak.WriteByte(1);
+                    }
+                    else { pak.WriteByte(3); }
+                    pak.WriteShortLowEndian(spell.Icon);
+                    pak.WritePascalString(spell.Name);
+                    if(m_gameClient.Player.HaveChampionSpell(spec.SpellID))
+                    	pak.WriteByte((byte)1);
+                    else if(m_gameClient.Player.IsCSAvailable(type, skillindex, spec.Index))
+                    	pak.WriteByte((byte)2);
+                    else
+                    	pak.WriteByte((byte)0);
+                    pak.WriteByte(0);
+                }
+            }
+            SendTCP(pak);               
+        }
 
 		public virtual void SendTrainerWindow()
 		{

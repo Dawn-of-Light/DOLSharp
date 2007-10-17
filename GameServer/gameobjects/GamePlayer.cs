@@ -545,6 +545,9 @@ namespace DOL.GS
 			if (CurrentRegion.IsInstance)
 				MoveTo((ushort)PlayerCharacter.BindRegion, PlayerCharacter.BindXpos, PlayerCharacter.BindYpos, PlayerCharacter.BindZpos, (ushort)PlayerCharacter.BindHeading);
 
+			// Remove champion dedicated spell line
+			SkillBase.UnRegisterSpellLine("Champion Abilities"+Name);
+			
 			// cancel all effects until saving of running effects is done
 			try
 			{
@@ -3734,7 +3737,7 @@ namespace DOL.GS
 		/// <param name="sendMessage"></param>
 		/// <param name="allowMultiply"></param>
 		public override void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, long expOutpostBonus, bool sendMessage, bool allowMultiply)
-		{
+		{			
 			if (!GainXP && expTotal > 0)
 				return;
 
@@ -3751,6 +3754,9 @@ namespace DOL.GS
 				expTotal += expCampBonus;
 			}
 
+			// Get Champion Experience too
+			GainChampionExperience(expTotal);
+			
 			//catacombs characters get 50% boost if they are elligable for slash level
 			switch ((eCharacterClass)CharacterClass.ID)
 			{
@@ -3772,7 +3778,6 @@ namespace DOL.GS
 						break;
 					}
 			}
-
 
 			base.GainExperience(expTotal, expCampBonus, expGroupBonus, expOutpostBonus, sendMessage, allowMultiply);
 
@@ -9770,6 +9775,9 @@ namespace DOL.GS
 		{
 			Character character = PlayerCharacter; // if its derived and filled with some code
 			if ( character == null ) return; // no character => exit
+
+			//Lohx - champion abilities
+            LoadChampionSpells();			
 			
 			Hashtable disabledAbilities = new Hashtable();
 			Hashtable disabledSpells = new Hashtable();
@@ -12393,6 +12401,301 @@ namespace DOL.GS
             WraithTimer = new RegionTimer(this, new RegionTimerCallback(WraithForm), 30000);
         }
         #endregion
+        
+       	#region Champion Levels
+         /// <summary> 
+        /// The maximum champion level a player can reach 
+        /// </summary> 
+        public const int CL_MAX_LEVEL = 10;
+        /// <summary> 
+        /// A table that holds the required XP/Level 
+        /// </summary> 
+        public static readonly long[] CLXPLevel = 
+        { 
+            0, //xp tp level 0 
+            32000, //xp to level 1 
+         	64000, // xp to level 2 
+         	96000, // xp to level 3 
+         	128000, // xp to level 4 
+         	160000, // xp to level 5 
+         	192000, // xp to level 6 
+         	224000, // xp to level 7 
+         	256000, // xp to level 8 
+         	288000, // xp to level 9 
+         	320000, // xp to level 10 
+        };        	
+		/// <summary>
+		/// Is Champion level activated
+		/// </summary>	        
+		public virtual bool Champion
+		{
+        	get { return PlayerCharacter != null ? PlayerCharacter.Champion : false; }
+            set { if ( PlayerCharacter != null ) PlayerCharacter.Champion = value; }	
+		}
+ 		/// <summary>
+		/// Champion level
+		/// </summary>			
+ 		public virtual int ChampionLevel
+		{
+        	get { return PlayerCharacter != null ? PlayerCharacter.ChampionLevel : 0; }
+            set { if ( PlayerCharacter != null ) PlayerCharacter.ChampionLevel = value; }	
+		} 
+ 		/// <summary>
+		/// Champion Experience
+		/// </summary>		
+		public virtual long ChampionExperience
+		{
+        	get { return PlayerCharacter != null ? PlayerCharacter.ChampionExperience : 0; }
+            set { if ( PlayerCharacter != null ) PlayerCharacter.ChampionExperience = value; }	
+		}
+		/// <summary>
+		/// Champion Available speciality points
+		/// </summary>		
+        public virtual int ChampionSpecialtyPoints
+        {
+            get { return PlayerCharacter != null ? PlayerCharacter.ChampionSpecialtyPoints : 0; }
+            set { if (PlayerCharacter != null) PlayerCharacter.ChampionSpecialtyPoints = value; }
+        }  
+		/// <summary>
+		/// Serialised Champion spells
+		/// </summary>		
+        public virtual string ChampionSpells
+        {
+            get { return PlayerCharacter != null ? PlayerCharacter.ChampionSpells : null; }
+            set { if (PlayerCharacter != null) PlayerCharacter.ChampionSpells = value; }
+        }           
+        /// <summary> 
+        /// Returns how far into the champion level we have progressed 
+        /// A value between 0 and 1000 (1 bubble = 100) 
+        /// </summary> 
+        public virtual ushort ChampionLevelPermill 
+        { 
+            get 
+            { 
+                //No progress if we haven't even reached current level! 
+                if (ChampionExperience <= ChampionExperienceForCurrentLevel) 
+                    return 0; 
+                //No progess after maximum level 
+                if (ChampionLevel > CL_MAX_LEVEL) // needed to get exp after 50 
+                    return 0; 
+                return (ushort)(1000 * (ChampionExperience - ChampionExperienceForCurrentLevel) / (ChampionExperienceForNextLevel - ChampionExperienceForCurrentLevel)); 
+            } 
+        } 
+        /// <summary> 
+        /// Returns the xp that are needed for the next level 
+        /// </summary> 
+        public virtual long ChampionExperienceForNextLevel 
+        { 
+            get { return GetChampionExperienceForLevel(ChampionLevel + 1); } 
+        } 
+        /// <summary> 
+        /// Returns the xp that were needed for the current level 
+        /// </summary> 
+        public virtual long ChampionExperienceForCurrentLevel 
+        { 
+            get { return GetChampionExperienceForLevel(ChampionLevel); } 
+        }        
+ 		/// <summary>
+		/// Gets/Sets amount of champion skills respecs
+		/// (delegate to PlayerCharacter)
+		/// </summary>
+		public virtual int RespecAmountChampionSkill
+		{
+			get { return PlayerCharacter != null ? PlayerCharacter.RespecAmountChampionSkill : 0; }
+			set { if ( PlayerCharacter != null ) PlayerCharacter.RespecAmountChampionSkill = value; }
+		}
+        /// <summary>
+        /// Returns the xp that are needed for the specified level 
+        /// </summary>         
+		public virtual long GetChampionExperienceForLevel(int level) 
+        { 
+            if (level > CL_MAX_LEVEL) 
+                return CLXPLevel[GamePlayer.CL_MAX_LEVEL]; // exp for level 51, needed to get exp after 50 
+            if (level <= 0) 
+                return CLXPLevel[0]; 
+            return CLXPLevel[level - 1]; 
+        }         
+        /// <summary> 
+        /// The process that gains exp 
+        /// </summary> 
+        /// <param name="experience">Amount of Experience</param> 
+        public virtual void GainChampionExperience(long experience) 
+        { 
+        	// Do not gain experience if champion not activated or if champion max level reached
+ 			if (!Champion || ChampionLevel == CL_MAX_LEVEL)
+				return;
+ 			
+            if (experience > 0) 
+            { 
+                double modifier = ServerProperties.Properties.XP_RATE; 
+                experience = (long)((double)experience * modifier / 200000); 
+            } 
+            System.Globalization.NumberFormatInfo format = System.Globalization.NumberFormatInfo.InvariantInfo; 
+            string totalexp = experience.ToString("N0", format); 
+
+            // Wtf this screws up level 0 
+            if (ChampionExperience + experience < ChampionExperienceForCurrentLevel)  
+           		experience = ChampionExperienceForCurrentLevel - ChampionExperience; 
+
+         	if (experience > 0) 
+         	{ 
+                System.Globalization.NumberFormatInfo format2 = System.Globalization.NumberFormatInfo.InvariantInfo; 
+                string totalXP = experience.ToString("N0", format2); 
+
+            	Out.SendMessage("You get " + totalXP + " champion experience points.", eChatType.CT_Important, eChatLoc.CL_SystemWindow); 
+         	} 
+
+         	ChampionExperience += experience; // force usage of this method, Experience property cannot be set 
+ 
+         	if (experience >= 0) 
+         	{ 
+           	 	//Level up 
+                if (ChampionLevel < CL_MAX_LEVEL && ChampionExperience >= ChampionExperienceForNextLevel) 
+                    ChampionLevelUp();  
+         	} 
+        } 
+        /// <summary> 
+        /// Holds what happens when your champion level goes up; 
+        /// </summary> 
+        public virtual void ChampionLevelUp() 
+        { 
+            ChampionLevel++; 
+            ChampionSpecialtyPoints++;            
+            /*
+            //Code for w/e happens when your CL goes up... 
+            if (ChampionLevel == 3) 
+            { 
+                switch (Realm) 
+                { 
+                    case 1: 
+                        AddAbility(SkillBase.GetAbility(Abilities.Weapon_Slashing)); 
+                        AddAbility(SkillBase.GetAbility(Abilities.Weapon_Thrusting)); 
+                        AddAbility(SkillBase.GetAbility(Abilities.Weapon_Crushing)); 
+                        break; 
+                    case 2: 
+                        AddAbility(SkillBase.GetAbility(Abilities.Weapon_Axes)); 
+                        AddAbility(SkillBase.GetAbility(Abilities.Weapon_Hammers)); 
+                        AddAbility(SkillBase.GetAbility(Abilities.Weapon_Swords)); 
+                        break; 
+                    case 3: 
+                        AddAbility(SkillBase.GetAbility(Abilities.Weapon_Blades)); 
+                        AddAbility(SkillBase.GetAbility(Abilities.Weapon_Blunt)); 
+                        AddAbility(SkillBase.GetAbility(Abilities.Weapon_Piercing)); 
+                        break; 
+                } 
+                AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small)); 
+            } 
+            */
+ 			Out.SendMessage("You have gained one champion level!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);         
+            Out.SendUpdatePlayer(); 
+            Out.SendUpdatePoints(); 
+            UpdatePlayerStatus(); 
+        }        
+        /// <summary> 
+        /// Load champion spells of this player 
+        /// </summary>  
+        protected virtual void LoadChampionSpells()
+        {
+        	string championSpells = ChampionSpells;
+        	Hashtable championSpellsh = new Hashtable();
+            SpellLine line = new SpellLine("Champion Abilities"+Name, "Champion Abilities", "Champion Abilities", true);
+            line.Level = 50;
+            SkillBase.RegisterSpellLine(line);
+            if (championSpells != null && championSpells.Length > 0)
+            {                
+                foreach (string cSpell in championSpells.Split(';'))
+                {
+                    string[] cSpellProp = cSpell.Split('|');
+                    if (cSpellProp.Length < 2) continue;
+                    championSpellsh.Add(cSpellProp[0], int.Parse(cSpellProp[0]));
+                }
+            }
+            if (championSpellsh != null)
+            {
+                foreach (DictionaryEntry de in championSpellsh)
+                {
+                    SkillBase.AddSpellToList("Champion Abilities" + Name, (int)de.Value);
+                }
+                AddSpellLine(line);
+            }
+            championSpellsh = null;
+        }
+        /// <summary> 
+        /// Checks if player has this champion spell 
+        /// </summary>         
+        public virtual bool HaveChampionSpell(int spellid)
+        {
+            string championSpells = ChampionSpells;
+            if (championSpells != null && championSpells.Length > 0)
+            {
+                foreach (string cSpell in championSpells.Split(';'))
+                {
+                    string[] cSpellProp = cSpell.Split('|');
+                    if (cSpellProp.Length < 2) continue;
+                    if(int.Parse(cSpellProp[0]) == spellid) return true;
+                }
+            }
+            return false;
+        }       
+        /// <summary> 
+        /// Returns if spell is available (for trainer window)
+        /// </summary> 
+        public virtual bool IsCSAvailable(int idline, int skillindex, int index)
+        {
+ 			// TODO : this has to be reviewed. Original code has some problem with cross lines etc.
+            ChampSpec spec = ChampSpecMgr.GetAbilityFromIndex(idline, skillindex, index - 1);
+            if (spec != null) return HaveChampionSpell(spec.SpellID);
+            else return true;
+        }
+        #endregion
+		
+		#region Master levels
+       /// <summary> 
+        /// The maximum ML level a player can reach 
+        /// </summary>
+        public const int ML_MAX_LEVEL = 10;         
+        /// <summary> 
+        /// Holds the ml line 
+        /// </summary> 
+        public virtual byte ML 
+        { 
+        	get { return PlayerCharacter != null ? PlayerCharacter.ML : (byte)0; }
+            set { if ( PlayerCharacter != null ) PlayerCharacter.ML = value; }
+        } 
+        /// <summary> 
+        /// Gets and sets the ML Level of this character 
+        /// </summary> 
+        public virtual int MLLevel 
+        { 
+        	get { return PlayerCharacter != null ? PlayerCharacter.MLLevel : 0; }
+            set { if ( PlayerCharacter != null ) PlayerCharacter.MLLevel = value; }
+        } 
+        /// <summary> 
+        /// Gets and sets ML Step 
+        /// </summary> 
+        public virtual int MLStep 
+        { 
+            get { return PlayerCharacter != null ? PlayerCharacter.MLStep : 1; } 
+            set { if ( PlayerCharacter != null ) PlayerCharacter.MLStep = value; }
+        }       
+        /// <summary> 
+        /// Gets and sets ML Experience 
+        /// </summary> 
+        public virtual long MLExperience 
+        { 
+            get { return PlayerCharacter != null ? PlayerCharacter.MLExperience : 0; } 
+            set { if ( PlayerCharacter != null ) PlayerCharacter.MLExperience = value; }
+        }                
+        /// <summary> 
+        /// Gets and sets ML Step granted flag 
+        /// </summary> 
+        public virtual bool MLGranted
+        { 
+            get { return PlayerCharacter != null ? PlayerCharacter.MLGranted : false; } 
+            set { if ( PlayerCharacter != null ) PlayerCharacter.MLGranted = value; }
+        }         
+       	#endregion
+       	
 
 		/// <summary>
 		/// Returns the string representation of the GamePlayer

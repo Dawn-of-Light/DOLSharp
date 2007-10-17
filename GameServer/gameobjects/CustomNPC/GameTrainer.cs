@@ -33,7 +33,30 @@ namespace DOL.GS
 	/// </summary>
 	public class GameTrainer : GameNPC
 	{
-		public virtual eCharacterClass TrainedClass 
+		// Values from live servers
+		public enum CLTrainerTypes : int
+		{
+			Acolyte = 4,
+			AlbionRogue = 2,
+			Disciple = 7,
+			Elementalist = 5,
+			Fighter = 1,
+			Forester = 12,
+			Guardian = 1,
+			Mage = 6,
+			Magician = 11,
+			MidgardRogue = 3,
+			Mystic = 9,
+			Naturalist = 10,
+			Seer = 8,
+			Stalker = 2,
+			Viking = 1,			
+		}
+		
+		// Current trainer type, 0 is for normal trainers.
+		public int TrainerType = 0;
+
+		public virtual eCharacterClass TrainedClass
 		{
 			get { return eCharacterClass.Unknown; }
 		}
@@ -43,7 +66,13 @@ namespace DOL.GS
 		public GameTrainer()
 		{
 		}
-
+		/// <summary>
+		/// Constructs a new GameTrainer that will also train Champion level
+		/// </summary>
+		public GameTrainer(int CLTrainerType)
+		{
+			TrainerType	= CLTrainerType;		
+		}
 		#region GetExamineMessages
 		/// <summary>
 		/// Adds messages to ArrayList which are sent when object is targeted
@@ -112,9 +141,12 @@ namespace DOL.GS
             {
                 player.Out.SendMessage(String.Format("{0} says, \" {1}, if you wish, I can undo the training you've done so far and give you the ability to train again. This would allow you to [respecialize] your skills. If you are interested, you must simply let me know.\"", this.Name, player.Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
             }
-			
+			            
 			// Turn to face player
 			TurnTo(player, 10000);
+
+			if (TrainerType > 0 && player.Level >= 50)
+				player.Out.SendChampionTrainerWindow(TrainerType);
 
 			return true;
 		}
@@ -205,7 +237,7 @@ namespace DOL.GS
 							player.RespecAmountRealmSkill++;
 							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.ReceiveItem.RespecRealm"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							return true;
-						}
+						}						
 				}
 			}
 
