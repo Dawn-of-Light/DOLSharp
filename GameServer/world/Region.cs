@@ -511,11 +511,13 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Loads the region from database
+        /// Loads the region from database
 		/// </summary>
-		/// <param name="mobCount">The count of loaded mobs</param>
-		/// <param name="merchantCount">The count of loaded merchants</param>
-		/// <param name="itemCount">The count of loaded items</param>
+		/// <param name="mobObjs"></param>
+		/// <param name="mobCount"></param>
+		/// <param name="merchantCount"></param>
+		/// <param name="itemCount"></param>
+		/// <param name="bindCount"></param>
 		public void LoadFromDatabase(Mob[] mobObjs, ref long mobCount, ref long merchantCount, ref long itemCount, ref long bindCount)
 		{
 			Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
@@ -1145,9 +1147,11 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets the areas for a certain spot
+        /// Gets the areas for a certain spot
 		/// </summary>
+		/// <param name="zone"></param>
 		/// <param name="p"></param>
+		/// <param name="checkZ"></param>
 		/// <returns></returns>
 		public IList GetAreasOfZone(Zone zone, IPoint3D p, bool checkZ)
 		{

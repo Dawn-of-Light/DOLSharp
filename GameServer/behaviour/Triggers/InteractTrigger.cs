@@ -38,12 +38,12 @@ namespace DOL.GS.Behaviour.Triggers
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
-		/// Creates a new questtrigger and does some simple triggertype parameter compatibility checking
+        /// Creates a new questtrigger and does some simple triggertype parameter compatibility checking
 		/// </summary>
-		/// <param name="questPart">Parent QuestPart of this Trigger</param>
-		/// <param name="type">Triggertype</param>
-		/// <param name="k">keyword (K), meaning depends on triggertype</param>
-		/// <param name="i">variable (I), meaning depends on triggertype</param>
+		/// <param name="defaultNPC"></param>
+		/// <param name="notifyHandler"></param>
+		/// <param name="k"></param>
+		/// <param name="i"></param>
         public InteractTrigger(GameNPC defaultNPC, DOLEventHandler notifyHandler,  Object k, Object i)
             : base(defaultNPC, notifyHandler, eTriggerType.Interact, k, i)
         { }
@@ -51,8 +51,9 @@ namespace DOL.GS.Behaviour.Triggers
         /// <summary>
         /// Creates a new questtrigger and does some simple triggertype parameter compatibility checking
         /// </summary>
-        /// <param name="questPart">Parent QuestPart of this Trigger</param>                
-        /// <param name="i">variable (I), meaning depends on triggertype</param>
+        /// <param name="defaultNPC"></param>
+        /// <param name="notifyHandler"></param>
+        /// <param name="i"></param>
         public InteractTrigger(GameNPC defaultNPC, DOLEventHandler notifyHandler, GameNPC i)
             : this(defaultNPC,notifyHandler,  (object)null,(object) i)
         { }

@@ -92,13 +92,12 @@ namespace DOL.GS.Behaviour
 
 		/// <summary>
         /// Creates a new QuestRequirement and does some basich compativilite checks for the parameters
-        /// </summary>
-        /// <param name="type">RequirementType</param>
-        /// <param name="n">First Requirement Variable, meaning depends on RequirementType</param>
-        /// <param name="v">Second Requirement Variable, meaning depends on RequirementType</param>
-        /// <param name="defaultNPC">Default npc to use is non is given</param>
-        /// <param name="questType">Type of quest this requirement is attached to</param>
-        /// <param name="comp">Comparator used if some values are veeing compared</param>
+		/// </summary>
+		/// <param name="defaultNPC"></param>
+		/// <param name="type"></param>
+		/// <param name="n"></param>
+		/// <param name="v"></param>
+		/// <param name="comp"></param>
         public AbstractRequirement(GameNPC defaultNPC, eRequirementType type, Object n, Object v, eComparator comp) : this(defaultNPC,type,comp)
         {            			            
 

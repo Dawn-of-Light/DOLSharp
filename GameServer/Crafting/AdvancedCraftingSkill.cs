@@ -112,8 +112,9 @@ namespace DOL.GS
 		#region Requirement check
 
 		/// <summary>
-		/// Check if the player can enchant the item
+        /// Check if the player can enchant the item
 		/// </summary>
+		/// <param name="player"></param>
 		/// <param name="item"></param>
 		/// <returns></returns>
 		public virtual bool IsAllowedToCombine(GamePlayer player, InventoryItem item)
@@ -146,10 +147,10 @@ namespace DOL.GS
 		#region Apply magical effect
 
 		/// <summary>
-		/// Apply the magical bonus to the item
+        /// Apply the magical bonus to the item
 		/// </summary>
+		/// <param name="player"></param>
 		/// <param name="item"></param>
-		/// <returns></returns>
 		protected abstract void ApplyMagicalEffect(GamePlayer player, InventoryItem item);
 		
 		#endregion

@@ -26,9 +26,7 @@ namespace DOL.GS.Effects
         /// <summary>
         /// Called when effect is to be started
         /// </summary>
-        /// <param name="player">The player to start the effect for</param>
-        /// <param name="duration">The effectduration in secounds</param>
-        /// <param name="value">The percentage additional value for melee absorb</param>
+        /// <param name="living"></param>
         public override void Start(GameLiving living)
         {
 			base.Start(living);
@@ -68,9 +66,8 @@ namespace DOL.GS.Effects
         }
 
         /// <summary>
-        /// Called when effect is to be cancelled
+        ///  Called when effect is to be cancelled
         /// </summary>
-        /// <param name="playerCancel">Whether or not effect is player cancelled</param>
         public override void Stop()
         {
 			base.Stop();

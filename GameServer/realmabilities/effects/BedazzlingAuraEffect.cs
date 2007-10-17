@@ -25,11 +25,10 @@ namespace DOL.GS.RealmAbilities
 		}
 
 		/// <summary>
-		/// Called when effect is to be started
+        /// Called when effect is to be started
 		/// </summary>
-		/// <param name="player">The player to start the effect for</param>
-		/// <param name="duration">The effectduration in secounds</param>
-		/// <param name="value">The percentage additional value for all magic resis</param>
+		/// <param name="living"></param>
+		/// <param name="value"></param>
 		public void Start(GameLiving living, int value)
 		{
 			m_value = value;

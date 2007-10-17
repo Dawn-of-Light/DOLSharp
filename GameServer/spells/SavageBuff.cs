@@ -24,9 +24,8 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	// Main class for savage buffs
-	/// </summary>
+	
+    // Main class for savage buffs
 	public abstract class AbstractSavageBuff : PropertyChangingSpell
 	{
 		public override int BonusCategory1 { get { return 1; } }
@@ -74,9 +73,9 @@ namespace DOL.GS.Spells
 	public abstract class AbstractSavageStatBuff : AbstractSavageBuff
 	{
 		/// <summary>
-		/// Sends needed updates on start/stop
+        /// Sends needed updates on start/stop
 		/// </summary>
-		/// <param name="effect"></param>
+		/// <param name="target"></param>
 		protected override void SendUpdates(GameLiving target)
 		{
 			GamePlayer player = target as GamePlayer;
@@ -94,9 +93,9 @@ namespace DOL.GS.Spells
 	public abstract class AbstractSavageResistBuff : AbstractSavageBuff
 	{
 		/// <summary>
-		/// Sends needed updates on start/stop
+        /// Sends needed updates on start/stop
 		/// </summary>
-		/// <param name="effect"></param>
+		/// <param name="target"></param>
 		protected override void SendUpdates(GameLiving target)
 		{
 			GamePlayer player = target as GamePlayer;
@@ -167,4 +166,5 @@ namespace DOL.GS.Spells
 		public SavageCrushResistanceBuff(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
 	}
 }
+
 

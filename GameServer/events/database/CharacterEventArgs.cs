@@ -38,10 +38,11 @@ namespace DOL.Events
 		private GameClient m_client;
 		
 		/// <summary>
-		/// Constructs a new event argument class for the
-		/// character events 
+        /// Constructs a new event argument class for the
+        /// character events 
 		/// </summary>
 		/// <param name="character"></param>
+		/// <param name="client"></param>
 		public CharacterEventArgs(Character character, GameClient client)
 		{
 			m_character = character;

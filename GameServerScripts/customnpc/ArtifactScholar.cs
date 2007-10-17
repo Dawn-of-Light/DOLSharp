@@ -742,8 +742,8 @@ namespace DOL.GS.Scripts
         /// <summary>
         /// Checks all inventory slots on the player, to make sure he does not get double-artifacts.
         /// </summary>
-        /// <param name="player">The player to check.</param>
-        /// <param name="artifact">The artifact to check for.</param>
+        /// <param name="player"></param>
+        /// <param name="str"></param>
         /// <returns></returns>
         private bool PlayerHasArtifact(GamePlayer player, string str)
         {

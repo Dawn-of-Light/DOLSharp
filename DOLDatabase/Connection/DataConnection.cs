@@ -272,11 +272,11 @@ namespace DOL.Database.Connection
 		}
 
 		/// <summary>
-		/// Execute select on sql database
-		/// Close returned datareader when done or use using(reader) { ... }
+        /// Execute select on sql database
+        /// Close returned datareader when done or use using(reader) { ... }
 		/// </summary>
 		/// <param name="sqlcommand"></param>
-		/// <returns></returns>
+		/// <param name="callback"></param>
 		public void ExecuteSelect(string sqlcommand, QueryCallback callback)
 		{
 			if (connType == ConnectionType.DATABASE_MYSQL)

@@ -382,18 +382,16 @@ namespace DOL.GS.Scripts
                         }
                     case "unsummon":
                         {
-                            if (client.Player.TargetObject == null)
-                            {
-                                client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Boat.NoBoatSelected"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-                                break;
-                            }
-                            GameBoat playerBoat = BoatMgr.GetBoatByName(client.Player.TargetObject.Name);
+                            GameBoat playerBoat = BoatMgr.GetBoatByOwner(client.Player.InternalID);
 
-                            if (client.Player.InternalID == playerBoat.OwnerID)
+                            if (playerBoat != null)
                             {
-                                client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Boat.Unsummoned", playerBoat.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-                                playerBoat.SaveIntoDatabase();
-                                playerBoat.RemoveFromWorld();
+                                if (client.Player.InternalID == playerBoat.OwnerID)
+                                {
+                                    client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Boat.Unsummoned", playerBoat.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                                    playerBoat.SaveIntoDatabase();
+                                    playerBoat.RemoveFromWorld();
+                                }
                             }
                             else
                             {
@@ -516,9 +514,7 @@ namespace DOL.GS.Scripts
             }
             catch (Exception e)
             {
-                if (log.IsErrorEnabled)
-                    log.Error("error in /boat command, " + args[1] + " command: " + e.ToString());
-
+                e = new Exception();
                 DisplayHelp(client);
                 return 0;
             }
