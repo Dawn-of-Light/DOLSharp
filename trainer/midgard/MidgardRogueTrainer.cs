@@ -35,7 +35,7 @@ namespace DOL.GS.Trainer
 
 		public const string PRACTICE_WEAPON_ID = "training_sword_mid";
 		
-		public MidgardRogueTrainer() : base()
+		public MidgardRogueTrainer() : base((int)CLTrainerTypes.MidgardRogue)
 		{
 		}
 

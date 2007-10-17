@@ -42,6 +42,10 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		public const string PRACTICE_SHIELD_ID = "small_training_shield";
 
+		public SeerTrainer() : base((int)CLTrainerTypes.Seer)
+		{
+		}
+		
 		/// <summary>
 		/// Interact with trainer
 		/// </summary>
