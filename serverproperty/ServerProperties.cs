@@ -480,7 +480,13 @@ namespace DOL.GS.ServerProperties
         [ServerProperty("max_outdoor_house_items", "Max number of items allowed in a players garden.", 30)]
         public static readonly int MAX_OUTDOOR_HOUSE_ITEMS;
 
-	        /// <summary>
+        /// <summary>
+        /// This is to set the baseHP For NPCs
+        /// </summary>
+        [ServerProperty("gamenpc_base_hp", "GameNPC's base HP * level", 500)]
+        public static readonly int GAMENPC_BASE_HP;
+
+        /// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
 		/// type of the default value

@@ -29,9 +29,10 @@ namespace DOL.GS
 	public class LootGeneratorMoney : LootGeneratorBase
 	{
 		/// <summary>
-		/// Generate loot for given mob
+        /// Generate loot for given mob
 		/// </summary>
 		/// <param name="mob"></param>
+		/// <param name="killer"></param>
 		/// <returns></returns>
 		public override LootList GenerateLoot(GameNPC mob, GameObject killer)
 		{

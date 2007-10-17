@@ -39,19 +39,23 @@ namespace DOL.GS.Behaviour.Triggers
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
-		/// Creates a new questtrigger and does some simple triggertype parameter compatibility checking
-		/// </summary>			
-		/// <param name="k">keyword (K), meaning depends on triggertype</param>
-		/// <param name="i">variable (I), meaning depends on triggertype</param>
+        /// Creates a new questtrigger and does some simple triggertype parameter compatibility checking
+		/// </summary>
+		/// <param name="defaultNPC"></param>
+		/// <param name="notifyHandler"></param>
+		/// <param name="k"></param>
+		/// <param name="i"></param>
         public EnemyDyingTrigger(GameNPC defaultNPC, DOLEventHandler notifyHandler,  Object k, Object i)
             : base(defaultNPC, notifyHandler, eTriggerType.EnemyDying, k, i)
         { }
 
         /// <summary>
         /// Creates a new questtrigger and does some simple triggertype parameter compatibility checking
-        /// </summary>        
-        /// <param name="k">keyword (K), meaning depends on triggertype</param>
-        /// <param name="i">variable (I), meaning depends on triggertype</param>
+        /// </summary>
+        /// <param name="defaultNPC"></param>
+        /// <param name="notifyHandler"></param>
+        /// <param name="k"></param>
+        /// <param name="i"></param>
         public EnemyDyingTrigger(GameNPC defaultNPC, DOLEventHandler notifyHandler, string k, GameLiving i)
             : this(defaultNPC,notifyHandler, (object)k,(object) i)
         { }
@@ -60,11 +64,10 @@ namespace DOL.GS.Behaviour.Triggers
         /// Checks the trigger, this method is called whenever a event associated with this questparts quest
         /// or a manualy associated eventhandler is notified.
         /// </summary>
-        /// <param name="e">DolEvent of notify call</param>
-        /// <param name="sender">Sender of notify call</param>
-        /// <param name="args">EventArgs of notify call</param>
-        /// <param name="player">GamePlayer this call is related to, can be null</param>
-        /// <returns>true if QuestPart should be executes, else false</returns>
+        /// <param name="e"></param>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public override bool Check(DOLEvent e, object sender, EventArgs args)
         {            
             bool result = false;

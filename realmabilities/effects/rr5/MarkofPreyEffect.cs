@@ -35,10 +35,10 @@ namespace DOL.GS.Effects
         { }  
 
 		/// <summary>
-		/// Start the guarding on player
+		/// Start guarding the player
 		/// </summary>
-		/// <param name="guardSource">The guarder</param>
-		/// <param name="guardTarget">The player guarded by guarder</param>
+		/// <param name="Caster"></param>
+		/// <param name="CasterTarget"></param>
 		public void Start(GamePlayer Caster, GamePlayer CasterTarget)
 		{
 			if (Caster == null || CasterTarget == null)

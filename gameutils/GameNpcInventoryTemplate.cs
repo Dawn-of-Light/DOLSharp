@@ -408,11 +408,12 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Overridden. Inventory template cannot be modified.
+        /// Overridden. Inventory template cannot be modified.
 		/// </summary>
-		/// <param name="fromSlot">Source slot</param>
-		/// <param name="toSlot">Destination slot</param>
-		/// <returns>false</returns>
+		/// <param name="fromSlot"></param>
+		/// <param name="toSlot"></param>
+		/// <param name="itemCount"></param>
+		/// <returns></returns>
 		public override bool MoveItem(eInventorySlot fromSlot, eInventorySlot toSlot, int itemCount)
 		{
 			return false;

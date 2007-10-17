@@ -39,13 +39,12 @@ namespace DOL.GS.Behaviour.Requirements
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
-		/// Creates a new QuestRequirement and does some basich compativilite checks for the parameters
+        /// Creates a new QuestRequirement and does some basich compativilite checks for the parameters
 		/// </summary>
-		/// <param name="defaultNPC">Parent defaultNPC of this Requirement</param>
-		/// <param name="type">RequirementType</param>
-		/// <param name="n">First Requirement Variable, meaning depends on RequirementType</param>
-		/// <param name="v">Second Requirement Variable, meaning depends on RequirementType</param>
-		/// <param name="comp">Comparator used if some values are veeing compared</param>
+		/// <param name="defaultNPC"></param>
+		/// <param name="n"></param>
+		/// <param name="v"></param>
+		/// <param name="comp"></param>
         public RealmPointsRequirement(GameNPC defaultNPC,  Object n, Object v, eComparator comp)
             : base(defaultNPC, eRequirementType.RealmPoints, n, v, comp)
 		{   			
@@ -63,13 +62,12 @@ namespace DOL.GS.Behaviour.Requirements
 		}
 
 		/// <summary>
-		/// Checks the added requirement whenever a trigger associated with this defaultNPC fires.(returns true)
-		/// </summary>        
-		/// <param name="e">DolEvent of notify call</param>
-		/// <param name="sender">Sender of notify call</param>
-		/// <param name="args">EventArgs of notify call</param>
-		/// <param name="player">GamePlayer this call is related to, can be null</param>
-		/// <returns>true if all Requirements fordefaultNPC where fullfilled, else false</returns>
+        /// Checks the added requirement whenever a trigger associated with this defaultNPC fires.(returns true)
+		/// </summary>
+		/// <param name="e"></param>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
+		/// <returns></returns>
 		public override bool Check(DOLEvent e, object sender, EventArgs args)
 		{
 			bool result = true;

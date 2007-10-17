@@ -63,10 +63,11 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Adds a player to the chatgroup
+        /// Adds a player to the chatgroup
 		/// </summary>
-		/// <param name="player">GamePlayer to be added to the group</param>
-		/// <returns>true if added successfully</returns>
+		/// <param name="player"></param>
+		/// <param name="leader"></param>
+		/// <returns></returns>
 		public virtual bool AddPlayer(GamePlayer player,bool leader) 
 		{
 			if (player == null) return false;

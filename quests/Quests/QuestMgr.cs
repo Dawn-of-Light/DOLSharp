@@ -114,20 +114,22 @@ namespace DOL.GS.Quests
 			return ResolveLiving(identifier, null, false);
 		}
 		/// <summary>
-		/// Searches for a GameLiving with the given id or name in WorldMgr
+        /// Searches for a GameLiving with the given id or name in WorldMgr
 		/// </summary>
-		/// <param name="identifier">ID or Name of GameLiving to resolve</param>
-		/// <returns>GameLiving</returns>
+		/// <param name="identifier"></param>
+		/// <param name="defaultLiving"></param>
+		/// <returns></returns>
 		public static GameLiving ResolveLiving(object identifier, GameLiving defaultLiving)
 		{
 			return ResolveLiving(identifier, defaultLiving, false);
 		}
 		/// <summary>
-		/// Searches for a GameLiving with the given id or name either in worldMgr or Database if lookukDB is true
+        /// Searches for a GameLiving with the given id or name either in worldMgr or Database if lookukDB is true
 		/// </summary>
-		/// <param name="identifier">ID or name of GameLiving</param>
-		/// <param name="lookupDB">Search in DB or existing GameLivings in worldMgr</param>
-		/// <returns>GameLiving</returns>
+		/// <param name="identifier"></param>
+		/// <param name="defaultLiving"></param>
+		/// <param name="lookupDB"></param>
+		/// <returns></returns>
 		public static GameLiving ResolveLiving(object identifier, GameLiving defaultLiving, bool lookupDB)
 		{
 			GameLiving living = null;
@@ -176,20 +178,22 @@ namespace DOL.GS.Quests
 			return ResolveNPC(identifier,null, false);
 		}
 		/// <summary>
-		/// Searches for a NPC with the given id or name in WorldMgr
+        /// Searches for a NPC with the given id or name in WorldMgr
 		/// </summary>
-		/// <param name="identifier">ID or Name of NPC to resolve</param>
-		/// <returns>NPC</returns>
+		/// <param name="identifier"></param>
+		/// <param name="defaultNPC"></param>
+		/// <returns></returns>
 		public static GameNPC ResolveNPC(object identifier, GameNPC defaultNPC)
 		{
 			return ResolveNPC(identifier,defaultNPC, false);
 		}
 		/// <summary>
-		/// Searches for a NPC with the given id or name either in worldMgr or Database if lookukDB is true
+        /// Searches for a NPC with the given id or name either in worldMgr or Database if lookukDB is true
 		/// </summary>
-		/// <param name="identifier">ID or name of NPC</param>
-		/// <param name="lookupDB">Search in DB or existing NPCs in worldMgr</param>
-		/// <returns>NPC</returns>
+		/// <param name="identifier"></param>
+		/// <param name="defaultNPC"></param>
+		/// <param name="lookupDB"></param>
+		/// <returns></returns>
 		public static GameNPC ResolveNPC(object identifier, GameNPC defaultNPC, bool lookupDB)
 		{
 			GameNPC npc = null;
@@ -304,11 +308,13 @@ namespace DOL.GS.Quests
 		}
 		
 		/// <summary>
-		/// Send the quest dialogue for a classic quest to the player
+        /// Send the quest dialogue for a classic quest to the player
 		/// </summary>
-		/// <param name="questType">The type of the quest</param>
-		/// <param name="source">The npc source</param>
-		/// <param name="sentence">The sentence to show</param>
+		/// <param name="questType"></param>
+		/// <param name="sentence"></param>
+		/// <param name="player"></param>
+		/// <param name="source"></param>
+		/// <returns></returns>
 		public static bool ProposeQuestToPlayer(Type questType, string sentence, GamePlayer player, GameNPC source)
 		{
 
@@ -326,9 +332,11 @@ namespace DOL.GS.Quests
         /// <summary>
         /// Send the quest dialogue for a classic quest to the player
         /// </summary>
-        /// <param name="questType">The type of the quest</param>
-        /// <param name="source">The npc source</param>
-        /// <param name="target">The player to ask</param>
+        /// <param name="questType"></param>
+        /// <param name="sentence"></param>
+        /// <param name="player"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
         public static bool AbortQuestToPlayer(Type questType, string sentence, GamePlayer player,GameNPC source )
         {
             if (player.IsDoingQuest(questType) != null)

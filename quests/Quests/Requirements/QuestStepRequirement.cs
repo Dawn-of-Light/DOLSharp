@@ -39,36 +39,36 @@ namespace DOL.GS.Quests.Requirements
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
-		/// Creates a new QuestRequirement and does some basich compativilite checks for the parameters
-		/// </summary>		
-		/// <param name="type">RequirementType</param>
-		/// <param name="n">First Requirement Variable, meaning depends on RequirementType</param>
-		/// <param name="v">Second Requirement Variable, meaning depends on RequirementType</param>
-		/// <param name="comp">Comparator used if some values are veeing compared</param>
+        /// Creates a new QuestRequirement and does some basich compativilite checks for the parameters
+		/// </summary>
+		/// <param name="defaultNPC"></param>
+		/// <param name="n"></param>
+		/// <param name="v"></param>
+		/// <param name="comp"></param>
         public QuestStepRequirement(GameNPC defaultNPC, Object n, Object v, eComparator comp)
             : base(defaultNPC, eRequirementType.QuestStep, n, v, comp)
 		{   			
 		}
 
         /// <summary>
-		/// Creates a new QuestRequirement and does some basich compativilite checks for the parameters
-		/// </summary>		
-		/// <param name="n">First Requirement Variable, meaning depends on RequirementType</param>
-		/// <param name="v">Second Requirement Variable, meaning depends on RequirementType</param>
-		/// <param name="comp">Comparator used if some values are veeing compared</param>
+        /// Creates a new QuestRequirement and does some basich compativilite checks for the parameters
+        /// </summary>
+        /// <param name="defaultNPC"></param>
+        /// <param name="questType"></param>
+        /// <param name="v"></param>
+        /// <param name="comp"></param>
         public QuestStepRequirement(GameNPC defaultNPC, Type questType,int v, eComparator comp)
             : this(defaultNPC, (object)questType, (object)v, comp)
 		{   			
 		}
 
 		/// <summary>
-		/// Checks the added requirement whenever a trigger associated with this questpart fires.(returns true)
-		/// </summary>        
-		/// <param name="e">DolEvent of notify call</param>
-		/// <param name="sender">Sender of notify call</param>
-		/// <param name="args">EventArgs of notify call</param>
-		/// <param name="player">GamePlayer this call is related to, can be null</param>
-		/// <returns>true if all Requirements forQuestPart where fullfilled, else false</returns>
+        /// Checks the added requirement whenever a trigger associated with this questpart fires.(returns true)
+		/// </summary>
+		/// <param name="e"></param>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
+		/// <returns></returns>
 		public override bool Check(DOLEvent e, object sender, EventArgs args)
 		{
 			bool result = true;

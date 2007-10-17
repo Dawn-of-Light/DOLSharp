@@ -1172,11 +1172,13 @@ namespace DOL.GS
 		#region Get random NPC
 
 		/// <summary>
-		/// Get's a random NPC based on a con level
-		/// </summary>
+        /// /// <summary>
+        /// Get's a random NPC based on a con level
+        /// </summary>
 		/// <param name="realm"></param>
-		/// <param name="conLevel">-3 grey, -2 green, -1 blue, 0 yellow, 1 - orange, 2 red, 3 purple</param>
-		/// <returns></returns>
+		/// <param name="compareLevel"></param>
+        /// <param name="conLevel">-3 grey, -2 green, -1 blue, 0 yellow, 1 - orange, 2 red, 3 purple</param>
+        /// <returns></returns>
 		public GameNPC GetRandomNPCByCon(eRealm realm, int compareLevel, int conLevel)
 		{
 			if (!m_initialized) InitializeZone();

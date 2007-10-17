@@ -222,12 +222,11 @@ namespace DOL.GS.Behaviour
     {
         /// <summary>
         /// Checks the requirement whenever a trigger associated with this questpart fires.(returns true)
-        /// </summary>        
-        /// <param name="e">DolEvent of notify call</param>
-        /// <param name="sender">Sender of notify call</param>
-        /// <param name="args">EventArgs of notify call</param>
-        /// <param name="player">GamePlayer this call is related to, can be null</param>
-        /// <returns>true if all Requirements forQuestPart where fullfilled, else false</returns>
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
         bool Check(DOLEvent e, object sender, EventArgs args);
     }
 }

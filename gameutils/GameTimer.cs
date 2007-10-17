@@ -205,7 +205,7 @@ namespace DOL.GS
 			public static readonly int BUCKET_BITS = 4;
 			/// <summary>
 			/// The table arrays size in bits.
-			/// Table size in milliseconds is (1<<BUCKET_BITS + TABLE_BITS).
+			/// Table size in milliseconds is (1 less than less than BUCKET_BITS + TABLE_BITS).
 			/// </summary>
 			public static readonly int TABLE_BITS = 17;
 			/// <summary>

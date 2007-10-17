@@ -220,9 +220,10 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// changes aggro of faction and related factions to player
+        /// changes aggro of faction and related factions to player
 		/// </summary>
 		/// <param name="player"></param>
+		/// <param name="amount"></param>
 		public void ChangeAggroLevel(GamePlayer player, int amount)
 		{
 			// remember the player
