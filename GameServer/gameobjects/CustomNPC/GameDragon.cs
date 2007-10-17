@@ -64,6 +64,8 @@ namespace DOL.GS
 			m_glareAnnounce = "{0} glares at {1}!";
 			m_deathAnnounce = new String[] { "The earth lurches beneath your feet as {0} staggers and topples to the ground.",
 				"A glowing light begins to form on the mound that served as {0}'s lair." };
+
+			TetherRange = 2500;	// TODO: Can be removed once there is an NPCTemplate.
 		}
 
 		/// <summary>
@@ -152,7 +154,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override double AttackDamage(InventoryItem weapon)
 		{
-			return base.AttackDamage(weapon) * 1.0;
+			return base.AttackDamage(weapon) * 4.0;
 		}
 
 		/// <summary>
@@ -257,17 +259,6 @@ namespace DOL.GS
 
 			if (e == GameNPCEvent.ArriveAtTarget)
 				EvadeChance = 0;
-		}
-
-		private const int m_tetherRange = 2500;
-
-		/// <summary>
-		/// The dragon's tether range. If it is pulled beyond this
-		/// distance it will return to its spawn point.
-		/// </summary>
-		public int TetherRange
-		{
-			get { return m_tetherRange; }
 		}
 
 		#endregion
@@ -390,13 +381,14 @@ namespace DOL.GS
 					add.CurrentSpeed = 0;
 					add.Level = (byte)level;
 					add.RespawnInterval = -1;
+					add.Strength = 5000; // Doubt this will help damage wise, but let's try.
 					add.AddToWorld();
 					new DespawnTimer(this, add, uptime * 1000);
 				}
 			}
 			catch
 			{
-				log.Warn(String.Format("Unable to load template for {0}", Name));
+				log.Warn(String.Format("Unable to get template for {0}", Name));
 			}
 			return add;
 		}
