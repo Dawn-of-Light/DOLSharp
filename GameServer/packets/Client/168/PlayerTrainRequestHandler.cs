@@ -38,10 +38,56 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			uint x = packet.ReadInt();
 			uint y = packet.ReadInt();
-			int sessionId = packet.ReadShort();
-			int unk1 = packet.ReadByte();
+			int idline = packet.ReadByte();
+			int unk = packet.ReadByte();
+			int row = packet.ReadByte();
 			int skillindex = packet.ReadByte();
+			
+			// idline not null so this is a Champion level training window
+            if (idline > 0)
+            { 	
+                ChampSpec spec = ChampSpecMgr.GetAbilityFromIndex(idline, row, skillindex);
+                if (spec != null)
+                {
+                    if (client.Player.HaveChampionSpell(spec.SpellID))
+                    {
+                        client.Out.SendMessage("You already have that ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        return 1;
+                    }
+                    if (!client.Player.IsCSAvailable(idline, row, skillindex))
+                    {
+                        client.Out.SendMessage("You do not meet the requirements for that ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        return 1;
+                    }
+                    if ((client.Player.ChampionSpecialtyPoints - spec.Cost) < 0)
+                    {
+                        client.Out.SendMessage("You do not have enough champion specialty points for that ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        return 1;
+                    }
+                    client.Player.ChampionSpecialtyPoints -= spec.Cost;
+                    SpellLine sl = SkillBase.GetSpellLine("Champion Abilities" + client.Player.Name);
+                    if (sl.Spec.StartsWith("?"))
+                    {
+                        SpellLine line = new SpellLine("Champion Abilities" + client.Player.Name, "Champion Abilities", "Champion Abilities", true);
+                        SkillBase.RegisterSpellLine(line);
+                    }
+                    SkillBase.AddSpellToList("Champion Abilities" + client.Player.Name, spec.SpellID);
+                    client.Player.ChampionSpells += spec.SpellID.ToString() + "|1;";
 
+                    client.Player.AddSpellLine(sl);
+                    client.Player.UpdateSpellLineLevels(false);
+                    client.Player.RefreshSpecDependantSkills(true);
+                    //client.Out.SendUpdatePoints();
+                    //client.Out.SendUpdatePlayer();
+                    client.Out.SendMessage("You gain an ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    client.Out.SendChampionTrainerWindow(idline);
+                    client.Out.SendUpdatePlayerSkills();
+                    return 1;
+                }
+                else { client.Out.SendMessage("Didn't find spec!", eChatType.CT_System, eChatLoc.CL_SystemWindow); }
+                return 1;
+            }
+            
 			IList speclist = client.Player.GetSpecList();
 			if (skillindex < speclist.Count)
 			{

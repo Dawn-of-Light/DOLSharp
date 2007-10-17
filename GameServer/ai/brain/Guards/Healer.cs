@@ -22,6 +22,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		private void CheckAreaForHealing()
 		{
+			if(guard==null) return;
 			if (guard.CanUseRanged)
 				SpellMgr.CheckAreaForHeals(guard);
 		}
