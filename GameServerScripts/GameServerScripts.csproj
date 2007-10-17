@@ -225,6 +225,7 @@
     <Compile Include="gmcommands\cast.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="gmcommands\Centeranno.cs" />
     <Compile Include="gmcommands\crafting.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -301,6 +302,7 @@
     <Compile Include="gmcommands\speed.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="gmcommands\Team.cs" />
     <Compile Include="gmcommands\titlegm.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -35,7 +35,7 @@ namespace DOL.GS.Trainer
 
 		public const string PRACTICE_WEAPON_ID = "training_staff";
 	
-		public MagicianTrainer() : base()
+		public MagicianTrainer() : base((int)CLTrainerTypes.Magician)
 		{
 		}
 

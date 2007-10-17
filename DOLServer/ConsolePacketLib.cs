@@ -141,6 +141,7 @@ namespace DOLGameServerConsole
 		public void SendTimerWindow(string title, int seconds) { }
 		public void SendCloseTimerWindow() { }
 		public void SendTrainerWindow() { }
+        public void SendChampionTrainerWindow(int type) { }
 		public void SendInterruptAnimation(GameLiving living) { }
 		public void SendDisableSkill(Skill skill, int duration) { }
 		public void SendUpdateIcons(IList changedEffects, ref int lastUpdateEffectsCount) { }
