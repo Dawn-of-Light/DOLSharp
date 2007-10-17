@@ -100,11 +100,10 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public void ChangePatrolLevel()
 		{
-			#warning Etaew: deactivated for now
-			return;
-			/* Please comment out in this way
+			//#warning Etaew: deactivated for now
+			//return;
 			byte level = (byte)(Component.Keep.Level / 2);
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < PatrolGuards.Count; i++)
 			{
 				GameKeepGuard guard = PatrolGuards[i] as GameKeepGuard;
 				if (i <= level)
@@ -115,7 +114,6 @@ namespace DOL.GS.Keeps
 					guard.RemoveFromWorld();
 				}
 			}
-			*/
 		}
 
 		/// <summary>

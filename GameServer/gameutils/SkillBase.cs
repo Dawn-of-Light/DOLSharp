@@ -861,6 +861,7 @@ namespace DOL.GS
 			m_propertyTypes[(int)eProperty.Skill_EtherealShriek] = ePropertyType.Skill | ePropertyType.SkillMagical;
 			m_propertyTypes[(int)eProperty.Skill_PhantasmalWail] = ePropertyType.Skill | ePropertyType.SkillMagical;
 			m_propertyTypes[(int)eProperty.Skill_SpectralForce] = ePropertyType.Skill | ePropertyType.SkillMagical;
+            m_propertyTypes[(int)eProperty.Skill_SpectralGuard] = ePropertyType.Skill | ePropertyType.SkillMagical;
 			m_propertyTypes[(int)eProperty.Skill_OdinsWill] = ePropertyType.Skill | ePropertyType.SkillMagical;
 			m_propertyTypes[(int)eProperty.Skill_Cursing] = ePropertyType.Skill | ePropertyType.SkillMagical;
 			m_propertyTypes[(int)eProperty.Skill_Hexing] = ePropertyType.Skill | ePropertyType.SkillMagical;
@@ -998,6 +999,7 @@ namespace DOL.GS
 			m_propertyNames[eProperty.Skill_EtherealShriek] = "Ethereal Shriek";
 			m_propertyNames[eProperty.Skill_PhantasmalWail] = "Phantasmal Wail";
 			m_propertyNames[eProperty.Skill_SpectralForce] = "Spectral Force";
+            m_propertyNames[eProperty.Skill_SpectralGuard] = "Spectral Guard";
 			m_propertyNames[eProperty.Skill_OdinsWill] = "Odin's Will";
 			m_propertyNames[eProperty.Skill_Cursing] = "Cursing";
 			m_propertyNames[eProperty.Skill_Hexing] = "Hexing";
@@ -1778,6 +1780,7 @@ namespace DOL.GS
 				m_specToSkill[Specs.EtherealShriek] = eProperty.Skill_EtherealShriek;
 				m_specToSkill[Specs.PhantasmalWail] = eProperty.Skill_PhantasmalWail;
 				m_specToSkill[Specs.SpectralForce] = eProperty.Skill_SpectralForce;
+                m_specToSkill[Specs.SpectralGuard] = eProperty.Skill_SpectralGuard;
 
 				//Other
 				m_specToSkill[Specs.Critical_Strike] = eProperty.Skill_Critical_Strike;

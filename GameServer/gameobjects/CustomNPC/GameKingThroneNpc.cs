@@ -23,8 +23,11 @@ using DOL.Language;
 namespace DOL.GS
 {
 	// This class has to be completed and may be inherited for scripting purpose (like quests)
-	public abstract class KingNPC : GameNPC
+	public class KingNPC : GameNPC
 	{
+		public KingNPC() : base()
+		{
+		}
         public override bool Interact(GamePlayer player)
         {
 			if (!base.Interact(player))
@@ -61,9 +64,12 @@ namespace DOL.GS
         }
 	}
 	// This class has to be completed and may be inherited for scripting purpose
-	public abstract class CLWeaponNPC : GameNPC
+	public class CLWeaponNPC : GameNPC
 	{
-		/// <summary>
+		public CLWeaponNPC() : base()
+		{
+		}
+        /// <summary>
 		/// Talk to trainer
 		/// </summary>
 		/// <param name="source"></param>
