@@ -66,7 +66,7 @@ namespace DOL.GS.RealmAbilities
 			}
 
 			//send spelleffect
-			foreach (GamePlayer visPlayer in WorldMgr.GetPlayersCloseToObject(player, WorldMgr.VISIBILITY_DISTANCE))
+			foreach (GamePlayer visPlayer in player.GetPlayersInRadius((ushort)WorldMgr.VISIBILITY_DISTANCE))
 				visPlayer.Out.SendSpellEffectAnimation(player, player, 7075, 0, false, 0x01);
 
 			int petHealthPercent = player.ControlledNpc.Body.HealthPercent;

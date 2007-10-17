@@ -33,13 +33,15 @@ namespace DOL.Events
 		private bool m_sendMessage;
 		private bool m_allowMultiply;
 
-		/// <summary>
-		/// Constructs new ReceiveMoneyEventArgs
-		/// </summary>
-		/// <param name="expBase">the amount of base exp gained</param>
-		/// <param name="expCampBonus">camp bonus to exp gained</param>
-		/// <param name="expGroupBonus">group bonus to exp gained</param>
-		/// <param name="sendMessage">send experience gained messages</param>
+        /// <summary>
+        /// Constructs new ReceiveMoneyEventArgs
+        /// </summary>
+        /// <param name="expBase">the amount of base exp gained</param>
+        /// <param name="expCampBonus">camp bonus to exp gained</param>
+        /// <param name="expGroupBonus">group bonus to exp gained</param>
+        /// <param name="expOutpostBonus">outpost bonus to exp gained</param>
+        /// <param name="sendMessage">send experience gained messages</param>
+        /// <param name="allowMultiply"></param>
 		public GainedExperienceEventArgs(long expBase, long expCampBonus, long expGroupBonus, long expOutpostBonus, bool sendMessage, bool allowMultiply)
 		{
 			m_expBase = expBase;

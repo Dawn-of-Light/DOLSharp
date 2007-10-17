@@ -76,6 +76,7 @@ namespace DOL.GS.Scripts
 		"'/mob copy' copies a mob exactly and places it at your location",
 		"'/mob npctemplate <NPCTemplateID>' creates a mob with npc template, or modifies target",
 		"'/mob path <PathID>' associate the mob to the specified path",
+        "'/mob <stat> <ammount>' Set the mobs stats (str, con, etc)",
 		"'/mob tether <tether range>' set mob tether range (>0=check, 0=no check, <0=no check)"
 		)]
 	public class MobCommandHandler : AbstractCommandHandler, ICommandHandler
@@ -405,7 +406,143 @@ namespace DOL.GS.Scripts
 						}
 					}
 					break;
-				case "regen":
+                case "str":
+                    {
+                        int strength;
+                        try
+                        {
+                            strength = Convert.ToUInt16(args[2]);
+                            targetMob.Strength = strength;
+                            targetMob.SaveIntoDatabase();
+                            client.Out.SendMessage("Mob Strength changed to: " + targetMob.Strength, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        }
+                        catch (Exception)
+                        {
+                            client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                    }
+                    break;
+                case "con":
+                    {
+                        int constitution;
+                        try
+                        {
+                            constitution = Convert.ToUInt16(args[2]);
+                            targetMob.Constitution = constitution;
+                            targetMob.SaveIntoDatabase();
+                            client.Out.SendMessage("Mob Constitution changed to: " + targetMob.Constitution, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        }
+                        catch (Exception)
+                        {
+                            client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                    }
+                    break;
+                case "dex":
+                    {
+                        int dexterity;
+                        try
+                        {
+                            dexterity = Convert.ToUInt16(args[2]);
+                            targetMob.Dexterity = dexterity;
+                            targetMob.SaveIntoDatabase();
+                            client.Out.SendMessage("Mob Dexterity changed to: " + targetMob.Dexterity, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        }
+                        catch (Exception)
+                        {
+                            client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                    }
+                    break;
+                case "qui":
+                    {
+                        int quickness;
+                        try
+                        {
+                            quickness = Convert.ToUInt16(args[2]);
+                            targetMob.Quickness = quickness;
+                            targetMob.SaveIntoDatabase();
+                            client.Out.SendMessage("Mob Quickness changed to: " + targetMob.Quickness, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        }
+                        catch (Exception)
+                        {
+                            client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                    }
+                    break;
+                case "pie":
+                    {
+                        int piety;
+                        try
+                        {
+                            piety = Convert.ToUInt16(args[2]);
+                            targetMob.Piety = piety;
+                            targetMob.SaveIntoDatabase();
+                            client.Out.SendMessage("Mob Piety changed to: " + targetMob.Piety, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        }
+                        catch (Exception)
+                        {
+                            client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                    }
+                    break;
+                case "cha":
+                    {
+                        int charisma;
+                        try
+                        {
+                            charisma = Convert.ToUInt16(args[2]);
+                            targetMob.Charisma = charisma;
+                            targetMob.SaveIntoDatabase();
+                            client.Out.SendMessage("Mob Charisma changed to: " + targetMob.Charisma, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        }
+                        catch (Exception)
+                        {
+                            client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                    }
+                    break;
+                case "int":
+                    {
+                        int intelligence;
+                        try
+                        {
+                            intelligence = Convert.ToUInt16(args[2]);
+                            targetMob.Intelligence = intelligence;
+                            targetMob.SaveIntoDatabase();
+                            client.Out.SendMessage("Mob Intelligence changed to: " + targetMob.Intelligence, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        }
+                        catch (Exception)
+                        {
+                            client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                    }
+                    break;
+                case "emp":
+                    {
+                        int empathy;
+                        try
+                        {
+                            empathy = Convert.ToUInt16(args[2]);
+                            targetMob.Empathy = empathy;
+                            targetMob.SaveIntoDatabase();
+                            client.Out.SendMessage("Mob Empathy changed to: " + targetMob.Empathy, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        }
+                        catch (Exception)
+                        {
+                            client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                    }
+                    break;
+                case "regen":
 					{
 						try
 						{

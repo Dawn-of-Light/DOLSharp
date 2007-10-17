@@ -44,8 +44,9 @@ namespace DOL.GS
 			return RandomGen.Next(max + 1);
 		}
 		/// <summary>
-		/// Generates a random number between min..max inclusive min AND max
+        /// Generates a random number between min..max inclusive min AND max
 		/// </summary>
+		/// <param name="min"></param>
 		/// <param name="max"></param>
 		/// <returns></returns>
 		public static int Random(int min, int max)

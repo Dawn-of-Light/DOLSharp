@@ -160,9 +160,11 @@ namespace DOL.GS.Quests
 		}		
 
 		/// <summary>
-		/// Create an Item, Search for a NPC to consign the Item and give Item to the Player
+        /// Create an Item, Search for a NPC to consign the Item and give Item to the Player
 		/// </summary>
-		/// <param name="player">The GamePlayer Object</param>
+		/// <param name="player"></param>
+		/// <param name="source"></param>
+		/// <returns></returns>
 		public static bool BuildTask(GamePlayer player, GameLiving source)
 		{
 			if (source == null)

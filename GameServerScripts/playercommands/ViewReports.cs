@@ -34,8 +34,9 @@ namespace DOL.GS.Scripts
         "/viewreports")]
     public class ViewReportsCommandHandler : ICommandHandler
     {
+        /// <summary>
         /// Defines a logger for this class.
-        /// </summary>
+        /// </summary>      
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 
@@ -122,6 +123,7 @@ namespace DOL.GS.Scripts
             }
             catch (Exception e)
             {
+                e = new Exception();
                 // Display bug reports to player
                 string Reports = "---------- BUG REPORTS ------------\n";
                 DataObject[] dbo = GameServer.Database.SelectAllObjects(typeof(BugReport));

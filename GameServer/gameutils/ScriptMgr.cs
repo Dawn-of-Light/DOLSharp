@@ -119,10 +119,11 @@ namespace DOL
 				}
 
 				/// <summary>
-				/// Returns an array of all the available commands with the specified plvl and their descriptions
+                /// Returns an array of all the available commands with the specified plvl and their descriptions
 				/// </summary>
 				/// <param name="plvl">plvl of the commands to get</param>
-				/// <returns>An array of strings representing available commands at the specified plvl</returns>
+				/// <param name="addDesc"></param>
+				/// <returns></returns>
 				public static string[] GetCommandList(uint plvl, bool addDesc)
 				{
 					IDictionaryEnumerator iter = m_cmds.GetEnumerator();

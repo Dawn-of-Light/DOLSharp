@@ -203,13 +203,14 @@ namespace DOL.GS
 
 
 		/// <summary>
-		/// Register a generator for the given parameters,
-		/// If all parameters are null a global generaotr for all mobs will be registered
+        /// Register a generator for the given parameters,
+        /// If all parameters are null a global generaotr for all mobs will be registered
 		/// </summary>
 		/// <param name="generator"></param>
 		/// <param name="mobname"></param>
 		/// <param name="mobguild"></param>
 		/// <param name="mobfaction"></param>
+		/// <param name="mobregion"></param>
 		public static void RegisterLootGenerator(ILootGenerator generator, string mobname, string mobguild, string mobfaction, int mobregion)
 		{
 			if (generator == null)

@@ -836,8 +836,8 @@ namespace DOL.AI.Brain
         /// <summary>
         /// Checks if any spells need casting
         /// </summary>
-        /// <param name="Positive">whether to check positive (true) spells or negative (false) spells</param>
-        /// <remarks>Specify whether we should check for positive (buffs, heals, etc) or negative (damages, taunts, stuns, etc).</remarks>
+        /// <param name="Defensive"></param>
+        /// <returns></returns>
         public virtual bool CheckSpells(bool Defensive)
         {
             //Make sure owns a body, has spells, and isn't casting

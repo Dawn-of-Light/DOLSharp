@@ -1597,7 +1597,12 @@ namespace DOL.GS.Scripts
 						{
 							if ( client.Player.Guild == null )
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NotMember"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-                            Alliance A = client.Player.Guild.alliance;
+
+                            Alliance A = null;
+                            if (client.Player.Guild.theGuildDB.AllianceID != null)
+                            {
+                                A = client.Player.Guild.alliance;
+                            }
 							if ( A == null )
 							    return DisplayError(client, "Your guild is not a member of an alliance!");
 							

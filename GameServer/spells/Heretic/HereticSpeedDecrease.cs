@@ -21,10 +21,11 @@ namespace DOL.GS.Spells
 		}
 
 		/// <summary>
-		/// Determines wether this spell is better than given one
+        /// Determines wether this spell is better than given one
 		/// </summary>
 		/// <param name="oldeffect"></param>
-		/// <returns>true if this spell is better version than compare spell</returns>
+		/// <param name="neweffect"></param>
+		/// <returns></returns>
 		public override bool IsNewEffectBetter(GameSpellEffect oldeffect, GameSpellEffect neweffect)
 		{
 			if (oldeffect.Owner is GamePlayer) return false; //no overwrite for players

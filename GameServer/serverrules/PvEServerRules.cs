@@ -125,9 +125,10 @@ namespace DOL.GS.ServerRules
 		}
 
 		/// <summary>
-		/// Is player allowed to make the item
+        /// Is player allowed to make the item
 		/// </summary>
 		/// <param name="player"></param>
+		/// <param name="item"></param>
 		/// <returns></returns>
 		public override bool IsAllowedToCraft(GamePlayer player, ItemTemplate item)
 		{

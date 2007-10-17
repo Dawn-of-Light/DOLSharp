@@ -82,14 +82,12 @@ namespace DOL.GS.Behaviour
             set { notifyHandler = value; }
 		}
 		   
- 	   /// <summary>
-		/// Creates a new questtrigger and does some simple triggertype parameter compatibility checking
-		/// </summary>
-		/// <param name="defaultNPC"></param>
-		/// <param name="notifyHandler"></param>
-		/// <param name="type">Triggertype</param>
-		/// <param name="k">keyword (K), meaning depends on triggertype</param>
-		/// <param name="i">variable (I), meaning depends on triggertype</param>
+ 	    /// <summary>
+        /// Creates a new questtrigger and does some simple triggertype parameter compatibility checking
+ 	    /// </summary>
+ 	    /// <param name="defaultNPC"></param>
+ 	    /// <param name="notifyHandler"></param>
+ 	    /// <param name="type"></param>
         public AbstractTrigger(GameLiving defaultNPC, DOLEventHandler notifyHandler, eTriggerType type)
         {
             this.defaultNPC = defaultNPC;

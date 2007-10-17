@@ -194,11 +194,10 @@ namespace DOL.GS.Behaviour
         /// Checks the added triggers, this method is called whenever a event associated with this questparts quest
         /// or a manualy associated eventhandler is notified.
         /// </summary>
-        /// <param name="e">DolEvent of notify call</param>
-        /// <param name="sender">Sender of notify call</param>
-        /// <param name="args">EventArgs of notify call</param>
-        /// <param name="player">GamePlayer this call is related to, can be null</param>
-        /// <returns>true if QuestPart should be executes, else false</returns>
+        /// <param name="e"></param>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
         protected virtual bool CheckTriggers(DOLEvent e, object sender, EventArgs args)
         {            
             if (triggers != null)

@@ -1928,11 +1928,11 @@ namespace DOL.GS.Spells
         }
 		
 		/// <summary>
-		/// Hold events for focus spells
+        /// Hold events for focus spells
 		/// </summary>
-		/// <param name="living"></param>
-		/// <param name="message"></param>
-		/// <param name="type"></param>		
+		/// <param name="e"></param>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
         private void EventAction(DOLEvent e, object sender, EventArgs args)
         {
             GameLiving living = sender as GameLiving;
