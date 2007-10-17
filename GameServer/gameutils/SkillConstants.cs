@@ -690,6 +690,10 @@ namespace DOL.GS
 		/// Spectral Force Magic Spec
 		/// </summary>
 		public const string SpectralForce = "Spectral Force"; //Bainshee
+        /// <summary>
+        /// Spectral Guard Magic Spec
+        /// </summary>
+        public const string SpectralGuard = "Spectral Guard"; //Bainshee
 		/// <summary>
 		/// Vampiiric Embrace Magic Spec
 		/// </summary>

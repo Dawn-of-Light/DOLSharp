@@ -71,23 +71,8 @@ namespace DOL.GS.Keeps
 			if (this.Component == null)
 				return false;
 
-			byte flag = 0;
-			if (PlayerMgr.IsAllowedToInteract(player, this.Component.Keep, eInteractType.Claim))
-			{
-				player.Out.SendDialogBox(eDialogCode.KeepClaim, (ushort)player.ObjectID, 0, 0, 0, eDialogType.YesNo, false, "Do you wish to claim\n" + this.Component.Keep.Name + "?");
-				return true;
-			}
-			if (PlayerMgr.IsAllowedToInteract(player, this.Component.Keep, eInteractType.Release))
-			{
-				flag += 4;
-			}
-			if (PlayerMgr.IsAllowedToInteract(player, this.Component.Keep, eInteractType.ChangeLevel))
-			{
-				flag += 1;
-			}
-			if (flag > 0)
-				player.Out.SendKeepClaim(this.Component.Keep, flag);
-			return true;
+            player.Out.SendMessage("Would you like to [Claim Keep] now? Or maybe [Release Keep]? Or you can set the [Upgrade Level] of your keep.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+            return true;
 		}
 
 		/// <summary>
@@ -111,5 +96,44 @@ namespace DOL.GS.Keeps
 			}
 			base.TakeDamage(source, damageType, damageAmount, criticalAmount);
 		}
-	}
+        public override bool WhisperReceive(GameLiving source, string str)
+        {
+            if (!base.WhisperReceive(source, str)) return false;
+            if (!(source is GamePlayer)) return false;
+            GamePlayer player = (GamePlayer)source;
+            byte flag = 0;
+            switch (str)
+            {
+                case "Claim Keep":
+                    {
+                        if (PlayerMgr.IsAllowedToInteract(player, this.Component.Keep, eInteractType.Claim))
+                        {
+                            player.Out.SendDialogBox(eDialogCode.KeepClaim, (ushort)player.ObjectID, 0, 0, 0, eDialogType.YesNo, false, "Do you wish to claim\n" + this.Component.Keep.Name + "?");
+                            return true;
+                        }
+                        break;
+                    }
+                case "Upgrade Level":
+                    {
+                        if (PlayerMgr.IsAllowedToInteract(player, this.Component.Keep, eInteractType.ChangeLevel))
+                        {
+                            flag += 1;
+                        }
+                        break;
+                    }
+                case "Release Keep":
+                    {
+                        if (PlayerMgr.IsAllowedToInteract(player, this.Component.Keep, eInteractType.Release))
+                        {
+                            flag += 4;
+                        }
+                        break;
+                    }
+            }
+            if (flag > 0)
+                player.Out.SendKeepClaim(this.Component.Keep, flag);
+
+            return true;
+        }
+    }
 }

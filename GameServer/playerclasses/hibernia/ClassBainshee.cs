@@ -62,12 +62,13 @@ namespace DOL.GS.Scripts
 			// Specializations
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.EtherealShriek));
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.PhantasmalWail));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.SpectralForce));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.SpectralGuard));
 			
 			// Spell lines
 			player.AddSpellLine(SkillBase.GetSpellLine(Specs.EtherealShriek));
 			player.AddSpellLine(SkillBase.GetSpellLine(Specs.PhantasmalWail));
 			player.AddSpellLine(SkillBase.GetSpellLine(Specs.SpectralForce));
+            player.AddSpellLine(SkillBase.GetSpellLine(Specs.SpectralGuard));
 
 			if (player.Level >= 5) 
 			{

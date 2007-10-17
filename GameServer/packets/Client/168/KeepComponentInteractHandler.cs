@@ -48,11 +48,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 					client.Out.SendMessage("DEBUG : selected hookpoint id " + HPindex, eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 
 				GameKeepComponent hp = keep.KeepComponents[wallId] as GameKeepComponent;
-				if (hp.Height > 0)
-				{
-					client.Out.SendMessage("You cannot use hookpoints on components which are past the default height at this time!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
-				}
 				client.Out.SendClearKeepComponentHookPoint(hp, HPindex);
 				client.Out.SendHookPointStore(hp.HookPoints[HPindex] as GameKeepHookPoint);
 			}
