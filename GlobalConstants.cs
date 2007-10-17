@@ -1471,6 +1471,7 @@ namespace DOL.GS
 				case Specs.Hexing: return 0x8E;
 				case Specs.Fist_Wraps: return 0x93;
 				case Specs.Mauler_Staff: return 0x94;
+                case Specs.SpectralGuard: return 0x95;
 				default: return 0;
 			}
 		}

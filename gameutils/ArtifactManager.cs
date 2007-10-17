@@ -90,7 +90,7 @@ namespace DOL.GS
             }
 
             int level = (int)(iitem.Experience / alevel.Experience);
-            log.Info("Info: Calculated artifact level: " + level + " objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
+            //log.Info("Info: Calculated artifact level: " + level + " objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
 
             ArrayList applyingBonus = new ArrayList();
 
@@ -99,7 +99,7 @@ namespace DOL.GS
                 if (abonus.Level <= level)
                     applyingBonus.Add(abonus);
             }
-            log.Info("Info: Found " + applyingBonus.Count + " bonuses that apply to artifact at given level objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
+            //log.Info("Info: Found " + applyingBonus.Count + " bonuses that apply to artifact at given level objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
 
             abonuslist = null;
 
@@ -112,7 +112,7 @@ namespace DOL.GS
                     continue;
                 }
 
-                log.Info("Info: Added bonustype " + (eProperty)abonus.BonusType + " amount: " + abonus.BonusAmount + " objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb + " and index[i] = " + i);
+                //log.Info("Info: Added bonustype " + (eProperty)abonus.BonusType + " amount: " + abonus.BonusAmount + " objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb + " and index[i] = " + i);
 
                 if (abonus.BonusType >= 0)
                 {
@@ -188,7 +188,7 @@ namespace DOL.GS
 
             }
 
-            log.Info("Info: Returning item objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
+            //log.Info("Info: Returning item objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
             return iitem;
         }
 
@@ -269,12 +269,12 @@ namespace DOL.GS
             ArrayList artibonus = m_ArtifactBonusByID_Nb[iitem.Id_nb] as ArrayList;
             if (artibonus == null)
             {
-                log.Info("Info: item check turned out to be FALSE for objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
+                //log.Info("Info: item check turned out to be FALSE for objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
                 return false;
             }
             else
             {
-                log.Info("Info: item check turned out to be TRUE for objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
+                //log.Info("Info: item check turned out to be TRUE for objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
                 return true;
             }
         }
@@ -286,7 +286,7 @@ namespace DOL.GS
         /// <param name="experience">the amount of xp</param>
         public static void GainArtifactExperience(GamePlayer player, long experience)
         {
-            log.Info("Info: Gainartifactexperience was called player:" + player.Name + " experience: " + experience);
+            //log.Info("Info: Gainartifactexperience was called player:" + player.Name + " experience: " + experience);
             ArrayList leveledArtis = new ArrayList();
 
             foreach (InventoryItem iitem in player.Inventory.AllItems)
@@ -294,7 +294,7 @@ namespace DOL.GS
                 // If item is NOT Artifact and NOT Equipped we do not process it.
                 if (!(player.Inventory as GamePlayerInventory).IsEquippedSlot((eInventorySlot)iitem.SlotPosition))
                 {
-                    log.Info("Info: Artifact not equipped");
+                    //log.Info("Info: Artifact not equipped");
                 }
                 else if (IsArtifact(iitem) && IsActivated(iitem))
                 {
@@ -303,7 +303,7 @@ namespace DOL.GS
                     ArtifactLevel alevel = m_ArtifactLevelByID_Nb[iitem.Id_nb] as ArtifactLevel;
                     if (alevel == null)
                     {
-                        log.Error("ArtifactLevel with Id_nb " + iitem.Id_nb + " not found, returning.");
+                        //log.Error("ArtifactLevel with Id_nb " + iitem.Id_nb + " not found, returning.");
                         return;
                     }
 
@@ -324,7 +324,7 @@ namespace DOL.GS
                         }
                         if (iitem.Experience > alevel.Experience)
                             iitem.Experience = alevel.Experience;
-                        log.Info("Info: gained experience: " + experience + " item got: " + (experience / 1000) + " item: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
+                        //log.Info("Info: gained experience: " + experience + " item got: " + (experience / 1000) + " item: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
 
                         long currentLevel = GetArtifactLevel(iitem);
                         if (currentLevel <= 1)

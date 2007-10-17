@@ -792,16 +792,12 @@ namespace DOL.GS.Keeps
 		/// <param name="targetLevel">The target level</param>
 		public void StartChangeLevel(byte targetLevel)
 		{
-			#warning Etaew: deactivate upgrades for now
-			return;
-			/* Please out comment it in this way
 			if (this.Level == targetLevel)
 				return;
 			this.TargetLevel = targetLevel;
 			StartChangeLevelTimer();
 			if (this.Guild != null)
 				KeepGuildMgr.SendChangeLevelTimeMessage(this);
-			*/
 		}
 
 		/// <summary>
