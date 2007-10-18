@@ -847,8 +847,8 @@ namespace DOL.GS
 						case 2:
 							{
 								character.BindRegion = 100;
-								character.BindXpos = 804577;
-								character.BindYpos = 723946;
+								character.BindXpos = 804000;
+								character.BindYpos = 726500;
 								character.BindZpos = 4680;
 								character.BindHeading = 3580;
 								break;
