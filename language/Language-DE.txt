@@ -22,8 +22,8 @@ System.ReleaseTimer:					Automatischer Release
 
 # CRAFTING
 # (All)
-Crafting.CheckTool.AlchemyKit:				Alchimiekasten
-Crafting.CheckTool.FindAlchemyTable:			Ihr müsst dafür erstmal einen Alchimietisch finden!
+Crafting.CheckTool.AlchemyKit:				Alchemiekasten
+Crafting.CheckTool.FindAlchemyTable:			Ihr müsst dafür erstmal einen Alchemietisch finden!
 Crafting.CheckTool.FindForge:				Ihr müsst dafür erstmal eine Schmiede finden!
 Crafting.CheckTool.FindLathe:				Ihr müsst dafür erstmal eine Werkbank finden!
 Crafting.CheckTool.FindPlaningTool:			Ihr benötigt noch einen Hobel!
@@ -44,7 +44,7 @@ Crafting.GainCraftingSkillPoints.RaiseWeaponcraft:	Ihr müsst Euch zu Eurem Ausbi
 
 # /AbstractCraftingSkill
 AbstractCraftingSkill.BuildCraftedItem.BackpackFull:	Euer Rucksack ist voll. {0} wurde auf dem Boden abgelegt.
-AbstractCraftingSkill.BuildCraftedItem.Masterpiece:	Gratulation! Das war ein Meisterstück.
+AbstractCraftingSkill.BuildCraftedItem.Masterpiece:	Es ist ein Meisterstück!
 AbstractCraftingSkill.BuildCraftedItem.Successfully:	Ihr habt es geschafft, {0} wurde erfolgreich hergestellt. ({1})
 AbstractCraftingSkill.CheckRawMaterial.NoIngredients:	Ihr könnt nicht anfangen, {0} erfordert Rohstoffe.
 AbstractCraftingSkill.CheckRawMaterial.YouAreMissing:	Ihr benötigt:
@@ -185,8 +185,8 @@ GamePlayer.CraftItem.DontHaveAbilityMake:		Ihr habt nicht die Fähigkeit, diesen 
 GamePlayer.CurrentTitle.TitleCleared:			Euer Titel wurde Euch aberkannt.		
 GamePlayer.Die.CorpseLies:				{0} ist gerade gestorben. {1} Leichnam liegt auf der Erde.	
 GamePlayer.Die.DeadRVR:					Ihr starbt im Kampf für Euer Reich und verliert deshalb keine Erfahrung!
-GamePlayer.Die.DeathN1:					Das ist Euer erster Tod auf dieser Stufe. Der Verlusst Eurer Erfahrung und Konstitution ist deshalb gering.
-GamePlayer.Die.DeathN2:					Das ist Euer zweiter Tod auf dieser Stufe. Der Verlusst Eurer Erfahrung und Konstitution ist deshalb etwas geringer.
+GamePlayer.Die.DeathN1:					Das ist Euer erster Tod auf dieser Stufe. Der Verlust Eurer Erfahrung und Konstitution ist deshalb gering.
+GamePlayer.Die.DeathN2:					Das ist Euer zweiter Tod auf dieser Stufe. Der Verlust Eurer Erfahrung und Konstitution ist deshalb etwas geringer.
 GamePlayer.Die.DuelDefeated:				{0} wurde gerade von {1} in einem Duell besiegt !	
 GamePlayer.Die.Killed:					{0} wurde gerade getötet !
 GamePlayer.Die.KilledBy:				{0} wurde gerade von {1} getötet.	
@@ -256,7 +256,7 @@ GamePlayer.PickupObject.BackpackFull:			Euer Rucksack ist voll. Ihr solltet erst
 GamePlayer.PickupObject.CantGetThat:			Ihr könnt das nicht bekommen!		
 GamePlayer.PickupObject.GroupMemberPicksUp:		{0} hebt {1} auf.
 GamePlayer.PickupObject.ItemBelowBGThreshold:		Dieser Gegenstand ist unter dem Lootlevel Eurer Kampfgruppe.
-GamePlayer.PickupObject.LootDoesntBelongYou:		Die Beute gehört Euch nicht - Also Finger weg!			
+GamePlayer.PickupObject.LootDoesntBelongYou:		Die Beute gehört Euch nicht - also Finger weg!			
 GamePlayer.PickupObject.MustHaveTarget:			Ihr müsst erst etwas auswählen, um es nehmen zu können!		
 GamePlayer.PickupObject.NoOneGroupWantsMoney:		Niemand in der Gruppe will das Geld haben.			
 GamePlayer.PickupObject.NoOneWantsThis:			Keiner in der Gruppe will den Gegenstand [{0}].
@@ -408,88 +408,88 @@ GameStaticItem.GetName.Article2:			{0}
 HouseEnterLeave.TooFarAway:				Ihr seid zu weit von diesem Haus entfernt, um es zu betreten!
 HouseEnterLeave.CantEnter:				Ihr könnt dieses Haus nicht betreten!
 HousingDecorationRotate.Rotated:			Die Innendekoration wurde von {0} Grad auf {1} Grad gedreht.
-HousingPickupItemHandler.GardenRemoved:			Das Gartenobjekt entfernt.
+HousingPickupItemHandler.GardenRemoved:			Der Gartenartikel wurde entfernt.
 HousingPickupItemHandler.PickUp:			Es wird {0} in Euren Rucksack gesteckt
 HousingPlaceItemHandler.30objects:			Ihr könnt keine weiteren Dekorationen platzieren, entfernt zunächst eine!
-HousingPlaceItemHandler.40objects:			Ihr könnt keine weiteren Dekorationen platzieren, entfernt zunächst eine!.
-HousingPlaceItemHandler.CantFloor:			Dieses Objekt kann nicht auf dem Boden platziert werden!
-HousingPlaceItemHandler.CantWall:			Dieses Objekt kann nicht an einer Wand platziert werden!
+HousingPlaceItemHandler.40objects:			Ihr könnt keine weiteren Dekorationen platzieren, entfernt zunächst eine!
+HousingPlaceItemHandler.CantFloor:			Dieses Objekt kann nicht auf dem Boden gestellt werden!
+HousingPlaceItemHandler.CantWall:			Dieses Objekt kann nicht an einer Wand aufgehangen werden!
 HousingPlaceItemHandler.DropOnFloor:			Ihr stellt {0} auf den Boden Eures Hauses.
-HousingPlaceItemHandler.DropOnGarden:			Ihr platziert {0} im Garten!
+HousingPlaceItemHandler.DropOnGarden:			Ihr stellt {0} im Garten auf!
 HousingPlaceItemHandler.DropOnWall:			Ihr hängt {0} an die Wand!
-HousingPlaceItemHandler.GardenObjectPlaced:		Gartenobjekt wurde platziert. Es können noch {0} Objekte platziert werden.
+HousingPlaceItemHandler.GardenObjectPlaced:		Gartenartikel wurde aufgestellt. Es können noch {0} Artikel platziert werden.
 HousingPlaceItemHandler.HasPorch:			Dieses Haus hat bereits eine Veranda!
-HousingPlaceItemHandler.HasNoPorch:			Dieses Haus hat garkeine Veranda.
-HousingPlaceItemHandler.IndoorObjectPlaced:		Inneneinrichtung aufgestellt. {0} freie Plätze verbleidend.
-HousingPlaceItemHandler.NoHookpoint:			Ihr kann nichts platziert werden!
+HousingPlaceItemHandler.HasNoPorch:			Dieses Haus hat keine Veranda.
+HousingPlaceItemHandler.IndoorObjectPlaced:		Inneneinrichtung aufgestellt. {0} freie Plätze verbleibend.
+HousingPlaceItemHandler.NoHookpoint:			Hier kann nichts aufgestellt werden!
 HousingPlaceItemHandler.PutMoney:			Ihr leistet eine Anzahlung auf Euer Haus.
 
 # /Housing
-Scripts.Player.Housing.BadShieldBanner:			That is not a valid shield or banner object.
-Scripts.Player.Housing.CantBeSold:			This item cannot be sold!
-Scripts.Player.Housing.CarpetsRemoved:			Your carpets have been removed.
-Scripts.Player.Housing.ClearHookPoint:			Would you like to clear the current hookpoint?
-Scripts.Player.Housing.EnteredHouse:			You have entered house number {0}.
-Scripts.Player.Housing.GardenItemPlaced:		Garden object placed. {0} slots remaining.
-Scripts.Player.Housing.GardenItemPlacedName:		You have placed {0} in your garden.
-Scripts.Player.Housing.GardenMaxObjects:		You have already placed 30 objects in your garden. You cannot place more.
-Scripts.Player.Housing.GuildNowOwns:			[Guild] {0} now owns a guild house from {1}!
-Scripts.Player.Housing.HookPointAdded:			That item has been added to your house.
-Scripts.Player.Housing.HookPointAlready:		That HookPoint already has an item!
-Scripts.Player.Housing.HookPointCleared:		That HookPoint has been cleared.
-Scripts.Player.Housing.HookPointCloser:			Stand as close to the housepoint as possible and face the proper direction and press accept.
-Scripts.Player.Housing.HookPointID:			The hookpoint ID is: {0}
-Scripts.Player.Housing.HookPointLogged:			Logged hookpoint position {0} in error.log!
-Scripts.Player.Housing.HookPointLogLoc:			Log this housepoint location?
-Scripts.Player.Housing.HookPointNot:			That is not a hookpoint item!
-Scripts.Player.Housing.HookPointNotPlaced:		That hookpoint item was not placed.
-Scripts.Player.Housing.HouseUseMaterial:		You need to hold shift+right-click on your house to change those materials.
-Scripts.Player.Housing.HouseUseMaterial:		You need to hold shift+right-click on your house to change your carpets.
-Scripts.Player.Housing.IndoorFloorPlaced:		You have placed {0} on the floor of your house.
-Scripts.Player.Housing.IndoorItemPlaced:		Indoor item placed. {0} slots remaining.
-Scripts.Player.Housing.IndoorMaxItems:			You have already placed {0} in your house. You cannot place more.
-Scripts.Player.Housing.IndoorWallPlaced:		You have placed {0} onto the wall of your house.
-Scripts.Player.Housing.InteriorBannersAdded:		Your interior guild banners have been changed.
-Scripts.Player.Housing.InteriorBannersRemoved:		Your interior guild banners have been removed.
-Scripts.Player.Housing.InteriorShieldsAdded:		Your interior guild shields have been changed.
-Scripts.Player.Housing.InteriorShieldsRemoved:		Your interior guild shields have been removed.
-Scripts.Player.Housing.LeftHouse:			You have exited house number {0}.
-Scripts.Player.Housing.LotAlready:			You already own another lot or house (Number {0})
-Scripts.Player.Housing.LotBought:			You just bought this lot for {0}!
-Scripts.Player.Housing.LotCost:				It can be bought for {0}.
-Scripts.Player.Housing.LotNotItem:			That is not a valid house deed.
-Scripts.Player.Housing.LotNotYours:			You do not own this lot!
-Scripts.Player.Housing.LotOffer:			Do you wish to buy this lot? It costs {0}.
-Scripts.Player.Housing.LotTargeted:			You target lot number {0}.
-Scripts.Player.Housing.NotFloorObject:			This item cannot be placed on the floor!
-Scripts.Player.Housing.NotHookPoint:			This item cannot be placed on a hookpoint!
-Scripts.Player.Housing.NotWallObject:			This item cannot be placed on a wall!
-Scripts.Player.Housing.OutdoorBannersAdded:		Your outdoor guild banners have been changed.
-Scripts.Player.Housing.OutdoorBannersRemoved:		Your outdoor guild banners have been removed.
-Scripts.Player.Housing.OutdoorShieldsAdded:		Your outdoor guild shields have been changed.
-Scripts.Player.Housing.OutdoorShieldsRemoved:		Your outdoor guild shields have been removed.
-Scripts.Player.Housing.PaidChanges:			You have paid {0} for your changes.
-Scripts.Player.Housing.PaidNotEnough:			You do not have enough money to do that!
-Scripts.Player.Housing.PorchAlready:			This house already has a porch!
-Scripts.Player.Housing.PorchNone:			This house does not have a porch!
-Scripts.Player.Housing.PorchNotItem:			This is not a porch item!
-Scripts.Player.Housing.TransferToGuild:			Do you want to transfer this house to {0}?
+Scripts.Player.Housing.BadShieldBanner:			Das ist kein gültiges Schild oder Banner.
+Scripts.Player.Housing.CantBeSold:			Ihr könnt diesen Gegenstand nicht verkaufen!
+Scripts.Player.Housing.CarpetsRemoved:			Eure Teppiche wurden entfernt.
+Scripts.Player.Housing.ClearHookPoint:			Wollt Ihr diesen Stellplatz räumen?
+Scripts.Player.Housing.EnteredHouse:			Ihr habt Haus Nr. {0} betreten.
+Scripts.Player.Housing.GardenItemPlaced:		Gartenartikel aufgestellt. Es verbleiben {0} Stellmöglichkeiten.
+Scripts.Player.Housing.GardenItemPlacedName:		Ihr habt {0} in Eurem Garten aufgestellt.
+Scripts.Player.Housing.GardenMaxObjects:		Ihr habt bereits 30 Artikel in Eurem Garten aufgestellt. Mehr geht nicht.
+Scripts.Player.Housing.GuildNowOwns:			[Gilde] {0} besitzt nun ein Gildenhaus für {1}!
+Scripts.Player.Housing.HookPointAdded:			Der Gegenstand wurde Eurem Haus hinzugefügt.
+Scripts.Player.Housing.HookPointAlready:		Dieser Stellplatz ist bereits belegt!
+Scripts.Player.Housing.HookPointCleared:		Der Stellplatz wurde geräumt.
+Scripts.Player.Housing.HookPointCloser:			Geht so nahe an den Stellplatz heran wie möglich, blickt in die richtige Richtung und akzeptiert.
+Scripts.Player.Housing.HookPointID:			Die Stellplatz-ID ist: {0}
+Scripts.Player.Housing.HookPointLogged:			Die Position von Stellplatz {0} wurde ins error.log geschrieben!
+Scripts.Player.Housing.HookPointLogLoc:			Wollt Ihr die Position dieses Stellplatzes in die Logdatei schreiben?
+Scripts.Player.Housing.HookPointNot:			Dieser Gegenstand ist nicht für einen Stellplatz bestimmt!
+Scripts.Player.Housing.HookPointNotPlaced:		Der Gegenstand wurde nicht aufgestellt.
+Scripts.Player.Housing.HouseUseMaterial:		Ihr müßt die Umschalttaste gedrückt halten und dann mit der Maus auf Euer Haus rechts-clicken um das Material zu verändern.
+Scripts.Player.Housing.HouseUseMaterial:		Ihr müßt die Umschalttaste gedrückt halten und dann mit der Maus auf Euer Haus rechts-clicken um Eure Teppiche auszutauschen.
+Scripts.Player.Housing.IndoorFloorPlaced:		Ihr habt {0} auf den Boden Eures Hauses gestellt.
+Scripts.Player.Housing.IndoorItemPlaced:		Inneneinrichtung aufgestellt. {0} freie Plätze verbleibend.
+Scripts.Player.Housing.IndoorMaxItems:			Ihr habt bereits {0} Gegenstände platziert. Mehr geht nicht.
+Scripts.Player.Housing.IndoorWallPlaced:		Ihr habt {0} an der Wand Eures Hauses aufgehangen.
+Scripts.Player.Housing.InteriorBannersAdded:		Die Gildenbanner in Eurem Haus wurden verändert.
+Scripts.Player.Housing.InteriorBannersRemoved:		Die Gildenbanner in Eurem Haus wurden entfernt.
+Scripts.Player.Housing.InteriorShieldsAdded:		Die Gildenschilde in Eurem Haus wurden verändert.
+Scripts.Player.Housing.InteriorShieldsRemoved:		Die Gildenschilde in Eurem Haus wurden entfernt.
+Scripts.Player.Housing.LeftHouse:			Ihr habt Haus Nr. {0} verlassen.
+Scripts.Player.Housing.LotAlready:			Ihr besitzt bereits ein Haus oder Grundstück (Nr. {0})!
+Scripts.Player.Housing.LotBought:			Ihr habt soeben dieses Grundstück für {0} erworben!
+Scripts.Player.Housing.LotCost:				Für {0} ist dieses Grundstück nicht zu haben.
+Scripts.Player.Housing.LotNotItem:			Das ist keine gültige Besitzurkunde.
+Scripts.Player.Housing.LotNotYours:			Dieses Grundstück gehört Euch nicht!
+Scripts.Player.Housing.LotOffer:			Wünscht Ihr dieses Grundstück zu kaufen? Es kostet {0}.
+Scripts.Player.Housing.LotTargeted:			Es interessiert Euch Grundstück Nr. {0}.
+Scripts.Player.Housing.NotFloorObject:			Dieser Gegenstand kann nicht auf den Boden gestellt werden!
+Scripts.Player.Housing.NotHookPoint:			Dieser Gegenstand gehört nicht auf einen Stellplatz!
+Scripts.Player.Housing.NotWallObject:			Dieser Gegenstand kann nicht aufgehangen werden!
+Scripts.Player.Housing.OutdoorBannersAdded:		Die Gildenbanner an Eurem Haus wurden verändert.
+Scripts.Player.Housing.OutdoorBannersRemoved:		Die Gildenbanner an Eurem Haus wurden entfernt.
+Scripts.Player.Housing.OutdoorShieldsAdded:		Die Gildenschilde an Eurem Haus wurden verändert.
+Scripts.Player.Housing.OutdoorShieldsRemoved:		Die Gildenschilde an Eurem Haus wurden entfernt.
+Scripts.Player.Housing.PaidChanges:			Ihr habt {0} für die Änderungen ausgegeben.
+Scripts.Player.Housing.PaidNotEnough:			Ihr habt nicht genug Geld dafür!
+Scripts.Player.Housing.PorchAlready:			Dieses Haus verfügt bereits über eine Veranda!
+Scripts.Player.Housing.PorchNone:			Dieses Haus verfügt über keine Veranda!
+Scripts.Player.Housing.PorchNotItem:			Das ist keine Veranda!
+Scripts.Player.Housing.TransferToGuild:			Möchtet Ihr dieses Haus an {0} übertragen?
 
 # VIEWREPORTS 
-Scripts.Player.ViewReport.Help.Close:			'/viewreport close <report #>' Will close the report of id #. 
-Scripts.Player.ViewReport.Help.Delete:			'/viewreport delete <report #' Deletes a report of id #. 
-Scripts.Player.ViewReport.InvalidReport:		That is not a valid report. 
-Scripts.Player.ViewReport.NoPriv:			You do not have the privilages to edit reports 
-Scripts.Player.ViewReport.ReportDeleted:		Report {0} has been deleted. 
-Scripts.Player.ViewReport.UnknownCommand:		That is not a valid command. 
-Scripts.Player.VeiwReport.Usage:			Usage: 
+Scripts.Player.ViewReport.Help.Close:			'/viewreport close <report #>' Schließt den Bericht mit der ID #. 
+Scripts.Player.ViewReport.Help.Delete:			'/viewreport delete <report #' Löscht den Bericht mit der ID #. 
+Scripts.Player.ViewReport.InvalidReport:		Das ist kein gültiger Bericht.
+Scripts.Player.ViewReport.NoPriv:			Ihr seid nicht befugt Berichte zu verändern.
+Scripts.Player.ViewReport.ReportDeleted:		Bericht {0} wurde gelöscht. 
+Scripts.Player.ViewReport.UnknownCommand:		Das ist kein gültiger Befehl. 
+Scripts.Player.VeiwReport.Usage:			Verwendet: 
 
 # Styles
 # /StyleProcessor
 StyleProcessor.ExecuteStyle.BackStrike:			Ihr führt einen kritischen Schlag auf den Rücken Eures Zieles aus.
 StyleProcessor.ExecuteStyle.ExecuteFail:		Ihr führt den Kampfstil "{0}" nicht richtig aus!
 StyleProcessor.ExecuteStyle.PerformPerfectly:		Ihr führt den Kampfstil "{0}" perfekt aus.{1}
-StyleProcessor.ExecuteStyle.PerformsPerfectly:		Your {0} performs {1} perfectly! {2}
+StyleProcessor.ExecuteStyle.PerformsPerfectly:		Euer {0} führt {1} perfekt aus! {2}
 # ---->	Anpassung ---					---Muss mit dem Namen in der Styles-Tabelle übereinstimmen!---
 StyleProcessor.ExecuteStyle.StyleNameBackstab:		Backstab
 StyleProcessor.ExecuteStyle.StyleNameBackstabII:	Backstab II
@@ -501,17 +501,17 @@ StyleProcessor.TryToUseStyle.AlreadySelectedStyles:	Ihr habt bereits Eure Kampfs
 StyleProcessor.TryToUseStyle.BackupStyle:		Ihr bereitet nun den Kampfstil "{0}" als Reserve für den Kampstil "{1}" vor!
 StyleProcessor.TryToUseStyle.CantCombatMode:		Ihr könnt Euch nicht kampfbereit machen, während Ihr liegt!
 StyleProcessor.TryToUseStyle.CantMeleeCombat:		Ihr könnt Euch nicht in den Nahkampf stürzen mit einer Schusswaffe!
-StyleProcessor.TryToUseStyle.DualWielding:		You must be dual wielding to use this style!
-StyleProcessor.TryToUseStyle.Fatigued:			Ihr seid zu erschöpft, um diesen Kampfstil einzusetzen!
+StyleProcessor.TryToUseStyle.DualWielding:		Ihr müßt Waffen in beiden Händen führen, um diesen Kampfstil ausführen zu können!
+StyleProcessor.TryToUseStyle.Fatigued:			Ihr seid zu erschöpft, um diesen Kampfstil auszuführen!
 StyleProcessor.TryToUseStyle.MustHaveTarget:		Ihr benötigt ein Ziel für Euren nächsten Kampstil!
 StyleProcessor.TryToUseStyle.NoLongerPreparing:		Ihr bereitet den Kampfstil "{0}" nicht mehr vor!
-StyleProcessor.TryToUseStyle.PerformStyleBefore:	Vor diesem Kampfstil müsst Ihr erst den Kampfstil "{0}" einsetzen!
+StyleProcessor.TryToUseStyle.PerformStyleBefore:	Vor diesem Kampfstil müsst Ihr erst den Kampfstil "{0}" ausführen!
 StyleProcessor.TryToUseStyle.PreparePerform:		Ihr bereitet den Kampfstil "{0}" vor!
 StyleProcessor.TryToUseStyle.StyleRequires:		Dieser Kampstil erfordert eine {0}-Waffe!
 
 # TRAINER
 # /GameTrainer
-GameTrainer.AddGift.NotEnoughSpace:			Es ist nicht genug Platz in Eurem Gepäck für das Geschenk. Bitte legt erst etwas raus.
+GameTrainer.AddGift.NotEnoughSpace:			Es ist nicht genug Platz in Eurem Gepäck für das Geschenk. Bitte nehmt erst etwas heraus.
 GameTrainer.GetExamineMessages.RightClick:		
 GameTrainer.GetExamineMessages.YouExamine:		Es interessiert Euch {0}. {1} steht Euch {2} und bildet als {3} den Nachwuchs aus.
 GameTrainer.GetExamineMessages.YouTarget:		Es wird {0} als Ziel erfasst.
@@ -537,10 +537,10 @@ GameStableMaster.HorseName:				Reitpferd
 GameStableMaster.UnknownWay:				Tut mir leid, dieses Ticket nach {0} ist hier nicht gültig.
 
 # /KingNPC
-CLWeaponNPC.ReceiveItem.RespecCL:			Thanks, I added a single champion skill respec to use /respec cl.
-KingNPC.WhisperReceive.AlreadyChampion:			You are already a champion!
-KingNPC.WhisperReceive.AskForChampion:			Would you like to embrace in the life of [champions]?
-KingNPC.WhisperReceive.IsNowChampion:			You have just embraced on the life of the champions!
+CLWeaponNPC.ReceiveItem.RespecCL:			Vielen Dank, Ihr dürft nun Eure Champion-Fertigkeiten neu trainieren. Um dies zu tun, gebt /respec cl ein.
+KingNPC.WhisperReceive.AlreadyChampion:			Ihr seid bereits ein Champion!
+KingNPC.WhisperReceive.AskForChampion:			Würdet Ihr gerne das Leben eines [Champions] führen?
+KingNPC.WhisperReceive.IsNowChampion:			Ihr habt Euch soeben für das Leben eines Champions entschieden!
 
 # /packets/Client/168
 # /DetailDisplayHandler
@@ -632,9 +632,9 @@ DetailDisplayHandler.WriteClassicWeaponInfos.DamageType:Schadensart: {0}
 DetailDisplayHandler.WriteClassicWeaponInfos.EffDamage:	Effektiver Schaden:
 DetailDisplayHandler.WriteClassicWeaponInfos.Quality:	- {0}% Qualität
 DetailDisplayHandler.WriteClassicWeaponInfos.SPD:	- {0} Waffengeschwindigkeit
-DetailDisplayHandler.WriteHorseInfo.AdvancedHorse:	This is an advanced horse.
+DetailDisplayHandler.WriteHorseInfo.AdvancedHorse:	Dies ist ein Pferd der gehobenen Klasse.
 DetailDisplayHandler.WriteHorseInfo.Armor:		- Rüstung: {0}
-DetailDisplayHandler.WriteHorseInfo.Barding:		- Barding: None
+DetailDisplayHandler.WriteHorseInfo.Barding:		- Pferderüstung: Keine.
 DetailDisplayHandler.WriteHorseInfo.BasicHorse:		Das ist ein einfaches Pferd.
 DetailDisplayHandler.WriteHorseInfo.Food:		- Lieblingsfutter: Heu und gelegentlich Äpfel
 DetailDisplayHandler.WriteHorseInfo.MountWindow:	Um dieses Pferd zum aktiven Reittier zu machen, müsst Ihr das Symbol in den entsprechenden Slot Eures Reittierfensters legen.
@@ -832,39 +832,39 @@ Scripts.Players.Battlegroup.Usage:			Verwendet: /bc <text>
 Scripts.Players.Battlegroup.UsageInvite:		Verwendet: /bg invite <playername>
 
 # Boats
-Scripts.Player.Boat.AlreadyOnBoat:			That player is already on the boat!
-Scripts.Player.Boat.BoardingDenied:			Your request to board {0} was denied.
-Scripts.Player.Boat.BoardingGranted:			You accepted the boarding request.
-Scripts.Player.Boat.BoardingRequest:			{0} is trying to board your boat. Accept?
-Scripts.Player.Boat.BoatTooFar:				{0} is too far away for you to board.
-Scripts.Player.Boat.BootedBy:				You have been kicked off the boat by {0}.
-Scripts.Player.Boat.BootedTarget:			You have booted {0} from the boat.
-Scripts.Player.Boat.DeleteConfirmation:			Do you really want to delete your boat {0}?
-Scripts.Player.Boat.FullBoat:				The boat is currently full.
-Scripts.Player.Boat.Help.Board:				/boat board - Boards the targeted boat.
-Scripts.Player.Boat.Help.Boot:				/boat boot - Boots the selected player from your boat.
-Scripts.Player.Boat.Help.Delete:			/boat delete - Gives a confirmation dialog to delete your current boat !!permanantly!!
-Scripts.Player.Boat.Help.Follow:			/boat follow - Orders your boat to follow your selected target.
-Scripts.Player.Boat.Help.StopFollow:			/boat stopfollow - Orders your boat to stop following its target.
-Scripts.Player.Boat.Help.Summon:			/boat summon - Summons your boat.
-Scripts.Player.Boat.Help.Unsummon:			/boat unsummon - Unsummons your targeted boat.
-Scripts.Player.Boat.InviteNoSelf:			You cannot invite yourself!
-Scripts.Player.Boat.InviteRecieved:			{0} has invited you to join them on their boat.
-Scripts.Player.Boat.InviteSent:				You have invited {0} to join you on your boat.
-Scripts.Player.Boat.MoveFollow:				Your boat begins to follow {0}.
-Scripts.Player.Boat.NoBoatSelected:			You must select a boat first!
-Scripts.Player.Boat.NoPlayerSelected:			You need to select a player first.
-Scripts.Player.Boat.NotInWater:				You must be in the water before you can summon your boat!
-Scripts.Player.Boat.NotOwnBoat:				You do not own a boat.
-Scripts.Player.Boat.OwnerNotOn:				The owner of that boat is not online.
-Scripts.Player.Boat.PlayerIsDead:			You cannot interact with a dead player!
-Scripts.Player.Boat.StopFollow:				You bring your boat to a halt.
-Scripts.Player.Boat.Summoned:				Your {0} has been summoned.
-Scripts.Player.Boat.TargetNotInBoat:			{0} is not in your boat.
-Scripts.Player.Boat.UnknownCommand:			That is not a valid boat command. /boat for help.
-Scripts.Player.Boat.Unsummoned:				Your {0} has been unsummoned.
-Scripts.Player.Boat.Usage:				Usage:
-Scripts.Player.Boat.YouBoard:				You board the {0}.
+Scripts.Player.Boat.AlreadyOnBoat:			Dieser Spieler ist bereits in einem Boot!
+Scripts.Player.Boat.BoardingDenied:			Eure Bitte an Bord des {0} kommen zu dürfen wurde abgelehnt.
+Scripts.Player.Boat.BoardingGranted:			Eurer Bitte an Bord kommen zu dürfen wurde entsprochen.
+Scripts.Player.Boat.BoardingRequest:			{0} würde gern an Bord Eures Schiffes komment. Wollt Ihr das zulassen?
+Scripts.Player.Boat.BoatTooFar:				{0} ist zu weit entfernt um einsteigen zu können.
+Scripts.Player.Boat.BootedBy:				{0} hat Euch von Bord geworfen.
+Scripts.Player.Boat.BootedTarget:			Ihr habt {0} von Bord geworfen.
+Scripts.Player.Boat.DeleteConfirmation:			Wollt Ihr Euer Boot {0} wirklich zerstören?
+Scripts.Player.Boat.FullBoat:				Das Boot kann keine weiteren Passagiere aufnehmen.
+Scripts.Player.Boat.Help.Board:				/boat board - An Bord des ausgewählten Bootes gehen.
+Scripts.Player.Boat.Help.Boot:				/boat boot - Wirft den ausgewählten Spieler von Bord.
+Scripts.Player.Boat.Help.Delete:			/boat delete - Zerstört das Boot, aber fragt zuvor um Eure Zustimmung.
+Scripts.Player.Boat.Help.Follow:			/boat follow - Gibt Eurem Boot die Anweisung Eurem Ziel zu folgen.
+Scripts.Player.Boat.Help.StopFollow:			/boat stopfollow - Gibt Eurem Boot die Anweisung nicht mehr Eurem Ziel zu folgen.
+Scripts.Player.Boat.Help.Summon:			/boat summon - Ruft Euer Boot herbei.
+Scripts.Player.Boat.Help.Unsummon:			/boat unsummon - Läßt Euer Boot im Rucksack verschwinden.
+Scripts.Player.Boat.InviteNoSelf:			Ihr könnt Euch nicht selbst einladen!
+Scripts.Player.Boat.InviteRecieved:			{0} hat Euch eingeladen an Bord zu kommen.
+Scripts.Player.Boat.InviteSent:				Ihr habt {0} eingeladen an Bord zu kommen.
+Scripts.Player.Boat.MoveFollow:				Euer Boot folgt nun {0}.
+Scripts.Player.Boat.NoBoatSelected:			Ihr müßt erst ein Boot auswählen!
+Scripts.Player.Boat.NoPlayerSelected:			Ihr müßt zunächst einen Spieler auswählen.
+Scripts.Player.Boat.NotInWater:				Ihr müßt Euch ins Wasser begeben um Euer Boot benutzen zu können!
+Scripts.Player.Boat.NotOwnBoat:				Ihr besitzt kein eigenes Boot.
+Scripts.Player.Boat.OwnerNotOn:				Der Besitzer dieses Boots ist im Moment nicht online.
+Scripts.Player.Boat.PlayerIsDead:			Ihr könnt nicht mit einem toten Spieler interagieren!
+Scripts.Player.Boat.StopFollow:				Ihr bringt Euer Boot zum Anhalten.
+Scripts.Player.Boat.Summoned:				Euer {0} ist nun fahrbereit.
+Scripts.Player.Boat.TargetNotInBoat:			{0} befindet sich nicht an Bord.
+Scripts.Player.Boat.UnknownCommand:			That is not a valid boat command. /boat for help. Das ist kein gültiger Befehl für Boote. Für Hilfe gebt /boat ein.
+Scripts.Player.Boat.Unsummoned:				Euer {0} verschwindet in Eurem Rucksack.
+Scripts.Player.Boat.Usage:				Verwendet:
+Scripts.Player.Boat.YouBoard:				Ihr geht an Bord des {0}.
 
 # /Boot
 Scripts.Players.Boot.InHouseError:			Ihr müsst Euch in Eurem Haus befinden, um diesen Befehl verwenden zu können!
@@ -971,88 +971,88 @@ Scripts.Players.Duel.YouInGroup:			Ihr seit Mitglied einer Gruppe.
 Scripts.Players.Duel.YouSurrender:			Ihr ergebt Euch {0}!
 
 # /Guilds
-Scripts.Player.Guild.AccountRemoved:			{0} has removed {1} from the guild.	
-Scripts.Player.Guild.ActiveBuff:			Your guild already has an active buff. You must wait for it to expire first.	
-Scripts.Player.Guild.AllianceAlreadyOther:		That guild already has an alliance.	
-Scripts.Player.Guild.AllianceAnsCancel:			The alliance offer has been cancelled.	
-Scripts.Player.Guild.AllianceDeclined:			You decline the alliance offer.	
-Scripts.Player.Guild.AllianceDeclinedOther:		The alliance offer has been declined	
-Scripts.Player.Guild.AllianceDisabled:			Alliances are disabled on this server.	
-Scripts.Player.Guild.AllianceIndexNotVal:		The alliance index is not a valid number.	
-Scripts.Player.Guild.AllianceInfo:			Alliance info for {0}:
-Scripts.Player.Guild.AllianceInvite:			You have invited a guild to join your alliance.	
-Scripts.Player.Guild.AllianceInvited:			You have been invited to join the alliance of {0}.	
-Scripts.Player.Guild.AllianceLeader:			Alliance leader {0}	
-Scripts.Player.Guild.AllianceMax:			You are unable to invite that guild to your alliance, as your alliance already has the max number of guilds.	
+Scripts.Player.Guild.AccountRemoved:			{0} hat {1} aus der Gilde entfernt.
+Scripts.Player.Guild.ActiveBuff:			Eure Gilde verfügt bereits über einen Bonuszauber. Ihr müßt warten, bis dieser vorbei ist.
+Scripts.Player.Guild.AllianceAlreadyOther:		Diese Gilde ist bereits in einer Allianz.
+Scripts.Player.Guild.AllianceAnsCancel:			Das Angebot, der Allianz beizutreten wurde zurückgezogen.
+Scripts.Player.Guild.AllianceDeclined:			Ihr lehnt es ab, der Allianz beizutreten.	
+Scripts.Player.Guild.AllianceDeclinedOther:		Das Angebot, der Allianz beizutreten wurde abgelehnt.
+Scripts.Player.Guild.AllianceDisabled:			Allianzen sind auf diesem Server nicht erlaubt.
+Scripts.Player.Guild.AllianceIndexNotVal:		Die Allianz-ID ist ungültig.
+Scripts.Player.Guild.AllianceInfo:			Allianz-Informationen für {0}:
+Scripts.Player.Guild.AllianceInvite:			Ihr habt einer Gilde angeboten, Eurer Allianz beizutreten.
+Scripts.Player.Guild.AllianceInvited:			Euch wurde angeboten, der Allianz von {0} beizutreten.
+Scripts.Player.Guild.AllianceLeader:			Anführer der Allianz {0}	
+Scripts.Player.Guild.AllianceMax:			Ihr könnt dieser Gilde nicht anbieten Eurer Allianz beizutreten, da bereits zuviele Gilden in Eurer Allianz sind.
 Scripts.Player.Guild.AllianceMember:			{0} - {1}	
-Scripts.Player.Guild.AllianceMembers:			Alliance members:	
-Scripts.Player.Guild.AllianceMemNotSel:			You must select a player from the same alliance.	
-Scripts.Player.Guild.AllianceNoGMSelected:		You must select a GM of guild you want to invite.	
-Scripts.Player.Guild.AllianceNoLeader:			No alliance leader
-Scripts.Player.Guild.AllianceNotLeader:			You have to be the leader guild of the alliance , before you can remove a guild from the alliance.	
-Scripts.Player.Guild.AllianceNotMember:			You must be in an alliance to do that.	
-Scripts.Player.Guild.AlreadyInGuild:			{0} is already a member of a guild.	
-Scripts.Player.Guild.AlreadyInGuild:			They are already a member of a guild.	
-Scripts.Player.Guild.AMotdSet:				You have set the alliance motd for the guild.	
-Scripts.Player.Guild.BannerAlready:			Your guild already has a banner.	
-Scripts.Player.Guild.BannerBought:			You have purchased a guild banner for {0} bounty points.	
-Scripts.Player.Guild.BannerGroupSummoned:		Someone in your group has already summoned the guild banner.	
-Scripts.Player.Guild.BannerGuildSummoned:		Someone in your guild has already summoned the guild banner.	
-Scripts.Player.Guild.BannerNoGroup:			You need to be in a Group to summon a Banner.	
-Scripts.Player.Guild.BannerNone:			Your guild does not own a guild banner.	
-Scripts.Player.Guild.BannerNotAfford:			You need 50,000 bounty points to purchase a guild banner!	
-Scripts.Player.Guild.BannerSummoned:			You have summoned your guild banner.	
-Scripts.Player.Guild.BannerUnsummoned:			You have unsummoned your guild banner.	
-Scripts.Player.Guild.BuffActivated:			[Guild Buff] {0} has spent 1000 Guild Merit Points and activated a Guild Buff!	
-Scripts.Player.Guild.BuffBountyPoints:			Your guild will now gain 5% bonus to bounty points for 24 hours!	
-Scripts.Player.Guild.BuffBPActivated:			[Guild Buff] Your guild will now get bonus to bounty points for 24 hours!	
-Scripts.Player.Guild.BuffMPActivated:			[Guild Buff] Your guild will now get bonus to merit points for 24 hours!	
-Scripts.Player.Guild.BuffRealmPoints:			Your guild will now gain 5% bonus to realm points for 24 hours!	
-Scripts.Player.Guild.ClaimNotNear:			You must be near a keep to claim it.	
-Scripts.Player.Guild.ConfirmLeave:			Do you really want to leave {0}?	
-Scripts.Player.Guild.DemotedHigherThanPlayer:		You can only demote to ranks below your own.	
-Scripts.Player.Guild.DemotedOther:			{0} has been demoted to {1}.	
-Scripts.Player.Guild.DemotedSelf:			You have been demoted to {0}.	
-Scripts.Player.Guild.DepositAmmount:			You deposit {0} into your guilds bank account.	
-Scripts.Player.Guild.DepositFull:			The guild bank seems to be full.	
-Scripts.Player.Guild.DepositInvalid:			That is an invalid deposit ammount.	
-Scripts.Player.Guild.DuesOff:				Guild dues are currently turned off.	
-Scripts.Player.Guild.DuesOn:				Guild dues are currently set at {0} percent.	
-Scripts.Player.Guild.EmailSet:				You have set the guild email to {0}.	
-Scripts.Player.Guild.EmblemAlready:			Your guild already has an emblem but you may change it for a hefty fee of 100 gold. You must select the EmblemNPC again for this proceedure to happen.	
-Scripts.Player.Guild.EmblemNeedGold:			You must have 200 gold to re emblem your guild.	
-Scripts.Player.Guild.EmblemNeedNPC:			You must select the EmblemNPC.	
-Scripts.Player.Guild.EmblemNPCNotSelected:		You must select the EmblemNPC.	
-Scripts.Player.Guild.EmblemRedo:			Would you like to re-emblem your guild for 100 gold?	
-Scripts.Player.Guild.FormNoGroup:			You must be in a group to form a guild.	
-Scripts.Player.Guild.FormNoMembers:			You need {0} members in your group to form a guild.	
-Scripts.Player.Guild.GuildCreated:			The guild {0} was created with {1} as leader.	
-Scripts.Player.Guild.GuildExists:			That guild cannot be created because it already exists.	
-Scripts.Player.Guild.GuildForceLeave:			{0} has removed you from {1}.	
-Scripts.Player.Guild.GuildLeave:			You have left your guild.	
-Scripts.Player.Guild.GuildLevelReq:			Your guild is not high enough level for this command.	
-Scripts.Player.Guild.GuildNotExist:			That guild does not exist.	
-Scripts.Player.Guild.Help.GuildACancel:			/gc acancel - to cancel an alliance invitation	
-Scripts.Player.Guild.Help.GuildAccept:			/gc aaccept - to accept an alliance invitation	
-Scripts.Player.Guild.Help.GuildAccept:			/gc accept - to accept invite to guild	
-Scripts.Player.Guild.Help.GuildADecline:		/gc adecline - to decline an alliance invitation	
-Scripts.Player.Guild.Help.GuildAInvite:			/gc ainvite - to invite another guild to join your alliance	
-Scripts.Player.Guild.Help.GuildAlli:			/gc alliance - to show information on the alliance	
-Scripts.Player.Guild.Help.GuildAMotd:			/gc amotd <text> - to set the message of the day of the alliance's guild	
-Scripts.Player.Guild.Help.GuildARemove:			/gc aremove - to removes your entire guild from an alliance	
-Scripts.Player.Guild.Help.GuildARemoveAlli:		/gc aremove alliance [#] - to Remove the specified guild (listed by number) from the alliance	
+Scripts.Player.Guild.AllianceMembers:			Mitglieder der Allianz:	
+Scripts.Player.Guild.AllianceMemNotSel:			Ihr müßt ein Mitglied derselben Allianz auswählen.
+Scripts.Player.Guild.AllianceNoGMSelected:		Ihr müßt einen Anführer der Gilde auswählen.
+Scripts.Player.Guild.AllianceNoLeader:			Kein Anführer der Allianz
+Scripts.Player.Guild.AllianceNotLeader:			Ihr müßt der Anführer der Allianz sein, um eine Gilde aus der Allianz entfernen zu können.
+Scripts.Player.Guild.AllianceNotMember:			Um das zu tun, müßtet Ihr erstmal in einer Allianz sein.
+Scripts.Player.Guild.AlreadyInGuild:			{0} gehört bereits einer Gilde an.
+Scripts.Player.Guild.AlreadyInGuild:			Die gehören bereits einer Gilde an.
+Scripts.Player.Guild.AMotdSet:				Ihr habt die Willkommensnachricht für diese Gilde geändert.
+Scripts.Player.Guild.BannerAlready:			Eure Gilde hat schon ein Banner.
+Scripts.Player.Guild.BannerBought:			Ihr habt ein Gildenbanner für {0} Kopfgeldpunkte erworben.
+Scripts.Player.Guild.BannerGroupSummoned:		Jemand aus Eurer Gruppe hat bereits das Gildenbanner gehisst.
+Scripts.Player.Guild.BannerGuildSummoned:		Jemand aus Eurer Gilde hat bereits das Gildenbanner gehisst.	
+Scripts.Player.Guild.BannerNoGroup:			Ihr müßt in einer Gruppe sein, um das Gildenbanner hissen zu können.
+Scripts.Player.Guild.BannerNone:			Eure Gilde besitzt kein Gildenbanner.
+Scripts.Player.Guild.BannerNotAfford:			Ihr benötigt 50.000 Kopfgeldpunkte, um ein Gildenbanner kaufen zu können.
+Scripts.Player.Guild.BannerSummoned:			Ihr habt das Gildenbanner gehisst.
+Scripts.Player.Guild.BannerUnsummoned:			Ihr habt das Gildenbanner eingeholt.	
+Scripts.Player.Guild.BuffActivated:			[Gildenbonuszauber] {0} hat 1000 Gildenverdienstpunkte ausgegeben, und einen Gildenbonuszauber aktiviert!
+Scripts.Player.Guild.BuffBountyPoints:			Eure Gilde wird für die nächsten 24 Stunden einen 5% Bonus auf Kopfgeldpunkte erhalten!
+Scripts.Player.Guild.BuffBPActivated:			[Gildenbonuszauber] Eure Gilde wird für die nächsten 24 Stunden einen Bonus auf Kopfgeldpunkte erhalten!	
+Scripts.Player.Guild.BuffMPActivated:			[Gildenbonuszauber] Eure Gilde wird für die nächsten 24 Stunden einen Bonus auf Verdienstpunkte erhalten!	
+Scripts.Player.Guild.BuffRealmPoints:			Eure Gilde wird für die nächsten 24 Stunden einen 5% Bonus auf Reichspunkte erhalten!
+Scripts.Player.Guild.ClaimNotNear:			Ihr müßt Euch in der Nähe der Festung befinden, um Euren Anspruch geltend machen zu können.
+Scripts.Player.Guild.ConfirmLeave:			Wollt Ihr {0} wirklich verlassen?
+Scripts.Player.Guild.DemotedHigherThanPlayer:		Das steht Euch nicht zu!
+Scripts.Player.Guild.DemotedOther:			{0} wurde zum {1} degradiert.	
+Scripts.Player.Guild.DemotedSelf:			Ihr wurdet zum {0} degradiert.	
+Scripts.Player.Guild.DepositAmmount:			Ihr zahlt {0} auf das Konto Eurer Gilde ein.
+Scripts.Player.Guild.DepositFull:			Es scheint, als ob das Konto Eurer Gilde voll ist.
+Scripts.Player.Guild.DepositInvalid:			Das ist kein gültiger Betrag.
+Scripts.Player.Guild.DuesOff:				Es werden zur Zeit keine Gildenabgaben gefordert.
+Scripts.Player.Guild.DuesOn:				Die Gildenabgaben belaufen sich zur Zeit auf {0} Prozent.
+Scripts.Player.Guild.EmailSet:				Ihr habt die E-Mail-Adresse für die Gilde auf {0} geändert.
+Scripts.Player.Guild.EmblemAlready:			Eure Gilde hat bereits ein Abzeichen, aber Ihr könnt es für einen stattlichen Betrag von 100 Gold ändern. Wenn Ihr das dennoch zu tun wünscht, sprecht noch einmal mit dem Abzeichenmacher.	
+Scripts.Player.Guild.EmblemNeedGold:			Ihr benötigt 200 Gold für ein neues Gildenabzeichen.
+Scripts.Player.Guild.EmblemNeedNPC:			Ihr müßt mit dem Abzeichenmacher sprechen.
+Scripts.Player.Guild.EmblemNPCNotSelected:		Ihr müßt mit dem Abzeichenmacher sprechen.	
+Scripts.Player.Guild.EmblemRedo:			Wollt Ihr ein neues Gildenabzeichen für 100 Gold erwerben?
+Scripts.Player.Guild.FormNoGroup:			Ihr müßt einer Gruppe angehören um eine Gilde zu gründen.
+Scripts.Player.Guild.FormNoMembers:			Ihr benötigt {0} Spieler in Eurer Gruppe, um eine Gilde zu gründen.
+Scripts.Player.Guild.GuildCreated:			Die Gilde {0} wurde gegründet, ihr Anführer ist {1}.
+Scripts.Player.Guild.GuildExists:			Diese Gilde gibt es schon.
+Scripts.Player.Guild.GuildForceLeave:			{0} hat Dich aus {1} entfernt.
+Scripts.Player.Guild.GuildLeave:			Ihr habt Eure Gilde verlassen.
+Scripts.Player.Guild.GuildLevelReq:			Eure Gilde ist nicht befugt, diesen Befehl auszuführen.
+Scripts.Player.Guild.GuildNotExist:			Diese Gilde gibt es nicht.
+Scripts.Player.Guild.Help.GuildACancel:			/gc acancel - eine Einladung für eine Allianz zurückziehen	
+Scripts.Player.Guild.Help.GuildAccept:			/gc aaccept - eine Einladung für eine Allianz annehmen	
+Scripts.Player.Guild.Help.GuildAccept:			/gc accept - eine Einladung für eine Gilde annehmen	
+Scripts.Player.Guild.Help.GuildADecline:		/gc adecline - eine Einladung für eine Allianz ausschlagen	
+Scripts.Player.Guild.Help.GuildAInvite:			/gc ainvite - eine andere Gilde in Eure Allianz einladen	
+Scripts.Player.Guild.Help.GuildAlli:			/gc alliance - Informationen zu einer Allianz anzeigen	
+Scripts.Player.Guild.Help.GuildAMotd:			/gc amotd <text> - Willkommensbotschaft für eine Allianz ändern	
+Scripts.Player.Guild.Help.GuildARemove:			/gc aremove - aus der Allianz austreten (betrifft alle in der Gilde)	
+Scripts.Player.Guild.Help.GuildARemoveAlli:		/gc aremove alliance [#] - eine Gilde aus der Allianz ausschliessen (ID erforderlich)
 Scripts.Player.Guild.Help.GuildAutoRemove:		/gc autoremove <playername> - 	
 Scripts.Player.Guild.Help.GuildAutoRemoveAcc:		/gc autoremove account <playername> -
-Scripts.Player.Guild.Help.GuildBannerSummon:		/gc summon - summons the guild banner if you have one	
-Scripts.Player.Guild.Help.GuildBuff:			/gc buff <realmpoints/bountypoints> - sets the guild buff to gain bounty or realm points	
-Scripts.Player.Guild.Help.GuildBuyBanner:		/gc buybanner - Spend points to buy a guild banner.	
-Scripts.Player.Guild.Help.GuildCancel:			/gc cancel <option> [value] - to cancel all command done before	
-Scripts.Player.Guild.Help.GuildClaim:			/gc claim - to claim a keep	
-Scripts.Player.Guild.Help.GuildDecline:			/gc decline - to decline the enter in guild	
-Scripts.Player.Guild.Help.GuildDemote:			/gc demote <rank#> [name] - to set the rank from 0 to 10 of the player to an inferior rank	
-Scripts.Player.Guild.Help.GuildDeposit:			/gc deposit <ammount> - puts money into the guild bank account.	
-Scripts.Player.Guild.Help.GuildDues:			/gc dues <ammount> - to set your guild dues %. 1-100% <0 is off>	
-Scripts.Player.Guild.Help.GuildEdit:			/gc edit - to show list of all option in guild edit	
+Scripts.Player.Guild.Help.GuildBannerSummon:		/gc summon - hisst das Gildenbanner, sofern vorhanden	
+Scripts.Player.Guild.Help.GuildBuff:			/gc buff <realmpoints/bountypoints> - einen Bonuszauber für die Gilde kaufen	
+Scripts.Player.Guild.Help.GuildBuyBanner:		/gc buybanner - ein Gildenbanner kaufen	
+Scripts.Player.Guild.Help.GuildCancel:			/gc cancel <option> [value] - alle vorherigen Befehle zurückziehen	
+Scripts.Player.Guild.Help.GuildClaim:			/gc claim - eine Festung für die Gilde in Anspruch nehmen
+Scripts.Player.Guild.Help.GuildDecline:			/gc decline - eine Einladung für eine Gilde ausschlagen	
+Scripts.Player.Guild.Help.GuildDemote:			/gc demote <rank#> [name] - einen Spieler degradieren (gültige Ränge: 0-10)	
+Scripts.Player.Guild.Help.GuildDeposit:			/gc deposit <ammount> - Geld auf das Gildenkonto einzahlen	
+Scripts.Player.Guild.Help.GuildDues:			/gc dues <ammount> - Gildenabgaben verlangen (0-100%)	
+Scripts.Player.Guild.Help.GuildEdit:			/gc edit - zeige eine Liste der für /gc edit verfügbaren Optionen an	
 Scripts.Player.Guild.Help.GuildEditACHear:		/gc edit <ranknum> achear <y/n> - edits this rank to be able to hear Alliance chat	
 Scripts.Player.Guild.Help.GuildEditACSpeak:		/gc edit <ranknum> acspeak <y/n> - edits this rank to be able to speak in Alliance chat	
 Scripts.Player.Guild.Help.GuildEditAlli:		/gc edit <ranknum> alli <y/n>-  to allow a rank to enter/leave alliances (create a diplomatic officer)	
@@ -1097,7 +1097,7 @@ Scripts.Player.Guild.Help.GuildUsage:			Usage:
 Scripts.Player.Guild.Help.GuildWebpage:			/gc webpage <the.guildpage.com> - is an additional line set by the leader that can be display in a /gc info command, as well as on the Herald.	
 Scripts.Player.Guild.Help.GuildWho:			/gc who - to show all player in your guild	
 Scripts.Player.Guild.Help.GuildWithdraw:		/gc withdraw <ammount> - gets money from the guild bank account.	
-Scripts.Player.Guild.InCombat:				You can't unsummon your Banner while you're in Combat!	
+Scripts.Player.Guild.InCombat:				Ihr könnt das Banner nicht mitten im Kampf einholen!	
 Scripts.Player.Guild.InfoAMotd:				AllianceMessage: {0}	
 Scripts.Player.Guild.InfoCEmail:			Contact Email: {0}	
 Scripts.Player.Guild.InfoGDuesBank:			Dues: {0} Guild Bank: {1} copper pieces	
