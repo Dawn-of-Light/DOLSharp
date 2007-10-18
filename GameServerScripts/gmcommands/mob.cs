@@ -408,10 +408,10 @@ namespace DOL.GS.Scripts
 					break;
                 case "str":
                     {
-                        int strength;
+                        short strength;
                         try
                         {
-                            strength = Convert.ToUInt16(args[2]);
+                            strength = Convert.ToInt16(args[2]);
                             targetMob.Strength = strength;
                             targetMob.SaveIntoDatabase();
                             client.Out.SendMessage("Mob Strength changed to: " + targetMob.Strength, eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -425,10 +425,10 @@ namespace DOL.GS.Scripts
                     break;
                 case "con":
                     {
-                        int constitution;
+                        short constitution;
                         try
                         {
-                            constitution = Convert.ToUInt16(args[2]);
+                            constitution = Convert.ToInt16(args[2]);
                             targetMob.Constitution = constitution;
                             targetMob.SaveIntoDatabase();
                             client.Out.SendMessage("Mob Constitution changed to: " + targetMob.Constitution, eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -442,10 +442,10 @@ namespace DOL.GS.Scripts
                     break;
                 case "dex":
                     {
-                        int dexterity;
+                        short dexterity;
                         try
                         {
-                            dexterity = Convert.ToUInt16(args[2]);
+                            dexterity = Convert.ToInt16(args[2]);
                             targetMob.Dexterity = dexterity;
                             targetMob.SaveIntoDatabase();
                             client.Out.SendMessage("Mob Dexterity changed to: " + targetMob.Dexterity, eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -459,10 +459,10 @@ namespace DOL.GS.Scripts
                     break;
                 case "qui":
                     {
-                        int quickness;
+                        short quickness;
                         try
                         {
-                            quickness = Convert.ToUInt16(args[2]);
+                            quickness = Convert.ToInt16(args[2]);
                             targetMob.Quickness = quickness;
                             targetMob.SaveIntoDatabase();
                             client.Out.SendMessage("Mob Quickness changed to: " + targetMob.Quickness, eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -476,10 +476,10 @@ namespace DOL.GS.Scripts
                     break;
                 case "pie":
                     {
-                        int piety;
+                        short piety;
                         try
                         {
-                            piety = Convert.ToUInt16(args[2]);
+                            piety = Convert.ToInt16(args[2]);
                             targetMob.Piety = piety;
                             targetMob.SaveIntoDatabase();
                             client.Out.SendMessage("Mob Piety changed to: " + targetMob.Piety, eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -493,10 +493,10 @@ namespace DOL.GS.Scripts
                     break;
                 case "cha":
                     {
-                        int charisma;
+                        short charisma;
                         try
                         {
-                            charisma = Convert.ToUInt16(args[2]);
+                            charisma = Convert.ToInt16(args[2]);
                             targetMob.Charisma = charisma;
                             targetMob.SaveIntoDatabase();
                             client.Out.SendMessage("Mob Charisma changed to: " + targetMob.Charisma, eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -510,10 +510,10 @@ namespace DOL.GS.Scripts
                     break;
                 case "int":
                     {
-                        int intelligence;
+                        short intelligence;
                         try
                         {
-                            intelligence = Convert.ToUInt16(args[2]);
+                            intelligence = Convert.ToInt16(args[2]);
                             targetMob.Intelligence = intelligence;
                             targetMob.SaveIntoDatabase();
                             client.Out.SendMessage("Mob Intelligence changed to: " + targetMob.Intelligence, eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -527,10 +527,10 @@ namespace DOL.GS.Scripts
                     break;
                 case "emp":
                     {
-                        int empathy;
+                        short empathy;
                         try
                         {
-                            empathy = Convert.ToUInt16(args[2]);
+                            empathy = Convert.ToInt16(args[2]);
                             targetMob.Empathy = empathy;
                             targetMob.SaveIntoDatabase();
                             client.Out.SendMessage("Mob Empathy changed to: " + targetMob.Empathy, eChatType.CT_System, eChatLoc.CL_SystemWindow);
