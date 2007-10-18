@@ -142,7 +142,7 @@ namespace DOL.GS.Scripts
                     Reports += "Report: " + repo.Message + "\n";
                     Reports += "Closed By: " + repo.ClosedBy + "\n";
                     Reports += "Date Closed: " + repo.DateClosed + "\n\n";
-                    client.Out.SendMessage(Reports, eChatType.CT_Important, eChatLoc.CL_ChatWindow);
+                    client.Out.SendMessage(Reports, eChatType.CT_Important, eChatLoc.CL_PopupWindow);
                     Reports = "";
                 }
                 return 0;

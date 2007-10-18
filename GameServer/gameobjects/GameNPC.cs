@@ -397,97 +397,100 @@ namespace DOL.GS
             {
                 switch (stat)
                 {
-                    case eStat.STR: npc.Strength = newstat; break;
-                    case eStat.DEX: npc.Dexterity = newstat; break;
-                    case eStat.CON: npc.Constitution = newstat; break;
-                    case eStat.QUI: npc.Quickness = newstat; break;
-                    case eStat.INT: npc.Intelligence = newstat; break;
-                    case eStat.PIE: npc.Piety = newstat; break;
-                    case eStat.EMP: npc.Empathy = newstat; break;
-                    case eStat.CHR: npc.Charisma = newstat; break;
+                    case eStat.STR: npc.Strength = (short)newstat; break;
+                    case eStat.DEX: npc.Dexterity = (short)newstat; break;
+                    case eStat.CON: npc.Constitution = (short)newstat; break;
+                    case eStat.QUI: npc.Quickness = (short)newstat; break;
+                    case eStat.INT: npc.Intelligence = (short)newstat; break;
+                    case eStat.PIE: npc.Piety = (short)newstat; break;
+                    case eStat.EMP: npc.Empathy = (short)newstat; break;
+                    case eStat.CHR: npc.Charisma = (short)newstat; break;
                 }
             }
         }
 
-        private int m_npcConstitution;
-        private int m_npcDexterity;
-        private int m_npcStrength;
-        private int m_npcQuickness;
-        private int m_npcIntelligence;
-        private int m_npcPiety;
-        private int m_npcEmpathy;
-        private int m_npcCharisma;
+        protected short m_npcConstitution;
+        protected short m_npcDexterity;
+        protected short m_npcStrength;
+        protected short m_npcQuickness;
+        protected short m_npcIntelligence;
+        protected short m_npcPiety;
+        protected short m_npcEmpathy;
+        protected short m_npcCharisma;
 
         /// <summary>
         /// Gets NPC's constitution
         /// </summary>
-        public int Constitution
+        public short Constitution
         {
-            get { return m_npcConstitution; }
-            set { m_npcConstitution = value; }
+            get
+            {
+                return m_charStat[eStat.CON - eStat._First];
+            }
+            set { m_charStat[eStat.CON - eStat._First] = value; }
         }
 
         /// <summary>
         /// Gets NPC's dexterity
         /// </summary>
-        public int Dexterity
+        public short Dexterity
         {
-            get { return m_npcDexterity; }
-            set { m_npcDexterity = value; }
+            get { return m_charStat[eStat.DEX - eStat._First]; }
+            set { m_charStat[eStat.DEX - eStat._First] = value; }
         }
 
         /// <summary>
         /// Gets NPC's strength
         /// </summary>
-        public int Strength
+        public short Strength
         {
-            get { return m_npcStrength; }
-            set { m_npcStrength = value; }
+            get { return m_charStat[eStat.STR - eStat._First]; }
+            set { m_charStat[eStat.STR - eStat._First] = value; }
         }
 
         /// <summary>
         /// Gets NPC's quickness
         /// </summary>
-        public int Quickness
+        public short Quickness
         {
-            get { return m_npcQuickness; }
-            set { m_npcQuickness = value; }
+            get { return m_charStat[eStat.QUI - eStat._First]; }
+            set { m_charStat[eStat.QUI - eStat._First] = value; }
         }
 
         /// <summary>
         /// Gets NPC's intelligence
         /// </summary>
-        public int Intelligence
+        public short Intelligence
         {
-            get { return m_npcIntelligence; }
-            set { m_npcIntelligence = value; }
+            get { return m_charStat[eStat.INT - eStat._First]; }
+            set { m_charStat[eStat.INT - eStat._First] = value; }
         }
 
         /// <summary>
         /// Gets NPC's piety
         /// </summary>
-        public int Piety
+        public short Piety
         {
-            get { return m_npcPiety; }
-            set { m_npcPiety = value; }
+            get { return m_charStat[eStat.PIE - eStat._First]; }
+            set { m_charStat[eStat.PIE - eStat._First] = value; }
         }
 
         /// <summary>
         /// Gets NPC's empathy
         /// </summary>
-        public int Empathy
+        public short Empathy
         {
-            get { return m_npcEmpathy; }
-            set { m_npcEmpathy = value; }
+            get { return m_charStat[eStat.EMP - eStat._First]; }
+            set { m_charStat[eStat.EMP - eStat._First] = value; }
         }
 
         /// <summary>
         /// Gets NPC's charisma
         /// </summary>
-        public int Charisma
+        public short Charisma
         {
-            get { return m_npcCharisma; }
-            set { m_npcCharisma = value; }
+            get { return m_charStat[eStat.CHR - eStat._First]; }
+            set { m_charStat[eStat.CHR - eStat._First] = value; }
         }
         #endregion
         #region Flags/Position/SpawnPosition/UpdateTick/Tether
@@ -1738,14 +1741,14 @@ namespace DOL.GS
 			Flags = npc.Flags;
             
             // Stats
-            m_npcConstitution = npc.Constitution;
-            m_npcDexterity = npc.Dexterity;
-            m_npcStrength = npc.Strength;
-            m_npcQuickness = npc.Quickness;
-            m_npcIntelligence = npc.Intelligence;
-            m_npcPiety = npc.Piety;
-            m_npcEmpathy = npc.Empathy;
-            m_npcCharisma = npc.Charisma;
+            m_npcConstitution = (short)npc.Constitution;
+            m_npcDexterity = (short)npc.Dexterity;
+            m_npcStrength = (short)npc.Strength;
+            m_npcQuickness = (short)npc.Quickness;
+            m_npcIntelligence = (short)npc.Intelligence;
+            m_npcPiety = (short)npc.Piety;
+            m_npcEmpathy = (short)npc.Empathy;
+            m_npcCharisma = (short)npc.Charisma;
 
             MeleeDamageType = (eDamageType)npc.MeleeDamageType;
 			if (MeleeDamageType == 0)
@@ -1929,14 +1932,14 @@ namespace DOL.GS
 			this.Level = level;
 
             // Stats
-            this.Constitution = template.Constitution;
-            this.Dexterity = template.Dexterity;
-            this.Strength = template.Strength;
-            this.Quickness = template.Quickness;
-            this.Intelligence = template.Intelligence;
-            this.Piety = template.Piety;
-            this.Empathy = template.Empathy;
-            this.Charisma = template.Charisma;
+            this.Constitution = (short)template.Constitution;
+            this.Dexterity = (short)template.Dexterity;
+            this.Strength = (short)template.Strength;
+            this.Quickness = (short)template.Quickness;
+            this.Intelligence = (short)template.Intelligence;
+            this.Piety = (short)template.Piety;
+            this.Empathy = (short)template.Empathy;
+            this.Charisma = (short)template.Charisma;
 
             this.MaxDistance = template.MaxDistance;
             this.TetherRange = template.TetherRange;
