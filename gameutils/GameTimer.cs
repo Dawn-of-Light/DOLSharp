@@ -264,7 +264,7 @@ namespace DOL.GS
 			/// </summary>
 			private readonly CacheBucket[] m_cachedBucket = new CacheBucket[1 << CACHE_BITS];
 			/// <summary>
-			/// Stores all timers. Array index = (TimerTick>>BUCKET_BITS)&TABLE_MASK
+            /// Stores all timers. Array index = (TimerTick>>BUCKET_BITS)&TABLE_MASK
 			/// </summary>
 			private readonly GameTimer[] m_buckets = new GameTimer[1 << TABLE_BITS];
 			/// <summary>
