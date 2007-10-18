@@ -1172,7 +1172,6 @@ namespace DOL.GS
 		#region Get random NPC
 
 		/// <summary>
-        /// /// <summary>
         /// Get's a random NPC based on a con level
         /// </summary>
 		/// <param name="realm"></param>
