@@ -536,6 +536,12 @@ GameStableMaster.HorseName:				Reitpferd
 # <----
 GameStableMaster.UnknownWay:				Tut mir leid, dieses Ticket nach {0} ist hier nicht gültig.
 
+# /KingNPC
+CLWeaponNPC.ReceiveItem.RespecCL:			Thanks, I added a single champion skill respec to use /respec cl.
+KingNPC.WhisperReceive.AlreadyChampion:			You are already a champion!
+KingNPC.WhisperReceive.AskForChampion:			Would you like to embrace in the life of [champions]?
+KingNPC.WhisperReceive.IsNowChampion:			You have just embraced on the life of the champions!
+
 # /packets/Client/168
 # /DetailDisplayHandler
 DetailDisplayHandler.GetShortItemInfo.CrafterName:	Crafter : {0}
