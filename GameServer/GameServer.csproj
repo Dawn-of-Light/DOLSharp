@@ -467,6 +467,7 @@
     <Compile Include="GameClient.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="gameobjects\CustomNPC\Cuuldurach.cs" />
     <Compile Include="gameobjects\CustomNPC\GameBoatStableMaster.cs" />
     <Compile Include="gameobjects\CustomNPC\GameDragon.cs" />
     <Compile Include="gameobjects\CustomNPC\GameKingThroneNpc.cs" />
