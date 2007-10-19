@@ -409,15 +409,6 @@ namespace DOL.GS
             }
         }
 
-        protected short m_npcConstitution;
-        protected short m_npcDexterity;
-        protected short m_npcStrength;
-        protected short m_npcQuickness;
-        protected short m_npcIntelligence;
-        protected short m_npcPiety;
-        protected short m_npcEmpathy;
-        protected short m_npcCharisma;
-
         /// <summary>
         /// Gets NPC's constitution
         /// </summary>
@@ -1741,14 +1732,20 @@ namespace DOL.GS
 			Flags = npc.Flags;
             
             // Stats
-            m_npcConstitution = (short)npc.Constitution;
-            m_npcDexterity = (short)npc.Dexterity;
-            m_npcStrength = (short)npc.Strength;
-            m_npcQuickness = (short)npc.Quickness;
-            m_npcIntelligence = (short)npc.Intelligence;
-            m_npcPiety = (short)npc.Piety;
-            m_npcEmpathy = (short)npc.Empathy;
-            m_npcCharisma = (short)npc.Charisma;
+            Constitution = (short)npc.Constitution;
+            Dexterity = (short)npc.Dexterity;
+            Strength = (short)npc.Strength;
+            Quickness = (short)npc.Quickness;
+            Intelligence = (short)npc.Intelligence;
+            Piety = (short)npc.Piety;
+            Empathy = (short)npc.Empathy;
+            Charisma = (short)npc.Charisma;
+
+			// Bring mob strength on par with that of a templated
+			// player.
+
+			if (Strength < (20 + Level * 8))
+				Strength = (short)(20 + Level * 6);
 
             MeleeDamageType = (eDamageType)npc.MeleeDamageType;
 			if (MeleeDamageType == 0)
@@ -1849,14 +1846,14 @@ namespace DOL.GS
 			mob.Level = Level;
 
             // Stats
-            mob.Constitution = m_npcConstitution;
-            mob.Dexterity = m_npcDexterity;
-            mob.Strength = m_npcStrength;
-            mob.Quickness = m_npcQuickness;
-            mob.Intelligence = m_npcIntelligence;
-            mob.Piety = m_npcPiety;
-            mob.Empathy = m_npcEmpathy;
-            mob.Charisma = m_npcCharisma;
+            mob.Constitution = Constitution;
+            mob.Dexterity = Dexterity;
+            mob.Strength = Strength;
+            mob.Quickness = Quickness;
+            mob.Intelligence = Intelligence;
+            mob.Piety = Piety;
+            mob.Empathy = Empathy;
+            mob.Charisma = Charisma;
 
 			mob.ClassType = this.GetType().ToString();
 			mob.Flags = Flags;
@@ -4060,14 +4057,14 @@ namespace DOL.GS
 			m_flags = 0;
 			m_maxdistance = 0;
 			m_boatowner_id = "";
-            m_npcConstitution = 30;
-            m_npcDexterity = 30;
-            m_npcStrength = 30;
-            m_npcQuickness = 30;
-            m_npcIntelligence = 30;
-            m_npcPiety = 30;
-            m_npcEmpathy = 30;
-            m_npcCharisma = 30;
+			for (eStat stat = eStat._First; stat <= eStat.CHR; ++stat)
+				m_charStat[stat - eStat._First] = 30;
+
+			// Bring mob strength on par with that of a templated
+			// player.
+
+			Strength = (short)(20 + Level * 6);
+
 			//m_factionName = "";
 			LinkedFactions = new ArrayList(1);
 			if (m_ownBrain == null)
@@ -4084,15 +4081,14 @@ namespace DOL.GS
 		public GameNPC(INpcTemplate template)
 			: this()
 		{
-            m_npcConstitution = 30;
-            m_npcDexterity = 30;
-            m_npcStrength = 30;
-            m_npcQuickness = 30;
-            m_npcIntelligence = 30;
-            m_npcPiety = 30;
-            m_npcEmpathy = 30;
-            m_npcCharisma = 30;
-            LoadTemplate(template);
+			for (eStat stat = eStat._First; stat <= eStat.CHR; ++stat)
+				m_charStat[stat - eStat._First] = 30;
+
+			// Bring mob strength on par with that of a templated
+			// player.
+
+			Strength = (short)(20 + Level * 6);
+
             m_boatowner_id = "";
         }
 	}
