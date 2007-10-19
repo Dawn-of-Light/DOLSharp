@@ -83,7 +83,9 @@ namespace DOL.GS
 		public override void LoadFromDatabase(DataObject obj)
 		{
 			base.LoadFromDatabase(obj);
-			WorldMgr.GetRegion(CurrentRegionID).AddArea(new Area.Circle(String.Format("{0}'s Lair", Name),
+			String[] dragonName = Name.Split(new char[] { ' ' });
+			WorldMgr.GetRegion(CurrentRegionID).AddArea(new Area.Circle(String.Format("{0}'s Lair",
+				dragonName[0]),
 				X, Y, 0, LairRadius + 200));
 		}
 
@@ -154,7 +156,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override double AttackDamage(InventoryItem weapon)
 		{
-			return base.AttackDamage(weapon) * 4.0;
+			return base.AttackDamage(weapon) * 1.0;
 		}
 
 		/// <summary>
