@@ -193,6 +193,24 @@ namespace DOL
 			/// </summary>
 			public override void OnConnect()
 			{
+                if (ServerProperties.Properties.ALLOW_DUAL_LOGINS == false)
+                {
+                    foreach (GameClient curPlayer in WorldMgr.GetAllPlayingClients())
+                    {
+                        if (curPlayer.LocalIP == LocalIP)
+                        {
+                            if (curPlayer.Account.PrivLevel > 1)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                GameServer.Instance.Close();
+                                break;
+                            }
+                        }
+                    }
+                }
 				GameEventMgr.Notify(GameClientEvent.Connected, this);
 			}
 
