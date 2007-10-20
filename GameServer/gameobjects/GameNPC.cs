@@ -1730,7 +1730,20 @@ namespace DOL.GS
 			Size = npc.Size;
 			Level = npc.Level;	// health changes when GameNPC.Level changes
 			Flags = npc.Flags;
-            
+
+			// Copy stats from the table, we'll do a sanity check
+			// afterwards.
+
+			Strength = (short)npc.Strength;
+			Constitution = (short)npc.Constitution;
+			Dexterity = (short)npc.Dexterity;
+			Quickness = (short)npc.Quickness;
+			Intelligence = (short)npc.Intelligence;
+			Piety = (short)npc.Piety;
+			Charisma = (short)npc.Charisma;
+			Empathy = (short)npc.Empathy;
+			CheckStats();
+
             MeleeDamageType = (eDamageType)npc.MeleeDamageType;
 			if (MeleeDamageType == 0)
 			{
@@ -4013,6 +4026,21 @@ namespace DOL.GS
                 return (npc.Faction == Faction || Faction.FriendFactions.Contains(npc.Faction));
         }
 
+		/// <summary>
+		/// Check whether current stats for this mob are sane.
+		/// </summary>
+		private void CheckStats()
+		{
+			// Mob stats should be a minimum of 30 each and strength should
+			// be on par with that of a templated player.
+
+			for (eStat stat = eStat._First; stat <= eStat.CHR; ++stat)
+				if (m_charStat[stat - eStat._First] <= 0) m_charStat[stat - eStat._First] = 30;
+
+			if (Strength < (20 + Level * 6))
+				Strength = (short)(20 + Level * 6);
+		}
+
         private string m_boatowner_id;
         /// <summary>
 		/// Constructs a NPC
@@ -4041,11 +4069,12 @@ namespace DOL.GS
 			m_flags = 0;
 			m_maxdistance = 0;
 			m_boatowner_id = "";
+
+			// Mob stats should be a minimum of 30 each and strength should
+			// be on par with that of a templated player.
+
 			for (eStat stat = eStat._First; stat <= eStat.CHR; ++stat)
 				m_charStat[stat - eStat._First] = 30;
-
-			// Bring mob strength on par with that of a templated
-			// player.
 
 			Strength = (short)(20 + Level * 6);
 
@@ -4065,55 +4094,24 @@ namespace DOL.GS
 		public GameNPC(INpcTemplate template)
 			: this()
 		{
-            // Need to load our NPC Template
-            if (template != null)
-                LoadTemplate(template);
+			// Load template.
 
-            // Check template stats, if lower than default, bump to default and calc proper str
-            for (eStat stat = eStat._First; stat <= eStat.CHR; ++stat)
-            {
-                if (stat == eStat.CHR && template.Charisma < 30)
-                {
-                    m_charStat[stat - eStat.CHR] = 30;
-                    Charisma = 30;
-                }
-                else if (stat == eStat.CON && template.Constitution < 30)
-                {
-                    m_charStat[stat - eStat.CON] = 30;
-                    Constitution = 30;
-                }
-                else if (stat == eStat.DEX && template.Dexterity < 30)
-                {
-                    m_charStat[stat - eStat.DEX] = 30;
-                    Dexterity = 30;
-                }
-                else if (stat == eStat.EMP && template.Empathy < 30)
-                {
-                    m_charStat[stat - eStat.EMP] = 30;
-                    Empathy = 30;
-                }
-                else if (stat == eStat.INT && template.Intelligence < 30)
-                {
-                    m_charStat[stat - eStat.INT] = 30;
-                    Intelligence = 30;
-                }
-                else if (stat == eStat.PIE && template.Piety < 30)
-                {
-                    m_charStat[stat - eStat.PIE] = 30;
-                    Piety = 30;
-                }
-                else if (stat == eStat.QUI && template.Quickness < 30)
-                {
-                    m_charStat[stat - eStat.QUI] = 30;
-                    Quickness = 30;
-                }
-                else if (stat == eStat.STR && template.Strength < (short)(20 + Convert.ToInt16(template.Level) * 6))
-                {
-                    m_charStat[stat - eStat.STR] = (short)(20 + Convert.ToInt16(template.Level) * 6);
-                    Strength = (short)(20 + Convert.ToInt16(template.Level) * 6);
-                }
-            }            
-            // Mob is not a boat, does not need an owner
+			if (template != null)
+				LoadTemplate(template);
+
+			// Copy stats from template, we'll do a sanity check
+			// afterwards.
+
+			Strength = (short) template.Strength;
+			Constitution = (short) template.Constitution;
+			Dexterity = (short)template.Dexterity;
+			Quickness = (short) template.Quickness;
+			Intelligence = (short) template.Intelligence;
+			Piety = (short) template.Piety;
+			Charisma = (short) template.Charisma;
+			Empathy = (short) template.Empathy;
+			CheckStats();
+
             m_boatowner_id = "";
         }
 	}
