@@ -160,14 +160,14 @@ namespace DOL.GS
 					DBSpell spell = new DBSpell();
 					spell.AutoSave = false;
 					spell.CastTime = 0;
-					spell.ClientEffect = 521;
+					spell.ClientEffect = 5702;
 					spell.Description = "Glare";
 					spell.Name = "Dragon Glare";
 					spell.Range = 2500;
 					spell.Radius = 700;
 					spell.Damage = 2000;
 					spell.RecastDelay = 10;
-					spell.DamageType = (int)eDamageType.Cold;
+					spell.DamageType = (int)eDamageType.Spirit;
 					spell.SpellID = 6021;
 					spell.Target = "Enemy";
 					spell.Type = "DirectDamage";
