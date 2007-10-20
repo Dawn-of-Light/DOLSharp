@@ -158,7 +158,7 @@ namespace DOL.GS
 					DBSpell spell = new DBSpell();
 					spell.AutoSave = false;
 					spell.CastTime = 0;
-					spell.ClientEffect = 161;
+					spell.ClientEffect = 5701;
 					spell.Description = "Glare";
 					spell.Name = "Dragon Glare";
 					spell.Range = 2500;
