@@ -487,6 +487,12 @@ namespace DOL.GS.ServerProperties
         public static readonly int GAMENPC_BASE_HP;
 
         /// <summary>
+        /// This will Allow/Disallow dual loggins
+        /// </summary>
+        [ServerProperty("allow_dual_logins", "Diasable to disallow players to connect with more than 1 account at a time.", true)]
+        public static bool ALLOW_DUAL_LOGINS;
+
+        /// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
 		/// type of the default value
