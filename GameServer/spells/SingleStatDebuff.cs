@@ -265,4 +265,37 @@ namespace DOL.GS.Spells
 		// constructor
 		public SkillsDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
+	/// <summary>
+	/// Acuity stat baseline debuff
+	/// </summary>
+	[SpellHandlerAttribute("AcuityDebuff")]
+	public class AcuityDebuff : SingleStatDebuff
+	{
+		public override eProperty Property1 { get { return eProperty.Acuity; } }	
+
+		// constructor
+		public AcuityDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+	}
+	/// <summary>
+	/// Quickness stat baseline debuff
+	/// </summary>
+	[SpellHandlerAttribute("QuicknessDebuff")]
+	public class QuicknessDebuff : SingleStatDebuff
+	{
+		public override eProperty Property1 { get { return eProperty.Quickness; } }	
+
+		// constructor
+		public QuicknessDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+	}
+	/// <summary>
+	/// ToHit Skill debuff
+	/// </summary>
+	[SpellHandlerAttribute("ToHitDebuff")]
+	public class ToHitSkillDebuff : SingleStatDebuff
+	{
+		public override eProperty Property1 { get { return eProperty.ToHitBonus; } }	
+
+		// constructor
+		public ToHitSkillDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+	}
  }

@@ -285,4 +285,23 @@ namespace DOL.GS.Spells
 		// constructor
 		public CrushResistDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
+	/// <summary>
+	/// Crush/Slash/Thrust resistance debuff
+	/// </summary>
+	[SpellHandlerAttribute("CrushSlashThrustDebuff")]
+	public class CrushSlashThrustDebuff : AbstractResistDebuff
+	{
+		public override int BonusCategory1 { get { return 3; } }
+		public override int BonusCategory2 { get { return 3; } }
+		public override int BonusCategory3 { get { return 3; } }
+		
+		public override eProperty Property1 { get { return eProperty.Resist_Crush; } }	
+		public override eProperty Property2 { get { return eProperty.Resist_Slash; } }	
+		public override eProperty Property3 { get { return eProperty.Resist_Thrust; } }	
+
+		public override string DebuffTypeName { get { return "Crush/Slash/Thrust"; } }
+
+		// constructor
+		public CrushSlashThrustDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+	}
 }
