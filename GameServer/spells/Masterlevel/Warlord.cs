@@ -150,6 +150,17 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    #region Warlord-5
+    [SpellHandlerAttribute("Critical")]
+    public class CriticalDamageBuff : MasterlevelDualBuffHandling
+    {
+        public override eProperty Property1 { get { return eProperty.CriticalSpellHitChance; } }
+        public override eProperty Property2 { get { return eProperty.CriticalMeleeHitChance; } }
+
+        public CriticalDamageBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+    }
+    #endregion  
+        
     #region Warlord-7
     [SpellHandlerAttribute("CleansingAura")]
     public class CleansingAurauraSpellHandler : SpellHandler
