@@ -38,8 +38,7 @@ namespace DOL.GS
 
 		#region Add Spawns
 
-		/*
-		private ArrayList m_retrieverList = new ArrayList();
+		private ArrayList m_messengerList = new ArrayList();
 
 		/// <summary>
 		/// Spawn dogs that will despawn again after 60 seconds; there is
@@ -50,34 +49,32 @@ namespace DOL.GS
 		{
 			base.CheckAddSpawns();	// In order to reset HealthPercentOld.
 
-			Yell("Come to me my babies!");
+			GameNPC glimmerSpawn;
+			bool isMessenger;
+			m_messengerList.Clear();
 
-			GameNPC dogSpawn;
-			bool isRetriever = false;
-			m_retrieverList.Clear();
+			// Spawn glimmer mobs, in most cases (75% chance) these mobs will be around
+			// level 60 and con red to purple, in some cases (25%) they will be
+			// messengers, who will try to get out of the lair and, if successful,
+			// cause Cuuldurach to spawn a couple of deep purple adds.
 
-			// Spawn dogs, in most cases (75% chance) these dogs will be level 
-			// 37 and con green (decoys), in some cases (25%) they will be
-			// retrievers, who will try to get out of the lair and, if successful,
-			// cause Gjalpinulva to spawn a couple of deep purple adds.
-
-			for (int dog = 1; dog <= 10; ++dog)
+			for (int glimmer = 1; glimmer <= 10; ++glimmer)
 			{
-				isRetriever = Util.Chance(25);
-				dogSpawn = SpawnTimedAdd((isRetriever) ? 610 : 611,
-					(isRetriever) ? Util.Random(50, 55) : 37,
+				isMessenger = Util.Chance(25);
+				glimmerSpawn = SpawnTimedAdd((isMessenger) ? 620 : 621+Util.Random(2),
+					(isMessenger) ? Util.Random(47, 53) : Util.Random(57, 63),
 					X + Util.Random(300, 600), Y + Util.Random(300, 600), 60);
 
-				// We got a retriever, tell it who its master is and which exit
+				// We got a messenger, tell it who its master is and which exit
 				// to run to.
 
-				if (isRetriever)
+				if (isMessenger)
 				{
-					if (dogSpawn.Brain is RetrieverMobBrain)
+					if (glimmerSpawn.Brain is RetrieverMobBrain)
 					{
-						(dogSpawn.Brain as RetrieverMobBrain).Master = this;
-						m_retrieverList.Add(dogSpawn);
-						dogSpawn.WalkTo(GetExitCoordinates(Util.Random(1, 4)), 200);	// Pick 1 out of 4 possible exits.
+						(glimmerSpawn.Brain as RetrieverMobBrain).Master = this;
+						m_messengerList.Add(glimmerSpawn);
+						glimmerSpawn.WalkTo(GetExitCoordinates(Util.Random(1, 4)), 200);	// Pick 1 out of 4 possible exits.
 					}
 				}
 			}
@@ -98,10 +95,10 @@ namespace DOL.GS
 
 			switch (exitNo)
 			{
-				case 1: return new Point3D(707026, 1019564, 0);
-				case 2: return new Point3D(706924, 1023596, 0);
-				case 3: return new Point3D(711441, 1023175, 0);
-				case 4: return new Point3D(710708, 1018894, 0);
+				case 1: return new Point3D(407292, 704008, 0);
+				case 2: return new Point3D(406158, 707745, 0);
+				case 3: return new Point3D(410302, 708563, 0);
+				case 4: return new Point3D(411117, 704696, 0);
 				default: return new Point3D(SpawnX, SpawnY, SpawnZ);
 			}
 		}
@@ -117,32 +114,29 @@ namespace DOL.GS
 
 			// Spawn nasty adds.
 
-			if (m_retrieverList.Contains(sender))
-				SpawnDrakulvs(Util.Random(7, 10), sender.X, sender.Y);
+			if (m_messengerList.Contains(sender))
+				SpawnGlimmers(Util.Random(7, 10), sender.X, sender.Y);
 		}
 
 		/// <summary>
-		/// Spawn some (10-20) nasty level 62-68 drakulvs around the spot the
+		/// Spawn a couple of nasty level 62-68 glimmer mobs around the spot the
 		/// retriever has reported back from, then make these spawns aggro the
 		/// raid inside the lair.
 		/// </summary>
 		/// <param name="numAdds"></param>
 		/// <param name="x"></param>
 		/// <param name="y"></param>
-		private void SpawnDrakulvs(int numAdds, int x, int y)
+		private void SpawnGlimmers(int numAdds, int x, int y)
 		{
-			GameNPC drakulv;
-			bool isDisciple = false;
+			GameNPC glimmer;
 			for (int add = 0; add < numAdds; ++add)
 			{
-				isDisciple = Util.Chance(25);
-				drakulv = SpawnTimedAdd((isDisciple) ? 613 : 612, Util.Random(62, 68),
+				glimmer = SpawnTimedAdd(624+Util.Random(2), Util.Random(62, 68),
 					x + Util.Random(250), y + Util.Random(250), 120);
-				if (drakulv.Brain is StandardMobBrain && this.Brain is DragonBrain)
-					(Brain as DragonBrain).AddAggroListTo(drakulv.Brain as StandardMobBrain);
+				if (glimmer.Brain is StandardMobBrain && this.Brain is DragonBrain)
+					(Brain as DragonBrain).AddAggroListTo(glimmer.Brain as StandardMobBrain);
 			}
 		}
-		*/
 		 
 		#endregion
 
