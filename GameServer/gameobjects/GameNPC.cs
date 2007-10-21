@@ -1710,6 +1710,7 @@ namespace DOL.GS
 		/// <param name="obj">template to load from</param>
 		public override void LoadFromDatabase(DataObject obj)
 		{
+			if (obj == null) return;
 			base.LoadFromDatabase(obj);
 			if (!(obj is Mob)) return;
 			Mob npc = (Mob)obj;
@@ -2012,7 +2013,8 @@ namespace DOL.GS
 			BuffBonusCategory4[(int)eStat.EMP] += template.Empathy;
 			BuffBonusCategory4[(int)eStat.CHR] += template.Charisma;
 
-			m_ownBrain = (Name.EndsWith("retriever")) // Don't like this hack, but can't specify a brain in npctemplate at the moment
+			m_ownBrain = (Name.EndsWith("retriever")
+				|| Name.EndsWith("messenger")) // Don't like this hack, but can't specify a brain in npctemplate at the moment
 				? new RetrieverMobBrain()
 				: new StandardMobBrain();
 			m_ownBrain.Body = this;
@@ -4094,10 +4096,11 @@ namespace DOL.GS
 		public GameNPC(INpcTemplate template)
 			: this()
 		{
+			if (template == null) return;
+
 			// Load template.
 
-			if (template != null)
-				LoadTemplate(template);
+			LoadTemplate(template);
 
 			// Copy stats from template, we'll do a sanity check
 			// afterwards.

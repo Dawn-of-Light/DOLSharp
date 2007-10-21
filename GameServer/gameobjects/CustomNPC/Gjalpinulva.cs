@@ -64,7 +64,7 @@ namespace DOL.GS
 			{
 				isRetriever = Util.Chance(25);
 				dogSpawn = SpawnTimedAdd((isRetriever) ? 610 : 611, 
-					(isRetriever) ? Util.Random(50, 55) : 37, 
+					(isRetriever) ? Util.Random(47, 53) : 37, 
 					X + Util.Random(300, 600), Y + Util.Random(300, 600), 60);
 
 				// We got a retriever, tell it who its master is and which exit
