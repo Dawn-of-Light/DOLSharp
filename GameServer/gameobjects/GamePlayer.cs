@@ -9057,10 +9057,17 @@ namespace DOL.GS
 				RAPropertyEnhancer ab = GetAbility(typeof(LifterAbility)) as RAPropertyEnhancer;
 				if (ab != null)
 					enc *= 1 + ((double)ab.Amount / 100);
+
+				// Apply Sojourner ability
+				if (this.GetSpellLine("Sojourner") != null)
+				{
+					enc *= 1.25;
+				}	
 				
+				// Apply Walord effect
 				GameSpellEffect iBaneLordEffect = SpellHandler.FindEffectOnTarget((GameLiving)this, "Oppression");
 				if (iBaneLordEffect != null)
-					enc *= 1 - ((double)iBaneLordEffect.Spell.Value / 100);
+					enc *= 1.00 - (iBaneLordEffect.Spell.Value * 0.01);
 				
 				return (int)enc;
 			}

@@ -76,6 +76,11 @@ namespace DOL.GS.Spells
                 if (ra != null)
                     ad.Damage *= 1 + (ra.Amount / 100);
             }
+            			
+			GameSpellEffect iWarLordEffect = SpellHandler.FindEffectOnTarget(target, "CleansingAura");
+			if (iWarLordEffect != null)
+				ad.Damage *= (int)(1.00 - (iWarLordEffect.Spell.Value * 0.01));
+                       
             ad.CriticalDamage = 0;
 			return ad;
 		}
