@@ -47,9 +47,6 @@ namespace DOL.GS.PropertyCalc
 
 				abs += (living.GetModified(eProperty.Constitution) + living.GetModified(eProperty.Dexterity) - 100) / 400;
 			}
-
-			abs += living.AbilityBonus[(int)property];
-
 			return abs;
 		}
 	}

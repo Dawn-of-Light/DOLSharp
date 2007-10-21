@@ -340,8 +340,38 @@ namespace DOL.GS.Spells
 
     #region CCResist
     [SpellHandler("CCResist")]
-    public class CCResistSpellHandler : SpellHandler
+    public class CCResistSpellHandler : MasterlevelHandling
     {
+        public override void OnEffectStart(GameSpellEffect effect)
+        {
+        	base.OnEffectStart(effect);
+            effect.Owner.BuffBonusCategory1[(int)eProperty.MesmerizeDuration] += (int)m_spell.Value;
+            effect.Owner.BuffBonusCategory1[(int)eProperty.StunDuration] += (int)m_spell.Value;
+            effect.Owner.BuffBonusCategory1[(int)eProperty.SpeedDecreaseDuration] += (int)m_spell.Value;
+             
+            if (effect.Owner is GamePlayer)
+            {
+            	GamePlayer player = effect.Owner as GamePlayer;
+                player.UpdatePlayerStatus();
+            	player.Out.SendUpdatePlayer();       
+            }
+        }
+
+        public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
+        {
+            effect.Owner.BuffBonusCategory1[(int)eProperty.MesmerizeDuration] -= (int)m_spell.Value;
+            effect.Owner.BuffBonusCategory1[(int)eProperty.StunDuration] -= (int)m_spell.Value;
+            effect.Owner.BuffBonusCategory1[(int)eProperty.SpeedDecreaseDuration] -= (int)m_spell.Value;
+            
+            if (effect.Owner is GamePlayer)
+            {
+            	GamePlayer player = effect.Owner as GamePlayer;
+                player.UpdatePlayerStatus();
+            	player.Out.SendUpdatePlayer();  
+            }
+            return base.OnEffectExpires(effect,noMessages);
+        }
+
         // constructor
         public CCResistSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
