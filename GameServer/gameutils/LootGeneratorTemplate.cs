@@ -162,13 +162,11 @@ namespace DOL.GS
 		public override LootList GenerateLoot(GameNPC mob, GameObject killer)
 		{
 			LootList loot = base.GenerateLoot(mob, killer);
-
 			ArrayList mobXLootTemplates = (ArrayList)m_mobXLootTemplates[mob.Name.ToLower()];
-			//DBMobXLootTemplate[] mobXLootTemplates = ((DBMobXLootTemplate[]) m_mobXLootTemplates[mob.Name]);
-			//string lootTemplateName = null;
 			IList lootTemplates = null;
 
-			//Build list of possible loottemplates...
+			// Create a list with all loot templates for this mob.
+
 			if (mobXLootTemplates == null)
 			{
 				// allow lazy relation between lootTemplate and mob if templateName == mob name.                
@@ -176,46 +174,51 @@ namespace DOL.GS
 			}
 			else
 			{
+				// Look up all possible drops for each entry in MobXLoot.
+
 				lootTemplates = new ArrayList();
 				foreach (DBMobXLootTemplate mobXLootTemplate in mobXLootTemplates)
-				{
-					loot.DropCount = Math.Max(loot.DropCount, mobXLootTemplate.DropCount);
-
-					IList templateList = (IList)m_templateNameXLootTemplate[mobXLootTemplate.LootTemplateName.ToLower()];
-					if (templateList != null)
-					{
-						((ArrayList)lootTemplates).AddRange(templateList);
-					}
-				}
+					GenerateLootFromTemplate(mobXLootTemplate, (ArrayList) lootTemplates, loot);
 			}
+
+			// Add random drops to loot list.
 
 			if (lootTemplates != null)
 			{
-				int moblvl = mob.Level - 3;
-				int itemlvl, chance;
 				foreach (DBLootTemplate lootTemplate in lootTemplates)
-				{
-					// formula for chance of adding items to our loot based on item level and mob level **						
-					itemlvl = lootTemplate.ItemTemplate.Level;
-					chance = lootTemplate.Chance; // add in our chance based on 'Chance' of item
-					/*levelDiff = FastMath.Abs(moblvl - itemlvl);
-					if (levelDiff > LEVEL_RANGE_FACTOR)
-					{
-						levelBasedFactor = LEVEL_RANGE_FACTOR / (double)levelDiff;
-						if (levelBasedFactor < 1.0)
-							chance = (int)(((double)chance) * levelBasedFactor); // get our chance based on level
-					}
-					 */
-					//chance = chance >> 3; // if we are dropping multiple items we want to lower our chance to carry each item
-
-					//Console.WriteLine("Chance for "+lootTemplate.ItemTemplate.Name+" is '"+chance+"/100'");
-
-					// we will drop this item
-					loot.AddRandom(chance, lootTemplate.ItemTemplate); // add this to our lootlist
-				}
+					loot.AddRandom(lootTemplate.Chance, lootTemplate.ItemTemplate);
 			}
 
 			return loot;
+		}
+
+		/// <summary>
+		/// Add all loot templates for an entry in MobXLoot to the list of templates;
+		/// if the item has a 100% drop chance, add it as a fixed drop to the
+		/// loot list.
+		/// </summary>
+		/// <param name="mobXLootTemplate">Entry in MobXLoot.</param>
+		/// <param name="lootTemplates">List of templates for random drops.</param>
+		/// <param name="loot">List to hold loot.</param>
+		private void GenerateLootFromTemplate(DBMobXLootTemplate mobXLootTemplate, 
+			ArrayList lootTemplates, LootList loot)
+		{
+			if (mobXLootTemplate == null) return;
+
+			IList templateList = (IList)m_templateNameXLootTemplate[mobXLootTemplate.LootTemplateName.ToLower()];
+			if (templateList != null)
+			{
+				foreach (DBLootTemplate lootTemplate in templateList)
+				{
+					if (lootTemplate.Chance == 100)
+						loot.AddFixed(lootTemplate.ItemTemplate, mobXLootTemplate.DropCount);
+					else
+					{
+						loot.DropCount = Math.Max(loot.DropCount, mobXLootTemplate.DropCount);
+						lootTemplates.Add(lootTemplate);
+					}
+				}
+			}
 		}
 	}
 }

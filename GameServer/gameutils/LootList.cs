@@ -57,12 +57,13 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Adds a dbloottemplate to list of fixed drops
+		/// Adds dropCount pieces of this item to the list of fixed drops.
 		/// </summary>
 		/// <param name="loot"></param>
-		public void AddFixed(ItemTemplate loot)
+		public void AddFixed(ItemTemplate loot, int dropCount)
 		{
-			m_fixedItemDrops.Add(loot);
+			for (int drop = 0; drop < dropCount; drop++)
+				m_fixedItemDrops.Add(loot);
 		}
 
 		public void AddRandom(int chance, ItemTemplate loot)

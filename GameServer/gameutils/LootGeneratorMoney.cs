@@ -54,7 +54,7 @@ namespace DOL.GS
 			money.Silver = (byte)Money.GetSilver(moneyCount);
 			money.Gold = (byte)Money.GetGold(moneyCount);
 
-			loot.AddFixed(money);
+			loot.AddFixed(money, 1);
 			return loot;
 		}
 	}
