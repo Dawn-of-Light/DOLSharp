@@ -3404,6 +3404,7 @@ namespace DOL.GS
 			ArrayList dropMessages = new ArrayList();
 			ArrayList autolootlist = new ArrayList();
 			ArrayList aplayer = new ArrayList();
+			String message;
 			lock (m_xpGainers.SyncRoot)
 			{
 				if (m_xpGainers.Keys.Count == 0) return;
@@ -3469,8 +3470,11 @@ namespace DOL.GS
 					}
 					if (!playerAttacker) return; // no loot if mob kills another mob
 
-					//Only add money loot if not killing grays
-					dropMessages.Add(GetName(0, true) + " drops " + loot.GetName(1, false) + ".");
+					message = String.Format("{0} drops {1}.",
+						GetName(0, true),
+						char.IsLower(loot.Name[0]) ? loot.GetName(1, false) : loot.Name);
+						
+					dropMessages.Add(message);
 					loot.AddToWorld();
 
 					foreach (GameObject gainer in m_xpGainers.Keys)
@@ -3489,21 +3493,7 @@ namespace DOL.GS
 				}
 			}
 
-			if (dropMessages.Count > 0)
-			{
-				GamePlayer killerPlayer = killer as GamePlayer;
-				if (killerPlayer != null)
-				{
-					foreach (string str in dropMessages)
-						killerPlayer.Out.SendMessage(str, eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
-				}
-				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
-				{
-					if (player == killer) continue;
-					foreach (string str in dropMessages)
-						player.Out.SendMessage(str, eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
-				}
-			}
+            BroadcastLoot(dropMessages);
 
 			if (autolootlist.Count > 0)
 			{
@@ -4026,6 +4016,32 @@ namespace DOL.GS
                 return false;
             else
                 return (npc.Faction == Faction || Faction.FriendFactions.Contains(npc.Faction));
+        }
+
+        /// <summary>
+        /// Broadcast loot to the raid.
+        /// </summary>
+        /// <param name="dropMessages">List of drop messages to broadcast.</param>
+        private void BroadcastLoot(ArrayList dropMessages)
+        {
+            if (dropMessages.Count > 0)
+            {
+                String lastMessage;
+                foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+                {
+                    lastMessage = "";
+                    foreach (string str in dropMessages)
+                    {
+                        // Suppress identical messages (multiple item drops).
+
+                        if (str != lastMessage)
+                        {
+                            player.Out.SendMessage(str, eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+                            lastMessage = str;
+                        }
+                    }
+                }
+            }
         }
 
 		/// <summary>
