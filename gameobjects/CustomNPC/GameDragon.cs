@@ -383,7 +383,6 @@ namespace DOL.GS
 					add.CurrentSpeed = 0;
 					add.Level = (byte)level;
 					add.RespawnInterval = -1;
-					add.Strength = 5000; // Doubt this will help damage wise, but let's try.
 					add.AddToWorld();
 					new DespawnTimer(this, add, uptime * 1000);
 				}
