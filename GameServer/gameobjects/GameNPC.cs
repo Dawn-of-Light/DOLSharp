@@ -3369,7 +3369,7 @@ namespace DOL.GS
 		protected override int HealthRegenerationTimerCallback(RegionTimer selfRegenerationTimer)
 		{
 			int period = m_healthRegenerationPeriod;
-			if (!InCombat || Util.Chance(50)) // mobs have only 50% chance to heal itself 
+			if (!InCombat || Util.Chance(25)) // mobs have only 25% chance to heal itself 
 			{
 				period = base.HealthRegenerationTimerCallback(selfRegenerationTimer);
 				BroadcastUpdate();
