@@ -101,37 +101,30 @@ namespace DOL.GS
 			ArrayList loot = new ArrayList(m_fixedItemDrops.Count + m_dropCount);
 			loot.AddRange(m_fixedItemDrops);
 
-			// to randomly select an itemtemplate from list depending on chance. 
-			// a virtual space ranging from 0 -> mrandomitemsdrops.Count *100 is created,
-			// then a random number withing this range is picked, and then chances of each itemtemplate are summed up until we  reach the random number.
+            int dice;
+            ArrayList lootCandidates = new ArrayList();
 
-			// determine which is smaller dropCount or number of items to drop and use smaller one.
-			/*
-			foreach (LootEntry e in m_randomItemDrops)
-			{
-				if (Util.Chance(e.Chance))
-					loot.Add(e.ItemTemplate);
-			}*/
+            // Drop count is the maximum number of items to drop, so we'll
+            // do just as many rolls.
 
-			int maxTries = Math.Min(m_dropCount, m_randomItemDrops.Count);
-			int randomRange = m_randomItemDrops.Count * 100;
-			for (int i = 0; i < maxTries; i++)
-			{
-				//int randomRange = m_randomItemDrops.Count*100;
-				int randomShot = Util.Random(randomRange);
-				for (int j = 0; j < m_randomItemDrops.Count; j++)
-				{
-					LootEntry entry = m_randomItemDrops[j] as LootEntry;
-					randomShot -= entry.Chance;
-					if (randomShot <= 0)
-					{
-						loot.Add(entry.ItemTemplate);
-						m_randomItemDrops.RemoveAt(j);
-						randomRange -= 100;
-						break;
-					}
-				}
-			}
+            for (int roll = 0; roll < m_dropCount; ++roll)
+            {
+                dice = Util.Random(1, 100);
+
+                // For each roll make a list of items that have at least this
+                // chance to drop.
+
+                lootCandidates.Clear();
+                foreach (LootEntry lootEntry in m_randomItemDrops)
+                    if (lootEntry.Chance >= dice)
+                        lootCandidates.Add(lootEntry.ItemTemplate);
+
+                // Now pick one of these items at random.
+
+                if (lootCandidates.Count > 0)
+                    loot.Add(lootCandidates[Util.Random(lootCandidates.Count-1)]);
+            }
+
 			return (ItemTemplate[])loot.ToArray(typeof(ItemTemplate));
 		}
 	}
@@ -154,9 +147,10 @@ namespace DOL.GS
 		{
 			get { return m_itemTemplate; }
 		}
-		public int Chance
-		{
-			get { return m_chance; }
-		}
+
+        public int Chance
+        {
+            get { return m_chance; }
+        }
 	}
 }
