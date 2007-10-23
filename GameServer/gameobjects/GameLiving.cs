@@ -2714,12 +2714,18 @@ namespace DOL.GS
 		/// <param name="attackTarget">The object to attack</param>
 		public virtual void StartAttack(GameObject attackTarget)
 		{
+			if (!IsAlive || ObjectState != eObjectState.Active) return;
+
+			// Necromancer with summoned pet cannot attack
+			if(ControlledNpc != null)
+				if(ControlledNpc.Body != null)
+					if(ControlledNpc.Body is NecromancerPet)
+						return;					
+
 			if (IsMezzed || IsStunned) return;
 			//			if (AttackState)
 			//				StopAttack(); // interrupts range attack animation
-
-			if (!IsAlive || ObjectState != eObjectState.Active) return;
-
+		
 			m_attackState = true;
 
 			// cancel engage effect if exist
@@ -3975,7 +3981,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <summary>
 		/// Ability bonus property
 		/// </summary>
-		public IPropertyIndexer AbilityBonus
+		public virtual IPropertyIndexer AbilityBonus
 		{
 			get { return m_abilityBonus; }
 		}
@@ -3987,7 +3993,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <summary>
 		/// Property Item Bonus field
 		/// </summary>
-		public IPropertyIndexer ItemBonus
+		public virtual IPropertyIndexer ItemBonus
 		{
 			get { return m_itemBonus; }
 		}

@@ -41,7 +41,7 @@ namespace DOL.GS.PropertyCalc
 				+ living.BuffBonusCategory2[(int)property]);
 
 			// Relic bonus calculated before RA bonuses
-			if (living is GamePlayer)
+			if (living is GamePlayer || living is NecromancerPet)
 				percent = (int)(percent * (1.00 + RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Strength)));
 
 			// Apply RA bonus

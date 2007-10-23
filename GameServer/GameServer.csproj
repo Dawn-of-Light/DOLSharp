@@ -537,6 +537,7 @@
     <Compile Include="gameobjects\GameStaticItemTimed.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="gameobjects\GameNecromancerPet.cs" />
     <Compile Include="gameobjects\SiegeWeapon\gameSiegeBallista.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1625,6 +1626,7 @@
     <Compile Include="spells\DamageToPowerSpellHandler.cs" />
     <Compile Include="spells\DisarmSpellHandler.cs" />
     <Compile Include="spells\EnduranceHealSpellHandler.cs" />
+    <Compile Include="spells\FacilisSpellHandler.cs" />
     <Compile Include="spells\Fury.cs" />
     <Compile Include="spells\HealthToFatigue.cs" />
     <Compile Include="spells\Heretic\HereticDamageLostOnPulse.cs" />
@@ -1644,6 +1646,7 @@
     <Compile Include="spells\Masterlevel\Stormlord.cs" />
     <Compile Include="spells\Masterlevel\Warlord.cs" />
     <Compile Include="spells\MetalGuardSpellHandler.cs" />
+    <Compile Include="spells\SummonNecromancerPet.cs" />
     <Compile Include="spells\NoVarianceSpells.cs" />
     <Compile Include="spells\OmniLifedrainSpellHandler.cs" />
     <Compile Include="spells\PetMesmerizeSpellHandler.cs" />

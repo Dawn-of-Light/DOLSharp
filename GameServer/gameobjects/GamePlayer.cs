@@ -4411,22 +4411,20 @@ namespace DOL.GS
 		/// <param name="attackTarget">the target to attack</param>
 		public override void StartAttack(GameObject attackTarget)
 		{
-			if (IsOnHorse)
-				IsOnHorse = false;
-
-			long VanishTick = this.TempProperties.getLongProperty(VanishEffect.VANISH_BLOCK_ATTACK_TIME_KEY, 0);
-			long changeTime = this.CurrentRegion.Time - VanishTick;
-			if (changeTime < 30000 && VanishTick > 0)
-			{
-				this.Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.YouMustWait", ((30000 - changeTime) / 1000).ToString()), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-				return;
-			}
-
 			if (!IsAlive)
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.YouCantCombat"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
 			}
+		
+			// Necromancer with summoned pet cannot attack
+			if(ControlledNpc != null)
+				if(ControlledNpc.Body != null)
+					if(ControlledNpc.Body is NecromancerPet)
+					{
+						Out.SendMessage("You cannot enter combat in shade mode!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+						return;					
+					}
 
 			//			if(IsShade)
 			//			{
@@ -4450,7 +4448,18 @@ namespace DOL.GS
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.YouMustWaitAgain", (vanishTimeout - CurrentRegion.Time + 1000) / 1000), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
 			}
+			
+			long VanishTick = this.TempProperties.getLongProperty(VanishEffect.VANISH_BLOCK_ATTACK_TIME_KEY, 0);
+			long changeTime = this.CurrentRegion.Time - VanishTick;
+			if (changeTime < 30000 && VanishTick > 0)
+			{
+				this.Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.YouMustWait", ((30000 - changeTime) / 1000).ToString()), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+				return;
+			}
 
+			if (IsOnHorse)
+				IsOnHorse = false;
+			
 			if (IsDisarmed)
 			{
 				Out.SendMessage("You are disarmed and cannot attack!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
