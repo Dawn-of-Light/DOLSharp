@@ -744,6 +744,7 @@
     <PreBuildEvent>
     </PreBuildEvent>
     <PostBuildEvent>xcopy "$(ProjectDir)*.cs" "$(SolutionDir)\$(ConfigurationName)\scripts" /y /s /q /i
-xcopy "$(ProjectDir)*.cs" "$(SolutionDir)\DOLServer\$(OutDir)\scripts" /y /s /q /i</PostBuildEvent>
+xcopy "$(ProjectDir)*.cs" "$(SolutionDir)\DOLServer\$(OutDir)\scripts" /y /s /q /i
+xcopy "$(SolutionDir)$(ConfigurationName)\lib\*.*" "$(SolutionDir)\DOLServer\$(OutDir)\lib" /y /s /q /i</PostBuildEvent>
   </PropertyGroup>
 </Project>
