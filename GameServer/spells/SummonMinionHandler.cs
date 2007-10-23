@@ -41,16 +41,18 @@ namespace DOL.GS.Spells
 	/// higher than zero is considered as level value.
 	/// Resulting value is limited by the Byte field type.
 	/// Spell.DamageType is used to determine which type of pet is being cast:
+	/// 0 = melee
 	/// 1 = healer
+	/// 2 = mage
+	/// 3 = debuffer
+	/// 4 = Buffer
+	/// 5 = Range
 	/// </summary>
 	[SpellHandler("SummonMinion")]
 	public class SummonMinionHandler : SpellHandler
 	{
 		public SummonMinionHandler(GameLiving caster, Spell spell, SpellLine line)
-			: base(caster, spell, line)
-		{
-
-		}
+			: base(caster, spell, line) { }
 
 		/// <summary>
 		/// called after normal spell cast is completed and effect has to be started
@@ -123,7 +125,39 @@ namespace DOL.GS.Spells
 			{
 				target.GetSpotFromHeading(64, out x, out y);
 
-				ControlledNpc controlledBrain = new ControlledNpc(pet);
+				ControlledNpc controlledBrain;
+
+				switch (Spell.DamageType)
+				{
+					//Melee
+					case (eDamageType)((byte)0):
+						controlledBrain = new BDMeleeBrain(pet);
+						break;
+					//Healer
+					case (eDamageType)((byte)1):
+						controlledBrain = new BDHealerBrain(pet);
+						break;
+					//Mage
+					case (eDamageType)((byte)2):
+						controlledBrain = new BDCasterBrain(pet);
+						break;
+					//Debuffer
+					case (eDamageType)((byte)3):
+						controlledBrain = new BDDebufferBrain(pet);
+						break;
+					//Buffer
+					case (eDamageType)((byte)4):
+						controlledBrain = new BDBufferBrain(pet);
+						break;
+					//Range
+					case (eDamageType)((byte)5):
+						controlledBrain = new BDArcherBrain(pet);
+						break;
+					//Other 
+					default:
+						controlledBrain = new ControlledNpc(pet);
+						break;
+				}
 
 				GameNPC summoned = new GameNPC(template);
 				summoned.SetOwnBrain(controlledBrain);
@@ -134,8 +168,6 @@ namespace DOL.GS.Spells
 				summoned.Heading = (ushort)((target.Heading + 2048) % 4096);
 				summoned.Realm = target.Realm;
 				summoned.CurrentSpeed = 0;
-				//We summoned a minion, make it one
-				((IControlledBrain)summoned.Brain).IsMinion = true;
 
 				if (Spell.Damage < 0)
 					summoned.Level = (byte)(target.Level * Spell.Damage * -0.01);
@@ -149,30 +181,6 @@ namespace DOL.GS.Spells
 				//to a level 50
 				if (summoned.Level == 37 && pet.Level >= 41)
 					summoned.Level = 41;
-
-				switch (Spell.DamageType)
-				{
-					//Melee/range
-					case (eDamageType)((byte)0):
-						summoned.CanFight = true;
-
-						break;
-					//Healer
-					case (eDamageType)((byte)1):
-						summoned.CanFight = false;
-
-						break;
-					//Mage
-					case (eDamageType)((byte)2):
-						summoned.CanFight = true;
-
-						break;
-					//Debuffer/buffer
-					case (eDamageType)((byte)3):
-						summoned.CanFight = true;
-
-						break;
-				}
 
 				summoned.AddToWorld();
 				summoned.UpdateNPCEquipmentAppearance();

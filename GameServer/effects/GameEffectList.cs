@@ -269,7 +269,7 @@ namespace DOL.GS.Effects
 			if (m_owner is GameNPC)
 			{
 				IControlledBrain npc = ((GameNPC)m_owner).Brain as IControlledBrain;
-				if (npc != null && !npc.IsMinion)
+				if (npc != null)
 					npc.UpdatePetWindow();
 			}
 		}
