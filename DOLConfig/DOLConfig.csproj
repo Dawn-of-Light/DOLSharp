@@ -98,6 +98,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetDir)DOLConfig.exe" "$(SolutionDir)$(ConfigurationName)"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetDir)DOLConfig.exe" "$(SolutionDir)$(ConfigurationName)"
+xcopy "$(TargetDir)DOLConfig.exe" "$(SolutionDir)\DOLServer\$(OutDir)" /y /s /q /i</PostBuildEvent>
   </PropertyGroup>
 </Project>

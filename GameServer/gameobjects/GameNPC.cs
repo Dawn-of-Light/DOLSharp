@@ -149,19 +149,19 @@ namespace DOL.GS
 			}
 		}
 
-        /// <summary>
-        /// Gets or sets the owner of this npc
-        /// </summary>
-        public string BoatOwnerID
-        {
-            get { return m_boatowner_id; }
-            set
-            {
-                m_boatowner_id = value;
-            }
-        }
-        
-        /// <summary>
+		/// <summary>
+		/// Gets or sets the owner of this npc
+		/// </summary>
+		public string BoatOwnerID
+		{
+			get { return m_boatowner_id; }
+			set
+			{
+				m_boatowner_id = value;
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets the heading of this NPC
 		/// </summary>
 		public override ushort Heading
@@ -245,12 +245,12 @@ namespace DOL.GS
 			}
 		}
 
-        protected bool m_HealthMultiplicator = false;
-        public bool HealthMultiplicator
-        {
-            get { return m_HealthMultiplicator; }
-            set { m_HealthMultiplicator = value; }
-        }
+		protected bool m_HealthMultiplicator = false;
+		public bool HealthMultiplicator
+		{
+			get { return m_HealthMultiplicator; }
+			set { m_HealthMultiplicator = value; }
+		}
 
 		/// <summary>
 		/// Gets or sets the name of this npc
@@ -349,142 +349,142 @@ namespace DOL.GS
 			set { m_houseNumber = value; }
 		}
 		#endregion
-        #region Stats
+		#region Stats
 
-        /// <summary>
-        /// Calculates the maximum health for a specific npclevel and constitution
-        /// </summary>
-        /// <param name="level">The level of the npc</param>
-        /// <param name="constitution">The constitution of the npc</param>
-        /// <returns></returns>
-        public virtual int CalculateMaxHealth(int level, int constitution)
-        {
-            constitution -= 50;
-            if (constitution < 0)
-                constitution *= 2;
-            int hp1 = ServerProperties.Properties.GAMENPC_BASE_HP * (20 + 20 + level);
-            int hp2 = hp1 * constitution / 10000;
-            return Math.Max(1, 20 + hp1 / 50 + hp2);
-        }
+		/// <summary>
+		/// Calculates the maximum health for a specific npclevel and constitution
+		/// </summary>
+		/// <param name="level">The level of the npc</param>
+		/// <param name="constitution">The constitution of the npc</param>
+		/// <returns></returns>
+		public virtual int CalculateMaxHealth(int level, int constitution)
+		{
+			constitution -= 50;
+			if (constitution < 0)
+				constitution *= 2;
+			int hp1 = ServerProperties.Properties.GAMENPC_BASE_HP * (20 + 20 + level);
+			int hp2 = hp1 * constitution / 10000;
+			return Math.Max(1, 20 + hp1 / 50 + hp2);
+		}
 
 
-        /// <summary>
-        /// Calculates MaxHealth of an NPC
-        /// </summary>
-        /// <returns>maxpower of npc</returns>
-        public virtual int CalculateMaxMana(int level, int manastat)
-        {
-            int maxpower = 0;
-            maxpower = (level * (20 + 20 + 5)) + (this.Intelligence - 50);
-            if (maxpower < 0)
-                maxpower = 0;
-            return maxpower;
-        }
+		/// <summary>
+		/// Calculates MaxHealth of an NPC
+		/// </summary>
+		/// <returns>maxpower of npc</returns>
+		public virtual int CalculateMaxMana(int level, int manastat)
+		{
+			int maxpower = 0;
+			maxpower = (level * (20 + 20 + 5)) + (this.Intelligence - 50);
+			if (maxpower < 0)
+				maxpower = 0;
+			return maxpower;
+		}
 
-        /// <summary>
-        /// Change a stat value
-        /// (delegate to GameNPC)
-        /// </summary>
-        /// <param name="stat">The stat to change</param>
-        /// <param name="val">The new value</param>
-        public override void ChangeBaseStat(eStat stat, short val)
-        {
-            int oldstat = GetBaseStat(stat);
-            base.ChangeBaseStat(stat, val);
-            int newstat = GetBaseStat(stat);
-            GameNPC npc = this;
-            if (this != null && oldstat != newstat)
-            {
-                switch (stat)
-                {
-                    case eStat.STR: npc.Strength = (short)newstat; break;
-                    case eStat.DEX: npc.Dexterity = (short)newstat; break;
-                    case eStat.CON: npc.Constitution = (short)newstat; break;
-                    case eStat.QUI: npc.Quickness = (short)newstat; break;
-                    case eStat.INT: npc.Intelligence = (short)newstat; break;
-                    case eStat.PIE: npc.Piety = (short)newstat; break;
-                    case eStat.EMP: npc.Empathy = (short)newstat; break;
-                    case eStat.CHR: npc.Charisma = (short)newstat; break;
-                }
-            }
-        }
+		/// <summary>
+		/// Change a stat value
+		/// (delegate to GameNPC)
+		/// </summary>
+		/// <param name="stat">The stat to change</param>
+		/// <param name="val">The new value</param>
+		public override void ChangeBaseStat(eStat stat, short val)
+		{
+			int oldstat = GetBaseStat(stat);
+			base.ChangeBaseStat(stat, val);
+			int newstat = GetBaseStat(stat);
+			GameNPC npc = this;
+			if (this != null && oldstat != newstat)
+			{
+				switch (stat)
+				{
+					case eStat.STR: npc.Strength = (short)newstat; break;
+					case eStat.DEX: npc.Dexterity = (short)newstat; break;
+					case eStat.CON: npc.Constitution = (short)newstat; break;
+					case eStat.QUI: npc.Quickness = (short)newstat; break;
+					case eStat.INT: npc.Intelligence = (short)newstat; break;
+					case eStat.PIE: npc.Piety = (short)newstat; break;
+					case eStat.EMP: npc.Empathy = (short)newstat; break;
+					case eStat.CHR: npc.Charisma = (short)newstat; break;
+				}
+			}
+		}
 
-        /// <summary>
-        /// Gets NPC's constitution
-        /// </summary>
-        public short Constitution
-        {
-            get
-            {
-                return m_charStat[eStat.CON - eStat._First];
-            }
-            set { m_charStat[eStat.CON - eStat._First] = value; }
-        }
+		/// <summary>
+		/// Gets NPC's constitution
+		/// </summary>
+		public short Constitution
+		{
+			get
+			{
+				return m_charStat[eStat.CON - eStat._First];
+			}
+			set { m_charStat[eStat.CON - eStat._First] = value; }
+		}
 
-        /// <summary>
-        /// Gets NPC's dexterity
-        /// </summary>
-        public short Dexterity
-        {
-            get { return m_charStat[eStat.DEX - eStat._First]; }
-            set { m_charStat[eStat.DEX - eStat._First] = value; }
-        }
+		/// <summary>
+		/// Gets NPC's dexterity
+		/// </summary>
+		public short Dexterity
+		{
+			get { return m_charStat[eStat.DEX - eStat._First]; }
+			set { m_charStat[eStat.DEX - eStat._First] = value; }
+		}
 
-        /// <summary>
-        /// Gets NPC's strength
-        /// </summary>
-        public short Strength
-        {
-            get { return m_charStat[eStat.STR - eStat._First]; }
-            set { m_charStat[eStat.STR - eStat._First] = value; }
-        }
+		/// <summary>
+		/// Gets NPC's strength
+		/// </summary>
+		public short Strength
+		{
+			get { return m_charStat[eStat.STR - eStat._First]; }
+			set { m_charStat[eStat.STR - eStat._First] = value; }
+		}
 
-        /// <summary>
-        /// Gets NPC's quickness
-        /// </summary>
-        public short Quickness
-        {
-            get { return m_charStat[eStat.QUI - eStat._First]; }
-            set { m_charStat[eStat.QUI - eStat._First] = value; }
-        }
+		/// <summary>
+		/// Gets NPC's quickness
+		/// </summary>
+		public short Quickness
+		{
+			get { return m_charStat[eStat.QUI - eStat._First]; }
+			set { m_charStat[eStat.QUI - eStat._First] = value; }
+		}
 
-        /// <summary>
-        /// Gets NPC's intelligence
-        /// </summary>
-        public short Intelligence
-        {
-            get { return m_charStat[eStat.INT - eStat._First]; }
-            set { m_charStat[eStat.INT - eStat._First] = value; }
-        }
+		/// <summary>
+		/// Gets NPC's intelligence
+		/// </summary>
+		public short Intelligence
+		{
+			get { return m_charStat[eStat.INT - eStat._First]; }
+			set { m_charStat[eStat.INT - eStat._First] = value; }
+		}
 
-        /// <summary>
-        /// Gets NPC's piety
-        /// </summary>
-        public short Piety
-        {
-            get { return m_charStat[eStat.PIE - eStat._First]; }
-            set { m_charStat[eStat.PIE - eStat._First] = value; }
-        }
+		/// <summary>
+		/// Gets NPC's piety
+		/// </summary>
+		public short Piety
+		{
+			get { return m_charStat[eStat.PIE - eStat._First]; }
+			set { m_charStat[eStat.PIE - eStat._First] = value; }
+		}
 
-        /// <summary>
-        /// Gets NPC's empathy
-        /// </summary>
-        public short Empathy
-        {
-            get { return m_charStat[eStat.EMP - eStat._First]; }
-            set { m_charStat[eStat.EMP - eStat._First] = value; }
-        }
+		/// <summary>
+		/// Gets NPC's empathy
+		/// </summary>
+		public short Empathy
+		{
+			get { return m_charStat[eStat.EMP - eStat._First]; }
+			set { m_charStat[eStat.EMP - eStat._First] = value; }
+		}
 
-        /// <summary>
-        /// Gets NPC's charisma
-        /// </summary>
-        public short Charisma
-        {
-            get { return m_charStat[eStat.CHR - eStat._First]; }
-            set { m_charStat[eStat.CHR - eStat._First] = value; }
-        }
-        #endregion
-        #region Flags/Position/SpawnPosition/UpdateTick/Tether
+		/// <summary>
+		/// Gets NPC's charisma
+		/// </summary>
+		public short Charisma
+		{
+			get { return m_charStat[eStat.CHR - eStat._First]; }
+			set { m_charStat[eStat.CHR - eStat._First] = value; }
+		}
+		#endregion
+		#region Flags/Position/SpawnPosition/UpdateTick/Tether
 		/// <summary>
 		/// Various flags for this npc
 		/// </summary>
@@ -635,16 +635,16 @@ namespace DOL.GS
 				BroadcastUpdate();
 			}
 		}
-        /*
-		/// <summary>
-		/// Gets sets the currentwaypoint that npc has to wander to
-		/// </summary>
-		public PathPoint CurrentWayPoint
-		{
-			get { return m_currentWayPoint; }
-			set { m_currentWayPoint = value; }
-		}
-        */
+		/*
+		  /// <summary>
+		  /// Gets sets the currentwaypoint that npc has to wander to
+		  /// </summary>
+		  public PathPoint CurrentWayPoint
+		  {
+			  get { return m_currentWayPoint; }
+			  set { m_currentWayPoint = value; }
+		  }
+		*/
 		/// <summary>
 		/// Stores the currentwaypoint that npc has to wander to
 		/// </summary>
@@ -796,7 +796,7 @@ namespace DOL.GS
 			}
 		}
 
-		#endregion
+	   #endregion
 		#region Movement
 		/// <summary>
 		/// Target X coordinate to walk to
@@ -844,7 +844,7 @@ namespace DOL.GS
 		/// Property entry on follow timer, wether the follow target is in range
 		/// </summary>
 		protected static readonly string FOLLOW_TARGET_IN_RANGE = "FollowTargetInRange";
-		
+
 		private string m_pathID;
 		public string PathID
 		{
@@ -1120,9 +1120,9 @@ namespace DOL.GS
 		/// <param name="speed">walk speed</param>
 		public virtual void WalkTo(int tx, int ty, int tz, int speed)
 		{
-            // Walking to the spot we're already at will only get us into trouble.
-            if (tx == X && ty == Y && tz == Z)
-                return;
+			// Walking to the spot we're already at will only get us into trouble.
+			if (tx == X && ty == Y && tz == Z)
+				return;
 
 			if (IsTurningDisabled)
 				return; // can't walk when turning is disabled
@@ -1409,7 +1409,7 @@ namespace DOL.GS
 			}
 			int newX, newY, newZ;
 
-			 //Check for any formations
+			//Check for any formations
 			if (this.Brain is StandardMobBrain)
 			{
 				StandardMobBrain brain = this.Brain as StandardMobBrain;
@@ -1482,15 +1482,15 @@ namespace DOL.GS
 		}
 
 		#endregion
-        #region Path (Movement)
-        /// <summary>
-        /// Gets sets the currentwaypoint that npc has to wander to
-        /// </summary>
-        public PathPoint CurrentWayPoint
-        {
-            get { return m_currentWayPoint; }
-            set { m_currentWayPoint = value; }
-        }
+		#region Path (Movement)
+		/// <summary>
+		/// Gets sets the currentwaypoint that npc has to wander to
+		/// </summary>
+		public PathPoint CurrentWayPoint
+		{
+			get { return m_currentWayPoint; }
+			set { m_currentWayPoint = value; }
+		}
 
 		/// <summary>
 		/// Is the NPC returning home, if so, we don't want it to think
@@ -1503,162 +1503,162 @@ namespace DOL.GS
 
 		protected bool m_isReturningHome = false;
 
-        /// <summary>
-        /// Gets if npc moving on path
-        /// </summary>
-        public bool IsMovingOnPath
-        {
-            get { return m_IsMovingOnPath; }
-        }
-        /// <summary>
-        /// Stores if npc moving on path
-        /// </summary>
-        protected bool m_IsMovingOnPath = false;
+		/// <summary>
+		/// Gets if npc moving on path
+		/// </summary>
+		public bool IsMovingOnPath
+		{
+			get { return m_IsMovingOnPath; }
+		}
+		/// <summary>
+		/// Stores if npc moving on path
+		/// </summary>
+		protected bool m_IsMovingOnPath = false;
 
-        /// <summary>
-        /// let the npc travel on its path
-        /// </summary>
-        /// <param name="speed">Speed on path</param>
-        public void MoveOnPath(int speed)
-        {
-            if (IsMovingOnPath)
-                StopMoveOnPath();
+		/// <summary>
+		/// let the npc travel on its path
+		/// </summary>
+		/// <param name="speed">Speed on path</param>
+		public void MoveOnPath(int speed)
+		{
+			if (IsMovingOnPath)
+				StopMoveOnPath();
 
-            if (CurrentWayPoint == null)
-            {
-                if (log.IsWarnEnabled)
-                    log.Warn("No path to travel on for " + Name);
-                return;
-            }
-            PathingNormalSpeed = speed;
+			if (CurrentWayPoint == null)
+			{
+				if (log.IsWarnEnabled)
+					log.Warn("No path to travel on for " + Name);
+				return;
+			}
+			PathingNormalSpeed = speed;
 
-            //if (Point3D.GetDistance(npc.CurrentWayPoint, npc)<100)
-            //not sure because here use point3D get distance but why??
-            if (WorldMgr.CheckDistance(CurrentWayPoint, this, 100))
-            {
-                if (CurrentWayPoint.Type == ePathType.Path_Reverse && CurrentWayPoint.FiredFlag)
-                    CurrentWayPoint = CurrentWayPoint.Prev;
-                else
-                    CurrentWayPoint = CurrentWayPoint.Next;
-                if ((CurrentWayPoint.Type == ePathType.Loop) && (CurrentWayPoint.Next == null))
-                {
-                    CurrentWayPoint = MovementMgr.FindFirstPathPoint(CurrentWayPoint);
-                }
-            }
-            if (CurrentWayPoint != null)
-            {
-                GameEventMgr.AddHandler(this, GameNPCEvent.CloseToTarget, new DOLEventHandler(OnCloseToWaypoint));
-                WalkTo(CurrentWayPoint, Math.Min(speed, CurrentWayPoint.MaxSpeed));
-                m_IsMovingOnPath = true;
+			//if (Point3D.GetDistance(npc.CurrentWayPoint, npc)<100)
+			//not sure because here use point3D get distance but why??
+			if (WorldMgr.CheckDistance(CurrentWayPoint, this, 100))
+			{
+				if (CurrentWayPoint.Type == ePathType.Path_Reverse && CurrentWayPoint.FiredFlag)
+					CurrentWayPoint = CurrentWayPoint.Prev;
+				else
+					CurrentWayPoint = CurrentWayPoint.Next;
+				if ((CurrentWayPoint.Type == ePathType.Loop) && (CurrentWayPoint.Next == null))
+				{
+					CurrentWayPoint = MovementMgr.FindFirstPathPoint(CurrentWayPoint);
+				}
+			}
+			if (CurrentWayPoint != null)
+			{
+				GameEventMgr.AddHandler(this, GameNPCEvent.CloseToTarget, new DOLEventHandler(OnCloseToWaypoint));
+				WalkTo(CurrentWayPoint, Math.Min(speed, CurrentWayPoint.MaxSpeed));
+				m_IsMovingOnPath = true;
 				Notify(GameNPCEvent.PathMoveStarts, this);
-            }
-            else
-            {
-                StopMoveOnPath();
-            }
-        }
+			}
+			else
+			{
+				StopMoveOnPath();
+			}
+		}
 
-        /// <summary>
-        /// Stop move on path
-        /// </summary>
-        public void StopMoveOnPath()
-        {
-            if (!IsMovingOnPath)
-                return;
+		/// <summary>
+		/// Stop move on path
+		/// </summary>
+		public void StopMoveOnPath()
+		{
+			if (!IsMovingOnPath)
+				return;
 
-            GameEventMgr.RemoveHandler(this, GameNPCEvent.CloseToTarget, new DOLEventHandler(OnCloseToWaypoint));
-            Notify(GameNPCEvent.PathMoveEnds, this);
-            m_IsMovingOnPath = false;
-        }
+			GameEventMgr.RemoveHandler(this, GameNPCEvent.CloseToTarget, new DOLEventHandler(OnCloseToWaypoint));
+			Notify(GameNPCEvent.PathMoveEnds, this);
+			m_IsMovingOnPath = false;
+		}
 
-        /// <summary>
-        /// decides what to do on reached waypoint in path
-        /// </summary>
-        /// <param name="e"></param>
-        /// <param name="n"></param>
-        /// <param name="args"></param>
-        protected void OnCloseToWaypoint(DOLEvent e, object n, EventArgs args)
-        {
-            if (!IsMovingOnPath || n != this)
-                return;
+		/// <summary>
+		/// decides what to do on reached waypoint in path
+		/// </summary>
+		/// <param name="e"></param>
+		/// <param name="n"></param>
+		/// <param name="args"></param>
+		protected void OnCloseToWaypoint(DOLEvent e, object n, EventArgs args)
+		{
+			if (!IsMovingOnPath || n != this)
+				return;
 
-            if (CurrentWayPoint != null)
-            {
-                WaypointDelayAction waitTimer = new WaypointDelayAction(this);
-                waitTimer.Start(Math.Max(1, CurrentWayPoint.WaitTime * 100));
-            }
-            else
-                StopMoveOnPath();
-        }
+			if (CurrentWayPoint != null)
+			{
+				WaypointDelayAction waitTimer = new WaypointDelayAction(this);
+				waitTimer.Start(Math.Max(1, CurrentWayPoint.WaitTime * 100));
+			}
+			else
+				StopMoveOnPath();
+		}
 
-        /// <summary>
-        /// Delays movement to the next waypoint
-        /// </summary>
-        protected class WaypointDelayAction : RegionAction
-        {
-            /// <summary>
-            /// Constructs a new WaypointDelayAction
-            /// </summary>
-            /// <param name="actionSource"></param>
-            public WaypointDelayAction(GameObject actionSource)
-                : base(actionSource)
-            {
-            }
+		/// <summary>
+		/// Delays movement to the next waypoint
+		/// </summary>
+		protected class WaypointDelayAction : RegionAction
+		{
+			/// <summary>
+			/// Constructs a new WaypointDelayAction
+			/// </summary>
+			/// <param name="actionSource"></param>
+			public WaypointDelayAction(GameObject actionSource)
+				: base(actionSource)
+			{
+			}
 
-            /// <summary>
-            /// Called on every timer tick
-            /// </summary>
-            protected override void OnTick()
-            {
-                GameNPC npc = (GameNPC)m_actionSource;
-                if (!npc.IsMovingOnPath)
-                    return;
-                PathPoint oldPathPoint = npc.CurrentWayPoint;
-                PathPoint nextPathPoint = npc.CurrentWayPoint.Next;
-                if ((npc.CurrentWayPoint.Type == ePathType.Path_Reverse) && (npc.CurrentWayPoint.FiredFlag))
-                    nextPathPoint = npc.CurrentWayPoint.Prev;
+			/// <summary>
+			/// Called on every timer tick
+			/// </summary>
+			protected override void OnTick()
+			{
+				GameNPC npc = (GameNPC)m_actionSource;
+				if (!npc.IsMovingOnPath)
+					return;
+				PathPoint oldPathPoint = npc.CurrentWayPoint;
+				PathPoint nextPathPoint = npc.CurrentWayPoint.Next;
+				if ((npc.CurrentWayPoint.Type == ePathType.Path_Reverse) && (npc.CurrentWayPoint.FiredFlag))
+					nextPathPoint = npc.CurrentWayPoint.Prev;
 
-                if (nextPathPoint == null)
-                {
-                    switch (npc.CurrentWayPoint.Type)
-                    {
+				if (nextPathPoint == null)
+				{
+					switch (npc.CurrentWayPoint.Type)
+					{
 						case ePathType.Loop:
 							{
 								npc.CurrentWayPoint = MovementMgr.FindFirstPathPoint(npc.CurrentWayPoint);
 								npc.Notify(GameNPCEvent.PathMoveStarts, npc);
 								break;
 							}
-                        case ePathType.Once:
-                            npc.CurrentWayPoint = null;//to stop
-                            break;
-                        case ePathType.Path_Reverse://invert sens when go to end of path
-                            if (oldPathPoint.FiredFlag)
-                                npc.CurrentWayPoint = npc.CurrentWayPoint.Next;
-                            else
-                                npc.CurrentWayPoint = npc.CurrentWayPoint.Prev;
-                            break;
-                    }
-                }
-                else
-                {
-                    if ((npc.CurrentWayPoint.Type == ePathType.Path_Reverse) && (npc.CurrentWayPoint.FiredFlag))
-                        npc.CurrentWayPoint = npc.CurrentWayPoint.Prev;
-                    else
-                        npc.CurrentWayPoint = npc.CurrentWayPoint.Next;
-                }
-                oldPathPoint.FiredFlag = !oldPathPoint.FiredFlag;
+						case ePathType.Once:
+							npc.CurrentWayPoint = null;//to stop
+							break;
+						case ePathType.Path_Reverse://invert sens when go to end of path
+							if (oldPathPoint.FiredFlag)
+								npc.CurrentWayPoint = npc.CurrentWayPoint.Next;
+							else
+								npc.CurrentWayPoint = npc.CurrentWayPoint.Prev;
+							break;
+					}
+				}
+				else
+				{
+					if ((npc.CurrentWayPoint.Type == ePathType.Path_Reverse) && (npc.CurrentWayPoint.FiredFlag))
+						npc.CurrentWayPoint = npc.CurrentWayPoint.Prev;
+					else
+						npc.CurrentWayPoint = npc.CurrentWayPoint.Next;
+				}
+				oldPathPoint.FiredFlag = !oldPathPoint.FiredFlag;
 
-                if (npc.CurrentWayPoint != null)
-                {
-                    npc.WalkTo(npc.CurrentWayPoint, Math.Min(npc.PathingNormalSpeed, npc.CurrentWayPoint.MaxSpeed));
-                }
-                else
-                {
-                    npc.StopMoveOnPath();
-                }
-            }
-        }
-        #endregion
+				if (npc.CurrentWayPoint != null)
+				{
+					npc.WalkTo(npc.CurrentWayPoint, Math.Min(npc.PathingNormalSpeed, npc.CurrentWayPoint.MaxSpeed));
+				}
+				else
+				{
+					npc.StopMoveOnPath();
+				}
+			}
+		}
+		#endregion
 		#region Inventory/LoadfromDB
 		private NpcTemplate m_npcTemplate;
 		/// <summary>
@@ -1745,7 +1745,7 @@ namespace DOL.GS
 			Empathy = (short)npc.Empathy;
 			CheckStats();
 
-            MeleeDamageType = (eDamageType)npc.MeleeDamageType;
+			MeleeDamageType = (eDamageType)npc.MeleeDamageType;
 			if (MeleeDamageType == 0)
 			{
 				MeleeDamageType = eDamageType.Slash;
@@ -1759,7 +1759,7 @@ namespace DOL.GS
 			if (npc.RespawnInterval == -1)
 				npc.RespawnInterval = 0;
 			m_respawnInterval = npc.RespawnInterval * 1000;
-			
+
 			m_pathID = npc.PathID;
 
 			if (npc.Brain != "")
@@ -1777,7 +1777,7 @@ namespace DOL.GS
 				if (brain != null)
 					SetOwnBrain(brain);
 			}
-			
+
 			IAggressiveBrain aggroBrain = Brain as IAggressiveBrain;
 			if (aggroBrain != null)
 			{
@@ -1843,15 +1843,15 @@ namespace DOL.GS
 			mob.Size = Size;
 			mob.Level = Level;
 
-            // Stats
-            mob.Constitution = Constitution;
-            mob.Dexterity = Dexterity;
-            mob.Strength = Strength;
-            mob.Quickness = Quickness;
-            mob.Intelligence = Intelligence;
-            mob.Piety = Piety;
-            mob.Empathy = Empathy;
-            mob.Charisma = Charisma;
+			// Stats
+			mob.Constitution = Constitution;
+			mob.Dexterity = Dexterity;
+			mob.Strength = Strength;
+			mob.Quickness = Quickness;
+			mob.Intelligence = Intelligence;
+			mob.Piety = Piety;
+			mob.Empathy = Empathy;
+			mob.Charisma = Charisma;
 
 			mob.ClassType = this.GetType().ToString();
 			mob.Flags = Flags;
@@ -1926,18 +1926,18 @@ namespace DOL.GS
 			}
 			this.Level = level;
 
-            // Stats
-            this.Constitution = (short)template.Constitution;
-            this.Dexterity = (short)template.Dexterity;
-            this.Strength = (short)template.Strength;
-            this.Quickness = (short)template.Quickness;
-            this.Intelligence = (short)template.Intelligence;
-            this.Piety = (short)template.Piety;
-            this.Empathy = (short)template.Empathy;
-            this.Charisma = (short)template.Charisma;
+			// Stats
+			this.Constitution = (short)template.Constitution;
+			this.Dexterity = (short)template.Dexterity;
+			this.Strength = (short)template.Strength;
+			this.Quickness = (short)template.Quickness;
+			this.Intelligence = (short)template.Intelligence;
+			this.Piety = (short)template.Piety;
+			this.Empathy = (short)template.Empathy;
+			this.Charisma = (short)template.Charisma;
 
-            this.MaxDistance = template.MaxDistance;
-            this.TetherRange = template.TetherRange;
+			this.MaxDistance = template.MaxDistance;
+			this.TetherRange = template.TetherRange;
 			this.BodyType = template.BodyType;
 			this.MaxSpeedBase = template.MaxSpeed;
 			this.Flags = template.Flags;
@@ -2429,16 +2429,16 @@ namespace DOL.GS
 			else if (Mana > 0 && MaxMana > 0)
 				StartPowerRegeneration();
 
-            //If the Mob has a Path assigned he will now walk on it!
-            if (MaxSpeedBase > 0 && CurrentSpellHandler == null && !IsMoving
-                && !AttackState && !InCombat && !IsMovingOnPath && !IsReturningHome
-                //Check everything otherwise the Server will crash
-                && PathID != null && PathID != "" && PathID != "NULL")
-            {
-                PathPoint path = MovementMgr.LoadPath(PathID);
-                CurrentWayPoint = path;
-                MoveOnPath(path.MaxSpeed);
-            }
+			//If the Mob has a Path assigned he will now walk on it!
+			if (MaxSpeedBase > 0 && CurrentSpellHandler == null && !IsMoving
+			    && !AttackState && !InCombat && !IsMovingOnPath && !IsReturningHome
+				//Check everything otherwise the Server will crash
+			    && PathID != null && PathID != "" && PathID != "NULL")
+			{
+				PathPoint path = MovementMgr.LoadPath(PathID);
+				CurrentWayPoint = path;
+				MoveOnPath(path.MaxSpeed);
+			}
 
 			if (m_houseNumber > 0)
 			{
@@ -2870,17 +2870,6 @@ namespace DOL.GS
 		#endregion
 		#region Combat
 
-		private bool m_canFight = true;
-
-		/// <summary>
-		/// Can this NPC engage in melee
-		/// </summary>
-		public bool CanFight
-		{
-			get { return m_canFight; }
-			set { m_canFight = value; }
-		}
-
 		/// <summary>
 		/// The property that holds charmed tick if any
 		/// </summary>
@@ -2897,10 +2886,8 @@ namespace DOL.GS
 		/// <param name="attackTarget">The object to attack</param>
 		public override void StartAttack(GameObject attackTarget)
 		{
-			if (!CanFight) return;
-
-            if (IsMovingOnPath)
-                StopMoveOnPath();
+			if (IsMovingOnPath)
+				StopMoveOnPath();
 
 			if (this.Brain is IControlledBrain)
 			{
@@ -3473,7 +3460,7 @@ namespace DOL.GS
 					message = String.Format("{0} drops {1}.",
 						GetName(0, true),
 						char.IsLower(loot.Name[0]) ? loot.GetName(1, false) : loot.Name);
-						
+
 					dropMessages.Add(message);
 					loot.AddToWorld();
 
@@ -3493,7 +3480,7 @@ namespace DOL.GS
 				}
 			}
 
-            BroadcastLoot(dropMessages);
+			BroadcastLoot(dropMessages);
 
 			if (autolootlist.Count > 0)
 			{
@@ -3738,7 +3725,7 @@ namespace DOL.GS
 		/// </summary>
 		public override IControlledBrain ControlledNpc
 		{
-			get 
+			get
 			{
 				if (m_controlledNpc == null) return null;
 				return m_controlledNpc[0];
@@ -3881,18 +3868,6 @@ namespace DOL.GS
 		{
 			if (Brain is IControlledBrain)
 			{
-				//edit for BD
-				//Make the minion's attack
-				if (!CanFight) return;
-				if (WorldMgr.GetDistance(TargetObject, this) >= 500)
-				{
-					ChargeAbility charge;
-					if ((charge = (ChargeAbility)GetAbility(typeof(ChargeAbility))) != null && GetSkillDisabledDuration(charge) == 0)
-					{
-						charge.Execute(this);
-						//Out.SendMessage("Your " + icb.Body.Name + " begins to charge " + target.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					}
-				}
 				((IControlledBrain)Brain).Attack(TargetObject);
 			}
 		}
@@ -3907,7 +3882,7 @@ namespace DOL.GS
 			IControlledBrain npc = Brain as IControlledBrain;
 			//This method shouldn't be called if this is the player's main pet.  Only minions and subpets
 			//should call this method.
-			if (npc == null || !npc.IsMinion) return;
+			if (npc == null || !(npc is BDPetBrain)) return;
 			GameNPC owner = (GameNPC)npc.Owner;
 
 			//Added function in GameNPC to kill the pet for us
@@ -3970,7 +3945,7 @@ namespace DOL.GS
 		/// </summary>
 		public override void CommandNpcAgressive()
 		{
-			if (Brain is IControlledBrain && Brain.Body.CanFight)
+			if (Brain is IControlledBrain)
 				((IControlledBrain)Brain).AggressionState = eAggressionState.Aggressive;
 		}
 
@@ -3979,7 +3954,7 @@ namespace DOL.GS
 		/// </summary>
 		public override void CommandNpcDefensive()
 		{
-			if (Brain is IControlledBrain && Brain.Body.CanFight)
+			if (Brain is IControlledBrain)
 				((IControlledBrain)Brain).AggressionState = eAggressionState.Defensive;
 		}
 
@@ -4005,44 +3980,44 @@ namespace DOL.GS
 			}
 		}
 
-        /// <summary>
-        /// Whether this NPC is a friend or not.
-        /// </summary>
-        /// <param name="npc">The NPC that is checked against.</param>
-        /// <returns></returns>
-        public bool IsFriend(GameNPC npc)
-        {
-            if (Faction == null || npc.Faction == null)
-                return false;
-            else
-                return (npc.Faction == Faction || Faction.FriendFactions.Contains(npc.Faction));
-        }
+		/// <summary>
+		/// Whether this NPC is a friend or not.
+		/// </summary>
+		/// <param name="npc">The NPC that is checked against.</param>
+		/// <returns></returns>
+		public bool IsFriend(GameNPC npc)
+		{
+			if (Faction == null || npc.Faction == null)
+				return false;
+			else
+				return (npc.Faction == Faction || Faction.FriendFactions.Contains(npc.Faction));
+		}
 
-        /// <summary>
-        /// Broadcast loot to the raid.
-        /// </summary>
-        /// <param name="dropMessages">List of drop messages to broadcast.</param>
-        private void BroadcastLoot(ArrayList dropMessages)
-        {
-            if (dropMessages.Count > 0)
-            {
-                String lastMessage;
-                foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
-                {
-                    lastMessage = "";
-                    foreach (string str in dropMessages)
-                    {
-                        // Suppress identical messages (multiple item drops).
+		/// <summary>
+		/// Broadcast loot to the raid.
+		/// </summary>
+		/// <param name="dropMessages">List of drop messages to broadcast.</param>
+		private void BroadcastLoot(ArrayList dropMessages)
+		{
+			if (dropMessages.Count > 0)
+			{
+				String lastMessage;
+				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+				{
+					lastMessage = "";
+					foreach (string str in dropMessages)
+					{
+						// Suppress identical messages (multiple item drops).
 
-                        if (str != lastMessage)
-                        {
-                            player.Out.SendMessage(str, eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
-                            lastMessage = str;
-                        }
-                    }
-                }
-            }
-        }
+						if (str != lastMessage)
+						{
+							player.Out.SendMessage(str, eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+							lastMessage = str;
+						}
+					}
+				}
+			}
+		}
 
 		/// <summary>
 		/// Check whether current stats for this mob are sane.
@@ -4059,8 +4034,8 @@ namespace DOL.GS
 				Strength = (short)(20 + Level * 6);
 		}
 
-        private string m_boatowner_id;
-        /// <summary>
+		private string m_boatowner_id;
+		/// <summary>
 		/// Constructs a NPC
 		/// </summary>
 		public GameNPC()
@@ -4121,17 +4096,17 @@ namespace DOL.GS
 			// Copy stats from template, we'll do a sanity check
 			// afterwards.
 
-			Strength = (short) template.Strength;
-			Constitution = (short) template.Constitution;
+			Strength = (short)template.Strength;
+			Constitution = (short)template.Constitution;
 			Dexterity = (short)template.Dexterity;
-			Quickness = (short) template.Quickness;
-			Intelligence = (short) template.Intelligence;
-			Piety = (short) template.Piety;
-			Charisma = (short) template.Charisma;
-			Empathy = (short) template.Empathy;
+			Quickness = (short)template.Quickness;
+			Intelligence = (short)template.Intelligence;
+			Piety = (short)template.Piety;
+			Charisma = (short)template.Charisma;
+			Empathy = (short)template.Empathy;
 			CheckStats();
 
-            m_boatowner_id = "";
-        }
+			m_boatowner_id = "";
+		}
 	}
 }

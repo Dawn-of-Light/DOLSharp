@@ -68,13 +68,12 @@ namespace DOL.AI.Brain
 		GameLiving Owner { get; }
 		void Attack(GameObject target);
 		void Follow(GameObject target);
-        void FollowOwner();
+		void FollowOwner();
 		void Stay();
 		void ComeHere();
 		void Goto(GameObject target);
 		void UpdatePetWindow();
 		GamePlayer GetPlayerOwner();
-		bool IsMinion { get; set; }
-        bool IsMainPet { get; set; }
+		bool IsMainPet { get; set; }
 	}
 }

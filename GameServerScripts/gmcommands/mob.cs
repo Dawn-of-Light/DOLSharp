@@ -288,7 +288,7 @@ namespace DOL.GS.Scripts
 						{
 							info.Add(" + Not aggressive brain");
 						}
-						info.Add(" + Tether Range: " + targetMob.TetherRange);
+						//info.Add(" + Tether Range: " + targetMob.TetherRange);
 						TimeSpan respawn = TimeSpan.FromMilliseconds(targetMob.RespawnInterval);
 						if (targetMob.RespawnInterval <= 0)
 							info.Add(" + Respawn: NPC will not respawn");
@@ -761,7 +761,8 @@ namespace DOL.GS.Scripts
 					}
 					break;
 
-				case "tether":
+					//Disabled tether for now
+				/*case "tether":
 					{
 						try
 						{
@@ -777,7 +778,7 @@ namespace DOL.GS.Scripts
 							return 1;
 						}
 					}
-					break;
+					break;*/
 
 				case "damagetype":
 					{

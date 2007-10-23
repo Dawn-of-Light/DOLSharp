@@ -208,7 +208,7 @@ namespace DOL.GS
 		public bool IsAnonymous
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.IsAnonymous && (ServerProperties.Properties.ANON_MODIFIER != -1) : false; }
-			set	{ if ( PlayerCharacter != null ) PlayerCharacter.IsAnonymous = value; }
+			set { if (PlayerCharacter != null) PlayerCharacter.IsAnonymous = value; }
 		}
 
 		/// <summary>
@@ -236,7 +236,7 @@ namespace DOL.GS
 		public bool GainXP
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.GainXP : true; }
-			set	{ if ( PlayerCharacter != null ) PlayerCharacter.GainXP = value; }
+			set { if (PlayerCharacter != null) PlayerCharacter.GainXP = value; }
 		}
 
 		/// <summary>
@@ -245,8 +245,8 @@ namespace DOL.GS
 		/// </summary>
 		public bool GainRP
 		{
-			get { return ( PlayerCharacter != null ? PlayerCharacter.GainRP : true ); }
-			set	{ if ( PlayerCharacter != null ) PlayerCharacter.GainRP = value; }
+			get { return (PlayerCharacter != null ? PlayerCharacter.GainRP : true); }
+			set { if (PlayerCharacter != null) PlayerCharacter.GainRP = value; }
 		}
 
 		/// <summary>
@@ -256,7 +256,7 @@ namespace DOL.GS
 		public string GuildNote
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.GuildNote : String.Empty; }
-			set	{ if ( PlayerCharacter != null ) PlayerCharacter.GuildNote = value; }
+			set { if (PlayerCharacter != null) PlayerCharacter.GuildNote = value; }
 		}
 
 		/// <summary>
@@ -266,7 +266,7 @@ namespace DOL.GS
 		public bool Autoloot
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.Autoloot : true; }
-			set	{ if ( PlayerCharacter != null ) PlayerCharacter.Autoloot = value; }
+			set { if (PlayerCharacter != null) PlayerCharacter.Autoloot = value; }
 		}
 
 		/// <summary>
@@ -276,7 +276,7 @@ namespace DOL.GS
 		public bool Advisor
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.Advisor : false; }
-			set	{ if ( PlayerCharacter != null ) PlayerCharacter.Advisor = value; }
+			set { if (PlayerCharacter != null) PlayerCharacter.Advisor = value; }
 		}
 
 		private bool m_canUseSlashLevel = false;
@@ -516,11 +516,11 @@ namespace DOL.GS
 			if (PlayerGroup != null)
 				PlayerGroup.RemovePlayer(this);
 
-            BattleGroup mybattlegroup = (BattleGroup)this.TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
-            if (mybattlegroup != null)
-                mybattlegroup.RemoveBattlePlayer(this);
-            
-            if (TradeWindow != null)
+			BattleGroup mybattlegroup = (BattleGroup)this.TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
+			if (mybattlegroup != null)
+				mybattlegroup.RemoveBattlePlayer(this);
+
+			if (TradeWindow != null)
 				TradeWindow.CloseTrade();
 
 			if (m_guild != null)
@@ -546,8 +546,8 @@ namespace DOL.GS
 				MoveTo((ushort)PlayerCharacter.BindRegion, PlayerCharacter.BindXpos, PlayerCharacter.BindYpos, PlayerCharacter.BindZpos, (ushort)PlayerCharacter.BindHeading);
 
 			// Remove champion dedicated spell line
-			SkillBase.UnRegisterSpellLine("Champion Abilities"+Name);
-			
+			SkillBase.UnRegisterSpellLine("Champion Abilities" + Name);
+
 			// cancel all effects until saving of running effects is done
 			try
 			{
@@ -661,9 +661,9 @@ namespace DOL.GS
 		public virtual void Bind(bool forced)
 		{
 			Character character = PlayerCharacter; // if property will be derived with cost-intensive code, so its only getted one time
-			if ( character == null ) return;
-			
-			if ( forced )
+			if (character == null) return;
+
+			if (forced)
 			{
 				character.BindRegion = CurrentRegionID;
 				character.BindHeading = Heading;
@@ -826,7 +826,7 @@ namespace DOL.GS
 		public virtual void Release(eReleaseType releaseCommand, bool forced)
 		{
 			Character character = PlayerCharacter;
-			if ( character == null ) return;
+			if (character == null) return;
 
 			//battlegrounds caps
 			foreach (AbstractGameKeep keep in KeepMgr.GetKeepsOfRegion(CurrentRegionID))
@@ -1050,7 +1050,7 @@ namespace DOL.GS
 									}
 									break;
 								}
-								//nf
+							//nf
 							case 163:
 								{
 									if (character.BindRegion != 163)
@@ -1426,7 +1426,7 @@ namespace DOL.GS
 			get { return PlayerCharacter != null ? PlayerCharacter.LastName : string.Empty; }
 			set
 			{
-				if ( PlayerCharacter == null ) return;
+				if (PlayerCharacter == null) return;
 				PlayerCharacter.LastName = value;
 				//update last name for all players if client is playing
 				if (ObjectState == eObjectState.Active)
@@ -1470,7 +1470,7 @@ namespace DOL.GS
 			get { return PlayerCharacter != null ? PlayerCharacter.Name : string.Empty; }
 			set
 			{
-				if ( PlayerCharacter == null ) return;
+				if (PlayerCharacter == null) return;
 				PlayerCharacter.Name = value;
 				//base.Name = value; // only need if there will be some special code in base-property in future
 				//update name for all players if client is playing
@@ -1492,19 +1492,19 @@ namespace DOL.GS
 			}
 		}
 
-        /// <summary>
-        /// The prefix for RR 12/13 players
-        /// </summary>
-        public string PrefixName
-        {
-            get
-            {
-                if (RealmLevel >= 110)
-                    return RealmTitle;
-                else
-                    return string.Empty;
-            }
-        }
+		/// <summary>
+		/// The prefix for RR 12/13 players
+		/// </summary>
+		public string PrefixName
+		{
+			get
+			{
+				if (RealmLevel >= 110)
+					return RealmTitle;
+				else
+					return string.Empty;
+			}
+		}
 
 		/// <summary>
 		/// Sets or gets the model of the player. If the player is
@@ -1516,7 +1516,7 @@ namespace DOL.GS
 			get { return PlayerCharacter != null ? (ushort)PlayerCharacter.CurrentModel : base.Model; }
 			set
 			{
-				if ( PlayerCharacter == null || PlayerCharacter.CurrentModel == value ) return;
+				if (PlayerCharacter == null || PlayerCharacter.CurrentModel == value) return;
 
 				PlayerCharacter.CurrentModel = value;
 				//base.Model; // only need if there will be some special code in base-property in future
@@ -1530,11 +1530,11 @@ namespace DOL.GS
 
 		#region Stats
 
-        /// <summary>
-        /// Holds if the player can gain a FreeLevel
-        /// </summary>
-        public byte FreeLevelState
-        {
+		/// <summary>
+		/// Holds if the player can gain a FreeLevel
+		/// </summary>
+		public byte FreeLevelState
+		{
 			get
 			{
 				if (ServerProperties.Properties.FREELEVEL_DAYS == -1)
@@ -1556,8 +1556,8 @@ namespace DOL.GS
 					else return 4;
 				}
 			}
-        }
-         
+		}
+
 		/// <summary>
 		/// Gets/sets the player efficacy percent
 		/// (delegate to PlayerCharacter)
@@ -1565,7 +1565,7 @@ namespace DOL.GS
 		public int TotalConstitutionLostAtDeath
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.ConLostAtDeath : 0; }
-			set	{ if ( PlayerCharacter != null ) PlayerCharacter.ConLostAtDeath = value; }
+			set { if (PlayerCharacter != null) PlayerCharacter.ConLostAtDeath = value; }
 		}
 
 
@@ -1581,7 +1581,7 @@ namespace DOL.GS
 			base.ChangeBaseStat(stat, val);
 			int newstat = GetBaseStat(stat);
 			Character character = PlayerCharacter; // to call it only once, if in future there will be some special code to get the character
-			if ( character != null && oldstat != newstat )
+			if (character != null && oldstat != newstat)
 			{
 				switch (stat)
 				{
@@ -1782,7 +1782,7 @@ namespace DOL.GS
 
 				int oldPercent = HealthPercent;
 				base.Health = value;
-				if ( PlayerCharacter != null )
+				if (PlayerCharacter != null)
 					PlayerCharacter.Health = value;
 				if (oldPercent != HealthPercent)
 				{
@@ -1862,7 +1862,7 @@ namespace DOL.GS
 				}
 				int oldPercent = ManaPercent;
 				base.Mana = value;
-				if ( PlayerCharacter != null )
+				if (PlayerCharacter != null)
 					PlayerCharacter.Mana = value;
 				if (oldPercent != ManaPercent)
 				{
@@ -1906,11 +1906,11 @@ namespace DOL.GS
 					base.Endurance = value; //needed to start regeneration
 					return;
 				}
-				else if ( IsAlive && value < MaxEndurance )
-				    StartEnduranceRegeneration();
+				else if (IsAlive && value < MaxEndurance)
+					StartEnduranceRegeneration();
 				int oldPercent = EndurancePercent;
 				base.Endurance = value;
-				if ( PlayerCharacter != null )
+				if (PlayerCharacter != null)
 					PlayerCharacter.Endurance = value;
 				if (oldPercent != EndurancePercent)
 				{
@@ -1935,7 +1935,7 @@ namespace DOL.GS
 				if (MaxEndurance == value)
 					return;
 				base.MaxEndurance = value;
-				if ( PlayerCharacter != null )
+				if (PlayerCharacter != null)
 					PlayerCharacter.MaxEndurance = value;
 				UpdatePlayerStatus();
 			}
@@ -2009,7 +2009,7 @@ namespace DOL.GS
 		public int Race
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.Race : 0; }
-			set { if ( PlayerCharacter != null ) PlayerCharacter.Race = value; }
+			set { if (PlayerCharacter != null) PlayerCharacter.Race = value; }
 		}
 
 		/// <summary>
@@ -2083,12 +2083,12 @@ namespace DOL.GS
 		/// (KeyName -> Specialization)
 		/// </summary>
 		protected readonly Hashtable m_specialization = new Hashtable();
-		
+
 		/// <summary>
 		/// Holds the players specs again but ordered
 		/// </summary>
 		protected readonly ArrayList m_specList = new ArrayList();
-		
+
 		/// <summary>
 		/// Holds the Spell lines the player can use
 		/// </summary>
@@ -2098,7 +2098,7 @@ namespace DOL.GS
 		/// Holds all styles of the player
 		/// </summary>
 		protected readonly ArrayList m_styles = new ArrayList();
-		
+
 		/// <summary>
 		/// Holds all non trainable skills in determined order without styles
 		/// </summary>
@@ -2108,7 +2108,7 @@ namespace DOL.GS
 		/// Temporary Stats Boni
 		/// </summary>
 		protected readonly int[] m_statBonus = new int[8];
-		
+
 		/// <summary>
 		/// Temporary Stats Boni in percent
 		/// </summary>
@@ -2121,7 +2121,7 @@ namespace DOL.GS
 		public int RespecAmountAllSkill
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.RespecAmountAllSkill : 0; }
-			set { if ( PlayerCharacter != null ) PlayerCharacter.RespecAmountAllSkill = value; }
+			set { if (PlayerCharacter != null) PlayerCharacter.RespecAmountAllSkill = value; }
 		}
 
 		/// <summary>
@@ -2131,7 +2131,7 @@ namespace DOL.GS
 		public int RespecAmountSingleSkill
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.RespecAmountSingleSkill : 0; }
-			set { if ( PlayerCharacter != null ) PlayerCharacter.RespecAmountSingleSkill = value; }
+			set { if (PlayerCharacter != null) PlayerCharacter.RespecAmountSingleSkill = value; }
 		}
 
 		/// <summary>
@@ -2141,9 +2141,9 @@ namespace DOL.GS
 		public int RespecAmountRealmSkill
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.RespecAmountRealmSkill : 0; }
-			set { if ( PlayerCharacter != null ) PlayerCharacter.RespecAmountRealmSkill = value; }
+			set { if (PlayerCharacter != null) PlayerCharacter.RespecAmountRealmSkill = value; }
 		}
-		
+
 		/// <summary>
 		/// Gets/Sets amount of DOL respecs
 		/// (delegate to PlayerCharacter)
@@ -2151,7 +2151,7 @@ namespace DOL.GS
 		public int RespecAmountDOL
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.RespecAmountDOL : 0; }
-			set { if ( PlayerCharacter != null ) PlayerCharacter.RespecAmountDOL = value; }
+			set { if (PlayerCharacter != null) PlayerCharacter.RespecAmountDOL = value; }
 		}
 
 		/// <summary>
@@ -2161,7 +2161,7 @@ namespace DOL.GS
 		public bool IsLevelRespecUsed
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.IsLevelRespecUsed : true; }
-			set { if ( PlayerCharacter != null ) PlayerCharacter.IsLevelRespecUsed = value; }
+			set { if (PlayerCharacter != null) PlayerCharacter.IsLevelRespecUsed = value; }
 		}
 
 		/// <summary>
@@ -2259,7 +2259,7 @@ namespace DOL.GS
 				IsLevelRespecUsed = true;
 			return specPoints;
 		}
-		
+
 		public int RespecDOL()
 		{
 			int specPoints = RespecAllLines(); // Wipe skills and styles.
@@ -2429,7 +2429,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-        /// Adds a new Ability to the player
+		/// Adds a new Ability to the player
 		/// </summary>
 		/// <param name="ability"></param>
 		/// <param name="sendUpdates"></param>
@@ -3000,7 +3000,7 @@ namespace DOL.GS
 		public long BountyPoints
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.BountyPoints : 0; }
-			set { if ( PlayerCharacter != null ) PlayerCharacter.BountyPoints = value; }
+			set { if (PlayerCharacter != null) PlayerCharacter.BountyPoints = value; }
 		}
 
 		/// <summary>
@@ -3010,7 +3010,7 @@ namespace DOL.GS
 		public long RealmPoints
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.RealmPoints : 0; }
-			set { if ( PlayerCharacter != null ) PlayerCharacter.RealmPoints = value; }
+			set { if (PlayerCharacter != null) PlayerCharacter.RealmPoints = value; }
 		}
 
 		/// <summary>
@@ -3020,7 +3020,7 @@ namespace DOL.GS
 		public int SkillSpecialtyPoints
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.SkillSpecialtyPoints : 0; }
-			set { if ( PlayerCharacter != null ) PlayerCharacter.SkillSpecialtyPoints = value; }
+			set { if (PlayerCharacter != null) PlayerCharacter.SkillSpecialtyPoints = value; }
 		}
 
 		/// <summary>
@@ -3030,7 +3030,7 @@ namespace DOL.GS
 		public int RealmSpecialtyPoints
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.RealmSpecialtyPoints : 0; }
-			set { if ( PlayerCharacter != null ) PlayerCharacter.RealmSpecialtyPoints = value; }
+			set { if (PlayerCharacter != null) PlayerCharacter.RealmSpecialtyPoints = value; }
 		}
 
 		/// <summary>
@@ -3041,7 +3041,7 @@ namespace DOL.GS
 			get { return PlayerCharacter != null ? PlayerCharacter.RealmLevel : 0; }
 			set
 			{
-				if ( PlayerCharacter != null ) 
+				if (PlayerCharacter != null)
 					PlayerCharacter.RealmLevel = value;
 				CharacterClass.OnRealmLevelUp(this);
 			}
@@ -3260,7 +3260,7 @@ namespace DOL.GS
 			return RemoveBountyPoints(amount, null);
 		}
 		/// <summary>
-        /// Called when this living buy something with realm points
+		/// Called when this living buy something with realm points
 		/// </summary>
 		/// <param name="amount"></param>
 		/// <param name="str"></param>
@@ -3658,12 +3658,12 @@ namespace DOL.GS
 		/// </summary>
 		public virtual long Experience
 		{
-			get { return m_currentXP; } 
-//			set
-//			{
-//				m_currentXP=value;
-//				m_character.Experience=m_currentXP;
-//			}
+			get { return m_currentXP; }
+			//			set
+			//			{
+			//				m_currentXP=value;
+			//				m_character.Experience=m_currentXP;
+			//			}
 		}
 
 		/// <summary>
@@ -3715,7 +3715,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-        /// Called whenever this player gains experience
+		/// Called whenever this player gains experience
 		/// </summary>
 		/// <param name="expTotal"></param>
 		/// <param name="expCampBonus"></param>
@@ -3724,11 +3724,11 @@ namespace DOL.GS
 		/// <param name="sendMessage"></param>
 		public void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, long expOutpostBonus, bool sendMessage)
 		{
-			GainExperience(expTotal, expCampBonus, expGroupBonus,  expOutpostBonus, sendMessage, true);
+			GainExperience(expTotal, expCampBonus, expGroupBonus, expOutpostBonus, sendMessage, true);
 		}
 
 		/// <summary>
-        /// Called whenever this player gains experience
+		/// Called whenever this player gains experience
 		/// </summary>
 		/// <param name="expTotal"></param>
 		/// <param name="expCampBonus"></param>
@@ -3737,7 +3737,7 @@ namespace DOL.GS
 		/// <param name="sendMessage"></param>
 		/// <param name="allowMultiply"></param>
 		public override void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, long expOutpostBonus, bool sendMessage, bool allowMultiply)
-		{			
+		{
 			if (!GainXP && expTotal > 0)
 				return;
 
@@ -3756,7 +3756,7 @@ namespace DOL.GS
 
 			// Get Champion Experience too
 			GainChampionExperience(expTotal);
-			
+
 			//catacombs characters get 50% boost if they are elligable for slash level
 			switch ((eCharacterClass)CharacterClass.ID)
 			{
@@ -3857,7 +3857,7 @@ namespace DOL.GS
 			{
 				int oldLevel = Level;
 				base.Level = value;
-				if ( PlayerCharacter != null )
+				if (PlayerCharacter != null)
 					PlayerCharacter.Level = value;
 				if (oldLevel > 0)
 				{
@@ -3882,7 +3882,7 @@ namespace DOL.GS
 		public virtual bool IsLevelSecondStage
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.IsLevelSecondStage : false; }
-			set { if ( PlayerCharacter != null ) PlayerCharacter.IsLevelSecondStage = value; }
+			set { if (PlayerCharacter != null) PlayerCharacter.IsLevelSecondStage = value; }
 		}
 
 		/// <summary>
@@ -4032,7 +4032,7 @@ namespace DOL.GS
 				StartPowerRegeneration();
 			}
 
-			if ( PlayerCharacter != null )
+			if (PlayerCharacter != null)
 				PlayerCharacter.DeathCount = 0;
 
 			if (PlayerGroup != null)
@@ -4083,8 +4083,8 @@ namespace DOL.GS
 			}
 
 			SkillSpecialtyPoints += specpoints;
-//TODO: here we reset the death count because the character has mini dinged he will restart his con loss and xp penalties, is this correct?
-			if ( PlayerCharacter != null )
+			//TODO: here we reset the death count because the character has mini dinged he will restart his con loss and xp penalties, is this correct?
+			if (PlayerCharacter != null)
 				PlayerCharacter.DeathCount = 0;
 
 			if (PlayerGroup != null)
@@ -4149,7 +4149,7 @@ namespace DOL.GS
 		public bool CancelStyle
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.CancelStyle : false; }
-			set { if ( PlayerCharacter != null ) PlayerCharacter.CancelStyle = value; }
+			set { if (PlayerCharacter != null) PlayerCharacter.CancelStyle = value; }
 		}
 		/// <summary>
 		/// Decides which style living will use in this moment
@@ -4178,7 +4178,7 @@ namespace DOL.GS
 		public bool SafetyFlag
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.SafetyFlag : false; }
-			set { if ( PlayerCharacter != null ) PlayerCharacter.SafetyFlag = value; }
+			set { if (PlayerCharacter != null) PlayerCharacter.SafetyFlag = value; }
 		}
 
 		/// <summary>
@@ -4189,7 +4189,7 @@ namespace DOL.GS
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.IsCloakHoodUp : base.IsCloakHoodUp; }
 			set
-			{ 
+			{
 				//base.IsCloakHoodUp = value; // only needed if some special code will be added in base-property in future
 				PlayerCharacter.IsCloakHoodUp = value;
 
@@ -4270,7 +4270,7 @@ namespace DOL.GS
 		public virtual bool SpellQueue
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.SpellQueue : false; }
-			set { if ( PlayerCharacter != null ) PlayerCharacter.SpellQueue = value; }
+			set { if (PlayerCharacter != null) PlayerCharacter.SpellQueue = value; }
 		}
 
 
@@ -4608,7 +4608,7 @@ namespace DOL.GS
 
 
 		/// <summary>
-        /// Switches the active quiver slot to another one
+		/// Switches the active quiver slot to another one
 		/// </summary>
 		/// <param name="slot"></param>
 		/// <param name="forced"></param>
@@ -4878,7 +4878,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-        /// Called whenever a single attack strike is made
+		/// Called whenever a single attack strike is made
 		/// </summary>
 		/// <param name="target"></param>
 		/// <param name="weapon"></param>
@@ -4948,7 +4948,7 @@ namespace DOL.GS
 								if (weapon != null)
 									hitWeapon = GlobalConstants.NameToShortName(weapon.Name);
 								break;
-						}													
+						}
 
 						if (hitWeapon.Length > 0)
 							hitWeapon = " " + LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.WithYour") + " " + hitWeapon;
@@ -4965,7 +4965,7 @@ namespace DOL.GS
 						}
 						else
 							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.InterceptHit", attackTypeMsg, ad.Target.GetName(0, false), hitWeapon, ad.Damage, modmessage), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-						 
+
 						// critical hit
 						if (ad.CriticalDamage > 0)
 							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Critical", ad.Target.GetName(0, false), ad.CriticalDamage), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
@@ -5180,7 +5180,7 @@ namespace DOL.GS
 						if (hitLocName != null)
 							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.HitsYour", ad.Attacker.GetName(0, true), hitLocName, ad.Damage, modmessage), eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
 						else
-							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.HitsYou", ad.Attacker.IsAlive ? ad.Attacker.GetName(0, true): "A dead enemy", ad.Damage, modmessage), eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
+							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.HitsYou", ad.Attacker.IsAlive ? ad.Attacker.GetName(0, true) : "A dead enemy", ad.Damage, modmessage), eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
 
 						if (ad.CriticalDamage > 0)
 							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.HitsYouCritical", ad.Attacker.GetName(0, true), ad.CriticalDamage), eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
@@ -5312,12 +5312,12 @@ namespace DOL.GS
 					}
 			}
 			// Mauler
-            if (CharacterClass.ID > 59 && CharacterClass.ID < 63)
-            {
-                this.Mana += (7 * this.MaxMana) / 100;
-            }
-            
-            // vampiir
+			if (CharacterClass.ID > 59 && CharacterClass.ID < 63)
+			{
+				this.Mana += (7 * this.MaxMana) / 100;
+			}
+
+			// vampiir
 			if (CharacterClass is ClassVampiir)
 			{
 				GameSpellEffect removeEffect = SpellHandler.FindEffectOnTarget(this, "VampiirSpeedEnhancement");
@@ -5655,7 +5655,7 @@ namespace DOL.GS
 			{
 				eaf -= (int)(effect.SpellHandler as VampiirArmorDebuff).Spell.Value;
 			}*/
-			return eaf; 
+			return eaf;
 		}
 
 		/// <summary>
@@ -6196,7 +6196,7 @@ namespace DOL.GS
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Die.LoseExperience"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
 					// if this is the first death in level, you lose only half the penalty
 					switch (PlayerCharacter.DeathCount)
-						{
+					{
 						case 0:
 							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Die.DeathN1"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
 							xpLossPercent /= 3;
@@ -6532,279 +6532,279 @@ namespace DOL.GS
 			}
 		}
 
-        public override void CastSpell(Spell spell, SpellLine line)
-        {
-            if (spell.SpellType == "StyleHandler")
-            {
-                Style style = SkillBase.GetStyleByID((int)spell.Value, CharacterClass.ID);
-                if (style != null)
-                {
-                    StyleProcessor.TryToUseStyle(this, style);
-                }
-                else { Out.SendMessage("That style is not implemented!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow); }
-            }
-            else if (spell.SpellType == "BodyguardHandler")
-            {
-                Ability ab = SkillBase.GetAbility("Bodyguard");
-                IAbilityActionHandler handler = SkillBase.GetAbilityActionHandler(ab.KeyName);
-                if (handler != null)
-                {
-                    handler.Execute(ab, this);
-                    return;
-                }
-            }
-            else
-            {
-                if (IsStunned)
-                {
-                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.CantCastStunned"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-                    return;
-                }
-                if (IsMezzed)
-                {
-                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.CantCastMezzed"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-                    return;
-                }
+		public override void CastSpell(Spell spell, SpellLine line)
+		{
+			if (spell.SpellType == "StyleHandler")
+			{
+				Style style = SkillBase.GetStyleByID((int)spell.Value, CharacterClass.ID);
+				if (style != null)
+				{
+					StyleProcessor.TryToUseStyle(this, style);
+				}
+				else { Out.SendMessage("That style is not implemented!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow); }
+			}
+			else if (spell.SpellType == "BodyguardHandler")
+			{
+				Ability ab = SkillBase.GetAbility("Bodyguard");
+				IAbilityActionHandler handler = SkillBase.GetAbilityActionHandler(ab.KeyName);
+				if (handler != null)
+				{
+					handler.Execute(ab, this);
+					return;
+				}
+			}
+			else
+			{
+				if (IsStunned)
+				{
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.CantCastStunned"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+					return;
+				}
+				if (IsMezzed)
+				{
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.CantCastMezzed"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+					return;
+				}
 				/*
                 if (IsSilenced)
                 {
                     Out.SendMessage("You are fumbling for your words, and cannot cast!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
                     return;
                 }
-                */            
+                */
 				double fumbleChance = GetModified(eProperty.SpellFumbleChance);
 				fumbleChance *= 0.01;
 				if (fumbleChance > 0)
 				{
 					if (Util.ChanceDouble(fumbleChance))
 					{
-                   		Out.SendMessage("You are fumbling for your words, and cannot cast!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-                    	return;
+						Out.SendMessage("You are fumbling for your words, and cannot cast!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+						return;
 					}
 				}
 
-                lock (m_spellQueueAccessMonitor)
-                {
-                    // warlock queue stuff
-                    if (m_runningSpellHandler != null)
-                    {
-                        if (spell.CastTime > 0 && !(m_runningSpellHandler is ChamberSpellHandler) && spell.SpellType != "Chamber")
-                        {
-                            if (m_runningSpellHandler.Spell.InstrumentRequirement != 0)
-                            {
-                                Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyPlaySong"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-                                return;
-                            }
-                            if (SpellQueue)
-                            {
-                                Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyCastFollow"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-                                m_nextSpell = spell;
-                                m_nextSpellLine = line;
-                            }
-                            else Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyCastNoQueue"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-                            return;
-                        }
-                        else if (m_runningSpellHandler is PrimerSpellHandler)
-                        {
-                            if (!spell.IsSecondary)
-                            {
-                                Out.SendMessage("Only a secondary spell can follow up the spell your are casting!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-                            }
-                            else
-                            {
-                                if (SpellQueue && !(m_runningSpellHandler is ChamberSpellHandler))
-                                {
-                                    Spell cloneSpell = null;
-                                    if (m_runningSpellHandler is PowerlessSpellHandler)
-                                    {
-                                        cloneSpell = spell.Copy();
-                                        cloneSpell.CostPower = false;
-                                        m_nextSpell = cloneSpell;
-                                        m_nextSpellLine = line;
-                                    }
-                                    else if (m_runningSpellHandler is RangeSpellHandler)
-                                    {
-                                        cloneSpell = spell.Copy();
-                                        cloneSpell.CostPower = false;
-                                        cloneSpell.OverrideRange = m_runningSpellHandler.Spell.Range;
-                                        m_nextSpell = cloneSpell;
-                                        m_nextSpellLine = line;
-                                    }
-                                    else if (m_runningSpellHandler is UninterruptableSpellHandler)
-                                    {
-                                        cloneSpell = spell.Copy();
-                                        cloneSpell.CostPower = false;
-                                        m_nextSpell = cloneSpell;
-                                        m_nextSpellLine = line;
-                                    }
-                                    Out.SendMessage("You prepare a secondary spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-                                }
-                                return;
-                            }
-                        }
-                        else if (m_runningSpellHandler is ChamberSpellHandler)
-                        {
-                            ChamberSpellHandler chamber = (ChamberSpellHandler)m_runningSpellHandler;
-                            if (IsMoving || IsStrafing)
-                            {
-                                m_runningSpellHandler = null;
-                                return;
-                            }
-                            if (spell.IsPrimary)
-                            {
-                                if (spell.SpellType == "Bolt" && !chamber.Spell.AllowBolt)
-                                {
-                                    Out.SendMessage("This spell cannot be stored in this chamber.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-                                    return;
-                                }
-                                if (chamber.PrimarySpell == null)
-                                {
-                                    Spell cloneSpell = spell.Copy();
-                                    cloneSpell.InChamber = true;
-                                    cloneSpell.CostPower = false;
-                                    chamber.PrimarySpell = cloneSpell;
-                                    chamber.PrimarySpellLine = line;
-                                    Out.SendMessage("You load " + spell.Name + " into your " + ((ChamberSpellHandler)m_runningSpellHandler).Spell.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                    Out.SendMessage("Select the second spell for your " + ((ChamberSpellHandler)m_runningSpellHandler).Spell.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                }
-                                else
-                                {
-                                    Out.SendMessage("This spell cannot be stored in this chamber.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-                                }
-                            }
-                            else if (spell.IsSecondary)
-                            {
-                                if (chamber.PrimarySpell != null)
-                                {
-                                    if (chamber.SecondarySpell == null)
-                                    {
-                                        Spell cloneSpell = spell.Copy();
-                                        cloneSpell.CostPower = false;
-                                        cloneSpell.InChamber = true;
-                                        cloneSpell.OverrideRange = chamber.PrimarySpell.Range;
-                                        chamber.SecondarySpell = cloneSpell;
-                                        chamber.SecondarySpellLine = line;
-                                        Out.SendMessage("You load " + spell.Name + " into your " + ((ChamberSpellHandler)m_runningSpellHandler).Spell.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				lock (m_spellQueueAccessMonitor)
+				{
+					// warlock queue stuff
+					if (m_runningSpellHandler != null)
+					{
+						if (spell.CastTime > 0 && !(m_runningSpellHandler is ChamberSpellHandler) && spell.SpellType != "Chamber")
+						{
+							if (m_runningSpellHandler.Spell.InstrumentRequirement != 0)
+							{
+								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyPlaySong"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+								return;
+							}
+							if (SpellQueue)
+							{
+								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyCastFollow"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+								m_nextSpell = spell;
+								m_nextSpellLine = line;
+							}
+							else Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyCastNoQueue"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+							return;
+						}
+						else if (m_runningSpellHandler is PrimerSpellHandler)
+						{
+							if (!spell.IsSecondary)
+							{
+								Out.SendMessage("Only a secondary spell can follow up the spell your are casting!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+							}
+							else
+							{
+								if (SpellQueue && !(m_runningSpellHandler is ChamberSpellHandler))
+								{
+									Spell cloneSpell = null;
+									if (m_runningSpellHandler is PowerlessSpellHandler)
+									{
+										cloneSpell = spell.Copy();
+										cloneSpell.CostPower = false;
+										m_nextSpell = cloneSpell;
+										m_nextSpellLine = line;
+									}
+									else if (m_runningSpellHandler is RangeSpellHandler)
+									{
+										cloneSpell = spell.Copy();
+										cloneSpell.CostPower = false;
+										cloneSpell.OverrideRange = m_runningSpellHandler.Spell.Range;
+										m_nextSpell = cloneSpell;
+										m_nextSpellLine = line;
+									}
+									else if (m_runningSpellHandler is UninterruptableSpellHandler)
+									{
+										cloneSpell = spell.Copy();
+										cloneSpell.CostPower = false;
+										m_nextSpell = cloneSpell;
+										m_nextSpellLine = line;
+									}
+									Out.SendMessage("You prepare a secondary spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+								}
+								return;
+							}
+						}
+						else if (m_runningSpellHandler is ChamberSpellHandler)
+						{
+							ChamberSpellHandler chamber = (ChamberSpellHandler)m_runningSpellHandler;
+							if (IsMoving || IsStrafing)
+							{
+								m_runningSpellHandler = null;
+								return;
+							}
+							if (spell.IsPrimary)
+							{
+								if (spell.SpellType == "Bolt" && !chamber.Spell.AllowBolt)
+								{
+									Out.SendMessage("This spell cannot be stored in this chamber.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								if (chamber.PrimarySpell == null)
+								{
+									Spell cloneSpell = spell.Copy();
+									cloneSpell.InChamber = true;
+									cloneSpell.CostPower = false;
+									chamber.PrimarySpell = cloneSpell;
+									chamber.PrimarySpellLine = line;
+									Out.SendMessage("You load " + spell.Name + " into your " + ((ChamberSpellHandler)m_runningSpellHandler).Spell.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									Out.SendMessage("Select the second spell for your " + ((ChamberSpellHandler)m_runningSpellHandler).Spell.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								}
+								else
+								{
+									Out.SendMessage("This spell cannot be stored in this chamber.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+								}
+							}
+							else if (spell.IsSecondary)
+							{
+								if (chamber.PrimarySpell != null)
+								{
+									if (chamber.SecondarySpell == null)
+									{
+										Spell cloneSpell = spell.Copy();
+										cloneSpell.CostPower = false;
+										cloneSpell.InChamber = true;
+										cloneSpell.OverrideRange = chamber.PrimarySpell.Range;
+										chamber.SecondarySpell = cloneSpell;
+										chamber.SecondarySpellLine = line;
+										Out.SendMessage("You load " + spell.Name + " into your " + ((ChamberSpellHandler)m_runningSpellHandler).Spell.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-                                    }
-                                    else
-                                    {
-                                        Out.SendMessage("You have already chosen your spells for this chamber.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+									}
+									else
+									{
+										Out.SendMessage("You have already chosen your spells for this chamber.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 
-                                    }
-                                }
-                                else
-                                {
-                                    Out.SendMessage("You must store a primary spell first!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+									}
+								}
+								else
+								{
+									Out.SendMessage("You must store a primary spell first!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 
-                                }
-                            }
+								}
+							}
 
-                        }
-                        else if (!(m_runningSpellHandler is ChamberSpellHandler) && spell.SpellType == "Chamber")
-                        {
-                            Out.SendMessage("You may not ready this spell as a followup!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-                            return;
-                        }
-                    }
-                }
-                ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(this, spell, line);
-                if (spellhandler != null)
-                {
-                    if (spell.CastTime > 0)
-                    {
-                        GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, "Chamber", spell.Name);
+						}
+						else if (!(m_runningSpellHandler is ChamberSpellHandler) && spell.SpellType == "Chamber")
+						{
+							Out.SendMessage("You may not ready this spell as a followup!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+							return;
+						}
+					}
+				}
+				ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(this, spell, line);
+				if (spellhandler != null)
+				{
+					if (spell.CastTime > 0)
+					{
+						GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, "Chamber", spell.Name);
 
-                        if (effect != null && spell.Name == effect.Spell.Name)
-                        {
-                            spellhandler.CastSpell();
-                        }
-                        else
-                        {
-                            if (spellhandler is ChamberSpellHandler && m_runningSpellHandler == null)
-                            {
-                                ((ChamberSpellHandler)spellhandler).EffectSlot = ChamberSpellHandler.GetEffectSlot(spellhandler.Spell.Name);
-                                m_runningSpellHandler = spellhandler;
-                                m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
-                                spellhandler.CastSpell();
-                            }
-                            else if (m_runningSpellHandler == null)
-                            {
-                                m_runningSpellHandler = spellhandler;
-                                m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
-                                spellhandler.CastSpell();
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (spell.IsSecondary)
-                        {
-                            GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, "Powerless");
-                            if (effect == null)
-                                effect = SpellHandler.FindEffectOnTarget(this, "Range");
-                            if (effect == null)
-                                effect = SpellHandler.FindEffectOnTarget(this, "Uninterruptable");
+						if (effect != null && spell.Name == effect.Spell.Name)
+						{
+							spellhandler.CastSpell();
+						}
+						else
+						{
+							if (spellhandler is ChamberSpellHandler && m_runningSpellHandler == null)
+							{
+								((ChamberSpellHandler)spellhandler).EffectSlot = ChamberSpellHandler.GetEffectSlot(spellhandler.Spell.Name);
+								m_runningSpellHandler = spellhandler;
+								m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
+								spellhandler.CastSpell();
+							}
+							else if (m_runningSpellHandler == null)
+							{
+								m_runningSpellHandler = spellhandler;
+								m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
+								spellhandler.CastSpell();
+							}
+						}
+					}
+					else
+					{
+						if (spell.IsSecondary)
+						{
+							GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, "Powerless");
+							if (effect == null)
+								effect = SpellHandler.FindEffectOnTarget(this, "Range");
+							if (effect == null)
+								effect = SpellHandler.FindEffectOnTarget(this, "Uninterruptable");
 
-                            if (m_runningSpellHandler == null && effect == null)
-                                Out.SendMessage("You cannot cast this spell directly!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-                            else if (m_runningSpellHandler != null)
-                            {
-                                if (m_runningSpellHandler.Spell.IsPrimary)
-                                {
-                                    lock (m_spellQueueAccessMonitor)
-                                    {
-                                        if (SpellQueue && !(m_runningSpellHandler is ChamberSpellHandler))
-                                        {
-                                            Out.SendMessage("You prepare this as a secondary spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-                                            m_nextSpell = spell;
-                                            m_nextSpellLine = line;
-                                        }
-                                    }
-                                }
-                                else if (!(m_runningSpellHandler is ChamberSpellHandler))
-                                    Out.SendMessage("You cannot cast this spell directly!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-                            }
-                            else if (effect != null)
-                            {
-                                Spell cloneSpell = null;
-                                if (effect.SpellHandler is PowerlessSpellHandler)
-                                {
-                                    cloneSpell = spell.Copy();
-                                    cloneSpell.CostPower = false;
-                                    spellhandler = ScriptMgr.CreateSpellHandler(this, cloneSpell, line);
-                                    spellhandler.CastSpell();
-                                    effect.Cancel(false);
-                                }
-                                else if (effect.SpellHandler is RangeSpellHandler)
-                                {
-                                    cloneSpell = spell.Copy();
-                                    cloneSpell.CostPower = false;
-                                    cloneSpell.OverrideRange = effect.Spell.Range;
-                                    spellhandler = ScriptMgr.CreateSpellHandler(this, cloneSpell, line);
-                                    spellhandler.CastSpell();
-                                    effect.Cancel(false);
-                                }
-                                else if (effect.SpellHandler is UninterruptableSpellHandler)
-                                {
-                                    cloneSpell = spell.Copy();
-                                    cloneSpell.CostPower = false;
-                                    spellhandler = ScriptMgr.CreateSpellHandler(this, cloneSpell, line);
-                                    spellhandler.CastSpell();
-                                    effect.Cancel(false);
-                                }
-                            }
-                        }
-                        else
-                            spellhandler.CastSpell();
-                    }
-                }
-                else
-                {
-                    Out.SendMessage(spell.Name + " not implemented yet (" + spell.SpellType + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                }
-            }
-        }
+							if (m_runningSpellHandler == null && effect == null)
+								Out.SendMessage("You cannot cast this spell directly!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+							else if (m_runningSpellHandler != null)
+							{
+								if (m_runningSpellHandler.Spell.IsPrimary)
+								{
+									lock (m_spellQueueAccessMonitor)
+									{
+										if (SpellQueue && !(m_runningSpellHandler is ChamberSpellHandler))
+										{
+											Out.SendMessage("You prepare this as a secondary spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+											m_nextSpell = spell;
+											m_nextSpellLine = line;
+										}
+									}
+								}
+								else if (!(m_runningSpellHandler is ChamberSpellHandler))
+									Out.SendMessage("You cannot cast this spell directly!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+							}
+							else if (effect != null)
+							{
+								Spell cloneSpell = null;
+								if (effect.SpellHandler is PowerlessSpellHandler)
+								{
+									cloneSpell = spell.Copy();
+									cloneSpell.CostPower = false;
+									spellhandler = ScriptMgr.CreateSpellHandler(this, cloneSpell, line);
+									spellhandler.CastSpell();
+									effect.Cancel(false);
+								}
+								else if (effect.SpellHandler is RangeSpellHandler)
+								{
+									cloneSpell = spell.Copy();
+									cloneSpell.CostPower = false;
+									cloneSpell.OverrideRange = effect.Spell.Range;
+									spellhandler = ScriptMgr.CreateSpellHandler(this, cloneSpell, line);
+									spellhandler.CastSpell();
+									effect.Cancel(false);
+								}
+								else if (effect.SpellHandler is UninterruptableSpellHandler)
+								{
+									cloneSpell = spell.Copy();
+									cloneSpell.CostPower = false;
+									spellhandler = ScriptMgr.CreateSpellHandler(this, cloneSpell, line);
+									spellhandler.CastSpell();
+									effect.Cancel(false);
+								}
+							}
+						}
+						else
+							spellhandler.CastSpell();
+					}
+				}
+				else
+				{
+					Out.SendMessage(spell.Name + " not implemented yet (" + spell.SpellType + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+			}
+		}
 
 		#endregion
 
@@ -7053,451 +7053,451 @@ namespace DOL.GS
 			return true;
 		}
 
-        /// <summary>
-        /// Called when the player uses an inventory in a slot
-        /// eg. by clicking on the icon in the qickbar dragged from a slot
-        /// </summary>
-        /// <param name="slot"></param>
-        /// <param name="type">Which /use command was used (0=simple click on icon, 1=use, 2=/use2)</param>
-        public virtual void UseSlot(int slot, int type)
-        {
-            if (!IsAlive)
-            {
-                Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantFire"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                return;
-            }
+		/// <summary>
+		/// Called when the player uses an inventory in a slot
+		/// eg. by clicking on the icon in the qickbar dragged from a slot
+		/// </summary>
+		/// <param name="slot"></param>
+		/// <param name="type">Which /use command was used (0=simple click on icon, 1=use, 2=/use2)</param>
+		public virtual void UseSlot(int slot, int type)
+		{
+			if (!IsAlive)
+			{
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantFire"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
 
-            lock (Inventory)
-            {
-                InventoryItem useItem = Inventory.GetItem((eInventorySlot)slot);
-                if (useItem == null)
-                {
-                    if ((slot >= Slot.FIRSTQUIVER) && (slot <= Slot.FOURTHQUIVER))
-                    {
-                        Out.SendMessage("The quiver slot " + (slot - (Slot.FIRSTQUIVER) + 1) + " is empty!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                    }
-                    else
-                    {
-                        // don't allow using empty slots
-                        Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.IllegalSourceObject", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                    }
-                    return;
-                }
-                if (useItem.Item_Type != Slot.RANGED && (slot != Slot.HORSE || type != 0))
-                {
-                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.AttemptToUse", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                }
+			lock (Inventory)
+			{
+				InventoryItem useItem = Inventory.GetItem((eInventorySlot)slot);
+				if (useItem == null)
+				{
+					if ((slot >= Slot.FIRSTQUIVER) && (slot <= Slot.FOURTHQUIVER))
+					{
+						Out.SendMessage("The quiver slot " + (slot - (Slot.FIRSTQUIVER) + 1) + " is empty!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+					else
+					{
+						// don't allow using empty slots
+						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.IllegalSourceObject", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+					return;
+				}
+				if (useItem.Item_Type != Slot.RANGED && (slot != Slot.HORSE || type != 0))
+				{
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.AttemptToUse", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
 
-                switch (slot)
-                {
-                    case Slot.HORSEARMOR:
-                    case Slot.HORSEBARDING:
-                        return;
-                    case Slot.HORSE:
-                        if (type == 0)
-                        {
-                            if (IsOnHorse)
-                                IsOnHorse = false;
-                            else
-                            {
-                                if (Level < useItem.Level)
-                                {
-                                    Out.SendMessage("You must have " + useItem.Level + " level for summon this horse", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                    return;
-                                }
-                                if (!IsAlive)
-                                {
-                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountWhileDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                    return;
-                                }
-                                if (Steed != null)
-                                {
-                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.MustDismountBefore"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                    return;
-                                }
-                                if (CurrentRegion.IsRvR && !ActiveHorse.IsSummonRvR)
-                                {
-                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantSummonRvR"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                    return;
-                                }
-                                if (IsMoving)
-                                {
-                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountMoving"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                    return;
-                                }
-                                if (IsSitting)
-                                {
-                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantCallMountSeated"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                    return;
-                                }
-                                if (IsStealthed)
-                                {
-                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountSteath"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                    return;
-                                }
-                                if (InCombat)
-                                {
-                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                    return;
-                                }
-                                if (IsSummoningMount)
-                                {
-                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.StopCallingMount"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                    StopWhistleTimers();
-                                    return;
-                                }
-                                Out.SendTimerWindow("Summoning Mount", 5);
-                                foreach (GamePlayer plr in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-                                    plr.Out.SendEmoteAnimation(this, eEmote.Horse_whistle);
-                                // vampiir ~
-                                GameSpellEffect effects = SpellHandler.FindEffectOnTarget(this, "VampiirSpeedEnhancement");
-                                GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, "SpeedEnhancement");
-                                if (effects != null)
-                                    effects.Cancel(false);
-                                if (effect != null)
-                                    effect.Cancel(false);
-                                Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.WhistleMount"), eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
-                                m_whistleMountTimer = new RegionTimer(this);
-                                m_whistleMountTimer.Callback = new RegionTimerCallback(WhistleMountTimerCallback);
-                                m_whistleMountTimer.Start(5000);
-                            }
-                        }
-                        break;
-                    case Slot.RIGHTHAND:
-                    case Slot.LEFTHAND:
-                        if (ActiveWeaponSlot == eActiveWeaponSlot.Standard)
-                            break;
-                        SwitchWeapon(eActiveWeaponSlot.Standard);
-                        Notify(GamePlayerEvent.UseSlot, this, new UseSlotEventArgs(slot, type));
-                        return;
+				switch (slot)
+				{
+					case Slot.HORSEARMOR:
+					case Slot.HORSEBARDING:
+						return;
+					case Slot.HORSE:
+						if (type == 0)
+						{
+							if (IsOnHorse)
+								IsOnHorse = false;
+							else
+							{
+								if (Level < useItem.Level)
+								{
+									Out.SendMessage("You must have " + useItem.Level + " level for summon this horse", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								if (!IsAlive)
+								{
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountWhileDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								if (Steed != null)
+								{
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.MustDismountBefore"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								if (CurrentRegion.IsRvR && !ActiveHorse.IsSummonRvR)
+								{
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantSummonRvR"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								if (IsMoving)
+								{
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountMoving"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								if (IsSitting)
+								{
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantCallMountSeated"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								if (IsStealthed)
+								{
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountSteath"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								if (InCombat)
+								{
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								if (IsSummoningMount)
+								{
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.StopCallingMount"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									StopWhistleTimers();
+									return;
+								}
+								Out.SendTimerWindow("Summoning Mount", 5);
+								foreach (GamePlayer plr in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+									plr.Out.SendEmoteAnimation(this, eEmote.Horse_whistle);
+								// vampiir ~
+								GameSpellEffect effects = SpellHandler.FindEffectOnTarget(this, "VampiirSpeedEnhancement");
+								GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, "SpeedEnhancement");
+								if (effects != null)
+									effects.Cancel(false);
+								if (effect != null)
+									effect.Cancel(false);
+								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.WhistleMount"), eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
+								m_whistleMountTimer = new RegionTimer(this);
+								m_whistleMountTimer.Callback = new RegionTimerCallback(WhistleMountTimerCallback);
+								m_whistleMountTimer.Start(5000);
+							}
+						}
+						break;
+					case Slot.RIGHTHAND:
+					case Slot.LEFTHAND:
+						if (ActiveWeaponSlot == eActiveWeaponSlot.Standard)
+							break;
+						SwitchWeapon(eActiveWeaponSlot.Standard);
+						Notify(GamePlayerEvent.UseSlot, this, new UseSlotEventArgs(slot, type));
+						return;
 
-                    case Slot.TWOHAND:
-                        if (ActiveWeaponSlot == eActiveWeaponSlot.TwoHanded)
-                            break;
-                        SwitchWeapon(eActiveWeaponSlot.TwoHanded);
-                        Notify(GamePlayerEvent.UseSlot, this, new UseSlotEventArgs(slot, type));
-                        return;
+					case Slot.TWOHAND:
+						if (ActiveWeaponSlot == eActiveWeaponSlot.TwoHanded)
+							break;
+						SwitchWeapon(eActiveWeaponSlot.TwoHanded);
+						Notify(GamePlayerEvent.UseSlot, this, new UseSlotEventArgs(slot, type));
+						return;
 
-                    case Slot.RANGED:
-                        bool newAttack = false;
-                        if (ActiveWeaponSlot != eActiveWeaponSlot.Distance)
-                        {
-                            SwitchWeapon(eActiveWeaponSlot.Distance);
-                        }
-                        else if (!AttackState)
-                        {
-                            StartAttack(TargetObject);
-                            newAttack = true;
-                        }
+					case Slot.RANGED:
+						bool newAttack = false;
+						if (ActiveWeaponSlot != eActiveWeaponSlot.Distance)
+						{
+							SwitchWeapon(eActiveWeaponSlot.Distance);
+						}
+						else if (!AttackState)
+						{
+							StartAttack(TargetObject);
+							newAttack = true;
+						}
 
-                        //Clean up range attack state/type if we are not in combat mode
-                        //anymore
-                        if (!AttackState)
-                        {
-                            RangeAttackState = eRangeAttackState.None;
-                            RangeAttackType = eRangeAttackType.Normal;
-                        }
-                        if (!newAttack && RangeAttackState != eRangeAttackState.None)
-                        {
-                            if (RangeAttackState == eRangeAttackState.ReadyToFire)
-                            {
-                                RangeAttackState = eRangeAttackState.Fire;
-                                m_attackAction.Start(1);
-                            }
-                            else if (RangeAttackState == eRangeAttackState.Aim)
-                            {
-                                if (!TargetInView)
-                                {
-                                    // Don't store last target if it's not visible
-                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantSeeTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                }
-                                else
-                                {
-                                    if (m_rangeAttackTarget.Target == null)
-                                    {
-                                        //set new target only if there was no target before
-                                        RangeAttackTarget = TargetObject;
-                                    }
+						//Clean up range attack state/type if we are not in combat mode
+						//anymore
+						if (!AttackState)
+						{
+							RangeAttackState = eRangeAttackState.None;
+							RangeAttackType = eRangeAttackType.Normal;
+						}
+						if (!newAttack && RangeAttackState != eRangeAttackState.None)
+						{
+							if (RangeAttackState == eRangeAttackState.ReadyToFire)
+							{
+								RangeAttackState = eRangeAttackState.Fire;
+								m_attackAction.Start(1);
+							}
+							else if (RangeAttackState == eRangeAttackState.Aim)
+							{
+								if (!TargetInView)
+								{
+									// Don't store last target if it's not visible
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantSeeTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								}
+								else
+								{
+									if (m_rangeAttackTarget.Target == null)
+									{
+										//set new target only if there was no target before
+										RangeAttackTarget = TargetObject;
+									}
 
-                                    RangeAttackState = eRangeAttackState.AimFire;
-                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.AutoReleaseShot"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                }
-                            }
-                            else if (RangeAttackState == eRangeAttackState.AimFire)
-                            {
-                                RangeAttackState = eRangeAttackState.AimFireReload;
-                                Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.AutoReleaseShotReload"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            }
-                            else if (RangeAttackState == eRangeAttackState.AimFireReload)
-                            {
-                                RangeAttackState = eRangeAttackState.Aim;
-                                Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.NoAutoReleaseShotReload"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            }
-                        }
-                        break;
-                    case Slot.FIRSTQUIVER: SwitchQuiver(eActiveQuiverSlot.First, false); break;
-                    case Slot.SECONDQUIVER: SwitchQuiver(eActiveQuiverSlot.Second, false); break;
-                    case Slot.THIRDQUIVER: SwitchQuiver(eActiveQuiverSlot.Third, false); break;
-                    case Slot.FOURTHQUIVER: SwitchQuiver(eActiveQuiverSlot.Fourth, false); break;
-                }
-                if (useItem.SpellID != 0 || useItem.SpellID1 != 0 || useItem.PoisonSpellID != 0) // don't return without firing events
-                {
-                    if (IsSitting)
-                    {
-                        Out.SendMessage("You can't use an item while sitting!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        return;
-                    }
+									RangeAttackState = eRangeAttackState.AimFire;
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.AutoReleaseShot"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								}
+							}
+							else if (RangeAttackState == eRangeAttackState.AimFire)
+							{
+								RangeAttackState = eRangeAttackState.AimFireReload;
+								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.AutoReleaseShotReload"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							else if (RangeAttackState == eRangeAttackState.AimFireReload)
+							{
+								RangeAttackState = eRangeAttackState.Aim;
+								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.NoAutoReleaseShotReload"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+						}
+						break;
+					case Slot.FIRSTQUIVER: SwitchQuiver(eActiveQuiverSlot.First, false); break;
+					case Slot.SECONDQUIVER: SwitchQuiver(eActiveQuiverSlot.Second, false); break;
+					case Slot.THIRDQUIVER: SwitchQuiver(eActiveQuiverSlot.Third, false); break;
+					case Slot.FOURTHQUIVER: SwitchQuiver(eActiveQuiverSlot.Fourth, false); break;
+				}
+				if (useItem.SpellID != 0 || useItem.SpellID1 != 0 || useItem.PoisonSpellID != 0) // don't return without firing events
+				{
+					if (IsSitting)
+					{
+						Out.SendMessage("You can't use an item while sitting!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return;
+					}
 
-                    if (ArtifactManager.IsArtifact(useItem))
-                    {
-                        long artifactusetick = TempProperties.getLongProperty("artifactuse" + useItem.Id_nb, 0L);
-                        long changeTime = CurrentRegion.Time - artifactusetick;
-                        //Console.WriteLine("changetime is :" + changeTime);
-                        long delay = (long)useItem.ArtiID * 1000;
-                        long lastChargedItemUseTick = TempProperties.getLongProperty(LAST_CHARGED_ITEM_USE_TICK, 0L);
-                        long changeTime1 = CurrentRegion.Time - lastChargedItemUseTick;
-                        long delay1 = TempProperties.getLongProperty(ITEM_USE_DELAY, 0L);
-                        if (Client.Account.PrivLevel == 1 && changeTime < delay)
-                        {
-                            Out.SendMessage("You must wait " + (delay - changeTime) / 1000 + " more seconds before discharging that artifact!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return;
-                        }
-                        else if (Client.Account.PrivLevel == 1 && changeTime1 < delay1)
-                        {
-                            Out.SendMessage("You must wait " + (delay1 - changeTime1) / 1000 + " more second before discharge another object!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return;
-                        }
-                        else
-                        {
-                            SpellLine chargeEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-                            if (chargeEffectLine != null)
-                            {
-                                if (type == 1) //use1
-                                {
-                                    Spell spell = SkillBase.GetSpellByID(useItem.SpellID);
-                                    if (spell.Level <= Level)
-                                    {
-                                        ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
-                                        if (spellHandler != null)
-                                        {
-                                            if (IsOnHorse && !spellHandler.HasPositiveEffect)
-                                                IsOnHorse = false;
-                                            Stealth(false);
-                                            spellHandler.CastSpell();
-                                            TempProperties.setProperty("artifactuse" + useItem.Id_nb, CurrentRegion.Time);
-                                            TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
-                                            TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 1));
-                                        }
-                                        else
-                                        {
-                                            Out.SendMessage("Charge effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					if (ArtifactManager.IsArtifact(useItem))
+					{
+						long artifactusetick = TempProperties.getLongProperty("artifactuse" + useItem.Id_nb, 0L);
+						long changeTime = CurrentRegion.Time - artifactusetick;
+						//Console.WriteLine("changetime is :" + changeTime);
+						long delay = (long)useItem.ArtiID * 1000;
+						long lastChargedItemUseTick = TempProperties.getLongProperty(LAST_CHARGED_ITEM_USE_TICK, 0L);
+						long changeTime1 = CurrentRegion.Time - lastChargedItemUseTick;
+						long delay1 = TempProperties.getLongProperty(ITEM_USE_DELAY, 0L);
+						if (Client.Account.PrivLevel == 1 && changeTime < delay)
+						{
+							Out.SendMessage("You must wait " + (delay - changeTime) / 1000 + " more seconds before discharging that artifact!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
+						else if (Client.Account.PrivLevel == 1 && changeTime1 < delay1)
+						{
+							Out.SendMessage("You must wait " + (delay1 - changeTime1) / 1000 + " more second before discharge another object!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
+						else
+						{
+							SpellLine chargeEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+							if (chargeEffectLine != null)
+							{
+								if (type == 1) //use1
+								{
+									Spell spell = SkillBase.GetSpellByID(useItem.SpellID);
+									if (spell.Level <= Level)
+									{
+										ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
+										if (spellHandler != null)
+										{
+											if (IsOnHorse && !spellHandler.HasPositiveEffect)
+												IsOnHorse = false;
+											Stealth(false);
+											spellHandler.CastSpell();
+											TempProperties.setProperty("artifactuse" + useItem.Id_nb, CurrentRegion.Time);
+											TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
+											TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 1));
+										}
+										else
+										{
+											Out.SendMessage("Charge effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-                                        }
-                                    }
-                                    else
-                                        Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                    return;
-                                }
-                                else if (type == 2) //use2
-                                {
-                                    Spell spell = SkillBase.GetSpellByID(useItem.SpellID1);
-                                    if (spell.Level <= Level)
-                                    {
-                                        ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
-                                        if (spellHandler != null)
-                                        {
-                                            if (IsOnHorse && !spellHandler.HasPositiveEffect)
-                                                IsOnHorse = false;
-                                            Stealth(false);
-                                            spellHandler.CastSpell();
-                                            TempProperties.setProperty("artifactuse" + useItem.Id_nb, CurrentRegion.Time);
-                                            TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
-                                            TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 1));
-                                        }
-                                        else
-                                        {
-                                            Out.SendMessage("Charge effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										}
+									}
+									else
+										Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								else if (type == 2) //use2
+								{
+									Spell spell = SkillBase.GetSpellByID(useItem.SpellID1);
+									if (spell.Level <= Level)
+									{
+										ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
+										if (spellHandler != null)
+										{
+											if (IsOnHorse && !spellHandler.HasPositiveEffect)
+												IsOnHorse = false;
+											Stealth(false);
+											spellHandler.CastSpell();
+											TempProperties.setProperty("artifactuse" + useItem.Id_nb, CurrentRegion.Time);
+											TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
+											TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 1));
+										}
+										else
+										{
+											Out.SendMessage("Charge effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-                                        }
-                                    }
-                                    else
-                                        Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										}
+									}
+									else
+										Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-                                }
-                            }
-                        }
-                        return;
-                    }
+								}
+							}
+						}
+						return;
+					}
 
-                    if ((type < 2 && useItem.SpellID > 0 && useItem.Charges < 1) || (type == 2 && useItem.SpellID1 > 0 && useItem.Charges1 < 1) || (useItem.PoisonSpellID > 0 && useItem.PoisonCharges < 1))
-                    {
-                        Out.SendMessage("The " + useItem.Name + " is out of charges.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        return;
-                    }
-                    else if (!ArtifactManager.IsArtifact(useItem))
-                    {
-                        if (useItem.Object_Type == (int)eObjectType.Poison)
-                        {
-                            InventoryItem mainHand = AttackWeapon;
-                            InventoryItem leftHand = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
-                            if (mainHand != null && mainHand.PoisonSpellID == 0)
-                            {
-                                ApplyPoison(useItem, mainHand);
-                            }
-                            else if (leftHand != null && leftHand.PoisonSpellID == 0)
-                            {
-                                ApplyPoison(useItem, leftHand);
-                            }
-                        }
-                        else if (useItem.Object_Type == (int)eObjectType.Magical &&
-                            (useItem.Item_Type == (int)eInventorySlot.FirstBackpack || useItem.Item_Type == 41))
-                        {
-                            long lastPotionItemUseTick = TempProperties.getLongProperty(LAST_POTION_ITEM_USE_TICK, 0L);
-                            long changeTime = CurrentRegion.Time - lastPotionItemUseTick;
-                            if (Client.Account.PrivLevel == 1 && changeTime < 60000) //1 minutes reuse timer
-                            {
-                                Out.SendMessage("You must wait " + (60000 - changeTime) / 1000 + " more second before use potion!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return;
-                            }
-                            else
-                            {
-                                SpellLine potionEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Potions_Effects);
-                                if (useItem.Item_Type == 41)
-                                    potionEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+					if ((type < 2 && useItem.SpellID > 0 && useItem.Charges < 1) || (type == 2 && useItem.SpellID1 > 0 && useItem.Charges1 < 1) || (useItem.PoisonSpellID > 0 && useItem.PoisonCharges < 1))
+					{
+						Out.SendMessage("The " + useItem.Name + " is out of charges.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return;
+					}
+					else if (!ArtifactManager.IsArtifact(useItem))
+					{
+						if (useItem.Object_Type == (int)eObjectType.Poison)
+						{
+							InventoryItem mainHand = AttackWeapon;
+							InventoryItem leftHand = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
+							if (mainHand != null && mainHand.PoisonSpellID == 0)
+							{
+								ApplyPoison(useItem, mainHand);
+							}
+							else if (leftHand != null && leftHand.PoisonSpellID == 0)
+							{
+								ApplyPoison(useItem, leftHand);
+							}
+						}
+						else if (useItem.Object_Type == (int)eObjectType.Magical &&
+						    (useItem.Item_Type == (int)eInventorySlot.FirstBackpack || useItem.Item_Type == 41))
+						{
+							long lastPotionItemUseTick = TempProperties.getLongProperty(LAST_POTION_ITEM_USE_TICK, 0L);
+							long changeTime = CurrentRegion.Time - lastPotionItemUseTick;
+							if (Client.Account.PrivLevel == 1 && changeTime < 60000) //1 minutes reuse timer
+							{
+								Out.SendMessage("You must wait " + (60000 - changeTime) / 1000 + " more second before use potion!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+							else
+							{
+								SpellLine potionEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Potions_Effects);
+								if (useItem.Item_Type == 41)
+									potionEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
 
-                                if (potionEffectLine != null)
-                                {
-                                    IList spells = SkillBase.GetSpellList(potionEffectLine.KeyName);
-                                    if (spells != null)
-                                    {
-                                        foreach (Spell spell in spells)
-                                        {
-                                            if (spell.ID == useItem.SpellID)
-                                            {
-                                                if (spell.Level <= Level)
-                                                {
-                                                    if (spell.CastTime > 0 && AttackState)
-                                                    {
-                                                        Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantUseInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                                    }
-                                                    else
-                                                    {
-                                                        ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, potionEffectLine);
-                                                        if (spellHandler != null)
-                                                        {
-                                                            Stealth(false);
-                                                            if (useItem.Item_Type == 40)
-                                                                Emote(eEmote.Drink);
-                                                            spellHandler.StartSpell(TargetObject as GameLiving);
-                                                            if (useItem.Count > 1)
-                                                                Inventory.RemoveCountFromStack(useItem, 1);
-                                                            else
-                                                            {
-                                                                useItem.Charges--;
-                                                                if (useItem.Charges < 1) Inventory.RemoveCountFromStack(useItem, 1);
-                                                            }
-                                                            Out.SendMessage(useItem.GetName(0, false) + " has been used.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                                            TempProperties.setProperty(LAST_POTION_ITEM_USE_TICK, CurrentRegion.Time);
-                                                        }
-                                                        else
-                                                        {
-                                                            Out.SendMessage("Potion effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                                        }
-                                                    }
-                                                }
-                                                else
-                                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.NotEnouthPower"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else if (type > 0)
-                        {
-                            if (!(new ArrayList(Inventory.EquippedItems).Contains(useItem)))
-                            {
-                                Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.Can'tUseFromBackpack"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            }
-                            else
-                            {
-                                long lastChargedItemUseTick = TempProperties.getLongProperty(LAST_CHARGED_ITEM_USE_TICK, 0L);
-                                long changeTime = CurrentRegion.Time - lastChargedItemUseTick;
-                                long delay = TempProperties.getLongProperty(ITEM_USE_DELAY, 0L);
-                                if (Client.Account.PrivLevel == 1 && changeTime < delay) //2 minutes reuse timer
-                                {
-                                    Out.SendMessage("You must wait " + (delay - changeTime) / 1000 + " more second before discharge another object!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                    return;
-                                }
-                                else
-                                {
-                                    SpellLine chargeEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+								if (potionEffectLine != null)
+								{
+									IList spells = SkillBase.GetSpellList(potionEffectLine.KeyName);
+									if (spells != null)
+									{
+										foreach (Spell spell in spells)
+										{
+											if (spell.ID == useItem.SpellID)
+											{
+												if (spell.Level <= Level)
+												{
+													if (spell.CastTime > 0 && AttackState)
+													{
+														Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantUseInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+													}
+													else
+													{
+														ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, potionEffectLine);
+														if (spellHandler != null)
+														{
+															Stealth(false);
+															if (useItem.Item_Type == 40)
+																Emote(eEmote.Drink);
+															spellHandler.StartSpell(TargetObject as GameLiving);
+															if (useItem.Count > 1)
+																Inventory.RemoveCountFromStack(useItem, 1);
+															else
+															{
+																useItem.Charges--;
+																if (useItem.Charges < 1) Inventory.RemoveCountFromStack(useItem, 1);
+															}
+															Out.SendMessage(useItem.GetName(0, false) + " has been used.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+															TempProperties.setProperty(LAST_POTION_ITEM_USE_TICK, CurrentRegion.Time);
+														}
+														else
+														{
+															Out.SendMessage("Potion effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+														}
+													}
+												}
+												else
+													Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.NotEnouthPower"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+												break;
+											}
+										}
+									}
+								}
+							}
+						}
+						else if (type > 0)
+						{
+							if (!(new ArrayList(Inventory.EquippedItems).Contains(useItem)))
+							{
+								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.Can'tUseFromBackpack"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							else
+							{
+								long lastChargedItemUseTick = TempProperties.getLongProperty(LAST_CHARGED_ITEM_USE_TICK, 0L);
+								long changeTime = CurrentRegion.Time - lastChargedItemUseTick;
+								long delay = TempProperties.getLongProperty(ITEM_USE_DELAY, 0L);
+								if (Client.Account.PrivLevel == 1 && changeTime < delay) //2 minutes reuse timer
+								{
+									Out.SendMessage("You must wait " + (delay - changeTime) / 1000 + " more second before discharge another object!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								else
+								{
+									SpellLine chargeEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
 
-                                    if (chargeEffectLine != null)
-                                    {
-                                        if (type == 1) //use1
-                                        {
-                                            Spell spell = SkillBase.GetSpellByID(useItem.SpellID);
-                                            if (spell.Level <= Level)
-                                            {
-                                                ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
-                                                if (spellHandler != null)
-                                                {
-                                                    if (IsOnHorse && !spellHandler.HasPositiveEffect)
-                                                        IsOnHorse = false;
-                                                    Stealth(false);
-                                                    spellHandler.CastSpell();
-                                                    if (useItem.MaxCharges > 0)
-                                                        useItem.Charges--;
-                                                    TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
-                                                    TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 2));
-                                                }
-                                                else
-                                                {
-                                                    Out.SendMessage("Charge effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                                }
-                                            }
-                                            else
-                                                Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									if (chargeEffectLine != null)
+									{
+										if (type == 1) //use1
+										{
+											Spell spell = SkillBase.GetSpellByID(useItem.SpellID);
+											if (spell.Level <= Level)
+											{
+												ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
+												if (spellHandler != null)
+												{
+													if (IsOnHorse && !spellHandler.HasPositiveEffect)
+														IsOnHorse = false;
+													Stealth(false);
+													spellHandler.CastSpell();
+													if (useItem.MaxCharges > 0)
+														useItem.Charges--;
+													TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
+													TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 2));
+												}
+												else
+												{
+													Out.SendMessage("Charge effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+												}
+											}
+											else
+												Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 
-                                        }
-                                        else if (type == 2) //use2
-                                        {
-                                            Spell spell = SkillBase.GetSpellByID(useItem.SpellID1);
-                                            if (spell.Level <= Level)
-                                            {
-                                                ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
-                                                if (spellHandler != null)
-                                                {
-                                                    if (IsOnHorse && !spellHandler.HasPositiveEffect)
-                                                        IsOnHorse = false;
-                                                    Stealth(false);
-                                                    spellHandler.CastSpell();
-                                                    if (useItem.MaxCharges1 > 0)
-                                                        useItem.Charges1--;
-                                                    TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
-                                                    TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 2));
-                                                }
-                                                else
-                                                {
-                                                    Out.SendMessage("Charge effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                                }
-                                            }
-                                            else
-                                                Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                // notify event handlers about used slot
-                Notify(GamePlayerEvent.UseSlot, this, new UseSlotEventArgs(slot, type));
-            }
-        }
+										}
+										else if (type == 2) //use2
+										{
+											Spell spell = SkillBase.GetSpellByID(useItem.SpellID1);
+											if (spell.Level <= Level)
+											{
+												ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
+												if (spellHandler != null)
+												{
+													if (IsOnHorse && !spellHandler.HasPositiveEffect)
+														IsOnHorse = false;
+													Stealth(false);
+													spellHandler.CastSpell();
+													if (useItem.MaxCharges1 > 0)
+														useItem.Charges1--;
+													TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
+													TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 2));
+												}
+												else
+												{
+													Out.SendMessage("Charge effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+												}
+											}
+											else
+												Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				// notify event handlers about used slot
+				Notify(GamePlayerEvent.UseSlot, this, new UseSlotEventArgs(slot, type));
+			}
+		}
 
 		/// <summary>
 		/// Apply poison to weapon
@@ -7988,12 +7988,12 @@ namespace DOL.GS
 			{
 				PlayerGroup.RemovePlayer(this);
 			}
-            BattleGroup mybattlegroup = (BattleGroup)this.TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
-            if (mybattlegroup != null)
-            {
-                mybattlegroup.RemoveBattlePlayer(this);
-            }
-            if (m_guild != null)
+			BattleGroup mybattlegroup = (BattleGroup)this.TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
+			if (mybattlegroup != null)
+			{
+				mybattlegroup.RemoveBattlePlayer(this);
+			}
+			if (m_guild != null)
 			{
 				m_guild.RemoveOnlineMember(this);
 			}
@@ -8294,7 +8294,7 @@ namespace DOL.GS
 		public string GuildID
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.GuildID : string.Empty; }
-			set	{ if ( PlayerCharacter != null ) PlayerCharacter.GuildID = value; }
+			set { if (PlayerCharacter != null) PlayerCharacter.GuildID = value; }
 		}
 
 		/// <summary>
@@ -8366,14 +8366,14 @@ namespace DOL.GS
 		{
 			get
 			{
-				if ( PlayerCharacter != null && PlayerCharacter.SerializedFriendsList != null)
+				if (PlayerCharacter != null && PlayerCharacter.SerializedFriendsList != null)
 					return new ArrayList(PlayerCharacter.SerializedFriendsList.Split(','));
 				return new ArrayList(0);
 			}
 			set
 			{
-				if ( PlayerCharacter == null ) return;
-				if ( value == null )
+				if (PlayerCharacter == null) return;
+				if (value == null)
 					PlayerCharacter.SerializedFriendsList = "";
 				else
 					PlayerCharacter.SerializedFriendsList = String.Join(",", (string[])value.ToArray(typeof(string)));
@@ -9062,13 +9062,13 @@ namespace DOL.GS
 				if (this.GetSpellLine("Sojourner") != null)
 				{
 					enc *= 1.25;
-				}	
-				
+				}
+
 				// Apply Walord effect
 				GameSpellEffect iBaneLordEffect = SpellHandler.FindEffectOnTarget((GameLiving)this, "Oppression");
 				if (iBaneLordEffect != null)
 					enc *= 1.00 - (iBaneLordEffect.Spell.Value * 0.01);
-				
+
 				return (int)enc;
 			}
 		}
@@ -9192,21 +9192,21 @@ namespace DOL.GS
 
 			Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Magic", item.GetName(0, false))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-            // Do not apply bonuses to Arti's let assignArtifactbonuses() do it.
-            if (!ArtifactManager.IsArtifact(item))
-            {
-                if (item.Bonus1 != 0) ItemBonus[item.Bonus1Type] += item.Bonus1;
-                if (item.Bonus2 != 0) ItemBonus[item.Bonus2Type] += item.Bonus2;
-                if (item.Bonus3 != 0) ItemBonus[item.Bonus3Type] += item.Bonus3;
-                if (item.Bonus4 != 0) ItemBonus[item.Bonus4Type] += item.Bonus4;
-                if (item.Bonus5 != 0) ItemBonus[item.Bonus5Type] += item.Bonus5;
-                if (item.Bonus6 != 0) ItemBonus[item.Bonus6Type] += item.Bonus6;
-                if (item.Bonus7 != 0) ItemBonus[item.Bonus7Type] += item.Bonus7;
-                if (item.Bonus8 != 0) ItemBonus[item.Bonus8Type] += item.Bonus8;
-                if (item.Bonus9 != 0) ItemBonus[item.Bonus9Type] += item.Bonus9;
-                if (item.Bonus10 != 0) ItemBonus[item.Bonus10Type] += item.Bonus10;
-                if (item.ExtraBonus != 0) ItemBonus[item.ExtraBonusType] += item.ExtraBonus;
-            }
+			// Do not apply bonuses to Arti's let assignArtifactbonuses() do it.
+			if (!ArtifactManager.IsArtifact(item))
+			{
+				if (item.Bonus1 != 0) ItemBonus[item.Bonus1Type] += item.Bonus1;
+				if (item.Bonus2 != 0) ItemBonus[item.Bonus2Type] += item.Bonus2;
+				if (item.Bonus3 != 0) ItemBonus[item.Bonus3Type] += item.Bonus3;
+				if (item.Bonus4 != 0) ItemBonus[item.Bonus4Type] += item.Bonus4;
+				if (item.Bonus5 != 0) ItemBonus[item.Bonus5Type] += item.Bonus5;
+				if (item.Bonus6 != 0) ItemBonus[item.Bonus6Type] += item.Bonus6;
+				if (item.Bonus7 != 0) ItemBonus[item.Bonus7Type] += item.Bonus7;
+				if (item.Bonus8 != 0) ItemBonus[item.Bonus8Type] += item.Bonus8;
+				if (item.Bonus9 != 0) ItemBonus[item.Bonus9Type] += item.Bonus9;
+				if (item.Bonus10 != 0) ItemBonus[item.Bonus10Type] += item.Bonus10;
+				if (item.ExtraBonus != 0) ItemBonus[item.ExtraBonusType] += item.ExtraBonus;
+			}
 
 			if (ObjectState == eObjectState.Active)
 			{
@@ -9287,21 +9287,21 @@ namespace DOL.GS
 
 			if (!item.IsMagical) return;
 
-            // Do not apply bonuses to Arti's let assignArtifactbonuses() do it.
-            if (!ArtifactManager.IsArtifact(item))
-            {
-                if (item.Bonus1 != 0) ItemBonus[item.Bonus1Type] -= item.Bonus1;
-                if (item.Bonus2 != 0) ItemBonus[item.Bonus2Type] -= item.Bonus2;
-                if (item.Bonus3 != 0) ItemBonus[item.Bonus3Type] -= item.Bonus3;
-                if (item.Bonus4 != 0) ItemBonus[item.Bonus4Type] -= item.Bonus4;
-                if (item.Bonus5 != 0) ItemBonus[item.Bonus5Type] -= item.Bonus5;
-                if (item.Bonus6 != 0) ItemBonus[item.Bonus6Type] -= item.Bonus6;
-                if (item.Bonus7 != 0) ItemBonus[item.Bonus7Type] -= item.Bonus7;
-                if (item.Bonus8 != 0) ItemBonus[item.Bonus8Type] -= item.Bonus8;
-                if (item.Bonus9 != 0) ItemBonus[item.Bonus9Type] -= item.Bonus9;
-                if (item.Bonus10 != 0) ItemBonus[item.Bonus10Type] -= item.Bonus10;
-                if (item.ExtraBonus != 0) ItemBonus[item.ExtraBonusType] -= item.ExtraBonus;
-            }
+			// Do not apply bonuses to Arti's let assignArtifactbonuses() do it.
+			if (!ArtifactManager.IsArtifact(item))
+			{
+				if (item.Bonus1 != 0) ItemBonus[item.Bonus1Type] -= item.Bonus1;
+				if (item.Bonus2 != 0) ItemBonus[item.Bonus2Type] -= item.Bonus2;
+				if (item.Bonus3 != 0) ItemBonus[item.Bonus3Type] -= item.Bonus3;
+				if (item.Bonus4 != 0) ItemBonus[item.Bonus4Type] -= item.Bonus4;
+				if (item.Bonus5 != 0) ItemBonus[item.Bonus5Type] -= item.Bonus5;
+				if (item.Bonus6 != 0) ItemBonus[item.Bonus6Type] -= item.Bonus6;
+				if (item.Bonus7 != 0) ItemBonus[item.Bonus7Type] -= item.Bonus7;
+				if (item.Bonus8 != 0) ItemBonus[item.Bonus8Type] -= item.Bonus8;
+				if (item.Bonus9 != 0) ItemBonus[item.Bonus9Type] -= item.Bonus9;
+				if (item.Bonus10 != 0) ItemBonus[item.Bonus10Type] -= item.Bonus10;
+				if (item.ExtraBonus != 0) ItemBonus[item.ExtraBonusType] -= item.ExtraBonus;
+			}
 
 			if (ObjectState == eObjectState.Active)
 			{
@@ -9371,7 +9371,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="slot_pos">SlotPosition to drop</param>
 		/// <returns>true if dropped</returns>
-        public virtual bool DropItem(eInventorySlot slot_pos)
+		public virtual bool DropItem(eInventorySlot slot_pos)
 		{
 			GameInventoryItem tempItem;
 			return DropItem(slot_pos, out tempItem);
@@ -9384,7 +9384,7 @@ namespace DOL.GS
 		/// <param name="slot_pos">SlotPosition to drop</param>
 		/// <param name="droppedItem">out GameItem that was created</param>
 		/// <returns>true if dropped</returns>
-        public virtual bool DropItem(eInventorySlot slot_pos, out GameInventoryItem droppedItem)
+		public virtual bool DropItem(eInventorySlot slot_pos, out GameInventoryItem droppedItem)
 		{
 			droppedItem = null;
 			if (slot_pos >= eInventorySlot.FirstBackpack && slot_pos <= eInventorySlot.LastBackpack)
@@ -9401,7 +9401,7 @@ namespace DOL.GS
 					if (!Inventory.RemoveItem(item)) return false;
 
 					droppedItem = CreateItemOnTheGround(item);
-					Notify(PlayerInventoryEvent.ItemDropped,this, new ItemDroppedEventArgs(item,droppedItem));
+					Notify(PlayerInventoryEvent.ItemDropped, this, new ItemDroppedEventArgs(item, droppedItem));
 					return true;
 				}
 			}
@@ -9413,7 +9413,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="item">the item to create on the ground</param>
 		/// <returns>the GameInventoryItem on the ground</returns>
-        public virtual GameInventoryItem CreateItemOnTheGround(InventoryItem item)
+		public virtual GameInventoryItem CreateItemOnTheGround(InventoryItem item)
 		{
 			GameInventoryItem gameItem = new GameInventoryItem(item); // fixed
 
@@ -9431,12 +9431,12 @@ namespace DOL.GS
 			return gameItem;
 		}
 		/// <summary>
-        /// Called when the player picks up an item from the ground
+		/// Called when the player picks up an item from the ground
 		/// </summary>
 		/// <param name="floorObject"></param>
 		/// <param name="checkRange"></param>
 		/// <returns></returns>
-        public virtual bool PickupObject(GameObject floorObject, bool checkRange)
+		public virtual bool PickupObject(GameObject floorObject, bool checkRange)
 		{
 			if (floorObject == null)
 			{
@@ -9473,154 +9473,154 @@ namespace DOL.GS
 						return false;
 					}
 					PlayerGroup group = PlayerGroup;
-                    BattleGroup mybattlegroup = (BattleGroup)TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
-                    if (mybattlegroup != null
-                        && mybattlegroup.GetBGLootType() == true)
-                    {
-                        GamePlayer theTreasurer = mybattlegroup.GetBGTreasurer();
-                        if (theTreasurer.CanSeeObject(mybattlegroup.GetBGTreasurer(), floorObject))
-                        {
-                            bool good = false;
-                            if (floorItem.Item.IsStackable)
-                                good = theTreasurer.Inventory.AddTemplate(floorItem.Item, floorItem.Item.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
-                            else
-                                good = theTreasurer.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, floorItem.Item);
+					BattleGroup mybattlegroup = (BattleGroup)TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
+					if (mybattlegroup != null
+					    && mybattlegroup.GetBGLootType() == true)
+					{
+						GamePlayer theTreasurer = mybattlegroup.GetBGTreasurer();
+						if (theTreasurer.CanSeeObject(mybattlegroup.GetBGTreasurer(), floorObject))
+						{
+							bool good = false;
+							if (floorItem.Item.IsStackable)
+								good = theTreasurer.Inventory.AddTemplate(floorItem.Item, floorItem.Item.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+							else
+								good = theTreasurer.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, floorItem.Item);
 
-                            if (!good)
-                            {
-                                theTreasurer.Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.BackpackFull"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return false;
-                            }
-                            theTreasurer.Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YouGet", floorItem.Item.GetName(1, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            Message.SystemToOthers(this, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.GroupMemberPicksUp", Name, floorItem.Item.GetName(1, false)), eChatType.CT_System);
-                        }
-                        else
-                        {
-                            mybattlegroup.SendMessageToBattleGroupMembers(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.NoOneWantsThis", floorObject.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        }
-                    }
-                    else if (group != null && group.AutosplitLoot)
-                    {
-                        ArrayList eligibleMembers = new ArrayList(8);
-                        foreach (GamePlayer ply in group.GetPlayersInTheGroup())
-                        {
-                            if (ply.IsAlive
-                                && ply.CanSeeObject(ply, floorObject)
-                                && (WorldMgr.GetDistance(this, ply) < WorldMgr.MAX_EXPFORKILL_DISTANCE)
-                                && (ply.ObjectState == eObjectState.Active)
-                                && (ply.AutoSplitLoot)
-                                && (ply.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != eInventorySlot.Invalid))
-                            {
-                                eligibleMembers.Add(ply);
-                            }
-                        }
+							if (!good)
+							{
+								theTreasurer.Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.BackpackFull"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return false;
+							}
+							theTreasurer.Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YouGet", floorItem.Item.GetName(1, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							Message.SystemToOthers(this, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.GroupMemberPicksUp", Name, floorItem.Item.GetName(1, false)), eChatType.CT_System);
+						}
+						else
+						{
+							mybattlegroup.SendMessageToBattleGroupMembers(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.NoOneWantsThis", floorObject.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+					}
+					else if (group != null && group.AutosplitLoot)
+					{
+						ArrayList eligibleMembers = new ArrayList(8);
+						foreach (GamePlayer ply in group.GetPlayersInTheGroup())
+						{
+							if (ply.IsAlive
+							    && ply.CanSeeObject(ply, floorObject)
+							    && (WorldMgr.GetDistance(this, ply) < WorldMgr.MAX_EXPFORKILL_DISTANCE)
+							    && (ply.ObjectState == eObjectState.Active)
+							    && (ply.AutoSplitLoot)
+							    && (ply.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != eInventorySlot.Invalid))
+							{
+								eligibleMembers.Add(ply);
+							}
+						}
 
-                        if (eligibleMembers.Count <= 0)
-                        {
-                            Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.NoOneWantsThis", floorObject.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return false;
-                        }
+						if (eligibleMembers.Count <= 0)
+						{
+							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.NoOneWantsThis", floorObject.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return false;
+						}
 
-                        int i = Util.Random(0, eligibleMembers.Count - 1);
-                        GamePlayer eligibleMember = eligibleMembers[i] as GamePlayer;
-                        if (eligibleMember != null)
-                        {
-                            bool good = false;
-                            if (floorItem.Item.IsStackable) // poison ID is lost here
-                                good = eligibleMember.Inventory.AddTemplate(floorItem.Item, floorItem.Item.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
-                            else
-                                good = eligibleMember.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, floorItem.Item);
+						int i = Util.Random(0, eligibleMembers.Count - 1);
+						GamePlayer eligibleMember = eligibleMembers[i] as GamePlayer;
+						if (eligibleMember != null)
+						{
+							bool good = false;
+							if (floorItem.Item.IsStackable) // poison ID is lost here
+								good = eligibleMember.Inventory.AddTemplate(floorItem.Item, floorItem.Item.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+							else
+								good = eligibleMember.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, floorItem.Item);
 
-                            if (!good)
-                            {
-                                eligibleMember.Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.BackpackFull"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return false;
-                            }
-                            Message.SystemToOthers(this, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.GroupMemberPicksUp", Name, floorItem.Item.GetName(1, false)), eChatType.CT_System);
-                            group.SendMessageToGroupMembers(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.Autosplit", floorItem.Item.GetName(1, true), eligibleMember.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        }
-                    }
-                    else
-                    {
-                        bool good = false;
-                        if (floorItem.Item.IsStackable)
-                            good = Inventory.AddTemplate(floorItem.Item, floorItem.Item.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
-                        else
-                            good = Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, floorItem.Item);
+							if (!good)
+							{
+								eligibleMember.Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.BackpackFull"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return false;
+							}
+							Message.SystemToOthers(this, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.GroupMemberPicksUp", Name, floorItem.Item.GetName(1, false)), eChatType.CT_System);
+							group.SendMessageToGroupMembers(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.Autosplit", floorItem.Item.GetName(1, true), eligibleMember.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+					}
+					else
+					{
+						bool good = false;
+						if (floorItem.Item.IsStackable)
+							good = Inventory.AddTemplate(floorItem.Item, floorItem.Item.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+						else
+							good = Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, floorItem.Item);
 
-                        if (!good)
-                        {
-                            Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.BackpackFull"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return false;
-                        }
-                        Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YouGet", floorItem.Item.GetName(1, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        Message.SystemToOthers(this, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.GroupMemberPicksUp", Name, floorItem.Item.GetName(1, false)), eChatType.CT_System);
-                    }
-                    floorItem.RemoveFromWorld();
-                }
-                return true;
-            }
-            else if (floorObject is GameMoney)
-            {
-                GameMoney moneyObject = floorObject as GameMoney;
-                lock (moneyObject)
-                {
-                    if (moneyObject.ObjectState != eObjectState.Active)
-                        return false;
+						if (!good)
+						{
+							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.BackpackFull"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return false;
+						}
+						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YouGet", floorItem.Item.GetName(1, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						Message.SystemToOthers(this, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.GroupMemberPicksUp", Name, floorItem.Item.GetName(1, false)), eChatType.CT_System);
+					}
+					floorItem.RemoveFromWorld();
+				}
+				return true;
+			}
+			else if (floorObject is GameMoney)
+			{
+				GameMoney moneyObject = floorObject as GameMoney;
+				lock (moneyObject)
+				{
+					if (moneyObject.ObjectState != eObjectState.Active)
+						return false;
 
-                    PlayerGroup group = PlayerGroup;
-                    if (group != null && group.AutosplitCoins)
-                    {
-                        //Spread the money in the group
-                        ArrayList eligibleMembers = new ArrayList(8);
-                        lock (group)
-                        {
-                            foreach (GamePlayer ply in group)
-                            {
-                                if (ply.IsAlive
-                                    && ply.CanSeeObject(ply, floorObject)
-                                    && (ply.ObjectState == eObjectState.Active))
-                                {
-                                    eligibleMembers.Add(ply);
-                                }
-                            }
-                        }
-                        if (eligibleMembers.Count <= 0)
-                        {
-                            Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.NoOneGroupWantsMoney"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return false;
-                        }
+					PlayerGroup group = PlayerGroup;
+					if (group != null && group.AutosplitCoins)
+					{
+						//Spread the money in the group
+						ArrayList eligibleMembers = new ArrayList(8);
+						lock (group)
+						{
+							foreach (GamePlayer ply in group)
+							{
+								if (ply.IsAlive
+								    && ply.CanSeeObject(ply, floorObject)
+								    && (ply.ObjectState == eObjectState.Active))
+								{
+									eligibleMembers.Add(ply);
+								}
+							}
+						}
+						if (eligibleMembers.Count <= 0)
+						{
+							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.NoOneGroupWantsMoney"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return false;
+						}
 
-                        foreach (GamePlayer eligibleMember in eligibleMembers)
-                        {
-                            if (eligibleMember.Guild != null && eligibleMember.Guild.IsGuildDuesOn())
-                            {
-                                double moneyToGuild = moneyObject.TotalCopper / eligibleMembers.Count * eligibleMember.Guild.GetGuildDuesPercent() / 100;
-                                long moneyToPlayer = (moneyObject.TotalCopper / eligibleMembers.Count) - (long)moneyToGuild;
-                                eligibleMember.Guild.SetGuildBank(eligibleMember, moneyToGuild);
-                                eligibleMember.AddMoney(moneyToPlayer, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YourLootShare", Money.GetString(moneyObject.TotalCopper / eligibleMembers.Count)));
-                            }
-                            else
-                                eligibleMember.AddMoney(moneyObject.TotalCopper / eligibleMembers.Count, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YourLootShare", Money.GetString(moneyObject.TotalCopper / eligibleMembers.Count)));
-                        }
-                    }
-                    else
-                    {
-                        //Add money only to picking player
-                        if (this != null && Guild != null && Guild.IsGuildDuesOn())
-                        {
-                            double moneyToGuild = moneyObject.TotalCopper * Client.Player.Guild.GetGuildDuesPercent() / 100;
-                            long MoneyToPlayer = moneyObject.TotalCopper - (long)moneyToGuild;
-                            Client.Player.Guild.SetGuildBank(Client.Player, moneyToGuild);
-                            Client.Player.AddMoney(MoneyToPlayer, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YourLootShare", MoneyToPlayer.ToString()));
-                        }
-                        else
-                            AddMoney(moneyObject.TotalCopper, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YouPickUp", Money.GetString(moneyObject.TotalCopper)));
-                    }
-                    moneyObject.Delete();
-                    return true;
-                }
-            }
+						foreach (GamePlayer eligibleMember in eligibleMembers)
+						{
+							if (eligibleMember.Guild != null && eligibleMember.Guild.IsGuildDuesOn())
+							{
+								double moneyToGuild = moneyObject.TotalCopper / eligibleMembers.Count * eligibleMember.Guild.GetGuildDuesPercent() / 100;
+								long moneyToPlayer = (moneyObject.TotalCopper / eligibleMembers.Count) - (long)moneyToGuild;
+								eligibleMember.Guild.SetGuildBank(eligibleMember, moneyToGuild);
+								eligibleMember.AddMoney(moneyToPlayer, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YourLootShare", Money.GetString(moneyObject.TotalCopper / eligibleMembers.Count)));
+							}
+							else
+								eligibleMember.AddMoney(moneyObject.TotalCopper / eligibleMembers.Count, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YourLootShare", Money.GetString(moneyObject.TotalCopper / eligibleMembers.Count)));
+						}
+					}
+					else
+					{
+						//Add money only to picking player
+						if (this != null && Guild != null && Guild.IsGuildDuesOn())
+						{
+							double moneyToGuild = moneyObject.TotalCopper * Client.Player.Guild.GetGuildDuesPercent() / 100;
+							long MoneyToPlayer = moneyObject.TotalCopper - (long)moneyToGuild;
+							Client.Player.Guild.SetGuildBank(Client.Player, moneyToGuild);
+							Client.Player.AddMoney(MoneyToPlayer, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YourLootShare", MoneyToPlayer.ToString()));
+						}
+						else
+							AddMoney(moneyObject.TotalCopper, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YouPickUp", Money.GetString(moneyObject.TotalCopper)));
+					}
+					moneyObject.Delete();
+					return true;
+				}
+			}
 			else if (floorObject is GameBoat)
 			{
 				if (!WorldMgr.CheckDistance(this, floorObject, 1000))
@@ -9648,21 +9648,21 @@ namespace DOL.GS
 
 		#endregion
 
-        /// <summary>
-        /// Checks to see if an object is viewable from the players perspective
-        /// </summary>
-        /// <param name="player">The Player that can see</param>
-        /// <param name="obj">The Object to be seen</param>
-        /// <returns>True/False</returns>
-        public bool CanSeeObject(GamePlayer player, GameObject obj)
-        {
-            foreach (GamePlayer plr in obj.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-            {
-                if (plr == player)
-                    return true;
-            }
-            return false;
-        }
+		/// <summary>
+		/// Checks to see if an object is viewable from the players perspective
+		/// </summary>
+		/// <param name="player">The Player that can see</param>
+		/// <param name="obj">The Object to be seen</param>
+		/// <returns>True/False</returns>
+		public bool CanSeeObject(GamePlayer player, GameObject obj)
+		{
+			foreach (GamePlayer plr in obj.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			{
+				if (plr == player)
+					return true;
+			}
+			return false;
+		}
 
 		#region Database
 
@@ -9781,16 +9781,16 @@ namespace DOL.GS
 		protected virtual void LoadSkillsFromCharacter()
 		{
 			Character character = PlayerCharacter; // if its derived and filled with some code
-			if ( character == null ) return; // no character => exit
+			if (character == null) return; // no character => exit
 
 			//Lohx - champion abilities
-            LoadChampionSpells();			
-			
+			LoadChampionSpells();
+
 			Hashtable disabledAbilities = new Hashtable();
 			Hashtable disabledSpells = new Hashtable();
-				
+
 			string tmpStr = character.DisabledAbilities; // get this from char only 1time
-			if ( tmpStr != null && tmpStr.Length > 0 )
+			if (tmpStr != null && tmpStr.Length > 0)
 			{
 				try
 				{
@@ -9807,9 +9807,9 @@ namespace DOL.GS
 						log.Error(Name + ": error in loading disabled abilities => '" + tmpStr + "'", e);
 				}
 			}
-			
+
 			tmpStr = character.DisabledSpells;
-			if ( tmpStr != null && tmpStr.Length > 0 )
+			if (tmpStr != null && tmpStr.Length > 0)
 			{
 				try
 				{
@@ -9826,11 +9826,11 @@ namespace DOL.GS
 						log.Error(Name + ": error in loading disabled spells => '" + tmpStr + "'", e);
 				}
 			}
-			
+
 			lock (m_skillList.SyncRoot)
 			{
 				tmpStr = character.SerializedAbilities;
-				if ( tmpStr != null && tmpStr.Length > 0 )
+				if (tmpStr != null && tmpStr.Length > 0)
 				{
 					try
 					{
@@ -9881,11 +9881,11 @@ namespace DOL.GS
 				}
 
 			}
-			
+
 			lock (m_specList.SyncRoot)
 			{
 				tmpStr = character.SerializedSpecs;
-				if ( tmpStr != null && tmpStr.Length > 0)
+				if (tmpStr != null && tmpStr.Length > 0)
 				{
 					try
 					{
@@ -9922,23 +9922,23 @@ namespace DOL.GS
 			{
 				m_spelllines.Clear();
 				tmpStr = character.SerializedSpellLines;
-				if ( tmpStr != null && tmpStr.Length > 0 )
-				foreach (string serializedSpellLine in tmpStr.Split(';'))
-				{
-					try
+				if (tmpStr != null && tmpStr.Length > 0)
+					foreach (string serializedSpellLine in tmpStr.Split(';'))
 					{
-						string[] values = serializedSpellLine.Split('|');
-						if (values.Length < 2) continue;
-						SpellLine splLine = SkillBase.GetSpellLine(values[0]);
-						splLine.Level = int.Parse(values[1]);
-						AddSpellLine(splLine);
+						try
+						{
+							string[] values = serializedSpellLine.Split('|');
+							if (values.Length < 2) continue;
+							SpellLine splLine = SkillBase.GetSpellLine(values[0]);
+							splLine.Level = int.Parse(values[1]);
+							AddSpellLine(splLine);
+						}
+						catch (Exception e)
+						{
+							if (log.IsErrorEnabled)
+								log.Error("Error loading SpellLine '" + serializedSpellLine + "' from character '" + character.Name + "'", e);
+						}
 					}
-					catch (Exception e)
-					{
-						if (log.IsErrorEnabled)
-							log.Error("Error loading SpellLine '" + serializedSpellLine + "' from character '" + character.Name + "'", e);
-					}
-				}
 			}
 			CharacterClass.OnLevelUp(this); // load all skills from DB first to keep the order
 			CharacterClass.OnRealmLevelUp(this);
@@ -10023,13 +10023,13 @@ namespace DOL.GS
 						break;
 					}
 				}
-			
+
 				m_guildName = m_guild.Name;
 				m_guild.AddOnlineMember(this);
 				//m_guildNote = m_character.GuildNote; // OBSOLETE (VaNaTiC)
 			}
 			#endregion
-			
+
 			#region setting world-init-position (delegate to PlayerCharacter dont make sense)
 			m_X = my_character.Xpos;
 			m_Y = my_character.Ypos;
@@ -10077,7 +10077,7 @@ namespace DOL.GS
 
 			m_currentSpeed = 0;
 			//m_maxSpeedBase = m_character.MaxSpeed; // OBSOLETE (VaNaTiC)
-			if ( MaxSpeedBase == 0 )
+			if (MaxSpeedBase == 0)
 				MaxSpeedBase = PLAYER_BASE_SPEED;
 
 			//m_maxHealth = m_character.MaxHealth;
@@ -10121,10 +10121,10 @@ namespace DOL.GS
 			//m_skillSpecPts = m_character.SkillSpecialtyPoints; // OBSOLETE (VaNaTiC)
 			//m_realmSpecPts = m_character.RealmSpecialtyPoints; // OBSOLETE (VaNaTiC)
 			//m_realmLevel = m_character.RealmLevel; // OBSOLETE (VaNaTiC)
-			if ( RealmLevel == 0 )
-			//{
+			if (RealmLevel == 0)
+				//{
 				RealmLevel = CalculateRealmLevelFromRPs(RealmPoints);
-				//m_character.RealmLevel = m_realmLevel; // OBSOLETE (VaNaTiC)
+			//m_character.RealmLevel = m_realmLevel; // OBSOLETE (VaNaTiC)
 			//}
 
 			//m_cancelStyle = m_character.CancelStyle; // OBSOLETE (VaNaTiC)
@@ -10199,7 +10199,7 @@ namespace DOL.GS
 
 			//let's only check if we can use /level once shall we, 
 			//this is nice because i want to check the property often for the new catacombs classes
-			
+
 			//find all characters in the database
 			foreach (Character plr in Client.Account.Characters)
 			{
@@ -10370,10 +10370,10 @@ namespace DOL.GS
 				}
 		}
 
-        public string GetName(GamePlayer target)
-        {
-            return GameServer.ServerRules.GetPlayerName(this, target);
-        }
+		public string GetName(GamePlayer target)
+		{
+			return GameServer.ServerRules.GetPlayerName(this, target);
+		}
 
 		/// <summary>
 		/// Adds messages to ArrayList which are sent when object is targeted
@@ -10648,91 +10648,91 @@ namespace DOL.GS
 			}
 		}
 
-        /// <summary>
-        /// Checks whether this player can detect stealthed enemy
-        /// </summary>
-        /// <param name="enemy"></param>
-        /// <returns>true if enemy can be detected</returns>
-        public virtual bool CanDetect(GamePlayer enemy)
-        {
-            if (enemy.CurrentRegionID != CurrentRegionID)
-                return false;
-            if (!IsAlive)
-                return false;
-            if (enemy.EffectList.GetOfType(typeof(VanishEffect)) != null)
-                return false;
-            if (this.Client.Account.PrivLevel > 1)
-                return true;
-            if (enemy.Client.Account.PrivLevel > 1)
-                return false;
+		/// <summary>
+		/// Checks whether this player can detect stealthed enemy
+		/// </summary>
+		/// <param name="enemy"></param>
+		/// <returns>true if enemy can be detected</returns>
+		public virtual bool CanDetect(GamePlayer enemy)
+		{
+			if (enemy.CurrentRegionID != CurrentRegionID)
+				return false;
+			if (!IsAlive)
+				return false;
+			if (enemy.EffectList.GetOfType(typeof(VanishEffect)) != null)
+				return false;
+			if (this.Client.Account.PrivLevel > 1)
+				return true;
+			if (enemy.Client.Account.PrivLevel > 1)
+				return false;
 
-            /*
-             * http://www.critshot.com/forums/showthread.php?threadid=3142
-             * The person doing the looking has a chance to find them based on their level, minus the stealthed person's stealth spec.
-             *
-             * -Normal detection range = (enemy lvl  your stealth spec) * 20 + 125
-             * -Detect Hidden Range = (enemy lvl  your stealth spec) * 50 + 250
-             * -See Hidden range = 2700 - (38 * your stealth spec)
-             */
+			/*
+			 * http://www.critshot.com/forums/showthread.php?threadid=3142
+			 * The person doing the looking has a chance to find them based on their level, minus the stealthed person's stealth spec.
+			 *
+			 * -Normal detection range = (enemy lvl  your stealth spec) * 20 + 125
+			 * -Detect Hidden Range = (enemy lvl  your stealth spec) * 50 + 250
+			 * -See Hidden range = 2700 - (38 * your stealth spec)
+			 */
 
-            int EnemyStealthLevel = enemy.GetModifiedSpecLevel(Specs.Stealth);
-            if (EnemyStealthLevel > 50)
-                EnemyStealthLevel = 50;
-            int levelDiff = this.Level - EnemyStealthLevel;
-            if (levelDiff < 0) levelDiff = 0;
+			int EnemyStealthLevel = enemy.GetModifiedSpecLevel(Specs.Stealth);
+			if (EnemyStealthLevel > 50)
+				EnemyStealthLevel = 50;
+			int levelDiff = this.Level - EnemyStealthLevel;
+			if (levelDiff < 0) levelDiff = 0;
 
-            int range;
-            bool enemyHasCamouflage = enemy.EffectList.GetOfType(typeof(CamouflageEffect)) != null;
-            if (HasAbility(Abilities.DetectHidden) && !enemy.HasAbility(Abilities.DetectHidden) && !enemyHasCamouflage)
-            {
-                // we have detect hidden and enemy don't = higher range
-                range = levelDiff * 50 + 250; // Detect Hidden advantage
-            }
-            else
-            {
-                range = levelDiff * 20 + 125; // Normal detection range
-            }
+			int range;
+			bool enemyHasCamouflage = enemy.EffectList.GetOfType(typeof(CamouflageEffect)) != null;
+			if (HasAbility(Abilities.DetectHidden) && !enemy.HasAbility(Abilities.DetectHidden) && !enemyHasCamouflage)
+			{
+				// we have detect hidden and enemy don't = higher range
+				range = levelDiff * 50 + 250; // Detect Hidden advantage
+			}
+			else
+			{
+				range = levelDiff * 20 + 125; // Normal detection range
+			}
 
-            // Mastery of Stealth Bonus
-            RAPropertyEnhancer mos = GetAbility(typeof(MasteryOfStealthAbility)) as RAPropertyEnhancer;
-            if (mos != null && !enemyHasCamouflage)
-            {
-                range += mos.GetAmountForLevel(mos.Level);
-            }
+			// Mastery of Stealth Bonus
+			RAPropertyEnhancer mos = GetAbility(typeof(MasteryOfStealthAbility)) as RAPropertyEnhancer;
+			if (mos != null && !enemyHasCamouflage)
+			{
+				range += mos.GetAmountForLevel(mos.Level);
+			}
 
-            range += BuffBonusCategory1[(int)eProperty.Skill_Stealth];
+			range += BuffBonusCategory1[(int)eProperty.Skill_Stealth];
 
-            // Apply Blanket of camouflage effect
-            GameSpellEffect iSpymasterEffect1 = SpellHandler.FindEffectOnTarget((GameLiving)enemy, "BlanketOfCamouflage");
-            if (iSpymasterEffect1 != null)
-            {
-                range -= (int)iSpymasterEffect1.Spell.Value;
-                if (range < 0) range = 0;
-            }
+			// Apply Blanket of camouflage effect
+			GameSpellEffect iSpymasterEffect1 = SpellHandler.FindEffectOnTarget((GameLiving)enemy, "BlanketOfCamouflage");
+			if (iSpymasterEffect1 != null)
+			{
+				range -= (int)iSpymasterEffect1.Spell.Value;
+				if (range < 0) range = 0;
+			}
 
-            // Apply Lookout effect
-            GameSpellEffect iSpymasterEffect2 = SpellHandler.FindEffectOnTarget((GameLiving)this, "Loockout");
-            if (iSpymasterEffect2 != null)
-                range += (int)iSpymasterEffect2.Spell.Value;
+			// Apply Lookout effect
+			GameSpellEffect iSpymasterEffect2 = SpellHandler.FindEffectOnTarget((GameLiving)this, "Loockout");
+			if (iSpymasterEffect2 != null)
+				range += (int)iSpymasterEffect2.Spell.Value;
 
-            // Apply Prescience node effect
-            GameSpellEffect iConvokerEffect = SpellHandler.FindEffectOnTarget((GameLiving)enemy, "Prescience");
-            if (iConvokerEffect != null)
-                range += (int)iConvokerEffect.Spell.Value;
+			// Apply Prescience node effect
+			GameSpellEffect iConvokerEffect = SpellHandler.FindEffectOnTarget((GameLiving)enemy, "Prescience");
+			if (iConvokerEffect != null)
+				range += (int)iConvokerEffect.Spell.Value;
 
-            //Hard cap is 1900
-            if (range > 1900)
-                range = 1900;
-            //Possibilité de voir les membres du groupes fufutés .... pour tout le monde
-            else if (enemy.PlayerGroup != null && PlayerGroup != null && enemy.PlayerGroup == PlayerGroup)
-            {
-                range = 2500;
-            }
+			//Hard cap is 1900
+			if (range > 1900)
+				range = 1900;
+			//Possibilité de voir les membres du groupes fufutés .... pour tout le monde
+			else if (enemy.PlayerGroup != null && PlayerGroup != null && enemy.PlayerGroup == PlayerGroup)
+			{
+				range = 2500;
+			}
 
-            // Fin
-            // vampiir stealth range, uncomment when add eproperty stealthrange i suppose
-            return WorldMgr.CheckDistance(this, enemy, range);
-        }
+			// Fin
+			// vampiir stealth range, uncomment when add eproperty stealthrange i suppose
+			return WorldMgr.CheckDistance(this, enemy, range);
+		}
 
 		#endregion
 
@@ -10969,7 +10969,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-        /// Add a new crafting skill to the player
+		/// Add a new crafting skill to the player
 		/// </summary>
 		/// <param name="skill"></param>
 		/// <param name="startValue"></param>
@@ -11508,7 +11508,7 @@ namespace DOL.GS
 			npc.Body.StopAttack();
 			npc.Body.StopCurrentSpellcast();
 			npc.Follow(this);
-			
+
 			if (npc.Body.ControlledNpcList != null)
 			{
 				foreach (IControlledBrain icb in npc.Body.ControlledNpcList)
@@ -11760,7 +11760,7 @@ namespace DOL.GS
 			private readonly InvulnerabilityExpiredCallback m_callback;
 
 			/// <summary>
-            /// Constructs a new InvulnerabilityTimer
+			/// Constructs a new InvulnerabilityTimer
 			/// </summary>
 			/// <param name="actionSource"></param>
 			/// <param name="callback"></param>
@@ -11897,7 +11897,7 @@ namespace DOL.GS
 			get { return PlayerCharacter != null ? PlayerCharacter.KillsAlbionPlayers : 0; }
 			set
 			{
-				if ( PlayerCharacter != null ) PlayerCharacter.KillsAlbionPlayers = value;
+				if (PlayerCharacter != null) PlayerCharacter.KillsAlbionPlayers = value;
 				Notify(GamePlayerEvent.KillsAlbionPlayersChanged, this);
 				Notify(GamePlayerEvent.KillsTotalPlayersChanged, this);
 			}
@@ -11912,7 +11912,7 @@ namespace DOL.GS
 			get { return PlayerCharacter != null ? PlayerCharacter.KillsMidgardPlayers : 0; }
 			set
 			{
-				if ( PlayerCharacter != null ) PlayerCharacter.KillsMidgardPlayers = value;
+				if (PlayerCharacter != null) PlayerCharacter.KillsMidgardPlayers = value;
 				Notify(GamePlayerEvent.KillsMidgardPlayersChanged, this);
 				Notify(GamePlayerEvent.KillsTotalPlayersChanged, this);
 			}
@@ -11927,7 +11927,7 @@ namespace DOL.GS
 			get { return PlayerCharacter != null ? PlayerCharacter.KillsHiberniaPlayers : 0; }
 			set
 			{
-				if ( PlayerCharacter != null ) PlayerCharacter.KillsHiberniaPlayers = value;
+				if (PlayerCharacter != null) PlayerCharacter.KillsHiberniaPlayers = value;
 				Notify(GamePlayerEvent.KillsHiberniaPlayersChanged, this);
 				Notify(GamePlayerEvent.KillsTotalPlayersChanged, this);
 			}
@@ -11942,7 +11942,7 @@ namespace DOL.GS
 			get { return PlayerCharacter != null ? PlayerCharacter.KillsAlbionDeathBlows : 0; }
 			set
 			{
-				if ( PlayerCharacter != null ) PlayerCharacter.KillsAlbionDeathBlows = value;
+				if (PlayerCharacter != null) PlayerCharacter.KillsAlbionDeathBlows = value;
 				Notify(GamePlayerEvent.KillsTotalDeathBlowsChanged, this);
 			}
 		}
@@ -11956,7 +11956,7 @@ namespace DOL.GS
 			get { return PlayerCharacter != null ? PlayerCharacter.KillsMidgardDeathBlows : 0; }
 			set
 			{
-				if ( PlayerCharacter != null ) PlayerCharacter.KillsMidgardDeathBlows = value;
+				if (PlayerCharacter != null) PlayerCharacter.KillsMidgardDeathBlows = value;
 				Notify(GamePlayerEvent.KillsTotalDeathBlowsChanged, this);
 			}
 		}
@@ -11970,7 +11970,7 @@ namespace DOL.GS
 			get { return PlayerCharacter != null ? PlayerCharacter.KillsHiberniaDeathBlows : 0; }
 			set
 			{
-				if ( PlayerCharacter != null ) PlayerCharacter.KillsHiberniaDeathBlows = value;
+				if (PlayerCharacter != null) PlayerCharacter.KillsHiberniaDeathBlows = value;
 				Notify(GamePlayerEvent.KillsTotalDeathBlowsChanged, this);
 			}
 		}
@@ -11984,7 +11984,7 @@ namespace DOL.GS
 			get { return PlayerCharacter != null ? PlayerCharacter.KillsAlbionSolo : 0; }
 			set
 			{
-				if ( PlayerCharacter != null ) PlayerCharacter.KillsAlbionSolo = value;
+				if (PlayerCharacter != null) PlayerCharacter.KillsAlbionSolo = value;
 				Notify(GamePlayerEvent.KillsTotalSoloChanged, this);
 			}
 		}
@@ -11998,7 +11998,7 @@ namespace DOL.GS
 			get { return PlayerCharacter != null ? PlayerCharacter.KillsMidgardSolo : 0; }
 			set
 			{
-				if ( PlayerCharacter != null ) PlayerCharacter.KillsMidgardSolo = value;
+				if (PlayerCharacter != null) PlayerCharacter.KillsMidgardSolo = value;
 				Notify(GamePlayerEvent.KillsTotalSoloChanged, this);
 			}
 		}
@@ -12012,7 +12012,7 @@ namespace DOL.GS
 			get { return PlayerCharacter != null ? PlayerCharacter.KillsHiberniaSolo : 0; }
 			set
 			{
-				if ( PlayerCharacter != null ) PlayerCharacter.KillsHiberniaSolo = value;
+				if (PlayerCharacter != null) PlayerCharacter.KillsHiberniaSolo = value;
 				Notify(GamePlayerEvent.KillsTotalSoloChanged, this);
 			}
 		}
@@ -12026,8 +12026,8 @@ namespace DOL.GS
 			get { return PlayerCharacter != null ? PlayerCharacter.CapturedKeeps : 0; }
 			set
 			{
-				if ( PlayerCharacter != null ) PlayerCharacter.CapturedKeeps = value;
-				Notify(GamePlayerEvent.CapturedKeepsChanged, this); 
+				if (PlayerCharacter != null) PlayerCharacter.CapturedKeeps = value;
+				Notify(GamePlayerEvent.CapturedKeepsChanged, this);
 			}
 		}
 
@@ -12040,8 +12040,8 @@ namespace DOL.GS
 			get { return PlayerCharacter != null ? PlayerCharacter.CapturedTowers : 0; }
 			set
 			{
-				if ( PlayerCharacter != null ) PlayerCharacter.CapturedTowers = value;
-				Notify(GamePlayerEvent.CapturedTowersChanged, this); 
+				if (PlayerCharacter != null) PlayerCharacter.CapturedTowers = value;
+				Notify(GamePlayerEvent.CapturedTowersChanged, this);
 			}
 		}
 
@@ -12054,11 +12054,11 @@ namespace DOL.GS
 			get { return PlayerCharacter != null ? PlayerCharacter.CapturedRelics : 0; }
 			set
 			{
-				if ( PlayerCharacter != null ) PlayerCharacter.CapturedRelics = value;
-				Notify(GamePlayerEvent.CapturedRelicsChanged, this); 
-			}			
+				if (PlayerCharacter != null) PlayerCharacter.CapturedRelics = value;
+				Notify(GamePlayerEvent.CapturedRelicsChanged, this);
+			}
 		}
-		
+
 		/// <summary>
 		/// Gets or sets the count of dragons killed.
 		/// (delegate to PlayerCharacter)
@@ -12068,8 +12068,8 @@ namespace DOL.GS
 			get { return PlayerCharacter != null ? PlayerCharacter.KillsDragon : 0; }
 			set
 			{
-				if ( PlayerCharacter != null ) PlayerCharacter.KillsDragon = value;
-				Notify(GamePlayerEvent.KillsDragonChanged, this); 
+				if (PlayerCharacter != null) PlayerCharacter.KillsDragon = value;
+				Notify(GamePlayerEvent.KillsDragonChanged, this);
 			}
 		}
 
@@ -12080,7 +12080,7 @@ namespace DOL.GS
 		public int DeathsPvP
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.DeathsPvP : 0; }
-			set { if ( PlayerCharacter != null ) PlayerCharacter.DeathsPvP = value; }
+			set { if (PlayerCharacter != null) PlayerCharacter.DeathsPvP = value; }
 		}
 
 		/// <summary>
@@ -12092,7 +12092,7 @@ namespace DOL.GS
 			get { return PlayerCharacter != null ? PlayerCharacter.KillsLegion : 0; }
 			set
 			{
-				if ( PlayerCharacter != null ) PlayerCharacter.KillsLegion = value;
+				if (PlayerCharacter != null) PlayerCharacter.KillsLegion = value;
 				Notify(GamePlayerEvent.KillsLegionChanged, this);
 			}
 		}
@@ -12106,7 +12106,7 @@ namespace DOL.GS
 			get { return PlayerCharacter != null ? PlayerCharacter.KillsEpicBoss : 0; }
 			set
 			{
-				if ( PlayerCharacter != null ) PlayerCharacter.KillsEpicBoss = value;
+				if (PlayerCharacter != null) PlayerCharacter.KillsEpicBoss = value;
 				Notify(GamePlayerEvent.KillsEpicBossChanged, this);
 			}
 		}
@@ -12359,65 +12359,65 @@ namespace DOL.GS
 
 		#endregion
 
-        #region Bainshee
-        protected bool m_InWraithForm = false;
+		#region Bainshee
+		protected bool m_InWraithForm = false;
 
-        public bool InWraithForm
-        {
-            get { return m_InWraithForm; }
-            set
-            {
-                m_InWraithForm = value;
-                if (m_InWraithForm)
-                {
-                    switch (Race)
-                    {
-                        case 9: Model = 1883; break; //Celt   
-                        case 11: Model = 1885; break; //Elf
-                        case 12: Model = 1884; break; //Lurikeen
+		public bool InWraithForm
+		{
+			get { return m_InWraithForm; }
+			set
+			{
+				m_InWraithForm = value;
+				if (m_InWraithForm)
+				{
+					switch (Race)
+					{
+						case 9: Model = 1883; break; //Celt   
+						case 11: Model = 1885; break; //Elf
+						case 12: Model = 1884; break; //Lurikeen
 
-                    }
-                    WraithFormTime();
-                }
-                else
-                {
-                    Model = (ushort)m_client.Account.Characters[m_client.ActiveCharIndex].CreationModel;
-                }
-            }
-        }
+					}
+					WraithFormTime();
+				}
+				else
+				{
+					Model = (ushort)m_client.Account.Characters[m_client.ActiveCharIndex].CreationModel;
+				}
+			}
+		}
 
-        protected RegionTimer WraithTimer;
+		protected RegionTimer WraithTimer;
 
-        protected virtual int WraithForm(RegionTimer timer)
-        {
-            InWraithForm = false;
+		protected virtual int WraithForm(RegionTimer timer)
+		{
+			InWraithForm = false;
 
-            timer.Stop();
-            timer = null;
-            return 0;
-        }
+			timer.Stop();
+			timer = null;
+			return 0;
+		}
 
 
-        protected void WraithFormTime()
-        {
-            if (WraithTimer != null)
-            {
-                WraithTimer.Stop();
-            }
-            WraithTimer = null;
-            WraithTimer = new RegionTimer(this, new RegionTimerCallback(WraithForm), 30000);
-        }
-        #endregion
-        
-       	#region Champion Levels
-         /// <summary> 
-        /// The maximum champion level a player can reach 
-        /// </summary> 
-        public const int CL_MAX_LEVEL = 10;
-        /// <summary> 
-        /// A table that holds the required XP/Level 
-        /// </summary> 
-        public static readonly long[] CLXPLevel = 
+		protected void WraithFormTime()
+		{
+			if (WraithTimer != null)
+			{
+				WraithTimer.Stop();
+			}
+			WraithTimer = null;
+			WraithTimer = new RegionTimer(this, new RegionTimerCallback(WraithForm), 30000);
+		}
+		#endregion
+
+		#region Champion Levels
+		/// <summary> 
+		/// The maximum champion level a player can reach 
+		/// </summary> 
+		public const int CL_MAX_LEVEL = 10;
+		/// <summary> 
+		/// A table that holds the required XP/Level 
+		/// </summary> 
+		public static readonly long[] CLXPLevel = 
         { 
             0, //xp tp level 0 
             32000, //xp to level 1 
@@ -12430,279 +12430,279 @@ namespace DOL.GS
          	256000, // xp to level 8 
          	288000, // xp to level 9 
          	320000, // xp to level 10 
-        };        	
+        };
 		/// <summary>
 		/// Is Champion level activated
 		/// </summary>	        
 		public virtual bool Champion
 		{
-        	get { return PlayerCharacter != null ? PlayerCharacter.Champion : false; }
-            set { if ( PlayerCharacter != null ) PlayerCharacter.Champion = value; }	
+			get { return PlayerCharacter != null ? PlayerCharacter.Champion : false; }
+			set { if (PlayerCharacter != null) PlayerCharacter.Champion = value; }
 		}
- 		/// <summary>
+		/// <summary>
 		/// Champion level
 		/// </summary>			
- 		public virtual int ChampionLevel
+		public virtual int ChampionLevel
 		{
-        	get { return PlayerCharacter != null ? PlayerCharacter.ChampionLevel : 0; }
-            set { if ( PlayerCharacter != null ) PlayerCharacter.ChampionLevel = value; }	
-		} 
- 		/// <summary>
+			get { return PlayerCharacter != null ? PlayerCharacter.ChampionLevel : 0; }
+			set { if (PlayerCharacter != null) PlayerCharacter.ChampionLevel = value; }
+		}
+		/// <summary>
 		/// Champion Experience
 		/// </summary>		
 		public virtual long ChampionExperience
 		{
-        	get { return PlayerCharacter != null ? PlayerCharacter.ChampionExperience : 0; }
-            set { if ( PlayerCharacter != null ) PlayerCharacter.ChampionExperience = value; }	
+			get { return PlayerCharacter != null ? PlayerCharacter.ChampionExperience : 0; }
+			set { if (PlayerCharacter != null) PlayerCharacter.ChampionExperience = value; }
 		}
 		/// <summary>
 		/// Champion Available speciality points
 		/// </summary>		
-        public virtual int ChampionSpecialtyPoints
-        {
-            get { return PlayerCharacter != null ? PlayerCharacter.ChampionSpecialtyPoints : 0; }
-            set { if (PlayerCharacter != null) PlayerCharacter.ChampionSpecialtyPoints = value; }
-        }  
+		public virtual int ChampionSpecialtyPoints
+		{
+			get { return PlayerCharacter != null ? PlayerCharacter.ChampionSpecialtyPoints : 0; }
+			set { if (PlayerCharacter != null) PlayerCharacter.ChampionSpecialtyPoints = value; }
+		}
 		/// <summary>
 		/// Serialised Champion spells
 		/// </summary>		
-        public virtual string ChampionSpells
-        {
-            get { return PlayerCharacter != null ? PlayerCharacter.ChampionSpells : null; }
-            set { if (PlayerCharacter != null) PlayerCharacter.ChampionSpells = value; }
-        }           
-        /// <summary> 
-        /// Returns how far into the champion level we have progressed 
-        /// A value between 0 and 1000 (1 bubble = 100) 
-        /// </summary> 
-        public virtual ushort ChampionLevelPermill 
-        { 
-            get 
-            { 
-                //No progress if we haven't even reached current level! 
-                if (ChampionExperience <= ChampionExperienceForCurrentLevel) 
-                    return 0; 
-                //No progess after maximum level 
-                if (ChampionLevel > CL_MAX_LEVEL) // needed to get exp after 50 
-                    return 0; 
-                return (ushort)(1000 * (ChampionExperience - ChampionExperienceForCurrentLevel) / (ChampionExperienceForNextLevel - ChampionExperienceForCurrentLevel)); 
-            } 
-        } 
-        /// <summary> 
-        /// Returns the xp that are needed for the next level 
-        /// </summary> 
-        public virtual long ChampionExperienceForNextLevel 
-        { 
-            get { return GetChampionExperienceForLevel(ChampionLevel + 1); } 
-        } 
-        /// <summary> 
-        /// Returns the xp that were needed for the current level 
-        /// </summary> 
-        public virtual long ChampionExperienceForCurrentLevel 
-        { 
-            get { return GetChampionExperienceForLevel(ChampionLevel); } 
-        }        
- 		/// <summary>
+		public virtual string ChampionSpells
+		{
+			get { return PlayerCharacter != null ? PlayerCharacter.ChampionSpells : null; }
+			set { if (PlayerCharacter != null) PlayerCharacter.ChampionSpells = value; }
+		}
+		/// <summary> 
+		/// Returns how far into the champion level we have progressed 
+		/// A value between 0 and 1000 (1 bubble = 100) 
+		/// </summary> 
+		public virtual ushort ChampionLevelPermill
+		{
+			get
+			{
+				//No progress if we haven't even reached current level! 
+				if (ChampionExperience <= ChampionExperienceForCurrentLevel)
+					return 0;
+				//No progess after maximum level 
+				if (ChampionLevel > CL_MAX_LEVEL) // needed to get exp after 50 
+					return 0;
+				return (ushort)(1000 * (ChampionExperience - ChampionExperienceForCurrentLevel) / (ChampionExperienceForNextLevel - ChampionExperienceForCurrentLevel));
+			}
+		}
+		/// <summary> 
+		/// Returns the xp that are needed for the next level 
+		/// </summary> 
+		public virtual long ChampionExperienceForNextLevel
+		{
+			get { return GetChampionExperienceForLevel(ChampionLevel + 1); }
+		}
+		/// <summary> 
+		/// Returns the xp that were needed for the current level 
+		/// </summary> 
+		public virtual long ChampionExperienceForCurrentLevel
+		{
+			get { return GetChampionExperienceForLevel(ChampionLevel); }
+		}
+		/// <summary>
 		/// Gets/Sets amount of champion skills respecs
 		/// (delegate to PlayerCharacter)
 		/// </summary>
 		public virtual int RespecAmountChampionSkill
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.RespecAmountChampionSkill : 0; }
-			set { if ( PlayerCharacter != null ) PlayerCharacter.RespecAmountChampionSkill = value; }
+			set { if (PlayerCharacter != null) PlayerCharacter.RespecAmountChampionSkill = value; }
 		}
-        /// <summary>
-        /// Returns the xp that are needed for the specified level 
-        /// </summary>         
-		public virtual long GetChampionExperienceForLevel(int level) 
-        { 
-            if (level > CL_MAX_LEVEL) 
-                return CLXPLevel[GamePlayer.CL_MAX_LEVEL]; // exp for level 51, needed to get exp after 50 
-            if (level <= 0) 
-                return CLXPLevel[0]; 
-            return CLXPLevel[level - 1]; 
-        }         
-        /// <summary> 
-        /// The process that gains exp 
-        /// </summary> 
-        /// <param name="experience">Amount of Experience</param> 
-        public virtual void GainChampionExperience(long experience) 
-        { 
-        	// Do not gain experience if champion not activated or if champion max level reached
- 			if (!Champion || ChampionLevel == CL_MAX_LEVEL)
+		/// <summary>
+		/// Returns the xp that are needed for the specified level 
+		/// </summary>         
+		public virtual long GetChampionExperienceForLevel(int level)
+		{
+			if (level > CL_MAX_LEVEL)
+				return CLXPLevel[GamePlayer.CL_MAX_LEVEL]; // exp for level 51, needed to get exp after 50 
+			if (level <= 0)
+				return CLXPLevel[0];
+			return CLXPLevel[level - 1];
+		}
+		/// <summary> 
+		/// The process that gains exp 
+		/// </summary> 
+		/// <param name="experience">Amount of Experience</param> 
+		public virtual void GainChampionExperience(long experience)
+		{
+			// Do not gain experience if champion not activated or if champion max level reached
+			if (!Champion || ChampionLevel == CL_MAX_LEVEL)
 				return;
- 			
-            if (experience > 0) 
-            { 
-                double modifier = ServerProperties.Properties.XP_RATE; 
-                experience = (long)((double)experience * modifier / 200000); 
-            } 
-            System.Globalization.NumberFormatInfo format = System.Globalization.NumberFormatInfo.InvariantInfo; 
-            string totalexp = experience.ToString("N0", format); 
 
-            // Wtf this screws up level 0 
-            if (ChampionExperience + experience < ChampionExperienceForCurrentLevel)  
-           		experience = ChampionExperienceForCurrentLevel - ChampionExperience; 
+			if (experience > 0)
+			{
+				double modifier = ServerProperties.Properties.XP_RATE;
+				experience = (long)((double)experience * modifier / 200000);
+			}
+			System.Globalization.NumberFormatInfo format = System.Globalization.NumberFormatInfo.InvariantInfo;
+			string totalexp = experience.ToString("N0", format);
 
-         	if (experience > 0) 
-         	{ 
-                System.Globalization.NumberFormatInfo format2 = System.Globalization.NumberFormatInfo.InvariantInfo; 
-                string totalXP = experience.ToString("N0", format2); 
+			// Wtf this screws up level 0 
+			if (ChampionExperience + experience < ChampionExperienceForCurrentLevel)
+				experience = ChampionExperienceForCurrentLevel - ChampionExperience;
 
-            	Out.SendMessage("You get " + totalXP + " champion experience points.", eChatType.CT_Important, eChatLoc.CL_SystemWindow); 
-         	} 
+			if (experience > 0)
+			{
+				System.Globalization.NumberFormatInfo format2 = System.Globalization.NumberFormatInfo.InvariantInfo;
+				string totalXP = experience.ToString("N0", format2);
 
-         	ChampionExperience += experience; // force usage of this method, Experience property cannot be set 
- 
-         	if (experience >= 0) 
-         	{ 
-           	 	//Level up 
-                if (ChampionLevel < CL_MAX_LEVEL && ChampionExperience >= ChampionExperienceForNextLevel) 
-                    ChampionLevelUp();  
-         	} 
-        } 
-        /// <summary> 
-        /// Holds what happens when your champion level goes up; 
-        /// </summary> 
-        public virtual void ChampionLevelUp() 
-        { 
-            ChampionLevel++; 
-            ChampionSpecialtyPoints++;            
-            /*
-            //Code for w/e happens when your CL goes up... 
-            if (ChampionLevel == 3) 
-            { 
-                switch (Realm) 
-                { 
-                    case 1: 
-                        AddAbility(SkillBase.GetAbility(Abilities.Weapon_Slashing)); 
-                        AddAbility(SkillBase.GetAbility(Abilities.Weapon_Thrusting)); 
-                        AddAbility(SkillBase.GetAbility(Abilities.Weapon_Crushing)); 
-                        break; 
-                    case 2: 
-                        AddAbility(SkillBase.GetAbility(Abilities.Weapon_Axes)); 
-                        AddAbility(SkillBase.GetAbility(Abilities.Weapon_Hammers)); 
-                        AddAbility(SkillBase.GetAbility(Abilities.Weapon_Swords)); 
-                        break; 
-                    case 3: 
-                        AddAbility(SkillBase.GetAbility(Abilities.Weapon_Blades)); 
-                        AddAbility(SkillBase.GetAbility(Abilities.Weapon_Blunt)); 
-                        AddAbility(SkillBase.GetAbility(Abilities.Weapon_Piercing)); 
-                        break; 
-                } 
-                AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small)); 
-            } 
-            */
- 			Out.SendMessage("You have gained one champion level!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);         
-            Out.SendUpdatePlayer(); 
-            Out.SendUpdatePoints(); 
-            UpdatePlayerStatus(); 
-        }        
-        /// <summary> 
-        /// Load champion spells of this player 
-        /// </summary>  
-        protected virtual void LoadChampionSpells()
-        {
-        	string championSpells = ChampionSpells;
-        	Hashtable championSpellsh = new Hashtable();
-            SpellLine line = new SpellLine("Champion Abilities"+Name, "Champion Abilities", "Champion Abilities", true);
-            line.Level = 50;
-            SkillBase.RegisterSpellLine(line);
-            if (championSpells != null && championSpells.Length > 0)
-            {                
-                foreach (string cSpell in championSpells.Split(';'))
-                {
-                    string[] cSpellProp = cSpell.Split('|');
-                    if (cSpellProp.Length < 2) continue;
-                    championSpellsh.Add(cSpellProp[0], int.Parse(cSpellProp[0]));
-                }
-            }
-            if (championSpellsh != null)
-            {
-                foreach (DictionaryEntry de in championSpellsh)
-                {
-                    SkillBase.AddSpellToList("Champion Abilities" + Name, (int)de.Value);
-                }
-                AddSpellLine(line);
-            }
-            championSpellsh = null;
-        }
-        /// <summary> 
-        /// Checks if player has this champion spell 
-        /// </summary>         
-        public virtual bool HaveChampionSpell(int spellid)
-        {
-            string championSpells = ChampionSpells;
-            if (championSpells != null && championSpells.Length > 0)
-            {
-                foreach (string cSpell in championSpells.Split(';'))
-                {
-                    string[] cSpellProp = cSpell.Split('|');
-                    if (cSpellProp.Length < 2) continue;
-                    if(int.Parse(cSpellProp[0]) == spellid) return true;
-                }
-            }
-            return false;
-        }       
-        /// <summary> 
-        /// Returns if spell is available (for trainer window)
-        /// </summary> 
-        public virtual bool IsCSAvailable(int idline, int skillindex, int index)
-        {
- 			// TODO : this has to be reviewed. Original code has some problem with cross lines etc.
-            ChampSpec spec = ChampSpecMgr.GetAbilityFromIndex(idline, skillindex, index - 1);
-            if (spec != null) return HaveChampionSpell(spec.SpellID);
-            else return true;
-        }
-        #endregion
-		
+				Out.SendMessage("You get " + totalXP + " champion experience points.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			}
+
+			ChampionExperience += experience; // force usage of this method, Experience property cannot be set 
+
+			if (experience >= 0)
+			{
+				//Level up 
+				if (ChampionLevel < CL_MAX_LEVEL && ChampionExperience >= ChampionExperienceForNextLevel)
+					ChampionLevelUp();
+			}
+		}
+		/// <summary> 
+		/// Holds what happens when your champion level goes up; 
+		/// </summary> 
+		public virtual void ChampionLevelUp()
+		{
+			ChampionLevel++;
+			ChampionSpecialtyPoints++;
+			/*
+			//Code for w/e happens when your CL goes up... 
+			if (ChampionLevel == 3) 
+			{ 
+			    switch (Realm) 
+			    { 
+				   case 1: 
+					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Slashing)); 
+					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Thrusting)); 
+					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Crushing)); 
+					  break; 
+				   case 2: 
+					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Axes)); 
+					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Hammers)); 
+					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Swords)); 
+					  break; 
+				   case 3: 
+					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Blades)); 
+					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Blunt)); 
+					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Piercing)); 
+					  break; 
+			    } 
+			    AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small)); 
+			} 
+			*/
+			Out.SendMessage("You have gained one champion level!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			Out.SendUpdatePlayer();
+			Out.SendUpdatePoints();
+			UpdatePlayerStatus();
+		}
+		/// <summary> 
+		/// Load champion spells of this player 
+		/// </summary>  
+		protected virtual void LoadChampionSpells()
+		{
+			string championSpells = ChampionSpells;
+			Hashtable championSpellsh = new Hashtable();
+			SpellLine line = new SpellLine("Champion Abilities" + Name, "Champion Abilities", "Champion Abilities", true);
+			line.Level = 50;
+			SkillBase.RegisterSpellLine(line);
+			if (championSpells != null && championSpells.Length > 0)
+			{
+				foreach (string cSpell in championSpells.Split(';'))
+				{
+					string[] cSpellProp = cSpell.Split('|');
+					if (cSpellProp.Length < 2) continue;
+					championSpellsh.Add(cSpellProp[0], int.Parse(cSpellProp[0]));
+				}
+			}
+			if (championSpellsh != null)
+			{
+				foreach (DictionaryEntry de in championSpellsh)
+				{
+					SkillBase.AddSpellToList("Champion Abilities" + Name, (int)de.Value);
+				}
+				AddSpellLine(line);
+			}
+			championSpellsh = null;
+		}
+		/// <summary> 
+		/// Checks if player has this champion spell 
+		/// </summary>         
+		public virtual bool HaveChampionSpell(int spellid)
+		{
+			string championSpells = ChampionSpells;
+			if (championSpells != null && championSpells.Length > 0)
+			{
+				foreach (string cSpell in championSpells.Split(';'))
+				{
+					string[] cSpellProp = cSpell.Split('|');
+					if (cSpellProp.Length < 2) continue;
+					if (int.Parse(cSpellProp[0]) == spellid) return true;
+				}
+			}
+			return false;
+		}
+		/// <summary> 
+		/// Returns if spell is available (for trainer window)
+		/// </summary> 
+		public virtual bool IsCSAvailable(int idline, int skillindex, int index)
+		{
+			// TODO : this has to be reviewed. Original code has some problem with cross lines etc.
+			ChampSpec spec = ChampSpecMgr.GetAbilityFromIndex(idline, skillindex, index - 1);
+			if (spec != null) return HaveChampionSpell(spec.SpellID);
+			else return true;
+		}
+		#endregion
+
 		#region Master levels
-       /// <summary> 
-        /// The maximum ML level a player can reach 
-        /// </summary>
-        public const int ML_MAX_LEVEL = 10;         
-        /// <summary> 
-        /// Holds the ml line 
-        /// </summary> 
-        public virtual byte ML 
-        { 
-        	get { return PlayerCharacter != null ? PlayerCharacter.ML : (byte)0; }
-            set { if ( PlayerCharacter != null ) PlayerCharacter.ML = value; }
-        } 
-        /// <summary> 
-        /// Gets and sets the ML Level of this character 
-        /// </summary> 
-        public virtual int MLLevel 
-        { 
-        	get { return PlayerCharacter != null ? PlayerCharacter.MLLevel : 0; }
-            set { if ( PlayerCharacter != null ) PlayerCharacter.MLLevel = value; }
-        } 
-        /// <summary> 
-        /// Gets and sets ML Step 
-        /// </summary> 
-        public virtual int MLStep 
-        { 
-            get { return PlayerCharacter != null ? PlayerCharacter.MLStep : 1; } 
-            set { if ( PlayerCharacter != null ) PlayerCharacter.MLStep = value; }
-        }       
-        /// <summary> 
-        /// Gets and sets ML Experience 
-        /// </summary> 
-        public virtual long MLExperience 
-        { 
-            get { return PlayerCharacter != null ? PlayerCharacter.MLExperience : 0; } 
-            set { if ( PlayerCharacter != null ) PlayerCharacter.MLExperience = value; }
-        }                
-        /// <summary> 
-        /// Gets and sets ML Step granted flag 
-        /// </summary> 
-        public virtual bool MLGranted
-        { 
-            get { return PlayerCharacter != null ? PlayerCharacter.MLGranted : false; } 
-            set { if ( PlayerCharacter != null ) PlayerCharacter.MLGranted = value; }
-        }         
-       	#endregion
-       	
+		/// <summary> 
+		/// The maximum ML level a player can reach 
+		/// </summary>
+		public const int ML_MAX_LEVEL = 10;
+		/// <summary> 
+		/// Holds the ml line 
+		/// </summary> 
+		public virtual byte ML
+		{
+			get { return PlayerCharacter != null ? PlayerCharacter.ML : (byte)0; }
+			set { if (PlayerCharacter != null) PlayerCharacter.ML = value; }
+		}
+		/// <summary> 
+		/// Gets and sets the ML Level of this character 
+		/// </summary> 
+		public virtual int MLLevel
+		{
+			get { return PlayerCharacter != null ? PlayerCharacter.MLLevel : 0; }
+			set { if (PlayerCharacter != null) PlayerCharacter.MLLevel = value; }
+		}
+		/// <summary> 
+		/// Gets and sets ML Step 
+		/// </summary> 
+		public virtual int MLStep
+		{
+			get { return PlayerCharacter != null ? PlayerCharacter.MLStep : 1; }
+			set { if (PlayerCharacter != null) PlayerCharacter.MLStep = value; }
+		}
+		/// <summary> 
+		/// Gets and sets ML Experience 
+		/// </summary> 
+		public virtual long MLExperience
+		{
+			get { return PlayerCharacter != null ? PlayerCharacter.MLExperience : 0; }
+			set { if (PlayerCharacter != null) PlayerCharacter.MLExperience = value; }
+		}
+		/// <summary> 
+		/// Gets and sets ML Step granted flag 
+		/// </summary> 
+		public virtual bool MLGranted
+		{
+			get { return PlayerCharacter != null ? PlayerCharacter.MLGranted : false; }
+			set { if (PlayerCharacter != null) PlayerCharacter.MLGranted = value; }
+		}
+		#endregion
+
 
 		/// <summary>
 		/// Returns the string representation of the GamePlayer
