@@ -285,8 +285,14 @@ namespace DOL.GS.Spells
 				}
 				else
 				{
-					// instant cast
-					SendCastAnimation(0);
+                   // instant cast
+                    bool sendcast = true;
+		        	if (m_caster.ControlledNpc!=null)
+		        		if(m_caster.ControlledNpc.Body!=null)
+		        			if(m_caster.ControlledNpc.Body is NecromancerPet)
+		        				sendcast = false;
+                    
+                    if(sendcast) SendCastAnimation(0);
 					FinishSpellCast(target);
 				}
 			}
@@ -395,6 +401,19 @@ namespace DOL.GS.Spells
 				MessageToCaster("You can't cast while sitting!", eChatType.CT_SpellResisted);
 				return false;
 			}
+			
+ 			// Class checking for necromancer without pet
+			if(m_caster is GamePlayer)
+			{		
+				GamePlayer player = Caster as GamePlayer;
+				if (player.CharacterClass.ID==(int)eCharacterClass.Necromancer
+				    && player.ControlledNpc == null
+				    && Spell.SpellType.ToLower()!="necromancerpet")
+				{
+					MessageToCaster("You have to summon your pet first!", eChatType.CT_SpellResisted);
+					return false;
+				}
+			}       
 
 			if (m_caster.AttackState && m_spell.CastTime != 0)
 			{
@@ -981,19 +1000,20 @@ namespace DOL.GS.Spells
 						return ticks;
 				}
 
-				// Necromancer RA5L effect
-				if (player.CharacterClass.ID == (int)eCharacterClass.Necromancer)
-				{
-					// Edit here the spelltype depending on how you implemented the pet			
-					if (Spell.SpellType == "PET" && m_caster.EffectList.GetOfType(typeof(CallOfDarknessEffect)) != null)
-					{
-						return 3000; //always 3 sec
-					}
-				}
+                // Necromancer RA5L effect
+                if (player.CharacterClass.ID == (int)eCharacterClass.Necromancer)
+                {
+                    // Edit here the spelltype depending on how you implemented the pet			
+                    if (Spell.SpellType.ToLower() == "necromancerpet" 
+                        && m_caster.EffectList.GetOfType(typeof(CallOfDarknessEffect)) != null)
+                    {
+                        return 3000; //always 3 sec
+                    }
+                }
 			}
 			double percent = 1.0;
-			int dex = m_caster.GetModified(eProperty.Dexterity);
-
+			int dex = m_caster.GetModified(eProperty.Dexterity);		
+			
 			if (m_caster.EffectList.GetOfType(typeof(QuickCastEffect)) != null)
 			{
 				return 2000; //always 2 sec
@@ -1185,6 +1205,12 @@ namespace DOL.GS.Spells
 					((GamePlayer)m_caster).TempProperties.setProperty(GamePlayer.QUICK_CAST_CHANGE_TICK, m_caster.CurrentRegion.Time);
 					((GamePlayer)m_caster).DisableSkill(SkillBase.GetAbility(Abilities.Quickcast), QuickCastAbilityHandler.DISABLE_DURATION);
 					quickcast.Cancel(false);
+				}
+				//Terminate Necromancer RA5L
+				CallOfDarknessEffect callofdarkness = (CallOfDarknessEffect)m_caster.EffectList.GetOfType(typeof(CallOfDarknessEffect));
+				if (callofdarkness != null && Spell.SpellType.ToLower() == "necromancerpet")
+				{
+					callofdarkness.Cancel(false);
 				}
 			}
 
@@ -1500,6 +1526,12 @@ namespace DOL.GS.Spells
 		/// <param name="target">The current target object</param>
 		public virtual void StartSpell(GameLiving target)
 		{
+         	m_caster.Notify(GameLivingEvent.StartSpell, m_caster, new CastSpellEventArgs(this));
+        	if (m_caster.ControlledNpc!=null)
+        		if(m_caster.ControlledNpc.Body!=null)
+        			if(m_caster.ControlledNpc.Body is NecromancerPet)
+        				return;
+
 			GamePlayer player = Caster as GamePlayer;
 			if (target == null || (Spell.Radius > 0 && Spell.Range == 0))
 				target = Caster;

@@ -17,6 +17,7 @@
  *
  */
 using System;
+using DOL.AI.Brain;
 
 namespace DOL.GS.PropertyCalc
 {
@@ -50,12 +51,12 @@ namespace DOL.GS.PropertyCalc
 				debuff = -debuff;
 			}
 			int res = 0;
-
+			int cap = 0;
 			if (living is GamePlayer)
 			{
 				GamePlayer player = (GamePlayer)living;
 				res += SkillBase.GetRaceResist((eRace)player.Race, (eResist)property);
-				int cap = living.Level / 2 + 1;
+				cap = living.Level / 2 + 1;
 
 				if (itemBonus > cap)
 				{
@@ -65,6 +66,26 @@ namespace DOL.GS.PropertyCalc
 				if (buffBonus > cap)
 				{
 					buffBonus = cap;
+				}
+			}
+			if (living is NecromancerPet)
+			{
+				IControlledBrain brain = ((NecromancerPet)living).Brain as IControlledBrain;
+				if (brain != null)
+				{
+					if (brain.GetPlayerOwner()!=null)
+					{
+						res += SkillBase.GetRaceResist((eRace)brain.GetPlayerOwner().Race, (eResist)property);
+					}
+					cap = brain.GetPlayerOwner().Level / 2 + 1;	
+					if (itemBonus > cap)
+					{
+						itemBonus = cap;
+					}	
+					if (buffBonus > cap)
+					{
+						buffBonus = cap;
+					}					
 				}
 			}
 

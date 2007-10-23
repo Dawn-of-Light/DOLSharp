@@ -17,6 +17,7 @@
  *
  */
 using System;
+using DOL.AI.Brain;
 
 namespace DOL.GS.PropertyCalc
 {
@@ -34,6 +35,7 @@ namespace DOL.GS.PropertyCalc
 	{
 		public override int CalcValue(GameLiving living, eProperty property)
 		{
+			
 			GamePlayer player = living as GamePlayer;
 			if (player != null)
 			{
@@ -44,12 +46,27 @@ namespace DOL.GS.PropertyCalc
 				+ player.AbilityBonus[(int)property] * 10;
 				int parrySpec = 0;
 				if (player.HasSpecialization(Specs.Parry))
-				{
+				{					
 					parrySpec = (player.Dexterity * 2 - 100) / 4 + (player.GetModifiedSpecLevel(Specs.Parry) - 1) * (10 / 2) + 50;
 				}
 				return parrySpec + buff;
 			}
-
+			NecromancerPet pet = living as NecromancerPet;
+			if (pet != null)
+			{
+				IControlledBrain brain = pet.Brain as IControlledBrain;
+				if (brain != null)
+				{
+					int buff = pet.BuffBonusCategory1[(int)property] * 10
+					+ pet.BuffBonusCategory2[(int)property] * 10
+					- pet.BuffBonusCategory3[(int)property] * 10
+					+ pet.BuffBonusCategory4[(int)property] * 10
+					+ pet.AbilityBonus[(int)property] * 10
+					+ (pet.GetModified(eProperty.Dexterity) * 2 - 100) / 4
+					+ pet.ParryChance * 10;
+					return buff;
+				}
+			}			
 			GameNPC npc = living as GameNPC;
 			if (npc != null)
 			{
