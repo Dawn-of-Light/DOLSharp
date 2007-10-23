@@ -40,13 +40,13 @@ namespace DOL.GS.PropertyCalc
 			{
 //				GamePlayer player = (GamePlayer)living;
 				return living.Level + living.ItemBonus[(int)property] + living.BuffBonusCategory1[(int)property];
-			} 
+			} 		
 			else if (living is GameNPC) 
 			{
 				IControlledBrain brain = ((GameNPC)living).Brain as IControlledBrain;
 				if (brain != null)
-					return brain.Owner.Level;
-				return living.Level;
+					return brain.Owner.Level + living.ItemBonus[(int)property] + living.BuffBonusCategory1[(int)property];
+				return living.Level + living.ItemBonus[(int)property] + living.BuffBonusCategory1[(int)property];
 			}
 			return 0;
 		}

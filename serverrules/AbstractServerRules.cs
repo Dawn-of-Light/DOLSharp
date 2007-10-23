@@ -250,6 +250,15 @@ namespace DOL.GS.ServerRules
 			//I don't want mobs attacking guards
 			if (defender is GameKeepGuard && attacker is GameNPC && attacker.Realm == 0)
 				return false;
+			
+			//Checking for shadowed necromancer, can't be attacked.
+			if(defender.ControlledNpc != null)
+				if(defender.ControlledNpc.Body != null)
+					if(defender.ControlledNpc.Body is NecromancerPet)
+					{
+						if (quiet == false) MessageToLiving(attacker, "You can't attack a shadowed necromancer!");
+						return false;		
+					}			
 
 			return true;
 		}
