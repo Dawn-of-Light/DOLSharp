@@ -103,6 +103,13 @@
     <Compile Include="ai\APlayerVicinityBrain.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ai\brain\BD Pets\BDArcherBrain.cs" />
+    <Compile Include="ai\brain\BD Pets\BDBufferBrain.cs" />
+    <Compile Include="ai\brain\BD Pets\BDCasterBrain.cs" />
+    <Compile Include="ai\brain\BD Pets\BDDebufferBrain.cs" />
+    <Compile Include="ai\brain\BD Pets\BDHealerBrain.cs" />
+    <Compile Include="ai\brain\BD Pets\BDMeleeBrain.cs" />
+    <Compile Include="ai\brain\BD Pets\BDPetBrain.cs" />
     <Compile Include="ai\brain\BlankBrain.cs" />
     <Compile Include="ai\brain\ControlledNpc.cs">
       <SubType>Code</SubType>
@@ -2045,6 +2052,7 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>xcopy "$(ProjectDir)\language\*.txt" "$(SolutionDir)\$(ConfigurationName)\languages" /y /s /q /i</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(ProjectDir)\language\*.txt" "$(SolutionDir)\$(ConfigurationName)\languages" /y /s /q /i
+xcopy "$(ProjectDir)\language\*.txt" "$(SolutionDir)\DOLServer\bin\$(ConfigurationName)\languages" /y /s /q /i</PostBuildEvent>
   </PropertyGroup>
 </Project>
