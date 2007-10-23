@@ -119,6 +119,10 @@ namespace DOL.Events
 		/// </summary>
 		public static readonly GameLivingEvent CastSpell = new GameLivingEvent("GameLiving.CastSpell");
 		/// <summary>
+		/// The StartSpell event is fired whenever the living start a spell
+		/// </summary>
+		public static readonly GameLivingEvent StartSpell = new GameLivingEvent("GameLiving.StartSpell");
+		/// <summary>
 		/// The CastFinished event is fired whenever the living finishes casting a spell
 		/// </summary>
 		public static readonly GameLivingEvent CastFinished = new GameLivingEvent("GameLiving.CastFinished");
