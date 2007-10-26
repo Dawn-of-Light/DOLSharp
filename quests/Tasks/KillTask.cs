@@ -151,19 +151,23 @@ namespace DOL.GS.Quests
 		/// <param name="args">The event arguments</param>
 		public override void Notify(DOLEvent e, object sender, EventArgs args)
 		{
+			// Filter only the events from task owner
+			if (sender != m_taskPlayer)
+				return;
+			
 			if (CheckTaskExpired()) 
 			{
 				return;
 			}
-
-			GamePlayer player = (GamePlayer) sender;			
-
+			
+			GamePlayer player = m_taskPlayer;
+			
 			if (e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs)args;				
 				GameLiving target = gArgs.Target as GameLiving;
 				InventoryItem item = gArgs.Item;
-
+				
 				if(player.Task.RecieverName == target.Name && item.Name == player.Task.ItemName)
 				{
 					player.Inventory.RemoveItem(item);
@@ -175,9 +179,8 @@ namespace DOL.GS.Quests
 			else if (e == GameLivingEvent.EnemyKilled) 
 			{
 				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;
-
 				GameLiving target = gArgs.Target;
-
+				
 				// check wether the right mob was killed
 				if (target.Name!=MobName)
 					return;
@@ -212,10 +215,12 @@ namespace DOL.GS.Quests
 					}
 				}
 
-				// Uncomment line below to test taks as GM, other wise GM will not get items for kill
-				//lowestCon = 0;
+				// The following lines allow the GM to drop the task item
+				if (player.Client.Account.PrivLevel != 1)
+					lowestCon = 0;
 
-				if(lowestCon>=-2)	//Only add task Loot if not killing grays
+				//Only add task Loot if not killing grays
+				if(lowestCon >= -2)
 				{
 					ArrayList Owners = new ArrayList();
 					if(player.PlayerGroup == null)
@@ -235,7 +240,7 @@ namespace DOL.GS.Quests
 						}
 					}
 
-					if(Owners.Count > 0)
+					if (Owners.Count > 0)
 					{
 						ArrayList dropMessages = new ArrayList();
 						InventoryItem itemdrop = GenerateItem(ItemName, 1, ObjectModels[ItemIndex]);
@@ -245,7 +250,6 @@ namespace DOL.GS.Quests
 							droppeditem.AddOwner((GameObject)Owners[a]);
 						}
 						droppeditem.Name = itemdrop.Name;
-						dropMessages.Add(target.GetName(0, true) +" drops "+ droppeditem.GetName(1, false) +".");
 						droppeditem.Level = 1;
 						droppeditem.X = target.X;
 						droppeditem.Y = target.Y;
@@ -285,7 +289,7 @@ namespace DOL.GS.Quests
 				return false;
 			}
 			else
-			{							
+			{
 				player.Task = new KillTask(player);
 				player.Task.TimeOut = DateTime.Now.AddHours(2);
 				((KillTask)player.Task).ItemIndex = Util.Random(0, TaskObjects.Length-1);
