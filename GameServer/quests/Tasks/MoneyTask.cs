@@ -124,7 +124,11 @@ namespace DOL.GS.Quests
 		/// <param name="args">The event arguments</param>
 		public override void Notify(DOLEvent e, object sender, EventArgs args)
 		{
-			if (CheckTaskExpired()) 
+            // Filter only the events from task owner
+            if (sender != m_taskPlayer)
+                return;
+
+            if (CheckTaskExpired()) 
 			{
 				return;
 			}
