@@ -196,7 +196,10 @@ namespace DOL.AI.Brain
 		public virtual void Attack(GameObject target)
 		{
 			if (AggressionState == eAggressionState.Passive)
+			{
 				AggressionState = eAggressionState.Defensive;
+				UpdatePetWindow();
+			}
 			m_orderAttackTarget = target as GameLiving;
 
 			AttackMostWanted();
