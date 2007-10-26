@@ -1180,46 +1180,8 @@ namespace DOL.GS
         /// <returns></returns>
 		public GameNPC GetRandomNPCByCon(eRealm realm, int compareLevel, int conLevel)
 		{
-			if (!m_initialized) InitializeZone();
-			// select random starting subzone and iterate over all objects in subzone than in all subzone...
-			int currentSubZoneIndex = Util.Random(SUBZONE_NBR);
-			int startSubZoneIndex = currentSubZoneIndex;
-			GameNPC randomNPC = null;
-			GameNPC currentNPC = null;
-			do
-			{
-				SubNodeElement startElement = m_subZoneElements[currentSubZoneIndex][(int)eGameObjectType.NPC];
-				lock (startElement)
-				{
-					// if list is not empty
-					if (startElement != startElement.next)
-					{
-						SubNodeElement curElement = startElement.next;
-						do
-						{
-							currentNPC = (GameNPC)curElement.data;
-							if (currentNPC != null && currentNPC.ObjectState == GameObject.eObjectState.Active)
-							{
-								if ((int)GameObject.GetConLevel(compareLevel, currentNPC.Level) == conLevel && currentNPC.Realm == (byte)realm)
-								{
-									randomNPC = currentNPC;
-									break;
-								}
-							}
-							curElement = curElement.next;
-						} while ((randomNPC != null) && (curElement != startElement));
-					}
-				}
-
-				if (randomNPC == null)
-				{
-					if (++currentSubZoneIndex >= SUBZONE_NBR)
-					{
-						currentSubZoneIndex = 0;
-					}
-				}
-			} while ((randomNPC != null) && (currentSubZoneIndex != startSubZoneIndex));
-
+			List<GameNPC> npcs = GetNPCsOfZone(new eRealm[] { realm }, 0, 0, compareLevel, conLevel, true);
+			GameNPC randomNPC = (npcs.Count == 0 ? null : npcs[0]);
 			return randomNPC;
 		}
 
@@ -1267,55 +1229,8 @@ namespace DOL.GS
 		/// <returns>The NPC</returns>
 		public GameNPC GetRandomNPC(eRealm[] realms, int minLevel, int maxLevel)
 		{
-
-			if (!m_initialized) InitializeZone();
-			// select random starting subzone and iterate over all objects in subzone than in all subzone...
-			int currentSubZoneIndex = Util.Random(SUBZONE_NBR);
-			int startSubZoneIndex = currentSubZoneIndex;
-			GameNPC randomNPC = null;
-			GameNPC currentNPC = null;
-			do
-			{
-				SubNodeElement startElement = m_subZoneElements[currentSubZoneIndex][(int)eGameObjectType.NPC];
-				lock (startElement)
-				{
-					// if list is not empty
-					if (startElement != startElement.next)
-					{
-						SubNodeElement curElement = startElement.next;
-						do
-						{
-							currentNPC = (GameNPC)curElement.data;
-							if (currentNPC != null && currentNPC.ObjectState == GameObject.eObjectState.Active)
-							{
-								if (minLevel >= 0 && currentNPC.Level < minLevel &&
-									maxLevel >= 0 && currentNPC.Level > maxLevel)
-								{
-									for (int i = 0; i < realms.Length; ++i)
-									{
-										byte realm = (byte)realms[i];
-										if (currentNPC.Realm == realm)
-										{
-											randomNPC = currentNPC;
-											break;
-										}
-									}
-								}
-							}
-							curElement = curElement.next;
-						} while ((randomNPC != null) && (curElement != startElement));
-					}
-				}
-
-				if (randomNPC == null)
-				{
-					if (++currentSubZoneIndex >= SUBZONE_NBR)
-					{
-						currentSubZoneIndex = 0;
-					}
-				}
-			} while ((randomNPC != null) && (currentSubZoneIndex != startSubZoneIndex));
-
+			List<GameNPC> npcs = GetNPCsOfZone(realms, minLevel, maxLevel, 0, 0, true);
+			GameNPC randomNPC = (npcs.Count == 0 ? null : npcs[0]);
 			return randomNPC;
 		}
 
@@ -1326,12 +1241,17 @@ namespace DOL.GS
 		/// <returns></returns>
 		public List<GameNPC> GetNPCsOfZone(eRealm realm)
 		{
+			return GetNPCsOfZone(new eRealm[] { realm }, 0, 0, 0, 0, false);
+		}
+		public List<GameNPC> GetNPCsOfZone(eRealm[] realms, int minLevel, int maxLevel, int compareLevel, int conLevel, bool firstOnly)
+		{
 			List<GameNPC> list = new List<GameNPC>();
 			if (!m_initialized) InitializeZone();
 			// select random starting subzone and iterate over all objects in subzone than in all subzone...
 			int currentSubZoneIndex = Util.Random(SUBZONE_NBR);
 			int startSubZoneIndex = currentSubZoneIndex;
 			GameNPC currentNPC = null;
+			bool stopSearching = false;
 			do
 			{
 				SubNodeElement startElement = m_subZoneElements[currentSubZoneIndex][(int)eGameObjectType.NPC];
@@ -1344,17 +1264,50 @@ namespace DOL.GS
 						do
 						{
 							currentNPC = (GameNPC)curElement.data;
-							if ((eRealm)currentNPC.Realm == realm)
-								list.Add(currentNPC);
-
+							bool added = false;
+							// Check for specified realms
+							for (int i = 0; i < realms.Length; ++i)
+							{
+								byte realm = (byte)realms[i];
+								if (currentNPC.Realm == realm)
+								{
+									// Check for min-max level, if any specified
+									bool addToList = true;
+									if (compareLevel > 0 && conLevel > 0)
+										addToList = ((int)GameObject.GetConLevel(compareLevel, currentNPC.Level) == conLevel);
+									else
+									{
+										if (minLevel > 0 && currentNPC.Level < minLevel)
+											addToList = false;
+										if (maxLevel > 0 && currentNPC.Level > maxLevel)
+											addToList = false;
+									}
+									if (addToList)
+									{
+										list.Add(currentNPC);
+										added = true;
+										break;
+									}
+								}
+							}
+							// If we have added and must return one only result,
+							// then mark for stop searching
+							if (firstOnly && added)
+							{
+								stopSearching = true;
+								break;
+							}
 							curElement = curElement.next;
 						} while (curElement != startElement);
 					}
 				}
-					if (++currentSubZoneIndex >= SUBZONE_NBR)
-					{
-						currentSubZoneIndex = 0;
-					}
+				if (++currentSubZoneIndex >= SUBZONE_NBR)
+				{
+					currentSubZoneIndex = 0;
+				}
+				// If stop searching forced, then exit
+				if (stopSearching)
+					break;
 			} while (currentSubZoneIndex != startSubZoneIndex);
 
 			return list;
