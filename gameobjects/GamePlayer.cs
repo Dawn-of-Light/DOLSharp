@@ -11381,9 +11381,10 @@ namespace DOL.GS
 			if (!CheckControlledNpc(npc))
 				return;
 			GameObject target = TargetObject;
-			if (target is GameNPC && ((GameNPC)target).Brain is IControlledBrain && ControlledNpc.Body.ControlledNpcList != null)
+			if (target is GameNPC && ((GameNPC)target).Brain is BDPetBrain && ControlledNpc.Body.ControlledNpcList != null)
 			{
-				Notify(GameLivingEvent.Dying, target, null);
+				//Notify(GameLivingEvent.Dying, target, null);
+				(target as GameNPC).CommandNpcRelease();
 				return;
 			}
 
