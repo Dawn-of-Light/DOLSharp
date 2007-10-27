@@ -513,9 +513,9 @@ GameTrainer.ReceiveItem.RespecSingle:			Thanks, I added a single spec respec to 
 
 # KING THRONE NPC
 CLWeaponNPC.ReceiveItem.RespecCL:			Thanks, I added a single champion skill respec to use /respec cl.
-KingNPC.WhisperReceive.IsNowChampion:		You have just embraced on the life of the champions!
-KingNPC.WhisperReceive.AlreadyChampion:		You are already a champion!
-KingNPC.WhisperReceive.AskForChampion:		Would you like to embrace in the life of [champions]?
+KingNPC.WhisperReceive.IsNowChampion:			You have just embraced on the life of the champions!
+KingNPC.WhisperReceive.AlreadyChampion:			You are already a champion!
+KingNPC.WhisperReceive.AskForChampion:			Would you like to embrace in the life of [Champions]?
 
 # /EnchanterTrainer
 EnchanterTrainer.Interact.PathOfEssence:		{0} says, "Do you choose to train as an Enchanter and follow the Path of Essence? Life as an [Enchanter] is as rewarding as it is dangerous, but it is yours for the asking."
