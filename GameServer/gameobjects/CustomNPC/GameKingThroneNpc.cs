@@ -48,7 +48,7 @@ namespace DOL.GS
             GamePlayer player = source as GamePlayer;
             if (player == null) return false;
  
-            if(str=="champions" && player.Level == 50)
+            if(str=="Champions" && player.Level == 50)
             {
                     if (player.Champion == true) 
                     { 
