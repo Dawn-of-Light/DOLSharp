@@ -168,6 +168,7 @@ namespace DOL.GS.Spells
 				summoned.Heading = (ushort)((target.Heading + 2048) % 4096);
 				summoned.Realm = target.Realm;
 				summoned.CurrentSpeed = 0;
+				controlledBrain.IsMainPet = false;
 
 				if (Spell.Damage < 0)
 					summoned.Level = (byte)(target.Level * Spell.Damage * -0.01);
@@ -206,7 +207,7 @@ namespace DOL.GS.Spells
 
 			GameEventMgr.RemoveHandler(pet, GameLivingEvent.Dying, new DOLEventHandler(OnNpcReleaseCommand));
 
-			((GameNPC)npc.Owner).RemoveControlledNpc(npc);
+			//((GameNPC)npc.Owner).RemoveControlledNpc(npc);
 
 			GameSpellEffect effect = FindEffectOnTarget(npc.Body, this);
 			if (effect != null)

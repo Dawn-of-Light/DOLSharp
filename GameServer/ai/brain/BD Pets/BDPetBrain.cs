@@ -17,6 +17,7 @@
  *
  */
 using System;
+using DOL.Events;
 using DOL.GS;
 
 namespace DOL.AI.Brain
@@ -53,8 +54,10 @@ namespace DOL.AI.Brain
 		{
 			if (!base.Stop()) return false;
 
-			//Posibily add support for this
-			Body.CommandNpcRelease();
+			GameEventMgr.RemoveHandler(((IControlledBrain)((GameNPC)Owner).Brain).Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnOwnerAttacked));
+
+			if (IsActive && Body.IsAlive)
+				Body.CommandNpcRelease();
 			return true;
 		}
 

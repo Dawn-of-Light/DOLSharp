@@ -3882,7 +3882,7 @@ namespace DOL.GS
 			IControlledBrain npc = Brain as IControlledBrain;
 			//This method shouldn't be called if this is the player's main pet.  Only minions and subpets
 			//should call this method.
-			if (npc == null || !(npc is BDPetBrain)) return;
+			if (npc == null) return;
 			GameNPC owner = (GameNPC)npc.Owner;
 
 			//Added function in GameNPC to kill the pet for us

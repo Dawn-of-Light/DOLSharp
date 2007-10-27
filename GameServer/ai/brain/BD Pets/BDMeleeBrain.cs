@@ -71,20 +71,6 @@ namespace DOL.AI.Brain
 		}
 
 		/// <summary>
-		/// Stops the brain thinking
-		/// </summary>
-		/// <returns>true if stopped</returns>
-		public override bool Stop()
-		{
-			if (!base.Stop()) return false;
-
-			GameEventMgr.RemoveHandler(((IControlledBrain)((GameNPC)Owner).Brain).Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnOwnerAttacked));
-
-			Body.CommandNpcRelease();
-			return true;
-		}
-
-		/// <summary>
 		/// Do the mob AI
 		/// </summary>
 		public override void Think()
