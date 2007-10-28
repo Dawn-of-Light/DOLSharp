@@ -72,7 +72,7 @@ GameLiving.ReceiveMoney:				{0} will Euer Geld nicht!
 GameMerchant.GetExamineMessages.BuyItemsFor:		{0} sagt: "Ihr machen Geschäft mit {0}? Geben {0} einfach {1} für seine Dinge."
 GameMerchant.GetExamineMessages.Nothing:		Nichts
 GameMerchant.GetExamineMessages.RightClick:		
-GameMerchant.GetExamineMessages.YouExamine:		Es interessiert Euch {0}. {1} steht Euch {2} und treibt Handel.
+GameMerchant.GetExamineMessages.YouExamine:		Es interessiert Euch {0}. {0} steht Euch {2} und treibt Handel.
 GameMerchant.OnPlayerAppraise.Offers:			{0} bietet Euch {1} für {2}.
 GameMerchant.OnPlayerBuy.Bought:			Ihr habt gerade {0} gekauft für {1}.
 GameMerchant.OnPlayerBuy.Bought2:			Ihr habt gerade {0} gekauft für {1} {2}.
@@ -99,7 +99,9 @@ GameNPC.GetAggroLevelString.Hostile2:			Feindlich
 GameNPC.GetAggroLevelString.Neutral1:			neutral
 GameNPC.GetAggroLevelString.Neutral2:			Neutral
 GameNPC.GetAggroLevelString.TowardsYou:			{0} gegenüber
-GameNPC.GetExamineMessages.YouExamine:			Es interessiert Euch {0}. {1} steht Euch {2}.
+GameNPC.GetExamineMessages.YouExamine:			Es interessiert Euch {0}. {0} steht Euch {2}.
+GameNPC.SayTo.Says:					{0} sagt: "{1}"
+GameNPC.SayTo.SpeaksTo:					{0} spricht zu {1}
 
 # GAMEOBJECT
 GameObject.GetExamineMessages.YouTarget:		Es wird {0} als Ziel erfasst.
@@ -513,7 +515,7 @@ StyleProcessor.TryToUseStyle.StyleRequires:		Dieser Kampstil erfordert eine {0}-
 # /GameTrainer
 GameTrainer.AddGift.NotEnoughSpace:			Es ist nicht genug Platz in Eurem Gepäck für das Geschenk. Bitte nehmt erst etwas heraus.
 GameTrainer.GetExamineMessages.RightClick:		
-GameTrainer.GetExamineMessages.YouExamine:		Es interessiert Euch {0}. {1} steht Euch {2} und bildet als {3} den Nachwuchs aus.
+GameTrainer.GetExamineMessages.YouExamine:		Es interessiert Euch {0}. {0} steht Euch {2} und bildet als {3} den Nachwuchs aus.
 GameTrainer.GetExamineMessages.YouTarget:		Es wird {0} als Ziel erfasst.
 GameTrainer.PromotePlayer.Accepted:			{0} hat Euch als Mitglied akzeptiert!
 GameTrainer.PromotePlayer.Says:				{0} sagt: "{1}"
@@ -706,7 +708,7 @@ AbstractArea.Left:					(Region) Ihr seid nun nicht mehr {0}!
 # /Blacksmith
 Scripts.Blacksmith.AbortRepair:				Ihr weigert Euch {0} reparieren zu lassen.
 Scripts.Blacksmith.CantRepairThat:			So was kann ich nicht reparieren.
-Scripts.Blacksmith.GiveObject:				(Gebt {0} einen Gegenstand aus Eurem Gepäck zum Reparieren.)
+Scripts.Blacksmith.GiveObject:				(Gebt einen Gegenstand aus Eurem Gepäck zum Reparieren.)
 Scripts.Blacksmith.InvalidItem:				Falscher Gegenstand.
 Scripts.Blacksmith.ItsDone:				Hier, bitte, {0} ist bereit zum Einsatz.
 Scripts.Blacksmith.NoNeedRepair:			Dieser Gegenstand befindet sich bereits in einem tadellosen Zustand.
@@ -716,7 +718,7 @@ Scripts.Blacksmith.ObjectRatherOld:			Uhh, {0} ist schon ziemlich alt. Ich werde
 Scripts.Blacksmith.RepairCostAccept:			Es wird Euch {0} kosten, {1} reparieren zu lassen. Seid Ihr damit einverstanden?
 Scripts.Blacksmith.Say:					Ich kann Eure Waffen und Rüstungen reparieren. Gebt mir einfach die Gegenstände, die ich reparieren soll, und ich will sehen, was ich tun kann. Keine Sorge, ich verlange nicht viel für meine Dienste.
 Scripts.Blacksmith.StackedObjets:			{0} kann immer nur einen Gegenstand reparieren.
-Scripts.Blacksmith.YouExamine:				Es interessiert Euch {0}. {1} steht Euch {2} und arbeitet als Schmied.
+Scripts.Blacksmith.YouExamine:				Es interessiert Euch {0}. {0} steht Euch {2} und arbeitet als Schmied.
 Scripts.Blacksmith.YouPay:				{0} erhält von Euch {1}.
 Scripts.Blacksmith.YouTarget:				Es wird {0} als Ziel erfasst.
 
