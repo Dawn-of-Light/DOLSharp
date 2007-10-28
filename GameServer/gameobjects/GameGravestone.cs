@@ -19,6 +19,7 @@
 using System;
 
 using DOL.Database;
+using DOL.Language;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
@@ -42,7 +43,7 @@ namespace DOL.GS
 			//as standard! We want our mobs/items etc. at
 			//the same startingspots when we restart!
 			m_saveInDB = false;
-			m_Name = player.Name+"'s Grave";
+			m_Name = LanguageMgr.GetTranslation(player.Client, "GameLiving.ReceiveItem", player.Name);
 			m_Heading = player.Heading;
 			m_X=player.X;
 			m_Y=player.Y;
