@@ -2851,16 +2851,11 @@ namespace DOL.GS
 		/// <param name="message"></param>
 		public virtual void SayTo(GamePlayer target, eChatLoc loc, string message)
 		{
-//			string resultText = GetName(0, true) + " says, \"" + message + "\"";
 			string resultText = LanguageMgr.GetTranslation(target.Client, "GameNPC.SayTo.Says", GetName(0, true), message);
-
-			//LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Aggressive1")
-
 			switch (loc)
 			{
 				case eChatLoc.CL_PopupWindow:
 					target.Out.SendMessage(resultText, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-//					Message.ChatToArea(this, GetName(0, true) + " speaks to " + target.GetName(0, false), eChatType.CT_System, WorldMgr.SAY_DISTANCE, target);
 					Message.ChatToArea(this, LanguageMgr.GetTranslation(target.Client, "GameNPC.SayTo.Says", GetName(0, true), target.GetName(0, false)), eChatType.CT_System, WorldMgr.SAY_DISTANCE, target);
 					break;
 				case eChatLoc.CL_ChatWindow:
