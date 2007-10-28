@@ -2795,7 +2795,7 @@ namespace DOL.GS
 			if (!base.Interact(player)) return false;
 			if (!GameServer.ServerRules.IsSameRealm(this, player, true))
 			{
-				player.Out.SendMessage(GetName(0, true) + " gives you a dirty look.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameNPC.Interact.DirtyLook", GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			if (MAX_PASSENGERS > 1)
@@ -2808,13 +2808,13 @@ namespace DOL.GS
 
 				if (RiderSlot(player) != -1)
 				{
-					player.Out.SendMessage("You are already riding this " + name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameNPC.Interact.AlreadyRiding", name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 
 				if (GetFreeArrayLocation() == -1)
 				{
-					player.Out.SendMessage("This " + name + " is full.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameNPC.Interact.IsFull", name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 

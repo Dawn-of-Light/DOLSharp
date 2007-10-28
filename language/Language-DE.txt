@@ -68,6 +68,9 @@ AbstractCraftingSkill.MakeItem.NotAllMaterials:		Ihr habt nicht alles Ausgangsma
 GameLiving.ReceiveItem:					{0} will diesen Gegenstand nicht!
 GameLiving.ReceiveMoney:				{0} will Euer Geld nicht!
 
+# GAMEGRAVESTONE
+GameGravestone.GameGravestone.Grave:			Grabstein von {0}
+
 # GAMEMERCHANT
 GameMerchant.GetExamineMessages.BuyItemsFor:		{0} sagt: "Ihr machen Geschäft mit {0}? Geben {0} einfach {1} für seine Dinge."
 GameMerchant.GetExamineMessages.Nothing:		Nichts
@@ -100,6 +103,9 @@ GameNPC.GetAggroLevelString.Neutral1:			neutral
 GameNPC.GetAggroLevelString.Neutral2:			Neutral
 GameNPC.GetAggroLevelString.TowardsYou:			{0} gegenüber
 GameNPC.GetExamineMessages.YouExamine:			Es interessiert Euch {0}. {0} steht Euch {2}.
+GameNPC.Interact.AlreadyRiding:				Ihr fahrt bereits mit {0}.
+GameNPC.Interact.DirtyLook:				{0} wirft Euch einen bösen Blick zu.
+GameNPC.Interact.IsFull:				Es ist kein Platz mehr frei.
 GameNPC.SayTo.Says:					{0} sagt: "{1}"
 GameNPC.SayTo.SpeaksTo:					{0} spricht zu {1}
 
