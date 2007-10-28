@@ -81,7 +81,7 @@ namespace DOL.Database
         /// <summary>
         /// The Name of the boat
         /// </summary>
-        [DataElement(AllowDbNull = false)]
+        [PrimaryKey]
         public string BoatName
         {
             get
