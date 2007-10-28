@@ -100,6 +100,8 @@ GameNPC.GetAggroLevelString.Neutral1:			neutral
 GameNPC.GetAggroLevelString.Neutral2:			Neutral
 GameNPC.GetAggroLevelString.TowardsYou:			{0} towards you
 GameNPC.GetExamineMessages.YouExamine:			You examine {0}. {1} is {2}.
+GameNPC.SayTo.Says:					{0} says, "{1}"
+GameNPC.SayTo.SpeaksTo:					{0} speaks to {1}
 
 # GAMEOBJECT
 GameObject.GetExamineMessages.YouTarget:		You target [{0}].
