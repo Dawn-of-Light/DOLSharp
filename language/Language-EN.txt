@@ -683,6 +683,10 @@ PlayerInitRequestHandler.SaferLocation:			This area isn't currently secure and y
 # /PlayerMoveItemRequestHandler
 PlayerMoveItemRequestHandler.TooFarAway:		You are too far away to give anything to {0}.
 
+# /PlayerPickUpRequestHandler
+PlayerPickUpRequestHandler.HandlePacket.Target:		You must have a target to get something!
+PlayerPickUpRequestHandler.HandlePacket.InvalidTarget:	You have an invalid target!
+
 # /PlayerPositionUpdateHandler
 PlayerPositionUpdateHandler.Endurance:			You lose endurance!
 PlayerPositionUpdateHandler.Entered:			You have entered {0}.
