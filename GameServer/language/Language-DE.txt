@@ -696,6 +696,10 @@ PlayerInitRequestHandler.SaferLocation:			Diese Gegend ist im Moment nicht siche
 # /PlayerMoveItemRequestHandler
 PlayerMoveItemRequestHandler.TooFarAway:		Ihr seit zu weit weg, um {0} etwas zu geben.
 
+# /PlayerPickUpRequestHandler
+PlayerPickUpRequestHandler.HandlePacket.Target:		Ihr müsst erst ein Ziel auswählen, um etwas zu nehmen!
+PlayerPickUpRequestHandler.HandlePacket.InvalidTarget:	Dieses Ziel könnt Ihr nicht auswählen!
+
 # /PlayerPositionUpdateHandler
 PlayerPositionUpdateHandler.Endurance:			Ihr verliert Ausdauer!
 PlayerPositionUpdateHandler.Entered:			Ihr befindet Euch nun {0}.
