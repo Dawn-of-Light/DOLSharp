@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using DOL.Language;
 using DOL.GS;
 
 namespace DOL.GS.PacketHandler.Client.v168
@@ -37,12 +38,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 			GameObject target = client.Player.TargetObject;
 			if (target == null)
 			{
-				client.Out.SendMessage("You must have a target to get something!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPickUpRequestHandler.HandlePacket.Target"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
 			if (target.ObjectState != GameObject.eObjectState.Active)
 			{
-				client.Out.SendMessage("You have an invalid target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPickUpRequestHandler.HandlePacket.InvalidTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
 			
