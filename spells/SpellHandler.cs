@@ -50,7 +50,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		protected static readonly byte MAX_DELVE_RECURSION = 5;
 
-		private DelayedCastTimer m_castTimer;
+		protected DelayedCastTimer m_castTimer;
 		/// <summary>
 		/// The spell that we want to handle
 		/// </summary>
@@ -244,6 +244,24 @@ namespace DOL.GS.Spells
 			m_interrupted = false;
 			GameLiving target = Caster.TargetObject as GameLiving;
 
+			if (Spell.Target.ToLower() == "pet")
+			{
+				// Pet is the target, check if the caster is the pet.
+
+				if (Caster is GameNPC && (Caster as GameNPC).Brain is IControlledBrain)
+					target = Caster;
+			}
+			else if (Spell.Target.ToLower() == "controlled")
+			{
+				// Can only be issued by the owner of a pet and the target
+				// is always the pet then.
+
+				if (Caster is GamePlayer && Caster.ControlledNpc != null)
+					target = Caster.ControlledNpc.Body;
+				else
+					target = null;
+			}
+
 			if (Spell.Pulse != 0 && CancelPulsingSpell(Caster, Spell.SpellType))
 			{
 				// is done even if caster is sitting
@@ -252,7 +270,8 @@ namespace DOL.GS.Spells
 				else
 					MessageToCaster("You stop playing your song.", eChatType.CT_Spell);
 			}
-			else if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, target, Spell, m_spellLine) && CheckBeginCast(target))
+			else if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, target, Spell, m_spellLine) 
+				&& CheckBeginCast(target))
 			{
 				if (m_caster is GamePlayer && (m_caster as GamePlayer).IsOnHorse && !HasPositiveEffect)
 				{
@@ -341,6 +360,8 @@ namespace DOL.GS.Spells
 				return false;
 			if (Caster.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) != null)
 				return false;
+			if (Caster.EffectList.GetOfType(typeof(FacilitatePainworkingEffect)) != null)
+				return false;
 			if (IsCasting)
 			{
 				double mod = Caster.GetConLevel(attacker);
@@ -382,7 +403,7 @@ namespace DOL.GS.Spells
 			GameSpellEffect Phaseshift = SpellHandler.FindEffectOnTarget(Caster, "Phaseshift");
 			if (Phaseshift != null && (Spell.InstrumentRequirement == 0 || Spell.SpellType == "Mesmerize"))
 			{
-				MessageToCaster("You're phaseshiftet and can't cast a spell", eChatType.CT_System);
+				MessageToCaster("You're phaseshifted and can't cast a spell", eChatType.CT_System);
 				return false;
 			}
 
@@ -390,7 +411,8 @@ namespace DOL.GS.Spells
 			{
 				if (!CheckInstrument())
 				{
-					MessageToCaster("You are not wielding the right type of instrument!", eChatType.CT_SpellResisted);
+					MessageToCaster("You are not wielding the right type of instrument!", 
+						eChatType.CT_SpellResisted);
 					return false;
 				}
 			}
@@ -400,20 +422,7 @@ namespace DOL.GS.Spells
 				//don't allow standing up (like stun or mez)
 				MessageToCaster("You can't cast while sitting!", eChatType.CT_SpellResisted);
 				return false;
-			}
-			
- 			// Class checking for necromancer without pet
-			if(m_caster is GamePlayer)
-			{		
-				GamePlayer player = Caster as GamePlayer;
-				if (player.CharacterClass.ID==(int)eCharacterClass.Necromancer
-				    && player.ControlledNpc == null
-				    && Spell.SpellType.ToLower()!="necromancerpet")
-				{
-					MessageToCaster("You have to summon your pet first!", eChatType.CT_SpellResisted);
-					return false;
-				}
-			}       
+			}      
 
 			if (m_caster.AttackState && m_spell.CastTime != 0)
 			{
@@ -452,7 +461,8 @@ namespace DOL.GS.Spells
 				}
 			}
 
-			if (m_spell.Target.ToLower() == "area")
+			String targetType = m_spell.Target.ToLower();
+			if (targetType == "area")
 			{
 				if (!WorldMgr.CheckDistance(m_caster, m_caster.GroundTarget, CalculateSpellRange()))
 				{
@@ -465,19 +475,30 @@ namespace DOL.GS.Spells
 				//					return false;
 				//				}
 			}
-			else if (m_spell.Target.ToLower() != "self" && m_spell.Target.ToLower() != "group" && m_spell.Target.ToLower() != "pet" && m_spell.Target.ToLower() != "cone" && m_spell.Range > 0)
+			else if (targetType != "self" && targetType != "group" && targetType != "pet"
+				&& targetType != "controlled" && targetType != "cone" && m_spell.Range > 0)
 			{
-				//all spells that need a target
+				// All spells that need a target.
+
+				if (FindStaticEffectOnTarget(selectedTarget, typeof(ShadeEffect)) != null)
+				{
+					MessageToCaster("Invalid target.", eChatType.CT_System);
+					return false;
+				}
 
 				if (selectedTarget == null || selectedTarget.ObjectState != GameLiving.eObjectState.Active)
 				{
-					MessageToCaster("You must select a target for this spell!", eChatType.CT_SpellResisted);
+					MessageToCaster("You must select a target for this spell!",
+						eChatType.CT_SpellResisted);
 					return false;
 				}
 
 				if (!WorldMgr.CheckDistance(m_caster, selectedTarget, CalculateSpellRange()))
 				{
-					MessageToCaster("That target is too far away!", eChatType.CT_SpellResisted);
+					MessageToCaster("That target is too far away!",
+						eChatType.CT_SpellResisted);
+					Caster.Notify(GameLivingEvent.CastFailed,
+						new CastFailedEventArgs(this, CastFailedEventArgs.Reasons.TargetTooFarAway));
 					return false;
 				}
 
@@ -493,7 +514,9 @@ namespace DOL.GS.Spells
 						//enemys have to be in front and in view for targeted spells
 						if (!(m_caster.IsObjectInFront(selectedTarget, 180) && m_caster.TargetInView))
 						{
-							MessageToCaster("Your target is not in view.", eChatType.CT_SpellResisted);
+							MessageToCaster("Your target is not in view!", eChatType.CT_System);
+							Caster.Notify(GameLivingEvent.CastFailed,
+								new CastFailedEventArgs(this, CastFailedEventArgs.Reasons.TargetNotInView));
 							return false;
 						}
 
@@ -517,25 +540,14 @@ namespace DOL.GS.Spells
 							return false;
 						}
 						break;
-
-					case "pet":
-						if (Caster is GamePlayer)
-						{
-							GamePlayer casterPlayer = (GamePlayer)Caster;
-							if (casterPlayer.ControlledNpc == null)
-							{
-								// TODO: correct message?
-								MessageToCaster("Not controlling anything.", eChatType.CT_SpellResisted);
-								return false;
-							}
-						}
-						break;
 				}
 
 				//heals/buffs/rez need LOS only to start casting
 				if (!m_caster.TargetInView && m_spell.Target.ToLower() != "pet")
 				{
-					MessageToCaster("Your target is not in view.", eChatType.CT_SpellResisted);
+					MessageToCaster("Your target is not in view!", eChatType.CT_System);
+					Caster.Notify(GameLivingEvent.CastFailed,
+								new CastFailedEventArgs(this, CastFailedEventArgs.Reasons.TargetNotInView));
 					return false;
 				}
 
@@ -547,7 +559,8 @@ namespace DOL.GS.Spells
 			}
 
 			//Ryan: don't want mobs to have reductions in mana
-			if (m_caster is GamePlayer && m_caster.Mana < CalculateNeededPower(selectedTarget) && Spell.SpellType != "Archery")
+			//Aredhel: Then prevent mana from being deducted, but I need this check for the pet
+			if (m_caster.Mana < CalculateNeededPower(selectedTarget) && Spell.SpellType != "Archery")
 			{
 				MessageToCaster("You don't have enough power to cast that!", eChatType.CT_SpellResisted);
 				return false;
@@ -591,6 +604,9 @@ namespace DOL.GS.Spells
 				}
 			}
 
+			if (!(Caster is GamePlayer))
+				Caster.Notify(GameLivingEvent.CastSucceeded, this,
+					new PetSpellEventArgs(Spell, SpellLine, selectedTarget));
 			return true;
 		}
 
@@ -912,7 +928,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Casts a spell after the CastTime delay
 		/// </summary>
-		private class DelayedCastTimer : GameTimer
+		protected class DelayedCastTimer : GameTimer
 		{
 			/// <summary>
 			/// The spellhandler instance with callbacks
@@ -999,17 +1015,6 @@ namespace DOL.GS.Spells
 					    && Spell.SpellType != "ArmorAbsorbtionBuff"))
 						return ticks;
 				}
-
-                // Necromancer RA5L effect
-                if (player.CharacterClass.ID == (int)eCharacterClass.Necromancer)
-                {
-                    // Edit here the spelltype depending on how you implemented the pet			
-                    if (Spell.SpellType.ToLower() == "necromancerpet" 
-                        && m_caster.EffectList.GetOfType(typeof(CallOfDarknessEffect)) != null)
-                    {
-                        return 3000; //always 3 sec
-                    }
-                }
 			}
 			double percent = 1.0;
 			int dex = m_caster.GetModified(eProperty.Dexterity);		
@@ -1045,6 +1050,20 @@ namespace DOL.GS.Spells
 			if (ticks < 1)
 				ticks = 1; // at least 1 tick
 			return ticks;
+		}
+
+		/// <summary>
+		/// The casting time reduction based on dexterity bonus.
+		/// </summary>
+		public virtual double DexterityCastTimeReduction
+		{
+			get
+			{
+				int dex = Caster.GetModified(eProperty.Dexterity);
+				if (dex < 60) return 1.0;
+				else if (dex < 250) return 1.0 - (dex - 60) * 0.15 * 0.01;
+				else return 1.0 - ((dex - 60) * 0.15 + (dex - 250) * 0.05) * 0.01;
+			}
 		}
 
 		#region animations
@@ -1342,7 +1361,10 @@ namespace DOL.GS.Spells
 					}
 					else
 					{
-						// ...
+						// Pet casting itself.
+
+						if (Caster is GameNPC && (Caster as GameNPC).Brain is IControlledBrain)
+							list.Add(Caster);
 					}
 					break;
 
@@ -1540,7 +1562,7 @@ namespace DOL.GS.Spells
 			double effectiveness = 1.0;
 
 			if (Caster is GamePlayer)
-				effectiveness = player.PlayerEffectiveness;
+				effectiveness = player.Effectiveness;
 
 			if (Caster.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) != null)
 			{
@@ -2208,6 +2230,27 @@ namespace DOL.GS.Spells
 		}
 
 		/// <summary>
+		/// Returns true if the target has the given static effect, false
+		/// otherwise.
+		/// </summary>
+		/// <param name="target"></param>
+		/// <param name="effectType"></param>
+		/// <returns></returns>
+		public static IGameEffect FindStaticEffectOnTarget(GameLiving target, Type effectType)
+		{
+			if (target == null)
+				return null;
+
+			lock (target.EffectList)
+			{
+				foreach (IGameEffect effect in target.EffectList)
+					if (effect.GetType() == effectType)
+						return effect;
+			}
+			return null;
+		}
+
+		/// <summary>
 		/// Find pulsing spell by spell handler
 		/// </summary>
 		/// <param name="living"></param>
@@ -2432,12 +2475,10 @@ namespace DOL.GS.Spells
 
 			CalculateDamageVariance(target, out minVariance, out maxVariance);
 			double spellDamage = CalculateDamageBase();
-			GamePlayer player = null;
 			if (m_caster is GamePlayer)
 				effectiveness += m_caster.GetModified((Spell.SpellType != "Archery" ? eProperty.SpellDamage : eProperty.RangedDamage)) * 0.01;
 
-			if (player != null)
-				spellDamage *= player.PlayerEffectiveness;
+			spellDamage *= m_caster.Effectiveness;
 			int finalDamage = Util.Random((int)(minVariance * spellDamage), (int)(maxVariance * spellDamage));
 
 			int hitChance = CalculateToHitChance(ad.Target);
@@ -2569,10 +2610,11 @@ namespace DOL.GS.Spells
 				modmessage = " (+" + ad.Modifier + ")";
 			if (ad.Modifier < 0)
 				modmessage = " (" + ad.Modifier + ")";
-			if (Caster is GamePlayer)
+			if (Caster is GamePlayer || Caster is NecromancerPet)
 				MessageToCaster(string.Format("You hit {0} for {1}{2} damage!", ad.Target.GetName(0, false), ad.Damage, modmessage), eChatType.CT_YouHit);
 			else if (Caster is GameNPC)
-				MessageToCaster(string.Format("Your " + Caster.Name + " hits {0} for {1}{2} damage!", ad.Target.GetName(0, false), ad.Damage, modmessage), eChatType.CT_YouHit);
+				MessageToCaster(string.Format("Your " + Caster.Name + " hits {0} for {1}{2} damage!",
+					ad.Target.GetName(0, false), ad.Damage, modmessage), eChatType.CT_YouHit);
 			if (ad.CriticalDamage > 0)
 				MessageToCaster("You critical hit for an additional " + ad.CriticalDamage + " damage!", eChatType.CT_YouHit);
 		}

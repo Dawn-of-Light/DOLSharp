@@ -130,7 +130,7 @@ namespace DOL.GS.Spells
             int criticalchance = Caster.GetModified(eProperty.CriticalHealHitChance);
             double effectiveness = 0;
             if (Caster is GamePlayer)
-                effectiveness = ((GamePlayer)Caster).PlayerEffectiveness + Caster.GetModified(eProperty.HealingEffectiveness) * 0.01;
+                effectiveness = ((GamePlayer)Caster).Effectiveness + Caster.GetModified(eProperty.HealingEffectiveness) * 0.01;
             if (Caster is GameNPC)
                 effectiveness = 1.0;
 
