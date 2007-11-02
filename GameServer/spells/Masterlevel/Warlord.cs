@@ -202,7 +202,7 @@ namespace DOL.GS.Spells
             GamePlayer player = effect.Owner as GamePlayer;
             if (player != null)
             {
-                player.PlayerEffectiveness += Spell.Value * 0.01;
+                player.Effectiveness += Spell.Value * 0.01;
                 player.Out.SendUpdateWeaponAndArmorStats();
                 player.Out.SendStatusUpdate();
             }
@@ -220,7 +220,7 @@ namespace DOL.GS.Spells
             GamePlayer player = effect.Owner as GamePlayer;
             if (player != null)
             {
-                player.PlayerEffectiveness -= Spell.Value * 0.01;
+                player.Effectiveness -= Spell.Value * 0.01;
                 player.Out.SendUpdateWeaponAndArmorStats();
                 player.Out.SendStatusUpdate();
             }

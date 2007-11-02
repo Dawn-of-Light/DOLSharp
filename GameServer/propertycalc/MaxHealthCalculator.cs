@@ -87,5 +87,40 @@ namespace DOL.GS.PropertyCalc
                 }
             }
 		}
+
+        /// <summary>
+        /// Returns the hits cap for this living.
+        /// </summary>
+        /// <param name="living">The living the cap is to be determined for.</param>
+        /// <returns></returns>
+        public static int GetItemBonusCap(GameLiving living)
+        {
+            if (living == null) return 0;
+            return living.Level * 4;
+        }
+
+        /// <summary>
+        /// Returns the hits cap increase for the this living.
+        /// </summary>
+        /// <param name="living">The living the cap increase is to be determined for.</param>
+        /// <returns></returns>
+        public static int GetItemBonusCapIncrease(GameLiving living)
+        {
+            if (living == null) return 0;
+            int itemBonusCapIncreaseCap = GetItemBonusCapIncreaseCap(living);
+            int itemBonusCapIncrease = living.ItemBonus[(int)(eProperty.MaxHealthCapBonus)];
+            return Math.Min(itemBonusCapIncrease, itemBonusCapIncreaseCap);
+        }
+
+        /// <summary>
+        /// Returns the cap for hits cap increase for this living.
+        /// </summary>
+        /// <param name="living">The living the value is to be determined for.</param>
+        /// <returns>The cap increase cap for this living.</returns>
+        public static int GetItemBonusCapIncreaseCap(GameLiving living)
+        {
+            if (living == null) return 0;
+            return living.Level * 4;
+        }
 	}
 }

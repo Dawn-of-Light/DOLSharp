@@ -270,7 +270,7 @@ namespace DOL.GS.Spells
 				ad.Damage = (int)Math.Min(ad.Damage, m_handler.Spell.Damage * 3);
 
 				if(caster is GamePlayer)
-					ad.Damage = (int)(ad.Damage*((GamePlayer)caster).PlayerEffectiveness);
+					ad.Damage = (int)(ad.Damage*((GamePlayer)caster).Effectiveness);
 
 				// fix critical damage
 				if (blocked == false && ad.CriticalDamage > 0)

@@ -2974,7 +2974,7 @@ namespace DOL.GS
 		/// get / set the player's effectiveness.
 		/// Effectiveness is used in physical/magic damage (exept dot), in weapon skill and max concentration
 		/// </summary>
-		public double PlayerEffectiveness
+		public override double Effectiveness
 		{
 			get { return m_playereffectiveness; }
 			set { m_playereffectiveness = value; }
@@ -4898,7 +4898,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected override AttackData MakeAttack(GameObject target, InventoryItem weapon, Style style, double effectiveness, int interruptDuration, bool dualWield)
 		{
-			AttackData ad = base.MakeAttack(target, weapon, style, effectiveness * PlayerEffectiveness, interruptDuration, dualWield);
+			AttackData ad = base.MakeAttack(target, weapon, style, effectiveness * Effectiveness, interruptDuration, dualWield);
 
 			//Clear the styles for the next round!
 			NextCombatStyle = null;
@@ -5568,7 +5568,7 @@ namespace DOL.GS
 					: CharacterClass.WeaponSkillBase);
 
 			//added for WS Poisons
-			double preBuff = ((Level * classbase * 0.02 * (1 + (GetWeaponStat(weapon) - 50) * 0.005)) * PlayerEffectiveness);
+			double preBuff = ((Level * classbase * 0.02 * (1 + (GetWeaponStat(weapon) - 50) * 0.005)) * Effectiveness);
 
 			//return ((Level * classbase * 0.02 * (1 + (GetWeaponStat(weapon) - 50) * 0.005)) * PlayerEffectiveness);
 			return Math.Max(0, preBuff * GetModified(eProperty.WeaponSkill) * 0.01);
@@ -11599,7 +11599,8 @@ namespace DOL.GS
 			if (IsShade == state)
 			{
 				if (state && (ObjectState == eObjectState.Active))
-					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Shade.AlreadyShade"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Shade.AlreadyShade"),
+						eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			if (state)
@@ -11643,7 +11644,8 @@ namespace DOL.GS
 				m_ShadeEffect = null;
 				Model = (ushort)m_client.Account.Characters[m_client.ActiveCharIndex].CreationModel;
 				if (ObjectState == eObjectState.Active)
-					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Shade.NoLongerShade"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Shade.NoLongerShade"),
+						eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 				if (ControlledNpc != null)
 					CommandNpcRelease();

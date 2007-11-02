@@ -30,6 +30,7 @@ namespace DOL.GS.Effects
 		/// The effect owner
 		/// </summary>
 		GamePlayer m_player;
+		private int m_timeRemaining = -1;
 
 		/// <summary>
 		/// Creates a new stealth effect
@@ -42,10 +43,14 @@ namespace DOL.GS.Effects
 		/// Start the shade effect on player
 		/// </summary>
 		/// <param name="player">The effect target</param>
-		public void Start(GamePlayer player)
+		public override void Start(GameLiving living)
 		{
+			GamePlayer player = living as GamePlayer;
+			if (player != null)
+			{
 			m_player = player;
 			player.EffectList.Add(this);
+			}
 		}
 
 		/// <summary>
@@ -73,12 +78,24 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Remaining Time of the effect in seconds
 		/// </summary>
-		public override int RemainingTime { get { return 0; } }
+		public override int RemainingTime 
+        { 
+            get { return (m_timeRemaining < 0) ? 0 : m_timeRemaining * 1000; } 
+        }
 
 		/// <summary>
 		/// Icon to show on players, can be id
 		/// </summary>
 		public override ushort Icon { get { return 0x193; } }
+
+        /// <summary>
+        /// Set timer when pet is out of range.
+        /// </summary>
+        /// <param name="seconds"></param>
+        public void SetTetherTimer(int seconds)
+        {
+            m_timeRemaining = seconds;
+        }
 
 		//VaNaTiC->
 		/*

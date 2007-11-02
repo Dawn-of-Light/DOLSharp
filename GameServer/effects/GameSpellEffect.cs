@@ -121,7 +121,7 @@ namespace DOL.GS.Effects
 		/// Starts the effect
 		/// </summary>
 		/// <param name="target">the target</param>
-		public void Start(GameLiving target)
+		public virtual void Start(GameLiving target)
 		{
 			lock (m_LockObject)
 			{

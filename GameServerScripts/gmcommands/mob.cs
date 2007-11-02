@@ -327,6 +327,36 @@ namespace DOL.GS.Scripts
 						client.Out.SendCustomTextWindow("[ " + targetMob.Name + " ]", info);
 					}
 					break;
+				case "stats":
+					{
+						if (targetMob == null)
+						{
+							client.Out.SendMessage("No target selected.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 1;
+						}
+						ArrayList info = new ArrayList();
+						info.Add("Modified stats:");
+						info.Add("");
+						for (eProperty property = eProperty.Stat_First; property <= eProperty.Stat_Last; ++property)
+							info.Add(String.Format("{0}: {1}",
+								GlobalConstants.PropertyToName(property),
+								targetMob.GetModified(property)));
+						info.Add("");
+						info.Add("Modified resists:");
+						info.Add("");
+						for (eProperty property = eProperty.Resist_First + 1; property <= eProperty.Resist_Last; ++property)
+							info.Add(String.Format("{0}: {1}",
+								GlobalConstants.PropertyToName(property),
+								targetMob.GetModified(property)));
+						info.Add("");
+						info.Add("Miscellaneous:");
+						info.Add("");
+						info.Add(String.Format("Maximum Health: {0}", targetMob.MaxHealth));
+						info.Add(String.Format("Armor Factor (AF): {0}", targetMob.GetModified(eProperty.ArmorFactor)));
+						info.Add(String.Format("Absorption (ABS): {0}", targetMob.GetModified(eProperty.ArmorAbsorbtion)));
+						client.Out.SendCustomTextWindow("[ " + targetMob.Name + " ]", info);
+						return 1;
+					}
 				case "level":
 					{
 						byte level;
