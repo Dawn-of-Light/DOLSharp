@@ -57,7 +57,9 @@ namespace DOL.GS.Scripts
 	 "/player update",
 	 "/player info",
 	 "/player showgroup",
-	 "/player showeffects")]
+	 "/player showeffects",
+	 "/player stats"
+   )]
 
 	public class PlayerCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
@@ -76,6 +78,37 @@ namespace DOL.GS.Scripts
 
 			switch (args[1])
 			{
+				case "stats":
+					{
+						GamePlayer player = client.Player.TargetObject as GamePlayer;
+						if (player == null)
+						{
+							client.Out.SendMessage("You need a valid target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 0;
+						}
+						ArrayList info = new ArrayList();
+						info.Add("Modified stats:");
+						info.Add("");
+						for (eProperty property = eProperty.Stat_First; property <= eProperty.Stat_Last; ++property)
+							info.Add(String.Format("{0}: {1}",
+								GlobalConstants.PropertyToName(property),
+								player.GetModified(property)));
+						info.Add("");
+						info.Add("Modified resists:");
+						info.Add("");
+						for (eProperty property = eProperty.Resist_First + 1; property <= eProperty.Resist_Last; ++property)
+							info.Add(String.Format("{0}: {1}",
+								GlobalConstants.PropertyToName(property),
+								player.GetModified(property)));
+						info.Add("");
+						info.Add("Miscellaneous:");
+						info.Add("");
+						info.Add(String.Format("Maximum Health: {0}", player.MaxHealth));
+						info.Add(String.Format("Armor Factor (AF): {0}", player.GetModified(eProperty.ArmorFactor)));
+						info.Add(String.Format("Absorption (ABS): {0}", player.GetModified(eProperty.ArmorAbsorbtion)));
+						client.Out.SendCustomTextWindow("[ " + player.Name + " ]", info);
+						return 1;
+					}
 				case "name":
 					{
 						GamePlayer player = client.Player.TargetObject as GamePlayer;

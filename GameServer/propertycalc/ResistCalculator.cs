@@ -24,11 +24,10 @@ namespace DOL.GS.PropertyCalc
 	/// <summary>
 	/// The Resistance Property calculator
 	/// 
-	/// BuffBonusCategory1 is used for all capped buffs
-	/// BuffBonusCategory2 external used for only damagemodifiing resists (1.65 Category2 Resists)
-	/// BuffBonusCategory3 is used for all debuffs (positive values expected here)
-	/// BuffBonusCategory4 is used for all uncapped modifications
-	///                    category 4 kicks in at last
+	/// BuffBonusCategory1 is used for buffs cast on the living.
+	/// BuffBonusCategory2 is used for modified damage only (no full resist)
+	/// BuffBonusCategory3 is used for debuffs
+	/// BuffBonusCategory4 is used for buffs that have no softcap
 	/// BuffBonusMultCategory1 unused
 	/// </summary>
 	[PropertyCalculator(eProperty.Resist_First, eProperty.Resist_Last)]
@@ -36,66 +35,86 @@ namespace DOL.GS.PropertyCalc
 	{
 		public ResistCalculator() { }
 
-		public override int CalcValue(GameLiving living, eProperty property)
-		{
-            int intProperty = (int)property;
-            // item cap 26%
-            int itemBonus = Math.Min(26, living.ItemBonus[intProperty]);
-            int abilityBonus = living.AbilityBonus[intProperty];
-            // base 24% buff + 5% decap lotm 
-            int buffBonus = Math.Min(29, living.BuffBonusCategory1[intProperty]);
-            int debuff = living.BuffBonusCategory3[intProperty]; 
+        /// <summary>
+        /// Calculate the actual resist amount for the given living and the given
+        /// resist type, applying all possible caps and cap increases.
+        /// </summary>
+        /// <param name="living">The living the resist amount is to be determined for.</param>
+        /// <param name="property">The resist type.</param>
+        /// <returns>The actual resist amount.</returns>
+        public override int CalcValue(GameLiving living, eProperty property)
+        {
+            GameLiving controller = (living is NecromancerPet)
+            ? (((living as NecromancerPet).Brain) as IControlledBrain).Owner
+            : living;
             
-            if (debuff < 0)
-			{
-				debuff = -debuff;
-			}
-			int res = 0;
-			int cap = 0;
-			if (living is GamePlayer)
-			{
-				GamePlayer player = (GamePlayer)living;
-				res += SkillBase.GetRaceResist((eRace)player.Race, (eResist)property);
-				cap = living.Level / 2 + 1;
+            int propertyIndex = (int)property;
 
-				if (itemBonus > cap)
-				{
-					itemBonus = cap;
-				}
+            // Raw bonuses and debuffs.
 
-				if (buffBonus > cap)
-				{
-					buffBonus = cap;
-				}
-			}
-			if (living is NecromancerPet)
-			{
-				IControlledBrain brain = ((NecromancerPet)living).Brain as IControlledBrain;
-				if (brain != null)
-				{
-					if (brain.GetPlayerOwner()!=null)
-					{
-						res += SkillBase.GetRaceResist((eRace)brain.GetPlayerOwner().Race, (eResist)property);
-					}
-					cap = brain.GetPlayerOwner().Level / 2 + 1;	
-					if (itemBonus > cap)
-					{
-						itemBonus = cap;
-					}	
-					if (buffBonus > cap)
-					{
-						buffBonus = cap;
-					}					
-				}
-			}
+            int itemBonus = controller.ItemBonus[propertyIndex];
+            int buffBonus = living.BuffBonusCategory1[propertyIndex];
+            int debuff = living.BuffBonusCategory3[propertyIndex];
+            int abilityBonus = controller.BuffBonusCategory4[propertyIndex];
+            int racialBonus = (controller is GamePlayer)
+                ? SkillBase.GetRaceResist((eRace)((controller as GamePlayer).Race), (eResist)property)
+                : 0;
 
-			//100% debuff effectiveness for resists buffs
-			buffBonus = buffBonus + living.BuffBonusCategory4[intProperty] - debuff;
-			//50% debuff effectiveness for item and racial bonuses
-			if (buffBonus < 0)
-				buffBonus /= 2;
+            // Item bonus cap and cap increase from Mythirians.
 
-			return Math.Min(70, res + itemBonus + buffBonus + abilityBonus);
-		}
+            int itemBonusCap = controller.Level / 2 + 1;
+            int itemBonusCapIncrease = GetItemBonusCapIncrease(controller, property);
+
+            // Apply softcaps.
+
+            itemBonus = Math.Min(itemBonus, itemBonusCap + itemBonusCapIncrease);
+            buffBonus = Math.Min(buffBonus, BuffBonusCap);
+
+            // Apply debuffs. 100% Effectiveness for player buffs, but only 50%
+            // effectiveness for item bonuses.
+
+            buffBonus -= Math.Abs(debuff);
+
+            if (buffBonus < 0)
+            {
+                itemBonus += buffBonus / 2;
+                buffBonus = 0;
+                if (itemBonus < 0)
+                    itemBonus = 0;
+            }
+
+            // Add up and apply hardcap.
+
+            return Math.Min(itemBonus + buffBonus + abilityBonus + racialBonus, HardCap);
+        }
+
+        /// <summary>
+        /// Returns the resist cap increase for the given living and the given
+        /// resist type. It is hardcapped at 5% for the time being.
+        /// </summary>
+        /// <param name="living">The living the cap increase is to be determined for.</param>
+        /// <param name="property">The resist type.</param>
+        /// <returns></returns>
+        public static int GetItemBonusCapIncrease(GameLiving living, eProperty property)
+        {
+            if (living == null) return 0;
+            return Math.Min(living.ItemBonus[(int)(eProperty.ResCapBonus_First - eProperty.Resist_First + property)], 5);
+        }
+
+        /// <summary>
+        /// Cap for player cast resist buffs.
+        /// </summary>
+        public static int BuffBonusCap
+        {
+            get { return 24; }
+        }
+
+        /// <summary>
+        /// Hard cap for resists.
+        /// </summary>
+        public static int HardCap
+        {
+            get { return 70; }
+        }
 	}
 }

@@ -412,7 +412,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets NPC's constitution
 		/// </summary>
-		public short Constitution
+		public virtual short Constitution
 		{
 			get
 			{
@@ -424,7 +424,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets NPC's dexterity
 		/// </summary>
-		public short Dexterity
+		public virtual short Dexterity
 		{
 			get { return m_charStat[eStat.DEX - eStat._First]; }
 			set { m_charStat[eStat.DEX - eStat._First] = value; }
@@ -433,7 +433,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets NPC's strength
 		/// </summary>
-		public short Strength
+		public virtual short Strength
 		{
 			get { return m_charStat[eStat.STR - eStat._First]; }
 			set { m_charStat[eStat.STR - eStat._First] = value; }
@@ -442,7 +442,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets NPC's quickness
 		/// </summary>
-		public short Quickness
+		public virtual short Quickness
 		{
 			get { return m_charStat[eStat.QUI - eStat._First]; }
 			set { m_charStat[eStat.QUI - eStat._First] = value; }
@@ -451,7 +451,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets NPC's intelligence
 		/// </summary>
-		public short Intelligence
+		public virtual short Intelligence
 		{
 			get { return m_charStat[eStat.INT - eStat._First]; }
 			set { m_charStat[eStat.INT - eStat._First] = value; }
@@ -460,7 +460,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets NPC's piety
 		/// </summary>
-		public short Piety
+		public virtual short Piety
 		{
 			get { return m_charStat[eStat.PIE - eStat._First]; }
 			set { m_charStat[eStat.PIE - eStat._First] = value; }
@@ -469,7 +469,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets NPC's empathy
 		/// </summary>
-		public short Empathy
+		public virtual short Empathy
 		{
 			get { return m_charStat[eStat.EMP - eStat._First]; }
 			set { m_charStat[eStat.EMP - eStat._First] = value; }
@@ -478,7 +478,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets NPC's charisma
 		/// </summary>
-		public short Charisma
+		public virtual short Charisma
 		{
 			get { return m_charStat[eStat.CHR - eStat._First]; }
 			set { m_charStat[eStat.CHR - eStat._First] = value; }
@@ -3369,6 +3369,29 @@ namespace DOL.GS
 		public override int AttackCriticalChance(InventoryItem weapon)
 		{
 			return 0;
+		}
+
+		/// <summary>
+		/// Stop attacking and following, but stay in attack mode (e.g. in
+		/// order to cast a spell instead).
+		/// </summary>
+		public virtual void HoldAttack()
+		{
+			if (m_attackAction != null)
+				m_attackAction.Stop();
+			StopFollow();
+		}
+
+		/// <summary>
+		/// Continue a previously started attack.
+		/// </summary>
+		public virtual void ContinueAttack(GameObject target)
+		{
+			if (m_attackAction != null && target != null)
+			{
+				Follow(target, 90, MaxDistance);
+				m_attackAction.Start(1);
+			}
 		}
 
 		/// <summary>

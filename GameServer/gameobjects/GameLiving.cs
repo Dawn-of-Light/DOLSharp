@@ -655,6 +655,15 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Gets the current strafing mode
+		/// </summary>
+		public virtual bool IsStrafing
+		{
+			get { return false; }
+			set { }
+		}
+
+		/// <summary>
 		/// Holds disease counter
 		/// </summary>
 		protected sbyte m_diseasedCount;
@@ -1753,12 +1762,12 @@ namespace DOL.GS
 									string modmessage = "";
 									if (ad.Modifier > 0) modmessage = " (+" + ad.Modifier + ")";
 									if (ad.Modifier < 0) modmessage = " (" + ad.Modifier + ")";
-									string attackTypeMsg = "attack";
+									string attackTypeMsg = "attacks";
 									if (ad.Attacker.ActiveWeaponSlot == eActiveWeaponSlot.Distance)
-										attackTypeMsg = "shot";
-									owner.Out.SendMessage(string.Format("Your {0} {1} {2} and hit for {3}{4} damage!", ad.Attacker.Name, attackTypeMsg, ad.Target.GetName(0, false), ad.Damage, modmessage), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+										attackTypeMsg = "shoots";
+									owner.Out.SendMessage(string.Format("Your {0} {1} {2} and hits for {3}{4} damage!", ad.Attacker.Name, attackTypeMsg, ad.Target.GetName(0, false), ad.Damage, modmessage), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 									if (ad.CriticalDamage > 0)
-										owner.Out.SendMessage("Your " + ad.Attacker.Name + " critical hit " + ad.Target.GetName(0, false) + " for an additional " + ad.CriticalDamage + " damage!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+										owner.Out.SendMessage("Your " + ad.Attacker.Name + " critically hits " + ad.Target.GetName(0, false) + " for an additional " + ad.CriticalDamage + " damage!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 									break;
 								}
 							default:
@@ -1781,13 +1790,13 @@ namespace DOL.GS
 						switch (ad.AttackResult)
 						{
 							case eAttackResult.Blocked:
-								owner.Out.SendMessage(ad.Attacker.GetName(0, true) + " attacks your " + ad.Target.Name + " and pet block the blow!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+								owner.Out.SendMessage(ad.Attacker.GetName(0, true) + " attacks your " + ad.Target.Name + " and is blocked!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 								break;
 							case eAttackResult.Parried:
-								owner.Out.SendMessage(ad.Attacker.GetName(0, true) + " attacks your " + ad.Target.Name + " and pet parry the blow!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+								owner.Out.SendMessage(ad.Attacker.GetName(0, true) + " attacks your " + ad.Target.Name + " and is parried!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 								break;
 							case eAttackResult.Evaded:
-								owner.Out.SendMessage(ad.Attacker.GetName(0, true) + " attacks your " + ad.Target.Name + " and pet evade the blow!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+								owner.Out.SendMessage(ad.Attacker.GetName(0, true) + " attacks your " + ad.Target.Name + " and is evaded!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 								break;
 							case eAttackResult.Fumbled:
 								owner.Out.SendMessage(ad.Attacker.GetName(0, true) + " fumbled!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
@@ -1802,10 +1811,10 @@ namespace DOL.GS
 									string modmessage = "";
 									if (ad.Modifier > 0) modmessage = " (+" + ad.Modifier + ")";
 									if (ad.Modifier < 0) modmessage = " (" + ad.Modifier + ")";
-									owner.Out.SendMessage(ad.Attacker.GetName(0, true) + " hits your " + ad.Target.Name + " for " + ad.Damage + modmessage + " damage.", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+									owner.Out.SendMessage(ad.Attacker.GetName(0, true) + " hits your " + ad.Target.Name + " for " + ad.Damage + modmessage + " damage.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									if (ad.CriticalDamage > 0)
 									{
-										owner.Out.SendMessage(ad.Attacker.GetName(0, true) + " critical hits your " + ad.Target.Name + " for an additional " + ad.CriticalDamage + " damage.", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+										owner.Out.SendMessage(ad.Attacker.GetName(0, true) + " critically hits your " + ad.Target.Name + " for an additional " + ad.CriticalDamage + " damage.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									}
 									break;
 								}
@@ -1823,11 +1832,7 @@ namespace DOL.GS
 				Message.SystemToArea(ad.Attacker, message, eChatType.CT_OthersCombat, (GameObject[])excludes.ToArray(typeof(GameObject)));
 			}
 
-			// Melee has a 100% chance to interrupt players, but only a 25% chance
-			// to interrupt anything else (like NPCs) - call it a hunch :)
-			int interruptChance = (ad.Target is GamePlayer) ? 100 : 25;
-			if (Util.Chance(interruptChance))
-				ad.Target.StartInterruptTimer(interruptDuration, ad.AttackType, this);
+			ad.Target.StartInterruptTimer(interruptDuration, ad.AttackType, this);
 
 			if (ad.Target is GamePlayer && (ad.Target as GamePlayer).CharacterClass is ClassMauler && ad.Damage > 0)
 			{
@@ -2714,14 +2719,7 @@ namespace DOL.GS
 		/// <param name="attackTarget">The object to attack</param>
 		public virtual void StartAttack(GameObject attackTarget)
 		{
-			if (!IsAlive || ObjectState != eObjectState.Active) return;
-
-			// Necromancer with summoned pet cannot attack
-			if(ControlledNpc != null)
-				if(ControlledNpc.Body != null)
-					if(ControlledNpc.Body is NecromancerPet)
-						return;					
-
+			if (!IsAlive || ObjectState != eObjectState.Active) return;			
 			if (IsMezzed || IsStunned) return;
 			//			if (AttackState)
 			//				StopAttack(); // interrupts range attack animation
@@ -2851,6 +2849,7 @@ namespace DOL.GS
 			InterceptEffect intercept = null;
 			GameSpellEffect bladeturn = null;
 			EngageEffect engage = null;
+			ShadeEffect shade = null;
 			// ML effects
 			BodyguardEffect bodyguard = null;
 			GameSpellEffect phaseshift = null;
@@ -2876,6 +2875,7 @@ namespace DOL.GS
 					if (effect is BerserkEffect) defenceDisabled = true;
 					if (engage == null && effect is EngageEffect) engage = (EngageEffect)effect;
 					if (intercept != null) continue; // already found
+					if (shade == null && effect is ShadeEffect) shade = (ShadeEffect)effect;
 					// ML effects
 					if (bodyguard == null && effect is BodyguardEffect && ((BodyguardEffect)effect).GuardTarget == this) bodyguard = (BodyguardEffect)effect;
 					if (phaseshift == null && effect is GameSpellEffect && ((GameSpellEffect)effect).Spell.SpellType == "Phaseshift") phaseshift = (GameSpellEffect)effect;
@@ -2907,6 +2907,10 @@ namespace DOL.GS
 				stealthStyle = true;
 				defenceDisabled = true;
 			}
+
+			// Necromancer Shade
+			if (shade != null)
+				return eAttackResult.NoValidTarget;
 
 			// Bodyguard
 			if (bodyguard != null
@@ -5515,6 +5519,15 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		//		{
 		//			get { return m_activeSpellHandlers; }
 		//		}
+
+		/// <summary>
+		/// Multiplier for melee and magic.
+		/// </summary>
+		public virtual double Effectiveness
+		{
+			get { return 1.0; }
+			set { }
+		}
 
 		public virtual bool IsCasting
 		{

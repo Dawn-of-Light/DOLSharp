@@ -182,7 +182,7 @@ GamePlayer.Bind.CantBindDead:				You can not bind while dead!
 GamePlayer.Bind.CantHere:				You cannot bind here!	
 GamePlayer.Bind.LastBindPoint:				Last Bind Point : {0}.	
 GamePlayer.Bind.MustWait:				You must wait {0} seconds to bind again!	
-GamePlayer.CastSpell.AlreadyCastFollow:			You are already casting a spell!  You prepare this spell as a follow up!		
+GamePlayer.CastSpell.AlreadyCastFollow:			You are already casting a spell! You prepare this spell as a follow up!		
 GamePlayer.CastSpell.AlreadyCastNoQueue:		You are already casting a spell, to enable spell queueing use '/noqueue'!			
 GamePlayer.CastSpell.AlreadyPlaySong:			You are already playing a song!		
 GamePlayer.CastSpell.CantCastMezzed:			You can't cast while mesmerized!		

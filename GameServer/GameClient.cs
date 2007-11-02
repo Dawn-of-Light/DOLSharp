@@ -225,10 +225,22 @@ namespace DOL
 				Character car = m_account.Characters[m_activeCharIndex];
 
 				Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
+				String playerClass;
+
+				switch ((eCharacterClass)(m_account.Characters[m_activeCharIndex].Class))
+				{
+					case eCharacterClass.Disciple:
+					case eCharacterClass.Necromancer:
+						playerClass = "DOL.GS.GameNecromancer";
+						break;
+					default:
+						playerClass = ServerProperties.Properties.PLAYER_CLASS;
+						break;
+				}
 
 				try
 				{
-					player = (GamePlayer)gasm.CreateInstance(ServerProperties.Properties.PLAYER_CLASS, false, BindingFlags.CreateInstance, null, new object[] { this, m_account.Characters[m_activeCharIndex] }, null, null);
+					player = (GamePlayer)gasm.CreateInstance(playerClass, false, BindingFlags.CreateInstance, null, new object[] { this, m_account.Characters[m_activeCharIndex] }, null, null);
 				}
 				catch (Exception e)
 				{
@@ -241,7 +253,7 @@ namespace DOL
 					{
 						try
 						{
-							player = (GamePlayer)asm.CreateInstance(ServerProperties.Properties.PLAYER_CLASS, false, BindingFlags.CreateInstance, null, new object[] { this, m_account.Characters[m_activeCharIndex] }, null, null);
+							player = (GamePlayer)asm.CreateInstance(playerClass, false, BindingFlags.CreateInstance, null, new object[] { this, m_account.Characters[m_activeCharIndex] }, null, null);
 						}
 						catch (Exception e)
 						{
@@ -254,7 +266,16 @@ namespace DOL
 				}
 				if (player == null)
 				{
-					player = new GamePlayer(this, m_account.Characters[m_activeCharIndex]);
+					switch ((eCharacterClass)(m_account.Characters[m_activeCharIndex].Class))
+					{
+						case eCharacterClass.Disciple:
+						case eCharacterClass.Necromancer:
+							player = new GameNecromancer(this, m_account.Characters[m_activeCharIndex]);
+							break;
+						default:
+							player = new GamePlayer(this, m_account.Characters[m_activeCharIndex]);
+							break;
+					}
 				}
 				Thread.MemoryBarrier();
 				Player = player;

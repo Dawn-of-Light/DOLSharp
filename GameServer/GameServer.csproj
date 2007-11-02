@@ -137,6 +137,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ai\brain\TurretBrain.cs" />
+    <Compile Include="ai\NecromancerPetBrain.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -223,6 +224,7 @@
     <Compile Include="effects\EngageEffect.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="effects\FacilitatePainworkingEffect.cs" />
     <Compile Include="effects\GameEffectList.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -302,6 +304,7 @@
     <Compile Include="events\gameobjects\AttackFinishedEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="events\gameobjects\CastFailedEventArgs.cs" />
     <Compile Include="events\gameobjects\CastSpellEventArgs.cs" />
     <Compile Include="events\gameobjects\DyingEventArgs.cs">
       <SubType>Code</SubType>
@@ -359,6 +362,7 @@
     <Compile Include="events\gameobjects\MoveToEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="events\gameobjects\PetSpellEventArgs.cs" />
     <Compile Include="events\gameobjects\PlayerDisbandedEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -402,6 +406,7 @@
     <Compile Include="events\gameobjects\TakeDamageEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="events\gameobjects\TetherEventArgs.cs" />
     <Compile Include="events\gameobjects\TimerEventArgs.cs" />
     <Compile Include="events\gameobjects\TurnToEventArgs.cs">
       <SubType>Code</SubType>
@@ -474,12 +479,12 @@
     <Compile Include="GameClient.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="gameobjects\CustomNPC\Cuuldurach.cs" />
+    <Compile Include="gameobjects\Dragons\Cuuldurach.cs" />
     <Compile Include="gameobjects\CustomNPC\GameBoatStableMaster.cs" />
-    <Compile Include="gameobjects\CustomNPC\GameDragon.cs" />
+    <Compile Include="gameobjects\Dragons\GameDragon.cs" />
     <Compile Include="gameobjects\CustomNPC\GameKingThroneNpc.cs" />
-    <Compile Include="gameobjects\CustomNPC\Gjalpinulva.cs" />
-    <Compile Include="gameobjects\CustomNPC\Golestandt.cs" />
+    <Compile Include="gameobjects\Dragons\Gjalpinulva.cs" />
+    <Compile Include="gameobjects\Dragons\Golestandt.cs" />
     <Compile Include="gameobjects\GameBoat.cs" />
     <Compile Include="gameobjects\GameHorseBoat.cs" />
     <Compile Include="gameobjects\CustomNPC\CraftNPC.cs">
@@ -519,6 +524,7 @@
     <Compile Include="gameobjects\GameMovingObject.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="gameobjects\Necromancer\GameNecromancer.cs" />
     <Compile Include="gameobjects\GameNPC.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -537,7 +543,7 @@
     <Compile Include="gameobjects\GameStaticItemTimed.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="gameobjects\GameNecromancerPet.cs" />
+    <Compile Include="gameobjects\Necromancer\NecromancerPet.cs" />
     <Compile Include="gameobjects\SiegeWeapon\gameSiegeBallista.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1646,7 +1652,10 @@
     <Compile Include="spells\Masterlevel\Stormlord.cs" />
     <Compile Include="spells\Masterlevel\Warlord.cs" />
     <Compile Include="spells\MetalGuardSpellHandler.cs" />
-    <Compile Include="spells\SummonNecromancerPet.cs" />
+    <Compile Include="spells\Necromancer\FacilitatePainworking.cs" />
+    <Compile Include="spells\Necromancer\PetSpellHandler.cs" />
+    <Compile Include="spells\Necromancer\PowerDrainSpellHandler.cs" />
+    <Compile Include="spells\Necromancer\SummonNecromancerPet.cs" />
     <Compile Include="spells\NoVarianceSpells.cs" />
     <Compile Include="spells\OmniLifedrainSpellHandler.cs" />
     <Compile Include="spells\PetMesmerizeSpellHandler.cs" />

@@ -17,6 +17,7 @@
  *
  */
 using System;
+using DOL.AI.Brain;
 
 namespace DOL.GS.PropertyCalc
 {
@@ -32,124 +33,129 @@ namespace DOL.GS.PropertyCalc
 	/// </summary>
 	[PropertyCalculator(eProperty.Stat_First, eProperty.Stat_Last)]
 	public class StatCalculator : PropertyCalculator
-	{
-		public StatCalculator() { }
+    {
+        public StatCalculator() { }
 
-		public override int CalcValue(GameLiving living, eProperty property)
-		{
-			if (living is GamePlayer)
+        public override int CalcValue(GameLiving living, eProperty property)
+        {
+            GameLiving controller = (living is NecromancerPet && (
+				property == eProperty.Dexterity || property == eProperty.Quickness))
+                ? (((living as NecromancerPet).Brain) as IControlledBrain).Owner
+                : living;
+
+            int propertyIndex = (int)property;
+
+            // Raw bonuses and debuffs.
+
+            int baseStat = controller.GetBaseStat((eStat)property);
+            int itemBonus = controller.ItemBonus[propertyIndex];
+            int abilityBonus = controller.AbilityBonus[propertyIndex];
+            int baseBuffBonus = living.BuffBonusCategory1[propertyIndex];
+            int specBuffBonus = living.BuffBonusCategory2[propertyIndex];
+            int debuff = living.BuffBonusCategory3[propertyIndex];
+			int deathConDebuff = 0;
+
+			// Special cases:
+			// 1) ManaStat (base stat + acuity, players only).
+			// All caster classes benefit from item and ability acuity
+			// bonuses, but only list casters can reap the benefits of
+			// acuity buffs.
+			// 2) Constitution lost at death, only affects players.
+
+			if (controller is GamePlayer)
 			{
-				GamePlayer player = living as GamePlayer;
-				int baseStat = player.GetBaseStat((eStat)property);
-				int itemBonus = living.ItemBonus[(int)property];
-				int abilityBonus = living.AbilityBonus[(int)property];
-				int singleStatBonus = living.BuffBonusCategory1[(int)property];
-				int dualStatBonus = living.BuffBonusCategory2[(int)property];
-				int debuff = living.BuffBonusCategory3[(int)property];
-				int acuityBonus = 0;
-
-				int itemcap = (int)(living.Level * 1.5);
-				int singlecap = (int)(living.Level * 1.25);
-				int dualcap = (int)(living.Level * 1.25 * 1.5);
-				int overcapMax = living.Level / 2 + 1;
-				int overcapbonus = living.ItemBonus[(int)(eProperty.StatCapBonus_First - eProperty.Stat_First + property)];
-
-				if (property == (eProperty)player.CharacterClass.ManaStat)
+				GamePlayer player = controller as GamePlayer;
+				if (property == (eProperty)(player.CharacterClass.ManaStat))
 				{
-					overcapbonus += living.ItemBonus[(int)eProperty.AcuCapBonus];
-					itemBonus += living.ItemBonus[(int)eProperty.Acuity];
-					abilityBonus += living.AbilityBonus[(int)eProperty.Acuity];
+					itemBonus += player.ItemBonus[(int)eProperty.Acuity];
+					abilityBonus += player.AbilityBonus[(int)eProperty.Acuity];
 					if (player.CharacterClass.ClassType == eClassType.ListCaster)
-						acuityBonus = living.BuffBonusCategory1[(int)eProperty.Acuity];
+						baseBuffBonus += player.BuffBonusCategory1[(int)eProperty.Acuity];
 				}
 
-				overcapbonus = Math.Min(overcapbonus, overcapMax);
-				if (itemBonus > itemcap + overcapbonus)
-				{
-					itemBonus = itemcap + overcapbonus;
-				}
-				if (singleStatBonus > singlecap)
-				{
-					singleStatBonus = singlecap;
-				}
-				if (dualStatBonus > dualcap)
-				{
-					dualStatBonus = dualcap;
-				}
-				if (debuff < 0)
-				{
-					debuff = -debuff;
-				}
-				int stat = singleStatBonus + dualStatBonus - debuff + acuityBonus + living.BuffBonusCategory4[(int)property];
-				//50% debuff effectiveness for item and base stats
-				if (stat < 0)
-					stat >>= 1;
-				stat += baseStat + itemBonus + abilityBonus;
-				stat = (int)(stat * living.BuffBonusMultCategory1.Get((int)property));
-
-				if (property == eProperty.Constitution && player.TotalConstitutionLostAtDeath > 0)
-				{
-					stat -= player.TotalConstitutionLostAtDeath;
-				}
-
-				if (stat < 1) stat = 1;	// at least 1
-
-				return stat;
+				deathConDebuff = player.TotalConstitutionLostAtDeath;
 			}
-			else
+
+            // Caps and cap increases. Only players actually have a buff bonus cap, 
+			// pets don't.
+
+            int itemBonusCap = GetItemBonusCap(controller, property);
+            int baseBuffBonusCap = (living is GamePlayer) ? (int)(living.Level * 1.25) : Int16.MaxValue;
+            int specBuffBonusCap = (living is GamePlayer) ? (int)(living.Level * 1.5 * 1.25) : Int16.MaxValue;
+            int itemBonusCapIncrease = GetItemBonusCapIncrease(controller, property);
+            
+			// Apply softcaps. Cap increase is capped already.
+
+			itemBonus = Math.Min(itemBonus, itemBonusCap + itemBonusCapIncrease);
+			baseBuffBonus = Math.Min(baseBuffBonus, baseBuffBonusCap);
+			specBuffBonus = Math.Min(specBuffBonus, specBuffBonusCap);
+
+			// Apply debuffs, 100% effectiveness for player buffs, 50% effectiveness
+			// for item and base stats
+
+			int unbuffedBonus = baseStat + itemBonus;
+			int buffBonus = baseBuffBonus + specBuffBonus - Math.Abs(debuff);
+			if (buffBonus < 0)
 			{
-                GameNPC npc = living as GameNPC;
-                int baseStat = npc.GetBaseStat((eStat)property);
-                int itemBonus = living.ItemBonus[(int)property];
-                int abilityBonus = living.AbilityBonus[(int)property];
-                int singleStatBonus = living.BuffBonusCategory1[(int)property];
-                int dualStatBonus = living.BuffBonusCategory2[(int)property];
-                int debuff = living.BuffBonusCategory3[(int)property];
-                int acuityBonus = 0;
+				unbuffedBonus += buffBonus / 2;
+				buffBonus = 0;
+				if (unbuffedBonus < 0)
+					unbuffedBonus = 0;
+			}
 
-                int itemcap = (int)(living.Level * 1.5);
-                int singlecap = (int)(living.Level * 1.25);
-                int dualcap = (int)(living.Level * 1.25 * 1.5);
-                int overcapMax = living.Level / 2 + 1;
-                int overcapbonus = living.ItemBonus[(int)(eProperty.StatCapBonus_First - eProperty.Stat_First + property)];
+			// Add up and apply any multiplicators.
 
-                if (property == (eProperty)npc.Intelligence)
-                {
-                    overcapbonus += living.ItemBonus[(int)eProperty.AcuCapBonus];
-                    itemBonus += living.ItemBonus[(int)eProperty.Acuity];
-                    abilityBonus += living.AbilityBonus[(int)eProperty.Acuity];
-                    //if (player.CharacterClass.ClassType == eClassType.ListCaster)
-                       // acuityBonus = living.BuffBonusCategory1[(int)eProperty.Acuity];
-                }
+			int stat = unbuffedBonus + buffBonus + abilityBonus;
+			stat = (int)(stat * living.BuffBonusMultCategory1.Get((int)property));
 
-                overcapbonus = Math.Min(overcapbonus, overcapMax);
-                if (itemBonus > itemcap + overcapbonus)
-                {
-                    itemBonus = itemcap + overcapbonus;
-                }
-                if (singleStatBonus > singlecap)
-                {
-                    singleStatBonus = singlecap;
-                }
-                if (dualStatBonus > dualcap)
-                {
-                    dualStatBonus = dualcap;
-                }
-                if (debuff < 0)
-                {
-                    debuff = -debuff;
-                }
-                int stat = singleStatBonus + dualStatBonus - debuff + acuityBonus + living.BuffBonusCategory4[(int)property];
-                //50% debuff effectiveness for item and base stats
-                if (stat < 0)
-                    stat >>= 1;
-                stat += baseStat + itemBonus + abilityBonus;
-                stat = (int)(stat * living.BuffBonusMultCategory1.Get((int)property));
+			// Possibly apply constitution loss at death.
 
-                if (stat < 1) stat = 1;	// at least 1
+			stat -= (property == eProperty.Constitution)? deathConDebuff : 0;
 
-                return stat;
+			return Math.Max(1, stat);
+        }
+
+        /// <summary>
+        /// Returns the stat cap for this living and the given stat.
+        /// </summary>
+        /// <param name="living">The living the cap is to be determined for.</param>
+        /// <param name="property">The stat.</param>
+        /// <returns></returns>
+        public static int GetItemBonusCap(GameLiving living, eProperty property)
+        {
+            if (living == null) return 0;
+            return (int) (living.Level * 1.5);
+        }
+
+        /// <summary>
+        /// Returns the stat cap increase for this living and the given stat.
+        /// </summary>
+        /// <param name="living">The living the cap increase is to be determined for.</param>
+        /// <param name="property">The stat.</param>
+        /// <returns></returns>
+        public static int GetItemBonusCapIncrease(GameLiving living, eProperty property)
+        {
+            if (living == null) return 0;
+            int itemBonusCapIncreaseCap = GetItemBonusCapIncreaseCap(living);
+            int itemBonusCapIncrease = living.ItemBonus[(int)(eProperty.StatCapBonus_First - eProperty.Stat_First + property)];
+            if (living is GamePlayer)
+            {
+                if (property == (eProperty)((living as GamePlayer).CharacterClass.ManaStat))
+                    itemBonusCapIncrease += living.ItemBonus[(int)eProperty.AcuCapBonus];
             }
-		}
+
+            return Math.Min(itemBonusCapIncrease, itemBonusCapIncreaseCap);
+        }
+
+        /// <summary>
+        /// Returns the cap for stat cap increases.
+        /// </summary>
+        /// <param name="living">The living the value is to be determined for.</param>
+        /// <returns>The cap increase cap for this living.</returns>
+        public static int GetItemBonusCapIncreaseCap(GameLiving living)
+        {
+            if (living == null) return 0;
+            return living.Level / 2 + 1;
+        }
 	}
 }
