@@ -24,6 +24,8 @@ namespace DOL.GS
 			{
 				InventoryItem newItem = new InventoryItem();
 				newItem.Model = item.Model;
+				newItem.Color = item.Color;
+				newItem.Effect = item.Effect;
 				newItem.Object_Type = item.Object_Type;
 				newItem.Hand = item.Hand;
 				AddItem((eInventorySlot)item.SlotPosition, newItem);

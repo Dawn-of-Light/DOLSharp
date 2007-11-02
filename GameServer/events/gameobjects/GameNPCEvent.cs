@@ -100,5 +100,17 @@ namespace DOL.Events
 		/// Fired whenever following NPC lost its target
 		/// </summary>
 		public static readonly GameNPCEvent FollowLostTarget = new GameNPCEvent("GameNPC.FollowLostTarget");
+		/// <summary>
+		/// Fired whenever pet is supposed to cast a spell.
+		/// </summary>
+		public static readonly GameNPCEvent PetSpell = new GameNPCEvent("GameNPC.PetSpell");
+		/// <summary>
+		/// Fired whenever pet is out of tether range (necromancer).
+		/// </summary>
+		public static readonly GameNPCEvent OutOfTetherRange = new GameNPCEvent("GameNPC.OutOfTetherRange");
+		/// <summary>
+		/// Fired when pet is lost (necromancer).
+		/// </summary>
+		public static readonly GameNPCEvent PetLost = new GameNPCEvent("GameNPC.PetLost");
 	}
 }

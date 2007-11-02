@@ -685,6 +685,20 @@ namespace DOL.GS
 		SpellLevel = 218,
         MissHit = 219,
         KeepDamage = 220,
+
+		//Resist cap increases
+		ResCapBonus_First = 221,
+		BodyResCapBonus = 221,
+		ColdResCapBonus = 222,
+		CrushResCapBonus = 223,
+		EnergyResCapBonus = 224,
+		HeatResCapBonus = 225,
+		MatterResCapBonus = 226,
+		SlashResCapBonus = 227,
+		SpiritResCapBonus = 228,
+		ThrustResCapBonus = 229,
+		ResCapBonus_Last = 229,
+
 		MaxProperty = 255,
 	}
 
@@ -1224,6 +1238,31 @@ namespace DOL.GS
 				default: return 0;
 			}
 		}
+
+		public static string PropertyToName(eProperty property)
+		{
+			switch (property)
+			{
+				case eProperty.Strength: return "Strength";
+				case eProperty.Dexterity: return "Dexterity";
+				case eProperty.Constitution: return "Constitution";
+				case eProperty.Quickness: return "Quickness";
+				case eProperty.Intelligence: return "Intelligence";
+				case eProperty.Piety: return "Piety";
+				case eProperty.Empathy: return "Empathy";
+				case eProperty.Charisma: return "Charisma";
+				case eProperty.Resist_Cold: return "Cold Resist";
+				case eProperty.Resist_Crush: return "Crush Resist";
+				case eProperty.Resist_Energy: return "Energy Resist";
+				case eProperty.Resist_Heat: return "Heat Resist";
+				case eProperty.Resist_Matter: return "Matter Resist";
+				case eProperty.Resist_Slash: return "Slash Resist";
+				case eProperty.Resist_Spirit: return "Spirit Resist";
+				case eProperty.Resist_Thrust: return "Thrust Resist";
+				default: return "not implemented";
+			}
+		}
+
 		public static string DamageTypeToName(eDamageType damage)
 		{
 			switch (damage)

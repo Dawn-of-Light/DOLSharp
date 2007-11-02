@@ -24,19 +24,19 @@ namespace DOL.GS.Spells
 			{
 				base.OnEffectStart(effect);
 				GamePlayer player = effect.Owner as GamePlayer;
-				player.BuffBonusCategory1[0] = (int)player.PlayerEffectiveness;
+				player.BuffBonusCategory1[0] = (int)player.Effectiveness;
 
-				double effectiveness =  player.PlayerEffectiveness;
+				double effectiveness =  player.Effectiveness;
 				double valueToAdd = (Spell.Value * effectiveness)/100;
 				valueToAdd = effectiveness - valueToAdd;
 
 				if ((valueToAdd) > 0)
 				{
-					player.PlayerEffectiveness = valueToAdd;
+					player.Effectiveness = valueToAdd;
 				}
 				else
 				{
-					player.PlayerEffectiveness = 0;
+					player.Effectiveness = 0;
 				}
 			
 
@@ -53,7 +53,7 @@ namespace DOL.GS.Spells
 			if (effect.Owner is GamePlayer)
 			{
 				GamePlayer player = effect.Owner as GamePlayer;
-				player.PlayerEffectiveness = player.BuffBonusCategory1[0];
+				player.Effectiveness = player.BuffBonusCategory1[0];
 				player.BuffBonusCategory1[0] = 0;
 				MessageToLiving(effect.Owner, Spell.Message3, eChatType.CT_Spell);
 				Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message4, effect.Owner.GetName(0, true)), eChatType.CT_Spell, effect.Owner);

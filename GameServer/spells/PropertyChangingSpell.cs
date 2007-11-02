@@ -24,6 +24,8 @@ using DOL.GS.PacketHandler;
 using DOL.GS.PropertyCalc;
 
 using log4net;
+using DOL.AI.Brain;
+using System;
 
 namespace DOL.GS.Spells
 {
@@ -127,9 +129,30 @@ namespace DOL.GS.Spells
 			}
 
 			//messages are after buff and after "Your xxx has increased." messages
-			MessageToLiving(effect.Owner, Spell.Message1, toLiving);
-			Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, false)), toOther, effect.Owner);
+			if (effect.Owner is GameNPC && (effect.Owner as GameNPC).Brain is IControlledBrain)
+			{
+				GameLiving player = ((effect.Owner as GameNPC).Brain as IControlledBrain).Owner;
+				if (player != null)
+				{
+					// If pet is buffed, it shows as a beneficial spell to the owner,
+					// i.e. in blue writing...
 
+					MessageToLiving(player, String.Format(Spell.Message2,
+						effect.Owner.GetName(0, true)), toLiving);
+
+					// ...and in white writing for everyone else.
+
+					foreach (GamePlayer gamePlayer in effect.Owner.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+						if (gamePlayer != player)
+							MessageToLiving(gamePlayer, String.Format(Spell.Message2,
+								effect.Owner.GetName(0, true)), toOther);
+				}
+			}
+			else
+			{
+				MessageToLiving(effect.Owner, Spell.Message1, toLiving);
+				Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, false)), toOther, effect.Owner);
+			}
 			if (ServerProperties.Properties.BUFF_RANGE > 0 && effect.Spell.Concentration > 0 && effect.SpellHandler.HasPositiveEffect && effect.Owner != effect.SpellHandler.Caster)
 			{
 				m_buffCheckAction = new BuffCheckAction(effect.SpellHandler.Caster, effect.Owner, effect);

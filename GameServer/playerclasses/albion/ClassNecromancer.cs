@@ -65,8 +65,8 @@ namespace DOL.GS.Scripts
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Death_Servant));
 
 				player.AddSpellLine(SkillBase.GetSpellLine("Painworking"));
-				player.AddSpellLine(SkillBase.GetSpellLine("Necro Deathsight"));
-				player.AddSpellLine(SkillBase.GetSpellLine("Necro Painworking"));
+				player.AddSpellLine(SkillBase.GetSpellLine("Deathsight Spec"));
+				player.AddSpellLine(SkillBase.GetSpellLine("Painworking Spec"));
 				player.AddSpellLine(SkillBase.GetSpellLine("Death Servant Spec"));
 			}
 		}
