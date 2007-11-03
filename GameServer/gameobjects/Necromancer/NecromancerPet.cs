@@ -29,6 +29,7 @@ using DOL.GS.PacketHandler;
 using DOL.Database;
 using System.Collections;
 using DOL.GS.Effects;
+using DOL.GS.Styles;
 
 namespace DOL.GS
 {
@@ -46,6 +47,8 @@ namespace DOL.GS
 		{
 		}
 
+        INpcTemplate m_petTemplate;
+
 		/// <summary>
 		/// Create necromancer pet from template. Con and hit bonuses from
 		/// items the caster was wearing when the summon started, will be
@@ -58,6 +61,8 @@ namespace DOL.GS
 		public NecromancerPet(INpcTemplate npcTemplate, GamePlayer owner, int summonConBonus, 
 			int summonHitsBonus) : base(npcTemplate)
 		{
+            m_petTemplate = npcTemplate;
+
             // Transfer bonuses.
             
 			m_summonConBonus = summonConBonus;
@@ -185,7 +190,6 @@ namespace DOL.GS
 
             return base.AttackDamageType(weapon);
         }
-
 
 		private int m_summonConBonus;
 		private int m_summonHitsBonus;
@@ -336,6 +340,22 @@ namespace DOL.GS
 			}
 			return false;
 		}
+
+        /// <summary>
+        /// Pick a random style for now.
+        /// </summary>
+        /// <returns></returns>
+        protected override Style GetStyleToUse()
+        {
+            if (m_petTemplate != null)
+            {
+                int styleCount = m_petTemplate.Styles.Count;
+                if (styleCount > 0)
+                    return (Style)(m_petTemplate.Styles[Util.Random(styleCount - 1)]);
+            }
+
+            return base.GetStyleToUse();
+        }
 
 		/// <summary>
 		/// Pet-only insta spells.

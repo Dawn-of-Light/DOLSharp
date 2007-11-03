@@ -129,8 +129,14 @@ namespace DOL.GS
 				for (int i = 0; i < styles.Length; i++)
 				{
 					if (styles[i].Trim().Length == 0) continue;
-					int id = int.Parse(styles[i]);
-					Style style = SkillBase.GetStyleByID(id, -1);
+					string[] styleAndClass = styles[i].Split('|');
+					if (styleAndClass.Length != 2) continue;
+					string stylePart = styleAndClass[0].Trim();
+					string classPart = styleAndClass[1].Trim();
+					if (stylePart.Length == 0 || classPart.Length == 0) continue;
+					int styleID = int.Parse(stylePart);
+					int classID = int.Parse(classPart);
+					Style style = SkillBase.GetStyleByID(styleID, classID);
 					m_styles.Add(style);
 				}
 			}
