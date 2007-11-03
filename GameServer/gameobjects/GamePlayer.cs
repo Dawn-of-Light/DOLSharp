@@ -1826,6 +1826,13 @@ namespace DOL.GS
 			return Math.Max(1, 20 + hp1 / 50 + hp2);
 		}
 
+        /// <summary>
+        /// Health as it should display in the group window.
+        /// </summary>
+        public virtual byte HealthPercentGroupWindow
+        {
+            get { return HealthPercent; }
+        }
 
 		/// <summary>
 		/// Calculates MaxHealth

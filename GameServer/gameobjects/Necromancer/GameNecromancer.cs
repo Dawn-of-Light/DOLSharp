@@ -84,9 +84,25 @@ namespace DOL.GS
 		/// <param name="attackTarget"></param>
 		public override void StartAttack(GameObject attackTarget)
 		{
-			if (!IsShade)
-				base.StartAttack(attackTarget);
+            if (!IsShade)
+                base.StartAttack(attackTarget);
+            else
+                Out.SendMessage("You cannot enter combat while you are a shade!",
+                    eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 		}
+
+        /// <summary>
+        /// If the pet is up, show the pet's health in the group window.
+        /// </summary>
+        public override byte HealthPercentGroupWindow
+        {
+            get
+            {
+                if (ControlledNpc == null)
+                    return base.HealthPercentGroupWindow;
+                return ControlledNpc.Body.HealthPercent;
+            }
+        }
 
         /// <summary>
         /// Set the tether timer if pet gets out of range or comes back into range.

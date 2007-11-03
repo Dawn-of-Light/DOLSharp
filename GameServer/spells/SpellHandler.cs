@@ -1547,12 +1547,6 @@ namespace DOL.GS.Spells
 		/// <param name="target">The current target object</param>
 		public virtual void StartSpell(GameLiving target)
 		{
-         	m_caster.Notify(GameLivingEvent.StartSpell, m_caster, new CastSpellEventArgs(this));
-        	if (m_caster.ControlledNpc!=null)
-        		if(m_caster.ControlledNpc.Body!=null)
-        			if(m_caster.ControlledNpc.Body is NecromancerPet)
-        				return;
-
 			GamePlayer player = Caster as GamePlayer;
 			if (target == null || (Spell.Radius > 0 && Spell.Range == 0))
 				target = Caster;
@@ -2157,6 +2151,9 @@ namespace DOL.GS.Spells
 		/// <returns>first occurance of effect in target's effect list or null</returns>
 		public static GameSpellEffect FindEffectOnTarget(GameLiving target, string spellType)
 		{
+			if (target == null)
+				return null;
+
 			lock (target.EffectList)
 			{
 				foreach (IGameEffect fx in target.EffectList)
