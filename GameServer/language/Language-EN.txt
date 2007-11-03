@@ -488,7 +488,7 @@ Scripts.Player.Housing.TransferToGuild:			Do you want to transfer this house to 
 StyleProcessor.ExecuteStyle.BackStrike:			You inflict a critical strike in the back of your target 
 StyleProcessor.ExecuteStyle.ExecuteFail:		You fail to execute your {0} perfectly!
 StyleProcessor.ExecuteStyle.PerformPerfectly:		You perform your {0} perfectly! {1}
-StyleProcessor.ExecuteStyle.PerformsPerfectly:		Your {0} performs {1} perfectly! {2}
+StyleProcessor.ExecuteStyle.PerformsPerfectly:		Your {0} performs its {1} perfectly.{2}
 StyleProcessor.ExecuteStyle.StyleNameBackstab:		Backstab
 StyleProcessor.ExecuteStyle.StyleNameBackstabII:	Backstab II
 StyleProcessor.ExecuteStyle.StyleNamePerforateArtery:	Perforate Artery
