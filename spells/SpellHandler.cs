@@ -480,12 +480,6 @@ namespace DOL.GS.Spells
 			{
 				// All spells that need a target.
 
-				if (FindStaticEffectOnTarget(selectedTarget, typeof(ShadeEffect)) != null)
-				{
-					MessageToCaster("Invalid target.", eChatType.CT_System);
-					return false;
-				}
-
 				if (selectedTarget == null || selectedTarget.ObjectState != GameLiving.eObjectState.Active)
 				{
 					MessageToCaster("You must select a target for this spell!",
@@ -508,6 +502,12 @@ namespace DOL.GS.Spells
 						if (selectedTarget == m_caster)
 						{
 							MessageToCaster("You can't attack yourself! ", eChatType.CT_System);
+							return false;
+						}
+
+						if (FindStaticEffectOnTarget(selectedTarget, typeof(ShadeEffect)) != null)
+						{
+							MessageToCaster("Invalid target.", eChatType.CT_System);
 							return false;
 						}
 
@@ -559,8 +559,7 @@ namespace DOL.GS.Spells
 			}
 
 			//Ryan: don't want mobs to have reductions in mana
-			//Aredhel: Then prevent mana from being deducted, but I need this check for the pet
-			if (m_caster.Mana < CalculateNeededPower(selectedTarget) && Spell.SpellType != "Archery")
+			if (m_caster is GamePlayer && m_caster.Mana < CalculateNeededPower(selectedTarget) && Spell.SpellType != "Archery")
 			{
 				MessageToCaster("You don't have enough power to cast that!", eChatType.CT_SpellResisted);
 				return false;
