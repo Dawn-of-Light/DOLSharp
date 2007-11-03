@@ -137,7 +137,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ai\brain\TurretBrain.cs" />
-    <Compile Include="ai\NecromancerPetBrain.cs" />
+    <Compile Include="ai\brain\Necromancer\NecromancerPetBrain.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1654,7 +1654,8 @@
     <Compile Include="spells\MetalGuardSpellHandler.cs" />
     <Compile Include="spells\Necromancer\FacilitatePainworking.cs" />
     <Compile Include="spells\Necromancer\PetSpellHandler.cs" />
-    <Compile Include="spells\Necromancer\PowerDrainSpellHandler.cs" />
+    <Compile Include="spells\Necromancer\PowerDrain.cs" />
+    <Compile Include="spells\Necromancer\PowerTransfer.cs" />
     <Compile Include="spells\Necromancer\SummonNecromancerPet.cs" />
     <Compile Include="spells\NoVarianceSpells.cs" />
     <Compile Include="spells\OmniLifedrainSpellHandler.cs" />

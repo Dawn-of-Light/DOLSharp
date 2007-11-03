@@ -291,9 +291,10 @@ namespace DOL.GS.Spells
 			{
 				chatType = eChatType.CT_Spell;
 			}
-
+			bool upperCase = Spell.Message2.StartsWith("{0}");
 			MessageToLiving(effect.Owner, Spell.Message1, chatType);
-			Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, true)), chatType, effect.Owner);
+			Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, 
+				effect.Owner.GetName(0, upperCase)), chatType, effect.Owner);
 			GameEventMgr.AddHandler(effect.Owner, EventType, new DOLEventHandler(EventHandler));
 		}
 
@@ -310,8 +311,10 @@ namespace DOL.GS.Spells
 			{
 				// "Your weapon returns to normal."
 				// "{0}'s weapon returns to normal."
+				bool upperCase = Spell.Message4.StartsWith("{0}");
 				MessageToLiving(effect.Owner, Spell.Message3, eChatType.CT_SpellExpires);
-				Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message4, effect.Owner.GetName(0, true)), eChatType.CT_SpellExpires, effect.Owner);
+				Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message4, 
+					effect.Owner.GetName(0, upperCase)), eChatType.CT_SpellExpires, effect.Owner);
 			}
 			GameEventMgr.RemoveHandler(effect.Owner, EventType, new DOLEventHandler(EventHandler));
 			return 0;
