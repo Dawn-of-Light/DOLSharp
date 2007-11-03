@@ -65,7 +65,7 @@ namespace DOL.GS
 
 			// Set level dependent stats.
 
-			Strength = (short) (20 + Level * 6);
+			Strength = (short) (20 + Level * 4);
 
             // Load equipment, if available.
 
@@ -200,23 +200,6 @@ namespace DOL.GS
 			{
 				return (int) (Level * 38 + m_summonHitsBonus + 3.1 * m_summonConBonus);
 			}
-		}
-
-		/// <summary>
-		/// Current power. Pet uses power pool of the shade.
-		/// </summary>
-		public override int Mana
-		{
-			get { return (Brain as NecromancerPetBrain).Owner.Mana; }
-			set { (Brain as NecromancerPetBrain).Owner.Mana = value; }
-		}
-
-		/// <summary>
-		/// Maximum amount of power. Pet uses power pool of the shade.
-		/// </summary>
-		public override int MaxMana
-		{
-			get { return (Brain as NecromancerPetBrain).Owner.MaxMana; }
 		}
 
 		/// <summary>
