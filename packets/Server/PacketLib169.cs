@@ -70,7 +70,7 @@ namespace DOL.GS.PacketHandler
 						pak.WriteByte(updatePlayer.Level);
 						if (sameRegion)
 						{
-							pak.WriteByte(updatePlayer.HealthPercent);					
+							pak.WriteByte(updatePlayer.HealthPercentGroupWindow);					
 							pak.WriteByte(updatePlayer.ManaPercent);		
 							pak.WriteByte(updatePlayer.EndurancePercent); //new in 1.69
 

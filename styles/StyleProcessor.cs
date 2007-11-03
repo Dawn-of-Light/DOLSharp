@@ -349,6 +349,7 @@ namespace DOL.GS.Styles
 			//First thing in processors, lock the objects you modify
 			//This way it makes sure the objects are not modified by
 			//several different threads at the same time!
+
 			GamePlayer player = living as GamePlayer;
 			lock (living)
 			{
@@ -457,7 +458,7 @@ namespace DOL.GS.Styles
 							if (owner != null)
 							{
 								string damageAmount = (attackData.StyleDamage > 0) ? " (+" + attackData.StyleDamage + ")" : "";
-								owner.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.ExecuteStyle.PerformsPerfectly", living.Name, attackData.Style.Name, damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+								owner.Out.SendMessage(LanguageMgr.GetTranslation(owner.Client, "StyleProcessor.ExecuteStyle.PerformsPerfectly", living.Name, attackData.Style.Name, damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 							}
 						}
 					}
@@ -474,7 +475,7 @@ namespace DOL.GS.Styles
 								//Add the procs to the styleEffects
 								if (Util.Chance(proc.Chance))
 								{
-									effect = CreateMagicEffect(player, attackData.Target, proc.SpellID);
+									effect = CreateMagicEffect(living, attackData.Target, proc.SpellID);
 									//effect could be null if the SpellID is bigger than ushort
 									if (effect != null)
 										attackData.StyleEffects.Add(effect);
@@ -486,7 +487,7 @@ namespace DOL.GS.Styles
 							//Add one proc randomly
 							int random = Util.Random(attackData.Style.Procs.Count - 1);
 							//effect could be null if the SpellID is bigger than ushort
-							effect = CreateMagicEffect(player, attackData.Target, attackData.Style.Procs[random].SpellID);
+							effect = CreateMagicEffect(living, attackData.Target, attackData.Style.Procs[random].SpellID);
 							if (effect != null)
 								attackData.StyleEffects.Add(effect);
 						}
