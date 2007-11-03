@@ -85,21 +85,7 @@ namespace DOL.AI.Brain
 				if (SpellsQueued)
 					CheckSpellQueue();
 				else
-				{
-					if (!Body.AttackState)
-						AttackMostWanted();
-					else
-					{
-						GameLiving target = CalculateNextAttackTarget();
-						if (target != null)
-							Body.ContinueAttack(target);
-						else
-						{
-							m_orderAttackTarget = null;
-							FollowOwner();
-						}
-					}
-				}
+					AttackMostWanted();
 			}
 			else if (e == GameNPCEvent.CastFailed)
 			{
@@ -132,32 +118,31 @@ namespace DOL.AI.Brain
 					MessageToOwner(String.Format("The {0} begins casting the spell!", Body.Name),
 						eChatType.CT_System);
 
-				// Start the attack animation, even if we're about to cast a spell.
+				// If pet is casting an offensive spell and is not set to
+				// passive, put target on its aggro list; that way, even with
+				// no attack directive from the owner it will start an attack
+				// after the cast has finished.
 
 				if (target != Body && spellArgs.Spell.Target == "Enemy")
 				{
 					if (target != null)
 					{
-						AddToAggroList(target, 1);
-						if (!Body.AttackState)
+						if (!Body.AttackState && AggressionState != eAggressionState.Passive)
 						{
 							Body.StartAttack(target);
-							Body.HoldAttack();
-						}						
+							AddToAggroList(target, 1);
+						}
 					}
 				}
 			}
 			else if (e == GameNPCEvent.AttackFinished)
 			{
-				if (SpellsQueued)
-				{
-					// If there are spells in the queue, hold the melee attack
-					// and start casting.
+				// If there are spells in the queue, hold the melee attack
+				// and start casting.
 
-					Body.HoldAttack();
+				if (SpellsQueued)
 					CheckSpellQueue();
-				}
-				else if (!Body.AttackState)
+				else
 					AttackMostWanted();
 			}
             else if (e == GameNPCEvent.OutOfTetherRange)

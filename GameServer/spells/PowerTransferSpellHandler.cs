@@ -27,7 +27,7 @@ namespace DOL.GS.Spells
 	/// Spell calculates a percentage of the caster's power.
 	/// Heals target for the full amount, Caster loses half that amount in power.
 	/// </summary>
-	[SpellHandlerAttribute("PowerTransfer")]
+	[SpellHandlerAttribute("PowerTransferDisabled")]
 	public class PowerTransferSpellHandler : SpellHandler
 	{
 		// constructor

@@ -8873,7 +8873,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets/sets the current strafing mode
 		/// </summary>
-		public virtual bool IsStrafing
+		public override bool IsStrafing
 		{
 			set
 			{

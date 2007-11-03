@@ -28,7 +28,7 @@ namespace DOL.GS.Spells
 	/// power).
 	/// </summary>
 	[SpellHandlerAttribute("PowerDrain")]
-	public class PowerDrainSpellHandler : DirectDamageSpellHandler
+	public class PowerDrain : DirectDamageSpellHandler
 	{
 		/// <summary>
 		/// Execute direct effect.
@@ -55,13 +55,21 @@ namespace DOL.GS.Spells
 		/// <param name="ad">Attack data.</param>
 		public virtual void DrainPower(AttackData ad)
 		{
-			if (ad == null || !m_caster.IsAlive) return;
+			if (ad == null || !m_caster.IsAlive || !(m_caster is NecromancerPet)) 
+				return;
 
-			int power = (ad.Damage + ad.CriticalDamage) * m_spell.LifeDrainReturn / 100;
-			power = m_caster.ChangeMana(m_caster, GameLiving.eManaChangeType.Spell, power);
-				
-			if (power > 0)
-				MessageToOwner(String.Format("Your summon channels {0} power to you!", power), eChatType.CT_Spell);
+			// The power channelled through this spell goes to the owner, not
+			// the pet.
+
+			GameLiving owner = ((Caster as NecromancerPet).Brain as IControlledBrain).Owner;
+			if (owner == null)
+				return;
+
+			int powerGain = (ad.Damage + ad.CriticalDamage) * m_spell.LifeDrainReturn / 100;
+			powerGain = owner.ChangeMana(m_caster, GameLiving.eManaChangeType.Spell, powerGain);
+
+			if (powerGain > 0)
+				MessageToOwner(String.Format("Your summon channels {0} power to you!", powerGain), eChatType.CT_Spell);
 			else
 				MessageToOwner("You cannot absorb any more power.", eChatType.CT_SpellResisted);
 		}
@@ -110,7 +118,7 @@ namespace DOL.GS.Spells
 		/// <param name="caster"></param>
 		/// <param name="spell"></param>
 		/// <param name="line"></param>
-		public PowerDrainSpellHandler(GameLiving caster, Spell spell, SpellLine line) 
+		public PowerDrain(GameLiving caster, Spell spell, SpellLine line) 
             : base(caster, spell, line) { }
 	}
 }

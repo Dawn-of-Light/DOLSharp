@@ -172,6 +172,11 @@ namespace DOL.AI.Brain
 				return;
 			foreach (GamePlayer player in Body.GetPlayersInRadius((ushort)AggroRange))
 			{
+				// Don't aggro on immune players.
+
+				if (player.EffectList.GetOfType(typeof(ShadeEffect)) != null)
+					continue;
+
 				int aggrolevel = 0;
 
 				if (Body.Faction != null)

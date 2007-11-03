@@ -108,10 +108,16 @@ namespace DOL.GS.Spells
 			GamePlayer player = Caster as GamePlayer;
 			if (player == null || player.ControlledNpc == null) return;
 
-			ControlledNpc petBrain = player.ControlledNpc as ControlledNpc;
+			// Now deduct mana for the spell (the pet will cast for free,
+			// mana pool is *not* shared).
+
+			int powerCost = CalculateNeededPower(Caster);
+			if (powerCost > 0)
+				Caster.ChangeMana(Caster, DOL.GS.GameLiving.eManaChangeType.Spell, -powerCost);
 
 			// If there is an ID, create a sub spell for the pet.
 
+			ControlledNpc petBrain = player.ControlledNpc as ControlledNpc;
 			if (petBrain != null && Spell.SubSpellID > 0)
 			{
 				Spell spell = SkillBase.GetSpellByID(Spell.SubSpellID);
