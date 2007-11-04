@@ -104,6 +104,15 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Returns the chance for a critical hit with a spell.
+		/// </summary>
+		public override int SpellCriticalChance
+		{
+			get { return ((Brain as IControlledBrain).Owner).GetModified(eProperty.CriticalSpellHitChance); }
+			set { }
+		}
+
+		/// <summary>
 		/// Multiplier for melee and magic.
 		/// </summary>
 		public override double Effectiveness
@@ -410,8 +419,12 @@ namespace DOL.GS
             if (m_petTemplate != null)
             {
                 int styleCount = m_petTemplate.Styles.Count;
-                if (styleCount > 0)
-                    return (Style)(m_petTemplate.Styles[Util.Random(styleCount - 1)]);
+				if (styleCount > 0)
+				{
+					Style style = (Style)(m_petTemplate.Styles[Util.Random(styleCount - 1)]);
+					if (style.Level <= Level)
+						return style;
+				}
             }
 
             return base.GetStyleToUse();

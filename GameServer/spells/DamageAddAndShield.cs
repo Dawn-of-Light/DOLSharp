@@ -271,10 +271,13 @@ namespace DOL.GS.Spells
 		/// </summary>
 		/// <param name="target">target that gets the effect</param>
 		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
-		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
-		{
-			base.ApplyEffectOnTarget(target, m_minDamageSpread);
-		}
+		//public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+		//{
+		//    base.ApplyEffectOnTarget(target, m_minDamageSpread);
+		//}
+		// Either keep this commented out or don't let DamageShield inherit
+		// from AbstractDamageAddSpellHandler, because it screws spell duration
+		// up completely.
 
 		/// <summary>
 		/// When an applied effect starts

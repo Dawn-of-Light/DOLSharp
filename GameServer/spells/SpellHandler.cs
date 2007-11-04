@@ -372,7 +372,7 @@ namespace DOL.GS.Spells
 				if (Util.Chance((int)chance))
 				{
 					Caster.TempProperties.setProperty(INTERRUPT_TIMEOUT_PROPERTY, Caster.CurrentRegion.Time + SPELL_INTERRUPT_DURATION);
-					MessageToCaster(attacker.GetName(0, true) + " is attacking you and your spell is interrupted!", eChatType.CT_SpellResisted);
+					MessageToLiving(Caster, attacker.GetName(0, true) + " attacks you and your spell is interrupted!", eChatType.CT_SpellResisted);
 					InterruptCasting(); // always interrupt at the moment
 					return true;
 				}
@@ -1224,14 +1224,7 @@ namespace DOL.GS.Spells
 					((GamePlayer)m_caster).DisableSkill(SkillBase.GetAbility(Abilities.Quickcast), QuickCastAbilityHandler.DISABLE_DURATION);
 					quickcast.Cancel(false);
 				}
-				//Terminate Necromancer RA5L
-				CallOfDarknessEffect callofdarkness = (CallOfDarknessEffect)m_caster.EffectList.GetOfType(typeof(CallOfDarknessEffect));
-				if (callofdarkness != null && Spell.SpellType.ToLower() == "necromancerpet")
-				{
-					callofdarkness.Cancel(false);
-				}
 			}
-
 
 			// disable spells with recasttimer (Disables group of same type with same delay)
 			if (m_spell.RecastDelay > 0 && m_startReuseTimer)
@@ -1626,7 +1619,6 @@ namespace DOL.GS.Spells
 			}
 
 			duration *= effectiveness;
-
 			if (duration < 1)
 				duration = 1;
 			else if (duration > (Spell.Duration * 4))
@@ -1940,24 +1932,22 @@ namespace DOL.GS.Spells
 		#region messages
 
 		/// <summary>
-		/// sends a message to the caster
+		/// Sends a message to the caster, if the caster is a controlled
+		/// creature, to the player instead (only spell hit and resisted
+		/// messages).
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="type"></param>
 		public void MessageToCaster(string message, eChatType type)
 		{
-			if (m_caster is GamePlayer)
+			if (Caster is GamePlayer)
+				(Caster as GamePlayer).Out.SendMessage(message, type, eChatLoc.CL_SystemWindow);
+			else if (Caster is GameNPC && (Caster as GameNPC).Brain is IControlledBrain 
+				&& (type == eChatType.CT_YouHit || type == eChatType.CT_SpellResisted))
 			{
-				((GamePlayer)m_caster).Out.SendMessage(message, type, eChatLoc.CL_SystemWindow);
-			}
-			else if (m_caster is GameNPC && (m_caster as GameNPC).Brain is IControlledBrain && type == eChatType.CT_YouHit)
-			{
-				GamePlayer playerowner = ((IControlledBrain)((GameNPC)m_caster).Brain).GetPlayerOwner();
-
-				if (playerowner != null)
-				{
-					playerowner.Out.SendMessage(message, type, eChatLoc.CL_SystemWindow);
-				}
+				GamePlayer owner = ((Caster as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
+				if (owner != null)
+					owner.Out.SendMessage(message, type, eChatLoc.CL_SystemWindow);
 			}
 		}
 
@@ -2612,7 +2602,7 @@ namespace DOL.GS.Spells
 				MessageToCaster(string.Format("Your " + Caster.Name + " hits {0} for {1}{2} damage!",
 					ad.Target.GetName(0, false), ad.Damage, modmessage), eChatType.CT_YouHit);
 			if (ad.CriticalDamage > 0)
-				MessageToCaster("You critical hit for an additional " + ad.CriticalDamage + " damage!", eChatType.CT_YouHit);
+				MessageToCaster("You critically hit for an additional " + ad.CriticalDamage + " damage!", eChatType.CT_YouHit);
 		}
 
 		/// <summary>
