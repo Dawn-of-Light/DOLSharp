@@ -99,6 +99,12 @@ namespace DOL.GS.Spells
                     player.Out.SendMessage(m_caster.GetName(0, true) + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
             }
 
+			// Now deduct mana for the spell.
+
+			int powerCost = CalculateNeededPower(Caster);
+			if (powerCost > 0)
+				Caster.ChangeMana(Caster, DOL.GS.GameLiving.eManaChangeType.Spell, -powerCost);
+
             // Create the pet.
 
             StartSpell(target);
