@@ -150,8 +150,18 @@ namespace DOL.GS.Spells
 			summoned.Heading = (ushort)((target.Heading + 2048) % 4096);
 			summoned.Realm = target.Realm;
 			summoned.CurrentSpeed = 0;
-			if (Spell.Damage < 0) summoned.Level = (byte)(target.Level * Spell.Damage * -0.01);
-			else summoned.Level = (byte)Spell.Damage;
+
+			// Pet level will be 88% of the level of the caster +1, except for
+			// the minor zombie servant, which will cap out at level 2 (patch 1.87).
+
+			if (Spell.Damage < 0)
+			{
+				double petLevel = target.Level * Spell.Damage * -0.01 + 1;
+				summoned.Level = (byte)((summoned.Name == "minor zombie servant")
+					? Math.Min(2, petLevel) : petLevel);
+			}
+			else 
+				summoned.Level = (byte)Spell.Damage;
 
 			summoned.AddToWorld();
 			player.Shade(true);

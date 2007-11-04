@@ -100,6 +100,8 @@ namespace DOL.GS
             {
                 if (ControlledNpc == null)
                     return base.HealthPercentGroupWindow;
+				log.Info(String.Format("GameNecromancer.HealthPercentGroupWindow({0}, {1})",
+					HealthPercent, ControlledNpc.Body.HealthPercent));
                 return ControlledNpc.Body.HealthPercent;
             }
         }
