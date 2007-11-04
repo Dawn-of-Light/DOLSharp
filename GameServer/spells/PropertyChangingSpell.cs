@@ -128,25 +128,26 @@ namespace DOL.GS.Spells
 				SendEffectAnimation(effect.Owner, 0, false, 1);
 			}
 
-			//messages are after buff and after "Your xxx has increased." messages
-			if (effect.Owner is GameNPC && (effect.Owner as GameNPC).Brain is IControlledBrain)
+			GameLiving player = null;
+
+			if (Caster is GameNPC && (Caster as GameNPC).Brain is IControlledBrain)
+				player = ((Caster as GameNPC).Brain as IControlledBrain).Owner;
+			else if (effect.Owner is GameNPC && (effect.Owner as GameNPC).Brain is IControlledBrain)
+				player = ((effect.Owner as GameNPC).Brain as IControlledBrain).Owner;
+
+			if (player != null)
 			{
-				GameLiving player = ((effect.Owner as GameNPC).Brain as IControlledBrain).Owner;
-				if (player != null)
-				{
-					// If pet is buffed, it shows as a beneficial spell to the owner,
-					// i.e. in blue writing...
+				// Controlled NPC. Show message in blue writing to owner...
 
-					MessageToLiving(player, String.Format(Spell.Message2,
-						effect.Owner.GetName(0, true)), toLiving);
+				MessageToLiving(player, String.Format(Spell.Message2,
+					effect.Owner.GetName(0, true)), toLiving);
 
-					// ...and in white writing for everyone else.
+				// ...and in white writing for everyone else.
 
-					foreach (GamePlayer gamePlayer in effect.Owner.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
-						if (gamePlayer != player)
-							MessageToLiving(gamePlayer, String.Format(Spell.Message2,
-								effect.Owner.GetName(0, true)), toOther);
-				}
+				foreach (GamePlayer gamePlayer in effect.Owner.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+					if (gamePlayer != player)
+						MessageToLiving(gamePlayer, String.Format(Spell.Message2,
+							effect.Owner.GetName(0, true)), toOther);
 			}
 			else
 			{
