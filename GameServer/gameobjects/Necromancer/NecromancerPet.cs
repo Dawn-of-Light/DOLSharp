@@ -68,10 +68,6 @@ namespace DOL.GS
 			m_summonConBonus = summonConBonus;
 			m_summonHitsBonus = summonHitsBonus;
 
-			// Set level dependent stats.
-
-			Strength = (short) (20 + Level * 4);
-
             // Load equipment, if available.
 
             String templateID = "";
@@ -122,7 +118,13 @@ namespace DOL.GS
         /// <returns>The specialisation level.</returns>
         public override int GetModifiedSpecLevel(string keyName)
         {
-            return (Brain as NecromancerPetBrain).Owner.GetModifiedSpecLevel(keyName);
+            switch (keyName)
+            {
+                case Specs.Slash:
+                case Specs.Crush:
+                case Specs.Two_Handed: return Level;
+                default: return (Brain as NecromancerPetBrain).Owner.GetModifiedSpecLevel(keyName);
+            }
         }
 
 		/// <summary>
@@ -139,6 +141,10 @@ namespace DOL.GS
 				foreach (InventoryItem item in weapons)
 					if (item != null)
 						weaponSpeed += item.SPD_ABS;
+					else
+					{
+						weaponSpeed += 34;
+					}
 				weaponSpeed = (weapons.Length > 0) ? weaponSpeed / weapons.Length : 34.0;
 			}
 			else
@@ -194,6 +200,42 @@ namespace DOL.GS
 		private int m_summonConBonus;
 		private int m_summonHitsBonus;
 
+        /// <summary>
+        /// Current health (absolute value).
+        /// </summary>
+        public override int Health
+        {
+            get
+            {
+                return base.Health;
+            }
+            set
+            {
+                value = Math.Min(value, MaxHealth);
+                value = Math.Max(value, 0);
+                
+                if (Health == value)
+                {
+                    base.Health = value; //needed to start regeneration
+                    return;
+                }
+
+                int oldPercent = HealthPercent;
+                base.Health = value;
+                if (oldPercent != HealthPercent)
+                {
+                    // Update pet health in group window.
+
+                    GamePlayer owner = ((Brain as IControlledBrain).Owner) as GamePlayer;
+					if (owner.PlayerGroup != null)
+					{
+						log.Info(String.Format("Update pet health ({0})", value));
+						owner.PlayerGroup.UpdateMember(owner, false, false);
+					}
+                }
+            }
+        }
+
 		/// <summary>
 		/// Maximum health for a necro pet. Level*38 base plus Con and
 		/// Hits bonuses on the summoning suit (3.1 hits per 1 Con).
@@ -204,6 +246,24 @@ namespace DOL.GS
 			{
 				return (int) (Level * 38 + m_summonHitsBonus + 3.1 * m_summonConBonus);
 			}
+		}
+
+		/// <summary>
+		/// Base strength. Make greater necroservant slightly weaker than
+		/// all the other pets.
+		/// </summary>
+		public override short Strength
+		{
+			get { return (short)(20 + 4 * Level - ((Name == "greater necroservant") ? (int)Level : 0)); }
+		}
+
+		/// <summary>
+		/// Base constitution. Pet will never have higher constitution
+		/// than this.
+		/// </summary>
+		public override short Constitution
+		{
+			get { return (short)(12.3 * Level + m_summonConBonus); }
 		}
 
 		/// <summary>

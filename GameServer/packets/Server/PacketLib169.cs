@@ -113,7 +113,7 @@ namespace DOL.GS.PacketHandler
 			bool sameRegion = player.CurrentRegion == m_gameClient.Player.CurrentRegion;
 			if (sameRegion)
 			{
-				pak.WriteByte(player.HealthPercent);
+				pak.WriteByte(player.HealthPercentGroupWindow);
 				pak.WriteByte(player.ManaPercent);
 				pak.WriteByte(player.EndurancePercent); // new in 1.69
 
