@@ -47,13 +47,14 @@ namespace DOL.AI.Brain
         /// </summary>
 		public override void Think()
 		{
-			//DumpAggroList();
             CheckTether();
 			if (IsActive)
 				base.Think();
 		}
 
-        /// <summary>
+		#region Events
+
+		/// <summary>
         /// Process events.
         /// </summary>
         /// <param name="e"></param>
@@ -130,6 +131,7 @@ namespace DOL.AI.Brain
 						if (!Body.AttackState && AggressionState != eAggressionState.Passive)
 						{
 							Body.StartAttack(target);
+							Body.StopAttack();
 							AddToAggroList(target, 1);
 						}
 					}
@@ -168,7 +170,11 @@ namespace DOL.AI.Brain
             }
 		}
 
-        /// <summary>
+		#endregion
+
+		#region Spell Queue
+
+		/// <summary>
         /// See if there are any spells queued up and if so, get the first one
         /// and cast it.
         /// </summary>
@@ -296,7 +302,11 @@ namespace DOL.AI.Brain
 			}
 		}
 
-        private const int m_softTether = 2000;    // TODO: Check on Pendragon
+		#endregion
+
+		#region Tether
+
+		private const int m_softTether = 2000;    // TODO: Check on Pendragon
         private const int m_hardTether = 2500;
         private TetherTimer m_tetherTimer = null;
 
@@ -383,5 +393,7 @@ namespace DOL.AI.Brain
 			if (owner != null)
 				owner.Out.SendMessage(message, chatType, eChatLoc.CL_SystemWindow);
 		}
+
+		#endregion
 	}
 }
