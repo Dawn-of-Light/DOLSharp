@@ -44,31 +44,20 @@ namespace DOL.GS.PropertyCalc
         /// <returns>The actual resist amount.</returns>
         public override int CalcValue(GameLiving living, eProperty property)
         {
-            GameLiving controller = (living is NecromancerPet)
-            ? (((living as NecromancerPet).Brain) as IControlledBrain).Owner
-            : living;
-            
             int propertyIndex = (int)property;
 
-            // Raw bonuses and debuffs.
+            // Abilities/racials/debuffs.
 
-            int itemBonus = controller.ItemBonus[propertyIndex];
-            int buffBonus = living.BuffBonusCategory1[propertyIndex];
             int debuff = living.BuffBonusCategory3[propertyIndex];
-            int abilityBonus = controller.BuffBonusCategory4[propertyIndex];
-            int racialBonus = (controller is GamePlayer)
-                ? SkillBase.GetRaceResist((eRace)((controller as GamePlayer).Race), (eResist)property)
+            int abilityBonus = living.BuffBonusCategory4[propertyIndex];
+            int racialBonus = (living is GamePlayer)
+                ? SkillBase.GetRaceResist((eRace)((living as GamePlayer).Race), (eResist)property)
                 : 0;
 
-            // Item bonus cap and cap increase from Mythirians.
+            // Items and buffs.
 
-            int itemBonusCap = controller.Level / 2 + 1;
-            int itemBonusCapIncrease = GetItemBonusCapIncrease(controller, property);
-
-            // Apply softcaps.
-
-            itemBonus = Math.Min(itemBonus, itemBonusCap + itemBonusCapIncrease);
-            buffBonus = Math.Min(buffBonus, BuffBonusCap);
+            int itemBonus = CalcValueFromItems(living, property);
+            int buffBonus = CalcValueFromBuffs(living, property);
 
             // Apply debuffs. 100% Effectiveness for player buffs, but only 50%
             // effectiveness for item bonuses.
@@ -86,6 +75,35 @@ namespace DOL.GS.PropertyCalc
             // Add up and apply hardcap.
 
             return Math.Min(itemBonus + buffBonus + abilityBonus + racialBonus, HardCap);
+        }
+
+        /// <summary>
+        /// Calculate modified resists from buffs only.
+        /// </summary>
+        /// <param name="living"></param>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public override int CalcValueFromBuffs(GameLiving living, eProperty property)
+        {
+            int buffBonus = living.BuffBonusCategory1[(int)property];
+            return Math.Min(buffBonus, BuffBonusCap);
+        }
+
+        /// <summary>
+        /// Calculate modified resists from items only.
+        /// </summary>
+        /// <param name="living"></param>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public override int CalcValueFromItems(GameLiving living, eProperty property)
+        {
+            int itemBonus = living.ItemBonus[(int)property];
+
+            // Item bonus cap and cap increase from Mythirians.
+
+            int itemBonusCap = living.Level / 2 + 1;
+            int itemBonusCapIncrease = GetItemBonusCapIncrease(living, property);
+            return Math.Min(itemBonus, itemBonusCap + itemBonusCapIncrease);
         }
 
         /// <summary>
