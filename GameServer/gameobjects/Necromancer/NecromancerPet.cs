@@ -206,6 +206,82 @@ namespace DOL.GS
             return base.AttackDamageType(weapon);
         }
 
+        /// <summary>
+        /// Get modified bonuses for the pet; some bonuses come from the shade,
+        /// some come from the pet.
+        /// </summary>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public override int GetModified(eProperty property)
+        {
+            GamePlayer owner = (Brain as IControlledBrain).Owner as GamePlayer;
+            switch (property)
+            {
+                case eProperty.Intelligence: 
+                    return owner.GetModifiedFromItems(property);    // Necessary?
+                case eProperty.Strength:
+                case eProperty.Dexterity:
+                case eProperty.Quickness:
+				case eProperty.Resist_Crush:
+                case eProperty.Resist_Body:
+                case eProperty.Resist_Cold:
+                case eProperty.Resist_Energy:
+                case eProperty.Resist_Heat:
+                case eProperty.Resist_Matter:
+                case eProperty.Resist_Slash:
+                case eProperty.Resist_Spirit:
+                case eProperty.Resist_Thrust:
+                    {
+                        // Get item bonuses from the shade, but buff bonuses from the pet.
+
+                        int itemBonus = owner.GetModifiedFromItems(property);
+                        int buffBonus = GetModifiedFromBuffs(property);
+                        int debuff = BuffBonusCategory3[(int)property];
+
+						// Base stats from the pet; add this to item bonus
+						// afterwards, as it is treated the same way for
+						// debuffing purposes.
+
+						int baseBonus = 0;
+						switch (property)
+						{
+							case eProperty.Strength: 
+								baseBonus = Strength;
+								break;
+							case eProperty.Dexterity:
+								baseBonus = Dexterity;
+								break;
+							case eProperty.Quickness:
+								baseBonus = Quickness;
+								break;
+							case eProperty.Constitution:
+								baseBonus = Constitution;
+								break;
+						}
+
+						itemBonus += baseBonus;
+
+                        // Apply debuffs. 100% Effectiveness for player buffs, but only 50%
+                        // effectiveness for item bonuses.
+
+                        buffBonus -= Math.Abs(debuff);
+
+                        if (buffBonus < 0)
+                        {
+                            itemBonus += buffBonus / 2;
+                            buffBonus = 0;
+                            if (itemBonus < 0)
+                                itemBonus = 0;
+                        }
+
+                        return itemBonus + buffBonus;
+                    }
+            }
+
+            return base.GetModified(property);
+        }
+
+
 		private int m_summonConBonus;
 		private int m_summonHitsBonus;
 
@@ -273,6 +349,24 @@ namespace DOL.GS
 		public override short Constitution
 		{
 			get { return (short)(12.3 * Level + m_summonConBonus); }
+		}
+
+		/// <summary>
+		/// Base dexterity. Make greater necroservant slightly more dextrous than
+		/// all the other pets.
+		/// </summary>
+		public override short Dexterity
+		{
+			get { return (short)(3 * Level + ((Name == "greater necroservant") ? (int)Level : 0)); }
+		}
+
+		/// <summary>
+		/// Base quickness. Make greater necroservant slightly quicker than
+		/// all the other pets.
+		/// </summary>
+		public override short Quickness
+		{
+			get { return (short)(3 * Level + ((Name == "greater necroservant") ? (int)Level : 0)); }
 		}
 
 		/// <summary>

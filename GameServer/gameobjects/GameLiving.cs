@@ -4098,6 +4098,54 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			return 0;
 		}
 
+        /// <summary>
+        /// Retrieve a property value of this living's buff bonuses only;
+        /// caps and cap increases apply.
+        /// </summary>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public virtual int GetModifiedFromBuffs(eProperty property)
+        {
+            if (m_propertyCalc != null && m_propertyCalc[(int)property] != null)
+            {
+                return m_propertyCalc[(int)property].CalcValueFromBuffs(this, property);
+            }
+            else
+            {
+                if (log.IsInfoEnabled)
+                    log.Info("No buff bonus calculator for requested Property found: " + property.ToString());
+                /*
+                 * if (log.IsDebugEnabled)
+                    log.Debug(Environment.StackTrace);
+                 */
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Retrieve a property value of this living's item bonuses only;
+        /// caps and cap increases apply.
+        /// </summary>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public virtual int GetModifiedFromItems(eProperty property)
+        {
+            if (m_propertyCalc != null && m_propertyCalc[(int)property] != null)
+            {
+                return m_propertyCalc[(int)property].CalcValueFromItems(this, property);
+            }
+            else
+            {
+                if (log.IsInfoEnabled)
+                    log.Info("No item bonus calculator for requested Property found: " + property.ToString());
+                /*
+                 * if (log.IsDebugEnabled)
+                    log.Debug(Environment.StackTrace);
+                 */
+            }
+            return 0;
+        }
+
 		// /// <summary>
 		// /// Old temp properties
 		// /// </summary>

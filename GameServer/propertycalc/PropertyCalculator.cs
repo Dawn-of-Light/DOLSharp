@@ -50,5 +50,27 @@ namespace DOL.GS.PropertyCalc
 		{
 			return 0;
 		}
+
+        /// <summary>
+        /// Calculates the property value for this living's buff bonuses only.
+        /// </summary>
+        /// <param name="living"></param>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public virtual int CalcValueFromBuffs(GameLiving living, eProperty property)
+        {
+            return 0;
+        }
+
+        /// <summary>
+        /// Calculates the property value for this living's item bonuses only.
+        /// </summary>
+        /// <param name="living"></param>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public virtual int CalcValueFromItems(GameLiving living, eProperty property)
+        {
+            return 0;
+        }
 	}
 }
