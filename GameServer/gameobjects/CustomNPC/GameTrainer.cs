@@ -324,5 +324,41 @@ namespace DOL.GS
 			}
 			return true;
 		}
+
+        /// <summary>
+        /// Dismiss a player.
+        /// </summary>
+        /// <param name="player"></param>
+        protected virtual void DismissPlayer(GamePlayer player)
+        {
+            WhisperPlayer(player, "You must seek elsewhere for your training.", 
+                eChatLoc.CL_ChatWindow);
+        }
+
+        /// <summary>
+        /// Offer training to the player.
+        /// </summary>
+        /// <param name="player"></param>
+        protected virtual void OfferTraining(GamePlayer player)
+        {
+            WhisperPlayer(player, "Would you like to do some training?", 
+                eChatLoc.CL_ChatWindow);
+			player.Out.SendTrainerWindow();
+        }
+
+        /// <summary>
+        /// Whisper a player.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="message"></param>
+        protected virtual void WhisperPlayer(GamePlayer player, String message, eChatLoc chatLoc)
+        {
+            if (player == null)
+                return;
+
+            player.Out.SendMessage(String.Format("{0} says, \"{1}\"", Name, message), 
+                eChatType.CT_Say, chatLoc);
+
+        }
 	}
 }
