@@ -103,38 +103,246 @@ namespace DOL.GS
 			}
 		}
 
+		#region Stats
+
 		/// <summary>
-		/// Returns the chance for a critical hit with a spell.
+		/// Get modified bonuses for the pet; some bonuses come from the shade,
+		/// some come from the pet.
 		/// </summary>
-		public override int SpellCriticalChance
+		/// <param name="property"></param>
+		/// <returns></returns>
+		public override int GetModified(eProperty property)
 		{
-			get { return ((Brain as IControlledBrain).Owner).GetModified(eProperty.CriticalSpellHitChance); }
-			set { }
+			if (Brain == null || (Brain as IControlledBrain) == null)
+				return base.GetModified(property);
+
+			GamePlayer owner = (Brain as IControlledBrain).Owner as GamePlayer;
+
+			switch (property)
+			{
+				case eProperty.Strength:
+				case eProperty.Dexterity:
+				case eProperty.Quickness:
+				case eProperty.Resist_Crush:
+				case eProperty.Resist_Body:
+				case eProperty.Resist_Cold:
+				case eProperty.Resist_Energy:
+				case eProperty.Resist_Heat:
+				case eProperty.Resist_Matter:
+				case eProperty.Resist_Slash:
+				case eProperty.Resist_Spirit:
+				case eProperty.Resist_Thrust:
+					{
+						// Get item bonuses from the shade, but buff bonuses from the pet.
+
+						int itemBonus = owner.GetModifiedFromItems(property);
+						int buffBonus = GetModifiedFromBuffs(property);
+						int debuff = BuffBonusCategory3[(int)property];
+
+						// Base stats from the pet; add this to item bonus
+						// afterwards, as it is treated the same way for
+						// debuffing purposes.
+
+						int baseBonus = 0;
+						switch (property)
+						{
+							case eProperty.Strength:
+								baseBonus = Strength;
+								break;
+							case eProperty.Dexterity:
+								baseBonus = Dexterity;
+								break;
+							case eProperty.Quickness:
+								baseBonus = Quickness;
+								break;
+						}
+
+						itemBonus += baseBonus;
+
+						// Apply debuffs. 100% Effectiveness for player buffs, but only 50%
+						// effectiveness for item bonuses.
+
+						buffBonus -= Math.Abs(debuff);
+
+						if (buffBonus < 0)
+						{
+							itemBonus += buffBonus / 2;
+							buffBonus = 0;
+							if (itemBonus < 0)
+								itemBonus = 0;
+						}
+
+						return itemBonus + buffBonus;
+					}
+				case eProperty.Constitution:
+					{
+						int baseBonus = Constitution;
+						int buffBonus = GetModifiedFromBuffs(eProperty.Constitution);
+						int debuff = BuffBonusCategory3[(int)property];
+
+						// Apply debuffs. 100% Effectiveness for player buffs, but only 50%
+						// effectiveness for base bonuses.
+
+						buffBonus -= Math.Abs(debuff);
+
+						if (buffBonus < 0)
+						{
+							baseBonus += buffBonus / 2;
+							buffBonus = 0;
+							if (baseBonus < 0)
+								baseBonus = 0;
+						}
+
+						return baseBonus + buffBonus;
+					}
+				case eProperty.MaxHealth:
+					{
+						int conBonus = (int)(3.1 * Constitution);
+						int hitsBonus = (int)(32.5 * Level + m_summonHitsBonus);
+						int debuff = BuffBonusCategory3[(int)property];
+
+						// Apply debuffs. As only base constitution affects pet
+						// health, effectiveness is a flat 50%.
+
+						conBonus -= Math.Abs(debuff) / 2;
+
+						if (conBonus < 0)
+							conBonus = 0;
+
+						return conBonus + hitsBonus;
+					}
+			}
+
+			return base.GetModified(property);
+		}
+
+		private int m_summonConBonus;
+		private int m_summonHitsBonus;
+
+		/// <summary>
+		/// Current health (absolute value).
+		/// </summary>
+		public override int Health
+		{
+			get
+			{
+				return base.Health;
+			}
+			set
+			{
+				value = Math.Min(value, MaxHealth);
+				value = Math.Max(value, 0);
+
+				if (Health == value)
+				{
+					base.Health = value; //needed to start regeneration
+					return;
+				}
+
+				int oldPercent = HealthPercent;
+				base.Health = value;
+				if (oldPercent != HealthPercent)
+				{
+					// Update pet health in group window.
+
+					GamePlayer owner = ((Brain as IControlledBrain).Owner) as GamePlayer;
+					if (owner.PlayerGroup != null)
+						owner.PlayerGroup.UpdateMember(owner, false, false);
+				}
+			}
 		}
 
 		/// <summary>
-		/// Multiplier for melee and magic.
+		/// Base strength. 
 		/// </summary>
-		public override double Effectiveness
+		public override short Strength
 		{
-			get { return (Brain as NecromancerPetBrain).Owner.Effectiveness; }
+			get
+			{
+				switch (Name)
+				{
+					case "greater necroservant":
+						return 60;
+					default:
+						return (short)(60 + Level);
+				}
+			}
 		}
 
-        /// <summary>
-        /// Specialisation level including item bonuses and RR.
-        /// </summary>
-        /// <param name="keyName">The specialisation line.</param>
-        /// <returns>The specialisation level.</returns>
-        public override int GetModifiedSpecLevel(string keyName)
-        {
-            switch (keyName)
-            {
-                case Specs.Slash:
-                case Specs.Crush:
-                case Specs.Two_Handed: return Level;
-                default: return (Brain as NecromancerPetBrain).Owner.GetModifiedSpecLevel(keyName);
-            }
-        }
+		/// <summary>
+		/// Base constitution. 
+		/// </summary>
+		public override short Constitution
+		{
+			get
+			{
+				switch (Name)
+				{
+					case "greater necroservant":
+						return (short)(60 + Level / 3 + m_summonConBonus);
+					default:
+						return (short)(60 + Level / 2 + m_summonConBonus);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Base dexterity. Make greater necroservant slightly more dextrous than
+		/// all the other pets.
+		/// </summary>
+		public override short Dexterity
+		{
+			get
+			{
+				switch (Name)
+				{
+					case "greater necroservant":
+						return (short)(60 + Level);
+					default:
+						return 60;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Base quickness. 
+		/// </summary>
+		public override short Quickness
+		{
+			get
+			{
+				switch (Name)
+				{
+					case "greater necroservant":
+						return (short)(60 + Level / 2);
+					default:
+						return (short)(60 + Level / 3);
+				}
+			}
+		}
+
+		#endregion
+
+		#region Melee
+
+		/// <summary>
+		/// The type of damage the currently active weapon does.
+		/// </summary>
+		/// <param name="weapon"></param>
+		/// <returns></returns>
+		public override eDamageType AttackDamageType(InventoryItem weapon)
+		{
+			if (weapon != null)
+			{
+				switch ((eWeaponDamageType)weapon.Type_Damage)
+				{
+					case eWeaponDamageType.Crush: return eDamageType.Crush;
+					case eWeaponDamageType.Slash: return eDamageType.Slash;
+				}
+			}
+
+			return base.AttackDamageType(weapon);
+		}
 
 		/// <summary>
 		/// Get melee speed in milliseconds.
@@ -165,209 +373,120 @@ namespace DOL.GS
 			return (int)(speed * GetModified(eProperty.MeleeSpeed) * 0.01);
 		}
 
-        /// <summary>
-        /// Weapon specialisation is up to level, if a weapon is equipped.
-        /// </summary>
-        /// <param name="weapon"></param>
-        /// <returns></returns>
-        public override int WeaponSpecLevel(InventoryItem weapon)
-        {
-            return (weapon != null) ? Level : base.WeaponSpecLevel(weapon);
-        }
-
-        /// <summary>
-        /// Get weapon skill for the pet (for formula see Spydor's Web,
-        /// http://daoc.nisrv.com/modules.php?name=Weapon_Skill_Calc).
-        /// </summary>
-        /// <param name="weapon"></param>
-        /// <returns></returns>
-        public override double GetWeaponSkill(InventoryItem weapon)
-        {
-            if (weapon == null)
-                return base.GetWeaponSkill(weapon);
-
-            // Let's say the pet is paladin-like.
-
-            double factor = 1.9;
-            double baseWS = 380;
-            return ((GetWeaponStat(weapon) - 50) * factor + baseWS) * (1 + WeaponSpecLevel(weapon) / 100);
-        }
-
-        /// <summary>
-        /// The type of damage the currently active weapon does.
-        /// </summary>
-        /// <param name="weapon"></param>
-        /// <returns></returns>
-        public override eDamageType AttackDamageType(InventoryItem weapon)
-        {
-			//if (weapon != null)
-			//    return (eDamageType) (weapon.Type_Damage);
-
-            return base.AttackDamageType(weapon);
-        }
-
-        /// <summary>
-        /// Get modified bonuses for the pet; some bonuses come from the shade,
-        /// some come from the pet.
-        /// </summary>
-        /// <param name="property"></param>
-        /// <returns></returns>
-        public override int GetModified(eProperty property)
-        {
-            GamePlayer owner = (Brain as IControlledBrain).Owner as GamePlayer;
-            switch (property)
-            {
-                case eProperty.Intelligence: 
-                    return owner.GetModifiedFromItems(property);    // Necessary?
-                case eProperty.Strength:
-                case eProperty.Dexterity:
-                case eProperty.Quickness:
-				case eProperty.Resist_Crush:
-                case eProperty.Resist_Body:
-                case eProperty.Resist_Cold:
-                case eProperty.Resist_Energy:
-                case eProperty.Resist_Heat:
-                case eProperty.Resist_Matter:
-                case eProperty.Resist_Slash:
-                case eProperty.Resist_Spirit:
-                case eProperty.Resist_Thrust:
-                    {
-                        // Get item bonuses from the shade, but buff bonuses from the pet.
-
-                        int itemBonus = owner.GetModifiedFromItems(property);
-                        int buffBonus = GetModifiedFromBuffs(property);
-                        int debuff = BuffBonusCategory3[(int)property];
-
-						// Base stats from the pet; add this to item bonus
-						// afterwards, as it is treated the same way for
-						// debuffing purposes.
-
-						int baseBonus = 0;
-						switch (property)
-						{
-							case eProperty.Strength: 
-								baseBonus = Strength;
-								break;
-							case eProperty.Dexterity:
-								baseBonus = Dexterity;
-								break;
-							case eProperty.Quickness:
-								baseBonus = Quickness;
-								break;
-							case eProperty.Constitution:
-								baseBonus = Constitution;
-								break;
-						}
-
-						itemBonus += baseBonus;
-
-                        // Apply debuffs. 100% Effectiveness for player buffs, but only 50%
-                        // effectiveness for item bonuses.
-
-                        buffBonus -= Math.Abs(debuff);
-
-                        if (buffBonus < 0)
-                        {
-                            itemBonus += buffBonus / 2;
-                            buffBonus = 0;
-                            if (itemBonus < 0)
-                                itemBonus = 0;
-                        }
-
-                        return itemBonus + buffBonus;
-                    }
-            }
-
-            return base.GetModified(property);
-        }
-
-
-		private int m_summonConBonus;
-		private int m_summonHitsBonus;
-
-        /// <summary>
-        /// Current health (absolute value).
-        /// </summary>
-        public override int Health
-        {
-            get
-            {
-                return base.Health;
-            }
-            set
-            {
-                value = Math.Min(value, MaxHealth);
-                value = Math.Max(value, 0);
-                
-                if (Health == value)
-                {
-                    base.Health = value; //needed to start regeneration
-                    return;
-                }
-
-                int oldPercent = HealthPercent;
-                base.Health = value;
-                if (oldPercent != HealthPercent)
-                {
-                    // Update pet health in group window.
-
-                    GamePlayer owner = ((Brain as IControlledBrain).Owner) as GamePlayer;
-					if (owner.PlayerGroup != null)
-					{
-						log.Info(String.Format("Update pet health ({0})", value));
-						owner.PlayerGroup.UpdateMember(owner, false, false);
-					}
-                }
-            }
-        }
-
 		/// <summary>
-		/// Maximum health for a necro pet. Level*38 base plus Con and
-		/// Hits bonuses on the summoning suit (3.1 hits per 1 Con).
+		/// Pick a random style for now.
 		/// </summary>
-		public override int MaxHealth
+		/// <returns></returns>
+		protected override Style GetStyleToUse()
 		{
-			get
+			if (m_petTemplate != null)
 			{
-				return (int) (Level * 38 + m_summonHitsBonus + 3.1 * m_summonConBonus);
+				int styleCount = m_petTemplate.Styles.Count;
+				if (styleCount > 0)
+				{
+					Style style = (Style)(m_petTemplate.Styles[Util.Random(styleCount - 1)]);
+					if (style.Level <= Level)
+						return style;
+				}
 			}
+
+			return base.GetStyleToUse();
 		}
 
 		/// <summary>
-		/// Base strength. Make greater necroservant slightly weaker than
-		/// all the other pets.
+		/// Get weapon skill for the pet (for formula see Spydor's Web,
+		/// http://daoc.nisrv.com/modules.php?name=Weapon_Skill_Calc).
 		/// </summary>
-		public override short Strength
+		/// <param name="weapon"></param>
+		/// <returns></returns>
+		public override double GetWeaponSkill(InventoryItem weapon)
 		{
-			get { return (short)(20 + 4 * Level - ((Name == "greater necroservant") ? (int)Level : 0)); }
+			if (weapon == null)
+				return base.GetWeaponSkill(weapon);
+
+			// Let's say the pet is paladin-like.
+
+			double factor = 1.9;
+			double baseWS = 380;
+			return ((GetWeaponStat(weapon) - 50) * factor + baseWS) * (1 + WeaponSpecLevel(weapon) / 100);
 		}
 
 		/// <summary>
-		/// Base constitution. Pet will never have higher constitution
-		/// than this.
+		/// Weapon specialisation is up to level, if a weapon is equipped.
 		/// </summary>
-		public override short Constitution
+		/// <param name="weapon"></param>
+		/// <returns></returns>
+		public override int WeaponSpecLevel(InventoryItem weapon)
 		{
-			get { return (short)(12.3 * Level + m_summonConBonus); }
+			return (weapon != null) ? Level : base.WeaponSpecLevel(weapon);
+		}
+
+
+		#endregion
+
+		#region Spells
+
+		/// <summary>
+		/// Pet-only insta spells.
+		/// </summary>
+		public String PetInstaSpellLine
+		{
+			get { return "Necro Pet Insta Spells"; }
 		}
 
 		/// <summary>
-		/// Base dexterity. Make greater necroservant slightly more dextrous than
-		/// all the other pets.
+		/// Insta cast baseline buffs (STR+DEX) on the pet.
 		/// </summary>
-		public override short Dexterity
+		private void Empower()
 		{
-			get { return (short)(3 * Level + ((Name == "greater necroservant") ? (int)Level : 0)); }
+			if (AttackState) return;
+
+			SpellLine buffLine = SkillBase.GetSpellLine(PetInstaSpellLine);
+			if (buffLine == null)
+				return;
+
+			IList buffList = SkillBase.GetSpellList(PetInstaSpellLine);
+			if (buffList.Count == 0)
+				return;
+
+			// Find the best baseline buffs for this level.
+
+			int maxLevel = Level;
+			Spell strBuff = null, dexBuff = null;
+			foreach (Spell spell in buffList)
+			{
+				if (spell.Level <= maxLevel)
+				{
+					switch (spell.SpellType)
+					{
+						case "StrengthBuff":
+							{
+								if (strBuff == null)
+									strBuff = spell;
+								else
+									strBuff = (strBuff.Level < spell.Level) ? spell : strBuff;
+							}
+							break;
+						case "DexterityBuff":
+							{
+								if (dexBuff == null)
+									dexBuff = spell;
+								else
+									dexBuff = (dexBuff.Level < spell.Level) ? spell : dexBuff;
+							}
+							break;
+					}
+				}
+			}
+
+			// Insta buff.
+
+			if (strBuff != null)
+				CastSpell(strBuff, buffLine);
+			if (dexBuff != null)
+				CastSpell(dexBuff, buffLine);
 		}
 
-		/// <summary>
-		/// Base quickness. Make greater necroservant slightly quicker than
-		/// all the other pets.
-		/// </summary>
-		public override short Quickness
-		{
-			get { return (short)(3 * Level + ((Name == "greater necroservant") ? (int)Level : 0)); }
-		}
 
 		/// <summary>
 		/// Called when spell has finished casting.
@@ -379,7 +498,46 @@ namespace DOL.GS
 			Brain.Notify(GameNPCEvent.CastFinished, this, new CastSpellEventArgs(handler));
 		}
 
+		/// <summary>
+		/// Returns the chance for a critical hit with a spell.
+		/// </summary>
+		public override int SpellCriticalChance
+		{
+			get { return ((Brain as IControlledBrain).Owner).GetModified(eProperty.CriticalSpellHitChance); }
+			set { }
+		}
+
+		#endregion
+
+		#region Shared Melee & Spells
+
+		/// <summary>
+		/// Multiplier for melee and magic.
+		/// </summary>
+		public override double Effectiveness
+		{
+			get { return (Brain as NecromancerPetBrain).Owner.Effectiveness; }
+		}
+
         /// <summary>
+        /// Specialisation level including item bonuses and RR.
+        /// </summary>
+        /// <param name="keyName">The specialisation line.</param>
+        /// <returns>The specialisation level.</returns>
+        public override int GetModifiedSpecLevel(string keyName)
+        {
+            switch (keyName)
+            {
+                case Specs.Slash:
+                case Specs.Crush:
+                case Specs.Two_Handed: return Level;
+                default: return (Brain as NecromancerPetBrain).Owner.GetModifiedSpecLevel(keyName);
+            }
+		}
+
+		#endregion
+
+		/// <summary>
         /// Actions to be taken when the pet receives a whisper.
         /// </summary>
         /// <param name="source">Source of the whisper.</param>
@@ -502,87 +660,6 @@ namespace DOL.GS
 				return true;
 			}
 			return false;
-		}
-
-        /// <summary>
-        /// Pick a random style for now.
-        /// </summary>
-        /// <returns></returns>
-        protected override Style GetStyleToUse()
-        {
-            if (m_petTemplate != null)
-            {
-                int styleCount = m_petTemplate.Styles.Count;
-				if (styleCount > 0)
-				{
-					Style style = (Style)(m_petTemplate.Styles[Util.Random(styleCount - 1)]);
-					if (style.Level <= Level)
-						return style;
-				}
-            }
-
-            return base.GetStyleToUse();
-        }
-
-		/// <summary>
-		/// Pet-only insta spells.
-		/// </summary>
-		public String PetInstaSpellLine
-		{
-			get { return "Necro Pet Insta Spells"; }
-		}
-
-		/// <summary>
-		/// Insta cast baseline buffs (STR+DEX) on the pet.
-		/// </summary>
-		private void Empower()
-		{
-            if (AttackState) return;
-
-			SpellLine buffLine = SkillBase.GetSpellLine(PetInstaSpellLine);
-			if (buffLine == null)
-				return;
-
-			IList buffList = SkillBase.GetSpellList(PetInstaSpellLine);
-			if (buffList.Count == 0)
-				return;
-
-			// Find the best baseline buffs for this level.
-
-			int maxLevel = Level;
-			Spell strBuff = null, dexBuff = null;
-			foreach (Spell spell in buffList)
-			{
-				if (spell.Level <= maxLevel)
-				{
-					switch (spell.SpellType)
-					{
-						case "StrengthBuff":
-							{
-								if (strBuff == null)
-									strBuff = spell;
-								else
-									strBuff = (strBuff.Level < spell.Level) ? spell : strBuff;
-							}
-							break;
-						case "DexterityBuff":
-							{
-								if (dexBuff == null)
-									dexBuff = spell;
-								else
-									dexBuff = (dexBuff.Level < spell.Level) ? spell : dexBuff;
-							}
-							break;
-					}
-				}
-			}
-
-			// Insta buff.
-
-			if (strBuff != null)
-				CastSpell(strBuff, buffLine);
-			if (dexBuff != null)
-				CastSpell(dexBuff, buffLine);
 		}
 
         /// <summary>

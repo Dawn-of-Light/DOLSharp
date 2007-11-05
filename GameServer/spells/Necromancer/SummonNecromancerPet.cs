@@ -44,15 +44,15 @@ namespace DOL.GS.Spells
 		public override void CastSpell()
 		{
 			// First check current item bonuses for constitution and hits
-            // (including cap increases) of the caster.
+            // (including cap increases) of the caster, bonuses from
+			// abilities such as Toughness will transfer as well.
 
-            int conCap = StatCalculator.GetItemBonusCap(Caster, eProperty.Constitution) 
-                + StatCalculator.GetItemBonusCapIncrease(Caster, eProperty.Constitution);
-            int hitsCap = MaxHealthCalculator.GetItemBonusCap(Caster) 
-                + MaxHealthCalculator.GetItemBonusCapIncrease(Caster);
+			int hitsCap = MaxHealthCalculator.GetItemBonusCap(Caster) 
+			    + MaxHealthCalculator.GetItemBonusCapIncrease(Caster);
 
-			m_summonConBonus = Math.Min(Caster.ItemBonus[(int)(eProperty.Constitution)], conCap);
-			m_summonHitsBonus = Math.Min(Caster.ItemBonus[(int)(eProperty.MaxHealth)], hitsCap);
+			m_summonConBonus = Caster.GetModifiedFromItems(eProperty.Constitution);
+			m_summonHitsBonus = Math.Min(Caster.ItemBonus[(int)(eProperty.MaxHealth)], hitsCap)
+				+ Caster.AbilityBonus[(int)(eProperty.MaxHealth)]; ;
 
             // Now summon the pet.
 
