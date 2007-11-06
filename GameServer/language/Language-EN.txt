@@ -110,6 +110,7 @@ GameNPC.SayTo.Says:					{0} says, "{1}"
 GameNPC.SayTo.SpeaksTo:					{0} speaks to {1}
 
 # GAMEOBJECT
+GameObject.Casting.CastsASpell:				{0} casts a spell!
 GameObject.GetExamineMessages.YouTarget:		You target [{0}].
 GameObject.GetName.Article1:				The {0}
 GameObject.GetName.Article2:				the {0}
@@ -124,7 +125,6 @@ GameObject.GetPronoun.Pronoun4:				its
 GameObject.GetPronoun.Pronoun5:				It
 GameObject.GetPronoun.Pronoun6:				it
 GameObject.Interact.TooFarAway:				You are too far away to interact with {0}.
-GameObject.Casting.CastsASpell:				{0} casts a spell!
 
 # GAMEPLAYER
 GamePlayer.AddAbility.YouLearn:				You learn the {0} ability!	
@@ -522,6 +522,7 @@ GameTrainer.ReceiveItem.RespecSingle:			Thanks, I added a single spec respec to 
 GameTrainer.Train.WouldYouLikeTo:			Would you like to do some training?
 GameTrainer.Train.SeekElsewhere:			You must seek elsewhere for your training.
 
+
 # KING THRONE NPC
 CLWeaponNPC.ReceiveItem.RespecCL:			Thanks, I added a single champion skill respec to use /respec cl.
 KingNPC.WhisperReceive.IsNowChampion:			You have just embraced on the life of the champions!
@@ -687,8 +688,8 @@ PlayerInitRequestHandler.SaferLocation:			This area isn't currently secure and y
 PlayerMoveItemRequestHandler.TooFarAway:		You are too far away to give anything to {0}.
 
 # /PlayerPickUpRequestHandler
-PlayerPickUpRequestHandler.HandlePacket.Target:		You must have a target to get something!
 PlayerPickUpRequestHandler.HandlePacket.InvalidTarget:	You have an invalid target!
+PlayerPickUpRequestHandler.HandlePacket.Target:		You must have a target to get something!
 
 # /PlayerPositionUpdateHandler
 PlayerPositionUpdateHandler.Endurance:			You lose endurance!
@@ -721,6 +722,19 @@ Scripts.Blacksmith.StackedObjets:			{0} can't repair stacked objets.
 Scripts.Blacksmith.YouExamine:				You examine {0}. {1} is {2} and is a smith.
 Scripts.Blacksmith.YouPay:				You pay {0} {1}.
 Scripts.Blacksmith.YouTarget:				You target [{0}].
+
+# /Recharger
+Scripts.Recharger.GetExamineMessages:			You examine {0}. {1} is {2} and can recharge your equipment.
+Scripts.Recharger.Interact:				I can recharge weapons or armor for you, Just hand me the item you want recharged and I'll see what I can do, for a small fee.
+Scripts.Recharger.ReceiveItem.CantThat:			I can't recharge that.
+Scripts.Recharger.ReceiveItem.Cost:			It will cost {0} to recharge that. Do you accept?
+Scripts.Recharger.ReceiveItem.FullyCharged:		Item is fully charged!
+Scripts.Recharger.ReceiveItem.StackedObjects:		{0} can't recharge stacked objects.
+Scripts.Recharger.RechargerDialogResponse.Decline:	You decline to have your {0} recharged.
+Scripts.Recharger.RechargerDialogResponse.FullyCharged:	There, it is now fully charged!
+Scripts.Recharger.RechargerDialogResponse.GiveMoney:	You give to {0} {1}.
+Scripts.Recharger.RechargerDialogResponse.InvalidItem:	Invalid item.
+Scripts.Recharger.RechargerDialogResponse.NotMoney:	You don't have enough money.
 
 # GameEvents
 # /Playerenterexit
@@ -1238,6 +1252,38 @@ Hib.ImportantDelivery.TalkToFreagus.GoodCrop:		Ah! These must be from Aethic in 
 Hib.ImportantDelivery.TalkToFreagus.Reward:		It's a little tattered, but it will keep you warm in the cold months. Thank you again {0}.
 Hib.ImportantDelivery.TalkToFreagus.Welcome:		Welcome to my stable friend. What can I do for you today?
 
+# SERVERRULES
+# /AbstractServerRules/PlayerStatistics
+# /Kills
+PlayerStatistic.Kill.Title:				Kill Report
+PlayerStatistic.Kill.AlbionPlayer:			Albion Players Killed
+PlayerStatistic.Kill.HiberniaPlayer:			Hibernia Players Killed
+PlayerStatistic.Kill.MidgardPlayer:			Midgard Players Killed
+PlayerStatistic.Kill.TotalPlayers:			Total Players Killed
+
+# /Deathblows
+PlayerStatistic.Deathblows.AlbionPlayer:		Albion Deathblows
+PlayerStatistic.Deathblows.HiberniaPlayer:		Hibernia Deathblows
+PlayerStatistic.Deathblows.MidgardPlayer:		Midgard Deathblows
+PlayerStatistic.Deathblows.TotalPlayers:		Total Deathblows
+
+# /Solo
+PlayerStatistic.Solo.AlbionPlayer:			Albion Solo Killed
+PlayerStatistic.Solo.HiberniaPlayer:			Hibernia Solo Killed
+PlayerStatistic.Solo.MidgardPlayer:			Midgard Solo Killed
+PlayerStatistic.Solo.TotalPlayers:			Total Solo Killed
+
+# /Capture
+PlayerStatistic.Capture.Title:				Capture Report
+PlayerStatistic.Capture.Keeps:				Total Keeps Captured
+PlayerStatistic.Capture.Towers:				Total Towers Captured
+
+# /PvE
+PlayerStatistic.PvE.Title:				PvE Report
+PlayerStatistic.PvE.KillsDragon:			Dragon Kills
+PlayerStatistic.PvE.KillsEpic:				Epic Boss Kills
+PlayerStatistic.PvE.KillsLegion:			Legion Kills
+
 # TITLES
 # /Claim
 Titles.Claim.Frontier.FrontierChallenger:		Frontier Challenger
@@ -1296,37 +1342,6 @@ Titles.CL.Level7:					Patron of Minotaur
 Titles.CL.Level8:					Visionary
 Titles.CL.Level9:					Gladiator
 Titles.CL.Level10:					Labyrinthian
-
-# PLAYER STATISTIC
-# /Kills
-PlayerStatistic.Kill.Title:				Kill Report
-PlayerStatistic.Kill.AlbionPlayer:			Albion Players Killed
-PlayerStatistic.Kill.HiberniaPlayer:			Hibernia Players Killed
-PlayerStatistic.Kill.MidgardPlayer:			Midgard Players Killed
-PlayerStatistic.Kill.TotalPlayers:			Total Players Killed
-
-# /Deathblows
-PlayerStatistic.Deathblows.AlbionPlayer:		Albion Deathblows
-PlayerStatistic.Deathblows.HiberniaPlayer:		Hibernia Deathblows
-PlayerStatistic.Deathblows.MidgardPlayer:		Midgard Deathblows
-PlayerStatistic.Deathblows.TotalPlayers:		Total Deathblows
-
-# /Solo
-PlayerStatistic.Solo.AlbionPlayer:			Albion Solo Killed
-PlayerStatistic.Solo.HiberniaPlayer:			Hibernia Solo Killed
-PlayerStatistic.Solo.MidgardPlayer:			Midgard Solo Killed
-PlayerStatistic.Solo.TotalPlayers:			Total Solo Killed
-
-# /Capture
-PlayerStatistic.Capture.Title:				Capture Report
-PlayerStatistic.Capture.Keeps:				Total Keeps Captured
-PlayerStatistic.Capture.Towers:				Total Towers Captured
-
-# /PvE
-PlayerStatistic.PvE.Title:				PvE Report
-PlayerStatistic.PvE.KillsDragon:			Dragon Kills
-PlayerStatistic.PvE.KillsEpic:				Epic Boss Kills
-PlayerStatistic.PvE.KillsLegion:			Legion Kills
 
 # VIEWREPORTS
 Scripts.Player.VeiwReport.Usage: Usage:

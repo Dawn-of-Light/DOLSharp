@@ -110,6 +110,7 @@ GameNPC.SayTo.Says:					{0} sagt: "{1}"
 GameNPC.SayTo.SpeaksTo:					{0} spricht zu {1}
 
 # GAMEOBJECT
+GameObject.Casting.CastsASpell:				{0} zaubert!
 GameObject.GetExamineMessages.YouTarget:		Es wird {0} als Ziel erfasst.
 GameObject.GetName.Article1:				{0}
 GameObject.GetName.Article2:				{0}
@@ -399,7 +400,7 @@ GamePlayer.UseSlot.CantSeeTarget:			Ihr könnt Euer Ziel nicht sehen!
 GamePlayer.UseSlot.CantSummonRvR:			Ihr könnt das Pferd nicht in RvR-Zonen rufen.		
 GamePlayer.UseSlot.Can'tUseFromBackpack:		Ihr müsst diesen Gegenstand erst anlegen, bevor Ihr ihn verwenden könnt!			
 GamePlayer.UseSlot.CantUseInCombat:			Ihr könnt diesen Gegenstand nicht im Kampf benutzen!		
-GamePlayer.UseSlot.IllegalSourceObject:			In dieser Position({0}) tragt Ihr nichts.
+GamePlayer.UseSlot.IllegalSourceObject:			In dieser Position tragt Ihr nichts.
 GamePlayer.UseSlot.MustDismountBefore:			Ihr müsst vorher absteigen.		
 GamePlayer.UseSlot.NoAutoReleaseShotReload:		Eurer Schuss wird nun nicht länger automatisch nachgeladen und freigegeben.			
 GamePlayer.UseSlot.NotEnouthPower:			Ihr seit nicht mächtig genug, um den Zauber dieses Gegenstandes anwenden zu können.		
@@ -477,7 +478,7 @@ Scripts.Player.Housing.OutdoorBannersRemoved:		Die Gildenbanner an Eurem Haus wu
 Scripts.Player.Housing.OutdoorShieldsAdded:		Die Gildenschilde an Eurem Haus wurden verändert.
 Scripts.Player.Housing.OutdoorShieldsRemoved:		Die Gildenschilde an Eurem Haus wurden entfernt.
 Scripts.Player.Housing.PaidChanges:			Ihr habt {0} für die Änderungen ausgegeben.
-Scripts.Player.Housing.PaidNotEnough:			Ihr habt nicht genug Geld dafür!
+Scripts.Player.Housing.PaidNotEnough:			Ihr habt dafür nicht genug Geld!
 Scripts.Player.Housing.PorchAlready:			Dieses Haus verfügt bereits über eine Veranda!
 Scripts.Player.Housing.PorchNone:			Dieses Haus verfügt über keine Veranda!
 Scripts.Player.Housing.PorchNotItem:			Das ist keine Veranda!
@@ -529,6 +530,9 @@ GameTrainer.PromotePlayer.Upgraded:			Ihr wurdet befördert und gehört nun der {0
 GameTrainer.ReceiveItem.RespecFull:			Ein schöner {0}! Ich gewähre Euch eine volle Fähigkeitenrespezialisierung. Gebt "/respec all" ein.
 GameTrainer.ReceiveItem.RespecRealm:			Danke, ich gewähre Euch eine Reichsfähigkeitenrespezialisierung. Gebt "/respec realm" ein.
 GameTrainer.ReceiveItem.RespecSingle:			Danke, ich gewähre Euch eine einzelne Fähigkeitsrespezialisierung. Gebt "/respec <Zauberlinie>"
+GameTrainer.Train.WouldYouLikeTo:			Sucht Ihre eine Ausbildung?
+GameTrainer.Train.SeekElsewhere:			Es tut mir leid, da kann ich Euch leider nicht helfen.
+
 
 # /EnchanterTrainer
 EnchanterTrainer.Interact.PathOfEssence:		{0} sagt: "Wollt Ihr als Beschwörer trainieren und dem Pfad der Essenz folgen? Das Leben als [Beschwörer] ist so lohnend wie gefährlich, aber es ist an Euch."
@@ -697,8 +701,8 @@ PlayerInitRequestHandler.SaferLocation:			Diese Gegend ist im Moment nicht siche
 PlayerMoveItemRequestHandler.TooFarAway:		Ihr seit zu weit weg, um {0} etwas zu geben.
 
 # /PlayerPickUpRequestHandler
-PlayerPickUpRequestHandler.HandlePacket.Target:		Ihr müsst erst ein Ziel auswählen, um etwas zu nehmen!
 PlayerPickUpRequestHandler.HandlePacket.InvalidTarget:	Dieses Ziel könnt Ihr nicht auswählen!
+PlayerPickUpRequestHandler.HandlePacket.Target:		Ihr müsst erst ein Ziel auswählen, um etwas zu nehmen!
 
 # /PlayerPositionUpdateHandler
 PlayerPositionUpdateHandler.Endurance:			Ihr verliert Ausdauer!
@@ -722,7 +726,7 @@ Scripts.Blacksmith.GiveObject:				(Gebt einen Gegenstand aus Eurem Gepäck zum Re
 Scripts.Blacksmith.InvalidItem:				Falscher Gegenstand.
 Scripts.Blacksmith.ItsDone:				Hier, bitte, {0} ist bereit zum Einsatz.
 Scripts.Blacksmith.NoNeedRepair:			Dieser Gegenstand befindet sich bereits in einem tadellosen Zustand.
-Scripts.Blacksmith.NotEnoughMoney:			Ihr habe nicht genug Geld für die Reparatur.
+Scripts.Blacksmith.NotEnoughMoney:			Ihr habt dafür nicht genug Geld!
 Scripts.Blacksmith.ObjectCantRepaired:			Dieser Gegenstand kann nicht repariert werden.
 Scripts.Blacksmith.ObjectRatherOld:			Uhh, {0} ist schon ziemlich alt. Ich werde nicht mehr in der Lage sein, eine erneute Reparatur durchzuführen. Gebt also gut darauf acht!
 Scripts.Blacksmith.RepairCostAccept:			Es wird Euch {0} kosten, {1} reparieren zu lassen. Seid Ihr damit einverstanden?
@@ -731,6 +735,19 @@ Scripts.Blacksmith.StackedObjets:			{0} kann immer nur einen Gegenstand reparier
 Scripts.Blacksmith.YouExamine:				Es interessiert Euch {0}. {0} steht Euch {2} und arbeitet als Schmied.
 Scripts.Blacksmith.YouPay:				{0} erhält von Euch {1}.
 Scripts.Blacksmith.YouTarget:				Es wird {0} als Ziel erfasst.
+
+# /Recharger
+Scripts.Recharger.GetExamineMessages:			Es interessiert Euch {0}. {0} steht Euch {2} und arbeitet als Manabeschwörer.
+Scripts.Recharger.Interact:				Oh! Ihr seid das. Ja, ja... Ich kann Eure magischen Gegenstände aufladen. Offenbar habe ich in letzter Zeit nichts anderes zu tun. Also gebt schon her. Ich sage Euch dann, was es kostet. 
+Scripts.Recharger.ReceiveItem.CantThat:			Ich kann das nicht wieder aufladen.
+Scripts.Recharger.ReceiveItem.Cost:			Meine Arbeit kostet Euch {0}. Seid Ihr einverstanden damit?
+Scripts.Recharger.ReceiveItem.FullyCharged:		Der Gegenstand ist wieder voll aufgeladen!
+Scripts.Recharger.ReceiveItem.StackedObjects:		{0} kann immer nur einen Gegenstand reparieren.
+Scripts.Recharger.RechargerDialogResponse.Decline:	Ihr gebt {0} zum wieder aufladen.
+Scripts.Recharger.RechargerDialogResponse.FullyCharged:	Hier, bitte, es ist nun wieder voll aufgeladen!
+Scripts.Recharger.RechargerDialogResponse.GiveMoney:	{0} erhält von Euch {1}.
+Scripts.Recharger.RechargerDialogResponse.InvalidItem:	Falscher Gegenstand.
+Scripts.Recharger.RechargerDialogResponse.NotMoney:	Ihr habt dafür nicht genug Geld!
 
 # GameEvents
 # /Playerenterexit
@@ -1248,6 +1265,38 @@ Hib.ImportantDelivery.TalkToFreagus.GoodCrop:		Ah! Das muss von Aethic aus Tir n
 Hib.ImportantDelivery.TalkToFreagus.Reward:		Es ist zwar nur ein kleiner Lumpen, aber er wird Euch warm halten in den kalten Monaten. Nochmals Dank {0}.
 Hib.ImportantDelivery.TalkToFreagus.Welcome:		Willkommen in meinem Pferdestall, Freund. Was kann ich heute für Euch tun?
 
+# SERVERRULES
+# /AbstractServerRules/PlayerStatistics
+# /Kills
+PlayerStatistic.Kill.Title:				Kill Report
+PlayerStatistic.Kill.AlbionPlayer:			Albion-Spieler getötet
+PlayerStatistic.Kill.HiberniaPlayer:			Hibernia-Spieler getötet
+PlayerStatistic.Kill.MidgardPlayer:			Midgard-Spieler getötet
+PlayerStatistic.Kill.TotalPlayers:			Insgesamt getötet
+
+# /Deathblows
+PlayerStatistic.Deathblows.AlbionPlayer:		Todestöße Albion
+PlayerStatistic.Deathblows.HiberniaPlayer:		Todestöße Hibernia
+PlayerStatistic.Deathblows.MidgardPlayer:		Todestöße Midgard
+PlayerStatistic.Deathblows.TotalPlayers:		Insgesamt
+
+# /Solo
+PlayerStatistic.Solo.AlbionPlayer:			Einzelkills Albion
+PlayerStatistic.Solo.HiberniaPlayer:			Einzelkills Hibernia
+PlayerStatistic.Solo.MidgardPlayer:			Einzelkills Midgard
+PlayerStatistic.Solo.TotalPlayers:			Insgesamt
+
+# /Capture
+PlayerStatistic.Capture.Title:				Eroberungs-Report
+PlayerStatistic.Capture.Keeps:				Festungen erobert
+PlayerStatistic.Capture.Towers:				Türme erobert
+
+# /PvE
+PlayerStatistic.PvE.Title:				PvE-Report
+PlayerStatistic.PvE.KillsDragon:			Drachen getötet
+PlayerStatistic.PvE.KillsEpic:				Epischer Boss getötet
+PlayerStatistic.PvE.KillsLegion:			Legion getötet
+
 # TITLES
 # /Claim
 Titles.Claim.Frontier.FrontierChallenger:		Aufstrebender Burgherr
@@ -1306,34 +1355,3 @@ Titles.CL.Level7:					Friedenswahrer
 Titles.CL.Level8:					Visionär
 Titles.CL.Level9:					Meister des Labyrinths
 Titles.CL.Level10:					Champion des Reiches
-
-# PLAYER STATISTIC
-# /Kills
-PlayerStatistic.Kill.Title:				Kill Report
-PlayerStatistic.Kill.AlbionPlayer:			Albion-Spieler getötet
-PlayerStatistic.Kill.HiberniaPlayer:			Hibernia-Spieler getötet
-PlayerStatistic.Kill.MidgardPlayer:			Midgard-Spieler getötet
-PlayerStatistic.Kill.TotalPlayers:			Insgesamt getötet
-
-# /Deathblows
-PlayerStatistic.Deathblows.AlbionPlayer:		Todestöße Albion
-PlayerStatistic.Deathblows.HiberniaPlayer:		Todestöße Hibernia
-PlayerStatistic.Deathblows.MidgardPlayer:		Todestöße Midgard
-PlayerStatistic.Deathblows.TotalPlayers:		Insgesamt
-
-# /Solo
-PlayerStatistic.Solo.AlbionPlayer:			Einzelkills Albion
-PlayerStatistic.Solo.HiberniaPlayer:			Einzelkills Hibernia
-PlayerStatistic.Solo.MidgardPlayer:			Einzelkills Midgard
-PlayerStatistic.Solo.TotalPlayers:			Insgesamt
-
-# /Capture
-PlayerStatistic.Capture.Title:				Eroberungs-Report
-PlayerStatistic.Capture.Keeps:				Festungen erobert
-PlayerStatistic.Capture.Towers:				Türme erobert
-
-# /PvE
-PlayerStatistic.PvE.Title:				PvE-Report
-PlayerStatistic.PvE.KillsDragon:			Drachen getötet
-PlayerStatistic.PvE.KillsEpic:				Epischer Boss getötet
-PlayerStatistic.PvE.KillsLegion:			Legion getötet
