@@ -123,8 +123,16 @@ namespace DOL.GS.Spells
 		/// <param name="ad"></param>
 		public override void SendDamageMessages(AttackData ad)
 		{
-			MessageToCaster(String.Format("Your {0} hits {1} for {2} damage!",
-				Spell.Name, ad.Target.GetName(0, false), ad.Damage), eChatType.CT_YouHit);
+			if (Spell.Name.StartsWith("Proc"))
+			{
+				MessageToCaster(String.Format("You hit {0} for {1} damage!",
+					ad.Target.GetName(0, false), ad.Damage), eChatType.CT_YouHit);
+			}
+			else
+			{
+				MessageToCaster(String.Format("Your {0} hits {1} for {2} damage!",
+					Spell.Name, ad.Target.GetName(0, false), ad.Damage), eChatType.CT_YouHit);
+			}
 			if (ad.CriticalDamage > 0)
 				MessageToCaster(String.Format("Your {0} critically hits {1} for an additional {2} damage!",
 					Spell.Name, ad.Target.GetName(0, false), ad.CriticalDamage), eChatType.CT_YouHit);
