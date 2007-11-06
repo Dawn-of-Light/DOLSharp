@@ -224,7 +224,7 @@
     <Compile Include="effects\EngageEffect.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="effects\FacilitatePainworkingEffect.cs" />
+    <Compile Include="effects\Necromancer\FacilitatePainworkingEffect.cs" />
     <Compile Include="effects\GameEffectList.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -250,6 +250,7 @@
     <Compile Include="effects\InterceptEffect.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="effects\Necromancer\NecromancerShadeEffect.cs" />
     <Compile Include="effects\ProtectEffect.cs">
       <SubType>Code</SubType>
     </Compile>

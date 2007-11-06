@@ -28,6 +28,7 @@ using log4net;
 using DOL.Events;
 using DOL.GS.Effects;
 using System.Collections;
+using DOL.AI.Brain;
 
 namespace DOL.GS
 {
@@ -40,7 +41,8 @@ namespace DOL.GS
 
 		#region Pet Control
 
-		String m_petName = "";
+		private String m_petName = "";
+		private int m_savedPetHealthPercent = 0;
 
 		/// <summary>
 		/// Sets the controlled object for this player
@@ -48,6 +50,9 @@ namespace DOL.GS
 		/// <param name="controlledNpc"></param>
 		public override void SetControlledNpc(DOL.AI.Brain.IControlledBrain controlledNpc)
 		{
+			m_savedPetHealthPercent = (ControlledNpc != null) 
+				? (int) ControlledNpc.Body.HealthPercent : 0;
+
 			base.SetControlledNpc(controlledNpc);
 			if (controlledNpc == null)
 			{
@@ -64,6 +69,9 @@ namespace DOL.GS
 		/// </summary>
 		public override void CommandNpcRelease()
 		{
+				m_savedPetHealthPercent = (ControlledNpc != null) 
+				? (int) ControlledNpc.Body.HealthPercent : 0;
+
 			base.CommandNpcRelease();
 			OnPetReleased();
 		}
@@ -73,7 +81,8 @@ namespace DOL.GS
 		/// </summary>
 		protected virtual void OnPetReleased()
 		{
-			CasterForm();
+			if (IsShade)
+				Shade(false);
 		}
 
 		#endregion
@@ -87,7 +96,7 @@ namespace DOL.GS
             if (!IsShade)
                 base.StartAttack(attackTarget);
             else
-                Out.SendMessage("You cannot enter combat while you are a shade!",
+                Out.SendMessage("You cannot enter combat while in shade form!",
                     eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 		}
 
@@ -110,7 +119,9 @@ namespace DOL.GS
         /// <param name="seconds"></param>
         public void SetTetherTimer(int seconds)
         {
-            ShadeEffect shadeEffect = EffectList.GetOfType(typeof(ShadeEffect)) as ShadeEffect;
+			NecromancerShadeEffect shadeEffect = 
+				EffectList.GetOfType(typeof(NecromancerShadeEffect)) as NecromancerShadeEffect;
+
             if (shadeEffect != null)
             {
                 lock (shadeEffect)
@@ -122,18 +133,78 @@ namespace DOL.GS
             }
         }
 
-		protected virtual void CasterForm()
+		/// <summary>
+		/// Create a necromancer shade effect for this player.
+		/// </summary>
+		/// <returns></returns>
+		protected override ShadeEffect CreateShadeEffect()
 		{
-			if (IsShade)
+			return new NecromancerShadeEffect();
+		}
+
+		/// <summary>
+		/// Changes shade state of the player
+		/// </summary>
+		/// <param name="state">The new state</param>
+		public override void Shade(bool state)
+		{
+			bool wasShade = IsShade;
+			base.Shade(state);
+
+			if (wasShade == state)
+				return;
+
+			if (state)
 			{
-				Shade(false);
+				// Necromancer has become a shade. Have any previous NPC 
+				// attackers aggro on pet now, as they can't attack the 
+				// necromancer any longer.
+
+				if (ControlledNpc != null && ControlledNpc.Body != null)
+				{
+					GameNPC pet = ControlledNpc.Body;
+					ArrayList attackerList = (ArrayList)m_attackers.Clone();
+
+					if (pet != null)
+					{
+						foreach (GameObject obj in attackerList)
+						{
+							if (obj is GameNPC)
+							{
+								GameNPC npc = (GameNPC)obj;
+								if (npc.TargetObject == this && npc.AttackState)
+								{
+									IAggressiveBrain brain = npc.Brain as IAggressiveBrain;
+									if (brain != null)
+									{
+										(npc).AddAttacker(pet);
+										npc.StopAttack();
+										brain.AddToAggroList(pet, (int)(brain.GetAggroAmountForLiving(this) + 1));
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				// Necromancer has lost shade form, release the pet if it
+				// isn't dead already and update necromancer's current health.
+
+				if (ControlledNpc != null)
+					(ControlledNpc as ControlledNpc).Stop();
+
+				Health = MaxHealth * Math.Max(10, m_savedPetHealthPercent) / 100;
 			}
 		}
 
 		public GameNecromancer(GameClient client, Character theChar)
 			: base(client, theChar)
 		{
-			CasterForm();
+			// Force caster form when creating this player in the world.
+
+			Model = (ushort)client.Account.Characters[m_client.ActiveCharIndex].CreationModel;
 		}
 	}
 }

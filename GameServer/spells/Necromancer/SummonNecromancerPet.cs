@@ -173,13 +173,13 @@ namespace DOL.GS.Spells
 				summoned.Level = (byte)Spell.Damage;
 
 			summoned.AddToWorld();
-			player.Shade(true);
 
 			GameEventMgr.AddHandler(player, GamePlayerEvent.CommandNpcRelease, new DOLEventHandler(OnNpcReleaseCommand));
 			GameEventMgr.AddHandler(summoned, GameLivingEvent.WhisperReceive, new DOLEventHandler(OnWhisperReceive));
 
 			player.SetControlledNpc((IControlledBrain)summoned.Brain);
 			effect.Start(summoned);
+			player.Shade(true);
 
 			// Cancel RR5 Call of Darkness if on caster.
 
