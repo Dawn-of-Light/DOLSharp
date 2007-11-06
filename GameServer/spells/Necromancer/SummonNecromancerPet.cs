@@ -25,6 +25,7 @@ using DOL.GS.PacketHandler;
 using DOL.Events;
 using DOL.GS.PropertyCalc;
 using System.Collections;
+using DOL.Language;
 
 namespace DOL.GS.Spells
 {
@@ -96,7 +97,9 @@ namespace DOL.GS.Spells
             foreach (GamePlayer player in m_caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
             {
                 if (player != m_caster)
-                    player.Out.SendMessage(m_caster.GetName(0, true) + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, 
+                        "GameObject.Casting.CastsASpell", m_caster.GetName(0, true)), 
+                        eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
             }
 
 			// Now deduct mana for the spell.

@@ -99,7 +99,7 @@ namespace DOL.GS
 			{
 				String message = String.Format("Hail, {0}. As my summoner, you may target me and say Arawn to learn more about the abilities I possess.",
 					(owner.PlayerCharacter.Gender == 0) ? "Master" : "Mistress");
-				WhisperOwner(message);
+				SayTo(owner, eChatLoc.CL_SystemWindow, message);
 			}
 		}
 
@@ -374,6 +374,17 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// The level of the living for proc effects. I put this in to
+		/// give necromancer pets a chance to use weapon procs that have
+		/// a level 50 requirement mostly. Keep an eye on this!
+		/// </summary>
+		/// <returns></returns>
+		protected override int EffectiveLevelForProc
+		{
+			get { return (Brain as IControlledBrain).Owner.Level; }
+		}
+
+		/// <summary>
 		/// Pick a random style for now.
 		/// </summary>
 		/// <returns></returns>
@@ -547,9 +558,8 @@ namespace DOL.GS
 		{
 			GamePlayer owner = ((Brain as IControlledBrain).Owner) as GamePlayer;
 			if (source == null || source != owner) return false;
-			String reply;
 
-			switch (text)
+			switch (text.ToLower())
 			{
 				case "arawn":
 					{
@@ -561,32 +571,40 @@ namespace DOL.GS
 							case "lesser zombie servant":
 							case "zombie servant":
 							case "reanimated servant":
-							case "necroservant": reply = taunt;
-								break;
-							case "greater necroservant": reply = taunt + " I can also inflict [poison] or [disease] on your enemies. " + empower;
-								break;
-							case "abomination": reply = "As one of the chosen warriors of Arawn, I have a mighty arsenal of [weapons] at your disposal. If you wish it, I am able to [taunt] your enemies so that they will focus on me instead of you. "
-								+ empower;
-								break;
-							default: return false;
+							case "necroservant":
+                                SayTo(owner, taunt);
+								return true;
+							case "greater necroservant": 
+                                SayTo(owner, taunt + " I can also inflict [poison] or [disease] on your enemies. " 
+                                    + empower);
+								return true;
+							case "abomination": 
+                                SayTo(owner, "As one of the chosen warriors of Arawn, I have a mighty arsenal of [weapons] at your disposal. If you wish it, I am able to [taunt] your enemies so that they will focus on me instead of you. "
+								    + empower);
+								return true;
+							default: 
+                                return false;
 						}
 					}
-					break;
-				case "disease": WhisperOwner("As you command.");
-					return true;	// TODO
-				case "empower": WhisperOwner("As you command.");
+				case "disease": 
+                    SayTo(owner, eChatLoc.CL_SystemWindow, "As you command.");  // TODO
+					return true;
+				case "empower":
+                    SayTo(owner, eChatLoc.CL_SystemWindow, "As you command.");
 					Empower();
 					return true;
-				case "poison": WhisperOwner("As you command.");
-					return true; // TODO
-				case "taunt": return true;	// TODO
+				case "poison":
+                    SayTo(owner, eChatLoc.CL_SystemWindow, "As you command."); // TODO
+					return true;
+				case "taunt": 
+                    return true;	// TODO
 				case "weapons":
 					{
 						if (Name != "abomination")
 							return false;
 
-						reply = "What weapon do you command me to wield? A [fiery sword], [icy sword], [poisonous sword] or a [flaming mace], [frozen mace], [venomous mace]?";
-						break;
+						SayTo(owner, "What weapon do you command me to wield? A [fiery sword], [icy sword], [poisonous sword] or a [flaming mace], [frozen mace], [venomous mace]?");
+						return true;
 					}
 				case "fiery sword": 
 				case "icy sword": 
@@ -600,14 +618,11 @@ namespace DOL.GS
 
 						String templateID = String.Format("{0}_{1}", Name, text.Replace(" ", "_"));
 						if (LoadEquipmentTemplate(templateID))
-							WhisperOwner("As you command.");
+							SayTo(owner, eChatLoc.CL_SystemWindow, "As you command.");
 						return true;
 					}
 				default: return false;
 			}
-			owner.Out.SendMessage(String.Format("The {0} says, \"{1}\"", Name, reply),
-				eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-			return true;
 		}
 
         /// <summary>
@@ -631,14 +646,17 @@ namespace DOL.GS
 						switch (templateID)
 						{
 							case "abomination_fiery_sword": 
-							case "abomination_flaming_mace":item.ProcSpellID = 32053;
+							case "abomination_flaming_mace":
+								item.ProcSpellID = 32053;
 								break;
 							case "abomination_icy_sword": 
-							case "abomination_frozen_mace":item.ProcSpellID = 32050;
+							case "abomination_frozen_mace":
+								item.ProcSpellID = 32050;
 								break;
 							case "abomination_poisonous_sword":
-								case "abomination_venomous_mace":
-									break;
+							case "abomination_venomous_mace":
+								item.ProcSpellID = 32013;	// Matter DoT, not quite what I have in mind...
+								break;
 						}
 						SwitchWeapon(eActiveWeaponSlot.TwoHanded);
 					}
@@ -674,19 +692,5 @@ namespace DOL.GS
             owner.Notify(GameNPCEvent.PetLost);
             Die(null);
         }
-
-		/// <summary>
-		/// Send a whisper to the owner.
-		/// </summary>
-		/// <param name="message">Message.</param>
-		private void WhisperOwner(String message)
-		{
-			GamePlayer owner = ((Brain as IControlledBrain).Owner) as GamePlayer;
-			if (owner == null)
-				return;
-
-			owner.Out.SendMessage(String.Format("The {0} says, \"{1}\"", Name, message), 
-				eChatType.CT_System, eChatLoc.CL_SystemWindow);
-		}
 	}
 }
