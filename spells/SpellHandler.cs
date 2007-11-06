@@ -505,7 +505,7 @@ namespace DOL.GS.Spells
 							return false;
 						}
 
-						if (FindStaticEffectOnTarget(selectedTarget, typeof(ShadeEffect)) != null)
+						if (FindStaticEffectOnTarget(selectedTarget, typeof(NecromancerShadeEffect)) != null)
 						{
 							MessageToCaster("Invalid target.", eChatType.CT_System);
 							return false;

@@ -22,7 +22,7 @@ using System.Collections;
 namespace DOL.GS.Effects
 {
 	/// <summary>
-	/// The helper effect for player shade mode
+	/// Player shade effect.
 	/// </summary>
 	public class ShadeEffect : StaticEffect, IGameEffect
 	{
@@ -30,90 +30,52 @@ namespace DOL.GS.Effects
 		/// The effect owner
 		/// </summary>
 		GamePlayer m_player;
-		private int m_timeRemaining = -1;
 
 		/// <summary>
-		/// Creates a new stealth effect
+		/// Creates a new shade effect.
 		/// </summary>
-		public ShadeEffect()
-		{
-		}
+		public ShadeEffect() { }
 
 		/// <summary>
-		/// Start the shade effect on player
+		/// Start the shade effect on a player.
 		/// </summary>
-		/// <param name="player">The effect target</param>
+		/// <param name="living">The effect target</param>
 		public override void Start(GameLiving living)
 		{
 			GamePlayer player = living as GamePlayer;
 			if (player != null)
 			{
-			m_player = player;
-			player.EffectList.Add(this);
+				m_player = player;
+				player.EffectList.Add(this);
 			}
 		}
 
 		/// <summary>
-		/// Stop the effect on target
+		/// Stop the effect.
 		/// </summary>
 		public override void Stop()
 		{
-//			m_player.Out.SendMessage("You Stop effect.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			m_player.EffectList.Remove(this);
 		}
 
 		/// <summary>
-		/// Called when effect must be canceled
+		/// Cancel the effect.
 		/// </summary>
-		public override void Cancel(bool playerCancel) {
-//			m_player.Out.SendMessage("You Cancel effect.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+		public override void Cancel(bool playerCancel) 
+		{
 			m_player.Shade(false);
 		}
 
 		/// <summary>
-		/// Name of the effect
+		/// Name of the effect.
 		/// </summary>
-		public override string Name { get { return "Shade"; } }
+		public override string Name { get { return "Shade"; } }	
 
-		/// <summary>
-		/// Remaining Time of the effect in seconds
-		/// </summary>
-		public override int RemainingTime 
-        { 
-            get { return (m_timeRemaining < 0) ? 0 : m_timeRemaining * 1000; } 
-        }
 
 		/// <summary>
 		/// Icon to show on players, can be id
 		/// </summary>
 		public override ushort Icon { get { return 0x193; } }
-
-        /// <summary>
-        /// Set timer when pet is out of range.
-        /// </summary>
-        /// <param name="seconds"></param>
-        public void SetTetherTimer(int seconds)
-        {
-            m_timeRemaining = seconds;
-        }
-
-		//VaNaTiC->
-		/*
-		/// <summary>
-		/// unique id for identification in effect list
-		/// </summary>
-		private ushort m_id;
-
-		/// <summary>
-		/// unique id for identification in effect list
-		/// </summary>
-		public ushort InternalID
-		{
-			get { return m_id; }
-			set { m_id = value; }
-		}
-		*/
-		//VaNaTiC<-
 		
 		/// <summary>
 		/// Delve Info
