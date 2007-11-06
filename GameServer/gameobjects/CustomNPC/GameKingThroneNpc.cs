@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
 using DOL.GS.PacketHandler;
 using DOL.Database;
 using DOL.Language;
@@ -88,7 +89,7 @@ namespace DOL.GS
                     if (player.Champion && player.ChampionLevel >= 5)
                     {
  						player.RemoveSpellLine("Champion Abilities" + player.Name);
- 						SkillBase.UnRegisterSpellLine("Champion Abilities"+Name);
+ 						SkillBase.UnRegisterSpellLine("Champion Abilities" + player.Name);
  						player.ChampionSpells = "";
 						player.ChampionSpecialtyPoints=player.ChampionLevel;
                     	player.UpdateSpellLineLevels(false);
@@ -132,4 +133,72 @@ namespace DOL.GS
 			return base.ReceiveItem(source, item);
 		}
 	}
+/*
+	public class ThroneTeleporterNPC : GameNPC
+	{
+		public ThroneTeleporterNPC() : base()
+		{
+		}
+        public override bool Interact(GamePlayer player)
+        {
+			if (!base.Interact(player))
+				return false;
+			
+			TurnTo(player, 5000);
+			if(!AmIInside())
+				player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client, "ThroneTeleporterNPC.Interact.AskForAudience"),
+			                                     this.Name, 
+			                                     LanguageMgr.GetTranslation(player.Client, "GlobalWords.Yes"),
+			                                     LanguageMgr.GetTranslation(player.Client, "GlobalWords.No")), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+			else
+				player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client, "ThroneTeleporterNPC.Interact.AskForExit"),GetOutsideZone(player.Realm)), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+			return true;
+        }
+        public override bool WhisperReceive(GameLiving source, string str)
+        {
+            if (!base.WhisperReceive(source, str))
+                return false;
+            
+            GamePlayer player = source as GamePlayer;
+            if (player == null) return false;
+ 
+            if(str.ToLower() == GetOutsideZone(player.Realm).ToLower())
+            	
+            if(str.ToLower() == LanguageMgr.GetTranslation(player.Client, "GlobalWords.Yes"))
+
+            return true;
+        }
+        protected virtual bool TeleportPlayer(ushort pRegion)
+        {
+ 			player.MoveTo(location.Region, location.X, location.Y, location.Z, location.Heading);       	
+        }
+        protected virtual bool AmIInside()
+        {
+        	// Check current region ID
+        	switch(this.CurrentRegionID)
+        	{
+        		case 394:
+        		case 360:
+        		case 395:
+        			return true;
+        		default:
+        			return false;
+        	}
+        }
+        protected virtual string GetOutsideZone(byte pRealm)
+        {
+        	switch(pRealm)
+        	{
+        		case 1:
+        			return "Camelot";
+        		case 2:
+        			return "Jordheim";
+        		case 3:
+        			return "Tir na nog";
+        		default:
+        			return ""
+        	}
+        }
+	}
+	*/
 }
