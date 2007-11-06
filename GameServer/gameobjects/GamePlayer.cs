@@ -108,6 +108,11 @@ namespace DOL.GS
 		public static readonly string QUICK_CAST_CHANGE_TICK = "quick_cast_change_tick";
 
 		/// <summary>
+		/// Array that stores ML step completition
+		/// </summary>		
+		private ArrayList m_mlsteps = new ArrayList(); 
+		
+		/// <summary>
 		/// Gets or sets the targetObject's visibility
 		/// </summary>
 		public override bool TargetInView
@@ -10177,7 +10182,15 @@ namespace DOL.GS
 				if (log.IsErrorEnabled)
 					log.Error("More than one DBTask Object found for player " + Name);
 			}
-
+			
+			// Load ML steps of player ...
+			DBCharacterXMasterLevel[] mlsteps = (DBCharacterXMasterLevel[])GameServer.Database.SelectObjects(typeof(DBCharacterXMasterLevel), "CharName ='" + GameServer.Database.Escape(Name) + "'");
+			if (mlsteps.Length > 0)
+			{
+				foreach (DBCharacterXMasterLevel mlstep in mlsteps)
+					m_mlsteps.Add(mlstep);
+			}
+			
 			// statistics
 			/*// OBSOLETE (VaNaTiC)
 			m_killsAlbionPlayers = m_character.KillsAlbionPlayers;
@@ -10262,6 +10275,14 @@ namespace DOL.GS
 				}
 				GameServer.Database.SaveObject(my_character);
 				Inventory.SaveIntoDatabase(InternalID);
+				
+				if (m_mlsteps!=null)
+				{
+					foreach (DBCharacterXMasterLevel mlstep in m_mlsteps)
+						if (mlstep != null)
+							GameServer.Database.SaveObject(mlstep);
+				}
+				
 				if (log.IsInfoEnabled)
 					log.Info(my_character.Name + " saved!");
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SaveIntoDatabase.CharacterSaved"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -12402,6 +12423,14 @@ namespace DOL.GS
          	320000, // xp to level 10 
         };
 		/// <summary>
+		/// Get the CL title string of the player
+		/// </summary>
+		public string CLTitle
+		{
+			get
+			{ return GlobalConstants.ClToClTitle((int)ChampionLevel); }
+		}
+		/// <summary>
 		/// Is Champion level activated
 		/// </summary>	        
 		public virtual bool Champion
@@ -12505,7 +12534,11 @@ namespace DOL.GS
 			if (experience > 0)
 			{
 				double modifier = ServerProperties.Properties.XP_RATE;
-				experience = (long)((double)experience * modifier / 200000);
+				// 1 CLXP point per 333K normal XP
+				if (this.CurrentRegion.IsRvR)
+					experience = (long)((double)experience * modifier / 333000);
+				else // 1 CLXP point per 2 Million normal XP
+					experience = (long)((double)experience * modifier / 2000000);
 			}
 			System.Globalization.NumberFormatInfo format = System.Globalization.NumberFormatInfo.InvariantInfo;
 			string totalexp = experience.ToString("N0", format);
@@ -12631,6 +12664,32 @@ namespace DOL.GS
 		/// The maximum ML level a player can reach 
 		/// </summary>
 		public const int ML_MAX_LEVEL = 10;
+		
+		/// <summary> 
+		/// Amount of MLXP required for ML validation. MLXP reset at every ML.
+		/// </summary>	
+		public static readonly long[] MLXPLevel = 
+        { 
+            0, //xp tp level 0 
+            32000, //xp to level 1 
+         	32000, // xp to level 2 
+         	32000, // xp to level 3 
+         	32000, // xp to level 4 
+         	32000, // xp to level 5 
+         	32000, // xp to level 6 
+         	32000, // xp to level 7 
+         	32000, // xp to level 8 
+         	32000, // xp to level 9 
+         	32000, // xp to level 10 
+        };
+		/// <summary>
+		/// Get the ML title string of the player
+		/// </summary>
+		public string MLTitle
+		{
+			get
+			{ return GlobalConstants.MlToMlTitle((int)ML); }
+		}				
 		/// <summary> 
 		/// Holds the ml line 
 		/// </summary> 
@@ -12648,14 +12707,6 @@ namespace DOL.GS
 			set { if (PlayerCharacter != null) PlayerCharacter.MLLevel = value; }
 		}
 		/// <summary> 
-		/// Gets and sets ML Step 
-		/// </summary> 
-		public virtual int MLStep
-		{
-			get { return PlayerCharacter != null ? PlayerCharacter.MLStep : 1; }
-			set { if (PlayerCharacter != null) PlayerCharacter.MLStep = value; }
-		}
-		/// <summary> 
 		/// Gets and sets ML Experience 
 		/// </summary> 
 		public virtual long MLExperience
@@ -12664,12 +12715,85 @@ namespace DOL.GS
 			set { if (PlayerCharacter != null) PlayerCharacter.MLExperience = value; }
 		}
 		/// <summary> 
-		/// Gets and sets ML Step granted flag 
+		/// Gets and sets the ML validated flag. This allow to get new ML to arbiter
 		/// </summary> 
 		public virtual bool MLGranted
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.MLGranted : false; }
 			set { if (PlayerCharacter != null) PlayerCharacter.MLGranted = value; }
+		}
+		/// <summary>
+		/// Check ML step completition
+		/// </summary>   
+		public bool HasFinishedMLStep(int mllevel, int step)
+		{
+			// No steps registered so false
+			if (m_mlsteps==null) return false;
+			// Current ML Level >= required ML, so true
+			if (MLLevel >= mllevel) return true;					
+			
+			// Check current registered steps
+			foreach (DBCharacterXMasterLevel mlstep in m_mlsteps )
+			{ 
+				// Found so return value
+				if (mlstep.MLLevel == mllevel && mlstep.MLStep == step)
+					return mlstep.StepCompleted;
+			}
+			
+			// Not found so false
+			return false;
+		}
+		/// <summary>
+		/// Set ML step completition
+		/// </summary>   
+		public void SetFinishedMLStep(int mllevel, int step)
+		{
+			// Check current registered steps in case of previous GM rollback command
+			if (m_mlsteps!=null)
+			{
+				foreach (DBCharacterXMasterLevel mlstep in m_mlsteps)
+				{ 
+					if (mlstep.MLLevel == mllevel && mlstep.MLStep == step)
+					{
+							mlstep.StepCompleted = true;
+							return;					
+					}
+				}
+			}
+			
+			// Register new step
+			DBCharacterXMasterLevel newstep = new DBCharacterXMasterLevel();
+			newstep.CharName = Name;
+			newstep.MLLevel = mllevel;
+			newstep.MLStep = step;
+			newstep.StepCompleted = true;
+			newstep.ValidationDate = DateTime.Now;
+			m_mlsteps.Add(newstep);
+			
+			// Add it in DB
+			try
+			{
+				GameServer.Database.AddNewObject(newstep);
+			}
+			catch (Exception e)
+			{
+				if (log.IsErrorEnabled)
+					log.Error("Error adding player " + Name + " ml step!", e);
+			}
+			
+			// Refresh Window
+			Out.SendMasterLevelWindow((byte)mllevel);
+		}		
+		/// <summary>
+		/// Returns the xp that are needed for the specified level 
+		/// </summary>         
+		public virtual long GetMLExperienceForLevel(int level)
+		{
+			if (level >= ML_MAX_LEVEL)
+				return MLXPLevel[GamePlayer.ML_MAX_LEVEL-1]; // exp for level 9, needed to get exp after 9 
+			if (level <= 0)
+				return MLXPLevel[0];
+			return MLXPLevel[level];
 		}
 		#endregion
 

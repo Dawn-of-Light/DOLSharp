@@ -46,7 +46,7 @@ namespace DOL.GS.PacketHandler
 			GamePlayer player = m_gameClient.Player;
 			if (player == null)
 				return;
-
+			
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
 			pak.WriteByte(0x03); //subcode
 			pak.WriteByte(0x0f); //number of entry
@@ -55,39 +55,30 @@ namespace DOL.GS.PacketHandler
 			//entry :
 
 			pak.WriteByte(player.Level); //level
-			pak.WritePascalString(player.Name);
-
+			pak.WritePascalString(player.Name); // player name
 			pak.WriteByte((byte) (player.MaxHealth >> 8)); // maxhealth high byte ?
 			pak.WritePascalString(player.CharacterClass.Name); // class name
 			pak.WriteByte((byte) (player.MaxHealth & 0xFF)); // maxhealth low byte ?
-
 			pak.WritePascalString( /*"The "+*/player.CharacterClass.Profession); // Profession
-
 			pak.WriteByte(0x00); //unk
-
-			pak.WritePascalString(player.CharacterClass.GetTitle(player.Level));
-
+			pak.WritePascalString(player.CharacterClass.GetTitle(player.Level)); // player level
 			//todo make function to calcule realm rank
 			//client.Player.RealmPoints
 			//todo i think it s realmpoint percent not realrank
 			pak.WriteByte((byte) player.RealmLevel); //urealm rank
-			pak.WritePascalString(player.RealmTitle);
+			pak.WritePascalString(player.RealmTitle); // Realm title
 			pak.WriteByte((byte) player.RealmSpecialtyPoints); // realm skill points
-
 			pak.WritePascalString(player.CharacterClass.BaseName); // base class
-
 			pak.WriteByte((byte)(HouseMgr.GetHouseNumberByPlayer(player) >> 8)); // personal house high byte
-			pak.WritePascalString(player.GuildName);
+			pak.WritePascalString(player.GuildName); // Guild name
 			pak.WriteByte((byte)(HouseMgr.GetHouseNumberByPlayer(player) & 0xFF)); // personal house low byte
-
-			pak.WritePascalString(player.LastName);
-
-			pak.WriteByte(0x0); // ML Level
-			pak.WritePascalString(player.RaceName);
-
+			pak.WritePascalString(player.LastName); // Last name
+			pak.WriteByte((byte)(player.MLLevel+1)); // ML Level (+1)
+			pak.WritePascalString(player.RaceName); // Race name
 			pak.WriteByte(0x0);
+			
 			if (player.GuildRank != null)
-				pak.WritePascalString(player.GuildRank.Title);
+				pak.WritePascalString(player.GuildRank.Title); // Guild title
 			else
 				pak.WritePascalString("");
 			pak.WriteByte(0x0);
@@ -100,20 +91,22 @@ namespace DOL.GS.PacketHandler
 
 			pak.WriteByte(0x0);
 			pak.WritePascalString(player.CraftTitle); //crafter title: legendary alchemist
-
 			pak.WriteByte(0x0);
-			pak.WritePascalString("None"); //ML title
+			pak.WritePascalString(player.MLTitle); //ML title
 
 			// new in 1.75
 			pak.WriteByte(0x0);
-			string title = "None";
 			if (player.CurrentTitle != PlayerTitleMgr.ClearTitle)
-				title = player.CurrentTitle.GetValue(player);
-			pak.WritePascalString(title); // new in 1.74
+				pak.WritePascalString(player.CurrentTitle.GetValue(player)); // new in 1.74 - Custom title
+			else
+				pak.WritePascalString("None"); 
 
 			// new in 1.79
-			pak.WriteByte(0x0); // Champion Level
-			pak.WritePascalString("None"); // Champion Title
+			if(player.Champion)
+				pak.WriteByte((byte)(player.ChampionLevel+1)); // Champion Level (+1)
+			else
+				pak.WriteByte(0x0);
+			pak.WritePascalString(player.CLTitle); // Champion Title
 			SendTCP(pak);
 		}
 

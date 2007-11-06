@@ -176,7 +176,7 @@ namespace DOLGameServerConsole
 		public void SendHookPointStore(GameKeepHookPoint hookPoint) { }
 		public void SendPlaySound(eSoundType soundType, ushort soundID) { }
 		public void SendNPCsQuestEffect(GameNPC npc, bool flag) { }
-
+		public void SendMasterLevelWindow(byte ml) { }
 		public void SendHexEffect(GamePlayer player, byte effect1, byte effect2, byte effect3, byte effect4, byte effect5) { }
 
 		public void SendSiegeWeaponAnimation(GameSiegeWeapon siegeWeapon) { }

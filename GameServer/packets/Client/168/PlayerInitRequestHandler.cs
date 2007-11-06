@@ -207,6 +207,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.FreeLevel"));
 				}
 				
+				player.Out.SendMasterLevelWindow(0);
+				
 				AssemblyName an = Assembly.GetExecutingAssembly().GetName();
 				player.Out.SendMessage("Dawn of Light " + an.Name + " Version: " + an.Version, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
@@ -249,7 +251,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 					}
 				}
-
+				
 				if (player.IsUnderwater)
 					player.IsDiving = true;
 

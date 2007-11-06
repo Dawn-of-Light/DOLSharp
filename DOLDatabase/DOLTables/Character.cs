@@ -2151,25 +2151,9 @@ namespace DOL
 					Dirty = true;
 					m_mlLevel = value;
 				}
-			}
+			}		
 			/// <summary>
-			/// ML Step of this character
-			/// </summary>
-			[DataElement(AllowDbNull = false)]
-			public int MLStep
-			{
-				get
-				{
-					return m_mlStep;
-				}
-				set
-				{
-					Dirty = true;
-					m_mlStep = value;
-				}
-			}			
-			/// <summary>
-			/// ML step is granted to this character
+			/// ML can be validated to next level
 			/// </summary>
 			[DataElement(AllowDbNull = false)]
 			public bool MLGranted
@@ -2183,7 +2167,7 @@ namespace DOL
 					Dirty = true;
 					m_mlGranted = value;
 				}
-			}        
+			}  	
 		}
 	}
 }

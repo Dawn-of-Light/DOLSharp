@@ -35,6 +35,7 @@ using DOL.GS.Quests;
 using DOL.GS.RealmAbilities;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS.PacketHandler
@@ -1932,9 +1933,10 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendUpdatePlayer()
 		{
-			if (m_gameClient.Player == null)
+			GamePlayer player = m_gameClient.Player;
+			if (player == null)
 				return;
-
+			
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
 			pak.WriteByte(0x03); //subcode
 			pak.WriteByte(0x0d); //number of entry
@@ -1942,55 +1944,46 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(0x00); //unk
 			//entry :
 
-			pak.WriteByte(m_gameClient.Player.Level); //level
-			pak.WritePascalString(m_gameClient.Player.Name);
-
-			pak.WriteByte((byte)(m_gameClient.Player.MaxHealth >> 8)); // maxhealth high byte ?
-			pak.WritePascalString(m_gameClient.Player.CharacterClass.Name); // class name
-			pak.WriteByte((byte)(m_gameClient.Player.MaxHealth & 0xFF)); // maxhealth low byte ?
-
-			pak.WritePascalString( /*"The "+*/m_gameClient.Player.CharacterClass.Profession); // Profession
-
+			pak.WriteByte(player.Level); //level
+			pak.WritePascalString(player.Name); // player name
+			pak.WriteByte((byte)(player.MaxHealth >> 8)); // maxhealth high byte ?
+			pak.WritePascalString(player.CharacterClass.Name); // class name
+			pak.WriteByte((byte)(player.MaxHealth & 0xFF)); // maxhealth low byte ?
+			pak.WritePascalString( /*"The "+*/player.CharacterClass.Profession); // Profession
 			pak.WriteByte(0x00); //unk
-
-			pak.WritePascalString(m_gameClient.Player.CharacterClass.GetTitle(m_gameClient.Player.Level));
+			pak.WritePascalString(player.CharacterClass.GetTitle(player.Level)); // player level
 
 			//todo make function to calcule realm rank
 			//client.Player.RealmPoints
 			//todo i think it s realmpoint percent not realrank
-			pak.WriteByte((byte)m_gameClient.Player.RealmLevel); //urealm rank
-			pak.WritePascalString(m_gameClient.Player.RealmTitle);
-			pak.WriteByte((byte)m_gameClient.Player.RealmSpecialtyPoints); // realm skill points
-
-			pak.WritePascalString(m_gameClient.Player.CharacterClass.BaseName); // base class
-
-			pak.WriteByte((byte)(HouseMgr.GetHouseNumberByPlayer(m_gameClient.Player) >> 8)); // personal house high byte
-			pak.WritePascalString(m_gameClient.Player.GuildName);
-			pak.WriteByte((byte)(HouseMgr.GetHouseNumberByPlayer(m_gameClient.Player) & 0xFF)); // personal house low byte
-
-			pak.WritePascalString(m_gameClient.Player.LastName);
-
-			pak.WriteByte(0x0); // ML Level
-			pak.WritePascalString(m_gameClient.Player.RaceName);
-
+			pak.WriteByte((byte)player.RealmLevel); //urealm rank
+			pak.WritePascalString(player.RealmTitle); // Realm title
+			pak.WriteByte((byte)player.RealmSpecialtyPoints); // realm skill points
+			pak.WritePascalString(player.CharacterClass.BaseName); // base class
+			pak.WriteByte((byte)(HouseMgr.GetHouseNumberByPlayer(player) >> 8)); // personal house high byte
+			pak.WritePascalString(player.GuildName);  // Guild name
+			pak.WriteByte((byte)(HouseMgr.GetHouseNumberByPlayer(player) & 0xFF)); // personal house low byte
+			pak.WritePascalString(player.LastName); // Last name
+			pak.WriteByte((byte)(player.MLLevel+1)); // ML Level (+1)
+			pak.WritePascalString(player.RaceName); // Race name			
 			pak.WriteByte(0x0);
-			if (m_gameClient.Player.GuildRank != null)
-				pak.WritePascalString(m_gameClient.Player.GuildRank.Title);
+			
+			if (player.GuildRank != null)
+				pak.WritePascalString(player.GuildRank.Title); // Guild title
 			else
 				pak.WritePascalString("");
 			pak.WriteByte(0x0);
 
-			AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(m_gameClient.Player.CraftingPrimarySkill);
+			AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(player.CraftingPrimarySkill);
 			if (skill != null)
 				pak.WritePascalString(skill.Name); //crafter guilde: alchemist
 			else
 				pak.WritePascalString("None"); //no craft skill at start
 
 			pak.WriteByte(0x0);
-			pak.WritePascalString(m_gameClient.Player.CraftTitle); //crafter title: legendary alchemist
-
+			pak.WritePascalString(player.CraftTitle); //crafter title: legendary alchemist
 			pak.WriteByte(0x0);
-			pak.WritePascalString("None"); //ML title
+			pak.WritePascalString(player.MLTitle); //ML title
 			SendTCP(pak);
 		}
 
@@ -3229,6 +3222,42 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
+		public virtual void SendMasterLevelWindow(byte ml)
+		{
+			// If required ML=0 then send current player ML data
+			byte mlrequired = (ml==(byte)0 ? ((byte)m_gameClient.Player.MLLevel == (byte)0 ? (byte)1 : (byte)m_gameClient.Player.MLLevel) : ml);
+
+			string description = "";
+			double MLXPpercent = 0;
+			
+			if (m_gameClient.Player.MLLevel < 10)
+				MLXPpercent = 100.0 * (double)m_gameClient.Player.MLExperience / (double)m_gameClient.Player.GetMLExperienceForLevel((int)(m_gameClient.Player.MLLevel+1));
+			else MLXPpercent = 100.0; // ML10 has no MLXP, so always 100%
+					
+			GSTCPPacketOut pak = new GSTCPPacketOut((byte)ePackets.MasterLevelWindow);
+			pak.WriteByte((byte)MLXPpercent); // MLXP (displayed in window)
+			pak.WriteByte((byte)0x64);
+			pak.WriteByte((byte)(m_gameClient.Player.MLLevel+1)); // ML level + 1
+			pak.WriteByte((byte)0x00);
+			pak.WriteByte(ml); // Required ML	
+			if (mlrequired<10)
+			{
+				// ML level completition is displayed client side (Step 11)
+				for (int i=1; i<11; i++)
+				{
+					if (!m_gameClient.Player.HasFinishedMLStep((int)mlrequired, i))
+						description = i.ToString() + ". " + LanguageMgr.GetTranslation(m_gameClient, String.Format("SendMasterLevelWindow.Uncomplete.ML{0}.Step{1}",mlrequired,i));
+					else
+						description = i.ToString() + ". " + LanguageMgr.GetTranslation(m_gameClient, String.Format("SendMasterLevelWindow.Complete.ML{0}.Step{1}",mlrequired,i));						
+					pak.WritePascalString(description);
+				}
+			}
+			else pak.WriteByte((byte)0x00);
+				
+			pak.WriteByte((byte)0x00);
+			SendTCP(pak);
+		}
+		
 		public virtual void SendConsignmentMerchantMoney(ushort mithril, ushort plat, ushort gold, byte silver, byte copper)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut((byte)ePackets.ConsignmentMerchantMoney);

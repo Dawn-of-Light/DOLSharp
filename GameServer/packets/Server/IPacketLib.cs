@@ -132,6 +132,7 @@ namespace DOL.GS.PacketHandler
 		StatsUpdate = 0xFB,
 		CharacterOverview = 0xFD,
 		Realm = 0xFE,
+		MasterLevelWindow = 0x13,
 	}
 	/// <summary>
 	/// Enum for LoginDeny reasons
@@ -419,6 +420,7 @@ namespace DOL.GS.PacketHandler
 		WarmapWindowHibernia = 0x30,
 		WarmapWindowAlbion = 0x31,
 		WarmapWindowMidgard = 0x32,
+		MasterLevelWindow = 0x19,
 	}
 
 
@@ -528,7 +530,7 @@ namespace DOL.GS.PacketHandler
 		void SendPetWindow(GameLiving pet, ePetWindowAction windowAction, eAggressionState aggroState, eWalkState walkState);
 		void SendPlaySound(eSoundType soundType, ushort soundID);
 		void SendNPCsQuestEffect(GameNPC npc, bool flag);
-
+		void SendMasterLevelWindow(byte ml);
 		void SendHexEffect(GamePlayer player,byte effect1,byte effect2,byte effect3,byte effect4,byte effect5);
 		void SendRvRGuildBanner(GamePlayer player, bool show);
 		void SendSiegeWeaponAnimation(GameSiegeWeapon siegeWeapon);
