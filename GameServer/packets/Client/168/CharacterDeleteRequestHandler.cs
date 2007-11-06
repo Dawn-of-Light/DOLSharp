@@ -81,6 +81,22 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (log.IsErrorEnabled)
 							log.Error("Error deleting char quests, char OID="+chars[i].ObjectId, e);
 					}
+					
+					// delete ML steps
+					try
+					{
+						DataObject[] objs = GameServer.Database.SelectObjects(typeof(DBCharacterXMasterLevel), "CharName = '" + GameServer.Database.Escape(chars[i].Name) + "'");
+						foreach (DBCharacterXMasterLevel mlstep in objs)
+						{
+							GameServer.Database.DeleteObject(mlstep);
+						}
+						GameServer.Database.WriteDatabaseTable(typeof (DBCharacterXMasterLevel));
+					}
+					catch (Exception e)
+					{
+						if (log.IsErrorEnabled)
+							log.Error("Error deleting char ml steps, char OID="+chars[i].ObjectId, e);
+					}					
 
 					GameServer.Database.DeleteObject(chars[i]);
 					GameServer.Database.WriteDatabaseTable(typeof (Character));

@@ -319,7 +319,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 								player.TempProperties.removeProperty(House.BPSFORHOUSERENT);
 							}
 
-							player.TempProperties.removeProperty(House.MONEYFORHOUSERENT);
+						 player.TempProperties.removeProperty(House.MONEYFORHOUSERENT);
+							break;
+						}
+					case eDialogCode.MasterLevelWindow:
+						{
+							player.Out.SendMasterLevelWindow((byte)m_response);
 							break;
 						}
 				}

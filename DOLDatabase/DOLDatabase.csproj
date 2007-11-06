@@ -148,6 +148,7 @@
     <Compile Include="DOLTables\ClassXRealmAbility.cs" />
     <Compile Include="DOLTables\DBBoat.cs" />
     <Compile Include="DOLTables\DBChampSpec.cs" />
+    <Compile Include="DOLTables\DBCharacterXMasterLevel.cs" />
     <Compile Include="DOLTables\DBHousepointItem.cs" />
     <Compile Include="DOLTables\DBHouseCharsXPerms.cs" />
     <Compile Include="DOLTables\DBHousePermissions.cs" />
