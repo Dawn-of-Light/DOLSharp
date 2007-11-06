@@ -374,17 +374,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// The level of the living for proc effects. I put this in to
-		/// give necromancer pets a chance to use weapon procs that have
-		/// a level 50 requirement mostly. Keep an eye on this!
-		/// </summary>
-		/// <returns></returns>
-		protected override int EffectiveLevelForProc
-		{
-			get { return (Brain as IControlledBrain).Owner.Level; }
-		}
-
-		/// <summary>
 		/// Pick a random style for now.
 		/// </summary>
 		/// <returns></returns>

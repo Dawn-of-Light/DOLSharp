@@ -2597,17 +2597,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// The level of the living for proc effects. I put this in to
-		/// give necromancer pets a chance to use weapon procs that have
-		/// a level 50 requirement mostly. Keep an eye on this!
-		/// </summary>
-		/// <returns></returns>
-		protected virtual int EffectiveLevelForProc
-		{
-			get { return Level; }
-		}
-
-		/// <summary>
 		/// Starts the weapon proc if any
 		/// </summary>
 		/// <param name="ad"></param>
