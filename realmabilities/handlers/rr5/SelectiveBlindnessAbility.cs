@@ -118,8 +118,7 @@ namespace DOL.GS.RealmAbilities
 
                 SelectiveBlindnessEffect SelectiveBlindness = (SelectiveBlindnessEffect)radiusPlayer.EffectList.GetOfType(typeof(SelectiveBlindnessEffect));
                 if (SelectiveBlindness != null) SelectiveBlindness.Cancel(false);
-                radiusPlayer.TempProperties.setProperty("SelectiveBlindnessOwner", player);
-                new SelectiveBlindnessEffect().Start(radiusPlayer);
+                new SelectiveBlindnessEffect(player).Start(radiusPlayer);
             }
             DisableSkill(player);
             timer.Stop();

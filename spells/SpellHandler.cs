@@ -407,6 +407,20 @@ namespace DOL.GS.Spells
 				return false;
 			}
 
+			// Apply Mentalist RA5L
+			SelectiveBlindnessEffect SelectiveBlindness = (SelectiveBlindnessEffect)Caster.EffectList.GetOfType(typeof(SelectiveBlindnessEffect));
+			if (SelectiveBlindness != null)
+			{
+				GameLiving EffectOwner = SelectiveBlindness.EffectSource;
+				if(EffectOwner==selectedTarget)
+				{
+					if (m_caster is GamePlayer)
+						((GamePlayer)m_caster).Out.SendMessage(string.Format("{0} is invisible to you!", selectedTarget.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+					
+					return false;
+				}
+			}				
+			
 			if (m_spell.InstrumentRequirement != 0)
 			{
 				if (!CheckInstrument())

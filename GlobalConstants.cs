@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using DOL.GS.PacketHandler;
 using DOL.Database;
+using DOL.Language;
 
 namespace DOL.GS
 {
@@ -1299,6 +1300,40 @@ namespace DOL.GS
 				case 10: return "Legendary";
 				case 11: return "Legendary Grandmaster";
 				default: return "";
+			}
+		}
+		
+		public static string MlToMlTitle(int ML)
+		{
+			switch (ML)
+			{
+				case 1: return "Banelord";
+				case 2: return "Battlemaster";
+				case 3: return "Convoker";
+				case 4: return "Perfecter";
+				case 5: return "Sojourner";
+				case 6: return "Spymaster";
+				case 7: return "Stormlord";
+				case 8: return "Warlord";
+				default: return "None";
+			}
+		}
+		
+		public static string ClToClTitle(int CL)
+		{
+			switch (CL)
+			{
+				case 1: return "Seeker";
+				case 2: return "Enforcer";
+				case 3: return "Outrider";
+				case 4: return "Lightbringer";
+				case 5: return "King's Champion";
+				case 6: return "King's Champion";
+				case 7: return "King's Champion";
+				case 8: return "King's Champion";
+				case 9: return "King's Champion";
+				case 10: return "King's Champion";
+				default: return "None";					
 			}
 		}
 

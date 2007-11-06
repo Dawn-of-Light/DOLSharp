@@ -18,6 +18,9 @@ System.LanguagesName.Spanish:					Espagnol
 System.LanguagesName.Czech:					Tchèque
 System.LanguagesName.Italian:					Italien 
 
+GlobalWords.Yes							Oui
+GlobalWords.No							Non
+
 # SYSTEM
 System.NoSense:									Cela n'aurait aucun sens !
 System.MustSelectTarget:						Vous devez selectionner une cible !
@@ -629,10 +632,12 @@ GameTrainer.ReceiveItem.RespecRealm:		Merci, j'ai recu une possibilité de respéc
 GameTrainer.ReceiveItem.RespecSingle:		Merci, j'ai recu une possibilité de respécialisation simple. Pour utiliser: /respec <linename>
 
 # KING THRONE NPC
-CLWeaponNPC.ReceiveItem.RespecCL:			Merci, j'ai recu une possibilité de respécialisation des compétences de champion. Pour utiliser: /respec cl.
-KingNPC.WhisperReceive.IsNowChampion:		Vous venez de devenir un champion!
-KingNPC.WhisperReceive.AlreadyChampion:		Vous êtes déjà un champion!
-KingNPC.WhisperReceive.AskForChampion:		Souaitez vous faire partie des [champions] de notre royaume?
+CLWeaponNPC.ReceiveItem.RespecCL:				Merci, j'ai recu une possibilité de respécialisation des compétences de champion. Pour utiliser: /respec cl.
+KingNPC.WhisperReceive.IsNowChampion:			Vous venez de devenir un champion!
+KingNPC.WhisperReceive.AlreadyChampion:			Vous êtes déjà un champion!
+KingNPC.WhisperReceive.AskForChampion:			Souaitez vous faire partie des [champions] de notre royaume?
+ThroneTeleporterNPC.Interact.AskForAudience		{0} dit, "Bonjour, citoyen. Avez-vous besoin d'entrer dans la salle du trône ?"\n\nVotre réponse: [{1}] or [{2}]
+ThroneTeleporterNPC.Interact.AskForExit			{0} dit, Désirez-vous quitter la salle du trône et retourner à [{0}]?
 
 # /EnchanterTrainer
 EnchanterTrainer.Interact.PathOfEssence:		{0} dit, "Voulez-vous vous devenir un Enchanteur et suivre la voix des magiciens?  La vie d'un [Enchanteur] en vaut la peine mais elle est dangereuse, mais cela est votre demande."
@@ -1247,3 +1252,97 @@ Scripts.Player.ViewReport.UnknownCommand: Ce n'est pas une commande valide.
 Scripts.Player.ViewReport.ReportDeleted: Report {0} est maintenant effacer.
 Scripts.Player.ViewReport.NoPriv: Vous n'avez pas les privilége pour edit les reports.
 
+# MASTERLEVEL
+# 1. Uncomplete steps
+SendMasterLevelWindow.Uncomplete.ML1.Step1:		Ianetor aime jouer avec le , et recherche des aventuriers pour participer à un jeu explosif en Anatolie d'Océania ! Ce défi est réservé à un groupe d'aventurier.
+SendMasterLevelWindow.Uncomplete.ML1.Step2:		Le voleur qui a dérobé Lornas est toujours en vie ! Ce défi est réservé à un groupe d'aventurier.
+SendMasterLevelWindow.Uncomplete.ML1.Step3:		Les clans tritons zhton et Kyhnroe en Mésothalassa et Océania Boréale sont à l'agonie, mais ils s'affrontent toujours l'un l'autre.Chaque clan est à la recherche d'aventuriers pour combattre à leurs cotés! Ce défi est réservé à un groupe de combat
+SendMasterLevelWindow.Uncomplete.ML1.Step4:		La barrière retient toujours ceux qui sont emprisonnés dans la mer maudite d'Hespéros d'Océania ! Ce défi est réservé à un groupe d'aventurier.
+SendMasterLevelWindow.Uncomplete.ML1.Step5:		Vous n'avez pas encore prouvé votre valeur en combat singulier face aux Champions du Seigneur Krojer! Ce défi est à relever seul.
+SendMasterLevelWindow.Uncomplete.ML1.Step6:		Kirkleis contemple toujours avec colère le miroir qui lui renvoie l'image de sa malédiction ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML1.Step7:		Les portails restent sombre et silencieux ! Le Rassa est enfermé hors de portée de ceux qui cherchent sont pouvoir ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML1.Step8:		Le rubis repose dans le sable au pied de la tête dont l'oeuil contemple les profondeurs insondables ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML1.Step9:		Desmona porte toujours sa couronne,le symbole nécessaire reste à trouver ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML1.Step10:		Faites face à Cetus avec un anneau, un rubis, un miroir et une couronne ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML2.Step1:		La mort marche dans vos pas dans le Temple du Sobékite Eternel! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML2.Step2:		Les assassins de l'imposteur tuent les gardien du Temple du Sobékite Eternel! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML2.Step3:		Le chef Triton et ses suivants détiennent moult richessses dérobées au sein du Temple Sobékite Eternel! Ce défi est réservé à un groupe de combat. 
+SendMasterLevelWindow.Uncomplete.ML2.Step4:		Le reflet de Rrionne est la clef de sont invulnérabilité ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML2.Step5:		Vous n'avez pas gagné le jeu de stratégie de Chath ! Ce défi est réservé à un groupe de combatr.
+SendMasterLevelWindow.Uncomplete.ML2.Step6:		L'épreuve de Kanahkt semble trop dure pour vous ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML2.Step7:		Vous devez toujours faire face à la Peur, la Terreure et l'Horreur ! Ce défi est réservé à un groupe de combat ou à un aventurier.
+SendMasterLevelWindow.Uncomplete.ML2.Step8:		Pour être victorieux, vous devez vous affrontez vous même ! Ce défi est réservé à un groupe d'avanturiers.
+SendMasterLevelWindow.Uncomplete.ML2.Step9:		Remportez la victoire face aux Maitres des Batailles qui ont autrefois remporté l'épreuve du Sobékite Eternel ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML2.Step10:		Un imposteur a volé l'Ankh de Vie, lui accordant l'immortalité tant qu'il réside dans le Temple du Sobékite Eternel. Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML3.Step1:		Moirai détient toujours le pouvoir runique de son bouclier magique ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML3.Step2:		Kepa est affaiblie et s'accroche désespérément à son pouvoir ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML3.Step3:		Casta utilise toujours son artefact pour tuer quiconque pénètre dans son antre ! Ce défi est réservé à un groupe de combat. 
+SendMasterLevelWindow.Uncomplete.ML3.Step4:		Laodamedia garde toujours vigoureusement l'entrée de sa tanière ! Ce défi est réservé à un groupe de combat. 
+SendMasterLevelWindow.Uncomplete.ML3.Step5:		Antioos clâme que son pouvoir est supérieur à tous les autres ! Ce défi est réservé à un groupe de combat. 
+SendMasterLevelWindow.Uncomplete.ML3.Step6:		Un étrange barracuda erre dans les ténèbres, luisant de pouvoir ! Ce défi est réservé à un groupe de combat. 
+SendMasterLevelWindow.Uncomplete.ML3.Step7:		Shraogh inspire toujours la peur chez ceux qui osent se mesurer à lui ! Ce défi est réservé à un groupe de combat. 
+SendMasterLevelWindow.Uncomplete.ML3.Step8:		La raie pastenague dégage un pouvoir surnaturel ! Ce défi est réservé à un groupe de combat. 
+SendMasterLevelWindow.Uncomplete.ML3.Step9:		La pieuvre Sinovia dévore ceux qui s'approchent ! Ce défi est réservé à un groupe de combat. 
+SendMasterLevelWindow.Uncomplete.ML3.Step10:	        La Méduse transforme toujours en pierre quiconque s'oppose à elle ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML4.Step1:		Le Colosse n'est pas encore invoqué à partir des scorpions du désert de Stygie ! Ce défi est réservé à un groupe d'aventuriers.
+SendMasterLevelWindow.Uncomplete.ML4.Step2:		La Forteresse des Tempêtes n'est pas encore tombée ! Ce défi est réservé à un groupe de combat. 
+SendMasterLevelWindow.Uncomplete.ML4.Step3:		On dit du Puissant Oeil de Ra qu'il rôde toujours dans les terres désertiques d'Atum ! Ce défi est réservé à un groupe d'aventuriers.
+SendMasterLevelWindow.Uncomplete.ML4.Step4:		Une pierre précieuse pour certains n'est qu'une babiole pour une déesse ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML4.Step5:		Le Jann des Terres d'Atum virevolte parmi les dunes ! Ce défi est réservé à un groupe de combat. 
+SendMasterLevelWindow.Uncomplete.ML4.Step6:		Oukesson le Ghillan se démultiplie pour combattre, et ne lâchera pas ses trésors tant qu'il ne sera pas vaincu ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML4.Step7:		Les gardiens de la rivière Iter ne sont pas encore réveillés ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML4.Step8:		Le sang de Daehien coule toujours dans les Terres d'Atum ! Ce défi est réservé à un groupe de combat ! 
+SendMasterLevelWindow.Uncomplete.ML4.Step9:		Gaurmaes la Maride est toujours à l'abri derrière tornades et poussière ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML4.Step10:	        Martikhoras règne toujours dans sa pyramide ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML5.Step1:		La Jarre Canopique (Intestins) doit être volée auprès de l'Avatar de Qebehsenuef ! Ce défi est réservé à un groupe d'aventuriers.
+SendMasterLevelWindow.Uncomplete.ML5.Step2:		La jarre Canopique (Estomac) doit être volée auprès de l'Avatar de Duamutef ! Ce défi est réservé à un groupe d'aventuriers.
+SendMasterLevelWindow.Uncomplete.ML5.Step3:		La Jarre Canopique (Poumons) doit être volée auprès de l'Avatar de Hapy ! Ce défi est réservé à un groupe d'aventuriers.
+SendMasterLevelWindow.Uncomplete.ML5.Step4:		La Jarre Canopique (Foie) doit être volée auprès de l'Avatar de Imsety ! Ce défi est réservé à un groupe d'aventuriers.
+SendMasterLevelWindow.Uncomplete.ML5.Step5:		Les gorgones d'Aérus détiennent toujours le Miroir de Ra de Cau Surae ! Ce défi est réservé à un groupe d'aventuriers.
+SendMasterLevelWindow.Uncomplete.ML5.Step6:		Les maudits détiennent la résine qui préserve ! Ce défi est réservé à un groupe d'aventuriers.
+SendMasterLevelWindow.Uncomplete.ML5.Step7:		Les maudits détiennent le masque nécessaire pour affronter Ammut ! Ce défi est réservé à un groupe d'aventuriers.
+SendMasterLevelWindow.Uncomplete.ML5.Step8:		Les attaches se trouvent chez les maudits. Ce défi est réservé à un groupe d'aventuriers.
+SendMasterLevelWindow.Uncomplete.ML5.Step9:		Vous devez boire les eaux empoisonnées pour aider Mahaf ! Ce défi est réservé à un groupe d'aventuriers.
+SendMasterLevelWindow.Uncomplete.ML5.Step10:	        Vous devez faire face à Ammut dans les profondeurs des Chambres de Ma'ati afin d'être jugé ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML6.Step1:		Cherchez un uraeus rare là où ils se trouvent. Ce défi est réservé à un groupe d'aventuriers.
+SendMasterLevelWindow.Uncomplete.ML6.Step2:		Le sacrifice doit encore avoir lieu, la salamandre n'est pas encore née ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML6.Step3:		Lateef se lamente sur son destin de suivant d'Am-he et souhaite retourner dans le désert ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML6.Step4:		Pallida-uraei n'est pas encore apparu ! Cherchez le foyez des Uraeus ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML6.Step5:		Les flammes à l'extrême Est de Volcania gardent les objets, et doivent être éteintes ! Ce défi est réservé à un groupe d'aventuriers.
+SendMasterLevelWindow.Uncomplete.ML6.Step6:		Cherchez Siraadi le sacrificateur au milieu des pilliers de la vengeance de Volcania ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML6.Step7:		Les trois gardiens d'Ankhkare le surveillent. Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML6.Step8:		Au centre de l'île les brasiers appellent les efreet ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML6.Step9:		La Forteresse de Vazul dans les îles de Cendres n'est pas encore tombée ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML6.Step10:	        La Chimère tient toujours sa forteresse des Iles de Cendres Orientales ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML7.Step1:		Vous devez acquérir le gantelet de feu ! Ce défi est réservé à un groupe d'aventuriers.
+SendMasterLevelWindow.Uncomplete.ML7.Step2:		Vous pouvez en apprendre plus sur vos ennemis, mais ils sont quatre cette fois. Vous ne pouvez mettre fin à leur guerre, mais pouvez prouver votre courage.Ce défi est réservé à un groupe d'aventuriers.
+SendMasterLevelWindow.Uncomplete.ML7.Step3:		Les Apophiens souhaitent mettre à l'épreuve votre endurance. Ce défi est réservé à un groupe d'aventuriers.
+SendMasterLevelWindow.Uncomplete.ML7.Step4:		Les Volurgons souhaitent mettre à l'épreuve votre endurance. Ce défi est réservé à un groupe d'aventuriers.
+SendMasterLevelWindow.Uncomplete.ML7.Step5:		Les Shaitans souhaitent mettre à l'épreuve votre endurance. Ce défi est réservé à un groupe d'aventuriers.
+SendMasterLevelWindow.Uncomplete.ML7.Step6:		Les Hephaestiens souhaitent mettre à l'épreuve votre endurance. Ce défi est réservé à un groupe d'aventuriers.
+SendMasterLevelWindow.Uncomplete.ML7.Step7:		Vous devez passer une épreuve dans la Chambre des Flammes ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML7.Step8:		Le regard de Katorii détruit toute vie, elle doit être tuée ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML7.Step9:		Une force mystérieuse bloque votre chemin ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML7.Step10:	        Typhon repose dans son nid de lave au Coeur de Volcania ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML8.Step1:		Bisul le jinn a toujours le cristal de contrôle ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML8.Step2:		Le bouclier d'Agne fut détruit il y a bien longtemps, mais Tholos a en sa possession un autre exemplaire ! Ce défi est réservé à un groupe de combat. 
+SendMasterLevelWindow.Uncomplete.ML8.Step3:		L'épée du grand Agne est maintenant entre les mains d'un Jinn malfaisant ! Ce défi est réservé à un groupe de combat. 
+SendMasterLevelWindow.Uncomplete.ML8.Step4:		Autrefois noble et fier, il ne reste plus d'Agne que quelques débris près des foyers des centaures. Ce défi est réservé à un groupe d'aventuriers.
+SendMasterLevelWindow.Uncomplete.ML8.Step5:		Kratos n'a pas encore donné la jambe d'Agne ! Ce défi est réservé à un groupe de combat. 
+SendMasterLevelWindow.Uncomplete.ML8.Step6:		Les serviteurs de Dawar détiennent la tête d'Agne ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML8.Step7:		Trouvez le torse d'Agne parmi les statues d'Aérus ! Ce défi est réservé à un groupe d'aventuriers. 
+SendMasterLevelWindow.Uncomplete.ML8.Step8:		Un groupe de Gorgones tente de briser vos efforts pour reconstruire Agne et ont caché son bras gauche ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML8.Step9:		Le bras droit repose dans les ruines d'un ancien puissant temple Atlante. Ce défi est réservé à un groupe d'aventuriers. 
+SendMasterLevelWindow.Uncomplete.ML8.Step10:	        Vous devez d'abord défaire l'armée d'Agne sur son champ de bataille puis vous devrez renverser Talos dans son temple ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML9.Step1:		Il y a bien longtemps, Kyros était un guerrier ultime aux nombreux rôles lors des batailles. Saurez vous le défier ? 
+SendMasterLevelWindow.Uncomplete.ML9.Step2:		Lachlen était un grand explorateur, toujours prêt à affronter de nouveaux dangers. Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML9.Step3:		Il y a bien longtemps, Evzen avait réunifié trois pays après la mort de leurs seigneurs de guerre puis y avait régné d'une main de fer. 
+SendMasterLevelWindow.Uncomplete.ML9.Step4:		Quatre rois similaires sont dormants et doivent être réveillés ! Ce défi est réservé à un groupe de combat.  
+SendMasterLevelWindow.Uncomplete.ML9.Step5:		Nelos aimerait vous apprendre une leçon à laquelle il se pourrait que vous ne surviviez pas ! Ce défi est réservé à un groupe de combat. 
+SendMasterLevelWindow.Uncomplete.ML9.Step6:		Des patrouilles centaures menées par Katri vous empêchent d'atteindre votre but ! Ce défi est réservé à un groupe de combat.
+SendMasterLevelWindow.Uncomplete.ML9.Step7:		Seul les laculus les plus forts survivent car ils se dévorent les uns les autres. Ce défi est réservé à un groupe de combat.  
+SendMasterLevelWindow.Uncomplete.ML9.Step8:		Vous n'avez pas encore prouvé votre valeur auprès des Gardiens du Phoénix ! Ce défi est réservé à un groupe de combat. 
+SendMasterLevelWindow.Uncomplete.ML9.Step9:		Neola garde toujours ses soeurs. Ce défi est réservé à un groupe de combat. 
+SendMasterLevelWindow.Uncomplete.ML9.Step10:	        Le Phoénix n'est pas encore affaibli ! Ce défi est réservé à un groupe de combat.
+
+# 1. Completed steps

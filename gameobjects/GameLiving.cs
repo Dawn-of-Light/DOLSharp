@@ -1554,6 +1554,21 @@ namespace DOL.GS
 				return ad;
 			}
 
+			// Apply Mentalist RA5L
+			SelectiveBlindnessEffect SelectiveBlindness = (SelectiveBlindnessEffect)EffectList.GetOfType(typeof(SelectiveBlindnessEffect));
+			if (SelectiveBlindness != null)
+			{
+				GameLiving EffectOwner = SelectiveBlindness.EffectSource;
+				if(EffectOwner==ad.Target)
+				{
+					if (this is GamePlayer)
+						((GamePlayer)this).Out.SendMessage(string.Format("{0} is invisible to you!", ad.Target.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+					
+					ad.AttackResult = eAttackResult.Missed;
+					return ad;
+				}
+			}				
+			
 			//Calculate our attack result and attack damage
 			ad.AttackResult = ad.Target.CalculateEnemyAttackResult(ad, weapon);
 
