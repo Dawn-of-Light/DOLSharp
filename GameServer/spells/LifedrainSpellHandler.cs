@@ -73,24 +73,6 @@ namespace DOL.GS.Spells
             }
         }
 
-        /// <summary>
-        /// Calculates the base 100% spell damage which is then modified by damage variance factors
-        /// </summary>
-        /// <returns></returns>
-        public override double CalculateDamageBase()
-        {
-            double spellDamage = Spell.Damage;
-            GamePlayer player = Caster as GamePlayer;
-            if (player != null && player.CharacterClass.ManaStat != eStat.UNDEFINED)
-            {
-                int manaStatValue = player.GetModified((eProperty)player.CharacterClass.ManaStat);
-                spellDamage *= (manaStatValue + 180) / 250.0;
-                if (spellDamage < 0)
-                    spellDamage = 0;
-            }
-            return spellDamage;
-        }
-
         // constructor
         public LifedrainSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }

@@ -2363,6 +2363,11 @@ namespace DOL.GS.Spells
 			double spellDamage = Spell.Damage;
 			GamePlayer player = Caster as GamePlayer;
 
+			// For pets the stats of the owner have to be taken into account.
+
+			if (Caster is GameNPC && ((Caster as GameNPC).Brain) is IControlledBrain)
+				player = (((Caster as GameNPC).Brain) as IControlledBrain).Owner as GamePlayer;
+
 			if (player != null)
 			{
 				if (this.SpellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect)
@@ -2468,6 +2473,7 @@ namespace DOL.GS.Spells
 
 			CalculateDamageVariance(target, out minVariance, out maxVariance);
 			double spellDamage = CalculateDamageBase();
+
 			if (m_caster is GamePlayer)
 				effectiveness += m_caster.GetModified((Spell.SpellType != "Archery" ? eProperty.SpellDamage : eProperty.RangedDamage)) * 0.01;
 
