@@ -9362,7 +9362,7 @@ namespace DOL.GS
 				return false;
 			}
 
-			Out.SendMessage("You receive " + item.GetName(0, false) + " from " + source.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage("You receive " + item.GetName(0, false) + " from " + source.GetName(0, false) + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			if (source is GamePlayer)
 			{

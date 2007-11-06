@@ -39,7 +39,7 @@ namespace DOL.GS.Trainer
 		}
 
 		/// <summary>
-		/// Interact with trainer
+		/// Interact with trainer.
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
@@ -58,7 +58,7 @@ namespace DOL.GS.Trainer
                 {
                     String message = "Hail, young Disciple. Have you come seeking to imbue yourself with the power of ";
                     message += "Arawn and serve as one of his [Necromancers]?";
-                    WhisperPlayer(player, message, eChatLoc.CL_PopupWindow);
+                    SayTo(player, message);
 				} 
                 else 
                     DismissPlayer(player);					
@@ -103,7 +103,7 @@ namespace DOL.GS.Trainer
                     message += "amount of health. Necromancers have the power to wound their enemies and the pain ";
                     message += "they inflict brings them a surge of power or restores life to their servant. Do you ";
                     message += "wish to dedicate yourself to Lord Arawn and [join the Temple of Arawn]?";
-                    WhisperPlayer(player, message, eChatLoc.CL_PopupWindow);
+                    SayTo(player, message);
                     break;
 
 			case "join the temple of arawn":

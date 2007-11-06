@@ -2597,6 +2597,17 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// The level of the living for proc effects. I put this in to
+		/// give necromancer pets a chance to use weapon procs that have
+		/// a level 50 requirement mostly. Keep an eye on this!
+		/// </summary>
+		/// <returns></returns>
+		protected virtual int EffectiveLevelForProc
+		{
+			get { return Level; }
+		}
+
+		/// <summary>
 		/// Starts the weapon proc if any
 		/// </summary>
 		/// <param name="ad"></param>
@@ -2618,7 +2629,7 @@ namespace DOL.GS
 							{
 								if (spell.ID == weapon.ProcSpellID)
 								{
-									if (spell.Level <= Level)
+									if (spell.Level <= EffectiveLevel)
 									{
 										ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(ad.Attacker, spell, procEffectLine);
 										if (spellHandler != null)
@@ -2646,7 +2657,7 @@ namespace DOL.GS
 							{
 								if (spell.ID == weapon.ProcSpellID1)
 								{
-									if (spell.Level <= Level)
+									if (spell.Level <= EffectiveLevel)
 									{
 										ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(ad.Attacker, spell, procEffectLine);
 										if (spellHandler != null)
@@ -2682,7 +2693,7 @@ namespace DOL.GS
 							{
 								if (spell.ID == weapon.PoisonSpellID)
 								{
-									if (spell.Level <= Level)
+									if (spell.Level <= EffectiveLevel)
 									{
 										ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, poisonLine);
 										if (spellHandler != null)

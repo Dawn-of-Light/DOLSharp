@@ -124,6 +124,7 @@ GameObject.GetPronoun.Pronoun4:				its
 GameObject.GetPronoun.Pronoun5:				It
 GameObject.GetPronoun.Pronoun6:				it
 GameObject.Interact.TooFarAway:				You are too far away to interact with {0}.
+GameObject.Casting.CastsASpell:				{0} casts a spell!
 
 # GAMEPLAYER
 GamePlayer.AddAbility.YouLearn:				You learn the {0} ability!	
@@ -518,6 +519,8 @@ GameTrainer.PromotePlayer.Upgraded:			You have been upgraded to the {0} class!
 GameTrainer.ReceiveItem.RespecFull:			A nice {0}! I added a full respec to use /respec all.
 GameTrainer.ReceiveItem.RespecRealm:			Thanks, I added a realm respec to use /respec realm.
 GameTrainer.ReceiveItem.RespecSingle:			Thanks, I added a single spec respec to use /respec <linename>
+GameTrainer.Train.WouldYouLikeTo:			Would you like to do some training?
+GameTrainer.Train.SeekElsewhere:			You must seek elsewhere for your training.
 
 # KING THRONE NPC
 CLWeaponNPC.ReceiveItem.RespecCL:			Thanks, I added a single champion skill respec to use /respec cl.
