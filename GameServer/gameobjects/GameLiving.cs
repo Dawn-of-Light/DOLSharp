@@ -2849,7 +2849,7 @@ namespace DOL.GS
 			InterceptEffect intercept = null;
 			GameSpellEffect bladeturn = null;
 			EngageEffect engage = null;
-			ShadeEffect shade = null;
+			NecromancerShadeEffect shade = null;
 			// ML effects
 			BodyguardEffect bodyguard = null;
 			GameSpellEffect phaseshift = null;
@@ -2875,7 +2875,7 @@ namespace DOL.GS
 					if (effect is BerserkEffect) defenceDisabled = true;
 					if (engage == null && effect is EngageEffect) engage = (EngageEffect)effect;
 					if (intercept != null) continue; // already found
-					if (shade == null && effect is ShadeEffect) shade = (ShadeEffect)effect;
+					if (shade == null && effect is NecromancerShadeEffect) shade = (NecromancerShadeEffect)effect;
 					// ML effects
 					if (bodyguard == null && effect is BodyguardEffect && ((BodyguardEffect)effect).GuardTarget == this) bodyguard = (BodyguardEffect)effect;
 					if (phaseshift == null && effect is GameSpellEffect && ((GameSpellEffect)effect).Spell.SpellType == "Phaseshift") phaseshift = (GameSpellEffect)effect;

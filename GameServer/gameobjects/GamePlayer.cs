@@ -11598,9 +11598,18 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Changes shade state of the player
+		/// Create a shade effect for this player.
 		/// </summary>
-		/// <param name="state">The new state</param>
+		/// <returns></returns>
+		protected virtual ShadeEffect CreateShadeEffect()
+		{
+			return new ShadeEffect();
+		}
+
+		/// <summary>
+		/// Changes shade state of the player.
+		/// </summary>
+		/// <param name="state">The new state.</param>
 		public virtual void Shade(bool state)
 		{
 			if (IsShade == state)
@@ -11610,82 +11619,24 @@ namespace DOL.GS
 						eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
+
 			if (state)
 			{
-				if (ObjectState == eObjectState.Active)
-				{
-					Model = 822;// Shade
-					//					Out.SendMessage("You are already a shade!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-					m_ShadeEffect = new ShadeEffect();
-					m_ShadeEffect.Start(this);
-					ArrayList temp = (ArrayList)m_attackers.Clone();
-					GameNPC pet = null;
-					if (ControlledNpc != null && ControlledNpc.Body != null)
-						pet = ControlledNpc.Body;
-					if (pet != null)
-					{
-						foreach (GameObject obj in temp)
-							if (obj is GameNPC)
-							{
-								GameNPC npc = (GameNPC)obj;
-								if (npc.TargetObject == this && npc.AttackState)
-								{
-									Out.SendDebugMessage("Reaggro " + npc.Name + " on " + pet.Name);
-									IAggressiveBrain brain = npc.Brain as IAggressiveBrain;
-									if (brain != null)
-									{
-										(npc).AddAttacker(pet);
-										npc.StopAttack();
-										brain.AddToAggroList(pet, (int)(brain.GetAggroAmountForLiving(this) + 1));
-									}
-								}
-							}
-					}
-				}
+				// Turn into a shade.
+
+				Model = 822;
+				m_ShadeEffect = CreateShadeEffect();
+				m_ShadeEffect.Start(this);
 			}
 			else
 			{
-				bool looseHP = false;
+				// Drop shade form.
 
 				m_ShadeEffect.Stop();
 				m_ShadeEffect = null;
 				Model = (ushort)m_client.Account.Characters[m_client.ActiveCharIndex].CreationModel;
-				if (ObjectState == eObjectState.Active)
-					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Shade.NoLongerShade"),
-						eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-				if (ControlledNpc != null)
-					CommandNpcRelease();
-
-				foreach (GameNPC npc in GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
-				{
-					if (GameServer.ServerRules.IsAllowedToAttack(npc, this, true))
-					{
-						IAggressiveBrain aggroBrain = npc.Brain as IAggressiveBrain;
-						if (aggroBrain != null && WorldMgr.CheckDistance(this, npc, aggroBrain.AggroRange * 3))
-						{
-							looseHP = true;
-							break;
-						}
-					}
-				}
-				if (!looseHP)
-				{
-					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-					{
-						if (GameServer.ServerRules.IsAllowedToAttack(player, this, true))
-						{
-							looseHP = true;
-							break;
-						}
-					}
-				}
-
-				if (looseHP)
-				{
-					int HP = Math.Max(1, Health / 10);
-					Health = HP;
-				}
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Shade.NoLongerShade"),
+					eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 		}
 

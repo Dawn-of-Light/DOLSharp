@@ -644,7 +644,7 @@ namespace DOL.GS
 								break;
 							case "abomination_poisonous_sword":
 							case "abomination_venomous_mace":
-								item.ProcSpellID = 32013;	// Matter DoT, not quite what I have in mind...
+								item.ProcSpellID = 32013;
 								break;
 						}
 						SwitchWeapon(eActiveWeaponSlot.TwoHanded);
