@@ -31,6 +31,23 @@ namespace DOL.GS.Spells
 	public class SpeedDecreaseSpellHandler : UnbreakableSpeedDecreaseSpellHandler
 	{
 		/// <summary>
+		/// Apply the effect.
+		/// </summary>
+		/// <param name="target"></param>
+		/// <param name="effectiveness"></param>
+		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+		{
+			// Check for root immunity.
+			if (Spell.Value == 99 &&
+				FindStaticEffectOnTarget(target, typeof(MezzRootImmunityEffect)) != null)
+			{
+				MessageToCaster("Your target is immune!", eChatType.CT_System);
+				return;
+			}
+			base.ApplyEffectOnTarget(target, effectiveness);
+		}
+
+		/// <summary>
 		/// When an applied effect starts
 		/// duration spells only
 		/// </summary>
