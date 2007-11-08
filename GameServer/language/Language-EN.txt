@@ -1343,6 +1343,16 @@ Titles.CL.Level8:					Visionary
 Titles.CL.Level9:					Gladiator
 Titles.CL.Level10:					Labyrinthian
 
+# /ML
+Titles.ML.Line1:					Banelord
+Titles.ML.Line2:					Battlemaster
+Titles.ML.Line3:					Convoker
+Titles.ML.Line4:					Perfecter
+Titles.ML.Line5:					Sojourner
+Titles.ML.Line6:					Spymaster
+Titles.ML.Line7:					Stormlord
+Titles.ML.Line8:					Warlord
+
 # VIEWREPORTS
 Scripts.Player.VeiwReport.Usage: Usage:
 Scripts.Player.ViewReport.Help.Close: '/viewreport close <report #>' Will close the report of id #.
