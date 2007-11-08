@@ -539,7 +539,9 @@
     <Compile Include="playertitles\kills\hibernia\ScourgeOfHiberniaTitle.cs" />
     <Compile Include="playertitles\kills\midgard\BaneOfMidgardTitle.cs" />
     <Compile Include="playertitles\kills\midgard\ScourgeOfMidgardTitle.cs" />
+    <Compile Include="playertitles\level\ChampionTitle.cs" />
     <Compile Include="playertitles\level\Level20Title.cs" />
+    <Compile Include="playertitles\level\MasterlevelTitle.cs" />
     <Compile Include="playertitles\privlevel\AdministratorTitle.cs" />
     <Compile Include="playertitles\privlevel\GamemasterTitle.cs" />
     <Compile Include="playertitles\solokills\DuelMasterTitle.cs" />

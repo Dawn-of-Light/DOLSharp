@@ -129,6 +129,14 @@ namespace DOL.Events
 		/// The SwimmingStatus event is fired whenever the player IsSwimming flag changes
 		/// </summary>
 		public static readonly GamePlayerEvent SwimmingStatus = new GamePlayerEvent("GamePlayer.SwimmingStatus");
+		/// <summary>
+		/// The BecomeML event is fired whenever the player chose is ML path
+		/// </summary>
+		public static readonly GamePlayerEvent BecomeML = new GamePlayerEvent("GamePlayer.BecomeML");
+		/// <summary>
+		/// The ChampionLevelUp event is fired whenever the player gain a champion level
+		/// </summary>
+		public static readonly GamePlayerEvent ChampionLevelUp = new GamePlayerEvent("GamePlayer.ChampionLevelUp");
 
 		#region Statistics
 
