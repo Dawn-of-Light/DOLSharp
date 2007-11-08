@@ -12428,7 +12428,12 @@ namespace DOL.GS
 		public string CLTitle
 		{
 			get
-			{ return GlobalConstants.ClToClTitle((int)ChampionLevel); }
+			{ 
+				if (Champion && ChampionLevel > 0)
+					return LanguageMgr.GetTranslation(Client, String.Format("Titles.CL.Level{0}",ChampionLevel));
+				else
+					return "None"; 
+			}
 		}
 		/// <summary>
 		/// Is Champion level activated
@@ -12477,14 +12482,15 @@ namespace DOL.GS
 		public virtual ushort ChampionLevelPermill
 		{
 			get
-			{
-				//No progress if we haven't even reached current level! 
+			{			
+				//No progress if we haven't even reached current level!
 				if (ChampionExperience <= ChampionExperienceForCurrentLevel)
 					return 0;
 				//No progess after maximum level 
-				if (ChampionLevel > CL_MAX_LEVEL) // needed to get exp after 50 
+				if (ChampionLevel > CL_MAX_LEVEL) // needed to get exp after 10 
 					return 0;
 				return (ushort)(1000 * (ChampionExperience - ChampionExperienceForCurrentLevel) / (ChampionExperienceForNextLevel - ChampionExperienceForCurrentLevel));
+
 			}
 		}
 		/// <summary> 
@@ -12596,6 +12602,7 @@ namespace DOL.GS
 			    AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small)); 
 			} 
 			*/
+			Notify(GamePlayerEvent.ChampionLevelUp, this);
 			Out.SendMessage("You have gained one champion level!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			Out.SendUpdatePlayer();
 			Out.SendUpdatePoints();
@@ -12688,7 +12695,12 @@ namespace DOL.GS
 		public string MLTitle
 		{
 			get
-			{ return GlobalConstants.MlToMlTitle((int)ML); }
+			{ 
+				if (ML > 0)
+					return LanguageMgr.GetTranslation(Client, String.Format("Titles.ML.Line{0}",(int)ML));
+				else
+					return "None"; 
+			}
 		}				
 		/// <summary> 
 		/// Holds the ml line 

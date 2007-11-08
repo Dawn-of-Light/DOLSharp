@@ -120,8 +120,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort((ushort) m_gameClient.Player.SkillSpecialtyPoints);
 			pak.WriteInt((uint)m_gameClient.Player.BountyPoints);
 			pak.WriteShort((ushort) m_gameClient.Player.RealmSpecialtyPoints);
-			//pak.WriteShort(m_gameClient.Player.ChampionLevelPermill);
-			pak.WriteShort(0);
+			pak.WriteShort(m_gameClient.Player.ChampionLevelPermill);
 			SendTCP(pak);
 		}
 	}
