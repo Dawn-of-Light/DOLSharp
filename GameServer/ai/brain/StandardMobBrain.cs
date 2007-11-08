@@ -487,7 +487,6 @@ namespace DOL.AI.Brain
 		/// <returns>the best target</returns>
 		protected virtual GameLiving CalculateNextAttackTarget()
 		{
-			//DOLConsole.WriteLine(this.Name+": CalculateAttackObject()");
 			GameLiving maxAggroObject = null;
 			lock (m_aggroTable.SyncRoot)
 			{
@@ -496,6 +495,11 @@ namespace DOL.AI.Brain
 				while (aggros.MoveNext())
 				{
 					GameLiving living = (GameLiving)aggros.Key;
+
+					// Don't bother about necro shade, can't attack it anyway.
+					if (living.EffectList.GetOfType(typeof(NecromancerShadeEffect)) != null)
+						continue;
+
 					long amount = (long)aggros.Value;
 					//DOLConsole.WriteLine(this.Name+": check aggro "+living.Name+" "+amount);
 

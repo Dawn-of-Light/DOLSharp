@@ -172,6 +172,33 @@ namespace DOL.AI.Brain
 
 		#endregion
 
+		#region Taunt
+
+		/// <summary>
+		/// Whether or not taunt mode is activated.
+		/// </summary>
+		private bool TauntMode
+		{
+			get { return (Body.EffectList.GetOfType(typeof(TauntEffect)) != null); }
+		}
+
+		/// <summary>
+		/// In addition to attacking the next target, taunt it if we
+		/// we were told to do so and we don't have the attention of our
+		/// target yet.
+		/// </summary>
+		protected override void AttackMostWanted()
+		{
+			base.AttackMostWanted();
+			if (Body.TargetObject is GameNPC && TauntMode)
+			{
+				if ((Body.TargetObject as GameNPC).TargetObject != Body)
+					(Body as NecromancerPet).Taunt();
+			}
+		}
+
+		#endregion
+
 		#region Spell Queue
 
 		/// <summary>
