@@ -250,7 +250,9 @@
     <Compile Include="effects\InterceptEffect.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="effects\Necromancer\MezzRootImmunityEffect.cs" />
     <Compile Include="effects\Necromancer\NecromancerShadeEffect.cs" />
+    <Compile Include="effects\Necromancer\TauntEffect.cs" />
     <Compile Include="effects\ProtectEffect.cs">
       <SubType>Code</SubType>
     </Compile>

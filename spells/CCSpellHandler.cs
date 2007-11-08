@@ -196,6 +196,11 @@ namespace DOL.GS.Spells
 		
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
+			if (FindStaticEffectOnTarget(target, typeof(MezzRootImmunityEffect)) != null)
+			{
+				MessageToCaster("Your target is immune!", eChatType.CT_System);
+				return;
+			}
             GameSpellEffect mezblock = SpellHandler.FindEffectOnTarget(target, "CeremonialBracerMez");
             if (mezblock != null)
             {
