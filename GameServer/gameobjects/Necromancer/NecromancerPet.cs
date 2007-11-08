@@ -68,21 +68,35 @@ namespace DOL.GS
 			m_summonConBonus = summonConBonus;
 			m_summonHitsBonus = summonHitsBonus;
 
-            // Load equipment, if available.
-
-            String templateID = "";
+            // Set immunities/load equipment/etc.
 
             switch (Name)
             {
-                case "reanimated servant" : templateID = "reanimated_servant";
+				case "lesser zombie servant":
+				case "zombie servant":
+					EffectList.Add(new MezzRootImmunityEffect());
+					LoadEquipmentTemplate("barehand_weapon");
+					break;
+                case "reanimated servant" : 
+					LoadEquipmentTemplate("reanimated_servant");
                     break;
-                case "necroservant": templateID = "necroservant";
+                case "necroservant": 
+					LoadEquipmentTemplate("necroservant");
                     break;
-                case "abomination": templateID = "abomination_fiery_sword";
+				case "greater necroservant":
+					LoadEquipmentTemplate("barehand_weapon");
+					InventoryItem item;
+					if (Inventory != null && 
+						(item = Inventory.GetItem(eInventorySlot.RightHandWeapon)) != null)
+							item.ProcSpellID = 32013;
+						break;
+                case "abomination": 
+					LoadEquipmentTemplate("abomination_fiery_sword");
                     break;
+				default:
+					LoadEquipmentTemplate("barehand_weapon");
+					break;
             }
-
-			LoadEquipmentTemplate(templateID);
 
             // Create a brain for the pet.
 
@@ -297,7 +311,7 @@ namespace DOL.GS
 				switch (Name)
 				{
 					case "greater necroservant":
-						return (short)(60 + Level);
+						return (short)(60 + Level / 2);
 					default:
 						return 60;
 				}
@@ -314,7 +328,7 @@ namespace DOL.GS
 				switch (Name)
 				{
 					case "greater necroservant":
-						return (short)(60 + Level / 2);
+						return (short)(60 + Level);
 					default:
 						return (short)(60 + Level / 3);
 				}
@@ -341,7 +355,7 @@ namespace DOL.GS
 				}
 			}
 
-			return base.AttackDamageType(weapon);
+			return eDamageType.Crush;
 		}
 
 		/// <summary>
@@ -374,6 +388,43 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Whether or not pet can use left hand weapon.
+		/// </summary>
+		public override bool CanUseLefthandedWeapon
+		{
+			get
+			{
+				switch (Name)
+				{
+					case "lesser zombie servant":
+					case "zombie servant":
+					case "greater necroservant":
+						return true;
+					default: 
+						return false;
+				}
+
+			}
+		}
+
+		/// <summary>
+		/// Calculates how many times left hand can swing.
+		/// </summary>
+		/// <returns></returns>
+		public override int CalculateLeftHandSwingCount()
+		{
+			switch (Name)
+			{
+				case "lesser zombie servant":
+				case "zombie servant":
+				case "greater necroservant":
+					return 1;
+				default:
+					return 0;
+			}
+		}
+
+		/// <summary>
 		/// Pick a random style for now.
 		/// </summary>
 		/// <returns></returns>
@@ -382,10 +433,10 @@ namespace DOL.GS
 			if (m_petTemplate != null)
 			{
 				int styleCount = m_petTemplate.Styles.Count;
-				if (styleCount > 0)
+				if (styleCount > 0 && Util.Chance(20 + styleCount))
 				{
 					Style style = (Style)(m_petTemplate.Styles[Util.Random(styleCount - 1)]);
-					if (style.Level <= Level)
+					if (style.Level >= Level/4 && style.Level <= Level)
 						return style;
 				}
 			}
@@ -421,6 +472,34 @@ namespace DOL.GS
 			return (weapon != null) ? Level : base.WeaponSpecLevel(weapon);
 		}
 
+		/// <summary>
+		/// Toggle taunt mode on/off.
+		/// </summary>
+		private void ToggleTauntMode()
+		{
+			TauntEffect tauntEffect = EffectList.GetOfType(typeof(TauntEffect)) as TauntEffect;
+			GamePlayer owner = (Brain as IControlledBrain).Owner as GamePlayer;
+
+			if (tauntEffect != null)
+			{
+				// It's on, so let's switch it off.
+
+				tauntEffect.Stop();
+				if (owner != null)
+					owner.Out.SendMessage(String.Format("{0} seems to be less aggressive than before.",
+						GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+			else
+			{
+				// It's off, so let's turn it on.
+
+				if (owner != null)
+					owner.Out.SendMessage(String.Format("{0} enters an aggressive stance.",
+						GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+				new TauntEffect().Start(this);
+			}
+		}
 
 		#endregion
 
@@ -487,6 +566,29 @@ namespace DOL.GS
 				CastSpell(dexBuff, buffLine);
 		}
 
+		/// <summary>
+		/// Taunt the current target.
+		/// </summary>
+		public void Taunt()
+		{
+			SpellLine chantsLine = SkillBase.GetSpellLine("Chants");
+			if (chantsLine == null)
+				return;
+
+			IList chantsList = SkillBase.GetSpellList("Chants");
+			if (chantsList.Count == 0)
+				return;
+
+			// Find the best paladin taunt for this level.
+
+			Spell tauntSpell = null;
+			foreach (Spell spell in chantsList)
+				if (spell.SpellType == "Taunt" && spell.Level <= Level)
+					tauntSpell = spell;
+
+			if (tauntSpell != null && GetSkillDisabledDuration(tauntSpell) == 0)
+				CastSpell(tauntSpell, chantsLine);
+		}
 
 		/// <summary>
 		/// Called when spell has finished casting.
@@ -530,7 +632,10 @@ namespace DOL.GS
             {
                 case Specs.Slash:
                 case Specs.Crush:
-                case Specs.Two_Handed: return Level;
+                case Specs.Two_Handed: 
+				case Specs.Shields:
+				case Specs.Critical_Strike:
+					return Level;
                 default: return (Brain as NecromancerPetBrain).Owner.GetModifiedSpecLevel(keyName);
             }
 		}
@@ -575,18 +680,30 @@ namespace DOL.GS
                                 return false;
 						}
 					}
-				case "disease": 
-                    SayTo(owner, eChatLoc.CL_SystemWindow, "As you command.");  // TODO
+				case "disease":
+					InventoryItem item;
+					if (Inventory != null &&
+						(item = Inventory.GetItem(eInventorySlot.RightHandWeapon)) != null)
+					{
+						item.ProcSpellID = 32014;
+						SayTo(owner, eChatLoc.CL_SystemWindow, "As you command.");
+					}
 					return true;
 				case "empower":
                     SayTo(owner, eChatLoc.CL_SystemWindow, "As you command.");
 					Empower();
 					return true;
 				case "poison":
-                    SayTo(owner, eChatLoc.CL_SystemWindow, "As you command."); // TODO
+					if (Inventory != null && 
+						(item = Inventory.GetItem(eInventorySlot.RightHandWeapon)) != null)
+					{
+						item.ProcSpellID = 32013;
+						SayTo(owner, eChatLoc.CL_SystemWindow, "As you command.");
+					}
 					return true;
-				case "taunt": 
-                    return true;	// TODO
+				case "taunt":
+					ToggleTauntMode();
+                    return true;
 				case "weapons":
 					{
 						if (Name != "abomination")
@@ -652,6 +769,11 @@ namespace DOL.GS
 					else
 					{
 						if ((item = Inventory.GetItem(eInventorySlot.RightHandWeapon)) != null)
+						{
+							item.DPS_AF = (int)(Level * 3.3);
+							item.SPD_ABS = 37;
+						}
+						if ((item = Inventory.GetItem(eInventorySlot.LeftHandWeapon)) != null)
 						{
 							item.DPS_AF = (int)(Level * 3.3);
 							item.SPD_ABS = 37;

@@ -2060,7 +2060,7 @@ namespace DOL.GS
 			{
 				GameLiving owner = (GameLiving)m_actionSource;
 
-				if (owner.IsMezzed || owner.IsStunned)
+				if (owner.IsMezzed || owner.IsStunned || owner.IsCasting)
 				{
 					Interval = 100;
 					return;
@@ -2425,7 +2425,6 @@ namespace DOL.GS
 					{
 						mainHandAD.AnimationId = 0x1F6; // both weapons swing animation
 					}
-
 				}
 				else
 				{
