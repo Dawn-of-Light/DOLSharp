@@ -1449,3 +1449,13 @@ Titles.CL.Level7:					Friedenswahrer
 Titles.CL.Level8:					Visionär
 Titles.CL.Level9:					Meister des Labyrinths
 Titles.CL.Level10:					Champion des Reiches
+
+# /ML
+Titles.ML.Line1:					Fluchlord
+Titles.ML.Line2:					Kampfmeister
+Titles.ML.Line3:					Anrufer
+Titles.ML.Line4:					Vollender
+Titles.ML.Line5:					Reisender
+Titles.ML.Line6:					Meisterspion
+Titles.ML.Line7:					Sturmlord
+Titles.ML.Line8:					Kriegsherr
