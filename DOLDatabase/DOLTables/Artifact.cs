@@ -36,6 +36,7 @@ namespace DOL.Database
 		private String m_scrollID;
 		private String m_bookID;
 		private String m_questID;
+        private String m_zone;
         private int m_reuseTimer;
 		private UInt32[] m_experience;
 
@@ -154,6 +155,21 @@ namespace DOL.Database
 				m_questID = value;
 			}
 		}
+
+        /// <summary>
+        /// The zone this artifact belongs to.
+        /// </summary>
+        [DataElement(AllowDbNull = false)]
+        public String Zone
+        {
+            get { return m_zone; }
+            set
+            {
+                Dirty = true;
+                m_zone = value;
+            }
+        }
+
 		/// <summary>
 		/// The reuse timer for the artifact.
 		/// </summary>

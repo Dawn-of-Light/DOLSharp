@@ -3443,19 +3443,31 @@ namespace DOL.GS
 						loot.Name = lootTemplate.Name;
 						loot.Model = (ushort)lootTemplate.Model;
 					}
-					else
-					{
-						loot = new GameInventoryItem(new InventoryItem(lootTemplate));
-						loot.X = X;
-						loot.Y = Y;
-						loot.Z = Z;
-						loot.Heading = Heading;
-						loot.CurrentRegion = CurrentRegion;
-						if (((GameInventoryItem)loot).Item.Id_nb == "aurulite")
-						{
-							((GameInventoryItem)loot).Item.Count = ((GameInventoryItem)loot).Item.PackSize;
-						}
-					}
+                    else if (lootTemplate.Name.StartsWith("scroll|"))
+                    {
+                        String[] scrollData = lootTemplate.Name.Split('|');
+                        String bookID = scrollData[1];
+                        int pageNumber = UInt16.Parse(scrollData[2]);
+                        loot = ArtifactMgr.CreateScroll(bookID, pageNumber);
+                        loot.X = X;
+                        loot.Y = Y;
+                        loot.Z = Z;
+                        loot.Heading = Heading;
+                        loot.CurrentRegion = CurrentRegion;
+                    }
+                    else
+                    {
+                        loot = new GameInventoryItem(new InventoryItem(lootTemplate));
+                        loot.X = X;
+                        loot.Y = Y;
+                        loot.Z = Z;
+                        loot.Heading = Heading;
+                        loot.CurrentRegion = CurrentRegion;
+                        if (((GameInventoryItem)loot).Item.Id_nb == "aurulite")
+                        {
+                            ((GameInventoryItem)loot).Item.Count = ((GameInventoryItem)loot).Item.PackSize;
+                        }
+                    }
 
 					bool playerAttacker = false;
 					foreach (GameObject gainer in m_xpGainers.Keys)
