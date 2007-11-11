@@ -77,27 +77,47 @@ namespace DOL.GS
             return true;
 		}
 
-		/// <summary>
-		/// Find the matching artifacts for this book.
-		/// </summary>
-		/// <param name="bookID">The title of the book.</param>
-		/// <returns>A list of all the artifacts that match this book.</returns>
-		private static ArrayList GetArtifactsFromBookID(String bookID)
-		{
-			ArrayList artifacts = new ArrayList();
+        /// <summary>
+        /// Find all artifacts from a particular zone.
+        /// </summary>
+        /// <param name="zone"></param>
+        /// <returns></returns>
+        public static ArrayList GetArtifactsFromZone(String zone)
+        {
+            ArrayList artifacts = new ArrayList();
 
-			lock (m_artifacts.SyncRoot)
-			{
-				IDictionaryEnumerator artifactEnum = m_artifacts.GetEnumerator();
-				while (artifactEnum.MoveNext())
-					if ((artifactEnum.Value as Artifact).BookID == bookID)
-						artifacts.Add(artifactEnum.Value);
-			}
+            lock (m_artifacts.SyncRoot)
+            {
+                IDictionaryEnumerator artifactEnum = m_artifacts.GetEnumerator();
+                while (artifactEnum.MoveNext())
+                    if ((artifactEnum.Value as Artifact).Zone == zone)
+                        artifacts.Add(artifactEnum.Value);
+            }
 
-			return artifacts;
-		}
+            return artifacts;
+        }
 
 		#region Scrolls & Books
+
+        /// <summary>
+        /// Find the matching artifacts for this book.
+        /// </summary>
+        /// <param name="bookID">The title of the book.</param>
+        /// <returns>A list of all the artifacts that match this book.</returns>
+        private static ArrayList GetArtifactsFromBookID(String bookID)
+        {
+            ArrayList artifacts = new ArrayList();
+
+            lock (m_artifacts.SyncRoot)
+            {
+                IDictionaryEnumerator artifactEnum = m_artifacts.GetEnumerator();
+                while (artifactEnum.MoveNext())
+                    if ((artifactEnum.Value as Artifact).BookID == bookID)
+                        artifacts.Add(artifactEnum.Value);
+            }
+
+            return artifacts;
+        }
 
 		/// <summary>
 		/// Get the artifact ID for this book.
@@ -216,13 +236,14 @@ namespace DOL.GS
             {
                 scroll.Item.Flags = 1 << (pageNumber - 1);
 				scroll.Item.Name = CreateScrollName(scroll.Item, artifactID);
+				scroll.Name = scroll.Item.Name;
             }
 
             return scroll;
         }
 
 		/// <summary>
-		/// Creates the name of of the scroll (or book).
+		/// Creates the name of the scroll (or book).
 		/// </summary>
 		/// <param name="scroll">Scroll to get the name for.</param>
 		/// <param name="artifactID">The ID of the artifact this scroll is intended for.</param>
@@ -304,18 +325,12 @@ namespace DOL.GS
 			{
 				player.Out.SendSpellEffectAnimation(player, player, 1, 0, false, 1);
 				player.Inventory.RemoveItem(scroll);
+                scroll.Name = CreateScrollName(scroll, artifactID);
 
-				// If book is complete change the icon, in any case adjust the
-				// scroll name.
+				// If book is complete change the icon.
 
 				if ((scroll.Flags & (int)Book.AllPages) == (int)Book.AllPages)
-				{
-					lock (m_books.SyncRoot)
-						scroll.Name = m_books[artifactID] as String;
 					scroll.Model = 500;
-				}
-				else
-					scroll.Name = CreateScrollName(scroll, artifactID);
 
 				// Now try to put the combined scrolls back in the player's backpack.
 
@@ -328,17 +343,26 @@ namespace DOL.GS
 				{
 					player.Out.SendMessage(String.Format("Your backpack is full. {0} is dropped on the ground.",
 						player.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-					GameInventoryItem loot = new GameInventoryItem(scroll);
-					loot.AddOwner(player);
-					loot.X = player.X;
-					loot.Y = player.Y;
-					loot.Z = player.Z;
-					loot.Heading = player.Heading;
-					loot.CurrentRegion = player.CurrentRegion;
+                    DropScroll(player, scroll);
 				}
 			}
             return true;
+        }
+
+        /// <summary>
+        /// Drop a scroll to the ground.
+        /// </summary>
+        /// <param name="owner"></param>
+        /// <param name="scroll"></param>
+        private static void DropScroll(GamePlayer owner, InventoryItem scroll)
+        {
+            GameInventoryItem loot = new GameInventoryItem(scroll);
+            loot.AddOwner(owner);
+            loot.X = owner.X;
+            loot.Y = owner.Y;
+            loot.Z = owner.Z;
+            loot.Heading = owner.Heading;
+            loot.CurrentRegion = owner.CurrentRegion;
         }
 
 		#endregion
