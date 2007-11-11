@@ -251,6 +251,7 @@ namespace DOL.Database
 		protected string craftername;
         protected long item_exp;
         protected bool item_activated;
+        protected int item_flags;
 
 		/// <summary>
 		/// The count of items (for stack!)
@@ -267,6 +268,7 @@ namespace DOL.Database
 			m_count = 1;
             m_internalID = this.ObjectId;
             item_activated = false;
+            item_flags = 0;
 		}
 
 		/// <summary>
@@ -279,6 +281,7 @@ namespace DOL.Database
 			CopyFrom(itemTemplate);
             m_internalID = this.ObjectId;
             item_activated = false;
+            item_flags = 0;
         }
 
 		/// <summary>
@@ -291,6 +294,7 @@ namespace DOL.Database
 			CopyFrom(inventoryItem);
             m_internalID = this.ObjectId;
             item_activated = false;
+            item_flags = inventoryItem.Flags;
         }
 
 		override public bool AutoSave
@@ -395,12 +399,25 @@ namespace DOL.Database
                 item_activated = value;
             }
         }
+
+        [DataElement(AllowDbNull = false)]
+        public int Flags
+        {
+            get { return item_flags; }
+            set
+            {
+                Dirty = true;
+                item_flags = value;
+            }
+        }
+
         public void CopyFrom(InventoryItem template)
 		{
 			OwnerID = template.OwnerID;
 			Count = template.Count;
 			SlotPosition = template.SlotPosition;
 			CrafterName = template.CrafterName;
+            Flags = template.Flags;
 			CopyFrom((ItemTemplate)template);
 		}
 
@@ -475,6 +492,7 @@ namespace DOL.Database
 			Realm = template.Realm;
 			AllowedClasses = template.AllowedClasses;
             ArtiID = template.ArtiID;
+            Flags = 0;
 		}
 	}
 }

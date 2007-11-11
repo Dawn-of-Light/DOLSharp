@@ -30,6 +30,7 @@ namespace DOL.GS.PropertyCalc
 	/// BuffBonusCategory4 is used for buffs that have no softcap
 	/// BuffBonusMultCategory1 unused
 	/// </summary>
+	/// <author>Aredhel</author>	
 	[PropertyCalculator(eProperty.Resist_First, eProperty.Resist_Last)]
 	public class ResistCalculator : PropertyCalculator
 	{

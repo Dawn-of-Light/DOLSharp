@@ -95,6 +95,29 @@ namespace DOL.GS.Scripts
 							}
 							break;
 						}
+                    case "scroll":
+                        {
+                            //Create an artifact scroll
+                            try
+                            {
+                                GameInventoryItem scroll = ArtifactMgr.CreateScroll(args[2], Convert.ToInt16(args[3]));
+                                if (scroll == null)
+                                {
+                                    client.Out.SendMessage(String.Format("Scroll page {0} for artifact {1} could not be found",
+                                        args[3], args[2]), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                                    return 0;
+                                }
+                                if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, scroll.Item))
+                                    client.Out.SendMessage(String.Format("Scroll {0} created.", scroll.Item.Name),
+                                        eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            }
+                            catch (Exception)
+                            {
+                                client.Out.SendMessage("Type /item for command overview", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            }
+
+                            break;
+                        }
 					case "create":
 						{
 							//Create a new object

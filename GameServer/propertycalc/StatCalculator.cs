@@ -31,6 +31,7 @@ namespace DOL.GS.PropertyCalc
 	///                    category 4 kicks in at last
 	/// BuffBonusMultCategory1 used after all buffs/debuffs
 	/// </summary>
+	/// <author>Aredhel</author>
 	[PropertyCalculator(eProperty.Stat_First, eProperty.Stat_Last)]
 	public class StatCalculator : PropertyCalculator
     {

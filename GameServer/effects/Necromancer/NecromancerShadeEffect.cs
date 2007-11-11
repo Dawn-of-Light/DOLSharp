@@ -26,6 +26,7 @@ namespace DOL.GS.Effects
 	/// Necromancer shade effect (grants immunity to all forms of
 	/// attack).
 	/// </summary>
+	/// <author>Aredhel</author>
 	class NecromancerShadeEffect : ShadeEffect
 	{
 		/// <summary>

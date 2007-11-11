@@ -31,6 +31,7 @@ namespace DOL.GS.Spells
 	/// Handler for spells that are issued by the player, but cast
 	/// by his pet.
 	/// </summary>
+	/// <author>Aredhel</author>
 	[SpellHandler("PetSpell")]
 	class PetSpellHandler : SpellHandler
 	{

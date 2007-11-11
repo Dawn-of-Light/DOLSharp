@@ -24,6 +24,10 @@ using DOL.GS.Spells;
 
 namespace DOL.GS.Effects
 {
+	/// <summary>
+	/// The Facilitate Painworking effect.
+	/// </summary>
+	/// <author>Aredhel</author>
     class FacilitatePainworkingEffect : GameSpellEffect
     {
         public FacilitatePainworkingEffect(ISpellHandler handler, int duration, int pulseFreq,
