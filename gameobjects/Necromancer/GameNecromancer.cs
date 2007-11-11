@@ -32,6 +32,10 @@ using DOL.AI.Brain;
 
 namespace DOL.GS
 {
+	/// <summary>
+	/// The necromancer player class.
+	/// </summary>
+	/// <author>Aredhel</author>	
 	class GameNecromancer : GamePlayer
 	{
 		/// <summary>

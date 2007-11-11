@@ -28,7 +28,11 @@ using System.Collections;
 
 namespace DOL.GS
 {
-    public class Golestandt : GameDragon
+	/// <summary>
+	/// The Albion dragon.
+	/// </summary>
+	/// <author>Aredhel</author>    
+	public class Golestandt : GameDragon
     {
 		/// <summary>
 		/// Defines a logger for this class.

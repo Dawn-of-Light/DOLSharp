@@ -7109,6 +7109,8 @@ namespace DOL.GS
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.AttemptToUse", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 
+				#region Non-backpack/vault slots
+
 				switch (slot)
 				{
 					case Slot.HORSEARMOR:
@@ -7261,7 +7263,21 @@ namespace DOL.GS
 					case Slot.THIRDQUIVER: SwitchQuiver(eActiveQuiverSlot.Third, false); break;
 					case Slot.FOURTHQUIVER: SwitchQuiver(eActiveQuiverSlot.Fourth, false); break;
 				}
-				if (useItem.SpellID != 0 || useItem.SpellID1 != 0 || useItem.PoisonSpellID != 0) // don't return without firing events
+
+				#endregion
+
+				if (useItem.Object_Type == (int)eObjectType.Magical
+					&& useItem.Item_Type == (int)eInventorySlot.FirstBackpack
+					&& useItem.Flags != 0)
+				{
+					if (Level >= useItem.Level)
+						ArtifactMgr.CombineScrolls(this, useItem);
+					else
+						Out.SendMessage("You are not powerful enough to use this item's spell.", 
+							eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return;
+				}
+				else if (useItem.SpellID != 0 || useItem.SpellID1 != 0 || useItem.PoisonSpellID != 0) // don't return without firing events
 				{
 					if (IsSitting)
 					{
@@ -7369,6 +7385,15 @@ namespace DOL.GS
 							{
 								ApplyPoison(useItem, leftHand);
 							}
+						}
+						else if (useItem.Object_Type == (int)eObjectType.Magical &&
+							useItem.Item_Type == (int)eInventorySlot.FirstBackpack && useItem.Flags != 0)
+						{
+							if (Level >= useItem.Level)
+								ArtifactMgr.CombineScrolls(this, useItem);
+							else
+								Out.SendMessage("You are not powerful enough to use this item's spell.",
+									eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						else if (useItem.Object_Type == (int)eObjectType.Magical &&
 						    (useItem.Item_Type == (int)eInventorySlot.FirstBackpack || useItem.Item_Type == 41))

@@ -23,6 +23,10 @@ using DOL.GS.Effects;
 
 namespace DOL.GS.Spells
 {
+	/// <summary>
+	/// Spell handler for Facilitate Painworking.
+	/// </summary>
+	/// <author>Aredhel</author>
 	[SpellHandlerAttribute("FacilitatePainworking")]
 	class FacilitatePainworking : SpellHandler
 	{

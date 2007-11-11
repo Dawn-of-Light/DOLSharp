@@ -32,6 +32,7 @@ namespace DOL.AI.Brain
 	/// on a player of their own accord, instead, they'll go searching
 	/// for adds around the area and make those aggro on a player.
 	/// </summary>
+	/// <author>Aredhel</author>
 	class ScoutMobBrain : StandardMobBrain
 	{
 		/// <summary>

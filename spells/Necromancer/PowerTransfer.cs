@@ -24,6 +24,10 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
+	/// <summary>
+	/// Spell handler for power trasnfer.
+	/// </summary>
+	/// <author>Aredhel</author>
 	[SpellHandlerAttribute("PowerTransfer")]
 	class PowerTransfer : SpellHandler
 	{

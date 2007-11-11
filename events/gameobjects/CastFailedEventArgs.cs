@@ -24,6 +24,11 @@ using DOL.GS.Spells;
 
 namespace DOL.Events
 {
+	/// <summary>
+	/// Arguments for a cast failed event, stating the reason
+	/// why a particular spell cast failed.
+	/// </summary>
+	/// <author>Aredhel</author>
 	class CastFailedEventArgs : CastSpellEventArgs
 	{
 		public enum Reasons
@@ -33,7 +38,7 @@ namespace DOL.Events
 		};
 				
 		/// <summary>
-		/// Constructs a new Dying event args
+		/// Constructs arguments for a cast failed event.
 		/// </summary>
 		public CastFailedEventArgs(ISpellHandler handler, Reasons reason) 
 			: base(handler)

@@ -24,6 +24,11 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Effects
 {
+	/// <summary>
+	/// Pet taunt effect. While active, the pet will keep trying
+	/// to taunt its target in case it is attacking someone else.
+	/// </summary>
+	/// <author>Aredhel</author>
 	class TauntEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
