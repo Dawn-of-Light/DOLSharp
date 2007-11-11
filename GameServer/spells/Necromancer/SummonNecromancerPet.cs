@@ -29,6 +29,10 @@ using DOL.Language;
 
 namespace DOL.GS.Spells
 {
+	/// <summary>
+	/// Spell handler to summon a necromancer pet.
+	/// </summary>
+	/// <author>Aredhel</author>
 	[SpellHandler("SummonNecroPet")]
 	public class SummonNecromancerPet : SummonSpellHandler
 	{

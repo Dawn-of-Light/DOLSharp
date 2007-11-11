@@ -31,6 +31,7 @@ namespace DOL.AI.Brain
 	/// <summary>
 	/// AI for dragon like NPCs.
 	/// </summary>
+	/// <author>Aredhel</author>
     public class DragonBrain : StandardMobBrain
     {
 		/// <summary>

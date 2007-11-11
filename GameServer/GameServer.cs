@@ -721,6 +721,12 @@ namespace DOL
                     if (!InitComponent(QuestMgr.Init(), "Quest Manager"))
                         return false;
                 }
+
+                //---------------------------------------------------------------
+                //Load artifact manager
+                if (!InitComponent(ArtifactMgr.Init(), "Artifact Manager"))
+                    return false;
+
 				//---------------------------------------------------------------
 				//Notify our scripts that everything went fine!
 				GameEventMgr.Notify(ScriptEvent.Loaded);
