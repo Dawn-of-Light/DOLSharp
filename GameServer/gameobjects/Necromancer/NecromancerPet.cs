@@ -33,6 +33,10 @@ using DOL.GS.Styles;
 
 namespace DOL.GS
 {
+	/// <summary>
+	/// The necromancer pets.
+	/// </summary>
+	/// <author>Aredhel</author>
 	class NecromancerPet : GameNPC
 	{
 		/// <summary>

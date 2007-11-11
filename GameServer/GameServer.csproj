@@ -578,6 +578,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="gameutils\ArtifactManager.cs" />
+    <Compile Include="gameutils\ArtifactMgr.cs" />
     <Compile Include="gameutils\BattleGroup.cs" />
     <Compile Include="gameutils\BoatMgr.cs" />
     <Compile Include="gameutils\ChampSpec.cs" />

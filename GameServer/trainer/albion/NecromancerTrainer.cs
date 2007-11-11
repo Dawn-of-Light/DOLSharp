@@ -22,9 +22,10 @@ using DOL.GS.PacketHandler;
 namespace DOL.GS.Trainer
 {
 	/// <summary>
-	/// Necromancer Trainer
+	/// Necromancer trainer.
 	/// </summary>	
-	[NPCGuildScript("Necromancer Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Necromancer Trainer" NPC's in Albion (multiple guilds are possible for one script)
+	/// <author>Aredhel</author>
+	[NPCGuildScript("Necromancer Trainer", eRealm.Albion)]
 	public class NecromancerTrainer : GameTrainer
 	{
 		public override eCharacterClass TrainedClass
@@ -34,9 +35,8 @@ namespace DOL.GS.Trainer
 
 		public const string WEAPON_ID = "necromancer_item";
 
-		public NecromancerTrainer() : base()
-		{
-		}
+		public NecromancerTrainer() 
+			: base() { }
 
 		/// <summary>
 		/// Interact with trainer.

@@ -34,6 +34,7 @@ namespace DOL.AI.Brain
 	/// task usually is to prevent the retriever from reaching its target,
 	/// because bad things may happen should it succeed.
 	/// </summary>
+	/// <author>Aredhel</author>
     class RetrieverMobBrain : StandardMobBrain
     {
 		/// <summary>

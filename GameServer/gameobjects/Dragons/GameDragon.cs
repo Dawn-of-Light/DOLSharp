@@ -34,6 +34,7 @@ namespace DOL.GS
 	/// and override some of the methods and properties provided in this abstract
 	/// class.
 	/// </summary>
+	/// <author>Aredhel</author>
 	public abstract class GameDragon : GameNPC
 	{
 		/// <summary>

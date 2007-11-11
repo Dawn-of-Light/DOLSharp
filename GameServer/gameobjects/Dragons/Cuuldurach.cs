@@ -29,6 +29,10 @@ using DOL.AI.Brain;
 
 namespace DOL.GS
 {
+	/// <summary>
+	/// The Hibernia dragon.
+	/// </summary>
+	/// <author>Aredhel</author>
 	public class Cuuldurach : GameDragon
 	{
 		/// <summary>

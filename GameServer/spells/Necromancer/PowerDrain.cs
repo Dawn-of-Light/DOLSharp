@@ -27,6 +27,7 @@ namespace DOL.GS.Spells
 	/// Handles power drain (conversion of target health to caster
 	/// power).
 	/// </summary>
+	/// <author>Aredhel</author>	
 	[SpellHandlerAttribute("PowerDrain")]
 	public class PowerDrain : DirectDamageSpellHandler
 	{

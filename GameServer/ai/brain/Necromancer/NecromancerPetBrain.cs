@@ -30,6 +30,10 @@ using DOL.GS.Effects;
 
 namespace DOL.AI.Brain
 {
+	/// <summary>
+	/// A brain for the necromancer pets.
+	/// </summary>
+	/// <author>Aredhel</author>
 	class NecromancerPetBrain : ControlledNpc
 	{
 		/// <summary>

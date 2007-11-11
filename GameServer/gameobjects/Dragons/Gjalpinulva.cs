@@ -29,6 +29,10 @@ using DOL.AI.Brain;
 
 namespace DOL.GS
 {
+	/// <summary>
+	/// The Midgard dragon.
+	/// </summary>
+	/// <author>Aredhel</author>	
 	public class Gjalpinulva : GameDragon
 	{
 		/// <summary>
