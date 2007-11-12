@@ -873,6 +873,7 @@ namespace DOL.GS
 		public const string Potions_Effects = "Potions";
 		public const string Mob_Spells = "Mob Spells";
 		public const string Character_Abilities = "Character Abilities"; // dirty tricks, flurry ect...
+		public const string Item_Spells = "Item Spells";	// Combine scroll etc.
 	}
 
 	public class GlobalConstants
