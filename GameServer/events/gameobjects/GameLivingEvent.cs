@@ -135,7 +135,6 @@ namespace DOL.Events
 		/// </summary>
 		public static readonly GameLivingEvent CastSucceeded = new GameLivingEvent("GameLiving.CastSucceeded");
 		/// <summary>
-		/// <summary>
 		/// The HealthChanged event is fired whenever the GameLiving's health is changed
 		/// </summary>
 		public static readonly GameLivingEvent HealthChanged = new GameLivingEvent("GameLiving.HealthChanged");
