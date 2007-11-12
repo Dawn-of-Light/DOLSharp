@@ -23,11 +23,16 @@ using DOL.Database;
 
 namespace DOL.GS
 {
-    class ArtifactScholar : GameNPC
+    public class ArtifactScholar : GameNPC
     {
         public ArtifactScholar()
             : base()
         {
+        }
+
+        public override bool AddToWorld()
+        {
+            return base.AddToWorld();
         }
 
         public override bool ReceiveItem(GameLiving source, InventoryItem item)
