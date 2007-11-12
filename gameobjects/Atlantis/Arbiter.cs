@@ -19,38 +19,16 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using DOL.Database;
 
 namespace DOL.GS
 {
-    public class ArtifactScholar : GameNPC
+    /// <summary>
+    /// The Atlantis arbiter.
+    /// </summary>
+    /// <author>Aredhel</author>
+    public class Arbiter : Researcher
     {
-        public ArtifactScholar()
-            : base()
-        {
-        }
-
-        public override bool AddToWorld()
-        {
-            return base.AddToWorld();
-        }
-
-        public override bool ReceiveItem(GameLiving source, InventoryItem item)
-        {
-            if (!(source is GamePlayer))
-                return false;
-
-            GamePlayer player = source as GamePlayer;
-
-            //if (!ArtifactMgr.IsArtifactBook(item))
-            //{
-            //    player.Out.SendMessage(String.Format("{0} does not want that item.", GetName(0, true)));
-            //    return false;
-            //}
-
-
-
-            return false;
-        }
+        public Arbiter()
+            : base() { }
     }
 }
