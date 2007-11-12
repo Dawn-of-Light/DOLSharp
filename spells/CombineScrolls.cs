@@ -79,14 +79,6 @@ namespace DOL.GS.Spells
             if (scroll == null || !ArtifactMgr.IsArtifactScroll(scroll))
                 return;
 
-            String scrollID = ArtifactMgr.GetScrollIDFromItem(scroll);
-			if (scrollID == null)
-				return;
-
-            String artifactID = ArtifactMgr.GetArtifactIDFromScrollID(scrollID);
-            if (artifactID == null)
-                return;
-
             player.Inventory.RemoveItem(scroll);
 
             ICollection backpack = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack,
@@ -97,22 +89,14 @@ namespace DOL.GS.Spells
                 if (item == null)
                     continue;
 
-                if (ArtifactMgr.IsArtifactScroll(item) &&
-                    item.Name.StartsWith(scrollID) &&
-                    (item.Flags & scroll.Flags) == 0)
-                {
-                    scroll.Flags |= item.Flags;
-                    player.Inventory.RemoveItem(item);
-
-                    if ((scroll.Flags & (int)ArtifactMgr.Book.AllPages) == (int)ArtifactMgr.Book.AllPages)
-                    {
-                        scroll.Model = 500;
-                        break;
-                    }
-                }
+				if (ArtifactMgr.CombineScrolls(scroll, item))
+				{
+					player.Inventory.RemoveItem(item);
+					if (ArtifactMgr.IsArtifactBook(scroll))
+						break;
+				}
             }
 
-            scroll.Name = ArtifactMgr.CreateScrollName(scroll, artifactID);
             player.Out.SendSpellEffectAnimation(player, player, 1, 0, false, 1);
 
             eInventorySlot slot = player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack,

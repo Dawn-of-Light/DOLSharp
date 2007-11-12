@@ -38,8 +38,7 @@ namespace DOL.GS
         /// </summary>
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static Hashtable m_artifacts;
-		private static Hashtable m_scrolls, m_books, m_quests;
+        private static ArrayList m_artifacts;
 
         public enum Book { Page1 = 0x1, Page2 = 0x2, Page3 = 0x4, AllPages = 0x7 };
 
@@ -56,22 +55,10 @@ namespace DOL.GS
         {
             DataObject[] dbo = GameServer.Database.SelectAllObjects(typeof(Artifact));
             Artifact artifact;
-			m_artifacts = new Hashtable();
-			m_scrolls = new Hashtable();
-			m_books = new Hashtable();
-			m_quests = new Hashtable();
-            for (int i = 0; i < dbo.Length; i++)
-            {
-                artifact = dbo[i] as Artifact;
-                m_artifacts[artifact.ItemID] = artifact;
+			m_artifacts = new ArrayList();
 
-				if (!m_scrolls.Contains(artifact.ArtifactID))
-					m_scrolls[artifact.ArtifactID] = artifact.ScrollID;
-				if (!m_books.Contains(artifact.ArtifactID))
-					m_books[artifact.ArtifactID] = artifact.BookID;
-				if (!m_quests.Contains(artifact.ArtifactID))
-					m_quests[artifact.ArtifactID] = artifact.QuestID;
-            }
+            for (int i = 0; i < dbo.Length; i++)
+                m_artifacts.Add(dbo[i]);
 
             log.Info(String.Format("{0} artifacts loaded", m_artifacts.Count));
             return true;
@@ -88,10 +75,9 @@ namespace DOL.GS
 
             lock (m_artifacts.SyncRoot)
             {
-                IDictionaryEnumerator artifactEnum = m_artifacts.GetEnumerator();
-                while (artifactEnum.MoveNext())
-                    if ((artifactEnum.Value as Artifact).Zone == zone)
-                        artifacts.Add(artifactEnum.Value);
+                foreach (Artifact artifact in m_artifacts)
+                    if (artifact.Zone == zone)
+                        artifacts.Add(artifact);
             }
 
             return artifacts;
@@ -100,56 +86,38 @@ namespace DOL.GS
 		#region Scrolls & Books
 
         /// <summary>
-        /// Find the matching artifacts for this book.
+        /// Find the matching artifact for this book.
         /// </summary>
         /// <param name="bookID">The title of the book.</param>
-        /// <returns>A list of all the artifacts that match this book.</returns>
-        private static ArrayList GetArtifactsFromBookID(String bookID)
+        /// <returns>The artifact that matches this book.</returns>
+        private static Artifact GetArtifactFromBookID(String bookID)
         {
             ArrayList artifacts = new ArrayList();
 
             lock (m_artifacts.SyncRoot)
             {
-                IDictionaryEnumerator artifactEnum = m_artifacts.GetEnumerator();
-                while (artifactEnum.MoveNext())
-                    if ((artifactEnum.Value as Artifact).BookID == bookID)
-                        artifacts.Add(artifactEnum.Value);
+                foreach (Artifact artifact in m_artifacts)
+                    if (artifact.BookID == bookID)
+                        return artifact;
             }
 
-            return artifacts;
+            return null;
         }
 
 		/// <summary>
-		/// Get the artifact ID for this book.
-		/// </summary>
-		/// <param name="bookID"></param>
-		/// <returns></returns>
-		public static String GetArtifactIDFromBookID(String bookID)
-		{
-			lock (m_books.SyncRoot)
-			{
-				IDictionaryEnumerator bookEnum = m_books.GetEnumerator();
-				while (bookEnum.MoveNext())
-					if ((bookEnum.Value as String) == bookID)
-						return bookEnum.Key as String;
-			}
-			return null;
-		}
-
-		/// <summary>
-		/// Get the artifact ID for this scroll.
+		/// Get the artifact for this scroll.
 		/// </summary>
 		/// <param name="scrollID"></param>
 		/// <returns></returns>
-		public static String GetArtifactIDFromScrollID(String scrollID)
+		private static Artifact GetArtifactFromScrollID(String scrollID)
 		{
-			lock (m_scrolls.SyncRoot)
+			lock (m_artifacts.SyncRoot)
 			{
-				IDictionaryEnumerator scrollEnum = m_scrolls.GetEnumerator();
-				while (scrollEnum.MoveNext())
-					if ((scrollEnum.Value as String) == scrollID)
-						return scrollEnum.Key as String;
+                foreach (Artifact artifact in m_artifacts)
+					if (artifact.ScrollID == scrollID)
+						return artifact;
 			}
+
 			return null;
 		}
 
@@ -159,7 +127,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="item"></param>
 		/// <returns></returns>
-		public static String GetScrollIDFromItem(InventoryItem item)
+		private static String GetScrollIDFromItem(InventoryItem item)
 		{
 			if (item == null)
 				return null;
@@ -200,8 +168,7 @@ namespace DOL.GS
 				|| item.Flags != (int)Book.AllPages)
 				return false;
 
-			lock (m_books.SyncRoot)
-				return m_books.ContainsValue(item.Name);
+            return (GetArtifactFromBookID(item.Name) != null);
 		}
 
 		/// <summary>
@@ -222,8 +189,34 @@ namespace DOL.GS
 			if (parts.Length != 2)
 				return false;
 
-			lock (m_scrolls.SyncRoot)
-				return m_scrolls.ContainsValue(parts[0]);
+            return (GetArtifactFromScrollID(parts[0]) != null);
+		}
+
+		/// <summary>
+		/// Combine 2 scrolls.
+		/// </summary>
+		/// <param name="scroll"></param>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public static bool CombineScrolls(InventoryItem scroll, InventoryItem item)
+		{
+			if (!CanCombine(scroll, item))
+				return false;
+
+			String scrollID = ArtifactMgr.GetScrollIDFromItem(scroll);
+			if (scrollID == null)
+				return false;
+
+			Artifact artifact = ArtifactMgr.GetArtifactFromScrollID(scrollID);
+			if (artifact == null)
+				return false;
+
+			scroll.Flags |= item.Flags;
+			if ((scroll.Flags & (int)Book.AllPages) == (int)Book.AllPages)
+				scroll.Model = 500;
+
+			scroll.Name = CreateScrollName(scroll, artifact);
+			return true;
 		}
 
 		/// <summary>
@@ -237,22 +230,15 @@ namespace DOL.GS
 			if (pageNumber < 1 || pageNumber > 3)
 				return null;
 
-			String artifactID = GetArtifactIDFromBookID(bookID);
-			if (artifactID == null)
-				return null;
-
-			String scrollID = null;
-			lock (m_scrolls.SyncRoot)
-				scrollID = m_scrolls[artifactID] as String;
-			if (scrollID == null)
+            Artifact artifact = GetArtifactFromBookID(bookID);
+			if (artifact == null)
 				return null;
 
             GameInventoryItem scroll = GameInventoryItem.CreateFromTemplate("artifact_scroll");
-
             if (scroll != null)
             {
                 scroll.Item.Flags = 1 << (pageNumber - 1);
-				scroll.Item.Name = CreateScrollName(scroll.Item, artifactID);
+				scroll.Item.Name = CreateScrollName(scroll.Item, artifact);
 				scroll.Name = scroll.Item.Name;
             }
 
@@ -265,31 +251,24 @@ namespace DOL.GS
 		/// <param name="scroll">Scroll to get the name for.</param>
 		/// <param name="artifactID">The ID of the artifact this scroll is intended for.</param>
 		/// <returns>The ingame name.</returns>
-		public static String CreateScrollName(InventoryItem scroll, String artifactID)
+		private static String CreateScrollName(InventoryItem scroll, Artifact artifact)
 		{
-			String scrollID, bookID;
-
-			lock (m_scrolls.SyncRoot)
-				scrollID = m_scrolls[artifactID] as String;
-			lock (m_books.SyncRoot)
-				bookID = m_books[artifactID] as String;
-
 			switch (scroll.Flags & (int)Book.AllPages)
 			{
 				case (int)Book.AllPages:
-					return bookID;
+					return artifact.BookID;
 				case (int)Book.Page1:
-					return scrollID + ", page 1 of 3";
+					return artifact.ScrollID + ", page 1 of 3";
 				case (int)Book.Page2:
-					return scrollID + ", page 2 of 3";
+                    return artifact.ScrollID + ", page 2 of 3";
 				case (int)Book.Page3:
-					return scrollID + ", page 3 of 3";
+                    return artifact.ScrollID + ", page 3 of 3";
 				case (int)Book.Page1 | (int)Book.Page2:
-					return scrollID + ", pages 1 and 2";
+                    return artifact.ScrollID + ", pages 1 and 2";
 				case (int)Book.Page1 | (int)Book.Page3:
-					return scrollID + ", pages 1 and 3";
+                    return artifact.ScrollID + ", pages 1 and 3";
 				case (int)Book.Page2 | (int)Book.Page3:
-					return scrollID + ", pages 2 and 3";
+                    return artifact.ScrollID + ", pages 2 and 3";
 				default:
 					return "<undefined>";
 			}
