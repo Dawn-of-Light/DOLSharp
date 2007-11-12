@@ -24,24 +24,20 @@ using DOL.Database.Attributes;
 namespace DOL.Database
 {
     /// <summary>
-    /// An artifact.
+    /// Relation between artifacts and the actual items.
     /// </summary>
-	/// <author>Aredhel</author>
-    [DataTable(TableName = "Artifact")]
-    public class Artifact : DataObject
+    /// <author>Aredhel</author>
+    [DataTable(TableName = "ArtifactXItem")]
+    class ArtifactXItem : DataObject
     {
         private String m_artifactID;
-		private String m_scrollID;
-		private String m_bookID;
-		private String m_questID;
-        private String m_zone;
-        private int m_reuseTimer;
-        private int m_xpRate;
+        private String m_itemID;
+        private String m_version;
 
         /// <summary>
-        /// Create a new artifact object.
+        /// Create a new artifact/item relation.
         /// </summary>
-        public Artifact()
+        public ArtifactXItem()
             : base() { }
 
         /// <summary>
@@ -60,96 +56,38 @@ namespace DOL.Database
         public String ArtifactID
         {
             get { return m_artifactID; }
-            set 
-            {
-                Dirty = true;
-                m_artifactID = value; 
-            }
-        }
-
-		/// <summary>
-		/// The ID for the scrolls that make up the book for this 
-		/// artifact.
-		/// </summary>
-		[DataElement(AllowDbNull = false)]
-		public String ScrollID
-		{
-			get { return m_scrollID; }
-			set
-			{
-				Dirty = true;
-				m_scrollID = value;
-			}
-		}
-
-		/// <summary>
-		/// The ID for the book required to unlock this artifact.
-		/// </summary>
-		[DataElement(AllowDbNull = false)]
-		public String BookID
-		{
-			get { return m_bookID; }
-			set
-			{
-				Dirty = true;
-				m_bookID = value;
-			}
-		}
-
-		/// <summary>
-		/// The ID for the quest that needs to be completed in order
-		/// to unlock this artifact.
-		/// </summary>
-		[DataElement(AllowDbNull = false)]
-		public String QuestID
-		{
-			get { return m_questID; }
-			set
-			{
-				Dirty = true;
-				m_questID = value;
-			}
-		}
-
-        /// <summary>
-        /// The zone this artifact belongs to.
-        /// </summary>
-        [DataElement(AllowDbNull = false)]
-        public String Zone
-        {
-            get { return m_zone; }
             set
             {
                 Dirty = true;
-                m_zone = value;
+                m_artifactID = value;
             }
         }
 
-		/// <summary>
-		/// The reuse timer for the artifact.
-		/// </summary>
-		[DataElement(AllowDbNull = false)]
-		public int ReuseTimer
-		{
-			get { return m_reuseTimer; }
-			set
-			{
-				Dirty = true;
-				m_reuseTimer = value;
-			}
-		}
-
         /// <summary>
-        /// The rate at which this artifact gains xp (in percent).
+        /// The item ID.
         /// </summary>
         [DataElement(AllowDbNull = false)]
-        public int XPRate
+        public String ItemID
         {
-            get { return m_xpRate; }
+            get { return m_itemID; }
             set
             {
                 Dirty = true;
-                m_xpRate = value;
+                m_itemID = value;
+            }
+        }
+
+        /// <summary>
+        /// The artifact ID.
+        /// </summary>
+        [DataElement(AllowDbNull = false)]
+        public String Version
+        {
+            get { return m_version; }
+            set
+            {
+                Dirty = true;
+                m_version = value;
             }
         }
     }
