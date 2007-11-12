@@ -482,6 +482,7 @@
     <Compile Include="GameClient.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="gameobjects\CustomNPC\ArtifactScholar.cs" />
     <Compile Include="gameobjects\Dragons\Cuuldurach.cs" />
     <Compile Include="gameobjects\CustomNPC\GameBoatStableMaster.cs" />
     <Compile Include="gameobjects\Dragons\GameDragon.cs" />
@@ -1628,6 +1629,7 @@
     <Compile Include="spells\CombatHealSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="spells\CombineScrolls.cs" />
     <Compile Include="spells\ConcentrationList.cs">
       <SubType>Code</SubType>
     </Compile>
