@@ -54,7 +54,6 @@ namespace DOL.GS
         public static bool LoadArtifacts()
         {
             DataObject[] dbo = GameServer.Database.SelectAllObjects(typeof(Artifact));
-            Artifact artifact;
 			m_artifacts = new ArrayList();
 
             for (int i = 0; i < dbo.Length; i++)
@@ -249,7 +248,7 @@ namespace DOL.GS
 		/// Creates the name of the scroll (or book).
 		/// </summary>
 		/// <param name="scroll">Scroll to get the name for.</param>
-		/// <param name="artifactID">The ID of the artifact this scroll is intended for.</param>
+		/// <param name="artifact">The ID of the artifact this scroll is intended for.</param>
 		/// <returns>The ingame name.</returns>
 		private static String CreateScrollName(InventoryItem scroll, Artifact artifact)
 		{

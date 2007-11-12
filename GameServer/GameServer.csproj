@@ -482,7 +482,11 @@
     <Compile Include="GameClient.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="gameobjects\CustomNPC\ArtifactScholar.cs" />
+    <Compile Include="gameobjects\Atlantis\Arbiter.cs" />
+    <Compile Include="gameobjects\Atlantis\ArtifactScholar.cs" />
+    <Compile Include="gameobjects\Atlantis\HeadScholar.cs" />
+    <Compile Include="gameobjects\Atlantis\Researcher.cs" />
+    <Compile Include="gameobjects\Atlantis\Scholar.cs" />
     <Compile Include="gameobjects\Dragons\Cuuldurach.cs" />
     <Compile Include="gameobjects\CustomNPC\GameBoatStableMaster.cs" />
     <Compile Include="gameobjects\Dragons\GameDragon.cs" />
