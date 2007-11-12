@@ -124,7 +124,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="bookID"></param>
 		/// <returns></returns>
-		private static String GetArtifactIDFromBookID(String bookID)
+		public static String GetArtifactIDFromBookID(String bookID)
 		{
 			lock (m_books.SyncRoot)
 			{
@@ -141,7 +141,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="scrollID"></param>
 		/// <returns></returns>
-		private static String GetArtifactIDFromScrollID(String scrollID)
+		public static String GetArtifactIDFromScrollID(String scrollID)
 		{
 			lock (m_scrolls.SyncRoot)
 			{
@@ -159,7 +159,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="item"></param>
 		/// <returns></returns>
-		private static String GetScrollIDFromItem(InventoryItem item)
+		public static String GetScrollIDFromItem(InventoryItem item)
 		{
 			if (item == null)
 				return null;
@@ -169,6 +169,23 @@ namespace DOL.GS
 				return null;
 
 			return parts[0];
+		}
+
+		/// <summary>
+		/// Check whether these 2 items can be combined.
+		/// </summary>
+		/// <param name="item1"></param>
+		/// <param name="item2"></param>
+		/// <returns></returns>
+		public static bool CanCombine(InventoryItem item1, InventoryItem item2)
+		{
+			if (!IsArtifactScroll(item1) || !IsArtifactScroll(item2))
+				return false;
+
+			if (GetScrollIDFromItem(item1) != GetScrollIDFromItem(item2))
+				return false;
+
+			return ((item1.Flags & item2.Flags) == 0);
 		}
 
 		/// <summary>
@@ -248,7 +265,7 @@ namespace DOL.GS
 		/// <param name="scroll">Scroll to get the name for.</param>
 		/// <param name="artifactID">The ID of the artifact this scroll is intended for.</param>
 		/// <returns>The ingame name.</returns>
-		private static String CreateScrollName(InventoryItem scroll, String artifactID)
+		public static String CreateScrollName(InventoryItem scroll, String artifactID)
 		{
 			String scrollID, bookID;
 
@@ -277,93 +294,6 @@ namespace DOL.GS
 					return "<undefined>";
 			}
 		}
-
-        /// <summary>
-        /// Combine scrolls, if possible, complete the book.
-        /// </summary>
-        /// <param name="player">Player trying the combine.</param>
-        /// <param name="scroll">The scroll in the player's inventory to be used.</param>
-        /// <returns>True if the combine succeeded, false otherwise.</returns>
-        public static bool CombineScrolls(GamePlayer player, InventoryItem scroll)
-        {
-			String scrollID = GetScrollIDFromItem(scroll);
-			if (scrollID == null)
-				return false;
-
-			String artifactID = GetArtifactIDFromScrollID(scrollID);
-			if (artifactID == null)
-				return false;
-
-			int oldFlags = scroll.Flags;
-
-			player.Out.SendMessage("You try to combine the scrolls.",
-				eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-			// Find matching pages in the player's backpack.
-
-			ICollection backpack = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack,
-                eInventorySlot.LastBackpack);
-
-            foreach (InventoryItem item in backpack)
-            {
-                if (item != null)
-                {
-                    if (item.Name.StartsWith(scrollID) && (item.Flags & (int)Book.AllPages) != 0
-                        && (item.Flags & scroll.Flags) == 0)
-                    {
-                        scroll.Flags |= item.Flags;
-                        player.Inventory.RemoveItem(item);
-                        if ((scroll.Flags & (int)Book.AllPages) == (int)Book.AllPages)
-                            break;
-                    }
-                }
-            }
-
-			// Combine successful?
-
-			if (scroll.Flags != oldFlags)
-			{
-				player.Out.SendSpellEffectAnimation(player, player, 1, 0, false, 1);
-				player.Inventory.RemoveItem(scroll);
-                scroll.Name = CreateScrollName(scroll, artifactID);
-
-				// If book is complete change the icon.
-
-				if ((scroll.Flags & (int)Book.AllPages) == (int)Book.AllPages)
-					scroll.Model = 500;
-
-				// Now try to put the combined scrolls back in the player's backpack.
-
-				eInventorySlot slot = player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack,
-					eInventorySlot.LastBackpack);
-
-				if (slot != eInventorySlot.Invalid)
-					player.Inventory.AddItem(slot, scroll);
-				else
-				{
-					player.Out.SendMessage(String.Format("Your backpack is full. {0} is dropped on the ground.",
-						player.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                    DropScroll(player, scroll);
-				}
-			}
-            return true;
-        }
-
-        /// <summary>
-        /// Drop a scroll to the ground.
-        /// </summary>
-        /// <param name="owner"></param>
-        /// <param name="scroll"></param>
-        private static void DropScroll(GamePlayer owner, InventoryItem scroll)
-        {
-            GameInventoryItem loot = new GameInventoryItem(scroll);
-            loot.AddOwner(owner);
-            loot.X = owner.X;
-            loot.Y = owner.Y;
-            loot.Z = owner.Z;
-            loot.Heading = owner.Heading;
-            loot.CurrentRegion = owner.CurrentRegion;
-        }
 
 		#endregion
     }

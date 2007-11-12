@@ -7074,6 +7074,17 @@ namespace DOL.GS
 			return true;
 		}
 
+        private InventoryItem m_useItem;
+
+        /// <summary>
+        /// The item the player is trying to use.
+        /// </summary>
+        public InventoryItem UseItem
+        {
+            get { return m_useItem; }
+            set { m_useItem = value; }
+        }
+
 		/// <summary>
 		/// Called when the player uses an inventory in a slot
 		/// eg. by clicking on the icon in the qickbar dragged from a slot
@@ -7091,6 +7102,8 @@ namespace DOL.GS
 			lock (Inventory)
 			{
 				InventoryItem useItem = Inventory.GetItem((eInventorySlot)slot);
+                UseItem = useItem;
+
 				if (useItem == null)
 				{
 					if ((slot >= Slot.FIRSTQUIVER) && (slot <= Slot.FOURTHQUIVER))
@@ -7266,18 +7279,7 @@ namespace DOL.GS
 
 				#endregion
 
-				if (useItem.Object_Type == (int)eObjectType.Magical
-					&& useItem.Item_Type == (int)eInventorySlot.FirstBackpack
-					&& useItem.Flags != 0)
-				{
-					if (Level >= useItem.Level)
-						ArtifactMgr.CombineScrolls(this, useItem);
-					else
-						Out.SendMessage("You are not powerful enough to use this item's spell.", 
-							eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
-				}
-				else if (useItem.SpellID != 0 || useItem.SpellID1 != 0 || useItem.PoisonSpellID != 0) // don't return without firing events
+                if (useItem.SpellID != 0 || useItem.SpellID1 != 0 || useItem.PoisonSpellID != 0) // don't return without firing events
 				{
 					if (IsSitting)
 					{
@@ -7285,7 +7287,15 @@ namespace DOL.GS
 						return;
 					}
 
-					if (ArtifactManager.IsArtifact(useItem))
+					if (useItem.Object_Type == (int)eObjectType.Magical
+						&& useItem.Item_Type == (int)eInventorySlot.FirstBackpack
+						&& useItem.SpellID > 0
+						&& useItem.MaxCharges == 0)
+					{
+						UseMagicalItem(useItem, type);
+						return;
+					}
+					else if (ArtifactManager.IsArtifact(useItem))
 					{
 						long artifactusetick = TempProperties.getLongProperty("artifactuse" + useItem.Id_nb, 0L);
 						long changeTime = CurrentRegion.Time - artifactusetick;
@@ -7385,15 +7395,6 @@ namespace DOL.GS
 							{
 								ApplyPoison(useItem, leftHand);
 							}
-						}
-						else if (useItem.Object_Type == (int)eObjectType.Magical &&
-							useItem.Item_Type == (int)eInventorySlot.FirstBackpack && useItem.Flags != 0)
-						{
-							if (Level >= useItem.Level)
-								ArtifactMgr.CombineScrolls(this, useItem);
-							else
-								Out.SendMessage("You are not powerful enough to use this item's spell.",
-									eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						else if (useItem.Object_Type == (int)eObjectType.Magical &&
 						    (useItem.Item_Type == (int)eInventorySlot.FirstBackpack || useItem.Item_Type == 41))
@@ -7542,6 +7543,39 @@ namespace DOL.GS
 				}
 				// notify event handlers about used slot
 				Notify(GamePlayerEvent.UseSlot, this, new UseSlotEventArgs(slot, type));
+			}
+		}
+
+		/// <summary>
+		/// Use a magical item's spell.
+		/// </summary>
+		/// <param name="item"></param>
+		/// <param name="type"></param>
+		protected void UseMagicalItem(InventoryItem item, int type)
+		{
+			log.Info(">>> UseMagicalItem");
+			SpellLine itemSpellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Spells);
+			if (itemSpellLine == null)
+				return;
+
+			if (type == 1) //use1
+			{
+				Spell spell = SkillBase.GetSpellByID(item.SpellID);
+				if (spell.Level > Level)
+				{
+					Out.SendMessage("You are not powerful enough to use this item's spell.",
+						eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return;
+				}
+
+				ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, itemSpellLine);
+				if (spellHandler == null)
+					return;
+
+				if (IsOnHorse && !spellHandler.HasPositiveEffect)
+					IsOnHorse = false;
+				Stealth(false);
+				spellHandler.CastSpell();
 			}
 		}
 
