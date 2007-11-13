@@ -82,6 +82,30 @@ namespace DOL.GS
             return artifacts;
         }
 
+		/// <summary>
+		/// Find all artifacts this scholar is studying.
+		/// </summary>
+		/// <param name="scholarID"></param>
+		/// <returns></returns>
+		public static ArrayList GetArtifactsFromScholar(String scholarID)
+		{
+            ArrayList artifacts = new ArrayList();
+
+			lock (m_artifacts.SyncRoot)
+			{
+				String[] scholarIDs;
+				foreach (Artifact artifact in m_artifacts)
+				{
+					scholarIDs = artifact.ScholarID.Split(';');
+					foreach (String id in scholarIDs)
+						if (String.Format("Scholar {0}", id) == scholarID)
+							artifacts.Add(artifact);
+				}
+			}
+
+			return artifacts;
+		}
+
 		#region Scrolls & Books
 
         /// <summary>
@@ -89,7 +113,7 @@ namespace DOL.GS
         /// </summary>
         /// <param name="bookID">The title of the book.</param>
         /// <returns>The artifact that matches this book.</returns>
-        private static Artifact GetArtifactFromBookID(String bookID)
+        public static Artifact GetArtifactFromBookID(String bookID)
         {
             ArrayList artifacts = new ArrayList();
 
