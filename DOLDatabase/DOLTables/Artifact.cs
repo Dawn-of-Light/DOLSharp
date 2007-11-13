@@ -31,10 +31,12 @@ namespace DOL.Database
     public class Artifact : DataObject
     {
         private String m_artifactID;
+		private int m_levelReq;
 		private String m_scrollID;
 		private String m_bookID;
 		private String m_questID;
         private String m_zone;
+		private String m_scholarID;
         private int m_reuseTimer;
         private int m_xpRate;
 
@@ -66,6 +68,20 @@ namespace DOL.Database
                 m_artifactID = value; 
             }
         }
+
+		/// <summary>
+		/// The level requirement for the artifact.
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int LevelRequirement
+		{
+			get { return m_levelReq; }
+			set
+			{
+				Dirty = true;
+				m_levelReq = value;
+			}
+		}
 
 		/// <summary>
 		/// The ID for the scrolls that make up the book for this 
@@ -124,6 +140,20 @@ namespace DOL.Database
                 m_zone = value;
             }
         }
+
+		/// <summary>
+		/// The scholar(s) studying this artifact.
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public String ScholarID
+		{
+			get { return m_scholarID; }
+			set
+			{
+				Dirty = true;
+				m_scholarID = value;
+			}
+		}
 
 		/// <summary>
 		/// The reuse timer for the artifact.
