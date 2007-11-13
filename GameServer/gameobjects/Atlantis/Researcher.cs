@@ -19,6 +19,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Collections;
+using DOL.AI.Brain;
+using DOL.Language;
 
 namespace DOL.GS
 {
@@ -38,6 +41,67 @@ namespace DOL.GS
             Inventory = template.CloseTemplate();
             Flags = 16;	// Peace flag.
             return base.AddToWorld();
+        }
+
+        /// <summary>
+		/// How friendly this NPC is to a player.
+		/// </summary>
+		/// <param name="player">GamePlayer that is examining this object</param>
+		/// <param name="firstLetterUppercase"></param>
+		/// <returns>Aggro state as a string.</returns>
+        public override string GetAggroLevelString(GamePlayer player, bool firstLetterUppercase)
+        {
+            IAggressiveBrain aggroBrain = Brain as IAggressiveBrain;
+            String aggroLevelString;
+
+            if (GameServer.ServerRules.IsSameRealm(this, player, true))
+            {
+                if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Friendly2");
+                else aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Friendly1");
+            }
+            else if (aggroBrain != null && aggroBrain.AggroLevel > 0)
+            {
+                if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Aggressive2");
+                else aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Aggressive1");
+            }
+            else
+            {
+                if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Neutral2");
+                else aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Neutral1");
+            }
+
+            return aggroLevelString + ".";
+        }
+
+        /// <summary>
+        /// Returns a list of examine messages.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        public override IList GetExamineMessages(GamePlayer player)
+        {
+            IList list = new ArrayList(4);
+
+            list.Add(String.Format("You examine {0}. {1} is {2}.",
+                Name,
+                (Name.EndsWith("a") || Name.EndsWith("le")) ? "She" : "He",
+                GetAggroLevelString(player, false)));
+
+            return list;
+        }
+
+        /// <summary>
+        /// Turn the researcher to face the player.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        public override bool Interact(GamePlayer player)
+        {
+            if (!base.Interact(player))
+                return false;
+
+            TurnTo(player, 10000);
+            return true;
         }
     }
 }
