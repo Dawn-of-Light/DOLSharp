@@ -651,6 +651,8 @@
     <Compile Include="quests\albion\YdeniasCrush.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\Atlantis\Artifacts\Cloudsong.cs" />
+    <Compile Include="quests\Atlantis\Artifacts\Snatcher.cs" />
     <Compile Include="quests\examples\HelpSirQuait.cs">
       <SubType>Code</SubType>
     </Compile>
