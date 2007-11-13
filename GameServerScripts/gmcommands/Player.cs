@@ -30,6 +30,7 @@ using DOL.GS.Spells;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using log4net;
+using DOL.GS.Quests;
 
 namespace DOL.GS.Scripts
 {
@@ -58,7 +59,8 @@ namespace DOL.GS.Scripts
 	 "/player info",
 	 "/player showgroup",
 	 "/player showeffects",
-	 "/player stats"
+	 "/player stats",
+	 "/player articredit"
    )]
 
 	public class PlayerCommandHandler : AbstractCommandHandler, ICommandHandler
@@ -78,6 +80,22 @@ namespace DOL.GS.Scripts
 
 			switch (args[1])
 			{
+				case "articredit":
+					{
+						if (args.Length != 3)
+							return DisplaySyntax(client);
+
+						GamePlayer player = client.Player.TargetObject as GamePlayer;
+						if (player == null)
+						{
+							client.Out.SendMessage("You need a valid target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 0;
+						}
+
+						ArtifactMgr.GrantArtifactCredit(player, args[2]);
+						return 1;
+					}
+
 				case "stats":
 					{
 						GamePlayer player = client.Player.TargetObject as GamePlayer;
