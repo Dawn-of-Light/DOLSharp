@@ -608,6 +608,11 @@ namespace DOL
 
 
 				//---------------------------------------------------------------
+				//Load artifact manager
+				if (!InitComponent(ArtifactMgr.Init(), "Artifact Manager"))
+					return false;
+
+				//---------------------------------------------------------------
 				//Try to initialize the WorldMgr in early state
 				RegionData[] regionsData;
 				if (!InitComponent(WorldMgr.EarlyInit(out regionsData), "World Manager PreInitialization"))
@@ -721,11 +726,6 @@ namespace DOL
                     if (!InitComponent(QuestMgr.Init(), "Quest Manager"))
                         return false;
                 }
-
-                //---------------------------------------------------------------
-                //Load artifact manager
-                if (!InitComponent(ArtifactMgr.Init(), "Artifact Manager"))
-                    return false;
 
 				//---------------------------------------------------------------
 				//Notify our scripts that everything went fine!
