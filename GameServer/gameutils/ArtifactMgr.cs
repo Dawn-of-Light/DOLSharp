@@ -24,6 +24,8 @@ using DOL.Database;
 using System.Reflection;
 using log4net;
 using DOL.GS.PacketHandler;
+using DOL.GS.Quests;
+using DOL.GS.Scripts;
 
 namespace DOL.GS
 {
@@ -106,9 +108,83 @@ namespace DOL.GS
 			return artifacts;
 		}
 
+		#region Quests
+
+		/// <summary>
+		/// Find the quest ID for this artifact.
+		/// </summary>
+		/// <param name="artifactID"></param>
+		/// <returns></returns>
+		private static String GetQuestIDFromArtifactID(String artifactID)
+		{
+			lock (m_artifacts.SyncRoot)
+			{
+				foreach (Artifact artifact in m_artifacts)
+					if (artifact.ArtifactID == artifactID)
+						return artifact.QuestID;
+			}
+
+			return null;
+		}
+
+		/// <summary>
+		/// Find the matching quest type for this artifact.
+		/// </summary>
+		/// <param name="artifactID"></param>
+		/// <returns></returns>
+		private static Type GetQuestTypeFromArtifactID(String artifactID)
+		{
+			String questID = ArtifactMgr.GetQuestIDFromArtifactID(artifactID);
+			if (questID == null)
+				return null;
+
+			Type questType = null;
+			foreach (Assembly asm in ScriptMgr.Scripts)
+			{
+				questType = asm.GetType(questID);
+				if (questType != null)
+					break;
+			}
+
+			if (questType == null)
+				questType = Assembly.GetAssembly(typeof(GameServer)).GetType(questID);
+
+			return questType;
+		}
+
+		/// <summary>
+		/// Grant credit for an artifact.
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="artifactID"></param>
+		/// <returns></returns>
+		public static bool GrantArtifactCredit(GamePlayer player, String artifactID)
+		{
+			if (player == null)
+				return false;
+
+			Type questType = GetQuestTypeFromArtifactID(artifactID);
+			if (questType == null)
+				return false;
+
+			if (player.HasFinishedQuest(questType) > 0)
+				return false;
+
+			AbstractQuest quest = (AbstractQuest)(System.Activator.CreateInstance(questType,
+				new object[] { player }));
+
+			if (quest == null)
+				return false;
+
+			quest.FinishQuest();
+			return true;
+		}
+
+		#endregion
+
 		#region Scrolls & Books
 
-        /// <summary>
+		/// <summary>
         /// Find the matching artifact for this book.
         /// </summary>
         /// <param name="bookID">The title of the book.</param>
