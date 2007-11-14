@@ -23,6 +23,8 @@ using DOL.GS.PacketHandler;
 using DOL.Database;
 using System.Collections;
 using DOL.GS.Quests;
+using log4net;
+using System.Reflection;
 
 namespace DOL.GS
 {
@@ -32,11 +34,16 @@ namespace DOL.GS
     /// <author>Aredhel</author>
     public class Scholar : Researcher
     {
+		/// <summary>
+		/// Defines a logger for this class.
+		/// </summary>
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		private enum TurnDownReason { NoCredit, NoBook, NoUse };
 		private ArrayList m_artifacts;
 
 		/// <summary>
-		/// Create a new scholar and load the list of artifacts
-		/// he's studying.
+		/// Create a new scholar.
 		/// </summary>
         public Scholar()
             : base() { }
@@ -85,22 +92,6 @@ namespace DOL.GS
             return true;
         }
 
-        public override bool ReceiveItem(GameLiving source, InventoryItem item)
-        {
-            if (!(source is GamePlayer))
-                return false;
-
-            GamePlayer player = source as GamePlayer;
-
-            //if (!ArtifactMgr.IsArtifactBook(item))
-            //{
-            //    player.Out.SendMessage(String.Format("{0} does not want that item.", GetName(0, true)));
-            //    return false;
-            //}
-
-            return false;
-        }
-
 		/// <summary>
 		/// Talk to the scholar.
 		/// </summary>
@@ -119,6 +110,8 @@ namespace DOL.GS
 			if (m_artifacts == null)
 				m_artifacts = ArtifactMgr.GetArtifactsFromScholar(Name);
 
+			// Talking about artifacts?
+
 			Artifact subject = null;
 			lock (m_artifacts.SyncRoot)
 			{
@@ -132,11 +125,15 @@ namespace DOL.GS
 				}
 			}
 
-			if (subject == null)
-				return false;
+            if (subject != null)
+            {
+                HandOutArtifact(player, subject);
+                return true;
+            }
 
-			HandOutArtifact(player, subject);
-			return true;
+            // Talking about versions?
+
+			return false;
 		}
 
 		/// <summary>
@@ -147,22 +144,87 @@ namespace DOL.GS
 		/// <param name="artifact"></param>
 		private void HandOutArtifact(GamePlayer player, Artifact artifact)
 		{
-			if (PlayerHasBook(player, artifact) && PlayerHasQuest(player, artifact))
-			{
-				// TODO!
-				return;
-			}
-			
-			String reply = String.Format("{0}, I cannot activate that artifact for you. ",
-				player.Name);
-			reply += "This could be because you have already activated it, or you are in the ";
-			reply += "process of activating it, or you may not have completed everything ";
-			reply += "you need to do. Remember that the activation process requires you to ";
-			reply += "have credit for the artifact's encounter, as well as the artifact's ";
-			reply += "complete book of scrolls.";
+            InventoryItem book = null;
+            AbstractQuest credit= null;
 
-			SayTo(player, eChatLoc.CL_PopupWindow, reply);
+            // No credit/already activated/no book.
+
+            if (!PlayerHasQuest(player, artifact, ref credit) ||
+                credit.GetCustomProperty("artifact") == "true" ||
+                (credit.GetCustomProperty("book") != "true" && !PlayerHasBook(player, artifact, ref book)))
+            {
+                String reply = String.Format("{0}, I cannot activate that artifact for you. ", player.Name);
+                reply += "This could be because you have already activated it, or you are in the ";
+                reply += "process of activating it, or you may not have completed everything ";
+                reply += "you need to do. Remember that the activation process requires you to ";
+                reply += "have credit for the artifact's encounter, as well as the artifact's ";
+                reply += "complete book of scrolls.";
+                SayTo(player, eChatLoc.CL_PopupWindow, reply);
+                return;
+            }
+
+            Hashtable versions = null;
+            if (!PlayerCanUseArtifact(player, artifact, ref versions))
+            {
+                // TODO: Player can not use this artifact, how is that handled?
+                return;
+            }
+
+            // If we haven't received the book yet, we will take it from the
+            // player's backpack now.
+
+            if (credit.GetCustomProperty("book") != "true")
+            {
+                credit.SetCustomProperty("book", "true");
+                player.Inventory.RemoveItem(book);
+            }
+
+			IDictionaryEnumerator versionEnum = versions.GetEnumerator();
+			if (versions.Count == 1)
+			{
+				versionEnum.MoveNext();
+                GameInventoryItem artifactItem = 
+                    GameInventoryItem.CreateFromTemplate((ItemTemplate)versionEnum.Value);
+				player.ReceiveItem(this, artifactItem);
+                credit.SetCustomProperty("artifact", "true");
+                return;
+			}
+
+            // TODO: Check on live.
+
+            int numVersions = versions.Count;
+            String question = "Would you like ";
+            while (versionEnum.MoveNext())
+            {
+                if (numVersions < versions.Count)
+                {
+                    if (versions.Count > 2)
+                        question += (numVersions == 1) ? ", or " : ", ";
+                    else
+                        question += (numVersions == 1) ? " or " : " ";
+                }
+                question += String.Format("a [{0}] version", versionEnum.Value);
+                --numVersions;
+            }
+
+            question += "?";
+            SayTo(player, eChatLoc.CL_PopupWindow, question);
 		}
+
+        /// <summary>
+        /// Check if the player can actually use the artifact.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="artifact"></param>
+        /// <param name="versions"></param>
+        /// <returns></returns>
+        private bool PlayerCanUseArtifact(GamePlayer player, Artifact artifact, ref Hashtable versions)
+        {
+            versions = ArtifactMgr.GetArtifactVersionsFromClass(artifact.ArtifactID,
+                (eCharacterClass)player.CharacterClass.ID);
+
+            return (versions.Count > 0);
+        }
 
 		/// <summary>
 		/// Check if player has the book for this artifact.
@@ -170,7 +232,7 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		/// <param name="artifact"></param>
 		/// <returns></returns>
-		private bool PlayerHasBook(GamePlayer player, Artifact artifact)
+		private bool PlayerHasBook(GamePlayer player, Artifact artifact, ref InventoryItem book)
 		{
 			ICollection backpack = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack,
 				eInventorySlot.LastBackpack);
@@ -180,8 +242,11 @@ namespace DOL.GS
 				if (item == null || !ArtifactMgr.IsArtifactBook(item))
 					continue;
 
-				if (ArtifactMgr.GetArtifactFromBookID(item.Name).ArtifactID == artifact.ArtifactID)
-					return true;
+                if (ArtifactMgr.GetArtifactFromBookID(item.Name).ArtifactID == artifact.ArtifactID)
+                {
+                    book = item;
+                    return true;
+                }
 			}
 
 			return false;
@@ -193,15 +258,18 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		/// <param name="artifact"></param>
 		/// <returns></returns>
-		private bool PlayerHasQuest(GamePlayer player, Artifact artifact)
+		private bool PlayerHasQuest(GamePlayer player, Artifact artifact, ref AbstractQuest credit)
 		{
-			IList finishedQuests = player.QuestListFinished;
-			if (finishedQuests == null)
-				return false;
-
-			foreach (AbstractQuest quest in finishedQuests)
-				if (quest.Name == artifact.QuestID)
-					return true;
+            IList finishedQuests = player.QuestListFinished;
+            
+            foreach (AbstractQuest quest in finishedQuests)
+            {
+                if (quest.GetType() == ArtifactMgr.GetQuestTypeFromArtifactID(artifact.ArtifactID))
+                {
+                    credit = quest;
+                    return true;
+                }
+            }
 
 			return false;
 		}

@@ -41,6 +41,7 @@ namespace DOL.GS
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private static ArrayList m_artifacts;
+        private static Hashtable m_artifactVersions;
 
         public enum Book { Page1 = 0x1, Page2 = 0x2, Page3 = 0x4, AllPages = 0x7 };
 
@@ -60,6 +61,20 @@ namespace DOL.GS
 
             for (int i = 0; i < dbo.Length; i++)
                 m_artifacts.Add(dbo[i]);
+
+            dbo = GameServer.Database.SelectAllObjects(typeof(ArtifactXItem));
+            m_artifactVersions = new Hashtable();
+            ArrayList versionList;
+            foreach (ArtifactXItem artifactVersion in dbo)
+            {
+                versionList = (ArrayList)m_artifactVersions[artifactVersion.ArtifactID];
+                if (versionList == null)
+                {
+                    versionList = new ArrayList();
+                    m_artifactVersions.Add(artifactVersion.ArtifactID, versionList);
+                }
+                versionList.Add(artifactVersion);
+            }
 
             log.Info(String.Format("{0} artifacts loaded", m_artifacts.Count));
             return true;
@@ -108,6 +123,75 @@ namespace DOL.GS
 			return artifacts;
 		}
 
+        /// <summary>
+        /// Get a list of all versions for this artifact.
+        /// </summary>
+        /// <param name="artifactID"></param>
+        /// <returns></returns>
+        private static ArrayList GetArtifactVersions(String artifactID)
+        {
+            ArrayList versions = null;
+            if (artifactID != null)
+            {
+                lock (m_artifactVersions.SyncRoot)
+                    versions = (ArrayList)m_artifactVersions[artifactID];
+            }
+
+            return (versions == null) ? new ArrayList() : versions;
+        }
+
+        /// <summary>
+        /// Create a hashtable containing all item templates that are valid for
+        /// this class.
+        /// </summary>
+        /// <param name="artifactID"></param>
+        /// <param name="charClass"></param>
+        /// <returns></returns>
+        public static Hashtable GetArtifactVersionsFromClass(String artifactID, 
+            eCharacterClass charClass)
+        {
+            ArrayList allVersions = GetArtifactVersions(artifactID);
+            Hashtable classVersions = new Hashtable();
+
+            lock (allVersions.SyncRoot)
+            {
+                ItemTemplate itemTemplate;
+                foreach (ArtifactXItem version in allVersions)
+                {
+                    itemTemplate = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate),
+                        version.ItemID);
+
+                    if (itemTemplate == null)
+                    {
+                        log.Warn(String.Format("Artifact item template '{0}' is missing",
+                            version.ItemID));
+                    }
+                    else
+                    {
+                        String[] classIDs = itemTemplate.AllowedClasses.Split(';');
+                        foreach (String classID in classIDs)
+                        {
+                            try
+                            {
+                                if (Int16.Parse(classID) == (int)charClass)
+                                {
+                                    classVersions.Add(version.Version, itemTemplate);
+                                    break;
+                                }
+                            }
+                            catch
+                            {
+                                log.Warn(String.Format("Invalid class ID '{0}' for item template '{1}'",
+                                    classID, itemTemplate.Id_nb));
+                            }
+                        }
+                    }
+                }
+            }
+
+            return classVersions;
+        }
+
 		#region Quests
 
 		/// <summary>
@@ -132,7 +216,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="artifactID"></param>
 		/// <returns></returns>
-		private static Type GetQuestTypeFromArtifactID(String artifactID)
+		public static Type GetQuestTypeFromArtifactID(String artifactID)
 		{
 			String questID = ArtifactMgr.GetQuestIDFromArtifactID(artifactID);
 			if (questID == null)
