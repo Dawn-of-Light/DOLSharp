@@ -807,6 +807,7 @@
     <Compile Include="behaviour\Requirements\EquippedItemRequirement.cs" />
     <Compile Include="behaviour\Requirements\GuildRequirement.cs" />
     <Compile Include="behaviour\Requirements\RealmPointsRequirement.cs" />
+    <Compile Include="quests\Quests\ArtifactQuest.cs" />
     <Compile Include="quests\Quests\Requirements\QuestGivableRequirement.cs" />
     <Compile Include="quests\Quests\Requirements\QuestPendingRequirement.cs" />
     <Compile Include="quests\Quests\Requirements\QuestCompletedRequirement.cs" />

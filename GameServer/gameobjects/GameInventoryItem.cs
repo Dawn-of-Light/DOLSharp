@@ -94,6 +94,20 @@ namespace DOL.GS
 				return null;
 			}
 
+			return CreateFromTemplate(template);
+		}
+
+		/// <summary>
+		/// Creates a new GameInventoryItem based on an ItemTemplate. Will disappear 
+		/// after 3 minutes after being added to the world.
+		/// </summary>
+		/// <param name="template">The template to load and create an item from.</param>
+		/// <returns>Item reference or null.</returns>
+		public static GameInventoryItem CreateFromTemplate(ItemTemplate template)
+		{
+			if (template == null)
+				return null;
+
 			GameInventoryItem invItem = new GameInventoryItem();
 
 			invItem.m_item = new InventoryItem();

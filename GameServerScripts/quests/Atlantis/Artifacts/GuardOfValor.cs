@@ -26,20 +26,20 @@ using DOL.Database;
 namespace DOL.GS.Quests.Atlantis.Artifacts
 {
 	/// <summary>
-	/// Quest for the Snatcher artifact.
+	/// Quest for the Guard of Valor artifact.
 	/// </summary>
 	/// <author>Aredhel</author>
-	class Snatcher : ArtifactQuest
+	class GuardOfValor : ArtifactQuest
 	{
-		public Snatcher(GamePlayer questingPlayer)
+		public GuardOfValor(GamePlayer questingPlayer)
 			: base(questingPlayer) { }
 
-		public Snatcher(GamePlayer questingPlayer, DBQuest dbQuest)
+		public GuardOfValor(GamePlayer questingPlayer, DBQuest dbQuest)
 			: base(questingPlayer, dbQuest) { }
 
 		public override string Name
 		{
-			get { return "Snatcher"; }
+			get { return "Guard of Valor"; }
 		}
 	}
 }
