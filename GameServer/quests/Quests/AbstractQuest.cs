@@ -211,7 +211,10 @@ namespace DOL.GS.Quests
 
 			// move quest from active list to finished list...
 			m_questPlayer.QuestList.Remove(this);
-			m_questPlayer.QuestListFinished.Add(this);
+
+			if (m_questPlayer.HasFinishedQuest(this.GetType()) == 0)
+				m_questPlayer.QuestListFinished.Add(this);
+
 			m_questPlayer.Out.SendQuestListUpdate();
 		}
 
