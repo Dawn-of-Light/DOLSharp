@@ -56,18 +56,24 @@ namespace DOL.GS
 
             if (GameServer.ServerRules.IsSameRealm(this, player, true))
             {
-                if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Friendly2");
-                else aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Friendly1");
+                if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client, 
+                    "GameNPC.GetAggroLevelString.Friendly2");
+                else aggroLevelString = LanguageMgr.GetTranslation(player.Client, 
+                    "GameNPC.GetAggroLevelString.Friendly1");
             }
             else if (aggroBrain != null && aggroBrain.AggroLevel > 0)
             {
-                if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Aggressive2");
-                else aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Aggressive1");
+                if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client, 
+                    "GameNPC.GetAggroLevelString.Aggressive2");
+                else aggroLevelString = LanguageMgr.GetTranslation(player.Client, 
+                    "GameNPC.GetAggroLevelString.Aggressive1");
             }
             else
             {
-                if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Neutral2");
-                else aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Neutral1");
+                if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client, 
+                    "GameNPC.GetAggroLevelString.Neutral2");
+                else aggroLevelString = LanguageMgr.GetTranslation(player.Client, 
+                    "GameNPC.GetAggroLevelString.Neutral1");
             }
 
             return aggroLevelString + ".";

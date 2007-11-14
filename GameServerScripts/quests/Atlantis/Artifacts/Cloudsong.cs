@@ -20,6 +20,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using DOL.Events;
+using DOL.GS.Quests;
+using DOL.Database;
 
 namespace DOL.GS.Quests.Atlantis.Artifacts
 {
@@ -27,19 +29,17 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 	/// Quest for the Cloudsong artifact.
 	/// </summary>
 	/// <author>Aredhel</author>
-	class Cloudsong : AbstractQuest
+	class Cloudsong : ArtifactQuest
 	{
 		public Cloudsong(GamePlayer questingPlayer)
 			: base(questingPlayer) { }
 
+		public Cloudsong(GamePlayer questingPlayer, DBQuest dbQuest)
+			: base(questingPlayer, dbQuest) { }
+
 		public override string Name
 		{
 			get { return "Cloudsong"; }
-		}
-
-		public override bool CheckQuestQualification(GamePlayer player)
-		{
-			return (player == null || player.Level < 40);
 		}
 
 		public override void Notify(DOLEvent e, object sender, EventArgs args)

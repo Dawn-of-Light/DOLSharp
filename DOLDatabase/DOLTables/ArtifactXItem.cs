@@ -28,7 +28,7 @@ namespace DOL.Database
     /// </summary>
     /// <author>Aredhel</author>
     [DataTable(TableName = "ArtifactXItem")]
-    class ArtifactXItem : DataObject
+    public class ArtifactXItem : DataObject
     {
         private String m_artifactID;
         private String m_itemID;
