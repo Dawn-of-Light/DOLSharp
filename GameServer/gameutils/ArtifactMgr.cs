@@ -467,6 +467,7 @@ namespace DOL.GS
             scroll.Item.Model = (pageNumbers == Book.AllPages)
                 ? artifactBook.BookModel
                 : artifactBook.ScrollModel;
+			scroll.Model = (ushort)scroll.Item.Model;
 
             return scroll;
         }
