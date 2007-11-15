@@ -137,6 +137,7 @@
     <Compile Include="DOLTables\Account_Archive.cs" />
     <Compile Include="DOLTables\Artifact.cs" />
     <Compile Include="DOLTables\ArtifactBonus.cs" />
+    <Compile Include="DOLTables\ArtifactBook.cs" />
     <Compile Include="DOLTables\ArtifactLevel.cs" />
     <Compile Include="DOLTables\ArtifactXItem.cs" />
     <Compile Include="DOLTables\BindPoint.cs">
