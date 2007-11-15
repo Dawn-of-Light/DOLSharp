@@ -79,11 +79,19 @@ namespace DOL.GS.Spells
             if (useItem == null || !ArtifactMgr.IsArtifactScroll(useItem))
                 return;
 
-            ICollection backpack = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack,
-                eInventorySlot.LastBackpack);
+			GameInventoryItem combinedScroll = GameInventoryItem.CreateFromTemplate("artifact_scroll");
+			if (combinedScroll == null)
+				return;
 
-            GameInventoryItem combinedScroll = new GameInventoryItem(useItem);
+			combinedScroll.AddOwner(player);
+			combinedScroll.Name = useItem.Name;
+			combinedScroll.Item.Name = useItem.Name;
+
+			ICollection backpack = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack,
+				eInventorySlot.LastBackpack);
+
             ArrayList removeItems = new ArrayList();
+			removeItems.Add(useItem);
             foreach (InventoryItem item in backpack)
             {
                 if (item == null)
@@ -99,10 +107,10 @@ namespace DOL.GS.Spells
             }
 
             player.Out.SendSpellEffectAnimation(player, player, 1, 0, false, 1);
-            
-            if (player.ReceiveItem(player, combinedScroll))
-                foreach (InventoryItem item in removeItems)
-                    player.Inventory.RemoveItem(item);
+
+			if (player.ReceiveItem(player, combinedScroll))
+				foreach (InventoryItem item in removeItems)
+					player.Inventory.RemoveItem(item);
         }
 
         /// <summary>
