@@ -37,7 +37,17 @@ namespace DOL.GS
         public override bool AddToWorld()
         {
             GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
-            template.AddNPCEquipment(eInventorySlot.TorsoArmor, 2230);
+			switch (Realm)
+			{
+				case 1: template.AddNPCEquipment(eInventorySlot.TorsoArmor, 2230); break;
+				case 2: template.AddNPCEquipment(eInventorySlot.TorsoArmor, 2232);
+						template.AddNPCEquipment(eInventorySlot.ArmsArmor, 2233);
+						template.AddNPCEquipment(eInventorySlot.LegsArmor, 2234);
+						template.AddNPCEquipment(eInventorySlot.HandsArmor, 2235);
+						template.AddNPCEquipment(eInventorySlot.FeetArmor, 2236);
+					break;
+				case 3: template.AddNPCEquipment(eInventorySlot.TorsoArmor, 2231); ; break;
+			}
             Inventory = template.CloseTemplate();
             Flags = 16;	// Peace flag.
             return base.AddToWorld();
@@ -76,7 +86,7 @@ namespace DOL.GS
                     "GameNPC.GetAggroLevelString.Neutral1");
             }
 
-            return aggroLevelString + ".";
+            return aggroLevelString;
         }
 
         /// <summary>
@@ -87,12 +97,11 @@ namespace DOL.GS
         public override IList GetExamineMessages(GamePlayer player)
         {
             IList list = new ArrayList(4);
-
-            list.Add(String.Format("You examine {0}. {1} is {2}.",
-                Name,
-                (Name.EndsWith("a") || Name.EndsWith("le")) ? "She" : "He",
-                GetAggroLevelString(player, false)));
-
+			list.Add(String.Format(LanguageMgr.GetTranslation(player.Client, "Researcher.GetExamineMessages.YouExamine",
+									Name, (Name.EndsWith("a") || Name.EndsWith("le")) ?
+									LanguageMgr.GetTranslation(player.Client, "Researcher.GetExamineMessages.She") :
+									LanguageMgr.GetTranslation(player.Client, "Researcher.GetExamineMessages.He"),
+									GetAggroLevelString(player, false))));
             return list;
         }
 
