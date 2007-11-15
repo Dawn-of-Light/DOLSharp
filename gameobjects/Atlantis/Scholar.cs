@@ -231,6 +231,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="artifact"></param>
+		/// <param name="book"></param>
 		/// <returns></returns>
 		private bool PlayerHasBook(GamePlayer player, Artifact artifact, ref InventoryItem book)
 		{
@@ -242,7 +243,7 @@ namespace DOL.GS
 				if (item == null || !ArtifactMgr.IsArtifactBook(item))
 					continue;
 
-                if (ArtifactMgr.GetArtifactFromBookID(item.Name).ArtifactID == artifact.ArtifactID)
+                if (ArtifactMgr.GetArtifactIDFromBookID(item.Name) == artifact.ArtifactID)
                 {
                     book = item;
                     return true;
@@ -257,6 +258,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="artifact"></param>
+		/// <param name="credit"></param>
 		/// <returns></returns>
 		private bool PlayerHasQuest(GamePlayer player, Artifact artifact, ref AbstractQuest credit)
 		{
