@@ -75,41 +75,34 @@ namespace DOL.GS.Spells
             if (player == null)
                 return;
 
-            InventoryItem scroll = player.UseItem;
-            if (scroll == null || !ArtifactMgr.IsArtifactScroll(scroll))
+            InventoryItem useItem = player.UseItem;
+            if (useItem == null || !ArtifactMgr.IsArtifactScroll(useItem))
                 return;
-
-            player.Inventory.RemoveItem(scroll);
 
             ICollection backpack = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack,
                 eInventorySlot.LastBackpack);
 
+            GameInventoryItem combinedScroll = new GameInventoryItem(useItem);
+            ArrayList removeItems = new ArrayList();
             foreach (InventoryItem item in backpack)
             {
                 if (item == null)
                     continue;
 
-				if (ArtifactMgr.CombineScrolls(scroll, item))
-				{
-					player.Inventory.RemoveItem(item);
-					if (ArtifactMgr.IsArtifactBook(scroll))
-						break;
-				}
+                if (ArtifactMgr.CanCombine(combinedScroll.Item, item))
+                {
+                    combinedScroll = ArtifactMgr.CombineScrolls(combinedScroll.Item, item);
+                    removeItems.Add(item);
+                    if (ArtifactMgr.IsArtifactBook(combinedScroll.Item))
+                        break;
+                }
             }
 
             player.Out.SendSpellEffectAnimation(player, player, 1, 0, false, 1);
-
-            eInventorySlot slot = player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack,
-                eInventorySlot.LastBackpack);
-
-            if (slot != eInventorySlot.Invalid)
-                player.Inventory.AddItem(slot, scroll);
-            else
-            {
-                player.Out.SendMessage(String.Format("Your backpack is full. {0} is dropped on the ground.",
-                    player.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                DropScroll(player, scroll);
-            }
+            
+            if (player.ReceiveItem(player, combinedScroll))
+                foreach (InventoryItem item in removeItems)
+                    player.Inventory.RemoveItem(item);
         }
 
         /// <summary>
