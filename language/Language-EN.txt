@@ -484,7 +484,13 @@ Scripts.Player.Housing.PorchNone:			This house does not have a porch!
 Scripts.Player.Housing.PorchNotItem:			This is not a porch item!
 Scripts.Player.Housing.TransferToGuild:			Do you want to transfer this house to {0}?
 
-# Styles
+# GAMEOBJECTS/ATLANTIS
+# /Researcher
+Researcher.GetExamineMessages.YouExamine:		You examine {0}. {1} is {2}.
+Researcher.GetExamineMessages.She:			She
+Researcher.GetExamineMessages.He:			He
+
+# STYLES
 # /StyleProcessor
 StyleProcessor.ExecuteStyle.BackStrike:			You inflict a critical strike in the back of your target 
 StyleProcessor.ExecuteStyle.ExecuteFail:		You fail to execute your {0} perfectly!

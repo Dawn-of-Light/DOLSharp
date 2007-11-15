@@ -411,7 +411,13 @@ GamePlayer.Whisper.SelectTarget:			Wählt jemanden aus, dem Ihr etwas zuflüstern 
 
 # GAMESTAICITEM
 GameStaticItem.GetName.Article1:			{0}
-GameStaticItem.GetName.Article2:			{0}		
+GameStaticItem.GetName.Article2:			{0}
+
+# GAMEOBJECTS/ATLANTIS
+# /Researcher
+Researcher.GetExamineMessages.YouExamine:		Es interessiert Euch {0}. {1} steht Euch {2} gegenüber.
+Researcher.GetExamineMessages.She:			Sie
+Researcher.GetExamineMessages.He:			Er
 
 # HOUSING
 HouseEnterLeave.TooFarAway:				Ihr seid zu weit von diesem Haus entfernt, um es zu betreten!
@@ -493,7 +499,7 @@ Scripts.Player.ViewReport.ReportDeleted:		Bericht {0} wurde gelöscht.
 Scripts.Player.ViewReport.UnknownCommand:		Das ist kein gültiger Befehl. 
 Scripts.Player.VeiwReport.Usage:			Verwendet: 
 
-# Styles
+# STYLES
 # /StyleProcessor
 StyleProcessor.ExecuteStyle.BackStrike:			Ihr führt einen kritischen Schlag auf den Rücken Eures Zieles aus.
 StyleProcessor.ExecuteStyle.ExecuteFail:		Ihr führt den Kampfstil "{0}" nicht richtig aus!
