@@ -40,10 +40,11 @@ namespace DOL.GS
         /// </summary>
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static ArrayList m_artifacts;
+        private static Hashtable m_artifacts;
         private static Hashtable m_artifactVersions;
+        private static Hashtable m_artifactBooks;
 
-        public enum Book { Page1 = 0x1, Page2 = 0x2, Page3 = 0x4, AllPages = 0x7 };
+        public enum Book { NoPage = 0x0, Page1 = 0x1, Page2 = 0x2, Page3 = 0x4, AllPages = 0x7 };
 
 
         public static bool Init()
@@ -57,10 +58,9 @@ namespace DOL.GS
         public static bool LoadArtifacts()
         {
             DataObject[] dbo = GameServer.Database.SelectAllObjects(typeof(Artifact));
-			m_artifacts = new ArrayList();
-
-            for (int i = 0; i < dbo.Length; i++)
-                m_artifacts.Add(dbo[i]);
+			m_artifacts = new Hashtable();
+            foreach (Artifact artifact in dbo)
+                m_artifacts.Add(artifact.ArtifactID, artifact);
 
             dbo = GameServer.Database.SelectAllObjects(typeof(ArtifactXItem));
             m_artifactVersions = new Hashtable();
@@ -76,6 +76,11 @@ namespace DOL.GS
                 versionList.Add(artifactVersion);
             }
 
+            dbo = GameServer.Database.SelectAllObjects(typeof(ArtifactBook));
+            m_artifactBooks = new Hashtable();
+            foreach (ArtifactBook artifactBook in dbo)
+                m_artifactBooks[artifactBook.ArtifactID] = artifactBook;
+
             log.Info(String.Format("{0} artifacts loaded", m_artifacts.Count));
             return true;
 		}
@@ -89,11 +94,14 @@ namespace DOL.GS
         {
             ArrayList artifacts = new ArrayList();
 
-            lock (m_artifacts.SyncRoot)
+            if (zone != null)
             {
-                foreach (Artifact artifact in m_artifacts)
-                    if (artifact.Zone == zone)
-                        artifacts.Add(artifact);
+                lock (m_artifacts.SyncRoot)
+                {
+                    foreach (DictionaryEntry entry in m_artifacts)
+                        if ((entry.Value as Artifact).Zone == zone)
+                            artifacts.Add(entry.Value);
+                }
             }
 
             return artifacts;
@@ -108,17 +116,20 @@ namespace DOL.GS
 		{
             ArrayList artifacts = new ArrayList();
 
-			lock (m_artifacts.SyncRoot)
-			{
-				String[] scholarIDs;
-				foreach (Artifact artifact in m_artifacts)
-				{
-					scholarIDs = artifact.ScholarID.Split(';');
-					foreach (String id in scholarIDs)
-						if (String.Format("Scholar {0}", id) == scholarID)
-							artifacts.Add(artifact);
-				}
-			}
+            if (scholarID != null)
+            {
+                lock (m_artifacts.SyncRoot)
+                {
+                    String[] scholarIDs;
+                    foreach (DictionaryEntry entry in m_artifacts)
+                    {
+                        scholarIDs = (entry.Value as Artifact).ScholarID.Split(';');
+                        foreach (String id in scholarIDs)
+                            if (String.Format("Scholar {0}", id) == scholarID)
+                                artifacts.Add(entry.Value);
+                    }
+                }
+            }
 
 			return artifacts;
 		}
@@ -150,6 +161,9 @@ namespace DOL.GS
         public static Hashtable GetArtifactVersionsFromClass(String artifactID, 
             eCharacterClass charClass)
         {
+            if (artifactID == null)
+                return null;
+
             ArrayList allVersions = GetArtifactVersions(artifactID);
             Hashtable classVersions = new Hashtable();
 
@@ -201,11 +215,14 @@ namespace DOL.GS
 		/// <returns></returns>
 		private static String GetQuestIDFromArtifactID(String artifactID)
 		{
+            if (artifactID == null)
+                return null;
+
 			lock (m_artifacts.SyncRoot)
 			{
-				foreach (Artifact artifact in m_artifacts)
-					if (artifact.ArtifactID == artifactID)
-						return artifact.QuestID;
+                foreach (DictionaryEntry entry in m_artifacts)
+					if ((entry.Value as Artifact).ArtifactID == artifactID)
+                        return (entry.Value as Artifact).QuestID;
 			}
 
 			return null;
@@ -218,7 +235,10 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static Type GetQuestTypeFromArtifactID(String artifactID)
 		{
-			String questID = ArtifactMgr.GetQuestIDFromArtifactID(artifactID);
+            if (artifactID == null)
+                return null;
+
+			String questID = GetQuestIDFromArtifactID(artifactID);
 			if (questID == null)
 				return null;
 
@@ -244,7 +264,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static bool GrantArtifactCredit(GamePlayer player, String artifactID)
 		{
-			if (player == null)
+			if (player == null || artifactID == null)
 				return false;
 
 			Type questType = GetQuestTypeFromArtifactID(artifactID);
@@ -268,59 +288,31 @@ namespace DOL.GS
 
 		#region Scrolls & Books
 
-		/// <summary>
+        /// <summary>
         /// Find the matching artifact for this book.
         /// </summary>
-        /// <param name="bookID">The title of the book.</param>
-        /// <returns>The artifact that matches this book.</returns>
-        public static Artifact GetArtifactFromBookID(String bookID)
+        /// <param name="bookID"></param>
+        /// <returns></returns>
+        public static String GetArtifactIDFromBookID(String bookID)
         {
-            ArrayList artifacts = new ArrayList();
+            if (bookID == null)
+                return null;
 
-            lock (m_artifacts.SyncRoot)
+            String artifactID = null;
+            lock (m_artifactBooks.SyncRoot)
             {
-                foreach (Artifact artifact in m_artifacts)
-                    if (artifact.BookID == bookID)
-                        return artifact;
+                foreach (DictionaryEntry entry in m_artifactBooks)
+                {
+                    if ((entry.Value as ArtifactBook).BookID == bookID)
+                    {
+                        artifactID = (entry.Value as ArtifactBook).ArtifactID;
+                        break;
+                    }
+                }
             }
 
-            return null;
+            return artifactID;
         }
-
-		/// <summary>
-		/// Get the artifact for this scroll.
-		/// </summary>
-		/// <param name="scrollID"></param>
-		/// <returns></returns>
-		private static Artifact GetArtifactFromScrollID(String scrollID)
-		{
-			lock (m_artifacts.SyncRoot)
-			{
-                foreach (Artifact artifact in m_artifacts)
-					if (artifact.ScrollID == scrollID)
-						return artifact;
-			}
-
-			return null;
-		}
-
-		/// <summary>
-		/// Returns the scroll's ID for this item or null, if it isn't
-		/// a valid scroll.
-		/// </summary>
-		/// <param name="item"></param>
-		/// <returns></returns>
-		private static String GetScrollIDFromItem(InventoryItem item)
-		{
-			if (item == null)
-				return null;
-
-			String[] parts = item.Name.Split(',');
-			if (parts.Length != 2)
-				return null;
-
-			return parts[0];
-		}
 
 		/// <summary>
 		/// Check whether these 2 items can be combined.
@@ -330,132 +322,175 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static bool CanCombine(InventoryItem item1, InventoryItem item2)
 		{
-			if (!IsArtifactScroll(item1) || !IsArtifactScroll(item2))
-				return false;
+            String artifactID1 = null;
+            Book pageNumbers1 = GetPageNumbers(item1, ref artifactID1);
+            if (pageNumbers1 == Book.NoPage || pageNumbers1 == Book.AllPages)
+                return false;
 
-			if (GetScrollIDFromItem(item1) != GetScrollIDFromItem(item2))
-				return false;
+            String artifactID2 = null;
+            Book pageNumbers2 = GetPageNumbers(item2, ref artifactID2);
+            if (pageNumbers2 == Book.NoPage || pageNumbers2 == Book.AllPages)
+                return false;
 
-			return ((item1.Flags & item2.Flags) == 0);
+            if (artifactID1 != artifactID2 ||
+                (Book)((int)pageNumbers1 & (int)pageNumbers2) != Book.NoPage)
+                return false;
+
+            return true;
 		}
+
+        /// <summary>
+        /// Check which scroll pages are in this item.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="artifactID"></param>
+        /// <returns></returns>
+        public static Book GetPageNumbers(InventoryItem item, ref String artifactID)
+        {
+            if (item.Object_Type != (int)eObjectType.Magical
+                || item.Item_Type != (int)eInventorySlot.FirstBackpack)
+                return Book.NoPage;
+
+            lock (m_artifactBooks.SyncRoot)
+            {
+                ArtifactBook artifactBook;
+                foreach (DictionaryEntry entry in m_artifactBooks)
+                {
+                    artifactBook = (ArtifactBook) entry.Value;
+                    artifactID = artifactBook.ArtifactID;
+                    if (item.Name == artifactBook.Scroll1)
+                        return Book.Page1;
+                    else if (item.Name == artifactBook.Scroll2)
+                        return Book.Page2;
+                    else if (item.Name == artifactBook.Scroll3)
+                        return Book.Page3;
+                    else if (item.Name == artifactBook.Scroll12)
+                        return (Book)((int)Book.Page1 | (int)Book.Page2);
+                    else if (item.Name == artifactBook.Scroll13)
+                        return (Book)((int)Book.Page1 | (int)Book.Page3);
+                    else if (item.Name == artifactBook.Scroll23)
+                        return (Book)((int)Book.Page2 | (int)Book.Page3);
+                    else if (item.Name == artifactBook.BookID)
+                        return Book.AllPages;
+                }
+            }
+
+            return Book.NoPage;
+        }
 
 		/// <summary>
 		/// Whether or not the item is an artifact book.
+        /// CHECK IF THIS METHOD IS REALLY NEEDED.
 		/// </summary>
 		/// <param name="item"></param>
 		/// <returns></returns>
 		public static bool IsArtifactBook(InventoryItem item)
 		{
-			if (item.Object_Type != (int)eObjectType.Magical
-				|| item.Item_Type != (int)eInventorySlot.FirstBackpack
-				|| item.Flags != (int)Book.AllPages)
-				return false;
-
-            return (GetArtifactFromBookID(item.Name) != null);
+            String artifactID = null;
+            return (GetPageNumbers(item, ref artifactID) == Book.AllPages);
 		}
 
 		/// <summary>
 		/// Whether or not the item is an artifact scroll.
+        /// CHECK IF THIS METHOD IS REALLY NEEDED.
 		/// </summary>
 		/// <param name="item"></param>
 		/// <returns></returns>
 		public static bool IsArtifactScroll(InventoryItem item)
 		{
-			if (item.Object_Type != (int)eObjectType.Magical
-				|| item.Item_Type != (int)eInventorySlot.FirstBackpack
-				|| (item.Flags & (int)Book.AllPages) == 0
-				|| item.Flags == (int)Book.AllPages)
-				return false;
-
-			String[] parts = item.Name.Split(',');
-
-			if (parts.Length != 2)
-				return false;
-
-            return (GetArtifactFromScrollID(parts[0]) != null);
+            String artifactID = null;
+            Book pageNumbers = GetPageNumbers(item, ref artifactID);
+            return (pageNumbers != Book.NoPage && pageNumbers != Book.AllPages);
 		}
 
 		/// <summary>
 		/// Combine 2 scrolls.
 		/// </summary>
-		/// <param name="scroll"></param>
-		/// <param name="item"></param>
+		/// <param name="scroll1"></param>
+		/// <param name="scroll2"></param>
 		/// <returns></returns>
-		public static bool CombineScrolls(InventoryItem scroll, InventoryItem item)
+		public static GameInventoryItem CombineScrolls(InventoryItem scroll1, InventoryItem scroll2)
 		{
-			if (!CanCombine(scroll, item))
-				return false;
+			if (!CanCombine(scroll1, scroll2))
+				return null;
 
-			String scrollID = ArtifactMgr.GetScrollIDFromItem(scroll);
-			if (scrollID == null)
-				return false;
+            String artifactID = null;
+            Book combinedPages = (Book)((int)GetPageNumbers(scroll1, ref artifactID) |
+                (int)GetPageNumbers(scroll2, ref artifactID));
 
-			Artifact artifact = ArtifactMgr.GetArtifactFromScrollID(scrollID);
-			if (artifact == null)
-				return false;
-
-			scroll.Flags |= item.Flags;
-			if ((scroll.Flags & (int)Book.AllPages) == (int)Book.AllPages)
-				scroll.Model = 500;
-
-			scroll.Name = CreateScrollName(scroll, artifact);
-			return true;
+            return CreatePages(artifactID, combinedPages);
 		}
 
-		/// <summary>
-        /// Create a scroll from a particular book.
+        /// <summary>
+        /// Create a scroll or book containing the given page numbers.
         /// </summary>
-        /// <param name="bookID">Title of the book the scroll is a part of.</param>
-        /// <param name="pageNumber">Scroll page number (1-3).</param>
-        /// <returns>An item that can be picked up by a player (or null).</returns>
-        public static GameInventoryItem CreateScroll(String bookID, int pageNumber)
+        /// <param name="artifactID"></param>
+        /// <param name="pageNumbers"></param>
+        /// <returns></returns>
+        private static GameInventoryItem CreatePages(String artifactID, Book pageNumbers)
         {
-			if (pageNumber < 1 || pageNumber > 3)
-				return null;
+            if (artifactID == null || pageNumbers == Book.NoPage)
+                return null;
 
-            Artifact artifact = GetArtifactFromBookID(bookID);
-			if (artifact == null)
-				return null;
+            ArtifactBook artifactBook;
+            lock (m_artifactBooks.SyncRoot)
+                artifactBook = (ArtifactBook)m_artifactBooks[artifactID];
+
+            if (artifactBook == null)
+                return null;
 
             GameInventoryItem scroll = GameInventoryItem.CreateFromTemplate("artifact_scroll");
-            if (scroll != null)
+            if (scroll == null)
+                return null;
+
+            String scrollTitle = null;
+            switch (pageNumbers)
             {
-                scroll.Item.Flags = 1 << (pageNumber - 1);
-				scroll.Item.Name = CreateScrollName(scroll.Item, artifact);
-				scroll.Name = scroll.Item.Name;
+                case Book.Page1: scrollTitle = artifactBook.Scroll1;
+                    break;
+                case Book.Page2: scrollTitle = artifactBook.Scroll2;
+                    break;
+                case Book.Page3: scrollTitle = artifactBook.Scroll3;
+                    break;
+                case (Book)((int)Book.Page1 | (int)Book.Page2): scrollTitle = artifactBook.Scroll12;
+                    break;
+                case (Book)((int)Book.Page1 | (int)Book.Page3): scrollTitle = artifactBook.Scroll13;
+                    break;
+                case (Book)((int)Book.Page2 | (int)Book.Page3): scrollTitle = artifactBook.Scroll23;
+                    break;
+                case Book.AllPages: scrollTitle = artifactBook.BookID;
+                    break;
             }
+
+            scroll.Name = scrollTitle;
+            scroll.Item.Name = scrollTitle;
+            scroll.Item.Model = (pageNumbers == Book.AllPages)
+                ? artifactBook.BookModel
+                : artifactBook.ScrollModel;
 
             return scroll;
         }
 
 		/// <summary>
-		/// Creates the name of the scroll (or book).
-		/// </summary>
-		/// <param name="scroll">Scroll to get the name for.</param>
-		/// <param name="artifact">The ID of the artifact this scroll is intended for.</param>
-		/// <returns>The ingame name.</returns>
-		private static String CreateScrollName(InventoryItem scroll, Artifact artifact)
-		{
-			switch (scroll.Flags & (int)Book.AllPages)
-			{
-				case (int)Book.AllPages:
-					return artifact.BookID;
-				case (int)Book.Page1:
-					return artifact.ScrollID + ", page 1 of 3";
-				case (int)Book.Page2:
-                    return artifact.ScrollID + ", page 2 of 3";
-				case (int)Book.Page3:
-                    return artifact.ScrollID + ", page 3 of 3";
-				case (int)Book.Page1 | (int)Book.Page2:
-                    return artifact.ScrollID + ", pages 1 and 2";
-				case (int)Book.Page1 | (int)Book.Page3:
-                    return artifact.ScrollID + ", pages 1 and 3";
-				case (int)Book.Page2 | (int)Book.Page3:
-                    return artifact.ScrollID + ", pages 2 and 3";
-				default:
-					return "<undefined>";
-			}
-		}
+        /// Create a scroll from a particular book.
+        /// </summary>
+        /// <param name="artifactID">The artifact's ID.</param>
+        /// <param name="pageNumber">Scroll page number (1-3).</param>
+        /// <returns>An item that can be picked up by a player (or null).</returns>
+        public static GameInventoryItem CreateScroll(String artifactID, int pageNumber)
+        {
+			if (pageNumber < 1 || pageNumber > 3)
+				return null;
+
+            switch (pageNumber)
+            {
+                case 1: return CreatePages(artifactID, Book.Page1);
+                case 2: return CreatePages(artifactID, Book.Page2);
+                case 3: return CreatePages(artifactID, Book.Page3);
+            }
+
+            return null;
+        }
 
 		#endregion
     }
