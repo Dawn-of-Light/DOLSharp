@@ -43,7 +43,7 @@ namespace DOL.GS
 			//as standard! We want our mobs/items etc. at
 			//the same startingspots when we restart!
 			m_saveInDB = false;
-			m_Name = LanguageMgr.GetTranslation(player.Client, "GameLiving.ReceiveItem", player.Name);
+			m_Name = LanguageMgr.GetTranslation(player.Client, "GameGravestone.GameGravestone.Grave", player.Name);
 			m_Heading = player.Heading;
 			m_X=player.X;
 			m_Y=player.Y;
