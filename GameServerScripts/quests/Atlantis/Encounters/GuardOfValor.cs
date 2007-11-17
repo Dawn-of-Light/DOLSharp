@@ -23,36 +23,26 @@ using DOL.Events;
 using DOL.GS.Quests;
 using DOL.Database;
 
-namespace DOL.GS.Quests.Atlantis.Artifacts
+namespace DOL.GS.Quests.Atlantis.Encounters
 {
 	/// <summary>
-	/// Quest for the Cloudsong artifact.
+	/// Encounter for the Guard of Valor artifact.
 	/// </summary>
 	/// <author>Aredhel</author>
-	class Cloudsong : ArtifactQuest
+	public class GuardOfValor : ArtifactEncounter
 	{
-		public Cloudsong()
-			: base() { }
+		public GuardOfValor(GamePlayer questingPlayer)
+			: base(questingPlayer) { }
 
-		public Cloudsong(Type encounterType)
-			: base(encounterType) { }
-
-		/// <summary>
-		/// This constructor is needed to load quests from the DB.
-		/// </summary>
-		/// <param name="questingPlayer"></param>
-		/// <param name="dbQuest"></param>
-		public Cloudsong(GamePlayer questingPlayer, DBQuest dbQuest)
+		public GuardOfValor(GamePlayer questingPlayer, DBQuest dbQuest)
 			: base(questingPlayer, dbQuest) { }
 
+		/// <summary>
+		/// Name of the encounter.
+		/// </summary>
 		public override string Name
 		{
-			get { return "Cloudsong"; }
-		}
-
-		public override void Notify(DOLEvent e, object sender, EventArgs args)
-		{
-			// Need to do anything here?
+			get { return "A Gift of Love Encounter"; }
 		}
 	}
 }

@@ -101,7 +101,7 @@ namespace DOL.GS.Spells
                 {
                     combinedScroll = ArtifactMgr.CombineScrolls(combinedScroll.Item, item);
                     removeItems.Add(item);
-                    if (ArtifactMgr.IsArtifactBook(combinedScroll.Item))
+                    if (ArtifactMgr.GetArtifactFromBook(combinedScroll.Item) != null)
                         break;
                 }
             }
@@ -111,22 +111,6 @@ namespace DOL.GS.Spells
 			if (player.ReceiveItem(player, combinedScroll))
 				foreach (InventoryItem item in removeItems)
 					player.Inventory.RemoveItem(item);
-        }
-
-        /// <summary>
-        /// Drop a scroll to the ground.
-        /// </summary>
-        /// <param name="owner"></param>
-        /// <param name="scroll"></param>
-        private static void DropScroll(GamePlayer owner, InventoryItem scroll)
-        {
-            GameInventoryItem loot = new GameInventoryItem(scroll);
-            loot.AddOwner(owner);
-            loot.X = owner.X;
-            loot.Y = owner.Y;
-            loot.Z = owner.Z;
-            loot.Heading = owner.Heading;
-            loot.CurrentRegion = owner.CurrentRegion;
         }
     }
 }

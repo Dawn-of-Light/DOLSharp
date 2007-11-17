@@ -77,7 +77,8 @@ namespace DOL.GS
 
                 if (artifacts.Count > 0)
                 {
-                    String bookID = (artifacts[Util.Random(artifacts.Count-1)] as Artifact).BookID;
+					String artifactID = 
+						(artifacts[Util.Random(artifacts.Count-1)] as Artifact).ArtifactID;
                     int pageNumber;
 
                     if (mob.Level >= 55)
@@ -89,7 +90,7 @@ namespace DOL.GS
 
                     ItemTemplate loot = new ItemTemplate();
                     loot.Model = 488;
-                    loot.Name = "scroll|" + bookID + "|" + pageNumber;
+                    loot.Name = "scroll|" + artifactID + "|" + pageNumber;
                     loot.Level = 35;
 
                     lootList.AddFixed(loot, 1);

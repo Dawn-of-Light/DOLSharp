@@ -3446,9 +3446,9 @@ namespace DOL.GS
                     else if (lootTemplate.Name.StartsWith("scroll|"))
                     {
                         String[] scrollData = lootTemplate.Name.Split('|');
-                        String bookID = scrollData[1];
+                        String artifactID = scrollData[1];
                         int pageNumber = UInt16.Parse(scrollData[2]);
-                        loot = ArtifactMgr.CreateScroll(bookID, pageNumber);
+                        loot = ArtifactMgr.CreateScroll(artifactID, pageNumber);
                         loot.X = X;
                         loot.Y = Y;
                         loot.Z = Z;
