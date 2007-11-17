@@ -25,6 +25,8 @@ using System.Collections;
 using DOL.GS.Quests;
 using log4net;
 using System.Reflection;
+using DOL.Events;
+using DOL.GS.Quests.Atlantis;
 
 namespace DOL.GS
 {
@@ -127,8 +129,8 @@ namespace DOL.GS
 
             if (subject != null)
             {
-                HandOutArtifact(player, subject);
-                return true;
+				GiveArtifactQuest(player, subject);
+				return true;
             }
 
             // Talking about versions?
@@ -137,79 +139,160 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// If player has the book in his backpack and the quest completed
-		/// in his log, hand out the artifact, else turn him down.
+		/// Give the artifact quest to the player.
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="artifact"></param>
-		private void HandOutArtifact(GamePlayer player, Artifact artifact)
+		private void GiveArtifactQuest(GamePlayer player, Artifact artifact)
 		{
-            InventoryItem book = null;
-            AbstractQuest credit= null;
+			if (artifact == null)
+				return;
 
-            // No credit/already activated/no book.
+			Type encounterType = ArtifactMgr.GetQuestType(artifact.EncounterID);
+			Type questType = ArtifactMgr.GetQuestType(artifact.QuestID);
 
-            if (!PlayerHasQuest(player, artifact, ref credit) ||
-                credit.GetCustomProperty("artifact") == "true" ||
-                (credit.GetCustomProperty("book") != "true" && !PlayerHasBook(player, artifact, ref book)))
-            {
-                String reply = String.Format("{0}, I cannot activate that artifact for you. ", player.Name);
-                reply += "This could be because you have already activated it, or you are in the ";
-                reply += "process of activating it, or you may not have completed everything ";
-                reply += "you need to do. Remember that the activation process requires you to ";
-                reply += "have credit for the artifact's encounter, as well as the artifact's ";
-                reply += "complete book of scrolls.";
-                SayTo(player, eChatLoc.CL_PopupWindow, reply);
-                return;
-            }
-
-            Hashtable versions = null;
-            if (!PlayerCanUseArtifact(player, artifact, ref versions))
-            {
-                // TODO: Player can not use this artifact, how is that handled?
-                return;
-            }
-
-            // If we haven't received the book yet, we will take it from the
-            // player's backpack now.
-
-            if (credit.GetCustomProperty("book") != "true")
-            {
-                credit.SetCustomProperty("book", "true");
-                player.Inventory.RemoveItem(book);
-            }
-
-			IDictionaryEnumerator versionEnum = versions.GetEnumerator();
-			if (versions.Count == 1)
+			if (questType == null)
 			{
-				versionEnum.MoveNext();
-                GameInventoryItem artifactItem = 
-                    GameInventoryItem.CreateFromTemplate((ItemTemplate)versionEnum.Value);
-				player.ReceiveItem(this, artifactItem);
-                credit.SetCustomProperty("artifact", "true");
-                return;
+				log.Warn(String.Format("Can't find quest type for {0}", artifact.QuestID));
+				return;
 			}
 
-            // TODO: Check on live.
+			ArtifactQuest artifactQuest = (ArtifactQuest)Activator.CreateInstance(questType,
+				new object[] { encounterType });
 
-            int numVersions = versions.Count;
-            String question = "Would you like ";
-            while (versionEnum.MoveNext())
-            {
-                if (numVersions < versions.Count)
-                {
-                    if (versions.Count > 2)
-                        question += (numVersions == 1) ? ", or " : ", ";
-                    else
-                        question += (numVersions == 1) ? " or " : " ";
-                }
-                question += String.Format("a [{0}] version", versionEnum.Value);
-                --numVersions;
-            }
+			if (artifactQuest.CheckQuestQualification(player))
+			{
+				Hashtable versions = null;
+				if (!PlayerCanUseArtifact(player, artifact, ref versions))
+				{
+					artifactQuest.DeclineQuest(this);
+					return;
+				}
 
-            question += "?";
-            SayTo(player, eChatLoc.CL_PopupWindow, question);
+				artifactQuest.QuestPlayer = player;
+				artifactQuest.Step = 1;
+				artifactQuest.SaveIntoDatabase();
+				artifactQuest.StartQuest(this);
+				player.AddQuest(artifactQuest);
+				artifactQuest.Notify(GamePlayerEvent.AcceptQuest, player, new EventArgs());
+			}
+			else
+			{
+				String reply = String.Format("{0}, I cannot activate that artifact for you. ", player.Name);
+				reply += "This could be because you have already activated it, or you are in the ";
+				reply += "process of activating it, or you may not have completed everything ";
+				reply += "you need to do. Remember that the activation process requires you to ";
+				reply += "have credit for the artifact's encounter, as well as the artifact's ";
+				reply += "complete book of scrolls.";
+				TurnTo(player);
+				SayTo(player, eChatLoc.CL_PopupWindow, reply);
+				return;
+			}
 		}
+
+		/// <summary>
+		/// Invoked when scholar receives an item.
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public override bool ReceiveItem(GameLiving source, InventoryItem item)
+		{
+			GamePlayer player = source as GamePlayer;
+			if (player != null)
+			{
+				Artifact artifact = ArtifactMgr.GetArtifactFromBook(item);
+				if (artifact != null)
+				{
+					Type questType = ArtifactMgr.GetQuestType(artifact.QuestID);
+					AbstractQuest quest;
+					if (questType != null && (quest = player.IsDoingQuest(questType)) != null)
+					{
+						(quest as ArtifactQuest).EndQuest(this);
+						player.Inventory.RemoveItem(item);
+						player.RemoveEncounterCredit(ArtifactMgr.GetQuestType(artifact.EncounterID));
+						return true;
+					}
+				}
+			}
+
+			return base.ReceiveItem(source, item);
+		}
+
+		///// <summary>
+		///// If player has the book in his backpack and the quest completed
+		///// in his log, hand out the artifact, else turn him down.
+		///// </summary>
+		///// <param name="player"></param>
+		///// <param name="artifact"></param>
+		//private void HandOutArtifact(GamePlayer player, Artifact artifact)
+		//{
+		//    InventoryItem book = null;
+		//    AbstractQuest credit= null;
+
+		//    // No credit/already activated/no book.
+
+		//    if (!PlayerHasQuest(player, artifact, ref credit) ||
+		//        credit.GetCustomProperty("artifact") == "true" ||
+		//        (credit.GetCustomProperty("book") != "true" && !PlayerHasBook(player, artifact, ref book)))
+		//    {
+		//        String reply = String.Format("{0}, I cannot activate that artifact for you. ", player.Name);
+		//        reply += "This could be because you have already activated it, or you are in the ";
+		//        reply += "process of activating it, or you may not have completed everything ";
+		//        reply += "you need to do. Remember that the activation process requires you to ";
+		//        reply += "have credit for the artifact's encounter, as well as the artifact's ";
+		//        reply += "complete book of scrolls.";
+		//        SayTo(player, eChatLoc.CL_PopupWindow, reply);
+		//        return;
+		//    }
+
+		//    Hashtable versions = null;
+		//    if (!PlayerCanUseArtifact(player, artifact, ref versions))
+		//    {
+		//        // TODO: Player can not use this artifact, how is that handled?
+		//        return;
+		//    }
+
+		//    // If we haven't received the book yet, we will take it from the
+		//    // player's backpack now.
+
+		//    if (credit.GetCustomProperty("book") != "true")
+		//    {
+		//        credit.SetCustomProperty("book", "true");
+		//        player.Inventory.RemoveItem(book);
+		//    }
+
+		//    IDictionaryEnumerator versionEnum = versions.GetEnumerator();
+		//    if (versions.Count == 1)
+		//    {
+		//        versionEnum.MoveNext();
+		//        GameInventoryItem artifactItem = 
+		//            GameInventoryItem.CreateFromTemplate((ItemTemplate)versionEnum.Value);
+		//        player.ReceiveItem(this, artifactItem);
+		//        credit.SetCustomProperty("artifact", "true");
+		//        return;
+		//    }
+
+		//    // TODO: Check on live.
+
+		//    int numVersions = versions.Count;
+		//    String question = "Would you like ";
+		//    while (versionEnum.MoveNext())
+		//    {
+		//        if (numVersions < versions.Count)
+		//        {
+		//            if (versions.Count > 2)
+		//                question += (numVersions == 1) ? ", or " : ", ";
+		//            else
+		//                question += (numVersions == 1) ? " or " : " ";
+		//        }
+		//        question += String.Format("a [{0}] version", versionEnum.Value);
+		//        --numVersions;
+		//    }
+
+		//    question += "?";
+		//    SayTo(player, eChatLoc.CL_PopupWindow, question);
+		//}
 
         /// <summary>
         /// Check if the player can actually use the artifact.
@@ -226,54 +309,31 @@ namespace DOL.GS
             return (versions.Count > 0);
         }
 
-		/// <summary>
-		/// Check if player has the book for this artifact.
-		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="artifact"></param>
-		/// <param name="book"></param>
-		/// <returns></returns>
-		private bool PlayerHasBook(GamePlayer player, Artifact artifact, ref InventoryItem book)
-		{
-			ICollection backpack = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack,
-				eInventorySlot.LastBackpack);
+		///// <summary>
+		///// Check if player has the book for this artifact.
+		///// </summary>
+		///// <param name="player"></param>
+		///// <param name="artifact"></param>
+		///// <param name="book"></param>
+		///// <returns></returns>
+		//private bool PlayerHasBook(GamePlayer player, Artifact artifact, ref InventoryItem book)
+		//{
+		//    ICollection backpack = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack,
+		//        eInventorySlot.LastBackpack);
 
-			foreach (InventoryItem item in backpack)
-			{
-				if (item == null || !ArtifactMgr.IsArtifactBook(item))
-					continue;
+		//    foreach (InventoryItem item in backpack)
+		//    {
+		//        if (item == null || !ArtifactMgr.IsArtifactBook(item))
+		//            continue;
 
-                if (ArtifactMgr.GetArtifactIDFromBookID(item.Name) == artifact.ArtifactID)
-                {
-                    book = item;
-                    return true;
-                }
-			}
+		//        if (ArtifactMgr.GetArtifactIDFromBookID(item.Name) == artifact.ArtifactID)
+		//        {
+		//            book = item;
+		//            return true;
+		//        }
+		//    }
 
-			return false;
-		}
-
-		/// <summary>
-		/// Check if player has the quest completed for this artifact.
-		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="artifact"></param>
-		/// <param name="credit"></param>
-		/// <returns></returns>
-		private bool PlayerHasQuest(GamePlayer player, Artifact artifact, ref AbstractQuest credit)
-		{
-            IList finishedQuests = player.QuestListFinished;
-            
-            foreach (AbstractQuest quest in finishedQuests)
-            {
-                if (quest.GetType() == ArtifactMgr.GetQuestTypeFromArtifactID(artifact.ArtifactID))
-                {
-                    credit = quest;
-                    return true;
-                }
-            }
-
-			return false;
-		}
+		//    return false;
+		//}
     }
 }

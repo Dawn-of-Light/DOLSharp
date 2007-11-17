@@ -740,6 +740,8 @@
     <Compile Include="propertycalc\SpellLevelCalculator.cs" />
     <Compile Include="propertycalc\WaterSpeedCalculator.cs" />
     <Compile Include="propertycalc\WeaponSkillCalculator.cs" />
+    <Compile Include="quests\Atlantis\ArtifactEncounter.cs" />
+    <Compile Include="quests\Atlantis\ArtifactQuest.cs" />
     <Compile Include="quests\Missions\AbstractMission.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -807,7 +809,6 @@
     <Compile Include="behaviour\Requirements\EquippedItemRequirement.cs" />
     <Compile Include="behaviour\Requirements\GuildRequirement.cs" />
     <Compile Include="behaviour\Requirements\RealmPointsRequirement.cs" />
-    <Compile Include="quests\Quests\ArtifactQuest.cs" />
     <Compile Include="quests\Quests\Requirements\QuestGivableRequirement.cs" />
     <Compile Include="quests\Quests\Requirements\QuestPendingRequirement.cs" />
     <Compile Include="quests\Quests\Requirements\QuestCompletedRequirement.cs" />
