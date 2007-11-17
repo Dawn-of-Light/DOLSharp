@@ -34,8 +34,8 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		public Cloudsong()
 			: base() { }
 
-		public Cloudsong(Type encounterType)
-			: base(encounterType) { }
+		public Cloudsong(Artifact artifact, Type encounterType)
+			: base(artifact, encounterType) { }
 
 		/// <summary>
 		/// This constructor is needed to load quests from the DB.
