@@ -32,8 +32,7 @@ namespace DOL.Database
     {
         private String m_artifactID;
 		private int m_levelReq;
-		private String m_scrollID;
-		private String m_bookID;
+		private String m_encounterID;
 		private String m_questID;
         private String m_zone;
 		private String m_scholarID;
@@ -70,45 +69,17 @@ namespace DOL.Database
         }
 
 		/// <summary>
-		/// The level requirement for the artifact.
+		/// The ID for the encounter required to get the quest for 
+		/// this artifact.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public int LevelRequirement
+		public String EncounterID
 		{
-			get { return m_levelReq; }
+			get { return m_encounterID; }
 			set
 			{
 				Dirty = true;
-				m_levelReq = value;
-			}
-		}
-
-		/// <summary>
-		/// The ID for the scrolls that make up the book for this 
-		/// artifact.
-		/// </summary>
-		[DataElement(AllowDbNull = false)]
-		public String ScrollID
-		{
-			get { return m_scrollID; }
-			set
-			{
-				Dirty = true;
-				m_scrollID = value;
-			}
-		}
-
-		/// <summary>
-		/// The ID for the book required to unlock this artifact.
-		/// </summary>
-		[DataElement(AllowDbNull = false)]
-		public String BookID
-		{
-			get { return m_bookID; }
-			set
-			{
-				Dirty = true;
-				m_bookID = value;
+				m_encounterID = value;
 			}
 		}
 

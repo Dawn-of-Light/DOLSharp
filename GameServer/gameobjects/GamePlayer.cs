@@ -10917,6 +10917,32 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Remove credit for this type of encounter.
+		/// </summary>
+		/// <param name="questType"></param>
+		/// <returns></returns>
+		public bool RemoveEncounterCredit(Type questType)
+		{
+			if (questType == null)
+				return false;
+
+			lock (m_questListFinished)
+			{
+				foreach (AbstractQuest q in m_questListFinished)
+				{
+					if (q.GetType().Equals(questType) && q.Step == -1)
+					{
+						m_questListFinished.Remove(q);
+						q.DeleteFromDatabase();
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
+		/// <summary>
 		/// Checks if a player has done a specific quest
 		/// </summary>
 		/// <param name="questType">The quest type</param>

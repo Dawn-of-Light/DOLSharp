@@ -35,7 +35,8 @@ namespace DOL.Database
         private String m_artifactID;
         private String m_scroll1, m_scroll2, m_scroll3;
         private String m_scroll12, m_scroll13, m_scroll23;
-        private int m_scrollModel;
+        private int m_scrollModel1, m_scrollModel2;
+		private int m_scrollLevel;
         private String m_messageUse;
 		private String m_messageCombineScrolls, m_messageCombineBook;
 		private String m_messageReceiveScrolls, m_messageReceiveBook;
@@ -182,18 +183,46 @@ namespace DOL.Database
         }
 
         /// <summary>
-        /// Scroll model (icon).
+        /// Scroll model (icon) for a single scroll.
         /// </summary>
         [DataElement(AllowDbNull = false)]
-        public int ScrollModel
+        public int ScrollModel1
         {
-            get { return m_scrollModel; }
+            get { return m_scrollModel1; }
             set
             {
                 Dirty = true;
-                m_scrollModel = value;
+                m_scrollModel1 = value;
             }
         }
+
+		/// <summary>
+		/// Scroll model (icon) for 2 combined scrolls.
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int ScrollModel2
+		{
+			get { return m_scrollModel2; }
+			set
+			{
+				Dirty = true;
+				m_scrollModel2 = value;
+			}
+		}
+
+		/// <summary>
+		/// Scroll level.
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int ScrollLevel
+		{
+			get { return m_scrollLevel; }
+			set
+			{
+				Dirty = true;
+				m_scrollLevel = value;
+			}
+		}
 
         /// <summary>
         /// Message issued when scroll is used.

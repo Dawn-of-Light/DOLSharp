@@ -228,30 +228,51 @@ namespace DOL.GS
 			return null;
 		}
 
+		///// <summary>
+		///// Find the matching quest type for this artifact.
+		///// </summary>
+		///// <param name="artifactID"></param>
+		///// <returns></returns>
+		//public static Type GetQuestTypeFromArtifactID(String artifactID)
+		//{
+		//    if (artifactID == null)
+		//        return null;
+
+		//    String questID = GetQuestIDFromArtifactID(artifactID);
+		//    if (questID == null)
+		//        return null;
+
+		//    Type questType = null;
+		//    foreach (Assembly asm in ScriptMgr.Scripts)
+		//    {
+		//        questType = asm.GetType(questID);
+		//        if (questType != null)
+		//            break;
+		//    }
+
+		//    if (questType == null)
+		//        questType = Assembly.GetAssembly(typeof(GameServer)).GetType(questID);
+
+		//    return questType;
+		//}
+
 		/// <summary>
-		/// Find the matching quest type for this artifact.
+		/// Get the quest type from the quest type string.
 		/// </summary>
-		/// <param name="artifactID"></param>
+		/// <param name="questTypeString"></param>
 		/// <returns></returns>
-		public static Type GetQuestTypeFromArtifactID(String artifactID)
+		public static Type GetQuestType(String questTypeString)
 		{
-            if (artifactID == null)
-                return null;
-
-			String questID = GetQuestIDFromArtifactID(artifactID);
-			if (questID == null)
-				return null;
-
 			Type questType = null;
 			foreach (Assembly asm in ScriptMgr.Scripts)
 			{
-				questType = asm.GetType(questID);
+				questType = asm.GetType(questTypeString);
 				if (questType != null)
 					break;
 			}
 
 			if (questType == null)
-				questType = Assembly.GetAssembly(typeof(GameServer)).GetType(questID);
+				questType = Assembly.GetAssembly(typeof(GameServer)).GetType(questTypeString);
 
 			return questType;
 		}
@@ -267,7 +288,14 @@ namespace DOL.GS
 			if (player == null || artifactID == null)
 				return false;
 
-			Type questType = GetQuestTypeFromArtifactID(artifactID);
+			Artifact artifact;
+			lock (m_artifacts.SyncRoot)
+				artifact = (Artifact) m_artifacts[artifactID];
+
+			if (artifact == null)
+				return false;
+
+			Type questType = GetQuestType(artifact.EncounterID);
 			if (questType == null)
 				return false;
 
@@ -379,16 +407,38 @@ namespace DOL.GS
         }
 
 		/// <summary>
-		/// Whether or not the item is an artifact book.
-        /// CHECK IF THIS METHOD IS REALLY NEEDED.
+		/// Find the artifact that matches this book.
 		/// </summary>
-		/// <param name="item"></param>
+		/// <param name="book"></param>
 		/// <returns></returns>
-		public static bool IsArtifactBook(InventoryItem item)
+		public static Artifact GetArtifactFromBook(InventoryItem book)
 		{
-            String artifactID = null;
-            return (GetPageNumbers(item, ref artifactID) == Book.AllPages);
+			if (book == null)
+				return null;
+
+			String artifactID = null;
+			if (GetPageNumbers(book, ref artifactID) != Book.AllPages)
+				return null;
+
+			if (artifactID == null)
+				return null;
+
+			lock (m_artifacts.SyncRoot)
+				return (Artifact)m_artifacts[artifactID];
 		}
+
+
+		///// <summary>
+		///// Whether or not the item is an artifact book.
+		///// CHECK IF THIS METHOD IS REALLY NEEDED.
+		///// </summary>
+		///// <param name="item"></param>
+		///// <returns></returns>
+		//public static bool IsArtifactBook(InventoryItem item)
+		//{
+		//    String artifactID = null;
+		//    return (GetPageNumbers(item, ref artifactID) == Book.AllPages);
+		//}
 
 		/// <summary>
 		/// Whether or not the item is an artifact scroll.
@@ -444,31 +494,43 @@ namespace DOL.GS
                 return null;
 
             String scrollTitle = null;
+			int scrollModel = 499;
             switch (pageNumbers)
             {
-                case Book.Page1: scrollTitle = artifactBook.Scroll1;
+                case Book.Page1: 
+					scrollTitle = artifactBook.Scroll1;
+					scrollModel = artifactBook.ScrollModel1;
                     break;
-                case Book.Page2: scrollTitle = artifactBook.Scroll2;
+                case Book.Page2: 
+					scrollTitle = artifactBook.Scroll2;
+					scrollModel = artifactBook.ScrollModel1;
                     break;
-                case Book.Page3: scrollTitle = artifactBook.Scroll3;
+                case Book.Page3: 
+					scrollTitle = artifactBook.Scroll3;
+					scrollModel = artifactBook.ScrollModel1;
                     break;
-                case (Book)((int)Book.Page1 | (int)Book.Page2): scrollTitle = artifactBook.Scroll12;
+                case (Book)((int)Book.Page1 | (int)Book.Page2): 
+					scrollTitle = artifactBook.Scroll12;
+					scrollModel = artifactBook.ScrollModel2;
                     break;
-                case (Book)((int)Book.Page1 | (int)Book.Page3): scrollTitle = artifactBook.Scroll13;
+                case (Book)((int)Book.Page1 | (int)Book.Page3): 
+					scrollTitle = artifactBook.Scroll13;
+					scrollModel = artifactBook.ScrollModel2;
                     break;
-                case (Book)((int)Book.Page2 | (int)Book.Page3): scrollTitle = artifactBook.Scroll23;
+                case (Book)((int)Book.Page2 | (int)Book.Page3): 
+					scrollTitle = artifactBook.Scroll23;
+					scrollModel = artifactBook.ScrollModel2;
                     break;
-                case Book.AllPages: scrollTitle = artifactBook.BookID;
+                case Book.AllPages: 
+					scrollTitle = artifactBook.BookID;
+					scroll.Item.Model = artifactBook.BookModel;
                     break;
             }
 
             scroll.Name = scrollTitle;
             scroll.Item.Name = scrollTitle;
-            scroll.Item.Model = (pageNumbers == Book.AllPages)
-                ? artifactBook.BookModel
-                : artifactBook.ScrollModel;
-			scroll.Model = (ushort)scroll.Item.Model;
-
+			scroll.Model = (ushort)scrollModel;
+			scroll.Item.Model = (ushort)scrollModel;
             return scroll;
         }
 
