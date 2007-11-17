@@ -34,8 +34,8 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		public Snatcher()
 			: base() { }
 
-		public Snatcher(Type encounterType)
-			: base(encounterType) { }
+		public Snatcher(Artifact artifact, Type encounterType)
+			: base(artifact, encounterType) { }
 
 		/// <summary>
 		/// This constructor is needed to load quests from the DB.

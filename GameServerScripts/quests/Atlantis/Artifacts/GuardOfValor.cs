@@ -35,8 +35,8 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		public GuardOfValor()
 			: base() { }
 
-		public GuardOfValor(Type encounterType)
-			: base(encounterType) { }
+		public GuardOfValor(Artifact artifact, Type encounterType)
+			: base(artifact, encounterType) { }
 
 		/// <summary>
 		/// This constructor is needed to load quests from the DB.
@@ -106,12 +106,12 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 				return;
 
 			base.StartQuest(scholar);
-			String request = String.Format("Tell me, {0}, do you have any versions of the Love Story to go ",
-				QuestPlayer.CharacterClass.Name);
-			request += "with the Guard of Valor? I have found a few copies, but I am always looking ";
-			request += "for more. Each one has different information in them that helps me with ";
-			request += "my research. Please give me the Love Story now while I finish up with ";
-			request += "the Guard of Valor.";
+			String request = String.Format("Tell me, {0}, do you have any versions of the Love Story {1} {2} {3} {4}",
+				QuestPlayer.CharacterClass.Name,
+                "to go with the Guard of Valor? I have found a few copies, but I am always looking",
+			    "for more. Each one has different information in them that helps me with",
+			    "my research. Please give me the Love Story now while I finish up with",
+			    "the Guard of Valor.");
 			scholar.TurnTo(QuestPlayer);
 			scholar.SayTo(QuestPlayer, eChatLoc.CL_PopupWindow, request);
 		}
