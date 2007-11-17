@@ -54,6 +54,9 @@ namespace DOL.GS.Quests
 		/// </summary>		
 		public AbstractQuest()
 		{
+			m_dbQuest = new DBQuest();
+			m_dbQuest.Name = GetType().FullName;
+			m_dbQuest.Step = 1;
 		}
 
 		/// <summary>
@@ -157,7 +160,11 @@ namespace DOL.GS.Quests
 		public GamePlayer QuestPlayer
 		{
 			get	{ return m_questPlayer; }
-			set	{ m_questPlayer = value; }
+			set	
+			{ 
+				m_questPlayer = value;
+				m_dbQuest.CharName = QuestPlayer.Name;
+			}
 		}
 
 		/// <summary>

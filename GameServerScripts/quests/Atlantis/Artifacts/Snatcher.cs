@@ -31,9 +31,17 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 	/// <author>Aredhel</author>
 	class Snatcher : ArtifactQuest
 	{
-		public Snatcher(GamePlayer questingPlayer)
-			: base(questingPlayer) { }
+		public Snatcher()
+			: base() { }
 
+		public Snatcher(Type encounterType)
+			: base(encounterType) { }
+
+		/// <summary>
+		/// This constructor is needed to load quests from the DB.
+		/// </summary>
+		/// <param name="questingPlayer"></param>
+		/// <param name="dbQuest"></param>
 		public Snatcher(GamePlayer questingPlayer, DBQuest dbQuest)
 			: base(questingPlayer, dbQuest) { }
 

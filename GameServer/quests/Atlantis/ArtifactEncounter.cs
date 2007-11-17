@@ -19,40 +19,31 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using DOL.Events;
-using DOL.GS.Quests;
 using DOL.Database;
+using DOL.Events;
 
-namespace DOL.GS.Quests.Atlantis.Artifacts
+namespace DOL.GS.Quests.Atlantis
 {
 	/// <summary>
-	/// Quest for the Cloudsong artifact.
+	/// Base class for all artifact encounters.
 	/// </summary>
 	/// <author>Aredhel</author>
-	class Cloudsong : ArtifactQuest
+	public class ArtifactEncounter : AbstractQuest
 	{
-		public Cloudsong()
-			: base() { }
+		public ArtifactEncounter(GamePlayer questingPlayer)
+			: base(questingPlayer) { }
 
-		public Cloudsong(Type encounterType)
-			: base(encounterType) { }
-
-		/// <summary>
-		/// This constructor is needed to load quests from the DB.
-		/// </summary>
-		/// <param name="questingPlayer"></param>
-		/// <param name="dbQuest"></param>
-		public Cloudsong(GamePlayer questingPlayer, DBQuest dbQuest)
+		public ArtifactEncounter(GamePlayer questingPlayer, DBQuest dbQuest)
 			: base(questingPlayer, dbQuest) { }
 
-		public override string Name
+		public override bool CheckQuestQualification(GamePlayer player)
 		{
-			get { return "Cloudsong"; }
+			return (player == null);
 		}
 
 		public override void Notify(DOLEvent e, object sender, EventArgs args)
 		{
-			// Need to do anything here?
+			// TODO.
 		}
 	}
 }
