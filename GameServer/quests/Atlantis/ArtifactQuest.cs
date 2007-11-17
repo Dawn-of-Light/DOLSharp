@@ -41,11 +41,13 @@ namespace DOL.GS.Quests.Atlantis
 		public ArtifactQuest()
 			: base() { }
 
+        private Artifact m_artifact;
 		private Type m_encounterType;
 
-		public ArtifactQuest(Type encounterType) 
+		public ArtifactQuest(Artifact artifact, Type encounterType) 
 			: base()
 		{
+            m_artifact = artifact;
 			m_encounterType = encounterType;
 		}
 
@@ -64,11 +66,12 @@ namespace DOL.GS.Quests.Atlantis
 		/// <returns></returns>
 		public override bool CheckQuestQualification(GamePlayer player)
 		{
-			// Must have the encounter, must not be on the quest and
-			// must not have the quest finished either.
+			// Must have the encounter, must have the book; must not be on the quest
+			// and must not have the quest finished either.
 
 			return (player != null &&
 				m_encounterType != null &&
+                ArtifactMgr.HasBookForArtifact(player, m_artifact) &&
 				player.HasFinishedQuest(m_encounterType) > 0 &&
 				player.IsDoingQuest(this.GetType()) == null &&
 				player.HasFinishedQuest(this.GetType()) == 0);

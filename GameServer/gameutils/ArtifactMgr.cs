@@ -209,54 +209,6 @@ namespace DOL.GS
 		#region Quests
 
 		/// <summary>
-		/// Find the quest ID for this artifact.
-		/// </summary>
-		/// <param name="artifactID"></param>
-		/// <returns></returns>
-		private static String GetQuestIDFromArtifactID(String artifactID)
-		{
-            if (artifactID == null)
-                return null;
-
-			lock (m_artifacts.SyncRoot)
-			{
-                foreach (DictionaryEntry entry in m_artifacts)
-					if ((entry.Value as Artifact).ArtifactID == artifactID)
-                        return (entry.Value as Artifact).QuestID;
-			}
-
-			return null;
-		}
-
-		///// <summary>
-		///// Find the matching quest type for this artifact.
-		///// </summary>
-		///// <param name="artifactID"></param>
-		///// <returns></returns>
-		//public static Type GetQuestTypeFromArtifactID(String artifactID)
-		//{
-		//    if (artifactID == null)
-		//        return null;
-
-		//    String questID = GetQuestIDFromArtifactID(artifactID);
-		//    if (questID == null)
-		//        return null;
-
-		//    Type questType = null;
-		//    foreach (Assembly asm in ScriptMgr.Scripts)
-		//    {
-		//        questType = asm.GetType(questID);
-		//        if (questType != null)
-		//            break;
-		//    }
-
-		//    if (questType == null)
-		//        questType = Assembly.GetAssembly(typeof(GameServer)).GetType(questID);
-
-		//    return questType;
-		//}
-
-		/// <summary>
 		/// Get the quest type from the quest type string.
 		/// </summary>
 		/// <param name="questTypeString"></param>
@@ -427,18 +379,34 @@ namespace DOL.GS
 				return (Artifact)m_artifacts[artifactID];
 		}
 
+        /// <summary>
+        /// Whether or not the player has the complete book for this 
+        /// artifact in his backpack.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="artifact"></param>
+        /// <returns></returns>
+        public static bool HasBookForArtifact(GamePlayer player, Artifact artifact)
+        {
+            if (player == null || artifact == null)
+                return false;
 
-		///// <summary>
-		///// Whether or not the item is an artifact book.
-		///// CHECK IF THIS METHOD IS REALLY NEEDED.
-		///// </summary>
-		///// <param name="item"></param>
-		///// <returns></returns>
-		//public static bool IsArtifactBook(InventoryItem item)
-		//{
-		//    String artifactID = null;
-		//    return (GetPageNumbers(item, ref artifactID) == Book.AllPages);
-		//}
+            String bookID;
+            lock (m_artifactBooks.SyncRoot)
+                bookID = ((ArtifactBook)m_artifactBooks[artifact.ArtifactID]).BookID;
+
+            ICollection backpack = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, 
+                eInventorySlot.LastBackpack);
+            foreach (InventoryItem item in backpack)
+            {
+                if (item.Object_Type == (int)eObjectType.Magical &&
+                    item.Item_Type == (int)eInventorySlot.FirstBackpack &&
+                    item.Name == bookID)
+                    return true;
+            }
+
+            return false;
+        }
 
 		/// <summary>
 		/// Whether or not the item is an artifact scroll.
