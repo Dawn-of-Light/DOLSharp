@@ -31,7 +31,7 @@ namespace DOL.GS.Quests.Atlantis
     /// Base class for all artifact quests.
     /// </summary>
     /// <author>Aredhel</author>
-    public class ArtifactQuest : AbstractQuest
+    public class ArtifactQuest : BaseQuest
     {
 		/// <summary>
 		/// Defines a logger for this class.
@@ -60,6 +60,37 @@ namespace DOL.GS.Quests.Atlantis
 			: base(questingPlayer, dbQuest) { }
 
 		/// <summary>
+		/// Quest initialisation.
+		/// </summary>
+		public static void Init(String artifactID, Type questType)
+		{
+			if (artifactID == null || questType == null)
+				return;
+
+			String[] scholars = ArtifactMgr.GetScholarsFromArtifactID(artifactID);
+			if (scholars != null)
+			{
+				int realm = 1;
+				GameNPC[] npcs;
+				foreach (String scholar in scholars)
+				{
+					npcs = WorldMgr.GetNPCsByName(String.Format("Scholar {0}", scholar), (eRealm)realm);
+					if (npcs.Length == 0)
+					{
+						log.Warn(String.Format("Scholar {0} not found in realm {1}",
+							scholar, realm));
+					}
+					else
+					{
+						npcs[0].AddQuestToGive(questType);
+					}
+
+					++realm;
+				}
+			}
+		}
+
+		/// <summary>
 		/// Check if player is eligible for this quest.
 		/// </summary>
 		/// <param name="player"></param>
@@ -75,6 +106,14 @@ namespace DOL.GS.Quests.Atlantis
 				player.HasFinishedQuest(m_encounterType) > 0 &&
 				player.IsDoingQuest(this.GetType()) == null &&
 				player.HasFinishedQuest(this.GetType()) == 0);
+		}
+
+		/// <summary>
+		/// The reward for this quest.
+		/// </summary>
+		public virtual String Reward
+		{
+			get { return "UNDEFINED"; }
 		}
 
 		/// <summary>

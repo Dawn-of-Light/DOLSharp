@@ -27,6 +27,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.Scripts;
 using log4net;
 using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
+using DOL.GS.Quests.Atlantis;
 
 namespace DOL.GS.Quests
 {				
@@ -85,6 +86,15 @@ namespace DOL.GS.Quests
                         if (log.IsInfoEnabled)
                             log.Info("Registering quest: " + type.FullName);
                         RegisterQuestType(type);
+						if (type.IsSubclassOf(typeof(ArtifactQuest)))
+						{
+							log.Info(String.Format("Initialising quest: {0}", type.FullName));
+							type.InvokeMember("Init",
+								BindingFlags.InvokeMethod,
+								null,
+								null,
+								new object[] { });
+						}
                     }
                 }
             }
