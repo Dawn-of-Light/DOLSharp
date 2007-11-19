@@ -41,9 +41,6 @@ namespace DOL.GS
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		private enum TurnDownReason { NoCredit, NoBook, NoUse };
-		private ArrayList m_artifacts;
-
 		/// <summary>
 		/// Create a new scholar.
 		/// </summary>
@@ -76,7 +73,7 @@ namespace DOL.GS
 					{
 						if (quests.Count > 1 && numQuests < quests.Count)
 							intro += (numQuests == 1) ? ", or " : ", ";
-						intro += String.Format("[{0}]", quest.Reward);
+						intro += String.Format("[{0}]", quest.ArtifactID);
 						--numQuests;
 					}
 				}
@@ -110,86 +107,74 @@ namespace DOL.GS
 			if (player == null)
 				return false;
 
-			if (m_artifacts == null)
-				m_artifacts = ArtifactMgr.GetArtifactsFromScholar(Name);
-
-			// Talking about artifacts?
-
-			Artifact subject = null;
-			lock (m_artifacts.SyncRoot)
+			lock (QuestListToGive.SyncRoot)
 			{
-				foreach (Artifact artifact in m_artifacts)
+				// Start new quest...
+
+				foreach (ArtifactQuest quest in QuestListToGive)
 				{
-					if (text.ToLower() == artifact.ArtifactID.ToLower())
+					if (text.ToLower() == quest.ArtifactID.ToLower())
 					{
-						subject = artifact;
-						break;
+						if (quest.CheckQuestQualification(player))
+							GiveArtifactQuest(player, quest.GetType());
+						else
+							DenyArtifactQuest(player);
+						return true;
 					}
+				}
+
+				// ...or continuing a quest?
+
+				foreach (AbstractQuest quest in player.QuestList)
+				{
+					if (quest is ArtifactQuest && QuestListToGive.Contains(quest))
+						if ((quest as ArtifactQuest).WhisperReceive(player, this, text))
+							return true;
 				}
 			}
 
-            if (subject != null)
-            {
-				GiveArtifactQuest(player, subject);
-				return true;
-            }
-
-            // Talking about versions?
-
 			return false;
+		}
+
+		/// <summary>
+		/// Deny a quest to a player.
+		/// </summary>
+		/// <param name="player"></param>
+		private void DenyArtifactQuest(GamePlayer player)
+		{
+			if (player != null)
+			{
+				String reply = String.Format("{0} I cannot activate that artifact for you. {1} {2} {3} {4} {5}",
+					player.Name,
+					"This could be because you have already activated it, or you are in the",
+					"process of activating it, or you may not have completed everything",
+					"you need to do. Remember that the activation process requires you to",
+					"have credit for the artifact's encounter, as well as the artifact's",
+					"complete book of scrolls.");
+				TurnTo(player);
+				SayTo(player, eChatLoc.CL_PopupWindow, reply);
+			}
+			return;
 		}
 
 		/// <summary>
 		/// Give the artifact quest to the player.
 		/// </summary>
 		/// <param name="player"></param>
-		/// <param name="artifact"></param>
-		private void GiveArtifactQuest(GamePlayer player, Artifact artifact)
+		/// <param name="questType"></param>
+		private void GiveArtifactQuest(GamePlayer player, Type questType)
 		{
-			if (artifact == null)
+			if (player == null || questType == null)
 				return;
 
-			Type encounterType = ArtifactMgr.GetQuestType(artifact.EncounterID);
-			Type questType = ArtifactMgr.GetQuestType(artifact.QuestID);
+			ArtifactQuest quest = (ArtifactQuest)Activator.CreateInstance(questType,
+				new object[] { player });
 
-			if (questType == null)
-			{
-				log.Warn(String.Format("Can't find quest type for {0}", artifact.QuestID));
+			if (quest == null)
 				return;
-			}
 
-			ArtifactQuest artifactQuest = (ArtifactQuest)Activator.CreateInstance(questType,
-				new object[] { artifact, encounterType });
-
-			if (artifactQuest.CheckQuestQualification(player))
-			{
-				Hashtable versions = null;
-				if (!PlayerCanUseArtifact(player, artifact, ref versions))
-				{
-					artifactQuest.DeclineQuest(this);
-					return;
-				}
-
-				artifactQuest.QuestPlayer = player;
-				artifactQuest.Step = 1;
-				artifactQuest.SaveIntoDatabase();
-				artifactQuest.StartQuest(this);
-				player.AddQuest(artifactQuest);
-				artifactQuest.Notify(GamePlayerEvent.AcceptQuest, player, new EventArgs());
-			}
-			else
-			{
-                String reply = String.Format("{0} I cannot activate that artifact for you. {1} {2} {3} {4} {5}",
-                    player.Name,
-                    "This could be because you have already activated it, or you are in the",
-                    "process of activating it, or you may not have completed everything",
-                    "you need to do. Remember that the activation process requires you to",
-                    "have credit for the artifact's encounter, as well as the artifact's",
-                    "complete book of scrolls.");
-				TurnTo(player);
-				SayTo(player, eChatLoc.CL_PopupWindow, reply);
-				return;
-			}
+			player.AddQuest(quest);
+			quest.WhisperReceive(player, this, quest.ArtifactID);
 		}
 
 		/// <summary>
@@ -200,40 +185,22 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override bool ReceiveItem(GameLiving source, InventoryItem item)
 		{
+			if (base.ReceiveItem(source, item))
+				return true;;
+
 			GamePlayer player = source as GamePlayer;
 			if (player != null)
 			{
-				Artifact artifact = ArtifactMgr.GetArtifactFromBook(item);
-				if (artifact != null)
+				lock (QuestListToGive.SyncRoot)
 				{
-					Type questType = ArtifactMgr.GetQuestType(artifact.QuestID);
-					AbstractQuest quest;
-					if (questType != null && (quest = player.IsDoingQuest(questType)) != null)
-					{
-						(quest as ArtifactQuest).EndQuest(this);
-						player.Inventory.RemoveItem(item);
-						player.RemoveEncounterCredit(ArtifactMgr.GetQuestType(artifact.EncounterID));
-						return true;
-					}
+					foreach (AbstractQuest quest in player.QuestList)
+						if (quest is ArtifactQuest && (HasQuest(quest.GetType()) != null))
+							if ((quest as ArtifactQuest).ReceiveItem(player, this, item))
+								return true;
 				}
 			}
 
-			return base.ReceiveItem(source, item);
+			return false;
 		}
-
-        /// <summary>
-        /// Check if the player can actually use the artifact.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <param name="artifact"></param>
-        /// <param name="versions"></param>
-        /// <returns></returns>
-        private bool PlayerCanUseArtifact(GamePlayer player, Artifact artifact, ref Hashtable versions)
-        {
-            versions = ArtifactMgr.GetArtifactVersionsFromClass(artifact.ArtifactID,
-                (eCharacterClass)player.CharacterClass.ID);
-
-            return (versions.Count > 0);
-        }
     }
 }

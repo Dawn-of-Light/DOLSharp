@@ -247,6 +247,23 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Get the quest type for the encounter from the artifact ID.
+		/// </summary>
+		/// <param name="artifactID"></param>
+		/// <returns></returns>
+		public static Type GetEncounterTypeFromArtifactID(String artifactID)
+		{
+			if (artifactID == null)
+				return null;
+
+			Artifact artifact = null;
+			lock (m_artifacts.SyncRoot)
+				artifact = (Artifact)m_artifacts[artifactID];
+
+			return GetQuestType(artifact.EncounterID);
+		}
+
+		/// <summary>
 		/// Grant credit for an artifact.
 		/// </summary>
 		/// <param name="player"></param>
@@ -401,28 +418,36 @@ namespace DOL.GS
         /// artifact in his backpack.
         /// </summary>
         /// <param name="player"></param>
-        /// <param name="artifact"></param>
+        /// <param name="artifactID"></param>
         /// <returns></returns>
-        public static bool HasBookForArtifact(GamePlayer player, Artifact artifact)
+        public static bool HasBookForArtifact(GamePlayer player, String artifactID)
         {
-            if (player == null || artifact == null)
-                return false;
+			if (player == null || artifactID == null)
+				return false;
 
-            String bookID;
-            lock (m_artifactBooks.SyncRoot)
-                bookID = ((ArtifactBook)m_artifactBooks[artifact.ArtifactID]).BookID;
+			String bookID;
+			lock (m_artifactBooks.SyncRoot)
+			{
+				ArtifactBook artifactBook = (ArtifactBook)m_artifactBooks[artifactID];
+				if (artifactBook == null)
+				{
+					log.Warn(String.Format("Can't find the book for artifact \"{0}\"", artifactID));
+					return false;
+				}
+				bookID = artifactBook.BookID;
+			}
 
-            ICollection backpack = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, 
-                eInventorySlot.LastBackpack);
-            foreach (InventoryItem item in backpack)
-            {
-                if (item.Object_Type == (int)eObjectType.Magical &&
-                    item.Item_Type == (int)eInventorySlot.FirstBackpack &&
-                    item.Name == bookID)
-                    return true;
-            }
+			ICollection backpack = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack,
+				eInventorySlot.LastBackpack);
+			foreach (InventoryItem item in backpack)
+			{
+				if (item.Object_Type == (int)eObjectType.Magical &&
+					item.Item_Type == (int)eInventorySlot.FirstBackpack &&
+					item.Name == bookID)
+					return true;
+			}
 
-            return false;
+			return false;
         }
 
 		/// <summary>
