@@ -71,8 +71,8 @@ namespace DOL.GS.Quests.Atlantis
 					npcs = WorldMgr.GetNPCsByName(String.Format("Scholar {0}", scholar), (eRealm)realm);
 					if (npcs.Length == 0)
 					{
-						log.Warn(String.Format("Scholar {0} not found in realm {1}",
-							scholar, realm));
+						log.Warn(String.Format("Scholar {0} not found in {1}",
+							scholar, GlobalConstants.RealmToName((eRealm)realm)));
 					}
 					else
 					{
@@ -103,7 +103,7 @@ namespace DOL.GS.Quests.Atlantis
 			// and must not have the quest finished either.
 
 			Type encounterType = 
-				ArtifactMgr.GetEncounterTypeFromArtifactID(ArtifactID);
+				ArtifactMgr.GetEncounterType(ArtifactID);
 
 			return (player != null &&
 				encounterType != null &&
@@ -163,6 +163,20 @@ namespace DOL.GS.Quests.Atlantis
 		{
 			lock (player.Inventory)
 				return player.Inventory.RemoveItem(item);
+		}
+
+		/// <summary>
+		/// When finishing an artifact quest remove the encounter
+		/// credit.
+		/// </summary>
+		public override void FinishQuest()
+		{
+			base.FinishQuest();
+
+			Type encounterType =
+				ArtifactMgr.GetEncounterType(ArtifactID);
+
+			QuestPlayer.RemoveEncounterCredit(encounterType);
 		}
     }
 }

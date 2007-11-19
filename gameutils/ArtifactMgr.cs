@@ -81,7 +81,8 @@ namespace DOL.GS
             foreach (ArtifactBook artifactBook in dbo)
                 m_artifactBooks[artifactBook.ArtifactID] = artifactBook;
 
-            log.Info(String.Format("{0} artifacts loaded", m_artifacts.Count));
+            log.Info(String.Format("{0} artifacts ({1} versions) and {2} books loaded", 
+				m_artifacts.Count, m_artifactVersions.Count, m_artifactBooks.Count));
             return true;
 		}
 
@@ -95,46 +96,34 @@ namespace DOL.GS
             ArrayList artifacts = new ArrayList();
 
             if (zone != null)
-            {
                 lock (m_artifacts.SyncRoot)
-                {
                     foreach (DictionaryEntry entry in m_artifacts)
                         if ((entry.Value as Artifact).Zone == zone)
                             artifacts.Add(entry.Value);
-                }
-            }
 
             return artifacts;
         }
 
 		/// <summary>
-		/// Find all artifacts this scholar is studying.
+		/// Get a list of all scholars studying this artifact.
 		/// </summary>
-		/// <param name="scholarID"></param>
+		/// <param name="artifactID"></param>
 		/// <returns></returns>
-		public static ArrayList GetArtifactsFromScholar(String scholarID)
+		public static String[] GetScholarsFromArtifactID(String artifactID)
 		{
-            ArrayList artifacts = new ArrayList();
-
-            if (scholarID != null)
-            {
-                lock (m_artifacts.SyncRoot)
-                {
-                    String[] scholarIDs;
-                    foreach (DictionaryEntry entry in m_artifacts)
-                    {
-                        scholarIDs = (entry.Value as Artifact).ScholarID.Split(';');
-                        foreach (String id in scholarIDs)
-                            if (String.Format("Scholar {0}", id) == scholarID)
-                                artifacts.Add(entry.Value);
-                    }
-                }
-            }
-
-			return artifacts;
+			String[] scholars = null;
+			Artifact artifact = null;
+			if (artifactID != null)
+				lock (m_artifacts.SyncRoot)
+					artifact = (Artifact)m_artifacts[artifactID];
+			if (artifact != null)
+				scholars = artifact.ScholarID.Split(';');
+			return scholars;
 		}
 
-        /// <summary>
+		#region Artifact Versions
+
+		/// <summary>
         /// Get a list of all versions for this artifact.
         /// </summary>
         /// <param name="artifactID"></param>
@@ -204,26 +193,11 @@ namespace DOL.GS
             }
 
             return classVersions;
-        }
-
-		/// <summary>
-		/// Get a list of all scholars studying this artifact.
-		/// </summary>
-		/// <param name="artifactID"></param>
-		/// <returns></returns>
-		public static String[] GetScholarsFromArtifactID(String artifactID)
-		{
-			String[] scholars = null;
-			Artifact artifact = null;
-			if (artifactID != null)
-				lock (m_artifacts.SyncRoot)
-					artifact = (Artifact)m_artifacts[artifactID];
-			if (artifact != null)
-				scholars = artifact.ScholarID.Split(';');
-			return scholars;
 		}
 
-		#region Quests
+		#endregion
+
+		#region Encounters & Quests
 
 		/// <summary>
 		/// Get the quest type from the quest type string.
@@ -251,7 +225,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="artifactID"></param>
 		/// <returns></returns>
-		public static Type GetEncounterTypeFromArtifactID(String artifactID)
+		public static Type GetEncounterType(String artifactID)
 		{
 			if (artifactID == null)
 				return null;
@@ -431,7 +405,7 @@ namespace DOL.GS
 				ArtifactBook artifactBook = (ArtifactBook)m_artifactBooks[artifactID];
 				if (artifactBook == null)
 				{
-					log.Warn(String.Format("Can't find the book for artifact \"{0}\"", artifactID));
+					log.Warn(String.Format("Can't find book for artifact \"{0}\"", artifactID));
 					return false;
 				}
 				bookID = artifactBook.BookID;
@@ -452,7 +426,6 @@ namespace DOL.GS
 
 		/// <summary>
 		/// Whether or not the item is an artifact scroll.
-        /// CHECK IF THIS METHOD IS REALLY NEEDED.
 		/// </summary>
 		/// <param name="item"></param>
 		/// <returns></returns>

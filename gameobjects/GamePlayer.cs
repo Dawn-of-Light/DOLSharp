@@ -10911,6 +10911,8 @@ namespace DOL.GS
 					return false;
 
 				m_questList.Add(quest);
+				Out.SendMessage(String.Format("You have been given the {0} quest.",
+					quest.Name), eChatType.CT_Group, eChatLoc.CL_ChatWindow);
 			}
 			Out.SendQuestUpdate(quest);
 			return true;
