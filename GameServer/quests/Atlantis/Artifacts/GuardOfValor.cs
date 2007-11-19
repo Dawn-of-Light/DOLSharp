@@ -117,6 +117,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 						player.CharacterClass.Name);
 					scholar.TurnTo(player);
 					scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
+					FinishQuest();
 					return true;
 				}
 			}
@@ -168,10 +169,10 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 				switch (Step)
 				{
 					case 1:
-						return "[Step #1]: Defeat Danos.";
+						return "Defeat Danos.";
 					case 2 :
 						// TODO: Get correct description.
-						return "[Step #2]: Turn in the complete Love Story.";
+						return "Turn in the complete Love Story.";
 					default :
 						return base.Description;
 				}

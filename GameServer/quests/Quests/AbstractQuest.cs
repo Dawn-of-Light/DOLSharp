@@ -214,7 +214,8 @@ namespace DOL.GS.Quests
 		public virtual void FinishQuest()
 		{
 			Step = -1; // -1 indicates finished or aborted quests etc, they won't show up in the list
-			m_questPlayer.Out.SendMessage("You finish the "+Name+" quest!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+			m_questPlayer.Out.SendMessage(String.Format("You have completed the {0} quest!",
+				Name), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
 
 			// move quest from active list to finished list...
 			m_questPlayer.QuestList.Remove(this);
