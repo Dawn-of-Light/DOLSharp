@@ -2182,7 +2182,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="questType">The quest type</param>
 		/// <returns>the quest if the npc have the quest or null if not</returns>
-		private AbstractQuest HasQuest(Type questType)
+		protected AbstractQuest HasQuest(Type questType)
 		{
 			lock (m_questListToGive.SyncRoot)
 			{
