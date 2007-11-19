@@ -64,20 +64,21 @@ namespace DOL.GS
                 player.CharacterClass.Name,
                 "I study the lore and magic of the following artifacts:");
 
-			if (m_artifacts == null)
-				m_artifacts = ArtifactMgr.GetArtifactsFromScholar(Name);
-
-			int numArtifacts = m_artifacts.Count;
-
-			lock (m_artifacts.SyncRoot)
+			IList quests = QuestListToGive;
+			if (quests.Count == 0)
+				intro += " It seems your database does not provide any artifact quests for me";
+			else
 			{
-				foreach (Artifact artifact in m_artifacts)
+				lock (quests.SyncRoot)
 				{
-					if (m_artifacts.Count > 1 && numArtifacts < m_artifacts.Count)
-						intro += (numArtifacts == 1) ? ", or " : ", ";
-
-					intro += String.Format("[{0}]", artifact.ArtifactID);
-					--numArtifacts;
+					int numQuests = quests.Count;
+					foreach (ArtifactQuest quest in quests)
+					{
+						if (quests.Count > 1 && numQuests < quests.Count)
+							intro += (numQuests == 1) ? ", or " : ", ";
+						intro += String.Format("[{0}]", quest.Reward);
+						--numQuests;
+					}
 				}
 			}
 
@@ -158,7 +159,7 @@ namespace DOL.GS
 			}
 
 			ArtifactQuest artifactQuest = (ArtifactQuest)Activator.CreateInstance(questType,
-				new object[] { encounterType });
+				new object[] { artifact, encounterType });
 
 			if (artifactQuest.CheckQuestQualification(player))
 			{
