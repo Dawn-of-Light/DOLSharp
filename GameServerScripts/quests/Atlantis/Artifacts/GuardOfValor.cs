@@ -23,6 +23,7 @@ using DOL.Events;
 using DOL.GS.Quests;
 using DOL.Database;
 using DOL.GS.PacketHandler;
+using System.Collections;
 
 namespace DOL.GS.Quests.Atlantis.Artifacts
 {
@@ -45,6 +46,14 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// <param name="dbQuest"></param>
 		public GuardOfValor(GamePlayer questingPlayer, DBQuest dbQuest)
 			: base(questingPlayer, dbQuest) { }
+
+		/// <summary>
+		/// Quest initialisation.
+		/// </summary>
+		public static void Init()
+		{
+			ArtifactQuest.Init("Guard of Valor", typeof(GuardOfValor));
+		}
 
 		/// <summary>
 		/// Check if player is eligible for this quest.
@@ -79,11 +88,20 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		}
 
 		/// <summary>
-		/// The name of the quest.
+		/// The name of the quest (not necessarily the same as
+		/// the name of the reward).
 		/// </summary>
 		public override string Name
 		{
 			get { return "A Gift of Love"; }
+		}
+
+		/// <summary>
+		/// The reward for this quest.
+		/// </summary>
+		public override String Reward
+		{
+			get { return "Guard of Valor"; }
 		}
 
 		/// <summary>

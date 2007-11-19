@@ -206,6 +206,23 @@ namespace DOL.GS
             return classVersions;
         }
 
+		/// <summary>
+		/// Get a list of all scholars studying this artifact.
+		/// </summary>
+		/// <param name="artifactID"></param>
+		/// <returns></returns>
+		public static String[] GetScholarsFromArtifactID(String artifactID)
+		{
+			String[] scholars = null;
+			Artifact artifact = null;
+			if (artifactID != null)
+				lock (m_artifacts.SyncRoot)
+					artifact = (Artifact)m_artifacts[artifactID];
+			if (artifact != null)
+				scholars = artifact.ScholarID.Split(';');
+			return scholars;
+		}
+
 		#region Quests
 
 		/// <summary>
