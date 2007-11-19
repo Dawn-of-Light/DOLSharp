@@ -77,7 +77,7 @@ namespace DOL.GS.PacketHandler
 			else
 			{
 				string name = quest.Name;
-				string desc = quest.Description;
+				string desc = string.Format("[Step #{0}]: {1}", quest.Step,	quest.Description);
 				if (name.Length > byte.MaxValue)
 				{
 					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": name is too long for 1.68+ clients (" + name.Length + ") '" + name + "'");

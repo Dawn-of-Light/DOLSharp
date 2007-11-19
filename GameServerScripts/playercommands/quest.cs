@@ -18,6 +18,7 @@
  */
 using DOL.GS.PacketHandler;
 using DOL.GS.Quests;
+using System;
 
 namespace DOL.GS.Scripts
 {
@@ -30,12 +31,18 @@ namespace DOL.GS.Scripts
 		public int OnCommand(GameClient client, string[] args)
 		{
 			string message = "";
-			message += "Current Quests:\n";
+			if (client.Player.QuestList.Count == 0)
+				message += "You have no currently pending quests.\n";
+			else
+				message += "You are currently working on the following quests:\n";
 			foreach (AbstractQuest quest in client.Player.QuestList)
-				message += quest.Name + "\n";
-			message += "Completed Quests:\n";
+			{
+				message += String.Format("On step {0} of quest '{1}'\n", quest.Step, quest.Name);
+				message += String.Format("What to do: {0}", quest.Description);
+			}
+			message += "\nYou have completed the following quests:\n";
 			foreach (AbstractQuest quest in client.Player.QuestListFinished)
-				message += quest.Name + "\n";
+				message += quest.Name + ", completed.\n";
 			client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return 1;
 		}
