@@ -24,6 +24,7 @@ using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
 using System.Reflection;
+using System.Collections;
 
 namespace DOL.GS.Quests.Atlantis
 {
@@ -41,15 +42,8 @@ namespace DOL.GS.Quests.Atlantis
 		public ArtifactQuest()
 			: base() { }
 
-        private Artifact m_artifact;
-		private Type m_encounterType;
-
-		public ArtifactQuest(Artifact artifact, Type encounterType) 
-			: base()
-		{
-            m_artifact = artifact;
-			m_encounterType = encounterType;
-		}
+		public ArtifactQuest(GamePlayer questingPlayer)
+			: base(questingPlayer) { }
 
 		/// <summary>
 		/// This constructor is needed to load quests from the DB.
@@ -91,6 +85,14 @@ namespace DOL.GS.Quests.Atlantis
 		}
 
 		/// <summary>
+		/// The artifact ID.
+		/// </summary>
+		public virtual String ArtifactID
+		{
+			get { return "UNDEFINED"; }
+		}
+
+		/// <summary>
 		/// Check if player is eligible for this quest.
 		/// </summary>
 		/// <param name="player"></param>
@@ -100,66 +102,67 @@ namespace DOL.GS.Quests.Atlantis
 			// Must have the encounter, must have the book; must not be on the quest
 			// and must not have the quest finished either.
 
+			Type encounterType = 
+				ArtifactMgr.GetEncounterTypeFromArtifactID(ArtifactID);
+
 			return (player != null &&
-				m_encounterType != null &&
-                ArtifactMgr.HasBookForArtifact(player, m_artifact) &&
-				player.HasFinishedQuest(m_encounterType) > 0 &&
+				encounterType != null &&
+                ArtifactMgr.HasBookForArtifact(player, ArtifactID) &&
+				player.HasFinishedQuest(encounterType) > 0 &&
 				player.IsDoingQuest(this.GetType()) == null &&
 				player.HasFinishedQuest(this.GetType()) == 0);
 		}
 
 		/// <summary>
-		/// The reward for this quest.
+		/// Check if player can use the reward.
 		/// </summary>
-		public virtual String Reward
+		/// <param name="player"></param>
+		/// <returns></returns>
+		public virtual bool CheckRewardQualification(GamePlayer player)
 		{
-			get { return "UNDEFINED"; }
+			if (player == null)
+				return false;
+
+			Hashtable versions = ArtifactMgr.GetArtifactVersionsFromClass(ArtifactID,
+				(eCharacterClass)player.CharacterClass.ID);
+
+			return (versions.Count > 0);
 		}
 
 		/// <summary>
-		/// Handles events.
+		/// Handle an item given to the scholar.
 		/// </summary>
-		/// <param name="e"></param>
-		/// <param name="sender"></param>
-		/// <param name="args"></param>
-        public override void Notify(DOLEvent e, object sender, EventArgs args)
-        {
-			if (e == GamePlayerEvent.AcceptQuest)
-			{
-				GamePlayer player = sender as GamePlayer;
-				if (player != null)
-					player.Out.SendMessage(String.Format("You have been given the {0} quest.",
-						Name), eChatType.CT_Group, eChatLoc.CL_ChatWindow);
-				Step = 2;
-			}
-        }
-
-		/// <summary>
-		/// Decline the quest. This happens if the player cannot
-		/// actually use the artifact.
-		/// </summary>
-		/// <param name="scholar"></param>
-		public virtual void DeclineQuest(Scholar scholar)
+		/// <param name="source"></param>
+		/// <param name="item"></param>
+		/// <param name="target"></param>
+		/// <returns></returns>
+		public virtual bool ReceiveItem(GameLiving source, GameLiving target, InventoryItem item)
 		{
-			if (scholar == null || QuestPlayer == null)
-				return;
+			return false;
 		}
 
 		/// <summary>
-		/// Start the quest.
+		/// Handle whispers to the scholar.
 		/// </summary>
-		/// <param name="scholar"></param>
-		public virtual void StartQuest(Scholar scholar)
+		/// <param name="source"></param>
+		/// <param name="text"></param>
+		/// <param name="target"></param>
+		/// <returns></returns>
+		public virtual bool WhisperReceive(GameLiving source, GameLiving target, string text)
 		{
+			return false;
 		}
 
 		/// <summary>
-		/// End the quest.
+		/// Remove an item from the player's inventory.
 		/// </summary>
-		/// <param name="scholar"></param>
-		public virtual void EndQuest(Scholar scholar)
+		/// <param name="player"></param>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public virtual bool RemoveItem(GamePlayer player, InventoryItem item)
 		{
-			FinishQuest();
+			lock (player.Inventory)
+				return player.Inventory.RemoveItem(item);
 		}
     }
 }
