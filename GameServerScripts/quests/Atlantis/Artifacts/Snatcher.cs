@@ -45,7 +45,27 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		public Snatcher(GamePlayer questingPlayer, DBQuest dbQuest)
 			: base(questingPlayer, dbQuest) { }
 
+		/// <summary>
+		/// Quest initialisation.
+		/// </summary>
+		public static void Init()
+		{
+			ArtifactQuest.Init("Snatcher", typeof(Snatcher));
+		}
+
+		/// <summary>
+		/// The name of the quest (not necessarily the same as
+		/// the name of the reward).
+		/// </summary>
 		public override string Name
+		{
+			get { return "Snatcher"; }
+		}
+
+		/// <summary>
+		/// The reward for this quest.
+		/// </summary>
+		public override String Reward
 		{
 			get { return "Snatcher"; }
 		}
