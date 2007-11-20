@@ -127,7 +127,7 @@ namespace DOL.GS
 
 				foreach (AbstractQuest quest in player.QuestList)
 				{
-					if (quest is ArtifactQuest && QuestListToGive.Contains(quest))
+					if (quest is ArtifactQuest && (HasQuest(quest.GetType()) != null))
 						if ((quest as ArtifactQuest).WhisperReceive(player, this, text))
 							return true;
 				}
