@@ -654,14 +654,16 @@ namespace DOL.AI.Brain
 
 			if (target != null)
 			{
-				if (!Body.AttackState || target != Body.TargetObject)
+				//if (!Body.AttackState || target != Body.TargetObject)
+				if (!Body.IsAttacking || target != Body.TargetObject)
 				{
 					Body.StartAttack(target);
 				}
 			}
 			else
 			{
-				if (Body.AttackState)
+				//if (Body.AttackState)
+				if (Body.IsAttacking)
 					Body.StopAttack();
 
 				if (Body.SpellTimer != null && Body.SpellTimer.IsAlive)

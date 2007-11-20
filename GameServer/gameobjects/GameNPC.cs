@@ -4031,7 +4031,7 @@ namespace DOL.GS
 		/// Broadcast loot to the raid.
 		/// </summary>
 		/// <param name="dropMessages">List of drop messages to broadcast.</param>
-		private void BroadcastLoot(ArrayList dropMessages)
+		protected void BroadcastLoot(ArrayList dropMessages)
 		{
 			if (dropMessages.Count > 0)
 			{

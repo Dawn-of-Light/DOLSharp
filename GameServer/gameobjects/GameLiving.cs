@@ -2727,6 +2727,11 @@ namespace DOL.GS
 			}
 		}
 
+		public void SetAttackState()
+		{
+			m_attackState = true;
+		}
+
 		/// <summary>
 		/// Starts a melee attack on a target
 		/// </summary>
@@ -5594,6 +5599,11 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		public virtual bool IsCasting
 		{
 			get { return m_runningSpellHandler != null;/*&& m_runningSpellHandler.IsCasting;*/ }
+		}
+
+		public virtual bool IsAttacking
+		{
+			get { return (m_attackState && (m_attackAction != null) && m_attackAction.IsAlive); }
 		}
 
 		/// <summary>
