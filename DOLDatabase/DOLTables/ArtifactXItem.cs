@@ -33,6 +33,7 @@ namespace DOL.Database
         private String m_artifactID;
         private String m_itemID;
         private String m_version;
+		private int m_realm;
 
         /// <summary>
         /// Create a new artifact/item relation.
@@ -78,7 +79,7 @@ namespace DOL.Database
         }
 
         /// <summary>
-        /// The artifact ID.
+        /// The artifact version.
         /// </summary>
         [DataElement(AllowDbNull = false)]
         public String Version
@@ -90,5 +91,19 @@ namespace DOL.Database
                 m_version = value;
             }
         }
+
+		/// <summary>
+		/// The realm.
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int Realm
+		{
+			get { return m_realm; }
+			set
+			{
+				Dirty = true;
+				m_realm = value;
+			}
+		}
     }
 }

@@ -124,7 +124,7 @@ namespace DOL.GS.Quests.Atlantis
 				return false;
 
 			Hashtable versions = ArtifactMgr.GetArtifactVersionsFromClass(ArtifactID,
-				(eCharacterClass)player.CharacterClass.ID);
+				(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
 
 			return (versions.Count > 0);
 		}

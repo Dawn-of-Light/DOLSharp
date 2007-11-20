@@ -1094,6 +1094,14 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Whether the living is actually attacking something.
+		/// </summary>
+		public virtual bool IsAttacking
+		{
+			get { return (m_attackState && (m_attackAction != null) && m_attackAction.IsAlive); }
+		}
+
+		/// <summary>
 		/// Gets the effective AF of this living
 		/// </summary>
 		public virtual int EffectiveOverallAF
@@ -5599,11 +5607,6 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		public virtual bool IsCasting
 		{
 			get { return m_runningSpellHandler != null;/*&& m_runningSpellHandler.IsCasting;*/ }
-		}
-
-		public virtual bool IsAttacking
-		{
-			get { return (m_attackState && (m_attackAction != null) && m_attackAction.IsAlive); }
 		}
 
 		/// <summary>
