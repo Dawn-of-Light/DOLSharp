@@ -30,20 +30,20 @@ using System.Reflection;
 namespace DOL.GS.Quests.Atlantis.Artifacts
 {
 	/// <summary>
-	/// Quest for the Guard of Valor artifact.
+	/// Quest for the Malice's Axe artifact.
 	/// </summary>
 	/// <author>Aredhel</author>
-	public class GuardOfValor : ArtifactQuest
+	public class MalicesAxe : ArtifactQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public GuardOfValor()
+		public MalicesAxe()
 			: base() { }
 
-		public GuardOfValor(GamePlayer questingPlayer)
+		public MalicesAxe(GamePlayer questingPlayer)
 			: base(questingPlayer) { }
 
 		/// <summary>
@@ -51,17 +51,17 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// </summary>
 		/// <param name="questingPlayer"></param>
 		/// <param name="dbQuest"></param>
-		public GuardOfValor(GamePlayer questingPlayer, DBQuest dbQuest)
+		public MalicesAxe(GamePlayer questingPlayer, DBQuest dbQuest)
 			: base(questingPlayer, dbQuest) { }
 
-		private static String m_artifactID = "Guard of Valor";
+		private static String m_artifactID = "Malice's Axe";
 
 		/// <summary>
 		/// Quest initialisation.
 		/// </summary>
 		public static void Init()
 		{
-			ArtifactQuest.Init(m_artifactID, typeof(GuardOfValor));
+			ArtifactQuest.Init(m_artifactID, typeof(MalicesAxe));
 		}
 
 		/// <summary>
@@ -75,7 +75,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 				return false;
 
 			// TODO: Check if this is the correct level for the quest.
-			return (player.Level >= 40);
+			return (player.Level >= 45);
 		}
 
 		/// <summary>
@@ -97,27 +97,17 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 
 			if (Step == 2 && ArtifactMgr.GetArtifactIDFromBookID(item.Name) == ArtifactID)
 			{
-				Hashtable versions = ArtifactMgr.GetArtifactVersionsFromClass(ArtifactID,
-					(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
-
-				IDictionaryEnumerator versionsEnum = versions.GetEnumerator();
-				versionsEnum.MoveNext();
-
-				if (versions.Count > 0 && RemoveItem(player, item))
+				if (RemoveItem(player, item))
 				{
-					GiveItem(player, versionsEnum.Value as ItemTemplate);
-
-					String reply = "Can you feel the magic of the Guard of Valor flowing once again? ";
-					reply += "It comes from Aloeus' love for his beautiful Nikolia. When Aloeus ";
-					reply += "presented the gift to Nikolia, the magic in it bound to her. And now as ";
-					reply += "I present it to you, the magic in it will bind itself to you, so that no ";
-					reply += String.Format("other may wear it. I beg you, {0}, take care not to destroy ",
-						player.CharacterClass.Name);
-					reply += String.Format("such a gift! It cannot be replaced! I wish you well, {0}.",
-						player.CharacterClass.Name);
-					scholar.TurnTo(player);
+					String reply = String.Format("You now have a decision to make, {0}. {1} {2} {3} {4} {5}",
+						player.CharacterClass.Name,
+						"I can unlock your Malice Axe so it uses [slashing] skills or so it uses",
+						"[crushing] skills. In both cases, I can unlock it as a one-handed weapon",
+						"or a two-handed one. All you must do is decide whick kind of damage you",
+						"would like to do to your enemies. Once you have chosen, you cannot change",
+						"your mind.");
 					scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
-					FinishQuest();
+					Step = 3;
 					return true;
 				}
 			}
@@ -134,6 +124,10 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// <returns></returns>
 		public override bool WhisperReceive(GameLiving source, GameLiving target, string text)
 		{
+			log.Info(String.Format("Malice's Axe: WhisperReceive({0}, {1}, {2})",
+				(source == null) ? "null" : source.Name,
+				(target == null) ? "null" : target.Name,
+				text));
 			if (base.WhisperReceive(source, target, text))
 				return true;
 
@@ -144,16 +138,60 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 
 			if (Step == 1 && text.ToLower() == ArtifactID.ToLower())
 			{
-				String reply = String.Format("Tell me, {0}, do you have any versions of the Love Story {1} {2} {3} {4}",
-					player.CharacterClass.Name,
-					"to go with the Guard of Valor? I have found a few copies, but I am always looking",
-					"for more. Each one has different information in them that helps me with",
-					"my research. Please give me the Love Story now while I finish up with",
-					"the Guard of Valor.");
+				String reply = "Ah, yes, the axe of Malice. It has an interesting tale, but I'm not sure I believe it. Did you find the story of the axe? If you have, please give it to me now.";
 				scholar.TurnTo(player);
 				scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
 				Step = 2;
 				return true;
+			}
+			else if (Step == 3)
+			{
+				switch (text.ToLower())
+				{
+					case "slashing":
+					case "crushing":
+						{
+							SetCustomProperty("DamageType", text.ToLower());
+							String reply = String.Format("Would you like your {0} Malice's Axe to be {1}",
+								text.ToLower(),
+								"[one handed] or [two handed]?");
+							scholar.TurnTo(player);
+							scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
+							Step = 4;
+							return true;
+						}
+						
+				}
+				return false;
+			}
+			else if (Step == 4)
+			{
+				switch (text.ToLower())
+				{
+					case "one handed":
+					case "two handed":
+						{
+							String versionID = String.Format("{0};{1}",
+								GetCustomProperty("DamageType"), text.ToLower());
+							Hashtable versions = ArtifactMgr.GetArtifactVersionsFromClass(ArtifactID,
+								(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
+							ItemTemplate template = versions[versionID] as ItemTemplate;
+							if (template == null)
+							{
+								log.Warn(String.Format("Artifact version {0} not found", versionID));
+								return false;
+							}
+							GiveItem(player, template);
+							String reply = String.Format("Here's your {0}. May it serve you well. {1}",
+								template.Name,
+								"Just don't lose it. You can't ever replace it.");
+							scholar.TurnTo(player);
+							scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
+							FinishQuest();
+							return true;
+						}
+				}
+				return false;
 			}
 
 			return false;
@@ -169,11 +207,14 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 				switch (Step)
 				{
 					case 1:
-						return "Defeat Danos.";
-					case 2 :
-						// TODO: Get correct description.
-						return "Turn in the complete Love Story.";
-					default :
+						return "Defeat Malamis.";
+					case 2:
+						return "Turn in the completed book.";
+					case 3:
+						return "Choose between a [slashing] version of Malice's Axe or a [crushing] one. Both one-handed and two-handed versions are available for both.";
+					case 4:
+						return "Choose between one handed or two handed versions.";
+					default:
 						return base.Description;
 				}
 			}
@@ -185,7 +226,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// </summary>
 		public override string Name
 		{
-			get { return "A Gift of Love"; }
+			get { return "Malice's Axe"; }
 		}
 
 		/// <summary>
