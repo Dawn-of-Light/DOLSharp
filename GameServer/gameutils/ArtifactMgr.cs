@@ -127,17 +127,24 @@ namespace DOL.GS
         /// Get a list of all versions for this artifact.
         /// </summary>
         /// <param name="artifactID"></param>
+		/// <param name="realm"></param>
         /// <returns></returns>
-        private static ArrayList GetArtifactVersions(String artifactID)
+        private static ArrayList GetArtifactVersions(String artifactID, eRealm realm)
         {
-            ArrayList versions = null;
+            ArrayList versions = new ArrayList();
             if (artifactID != null)
             {
-                lock (m_artifactVersions.SyncRoot)
-                    versions = (ArrayList)m_artifactVersions[artifactID];
+				lock (m_artifactVersions.SyncRoot)
+				{
+					ArrayList allVersions = (ArrayList)m_artifactVersions[artifactID];
+					if (allVersions != null)
+						foreach (ArtifactXItem version in allVersions)
+							if (version.Realm == 0 || version.Realm == (int)realm)
+								versions.Add(version);
+				}
             }
 
-            return (versions == null) ? new ArrayList() : versions;
+            return versions;
         }
 
         /// <summary>
@@ -146,14 +153,15 @@ namespace DOL.GS
         /// </summary>
         /// <param name="artifactID"></param>
         /// <param name="charClass"></param>
+		/// <param name="realm"></param>
         /// <returns></returns>
         public static Hashtable GetArtifactVersionsFromClass(String artifactID, 
-            eCharacterClass charClass)
+            eCharacterClass charClass, eRealm realm)
         {
             if (artifactID == null)
                 return null;
 
-            ArrayList allVersions = GetArtifactVersions(artifactID);
+            ArrayList allVersions = GetArtifactVersions(artifactID, realm);
             Hashtable classVersions = new Hashtable();
 
             lock (allVersions.SyncRoot)
