@@ -34,7 +34,7 @@ namespace DOL.AI.Brain
 	/// A brain for the necromancer pets.
 	/// </summary>
 	/// <author>Aredhel</author>
-	class NecromancerPetBrain : ControlledNpc
+	public class NecromancerPetBrain : ControlledNpc
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -134,8 +134,10 @@ namespace DOL.AI.Brain
 					{
 						if (!Body.AttackState && AggressionState != eAggressionState.Passive)
 						{
-							Body.StartAttack(target);
-							Body.StopAttack();
+							//Body.StartAttack(target);
+							//Body.StopAttack();
+							Body.SetAttackState();
+							(Owner as GamePlayer).Out.SendObjectUpdate(Body);
 							AddToAggroList(target, 1);
 						}
 					}

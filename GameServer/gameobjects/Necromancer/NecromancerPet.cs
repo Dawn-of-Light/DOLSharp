@@ -37,7 +37,7 @@ namespace DOL.GS
 	/// The necromancer pets.
 	/// </summary>
 	/// <author>Aredhel</author>
-	class NecromancerPet : GameNPC
+	public class NecromancerPet : GameNPC
 	{
 		/// <summary>
 		/// Defines a logger for this class.
