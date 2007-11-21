@@ -9418,15 +9418,23 @@ namespace DOL.GS
 		/// <returns>true if player took the item</returns>
 		public override bool ReceiveItem(GameLiving source, InventoryItem item)
 		{
-			if (source == null || item == null) return false;
+			if (item == null) return false;
 
 			if (!Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
-			{
-				Out.SendMessage(source.GetName(0, false) + " wanted to give you something, but your inventory is full!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
-			}
 
-			Out.SendMessage("You receive " + item.GetName(0, false) + " from " + source.GetName(0, false) + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			if (source == null)
+			{
+				Out.SendMessage(String.Format("You receive {0}!",
+					item.GetName(0, false)),
+					eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+			}
+			else
+			{
+				Out.SendMessage(String.Format("You receive {0} from {1}!",
+					item.GetName(0, false), source.GetName(0, false)),
+					eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+			}
 
 			if (source is GamePlayer)
 			{

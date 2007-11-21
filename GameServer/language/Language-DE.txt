@@ -424,12 +424,12 @@ Albion.Arbiter.Interact.BeginTrials:			Willkommen in Atlantis, {0}. Sobald Ihr b
 Albion.Arbiter.Interact.Welcome:				Ah, {0}, willkommen bei dem, was von Atlantis noch übrig ist. Was für ein großer Fund dies ist! Wir wissen nicht, warum wir Botschaften von Atlantis erhielten, doch als wir sie bekamen, setzten wir uns sofort in Bewegung. Wir haben von Atlantis seit vielen Jahren nichts gehört. Mehr Jahre, als unser Land eine Geschichte hat. Doch wir gingen los, und wisst Ihr warum? Die [Versprechen] von Atlantis!
 Albion.Arbiter.WhisperReceive.CaseExist:			existieren
 Albion.Arbiter.WhisperReceive.CaseGuide:			führen
-Albion.Arbiter.WhisperReceive.CaseInhabitants:		Einwohner
-Albion.Arbiter.WhisperReceive.CasePlace:			Platz
-Albion.Arbiter.WhisperReceive.CasePromises:		Versprechen
+Albion.Arbiter.WhisperReceive.CaseInhabitants:		einwohner
+Albion.Arbiter.WhisperReceive.CasePlace:			platz
+Albion.Arbiter.WhisperReceive.CasePromises:		versprechen
 Albion.Arbiter.WhisperReceive.CaseSurvived:		überlebt
-Albion.Arbiter.WhisperReceive.CaseTablet:		Tafel
-Albion.Arbiter.WhisperReceive.CaseTrials:		Prüfungen
+Albion.Arbiter.WhisperReceive.CaseTablet:		tafel
+Albion.Arbiter.WhisperReceive.CaseTrials:		prüfungen
 Albion.Arbiter.WhisperReceive.Exist:			Ja, aber in einer korrupten und verkommenen Form. Um sie zu bestehen, braucht man mehr als nur eine noble Fähigkeit. Wir bemerkten zuerst nicht, dass es nicht nur Heldentaten, Stärke und Können bedarf. Es scheint, die Biester der Ebenen haben ihre eigene Kultur entwickelt. Oft durch die alten Prüfungen beeinflusst, aber über die Zeit so stark verändert, dass es fast keine Ähnlichkeit mehr gibt. Wenn Ihr die Fähigkeiten, den Ruhm und die Reichtümer jenseits dieses Portals wollt, {0}, dann müsst Ihr die Ebenen betreten und auf alles vorbereitet sein. Denn ich weiß zu wenig, als dass ich Euch [führen] könnte.
 Albion.Arbiter.WhisperReceive.Guide:			Ich werde aber mein Bestes tun. Ihr werdet es wissen, wenn Ihr jede der einzelnen [Prüfungen] durchlauft. Wenn Ihr eine Prüfung abgeschlossen habt, kehrt zu mir zurück, und ich werde Euch so gut ich kann helfen. Viel Glück {0}.
 Albion.Arbiter.WhisperReceive.Inhabitants:		Oh ja, die Einwohner. Zu einem Zeitpunkt sah es so aus, als hätte es keine Gesellschaftsformen unter den Kreaturen in den Ebenen gegeben. Das war unser erster Fehler. Wir dachten, es gäbe nur Prüfungen. Es zeigte sich, dass irgendwie, nach dem Fall Atlantis. die Kreaturen von den Ebenen einen Weg fanden, in den Ebenen zu überleben. Wir glauben, dass manche Kreaturen sogar in den Ebenen Zuflucht suchten, doch wir können uns nicht sicher sein. Alles was wir wissen ist, dass als Atlantis fiel, fiel es schnell. Doch über das, was hinter dem Portal liegt, kann ich nur sagen, dass die Prüfungen noch immer [existieren].
