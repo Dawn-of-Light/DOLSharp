@@ -490,6 +490,26 @@ Researcher.GetExamineMessages.YouExamine:		You examine {0}. {1} is {2}.
 Researcher.GetExamineMessages.She:			She
 Researcher.GetExamineMessages.He:			He
 
+# /Arbiter
+Albion.Arbiter.Interact.BeginTrials:			{0}, welcome to Atlantis. When you are ready, you may begin the Trials. Come to me then.
+Albion.Arbiter.Interact.Welcome:				Ah, {0}, welcome to what is left of Atlantis! What a grand find this is! We don't know why we received messages from Atlantis, but when we did, we set forth right away. We had not heard of Atlantis for years. More years than our land has a history. But we set forth, and do you know why? The [promises] of Atlantis!
+Albion.Arbiter.WhisperReceive.CaseExist:			exist
+Albion.Arbiter.WhisperReceive.CaseGuide:			guide
+Albion.Arbiter.WhisperReceive.CaseInhabitants:		inhabitants
+Albion.Arbiter.WhisperReceive.CasePlace:			place
+Albion.Arbiter.WhisperReceive.CasePromises:		promises
+Albion.Arbiter.WhisperReceive.CaseSurvived:		survived
+Albion.Arbiter.WhisperReceive.CaseTablet:		tablet
+Albion.Arbiter.WhisperReceive.CaseTrials:		trials
+Albion.Arbiter.WhisperReceive.Exist:			Yes, but in some corrupted, degraded form. Passing them will involve more than any one noble skill alone. We did not realize it was not merely a matter of heroics, strength and skill. It seems the beasts of the planes have developed a culture of their own, often influenced by the ancient trials, but evolved so much over time that there really is no resemblance. If you want the skills, the glory and the riches beyond this portal, my dear {0} you are going to have to enter the planes, and be prepared for anything, for I know too little to [guide] you.
+Albion.Arbiter.WhisperReceive.Guide:			I will do my best though. You will know if you pass each of the [trials]. When you have completed a trial, return to me and I will aid you best I can. Good luck {0}.
+Albion.Arbiter.WhisperReceive.Inhabitants:		Oh yes, the inhabitants. It seems, well, at one point, there were no societies of creatures in the planes. That was our first mistake. We assumed there would only be the trials. It turns out that somehow, the creatures of the Planes, after Atlantis' fall, found the means to survive in the planes. We think some creatures may have even escaped to the planes, though we can't be sure. All we know is that when Atlantis fell, it fell quickly. But, as for what lies beyond that portal, all I can say is the trials still [exist].
+Albion.Arbiter.WhisperReceive.Place:			It is the Hall of Heroes. As the Atlanteans refer to it. It's the entrance to the Planes of Trials. Now, I can glean a bit off of these tablets. We know that beyond this, through that portal there, lie the Planes of the Trials. There are certain trials you must defeat if you wish to be considered worthy of Atlantis. To fail is to die, for the most part, though it does mention something about survivors being sent away in disgrace. I can't tell you much about the trials, or even how to pass them. You see, Atlantis has fallen, and of the first ones we sent into the planes, only a few [survived].
+Albion.Arbiter.WhisperReceive.Promises:			Ah they spoke of these traits they value above all others, and of trials that tested other cultures for those traits. Those who pass the trials are promised greater skills in their trained arts. We don't know how, but that is what we are studying. See here, behind me, this stone with these glyphs? We call it the [tablet] of destiny.
+Albion.Arbiter.WhisperReceive.Survived:			Here, we are at a true disadvantage. Not only do we not know what the original trials were supposed to be like, what was necessary for passing them, and all the ceremonial steps involved, but it seems the [inhabitants] of the planes have forgotten as well.
+Albion.Arbiter.WhisperReceive.Tablet:			Aye, this tablet and its magic, they are the only source of knowledge we have on the trials and the planes. We're trying to translate it, and we have found some other tablets and scrolls that tell us a bit about this [place].
+Albion.Arbiter.WhisperReceive.Trials:			Yes, much of these planes were created for the trials. You will be rewarded with the abilities of the ancient Atlanteans if you can complete these trials.
+
 # STYLES
 # /StyleProcessor
 StyleProcessor.ExecuteStyle.BackStrike:			You inflict a critical strike in the back of your target 

@@ -107,6 +107,7 @@ namespace DOL.GS.Quests.Atlantis
 
 			return (player != null &&
 				encounterType != null &&
+				player.Level >= Level &&
                 ArtifactMgr.HasBookForArtifact(player, ArtifactID) &&
 				player.HasFinishedQuest(encounterType) > 0 &&
 				player.IsDoingQuest(this.GetType()) == null &&
@@ -127,6 +128,14 @@ namespace DOL.GS.Quests.Atlantis
 				(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
 
 			return (versions.Count > 0);
+		}
+
+		/// <summary>
+		/// Minimum level requirement, adjust this for lowbie artifacts.
+		/// </summary>
+		public override int Level
+		{
+			get { return 45; }
 		}
 
 		/// <summary>

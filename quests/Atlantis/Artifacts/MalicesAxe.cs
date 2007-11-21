@@ -65,20 +65,6 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		}
 
 		/// <summary>
-		/// Check if player is eligible for this quest.
-		/// </summary>
-		/// <param name="player"></param>
-		/// <returns></returns>
-		public override bool CheckQuestQualification(GamePlayer player)
-		{
-			if (!base.CheckQuestQualification(player))
-				return false;
-
-			// TODO: Check if this is the correct level for the quest.
-			return (player.Level >= 45);
-		}
-
-		/// <summary>
 		/// Handle an item given to the scholar.
 		/// </summary>
 		/// <param name="source"></param>
@@ -103,7 +89,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 						player.CharacterClass.Name,
 						"I can unlock your Malice Axe so it uses [slashing] skills or so it uses",
 						"[crushing] skills. In both cases, I can unlock it as a one-handed weapon",
-						"or a two-handed one. All you must do is decide whick kind of damage you",
+						"or a two-handed one. All you must do is decide which kind of damage you",
 						"would like to do to your enemies. Once you have chosen, you cannot change",
 						"your mind.");
 					scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
@@ -124,10 +110,6 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// <returns></returns>
 		public override bool WhisperReceive(GameLiving source, GameLiving target, string text)
 		{
-			log.Info(String.Format("Malice's Axe: WhisperReceive({0}, {1}, {2})",
-				(source == null) ? "null" : source.Name,
-				(target == null) ? "null" : target.Name,
-				text));
 			if (base.WhisperReceive(source, target, text))
 				return true;
 
@@ -160,7 +142,6 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 							Step = 4;
 							return true;
 						}
-						
 				}
 				return false;
 			}

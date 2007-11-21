@@ -419,6 +419,26 @@ Researcher.GetExamineMessages.YouExamine:		Es interessiert Euch {0}. {1} steht E
 Researcher.GetExamineMessages.She:			Sie
 Researcher.GetExamineMessages.He:			Er
 
+# /Arbiter
+Albion.Arbiter.Interact.BeginTrials:			Willkommen in Atlantis, {0}. Sobald Ihr bereit seid, könnt Ihr mit den Prüfungen beginnen. Kommt dann zu mir.
+Albion.Arbiter.Interact.Welcome:				Ah, {0}, willkommen bei dem, was von Atlantis noch übrig ist. Was für ein großer Fund dies ist! Wir wissen nicht, warum wir Botschaften von Atlantis erhielten, doch als wir sie bekamen, setzten wir uns sofort in Bewegung. Wir haben von Atlantis seit vielen Jahren nichts gehört. Mehr Jahre, als unser Land eine Geschichte hat. Doch wir gingen los, und wisst Ihr warum? Die [Versprechen] von Atlantis!
+Albion.Arbiter.WhisperReceive.CaseExist:			existieren
+Albion.Arbiter.WhisperReceive.CaseGuide:			führen
+Albion.Arbiter.WhisperReceive.CaseInhabitants:		Einwohner
+Albion.Arbiter.WhisperReceive.CasePlace:			Platz
+Albion.Arbiter.WhisperReceive.CasePromises:		Versprechen
+Albion.Arbiter.WhisperReceive.CaseSurvived:		überlebt
+Albion.Arbiter.WhisperReceive.CaseTablet:		Tafel
+Albion.Arbiter.WhisperReceive.CaseTrials:		Prüfungen
+Albion.Arbiter.WhisperReceive.Exist:			Ja, aber in einer korrupten und verkommenen Form. Um sie zu bestehen, braucht man mehr als nur eine noble Fähigkeit. Wir bemerkten zuerst nicht, dass es nicht nur Heldentaten, Stärke und Können bedarf. Es scheint, die Biester der Ebenen haben ihre eigene Kultur entwickelt. Oft durch die alten Prüfungen beeinflusst, aber über die Zeit so stark verändert, dass es fast keine Ähnlichkeit mehr gibt. Wenn Ihr die Fähigkeiten, den Ruhm und die Reichtümer jenseits dieses Portals wollt, {0}, dann müsst Ihr die Ebenen betreten und auf alles vorbereitet sein. Denn ich weiß zu wenig, als dass ich Euch [führen] könnte.
+Albion.Arbiter.WhisperReceive.Guide:			Ich werde aber mein Bestes tun. Ihr werdet es wissen, wenn Ihr jede der einzelnen [Prüfungen] durchlauft. Wenn Ihr eine Prüfung abgeschlossen habt, kehrt zu mir zurück, und ich werde Euch so gut ich kann helfen. Viel Glück {0}.
+Albion.Arbiter.WhisperReceive.Inhabitants:		Oh ja, die Einwohner. Zu einem Zeitpunkt sah es so aus, als hätte es keine Gesellschaftsformen unter den Kreaturen in den Ebenen gegeben. Das war unser erster Fehler. Wir dachten, es gäbe nur Prüfungen. Es zeigte sich, dass irgendwie, nach dem Fall Atlantis. die Kreaturen von den Ebenen einen Weg fanden, in den Ebenen zu überleben. Wir glauben, dass manche Kreaturen sogar in den Ebenen Zuflucht suchten, doch wir können uns nicht sicher sein. Alles was wir wissen ist, dass als Atlantis fiel, fiel es schnell. Doch über das, was hinter dem Portal liegt, kann ich nur sagen, dass die Prüfungen noch immer [existieren].
+Albion.Arbiter.WhisperReceive.Place:			Es ist die Halle der Helden, wie die Atlanter sie nannten. Es ist der Eingang zu den Ebenen der Prüfungen. Nun, ein wenig kann ich diesen Tafeln entnehmen. Wir wissen, hinter dem Portal dort liegen die Ebenen der Prüfungen. Es gibt bestimmte Prüfungen, die Ihr bestehen müsst, wenn Ihr für Atlantis als würdig angesehen werden wollt. Versagen bedeutet meistens zu sterben. Obwohl auch von Überlebenden berichtet wird, die in Schande fortgeschickt wurden. Ich kann Euch nicht viel über die Prüfungen sagen, oder wie sie zu bestehen sind. Atlantis fiel, und von denen, die wir als Erste in die Ebenen aussandten, wissen wir, das nur wenige [überlebt] haben.
+Albion.Arbiter.WhisperReceive.Promises:			Ah, sie sprechen von den Eigenschaften die sie mehr als alles andere schätzten und von Prüfungen, die andere Kulturen daraufhin testeten. Denjenigen, die diese Prüfungen bestanden, wurden bessere Fähigkeiten in ihren erlernten Künsten versprochen. Wir wissen nicht wie, doch das ist, was sie studieren. Seht Ihr hier hinter mir den Stein mit den Hyroglyphen? Wir nennen ihn die [Tafel] des Schicksals.
+Albion.Arbiter.WhisperReceive.Survived:			Hier sind wir im Nachteil. Wir wissen weder, wie die ursprünglichen Prüfungen abliefen, noch was zum Bestehen nötig war oder etwas über all die dazugehörenden zeremoniellen Schritte. Doch es scheint, die [Einwohner] der Ebenen haben es auch vergessen.
+Albion.Arbiter.WhisperReceive.Tablet:			Ja, diese Tafel und seine Magie sind unsere einzige Wissensquelle über die Prüfungen und die Ebenen. Wir versuchen Sie zu übersetzen. Auch haben wir einige andere Tafeln und Schriftrollen gefunden, die uns etwas über diesen [Platz] erzählen.
+Albion.Arbiter.WhisperReceive.Trials:			Ja, viele dieser Ebenen wurden für die Prüfungen geschaffen. Ihr werdet mit den Fähigkeiten der alten Atlanter belohnt werden, falls Ihr diese Prüfungen abschließen könnt.
+
 # HOUSING
 HouseEnterLeave.TooFarAway:				Ihr seid zu weit von diesem Haus entfernt, um es zu betreten!
 HouseEnterLeave.CantEnter:				Ihr könnt dieses Haus nicht betreten!
