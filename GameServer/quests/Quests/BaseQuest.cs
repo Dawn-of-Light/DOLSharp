@@ -322,22 +322,12 @@ namespace DOL.GS.Quests
 
 		protected static void GiveItem(GameLiving source, GamePlayer player, ItemTemplate itemTemplate)
 		{
-			InventoryItem item = new InventoryItem(itemTemplate);
-			if (player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
-			{
-				if (source == null)
-				{
-					player.Out.SendMessage("You receive the " + itemTemplate.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
-				else
-				{
-					player.Out.SendMessage("You receive " + itemTemplate.GetName(0, false) + " from " + source.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
-			}
-			else
+			InventoryItem item = new InventoryItem(itemTemplate);			
+			if (!player.ReceiveItem(source, item))
 			{
 				player.CreateItemOnTheGround(item);
-				player.Out.SendMessage("Your Inventory is full. You couldn't recieve the " + itemTemplate.Name + ", so it's been placed on the ground. Pick it up as soon as possible or it will vanish in a few minutes.", eChatType.CT_Important, eChatLoc.CL_PopupWindow);
+				player.Out.SendMessage(String.Format("Your backpack is full, {0} is dropped on the ground.",
+					itemTemplate.Name), eChatType.CT_Important, eChatLoc.CL_PopupWindow);
 			}
 		}
 

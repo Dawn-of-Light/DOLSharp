@@ -742,10 +742,12 @@
     <Compile Include="propertycalc\WeaponSkillCalculator.cs" />
     <Compile Include="quests\Atlantis\ArtifactEncounter.cs" />
     <Compile Include="quests\Atlantis\ArtifactQuest.cs" />
+    <Compile Include="quests\Atlantis\Artifacts\Battler.cs" />
     <Compile Include="quests\Atlantis\Artifacts\Cloudsong.cs" />
     <Compile Include="quests\Atlantis\Artifacts\GuardOfValor.cs" />
     <Compile Include="quests\Atlantis\Artifacts\MalicesAxe.cs" />
     <Compile Include="quests\Atlantis\Artifacts\Snatcher.cs" />
+    <Compile Include="quests\Atlantis\Encounters\Battler.cs" />
     <Compile Include="quests\Atlantis\Encounters\Cloudsong.cs" />
     <Compile Include="quests\Atlantis\Encounters\GuardOfValor.cs" />
     <Compile Include="quests\Atlantis\Encounters\MalicesAxe.cs" />
