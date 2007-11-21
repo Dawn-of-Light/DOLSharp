@@ -76,7 +76,7 @@ namespace DOL.GS.PacketHandler
 			}
 			else
 			{
-				string name = quest.Name;
+				string name = string.Format("{0} (Level {1})", quest.Name, quest.Level);
 				string desc = string.Format("[Step #{0}]: {1}", quest.Step,	quest.Description);
 				if (name.Length > byte.MaxValue)
 				{

@@ -184,6 +184,14 @@ namespace DOL.GS.Quests
 		}
 
 		/// <summary>
+		/// Retrieves the minimum level for this quest.
+		/// </summary>
+		public virtual int Level
+		{
+			get { return 1; }
+		}
+
+		/// <summary>
 		/// Gets or Sets the current step of the quest.
 		/// Changing the Quest Step will propably change the 
 		/// description and also update the player quest list and
