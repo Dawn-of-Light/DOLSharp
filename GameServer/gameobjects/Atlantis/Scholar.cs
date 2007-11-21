@@ -119,7 +119,7 @@ namespace DOL.GS
 							GiveArtifactQuest(player, quest.GetType());
 						else
 							DenyArtifactQuest(player);
-						return true;
+						return false;
 					}
 				}
 
@@ -129,11 +129,11 @@ namespace DOL.GS
 				{
 					if (quest is ArtifactQuest && (HasQuest(quest.GetType()) != null))
 						if ((quest as ArtifactQuest).WhisperReceive(player, this, text))
-							return true;
+							return false;
 				}
 			}
 
-			return false;
+			return true;
 		}
 
 		/// <summary>
