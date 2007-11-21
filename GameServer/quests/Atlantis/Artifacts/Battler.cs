@@ -30,20 +30,20 @@ using System.Reflection;
 namespace DOL.GS.Quests.Atlantis.Artifacts
 {
 	/// <summary>
-	/// Quest for the Malice's Axe artifact.
+	/// Quest for the Battler artifact.
 	/// </summary>
 	/// <author>Aredhel</author>
-	public class MalicesAxe : ArtifactQuest
+	public class Battler : ArtifactQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public MalicesAxe()
+		public Battler()
 			: base() { }
 
-		public MalicesAxe(GamePlayer questingPlayer)
+		public Battler(GamePlayer questingPlayer)
 			: base(questingPlayer) { }
 
 		/// <summary>
@@ -51,17 +51,17 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// </summary>
 		/// <param name="questingPlayer"></param>
 		/// <param name="dbQuest"></param>
-		public MalicesAxe(GamePlayer questingPlayer, DBQuest dbQuest)
+		public Battler(GamePlayer questingPlayer, DBQuest dbQuest)
 			: base(questingPlayer, dbQuest) { }
 
-		private static String m_artifactID = "Malice's Axe";
+		private static String m_artifactID = "Battler";
 
 		/// <summary>
 		/// Quest initialisation.
 		/// </summary>
 		public static void Init()
 		{
-			ArtifactQuest.Init(m_artifactID, typeof(MalicesAxe));
+			ArtifactQuest.Init(m_artifactID, typeof(Battler));
 		}
 
 		/// <summary>
@@ -88,7 +88,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 				{
 					String reply = String.Format("You now have a decision to make, {0}. {1} {2} {3} {4} {5}",
 						player.CharacterClass.Name,
-						"I can unlock your Malice Axe so it uses [slashing] skills or so it uses",
+						"I can unlock your Battler so it uses [slashing] skills or so it uses",
 						"[crushing] skills. In both cases, I can unlock it as a one-handed weapon",
 						"or a two-handed one. All you must do is decide which kind of damage you",
 						"would like to do to your enemies. Once you have chosen, you cannot change",
@@ -121,7 +121,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 
 			if (Step == 1 && text.ToLower() == ArtifactID.ToLower())
 			{
-				String reply = "Ah, yes, the axe of Malice. It has an interesting tale, but I'm not sure I believe it. Did you find the story of the axe? If you have, please give it to me now.";
+				String reply = "Battler, eh? Careful, when I unlock this sword's abilities, for it has a thirst for blood, from what we've learned of it. Do you have the scrolls that talk about Battler?";
 				scholar.TurnTo(player);
 				scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
 				Step = 2;
@@ -135,8 +135,8 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 					case "crushing":
 						{
 							SetCustomProperty("DamageType", text.ToLower());
-							String reply = String.Format("Would you like your {0} Malice's Axe to be {1}",
-								text.ToLower(),
+							String reply = String.Format("Now, would you like your Battler{0} to be {1}",
+								(text.ToLower() == "slashing") ? "" : " Mace",
 								"[one handed] or [two handed]?");
 							scholar.TurnTo(player);
 							scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
@@ -164,9 +164,8 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 								return false;
 							}
 							GiveItem(scholar, player, template);
-							String reply = String.Format("Here's your {0}. May it serve you well. {1}",
-								template.Name,
-								"Just don't lose it. You can't ever replace it.");
+							String reply = String.Format("Here you are. Do not lose {0}, for it is irreplaceable.",
+								template.Name);
 							scholar.TurnTo(player);
 							scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
 							FinishQuest();
@@ -184,16 +183,17 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// </summary>
 		public override string Description
 		{
+			// TODO: Get correct journal entries!
 			get
 			{
 				switch (Step)
 				{
 					case 1:
-						return "Defeat Malamis.";
+						return "Defeat Battler.";
 					case 2:
 						return "Turn in the completed book.";
 					case 3:
-						return "Choose between a [slashing] version of Malice's Axe or a [crushing] one. Both one-handed and two-handed versions are available for both.";
+						return "Choose between a [slashing] version of Battler or a [crushing] one. Both one-handed and two-handed versions are available for both.";
 					case 4:
 						return "Choose between one handed or two handed versions.";
 					default:
@@ -208,7 +208,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// </summary>
 		public override string Name
 		{
-			get { return "Malice's Axe"; }
+			get { return "Battler"; }
 		}
 
 		/// <summary>
