@@ -153,7 +153,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 					case "one handed":
 					case "two handed":
 						{
-							String versionID = String.Format("{0};{1}",
+							String versionID = String.Format("{0};{1};",
 								GetCustomProperty("DamageType"), text.ToLower());
 							Hashtable versions = ArtifactMgr.GetArtifactVersionsFromClass(ArtifactID,
 								(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
