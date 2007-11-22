@@ -485,6 +485,7 @@
     <Compile Include="gameobjects\Atlantis\Arbiter.cs" />
     <Compile Include="gameobjects\Atlantis\ArtifactScholar.cs" />
     <Compile Include="gameobjects\Atlantis\HeadScholar.cs" />
+    <Compile Include="gameutils\Atlantis\InventoryArtifact.cs" />
     <Compile Include="gameobjects\Atlantis\Researcher.cs" />
     <Compile Include="gameobjects\Atlantis\Scholar.cs" />
     <Compile Include="gameobjects\Dragons\Cuuldurach.cs" />
@@ -582,8 +583,7 @@
     <Compile Include="gameutils\Alliance.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="gameutils\ArtifactManager.cs" />
-    <Compile Include="gameutils\ArtifactMgr.cs" />
+    <Compile Include="gameutils\Atlantis\ArtifactMgr.cs" />
     <Compile Include="gameutils\BattleGroup.cs" />
     <Compile Include="gameutils\BoatMgr.cs" />
     <Compile Include="gameutils\ChampSpec.cs" />
