@@ -70,7 +70,7 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public override bool LoadFromDatabase(string inventoryID)
 		{
-            ArtifactManager.LoadArtifacts(); //loading artifacts
+            //ArtifactManager.LoadArtifacts(); //loading artifacts
             lock (m_items.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				try
@@ -84,20 +84,26 @@ namespace DOL.GS
 								log.Error("Tried to load an item in invalid slot, ignored. Item id=" + item.ObjectId);
 							continue;
 						}
-                        //add to artifact collection
-                        if (ArtifactManager.IsArtifact(item))
-                        {
-                            Artifacts.Add(item);
-                            //Dinberg - reset artifact reuse timers on login/out to prevent abuse.
-                            Player.TempProperties.setProperty("artifactuse" + item.Id_nb, Player.CurrentRegion.Time);
-                        }
+						////add to artifact collection
+						//if (ArtifactManager.IsArtifact(item))
+						//{
+						//    Artifacts.Add(item);
+						//    //Dinberg - reset artifact reuse timers on login/out to prevent abuse.
+						//    Player.TempProperties.setProperty("artifactuse" + item.Id_nb, Player.CurrentRegion.Time);
+						//}
+
                         if (m_items[item.SlotPosition] != null)
 						{
 							if (log.IsErrorEnabled)
 								log.Error("Error loading " + m_player.Name + "'s inventory OwnerID " + inventoryID + " slot " + item.SlotPosition + " duplicate item found, skipping!");
 							continue;
 						}
-						m_items.Add(item.SlotPosition, item);
+
+						if (ArtifactMgr.IsArtifact(item))
+							m_items.Add(item.SlotPosition, new InventoryArtifact(item));
+						else
+							m_items.Add(item.SlotPosition, item);
+
 						if (GlobalConstants.IsWeapon(item.Object_Type)
 							&& item.Type_Damage == 0
 							&& item.Object_Type != (int)eObjectType.CompositeBow
@@ -201,10 +207,6 @@ namespace DOL.GS
 			if (!base.AddItem(slot, item)) return false;
 			item.OwnerID = m_player.InternalID;
 			GameServer.Database.AddNewObject(item);
-
-            //artifact
-            if (ArtifactManager.IsArtifact(item) && !Artifacts.Contains(item))
-                Artifacts.Add(item);
             
             if (IsEquippedSlot((eInventorySlot)item.SlotPosition))
 				Player.Notify(PlayerInventoryEvent.ItemEquipped, this, new ItemEquippedArgs(item, (int)eInventorySlot.Invalid));
@@ -232,12 +234,7 @@ namespace DOL.GS
 
 			if (!base.RemoveItem(item)) return false;
 
-			GameServer.Database.DeleteObject(item);
-
-            //artifact
-            if (ArtifactManager.IsArtifact(item) && Artifacts.Contains(item))
-                Artifacts.Remove(item);
-            
+			GameServer.Database.DeleteObject(item);            
             ITradeWindow window = m_player.TradeWindow;
 			if (window != null)
 				window.RemoveItemToTrade(item);

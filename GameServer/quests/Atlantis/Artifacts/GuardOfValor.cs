@@ -106,7 +106,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 
 				if (versions.Count > 0 && RemoveItem(player, item))
 				{
-					GiveItem(scholar, player, versionsEnum.Value as ItemTemplate);
+					GiveItem(scholar, player, ArtifactID, versionsEnum.Value as ItemTemplate);
 
 					String reply = "Can you feel the magic of the Guard of Valor flowing once again? ";
 					reply += "It comes from Aloeus' love for his beautiful Nikolia. When Aloeus ";
