@@ -139,6 +139,24 @@ namespace DOL.GS.Quests.Atlantis
 		}
 
 		/// <summary>
+		/// Hand out an artifact.
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="player"></param>
+		/// <param name="itemTemplate"></param>
+		protected static void GiveItem(GameLiving source, GamePlayer player, String artifactID, 
+			ItemTemplate itemTemplate)
+		{
+			InventoryItem item = new InventoryArtifact(itemTemplate);
+			if (!player.ReceiveItem(source, item))
+			{
+				player.CreateItemOnTheGround(item);
+				player.Out.SendMessage(String.Format("Your backpack is full, {0} is dropped on the ground.",
+					itemTemplate.Name), eChatType.CT_Important, eChatLoc.CL_PopupWindow);
+			}
+		}
+
+		/// <summary>
 		/// Handle an item given to the scholar.
 		/// </summary>
 		/// <param name="source"></param>

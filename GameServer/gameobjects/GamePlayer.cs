@@ -7295,93 +7295,13 @@ namespace DOL.GS
 						UseMagicalItem(useItem, type);
 						return;
 					}
-					else if (ArtifactManager.IsArtifact(useItem))
-					{
-						long artifactusetick = TempProperties.getLongProperty("artifactuse" + useItem.Id_nb, 0L);
-						long changeTime = CurrentRegion.Time - artifactusetick;
-						//Console.WriteLine("changetime is :" + changeTime);
-						long delay = (long)useItem.ArtiID * 1000;
-						long lastChargedItemUseTick = TempProperties.getLongProperty(LAST_CHARGED_ITEM_USE_TICK, 0L);
-						long changeTime1 = CurrentRegion.Time - lastChargedItemUseTick;
-						long delay1 = TempProperties.getLongProperty(ITEM_USE_DELAY, 0L);
-						if (Client.Account.PrivLevel == 1 && changeTime < delay)
-						{
-							Out.SendMessage("You must wait " + (delay - changeTime) / 1000 + " more seconds before discharging that artifact!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return;
-						}
-						else if (Client.Account.PrivLevel == 1 && changeTime1 < delay1)
-						{
-							Out.SendMessage("You must wait " + (delay1 - changeTime1) / 1000 + " more second before discharge another object!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return;
-						}
-						else
-						{
-							SpellLine chargeEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-							if (chargeEffectLine != null)
-							{
-								if (type == 1) //use1
-								{
-									Spell spell = SkillBase.GetSpellByID(useItem.SpellID);
-									if (spell.Level <= Level)
-									{
-										ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
-										if (spellHandler != null)
-										{
-											if (IsOnHorse && !spellHandler.HasPositiveEffect)
-												IsOnHorse = false;
-											Stealth(false);
-											spellHandler.CastSpell();
-											TempProperties.setProperty("artifactuse" + useItem.Id_nb, CurrentRegion.Time);
-											TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
-											TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 1));
-										}
-										else
-										{
-											Out.SendMessage("Charge effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-										}
-									}
-									else
-										Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
-								else if (type == 2) //use2
-								{
-									Spell spell = SkillBase.GetSpellByID(useItem.SpellID1);
-									if (spell.Level <= Level)
-									{
-										ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
-										if (spellHandler != null)
-										{
-											if (IsOnHorse && !spellHandler.HasPositiveEffect)
-												IsOnHorse = false;
-											Stealth(false);
-											spellHandler.CastSpell();
-											TempProperties.setProperty("artifactuse" + useItem.Id_nb, CurrentRegion.Time);
-											TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
-											TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 1));
-										}
-										else
-										{
-											Out.SendMessage("Charge effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-										}
-									}
-									else
-										Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-								}
-							}
-						}
-						return;
-					}
 
 					if ((type < 2 && useItem.SpellID > 0 && useItem.Charges < 1) || (type == 2 && useItem.SpellID1 > 0 && useItem.Charges1 < 1) || (useItem.PoisonSpellID > 0 && useItem.PoisonCharges < 1))
 					{
 						Out.SendMessage("The " + useItem.Name + " is out of charges.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;
 					}
-					else if (!ArtifactManager.IsArtifact(useItem))
+					else
 					{
 						if (useItem.Object_Type == (int)eObjectType.Poison)
 						{
@@ -9272,21 +9192,17 @@ namespace DOL.GS
 
 			Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Magic", item.GetName(0, false))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-			// Do not apply bonuses to Arti's let assignArtifactbonuses() do it.
-			if (!ArtifactManager.IsArtifact(item))
-			{
-				if (item.Bonus1 != 0) ItemBonus[item.Bonus1Type] += item.Bonus1;
-				if (item.Bonus2 != 0) ItemBonus[item.Bonus2Type] += item.Bonus2;
-				if (item.Bonus3 != 0) ItemBonus[item.Bonus3Type] += item.Bonus3;
-				if (item.Bonus4 != 0) ItemBonus[item.Bonus4Type] += item.Bonus4;
-				if (item.Bonus5 != 0) ItemBonus[item.Bonus5Type] += item.Bonus5;
-				if (item.Bonus6 != 0) ItemBonus[item.Bonus6Type] += item.Bonus6;
-				if (item.Bonus7 != 0) ItemBonus[item.Bonus7Type] += item.Bonus7;
-				if (item.Bonus8 != 0) ItemBonus[item.Bonus8Type] += item.Bonus8;
-				if (item.Bonus9 != 0) ItemBonus[item.Bonus9Type] += item.Bonus9;
-				if (item.Bonus10 != 0) ItemBonus[item.Bonus10Type] += item.Bonus10;
-				if (item.ExtraBonus != 0) ItemBonus[item.ExtraBonusType] += item.ExtraBonus;
-			}
+			if (item.Bonus1 != 0) ItemBonus[item.Bonus1Type] += item.Bonus1;
+			if (item.Bonus2 != 0) ItemBonus[item.Bonus2Type] += item.Bonus2;
+			if (item.Bonus3 != 0) ItemBonus[item.Bonus3Type] += item.Bonus3;
+			if (item.Bonus4 != 0) ItemBonus[item.Bonus4Type] += item.Bonus4;
+			if (item.Bonus5 != 0) ItemBonus[item.Bonus5Type] += item.Bonus5;
+			if (item.Bonus6 != 0) ItemBonus[item.Bonus6Type] += item.Bonus6;
+			if (item.Bonus7 != 0) ItemBonus[item.Bonus7Type] += item.Bonus7;
+			if (item.Bonus8 != 0) ItemBonus[item.Bonus8Type] += item.Bonus8;
+			if (item.Bonus9 != 0) ItemBonus[item.Bonus9Type] += item.Bonus9;
+			if (item.Bonus10 != 0) ItemBonus[item.Bonus10Type] += item.Bonus10;
+			if (item.ExtraBonus != 0) ItemBonus[item.ExtraBonusType] += item.ExtraBonus;
 
 			if (ObjectState == eObjectState.Active)
 			{
@@ -9367,21 +9283,17 @@ namespace DOL.GS
 
 			if (!item.IsMagical) return;
 
-			// Do not apply bonuses to Arti's let assignArtifactbonuses() do it.
-			if (!ArtifactManager.IsArtifact(item))
-			{
-				if (item.Bonus1 != 0) ItemBonus[item.Bonus1Type] -= item.Bonus1;
-				if (item.Bonus2 != 0) ItemBonus[item.Bonus2Type] -= item.Bonus2;
-				if (item.Bonus3 != 0) ItemBonus[item.Bonus3Type] -= item.Bonus3;
-				if (item.Bonus4 != 0) ItemBonus[item.Bonus4Type] -= item.Bonus4;
-				if (item.Bonus5 != 0) ItemBonus[item.Bonus5Type] -= item.Bonus5;
-				if (item.Bonus6 != 0) ItemBonus[item.Bonus6Type] -= item.Bonus6;
-				if (item.Bonus7 != 0) ItemBonus[item.Bonus7Type] -= item.Bonus7;
-				if (item.Bonus8 != 0) ItemBonus[item.Bonus8Type] -= item.Bonus8;
-				if (item.Bonus9 != 0) ItemBonus[item.Bonus9Type] -= item.Bonus9;
-				if (item.Bonus10 != 0) ItemBonus[item.Bonus10Type] -= item.Bonus10;
-				if (item.ExtraBonus != 0) ItemBonus[item.ExtraBonusType] -= item.ExtraBonus;
-			}
+			if (item.Bonus1 != 0) ItemBonus[item.Bonus1Type] -= item.Bonus1;
+			if (item.Bonus2 != 0) ItemBonus[item.Bonus2Type] -= item.Bonus2;
+			if (item.Bonus3 != 0) ItemBonus[item.Bonus3Type] -= item.Bonus3;
+			if (item.Bonus4 != 0) ItemBonus[item.Bonus4Type] -= item.Bonus4;
+			if (item.Bonus5 != 0) ItemBonus[item.Bonus5Type] -= item.Bonus5;
+			if (item.Bonus6 != 0) ItemBonus[item.Bonus6Type] -= item.Bonus6;
+			if (item.Bonus7 != 0) ItemBonus[item.Bonus7Type] -= item.Bonus7;
+			if (item.Bonus8 != 0) ItemBonus[item.Bonus8Type] -= item.Bonus8;
+			if (item.Bonus9 != 0) ItemBonus[item.Bonus9Type] -= item.Bonus9;
+			if (item.Bonus10 != 0) ItemBonus[item.Bonus10Type] -= item.Bonus10;
+			if (item.ExtraBonus != 0) ItemBonus[item.ExtraBonusType] -= item.ExtraBonus;
 
 			if (ObjectState == eObjectState.Active)
 			{

@@ -163,7 +163,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 								log.Warn(String.Format("Artifact version {0} not found", versionID));
 								return false;
 							}
-							GiveItem(scholar, player, template);
+							GiveItem(scholar, player, ArtifactID, template);
 							String reply = String.Format("Here's your {0}. May it serve you well. {1}",
 								template.Name,
 								"Just don't lose it. You can't ever replace it.");
