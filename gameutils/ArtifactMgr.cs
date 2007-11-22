@@ -306,9 +306,37 @@ namespace DOL.GS
                     }
                 }
             }
-
-            return artifactID;
+			return artifactID;
         }
+
+		/// <summary>
+		/// Find the matching artifact for the item
+		/// </summary>
+		/// <param name="bookID"></param>
+		/// <returns></returns>
+		public static String GetArtifactIDFromItemID(String itemID)
+		{
+			if (itemID == null)
+				return null;
+
+			String artifactID = null;
+			lock (m_artifactVersions.SyncRoot)
+			{
+				foreach (ArrayList list in m_artifactVersions.Values)
+				{
+					foreach (ArtifactXItem AxI in list)
+					{
+						if (AxI.ItemID == itemID)
+						{
+							artifactID = AxI.ArtifactID;
+							break;
+						}
+					}
+				}
+			}
+
+			return artifactID;
+		}
 
 		/// <summary>
 		/// Check whether these 2 items can be combined.
@@ -393,6 +421,28 @@ namespace DOL.GS
 
 			lock (m_artifacts.SyncRoot)
 				return (Artifact)m_artifacts[artifactID];
+		}
+
+		/// <summary>
+		/// Find all artifacts that this player carries
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns></returns>
+		public static List<string> GetArtifactsFromPlayer(GamePlayer player)
+		{
+		    List<string> artifacts = new List<string>();
+			lock (player.Inventory.AllItems.SyncRoot)
+			{
+				foreach (InventoryItem item in player.Inventory.AllItems)
+				{
+					string ArtID = GetArtifactIDFromItemID(item.Id_nb);
+					if (ArtID != null)
+					{
+						artifacts.Add(ArtID);
+					}
+				}
+			}
+			return artifacts;
 		}
 
         /// <summary>
