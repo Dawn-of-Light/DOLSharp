@@ -45,18 +45,18 @@ namespace DOL.GS
                 m_ArtifactLevelByID_Nb[entry.Id_nb] = entry;
             }
 
-            dbo = GameServer.Database.SelectAllObjects(typeof(ArtifactBonus));
-            for (int i = 0; i < dbo.Length; i++)
-            {
-                ArtifactBonus entry = dbo[i] as ArtifactBonus;
-                ArrayList artibonus = m_ArtifactBonusByID_Nb[entry.Id_nb] as ArrayList;
-                if (artibonus == null)
-                {
-                    artibonus = new ArrayList();
-                }
-                artibonus.Add(entry);
-                m_ArtifactBonusByID_Nb[entry.Id_nb] = artibonus;
-            }
+            //dbo = GameServer.Database.SelectAllObjects(typeof(ArtifactBonus));
+			//for (int i = 0; i < dbo.Length; i++)
+			//{
+			//    ArtifactBonus entry = dbo[i] as ArtifactBonus;
+			//    ArrayList artibonus = m_ArtifactBonusByID_Nb[entry.Id_nb] as ArrayList;
+			//    if (artibonus == null)
+			//    {
+			//        artibonus = new ArrayList();
+			//    }
+			//    artibonus.Add(entry);
+			//    m_ArtifactBonusByID_Nb[entry.Id_nb] = artibonus;
+			//}
         }
 
         /// <summary>
@@ -66,125 +66,125 @@ namespace DOL.GS
         /// <returns></returns>
         public static InventoryItem AssignArtifactBonuses(InventoryItem iitem)
         {
-            if (!IsArtifact(iitem))
-            {
-                log.Warn("Error: given iitem is not an artifact objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
-                return iitem;
-            }
+			//if (!IsArtifact(iitem))
+			//{
+			//    log.Warn("Error: given iitem is not an artifact objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
+			//    return iitem;
+			//}
 
-            ArrayList abonuslist = m_ArtifactBonusByID_Nb[iitem.Id_nb] as ArrayList;
-            ArtifactLevel alevel = m_ArtifactLevelByID_Nb[iitem.Id_nb] as ArtifactLevel;
+			//ArrayList abonuslist = m_ArtifactBonusByID_Nb[iitem.Id_nb] as ArrayList;
+			//ArtifactLevel alevel = m_ArtifactLevelByID_Nb[iitem.Id_nb] as ArtifactLevel;
 
-            if (abonuslist == null)
-            {
-                log.Warn("Error: given iitem is an artifact but ArtifactBonus values arent populated objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
-                return iitem;
-            }
+			//if (abonuslist == null)
+			//{
+			//    log.Warn("Error: given iitem is an artifact but ArtifactBonus values arent populated objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
+			//    return iitem;
+			//}
 
-            if (alevel == null)
-            {
-                log.Warn("Error: given iitem is an artifact but ArtifactBonus values arent populated objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
-                return iitem;
-            }
+			//if (alevel == null)
+			//{
+			//    log.Warn("Error: given iitem is an artifact but ArtifactBonus values arent populated objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
+			//    return iitem;
+			//}
 
-            int level = (int)(iitem.Experience / alevel.Experience);
-            //log.Info("Info: Calculated artifact level: " + level + " objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
+			//int level = (int)(iitem.Experience / alevel.Experience);
+			////log.Info("Info: Calculated artifact level: " + level + " objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
 
-            ArrayList applyingBonus = new ArrayList();
+			//ArrayList applyingBonus = new ArrayList();
 
-            foreach (ArtifactBonus abonus in abonuslist)
-            {
-                if (abonus.Level <= level)
-                    applyingBonus.Add(abonus);
-            }
-            //log.Info("Info: Found " + applyingBonus.Count + " bonuses that apply to artifact at given level objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
+			//foreach (ArtifactBonus abonus in abonuslist)
+			//{
+			//    if (abonus.Level <= level)
+			//        applyingBonus.Add(abonus);
+			//}
+			////log.Info("Info: Found " + applyingBonus.Count + " bonuses that apply to artifact at given level objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
 
-            abonuslist = null;
+			//abonuslist = null;
 
-            for (int i = 0; i < applyingBonus.Count; i++)
-            {
-                ArtifactBonus abonus = applyingBonus[i] as ArtifactBonus;
-                if (abonus == null)
-                {
-                    log.Warn("Error: failed to cast arraylist[" + i + "] entry to artifactbonus objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
-                    continue;
-                }
+			//for (int i = 0; i < applyingBonus.Count; i++)
+			//{
+			//    ArtifactBonus abonus = applyingBonus[i] as ArtifactBonus;
+			//    if (abonus == null)
+			//    {
+			//        log.Warn("Error: failed to cast arraylist[" + i + "] entry to artifactbonus objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
+			//        continue;
+			//    }
 
-                //log.Info("Info: Added bonustype " + (eProperty)abonus.BonusType + " amount: " + abonus.BonusAmount + " objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb + " and index[i] = " + i);
+			//    //log.Info("Info: Added bonustype " + (eProperty)abonus.BonusType + " amount: " + abonus.BonusAmount + " objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb + " and index[i] = " + i);
 
-                if (abonus.BonusType >= 0)
-                {
-                    switch (i)
-                    {
-                        case 0:
-                            iitem.Bonus1 = abonus.BonusAmount;
-                            iitem.Bonus1Type = abonus.BonusType;
-                            break;
-                        case 1:
-                            iitem.Bonus2 = abonus.BonusAmount;
-                            iitem.Bonus2Type = abonus.BonusType;
-                            break;
-                        case 2:
-                            iitem.Bonus3 = abonus.BonusAmount;
-                            iitem.Bonus3Type = abonus.BonusType;
-                            break;
-                        case 3:
-                            iitem.Bonus4 = abonus.BonusAmount;
-                            iitem.Bonus4Type = abonus.BonusType;
-                            break;
-                        case 4:
-                            iitem.Bonus5 = abonus.BonusAmount;
-                            iitem.Bonus5Type = abonus.BonusType;
-                            break;
-                        case 5:
-                            iitem.Bonus6 = abonus.BonusAmount;
-                            iitem.Bonus6Type = abonus.BonusType;
-                            break;
-                        case 6:
-                            iitem.Bonus7 = abonus.BonusAmount;
-                            iitem.Bonus7Type = abonus.BonusType;
-                            break;
-                        case 7:
-                            iitem.Bonus8 = abonus.BonusAmount;
-                            iitem.Bonus8Type = abonus.BonusType;
-                            break;
-                        case 8:
-                            iitem.Bonus9 = abonus.BonusAmount;
-                            iitem.Bonus9Type = abonus.BonusType;
-                            break;
-                        case 9:
-                            iitem.Bonus10 = abonus.BonusAmount;
-                            iitem.Bonus10Type = abonus.BonusType;
-                            break;
-                        case 10:
-                            iitem.ExtraBonus = abonus.BonusAmount;
-                            iitem.ExtraBonusType = abonus.BonusType;
-                            break;
-                    }
-                }
-                else if (abonus.BonusType < 0)
-                {
-                    switch (abonus.BonusType)
-                    {
-                        case -10:
-                            iitem.ProcSpellID = abonus.BonusAmount;
-                            break;
-                        case -20:
-                            iitem.ProcSpellID1 = abonus.BonusAmount;
-                            break;
-                        case -30:
-                            iitem.SpellID = abonus.BonusAmount;
-                            iitem.MaxCharges = -1;
-                            break;
-                        case -40:
-                            iitem.SpellID1 = abonus.BonusAmount;
-                            iitem.MaxCharges1 = -1;
-                            break;
-                    }
+			//    if (abonus.BonusType >= 0)
+			//    {
+			//        switch (i)
+			//        {
+			//            case 0:
+			//                iitem.Bonus1 = abonus.BonusAmount;
+			//                iitem.Bonus1Type = abonus.BonusType;
+			//                break;
+			//            case 1:
+			//                iitem.Bonus2 = abonus.BonusAmount;
+			//                iitem.Bonus2Type = abonus.BonusType;
+			//                break;
+			//            case 2:
+			//                iitem.Bonus3 = abonus.BonusAmount;
+			//                iitem.Bonus3Type = abonus.BonusType;
+			//                break;
+			//            case 3:
+			//                iitem.Bonus4 = abonus.BonusAmount;
+			//                iitem.Bonus4Type = abonus.BonusType;
+			//                break;
+			//            case 4:
+			//                iitem.Bonus5 = abonus.BonusAmount;
+			//                iitem.Bonus5Type = abonus.BonusType;
+			//                break;
+			//            case 5:
+			//                iitem.Bonus6 = abonus.BonusAmount;
+			//                iitem.Bonus6Type = abonus.BonusType;
+			//                break;
+			//            case 6:
+			//                iitem.Bonus7 = abonus.BonusAmount;
+			//                iitem.Bonus7Type = abonus.BonusType;
+			//                break;
+			//            case 7:
+			//                iitem.Bonus8 = abonus.BonusAmount;
+			//                iitem.Bonus8Type = abonus.BonusType;
+			//                break;
+			//            case 8:
+			//                iitem.Bonus9 = abonus.BonusAmount;
+			//                iitem.Bonus9Type = abonus.BonusType;
+			//                break;
+			//            case 9:
+			//                iitem.Bonus10 = abonus.BonusAmount;
+			//                iitem.Bonus10Type = abonus.BonusType;
+			//                break;
+			//            case 10:
+			//                iitem.ExtraBonus = abonus.BonusAmount;
+			//                iitem.ExtraBonusType = abonus.BonusType;
+			//                break;
+			//        }
+			//    }
+			//    else if (abonus.BonusType < 0)
+			//    {
+			//        switch (abonus.BonusType)
+			//        {
+			//            case -10:
+			//                iitem.ProcSpellID = abonus.BonusAmount;
+			//                break;
+			//            case -20:
+			//                iitem.ProcSpellID1 = abonus.BonusAmount;
+			//                break;
+			//            case -30:
+			//                iitem.SpellID = abonus.BonusAmount;
+			//                iitem.MaxCharges = -1;
+			//                break;
+			//            case -40:
+			//                iitem.SpellID1 = abonus.BonusAmount;
+			//                iitem.MaxCharges1 = -1;
+			//                break;
+			//        }
 
-                }
+			//    }
 
-            }
+            //}
 
             //log.Info("Info: Returning item objectid: " + iitem.ObjectId + " id_nb: " + iitem.Id_nb);
             return iitem;

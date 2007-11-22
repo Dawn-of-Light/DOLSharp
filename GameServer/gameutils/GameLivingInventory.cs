@@ -140,7 +140,7 @@ namespace DOL.GS
 			if(    ( slot >= eInventorySlot.RightHandWeapon && slot <= eInventorySlot.FourthQuiver)
 				|| ( slot >= eInventorySlot.HeadArmor && slot <= eInventorySlot.Neck)
 				|| ( slot >= eInventorySlot.HorseArmor && slot <= eInventorySlot.Horse)
-				|| ( slot >= eInventorySlot.Waist && slot <= eInventorySlot.RightRing)
+				|| ( slot >= eInventorySlot.Waist && slot <= eInventorySlot.Mythical)
 				|| ( slot == eInventorySlot.Ground))
 				return slot;
 
