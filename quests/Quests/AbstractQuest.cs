@@ -133,15 +133,6 @@ namespace DOL.GS.Quests
 			else
 				GameServer.Database.AddNewObject(m_dbQuest);
 		}
-
-		/// <summary>
-		/// Removes this quest from the database
-		/// </summary>
-		public virtual void RemoveFromDatabase()
-		{
-			m_dbQuest.AutoSave = false;
-			GameServer.Database.DeleteObject(m_dbQuest);
-		}
 		  
 		/// <summary>
 		/// Deletes this quest from the database
