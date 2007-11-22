@@ -527,7 +527,7 @@ namespace DOL.GS.Quests.Atlantis
 			if (m_questPlayer.HasFinishedQuest(this.GetType()) == 0)
 				m_questPlayer.QuestListFinished.Add(this);
 
-			RemoveFromDatabase();
+			DeleteFromDatabase();
 
 			m_questPlayer.Out.SendQuestListUpdate();
 		}
