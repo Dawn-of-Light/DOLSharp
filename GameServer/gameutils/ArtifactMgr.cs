@@ -26,6 +26,7 @@ using log4net;
 using DOL.GS.PacketHandler;
 using DOL.GS.Quests;
 using DOL.GS.Scripts;
+using DOL.Events;
 
 namespace DOL.GS
 {
@@ -57,10 +58,14 @@ namespace DOL.GS
         /// </summary>
         public static bool LoadArtifacts()
         {
+			// Load artifacts.
+
             DataObject[] dbo = GameServer.Database.SelectAllObjects(typeof(Artifact));
 			m_artifacts = new Hashtable();
             foreach (Artifact artifact in dbo)
                 m_artifacts.Add(artifact.ArtifactID, artifact);
+
+			// Load artifact versions.
 
             dbo = GameServer.Database.SelectAllObjects(typeof(ArtifactXItem));
             m_artifactVersions = new Hashtable();
@@ -76,10 +81,21 @@ namespace DOL.GS
                 versionList.Add(artifactVersion);
             }
 
+			// Load artifact bonuses.
+
+
+
+			// Load artifact books.
+
             dbo = GameServer.Database.SelectAllObjects(typeof(ArtifactBook));
             m_artifactBooks = new Hashtable();
             foreach (ArtifactBook artifactBook in dbo)
                 m_artifactBooks[artifactBook.ArtifactID] = artifactBook;
+
+			// Install event handlers.
+
+			GameEventMgr.AddHandler(GamePlayerEvent.GainedExperience, 
+				new DOLEventHandler(PlayerGainedExperience));
 
             log.Info(String.Format("{0} artifacts ({1} versions) and {2} books loaded", 
 				m_artifacts.Count, m_artifactVersions.Count, m_artifactBooks.Count));
@@ -121,15 +137,132 @@ namespace DOL.GS
 			return scholars;
 		}
 
+		#region Level & Experience
+
+		private static readonly long[] m_xpForLevel =
+			{
+				0,				// xp to level 0
+				50000000,		// xp to level 1
+				100000000,		// xp to level 2
+				150000000,		// xp to level 3
+				200000000,		// xp to level 4
+				250000000,		// xp to level 5
+				300000000,		// xp to level 6
+				350000000,		// xp to level 7
+				400000000,		// xp to level 8
+				450000000,		// xp to level 9
+				500000000		// xp to level 10
+			};
+
+		/// <summary>
+		/// Called from GameEventMgr when player has gained experience.
+		/// </summary>
+		/// <param name="e"></param>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
+		public static void PlayerGainedExperience(DOLEvent e, object sender, EventArgs args)
+		{
+			GamePlayer player = sender as GamePlayer;
+			GainedExperienceEventArgs xpArgs = args as GainedExperienceEventArgs;
+			if (player == null || xpArgs == null)
+				return;
+
+			// Suffice to calculate total XP once for all artifacts.
+
+			long xpAmount = xpArgs.ExpBase +
+					xpArgs.ExpCampBonus +
+					xpArgs.ExpGroupBonus +
+					xpArgs.ExpOutpostBonus;
+
+			// Only currently equipped artifacts can gain experience.
+
+			ICollection equippedItems = player.Inventory.GetItemRange(eInventorySlot.MinEquipable,
+				eInventorySlot.MaxEquipable);
+
+			lock (m_artifactVersions.SyncRoot)
+				foreach (InventoryItem item in equippedItems)
+					if (item != null)
+						foreach (DictionaryEntry entry in m_artifactVersions)
+							foreach (ArtifactXItem version in (entry.Value as ArrayList))
+								if (version.ItemID == item.Id_nb)
+									ArtifactGainedExperience(player, item, xpAmount, version);
+		}
+
+		/// <summary>
+		/// Called when an artifact has gained experience.
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="item"></param>
+		/// <param name="xpAmount"></param>
+		/// <param name="artifactVersion"></param>
+		private static void ArtifactGainedExperience(GamePlayer player, InventoryItem item,
+			long xpAmount, ArtifactXItem artifactVersion)
+		{
+			if (player == null || item == null || artifactVersion == null)
+				return;
+
+			long artifactXPOld = item.Experience;
+			if (artifactXPOld >= m_xpForLevel[10])	// Can't go past level 10.
+				return;
+
+			// All artifacts share the same XP table, we make them level
+			// at different rates by tweaking the XP rate.
+
+			int xpRate;
+
+			lock (m_artifacts.SyncRoot)
+			{
+				Artifact artifact = m_artifacts[artifactVersion.ArtifactID] as Artifact;
+				if (artifact == null)
+					return;
+				xpRate = artifact.XPRate;
+			}
+
+			long artifactXPNew = (long)(artifactXPOld + (xpAmount * xpRate)/100);
+			item.Experience = artifactXPNew;
+
+			player.Out.SendMessage(String.Format("Your {0} has gained experience.", item.Name),
+				eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+
+			// Now let's see if this artifact has gained a new level yet.
+
+			for (int level = 1; level <= 10; ++level)
+			{
+				if (artifactXPOld < m_xpForLevel[level] && artifactXPNew >= m_xpForLevel[level])
+				{
+					ArtifactGainedLevel(player, item, level, artifactVersion);
+					return;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Called when artifact has gained a level.
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="item"></param>
+		/// <param name="level"></param>
+		/// <param name="artifactVersion"></param>
+		private static void ArtifactGainedLevel(GamePlayer player, InventoryItem item, int level,
+			ArtifactXItem artifactVersion)
+		{
+			// TODO: Copy new bonuses.
+
+			player.Out.SendMessage(String.Format("Your {0} has gained a level!", item.Name),
+				eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+		}
+
+		#endregion
+
 		#region Artifact Versions
 
 		/// <summary>
-        /// Get a list of all versions for this artifact.
-        /// </summary>
-        /// <param name="artifactID"></param>
+		/// Get a list of all versions for this artifact.
+		/// </summary>
+		/// <param name="artifactID"></param>
 		/// <param name="realm"></param>
-        /// <returns></returns>
-        private static ArrayList GetArtifactVersions(String artifactID, eRealm realm)
+		/// <returns></returns>
+		private static ArrayList GetArtifactVersions(String artifactID, eRealm realm)
         {
             ArrayList versions = new ArrayList();
             if (artifactID != null)
