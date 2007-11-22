@@ -44,7 +44,6 @@ namespace DOL.GS
                 ArtifactLevel entry = dbo[i] as ArtifactLevel;
                 m_ArtifactLevelByID_Nb[entry.Id_nb] = entry;
             }
-            log.Info("Loaded " + m_ArtifactLevelByID_Nb.Count + " entries from ArtifactLevelDB.");
 
             dbo = GameServer.Database.SelectAllObjects(typeof(ArtifactBonus));
             for (int i = 0; i < dbo.Length; i++)
@@ -58,7 +57,6 @@ namespace DOL.GS
                 artibonus.Add(entry);
                 m_ArtifactBonusByID_Nb[entry.Id_nb] = artibonus;
             }
-            log.Info("Loaded " + m_ArtifactBonusByID_Nb.Count + " entries from ArtifactBonusDB.");
         }
 
         /// <summary>
