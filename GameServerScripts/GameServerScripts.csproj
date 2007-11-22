@@ -118,7 +118,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="behaviour\examples\TestBehaviour.cs" />
-    <Compile Include="customnpc\Artifactivator.cs" />
     <Compile Include="customnpc\Blacksmith.cs">
       <SubType>Code</SubType>
     </Compile>

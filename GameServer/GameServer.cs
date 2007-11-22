@@ -1165,7 +1165,9 @@ namespace DOL
 							foreach (Type type in assembly.GetTypes())
 							{
 								// Pick up a class
-								if (type.IsClass != true)
+								// Aredhel: Ok, I know checking for InventoryArtifact type
+								// is a hack, but I currently have no better idea.
+								if (type.IsClass != true || type == typeof(InventoryArtifact))
 									continue;
 								object[] attrib = type.GetCustomAttributes(typeof(DataTable), true);
 								if (attrib.Length > 0)

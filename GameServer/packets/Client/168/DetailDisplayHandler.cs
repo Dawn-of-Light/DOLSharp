@@ -31,6 +31,7 @@ using DOL.GS.Styles;
 using DOL.GS.SkillHandler;
 
 using log4net;
+using System.Collections.Generic;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
@@ -67,6 +68,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 
 						caption = item.Name;
+
+						// Aredhel: Start of a more sophisticated item delve system.
+
+						foreach (string line in item.Delve)
+							objectInfo.Add(line);
+						break;
 
 						//**********************************
 						//show crafter name
@@ -128,22 +135,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						}
 
-                        if (ArtifactManager.IsArtifact(item))
-                        {
-                            long level = ArtifactManager.GetArtifactLevel(item);
-                            objectInfo.Add(" ");
-                            if (ArtifactManager.IsActivated(item))
-                            {
-                                objectInfo.Add(" - Artifact Information -");
-                                objectInfo.Add("      Artifact Level: " + level);
-                                objectInfo.Add(" Artifact Experience: " + item.Experience);
-                            }
-                            else
-                            {
-                                objectInfo.Add(" - Artifact Information -");
-                                objectInfo.Add("  Artifact Not Activated ");
-                            }
-                        }
                         //***********************************
 						//shows info for Shields			*
 						//***********************************

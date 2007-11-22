@@ -137,7 +137,26 @@ namespace DOL.GS
 			return scholars;
 		}
 
-		#region Level & Experience
+		/// <summary>
+		/// Checks whether or not the item is an artifact (simple item
+		/// name check for now).
+		/// </summary>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public static bool IsArtifact(InventoryItem item)
+		{
+			if (item == null)
+				return false;
+
+			lock (m_artifactVersions.SyncRoot)
+				foreach (DictionaryEntry entry in m_artifactVersions)
+					foreach (ArtifactXItem version in (entry.Value as ArrayList))
+						if (version.ItemID == item.Id_nb)
+							return true;
+			return false;
+		}
+
+		#region Experience/Level
 
 		private static readonly long[] m_xpForLevel =
 			{
@@ -153,6 +172,63 @@ namespace DOL.GS
 				450000000,		// xp to level 9
 				500000000		// xp to level 10
 			};
+
+		/// <summary>
+		/// Determine artifact level from total XP.
+		/// </summary>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public static int GetItemLevel(InventoryArtifact item)
+		{
+			if (item != null)
+			{
+				for (int level = 10; level >= 0; --level)
+					if (item.Experience >= m_xpForLevel[level])
+						return level;
+			}
+			return 0;
+		}
+
+		/// <summary>
+		/// Calculate the XP gained towards the next level (in percent).
+		/// </summary>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public static int GetExperienceGainedTowardsNextLevel(InventoryArtifact item)
+		{
+			if (item != null)
+			{
+				int level = GetItemLevel(item);
+				if (level < 10)
+				{
+					double xpGained = item.Experience - m_xpForLevel[level];
+					double xpNeeded = m_xpForLevel[level + 1];
+					return (int)(xpGained * 100 / xpNeeded);
+				}
+			}
+			return 0;
+		}
+
+		/// <summary>
+		/// Get the level this artifact will gain a new ability.
+		/// </summary>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public static int GetNewAbilityAtLevel(InventoryArtifact item)
+		{
+			// TODO.
+			return GetItemLevel(item);
+		}
+
+		/// <summary>
+		/// What this artifact gains XP from.
+		/// </summary>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public static String GetEarnsXP(InventoryArtifact item)
+		{
+			return "Slaying enemies and monsters found anywhere.";
+		}
 
 		/// <summary>
 		/// Called from GameEventMgr when player has gained experience.
@@ -445,7 +521,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Find the matching artifact for the item
 		/// </summary>
-		/// <param name="bookID"></param>
+		/// <param name="itemID"></param>
 		/// <returns></returns>
 		public static String GetArtifactIDFromItemID(String itemID)
 		{
