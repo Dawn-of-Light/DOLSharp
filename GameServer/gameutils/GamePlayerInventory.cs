@@ -84,13 +84,6 @@ namespace DOL.GS
 								log.Error("Tried to load an item in invalid slot, ignored. Item id=" + item.ObjectId);
 							continue;
 						}
-						////add to artifact collection
-						//if (ArtifactManager.IsArtifact(item))
-						//{
-						//    Artifacts.Add(item);
-						//    //Dinberg - reset artifact reuse timers on login/out to prevent abuse.
-						//    Player.TempProperties.setProperty("artifactuse" + item.Id_nb, Player.CurrentRegion.Time);
-						//}
 
                         if (m_items[item.SlotPosition] != null)
 						{
@@ -98,6 +91,11 @@ namespace DOL.GS
 								log.Error("Error loading " + m_player.Name + "'s inventory OwnerID " + inventoryID + " slot " + item.SlotPosition + " duplicate item found, skipping!");
 							continue;
 						}
+
+						// Depending on whether or not the item is an artifact we will
+						// create different types of inventory items. That way we can speed
+						// up item type checks and implement item delve information in
+						// a natural way, i.e. through inheritance.
 
 						if (ArtifactMgr.IsArtifact(item))
 							m_items.Add(item.SlotPosition, new InventoryArtifact(item));

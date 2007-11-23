@@ -21,6 +21,8 @@ using System;
 using DOL.Database;
 using DOL.Database.Attributes;
 using System.Collections.Generic;
+using log4net;
+using System.Reflection;
 
 namespace DOL.Database
 {
@@ -247,6 +249,11 @@ namespace DOL.Database
 	[DataTable(TableName = "InventoryItem")]
 	public class InventoryItem : ItemTemplate
 	{
+		/// <summary>
+		/// Defines a logger for this class.
+		/// </summary>
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
 		protected string m_ownerID;
 		protected int m_slot_pos;
 		protected string craftername;
@@ -373,7 +380,7 @@ namespace DOL.Database
 		}
 
         [DataElement(AllowDbNull = false)]
-        public long Experience
+        public virtual long Experience
         {
             get { return item_exp; }
             set
@@ -397,12 +404,13 @@ namespace DOL.Database
 
         public void CopyFrom(InventoryItem template)
 		{
+			CopyFrom((ItemTemplate)template);
 			OwnerID = template.OwnerID;
 			Count = template.Count;
 			SlotPosition = template.SlotPosition;
 			CrafterName = template.CrafterName;
 			Experience = template.Experience;
-			CopyFrom((ItemTemplate)template);
+			//CopyFrom((ItemTemplate)template);
 		}
 
 		public void CopyFrom(ItemTemplate template)
@@ -475,7 +483,6 @@ namespace DOL.Database
 			PoisonMaxCharges = template.PoisonMaxCharges;
 			Realm = template.Realm;
 			AllowedClasses = template.AllowedClasses;
-            ArtiID = template.ArtiID;
 		}
 	}
 }
