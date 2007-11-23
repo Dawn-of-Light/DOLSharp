@@ -23,8 +23,9 @@ using System.Text;
 using DOL.GS;
 using log4net;
 using System.Reflection;
+using DOL.Database;
 
-namespace DOL.Database
+namespace DOL.GS
 {
 	/// <summary>
 	/// An artifact inside an inventory.
@@ -43,11 +44,16 @@ namespace DOL.Database
 		private int m_newAbilityAtLevel;
 		private String m_earnsXP;
 
-		public InventoryArtifact()
-		{
-			log.Warn("*** InventoryArtifact default constructor invoked ***");
-		}
+		/// <summary>
+		/// This constructor shouldn't be called, so we prevent anyone
+		/// from using it.
+		/// </summary>
+		private InventoryArtifact() { }
 
+		/// <summary>
+		/// Create a new inventory artifact from an item template.
+		/// </summary>
+		/// <param name="template"></param>
 		public InventoryArtifact(ItemTemplate template)
 			: base(template)
 		{
@@ -58,11 +64,16 @@ namespace DOL.Database
 			m_earnsXP = ArtifactMgr.GetEarnsXP(this);
 		}
 
+		/// <summary>
+		/// Create a new inventory artifact from an existing inventory item.
+		/// </summary>
+		/// <param name="item"></param>
 		public InventoryArtifact(InventoryItem item)
+			: base(item)
 		{
 			if (item != null)
 			{
-				this.CopyFrom(item);
+				this.ObjectId = item.ObjectId;	// This is the key for the 'inventoryitem' table
 				m_artifactID = ArtifactMgr.GetArtifactIDFromItemID(item.Id_nb);
 				m_artifactLevel = ArtifactMgr.GetItemLevel(this);
 				m_xpToNextLevel = ArtifactMgr.GetExperienceGainedTowardsNextLevel(this);
@@ -71,29 +82,35 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// The artifact ID.
+		/// </summary>
 		public String ArtifactID
 		{
 			get { return m_artifactID; }
 		}
 
+		/// <summary>
+		/// The current level of the artifact.
+		/// </summary>
 		public int ArtifactLevel
 		{
 			get { return m_artifactLevel; }
 		}
 
-		public int ExperienceToNextLevel
+		/// <summary>
+		/// The total experience this artifact has gained so far.
+		/// </summary>
+		public override long Experience
 		{
-			get { return m_xpToNextLevel; }
-		}
-
-		public int NewAbilityAtLevel
-		{
-			get { return m_newAbilityAtLevel; }
-		}
-
-		public String EarnsXP
-		{
-			get { return m_earnsXP; }
+			get { return base.Experience; }
+			set
+			{
+				base.Experience = value;
+				m_artifactLevel = ArtifactMgr.GetItemLevel(this);
+				m_xpToNextLevel = ArtifactMgr.GetExperienceGainedTowardsNextLevel(this);
+				m_newAbilityAtLevel = ArtifactMgr.GetNewAbilityAtLevel(this);
+			}
 		}
 
 		/// <summary>
@@ -109,11 +126,11 @@ namespace DOL.Database
 
 				if (ArtifactLevel < 10)
 				{
-					delve.Add(string.Format("- {0}% exp earned towards {1}", ExperienceToNextLevel,
+					delve.Add(string.Format("- {0}% exp earned towards level {1}", m_xpToNextLevel,
 						ArtifactLevel + 1));
 					delve.Add(string.Format("- Artifact will gain new abilities at level {0}",
-						NewAbilityAtLevel));
-					delve.Add(string.Format("(Earns exp: {0})", EarnsXP));
+						m_newAbilityAtLevel));
+					delve.Add(string.Format("(Earns exp: {0})", m_earnsXP));
 				}
 
 				delve.Add("");

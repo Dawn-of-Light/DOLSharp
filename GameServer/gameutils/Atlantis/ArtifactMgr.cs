@@ -148,6 +148,9 @@ namespace DOL.GS
 			if (item == null)
 				return false;
 
+			if (item is InventoryArtifact)
+				return true;
+
 			lock (m_artifactVersions.SyncRoot)
 				foreach (DictionaryEntry entry in m_artifactVersions)
 					foreach (ArtifactXItem version in (entry.Value as ArrayList))
