@@ -324,7 +324,7 @@ GamePlayer.Release.WillReleaseAuto:			You will now release automatically in {0} 
 GamePlayer.Release.WillReleaseAutoCity:			You will now release automatically to your home city in {0} more seconds!		
 GamePlayer.Release.WillReleaseIn:			You will autorelease in {0} seconds.		
 GamePlayer.Release.YouRelease:				You release your corpse unto death.	
-GamePlayer.Release.ReleaseToPortalKeep: You will now release to the nearest border or portal keep in {0} more seconds!
+GamePlayer.Release.ReleaseToPortalKeep: 		You will now release to the nearest border or portal keep in {0} more seconds!
 GamePlayer.RemoveAbility.YouLose:			You lose the {0} ability!		
 GamePlayer.RemoveSpecialization.YouLose:		You lose the {0} skill!			
 GamePlayer.RemoveSpellLine.YouLose:			You lose the {0} spell line!		
@@ -412,6 +412,82 @@ GamePlayer.Whisper.SelectTarget:			Select a target to whisper to!
 # GAMESTAICITEM
 GameStaticItem.GetName.Article1:			The {0}
 GameStaticItem.GetName.Article2:			the {0}
+
+# GAMEOBJECTS/ATLANTIS
+# /Researcher
+Researcher.GetExamineMessages.YouExamine:		You examine {0}. {1} is {2}.
+Researcher.GetExamineMessages.She:			She
+Researcher.GetExamineMessages.He:			He
+
+# /Arbiter
+Albion.Arbiter.Interact.BeginTrials:			{0}, welcome to Atlantis. When you are ready, you may begin the Trials. Come to me then.
+Albion.Arbiter.Interact.Welcome:			Ah, {0}, welcome to what is left of Atlantis! What a grand find this is! We don't know why we received messages from Atlantis, but when we did, we set forth right away. We had not heard of Atlantis for years. More years than our land has a history. But we set forth, and do you know why? The [promises] of Atlantis!
+Albion.Arbiter.WhisperReceive.Case1:			promises
+Albion.Arbiter.WhisperReceive.Case2:			tablet
+Albion.Arbiter.WhisperReceive.Case3:			place
+Albion.Arbiter.WhisperReceive.Case4:			survived
+Albion.Arbiter.WhisperReceive.Case5:			inhabitants
+Albion.Arbiter.WhisperReceive.Case6:			exist
+Albion.Arbiter.WhisperReceive.Case7:			guide
+Albion.Arbiter.WhisperReceive.Case8:			trials
+Albion.Arbiter.WhisperReceive.Text1:			Ah they spoke of these traits they value above all others, and of trials that tested other cultures for those traits. Those who pass the trials are promised greater skills in their trained arts. We don't know how, but that is what we are studying. See here, behind me, this stone with these glyphs? We call it the [tablet] of destiny.
+Albion.Arbiter.WhisperReceive.Text2:			Aye, this tablet and its magic, they are the only source of knowledge we have on the trials and the planes. We're trying to translate it, and we have found some other tablets and scrolls that tell us a bit about this [place].
+Albion.Arbiter.WhisperReceive.Text3:			It is the Hall of Heroes. As the Atlanteans refer to it. It's the entrance to the Planes of Trials. Now, I can glean a bit off of these tablets. We know that beyond this, through that portal there, lie the Planes of the Trials. There are certain trials you must defeat if you wish to be considered worthy of Atlantis. To fail is to die, for the most part, though it does mention something about survivors being sent away in disgrace. I can't tell you much about the trials, or even how to pass them. You see, Atlantis has fallen, and of the first ones we sent into the planes, only a few [survived].
+Albion.Arbiter.WhisperReceive.Text4:			Here, we are at a true disadvantage. Not only do we not know what the original trials were supposed to be like, what was necessary for passing them, and all the ceremonial steps involved, but it seems the [inhabitants] of the planes have forgotten as well.
+Albion.Arbiter.WhisperReceive.Text5:			Oh yes, the inhabitants. It seems, well, at one point, there were no societies of creatures in the planes. That was our first mistake. We assumed there would only be the trials. It turns out that somehow, the creatures of the Planes, after Atlantis' fall, found the means to survive in the planes. We think some creatures may have even escaped to the planes, though we can't be sure. All we know is that when Atlantis fell, it fell quickly. But, as for what lies beyond that portal, all I can say is the trials still [exist].
+Albion.Arbiter.WhisperReceive.Text6:			Yes, but in some corrupted, degraded form. Passing them will involve more than any one noble skill alone. We did not realize it was not merely a matter of heroics, strength and skill. It seems the beasts of the planes have developed a culture of their own, often influenced by the ancient trials, but evolved so much over time that there really is no resemblance. If you want the skills, the glory and the riches beyond this portal, my dear {0} you are going to have to enter the planes, and be prepared for anything, for I know too little to [guide] you.
+Albion.Arbiter.WhisperReceive.Text7:			I will do my best though. You will know if you pass each of the [trials]. When you have completed a trial, return to me and I will aid you best I can. Good luck {0}.
+Albion.Arbiter.WhisperReceive.Text8:			Yes, much of these planes were created for the trials. You will be rewarded with the abilities of the ancient Atlanteans if you can complete these trials.
+Hibernia.Arbiter.Interact.BeginTrials:			{0}. welcome to Atlantis. When you are ready, you may begin the Trials. Come to me then.
+Hibernia.Arbiter.Interact.Welcome:			Atlantis! Can you believe it, {0}? Another civilization rumored to be as wonderful as the elven earthly [paradise], when only the elves walked the land! This civilization is rumored to be older even than the elves! I didn't think any mortal walked the lands when elves ruled! It's wonder why they never mentioned or spoke of the Atlanteans!
+Hibernia.Arbiter.WhisperReceive.Case1:			paradise
+Hibernia.Arbiter.WhisperReceive.Case2:			test
+Hibernia.Arbiter.WhisperReceive.Case3:			tablet
+Hibernia.Arbiter.WhisperReceive.Case4:			place
+Hibernia.Arbiter.WhisperReceive.Case5:			survived
+Hibernia.Arbiter.WhisperReceive.Case6:			inhabitants
+Hibernia.Arbiter.WhisperReceive.Case7:			different
+Hibernia.Arbiter.WhisperReceive.Case8:			exist
+Hibernia.Arbiter.WhisperReceive.Case9:			aid
+Hibernia.Arbiter.WhisperReceive.Text1:			This paradise, for it was truly a paradise,was a model for all the civilizations around Atlantis. They saw themselves as greater than all the others, and they were benevolent in their treatment of those civilizations they took into their fold. They gave them a sort of [test] before they would let them into the kingdom of Atlantis. Nations that passed the test were seen as advanced, not as superior as Atlantis herself, but advanced. Those who failed were either not dealt with or treated as a subservient nation.
+Hibernia.Arbiter.WhisperReceive.Text2:			Ah the tests. They spoke of these traits they value above all others, and of trials that testet other cultures for those traits. Those who pass the trials are promised greater skills in their trained arts. The nations they represented, entered into the kingdom. We don't know how the trials worked, but that is what we are studying. See here, behind me, this stone with these glyphs? We call it the [tablet] of the planes.
+Hibernia.Arbiter.WhisperReceive.Text3:			Aye, this tablet and its magic, they are the only source of knowledge we have on the trials and the planes. We're trying to translate it. We've also found some other tablets and scrolls that tell us a bit about this [place].
+Hibernia.Arbiter.WhisperReceive.Text4:			It is the Hall of Heroes. As the Atlanteans refer to it. It's the entrance to the Planes of Trials. Now, I can glean a bit off of these tablets. We know that beyond this, throught that portal there, lies tha Planes of Trials. There are some trials you must defeat if you wish to be considered worthy of Atlantis. To fail is to die, for the most part, though it does mention something about survivors being sent away in disgrace. I can't tell you much about the trials, or even how to pass them. You see, Atlantis has fallen, and of the first ones we sent into the planes, only a few [survived].
+Hibernia.Arbiter.WhisperReceive.Text5:			We know nothing of the original trials, or what they were meant to do. We barely know the ceremonial steps involved, or even what was needed to pass them. What's more, the [inhabitants] of the planes, the original participants and holders of the trials, have forgotten as well. The information wasn't passed down through the generations since Atlantis' fall.
+Hibernia.Arbiter.WhisperReceive.Text6:			Well. At one time, when Atlantis existed as a civilization, the planes were kept separate. Atlanteans didn't live in the planes. They only traveled to the planes for the trials or for ceremonies. The only creatures in the planes were subservient creatures that served the Atlanteans in holding and conducting the trials. The creatures that were in the planes were not native to the planes, really, and often only stayed for a set determined time, until they could return to their own lands. Now, it is quite [different].
+Hibernia.Arbiter.WhisperReceive.Text7:			We assumed there would only be the trials. It turns out that somehow, the creatures of the Planes, after Atlantis' fall, found the means to survive in the planes. They've procreated. We even believe some creatures escaped to the planes that perhaps never had a part in the trials. But we can't be sure. All we know is that when Atlantis fell, it fell qzuckly. But, as for what lies beyond that portal, all I can say is the trials still [exist].
+Hibernia.Arbiter.WhisperReceive.Text8:			Yes, but in some corrupted way. Passing them will involve more than any one noble skill alone. We did not realize it was not merely a matter of heroics, strength and skill. It seems the beasts of the planes have developed a culture of their own, influenced by the ancient trials, but radically changed from the intent of the trials. If you want the skills, the glory and the riches beyond this portal, my dear {0}, you are going to have to enter the planes, and be prepared for anything, for I know too little to [aid] you.
+Hibernia.Arbiter.WhisperReceive.Text9:			I will do my best, though. You will know as you pass each of the trials. When you have completed a trial, return to me. Good luck {0}.
+
+Midgard.Arbiter.Interact.BeginTrials:			
+Midgard.Arbiter.Interact.Welcome:			
+
+Midgard.Arbiter.WhisperReceive.Case1:			
+Midgard.Arbiter.WhisperReceive.Text1:			
+
+Midgard.Arbiter.WhisperReceive.Case2:			
+Midgard.Arbiter.WhisperReceive.Text2:			
+
+Midgard.Arbiter.WhisperReceive.Case3:			
+Midgard.Arbiter.WhisperReceive.Text3:			
+
+Midgard.Arbiter.WhisperReceive.Case4:			
+Midgard.Arbiter.WhisperReceive.Text4:			
+
+Midgard.Arbiter.WhisperReceive.Case5:			
+Midgard.Arbiter.WhisperReceive.Text5:			
+
+Midgard.Arbiter.WhisperReceive.Case6:			
+Midgard.Arbiter.WhisperReceive.Text6:			
+
+Midgard.Arbiter.WhisperReceive.Case7:			
+Midgard.Arbiter.WhisperReceive.Text7:			
+
+Midgard.Arbiter.WhisperReceive.Case8:			
+Midgard.Arbiter.WhisperReceive.Text8:			
+
+Midgard.Arbiter.WhisperReceive.Case9:			
+Midgard.Arbiter.WhisperReceive.Text9:			
 					
 # HOUSING
 HouseEnterLeave.TooFarAway:				You are too far away to enter house {0}.
@@ -449,9 +525,9 @@ Scripts.Player.Housing.HookPointLogged:			Logged hookpoint position {0} in error
 Scripts.Player.Housing.HookPointLogLoc:			Log this housepoint location?
 Scripts.Player.Housing.HookPointNot:			That is not a hookpoint item!
 Scripts.Player.Housing.HookPointNotPlaced:		That hookpoint item was not placed.
-Scripts.Player.Housing.HookPointAlready: That HookPoint already has an item!
-Scripts.Player.Housing.ClearHookPoint: Would you like to clear the current hookpoint?
-Scripts.Player.Housing.HookPointCleared: That HookPoint has been cleared.
+Scripts.Player.Housing.HookPointAlready: 		That HookPoint already has an item!
+Scripts.Player.Housing.ClearHookPoint: 			Would you like to clear the current hookpoint?
+Scripts.Player.Housing.HookPointCleared: 		That HookPoint has been cleared.
 Scripts.Player.Housing.HouseUseMaterial:		You need to hold shift+right-click on your house to change those materials.
 Scripts.Player.Housing.HouseUseMaterial:		You need to hold shift+right-click on your house to change your carpets.
 Scripts.Player.Housing.IndoorFloorPlaced:		You have placed {0} on the floor of your house.
@@ -483,32 +559,6 @@ Scripts.Player.Housing.PorchAlready:			This house already has a porch!
 Scripts.Player.Housing.PorchNone:			This house does not have a porch!
 Scripts.Player.Housing.PorchNotItem:			This is not a porch item!
 Scripts.Player.Housing.TransferToGuild:			Do you want to transfer this house to {0}?
-
-# GAMEOBJECTS/ATLANTIS
-# /Researcher
-Researcher.GetExamineMessages.YouExamine:		You examine {0}. {1} is {2}.
-Researcher.GetExamineMessages.She:			She
-Researcher.GetExamineMessages.He:			He
-
-# /Arbiter
-Albion.Arbiter.Interact.BeginTrials:			{0}, welcome to Atlantis. When you are ready, you may begin the Trials. Come to me then.
-Albion.Arbiter.Interact.Welcome:				Ah, {0}, welcome to what is left of Atlantis! What a grand find this is! We don't know why we received messages from Atlantis, but when we did, we set forth right away. We had not heard of Atlantis for years. More years than our land has a history. But we set forth, and do you know why? The [promises] of Atlantis!
-Albion.Arbiter.WhisperReceive.CaseExist:			exist
-Albion.Arbiter.WhisperReceive.CaseGuide:			guide
-Albion.Arbiter.WhisperReceive.CaseInhabitants:		inhabitants
-Albion.Arbiter.WhisperReceive.CasePlace:			place
-Albion.Arbiter.WhisperReceive.CasePromises:		promises
-Albion.Arbiter.WhisperReceive.CaseSurvived:		survived
-Albion.Arbiter.WhisperReceive.CaseTablet:		tablet
-Albion.Arbiter.WhisperReceive.CaseTrials:		trials
-Albion.Arbiter.WhisperReceive.Exist:			Yes, but in some corrupted, degraded form. Passing them will involve more than any one noble skill alone. We did not realize it was not merely a matter of heroics, strength and skill. It seems the beasts of the planes have developed a culture of their own, often influenced by the ancient trials, but evolved so much over time that there really is no resemblance. If you want the skills, the glory and the riches beyond this portal, my dear {0} you are going to have to enter the planes, and be prepared for anything, for I know too little to [guide] you.
-Albion.Arbiter.WhisperReceive.Guide:			I will do my best though. You will know if you pass each of the [trials]. When you have completed a trial, return to me and I will aid you best I can. Good luck {0}.
-Albion.Arbiter.WhisperReceive.Inhabitants:		Oh yes, the inhabitants. It seems, well, at one point, there were no societies of creatures in the planes. That was our first mistake. We assumed there would only be the trials. It turns out that somehow, the creatures of the Planes, after Atlantis' fall, found the means to survive in the planes. We think some creatures may have even escaped to the planes, though we can't be sure. All we know is that when Atlantis fell, it fell quickly. But, as for what lies beyond that portal, all I can say is the trials still [exist].
-Albion.Arbiter.WhisperReceive.Place:			It is the Hall of Heroes. As the Atlanteans refer to it. It's the entrance to the Planes of Trials. Now, I can glean a bit off of these tablets. We know that beyond this, through that portal there, lie the Planes of the Trials. There are certain trials you must defeat if you wish to be considered worthy of Atlantis. To fail is to die, for the most part, though it does mention something about survivors being sent away in disgrace. I can't tell you much about the trials, or even how to pass them. You see, Atlantis has fallen, and of the first ones we sent into the planes, only a few [survived].
-Albion.Arbiter.WhisperReceive.Promises:			Ah they spoke of these traits they value above all others, and of trials that tested other cultures for those traits. Those who pass the trials are promised greater skills in their trained arts. We don't know how, but that is what we are studying. See here, behind me, this stone with these glyphs? We call it the [tablet] of destiny.
-Albion.Arbiter.WhisperReceive.Survived:			Here, we are at a true disadvantage. Not only do we not know what the original trials were supposed to be like, what was necessary for passing them, and all the ceremonial steps involved, but it seems the [inhabitants] of the planes have forgotten as well.
-Albion.Arbiter.WhisperReceive.Tablet:			Aye, this tablet and its magic, they are the only source of knowledge we have on the trials and the planes. We're trying to translate it, and we have found some other tablets and scrolls that tell us a bit about this [place].
-Albion.Arbiter.WhisperReceive.Trials:			Yes, much of these planes were created for the trials. You will be rewarded with the abilities of the ancient Atlanteans if you can complete these trials.
 
 # STYLES
 # /StyleProcessor
@@ -1380,13 +1430,13 @@ Titles.ML.Line7:					Stormlord
 Titles.ML.Line8:					Warlord
 
 # VIEWREPORTS
-Scripts.Player.VeiwReport.Usage: Usage:
-Scripts.Player.ViewReport.Help.Close: '/viewreport close <report #>' Will close the report of id #.
-Scripts.Player.ViewReport.Help.Delete: '/viewreport delete <report #' Deletes a report of id #.
-Scripts.Player.ViewReport.InvalidReport: That is not a valid report.
-Scripts.Player.ViewReport.UnknownCommand: That is not a valid command.
-Scripts.Player.ViewReport.ReportDeleted: Report {0} has been deleted.
-Scripts.Player.ViewReport.NoPriv: You do not have the privilages to edit reports.
+Scripts.Player.VeiwReport.Usage: 			Usage:
+Scripts.Player.ViewReport.Help.Close:			'/viewreport close <report #>' Will close the report of id #.
+Scripts.Player.ViewReport.Help.Delete:			'/viewreport delete <report #' Deletes a report of id #.
+Scripts.Player.ViewReport.InvalidReport:		That is not a valid report.
+Scripts.Player.ViewReport.UnknownCommand:		That is not a valid command.
+Scripts.Player.ViewReport.ReportDeleted:		Report {0} has been deleted.
+Scripts.Player.ViewReport.NoPriv:			You do not have the privilages to edit reports.
 
 # MASTERLEVEL
 # 1. Uncomplete steps
@@ -1399,7 +1449,7 @@ SendMasterLevelWindow.Uncomplete.ML1.Step6:		Kirkleis still looks upon himself w
 SendMasterLevelWindow.Uncomplete.ML1.Step7:		The portals lie dark and silent still! The Rassa remains locked away from those who would seek its power! This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML1.Step8:		The ruby lies in the sand beneath the head that stares one eye into the eternal depth! This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML1.Step9:		Desmona still wears her crown, the token needed remains unfound! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML1.Step10:	Face Cetus with a ring, a ruby, a mirror and a crown! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML1.Step10:		Face Cetus with a ring, a ruby, a mirror and a crown! This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML2.Step1:		Death stalks you from the shadows in the Temple of the Sobekite Eternal! This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML2.Step2:		The imposter's assasins are slaying the keepers of the Temple of the Sobekite Eternal! This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML2.Step3:		The triton chiefs and their followers in the flooded depths of the Temple of the Sobekite Eternal hoard stolen goods! This is a battlegroup encounter. 
@@ -1409,7 +1459,7 @@ SendMasterLevelWindow.Uncomplete.ML2.Step6:		Kanahkt's test seems to be too diff
 SendMasterLevelWindow.Uncomplete.ML2.Step7:		You mush face fear, terror, or horror! This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML2.Step8:		To prove victorious, you must face yourself! This is a group encounter.
 SendMasterLevelWindow.Uncomplete.ML2.Step9:		Defeat the Battle Masters who once defeated the trial of the Sobekite Eternal! This is a battle group encounter.
-SendMasterLevelWindow.Uncomplete.ML2.Step10:	An imposter has stolen the Ankh of Life, granting him immortality as long as he resides in the Temple of the Sobekite Eternal! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML2.Step10:		An imposter has stolen the Ankh of Life, granting him immortality as long as he resides in the Temple of the Sobekite Eternal! This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML3.Step1:		Moirai still holds the runic power behind her magical shielding!
 SendMasterLevelWindow.Uncomplete.ML3.Step2:		Kepa has agreed to give you her runic power, will you help?
 SendMasterLevelWindow.Uncomplete.ML3.Step3:		Casta still uses her artifacts to slay anyone who enters her lair!
@@ -1419,7 +1469,7 @@ SendMasterLevelWindow.Uncomplete.ML3.Step6:		A strange barracuda resides in the 
 SendMasterLevelWindow.Uncomplete.ML3.Step7:		Shraogh still strikes fear into the heart of those who oppose him!
 SendMasterLevelWindow.Uncomplete.ML3.Step8:		The sting ray swarm with an unnatural glowing power!
 SendMasterLevelWindow.Uncomplete.ML3.Step9:		Sinovia the octopus devours those who come near!
-SendMasterLevelWindow.Uncomplete.ML3.Step10:	Medusa still turns anyone who opposes her into stone! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML3.Step10:		Medusa still turns anyone who opposes her into stone! This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML4.Step1:		Colossal has yet to be summoned from the scorpions of the Stygian Desert! This is a group encounter.
 SendMasterLevelWindow.Uncomplete.ML4.Step2:		The Fortress of Storms has not been taken! This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML4.Step3:		The Mighty One, the Eye of Ra, is rumored to roam the desert Land of Atum still! This is a group encounter.
@@ -1429,7 +1479,7 @@ SendMasterLevelWindow.Uncomplete.ML4.Step6:		Oukesson the Ghillian is still mult
 SendMasterLevelWindow.Uncomplete.ML4.Step7:		The guardians of the river Iter have yet to waken! This is a group encounter.
 SendMasterLevelWindow.Uncomplete.ML4.Step8:		The blood of Daehien still flows in the Land of Atum! This is a battlegroup encounter. 
 SendMasterLevelWindow.Uncomplete.ML4.Step9:		The marid, Gaurmaes, is still safe behind tornados and dust! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML4.Step10:	Martikhoras reigns in his pyramid still! This is a battlegroup encounter. 
+SendMasterLevelWindow.Uncomplete.ML4.Step10:		Martikhoras reigns in his pyramid still! This is a battlegroup encounter. 
 SendMasterLevelWindow.Uncomplete.ML5.Step1:		The Canopic Jar - Intestines must be stolen from the Echo of Qebehsenuef! This is a group encounter.
 SendMasterLevelWindow.Uncomplete.ML5.Step2:		Another Canopic Jar - Stomach must be stolen from the Echo of Duamutef! This is a group encounter. 
 SendMasterLevelWindow.Uncomplete.ML5.Step3:		Another Canopic Jar - Lungs must be stolen from the Echo of Hapy! This is a group encounter.
@@ -1439,7 +1489,7 @@ SendMasterLevelWindow.Uncomplete.ML5.Step6:		The bound ones hold the resin that 
 SendMasterLevelWindow.Uncomplete.ML5.Step7:		The bound ones hold a mask still needed to face Ammut! This is a group encounter.
 SendMasterLevelWindow.Uncomplete.ML5.Step8:		Wrappings can be found amongst the bound ones. This is a group encounter.
 SendMasterLevelWindow.Uncomplete.ML5.Step9:		You must drink the poisoned waters for the aid of Mahaf! This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML5.Step10:	You must face Ammut in the depths of the Halls of Ma'ati and be judged! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML5.Step10:		You must face Ammut in the depths of the Halls of Ma'ati and be judged! This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML6.Step1:		Look for a rare uraeus from where they appear. This is a group encounter.
 SendMasterLevelWindow.Uncomplete.ML6.Step2:		The sacrifice has yet to take place, the salamander has yet to be born! This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML6.Step3:		Lateef laments his fate as follower of Am-he and wishes to return to the desert! This is a battlegroup encounter.
@@ -1449,7 +1499,7 @@ SendMasterLevelWindow.Uncomplete.ML6.Step6:		Seek out the sacrificer Siraadi amo
 SendMasterLevelWindow.Uncomplete.ML6.Step7:		Three of Ankhkare guardians guard him well. This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML6.Step8:		In the center of the island braziers still call efreet! This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML6.Step9:		Vazul's Fortress in the Azhen Isles has yet to be breached! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML6.Step10:	The Chimera still holds strong in her fortress in East Ashen Isles! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML6.Step10:		The Chimera still holds strong in her fortress in East Ashen Isles! This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML7.Step1:		You must acquire the gauntlet of fire! This is a group encounter.
 SendMasterLevelWindow.Uncomplete.ML7.Step2:		You can learn all there is to know of your opponent through combat, but time multiplies when there are four. It is not for you to end the feud, but you can't move on until they have all seen you as a threat. This is a group encounter.
 SendMasterLevelWindow.Uncomplete.ML7.Step3:		The Apophians wish to test your endurance. This is a group encounter.
@@ -1459,7 +1509,7 @@ SendMasterLevelWindow.Uncomplete.ML7.Step6:		The Hephaestians wish to test your 
 SendMasterLevelWindow.Uncomplete.ML7.Step7:		You must face a challeng in the Chamber of flame! This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML7.Step8:		Katorii's gaze destroys all life it falls upon, yes she must be destroyed! This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML7.Step9:		A mysterious force blocks your path! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML7.Step10:	Typhon lies in the lava pool in the center of Volcanus deep! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML7.Step10:		Typhon lies in the lava pool in the center of Volcanus deep! This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML8.Step1:		Bisul the jinni still has the control crystal! This is a battlegroup encounter. 
 SendMasterLevelWindow.Uncomplete.ML8.Step2:		Agnes shield was destroyed long ago, but it has a twin in his brother Tholoss prossession! This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML8.Step3:		The sword the great Agne is now in the hands of a mischievous Jinn! This is a battlegroup encounter.
@@ -1469,7 +1519,7 @@ SendMasterLevelWindow.Uncomplete.ML8.Step6:		Dawars servant bears the head of Ag
 SendMasterLevelWindow.Uncomplete.ML8.Step7:		Find the torso of Agne amongst the statues of Aerus! This is a group encounter. 
 SendMasterLevelWindow.Uncomplete.ML8.Step8:		A group of gorgons have collaborated to thwart your effort to rebuild Agne by hiding his left arm because the trials resulted in many gorgon deaths in the past! This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML8.Step9:		The right arm lies in the once great hall of a wreaked Atlantean temple. This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML8.Step10:	First you must defeat Agnes army on his battlefield then you must topple Talos in his temple! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML8.Step10:		First you must defeat Agnes army on his battlefield then you must topple Talos in his temple! This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML9.Step1:		Long ago Kyros demonstrated himself to be the ultimate warrior serving many different roles in combat, would you dare challenge him? This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML9.Step2:		Lachlen was a great explorer who was always prepared to face the unique dangers lurking in each new land! This is a group encounter.
 SendMasterLevelWindow.Uncomplete.ML9.Step3:		Long ago Evzen unified three warring territories after each territorys warlord was slain then ruled the combined landsd with an iron fist! This is a battlegroup encounter.
@@ -1479,7 +1529,7 @@ SendMasterLevelWindow.Uncomplete.ML9.Step6:		Centaur patrols led by Katri hinder
 SendMasterLevelWindow.Uncomplete.ML9.Step7:		Only the strongest Iaculi survive as they cannibalize each other. This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML9.Step8:		You have not yet proven yourself worthy to the Phoenix's Guardians! This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML9.Step9:		Neola still guards her sisters well. This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML9.Step10:	The phoenix is not yet weakend, and still reigns above! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML9.Step10:		The phoenix is not yet weakend, and still reigns above! This is a battlegroup encounter.
 
 # 1. Completed steps
 SendMasterLevelWindow.Complete.ML1.Step1:	[Completed] Ianetor has been defeated !	
