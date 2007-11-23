@@ -2,7 +2,7 @@
 <root>
 	<Region001>
 		<description>Albion</description>
-		<isDivingEnabled>False</isDivingEnabled>
+		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>0</waterLevel>
 		<id>1</id>
 		<port>10400</port>
@@ -483,7 +483,7 @@
 	</Region099>
 	<Region100>
 		<description>Midgard</description>
-		<isDivingEnabled>False</isDivingEnabled>
+		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>0</waterLevel>
 		<id>100</id>
 		<port>10400</port>
@@ -837,7 +837,7 @@
 	</Region199>
 	<Region200>
 		<description>Hibernia</description>
-		<isDivingEnabled>False</isDivingEnabled>
+		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>0</waterLevel>
 		<id>200</id>
 		<port>10400</port>
