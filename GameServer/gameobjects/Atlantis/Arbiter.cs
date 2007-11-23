@@ -71,67 +71,75 @@ namespace DOL.GS
 			String lowerCase = text.ToLower();
 
 			if (lowerCase == LanguageMgr.GetTranslation(player.Client,
-					String.Format("{0}.Arbiter.WhisperReceive.CasePromises", realm)))
+					String.Format("{0}.Arbiter.WhisperReceive.Case1", realm)))
 			{
 				SayTo(player, eChatLoc.CL_PopupWindow,
 					LanguageMgr.GetTranslation(player.Client,
-					String.Format("{0}.Arbiter.WhisperReceive.Promises", realm)));
+					String.Format("{0}.Arbiter.WhisperReceive.Text1", realm)));
 				return false;
 			}
 			else if (lowerCase == LanguageMgr.GetTranslation(player.Client,
-					String.Format("{0}.Arbiter.WhisperReceive.CaseTablet", realm)))
+					String.Format("{0}.Arbiter.WhisperReceive.Case2", realm)))
 			{
 				SayTo(player, eChatLoc.CL_PopupWindow,
 					LanguageMgr.GetTranslation(player.Client,
-					String.Format("{0}.Arbiter.WhisperReceive.Tablet", realm)));
+					String.Format("{0}.Arbiter.WhisperReceive.Text2", realm)));
 				return false;
 			}
 			else if (lowerCase == LanguageMgr.GetTranslation(player.Client,
-			   String.Format("{0}.Arbiter.WhisperReceive.CasePlace", realm)))
+			   String.Format("{0}.Arbiter.WhisperReceive.Case3", realm)))
 			{
 				SayTo(player, eChatLoc.CL_PopupWindow,
 					LanguageMgr.GetTranslation(player.Client,
-					String.Format("{0}.Arbiter.WhisperReceive.Place", realm)));
+					String.Format("{0}.Arbiter.WhisperReceive.Text3", realm)));
 				return false;
 			}
 			else if (lowerCase == LanguageMgr.GetTranslation(player.Client,
-			   String.Format("{0}.Arbiter.WhisperReceive.CaseSurvived", realm)))
+			   String.Format("{0}.Arbiter.WhisperReceive.Case4", realm)))
 			{
 				SayTo(player, eChatLoc.CL_PopupWindow,
 					LanguageMgr.GetTranslation(player.Client,
-					String.Format("{0}.Arbiter.WhisperReceive.Survived", realm)));
+					String.Format("{0}.Arbiter.WhisperReceive.Text4", realm)));
 				return false;
 			}
 			else if (lowerCase == LanguageMgr.GetTranslation(player.Client,
-			   String.Format("{0}.Arbiter.WhisperReceive.CaseInhabitants", realm)))
+			   String.Format("{0}.Arbiter.WhisperReceive.Case5", realm)))
 			{
 				SayTo(player, eChatLoc.CL_PopupWindow,
 					LanguageMgr.GetTranslation(player.Client,
-					String.Format("{0}.Arbiter.WhisperReceive.Inhabitants", realm)));
+					String.Format("{0}.Arbiter.WhisperReceive.Text5", realm)));
 				return false;
 			}
 			else if (lowerCase == LanguageMgr.GetTranslation(player.Client,
-			   String.Format("{0}.Arbiter.WhisperReceive.CaseExist", realm)))
+			   String.Format("{0}.Arbiter.WhisperReceive.Case6", realm)))
 			{
 				SayTo(player, eChatLoc.CL_PopupWindow,
 					LanguageMgr.GetTranslation(player.Client,
-					String.Format("{0}.Arbiter.WhisperReceive.Exist", realm), player.CharacterClass.Name));
+					String.Format("{0}.Arbiter.WhisperReceive.Text6", realm), player.CharacterClass.Name));
 				return false;
 			}
 			else if (lowerCase == LanguageMgr.GetTranslation(player.Client,
-			   String.Format("{0}.Arbiter.WhisperReceive.CaseGuide", realm)))
+			   String.Format("{0}.Arbiter.WhisperReceive.Case7", realm)))
 			{
 				SayTo(player, eChatLoc.CL_PopupWindow,
 					LanguageMgr.GetTranslation(player.Client,
-					String.Format("{0}.Arbiter.WhisperReceive.Guide", realm), player.CharacterClass.Name));
+					String.Format("{0}.Arbiter.WhisperReceive.Text7", realm), player.CharacterClass.Name));
 				return false;
 			}
 			else if (lowerCase == LanguageMgr.GetTranslation(player.Client,
-			   String.Format("{0}.Arbiter.WhisperReceive.CaseTrials", realm)))
+			   String.Format("{0}.Arbiter.WhisperReceive.Case8", realm)))
 			{
 				SayTo(player, eChatLoc.CL_PopupWindow,
 					LanguageMgr.GetTranslation(player.Client,
-					String.Format("{0}.Arbiter.WhisperReceive.Trials", realm)));
+					String.Format("{0}.Arbiter.WhisperReceive.Text8", realm), player.CharacterClass.Name));
+				return false;
+			}
+			else if (lowerCase == LanguageMgr.GetTranslation(player.Client,
+				String.Format("{0}.Arbiter.WhisperReceive.Case9", realm)))
+			{
+				SayTo(player, eChatLoc.CL_PopupWindow,
+					LanguageMgr.GetTranslation(player.Client,
+					String.Format("{0}.Arbiter.WhisperReceive.Text9", realm), player.CharacterClass.Name));
 				return false;
 			}
 
