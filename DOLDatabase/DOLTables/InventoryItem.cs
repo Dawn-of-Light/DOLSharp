@@ -391,15 +391,19 @@ namespace DOL.Database
         }
 
 		/// <summary>
-		/// Item delve information.
+		/// Add item delve information.
 		/// </summary>
-		public virtual List<String> Delve
+		public virtual void Delve(List<String> delve)
 		{
-			get
-			{
-				// TODO.
-				return new List<string>();
-			}
+			return;
+		}
+
+		/// <summary>
+		/// Add item magical bonus delve information.
+		/// </summary>
+		protected virtual void DelveMagicalBonus(List<String> delve, int bonusAmount, int bonusType)
+		{
+			return;
 		}
 
         public void CopyFrom(InventoryItem template)
