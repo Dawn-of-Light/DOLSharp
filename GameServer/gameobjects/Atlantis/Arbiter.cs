@@ -75,7 +75,7 @@ namespace DOL.GS
 			{
 				SayTo(player, eChatLoc.CL_PopupWindow,
 					LanguageMgr.GetTranslation(player.Client,
-					String.Format("{0}.Arbiter.WhisperReceive.Text1", realm)));
+					String.Format("{0}.Arbiter.WhisperReceive.Text1", realm), player.CharacterClass.Name));
 				return false;
 			}
 			else if (lowerCase == LanguageMgr.GetTranslation(player.Client,
@@ -99,7 +99,7 @@ namespace DOL.GS
 			{
 				SayTo(player, eChatLoc.CL_PopupWindow,
 					LanguageMgr.GetTranslation(player.Client,
-					String.Format("{0}.Arbiter.WhisperReceive.Text4", realm)));
+					String.Format("{0}.Arbiter.WhisperReceive.Text4", realm), player.CharacterClass.Name));
 				return false;
 			}
 			else if (lowerCase == LanguageMgr.GetTranslation(player.Client,
