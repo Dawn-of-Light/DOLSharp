@@ -461,35 +461,20 @@ Hibernia.Arbiter.WhisperReceive.Text7:			Wir dachten, es gäbe nur die Prüfungen.
 Hibernia.Arbiter.WhisperReceive.Text8:			Ja, aber in einer korrupten und verkommenen Form. Um sie zu bestehen, braucht man mehr als nur eine noble Fähigkeit. Wir bemerkten zuerst nicht, dass es nicht nur Heldentaten, Stärke und Können bedarf. Es scheint, die Biester der Ebenen haben eine eigene Kultur entwickelt, beeinflusst durch die alten Prüfungen, aber von Grund auf verändert, was die ursprüngliche Absicht der Prüfungen angeht. Wenn Ihr die Fähigkeiten, den Ruhm und die Reichtümer hinter diesem Portal haben wollt, mein {0}, dann müsst Ihr die Ebenen betreten und auf alles vorbereitet sein. Denn ich weiß zu wenig, als dass ich Euch [helfen] könnte.
 Hibernia.Arbiter.WhisperReceive.Text9:			Ich werde aber mein Bestes tun. Ihr werdet es wissen, sobald Ihr jede der einzelnen Prüfungen besteht. Wenn Ihr eine Prüfung erfüllt habt, kehrt zu mir zurück. Viel Glück, {0}.
 
-Midgard.Arbiter.Interact.BeginTrials:			
-Midgard.Arbiter.Interact.Welcome:			
+Midgard.Arbiter.Interact.BeginTrials:			Willkommen in Atlantis, {0}. Sobald Ihr bereit seid, könnt Ihr mit den Prüfungen beginnen. Kommt dann zu mir.
+Midgard.Arbiter.Interact.Welcome:			{0}, willkommen in den Resten von Atlantis. Was das für Menschen waren! Hier lernte ich, dass sie über viel mehr Magie als wir verfügten. Oh, sie hatten Götter! Doch darüber wollen wir nicht reden, sondern über das [Geschenk], dass sie uns hinterliesen!
 
-Midgard.Arbiter.WhisperReceive.Case1:			
-Midgard.Arbiter.WhisperReceive.Text1:			
+Midgard.Arbiter.WhisperReceive.Case1:			geschenk
+Midgard.Arbiter.WhisperReceive.Text1:			Das Geschenk der Ebenen der Prüfungen. Was für ein Ort, um Euren Wert zu beweisen, {0}. Was für ein Weg, um Eure Stärke und Euer Können zu beweisen. Wir erhielten Nachrichten und kamen hierher. Wir erwarteten nicht, hier Ruinen vorzufinden. Doch seht dieses Gebäude an, das wir freigelget haben. Ist es nicht ein [Wunder]?
 
-Midgard.Arbiter.WhisperReceive.Case2:			
-Midgard.Arbiter.WhisperReceive.Text2:			
+Midgard.Arbiter.WhisperReceive.Case2:			wunder
+Midgard.Arbiter.WhisperReceive.Text2:			Seht diese Tafel hinter mir. Es ist unsere einzige und echte Informationsquelle. Teile davon habe ich übersetzt, doch alles kann ich nicht erkennen. Es ist die Halle der Helden. Wie die Atlanter sie nannten. Es ist der Eingang zu den Ebenen der Prüfungen. Alles was ich herausfinden konnte ist, dass hinter diesem Portal die Ebenen der Prüfungen liegen. Es gibt zehn Prüfungen, entworfen, damit sich die Teilnehmer die Würde aneignen können, die Fähigkeiten von Atlantis zu erreichen. Ich denke versagen heißt sterben. Aber wir wissen, dass das Bestehen bedeutet, größere Fähigkeiten oder Macht zu bekommen, Dank der Magie von Atlantis. Falls Ihr die Prüfungen besteht, werdet Ihr mächtiger sein, als unsere [Feinde]!
 
-Midgard.Arbiter.WhisperReceive.Case3:			
-Midgard.Arbiter.WhisperReceive.Text3:			
+Midgard.Arbiter.WhisperReceive.Case3:			feinde
+Midgard.Arbiter.WhisperReceive.Text3:			Wir glauben, dass die anderen Reiche auch einen Zutritt zu den Ebenen haben. Wir müssen unser Bestes geben, damit alle auch erfolgeich sind, die sie betreten. Doch seid vorsichtig. Die Prüfungen sind nicht das, was die Schriftrollen und diese Tafel sagen. Es scheint, die [Einwohner] der Ebenen haben ihre eigenen Vorstellungen über die Prüfungen.
 
-Midgard.Arbiter.WhisperReceive.Case4:			
-Midgard.Arbiter.WhisperReceive.Text4:			
-
-Midgard.Arbiter.WhisperReceive.Case5:			
-Midgard.Arbiter.WhisperReceive.Text5:			
-
-Midgard.Arbiter.WhisperReceive.Case6:			
-Midgard.Arbiter.WhisperReceive.Text6:			
-
-Midgard.Arbiter.WhisperReceive.Case7:			
-Midgard.Arbiter.WhisperReceive.Text7:			
-
-Midgard.Arbiter.WhisperReceive.Case8:			
-Midgard.Arbiter.WhisperReceive.Text8:			
-
-Midgard.Arbiter.WhisperReceive.Case9:			
-Midgard.Arbiter.WhisperReceive.Text9:			
+Midgard.Arbiter.WhisperReceive.Case4:			einwohner
+Midgard.Arbiter.WhisperReceive.Text4:			Es gibt viele seltsame Kreaturen hinter diesem Portal, mein {0} Freund. Sie sind nicht Teil der ursprünglichen Prüfungen und ich weiß nicht, was sie dort machen. Ich kann nur raten, dass sie die Überlebenden des Untergangs von Atlantis sind. Sie suchten Zuflucht in den Ebenen. Nun müsst Ihr mit ihnen fertig werden, während Ihr die Prüfungen durchlauft. Nun, {0}, wenn Ihr die Fähigkeiten, den Ruhm und die Reichtümer hinter diesem Portal wollt, müsst ihr eintreten in die Ebenen. Seid auf alles vorbereitet. Ihr werdet wissen, wann Ihr eine Prüfung bestanden habt. Kehrt dann zu mir zurück, damit ich Euch durch die Prüfungen führen kann. Ich werde versuchen, Euch so gut es geht zu helfen.
 
 # HOUSING
 HouseEnterLeave.TooFarAway:				Ihr seid zu weit von diesem Haus entfernt, um es zu betreten!
