@@ -101,7 +101,7 @@ namespace DOL.GS.Spells
                 {
                     combinedScroll = ArtifactMgr.CombineScrolls(combinedScroll.Item, item);
                     removeItems.Add(item);
-                    if (ArtifactMgr.GetArtifactFromBook(combinedScroll.Item) != null)
+                    if (ArtifactMgr.GetArtifact(combinedScroll.Item) != null)
                         break;
                 }
             }
