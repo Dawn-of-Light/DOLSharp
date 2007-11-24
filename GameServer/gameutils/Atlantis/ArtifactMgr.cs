@@ -44,6 +44,7 @@ namespace DOL.GS
         private static Hashtable m_artifacts;
         private static Hashtable m_artifactVersions;
         private static Hashtable m_artifactBooks;
+		private static List<ArtifactBonus> m_artifactBonuses;
 
         public enum Book { NoPage = 0x0, Page1 = 0x1, Page2 = 0x2, Page3 = 0x4, AllPages = 0x7 };
 
@@ -83,7 +84,10 @@ namespace DOL.GS
 
 			// Load artifact bonuses.
 
-
+			dbo = GameServer.Database.SelectAllObjects(typeof(ArtifactBonus));
+			m_artifactBonuses = new List<ArtifactBonus>();
+			foreach (ArtifactBonus artifactBonus in dbo)
+				m_artifactBonuses.Add(artifactBonus);
 
 			// Load artifact books.
 
@@ -97,9 +101,38 @@ namespace DOL.GS
 			GameEventMgr.AddHandler(GamePlayerEvent.GainedExperience, 
 				new DOLEventHandler(PlayerGainedExperience));
 
-            log.Info(String.Format("{0} artifacts ({1} versions) and {2} books loaded", 
-				m_artifacts.Count, m_artifactVersions.Count, m_artifactBooks.Count));
+            log.Info(String.Format("{0} artifacts and {1} books loaded", 
+				m_artifacts.Count, m_artifactBooks.Count));
             return true;
+		}
+
+		/// <summary>
+		/// Find the matching artifact for the item
+		/// </summary>
+		/// <param name="itemID"></param>
+		/// <returns></returns>
+		public static String GetArtifactIDFromItemID(String itemID)
+		{
+			if (itemID == null)
+				return null;
+
+			String artifactID = null;
+			lock (m_artifactVersions.SyncRoot)
+			{
+				foreach (ArrayList list in m_artifactVersions.Values)
+				{
+					foreach (ArtifactXItem AxI in list)
+					{
+						if (AxI.ItemID == itemID)
+						{
+							artifactID = AxI.ArtifactID;
+							break;
+						}
+					}
+				}
+			}
+
+			return artifactID;
 		}
 
         /// <summary>
@@ -107,7 +140,7 @@ namespace DOL.GS
         /// </summary>
         /// <param name="zone"></param>
         /// <returns></returns>
-        public static ArrayList GetArtifactsFromZone(String zone)
+        public static ArrayList GetArtifacts(String zone)
         {
             ArrayList artifacts = new ArrayList();
 
@@ -125,7 +158,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="artifactID"></param>
 		/// <returns></returns>
-		public static String[] GetScholarsFromArtifactID(String artifactID)
+		public static String[] GetScholars(String artifactID)
 		{
 			String[] scholars = null;
 			Artifact artifact = null;
@@ -138,8 +171,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Checks whether or not the item is an artifact (simple item
-		/// name check for now).
+		/// Checks whether or not the item is an artifact.
 		/// </summary>
 		/// <param name="item"></param>
 		/// <returns></returns>
@@ -181,7 +213,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="item"></param>
 		/// <returns></returns>
-		public static int GetItemLevel(InventoryArtifact item)
+		public static int GetCurrentLevel(InventoryArtifact item)
 		{
 			if (item != null)
 			{
@@ -197,11 +229,11 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="item"></param>
 		/// <returns></returns>
-		public static int GetExperienceGainedTowardsNextLevel(InventoryArtifact item)
+		public static int GetXPGainedForLevel(InventoryArtifact item)
 		{
 			if (item != null)
 			{
-				int level = GetItemLevel(item);
+				int level = GetCurrentLevel(item);
 				if (level < 10)
 				{
 					double xpGained = item.Experience - m_xpForLevel[level];
@@ -213,14 +245,20 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Get the level this artifact will gain a new ability.
+		/// Get a list of all level requirements for this artifact.
 		/// </summary>
-		/// <param name="item"></param>
+		/// <param name="artifactID"></param>
 		/// <returns></returns>
-		public static int GetNewAbilityAtLevel(InventoryArtifact item)
+		public static int[] GetLevelRequirements(String artifactID)
 		{
-			// TODO.
-			return GetItemLevel(item);
+			int[] requirements = new int[ArtifactBonus.ID.Max - ArtifactBonus.ID.Min + 1];
+
+			lock (m_artifactBonuses)
+				foreach (ArtifactBonus bonus in m_artifactBonuses)
+					if (bonus.ArtifactID == artifactID)
+						requirements[bonus.BonusID] = bonus.Level;
+
+			return requirements;
 		}
 
 		/// <summary>
@@ -260,11 +298,8 @@ namespace DOL.GS
 
 			lock (m_artifactVersions.SyncRoot)
 				foreach (InventoryItem item in equippedItems)
-					if (item != null)
-						foreach (DictionaryEntry entry in m_artifactVersions)
-							foreach (ArtifactXItem version in (entry.Value as ArrayList))
-								if (version.ItemID == item.Id_nb)
-									ArtifactGainedExperience(player, item, xpAmount, version);
+					if (item != null && item is InventoryArtifact)
+						ArtifactGainedExperience(player, item as InventoryArtifact, xpAmount);
 		}
 
 		/// <summary>
@@ -273,11 +308,9 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		/// <param name="item"></param>
 		/// <param name="xpAmount"></param>
-		/// <param name="artifactVersion"></param>
-		private static void ArtifactGainedExperience(GamePlayer player, InventoryItem item,
-			long xpAmount, ArtifactXItem artifactVersion)
+		private static void ArtifactGainedExperience(GamePlayer player, InventoryArtifact item, long xpAmount)
 		{
-			if (player == null || item == null || artifactVersion == null)
+			if (player == null || item == null)
 				return;
 
 			long artifactXPOld = item.Experience;
@@ -291,7 +324,7 @@ namespace DOL.GS
 
 			lock (m_artifacts.SyncRoot)
 			{
-				Artifact artifact = m_artifacts[artifactVersion.ArtifactID] as Artifact;
+				Artifact artifact = m_artifacts[item.ArtifactID] as Artifact;
 				if (artifact == null)
 					return;
 				xpRate = artifact.XPRate;
@@ -309,26 +342,12 @@ namespace DOL.GS
 			{
 				if (artifactXPOld < m_xpForLevel[level] && artifactXPNew >= m_xpForLevel[level])
 				{
-					ArtifactGainedLevel(player, item, level, artifactVersion);
+					player.Out.SendMessage(String.Format("Your {0} has gained a level!", item.Name),
+						eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					item.OnLevelGained(level);
 					return;
 				}
 			}
-		}
-
-		/// <summary>
-		/// Called when artifact has gained a level.
-		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="item"></param>
-		/// <param name="level"></param>
-		/// <param name="artifactVersion"></param>
-		private static void ArtifactGainedLevel(GamePlayer player, InventoryItem item, int level,
-			ArtifactXItem artifactVersion)
-		{
-			// TODO: Copy new bonuses.
-
-			player.Out.SendMessage(String.Format("Your {0} has gained a level!", item.Name),
-				eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 		}
 
 		#endregion
@@ -367,8 +386,8 @@ namespace DOL.GS
         /// <param name="charClass"></param>
 		/// <param name="realm"></param>
         /// <returns></returns>
-        public static Hashtable GetArtifactVersionsFromClass(String artifactID, 
-            eCharacterClass charClass, eRealm realm)
+        public static Hashtable GetArtifactVersions(String artifactID, eCharacterClass charClass, 
+			eRealm realm)
         {
             if (artifactID == null)
                 return null;
@@ -501,7 +520,7 @@ namespace DOL.GS
         /// </summary>
         /// <param name="bookID"></param>
         /// <returns></returns>
-        public static String GetArtifactIDFromBookID(String bookID)
+        public static String GetArtifactID(String bookID)
         {
             if (bookID == null)
                 return null;
@@ -520,35 +539,6 @@ namespace DOL.GS
             }
 			return artifactID;
         }
-
-		/// <summary>
-		/// Find the matching artifact for the item
-		/// </summary>
-		/// <param name="itemID"></param>
-		/// <returns></returns>
-		public static String GetArtifactIDFromItemID(String itemID)
-		{
-			if (itemID == null)
-				return null;
-
-			String artifactID = null;
-			lock (m_artifactVersions.SyncRoot)
-			{
-				foreach (ArrayList list in m_artifactVersions.Values)
-				{
-					foreach (ArtifactXItem AxI in list)
-					{
-						if (AxI.ItemID == itemID)
-						{
-							artifactID = AxI.ArtifactID;
-							break;
-						}
-					}
-				}
-			}
-
-			return artifactID;
-		}
 
 		/// <summary>
 		/// Check whether these 2 items can be combined.
@@ -619,7 +609,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="book"></param>
 		/// <returns></returns>
-		public static Artifact GetArtifactFromBook(InventoryItem book)
+		public static Artifact GetArtifact(InventoryItem book)
 		{
 			if (book == null)
 				return null;
@@ -636,11 +626,11 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Find all artifacts that this player carries
+		/// Find all artifacts that this player carries.
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public static List<string> GetArtifactsFromPlayer(GamePlayer player)
+		public static List<string> GetArtifacts(GamePlayer player)
 		{
 		    List<string> artifacts = new List<string>();
 			lock (player.Inventory.AllItems.SyncRoot)
@@ -664,7 +654,7 @@ namespace DOL.GS
         /// <param name="player"></param>
         /// <param name="artifactID"></param>
         /// <returns></returns>
-        public static bool HasBookForArtifact(GamePlayer player, String artifactID)
+        public static bool HasBook(GamePlayer player, String artifactID)
         {
 			if (player == null || artifactID == null)
 				return false;

@@ -61,7 +61,7 @@ namespace DOL.GS.Quests.Atlantis
 			if (artifactID == null || questType == null)
 				return;
 
-			String[] scholars = ArtifactMgr.GetScholarsFromArtifactID(artifactID);
+			String[] scholars = ArtifactMgr.GetScholars(artifactID);
 			if (scholars != null)
 			{
 				int realm = 1;
@@ -108,7 +108,7 @@ namespace DOL.GS.Quests.Atlantis
 			return (player != null &&
 				encounterType != null &&
 				player.Level >= Level &&
-                ArtifactMgr.HasBookForArtifact(player, ArtifactID) &&
+                ArtifactMgr.HasBook(player, ArtifactID) &&
 				player.HasFinishedQuest(encounterType) > 0 &&
 				player.IsDoingQuest(this.GetType()) == null &&
 				player.HasFinishedQuest(this.GetType()) == 0);
@@ -124,7 +124,7 @@ namespace DOL.GS.Quests.Atlantis
 			if (player == null)
 				return false;
 
-			Hashtable versions = ArtifactMgr.GetArtifactVersionsFromClass(ArtifactID,
+			Hashtable versions = ArtifactMgr.GetArtifactVersions(ArtifactID,
 				(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
 
 			return (versions.Count > 0);
@@ -143,6 +143,7 @@ namespace DOL.GS.Quests.Atlantis
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="player"></param>
+		/// <param name="artifactID"></param>
 		/// <param name="itemTemplate"></param>
 		protected static void GiveItem(GameLiving source, GamePlayer player, String artifactID, 
 			ItemTemplate itemTemplate)

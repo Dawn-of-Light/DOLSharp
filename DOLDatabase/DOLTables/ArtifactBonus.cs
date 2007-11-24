@@ -31,12 +31,28 @@ namespace DOL.Database
 	public class ArtifactBonus : DataObject
 	{
 		private String m_artifactID;
-		private String m_version;
+		private int m_bonusID;
 		private int m_level;
-		private int m_bonus;
-		private int m_bonusType;
-		private int m_spellID;
-		private int m_procSpellID;
+
+		public enum ID
+		{
+			Min = 0,
+			Bonus1 = 0,
+			Bonus2 = 1,
+			Bonus3 = 2,
+			Bonus4 = 3,
+			Bonus5 = 4,
+			Bonus6 = 5,
+			Bonus7 = 6,
+			Bonus8 = 7,
+			Bonus9 = 8,
+			Bonus10 = 9,
+			Spell = 10,
+			Spell1 = 11,
+			ProcSpell = 12,
+			ProcSpell1 = 13,
+			Max = 13
+		};					  
 
 		/// <summary>
 		/// Create a new artifact bonus.
@@ -68,16 +84,21 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		/// The artifact version.
+		/// The ID of the bonus.
+		/// 0-9: Stat bonuses 1 through 10.
+		/// 10: SpellID
+		/// 11: SpellID1
+		/// 12: ProcSpellID
+		/// 13: ProcSpellID1
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public String Version
+		public int BonusID
 		{
-			get { return m_version; }
+			get { return m_bonusID; }
 			set
 			{
 				Dirty = true;
-				m_version = value;
+				m_bonusID = value;
 			}
 		}
 
@@ -92,62 +113,6 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_level = value;
-			}
-		}
-
-		/// <summary>
-		/// The bonus amount.
-		/// </summary>
-		[DataElement(AllowDbNull = true)]
-		public int Bonus
-		{
-			get { return m_bonus; }
-			set
-			{
-				Dirty = true;
-				m_bonus = value;
-			}
-		}
-
-		/// <summary>
-		/// The bonus type.
-		/// </summary>
-		[DataElement(AllowDbNull = true)]
-		public int BonusType
-		{
-			get { return m_bonusType; }
-			set
-			{
-				Dirty = true;
-				m_bonusType = value;
-			}
-		}
-
-		/// <summary>
-		/// The spell ID.
-		/// </summary>
-		[DataElement(AllowDbNull = true)]
-		public int SpellID
-		{
-			get { return m_spellID; }
-			set
-			{
-				Dirty = true;
-				m_spellID = value;
-			}
-		}
-
-		/// <summary>
-		/// The proc spell ID.
-		/// </summary>
-		[DataElement(AllowDbNull = true)]
-		public int ProcSpellID
-		{
-			get { return m_procSpellID; }
-			set
-			{
-				Dirty = true;
-				m_procSpellID = value;
 			}
 		}
 	}

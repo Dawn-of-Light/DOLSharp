@@ -95,10 +95,10 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 			if (player == null || scholar == null)
 				return false;
 
-			if (Step == 2 && ArtifactMgr.GetArtifactIDFromBookID(item.Name) == ArtifactID)
+			if (Step == 2 && ArtifactMgr.GetArtifactID(item.Name) == ArtifactID)
 			{
 				scholar.TurnTo(player);
-				Hashtable versions = ArtifactMgr.GetArtifactVersionsFromClass(ArtifactID,
+				Hashtable versions = ArtifactMgr.GetArtifactVersions(ArtifactID,
 					(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
 
 				IDictionaryEnumerator versionsEnum = versions.GetEnumerator();

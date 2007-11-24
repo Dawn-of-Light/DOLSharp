@@ -469,7 +469,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Bonus1
+		public virtual int Bonus1
 		{
 			get
 			{
@@ -482,7 +482,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Bonus2
+		public virtual int Bonus2
 		{
 			get
 			{
@@ -495,7 +495,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Bonus3
+		public virtual int Bonus3
 		{
 			get
 			{
@@ -508,7 +508,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Bonus4
+		public virtual int Bonus4
 		{
 			get
 			{
@@ -521,7 +521,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Bonus5
+		public virtual int Bonus5
 		{
 			get
 			{
@@ -534,7 +534,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Bonus6
+		public virtual int Bonus6
 		{
 			get
 			{
@@ -547,7 +547,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Bonus7
+		public virtual int Bonus7
 		{
 			get
 			{
@@ -560,7 +560,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Bonus8
+		public virtual int Bonus8
 		{
 			get
 			{
@@ -573,7 +573,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Bonus9
+		public virtual int Bonus9
 		{
 			get
 			{
@@ -586,7 +586,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Bonus10
+		public virtual int Bonus10
 		{
 			get
 			{
@@ -612,7 +612,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Bonus1Type
+		public virtual int Bonus1Type
 		{
 			get
 			{
@@ -625,7 +625,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Bonus2Type
+		public virtual int Bonus2Type
 		{
 			get
 			{
@@ -638,7 +638,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Bonus3Type
+		public virtual int Bonus3Type
 		{
 			get
 			{
@@ -651,7 +651,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Bonus4Type
+		public virtual int Bonus4Type
 		{
 			get
 			{
@@ -664,7 +664,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Bonus5Type
+		public virtual int Bonus5Type
 		{
 			get
 			{
@@ -677,7 +677,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Bonus6Type
+		public virtual int Bonus6Type
 		{
 			get
 			{
@@ -690,7 +690,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Bonus7Type
+		public virtual int Bonus7Type
 		{
 			get
 			{
@@ -703,7 +703,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Bonus8Type
+		public virtual int Bonus8Type
 		{
 			get
 			{
@@ -716,7 +716,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Bonus9Type
+		public virtual int Bonus9Type
 		{
 			get
 			{
@@ -729,7 +729,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Bonus10Type
+		public virtual int Bonus10Type
 		{
 			get
 			{
@@ -966,7 +966,7 @@ namespace DOL.Database
 		/// Spell id for items with charge
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
-		public int SpellID
+		public virtual int SpellID
 		{
 			get { return m_spellID; }
 			set
@@ -980,7 +980,7 @@ namespace DOL.Database
 		/// Spell id for items with charge
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
-		public int SpellID1
+		public virtual int SpellID1
 		{
 			get { return m_spellID1; }
 			set
@@ -994,7 +994,7 @@ namespace DOL.Database
 		/// ProcSpell id for items
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
-		public int ProcSpellID
+		public virtual int ProcSpellID
 		{
 			get { return m_procSpellID; }
 			set
@@ -1005,7 +1005,7 @@ namespace DOL.Database
 		}
 
 		[DataElement(AllowDbNull = true)]
-		public int ProcSpellID1
+		public virtual int ProcSpellID1
 		{
 			get { return m_procSpellID1; }
 			set
