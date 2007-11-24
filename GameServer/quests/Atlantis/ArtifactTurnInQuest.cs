@@ -262,11 +262,11 @@ namespace DOL.GS.Quests.Atlantis
 		public override bool CheckQuestQualification(GamePlayer player)
 		{
 			bool artCheck = false;
-			List<string> arts = ArtifactMgr.GetArtifactsFromPlayer(player);
+			List<string> arts = ArtifactMgr.GetArtifacts(player);
 
 			foreach (string art in arts)
 			{
-				Hashtable versions = ArtifactMgr.GetArtifactVersionsFromClass(art, (eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
+				Hashtable versions = ArtifactMgr.GetArtifactVersions(art, (eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
 				if (versions.Count > 1)
 				{
 					artCheck = true;
@@ -302,7 +302,8 @@ namespace DOL.GS.Quests.Atlantis
 	        {
 				//Lets see if they gave us a valid artifact
 	            string ArtID = ArtifactMgr.GetArtifactIDFromItemID(item.Id_nb);
-	            Hashtable versions = ArtifactMgr.GetArtifactVersionsFromClass(ArtID, (eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
+	            Hashtable versions = ArtifactMgr.GetArtifactVersions(ArtID, 
+					(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
 				//If this artifact has more than one option for them, give them the quest
 				if (versions.Count > 1 && RemoveItem(player, item))
 				{
@@ -322,7 +323,8 @@ namespace DOL.GS.Quests.Atlantis
 	        else
 	        {
 				//Why are they giving this to us!
-	            player.Out.SendMessage(string.Format("{0} doesn't want that item.", scholar.Name), eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+	            player.Out.SendMessage(string.Format("{0} doesn't want that item.", scholar.Name), 
+					eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 	        }
 
 	        return base.ReceiveItem(source, target, item);
@@ -350,7 +352,8 @@ namespace DOL.GS.Quests.Atlantis
 
 				//Lets get the next set of options
 				//Get the versions of this art
-				Hashtable versions = ArtifactMgr.GetArtifactVersionsFromClass(ArtifactID, (eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
+				Hashtable versions = ArtifactMgr.GetArtifactVersions(ArtifactID, 
+					(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
 				GetNextOptions(versions);
 
 				//If we still have more options, give it to them

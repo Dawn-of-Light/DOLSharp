@@ -70,10 +70,25 @@ namespace DOL.GS.PacketHandler.Client.v168
 						caption = item.Name;
 
 						// Aredhel: Start of a more sophisticated item delve system.
+						// The idea is to have every item inherit from an item base class,
+						// this base class will provide a method
+						// 
+						// public virtual List<String> Delve()
+						// 
+						// which can be overridden in derived classes to provide additional
+						// information. Same goes for spells, just add the spell delve
+						// in the Delve() hierarchy. This will on one hand make this class
+						// much more concise (1800 lines at the time of this writing) and
+						// on the other hand the whole delve system much more flexible, for
+						// example when adding new item types (artifacts, for example) you
+						// provide *only* an overridden Delve() method, use the base
+						// Delve() and you're done, spells, charges and everything else.
 
-						foreach (string line in item.Delve)
+						List<String> delve = new List<String>();
+						item.Delve(delve);
+
+						foreach (string line in delve)
 							objectInfo.Add(line);
-						break;
 
 						//**********************************
 						//show crafter name

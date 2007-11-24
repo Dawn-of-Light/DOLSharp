@@ -121,10 +121,11 @@ namespace DOL.GS
 					// Give the intro text
 					foreach (ArtifactTurnInQuest quest in QuestListToGive)
 					{
-						List<string> arts = ArtifactMgr.GetArtifactsFromPlayer(player);
+						List<string> arts = ArtifactMgr.GetArtifacts(player);
 						foreach (string art in arts)
 						{
-							Hashtable versions = ArtifactMgr.GetArtifactVersionsFromClass(art, (eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
+							Hashtable versions = ArtifactMgr.GetArtifactVersions(art, 
+								(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
 							if (versions.Count > 1)
 							{
 								this.SayTo(player, string.Format("{0}, I see that you carry {1}. If you are interested, I will exchange yours for you but there is a price to pay for the change. Any experience or levels your artifact has gained will be lost when the change occurs. Are you still [interested]?", player.CharacterClass.Name, art));
