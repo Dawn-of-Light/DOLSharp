@@ -37,6 +37,7 @@ namespace DOL.Database
 		public enum ID
 		{
 			Min = 0,
+			MinStat = 0,
 			Bonus1 = 0,
 			Bonus2 = 1,
 			Bonus3 = 2,
@@ -47,10 +48,13 @@ namespace DOL.Database
 			Bonus8 = 7,
 			Bonus9 = 8,
 			Bonus10 = 9,
+			MaxStat = 9,
+			MinSpell = 10,
 			Spell = 10,
 			Spell1 = 11,
 			ProcSpell = 12,
 			ProcSpell1 = 13,
+			MaxSpell = 13,
 			Max = 13
 		};					  
 

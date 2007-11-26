@@ -1046,8 +1046,8 @@ namespace DOL.GS
 			m_propertyNames[eProperty.MaxSpeed] = "Maximum Speed";
 			m_propertyNames[eProperty.MaxConcentration] = "Concentration";
 
-			m_propertyNames[eProperty.ArmorFactor] = "Armorfactor";
-			m_propertyNames[eProperty.ArmorAbsorbtion] = "Armor Absorbsion";
+			m_propertyNames[eProperty.ArmorFactor] = "Bonus to armor factor (AF)";
+			m_propertyNames[eProperty.ArmorAbsorbtion] = "Bonus to armor absorption (ABS)";
 
 			m_propertyNames[eProperty.HealthRegenerationRate] = "Health Regeneration";
 			m_propertyNames[eProperty.PowerRegenerationRate] = "Power Regeneration";
@@ -1072,7 +1072,7 @@ namespace DOL.GS
 			m_propertyNames[eProperty.BlockChance] = "Block Chance";
 			m_propertyNames[eProperty.ParryChance] = "Parry Chance";
 			m_propertyNames[eProperty.FumbleChance] = "Fumble Chance";
-			m_propertyNames[eProperty.MeleeDamage] = "all Melee Damage";
+			m_propertyNames[eProperty.MeleeDamage] = "Bonus to melee damage";
 			m_propertyNames[eProperty.RangedDamage] = "all Ranged Damage";
 			m_propertyNames[eProperty.MesmerizeDuration] = "Mesmerize Duration";
 			m_propertyNames[eProperty.StunDuration] = "Stun Duration";
@@ -1088,17 +1088,17 @@ namespace DOL.GS
 			m_propertyNames[eProperty.ArcherySpeed] = "Archery Speed";
 			m_propertyNames[eProperty.ArrowRecovery] = "Arrow Recovery";
 			m_propertyNames[eProperty.BuffEffectiveness] = "all Stat Buff Spells";
-			m_propertyNames[eProperty.CastingSpeed] = "Casting Speed";
+			m_propertyNames[eProperty.CastingSpeed] = "Bonus to casting speed";
 			m_propertyNames[eProperty.DeathExpLoss] = "Death Experience Loss Reduction";
 			m_propertyNames[eProperty.DebuffEffectivness] = "Debuff Effectivness";
 			m_propertyNames[eProperty.Fatigue] = "Fatigue";
-			m_propertyNames[eProperty.HealingEffectiveness] = "all Heal Spells";
+			m_propertyNames[eProperty.HealingEffectiveness] = "Bonus to healing effectiveness";
 			m_propertyNames[eProperty.PowerPool] = "Power Pool";
 			m_propertyNames[eProperty.ResistPierce] = "Resist Pierce";
-			m_propertyNames[eProperty.SpellDamage] = "all Magic Damage";//fooljam fix : Was the wrong name (Spell Damage)
+			m_propertyNames[eProperty.SpellDamage] = "Bonus to magic damage";
 			m_propertyNames[eProperty.SpellDuration] = "Spell Duration";
-			m_propertyNames[eProperty.StyleDamage] = "Style Damage";
-			m_propertyNames[eProperty.MeleeSpeed] = "Melee Combat Speed";//Lifeflight fix : Was missing
+			m_propertyNames[eProperty.StyleDamage] = "Bonus to style damage";
+			m_propertyNames[eProperty.MeleeSpeed] = "Bonus to melee combat speed";
 			//Missing bonusses end
 
 			m_propertyNames[eProperty.StrCapBonus] = "Bonus to Strength attribute bonus cap";

@@ -355,6 +355,7 @@
     <Compile Include="events\gameobjects\InteractWithEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="events\gameobjects\ItemBonusChangedEventArgs.cs" />
     <Compile Include="events\gameobjects\ItemDroppedEventArgs.cs" />
     <Compile Include="events\gameobjects\ItemEquippedArgs.cs">
       <SubType>Code</SubType>
@@ -748,11 +749,18 @@
     <Compile Include="quests\Atlantis\Artifacts\MalicesAxe.cs" />
     <Compile Include="quests\Atlantis\Artifacts\Snatcher.cs" />
     <Compile Include="quests\Atlantis\ArtifactTurnInQuest.cs" />
+    <Compile Include="quests\Atlantis\Encounters\AFlask.cs" />
+    <Compile Include="quests\Atlantis\Encounters\AtlantisTablet.cs" />
     <Compile Include="quests\Atlantis\Encounters\Battler.cs" />
     <Compile Include="quests\Atlantis\Encounters\Cloudsong.cs" />
+    <Compile Include="quests\Atlantis\Encounters\DreamSphere.cs" />
+    <Compile Include="quests\Atlantis\Encounters\EerieDarknessStone.cs" />
+    <Compile Include="quests\Atlantis\Encounters\EggOfYouth.cs" />
+    <Compile Include="quests\Atlantis\Encounters\ErinysCharm.cs" />
     <Compile Include="quests\Atlantis\Encounters\GuardOfValor.cs" />
     <Compile Include="quests\Atlantis\Encounters\MalicesAxe.cs" />
     <Compile Include="quests\Atlantis\Encounters\Snatcher.cs" />
+    <Compile Include="quests\Atlantis\Encounters\StoneOfAtlantis.cs" />
     <Compile Include="quests\Missions\AbstractMission.cs">
       <SubType>Code</SubType>
     </Compile>

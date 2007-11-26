@@ -647,6 +647,7 @@ namespace DOL.GS
 		ToHitBonus = 187,
 
 		//TOA
+		ToABonus_First = 188,
 		ArcherySpeed = 188,
 		ArrowRecovery = 189,
 		BuffEffectiveness = 190,
@@ -660,6 +661,7 @@ namespace DOL.GS
 		SpellDamage = 198,
 		SpellDuration = 199,
 		StyleDamage = 200,
+		ToABonus_Last = 200,
 
 		//Caps bonuses
 		StatCapBonus_First = 201,
@@ -671,10 +673,10 @@ namespace DOL.GS
 		PieCapBonus = 206,
 		EmpCapBonus = 207,
 		ChaCapBonus = 208,
-		StatCapBonus_Last = 208,
 		AcuCapBonus = 209,
 		MaxHealthCapBonus = 210,
 		PowerPoolCapBonus = 211,
+		StatCapBonus_Last = 211,
 
 		WeaponSkill = 212,
 		AllSkills = 213,
