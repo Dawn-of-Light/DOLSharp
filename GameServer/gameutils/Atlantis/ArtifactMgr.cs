@@ -237,7 +237,7 @@ namespace DOL.GS
 				if (level < 10)
 				{
 					double xpGained = item.Experience - m_xpForLevel[level];
-					double xpNeeded = m_xpForLevel[level + 1];
+					double xpNeeded = m_xpForLevel[level + 1] - m_xpForLevel[level];
 					return (int)(xpGained * 100 / xpNeeded);
 				}
 			}
@@ -344,7 +344,7 @@ namespace DOL.GS
 				{
 					player.Out.SendMessage(String.Format("Your {0} has gained a level!", item.Name),
 						eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-					item.OnLevelGained(level);
+					item.OnLevelGained(player, level);
 					return;
 				}
 			}

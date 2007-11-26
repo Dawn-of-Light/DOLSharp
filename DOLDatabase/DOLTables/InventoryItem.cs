@@ -399,9 +399,17 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		/// Add item magical bonus delve information.
+		/// Add classic item magical bonus delve information.
 		/// </summary>
 		protected virtual void DelveMagicalBonus(List<String> delve, int bonusAmount, int bonusType)
+		{
+			return;
+		}
+
+		/// <summary>
+		/// Add ToA magical bonus delve information.
+		/// </summary>
+		protected virtual void DelveBonus(List<String> delve, int bonusAmount, int bonusType)
 		{
 			return;
 		}

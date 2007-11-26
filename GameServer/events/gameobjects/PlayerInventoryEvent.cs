@@ -44,5 +44,9 @@ namespace DOL.Events
 		/// The item was just dropped
 		/// </summary>
 		public static readonly PlayerInventoryEvent ItemDropped = new PlayerInventoryEvent("PlayerInventory.ItemDropped");
+		/// <summary>
+		/// A bonus on an item changed.
+		/// </summary>
+		public static readonly PlayerInventoryEvent ItemBonusChanged = new PlayerInventoryEvent("PlayerInventory.ItemBonusChanged");
 	}
 }

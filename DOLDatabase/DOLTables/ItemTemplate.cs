@@ -1133,5 +1133,177 @@ namespace DOL.Database
 				}
 			}
 		}
+
+		/// <summary>
+		/// Get the bonus amount.
+		/// </summary>
+		/// <param name="bonusID"></param>
+		/// <returns></returns>
+		public int GetBonusAmount(ArtifactBonus.ID bonusID)
+		{
+			switch ((int)bonusID)
+			{
+				case 0:
+					return Bonus1;
+				case 1:
+					return Bonus2;
+				case 2:
+					return Bonus3;
+				case 3:
+					return Bonus4;
+				case 4:
+					return Bonus5;
+				case 5:
+					return Bonus6;
+				case 6:
+					return Bonus7;
+				case 7:
+					return Bonus8;
+				case 8:
+					return Bonus9;
+				case 9:
+					return Bonus10;
+			}
+
+			return 0;
+		}
+
+		/// <summary>
+		/// Get the bonus type.
+		/// </summary>
+		/// <param name="bonusID"></param>
+		/// <returns></returns>
+		public int GetBonusType(ArtifactBonus.ID bonusID)
+		{
+			switch ((int)bonusID)
+			{
+				case 0:
+					return Bonus1Type;
+				case 1:
+					return Bonus2Type;
+				case 2:
+					return Bonus3Type;
+				case 3:
+					return Bonus4Type;
+				case 4:
+					return Bonus5Type;
+				case 5:
+					return Bonus6Type;
+				case 6:
+					return Bonus7Type;
+				case 7:
+					return Bonus8Type;
+				case 8:
+					return Bonus9Type;
+				case 9:
+					return Bonus10Type;
+				case 10:
+					return SpellID;
+				case 11:
+					return SpellID1;
+				case 12:
+					return ProcSpellID;
+				case 13:
+					return ProcSpellID1;
+			}
+
+			return 0;
+		}
+
+		/// <summary>
+		/// Set the bonus amount.
+		/// </summary>
+		/// <param name="bonusID"></param>
+		/// <returns></returns>
+		public void SetBonusAmount(ArtifactBonus.ID bonusID, int bonusAmount)
+		{
+			switch ((int)bonusID)
+			{
+				case 0:
+					Bonus1 = bonusAmount;
+					break;
+				case 1:
+					Bonus2 = bonusAmount;
+					break;
+				case 2:
+					Bonus3 = bonusAmount;
+					break;
+				case 3:
+					Bonus4 = bonusAmount;
+					break;
+				case 4:
+					Bonus5 = bonusAmount;
+					break;
+				case 5:
+					Bonus6 = bonusAmount;
+					break;
+				case 6:
+					Bonus7 = bonusAmount;
+					break;
+				case 7:
+					Bonus8 = bonusAmount;
+					break;
+				case 8:
+					Bonus9 = bonusAmount;
+					break;
+				case 9:
+					Bonus10 = bonusAmount;
+					break;
+			}
+		}
+
+		/// <summary>
+		/// Set the bonus type.
+		/// </summary>
+		/// <param name="bonusID"></param>
+		/// <returns></returns>
+		public void SetBonusType(ArtifactBonus.ID bonusID, int bonusType)
+		{
+			switch ((int)bonusID)
+			{
+				case 0:
+					Bonus1Type = bonusType;
+					break;
+				case 1:
+					Bonus2Type = bonusType;
+					break;
+				case 2:
+					Bonus3Type = bonusType;
+					break;
+				case 3:
+					Bonus4Type = bonusType;
+					break;
+				case 4:
+					Bonus5Type = bonusType;
+					break;
+				case 5:
+					Bonus6Type = bonusType;
+					break;
+				case 6:
+					Bonus7Type = bonusType;
+					break;
+				case 7:
+					Bonus8Type = bonusType;
+					break;
+				case 8:
+					Bonus9Type = bonusType;
+					break;
+				case 9:
+					Bonus10Type = bonusType;
+					break;
+				case 10:
+					SpellID = bonusType;
+					break;
+				case 11:
+					SpellID1 = bonusType;
+					break;
+				case 12:
+					ProcSpellID = bonusType;
+					break;
+				case 13:
+					ProcSpellID1 = bonusType;
+					break;
+			}
+		}
 	}
 }
