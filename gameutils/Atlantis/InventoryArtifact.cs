@@ -24,6 +24,8 @@ using DOL.GS;
 using log4net;
 using System.Reflection;
 using DOL.Database;
+using DOL.Events;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
@@ -58,6 +60,17 @@ namespace DOL.GS
 			ArtifactID = ArtifactMgr.GetArtifactIDFromItemID(template.Id_nb);
 			ArtifactLevel = 0;
 			m_levelRequirements = ArtifactMgr.GetLevelRequirements(ArtifactID);
+
+			for (ArtifactBonus.ID bonusID = ArtifactBonus.ID.Min; bonusID <= ArtifactBonus.ID.Max; ++bonusID)
+			{
+				// Clear all bonuses except the base (L0) bonuses.
+
+				if (m_levelRequirements[(int)bonusID] > 0)
+				{
+					SetBonusType(bonusID, 0);
+					SetBonusAmount(bonusID, 0);
+				}
+			}
 		}
 
 		/// <summary>
@@ -73,10 +86,6 @@ namespace DOL.GS
 				ArtifactID = ArtifactMgr.GetArtifactIDFromItemID(Id_nb);
 				ArtifactLevel = ArtifactMgr.GetCurrentLevel(this);
 				m_levelRequirements = ArtifactMgr.GetLevelRequirements(ArtifactID);
-				log.Info(String.Format("{0} (level {1})", ArtifactID, ArtifactLevel));
-				for (ArtifactBonus.ID bonusID = ArtifactBonus.ID.Min; bonusID <= ArtifactBonus.ID.Max; ++bonusID)
-					log.Info(String.Format("Bonus {0} Requirement Level {1}",
-						(int)bonusID, m_levelRequirements[(int)bonusID]));
 			}
 		}
 
@@ -101,331 +110,54 @@ namespace DOL.GS
 		/// <summary>
 		/// Called from ArtifactMgr when this artifact has gained a level.
 		/// </summary>
+		/// <param name="player"></param>
 		/// <param name="artifactLevel"></param>
-		public void OnLevelGained(int artifactLevel)
+		public void OnLevelGained(GamePlayer player, int artifactLevel)
 		{
 			if (artifactLevel > ArtifactLevel && artifactLevel <= 10)
 			{
 				ArtifactLevel = artifactLevel;
-				// TODO: Refresh bonuses so they affect the player.
-			}
-		}
-
-		#region Bonuses
-
-		/// <summary>
-		/// Stat bonus 1.
-		/// </summary>
-		public override int Bonus1
-		{
-			get 
-			{ 
-				return (ArtifactLevel >= m_levelRequirements[(int)ArtifactBonus.ID.Bonus1])
-					? base.Bonus1
-					: 0;
+				if (AddAbilities(player, ArtifactLevel) && player != null)
+					player.Out.SendMessage(String.Format("Your {0} has gained a new ability!", Name),
+						eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 		}
 
 		/// <summary>
-		/// Stat bonus 2.
+		/// Add all abilities for this level.
 		/// </summary>
-		public override int Bonus2
+		/// <param name="artifactLevel">The level to add abilities for.</param>
+		/// <returns>True, if artifact gained 1 or more abilities, else false.</returns>
+		private bool AddAbilities(GamePlayer player, int artifactLevel)
 		{
-			get
+			ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), 
+				Id_nb);
+
+			if (template == null)
 			{
-				return (ArtifactLevel >= m_levelRequirements[(int)ArtifactBonus.ID.Bonus2])
-					? base.Bonus2
-					: 0;
+				log.Warn(String.Format("Item template missing for artifact '{0}'", Name));
+				return false;
 			}
-		}
 
-		/// <summary>
-		/// Stat bonus 3.
-		/// </summary>
-		public override int Bonus3
-		{
-			get
+			bool abilityGained = false;
+
+			for (ArtifactBonus.ID bonusID = ArtifactBonus.ID.Min; bonusID <= ArtifactBonus.ID.Max; ++bonusID)
 			{
-				return (ArtifactLevel >= m_levelRequirements[(int)ArtifactBonus.ID.Bonus3])
-					? base.Bonus3
-					: 0;
-			}
-		}
+				if (m_levelRequirements[(int)bonusID] == artifactLevel)
+				{
+					SetBonusType(bonusID, template.GetBonusType(bonusID));
+					SetBonusAmount(bonusID, template.GetBonusAmount(bonusID));
 
-		/// <summary>
-		/// Stat bonus 4.
-		/// </summary>
-		public override int Bonus4
-		{
-			get
-			{
-				return (ArtifactLevel >= m_levelRequirements[(int)ArtifactBonus.ID.Bonus4])
-					? base.Bonus4
-					: 0;
-			}
-		}
+					if (bonusID <= ArtifactBonus.ID.MaxStat)
+						player.Notify(PlayerInventoryEvent.ItemBonusChanged, this,
+							new ItemBonusChangedEventArgs(GetBonusType(bonusID), GetBonusAmount(bonusID)));
 
-		/// <summary>
-		/// Stat bonus 5.
-		/// </summary>
-		public override int Bonus5
-		{
-			get
-			{
-				return (ArtifactLevel >= m_levelRequirements[(int)ArtifactBonus.ID.Bonus5])
-					? base.Bonus5
-					: 0;
+					abilityGained = true;
+				}
 			}
-		}
 
-		/// <summary>
-		/// Stat bonus 6.
-		/// </summary>
-		public override int Bonus6
-		{
-			get
-			{
-				return (ArtifactLevel >= m_levelRequirements[(int)ArtifactBonus.ID.Bonus6])
-					? base.Bonus6
-					: 0;
-			}
+			return abilityGained;
 		}
-
-		/// <summary>
-		/// Stat bonus 7.
-		/// </summary>
-		public override int Bonus7
-		{
-			get
-			{
-				return (ArtifactLevel >= m_levelRequirements[(int)ArtifactBonus.ID.Bonus7])
-					? base.Bonus7
-					: 0;
-			}
-		}
-
-		/// <summary>
-		/// Stat bonus 8.
-		/// </summary>
-		public override int Bonus8
-		{
-			get
-			{
-				return (ArtifactLevel >= m_levelRequirements[(int)ArtifactBonus.ID.Bonus8])
-					? base.Bonus8
-					: 0;
-			}
-		}
-
-		/// <summary>
-		/// Stat bonus 9.
-		/// </summary>
-		public override int Bonus9
-		{
-			get
-			{
-				return (ArtifactLevel >= m_levelRequirements[(int)ArtifactBonus.ID.Bonus9])
-					? base.Bonus9
-					: 0;
-			}
-		}
-
-		/// <summary>
-		/// Stat bonus 10.
-		/// </summary>
-		public override int Bonus10
-		{
-			get
-			{
-				return (ArtifactLevel >= m_levelRequirements[(int)ArtifactBonus.ID.Bonus10])
-					? base.Bonus10
-					: 0;
-			}
-		}
-
-		/// <summary>
-		/// Stat bonus 1 type.
-		/// </summary>
-		public override int Bonus1Type
-		{
-			get
-			{
-				return (ArtifactLevel >= m_levelRequirements[(int)ArtifactBonus.ID.Bonus1])
-					? base.Bonus1Type
-					: 0;
-			}
-		}
-
-		/// <summary>
-		/// Stat bonus 2 type.
-		/// </summary>
-		public override int Bonus2Type
-		{
-			get
-			{
-				return (ArtifactLevel >= m_levelRequirements[(int)ArtifactBonus.ID.Bonus2])
-					? base.Bonus2Type
-					: 0;
-			}
-		}
-
-		/// <summary>
-		/// Stat bonus 3 type.
-		/// </summary>
-		public override int Bonus3Type
-		{
-			get
-			{
-				return (ArtifactLevel >= m_levelRequirements[(int)ArtifactBonus.ID.Bonus3])
-					? base.Bonus3Type
-					: 0;
-			}
-		}
-
-		/// <summary>
-		/// Stat bonus 4 type.
-		/// </summary>
-		public override int Bonus4Type
-		{
-			get
-			{
-				return (ArtifactLevel >= m_levelRequirements[(int)ArtifactBonus.ID.Bonus4])
-					? base.Bonus4Type
-					: 0;
-			}
-		}
-
-		/// <summary>
-		/// Stat bonus 5 type.
-		/// </summary>
-		public override int Bonus5Type
-		{
-			get
-			{
-				return (ArtifactLevel >= m_levelRequirements[(int)ArtifactBonus.ID.Bonus5])
-					? base.Bonus5Type
-					: 0;
-			}
-		}
-
-		/// <summary>
-		/// Stat bonus 6 type.
-		/// </summary>
-		public override int Bonus6Type
-		{
-			get
-			{
-				return (ArtifactLevel >= m_levelRequirements[(int)ArtifactBonus.ID.Bonus6])
-					? base.Bonus6Type
-					: 0;
-			}
-		}
-
-		/// <summary>
-		/// Stat bonus 7 type.
-		/// </summary>
-		public override int Bonus7Type
-		{
-			get
-			{
-				return (ArtifactLevel >= m_levelRequirements[(int)ArtifactBonus.ID.Bonus7])
-					? base.Bonus7Type
-					: 0;
-			}
-		}
-
-		/// <summary>
-		/// Stat bonus 8 type.
-		/// </summary>
-		public override int Bonus8Type
-		{
-			get
-			{
-				return (ArtifactLevel >= m_levelRequirements[(int)ArtifactBonus.ID.Bonus8])
-					? base.Bonus8Type
-					: 0;
-			}
-		}
-
-		/// <summary>
-		/// Stat bonus 9 type.
-		/// </summary>
-		public override int Bonus9Type
-		{
-			get
-			{
-				return (ArtifactLevel >= m_levelRequirements[(int)ArtifactBonus.ID.Bonus9])
-					? base.Bonus9Type
-					: 0;
-			}
-		}
-
-		/// <summary>
-		/// Stat bonus 10 type.
-		/// </summary>
-		public override int Bonus10Type
-		{
-			get
-			{
-				return (ArtifactLevel >= m_levelRequirements[(int)ArtifactBonus.ID.Bonus10])
-					? base.Bonus10Type
-					: 0;
-			}
-		}
-
-		/// <summary>
-		/// Spell ID.
-		/// </summary>
-		public override int SpellID
-		{
-			get
-			{
-				return (ArtifactLevel >= m_levelRequirements[(int)ArtifactBonus.ID.Spell])
-					? base.SpellID
-					: 0;
-			}
-		}
-
-		/// <summary>
-		/// Spell ID 1.
-		/// </summary>
-		public override int SpellID1
-		{
-			get
-			{
-				return (ArtifactLevel >= m_levelRequirements[(int)ArtifactBonus.ID.Spell1])
-					? base.SpellID1
-					: 0;
-			}
-		}
-
-		/// <summary>
-		/// Proc spell ID.
-		/// </summary>
-		public override int ProcSpellID
-		{
-			get
-			{
-				return (ArtifactLevel >= m_levelRequirements[(int)ArtifactBonus.ID.ProcSpell])
-					? base.ProcSpellID
-					: 0;
-			}
-		}
-
-		/// <summary>
-		/// Proc spell ID 1.
-		/// </summary>
-		public override int ProcSpellID1
-		{
-			get
-			{
-				return (ArtifactLevel >= m_levelRequirements[(int)ArtifactBonus.ID.ProcSpell1])
-					? base.ProcSpellID1
-					: 0;
-			}
-		}
-
-		#endregion
 
 		#region Delve
 
@@ -451,72 +183,84 @@ namespace DOL.GS
 			}
 
 			delve.Add("");
+			delve.Add("Magical Bonuses:");
 
-			// TODO: Delve needs a serious makeover.
+			for (ArtifactBonus.ID bonusID = ArtifactBonus.ID.MinStat; bonusID <= ArtifactBonus.ID.MaxStat; ++bonusID)
+				DelveMagicalBonus(delve, GetBonusAmount(bonusID), GetBonusType(bonusID),
+					m_levelRequirements[(int)bonusID]);
 
-			DelveMagicalBonus(delve, Bonus1, Bonus1Type, m_levelRequirements[(int)ArtifactBonus.ID.Bonus1]);
-			DelveMagicalBonus(delve, Bonus2, Bonus2Type, m_levelRequirements[(int)ArtifactBonus.ID.Bonus2]);
-			DelveMagicalBonus(delve, Bonus3, Bonus3Type, m_levelRequirements[(int)ArtifactBonus.ID.Bonus3]);
-			DelveMagicalBonus(delve, Bonus4, Bonus4Type, m_levelRequirements[(int)ArtifactBonus.ID.Bonus4]);
-			DelveMagicalBonus(delve, Bonus5, Bonus5Type, m_levelRequirements[(int)ArtifactBonus.ID.Bonus5]);
-			DelveMagicalBonus(delve, Bonus6, Bonus6Type, m_levelRequirements[(int)ArtifactBonus.ID.Bonus6]);
-			DelveMagicalBonus(delve, Bonus7, Bonus7Type, m_levelRequirements[(int)ArtifactBonus.ID.Bonus7]);
-			DelveMagicalBonus(delve, Bonus8, Bonus8Type, m_levelRequirements[(int)ArtifactBonus.ID.Bonus8]);
-			DelveMagicalBonus(delve, Bonus9, Bonus9Type, m_levelRequirements[(int)ArtifactBonus.ID.Bonus9]);
-			DelveMagicalBonus(delve, Bonus10, Bonus10Type, m_levelRequirements[(int)ArtifactBonus.ID.Bonus10]);
+			delve.Add("");
+
+			for (ArtifactBonus.ID bonusID = ArtifactBonus.ID.MinStat; bonusID <= ArtifactBonus.ID.MaxStat; ++bonusID)
+				DelveBonus(delve, GetBonusAmount(bonusID), GetBonusType(bonusID),
+					m_levelRequirements[(int)bonusID]);
 
 			delve.Add("");
 		}
 
 		/// <summary>
-		/// Artifact magical bonus delve information (includes level
-		/// requirement notes).
-		/// </summary>
-		protected void DelveMagicalBonus(List<String> delve, int bonusAmount, int bonusType, 
-			int levelRequirement)
-		{
-			if (ArtifactLevel >= levelRequirement)
-			{
-				DelveMagicalBonus(delve, bonusAmount, bonusType);
-				DelveRequirement(delve, levelRequirement);
-			}
-		}
-
-		/// <summary>
-		/// Artifact magical bonus delve information.
-		/// NOTE: This should actually be in the base class.
-		/// </summary>
-		protected override void DelveMagicalBonus(List<String> delve, int bonusAmount, int bonusType)
-		{
-			log.Info(String.Format("Delve Bonus: {0}, Type: {1}", bonusAmount, bonusType));
-			if (bonusType != 0 &&
-				bonusAmount != 0 &&
-				!SkillBase.CheckPropertyType((eProperty)bonusType, ePropertyType.Focus))
-			{
-				delve.Add(String.Format("- {0}: {1}{2}",
-					SkillBase.GetPropertyName((eProperty)bonusType),
-					bonusAmount.ToString("+0;-0;0"),
-					((bonusType == (int)eProperty.PowerPool) ||
-					(bonusType >= (int)eProperty.Resist_First && bonusType <= (int)eProperty.Resist_Last))
-						? ((bonusType == (int)eProperty.PowerPool) ? "% of power pool." : "%")
-						: " pts"));
-			}
-		}
-
-		/// <summary>
-		/// Level requirement delve information.
+		/// Artifact classic magical bonus delve information.
 		/// </summary>
 		/// <param name="delve"></param>
+		/// <param name="bonusAmount"></param>
+		/// <param name="bonusType"></param>
 		/// <param name="levelRequirement"></param>
-		private void DelveRequirement(List<String> delve, int levelRequirement)
+		protected virtual void DelveMagicalBonus(List<String> delve, int bonusAmount, int bonusType,
+			int levelRequirement)
 		{
-			if (levelRequirement > 0)
-				delve.Add(String.Format("(Item level required: {0})", levelRequirement));
+			String levelTag = (levelRequirement > 0) 
+				? String.Format("[L{0}]: ", levelRequirement) 
+				: "";
+
+			if (IsStatBonus(bonusType) || IsSkillBonus(bonusType))
+				delve.Add(String.Format("- {0}{1}: {2} pts",
+					levelTag,
+					SkillBase.GetPropertyName((eProperty)bonusType),
+					bonusAmount.ToString("+0;-0;0")));
+			else if (IsResistBonus(bonusType))
+				delve.Add(String.Format("- {0}{1}: {2}%",
+					levelTag,
+					SkillBase.GetPropertyName((eProperty)bonusType),
+					bonusAmount.ToString("+0;-0;0")));
+			else if (bonusType == (int)eProperty.PowerPool)
+				delve.Add(String.Format("- {0}{1}: {2}% of power pool.",
+					levelTag,
+					SkillBase.GetPropertyName((eProperty)bonusType),
+					bonusAmount.ToString("+0;-0;0")));
+		}
+
+		/// <summary>
+		/// Artifact ToA magical bonus delve information.
+		/// </summary>
+		/// <param name="delve"></param>
+		/// <param name="bonusAmount"></param>
+		/// <param name="bonusType"></param>
+		/// <param name="levelRequirement"></param>
+		protected virtual void DelveBonus(List<String> delve, int bonusAmount, int bonusType,
+			int levelRequirement)
+		{
+			if (!IsToABonus(bonusType))
+				return;
+
+			String levelTag = (levelRequirement > 0)
+				? String.Format("[L{0}]: ", levelRequirement)
+				: "";
+
+			if (IsCapIncreaseBonus(bonusType) || bonusType == (int)eProperty.ArmorFactor)
+				delve.Add(String.Format("{0}{1}: {2}",
+					levelTag,
+					SkillBase.GetPropertyName((eProperty)bonusType),
+					bonusAmount));
+			else
+				delve.Add(String.Format("{0}{1}: {2}%",
+					levelTag,
+					SkillBase.GetPropertyName((eProperty)bonusType),
+					bonusAmount));
 		}
 
 		/// <summary>
 		/// Returns the level when this artifact will gain a new 
-		/// ability again.
+		/// ability.
 		/// </summary>
 		/// <returns></returns>
 		private int GainsNewAbilityAtLevel()
@@ -526,6 +270,101 @@ namespace DOL.GS
 					return m_levelRequirements[(int)bonusID];
 
 			return 10;
+		}
+
+		/// <summary>
+		/// Check whether this type is a cap increase bonus.
+		/// </summary>
+		/// <param name="bonusType"></param>
+		/// <returns></returns>
+		protected virtual bool IsCapIncreaseBonus(int bonusType)
+		{
+			if ((bonusType >= (int)eProperty.StatCapBonus_First) && (bonusType <= (int)eProperty.StatCapBonus_Last))
+				return true;
+			return false;
+		}
+
+		/// <summary>
+		/// Check whether this type is focus.
+		/// </summary>
+		/// <param name="bonusType"></param>
+		/// <returns></returns>
+		protected virtual bool IsFocusBonus(int bonusType)
+		{
+			if ((bonusType >= (int)eProperty.Focus_Darkness) && (bonusType <= (int)eProperty.Focus_Arboreal))
+				return true;
+			if ((bonusType >= (int)eProperty.Focus_EtherealShriek) && (bonusType <= (int)eProperty.Focus_Witchcraft))
+				return true;
+			if (bonusType == (int)eProperty.AllFocusLevels)
+				return true;
+			return false;
+		}
+
+		/// <summary>
+		/// Check whether this type is resist.
+		/// </summary>
+		/// <param name="bonusType"></param>
+		/// <returns></returns>
+		protected virtual bool IsResistBonus(int bonusType)
+		{
+			if ((bonusType >= (int)eProperty.Resist_First) && (bonusType <= (int)eProperty.Resist_Last))
+				return true;
+			return false;
+		}
+
+		/// <summary>
+		/// Check whether this type is a skill.
+		/// </summary>
+		/// <param name="bonusType"></param>
+		/// <returns></returns>
+		protected virtual bool IsSkillBonus(int bonusType)
+		{
+			if ((bonusType >= (int)eProperty.Skill_First) && (bonusType <= (int)eProperty.Skill_Last))
+				return true;
+			return false;
+		}
+
+		/// <summary>
+		/// Check whether this type is a stat bonus.
+		/// </summary>
+		/// <param name="bonusType"></param>
+		/// <returns></returns>
+		protected virtual bool IsStatBonus(int bonusType)
+		{
+			if ((bonusType >= (int)eProperty.Stat_First) && (bonusType <= (int)eProperty.Stat_Last))
+				return true;
+			if ((bonusType == (int)eProperty.MaxHealth) || (bonusType == (int)eProperty.MaxMana))
+				return true;
+			if ((bonusType == (int)eProperty.Fatigue) || (bonusType == (int)eProperty.PowerPool))
+				return true;
+			if ((bonusType == (int)eProperty.AllMeleeWeaponSkills) || (bonusType == (int)eProperty.AllMagicSkills))
+				return true;
+			if ((bonusType == (int)eProperty.AllDualWieldingSkills) || (bonusType == (int)eProperty.AllArcherySkills))
+				return true;
+			return false;
+		}
+
+		/// <summary>
+		/// Check whether this type is a ToA bonus (it's all mixed
+		/// up in GlobalConstants.cs, but let's try anyway).
+		/// </summary>
+		/// <param name="bonusType"></param>
+		/// <returns></returns>
+		protected virtual bool IsToABonus(int bonusType)
+		{
+			if (IsCapIncreaseBonus(bonusType))
+				return true;
+			if ((bonusType >= (int)eProperty.ToABonus_First) && (bonusType <= (int)eProperty.ToABonus_Last) &&
+				(bonusType != (int)eProperty.PowerPool))
+				return true;
+			if ((bonusType >= (int)eProperty.MaxSpeed) && (bonusType <= (int)eProperty.MeleeSpeed))
+				return true;
+			if ((bonusType >= (int)eProperty.CriticalMeleeHitChance) &&
+				(bonusType <= (int)eProperty.CriticalHealHitChance))
+				return true;
+			if ((bonusType >= (int)eProperty.EvadeChance) && (bonusType <= (int)eProperty.SpeedDecreaseDuration))
+				return true;
+			return false;
 		}
 
 		#endregion
