@@ -31,7 +31,6 @@ namespace DOL.Database
     public class Artifact : DataObject
     {
         private String m_artifactID;
-		private int m_levelReq;
 		private String m_encounterID;
 		private String m_questID;
         private String m_zone;

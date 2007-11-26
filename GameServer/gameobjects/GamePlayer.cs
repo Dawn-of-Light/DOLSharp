@@ -513,6 +513,7 @@ namespace DOL.GS
 			GameEventMgr.RemoveHandler(this, GameLivingEvent.AttackFinished, new DOLEventHandler(RangeAttackHandler));
 			GameEventMgr.RemoveHandler(m_inventory, PlayerInventoryEvent.ItemEquipped, new DOLEventHandler(OnItemEquipped));
 			GameEventMgr.RemoveHandler(m_inventory, PlayerInventoryEvent.ItemUnequipped, new DOLEventHandler(OnItemUnequipped));
+			GameEventMgr.RemoveHandler(m_inventory, PlayerInventoryEvent.ItemBonusChanged, new DOLEventHandler(OnItemBonusChanged));
 
 			//TODO perhaps pull out the whole group-handing from
 			//the packet handler and from the Player into a own class
@@ -9319,6 +9320,42 @@ namespace DOL.GS
 			}
 		}
 
+		/// <summary>
+		/// Handles a bonus change on an item.
+		/// </summary>
+		/// <param name="e"></param>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
+		protected virtual void OnItemBonusChanged(DOLEvent e, object sender, EventArgs args)
+		{
+			ItemBonusChangedEventArgs changeArgs = args as ItemBonusChangedEventArgs;
+			if (changeArgs == null || changeArgs.BonusType == 0 || changeArgs.BonusAmount == 0)
+				return;
+
+			ItemBonus[changeArgs.BonusType] += changeArgs.BonusAmount;
+
+			if (ObjectState == eObjectState.Active)
+			{
+				Out.SendCharStatsUpdate();
+				Out.SendCharResistsUpdate();
+				Out.SendUpdateWeaponAndArmorStats();
+				Out.SendUpdatePlayerSkills();
+				UpdatePlayerStatus();
+
+				if (IsAlive)
+				{
+					if (Health < MaxHealth) StartHealthRegeneration();
+					else if (Health > MaxHealth) Health = MaxHealth;
+
+					if (Mana < MaxMana) StartPowerRegeneration();
+					else if (Mana > MaxMana) Mana = MaxMana;
+
+					if (Endurance < MaxEndurance) StartEnduranceRegeneration();
+					else if (Endurance > MaxEndurance) Endurance = MaxEndurance;
+				}
+			}
+		}
+
 		#endregion
 
 		#region ReceiveItem/DropItem/PickupObject
@@ -12858,6 +12895,7 @@ namespace DOL.GS
 			m_inventory = new GamePlayerInventory(this);
 			GameEventMgr.AddHandler(m_inventory, PlayerInventoryEvent.ItemEquipped, new DOLEventHandler(OnItemEquipped));
 			GameEventMgr.AddHandler(m_inventory, PlayerInventoryEvent.ItemUnequipped, new DOLEventHandler(OnItemUnequipped));
+			GameEventMgr.AddHandler(m_inventory, PlayerInventoryEvent.ItemBonusChanged, new DOLEventHandler(OnItemBonusChanged));
 			m_enteredGame = false;
 			m_customDialogCallback = null;
 			m_sitting = false;

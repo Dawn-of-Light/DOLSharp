@@ -73,7 +73,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						// The idea is to have every item inherit from an item base class,
 						// this base class will provide a method
 						// 
-						// public virtual List<String> Delve()
+						// public virtual void Delve(List<String>)
 						// 
 						// which can be overridden in derived classes to provide additional
 						// information. Same goes for spells, just add the spell delve
@@ -84,11 +84,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 						// provide *only* an overridden Delve() method, use the base
 						// Delve() and you're done, spells, charges and everything else.
 
-						List<String> delve = new List<String>();
-						item.Delve(delve);
+						if (item is InventoryArtifact)
+						{
+							List<String> delve = new List<String>();
+							item.Delve(delve);
 
-						foreach (string line in delve)
-							objectInfo.Add(line);
+							foreach (string line in delve)
+								objectInfo.Add(line);
+
+							break;
+						}
 
 						//**********************************
 						//show crafter name
