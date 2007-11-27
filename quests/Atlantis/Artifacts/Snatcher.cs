@@ -22,6 +22,8 @@ using System.Text;
 using DOL.Events;
 using DOL.GS.Quests;
 using DOL.Database;
+using DOL.GS.PacketHandler;
+using System.Collections;
 
 namespace DOL.GS.Quests.Atlantis.Artifacts
 {
@@ -51,6 +53,96 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		public static void Init()
 		{
 			ArtifactQuest.Init("Snatcher", typeof(Snatcher));
+		}
+
+		/// <summary>
+		/// Handle an item given to the scholar.
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="item"></param>
+		/// <param name="target"></param>
+		/// <returns></returns>
+		public override bool ReceiveItem(GameLiving source, GameLiving target, InventoryItem item)
+		{
+			if (base.ReceiveItem(source, target, item))
+				return true;
+
+			GamePlayer player = source as GamePlayer;
+			Scholar scholar = target as Scholar;
+			if (player == null || scholar == null)
+				return false;
+
+			if (Step == 2 && ArtifactMgr.GetArtifactID(item.Name) == ArtifactID)
+			{
+				Hashtable versions = ArtifactMgr.GetArtifactVersions(ArtifactID,
+					(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
+
+				IDictionaryEnumerator versionsEnum = versions.GetEnumerator();
+				versionsEnum.MoveNext();
+				
+				if (versions.Count > 0 && RemoveItem(player, item))
+				{
+					GiveItem(scholar, player, ArtifactID, versionsEnum.Value as ItemTemplate);
+					String reply = String.Format("Brilliant, thank you! Here, take the artifact. {0} {1} {2}",
+						"I've unlocked its powers for you. As I've said before, I'm more interested",
+						"in the stories and the history behind these artifacts than the actual items",
+						"themselves.");
+					scholar.TurnTo(player);
+					scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
+					FinishQuest();
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Handle whispers to the scholar.
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="target"></param>
+		/// <param name="text"></param>
+		/// <returns></returns>
+		public override bool WhisperReceive(GameLiving source, GameLiving target, string text)
+		{
+			if (base.WhisperReceive(source, target, text))
+				return true;
+
+			GamePlayer player = source as GamePlayer;
+			Scholar scholar = target as Scholar;
+			if (player == null || scholar == null)
+				return false;
+
+			if (Step == 1 && text.ToLower() == ArtifactID.ToLower())
+			{
+				String reply = "Oh, the mysterious Snatcher. Do you have the scrolls on it? I've found a few that allude to its true nature, but haven't found anything with any detail.";
+				scholar.TurnTo(player);
+				scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
+				Step = 2;
+				return true;
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Description for the current step.
+		/// </summary>
+		public override string Description
+		{
+			get
+			{
+				switch (Step)
+				{
+					case 1:
+						return "Defeat Snatcher.";
+					case 2:
+						return "Turn in the completed book.";
+					default:
+						return base.Description;
+				}
+			}
 		}
 
 		/// <summary>
