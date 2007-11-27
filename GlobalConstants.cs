@@ -611,8 +611,8 @@ namespace DOL.GS
 
 		MeleeSpeed = 155,
 		Acuity = 156,
-		DPS = 220,
-		MagicAbsorbtion = 221,
+		DPS = 230,
+		MagicAbsorbtion = 231,
 
 		AllMagicSkills = 163,
 		AllMeleeWeaponSkills = 164,
