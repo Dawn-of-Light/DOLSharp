@@ -225,7 +225,7 @@ namespace DOL.GS.PacketHandler
 										{
 											flag |= 0x08;
 											icon1 = spl.Icon;
-											spell_name1 = spl.SpellType; // or best spl.Name ?
+											spell_name1 = spl.Name; // or best spl.Name ?
 											break;
 										}
 									}
@@ -246,7 +246,7 @@ namespace DOL.GS.PacketHandler
 										{
 											flag |= 0x10;
 											icon2 = spl.Icon;
-											spell_name2 = spl.SpellType; // or best spl.Name ?
+											spell_name2 = spl.Name; // or best spl.Name ?
 											break;
 										}
 									}
