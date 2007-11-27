@@ -92,6 +92,7 @@ namespace DOL.GS.Spells
 
             ArrayList removeItems = new ArrayList();
 			removeItems.Add(useItem);
+			bool combinesToBook = false;
             foreach (InventoryItem item in backpack)
             {
                 if (item == null)
@@ -101,12 +102,28 @@ namespace DOL.GS.Spells
                 {
                     combinedScroll = ArtifactMgr.CombineScrolls(combinedScroll.Item, item);
                     removeItems.Add(item);
-                    if (ArtifactMgr.GetArtifact(combinedScroll.Item) != null)
-                        break;
+					if (ArtifactMgr.GetArtifact(combinedScroll.Item) != null)
+					{
+						combinesToBook = true;
+						break;
+					}
                 }
             }
 
             player.Out.SendSpellEffectAnimation(player, player, 1, 0, false, 1);
+
+			ArtifactBook artifactBook = ArtifactMgr.GetArtifactBook(combinedScroll.Item);
+
+			if (artifactBook == null)
+				log.Warn(String.Format("Missing artifact book for item '{0}'", combinedScroll.Name));
+			else
+			{
+				String receiveMessage = (combinesToBook)
+					? artifactBook.MessageReceiveBook
+					: artifactBook.MessageReceiveScrolls;
+				player.Out.SendMessage(String.Format(receiveMessage, combinedScroll.Name, useItem.Name),
+					eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+			}
 
 			if (player.ReceiveItem(player, combinedScroll))
 				foreach (InventoryItem item in removeItems)
