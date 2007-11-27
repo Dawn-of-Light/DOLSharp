@@ -147,7 +147,7 @@ namespace DOL.GS.PropertyCalc
             if (living is GamePlayer)
             {
                 if (property == (eProperty)((living as GamePlayer).CharacterClass.ManaStat))
-                    itemBonus += living.ItemBonus[(int)eProperty.AcuCapBonus];
+                    itemBonus += living.ItemBonus[(int)eProperty.Acuity];
             }
 
             int itemBonusCapIncrease = GetItemBonusCapIncrease(living, property);

@@ -21,7 +21,7 @@ using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 
-namespace DOL.GS.Spells
+namespace DOL.GS.Spells.Atlantis
 {
     /// <summary>
     /// Arrogance spell handler
