@@ -743,6 +743,7 @@
     <Compile Include="propertycalc\WeaponSkillCalculator.cs" />
     <Compile Include="quests\Atlantis\ArtifactEncounter.cs" />
     <Compile Include="quests\Atlantis\ArtifactQuest.cs" />
+    <Compile Include="quests\Atlantis\Artifacts\AHealersEmbrace.cs" />
     <Compile Include="quests\Atlantis\Artifacts\Battler.cs" />
     <Compile Include="quests\Atlantis\Artifacts\Cloudsong.cs" />
     <Compile Include="quests\Atlantis\Artifacts\GuardOfValor.cs" />
@@ -750,6 +751,7 @@
     <Compile Include="quests\Atlantis\Artifacts\Snatcher.cs" />
     <Compile Include="quests\Atlantis\ArtifactTurnInQuest.cs" />
     <Compile Include="quests\Atlantis\Encounters\AFlask.cs" />
+    <Compile Include="quests\Atlantis\Encounters\AHealersEmbrace.cs" />
     <Compile Include="quests\Atlantis\Encounters\AtlantisTablet.cs" />
     <Compile Include="quests\Atlantis\Encounters\Battler.cs" />
     <Compile Include="quests\Atlantis\Encounters\Cloudsong.cs" />

@@ -28,15 +28,15 @@ using System.Collections;
 namespace DOL.GS.Quests.Atlantis.Artifacts
 {
 	/// <summary>
-	/// Quest for the Cloudsong artifact.
+	/// Quest for the A Healer's Embrace artifact.
 	/// </summary>
 	/// <author>Aredhel</author>
-	class Cloudsong : ArtifactQuest
+	class AHealersEmbrace : ArtifactQuest
 	{
-		public Cloudsong()
+		public AHealersEmbrace()
 			: base() { }
 
-		public Cloudsong(GamePlayer questingPlayer)
+		public AHealersEmbrace(GamePlayer questingPlayer)
 			: base(questingPlayer) { }
 
 		/// <summary>
@@ -44,7 +44,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// </summary>
 		/// <param name="questingPlayer"></param>
 		/// <param name="dbQuest"></param>
-		public Cloudsong(GamePlayer questingPlayer, DBQuest dbQuest)
+		public AHealersEmbrace(GamePlayer questingPlayer, DBQuest dbQuest)
 			: base(questingPlayer, dbQuest) { }
 
 		/// <summary>
@@ -52,7 +52,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// </summary>
 		public static void Init()
 		{
-			ArtifactQuest.Init("Cloudsong", typeof(Cloudsong));
+			ArtifactQuest.Init("Healer's Embrace", typeof(AHealersEmbrace));
 		}
 
 		/// <summary>
@@ -83,8 +83,12 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 				if (versions.Count > 0 && RemoveItem(player, item))
 				{
 					GiveItem(scholar, player, ArtifactID, versionsEnum.Value as ItemTemplate);
-					String reply = String.Format("Thank you! Here, take this cloak. {0}",
-						"I hope you find it useful. Please don't lose it, I can't replace it!");
+					String reply = String.Format("Here is the Healer's Embrace Cloak, {0} {1} {2} {3}, {4}!",
+						"restored to its original power. It is a fine cloak and I wish I could keep",
+						"it, but it is for you and you alone. Do not destroy it because you will never",
+						"have access to its full power again. Take care of it and it shall aid you in",
+						"the trials",
+						player.CharacterClass.Name);
 					scholar.TurnTo(player);
 					scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
 					FinishQuest();
@@ -112,13 +116,12 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 			if (player == null || scholar == null)
 				return false;
 
-			// TODO: I accidentally skipped the part for [story], check on live!
 			if (Step == 1 && text.ToLower() == ArtifactID.ToLower())
 			{
-				String reply = String.Format("Do you have the story that goes with Cloudsong? {0} {1} {2}",
-					"I'd very much like to read it. If you don't, go, get the scrolls and use them.",
-					"Then, when you've translated them into a book, return the book to me, and I will",
-					"give you the artifact. Do you have the [story]?");
+				String reply = String.Format("Vara was a very skilled healer and she put her skills {0} {1} {2}",
+					"into the Healer's Embrace cloak. It would help me to unlock them if I was to read",
+					"her Medical Log. Please give me Vara's Medical Log now so that I may awaken the",
+					"magic within the Cloak for you.");
 				scholar.TurnTo(player);
 				scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
 				Step = 2;
@@ -138,7 +141,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 				switch (Step)
 				{
 					case 1:
-						return "Defeat Eramai.";
+						return "Defeat Mesedsubastet .";
 					case 2:
 						return "Turn in the completed book.";
 					default:
@@ -153,7 +156,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// </summary>
 		public override string Name
 		{
-			get { return "Cloudsong"; }
+			get { return "A Healing Embrace"; }
 		}
 
 		/// <summary>
@@ -161,7 +164,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// </summary>
 		public override String ArtifactID
 		{
-			get { return "Cloudsong"; }
+			get { return "Healer's Embrace"; }
 		}
 
 		public override void Notify(DOLEvent e, object sender, EventArgs args)
