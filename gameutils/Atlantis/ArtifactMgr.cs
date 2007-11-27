@@ -573,7 +573,7 @@ namespace DOL.GS
         /// <returns></returns>
         public static Book GetPageNumbers(InventoryItem item, ref String artifactID)
         {
-            if (item.Object_Type != (int)eObjectType.Magical
+            if (item == null || item.Object_Type != (int)eObjectType.Magical
                 || item.Item_Type != (int)eInventorySlot.FirstBackpack)
                 return Book.NoPage;
 
@@ -645,6 +645,21 @@ namespace DOL.GS
 				}
 			}
 			return artifacts;
+		}
+
+		/// <summary>
+		/// Get the artifact book for this scroll/book item.
+		/// </summary>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public static ArtifactBook GetArtifactBook(InventoryItem item)
+		{
+			String artifactID = "";
+			if (GetPageNumbers(item, ref artifactID) == Book.NoPage)
+				return null;
+
+			lock (m_artifactBooks.SyncRoot)
+				return m_artifactBooks[artifactID] as ArtifactBook;
 		}
 
         /// <summary>

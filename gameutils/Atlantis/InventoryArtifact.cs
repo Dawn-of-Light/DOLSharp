@@ -127,6 +127,7 @@ namespace DOL.GS
 		/// Add all abilities for this level.
 		/// </summary>
 		/// <param name="artifactLevel">The level to add abilities for.</param>
+		/// <param name="player"></param>
 		/// <returns>True, if artifact gained 1 or more abilities, else false.</returns>
 		private bool AddAbilities(GamePlayer player, int artifactLevel)
 		{
