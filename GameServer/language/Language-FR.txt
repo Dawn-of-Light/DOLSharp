@@ -635,7 +635,7 @@ GameTrainer.ReceiveItem.RespecSingle:		Merci, j'ai recu une possibilité de respé
 CLWeaponNPC.ReceiveItem.RespecCL:				Merci, j'ai recu une possibilité de respécialisation des compétences de champion. Pour utiliser: /respec cl.
 KingNPC.WhisperReceive.IsNowChampion:			Vous venez de devenir un champion!
 KingNPC.WhisperReceive.AlreadyChampion:			Vous êtes déjà un champion!
-KingNPC.WhisperReceive.AskForChampion:			Souaitez vous faire partie des [champions] de notre royaume?
+KingNPC.WhisperReceive.AskForChampion:			Souaitez vous faire partie des [Champions] de notre royaume?
 ThroneTeleporterNPC.Interact.AskForAudience		{0} dit, "Bonjour, citoyen. Avez-vous besoin d'entrer dans la salle du trône ?"\n\nVotre réponse: [{1}] or [{2}]
 ThroneTeleporterNPC.Interact.AskForExit			{0} dit, Désirez-vous quitter la salle du trône et retourner à [{0}]?
 
