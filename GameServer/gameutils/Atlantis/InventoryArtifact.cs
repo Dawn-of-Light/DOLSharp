@@ -338,6 +338,8 @@ namespace DOL.GS
 				return true;
 			if ((bonusType == (int)eProperty.Fatigue) || (bonusType == (int)eProperty.PowerPool))
 				return true;
+			if (bonusType == (int)eProperty.Acuity)
+				return true;
 			if ((bonusType == (int)eProperty.AllMeleeWeaponSkills) || (bonusType == (int)eProperty.AllMagicSkills))
 				return true;
 			if ((bonusType == (int)eProperty.AllDualWieldingSkills) || (bonusType == (int)eProperty.AllArcherySkills))
