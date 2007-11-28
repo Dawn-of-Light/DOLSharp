@@ -458,20 +458,15 @@ Hibernia.Arbiter.WhisperReceive.Text6:			Well. At one time, when Atlantis existe
 Hibernia.Arbiter.WhisperReceive.Text7:			We assumed there would only be the trials. It turns out that somehow, the creatures of the Planes, after Atlantis' fall, found the means to survive in the planes. They've procreated. We even believe some creatures escaped to the planes that perhaps never had a part in the trials. But we can't be sure. All we know is that when Atlantis fell, it fell qzuckly. But, as for what lies beyond that portal, all I can say is the trials still [exist].
 Hibernia.Arbiter.WhisperReceive.Text8:			Yes, but in some corrupted way. Passing them will involve more than any one noble skill alone. We did not realize it was not merely a matter of heroics, strength and skill. It seems the beasts of the planes have developed a culture of their own, influenced by the ancient trials, but radically changed from the intent of the trials. If you want the skills, the glory and the riches beyond this portal, my dear {0}, you are going to have to enter the planes, and be prepared for anything, for I know too little to [aid] you.
 Hibernia.Arbiter.WhisperReceive.Text9:			I will do my best, though. You will know as you pass each of the trials. When you have completed a trial, return to me. Good luck {0}.
-
 Midgard.Arbiter.Interact.BeginTrials:			{0}, welcome to Atlantis. When you are ready, you may begin the Trials. Come to me then.
 Midgard.Arbiter.Interact.Welcome:			{0}, welcome to what is left of Atlantis! What a people they must have been! From what I have learned here, they had magic way beyond ours! Oh they were as gods! But let us not speak of them, but of the [gift] they have left us!
-
 Midgard.Arbiter.WhisperReceive.Case1:			gift
-Midgard.Arbiter.WhisperReceive.Text1:			Why, the gift of the Planes of Trials. What a place to prove your worth {0}, what a way to show your strength and skill. We received the messages, and came here. I'll admit, we didn't expect to find ruins. But look at this building we have uncovered! Isn't it a [marvel]?
-
 Midgard.Arbiter.WhisperReceive.Case2:			marvel
-Midgard.Arbiter.WhisperReceive.Text2:			See, this tablet behind me here? It is our only true source of information. I've translated bits and pieces of it, but I can't quite make out all of it. It is the Hall of Heroes. As the Atlanteans refer to it. It's the entrance to the Planes of Trials. All I've managed to get is that beyond this portal lie the Planes of Trials. There are ten trials designed to prove contestants worthy of gaining the skills of Atlantis. To fail is to die, I think. But we do know that to succeed is ti gain some greater skill or power through the magic of Atlantis. If you pass all trials, you should be more powerful than our [enemies]!
-
 Midgard.Arbiter.WhisperReceive.Case3:			enemies
-Midgard.Arbiter.WhisperReceive.Text3:			Ah, we believethe other realms also have access to some form of the planes. We must do our best to ensure all those who enter succeed. But you'll have to be careful. The trials are not what the scrolls and this tablet say they were. It seems the [inhabitants] of the Planes have their own idea about the trials.
-
 Midgard.Arbiter.WhisperReceive.Case4:			inhabitants
+Midgard.Arbiter.WhisperReceive.Text1:			Why, the gift of the Planes of Trials. What a place to prove your worth {0}, what a way to show your strength and skill. We received the messages, and came here. I'll admit, we didn't expect to find ruins. But look at this building we have uncovered! Isn't it a [marvel]?
+Midgard.Arbiter.WhisperReceive.Text2:			See, this tablet behind me here? It is our only true source of information. I've translated bits and pieces of it, but I can't quite make out all of it. It is the Hall of Heroes. As the Atlanteans refer to it. It's the entrance to the Planes of Trials. All I've managed to get is that beyond this portal lie the Planes of Trials. There are ten trials designed to prove contestants worthy of gaining the skills of Atlantis. To fail is to die, I think. But we do know that to succeed is ti gain some greater skill or power through the magic of Atlantis. If you pass all trials, you should be more powerful than our [enemies]!
+Midgard.Arbiter.WhisperReceive.Text3:			Ah, we believethe other realms also have access to some form of the planes. We must do our best to ensure all those who enter succeed. But you'll have to be careful. The trials are not what the scrolls and this tablet say they were. It seems the [inhabitants] of the Planes have their own idea about the trials.
 Midgard.Arbiter.WhisperReceive.Text4:			There are many strange creatures beyond that portal, my {0} friend. They are not part of the original trials and I don't know what they are doing there. I can only guess that they are the survivors of Atlantis' fall. They sought safety in the Planes. Now, they must be dealt with as you go through the trials. Now, {0}, if you want the skills, the glory and the riches beyond this portal, you need to enter the planes. Be prepared for anything. You will know you've passed a trial. Return to me, so I can guide you as best I can through the trials. I will try to aid you as best I can.
 
 # HOUSING
@@ -582,7 +577,6 @@ GameTrainer.ReceiveItem.RespecRealm:			Thanks, I added a realm respec to use /re
 GameTrainer.ReceiveItem.RespecSingle:			Thanks, I added a single spec respec to use /respec <linename>
 GameTrainer.Train.WouldYouLikeTo:			Would you like to do some training?
 GameTrainer.Train.SeekElsewhere:			You must seek elsewhere for your training.
-
 
 # KING THRONE NPC
 CLWeaponNPC.ReceiveItem.RespecCL:			Thanks, I added a single champion skill respec to use /respec cl.
@@ -783,6 +777,9 @@ Scripts.Blacksmith.StackedObjets:			{0} can't repair stacked objets.
 Scripts.Blacksmith.YouExamine:				You examine {0}. {1} is {2} and is a smith.
 Scripts.Blacksmith.YouPay:				You pay {0} {1}.
 Scripts.Blacksmith.YouTarget:				You target [{0}].
+
+# /GameHousingHastener
+GameHousingHastener.GetExamineMessages.Examine:		You examine {0}. {1} is {2} and is a hastener.
 
 # /Recharger
 Scripts.Recharger.GetExamineMessages:			You examine {0}. {1} is {2} and can recharge your equipment.
