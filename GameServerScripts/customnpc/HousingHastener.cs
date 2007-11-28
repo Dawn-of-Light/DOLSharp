@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using DOL.Database;
+using DOL.Language;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
@@ -55,7 +56,7 @@ namespace DOL.GS.Scripts
 		public override IList GetExamineMessages(GamePlayer player)
 		{
 			IList list = new ArrayList();
-			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and is a hastener.");
+			list.Add(LanguageMgr.GetTranslation(player.Client, "GameHousingHastener.GetExamineMessages.Examine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
 			return list;
 		}
 
