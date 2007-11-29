@@ -74,15 +74,12 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 
 			if (Step == 2 && ArtifactMgr.GetArtifactID(item.Name) == ArtifactID)
 			{
-				Hashtable versions = ArtifactMgr.GetArtifactVersions(ArtifactID,
+				Dictionary<String, ItemTemplate> versions = ArtifactMgr.GetArtifactVersions(ArtifactID,
 					(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
-
-				IDictionaryEnumerator versionsEnum = versions.GetEnumerator();
-				versionsEnum.MoveNext();
 
 				if (versions.Count > 0 && RemoveItem(player, item))
 				{
-					GiveItem(scholar, player, ArtifactID, versionsEnum.Value as ItemTemplate);
+					GiveItem(scholar, player, ArtifactID, versions[";;"]);
 					String reply = String.Format("Here is the Healer's Embrace Cloak, {0} {1} {2} {3}, {4}!",
 						"restored to its original power. It is a fine cloak and I wish I could keep",
 						"it, but it is for you and you alone. Do not destroy it because you will never",

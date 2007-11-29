@@ -51,7 +51,7 @@ namespace DOL.GS
             
             if (mob.CurrentRegion.Description == "Atlantis" && mob.Level >= 45 && Util.Chance(25))
             {
-                ArrayList artifacts = new ArrayList();
+                List<Artifact> artifacts = new List<Artifact>();
                 switch (mob.CurrentZone.Description)
                 {
                     case "Oceanus Hesperos":
@@ -78,7 +78,7 @@ namespace DOL.GS
                 if (artifacts.Count > 0)
                 {
 					String artifactID = 
-						(artifacts[Util.Random(artifacts.Count-1)] as Artifact).ArtifactID;
+						(artifacts[Util.Random(artifacts.Count-1)]).ArtifactID;
                     int pageNumber;
 
                     if (mob.Level >= 55)

@@ -266,7 +266,8 @@ namespace DOL.GS.Quests.Atlantis
 
 			foreach (string art in arts)
 			{
-				Hashtable versions = ArtifactMgr.GetArtifactVersions(art, (eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
+				Dictionary<String, ItemTemplate> versions = ArtifactMgr.GetArtifactVersions(art, 
+					(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
 				if (versions.Count > 1)
 				{
 					artCheck = true;
@@ -302,7 +303,7 @@ namespace DOL.GS.Quests.Atlantis
 	        {
 				//Lets see if they gave us a valid artifact
 	            string ArtID = ArtifactMgr.GetArtifactIDFromItemID(item.Id_nb);
-	            Hashtable versions = ArtifactMgr.GetArtifactVersions(ArtID, 
+				Dictionary<String, ItemTemplate> versions = ArtifactMgr.GetArtifactVersions(ArtID, 
 					(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
 				//If this artifact has more than one option for them, give them the quest
 				if (versions.Count > 1 && RemoveItem(player, item))
@@ -352,7 +353,7 @@ namespace DOL.GS.Quests.Atlantis
 
 				//Lets get the next set of options
 				//Get the versions of this art
-				Hashtable versions = ArtifactMgr.GetArtifactVersions(ArtifactID, 
+				Dictionary<String, ItemTemplate> versions = ArtifactMgr.GetArtifactVersions(ArtifactID, 
 					(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
 				GetNextOptions(versions);
 
@@ -409,7 +410,7 @@ namespace DOL.GS.Quests.Atlantis
 			return true;
 		}
 
-		private void GetNextOptions(Hashtable versions)
+		private void GetNextOptions(Dictionary<String, ItemTemplate> versions)
 		{
 			//Clear the current types since we are going to be offering more
 			m_curTypes.Clear();

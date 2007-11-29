@@ -87,7 +87,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (item is InventoryArtifact)
 						{
 							List<String> delve = new List<String>();
-							item.Delve(delve);
+							(item as InventoryArtifact).Delve(delve, client.Player);
 
 							foreach (string line in delve)
 								objectInfo.Add(line);
