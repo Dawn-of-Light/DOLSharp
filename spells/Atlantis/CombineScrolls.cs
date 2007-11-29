@@ -100,27 +100,24 @@ namespace DOL.GS.Spells
 
                 if (ArtifactMgr.CanCombine(combinedScroll.Item, item))
                 {
-                    combinedScroll = ArtifactMgr.CombineScrolls(combinedScroll.Item, item);
+                    combinedScroll = ArtifactMgr.CombineScrolls(combinedScroll.Item, item, ref combinesToBook);
                     removeItems.Add(item);
-					if (ArtifactMgr.GetArtifact(combinedScroll.Item) != null)
-					{
-						combinesToBook = true;
+					if (combinesToBook)
 						break;
-					}
                 }
             }
 
             player.Out.SendSpellEffectAnimation(player, player, 1, 0, false, 1);
 
-			ArtifactBook artifactBook = ArtifactMgr.GetArtifactBook(combinedScroll.Item);
+			Artifact artifact = ArtifactMgr.GetArtifact(combinedScroll.Item);
 
-			if (artifactBook == null)
-				log.Warn(String.Format("Missing artifact book for item '{0}'", combinedScroll.Name));
+			if (artifact == null)
+				log.Warn(String.Format("Missing artifact for item '{0}'", combinedScroll.Name));
 			else
 			{
 				String receiveMessage = (combinesToBook)
-					? artifactBook.MessageReceiveBook
-					: artifactBook.MessageReceiveScrolls;
+					? artifact.MessageReceiveBook
+					: artifact.MessageReceiveScrolls;
 				player.Out.SendMessage(String.Format(receiveMessage, combinedScroll.Name, useItem.Name),
 					eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
 			}
