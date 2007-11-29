@@ -74,15 +74,12 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 
 			if (Step == 2 && ArtifactMgr.GetArtifactID(item.Name) == ArtifactID)
 			{
-				Hashtable versions = ArtifactMgr.GetArtifactVersions(ArtifactID,
+				Dictionary<String, ItemTemplate> versions = ArtifactMgr.GetArtifactVersions(ArtifactID,
 					(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
-
-				IDictionaryEnumerator versionsEnum = versions.GetEnumerator();
-				versionsEnum.MoveNext();
 				
 				if (versions.Count > 0 && RemoveItem(player, item))
 				{
-					GiveItem(scholar, player, ArtifactID, versionsEnum.Value as ItemTemplate);
+					GiveItem(scholar, player, ArtifactID, versions[";;"]);
 					String reply = String.Format("Brilliant, thank you! Here, take the artifact. {0} {1} {2}",
 						"I've unlocked its powers for you. As I've said before, I'm more interested",
 						"in the stories and the history behind these artifacts than the actual items",

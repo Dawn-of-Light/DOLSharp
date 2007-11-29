@@ -155,9 +155,9 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 						{
 							String versionID = String.Format("{0};{1};",
 								GetCustomProperty("DamageType"), text.ToLower());
-							Hashtable versions = ArtifactMgr.GetArtifactVersions(ArtifactID,
+							Dictionary<String, ItemTemplate> versions = ArtifactMgr.GetArtifactVersions(ArtifactID,
 								(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
-							ItemTemplate template = versions[versionID] as ItemTemplate;
+							ItemTemplate template = versions[versionID];
 							if (template == null)
 							{
 								log.Warn(String.Format("Artifact version {0} not found", versionID));

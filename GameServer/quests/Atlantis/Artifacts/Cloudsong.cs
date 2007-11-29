@@ -74,7 +74,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 
 			if (Step == 2 && ArtifactMgr.GetArtifactID(item.Name) == ArtifactID)
 			{
-				Hashtable versions = ArtifactMgr.GetArtifactVersions(ArtifactID,
+				Dictionary<String, ItemTemplate> versions = ArtifactMgr.GetArtifactVersions(ArtifactID,
 					(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
 
 				IDictionaryEnumerator versionsEnum = versions.GetEnumerator();

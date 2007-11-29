@@ -98,16 +98,12 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 			if (Step == 2 && ArtifactMgr.GetArtifactID(item.Name) == ArtifactID)
 			{
 				scholar.TurnTo(player);
-				Hashtable versions = ArtifactMgr.GetArtifactVersions(ArtifactID,
+				Dictionary<String, ItemTemplate> versions = ArtifactMgr.GetArtifactVersions(ArtifactID,
 					(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
-
-				IDictionaryEnumerator versionsEnum = versions.GetEnumerator();
-				versionsEnum.MoveNext();
 
 				if (versions.Count > 0 && RemoveItem(player, item))
 				{
-					GiveItem(scholar, player, ArtifactID, versionsEnum.Value as ItemTemplate);
-
+					GiveItem(scholar, player, ArtifactID, versions[";;"]);
 					String reply = "Can you feel the magic of the Guard of Valor flowing once again? ";
 					reply += "It comes from Aloeus' love for his beautiful Nikolia. When Aloeus ";
 					reply += "presented the gift to Nikolia, the magic in it bound to her. And now as ";

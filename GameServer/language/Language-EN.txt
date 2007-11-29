@@ -682,7 +682,7 @@ DetailDisplayHandler.WriteClassicWeaponInfos.BaseDPS:	- {0} Base DPS
 DetailDisplayHandler.WriteClassicWeaponInfos.ClampDPS:	- {0} Clamped DPS
 DetailDisplayHandler.WriteClassicWeaponInfos.Condition:	- {0}% Condition
 DetailDisplayHandler.WriteClassicWeaponInfos.DamageMod:	Damage Modifiers:
-DetailDisplayHandler.WriteClassicWeaponInfos.DamageType:Damage Type: {0}
+DetailDisplayHandler.WriteClassicWeaponInfos.DamageType:- Damage Type: {0}
 DetailDisplayHandler.WriteClassicWeaponInfos.EffDamage:	Effective Damage:
 DetailDisplayHandler.WriteClassicWeaponInfos.Quality:	- {0}% Quality
 DetailDisplayHandler.WriteClassicWeaponInfos.SPD:	- {0} Weapon Speed
