@@ -124,7 +124,7 @@ namespace DOL.GS
 						List<string> arts = ArtifactMgr.GetArtifacts(player);
 						foreach (string art in arts)
 						{
-							Hashtable versions = ArtifactMgr.GetArtifactVersions(art, 
+							Dictionary<String, ItemTemplate> versions = ArtifactMgr.GetArtifactVersions(art, 
 								(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
 							if (versions.Count > 1)
 							{

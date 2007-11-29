@@ -19,6 +19,7 @@
 using System;
 using System.Text;
 using DOL.Database;
+using System.Collections.Generic;
 
 namespace DOL.GS
 {
@@ -351,6 +352,58 @@ namespace DOL.GS
 		public virtual Spell Copy()
 		{
 			return (Spell)MemberwiseClone();
+		}
+
+		/// <summary>
+		/// Fill in spell delve information.
+		/// </summary>
+		/// <param name="delve"></param>
+		public virtual void Delve(List<String> delve)
+		{
+			delve.Add(String.Format("Function: {0}", Name));
+			delve.Add("");
+			delve.Add(Description);
+			delve.Add("");
+			DelveEffect(delve);
+			DelveTarget(delve);
+
+			if (Range > 0)
+				delve.Add(String.Format("Range: {0}", Range));
+
+			if (Duration > 0 && Duration < 65535)
+				delve.Add(String.Format("Duration: {0}", 
+					(Duration >= 60000) 
+					? String.Format("{0}:{1} min", (int) (Duration / 60000), Duration % 60000)
+					: String.Format("{0} sec", Duration / 1000)));
+
+			delve.Add(String.Format("Casting time: {0}",
+				(CastTime == 0) ? "instant" : String.Format("{0} sec", CastTime)));
+
+			if (Target == "Enemy" || Target == "Area" || Target == "Cone")
+				delve.Add(String.Format("Damage: {0}", 
+					GlobalConstants.DamageTypeToName((eDamageType)DamageType)));
+
+			delve.Add("");
+		}
+
+		private void DelveEffect(List<String> delve)
+		{
+		}
+
+		private void DelveTarget(List<String> delve)
+		{
+			String target;
+			switch (Target)
+			{
+				case "Enemy":
+					target = "Targetted";
+					break;
+				default:
+					target = Target;
+					break;
+			}
+
+			delve.Add(String.Format("Target: {0}", target));
 		}
 	}
 }

@@ -26,6 +26,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS
 {
@@ -165,8 +166,13 @@ namespace DOL.GS
 		/// <summary>
 		/// Artifact delve information.
 		/// </summary>
-		public override void Delve(List<String> delve)
+		public virtual void Delve(List<String> delve, GamePlayer player)
 		{
+			if (player == null)
+				return;
+
+			// Artifact specific information.
+
 			if (ArtifactLevel < 10)
 			{
 				delve.Add(string.Format("Artifact (Current level: {0})", ArtifactLevel));
@@ -183,6 +189,8 @@ namespace DOL.GS
 				delve.Add("Current level: 10");
 			}
 
+			// Item bonuses.
+
 			delve.Add("");
 			delve.Add("Magical Bonuses:");
 
@@ -196,7 +204,36 @@ namespace DOL.GS
 				DelveBonus(delve, GetBonusAmount(bonusID), GetBonusType(bonusID),
 					m_levelRequirements[(int)bonusID]);
 
+			// Spells & Procs
+
+			DelveMagicalAbility(delve, ArtifactBonus.ID.Spell, m_levelRequirements[(int)ArtifactBonus.ID.Spell]);
+			DelveMagicalAbility(delve, ArtifactBonus.ID.ProcSpell, m_levelRequirements[(int)ArtifactBonus.ID.ProcSpell]);
+			DelveMagicalAbility(delve, ArtifactBonus.ID.Spell1, m_levelRequirements[(int)ArtifactBonus.ID.Spell1]);
+			DelveMagicalAbility(delve, ArtifactBonus.ID.ProcSpell1, m_levelRequirements[(int)ArtifactBonus.ID.ProcSpell1]);
+
 			delve.Add("");
+
+			// Weapon & Armor Stats.
+
+			if ((Object_Type >= (int)eObjectType.GenericWeapon) &&
+				(Object_Type <= (int)eObjectType.MaulerStaff) ||
+				(Object_Type == (int)eObjectType.Instrument))
+				DelveWeaponStats(delve, player);
+			else if (Object_Type >= (int)eObjectType.Cloth &&
+				Object_Type <= (int)eObjectType.Scale)
+				DelveArmorStats(delve, player);
+
+			// Reuse Timer
+
+			int reuseTimer = ArtifactMgr.GetReuseTimer(this);
+			
+			if (reuseTimer > 0)
+			{
+				TimeSpan reuseTimeSpan = new TimeSpan(0, 0, reuseTimer);
+				delve.Add("");
+				delve.Add(String.Format("Can use item every {0} min", 
+					reuseTimeSpan.ToString().Substring(3)));
+			}
 		}
 
 		/// <summary>
@@ -257,6 +294,169 @@ namespace DOL.GS
 					levelTag,
 					SkillBase.GetPropertyName((eProperty)bonusType),
 					bonusAmount));
+		}
+
+		/// <summary>
+		/// Artifact Magical Ability delve information (spells, procs).
+		/// </summary>
+		/// <param name="delve"></param>
+		/// <param name="bonusID"></param>
+		/// <param name="levelRequirement"></param>
+		public virtual void DelveMagicalAbility(List<String> delve, ArtifactBonus.ID bonusID, 
+			int levelRequirement)
+		{
+			String levelTag = (levelRequirement > 0)
+				? String.Format("[L{0}]: ", levelRequirement)
+				: "";
+
+			bool isProc = false;
+			bool isSecondary = false;
+			int spellID = 0;
+
+			switch (bonusID)
+			{
+				case ArtifactBonus.ID.Spell:
+					spellID = SpellID;
+					isProc = false;
+					isSecondary = false;
+					break;
+				case ArtifactBonus.ID.Spell1:
+					spellID = SpellID1;
+					isProc = false;
+					isSecondary = true;
+					break;
+				case ArtifactBonus.ID.ProcSpell:
+					spellID = ProcSpellID;
+					isProc = true;
+					isSecondary = false;
+					break;
+				case ArtifactBonus.ID.ProcSpell1:
+					spellID = ProcSpellID1;
+					isProc = true;
+					isSecondary = true;
+					break;
+			}
+
+			if (spellID == 0)
+				return;
+
+			delve.Add("");
+			delve.Add(String.Format("{0}{1}Magical Ability:", levelTag,
+				(isSecondary) ? "Secondary " : ""));
+
+			SpellLine spellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+			if (spellLine != null)
+			{
+				IList spells = SkillBase.GetSpellList(spellLine.KeyName);
+				if (spells != null)
+					foreach (Spell spell in spells)
+						if (spell.ID == spellID)
+							spell.Delve(delve);
+			}
+
+			if (isProc)
+				delve.Add(String.Format("- Spell has a chance of casting when this {0} enemy.",
+					(GlobalConstants.IsWeapon(Object_Type))
+					? "weapon strikes an" : "armor is hit by"));
+			else
+				delve.Add("- This spell is cast when the item is used.");
+		}
+
+		/// <summary>
+		/// Artifact weapon stats delve info.
+		/// </summary>
+		/// <param name="delve"></param>
+		/// <param name="player"></param>
+		public virtual void DelveWeaponStats(List<String> delve, GamePlayer player)
+		{
+			double itemDPS = DPS_AF / 10.0;
+			double clampedDPS = Math.Min(itemDPS, 1.2 + 0.3 * player.Level);
+			double itemSPD = SPD_ABS / 10.0;
+			double effectiveDPS = itemDPS * Quality / 100.0 * Condition / MaxCondition;
+
+			delve.Add("Damage Modifiers:");
+
+			if (itemDPS != 0)
+			{
+				delve.Add(LanguageMgr.GetTranslation(player.Client, 
+					"DetailDisplayHandler.WriteClassicWeaponInfos.BaseDPS", itemDPS.ToString("0.0")));
+				delve.Add(LanguageMgr.GetTranslation(player.Client, 
+					"DetailDisplayHandler.WriteClassicWeaponInfos.ClampDPS", clampedDPS.ToString("0.0")));
+			}
+
+			if (SPD_ABS >= 0)
+				delve.Add(LanguageMgr.GetTranslation(player.Client, 
+					"DetailDisplayHandler.WriteClassicWeaponInfos.SPD", itemSPD.ToString("0.0")));
+
+			if (Quality != 0)
+				delve.Add(LanguageMgr.GetTranslation(player.Client, 
+					"DetailDisplayHandler.WriteClassicWeaponInfos.Quality", Quality));
+
+			if (Condition != 0)
+				delve.Add(LanguageMgr.GetTranslation(player.Client, 
+					"DetailDisplayHandler.WriteClassicWeaponInfos.Condition", ConditionPercent));
+
+			delve.Add(LanguageMgr.GetTranslation(player.Client, 
+				"DetailDisplayHandler.WriteClassicWeaponInfos.DamageType",
+				(Type_Damage == 0 ? "None" : GlobalConstants.WeaponDamageTypeToName(Type_Damage))));
+			delve.Add(" ");
+
+			delve.Add(LanguageMgr.GetTranslation(player.Client, 
+				"DetailDisplayHandler.WriteClassicWeaponInfos.EffDamage"));
+			
+			if (itemDPS != 0)
+				delve.Add("- " + effectiveDPS.ToString("0.0") + " DPS");
+		}
+
+		/// <summary>
+		/// Artifact armor stats delve info.
+		/// </summary>
+		/// <param name="delve"></param>
+		/// <param name="player"></param>
+		public virtual void DelveArmorStats(List<String> delve, GamePlayer player)
+		{
+			delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.WriteClassicArmorInfos.ArmorMod"));
+
+			double af = 0;
+			int afCap = player.Level;
+			double effectiveAF = 0;
+
+			if (DPS_AF != 0)
+			{
+				delve.Add(LanguageMgr.GetTranslation(player.Client, 
+					"DetailDisplayHandler.WriteClassicArmorInfos.BaseFactor", DPS_AF));
+
+				if (Object_Type != (int)eObjectType.Cloth)
+					afCap *= 2;
+
+				af = Math.Min(afCap, DPS_AF);
+
+				delve.Add(LanguageMgr.GetTranslation(player.Client, 
+					"DetailDisplayHandler.WriteClassicArmorInfos.ClampFact", (int)af));
+			}
+
+			if (SPD_ABS >= 0)
+				delve.Add(LanguageMgr.GetTranslation(player.Client, 
+					"DetailDisplayHandler.WriteClassicArmorInfos.Absorption", SPD_ABS));
+
+			if (Quality != 0)
+				delve.Add(LanguageMgr.GetTranslation(player.Client, 
+					"DetailDisplayHandler.WriteClassicArmorInfos.Quality", Quality));
+
+			if (Condition != 0)
+				delve.Add(LanguageMgr.GetTranslation(player.Client, 
+					"DetailDisplayHandler.WriteClassicArmorInfos.Condition", ConditionPercent));
+
+			delve.Add(" ");
+			delve.Add(LanguageMgr.GetTranslation(player.Client, 
+				"DetailDisplayHandler.WriteClassicArmorInfos.EffArmor"));
+
+			if (DPS_AF != 0)
+			{
+				effectiveAF = af * Quality / 100.0 * Condition / MaxCondition * (1 + SPD_ABS / 100.0);
+				delve.Add(LanguageMgr.GetTranslation(player.Client, 
+					"DetailDisplayHandler.WriteClassicArmorInfos.Factor", (int)effectiveAF));
+			}
 		}
 
 		/// <summary>
@@ -358,7 +558,7 @@ namespace DOL.GS
 			if (IsCapIncreaseBonus(bonusType))
 				return true;
 			if ((bonusType >= (int)eProperty.ToABonus_First) && (bonusType <= (int)eProperty.ToABonus_Last) &&
-				(bonusType != (int)eProperty.PowerPool))
+				(bonusType != (int)eProperty.PowerPool) && (bonusType != (int)eProperty.Fatigue))
 				return true;
 			if ((bonusType >= (int)eProperty.MaxSpeed) && (bonusType <= (int)eProperty.MeleeSpeed))
 				return true;
