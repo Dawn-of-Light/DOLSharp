@@ -137,6 +137,10 @@ namespace DOL.Events
 		/// The ChampionLevelUp event is fired whenever the player gain a champion level
 		/// </summary>
 		public static readonly GamePlayerEvent ChampionLevelUp = new GamePlayerEvent("GamePlayer.ChampionLevelUp");
+		/// <summary>
+		/// The QuestRewardChosen event is fired whenever the player finishes a RewardQuest.
+		/// </summary>
+		public static readonly GamePlayerEvent QuestRewardChosen = new GamePlayerEvent("GamePlayer.QuestRewardChosen");
 
 		#region Statistics
 
