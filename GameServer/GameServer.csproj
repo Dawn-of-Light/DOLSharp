@@ -382,6 +382,7 @@
     <Compile Include="events\gameobjects\PlayerPromotedEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="events\gameobjects\QuestRewardChosenEventArgs.cs" />
     <Compile Include="events\gameobjects\RevivedEventArgs.cs" />
     <Compile Include="events\gameobjects\QuestEventArgs.cs">
       <SubType>Code</SubType>
@@ -636,6 +637,7 @@
     <Compile Include="packets\Client\168\ClientCrashPacketHandler.cs" />
     <Compile Include="packets\Client\168\PlayerMarketSearchRequestHandler.cs" />
     <Compile Include="packets\Client\168\PlayerSetMarketPrice.cs" />
+    <Compile Include="packets\Client\168\QuestRewardChosenHandler.cs" />
     <Compile Include="packets\Client\168\ShipHookpointInteract.cs" />
     <Compile Include="packets\Client\168\CryptKeyRequestHandler.cs" />
     <Compile Include="packets\Client\168\DestroyItemRequestHandler.cs" />
@@ -835,6 +837,7 @@
     <Compile Include="quests\Quests\Requirements\QuestCompletedRequirement.cs" />
     <Compile Include="quests\Quests\Requirements\QuestStepRequirement.cs" />
     <Compile Include="behaviour\Requirements\InventoryItemRequirement.cs" />
+    <Compile Include="quests\Quests\RewardQuest.cs" />
     <Compile Include="quests\Quests\Triggers\AcceptQuestTrigger.cs" />
     <Compile Include="quests\Quests\Triggers\AbortQuestTrigger.cs" />
     <Compile Include="quests\Quests\Triggers\ContinueQuestTrigger.cs" />

@@ -629,6 +629,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="quests\albion\MarlinsSalesPitch.cs" />
+    <Compile Include="quests\albion\NoHopeForTheHopeful.cs" />
     <Compile Include="quests\albion\Nuisances.cs">
       <SubType>Code</SubType>
     </Compile>
