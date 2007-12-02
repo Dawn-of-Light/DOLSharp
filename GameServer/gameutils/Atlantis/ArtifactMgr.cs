@@ -158,13 +158,13 @@ namespace DOL.GS
 			String artifactID = GetArtifactIDFromItemID(item.Id_nb);
 			lock (m_artifacts)
 			{
-				Artifact artifact = m_artifacts[artifactID];
-				if (artifact == null)
+				if (!m_artifacts.ContainsKey(artifactID))
 				{
 					log.Warn(String.Format("Can't find artifact for ID '{0}'", artifactID));
 					return 0;
 				}
 
+				Artifact artifact = m_artifacts[artifactID];
 				return artifact.ReuseTimer;
 			}
 		}
@@ -176,14 +176,12 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static String[] GetScholars(String artifactID)
 		{
-			String[] scholars = null;
-			Artifact artifact = null;
 			if (artifactID != null)
 				lock (m_artifacts)
-					artifact = m_artifacts[artifactID];
-			if (artifact != null)
-				scholars = artifact.ScholarID.Split(';');
-			return scholars;
+					if (m_artifacts.ContainsKey(artifactID))
+						return m_artifacts[artifactID].ScholarID.Split(';');
+
+			return null;
 		}
 
 		/// <summary>
@@ -382,11 +380,13 @@ namespace DOL.GS
             {
 				lock (m_artifactVersions)
 				{
-					List<ArtifactXItem> allVersions = m_artifactVersions[artifactID];
-					if (allVersions != null)
+					if (m_artifactVersions.ContainsKey(artifactID))
+					{
+						List<ArtifactXItem> allVersions = m_artifactVersions[artifactID];
 						foreach (ArtifactXItem version in allVersions)
 							if (version.Realm == 0 || version.Realm == (int)realm)
 								versions.Add(version);
+					}
 				}
             }
 
@@ -481,14 +481,12 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static Type GetEncounterType(String artifactID)
 		{
-			if (artifactID == null)
-				return null;
+			if (artifactID != null)
+				lock (m_artifacts)
+					if (m_artifacts.ContainsKey(artifactID))
+						return GetQuestType(m_artifacts[artifactID].EncounterID);
 
-			Artifact artifact = null;
-			lock (m_artifacts)
-				artifact = m_artifacts[artifactID];
-
-			return GetQuestType(artifact.EncounterID);
+			return null;
 		}
 
 		/// <summary>
@@ -541,13 +539,11 @@ namespace DOL.GS
         /// <returns></returns>
         public static String GetArtifactID(String bookID)
         {
-            if (bookID == null)
-                return null;
-
-            lock (m_artifacts)
-                foreach (Artifact artifact in m_artifacts.Values)
-                    if (artifact.BookID == bookID)
-						return artifact.ArtifactID;
+            if (bookID != null)
+				lock (m_artifacts)
+					foreach (Artifact artifact in m_artifacts.Values)
+						if (artifact.BookID == bookID)
+							return artifact.ArtifactID;
 
 			return null;
         }

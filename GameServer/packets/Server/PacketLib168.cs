@@ -1179,6 +1179,20 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(0x00);
 			SendTCP(pak);
 		}
+
+		public virtual void SendQuestOfferWindow(GameNPC questNPC, GamePlayer player, RewardQuest quest)
+		{
+		}
+
+		public virtual void SendQuestRewardWindow(GameNPC questNPC, GamePlayer player, RewardQuest quest)
+		{
+		}
+
+		protected virtual void SendQuestWindow(GameNPC questNPC, GamePlayer player, RewardQuest quest,
+			bool offer)
+		{
+		}
+
 		// i'm reusing the questsubscribe command for quest abort since its 99% the same, only different event dets fired
 		// data 3 defines wether it's subscribe or abort
 		public virtual void SendQuestSubscribeCommand(GameNPC invitingNPC, ushort questid, string inviteMessage)
