@@ -43,7 +43,6 @@ namespace DOL.GS.Quests.Albion
 			: base()
 		{
 			Init();
-			SetCustomProperty("kills", "0");
 		}
 
 		public NoHopeForTheHopeful(GamePlayer questingPlayer)
@@ -71,22 +70,87 @@ namespace DOL.GS.Quests.Albion
 
 		private void Init()
 		{
-			ItemTemplate bracerOfShavedBone = new ItemTemplate();
-			bracerOfShavedBone = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate),
-					"Bracer_of_Shaved_Bone");
+			ItemTemplate intelligentBracer = CreateBracer();
+			intelligentBracer.Id_nb = "recruits_intelligent_bracer";
+			intelligentBracer.Name = "Recruit's Intelligent Bracer";
+			intelligentBracer.Bonus1 = 4;
+			intelligentBracer.Bonus1Type = (int)eProperty.Acuity;
+			intelligentBracer.Bonus2 = 3;
+			intelligentBracer.Bonus2Type = (int)eProperty.Constitution;
+			intelligentBracer.Bonus3 = 2;
+			intelligentBracer.Bonus3Type = (int)eProperty.Resist_Slash;
 
+			ItemTemplate mightyBracer = CreateBracer();
+			mightyBracer.Id_nb = "recruits_mighty_bracer";
+			mightyBracer.Name = "Recruit's Mighty Bracer";
+			mightyBracer.Bonus1 = 4;
+			mightyBracer.Bonus1Type = (int)eProperty.Strength;
+			mightyBracer.Bonus2 = 4;
+			mightyBracer.Bonus2Type = (int)eProperty.Constitution;
+			mightyBracer.Bonus3 = 2;
+			mightyBracer.Bonus3Type = (int)eProperty.Resist_Slash;
+
+			ItemTemplate slyBracer = CreateBracer();
+			slyBracer.Id_nb = "recruits_sly_bracer";
+			slyBracer.Name = "Recruit's Sly Bracer";
+			slyBracer.Bonus1 = 4;
+			slyBracer.Bonus1Type = (int)eProperty.Dexterity;
+			slyBracer.Bonus2 = 4;
+			slyBracer.Bonus2Type = (int)eProperty.Quickness;
+			slyBracer.Bonus3 = 2;
+			slyBracer.Bonus3Type = (int)eProperty.Resist_Slash;
+
+			ItemTemplate piousBracer = CreateBracer();
+			piousBracer.Id_nb = "recruits_pious_bracer";
+			piousBracer.Name = "Recruit's Pious Bracer";
+			piousBracer.Bonus1 = 4;
+			piousBracer.Bonus1Type = (int)eProperty.Acuity;
+			piousBracer.Bonus2 = 3;
+			piousBracer.Bonus2Type = (int)eProperty.Dexterity;
+			piousBracer.Bonus3 = 2;
+			piousBracer.Bonus3Type = (int)eProperty.Resist_Slash;
+
+			Level = 1;
 			QuestGiver = sirDorian;
-			Rewards.XP = 22;
-			Rewards.Money = 22;
-			Rewards.AddOptionalReward(bracerOfShavedBone);
-			Rewards.AddOptionalReward(bracerOfShavedBone);
-			Rewards.AddOptionalReward(bracerOfShavedBone);
-			Rewards.AddOptionalReward(bracerOfShavedBone);
-			Rewards.AddOptionalReward(bracerOfShavedBone);
-			Rewards.AddOptionalReward(bracerOfShavedBone);
-			Rewards.AddOptionalReward(bracerOfShavedBone);
-			Rewards.AddOptionalReward(bracerOfShavedBone);
-			Rewards.ChoiceOf = 4;
+			Rewards.Experience = 22;
+			Rewards.MoneyPercent = 20;
+			Rewards.AddOptionalItem(intelligentBracer);
+			Rewards.AddOptionalItem(mightyBracer);
+			Rewards.AddOptionalItem(slyBracer);
+			Rewards.AddOptionalItem(piousBracer);
+			Rewards.ChoiceOf = 1;
+		}
+
+		/// <summary>
+		/// Create a raw bracer.
+		/// </summary>
+		/// <returns></returns>
+		private ItemTemplate CreateBracer()
+		{
+			ItemTemplate template = new ItemTemplate();
+			template.Level = 7;
+			template.Durability = 50000;
+			template.MaxDurability = 50000;
+			template.Condition = 50000;
+			template.MaxCondition = 50000;
+			template.Quality = 100;
+			template.Object_Type = 41;
+			template.Item_Type = 33;
+			template.Weight = 10;
+			template.Model = 598;
+			template.Bonus = 5;
+			template.IsPickable = true;
+			template.IsDropable = true;
+			template.CanDropAsLoot = false;
+			template.IsTradable = true;
+			template.Platinum = 0;
+			template.Gold = 0;
+			template.Silver = 0;
+			template.Copper = 22;
+			template.MaxCount = 1;
+			template.PackSize = 1;
+			template.Realm = 1;
+			return template;
 		}
 
 		[ScriptLoadedEvent]
@@ -146,7 +210,6 @@ namespace DOL.GS.Quests.Albion
 				if (quest == null)
 				{
 					quest = new NoHopeForTheHopeful();
-					quest.QuestGiver = sirDorian;
 					quest.OfferQuest(player);
 				}
 				else
@@ -337,17 +400,6 @@ namespace DOL.GS.Quests.Albion
 				text += "Perhaps word will spread among the bandits that the citizens of Cotswold will no ";
 				text += "longer tolerate their fear-mongering.";
 				return text;
-			}
-		}
-
-		/// <summary>
-		/// The level of the quest as it shows in the journal.
-		/// </summary>
-		public override int Level
-		{
-			get
-			{
-				return 1;
 			}
 		}
 

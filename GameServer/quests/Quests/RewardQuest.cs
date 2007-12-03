@@ -37,7 +37,7 @@ namespace DOL.GS.Quests
 
 		public RewardQuest() : base()
 		{
-			m_rewards = new QuestRewards();
+			m_rewards = new QuestRewards(this);
 		}
 
 		/// <summary>
@@ -57,7 +57,7 @@ namespace DOL.GS.Quests
 		public RewardQuest(GamePlayer questingPlayer,int step) 
 			: base(questingPlayer, step)
 		{
-			m_rewards = new QuestRewards();
+			m_rewards = new QuestRewards(this);
 		}
 
 		/// <summary>
@@ -68,7 +68,7 @@ namespace DOL.GS.Quests
 		public RewardQuest(GamePlayer questingPlayer, DBQuest dbQuest) 
 			: base(questingPlayer, dbQuest)
 		{
-			m_rewards = new QuestRewards();
+			m_rewards = new QuestRewards(this);
 		}
 
 		/// <summary>
@@ -170,7 +170,7 @@ namespace DOL.GS.Quests
 					return;
 
 				for (int reward = 0; reward < rewardArgs.CountChosen; ++reward)
-					Rewards.ChooseReward(reward);
+					Rewards.Choose(rewardArgs.ItemsChosen[reward]);
 
 				FinishQuest();
 			}
@@ -183,11 +183,12 @@ namespace DOL.GS.Quests
 		{
 			base.FinishQuest();
 
-			QuestPlayer.GainExperience(Rewards.XP);
+			QuestPlayer.Out.SendSoundEffect(11, 0, 0, 0, 0, 0);
+			QuestPlayer.GainExperience(Rewards.Experience);
 			QuestPlayer.ReceiveMoney(QuestGiver, Rewards.Money);
-			foreach (ItemTemplate basicReward in Rewards.BasicItemRewards)
+			foreach (ItemTemplate basicReward in Rewards.BasicItems)
 				GiveItem(QuestPlayer, basicReward);
-			foreach (ItemTemplate optionalReward in Rewards.ChosenItemRewards)
+			foreach (ItemTemplate optionalReward in Rewards.ChosenItems)
 				GiveItem(QuestPlayer, optionalReward);
 		}
 
@@ -196,18 +197,80 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public class QuestRewards
 		{
-			private long m_moneyReward, m_xpReward;
-			private List<ItemTemplate> m_basicItemRewards, m_optionalItemRewards;
+			private RewardQuest m_quest;
+			private int m_moneyPercent;
+			private long m_experience;
+			private List<ItemTemplate> m_basicItems, m_optionalItems;
 			private int m_choiceOf;
-			private List<ItemTemplate> m_chosenItemRewards;
-			public QuestRewards()
+			private List<ItemTemplate> m_chosenItems;
+
+			/// <summary>
+			/// The maximum amount of copper awarded for a quest with a
+			/// particular level.
+			/// </summary>
+			private long[] m_maxCopperForLevel = {
+				0,
+				115,
+				310,
+				630,
+				1015,
+				1923,
+				3106,
+				4778,
+				7490,
+				11365,
+				14700,		// level 10
+				17897,
+				21601,
+				25359,
+				31171,
+				38322,
+				47197,
+				55945,
+				67005,
+				81063,
+				92865,		// level 20
+				109341,
+				145712,
+				153350,
+				179629,
+				208979,
+				242462,
+				273694,
+				320555,
+				375366,
+				432613,		// level 30
+				488446,
+				556087,
+				641920,
+				735351,
+				816085,
+				935985,
+				1059493,
+				1142836,
+				1282954,
+				3000555,	// level 40
+				5031641,
+				5546643,
+				5955362,
+				6729142,
+				7352371,
+				8235521,
+				9064368,
+				10056130,
+				11018817,
+				11018817	// level 50, this appears to be the overall cap
+			};
+
+			public QuestRewards(RewardQuest quest)
 			{
-				m_moneyReward = 0;
-				m_xpReward = 0;
-				m_basicItemRewards = new List<ItemTemplate>();
-				m_optionalItemRewards = new List<ItemTemplate>();
+				m_quest = quest;
+				m_moneyPercent = 0;
+				m_experience = 0;
+				m_basicItems = new List<ItemTemplate>();
+				m_optionalItems = new List<ItemTemplate>();
 				m_choiceOf = 0;
-				m_chosenItemRewards = new List<ItemTemplate>();
+				m_chosenItems = new List<ItemTemplate>();
 			}
 
 			/// <summary>
@@ -216,18 +279,18 @@ namespace DOL.GS.Quests
 			/// <param name="reward"></param>
 			public void AddBasicReward(ItemTemplate reward)
 			{
-				if (m_basicItemRewards.Count < 8)
-					m_basicItemRewards.Add(reward);
+				if (m_basicItems.Count < 8)
+					m_basicItems.Add(reward);
 			}
 
 			/// <summary>
 			/// Add an optional reward (up to a maximum of 8).
 			/// </summary>
 			/// <param name="reward"></param>
-			public void AddOptionalReward(ItemTemplate reward)
+			public void AddOptionalItem(ItemTemplate reward)
 			{
-				if (m_optionalItemRewards.Count < 8)
-					m_optionalItemRewards.Add(reward);
+				if (m_optionalItems.Count < 8)
+					m_optionalItems.Add(reward);
 			}
 
 			/// <summary>
@@ -235,55 +298,86 @@ namespace DOL.GS.Quests
 			/// </summary>
 			/// <param name="reward"></param>
 			/// <returns></returns>
-			public bool ChooseReward(int reward)
+			public bool Choose(int reward)
 			{
-				if (reward > m_optionalItemRewards.Count)
+				if (reward > m_optionalItems.Count)
 					return false;
 
-				m_chosenItemRewards.Add(m_optionalItemRewards[reward]);
+				m_chosenItems.Add(m_optionalItems[reward]);
 				return true;
 			}
 
 			/// <summary>
-			/// Money awarded for completing this quest.
+			/// Money awarded for completing this quest. This is a percentage 
+			/// of the maximum amount of money awarded for a quest with this level.
+			/// This in turn means that there is a cap (100%) to earning money
+			/// from quests.
 			/// </summary>
-			public long Money
+			public int MoneyPercent
 			{
-				get { return m_moneyReward; }
-				set { m_moneyReward = value; }
+				get { return m_moneyPercent; }
+				set { if (value >= 0 && value <= 100) m_moneyPercent = value; }
 			}
 
 			/// <summary>
-			/// XP awarded for completing this quest.
+			/// Money awarded for completing this quest. This is a flat value.
+			/// You shouldn't be able to set this directly, because a level dependent
+			/// cap applies to all money earned from quests.
 			/// </summary>
-			public long XP
+			public long Money
 			{
-				get { return m_xpReward; }
-				set { m_xpReward = value; }
+				get { return (long)((m_maxCopperForLevel[m_quest.Level] * MoneyPercent / 100)); }
+			}
+
+			/// <summary>
+			/// Experience awarded for completing this quest. This is a percentage 
+			/// of the amount of experience the questing player needs to get from
+			/// their current level to the next level, not taking into account any
+			/// experience the player already has gained towards the next level.
+			/// Because this depends on the current level of the interacting player
+			/// it doesn't make sense to change it from your scripts.
+			/// </summary>
+			public int ExperiencePercent(GamePlayer player)
+			{
+				int currentLevel = player.Level;
+				if (currentLevel > 50)
+					return 0;
+				long experienceToLevel = GamePlayer.XPLevel[currentLevel] -
+					GamePlayer.XPLevel[currentLevel-1];
+				return (int)((m_experience * 100) / experienceToLevel);
+			}
+
+			/// <summary>
+			/// Experience awarded for completing this quest. This is a flat value.
+			/// </summary>
+			public long Experience
+			{
+				get { return m_experience; }
+				set { m_experience = value; }
 			}
 
 			/// <summary>
 			/// List of basic item rewards.
 			/// </summary>
-			public List<ItemTemplate> BasicItemRewards
+			public List<ItemTemplate> BasicItems
 			{
-				get { return m_basicItemRewards; }
+				get { return m_basicItems; }
 			}
 
 			/// <summary>
 			/// List of optional item rewards.
 			/// </summary>
-			public List<ItemTemplate> OptionalItemRewards
+			public List<ItemTemplate> OptionalItems
 			{
-				get { return m_optionalItemRewards; }
+				get { return m_optionalItems; }
 			}
 
 			/// <summary>
 			/// List of optional rewards the player actually picked.
 			/// </summary>
-			public List<ItemTemplate> ChosenItemRewards
+			public List<ItemTemplate> ChosenItems
 			{
-				get { return m_chosenItemRewards; }
+				get { return m_chosenItems; }
 			}
 
 			/// <summary>
@@ -295,8 +389,8 @@ namespace DOL.GS.Quests
 				get { return m_choiceOf; }
 				set 
 				{
-					if (m_optionalItemRewards.Count > 0)
-						m_choiceOf = Math.Min(Math.Max(1, value), m_optionalItemRewards.Count);
+					if (m_optionalItems.Count > 0)
+						m_choiceOf = Math.Min(Math.Max(1, value), m_optionalItems.Count);
 				}
 			}
 		}

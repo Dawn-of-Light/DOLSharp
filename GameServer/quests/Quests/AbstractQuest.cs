@@ -40,6 +40,11 @@ namespace DOL.GS.Quests
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
+		/// The level of the quest.
+		/// </summary>
+		protected int m_questLevel = 1;
+
+		/// <summary>
 		/// The player doing the quest
 		/// </summary>
 		protected GamePlayer m_questPlayer = null;
@@ -54,9 +59,9 @@ namespace DOL.GS.Quests
 		/// </summary>		
 		public AbstractQuest()
 		{
-			m_dbQuest = new DBQuest();
-			m_dbQuest.Name = GetType().FullName;
-			m_dbQuest.Step = 1;
+			//m_dbQuest = new DBQuest();
+			//m_dbQuest.Name = GetType().FullName;
+			//m_dbQuest.Step = 1;
 		}
 
 		/// <summary>
@@ -188,7 +193,12 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public virtual int Level
 		{
-			get { return 1; }
+			get { return m_questLevel; }
+			set 
+			{ 
+				if (value >= 1 && value <= 50)
+					m_questLevel = value; 
+			}
 		}
 
 		/// <summary>
