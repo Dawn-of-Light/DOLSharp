@@ -183,13 +183,10 @@ namespace DOL.GS.PacketHandler
 
 			int questIndex = 1;
 			lock (m_gameClient.Player.QuestList)
-			{
 				foreach (AbstractQuest quest in m_gameClient.Player.QuestList)
-				{
-					SendQuestPacket((quest.Step == -1) ? null : quest, questIndex);
-					questIndex++;
-				}
-			}
+					SendQuestPacket((quest.Step == -1) ? null : quest, questIndex++);
+			while (questIndex <= 25)
+				SendQuestPacket(null, questIndex++);
 		}
 	}
 }

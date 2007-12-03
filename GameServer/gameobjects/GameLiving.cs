@@ -3859,9 +3859,22 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <param name="enemy">enemy killed</param>
 		public virtual void EnemyKilled(GameLiving enemy)
 		{
-			//			log.Debug(Name + ": EnemyKilled " + enemy.Name);
 			RemoveAttacker(enemy);
 			Notify(GameLivingEvent.EnemyKilled, this, new EnemyKilledEventArgs(enemy));
+			
+			// Killed by a pet?
+
+			if (this is GameNPC && (this as GameNPC).Brain is IControlledBrain)
+			{
+				GamePlayer owner = ((this as GameNPC).Brain as IControlledBrain).Owner
+					as GamePlayer;
+
+				// Need to set sender = owner here, so QuestBehaviour takes
+				// the right action.
+
+				if (owner != null)
+					owner.Notify(GameLivingEvent.EnemyKilled, owner, new EnemyKilledEventArgs(enemy));
+			}
 		}
 		/// <summary>
 		/// Checks whether Living has ability to use lefthanded weapons

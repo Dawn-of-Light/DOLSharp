@@ -266,12 +266,22 @@ namespace DOL.GS.Quests
 		/// <param name="args">The event arguments</param>
 		public abstract void Notify(DOLEvent e, object sender, EventArgs args);
 
-		
+		/// <summary>
+		/// Called when this player has acquired the quest.
+		/// </summary>
+		/// <param name="player"></param>
+		public virtual void OnQuestAssigned(GamePlayer player)
+		{
+			player.Out.SendMessage(String.Format("You have been given the {0} quest.",
+				Name), eChatType.CT_Group, eChatLoc.CL_ChatWindow);
+		}
 		/// <summary>
 		/// This HybridDictionary holds all the custom properties of this quest
 		/// </summary>
 		protected readonly HybridDictionary m_customProperties = new HybridDictionary();
-		
+
+		#region Custom Properties
+
 		/// <summary>
 		/// This method parses the custom properties string of the m_dbQuest
 		/// into the HybridDictionary for easier use and access
@@ -366,5 +376,7 @@ namespace DOL.GS.Quests
 
 			return (string)m_customProperties[key];
 		}
+
+		#endregion
 	}
 }
