@@ -81,15 +81,15 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort(QuestMgr.GetIDForQuestType(quest.GetType())); // ID?
 			pak.WriteByte(0x01); // unknown
 			pak.WritePascalString(String.Format("{0}\r", quest.Goal));
-			pak.WriteByte(0x23); // Money 1?
-			pak.WriteByte(0x01); // Money 2
-			pak.WriteByte((byte)(((double)quest.Rewards.XP) / player.ExperienceForNextLevel));
-			pak.WriteByte((byte)quest.Rewards.BasicItemRewards.Count);
-			foreach (ItemTemplate reward in quest.Rewards.BasicItemRewards)
+			pak.WriteByte((byte)quest.Level);
+			pak.WriteByte((byte)quest.Rewards.Money);
+			pak.WriteByte((byte)quest.Rewards.ExperiencePercent(player));
+			pak.WriteByte((byte)quest.Rewards.BasicItems.Count);
+			foreach (ItemTemplate reward in quest.Rewards.BasicItems)
 				WriteTemplateData(pak, reward, 1);
 			pak.WriteByte((byte)quest.Rewards.ChoiceOf);
-			pak.WriteByte((byte)quest.Rewards.OptionalItemRewards.Count);
-			foreach (ItemTemplate reward in quest.Rewards.OptionalItemRewards)
+			pak.WriteByte((byte)quest.Rewards.OptionalItems.Count);
+			foreach (ItemTemplate reward in quest.Rewards.OptionalItems)
 				WriteTemplateData(pak, reward, 1);
 			SendTCP(pak);
 		}
@@ -172,6 +172,24 @@ namespace DOL.GS.PacketHandler
 				pak.WritePascalString(String.Format("{0} {1}", count, template.Name));
 			else
 				pak.WritePascalString(template.Name);
+		}
+
+		public override void SendQuestListUpdate()
+		{
+			if (m_gameClient == null || m_gameClient.Player == null)
+				return;
+
+			SendTaskInfo();
+
+			int questIndex = 1;
+			lock (m_gameClient.Player.QuestList)
+			{
+				foreach (AbstractQuest quest in m_gameClient.Player.QuestList)
+				{
+					SendQuestPacket((quest.Step == -1) ? null : quest, questIndex);
+					questIndex++;
+				}
+			}
 		}
 	}
 }
