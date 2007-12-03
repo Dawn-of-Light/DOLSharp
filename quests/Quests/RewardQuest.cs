@@ -177,12 +177,22 @@ namespace DOL.GS.Quests
 		}
 
 		/// <summary>
+		/// Play a sound effect when player has acquired the quest.
+		/// </summary>
+		/// <param name="player"></param>
+		public override void OnQuestAssigned(GamePlayer player)
+		{
+			player.Out.SendMessage(String.Format("You have acquired the {0} quest.",
+				Name), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
+			player.Out.SendSoundEffect(7, 0, 0, 0, 0, 0);
+		}
+
+		/// <summary>
 		/// Called when quest is finished, hands out rewards.
 		/// </summary>
 		public override void FinishQuest()
 		{
 			base.FinishQuest();
-
 			QuestPlayer.Out.SendSoundEffect(11, 0, 0, 0, 0, 0);
 			QuestPlayer.GainExperience(Rewards.Experience);
 			QuestPlayer.ReceiveMoney(QuestGiver, Rewards.Money);
