@@ -169,6 +169,11 @@ namespace DOL.GS.Quests
 				if (rewardArgs == null)
 					return;
 
+				// Check if this particular quest has been finished.
+
+				if (QuestMgr.GetIDForQuestType(this.GetType()) != rewardArgs.QuestID)
+					return;
+
 				for (int reward = 0; reward < rewardArgs.CountChosen; ++reward)
 					Rewards.Choose(rewardArgs.ItemsChosen[reward]);
 
@@ -287,7 +292,7 @@ namespace DOL.GS.Quests
 			/// Add a basic reward (up to a maximum of 8).
 			/// </summary>
 			/// <param name="reward"></param>
-			public void AddBasicReward(ItemTemplate reward)
+			public void AddBasicItem(ItemTemplate reward)
 			{
 				if (m_basicItems.Count < 8)
 					m_basicItems.Add(reward);

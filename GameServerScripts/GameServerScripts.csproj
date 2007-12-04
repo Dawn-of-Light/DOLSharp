@@ -547,6 +547,7 @@
     <Compile Include="playertitles\time\account\ElderTitle.cs" />
     <Compile Include="playertitles\time\char\VeteranTitle.cs" />
     <Compile Include="quests\albion\AFewRepairs.cs" />
+    <Compile Include="quests\albion\AfterTheAccident.cs" />
     <Compile Include="quests\albion\AgainstTheGrain.cs">
       <SubType>Code</SubType>
     </Compile>
