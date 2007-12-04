@@ -45,8 +45,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ushort data3 = packet.ReadShort();	// unknown
 			ushort data4 = packet.ReadShort();	// unknown
 
-			ushort questGiverID = packet.ReadShort();
 			ushort questID = packet.ReadShort();
+			ushort questGiverID = packet.ReadShort();
 
 			new QuestRewardChosenAction(client.Player, countChosen, itemsChosen,
 				questGiverID, questID)
