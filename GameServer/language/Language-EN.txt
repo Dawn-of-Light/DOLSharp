@@ -295,7 +295,9 @@ GamePlayer.Quit.CantQuitStanding:			You must be standing still to quit.
 GamePlayer.Quit.RecentlyInCombat:			You were recently in combat and must wait longer to quit.		
 GamePlayer.Quit.YouWillQuit1:				You will quit after sitting for {0} seconds...	
 GamePlayer.Quit.YouWillQuit2:				You will quit after sitting for {0} seconds. Type '/stand' or move if you don't want to quit.	
-GamePlayer.RealmTitle.UnknownRealm:			Unknown realm		
+GamePlayer.RealmTitle.UnknownRealm:			Unknown realm
+GamePlayer.ReceiveItem.Receive:				You receive {0}!
+GamePlayer.ReceiveItem.ReceiveFrom:			You receive {0} from {1}!
 GamePlayer.ReceiveTradeItem.CantTrade:			You can't trade this item!		
 GamePlayer.ReceiveTradeItem.StillSelfcrafting:		You are still selfcrafting.			
 GamePlayer.RefreshSpec.AfterBlocked:			This style is best used after your last attack is blocked.		
@@ -755,6 +757,11 @@ PlayerPositionUpdateHandler.FallingDamage:		You take falling damage!
 PlayerPositionUpdateHandler.FallPercent:		You take {0}% of your max hits in damage.
 PlayerPositionUpdateHandler.SafeFall:			The damage was lessened by your Safe Fall ability!
 PlayerPositionUpdateHandler.UnknownZone:		Unknown zone, moving to bind point.
+
+# /Quests
+# AbstractQuest
+AbstractQuest.FinishQuest.Completed:			You have completed the {0} quest!
+AbstractQuest.OnQuestAssigned.GetQuest:			You have been given the {0} quest.
 
 # /world
 # AbstractArea
