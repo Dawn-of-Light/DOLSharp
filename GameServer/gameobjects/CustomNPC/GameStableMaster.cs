@@ -60,11 +60,9 @@ namespace DOL.GS
 			{
 				GamePlayer player = (GamePlayer)source;
 
-				if (item.Name.ToLower().StartsWith("ticket to ") && item.Item_Type == 40)
-				{
-					String destination = item.Name.Substring(10);
-					//					String destination = item.Name.Substring(item.Name.IndexOf(" to "));
-					//PathPoint path = MovementMgr.Instance.LoadPath(this.Name+"=>"+destination);
+				if (item.Name.ToLower().StartsWith(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameStableMaster.ReceiveItem.TicketTo")) && item.Item_Type == 40)
+					{
+					String destination = item.Name.Substring(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameStableMaster.ReceiveItem.TicketTo").Length);
 					PathPoint path = MovementMgr.LoadPath(item.Id_nb);
 
 					if ((path != null) && ((Math.Abs(path.X - this.X)) < 500) && ((Math.Abs(path.Y - this.Y)) < 500))
@@ -75,14 +73,13 @@ namespace DOL.GS
 						eRace user_race = (eRace)player.Race;
 						foreach (GameNPC npc in GetNPCsInRadius(400))
 						{ // Allow for SI mounts -Echostorm
-							if (npc.Name == LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameStableMaster.HorseName")
+							if (npc.Name == LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameStableMaster.ReceiveItem.HorseName")
 								|| npc.Name == "Dragon Fly" || npc.Name == "Ampheretere" || npc.Name == "Gryphon")
 							{
 								horse.Model = npc.Model;
 								horse.Size = npc.Size;
 								horse.Name = npc.Name;
 								horse.Level = npc.Level;
-								//horse.Realm = npc.Realm;
 								break;
 							}
 						}
@@ -148,7 +145,7 @@ namespace DOL.GS
 					}
 					else
 					{
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameStableMaster.UnknownWay", destination), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameStableMaster.ReceiveItem.UnknownWay", destination), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 				}
 			}
