@@ -98,8 +98,7 @@ namespace DOL.GS.Quests.Atlantis
 		public ArtifactTurnInQuest(GamePlayer questingPlayer, string scholarName)
 			: base(questingPlayer)
 		{
-			m_name = string.Format("{0} {1}", 
-				GlobalConstants.RealmToName((eRealm)questingPlayer.Realm));
+			m_name = string.Format("{0} {1}", GlobalConstants.RealmToName((eRealm)questingPlayer.Realm), m_name);
 			m_scholarName = scholarName;
 			m_curTypes = new List<string>(2);
 			SetCustomProperty("Name", m_name);
