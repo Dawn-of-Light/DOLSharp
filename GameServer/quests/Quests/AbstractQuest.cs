@@ -24,6 +24,7 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS.Scripts;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Quests
@@ -232,8 +233,7 @@ namespace DOL.GS.Quests
 		public virtual void FinishQuest()
 		{
 			Step = -1; // -1 indicates finished or aborted quests etc, they won't show up in the list
-			m_questPlayer.Out.SendMessage(String.Format("You have completed the {0} quest!",
-				Name), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
+			m_questPlayer.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(m_questPlayer.Client, "AbstractQuest.FinishQuest.Completed", Name)), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
 
 			// move quest from active list to finished list...
 			m_questPlayer.QuestList.Remove(this);
@@ -272,8 +272,8 @@ namespace DOL.GS.Quests
 		/// <param name="player"></param>
 		public virtual void OnQuestAssigned(GamePlayer player)
 		{
-			player.Out.SendMessage(String.Format("You have been given the {0} quest.",
-				Name), eChatType.CT_Group, eChatLoc.CL_ChatWindow);
+			player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client, "AbstractQuest.OnQuestAssigned.GetQuest", Name)), eChatType.CT_Group, eChatLoc.CL_ChatWindow);
+
 		}
 		/// <summary>
 		/// This HybridDictionary holds all the custom properties of this quest

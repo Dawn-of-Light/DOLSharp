@@ -9381,15 +9381,11 @@ namespace DOL.GS
 
 			if (source == null)
 			{
-				Out.SendMessage(String.Format("You receive {0}!",
-					item.GetName(0, false)),
-					eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(String.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.ReceiveItem.Receive", item.GetName(0, false))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
 			}
 			else
 			{
-				Out.SendMessage(String.Format("You receive {0} from {1}!",
-					item.GetName(0, false), source.GetName(0, false)),
-					eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(String.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.ReceiveItem.ReceiveFrom", item.GetName(0, false), source.GetName(0, false))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
 			}
 
 			if (source is GamePlayer)

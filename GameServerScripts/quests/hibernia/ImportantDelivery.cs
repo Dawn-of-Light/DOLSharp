@@ -268,8 +268,12 @@ namespace DOL.GS.Quests.Hibernia
 
 			#region defineItems
 
-			ticketToTirnamBeo = CreateTicketTo("Tir na mBeo", "hs_magmell_tirnambeo");
-			ticketToArdee = CreateTicketTo("Ardee", "hs_tirnambeo_ardee");
+			ticketToTirnamBeo = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "hs_magmell_tirnambeo");
+			if (ticketToTirnamBeo == null)
+				ticketToTirnamBeo = CreateTicketTo("Tir na mBeo", "hs_magmell_tirnambeo");
+			ticketToArdee = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "hs_tirnambeo_ardee");
+			if (ticketToArdee == null)
+				ticketToArdee = CreateTicketTo("Ardee", "hs_tirnambeo_ardee");
 
             recruitsDiary = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "recruits_diary");
 			if (recruitsDiary == null)
