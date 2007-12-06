@@ -1345,16 +1345,17 @@ namespace DOL.GS.Scripts
 				case "viewloot":
 					{
 						DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(targetMob.Name) + "'");
-						string message = "[ " + targetMob.Name + "'s Loot Table ]\n\n";
+						DisplayMessage(client, "[ " + targetMob.Name + "'s Loot Table ]\n\n");
 
 						foreach (DBLootTemplate loot in template)
 						{
+                            string message = "";
 							if (loot.ItemTemplate == null)
 								message += loot.ItemTemplateID + " (Template Not Found)";
 							else message += loot.ItemTemplate.Name + " (" + loot.ItemTemplate.Id_nb + ")";
 							message += " Chance: " + loot.Chance.ToString() + "\n\n";
+                            DisplayMessage(client, message);
 						}
-						client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					}
 					break;
 				case "copy":
