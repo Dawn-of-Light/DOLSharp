@@ -89,8 +89,9 @@ namespace DOL.GS.Spells
 
 			GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
 			GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackFinished, new DOLEventHandler(OnAttack));
-			if (player != null)
-			GameEventMgr.AddHandler(player, GamePlayerEvent.StealthStateChanged, new DOLEventHandler(OnStealthStateChanged));
+            GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.CastFinished, new DOLEventHandler(OnAttack));
+            if (player != null)
+			    GameEventMgr.AddHandler(player, GamePlayerEvent.StealthStateChanged, new DOLEventHandler(OnStealthStateChanged));
 		}
 
 		/// <summary>
@@ -153,14 +154,23 @@ namespace DOL.GS.Spells
 			if (living == null) return;
 			AttackedByEnemyEventArgs attackedByEnemy = arguments as AttackedByEnemyEventArgs;
 			AttackFinishedEventArgs attackFinished = arguments as AttackFinishedEventArgs;
-			AttackData ad = null;
-			if (attackedByEnemy != null)
-				ad = attackedByEnemy.AttackData;
-			else if (attackFinished != null)
-				ad = attackFinished.AttackData;
+            CastSpellEventArgs castFinished = arguments as CastSpellEventArgs;
+            AttackData ad = null;
+            ISpellHandler sp = null;
+            if (attackedByEnemy != null)
+                ad = attackedByEnemy.AttackData;
+            else if (attackFinished != null)
+                ad = attackFinished.AttackData;
+            else if (castFinished != null)
+                sp = castFinished.SpellHandler;
 
-			if (ad == null || (ad.AttackResult != GameLiving.eAttackResult.HitStyle && ad.AttackResult != GameLiving.eAttackResult.HitUnstyled))
-				return;
+            // Speed should drop if the player casts an offensive spell
+            if (sp == null && ad == null)
+                return;
+            else if (sp == null && (ad.AttackResult != GameLiving.eAttackResult.HitStyle && ad.AttackResult != GameLiving.eAttackResult.HitUnstyled))
+                return;
+            else if (sp != null && sp.HasPositiveEffect)
+                return;
 
 			// remove speed buff if in combat
 			GameSpellEffect speed = SpellHandler.FindEffectOnTarget(living, this);
