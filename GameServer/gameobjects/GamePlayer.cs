@@ -4578,7 +4578,14 @@ namespace DOL.GS
 				if (removeEffect != null)
 					removeEffect.Cancel(false);
 			}
-			base.StartAttack(attackTarget);
+            else
+            {
+                // Bard RR5 ability must drop when the player starts a melee attack
+                IGameEffect DreamweaverRR5 = EffectList.GetOfType(typeof(DreamweaverEffect));
+                if (DreamweaverRR5 != null)
+                    DreamweaverRR5.Cancel(false);
+            }
+            base.StartAttack(attackTarget);
 
 			if (IsCasting && !m_runningSpellHandler.Spell.Uninterruptible)
 			{
