@@ -295,9 +295,11 @@ GamePlayer.Quit.CantQuitStanding:			Ihr müsst erst einmal stehen bleiben, bevor 
 GamePlayer.Quit.RecentlyInCombat:			Ihr habt gerade noch gekämpft und müsst etwas länger warten, bevor Ihr diese Welt verlassen könnt.		
 GamePlayer.Quit.YouWillQuit1:				Ihr werdet diese Welt in {0} Sekunden verlassen...	
 GamePlayer.Quit.YouWillQuit2:				Ihr werdet diese Welt in {0} Sekunden verlassen. Bewegt Euch einfach, falls Ihr noch hier bleiben wollt.	
-GamePlayer.RealmTitle.UnknownRealm:			Unbekanntes Reich		
-GamePlayer.ReceiveTradeItem.CantTrade:			Ihr könnt mit diesem Gegenstand nicht handeln!		
-GamePlayer.ReceiveTradeItem.StillSelfcrafting:		Ihr seid gerade beim Arbeiten.			
+GamePlayer.RealmTitle.UnknownRealm:			Unbekanntes Reich
+GamePlayer.ReceiveItem.Receive:				Ihr erhaltet "{0}"!
+GamePlayer.ReceiveItem.ReceiveFrom:			Ihr bekommt "{0}" von {1}!
+GamePlayer.ReceiveTradeItem.CantTrade:			Ihr könnt mit diesem Gegenstand nicht handeln!
+GamePlayer.ReceiveTradeItem.StillSelfcrafting:		Ihr seid gerade beim Arbeiten.
 GamePlayer.RefreshSpec.AfterBlocked:			Dieser Stil ist am Besten, wenn Euer letzter Angriff abgeblockt wurde.		
 GamePlayer.RefreshSpec.AfterEvaded:			Dieser Stil ist am Besten, wenn Eurem letzten Angriff ausgewichen wurde.		
 GamePlayer.RefreshSpec.AfterFumbles:			Dieser Stil ist am Besten, wenn Euer letzter Angriff verstolpert wurde.		
@@ -862,6 +864,11 @@ SendMasterLevelWindow.Uncomplete.ML9.Step7:		Only the strongest Iaculi survive a
 SendMasterLevelWindow.Uncomplete.ML9.Step8:		You have not yet proven yourself worthy to the Phoenix's Guardians! This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML9.Step9:		Neola still guards her sisters well. This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML9.Step10:		The phoenix is not yet weakend, and still reigns above! This is a battlegroup encounter.
+
+# /Quests
+# AbstractQuest
+AbstractQuest.FinishQuest.Completed:			Ihr habt die Quest "{0}" abgeschlossen!
+AbstractQuest.OnQuestAssigned.GetQuest:			Euch wurde die Quest "{0}" anvertraut.
 
 # /world
 # AbstractArea
