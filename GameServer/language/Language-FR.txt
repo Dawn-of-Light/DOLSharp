@@ -656,8 +656,8 @@ PlayerPositionUpdateHandler.UnknownZone:	Zone inconnue, retour à votre bind.
 
 # /gameobjects/CustomNPC
 # /GameStableMaster
-GameStableMaster.HorseName:					horse
-GameStableMaster.UnknownWay:				Votre monture ne connait pas la route vers {0}.
+GameStableMaster.ReceiveItem.HorseName:			horse
+GameStableMaster.ReceiveItem.UnknownWay:		Votre monture ne connait pas la route vers {0}.
 
 # /Blacksmith
 Scripts.Blacksmith.CantRepairStacked:		{0} ne peut pas réparer d'objets empilés.

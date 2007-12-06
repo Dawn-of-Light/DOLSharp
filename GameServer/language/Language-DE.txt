@@ -591,7 +591,6 @@ GameTrainer.ReceiveItem.RespecSingle:			Danke, ich gewähre Euch eine einzelne Fä
 GameTrainer.Train.WouldYouLikeTo:			Sucht Ihre eine Ausbildung?
 GameTrainer.Train.SeekElsewhere:			Es tut mir leid, da kann ich Euch leider nicht helfen.
 
-
 # /EnchanterTrainer
 EnchanterTrainer.Interact.PathOfEssence:		{0} sagt: "Wollt Ihr als Beschwörer trainieren und dem Pfad der Essenz folgen? Das Leben als [Beschwörer] ist so lohnend wie gefährlich, aber es ist an Euch."
 EnchanterTrainer.Interact.QuickStudy:			{0} sagt: "Ihr lernt rasch, {1}. Ihr solltet es jedoch nicht überhasten. Es gibt noch soviel zu lernen."
@@ -602,9 +601,9 @@ EnchanterTrainer.WhisperReceive.Welcome:		Willkommen, {0}. Von diesem Tage an ge
 # /gameobjects/CustomNPC
 # /GameStableMaster
 # ---->	Anpassung ---					---Muss an die Bezeichnung eurer Reitpferde angepasst werden!---
-GameStableMaster.HorseName:				Reitpferd
-# <----
-GameStableMaster.UnknownWay:				Tut mir leid, dieses Ticket nach {0} ist hier nicht gültig.
+GameStableMaster.ReceiveItem.HorseName:			Reitpferd
+GameStableMaster.ReceiveItem.TicketTo:			ticket nach 
+GameStableMaster.ReceiveItem.UnknownWay:		Tut mir leid, dieses Ticket nach {0} ist hier nicht gültig.
 
 # /KingNPC
 CLWeaponNPC.ReceiveItem.RespecCL:			Vielen Dank, Ihr dürft nun Eure Champion-Fertigkeiten neu trainieren. Um dies zu tun, gebt /respec cl ein.
@@ -698,7 +697,7 @@ DetailDisplayHandler.WriteClassicWeaponInfos.BaseDPS:	- {0} DPS Ausgangswert
 DetailDisplayHandler.WriteClassicWeaponInfos.ClampDPS:	- {0} DPS für Euch nutzbar
 DetailDisplayHandler.WriteClassicWeaponInfos.Condition:	- {0}% Zustand
 DetailDisplayHandler.WriteClassicWeaponInfos.DamageMod:	Schadensmodifikator:
-DetailDisplayHandler.WriteClassicWeaponInfos.DamageType:Schadensart: {0}
+DetailDisplayHandler.WriteClassicWeaponInfos.DamageType:- Schadensart: {0}
 DetailDisplayHandler.WriteClassicWeaponInfos.EffDamage:	Effektiver Schaden:
 DetailDisplayHandler.WriteClassicWeaponInfos.Quality:	- {0}% Qualität
 DetailDisplayHandler.WriteClassicWeaponInfos.SPD:	- {0} Waffengeschwindigkeit
