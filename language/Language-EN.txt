@@ -578,12 +578,6 @@ GameTrainer.ReceiveItem.RespecSingle:			Thanks, I added a single spec respec to 
 GameTrainer.Train.WouldYouLikeTo:			Would you like to do some training?
 GameTrainer.Train.SeekElsewhere:			You must seek elsewhere for your training.
 
-# KING THRONE NPC
-CLWeaponNPC.ReceiveItem.RespecCL:			Thanks, I added a single champion skill respec to use /respec cl.
-KingNPC.WhisperReceive.IsNowChampion:			You have just embraced on the life of the champions!
-KingNPC.WhisperReceive.AlreadyChampion:			You are already a champion!
-KingNPC.WhisperReceive.AskForChampion:			Would you like to embrace in the life of [Champions]?
-
 # /EnchanterTrainer
 EnchanterTrainer.Interact.PathOfEssence:		{0} says, "Do you choose to train as an Enchanter and follow the Path of Essence? Life as an [Enchanter] is as rewarding as it is dangerous, but it is yours for the asking."
 EnchanterTrainer.Interact.QuickStudy:			{0} says, "You are a quick study, {1}. But do not be too hasty. There is always more to learn."
@@ -593,8 +587,16 @@ EnchanterTrainer.WhisperReceive.Welcome:		Welcome, {0}. From this day forth you 
 
 # /gameobjects/CustomNPC
 # /GameStableMaster
-GameStableMaster.HorseName:				horse
-GameStableMaster.UnknownWay:				My horse doesn't know the way to {0} yet.
+GameStableMaster.ReceiveItem.HorseName:			horse
+#----> Attention! this must ends with blank character:	"ticket to "
+GameStableMaster.ReceiveItem.TicketTo:			ticket to 
+GameStableMaster.ReceiveItem.UnknownWay:		My horse doesn't know the way to {0} yet.
+
+# KING THRONE NPC
+CLWeaponNPC.ReceiveItem.RespecCL:			Thanks, I added a single champion skill respec to use /respec cl.
+KingNPC.WhisperReceive.IsNowChampion:			You have just embraced on the life of the champions!
+KingNPC.WhisperReceive.AlreadyChampion:			You are already a champion!
+KingNPC.WhisperReceive.AskForChampion:			Would you like to embrace in the life of [Champions]?
 
 # /packets/Client/168
 # /DetailDisplayHandler

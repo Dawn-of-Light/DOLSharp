@@ -457,8 +457,8 @@ EnchanterTrainer.WhisperReceive.Welcome:		Benvenuto, {0}. Da oggi in poi sarai r
 
 # /gameobjects/CustomNPC
 # /GameStableMaster
-GameStableMaster.HorseName:				cavallo
-GameStableMaster.UnknownWay:				Il mio cavallo non conosce ancora la strada per {0}.
+GameStableMaster.ReceiveItem.HorseName:			cavallo
+GameStableMaster.ReceiveItem.UnknownWay:		Il mio cavallo non conosce ancora la strada per {0}.
 
 # /packets/Client/168
 # /DetailDisplayHandler
