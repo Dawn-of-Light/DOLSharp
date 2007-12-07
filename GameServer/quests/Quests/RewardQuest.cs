@@ -78,9 +78,13 @@ namespace DOL.GS.Quests
 		/// </summary>
 		/// <param name="description"></param>
 		/// <param name="type"></param>
-		protected QuestGoal AddGoal(String description, QuestGoal.GoalType type, int targetNumber)
+		/// <param name="targetNumber"></param>
+		/// <param name="questItem"></param>
+		protected QuestGoal AddGoal(String description, QuestGoal.GoalType type, int targetNumber,
+			ItemTemplate questItem)
 		{
-			QuestGoal goal = new QuestGoal(this, description, type, m_goals.Count + 1, targetNumber);
+			QuestGoal goal = new QuestGoal(this, description, type, m_goals.Count + 1, targetNumber,
+				questItem);
 			m_goals.Add(goal);
 			return goal;
 		}
@@ -235,7 +239,8 @@ namespace DOL.GS.Quests
 			/// <param name="type"></param>
 			/// <param name="index"></param>
 			/// <param name="target"></param>
-			public QuestGoal(RewardQuest quest, String description, GoalType type, int index, int target)
+			public QuestGoal(RewardQuest quest, String description, GoalType type, int index, int target,
+				ItemTemplate questItem)
 			{
 				m_quest = quest;
 				m_description = description;
@@ -244,6 +249,7 @@ namespace DOL.GS.Quests
 				m_current = 0;
 				m_target = 0;
 				Target = target;
+				m_questItem = questItem;
 			}
 
 			/// <summary>
@@ -267,7 +273,8 @@ namespace DOL.GS.Quests
 			/// </summary>
 			public ItemTemplate QuestItem
 			{
-				get { return m_questItem; }
+				get { return (Current > 0) ? m_questItem : null; }
+				set { m_questItem = value; }
 			}
 
 			/// <summary>
