@@ -78,8 +78,8 @@ namespace DOL.GS.PacketHandler
 				pak.WriteShort((ushort)quest.Conclusion.Length);
 				pak.WriteStringBytes(quest.Conclusion);
 			}
-			pak.WriteShort(QuestMgr.GetIDForQuestType(quest.GetType())); // ID?
-			pak.WriteByte(0x01); // unknown
+			pak.WriteShort(QuestMgr.GetIDForQuestType(quest.GetType()));
+			pak.WriteByte(0x01); // #goals?
 			pak.WritePascalString(String.Format("{0}\r", quest.Goals[0].Description));
 			pak.WriteByte((byte)quest.Level);
 			pak.WriteByte((byte)quest.Rewards.Money);
@@ -221,7 +221,13 @@ namespace DOL.GS.PacketHandler
 				pak.WriteShortLowEndian((ushort)goal.XOffset1);
 				pak.WriteShortLowEndian((ushort)goal.YOffset1);
 				pak.WriteByte((byte)((goal.IsAchieved) ? 0x01 : 0x00));
-				pak.WriteByte(0x00);	// No quest item for now.
+				if (goal.QuestItem == null)
+					pak.WriteByte(0x00);
+				else
+				{
+					pak.WriteByte(0x01);
+					WriteTemplateData(pak, goal.QuestItem, 1);
+				}
 			}
 			SendTCP(pak);
 		}
