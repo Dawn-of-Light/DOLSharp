@@ -42,13 +42,11 @@ namespace DOL.GS.Quests.Albion
 		private static ItemTemplate RecruitsNecklaceofMight = null;
 		private static ItemTemplate RecruitsNecklaceofInsight = null;
 		private static ItemTemplate RecruitsNecklaceofFaith = null;
-		private static ItemTemplate PunySkeletonSkull = null;
 
 		public AfterTheAccident()
 			: base()
 		{
 			Init();
-			punySkeletonGoal = AddGoal("Puny skeleton skulls", QuestGoal.GoalType.KillTask, 2);
 		}
 
 		public AfterTheAccident(GamePlayer questingPlayer)
@@ -58,14 +56,12 @@ namespace DOL.GS.Quests.Albion
 			: base(questingPlayer, step)
 		{
 			Init();
-			punySkeletonGoal = AddGoal("Puny skeleton skulls", QuestGoal.GoalType.KillTask, 2);
 		}
 
 		public AfterTheAccident(GamePlayer questingPlayer, DBQuest dbQuest)
 			: base(questingPlayer, dbQuest)
 		{
 			Init();
-			punySkeletonGoal = AddGoal("Puny skeleton skulls", QuestGoal.GoalType.KillTask, 2);
 		}
 
 		private void Init()
@@ -195,40 +191,15 @@ namespace DOL.GS.Quests.Albion
 				if (SAVE_INTO_DATABASE)
 					GameServer.Database.AddNewObject(RecruitsNecklaceofFaith);
 			}
-			//The puny skeleton skulls.
-			PunySkeletonSkull = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "puny_skeleton_skull");
-			if (PunySkeletonSkull == null)
-			{
-				PunySkeletonSkull = new ItemTemplate();
-				PunySkeletonSkull.Name = "Puny Skeleton Skull";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + PunySkeletonSkull.Name + ", creating it ...");
 
-				PunySkeletonSkull.Level = 0;
-				PunySkeletonSkull.Weight = 0;
-				PunySkeletonSkull.Model = 540;
-
-				PunySkeletonSkull.Object_Type = (int)eObjectType.GenericItem;
-				PunySkeletonSkull.Id_nb = "puny_skeleton_skull";
-				PunySkeletonSkull.Gold = 0;
-				PunySkeletonSkull.Silver = 0;
-				PunySkeletonSkull.Copper = 0;
-				PunySkeletonSkull.IsPickable = false;
-				PunySkeletonSkull.IsDropable = false; // can't be sold to merchand
-
-				PunySkeletonSkull.Quality = 100;
-				PunySkeletonSkull.Condition = 100;
-				PunySkeletonSkull.MaxCondition = 100;
-				PunySkeletonSkull.Durability = 100;
-				PunySkeletonSkull.MaxDurability = 100;
-
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(PunySkeletonSkull);
-			}
+			ItemTemplate punySkeletonSkull = new ItemTemplate();
+			punySkeletonSkull.Weight = 1;
+			punySkeletonSkull.Condition = 50000;
+			punySkeletonSkull.MaxCondition = 50000;
+			punySkeletonSkull.Model = 540;
+			punySkeletonSkull.Extension = 1;
+			punySkeletonSkull.Name = "Puny Skeleton Skull";
+			
 			#endregion
 
 			QuestGiver = SirPrescott;
@@ -238,6 +209,9 @@ namespace DOL.GS.Quests.Albion
 			Rewards.AddOptionalItem(RecruitsNecklaceofInsight);
 			Rewards.AddOptionalItem(RecruitsNecklaceofFaith);
 			Rewards.ChoiceOf = 1;
+
+			punySkeletonGoal = AddGoal("Puny skeleton skulls", QuestGoal.GoalType.KillTask, 2, 
+				punySkeletonSkull);
 		}
 
 		[ScriptLoadedEvent]
@@ -555,19 +529,6 @@ namespace DOL.GS.Quests.Albion
 					}
 				}
 			}
-		}
-
-		public override void AbortQuest()
-		{
-			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
-
-		}
-
-		public override void FinishQuest()
-		{
-			base.FinishQuest();
-			RemoveItem(QuestPlayer, PunySkeletonSkull);
-			RemoveItem(QuestPlayer, PunySkeletonSkull);
 		}
 	}
 }

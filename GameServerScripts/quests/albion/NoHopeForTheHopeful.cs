@@ -43,7 +43,6 @@ namespace DOL.GS.Quests.Albion
 			: base()
 		{
 			Init();
-			banditHopefulGoal = AddGoal("Defeat two bandit hopefuls", QuestGoal.GoalType.KillTask, 2);
 		}
 
 		public NoHopeForTheHopeful(GamePlayer questingPlayer)
@@ -53,14 +52,12 @@ namespace DOL.GS.Quests.Albion
 			: base(questingPlayer, step)
 		{
 			Init();
-			banditHopefulGoal = AddGoal("Defeat two bandit hopefuls", QuestGoal.GoalType.KillTask, 2);
 		}
 
 		public NoHopeForTheHopeful(GamePlayer questingPlayer, DBQuest dbQuest)
 			: base(questingPlayer, dbQuest)
 		{
 			Init();
-			banditHopefulGoal = AddGoal("Defeat two bandit hopefuls", QuestGoal.GoalType.KillTask, 2);
 		}
 
 		private void Init()
@@ -105,6 +102,14 @@ namespace DOL.GS.Quests.Albion
 			piousBracer.Bonus3 = 2;
 			piousBracer.Bonus3Type = (int)eProperty.Resist_Slash;
 
+			ItemTemplate banditCloak = new ItemTemplate();
+			banditCloak.Weight = 0;
+			banditCloak.Condition = 50000;
+			banditCloak.MaxCondition = 50000;
+			banditCloak.Model = 669;
+			banditCloak.Extension = 1;
+			banditCloak.Name = "Bandit Cloak";
+
 			Level = 1;
 			QuestGiver = sirDorian;
 			Rewards.Experience = 22;
@@ -114,6 +119,9 @@ namespace DOL.GS.Quests.Albion
 			Rewards.AddOptionalItem(slyBracer);
 			Rewards.AddOptionalItem(piousBracer);
 			Rewards.ChoiceOf = 1;
+
+			banditHopefulGoal = AddGoal("Defeat two bandit hopefuls", QuestGoal.GoalType.KillTask, 2,
+				banditCloak);
 		}
 
 		/// <summary>
@@ -414,17 +422,6 @@ namespace DOL.GS.Quests.Albion
 					}
 				}
 			}
-		}
-
-		public override void AbortQuest()
-		{
-			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
-
-		}
-
-		public override void FinishQuest()
-		{
-			base.FinishQuest();
 		}
 	}
 }
