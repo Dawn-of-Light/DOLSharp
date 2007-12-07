@@ -37,35 +37,30 @@ namespace DOL.GS.Quests.Albion
 		protected const int maximumLevel = 50;
 
 		private static GameNPC sirDorian = null;
-		private short banditHopefulsKilled = 0;
+		private QuestGoal banditHopefulGoal;
 
 		public NoHopeForTheHopeful()
 			: base()
 		{
 			Init();
+			banditHopefulGoal = AddGoal("Defeat two bandit hopefuls", QuestGoal.GoalType.KillTask, 2);
 		}
 
 		public NoHopeForTheHopeful(GamePlayer questingPlayer)
-			: this(questingPlayer, 1)
-		{
-			Init();
-			SetCustomProperty("kills", "0");
-		}
+			: this(questingPlayer, 1) { }
 
 		public NoHopeForTheHopeful(GamePlayer questingPlayer, int step)
 			: base(questingPlayer, step)
 		{
 			Init();
-			SetCustomProperty("kills", "0");
+			banditHopefulGoal = AddGoal("Defeat two bandit hopefuls", QuestGoal.GoalType.KillTask, 2);
 		}
 
 		public NoHopeForTheHopeful(GamePlayer questingPlayer, DBQuest dbQuest)
 			: base(questingPlayer, dbQuest)
 		{
 			Init();
-			String kills = GetCustomProperty("kills");
-			if (kills != null && kills.Length > 0)
-				banditHopefulsKilled = Int16.Parse(GetCustomProperty("kills"));
+			banditHopefulGoal = AddGoal("Defeat two bandit hopefuls", QuestGoal.GoalType.KillTask, 2);
 		}
 
 		private void Init()
@@ -214,10 +209,8 @@ namespace DOL.GS.Quests.Albion
 				}
 				else
 				{
-					if (quest.Step == 1 && quest.banditHopefulsKilled == 2)
-					{
+					if (quest.Step == 1 && quest.banditHopefulGoal.IsAchieved)
 						quest.ChooseRewards(player);
-					}
 				}
 			}
 		}
@@ -333,7 +326,7 @@ namespace DOL.GS.Quests.Albion
 				{
 
 					case 1:
-						return Goal;
+						return Summary;
 					default:
 						return "No Queststep Description available.";
 				}
@@ -378,17 +371,6 @@ namespace DOL.GS.Quests.Albion
 		}
 
 		/// <summary>
-		/// The goal of the quest, keeps track of kill counts etc.
-		/// </summary>
-		public override string Goal
-		{
-			get
-			{
-				return String.Format("Quest Goal : Defeat two bandit hopefuls ({0}/2)", banditHopefulsKilled);
-			}
-		}
-
-		/// <summary>
 		/// Text showing upon finishing the quest.
 		/// </summary>
 		public override String Conclusion
@@ -425,20 +407,9 @@ namespace DOL.GS.Quests.Albion
 				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;
 				if (gArgs.Target.Name.IndexOf("bandit hopeful") >= 0)
 				{
-					if (banditHopefulsKilled == 0)
+					if (!banditHopefulGoal.IsAchieved)
 					{
-						banditHopefulsKilled++;
-						SetCustomProperty("kills", "1");
-						SaveIntoDatabase();
-						GoalAdvance(player);
-						return;
-					}
-					else if (banditHopefulsKilled == 1)
-					{
-						banditHopefulsKilled++;
-						SetCustomProperty("kills", "2");
-						SaveIntoDatabase();
-						GoalAdvance(player);
+						banditHopefulGoal.Advance();
 						return;
 					}
 				}
