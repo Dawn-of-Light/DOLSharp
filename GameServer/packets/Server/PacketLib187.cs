@@ -80,7 +80,7 @@ namespace DOL.GS.PacketHandler
 			}
 			pak.WriteShort(QuestMgr.GetIDForQuestType(quest.GetType())); // ID?
 			pak.WriteByte(0x01); // unknown
-			pak.WritePascalString(String.Format("{0}\r", quest.Goal));
+			pak.WritePascalString(String.Format("{0}\r", quest.Goals[0].Description));
 			pak.WriteByte((byte)quest.Level);
 			pak.WriteByte((byte)quest.Rewards.Money);
 			pak.WriteByte((byte)quest.Rewards.ExperiencePercent(player));
@@ -187,6 +187,43 @@ namespace DOL.GS.PacketHandler
 					SendQuestPacket((quest.Step == -1) ? null : quest, questIndex++);
 			while (questIndex <= 25)
 				SendQuestPacket(null, questIndex++);
+		}
+
+		protected override void SendQuestPacket(AbstractQuest q, int index)
+		{
+			if (q == null || !(q is RewardQuest))
+			{
+				base.SendQuestPacket(q, index);
+				return;
+			}
+
+			RewardQuest quest = q as RewardQuest;
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.QuestEntry));
+			pak.WriteByte((byte)index);
+			pak.WriteByte((byte)quest.Name.Length);
+			pak.WriteShort(0x00); // unknown
+			pak.WriteByte((byte)quest.Goals.Count);
+			pak.WriteByte((byte)quest.Level);
+			pak.WriteStringBytes(quest.Name);
+			pak.WritePascalString(quest.Description);
+			foreach (RewardQuest.QuestGoal goal in quest.Goals)
+			{
+				String goalDesc = String.Format("{0}\r", goal.Description);
+				pak.WriteShortLowEndian((ushort)goalDesc.Length);
+				pak.WriteStringBytes(goalDesc);
+				pak.WriteShortLowEndian((ushort)goal.ZoneID2);
+				pak.WriteShortLowEndian((ushort)goal.XOffset2);
+				pak.WriteShortLowEndian((ushort)goal.YOffset2);
+				pak.WriteShortLowEndian(0x00);	// unknown
+				pak.WriteShortLowEndian((ushort)goal.Type);
+				pak.WriteShortLowEndian(0x00);	// unknown
+				pak.WriteShortLowEndian((ushort)goal.ZoneID1);
+				pak.WriteShortLowEndian((ushort)goal.XOffset1);
+				pak.WriteShortLowEndian((ushort)goal.YOffset1);
+				pak.WriteByte((byte)((goal.IsAchieved) ? 0x01 : 0x00));
+				pak.WriteByte(0x00);	// No quest item for now.
+			}
+			SendTCP(pak);
 		}
 	}
 }
