@@ -33,11 +33,13 @@ namespace DOL.GS.Quests
 	public class RewardQuest : BaseQuest
 	{
 		private GameNPC m_questGiver;
+		private List<QuestGoal> m_goals;
 		private QuestRewards m_rewards;
 
 		public RewardQuest() : base()
 		{
 			m_rewards = new QuestRewards(this);
+			m_goals = new List<QuestGoal>();
 		}
 
 		/// <summary>
@@ -45,9 +47,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		/// <param name="questingPlayer">The player doing this quest</param>
 		public RewardQuest(GamePlayer questingPlayer) 
-			: this(questingPlayer, 1)
-		{
-		}
+			: this(questingPlayer, 1) { }
 
 		/// <summary>
 		/// Constructs a new RewardQuest.
@@ -58,6 +58,7 @@ namespace DOL.GS.Quests
 			: base(questingPlayer, step)
 		{
 			m_rewards = new QuestRewards(this);
+			m_goals = new List<QuestGoal>();
 		}
 
 		/// <summary>
@@ -69,6 +70,19 @@ namespace DOL.GS.Quests
 			: base(questingPlayer, dbQuest)
 		{
 			m_rewards = new QuestRewards(this);
+			m_goals = new List<QuestGoal>();
+		}
+
+		/// <summary>
+		/// Add a goal for this quest.
+		/// </summary>
+		/// <param name="description"></param>
+		/// <param name="type"></param>
+		protected QuestGoal AddGoal(String description, QuestGoal.GoalType type, int targetNumber)
+		{
+			QuestGoal goal = new QuestGoal(this, description, type, m_goals.Count + 1, targetNumber);
+			m_goals.Add(goal);
+			return goal;
 		}
 
 		/// <summary>
@@ -78,6 +92,14 @@ namespace DOL.GS.Quests
 		{
 			get { return m_questGiver; }
 			set { m_questGiver = value; }
+		}
+
+		/// <summary>
+		/// List of all goals for this quest
+		/// </summary>
+		public List<QuestGoal> Goals
+		{
+			get { return m_goals; }
 		}
 
 		/// <summary>
@@ -103,14 +125,6 @@ namespace DOL.GS.Quests
 		public virtual String Summary
 		{
 			get { return "QUEST SUMMARY UNDEFINED"; }
-		}
-
-		/// <summary>
-		/// The quest goal.
-		/// </summary>
-		public virtual String Goal
-		{
-			get { return "QUEST GOAL UNDEFINED"; }
 		}
 
 		/// <summary>
@@ -142,16 +156,6 @@ namespace DOL.GS.Quests
 		public virtual void ChooseRewards(GamePlayer player)
 		{
 			player.Out.SendQuestRewardWindow(QuestGiver, player, this);
-		}
-
-		/// <summary>
-		/// Player is getting closer to the quest goal.
-		/// </summary>
-		/// <param name="player"></param>
-		protected virtual void GoalAdvance(GamePlayer player)
-		{
-			player.Out.SendMessage(Goal, eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
-			player.Out.SendQuestUpdate(this);
 		}
 
 		/// <summary>
@@ -205,6 +209,178 @@ namespace DOL.GS.Quests
 				GiveItem(QuestPlayer, basicReward);
 			foreach (ItemTemplate optionalReward in Rewards.ChosenItems)
 				GiveItem(QuestPlayer, optionalReward);
+		}
+
+		/// <summary>
+		/// A single quest goal.
+		/// </summary>
+		public class QuestGoal
+		{
+			private RewardQuest m_quest;
+			private String m_description;
+			private int m_index;
+			private int m_current, m_target;
+			private int m_zoneID1 = 0, m_xOffset1 = 0, m_yOffset1 = 0;
+			private int m_zoneID2 = 0, m_xOffset2 = 0, m_yOffset2 = 0;
+			private GoalType m_goalType;
+			private ItemTemplate m_questItem = null;
+
+			public enum GoalType { KillTask = 3, ScoutMission = 5 };	// These are just a hunch for now.
+
+			/// <summary>
+			/// Constructs a new QuestGoal.
+			/// </summary>
+			/// <param name="quest">The quest this goal is a part of.</param>
+			/// <param name="description">The description of the goal.</param>
+			/// <param name="type"></param>
+			/// <param name="index"></param>
+			/// <param name="target"></param>
+			public QuestGoal(RewardQuest quest, String description, GoalType type, int index, int target)
+			{
+				m_quest = quest;
+				m_description = description;
+				m_goalType = type;
+				m_index = index;
+				m_current = 0;
+				m_target = 0;
+				Target = target;
+			}
+
+			/// <summary>
+			/// Ready-to-use description of the goal and its current status.
+			/// </summary>
+			public String Description
+			{
+				get { return String.Format("Quest Goal : {0} ({1}/{2})", m_description, Current, Target); }
+			}
+
+			/// <summary>
+			/// The type of the goal, i.e. whether to scout or to kill things.
+			/// </summary>
+			public GoalType Type
+			{
+				get { return m_goalType; }
+			}
+
+			/// <summary>
+			/// The quest item required for this goal.
+			/// </summary>
+			public ItemTemplate QuestItem
+			{
+				get { return m_questItem; }
+			}
+
+			/// <summary>
+			/// Current status of this goal.
+			/// </summary>
+			protected int Current
+			{
+				get 
+				{
+					if (m_quest.QuestPlayer == null)
+						return m_current;
+					String propertyValue = m_quest.GetCustomProperty(String.Format("goal{0}Current", m_index));
+					if (propertyValue == null)
+					{
+						Current = 0;
+						return Current;
+					}
+					return Int16.Parse(propertyValue); 
+				}
+				set 
+				{
+					if (m_quest.QuestPlayer == null)
+						m_current = value;
+					else
+					{
+						m_quest.SetCustomProperty(String.Format("goal{0}Current", m_index), value.ToString());
+						m_quest.SaveIntoDatabase();
+					}
+				}
+			}
+
+			/// <summary>
+			/// Target status of this goal.
+			/// </summary>
+			protected int Target
+			{
+				get 
+				{
+					if (m_quest.QuestPlayer == null)
+						return m_current;
+					String propertyValue = m_quest.GetCustomProperty(String.Format("goal{0}Target", m_index));
+					if (propertyValue == null)
+					{
+						Target = 0;
+						return Target;
+					}
+					return Int16.Parse(propertyValue); 
+				}
+				set 
+				{
+					if (m_quest.QuestPlayer == null)
+						m_target = value;
+					else
+					{
+						m_quest.SetCustomProperty(String.Format("goal{0}Target", m_index), value.ToString());
+						m_quest.SaveIntoDatabase();
+					}
+				}
+			}
+
+			/// <summary>
+			/// Whether or not the goal has been achieved yet.
+			/// </summary>
+			public bool IsAchieved
+			{
+				get { return (Current == Target); }
+			}
+
+			public void Advance()
+			{
+				if (Current < Target)
+				{
+					Current++;
+					m_quest.QuestPlayer.Out.SendMessage(Description, eChatType.CT_ScreenCenter, 
+						eChatLoc.CL_SystemWindow);
+					m_quest.QuestPlayer.Out.SendQuestUpdate(m_quest);
+				}
+			}
+
+			/*
+			 * Not quite sure about the meaning of the following locations data,
+			 * but have to provide it for the quest update packet nonetheless.
+			 */
+
+			public int ZoneID1
+			{
+				get { return m_zoneID1; }
+			}
+
+			public int XOffset1
+			{
+				get { return m_xOffset1; }
+			}
+
+			public int YOffset1
+			{
+				get { return m_yOffset1; }
+			}
+
+			public int ZoneID2
+			{
+				get { return m_zoneID2; }
+			}
+
+			public int XOffset2
+			{
+				get { return m_xOffset2; }
+			}
+
+			public int YOffset2
+			{
+				get { return m_yOffset2; }
+			}
 		}
 
 		/// <summary>

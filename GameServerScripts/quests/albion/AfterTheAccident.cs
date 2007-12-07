@@ -25,59 +25,51 @@ using log4net;
 
 namespace DOL.GS.Quests.Albion
 {
-	public class AftertheAccident : RewardQuest
+	public class AfterTheAccident : RewardQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		protected const string questTitle = "After the Accident";
+		protected const string questTitle = "After The Accident";
 		protected const int minimumLevel = 1;
 		protected const int maximumLevel = 50;
 
 		private static GameNPC SirPrescott = null;
-		private short PunySkeletonsKilled = 0;
+		private QuestGoal punySkeletonGoal;
 
 		private static ItemTemplate RecruitsNecklaceofMight = null;
 		private static ItemTemplate RecruitsNecklaceofInsight = null;
 		private static ItemTemplate RecruitsNecklaceofFaith = null;
 		private static ItemTemplate PunySkeletonSkull = null;
 
-		public AftertheAccident()
+		public AfterTheAccident()
 			: base()
 		{
 			Init();
+			punySkeletonGoal = AddGoal("Puny skeleton skulls", QuestGoal.GoalType.KillTask, 2);
 		}
 
-		public AftertheAccident(GamePlayer questingPlayer)
-			: this(questingPlayer, 1)
-		{
-			Init();
-			SetCustomProperty("a_kills", "0");
-		}
+		public AfterTheAccident(GamePlayer questingPlayer)
+			: this(questingPlayer, 1) { }
 
-		public AftertheAccident(GamePlayer questingPlayer, int step)
+		public AfterTheAccident(GamePlayer questingPlayer, int step)
 			: base(questingPlayer, step)
 		{
 			Init();
-			SetCustomProperty("a_kills", "0");
+			punySkeletonGoal = AddGoal("Puny skeleton skulls", QuestGoal.GoalType.KillTask, 2);
 		}
 
-		public AftertheAccident(GamePlayer questingPlayer, DBQuest dbQuest)
+		public AfterTheAccident(GamePlayer questingPlayer, DBQuest dbQuest)
 			: base(questingPlayer, dbQuest)
 		{
 			Init();
-			String kills = GetCustomProperty("a_kills");
-			if (kills != null && kills.Length > 0)
-				PunySkeletonsKilled = Int16.Parse(GetCustomProperty("a_kills"));
+			punySkeletonGoal = AddGoal("Puny skeleton skulls", QuestGoal.GoalType.KillTask, 2);
 		}
 
 		private void Init()
 		{
-			//ItemTemplate bracerOfShavedBone = new ItemTemplate();
-			//bracerOfShavedBone = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate),
-			//        "Bracer_of_Shaved_Bone");
 			#region defineItems
 
 			// Recruit's Necklace of Might
@@ -313,7 +305,7 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.AddHandler(SirPrescott, GameLivingEvent.Interact, new DOLEventHandler(TalkToSirPrescott));
 			GameEventMgr.AddHandler(SirPrescott, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToSirPrescott));
 
-			SirPrescott.AddQuestToGive(typeof(AftertheAccident));
+			SirPrescott.AddQuestToGive(typeof(AfterTheAccident));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -331,7 +323,7 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.RemoveHandler(SirPrescott, GameObjectEvent.Interact, new DOLEventHandler(TalkToSirPrescott));
 			GameEventMgr.RemoveHandler(SirPrescott, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToSirPrescott));
 
-			SirPrescott.RemoveQuestToGive(typeof(AftertheAccident));
+			SirPrescott.RemoveQuestToGive(typeof(AfterTheAccident));
 		}
 
 		protected static void TalkToSirPrescott(DOLEvent e, object sender, EventArgs args)
@@ -341,27 +333,25 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (SirPrescott.CanGiveQuest(typeof(AftertheAccident), player) <= 0)
+			if (SirPrescott.CanGiveQuest(typeof(AfterTheAccident), player) <= 0)
 				return;
 
 
-			AftertheAccident quest = player.IsDoingQuest(typeof(AftertheAccident)) as AftertheAccident;
+			AfterTheAccident quest = player.IsDoingQuest(typeof(AfterTheAccident)) as AfterTheAccident;
 			SirPrescott.TurnTo(player);
 
 			if (e == GameObjectEvent.Interact)
 			{
 				if (quest == null)
 				{
-					quest = new AftertheAccident();
+					quest = new AfterTheAccident();
 					quest.QuestGiver = SirPrescott;
 					quest.OfferQuest(player);
 				}
 				else
 				{
-					if (quest.Step == 1 && quest.PunySkeletonsKilled == 2)
-					{
+					if (quest.Step == 1 && quest.punySkeletonGoal.IsAchieved)
 						quest.ChooseRewards(player);
-					}
 				}
 			}
 		}
@@ -378,7 +368,7 @@ namespace DOL.GS.Quests.Albion
 			if (qargs == null)
 				return;
 
-			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(AftertheAccident)))
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(AfterTheAccident)))
 				return;
 
 			if (e == GamePlayerEvent.AcceptQuest)
@@ -394,7 +384,7 @@ namespace DOL.GS.Quests.Albion
 		public override bool CheckQuestQualification(GamePlayer player)
 		{
 			// if the player is already doing the quest his level is no longer of relevance
-			if (player.IsDoingQuest(typeof(AftertheAccident)) != null)
+			if (player.IsDoingQuest(typeof(AfterTheAccident)) != null)
 				return true;
 
 			// This checks below are only performed is player isn't doing quest already
@@ -412,7 +402,7 @@ namespace DOL.GS.Quests.Albion
 
 		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
 		{
-			AftertheAccident quest = player.IsDoingQuest(typeof(AftertheAccident)) as AftertheAccident;
+			AfterTheAccident quest = player.IsDoingQuest(typeof(AfterTheAccident)) as AfterTheAccident;
 
 			if (quest == null)
 				return;
@@ -438,10 +428,10 @@ namespace DOL.GS.Quests.Albion
 			// We recheck the qualification, because we don't talk to players
 			// who are not doing the quest.
 
-			if (SirPrescott.CanGiveQuest(typeof(AftertheAccident), player) <= 0)
+			if (SirPrescott.CanGiveQuest(typeof(AfterTheAccident), player) <= 0)
 				return;
 
-			if (player.IsDoingQuest(typeof(AftertheAccident)) != null)
+			if (player.IsDoingQuest(typeof(AfterTheAccident)) != null)
 				return;
 
 			if (response == 0x00)
@@ -452,7 +442,7 @@ namespace DOL.GS.Quests.Albion
 			{
 				// Player accepted, let's try to give him the quest.
 
-				if (!SirPrescott.GiveQuest(typeof(AftertheAccident), player, 1))
+				if (!SirPrescott.GiveQuest(typeof(AfterTheAccident), player, 1))
 					return;
 			}
 		}
@@ -477,7 +467,7 @@ namespace DOL.GS.Quests.Albion
 				{
 
 					case 1:
-						return Goal;
+						return Summary;
 					default:
 						return "No Queststep Description available.";
 				}
@@ -509,18 +499,6 @@ namespace DOL.GS.Quests.Albion
 			get
 			{
 				return "Kill two puny skeletons. Return to Sir Prescott with two Puny Skeleton Skulls as proof that you completed this task.";
-			}
-		}
-
-		/// <summary>
-		/// The goal of the quest, keeps track of kill counts etc.
-		/// </summary>
-		public override string Goal
-		{
-			get
-			{
-				return String.Format("Quest Goal : Puny skeleton skulls ({0}/2).", PunySkeletonsKilled);
-				//return String.Format("Kill two puny skeletons. Return to Sir Prescott with two Puny Skeleton Skulls as proof that you completed this task.\nQuest Goal : Puny skeleton skulls ({0}/2).", PunySkeletonsKilled);
 			}
 		}
 
@@ -561,7 +539,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (player == null)
 				return;
-			if (player.IsDoingQuest(typeof(AftertheAccident)) == null)
+			if (player.IsDoingQuest(typeof(AfterTheAccident)) == null)
 				return;
 
 
@@ -570,22 +548,9 @@ namespace DOL.GS.Quests.Albion
 				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;
 				if (gArgs.Target.Name.IndexOf("puny skeleton") >= 0)
 				{
-					if (PunySkeletonsKilled == 0)
+					if (!punySkeletonGoal.IsAchieved)
 					{
-						PunySkeletonsKilled++;
-						SetCustomProperty("a_kills", "1");
-						SaveIntoDatabase();
-						GoalAdvance(player);
-						GiveItem(QuestPlayer, PunySkeletonSkull);
-						return;
-					}
-					else if (PunySkeletonsKilled == 1)
-					{
-						PunySkeletonsKilled++;
-						SetCustomProperty("a_kills", "2");
-						SaveIntoDatabase();
-						GoalAdvance(player);
-						GiveItem(QuestPlayer, PunySkeletonSkull);
+						punySkeletonGoal.Advance();
 						return;
 					}
 				}
