@@ -965,6 +965,48 @@ namespace DOL.GS
 			return "none";
 		}
 
+		public static string ArmorLevelToName(int armorLevel, eRealm realm)
+		{
+			switch (realm)
+			{
+				case eRealm.Albion:
+					{
+						switch (armorLevel)
+						{
+							case ArmorLevel.Cloth: return "cloth";
+							case ArmorLevel.Chain: return "chain";
+							case ArmorLevel.Leather: return "leather";
+							case ArmorLevel.Plate: return "plate";
+							case ArmorLevel.Studded: return "studded";
+							default: return "undefined";
+						}
+					}
+				case eRealm.Midgard:
+					{
+						switch (armorLevel)
+						{
+							case ArmorLevel.Cloth: return "cloth";
+							case ArmorLevel.Chain: return "chain";
+							case ArmorLevel.Leather: return "leather";
+							case ArmorLevel.Studded: return "studded";
+							default: return "undefined";
+						}
+					}
+				case eRealm.Hibernia:
+					{
+						switch (armorLevel)
+						{
+							case ArmorLevel.Cloth: return "cloth";
+							case ArmorLevel.Scale: return "scale";
+							case ArmorLevel.Leather: return "leather";
+							case ArmorLevel.Reinforced: return "reinforced";
+							default: return "undefined";
+						}
+					}
+				default: return "undefined";
+			}
+		}
+
 		public static string WeaponDamageTypeToName(int weaponDamageTypeID)
 		{
 			return ((eWeaponDamageType)weaponDamageTypeID).ToString();
