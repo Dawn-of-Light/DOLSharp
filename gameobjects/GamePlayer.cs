@@ -2433,6 +2433,21 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// The best armor level this player can use.
+		/// </summary>
+		public int BestArmorLevel
+		{
+			get
+			{
+				int bestLevel = -1;
+				bestLevel = Math.Max(bestLevel, GetAbilityLevel(Abilities.AlbArmor));
+				bestLevel = Math.Max(bestLevel, GetAbilityLevel(Abilities.HibArmor));
+				bestLevel = Math.Max(bestLevel, GetAbilityLevel(Abilities.MidArmor));
+				return bestLevel;
+			}
+		}
+
+		/// <summary>
 		/// Adds a new Ability to the player
 		/// </summary>
 		/// <param name="ability"></param>
