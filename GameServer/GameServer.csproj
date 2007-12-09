@@ -748,6 +748,7 @@
     <Compile Include="quests\Atlantis\Artifacts\AHealersEmbrace.cs" />
     <Compile Include="quests\Atlantis\Artifacts\AlvarusLeggings.cs" />
     <Compile Include="quests\Atlantis\Artifacts\Battler.cs" />
+    <Compile Include="quests\Atlantis\Artifacts\CeremonialBracers.cs" />
     <Compile Include="quests\Atlantis\Artifacts\Cloudsong.cs" />
     <Compile Include="quests\Atlantis\Artifacts\EnyaliosBoots.cs" />
     <Compile Include="quests\Atlantis\Artifacts\GuardOfValor.cs" />
@@ -759,6 +760,7 @@
     <Compile Include="quests\Atlantis\Encounters\AlvarusLeggings.cs" />
     <Compile Include="quests\Atlantis\Encounters\AtlantisTablet.cs" />
     <Compile Include="quests\Atlantis\Encounters\Battler.cs" />
+    <Compile Include="quests\Atlantis\Encounters\CeremonialBracers.cs" />
     <Compile Include="quests\Atlantis\Encounters\Cloudsong.cs" />
     <Compile Include="quests\Atlantis\Encounters\DreamSphere.cs" />
     <Compile Include="quests\Atlantis\Encounters\EerieDarknessStone.cs" />
