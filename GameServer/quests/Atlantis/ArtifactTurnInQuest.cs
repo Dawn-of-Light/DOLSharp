@@ -24,6 +24,7 @@ using System.Text;
 using System.Reflection;
 using DOL.Database;
 using DOL.Events;
+using DOL.Language;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -168,17 +169,17 @@ namespace DOL.GS.Quests.Atlantis
 
 			#region defineNPCs
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Artifact Scholar Alaria", eRealm.Midgard);
+			GameNPC[] npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "ArtifactTurnInQuest.Init.ArtifactScholarFemale") + " Alaria", eRealm.Midgard);
 			if (npcs.Length == 0)
 			{
 				m_scholarAlaria = new ArtifactScholar();
-				m_scholarAlaria.Model = 50;
+				m_scholarAlaria.Model = 226;
 				m_scholarAlaria.Name = "Artifact Scholar Alaria";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + m_scholarAlaria.Name + ", creating her ...");
 				m_scholarAlaria.Realm = (byte)eRealm.Midgard;
 				m_scholarAlaria.CurrentRegionID = 71;
-				m_scholarAlaria.Size = 177;
+				m_scholarAlaria.Size = 50;
 				m_scholarAlaria.Level = 45;
 				m_scholarAlaria.X = 565733;
 				m_scholarAlaria.Y = 569502;
@@ -193,7 +194,7 @@ namespace DOL.GS.Quests.Atlantis
 			else
 				m_scholarAlaria = npcs[0] as ArtifactScholar;
 
-			npcs = WorldMgr.GetNPCsByName("Artifact Scholar Jarron", eRealm.Albion);
+			npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "ArtifactTurnInQuest.Init.ArtifactScholarMale") + " Jarron", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				m_scholarJarron = new ArtifactScholar();
@@ -218,16 +219,16 @@ namespace DOL.GS.Quests.Atlantis
 			else
 				m_scholarJarron = npcs[0] as ArtifactScholar;
 
-			npcs = WorldMgr.GetNPCsByName("Artifact Scholar Elmer", eRealm.Hibernia);
+			npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "ArtifactTurnInQuest.Init.ArtifactScholarMale") + " Elmer", eRealm.Hibernia);
 			if (npcs.Length == 0)
 			{
 				m_scholarElmer = new ArtifactScholar();
-				m_scholarElmer.Model = 50;
+				m_scholarElmer.Model = 374;
 				m_scholarElmer.Name = "Artifact Scholar Elmer";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + m_scholarElmer.Name + ", creating him ...");
 				m_scholarElmer.Realm = (byte)eRealm.Hibernia;
-				m_scholarElmer.CurrentRegionID = 371;
+				m_scholarElmer.CurrentRegionID = 72;
 				m_scholarElmer.Size = 50;
 				m_scholarElmer.Level = 45;
 				m_scholarElmer.X = 552204;
@@ -511,8 +512,7 @@ namespace DOL.GS.Quests.Atlantis
 		public override void FinishQuest()
 		{
 			Step = -1; // -1 indicates finished or aborted quests etc, they won't show up in the list
-			m_questPlayer.Out.SendMessage(String.Format("You have completed the {0} quest!",
-				Name), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
+			m_questPlayer.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(m_questPlayer.Client, "ArtifactTurnInQuest.FinishQuest.Completed", Name)), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
 
 			// move quest from active list to finished list...
 			m_questPlayer.QuestList.Remove(this);

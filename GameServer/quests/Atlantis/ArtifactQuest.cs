@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Text;
 using DOL.Database;
 using DOL.Events;
+using DOL.Language;
 using DOL.GS.PacketHandler;
 using log4net;
 using System.Reflection;
@@ -152,8 +153,7 @@ namespace DOL.GS.Quests.Atlantis
 			if (!player.ReceiveItem(source, item))
 			{
 				player.CreateItemOnTheGround(item);
-				player.Out.SendMessage(String.Format("Your backpack is full, {0} is dropped on the ground.",
-					itemTemplate.Name), eChatType.CT_Important, eChatLoc.CL_PopupWindow);
+				player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "ArtifactQuest.GiveItem.BackpackFull", itemTemplate.Name)), eChatType.CT_Important, eChatLoc.CL_PopupWindow);
 			}
 		}
 
