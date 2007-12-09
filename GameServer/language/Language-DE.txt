@@ -865,13 +865,23 @@ SendMasterLevelWindow.Uncomplete.ML9.Step8:		You have not yet proven yourself wo
 SendMasterLevelWindow.Uncomplete.ML9.Step9:		Neola still guards her sisters well. This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML9.Step10:		The phoenix is not yet weakend, and still reigns above! This is a battlegroup encounter.
 
+# QUESTS
+# /Atlantis
+# /ArtifactQuest
+ArtifactQuest.GiveItem.BackpackFull:			Euer Rucksack ist voll. {0} wurde auf dem Boden abgelegt
+
+# /ArtifactTurnInQuest
+ArtifactTurnInQuest.Init.ArtifactScholarMale:		Artefaktgelehrter
+ArtifactTurnInQuest.Init.ArtifactScholarFemale:		Artefaktgelehrte
+ArtifactTurnInQuest.FinishQuest.Completed:		Ihr habt die Quest "{0}" abgeschlossen!
+
 # /Quests
-# AbstractQuest
+# /AbstractQuest
 AbstractQuest.FinishQuest.Completed:			Ihr habt die Quest "{0}" abgeschlossen!
 AbstractQuest.OnQuestAssigned.GetQuest:			Euch wurde die Quest "{0}" anvertraut.
 
-# /world
-# AbstractArea
+# WORLD
+# /AbstractArea
 AbstractArea.Entered:					(Region) Ihr seid nun {0}!
 AbstractArea.Left:					(Region) Ihr seid nun nicht mehr {0}!
 
