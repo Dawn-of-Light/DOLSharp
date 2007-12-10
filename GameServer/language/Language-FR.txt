@@ -286,6 +286,8 @@ GamePlayer.Quit.RecentlyInCombat:			Vous étiez récemment en combat, vous devez a
 GamePlayer.Quit.YouWillQuit1:				Vous allez quitter le jeux au bout de {0} secondes.	
 GamePlayer.Quit.YouWillQuit2:				Vous allez quitter le jeux au bout de {0} secondes.  Tapez '/stand' ou deplacer-vous pour annuler la procédure.
 GamePlayer.RealmTitle.UnknownRealm:			Royaume inconnu
+GamePlayer.ReceiveItem.Receive:				Vous recevez {0}!
+GamePlayer.ReceiveItem.ReceiveFrom:			Vous recevez {0} de la part de {1}!
 GamePlayer.ReceiveTradeItem.CantTrade:			Vous ne pouvez pas échanger cet objet !
 GamePlayer.ReceiveTradeItem.StillSelfcrafting:	Vous êtes encore en train d'enchanter.
 GamePlayer.RefreshSpec.YouLearn:			Vous apprenez le style de combat {0} !
@@ -572,16 +574,19 @@ HousingPlaceItemHandler.PutMoney:			Vous déposez de l'argent sur le compte de vo
 
 # /Housing
 Scripts.Player.Housing.BadShieldBanner:			Ce n'est pas un objet ou une baniere valide.
-Scripts.Player.Housing.CantBeSold:			Cet objet ne peut être vendu!
+Scripts.Player.Housing.CantBeSold:				Cet objet ne peut être vendu!
 Scripts.Player.Housing.CarpetsRemoved:			Votre tapis à été retirer.
+Scripts.Player.Housing.ClearHookPoint:			Voulez vous retirer l'objet du point d'ancrage ?
 Scripts.Player.Housing.EnteredHouse:			Entrée dans la maison numéro {0}.
 Scripts.Player.Housing.GardenItemPlaced:		Objets du jardin placer. {0} places restante.
-Scripts.Player.Housing.GardenItemPlacedName:		Vous déposez l'objet {0} dans votre jardin.
+Scripts.Player.Housing.GardenItemPlacedName:	Vous déposez l'objet {0} dans votre jardin.
 Scripts.Player.Housing.GardenMaxObjects:		Vous avez déposer un nombre de 30 objets dans votre jardin. Vous n'avez plus de place.
 Scripts.Player.Housing.GuildNowOwns:			[Guild] {0} posséde maintenant une maison de guilde de {1}!
 Scripts.Player.Housing.HookPointAdded:			Cet objet a été ajouter à votre maison.
+Scripts.Player.Housing.HookPointAlready:		Cet ancrage possede deja un objet!
+Scripts.Player.Housing.HookPointCleared:		Le point d'ancrage est maintenant vide.
 Scripts.Player.Housing.HookPointCloser:			Tenez vous le plus prêt possible du lot désirer et appuyez sur "accepter".
-Scripts.Player.Housing.HookPointID:			L'id du point d'ancrage est: {0}
+Scripts.Player.Housing.HookPointID:				L'id du point d'ancrage est: {0}
 Scripts.Player.Housing.HookPointLogged:			La position du point d'ancrage {0} est dans error.log!
 Scripts.Player.Housing.HookPointLogLoc:			Afficher les points d'ancrage?
 Scripts.Player.Housing.HookPointNot:			Ce n'est pas un item utilisable sur les ancrages!
@@ -1057,6 +1062,8 @@ Scripts.Players.Broadcast.NoText:			Vous devez dire quelque-chose...
 
 # /Cancelstyle
 Scripts.Players.Cancelstyle.Set:			L'annulation de style est maintenant {0}.
+Scripts.Players.Cancelstyle.On: ON
+Scripts.Players.Cancelstyle.Off: OFF
 
 # /Chatgroup
 Scripts.Players.Chatgroup.Help.Help:			/cg help - Affiche toutes les commandes du groupe de discussion
@@ -1446,3 +1453,8 @@ SendMasterLevelWindow.Complete.ML9.Step7:	[Terminé] Le plus fort des Iaculus est
 SendMasterLevelWindow.Complete.ML9.Step8:	[Terminé] Vous avez prouvé votre valeur auprès des Gardiens du Phoénix !	
 SendMasterLevelWindow.Complete.ML9.Step9:	[Terminé] Neola n'a pas réussi à protéger ses soeurs !	
 SendMasterLevelWindow.Complete.ML9.Step10:	[Terminé] Le Phoénix est tombé !	
+
+# /Quests
+# AbstractQuest
+AbstractQuest.FinishQuest.Completed:		Vous avez terminez la quete: {0} !
+AbstractQuest.OnQuestAssigned.GetQuest:		Vous avez recu la quete: {0} !
