@@ -76,7 +76,8 @@ namespace DOL.GS.Spells
                 else
                 {
                     // show resisted effect if not healed
-                    SendEffectAnimation(Caster, 0, false, 0);
+					foreach (GameLiving healTarget in targets)
+						SendEffectAnimation(healTarget, 0, false,0);
                 }
             }
 
