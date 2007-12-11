@@ -231,8 +231,8 @@ namespace DOL.GS.Quests.Atlantis
 				m_scholarElmer.CurrentRegionID = 72;
 				m_scholarElmer.Size = 50;
 				m_scholarElmer.Level = 45;
-				m_scholarElmer.X = 552204;
-				m_scholarElmer.Y = 576761;
+				m_scholarElmer.X = 552291;
+				m_scholarElmer.Y = 576366;
 				m_scholarElmer.Z = 6767;
 				m_scholarElmer.Heading = 1074;
 				m_scholarElmer.MaxSpeedBase = 200;
