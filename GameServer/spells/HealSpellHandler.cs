@@ -67,18 +67,9 @@ namespace DOL.GS.Spells
             // send animation for non pulsing spells only
             if (Spell.Pulse == 0)
             {
-                if (healed)
-                {
-                    // send animation on all targets if healed
-                    foreach (GameLiving healTarget in targets)
-                        SendEffectAnimation(healTarget, 0, false, 1);
-                }
-                else
-                {
-                    // show resisted effect if not healed
-					foreach (GameLiving healTarget in targets)
-						SendEffectAnimation(healTarget, 0, false,0);
-                }
+                // show resisted effect if not healed
+				foreach (GameLiving healTarget in targets)
+					SendEffectAnimation(healTarget, 0, false, healed ? (byte)1 : (byte)0);
             }
 
             if (!healed && Spell.CastTime == 0) m_startReuseTimer = false;
