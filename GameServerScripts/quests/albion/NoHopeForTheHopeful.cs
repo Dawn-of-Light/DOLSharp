@@ -165,6 +165,9 @@ namespace DOL.GS.Quests.Albion
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Sir Dorian", eRealm.Albion);
+			if (npcs == null || npcs.Length == 0)
+				return;
+
 			sirDorian = npcs[0];
 
 			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
