@@ -185,6 +185,13 @@ namespace DOL.GS.Quests
 				for (int reward = 0; reward < rewardArgs.CountChosen; ++reward)
 					Rewards.Choose(rewardArgs.ItemsChosen[reward]);
 
+                //k109: Handle the player not choosing a reward.
+                if (Rewards.ChoiceOf > 0 && rewardArgs.CountChosen <= 0)
+                {
+                    QuestPlayer.Out.SendMessage("You must choose a reward!", eChatType.CT_System, eChatLoc.CL_ChatWindow);
+                    return;
+                }
+
 				FinishQuest();
 			}
 		}
@@ -208,7 +215,9 @@ namespace DOL.GS.Quests
 			base.FinishQuest();
 			QuestPlayer.Out.SendSoundEffect(11, 0, 0, 0, 0, 0);
 			QuestPlayer.GainExperience(Rewards.Experience);
-			QuestPlayer.ReceiveMoney(QuestGiver, Rewards.Money);
+            //k109: Could not get ReceiveMoney to work...trying AddMoney...
+            QuestPlayer.AddMoney(Rewards.Money);
+            //QuestPlayer.ReceiveMoney(QuestGiver, Rewards.Money);
 			foreach (ItemTemplate basicReward in Rewards.BasicItems)
 				GiveItem(QuestPlayer, basicReward);
 			foreach (ItemTemplate optionalReward in Rewards.ChosenItems)
