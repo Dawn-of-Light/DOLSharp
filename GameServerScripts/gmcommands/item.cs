@@ -302,7 +302,7 @@ namespace DOL.GS.Scripts
 							client.Out.SendMessage("         Slot: " + GlobalConstants.SlotToName(obj.Item_Type), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("        Realm: " + obj.Realm, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("  Value/Price: " + obj.Gold + "g " + obj.Silver + "s " + obj.Copper + "c", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("       Weight: " + (obj.Weight / 10.0f) + "lbs", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("       Weight: " + (obj.Weight / 10.0f) + " lbs", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("      Quality: " + obj.Quality + "%", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("   Durability: " + obj.Durability + "/" + obj.MaxDurability + "(max)", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("    Condition: " + obj.Condition + "/" + obj.MaxCondition + "(max)", eChatType.CT_System, eChatLoc.CL_PopupWindow);

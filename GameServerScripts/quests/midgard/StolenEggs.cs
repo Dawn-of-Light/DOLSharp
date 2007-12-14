@@ -310,6 +310,7 @@ namespace DOL.GS.Quests.Midgard
 				recruitsVest.Copper = 0;
 				recruitsVest.IsPickable = true;
 				recruitsVest.IsDropable = true;
+				recruitsVest.CanDropAsLoot = false;
 				recruitsVest.Color = 14; // blue leather
 
 				recruitsVest.Bonus = 5; // default bonus

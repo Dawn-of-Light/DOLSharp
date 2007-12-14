@@ -351,6 +351,7 @@ namespace DOL.GS.Quests.Albion
 				recruitsVest.Copper = 0;
 				recruitsVest.IsPickable = true;
 				recruitsVest.IsDropable = true;
+				recruitsVest.CanDropAsLoot = false;
 				recruitsVest.Color = 9; // red leather
 
 				recruitsVest.Bonus = 5; // default bonus
