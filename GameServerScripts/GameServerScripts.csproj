@@ -556,6 +556,7 @@
     <Compile Include="quests\albion\AndrewsSkins.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\albion\ANewHeroesWelcome.cs" />
     <Compile Include="quests\albion\ArgussArrows.cs" />
     <Compile Include="quests\albion\ArleighsAssistant.cs" />
     <Compile Include="quests\albion\ArrowsForYettaFletcher.cs">
@@ -574,6 +575,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="quests\albion\Cellar_Infestation.cs" />
+    <Compile Include="quests\albion\CemmethsOrders.cs" />
+    <Compile Include="quests\albion\ChildsPlay.cs" />
     <Compile Include="quests\albion\CityOfCamelot.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -587,6 +590,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="quests\albion\Disenchanted.cs" />
+    <Compile Include="quests\albion\DredgeUpAPledge.cs" />
     <Compile Include="quests\albion\epic\Academy50.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -634,18 +638,23 @@
     <Compile Include="quests\albion\Nuisances.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\albion\RecruitingNothingButTrouble.cs" />
     <Compile Include="quests\albion\RevengeTheOtherWhiteMeat.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="quests\albion\ShakenSquire.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\albion\TombWithAView.cs" />
+    <Compile Include="quests\albion\ToReachTheBreach.cs" />
     <Compile Include="quests\albion\TraitorInCotswold.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="quests\albion\TreviansBestFriend.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\albion\WhenBloodSpeaks.cs" />
+    <Compile Include="quests\albion\WhenGoodBrowniesGoBad.cs" />
     <Compile Include="quests\albion\WolfPeltCloak.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -658,6 +667,7 @@
     <Compile Include="quests\hibernia\BaseAddrirQuest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\hibernia\ChildsPlay.cs" />
     <Compile Include="quests\hibernia\CityOfTirnaNog.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -673,6 +683,7 @@
     <Compile Include="quests\hibernia\ImportantDelivery.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\hibernia\MagicalBacklash.cs" />
     <Compile Include="quests\hibernia\Nuisances.cs">
       <SubType>Code</SubType>
     </Compile>
