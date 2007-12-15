@@ -512,19 +512,6 @@ namespace DOL.GS.Quests.Albion
         }
 
         /// <summary>
-        /// The goal of the quest, keeps track of kill counts etc.
-        /// </summary>
-        //public override string Goal
-        //{
-        //    get
-        //    {
-
-        //        //return String.Format("Kill 1 skeleton. ({0}/1)", SkeletonsKilled);
-        //        return String.Format("Kill 1 decayed zombie. ({0}/1)", DecayingGhoulsKilled);
-        //    }
-        //}
-
-        /// <summary>
         /// Text showing upon finishing the quest.
         /// </summary>
         public override String Conclusion

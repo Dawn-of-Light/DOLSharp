@@ -16,12 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * Author:		k109
  * 
- * Date:		12/5/07	
- * Directory: /scripts/quests/albion/
+ * Date:		12/14/07	
+ * Directory: /scripts/quests/hibernia/
  *
  * Description:
  *  Brief Walkthrough: 
- * 1) Talk with Lady Grynoch in Cotswold Village
+ * 1) Talk with Richael in Mag Mell
  * 2) Find the Entrance to the Demon's Breach and then head back to her.  
  * You will receive some xp, copper and the armor of your choice.
  */
@@ -32,7 +32,7 @@ using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
 
-namespace DOL.GS.Quests.Albion
+namespace DOL.GS.Quests.Hibernia
 {
     public class ToReachTheBreach : RewardQuest
     {
@@ -45,10 +45,10 @@ namespace DOL.GS.Quests.Albion
         protected const int minimumLevel = 2;
         protected const int maximumLevel = 5;
 
-        private static GameNPC LadyGrynoch = null;
+        private static GameNPC Richael = null;
         private QuestGoal FoundBreach;
 
-        private static GameLocation Demons_Breach = new GameLocation("Demon's Breach", 1, 562731, 514531, 2751);
+        private static GameLocation Demons_Breach = new GameLocation("Demon's Breach", 200, 354760, 486115, 5973);
 
         private static IArea Demons_Breach_Area = null;
 
@@ -175,7 +175,7 @@ namespace DOL.GS.Quests.Albion
             #endregion
 
             Level = 3;
-            QuestGiver = LadyGrynoch;
+            QuestGiver = Richael;
             Rewards.Experience = 90;
             Rewards.MoneyPercent = 100;
             Rewards.AddOptionalItem(RecruitsIntelligentBelt);
@@ -198,39 +198,44 @@ namespace DOL.GS.Quests.Albion
 
             #region defineNPCS
 
-            GameNPC[] npcs = WorldMgr.GetNPCsByName("Lady Grynoch", eRealm.Albion);
+            GameNPC[] npcs = WorldMgr.GetNPCsByName("Richael", eRealm.Hibernia);
 
             if (npcs.Length == 0)
             {
-                LadyGrynoch = new GameNPC();
-                LadyGrynoch.Model = 5;
-                LadyGrynoch.Name = "LadyGrynoch";
+                Richael = new GameNPC();
+                Richael.Model = 377;
+                Richael.Name = "Richael";
                 if (log.IsWarnEnabled)
-                    log.Warn("Could not find " + LadyGrynoch.Name + ", creating her ...");
+                    log.Warn("Could not find " + Richael.Name + ", creating her ...");
                 //k109: My preference, no guildname for quest NPCs.  Uncomment if you like that...
-                //LadyGrynoch.GuildName = "Part of " + questTitle + " Quest";
-                LadyGrynoch.Realm = (byte)eRealm.Albion;
-                LadyGrynoch.CurrentRegionID = 1;
+                //Richael.GuildName = "Part of " + questTitle + " Quest";
+                Richael.Realm = (byte)eRealm.Hibernia;
+                Richael.CurrentRegionID = 200;
 
                 GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
-                template.AddNPCEquipment(eInventorySlot.TorsoArmor, 58);    //Slot 25
-                LadyGrynoch.Inventory = template.CloseTemplate();
-                LadyGrynoch.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
+                template.AddNPCEquipment(eInventorySlot.HandsArmor, 416, 37);       //Slot 22
+                template.AddNPCEquipment(eInventorySlot.TorsoArmor, 413, 37);       //Slot 25
+                template.AddNPCEquipment(eInventorySlot.FeetArmor, 417, 37);        //Slot 23
+                template.AddNPCEquipment(eInventorySlot.LegsArmor, 414, 35);        //Slot 27
+                template.AddNPCEquipment(eInventorySlot.Cloak, 57, 35);             //Slot 26
+                template.AddNPCEquipment(eInventorySlot.ArmsArmor, 415, 37);             //Slot 28
+                Richael.Inventory = template.CloseTemplate();
+                Richael.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
 
-                LadyGrynoch.Size = 51;
-                LadyGrynoch.Level = 38;
-                LadyGrynoch.X = 559698;
-                LadyGrynoch.Y = 513578;
-                LadyGrynoch.Z = 2428;
-                LadyGrynoch.Heading = 2742;
+                Richael.Size = 48;
+                Richael.Level = 38;
+                Richael.X = 347089;
+                Richael.Y = 491290;
+                Richael.Z = 5247;
+                Richael.Heading = 978;
 
                 if (SAVE_INTO_DATABASE)
-                    LadyGrynoch.SaveIntoDatabase();
+                    Richael.SaveIntoDatabase();
 
-                LadyGrynoch.AddToWorld();
+                Richael.AddToWorld();
             }
             else
-                LadyGrynoch = npcs[0];
+                Richael = npcs[0];
 
             #endregion
             #region defineAreas
@@ -241,10 +246,10 @@ namespace DOL.GS.Quests.Albion
             GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
             GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
-            GameEventMgr.AddHandler(LadyGrynoch, GameLivingEvent.Interact, new DOLEventHandler(TalkToLadyGrynoch));
-            GameEventMgr.AddHandler(LadyGrynoch, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToLadyGrynoch));
+            GameEventMgr.AddHandler(Richael, GameLivingEvent.Interact, new DOLEventHandler(TalkToRichael));
+            GameEventMgr.AddHandler(Richael, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToRichael));
 
-            LadyGrynoch.AddQuestToGive(typeof(ToReachTheBreach));
+            Richael.AddQuestToGive(typeof(ToReachTheBreach));
 
             if (log.IsInfoEnabled)
                 log.Info("Quest \"" + questTitle + "\" initialized");
@@ -253,7 +258,7 @@ namespace DOL.GS.Quests.Albion
         [ScriptUnloadedEvent]
         public static void ScriptUnloaded(DOLEvent e, object sender, EventArgs args)
         {
-            if (LadyGrynoch == null)
+            if (Richael == null)
                 return;
 
             Demons_Breach_Area.UnRegisterPlayerEnter(new DOLEventHandler(PlayerEnterDemonBreachArea));
@@ -262,32 +267,32 @@ namespace DOL.GS.Quests.Albion
             GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
             GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
-            GameEventMgr.RemoveHandler(LadyGrynoch, GameObjectEvent.Interact, new DOLEventHandler(TalkToLadyGrynoch));
-            GameEventMgr.RemoveHandler(LadyGrynoch, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToLadyGrynoch));
+            GameEventMgr.RemoveHandler(Richael, GameObjectEvent.Interact, new DOLEventHandler(TalkToRichael));
+            GameEventMgr.RemoveHandler(Richael, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToRichael));
 
-            LadyGrynoch.RemoveQuestToGive(typeof(ToReachTheBreach));
+            Richael.RemoveQuestToGive(typeof(ToReachTheBreach));
         }
 
-        protected static void TalkToLadyGrynoch(DOLEvent e, object sender, EventArgs args)
+        protected static void TalkToRichael(DOLEvent e, object sender, EventArgs args)
         {
             //We get the player from the event arguments and check if he qualifies		
             GamePlayer player = ((SourceEventArgs)args).Source as GamePlayer;
             if (player == null)
                 return;
 
-            if (LadyGrynoch.CanGiveQuest(typeof(ToReachTheBreach), player) <= 0)
+            if (Richael.CanGiveQuest(typeof(ToReachTheBreach), player) <= 0)
                 return;
 
 
             ToReachTheBreach quest = player.IsDoingQuest(typeof(ToReachTheBreach)) as ToReachTheBreach;
-            LadyGrynoch.TurnTo(player);
+            Richael.TurnTo(player);
 
             if (e == GameObjectEvent.Interact)
             {
                 if (quest == null)
                 {
                     quest = new ToReachTheBreach();
-                    quest.QuestGiver = LadyGrynoch;
+                    quest.QuestGiver = Richael;
                     quest.OfferQuest(player);
                 }
                 else
@@ -362,7 +367,7 @@ namespace DOL.GS.Quests.Albion
             // We recheck the qualification, because we don't talk to players
             // who are not doing the quest.
 
-            if (LadyGrynoch.CanGiveQuest(typeof(ToReachTheBreach), player) <= 0)
+            if (Richael.CanGiveQuest(typeof(ToReachTheBreach), player) <= 0)
                 return;
 
             if (player.IsDoingQuest(typeof(ToReachTheBreach)) != null)
@@ -376,7 +381,7 @@ namespace DOL.GS.Quests.Albion
             {
                 // Player accepted, let's try to give him the quest.
 
-                if (!LadyGrynoch.GiveQuest(typeof(ToReachTheBreach), player, 1))
+                if (!Richael.GiveQuest(typeof(ToReachTheBreach), player, 1))
                     return;
 
             }
@@ -416,9 +421,11 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                String desc = "Long have we known that demonic creatures lurk below.  Darkness Falls is but one example.  Recently, more evil managed to bubble to the surface.  When the Headmasters of the Academy moved the Shrouded Isles portal from it's former home to Cotswold, they inadvertently created a tear in the fabric of reality.  This tear allowed evil to claws it's way to the surface!\n\n"
-                    + "Luckily, this was noticed immediately by a Sorceress involved in the project, and the hole was capped, disallowing entry by the demons into our world.  Until a permanent solution is found, there is worry that they will amass their numbers in an effort to break free.  Some of our townsfolk have taken it upon themselves to venture inside to reduce the number of demons.  Alarmingly, there are reports of encountering our enemies from Hibernia and Midgard within, as well.\n\n"
-                    + "You must familiarize yourself with the entrance to Demon's Breach, so that you will know where to go to keep the forces of evil, Hibernia and Midgard at bay.\n\n";
+                String desc = "Taskmaster Sevinia is working diligently against the evil trickling into our land from the dungeons."
+                    + "Recently, more evil has surfaced in the form of Demon's Breach.  The Siabran archmages of the Unseelie court meddled with the energies near Mag Mell."
+                    + "Believing the area was a nexus for only two planes, they unleashed a storm of arcane energy, altering the disposition of the wildlife, animating the dead, and creating a tear into a demonic plane."
+                    + "To worsen matters Midgard and Albion gained access to this plane.  The foes unleashed on Hibernia by the Siabran carelessness will do more damage then the Unseelie.\n\n"
+                    + "Fortunately, our Path elders noticed this immediately, and they capped the hole, barring entry into our world.  We need a more permanent solution.  There's worry our enemies will break the ward sealing the lair.";
                 return desc;
             }
         }
@@ -430,7 +437,7 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                return "Find the entrance to the Demon's Breach. Return to Lady Grynoch once you've visited the Breach.";
+                return "Find the entrance to the Demon's Breach. Return to Richael once you've visited the Breach.";
             }
         }
 
@@ -442,7 +449,7 @@ namespace DOL.GS.Quests.Albion
             get
             {
                 String text = String.Format("You found your way to Demon's Breach, eh?  Mark it's location well, {0}",QuestPlayer.CharacterClass.Name);
-                text += ", for your assistance may be needed there one day.  We can't afford to allow hordes of demons, Hibernians or Midgardians to break free into our lands.";
+                text += ", for your assistance may be needed there one day.  We can't afford to allow hordes of demons, Albionians or Midgardians to break free into our lands.";
                 return text;
             }
         }
