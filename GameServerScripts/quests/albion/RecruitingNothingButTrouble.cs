@@ -548,9 +548,8 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                String text = String.Format("Good job, {0}!",
-                    QuestPlayer.Name);
-                text += "Perhaps those thugs will think twice about to whom they will be pledging their allegiance.  Here's a little something for your trouble.";
+                String text = String.Format("");
+                text += "Well I'll be!  You actually managed to get my sword back!  I must admit I thought I would never see it again.  Please accept this modest reward as payment for your services.";
                 return text;
             }
         }
