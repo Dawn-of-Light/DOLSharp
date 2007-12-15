@@ -664,6 +664,7 @@
     <Compile Include="quests\examples\HelpSirQuait.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\hibernia\SearchForKnowledge.cs" />
     <Compile Include="quests\hibernia\BaseAddrirQuest.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -687,6 +688,7 @@
     <Compile Include="quests\hibernia\Nuisances.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\hibernia\ToReachTheBreach.cs" />
     <Compile Include="quests\hibernia\TraitorInMagMell.cs">
       <SubType>Code</SubType>
     </Compile>

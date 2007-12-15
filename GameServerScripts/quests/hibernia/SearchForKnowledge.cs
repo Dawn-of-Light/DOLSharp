@@ -17,11 +17,11 @@
 * Author: k109
 * 
 * Date: 12/5/07	
-* Directory: /scripts/quests/albion/
+* Directory: /scripts/quests/hibernia/
 * 
-* Compiled on SVN 905
+* Compiled on SVN 911
 * 
-* Description: The "A New Heroes Welcome" quest, mimics live US servers.
+* Description: The "Search For Knowledge" quest, mimics live US servers.
  */
 using System;
 using System.Reflection;
@@ -30,45 +30,45 @@ using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
 
-namespace DOL.GS.Quests.Albion
+namespace DOL.GS.Quests.Hibernia
 {
-    public class ANewHeroesWelcome : RewardQuest
+    public class SearchForKnowledge : RewardQuest
     {
         /// <summary>
         /// Defines a logger for this class.
         /// </summary>
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected const string questTitle = "A New Heroes Welcome";
+        protected const string questTitle = "Search For Knowledge";
         protected const int minimumLevel = 1;
         protected const int maximumLevel = 5;
 
-        private static GameNPC MasterClaistan = null;
-        private static GameNPC PompinTheCrier = null;
+        private static GameNPC Blercyn = null;
+        private static GameNPC Epona = null;
 
-        private QuestGoal pompinsletter;
+        private QuestGoal eponasletter;
 
-        private static ItemTemplate LetterToPompin = null;
+        private static ItemTemplate LetterToEpona = null;
         private static ItemTemplate RecruitsCloak = null;
 
-        public ANewHeroesWelcome()
+        public SearchForKnowledge()
             : base()
         {
             Init();
         }
 
-        public ANewHeroesWelcome(GamePlayer questingPlayer)
+        public SearchForKnowledge(GamePlayer questingPlayer)
             : this(questingPlayer, 1)
         {
         }
 
-        public ANewHeroesWelcome(GamePlayer questingPlayer, int step)
+        public SearchForKnowledge(GamePlayer questingPlayer, int step)
             : base(questingPlayer, step)
         {
             Init();
         }
 
-        public ANewHeroesWelcome(GamePlayer questingPlayer, DBQuest dbQuest)
+        public SearchForKnowledge(GamePlayer questingPlayer, DBQuest dbQuest)
             : base(questingPlayer, dbQuest)
         {
             Init();
@@ -90,7 +90,7 @@ namespace DOL.GS.Quests.Albion
                 RecruitsCloak.Level = 5;
                 RecruitsCloak.Weight = 3;
                 RecruitsCloak.Model = 443;
-                RecruitsCloak.Color = 36;
+                RecruitsCloak.Color = 30;
 
                 RecruitsCloak.Object_Type = (int)eObjectType.Magical;
                 RecruitsCloak.Item_Type = (int)eEquipmentItems.CLOAK;
@@ -113,29 +113,29 @@ namespace DOL.GS.Quests.Albion
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(RecruitsCloak);
             }
-            LetterToPompin = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "letter_to_pompin");
-            if (LetterToPompin == null)
+            LetterToEpona = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "letter_to_epona");
+            if (LetterToEpona == null)
             {
-                LetterToPompin = new ItemTemplate();
-                LetterToPompin.Weight = 0;
-                LetterToPompin.Condition = 50000;
-                LetterToPompin.MaxCondition = 50000;
-                LetterToPompin.Model = 499;
-                LetterToPompin.Extension = 1;
-                LetterToPompin.Name = "Letter To Pompin";
+                LetterToEpona = new ItemTemplate();
+                LetterToEpona.Weight = 0;
+                LetterToEpona.Condition = 50000;
+                LetterToEpona.MaxCondition = 50000;
+                LetterToEpona.Model = 499;
+                LetterToEpona.Extension = 1;
+                LetterToEpona.Name = "Letter To Epona";
 
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(LetterToPompin);
+                    GameServer.Database.AddNewObject(LetterToEpona);
             }
             #endregion
             Level = 1;
-            QuestGiver = MasterClaistan;
+            QuestGiver = Blercyn;
             Rewards.Experience = 22;
             Rewards.MoneyPercent = 100;
             Rewards.AddBasicItem(RecruitsCloak);
             Rewards.ChoiceOf = 1;
 
-            pompinsletter = AddGoal("Take the message to Pompin the Crier", QuestGoal.GoalType.ScoutMission, 1, LetterToPompin);
+            eponasletter = AddGoal("Take the message to Epona", QuestGoal.GoalType.ScoutMission, 1, LetterToEpona);
         }
 
         [ScriptLoadedEvent]
@@ -149,7 +149,7 @@ namespace DOL.GS.Quests.Albion
 
             #region defineNPCS
 
-            GameNPC[] npcs = WorldMgr.GetNPCsByName("Master Claistan", eRealm.Albion);
+            GameNPC[] npcs = WorldMgr.GetNPCsByName("Blercyn", eRealm.Hibernia);
 
             /* Whops, if the npcs array length is 0 then no npc exists in
                 * this users Mob Database, so we simply create one ;-)
@@ -158,96 +158,88 @@ namespace DOL.GS.Quests.Albion
                 */
             if (npcs.Length == 0)
             {
-                MasterClaistan = new GameNPC();
-                MasterClaistan.Model = 33;
-                MasterClaistan.Name = "Master Claistan";
+                Blercyn = new GameNPC();
+                Blercyn.Model = 700;
+                Blercyn.Name = "Blercyn";
                 if (log.IsWarnEnabled)
-                    log.Warn("Could not find " + MasterClaistan.Name + ", creating him ...");
-                //MasterClaistan.GuildName = "Part of " + questTitle + " Quest";
-                MasterClaistan.Realm = (byte)eRealm.Albion;
-                MasterClaistan.CurrentRegionID = 1;
+                    log.Warn("Could not find " + Blercyn.Name + ", creating him ...");
+                //Blercyn.GuildName = "Part of " + questTitle + " Quest";
+                Blercyn.Realm = (byte)eRealm.Hibernia;
+                Blercyn.CurrentRegionID = 200;
 
                 GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
-                template.AddNPCEquipment(eInventorySlot.HandsArmor, 39);
-                template.AddNPCEquipment(eInventorySlot.FeetArmor, 40);
-                template.AddNPCEquipment(eInventorySlot.TorsoArmor, 36);
-                template.AddNPCEquipment(eInventorySlot.LegsArmor, 37);
-                template.AddNPCEquipment(eInventorySlot.ArmsArmor, 38);
-                MasterClaistan.Inventory = template.CloseTemplate();
-                MasterClaistan.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
+                template.AddNPCEquipment(eInventorySlot.TorsoArmor, 58);
+                Blercyn.Inventory = template.CloseTemplate();
+                Blercyn.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
 
-                MasterClaistan.Size = 52;
-                MasterClaistan.Level = 51;
-                MasterClaistan.X = 562190;
-                MasterClaistan.Y = 512571;
-                MasterClaistan.Z = 2500;
-                MasterClaistan.Heading = 1592;
+                Blercyn.Size = 50;
+                Blercyn.Level = 50;
+                Blercyn.X = 348614;
+                Blercyn.Y = 492141;
+                Blercyn.Z = 5199;
+                Blercyn.Heading = 1539;
 
                 //You don't have to store the created mob in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
 
                 if (SAVE_INTO_DATABASE)
-                    MasterClaistan.SaveIntoDatabase();
+                    Blercyn.SaveIntoDatabase();
 
-                MasterClaistan.AddToWorld();
+                Blercyn.AddToWorld();
             }
             else
-                MasterClaistan = npcs[0];
+                Blercyn = npcs[0];
 
             //Pompin The Crier
-            npcs = WorldMgr.GetNPCsByName("Pompin the Crier", eRealm.Albion);
+            npcs = WorldMgr.GetNPCsByName("Epona", eRealm.Hibernia);
             if (npcs.Length == 0)
             {
-                PompinTheCrier = new GameNPC();
-                PompinTheCrier.Model = 10;
-                PompinTheCrier.Name = "Pompin The Crier";
+                Epona = new GameNPC();
+                Epona.Model = 10;
+                Epona.Name = "Epona";
                 if (log.IsWarnEnabled)
-                    log.Warn("Could not find " + PompinTheCrier.Name + ", creating him ...");
-                //MasterClaistan.GuildName = "Part of " + questTitle + " Quest";
-                PompinTheCrier.Realm = (byte)eRealm.Albion;
-                PompinTheCrier.CurrentRegionID = 1;
+                    log.Warn("Could not find " + Epona.Name + ", creating him ...");
+                //Blercyn.GuildName = "Part of " + questTitle + " Quest";
+                Epona.Realm = (byte)eRealm.Hibernia;
+                Epona.CurrentRegionID = 200;
 
                 GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
-                template.AddNPCEquipment(eInventorySlot.HandsArmor, 39);
-                template.AddNPCEquipment(eInventorySlot.FeetArmor, 40);
-                template.AddNPCEquipment(eInventorySlot.TorsoArmor, 36);
-                template.AddNPCEquipment(eInventorySlot.LegsArmor, 37);
-                template.AddNPCEquipment(eInventorySlot.ArmsArmor, 38);
-                PompinTheCrier.Inventory = template.CloseTemplate();
-                PompinTheCrier.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
+                template.AddNPCEquipment(eInventorySlot.TorsoArmor, 58);
+                Epona.Inventory = template.CloseTemplate();
+                Epona.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
 
-                PompinTheCrier.Size = 50;
-                PompinTheCrier.Level = 5;
-                PompinTheCrier.X = 560484;
-                PompinTheCrier.Y = 511756;
-                PompinTheCrier.Z = 2344;
-                PompinTheCrier.Heading = 420;
+                Epona.Size = 50;
+                Epona.Level = 50;
+                Epona.X = 347606;
+                Epona.Y = 490658;
+                Epona.Z = 5227;
+                Epona.Heading = 1342;
 
                 //You don't have to store the created mob in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
 
                 if (SAVE_INTO_DATABASE)
-                    PompinTheCrier.SaveIntoDatabase();
+                    Epona.SaveIntoDatabase();
 
-                PompinTheCrier.AddToWorld();
+                Epona.AddToWorld();
             }
             else
-                PompinTheCrier = npcs[0];
+                Epona = npcs[0];
 
             #endregion
 
             GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
             GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
-            GameEventMgr.AddHandler(MasterClaistan, GameLivingEvent.Interact, new DOLEventHandler(TalkToMasterClaistan));
-            GameEventMgr.AddHandler(MasterClaistan, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMasterClaistan));
+            GameEventMgr.AddHandler(Blercyn, GameLivingEvent.Interact, new DOLEventHandler(TalkToBlercyn));
+            GameEventMgr.AddHandler(Blercyn, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToBlercyn));
 
-            GameEventMgr.AddHandler(PompinTheCrier, GameLivingEvent.Interact, new DOLEventHandler(TalkToPompinTheCrier));
-            GameEventMgr.AddHandler(PompinTheCrier, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToPompinTheCrier));
+            GameEventMgr.AddHandler(Epona, GameLivingEvent.Interact, new DOLEventHandler(TalkToEpona));
+            GameEventMgr.AddHandler(Epona, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToEpona));
 
-            MasterClaistan.AddQuestToGive(typeof(ANewHeroesWelcome));
+            Blercyn.AddQuestToGive(typeof(SearchForKnowledge));
 
             if (log.IsInfoEnabled)
                 log.Info("Quest \"" + questTitle + "\" initialized");
@@ -256,66 +248,66 @@ namespace DOL.GS.Quests.Albion
         [ScriptUnloadedEvent]
         public static void ScriptUnloaded(DOLEvent e, object sender, EventArgs args)
         {
-            if (MasterClaistan == null)
+            if (Blercyn == null)
                 return;
 
             GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
             GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
-            GameEventMgr.RemoveHandler(MasterClaistan, GameObjectEvent.Interact, new DOLEventHandler(TalkToMasterClaistan));
-            GameEventMgr.RemoveHandler(MasterClaistan, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToMasterClaistan));
+            GameEventMgr.RemoveHandler(Blercyn, GameObjectEvent.Interact, new DOLEventHandler(TalkToBlercyn));
+            GameEventMgr.RemoveHandler(Blercyn, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToBlercyn));
 
-            GameEventMgr.RemoveHandler(PompinTheCrier, GameLivingEvent.Interact, new DOLEventHandler(TalkToPompinTheCrier));
-            GameEventMgr.RemoveHandler(PompinTheCrier, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToPompinTheCrier));
+            GameEventMgr.RemoveHandler(Epona, GameLivingEvent.Interact, new DOLEventHandler(TalkToEpona));
+            GameEventMgr.RemoveHandler(Epona, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToEpona));
 
-            MasterClaistan.RemoveQuestToGive(typeof(ANewHeroesWelcome));
+            Blercyn.RemoveQuestToGive(typeof(SearchForKnowledge));
         }
 
-        protected static void TalkToMasterClaistan(DOLEvent e, object sender, EventArgs args)
+        protected static void TalkToBlercyn(DOLEvent e, object sender, EventArgs args)
         {
             //We get the player from the event arguments and check if he qualifies		
             GamePlayer player = ((SourceEventArgs)args).Source as GamePlayer;
             if (player == null)
                 return;
 
-            if (MasterClaistan.CanGiveQuest(typeof(ANewHeroesWelcome), player) <= 0)
+            if (Blercyn.CanGiveQuest(typeof(SearchForKnowledge), player) <= 0)
                 return;
 
 
-            ANewHeroesWelcome quest = player.IsDoingQuest(typeof(ANewHeroesWelcome)) as ANewHeroesWelcome;
-            MasterClaistan.TurnTo(player);
+            SearchForKnowledge quest = player.IsDoingQuest(typeof(SearchForKnowledge)) as SearchForKnowledge;
+            Blercyn.TurnTo(player);
 
             if (e == GameObjectEvent.Interact)
             {
                 if (quest == null)
                 {
-                    quest = new ANewHeroesWelcome();
-                    quest.QuestGiver = MasterClaistan;
+                    quest = new SearchForKnowledge();
+                    quest.QuestGiver = Blercyn;
                     quest.OfferQuest(player);
                 }
 
             }
         }
 
-        protected static void TalkToPompinTheCrier(DOLEvent e, object sender, EventArgs args)
+        protected static void TalkToEpona(DOLEvent e, object sender, EventArgs args)
         {
             GamePlayer player = ((SourceEventArgs)args).Source as GamePlayer;
             if (player == null)
                 return;
 
-            ANewHeroesWelcome quest = player.IsDoingQuest(typeof(ANewHeroesWelcome)) as ANewHeroesWelcome;
-            PompinTheCrier.TurnTo(player);
+            SearchForKnowledge quest = player.IsDoingQuest(typeof(SearchForKnowledge)) as SearchForKnowledge;
+            Epona.TurnTo(player);
             if (e == GameObjectEvent.Interact)
             {
                 if (quest == null)
                 {
-                    PompinTheCrier.SayTo(player, "Hello there, welcome to Cotswold.");
+                    Epona.SayTo(player, "You look a bit frazzled, adventurer.  Shall I make you whole again?");
                 }
                 else
                 {
                     if (quest.Step == 1)
                     {
-                        quest.QuestGiver = PompinTheCrier;
+                        quest.QuestGiver = Epona;
                         quest.ChooseRewards(player);
                     }
                 }
@@ -333,7 +325,7 @@ namespace DOL.GS.Quests.Albion
             if (qargs == null)
                 return;
 
-            if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(ANewHeroesWelcome)))
+            if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(SearchForKnowledge)))
                 return;
 
             if (e == GamePlayerEvent.AcceptQuest)
@@ -349,7 +341,7 @@ namespace DOL.GS.Quests.Albion
         public override bool CheckQuestQualification(GamePlayer player)
         {
             // if the player is already doing the quest his level is no longer of relevance
-            if (player.IsDoingQuest(typeof(ANewHeroesWelcome)) != null)
+            if (player.IsDoingQuest(typeof(SearchForKnowledge)) != null)
                 return true;
 
             // This checks below are only performed is player isn't doing quest already
@@ -367,7 +359,7 @@ namespace DOL.GS.Quests.Albion
 
         private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
         {
-            ANewHeroesWelcome quest = player.IsDoingQuest(typeof(ANewHeroesWelcome)) as ANewHeroesWelcome;
+            SearchForKnowledge quest = player.IsDoingQuest(typeof(SearchForKnowledge)) as SearchForKnowledge;
 
             if (quest == null)
                 return;
@@ -393,10 +385,10 @@ namespace DOL.GS.Quests.Albion
             // We recheck the qualification, because we don't talk to players
             // who are not doing the quest.
 
-            if (MasterClaistan.CanGiveQuest(typeof(ANewHeroesWelcome), player) <= 0)
+            if (Blercyn.CanGiveQuest(typeof(SearchForKnowledge), player) <= 0)
                 return;
 
-            if (player.IsDoingQuest(typeof(ANewHeroesWelcome)) != null)
+            if (player.IsDoingQuest(typeof(SearchForKnowledge)) != null)
                 return;
 
             if (response == 0x00)
@@ -406,7 +398,7 @@ namespace DOL.GS.Quests.Albion
             else
             {
                 // Player accepted, let's try to give him the quest.
-                if (!MasterClaistan.GiveQuest(typeof(ANewHeroesWelcome), player, 1))
+                if (!Blercyn.GiveQuest(typeof(SearchForKnowledge), player, 1))
                     return;          
             }
         }
@@ -445,9 +437,14 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                String desc = "Welcome to Cotswold! I see you're one of the latest arrivals to the outskirts of Camelot. If you're here to help with realm defense, you're most welcome. I'm pleased to do my part in readying you for that experience.\n"
-                    + "\nKing Constantine's hands are full dealing with the troubles that plague Albion. These are dark times, but we're a stalwart people and are fortunate to have a king that takes the well-being of his people seriously. Still, we're beset by many dangers. There's the threat of invasion by Midgard and Hibernia, precious relics to guard, lands to protect, and forces of evil that dwell below, awaiting the opportunity to strike.\n"
-                    + "\nThe realm war is taking a toll on our women and men fighting in the frontlines. The Guild leaders informed us that they're recruiting as may Healers as possible for the Frontiers. I need you to deliver Pompin the Crier a message regarding this news. He'll see to it that this message makes it into the right hands. He may also have a task for you.";
+                String desc = "Blessings upon you and welcome to Mag Mell.  Times are changing and so is the majetic Hibernia that we once knew."
+                    + "The intensity of the realm war against Albion and Midgard has brought much concern to our leaders."
+                    + "King Lug has returned from the Veil and taken his throne in Tir Na Nog once again."
+                    + "Even Fagan has been uneasy about the safety of his people here in Mag Mell.\n\n"
+                    + "The realm war has taken most of the garrison that guarded our small town.  When the sentinels had patrolled with regular numbers they had their hands full with Siabra and other creatures."
+                    + "Now they can barely handle patrolling the town perimeter with their skeletal force.  I have a message for our local healer, Epona."
+                    + "The realm war is taking a toll on our brave men and women fighting in the frontlines and the Path of Elders informed us that they are recruiting as many Healers as they can find for the frontiers."
+                    + "I need you to deliver Epona a message informing her of this news.  She may have a few tasks for you.";
                 return desc;
             }
         }
@@ -459,7 +456,7 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                return "Deliver the message from Master Claistan to Pompin the Crier.  He's most knowledgable about current events.  He can fill you in on the latest local news and perhaps give you a task.";
+                return "Listen to what Blercyn has to say about the current state of Mag Mell and Hibernia.  When your trainer has finished seek out Epona and deliver the letter.";
             }
         }
 
@@ -471,7 +468,7 @@ namespace DOL.GS.Quests.Albion
             get
             {
                 String text = String.Format("Thank you, {0}.",QuestPlayer.CharacterClass.Name);
-                text += "I'll send a herald to the healers in Black Mountains South.  This war is depleting our resources and we have much to do on all fronts.  I certainly have more than my share of work.  Let me know if you would like to help out.";
+                text += "I'll send a summons to my apprentices in Lough Gur.  The war is depleting our resources and we've much to do on all fronts.  I certainly have more than my share of work.  Let me know if you would like to help out.";
                 return text;
             }
         }

@@ -55,12 +55,12 @@ namespace DOL.GS.Quests.Hibernia
         public MagicalBacklash()
             : base()
         {
+            Init();
         }
 
         public MagicalBacklash(GamePlayer questingPlayer)
             : this(questingPlayer, 1)
         {
-            Init();
         }
 
         public MagicalBacklash(GamePlayer questingPlayer, int step)
@@ -290,7 +290,7 @@ namespace DOL.GS.Quests.Hibernia
             Rewards.AddOptionalItem(RecruitsStaff);
             Rewards.ChoiceOf = 1;
 
-            OrchardNipperKilled = AddGoal("Kill orchard nippers for wings.", QuestGoal.GoalType.KillTask, 1,nipperwing);
+            OrchardNipperKilled = AddGoal("Kill orchard nippers for wings.", QuestGoal.GoalType.KillTask, 1, nipperwing);
 
         }
 
@@ -550,26 +550,14 @@ namespace DOL.GS.Quests.Hibernia
         }
 
         /// <summary>
-        /// The goal of the quest, keeps track of kill counts etc.
-        /// </summary>
-        //public override string Goal
-        //{
-        //    get
-        //    {
-        //        return String.Format("Kill orchard nippers for wings. ({0}/1)", OrchardNipperKilled);
-        //    }
-        //}
-
-        /// <summary>
         /// Text showing upon finishing the quest.
         /// </summary>
         public override String Conclusion
         {
             get
             {
-                String text = String.Format("Good job, {0}!",
-                    QuestPlayer.Name);
-                text += "Perhaps those thugs will think twice about to whom they will be pledging their allegiance.  Here's a little something for your trouble.";
+                String text = String.Format("");
+                text += "Thank you.  I couldn't bear the thought of going near that place.  Your much braver then I'll ever be.  You should go speak with some of the other locals.  I'm sure they could use your help.";
                 return text;
             }
         }

@@ -514,17 +514,6 @@ namespace DOL.GS.Quests.Albion
         }
 
         /// <summary>
-        /// The goal of the quest, keeps track of kill counts etc.
-        /// </summary>
-        //public override string Goal
-        //{
-        //    get
-        //    {
-        //        return String.Format("Several groups of bandits have set up camps near Cotswold.  Find and defeat two bandit pledges.  Collect two of their insignia rings, then return to Sir Dorian for your reward.\nQuest Goal : Defeat two bandit pledges ({0}/2)", spriggarnsKilled);
-        //    }
-        //}
-
-        /// <summary>
         /// Text showing upon finishing the quest.
         /// </summary>
         public override String Conclusion
