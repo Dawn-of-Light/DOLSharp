@@ -262,7 +262,7 @@ namespace DOL.GS.Quests.Albion
             {
                 LadyGrynoch = new GameNPC();
                 LadyGrynoch.Model = 5;
-                LadyGrynoch.Name = "LadyGrynoch";
+                LadyGrynoch.Name = "Lady Grynoch";
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + LadyGrynoch.Name + ", creating her ...");
                 //k109: My preference, no guildname for quest NPCs.  Uncomment if you like that...
