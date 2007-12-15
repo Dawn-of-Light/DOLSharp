@@ -2851,6 +2851,10 @@ namespace DOL.GS
 		/// <param name="message"></param>
 		public virtual void SayTo(GamePlayer target, eChatLoc loc, string message)
 		{
+			if (target == null)
+				return;
+			
+			TurnTo(target);
 			string resultText = LanguageMgr.GetTranslation(target.Client, "GameNPC.SayTo.Says", GetName(0, true), message);
 			switch (loc)
 			{
