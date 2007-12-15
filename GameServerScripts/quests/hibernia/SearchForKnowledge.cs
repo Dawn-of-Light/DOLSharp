@@ -123,6 +123,7 @@ namespace DOL.GS.Quests.Hibernia
                 LetterToEpona.Model = 499;
                 LetterToEpona.Extension = 1;
                 LetterToEpona.Name = "Letter To Epona";
+				LetterToEpona.Id_nb = "letter_to_epona";
 
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(LetterToEpona);

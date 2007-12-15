@@ -123,6 +123,7 @@ namespace DOL.GS.Quests.Albion
                 LetterToPompin.Model = 499;
                 LetterToPompin.Extension = 1;
                 LetterToPompin.Name = "Letter To Pompin";
+				LetterToPompin.Id_nb = "letter_to_pompin";
 
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(LetterToPompin);
@@ -196,7 +197,7 @@ namespace DOL.GS.Quests.Albion
                 MasterClaistan = npcs[0];
 
             //Pompin The Crier
-            npcs = WorldMgr.GetNPCsByName("Pompin the Crier", eRealm.Albion);
+            npcs = WorldMgr.GetNPCsByName("Pompin The Crier", eRealm.Albion);
             if (npcs.Length == 0)
             {
                 PompinTheCrier = new GameNPC();
