@@ -28,6 +28,7 @@ using DOL.GS.Utils;
 using log4net;
 using DOL.Config;
 using Timer=System.Threading.Timer;
+using System.Collections.Generic;
 
 namespace DOL.GS
 {
@@ -99,6 +100,23 @@ namespace DOL.GS
 		/// How close a player can be to pick up loot
 		/// </summary>
 		public const int PICKUP_DISTANCE = 256;
+
+		/// <summary>
+		/// All available teleport locations.
+		/// </summary>
+		private static Dictionary<eRealm, List<Teleport>> m_teleportLocations;
+
+		/// <summary>
+		/// Returns a list of all teleport locations available for this realm.
+		/// </summary>
+		/// <param name="realm"></param>
+		/// <returns></returns>
+		public static List<Teleport> GetTeleportLocations(eRealm realm)
+		{
+			return (m_teleportLocations.ContainsKey(realm))
+				? m_teleportLocations[realm]
+				: null;
+		}
 
 		/// <summary>
 		/// This hashtable holds all regions in the world
@@ -255,10 +273,32 @@ namespace DOL.GS
 				log.Debug(string.Format("{0} blocks read from {1}", zoneCfg.Children.Count, GameServer.Instance.Configuration.ZoneConfigFile));
 			}
 
+			// Load available teleport locations.
+
+			DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(Teleport));
+			m_teleportLocations = new Dictionary<eRealm, List<Teleport>>();
+			int[] numTeleports = new int[3];
+			foreach (Teleport teleport in objs)
+			{
+				List<Teleport> teleportList;
+				if (m_teleportLocations.ContainsKey((eRealm)teleport.Realm))
+					teleportList = m_teleportLocations[(eRealm)teleport.Realm];
+				else
+				{
+					teleportList = new List<Teleport>();
+					m_teleportLocations.Add((eRealm)teleport.Realm, teleportList);
+				}
+				teleportList.Add(teleport);
+				if (teleport.Realm >= 1 && teleport.Realm <= 3)
+					numTeleports[teleport.Realm - 1]++;
+			}
+			log.Info(String.Format("Loaded {0} Albion, {1} Midgard and {2} Hibernia teleport locations",
+				numTeleports[0], numTeleports[1], numTeleports[2]));
+
 			// sort the regions by mob count
 
 			log.Debug("loading mobs from DB...");
-			DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(Mob));
+			objs = GameServer.Database.SelectAllObjects(typeof(Mob));
 
 			Hashtable mobsByRegionId = new Hashtable(512);
 			foreach (Mob mob in objs)
