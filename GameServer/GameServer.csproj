@@ -283,6 +283,7 @@
     </Compile>
     <Compile Include="effects\TimedEffect.cs" />
     <Compile Include="effects\TripleWieldEffect.cs" />
+    <Compile Include="effects\UniPortalEffect.cs" />
     <Compile Include="events\database\AccountEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -487,6 +488,8 @@
     <Compile Include="gameobjects\Atlantis\Arbiter.cs" />
     <Compile Include="gameobjects\Atlantis\ArtifactScholar.cs" />
     <Compile Include="gameobjects\Atlantis\HeadScholar.cs" />
+    <Compile Include="gameobjects\CustomNPC\Teleporters\AlbionTeleporter.cs" />
+    <Compile Include="gameobjects\GameTeleporter.cs" />
     <Compile Include="gameutils\Atlantis\InventoryArtifact.cs" />
     <Compile Include="gameobjects\Atlantis\Researcher.cs" />
     <Compile Include="gameobjects\Atlantis\Scholar.cs" />
@@ -1723,6 +1726,7 @@
     <Compile Include="spells\StyleTaunt.cs" />
     <Compile Include="spells\SummonMinionHandler.cs" />
     <Compile Include="spells\TurretSpellHandler.cs" />
+    <Compile Include="spells\UniPortal.cs" />
     <Compile Include="spells\Valkyrie\ValkyrieProc.cs" />
     <Compile Include="spells\Vampiir\VampArmorDebuff.cs">
       <SubType>Code</SubType>
