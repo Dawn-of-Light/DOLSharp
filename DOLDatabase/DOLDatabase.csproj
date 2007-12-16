@@ -286,6 +286,7 @@
     <Compile Include="DOLTables\NPCEquipment.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DOLTables\Teleport.cs" />
     <Compile Include="DOLTables\WorldObject.cs">
       <SubType>Code</SubType>
     </Compile>
