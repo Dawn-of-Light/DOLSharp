@@ -7505,7 +7505,7 @@ namespace DOL.GS
 			if (itemSpellLine == null)
 				return;
 
-			if (type == 1) //use1
+			if (type == 1 || type == 0) //use1
 			{
 				Spell spell = SkillBase.GetSpellByID(item.SpellID);
 				if (spell.Level > Level)

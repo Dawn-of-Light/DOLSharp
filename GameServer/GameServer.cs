@@ -571,8 +571,8 @@ namespace DOL
 
 				//---------------------------------------------------------------
 				//Check and convert the database version if older that current
-				if (!CheckDatabaseVersion())
-					return false;
+				//if (!CheckDatabaseVersion())
+				//	return false;
 
 				//---------------------------------------------------------------
 				//Try to init the server port

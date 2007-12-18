@@ -81,7 +81,7 @@ namespace DOL.AI.Brain
 
 			//Instead - lets just let CheckSpells() make all the checks for us
 			//Check for just positive spells
-			CheckSpells(true);
+			CheckSpells(eCheckSpellType.Defensive);
 
 			//If the npc is returning home, we don't need to think.
 			if (Body.IsReturningHome)
@@ -475,7 +475,7 @@ namespace DOL.AI.Brain
 			{
 				if (!Body.AttackState || target != Body.TargetObject)
 				{
-					if (!CheckSpells(false))
+					if (!CheckSpells(eCheckSpellType.Offensive))
 						Body.StartAttack(target);
 				}
 			}
@@ -840,12 +840,18 @@ namespace DOL.AI.Brain
 
 		#region Spells
 
+		public enum eCheckSpellType
+		{
+			Offensive,
+			Defensive
+		}
+
 		/// <summary>
 		/// Checks if any spells need casting
 		/// </summary>
-		/// <param name="Defensive"></param>
+		/// <param name="type">Which type should we go through and check for?</param>
 		/// <returns></returns>
-		public bool CheckSpells(bool Defensive)
+		public bool CheckSpells(eCheckSpellType type)
 		{
 			//Make sure owns a body, has spells, and isn't casting
 			//By checking IsCasting here - we should be able to save a lot of processor time
@@ -855,7 +861,7 @@ namespace DOL.AI.Brain
 			if (this.Body != null && this.Body.Spells != null && this.Body.Spells.Count > 0 && !Body.IsCasting && !Body.IsBeingInterrupted)
 			{
 				bool casted = false;
-				if (Defensive)
+				if (type == eCheckSpellType.Defensive)
 				{
 					foreach (Spell spell in Body.Spells)
 					{
