@@ -431,8 +431,9 @@ namespace DOL.GS
 		Undefined = 0,
 		// Note, these are set in the ItemDB now.  Changing
 		//any order will screw things up.
-		// char stats
-		Stat_First = 1,
+        // char stats
+        #region Stats
+        Stat_First = 1,
 		Strength = 1,
 		Dexterity = 2,
 		Constitution = 3,
@@ -445,8 +446,10 @@ namespace DOL.GS
 
 		MaxMana = 9,
 		MaxHealth = 10,
+        #endregion
 
-		// resists
+        #region Resists
+        // resists
 		Resist_First = 11,
 		Resist_Body = 11,
 		Resist_Cold = 12,
@@ -458,8 +461,10 @@ namespace DOL.GS
 		Resist_Spirit = 18,
 		Resist_Thrust = 19,
 		Resist_Last = 19,
+        #endregion
 
-		// skills
+        #region Skills
+        // skills
 		Skill_First = 20,
 		Skill_Two_Handed = 20,
 		Skill_Body = 21,
@@ -557,8 +562,10 @@ namespace DOL.GS
 		Skill_Aura_Manipulation = 113,
 		Skill_SpectralGuard = 114,
 		Skill_Last = 114,
+        #endregion
 
-		// Classic Focii
+        #region Focus
+        // Classic Focii
 		Focus_Darkness = 120,
 		Focus_Suppression = 121,
 		Focus_Runecarving = 122,
@@ -595,8 +602,9 @@ namespace DOL.GS
 		Focus_Cursing = 160,
 		Focus_Hexing = 161,
 		Focus_Witchcraft = 162,
+        #endregion
 
-		MaxSpeed = 145,
+        MaxSpeed = 145,
 		MaxConcentration = 147,
 
 		ArmorFactor = 148,
@@ -636,7 +644,8 @@ namespace DOL.GS
 		StunDuration = 177,
 		SpeedDecreaseDuration = 178,
 
-		//Catacombs
+        #region Catacombs
+        //Catacombs
 		BladeturnReinforcement = 179,
 		DefensiveBonus = 180,
 		NegativeReduction = 182,
@@ -645,8 +654,10 @@ namespace DOL.GS
 		SpellPowerCost = 185,
 		StyleCostReduction = 186,
 		ToHitBonus = 187,
+        #endregion
 
-		//TOA
+        #region TOA
+        //TOA
 		ToABonus_First = 188,
 		ArcherySpeed = 188,
 		ArrowRecovery = 189,
@@ -662,8 +673,10 @@ namespace DOL.GS
 		SpellDuration = 199,
 		StyleDamage = 200,
 		ToABonus_Last = 200,
+        #endregion
 
-		//Caps bonuses
+        #region Cap Bonuses
+        //Caps bonuses
 		StatCapBonus_First = 201,
 		StrCapBonus = 201,
 		DexCapBonus = 202,
@@ -677,8 +690,9 @@ namespace DOL.GS
 		MaxHealthCapBonus = 210,
 		PowerPoolCapBonus = 211,
 		StatCapBonus_Last = 211,
+        #endregion
 
-		WeaponSkill = 212,
+        WeaponSkill = 212,
 		AllSkills = 213,
 		CriticalMeleeHitChance = 214,
 		CriticalArcheryHitChance = 215,
@@ -689,7 +703,8 @@ namespace DOL.GS
         MissHit = 219,
         KeepDamage = 220,
 
-		//Resist cap increases
+        #region Resist Cap Increases
+        //Resist cap increases
 		ResCapBonus_First = 221,
 		BodyResCapBonus = 221,
 		ColdResCapBonus = 222,
@@ -701,8 +716,9 @@ namespace DOL.GS
 		SpiritResCapBonus = 228,
 		ThrustResCapBonus = 229,
 		ResCapBonus_Last = 229,
+        #endregion
 
-		MaxProperty = 255,
+        MaxProperty = 255,
 	}
 
 	/// <summary>
