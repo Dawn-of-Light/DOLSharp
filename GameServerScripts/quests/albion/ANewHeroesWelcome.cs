@@ -197,12 +197,12 @@ namespace DOL.GS.Quests.Albion
                 MasterClaistan = npcs[0];
 
             //Pompin The Crier
-            npcs = WorldMgr.GetNPCsByName("Pompin The Crier", eRealm.Albion);
+            npcs = WorldMgr.GetNPCsByName("Pompin the Crier", eRealm.Albion);
             if (npcs.Length == 0)
             {
                 PompinTheCrier = new GameNPC();
                 PompinTheCrier.Model = 10;
-                PompinTheCrier.Name = "Pompin The Crier";
+                PompinTheCrier.Name = "Pompin the Crier";
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + PompinTheCrier.Name + ", creating him ...");
                 //MasterClaistan.GuildName = "Part of " + questTitle + " Quest";
