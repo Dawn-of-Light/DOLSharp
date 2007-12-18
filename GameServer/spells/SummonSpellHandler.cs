@@ -147,7 +147,7 @@ namespace DOL.GS.Spells
 				summoned.AddToWorld();
 				effect.Start(summoned);
 				//Check for buffs
-				controlledBrain.CheckSpells(true);
+				controlledBrain.CheckSpells(StandardMobBrain.eCheckSpellType.Defensive);
 				controlledBrain.Attack(target);
                 //Initialize the Theurgist Petcap
                 if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ID == (int)eCharacterClass.Theurgist)
