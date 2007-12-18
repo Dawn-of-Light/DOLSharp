@@ -336,7 +336,7 @@ namespace DOL.AI.Brain
 			}
 
 			//Check for buffs, heals, etc
-			CheckSpells(true);
+			CheckSpells(eCheckSpellType.Defensive);
 
 			if (AggressionState == eAggressionState.Aggressive)
 			{

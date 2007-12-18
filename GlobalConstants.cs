@@ -167,7 +167,7 @@ namespace DOL.GS
 		public const int HELM = 21;
 		public const int HANDS = 22;
 		public const int FEET = 23;
-		public const int JEWELLERY = 24;
+		public const int JEWELRY = 24;
 		public const int TORSO = 25;
 		public const int CLOAK = 26;
 		public const int LEGS = 27;

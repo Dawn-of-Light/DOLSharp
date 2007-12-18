@@ -1353,7 +1353,7 @@ namespace DOL.GS
 					//Check for negatively casting spells
 					StandardMobBrain stanBrain = (StandardMobBrain)Brain;
 					if (stanBrain != null)
-						((StandardMobBrain)stanBrain).CheckSpells(false);
+						((StandardMobBrain)stanBrain).CheckSpells(StandardMobBrain.eCheckSpellType.Offensive);
 				}
 			}
 		}
@@ -3695,7 +3695,7 @@ namespace DOL.GS
 
 				//If we started casting a spell, stop the timer and wait for
 				//GameNPC.OnAfterSpellSequenceCast to start again
-				if (((StandardMobBrain)owner.Brain).CheckSpells(false))
+				if (((StandardMobBrain)owner.Brain).CheckSpells(StandardMobBrain.eCheckSpellType.Offensive))
 				{
 					Stop();
 					return;
