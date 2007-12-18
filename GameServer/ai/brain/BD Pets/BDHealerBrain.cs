@@ -84,7 +84,7 @@ namespace DOL.AI.Brain
 			base.Think();
 
 			//Check for buffs, heals, etc
-			CheckSpells(true);
+			CheckSpells(eCheckSpellType.Defensive);
 		}
 
 		/// <summary>

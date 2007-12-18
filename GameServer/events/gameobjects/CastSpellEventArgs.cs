@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.GS.Spells;
+using DOL.GS;
 
 namespace DOL.Events
 {
@@ -33,11 +34,25 @@ namespace DOL.Events
 		private ISpellHandler m_handler;
 
 		/// <summary>
-		/// Constructs a new Dying event args
+		/// The target of the spell
+		/// </summary>
+		private GameLiving m_target = null;
+
+		/// <summary>
+		/// Constructs a new cast event args
 		/// </summary>
 		public CastSpellEventArgs(ISpellHandler handler)
 		{
 			this.m_handler = handler;
+		}
+
+		/// <summary>
+		/// Constructs a new cast event args
+		/// </summary>
+		public CastSpellEventArgs(ISpellHandler handler, GameLiving target)
+		{
+			this.m_handler = handler;
+			this.m_target = target;
 		}
 
 		/// <summary>
@@ -46,6 +61,14 @@ namespace DOL.Events
 		public ISpellHandler SpellHandler
 		{
 			get { return m_handler; }
+		}
+
+		/// <summary>
+		/// Gets the target
+		/// </summary>
+		public GameLiving Target
+		{
+			get { return m_target; }
 		}
 	}
 }

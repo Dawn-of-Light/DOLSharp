@@ -35,10 +35,13 @@ namespace DOL.GS.Scripts
 				client.Out.SendMessage("Usage: /cast <spellid>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 0;
 			}
-			ushort spellID = 0;
+			int spellID = 0;
 			try
 			{
-				spellID = Convert.ToUInt16(args[1]);
+				spellID = Convert.ToInt32(args[1]);
+				Spell spell = SkillBase.GetSpellByID(spellID);
+				client.Player.CastSpell(spell, null);
+
 				GameObject obj = client.Player.TargetObject;
 				GameLiving target = null;
 				if (obj == null)
@@ -46,7 +49,7 @@ namespace DOL.GS.Scripts
 				else if (obj is GameLiving)
 					target = (GameLiving) obj;
 				foreach(GamePlayer plr in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-					plr.Out.SendSpellEffectAnimation(client.Player, target, spellID, 0, false, 1);
+					plr.Out.SendSpellEffectAnimation(client.Player, target, spell.ClientEffect, 0, false, 1);
 			}
 			catch
 			{
