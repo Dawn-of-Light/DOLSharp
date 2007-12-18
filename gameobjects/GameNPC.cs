@@ -2796,6 +2796,7 @@ namespace DOL.GS
 			if (!GameServer.ServerRules.IsSameRealm(this, player, true))
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameNPC.Interact.DirtyLook", GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Notify(GameObjectEvent.InteractFailed, this, new InteractEventArgs(player));
 				return false;
 			}
 			if (MAX_PASSENGERS > 1)
