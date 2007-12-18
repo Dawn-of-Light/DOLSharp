@@ -67,6 +67,11 @@ namespace DOL.Events
 		/// </summary>
 		public static readonly GameObjectEvent Interact = new GameObjectEvent("GameObject.Interact");
 		/// <summary>
+		/// The Interact Failed event is fired whenever a player interacts with this object but fails
+		/// <seealso cref="InteractEventArgs"/>
+		/// </summary>
+		public static readonly GameObjectEvent InteractFailed = new GameObjectEvent("GameObject.InteractFailed");
+		/// <summary>
 		/// The Interact event is fired whenever a player interacts with something
 		/// <seealso cref="InteractEventArgs"/>
 		/// </summary>

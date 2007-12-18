@@ -1840,6 +1840,15 @@ namespace DOL.GS.Scripts
 								client.Out.SendMessage("CompID=" + comp.InternalID + ";KeepID = " + comp.Keep.KeepID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						client.Out.SendMessage("You have created a keep.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						//send the creation packets
+						foreach (GameClient c in WorldMgr.GetClientsOfRegion(client.Player.CurrentRegionID))
+						{
+							c.Out.SendKeepInfo(keep);
+							foreach (GameKeepComponent keepComponent in keep.KeepComponents)
+							{
+								c.Out.SendKeepComponentInfo(keepComponent);
+							}
+						}
 					} break;
 				#endregion
 				case "towercreate":
@@ -1898,6 +1907,15 @@ namespace DOL.GS.Scripts
 						k.Load(keep);
 						new GameKeepComponent().LoadFromDatabase(towerComponent);
 						DisplayMessage(client, "Tower created and saved at your location!", new object[] { });
+						//send the creation packets
+						foreach (GameClient c in WorldMgr.GetClientsOfRegion(client.Player.CurrentRegionID))
+						{
+							c.Out.SendKeepInfo(k);
+							foreach (GameKeepComponent keepComponent in k.KeepComponents)
+							{
+								c.Out.SendKeepComponentInfo(keepComponent);
+							}
+						}
 						break;
 					}
 				case "create":
@@ -2003,6 +2021,16 @@ namespace DOL.GS.Scripts
 						}
 						client.Player.TempProperties.setProperty(TEMP_KEEP_LAST, k);
 						client.Out.SendMessage("You have created a keep", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+						//send the creation packets
+						foreach (GameClient c in WorldMgr.GetClientsOfRegion(client.Player.CurrentRegionID))
+						{
+							c.Out.SendKeepInfo(k);
+							foreach (GameKeepComponent keepComponent in k.KeepComponents)
+							{
+								c.Out.SendKeepComponentInfo(keepComponent);
+							}
+						}
 						break;
 					} 
 				case "remove":
