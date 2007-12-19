@@ -492,6 +492,15 @@ namespace DOL.GS.ServerProperties
         [ServerProperty("allow_dual_logins", "Diasable to disallow players to connect with more than 1 account at a time.", true)]
         public static bool ALLOW_DUAL_LOGINS;
 
+		/// <summary>
+		/// Minimum privilege level to be able to enter Atlantis through teleporters.
+		/// 1 = anyone can enter Atlantis,
+		/// 2 = only GMs and admins can enter Atlantis,
+		/// 3 = only admins can enter Atlantis.
+		/// </summary>
+		[ServerProperty("atlantis_teleport_plvl", "Set the minimum privilege level required to enter Atlantis zones.", 2)]
+		public static readonly int ATLANTIS_TELEPORT_PLVL;
+
         /// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the

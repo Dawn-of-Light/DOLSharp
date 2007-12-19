@@ -62,8 +62,11 @@ namespace DOL.GS.Spells
 			if (player == null)
 				return;
 
-			UniPortalEffect effect = new UniPortalEffect(1000);
+			SendEffectAnimation(player, 0, false, 1);
+
+			UniPortalEffect effect = new UniPortalEffect(this, 1000);
 			effect.Start(player);
+
 			player.MoveTo((ushort)m_destination.RegionID,
 				m_destination.X, m_destination.Y, m_destination.Z,
 				(ushort)m_destination.Heading);
