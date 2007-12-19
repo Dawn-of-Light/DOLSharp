@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using DOL.GS.Spells;
 
 namespace DOL.GS.Effects
 {
@@ -26,28 +27,12 @@ namespace DOL.GS.Effects
 	/// The effect associated with the UniPortal teleport spell.
 	/// </summary>
 	/// <author>Aredhel</author>
-	class UniPortalEffect : TimedEffect, IGameEffect
+	class UniPortalEffect : GameSpellEffect
 	{
 		/// <summary>
 		/// Create a new portal effect.
 		/// </summary>
-		public UniPortalEffect(int duration) 
-			: base(duration) { }
-
-		/// <summary>
-		/// Effect icon.
-		/// </summary>
-		public override ushort Icon
-		{
-			get { return 4310; }
-		}
-
-		/// <summary>
-		/// Effect name.
-		/// </summary>
-		public override string Name
-		{
-			get { return "Uni-Portal Effect"; }
-		}
+		public UniPortalEffect(ISpellHandler handler, int duration)
+			: base(handler, duration, 0) { }
 	}
 }
