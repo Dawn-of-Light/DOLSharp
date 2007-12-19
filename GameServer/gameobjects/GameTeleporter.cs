@@ -55,7 +55,7 @@ namespace DOL.GS
 		/// Talk to the teleporter.
 		/// </summary>
 		/// <param name="source"></param>
-		/// <param name="str"></param>
+		/// <param name="text"></param>
 		/// <returns></returns>
 		public override bool WhisperReceive(GameLiving source, string text)
 		{

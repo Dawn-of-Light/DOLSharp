@@ -3188,7 +3188,7 @@
 		<instance>True</instance>
 	</Region488>
 	<Region489> 
-		<description>Demons breach</description> 
+		<description>Demon's Breach</description> 
 		<isDivingEnabled>False</isDivingEnabled> 
 		<waterLevel>0</waterLevel> 
 		<id>489</id> 
