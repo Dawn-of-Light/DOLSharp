@@ -129,18 +129,31 @@ namespace DOL.GS
 				case "castle sauvage":
 					SayTo(player, "Castle Sauvage is what you seek, and Castle Sauvage is what you shall find.");
 					break;
+				case "diogel":
+					break;	// No text?
+				case "entrance":
+					break;	// No text?
 				case "forest sauvage":
 					SayTo(player, "Now to the Frontiers for the glory of the realm!");
 					break;
 				case "gothwaite":
 					SayTo(player, "The Shrouded Isles await you.");
 					break;
+				case "gwyntell":
+					break;	// No text?
 				case "oceanus":
+					if (player.Client.Account.PrivLevel < ServerProperties.Properties.ATLANTIS_TELEPORT_PLVL)
+					{
+						SayTo(player, "I'm sorry, but you are not authorized to enter Atlantis at this time.");
+						return;
+					}
 					SayTo(player, "You will soon arrive in the Haven of Oceanus.");
 					break;
 				case "snowdonia fortress":
 					SayTo(player, "Snowdonia Fortress is what you seek, and Snowdonia Fortress is what you shall find.");
 					break;
+				case "wearyall":
+					break;	// No text?
 				default:
 					SayTo(player, "This destination is not yet supported.");
 					return;
@@ -157,15 +170,15 @@ namespace DOL.GS
 		{
 			SpellLine spellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
 			IList spellList = SkillBase.GetSpellList(GlobalSpellsLines.Mob_Spells);
-			foreach (Spell spell in spellList)
+			Spell spell = SkillBase.GetSpellByID(5999);	// UniPortal spell.
+
+			if (spell != null)
 			{
-				if (spell.SpellType == "UniPortal")
-				{
-					TargetObject = player;
-					UniPortal portalHandler = new UniPortal(this, spell, spellLine, destination);
-					portalHandler.CastSpell();
-					return;
-				}
+				TargetObject = player;
+				UniPortal portalHandler = new UniPortal(this, spell, spellLine, destination);
+				m_runningSpellHandler = portalHandler;
+				portalHandler.CastSpell();
+				return;
 			}
 
 			// Spell not found in the database, fall back on default procedure.

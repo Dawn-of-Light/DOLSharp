@@ -488,6 +488,7 @@
     <Compile Include="gameobjects\Atlantis\Arbiter.cs" />
     <Compile Include="gameobjects\Atlantis\ArtifactScholar.cs" />
     <Compile Include="gameobjects\Atlantis\HeadScholar.cs" />
+    <Compile Include="gameobjects\CustomNPC\Teleporters\AlbionSITeleporter.cs" />
     <Compile Include="gameobjects\CustomNPC\Teleporters\AlbionTeleporter.cs" />
     <Compile Include="gameobjects\GameTeleporter.cs" />
     <Compile Include="gameutils\Atlantis\InventoryArtifact.cs" />
