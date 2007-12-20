@@ -1896,6 +1896,7 @@ namespace DOL.GS
 			IList m_equipLoc = new ArrayList();
 			Hashtable m_equipModel = new Hashtable();
 			GameNpcInventoryTemplate equip = new GameNpcInventoryTemplate();
+			bool equipHasItems = equip.LoadFromDatabase(template.TemplateId.ToString());
 			this.Name = template.Name;
 			this.GuildName = template.GuildName;
 			foreach (string str in template.Model.Split(';'))
@@ -1963,8 +1964,11 @@ namespace DOL.GS
 						//Get the Equipment model
 						m_equipModel.Add(x, loc[1]);
 					}
-					else equip.AddNPCEquipment((DOL.GS.eInventorySlot)x, y);
-
+					else
+					{
+						equip.AddNPCEquipment((DOL.GS.eInventorySlot)x, y);
+						equipHasItems = true;
+					}
 				}
 				if (m_equipLoc.Count > 1)
 				{
@@ -1987,9 +1991,12 @@ namespace DOL.GS
 						y = Convert.ToInt32(m_models[y]);
 					}
 					equip.AddNPCEquipment((DOL.GS.eInventorySlot)x, y);
+					equipHasItems = true;
 				}
-				this.Inventory = new GameNPCInventory(equip);
+				
 			}
+			if (equipHasItems)
+				this.Inventory = new GameNPCInventory(equip);
 			if (this.Inventory != null)
 			{
 				if (this.Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
