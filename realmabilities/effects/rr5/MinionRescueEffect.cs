@@ -25,7 +25,6 @@ using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
 using DOL.GS.Spells;
-using DOL.GS.Scripts;
 
 namespace DOL.GS.Effects
 {

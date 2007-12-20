@@ -23,7 +23,6 @@ using DOL.GS.Spells;
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
 using DOL.Events;
-using DOL.GS.Scripts;
 
 namespace DOL.GS.Spells
 {

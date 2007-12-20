@@ -28,7 +28,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			packet.Skip(8);
 			string cmdLine = packet.ReadString(255);
-			if(!Scripts.ScriptMgr.HandleCommand(client, cmdLine))
+			if(!ScriptMgr.HandleCommand(client, cmdLine))
 			{
 				if (cmdLine[0] == '&')
 				{

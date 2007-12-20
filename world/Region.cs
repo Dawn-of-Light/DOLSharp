@@ -24,7 +24,6 @@ using System.Reflection;
 using System.Threading;
 using DOL.Database;
 using DOL.GS.PacketHandler;
-using DOL.GS.Scripts;
 using DOL.Events;
 using DOL.GS.Utils;
 using log4net;

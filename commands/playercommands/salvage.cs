@@ -1,4 +1,4 @@
-/*
+ /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  * 
  * This program is free software; you can redistribute it and/or
@@ -16,22 +16,23 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.GS;
 
-namespace DOL.GS.Scripts
+namespace DOL.GS.Commands
 {
-	/// <summary>
-	/// Interface for classes that will handle commands
-	/// </summary>
-	public interface ICommandHandler
+	[CmdAttribute(
+		"&salvage",
+		ePrivLevel.Player,
+		"You can salvage an item when you are a crafter",
+		"/salvage")]
+	public class SalvageCommandHandler : ICommandHandler
 	{
-		/// <summary>
-		/// Called when a command needs to be executed
-		/// </summary>
-		/// <param name="client">Client executing the command</param>
-		/// <param name="args">Extra arguments for the command</param>
-		/// <returns>Non-zero if succeeded</returns>
-		int OnCommand(GameClient client, string[] args);
+		public int OnCommand(GameClient client, string[] args)
+		{
+			GameInventoryItem item = client.Player.TargetObject as GameInventoryItem;
+			if (item == null)
+				return 1;
+			client.Player.SalvageItem(item.Item);
+			return 1;
+		}
 	}
 }

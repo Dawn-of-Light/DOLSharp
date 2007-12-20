@@ -19,7 +19,7 @@
 using System;
 using DOL.GS;
 
-namespace DOL.GS.Scripts
+namespace DOL.GS.PlayerClass
 {
 	/// <summary>
 	///

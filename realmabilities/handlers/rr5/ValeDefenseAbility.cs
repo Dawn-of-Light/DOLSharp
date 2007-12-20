@@ -6,7 +6,6 @@ using System.Reflection;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
-using DOL.GS.Scripts;
 using DOL.Events;
 using DOL.Database;
 using DOL.GS.Spells;
@@ -39,7 +38,7 @@ namespace DOL.GS.RealmAbilities
 			foreach (GamePlayer member in player.PlayerGroup)
 			{
 				Spell subspell = SkillBase.GetSpellByID(7063);
-				ISpellHandler spellhandler = Scripts.ScriptMgr.CreateSpellHandler(player, subspell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+				ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(player, subspell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
                     spellhandler.StartSpell(member);
 			}
 			DisableSkill(living);

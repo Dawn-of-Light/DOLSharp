@@ -33,7 +33,6 @@ using DOL.GS.Housing;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.GS.PlayerTitles;
-using DOL.GS.Scripts;
 using DOL.GS.ServerRules;
 using DOL.GS.ServerProperties;
 using DOL.Config;
@@ -131,6 +130,14 @@ namespace DOL
 			/// The instance!
 			/// </summary>
 			protected static GameServer m_instance;
+
+			/// <summary>
+			/// A general logger for the server
+			/// </summary>
+			public ILog Logger
+			{
+				get { return log; }
+			}
 
 			#endregion
 

@@ -19,7 +19,6 @@
 using System;
 using System.Reflection;
 using DOL.Database;
-using DOL.GS.Scripts;
 using DOL.GS.Styles;
 using DOL.GS.Spells;
 using log4net;

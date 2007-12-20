@@ -249,7 +249,7 @@ namespace DOL
 				}
 				if (player == null)
 				{
-					foreach (Assembly asm in DOL.GS.Scripts.ScriptMgr.Scripts)
+					foreach (Assembly asm in ScriptMgr.Scripts)
 					{
 						try
 						{

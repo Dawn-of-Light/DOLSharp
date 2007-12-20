@@ -20,7 +20,7 @@ using System;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 
-namespace DOL.GS.Scripts
+namespace DOL.GS.Commands
 {
 	/// <summary>
 	/// Providing some basic command handler functionality

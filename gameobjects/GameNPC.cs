@@ -1766,7 +1766,7 @@ namespace DOL.GS
 			{
 				ArrayList asms = new ArrayList();
 				asms.Add(typeof(GameServer).Assembly);
-				asms.AddRange(Scripts.ScriptMgr.Scripts);
+				asms.AddRange(ScriptMgr.Scripts);
 				ABrain brain = null;
 				foreach (Assembly asm in asms)
 				{

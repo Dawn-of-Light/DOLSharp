@@ -20,7 +20,7 @@ using System;
 using DOL.GS;
 using System.Collections;
 
-namespace DOL.GS.Scripts
+namespace DOL.GS.PlayerClass
 {
 	/// <summary>
 	///
