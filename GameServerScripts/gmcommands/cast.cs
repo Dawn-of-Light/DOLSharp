@@ -25,14 +25,16 @@ namespace DOL.GS.Scripts
 		"&cast",
 		(uint) ePrivLevel.GM,
 		"cast a spell",
-		"/cast <spellid>")]
+		"/cast <spellid>",
+		"/cast <spellid> <case>")]
 	public class CastCommandHandler : ICommandHandler
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 2)
 			{
-				client.Out.SendMessage("Usage: /cast <spellid>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("Usage: /cast <spellid> Cast the ID of the spell", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("Usage: /cast <case> Cast the ID and the spell (/cast 10 t)", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 0;
 			}
 			int spellID = 0;
@@ -40,20 +42,26 @@ namespace DOL.GS.Scripts
 			{
 				spellID = Convert.ToInt32(args[1]);
 				Spell spell = SkillBase.GetSpellByID(spellID);
-				client.Player.CastSpell(spell, null);
-
-				GameObject obj = client.Player.TargetObject;
-				GameLiving target = null;
-				if (obj == null)
-					target = client.Player;
-				else if (obj is GameLiving)
-					target = (GameLiving) obj;
-				foreach(GamePlayer plr in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-					plr.Out.SendSpellEffectAnimation(client.Player, target, spell.ClientEffect, 0, false, 1);
+				if (args.Length >= 3 && args[2].ToLower() == "t")
+				{		
+					client.Player.CastSpell(spell, null);
+				}
+				else
+				{
+					GameObject obj = client.Player.TargetObject;
+					GameLiving target = null;
+					if (obj == null)
+						target = client.Player;
+					else if (obj is GameLiving)
+						target = (GameLiving)obj;
+					foreach (GamePlayer plr in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+						plr.Out.SendSpellEffectAnimation(client.Player, target, spell.ClientEffect, 0, false, 1);
+				}
 			}
 			catch
 			{
-				client.Out.SendMessage("Usage: /cast <spellid>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("Usage: /cast <spellid> Cast the ID of the spell", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("Usage: /cast <case> Cast the ID and the spell (/cast 10 t)", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 0;
 			}
 			return 1;
