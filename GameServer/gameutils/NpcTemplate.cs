@@ -117,7 +117,9 @@ namespace DOL.GS
 				{
 					int id = int.Parse(spells[k]);
 					Spell sp = SkillBase.GetSpellByID(id);
-					m_spells.Add(sp);
+					if (sp != null)
+						m_spells.Add(sp);
+					else log.Error("Tried to load a null spell into NPC template " + m_templateId + " spell ID: " + id);
 				}
 			}
 
