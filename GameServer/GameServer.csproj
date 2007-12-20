@@ -35,7 +35,8 @@
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>GameServer.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
@@ -56,7 +57,8 @@
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>GameServer.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
@@ -2124,7 +2126,6 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>xcopy "$(ProjectDir)\language\*.txt" "$(SolutionDir)\$(ConfigurationName)\languages" /y /s /q /i
-xcopy "$(ProjectDir)\language\*.txt" "$(SolutionDir)\DOLServer\bin\$(ConfigurationName)\languages" /y /s /q /i</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(ProjectDir)\language\*.txt" "$(SolutionDir)$(ConfigurationName)\languages" /y /s /q /i</PostBuildEvent>
   </PropertyGroup>
 </Project>
