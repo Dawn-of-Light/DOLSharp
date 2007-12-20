@@ -760,7 +760,7 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>xcopy "$(ProjectDir)*.cs" "$(SolutionDir)$(ConfigurationName)\scripts" /y /s /q /i
+    <PostBuildEvent>xcopy "$(ProjectDir)*.cs" "$(ProjectDir)..\$(ConfigurationName)\scripts" /y /s /q /i
 </PostBuildEvent>
   </PropertyGroup>
 </Project>
