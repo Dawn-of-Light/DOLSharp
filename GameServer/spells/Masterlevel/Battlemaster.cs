@@ -127,7 +127,7 @@ namespace DOL.GS.Spells
                 Spell spell = SkillBase.GetSpellByID(m_spell.SubSpellID);
                 if (spell != null && spell.SubSpellID == 0)
                 {
-                    ISpellHandler spellhandler = Scripts.ScriptMgr.CreateSpellHandler(m_caster, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+                    ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(m_caster, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
                     spellhandler.StartSpell(Caster);
                 }
             }

@@ -18,7 +18,7 @@
  */
 using System;
 
-namespace DOL.GS.Scripts
+namespace DOL.GS.PlayerClass
 {
 	/// <summary>
 	///

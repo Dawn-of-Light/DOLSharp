@@ -18,7 +18,6 @@
  */
 using System;
 using System.Reflection;
-using DOL.GS.Scripts;
 using log4net;
 
 namespace DOL.GS.PacketHandler

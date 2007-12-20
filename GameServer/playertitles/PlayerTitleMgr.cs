@@ -19,7 +19,6 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using DOL.GS.Scripts;
 using log4net;
 
 namespace DOL.GS.PlayerTitles

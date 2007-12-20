@@ -123,11 +123,11 @@ namespace DOL.DOLServer.Actions
 							line = line.Remove(0, 1);
 							line = line.Insert(0, "&");
 						}
-						GameClient client = new DOL.GS.GameClient(null);
+						GameClient client = new GameClient(null);
 						client.Out = new ConsolePacketLib();
 						try
 						{
-							bool res = DOL.GS.Scripts.ScriptMgr.HandleCommandNoPlvl(client, line);
+							bool res = ScriptMgr.HandleCommandNoPlvl(client, line);
 							if (!res)
 							{
 								Console.WriteLine("Unknown command: " + line);

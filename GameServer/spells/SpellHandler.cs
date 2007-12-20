@@ -444,7 +444,7 @@ namespace DOL.GS.Spells
 				{
 					GamePlayer player = m_caster as GamePlayer;
 					if ((player.CharacterClass.ID == (int)eCharacterClass.Vampiir) == false
-					    && player.CharacterClass is Scripts.ClassMauler == false)
+					    && player.CharacterClass is PlayerClass.ClassMauler == false)
 					{
 						m_caster.StopAttack();
 						return false;
@@ -1222,7 +1222,7 @@ namespace DOL.GS.Spells
 				//we need subspell ID to be 0, we don't want spells linking off the subspell
 				if (spell != null && spell.SubSpellID == 0)
 				{
-					ISpellHandler spellhandler = Scripts.ScriptMgr.CreateSpellHandler(m_caster, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+					ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(m_caster, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
 					spellhandler.StartSpell(target);
 				}
 			}

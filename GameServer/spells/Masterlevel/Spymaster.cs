@@ -7,7 +7,6 @@ using DOL.Events;
 using DOL.GS.Spells;
 using DOL.Database;
 using DOL.AI.Brain;
-using DOL.GS.Scripts;
 
 namespace DOL.GS.Spells
 {

@@ -5,12 +5,11 @@ using System.Collections;
 using System.Reflection;
 using DOL.GS;
 using DOL.Events;
-using DOL.GS.Scripts;
 using DOL.GS.PacketHandler;
 using log4net;
 using DOL.GS.Spells;
 
-namespace DOL.GS.Scripts
+namespace DOL.GS
 {
 	public class PlayerStatistic
 	{

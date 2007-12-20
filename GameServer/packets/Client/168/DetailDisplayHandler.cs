@@ -25,7 +25,6 @@ using DOL.Database;
 using DOL.Language;
 using DOL.GS.Effects;
 using DOL.GS.RealmAbilities;
-using DOL.GS.Scripts;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
 using DOL.GS.SkillHandler;
@@ -258,7 +257,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								if (spell != null)
 								{
 									objectInfo.Add(" ");
-									ISpellHandler sh = Scripts.ScriptMgr.CreateSpellHandler(client.Player, s, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+									ISpellHandler sh = ScriptMgr.CreateSpellHandler(client.Player, s, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
 									objectInfo.AddRange(sh.DelveInfo);
 								}
 							}

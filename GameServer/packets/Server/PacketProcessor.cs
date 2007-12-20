@@ -27,7 +27,6 @@ using System.Text;
 using System.Threading;
 using System.Timers;
 using DOL.Events;
-using DOL.GS.Scripts;
 using log4net;
 using Timer = System.Timers.Timer;
 

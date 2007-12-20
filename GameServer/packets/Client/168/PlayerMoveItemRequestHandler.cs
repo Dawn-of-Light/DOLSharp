@@ -109,7 +109,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						return 0;
 					}
 
-					if (!item.IsDropable && !(obj is GameNPC && (obj.GetType().ToString() == "DOL.GS.Scripts.Blacksmith" || obj.GetType().ToString() == "DOL.GS.Scripts.Recharger")))
+					if (!item.IsDropable && !(obj is GameNPC && (obj is Blacksmith || obj is Recharger)))
 					{
 						client.Out.SendInventorySlotsUpdate(new int[] { fromSlot });
 						client.Out.SendMessage("You can not remove this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);

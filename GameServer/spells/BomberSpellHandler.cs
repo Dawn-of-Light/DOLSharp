@@ -93,7 +93,7 @@ namespace DOL.GS.Spells
                 {
                     if (WorldMgr.CheckDistance(living, bomber, 500))
                     {
-                        ISpellHandler spellhandler = Scripts.ScriptMgr.CreateSpellHandler(Caster, subspell, SkillBase.GetSpellLine(this.SpellLine.KeyName));
+                        ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(Caster, subspell, SkillBase.GetSpellLine(this.SpellLine.KeyName));
                         spellhandler.StartSpell(living);
                     }
                     else

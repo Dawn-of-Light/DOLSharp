@@ -34,7 +34,6 @@ using DOL.GS.PlayerTitles;
 using DOL.GS.PropertyCalc;
 using DOL.GS.Quests;
 using DOL.GS.RealmAbilities;
-using DOL.GS.Scripts;
 using DOL.GS.SkillHandler;
 using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
@@ -2040,18 +2039,7 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public bool SetCharacterClass(int id)
 		{
-			//Try to find the class from scripts first
-			IClassSpec cl = null;
-			foreach (Assembly asm in ScriptMgr.Scripts)
-			{
-				cl = ScriptMgr.FindClassSpec(id, asm);
-				if (cl != null)
-					break;
-			}
-
-			//If it can't be found via script directory, try in gameserver
-			if (cl == null)
-				cl = ScriptMgr.FindClassSpec(id, Assembly.GetExecutingAssembly());
+			IClassSpec cl = ScriptMgr.FindClassSpec(id);
 
 			if (cl == null)
 			{
@@ -4587,7 +4575,7 @@ namespace DOL.GS
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.CombatTarget", attackTarget.GetName(0, false)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 			}
 			// vampiir
-			if (CharacterClass is ClassVampiir)
+			if (CharacterClass is PlayerClass.ClassVampiir)
 			{
 				GameSpellEffect removeEffect = SpellHandler.FindEffectOnTarget(this, "VampiirSpeedEnhancement");
 				if (removeEffect != null)
@@ -4955,7 +4943,7 @@ namespace DOL.GS
 				case eAttackResult.HitUnstyled:
 					{
 						// vampiir
-						if (CharacterClass is ClassVampiir
+						if (CharacterClass is PlayerClass.ClassVampiir
 							&& target is GameKeepComponent == false
 							&& target is GameKeepDoor == false
 							&& target is GameSiegeWeapon == false)
@@ -5362,7 +5350,7 @@ namespace DOL.GS
 			}
 
 			// vampiir
-			if (CharacterClass is ClassVampiir)
+			if (CharacterClass is PlayerClass.ClassVampiir)
 			{
 				GameSpellEffect removeEffect = SpellHandler.FindEffectOnTarget(this, "VampiirSpeedEnhancement");
 				if (removeEffect != null)

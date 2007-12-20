@@ -24,7 +24,6 @@ using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Database;
 using DOL.GS.Spells;
-using DOL.GS.Scripts;
 
 namespace DOL.GS.Spells
 {

@@ -20,7 +20,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using DOL.GS.PacketHandler;
-using DOL.GS.Scripts;
 using DOL.Database;
 using DOL.GS.Movement;
 using DOL.Events;
