@@ -159,6 +159,18 @@ namespace DOL.GS.ServerRules
 			return true;
 		}
 
+		public override bool IsAllowedToGuild(GamePlayer source, GamePlayer target, bool quiet)
+		{
+			if (source == null || target == null) return false;
+
+			if (source.Realm != target.Realm)
+			{
+				if (quiet == false) MessageToLiving(source, "You can't invite a player of another realm.");
+				return false;
+			}
+			return true;
+		}
+
 		public override bool IsAllowedToTrade(GameLiving source, GameLiving target, bool quiet)
 		{
 			if(source == null || target == null) return false;

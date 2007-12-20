@@ -94,6 +94,11 @@ namespace DOL.GS
 			player.Out.SendMessage("You begin salvaging the "+item.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 			
 			int count = CalculateMaterialCount(player, item, material);
+			if (count < 1)
+			{
+				player.Out.SendMessage("You can't salvage " + item.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return 0;
+			}
 			player.Out.SendTimerWindow("Salvaging: "+item.Name, count);
 			player.CraftTimer = new RegionTimer(player);
 			player.CraftTimer.Callback = new RegionTimerCallback(Proceed);
