@@ -2126,6 +2126,6 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>xcopy "$(ProjectDir)\language\*.txt" "$(SolutionDir)$(ConfigurationName)\languages" /y /s /q /i</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(ProjectDir)\language\*.txt" "$(ProjectDir)..\$(ConfigurationName)\languages" /y /s /q /i</PostBuildEvent>
   </PropertyGroup>
 </Project>
