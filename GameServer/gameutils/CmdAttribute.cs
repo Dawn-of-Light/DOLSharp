@@ -42,11 +42,11 @@ namespace DOL
 			/// <param name="lvl">Minimum required plvl for this command</param>
 			/// <param name="desc">Description of the command</param>
 			/// <param name="usage">How to use the command</param>
-			public CmdAttribute(string cmd, string[] alias, uint lvl, string desc, params string[] usage)
+			public CmdAttribute(string cmd, string[] alias, ePrivLevel lvl, string desc, params string[] usage)
 			{
 				m_cmd=cmd;
 				m_cmdAliases = alias;
-				m_lvl = lvl;
+				m_lvl = (uint)lvl;
 				m_description = desc;
 				//m_usage = new string[1];
 				m_usage = usage;
@@ -59,7 +59,7 @@ namespace DOL
 			/// <param name="lvl">Minimum required plvl for this command</param>
 			/// <param name="desc">Description of the command</param>
 			/// <param name="usage">How to use the command</param>
-			public CmdAttribute(string cmd, uint lvl, string desc, params string[] usage) : this(cmd,null,lvl,desc,usage)
+			public CmdAttribute(string cmd, ePrivLevel lvl, string desc, params string[] usage) : this(cmd,null,lvl,desc,usage)
 			{
 			}
 

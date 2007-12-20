@@ -27,7 +27,6 @@ using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
 using log4net;
-using DOL.GS.Scripts;
 
 namespace DOL.GS.Spells
 {

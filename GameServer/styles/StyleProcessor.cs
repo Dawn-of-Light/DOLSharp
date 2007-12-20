@@ -26,7 +26,6 @@ using DOL.Database;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
-using DOL.GS.Scripts;
 using DOL.GS.Effects;
 
 using log4net;

@@ -9,7 +9,6 @@ using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
 using log4net;
 using DOL.Database;
-using DOL.GS.Scripts;
 using DOL.GS.RealmAbilities;
 
 namespace DOL.GS.Spells

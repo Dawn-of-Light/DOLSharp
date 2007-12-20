@@ -30,7 +30,6 @@ using DOL.GS.Effects;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.GS.PropertyCalc;
-using DOL.GS.Scripts;
 using DOL.GS.SkillHandler;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
@@ -1857,7 +1856,7 @@ namespace DOL.GS
 
 			ad.Target.StartInterruptTimer(interruptDuration, ad.AttackType, this);
 
-			if (ad.Target is GamePlayer && (ad.Target as GamePlayer).CharacterClass is ClassMauler && ad.Damage > 0)
+			if (ad.Target is GamePlayer && (ad.Target as GamePlayer).CharacterClass is PlayerClass.ClassMauler && ad.Damage > 0)
 			{
 				ad.Target.Mana += ad.Damage / 5;
 			}

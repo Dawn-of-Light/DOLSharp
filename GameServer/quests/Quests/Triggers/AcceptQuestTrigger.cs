@@ -22,8 +22,8 @@ using DOL.Events;
 using DOL.Database;
 using log4net;
 using System.Reflection;
-using DOL.GS.Scripts;
-using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
+using DOL.GS.Behaviour.Attributes;
+using DOL.GS.Behaviour;
 
 namespace DOL.GS.Quests.Triggers
 {	

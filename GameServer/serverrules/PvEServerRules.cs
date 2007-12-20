@@ -145,11 +145,6 @@ namespace DOL.GS.ServerRules
 			return true;
 		}
 
-		public override bool IsAllowedToGuild(GamePlayer source, GamePlayer target, bool quiet)
-		{
-			return true;
-		}
-
 		public override bool IsAllowedToTrade(GameLiving source, GameLiving target, bool quiet)
 		{
 			return true;

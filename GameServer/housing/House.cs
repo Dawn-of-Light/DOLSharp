@@ -929,7 +929,7 @@ namespace DOL.GS.Housing
 
 						if (hNPC == null)
 						{
-							foreach (Assembly asm in Scripts.ScriptMgr.Scripts)
+							foreach (Assembly asm in ScriptMgr.Scripts)
 							{
 								hNPC = (GameNPC)asm.CreateInstance(npt.ClassType, false);
 								if (hNPC != null) break;

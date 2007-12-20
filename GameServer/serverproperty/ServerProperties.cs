@@ -21,7 +21,6 @@ using System.Globalization;
 using System;
 using System.Reflection;
 using DOL.Database;
-using DOL.GS.Scripts;
 using log4net;
 
 namespace DOL.GS.ServerProperties
@@ -500,6 +499,18 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("atlantis_teleport_plvl", "Set the minimum privilege level required to enter Atlantis zones.", 2)]
 		public static readonly int ATLANTIS_TELEPORT_PLVL;
+
+		/// <summary>
+		/// Sets the disabled commands for the server split by ;
+		/// </summary>
+		[ServerProperty("disabled_commands", "Sets the disabled commands for the server split by ;, example /realm;/toon;/quit", "")]
+		public static readonly string DISABLED_COMMANDS;
+
+		/// <summary>
+		/// Do we allow guild members from other realms
+		/// </summary>
+		[ServerProperty("allow_cross_realm_guilds","Do we allow guild members from other realms?", false)]
+		public static readonly bool ALLOW_CROSS_REALM_GUILDS;
 
         /// <summary>
 		/// This method loads the property from the database and returns

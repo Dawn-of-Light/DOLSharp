@@ -24,7 +24,6 @@ using System.Text;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
-using DOL.GS.Scripts;
 using log4net;
 
 namespace DOL.GS.Quests
