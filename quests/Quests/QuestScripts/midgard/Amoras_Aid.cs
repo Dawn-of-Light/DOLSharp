@@ -197,7 +197,7 @@ using DOL.AI.Brain;
 			npcs = WorldMgr.GetNPCsByName("Kari",(eRealm) 2);
 			if (npcs.Length == 0)
 			{			
-				Kari = new DOL.GS.Scripts.GameHealer();
+				Kari = new GameHealer();
 					Kari.Model = 216;
 				Kari.Name = "Kari";
 				if (log.IsWarnEnabled)
