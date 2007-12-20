@@ -153,7 +153,7 @@ using DOL.AI.Brain;
 			npcs = WorldMgr.GetNPCsByName("Kedra",(eRealm) 2);
 			if (npcs.Length == 0)
 			{			
-				Kedra = new DOL.GS.Scripts.GameHealer();
+				Kedra = new GameHealer();
 					Kedra.Model = 206;
 				Kedra.Name = "Kedra";
 				if (log.IsWarnEnabled)
