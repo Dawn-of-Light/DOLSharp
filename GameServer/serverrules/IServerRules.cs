@@ -129,15 +129,6 @@ namespace DOL.GS.ServerRules
 		bool IsAllowedToCraft(GamePlayer player, ItemTemplate item);
 
 		/// <summary>
-		/// Is player allowed to invite the target to guild
-		/// </summary>
-		/// <param name="source"></param>
-		/// <param name="target"></param>
-		/// <param name="quiet"></param>
-		/// <returns></returns>
-		bool IsAllowedToGuild(GamePlayer source, GamePlayer target, bool quiet);
-
-		/// <summary>
 		/// Short description of server rules
 		/// </summary>
 		/// <returns></returns>

@@ -23,7 +23,6 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using DOL.GS.Scripts;
 using DOL.AI.Brain;
 using log4net;
 

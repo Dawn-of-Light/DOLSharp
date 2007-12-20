@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using DOL.GS;
 using DOL.GS.Spells;
-using DOL.GS.Scripts;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 

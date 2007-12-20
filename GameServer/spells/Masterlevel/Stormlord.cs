@@ -21,7 +21,6 @@ using System;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
-using DOL.GS.Scripts;
 using DOL.Database;
 using DOL.Events;
 

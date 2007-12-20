@@ -231,17 +231,17 @@ namespace DOL.GS.Housing
 		{
 			#region Hibernia
 			//Hastener
-			CheckNPCTemplate(500, "DOL.GS.Scripts.GameHastener", "Hastener", "50", "");
+			CheckNPCTemplate(500, "DOL.GS.GameHastener", "Hastener", "50", "");
 			//Smith
-			CheckNPCTemplate(501, "DOL.GS.Scripts.Blacksmith", "Smith", "50", "");
+			CheckNPCTemplate(501, "DOL.GS.Blacksmith", "Smith", "50", "");
 			//Enchanter
-			CheckNPCTemplate(502, "DOL.GS.Scripts.Enchanter", "Enchanter", "50", "");
+			CheckNPCTemplate(502, "DOL.GS.Enchanter", "Enchanter", "50", "");
 			//Emblemeer
-			CheckNPCTemplate(503, "DOL.GS.Scripts.EmblemNPC", "Emblemer", "50", "");
+			CheckNPCTemplate(503, "DOL.GS.EmblemNPC", "Emblemer", "50", "");
 			//Healer
-			CheckNPCTemplate(504, "DOL.GS.Scripts.GameHealer", "Healer", "50", "");
+			CheckNPCTemplate(504, "DOL.GS.GameHealer", "Healer", "50", "");
 			//Recharger
-			CheckNPCTemplate(505, "DOL.GS.Scripts.Recharger", "Recharger", "50", "");
+			CheckNPCTemplate(505, "DOL.GS.Recharger", "Recharger", "50", "");
 			//Teleporter
 			//TODO: [WARN] CheckNPCTemplate( ... Teleporter ... )
 			CheckNPCTemplate(506, "DOL.GS.GameNPC", "Teleporter", "50", "");
@@ -273,7 +273,7 @@ namespace DOL.GS.Housing
 			//TODO: [WARN] merchant list
 			CheckNPCTemplate(515, "DOL.GS.GameMerchant", "Merchant", "50", "");
 			//Hibernia Vault Keeper
-			CheckNPCTemplate(516, "DOL.GS.Scripts.GameVaultKeeper", "Vault Keeper", "50", "");
+			CheckNPCTemplate(516, "DOL.GS.GameVaultKeeper", "Vault Keeper", "50", "");
 			//Dye Supply Master
 			//TODO: [WARN] merchant list
 			CheckNPCTemplate(517, "DOL.GS.GameMerchant", "Merchant", "50", "");

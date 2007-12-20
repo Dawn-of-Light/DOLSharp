@@ -25,7 +25,6 @@ using System.Text;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
-using DOL.GS.Scripts;
 using DOL.GS.Styles;
 using log4net;
 
