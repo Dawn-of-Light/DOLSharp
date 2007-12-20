@@ -317,6 +317,11 @@ namespace DOL.GS.Scripts
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InviteNotThis"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
+							if (!GameServer.ServerRules.IsAllowedToGuild(client.Player, obj, true))
+							{
+								client.Out.SendMessage("You cannot invite a member of this realm into your guild!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return 1;
+							}
 							obj.Out.SendGuildInviteCommand(client.Player, LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InviteRecieved", client.Player.Name, client.Player.Guild.Name));
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InviteSent", obj.Name, client.Player.Guild.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 							client.Player.Guild.UpdateGuildWindow();
