@@ -96,6 +96,25 @@ namespace DOL.GS.Keeps
 				}
 			}
 
+			//if no component assigned, teleport to the border keep
+			if (Component == null)
+			{
+				string location = "";
+				switch (player.Realm)
+				{
+					case 1: location = "Castle Sauvage"; break;
+					case 2: location = "Druim Ligen"; break;
+					case 3: location = "Svasudheim Faste"; break;
+				}
+
+				if (location != "")
+				{
+					Teleport t = (Teleport)GameServer.Database.FindObjectByKey(typeof(Teleport), location);
+					if (t != null)
+						player.MoveTo((ushort)t.RegionID, t.X, t.Y, t.Z, (ushort)t.Heading);
+				}
+			}
+
 			eDialogCode code = eDialogCode.SimpleWarning;
 			switch (player.Realm)
 			{
