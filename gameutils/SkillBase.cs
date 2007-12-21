@@ -485,12 +485,11 @@ namespace DOL.GS
 								// now we add every proc to the style (even if ClassID != 0)
 								foreach (byte classID in Enum.GetValues(typeof(eCharacterClass)))
 								{
-									try
-									{ // In case m_styleSpells doesn't contains any proc for this ClassID, I guess it can be improved
+									if (m_styleSpells.ContainsKey(st.ID) && m_styleSpells[st.ID].ContainsKey(classID))
+									{
 										foreach (DBStyleXSpell styleSpells in m_styleSpells[st.ID][classID])
 											st.Procs.Add(styleSpells);
 									}
-									catch { }
 								} 
 							}
 							styleList.Insert(insertpos, st);
