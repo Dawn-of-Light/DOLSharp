@@ -17,6 +17,13 @@ namespace DOL.GS
 			if (!base.Interact(player))
 				return false;
 
+			//we need to disable them for players for now
+			if (player.Client.Account.PrivLevel == 1)
+			{
+				SayTo(player, "I'm sorry, Task Dungeons are currently disabled!");
+				return true;
+			}
+
 			if (player.Mission == null)
 				SayTo(player, "I'm sure you're already aware that the guards protecting our towns often pay bounties to young adventurers willing to help them deal with threats in the area. We've decided to expand upon this idea and begin what we call the Taskmaster program. Voulenteers such as myself have been authorized to reward those willing to confront the dangers lurking within our dungeons. If you would like to assist I can give you such an [assignment] right now, and you will be rewarded as soon as you complete it.");
 			else SayTo(player, "You already have a task that requires competion.");
