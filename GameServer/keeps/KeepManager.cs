@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.Database;
 using DOL.GS.PacketHandler;
@@ -221,6 +222,43 @@ namespace DOL.GS.Keeps
 			foreach (AbstractGameKeep keep in keepsByID.Values)
 				myKeeps.Add(keep);
 			return myKeeps;
+		}
+
+		/// <summary>
+		/// Get the battleground portal keep for a player
+		/// </summary>
+		/// <param name="player">The player</param>
+		/// <returns>The battleground portal keep as AbstractGameKeep or null</returns>
+		public static AbstractGameKeep GetBGPK(GamePlayer player)
+		{
+			//the temporary keep variable for use in this method
+			AbstractGameKeep tempKeep = null;
+
+			//iterate through keeps and find all those which we aren't capped out for
+			foreach (AbstractGameKeep keep in m_keeps.Values)
+			{
+				//not in NF, not a PK, keep cap greater then player level
+				if (keep.Region != 163 && !keep.IsPortalKeep && keep.BaseLevel > player.Level)
+				{
+					//find the lowest level keep
+					if (tempKeep == null || keep.BaseLevel < tempKeep.BaseLevel)
+						tempKeep = keep;
+				}
+			}
+
+			//if we haven't found a CK, we're not going to find a PK
+			if (tempKeep == null)
+				return null;
+
+			//we now use the central keep we found, to find the portal keeps
+			foreach (AbstractGameKeep keep in GetKeepsOfRegion((ushort)tempKeep.Region))
+			{
+				//match the region keeps to a portal keep, and realm
+				if (keep.IsPortalKeep && keep.Realm == player.Realm)
+					return keep;
+			}
+
+			return null;
 		}
 
 		public static IList getNFKeeps()
