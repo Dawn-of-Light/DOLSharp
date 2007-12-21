@@ -276,21 +276,21 @@ namespace DOL.Database
 		}
 
 
-		[GameServerStartedEvent]
-		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
-		{
-			if (!m_init && (GameServer.Database != null))
-			{
-				log.Info("DATABASE ServerStats LOADED");
-				GameServer.Database.RegisterDataObject(typeof(DBServerStats));
-				GameServer.Database.LoadDatabaseTable(typeof(DBServerStats));
-				m_init = true;
-			}
-		}
-		[ScriptUnloadedEvent]
-		public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
-		{
-			//unregister tables
-		}
+		//[GameServerStartedEvent]
+		//public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
+		//{
+		//     if (!m_init && (GameServer.Database != null))
+		//     {
+		//          log.Info("DATABASE ServerStats LOADED");
+		//          GameServer.Database.RegisterDataObject(typeof(DBServerStats));
+		//          GameServer.Database.LoadDatabaseTable(typeof(DBServerStats));
+		//          m_init = true;
+		//     }
+		//}
+		//[ScriptUnloadedEvent]
+		//public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
+		//{
+		//     //unregister tables
+		//}
 	}
 }

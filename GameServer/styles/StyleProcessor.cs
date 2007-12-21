@@ -470,7 +470,7 @@ namespace DOL.GS.Styles
 							foreach (DBStyleXSpell proc in attackData.Style.Procs)
 							{ 
 								// RR4: we added all the procs to the style, now it's time to check for class ID
-								if (proc.ClassID != 0 && proc.ClassID != player.CharacterClass.ID) continue; 
+								if (proc.ClassID != 0 && player != null && proc.ClassID != player.CharacterClass.ID) continue; 
 								//Add the procs to the styleEffects
 								if (Util.Chance(proc.Chance))
 								{
