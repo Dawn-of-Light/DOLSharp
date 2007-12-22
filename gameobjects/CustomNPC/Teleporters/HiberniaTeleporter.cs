@@ -100,18 +100,9 @@ namespace DOL.GS
 		{
 			switch (destination.TeleportID.ToLower())
 			{
-				case "shannon estuary":
-					SayTo(player, "You shall soon arrive in the Shannon Estuary.");
-					break;
-				case "tir na nog":
-					SayTo(player, "The great city awaits!");
-					break;
-				case "druim ligen":
-					SayTo(player, "Druim Ligen is what you seek, and Druim Ligen is what you shall find.");
-					break;
-				case "necht":
+				case "aalid feie":
 					break;	// No text?
-				case "entrance":
+				case "battlegrounds":
 					break;	// No text?
 				case "cruachan gorge":
 					SayTo(player, "Now to the Frontiers for the glory of the realm!");
@@ -119,7 +110,17 @@ namespace DOL.GS
 				case "domnann":
 					SayTo(player, "The Shrouded Isles await you.");
 					break;
-				case "aalid feie":
+				case "droighaid":
+					break;	// No text?
+				case "druim cain":
+					SayTo(player, "Druim Cain is what you seek, and Druim Cain is what you shall find.");
+					break;
+				case "druim ligen":
+					SayTo(player, "Druim Ligen is what you seek, and Druim Ligen is what you shall find.");
+					break;
+				case "entrance":
+					break;	// No text?
+				case "necht":
 					break;	// No text?
 				case "oceanus":
 					if (player.Client.Account.PrivLevel < ServerProperties.Properties.ATLANTIS_TELEPORT_PLVL)
@@ -129,11 +130,12 @@ namespace DOL.GS
 					}
 					SayTo(player, "You will soon arrive in the Haven of Oceanus.");
 					break;
-				case "druim cain":
-					SayTo(player, "Druim Cain is what you seek, and Druim Cain is what you shall find.");
+				case "shannon estuary":
+					SayTo(player, "You shall soon arrive in the Shannon Estuary.");
 					break;
-				case "droighaid":
-					break;	// No text?
+				case "tir na nog":
+					SayTo(player, "The great city awaits!");
+					break;
 				default:
 					SayTo(player, "This destination is not yet supported.");
 					return;
@@ -148,23 +150,7 @@ namespace DOL.GS
 		/// <param name="destination"></param>
 		protected override void OnTeleport(GamePlayer player, Teleport destination)
 		{
-			SpellLine spellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
-			IList spellList = SkillBase.GetSpellList(GlobalSpellsLines.Mob_Spells);
-			Spell spell = SkillBase.GetSpellByID(5999);	// UniPortal spell.
-
-			if (spell != null)
-			{
-				TargetObject = player;
-				UniPortal portalHandler = new UniPortal(this, spell, spellLine, destination);
-				m_runningSpellHandler = portalHandler;
-				portalHandler.CastSpell();
-				return;
-			}
-
-			// Spell not found in the database, fall back on default procedure.
-
-			log.Warn("UniPortal spell not found");
-			base.OnTeleport(player, destination);
+			OnTeleportSpell(player, destination);
 		}
 	}
 }
