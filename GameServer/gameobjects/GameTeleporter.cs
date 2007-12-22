@@ -27,6 +27,8 @@ using DOL.Database;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
 using DOL.GS.Spells;
+using log4net;
+using System.Reflection;
 
 namespace DOL.GS
 {
@@ -36,6 +38,11 @@ namespace DOL.GS
 	/// <author>Aredhel</author>
 	public class GameTeleporter : GameNPC
 	{
+		/// <summary>
+		/// Defines a logger for this class.
+		/// </summary>
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
 		public GameTeleporter()
 			: base() { }
 
@@ -90,10 +97,8 @@ namespace DOL.GS
 				else
 				{
 					if (player.Client.Account.PrivLevel > 1)
-					{
 						player.Out.SendMessage("No portal keep found.",
 							eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-					}
 					return true;
 				}
 			}
