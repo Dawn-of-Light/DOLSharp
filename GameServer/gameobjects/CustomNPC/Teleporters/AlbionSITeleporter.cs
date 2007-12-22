@@ -130,23 +130,7 @@ namespace DOL.GS
 		/// <param name="destination"></param>
 		protected override void OnTeleport(GamePlayer player, Teleport destination)
 		{
-			SpellLine spellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
-			IList spellList = SkillBase.GetSpellList(GlobalSpellsLines.Mob_Spells);
-			foreach (Spell spell in spellList)
-			{
-				if (spell.SpellType == "UniPortal")
-				{
-					TargetObject = player;
-					UniPortal portalHandler = new UniPortal(this, spell, spellLine, destination);
-					portalHandler.CastSpell();
-					return;
-				}
-			}
-
-			// Spell not found in the database, fall back on default procedure.
-
-			log.Warn("UniPortal spell not found");
-			base.OnTeleport(player, destination);
+			OnTeleportSpell(player, destination);
 		}
 	}
 }

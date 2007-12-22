@@ -123,6 +123,8 @@ namespace DOL.GS
 				case "avalon marsh":
 					SayTo(player, "You shall soon arrive in the Avalon Marsh.");
 					break;
+				case "battlegrounds":
+					break;	// No text?
 				case "camelot":
 					SayTo(player, "The great city awaits!");
 					break;
@@ -168,23 +170,7 @@ namespace DOL.GS
 		/// <param name="destination"></param>
 		protected override void OnTeleport(GamePlayer player, Teleport destination)
 		{
-			SpellLine spellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
-			IList spellList = SkillBase.GetSpellList(GlobalSpellsLines.Mob_Spells);
-			Spell spell = SkillBase.GetSpellByID(5999);	// UniPortal spell.
-
-			if (spell != null)
-			{
-				TargetObject = player;
-				UniPortal portalHandler = new UniPortal(this, spell, spellLine, destination);
-				m_runningSpellHandler = portalHandler;
-				portalHandler.CastSpell();
-				return;
-			}
-
-			// Spell not found in the database, fall back on default procedure.
-
-			log.Warn("UniPortal spell not found");
-			base.OnTeleport(player, destination);
+			OnTeleportSpell(player, destination);
 		}
 	}
 }
