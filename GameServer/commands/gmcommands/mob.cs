@@ -616,21 +616,16 @@ namespace DOL.GS.Commands
 
 						//Create a new mob
 						GameNPC mob = null;
-						try
-						{
-							client.Out.SendDebugMessage(Assembly.GetAssembly(typeof(GameServer)).FullName);
-							mob = (GameNPC)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(theType, false);
-						}
-						catch (Exception e)
-						{
-							client.Out.SendMessage(e.ToString(), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-						}
-						if (mob == null)
+						ArrayList asms = new ArrayList(ScriptMgr.Scripts);
+						asms.Add(typeof(GameServer).Assembly);
+						foreach (Assembly script in asms)
 						{
 							try
 							{
-								client.Out.SendDebugMessage(Assembly.GetExecutingAssembly().FullName);
-								mob = (GameNPC)Assembly.GetExecutingAssembly().CreateInstance(theType, false);
+								client.Out.SendDebugMessage(script.FullName);
+								mob = (GameNPC)script.CreateInstance(theType, false);
+								if (mob != null)
+									break;
 							}
 							catch (Exception e)
 							{
