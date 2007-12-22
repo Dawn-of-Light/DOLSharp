@@ -365,10 +365,10 @@ namespace DOL.GS.GameEvents
 
 					realmPoints = (uint)(realmPoints * (1.0 + 2.0 * (killedPlayer.RealmLevel - killer.RealmLevel) / 900.0));
 
-					if (killer.PlayerGroup != null && killer.PlayerGroup.PlayerCount > 1)
+					if (killer.Group != null && killer.Group.MemberCount > 1)
 					{
 						int count = 0;
-						foreach (GamePlayer player in killer.PlayerGroup.GetPlayersInTheGroup())
+						foreach (GamePlayer player in killer.Group.GetPlayersInTheGroup())
 						{
 							if (!WorldMgr.CheckDistance(player, killedPlayer, WorldMgr.MAX_EXPFORKILL_DISTANCE)) continue;
 							count++;

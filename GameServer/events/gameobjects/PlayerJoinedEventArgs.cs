@@ -24,25 +24,25 @@ namespace DOL.Events
 	/// <summary>
 	/// Holds the arguments for the PlayerJoined event of PlayerGroup.
 	/// </summary>
-	public class PlayerJoinedEventArgs : EventArgs
+	public class MemberJoinedEventArgs : EventArgs
 	{
-		private GamePlayer m_player;
+		private GameLiving m_member;
 
 		/// <summary>
-		/// Constructs new PlayerJoinedEventArgs
+		/// Constructs new MemberJoinedEventArgs
 		/// </summary>
-		/// <param name="player">The joined player</param>
-		public PlayerJoinedEventArgs(GamePlayer player)
+		/// <param name="living">The joined living</param>
+		public MemberJoinedEventArgs(GameLiving living)
 		{
-			m_player = player;
+			m_member = living;
 		}
 
 		/// <summary>
-		/// The joined player
+		/// The joined member
 		/// </summary>
-		public GamePlayer Player
+		public GameLiving Member
 		{
-			get { return m_player; }
+			get { return m_member; }
 		}
 	}
 }

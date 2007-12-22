@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using DOL.Events;
 using DOL.Database;
 using DOL.GS;
@@ -150,10 +151,15 @@ namespace DOL.GS
 				/* Increasing of CapturedRelics */
 				//select targets to increase CapturedRelics
 				//TODO increase stats
-				
-				ArrayList targets = new ArrayList();
-				if (relic.CurrentCarrier.PlayerGroup != null)
-					targets.AddRange(relic.CurrentCarrier.PlayerGroup.GetPlayersInTheGroup());
+
+				List<GamePlayer> targets = new List<GamePlayer>();
+				if (relic.CurrentCarrier.Group != null)
+				{
+					foreach (GamePlayer p in relic.CurrentCarrier.Group.GetPlayersInTheGroup())
+					{
+						targets.Add(p);
+					}
+				}
 				else targets.Add(relic.CurrentCarrier);
 				foreach (GamePlayer target in targets)
 					target.CapturedRelics++;

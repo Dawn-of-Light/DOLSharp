@@ -70,7 +70,7 @@ namespace DOL.GS.Effects
         // <summary>
         // Holds player group
         // <//summary>
-        private PlayerGroup m_playerGroup;
+        private Group m_playerGroup;
 
         // <summary>
         // Creates a new guard effect
@@ -91,9 +91,9 @@ namespace DOL.GS.Effects
             if (guardSource == null || guardTarget == null)
                 return;
 
-            m_playerGroup = guardSource.PlayerGroup;
+            m_playerGroup = guardSource.Group;
 
-            if (m_playerGroup != guardTarget.PlayerGroup)
+            if (m_playerGroup != guardTarget.Group)
                 return;
 
             m_guardSource = guardSource;

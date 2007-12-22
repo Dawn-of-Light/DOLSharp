@@ -113,7 +113,7 @@ namespace DOL.GS.Quests.Hibernia
               RecruitsIntelligentBelt.IsDropable = false;
           }
           RecruitsMightyBelt = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate),"RecruitsMightyBelt");
-          if(RecruitsMightyBelt == null);
+          if(RecruitsMightyBelt == null)
           {
               RecruitsMightyBelt = new ItemTemplate();
               RecruitsMightyBelt.Name = "Recruit's Mighty Belt";

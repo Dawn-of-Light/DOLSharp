@@ -63,46 +63,37 @@ namespace DOL.GS.Spells
 
 			int groupHealCap = targetHealCap;
 
-			if (target is GamePlayer)
+			Group group = target.Group;
+			if (group != null) 
 			{
-				PlayerGroup group = ((GamePlayer)target).PlayerGroup;
-				if (group != null) 
+				lock (group)
 				{
-					lock (group)
-					{
-						groupHealCap *= group.PlayerCount;
-						targetHealCap *= 2;
+					groupHealCap *= group.MemberCount;
+					targetHealCap *= 2;
 
-						foreach (GamePlayer player in group)
+					foreach (GameLiving living in group)
+					{
+						if (!living.IsAlive) continue;
+						//heal only if target is in range
+						if (WorldMgr.CheckDistance(target, living, m_spell.Range))
 						{
-							if (!player.IsAlive) continue;
-							//heal only if target is in range
-							if (WorldMgr.CheckDistance(target, player, m_spell.Range))
+							double livingHealthPercent = living.Health / (double)living.MaxHealth;
+							if (livingHealthPercent < 1)
 							{
-								double playerHealthPercent = player.Health / (double)player.MaxHealth;
-								if (playerHealthPercent < 1)
+								injuredTargets.Add(living, livingHealthPercent);
+								if (livingHealthPercent < mostInjuredPercent)
 								{
-									injuredTargets.Add(player, playerHealthPercent);
-									if (playerHealthPercent < mostInjuredPercent)
-									{
-										mostInjuredLiving = player;
-										mostInjuredPercent = playerHealthPercent;
-									}
+									mostInjuredLiving = living;
+									mostInjuredPercent = livingHealthPercent;
 								}
 							}
 						}
 					}
 				}
-				else
-				{
-					// heal caster
-					if (mostInjuredPercent < 1)
-						injuredTargets.Add(target, mostInjuredPercent);
-				}
 			}
 			else
 			{
-				//for non-players
+				// heal caster
 				if (mostInjuredPercent < 1)
 					injuredTargets.Add(target, mostInjuredPercent);
 			}

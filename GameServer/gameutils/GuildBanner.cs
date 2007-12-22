@@ -25,11 +25,11 @@ namespace DOL.GS
         }
         public void Start()
         {
-            if (m_player.PlayerGroup != null)
+            if (m_player.Group != null)
             {
                 if (m_player != null)
                 {
-                    foreach (GamePlayer playa in m_player.PlayerGroup)
+                    foreach (GamePlayer playa in m_player.Group)
                     {
                         if (!playa.IsCarryingGuildBanner)
                         {
@@ -98,7 +98,7 @@ namespace DOL.GS
         {
             foreach (GamePlayer playa in m_player.GetPlayersInRadius(1500))
             {
-                if (playa.PlayerGroup != null && m_player.PlayerGroup != null && m_player.PlayerGroup.IsInTheGroup(playa))
+                if (playa.Group != null && m_player.Group != null && m_player.Group.IsInTheGroup(playa))
                 {
                     if (!(GameServer.ServerRules.IsAllowedToAttack(m_player, playa, false)))
                     {
@@ -151,9 +151,9 @@ namespace DOL.GS
                 gameItem.Z = m_player.Z;
                 gameItem.Heading = m_player.Heading;
                 gameItem.CurrentRegionID = m_player.CurrentRegionID;
-                if (m_killer.PlayerGroup != null)
+                if (m_killer.Group != null)
                 {
-                    foreach (GamePlayer player in m_killer.PlayerGroup.GetPlayersInTheGroup())
+                    foreach (GamePlayer player in m_killer.Group.GetPlayersInTheGroup())
                     {
                         gameItem.AddOwner(player);
                         player.Out.SendMessage("You may now pick up " + m_player.GuildName + "'s banner!", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);

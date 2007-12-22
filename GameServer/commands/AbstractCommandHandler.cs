@@ -32,6 +32,11 @@ namespace DOL.GS.Commands
 			return DisplayMessage(client, message, objs);
 		}
 
+		public virtual int DisplayMessage(GameClient client, string message)
+		{
+			return DisplayMessage(client, message, new object[] { });
+		}
+
 		public virtual int DisplayMessage(GameClient client, string message, params object[] objs)
 		{
 			if(client==null || !client.IsPlaying)

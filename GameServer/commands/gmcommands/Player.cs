@@ -1276,7 +1276,7 @@ namespace DOL.GS.Commands
 
 										if (name == pname.Player.Name)
 										{
-											foreach (GamePlayer groupedplayers in pname.Player.PlayerGroup)
+											foreach (GamePlayer groupedplayers in pname.Player.Group)
 											{
 
 												groupedplayers.MoveTo(client.Player.CurrentRegionID, client.Player.X, client.Player.Y, client.Player.Z, client.Player.Heading);
@@ -1455,7 +1455,7 @@ namespace DOL.GS.Commands
 							return 0;
 						}
 
-						if (player.PlayerGroup == null)
+						if (player.Group == null)
 						{
 							client.Out.SendMessage("Player does not have a group!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 0;
@@ -1463,7 +1463,7 @@ namespace DOL.GS.Commands
 
 						ArrayList text = new ArrayList();
 
-						foreach (GamePlayer p in player.PlayerGroup.GetPlayersInTheGroup())
+						foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 						{
 							text.Add(p.Name + " " + p.Level + " " + p.CharacterClass.Name);
 						}

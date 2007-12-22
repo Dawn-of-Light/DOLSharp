@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 using DOL.Events;
 using DOL.GS.Keeps;
@@ -14,19 +15,19 @@ namespace DOL.GS.Quests
 			: base(owner)
 		{
 			int realm = 0;
-			if (owner is PlayerGroup)
-				realm = (owner as PlayerGroup).Leader.Realm;
+			if (owner is Group)
+				realm = (owner as Group).Leader.Realm;
 			else if (owner is GamePlayer)
 				realm = (owner as GamePlayer).Realm;
 
 			ArrayList list = new ArrayList();
 
-			IList keeps;
-			if (owner is PlayerGroup)
-				keeps = KeepMgr.GetKeepsOfRegion((owner as PlayerGroup).Leader.CurrentRegionID);
+			ICollection<AbstractGameKeep> keeps;
+			if (owner is Group)
+				keeps = KeepMgr.GetKeepsOfRegion((owner as Group).Leader.CurrentRegionID);
 			else if (owner is GamePlayer)
 				keeps = KeepMgr.GetKeepsOfRegion((owner as GamePlayer).CurrentRegionID);
-			else keeps = new ArrayList();
+			else keeps = new List<AbstractGameKeep>();
 
 			foreach (AbstractGameKeep keep in keeps)
 			{

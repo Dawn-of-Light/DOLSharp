@@ -1402,9 +1402,6 @@
     <Compile Include="gameutils\PlayerClass.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="gameutils\PlayerGroup.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="gameutils\PlayerTradeWindow.cs">
       <SubType>Code</SubType>
     </Compile>

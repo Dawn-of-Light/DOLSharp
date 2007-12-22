@@ -122,7 +122,7 @@ namespace DOLGameServerConsole
 		public void SendQuestRewardWindow(GameNPC questNPC, GamePlayer player, RewardQuest quest) { }
 		public void SendQuestAbortCommand(GameNPC abortingNPC, ushort questid, string abortMessage) { }
 		public void SendGroupWindowUpdate() { }
-		public void SendGroupMemberUpdate(bool updateIcons, GamePlayer player) { }
+		public void SendGroupMemberUpdate(bool updateIcons, GameLiving living) { }
 		public void SendGroupMembersUpdate(bool updateIcons) { }
 		public void SendInventoryItemsUpdate(ICollection itemsToUpdate) { }
 		public void SendInventorySlotsUpdate(ICollection slots) { }
@@ -197,7 +197,7 @@ namespace DOLGameServerConsole
 		public void SendToggleHousePoints(House house) { }
 		public void SendRentReminder(House house) { }
 		public void SendMovingObjectCreate(GameMovingObject obj) { }
-		public void SendWarmapUpdate(IList list) { }
+		public void SendWarmapUpdate(ICollection<AbstractGameKeep> list) { }
 		public void SendWarmapDetailUpdate(List<List<byte>> fights, List<List<byte>> groups) { }
 		public void SendWarmapBonuses() { }
 		public void SendCheckLOS(GameObject Checker, GameObject Target, DOL.GS.PacketHandler.CheckLOSResponse callback) { }

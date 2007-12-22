@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
 using DOL.Database;
@@ -135,11 +136,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 
 				// important for zoning
-				if (player.PlayerGroup != null)
+				if (player.Group != null)
 				{
-					player.PlayerGroup.UpdateGroupWindow();
-					player.PlayerGroup.UpdateAllToMember(player, true, false);
-					player.PlayerGroup.UpdateMember(player, true, true);
+					player.Group.UpdateGroupWindow();
+					player.Group.UpdateAllToMember(player, true, false);
+					player.Group.UpdateMember(player, true, true);
 				}
 
 				player.Out.SendPlayerInitFinished((byte)mobs);
@@ -232,22 +233,20 @@ namespace DOL.GS.PacketHandler.Client.v168
 					player.MoveTo((ushort)player.PlayerCharacter.BindRegion, player.PlayerCharacter.BindXpos, player.PlayerCharacter.BindYpos, player.PlayerCharacter.BindZpos, (ushort)player.PlayerCharacter.BindHeading);
 				}
 
-				if (player.CurrentRegion.IsRvR && player.CurrentRegionID != 163)
+				if (player.Client.Account.PrivLevel == 1 && player.CurrentRegion.IsRvR && player.CurrentRegionID != 163)
 				{
-					IList list = KeepMgr.GetKeepsOfRegion(player.CurrentRegionID);
+					ICollection<AbstractGameKeep> list = KeepMgr.GetKeepsOfRegion(player.CurrentRegionID);
 
-					if (player.Client.Account.PrivLevel == 1 && list.Count > 0)
+
+					foreach (AbstractGameKeep k in list)
 					{
-						foreach (AbstractGameKeep k in list)
-						{
-							if (k.BaseLevel >= 50) continue;
+						if (k.BaseLevel >= 50) continue;
 
-							if (player.Level > k.BaseLevel)
-							{
-								player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.LevelCap"), eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
-								player.MoveTo((ushort)player.PlayerCharacter.BindRegion, player.PlayerCharacter.BindXpos, player.PlayerCharacter.BindYpos, player.PlayerCharacter.BindZpos, (ushort)player.PlayerCharacter.BindHeading);
-								break;
-							}
+						if (player.Level > k.BaseLevel)
+						{
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.LevelCap"), eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
+							player.MoveTo((ushort)player.PlayerCharacter.BindRegion, player.PlayerCharacter.BindXpos, player.PlayerCharacter.BindYpos, player.PlayerCharacter.BindZpos, (ushort)player.PlayerCharacter.BindHeading);
+							break;
 						}
 					}
 				}

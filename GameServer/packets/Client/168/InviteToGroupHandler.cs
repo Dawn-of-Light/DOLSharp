@@ -64,12 +64,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				GamePlayer target = (GamePlayer)player.TargetObject;
 
-				if(player.PlayerGroup != null && player.PlayerGroup.Leader != player)
+				if(player.Group != null && player.Group.Leader != player)
 				{
 					player.Out.SendMessage("You are not the leader of your group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
-				if(player.PlayerGroup != null && player.PlayerGroup.PlayerCount >= PlayerGroup.MAX_GROUP_SIZE)
+				if(player.Group != null && player.Group.MemberCount >= Group.MAX_GROUP_SIZE)
 				{
 					player.Out.SendMessage("The group is full.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					return;
@@ -80,7 +80,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					return;
 				}
 
-				if(target.PlayerGroup != null)
+				if(target.Group != null)
 				{
 					player.Out.SendMessage("The player is still in a group.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					return;

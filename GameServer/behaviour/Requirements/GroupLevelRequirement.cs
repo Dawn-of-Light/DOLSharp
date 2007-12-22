@@ -73,7 +73,7 @@ namespace DOL.GS.Behaviour.Requirements
 			bool result = true;
             GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
 
-            PlayerGroup group = player.PlayerGroup;
+            Group group = player.Group;
             int grouplevel = 0;
             if (group != null)
             {

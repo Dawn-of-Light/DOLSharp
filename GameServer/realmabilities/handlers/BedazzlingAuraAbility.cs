@@ -37,12 +37,16 @@ namespace DOL.GS.RealmAbilities
 			DisableSkill(living);
 
 			ArrayList targets = new ArrayList();
-			if (player.PlayerGroup == null)
+			if (player.Group == null)
 				targets.Add(player);
-			else foreach (GamePlayer grpMate in player.PlayerGroup.GetPlayersInTheGroup())
-					if (WorldMgr.CheckDistance(grpMate, player, m_range) && grpMate.IsAlive)
-						targets.Add(grpMate);
-
+			else
+			{
+				foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
+				{
+					if (WorldMgr.CheckDistance(p, player, m_range) && p.IsAlive)
+						targets.Add(p);
+				}
+			}
 			bool success;
 			foreach (GamePlayer target in targets)
 			{

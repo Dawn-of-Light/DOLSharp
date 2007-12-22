@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
 
@@ -67,7 +68,7 @@ namespace DOL.GS.Quests
 			{
 				if (m_owner is GamePlayer)
 					return eMissionType.Personal;
-				else if (m_owner is PlayerGroup)
+				else if (m_owner is Group)
 					return eMissionType.Group;
 				else if (m_owner is eRealm)
 					return eMissionType.Realm;
@@ -200,9 +201,9 @@ namespace DOL.GS.Quests
 		{
 			foreach (GamePlayer player in Targets)
 			{
-				if (m_owner is PlayerGroup)
+				if (m_owner is Group)
 				{
-					if (!WorldMgr.CheckDistance(player, (m_owner as PlayerGroup).Leader, WorldMgr.MAX_EXPFORKILL_DISTANCE))
+					if (!WorldMgr.CheckDistance(player, (m_owner as Group).Leader, WorldMgr.MAX_EXPFORKILL_DISTANCE))
 						continue;
 				}
 				if (RewardXP > 0)
@@ -220,14 +221,14 @@ namespace DOL.GS.Quests
 			switch (MissionType)
 			{
 				case eMissionType.Personal: (m_owner as GamePlayer).Mission = null; break;
-				case eMissionType.Group: (m_owner as PlayerGroup).Mission = null; break;
+				case eMissionType.Group: (m_owner as Group).Mission = null; break;
 				//case eMissionType.Realm: (m_owner.RealmMission = null; break;
 			}
 
 			m_customProperties.Clear();
 		}
 
-		private GamePlayer[] Targets
+		private List<GamePlayer> Targets
 		{
 			get
 			{
@@ -236,16 +237,18 @@ namespace DOL.GS.Quests
 					case eMissionType.Personal:
 						{
 							GamePlayer player = m_owner as GamePlayer;
-							return new GamePlayer[1] { player };
+							List<GamePlayer> list = new List<GamePlayer>();
+							list.Add(player);
+							return list;
 						}
 					case eMissionType.Group:
 						{
-							PlayerGroup group = m_owner as PlayerGroup;
-							return group.GetPlayersInTheGroup();
+							Group group = m_owner as Group;
+							return group.GetMembersInTheGroup() as List<GamePlayer>;
 						}
 					case eMissionType.Realm:
 					case eMissionType.None:
-					default: return new GamePlayer[] { };
+					default: return new List<GamePlayer>();
 				}
 			}
 		}
@@ -263,7 +266,7 @@ namespace DOL.GS.Quests
 			switch (MissionType)
 			{
 				case eMissionType.Personal: (m_owner as GamePlayer).Mission = null; break;
-				case eMissionType.Group: (m_owner as PlayerGroup).Mission = null; break;
+				case eMissionType.Group: (m_owner as Group).Mission = null; break;
 				//case eMissionType.Realm: m_owner.RealmMission = null; break;
 			}
 			m_customProperties.Clear();

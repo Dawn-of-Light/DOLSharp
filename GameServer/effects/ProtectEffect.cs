@@ -63,7 +63,7 @@ namespace DOL.GS.Effects
 			set { m_protectTarget = value; }
 		}
 
-		private PlayerGroup m_playerGroup;
+		private Group m_playerGroup;
 
 		/// <summary>
 		/// Creates a new protect effect
@@ -80,15 +80,15 @@ namespace DOL.GS.Effects
 			if (protectSource == null || protectTarget == null)
 				return;
 
-			m_playerGroup = protectSource.PlayerGroup;
+			m_playerGroup = protectSource.Group;
 
-			if (m_playerGroup != protectTarget.PlayerGroup)
+			if (m_playerGroup != protectTarget.Group)
 				return;
 
 			m_protectSource = protectSource;
 			m_protectTarget = protectTarget;
 
-			GameEventMgr.AddHandler(m_playerGroup, PlayerGroupEvent.PlayerDisbanded, new DOLEventHandler(GroupDisbandCallback));
+			GameEventMgr.AddHandler(m_playerGroup, GroupEvent.MemberDisbanded, new DOLEventHandler(GroupDisbandCallback));
 
 			m_protectSource.EffectList.Add(this);
 			m_protectTarget.EffectList.Add(this);
@@ -113,9 +113,9 @@ namespace DOL.GS.Effects
 		/// <param name="args"></param>
 		protected void GroupDisbandCallback(DOLEvent e, object sender, EventArgs args)
 		{
-			PlayerDisbandedEventArgs eArgs = args as PlayerDisbandedEventArgs;
+			MemberDisbandedEventArgs eArgs = args as MemberDisbandedEventArgs;
 			if (eArgs == null) return;
-			if (eArgs.Player == ProtectTarget || eArgs.Player == ProtectSource)
+			if (eArgs.Member == ProtectTarget || eArgs.Member == ProtectSource)
 			{
 				Cancel(false);
 			}
@@ -126,7 +126,7 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public override void Cancel(bool playerCancel)
 		{
-			GameEventMgr.RemoveHandler(m_playerGroup, PlayerGroupEvent.PlayerDisbanded, new DOLEventHandler(GroupDisbandCallback));
+			GameEventMgr.RemoveHandler(m_playerGroup, GroupEvent.MemberDisbanded, new DOLEventHandler(GroupDisbandCallback));
 			// intercept handling is done by the active part             
 			m_protectSource.EffectList.Remove(this);
 			m_protectTarget.EffectList.Remove(this);

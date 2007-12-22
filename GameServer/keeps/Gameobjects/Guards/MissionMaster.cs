@@ -88,13 +88,13 @@ namespace DOL.GS.Keeps
 					}
 				case "group missions":
 					{
-						if (player.PlayerGroup == null)
+						if (player.Group == null)
 						{
 							SayTo(player, "You are not in a group!");
 							break;
 						}
 
-						if (player.PlayerGroup.Leader != player)
+						if (player.Group.Leader != player)
 						{
 							SayTo(player, "You are not the leader of your group!");
 							break;
@@ -105,65 +105,65 @@ namespace DOL.GS.Keeps
 					}
 				case "tower raize":
 					{
-						if (player.PlayerGroup == null)
+						if (player.Group == null)
 						{
 							SayTo(player, "You are not in a group!");
 							break;
 						}
 
-						if (player.PlayerGroup.Leader != player)
+						if (player.Group.Leader != player)
 						{
 							SayTo(player, "You are not the leader of your group!");
 							break;
 						}
-						player.PlayerGroup.Mission = new RaizeMission(player.PlayerGroup);
+						player.Group.Mission = new RaizeMission(player.Group);
 						break;
 					}
 				case "tower capture":
 					{
-						if (player.PlayerGroup == null)
+						if (player.Group == null)
 						{
 							SayTo(player, "You are not in a group!");
 							break;
 						}
 
-						if (player.PlayerGroup.Leader != player)
+						if (player.Group.Leader != player)
 						{
 							SayTo(player, "You are not the leader of your group!");
 							break;
 						}
-						if (player.PlayerGroup.Mission != null)
-							player.PlayerGroup.Mission.ExpireMission();
-						player.PlayerGroup.Mission = new CaptureMission(CaptureMission.eCaptureType.Tower, player.PlayerGroup);
+						if (player.Group.Mission != null)
+							player.Group.Mission.ExpireMission();
+						player.Group.Mission = new CaptureMission(CaptureMission.eCaptureType.Tower, player.Group);
 						break;
 					}
 				case "keep capture":
 					{
-						if (player.PlayerGroup == null)
+						if (player.Group == null)
 						{
 							SayTo(player, "You are not in a group!");
 							break;
 						}
 
-						if (player.PlayerGroup.Leader != player)
+						if (player.Group.Leader != player)
 						{
 							SayTo(player, "You are not the leader of your group!");
 							break;
 						}
-						if (player.PlayerGroup.Mission != null)
-							player.PlayerGroup.Mission.ExpireMission();
-						player.PlayerGroup.Mission = new CaptureMission(CaptureMission.eCaptureType.Keep, player.PlayerGroup);
+						if (player.Group.Mission != null)
+							player.Group.Mission.ExpireMission();
+						player.Group.Mission = new CaptureMission(CaptureMission.eCaptureType.Keep, player.Group);
 						break;
 					}
 				case "caravan":
 					{
-						if (player.PlayerGroup == null)
+						if (player.Group == null)
 						{
 							SayTo(player, "You are not in a group!");
 							break;
 						}
 
-						if (player.PlayerGroup.Leader != player)
+						if (player.Group.Leader != player)
 						{
 							SayTo(player, "You are not the leader of your group!");
 							break;
@@ -173,38 +173,38 @@ namespace DOL.GS.Keeps
 					}
 				case "enemy guards":
 					{
-						if (player.PlayerGroup == null)
+						if (player.Group == null)
 						{
 							SayTo(player, "You are not in a group!");
 							break;
 						}
 
-						if (player.PlayerGroup.Leader != player)
+						if (player.Group.Leader != player)
 						{
 							SayTo(player, "You are not the leader of your group!");
 							break;
 						}
-						if (player.PlayerGroup.Mission != null)
-							player.PlayerGroup.Mission.ExpireMission();
-						player.PlayerGroup.Mission = new KillMission(typeof(GameKeepGuard), 25, "enemy realm guards", player.PlayerGroup);
+						if (player.Group.Mission != null)
+							player.Group.Mission.ExpireMission();
+						player.Group.Mission = new KillMission(typeof(GameKeepGuard), 25, "enemy realm guards", player.Group);
 						break;
 					}
 				case "realm enemies":
 					{
-						if (player.PlayerGroup == null)
+						if (player.Group == null)
 						{
 							SayTo(player, "You are not in a group!");
 							break;
 						}
 
-						if (player.PlayerGroup.Leader != player)
+						if (player.Group.Leader != player)
 						{
 							SayTo(player, "You are not the leader of your group!");
 							break;
 						}
-						if (player.PlayerGroup.Mission != null)
-							player.PlayerGroup.Mission.ExpireMission();
-						player.PlayerGroup.Mission = new KillMission(typeof(GamePlayer), 15, "enemy players", player.PlayerGroup);
+						if (player.Group.Mission != null)
+							player.Group.Mission.ExpireMission();
+						player.Group.Mission = new KillMission(typeof(GamePlayer), 15, "enemy players", player.Group);
 						break;
 					}
 				case "guild missions":
@@ -232,8 +232,8 @@ namespace DOL.GS.Keeps
 			if (player.Mission != null)
 				SayTo(player, player.Mission.Description);
 
-			if (player.PlayerGroup != null && player.PlayerGroup.Mission != null)
-				SayTo(player, player.PlayerGroup.Mission.Description);
+			if (player.Group != null && player.Group.Mission != null)
+				SayTo(player, player.Group.Mission.Description);
 
 			return true;
 		}

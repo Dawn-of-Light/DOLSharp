@@ -39,12 +39,12 @@ namespace DOL.GS.RealmAbilities
             DisableSkill(living);
 
             ArrayList targets = new ArrayList();
-            if (player.PlayerGroup == null)
+            if (player.Group == null)
                 {
                     player.Out.SendMessage("You must be in a group to use this ability!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
                     return;
                 }
-            else foreach (GamePlayer grpMate in player.PlayerGroup.GetPlayersInTheGroup())
+            else foreach (GamePlayer grpMate in player.Group.GetPlayersInTheGroup())
                     if (WorldMgr.CheckDistance(grpMate, player, m_range) && grpMate.IsAlive)
                         targets.Add(grpMate);
 

@@ -25,10 +25,10 @@ namespace DOL.GS.RealmAbilities
 			GamePlayer player = living as GamePlayer;
 			if (player != null)
 			{
-				if (player.PlayerGroup != null)
+				if (player.Group != null)
 				{
 					SendCasterSpellEffectAndCastMessage(living, 7066, true);
-					foreach (GamePlayer member in player.PlayerGroup)
+					foreach (GamePlayer member in player.Group)
 					{
 						if (!CheckPreconditions(member, DEAD) && member.CurrentRegionID == living.CurrentRegionID
 							&& member.CurrentRegionID == living.CurrentRegionID
