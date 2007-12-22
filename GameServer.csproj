@@ -646,6 +646,8 @@
     <Compile Include="gameobjects\CustomNPC\Teleporters\AlbionTeleporter.cs" />
     <Compile Include="gameobjects\CustomNPC\Teleporters\HiberniaSITeleporter.cs" />
     <Compile Include="gameobjects\CustomNPC\Teleporters\HiberniaTeleporter.cs" />
+    <Compile Include="gameobjects\CustomNPC\Teleporters\MidgardSITeleporter.cs" />
+    <Compile Include="gameobjects\CustomNPC\Teleporters\MidgardTeleporter.cs" />
     <Compile Include="gameobjects\CustomNPC\VaultKeeper.cs" />
     <Compile Include="gameobjects\GameTeleporter.cs" />
     <Compile Include="gameutils\Atlantis\InventoryArtifact.cs" />
