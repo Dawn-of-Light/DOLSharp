@@ -24,25 +24,25 @@ namespace DOL.Events
 	/// <summary>
 	/// Holds the arguments for the PlayerDisbanded event of PlayerGroup.
 	/// </summary>
-	public class PlayerDisbandedEventArgs : EventArgs
+	public class MemberDisbandedEventArgs : EventArgs
 	{
-		private GamePlayer m_player;
+		private GameLiving m_member;
 
 		/// <summary>
 		/// Constructs new PlayerDisbandedEventArgs
 		/// </summary>
-		/// <param name="player">The disbanded player</param>
-		public PlayerDisbandedEventArgs(GamePlayer player)
+		/// <param name="living">The disbanded living</param>
+		public MemberDisbandedEventArgs(GameLiving living)
 		{
-			m_player = player;
+			m_member = living;
 		}
 
 		/// <summary>
 		/// The disbanded player
 		/// </summary>
-		public GamePlayer Player
+		public GameLiving Member
 		{
-			get { return m_player; }
+			get { return m_member; }
 		}
 	}
 }

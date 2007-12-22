@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 using DOL.Events;
 using DOL.GS.Keeps;
@@ -20,8 +21,8 @@ namespace DOL.GS.Quests
 			: base(owner)
 		{
 			int realm = 0;
-			if (owner is PlayerGroup)
-				realm = (owner as PlayerGroup).Leader.Realm;
+			if (owner is Group)
+				realm = (owner as Group).Leader.Realm;
 			else if (owner is GamePlayer)
 				realm = (owner as GamePlayer).Realm;
 
@@ -31,12 +32,12 @@ namespace DOL.GS.Quests
 			{
 				case eCaptureType.Tower:
 					{
-						IList keeps;
-						if (owner is PlayerGroup)
-							keeps = KeepMgr.GetKeepsOfRegion((owner as PlayerGroup).Leader.CurrentRegionID);
+						ICollection<AbstractGameKeep> keeps;
+						if (owner is Group)
+							keeps = KeepMgr.GetKeepsOfRegion((owner as Group).Leader.CurrentRegionID);
 						else if (owner is GamePlayer)
 							keeps = KeepMgr.GetKeepsOfRegion((owner as GamePlayer).CurrentRegionID);
-						else keeps = new ArrayList();
+						else keeps = new List<AbstractGameKeep>();
 
 						foreach (AbstractGameKeep keep in keeps)
 						{
@@ -49,12 +50,12 @@ namespace DOL.GS.Quests
 					}
 				case eCaptureType.Keep:
 					{
-						IList keeps;
-						if (owner is PlayerGroup)
-							keeps = KeepMgr.GetKeepsOfRegion((owner as PlayerGroup).Leader.CurrentRegionID);
+						ICollection<AbstractGameKeep> keeps;
+						if (owner is Group)
+							keeps = KeepMgr.GetKeepsOfRegion((owner as Group).Leader.CurrentRegionID);
 						else if (owner is GamePlayer)
 							keeps = KeepMgr.GetKeepsOfRegion((owner as GamePlayer).CurrentRegionID);
-						else keeps = new ArrayList();
+						else keeps = new List<AbstractGameKeep>();
 
 						foreach (AbstractGameKeep keep in keeps)
 						{
@@ -86,8 +87,8 @@ namespace DOL.GS.Quests
 			GamePlayer testPlayer = null;
 			if (m_owner is GamePlayer)
 				testPlayer = m_owner as GamePlayer;
-			else if (m_owner is PlayerGroup)
-				testPlayer = (m_owner as PlayerGroup).Leader;
+			else if (m_owner is Group)
+				testPlayer = (m_owner as Group).Leader;
 
 			if (testPlayer != null)
 			{

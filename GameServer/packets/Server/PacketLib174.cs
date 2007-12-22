@@ -377,20 +377,20 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-		protected override void WriteGroupMemberUpdate(GSTCPPacketOut pak, bool updateIcons, GamePlayer player)
+		protected override void WriteGroupMemberUpdate(GSTCPPacketOut pak, bool updateIcons, GameLiving living)
 		{
-			base.WriteGroupMemberUpdate(pak, updateIcons, player);
+			base.WriteGroupMemberUpdate(pak, updateIcons, living);
 
-			bool sameRegion = player.CurrentRegion == m_gameClient.Player.CurrentRegion;
-			if (sameRegion && player.CurrentSpeed != 0)//todo : find a better way to detect when player change coord
+			bool sameRegion = living.CurrentRegion == m_gameClient.Player.CurrentRegion;
+			if (sameRegion && living.CurrentSpeed != 0)//todo : find a better way to detect when player change coord
 			{
-				Zone zone = player.CurrentZone;
+				Zone zone = living.CurrentZone;
 				if (zone == null)
 					return;
-				pak.WriteByte((byte)(0x40 | player.PlayerGroupIndex));
+				pak.WriteByte((byte)(0x40 | living.GroupIndex));
 				pak.WriteShort(zone.ID);
-				pak.WriteShort((ushort)(player.X - zone.XOffset));
-				pak.WriteShort((ushort)(player.Y - zone.YOffset));
+				pak.WriteShort((ushort)(living.X - zone.XOffset));
+				pak.WriteShort((ushort)(living.Y - zone.YOffset));
 			}
 		}
 
@@ -452,7 +452,7 @@ namespace DOL.GS.PacketHandler
 			int HibKeeps = 0;
 			int OwnerDFTowers = 0;
 			eRealm OwnerDF = eRealm.None;
-			foreach (AbstractGameKeep keep in KeepMgr.getNFKeeps())
+			foreach (AbstractGameKeep keep in KeepMgr.GetNFKeeps())
 			{
 
 				switch ((eRealm)keep.Realm)

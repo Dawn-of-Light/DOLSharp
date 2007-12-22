@@ -636,7 +636,7 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BannerNone"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
-							if (client.Player.PlayerGroup == null)
+							if (client.Player.Group == null)
 							{
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BannerNoGroup"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 								return 1;
@@ -649,7 +649,7 @@ namespace DOL.GS.Commands
 									return 1;
 								}
 							}
-							foreach (GamePlayer playa in client.Player.PlayerGroup)
+							foreach (GamePlayer playa in client.Player.Group)
 							{
 								if (playa.IsCarryingGuildBanner)
 								{
@@ -756,7 +756,7 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BannerNone"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 								return 1;
 							}
-							if (client.Player.PlayerGroup == null)
+							if (client.Player.Group == null)
 							{
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BannerNoGroup"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 								return 1;
@@ -900,7 +900,7 @@ namespace DOL.GS.Commands
 							{
 								if (!GuildMgr.DoesGuildExist(guildname))
 								{
-									PlayerGroup group = client.Player.PlayerGroup;
+									Group group = client.Player.Group;
 
 									if (group == null)
 									{
@@ -910,7 +910,7 @@ namespace DOL.GS.Commands
 
 									lock (group)
 									{
-										if (group.PlayerCount < Properties.GUILD_NUM)
+										if (group.MemberCount < Properties.GUILD_NUM)
 										{
 											client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.FormNoMembers" + Properties.GUILD_NUM), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 											return 0;
@@ -921,7 +921,7 @@ namespace DOL.GS.Commands
 										{
 											if (ply.Guild != null)
 											{
-												client.Player.PlayerGroup.SendMessageToGroupMembers(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.AlreadyInGuildName", ply.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+												client.Player.Group.SendMessageToGroupMembers(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.AlreadyInGuildName", ply.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 												return 0;
 											}
 										}
@@ -1268,7 +1268,7 @@ namespace DOL.GS.Commands
 												break;
 											case -5:
 											case 5:
-												keyStr = "G:" + (ply.PlayerGroup == null ? "s" : "g") + "_N:" + ply.Name;
+												keyStr = "G:" + (ply.Group == null ? "s" : "g") + "_N:" + ply.Name;
 												break;
 											case -6:
 											case 6:
@@ -1302,7 +1302,7 @@ namespace DOL.GS.Commands
 										if (play != null)
 										{
 											client.Out.SendMessage(string.Format("E,{0},{1},{2},{3},{4},{5},{6},\"{7}\",\"{8}\"",
-												(i + 1), 0, play.Name, play.Level, play.CharacterClass.ID, play.GuildRank.RankLevel, (play.PlayerGroup == null ? 1 : 2), (play.CurrentZone == null ? "" : play.CurrentZone.Description), play.GuildNote), eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+												(i + 1), 0, play.Name, play.Level, play.CharacterClass.ID, play.GuildRank.RankLevel, (play.Group == null ? 1 : 2), (play.CurrentZone == null ? "" : play.CurrentZone.Description), play.GuildNote), eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
 										}
 									}
 									return 1;

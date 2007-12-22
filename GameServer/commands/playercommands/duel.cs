@@ -330,12 +330,12 @@ namespace DOL.GS.Commands
 				actionSource.Out.SendMessage(LanguageMgr.GetTranslation(actionSource.Client, "Scripts.Players.Duel.YouInCombat"), eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			if (actionTarget.PlayerGroup != null)
+			if (actionTarget.Group != null)
 			{
 				actionSource.Out.SendMessage(LanguageMgr.GetTranslation(actionSource.Client, "Scripts.Players.Duel.TargetInGroup", actionTarget.Name), eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			if (actionSource.PlayerGroup != null)
+			if (actionSource.Group != null)
 			{
 				actionSource.Out.SendMessage(LanguageMgr.GetTranslation(actionSource.Client, "Scripts.Players.Duel.YouInGroup"), eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
 				return false;

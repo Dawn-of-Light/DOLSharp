@@ -199,9 +199,9 @@ namespace DOL.GS
                     if (c.Id == selection)
                     {
                         m_hand.Remove(c);
-                        if (m_owner.Player.PlayerGroup != null)
+                        if (m_owner.Player.Group != null)
                         {
-                            foreach (GamePlayer Groupee in m_owner.Player.PlayerGroup.GetPlayersInTheGroup())
+                            foreach (GamePlayer Groupee in m_owner.Player.Group.GetPlayersInTheGroup())
                             {
                                 if(Groupee == m_owner.Player) m_owner.Out.SendMessage("You discard the " + c.Name + " from your hand.", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
                                 else Groupee.Client.Out.SendMessage(m_owner.Player.Name + " discards " + (c.Up ? "the " + c.Name : "a card") + " from their hand.", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
@@ -224,10 +224,10 @@ namespace DOL.GS
             {
                 ArrayList cards = (ArrayList)m_hand.Clone();
                 m_hand.Clear();
-                if(m_owner.Player.PlayerGroup == null)
+                if(m_owner.Player.Group == null)
                     m_owner.Out.SendMessage("You discard all your cards.", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
                 else
-                    foreach(GamePlayer Groupee in m_owner.Player.PlayerGroup.GetPlayersInTheGroup())
+                    foreach(GamePlayer Groupee in m_owner.Player.Group.GetPlayersInTheGroup())
                         Groupee.Client.Out.SendMessage((Groupee.Client == m_owner ? "You discard all your cards." : m_owner.Player + " discards all their cards."), eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
                 return cards;
             }
@@ -240,8 +240,8 @@ namespace DOL.GS
         private static GameClient GroupDealer(GameClient player)
         {
             GameClient Dealer = null;
-            if (player.Player.PlayerGroup == null) return null;
-            foreach(GamePlayer Groupee in player.Player.PlayerGroup.GetPlayersInTheGroup())
+            if (player.Player.Group == null) return null;
+            foreach(GamePlayer Groupee in player.Player.Group.GetPlayersInTheGroup())
                 if(IsDealer(Groupee.Client)) Dealer = Groupee.Client;
             return Dealer;
         }
@@ -277,7 +277,7 @@ namespace DOL.GS
         /* A new shuffle causes all group members to discard their hands */
         public static void Shuffle(GameClient player, uint numDecks)
         {
-            if (player.Player.PlayerGroup == null)
+            if (player.Player.Group == null)
             {
                 player.Out.SendMessage("You must have a group to play cards!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
@@ -296,9 +296,9 @@ namespace DOL.GS
             if(!newDecks.Init(player, numDecks)) { return; }
             try
             {
-                if (player.Player.PlayerGroup == null) return;
+                if (player.Player.Group == null) return;
                 m_dealerDecks.Add(player.Player.PlayerCharacter.ObjectId, newDecks);
-                foreach (GamePlayer Groupee in player.Player.PlayerGroup.GetPlayersInTheGroup())
+                foreach (GamePlayer Groupee in player.Player.Group.GetPlayersInTheGroup())
                 {
                     DiscardAll(Groupee.Client);
                     if (Groupee == player.Player) player.Out.SendMessage("You shuffle " + numDecks + (numDecks > 1 ? " decks " : " deck ") + "of cards.", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
@@ -318,7 +318,7 @@ namespace DOL.GS
             DealerDeck deck;
             Card c;
 
-            if (!dealer.Player.PlayerGroup.IsInTheGroup(player.Player))
+            if (!dealer.Player.Group.IsInTheGroup(player.Player))
             { dealer.Out.SendMessage(player.Player.Name + " must be in your group to play cards!", eChatType.CT_System, eChatLoc.CL_SystemWindow); return; }
             if(!IsDealer(dealer))
             { dealer.Out.SendMessage("You must use /shuffle to prepare cards before dealing!", eChatType.CT_System, eChatLoc.CL_SystemWindow); return; }
@@ -340,7 +340,7 @@ namespace DOL.GS
                 return;
             }
             hand.AddCard(c, up);
-            foreach (GamePlayer Groupee in dealer.Player.PlayerGroup.GetPlayersInTheGroup())
+            foreach (GamePlayer Groupee in dealer.Player.Group.GetPlayersInTheGroup())
             {
                 if (Groupee == dealer.Player)
                     dealer.Out.SendMessage("You deal " + (player == dealer ? "yourself" : player.Player.Name) + (up ? " the " + c.Name : " a card face down") + ".", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
@@ -367,10 +367,10 @@ namespace DOL.GS
         /* Show Player's hand to their group */
         public static void Show(GameClient player)
         {
-            if (player.Player.PlayerGroup == null) return;
+            if (player.Player.Group == null) return;
             if (!IsPlayer(player)) { player.Out.SendMessage("You have no cards.", eChatType.CT_System, eChatLoc.CL_SystemWindow); return; }
 
-            foreach (GamePlayer Groupee in player.Player.PlayerGroup.GetPlayersInTheGroup())
+            foreach (GamePlayer Groupee in player.Player.Group.GetPlayersInTheGroup())
             {
                 if (Groupee == player.Player)
                     player.Out.SendMessage("You show your hand.", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);

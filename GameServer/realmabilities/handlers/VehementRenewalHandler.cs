@@ -32,7 +32,7 @@ namespace DOL.GS.RealmAbilities
 			GamePlayer player = living as GamePlayer;
 			if (player != null)
 			{
-				if (player.PlayerGroup == null)
+				if (player.Group == null)
 				{
 					player.Out.SendMessage("You are not in a group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
@@ -40,7 +40,7 @@ namespace DOL.GS.RealmAbilities
 
 				SendCasterSpellEffectAndCastMessage(living, 7017, true);
 
-				foreach (GamePlayer p in player.PlayerGroup)
+				foreach (GamePlayer p in player.Group)
 				{
 					if (p == player) continue;
 					if (!WorldMgr.CheckDistance(player, p, 2000)) continue;

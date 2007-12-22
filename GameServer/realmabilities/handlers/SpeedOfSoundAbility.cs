@@ -45,14 +45,14 @@ namespace DOL.GS.RealmAbilities
 
 			ArrayList targets = new ArrayList();
 
-			if (player.PlayerGroup == null)
+			if (player.Group == null)
 				targets.Add(player);
 			else
 			{
-				foreach (GamePlayer grpMate in player.PlayerGroup.GetPlayersInTheGroup())
+				foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 				{
-					if (WorldMgr.CheckDistance(grpMate, player, m_range) && grpMate.IsAlive)
-						targets.Add(grpMate);
+					if (WorldMgr.CheckDistance(p, player, m_range) && p.IsAlive)
+						targets.Add(p);
 				}
 			}
 

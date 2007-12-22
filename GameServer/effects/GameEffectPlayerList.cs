@@ -79,9 +79,9 @@ namespace DOL.GS.Effects
 			// no timer has to be updated like with top icons so it only
 			// makes sence to update group window icons on add/remove
 			GamePlayer player = m_owner as GamePlayer;
-			if (player != null && player.PlayerGroup != null)
+			if (player != null && player.Group != null)
 			{
-				player.PlayerGroup.UpdateMember(player, true, false);
+				player.Group.UpdateMember(player, true, false);
 			}
 
 			return true;
@@ -99,9 +99,9 @@ namespace DOL.GS.Effects
 			// no timer has to be updated like with top icons so it only
 			// makes sence to update group window icons on add/remove
 			GamePlayer player = m_owner as GamePlayer;
-			if (player != null && player.PlayerGroup != null)
+			if (player != null && player.Group != null)
 			{
-				player.PlayerGroup.UpdateMember(player, true, false);
+				player.Group.UpdateMember(player, true, false);
 			}
 			return true;
 		}

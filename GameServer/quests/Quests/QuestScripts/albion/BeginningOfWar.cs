@@ -796,9 +796,9 @@ namespace DOL.GS.Quests.Albion
 								SendSystemMessage(player, "Master Frederick looks around as a gate starts to swirl open.");
 
 								bool dunwynCloneCreated = false;
-								if (player.PlayerGroup != null)
+								if (player.Group != null)
 								{
-									foreach (GamePlayer groupMember in player.PlayerGroup.GetPlayersInTheGroup())
+									foreach (GamePlayer groupMember in player.Group.GetPlayersInTheGroup())
 									{
 										BeginningOfWar memberQuest = groupMember.IsDoingQuest(typeof (BeginningOfWar)) as BeginningOfWar;
 										// we found another groupmember doing the same quest...
@@ -971,9 +971,9 @@ namespace DOL.GS.Quests.Albion
 						quest.dunwynClone.MaxSpeedBase = player.MaxSpeedBase;
 						quest.dunwynClone.Follow(player, 100, 3000);
 						quest.Step = 15;
-						if (player.PlayerGroup != null)
+						if (player.Group != null)
 						{
-							foreach (GamePlayer groupMember in player.PlayerGroup.GetPlayersInTheGroup())
+							foreach (GamePlayer groupMember in player.Group.GetPlayersInTheGroup())
 							{
 								BeginningOfWar memberQuest = groupMember.IsDoingQuest(typeof (BeginningOfWar)) as BeginningOfWar;
 								// we found another groupmember doing the same quest...

@@ -38,10 +38,10 @@ namespace DOL.GS.Quests
 			{
 				GamePlayer player = sender as GamePlayer;
 
-				if (player.PlayerGroup == null)
+				if (player.Group == null)
 					return;
 
-				if (player.PlayerGroup.Leader != player)
+				if (player.Group.Leader != player)
 					return;
 			}
 
@@ -50,7 +50,7 @@ namespace DOL.GS.Quests
 			{
 				GamePlayer player = sender as GamePlayer;
 
-				if (player.PlayerGroup != null)
+				if (player.Group != null)
 					return;
 			}
 

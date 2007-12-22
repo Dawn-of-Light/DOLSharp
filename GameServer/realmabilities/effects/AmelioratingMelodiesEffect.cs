@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
@@ -82,11 +83,10 @@ namespace DOL.GS.RealmAbilities
 				m_countdown--;
 				GamePlayer player = Owner as GamePlayer;
 				if (player == null) return 0;
-				if (player.PlayerGroup == null) return 3000;
-				GamePlayer[] group = player.PlayerGroup.GetPlayersInTheGroup();
-				foreach (GamePlayer groupmember in group)
+				if (player.Group == null) return 3000;
+				foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 				{
-					if ((groupmember != player) && (groupmember.Health < groupmember.MaxHealth) && (WorldMgr.CheckDistance(player, groupmember, m_range)) && (groupmember.IsAlive))
+					if ((p != player) && (p.Health < p.MaxHealth) && (WorldMgr.CheckDistance(player, p, m_range)) && (p.IsAlive))
 					{
 						if (player.IsStealthed)
 						{
@@ -94,10 +94,10 @@ namespace DOL.GS.RealmAbilities
 						}
 
 						int heal = m_heal;
-						if (groupmember.Health + heal > groupmember.MaxHealth) heal = groupmember.MaxHealth - groupmember.Health;
-						groupmember.ChangeHealth(player, GameLiving.eHealthChangeType.Regenerate, heal);
-						player.Out.SendMessage("You heal " + groupmember.Name + " for " + heal.ToString() + " hit points.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-						groupmember.Out.SendMessage(player.Name + " heals you for " + heal.ToString() + " hit points.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+						if (p.Health + heal > p.MaxHealth) heal = p.MaxHealth - p.Health;
+						p.ChangeHealth(player, GameLiving.eHealthChangeType.Regenerate, heal);
+						player.Out.SendMessage("You heal " + p.Name + " for " + heal.ToString() + " hit points.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+						p.Out.SendMessage(player.Name + " heals you for " + heal.ToString() + " hit points.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 					}
 				}
 				return 3000;

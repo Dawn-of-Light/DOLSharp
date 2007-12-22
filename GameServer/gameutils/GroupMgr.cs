@@ -79,9 +79,9 @@ namespace DOL.GS
 
 			lock (group)
 			{
-				foreach(GamePlayer plr in group)
+				foreach(GameLiving living in group)
 				{
-					group.RemovePlayer(plr);
+					group.RemoveMember(living);
 				}
 			}
 
@@ -131,7 +131,7 @@ namespace DOL.GS
 				foreach (Group group in m_groups.Values)
 				{
 					if (group.Status == 10) continue; // not looking for members, ignore
-					if (group.Status==status || group.Status==0x0B)
+					if (group.Status == status || group.Status == 0x0B)
 					{
 						groupList.Add(group);
 					}
@@ -151,7 +151,7 @@ namespace DOL.GS
 			{
 				foreach (GamePlayer player in m_lfgPlayers.Keys)
 				{
-					if(player.PlayerGroup==null)
+					if(player.Group==null)
 					{
 						lookingPlayers.Add(player);
 					}

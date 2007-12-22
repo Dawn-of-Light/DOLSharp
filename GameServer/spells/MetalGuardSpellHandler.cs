@@ -36,7 +36,7 @@ namespace DOL.GS.Spells
             if (Caster is GamePlayer)
             {
                 GamePlayer casterPlayer = (GamePlayer)Caster;
-                PlayerGroup group = casterPlayer.PlayerGroup;
+                Group group = casterPlayer.Group;
                 if(group == null) return list; // Should not appen since it is checked in ability handler
                 int spellRange = CalculateSpellRange();
                 if (group != null)
@@ -45,7 +45,7 @@ namespace DOL.GS.Spells
                     {
                         foreach (GamePlayer groupPlayer in casterPlayer.GetPlayersInRadius((ushort)m_spell.Radius))
                         {
-                            if (casterPlayer.PlayerGroup.IsInTheGroup(groupPlayer))
+                            if (casterPlayer.Group.IsInTheGroup(groupPlayer))
                             {
                                 if (groupPlayer != casterPlayer && groupPlayer.IsAlive)
                                 {

@@ -19,6 +19,7 @@
 using System;
 using System.Reflection;
 using System.Collections;
+using System.Collections.Generic;
 using System.Timers;
 using DOL.Database;
 using DOL.Events;
@@ -109,12 +110,12 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// This hold all keep components
 		/// </summary>
-		private ArrayList m_keepComponents;
+		private List<GameKeepComponent> m_keepComponents;
 
 		/// <summary>
 		/// Keep components ( wall, tower, gate,...)
 		/// </summary>
-		public ArrayList KeepComponents
+		public List<GameKeepComponent> KeepComponents
 		{
 			get	{ return m_keepComponents; }
 			set { m_keepComponents = value;}
@@ -415,7 +416,7 @@ namespace DOL.GS.Keeps
 		public AbstractGameKeep()
 		{
 			m_guards = new Hashtable();
-			m_keepComponents = new ArrayList(1);
+			m_keepComponents = new List<GameKeepComponent>();
 			m_banners = new Hashtable();
 			m_doors = new Hashtable();
 			m_patrols = new Hashtable();
@@ -607,10 +608,10 @@ namespace DOL.GS.Keeps
 				return false;
 			}
 
-			if (player.PlayerGroup != null)
+			if (player.Group != null)
 			{
 				int count = 0;
-				foreach (GamePlayer p in player.PlayerGroup)
+				foreach (GamePlayer p in player.Group)
 				{
 					if (KeepMgr.getKeepCloseToSpot(p.CurrentRegionID, p, WorldMgr.VISIBILITY_DISTANCE) == this)
 						count++;

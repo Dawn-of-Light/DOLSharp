@@ -200,7 +200,7 @@ namespace DOL.GS.PacketHandler
 				byte nbsolo = 0x1E;
 				foreach (GamePlayer player in list)
 				{
-					if (player.PlayerGroup != null)
+					if (player.Group != null)
 					{
 						pak.WriteByte(nbleader++);
 					}
@@ -219,7 +219,7 @@ namespace DOL.GS.PacketHandler
 					pak.WriteByte(0); // objective
 					pak.WriteByte(0);
 					pak.WriteByte(0);
-					pak.WriteByte((byte)(player.PlayerGroup != null ? 1 : 0));
+					pak.WriteByte((byte)(player.Group != null ? 1 : 0));
 					pak.WriteByte(0);
 				}
 			}

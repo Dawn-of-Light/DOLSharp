@@ -885,12 +885,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
 						if (item == null) return 1;
 						string str = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Item", client.Player.Name, GetShortItemInfo(item, client));
-						if (client.Player.PlayerGroup == null)
+						if (client.Player.Group == null)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 1;
 						}
-						client.Player.PlayerGroup.SendMessageToGroupMembers(null, str);
+						client.Player.Group.SendMessageToGroupMembers(str, eChatType.CT_Group, eChatLoc.CL_ChatWindow);
 						return 1;
 					}
 				#endregion

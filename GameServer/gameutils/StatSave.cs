@@ -193,7 +193,6 @@ namespace DOL.Database
 		protected long m_memory;
 
 		static bool m_autoSave;
-		static bool m_init;
 
 		public DBServerStats()
 		{

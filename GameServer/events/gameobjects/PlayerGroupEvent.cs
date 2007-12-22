@@ -24,23 +24,23 @@ namespace DOL.Events
 	/// This class holds all possible player group events.
 	/// Only constants defined here!
 	/// </summary>
-	public class PlayerGroupEvent : DOLEvent
+	public class GroupEvent : DOLEvent
 	{
 		/// <summary>
 		/// Constructs a new PlayerGroup event
 		/// </summary>
 		/// <param name="name">the event name</param>
-		public PlayerGroupEvent(string name) : base (name)
+		public GroupEvent(string name) : base (name)
 		{
 		}
 
 		/// <summary>
 		/// The PlayerJoined event is fired whenever player joins the group
 		/// </summary>
-		public static readonly PlayerGroupEvent PlayerJoined = new PlayerGroupEvent("PlayerGroup.PlayerJoined");
+		public static readonly GroupEvent MemberJoined = new GroupEvent("Group.MemberJoined");
 		/// <summary>
 		/// The PlayerDisbanded event is fired whenever player disbands
 		/// </summary>
-		public static readonly PlayerGroupEvent PlayerDisbanded = new PlayerGroupEvent("PlayerGroup.PlayerDisbanded");
+		public static readonly GroupEvent MemberDisbanded = new GroupEvent("Group.MemberDisbanded");
 	}
 }

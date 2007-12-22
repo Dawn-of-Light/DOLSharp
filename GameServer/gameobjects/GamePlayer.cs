@@ -490,8 +490,8 @@ namespace DOL.GS
 			}
 
 			//Notify other group members of this linkdead
-			if (PlayerGroup != null)
-				PlayerGroup.UpdateMember(this, false, false);
+			if (Group != null)
+				Group.UpdateMember(this, false, false);
 
 			//Notify our event handlers (if any)
 			Notify(GamePlayerEvent.Linkdeath, this);
@@ -518,8 +518,8 @@ namespace DOL.GS
 			//the packet handler and from the Player into a own class
 			//Something on the same line like my suggested new inventory
 			//code (see TWiki) --SH
-			if (PlayerGroup != null)
-				PlayerGroup.RemovePlayer(this);
+			if (Group != null)
+				Group.RemoveMember(this);
 
 			BattleGroup mybattlegroup = (BattleGroup)this.TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
 			if (mybattlegroup != null)
@@ -1482,7 +1482,7 @@ namespace DOL.GS
 				if (ObjectState == eObjectState.Active)
 				{
 					Out.SendUpdatePlayer();
-					if (PlayerGroup != null)
+					if (Group != null)
 						Out.SendGroupWindowUpdate();
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
@@ -1791,8 +1791,8 @@ namespace DOL.GS
 					PlayerCharacter.Health = value;
 				if (oldPercent != HealthPercent)
 				{
-					if (PlayerGroup != null)
-						PlayerGroup.UpdateMember(this, false, false);
+					if (Group != null)
+						Group.UpdateMember(this, false, false);
 					UpdatePlayerStatus();
 				}
 			}
@@ -1830,14 +1830,6 @@ namespace DOL.GS
 			int hp2 = hp1 * constitution / 10000;
 			return Math.Max(1, 20 + hp1 / 50 + hp2);
 		}
-
-        /// <summary>
-        /// Health as it should display in the group window.
-        /// </summary>
-        public virtual byte HealthPercentGroupWindow
-        {
-            get { return HealthPercent; }
-        }
 
 		/// <summary>
 		/// Calculates MaxHealth
@@ -1878,8 +1870,8 @@ namespace DOL.GS
 					PlayerCharacter.Mana = value;
 				if (oldPercent != ManaPercent)
 				{
-					if (PlayerGroup != null)
-						PlayerGroup.UpdateMember(this, false, false);
+					if (Group != null)
+						Group.UpdateMember(this, false, false);
 					UpdatePlayerStatus();
 				}
 			}
@@ -1927,8 +1919,8 @@ namespace DOL.GS
 				if (oldPercent != EndurancePercent)
 				{
 					//ogre: 1.69+ endurance is displayed on group window
-					if (PlayerGroup != null)
-						PlayerGroup.UpdateMember(this, false, false);
+					if (Group != null)
+						Group.UpdateMember(this, false, false);
 					//end ogre
 					UpdatePlayerStatus();
 				}
@@ -2052,10 +2044,9 @@ namespace DOL.GS
 				m_class.SwitchToFemaleName();
 			PlayerCharacter.Class = m_class.ID;
 
-			if (PlayerGroup != null)
+			if (Group != null)
 			{
-				foreach (GamePlayer player in PlayerGroup.GetPlayersInTheGroup())
-					player.Out.SendGroupWindowUpdate();
+				Group.UpdateMember(this, false, true);
 			}
 			return true;
 		}
@@ -4051,9 +4042,9 @@ namespace DOL.GS
 			if (PlayerCharacter != null)
 				PlayerCharacter.DeathCount = 0;
 
-			if (PlayerGroup != null)
+			if (Group != null)
 			{
-				PlayerGroup.UpdateGroupWindow();
+				Group.UpdateGroupWindow();
 			}
 			Out.SendUpdatePlayer(); // Update player level
 			Out.SendCharStatsUpdate(); // Update Stats and MaxHitpoints
@@ -4103,9 +4094,9 @@ namespace DOL.GS
 			if (PlayerCharacter != null)
 				PlayerCharacter.DeathCount = 0;
 
-			if (PlayerGroup != null)
+			if (Group != null)
 			{
-				PlayerGroup.UpdateGroupWindow();
+				Group.UpdateGroupWindow();
 			}
 			Out.SendUpdatePlayer(); // Update player level
 			Out.SendCharStatsUpdate(); // Update Stats and MaxHitpoints
@@ -6278,9 +6269,9 @@ namespace DOL.GS
 
 		public override void EnemyKilled(GameLiving enemy)
 		{
-			if (PlayerGroup != null)
+			if (Group != null)
 			{
-				foreach (GamePlayer player in PlayerGroup.GetPlayersInTheGroup())
+				foreach (GamePlayer player in Group.GetPlayersInTheGroup())
 				{
 					if (player == this) continue;
 					if (enemy.Attackers.Contains(player)) continue;
@@ -7999,9 +7990,9 @@ namespace DOL.GS
 				if (clientp.Player.Friends.Contains(Name))
 					clientp.Out.SendRemoveFriends(friendList);
 			}
-			if (PlayerGroup != null)
+			if (Group != null)
 			{
-				PlayerGroup.RemovePlayer(this);
+				Group.RemoveMember(this);
 			}
 			BattleGroup mybattlegroup = (BattleGroup)this.TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
 			if (mybattlegroup != null)
@@ -8323,14 +8314,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Holds the group of this player
-		/// </summary>
-		protected PlayerGroup m_playerGroup;
-		/// <summary>
-		/// Holds the index of this player inside of the group
-		/// </summary>
-		protected int m_playerGroupIndex;
-		/// <summary>
 		/// true if this player is looking for a group
 		/// </summary>
 		protected bool m_lookingForGroup;
@@ -8338,23 +8321,6 @@ namespace DOL.GS
 		/// true if this player want to receive loot with autosplit between members of group
 		/// </summary>
 		protected bool m_autoSplitLoot = true;
-		/// <summary>
-		/// Gets or sets the player's group
-		/// </summary>
-		public PlayerGroup PlayerGroup
-		{
-			get { return m_playerGroup; }
-			set { m_playerGroup = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the index of this player inside of the group
-		/// </summary>
-		public int PlayerGroupIndex
-		{
-			get { return m_playerGroupIndex; }
-			set { m_playerGroupIndex = value; }
-		}
 
 		/// <summary>
 		/// Gets or sets the LookingForGroup flag in this player
@@ -9519,7 +9485,7 @@ namespace DOL.GS
 						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.CantGetThat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return false;
 					}
-					PlayerGroup group = PlayerGroup;
+					Group group = Group;
 					BattleGroup mybattlegroup = (BattleGroup)TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
 					if (mybattlegroup != null
 					    && mybattlegroup.GetBGLootType() == true)
@@ -9615,7 +9581,7 @@ namespace DOL.GS
 					if (moneyObject.ObjectState != eObjectState.Active)
 						return false;
 
-					PlayerGroup group = PlayerGroup;
+					Group group = Group;
 					if (group != null && group.AutosplitCoins)
 					{
 						//Spread the money in the group
@@ -10787,7 +10753,7 @@ namespace DOL.GS
 			if (range > 1900)
 				range = 1900;
 			//Possibilité de voir les membres du groupes fufutés .... pour tout le monde
-			else if (enemy.PlayerGroup != null && PlayerGroup != null && enemy.PlayerGroup == PlayerGroup)
+			else if (enemy.Group != null && Group != null && enemy.Group == Group)
 			{
 				range = 2500;
 			}
@@ -10965,8 +10931,8 @@ namespace DOL.GS
 			if (Mission != null)
 				Mission.Notify(e, sender, args);
 
-			if (PlayerGroup != null && PlayerGroup.Mission != null)
-				PlayerGroup.Mission.Notify(e, sender, args);
+			if (Group != null && Group.Mission != null)
+				Group.Mission.Notify(e, sender, args);
 
 			//Realm mission will be handled on the capture event args
 		}
@@ -12910,8 +12876,7 @@ namespace DOL.GS
 			m_sitting = false;
 			m_saveInDB = true; // always save char data in db
 			m_class = new DefaultCharacterClass();
-			m_playerGroupIndex = -1;
-			//m_isAnonymous = false; // OBSOLETE (VaNaTiC)
+			m_groupIndex = -1;
 			LoadFromDatabase(theChar);
 			m_currentAreas = new ArrayList(1);
 		}

@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
@@ -222,19 +223,19 @@ namespace DOL.GS.Quests
 				if(lowestCon >= -2)
 				{
 					ArrayList Owners = new ArrayList();
-					if(player.PlayerGroup == null)
+					if(player.Group == null)
 					{
 						Owners.Add(m_taskPlayer);
 					}
 					else
 					{
-						GamePlayer[] GPP = m_taskPlayer.PlayerGroup.GetPlayersInTheGroup();
-						foreach(GamePlayer GP in GPP)
+						ICollection<GamePlayer> group = m_taskPlayer.Group.GetPlayersInTheGroup();
+						foreach(GamePlayer p in group)
 						{
-							if(GP.Task !=null && GP.Task.GetType() == typeof(KillTask))
+							if(p.Task !=null && p.Task.GetType() == typeof(KillTask))
 							{
-								if (((KillTask)GP.Task).MobName == target.Name)
-									Owners.Add(GP);
+								if (((KillTask)p.Task).MobName == target.Name)
+									Owners.Add(p);
 							}
 						}
 					}

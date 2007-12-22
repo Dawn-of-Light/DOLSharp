@@ -9,8 +9,8 @@ namespace DOL.GS.Commands
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-            if (args.Length == 2 && client.Player.PlayerGroup != null)
-                foreach (GamePlayer Groupee in client.Player.PlayerGroup.GetPlayersInTheGroup())
+            if (args.Length == 2 && client.Player.Group != null)
+                foreach (GamePlayer Groupee in client.Player.Group.GetPlayersInTheGroup())
                     if(Groupee != client.Player) CardMgr.Held(client, Groupee.Client);
             else
                 CardMgr.Held(client, client);

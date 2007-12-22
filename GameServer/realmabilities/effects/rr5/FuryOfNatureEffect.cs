@@ -56,7 +56,7 @@ namespace DOL.GS.Effects
 			GamePlayer player = sender as GamePlayer;
 			if (player == null)
 				return;
-			if (player.PlayerGroup == null)
+			if (player.Group == null)
 				return;
 			if (extra > 0)
 				player.Out.SendMessage("Your Fury enables you to strike " + args.AttackData.Target.Name + " for " + extra + " additional points of damage", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
@@ -64,7 +64,7 @@ namespace DOL.GS.Effects
 			GamePlayer mostInjuredLiving = owner as GamePlayer;
 			if (mostInjuredLiving == null) return;
 
-			foreach (GamePlayer p in player.PlayerGroup)
+			foreach (GamePlayer p in player.Group)
 			{
 				if (p == player)
 					continue;
@@ -77,13 +77,13 @@ namespace DOL.GS.Effects
 			double mostInjuredPercent = mostInjuredLiving.Health / (float)mostInjuredLiving.MaxHealth;
 			int groupHealCap = args.AttackData.Damage;
 			int targetHealCap = args.AttackData.Damage;
-			if (player.PlayerGroup.PlayerCount > 2)
+			if (player.Group.MemberCount > 2)
 			{
-				lock (player.PlayerGroup)
+				lock (player.Group)
 				{
-					groupHealCap *= (player.PlayerGroup.PlayerCount);
+					groupHealCap *= (player.Group.MemberCount);
 					targetHealCap *= 2;
-					foreach (GamePlayer p in player.PlayerGroup)
+					foreach (GamePlayer p in player.Group)
 					{
 						if (!p.IsAlive) continue;
 						if (p == player) continue;

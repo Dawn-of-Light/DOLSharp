@@ -515,13 +515,13 @@ namespace DOL.AI.Brain
 
 					player = GetPlayerOwner();
 
-					if (player.PlayerGroup != null && player.CharacterClass.ID == (int)eCharacterClass.Enchanter)
+					if (player.Group != null && player.CharacterClass.ID == (int)eCharacterClass.Enchanter)
 					{
-						foreach (GamePlayer gplayer in player.PlayerGroup.GetPlayersInTheGroup())
+						foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 						{
-							if (gplayer.HealthPercent < 75)
+							if (p.HealthPercent < 75)
 							{
-								Body.TargetObject = gplayer;
+								Body.TargetObject = p;
 								break;
 							}
 						}
