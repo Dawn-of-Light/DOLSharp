@@ -25,6 +25,8 @@ using DOL.Language;
 using DOL.GS.PacketHandler;
 using DOL.Database;
 using DOL.GS.Housing;
+using DOL.GS.Keeps;
+using DOL.GS.Spells;
 
 namespace DOL.GS
 {
@@ -65,6 +67,38 @@ namespace DOL.GS
 			GamePlayer player = source as GamePlayer;
 			if (player == null)
 				return false;
+
+			// Battlegrounds is special, as the teleport location depends on
+			// the level of the player, so let's deal with that first.
+
+			if (text.ToLower() == "battlegrounds")
+			{
+				AbstractGameKeep portalKeep = KeepMgr.GetBGPK(player);
+				if (portalKeep != null)
+				{
+					Teleport teleport = new Teleport();
+					teleport.TeleportID = "battlegrounds";
+					teleport.Realm = portalKeep.Realm;
+					teleport.RegionID = portalKeep.Region;
+					teleport.X = portalKeep.X;
+					teleport.Y = portalKeep.Y;
+					teleport.Z = portalKeep.Z;
+					teleport.Heading = 0;
+					OnDestinationPicked(player, teleport);
+					return true;
+				}
+				else
+				{
+					if (player.Client.Account.PrivLevel > 1)
+					{
+						player.Out.SendMessage("No portal keep found.",
+							eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+					}
+					return true;
+				}
+			}
+
+			// Find the teleport location in the database.
 
 			List<Teleport> teleports = WorldMgr.GetTeleportLocations((eRealm)Realm);
 			foreach (Teleport teleport in teleports)
@@ -108,8 +142,38 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Teleport the player to the designated coordinates using the
+		/// portal spell.
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="destination"></param>
+		protected virtual void OnTeleportSpell(GamePlayer player, Teleport destination)
+		{
+			SpellLine spellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
+			IList spellList = SkillBase.GetSpellList(GlobalSpellsLines.Mob_Spells);
+			Spell spell = SkillBase.GetSpellByID(5999);	// UniPortal spell.
+
+			if (spell != null)
+			{
+				TargetObject = player;
+				UniPortal portalHandler = new UniPortal(this, spell, spellLine, destination);
+				m_runningSpellHandler = portalHandler;
+				portalHandler.CastSpell();
+				return;
+			}
+
+			// Spell not found in the database, fall back on default procedure.
+
+			if (player.Client.Account.PrivLevel > 1)
+				player.Out.SendMessage("Uni-Portal spell not found.",
+					eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+
+			player.MoveTo((ushort)destination.RegionID, destination.X, destination.Y, destination.Z,
+				(ushort)destination.Heading);
+		}
+
+		/// <summary>
 		/// Teleport the player to the designated coordinates. 
-		/// If you want to add spell animations, just override this method.
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="destination"></param>
