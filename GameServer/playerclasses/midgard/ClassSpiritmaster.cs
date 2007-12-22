@@ -33,7 +33,7 @@ namespace DOL.GS.PlayerClass
 			m_specializationMultiplier = 10;
 			m_primaryStat = eStat.PIE;
 			m_secondaryStat = eStat.DEX;
-			m_tertiaryStat = eStat.CON;
+			m_tertiaryStat = eStat.QUI;
 			m_manaStat = eStat.PIE;
 		}
 
