@@ -1474,39 +1474,35 @@ namespace DOL.GS.Spells
 					}
 				case "group":
 					{
-						if (Caster is GamePlayer)
+						Group group = m_caster.Group;
+						int spellRange = CalculateSpellRange();
+						if (spellRange == 0)
+							spellRange = NewRadius;
+						if (group == null)
 						{
-							GamePlayer casterPlayer = (GamePlayer)Caster;
-							PlayerGroup group = casterPlayer.PlayerGroup;
-							int spellRange = CalculateSpellRange();
-							if (spellRange == 0)
-								spellRange = NewRadius;
-							if (group == null)
+							list.Add(m_caster);
+							IControlledBrain npc = m_caster.ControlledNpc;
+							if (npc != null)
 							{
-								list.Add(casterPlayer);
-								IControlledBrain npc = casterPlayer.ControlledNpc;
-								if (npc != null)
-								{
-									if (WorldMgr.CheckDistance(casterPlayer, npc.Body, spellRange))
-										list.Add(npc.Body);
-								}
+								if (WorldMgr.CheckDistance(m_caster, npc.Body, spellRange))
+									list.Add(npc.Body);
 							}
-							else
+						}
+						else
+						{
+							lock (group)
 							{
-								lock (group)
+								foreach (GameLiving living in group)
 								{
-									foreach (GamePlayer groupPlayer in group)
-									{
-										// only players in range
-										if (WorldMgr.CheckDistance(casterPlayer, groupPlayer, spellRange))
-											list.Add(groupPlayer);
+									// only players in range
+									if (WorldMgr.CheckDistance(m_caster, living, spellRange))
+										list.Add(living);
 
-										IControlledBrain npc = groupPlayer.ControlledNpc;
-										if (npc != null)
-										{
-											if (WorldMgr.CheckDistance(casterPlayer, npc.Body, spellRange))
-												list.Add(npc.Body);
-										}
+									IControlledBrain npc = living.ControlledNpc;
+									if (npc != null)
+									{
+										if (WorldMgr.CheckDistance(m_caster, npc.Body, spellRange))
+											list.Add(npc.Body);
 									}
 								}
 							}

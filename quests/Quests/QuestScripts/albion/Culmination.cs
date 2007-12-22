@@ -732,9 +732,9 @@ namespace DOL.GS.Quests.Albion
 						quest.dunwynClone.SayTo(player, "Good job again Vinde. Now, I will be taking these recruits back to Avalon Marsh with me. There is much to do there. Good luck to you Vinde. I wish you well in your future endeavors.");
 						quest.ResetMasterDunwyn();
 						quest.Step = 4;
-						if (player.PlayerGroup != null)
+						if (player.Group != null)
 						{
-							foreach (GamePlayer groupMember in player.PlayerGroup.GetPlayersInTheGroup())
+							foreach (GamePlayer groupMember in player.Group.GetPlayersInTheGroup())
 							{
 								Culmination memberQuest = groupMember.IsDoingQuest(typeof (Culmination)) as Culmination;
 								// we found another groupmember doing the same quest...
@@ -769,9 +769,9 @@ namespace DOL.GS.Quests.Albion
 							if (quest.Step == 1)
 							{
 								quest.Step = 2;
-								if (player.PlayerGroup != null)
+								if (player.Group != null)
 								{
-									foreach (GamePlayer groupMember in player.PlayerGroup.GetPlayersInTheGroup())
+									foreach (GamePlayer groupMember in player.Group.GetPlayersInTheGroup())
 									{
 										Culmination memberQuest = groupMember.IsDoingQuest(typeof (Culmination)) as Culmination;
 										// we found another groupmember doing the same quest...
@@ -1069,9 +1069,9 @@ namespace DOL.GS.Quests.Albion
 
 
 				bool dunwynCloneCreated = false;
-				if (player.PlayerGroup != null)
+				if (player.Group != null)
 				{
-					foreach (GamePlayer groupMember in player.PlayerGroup.GetPlayersInTheGroup())
+					foreach (GamePlayer groupMember in player.Group.GetPlayersInTheGroup())
 					{
 						Culmination memberQuest = groupMember.IsDoingQuest(typeof (Culmination)) as Culmination;
 						// we found another groupmember doing the same quest...

@@ -412,16 +412,16 @@ namespace DOL.GS.Spells
             if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
 
             GamePlayer player = Caster as GamePlayer;
-            if ((player != null) && (player.PlayerGroup != null))
+            if ((player != null) && (player.Group != null))
             {
-                if (player.PlayerGroup.IsGroupInCombat())
+                if (player.Group.IsGroupInCombat())
                 {
                     player.Out.SendMessage("You can't teleport a group that is in combat!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     return;
                 }
                 else
                 {
-                    foreach (GamePlayer pl in player.PlayerGroup.GetPlayersInTheGroup())
+                    foreach (GamePlayer pl in player.Group.GetPlayersInTheGroup())
                     {
                         if (pl != null)
                         {

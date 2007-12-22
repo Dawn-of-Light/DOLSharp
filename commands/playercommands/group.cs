@@ -30,7 +30,7 @@ namespace DOL.GS.Commands
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			if (client.Player.PlayerGroup == null)
+			if (client.Player.Group == null)
 			{
 				client.Out.SendMessage("You are not part of a group", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
@@ -44,7 +44,7 @@ namespace DOL.GS.Commands
 					msg += args[i] + " ";
 				}
 
-				client.Player.PlayerGroup.SendMessageToGroupMembers(client.Player, msg);
+				client.Player.Group.SendMessageToGroupMembers(client.Player, msg, eChatType.CT_Group, eChatLoc.CL_ChatWindow);
 			}
 			else
 			{

@@ -3044,6 +3044,10 @@ namespace DOL.GS
 			if (killer is GamePlayer)
 				((GamePlayer)killer).Out.SendMessage(GetName(0, true) + " dies!", eChatType.CT_PlayerDied, eChatLoc.CL_SystemWindow);
 			StopFollow();
+
+			if (Group != null)
+				Group.RemoveMember(this);
+
 			base.Die(killer);
 
 			// deal out exp and realm points based on server rules
@@ -3517,7 +3521,7 @@ namespace DOL.GS
 							GamePlayer player = gainer as GamePlayer;
 							if (player.Autoloot && WorldMgr.CheckDistance(loot, player, 700))
 							{
-								if (player.PlayerGroup == null || (player.PlayerGroup != null && player == player.PlayerGroup.Leader))
+								if (player.Group == null || (player.Group != null && player == player.Group.Leader))
 									aplayer.Add(player);
 								autolootlist.Add(loot);
 							}
@@ -3560,16 +3564,15 @@ namespace DOL.GS
 			if (attackerPlayer == null)
 				return;
 
-			PlayerGroup attackerGroup = attackerPlayer.PlayerGroup;
+			Group attackerGroup = attackerPlayer.Group;
 			if (attackerGroup != null)
 			{
 				ArrayList xpGainers = new ArrayList(8);
 				lock (attackerGroup)
 				{
 					// collect "helping" group players in range
-					for (int i = 0; i < attackerGroup.PlayerCount; i++)
+					foreach (GamePlayer player in attackerGroup)
 					{
-						GamePlayer player = attackerGroup[i];
 						if (WorldMgr.CheckDistance(player, this, WorldMgr.MAX_EXPFORKILL_DISTANCE) && player.IsAlive && player.ObjectState == eObjectState.Active)
 							xpGainers.Add(player);
 					}

@@ -202,7 +202,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								if (cln == null) return;
 								GamePlayer groupLeader = cln.Player;
 								if (groupLeader == null) return;
-								if (player.PlayerGroup != null)
+								if (player.Group != null)
 								{
 									player.Out.SendMessage("You are still in a group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
@@ -216,29 +216,28 @@ namespace DOL.GS.PacketHandler.Client.v168
 									player.Out.SendMessage("You can't join a group while in combat!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
 								}
-								if (groupLeader.PlayerGroup != null)
+								if (groupLeader.Group != null)
 								{
-									if (groupLeader.PlayerGroup.Leader != groupLeader) return;
-									if (groupLeader.PlayerGroup.PlayerCount >= PlayerGroup.MAX_GROUP_SIZE)
+									if (groupLeader.Group.Leader != groupLeader) return;
+									if (groupLeader.Group.MemberCount >= Group.MAX_GROUP_SIZE)
 									{
 										player.Out.SendMessage("The group is full.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 										return;
 									}
-									if (groupLeader.PlayerGroup.IsGroupInCombat())
+									if (groupLeader.Group.IsGroupInCombat())
 									{
 										player.Out.SendMessage("You can't join a group that is in combat!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 										return;
 									}
-									groupLeader.PlayerGroup.AddPlayer(player);
+									groupLeader.Group.AddMember(player);
 									return;
 								}
 								else
 								{
-									PlayerGroup group = new PlayerGroup(groupLeader);
+									Group group = new Group(groupLeader);
 									GroupMgr.AddGroup(group, group);
-									groupLeader.PlayerGroup = group;
-									group.AddPlayer(groupLeader);
-									group.AddPlayer(player);
+									group.AddMember(groupLeader);
+									group.AddMember(player);
 									return;
 								}
 							}

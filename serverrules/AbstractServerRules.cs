@@ -665,12 +665,12 @@ namespace DOL.GS.ServerRules
 					if (player.ObjectState != GameObject.eObjectState.Active) continue;
 					//					if (!player.Alive) continue;
 					if (!WorldMgr.CheckDistance(player, killedNPC, WorldMgr.MAX_EXPFORKILL_DISTANCE)) continue;
-					if (player.PlayerGroup != null)
+					if (player.Group != null)
 					{
-						if (plrGrpExp.ContainsKey(player.PlayerGroup))
-							plrGrpExp[player.PlayerGroup] = (int)plrGrpExp[player.PlayerGroup] + 1;
+						if (plrGrpExp.ContainsKey(player.Group))
+							plrGrpExp[player.Group] = (int)plrGrpExp[player.Group] + 1;
 						else
-							plrGrpExp[player.PlayerGroup] = 1;
+							plrGrpExp[player.Group] = 1;
 					}
 					if (highestPlayer == null || (highestPlayer != null && player.Level > highestPlayer.Level))
 						highestPlayer = player;
@@ -702,12 +702,12 @@ namespace DOL.GS.ServerRules
 					if (living is GamePlayer)
 					{
 						GamePlayer killerPlayer = living as GamePlayer;
-						if (killerPlayer.PlayerGroup != null && killerPlayer.PlayerGroup.PlayerCount > 1)
+						if (killerPlayer.Group != null && killerPlayer.Group.MemberCount > 1)
 						{
-							lock (killerPlayer.PlayerGroup)
+							lock (killerPlayer.Group)
 							{
 								int count = 0;
-								foreach (GamePlayer player in killerPlayer.PlayerGroup.GetPlayersInTheGroup())
+								foreach (GamePlayer player in killerPlayer.Group.GetPlayersInTheGroup())
 								{
 									if (!WorldMgr.CheckDistance(player, killedNPC, WorldMgr.MAX_EXPFORKILL_DISTANCE)) continue;
 									count++;
@@ -815,8 +815,8 @@ namespace DOL.GS.ServerRules
 						if (living is GamePlayer)
 						{
 							GamePlayer player = living as GamePlayer;
-							if (player != null && player.PlayerGroup != null && plrGrpExp.ContainsKey(player.PlayerGroup))
-								groupExp += (long)(0.125 * xpReward * (int)plrGrpExp[player.PlayerGroup]);
+							if (player != null && player.Group != null && plrGrpExp.ContainsKey(player.Group))
+								groupExp += (long)(0.125 * xpReward * (int)plrGrpExp[player.Group]);
 						}
 
 						xpReward += (long)campBonus + groupExp + outpostXP;
@@ -915,12 +915,12 @@ namespace DOL.GS.ServerRules
 					if (living is GamePlayer)
 					{
 						GamePlayer killerPlayer = living as GamePlayer;
-						if (killerPlayer.PlayerGroup != null && killerPlayer.PlayerGroup.PlayerCount > 1)
+						if (killerPlayer.Group != null && killerPlayer.Group.MemberCount > 1)
 						{
-							lock (killerPlayer.PlayerGroup)
+							lock (killerPlayer.Group)
 							{
 								int count = 0;
-								foreach (GamePlayer player in killerPlayer.PlayerGroup.GetPlayersInTheGroup())
+								foreach (GamePlayer player in killerPlayer.Group.GetPlayersInTheGroup())
 								{
 									if (!WorldMgr.CheckDistance(player, killedLiving, WorldMgr.MAX_EXPFORKILL_DISTANCE)) continue;
 									count++;
@@ -1074,12 +1074,12 @@ namespace DOL.GS.ServerRules
 					{
 						GamePlayer killerPlayer = living as GamePlayer;
 						realmPoints = (int)(realmPoints * (1.0 + 2.0 * (killedPlayer.RealmLevel - killerPlayer.RealmLevel) / 900.0));
-						if (killerPlayer.PlayerGroup != null && killerPlayer.PlayerGroup.PlayerCount > 1)
+						if (killerPlayer.Group != null && killerPlayer.Group.MemberCount > 1)
 						{
-							lock (killerPlayer.PlayerGroup)
+							lock (killerPlayer.Group)
 							{
 								int count = 0;
-								foreach (GamePlayer player in killerPlayer.PlayerGroup.GetPlayersInTheGroup())
+								foreach (GamePlayer player in killerPlayer.Group.GetPlayersInTheGroup())
 								{
 									if (!WorldMgr.CheckDistance(player, killedPlayer, WorldMgr.MAX_EXPFORKILL_DISTANCE)) continue;
 									count++;

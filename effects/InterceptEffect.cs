@@ -42,7 +42,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Holds the interceptor/intercepted group
 		/// </summary>
-		private PlayerGroup m_group;
+		private Group m_group;
 
 		/// <summary>
 		/// Gets the interceptor
@@ -91,9 +91,9 @@ namespace DOL.GS.Effects
 		{
 			if (interceptor is GamePlayer && intercepted is GamePlayer)
 			{
-				m_group = ((GamePlayer)interceptor).PlayerGroup;
+				m_group = ((GamePlayer)interceptor).Group;
 				if (m_group == null) return;
-				GameEventMgr.AddHandler(m_group, PlayerGroupEvent.PlayerDisbanded, new DOLEventHandler(GroupDisbandCallback));
+				GameEventMgr.AddHandler(m_group, GroupEvent.MemberDisbanded, new DOLEventHandler(GroupDisbandCallback));
 			}
 
 			m_interceptSource = interceptor;
@@ -124,7 +124,7 @@ namespace DOL.GS.Effects
 		{
 			if (InterceptSource is GamePlayer && InterceptTarget is GamePlayer)
 			{
-				GameEventMgr.RemoveHandler(m_group, PlayerGroupEvent.PlayerDisbanded, new DOLEventHandler(GroupDisbandCallback));
+				GameEventMgr.RemoveHandler(m_group, GroupEvent.MemberDisbanded, new DOLEventHandler(GroupDisbandCallback));
 				m_group = null;
 			}
 			InterceptSource.EffectList.Remove(this);
@@ -146,9 +146,9 @@ namespace DOL.GS.Effects
 		/// <param name="args"></param>
 		protected void GroupDisbandCallback(DOLEvent e, object sender, EventArgs args)
 		{
-			PlayerDisbandedEventArgs eArgs = args as PlayerDisbandedEventArgs;
+			MemberDisbandedEventArgs eArgs = args as MemberDisbandedEventArgs;
 			if (eArgs == null) return;
-			if (eArgs.Player == InterceptSource || eArgs.Player == InterceptTarget)
+			if (eArgs.Member == InterceptSource || eArgs.Member == InterceptTarget)
 			{
 				Cancel(false);
 			}

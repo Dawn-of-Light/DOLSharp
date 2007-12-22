@@ -47,8 +47,8 @@ namespace DOL.GS.Effects
 			if (carrier == target) effectiveness = 1;
 			else if (carrier.Guild != null && target.Guild != null && carrier.Guild == target.Guild)
 				effectiveness = 1;
-			else if (carrier.PlayerGroup != null && target.PlayerGroup != null
-				&& carrier.PlayerGroup.IsInTheGroup(target))
+			else if (carrier.Group != null && target.Group != null
+				&& carrier.Group.IsInTheGroup(target))
 				effectiveness = 0.5;
 
 			#region Get new classdependend effect

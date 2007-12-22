@@ -208,9 +208,14 @@ namespace DOL.GS.Keeps
 			return getKeepCloseToSpot(regionid, point3d.X, point3d.Y, point3d.Z, radius);
 		}
 
-		public static IList getKeepsByRealmMap(int map)
+		/// <summary>
+		/// Gets all keeps by a realm map /rw
+		/// </summary>
+		/// <param name="map"></param>
+		/// <returns></returns>
+		public static ICollection<AbstractGameKeep> getKeepsByRealmMap(int map)
 		{
-			ArrayList myKeeps = new ArrayList();
+			List<AbstractGameKeep> myKeeps = new List<AbstractGameKeep>();
 			SortedList keepsByID = new SortedList();
 			foreach (AbstractGameKeep keep in m_keeps.Values)
 			{
@@ -261,14 +266,14 @@ namespace DOL.GS.Keeps
 			return null;
 		}
 
-		public static IList getNFKeeps()
+		public static ICollection<AbstractGameKeep> GetNFKeeps()
 		{
 			return GetKeepsOfRegion(163);
 		}
 
-		public static IList GetKeepsOfRegion(ushort region)
+		public static ICollection<AbstractGameKeep> GetKeepsOfRegion(ushort region)
 		{
-			ArrayList myKeeps = new ArrayList();
+			List<AbstractGameKeep> myKeeps = new List<AbstractGameKeep>();
 			foreach (AbstractGameKeep keep in m_keeps.Values)
 			{
 				if (keep.CurrentRegion.ID != region)
@@ -287,9 +292,9 @@ namespace DOL.GS.Keeps
 		/// <param name="z"></param>
 		/// <param name="radius"></param>
 		/// <returns></returns>
-		public static IEnumerable getKeepsCloseToSpot(ushort regionid, int x, int y, int z, int radius)
+		public static ICollection<AbstractGameKeep> getKeepsCloseToSpot(ushort regionid, int x, int y, int z, int radius)
 		{
-			ArrayList myKeeps = new ArrayList();
+			List<AbstractGameKeep> myKeeps = new List<AbstractGameKeep>();
 			long radiussqrt = radius * radius;
 			lock (m_keeps.SyncRoot)
 			{
@@ -382,19 +387,14 @@ namespace DOL.GS.Keeps
 			return index;
 		}
 
-		/// <summary>
-		/// Gets a copy of the current keeps table
-		/// </summary>
-		/// <returns></returns>
-		public static Hashtable Keeps
+		public static ICollection<AbstractGameKeep> GetAllKeeps()
 		{
-			get
+			List<AbstractGameKeep> myKeeps = new List<AbstractGameKeep>();
+			foreach (AbstractGameKeep keep in m_keeps.Values)
 			{
-				lock (m_keeps.SyncRoot)
-				{
-					return (Hashtable)m_keeps.Clone();
-				}
+				myKeeps.Add(keep);
 			}
+			return myKeeps;
 		}
 
 		/// <summary>
@@ -416,9 +416,9 @@ namespace DOL.GS.Keeps
 				case eGameServerType.GST_PvP:
 					{
 						//friendly player in group
-						if (checkGroup && target.PlayerGroup != null)
+						if (checkGroup && target.Group != null)
 						{
-							foreach (GamePlayer player in target.PlayerGroup.GetPlayersInTheGroup())
+							foreach (GamePlayer player in target.Group.GetPlayersInTheGroup())
 							{
 								if (!IsEnemy(keep, target, false))
 									return false;

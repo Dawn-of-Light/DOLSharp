@@ -33,12 +33,12 @@ namespace DOL.GS.Commands
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			if (client.Player.PlayerGroup == null || client.Player.PlayerGroup.PlayerCount < 2)
+			if (client.Player.Group == null || client.Player.Group.MemberCount < 2)
 			{
 				client.Out.SendMessage("You are not part of a group.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return 0;
 			}
-			if(client.Player.PlayerGroup.Leader != client.Player)
+			if(client.Player.Group.Leader != client.Player)
 			{
 				client.Out.SendMessage("You are not the leader of your group.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return 0;
@@ -60,7 +60,7 @@ namespace DOL.GS.Commands
 					return 1;
 				}
 				target = (GamePlayer)client.Player.TargetObject;
-				if(client.Player.PlayerGroup != target.PlayerGroup)
+				if(client.Player.Group != target.Group)
 				{
 					client.Out.SendMessage("You have not selected a valid player as your target.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					return 1;
@@ -73,7 +73,7 @@ namespace DOL.GS.Commands
 				if (targetClient == null)
 					target = null;
 				else target = targetClient.Player;
-				if(target==null || client.Player.PlayerGroup != target.PlayerGroup)
+				if(target==null || client.Player.Group != target.Group)
 				{ // Invalid target
 					client.Out.SendMessage("No players in group with that name.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					return 1;
@@ -86,8 +86,8 @@ namespace DOL.GS.Commands
 
 			}
 
-            client.Player.PlayerGroup.MakeLeader(target);
-			client.Player.PlayerGroup.SendMessageToGroupMembers(target.Name + " is new group leader.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            client.Player.Group.MakeLeader(target);
+			client.Player.Group.SendMessageToGroupMembers(target.Name + " is new group leader.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			return 0;
 		}

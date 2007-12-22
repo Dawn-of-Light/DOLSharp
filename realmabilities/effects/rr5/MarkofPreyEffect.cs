@@ -28,7 +28,7 @@ namespace DOL.GS.Effects
 	{
  		private GamePlayer EffectOwner;
  		private GamePlayer EffectCaster;
- 		private PlayerGroup m_playerGroup;
+ 		private Group m_playerGroup;
  		
         public MarkofPreyEffect()
             : base(RealmAbilities.MarkOfPreyAbility.DURATION)
@@ -44,8 +44,8 @@ namespace DOL.GS.Effects
 			if (Caster == null || CasterTarget == null)
 				return;
 
-			m_playerGroup = Caster.PlayerGroup;
-			if (m_playerGroup != CasterTarget.PlayerGroup)
+			m_playerGroup = Caster.Group;
+			if (m_playerGroup != CasterTarget.Group)
 				return;
 		
 			EffectCaster = Caster;
@@ -55,14 +55,14 @@ namespace DOL.GS.Effects
                 p.Out.SendSpellEffectAnimation(EffectCaster, EffectOwner, 7090, 0, false, 1);
             }
             GameEventMgr.AddHandler(EffectOwner, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));       
-			GameEventMgr.AddHandler(m_playerGroup, PlayerGroupEvent.PlayerDisbanded, new DOLEventHandler(GroupDisbandCallback));
+			GameEventMgr.AddHandler(m_playerGroup, GroupEvent.MemberDisbanded, new DOLEventHandler(GroupDisbandCallback));
             GameEventMgr.AddHandler(EffectOwner, GamePlayerEvent.AttackFinished, new DOLEventHandler(AttackFinished));
 		}
         public override void Stop()
         {
             if (EffectOwner != null)
             {
-				GameEventMgr.RemoveHandler(m_playerGroup, PlayerGroupEvent.PlayerDisbanded, new DOLEventHandler(GroupDisbandCallback));
+				GameEventMgr.RemoveHandler(m_playerGroup, GroupEvent.MemberDisbanded, new DOLEventHandler(GroupDisbandCallback));
            	 	GameEventMgr.RemoveHandler(EffectOwner, GamePlayerEvent.AttackFinished, new DOLEventHandler(AttackFinished));        
                 GameEventMgr.RemoveHandler(EffectOwner, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
  				m_playerGroup = null;
@@ -120,9 +120,9 @@ namespace DOL.GS.Effects
 		/// <param name="args"></param>
 		protected void GroupDisbandCallback(DOLEvent e, object sender, EventArgs args)
 		{
-			PlayerDisbandedEventArgs eArgs = args as PlayerDisbandedEventArgs;
+			MemberDisbandedEventArgs eArgs = args as MemberDisbandedEventArgs;
 			if (eArgs == null) return;
-			if (eArgs.Player == EffectOwner)
+			if (eArgs.Member == EffectOwner)
 			{
 				Cancel(false);
 			}

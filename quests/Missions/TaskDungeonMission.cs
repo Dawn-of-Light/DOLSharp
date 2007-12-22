@@ -76,8 +76,8 @@ namespace DOL.GS.Quests
             log.Info("INFO: Successfully entered TaskDungeonMission!");
 			GamePlayer player = owner as GamePlayer;
 
-			if (owner is PlayerGroup)
-				player = (owner as PlayerGroup).Leader;
+			if (owner is Group)
+				player = (owner as Group).Leader;
 
 			if (player == null)
 				return;
@@ -133,7 +133,7 @@ namespace DOL.GS.Quests
 
 		private static byte GetLevelFromPlayer(GamePlayer player)
 		{
-			if (player.PlayerGroup == null)
+			if (player.Group == null)
 			{
 				/*
 				 * solo
@@ -156,7 +156,7 @@ namespace DOL.GS.Quests
 			else
 			{
 				//to make this easier, we will use the players level  + group count
-				return (byte)(player.Level + player.PlayerGroup.PlayerCount);
+				return (byte)(player.Level + player.Group.MemberCount);
 			}
 		}
 
@@ -219,9 +219,9 @@ namespace DOL.GS.Quests
 								{
 									(m_owner as GamePlayer).Out.SendMessage((m_total - m_current) + " " + m_targetName + " Left", eChatType.CT_ScreenCenter, eChatLoc.CL_ChatWindow);
 								}
-								else if (m_owner is PlayerGroup)
+								else if (m_owner is Group)
 								{
-									foreach (GamePlayer player in (m_owner as PlayerGroup).GetPlayersInTheGroup())
+									foreach (GamePlayer player in (m_owner as Group).GetPlayersInTheGroup())
 									{
 										player.Out.SendMessage((m_total - m_current) + " " + m_targetName + " Left", eChatType.CT_ScreenCenter, eChatLoc.CL_ChatWindow);
 									}
@@ -242,9 +242,9 @@ namespace DOL.GS.Quests
 							{
 								(m_owner as GamePlayer).Out.SendMessage((m_total - m_current) + " Creatures Left", eChatType.CT_ScreenCenter, eChatLoc.CL_ChatWindow);
 							}
-							else if (m_owner is PlayerGroup)
+							else if (m_owner is Group)
 							{
-								foreach (GamePlayer player in (m_owner as PlayerGroup).GetPlayersInTheGroup())
+								foreach (GamePlayer player in (m_owner as Group).GetPlayersInTheGroup())
 								{
 									player.Out.SendMessage((m_total - m_current) + " Creatures Left", eChatType.CT_ScreenCenter, eChatLoc.CL_ChatWindow);
 								}
@@ -292,8 +292,8 @@ namespace DOL.GS.Quests
 		{
 			get {
 				GamePlayer player = m_owner as GamePlayer;
-				if (m_owner is PlayerGroup)
-					player = (m_owner as PlayerGroup).Leader;
+				if (m_owner is Group)
+					player = (m_owner as Group).Leader;
 				return player.Level * player.Level * 100;
 			}
 		}
@@ -317,8 +317,8 @@ namespace DOL.GS.Quests
 			get
 			{
 				GamePlayer player = m_owner as GamePlayer;
-				if (m_owner is PlayerGroup)
-					player = (m_owner as PlayerGroup).Leader;
+				if (m_owner is Group)
+					player = (m_owner as Group).Leader;
 				long amount = XPMagicNumber * player.Level;
 				if (player.Level > 1)
 					amount += XPMagicNumber * (player.Level - 1);
@@ -336,9 +336,9 @@ namespace DOL.GS.Quests
 			{
 				(m_owner as GamePlayer).Out.SendMessage("Mission Complete", eChatType.CT_ScreenCenter, eChatLoc.CL_ChatWindow);
 			}
-			else if (m_owner is PlayerGroup)
+			else if (m_owner is Group)
 			{
-				foreach (GamePlayer player in (m_owner as PlayerGroup).GetPlayersInTheGroup())
+				foreach (GamePlayer player in (m_owner as Group).GetPlayersInTheGroup())
 				{
 					player.Out.SendMessage("Mission Complete", eChatType.CT_ScreenCenter, eChatLoc.CL_ChatWindow);
 				}

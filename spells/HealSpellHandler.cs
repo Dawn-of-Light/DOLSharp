@@ -96,9 +96,9 @@ namespace DOL.GS.Spells
             {
                 //player not grouped, anyone else
                 //player grouped, different group
-                if ((target as GamePlayer).PlayerGroup == null ||
-                    (Caster as GamePlayer).PlayerGroup == null ||
-                    (Caster as GamePlayer).PlayerGroup != (target as GamePlayer).PlayerGroup)
+                if ((target as GamePlayer).Group == null ||
+                    (Caster as GamePlayer).Group == null ||
+                    (Caster as GamePlayer).Group != (target as GamePlayer).Group)
                 {
                     MessageToCaster("That player does not want assistance", eChatType.CT_SpellResisted);
                     return false;

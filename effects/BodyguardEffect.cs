@@ -63,7 +63,7 @@ namespace DOL.GS.Effects
         /// <summary>
         /// Holds player group
         /// </summary>
-        private PlayerGroup m_playerGroup;
+        private Group m_playerGroup;
 
         /// <summary>
         /// Creates a new guard effect
@@ -82,15 +82,15 @@ namespace DOL.GS.Effects
             if (guardSource == null || guardTarget == null)
                 return;
 
-            m_playerGroup = guardSource.PlayerGroup;
+            m_playerGroup = guardSource.Group;
 
-            if (m_playerGroup != guardTarget.PlayerGroup)
+            if (m_playerGroup != guardTarget.Group)
                 return;
 
             m_guardSource = guardSource;
             m_guardTarget = guardTarget;
 
-            GameEventMgr.AddHandler(m_playerGroup, PlayerGroupEvent.PlayerDisbanded, new DOLEventHandler(GroupDisbandCallback1));
+            GameEventMgr.AddHandler(m_playerGroup, GroupEvent.MemberDisbanded, new DOLEventHandler(GroupDisbandCallback1));
 
             m_guardSource.EffectList.Add(this);
             m_guardTarget.EffectList.Add(this);
@@ -115,9 +115,9 @@ namespace DOL.GS.Effects
         /// <param name="args"></param>
         protected void GroupDisbandCallback1(DOLEvent e, object sender, EventArgs args)
         {
-            PlayerDisbandedEventArgs eArgs = args as PlayerDisbandedEventArgs;
+            MemberDisbandedEventArgs eArgs = args as MemberDisbandedEventArgs;
             if (eArgs == null) return;
-            if (eArgs.Player == GuardTarget || eArgs.Player == GuardSource)
+            if (eArgs.Member == GuardTarget || eArgs.Member == GuardSource)
             {
                 Cancel(false);
             }
@@ -129,7 +129,7 @@ namespace DOL.GS.Effects
 		/// <param name="playerCancel"></param>
         public override void Cancel(bool playerCancel)
         {
-            GameEventMgr.RemoveHandler(m_playerGroup, PlayerGroupEvent.PlayerDisbanded, new DOLEventHandler(GroupDisbandCallback1));
+            GameEventMgr.RemoveHandler(m_playerGroup, GroupEvent.MemberDisbanded, new DOLEventHandler(GroupDisbandCallback1));
             m_guardSource.EffectList.Remove(this);
             m_guardTarget.EffectList.Remove(this);
 

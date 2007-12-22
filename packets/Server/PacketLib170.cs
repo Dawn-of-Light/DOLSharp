@@ -262,7 +262,7 @@ namespace DOL.GS.PacketHandler
 			}
 			SendTCP(pak);
 		}
-		public override void SendWarmapUpdate(IList list)
+		public override void SendWarmapUpdate(ICollection<AbstractGameKeep> list)
 		{
 			if (m_gameClient.Player == null) return;
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.WarMapClaimedKeeps));
@@ -343,7 +343,7 @@ namespace DOL.GS.PacketHandler
 			int OwnerDFTowers = 0;
 			eRealm OwnerDF = eRealm.None;
 
-			foreach (AbstractGameKeep keep in KeepMgr.getNFKeeps())
+			foreach (AbstractGameKeep keep in KeepMgr.GetNFKeeps())
 			{
 				if (keep is GameKeep)
 				{

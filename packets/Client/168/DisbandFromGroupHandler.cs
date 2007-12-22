@@ -28,8 +28,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			//DOLConsole.WriteLine("got disband from "+client.Player.Name);
-
 			new PlayerDisbandAction(client.Player).Start(1);
 
 			return 1;
@@ -55,11 +53,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				GamePlayer player = (GamePlayer)m_actionSource;
 
-				if(player.PlayerGroup == null)
-				{
+				if(player.Group == null)
 					return;
-				}
-				player.PlayerGroup.RemovePlayer(player);
+
+				GameLiving disbandMember = player;
+
+				if (player.TargetObject != null &&
+					player.TargetObject is GameLiving &&
+					(player.TargetObject as GameLiving).Group != null &&
+					(player.TargetObject as GameLiving).Group == player.Group)
+					disbandMember = player.TargetObject as GameLiving;
+				player.Group.RemoveMember(disbandMember);
 			}
 		}
 	}
