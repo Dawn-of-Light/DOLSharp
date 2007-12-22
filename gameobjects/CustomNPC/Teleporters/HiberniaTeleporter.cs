@@ -103,7 +103,8 @@ namespace DOL.GS
 				case "aalid feie":
 					break;	// No text?
 				case "battlegrounds":
-					break;	// No text?
+					SayTo(player, "I will teleport you to the appropriate battleground for your level and Realm Rank. If you exceed the Realm Rank for a battleground, you will not teleport. Please gain more experience to go to the next battleground.");
+					break;
 				case "cruachan gorge":
 					SayTo(player, "Now to the Frontiers for the glory of the realm!");
 					break;

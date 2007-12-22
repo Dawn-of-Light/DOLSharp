@@ -124,7 +124,8 @@ namespace DOL.GS
 					SayTo(player, "You shall soon arrive in the Avalon Marsh.");
 					break;
 				case "battlegrounds":
-					break;	// No text?
+					SayTo(player, "I will teleport you to the appropriate battleground for your level and Realm Rank. If you exceed the Realm Rank for a battleground, you will not teleport. Please gain more experience to go to the next battleground.");
+					break;
 				case "camelot":
 					SayTo(player, "The great city awaits!");
 					break;
