@@ -101,7 +101,7 @@ namespace DOL.GS.SkillHandler
 				}
 				return true;
 			}
-			if (player != null && (bitmask & NOTINGROUP) != 0 && player.PlayerGroup == null)
+			if (player != null && (bitmask & NOTINGROUP) != 0 && player.Group == null)
 			{
 				player.Out.SendMessage("You must be in a group use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return true;

@@ -69,8 +69,8 @@ namespace DOL.GS.Spells
 			if(player != null) 
 			{
 				player.Client.Out.SendUpdateMaxSpeed();
-				if(player.PlayerGroup != null)
-					player.PlayerGroup.UpdateMember(player, false, false);
+				if(player.Group != null)
+					player.Group.UpdateMember(player, false, false);
 			}
 			else
 			{
@@ -96,8 +96,8 @@ namespace DOL.GS.Spells
 			if(player != null) 
 			{
 				player.Client.Out.SendUpdateMaxSpeed();
-				if( player.PlayerGroup != null) 
-					player.PlayerGroup.UpdateMember(player, false, false);
+				if( player.Group != null) 
+					player.Group.UpdateMember(player, false, false);
 			}
 			else
 			{

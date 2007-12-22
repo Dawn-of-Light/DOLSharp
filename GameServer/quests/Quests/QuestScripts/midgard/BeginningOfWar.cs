@@ -790,9 +790,9 @@ namespace DOL.GS.Quests.Midgard
 								SendEmoteMessage(player, "Dalikor cocks an eyebrow as a portal opens behind you.");
 
 								bool briediCloneCreated = false;
-								if (player.PlayerGroup != null)
+								if (player.Group != null)
 								{
-									foreach (GamePlayer groupMember in player.PlayerGroup.GetPlayersInTheGroup())
+									foreach (GamePlayer groupMember in player.Group.GetPlayersInTheGroup())
 									{
 										BeginningOfWar memberQuest = groupMember.IsDoingQuest(typeof (BeginningOfWar)) as BeginningOfWar;
 										// we found another groupmember doing the same quest...
@@ -961,9 +961,9 @@ namespace DOL.GS.Quests.Midgard
 						quest.briediClone.MaxSpeedBase = player.MaxSpeedBase;
 						quest.briediClone.Follow(player, 100, 3000);
 						quest.Step = 15;
-						if (player.PlayerGroup != null)
+						if (player.Group != null)
 						{
-							foreach (GamePlayer groupMember in player.PlayerGroup.GetPlayersInTheGroup())
+							foreach (GamePlayer groupMember in player.Group.GetPlayersInTheGroup())
 							{
 								BeginningOfWar memberQuest = groupMember.IsDoingQuest(typeof (BeginningOfWar)) as BeginningOfWar;
 								// we found another groupmember doing the same quest...

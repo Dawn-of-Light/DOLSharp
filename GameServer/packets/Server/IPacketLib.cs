@@ -487,7 +487,7 @@ namespace DOL.GS.PacketHandler
 		void SendQuestSubscribeCommand(GameNPC invitingNPC,ushort questid, string inviteMessage);
 		void SendQuestAbortCommand(GameNPC abortingNPC, ushort questid, string abortMessage);
 		void SendGroupWindowUpdate();
-		void SendGroupMemberUpdate(bool updateIcons, GamePlayer player);
+		void SendGroupMemberUpdate(bool updateIcons, GameLiving living);
 		void SendGroupMembersUpdate(bool updateIcons);
 		void SendInventoryItemsUpdate(ICollection itemsToUpdate);
 		void SendInventorySlotsUpdate(ICollection slots);
@@ -551,7 +551,7 @@ namespace DOL.GS.PacketHandler
 		void SendKeepComponentHookPoint(GameKeepComponent component,int selectedHookPointIndex);
 		void SendClearKeepComponentHookPoint(GameKeepComponent component,int selectedHookPointIndex);
 		void SendHookPointStore(GameKeepHookPoint hookPoint);
-		void SendWarmapUpdate(IList list);
+		void SendWarmapUpdate(ICollection<AbstractGameKeep> list);
 		void SendWarmapDetailUpdate(List<List<byte>> fights, List<List<byte>> groups);
 		void SendWarmapBonuses();
 		//housing

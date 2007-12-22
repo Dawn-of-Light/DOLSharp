@@ -1069,7 +1069,7 @@ namespace DOL.GS.Quests.Albion
 				SendSystemMessage(player, "As you approach the fallen tower you see Morgana standing on top of the tower.");
 				quest.CreateMorgana();
 
-				if (player.PlayerGroup != null)
+				if (player.Group != null)
 					Morgana.Yell("Ha, is this all the forces of Albion have to offer? I expected a whole army leaded by my brother Arthur, but what do they send a little group of adventurers lead by a poor " + player.CharacterClass.Name + "?");
 				else
 					Morgana.Yell("Ha, is this all the forces of Albion have to offer? I expected a whole army leaded by my brother Arthur, but what do they send a poor " + player.CharacterClass.Name + "?");

@@ -36,7 +36,7 @@ namespace DOL.GS.Spells
 			m_startReuseTimer = true;
 			// do not start spell if not in combat
 			GamePlayer player = Caster as GamePlayer;
-			if (!Caster.InCombat && (player==null || player.PlayerGroup==null || !player.PlayerGroup.IsGroupInCombat()))
+			if (!Caster.InCombat && (player==null || player.Group==null || !player.Group.IsGroupInCombat()))
 				return;
 			base.StartSpell(target);
 		}

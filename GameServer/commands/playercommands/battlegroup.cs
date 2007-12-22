@@ -174,7 +174,7 @@ namespace DOL.GS.Commands
 
                         foreach (GamePlayer player in mybattlegroup.Members.Keys)
                         {
-                            if (player.PlayerGroup != null && player.PlayerGroup.PlayerCount > 1)
+                            if (player.Group != null && player.Group.MemberCount > 1)
                             {
                                 curBattleGroupGrouped.Add(player);
                             }
@@ -194,7 +194,7 @@ namespace DOL.GS.Commands
                                 text.Append(i);
                                 text.Append(") ");
                                 i++; //Eg. 1)Batlas Ichijin etc.
-                                text.Append(grouped.PlayerGroup.GroupMemberString(grouped));
+                                text.Append(grouped.Group.GroupMemberString(grouped));
                                 client.Out.SendMessage(text.ToString(), eChatType.CT_BattleGroup, eChatLoc.CL_SystemWindow);
                                 firstrun = 1;
                             }
@@ -204,11 +204,11 @@ namespace DOL.GS.Commands
                                 text.Append(i);
                                 text.Append(") ");
                                 i++; //Eg. 1)Batlas Ichijin etc.
-                                text.Append(grouped.PlayerGroup.GroupMemberString(grouped));
+                                text.Append(grouped.Group.GroupMemberString(grouped));
                                 client.Out.SendMessage(text.ToString(), eChatType.CT_BattleGroup, eChatLoc.CL_SystemWindow);
                             }
 
-                            foreach (GamePlayer gpl in grouped.PlayerGroup)
+                            foreach (GamePlayer gpl in grouped.Group)
                             {
                                 if (mybattlegroup.IsInTheBattleGroup(gpl))
                                     ListedPeople.Add(gpl);
@@ -252,7 +252,7 @@ namespace DOL.GS.Commands
 
                    foreach (GamePlayer player in mybattlegroup.Members.Keys)
                    {
-                       if (player.PlayerGroup != null && player.PlayerGroup.PlayerCount > 1)
+                       if (player.Group != null && player.Group.MemberCount > 1)
                        {
                            curBattleGroupGrouped.Add(player);
                        }
@@ -272,7 +272,7 @@ namespace DOL.GS.Commands
                            text.Append(i);
                            text.Append(") ");
                            i++; //Eg. 1)Batlas Ichijin etc.
-                           text.Append(grouped.PlayerGroup.GroupMemberClassString(grouped));
+                           text.Append(grouped.Group.GroupMemberClassString(grouped));
                            client.Out.SendMessage(text.ToString(), eChatType.CT_BattleGroup, eChatLoc.CL_SystemWindow);
                            firstrun = 1;
                        }
@@ -282,11 +282,11 @@ namespace DOL.GS.Commands
                            text.Append(i);
                            text.Append(") ");
                            i++; //Eg. 1)Batlas Ichijin etc.
-                           text.Append(grouped.PlayerGroup.GroupMemberClassString(grouped));
+                           text.Append(grouped.Group.GroupMemberClassString(grouped));
                            client.Out.SendMessage(text.ToString(), eChatType.CT_BattleGroup, eChatLoc.CL_SystemWindow);
                        }
 
-                       foreach (GamePlayer gpl in grouped.PlayerGroup)
+                       foreach (GamePlayer gpl in grouped.Group)
                        {
                            if (mybattlegroup.IsInTheBattleGroup(gpl))
                                ListedPeople.Add(gpl);

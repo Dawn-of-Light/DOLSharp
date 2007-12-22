@@ -223,7 +223,7 @@ namespace DOL.GS.ServerRules
 			if (playerAttacker != null && playerDefender != null)
 			{
 				//check group
-				if (playerAttacker.PlayerGroup != null && playerAttacker.PlayerGroup.IsInTheGroup(playerDefender))
+				if (playerAttacker.Group != null && playerAttacker.Group.IsInTheGroup(playerDefender))
 				{
 					if (!quiet) MessageToLiving(playerAttacker, "You can't attack your group members.");
 					return false;
@@ -486,7 +486,7 @@ namespace DOL.GS.ServerRules
 			//pvp servers, the realm changes to the group leaders realm
 			if (killer is GamePlayer)
 			{
-				PlayerGroup group = ((killer as GamePlayer).PlayerGroup);
+				Group group = ((killer as GamePlayer).Group);
 				if (group != null)
 					realm = (eRealm)group.Leader.Realm;
 				else realm = (eRealm)killer.Realm;
@@ -494,9 +494,9 @@ namespace DOL.GS.ServerRules
 			else if (killer is GameNPC && (killer as GameNPC).Brain is IControlledBrain)
 			{
 				GamePlayer player = ((killer as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
-				PlayerGroup group = null;
+				Group group = null;
 				if (player != null)
-					group = player.PlayerGroup;
+					group = player.Group;
 				if (group != null)
 					realm = (eRealm)group.Leader.Realm;
 				else realm = (eRealm)killer.Realm;

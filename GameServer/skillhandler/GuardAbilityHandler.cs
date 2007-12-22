@@ -71,7 +71,7 @@ namespace DOL.GS.SkillHandler
 
 			// Only attacks on other players may be guarded. 
 			// guard may only be used on other players in group
-			PlayerGroup group = player.PlayerGroup;
+			Group group = player.Group;
 			if (guardTarget == null || group == null || !group.IsInTheGroup(guardTarget))
 			{
 				player.Out.SendMessage("You can only guard players in your group!", eChatType.CT_System, eChatLoc.CL_SystemWindow);

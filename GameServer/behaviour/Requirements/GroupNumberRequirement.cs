@@ -73,11 +73,11 @@ namespace DOL.GS.Behaviour.Requirements
 			bool result = true;
             GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
 
-            PlayerGroup group = player.PlayerGroup;
+            Group group = player.Group;
             int groupcount = 0;
             if (group != null)
             {
-                groupcount = group.PlayerCount;
+                groupcount = group.MemberCount;
             }
             result = compare(groupcount, N, Comparator);
 

@@ -93,12 +93,12 @@ namespace DOL.GS.Keeps
 			if (player.Client.Account.PrivLevel > 1)
 				return true;
 
-			if (player.PlayerGroup == null)
+			if (player.Group == null)
 			{
 				player.Out.SendMessage("You must be in a group to claim.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			if (player.PlayerGroup.PlayerCount < ServerProperties.Properties.CLAIM_NUM)
+			if (player.Group.MemberCount < ServerProperties.Properties.CLAIM_NUM)
 			{
 				player.Out.SendMessage("You need " + ServerProperties.Properties.CLAIM_NUM + " players to claim.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;

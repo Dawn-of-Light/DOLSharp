@@ -44,14 +44,14 @@ namespace DOL.GS.RealmAbilities
 			
 			ArrayList targets = new ArrayList();
 			//select targets
-            if (player.PlayerGroup == null)
+            if (player.Group == null)
             {
                 if(player.Health < player.MaxHealth)
                   targets.Add(player);
             }
             else
             {
-                foreach (GamePlayer tplayer in player.PlayerGroup.GetPlayersInTheGroup())
+                foreach (GamePlayer tplayer in player.Group.GetPlayersInTheGroup())
                 {
                     if (tplayer.IsAlive && WorldMgr.CheckDistance(player, tplayer, m_healRange)
                         && tplayer.Health < tplayer.MaxHealth)
@@ -61,7 +61,7 @@ namespace DOL.GS.RealmAbilities
 
 			if (targets.Count == 0)
 			{
-				player.Out.SendMessage(((player.PlayerGroup != null) ? "Your group is" : "You are") + " fully healed!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(((player.Group != null) ? "Your group is" : "You are") + " fully healed!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				return;
 			}
 

@@ -737,9 +737,9 @@ namespace DOL.GS.Quests.Midgard
 						quest.briediClone.SayTo(player, "Good fight Eeinken, good fight. Now that my work here is done, these fine recruits and I shall be heading back to Gotar where they can get some more training. Please tell Dalikor I returned to Gotar won't you? Be safe!");
 						quest.ResetMasterBriedi();
 						quest.Step = 4;
-						if (player.PlayerGroup != null)
+						if (player.Group != null)
 						{
-							foreach (GamePlayer groupMember in player.PlayerGroup.GetPlayersInTheGroup())
+							foreach (GamePlayer groupMember in player.Group.GetPlayersInTheGroup())
 							{
 								Culmination memberQuest = groupMember.IsDoingQuest(typeof (Culmination)) as Culmination;
 								// we found another groupmember doing the same quest...
@@ -772,9 +772,9 @@ namespace DOL.GS.Quests.Midgard
 							{
 								quest.briediClone.SayTo(player, "Attack!");
 								quest.Step = 2;
-								if (player.PlayerGroup != null)
+								if (player.Group != null)
 								{
-									foreach (GamePlayer groupMember in player.PlayerGroup.GetPlayersInTheGroup())
+									foreach (GamePlayer groupMember in player.Group.GetPlayersInTheGroup())
 									{
 										Culmination memberQuest = groupMember.IsDoingQuest(typeof (Culmination)) as Culmination;
 										// we found another groupmember doing the same quest...
@@ -1080,9 +1080,9 @@ namespace DOL.GS.Quests.Midgard
 
 
 				bool briediCloneCreated = false;
-				if (player.PlayerGroup != null)
+				if (player.Group != null)
 				{
-					foreach (GamePlayer groupMember in player.PlayerGroup.GetPlayersInTheGroup())
+					foreach (GamePlayer groupMember in player.Group.GetPlayersInTheGroup())
 					{
 						Culmination memberQuest = groupMember.IsDoingQuest(typeof (Culmination)) as Culmination;
 						// we found another groupmember doing the same quest...

@@ -264,8 +264,8 @@ namespace DOL.GS
 					// Update pet health in group window.
 
 					GamePlayer owner = ((Brain as IControlledBrain).Owner) as GamePlayer;
-					if (owner.PlayerGroup != null)
-						owner.PlayerGroup.UpdateMember(owner, false, false);
+					if (owner.Group != null)
+						owner.Group.UpdateMember(owner, false, false);
 				}
 			}
 		}

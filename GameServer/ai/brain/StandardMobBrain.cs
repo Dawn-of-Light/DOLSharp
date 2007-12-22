@@ -317,15 +317,15 @@ namespace DOL.AI.Brain
 			{
 				GamePlayer player = (GamePlayer)living;
 
-				if (player.PlayerGroup != null)
+				if (player.Group != null)
 				{ // player is in group, add whole group to aggro list
 					lock (m_aggroTable.SyncRoot)
 					{
-						foreach (GamePlayer groupPlayer in player.PlayerGroup.GetPlayersInTheGroup())
+						foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 						{
-							if (m_aggroTable[groupPlayer] == null)
+							if (m_aggroTable[p] == null)
 							{
-								m_aggroTable[groupPlayer] = 1L;	// add the missing group member on aggro table
+								m_aggroTable[p] = 1L;	// add the missing group member on aggro table
 							}
 						}
 					}
@@ -772,8 +772,8 @@ namespace DOL.AI.Brain
 			// players will get 3 adds.
 
 			GamePlayer attacker = (GamePlayer)attackData.Attacker;
-			PlayerGroup attackerGroup = attacker.PlayerGroup;
-			int numAttackers = (attackerGroup == null) ? 1 : attackerGroup.PlayerCount;
+			Group attackerGroup = attacker.Group;
+			int numAttackers = (attackerGroup == null) ? 1 : attackerGroup.MemberCount;
 			int maxAdds = (numAttackers + 1) / 2 - 1;
 			if (maxAdds > 0)
 			{
@@ -816,7 +816,7 @@ namespace DOL.AI.Brain
 		/// <returns></returns>
 		protected virtual GamePlayer PickTarget(GamePlayer attacker)
 		{
-			PlayerGroup attackerGroup = attacker.PlayerGroup;
+			Group attackerGroup = attacker.Group;
 
 			// If no group, pick the attacker himself.
 

@@ -35,7 +35,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					GroupMgr.RemovePlayerLooking(client.Player);
 					break;
 				default:
-					PlayerGroup group = client.Player.PlayerGroup;
+					Group group = client.Player.Group;
 					if (group != null)
 					{
 						group.Status = code;

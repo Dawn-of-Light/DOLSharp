@@ -1114,7 +1114,7 @@ namespace DOL.GS.PacketHandler
 				byte nbsolo = 0x1E;
 				foreach (GamePlayer player in list)
 				{
-					if (player.PlayerGroup != null)
+					if (player.Group != null)
 					{
 						pak.WriteByte(nbleader++);
 					}
@@ -1339,8 +1339,8 @@ namespace DOL.GS.PacketHandler
 			AbstractMission pMission = m_gameClient.Player.Mission;
 
 			AbstractMission gMission = null;
-			if (m_gameClient.Player.PlayerGroup != null)
-				gMission = m_gameClient.Player.PlayerGroup.Mission;
+			if (m_gameClient.Player.Group != null)
+				gMission = m_gameClient.Player.Group.Mission;
 
 			AbstractMission rMission = null;
 
@@ -1421,14 +1421,14 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
 			pak.WriteByte(0x06);
 
-			PlayerGroup group = m_gameClient.Player.PlayerGroup;
+			Group group = m_gameClient.Player.Group;
 			if (group == null)
 			{
 				pak.WriteByte(0x00);
 			}
 			else
 			{
-				pak.WriteByte((byte)group.PlayerCount);
+				pak.WriteByte((byte)group.MemberCount);
 			}
 
 			pak.WriteByte(0x01);
@@ -1438,9 +1438,8 @@ namespace DOL.GS.PacketHandler
 			{
 				lock (group)
 				{
-					for (int i = 0; i < group.PlayerCount; ++i)
+					foreach (GamePlayer updatePlayer in group)
 					{
-						GamePlayer updatePlayer = group[i];
 						bool sameRegion = updatePlayer.CurrentRegion == m_gameClient.Player.CurrentRegion;
 
 						pak.WriteByte(updatePlayer.Level);
@@ -1482,20 +1481,20 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-		public void SendGroupMemberUpdate(bool updateIcons, GamePlayer player)
+		public void SendGroupMemberUpdate(bool updateIcons, GameLiving living)
 		{
 			if (m_gameClient.Player == null)
 				return;
-			PlayerGroup group = m_gameClient.Player.PlayerGroup;
+			Group group = m_gameClient.Player.Group;
 			if (group == null)
 				return;
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.GroupMemberUpdate));
 			lock (group)
 			{ // make sure group is not modified before update is sent else player index could change _before_ update
-				if (player.PlayerGroup != group)
+				if (living.Group != group)
 					return;
-				WriteGroupMemberUpdate(pak, updateIcons, player);
+				WriteGroupMemberUpdate(pak, updateIcons, living);
 				pak.WriteByte(0x00);
 				SendTCP(pak);
 			}
@@ -1506,38 +1505,38 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null)
 				return;
 
-			PlayerGroup group = m_gameClient.Player.PlayerGroup;
+			Group group = m_gameClient.Player.Group;
 			if (group == null)
 				return;
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.GroupMemberUpdate));
 			lock (group)
 			{ // make sure group is not modified before update is sent else player index could change _before_ update
-				foreach (GamePlayer player in group)
-					WriteGroupMemberUpdate(pak, updateIcons, player);
+				foreach (GameLiving living in group)
+					WriteGroupMemberUpdate(pak, updateIcons, living);
 				pak.WriteByte(0x00);
 				SendTCP(pak);
 			}
 		}
 
-		protected virtual void WriteGroupMemberUpdate(GSTCPPacketOut pak, bool updateIcons, GamePlayer player)
+		protected virtual void WriteGroupMemberUpdate(GSTCPPacketOut pak, bool updateIcons, GameLiving living)
 		{
-			pak.WriteByte((byte)(player.PlayerGroupIndex + 1)); // From 1 to 8
-			bool sameRegion = player.CurrentRegion == m_gameClient.Player.CurrentRegion;
+			pak.WriteByte((byte)(living.GroupIndex + 1)); // From 1 to 8
+			bool sameRegion = living.CurrentRegion == m_gameClient.Player.CurrentRegion;
 			if (sameRegion)
 			{
-				pak.WriteByte(player.HealthPercent);
-				pak.WriteByte(player.ManaPercent);
+				pak.WriteByte(living.HealthPercent);
+				pak.WriteByte(living.ManaPercent);
 
 				byte playerStatus = 0;
-				if (!player.IsAlive)
+				if (!living.IsAlive)
 					playerStatus |= 0x01;
-				if (player.IsMezzed)
+				if (living.IsMezzed)
 					playerStatus |= 0x02;
-				if (player.IsDiseased)
+				if (living.IsDiseased)
 					playerStatus |= 0x04;
-				if (SpellHandler.FindEffectOnTarget(player, "DamageOverTime") != null)
+				if (SpellHandler.FindEffectOnTarget(living, "DamageOverTime") != null)
 					playerStatus |= 0x08;
-				if (player.Client.ClientState == GameClient.eClientState.Linkdead)
+				if (living is GamePlayer && ((GamePlayer)living).Client.ClientState == GameClient.eClientState.Linkdead)
 					playerStatus |= 0x10;
 				if (!sameRegion)
 					playerStatus |= 0x20;
@@ -1548,15 +1547,15 @@ namespace DOL.GS.PacketHandler
 
 				if (updateIcons)
 				{
-					pak.WriteByte((byte)(0x80 | player.PlayerGroupIndex));
-					lock (player.EffectList)
+					pak.WriteByte((byte)(0x80 | living.GroupIndex));
+					lock (living.EffectList)
 					{
 						byte i = 0;
-						foreach (IGameEffect effect in player.EffectList)
+						foreach (IGameEffect effect in living.EffectList)
 							if (effect is GameSpellEffect)
 								i++;
 						pak.WriteByte(i);
-						foreach (IGameEffect effect in player.EffectList)
+						foreach (IGameEffect effect in living.EffectList)
 							if (effect is GameSpellEffect)
 							{
 								pak.WriteShort(effect.Icon);
@@ -1570,7 +1569,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte(0x20);
 				if (updateIcons)
 				{
-					pak.WriteByte((byte)(0x80 | player.PlayerGroupIndex));
+					pak.WriteByte((byte)(0x80 | living.GroupIndex));
 					pak.WriteByte(0);
 				}
 			}
@@ -2795,7 +2794,7 @@ namespace DOL.GS.PacketHandler
 		public virtual void SendKeepComponentDetailUpdate(GameKeepComponent keepComponent)
 		{
 		}
-		public virtual void SendWarmapUpdate(IList list)
+		public virtual void SendWarmapUpdate(ICollection<AbstractGameKeep> list)
 		{
 		}
 		public virtual void SendWarmapBonuses()

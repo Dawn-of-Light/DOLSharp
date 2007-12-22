@@ -29,7 +29,7 @@ namespace DOL.GS.Commands
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			if (client.Player.PlayerGroup == null)
+			if (client.Player.Group == null)
 			{
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Disband.NotInGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
@@ -37,40 +37,39 @@ namespace DOL.GS.Commands
 
 			if (args.Length < 2)//disband myslef
 			{
-				client.Player.PlayerGroup.RemovePlayer(client.Player);
+				client.Player.Group.RemoveMember(client.Player);
 				return 1;
 			}
 			else//disband by name
 			{
-				if (client.Player.PlayerGroup.Leader != client.Player)
+				if (client.Player.Group.Leader != client.Player)
 				{
 					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Disband.NotLeader"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 1;
 				}
 
-				GamePlayer target;
 				string name = args[1];
 
-				GameClient targetClient = WorldMgr.GetClientByPlayerNameAndRealm(name, client.Player.Realm, false);
-				if (targetClient == null)
-					target = null;
-				else
-					target = targetClient.Player;
-
-				if (target == null || client.Player.PlayerGroup != target.PlayerGroup)
-				{ // Invalid target 
-					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Disband.NoPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
-				}
-
-				if (target == client.Player)
+				if (name == client.Player.Name)
 				{
 					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Disband.NoYourself"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 1;
 				}
 
-				client.Player.PlayerGroup.SendMessageToGroupMembers(LanguageMgr.GetTranslation(client, "Scripts.Players.Disband.Disbanded", target.Name), eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-				target.PlayerGroup.RemovePlayer(target);
+				int startCount = client.Player.Group.MemberCount;
+
+				foreach (GameLiving living in client.Player.Group.GetMembersInTheGroup())
+				{
+					if (living.Name == name)
+						client.Player.Group.RemoveMember(living);
+				}
+
+				//no target found to remove
+				if (client.Player.Group.MemberCount == startCount)
+				{
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Disband.NoPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return 1;
+				}
 			}
 
 			return 0;

@@ -17,7 +17,6 @@
  *
  */
 using DOL.GS.PacketHandler;
-// TODO: Restrict inviting to own realm.
 
 namespace DOL.GS.Commands
 {
@@ -29,7 +28,7 @@ namespace DOL.GS.Commands
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
-			if (client.Player.PlayerGroup != null && client.Player.PlayerGroup.Leader != client.Player)
+			if (client.Player.Group != null && client.Player.Group.Leader != client.Player)
 			{
 				client.Out.SendMessage("You are not the leader of your group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 0;
@@ -76,7 +75,7 @@ namespace DOL.GS.Commands
 				}
 			}
 
-			if (target.PlayerGroup != null)
+			if (target.Group != null)
 			{
 				client.Out.SendMessage("The player is still in a group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;

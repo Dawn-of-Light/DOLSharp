@@ -41,10 +41,10 @@ namespace DOL.GS.RealmAbilities
 			if (player == null) return;
 
 			ArrayList targets = new ArrayList(); 
-			if (player.PlayerGroup == null)
+			if (player.Group == null)
 				targets.Add(player);
 			else
-				foreach (GamePlayer grpMate in player.PlayerGroup.GetPlayersInTheGroup())
+				foreach (GamePlayer grpMate in player.Group.GetPlayersInTheGroup())
 					if (WorldMgr.CheckDistance(grpMate, player, RANGE) && grpMate.IsAlive)
 						if(grpMate.CharacterClass.ClassType == eClassType.Hybrid
 				  			|| grpMate.CharacterClass.ClassType == eClassType.PureTank)

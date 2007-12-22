@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.Database;
 
 
@@ -25,7 +26,7 @@ namespace DOL.GS.Keeps
 {
 	public interface IKeep
 	{
-		ArrayList KeepComponents { get;}
+		List<GameKeepComponent> KeepComponents { get;}
 		Hashtable Guards { get;}
 		Hashtable Banners { get;}
 		void Load(DBKeep keep);

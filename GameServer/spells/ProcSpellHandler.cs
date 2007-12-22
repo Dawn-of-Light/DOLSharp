@@ -302,11 +302,11 @@ namespace DOL.GS.Spells
                         GamePlayer player = Caster as GamePlayer;
                         if (Caster is GamePlayer)
                         {
-                            if (player.PlayerGroup != null)
+                            if (player.Group != null)
                             {
-                                lock (player.PlayerGroup)
+                                lock (player.Group)
                                 {
-                                    foreach (GamePlayer groupPlayer in player.PlayerGroup)
+                                    foreach (GamePlayer groupPlayer in player.Group)
                                     {
                                         if (WorldMgr.CheckDistance(player, groupPlayer, m_procSpell.Range))
                                         {

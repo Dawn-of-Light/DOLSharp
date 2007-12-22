@@ -140,16 +140,16 @@ namespace DOL.GS.Keeps
 					{
 						if (keep.Guild != null)
 							return false;
-						foreach (AbstractGameKeep k in KeepMgr.Keeps.Values)
+						foreach (AbstractGameKeep k in KeepMgr.GetAllKeeps())
 						{
 							if (k.Guild == player.Guild)
 								return false;
 						}
-						if (player.PlayerGroup == null)
+						if (player.Group == null)
 							return false;
-						if (player.PlayerGroup.Leader != player)
+						if (player.Group.Leader != player)
 							return false;
-						if (player.PlayerGroup.PlayerCount < ServerProperties.Properties.CLAIM_NUM)
+						if (player.Group.MemberCount < ServerProperties.Properties.CLAIM_NUM)
 							return false;
 						if (!player.GuildRank.Claim)
 							return false;

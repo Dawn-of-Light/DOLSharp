@@ -3296,10 +3296,10 @@ namespace DOL.GS
 			missrate -= ad.Attacker.GetModified(eProperty.ToHitBonus);
 			// PVE group missrate
 			if (this is GameNPC && ad.Attacker is GamePlayer &&
-				((GamePlayer)ad.Attacker).PlayerGroup != null &&
-				(int)(0.90 * ((GamePlayer)ad.Attacker).PlayerGroup.Leader.Level) >= ad.Attacker.Level &&
-				WorldMgr.CheckDistance(ad.Attacker, ((GamePlayer)ad.Attacker).PlayerGroup.Leader, 3000))
-				missrate -= (int)(5 * ((GamePlayer)ad.Attacker).PlayerGroup.Leader.GetConLevel(this));
+				((GamePlayer)ad.Attacker).Group != null &&
+				(int)(0.90 * ((GamePlayer)ad.Attacker).Group.Leader.Level) >= ad.Attacker.Level &&
+				WorldMgr.CheckDistance(ad.Attacker, ((GamePlayer)ad.Attacker).Group.Leader, 3000))
+				missrate -= (int)(5 * ((GamePlayer)ad.Attacker).Group.Leader.GetConLevel(this));
 			else if (this is GameNPC || ad.Attacker is GameNPC) // if target is not player use level mod
 			{
 				missrate += (int)(5 * ad.Attacker.GetConLevel(this));
@@ -3483,16 +3483,15 @@ namespace DOL.GS
 					}
 				}
 
-				PlayerGroup attackerGroup = attackerPlayer.PlayerGroup;
+				Group attackerGroup = attackerPlayer.Group;
 				if (attackerGroup != null)
 				{
 					ArrayList xpGainers = new ArrayList(8);
 					lock (attackerGroup)
 					{
 						// collect "helping" group players in range
-						for (int i = 0; i < attackerGroup.PlayerCount; i++)
+						foreach (GamePlayer player in attackerGroup)
 						{
-							GamePlayer player = attackerGroup[i];
 							if (WorldMgr.CheckDistance(player, this, WorldMgr.MAX_EXPFORKILL_DISTANCE) && player.IsAlive && player.ObjectState == eObjectState.Active)
 								xpGainers.Add(player);
 						}
@@ -4694,6 +4693,14 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		}
 
 		/// <summary>
+		/// Health as it should display in the group window.
+		/// </summary>
+		public virtual byte HealthPercentGroupWindow
+		{
+			get { return HealthPercent; }
+		}
+
+		/// <summary>
 		/// Gets/sets the object mana
 		/// </summary>
 		public virtual int Mana
@@ -5866,6 +5873,35 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		{
 		}
 
+		#endregion
+
+		#region Group
+		/// <summary>
+		/// Holds the group of this player
+		/// </summary>
+		protected Group m_group;
+		/// <summary>
+		/// Holds the index of this player inside of the group
+		/// </summary>
+		protected int m_groupIndex;
+
+		/// <summary>
+		/// Gets or sets the player's group
+		/// </summary>
+		public Group Group
+		{
+			get { return m_group; }
+			set { m_group = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the index of this player inside of the group
+		/// </summary>
+		public int GroupIndex
+		{
+			get { return m_groupIndex; }
+			set { m_groupIndex = value; }
+		}
 		#endregion
 
 		/// <summary>
