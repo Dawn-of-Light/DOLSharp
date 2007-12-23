@@ -150,7 +150,8 @@ namespace DOL.GS.Quests
 		/// <param name="player"></param>
 		public virtual void OfferQuest(GamePlayer player)
 		{
-			player.Out.SendQuestOfferWindow(QuestGiver, player, this);
+			if (CheckQuestQualification(player))
+				player.Out.SendQuestOfferWindow(QuestGiver, player, this);
 		}
 
 		/// <summary>
@@ -222,6 +223,7 @@ namespace DOL.GS.Quests
 				GiveItem(QuestPlayer, basicReward);
 			foreach (ItemTemplate optionalReward in Rewards.ChosenItems)
 				GiveItem(QuestPlayer, optionalReward);
+			QuestPlayer.Out.SendNPCsQuestEffect(QuestGiver, QuestGiver.CanGiveOneQuest(QuestPlayer));
 		}
 
 		/// <summary>

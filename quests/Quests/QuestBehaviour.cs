@@ -116,8 +116,8 @@ namespace DOL.GS.Quests
 
             if (player == null)
             {
-                if (log.IsDebugEnabled)
-                    log.Debug("Couldn't guess player for EventArgs " + args + ". Triggers with this eventargs type won't work within quests.");
+				//if (log.IsDebugEnabled)
+				//    log.Debug("Couldn't guess player for EventArgs " + args + ". Triggers with this eventargs type won't work within quests.");
                 return;
             }
             AbstractQuest quest = player.IsDoingQuest(QuestType);
