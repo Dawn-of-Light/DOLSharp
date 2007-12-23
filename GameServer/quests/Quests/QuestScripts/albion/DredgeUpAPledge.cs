@@ -41,7 +41,7 @@ namespace DOL.GS.Quests.Albion
 
         protected const string questTitle = "Dredge Up a Pledge";
         protected const int minimumLevel = 1;
-        protected const int maximumLevel = 5;
+        protected const int maximumLevel = 50;
 
         private static GameNPC sirDorian = null;
         private QuestGoal banditPledgesKilled;
@@ -172,10 +172,6 @@ namespace DOL.GS.Quests.Albion
             if (player == null)
                 return;
 
-            if (sirDorian.CanGiveQuest(typeof(DredgeUpAPledge), player) <= 0)
-                return;
-
-
             DredgeUpAPledge quest = player.IsDoingQuest(typeof(DredgeUpAPledge)) as DredgeUpAPledge;
             sirDorian.TurnTo(player);
 
@@ -184,15 +180,12 @@ namespace DOL.GS.Quests.Albion
                 if (quest == null)
                 {
                     quest = new DredgeUpAPledge();
-                    quest.QuestGiver = sirDorian;
                     quest.OfferQuest(player);
                 }
                 else
                 {
                     if (quest.Step == 1 && quest.banditPledgesKilled.IsAchieved)
-                    {
                         quest.ChooseRewards(player);
-                    }
                 }
             }
         }
@@ -224,9 +217,20 @@ namespace DOL.GS.Quests.Albion
         /// <returns>true if qualified, false if not</returns>
         public override bool CheckQuestQualification(GamePlayer player)
         {
-            // if the player is already doing the quest his level is no longer of relevance
-            if (player.IsDoingQuest(typeof(DredgeUpAPledge)) != null)
-                return true;
+			// We're not going to offer this quest if the player is already on it...
+
+			if (player.IsDoingQuest(this.GetType()) != null)
+                return false;
+
+			// ...nor will we let him do it again.
+
+			if (player.HasFinishedQuest(this.GetType()) > 0)
+				return false;
+
+			// Also, he needs to finish another quest first.
+
+			if (player.HasFinishedQuest(typeof(NoHopeForTheHopeful)) <= 0)
+				return false;
 
             // This checks below are only performed is player isn't doing quest already
 
