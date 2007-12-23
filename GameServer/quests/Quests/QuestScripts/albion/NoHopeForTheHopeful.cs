@@ -203,10 +203,6 @@ namespace DOL.GS.Quests.Albion
 			GamePlayer player = ((SourceEventArgs)args).Source as GamePlayer;
 			if (player == null)
 				return;
-
-			if (sirDorian.CanGiveQuest(typeof(NoHopeForTheHopeful), player) <= 0)
-				return;
-
 			
 			NoHopeForTheHopeful quest = player.IsDoingQuest(typeof(NoHopeForTheHopeful)) as NoHopeForTheHopeful;
 			sirDorian.TurnTo(player);
@@ -253,9 +249,15 @@ namespace DOL.GS.Quests.Albion
 		/// <returns>true if qualified, false if not</returns>
 		public override bool CheckQuestQualification(GamePlayer player)
 		{
-			// if the player is already doing the quest his level is no longer of relevance
-			if (player.IsDoingQuest(typeof(NoHopeForTheHopeful)) != null)
-				return true;
+			// We're not going to offer this quest if the player is already on it...
+
+			if (player.IsDoingQuest(this.GetType()) != null)
+				return false;
+
+			// ...nor will we let him do it again.
+
+			if (player.HasFinishedQuest(this.GetType()) > 0)
+				return false;
 
 			// This checks below are only performed is player isn't doing quest already
 
