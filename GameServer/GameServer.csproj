@@ -2405,9 +2405,6 @@
     <Content Include="language\Language-FR.txt" />
     <Content Include="language\Language-IT.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="quests\Quests\QuestScripts\quests\" />
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
