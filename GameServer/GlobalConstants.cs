@@ -52,6 +52,7 @@ namespace DOL.GS
 		GenericWeapon = 1,
 
 		//Albion weapons
+		_FirstWeapon = 2,
 		CrushingWeapon = 2,
 		SlashingWeapon = 3,
 		ThrustWeapon = 4,
@@ -85,6 +86,7 @@ namespace DOL.GS
 		//Mauler weapons
 		FistWraps = 27,
 		MaulerStaff = 28,
+		_LastWeapon = 28,
 
 		//Armor
 		_FirstArmor = 31,
