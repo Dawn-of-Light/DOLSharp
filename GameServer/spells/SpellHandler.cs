@@ -1111,7 +1111,7 @@ namespace DOL.GS.Spells
 		/// <param name="boltDuration">The duration of a bolt</param>
 		/// <param name="noSound">sound?</param>
 		/// <param name="success">spell success?</param>
-		public virtual void SendEffectAnimation(GameLiving target, ushort boltDuration, bool noSound, byte success)
+		public virtual void SendEffectAnimation(GameObject target, ushort boltDuration, bool noSound, byte success)
 		{
 			if (target == null)
 				target = m_caster;
@@ -1132,7 +1132,7 @@ namespace DOL.GS.Spells
 				player.Out.SendInterruptAnimation(m_caster);
 			}
 		}
-		public virtual void SendEffectAnimation(GameLiving target, ushort clientEffect, ushort boltDuration, bool noSound, byte success)
+		public virtual void SendEffectAnimation(GameObject target, ushort clientEffect, ushort boltDuration, bool noSound, byte success)
 		{
 			if (target == null)
 				target = m_caster;

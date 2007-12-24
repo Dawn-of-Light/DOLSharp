@@ -110,7 +110,7 @@ namespace DOLGameServerConsole
 		public void SendCombatAnimation(GameObject attacker, GameObject defender, ushort weaponID, ushort shieldID, int style, byte stance, byte result, byte targetHealthPercent) { }
 		public void SendStatusUpdate() { }
 		public void SendSpellCastAnimation(GameLiving spellCaster, ushort spellID, ushort castingTime) { }
-		public void SendSpellEffectAnimation(GameLiving spellCaster, GameLiving spellTarget, ushort spellid, ushort boltTime, bool noSound, byte success) { }
+		public void SendSpellEffectAnimation(GameObject spellCaster, GameObject spellTarget, ushort spellid, ushort boltTime, bool noSound, byte success) { }
 		public void SendRiding(GameObject rider, GameObject steed, bool dismount) { }
 		public void SendFindGroupWindowUpdate(GamePlayer[] list) { }
 		public void SendDialogBox(eDialogCode code, ushort data1, ushort data2, ushort data3, ushort data4, eDialogType type, bool autoWarpText, string message) { }
