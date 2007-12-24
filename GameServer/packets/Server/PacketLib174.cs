@@ -410,7 +410,7 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-		public override void SendSpellEffectAnimation(GameLiving spellCaster, GameLiving spellTarget, ushort spellid, ushort boltTime, bool noSound, byte success)
+		public override void SendSpellEffectAnimation(GameObject spellCaster, GameObject spellTarget, ushort spellid, ushort boltTime, bool noSound, byte success)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.SpellEffectAnimation));
 			pak.WriteShort((ushort)spellCaster.ObjectID);
