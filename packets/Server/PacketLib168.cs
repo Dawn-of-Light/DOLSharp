@@ -1071,7 +1071,7 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-		public virtual void SendSpellEffectAnimation(GameLiving spellCaster, GameLiving spellTarget, ushort spellid, ushort boltTime, bool noSound, byte success)
+		public virtual void SendSpellEffectAnimation(GameObject spellCaster, GameObject spellTarget, ushort spellid, ushort boltTime, bool noSound, byte success)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.SpellEffectAnimation));
 			pak.WriteShort((ushort)spellCaster.ObjectID);

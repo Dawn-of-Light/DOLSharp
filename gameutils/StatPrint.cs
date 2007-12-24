@@ -49,10 +49,6 @@ namespace DOL.GS.GameEvents
 		private static PerformanceCounter m_processCpuUsedCounter;
 		private static Hashtable m_timerStatsByMgr;
 
-		public StatPrint()
-		{
-		}
-
 		[GameServerStartedEvent]
 		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
 		{
