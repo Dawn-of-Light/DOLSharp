@@ -3486,16 +3486,16 @@ namespace DOL.GS
 				Group attackerGroup = attackerPlayer.Group;
 				if (attackerGroup != null)
 				{
-					ArrayList xpGainers = new ArrayList(8);
-					lock (attackerGroup)
+					List<GameLiving> xpGainers = new List<GameLiving>(8);
+					// collect "helping" group players in range
+					foreach (GameLiving living in attackerGroup.GetMembersInTheGroup())
 					{
-						// collect "helping" group players in range
-						foreach (GameLiving living in attackerGroup)
-						{
-							if (WorldMgr.CheckDistance(living, this, WorldMgr.MAX_EXPFORKILL_DISTANCE) && living.IsAlive && living.ObjectState == eObjectState.Active)
-								this.AddXPGainer(living, (float)(damageDealt / xpGainers.Count));
-						}
+						if (WorldMgr.CheckDistance(living, this, WorldMgr.MAX_EXPFORKILL_DISTANCE) && living.IsAlive && living.ObjectState == eObjectState.Active)
+							xpGainers.Add(living);
 					}
+
+					foreach (GameLiving living in xpGainers)
+						this.AddXPGainer(living, (float)(damageDealt / xpGainers.Count));
 				}
 				else
 				{
