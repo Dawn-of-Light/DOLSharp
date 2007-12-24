@@ -473,7 +473,7 @@ namespace DOL.GS.PacketHandler
 		void SendCombatAnimation(GameObject attacker, GameObject defender, ushort weaponID, ushort shieldID, int style, byte stance, byte result, byte targetHealthPercent);
 		void SendStatusUpdate();
 		void SendSpellCastAnimation(GameLiving spellCaster, ushort spellID, ushort castingTime);
-		void SendSpellEffectAnimation(GameLiving spellCaster, GameLiving spellTarget,ushort spellid, ushort boltTime, bool noSound, byte success);
+		void SendSpellEffectAnimation(GameObject spellCaster, GameObject spellTarget,ushort spellid, ushort boltTime, bool noSound, byte success);
 		void SendRiding(GameObject rider, GameObject steed, bool dismount);
 		void SendFindGroupWindowUpdate(GamePlayer[] list);
 		void SendGroupInviteCommand(GamePlayer invitingPlayer, string inviteMessage);
