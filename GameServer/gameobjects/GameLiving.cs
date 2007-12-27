@@ -2461,7 +2461,7 @@ namespace DOL.GS
 					owner.DealDamage(mainHandAD);
 					if (mainHandAD.IsMeleeAttack)
 					{
-						owner.StartWeaponMagicalEffect(mainHandAD, mainWeapon); // proc, poison
+						owner.CheckWeaponMagicalEffect(mainHandAD, mainWeapon); // proc, poison
 						if (mainHandAD.Target is GameLiving)
 						{
 							GameLiving living = mainHandAD.Target as GameLiving;
@@ -2509,7 +2509,7 @@ namespace DOL.GS
 									owner.DealDamage(leftHandAD);
 									if (leftHandAD.IsMeleeAttack)
 									{
-										owner.StartWeaponMagicalEffect(leftHandAD, leftWeapon);
+										owner.CheckWeaponMagicalEffect(leftHandAD, leftWeapon);
 									}
 								}
 
@@ -2618,118 +2618,86 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Starts the weapon proc if any
+		/// Check if we can make a proc on a weapon go off.
 		/// </summary>
 		/// <param name="ad"></param>
 		/// <param name="weapon"></param>
-		protected virtual void StartWeaponMagicalEffect(AttackData ad, InventoryItem weapon)
+		protected virtual void CheckWeaponMagicalEffect(AttackData ad, InventoryItem weapon)
 		{
-			if (weapon != null)
+			if (weapon == null)
+				return;
+
+			// Proc chance is 2.5% per SPD, i.e. 10% for a 4.0 SPD weapon.
+
+			double procChance = weapon.SPD_ABS * 0.0025;
+
+			// Proc #1
+
+			if (weapon.ProcSpellID != 0 && Util.ChanceDouble(procChance))
+				StartWeaponMagicalEffect(ad, SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects),
+					weapon.ProcSpellID);
+
+			// Proc #2
+
+			if (weapon.ProcSpellID1 != 0 && Util.ChanceDouble(procChance))
+				StartWeaponMagicalEffect(ad, SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects),
+					weapon.ProcSpellID1);
+
+			// Poison
+
+			if (weapon.PoisonSpellID != 0)
 			{
-				// random chance (4.0spd = 10%)
-				if (weapon.ProcSpellID != 0 && Util.ChanceDouble(weapon.SPD_ABS * 0.0025))
+				if (ad.Target.EffectList.GetOfType(typeof(RemedyEffect)) != null)
 				{
-					SpellLine procEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-					if (procEffectLine != null)
-					{
-						IList spells = SkillBase.GetSpellList(procEffectLine.KeyName);
-						if (spells != null)
-						{
-							foreach (Spell spell in spells)
-							{
-								if (spell.ID == weapon.ProcSpellID)
-								{
-									if (spell.Level <= EffectiveLevel)
-									{
-										ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(ad.Attacker, spell, procEffectLine);
-										if (spellHandler != null)
-										{
-											spellHandler.StartSpell(ad.Target);
-										}
-									}
-									break;
-								}
-							}
-						}
-					}
+					if (this is GamePlayer)
+						(this as GamePlayer).Out.SendMessage("Your target is protected against your poison by a magical effect.",
+							eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					return;
 				}
 
-				// random chance (4.0spd = 10%)
-				if (weapon.ProcSpellID1 != 0 && Util.ChanceDouble(weapon.SPD_ABS * 0.0025))
+				StartWeaponMagicalEffect(ad, SkillBase.GetSpellLine(GlobalSpellsLines.Mundane_Poisons),
+					weapon.PoisonSpellID);
+
+				// Spymaster Enduring Poison
+
+				if (ad.Attacker is GamePlayer)
 				{
-					SpellLine procEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-					if (procEffectLine != null)
-					{
-						IList spells = SkillBase.GetSpellList(procEffectLine.KeyName);
-						if (spells != null)
-						{
-							foreach (Spell spell in spells)
-							{
-								if (spell.ID == weapon.ProcSpellID1)
-								{
-									if (spell.Level <= EffectiveLevel)
-									{
-										ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(ad.Attacker, spell, procEffectLine);
-										if (spellHandler != null)
-										{
-											spellHandler.StartSpell(ad.Target);
-										}
-									}
-									else if (this is GamePlayer)
-										((GamePlayer)this).Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									break;
-								}
-							}
-						}
-					}
+					GamePlayer PlayerAttacker = ad.Attacker as GamePlayer;
+					if (PlayerAttacker.GetSpellLine("Spymaster") != null)
+						if (Util.ChanceDouble((double)(15 * 0.0001))) return;
 				}
+				weapon.PoisonCharges--;
+				if (weapon.PoisonCharges <= 0) { weapon.PoisonMaxCharges = 0; weapon.PoisonSpellID = 0; }
+			}
+		}
 
-				// poison
+		/// <summary>
+		/// Make a proc or poison on the weapon go off.
+		/// </summary>
+		private void StartWeaponMagicalEffect(AttackData ad, SpellLine spellLine, int spellID)
+		{
+			if (spellLine == null)
+				return;
 
-				if (weapon.PoisonSpellID != 0)
+			IList spells = SkillBase.GetSpellList(spellLine.KeyName);
+			if (spells == null)
+				return;
+
+			foreach (Spell spell in spells)
+			{
+				if (spell.ID == spellID)
 				{
-					if (ad.Target.EffectList.GetOfType(typeof(RemedyEffect)) != null)
+					if (spell.Level > EffectiveLevel)
 					{
-						((GamePlayer)this).Out.SendMessage("Your target is protected against your poison by a magical effect.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						if (this is GamePlayer)
+							(this as GamePlayer).Out.SendMessage("You are not powerful enough to use this item's spell.",
+								eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 						return;
 					}
-					SpellLine poisonLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mundane_Poisons);
-					if (poisonLine != null)
-					{
-						IList spells = SkillBase.GetSpellList(poisonLine.KeyName);
-						if (spells != null)
-						{
-							foreach (Spell spell in spells)
-							{
-								if (spell.ID == weapon.PoisonSpellID)
-								{
-									if (spell.Level <= EffectiveLevel)
-									{
-										ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, poisonLine);
-										if (spellHandler != null)
-										{
-											spellHandler.StartSpell(ad.Target);
-										}
-									}
-									else if (this is GamePlayer)
-									{
-										((GamePlayer)this).Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-										return;
-									}
-									break;
-								}
-							}
-						}
-					}
-					// spymaster enduring poison
-					if (ad.Attacker is GamePlayer)
-					{
-						GamePlayer PlayerAttacker = ad.Attacker as GamePlayer;
-						if (PlayerAttacker.GetSpellLine("Spymaster") != null)
-							if (Util.ChanceDouble((double)(15 * 0.0001))) return;
-					}
-					weapon.PoisonCharges--;
-					if (weapon.PoisonCharges <= 0) { weapon.PoisonMaxCharges = 0; weapon.PoisonSpellID = 0; }
+
+					ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(ad.Attacker, spell, spellLine);
+					if (spellHandler != null)
+						spellHandler.StartSpell(ad.Target);
 				}
 			}
 		}
