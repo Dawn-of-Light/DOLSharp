@@ -26,24 +26,23 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player, //minimum privelege level
 		"Shows information about the server", //command description
 		"/serverinfo")] //usage
-		public class ServerInfoCommandHandler : ICommandHandler
+	public class ServerInfoCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			client.Out.SendMessage(GameServer.Instance.Configuration.ServerName, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-			AssemblyName an = Assembly.GetAssembly(typeof (GameServer)).GetName();
+			AssemblyName an = Assembly.GetAssembly(typeof(GameServer)).GetName();
 			client.Out.SendMessage("version: " + an.Version, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			client.Out.SendMessage("type: " + GameServer.Instance.Configuration.ServerType + " (" + GameServer.ServerRules.RulesDescription() + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			client.Out.SendMessage("playing: " + WorldMgr.GetAllPlayingClientsCount(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			if (client.Player != null)
 			{
-				long sec = client.Player.CurrentRegion.Time/1000;
-				long min = sec/60;
-				long hours = min/60;
-				long days = hours/24;
-				client.Out.SendMessage(string.Format("uptime: {0}d {1}h {2}m {3:00}s", days, hours%24, min%60, sec%60), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				long sec = client.Player.CurrentRegion.Time / 1000;
+				long min = sec / 60;
+				long hours = min / 60;
+				long days = hours / 24;
+				DisplayMessage(client, string.Format("uptime: {0}d {1}h {2}m {3:00}s", days, hours % 24, min % 60, sec % 60));
 			}
-			return 1;
 		}
 	}
 }

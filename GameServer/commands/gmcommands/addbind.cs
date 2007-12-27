@@ -27,9 +27,9 @@ namespace DOL.GS.Commands
 		ePrivLevel.GM,
 		"adds a bindpoint to the game",
 		"/addbind [radius=750]")]
-	public class AddBindCommandHandler : ICommandHandler
+	public class AddBindCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			ushort bindRadius = 750;
 			if (args.Length >= 2)
@@ -51,7 +51,6 @@ namespace DOL.GS.Commands
 			GameServer.Database.AddNewObject(bp);
 			client.Player.CurrentRegion.AddArea(new Area.BindArea("bind point", bp));
 			client.Out.SendMessage("Bindpoint added: X=" + bp.X + " Y=" + bp.Y + " Z=" + bp.Z + " Radius=" + bp.Radius + " Region=" + bp.Region, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			return 1;
 		}
 	}
 }

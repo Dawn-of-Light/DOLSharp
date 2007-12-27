@@ -23,12 +23,11 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player, //minimum privelege level
 	   "Toggles the cloak on and off when wearing a cloak.", //command description
 	   "/cloak")] //usage
-	public class CloakCommandHandler : ICommandHandler
+	public class CloakCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			client.Player.IsCloakInvisible = !client.Player.IsCloakInvisible;
-			return 0;
 		}
 	}
 }

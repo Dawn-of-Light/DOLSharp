@@ -32,20 +32,25 @@ namespace DOL.GS.Commands
 		"/account getaccountname <CharacterName>")]
 	public class AccountCommand : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			//Test for parameters, if none provided, display the syntax
 			if (args.Length < 2)
-				return DisplaySyntax(client);
-
+			{
+				DisplaySyntax(client);
+				return;
+			}
 			switch (args[1])
 			{
-					//Change the password for an account
+				//Change the password for an account
 				case "changepassword":
 					{
 						//Test correct parameters for password change
 						if (args.Length < 4)
-							return DisplaySyntax(client);
+						{
+							DisplaySyntax(client);
+							return;
+						}
 
 						string accountname = args[2];
 						string newpass = args[3];
@@ -53,7 +58,10 @@ namespace DOL.GS.Commands
 						//Test if the account can be found
 						Account acc = GetAccount(accountname);
 						if (acc == null)
-							return DisplayError(client, "Account {0} not found!", accountname);
+						{
+							DisplayMessage(client, "Account {0} not found!", accountname);
+							return;
+						}
 
 						//Set new password
 						acc.Password = newpass;
@@ -63,77 +71,101 @@ namespace DOL.GS.Commands
 					}
 					break;
 
-					//Delete an account
+				//Delete an account
 				case "delete":
 					{
 						//Test correct parameters 
 						if (args.Length < 3)
-							return DisplaySyntax(client);
+						{
+							DisplaySyntax(client);
+							return;
+						}
 
 						//Test if the account can be found
 						string accountname = args[2];
 						Account acc = GetAccount(accountname);
 						if (acc == null)
-							return DisplayError(client, "Account {0} not found!", accountname);
+						{
+							DisplayMessage(client, "Account {0} not found!", accountname);
+							return;
+						}
 
 						//Kick the player if active
 						KickAccount(acc);
 
 						//Delete the account object
 						GameServer.Database.DeleteObject(acc);
-						return DisplayMessage(client, "Account {0} deleted!", acc.Name);
+						DisplayMessage(client, "Account {0} deleted!", acc.Name);
+						return;
 					}
 
-					//Delete a character from an account
+				//Delete a character from an account
 				case "deletecharacter":
 					{
 						//Test correct parameters 
 						if (args.Length < 3)
-							return DisplaySyntax(client);
+						{
+							DisplaySyntax(client);
+							return;
+						}
 
 						string charname = args[2];
 						Character cha = GetCharacter(charname);
 						if (cha == null)
-							return DisplayError(client, "Character {0} not found!", charname);
+						{
+							DisplayMessage(client, "Character {0} not found!", charname);
+							return;
+						}
 
 						//Kick the player if active
 						KickCharacter(cha);
 
 						//Delete the character object
 						GameServer.Database.DeleteObject(cha);
-						return DisplayMessage(client, "Character {0} deleted!", cha.Name);
+						DisplayMessage(client, "Character {0} deleted!", cha.Name);
+						return;
 					}
 				case "movecharacter":
 					{
 						//Test correct parameters 
 						if (args.Length < 4)
-							return DisplaySyntax(client);
+						{
+							DisplaySyntax(client);
+							return;
+						}
 
 						string charname = args[2];
 						string accountname = args[3];
 
 						Character cha = GetCharacter(charname);
 						if (cha == null)
-							return DisplayError(client, "Character {0} not found!", charname);
+						{
+							DisplayMessage(client, "Character {0} not found!", charname);
+							return;
+						}
 
 						Account acc = GetAccount(accountname);
 						if (acc == null)
-							return DisplayError(client, "Account {0} not found!", accountname);
+						{
+							DisplayMessage(client, "Account {0} not found!", accountname);
+							return;
+						}
 
 						int firstAccountSlot = 0;
-						switch ((eRealm) cha.Realm)
+						switch ((eRealm)cha.Realm)
 						{
 							case eRealm.Albion:
-								firstAccountSlot = 1*8;
+								firstAccountSlot = 1 * 8;
 								break;
 							case eRealm.Midgard:
-								firstAccountSlot = 2*8;
+								firstAccountSlot = 2 * 8;
 								break;
 							case eRealm.Hibernia:
-								firstAccountSlot = 3*8;
+								firstAccountSlot = 3 * 8;
 								break;
 							default:
-								return DisplayError(client, "The character is not from a valid realm!");
+								DisplayMessage(client, "The character is not from a valid realm!");
+								return;
 						}
 
 						int freeslot = 0;
@@ -154,7 +186,10 @@ namespace DOL.GS.Commands
 						}
 
 						if (freeslot == 0)
-							return DisplayError(client, "Account {0} has no free character slots for this realm anymore!", accountname);
+						{
+							DisplayMessage(client, "Account {0} has no free character slots for this realm anymore!", accountname);
+							return;
+						}
 
 						//Check if the player is online
 						GameClient playingclient = WorldMgr.GetClientByPlayerName(cha.Name, true, false);
@@ -169,25 +204,32 @@ namespace DOL.GS.Commands
 						cha.AccountSlot = freeslot;
 
 						GameServer.Database.SaveObject(cha);
-						return DisplayMessage(client, "Character {0} moved to Account {1}!", cha.Name, acc.Name);
+						DisplayMessage(client, "Character {0} moved to Account {1}!", cha.Name, acc.Name);
+						return;
 					}
 
 				case "getaccountname":
 					{
 						//Test correct parameters 
 						if (args.Length < 3)
-							return DisplaySyntax(client);
+						{
+							DisplaySyntax(client);
+							return;
+						}
 
 						string charname = args[2];
 						Character cha = GetCharacter(charname);
 						if (cha == null)
-							return DisplayError(client, "Character {0} not found!", charname);
+						{
+							DisplayMessage(client, "Character {0} not found!", charname);
+							return;
+						}
 
 						string accname = GetAccountName(charname);
-						return DisplayMessage(client, "Account name for character " + cha.Name + " is : " + accname);
+						DisplayMessage(client, "Account name for character " + cha.Name + " is : " + accname);
+						return;
 					}
 			}
-			return 1;
 		}
 
 		/// <summary>
@@ -219,7 +261,7 @@ namespace DOL.GS.Commands
 				return client.Player.PlayerCharacter;
 
 			//Return database object
-			return (Character) GameServer.Database.SelectObject(typeof (Character), "Name='" + GameServer.Database.Escape(charname) + "'");
+			return (Character)GameServer.Database.SelectObject(typeof(Character), "Name='" + GameServer.Database.Escape(charname) + "'");
 		}
 
 		/// <summary>
@@ -267,7 +309,7 @@ namespace DOL.GS.Commands
 				return client.Account.Name;
 
 			//Return database object
-			Character ch = (Character) GameServer.Database.SelectObject(typeof (Character), "Name='" + GameServer.Database.Escape(charname) + "'");
+			Character ch = (Character)GameServer.Database.SelectObject(typeof(Character), "Name='" + GameServer.Database.Escape(charname) + "'");
 			if (ch != null)
 				return ch.AccountName;
 			else

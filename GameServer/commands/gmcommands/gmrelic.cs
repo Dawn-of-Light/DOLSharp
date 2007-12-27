@@ -30,12 +30,12 @@ namespace DOL.GS.Commands
 
 	public class GMRelicCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length != 3 || (args[1] != "magic" && args[1] != "strength"))
 			{
 				DisplaySyntax(client);
-				return 1;
+				return;
 			}
 
 			DBRelic relic = new DBRelic();
@@ -51,8 +51,6 @@ namespace DOL.GS.Commands
 			relic.RelicID = Util.Random(100);
 			GameServer.Database.AddNewObject(relic);
 			RelicMgr.Init();
-
-			return 1;
 		}
 	}
 }

@@ -26,16 +26,14 @@ namespace DOL.GS.Commands
 		ePrivLevel.GM,
 		"Gives XP to your target",
 		"/givexp <ammount>")]
-	public class GiveXPCommandHandler : ICommandHandler
+	public class GiveXPCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length == 1)
 			{
-				client.Out.SendMessage("Usage: /givexp <amount>",
-				                       eChatType.CT_System,
-				                       eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplaySyntax(client);
+				return;
 			}
 
 			long amount;
@@ -55,11 +53,8 @@ namespace DOL.GS.Commands
 			}
 			catch (Exception)
 			{
-				client.Out.SendMessage("Usage: /givexp <amount>",
-				                       eChatType.CT_System,
-				                       eChatLoc.CL_SystemWindow);
+				DisplaySyntax(client);
 			}
-			return 1;
 		}
 	}
 }

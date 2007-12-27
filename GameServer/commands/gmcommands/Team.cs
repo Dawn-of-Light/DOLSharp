@@ -26,31 +26,30 @@ namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 	"&team",
-	new string[] {"&te"},
+	new string[] { "&te" },
    ePrivLevel.GM,
 	"Server broadcast message for administrators",
 	"/team <message>")]
-	
-	public class TeamCommandHandler : ICommandHandler
+
+	public class TeamCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
-			if(args.Length < 2)
+			if (args.Length < 2)
 			{
-				client.Out.SendMessage("Use: /team <message>",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				return 0;
+				client.Out.SendMessage("Use: /team <message>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
 			}
-			
-			string msg = string.Join(" ",args,1,args.Length-1);
-			
+
+			string msg = string.Join(" ", args, 1, args.Length - 1);
+
 			foreach (GameClient player in WorldMgr.GetAllPlayingClients())
 			{
-				if(player.Account.PrivLevel >= 1)
+				if (player.Account.PrivLevel >= 1)
 				{
-					player.Out.SendMessage("[Staff -Information]:\n " + msg,eChatType.CT_Staff,eChatLoc.CL_ChatWindow);
+					player.Out.SendMessage("[Staff -Information]:\n " + msg, eChatType.CT_Staff, eChatLoc.CL_ChatWindow);
 				}
 			}
-		return 0;
 		}
 	}
 }

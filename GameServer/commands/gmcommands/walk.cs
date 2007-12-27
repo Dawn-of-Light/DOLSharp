@@ -31,9 +31,9 @@ namespace DOL.GS.Commands
 		ePrivLevel.GM,
 		"Stops the npc's movement!",
 		"'/stop' to stop the target mob")]
-	public class WalkCommandHandler : ICommandHandler
+	public class WalkCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			GameNPC targetNPC = null;
 			if (client.Player.TargetObject != null && client.Player.TargetObject is GameNPC)
@@ -44,22 +44,22 @@ namespace DOL.GS.Commands
 				if (targetNPC == null)
 				{
 					client.Out.SendMessage("Type /stop to stop your target npc from moving", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+					return;
 				}
 				targetNPC.StopMoving();
-				return 1;
+				return;
 			}
 			if (args.Length < 4)
 			{
 				client.Out.SendMessage("Usage:", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				client.Out.SendMessage("'/walk <xoff> <yoff> <zoff> <speed>'", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 			if (targetNPC == null)
 			{
 				client.Out.SendMessage("Type /walk for command overview", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 			int xoff = 0;
 			int yoff = 0;
@@ -76,11 +76,10 @@ namespace DOL.GS.Commands
 			catch (Exception)
 			{
 				client.Out.SendMessage("Type /walk for command overview", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 			targetNPC.WalkTo((targetNPC.X + xoff), (targetNPC.Y + yoff), (targetNPC.Z + zoff), speed);
-			return 1;
 		}
 	}
 }

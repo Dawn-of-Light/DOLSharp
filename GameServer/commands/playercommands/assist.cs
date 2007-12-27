@@ -22,9 +22,9 @@ using DOL.Language;
 namespace DOL.GS.Commands
 {
 	[CmdAttribute("&assist", ePrivLevel.Player, "Assist your target", "/assist [playerName]")]
-	public class AssistCommandHandler : ICommandHandler
+	public class AssistCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			GamePlayer assistPlayer = null;
 			if (args.Length > 1)
@@ -34,18 +34,18 @@ namespace DOL.GS.Commands
 				{
 					assistPlayer = assistClient.Player;
 					if (!GameServer.ServerRules.IsSameRealm(client.Player, assistPlayer, false))
-						return 0;
+						return;
 					if (!WorldMgr.CheckDistance(client.Player, assistClient.Player, 2048))
 					{
-                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.DontSee", args[1]), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        return 0;
+						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.DontSee", args[1]), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return;
 					}
 				}
 			}
 			else if (client.Player.TargetObject == null)
 			{
-                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.NoTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                return 0;
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.NoTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
 			}
 			else
 			{
@@ -54,24 +54,23 @@ namespace DOL.GS.Commands
 
 			if (assistPlayer == null)
 			{
-                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.NotValid"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                return 0;
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.NotValid"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
 			}
 			if (assistPlayer == client.Player)
 			{
-                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.CantAssistYourself"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                return 0;
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.CantAssistYourself"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
 			}
 
 			if (assistPlayer.TargetObject == null)
 			{
-                client.Out.SendMessage(assistPlayer.GetName(0, true) + LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.DoesntHaveTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                return 0;
+				client.Out.SendMessage(assistPlayer.GetName(0, true) + LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.DoesntHaveTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
 			}
 
 			client.Out.SendChangeTarget(assistPlayer.TargetObject);
-            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.YouAssist", assistPlayer.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-            return 1;
+			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.YouAssist", assistPlayer.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 	}
 }

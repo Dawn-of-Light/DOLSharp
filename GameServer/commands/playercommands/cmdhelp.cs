@@ -29,9 +29,9 @@ namespace DOL.GS.Commands
 		"'/cmdhelp' displays a list of all the commands and their descriptions",
 		"'/cmdhelp <plvl>' displays a list of all commands that require at least plvl",
 		"'/cmdhelp <cmd>' displays the usage for cmd")]
-	public class CmdHelpCommandHandler : ICommandHandler
+	public class CmdHelpCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			ePrivLevel plvl = (ePrivLevel)client.Account.PrivLevel;
 			bool iscmd = true;
@@ -51,11 +51,11 @@ namespace DOL.GS.Commands
 			if (iscmd)
 			{
 				string[] cmds = ScriptMgr.GetCommandList(plvl, true);
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Cmdhelp.PlvlCommands", plvl.ToString()), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Cmdhelp.PlvlCommands", plvl.ToString()));
 
 				foreach (string s in cmds)
 				{
-					client.Out.SendMessage(s, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					DisplayMessage(client, s);
 				}
 			}
 			else
@@ -71,19 +71,18 @@ namespace DOL.GS.Commands
 
 				if (cmd != null)
 				{
-					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Cmdhelp.Usage", arg), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Cmdhelp.Usage", arg));
 
 					foreach (string s in cmd.m_usage)
 					{
-						client.Out.SendMessage(s, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						DisplayMessage(client, s);
 					}
 				}
 				else
 				{
-					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Cmdhelp.NoCommand", arg), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Cmdhelp.NoCommand", arg));
 				}
 			}
-			return 1;
 		}
 	}
 }

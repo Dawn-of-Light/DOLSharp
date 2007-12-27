@@ -7,30 +7,29 @@ namespace DOL.GS.Commands
 		"&resurrect",
 		ePrivLevel.Player,
 		"Used for self resurrection with Sputin's Legacy", "/resurrect")]
-	public class ResurrectCommandHandler : ICommandHandler
+	public class ResurrectCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		private RegionTimer m_timer = null;
 
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (client.Player.IsAlive)
 			{
-				client.Out.SendMessage("You're not dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
+				DisplayMessage(client, "You're not dead!");
+				return;
 			}
 			if (!client.Player.TempProperties.getProperty(Effects.SputinsLegacyEffect.SPUTINSLEGACYHASRES, false))
 			{
-				client.Out.SendMessage("You have no active Self Ressurection!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
+				DisplayMessage(client, "You have no active Self Ressurection!");
+				return;
 			}
 			if (m_timer != null && m_timer.IsAlive)
-				return 0;
+				return;
 			m_timer = new RegionTimer(client.Player);
 			m_timer.Callback = new RegionTimerCallback(OnTick);
 			m_timer.Properties.setProperty("SELF_RES_PLAYER", client.Player);
 			m_timer.Start(10000);
-			client.Out.SendMessage("You will resurrect in 10 seconds!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			return 1;
+			DisplayMessage(client, "You will resurrect in 10 seconds!");
 		}
 
 		private int OnTick(RegionTimer timer)
@@ -52,7 +51,6 @@ namespace DOL.GS.Commands
 			player.Notify(GamePlayerEvent.Revive, player);
 
 			return 0;
-
 		}
 	}
 }

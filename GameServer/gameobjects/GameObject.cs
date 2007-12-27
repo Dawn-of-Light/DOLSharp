@@ -90,14 +90,6 @@ namespace DOL.GS
 			}
 		}
 
-		/// <summary>
-		/// Called when someone is trying to modify the object from in-game
-		/// </summary>
-		/// <param name="args">Arguments describing the requested action</param>
-		public virtual void Mod(string[] args)
-		{
-		}
-
 		#endregion
 
 		#region Position

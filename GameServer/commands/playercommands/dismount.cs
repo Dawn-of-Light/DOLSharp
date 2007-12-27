@@ -26,20 +26,19 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"Dismount your steed",
 		"/dismount")]
-	public class RideDismountCommandHandler : ICommandHandler
+	public class RideDismountCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (!client.Player.IsRiding)
 			{
 				if (client.Player.IsOnHorse)
 					client.Player.IsOnHorse = false;
 				else
-					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Dismount"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+					DisplayMessage(client, (LanguageMgr.GetTranslation(client, "Scripts.Players.Dismount")));
 			}
-			client.Player.DismountSteed(false);
-			return 1;
+			else 
+				client.Player.DismountSteed(false);
 		}
 	}
 }

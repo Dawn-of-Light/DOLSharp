@@ -24,14 +24,14 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"When you are dead you can '/release'. This will bring you back to your bindpoint!",
 		"/release")]
-	public class ReleaseCommandHandler : ICommandHandler
+	public class ReleaseCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (client.Player.CurrentRegion.IsRvR && !client.Player.CurrentRegion.IsDungeon)
 			{
 				client.Player.Release(GamePlayer.eReleaseType.RvR, false);
-				return 1;
+				return;
 			}
 
 			if (args.Length > 1)
@@ -41,11 +41,10 @@ namespace DOL.GS.Commands
 					&& args[1].ToLower() == "city")
 				{
 					client.Player.Release(GamePlayer.eReleaseType.City, false);
-					return 1;
+					return;
 				}
 			}
 			client.Player.Release(GamePlayer.eReleaseType.Normal, false);
-			return 1;
 		}
 	}
 }

@@ -512,6 +512,18 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("allow_cross_realm_guilds","Do we allow guild members from other realms?", false)]
 		public static readonly bool ALLOW_CROSS_REALM_GUILDS;
 
+		/// <summary>
+		/// What level should /level bring you to?
+		/// </summary>
+		[ServerProperty("slash_level_target", "What level should /level bring you to? ", 20)]
+		public static readonly int SLASH_LEVEL_TARGET;
+
+		/// <summary>
+		/// What level should you have on your account to be able to use /level?
+		/// </summary>
+		[ServerProperty("slash_level_requirement", "What level should you have on your account be able to use /level?", 50)]
+		public static readonly int SLASH_LEVEL_REQUIREMENT;
+
         /// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
@@ -565,6 +577,15 @@ namespace DOL.GS.ServerProperties
 				ServerPropertyAttribute attrib = (ServerPropertyAttribute)attribs[0];
 				f.SetValue(null, Properties.Load(attrib));
 			}
+		}
+
+		/// <summary>
+		/// Refreshes the server properties from the DB
+		/// </summary>
+		public static void Refresh()
+		{
+			log.Info("Refreshing server properties!");
+			Init(typeof(Properties));
 		}
 	}
 }

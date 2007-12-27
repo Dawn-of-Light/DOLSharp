@@ -31,7 +31,7 @@ namespace DOL.GS.Commands
 		"/advice <message>")]
 	public class AdviceCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			string msg = "";
 			if (args.Length >= 2)
@@ -57,7 +57,7 @@ namespace DOL.GS.Commands
 
 				}
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Advice.AdvicersOn", total), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-				return 1;
+				return;
 			}
 			foreach (GameClient playerClient in WorldMgr.GetAllClients())
 			{
@@ -68,7 +68,6 @@ namespace DOL.GS.Commands
 					playerClient.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Advice.Advice", getRealmString(client.Player.Realm), client.Player.Name, msg), eChatType.CT_Staff, eChatLoc.CL_ChatWindow);
 
 			}
-			return 1;
 		}
 
 		public string getRealmString(byte Realm)

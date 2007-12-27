@@ -384,7 +384,7 @@ namespace DOL.GS
 		/// <param name="myCommand">command to be executed</param>
 		/// <param name="pars">Args for the command</param>
 		/// <returns>Command result</returns>
-		private static int ExecuteCommand(GameClient client, GameCommand myCommand, string[] pars)
+		private static void ExecuteCommand(GameClient client, GameCommand myCommand, string[] pars)
 		{
 			if (pars.Length > 1)
 			{
@@ -397,7 +397,7 @@ namespace DOL.GS
 					{
 						client.Out.SendMessage(s, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
-					return 1;
+					return;
 				}
 			}
 			// what you type in script is what you get; needed for overloaded scripts,
@@ -426,7 +426,7 @@ namespace DOL.GS
 
 			}
 
-			return myCommand.m_cmdHandler.OnCommand(client, pars);
+			myCommand.m_cmdHandler.OnCommand(client, pars);
 		}
 
 		/// <summary>

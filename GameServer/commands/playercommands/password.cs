@@ -22,21 +22,21 @@ namespace DOL.GS.Commands
 	[CmdAttribute("&password", ePrivLevel.Player,
 		"Changes your account password",
 		"/password <current_password> <new_password>")]
-	public class PasswordCommand : ICommandHandler
+	public class PasswordCommand : AbstractCommandHandler, ICommandHandler
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			string usage = "Usage: /password <current_password> <new_password>";
 			
 			if (args.Length < 3)
 			{
 				client.Out.SendMessage(usage, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 			try
 			{
@@ -56,14 +56,13 @@ namespace DOL.GS.Commands
 					if (log.IsInfoEnabled)
 						log.Info(client.Player.Name + " (" + client.Account.Name +
 								") attempted to change password but failed!");
-					return 0;
+					return;
 				}
 			}
 			catch (Exception)
 			{
 				client.Out.SendMessage(usage, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
-			return 1;
 		}
 
 		public void PasswordCheckCallback(GamePlayer player, byte response)

@@ -22,13 +22,13 @@ namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&yell",
-		new string[] {"&y"},
+		new string[] { "&y" },
 		ePrivLevel.Player,
 		"Yell something to other players around you",
 		"/yell <message>")]
-	public class YellCommandHandler : ICommandHandler
+	public class YellCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			const string YELL_TICK = "YELL_Tick";
 			long YELLTick = client.Player.TempProperties.getLongProperty(YELL_TICK, 0);
@@ -40,8 +40,8 @@ namespace DOL.GS.Commands
 			long changeTime = client.Player.CurrentRegion.Time - YELLTick;
 			if (changeTime < 500 && YELLTick > 0)
 			{
-				client.Player.Out.SendMessage("Slow down! Think before you say each word!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
+				DisplayMessage(client, "Slow down! Think before you say each word!");
+				return;
 			}
 
 			if (args.Length < 2)
@@ -51,7 +51,7 @@ namespace DOL.GS.Commands
 					if (player != client.Player)
 					{
 						ushort headingtemp = player.GetHeadingToTarget(client.Player);
-						ushort headingtotarget = (ushort) (headingtemp - player.Heading);
+						ushort headingtotarget = (ushort)(headingtemp - player.Heading);
 						string direction = "";
 						if (headingtotarget < 0)
 							headingtotarget += 4096;
@@ -77,13 +77,13 @@ namespace DOL.GS.Commands
 						client.Out.SendMessage("You yell for help!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 				}
 				client.Player.TempProperties.setProperty(YELL_TICK, client.Player.CurrentRegion.Time);
-				return 1;
+				return;
 			}
 
 			string message = string.Join(" ", args, 1, args.Length - 1);
 			client.Player.Yell(message);
 			client.Player.TempProperties.setProperty(YELL_TICK, client.Player.CurrentRegion.Time);
-			return 1;
+			return;
 		}
 	}
 }

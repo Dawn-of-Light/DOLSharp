@@ -25,42 +25,40 @@ namespace DOL.GS.Commands
 		"&housefriend",
 		ePrivLevel.Player,
 		"Invite a specified player to hour house", "/housefriend player <player>")]
-	public class HousefriendCommandHandler : ICommandHandler
+	public class HousefriendCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length == 1)
-				return 1;
+				return;
 			if (!client.Player.InHouse)
-				return 1;
-			
+				return;
+
 			switch (args[1])
 			{
 				case "player":
 					{
 						if (args.Length == 2)
-							return 1;
+							return;
 						if (client.Player.Name == args[2])
-							return 1;
+							return;
 						GameClient targetClient = WorldMgr.GetClientByPlayerNameAndRealm(args[2], 0, true);
 						if (targetClient == null)
 						{
 							client.Out.SendMessage("No players online with that name.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 						if (client.Player.CurrentHouse.AddToPerm(targetClient.Player, ePermsTypes.Player, 1))
 							client.Out.SendMessage("You added " + targetClient.Player.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						break;
 					}
-                case "all":
-                    {
-                        if (client.Player.CurrentHouse.AddToPerm(null, ePermsTypes.All, 1))
-                            client.Out.SendMessage("You added Everybody !", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        break;
-                    }
+				case "all":
+					{
+						if (client.Player.CurrentHouse.AddToPerm(null, ePermsTypes.All, 1))
+							client.Out.SendMessage("You added Everybody !", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						break;
+					}
 			}
-
-			return 1;
 		}
 	}
 }

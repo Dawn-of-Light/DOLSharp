@@ -24,15 +24,13 @@ using DOL.Language;
 namespace DOL.GS.Commands
 {
 	[CmdAttribute("&cancelstyle", ePrivLevel.Player, "Toggle cancelstyle flag.", "/cancelstyle")]
-	public class CancelStyleCommandHandler : ICommandHandler
+	public class CancelStyleCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			client.Player.CancelStyle = !client.Player.CancelStyle;
-			client.Out.SendMessage(string.Format(LanguageMgr.GetTranslation(client, "Scripts.Players.Cancelstyle.Set", 
-				(client.Player.CancelStyle ? LanguageMgr.GetTranslation(client, "Scripts.Players.Cancelstyle.On") : LanguageMgr.GetTranslation(client, "Scripts.Players.Cancelstyle.Off")))),
-				eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			return 1;
+			DisplayMessage(client, string.Format(LanguageMgr.GetTranslation(client, "Scripts.Players.Cancelstyle.Set",
+				(client.Player.CancelStyle ? LanguageMgr.GetTranslation(client, "Scripts.Players.Cancelstyle.On") : LanguageMgr.GetTranslation(client, "Scripts.Players.Cancelstyle.Off")))));
 		}
 	}
 }

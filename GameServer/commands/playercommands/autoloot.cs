@@ -28,25 +28,24 @@ namespace DOL.GS.Commands
 		"/autoloot <on/off>")]
 	public class AutolootCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 2)
 			{
 				DisplaySyntax(client);
-				return 0;
+				return;
 			}
 
 			if (args[1].ToLower().Equals("on"))
 			{
 				client.Player.Autoloot = true;
-                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Autoloot.On"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Autoloot.On"));
             }
 			else if (args[1].ToLower().Equals("off"))
 			{
 				client.Player.Autoloot = false;
-                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Autoloot.Off"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Autoloot.Off"));
             }
-			return 1;
 		}
 	}
 }

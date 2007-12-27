@@ -49,28 +49,35 @@ namespace DOL.GS
 	namespace Scripts
 	{
 		[CmdAttribute("&xfire", ePrivLevel.Player, "Xfire support", "/xfire <on|off>")]
-		public class CheckXFireCommandHandler : ICommandHandler
+		public class CheckXFireCommandHandler : AbstractCommandHandler, ICommandHandler
 		{
-			public int OnCommand(GameClient client, string[] args)
+			public void OnCommand(GameClient client, string[] args)
 			{
-				if (client.Player == null || args.Length < 2)
-					return 1;
+				if (client.Player == null)
+					return;
+				if (args.Length < 2)
+				{
+					DisplaySyntax(client);
+					return;
+				}
 				byte flag = 0;
 				if (args[1].ToLower().Equals("on"))
 				{
 					client.Player.PlayerCharacter.ShowXFireInfo = true;
-					client.Out.SendMessage("Your XFire flag is ON. Your character data will be sent to the XFire service ( if you have XFire installed ). Use '/xfire off' to disable sending character data to the XFire service.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					DisplayMessage(client, "Your XFire flag is ON. Your character data will be sent to the XFire service ( if you have XFire installed ). Use '/xfire off' to disable sending character data to the XFire service.");
 					flag = 1;
 				}
 				else if (args[1].ToLower().Equals("off"))
 				{
 					client.Player.PlayerCharacter.ShowXFireInfo = false;
-					client.Out.SendMessage("Your XFire flag is OFF. TODO correct message.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					DisplayMessage(client, "Your XFire flag is OFF. TODO correct message.");
 				}
 				else
-					return 1;// not have clue what message for wrong params or help
+				{
+					DisplaySyntax(client);
+					return;
+				}
 				client.Player.Out.SendXFireInfo(flag);
-				return 1;
 			}
 		}
 	}

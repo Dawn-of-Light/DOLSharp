@@ -36,7 +36,7 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"prints out a random number between 1 and the number specified.",
 		"/random [#] to get a random number between 1 and the number you specified.")]
-	public class RandomCommandHandler : ICommandHandler
+	public class RandomCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		// declaring some msg's
 		private const int RESULT_RANGE = 512; // emote range
@@ -45,14 +45,13 @@ namespace DOL.GS.Commands
 		private const string MESSAGE_RESULT_OTHER = "{0} picks a random number between 1 and {1}: {2}"; // client.Player.Name, thrownMax, thrown
 		private const string MESSAGE_LOW_NUMBER = "You must select a maximum number greater than 1!";
 
-
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			// no args - display usage
 			if (args.Length < 2)
 			{
 				SystemMessage(client, MESSAGE_HELP);
-				return 0;
+				return;
 			}
 
 			int thrownMax;
@@ -69,13 +68,13 @@ namespace DOL.GS.Commands
 			catch (Exception)
 			{
 				SystemMessage(client, MESSAGE_HELP);
-				return 0;
+				return;
 			}
 
 			if (thrownMax < 2)
 			{
 				SystemMessage(client, MESSAGE_LOW_NUMBER);
-				return 0;
+				return;
 			}
 
 			// throw result
@@ -90,10 +89,10 @@ namespace DOL.GS.Commands
 
 			// sending result & playername to all players in range
 			foreach (GamePlayer player in client.Player.GetPlayersInRadius(RESULT_RANGE))
+			{
 				if (client.Player != player) // client gets unique message
 					EmoteMessage(player, otherMessage); // sending msg to other players
-
-			return 1;
+			}
 		}
 
 		// these are to make code look better

@@ -7,11 +7,11 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"Discard card # from your hand, or discard all cards.",
 		"/discard <#|all>")]
-	public class DiscardCommandHandler : ICommandHandler
+	public class DiscardCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
-            if(args.Length < 2) return 0;
+			if (args.Length < 2) return;
             if (args[1].Equals("all"))
                 CardMgr.DiscardAll(client);
             else
@@ -23,10 +23,9 @@ namespace DOL.GS.Commands
                 }
                 catch (Exception)
                 {
-                    return 0;
+					return;
                 }
             }
-            return 1;
 		}
 	}
 }

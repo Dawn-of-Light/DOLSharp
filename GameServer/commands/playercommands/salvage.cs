@@ -24,15 +24,14 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"You can salvage an item when you are a crafter",
 		"/salvage")]
-	public class SalvageCommandHandler : ICommandHandler
+	public class SalvageCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			GameInventoryItem item = client.Player.TargetObject as GameInventoryItem;
 			if (item == null)
-				return 1;
+				return;
 			client.Player.SalvageItem(item.Item);
-			return 1;
 		}
 	}
 }
