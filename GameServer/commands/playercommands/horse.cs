@@ -6,17 +6,17 @@ using System;
 namespace DOL.GS.Commands
 {
 	[CmdAttribute("&horse", ePrivLevel.Player, "Emotes pour les chevaux", "/horse <emote>")]
-	public class HorseEmoteCommandHandler : ICommandHandler
+	public class HorseEmoteCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		private const ushort EMOTE_RANGE_TO_TARGET = 2048;
 		private const ushort EMOTE_RANGE_TO_OTHERS = 512;
 
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (!client.Player.IsOnHorse)
 			{
 				client.Out.SendMessage("Vous devez chevaucher votre monture pour utiliser cette commande!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 			if (client.Player.TargetObject != null)
@@ -27,14 +27,14 @@ namespace DOL.GS.Commands
 				if (distanceToTarget > EMOTE_RANGE_TO_TARGET || distanceToTarget < 0)
 				{
 					client.Out.SendMessage("Vous ne voyez pas votre cible aux alentours.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+					return;
 				}
 			}
 
 			if (args.Length < 2)
 			{
 				Usage(client);
-				return 0;
+				return;
 			}
 
 			eEmote emoteID;
@@ -76,11 +76,10 @@ namespace DOL.GS.Commands
 					emoteMessages = EMOTE_MESSAGES_REAR;
 					break;
 				default:
-					return 0;
+					return;
 			}
 
 			SendEmote(client.Player, client.Player.TargetObject, emoteID, emoteMessages);
-			return 1;
 		}
 
 

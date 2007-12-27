@@ -24,20 +24,11 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player, //minimum privelege level
 		"Show the current coordinates", //command description
 		"/gloc")] //command usage
-		public class GlocCommandHandler : ICommandHandler
+	public class GlocCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
-			client.Out.SendMessage(
-				"You are at X:" + client.Player.X
-					+ " Y:" + client.Player.Y
-					+ " Z:" + client.Player.Z
-					+ " Heading:" + client.Player.Heading
-					+ " Region:" + client.Player.CurrentRegionID,
-				eChatType.CT_System,
-				eChatLoc.CL_SystemWindow);
-			//Command handled fine
-			return 1;
+			DisplayMessage(client, string.Format("You are at X:{0} Y:{1} Z:{2} Heading:{3} Region:{4}", client.Player.X, client.Player.Y, client.Player.Z, client.Player.Heading, client.Player.CurrentRegionID));
 		}
 	}
 }

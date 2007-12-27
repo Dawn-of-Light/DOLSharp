@@ -32,7 +32,7 @@ namespace DOL.GS.Commands
 		 ePrivLevel.Player,
 		 "Broadcast something to other players in the same zone",
 		 "/b <message>")]
-	public class BroadcastCommandHandler : ICommandHandler
+	public class BroadcastCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		private enum eBroadcastType : int
 		{
@@ -44,19 +44,17 @@ namespace DOL.GS.Commands
 			Server = 6,
 		}
 
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
-			if(args.Length<2)
+			if (args.Length < 2)
 			{
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Broadcast.NoText"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Broadcast.NoText"));
+				return;
 			}
 
 			string message = string.Join(" ", args, 1, args.Length - 1);
 
 			Broadcast(client.Player, message);
-
-			return 1;
 		}
 
 		private void Broadcast(GamePlayer player, string message)

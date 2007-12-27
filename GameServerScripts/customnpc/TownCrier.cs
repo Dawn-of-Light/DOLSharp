@@ -94,19 +94,6 @@ namespace DOL.GS.Scripts
 			}
 		}
 
-		public override void Mod(string[] args)
-		{
-			if (args.Length > 1)
-			{
-				m_msg = "";
-				for (int i = 1; i < args.Length; ++i)
-				{
-					m_msg += args[i];
-					m_msg += " ";
-				}
-			}
-		}
-
 		public override bool Interact(GamePlayer player)
 		{
 			bool res = false;

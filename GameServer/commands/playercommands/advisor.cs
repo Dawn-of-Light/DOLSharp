@@ -27,16 +27,15 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"Toggles Advisor status",
 		"/advisor")]
-	public class AdvisorCommandHandler : ICommandHandler
+	public class AdvisorCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			client.Player.Advisor = !client.Player.Advisor;
 			if (client.Player.Advisor)
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Advisor.On"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Advisor.On"));
 			else
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Advisor.Off"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			return 1;
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Advisor.Off"));
 		}
 	}
 }

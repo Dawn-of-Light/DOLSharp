@@ -33,43 +33,42 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"You can repair an item when you are a crafter",
 		"/repair")]
-	public class RepairCommandHandler : ICommandHandler
+	public class RepairCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			GameInventoryItem item = client.Player.TargetObject as GameInventoryItem;
 			if (item != null)
 			{
 				client.Player.RepairItem(item.Item);
-				return 1;
+				return;
 			}
 			GameKeepDoor door = client.Player.TargetObject as GameKeepDoor;
 			if (door != null)
 			{
-				if (!PreFireChecks(client.Player, door)) return 1;
+				if (!PreFireChecks(client.Player, door)) return;
 				StartRepair(client.Player, door);
 			}
 			GameKeepComponent component = client.Player.TargetObject as GameKeepComponent;
 			if (component != null)
 			{
-				if (!PreFireChecks(client.Player, component)) return 1;
+				if (!PreFireChecks(client.Player, component)) return;
 				StartRepair(client.Player, component);
 			}
 			GameSiegeWeapon weapon = client.Player.TargetObject as GameSiegeWeapon;
 			if (weapon != null)
 			{
-				if (!PreFireChecks(client.Player, weapon)) return 1;
+				if (!PreFireChecks(client.Player, weapon)) return;
 				StartRepair(client.Player, weapon);
 			}
-			return 1;
 		}
 
-		public static bool PreFireChecks(GamePlayer player, GameLiving obj)
+		public bool PreFireChecks(GamePlayer player, GameLiving obj)
 		{
 			if (obj == null)
 				return false;
@@ -78,7 +77,7 @@ namespace DOL.GS.Commands
 
 			if ((obj as GameLiving).InCombat)
 			{
-				player.Out.SendMessage("You can't repair object while it under attack!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(player, "You can't repair object while it under attack!");
 				return false;
 			}
 
@@ -86,14 +85,14 @@ namespace DOL.GS.Commands
 			{
 				if (obj.CurrentRegion.Time - obj.LastAttackedByEnemyTick <= 60 * 1000)
 				{
-					player.Out.SendMessage("You can't repair the keep component while it under attack!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					DisplayMessage(player, "You can't repair the keep component while it under attack!");
 					return false;
 				}
 			}
 
 			if ((obj as GameLiving).HealthPercent == 100)
 			{
-				player.Out.SendMessage("The component is already at full health!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(player, "The component is already at full health!");
 				return false;
 			}
 			if (obj is GameKeepComponent)
@@ -101,37 +100,37 @@ namespace DOL.GS.Commands
 				GameKeepComponent component = obj as GameKeepComponent;
 				if (component.IsRaized)
 				{
-					player.Out.SendMessage("You cannot repair a raized tower!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					DisplayMessage(player, "You cannot repair a raized tower!");
 					return false;
 				}
 			}
 
 			if (player.IsCrafting)
 			{
-				player.Out.SendMessage("You must end your current action before you repair anything!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(player, "You must end your current action before you repair anything!");
 				return false;
 			}
 			if (player.IsMoving)
 			{
-				player.Out.SendMessage("You can't repair while moving", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(player, "You can't repair while moving");
 				return false;
 			}
 
 			if (!player.IsAlive)
 			{
-				player.Out.SendMessage("You can't repair while dead.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(player, "You can't repair while dead.");
 				return false;
 			}
 
 			if (player.IsSitting)
 			{
-				player.Out.SendMessage("You can't repair while sit.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(player, "You can't repair while sit.");
 				return false;
 			}
 
 			if (!WorldMgr.CheckDistance(player, obj, WorldMgr.INTERACT_DISTANCE))
 			{
-				player.Out.SendMessage("You are too far away to repair this component.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(player, "You are too far away to repair this component.");
 				return false;
 			}
 
@@ -140,13 +139,13 @@ namespace DOL.GS.Commands
 
 			if (playerswood < repairamount)
 			{
-				player.Out.SendMessage("You need another " + (repairamount - playerswood) + " units of wood!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(player, "You need another " + (repairamount - playerswood) + " units of wood!");
 				return false;
 			}
 
 			if (player.GetCraftingSkillValue(eCraftingSkill.WoodWorking) < 1)
 			{
-				player.Out.SendMessage("You need woodworking skill to repair.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(player, "You need woodworking skill to repair.");
 				return false;
 			}
 
@@ -156,7 +155,7 @@ namespace DOL.GS.Commands
 		}
 
 		static int workDuration = 20;
-		public static void StartRepair(GamePlayer player, GameLiving obj)
+		public void StartRepair(GamePlayer player, GameLiving obj)
 		{
 			player.Out.SendTimerWindow("Repairing: " + obj.Name, workDuration);
 			player.CraftTimer = new RegionTimer(player);
@@ -166,7 +165,7 @@ namespace DOL.GS.Commands
 			player.CraftTimer.Start(workDuration * 1000);
 		}
 
-		protected static int Proceed(RegionTimer timer)
+		protected int Proceed(RegionTimer timer)
 		{
 			GamePlayer player = (GamePlayer)timer.Properties.getObjectProperty("repair_player", null);
 			GameLiving obj = (GameLiving)timer.Properties.getObjectProperty("repair_target", null);
@@ -201,7 +200,7 @@ namespace DOL.GS.Commands
 				}
 				int finish = obj.Health;
 				CalculatePlayersWood(player, (GetTotalWoodForLevel(obj.Level + 1)));
-				player.Out.SendMessage("You successfully repair the component by 15%!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(player, "You successfully repair the component by 15%!");
 				/*
 				 * - Realm points will now be awarded for successfully repairing a door or outpost piece.
 				 * Players will receive approximately 10% of the amount repaired in realm points. 
@@ -212,7 +211,7 @@ namespace DOL.GS.Commands
 			}
 			else
 			{
-				player.Out.SendMessage("You fail to repair the component!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(player, "You fail to repair the component!");
 			}
 
 			return 0;

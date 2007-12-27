@@ -28,24 +28,26 @@ namespace DOL.GS.Commands
 		ePrivLevel.GM,
 		"various commands to help you with areas",
 		"/area create <name> <type(circle/square>) <radius> <broadcast(y/n)> <soundid>")]
-	public class AreaCommandHandler : ICommandHandler
+	public class AreaCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length == 1)
 			{
-				ShowSyntax(client.Player);
-				return 1;
+				DisplaySyntax(client);
+				return;
 			}
+
 			switch (args[1].ToLower())
 			{
 				case "create":
 					{
 						if (args.Length != 7)
 						{
-							ShowSyntax(client.Player);
-							return 1;
+							DisplaySyntax(client);
+							return;
 						}
+
 						DBArea area = new DBArea();
 						area.Description = args[2];
 
@@ -59,8 +61,8 @@ namespace DOL.GS.Commands
 							case "bindarea": area.ClassType = "DOL.GS.Area+BindArea"; break;
 							default:
 								{
-									ShowSyntax(client.Player);
-									return 1;
+									DisplaySyntax(client);
+									return;
 								}
 						}
 
@@ -71,8 +73,8 @@ namespace DOL.GS.Commands
 							area.CanBroadcast = false;
 						else
 						{
-							ShowSyntax(client.Player);
-							return 1;
+							DisplaySyntax(client);
+							return;
 						}
 						area.Sound = byte.Parse(args[6]);
 						area.Region = client.Player.CurrentRegionID;
@@ -88,22 +90,12 @@ namespace DOL.GS.Commands
 						newArea.CanBroadcast = area.CanBroadcast;
 						WorldMgr.GetRegion(client.Player.CurrentRegionID).AddArea(newArea);
 						GameServer.Database.AddNewObject(area);
-						SendMessage(client.Player, "Area created - Description:" + area.Description + " X:" + area.X +
+						DisplayMessage(client, "Area created - Description:" + area.Description + " X:" + area.X +
 							" Y:" + area.Y + " Z:" + area.Z + " Radius:" + area.Radius + " Broadcast:" + area.CanBroadcast.ToString() +
 							" Sound:" + area.Sound);
 							break;
 					}
 			}
-			return 1;
-		}
-		public void ShowSyntax(GamePlayer player)
-		{
-			SendMessage(player, "Usage: /area");
-			SendMessage(player, "/area create <name> <type(circle/square/safearea/bindarea>) <radius> <broadcast(y/n)> <soundid>");
-		}
-		public void SendMessage(GamePlayer player, string message)
-		{
-			player.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 	}
 }

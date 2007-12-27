@@ -81,12 +81,12 @@ namespace DOL.GS.Commands
 		)]
 	public class MobCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length == 1)
 			{
 				DisplaySyntax(client);
-				return 1;
+				return;
 			}
 			string param = "";
 			if (args.Length > 2)
@@ -106,10 +106,10 @@ namespace DOL.GS.Commands
 				if (client.Player.TargetObject != null)
 				{
 					client.Out.SendMessage("Cannot use " + client.Player.TargetObject + " for /mob command.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+					return;
 				}
 				client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 			switch (args[1])
@@ -121,7 +121,7 @@ namespace DOL.GS.Commands
 						if (args.Length < 4)
 						{
 							client.Out.SendMessage("Usage: /mob nrandcreate <Number> <Radius>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 						try
 						{
@@ -131,7 +131,7 @@ namespace DOL.GS.Commands
 						catch (Exception)
 						{
 							client.Out.SendMessage("Usage: /mob  nrandcreate <Number> <Radius>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 						for (int i = 0; i < number; ++i)
 						{
@@ -175,7 +175,7 @@ namespace DOL.GS.Commands
 						if (args.Length < 8)
 						{
 							client.Out.SendMessage("Usage: /mob nfastcreate <Model> <Realm> <Level> <Number> <Radius> <Name>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 						try
 						{
@@ -189,7 +189,7 @@ namespace DOL.GS.Commands
 						catch (Exception)
 						{
 							client.Out.SendMessage("Usage: /mob nfastcreate <Model> <Level> <Number> <Radius> <Name>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 						for (int i = 0; i < number; ++i)
 						{
@@ -232,7 +232,7 @@ namespace DOL.GS.Commands
 						if (args.Length < 5)
 						{
 							client.Out.SendMessage("Usage: /mob fastcreate <Model> <Level> <Name>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 						try
 						{
@@ -243,7 +243,7 @@ namespace DOL.GS.Commands
 						catch
 						{
 							client.Out.SendMessage("Usage: /mob fastcreate <Model> <Level> <Name>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 						name = CheckName(name, client);
 						GameNPC mob = new GameNPC();
@@ -278,11 +278,11 @@ namespace DOL.GS.Commands
 						{
 							info.Add(" + Aggro level: " + aggroBrain.AggroLevel);
 							info.Add(" + Aggro range: " + aggroBrain.AggroRange);
-							if ( targetMob.MaxDistance < 0 )
-								info.Add(" + MaxDistance: " + -targetMob.MaxDistance*aggroBrain.AggroRange/100);
+							if (targetMob.MaxDistance < 0)
+								info.Add(" + MaxDistance: " + -targetMob.MaxDistance * aggroBrain.AggroRange / 100);
 							else
 								info.Add(" + MaxDistance: " + targetMob.MaxDistance);
-								
+
 						}
 						else
 						{
@@ -294,19 +294,19 @@ namespace DOL.GS.Commands
 							info.Add(" + Respawn: NPC will not respawn");
 						else info.Add(" + Respawn: " + respawn.Minutes + " minutes " + respawn.Seconds + " seconds (Position: X=" + targetMob.SpawnX + " Y=" + targetMob.SpawnY + " Z=" + targetMob.SpawnZ + ")");
 
-                        info.Add(" ");
-                        info.Add(" + Mob Stats:");
-                        info.Add(" + Constitution: " + targetMob.Constitution);
-                        info.Add(" + Dexterity: " + targetMob.Dexterity);
-                        info.Add(" + Strength: " + targetMob.Strength);
-                        info.Add(" + Quickness: " + targetMob.Quickness);
-                        info.Add(" + Intelligence: " + targetMob.Intelligence);
-                        info.Add(" + Piety: " + targetMob.Piety);
-                        info.Add(" + Empathy: " + targetMob.Empathy);
-                        info.Add(" + Charisma: " + targetMob.Charisma);
-                        info.Add(" ");
+						info.Add(" ");
+						info.Add(" + Mob Stats:");
+						info.Add(" + Constitution: " + targetMob.Constitution);
+						info.Add(" + Dexterity: " + targetMob.Dexterity);
+						info.Add(" + Strength: " + targetMob.Strength);
+						info.Add(" + Quickness: " + targetMob.Quickness);
+						info.Add(" + Intelligence: " + targetMob.Intelligence);
+						info.Add(" + Piety: " + targetMob.Piety);
+						info.Add(" + Empathy: " + targetMob.Empathy);
+						info.Add(" + Charisma: " + targetMob.Charisma);
+						info.Add(" ");
 
-                        info.Add(" + Damage type: " + targetMob.MeleeDamageType);
+						info.Add(" + Damage type: " + targetMob.MeleeDamageType);
 						info.Add(" + Position: X=" + targetMob.X + " Y=" + targetMob.Y + " Z=" + targetMob.Z);
 						info.Add(" + Guild: " + targetMob.GuildName);
 						info.Add(" + Model: " + targetMob.Model + " sized to " + targetMob.Size);
@@ -319,10 +319,10 @@ namespace DOL.GS.Commands
 						info.Add(" + Inventory: " + targetMob.Inventory);
 						info.Add(" + CanGiveQuest: " + targetMob.QuestListToGive.Count);
 						info.Add(" + Path: " + targetMob.PathID);
-                        if (targetMob.BoatOwnerID != null)
-                        {
-                            info.Add(" + Boat OwnerID: " + targetMob.BoatOwnerID);
-                        }
+						if (targetMob.BoatOwnerID != null)
+						{
+							info.Add(" + Boat OwnerID: " + targetMob.BoatOwnerID);
+						}
 
 						client.Out.SendCustomTextWindow("[ " + targetMob.Name + " ]", info);
 					}
@@ -332,7 +332,7 @@ namespace DOL.GS.Commands
 						if (targetMob == null)
 						{
 							client.Out.SendMessage("No target selected.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 						ArrayList info = new ArrayList();
 						info.Add("Modified stats:");
@@ -355,7 +355,7 @@ namespace DOL.GS.Commands
 						info.Add(String.Format("Armor Factor (AF): {0}", targetMob.GetModified(eProperty.ArmorFactor)));
 						info.Add(String.Format("Absorption (ABS): {0}", targetMob.GetModified(eProperty.ArmorAbsorbtion)));
 						client.Out.SendCustomTextWindow("[ " + targetMob.Name + " ]", info);
-						return 1;
+						return;
 					}
 				case "level":
 					{
@@ -370,7 +370,7 @@ namespace DOL.GS.Commands
 						catch (Exception)
 						{
 							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 					}
 					break;
@@ -392,12 +392,12 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage("Mob house changed to: " + house, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 							else
-								client.Out.SendMessage("House number "+house+" doesn't exists !", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage("House number " + house + " doesn't exists !", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						catch (Exception)
 						{
 							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 					}
 					break;
@@ -415,7 +415,7 @@ namespace DOL.GS.Commands
 						catch (Exception)
 						{
 							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 					}
 					break;
@@ -432,147 +432,147 @@ namespace DOL.GS.Commands
 						catch (Exception)
 						{
 							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 					}
 					break;
-                case "str":
-                    {
-                        short strength;
-                        try
-                        {
-                            strength = Convert.ToInt16(args[2]);
-                            targetMob.Strength = strength;
-                            targetMob.SaveIntoDatabase();
-                            client.Out.SendMessage("Mob Strength changed to: " + targetMob.Strength, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        }
-                        catch (Exception)
-                        {
-                            client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return 1;
-                        }
-                    }
-                    break;
-                case "con":
-                    {
-                        short constitution;
-                        try
-                        {
-                            constitution = Convert.ToInt16(args[2]);
-                            targetMob.Constitution = constitution;
-                            targetMob.SaveIntoDatabase();
-                            client.Out.SendMessage("Mob Constitution changed to: " + targetMob.Constitution, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        }
-                        catch (Exception)
-                        {
-                            client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return 1;
-                        }
-                    }
-                    break;
-                case "dex":
-                    {
-                        short dexterity;
-                        try
-                        {
-                            dexterity = Convert.ToInt16(args[2]);
-                            targetMob.Dexterity = dexterity;
-                            targetMob.SaveIntoDatabase();
-                            client.Out.SendMessage("Mob Dexterity changed to: " + targetMob.Dexterity, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        }
-                        catch (Exception)
-                        {
-                            client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return 1;
-                        }
-                    }
-                    break;
-                case "qui":
-                    {
-                        short quickness;
-                        try
-                        {
-                            quickness = Convert.ToInt16(args[2]);
-                            targetMob.Quickness = quickness;
-                            targetMob.SaveIntoDatabase();
-                            client.Out.SendMessage("Mob Quickness changed to: " + targetMob.Quickness, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        }
-                        catch (Exception)
-                        {
-                            client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return 1;
-                        }
-                    }
-                    break;
-                case "pie":
-                    {
-                        short piety;
-                        try
-                        {
-                            piety = Convert.ToInt16(args[2]);
-                            targetMob.Piety = piety;
-                            targetMob.SaveIntoDatabase();
-                            client.Out.SendMessage("Mob Piety changed to: " + targetMob.Piety, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        }
-                        catch (Exception)
-                        {
-                            client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return 1;
-                        }
-                    }
-                    break;
-                case "cha":
-                    {
-                        short charisma;
-                        try
-                        {
-                            charisma = Convert.ToInt16(args[2]);
-                            targetMob.Charisma = charisma;
-                            targetMob.SaveIntoDatabase();
-                            client.Out.SendMessage("Mob Charisma changed to: " + targetMob.Charisma, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        }
-                        catch (Exception)
-                        {
-                            client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return 1;
-                        }
-                    }
-                    break;
-                case "int":
-                    {
-                        short intelligence;
-                        try
-                        {
-                            intelligence = Convert.ToInt16(args[2]);
-                            targetMob.Intelligence = intelligence;
-                            targetMob.SaveIntoDatabase();
-                            client.Out.SendMessage("Mob Intelligence changed to: " + targetMob.Intelligence, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        }
-                        catch (Exception)
-                        {
-                            client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return 1;
-                        }
-                    }
-                    break;
-                case "emp":
-                    {
-                        short empathy;
-                        try
-                        {
-                            empathy = Convert.ToInt16(args[2]);
-                            targetMob.Empathy = empathy;
-                            targetMob.SaveIntoDatabase();
-                            client.Out.SendMessage("Mob Empathy changed to: " + targetMob.Empathy, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        }
-                        catch (Exception)
-                        {
-                            client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return 1;
-                        }
-                    }
-                    break;
-                case "regen":
+				case "str":
+					{
+						short strength;
+						try
+						{
+							strength = Convert.ToInt16(args[2]);
+							targetMob.Strength = strength;
+							targetMob.SaveIntoDatabase();
+							client.Out.SendMessage("Mob Strength changed to: " + targetMob.Strength, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						catch (Exception)
+						{
+							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
+					}
+					break;
+				case "con":
+					{
+						short constitution;
+						try
+						{
+							constitution = Convert.ToInt16(args[2]);
+							targetMob.Constitution = constitution;
+							targetMob.SaveIntoDatabase();
+							client.Out.SendMessage("Mob Constitution changed to: " + targetMob.Constitution, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						catch (Exception)
+						{
+							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
+					}
+					break;
+				case "dex":
+					{
+						short dexterity;
+						try
+						{
+							dexterity = Convert.ToInt16(args[2]);
+							targetMob.Dexterity = dexterity;
+							targetMob.SaveIntoDatabase();
+							client.Out.SendMessage("Mob Dexterity changed to: " + targetMob.Dexterity, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						catch (Exception)
+						{
+							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
+					}
+					break;
+				case "qui":
+					{
+						short quickness;
+						try
+						{
+							quickness = Convert.ToInt16(args[2]);
+							targetMob.Quickness = quickness;
+							targetMob.SaveIntoDatabase();
+							client.Out.SendMessage("Mob Quickness changed to: " + targetMob.Quickness, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						catch (Exception)
+						{
+							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
+					}
+					break;
+				case "pie":
+					{
+						short piety;
+						try
+						{
+							piety = Convert.ToInt16(args[2]);
+							targetMob.Piety = piety;
+							targetMob.SaveIntoDatabase();
+							client.Out.SendMessage("Mob Piety changed to: " + targetMob.Piety, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						catch (Exception)
+						{
+							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
+					}
+					break;
+				case "cha":
+					{
+						short charisma;
+						try
+						{
+							charisma = Convert.ToInt16(args[2]);
+							targetMob.Charisma = charisma;
+							targetMob.SaveIntoDatabase();
+							client.Out.SendMessage("Mob Charisma changed to: " + targetMob.Charisma, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						catch (Exception)
+						{
+							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
+					}
+					break;
+				case "int":
+					{
+						short intelligence;
+						try
+						{
+							intelligence = Convert.ToInt16(args[2]);
+							targetMob.Intelligence = intelligence;
+							targetMob.SaveIntoDatabase();
+							client.Out.SendMessage("Mob Intelligence changed to: " + targetMob.Intelligence, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						catch (Exception)
+						{
+							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
+					}
+					break;
+				case "emp":
+					{
+						short empathy;
+						try
+						{
+							empathy = Convert.ToInt16(args[2]);
+							targetMob.Empathy = empathy;
+							targetMob.SaveIntoDatabase();
+							client.Out.SendMessage("Mob Empathy changed to: " + targetMob.Empathy, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						catch (Exception)
+						{
+							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
+					}
+					break;
+				case "regen":
 					{
 						try
 						{
@@ -584,7 +584,7 @@ namespace DOL.GS.Commands
 						catch (Exception)
 						{
 							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 					}
 					break;
@@ -597,12 +597,12 @@ namespace DOL.GS.Commands
 							targetMob.Die(client.Player);
 							targetMob.XPGainers.Clear();
 							client.Out.SendMessage("Mob '" + targetMob.Name + "' killed", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 						catch (Exception)
 						{
 							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 					}
 				case "create":
@@ -612,7 +612,7 @@ namespace DOL.GS.Commands
 						if (args.Length > 2)
 							theType = args[2];
 						if (args.Length > 3)
-							realm = Convert.ToByte(args[3]); 
+							realm = Convert.ToByte(args[3]);
 
 						//Create a new mob
 						GameNPC mob = null;
@@ -635,7 +635,7 @@ namespace DOL.GS.Commands
 						if (mob == null)
 						{
 							client.Out.SendMessage("There was an error creating an instance of " + theType + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 0;
+							return;
 						}
 						//Fill the object variables
 						mob.X = client.Player.X;
@@ -672,7 +672,7 @@ namespace DOL.GS.Commands
 						catch (Exception)
 						{
 							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 					}
 					break;
@@ -690,7 +690,7 @@ namespace DOL.GS.Commands
 						catch (Exception)
 						{
 							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 					}
 					break;
@@ -704,7 +704,7 @@ namespace DOL.GS.Commands
 							if (targetMob == null || size > 255)
 							{
 								client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 1;
+								return;
 							}
 
 							targetMob.Size = (byte)size;
@@ -714,7 +714,7 @@ namespace DOL.GS.Commands
 						catch (Exception)
 						{
 							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 					}
 					break;
@@ -739,7 +739,7 @@ namespace DOL.GS.Commands
 						catch (Exception)
 						{
 							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 					}
 					break;
@@ -763,8 +763,8 @@ namespace DOL.GS.Commands
 						}
 						catch
 						{
-							DisplayError(client, "Type /mob for command overview.");
-							return 1;
+							DisplayMessage(client, "Type /mob for command overview.");
+							return;
 						}
 					}
 					break;
@@ -781,12 +781,12 @@ namespace DOL.GS.Commands
 						catch (Exception)
 						{
 							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 					}
 					break;
 
-					//Disabled tether for now
+				//Disabled tether for now
 				/*case "tether":
 					{
 						try
@@ -816,7 +816,7 @@ namespace DOL.GS.Commands
 						}
 						catch
 						{
-							DisplayError(client, "Type /mob for command overview.");
+							DisplayMessage(client, "Type /mob for command overview.");
 						}
 					}
 					break;
@@ -866,19 +866,19 @@ namespace DOL.GS.Commands
 							if (brain == null)
 							{
 								client.Out.SendMessage("There was an error creating an instance of " + brainType + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							targetMob.SetOwnBrain(brain);
 							targetMob.SaveIntoDatabase();
 						}
 						catch
 						{
-							DisplayError(client, "Type /mob for command overview.");
-							return 1;
+							DisplayMessage(client, "Type /mob for command overview.");
+							return;
 						}
 					}
 					break;
-				
+
 				case "path":
 					{
 						try
@@ -897,8 +897,8 @@ namespace DOL.GS.Commands
 						}
 						catch
 						{
-							DisplayError(client, "Type /mob for command overview.");
-							return 1;
+							DisplayMessage(client, "Type /mob for command overview.");
+							return;
 						}
 					}
 					break;
@@ -959,7 +959,7 @@ namespace DOL.GS.Commands
 						if (targetMob.QuestListToGive.Count == 0)
 						{
 							client.Out.SendMessage("Mob not have any quests!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 
 						client.Out.SendMessage("--------------------------------------------------------------", eChatType.CT_System, eChatLoc.CL_PopupWindow);
@@ -973,7 +973,7 @@ namespace DOL.GS.Commands
 						if (targetMob.Inventory == null)
 						{
 							client.Out.SendMessage("Mob inventory not found!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 
 						client.Out.SendMessage("--------------------------------------------------------------", eChatType.CT_System, eChatLoc.CL_PopupWindow);
@@ -1006,7 +1006,7 @@ namespace DOL.GS.Commands
 						if (args.Length < 3)
 						{
 							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 
 						if (args[2].ToLower() == "create")
@@ -1016,7 +1016,7 @@ namespace DOL.GS.Commands
 								if (targetMob.Inventory != null)
 								{
 									client.Out.SendMessage("Target mob inventory is set to " + targetMob.Inventory.GetType() + ", remove it first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return 1;
+									return;
 								}
 
 								targetMob.Inventory = new GameNpcInventoryTemplate();
@@ -1026,7 +1026,7 @@ namespace DOL.GS.Commands
 							catch
 							{
 								client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 1;
+								return;
 							}
 							break;
 						}
@@ -1037,7 +1037,7 @@ namespace DOL.GS.Commands
 								if (targetMob.Inventory != null && !(targetMob.Inventory is GameNpcInventoryTemplate))
 								{
 									client.Out.SendMessage("Target mob is not using GameNpcInventoryTemplate.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return 1;
+									return;
 								}
 								try
 								{
@@ -1045,7 +1045,7 @@ namespace DOL.GS.Commands
 									if (!load.LoadFromDatabase(args[3]))
 									{
 										client.Out.SendMessage("Error loading equipment template \"" + args[2] + "\"", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-										return 1;
+										return;
 									}
 									targetMob.EquipmentTemplateID = args[3];
 									targetMob.Inventory = load;
@@ -1056,7 +1056,7 @@ namespace DOL.GS.Commands
 								catch
 								{
 									client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return 1;
+									return;
 								}
 							}
 							else
@@ -1070,7 +1070,7 @@ namespace DOL.GS.Commands
 						if (template == null)
 						{
 							client.Out.SendMessage("Target mob is not using GameNpcInventoryTemplate.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 
 						switch (args[2])
@@ -1085,7 +1085,7 @@ namespace DOL.GS.Commands
 											if (slot == 0)
 											{
 												client.Out.SendMessage("No such slot available!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-												return 1;
+												return;
 											}
 
 											int model = Convert.ToInt32(args[4]);
@@ -1101,7 +1101,7 @@ namespace DOL.GS.Commands
 											if (!template.AddNPCEquipment((eInventorySlot)slot, model, color, effect))
 											{
 												client.Out.SendMessage("Couldn't add new item to slot " + slot + ". Template could be closed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-												return 1;
+												return;
 											}
 
 											client.Out.SendMessage("Item added to the mob inventory template!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -1109,13 +1109,13 @@ namespace DOL.GS.Commands
 										catch
 										{
 											client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-											return 1;
+											return;
 										}
 									}
 									else
 									{
 										client.Out.SendMessage("Usage: /mob equiptemplate add <slot> <model> [color] [effect]", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-										return 1;
+										return;
 									}
 								}
 								break;
@@ -1130,26 +1130,26 @@ namespace DOL.GS.Commands
 											if (slot == 0)
 											{
 												client.Out.SendMessage("No such slot available!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-												return 1;
+												return;
 											}
 
 											if (!template.RemoveNPCEquipment((eInventorySlot)slot))
 											{
 												client.Out.SendMessage("Couldn't remove item from slot " + slot + ". Template could be closed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-												return 1;
+												return;
 											}
 											client.Out.SendMessage("Mob inventory template slot " + slot + " cleaned!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 										}
 										catch
 										{
 											client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-											return 1;
+											return;
 										}
 									}
 									else
 									{
 										client.Out.SendMessage("Usage: /mob equiptemplate remove <slot>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-										return 1;
+										return;
 									}
 								}
 								break;
@@ -1159,7 +1159,7 @@ namespace DOL.GS.Commands
 									if (template.IsClosed)
 									{
 										client.Out.SendMessage("Template is already closed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-										return 1;
+										return;
 									}
 									targetMob.Inventory = template.CloseTemplate();
 									client.Out.SendMessage("Inventory template closed succesfully.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -1183,17 +1183,17 @@ namespace DOL.GS.Commands
 										if (!replace && null != GameServer.Database.SelectObject(typeof(NPCEquipment), "TemplateID = '" + GameServer.Database.Escape(args[3]) + "'"))
 										{
 											client.Out.SendMessage("Template with name '" + args[3] + "' already exists. Use 'replace' flag if you want to overwrite it.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-											return 1;
+											return;
 										}
 										if (!targetMob.Inventory.SaveIntoDatabase(args[3]))
 										{
 											client.Out.SendMessage("Error saving template with name " + args[3], eChatType.CT_System, eChatLoc.CL_SystemWindow);
-											return 1;
+											return;
 										}
 										targetMob.EquipmentTemplateID = args[3];
 										targetMob.SaveIntoDatabase();
 										client.Out.SendMessage("Target mob equipment template is saved as '" + args[3] + "'", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-										return 1;
+										return;
 									}
 									else
 									{
@@ -1272,8 +1272,8 @@ namespace DOL.GS.Commands
 								ItemTemplate itemtemplate = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), lootTemplateID);
 								if (itemtemplate == null)
 								{
-									DisplayError(client, "ItemTemplate " + lootTemplateID + " not found!");
-									return 0;
+									DisplayMessage(client, "ItemTemplate " + lootTemplateID + " not found!");
+									return;
 								}
 
 								DBLootTemplate lt = new DBLootTemplate();
@@ -1344,12 +1344,12 @@ namespace DOL.GS.Commands
 
 						foreach (DBLootTemplate loot in template)
 						{
-                            string message = "";
+							string message = "";
 							if (loot.ItemTemplate == null)
 								message += loot.ItemTemplateID + " (Template Not Found)";
 							else message += loot.ItemTemplate.Name + " (" + loot.ItemTemplate.Id_nb + ")";
 							message += " Chance: " + loot.Chance.ToString() + "\n\n";
-                            DisplayMessage(client, message);
+							DisplayMessage(client, message);
 						}
 					}
 					break;
@@ -1368,7 +1368,7 @@ namespace DOL.GS.Commands
 						if (mob == null)
 						{
 							client.Out.SendMessage("There was an error creating an instance of " + targetMob.GetType().FullName + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 0;
+							return;
 						}
 
 						//Fill the object variables
@@ -1409,11 +1409,11 @@ namespace DOL.GS.Commands
 						client.Out.SendMessage("Mob created: OID=" + mob.ObjectID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						break;
 					}
-                case "npctemplate":
+				case "npctemplate":
 					{
 						if (args.Length < 3)
 						{
-							DisplayError(client, "Usage: /mob npctemplate <id>", new object[] { });
+							DisplayMessage(client, "Usage: /mob npctemplate <id>", new object[] { });
 							break;
 						}
 						int id = 0;
@@ -1423,13 +1423,13 @@ namespace DOL.GS.Commands
 						}
 						catch
 						{
-							DisplayError(client, args[2] + " does not seem to be a number", new object[] { });
+							DisplayMessage(client, args[2] + " does not seem to be a number", new object[] { });
 							break;
 						}
 						INpcTemplate template = NpcTemplateMgr.GetTemplate(id);
 						if (template == null)
 						{
-							DisplayError(client, "no template found for " + id, new object[] { });
+							DisplayMessage(client, "no template found for " + id, new object[] { });
 							break;
 						}
 						if (targetMob == null)
@@ -1454,7 +1454,6 @@ namespace DOL.GS.Commands
 						break;
 					}
 			}
-			return 1;
 		}
 
 		private string CheckName(string name, GameClient client)

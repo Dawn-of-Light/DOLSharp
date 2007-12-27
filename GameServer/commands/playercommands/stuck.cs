@@ -23,17 +23,15 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player, //minimum privelege level
 		"Removes the player from the world and put it to a safe location", //command description
 		"/stuck")] //usage
-		public class StuckCommandHandler : ICommandHandler
+	public class StuckCommandHandler : ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			client.Player.Stuck = true;
 			if (!client.Player.Quit(false))
 			{
 				client.Player.Stuck = false;
-				return 0;
 			}
-			return 1;
 		}
 	}
 }

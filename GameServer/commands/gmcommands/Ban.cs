@@ -30,33 +30,36 @@ namespace DOL.GS.Commands
 		"&ban",
 		ePrivLevel.GM,
 		"Usage of /ban command :",
-        "/ban ip [reason] : Ban target's IP adress",
-        "/ban account [reason] : Ban target's account",
+		"/ban ip [reason] : Ban target's IP adress",
+		"/ban account [reason] : Ban target's account",
 		"/ban both [reason] : Ban target's account and its related IP adress")]
-    public class BanCommandHandler : AbstractCommandHandler,ICommandHandler
+	public class BanCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
-            if (args.Length < 2)
-                return DisplaySyntax(client);
+			if (args.Length < 2)
+			{
+				DisplaySyntax(client);
+				return;
+			}
 
 			GamePlayer player = client.Player.TargetObject as GamePlayer;
 			if (player == null)
 			{
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.GM.Ban.MustTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
+				return;
 			}
 
 			try
 			{
-                DataObject[] objs;
+				DataObject[] objs;
 				DBBannedAccount b = new DBBannedAccount();
-				string accip = ((IPEndPoint) player.Client.Socket.RemoteEndPoint).Address.ToString();
+				string accip = ((IPEndPoint)player.Client.Socket.RemoteEndPoint).Address.ToString();
 				string accname = GameServer.Database.Escape(player.Client.Account.Name);
 				string reason;
 
@@ -64,14 +67,14 @@ namespace DOL.GS.Commands
 					reason = String.Join(" ", args, 2, args.Length - 2);
 				else reason = "No Reason.";
 
-                switch (args[1].ToLower())
+				switch (args[1].ToLower())
 				{
 					case "account":
-                        objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(accname) + "')");
+						objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(accname) + "')");
 						if (objs.Length > 0)
 						{
-                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.GM.Ban.AAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-							return 0;
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.GM.Ban.AAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							return;
 						}
 
 						b.Type = "A";
@@ -79,31 +82,34 @@ namespace DOL.GS.Commands
 						break;
 
 					case "ip":
-                        objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='I' OR Type='B') AND Ip ='" + GameServer.Database.Escape(accip) + "')");
+						objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='I' OR Type='B') AND Ip ='" + GameServer.Database.Escape(accip) + "')");
 						if (objs.Length > 0)
 						{
-                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.GM.Ban.IAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-							return 1;
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.GM.Ban.IAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							return;
 						}
 
 						b.Type = "I";
-                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.GM.Ban.IBanned", accip), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.GM.Ban.IBanned", accip), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						break;
 
-                    case "both":
-                        objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "Type='B' AND Account ='" + GameServer.Database.Escape(accname) + "' AND Ip ='" + GameServer.Database.Escape(accip) + "'");
-                        if (objs.Length > 0)
-                        {
-                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.GM.Ban.BAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                            return 0;
-                        }
+					case "both":
+						objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "Type='B' AND Account ='" + GameServer.Database.Escape(accname) + "' AND Ip ='" + GameServer.Database.Escape(accip) + "'");
+						if (objs.Length > 0)
+						{
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.GM.Ban.BAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							return;
+						}
 
-                        b.Type = "B";
-                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.GM.Ban.BBanned", accname, accip), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                        break;
+						b.Type = "B";
+						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.GM.Ban.BBanned", accname, accip), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						break;
 
-                    default:
-                        return DisplaySyntax(client);
+					default:
+						{
+							DisplaySyntax(client);
+							break;
+						}
 				}
 
 				b.Author = client.Player.PlayerCharacter.Name;
@@ -115,9 +121,8 @@ namespace DOL.GS.Commands
 				GameServer.Database.SaveObject(b);
 
 				if (log.IsInfoEnabled)
-                    log.Info("Ban added [" + args[1].ToLower() + "]: " + accname + "(" + accip + ")");
-
-                return 1;
+					log.Info("Ban added [" + args[1].ToLower() + "]: " + accname + "(" + accip + ")");
+				return;
 			}
 			catch (Exception e)
 			{
@@ -125,8 +130,8 @@ namespace DOL.GS.Commands
 					log.Error("/ban Exception", e);
 			}
 
-            // if not returned here, there is an error
-            return DisplaySyntax(client);
+			// if not returned here, there is an error
+			DisplaySyntax(client);
 		}
 	}
 }

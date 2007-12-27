@@ -25,26 +25,23 @@ namespace DOL.GS.Commands
 		ePrivLevel.GM,
 		"Mount a steed",
 		"/mountgm")]
-	public class RideMountGmCommandHandler : ICommandHandler
+	public class RideMountGmCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (client.Player.IsRiding)
 			{
-				client.Out.SendMessage("You are already riding a steed!",
-				                       eChatType.CT_System,
-				                       eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(client, "You are already riding a steed!");
+				return;
 			}
+
 			if (client.Player.TargetObject == null || !(client.Player.TargetObject is GameNPC))
 			{
-				client.Out.SendMessage("You can't ride THIS!",
-				                       eChatType.CT_System,
-				                       eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(client, "You can't ride THIS!");
+				return;
 			}
+
 			client.Player.MountSteed((GameNPC) client.Player.TargetObject, false);
-			return 1;
 		}
 	}
 }

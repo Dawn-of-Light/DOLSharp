@@ -27,15 +27,14 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"Show news on social interface",
 		"/news")]
-	public class NewsCommandHandler : ICommandHandler
+	public class NewsCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (client.Player == null)
-				return 0;
+				return;
 
 			NewsMgr.DisplayNews(client);
-			return 1;
 		}
 	}
 }

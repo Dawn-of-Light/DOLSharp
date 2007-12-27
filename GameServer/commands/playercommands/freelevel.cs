@@ -25,9 +25,9 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player, //minimum privelege level
 		"Display state of FreeLevel", //command description
 		"/freelevel")] //command usage
-	public class FreelevelCommandHandler : ICommandHandler
+	public class FreelevelCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			//flag 1 = above level, 2 = elligable, 3= time until, 4 = level and time until, 5 = level until
 			byte state = client.Player.FreeLevelState;
@@ -49,9 +49,9 @@ namespace DOL.GS.Commands
 					message = "You don't have any FreeLevel !";
 				}
 				client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
-			
+
 			switch (state)
 			{
 				case 1:
@@ -76,7 +76,6 @@ namespace DOL.GS.Commands
 
 			}
 			client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			return 1;
 		}
 	}
 }

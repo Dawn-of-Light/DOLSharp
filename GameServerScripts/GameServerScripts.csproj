@@ -111,6 +111,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="behaviour\examples\TestBehaviour.cs" />
+    <Compile Include="commands\serverinfo.cs" />
+    <Compile Include="commands\version.cs" />
     <Compile Include="customnpc\TownCrier.cs">
       <SubType>Code</SubType>
     </Compile>

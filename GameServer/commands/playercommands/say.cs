@@ -26,16 +26,16 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"Say something to other players around you",
 		"/say <message>")]
-	public class SayCommandHandler : ICommandHandler
+	public class SayCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			const string SAY_TICK = "Say_Tick";
 
 			if (args.Length < 2)
 			{
 				client.Out.SendMessage("You must say something...", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 			string message = string.Join(" ", args, 1, args.Length - 1);
 
@@ -49,12 +49,11 @@ namespace DOL.GS.Commands
 			if (changeTime < 500 && SayTick > 0)
 			{
 				client.Player.Out.SendMessage("Slow down! Think before you say each word!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
+				return;
 			}
 
 			client.Player.Say(message);
 			client.Player.TempProperties.setProperty(SAY_TICK, client.Player.CurrentRegion.Time);
-			return 1;
 		}
 	}
 }

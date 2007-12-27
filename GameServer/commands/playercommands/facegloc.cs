@@ -33,14 +33,14 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"Turns and faces your character into the direction of the x, y coordinates provided (using DOL region global coordinates).",
 		"/facegloc [x] [y]")]
-	public class GLocFaceCommandHandler : ICommandHandler
+	public class GLocFaceCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 3)
 			{
 				client.Out.SendMessage("Please enter X and Y coordinates.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 			int x, y;
 			try
@@ -51,12 +51,11 @@ namespace DOL.GS.Commands
 			catch (Exception)
 			{
 				client.Out.SendMessage("Please enter X and Y coordinates.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 			ushort direction = client.Player.GetHeadingToSpot(x, y);
 			client.Player.Heading = direction;
 			client.Out.SendPlayerJump(true);
-			return 1;
 		}
 	}
 }

@@ -21,16 +21,17 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&where", ePrivLevel.Player, "Ask where an NPC is from Guards", "/where")]
-	public class WhereCommandHandler : ICommandHandler
+	[CmdAttribute("&where", ePrivLevel.Player, "Ask where an NPC is from Guards", "/where <NPC Name>")]
+	public class WhereCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length == 1)
 			{
-				client.Out.SendMessage("Usage: /where <Npc Name>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
+				DisplaySyntax(client);
+				return;
 			}
+
 			GameNPC targetnpc = client.Player.TargetObject as GameNPC;
 			if (targetnpc != null && CheckTargetIsGuard(targetnpc))
 			{
@@ -39,7 +40,7 @@ namespace DOL.GS.Commands
 				if (npcs == null || npcs.Length <= 0)
 				{
 					targetnpc.SayTo(client.Player, "Sorry, i do not know this person.");
-					return 0;
+					return;
 				}
 				GameNPC npc = npcs[0];
 				ushort heading = targetnpc.GetHeadingToTarget(npc);
@@ -47,9 +48,7 @@ namespace DOL.GS.Commands
 				targetnpc.SayTo(client.Player, eChatLoc.CL_SystemWindow, npc.Name + " is in the " + directionstring);
 				targetnpc.TurnTo(npc, 10000);
 				targetnpc.Emote(eEmote.Point);
-				return 1;
 			}
-			return 1;
 		}
 
 		public bool CheckTargetIsGuard(GameLiving target)

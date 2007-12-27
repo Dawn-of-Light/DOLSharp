@@ -25,14 +25,14 @@ namespace DOL.GS.Commands
 		ePrivLevel.GM,
 		"activate or deactivate debug command",
 		"/debug <on/off>")]
-	public class DebugCommandHandler : ICommandHandler
+	public class DebugCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 2)
 			{
 				client.Out.SendMessage("Usage: /debug {on/off}", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
+				return;
 			}
 			if (args[1].ToLower().Equals("on"))
 			{
@@ -46,7 +46,6 @@ namespace DOL.GS.Commands
 				client.Out.SendDebugMode(false);
 				client.Out.SendMessage("debug mode OFF", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
-			return 1;
 		}
 	}
 }

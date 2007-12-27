@@ -68,37 +68,36 @@ namespace DOL.GS.Commands
 	[CmdAttribute("&lookfar", ePrivLevel.Player, "Lets you look into the distance", "/lookfar")]
 	[CmdAttribute("&smile", ePrivLevel.Player, "Make a big smile", "/smile")]
 	[CmdAttribute("&stench", ePrivLevel.Player, "Wave away the local stench", "/stench")] 
-	public class EmoteCommandHandler : ICommandHandler
+	public class EmoteCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		private const ushort EMOTE_RANGE_TO_TARGET = 2048; // 2064 was out of range and 2020 in range;
 		private const ushort EMOTE_RANGE_TO_OTHERS = 512; // 519 was out of range and 504 in range;
 
-
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			// no emotes if dead
 			if (!client.Player.IsAlive)
 			{
-				client.Out.SendMessage("You can't do that, you're dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(client, "You can't do that, you're dead!");
+				return;
 			}
 
 			// no emotes in combat / mez / stun
 			if (client.Player.AttackState || client.Player.IsMezzed || client.Player.IsStunned)
 			{
-				client.Out.SendMessage("You can't do that, you're busy!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(client, "You can't do that, you're busy!");
+				return;
 			}
 
 			if (client.Player.TargetObject != null)
 			{
-				int distanceToTarget = WorldMgr.GetDistance((GameObject) client.Player, (GameObject) client.Player.TargetObject);
+				int distanceToTarget = WorldMgr.GetDistance(client.Player, client.Player.TargetObject);
 
 				// target not in range
 				if (distanceToTarget > EMOTE_RANGE_TO_TARGET || distanceToTarget < 0)
 				{
-					client.Out.SendMessage("You don't see your target around here.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+					DisplayMessage(client, "You don't see your target around here.");
+					return;
 				}
 			}
 
@@ -297,12 +296,10 @@ namespace DOL.GS.Commands
 					emoteMessages = EMOTE_MESSAGES_DRINK;
 					break;
 				default:
-					return 0;
+					return;
 			}
 
 			SendEmote(client.Player, client.Player.TargetObject, emoteID, emoteMessages);
-
-			return 1;
 		}
 
 
@@ -339,10 +336,6 @@ namespace DOL.GS.Commands
 		// send emote messages to all players in range
 		private void SendEmoteMessages(GamePlayer sourcePlayer, GamePlayer targetPlayer, string messageToSource, string messageToTarget, string messageToOthers)
 		{
-			//			sourcePlayer.Client.Out.SendMessage("sending messages", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			//			SendEmoteMessage(sourcePlayer, "to target: \""+messageToTarget+"\"");
-			//			SendEmoteMessage(sourcePlayer, "to others: \""+messageToOthers+"\"");
-
 			SendEmoteMessage(sourcePlayer, messageToSource);
 
 			if (targetPlayer != null)

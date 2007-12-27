@@ -35,21 +35,16 @@ namespace DOL.GS.Commands
 		 "'/object emblem <newEmblem>' to set the emblem to newEmblem",
 		 "'/object name <newName>' to set the targeted object name to newName",
 		 "'/object remove' to remove the targeted object",
-		 "'/object save' to save the object")]
-	public class ObjectCommandHandler : ICommandHandler
+		 "'/object save' to save the object",
+		 "'/object target' to automatically target the nearest object")]
+	public class ObjectCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length == 1)
 			{
-				client.Out.SendMessage("Usage:", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("'/object create' to create an default", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("'/object model newModel' to set the model to newModel", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("'/object model newModel' to set the emblem to newEmblem", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("'/object name newName' to set the name to newName", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("'/object remove' to remove the Object", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("'/object save' to save the Object", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplaySyntax(client);
+				return;
 			}
 			string param = "";
 			if (args.Length > 2)
@@ -60,7 +55,7 @@ namespace DOL.GS.Commands
 			if (args[1] != "create" && targetObject == null)
 			{
 				client.Out.SendMessage("Type /object for command overview", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 			switch (args[1])
@@ -87,33 +82,28 @@ namespace DOL.GS.Commands
 						if (args.Length > 2)
 							theType = args[2];
 
-						//Create a new object
-						GameStaticItem obj = new GameStaticItem();
-						try
-						{
-							client.Out.SendDebugMessage(Assembly.GetAssembly(typeof(GameServer)).FullName);
-							obj = (GameStaticItem)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(theType, false);
-						}
-						catch (Exception e)
-						{
-							client.Out.SendMessage(e.ToString(), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-						}
-						if (obj == null)
+						//Create a new mob
+						GameStaticItem obj = null;
+						ArrayList asms = new ArrayList(ScriptMgr.Scripts);
+						asms.Add(typeof(GameServer).Assembly);
+						foreach (Assembly script in asms)
 						{
 							try
 							{
-								client.Out.SendDebugMessage(Assembly.GetExecutingAssembly().FullName);
-								obj = (GameStaticItem)Assembly.GetExecutingAssembly().CreateInstance(theType, false);
+								client.Out.SendDebugMessage(script.FullName);
+								obj = (GameStaticItem)script.CreateInstance(theType, false);
+								if (obj != null)
+									break;
 							}
 							catch (Exception e)
 							{
-								client.Out.SendMessage(e.ToString(), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+								DisplayMessage(client, e.ToString());
 							}
 						}
 						if (obj == null)
 						{
 							client.Out.SendMessage("There was an error creating an instance of " + theType + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 0;
+							return;
 						}
 
 						//Fill the object variables
@@ -127,7 +117,7 @@ namespace DOL.GS.Commands
 						obj.Emblem = 0;
 						obj.AddToWorld();
 						obj.SaveIntoDatabase();
-						client.Out.SendMessage("Obj created: OID=" + obj.ObjectID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						DisplayMessage(client, "Obj created: OID=" + obj.ObjectID);
 						break;
 					}
 				case "model":
@@ -138,12 +128,12 @@ namespace DOL.GS.Commands
 							model = Convert.ToUInt16(args[2]);
 							targetObject.Model = model;
 							targetObject.SaveIntoDatabase();
-							client.Out.SendMessage("Object model changed to: " + targetObject.Model, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							DisplayMessage(client, "Object model changed to: " + targetObject.Model);
 						}
 						catch (Exception)
 						{
-							client.Out.SendMessage("Type /object for command overview", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							DisplayMessage(client, "Type /object for command overview");
+							return;
 						}
 						break;
 					}
@@ -155,12 +145,12 @@ namespace DOL.GS.Commands
 							emblem = Convert.ToInt32(args[2]);
 							targetObject.Emblem = emblem;
 							targetObject.SaveIntoDatabase();
-							client.Out.SendMessage("Object emblem changed to: " + targetObject.Emblem, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							DisplayMessage(client, "Object emblem changed to: " + targetObject.Emblem);
 						}
 						catch (Exception)
 						{
-							client.Out.SendMessage("Type /object for command overview", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							DisplayMessage(client, "Type /object for command overview");
+							return;
 						}
 						break;
 					}
@@ -170,30 +160,35 @@ namespace DOL.GS.Commands
 						{
 							targetObject.Name = param;
 							targetObject.SaveIntoDatabase();
-							client.Out.SendMessage("Object name changed to: " + targetObject.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							DisplayMessage(client, "Object name changed to: " + targetObject.Name);
 						}
 						break;
 					}
 				case "save":
 					{
 						targetObject.SaveIntoDatabase();
-						client.Out.SendMessage("Object saved to Database", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						DisplayMessage(client, "Object saved to Database");
 						break;
 					}
 				case "remove":
 					{
 						targetObject.DeleteFromDatabase();
 						targetObject.Delete();
-						client.Out.SendMessage("Object removed from Clients and Database", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						DisplayMessage(client, "Object removed from Clients and Database");
 						break;
 					}
 				case "target":
 					{
-						//todo targets the nearest object
+						foreach (GameStaticItem item in client.Player.GetItemsInRadius(1000))
+						{
+							client.Player.TargetObject = item;
+							DisplayMessage(client, "Target set to nearest object!");
+							return;
+						}
+						DisplayMessage(client, "No objects in 1000 unit range!");
 						break;
 					}
 			}
-			return 1;
 		}
 	}
 }

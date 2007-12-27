@@ -8,39 +8,38 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"Set your class or trade for /who output",
 		"/setwho class | trade")]
-	public class SetWhoCommandHandler : ICommandHandler
+	public class SetWhoCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 2)
 			{
-				client.Out.SendMessage("You need to specify if you want to change to class or trade", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(client, "You need to specify if you want to change to class or trade");
+				return;
 			}
+
 			if (args[1].ToLower() == "class")
 				client.Player.ClassNameFlag = true;
 			else if (args[1].ToLower() == "trade")
 			{
 				if (client.Player.CraftingPrimarySkill == eCraftingSkill.NoCrafting)
 				{
-					client.Out.SendMessage("You need a profession to enable it in for who messages", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+					DisplayMessage(client, "You need a profession to enable it in for who messages");
+					return;
 				}
+
 				client.Player.ClassNameFlag= false;
 			}
 			else
 			{
-				client.Out.SendMessage("You need to specify if you want to change to class or trade", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(client, "You need to specify if you want to change to class or trade");
+				return;
 			}
 
 			if (client.Player.ClassNameFlag)
-				client.Out.SendMessage("/who will no longer show your crafting title", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(client, "/who will no longer show your crafting title");
 			else
-				client.Out.SendMessage("/who will now show your crafting title", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-
-			return 1;
+				DisplayMessage(client, "/who will now show your crafting title");
 		}
 	}
 }

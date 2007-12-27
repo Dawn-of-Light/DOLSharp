@@ -26,23 +26,23 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"Guild Chat command",
 		"/gu <text>")]
-	public class GuildChatCommandHandler : ICommandHandler
+	public class GuildChatCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (client.Player.Guild == null)
 			{
-				client.Out.SendMessage("You don't belong to a player guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(client, "You don't belong to a player guild.");
+				return;
 			}
+
 			if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.GcSpeak))
 			{
-				client.Out.SendMessage("You don't have permission to speak on the on guild line.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(client, "You don't have permission to speak on the on guild line.");
+				return;
 			}
 			string message = "[Guild] " + client.Player.Name + ": \"" + string.Join(" ", args, 1, args.Length - 1) + "\"";
 			client.Player.Guild.SendMessageToGuildMembers(message, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
-			return 1;
 		}
 	}
 
@@ -52,19 +52,20 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"Speak in officer chat (Must be a guild officer)",
 		"/o <text>")]
-	public class OfficerGuildChatCommandHandler : ICommandHandler
+	public class OfficerGuildChatCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (client.Player.Guild == null)
 			{
-				client.Out.SendMessage("You don't belong to a player guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(client, "You don't belong to a player guild.");
+				return;
 			}
+
 			if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.OcSpeak))
 			{
-				client.Out.SendMessage("You don't have permission to speak on the officer line.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(client, "You don't have permission to speak on the officer line.");
+				return;
 			}
 			string message = "[Officers] " + client.Player.Name + ": \"" + string.Join(" ", args, 1, args.Length - 1) + "\"";
 			foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers())
@@ -75,7 +76,6 @@ namespace DOL.GS.Commands
 				}
 				ply.Out.SendMessage(message, eChatType.CT_Officer, eChatLoc.CL_ChatWindow);
 			}
-			return 1;
 		}
 	}
 
@@ -85,25 +85,28 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"Sends a message to the alliance chat",
 		"/as <text>")]
-	public class AllianceGuildChatCommandHandler : ICommandHandler
+	public class AllianceGuildChatCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (client.Player.Guild == null)
 			{
-				client.Out.SendMessage("You don't belong to a player guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(client, "You don't belong to a player guild.");
+				return;
 			}
+
 			if (client.Player.Guild.alliance == null)
 			{
-				client.Out.SendMessage("Your guild doesn't belong to any alliance.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(client, "Your guild doesn't belong to any alliance.");
+				return;
 			}
+
 			if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.AcSpeak))
 			{
-				client.Out.SendMessage("You can not speak on alliance chan.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(client, "You can not speak on alliance chan.");
+				return;
 			}
+
 			string message = "[Alliance] " + client.Player.Name + ": \"" + string.Join(" ", args, 1, args.Length - 1) + "\"";
 			foreach (Guild gui in client.Player.Guild.alliance.Guilds)
 			{
@@ -116,7 +119,6 @@ namespace DOL.GS.Commands
 					ply.Out.SendMessage(message, eChatType.CT_Alliance, eChatLoc.CL_ChatWindow);
 				}
 			}
-			return 1;
 		}
 	}
 }

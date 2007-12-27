@@ -30,12 +30,12 @@ namespace DOL.GS.Commands
 		"/plvl remove <command>")]
 	public class PlvlCommand : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length == 1)
 			{
 				DisplaySyntax(client);
-				return 0;
+				return;
 			}
 
 			uint plvl;
@@ -47,16 +47,16 @@ namespace DOL.GS.Commands
 						if (player == null)
 						{
 							client.Out.SendMessage("You must select a player to add single permission on him", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 0;
+							return;
 						}
 						if (args.Length != 3)
 						{
 							DisplaySyntax(client);
-							return 0;
+							return;
 						}
 						SinglePermission.setPermission(player, args[2]);
 						client.Out.SendMessage("You add the single permission to " + player.Name + " for " + args[2] + " command.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return 1;
+						break;
 					}
 				case "remove":
 					{
@@ -64,18 +64,18 @@ namespace DOL.GS.Commands
 						if (player == null)
 						{
 							client.Out.SendMessage("You must select a player to remove single permission on him", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 0;
+							return;
 						}
 						if (args.Length != 3)
 						{
 							DisplaySyntax(client);
-							return 0;
+							return;
 						}
 						if (SinglePermission.removePermission(player, args[2]))
 							client.Out.SendMessage("You remove the single permission of " + player.Name + " for " + args[2] + " command.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						else
 							client.Out.SendMessage("there is no permission of " + player.Name + " for " + args[2] + " command.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return 1;
+						break;
 					}
 				default:
 					{
@@ -113,7 +113,7 @@ namespace DOL.GS.Commands
 						{
 							DisplaySyntax(client);
 						}
-						return 1;
+						break;
 					}
 			}
 		}

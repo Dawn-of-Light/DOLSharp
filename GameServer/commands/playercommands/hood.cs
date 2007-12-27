@@ -23,12 +23,11 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player, //minimum privelege level
 		"Toggles the hood on and off when wearing a hooded cloak.", //command description
 		"/hood")] //usage
-		public class HoodCommandHandler : ICommandHandler
+	public class HoodCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			client.Player.IsCloakHoodUp = !client.Player.IsCloakHoodUp;
-			return 0;
 		}
 	}
 }

@@ -24,9 +24,9 @@ namespace DOL.GS.Commands
 		 ePrivLevel.Player, //minimum privelege level
 		 "Show the current coordinates", //command description
 		 "/groundassist")] //command usage
-	public class GroundAssistCommandHandler : ICommandHandler
+	public class GroundAssistCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			GameLiving target = client.Player.TargetObject as GameLiving;
 			if (args.Length > 1)
@@ -36,7 +36,7 @@ namespace DOL.GS.Commands
 				if (myclient == null)
 				{
 					client.Player.Out.SendMessage("No player with this name in game.", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-					return 1;
+					return;
 				}
 				target = myclient.Player;
 			}
@@ -44,29 +44,28 @@ namespace DOL.GS.Commands
 			if (target == client.Player)
 			{
 				client.Out.SendMessage("You can't groundassist yourself.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
+				return;
 			}
 
 			if (target == null)
-				return 0;
+				return;
 
 			if (!GameServer.ServerRules.IsSameRealm(client.Player, target as GameLiving, false))
-				return 0;
+				return;
 
 			if (!WorldMgr.CheckDistance(client.Player, target, 2048))
 			{
 				client.Out.SendMessage("You don't see " + args[1] + " around here!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
+				return;
 			}
 
 			if (target.GroundTarget == null || (target.GroundTarget.X == 0 && target.GroundTarget.Y == 0 && target.GroundTarget.Z == 0))
 			{
 				client.Out.SendMessage(target.Name + " doesn't currently have a ground target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
+				return;
 			}
 			client.Player.Out.SendChangeGroundTarget(target.GroundTarget);
 			client.Player.SetGroundTarget(target.GroundTarget.X, target.GroundTarget.Y, target.GroundTarget.Z);
-			return 1;
 		}
 	}
 }

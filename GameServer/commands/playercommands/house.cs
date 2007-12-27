@@ -30,17 +30,16 @@ namespace DOL.GS.Commands
 		)]
 	public class HouseCommanHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			House house = HouseMgr.GetHouseByPlayer(client.Player);
 			if (house == null)
 			{
-				DisplayError(client, "You do not own a house.");
-				return 0;
+				DisplayMessage(client, "You do not own a house.");
+				return;
 			}
 
 			house.SendHouseInfo(client.Player);
-			return 1;
 		}
 	}
 }

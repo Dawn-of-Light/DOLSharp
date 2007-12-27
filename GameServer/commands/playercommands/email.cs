@@ -17,16 +17,16 @@ namespace DOL.GS.Commands
 	  ePrivLevel.Player,
 	  "Set e-mail address for current account",
 	  "/email <address>")]
-	public class EmailCommand : ICommandHandler
+	public class EmailCommand : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
-			if(args.Length==1)
+			if (args.Length == 1)
 			{
-				  client.Out.SendMessage("Usage: /email <address>",
-				  eChatType.CT_System,
-				  eChatLoc.CL_SystemWindow);
-				return 1;
+				client.Out.SendMessage("Usage: /email <address>",
+				eChatType.CT_System,
+				eChatLoc.CL_SystemWindow);
+				return;
 			}
 			EmailSyntaxValidator emailsyntaxvalidator;  // validate mail
 			string EmailAddy = args[1];
@@ -36,7 +36,7 @@ namespace DOL.GS.Commands
 				client.Out.SendMessage("Please enter a valid e-mail address.",
 					eChatType.CT_System,
 					eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 
@@ -44,24 +44,20 @@ namespace DOL.GS.Commands
 			{
 				GamePlayer obj = (GamePlayer)client.Player;
 
-				if(obj != null)
+				if (obj != null)
 				{
-					if(obj.Client.Account != null)
-					{
-						obj.Client.Account.Mail = EmailAddy;  // Set email
-						GameServer.Database.SaveObject(obj.Client.Account); // Save account.
-						client.Out.SendMessage("Contact e-mail address set to " + 
-							obj.Client.Account.Mail+". Thanks!",
-							eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					}
+					obj.Client.Account.Mail = EmailAddy;  // Set email
+					GameServer.Database.SaveObject(obj.Client.Account); // Save account.
+					client.Out.SendMessage("Contact e-mail address set to " +
+						obj.Client.Account.Mail + ". Thanks!",
+						eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
-			} 
-			catch(Exception)
+			}
+			catch (Exception)
 			{
 				client.Out.SendMessage("Error - Usage: /email <address>",
 					eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
-			return 1;
 		}
 	}
 	public class EmailSyntaxValidator
@@ -121,22 +117,22 @@ namespace DOL.GS.Commands
 
 			//then trim
 			tmpmail = this.Trim(tmpmail);
-			
+
 			//separate account from domain, quit if unable to separate
-			if (! this.CrackEmail(tmpmail))
+			if (!this.CrackEmail(tmpmail))
 			{
 				return;
 			}
 
 			//validate the domain, quit if domain is bad
-			if (! this.DomainValid(TLDrequired))
+			if (!this.DomainValid(TLDrequired))
 			{
 				return;
 			}
 
 			//if the TLD is required, validate the domain extension,
 			//quit if the domain extension is bad
-			if (TLDrequired && ! this.DomainExtensionValid())
+			if (TLDrequired && !this.DomainExtensionValid())
 			{
 				return;
 			}
@@ -154,7 +150,7 @@ namespace DOL.GS.Commands
 		{
 			Regex re;
 			Match m;
-			bool  ok = false;
+			bool ok = false;
 
 			try
 			{
@@ -162,7 +158,7 @@ namespace DOL.GS.Commands
 				//note that we parse from right to left, thereby forcing
 				//this pattern to match the last @ symbol in the email.
 				re = new Regex(
-					"^(.+?)\\@(.+?)$", 
+					"^(.+?)\\@(.+?)$",
 					RegexOptions.Singleline | RegexOptions.RightToLeft
 				);
 
@@ -176,7 +172,7 @@ namespace DOL.GS.Commands
 
 					//first group is the account
 					this.account = m.Groups[1].Value;
-					
+
 					//second group is the domain
 					this.domain = m.Groups[2].Value;
 
@@ -209,11 +205,11 @@ namespace DOL.GS.Commands
 		private string RemoveBrackets(string input)
 		{
 			string output = null;
-			Regex  re;
-		
+			Regex re;
+
 			//pattern to match brackets or no brackets
 			re = new Regex(
-				"^\\<*|\\>*$", 
+				"^\\<*|\\>*$",
 				RegexOptions.IgnoreCase | RegexOptions.Singleline
 			);
 
@@ -239,11 +235,11 @@ namespace DOL.GS.Commands
 		private string Trim(string input)
 		{
 			string output = null;
-			Regex  re;
-		
+			Regex re;
+
 			//pattern to trim leading and trailing white space from string
 			re = new Regex(
-				"^\\s*|\\s*$", 
+				"^\\s*|\\s*$",
 				RegexOptions.IgnoreCase | RegexOptions.Singleline
 			);
 
@@ -263,7 +259,7 @@ namespace DOL.GS.Commands
 
 		private bool DomainValid(bool TLDrequired)
 		{
-			bool  valid;
+			bool valid;
 			Regex re;
 			string pattern, emaildomain;
 
@@ -272,7 +268,7 @@ namespace DOL.GS.Commands
 				//if the TLD is required, the pattern contains
 				//a basic TLD length check at the end
 				pattern = "^((([a-z0-9-]+)\\.)+)[a-z]{2,6}$";
-				emaildomain=this.domain;
+				emaildomain = this.domain;
 			}
 			else
 			{
@@ -282,11 +278,11 @@ namespace DOL.GS.Commands
 				//This means that we must append a . to the domain
 				//temporarily to test the email.
 				pattern = "^((([a-z0-9-]+)\\.)+)$";
-				emaildomain=this.domain+".";
+				emaildomain = this.domain + ".";
 			}
 
 			re = new Regex(
-				pattern, 
+				pattern,
 				RegexOptions.IgnoreCase | RegexOptions.Singleline
 			);
 
@@ -302,55 +298,55 @@ namespace DOL.GS.Commands
 
 		private bool DomainExtensionValid()
 		{
-			bool  valid;
+			bool valid;
 			Regex re;
 			string domainvalidatorpattern = "";
 
 			//pattern to validate all known TLD's
-			domainvalidatorpattern+="\\.(";
-			domainvalidatorpattern+="a[c-gil-oq-uwz]|";     //ac,ad,ae,af,ag,ai,al,am,an,ao,aq,ar,as,at,au,aw,az
-			domainvalidatorpattern+="b[a-bd-jm-or-tvwyz]|"; //ba,bb,bd,be,bf,bg,bh,bi,bj,bm,bn,bo,br,bs,bt,bv,bw,by,bz
-			domainvalidatorpattern+="c[acdf-ik-orsuvx-z]|"; //ca,cc,cd,cf,cg,ch,ci,ck,cl,cm,cn,co,cr,cs,cu,cv,cz,cy,cz
-			domainvalidatorpattern+="d[ejkmoz]|";           //de,dj,dk,dm,do,dz
-			domainvalidatorpattern+="e[ceghr-u]|";          //ec,ee,eg,eh,er,es,et,eu
-			domainvalidatorpattern+="f[i-kmorx]|";          //fi,fj,fk,fm,fo,fr,fx
-			domainvalidatorpattern+="g[abd-ilmnp-uwy]|";    //ga,gb,gd,ge,gf,gg,gh,gi,gl,gm,gn,gp,gq,gr,gs,gt,gu,gw,gy
-			domainvalidatorpattern+="h[kmnrtu]|";           //hk,hm,hn,hr,ht,hu
-			domainvalidatorpattern+="i[delm-oq-t]|";        //id,ie,il,im,in,io,iq,ir,is,it
-			domainvalidatorpattern+="j[emop]|";             //je,jm,jo,jp
-			domainvalidatorpattern+="k[eg-imnprwyz]|";      //ke,kg,kh,ki,km,kn,kp,kr,kw,ky,kz
-			domainvalidatorpattern+="l[a-cikr-vy]|";        //la,lb,lc,li,lk,lr,ls,lt,lu,lv,ly
-			domainvalidatorpattern+="m[acdghk-z]|";         //ma,mc,md,mg,mh,mk,ml,mm,mn,mo,mp,mq,mr,ms,mt,mu,mv,mw,mx,my,mz
-			domainvalidatorpattern+="n[ace-giloprtuz]|";    //na,nc,ne,nf,ng,ni,nl,no,np,nr,nt,nu,nz
-			domainvalidatorpattern+="om|";                  //om
-			domainvalidatorpattern+="p[ae-hk-nrtwy]|";      //pa,pe,pf,pg,ph,pk,pl,pm,pn,pr,pt,pw,py
-			domainvalidatorpattern+="qa|";                  //qa
-			domainvalidatorpattern+="r[eouw]|";             //re,ro,ru,rw
-			domainvalidatorpattern+="s[a-eg-ort-vyz]|";     //sa,sb,sc,sd,se,sg,sh,si,sj,sk,sl,sm,sn,so,sr,st,su,sv,sy,sz
-			domainvalidatorpattern+="t[cdf-hjkm-prtvwz]|";  //tc,td,tf,tg,th,tj,tk,tm,tn,to,tp,tr,tt,tv,tx,tz
-			domainvalidatorpattern+="u[agkmsyz]|";          //ua,ug,uk,um,us,uy,uz
-			domainvalidatorpattern+="v[aceginu]|";          //va,vc,ve,vg,vy,vn,vu
-			domainvalidatorpattern+="w[fs]|";               //wf,ws
-			domainvalidatorpattern+="y[etu]|";              //ye,yt,yu
-			domainvalidatorpattern+="z[admrw]|";            //za,zd,zm,zr,zw
-			domainvalidatorpattern+="com|";                 //com
-			domainvalidatorpattern+="edu|";                 //edu
-			domainvalidatorpattern+="net|";                 //net
-			domainvalidatorpattern+="org|";                 //org
-			domainvalidatorpattern+="mil|";                 //mil
-			domainvalidatorpattern+="gov|";                 //gov
-			domainvalidatorpattern+="biz|";                 //biz
-			domainvalidatorpattern+="pro|";                 //pro
-			domainvalidatorpattern+="aero|";                //aero
-			domainvalidatorpattern+="coop|";                //coop
-			domainvalidatorpattern+="info|";                //info
-			domainvalidatorpattern+="name|";                //name
-			domainvalidatorpattern+="int|";                 //int
-			domainvalidatorpattern+="museum";               //museum
-			domainvalidatorpattern+=")$";
-			
+			domainvalidatorpattern += "\\.(";
+			domainvalidatorpattern += "a[c-gil-oq-uwz]|";     //ac,ad,ae,af,ag,ai,al,am,an,ao,aq,ar,as,at,au,aw,az
+			domainvalidatorpattern += "b[a-bd-jm-or-tvwyz]|"; //ba,bb,bd,be,bf,bg,bh,bi,bj,bm,bn,bo,br,bs,bt,bv,bw,by,bz
+			domainvalidatorpattern += "c[acdf-ik-orsuvx-z]|"; //ca,cc,cd,cf,cg,ch,ci,ck,cl,cm,cn,co,cr,cs,cu,cv,cz,cy,cz
+			domainvalidatorpattern += "d[ejkmoz]|";           //de,dj,dk,dm,do,dz
+			domainvalidatorpattern += "e[ceghr-u]|";          //ec,ee,eg,eh,er,es,et,eu
+			domainvalidatorpattern += "f[i-kmorx]|";          //fi,fj,fk,fm,fo,fr,fx
+			domainvalidatorpattern += "g[abd-ilmnp-uwy]|";    //ga,gb,gd,ge,gf,gg,gh,gi,gl,gm,gn,gp,gq,gr,gs,gt,gu,gw,gy
+			domainvalidatorpattern += "h[kmnrtu]|";           //hk,hm,hn,hr,ht,hu
+			domainvalidatorpattern += "i[delm-oq-t]|";        //id,ie,il,im,in,io,iq,ir,is,it
+			domainvalidatorpattern += "j[emop]|";             //je,jm,jo,jp
+			domainvalidatorpattern += "k[eg-imnprwyz]|";      //ke,kg,kh,ki,km,kn,kp,kr,kw,ky,kz
+			domainvalidatorpattern += "l[a-cikr-vy]|";        //la,lb,lc,li,lk,lr,ls,lt,lu,lv,ly
+			domainvalidatorpattern += "m[acdghk-z]|";         //ma,mc,md,mg,mh,mk,ml,mm,mn,mo,mp,mq,mr,ms,mt,mu,mv,mw,mx,my,mz
+			domainvalidatorpattern += "n[ace-giloprtuz]|";    //na,nc,ne,nf,ng,ni,nl,no,np,nr,nt,nu,nz
+			domainvalidatorpattern += "om|";                  //om
+			domainvalidatorpattern += "p[ae-hk-nrtwy]|";      //pa,pe,pf,pg,ph,pk,pl,pm,pn,pr,pt,pw,py
+			domainvalidatorpattern += "qa|";                  //qa
+			domainvalidatorpattern += "r[eouw]|";             //re,ro,ru,rw
+			domainvalidatorpattern += "s[a-eg-ort-vyz]|";     //sa,sb,sc,sd,se,sg,sh,si,sj,sk,sl,sm,sn,so,sr,st,su,sv,sy,sz
+			domainvalidatorpattern += "t[cdf-hjkm-prtvwz]|";  //tc,td,tf,tg,th,tj,tk,tm,tn,to,tp,tr,tt,tv,tx,tz
+			domainvalidatorpattern += "u[agkmsyz]|";          //ua,ug,uk,um,us,uy,uz
+			domainvalidatorpattern += "v[aceginu]|";          //va,vc,ve,vg,vy,vn,vu
+			domainvalidatorpattern += "w[fs]|";               //wf,ws
+			domainvalidatorpattern += "y[etu]|";              //ye,yt,yu
+			domainvalidatorpattern += "z[admrw]|";            //za,zd,zm,zr,zw
+			domainvalidatorpattern += "com|";                 //com
+			domainvalidatorpattern += "edu|";                 //edu
+			domainvalidatorpattern += "net|";                 //net
+			domainvalidatorpattern += "org|";                 //org
+			domainvalidatorpattern += "mil|";                 //mil
+			domainvalidatorpattern += "gov|";                 //gov
+			domainvalidatorpattern += "biz|";                 //biz
+			domainvalidatorpattern += "pro|";                 //pro
+			domainvalidatorpattern += "aero|";                //aero
+			domainvalidatorpattern += "coop|";                //coop
+			domainvalidatorpattern += "info|";                //info
+			domainvalidatorpattern += "name|";                //name
+			domainvalidatorpattern += "int|";                 //int
+			domainvalidatorpattern += "museum";               //museum
+			domainvalidatorpattern += ")$";
+
 			re = new Regex(
-				domainvalidatorpattern, 
+				domainvalidatorpattern,
 				RegexOptions.IgnoreCase | RegexOptions.Singleline
 			);
 

@@ -27,9 +27,9 @@ namespace DOL.GS.Commands
 		ePrivLevel.GM,
 		"adds a door to the game",
 		"/adddoor <doorID>")]
-	public class AddDoorCommandHandler : ICommandHandler
+	public class AddDoorCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			int doorid = 0;
 			if (args.Length == 2)
@@ -40,8 +40,8 @@ namespace DOL.GS.Commands
 				}
 				catch
 				{
-					client.Out.SendMessage("doorid must be a ushort whitch are equal to real door id", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 0;
+					DisplayMessage(client, "doorid must be a ushort whitch are equal to real door id");
+					return;
 				}
 				DBDoor door = new DBDoor();
 				door.X = client.Player.X;
@@ -50,16 +50,12 @@ namespace DOL.GS.Commands
 				door.Heading = client.Player.Heading;
 				door.InternalID = doorid;
 				GameServer.Database.AddNewObject(door);
-				client.Out.SendMessage("door created with id = " + door.ObjectId, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(client, "door created with id = " + door.ObjectId);
 			}
 			else
 			{
-				client.Out.SendMessage("/adddoor <id> this id must be same that door select packet and you must hit command when you are on door", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
+				DisplayMessage(client, "/adddoor <id> this id must be same that door select packet and you must hit command when you are on door");
 			}
-
-
 		}
 	}
 }

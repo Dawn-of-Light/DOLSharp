@@ -24,34 +24,34 @@ namespace DOL.GS.Commands
 		"&spacing",
 		ePrivLevel.Player,
 		"Change the spacing of your pets!", "/spacing {normal, big, huge}")]
-	public class SpacingHandler : ICommandHandler
+	public class SpacingHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			GamePlayer player = client.Player;
 
 			//No one else needs to use this spell
 			if (player.CharacterClass.ID != (int)eCharacterClass.Bonedancer)
 			{
-				client.Out.SendMessage("Only Bonedancers can use this command!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(player, "Only Bonedancers can use this command!");
+				return;
 			}
 
 			//Help display
 			if (args.Length == 1)
 			{
-				client.Out.SendMessage("Spacing commands:", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("'/spacing normal' Use normal spacing between minions.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("'/spacing big' Use a larger spacing between minions.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("'/spacing huge' Use a very large spacing between minions.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(player, "Spacing commands:");
+				DisplayMessage(player, "'/spacing normal' Use normal spacing between minions.");
+				DisplayMessage(player, "'/spacing big' Use a larger spacing between minions.");
+				DisplayMessage(player, "'/spacing huge' Use a very large spacing between minions.");
+				return;
 			}
 
 			//Check to see if the BD has a commander and minions
 			if (player.ControlledNpc == null)
 			{
-				client.Out.SendMessage("You don't have a commander!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(player, "You don't have a commander!");
+				return;
 			}
 			bool haveminion = false;
 			foreach (AI.Brain.IControlledBrain icb in player.ControlledNpc.Body.ControlledNpcList)
@@ -61,8 +61,8 @@ namespace DOL.GS.Commands
 			}
 			if (!haveminion)
 			{
-				client.Out.SendMessage("You don't have any minions!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(player, "You don't have any minions!");
+				return;
 			}
 
 			switch (args[1].ToLower())
@@ -80,11 +80,9 @@ namespace DOL.GS.Commands
 					player.ControlledNpc.Body.FormationSpacing = 3;
 					break;
 				default:
-					client.Out.SendMessage("Unrecognized argument: " + args[1], eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					DisplayMessage(player, "Unrecognized argument: " + args[1]);
 					break;
 			}
-
-			return 1;
 		}
 	}
 }

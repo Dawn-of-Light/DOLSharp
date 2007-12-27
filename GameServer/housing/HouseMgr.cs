@@ -219,13 +219,25 @@ namespace DOL.GS.Housing
 			GameLotMarker.SpawnLotMarker(house.DatabaseItem);
 		}
 
+		/// <summary>
+		/// Checks if a player is the owner of the house, this checks all characters on the account
+		/// </summary>
+		/// <param name="house">The house object</param>
+		/// <param name="player">The player to check</param>
+		/// <returns>True if the player is the owner</returns>
 		public static bool IsOwner(DBHouse house, GamePlayer player)
 		{
 			if (house == null || player == null) return false;
 			if (house.OwnerIDs == null || house.OwnerIDs == "") return false;
 
-			return (house.OwnerIDs.IndexOf(player.PlayerCharacter.ObjectId) >= 0);
+			foreach (Character c in player.Client.Account.Characters)
+			{
+				if (house.OwnerIDs.Contains(c.ObjectId))
+					return true;
+			}
+			return false;
 		}
+
 		public static void AddOwner(DBHouse house, GamePlayer player)
 		{
 			if (house == null || player == null) return;

@@ -27,15 +27,15 @@ namespace DOL.GS.Commands
 		"cast a spell",
 		"/cast <spellid>",
 		"/cast <spellid> <case>")]
-	public class CastCommandHandler : ICommandHandler
+	public class CastCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 2)
 			{
 				client.Out.SendMessage("Usage: /cast <spellid> Cast the ID of the spell", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				client.Out.SendMessage("Usage: /cast <case> Cast the ID and the spell (/cast 10 t)", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
+				return;
 			}
 			int spellID = 0;
 			try
@@ -62,9 +62,7 @@ namespace DOL.GS.Commands
 			{
 				client.Out.SendMessage("Usage: /cast <spellid> Cast the ID of the spell", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				client.Out.SendMessage("Usage: /cast <case> Cast the ID and the spell (/cast 10 t)", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
 			}
-			return 1;
 		}
 	}
 }

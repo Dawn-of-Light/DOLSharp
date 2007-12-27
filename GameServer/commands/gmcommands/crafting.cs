@@ -30,12 +30,12 @@ namespace DOL.GS.Commands
 		 "'/crafting list' to have the list of all crafting skill with their id")]
 	public class CraftCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length == 1)
 			{
 				DisplaySyntax(client);
-				return 1;
+				return;
 			}
 
 			if (args[1] == "list")
@@ -46,7 +46,7 @@ namespace DOL.GS.Commands
 				{
 					client.Out.SendMessage(valeur + " = " + Enum.GetName(typeof(eCraftingSkill), valeur), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
-				return 1;
+				return;
 			}
 
 			GamePlayer targetPlayer = null;
@@ -58,10 +58,10 @@ namespace DOL.GS.Commands
 				if (client.Player.TargetObject != null)
 				{
 					client.Out.SendMessage("You can't use " + client.Player.TargetObject + " for /crafting command.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+					return;
 				}
 				client.Out.SendMessage("You must target a player to use this command.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 			switch (args[1])
@@ -96,7 +96,7 @@ namespace DOL.GS.Commands
 						catch (Exception)
 						{
 							client.Out.SendMessage("Type /crafting for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 					}
 					break;
@@ -120,7 +120,7 @@ namespace DOL.GS.Commands
 								if (targetPlayer.GetCraftingSkillValue(craftingSkillID) < 0)
 								{
 									client.Out.SendMessage(targetPlayer.Name + " does not have the crafting skill " + skill.Name + ", add it first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return 1;
+									return;
 								}
 
 								targetPlayer.GainCraftingSkill(craftingSkillID, amount);
@@ -132,7 +132,7 @@ namespace DOL.GS.Commands
 						catch (Exception)
 						{
 							client.Out.SendMessage("Type /crafting for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 					}
 					break;
@@ -143,8 +143,6 @@ namespace DOL.GS.Commands
 					}
 					break;
 			}
-
-			return 1;
 		}
 	}
 }

@@ -29,9 +29,9 @@ using DOL.GS.Quests;
 namespace DOL.GS.Commands
 {
 	[CmdAttribute("&task", ePrivLevel.Player, "Ask for a Task from Guards or Merchants", "/task")]
-	public class TaskCommandHandler : ICommandHandler
+	public class TaskCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length > 1)
 			{
@@ -45,7 +45,6 @@ namespace DOL.GS.Commands
 			{
 				TaskCommand(client.Player);
 			}
-			return 1;
 		}
 
 		/// <summary>

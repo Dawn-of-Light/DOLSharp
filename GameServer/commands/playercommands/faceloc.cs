@@ -34,13 +34,14 @@ namespace DOL.GS.Commands
 		"/faceloc [x] [y]")]
 	public class LocFaceCommandHandler : AbstractCommandHandler,ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (client.Player.IsTurningDisabled)
 			{
-				DisplayError(client, "You can't use this command now!", new object[] { });
-				return 0;
+				DisplayMessage(client, "You can't use this command now!");
+				return;
 			}
+
 			if (args.Length < 3)
 			{
 				client.Out.SendMessage
@@ -49,7 +50,7 @@ namespace DOL.GS.Commands
 					eChatType.CT_System,
 					eChatLoc.CL_SystemWindow
 					);
-				return 1;
+				return;
 			}
 			int x = 0;
 			int y = 0;
@@ -66,7 +67,6 @@ namespace DOL.GS.Commands
 			ushort direction = client.Player.GetHeadingToSpot(glocX, glocY);
 			client.Player.Heading = direction;
 			client.Out.SendPlayerJump(true);
-			return 1;
 		}
 	}
 }
