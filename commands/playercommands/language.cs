@@ -27,23 +27,22 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"Change your server-language display",
 		"/language <EN|FR|DE|ES|CZ>")]
-	public class LanguageCommandHandler : ICommandHandler
+	public class LanguageCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (DOL.GS.ServerProperties.Properties.ALLOW_CHANGE_LANGUAGE == false)
-				return 0;
+				return;
 			if (args.Length == 1)
 			{
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Language.Current", LanguageMgr.LangsToCompleteName(client, LanguageMgr.NameToLangs(client.Account.Language))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
 			}
-			else	if (args.Length == 2)
+			else if (args.Length == 2)
 			{
 				// Valid language -> English default
 				client.Account.Language = LanguageMgr.LangsToName(LanguageMgr.NameToLangs(args[1].ToUpper()));
@@ -51,10 +50,8 @@ namespace DOL.GS.Commands
 				GameServer.Database.SaveObject(client.Account);
 				if (log.IsInfoEnabled)
 					log.Info(client.Player.Name + " (" + client.Account.Name + ") changed language.");
-				return 0;
 			}
-			else	client.Out.SendMessage("Command help: /language <EN|FR|DE|ES|CZ>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			return 1;
+			else client.Out.SendMessage("Command help: /language <EN|FR|DE|ES|CZ>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 	}
 }

@@ -25,15 +25,15 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"Adds/Removes a player to/from your friendlist!",
 		"/friend <playerName>")]
-	public class FriendCommandHandler : ICommandHandler
+	public class FriendCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 2)
 			{
 				string[] friends = client.Player.PlayerCharacter.SerializedFriendsList.Split(',');
 				client.Out.SendCustomTextWindow("Friends (snapshot)", friends);
-				return 1;
+				return;
 			}
 			else if (args.Length == 2 && args[1] == "window")
 			{
@@ -47,7 +47,7 @@ namespace DOL.GS.Commands
 					client.Out.SendMessage(string.Format("F,{0},{1},{2},{3},\"{4}\"",
 						ind++, friendClient.Player.Name, friendClient.Player.Level, friendClient.Player.CharacterClass.ID, (friendClient.Player.CurrentZone == null ? "" : friendClient.Player.CurrentZone.Description)), eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
 				}
-				return 0;
+				return;
 			}
 			string name = string.Join(" ", args, 1, args.Length - 1);
 
@@ -63,48 +63,52 @@ namespace DOL.GS.Commands
 				name = args[1];
 				if (client.Player.Friends.Contains(name))
 				{
-					client.Out.SendMessage(name + " was removed from your friend list!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					DisplayMessage(client, name + " was removed from your friend list!");
 					client.Player.ModifyFriend(name, true);
 					client.Out.SendRemoveFriends(new string[] {name});
-					return 1;
+					return;
 				}
 				else
 				{
 					// nothing found
-					client.Out.SendMessage("No players online with that name.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+					DisplayMessage(client, "No players online with that name.");
+					return;
 				}
 			}
 
 			switch (result)
 			{
-				case 2: // name not unique
-					client.Out.SendMessage("Character name is not unique.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+				case 2:
+					{
+						// name not unique
+						DisplayMessage(client, "Character name is not unique.");
+						break;
+					}
 				case 3: // exact match
 				case 4: // guessed name
-					if (fclient == client)
 					{
-						client.Out.SendMessage("You can't add yourself!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return 1;
-					}
+						if (fclient == client)
+						{
+							DisplayMessage(client, "You can't add yourself!");
+							return;
+						}
 
-					name = fclient.Player.Name;
-					if (client.Player.Friends.Contains(name))
-					{
-						client.Out.SendMessage(name + " was removed from your friend list!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						client.Player.ModifyFriend(name, true);
-						client.Out.SendRemoveFriends(new string[] {name});
+						name = fclient.Player.Name;
+						if (client.Player.Friends.Contains(name))
+						{
+							DisplayMessage(client, name + " was removed from your friend list!");
+							client.Player.ModifyFriend(name, true);
+							client.Out.SendRemoveFriends(new string[] { name });
+						}
+						else
+						{
+							DisplayMessage(client, name + " was added to your friend list!");
+							client.Player.ModifyFriend(name, false);
+							client.Out.SendAddFriends(new string[] { name });
+						}
+						break;
 					}
-					else
-					{
-						client.Out.SendMessage(name + " was added to your friend list!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						client.Player.ModifyFriend(name, false);
-						client.Out.SendAddFriends(new string[] {name});
-					}
-					return 1;
 			}
-			return 0;
 		}
 	}
 }

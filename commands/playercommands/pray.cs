@@ -24,12 +24,11 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"You can pray on your gravestones to get some experience back",
 		"/pray")]
-	public class PrayCommandHandler : ICommandHandler
+	public class PrayCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			client.Player.Pray();
-			return 1;
 		}
 	}
 }

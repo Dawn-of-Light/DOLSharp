@@ -26,10 +26,15 @@ namespace DOL.GS.Commands
 	[CmdAttribute("&level", //command to handle
 	ePrivLevel.Player, //minimum privelege level
 	"Allows you to level 20 instantly if you have a level 50", "/level")] //usage
-	public class LevelCommandHandler : ICommandHandler
+	public class LevelCommandHandler : AbstractCommandHandler
 	{
 		public int OnCommand(GameClient client, string[] args)
 		{
+			if (ServerProperties.Properties.SLASH_LEVEL_TARGET <= 1)
+			{
+				DisplayMessage(client, "/level is disabled on this server currently!");
+				return 0;
+			}
 			if (!ServerProperties.Properties.ALLOW_CATA_SLASH_LEVEL)
 			{
 				switch ((eCharacterClass)client.Player.CharacterClass.ID)
@@ -54,10 +59,10 @@ namespace DOL.GS.Commands
 				if (client.Player.CanUseSlashLevel)
 				{
 					//if there is a level 50.. calculate the xp needed to get to
-					//level 20 from the current level and give it to the player
+					//level x from the current level and give it to the player
 
-					// only do this if the players level is  < 20
-					if (client.Player.Experience < GamePlayer.XPLevel[19])
+					// only do this if the players level is  < target level
+					if (client.Player.Experience < GamePlayer.XPLevel[ServerProperties.Properties.SLASH_LEVEL_TARGET - 1])
 					{
 						long newXP;
 						//calculate xp to level 20 from current level..
@@ -65,14 +70,14 @@ namespace DOL.GS.Commands
 						if (newXP < 0) newXP = 0;
 						client.Player.GainExperience(newXP);
 						client.Player.PlayerCharacter.UsedLevelCommand = true;
-						client.Player.Out.SendMessage("You have been rewarded enough Experience to reach level 20, right click on your trainer to gain levels!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Player.Out.SendMessage("You have been rewarded enough Experience to reach level " + ServerProperties.Properties.SLASH_LEVEL_TARGET + ", right click on your trainer to gain levels!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						client.Player.SaveIntoDatabase();
 						return 1;
 					}
-					client.Player.Out.SendMessage("/level only allows you to level to 20", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Player.Out.SendMessage("/level only allows you to level to " + ServerProperties.Properties.SLASH_LEVEL_TARGET, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 0;
 				}
-				client.Player.Out.SendMessage("You don't have a level 50 on your account!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Player.Out.SendMessage("You don't have a level " + ServerProperties.Properties.SLASH_LEVEL_REQUIREMENT + " on your account!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 0;
 			}
 			client.Player.Out.SendMessage("You need to be at your trainer to use this command", eChatType.CT_System, eChatLoc.CL_SystemWindow);

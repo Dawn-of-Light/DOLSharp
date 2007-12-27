@@ -151,6 +151,7 @@
     <Compile Include="behaviour\BehaviourMgr.cs" />
     <Compile Include="commands\admincommands\Account.cs" />
     <Compile Include="commands\admincommands\code.cs" />
+    <Compile Include="commands\admincommands\serverproperties.cs" />
     <Compile Include="commands\admincommands\plvl.cs" />
     <Compile Include="commands\gmcommands\addbind.cs" />
     <Compile Include="commands\gmcommands\AddHookPoint.cs" />
@@ -178,7 +179,6 @@
     <Compile Include="commands\gmcommands\kick.cs" />
     <Compile Include="commands\gmcommands\merchant.cs" />
     <Compile Include="commands\gmcommands\mob.cs" />
-    <Compile Include="commands\gmcommands\modify.cs" />
     <Compile Include="commands\gmcommands\morph.cs" />
     <Compile Include="commands\gmcommands\mountgm.cs" />
     <Compile Include="commands\gmcommands\npc.cs" />
@@ -264,7 +264,6 @@
     <Compile Include="commands\playercommands\salvage.cs" />
     <Compile Include="commands\playercommands\say.cs" />
     <Compile Include="commands\playercommands\send.cs" />
-    <Compile Include="commands\playercommands\serverinfo.cs" />
     <Compile Include="commands\playercommands\settitle.cs" />
     <Compile Include="commands\playercommands\setwho.cs" />
     <Compile Include="commands\playercommands\show.cs" />
@@ -277,7 +276,6 @@
     <Compile Include="commands\playercommands\target.cs" />
     <Compile Include="commands\playercommands\task.cs" />
     <Compile Include="commands\playercommands\time.cs" />
-    <Compile Include="commands\playercommands\version.cs" />
     <Compile Include="commands\playercommands\ViewReports.cs" />
     <Compile Include="commands\playercommands\where.cs" />
     <Compile Include="commands\playercommands\whisper.cs" />

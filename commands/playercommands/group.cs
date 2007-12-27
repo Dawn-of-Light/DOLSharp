@@ -26,14 +26,14 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"Say something to other chat group players",
 		"/g <message>")]
-	public class GCommandHandler : ICommandHandler
+	public class GCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (client.Player.Group == null)
 			{
-				client.Out.SendMessage("You are not part of a group", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(client, "You are not part of a group");
+				return;
 			}
 
 			if (args.Length >= 2)
@@ -48,10 +48,8 @@ namespace DOL.GS.Commands
 			}
 			else
 			{
-				client.Out.SendMessage("You have incorrectly formatted the command", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplaySyntax(client);
 			}
-
-			return 1;
 		}
 	}
 }

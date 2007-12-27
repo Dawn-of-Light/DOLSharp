@@ -23,27 +23,21 @@ namespace DOL.GS.Commands
 	[CmdAttribute("&Noqueue", //command to handle
 	ePrivLevel.Player, //minimum privelege level
 	"Allows you to disable/enable queuing", "/Noqueue")] //usage
-	public class NoqueueCommandHandler : ICommandHandler
+	public class NoqueueCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			client.Player.SpellQueue = !client.Player.SpellQueue;
 
 			if (client.Player.SpellQueue)
 			{
-				client.Out.SendMessage("You are now using the queuing option! To disable queuing use '/noqueue'.",
-					   eChatType.CT_System,
-					   eChatLoc.CL_SystemWindow);
+				DisplayMessage(client, "You are now using the queuing option! To disable queuing use '/noqueue'.");
 			}
 			else
 			{
-				client.Out.SendMessage("You are no longer using the queuing option! To enable queuing use '/noqueue'.",
-					   eChatType.CT_System,
-					   eChatLoc.CL_SystemWindow);
+				DisplayMessage(client, "You are no longer using the queuing option! To enable queuing use '/noqueue'.");
 
 			}
-			return 1;
 		}
 	}
 }

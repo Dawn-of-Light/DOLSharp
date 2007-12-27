@@ -36,7 +36,7 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"simulates a dice roll.",
 		"/roll [#] to throw with a specified number of dice")]
-	public class RollCommandHandler : ICommandHandler
+	public class RollCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		// declaring some msg's
 		private const int RESULT_RANGE = 512; // emote range
@@ -47,14 +47,13 @@ namespace DOL.GS.Commands
 		private const string MESSAGE_RESULT_OTHER = "{0} rolls {1} dice and comes up with: {2}"; // client.Player.Name, dice, thrown
 		private readonly string MESSAGE_WRONG_NUMBER = "You must number of dice between 1 and " + MAX_DICE + "!";
 
-
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			// no args - display usage
 			if (args.Length < 2)
 			{
 				SystemMessage(client, MESSAGE_HELP);
-				return 0;
+				return;
 			}
 
 
@@ -68,22 +67,22 @@ namespace DOL.GS.Commands
 			catch (OverflowException)
 			{
 				SystemMessage(client, MESSAGE_WRONG_NUMBER);
-				return 0;
+				return;
 			}
 			catch (Exception)
 			{
 				SystemMessage(client, MESSAGE_HELP);
-				return 0;
+				return;
 			}
 
 			if (dice < 1 || dice > MAX_DICE)
 			{
 				SystemMessage(client, MESSAGE_WRONG_NUMBER);
-				return 0;
+				return;
 			}
 
 			// throw result
-			int thrown = Util.Random(dice, dice*ONE_DIE_MAX_VALUE);
+			int thrown = Util.Random(dice, dice * ONE_DIE_MAX_VALUE);
 
 			// building roll result msg
 			string selfMessage = String.Format(MESSAGE_RESULT_SELF, dice, thrown);
@@ -94,10 +93,10 @@ namespace DOL.GS.Commands
 
 			// sending result & playername to all players in range
 			foreach (GamePlayer player in client.Player.GetPlayersInRadius(RESULT_RANGE))
+			{
 				if (client.Player != player) // client gets unique message
 					EmoteMessage(player, otherMessage); // sending msg to other players
-
-			return 1;
+			}
 		}
 
 		// these are to make code look better

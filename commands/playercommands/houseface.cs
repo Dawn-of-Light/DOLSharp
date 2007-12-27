@@ -10,7 +10,7 @@ namespace DOL.GS.Commands
 	  "Points to the specified guildhouse of the guild noted, or the lot number noted in the command. /houseface alone will point to one's personal home.")]
 	public class HouseFaceCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			int housenumber = 0;
 			if (args.Length > 1)
@@ -22,15 +22,15 @@ namespace DOL.GS.Commands
 				catch
 				{
 					DisplaySyntax(client);
-					return 0;
+					return;
 				}
 			}
 			else HouseMgr.GetHouseNumberByPlayer(client.Player);
 
 			if (housenumber == 0)
 			{
-				DisplayError(client, "No house found.", new object[] { });
-				return 0;
+				DisplayMessage(client, "No house found.");
+				return;
 			}
 
 			House house = HouseMgr.GetHouse(housenumber);
@@ -38,7 +38,7 @@ namespace DOL.GS.Commands
 			ushort direction = client.Player.GetHeadingToSpot(house.X, house.Y);
 			client.Player.Heading = direction;
 			client.Out.SendPlayerJump(true);
-			return 0;
+			DisplayMessage(client, "You face house " + housenumber);
 		}
 	}
 }

@@ -38,13 +38,14 @@ namespace DOL.GS.Commands
 		ePrivLevel.Admin,
 		"Executes custom code!",
 		"/code <codesnippet>")]
-	public class DynCodeCommandHandler : ICommandHandler
+	public class DynCodeCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-		public static bool ExecuteCode(GameClient client, string code)		
+		public static void ExecuteCode(GameClient client, string code)		
 		{
-			CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp"); 
-			if ( provider == null ) return false; 
+			CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp");
+			if (provider == null)
+				return;
 			CompilerParameters cp = new CompilerParameters();
 			StringBuilder text = new StringBuilder();
 			text.Append("using System;\n");
@@ -89,7 +90,7 @@ namespace DOL.GS.Commands
 
 				foreach (CompilerError err in cr.Errors)
 					client.Out.SendMessage(err.ErrorText, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-				return false;
+				return;
 			}
 
 			Assembly a = cr.CompiledAssembly;
@@ -106,22 +107,17 @@ namespace DOL.GS.Commands
 				foreach (string error in errors)
 					client.Out.SendMessage(error, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 			}
-
-			return true;
 		}
 
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length == 1)
 			{
-				client.Out.SendMessage("Usage: /code <codesnippet>",
-									   eChatType.CT_System,
-									   eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplaySyntax(client);
+				return;
 			}
 			string code = String.Join(" ", args, 1, args.Length - 1);
 			ExecuteCode(client, code);
-			return 1;
 		}
 	}
 }

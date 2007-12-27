@@ -13,15 +13,15 @@ namespace DOL.GS.Commands
 	  ePrivLevel.GM,
 		"Kicks the player offline of whom you select. USE: KICK <NAME>",
 		 "Use: KICK <NAME>")]
-	public class KickCommandHandler : ICommandHandler
+	public class KickCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			GameClient clientc = WorldMgr.GetClientByPlayerName(args[1], true, false);
 			if (clientc == null)
 			{
-				client.Out.SendMessage("No one with that name is online to Kick!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-				return 0;
+				DisplayMessage(client, "No one with that name is online to Kick!");
+				return;
 			}
 			for (int i = 0; i < 8; i++)
 			{
@@ -35,7 +35,6 @@ namespace DOL.GS.Commands
 			clientc.Out.SendPlayerQuit(true);
 			clientc.Player.SaveIntoDatabase();
 			clientc.Player.Quit(true);
-			return 0;
 		}
 	}
 }

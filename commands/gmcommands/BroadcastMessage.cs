@@ -25,9 +25,9 @@ namespace DOL.GS.Commands
 		ePrivLevel.GM,
 		"Broadcast something to all players in the DAOC",
 		"/broadcast <message>")]
-	public class AnnounceCommandHandler : ICommandHandler
+	public class AnnounceCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			string message = string.Join(" ", args, 1, args.Length - 1);
 			foreach (GameClient clientz in WorldMgr.GetAllPlayingClients())
@@ -37,9 +37,7 @@ namespace DOL.GS.Commands
 				textList.Add("");
 				textList.Add(message);
 				clientz.Player.Out.SendCustomTextWindow("Broadcast", textList);
-
 			}
-			return 1;
 		}
 	}
 }

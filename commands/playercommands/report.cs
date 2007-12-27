@@ -32,18 +32,18 @@ namespace DOL.GS.Commands
 		"Usage: /report <message>")]
 	public class ReportCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (ServerProperties.Properties.DISABLE_BUG_REPORTS)
 			{
-				DisplayError(client, "Bug reporting has been disabled for this server!", new object[] { });
-				return 1;
+				DisplayMessage(client, "Bug reporting has been disabled for this server!");
+				return;
 			}
 
 			if (args.Length < 2)
 			{
 				DisplaySyntax(client);
-				return 1;
+				return;
 			}
 
 			string message = string.Join(" ", args, 1, args.Length - 1);
@@ -58,13 +58,11 @@ namespace DOL.GS.Commands
 			{
 				if (client.Account.Mail == "")
 					client.Player.Out.SendMessage("If you enter your email address for your account with /email command, your bug reports will send an email to the staff!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-				else 
+				else
 				{
 					Mail.MailMgr.SendMail(ServerProperties.Properties.BUG_REPORT_EMAIL_ADDRESSES, GameServer.Instance.Configuration.ServerName + " bug report " + report.ID, report.Message, report.Submitter, client.Account.Mail);
 				}
 			}
-
-			return 1;
 		}
 	}
 }

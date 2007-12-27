@@ -11,17 +11,11 @@ namespace DOL.GS.Commands
         ePrivLevel.Player,
         "Displays player statistics",//TODO correct message
         "/stats")]
-    public class StatsCommandHandler : ICommandHandler
+    public class StatsCommandHandler : AbstractCommandHandler, ICommandHandler
     {
-        public int OnCommand(GameClient client, string[] args)
+        public void OnCommand(GameClient client, string[] args)
         {
-            GamePlayer player = client.Player;
-
-            player.Out.SendMessage(PlayerStatistic.GetStatsMessage(player), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-            
-            return 1;
+			DisplayMessage(client, PlayerStatistic.GetStatsMessage(client.Player));
         }
-
-
     }
 }

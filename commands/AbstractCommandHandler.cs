@@ -27,36 +27,35 @@ namespace DOL.GS.Commands
 	/// </summary>
 	public abstract class AbstractCommandHandler
 	{
-		public virtual int DisplayError(GameClient client, string message, params object[] objs)
+		public virtual void DisplayMessage(GamePlayer player, string message)
 		{
-			return DisplayMessage(client, message, objs);
+			DisplayMessage(player.Client, message, new object[] { });
+		}
+		public virtual void DisplayMessage(GameClient client, string message)
+		{
+			DisplayMessage(client, message, new object[] { });
 		}
 
-		public virtual int DisplayMessage(GameClient client, string message)
+		public virtual void DisplayMessage(GameClient client, string message, params object[] objs)
 		{
-			return DisplayMessage(client, message, new object[] { });
-		}
-
-		public virtual int DisplayMessage(GameClient client, string message, params object[] objs)
-		{
-			if(client==null || !client.IsPlaying)
-				return 0;
+			if (client == null || !client.IsPlaying)
+				return;
 			client.Out.SendMessage(String.Format(message,objs),eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			return 0;
+			return;
 		}
 
-		public virtual int DisplaySyntax(GameClient client)
+		public virtual void DisplaySyntax(GameClient client)
 		{
-			if(client==null || !client.IsPlaying)
-				return 0;
+			if (client == null || !client.IsPlaying)
+				return;
 		  CmdAttribute[] attrib = (CmdAttribute[]) this.GetType().GetCustomAttributes(typeof(CmdAttribute), false);
-		  if(attrib.Length==0) 
-				return 0;
+		  if (attrib.Length == 0)
+			  return;
 			
 			client.Out.SendMessage(attrib[0].Description,eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			foreach(string str in attrib[0].Usage)
 				client.Out.SendMessage(str,eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			return 0;
+			return;
 		}
 	}
 }

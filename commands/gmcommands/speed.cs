@@ -26,16 +26,14 @@ namespace DOL.GS.Commands
 		ePrivLevel.GM,
 		"Change speed",
 		"/speed <newSpeed>")]
-	public class SpeedCommandHandler : ICommandHandler
+	public class SpeedCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length == 1)
 			{
-				client.Out.SendMessage("Usage: /speed <number>",
-				                       eChatType.CT_System,
-				                       eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplaySyntax(client);
+				return;
 			}
 			ushort speed;
 			try
@@ -48,22 +46,17 @@ namespace DOL.GS.Commands
 				{
 					obj.MaxSpeedBase = speed;
 					obj.Out.SendUpdateMaxSpeed();
-					obj.Out.SendMessage((client.Player == obj ? "Your" : obj.Name) + " maximum speed is now " + speed.ToString(),
-					                    eChatType.CT_System,
-					                    eChatLoc.CL_SystemWindow);
+					DisplayMessage(obj, (client.Player == obj ? "Your" : obj.Name) + " maximum speed is now " + speed.ToString());
 				}
 				else
 				{
-					client.Out.SendMessage("You have not selected a valid target", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					DisplayMessage(client, "You have not selected a valid target");
 				}
 			}
 			catch (Exception)
 			{
-				client.Out.SendMessage("Usage: /speed <number>",
-				                       eChatType.CT_System,
-				                       eChatLoc.CL_SystemWindow);
+				DisplaySyntax(client);
 			}
-			return 1;
 		}
 	}
 }

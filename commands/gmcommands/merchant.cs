@@ -42,12 +42,12 @@ namespace DOL.GS.Commands
 		 "'/merchant type <classtype>")]
 	public class MerchantCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length == 1)
 			{
 				DisplaySyntax(client);
-				return 0;
+				return;
 			}
 
 			string param = "";
@@ -60,8 +60,8 @@ namespace DOL.GS.Commands
 
 			if (args[1] != "create" && targetMerchant == null)
 			{
-				client.Out.SendMessage("Type /merchant for command overview", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(client, "Type /merchant for command overview");
+				return;
 			}
 
 			switch (args[1].ToLower())
@@ -69,36 +69,31 @@ namespace DOL.GS.Commands
 				case "create":
 					{
 						string theType = "DOL.GS.GameMerchant";
-						if(args.Length > 2)
+						if (args.Length > 2)
 							theType = args[2];
 
 						//Create a new merchant
 						GameMerchant merchant = null;
-						try
-						{
-							client.Out.SendDebugMessage(Assembly.GetAssembly(typeof(GameServer)).FullName);
-							merchant = (GameMerchant)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(theType, false);
-						}
-						catch(Exception e)
-						{
-							client.Out.SendMessage(e.ToString(), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-						}
-						if(merchant == null)
+						ArrayList asms = new ArrayList(ScriptMgr.Scripts);
+						asms.Add(typeof(GameServer).Assembly);
+						foreach (Assembly script in asms)
 						{
 							try
 							{
-								client.Out.SendDebugMessage(Assembly.GetExecutingAssembly().FullName);
-								merchant = (GameMerchant)Assembly.GetExecutingAssembly().CreateInstance(theType, false);
+								client.Out.SendDebugMessage(script.FullName);
+								merchant = (GameMerchant)script.CreateInstance(theType, false);
+								if (merchant != null)
+									break;
 							}
-							catch(Exception e)
+							catch (Exception e)
 							{
 								client.Out.SendMessage(e.ToString(), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							}
 						}
-						if(merchant == null)
+						if (merchant == null)
 						{
-							client.Out.SendMessage("There was an error creating an instance of "+theType+"!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 0;
+							DisplayMessage(client, "There was an error creating an instance of " + theType + "!");
+							return;
 						}
 						//Fill the object variables
 						merchant.X = client.Player.X;
@@ -117,7 +112,7 @@ namespace DOL.GS.Commands
 						merchant.Size = 50;
 						merchant.AddToWorld();
 						merchant.SaveIntoDatabase();
-						client.Out.SendMessage("Merchant created: OID=" + merchant.ObjectID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						DisplayMessage(client, "Merchant created: OID=" + merchant.ObjectID);
 					}
 					break;
 
@@ -126,10 +121,10 @@ namespace DOL.GS.Commands
 						if (args.Length == 2)
 						{
 							if (targetMerchant.TradeItems == null)
-								client.Out.SendMessage("Merchant articles list is empty!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								DisplayMessage(client, "Merchant articles list is empty!");
 							else
 							{
-								client.Out.SendMessage("Merchant articles list: \"" + targetMerchant.TradeItems.ItemsListID + "\"", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								DisplayMessage(client, "Merchant articles list: \"" + targetMerchant.TradeItems.ItemsListID + "\"");
 							}
 						}
 					}
@@ -138,7 +133,7 @@ namespace DOL.GS.Commands
 				case "save":
 					{
 						targetMerchant.SaveIntoDatabase();
-						client.Out.SendMessage("Target Merchant saved in DB!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						DisplayMessage(client, "Target Merchant saved in DB!");
 					}
 					break;
 
@@ -146,7 +141,7 @@ namespace DOL.GS.Commands
 					{
 						targetMerchant.DeleteFromDatabase();
 						targetMerchant.Delete();
-						client.Out.SendMessage("Target Merchant removed from DB!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						DisplayMessage(client, "Target Merchant removed from DB!");
 					}
 					break;
 
@@ -159,12 +154,12 @@ namespace DOL.GS.Commands
 								string templateID = args[2];
 								targetMerchant.TradeItems = new MerchantTradeItems(templateID);
 								targetMerchant.SaveIntoDatabase();
-								client.Out.SendMessage("Merchant articles list loaded!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								DisplayMessage(client, "Merchant articles list loaded!");
 							}
 							catch (Exception)
 							{
-								client.Out.SendMessage("Type /merchant for command overview", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 1;
+								DisplayMessage(client, "Type /merchant for command overview");
+								return;
 							}
 						}
 					}
@@ -176,7 +171,7 @@ namespace DOL.GS.Commands
 						{
 							targetMerchant.TradeItems = null;
 							targetMerchant.SaveIntoDatabase();
-							client.Out.SendMessage("Merchant articles list removed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							DisplayMessage(client, "Merchant articles list removed!");
 						}
 					}
 					break;
@@ -185,7 +180,7 @@ namespace DOL.GS.Commands
 					{
 						if (args.Length < 3)
 						{
-							client.Out.SendMessage("Usage: /merchant articles add <ItemTemplate> <page> [slot]", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							DisplayMessage(client, "Usage: /merchant articles add <ItemTemplate> <page> [slot]");
 							break;
 						}
 						switch (args[2])
@@ -202,15 +197,15 @@ namespace DOL.GS.Commands
 
 											if (targetMerchant.TradeItems == null)
 											{
-												client.Out.SendMessage("Merchant articles list no found!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-												return 1;
+												DisplayMessage(client, "Merchant articles list no found!");
+												return;
 											}
 
 											ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), templateID);
 											if (template == null)
 											{
-												client.Out.SendMessage("ItemTemplate with id " + templateID + " could not be found!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-												return 1;
+												DisplayMessage(client, "ItemTemplate with id " + templateID + " could not be found!");
+												return;
 											}
 
 											if (args.Length == 6)
@@ -221,8 +216,8 @@ namespace DOL.GS.Commands
 											slot = targetMerchant.TradeItems.GetValidSlot(page, slot);
 											if (slot == eMerchantWindowSlot.Invalid)
 											{
-												client.Out.SendMessage("Page number (" + page + ") must be from 0 to " + (MerchantTradeItems.MAX_PAGES_IN_TRADEWINDOWS - 1) + " and slot (" + slot + ") must be from 0 to " + (MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS - 1) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-												return 1;
+												DisplayMessage(client, "Page number (" + page + ") must be from 0 to " + (MerchantTradeItems.MAX_PAGES_IN_TRADEWINDOWS - 1) + " and slot (" + slot + ") must be from 0 to " + (MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS - 1) + ".");
+												return;
 											}
 
 											MerchantItem item = (MerchantItem)GameServer.Database.SelectObject(typeof(MerchantItem), "ItemListID = '" + GameServer.Database.Escape(targetMerchant.TradeItems.ItemsListID) + "' AND PageNumber = '" + page + "' AND SlotPosition = '" + slot + "'");
@@ -241,17 +236,17 @@ namespace DOL.GS.Commands
 												item.ItemTemplateID = templateID;
 												GameServer.Database.SaveObject(item);
 											}
-											client.Out.SendMessage("Item added to the merchant articles list!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+											DisplayMessage(client, "Item added to the merchant articles list!");
 										}
 										catch (Exception)
 										{
-											client.Out.SendMessage("Type /merchant for command overview", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-											return 1;
+											DisplayMessage(client, "Type /merchant for command overview");
+											return;
 										}
 									}
 									else
 									{
-										client.Out.SendMessage("Usage: /merchant articles add <ItemTemplate> <page> [slot]", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										DisplayMessage(client, "Usage: /merchant articles add <ItemTemplate> <page> [slot]");
 									}
 									break;
 								}
@@ -266,41 +261,41 @@ namespace DOL.GS.Commands
 
 											if (page < 0 || page >= MerchantTradeItems.MAX_PAGES_IN_TRADEWINDOWS)
 											{
-												client.Out.SendMessage("Page number (" + page + ") must be between [0;" + (MerchantTradeItems.MAX_PAGES_IN_TRADEWINDOWS - 1) + "]!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-												return 1;
+												DisplayMessage(client, "Page number (" + page + ") must be between [0;" + (MerchantTradeItems.MAX_PAGES_IN_TRADEWINDOWS - 1) + "]!");
+												return;
 											}
 
 											if (slot < 0 || slot >= MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS)
 											{
-												client.Out.SendMessage("Slot (" + slot + ") must be between [0;" + (MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS - 1) + "]!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-												return 1;
+												DisplayMessage(client, "Slot (" + slot + ") must be between [0;" + (MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS - 1) + "]!");
+												return;
 											}
 
 											if (targetMerchant.TradeItems == null)
 											{
-												client.Out.SendMessage("Merchant articles list no found!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-												return 1;
+												DisplayMessage(client, "Merchant articles list no found!");
+												return;
 											}
 
 											MerchantItem item = (MerchantItem)GameServer.Database.SelectObject(typeof(MerchantItem), "ItemListID = '" + GameServer.Database.Escape(targetMerchant.TradeItems.ItemsListID) + "' AND PageNumber = '" + page + "' AND SlotPosition = '" + slot + "'");
 											if (item == null)
 											{
-												client.Out.SendMessage("Slot " + slot + " in page " + page + " is already empty.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-												return 1;
+												DisplayMessage(client, "Slot " + slot + " in page " + page + " is already empty.");
+												return;
 											}
 											GameServer.Database.DeleteObject(item);
-											client.Out.SendMessage("Merchant articles list slot " + slot + " in page " + page + " cleaned!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+											DisplayMessage(client, "Merchant articles list slot " + slot + " in page " + page + " cleaned!");
 
 										}
 										catch (Exception)
 										{
-											client.Out.SendMessage("Type /merchant for command overview", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-											return 1;
+											DisplayMessage(client, "Type /merchant for command overview");
+											return;
 										}
 									}
 									else
 									{
-										client.Out.SendMessage("Usage: /merchant articles remove <page> <slot>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										DisplayMessage(client, "Usage: /merchant articles remove <page> <slot>");
 									}
 									break;
 								}
@@ -312,10 +307,10 @@ namespace DOL.GS.Commands
 										{
 											if (targetMerchant.TradeItems == null)
 											{
-												client.Out.SendMessage("Merchant articles list no found!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-												return 1;
+												DisplayMessage(client, "Merchant articles list no found!");
+												return;
 											}
-											client.Out.SendMessage("Deleting articles list template ...", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+											DisplayMessage(client, "Deleting articles list template ...");
 
 											MerchantItem[] merchantitems = (MerchantItem[])GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemsListID = '" + GameServer.Database.Escape(targetMerchant.TradeItems.ItemsListID) + "'");
 											if (merchantitems.Length > 0)
@@ -325,18 +320,18 @@ namespace DOL.GS.Commands
 													GameServer.Database.DeleteObject(item);
 												}
 											}
-											client.Out.SendMessage("Merchant articles list deleted.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+											DisplayMessage(client, "Merchant articles list deleted.");
 										}
 										catch (Exception)
 										{
-											client.Out.SendMessage("Type /merchant for command overview", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-											return 1;
+											DisplayMessage(client, "Type /merchant for command overview");
+											return;
 										}
 									}
 									break;
 								}
 							default:
-								client.Out.SendMessage("Type /merchant for command overview", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								DisplayMessage(client, "Type /merchant for command overview");
 								break;
 						}
 						break;
@@ -349,21 +344,16 @@ namespace DOL.GS.Commands
 
 						//Create a new merchant
 						GameMerchant merchant = null;
-						try
-						{
-							client.Out.SendDebugMessage(Assembly.GetAssembly(typeof(GameServer)).FullName);
-							merchant = (GameMerchant)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(theType, false);
-						}
-						catch (Exception e)
-						{
-							client.Out.SendMessage(e.ToString(), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-						}
-						if (merchant == null)
+						ArrayList asms = new ArrayList(ScriptMgr.Scripts);
+						asms.Add(typeof(GameServer).Assembly);
+						foreach (Assembly script in asms)
 						{
 							try
 							{
-								client.Out.SendDebugMessage(Assembly.GetExecutingAssembly().FullName);
-								merchant = (GameMerchant)Assembly.GetExecutingAssembly().CreateInstance(theType, false);
+								client.Out.SendDebugMessage(script.FullName);
+								merchant = (GameMerchant)script.CreateInstance(theType, false);
+								if (merchant != null)
+									break;
 							}
 							catch (Exception e)
 							{
@@ -372,8 +362,8 @@ namespace DOL.GS.Commands
 						}
 						if (merchant == null)
 						{
-							client.Out.SendMessage("There was an error creating an instance of " + theType + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 0;
+							DisplayMessage(client, "There was an error creating an instance of " + theType + "!");
+							return;
 						}
 						//Fill the object variables
 						merchant.X = targetMerchant.X;
@@ -397,11 +387,10 @@ namespace DOL.GS.Commands
 						merchant.SaveIntoDatabase();
 						targetMerchant.Delete();
 						targetMerchant.DeleteFromDatabase();
-						client.Out.SendMessage("Merchant type changed to " + param, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						DisplayMessage(client, "Merchant type changed to " + param);
 						break;
 					}
 			}
-			return 1;
 		}
 	}
 }

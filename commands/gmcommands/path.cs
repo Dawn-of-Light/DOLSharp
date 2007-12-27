@@ -86,20 +86,18 @@ namespace DOL.GS.Commands
 			client.Player.TempProperties.setProperty(TEMP_PATH_LAST, null);
 		}
 
-		private int PathHide(GameClient client)
+		private void PathHide(GameClient client)
 		{
 			ArrayList objs = (ArrayList)client.Player.TempProperties.getObjectProperty(TEMP_PATH_OBJS, null);
 			if (objs == null)
-				return 0;
+				return;
 
 			// remove the markers
 			foreach (GameStaticItem obj in objs)
 				obj.Delete();
-
-			return 1;
 		}
 
-		private int PathCreate(GameClient client)
+		private void PathCreate(GameClient client)
 		{
 			//Remove old temp objects
 			RemoveAllTempPathObjects(client);
@@ -109,17 +107,15 @@ namespace DOL.GS.Commands
 			client.Player.TempProperties.setProperty(TEMP_PATH_LAST, startpoint);
 			client.Player.Out.SendMessage("Path creation started! You can add new pathpoints via /path add now!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			CreateTempPathObject(client, startpoint, "TMP PP 1");
-
-			return 1;
 		}
 
-		private int PathAdd(GameClient client, string[] args)
+		private void PathAdd(GameClient client, string[] args)
 		{
 			PathPoint path = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
 			if (path == null)
 			{
-				DisplayError(client, "No path created yet! Use /path create first!");
-				return 0;
+				DisplayMessage(client, "No path created yet! Use /path create first!");
+				return;
 			}
 
 			int speedlimit = 1000;
@@ -132,8 +128,8 @@ namespace DOL.GS.Commands
 				}
 				catch
 				{
-					DisplayError(client, "No valid speedlimit '{0}'!", args[2]);
-					return 0;
+					DisplayMessage(client, "No valid speedlimit '{0}'!", args[2]);
+					return;
 				}
 
 				if (args.Length > 3)
@@ -144,7 +140,7 @@ namespace DOL.GS.Commands
 					}
 					catch
 					{
-						DisplayError(client, "No valid wait time '{0}'!", args[3]);
+						DisplayMessage(client, "No valid wait time '{0}'!", args[3]);
 					}
 				}
 			}
@@ -164,17 +160,16 @@ namespace DOL.GS.Commands
 			len += 2;
 			CreateTempPathObject(client, newpp, "TMP PP " + len);
 			DisplayMessage(client, "Pathpoint added. Current pathlength = {0}", len);
-			return 1;
 		}
 
-		private int PathSpeed(GameClient client, string[] args)
+		private void PathSpeed(GameClient client, string[] args)
 		{
 			int speedlimit = 80;
 
 			if (args.Length < 3)
 			{
-				DisplayError(client, "No valid speedlimit '{0}'!", args[2]);
-				return 0;
+				DisplayMessage(client, "No valid speedlimit '{0}'!", args[2]);
+				return;
 			}
 
 			try
@@ -183,16 +178,16 @@ namespace DOL.GS.Commands
 			}
 			catch
 			{
-				DisplayError(client, "No valid speedlimit '{0}'!", args[2]);
-				return 0;
+				DisplayMessage(client, "No valid speedlimit '{0}'!", args[2]);
+				return;
 			}
 
 			PathPoint pathpoint = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_FIRST, null);
 
 			if (pathpoint == null)
 			{
-				DisplayError(client, "No path created yet! Use /path create first!");
-				return 0;
+				DisplayMessage(client, "No path created yet! Use /path create first!");
+				return;
 			}
 
 			pathpoint.MaxSpeed = speedlimit;
@@ -202,22 +197,21 @@ namespace DOL.GS.Commands
 				pathpoint = pathpoint.Next;
 				pathpoint.MaxSpeed = speedlimit;
 			}
-
-			return 1;
 		}
 
-		private int PathTravel(GameClient client)
+		private void PathTravel(GameClient client)
 		{
 			PathPoint path = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
 			if (client.Player.TargetObject == null || !(client.Player.TargetObject is GameNPC))
 			{
-				DisplayError(client, "You need to select a mob first!");
-				return 0;
+				DisplayMessage(client, "You need to select a mob first!");
+				return;
 			}
+
 			if (path == null)
 			{
-				DisplayError(client, "No path created yet! Use /path create first!");
-				return 0;
+				DisplayMessage(client, "No path created yet! Use /path create first!");
+				return;
 			}
 			int speed = Math.Min(((GameNPC)client.Player.TargetObject).MaxSpeedBase, path.MaxSpeed);
 
@@ -228,38 +222,36 @@ namespace DOL.GS.Commands
 			((GameNPC)client.Player.TargetObject).CurrentWayPoint = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_FIRST, null);
 
 			((GameNPC)client.Player.TargetObject).MoveOnPath(speed);
-			return 1;
 		}
 
-		private int PathStop(GameClient client)
+		private void PathStop(GameClient client)
 		{
 			if (client.Player.TargetObject == null || !(client.Player.TargetObject is GameNPC))
 			{
-				DisplayError(client, "You need to select a mob first!");
-				return 0;
+				DisplayMessage(client, "You need to select a mob first!");
+				return;
 			}
 
 			// clear any current path
 			((GameNPC)client.Player.TargetObject).CurrentWayPoint = null;
 			((GameNPC)client.Player.TargetObject).WalkToSpawn();
-			return 1;
 		}
 
-		private int PathType(GameClient client, string[] args)
+		private void PathType(GameClient client, string[] args)
 		{
 			PathPoint path = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
 			if (args.Length < 2)
 			{
-				DisplayError(client, "Usage: /path type <pathtype>");
-				DisplayError(client, "Current path type is '{0}'", path.Type.ToString());
-				DisplayError(client, "Possible pathtype values are:");
-				DisplayError(client, String.Join(", ", Enum.GetNames(typeof(ePathType))));
-				return 0;
+				DisplayMessage(client, "Usage: /path type <pathtype>");
+				DisplayMessage(client, "Current path type is '{0}'", path.Type.ToString());
+				DisplayMessage(client, "Possible pathtype values are:");
+				DisplayMessage(client, String.Join(", ", Enum.GetNames(typeof(ePathType))));
+				return;
 			}
 			if (path == null)
 			{
-				DisplayError(client, "No path created yet! Use /path create or /path load first!");
-				return 0;
+				DisplayMessage(client, "No path created yet! Use /path create or /path load first!");
+				return;
 			}
 
 			ePathType pathType = ePathType.Once;
@@ -269,11 +261,11 @@ namespace DOL.GS.Commands
 			}
 			catch
 			{
-				DisplayError(client, "Usage: /path type <pathtype>");
-				DisplayError(client, "Current path type is '{0}'", path.Type.ToString());
-				DisplayError(client, "PathType must be one of the following:");
-				DisplayError(client, String.Join(", ", Enum.GetNames(typeof(ePathType))));
-				return 0;
+				DisplayMessage(client, "Usage: /path type <pathtype>");
+				DisplayMessage(client, "Current path type is '{0}'", path.Type.ToString());
+				DisplayMessage(client, "PathType must be one of the following:");
+				DisplayMessage(client, String.Join(", ", Enum.GetNames(typeof(ePathType))));
+				return;
 			}
 
 			path.Type = pathType;
@@ -283,16 +275,15 @@ namespace DOL.GS.Commands
 				temp.Type = pathType;
 				temp = temp.Prev;
 			}
-			DisplayError(client, "Current path type set to '{0}'", path.Type.ToString());
-			return 1;
+			DisplayMessage(client, "Current path type set to '{0}'", path.Type.ToString());
 		}
 
-		private int PathLoad(GameClient client, string[] args)
+		private void PathLoad(GameClient client, string[] args)
 		{
 			if (args.Length < 2)
 			{
-				DisplayError(client, "Usage: /path load <pathname>");
-				return 0;
+				DisplayMessage(client, "Usage: /path load <pathname>");
+				return;
 			}
 			string pathname = String.Join(" ", args, 2, args.Length - 2);
 			PathPoint path = MovementMgr.LoadPath(pathname);
@@ -309,44 +300,44 @@ namespace DOL.GS.Commands
 					len++;
 				}
 				client.Player.TempProperties.setProperty(TEMP_PATH_LAST, path);
-				return 1;
+				return;
 			}
-			DisplayError(client, "Path '{0}' not found!", pathname);
-			return 0;
+			DisplayMessage(client, "Path '{0}' not found!", pathname);
 		}
 
-		private int PathSave(GameClient client, string[] args)
+		private void PathSave(GameClient client, string[] args)
 		{
 			PathPoint path = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
 			if (args.Length < 2)
 			{
-				DisplayError(client, "Usage: /path save <pathname>");
-				return 0;
+				DisplayMessage(client, "Usage: /path save <pathname>");
+				return;
 			}
+
 			if (path == null)
 			{
-				DisplayError(client, "No path created yet! Use /path create first!");
-				return 0;
+				DisplayMessage(client, "No path created yet! Use /path create first!");
+				return;
 			}
+
 			string pathname = String.Join(" ", args, 2, args.Length - 2);
 			MovementMgr.SavePath(pathname, path);
 			DisplayMessage(client, "Path saved as '{0}'", pathname);
-			return 1;
 		}
 
-		private int PathAssignHorseroute(GameClient client, string[] args)
+		private void PathAssignHorseroute(GameClient client, string[] args)
 		{
 			PathPoint path = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
 			if (args.Length < 2)
 			{
-				DisplayError(client, "Usage: /path assignhorseroute <destination>");
-				return 0;
+				DisplayMessage(client, "Usage: /path assignhorseroute <destination>");
+				return;
 			}
 
 			if (path == null)
 			{
-				DisplayError(client, "No path created yet! Use /path create first!");
-				return 0;
+				DisplayMessage(client, "No path created yet! Use /path create first!");
+				return;
 			}
 
 			GameMerchant merchant = null;
@@ -356,8 +347,8 @@ namespace DOL.GS.Commands
 				merchant = client.Player.TargetObject as GameBoatStableMaster;
 			if (merchant == null)
 			{
-				DisplayError(client, "You must select a stable master to assign a horseroute!");
-				return 0;
+				DisplayMessage(client, "You must select a stable master to assign a horseroute!");
+				return;
 			}
 			string target = String.Join(" ", args, 2, args.Length - 2); ;
 			bool ticketFound = false;
@@ -366,7 +357,7 @@ namespace DOL.GS.Commands
 			// With the new horse system, the stablemasters are using the item.Id_nb to find the horse route in the database
 			// So we have to save a path in the database with the Id_nb as a PathID
 			// The following string will contain the item Id_nb if it is found in the merchant list
-			string pathname = ""; 
+			string pathname = "";
 			if (merchant.TradeItems != null)
 			{
 				foreach (ItemTemplate template in merchant.TradeItems.GetAllItems().Values)
@@ -382,37 +373,83 @@ namespace DOL.GS.Commands
 			}
 			if (!ticketFound)
 			{
-				DisplayError(client, "Stablemaster has no {0}!", ticket);
-				return 0;
+				DisplayMessage(client, "Stablemaster has no {0}!", ticket);
+				return;
 			}
-			//MovementMgr.Instance.SavePath(merchant.Name + "=>" + target, path);
-			MovementMgr.SavePath(pathname, path); 
-			return 1;
+			MovementMgr.SavePath(pathname, path);
 		}
 
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 2)
 			{
 				DisplaySyntax(client);
-				return 0;
+				return;
 			}
+
 			switch (args[1].ToLower())
 			{
-				case "create": return PathCreate(client);
-				case "add": return PathAdd(client, args);
-				case "travel": return PathTravel(client);
-				case "stop": return PathStop(client);
-				case "speed": return PathSpeed(client, args);
-				case "type": return PathType(client, args);
-				case "save": return PathSave(client, args);
-				case "load": return PathLoad(client, args);
-				case "assignhorseroute": return PathAssignHorseroute(client, args);
-				case "hide": return PathHide(client);
-				case "delete": RemoveAllTempPathObjects(client); return 1;
+				case "create":
+					{
+						PathCreate(client);
+						break;
+					}
+				case "add":
+					{
+						PathAdd(client, args);
+						break;
+					}
+				case "travel":
+					{
+						PathTravel(client);
+						break;
+					}
+				case "stop":
+					{
+						PathStop(client);
+						break;
+					}
+				case "speed":
+					{
+						PathSpeed(client, args);
+						break;
+					}
+				case "type":
+					{
+						PathType(client, args);
+						break;
+					}
+				case "save":
+					{
+						PathSave(client, args);
+						break;
+					}
+				case "load":
+					{
+						PathLoad(client, args);
+						break;
+					}
+				case "assignhorseroute":
+					{
+						PathAssignHorseroute(client, args);
+						break;
+					}
+				case "hide":
+					{
+						PathHide(client);
+						break;
+					}
+				case "delete":
+					{
+						RemoveAllTempPathObjects(client);
+						break;
+					}
+				default:
+					{
+						DisplaySyntax(client);
+						break;
+					}
 			}
-			DisplaySyntax(client);
-			return 0;
 		}
 	}
 }

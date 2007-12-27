@@ -28,7 +28,7 @@ namespace DOL.GS.Commands
 		"/time")]
 	public class TimeCommandHandler : ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			// starts a new day with 'speed' at 'time'(1/1000)
 			// /time speed time
@@ -48,10 +48,10 @@ namespace DOL.GS.Commands
 						client.Out.SendMessage(
 							"Usage: /time <speed> <time>",
 							eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return 0;
+						return;
 					}
-					WorldMgr.StartDay(speed, time*(77760000/1000));
-					return 1;
+					WorldMgr.StartDay(speed, time * (77760000 / 1000));
+					return;
 					//78643200 > 
 					//77929920 >
 					//myTimer = new Timer(77760000/timeadd);
@@ -59,14 +59,12 @@ namespace DOL.GS.Commands
 			}
 			//1000/60/54 to be like 77760 = 54*60*24
 			// so for mythic day contain 24 hours each hours contain 60 minutes and each minute contain 54 seconde ;)
-			uint heure = WorldMgr.GetCurrentDayTime()/1000/60/60;
-			uint minute = WorldMgr.GetCurrentDayTime()/1000/60%60;
-			uint seconde = WorldMgr.GetCurrentDayTime()/1000%60;
+			uint hour = WorldMgr.GetCurrentDayTime() / 1000 / 60 / 60;
+			uint minute = WorldMgr.GetCurrentDayTime() / 1000 / 60 % 60;
+			uint seconde = WorldMgr.GetCurrentDayTime() / 1000 % 60;
 
-			client.Out.SendMessage("it is " + heure.ToString() + "H" + minute.ToString() + "min" + seconde.ToString() + "sec",
-			                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			return 1;
+			client.Out.SendMessage("it is " + hour.ToString() + "H" + minute.ToString() + "min" + seconde.ToString() + "sec",
+								   eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
-
 	}
 }

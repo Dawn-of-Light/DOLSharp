@@ -42,14 +42,14 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"Respecs the char",
 		"/respec")]
-	public class RespecCommandHandler : ICommandHandler
+	public class RespecCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		const string RA_RESPEC = "realm_respec";
 		const string ALL_RESPEC = "all_respec";
 		const string LINE_RESPEC = "line_respec";
 		const string DOL_RESPEC = "dol_respec";
 
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 2)
 			{
@@ -59,38 +59,38 @@ namespace DOL.GS.Commands
 					&& client.Player.RespecAmountDOL <1
 					&& client.Player.RespecAmountRealmSkill < 1)
 				{
-					client.Out.SendMessage("You don't seem to have any respecs available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+					DisplayMessage(client, "You don't seem to have any respecs available.");
+					return;
 				}
 
 				if (client.Player.RespecAmountAllSkill > 0)
 				{
-					client.Out.SendMessage("You have " + client.Player.RespecAmountAllSkill + " full skill respecs available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					client.Out.SendMessage("Target any trainer and use /respec ALL", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					DisplayMessage(client, "You have " + client.Player.RespecAmountAllSkill + " full skill respecs available.");
+					DisplayMessage(client, "Target any trainer and use /respec ALL");
 				}
 				if (client.Player.RespecAmountSingleSkill > 0)
 				{
-					client.Out.SendMessage("You have " + client.Player.RespecAmountSingleSkill + " single-line respecs available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					client.Out.SendMessage("Target any trainer and use /respec <line name>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					DisplayMessage(client, "You have " + client.Player.RespecAmountSingleSkill + " single-line respecs available.");
+					DisplayMessage(client, "Target any trainer and use /respec <line name>");
 				}
 				if (client.Player.RespecAmountRealmSkill > 0)
 				{
-					client.Out.SendMessage("You have " + client.Player.RespecAmountRealmSkill + " realm skill respecs available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					client.Out.SendMessage("Target any trainer and use /respec REALM", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					DisplayMessage(client, "You have " + client.Player.RespecAmountRealmSkill + " realm skill respecs available.");
+					DisplayMessage(client, "Target any trainer and use /respec REALM");
 				}
 				if (client.Player.RespecAmountDOL > 0)
 				{
-					client.Out.SendMessage("You have " + client.Player.RespecAmountDOL + " DOL ( full skill ) respecs available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					client.Out.SendMessage("Target any trainer and use /respec DOL", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					DisplayMessage(client, "You have " + client.Player.RespecAmountDOL + " DOL ( full skill ) respecs available.");
+					DisplayMessage(client, "Target any trainer and use /respec DOL");
 				}
-				return 1;
+				return;
 			}
 
 			// Player must be speaking with trainer to respec.  (Thus have trainer targeted.) Prevents losing points out in the wild.
 			if (client.Player.TargetObject is GameTrainer == false)
 			{
-				client.Out.SendMessage("You must be speaking with your trainer to respec.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(client, "You must be speaking with your trainer to respec.");
+				return;
 			}
 
 			switch (args[1].ToLower())
@@ -100,8 +100,8 @@ namespace DOL.GS.Commands
 						// Check for full respecs.
 						if (client.Player.RespecAmountAllSkill < 1)
 						{
-							client.Out.SendMessage("You don't seem to have any full skill respecs available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							DisplayMessage(client, "You don't seem to have any full skill respecs available.");
+							return;
 						}
 
 						client.Out.SendCustomDialog("CAUTION: All Respec changes are final with no 2nd chance. Proceed Carefully!", new CustomDialogResponse(RespecDialogResponse));
@@ -113,8 +113,8 @@ namespace DOL.GS.Commands
 						// Check for DOL respecs.
 						if (client.Player.RespecAmountDOL < 1)
 						{
-							client.Out.SendMessage("You don't seem to have any DOL respecs available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							DisplayMessage(client, "You don't seem to have any DOL respecs available.");
+							return;
 						}
 
 						client.Out.SendCustomDialog("CAUTION: All Respec changes are final with no 2nd chance. Proceed Carefully!", new CustomDialogResponse(RespecDialogResponse));
@@ -125,8 +125,8 @@ namespace DOL.GS.Commands
 					{
 						if (client.Player.RespecAmountRealmSkill < 1)
 						{
-							client.Out.SendMessage("You don't seem to have any realm skill respecs available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							DisplayMessage(client, "You don't seem to have any realm skill respecs available.");
+							return;
 						}
 
 						client.Out.SendCustomDialog("CAUTION: All Respec changes are final with no 2nd chance. Proceed Carefully!", new CustomDialogResponse(RespecDialogResponse));
@@ -138,21 +138,21 @@ namespace DOL.GS.Commands
 						// Check for single-line respecs.
 						if (client.Player.RespecAmountSingleSkill < 1)
 						{
-							client.Out.SendMessage("You don't seem to have any single-line respecs available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							DisplayMessage(client, "You don't seem to have any single-line respecs available.");
+							return;
 						}
 
 						string lineName = string.Join(" ", args, 1, args.Length - 1);
 						Specialization specLine = client.Player.GetSpecializationByName(lineName, false);
 						if (specLine == null)
 						{
-							client.Out.SendMessage("No line with name '" + lineName + "' found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							DisplayMessage(client, "No line with name '" + lineName + "' found.");
+							return;
 						}
 						if (specLine.Level < 2)
 						{
-							client.Out.SendMessage("Level of " + specLine.Name + " line is less than 2. ", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							DisplayMessage(client, "Level of " + specLine.Name + " line is less than 2. ");
+							return;
 						}
 
 						client.Out.SendCustomDialog("CAUTION: All Respec changs are final with no 2nd chance. Proceed Carefully!", new CustomDialogResponse(RespecDialogResponse));
@@ -160,9 +160,8 @@ namespace DOL.GS.Commands
 						break;
 					}
 			}
-
-			return 1;
 		}
+
 		protected void RespecDialogResponse(GamePlayer player, byte response)
 		{
 
@@ -201,12 +200,12 @@ namespace DOL.GS.Commands
 					player.GetStyleList().Clear(); // Kill styles
 				}
 				player.UpdateSpellLineLevels(false);
-				player.Out.SendMessage("You regain " + specPoints + " specialization points!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(player, "You regain " + specPoints + " specialization points!");
 			}
 			if (realmSpecPoints > 0)
 			{
 				player.RealmSpecialtyPoints += realmSpecPoints;
-				player.Out.SendMessage("You regain " + realmSpecPoints + " realm specialization points!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(player, "You regain " + realmSpecPoints + " realm specialization points!");
 			}
 			player.RefreshSpecDependantSkills(false);
 			// Notify Player of points
@@ -215,7 +214,6 @@ namespace DOL.GS.Commands
 			player.Out.SendUpdatePlayer();
 			player.Out.SendTrainerWindow();
 			player.SaveIntoDatabase();
-			return;
 		}
 	}
 }

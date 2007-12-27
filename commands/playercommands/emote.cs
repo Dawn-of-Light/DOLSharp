@@ -27,7 +27,7 @@ namespace DOL.GS.Commands
 		"&emote", new string[] {"&em", "&e"},
 		ePrivLevel.Player,
 		"Roleplay an action or emotion", "/emote <text>")]
-	public class CustomEmoteCommandHandler : ICommandHandler
+	public class CustomEmoteCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		/// <summary>
 		/// Method to handle the command from the client
@@ -35,19 +35,19 @@ namespace DOL.GS.Commands
 		/// <param name="client"></param>
 		/// <param name="args"></param>
 		/// <returns></returns>
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			// no emotes if dead
 			if (!client.Player.IsAlive)
 			{
 				client.Out.SendMessage("You can't emote while dead!", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 			if (args.Length < 2)
 			{
 				client.Out.SendMessage("You need something to emote.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 			string ownRealm = string.Join(" ", args, 1, args.Length - 1);
@@ -56,6 +56,7 @@ namespace DOL.GS.Commands
 			string diffRealm = "<" + client.Player.Name + " makes strange motions.>";
 
 			foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.SAY_DISTANCE))
+			{
 				if (GameServer.ServerRules.IsAllowedToUnderstand(client.Player, player))
 				{
 					player.Out.SendMessage(ownRealm, eChatType.CT_Emote, eChatLoc.CL_ChatWindow);
@@ -64,8 +65,7 @@ namespace DOL.GS.Commands
 				{
 					player.Out.SendMessage(diffRealm, eChatType.CT_Emote, eChatLoc.CL_ChatWindow);
 				}
-
-			return 1;
+			}
 		}
 	}
 }

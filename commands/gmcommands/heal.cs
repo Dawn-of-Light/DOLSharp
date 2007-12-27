@@ -26,9 +26,9 @@ namespace DOL.GS.Commands
 		ePrivLevel.GM,
 		"Heals your target (health,endu,mana)",
 		"/heal")]
-	public class HealCommandHandler : ICommandHandler
+	public class HealCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			try
 			{
@@ -48,11 +48,8 @@ namespace DOL.GS.Commands
 			}
 			catch (Exception)
 			{
-				client.Out.SendMessage("Usage: /heal",
-				                       eChatType.CT_System,
-				                       eChatLoc.CL_SystemWindow);
+				DisplaySyntax(client);
 			}
-			return 1;
 		}
 	}
 }

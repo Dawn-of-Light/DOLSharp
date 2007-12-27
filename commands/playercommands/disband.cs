@@ -25,27 +25,27 @@ namespace DOL.GS.Commands
 		"&disband",
 		ePrivLevel.Player,
 		"Disband from a group", "/disband")]
-	public class DisbandCommandHandler : ICommandHandler
+	public class DisbandCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (client.Player.Group == null)
 			{
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Disband.NotInGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 			if (args.Length < 2)//disband myslef
 			{
 				client.Player.Group.RemoveMember(client.Player);
-				return 1;
+				return;
 			}
 			else//disband by name
 			{
 				if (client.Player.Group.Leader != client.Player)
 				{
 					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Disband.NotLeader"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+					return;
 				}
 
 				string name = args[1];
@@ -53,7 +53,7 @@ namespace DOL.GS.Commands
 				if (name == client.Player.Name)
 				{
 					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Disband.NoYourself"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+					return;
 				}
 
 				int startCount = client.Player.Group.MemberCount;
@@ -68,11 +68,9 @@ namespace DOL.GS.Commands
 				if (client.Player.Group.MemberCount == startCount)
 				{
 					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Disband.NoPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+					return;
 				}
 			}
-
-			return 0;
 		}
 	}
 }

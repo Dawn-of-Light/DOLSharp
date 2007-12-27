@@ -25,36 +25,34 @@ namespace DOL.GS.Commands
 			"']jump <zoneID> <locX> <locY> <locZ> <heading>' (Autoused for *jump in debug mode)")]
 	public class OnDebugJump : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length == 6)
 			{
-				try
+				ushort zoneID = 0;
+				ushort.TryParse(args[1], out zoneID);
+				if (zoneID == 0)
 				{
-					Zone z = WorldMgr.GetZone(Convert.ToUInt16(args[1]));
-					if (z == null)
-					{
-						client.Out.SendMessage("Unknown zone ID: " + args[1], eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return 1;
-					}
-					ushort RegionID = z.ZoneRegion.ID;
-					int X = z.XOffset + Convert.ToInt32(args[2]);
-					int Y = z.YOffset + Convert.ToInt32(args[3]);
-					int Z = Convert.ToInt32(args[4]);
-					ushort Heading = Convert.ToUInt16(args[5]);
-					if (!CheckExpansion(client, RegionID)) return 0;
-					client.Player.MoveTo(RegionID, X, Y, Z, Heading);
-					return 0;
+					DisplayMessage(client, "Invalid zoneID: " + args[1]);
+					return;
 				}
-				catch
+				Zone z = WorldMgr.GetZone(zoneID);
+				if (z == null)
 				{
-					return 1;
+					DisplayMessage(client, "Unknown zone ID: " + args[1]);
+					return;
 				}
+				ushort RegionID = z.ZoneRegion.ID;
+				int X = z.XOffset + Convert.ToInt32(args[2]);
+				int Y = z.YOffset + Convert.ToInt32(args[3]);
+				int Z = Convert.ToInt32(args[4]);
+				ushort Heading = Convert.ToUInt16(args[5]);
+				if (!CheckExpansion(client, RegionID)) return;
+				client.Player.MoveTo(RegionID, X, Y, Z, Heading);
 			}
 			else
 			{
 				DisplaySyntax(client);
-				return 0;
 			}
 		}
 
@@ -63,12 +61,12 @@ namespace DOL.GS.Commands
 			Region reg = WorldMgr.GetRegion(RegionID);
 			if (reg == null)
 			{
-				client.Out.SendMessage("Unknown region (" + RegionID.ToString() + ").", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(client, "Unknown region (" + RegionID.ToString() + ").");
 				return false;
 			}
 			else if (reg.Expansion >= (int)client.ClientType)
 			{
-				client.Out.SendMessage("Region (" + reg.Description + ") is not supported by your client.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(client, "Region (" + reg.Description + ") is not supported by your client.");
 				return false;
 			}
 			return true;

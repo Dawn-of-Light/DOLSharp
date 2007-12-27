@@ -26,36 +26,35 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"Sends a private message to your target if it is close enough",
 		"/whisper <message>")]
-	public class WhisperCommandHandler : ICommandHandler
+	public class WhisperCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 2)
 			{
-				client.Out.SendMessage("Usage: /whisper Message", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplaySyntax(client);
+				return;
 			}
+
 			GameObject obj = client.Player.TargetObject;
 			if (obj == null)
 			{
-				client.Out.SendMessage("Select the target you want to whisper to!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(client, "Select the target you want to whisper to!");
+				return;
 			}
-			if (!(obj is GameLiving))
+
+			if (obj is GameLiving == false)
 			{
-				client.Out.SendMessage("You look pretty silly whispering to " + obj.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(client, "You look pretty silly whispering to " + obj.GetName(0, false) + ".");
+				return;
 			}
+
 			if (obj == client.Player)
 			{
-				client.Out.SendMessage("Hmmmm...you shouldn't talk to yourself!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-				return 1;
+				DisplayMessage(client, "Hmmmm...you shouldn't talk to yourself!");
+				return;
 			}
-			GameLiving target = (GameLiving) obj;
-			string message = string.Join(" ", args, 1, args.Length - 1);
-			client.Player.Whisper(target, message);
-			return 1;
+			client.Player.Whisper(obj as GameLiving, string.Join(" ", args, 1, args.Length - 1));
 		}
 	}
 }
