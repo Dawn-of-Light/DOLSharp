@@ -1,4 +1,5 @@
 using DOL.AI.Brain;
+using DOL.Language;
 using System.Collections;
 
 namespace DOL.GS
@@ -19,9 +20,8 @@ namespace DOL.GS
 
 		public override IList GetExamineMessages(GamePlayer player)
 		{
-			//You examine the Guardian Sergeant.  He is neutral towards you and is a guard.
 			IList list = new ArrayList(4);
-			list.Add("You examine the " + GetName(0, true) + ". " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and is a guard.");
+			list.Add(LanguageMgr.GetTranslation(player.Client, "GameGuard.GetExamineMessages.Examine", GetName(0, true), GetPronoun(0, true), GetAggroLevelString(player, false)));
 			return list;
 		}
 

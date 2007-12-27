@@ -71,6 +71,9 @@ GameLiving.ReceiveMoney:				{0} doesn't want your money!
 # GAMEGRAVESTONE
 GameGravestone.GameGravestone.Grave:			{0}'s Grave
 
+# GAMEGUARD
+GameGuard.GetExamineMessages.Examine:			You examine the {0}. {1} is {2} and is a guard.
+
 # GAMEMERCHANT
 GameMerchant.GetExamineMessages.BuyItemsFor:		{0} says, "You can buy items here for {1}."
 GameMerchant.GetExamineMessages.Nothing:		nothing
