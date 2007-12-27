@@ -80,6 +80,10 @@ namespace DOL.GS
 				case "zombie servant":
 					EffectList.Add(new MezzRootImmunityEffect());
 					LoadEquipmentTemplate("barehand_weapon");
+					InventoryItem item;
+					if (Inventory != null &&
+						(item = Inventory.GetItem(eInventorySlot.RightHandWeapon)) != null)
+						item.ProcSpellID = 2165;
 					break;
                 case "reanimated servant" : 
 					LoadEquipmentTemplate("reanimated_servant");
@@ -89,7 +93,6 @@ namespace DOL.GS
                     break;
 				case "greater necroservant":
 					LoadEquipmentTemplate("barehand_weapon");
-					InventoryItem item;
 					if (Inventory != null && 
 						(item = Inventory.GetItem(eInventorySlot.RightHandWeapon)) != null)
 							item.ProcSpellID = 32013;
