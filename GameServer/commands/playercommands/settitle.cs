@@ -30,16 +30,16 @@ namespace DOL.GS.Commands
 		 ePrivLevel.Player,
 		 "Sets the current player title",
 		 "/settitle <index> - to change current title using index in the list")]
-	public class SetTitleCommandHandler : ICommandHandler
+	public class SetTitleCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			int index = -1;
 			if (args.Length > 1)
 			{
 				try { index = int.Parse(args[1]); }
-				catch {}
-				
+				catch { }
+
 				IPlayerTitle current = client.Player.CurrentTitle;
 				if (current != null && current.IsForced(client.Player))
 					client.Out.SendMessage("You cannot change the current title.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -49,15 +49,13 @@ namespace DOL.GS.Commands
 					if (index < 0 || index >= titles.Count)
 						client.Player.CurrentTitle = PlayerTitleMgr.ClearTitle;
 					else
-						client.Player.CurrentTitle = (IPlayerTitle) titles[index];
+						client.Player.CurrentTitle = (IPlayerTitle)titles[index];
 				}
 			}
 			else
 			{
 				client.Out.SendPlayerTitles();
 			}
-			
-			return 1;
 		}
 	}
 }

@@ -22,18 +22,18 @@ namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&send",
-		new string[] {"&tell", "&t"},
+		new string[] { "&tell", "&t" },
 		ePrivLevel.Player,
 		"Sends a private message to a player",
 		"Use: SEND <TARGET> <TEXT TO SEND>")]
-	public class SendCommandHandler : ICommandHandler
+	public class SendCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 3)
 			{
 				client.Out.SendMessage("Use: SEND <TARGET> <TEXT TO SEND>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 			string targetName = args[1];
 			string message = string.Join(" ", args, 2, args.Length - 2);
@@ -49,14 +49,14 @@ namespace DOL.GS.Commands
 			{
 				// nothing found
 				client.Out.SendMessage(targetName + " is not in the game, or in another realm.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 			switch (result)
 			{
 				case 2: // name not unique
 					client.Out.SendMessage("Character name is not unique.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+					return;
 				case 3: // exact match
 				case 4: // guessed name
 					if (targetClient == client)
@@ -67,9 +67,8 @@ namespace DOL.GS.Commands
 					{
 						client.Player.Send(targetClient.Player, message);
 					}
-					return 1;
+					return;
 			}
-			return 0;
 		}
 	}
 }

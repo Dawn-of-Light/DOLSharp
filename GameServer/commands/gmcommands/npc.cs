@@ -25,86 +25,86 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-    [CmdAttribute(
+	[CmdAttribute(
 		"&npc",
 		ePrivLevel.GM,
 		"Various npc commands",
-        "/npc say <text>",
-        "/npc yell <text>",
-        "/npc action <text>",
-        "/npc emote <emote>",
-        "/npc face <name>",
+		"/npc say <text>",
+		"/npc yell <text>",
+		"/npc action <text>",
+		"/npc emote <emote>",
+		"/npc face <name>",
 		"/npc follow <name>",
 		"/npc stopfollow",
-        "/npc walkto <name> [speed]",
+		"/npc walkto <name> [speed]",
 		"/npc target <name>",
-	    "/npc weapon <slot>",
-        "/npc cast <spellLine> <spellID>")]
-    
+		"/npc weapon <slot>",
+		"/npc cast <spellLine> <spellID>")]
+
 	public class NPCCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-        public int OnCommand(GameClient client, string[] args)
-        {
+		public void OnCommand(GameClient client, string[] args)
+		{
 			if (args.Length == 1)
 			{
 				DisplaySyntax(client);
-				return 1;
+				return;
 			}
 
-            if (!(client.Player.TargetObject is GameNPC))
-            {
-                client.Out.SendMessage("You must target an NPC.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                return 0;
-            }
+			if (!(client.Player.TargetObject is GameNPC))
+			{
+				client.Out.SendMessage("You must target an NPC.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
 
-            GameNPC npc = client.Player.TargetObject as GameNPC;
+			GameNPC npc = client.Player.TargetObject as GameNPC;
 
-            switch (args[1].ToLower())
-            {
-                case "say":
-                    {
-                        if (args.Length < 3)
-                        {
-                            client.Player.Out.SendMessage("Usage: /npc say <message>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return 0;
-                        }
-                        string message = string.Join(" ", args, 2, args.Length - 2);
-                        npc.Say(message);
-                        break;
-                    }
-                case "yell":
-                    {
-                        if (args.Length < 3)
-                        {
-                            client.Player.Out.SendMessage("Usage: /npc yell <message>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return 0;
-                        }
-                        string message = string.Join(" ", args, 2, args.Length - 2);
-                        npc.Yell(message);
-                        break;
-                    }
-                case "action":
-                    {
-                        if (args.Length < 3)
-                        {
-                            client.Player.Out.SendMessage("Usage: /npc action <action message>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return 0;
-                        }
-                        string action = string.Join(" ", args, 2, args.Length - 2);
-                        action = "<" + npc.Name + " " + action + " >";
+			switch (args[1].ToLower())
+			{
+				case "say":
+					{
+						if (args.Length < 3)
+						{
+							client.Player.Out.SendMessage("Usage: /npc say <message>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
+						string message = string.Join(" ", args, 2, args.Length - 2);
+						npc.Say(message);
+						break;
+					}
+				case "yell":
+					{
+						if (args.Length < 3)
+						{
+							client.Player.Out.SendMessage("Usage: /npc yell <message>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
+						string message = string.Join(" ", args, 2, args.Length - 2);
+						npc.Yell(message);
+						break;
+					}
+				case "action":
+					{
+						if (args.Length < 3)
+						{
+							client.Player.Out.SendMessage("Usage: /npc action <action message>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
+						string action = string.Join(" ", args, 2, args.Length - 2);
+						action = "<" + npc.Name + " " + action + " >";
 						foreach (GamePlayer player in npc.GetPlayersInRadius(WorldMgr.SAY_DISTANCE))
 						{
 							player.Out.SendMessage(action, eChatType.CT_Emote, eChatLoc.CL_ChatWindow);
 						}
-                        break;
-                    }
-                case "emote":
-                    {
-                        if (args.Length != 3)
-                        {
-                            client.Player.Out.SendMessage("Usage: /npc emote <emote>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return 0;
-                        }
+						break;
+					}
+				case "emote":
+					{
+						if (args.Length != 3)
+						{
+							client.Player.Out.SendMessage("Usage: /npc emote <emote>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
 
 						eEmote emoteID;
 						switch (args[2].ToLower())
@@ -142,307 +142,306 @@ namespace DOL.GS.Commands
 							case "victory": emoteID = eEmote.Victory; break;
 							case "wave": emoteID = eEmote.Wave; break;
 							case "yes": emoteID = eEmote.Yes; break;
-							default: return 0;
+							default: return;
 						}
 
 						npc.Emote(emoteID);
-                        break;
-                    }
-                case "walkto":
-                    {
-                        if (args.Length < 3 || args.Length > 4)
-                        {
-                            client.Out.SendMessage("Usage: /npc walkto <targetname> [speed]", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return 0;
-                        }
+						break;
+					}
+				case "walkto":
+					{
+						if (args.Length < 3 || args.Length > 4)
+						{
+							client.Out.SendMessage("Usage: /npc walkto <targetname> [speed]", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
 
 						int speed = 200;
-						if(args.Length == 4)
-						{	
+						if (args.Length == 4)
+						{
 							speed = Convert.ToInt32(args[3]);
 						}
 
-						int X=0;
-						int Y=0;
-						int Z=0;
+						int X = 0;
+						int Y = 0;
+						int Z = 0;
 						switch (args[2].ToLower())
 						{
 							case "me":
-							{
-								X = client.Player.X;
-								Y = client.Player.Y;
-								Z = client.Player.Z;
-								break;
-							}
+								{
+									X = client.Player.X;
+									Y = client.Player.Y;
+									Z = client.Player.Z;
+									break;
+								}
 
 							default:
-							{
-								//Check for players by name in visibility distance
-								foreach (GamePlayer targetplayer in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 								{
-									if (targetplayer.Name.ToLower() == args[2].ToLower())
+									//Check for players by name in visibility distance
+									foreach (GamePlayer targetplayer in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 									{
-										X = targetplayer.X;
-										Y = targetplayer.Y;
-										Z = targetplayer.Z;
-										break;
+										if (targetplayer.Name.ToLower() == args[2].ToLower())
+										{
+											X = targetplayer.X;
+											Y = targetplayer.Y;
+											Z = targetplayer.Z;
+											break;
+										}
 									}
-								}
-								//Check for NPCs by name in visibility distance
-								foreach (GameNPC target in npc.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
-								{
-									if (target.Name.ToLower() == args[2].ToLower())
+									//Check for NPCs by name in visibility distance
+									foreach (GameNPC target in npc.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
 									{
-										X = target.X;
-										Y = target.Y;
-										Z = target.Z;
-										break;
+										if (target.Name.ToLower() == args[2].ToLower())
+										{
+											X = target.X;
+											Y = target.Y;
+											Z = target.Z;
+											break;
+										}
 									}
+									break;
 								}
-								break;
-							}
 						}
 
-						if(X == 0 && Y == 0 && Z == 0)
+						if (X == 0 && Y == 0 && Z == 0)
 						{
-							client.Out.SendMessage("Can't find name "+ args[2].ToLower() +" near your target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 0;
+							client.Out.SendMessage("Can't find name " + args[2].ToLower() + " near your target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
 						}
 
 						npc.WalkTo(X, Y, Z, speed);
 						client.Out.SendMessage("Your target is walking to your location!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        break;
-                    }
-                case "face":
-                    {
-                        if (args.Length != 3)
-                        {
-                            client.Player.Out.SendMessage("Usage: /npc face <targetname>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return 0;
-                        }
-						
+						break;
+					}
+				case "face":
+					{
+						if (args.Length != 3)
+						{
+							client.Player.Out.SendMessage("Usage: /npc face <targetname>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
+
 						GameLiving target = null;
 						switch (args[2].ToLower())
 						{
 							case "me":
-							{
-								target = client.Player;
-								break;
-							}
+								{
+									target = client.Player;
+									break;
+								}
 
 							default:
-							{
-								//Check for players by name in visibility distance
-								foreach (GamePlayer targetplayer in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 								{
-									if (targetplayer.Name.ToLower() == args[2].ToLower())
+									//Check for players by name in visibility distance
+									foreach (GamePlayer targetplayer in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 									{
-										target = targetplayer;
-										break;
+										if (targetplayer.Name.ToLower() == args[2].ToLower())
+										{
+											target = targetplayer;
+											break;
+										}
 									}
-								}
-								//Check for NPCs by name in visibility distance
-								foreach (GameNPC targetNpc in npc.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
-								{
-									if (targetNpc.Name.ToLower() == args[2].ToLower())
+									//Check for NPCs by name in visibility distance
+									foreach (GameNPC targetNpc in npc.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
 									{
-										target = targetNpc;
-										break;
+										if (targetNpc.Name.ToLower() == args[2].ToLower())
+										{
+											target = targetNpc;
+											break;
+										}
 									}
+									break;
 								}
-								break;
-							}
 						}
 
-						if(target == null)
+						if (target == null)
 						{
-							client.Out.SendMessage("Can't find name "+ args[2].ToLower() +" near your target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 0;
+							client.Out.SendMessage("Can't find name " + args[2].ToLower() + " near your target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
 						}
 
 						npc.TurnTo(target);
-                        break;
-                    }
+						break;
+					}
 				case "follow":
-				{
-					if (args.Length != 3)
 					{
-						client.Player.Out.SendMessage("Usage: /npc follow <targetname>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return 0;
-					}
-						
-					GameLiving target = null;
-					switch (args[2].ToLower())
-					{
-						case "me":
+						if (args.Length != 3)
 						{
-							target = client.Player;
-							break;
+							client.Player.Out.SendMessage("Usage: /npc follow <targetname>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
 						}
 
-						default:
+						GameLiving target = null;
+						switch (args[2].ToLower())
 						{
-							//Check for players by name in visibility distance
-							foreach (GamePlayer targetplayer in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-							{
-								if (targetplayer.Name.ToLower() == args[2].ToLower())
+							case "me":
 								{
-									target = targetplayer;
+									target = client.Player;
 									break;
 								}
-							}
-							//Check for NPCs by name in visibility distance
-							foreach (GameNPC targetNpc in npc.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
-							{
-								if (targetNpc.Name.ToLower() == args[2].ToLower())
+
+							default:
 								{
-									target = targetNpc;
+									//Check for players by name in visibility distance
+									foreach (GamePlayer targetplayer in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+									{
+										if (targetplayer.Name.ToLower() == args[2].ToLower())
+										{
+											target = targetplayer;
+											break;
+										}
+									}
+									//Check for NPCs by name in visibility distance
+									foreach (GameNPC targetNpc in npc.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
+									{
+										if (targetNpc.Name.ToLower() == args[2].ToLower())
+										{
+											target = targetNpc;
+											break;
+										}
+									}
 									break;
 								}
-							}
-							break;
 						}
-					}
 
-					if(target == null)
-					{
-						client.Out.SendMessage("Can't find name "+ args[2].ToLower() +" near your target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return 0;
-					}
+						if (target == null)
+						{
+							client.Out.SendMessage("Can't find name " + args[2].ToLower() + " near your target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
 
-					npc.Follow(target, 128, short.MaxValue);
-					break;
-				}
+						npc.Follow(target, 128, short.MaxValue);
+						break;
+					}
 				case "stopfollow":
-				{
-					if (args.Length != 2)
 					{
-						client.Player.Out.SendMessage("Usage: /npc stopfollow", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return 0;
-					}
+						if (args.Length != 2)
+						{
+							client.Player.Out.SendMessage("Usage: /npc stopfollow", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
 
-					npc.StopFollow();
-					break;
-				}
+						npc.StopFollow();
+						break;
+					}
 				case "target":
-				{
-					if (args.Length != 3)
 					{
-						client.Player.Out.SendMessage("Usage: /npc target <targetName>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return 0;
-					}
-
-					GameLiving target = null;
-					switch (args[2].ToLower())
-					{
-						case "self": 
+						if (args.Length != 3)
 						{
-							target = npc; 
+							client.Player.Out.SendMessage("Usage: /npc target <targetName>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
 						}
-							break;
 
-						case "me": 
+						GameLiving target = null;
+						switch (args[2].ToLower())
 						{
-							target = client.Player; 
-						}
-							break;
-
-						default:
-						{
-							//Check for players by name in visibility distance
-							foreach (GamePlayer targetplayer in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-							{
-								if (targetplayer.Name.ToLower() == args[2].ToLower())
+							case "self":
 								{
-									target = targetplayer;
+									target = npc;
+								}
+								break;
+
+							case "me":
+								{
+									target = client.Player;
+								}
+								break;
+
+							default:
+								{
+									//Check for players by name in visibility distance
+									foreach (GamePlayer targetplayer in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+									{
+										if (targetplayer.Name.ToLower() == args[2].ToLower())
+										{
+											target = targetplayer;
+											break;
+										}
+									}
+									//Check for NPCs by name in visibility distance
+									foreach (GameNPC targetNpc in npc.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
+									{
+										if (targetNpc.Name.ToLower() == args[2].ToLower())
+										{
+											target = targetNpc;
+											break;
+										}
+									}
 									break;
 								}
-							}
-							//Check for NPCs by name in visibility distance
-							foreach (GameNPC targetNpc in npc.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
-							{
-								if (targetNpc.Name.ToLower() == args[2].ToLower())
-								{
-									target = targetNpc;
-									break;
-								}
-							}
-							break;
 						}
+
+						if (target == null)
+						{
+							client.Out.SendMessage("Can't find name " + args[2].ToLower() + " near your target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
+
+						npc.TargetObject = target;
+						client.Out.SendMessage(npc.Name + " now target " + target.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						break;
 					}
 
-					if(target == null)
-					{
-						client.Out.SendMessage("Can't find name "+ args[2].ToLower() +" near your target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return 0;
-					}
 
-					npc.TargetObject = target;
-					client.Out.SendMessage(npc.Name+ " now target " +target.Name+ ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					break;
-				}
-
-								
 				case "cast":
-                    {
-                        if (args.Length != 4)
-                        {
-                            client.Player.Out.SendMessage("Usage: /npc cast <spellLine> <spellID>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					{
+						if (args.Length != 4)
+						{
+							client.Player.Out.SendMessage("Usage: /npc cast <spellLine> <spellID>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							client.Player.Out.SendMessage("(Be sure the npc target something to be able to cast)", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 0;
-                        }
+							return;
+						}
 
 						SpellLine line = SkillBase.GetSpellLine(args[2]);
 						IList spells = SkillBase.GetSpellList(line.KeyName);
-						if(spells.Count <= 0)
+						if (spells.Count <= 0)
 						{
-							client.Out.SendMessage("No spells found in line "+args[2]+"!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 0;
+							client.Out.SendMessage("No spells found in line " + args[2] + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
 						}
 
 						if (spells != null)
 						{
-							foreach(Spell spl in spells)
+							foreach (Spell spl in spells)
 							{
-								if(spl.ID == Convert.ToInt16(args[3])) 
+								if (spl.ID == Convert.ToInt16(args[3]))
 								{
 									npc.CastSpell(spl, line);
-									return 0;
+									return;
 								}
 							}
 						}
 
-						client.Out.SendMessage("Spell with id "+Convert.ToInt16(args[3])+" not found in db!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage("Spell with id " + Convert.ToInt16(args[3]) + " not found in db!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-                        break;
-                    }
+						break;
+					}
 				case "weapon":
-				{
-					if (args.Length != 3)
 					{
-						client.Player.Out.SendMessage("Usage: /npc weapon <activeWeaponSlot>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return 0;
+						if (args.Length != 3)
+						{
+							client.Player.Out.SendMessage("Usage: /npc weapon <activeWeaponSlot>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
+
+						if (Convert.ToInt16(args[2]) < 0 || Convert.ToInt16(args[2]) > 2)
+						{
+							client.Player.Out.SendMessage("The activeWeaponSlot must be between 0 and 2.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
+
+						GameLiving.eActiveWeaponSlot slot = (GameLiving.eActiveWeaponSlot)Convert.ToInt16(args[2]);
+						npc.SwitchWeapon(slot);
+						client.Player.Out.SendMessage(npc.Name + " will now use its " + Enum.GetName(typeof(GameLiving.eActiveWeaponSlot), slot) + " weapon to attack.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+						break;
 					}
-
-					if(Convert.ToInt16(args[2]) < 0 || Convert.ToInt16(args[2]) > 2)
-					{
-						client.Player.Out.SendMessage("The activeWeaponSlot must be between 0 and 2.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return 0;
-					}
-
-					GameLiving.eActiveWeaponSlot slot = (GameLiving.eActiveWeaponSlot)Convert.ToInt16(args[2]);
-					npc.SwitchWeapon(slot);
-					client.Player.Out.SendMessage(npc.Name+" will now use its "+Enum.GetName(typeof(GameLiving.eActiveWeaponSlot), slot)+" weapon to attack.", eChatType.CT_System, eChatLoc.CL_SystemWindow);	
-
-					break;
-				}
 				default:
 					{
 						client.Out.SendMessage("Type /npc for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					break;
-            }
-            return 1;
-        }
-    }
+			}
+		}
+	}
 }

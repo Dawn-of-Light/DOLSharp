@@ -26,13 +26,12 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"Get the version of the GameServer",
 		"/version")]
-	public class VersionCommandHandler : ICommandHandler
+	public class VersionCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
-			AssemblyName an = Assembly.GetAssembly(typeof (GameServer)).GetName();
+			AssemblyName an = Assembly.GetAssembly(typeof(GameServer)).GetName();
 			client.Out.SendMessage("Dawn of Light " + an.Name + " Version: " + an.Version, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			return 1;
 		}
 	}
 }

@@ -38,7 +38,8 @@ namespace DOL.GS.Commands
 		"'/keep remove'",
 		"'/keep name <Name>' to change name",
 		"'/keep keepid <keepID>' to assign keepid to keep",
-		"'/keep level <level>' to change base level of keep",
+		"'/keep level <level>' to change level of keep",
+		"'/keep baselevel <level>' to change base level of keep",
 		//"'/keep movehere' to move keep to player position",
 		//"'/keep addcomponent <compx> <compy> <comphead> <skin> <height>' to add component to current keep",
 		"'/keep save' to save keep into DB",
@@ -83,12 +84,12 @@ namespace DOL.GS.Commands
 			TBG40_44 = 29,
 		}
 
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length == 1)
 			{
 				DisplaySyntax(client);
-				return 1;
+				return;
 			}
 			AbstractGameKeep myKeep = (AbstractGameKeep)client.Player.TempProperties.getObjectProperty(TEMP_KEEP_LAST, null);
 			if (myKeep == null) myKeep = KeepMgr.getKeepCloseToSpot(client.Player.CurrentRegionID, client.Player, 10000);
@@ -99,14 +100,14 @@ namespace DOL.GS.Commands
 					{
 						if (args.Length < 5)
 						{
-							client.Out.SendMessage("type of keep :", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							DisplayMessage(client, "type of keep :");
 							int i = 0;
 							foreach (string str in Enum.GetNames(typeof(eKeepTypes)))
 							{
-								client.Out.SendMessage("#" + i + " : " + str, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								DisplayMessage(client, "#" + i + " : " + str);
 								i++;
 							}
-							return 1;
+							return;
 						}
 						int keepType = 0;
 						int keepID = 0;
@@ -120,7 +121,7 @@ namespace DOL.GS.Commands
 						catch
 						{
 							DisplaySyntax(client);
-							return 1;
+							return;
 						}
 						GameKeep keep = new GameKeep();
 						keep.DBKeep = new DBKeep();
@@ -1830,16 +1831,16 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 								} break;
 							default:
-								client.Out.SendMessage("Wrong type of keep", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 1;
+								DisplayMessage(client, "Wrong type of keep");
+								return;
 						}
 						client.Player.TempProperties.setProperty(TEMP_KEEP_LAST, keep);
 						foreach (GameKeepComponent comp in keep.KeepComponents)
 						{
 							if (comp.InternalID != null)
-								client.Out.SendMessage("CompID=" + comp.InternalID + ";KeepID = " + comp.Keep.KeepID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								DisplayMessage(client, "CompID=" + comp.InternalID + ";KeepID = " + comp.Keep.KeepID);
 						}
-						client.Out.SendMessage("You have created a keep.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						DisplayMessage(client, "You have created a keep.");
 						//send the creation packets
 						foreach (GameClient c in WorldMgr.GetClientsOfRegion(client.Player.CurrentRegionID))
 						{
@@ -1856,20 +1857,20 @@ namespace DOL.GS.Commands
 						if (args.Length < 5)
 						{
 							DisplaySyntax(client);
-							return 0;
+							return;
 						}
 
 						int keepid = -1;
 						if (!int.TryParse(args[2], out keepid))
 						{
-							DisplayError(client, "Invalid entry for KeepID!", new object[] { });
-							return 0;
+							DisplayMessage(client, "Invalid entry for KeepID!");
+							return;
 						}
 
 						if (KeepMgr.getKeepByID(keepid) != null)
 						{
-							DisplayError(client, "KeepID {0} already exists!", keepid);
-							return 0;
+							DisplayMessage(client, "KeepID {0} already exists!", keepid);
+							return;
 						}
 
 						// Most //
@@ -1877,15 +1878,15 @@ namespace DOL.GS.Commands
 						// We must check that the client is not trying to create a tower with a lower KeepID
 						if ((keepid >> 8) == 0)
 						{
-							DisplayError(client, "Wrong KeepID ({0}) : a tower KeepID must be higher than 255 !", keepid);
-							return 0;
+							DisplayMessage(client, "Wrong KeepID ({0}) : a tower KeepID must be higher than 255 !", keepid);
+							return;
 						}
 
 						byte baseLevel = 50;
 						if (!byte.TryParse(args[3], out baseLevel))
 						{
-							DisplayError(client, "Invalid entry for BaseLevel!", new object[] { });
-							return 0;
+							DisplayMessage(client, "Invalid entry for BaseLevel!");
+							return;
 						}
 
 						DBKeep keep = new DBKeep();
@@ -1906,7 +1907,7 @@ namespace DOL.GS.Commands
 						GameKeepTower k = new GameKeepTower();
 						k.Load(keep);
 						new GameKeepComponent().LoadFromDatabase(towerComponent);
-						DisplayMessage(client, "Tower created and saved at your location!", new object[] { });
+						DisplayMessage(client, "Tower created and saved at your location!");
 						//send the creation packets
 						foreach (GameClient c in WorldMgr.GetClientsOfRegion(client.Player.CurrentRegionID))
 						{
@@ -1923,7 +1924,7 @@ namespace DOL.GS.Commands
 						if (args.Length < 6)
 						{
 							DisplaySyntax(client);
-							return 1;
+							return;
 						}
 
 						int keepid = 0;
@@ -1934,13 +1935,13 @@ namespace DOL.GS.Commands
 						catch
 						{
 							DisplaySyntax(client);
-							return 1;
+							return;
 						}
 
 						if (KeepMgr.getKeepByID(keepid) != null)
 						{
-							DisplayError(client, "KeepID {0} already exists!", keepid);
-							return 0;
+							DisplayMessage(client, "KeepID {0} already exists!", keepid);
+							return;
 						}
 
 						// Most //
@@ -1948,8 +1949,8 @@ namespace DOL.GS.Commands
 						// We must check that the client is not trying to create a keep with a higher KeepID
 						if ((keepid >> 8) != 0)
 						{
-							DisplayError(client, "Wrong KeepID ({0}) : a keep KeepID must be lower than 256 !", keepid);
-							return 0;
+							DisplayMessage(client, "Wrong KeepID ({0}) : a keep KeepID must be lower than 256 !", keepid);
+							return;
 						}
 
 						byte baselevel = 0;
@@ -1960,7 +1961,7 @@ namespace DOL.GS.Commands
 						catch
 						{
 							DisplaySyntax(client);
-							return 1;
+							return;
 						}
 
 						int radius = 0;
@@ -1971,7 +1972,7 @@ namespace DOL.GS.Commands
 						catch
 						{
 							DisplaySyntax(client);
-							return 1;
+							return;
 						}
 
 						DBKeep keep = new DBKeep();
@@ -2020,7 +2021,7 @@ namespace DOL.GS.Commands
 							(door as GameObject).Delete();
 						}
 						client.Player.TempProperties.setProperty(TEMP_KEEP_LAST, k);
-						client.Out.SendMessage("You have created a keep", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						DisplayMessage(client, "You have created a keep");
 
 						//send the creation packets
 						foreach (GameClient c in WorldMgr.GetClientsOfRegion(client.Player.CurrentRegionID))
@@ -2032,7 +2033,7 @@ namespace DOL.GS.Commands
 							}
 						}
 						break;
-					} 
+					}
 				case "remove":
 					{
 						KeepArea karea = null;
@@ -2047,12 +2048,12 @@ namespace DOL.GS.Commands
 
 						if (karea == null)
 						{
-							DisplayError(client, "Your not in a keep area!", new object[] { });
-							return 1;
+							DisplayMessage(client, "Your not in a keep area!");
+							return;
 						}
 
 						karea.Keep.Unload(karea);
-						DisplayMessage(client, "Keep Unloaded!", new object[] { });
+						DisplayMessage(client, "Keep Unloaded!");
 
 						break;
 					}
@@ -2061,27 +2062,27 @@ namespace DOL.GS.Commands
 						if (args.Length < 3)
 						{
 							DisplaySyntax(client);
-							return 1;
+							return;
 						}
 						if (myKeep == null)
 						{
-							client.Out.SendMessage("You must create a keep first", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							DisplayMessage(client, "You must create a keep first");
+							return;
 						}
 						myKeep.Name = String.Join(" ", args, 2, args.Length - 2);
-						client.Out.SendMessage("You change the name of the current keep to " + myKeep.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						DisplayMessage(client, "You change the name of the current keep to " + myKeep.Name);
 					} break;
 				case "keepid":
 					{
 						if (args.Length < 3)
 						{
 							DisplaySyntax(client);
-							return 1;
+							return;
 						}
 						if (myKeep == null)
 						{
-							client.Out.SendMessage("You must create a keep first", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							DisplayMessage(client, "You must create a keep first");
+							return;
 						}
 						int keepid = 0;
 						try
@@ -2091,10 +2092,10 @@ namespace DOL.GS.Commands
 						catch
 						{
 							DisplaySyntax(client);
-							return 1;
+							return;
 						}
 						myKeep.KeepID = keepid;
-						client.Out.SendMessage("You change the id of the current keep to " + keepid, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						DisplayMessage(client, "You change the id of the current keep to " + keepid);
 
 					} break;
 				case "level":
@@ -2102,12 +2103,12 @@ namespace DOL.GS.Commands
 						if (args.Length < 3)
 						{
 							DisplaySyntax(client);
-							return 1;
+							return;
 						}
 						if (myKeep == null)
 						{
-							client.Out.SendMessage("You must create a keep first", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							DisplayMessage(client, "You must create a keep first");
+							return;
 						}
 						byte keepLevel = 0;
 						try
@@ -2117,14 +2118,38 @@ namespace DOL.GS.Commands
 						catch
 						{
 							DisplaySyntax(client);
-							return 1;
+							return;
 						}
 						myKeep.ChangeLevel(keepLevel);
-						client.Out.SendMessage("You change the level of the current keep to " + keepLevel, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						DisplayMessage(client, "You change the level of the current keep to " + keepLevel);
 
 					} break;
 				case "baselevel":
 					{
+						if (args.Length < 3)
+						{
+							DisplaySyntax(client);
+							return;
+						}
+						if (myKeep == null)
+						{
+							DisplayMessage(client, "You must create a keep first");
+							return;
+						}
+						byte keepLevel = 0;
+						try
+						{
+							keepLevel = Convert.ToByte(args[2]);
+						}
+						catch
+						{
+							DisplaySyntax(client);
+							return;
+						}
+						myKeep.DBKeep.BaseLevel = keepLevel;
+						myKeep.ChangeLevel(myKeep.Level);
+						DisplayMessage(client, "You change the base level of the current keep to " + keepLevel);
+
 						break;
 					}
 				/*	case "movehere":
@@ -2140,12 +2165,12 @@ namespace DOL.GS.Commands
 						if (args.Length < 3)
 						{
 							DisplaySyntax(client);
-							return 1;
+							return;
 						}
 						if (myKeep == null)
 						{
-							client.Out.SendMessage("You must create a keep first", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							DisplayMessage(client, "You must create a keep first");
+							return;
 						}
 						eRealm realm = eRealm.None;
 						try
@@ -2155,10 +2180,10 @@ namespace DOL.GS.Commands
 						catch
 						{
 							DisplaySyntax(client);
-							return 1;
+							return;
 						}
 						myKeep.Reset(realm);
-						client.Out.SendMessage("You change the realm of the current keep to " + GlobalConstants.RealmToName(realm), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						DisplayMessage(client, "You change the realm of the current keep to " + GlobalConstants.RealmToName(realm));
 						break;
 					}
 				case "radius":
@@ -2166,12 +2191,12 @@ namespace DOL.GS.Commands
 						if (args.Length < 3)
 						{
 							DisplaySyntax(client);
-							return 1;
+							return;
 						}
 						if (myKeep == null)
 						{
-							client.Out.SendMessage("You must create a keep first", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							DisplayMessage(client, "You must create a keep first");
+							return;
 						}
 						int radius = 0;
 						try
@@ -2181,21 +2206,21 @@ namespace DOL.GS.Commands
 						catch
 						{
 							DisplaySyntax(client);
-							return 1;
+							return;
 						}
 						myKeep.Area.ChangeRadius(radius);
-						client.Out.SendMessage("You change the radius of the current keep to " + radius, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						DisplayMessage(client, "You change the radius of the current keep to " + radius);
 						break;
 					}
 				case "save":
 					{
 						if (myKeep == null)
 						{
-							client.Out.SendMessage("You must create a keep first!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							DisplayMessage(client, "You must create a keep first!");
+							return;
 						}
 						myKeep.SaveIntoDatabase();
-						client.Out.SendMessage("Keep saved in database.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						DisplayMessage(client, "Keep saved in database.");
 					} break;
 				case "addteleporter":
 					{
@@ -2217,7 +2242,7 @@ namespace DOL.GS.Commands
 							stone.SaveIntoDatabase();
 							stone.AddToWorld();
 						}
-						DisplayMessage(client, "Teleport Stone added!", new object[] { });
+						DisplayMessage(client, "Teleport Stone added!");
 						break;
 					}
 				case "addbanner":
@@ -2231,8 +2256,8 @@ namespace DOL.GS.Commands
 								case "guild": bannerType = GameKeepBanner.eBannerType.Guild; break;
 								default:
 									{
-										DisplayError(client, "Usage: /keep addbanner <realm|guild>", new object[] { });
-										return 0;
+										DisplayMessage(client, "Usage: /keep addbanner <realm|guild>");
+										return;
 									}
 							}
 						}
@@ -2274,16 +2299,15 @@ namespace DOL.GS.Commands
 							else banner.ChangeRealm();
 							banner.AddToWorld();
 						}
-						DisplayMessage(client, "Banner added!", new object[] { });
+						DisplayMessage(client, "Banner added!");
 						break;
 					}
 				default:
 					{
 						DisplaySyntax(client);
-						return 1;
+						break;
 					}
 			}
-			return 1;
 		}
 	}
 }

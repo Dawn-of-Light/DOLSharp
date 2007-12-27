@@ -24,9 +24,9 @@ namespace DOL.GS.Commands
 		"&formation",
 		ePrivLevel.Player,
 		"Change the formation of your pets!", "/formation <type>")]
-	public class FormationHandler : ICommandHandler
+	public class FormationHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			GamePlayer player = client.Player;
 
@@ -34,7 +34,7 @@ namespace DOL.GS.Commands
 			if (player.CharacterClass.ID != (int)eCharacterClass.Bonedancer)
 			{
 				client.Out.SendMessage("Only Bonedancers can use this command!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 			//Help display
@@ -44,14 +44,14 @@ namespace DOL.GS.Commands
 				client.Out.SendMessage("'/formation triangle' Place the pets in a triangle formation.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				client.Out.SendMessage("'/formation line' Place the pets in a line formation.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				client.Out.SendMessage("'/formation protect' Place the pets in a protect formation that surrounds the commander.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 			//Check to see if the BD has a commander and minions
 			if (player.ControlledNpc == null)
 			{
 				client.Out.SendMessage("You don't have a commander!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 			bool haveminion = false;
 			foreach (AI.Brain.IControlledBrain icb in player.ControlledNpc.Body.ControlledNpcList)
@@ -65,7 +65,7 @@ namespace DOL.GS.Commands
 			if (!haveminion)
 			{
 				client.Out.SendMessage("You don't have any minions!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 			switch (args[1].ToLower())
@@ -86,8 +86,6 @@ namespace DOL.GS.Commands
 					client.Out.SendMessage("Unrecognized argument: " + args[1], eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					break;
 			}
-
-			return 1;
 		}
 	}
 }

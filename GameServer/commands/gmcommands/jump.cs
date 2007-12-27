@@ -36,18 +36,18 @@ namespace DOL.GS.Commands
 		"/jump <PlayerName> to me",
 		"/jump to GT",
 		"/jump rel <x> <y> <z>")]
-	public class OnJump : ICommandHandler
+	public class JumpCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length == 3 && args[1] == "to" && (args[2] == "GT" || args[2] == "gt")) // /Jump to GT
 			{
 				client.Player.MoveTo(client.Player.CurrentRegionID,
-				                     client.Player.GroundTarget.X,
-				                     client.Player.GroundTarget.Y,
-				                     client.Player.GroundTarget.Z,
-				                     client.Player.Heading);
-				return 1;
+									 client.Player.GroundTarget.X,
+									 client.Player.GroundTarget.Y,
+									 client.Player.GroundTarget.Z,
+									 client.Player.Heading);
+				return;
 			}
 			if (args.Length == 3 && args[1] == "to") // /Jump to PlayerName
 			{
@@ -56,7 +56,7 @@ namespace DOL.GS.Commands
 				if (clientc == null)
 				{
 					client.Out.SendMessage(args[2] + " cannot be found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 0;
+					return;
 				}
 				if (CheckExpansion(client, clientc, clientc.Player.CurrentRegionID))
 				{
@@ -65,9 +65,9 @@ namespace DOL.GS.Commands
 						clientc.Player.CurrentHouse.Enter(client.Player);
 					else
 						client.Player.MoveTo(clientc.Player.CurrentRegionID, clientc.Player.X, clientc.Player.Y, clientc.Player.Z, client.Player.Heading);
-					return 1;
+					return;
 				}
-				return 1;
+				return;
 			}
 			else if (args.Length == 4 && args[1] == "to") // /Jump to Name Realm
 			{
@@ -77,55 +77,55 @@ namespace DOL.GS.Commands
 				{
 					int realm = int.Parse(args[3]);
 
-					GameNPC[] npcs = WorldMgr.GetNPCsByName(args[2], (eRealm) realm);
+					GameNPC[] npcs = WorldMgr.GetNPCsByName(args[2], (eRealm)realm);
 					if (npcs.Length > 0)
 					{
 						client.Out.SendMessage("/Jump to " + npcs[0].CurrentRegion.Description, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						client.Player.MoveTo(npcs[0].CurrentRegionID, npcs[0].X, npcs[0].Y, npcs[0].Z, npcs[0].Heading);
-						return 1;
+						return;
 					}
 
 					client.Out.SendMessage(args[2] + " cannot be found in realm " + realm + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 0;
+					return;
 				}
 				if (CheckExpansion(client, clientc, clientc.Player.CurrentRegionID))
 				{
 					if (clientc.Player.InHouse)
 					{
 						client.Out.SendMessage("Cannot jump to someone inside a house", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return 1;
+						return;
 					}
 					client.Out.SendMessage("/Jump to " + clientc.Player.CurrentRegion, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					if (clientc.Player.CurrentHouse != null)
 						clientc.Player.CurrentHouse.Enter(client.Player);
 					else
 						client.Player.MoveTo(clientc.Player.CurrentRegionID, clientc.Player.X, clientc.Player.Y, clientc.Player.Z, client.Player.Heading);
-					return 1;
+					return;
 				}
-				return 1;
+				return;
 			}
 			else if (args.Length == 5 && args[1] == "to") // /Jump to X Y Z
 			{
 				client.Player.MoveTo(client.Player.CurrentRegionID, Convert.ToInt32(args[2]), Convert.ToInt32(args[3]), Convert.ToInt32(args[4]), client.Player.Heading);
-				return 1;
+				return;
 			}
 			else if (args.Length == 5 && args[1] == "rel") // /Jump rel +/-X +/-Y +/-Z
 			{
 				client.Player.MoveTo(client.Player.CurrentRegionID,
-				                     client.Player.X + Convert.ToInt32(args[2]),
-				                     client.Player.Y + Convert.ToInt32(args[3]),
-				                     client.Player.Z + Convert.ToInt32(args[4]),
-				                     client.Player.Heading);
-				return 1;
+									 client.Player.X + Convert.ToInt32(args[2]),
+									 client.Player.Y + Convert.ToInt32(args[3]),
+									 client.Player.Z + Convert.ToInt32(args[4]),
+									 client.Player.Heading);
+				return;
 			}
 			else if (args.Length == 6 && args[1] == "to") // /Jump to X Y Z RegionID
 			{
-				if (CheckExpansion(client, client, (ushort) Convert.ToUInt16(args[5])))
+				if (CheckExpansion(client, client, (ushort)Convert.ToUInt16(args[5])))
 				{
 					client.Player.MoveTo(Convert.ToUInt16(args[5]), Convert.ToInt32(args[2]), Convert.ToInt32(args[3]), Convert.ToInt32(args[4]), client.Player.Heading);
-					return 1;
+					return;
 				}
-				return 0;
+				return;
 			}
 			else if (args.Length == 6 && args[2] == "to") // /Jump PlayerName to X Y Z
 			{
@@ -134,10 +134,10 @@ namespace DOL.GS.Commands
 				if (clientc == null)
 				{
 					client.Out.SendMessage(args[1] + " is not in the game.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 0;
+					return;
 				}
 				clientc.Player.MoveTo(clientc.Player.CurrentRegionID, Convert.ToInt32(args[3]), Convert.ToInt32(args[4]), Convert.ToInt32(args[5]), clientc.Player.Heading);
-				return 1;
+				return;
 			}
 			else if (args.Length == 7 && args[2] == "to") // /Jump PlayerName to X Y Z RegionID
 			{
@@ -146,14 +146,14 @@ namespace DOL.GS.Commands
 				if (clientc == null)
 				{
 					client.Out.SendMessage(args[1] + " is not in the game.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 0;
+					return;
 				}
-				if (CheckExpansion(clientc, clientc, (ushort) Convert.ToUInt16(args[6])))
+				if (CheckExpansion(clientc, clientc, (ushort)Convert.ToUInt16(args[6])))
 				{
 					clientc.Player.MoveTo(Convert.ToUInt16(args[6]), Convert.ToInt32(args[3]), Convert.ToInt32(args[4]), Convert.ToInt32(args[5]), clientc.Player.Heading);
-					return 1;
+					return;
 				}
-				return 0;
+				return;
 			}
 			else if (args.Length == 4 && args[2] == "to") // /Jump PlayerName to PlayerCible
 			{
@@ -163,7 +163,7 @@ namespace DOL.GS.Commands
 				if (clientc == null)
 				{
 					client.Out.SendMessage(args[1] + " is not in the game.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 0;
+					return;
 				}
 				if (args[3] == "me") // /Jump PlayerName to me
 				{
@@ -177,7 +177,7 @@ namespace DOL.GS.Commands
 				if (clientto == null)
 				{
 					client.Out.SendMessage(args[3] + " is not in the game.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 0;
+					return;
 				}
 				else
 				{
@@ -187,9 +187,9 @@ namespace DOL.GS.Commands
 							clientto.Player.CurrentHouse.Enter(clientc.Player);
 						else
 							clientc.Player.MoveTo(clientto.Player.CurrentRegionID, clientto.Player.X, clientto.Player.Y, clientto.Player.Z, client.Player.Heading);
-						return 1;
+						return;
 					}
-					return 0;
+					return;
 				}
 			}
 			else
@@ -204,7 +204,7 @@ namespace DOL.GS.Commands
 				client.Out.SendMessage("Usage : /Jump PlayerName to X Y Z", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				client.Out.SendMessage("Usage : /Jump PlayerName to X Y Z RegionID", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				client.Out.SendMessage("PlayerCible can be [me].", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
+				return;
 			}
 		}
 

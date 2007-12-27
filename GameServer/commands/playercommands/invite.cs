@@ -24,14 +24,14 @@ namespace DOL.GS.Commands
 		"&invite",
 		ePrivLevel.Player,
 		"Invite a specified or targeted player to join your group", "/invite <player>")]
-	public class InviteCommandHandler : ICommandHandler
+	public class InviteCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (client.Player.Group != null && client.Player.Group.Leader != client.Player)
 			{
 				client.Out.SendMessage("You are not the leader of your group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
+				return;
 			}
 
 			string targetName = string.Join(" ", args, 1, args.Length - 1);
@@ -42,18 +42,18 @@ namespace DOL.GS.Commands
 				if (client.Player.TargetObject == null || client.Player.TargetObject == client.Player)
 				{
 					client.Out.SendMessage("You have not selected a valid player as your target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+					return;
 				}
 
 				if (!(client.Player.TargetObject is GamePlayer))
 				{
 					client.Out.SendMessage("You have not selected a valid player as your target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+					return;
 				}
 				target = (GamePlayer) client.Player.TargetObject;
 				if (!GameServer.ServerRules.IsAllowedToGroup(client.Player, target, false))
 				{
-					return 1;
+					return;
 				}
 			}
 			else
@@ -66,33 +66,31 @@ namespace DOL.GS.Commands
 				if (target == null || !GameServer.ServerRules.IsAllowedToGroup(client.Player, target, true))
 				{ // Invalid target or realm restriction
 					client.Out.SendMessage("No players online with that name.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+					return;
 				}
 				if (target == client.Player)
 				{
 					client.Out.SendMessage("You can't invite yourself.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+					return;
 				}
 			}
 
 			if (target.Group != null)
 			{
 				client.Out.SendMessage("The player is still in a group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 			if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP &&
 				target.IsStealthed)
 			{
 				client.Out.SendMessage("You can't find the player around here.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 			client.Out.SendMessage("You have invited " + target.Name + " to join your group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			target.Out.SendGroupInviteCommand(client.Player, client.Player.Name + " has invited you to join\n" + client.Player.GetPronoun(1, false) + " group. Do you wish to join?");
 			target.Out.SendMessage(client.Player.Name + " has invited you to join " + client.Player.GetPronoun(1, false) + " group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-			return 1;
 		}
 	}
 }

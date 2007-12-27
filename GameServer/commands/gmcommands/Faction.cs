@@ -44,12 +44,12 @@ namespace DOL.GS.Commands
 
 		protected string TEMP_FACTION_LAST = "TEMP_FACTION_LAST";
 
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 2)
 			{
 				DisplaySyntax(client);
-				return 0;
+				return;
 			}
 			Faction myfaction = (Faction)client.Player.TempProperties.getObjectProperty(TEMP_FACTION_LAST, null);
 			switch (args[1])
@@ -59,7 +59,7 @@ namespace DOL.GS.Commands
 						if (args.Length < 4)
 						{
 							DisplaySyntax(client);
-							return 0;
+							return;
 						}
 						string name = args[2];
 						int baseAggro = 0;
@@ -70,7 +70,7 @@ namespace DOL.GS.Commands
 						catch
 						{
 							client.Player.Out.SendMessage("The baseAggro must be a number.", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-							return 0;
+							return;
 						}
 
 						int max = 0;
@@ -104,14 +104,14 @@ namespace DOL.GS.Commands
 						if (myfaction == null)
 						{
 							client.Player.Out.SendMessage("You must select a faction first.", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-							return 0;
+							return;
 						}
 
 						GameNPC npc = client.Player.TargetObject as GameNPC;
 						if (npc == null)
 						{
 							client.Player.Out.SendMessage("You must select a mob first.", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-							return 0;
+							return;
 						}
 						npc.Faction = myfaction;
 						client.Player.Out.SendMessage("The mob " + npc.Name + " has joined the faction of " + myfaction.Name + ".", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
@@ -121,12 +121,12 @@ namespace DOL.GS.Commands
 						if (myfaction == null)
 						{
 							client.Player.Out.SendMessage("You must select a faction first.", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-							return 0;
+							return;
 						}
 						if (args.Length < 3)
 						{
 							DisplaySyntax(client);
-							return 0;
+							return;
 						}
 						int id = 0;
 						try
@@ -136,13 +136,13 @@ namespace DOL.GS.Commands
 						catch
 						{
 							client.Player.Out.SendMessage("The index must be a number.", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-							return 0;
+							return;
 						}
 						Faction linkedfaction = FactionMgr.GetFactionByID(id);
 						if (linkedfaction == null)
 						{
 							client.Player.Out.SendMessage("This Faction is not loaded", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-							return 0;
+							return;
 						}
 						DBLinkedFaction dblinkedfaction = new DBLinkedFaction();
 						dblinkedfaction.FactionID = myfaction.ID;
@@ -156,12 +156,12 @@ namespace DOL.GS.Commands
 						if (myfaction == null)
 						{
 							client.Player.Out.SendMessage("You must select a faction first.", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-							return 0;
+							return;
 						}
 						if (args.Length < 3)
 						{
 							DisplaySyntax(client);
-							return 0;
+							return;
 						}
 						int id = 0;
 						try
@@ -171,13 +171,13 @@ namespace DOL.GS.Commands
 						catch
 						{
 							client.Player.Out.SendMessage("The index must be a number.", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-							return 0;
+							return;
 						}
 						Faction linkedfaction = FactionMgr.GetFactionByID(id);
 						if (linkedfaction == null)
 						{
 							client.Player.Out.SendMessage("This Faction is not loaded", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-							return 0;
+							return;
 						}
 						DBLinkedFaction dblinkedfaction = new DBLinkedFaction();
 						dblinkedfaction.FactionID = myfaction.ID;
@@ -190,14 +190,14 @@ namespace DOL.GS.Commands
 					{
 						foreach (Faction faction in FactionMgr.Factions.Values)
 							client.Player.Out.SendMessage("#" + faction.ID.ToString() + ": " + faction.Name + " (" + faction.BaseAggroLevel + ")", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-						return 1;
+						return;
 					}
 				case "select":
 					{
 						if (args.Length < 3)
 						{
 							DisplaySyntax(client);
-							return 0;
+							return;
 						}
 						int id = 0;
 						try
@@ -207,23 +207,22 @@ namespace DOL.GS.Commands
 						catch
 						{
 							client.Player.Out.SendMessage("The index must be a number.", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-							return 0;
+							return;
 						}
 						Faction tempfaction = FactionMgr.GetFactionByID(id);
 						if (tempfaction == null)
 						{
 							client.Player.Out.SendMessage("This Faction is not loaded", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-							return 0;
+							return;
 						}
 						client.Player.TempProperties.setProperty(TEMP_FACTION_LAST, tempfaction);
 					} break;
 				default:
 					{
 						DisplaySyntax(client);
-						return 0;
+						return;
 					}
 			}
-			return 1;
 		}
 	}
 }

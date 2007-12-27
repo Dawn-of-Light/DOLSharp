@@ -55,13 +55,12 @@ namespace DOL.GS.Commands
 		/// </summary>
 		/// <param name="client">The client using the command</param>
 		/// <param name="args">The command arguments</param>
-		/// <returns></returns>
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length == 1)
 			{
 				DisplaySyntax(client);
-				return 1;
+				return;
 			}
 
 			switch (args[1])
@@ -119,21 +118,21 @@ namespace DOL.GS.Commands
 								{
 									if (client.Player.TargetObject is GameKeepComponent == false)
 									{
-										DisplayError(client, "You need to target a keep component to create a patrol!", new object[] { });
-										return 1;
+										DisplayMessage(client, "You need to target a keep component to create a patrol!", new object[] { });
+										return;
 									}
 									GameKeepComponent c = client.Player.TargetObject as GameKeepComponent;;
 									Patrol p = new Patrol(c);
 									p.SpawnPosition = PositionMgr.CreatePatrolPosition(p.PatrolID, c, client.Player);
 									p.PatrolID = p.SpawnPosition.TemplateID;
 									p.InitialiseGuards();
-									return 1;
+									return;
 								}
 						}
 						if (guard == null)
 						{
 							DisplaySyntax(client);
-							return 0;
+							return;
 						}
 
 						GameKeepComponent component = client.Player.TargetObject as GameKeepComponent;
@@ -174,27 +173,27 @@ namespace DOL.GS.Commands
 					{
 						if (client.Player.TargetObject is GameKeepGuard == false)
 						{
-							DisplayError(client, "Target a guard first!", new object[] { });
-							return 1;
+							DisplayMessage(client, "Target a guard first!", new object[] { });
+							return;
 						}
 						if (args.Length != 3)
 						{
 							DisplaySyntax(client);
-							return 1;
+							return;
 						}
 						byte height = byte.Parse(args[2]);
 						height = KeepMgr.GetHeightFromLevel(height);
 						if (height > 3)
 						{
-							DisplayError(client, "Keep levels range from 0 to 10", new object[] { });
-							return 1;
+							DisplayMessage(client, "Keep levels range from 0 to 10", new object[] { });
+							return;
 						}
 
 						GameKeepGuard guard = client.Player.TargetObject as GameKeepGuard;
 						if (PositionMgr.GetPosition(guard) != null)
 						{
-							DisplayError(client, "You already have a position assigned for height " + height + ", remove first!", new object[] { });
-							return 1;
+							DisplayMessage(client, "You already have a position assigned for height " + height + ", remove first!", new object[] { });
+							return;
 						}
 
 						DBKeepPosition pos = PositionMgr.CreatePosition(guard.GetType(), height, client.Player, guard.TemplateID, guard.Component);
@@ -202,20 +201,20 @@ namespace DOL.GS.Commands
 						PositionMgr.AddPosition(pos);
 						PositionMgr.FillPositions();
 
-						DisplayMessage(client, "Guard position added", new object[] { });
+						DisplayMessage(client, "Guard position added");
 						break;
 					}
 				case "removeposition":
 					{
 						if (client.Player.TargetObject is GameKeepGuard == false)
 						{
-							DisplayError(client, "Target a Guard first", null);
-							return 1;
+							DisplayMessage(client, "Target a Guard first");
+							return;
 						}
 						if (args.Length != 3)
 						{
 							DisplaySyntax(client);
-							return 1;
+							return;
 						}
 
 						GameKeepGuard guard = client.Player.TargetObject as GameKeepGuard;
@@ -250,8 +249,8 @@ namespace DOL.GS.Commands
 									PathPoint path = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
 									if (path == null)
 									{
-										DisplayError(client, "No path created yet! Use /keepguard path create first!");
-										return 0;
+										DisplayMessage(client, "No path created yet! Use /keepguard path create first!");
+										return;
 									}
 
 									int speedlimit = 1000;
@@ -263,8 +262,8 @@ namespace DOL.GS.Commands
 										}
 										catch
 										{
-											DisplayError(client, "No valid speedlimit '{0}'!", args[2]);
-											return 0;
+											DisplayMessage(client, "No valid speedlimit '{0}'!", args[2]);
+											return;
 										}
 									}
 									PathPoint newpp = new PathPoint(client.Player.X, client.Player.Y, client.Player.Z, speedlimit, path.Type);
@@ -288,19 +287,19 @@ namespace DOL.GS.Commands
 									PathPoint path = (PathPoint)client.Player.TempProperties.getObjectProperty(TEMP_PATH_LAST, null);
 									if (args.Length < 3)
 									{
-										DisplayError(client, "Usage: /keepguard path save");
-										return 0;
+										DisplayMessage(client, "Usage: /keepguard path save");
+										return;
 									}
 									if (path == null)
 									{
-										DisplayError(client, "No path created yet! Use /keepguard path create first!");
-										return 0;
+										DisplayMessage(client, "No path created yet! Use /keepguard path create first!");
+										return;
 									}
 									GameKeepGuard guard = client.Player.TargetObject as GameKeepGuard;
 									if (guard == null || guard.PatrolGroup == null)
 									{
-										DisplayError(client, "Target a patrol guard first");
-										return 0;
+										DisplayMessage(client, "Target a patrol guard first");
+										return;
 									}
 
 									path.Type = ePathType.Loop;
@@ -313,8 +312,6 @@ namespace DOL.GS.Commands
 						break;
 					}
 			}
-
-			return 1;
 		}
 
 		protected string TEMP_PATH_FIRST = "TEMP_PATH_FIRST";

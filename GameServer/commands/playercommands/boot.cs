@@ -12,19 +12,19 @@ namespace DOL.GS.Commands
 		 "Useage: /boot [playername]")]
 	public class BootCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			House house = HouseMgr.GetHouseByPlayer(client.Player);
 			if (house == null)
 			{
-				DisplayError(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Boot.NoHouseError"), new object[] { });
-				return 0;
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Boot.NoHouseError"));
+				return;
 			}
 
 			if (!client.Player.InHouse || client.Player.CurrentHouse != house)
 			{
-				DisplayError(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Boot.InHouseError"), new object[] { });
-				return 0;
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Boot.InHouseError"));
+				return;
 			}
 
 			foreach (GamePlayer player in house.GetAllPlayersInHouse())
@@ -33,12 +33,11 @@ namespace DOL.GS.Commands
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Boot.YouRemoved", client.Player.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					player.LeaveHouse();
-					return 1;
+					return;
 				}
 			}
 
 			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Boot.NoOneOnline"), eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-			return 0;
 		}
 	}
 }

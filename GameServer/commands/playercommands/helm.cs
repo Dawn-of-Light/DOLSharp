@@ -23,12 +23,11 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player, //minimum privelege level
 	 "Toggles the helm on and off when wearing an helm.", //command description
 	  "/helm")] //usage
-	public class HelmCommandHandler : ICommandHandler
+	public class HelmCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			client.Player.IsHelmInvisible = !client.Player.IsHelmInvisible;
-			return 0;
 		}
 	}
 }

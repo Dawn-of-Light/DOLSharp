@@ -67,14 +67,14 @@ namespace DOL.GS.Commands
 		"'/item findid <name>'")]
 	public class ItemCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			try
 			{
 				if (args.Length < 2)
 				{
 					DisplaySyntax(client);
-					return 0;
+					return;
 				}
 
 				switch (args[1].ToLower())
@@ -105,7 +105,7 @@ namespace DOL.GS.Commands
                                 {
                                     client.Out.SendMessage(String.Format("Scroll page {0} for artifact {1} could not be found",
                                         args[3], args[2]), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-                                    return 0;
+									return;
                                 }
                                 if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, scroll.Item))
                                     client.Out.SendMessage(String.Format("Scroll {0} created.", scroll.Item.Name),
@@ -127,7 +127,7 @@ namespace DOL.GS.Commands
 								if (template == null)
 								{
 									client.Out.SendMessage("ItemTemplate with id " + args[2] + " could not be found!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return 0;
+									return;
 								}
 								else
 								{
@@ -188,12 +188,12 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							if (!item.IsStackable)
 							{
 								client.Out.SendMessage(item.GetName(0, true) + " is not stackable.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							try
 							{
@@ -236,7 +236,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							try
 							{
@@ -270,7 +270,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							try
 							{
@@ -291,7 +291,7 @@ namespace DOL.GS.Commands
 							if (obj == null)
 							{
 								client.Out.SendMessage("Itemtemplate with ID:" + args[2] + " is unknown!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 
 							}
 							client.Out.SendMessage("--------------------------------------------------------------", eChatType.CT_System, eChatLoc.CL_PopupWindow);
@@ -363,7 +363,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 
 							try
@@ -400,7 +400,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							try
 							{
@@ -436,7 +436,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 
 							try
@@ -473,7 +473,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							try
 							{
@@ -509,7 +509,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							try
 							{
@@ -543,7 +543,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							try
 							{
@@ -577,7 +577,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							try
 							{
@@ -611,7 +611,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							try
 							{
@@ -645,7 +645,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							try
 							{
@@ -679,7 +679,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							try
 							{
@@ -713,7 +713,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							try
 							{
@@ -749,7 +749,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							try
 							{
@@ -783,7 +783,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							try
 							{
@@ -819,7 +819,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							try
 							{
@@ -856,7 +856,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							try
 							{
@@ -894,7 +894,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 
 							try
@@ -931,7 +931,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							try
 							{
@@ -970,7 +970,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							try
 							{
@@ -1066,7 +1066,7 @@ namespace DOL.GS.Commands
 										}
 									default:
 										client.Out.SendMessage("Unknown bonus number: " + num, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-										return 1;
+										return;
 								}
 								if (item.SlotPosition < (int)eInventorySlot.FirstBackpack)
 								{
@@ -1101,7 +1101,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							try
 							{
@@ -1137,7 +1137,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							try
 							{
@@ -1173,7 +1173,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							try
 							{
@@ -1207,7 +1207,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 
 							try
@@ -1241,7 +1241,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 
 							try
@@ -1276,7 +1276,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 
 							try
@@ -1311,7 +1311,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 
 							try
@@ -1352,7 +1352,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							try
 							{
@@ -1386,7 +1386,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 
 							try
@@ -1427,7 +1427,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 
 							try
@@ -1462,7 +1462,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 
 							try
@@ -1511,7 +1511,7 @@ namespace DOL.GS.Commands
 							else
 							{
 								client.Out.SendMessage("Incorrect format for /item", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 
 							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
@@ -1519,7 +1519,7 @@ namespace DOL.GS.Commands
 							if (item == null)
 							{
 								client.Out.SendMessage("No item located in slot " + slot, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 							//try
 							//{
@@ -1624,10 +1624,7 @@ namespace DOL.GS.Commands
 			catch (Exception e)
 			{
 				client.Out.SendMessage(e.Message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
 			}
-
-			return 1;
 		}
 	}
 }

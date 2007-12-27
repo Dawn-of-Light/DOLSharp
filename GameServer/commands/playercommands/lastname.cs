@@ -14,7 +14,7 @@ namespace DOL.GS.Commands
 		 ePrivLevel.Player,
 		 "Set/change your lastname.", "/lastname <name>")]
 
-	public class LastnameCommandHandler : ICommandHandler
+	public class LastnameCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		private const string LASTNAME_WEAK = "new lastname";
 		/* lastname cost: 10 gold pieces*/
@@ -27,8 +27,7 @@ namespace DOL.GS.Commands
 		public const int LASTNAME_MIN_LEVEL = 10;
 		public const int LASTNAME_MIN_CRAFTSKILL = 200;
 
-
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			/* Get primary crafting skill (if any) */
 			int CraftSkill = 0;
@@ -39,28 +38,28 @@ namespace DOL.GS.Commands
 			if (client.Player.Level < LASTNAME_MIN_LEVEL && CraftSkill < LASTNAME_MIN_CRAFTSKILL)
 			{
 				client.Out.SendMessage("You must be " + LASTNAME_MIN_LEVEL + "th level or " + LASTNAME_MIN_CRAFTSKILL + " in your primary trade skill to register a last name!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 			/* When you don't have a lastname, change is for free, otherwise you need money */
 			if (client.Player.LastName != "" && client.Player.GetCurrentMoney() < Money.GetMoney(0, 0, LASTNAME_FEE, 0, 0))
 			{
 				client.Out.SendMessage("Changing your last name costs " + Money.GetString(Money.GetMoney(0, 0, LASTNAME_FEE, 0, 0)) + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 			/* Check if you selected a Name Registrar NPC */
-			if (!(client.Player.TargetObject is NameRegistrar))
+			if (client.Player.TargetObject is NameRegistrar == false)
 			{
 				client.Out.SendMessage("You must select a name registrar to set your last name with!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 			/* Chek if you are near enough to NPC*/
 			if (WorldMgr.GetDistance(client.Player, client.Player.TargetObject) > WorldMgr.INTERACT_DISTANCE)
 			{
 				client.Out.SendMessage("You are too far away to interact with " + client.Player.TargetObject.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 			/* If you type /lastname with no other arguments, clear your actual lastname */
@@ -68,7 +67,7 @@ namespace DOL.GS.Commands
 			{
 				client.Player.TempProperties.setProperty(LASTNAME_WEAK, "");
 				client.Out.SendCustomDialog("Would you like to clear your last name?", new CustomDialogResponse(LastNameDialogResponse));
-				return 1;
+				return;
 			}
 
 			/* Get the name */
@@ -77,7 +76,7 @@ namespace DOL.GS.Commands
 			if (NewLastname.Length > LASTNAME_MAXLENGTH)
 			{
 				client.Out.SendMessage("Last names can be no longer than " + LASTNAME_MAXLENGTH + " characters!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 			/* First char of lastname must be uppercase */
@@ -85,14 +84,14 @@ namespace DOL.GS.Commands
 			if (NewLastname[0] < 'A' || NewLastname[0] > 'Z')
 			{
 				client.Out.SendMessage("Your lastname must start with a valid, uppercase character!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 			/* Only permits letters, with no spaces or symbols */
 			if (args.Length > 2 || LastnameIsInvalid(NewLastname))
 			{
 				client.Out.SendMessage("Your lastname must consist of valid characters!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 			/* Check if lastname is legal and is not contained in invalidnames.txt */
@@ -101,14 +100,14 @@ namespace DOL.GS.Commands
 				if (NewLastname.ToLower().IndexOf(invalid) != -1)
 				{
 					client.Out.SendMessage(NewLastname + " is not a legal last name! Choose another.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+					return;
 				}
 			}
 
 			client.Player.TempProperties.setProperty(LASTNAME_WEAK, NewLastname);
 			client.Out.SendCustomDialog("Would you like to set your last name to \x000a" + NewLastname + "?", new CustomDialogResponse(LastNameDialogResponse));
 
-			return 1;
+			return;
 		}
 
 		/* Validate lastnames: they must contain only letters (either lowercase or uppercase) */

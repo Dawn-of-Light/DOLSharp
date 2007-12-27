@@ -26,21 +26,20 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"Gives a range to a target",
 		"/range")]
-	public class RangeCommandHandler : ICommandHandler
+	public class RangeCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			GameLiving living = client.Player.TargetObject as GameLiving;
 			if (client.Player.TargetObject == null)
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Range.NeedTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(client, (LanguageMgr.GetTranslation(client, "Scripts.Players.Range.NeedTarget")));
 			else if (living == null || (living != null && client.Account.PrivLevel > 1))
 			{
 				int range = WorldMgr.GetDistance(client.Player, client.Player.TargetObject);
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Range.Result", range, (client.Player.TargetInView ? "" : LanguageMgr.GetTranslation(client, "Scripts.Players.Range.NotVisible"))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Range.Result", range, (client.Player.TargetInView ? "" : LanguageMgr.GetTranslation(client, "Scripts.Players.Range.NotVisible"))));
 			}
 			else
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Range.InvalidObject"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			return 0;
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Range.InvalidObject"));
 		}
 	}
 }

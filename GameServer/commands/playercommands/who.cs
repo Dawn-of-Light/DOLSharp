@@ -67,7 +67,7 @@ namespace DOL.GS.Commands
 		"/WHO <level> <level> lists players in level range",
 		"/WHO <language> lists players with a specific language"
 		)]
-	public class WhoCommandHandler : ICommandHandler
+	public class WhoCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -80,7 +80,7 @@ namespace DOL.GS.Commands
 		private const string MESSAGE_NO_ARGS = "Type /WHO HELP for variations on the WHO command.";
 		private const string MESSAGE_PLAYERS_ONLINE = "{0} player{1} currently online.";
 
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			int listStart = 1;
 			ArrayList filters = null;
@@ -111,9 +111,9 @@ namespace DOL.GS.Commands
 				int playing = clientsList.Count;
 
 				// including anon?
-				client.Out.SendMessage(string.Format(MESSAGE_PLAYERS_ONLINE, playing, playing > 1 ? "s" : ""), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage(MESSAGE_NO_ARGS, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplayMessage(client, string.Format(MESSAGE_PLAYERS_ONLINE, playing, playing > 1 ? "s" : ""));
+				DisplayMessage(client, MESSAGE_NO_ARGS);
+				return;
 			}
 
 
@@ -180,21 +180,19 @@ namespace DOL.GS.Commands
 
 			foreach (string str in resultMessages)
 			{
-				client.Out.SendMessage(str, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(client, str);
 			}
 
 			if (resultCount == 0)
 			{
-				client.Out.SendMessage(MESSAGE_NO_MATCHES, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(client, MESSAGE_NO_MATCHES);
 			}
 			else if (resultCount > MAX_LIST_SIZE)
 			{
-				client.Out.SendMessage(string.Format(MESSAGE_LIST_TRUNCATED, resultCount), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(client, string.Format(MESSAGE_LIST_TRUNCATED, resultCount));
 			}
 
 			filters = null;
-
-			return 1;
 		}
 
 

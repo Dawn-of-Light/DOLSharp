@@ -27,22 +27,22 @@ namespace DOL.GS.Commands
 		"Changes the players model", //command description
 		"'/morph <modelID>' to change into <modelID>",
 		"'/morph reset' to change back to normal")] //usage
-		public class MorphCommandHandler : ICommandHandler
+	public class MorphCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length == 1)
 			{
 				client.Out.SendMessage("Usage: /morph modelid",
-				                       eChatType.CT_System,
-				                       eChatLoc.CL_SystemWindow);
-				return 1;
+									   eChatType.CT_System,
+									   eChatLoc.CL_SystemWindow);
+				return;
 			}
 			if (args[1] == "reset")
 			{
-				client.Player.Model = (ushort) client.Account.Characters[client.ActiveCharIndex].CreationModel;
+				client.Player.Model = (ushort)client.Account.Characters[client.ActiveCharIndex].CreationModel;
 				client.Out.SendMessage("You change back to your normal form!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 			ushort model;
 			try
@@ -52,14 +52,12 @@ namespace DOL.GS.Commands
 			catch (Exception)
 			{
 				client.Out.SendMessage("Usage: /morph modelid",
-				                       eChatType.CT_System,
-				                       eChatLoc.CL_SystemWindow);
-				return 1;
+									   eChatType.CT_System,
+									   eChatLoc.CL_SystemWindow);
+				return;
 			}
 			client.Player.Model = model;
 			client.Out.SendMessage("You change into a new form!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-			return 1;
 		}
 	}
 }

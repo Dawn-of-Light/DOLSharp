@@ -25,9 +25,9 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"Gives a range to a ground target",
 		"/gtrange")]
-	public class GroundTargetRangeCommandHandler : ICommandHandler
+	public class GroundTargetRangeCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (client.Player.GroundTarget != null)
 			{
@@ -36,7 +36,6 @@ namespace DOL.GS.Commands
 			}
 			else
 				client.Out.SendMessage("Range to target: You don't have a ground target set.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			return 0;
 		}
 	}
 }

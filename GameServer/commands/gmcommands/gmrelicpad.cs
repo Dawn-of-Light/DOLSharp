@@ -30,12 +30,12 @@ namespace DOL.GS.Commands
 
 	public class GMRelicPadCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length != 4 || (args[1] != "magic" && args[1] != "strength"))
 			{
 				DisplaySyntax(client);
-				return 1;
+				return;
 			}
 
 			ushort emblem = ushort.Parse(args[3]);
@@ -52,8 +52,6 @@ namespace DOL.GS.Commands
 			pad.Heading = client.Player.Heading;
 			pad.AddToWorld();
 			pad.SaveIntoDatabase();
-
-			return 1;
 		}
 	}
 }

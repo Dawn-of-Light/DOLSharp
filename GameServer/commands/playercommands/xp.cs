@@ -27,12 +27,12 @@ namespace DOL.GS.Commands
 		"/xp <on/off>")]
 	public class XPCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 2)
 			{
 				DisplaySyntax(client);
-				return 0;
+				return;
 			}
 
 			if (args[1].ToLower().Equals("on"))
@@ -45,7 +45,6 @@ namespace DOL.GS.Commands
 				client.Player.GainXP = false;
 				client.Out.SendMessage("Your xp flag is OFF. You will no longer gain experience points. Use '/xp on' to start gaining experience points again.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
-			return 1;
 		}
 	}
 }

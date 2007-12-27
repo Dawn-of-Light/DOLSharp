@@ -30,17 +30,8 @@ namespace DOL.GS.Commands
 		"'/weather start' to start a random storm in this region",
 		"'/weather restart' to restart the storm in this region",
 		"'/weather stop' to stop the storm in this region")]
-	public class WeatherCommandHandler : ICommandHandler
+	public class WeatherCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public void PrintUsage(GameClient client)
-		{
-			client.Out.SendMessage("Usage: '/weather info' to get information about the current weather", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage("Usage: '/weather start' to start a random storm in this region", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage("Usage: '/weather start <line> <duration> <speed> <diffusion> <intensity>' to start a storm with the given parameters", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage("Usage: '/weather restart' to restart the storm in this region", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage("Usage: '/weather stop' to stop the storm in this region", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-		}
-
 		public void PrintStormInfo(GameClient client)
 		{
 			WeatherMgr mgr = WeatherMgr.GetWeatherForRegion(client.Player.CurrentRegionID);
@@ -49,22 +40,18 @@ namespace DOL.GS.Commands
 			bool active = mgr.IsActive;
 			if (!active)
 			{
-				client.Out.SendMessage("WEATHERINFO: There is no storm active in this region!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(client, "WEATHERINFO: There is no storm active in this region!");
 				return;
 			}
-			client.Out.SendMessage("WEATHERINFO: Storm is at X=" + mgr.CurrentWeatherLine +
-				", Width=" + mgr.Width +
-				", Speed=" + mgr.Speed +
-				", Fog=" + mgr.FogDiffusion +
-				", Intensity=" + mgr.Intensity, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			DisplayMessage(client, string.Format("WEATHERINFO: Storm is at X={0}, Width={1}, Speed={2}, Fog={3}, Intensity={4}", mgr.CurrentWeatherLine, mgr.Width, mgr.Speed, mgr.FogDiffusion, mgr.Intensity));
 		}
 
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length == 1)
 			{
-				PrintUsage(client);
-				return 1;
+				DisplaySyntax(client);
+				return;
 			}
 
 			WeatherMgr mgr = WeatherMgr.GetWeatherForRegion(client.Player.CurrentRegionID);
@@ -73,34 +60,42 @@ namespace DOL.GS.Commands
 			{
 				if (mgr == null)
 				{
-					client.Out.SendMessage("WEATHERINFO: There is no weather manager for this region!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+					DisplayMessage(client, "WEATHERINFO: There is no weather manager for this region!");
+					return;
 				}
 
 				switch (args[1])
 				{
 					case "info":
-						PrintStormInfo(client);
-						return 1;
-					case "start":
-						mgr.StartStorm();
-						client.Out.SendMessage("WEATHERINFO: A random storm has been started for this region!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						PrintStormInfo(client);
-						return 1;
-					case "restart":
-						mgr.RestartStorm();
-						client.Out.SendMessage("WEATHERINFO: The storm has been restarted for this region!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						PrintStormInfo(client);
-						return 1;
-					case "stop":
-						if (!mgr.IsActive)
-							client.Out.SendMessage("WEATHERINFO: There is no storm active in this region!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						else
 						{
-							mgr.StopStorm();
-							client.Out.SendMessage("WEATHERINFO: The storm has been stopped for this region until the next normal random interval!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							PrintStormInfo(client);
+							return;
 						}
-						return 1;
+					case "start":
+						{
+							mgr.StartStorm();
+							DisplayMessage(client, "WEATHERINFO: A random storm has been started for this region!");
+							PrintStormInfo(client);
+							return;
+						}
+					case "restart":
+						{
+							mgr.RestartStorm();
+							DisplayMessage(client, "WEATHERINFO: The storm has been restarted for this region!");
+							PrintStormInfo(client);
+							return;
+						}
+					case "stop":
+						{
+							if (!mgr.IsActive)
+								DisplayMessage(client, "WEATHERINFO: There is no storm active in this region!");
+							else
+							{
+								mgr.StopStorm();
+								DisplayMessage(client, "WEATHERINFO: The storm has been stopped for this region until the next normal random interval!");
+							}
+							return;
+						}
 				}
 			}
 
@@ -114,16 +109,15 @@ namespace DOL.GS.Commands
 					ushort diffusion = Convert.ToUInt16(args[5]);
 					ushort intensity = Convert.ToUInt16(args[6]);
 					mgr.StartStorm(line, duration, speed, diffusion, intensity);
-					client.Out.SendMessage("WEATHERINFO: The storm has been started for this region!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					DisplayMessage(client, "WEATHERINFO: The storm has been started for this region!");
 					PrintStormInfo(client);
-					return 1;
+					return;
 				}
 				catch
 				{
 				}
 			}
-			PrintUsage(client);
-			return 1;
+			DisplaySyntax(client);
 		}
 	}
 }

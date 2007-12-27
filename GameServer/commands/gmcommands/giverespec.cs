@@ -29,16 +29,14 @@ namespace DOL.GS.Commands
 		ePrivLevel.GM,
 		"Gives your target respecs",
 		"/giverespec <full|single> <amount>")]
-	public class GiveRespecCommandHandler : ICommandHandler
+	public class GiveRespecCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 3)
 			{
-				client.Out.SendMessage("Usage: /giverespec <full|single> <amount>",
-				                       eChatType.CT_System,
-				                       eChatLoc.CL_SystemWindow);
-				return 1;
+				DisplaySyntax(client);
+				return;
 			}
 
 
@@ -48,14 +46,14 @@ namespace DOL.GS.Commands
 				if (amount < 1)
 				{
 					client.Out.SendMessage("Amount can't be less than 1.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+					return;
 				}
 
 				GamePlayer obj = client.Player.TargetObject as GamePlayer;
 				if (obj == null)
 				{
 					client.Out.SendMessage("You have not selected a valid target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+					return;
 				}
 
 				switch (args[1].ToLower())
@@ -77,11 +75,8 @@ namespace DOL.GS.Commands
 			}
 			catch (Exception)
 			{
-				client.Out.SendMessage("Usage: /giverespec <full|single> <amount>",
-				                       eChatType.CT_System,
-				                       eChatLoc.CL_SystemWindow);
+				DisplaySyntax(client);
 			}
-			return 1;
 		}
 	}
 }

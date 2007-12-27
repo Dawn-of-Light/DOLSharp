@@ -29,23 +29,23 @@ namespace DOL.GS.Commands
 		"/bountyrent <personal/guild> <amount>")] //command usage
 	public class BountyRentCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 2)
 			{
 				DisplaySyntax(client);
-				return 0;
+				return;
 			}
 			House house = HouseMgr.GetHouseByPlayer(client.Player);
 			if (house == null)
 			{
-				DisplayError(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.NoHouseError"), new object[] { });
-				return 0;
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.NoHouseError"), new object[] { });
+				return;
 			}
 			if (!client.Player.InHouse || client.Player.CurrentHouse != house)
 			{
-				DisplayError(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.InHouseError"), new object[] { });
-				return 0;
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.InHouseError"), new object[] { });
+				return;
 			}
 			switch (args[1].ToLower())
 			{
@@ -58,12 +58,12 @@ namespace DOL.GS.Commands
 						}
 						catch
 						{
-							return 0;
+							return;
 						}
 						if ((client.Player.BountyPoints -= BPsToAdd) < 0)
 						{
 							//  DisplayError(client, "You do not have enough bps!", new object[] { });
-							return 0;
+							return;
 						}
 						BPsToAdd *= 10000;
 						client.Player.TempProperties.setProperty(House.BPSFORHOUSERENT, BPsToAdd);
@@ -82,7 +82,6 @@ namespace DOL.GS.Commands
 						break;
 					}
 			}
-			return 1;
 		}
 	}
 }

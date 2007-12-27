@@ -24,10 +24,10 @@ namespace DOL.GS.Commands
 	[CmdAttribute(
 		"&nohelp",
 		ePrivLevel.Player,
-		"Toggle nohelp on or off, to stop receiving help from  your realm", "/afk <text>")]
-	public class NoHelpCommandHandler : ICommandHandler
+		"Toggle nohelp on or off, to stop receiving help from  your realm", "/nohelp>")]
+	public class NoHelpCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			client.Player.NoHelp = !client.Player.NoHelp;
 
@@ -39,8 +39,6 @@ namespace DOL.GS.Commands
 			{
 				client.Out.SendMessage("You will once again receive help from members of your realm, type /nohelp again to stop receiving help.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
-
-			return 1;
 		}
 	}
 }

@@ -22,20 +22,18 @@ namespace DOL.GS.Commands
 	[CmdAttribute("&stand", ePrivLevel.Player, "Stands up when sitting", "/stand")]
 	public class StandCommandHandler : ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			client.Player.Sit(false);
-			return 1;
 		}
 	}
 
-	[CmdAttribute("&sit", new string[] {"&rest"}, ePrivLevel.Player, "Sit", "/sit")]
+	[CmdAttribute("&sit", new string[] { "&rest" }, ePrivLevel.Player, "Sit", "/sit")]
 	public class SitCommandHandler : ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			client.Player.Sit(true);
-			return 1;
 		}
 	}
 }

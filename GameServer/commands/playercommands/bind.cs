@@ -27,18 +27,16 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"Binds your soul to a bind location, you will start from there after you die and /release",
 		"/bind")]
-	public class BindCommandHandler : ICommandHandler
+	public class BindCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		/// <summary>
 		/// Method to handle the command and any arguments
 		/// </summary>
 		/// <param name="client"></param>
 		/// <param name="args"></param>
-		/// <returns></returns>
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			client.Player.Bind(false);
-			return 1;
 		}
 	}
 }

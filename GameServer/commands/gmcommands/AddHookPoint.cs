@@ -31,11 +31,12 @@ namespace DOL.GS.Commands
 		 "'/addhookpoint <skin> <id>' to add a hookpoint (select the gamekeepcomponent)")]
 	public class HookPointCommandHandler : AbstractCommandHandler,ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 3)
 			{
-				return 1;
+				DisplaySyntax(client);
+				return;
 			}
 			int id = 0;
 			int skin = 0;
@@ -44,8 +45,8 @@ namespace DOL.GS.Commands
 				GameKeepComponent compo = client.Player.TargetObject as GameKeepComponent;
 				if (compo == null)
 				{
-					this.DisplaySyntax(client);
-					return 1;
+					DisplayMessage(client, "You are not targeting a GameKeepComponent!");
+					return;
 				}
 				skin = Convert.ToInt32(args[1]);
 				id = Convert.ToInt32(args[2]);
@@ -60,10 +61,8 @@ namespace DOL.GS.Commands
 			}
 			catch(Exception e)
 			{
-				this.DisplayError(client,e.ToString());
-				return 1;
+				DisplayMessage(client,e.ToString());
 			}
-			return 1;
 		}
 	}
 }

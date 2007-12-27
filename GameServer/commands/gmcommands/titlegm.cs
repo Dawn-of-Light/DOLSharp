@@ -35,13 +35,13 @@ namespace DOL.GS.Commands
 		 "/titlegm <list> - lists all target player's titles")]
 	public class TitleGmCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			GamePlayer target = client.Player.TargetObject as GamePlayer;
 			if (target == null)
 			{
 				client.Out.SendMessage("You must target a player to change his titles!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 			if (args.Length > 2)
@@ -50,27 +50,27 @@ namespace DOL.GS.Commands
 				if (title == null)
 				{
 					client.Out.SendMessage("Title '" + args[2] + "' not found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+					return;
 				}
-				
+
 				switch (args[1].ToLower())
 				{
 					case "add":
 						{
 							target.AddTitle(title);
-							return 1;
+							return;
 						}
-						
+
 					case "remove":
 						{
 							target.RemoveTitle(title);
-							return 1;
+							return;
 						}
-						
+
 					case "set":
 						{
 							target.CurrentTitle = title;
-							return 1;
+							return;
 						}
 				}
 			}
@@ -91,14 +91,12 @@ namespace DOL.GS.Commands
 							list.Add("- " + target.CurrentTitle.GetDescription(target));
 							list.Add(" (" + target.CurrentTitle.GetType().FullName + ")");
 							client.Out.SendCustomTextWindow(target.Name + "'s titles", list);
-							return 1;
+							return;
 						}
 				}
 			}
-			
+
 			DisplaySyntax(client);
-			
-			return 1;
 		}
 	}
 }

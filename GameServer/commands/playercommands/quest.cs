@@ -28,7 +28,7 @@ namespace DOL.GS.Commands
 		"Display the players completed quests", "/quest")]
 	public class QuestCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			string message = "\n";
 			if (client.Player.QuestList.Count == 0)
@@ -50,8 +50,7 @@ namespace DOL.GS.Commands
 				foreach (AbstractQuest quest in client.Player.QuestListFinished)
 					message += quest.Name + ", completed.\n";
 			}
-			client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			return 1;
+			DisplayMessage(client, message);
 		}
 	}
 }

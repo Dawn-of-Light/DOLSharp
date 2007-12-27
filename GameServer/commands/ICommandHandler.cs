@@ -31,7 +31,6 @@ namespace DOL.GS.Commands
 		/// </summary>
 		/// <param name="client">Client executing the command</param>
 		/// <param name="args">Extra arguments for the command</param>
-		/// <returns>Non-zero if succeeded</returns>
-		int OnCommand(GameClient client, string[] args);
+		void OnCommand(GameClient client, string[] args);
 	}
 }

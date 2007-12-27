@@ -31,9 +31,9 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"Returns the age of the character",
 		"/played")]
-	public class PlayedCommandHandler : ICommandHandler
+	public class PlayedCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public int OnCommand(GameClient client, string[] args)
+		public void OnCommand(GameClient client, string[] args)
 		{
 			int yearsPlayed = 0;
 			int monthsPlayed = 0;
@@ -53,8 +53,6 @@ namespace DOL.GS.Commands
 			}
 
 			client.Out.SendMessage("You have played for " + yearsPlayed + " Years, " + monthsPlayed + " Months, " + daysPlayed + " Days, " + showPlayed.Hours + " Hours and " + showPlayed.Minutes + " Minutes.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-			return 0;
 		}
 	}
 }
