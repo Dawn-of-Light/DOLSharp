@@ -186,6 +186,25 @@ namespace DOL.GS.PacketHandler.Client.v168
 							WriteMagicalBonuses(objectInfo, item, client, false);
 						}
 
+						// Another hardcoded tidbit!
+
+						if (item.Id_nb == "Personal_Bind_Recall_Stone")
+						{
+							objectInfo.Add("Can use item every: 30:00 min");
+							GamePlayer player = client.Player;
+							long lastPersonalBindRecallStoneTick = player.TempProperties.getLongProperty(GamePlayer.LAST_PERSONAL_BIND_RECALL_STONE_USE_TICK, 0L);
+							int secondsWaiting = (int)((player.CurrentRegion.Time - lastPersonalBindRecallStoneTick) / 1000);
+							int secondsCooldown = 1800;
+							if (secondsCooldown > secondsWaiting)
+							{
+								int secondsRemaining = secondsCooldown - secondsWaiting;
+								int minutesRemaining = (int)(secondsRemaining / 60);
+								secondsRemaining %= 60;
+								objectInfo.Add(String.Format("Can use again in: {0:00}:{1:00}",
+									minutesRemaining, secondsRemaining));
+							}
+						}
+
 						//***********************************
 						//shows info for Poison Potions
 						//***********************************
@@ -199,14 +218,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						if (!item.IsDropable || !item.IsPickable)
 							objectInfo.Add(" ");//empty line
-						if (!item.IsDropable)
-						{
-							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CannotDropped"));
-							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CannotSold"));
-						}
+						
 						if (!item.IsPickable)
 							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CannotTraded"));
-						//	objectInfo.Add("Cannot be destroyed.");
+						if (!item.IsDropable)
+						{
+							//objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CannotDropped"));
+							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CannotSold"));
+						}
+
+						if (item.MaxDurability == 0)
+							objectInfo.Add("Cannot be destroyed.");
 
 						//Add admin info
 						if (client.Account.PrivLevel > 1)
@@ -1486,25 +1508,28 @@ Type    Description           Id
 								if (spl.ID == item.SpellID)
 								{
 									output.Add(" ");
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired"));
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired2", spl.Level));
+									//output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
 									output.Add(" ");
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic"));
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Charges", item.Charges));
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", item.MaxCharges));
 									output.Add(" ");
-
+									if (item.MaxCharges > 0)
+									{
+										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic"));
+										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Charges", item.Charges));
+										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", item.MaxCharges));
+										output.Add(" ");
+									}
 									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, chargeEffectsLine);
 									if (spellHandler != null)
 									{
 										output.AddRange(spellHandler.DelveInfo);
+										output.Add("- This spell is cast when the item is used.");
 										output.Add(" ");
 									}
 									else
 									{
 										output.Add("-" + spl.Name + "(Not implemented yet)");
 									}
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.UsedItem"));
 									break;
 								}
 							}
@@ -1529,22 +1554,24 @@ Type    Description           Id
 									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired"));
 									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
 									output.Add(" ");
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic"));
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Charges", item.Charges1));
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", item.MaxCharges1));
-									output.Add(" ");
-
+									if (item.MaxCharges1 > 0)
+									{
+										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic"));
+										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Charges", item.Charges1));
+										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", item.MaxCharges1));
+										output.Add(" ");
+									}
 									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, chargeEffectsLine);
 									if (spellHandler != null)
 									{
 										output.AddRange(spellHandler.DelveInfo);
+										output.Add("- This spell is cast when the item is used.");
 										output.Add(" ");
 									}
 									else
 									{
 										output.Add("-" + spl.Name + "(Not implemented yet)");
 									}
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.UsedItem"));
 									break;
 								}
 							}
