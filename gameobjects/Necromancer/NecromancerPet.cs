@@ -54,6 +54,18 @@ namespace DOL.GS
         INpcTemplate m_petTemplate;
 
 		/// <summary>
+		/// Proc IDs for various pet weapons.
+		/// </summary>
+		private enum Procs 
+		{ 
+			Cold = 32050,
+			Disease = 32014, 
+			Heat = 32053,
+			Poison = 32013, 
+			Stun = 2165 
+		};
+
+		/// <summary>
 		/// Create necromancer pet from template. Con and hit bonuses from
 		/// items the caster was wearing when the summon started, will be
 		/// transferred to the pet.
@@ -83,7 +95,7 @@ namespace DOL.GS
 					InventoryItem item;
 					if (Inventory != null &&
 						(item = Inventory.GetItem(eInventorySlot.RightHandWeapon)) != null)
-						item.ProcSpellID = 2165;
+						item.ProcSpellID = (int)Procs.Stun;
 					break;
                 case "reanimated servant" : 
 					LoadEquipmentTemplate("reanimated_servant");
@@ -95,7 +107,7 @@ namespace DOL.GS
 					LoadEquipmentTemplate("barehand_weapon");
 					if (Inventory != null && 
 						(item = Inventory.GetItem(eInventorySlot.RightHandWeapon)) != null)
-							item.ProcSpellID = 32013;
+						item.ProcSpellID = (int)Procs.Poison;
 						break;
                 case "abomination": 
 					LoadEquipmentTemplate("abomination_fiery_sword");
@@ -692,7 +704,7 @@ namespace DOL.GS
 					if (Inventory != null &&
 						(item = Inventory.GetItem(eInventorySlot.RightHandWeapon)) != null)
 					{
-						item.ProcSpellID = 32014;
+						item.ProcSpellID = (int)Procs.Disease;
 						SayTo(owner, eChatLoc.CL_SystemWindow, "As you command.");
 					}
 					return true;
@@ -704,7 +716,7 @@ namespace DOL.GS
 					if (Inventory != null && 
 						(item = Inventory.GetItem(eInventorySlot.RightHandWeapon)) != null)
 					{
-						item.ProcSpellID = 32013;
+						item.ProcSpellID = (int)Procs.Poison;
 						SayTo(owner, eChatLoc.CL_SystemWindow, "As you command.");
 					}
 					return true;
@@ -760,15 +772,15 @@ namespace DOL.GS
 						{
 							case "abomination_fiery_sword": 
 							case "abomination_flaming_mace":
-								item.ProcSpellID = 32053;
+								item.ProcSpellID = (int)Procs.Heat;
 								break;
 							case "abomination_icy_sword": 
 							case "abomination_frozen_mace":
-								item.ProcSpellID = 32050;
+								item.ProcSpellID = (int)Procs.Cold;
 								break;
 							case "abomination_poisonous_sword":
 							case "abomination_venomous_mace":
-								item.ProcSpellID = 32013;
+								item.ProcSpellID = (int)Procs.Poison;
 								break;
 						}
 						SwitchWeapon(eActiveWeaponSlot.TwoHanded);
