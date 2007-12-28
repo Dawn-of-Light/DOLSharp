@@ -37,7 +37,7 @@ namespace DOL.GS
 		public MetalWorking()
 		{
 			Icon = 0x06;
-			Name = "Metalworking";
+			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.Name.Metalworking");
 			eSkill = eCraftingSkill.MetalWorking;
 		}
 
