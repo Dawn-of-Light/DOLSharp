@@ -21,6 +21,7 @@ using System.Collections.Specialized;
 using System.Reflection;
 using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS
@@ -36,7 +37,7 @@ namespace DOL.GS
 		public HerbalCrafting()
 		{
 			Icon = 0x0A;
-			Name = "Herbcrafting";
+			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.Name.Herbcrafting");
 			eSkill = eCraftingSkill.HerbalCrafting;
 		}
 

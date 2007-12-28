@@ -37,7 +37,7 @@ namespace DOL.GS
 		public Fletching()
 		{
 			Icon = 0x0C;
-			Name = "Fletching";
+			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.Name.Fletching");
 			eSkill = eCraftingSkill.Fletching;
 		}
 

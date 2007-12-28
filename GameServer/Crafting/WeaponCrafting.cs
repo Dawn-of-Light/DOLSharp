@@ -37,7 +37,7 @@ namespace DOL.GS
 		public WeaponCrafting()
 		{
 			Icon = 0x01;
-			Name = "Weaponcraft";
+			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.Name.Weaponcraft");
 			eSkill = eCraftingSkill.WeaponCrafting;
 		}
 		

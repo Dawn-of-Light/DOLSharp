@@ -37,7 +37,7 @@ namespace DOL.GS
 		public Alchemy()
 		{
 			Icon = 0x04;
-			Name = "Alchemy";
+			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.Name.Alchemy");
 			eSkill = eCraftingSkill.Alchemy;
 		}
 

@@ -37,7 +37,7 @@ namespace DOL.GS
 		public LeatherCrafting()
 		{
 			Icon = 0x07;
-			Name = "Leathercrafting";
+			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.Name.Leathercrafting");
 			eSkill = eCraftingSkill.LeatherCrafting;
 		}
 

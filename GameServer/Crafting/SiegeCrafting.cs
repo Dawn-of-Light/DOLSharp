@@ -34,7 +34,7 @@ namespace DOL.GS
 			: base()
 		{
 			Icon = 0x03;
-			Name = "Siegecraft";
+			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.Name.Siegecraft");
 			eSkill = eCraftingSkill.SiegeCrafting;
 		}
 
