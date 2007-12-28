@@ -6863,6 +6863,7 @@ namespace DOL.GS
 		public const string LAST_CHARGED_ITEM_USE_TICK = "LastChargedItemUsedTick";
 		public const string ITEM_USE_DELAY = "ItemUseDelay";
 		public const string LAST_POTION_ITEM_USE_TICK = "LastPotionItemUsedTick";
+		public const string LAST_PERSONAL_BIND_RECALL_STONE_USE_TICK = "LastPersonalBindRecallStoneUseTick";
 
 		/// <summary>
 		/// Called when this player receives a trade item
@@ -7294,8 +7295,30 @@ namespace DOL.GS
 						&& useItem.SpellID > 0
 						&& useItem.MaxCharges == 0)
 					{
-						UseMagicalItem(useItem, type);
-						return;
+						if (useItem.Id_nb == "Personal_Bind_Recall_Stone")
+						{
+							long lastPersonalBindRecallStoneTick = TempProperties.getLongProperty(LAST_PERSONAL_BIND_RECALL_STONE_USE_TICK, 0L);
+							int secondsWaiting = (int)((CurrentRegion.Time - lastPersonalBindRecallStoneTick) / 1000);
+							int secondsCooldown = 1800;
+							if (secondsCooldown > secondsWaiting && Client.Account.PrivLevel == 1)
+							{
+								int secondsRemaining = secondsCooldown - secondsWaiting;
+								int minutesRemaining = (int)(secondsRemaining / 60);
+								secondsRemaining %= 60;
+								Out.SendMessage(String.Format("You must wait {0} to discharge this item!",
+									(minutesRemaining <= 0)
+										? String.Format("{0} more seconds", secondsRemaining)
+										: String.Format("{0} more minutes and {1} seconds",
+											minutesRemaining, secondsRemaining)),
+									eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							else
+							{
+								if (UseMagicalItem(useItem, type))
+									TempProperties.setProperty(LAST_PERSONAL_BIND_RECALL_STONE_USE_TICK, CurrentRegion.Time);
+							}
+							return;
+						}
 					}
 
 					// Artifacts don't require charges.
@@ -7477,12 +7500,11 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="item"></param>
 		/// <param name="type"></param>
-		protected void UseMagicalItem(InventoryItem item, int type)
+		protected bool UseMagicalItem(InventoryItem item, int type)
 		{
-			log.Info(">>> UseMagicalItem");
 			SpellLine itemSpellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Spells);
 			if (itemSpellLine == null)
-				return;
+				return false;
 
 			if (type == 1 || type == 0) //use1
 			{
@@ -7491,18 +7513,23 @@ namespace DOL.GS
 				{
 					Out.SendMessage("You are not powerful enough to use this item's spell.",
 						eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
+					return false;
 				}
+
+				Out.SendMessage(String.Format("You use {0}.", item.GetName(1, false)),
+					eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
 
 				ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, itemSpellLine);
 				if (spellHandler == null)
-					return;
+					return false;
 
 				if (IsOnHorse && !spellHandler.HasPositiveEffect)
 					IsOnHorse = false;
 				Stealth(false);
 				spellHandler.CastSpell();
+				return true;
 			}
+			return false;
 		}
 
 		/// <summary>

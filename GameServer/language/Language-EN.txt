@@ -765,6 +765,7 @@ DetailDisplayHandler.WriteMagicalBonuses.Charges:	- {0} Charges
 DetailDisplayHandler.WriteMagicalBonuses.FocusBonus:	Focus Bonuses:
 DetailDisplayHandler.WriteMagicalBonuses.Level:		- {0} Level
 DetailDisplayHandler.WriteMagicalBonuses.LevelRequired:	Level Requirement
+DetailDisplayHandler.WriteMagicalBonuses.LevelRequired2:	Level Requirement: {0} Level
 DetailDisplayHandler.WriteMagicalBonuses.MagicAbility:	Magical Ability:
 DetailDisplayHandler.WriteMagicalBonuses.MagicBonus:	Magical Bonuses:
 DetailDisplayHandler.WriteMagicalBonuses.MaxCharges:	- {0} Max

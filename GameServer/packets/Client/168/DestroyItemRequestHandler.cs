@@ -32,6 +32,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 			InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 			if (item != null)
 			{
+				if (item.MaxDurability == 0)
+				{
+					client.Out.SendMessage(String.Format("You can't destroy {0}!",
+						item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return 0;
+				}
+
 				if (item.Id_nb == "ARelic")
 				{
 					client.Out.SendMessage("You cannot destroy a relic!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
