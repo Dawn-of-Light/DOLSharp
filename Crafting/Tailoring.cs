@@ -37,7 +37,7 @@ namespace DOL.GS
 		public Tailoring()
 		{
 			Icon = 0x0B;
-			Name = "Tailoring";
+			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.Name.Tailoring");
 			eSkill = eCraftingSkill.Tailoring;
 		}
 

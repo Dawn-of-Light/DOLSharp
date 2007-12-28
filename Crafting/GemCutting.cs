@@ -21,6 +21,7 @@ using System.Collections.Specialized;
 using System.Reflection;
 using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS
@@ -36,7 +37,7 @@ namespace DOL.GS
 		public GemCutting()
 		{
 			Icon = 0x09;
-			Name = "Gemcutting";
+			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.Name.Gemcutting");
 			eSkill = eCraftingSkill.GemCutting;
 		}
 

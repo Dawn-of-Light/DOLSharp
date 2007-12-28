@@ -90,7 +90,7 @@ namespace DOL.GS
 		public SpellCrafting()
 		{
 			Icon = 0x0D;
-			Name = "Evocation";
+			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.Name.Evocation");
 			eSkill = eCraftingSkill.SpellCrafting;
 		}
 

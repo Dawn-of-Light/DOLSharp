@@ -37,7 +37,7 @@ namespace DOL.GS
 		public WoodWorking()
 		{
 			Icon = 0x0E;
-			Name = "Woodworking";
+			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.Name.Woodworking");
 			eSkill = eCraftingSkill.WoodWorking;
 		}
 
