@@ -1008,7 +1008,7 @@ namespace DOL.GS.Spells
 		public virtual int CalculateCastingTime()
 		{
 			int ticks = m_spell.CastTime;
-			if (Spell.InstrumentRequirement != 0)
+			if (Spell.InstrumentRequirement != 0 || SpellLine.KeyName == "Item Spells")
 			{
 				return ticks;
 			}

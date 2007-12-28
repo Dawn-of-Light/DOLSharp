@@ -1975,6 +1975,7 @@
     <Compile Include="spells\EnduranceHealSpellHandler.cs" />
     <Compile Include="spells\FacilisSpellHandler.cs" />
     <Compile Include="spells\Fury.cs" />
+    <Compile Include="spells\Teleport\GatewayPersonalBind.cs" />
     <Compile Include="spells\HealthToFatigue.cs" />
     <Compile Include="spells\Heretic\HereticDamageLostOnPulse.cs" />
     <Compile Include="spells\Heretic\HereticDamageSpeedDecrease.cs" />
@@ -2010,7 +2011,7 @@
     <Compile Include="spells\StyleTaunt.cs" />
     <Compile Include="spells\SummonMinionHandler.cs" />
     <Compile Include="spells\TurretSpellHandler.cs" />
-    <Compile Include="spells\UniPortal.cs" />
+    <Compile Include="spells\Teleport\UniPortal.cs" />
     <Compile Include="spells\Valkyrie\ValkyrieProc.cs" />
     <Compile Include="spells\Vampiir\VampArmorDebuff.cs">
       <SubType>Code</SubType>
