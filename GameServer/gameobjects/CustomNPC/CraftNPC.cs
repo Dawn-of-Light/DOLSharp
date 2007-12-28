@@ -19,6 +19,7 @@
 using System.Collections;
 using System.Reflection;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS
@@ -57,19 +58,19 @@ namespace DOL.GS
 			
 			if (player.CraftingPrimarySkill != TheCraftingSkill)
 			{
-				SayTo(player, eChatLoc.CL_ChatWindow, "I am not your master.");
+				SayTo(player, eChatLoc.CL_ChatWindow, LanguageMgr.GetTranslation(player.Client, "CraftNPC.Interact.NotMaster"));
 				return true;
 			}
 
 			if (player.GetCraftingSkillValue(TheCraftingSkill)%100 == 99)
 			{
 				player.GainCraftingSkill(TheCraftingSkill, 1);
-				SayTo(player, eChatLoc.CL_PopupWindow, "You have been promoted to "+player.CraftTitle+".");
+				SayTo(player, eChatLoc.CL_PopupWindow, LanguageMgr.GetTranslation(player.Client, "CraftNPC.Interact.Promoted", player.CraftTitle));
 				player.Out.SendUpdateCraftingSkills();
 			}
 			else
 			{
-				SayTo(player, eChatLoc.CL_SystemWindow, "You examine " + Name + ". He is friendly ");
+				SayTo(player, eChatLoc.CL_SystemWindow, LanguageMgr.GetTranslation(player.Client, "CraftNPC.Interact.Examine", Name));
 			}
 		
 			return true;
@@ -86,7 +87,7 @@ namespace DOL.GS
 
 			if (text == GUILD_ORDER && player.CraftingPrimarySkill == 0)
 			{
-				player.Out.SendCustomDialog("Are you sure you wish to join this order?\nOnce you select a primary trade skill,\nyou can't switch.", new CustomDialogResponse(CraftNpcDialogResponse));
+				player.Out.SendCustomDialog(LanguageMgr.GetTranslation(player.Client, "CraftNPC.WhisperReceive.WishToJoin", GUILD_ORDER), new CustomDialogResponse(CraftNpcDialogResponse));
 			}
 			return true;
 		}
@@ -98,7 +99,7 @@ namespace DOL.GS
 
 			player.CraftingPrimarySkill = TheCraftingSkill;
 		
-			player.Out.SendMessage("You've been accepted by the "+GUILD_CRAFTERS+"!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "CraftNPC.CraftNpcDialogResponse.Accepted", GUILD_CRAFTERS), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				
 			foreach (eCraftingSkill skill in TrainedSkills)
 			{

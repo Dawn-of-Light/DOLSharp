@@ -41,6 +41,20 @@ Crafting.GainCraftingSkillPoints.RaiseFletching:	Ihr müsst Euch zu Eurem Ausbild
 Crafting.GainCraftingSkillPoints.RaiseSpellcraft:	Ihr müsst Euch zu Eurem Ausbilder begeben, um Eure Fertigkeiten als Bannzauberer zu verbessern!
 Crafting.GainCraftingSkillPoints.RaiseTailoring:	Ihr müsst Euch zu Eurem Ausbilder begeben, um Eure Fertigkeiten als Schneider zu verbessern!
 Crafting.GainCraftingSkillPoints.RaiseWeaponcraft:	Ihr müsst Euch zu Eurem Ausbilder begeben, um Eure Fertigkeiten als Rüstungsschmied zu verbessern!
+Crafting.Name.Alchemy:					Alchemie
+Crafting.Name.Armorcraft:				Rüstungsschmied
+Crafting.Name.Clothworking:				Stoffhandwerk
+Crafting.Name.Evocation:				Bannzauberei
+Crafting.Name.Fletching:				Pfeilerstellung
+Crafting.Name.Gemcutting:				Edelsteinkunst
+Crafting.Name.Herbcrafting:				Kräuterkunde
+Crafting.Name.Jewelcraft:				Juwelierkunst
+Crafting.Name.Leathercrafting:				Lederhandwerk
+Crafting.Name.Metalworking:				Schmiedekunst
+Crafting.Name.Siegecraft:				Belagerungswaffen
+Crafting.Name.Tailoring:				Schneiderei
+Crafting.Name.Weaponcraft:				Waffenschmied
+Crafting.Name.Woodworking:				Schreinerei
 
 # /AbstractCraftingSkill
 AbstractCraftingSkill.BuildCraftedItem.BackpackFull:	Euer Rucksack ist voll. {0} wurde auf dem Boden abgelegt.
@@ -476,6 +490,53 @@ Midgard.Arbiter.WhisperReceive.Text2:			Seht diese Tafel hinter mir. Es ist unse
 Midgard.Arbiter.WhisperReceive.Text3:			Wir glauben, dass die anderen Reiche auch einen Zutritt zu den Ebenen haben. Wir müssen unser Bestes geben, damit alle auch erfolgeich sind, die sie betreten. Doch seid vorsichtig. Die Prüfungen sind nicht das, was die Schriftrollen und diese Tafel sagen. Es scheint, die [Einwohner] der Ebenen haben ihre eigenen Vorstellungen über die Prüfungen.
 Midgard.Arbiter.WhisperReceive.Text4:			Es gibt viele seltsame Kreaturen hinter diesem Portal, mein {0} Freund. Sie sind nicht Teil der ursprünglichen Prüfungen und ich weiß nicht, was sie dort machen. Ich kann nur raten, dass sie die Überlebenden des Untergangs von Atlantis sind. Sie suchten Zuflucht in den Ebenen. Nun müsst Ihr mit ihnen fertig werden, während Ihr die Prüfungen durchlauft. Nun, {0}, wenn Ihr die Fähigkeiten, den Ruhm und die Reichtümer hinter diesem Portal wollt, müsst ihr eintreten in die Ebenen. Seid auf alles vorbereitet. Ihr werdet wissen, wann Ihr eine Prüfung bestanden habt. Kehrt dann zu mir zurück, damit ich Euch durch die Prüfungen führen kann. Ich werde versuchen, Euch so gut es geht zu helfen.
 
+# GAMEOBJECTS/CUSTOMNPC
+# /Blacksmith
+Scripts.Blacksmith.AbortRepair:				Ihr weigert Euch {0} reparieren zu lassen.
+Scripts.Blacksmith.CantRepairThat:			So was kann ich nicht reparieren.
+Scripts.Blacksmith.GiveObject:				(Gebt einen Gegenstand aus Eurem Gepäck zum Reparieren.)
+Scripts.Blacksmith.InvalidItem:				Falscher Gegenstand.
+Scripts.Blacksmith.ItsDone:				Hier, bitte, {0} ist bereit zum Einsatz.
+Scripts.Blacksmith.NoNeedRepair:			Dieser Gegenstand befindet sich bereits in einem tadellosen Zustand.
+Scripts.Blacksmith.NotEnoughMoney:			Ihr habt dafür nicht genug Geld!
+Scripts.Blacksmith.ObjectCantRepaired:			Dieser Gegenstand kann nicht repariert werden.
+Scripts.Blacksmith.ObjectRatherOld:			Uhh, {0} ist schon ziemlich alt. Ich werde nicht mehr in der Lage sein, eine erneute Reparatur durchzuführen. Gebt also gut darauf acht!
+Scripts.Blacksmith.RepairCostAccept:			Es wird Euch {0} kosten, {1} reparieren zu lassen. Seid Ihr damit einverstanden?
+Scripts.Blacksmith.Say:					Ich kann Eure Waffen und Rüstungen reparieren. Gebt mir einfach die Gegenstände, die ich reparieren soll, und ich will sehen, was ich tun kann. Keine Sorge, ich verlange nicht viel für meine Dienste.
+Scripts.Blacksmith.StackedObjets:			{0} kann immer nur einen Gegenstand reparieren.
+Scripts.Blacksmith.YouExamine:				Es interessiert Euch {0}. {0} steht Euch {2} und arbeitet als Schmied.
+Scripts.Blacksmith.YouPay:				{0} erhält von Euch {1}.
+Scripts.Blacksmith.YouTarget:				Es wird {0} als Ziel erfasst.
+
+# /CraftNPC
+CraftNPC.CraftNpcDialogResponse.Accepted:		Die Zunft der {0} hat Euch aufgenommen!
+CraftNPC.Interact.Examine:				Ihr seid schon sehr weit gekommen, aber Eure Ausbildung ist noch nicht beendet. 
+CraftNPC.Interact.NotMaster:				Ich bin nicht Euer Meister.
+CraftNPC.Interact.Promoted:				Ihr seid zum {0} aufgestiegen.
+CraftNPC.WhisperReceive.WishToJoin:			Seid Ihr sicher, dass Ihr der {0}-Zunft beitreten wollt?
+
+# /GameStableMaster
+# ---->	Anpassung ---					---Muss an die Bezeichnung eurer Reitpferde angepasst werden!---
+GameStableMaster.ReceiveItem.HorseName:			Reitpferd
+GameStableMaster.ReceiveItem.TicketTo:			ticket nach 
+GameStableMaster.ReceiveItem.UnknownWay:		Tut mir leid, dieses Ticket nach {0} ist hier nicht gültig.
+
+# /GameHousingHastener
+GameHousingHastener.GetExamineMessages.Examine:		Es interessiert Euch {0}. {0} steht Euch {2} und treibt Handel.
+
+# /Recharger
+Scripts.Recharger.GetExamineMessages:			Es interessiert Euch {0}. {0} steht Euch {2} und arbeitet als Manabeschwörer.
+Scripts.Recharger.Interact:				Oh! Ihr seid das. Ja, ja... Ich kann Eure magischen Gegenstände aufladen. Offenbar habe ich in letzter Zeit nichts anderes zu tun. Also gebt schon her. Ich sage Euch dann, was es kostet. 
+Scripts.Recharger.ReceiveItem.CantThat:			Ich kann das nicht wieder aufladen.
+Scripts.Recharger.ReceiveItem.Cost:			Meine Arbeit kostet Euch {0}. Seid Ihr einverstanden damit?
+Scripts.Recharger.ReceiveItem.FullyCharged:		Der Gegenstand ist wieder voll aufgeladen!
+Scripts.Recharger.ReceiveItem.StackedObjects:		{0} kann immer nur einen Gegenstand reparieren.
+Scripts.Recharger.RechargerDialogResponse.Decline:	Ihr gebt {0} zum wieder aufladen.
+Scripts.Recharger.RechargerDialogResponse.FullyCharged:	Hier, bitte, es ist nun wieder voll aufgeladen!
+Scripts.Recharger.RechargerDialogResponse.GiveMoney:	{0} erhält von Euch {1}.
+Scripts.Recharger.RechargerDialogResponse.InvalidItem:	Falscher Gegenstand.
+Scripts.Recharger.RechargerDialogResponse.NotMoney:	Ihr habt dafür nicht genug Geld!
+
 # HOUSING
 HouseEnterLeave.TooFarAway:				Ihr seid zu weit von diesem Haus entfernt, um es zu betreten!
 HouseEnterLeave.CantEnter:				Ihr könnt dieses Haus nicht betreten!
@@ -602,13 +663,6 @@ EnchanterTrainer.Interact.QuickStudy:			{0} sagt: "Ihr lernt rasch, {1}. Ihr sol
 EnchanterTrainer.Interact.SeekElsewhere:		{0} sagt: "Ich kann Euch leider nicht ausbilden."
 EnchanterTrainer.WhisperReceive.CaseEnchanter:		Beschwörer
 EnchanterTrainer.WhisperReceive.Welcome:		Willkommen, {0}. Von diesem Tage an gehört Ihr zu den Reihen der Beschwörer. Hier, {0}. Nehmt dies als Geschenk. Es soll Euch auf dem Weg beistehen.
-
-# /gameobjects/CustomNPC
-# /GameStableMaster
-# ---->	Anpassung ---					---Muss an die Bezeichnung eurer Reitpferde angepasst werden!---
-GameStableMaster.ReceiveItem.HorseName:			Reitpferd
-GameStableMaster.ReceiveItem.TicketTo:			ticket nach 
-GameStableMaster.ReceiveItem.UnknownWay:		Tut mir leid, dieses Ticket nach {0} ist hier nicht gültig.
 
 # /KingNPC
 CLWeaponNPC.ReceiveItem.RespecCL:			Vielen Dank, Ihr dürft nun Eure Champion-Fertigkeiten neu trainieren. Um dies zu tun, gebt /respec cl ein.
@@ -889,40 +943,6 @@ AbstractArea.Entered:					(Region) Ihr seid nun {0}!
 AbstractArea.Left:					(Region) Ihr seid nun nicht mehr {0}!
 
 # SCRIPTS
-# CustomNPC
-# /Blacksmith
-Scripts.Blacksmith.AbortRepair:				Ihr weigert Euch {0} reparieren zu lassen.
-Scripts.Blacksmith.CantRepairThat:			So was kann ich nicht reparieren.
-Scripts.Blacksmith.GiveObject:				(Gebt einen Gegenstand aus Eurem Gepäck zum Reparieren.)
-Scripts.Blacksmith.InvalidItem:				Falscher Gegenstand.
-Scripts.Blacksmith.ItsDone:				Hier, bitte, {0} ist bereit zum Einsatz.
-Scripts.Blacksmith.NoNeedRepair:			Dieser Gegenstand befindet sich bereits in einem tadellosen Zustand.
-Scripts.Blacksmith.NotEnoughMoney:			Ihr habt dafür nicht genug Geld!
-Scripts.Blacksmith.ObjectCantRepaired:			Dieser Gegenstand kann nicht repariert werden.
-Scripts.Blacksmith.ObjectRatherOld:			Uhh, {0} ist schon ziemlich alt. Ich werde nicht mehr in der Lage sein, eine erneute Reparatur durchzuführen. Gebt also gut darauf acht!
-Scripts.Blacksmith.RepairCostAccept:			Es wird Euch {0} kosten, {1} reparieren zu lassen. Seid Ihr damit einverstanden?
-Scripts.Blacksmith.Say:					Ich kann Eure Waffen und Rüstungen reparieren. Gebt mir einfach die Gegenstände, die ich reparieren soll, und ich will sehen, was ich tun kann. Keine Sorge, ich verlange nicht viel für meine Dienste.
-Scripts.Blacksmith.StackedObjets:			{0} kann immer nur einen Gegenstand reparieren.
-Scripts.Blacksmith.YouExamine:				Es interessiert Euch {0}. {0} steht Euch {2} und arbeitet als Schmied.
-Scripts.Blacksmith.YouPay:				{0} erhält von Euch {1}.
-Scripts.Blacksmith.YouTarget:				Es wird {0} als Ziel erfasst.
-
-# /GameHousingHastener
-GameHousingHastener.GetExamineMessages.Examine:		Es interessiert Euch {0}. {0} steht Euch {2} und treibt Handel.
-
-# /Recharger
-Scripts.Recharger.GetExamineMessages:			Es interessiert Euch {0}. {0} steht Euch {2} und arbeitet als Manabeschwörer.
-Scripts.Recharger.Interact:				Oh! Ihr seid das. Ja, ja... Ich kann Eure magischen Gegenstände aufladen. Offenbar habe ich in letzter Zeit nichts anderes zu tun. Also gebt schon her. Ich sage Euch dann, was es kostet. 
-Scripts.Recharger.ReceiveItem.CantThat:			Ich kann das nicht wieder aufladen.
-Scripts.Recharger.ReceiveItem.Cost:			Meine Arbeit kostet Euch {0}. Seid Ihr einverstanden damit?
-Scripts.Recharger.ReceiveItem.FullyCharged:		Der Gegenstand ist wieder voll aufgeladen!
-Scripts.Recharger.ReceiveItem.StackedObjects:		{0} kann immer nur einen Gegenstand reparieren.
-Scripts.Recharger.RechargerDialogResponse.Decline:	Ihr gebt {0} zum wieder aufladen.
-Scripts.Recharger.RechargerDialogResponse.FullyCharged:	Hier, bitte, es ist nun wieder voll aufgeladen!
-Scripts.Recharger.RechargerDialogResponse.GiveMoney:	{0} erhält von Euch {1}.
-Scripts.Recharger.RechargerDialogResponse.InvalidItem:	Falscher Gegenstand.
-Scripts.Recharger.RechargerDialogResponse.NotMoney:	Ihr habt dafür nicht genug Geld!
-
 # GameEvents
 # /Playerenterexit
 Scripts.Events.PlayerEnterExit.Entered:			{0} betritt gerade das Spiel!

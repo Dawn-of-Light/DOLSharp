@@ -37,7 +37,7 @@ namespace DOL.GS
 		public ArmorCrafting()
 		{
 			Icon = 0x02;
-			Name = "Armorcraft";
+			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.Name.Armorcraft");
 			eSkill = eCraftingSkill.ArmorCrafting;
 		}
 
