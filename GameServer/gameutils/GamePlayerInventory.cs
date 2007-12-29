@@ -78,6 +78,9 @@ namespace DOL.GS
 					DataObject[] items = GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + GameServer.Database.Escape(inventoryID) + "'");
 					foreach (InventoryItem item in items)
 					{
+						if (item.CanUseEvery > 0)
+							item.SetCooldown();
+
 						if (GetValidInventorySlot((eInventorySlot)item.SlotPosition) == eInventorySlot.Invalid)
 						{
 							if (log.IsErrorEnabled)

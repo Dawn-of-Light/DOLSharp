@@ -7290,35 +7290,31 @@ namespace DOL.GS
 						return;
 					}
 
+					// Item with a non-charge ability.
+
 					if (useItem.Object_Type == (int)eObjectType.Magical
 						&& useItem.Item_Type == (int)eInventorySlot.FirstBackpack
 						&& useItem.SpellID > 0
 						&& useItem.MaxCharges == 0)
 					{
-						if (useItem.Id_nb == "Personal_Bind_Recall_Stone")
+						int cooldown = useItem.CanUseAgainIn;
+						if (cooldown > 0)
 						{
-							long lastPersonalBindRecallStoneTick = TempProperties.getLongProperty(LAST_PERSONAL_BIND_RECALL_STONE_USE_TICK, 0L);
-							int secondsWaiting = (int)((CurrentRegion.Time - lastPersonalBindRecallStoneTick) / 1000);
-							int secondsCooldown = 1800;
-							if (secondsCooldown > secondsWaiting && Client.Account.PrivLevel == 1)
-							{
-								int secondsRemaining = secondsCooldown - secondsWaiting;
-								int minutesRemaining = (int)(secondsRemaining / 60);
-								secondsRemaining %= 60;
-								Out.SendMessage(String.Format("You must wait {0} to discharge this item!",
-									(minutesRemaining <= 0)
-										? String.Format("{0} more seconds", secondsRemaining)
-										: String.Format("{0} more minutes and {1} seconds",
-											minutesRemaining, secondsRemaining)),
-									eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							}
-							else
-							{
-								if (UseMagicalItem(useItem, type))
-									TempProperties.setProperty(LAST_PERSONAL_BIND_RECALL_STONE_USE_TICK, CurrentRegion.Time);
-							}
-							return;
+							int minutes = cooldown / 60;
+							int seconds = cooldown % 60;
+							Out.SendMessage(String.Format("You must wait {0} to discharge this item!",
+								(minutes <= 0)
+									? String.Format("{0} more seconds", seconds)
+									: String.Format("{0} more minutes and {1} seconds",
+										minutes, seconds)),
+								eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
+						else
+						{
+							if (UseMagicalItem(useItem, type))
+								useItem.CanUseAgainIn = useItem.CanUseEvery;
+						}
+						return;
 					}
 
 					// Artifacts don't require charges.

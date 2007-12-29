@@ -23,6 +23,7 @@ using DOL.Database.Attributes;
 using System.Collections.Generic;
 using log4net;
 using System.Reflection;
+using System.Timers;
 
 namespace DOL.Database
 {
@@ -257,7 +258,10 @@ namespace DOL.Database
 		protected string m_ownerID;
 		protected int m_slot_pos;
 		protected string craftername;
+		protected int m_canUseAgainIn;
         protected long item_exp;
+		private int m_cooldown;
+		private DateTime m_lastUsedDateTime;
 
 		/// <summary>
 		/// The count of items (for stack!)
@@ -379,6 +383,51 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Internal use only!
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int Cooldown
+		{
+			get { return CanUseAgainIn; }
+			set { m_cooldown = value; }
+		}
+
+		/// <summary>
+		/// Internal use only!
+		/// </summary>
+		public void SetCooldown()
+		{
+			CanUseAgainIn = m_cooldown;
+		}
+
+		/// <summary>
+		/// When this item can be used again (in seconds).
+		/// </summary>
+		public int CanUseAgainIn
+		{
+			get 
+			{
+				try
+				{
+					TimeSpan elapsed = DateTime.Now.Subtract(m_lastUsedDateTime);
+					TimeSpan reuse = new TimeSpan(0, 0, CanUseEvery);
+					return (reuse.CompareTo(elapsed) < 0) 
+						? 0 
+						: CanUseEvery - elapsed.Seconds - 60 * elapsed.Minutes - 3600 * elapsed.Hours;
+				}
+				catch (ArgumentOutOfRangeException)
+				{
+					return 0;
+				}
+			}
+			set
+			{
+				m_lastUsedDateTime = DateTime.Now.AddSeconds(value - CanUseEvery);
+				Dirty = true;
+			}
+		}
+
         [DataElement(AllowDbNull = false)]
         public virtual long Experience
         {
@@ -389,6 +438,23 @@ namespace DOL.Database
                 item_exp = value;
             }
         }
+
+		/// <summary>
+		/// Whether to save this object or not.
+		/// </summary>
+		public override bool Dirty
+		{
+			get
+			{
+				// Items with reuse timers will ALWAYS be saved.
+
+				return (base.Dirty || CanUseEvery > 0);
+			}
+			set
+			{
+				base.Dirty = value;
+			}
+		}
 
         public void CopyFrom(InventoryItem template)
 		{
@@ -471,6 +537,7 @@ namespace DOL.Database
 			PoisonMaxCharges = template.PoisonMaxCharges;
 			Realm = template.Realm;
 			AllowedClasses = template.AllowedClasses;
+			CanUseEvery = template.CanUseEvery;
 		}
 	}
 }
