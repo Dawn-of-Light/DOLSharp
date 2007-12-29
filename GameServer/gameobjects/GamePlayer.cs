@@ -7516,7 +7516,7 @@ namespace DOL.GS
 					return false;
 				}
 
-				Out.SendMessage(String.Format("You use {0}.", item.GetName(1, false)),
+				Out.SendMessage(String.Format("You use {0}.", item.GetName(0, false)),
 					eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
 
 				ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, itemSpellLine);

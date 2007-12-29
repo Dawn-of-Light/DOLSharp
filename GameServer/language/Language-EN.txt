@@ -833,8 +833,8 @@ AbstractQuest.OnQuestAssigned.GetQuest:			You have been given the {0} quest.
 
 # WORLD
 # /AbstractArea
-AbstractArea.Entered:					(Region) You have entered {0}!
-AbstractArea.Left:					(Region) You have left {0}!
+AbstractArea.Entered:					(Region) You have entered {0}.
+AbstractArea.Left:					(Region) You have left {0}.
 
 # SCRIPTS
 # GameEvents
