@@ -186,22 +186,25 @@ namespace DOL.GS.PacketHandler.Client.v168
 							WriteMagicalBonuses(objectInfo, item, client, false);
 						}
 
-						// Another hardcoded tidbit!
+						// Items with a reuse timer (aka cooldown).
 
-						if (item.Id_nb == "Personal_Bind_Recall_Stone")
+						if (item.CanUseEvery > 0)
 						{
-							objectInfo.Add("Can use item every: 30:00 min");
-							GamePlayer player = client.Player;
-							long lastPersonalBindRecallStoneTick = player.TempProperties.getLongProperty(GamePlayer.LAST_PERSONAL_BIND_RECALL_STONE_USE_TICK, 0L);
-							int secondsWaiting = (int)((player.CurrentRegion.Time - lastPersonalBindRecallStoneTick) / 1000);
-							int secondsCooldown = 1800;
-							if (secondsCooldown > secondsWaiting)
+							int minutes = item.CanUseEvery / 60;
+							int seconds = item.CanUseEvery % 60;
+
+							objectInfo.Add(String.Format("Can use item every: {0:00}:{1:00}",
+									minutes, seconds));
+
+							int cooldown = item.CanUseAgainIn;
+
+							if (cooldown > 0)
 							{
-								int secondsRemaining = secondsCooldown - secondsWaiting;
-								int minutesRemaining = (int)(secondsRemaining / 60);
-								secondsRemaining %= 60;
+								minutes = cooldown / 60;
+								seconds = cooldown % 60;
+
 								objectInfo.Add(String.Format("Can use again in: {0:00}:{1:00}",
-									minutesRemaining, secondsRemaining));
+									minutes, seconds));
 							}
 						}
 
