@@ -165,7 +165,7 @@ namespace DOL.GS.Quests.Albion
 				lordUrqhart.Model = 79;
 				lordUrqhart.Name = "Lord Urqhart";
 				lordUrqhart.GuildName = "Vault Keeper";
-				lordUrqhart.Realm = (byte) eRealm.Albion;
+				lordUrqhart.Realm = eRealm.Albion;
 				lordUrqhart.CurrentRegionID = 10;
 				lordUrqhart.Size = 49;
 				lordUrqhart.Level = 50;
@@ -194,7 +194,7 @@ namespace DOL.GS.Quests.Albion
 				bombard.Model = 8;
 				bombard.Name = "Bombard";
 				bombard.GuildName = "Stable Master";
-				bombard.Realm = (byte) eRealm.Albion;
+				bombard.Realm = eRealm.Albion;
 				bombard.CurrentRegionID = 1;
 				bombard.Size = 49;
 				bombard.Level = 4;

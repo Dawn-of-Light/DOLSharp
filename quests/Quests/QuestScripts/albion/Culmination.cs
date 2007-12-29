@@ -166,7 +166,7 @@ namespace DOL.GS.Quests.Albion
 				queenTatiana.Heading = 174;
 				queenTatiana.Model = 603;
 				queenTatiana.GuildName = "Part of " + questTitle + " Quest";
-				queenTatiana.Realm = (byte) eRealm.None;
+				queenTatiana.Realm = eRealm.None;
 				queenTatiana.CurrentRegionID = 1;
 				queenTatiana.Size = 49;
 				queenTatiana.Level = 5;
@@ -208,7 +208,7 @@ namespace DOL.GS.Quests.Albion
 					fairySorceress[i].Model = 603; // //819;
 					fairySorceress[i].Name = "ire fairy sorceress";
 					fairySorceress[i].GuildName = "Part of " + questTitle + " Quest";
-					fairySorceress[i].Realm = (byte) eRealm.None;
+					fairySorceress[i].Realm = eRealm.None;
 					fairySorceress[i].CurrentRegionID = 1;
 					fairySorceress[i].Size = 35;
 					fairySorceress[i].Level = 5;
@@ -846,7 +846,7 @@ namespace DOL.GS.Quests.Albion
 				dunwynClone.Name = "Master Dunwyn";
 				dunwynClone.Model = 9;
 				dunwynClone.GuildName = "Part of " + questTitle + " Quest";
-				dunwynClone.Realm = (byte) eRealm.Albion;
+				dunwynClone.Realm = eRealm.Albion;
 				dunwynClone.CurrentRegionID = 1;
 				dunwynClone.Size = 50;
 				dunwynClone.Level = 14;
@@ -894,7 +894,7 @@ namespace DOL.GS.Quests.Albion
 				recruits[i].Name = "Recruit";
 
 				recruits[i].GuildName = "Part of " + questTitle + " Quest";
-				recruits[i].Realm = (byte) eRealm.Albion;
+				recruits[i].Realm = eRealm.Albion;
 				recruits[i].CurrentRegionID = 1;
 
 				recruits[i].Size = 50;

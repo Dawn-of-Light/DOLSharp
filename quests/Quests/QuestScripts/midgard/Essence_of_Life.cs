@@ -119,7 +119,7 @@ using DOL.AI.Brain;
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + AmbientRatStatua.Name + ", creating ...");
 				AmbientRatStatua.GuildName = "Part of " + questTitle + " Quest";
-				AmbientRatStatua.Realm = (byte) 0;
+				AmbientRatStatua.Realm = eRealm.None;
 				AmbientRatStatua.CurrentRegionID = 229;
 				AmbientRatStatua.Size = 1;
 				AmbientRatStatua.Level = 1;
@@ -160,7 +160,7 @@ using DOL.AI.Brain;
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + Ballach.Name + ", creating ...");
 				Ballach.GuildName = "Part of " + questTitle + " Quest";
-				Ballach.Realm = (byte) 2;
+				Ballach.Realm = eRealm.Midgard;
 				Ballach.CurrentRegionID = 243;
 				Ballach.Size = 48;
 				Ballach.Level = 20;

@@ -155,7 +155,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find" + abohas.Name + " , creating her ...");
 				abohas.GuildName = "Part of " + questTitle + " Quest";
-				abohas.Realm = (byte) eRealm.Midgard;
+				abohas.Realm = eRealm.Midgard;
 				abohas.CurrentRegionID = 100;
 				abohas.Size = 49;
 				abohas.Level = 21;
@@ -183,7 +183,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + harlfug.Name + ", creating her ...");
 				harlfug.GuildName = "Stable Master";
-				harlfug.Realm = (byte) eRealm.Midgard;
+				harlfug.Realm = eRealm.Midgard;
 				harlfug.CurrentRegionID = 100;
 				harlfug.Size = 52;
 				harlfug.Level = 41;
@@ -212,7 +212,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + gularg.Name + ", creating her ...");
 				gularg.GuildName = "Stable Master";
-				gularg.Realm = (byte) eRealm.Midgard;
+				gularg.Realm = eRealm.Midgard;
 				gularg.CurrentRegionID = 100;
 				gularg.Size = 50;
 				gularg.Level = 41;
@@ -242,7 +242,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + yolafson.Name + ", creating her ...");
 				yolafson.GuildName = "Stable Master";
-				yolafson.Realm = (byte) eRealm.Midgard;
+				yolafson.Realm = eRealm.Midgard;
 				yolafson.CurrentRegionID = 100;
 				yolafson.Size = 51;
 				yolafson.Level = 41;

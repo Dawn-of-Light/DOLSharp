@@ -127,7 +127,7 @@ namespace DOL.GS.Quests.Midgard
 				Danica.Model = 227;
 				Danica.Name = "Danica";
 				Danica.GuildName = "";
-				Danica.Realm = (byte) eRealm.Midgard;
+				Danica.Realm = eRealm.Midgard;
 				Danica.CurrentRegionID = 100;
 				Danica.Size = 51;
 				Danica.Level = 50;
@@ -154,7 +154,7 @@ namespace DOL.GS.Quests.Midgard
 				Kelic.Model = 26;
 				Kelic.Name = "Kelic";
 				Kelic.GuildName = "";
-				Kelic.Realm = (byte) eRealm.None;
+				Kelic.Realm = eRealm.None;
 				Kelic.CurrentRegionID = 100;
 				Kelic.Size = 100;
 				Kelic.Level = 65;

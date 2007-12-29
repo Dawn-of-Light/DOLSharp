@@ -14,7 +14,7 @@ namespace DOL.GS
 
 	public class NewsMgr
 	{
-		public static void CreateNews(string message, byte realm, eNewsType type, bool sendMessage)
+		public static void CreateNews(string message, eRealm realm, eNewsType type, bool sendMessage)
 		{
 			if (sendMessage)
 			{
@@ -22,7 +22,7 @@ namespace DOL.GS
 				{
 					if (client.Player == null)
 						continue;
-					if ((client.Account.PrivLevel != 1 || (eRealm)realm == eRealm.None) || client.Player.Realm == (int)realm)
+					if ((client.Account.PrivLevel != 1 || realm == eRealm.None) || client.Player.Realm == realm)
 					{
 						client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
@@ -31,7 +31,7 @@ namespace DOL.GS
 
 			DBNews news = new DBNews();
 			news.Type = (byte)type;
-			news.Realm = realm;
+			news.Realm = (byte)realm;
 			news.Text = message;
 			GameServer.Database.AddNewObject(news);
 		}

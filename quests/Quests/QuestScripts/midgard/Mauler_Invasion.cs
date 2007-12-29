@@ -115,7 +115,7 @@ using DOL.AI.Brain;
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + VikingKreimhilde.Name + ", creating ...");
 				VikingKreimhilde.GuildName = "Part of " + questTitle + " Quest";
-				VikingKreimhilde.Realm = (byte) 2;
+				VikingKreimhilde.Realm = eRealm.Midgard;
 				VikingKreimhilde.CurrentRegionID = 100;
 				VikingKreimhilde.Size = 51;
 				VikingKreimhilde.Level = 50;

@@ -178,7 +178,7 @@ namespace DOL.GS.Quests.Albion
 				dunwyn.Model = 9;
 				dunwyn.Name = "Master Dunwyn";
 				dunwyn.GuildName = "Part of " + questTitle + " Quest";
-				dunwyn.Realm = (byte) eRealm.Albion;
+				dunwyn.Realm = eRealm.Albion;
 				dunwyn.CurrentRegionID = 1;
 
 				dunwyn.Size = 50;
@@ -222,7 +222,7 @@ namespace DOL.GS.Quests.Albion
 				princessObera.Heading = 347;
 				princessObera.Model = 603;
 				princessObera.GuildName = "Part of " + questTitle + " Quest";
-				princessObera.Realm = (byte) eRealm.None;
+				princessObera.Realm = eRealm.None;
 				princessObera.CurrentRegionID = 1;
 				princessObera.Size = 49;
 				princessObera.Level = 3;
@@ -263,7 +263,7 @@ namespace DOL.GS.Quests.Albion
 					fairySorceress[i].Model = 603; // //819;
 					fairySorceress[i].Name = "ire fairy sorceress";
 					fairySorceress[i].GuildName = "Part of " + questTitle + " Quest";
-					fairySorceress[i].Realm = (byte) eRealm.None;
+					fairySorceress[i].Realm = eRealm.None;
 					fairySorceress[i].CurrentRegionID = 1;
 					fairySorceress[i].Size = 35;
 					fairySorceress[i].Level = 3;

@@ -147,7 +147,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + brotherLawrence.Name + ", creating him ...");
 				brotherLawrence.GuildName = "Part of " + questTitle + " Quest";
-				brotherLawrence.Realm = (byte) eRealm.Albion;
+				brotherLawrence.Realm = eRealm.Albion;
 				brotherLawrence.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();

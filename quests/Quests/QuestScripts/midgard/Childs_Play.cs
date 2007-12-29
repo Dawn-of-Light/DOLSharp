@@ -121,7 +121,7 @@ namespace DOL.GS.Quests.Midgard
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + Charles.Name + ", creating ...");
                 //Charles.GuildName = "Part of " + questTitle + " Quest";
-                Charles.Realm = (byte)2;
+                Charles.Realm = eRealm.Midgard;
                 Charles.CurrentRegionID = 100;
                 Charles.Size = 37;
                 Charles.Level = 1;

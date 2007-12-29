@@ -278,7 +278,7 @@ namespace DOL.GS.Commands
 								return;
 							}
 
-							player.Realm = newRealm;
+							player.Realm = (eRealm)newRealm;
 
 							client.Out.SendMessage("You successfully changed " + player.Name + "'s realm to " + GlobalConstants.RealmToName((eRealm)newRealm) + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 							player.Out.SendMessage(client.Player.Name + " has changed your realm to " + GlobalConstants.RealmToName((eRealm)newRealm) + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -990,10 +990,9 @@ namespace DOL.GS.Commands
 
 							switch (args[2])
 							{
-
 								case "albs":
 									{
-										foreach (GameClient aplayer in WorldMgr.GetClientsOfRealm(1))
+										foreach (GameClient aplayer in WorldMgr.GetClientsOfRealm(eRealm.Albion))
 										{
 											if (!(aplayer.Player.IsAlive))
 											{
@@ -1016,8 +1015,7 @@ namespace DOL.GS.Commands
 
 								case "hibs":
 									{
-
-										foreach (GameClient hplayer in WorldMgr.GetClientsOfRealm(3))
+										foreach (GameClient hplayer in WorldMgr.GetClientsOfRealm(eRealm.Hibernia))
 										{
 											if (!(hplayer.Player.IsAlive))
 											{
@@ -1040,8 +1038,7 @@ namespace DOL.GS.Commands
 
 								case "mids":
 									{
-
-										foreach (GameClient mplayer in WorldMgr.GetClientsOfRealm(2))
+										foreach (GameClient mplayer in WorldMgr.GetClientsOfRealm(eRealm.Midgard))
 										{
 											if (!(mplayer.Player.IsAlive))
 											{
@@ -1168,7 +1165,7 @@ namespace DOL.GS.Commands
 						{
 							case "albs":
 								{
-									foreach (GameClient aplayer in WorldMgr.GetClientsOfRealm(1))
+									foreach (GameClient aplayer in WorldMgr.GetClientsOfRealm(eRealm.Albion))
 									{
 										if (aplayer.Player.IsAlive && aplayer.Account.PrivLevel == 1)
 										{
@@ -1180,7 +1177,7 @@ namespace DOL.GS.Commands
 
 							case "mids":
 								{
-									foreach (GameClient mplayer in WorldMgr.GetClientsOfRealm(2))
+									foreach (GameClient mplayer in WorldMgr.GetClientsOfRealm(eRealm.Midgard))
 									{
 										if (mplayer.Player.IsAlive && mplayer.Account.PrivLevel == 1)
 										{
@@ -1191,7 +1188,7 @@ namespace DOL.GS.Commands
 								break;
 							case "hibs":
 								{
-									foreach (GameClient hplayer in WorldMgr.GetClientsOfRealm(3))
+									foreach (GameClient hplayer in WorldMgr.GetClientsOfRealm(eRealm.Hibernia))
 									{
 										if (hplayer.Player.IsAlive && hplayer.Account.PrivLevel == 1)
 										{

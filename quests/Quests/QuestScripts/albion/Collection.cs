@@ -168,7 +168,7 @@ namespace DOL.GS.Quests.Albion
 					general[i].Heading = generalLocations[i].Heading;
 
 					general[i].GuildName = "Part of " + questTitle + " Quest";
-					general[i].Realm = (byte) eRealm.None;
+					general[i].Realm = eRealm.None;
 					general[i].CurrentRegionID = generalLocations[i].RegionID;
 
 					general[i].Size = 49;

@@ -157,7 +157,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + hyndla.Name + ", creating ...");
 				hyndla.GuildName = "Part of " + questTitle + " Quest";
-				hyndla.Realm = (byte) eRealm.Midgard;
+				hyndla.Realm = eRealm.Midgard;
 				hyndla.CurrentRegionID = 100;
 
 				hyndla.Size = 50;
@@ -187,7 +187,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + njiedi.Name + ", creating ...");
 				njiedi.GuildName = "Stable Master";
-				njiedi.Realm = (byte) eRealm.Midgard;
+				njiedi.Realm = eRealm.Midgard;
 				njiedi.CurrentRegionID = 100;
 				njiedi.Size = 51;
 				njiedi.Level = 50;
@@ -238,7 +238,7 @@ namespace DOL.GS.Quests.Midgard
 				askefruerTrainer.Heading = 79;
 				askefruerTrainer.Model = 678;
 				askefruerTrainer.GuildName = "Part of " + questTitle + " Quest";
-				askefruerTrainer.Realm = (byte) eRealm.None;
+				askefruerTrainer.Realm = eRealm.None;
 				askefruerTrainer.CurrentRegionID = 100;
 				askefruerTrainer.Size = 49;
 				askefruerTrainer.Level = 3;

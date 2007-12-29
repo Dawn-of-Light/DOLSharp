@@ -232,14 +232,14 @@ namespace DOL.GS.Spells
 
 			foreach (GamePlayer player in target.GetPlayersInRadius(false, (ushort)Spell.Radius))
 			{
-				if (!GameServer.ServerRules.IsSameRealm(Caster, player, true) && player.Realm != 6)
+				if (!GameServer.ServerRules.IsSameRealm(Caster, player, true))
 				{
 					list.Add(player);
 				}
 			}
 			foreach (GameNPC npc in target.GetNPCsInRadius(false, (ushort)Spell.Radius))
 			{
-				if (!GameServer.ServerRules.IsSameRealm(Caster, npc, true) && npc.Realm != 6)
+				if (!GameServer.ServerRules.IsSameRealm(Caster, npc, true))
 				{
 					list.Add(npc);
 				}

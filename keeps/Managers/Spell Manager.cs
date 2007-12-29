@@ -114,10 +114,10 @@ namespace DOL.GS.Keeps
 			guard.TargetObject = target;
 			switch (guard.Realm)
 			{
-				case 0:
-				case 1: LaunchSpell(47, "Pyromancy", guard); break;
-				case 2: LaunchSpell(48, "Runecarving", guard); break;
-				case 3: LaunchSpell(47, "Way of the Eclipse", guard); break;
+				case eRealm.None:
+				case eRealm.Albion: LaunchSpell(47, "Pyromancy", guard); break;
+				case eRealm.Midgard: LaunchSpell(48, "Runecarving", guard); break;
+				case eRealm.Hibernia: LaunchSpell(47, "Way of the Eclipse", guard); break;
 			}
 		}
 

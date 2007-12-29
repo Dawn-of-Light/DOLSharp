@@ -55,7 +55,7 @@ namespace DOL.GS
 			{
 				TurnTo(player, 25000);
 				string Material;
-				if (player.Realm == (byte) eRealm.Hibernia)
+				if (player.Realm == eRealm.Hibernia)
 					Material = "quartz";
 				else
 					Material = "steel";

@@ -167,9 +167,8 @@ namespace DOL.GS.Quests.Midgard
 					general[i].Y = generalLocations[i].Y;
 					general[i].Z = generalLocations[i].Z;
 					general[i].Heading = generalLocations[i].Heading;
-					;
 
-					general[i].Realm = (byte) eRealm.None;
+					general[i].Realm = eRealm.None;
 					general[i].CurrentRegionID = generalLocations[i].RegionID;
 					general[i].Size = 49;
 					general[i].Level = 2;

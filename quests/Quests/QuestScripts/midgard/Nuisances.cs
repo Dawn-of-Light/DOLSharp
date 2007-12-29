@@ -378,7 +378,7 @@ namespace DOL.GS.Quests.Midgard
 			askefruer.Model = 678;
 			askefruer.Name = "Fallen Askefruer";
 			askefruer.GuildName = "Part of " + questTitle + " Quest";
-			askefruer.Realm = (byte) eRealm.None;
+			askefruer.Realm = eRealm.None;
 			askefruer.CurrentRegionID = askefruerLocation.RegionID;
 			askefruer.Size = 50;
 			askefruer.Level = 4;

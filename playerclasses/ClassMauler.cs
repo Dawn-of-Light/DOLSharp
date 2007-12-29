@@ -88,7 +88,7 @@ namespace DOL.GS.PlayerClass
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_FistWraps));
                 switch (player.Realm)
                 {
-                    case 1:
+                    case eRealm.Albion:
                         {
                             player.RemoveSpecialization(Specs.Slash);
                             player.RemoveSpecialization(Specs.Thrust);
@@ -99,7 +99,7 @@ namespace DOL.GS.PlayerClass
                             player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Leather));
                             break;
                         }
-                    case 2:
+                    case eRealm.Midgard:
                         {
                             player.RemoveSpecialization(Specs.Sword);
                             player.RemoveSpecialization(Specs.Hammer);
@@ -110,7 +110,7 @@ namespace DOL.GS.PlayerClass
                             player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Leather));
                             break;
                         }
-                    case 3:
+                    case eRealm.Hibernia:
                         {
                             player.RemoveSpecialization(Specs.Blades);
                             player.RemoveSpecialization(Specs.Piercing);

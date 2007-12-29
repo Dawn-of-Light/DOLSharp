@@ -44,7 +44,7 @@ namespace DOL.GS.ServerRules
 				return true;
 			if (ServerProperties.Properties.ALLOW_ALL_REALMS_DF)
 				return true;
-			return (player.Realm == (byte) DarknessFallOwner);
+			return (player.Realm == DarknessFallOwner);
 		}
 
 		public static eRealm DarknessFallOwner = eRealm.None;

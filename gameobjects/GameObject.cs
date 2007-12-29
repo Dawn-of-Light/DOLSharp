@@ -149,12 +149,12 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds the realm of this object
 		/// </summary>
-		protected byte m_Realm;
+		protected eRealm m_Realm;
 
 		/// <summary>
 		/// Gets or Sets the current Realm of the Object
 		/// </summary>
-		public virtual byte Realm
+		public virtual eRealm Realm
 		{
 			get { return m_Realm; }
 			set { m_Realm = value; }

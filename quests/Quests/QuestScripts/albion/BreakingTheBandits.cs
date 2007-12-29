@@ -155,7 +155,7 @@ namespace DOL.GS.Quests.Albion
                 atheleys.Name = "Atheleys Sy'Lian";
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + atheleys.Name + ", creating him ...");
-                atheleys.Realm = (byte)eRealm.Albion;
+                atheleys.Realm = eRealm.Albion;
                 atheleys.CurrentRegionID = 1;
                 atheleys.Size = 50;
                 atheleys.Level = 30;
@@ -189,7 +189,7 @@ namespace DOL.GS.Quests.Albion
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find Mostram, creating him ...");
                 mostram.GuildName = "";
-                mostram.Realm = (byte)eRealm.None;
+                mostram.Realm = eRealm.None;
                 mostram.CurrentRegionID = 1;
                 mostram.Size = 52;
                 mostram.Level = 9;

@@ -149,7 +149,7 @@ namespace DOL.GS.Commands
 							guard.Y = client.Player.Y;
 							guard.Z = client.Player.Z;
 							guard.Heading = client.Player.Heading;
-							guard.Realm = (byte)guard.CurrentZone.GetRealm();
+							guard.Realm = guard.CurrentZone.GetRealm();
 							guard.SaveIntoDatabase();
 							foreach (AbstractArea area in guard.CurrentAreas)
 							{

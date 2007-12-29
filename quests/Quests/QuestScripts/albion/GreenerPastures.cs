@@ -148,7 +148,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + farmerAsma.Name + ", creating him ...");
 				farmerAsma.GuildName = "Part of " + questTitle + " Quest";
-				farmerAsma.Realm = (byte) eRealm.Albion;
+				farmerAsma.Realm = eRealm.Albion;
 				farmerAsma.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();

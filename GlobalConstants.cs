@@ -24,6 +24,48 @@ using DOL.Language;
 
 namespace DOL.GS
 {
+
+
+	/// <summary>
+	/// Defines the realms for various packets and search functions etc.
+	/// </summary>
+	public enum eRealm : byte
+	{
+		/// <summary>
+		/// First realm number, for use in all arrays
+		/// </summary>
+		_First = 0,
+		/// <summary>
+		/// No specific realm
+		/// </summary>
+		None = 0,
+		/// <summary>
+		/// First player realm number, for use in all arrays
+		/// </summary>
+		_FirstPlayerRealm = 1,
+		/// <summary>
+		/// Albion Realm
+		/// </summary>
+		Albion = 1,
+		/// <summary>
+		/// Midgard Realm
+		/// </summary>
+		Midgard = 2,
+		/// <summary>
+		/// Hibernia Realm
+		/// </summary>
+		Hibernia = 3,
+		/// <summary>
+		/// Last player realm number, for use in all arrays
+		/// </summary>
+		_LastPlayerRealm = 3,
+
+		/// <summary>
+		/// LastRealmNumber to allow dynamic allocation of realm specific arrays.
+		/// </summary>
+		_Last = 3
+
+	};
 	/// <summary>
 	/// The priveledge level of the client
 	/// </summary>

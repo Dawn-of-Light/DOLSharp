@@ -162,7 +162,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + masterFrederick.Name + ", creating him ...");
 				masterFrederick.GuildName = "Part of Frederick Quests";
-				masterFrederick.Realm = (byte) eRealm.Albion;
+				masterFrederick.Realm = eRealm.Albion;
 				masterFrederick.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();

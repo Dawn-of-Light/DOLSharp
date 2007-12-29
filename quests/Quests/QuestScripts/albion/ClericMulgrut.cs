@@ -145,7 +145,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + hughGallen.Name + ", creating him ...");
 				hughGallen.GuildName = "Part of " + questTitle + " Quest";
-				hughGallen.Realm = (byte) eRealm.Albion;
+				hughGallen.Realm = eRealm.Albion;
 				hughGallen.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -478,7 +478,7 @@ namespace DOL.GS.Quests.Albion
 								mulgrutMaggot = new GameNPC();
 								mulgrutMaggot.Model = 467;
 								mulgrutMaggot.Name = "Mulgrut Maggot";
-								mulgrutMaggot.Realm = (byte) eRealm.None;
+								mulgrutMaggot.Realm = eRealm.None;
 								mulgrutMaggot.CurrentRegionID = 1;
 
 								mulgrutMaggot.Size = 60;

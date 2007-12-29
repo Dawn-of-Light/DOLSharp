@@ -170,7 +170,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + yuliwyf.Name + ", creating ...");
 				yuliwyf.GuildName = "Part of " + questTitle + " Quest";
-				yuliwyf.Realm = (byte) eRealm.Midgard;
+				yuliwyf.Realm = eRealm.Midgard;
 				yuliwyf.CurrentRegionID = 101;
 				yuliwyf.Size = 51;
 				yuliwyf.Level = 50;
@@ -199,7 +199,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + harlfug.Name + ", creating her ...");
 				harlfug.GuildName = "Stable Master";
-				harlfug.Realm = (byte) eRealm.Midgard;
+				harlfug.Realm = eRealm.Midgard;
 				harlfug.CurrentRegionID = 100;
 				harlfug.Size = 52;
 				harlfug.Level = 41;

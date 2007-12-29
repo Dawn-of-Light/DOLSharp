@@ -121,7 +121,7 @@ using DOL.AI.Brain;
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + BarkeepNognar.Name + ", creating ...");
 				BarkeepNognar.GuildName = "Part of " + questTitle + " Quest";
-				BarkeepNognar.Realm = (byte) 2;
+				BarkeepNognar.Realm = eRealm.Midgard;
 				BarkeepNognar.CurrentRegionID = 100;
 				BarkeepNognar.Size = 58;
 				BarkeepNognar.Level = 15;
@@ -166,7 +166,7 @@ using DOL.AI.Brain;
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + BarkeepPrugar.Name + ", creating ...");
 				BarkeepPrugar.GuildName = "Part of " + questTitle + " Quest";
-				BarkeepPrugar.Realm = (byte) 2;
+				BarkeepPrugar.Realm = eRealm.Midgard;
 				BarkeepPrugar.CurrentRegionID = 101;
 				BarkeepPrugar.Size = 60;
 				BarkeepPrugar.Level = 15;

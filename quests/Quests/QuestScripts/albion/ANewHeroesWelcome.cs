@@ -165,7 +165,7 @@ namespace DOL.GS.Quests.Albion
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + MasterClaistan.Name + ", creating him ...");
                 //MasterClaistan.GuildName = "Part of " + questTitle + " Quest";
-                MasterClaistan.Realm = (byte)eRealm.Albion;
+                MasterClaistan.Realm = eRealm.Albion;
                 MasterClaistan.CurrentRegionID = 1;
 
                 GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -206,7 +206,7 @@ namespace DOL.GS.Quests.Albion
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + PompinTheCrier.Name + ", creating him ...");
                 //MasterClaistan.GuildName = "Part of " + questTitle + " Quest";
-                PompinTheCrier.Realm = (byte)eRealm.Albion;
+                PompinTheCrier.Realm = eRealm.Albion;
                 PompinTheCrier.CurrentRegionID = 1;
 
                 GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();

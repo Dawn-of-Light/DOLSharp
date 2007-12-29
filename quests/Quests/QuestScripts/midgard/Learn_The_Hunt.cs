@@ -115,7 +115,7 @@ using DOL.AI.Brain;
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + Aegan.Name + ", creating ...");
 				Aegan.GuildName = "Part of " + questTitle + " Quest";
-				Aegan.Realm = (byte) 2;
+				Aegan.Realm = eRealm.Midgard;
 				Aegan.CurrentRegionID = 100;
 				Aegan.Size = 51;
 				Aegan.Level = 41;
