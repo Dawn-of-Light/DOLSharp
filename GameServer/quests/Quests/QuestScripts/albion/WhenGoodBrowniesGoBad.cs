@@ -220,7 +220,7 @@ namespace DOL.GS.Quests.Albion
                     log.Warn("Could not find " + MasterKless.Name + ", creating him ...");
                 //k109: My preference, no guildname for quest NPCs.  Uncomment if you like that...
                 //MasterKless.GuildName = "Part of " + questTitle + " Quest";
-                MasterKless.Realm = (byte)eRealm.Albion;
+                MasterKless.Realm = eRealm.Albion;
                 MasterKless.CurrentRegionID = 1;
 
                 GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();

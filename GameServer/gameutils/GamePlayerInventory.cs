@@ -399,7 +399,7 @@ namespace DOL.GS
 					}
 				}
 
-				if (valid && (fromItem.Realm > 0 && m_player.Realm != fromItem.Realm) && ((int)toSlot >= (int)eInventorySlot.HorseArmor && (int)toSlot <= (int)eInventorySlot.HorseBarding))
+				if (valid && (fromItem.Realm > 0 && (int)m_player.Realm != fromItem.Realm) && ((int)toSlot >= (int)eInventorySlot.HorseArmor && (int)toSlot <= (int)eInventorySlot.HorseBarding))
 				{
 					if (m_player.Client.Account.PrivLevel == 1)
 						valid = false;
@@ -562,7 +562,7 @@ namespace DOL.GS
 					//"The Lute of the Initiate must be readied in the 2-handed slot!"
 				}
 
-				if (valid && (fromItem.Realm > 0 && m_player.Realm != fromItem.Realm) && ((int)toSlot >= (int)eInventorySlot.HorseArmor && (int)toSlot <= (int)eInventorySlot.HorseBarding))
+				if (valid && (fromItem.Realm > 0 && (int)m_player.Realm != fromItem.Realm) && ((int)toSlot >= (int)eInventorySlot.HorseArmor && (int)toSlot <= (int)eInventorySlot.HorseBarding))
 				{
 					if (m_player.Client.Account.PrivLevel == 1)
 						valid = false;

@@ -114,7 +114,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + Ferowl.Name + " , creating it ...");
 				Ferowl.GuildName = "";
-				Ferowl.Realm = (byte) eRealm.Albion;
+				Ferowl.Realm = eRealm.Albion;
 				Ferowl.CurrentRegionID = 1;
 				Ferowl.Size = 51;
 				Ferowl.Level = 40;
@@ -140,7 +140,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + Morgana.Name + " , creating it ...");
 				Morgana.GuildName = "";
-				Morgana.Realm = (byte) eRealm.None;
+				Morgana.Realm = eRealm.None;
 				Morgana.CurrentRegionID = 1;
 				Morgana.Size = 51;
 				Morgana.Level = 90;
@@ -179,7 +179,7 @@ namespace DOL.GS.Quests.Albion
 				Bechard.Model = 606;
 				Bechard.Name = "Bechard";
 				Bechard.GuildName = "";
-				Bechard.Realm = (byte) eRealm.None;
+				Bechard.Realm = eRealm.None;
 				Bechard.CurrentRegionID = 1;
 				Bechard.Size = 50;
 				Bechard.Level = 63;
@@ -205,7 +205,7 @@ namespace DOL.GS.Quests.Albion
 				Silcharde.Model = 606;
 				Silcharde.Name = "Silcharde";
 				Silcharde.GuildName = "";
-				Silcharde.Realm = (byte) eRealm.None;
+				Silcharde.Realm = eRealm.None;
 				Silcharde.CurrentRegionID = 1;
 				Silcharde.Size = 50;
 				Silcharde.Level = 63;
@@ -1091,7 +1091,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + Morgana.Name + " , creating it ...");
 				Morgana.GuildName = "";
-				Morgana.Realm = (byte) eRealm.None;
+				Morgana.Realm = eRealm.None;
 				Morgana.CurrentRegionID = 1;
 				Morgana.Size = 51;
 				Morgana.Level = 90;

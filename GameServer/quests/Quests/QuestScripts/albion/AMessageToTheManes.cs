@@ -151,7 +151,7 @@ namespace DOL.GS.Quests.Albion
                 sirJerem.Name = "Sir Jerem";
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + sirJerem.Name + ", creating him ...");
-                sirJerem.Realm = (byte)eRealm.Albion;
+                sirJerem.Realm = eRealm.Albion;
                 sirJerem.CurrentRegionID = 1;
                 sirJerem.Size = 49;
                 sirJerem.Level = 38;

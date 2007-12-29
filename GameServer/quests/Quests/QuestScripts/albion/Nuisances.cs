@@ -382,7 +382,7 @@ namespace DOL.GS.Quests.Albion
 			ireFairy.Model = 603;
 			ireFairy.Name = "Ire Fairy";
 			ireFairy.GuildName = "Part of " + questTitle + " Quest";
-			ireFairy.Realm = (byte) eRealm.None;
+			ireFairy.Realm = eRealm.None;
 			ireFairy.CurrentRegionID = 1;
 			ireFairy.Size = 50;
 			ireFairy.Level = 4;

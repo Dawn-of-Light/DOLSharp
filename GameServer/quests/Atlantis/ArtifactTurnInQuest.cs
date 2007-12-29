@@ -177,7 +177,7 @@ namespace DOL.GS.Quests.Atlantis
 				m_scholarAlaria.Name = "Artifact Scholar Alaria";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + m_scholarAlaria.Name + ", creating her ...");
-				m_scholarAlaria.Realm = (byte)eRealm.Midgard;
+				m_scholarAlaria.Realm = eRealm.Midgard;
 				m_scholarAlaria.CurrentRegionID = 71;
 				m_scholarAlaria.Size = 50;
 				m_scholarAlaria.Level = 45;
@@ -202,7 +202,7 @@ namespace DOL.GS.Quests.Atlantis
 				m_scholarJarron.Name = "Artifact Scholar Jarron";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + m_scholarJarron.Name + ", creating him ...");
-				m_scholarJarron.Realm = (byte)eRealm.Albion;
+				m_scholarJarron.Realm = eRealm.Albion;
 				m_scholarJarron.CurrentRegionID = 70;
 				m_scholarJarron.Size = 50;
 				m_scholarJarron.Level = 45;
@@ -227,7 +227,7 @@ namespace DOL.GS.Quests.Atlantis
 				m_scholarElmer.Name = "Artifact Scholar Elmer";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + m_scholarElmer.Name + ", creating him ...");
-				m_scholarElmer.Realm = (byte)eRealm.Hibernia;
+				m_scholarElmer.Realm = eRealm.Hibernia;
 				m_scholarElmer.CurrentRegionID = 72;
 				m_scholarElmer.Size = 50;
 				m_scholarElmer.Level = 45;

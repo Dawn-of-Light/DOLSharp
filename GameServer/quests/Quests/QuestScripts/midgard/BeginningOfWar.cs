@@ -177,7 +177,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + briedi.Name + ", creating him ...");
 				briedi.GuildName = "Part of " + questTitle + " Quest";
-				briedi.Realm = (byte) eRealm.Midgard;
+				briedi.Realm = eRealm.Midgard;
 				briedi.CurrentRegionID = 100;
 
 				briedi.Size = 50;
@@ -232,7 +232,7 @@ namespace DOL.GS.Quests.Midgard
 				princessAiyr.Heading = 1;
 				princessAiyr.Model = 678;
 				princessAiyr.GuildName = "Part of " + questTitle + " Quest";
-				princessAiyr.Realm = (byte) eRealm.None;
+				princessAiyr.Realm = eRealm.None;
 				princessAiyr.CurrentRegionID = 100;
 				princessAiyr.Size = 49;
 				princessAiyr.Level = 3;
@@ -273,7 +273,7 @@ namespace DOL.GS.Quests.Midgard
 					if (log.IsWarnEnabled)
 						log.Warn("Could not find " + askefruerSorceress[i].Name + ", creating ...");
 					askefruerSorceress[i].GuildName = "Part of " + questTitle + " Quest";
-					askefruerSorceress[i].Realm = (byte) eRealm.None;
+					askefruerSorceress[i].Realm = eRealm.None;
 					askefruerSorceress[i].CurrentRegionID = 100;
 					askefruerSorceress[i].Size = 35;
 					askefruerSorceress[i].Level = 3;

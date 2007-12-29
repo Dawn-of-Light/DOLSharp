@@ -163,7 +163,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + madissair.Name + ", creating him ...");
 				madissair.GuildName = "Part of " + questTitle + " Quest";
-				madissair.Realm = (byte) eRealm.Albion;
+				madissair.Realm = eRealm.Albion;
 				madissair.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -204,7 +204,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + eileenMorton.Name + ", creating him ...");
 				eileenMorton.GuildName = "Part of " + questTitle + " Quest";
-				eileenMorton.Realm = (byte) eRealm.Albion;
+				eileenMorton.Realm = eRealm.Albion;
 				eileenMorton.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -244,7 +244,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + scribeVeral.Name + ", creating him ...");
 				scribeVeral.GuildName = "Part of " + questTitle + " Quest";
-				scribeVeral.Realm = (byte) eRealm.Albion;
+				scribeVeral.Realm = eRealm.Albion;
 				scribeVeral.CurrentRegionID = 10;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -282,7 +282,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + serawen.Name + ", creating him ...");
 				serawen.GuildName = "Part of " + questTitle + " Quest";
-				serawen.Realm = (byte) eRealm.Albion;
+				serawen.Realm = eRealm.Albion;
 				serawen.CurrentRegionID = 10;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();

@@ -119,7 +119,7 @@ using DOL.AI.Brain;
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + Lycla.Name + ", creating ...");
 				Lycla.GuildName = "Part of " + questTitle + " Quest";
-				Lycla.Realm = (byte) 2;
+				Lycla.Realm = eRealm.Midgard;
 				Lycla.CurrentRegionID = 100;
 				Lycla.Size = 48;
 				Lycla.Level = 50;
@@ -161,7 +161,7 @@ using DOL.AI.Brain;
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + Amora.Name + ", creating ...");
 				Amora.GuildName = "Part of " + questTitle + " Quest";
-				Amora.Realm = (byte) 2;
+				Amora.Realm = eRealm.Midgard;
 				Amora.CurrentRegionID = 100;
 				Amora.Size = 49;
 				Amora.Level = 28;
@@ -203,7 +203,7 @@ using DOL.AI.Brain;
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + Kari.Name + ", creating ...");
 				Kari.GuildName = "Part of " + questTitle + " Quest";
-				Kari.Realm = (byte) 2;
+				Kari.Realm = eRealm.Midgard;
 				Kari.CurrentRegionID = 100;
 				Kari.Size = 51;
 				Kari.Level = 20;

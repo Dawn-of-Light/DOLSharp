@@ -66,7 +66,7 @@ namespace DOL.GS.GameEvents
 				Model = 132;
 				Size = 30;
 				Level = 10;
-				Realm = 1;
+				Realm = eRealm.Albion;
 				CurrentRegionID = 1;
 
 				//At the beginning, the spider isn't following anyone

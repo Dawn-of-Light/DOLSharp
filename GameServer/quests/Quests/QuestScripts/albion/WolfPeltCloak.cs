@@ -164,7 +164,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + stewardWillie.Name + ", creating him ...");
 				stewardWillie.GuildName = "Part of " + questTitle;
-				stewardWillie.Realm = (byte) eRealm.Albion;
+				stewardWillie.Realm = eRealm.Albion;
 				stewardWillie.CurrentRegionID = 1;
 				stewardWillie.Size = 52;
 				stewardWillie.Level = 35;
@@ -196,7 +196,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + lynnet.Name + ", creating ...");
 				lynnet.GuildName = "Part of " + questTitle;
-				lynnet.Realm = (byte) eRealm.Albion; //Needs to be none, else we can't kill him ;-)
+				lynnet.Realm = eRealm.Albion; //Needs to be none, else we can't kill him ;-)
 				lynnet.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -231,7 +231,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + don.Name + ", creating ...");
 				don.GuildName = "Part of " + questTitle;
-				don.Realm = (byte) eRealm.Albion; //Needs to be none, else we can't kill him ;-)
+				don.Realm = eRealm.Albion; //Needs to be none, else we can't kill him ;-)
 				don.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();

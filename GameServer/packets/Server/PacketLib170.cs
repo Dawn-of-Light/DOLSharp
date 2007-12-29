@@ -287,7 +287,7 @@ namespace DOL.GS.PacketHandler
 				int tower = keep.KeepID >> 8;
 				int map = (id - 25) / 25;
 				int index = id - (map * 25 + 25);
-				int flag = keep.Realm; // 3 bits
+				int flag = (byte)keep.Realm; // 3 bits
 				Guild guild = keep.Guild;
 				string name = "";
 				pak.WriteByte((byte)((map << 6) | (index << 3) | tower));

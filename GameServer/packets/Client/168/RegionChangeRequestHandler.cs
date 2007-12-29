@@ -54,9 +54,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 				zonePoint = new ZonePoint();
 				switch (client.Player.Realm)
 				{
-					case 1: zonePoint.Region = 1; break;
-					case 2: zonePoint.Region = 100; break;
-					case 3: zonePoint.Region = 200; break;
+					case eRealm.Albion: zonePoint.Region = 1; break;
+					case eRealm.Midgard: zonePoint.Region = 100; break;
+					case eRealm.Hibernia: zonePoint.Region = 200; break;
 				}
 				zonePoint.ClassType = "DOL.GS.GameEvents.TutorialJumpPointHandler";
 			}

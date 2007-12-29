@@ -144,10 +144,10 @@ namespace DOL.GS.Commands
 							mob.Z = client.Player.Z;
 							mob.CurrentRegion = client.Player.CurrentRegion;
 							mob.Heading = client.Player.Heading;
-							mob.Level = (byte)DOL.GS.Util.Random(10, 50);
-							mob.Realm = (byte)DOL.GS.Util.Random(1, 3);
+							mob.Level = (byte)Util.Random(10, 50);
+							mob.Realm = (eRealm)Util.Random(1, 3);
 							mob.Name = "rand_" + i;
-							mob.Model = (byte)DOL.GS.Util.Random(100, 200);
+							mob.Model = (byte)Util.Random(100, 200);
 
 							//Fill the living variables
 							if (mob.Brain is IAggressiveBrain)
@@ -196,15 +196,15 @@ namespace DOL.GS.Commands
 							GameNPC mob = new GameNPC();
 
 							//Fill the object variables
-							int x = client.Player.X + DOL.GS.Util.Random(-radius, radius);
-							int y = client.Player.Y + DOL.GS.Util.Random(-radius, radius);
+							int x = client.Player.X + Util.Random(-radius, radius);
+							int y = client.Player.Y + Util.Random(-radius, radius);
 							mob.X = FastMath.Abs(x);
 							mob.Y = FastMath.Abs(y);
 							mob.Z = client.Player.Z;
 							mob.CurrentRegion = client.Player.CurrentRegion;
 							mob.Heading = client.Player.Heading;
 							mob.Level = level;
-							mob.Realm = realm;
+							mob.Realm = (eRealm)realm;
 							mob.Name = name;
 							mob.Model = model;
 
@@ -408,7 +408,7 @@ namespace DOL.GS.Commands
 						try
 						{
 							realm = Convert.ToByte(args[2]);
-							targetMob.Realm = realm;
+							targetMob.Realm = (eRealm)realm;
 							targetMob.SaveIntoDatabase();
 							client.Out.SendMessage("Mob realm changed to: " + targetMob.Realm, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
@@ -644,7 +644,7 @@ namespace DOL.GS.Commands
 						mob.CurrentRegion = client.Player.CurrentRegion;
 						mob.Heading = client.Player.Heading;
 						mob.Level = 1;
-						mob.Realm = realm;
+						mob.Realm = (eRealm)realm;
 						mob.Name = "New Mob";
 						mob.Model = 408;
 						//Fill the living variables

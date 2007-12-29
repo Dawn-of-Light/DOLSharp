@@ -100,13 +100,13 @@ namespace DOL.GS
 							{
 								switch (itemTemplate.Realm)
 								{
-									case (int)DOL.GS.PacketHandler.eRealm.Albion:
+									case (int)eRealm.Albion:
 										templatesAlb.Add(itemTemplate);
 										break;
-									case (int)DOL.GS.PacketHandler.eRealm.Hibernia:
+									case (int)eRealm.Hibernia:
 										templatesHib.Add(itemTemplate);
 										break;
-									case (int)DOL.GS.PacketHandler.eRealm.Midgard:
+									case (int)eRealm.Midgard:
 										templatesMid.Add(itemTemplate);
 										break;
 									default:
@@ -140,19 +140,19 @@ namespace DOL.GS
 
 				switch (mob.CurrentZone.GetRealm())
 				{
-					case DOL.GS.PacketHandler.eRealm.Albion:
+					case eRealm.Albion:
 						{
 							int index = Math.Min(m_itemTemplatesAlb.Length - 1, mob.Level / LEVEL_RANGE);
 							itemTemplates = m_itemTemplatesAlb[index];
 						}
 						break;
-					case DOL.GS.PacketHandler.eRealm.Hibernia:
+					case eRealm.Hibernia:
 						{
 							int index = Math.Min(m_itemTemplatesHib.Length - 1, mob.Level / LEVEL_RANGE);
 							itemTemplates = m_itemTemplatesHib[index];
 							break;
 						}
-					case DOL.GS.PacketHandler.eRealm.Midgard:
+					case eRealm.Midgard:
 						{
 							int index = Math.Min(m_itemTemplatesHib.Length - 1, mob.Level / LEVEL_RANGE);
 							itemTemplates = m_itemTemplatesMid[index];

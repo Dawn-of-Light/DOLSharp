@@ -928,7 +928,7 @@ namespace DOL.GS
 			for (int i = 0; i < objs.Length; i++)
 			{
 				GameObject obj = objs[i];
-				if (obj != null && objectType.IsInstanceOfType(obj) && obj.Realm == (byte)realm && obj.Name == name)
+				if (obj != null && objectType.IsInstanceOfType(obj) && obj.Realm == realm && obj.Name == name)
 					returnObjs.Add(obj);
 			}
 			return (GameObject[])returnObjs.ToArray(objectType);
@@ -1178,7 +1178,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="realmID">ID of Realm (1=Alb, 2=Mid, 3=Hib)</param>
 		/// <returns>Client count of that realm</returns>
-		public static int GetClientsOfRealmCount(int realmID)
+		public static int GetClientsOfRealmCount(eRealm realm)
 		{
 			int count = 0;
 			lock (m_clients.SyncRoot)
@@ -1190,7 +1190,7 @@ namespace DOL.GS
 						if (client.IsPlaying
 							&& client.Player != null
 							&& client.Player.ObjectState == GameObject.eObjectState.Active
-							&& client.Player.Realm == realmID)
+							&& client.Player.Realm == realm)
 							count++;
 					}
 				}
@@ -1203,7 +1203,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="realmID">ID of Realm (1=Alb, 2=Mid, 3=Hib)</param>
 		/// <returns>An ArrayList of clients</returns>
-		public static ArrayList GetClientsOfRealm(int realmID)
+		public static ArrayList GetClientsOfRealm(eRealm realm)
 		{
 			ArrayList targetClients = new ArrayList();
 			lock (m_clients.SyncRoot)
@@ -1215,7 +1215,7 @@ namespace DOL.GS
 						if (client.IsPlaying
 							&& client.Player != null
 							&& client.Player.ObjectState == GameObject.eObjectState.Active
-							&& client.Player.Realm == realmID)
+							&& client.Player.Realm == realm)
 							targetClients.Add(client);
 					}
 				}
@@ -1254,7 +1254,7 @@ namespace DOL.GS
 		/// <param name="regionID">The ID of the Region</param>
 		/// <param name="realm">The realm of clients to check</param>
 		/// <returns>Number of playing Clients in that Region</returns>
-		public static int GetClientsOfRegionCount(ushort regionID, byte realm)
+		public static int GetClientsOfRegionCount(ushort regionID, eRealm realm)
 		{
 			int count = 0;
 			lock (m_clients.SyncRoot)
@@ -1373,13 +1373,13 @@ namespace DOL.GS
 		/// <param name="realmID">search in: 0=all realms or player.Realm</param>
 		/// <param name="activeRequired"></param>
 		/// <returns>The found GameClient or null</returns>
-		public static GameClient GetClientByPlayerNameAndRealm(string playerName, int realmID, bool activeRequired)
+		public static GameClient GetClientByPlayerNameAndRealm(string playerName, eRealm realm, bool activeRequired)
 		{
 			lock (m_clients.SyncRoot)
 			{
 				foreach (GameClient client in m_clients)
 				{
-					if (client != null && client.Player != null && (realmID == 0 || client.Player.Realm == realmID))
+					if (client != null && client.Player != null && (realm == eRealm.None || client.Player.Realm == realm))
 					{
 						if (activeRequired && (!client.IsPlaying || client.Player.ObjectState != GameObject.eObjectState.Active))
 							continue;
@@ -1402,11 +1402,11 @@ namespace DOL.GS
 		/// <param name="result">returns: 1=no name found, 2=name is not unique, 3=exact match, 4=guessed name</param>
 		/// <param name="activeRequired"></param>
 		/// <returns>The found GameClient or null</returns>
-		public static GameClient GuessClientByPlayerNameAndRealm(string playerName, int realmID, bool activeRequired, out int result)
+		public static GameClient GuessClientByPlayerNameAndRealm(string playerName, eRealm realm, bool activeRequired, out int result)
 		{
 			// first try exact match in case player with "abcde" name is
 			// before "abc" in list and user typed "abc"
-			GameClient guessedClient = GetClientByPlayerNameAndRealm(playerName, realmID, activeRequired);
+			GameClient guessedClient = GetClientByPlayerNameAndRealm(playerName, realm, activeRequired);
 			if (guessedClient != null)
 			{
 				result = 3; // exact match
@@ -1424,7 +1424,7 @@ namespace DOL.GS
 					{
 						if (activeRequired && (!client.IsPlaying || client.Player.ObjectState != GameObject.eObjectState.Active))
 							continue;
-						if (realmID == 0 || client.Player.Realm == realmID)
+						if (realm == eRealm.None || client.Player.Realm == realm)
 						{
 							if (client.Player.Name.ToLower().StartsWith(compareName))
 							{

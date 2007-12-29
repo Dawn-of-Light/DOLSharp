@@ -43,7 +43,7 @@ namespace DOL.GS.Commands
 
 			GameRelicPad pad = new GameRelicPad();
 			pad.Name = args[2];
-			pad.Realm = byte.Parse(args[3]);
+			pad.Realm = (eRealm)byte.Parse(args[3]);
 			pad.Emblem = emblem;
 			pad.CurrentRegionID = client.Player.CurrentRegionID;
 			pad.X = client.Player.X;

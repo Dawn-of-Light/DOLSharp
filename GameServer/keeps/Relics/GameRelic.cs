@@ -50,12 +50,12 @@ namespace DOL.GS
 			}
 		}
 
-		byte m_originalRealm;
+		private eRealm m_originalRealm;
 
 		/// <summary>
 		/// Get the original Realm of the relict (can only be 1(alb),2(mid) or 3(hibernia))
 		/// </summary>
-		public byte OriginalRealm
+		public eRealm OriginalRealm
 		{
 			get
 			{
@@ -375,8 +375,8 @@ namespace DOL.GS
 			Z = m_dbRelic.Z;
 			Heading = (ushort)m_dbRelic.Heading;
 			m_relicType = (eRelicType)m_dbRelic.relicType;
-			Realm = (byte)m_dbRelic.Realm;
-			m_originalRealm = (byte)m_dbRelic.OriginalRealm;
+			Realm = (eRealm)m_dbRelic.Realm;
+			m_originalRealm = (eRealm)m_dbRelic.OriginalRealm;
 
 
 			//get constant values
@@ -445,14 +445,14 @@ namespace DOL.GS
 			public ushort Model;
 		}
 
-		public static MiniTemp GetRelicTemplate(byte Realm, eRelicType RelicType)
+		public static MiniTemp GetRelicTemplate(eRealm Realm, eRelicType RelicType)
 		{
 
 
 			MiniTemp m_template = new MiniTemp();
 			switch (Realm)
 			{
-				case 1:
+				case eRealm.Albion:
 					if (RelicType == eRelicType.Magic)
 					{
 						m_template.Name = "Merlins Staff";
@@ -464,7 +464,7 @@ namespace DOL.GS
 						m_template.Model = 631;
 					}
 					break;
-				case 2:
+				case eRealm.Midgard:
 					if (RelicType == eRelicType.Magic)
 					{
 						m_template.Name = "Horn of Valhalla";
@@ -476,7 +476,7 @@ namespace DOL.GS
 						m_template.Model = 634;
 					}
 					break;
-				case 3:
+				case eRealm.Hibernia:
 					if (RelicType == eRelicType.Magic)
 					{
 						m_template.Name = "Cauldron of Dagda";

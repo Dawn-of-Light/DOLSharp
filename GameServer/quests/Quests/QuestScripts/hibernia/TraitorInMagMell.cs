@@ -149,7 +149,7 @@ namespace DOL.GS.Quests.Hibernia
 				ladyLegada.Model = 679;
 				ladyLegada.Name = "Lady Legada";
 				ladyLegada.GuildName = "Part of " + questTitle + " Quest";
-				ladyLegada.Realm = (byte) eRealm.None;
+				ladyLegada.Realm = eRealm.None;
 				ladyLegada.CurrentRegionID = legadaStart.RegionID;
 				ladyLegada.Size = 50;
 				ladyLegada.Level = 30;

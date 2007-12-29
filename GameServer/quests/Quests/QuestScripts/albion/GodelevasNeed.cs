@@ -149,7 +149,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + godelevaDowden.Name + ", creating him ...");
 				godelevaDowden.GuildName = "Part of " + questTitle + " Quest";
-				godelevaDowden.Realm = (byte) eRealm.Albion;
+				godelevaDowden.Realm = eRealm.Albion;
 				godelevaDowden.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();

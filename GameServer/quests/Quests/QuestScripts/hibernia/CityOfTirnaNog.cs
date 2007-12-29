@@ -170,7 +170,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + hylvian.Name + ", creating ...");
 				hylvian.GuildName = "Part of " + questTitle + " Quest";
-				hylvian.Realm = (byte) eRealm.Hibernia;
+				hylvian.Realm = eRealm.Hibernia;
 				hylvian.CurrentRegionID = 201;
 				hylvian.Size = 51;
 				hylvian.Level = 44;
@@ -199,7 +199,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + freagus.Name + ", creating ...");
 				freagus.GuildName = "Stable Master";
-				freagus.Realm = (byte) eRealm.Hibernia;
+				freagus.Realm = eRealm.Hibernia;
 				freagus.CurrentRegionID = 200;
 				freagus.Size = 48;
 				freagus.Level = 30;
@@ -228,7 +228,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + gweonry.Name + ", creating ...");
 				gweonry.GuildName = "Stable Master";
-				gweonry.Realm = (byte) eRealm.Hibernia;
+				gweonry.Realm = eRealm.Hibernia;
 				gweonry.CurrentRegionID = 200;
 				gweonry.Size = 48;
 				gweonry.Level = 30;

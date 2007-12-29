@@ -14,7 +14,7 @@ namespace DOL.GS.Quests
 		public ScoutMission(object owner)
 			: base(owner)
 		{
-			int realm = 0;
+			eRealm realm = 0;
 			if (owner is Group)
 				realm = (owner as Group).Leader.Realm;
 			else if (owner is GamePlayer)

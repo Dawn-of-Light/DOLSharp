@@ -117,7 +117,7 @@ using DOL.AI.Brain;
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + Pedra.Name + ", creating ...");
 				Pedra.GuildName = "Part of " + questTitle + " Quest";
-				Pedra.Realm = (byte) 2;
+				Pedra.Realm = eRealm.Midgard;
 				Pedra.CurrentRegionID = 151;
 				Pedra.Size = 51;
 				Pedra.Level = 50;
@@ -159,7 +159,7 @@ using DOL.AI.Brain;
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + Kedra.Name + ", creating ...");
 				Kedra.GuildName = "Part of " + questTitle + " Quest";
-				Kedra.Realm = (byte) 2;
+				Kedra.Realm = eRealm.Midgard;
 				Kedra.CurrentRegionID = 151;
 				Kedra.Size = 51;
 				Kedra.Level = 50;

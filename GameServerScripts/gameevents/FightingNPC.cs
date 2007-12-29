@@ -52,7 +52,7 @@ namespace DOL.GS.GameEvents
 				Model = 40;
 				Size = 50;
 				Level = 10;
-				Realm = 1;
+				Realm = eRealm.Albion;
 				CurrentRegionID = 1;
 				GuildName = "DOLTopia";
 			}

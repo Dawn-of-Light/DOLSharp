@@ -145,7 +145,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + yettaFletcher.Name + ", creating him ...");
 				yettaFletcher.GuildName = "Part of " + questTitle + " Quest";
-				yettaFletcher.Realm = (byte) eRealm.Albion;
+				yettaFletcher.Realm = eRealm.Albion;
 				yettaFletcher.CurrentRegionID = 1;
 
 				yettaFletcher.Size = 53;

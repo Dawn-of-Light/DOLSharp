@@ -104,7 +104,7 @@ namespace DOL.GS.Quests.Albion
 				Roben.Model = 36;
 				Roben.Name = "Roben Fraomar";
 				Roben.GuildName = "";
-				Roben.Realm = (byte) eRealm.Albion;
+				Roben.Realm = eRealm.Albion;
 				Roben.CurrentRegionID = 1;
 				Roben.Size = 52;
 				Roben.Level = 50;
@@ -130,7 +130,7 @@ namespace DOL.GS.Quests.Albion
 				Blythe.Model = 67;
 				Blythe.Name = "Sister Blythe";
 				Blythe.GuildName = "";
-				Blythe.Realm = (byte) eRealm.None;
+				Blythe.Realm = eRealm.None;
 				Blythe.CurrentRegionID = 1;
 				Blythe.Size = 50;
 				Blythe.Level = 69;

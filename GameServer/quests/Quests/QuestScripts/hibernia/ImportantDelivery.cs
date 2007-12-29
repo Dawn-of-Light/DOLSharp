@@ -155,7 +155,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find" + aethic.Name + " , creating ...");
 				aethic.GuildName = "Part of " + questTitle + " Quest";
-				aethic.Realm = (byte)eRealm.Hibernia;
+				aethic.Realm = eRealm.Hibernia;
 				aethic.CurrentRegionID = 200;
 				aethic.Size = 49;
 				aethic.Level = 21;
@@ -183,7 +183,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + freagus.Name + ", creating ...");
 				freagus.GuildName = "Stable Master";
-				freagus.Realm = (byte)eRealm.Hibernia;
+				freagus.Realm = eRealm.Hibernia;
 				freagus.CurrentRegionID = 200;
 				freagus.Size = 48;
 				freagus.Level = 30;
@@ -212,7 +212,7 @@ namespace DOL.GS.Quests.Hibernia
 				rumdor.Model = 361;
 				rumdor.Name = "Rumdor";
 				rumdor.GuildName = "Stable Master";
-				rumdor.Realm = (byte) eRealm.Hibernia;
+				rumdor.Realm = eRealm.Hibernia;
 				rumdor.CurrentRegionID = 200;
 				rumdor.Size = 53;
 				rumdor.Level = 33;
@@ -242,7 +242,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + truichon.Name + ", creating ...");
                 truichon.GuildName = "Stable Master";
-                truichon.Realm = (byte)eRealm.Hibernia;
+                truichon.Realm = eRealm.Hibernia;
                 truichon.CurrentRegionID = 1;
                 truichon.Size = 50;
                 truichon.Level = 33;

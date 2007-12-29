@@ -35,30 +35,31 @@ namespace DOL.GS.Quests.Tests
 	public class MoneyTaskTest : DOLTestCase
 	{
 		public MoneyTaskTest()
-		{			
-		}		
+		{
+		}
 
-		[Test] public void CreateMoneyTask()
+		[Test]
+		public void CreateMoneyTask()
 		{
 			GamePlayer player = CreateMockGamePlayer();
 
 			GameMerchant merchant = new GameMerchant();
-			merchant.Name ="Tester";
-			merchant.Realm=(byte)eRealm.Albion;
+			merchant.Name = "Tester";
+			merchant.Realm = eRealm.Albion;
 			Console.WriteLine(player.Name);
 
-			if (MoneyTask.CheckAvailability(player,merchant)) 
+			if (MoneyTask.CheckAvailability(player, merchant))
 			{
-				if (MoneyTask.BuildTask(player,merchant)) 
+				if (MoneyTask.BuildTask(player, merchant))
 				{
-					MoneyTask task =(MoneyTask) player.Task;
-			
-					
+					MoneyTask task = (MoneyTask)player.Task;
+
+
 					Assert.IsNotNull(task);
-					Console.WriteLine("XP"+task.RewardXP);
-					Console.WriteLine("Item:"+ task.ItemName);
-					Console.WriteLine("Item:"+ task.Name);
-					Console.WriteLine("Item:"+ task.Description);
+					Console.WriteLine("XP" + task.RewardXP);
+					Console.WriteLine("Item:" + task.ItemName);
+					Console.WriteLine("Item:" + task.Name);
+					Console.WriteLine("Item:" + task.Description);
 
 					// Check Notify Event handling
 					InventoryItem item = new InventoryItem();
@@ -66,9 +67,9 @@ namespace DOL.GS.Quests.Tests
 
 					GameNPC npc = new GameNPC();
 					npc.Name = task.RecieverName;
-					task.Notify(GamePlayerEvent.GiveItem,player,new GiveItemEventArgs(player,npc,item));
+					task.Notify(GamePlayerEvent.GiveItem, player, new GiveItemEventArgs(player, npc, item));
 
-					if (player.Task.TaskActive || player.Task==null)
+					if (player.Task.TaskActive || player.Task == null)
 						Assert.Fail("Task did not finished proper in Notify");
 				}
 			}

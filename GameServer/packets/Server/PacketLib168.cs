@@ -806,7 +806,7 @@ namespace DOL.GS.PacketHandler
 			if (obj is GameNPC && obj.IsUnderwater)
 				pak.WriteShort((ushort)(obj.Model | 0x8000));
 			else pak.WriteShort(obj.Model);
-			int flag = (obj.Realm & 3) << 4;
+			int flag = ((byte)obj.Realm & 3) << 4;
 			if (obj is GameKeepBanner)
 				flag |= 0x08;
 			if (obj is GameStaticItemTimed && m_gameClient.Player != null && (obj as GameStaticItemTimed).IsOwner(m_gameClient.Player))
@@ -2608,7 +2608,7 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.RegionSound));
 			pak.WriteShort((ushort)m_gameClient.Player.ObjectID);
 			pak.WriteByte(1); //level up sounds
-			pak.WriteByte(m_gameClient.Player.Realm);
+			pak.WriteByte((byte)m_gameClient.Player.Realm);
 			SendTCP(pak);
 		}
 
@@ -3053,7 +3053,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteInt((uint)obj.X);
 			pak.WriteInt((uint)obj.Y);
 			pak.WriteShort(obj.Model);
-			int flag = (obj.Type() | (obj.Realm == 3 ? 0x40 : obj.Realm << 4) | obj.Level << 9);
+			int flag = (obj.Type() | ((byte)obj.Realm == 3 ? 0x40 : (byte)obj.Realm << 4) | obj.Level << 9);
 			pak.WriteShort((ushort)flag); //(0x0002-for Ship,0x7D42-for catapult,0x9602,0x9612,0x9622-for ballista)
 			pak.WriteShort(obj.Emblem);//emblem
 			pak.WriteShort(0);

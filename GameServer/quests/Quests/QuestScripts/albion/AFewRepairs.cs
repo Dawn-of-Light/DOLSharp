@@ -158,7 +158,7 @@ namespace DOL.GS.Quests.Albion
                 briceYarley.Name = "Brice Yarley";
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + briceYarley.Name + ", creating him ...");
-                briceYarley.Realm = (byte)eRealm.Albion;
+                briceYarley.Realm = eRealm.Albion;
                 briceYarley.CurrentRegionID = 1;
                 briceYarley.Size = 51;
                 briceYarley.Level = 43;
@@ -188,7 +188,7 @@ namespace DOL.GS.Quests.Albion
                 patrickYarley.Name = "Patrick Yarley";
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + patrickYarley.Name + ", creating him ...");
-                patrickYarley.Realm = (byte)eRealm.Albion;
+                patrickYarley.Realm = eRealm.Albion;
                 patrickYarley.CurrentRegionID = 1;
                 patrickYarley.Size = 51;
                 patrickYarley.Level = 43;

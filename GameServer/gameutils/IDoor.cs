@@ -35,7 +35,7 @@ namespace DOL.GS
 		string Name	{get;}
 		int Flag {get;}
 		ushort Heading	{get;}
-		byte Realm {get;}
+		eRealm Realm {get;}
 		int DoorID	{get;}
 		int ObjectID	{get;}
 		eDoorState State {get; set;}

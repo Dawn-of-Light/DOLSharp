@@ -152,7 +152,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + dunan.Name + ", creating ...");
 				dunan.GuildName = "Part of " + questTitle + " Quest";
-				dunan.Realm = (byte) eRealm.Albion;
+				dunan.Realm = eRealm.Albion;
 				dunan.CurrentRegionID = 1;
 				dunan.Size = 49;
 				dunan.Level = 21;
@@ -180,7 +180,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + bombard.Name + ", creating ...");
 				bombard.GuildName = "Stable Master";
-				bombard.Realm = (byte) eRealm.Albion;
+				bombard.Realm = eRealm.Albion;
 				bombard.CurrentRegionID = 1;
 				bombard.Size = 49;
 				bombard.Level = 4;
@@ -208,7 +208,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + vuloch.Name + ", creating ...");
 				vuloch.GuildName = "Stable Master";
-				vuloch.Realm = (byte) eRealm.Albion;
+				vuloch.Realm = eRealm.Albion;
 				vuloch.CurrentRegionID = 1;
 				vuloch.Size = 50;
 				vuloch.Level = 4;
@@ -237,7 +237,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + yaren.Name + ", creating ...");
 				yaren.GuildName = "Stable Master";
-				yaren.Realm = (byte) eRealm.Albion;
+				yaren.Realm = eRealm.Albion;
 				yaren.CurrentRegionID = 1;
 				yaren.Size = 48;
 				yaren.Level = 4;

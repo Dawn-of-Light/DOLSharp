@@ -1268,7 +1268,7 @@ namespace DOL.GS
 							// Check for specified realms
 							for (int i = 0; i < realms.Length; ++i)
 							{
-								byte realm = (byte)realms[i];
+								eRealm realm = realms[i];
 								if (currentNPC.Realm == realm)
 								{
 									// Check for min-max level, if any specified

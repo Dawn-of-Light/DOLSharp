@@ -73,11 +73,9 @@ namespace DOL.GS.Behaviour.Requirements
 			bool result = true;
             GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
 
-            result = compare(player.Realm, N, Comparator);
+            result = compare((int)player.Realm, (int)N, Comparator);
 
 			return result;
 		}
-
-		
     }
 }

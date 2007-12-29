@@ -118,7 +118,7 @@ namespace DOL.GS.Quests.Hibernia
                 Charles.Name = "Charles";
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + Charles.Name + ", creating ...");
-                Charles.Realm = (byte)3;
+				Charles.Realm = eRealm.Hibernia;
                 Charles.CurrentRegionID = 200;
                 Charles.Size = 37;
                 Charles.Level = 1;

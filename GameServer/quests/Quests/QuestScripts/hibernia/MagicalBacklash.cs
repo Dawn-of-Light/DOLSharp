@@ -316,7 +316,7 @@ namespace DOL.GS.Quests.Hibernia
                     log.Warn("Could not find " + Josson.Name + ", creating him ...");
                 //k109: My preference, no guildname for quest NPCs.  Uncomment if you like that...
                 //Josson.GuildName = "Part of " + questTitle + " Quest";
-                Josson.Realm = (byte)eRealm.Hibernia;
+                Josson.Realm = eRealm.Hibernia;
                 Josson.CurrentRegionID = 200;
 
                 GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();

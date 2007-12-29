@@ -109,7 +109,7 @@ namespace DOL.GS.Quests.Albion
                     log.Warn("Could not find " + sirDorian.Name + ", creating him ...");
                 //k109: My preference, no guildname for quest NPCs.  Uncomment if you like that...
                 //sirDorian.GuildName = "Part of " + questTitle + " Quest";
-                sirDorian.Realm = (byte)eRealm.Albion;
+                sirDorian.Realm = eRealm.Albion;
                 sirDorian.CurrentRegionID = 1;
 
                 GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();

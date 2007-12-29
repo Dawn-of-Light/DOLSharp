@@ -314,7 +314,7 @@ namespace DOL.GS.Quests.Albion
                     log.Warn("Could not find " + Rheda.Name + ", creating him ...");
                 //k109: My preference, no guildname for quest NPCs.  Uncomment if you like that...
                 //Rheda.GuildName = "Part of " + questTitle + " Quest";
-                Rheda.Realm = (byte)eRealm.Albion;
+                Rheda.Realm = eRealm.Albion;
                 Rheda.CurrentRegionID = 1;
 
                 GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
