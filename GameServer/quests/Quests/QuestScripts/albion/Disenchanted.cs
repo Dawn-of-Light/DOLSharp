@@ -159,7 +159,7 @@ namespace DOL.GS.Quests.Albion
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + palune.Name + ", creating him ...");
                 palune.GuildName = "Enchanter";
-                palune.Realm = (byte)eRealm.Albion;
+                palune.Realm = eRealm.Albion;
                 palune.CurrentRegionID = 1;
                 palune.Size = 52;
                 palune.Level = 27;
@@ -189,7 +189,7 @@ namespace DOL.GS.Quests.Albion
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + guardCynon.Name + ", creating him ...");
                 guardCynon.GuildName = "Part of " + questTitle + " Quest";
-                guardCynon.Realm = (byte)eRealm.Albion;
+                guardCynon.Realm = eRealm.Albion;
                 guardCynon.CurrentRegionID = 1;
                 guardCynon.Size = 51;
                 guardCynon.Level = 25;

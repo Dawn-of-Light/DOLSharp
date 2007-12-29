@@ -376,8 +376,8 @@ namespace DOL.GS.Keeps
 
 			switch (guard.Realm)
 			{
-				case 0:
-				case 1:
+				case eRealm.None:
+				case eRealm.Albion:
 					{
 						if (guard is GuardFighter)
 							guard.Inventory = ClothingMgr.Albion_Fighter.CloneTemplate();
@@ -393,7 +393,7 @@ namespace DOL.GS.Keeps
 							guard.Inventory = ClothingMgr.Albion_Stealther.CloneTemplate();
 						break;
 					}
-				case 2:
+				case eRealm.Midgard:
 					{
 						if (guard is GuardFighter)
 							guard.Inventory = ClothingMgr.Midgard_Fighter.CloneTemplate();
@@ -409,7 +409,7 @@ namespace DOL.GS.Keeps
 							guard.Inventory = ClothingMgr.Midgard_Stealther.CloneTemplate();
 						break;
 					}
-				case 3:
+				case eRealm.Hibernia:
 					{
 						if (guard is GuardFighter)
 							guard.Inventory = ClothingMgr.Hibernia_Fighter.CloneTemplate();
@@ -443,7 +443,7 @@ namespace DOL.GS.Keeps
 			// casters and midgard archers use two handed weapons as default
 			if (guard is GuardCaster)
 				guard.SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded);
-			else if (guard is GuardArcher && guard.Realm == 2)
+			else if (guard is GuardArcher && guard.Realm == eRealm.Midgard)
 				guard.SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded);
 			else if ((guard is GuardFighter || guard is GuardLord) && Util.Chance(50))
 				guard.SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded);

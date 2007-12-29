@@ -157,7 +157,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + nob.Name + ", creating him ...");
 				nob.GuildName = "Part of " + questTitle + " Quest";
-				nob.Realm = (byte) eRealm.Albion;
+				nob.Realm = eRealm.Albion;
 				nob.CurrentRegionID = 1;
 
 				nob.Size = 45;
@@ -187,7 +187,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + colm.Name + ", creating ...");
 				colm.GuildName = "Stable Master";
-				colm.Realm = (byte) eRealm.Albion;
+				colm.Realm = eRealm.Albion;
 				colm.CurrentRegionID = 1;
 				colm.Size = 51;
 				colm.Level = 50;
@@ -236,7 +236,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + haruld.Name + ", creating ...");
 				haruld.GuildName = "Stable Master";
-				haruld.Realm = (byte) eRealm.Albion;
+				haruld.Realm = eRealm.Albion;
 				haruld.CurrentRegionID = 1;
 				haruld.Size = 49;
 				haruld.Level = 4;
@@ -279,7 +279,7 @@ namespace DOL.GS.Quests.Albion
 				fairyDragonflyHandler.Heading = 114;
 				fairyDragonflyHandler.Model = 603;
 				fairyDragonflyHandler.GuildName = "Part of " + questTitle + " Quest";
-				fairyDragonflyHandler.Realm = (byte) eRealm.None;
+				fairyDragonflyHandler.Realm = eRealm.None;
 				fairyDragonflyHandler.CurrentRegionID = 1;
 				fairyDragonflyHandler.Size = 49;
 				fairyDragonflyHandler.Level = 3;

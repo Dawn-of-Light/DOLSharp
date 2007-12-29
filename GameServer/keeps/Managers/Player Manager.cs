@@ -60,11 +60,11 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		/// <param name="keep">The keep object</param>
 		/// <param name="realm">The raizing realm</param>
-		public static void BroadcastRaize(AbstractGameKeep keep, byte realm)
+		public static void BroadcastRaize(AbstractGameKeep keep, eRealm realm)
 		{
-			string message = string.Format("{1} has been razed by the forces of {0}!", GlobalConstants.RealmToName((eRealm)realm), keep.Name);
+			string message = string.Format("{1} has been razed by the forces of {0}!", GlobalConstants.RealmToName(realm), keep.Name);
 			BroadcastMessage(message, eRealm.None);
-			NewsMgr.CreateNews(message, 0, eNewsType.RvRGlobal, false);
+			NewsMgr.CreateNews(message, eRealm.None, eNewsType.RvRGlobal, false);
 		}
 
 		/// <summary>
@@ -97,7 +97,7 @@ namespace DOL.GS.Keeps
 			{
 				if (client.Player == null)
 					continue;
-				if ((client.Account.PrivLevel != 1 || realm == eRealm.None) || client.Player.Realm == (int)realm)
+				if ((client.Account.PrivLevel != 1 || realm == eRealm.None) || client.Player.Realm == realm)
 				{
 					client.Out.SendMessage(message, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				}

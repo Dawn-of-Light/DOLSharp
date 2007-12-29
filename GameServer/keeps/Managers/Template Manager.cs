@@ -26,7 +26,7 @@ namespace DOL.GS.Keeps
 		{
 			if (guard.Component != null)
 				guard.Realm = guard.Component.Keep.Realm;
-			else guard.Realm = (byte)guard.CurrentZone.GetRealm();
+			else guard.Realm = guard.CurrentZone.GetRealm();
 		}
 
 		private static void SetGuardGuild(GameKeepGuard guard)
@@ -146,21 +146,21 @@ namespace DOL.GS.Keeps
 			{
 				switch (guard.Realm)
 				{
-					case 0:
-					case 1:
+					case eRealm.None:
+					case eRealm.Albion:
 						{
 							guard.Model = AlbionHastener;
 							guard.Size = 35;
 							break;
 						}
-					case 2:
+					case eRealm.Midgard:
 						{
 							guard.Model = MidgardHastener;
 							guard.Size = 30;
 							guard.Flags ^= (uint)GameNPC.eFlags.TRANSPARENT;
 							break;
 						}
-					case 3:
+					case eRealm.Hibernia:
 						{
 							guard.Model = HiberniaHastener;
 							guard.Size = 50;
@@ -763,7 +763,7 @@ namespace DOL.GS.Keeps
 			}
 			else if (guard is GuardArcher)
 			{
-				if (guard.Realm == (byte)eRealm.Albion)
+				if (guard.Realm == eRealm.Albion)
 					guard.BlockChance = 10;
 				guard.EvadeChance = 10;
 			}

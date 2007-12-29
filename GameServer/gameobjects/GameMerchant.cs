@@ -350,7 +350,7 @@ namespace DOL.GS
 			merchant.Heading = Heading;
 			merchant.Speed = MaxSpeedBase;
 			merchant.Region = CurrentRegionID;
-			merchant.Realm = Realm;
+			merchant.Realm = (byte)Realm;
 			merchant.Model = Model;
 			merchant.Size = Size;
 			merchant.Level = Level;

@@ -62,7 +62,7 @@ namespace DOL.GS
 			}
 		}
 
-		public override byte Realm
+		public override eRealm Realm
 		{
 			get
 			{
@@ -70,16 +70,15 @@ namespace DOL.GS
 				{
 					case 1:
 					case 11:
-						return 1;
+						return eRealm.Albion;
 					case 2:
 					case 12:
-						return 2;
+						return eRealm.Midgard;
 					case 3:
 					case 13:
-						return 3;
+						return eRealm.Hibernia;
 					default:
-						return 0;
-
+						return eRealm.None;
 				}
 			}
 			set

@@ -245,7 +245,7 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				return m_difficultyLevel[Realm-1];
+				return m_difficultyLevel[(int)Realm - 1];
 			}
 		}
 		private byte m_targetLevel;
@@ -369,10 +369,10 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// The Keep Realm linked to the DBKeep
 		/// </summary>
-		public byte Realm
+		public eRealm Realm
 		{
-			get	{ return DBKeep.Realm; }
-			set	{ DBKeep.Realm = value; }
+			get	{ return (eRealm)DBKeep.Realm; }
+			set	{ DBKeep.Realm = (byte)value; }
 		}
 
 		/// <summary>
@@ -575,7 +575,7 @@ namespace DOL.GS.Keeps
 
 		public virtual bool CheckForClaim(GamePlayer player)
 		{
-			if((int)player.Realm != this.Realm)
+			if(player.Realm != this.Realm)
 			{
 				player.Out.SendMessage("The keep is not owned by your realm.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return false;
@@ -936,7 +936,7 @@ namespace DOL.GS.Keeps
 		{
 			LastAttackedByEnemyTick = 0;
 
-			Realm = (byte)realm;
+			Realm = realm;
 
 			PlayerMgr.BroadcastCapture(this);
 

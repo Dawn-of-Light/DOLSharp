@@ -111,7 +111,7 @@ namespace DOL.GS.Quests.Midgard
 				Inaksha.Model = 193;
 				Inaksha.Name = "Inaksha";
 				Inaksha.GuildName = "";
-				Inaksha.Realm = (byte) eRealm.Midgard;
+				Inaksha.Realm = eRealm.Midgard;
 				Inaksha.CurrentRegionID = 100;
 				Inaksha.Size = 50;
 				Inaksha.Level = 41;
@@ -140,7 +140,7 @@ namespace DOL.GS.Quests.Midgard
 				Loken.Model = 212;
 				Loken.Name = "Loken";
 				Loken.GuildName = "";
-				Loken.Realm = (byte) eRealm.None;
+				Loken.Realm = eRealm.None;
 				Loken.CurrentRegionID = 100;
 				Loken.Size = 50;
 				Loken.Level = 65;
@@ -169,7 +169,7 @@ namespace DOL.GS.Quests.Midgard
 				Miri.Model = 220;
 				Miri.Name = "Miri";
 				Miri.GuildName = "";
-				Miri.Realm = (byte) eRealm.Midgard;
+				Miri.Realm = eRealm.Midgard;
 				Miri.CurrentRegionID = 101;
 				Miri.Size = 50;
 				Miri.Level = 43;

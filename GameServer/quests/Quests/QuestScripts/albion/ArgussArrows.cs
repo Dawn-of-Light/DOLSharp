@@ -164,7 +164,7 @@ namespace DOL.GS.Quests.Albion
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + argusBowman.Name + ", creating him ...");
                 argusBowman.GuildName = "Weapon Merchant";
-                argusBowman.Realm = (byte)eRealm.Albion;
+                argusBowman.Realm = eRealm.Albion;
                 argusBowman.CurrentRegionID = 1;
                 argusBowman.Size = 50;
                 argusBowman.Level = 18;

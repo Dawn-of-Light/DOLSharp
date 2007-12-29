@@ -163,7 +163,7 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + kealan.Name + ", creating him ...");
 
 				kealan.GuildName = "Part of " + questTitle + " Quest";
-				kealan.Realm = (byte) eRealm.Albion;
+				kealan.Realm = eRealm.Albion;
 				kealan.CurrentRegionID = 1;
 				kealan.Size = 48;
 				kealan.Level = 32;
@@ -196,7 +196,7 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + arachneida.Name + ", creating her ...");
 
 				arachneida.GuildName = "Part of " + questTitle + " Quest";
-				arachneida.Realm = (byte) eRealm.None;
+				arachneida.Realm = eRealm.None;
 				arachneida.CurrentRegionID = 1;
 				arachneida.Size = 90;
 				arachneida.Level = 12;

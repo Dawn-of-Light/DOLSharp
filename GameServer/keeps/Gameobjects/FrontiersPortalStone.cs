@@ -58,14 +58,14 @@ namespace DOL.GS.Keeps
 		public void MoveToPosition(DBKeepPosition position)
 		{ }
 
-		public override byte Realm
+		public override eRealm Realm
 		{
 			get
 			{
 				if (m_component != null)
-					return m_component.Keep.Realm;
+					return (eRealm)m_component.Keep.Realm;
 				if (m_CurrentRegion.ID == 163)
-					return (byte)CurrentZone.GetRealm();
+					return CurrentZone.GetRealm();
 				return base.Realm;
 			}
 		}
@@ -102,25 +102,28 @@ namespace DOL.GS.Keeps
 				string location = "";
 				switch (player.Realm)
 				{
-					case 1: location = "Castle Sauvage"; break;
-					case 2: location = "Druim Ligen"; break;
-					case 3: location = "Svasudheim Faste"; break;
+					case eRealm.Albion: location = "Castle Sauvage"; break;
+					case eRealm.Midgard: location = "Svasudheim Faste"; break;
+					case eRealm.Hibernia: location = "Druim Ligen"; break;
 				}
 
 				if (location != "")
 				{
-					Teleport t = (Teleport)GameServer.Database.FindObjectByKey(typeof(Teleport), location);
+					Teleport t = (Teleport)GameServer.Database.SelectObject(typeof(Teleport), "`TeleportID` = '" + location + "'");
 					if (t != null)
+					{
 						player.MoveTo((ushort)t.RegionID, t.X, t.Y, t.Z, (ushort)t.Heading);
+						return true;
+					}
 				}
 			}
 
 			eDialogCode code = eDialogCode.SimpleWarning;
 			switch (player.Realm)
 			{
-				case 1: code = eDialogCode.WarmapWindowAlbion; break;
-				case 2: code = eDialogCode.WarmapWindowMidgard; break;
-				case 3: code = eDialogCode.WarmapWindowHibernia; break;
+				case eRealm.Albion: code = eDialogCode.WarmapWindowAlbion; break;
+				case eRealm.Midgard: code = eDialogCode.WarmapWindowMidgard; break;
+				case eRealm.Hibernia: code = eDialogCode.WarmapWindowHibernia; break;
 			}
 
 			player.Out.SendDialogBox(code, 0, 0, 0, 0, eDialogType.YesNo, false, "");

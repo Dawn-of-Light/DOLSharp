@@ -157,7 +157,7 @@ namespace DOL.GS.Quests.Albion
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + marlinThuler.Name + ", creating him ...");
                 marlinThuler.GuildName = "Instrument Merchant";
-                marlinThuler.Realm = (byte)eRealm.Albion;
+                marlinThuler.Realm = eRealm.Albion;
                 marlinThuler.CurrentRegionID = 1;
                 marlinThuler.Size = 52;
                 marlinThuler.Level = 40;

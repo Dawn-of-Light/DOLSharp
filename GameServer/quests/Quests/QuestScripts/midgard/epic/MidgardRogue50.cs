@@ -110,7 +110,7 @@ namespace DOL.GS.Quests.Midgard
 				Masrim.Model = 177;
 				Masrim.Name = "Masrim";
 				Masrim.GuildName = "";
-				Masrim.Realm = (byte) eRealm.Midgard;
+				Masrim.Realm = eRealm.Midgard;
 				Masrim.CurrentRegionID = 100;
 				Masrim.Size = 52;
 				Masrim.Level = 40;
@@ -139,7 +139,7 @@ namespace DOL.GS.Quests.Midgard
 				Oona.Model = 356;
 				Oona.Name = "Oona";
 				Oona.GuildName = "";
-				Oona.Realm = (byte) eRealm.None;
+				Oona.Realm = eRealm.None;
 				Oona.CurrentRegionID = 100;
 				Oona.Size = 50;
 				Oona.Level = 65;
@@ -169,7 +169,7 @@ namespace DOL.GS.Quests.Midgard
 				MorlinCaan.Model = 235;
 				MorlinCaan.Name = "Morlin Caan";
 				MorlinCaan.GuildName = "Smith";
-				MorlinCaan.Realm = (byte) eRealm.Midgard;
+				MorlinCaan.Realm = eRealm.Midgard;
 				MorlinCaan.CurrentRegionID = 101;
 				MorlinCaan.Size = 50;
 				MorlinCaan.Level = 54;

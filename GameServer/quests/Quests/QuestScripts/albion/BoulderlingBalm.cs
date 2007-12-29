@@ -152,13 +152,13 @@ namespace DOL.GS.Quests.Albion
                 */
             if (npcs.Length == 0)
             {
-                brotherMaynard = new GameNPC();
+                brotherMaynard = new GameHealer();
                 brotherMaynard.Model = 34;
                 brotherMaynard.Name = "Brother Maynard";
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + brotherMaynard.Name + ", creating him ...");
                 brotherMaynard.GuildName = "Healer";
-                brotherMaynard.Realm = (byte)eRealm.Albion;
+                brotherMaynard.Realm = eRealm.Albion;
                 brotherMaynard.CurrentRegionID = 1;
                 brotherMaynard.Size = 52;
                 brotherMaynard.Level = 27;

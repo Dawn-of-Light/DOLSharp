@@ -220,7 +220,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the Realm of this NPC
 		/// </summary>
-		public override byte Realm
+		public override eRealm Realm
 		{
 			get
 			{
@@ -1726,7 +1726,7 @@ namespace DOL.GS
 			m_maxSpeedBase = npc.Speed;
 			m_currentSpeed = 0;
 			CurrentRegionID = npc.Region;
-			Realm = npc.Realm;
+			Realm = (eRealm)npc.Realm;
 			Model = npc.Model;
 			Size = npc.Size;
 			Level = npc.Level;	// health changes when GameNPC.Level changes
@@ -1838,7 +1838,7 @@ namespace DOL.GS
 			mob.Heading = Heading;
 			mob.Speed = MaxSpeedBase;
 			mob.Region = CurrentRegionID;
-			mob.Realm = Realm;
+			mob.Realm = (byte)Realm;
 			mob.Model = Model;
 			mob.Size = Size;
 			mob.Level = Level;

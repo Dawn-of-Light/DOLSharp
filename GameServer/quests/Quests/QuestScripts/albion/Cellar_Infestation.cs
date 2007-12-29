@@ -119,7 +119,7 @@ using DOL.AI.Brain;
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + MistressLaws.Name + ", creating ...");
 				MistressLaws.GuildName = "Part of " + questTitle + " Quest";
-				MistressLaws.Realm = (byte) 1;
+				MistressLaws.Realm = eRealm.Albion;
 				MistressLaws.CurrentRegionID = 51;
 				MistressLaws.Size = 52;
 				MistressLaws.Level = 40;
@@ -164,7 +164,7 @@ using DOL.AI.Brain;
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + YlaineBarrett.Name + ", creating ...");
 				YlaineBarrett.GuildName = "Part of " + questTitle + " Quest";
-				YlaineBarrett.Realm = (byte) 1;
+				YlaineBarrett.Realm = eRealm.Albion;
 				YlaineBarrett.CurrentRegionID = 51;
 				YlaineBarrett.Size = 50;
 				YlaineBarrett.Level = 40;

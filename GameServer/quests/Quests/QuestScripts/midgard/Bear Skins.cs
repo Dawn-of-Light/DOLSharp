@@ -115,7 +115,7 @@ using DOL.AI.Brain;
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + Helen.Name + ", creating ...");
 				Helen.GuildName = "Part of " + questTitle + " Quest";
-				Helen.Realm = (byte) 2;
+				Helen.Realm = eRealm.Midgard;
 				Helen.CurrentRegionID = 100;
 				Helen.Size = 49;
 				Helen.Level = 41;

@@ -162,7 +162,7 @@ namespace DOL.GS.Quests.Albion
                   if (log.IsWarnEnabled)
                       log.Warn("Could not find " + arleighPenn.Name + ", creating him ...");
                   arleighPenn.GuildName = "Dye Merchant";
-                  arleighPenn.Realm = (byte)eRealm.Albion;
+                  arleighPenn.Realm = eRealm.Albion;
                   arleighPenn.CurrentRegionID = 1;
                   arleighPenn.Size = 51;
                   arleighPenn.Level = 15;

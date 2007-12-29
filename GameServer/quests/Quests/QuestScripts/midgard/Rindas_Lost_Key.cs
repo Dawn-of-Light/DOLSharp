@@ -123,7 +123,7 @@ using DOL.AI.Brain;
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + DwarvenGuardRinda.Name + ", creating ...");
 				DwarvenGuardRinda.GuildName = "Part of " + questTitle + " Quest";
-				DwarvenGuardRinda.Realm = (byte) 2;
+				DwarvenGuardRinda.Realm = eRealm.Midgard;
 				DwarvenGuardRinda.CurrentRegionID = 100;
 				DwarvenGuardRinda.Size = 53;
 				DwarvenGuardRinda.Level = 41;
@@ -168,7 +168,7 @@ using DOL.AI.Brain;
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + hobgoblinsnakefinder.Name + ", creating ...");
 				hobgoblinsnakefinder.GuildName = "Part of " + questTitle + " Quest";
-				hobgoblinsnakefinder.Realm = (byte) 0;
+				hobgoblinsnakefinder.Realm = eRealm.None;
 				hobgoblinsnakefinder.CurrentRegionID = 100;
 				hobgoblinsnakefinder.Size = 37;
 				hobgoblinsnakefinder.Level = 1;

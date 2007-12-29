@@ -240,7 +240,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + SirPrescott.Name + ", creating him ...");
 				//SirPrescott.GuildName = "Part of " + questTitle + " Quest";
-				SirPrescott.Realm = (byte)eRealm.Albion;
+				SirPrescott.Realm = eRealm.Albion;
 				SirPrescott.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();

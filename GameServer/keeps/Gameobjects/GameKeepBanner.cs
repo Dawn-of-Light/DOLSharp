@@ -187,14 +187,14 @@ namespace DOL.GS.Keeps
 			ushort model = AlbionGuildModel;
 			switch (this.Component.Keep.Realm)
 			{
-				case 0: model = AlbionGuildModel; break;
-				case 1: model = AlbionGuildModel; break;
-				case 2: model = MidgardGuildModel; break;
-				case 3: model = HiberniaGuildModel; break;
+				case eRealm.None: model = AlbionGuildModel; break;
+				case eRealm.Albion: model = AlbionGuildModel; break;
+				case eRealm.Midgard: model = MidgardGuildModel; break;
+				case eRealm.Hibernia: model = HiberniaGuildModel; break;
 			}
 			this.Model = model;
 			this.Emblem = emblem;
-			this.Name = GlobalConstants.RealmToName((eRealm)this.Component.Keep.Realm) + " Guild Banner";
+			this.Name = GlobalConstants.RealmToName(this.Component.Keep.Realm) + " Guild Banner";
 		}
 	}
 }

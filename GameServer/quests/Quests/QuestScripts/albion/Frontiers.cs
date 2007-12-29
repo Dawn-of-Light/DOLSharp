@@ -167,7 +167,7 @@ namespace DOL.GS.Quests.Albion
 				masterVisur.Model = 61;
 				masterVisur.Name = "Master Visur";
 				masterVisur.GuildName = "Part of " + questTitle + " Quest";
-				masterVisur.Realm = (byte) eRealm.Albion;
+				masterVisur.Realm = eRealm.Albion;
 				masterVisur.CurrentRegionID = 1;
 				masterVisur.Size = 49;
 				masterVisur.Level = 55;
@@ -207,7 +207,7 @@ namespace DOL.GS.Quests.Albion
 				alice.Model = 52;
 				alice.Name = "Scryer Alice";
 				alice.GuildName = "Part of " + questTitle + " Quest";
-				alice.Realm = (byte) eRealm.Albion;
+				alice.Realm = eRealm.Albion;
 				alice.CurrentRegionID = 1;
 				alice.Size = 51;
 				alice.Level = 50;
@@ -266,7 +266,7 @@ namespace DOL.GS.Quests.Albion
 				colm.Model = 78;
 				colm.Name = "Dragonfly Handler Colm";
 				colm.GuildName = "Stable Master";
-				colm.Realm = (byte) eRealm.Albion;
+				colm.Realm = eRealm.Albion;
 				colm.CurrentRegionID = 1;
 				colm.Size = 51;
 				colm.Level = 50;
@@ -329,7 +329,7 @@ namespace DOL.GS.Quests.Albion
 				dragonfly.Model = 1207;
 				dragonfly.Name = "dragonfly hatchling";
 				dragonfly.GuildName = "Part of " + questTitle + " Quest";
-				dragonfly.Realm = (byte) eRealm.None;
+				dragonfly.Realm = eRealm.None;
 				dragonfly.CurrentRegionID = 1;
 				dragonfly.Size = 25;
 				dragonfly.Level = 31;
@@ -364,7 +364,7 @@ namespace DOL.GS.Quests.Albion
 				uliam.Model = 52;
 				uliam.Name = "Uliam";
 				uliam.GuildName = "Stable Master";
-				uliam.Realm = (byte) eRealm.Albion;
+				uliam.Realm = eRealm.Albion;
 				uliam.CurrentRegionID = 1;
 				uliam.Size = 51;
 				uliam.Level = 50;

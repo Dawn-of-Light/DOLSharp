@@ -118,7 +118,7 @@ namespace DOL.GS.Quests.Albion
                 Charles.Name = "Charles";
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + Charles.Name + ", creating ...");
-                Charles.Realm = (byte)1;
+                Charles.Realm = eRealm.Albion;
                 Charles.CurrentRegionID = 1;
                 Charles.Size = 37;
                 Charles.Level = 1;

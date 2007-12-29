@@ -194,14 +194,6 @@ namespace DOL.GS
 			foreach (String message in m_deathAnnounce)
 				BroadcastMessage(String.Format(message, Name));
 			ReportNews(killer);
-
-			// Don't let event dragons respawn.
-
-			if (Realm == 5)
-			{
-				Delete();
-				DeleteFromDatabase();
-			}
 		}
 
 		#region Damage & Heal Events

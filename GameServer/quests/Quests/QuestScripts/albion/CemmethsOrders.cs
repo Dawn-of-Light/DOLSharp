@@ -271,7 +271,7 @@ namespace DOL.GS.Quests.Albion
                     log.Warn("Could not find " + CemmethBudgwold.Name + ", creating him ...");
                 //k109: My preference, no guildname for quest NPCs.  Uncomment if you like that...
                 //Cemmeth.GuildName = "Part of " + questTitle + " Quest";
-                CemmethBudgwold.Realm = (byte)eRealm.Albion;
+                CemmethBudgwold.Realm = eRealm.Albion;
                 CemmethBudgwold.CurrentRegionID = 1;
 
                 GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();

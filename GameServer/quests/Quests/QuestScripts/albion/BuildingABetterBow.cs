@@ -146,7 +146,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + elvarIronhand.Name + ", creating him ...");
 				elvarIronhand.GuildName = "Part of " + questTitle + " Quest";
-				elvarIronhand.Realm = (byte) eRealm.Albion;
+				elvarIronhand.Realm = eRealm.Albion;
 				elvarIronhand.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();

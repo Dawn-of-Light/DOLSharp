@@ -37,7 +37,7 @@ namespace DOL.Events
 		/// <summary>
 		/// The realm
 		/// </summary>
-		private byte m_realm;
+		private eRealm m_realm;
 
 		/// <summary>
 		/// Constructs a new KeepEventArgs
@@ -47,7 +47,7 @@ namespace DOL.Events
 			this.m_keep = keep;
 		}
 
-		public KeepEventArgs(AbstractGameKeep keep, byte realm)
+		public KeepEventArgs(AbstractGameKeep keep, eRealm realm)
 		{
 			this.m_keep = keep;
 			this.m_realm = realm;
@@ -64,7 +64,7 @@ namespace DOL.Events
 		/// <summary>
 		/// Gets the Realm
 		/// </summary>
-		public byte Realm
+		public eRealm Realm
 		{
 			get { return m_realm; }
 		}

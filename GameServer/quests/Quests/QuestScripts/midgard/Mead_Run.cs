@@ -121,7 +121,7 @@ using DOL.AI.Brain;
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + Audun.Name + ", creating ...");
 				Audun.GuildName = "Part of " + questTitle + " Quest";
-				Audun.Realm = (byte) 2;
+				Audun.Realm = eRealm.Midgard;
 				Audun.CurrentRegionID = 101;
 				Audun.Size = 48;
 				Audun.Level = 49;
@@ -166,7 +166,7 @@ using DOL.AI.Brain;
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + GuardOlja.Name + ", creating ...");
 				GuardOlja.GuildName = "Part of " + questTitle + " Quest";
-				GuardOlja.Realm = (byte) 2;
+				GuardOlja.Realm = eRealm.Midgard;
 				GuardOlja.CurrentRegionID = 229;
 				GuardOlja.Size = 50;
 				GuardOlja.Level = 50;

@@ -73,14 +73,7 @@ namespace DOL.GS.GameEvents
 					string realm = "";
 					if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_Normal)
 					{
-						realm = "[";
-						switch (player.Realm)
-						{
-							case 1: realm = realm + "Albion"; break;
-							case 2: realm = realm + "Midgard"; break;
-							case 3: realm = realm + "Hibernia"; break;
-						}
-						realm = realm + "] ";
+						realm = "[" + GlobalConstants.RealmToName(player.Realm) + "] ";
 					}
 					message = realm + message;
 				}
@@ -113,14 +106,7 @@ namespace DOL.GS.GameEvents
 					string realm = "";
 					if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_Normal)
 					{
-						realm = "[";
-						switch (player.Realm)
-						{
-							case 1: realm = realm + "Albion"; break;
-							case 2: realm = realm + "Midgard"; break;
-							case 3: realm = realm + "Hibernia"; break;
-						}
-						realm = realm + "] ";
+						realm = "[" + GlobalConstants.RealmToName(player.Realm) + "] ";
 					}
 					message = realm + message;
 				}

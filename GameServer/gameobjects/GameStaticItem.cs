@@ -180,7 +180,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the realm of this item
 		/// </summary>
-		public override byte Realm
+		public override eRealm Realm
 		{
 			get { return base.Realm; }
 			set

@@ -125,7 +125,7 @@ using DOL.AI.Brain;
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + GuardAlakyrr.Name + ", creating ...");
 				GuardAlakyrr.GuildName = "Part of " + questTitle + " Quest";
-				GuardAlakyrr.Realm = (byte) 1;
+				GuardAlakyrr.Realm = eRealm.Albion;
 				GuardAlakyrr.CurrentRegionID = 63;
 				GuardAlakyrr.Size = 50;
 				GuardAlakyrr.Level = 30;

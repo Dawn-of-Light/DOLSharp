@@ -42,7 +42,7 @@ namespace DOL.GS.Behaviour.Examples
                 SirQuait.Name = "Sir Quait";
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + SirQuait.Name + ", creating ...");                
-                SirQuait.Realm = (byte)1;
+                SirQuait.Realm = eRealm.Albion;
                 SirQuait.CurrentRegionID = 1;
                 SirQuait.Size = 50;
                 SirQuait.Level = 10;

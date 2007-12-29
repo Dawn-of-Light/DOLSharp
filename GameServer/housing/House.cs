@@ -952,7 +952,7 @@ namespace DOL.GS.Housing
 						hNPC.Z = z;
 						hNPC.Heading = heading;
 						hNPC.CurrentRegionID = RegionID;
-						hNPC.Realm = (byte)item.Realm;
+						hNPC.Realm = (eRealm)item.Realm;
 						hNPC.Flags ^= (uint)GameNPC.eFlags.PEACE;
 						hNPC.AddToWorld();
 						break;

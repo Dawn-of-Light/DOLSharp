@@ -122,7 +122,7 @@ namespace DOL.GS.Quests.Hibernia
 				Revelin.Model = 361;
 				Revelin.Name = "Revelin";
 				Revelin.GuildName = "";
-				Revelin.Realm = (byte)eRealm.Hibernia;
+				Revelin.Realm = eRealm.Hibernia;
 				Revelin.CurrentRegionID = 200;
 				Revelin.Size = 42;
 				Revelin.Level = 20;
@@ -152,7 +152,7 @@ namespace DOL.GS.Quests.Hibernia
 				Cailean.Model = 98;
 				Cailean.Name = "Cailean";
 				Cailean.GuildName = "";
-				Cailean.Realm = (byte)eRealm.None;
+				Cailean.Realm = eRealm.None;
 				Cailean.CurrentRegionID = 200;
 				Cailean.Size = 60;
 				Cailean.Level = 65;

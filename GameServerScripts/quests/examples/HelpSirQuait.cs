@@ -117,7 +117,7 @@ using DOL.AI.Brain;
 			if (log.IsWarnEnabled)
 				log.Warn("Could not find " + SirQuait.Name + ", creating ...");
 			SirQuait.GuildName = "Part of " + questTitle + " Quest";
-			SirQuait.Realm = (byte) 1;
+			SirQuait.Realm = eRealm.Albion;
 			SirQuait.CurrentRegionID = 1;
 			SirQuait.Size = 50;
 			SirQuait.Level = 10;
@@ -159,7 +159,7 @@ using DOL.AI.Brain;
 			if (log.IsWarnEnabled)
 				log.Warn("Could not find " + EvilThiefoftheShadowclan.Name + ", creating ...");
 			EvilThiefoftheShadowclan.GuildName = "Part of " + questTitle + " Quest";
-			EvilThiefoftheShadowclan.Realm = (byte) 0;
+			EvilThiefoftheShadowclan.Realm = eRealm.None;
 			EvilThiefoftheShadowclan.CurrentRegionID = 1;
 			EvilThiefoftheShadowclan.Size = 50;
 			EvilThiefoftheShadowclan.Level = 1;

@@ -70,13 +70,13 @@ namespace DOL.GS.Commands
 			}
 		}
 
-		public string getRealmString(byte Realm)
+		public string getRealmString(eRealm Realm)
 		{
 			switch (Realm)
 			{
-				case 1: return " ALB";
-				case 2: return " MID";
-				case 3: return " HIB";
+				case eRealm.Albion: return " ALB";
+				case eRealm.Midgard: return " MID";
+				case eRealm.Hibernia: return " HIB";
 				default: return " NONE";
 			}
 		}

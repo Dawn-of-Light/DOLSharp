@@ -167,18 +167,18 @@ namespace DOL.GS.Quests
 		//Damp Cavern
 		private static ushort[] damp_cavern = new ushort[] { 300/*, 301, 302, 303, 304*/ };
 
-		private static ushort GetRegionFromLevel(byte level, byte realm)
+		private static ushort GetRegionFromLevel(byte level, eRealm realm)
 		{
 			//TODO: fill this properly for all levels
 			//if (level <= 10)
 			{
 				switch (realm)
 				{
-					case 1:
+					case eRealm.Albion:
 						return GetRandomRegion(burial_tomb);
-					case 2:
+					case eRealm.Midgard:
 						return GetRandomRegion(the_cursed_barrow);
-					case 3:
+					case eRealm.Hibernia:
 						return GetRandomRegion(damp_cavern);
 				}
 			}

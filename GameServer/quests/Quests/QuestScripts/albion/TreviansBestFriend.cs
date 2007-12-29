@@ -169,7 +169,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + trevian.Name + ", creating him ...");
 				trevian.GuildName = "Part of " + questTitle + " Quest";
-				trevian.Realm = (byte) eRealm.Albion;
+				trevian.Realm = eRealm.Albion;
 				trevian.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -210,7 +210,7 @@ namespace DOL.GS.Quests.Albion
 				puppy.Model = 459;
 				puppy.Name = "Trevian's Puppy";
 				puppy.GuildName = "Part of " + questTitle + " Quest";
-				puppy.Realm = (byte) eRealm.Albion;
+				puppy.Realm = eRealm.Albion;
 				puppy.CurrentRegionID = 1;
 				puppy.Size = 22;
 				puppy.Level = 5;
@@ -239,7 +239,7 @@ namespace DOL.GS.Quests.Albion
 				guardBrydus.Model = 27;
 				guardBrydus.Name = "Guard Brydus";
 				guardBrydus.GuildName = "Part of " + questTitle + " Quest";
-				guardBrydus.Realm = (byte) eRealm.Albion;
+				guardBrydus.Realm = eRealm.Albion;
 				guardBrydus.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -279,7 +279,7 @@ namespace DOL.GS.Quests.Albion
 				banditAbductorLeader.Model = 18;
 				banditAbductorLeader.Name = banditAbductorLeaderName;
 				banditAbductorLeader.GuildName = "Part of " + questTitle + " Quest";
-				banditAbductorLeader.Realm = (byte) eRealm.None;
+				banditAbductorLeader.Realm = eRealm.None;
 
 				banditAbductorLeader.CurrentRegionID = 1;
 
@@ -320,7 +320,7 @@ namespace DOL.GS.Quests.Albion
 				banditAbductor1.Model = 16;
 				banditAbductor1.Name = banditAbductorName;
 				banditAbductor1.GuildName = "Part of " + questTitle + " Quest";
-				banditAbductor1.Realm = (byte) eRealm.None;
+				banditAbductor1.Realm = eRealm.None;
 				banditAbductor1.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -351,7 +351,7 @@ namespace DOL.GS.Quests.Albion
 				banditAbductor2.Model = 16;
 				banditAbductor2.Name = banditAbductorName;
 				banditAbductor2.GuildName = "Part of " + questTitle + " Quest";
-				banditAbductor2.Realm = (byte) eRealm.None;
+				banditAbductor2.Realm = eRealm.None;
 				banditAbductor2.CurrentRegionID = 1;
 
 				template = new GameNpcInventoryTemplate();
@@ -1470,7 +1470,7 @@ namespace DOL.GS.Quests.Albion
 				lilybet.Model = 459;
 				lilybet.Name = "Lilybet";
 				lilybet.GuildName = "Part of " + questTitle + " Quest";
-				lilybet.Realm = (byte) eRealm.Albion;
+				lilybet.Realm = eRealm.Albion;
 				lilybet.CurrentRegionID = 1;
 				lilybet.Size = 43;
 				lilybet.Level = 6;

@@ -116,7 +116,7 @@ namespace DOL.GS.Quests.Hibernia
 				Ainrebh.Model = 384;
 				Ainrebh.Name = "Ainrebh";
 				Ainrebh.GuildName = "Enchanter";
-				Ainrebh.Realm = (byte) eRealm.Hibernia;
+				Ainrebh.Realm = eRealm.Hibernia;
 				Ainrebh.CurrentRegionID = 200;
 				Ainrebh.Size = 48;
 				Ainrebh.Level = 40;
@@ -145,7 +145,7 @@ namespace DOL.GS.Quests.Hibernia
 				GreenMaw.Model = 146;
 				GreenMaw.Name = "Green Maw";
 				GreenMaw.GuildName = "";
-				GreenMaw.Realm = (byte) eRealm.None;
+				GreenMaw.Realm = eRealm.None;
 				GreenMaw.CurrentRegionID = 200;
 				GreenMaw.Size = 50;
 				GreenMaw.Level = 65;

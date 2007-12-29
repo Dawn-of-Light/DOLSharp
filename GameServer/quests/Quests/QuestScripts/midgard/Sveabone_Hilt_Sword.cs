@@ -121,7 +121,7 @@ using DOL.AI.Brain;
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + Gridash.Name + ", creating ...");
 				Gridash.GuildName = "Part of " + questTitle + " Quest";
-				Gridash.Realm = (byte) 2;
+				Gridash.Realm = eRealm.Midgard;
 				Gridash.CurrentRegionID = 100;
 				Gridash.Size = 51;
 				Gridash.Level = 21;

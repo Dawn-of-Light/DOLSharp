@@ -153,7 +153,7 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + addrir.Name + ", creating him ...");
 				addrir.GuildName = "Part of Addrir Quests";
-				addrir.Realm = (byte) eRealm.Hibernia;
+				addrir.Realm = eRealm.Hibernia;
 				addrir.CurrentRegionID = 200;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();

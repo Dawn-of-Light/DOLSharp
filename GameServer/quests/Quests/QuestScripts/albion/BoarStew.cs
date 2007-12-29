@@ -150,7 +150,7 @@ namespace DOL.GS.Quests.Albion
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + masterGerol.Name + ", creating him ...");
                 masterGerol.GuildName = "Healer";
-                masterGerol.Realm = (byte)eRealm.Albion;
+                masterGerol.Realm = eRealm.Albion;
                 masterGerol.CurrentRegionID = 1;
                 masterGerol.Size = 45;
                 masterGerol.Level = 20;

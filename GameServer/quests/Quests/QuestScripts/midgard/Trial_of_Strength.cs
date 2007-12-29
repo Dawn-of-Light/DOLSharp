@@ -119,7 +119,7 @@ using DOL.AI.Brain;
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + ToroldSterkkriger.Name + ", creating ...");
 				ToroldSterkkriger.GuildName = "Part of " + questTitle + " Quest";
-				ToroldSterkkriger.Realm = (byte) 2;
+				ToroldSterkkriger.Realm = eRealm.Midgard;
 				ToroldSterkkriger.CurrentRegionID = 151;
 				ToroldSterkkriger.Size = 50;
 				ToroldSterkkriger.Level = 55;
@@ -164,7 +164,7 @@ using DOL.AI.Brain;
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + JorundBruttstein.Name + ", creating ...");
 				JorundBruttstein.GuildName = "Part of " + questTitle + " Quest";
-				JorundBruttstein.Realm = (byte) 2;
+				JorundBruttstein.Realm = eRealm.Midgard;
 				JorundBruttstein.CurrentRegionID = 151;
 				JorundBruttstein.Size = 52;
 				JorundBruttstein.Level = 50;

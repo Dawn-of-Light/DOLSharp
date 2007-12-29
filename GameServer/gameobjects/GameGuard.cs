@@ -31,9 +31,9 @@ namespace DOL.GS
 
 			switch (Realm)
 			{
-				case 1: Say("Have at thee, fiend!"); break;
-				case 2: Say("Death to the intruders!"); break;
-				case 3: Say("The wicked shall be scourned!"); break;
+				case eRealm.Albion: Say("Have at thee, fiend!"); break;
+				case eRealm.Midgard: Say("Death to the intruders!"); break;
+				case eRealm.Hibernia: Say("The wicked shall be scourned!"); break;
 			}
 		}
 	}
