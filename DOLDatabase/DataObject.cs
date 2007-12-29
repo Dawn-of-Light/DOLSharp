@@ -158,7 +158,7 @@ namespace DOL.Database
 		/// Is object different of object in DB
 		/// </summary>
 		[Browsable(false)]
-		public bool Dirty
+		public virtual bool Dirty
 		{
 			set
 			{

@@ -21,12 +21,19 @@ using System;
 using DOL.Database;
 using DOL.Database.Attributes;
 using System.Collections;
+using log4net;
+using System.Reflection;
 
 namespace DOL.Database
 {
 	[DataTable(TableName = "ItemTemplate", PreCache = true)]
 	public class ItemTemplate : DataObject
 	{
+		/// <summary>
+		/// Defines a logger for this class.
+		/// </summary>
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
 		protected string m_id_nb;
 		protected string m_name;
 		protected int m_level;
@@ -94,6 +101,7 @@ namespace DOL.Database
 		protected int m_poisonCharges;
 		protected int m_realm;
 		private string m_allowedClasses = "";
+		private int m_canUseEvery;
 		static bool m_autoSave;
 
 		public ItemTemplate()
@@ -1069,6 +1077,17 @@ namespace DOL.Database
 			set
 			{
 				m_allowedClasses = value;
+				Dirty = true;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public int CanUseEvery
+		{
+			get { return m_canUseEvery; }
+			set
+			{
+				m_canUseEvery = value;
 				Dirty = true;
 			}
 		}
