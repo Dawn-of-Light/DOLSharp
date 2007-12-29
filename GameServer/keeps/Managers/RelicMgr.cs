@@ -177,7 +177,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="Realm"></param>
 		/// <returns></returns>
-		public static IEnumerable getRelics(byte Realm)
+		public static IEnumerable getRelics(eRealm Realm)
 		{
 			ArrayList realmRelics = new ArrayList();
 			lock (m_relics)
@@ -198,7 +198,7 @@ namespace DOL.GS
 		/// <param name="Realm"></param>
 		/// <param name="RelicType"></param>
 		/// <returns></returns>
-		public static IEnumerable getRelics(byte Realm, eRelicType RelicType)
+		public static IEnumerable getRelics(eRealm Realm, eRelicType RelicType)
 		{
 			ArrayList realmTypeRelics = new ArrayList();
 			foreach (GameRelic relic in getRelics(Realm))
@@ -216,7 +216,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="realm"></param>
 		/// <returns></returns>
-		public static int GetRelicCount(byte realm)
+		public static int GetRelicCount(eRealm realm)
 		{
 			int index = 0;
 			lock (m_relics.SyncRoot)
@@ -236,7 +236,7 @@ namespace DOL.GS
 		/// <param name="realm"></param>
 		/// <param name="type"></param>
 		/// <returns></returns>
-		public static int GetRelicCount(byte realm, eRelicType type)
+		public static int GetRelicCount(eRealm realm, eRelicType type)
 		{
 			int index = 0;
 			lock (m_relics.SyncRoot)
@@ -258,7 +258,7 @@ namespace DOL.GS
 		/// <param name="realm"></param>
 		/// <param name="type"></param>
 		/// <returns></returns>
-		public static double GetRelicBonusModifier(byte realm, eRelicType type)
+		public static double GetRelicBonusModifier(eRealm realm, eRelicType type)
 		{
 			double value = 0.0;
 			//only playerrealms can get bonus

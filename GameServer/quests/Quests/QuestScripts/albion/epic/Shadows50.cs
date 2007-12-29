@@ -114,7 +114,7 @@ namespace DOL.GS.Quests.Albion
 				Lidmann.Model = 64;
 				Lidmann.Name = "Lidmann Halsey";
 				Lidmann.GuildName = "";
-				Lidmann.Realm = (byte)eRealm.Albion;
+				Lidmann.Realm = eRealm.Albion;
 				Lidmann.CurrentRegionID = 1;
 				Lidmann.Size = 50;
 				Lidmann.Level = 50;
@@ -143,7 +143,7 @@ namespace DOL.GS.Quests.Albion
 				Uragaig.Model = 349;
 				Uragaig.Name = "Cailleach Uragaig";
 				Uragaig.GuildName = "";
-				Uragaig.Realm = (byte)eRealm.None;
+				Uragaig.Realm = eRealm.None;
 				Uragaig.CurrentRegionID = 1;
 				Uragaig.Size = 55;
 				Uragaig.Level = 70;

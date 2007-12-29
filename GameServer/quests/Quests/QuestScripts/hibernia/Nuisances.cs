@@ -381,7 +381,7 @@ namespace DOL.GS.Quests.Hibernia
 			sluagh.Model = 603;
 			sluagh.Name = "Sluagh Footsoldier";
 			sluagh.GuildName = "Part of " + questTitle + " Quest";
-			sluagh.Realm = (byte) eRealm.None;
+			sluagh.Realm = eRealm.None;
 			sluagh.CurrentRegionID = 200;
 			sluagh.Size = 50;
 			sluagh.Level = 4;

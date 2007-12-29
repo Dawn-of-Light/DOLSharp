@@ -132,7 +132,7 @@ namespace DOL.GS.ServerRules
 		/// <returns></returns>
 		public override bool IsAllowedToCraft(GamePlayer player, ItemTemplate item)
 		{
-			return player.Realm == item.Realm;
+			return player.Realm == (eRealm)item.Realm;
 		}
 
 		public override bool IsAllowedCharsInAllRealms(GameClient client)

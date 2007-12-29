@@ -165,7 +165,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + dalikor.Name + ", creating him ...");
 				dalikor.GuildName = "Part of Dalikor Quests";
-				dalikor.Realm = (byte) eRealm.Midgard;
+				dalikor.Realm = eRealm.Midgard;
 				dalikor.CurrentRegionID = locationDalikor.RegionID;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();

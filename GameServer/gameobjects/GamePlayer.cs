@@ -723,9 +723,9 @@ namespace DOL.GS
 					eEmote bindEmote = eEmote.Bind;
 					switch (this.Realm)
 					{
-						case 1: bindEmote = eEmote.BindAlb; break;
-						case 2: bindEmote = eEmote.BindMid; break;
-						case 3: bindEmote = eEmote.BindHib; break;
+						case eRealm.Albion: bindEmote = eEmote.BindAlb; break;
+						case eRealm.Midgard: bindEmote = eEmote.BindMid; break;
+						case eRealm.Hibernia: bindEmote = eEmote.BindHib; break;
 					}
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
@@ -840,7 +840,7 @@ namespace DOL.GS
 				{
 					switch (Realm)
 					{
-						case 1:
+						case eRealm.Albion:
 							{
 								character.BindRegion = 1;
 								character.BindXpos = 560372;
@@ -849,7 +849,7 @@ namespace DOL.GS
 								character.BindHeading = 3006;
 								break;
 							}
-						case 2:
+						case eRealm.Midgard:
 							{
 								character.BindRegion = 100;
 								character.BindXpos = 804000;
@@ -858,7 +858,7 @@ namespace DOL.GS
 								character.BindHeading = 3580;
 								break;
 							}
-						case 3:
+						case eRealm.Hibernia:
 							{
 								character.BindHeading = 200;
 								character.BindXpos = 345869;
@@ -939,14 +939,14 @@ namespace DOL.GS
 					}
 				case eReleaseType.City:
 					{
-						if (Realm == (byte)eRealm.Hibernia)
+						if (Realm == eRealm.Hibernia)
 						{
 							relRegion = 201; // Tir Na Nog
 							relX = 8192 + 15780;
 							relY = 8192 + 22727;
 							relZ = 7060;
 						}
-						else if (Realm == (byte)eRealm.Midgard)
+						else if (Realm == eRealm.Midgard)
 						{
 							relRegion = 101; // Jordheim
 							relX = 8192 + 24664;
@@ -967,7 +967,7 @@ namespace DOL.GS
 					{
 						foreach (AbstractGameKeep keep in KeepMgr.GetKeepsOfRegion(CurrentRegionID))
 						{
-							if (keep.IsPortalKeep && (byte)keep.OriginalRealm == Realm)
+							if (keep.IsPortalKeep && keep.OriginalRealm == Realm)
 							{
 								relRegion = keep.CurrentRegion.ID;
 								relX = keep.X;
@@ -980,7 +980,7 @@ namespace DOL.GS
 						if (relX == 0)
 						{
 							relRegion = CurrentRegion.ID;
-							KeepMgr.GetBorderKeepLocation((Realm * 2) / 1, out relX, out relY, out relZ, out relHeading);
+							KeepMgr.GetBorderKeepLocation(((byte)Realm * 2) / 1, out relX, out relY, out relZ, out relHeading);
 						}
 						break;
 					}
@@ -991,15 +991,15 @@ namespace DOL.GS
 						{
 							switch (Realm)
 							{
-								case 1:
+								case eRealm.Albion:
 									{
-										relRegion = 1; // Cotsworlds
+										relRegion = 1; // Cotswold
 										relX = 8192 + 553251;
 										relY = 8192 + 502936;
 										relZ = 2280;
 										break;
 									}
-								case 2:
+								case eRealm.Midgard:
 									{
 										relRegion = 100; // Mularn
 										relX = 8192 + 795621;
@@ -1007,7 +1007,7 @@ namespace DOL.GS
 										relZ = 4680;
 										break;
 									}
-								case 3:
+								case eRealm.Hibernia:
 									{
 										relRegion = 200; // MagMell
 										relX = 8192 + 338652;
@@ -1063,17 +1063,17 @@ namespace DOL.GS
 										relRegion = 163;
 										switch (Realm)
 										{
-											case 1:
+											case eRealm.Albion:
 												{
 													KeepMgr.GetBorderKeepLocation(1, out relX, out relY, out relZ, out relHeading);
 													break;
 												}
-											case 2:
+											case eRealm.Midgard:
 												{
 													KeepMgr.GetBorderKeepLocation(3, out relX, out relY, out relZ, out relHeading);
 													break;
 												}
-											case 3:
+											case eRealm.Hibernia:
 												{
 													KeepMgr.GetBorderKeepLocation(5, out relX, out relY, out relZ, out relHeading);
 													break;
@@ -1118,7 +1118,7 @@ namespace DOL.GS
 				m_releaseTimer = null;
 			}
 
-			if (Realm != (byte)eRealm.None)
+			if (Realm != eRealm.None)
 			{
 				if (Level > 5)
 				{
@@ -3180,11 +3180,11 @@ namespace DOL.GS
 		{
 			get
 			{
-				if (Realm < 1 || Realm > 3)
+				if (Realm == eRealm.None)
 					return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.UnknownRealm");
 
 				int m_RR = PlayerCharacter.RealmLevel / 10;
-				return REALM_RANK_NAMES[Realm - 1, PlayerCharacter.Gender, m_RR];
+				return REALM_RANK_NAMES[(int)Realm - 1, PlayerCharacter.Gender, m_RR];
 			}
 		}
 
@@ -6026,7 +6026,7 @@ namespace DOL.GS
 		/// <param name="killer">the killer</param>
 		public override void Die(GameObject killer)
 		{
-			bool realmDeath = killer != null && killer.Realm != (byte)eRealm.None;
+			bool realmDeath = killer != null && killer.Realm != eRealm.None;
 
 			TargetObject = null;
 			Diving(waterBreath.Normal);
@@ -8554,13 +8554,13 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the realm of this player
 		/// </summary>
-		public override byte Realm
+		public override eRealm Realm
 		{
-			get { return PlayerCharacter != null ? (byte)PlayerCharacter.Realm : base.Realm; }
+			get { return PlayerCharacter != null ? (eRealm)PlayerCharacter.Realm : base.Realm; }
 			set
 			{
 				base.Realm = value;
-				PlayerCharacter.Realm = value;
+				PlayerCharacter.Realm = (byte)value;
 			}
 		}
 

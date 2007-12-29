@@ -85,7 +85,7 @@ namespace DOL.GS
 				{
 					Teleport teleport = new Teleport();
 					teleport.TeleportID = "battlegrounds";
-					teleport.Realm = portalKeep.Realm;
+					teleport.Realm = (byte)portalKeep.Realm;
 					teleport.RegionID = portalKeep.Region;
 					teleport.X = portalKeep.X;
 					teleport.Y = portalKeep.Y;

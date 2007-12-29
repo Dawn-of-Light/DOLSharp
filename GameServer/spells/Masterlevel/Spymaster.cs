@@ -86,17 +86,17 @@ namespace DOL.GS.Spells
             string TemplateId = "";
             switch (caster.Realm)
             {
-                case 1:
+                case eRealm.Albion:
                     decoy.Name = "Avalonian Unicorn Knight";
                     decoy.Model = (ushort)m_rnd.Next(61, 68);
                     TemplateId = "e3ead77b-22a7-4b7d-a415-92a29295dcf7";
                     break;
-                case 2:
+                case eRealm.Midgard:
                     decoy.Name = "Kobold Elding Herra";
                     decoy.Model = (ushort)m_rnd.Next(169, 184);
                     TemplateId = "ee137bff-e83d-4423-8305-8defa2cbcd7a";
                     break;
-                case 3:
+                case eRealm.Hibernia:
                     decoy.Name = "Elf Gilded Spear";
                     decoy.Model = (ushort)m_rnd.Next(334, 349);
                     TemplateId = "a4c798a2-186a-4bda-99ff-ccef228cb745";

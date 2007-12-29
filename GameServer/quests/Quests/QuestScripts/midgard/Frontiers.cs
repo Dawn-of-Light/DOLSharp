@@ -168,7 +168,7 @@ namespace DOL.GS.Quests.Midgard
 				annark.Model = 215;
 				annark.Name = "Stor Gothi Annark";
 				annark.GuildName = "Part of " + questTitle + " Quest";
-				annark.Realm = (byte) eRealm.Midgard;
+				annark.Realm = eRealm.Midgard;
 				annark.CurrentRegionID = 100;
 				annark.Size = 51;
 				annark.Level = 66;
@@ -201,7 +201,7 @@ namespace DOL.GS.Quests.Midgard
 				idora.Model = 227;
 				idora.Name = "Scryer Idora";
 				idora.GuildName = "Part of " + questTitle + " Quest";
-				idora.Realm = (byte) eRealm.Midgard;
+				idora.Realm = eRealm.Midgard;
 				idora.CurrentRegionID = 234;
 				idora.Size = 52;
 				idora.Level = 50;
@@ -259,7 +259,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + njiedi.Name + ", creating ...");
 				njiedi.GuildName = "Stable Master";
-				njiedi.Realm = (byte) eRealm.Midgard;
+				njiedi.Realm = eRealm.Midgard;
 				njiedi.CurrentRegionID = 100;
 				njiedi.Size = 51;
 				njiedi.Level = 50;
@@ -321,7 +321,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + griffin.Name + ", creating ...");
 				griffin.GuildName = "Part of " + questTitle + " Quest";
-				griffin.Realm = (byte) eRealm.Midgard;
+				griffin.Realm = eRealm.Midgard;
 				griffin.CurrentRegionID = njiedi.CurrentRegionID;
 				griffin.Size = 50;
 				griffin.Level = 50;
@@ -358,7 +358,7 @@ namespace DOL.GS.Quests.Midgard
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + vorgar.Name + ", creating ...");
 				vorgar.GuildName = "Stable Master";
-				vorgar.Realm = (byte) eRealm.Midgard;
+				vorgar.Realm = eRealm.Midgard;
 				vorgar.CurrentRegionID = 100;
 				vorgar.Size = 51;
 				vorgar.Level = 50;

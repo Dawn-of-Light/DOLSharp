@@ -1219,9 +1219,9 @@ namespace DOL.GS.ServerRules
 
 			// clients with priv level > 1 are considered friendly by anyone
 			GamePlayer playerTarget = target as GamePlayer;
-			if (playerTarget != null && playerTarget.Client.Account.PrivLevel > 1) return player.Realm;
+			if (playerTarget != null && playerTarget.Client.Account.PrivLevel > 1) return (byte)player.Realm;
 
-			return target.Realm;
+			return (byte)target.Realm;
 		}
 
 		/// <summary>

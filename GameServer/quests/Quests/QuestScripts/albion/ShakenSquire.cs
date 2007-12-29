@@ -146,7 +146,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + sirJerem.Name + ", creating him ...");
 				sirJerem.GuildName = "Part of " + questTitle + " Quest";
-				sirJerem.Realm = (byte) eRealm.Albion;
+				sirJerem.Realm = eRealm.Albion;
 				sirJerem.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -189,7 +189,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + squireGalune.Name + ", creating him ...");
 				squireGalune.GuildName = "Part of " + questTitle + " Quest";
-				squireGalune.Realm = (byte) eRealm.Albion;
+				squireGalune.Realm = eRealm.Albion;
 				squireGalune.CurrentRegionID = 21;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -237,7 +237,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + smallSpider.Name + ", creating him ...");
 				smallSpider.GuildName = "Part of " + questTitle + " Quest";
-				smallSpider.Realm = (byte) eRealm.None;
+				smallSpider.Realm = eRealm.None;
 				smallSpider.CurrentRegionID = 21;
 				smallSpider.Size = 17;
 				smallSpider.Level = 5;

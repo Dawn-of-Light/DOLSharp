@@ -149,7 +149,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + ydeniaPhilpott.Name + ", creating him ...");
 				ydeniaPhilpott.GuildName = "Part of " + questTitle + " Quest";
-				ydeniaPhilpott.Realm = (byte) eRealm.Albion;
+				ydeniaPhilpott.Realm = eRealm.Albion;
 				ydeniaPhilpott.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -191,7 +191,7 @@ namespace DOL.GS.Quests.Albion
 				elvarTambor.Model = 9;
 				elvarTambor.Name = "Elvar Tambor";
 				elvarTambor.GuildName = "Part of " + questTitle + " Quest";
-				elvarTambor.Realm = (byte) eRealm.Albion;
+				elvarTambor.Realm = eRealm.Albion;
 				elvarTambor.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();

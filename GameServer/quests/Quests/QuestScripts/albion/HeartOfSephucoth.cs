@@ -151,7 +151,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + eowylnAstos.Name + ", creating him ...");
 				eowylnAstos.GuildName = "Part of " + questTitle + " Quest";
-				eowylnAstos.Realm = (byte) eRealm.Albion;
+				eowylnAstos.Realm = eRealm.Albion;
 				eowylnAstos.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -569,7 +569,7 @@ namespace DOL.GS.Quests.Albion
 								sephucoth = new GameNPC();
 								sephucoth.Model = 136;
 								sephucoth.Name = "Sephucoth";
-								sephucoth.Realm = (byte) eRealm.None;
+								sephucoth.Realm = eRealm.None;
 								sephucoth.CurrentRegionID = 1;
 
 								sephucoth.Size = 55;

@@ -167,7 +167,7 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		public override byte Realm
+		public override eRealm Realm
 		{
 			get { return Keep.Realm; }
 		}

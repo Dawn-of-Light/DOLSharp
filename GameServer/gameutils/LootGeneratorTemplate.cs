@@ -217,7 +217,7 @@ namespace DOL.GS
                 foreach (DBLootTemplate lootTemplate in templateList)
 				{
                     if (player != null
-                        && lootTemplate.ItemTemplate.Realm != player.Realm
+                        && (eRealm)lootTemplate.ItemTemplate.Realm != player.Realm
                         && (lootTemplate.ItemTemplate.Realm == 1 || lootTemplate.ItemTemplate.Realm == 2 || lootTemplate.ItemTemplate.Realm == 3)
                         )
                         continue;

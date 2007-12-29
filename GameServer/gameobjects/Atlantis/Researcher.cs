@@ -39,16 +39,16 @@ namespace DOL.GS
             GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 			switch (Realm)
 			{
-				case 1: 
+				case eRealm.Albion: 
 					template.AddNPCEquipment(eInventorySlot.TorsoArmor, 2230); break;
-				case 2: 
+				case eRealm.Midgard:
 					template.AddNPCEquipment(eInventorySlot.TorsoArmor, 2232);
 					template.AddNPCEquipment(eInventorySlot.ArmsArmor, 2233);
 					template.AddNPCEquipment(eInventorySlot.LegsArmor, 2234);
 					template.AddNPCEquipment(eInventorySlot.HandsArmor, 2235);
 					template.AddNPCEquipment(eInventorySlot.FeetArmor, 2236);
 					break;
-				case 3: 
+				case eRealm.Hibernia:
 					template.AddNPCEquipment(eInventorySlot.TorsoArmor, 2231); ; break;
 			}
 

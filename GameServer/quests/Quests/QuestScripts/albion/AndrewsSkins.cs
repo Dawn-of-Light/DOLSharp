@@ -151,7 +151,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + andrewWyatt.Name + ", creating him ...");
 				andrewWyatt.GuildName = "Part of " + questTitle + " Quest";
-				andrewWyatt.Realm = (byte) eRealm.Albion;
+				andrewWyatt.Realm = eRealm.Albion;
 				andrewWyatt.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -190,7 +190,7 @@ namespace DOL.GS.Quests.Albion
 				georNadren.Model = 9;
 				georNadren.Name = "Geor Nadren";
 				georNadren.GuildName = "Part of " + questTitle + " Quest";
-				georNadren.Realm = (byte) eRealm.Albion;
+				georNadren.Realm = eRealm.Albion;
 				georNadren.CurrentRegionID = 10;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -229,7 +229,7 @@ namespace DOL.GS.Quests.Albion
 				verNuren.Model = 9;
 				verNuren.Name = "Ver Nuren";
 				verNuren.GuildName = "Part of " + questTitle + " Quest";
-				verNuren.Realm = (byte) eRealm.Albion;
+				verNuren.Realm = eRealm.Albion;
 				verNuren.CurrentRegionID = 10;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();

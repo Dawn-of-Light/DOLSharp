@@ -145,7 +145,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + commanderBurcrif.Name + ", creating him ...");
 				commanderBurcrif.GuildName = "Part of " + questTitle + " Quest";
-				commanderBurcrif.Realm = (byte) eRealm.Albion;
+				commanderBurcrif.Realm = eRealm.Albion;
 				commanderBurcrif.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -477,7 +477,7 @@ namespace DOL.GS.Quests.Albion
 								slith = new GameNPC();
 								slith.Model = 31;
 								slith.Name = "Slith";
-								slith.Realm = (byte) eRealm.None;
+								slith.Realm = eRealm.None;
 								slith.CurrentRegionID = 1;
 
 								slith.Size = 50;

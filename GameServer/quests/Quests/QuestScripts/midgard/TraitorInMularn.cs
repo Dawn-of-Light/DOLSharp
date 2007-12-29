@@ -150,7 +150,7 @@ namespace DOL.GS.Quests.Midgard
 				ladyHinda.Model = 678;
 				ladyHinda.Name = "Lady Hinda";
 				ladyHinda.GuildName = "Part of " + questTitle + " Quest";
-				ladyHinda.Realm = (byte) eRealm.None;
+				ladyHinda.Realm = eRealm.None;
 				ladyHinda.CurrentRegionID = hindaStart.RegionID;
 				ladyHinda.Size = 50;
 				ladyHinda.Level = 30;

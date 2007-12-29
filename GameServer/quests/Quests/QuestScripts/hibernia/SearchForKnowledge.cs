@@ -165,7 +165,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + Blercyn.Name + ", creating him ...");
                 //Blercyn.GuildName = "Part of " + questTitle + " Quest";
-                Blercyn.Realm = (byte)eRealm.Hibernia;
+                Blercyn.Realm = eRealm.Hibernia;
                 Blercyn.CurrentRegionID = 200;
 
                 GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -202,7 +202,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + Epona.Name + ", creating him ...");
                 //Blercyn.GuildName = "Part of " + questTitle + " Quest";
-                Epona.Realm = (byte)eRealm.Hibernia;
+                Epona.Realm = eRealm.Hibernia;
                 Epona.CurrentRegionID = 200;
 
                 GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();

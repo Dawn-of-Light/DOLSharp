@@ -214,7 +214,7 @@ namespace DOL.GS.ServerRules
 		public override bool IsAllowedToBind(GamePlayer player, BindPoint point)
 		{
 			if (point.Realm == 0) return true;
-			return player.Realm == point.Realm;
+			return player.Realm == (eRealm)point.Realm;
 		}
 
 		/// <summary>
@@ -225,7 +225,7 @@ namespace DOL.GS.ServerRules
 		/// <returns></returns>
 		public override bool IsAllowedToCraft(GamePlayer player, ItemTemplate item)
 		{
-			return player.Realm == item.Realm;
+			return player.Realm == (eRealm)item.Realm;
 		}
 
 		/// <summary>
@@ -239,7 +239,7 @@ namespace DOL.GS.ServerRules
 			if(living == null || item == null)
 				return false;
 
-			if(item.Realm != 0 && item.Realm != living.Realm)
+			if(item.Realm != 0 && item.Realm != (int)living.Realm)
 				return false;
 
 			//armor

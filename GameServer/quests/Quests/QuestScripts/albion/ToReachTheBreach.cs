@@ -113,7 +113,7 @@ namespace DOL.GS.Quests.Albion
               RecruitsIntelligentBelt.IsDropable = false;
           }
           RecruitsMightyBelt = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate),"RecruitsMightyBelt");
-          if(RecruitsMightyBelt == null);
+          if(RecruitsMightyBelt == null)
           {
               RecruitsMightyBelt = new ItemTemplate();
               RecruitsMightyBelt.Name = "Recruit's Mighty Belt";
@@ -209,7 +209,7 @@ namespace DOL.GS.Quests.Albion
                     log.Warn("Could not find " + LadyGrynoch.Name + ", creating her ...");
                 //k109: My preference, no guildname for quest NPCs.  Uncomment if you like that...
                 //LadyGrynoch.GuildName = "Part of " + questTitle + " Quest";
-                LadyGrynoch.Realm = (byte)eRealm.Albion;
+                LadyGrynoch.Realm = eRealm.Albion;
                 LadyGrynoch.CurrentRegionID = 1;
 
                 GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();

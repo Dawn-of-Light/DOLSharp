@@ -133,7 +133,7 @@ namespace DOL.GS.Quests.Midgard
 				Lynnleigh.Model = 217;
 				Lynnleigh.Name = "Lynnleigh";
 				Lynnleigh.GuildName = "";
-				Lynnleigh.Realm = (byte) eRealm.Midgard;
+				Lynnleigh.Realm = eRealm.Midgard;
 				Lynnleigh.CurrentRegionID = 100;
 				Lynnleigh.Size = 51;
 				Lynnleigh.Level = 50;
@@ -160,7 +160,7 @@ namespace DOL.GS.Quests.Midgard
 				Elizabeth.Model = 217;
 				Elizabeth.Name = "Elizabeth";
 				Elizabeth.GuildName = "Enchanter";
-				Elizabeth.Realm = (byte) eRealm.Midgard;
+				Elizabeth.Realm = eRealm.Midgard;
 				Elizabeth.CurrentRegionID = 100;
 				Elizabeth.Size = 51;
 				Elizabeth.Level = 41;
@@ -189,7 +189,7 @@ namespace DOL.GS.Quests.Midgard
 				Ydenia.Model = 217;
 				Ydenia.Name = "Ydenia of Seithkona";
 				Ydenia.GuildName = "";
-				Ydenia.Realm = (byte) eRealm.None;
+				Ydenia.Realm = eRealm.None;
 				Ydenia.CurrentRegionID = 100;
 				Ydenia.Size = 100;
 				Ydenia.Level = 65;

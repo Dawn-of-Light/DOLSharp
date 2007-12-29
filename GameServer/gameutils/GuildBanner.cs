@@ -200,13 +200,13 @@ namespace DOL.GS
                     */
                     switch (m_player.Realm)
                     {
-                        case 1:
+                        case eRealm.Albion:
                             m_guildBanner.Model = 3223;
                             break;
-                        case 2:
+                        case eRealm.Midgard:
                             m_guildBanner.Model = 3224;
                             break;
-                        case 3:
+                        case eRealm.Hibernia:
                             m_guildBanner.Model = 3225;
                             break;
                     }

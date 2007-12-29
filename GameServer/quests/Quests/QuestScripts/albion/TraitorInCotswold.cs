@@ -149,7 +149,7 @@ namespace DOL.GS.Quests.Albion
 				ladyFelin.Model = 603;
 				ladyFelin.Name = "Lady Felin";
 				ladyFelin.GuildName = "Part of " + questTitle + " Quest";
-				ladyFelin.Realm = (byte) eRealm.None;
+				ladyFelin.Realm = eRealm.None;
 				ladyFelin.CurrentRegionID = 1;
 				ladyFelin.Size = 50;
 				ladyFelin.Level = 30;

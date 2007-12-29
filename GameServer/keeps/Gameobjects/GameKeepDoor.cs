@@ -94,11 +94,11 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// Get the realm of the keep door from keep owner
 		/// </summary>
-		public override byte Realm
+		public override eRealm Realm
 		{
 			get
 			{
-				return (byte)this.Component.Keep.Realm;
+				return this.Component.Keep.Realm;
 			}
 		}
 
@@ -608,7 +608,7 @@ namespace DOL.GS.Keeps
 		/// <param name="realm">new realm of keep taken</param>
 		public void Reset(eRealm realm)
 		{
-			Realm = (byte)realm;
+			Realm = realm;
 			Health = MaxHealth;
 			m_oldHealthPercent = HealthPercent;
 			CloseDoor();

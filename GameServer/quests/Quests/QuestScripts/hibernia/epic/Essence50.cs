@@ -122,7 +122,7 @@ namespace DOL.GS.Quests.Hibernia
 				Brigit.Model = 384;
 				Brigit.Name = "Brigit";
 				Brigit.GuildName = "";
-				Brigit.Realm = (byte) eRealm.Hibernia;
+				Brigit.Realm = eRealm.Hibernia;
 				Brigit.CurrentRegionID = 201;
 				Brigit.Size = 51;
 				Brigit.Level = 50;
@@ -151,7 +151,7 @@ namespace DOL.GS.Quests.Hibernia
 				Caithor.Model = 339;
 				Caithor.Name = "Caithor";
 				Caithor.GuildName = "";
-				Caithor.Realm = (byte) eRealm.None;
+				Caithor.Realm = eRealm.None;
 				Caithor.CurrentRegionID = 200;
 				Caithor.Size = 60;
 				Caithor.Level = 65;

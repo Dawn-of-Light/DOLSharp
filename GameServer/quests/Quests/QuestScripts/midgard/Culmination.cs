@@ -167,7 +167,7 @@ namespace DOL.GS.Quests.Midgard
 				queenVuuna.Heading = 50;
 				queenVuuna.Model = 678;
 				queenVuuna.GuildName = "Part of " + questTitle + " Quest";
-				queenVuuna.Realm = (byte) eRealm.None;
+				queenVuuna.Realm = eRealm.None;
 				queenVuuna.CurrentRegionID = 100;
 				queenVuuna.Size = 49;
 				queenVuuna.Level = 5;
@@ -209,7 +209,7 @@ namespace DOL.GS.Quests.Midgard
 					askefruerSorceress[i].Model = 678; // //819;
 					askefruerSorceress[i].Name = "askefruer sorceress";
 					askefruerSorceress[i].GuildName = "Part of " + questTitle + " Quest";
-					askefruerSorceress[i].Realm = (byte) eRealm.None;
+					askefruerSorceress[i].Realm = eRealm.None;
 					askefruerSorceress[i].CurrentRegionID = 100;
 					askefruerSorceress[i].Size = 35;
 					askefruerSorceress[i].Level = 5;
@@ -849,7 +849,7 @@ namespace DOL.GS.Quests.Midgard
 				briediClone.Model = 157;
 				briediClone.Name = "Master Briedi";
 				briediClone.GuildName = "Part of " + questTitle + " Quest";
-				briediClone.Realm = (byte) eRealm.Midgard;
+				briediClone.Realm = eRealm.Midgard;
 				briediClone.CurrentRegionID = 100;
 
 				briediClone.Size = 50;
@@ -905,7 +905,7 @@ namespace DOL.GS.Quests.Midgard
 				recruits[i].Name = "Recruit";
 
 				recruits[i].GuildName = "Part of " + questTitle + " Quest";
-				recruits[i].Realm = (byte) eRealm.Midgard;
+				recruits[i].Realm = eRealm.Midgard;
 				recruits[i].CurrentRegionID = briediClone.CurrentRegionID;
 
 				recruits[i].Size = 50;

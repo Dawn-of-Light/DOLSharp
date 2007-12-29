@@ -143,7 +143,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + laridiaTheMinstrel.Name + ", creating him ...");
 				laridiaTheMinstrel.GuildName = "Part of " + questTitle + " Quest";
-				laridiaTheMinstrel.Realm = (byte) eRealm.Albion;
+				laridiaTheMinstrel.Realm = eRealm.Albion;
 				laridiaTheMinstrel.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -185,7 +185,7 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + farmerAsma.Name + ", creating him ...");
 				farmerAsma.GuildName = "Part of " + questTitle + " Quest";
-				farmerAsma.Realm = (byte) eRealm.Albion;
+				farmerAsma.Realm = eRealm.Albion;
 				farmerAsma.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
