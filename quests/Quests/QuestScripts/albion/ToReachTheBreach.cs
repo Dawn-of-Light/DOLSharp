@@ -143,7 +143,7 @@ namespace DOL.GS.Quests.Albion
               RecruitsMightyBelt.IsDropable = false;
           }
           RecruitsPiousBelt = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate),"RecruitsPiousBelt");
-          if(RecruitsPiousBelt == null);
+          if(RecruitsPiousBelt == null)
           {
               RecruitsPiousBelt = new ItemTemplate();
               RecruitsPiousBelt.Name = "Recruit's Pious Belt";
