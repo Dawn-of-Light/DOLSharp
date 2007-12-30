@@ -386,20 +386,6 @@ namespace DOL.GS
 		/// <returns>Command result</returns>
 		private static void ExecuteCommand(GameClient client, GameCommand myCommand, string[] pars)
 		{
-			if (pars.Length > 1)
-			{
-				if (pars[1].ToLower() == "help")
-				{
-					if (pars[0][0] == '&')
-						pars[0] = '/' + pars[0].Remove(0, 1);
-					client.Out.SendMessage(">----------Usage for " + pars[0] + "----------<", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					foreach (string s in myCommand.m_usage)
-					{
-						client.Out.SendMessage(s, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					}
-					return;
-				}
-			}
 			// what you type in script is what you get; needed for overloaded scripts,
 			// like emotes, to handle case insensitive and guessed commands correctly
 			pars[0] = myCommand.m_cmd;

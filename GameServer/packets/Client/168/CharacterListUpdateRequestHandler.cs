@@ -379,6 +379,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						GameServer.Database.AddNewObject(ch);
 						//Fire the character creation event
 						GameEventMgr.Notify(DatabaseEvent.CharacterCreated, null, new CharacterEventArgs(ch, client));
+						//add equipment
+						StartupEquipment.AddEquipment(ch);
 						//write changes
 						GameServer.Database.SaveObject(ch);
 
@@ -398,6 +400,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				GameServer.Database.WriteDatabaseTable(typeof(Character));
 				GameServer.Database.FillObjectRelations(client.Account);
+				client.Out.SendCharacterOverview((eRealm)client.Account.Realm);
 			}
 			return 1;
 		}

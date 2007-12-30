@@ -973,6 +973,29 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Searches for all NPCs with the given guild and realm in ALL regions!
+		/// </summary>
+		/// <param name="guild">The guild name for the npc</param>
+		/// <param name="realm">The realm of the npc</param>
+		/// <returns>A collection of NPCs which match the result</returns>
+		public static List<GameNPC> GetNPCsByGuild(string guild, eRealm realm)
+		{
+			List<GameNPC> returnNPCs = new List<GameNPC>();
+			foreach (Region r in m_regions.Values)
+			{
+				foreach (GameObject obj in r.Objects)
+				{
+					GameNPC npc = obj as GameNPC;
+					if (npc == null)
+						continue;
+					if (npc.Realm == realm && npc.GuildName == guild)
+						returnNPCs.Add(npc);
+				}
+			}
+			return returnNPCs;
+		}
+
+		/// <summary>
 		/// Fetch a GameClient based on it's ID
 		/// </summary>
 		/// <param name="id">ID to search</param>

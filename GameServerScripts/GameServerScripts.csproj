@@ -130,9 +130,6 @@
     <Compile Include="gameevents\PlayerEnterExit.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="gameevents\StartupEquipment.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="gameevents\StartupLocations.cs">
       <SubType>Code</SubType>
     </Compile>

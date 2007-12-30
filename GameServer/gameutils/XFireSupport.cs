@@ -43,43 +43,39 @@ namespace DOL.GS.GameEvents
 			player.Out.SendXFireInfo(0);
 		}
 	}
-
-namespace DOL.GS
+}
+namespace DOL.GS.Commands
 {
-	namespace Scripts
+	[CmdAttribute("&xfire", ePrivLevel.Player, "Xfire support", "/xfire <on|off>")]
+	public class CheckXFireCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		[CmdAttribute("&xfire", ePrivLevel.Player, "Xfire support", "/xfire <on|off>")]
-		public class CheckXFireCommandHandler : AbstractCommandHandler, ICommandHandler
+		public void OnCommand(GameClient client, string[] args)
 		{
-			public void OnCommand(GameClient client, string[] args)
+			if (client.Player == null)
+				return;
+			if (args.Length < 2)
 			{
-				if (client.Player == null)
-					return;
-				if (args.Length < 2)
-				{
-					DisplaySyntax(client);
-					return;
-				}
-				byte flag = 0;
-				if (args[1].ToLower().Equals("on"))
-				{
-					client.Player.PlayerCharacter.ShowXFireInfo = true;
-					DisplayMessage(client, "Your XFire flag is ON. Your character data will be sent to the XFire service ( if you have XFire installed ). Use '/xfire off' to disable sending character data to the XFire service.");
-					flag = 1;
-				}
-				else if (args[1].ToLower().Equals("off"))
-				{
-					client.Player.PlayerCharacter.ShowXFireInfo = false;
-					DisplayMessage(client, "Your XFire flag is OFF. TODO correct message.");
-				}
-				else
-				{
-					DisplaySyntax(client);
-					return;
-				}
-				client.Player.Out.SendXFireInfo(flag);
+				DisplaySyntax(client);
+				return;
 			}
+			byte flag = 0;
+			if (args[1].ToLower().Equals("on"))
+			{
+				client.Player.PlayerCharacter.ShowXFireInfo = true;
+				DisplayMessage(client, "Your XFire flag is ON. Your character data will be sent to the XFire service ( if you have XFire installed ). Use '/xfire off' to disable sending character data to the XFire service.");
+				flag = 1;
+			}
+			else if (args[1].ToLower().Equals("off"))
+			{
+				client.Player.PlayerCharacter.ShowXFireInfo = false;
+				DisplayMessage(client, "Your XFire flag is OFF. TODO correct message.");
+			}
+			else
+			{
+				DisplaySyntax(client);
+				return;
+			}
+			client.Player.Out.SendXFireInfo(flag);
 		}
 	}
-}
 }

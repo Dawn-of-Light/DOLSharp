@@ -53,7 +53,7 @@ namespace DOL.GS
 		};    
 
 		//Defines all the slots that hold equipment
-		protected static readonly eInventorySlot[] EQUIP_SLOTS = 
+		public static readonly eInventorySlot[] EQUIP_SLOTS = 
 		{ 
 			eInventorySlot.Horse,
 			eInventorySlot.HorseArmor,
