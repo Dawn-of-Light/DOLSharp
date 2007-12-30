@@ -55,6 +55,9 @@ namespace DOL.GS.Behaviour.Actions
 				case eTextType.Say:
 					player.Out.SendMessage(message, eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 					break;
+				case eTextType.SayTo:
+					player.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					break;
 				case eTextType.Yell:
 					player.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
 					break;

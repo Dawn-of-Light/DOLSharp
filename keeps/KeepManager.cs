@@ -243,7 +243,7 @@ namespace DOL.GS.Keeps
 			foreach (AbstractGameKeep keep in m_keeps.Values)
 			{
 				//not in NF, not a PK, keep cap greater then player level
-				if (keep.Region != 163 && !keep.IsPortalKeep && keep.BaseLevel > player.Level)
+				if (keep.Region != 163 && !keep.IsPortalKeep && keep.BaseLevel >= player.Level)
 				{
 					//find the lowest level keep
 					if (tempKeep == null || keep.BaseLevel < tempKeep.BaseLevel)

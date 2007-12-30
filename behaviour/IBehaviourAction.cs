@@ -57,6 +57,10 @@ namespace DOL.GS.Behaviour
 		/// NPC yells something
 		/// </summary>
 		Yell = 0x07,
+		/// <summary>
+		/// NPC says something to target
+		/// </summary>
+		SayTo = 0x08,
     }
 
     /// <summary>
@@ -243,6 +247,10 @@ namespace DOL.GS.Behaviour
         /// <remarks>Tested</remarks>
         Timer,
         //TREA : drops treasure index p##        
+		/// <summary>
+		/// Display a trainer window
+		/// </summary>
+		TrainerWindow,
         /// <summary>
         /// WHIS : Q:GameLiving(NPC) whispers message P:string to player
         /// </summary>
