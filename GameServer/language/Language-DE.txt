@@ -778,6 +778,7 @@ DetailDisplayHandler.WriteMagicalBonuses.Charges:	- {0} Ladungen
 DetailDisplayHandler.WriteMagicalBonuses.FocusBonus:	Fokusboni:
 DetailDisplayHandler.WriteMagicalBonuses.Level:		- Stufe {0}
 DetailDisplayHandler.WriteMagicalBonuses.LevelRequired:	Benötigte Erfahrung:
+DetailDisplayHandler.WriteMagicalBonuses.LevelRequired2:Benötigte Erfahrung: Stufe {0}
 DetailDisplayHandler.WriteMagicalBonuses.MagicAbility:	Magiefähigkeit:
 DetailDisplayHandler.WriteMagicalBonuses.MagicBonus:	Magieboni:
 DetailDisplayHandler.WriteMagicalBonuses.MaxCharges:	- {0} Max
@@ -1321,76 +1322,76 @@ Scripts.Player.Guild.Help.GuildWebpage:			/gc webpage <the.guildpage.com> - is a
 Scripts.Player.Guild.Help.GuildWho:			/gc who - to show all player in your guild	
 Scripts.Player.Guild.Help.GuildWithdraw:		/gc withdraw <ammount> - gets money from the guild bank account.	
 Scripts.Player.Guild.InCombat:				Ihr könnt das Banner nicht mitten im Kampf einholen!	
-Scripts.Player.Guild.InfoAMotd:				AllianceMessage: {0}	
-Scripts.Player.Guild.InfoCEmail:			Contact Email: {0}	
-Scripts.Player.Guild.InfoGDuesBank:			Dues: {0} Guild Bank: {1} copper pieces	
-Scripts.Player.Guild.InfoGuild:				Guild Info for {0}:	
-Scripts.Player.Guild.InfoGuildLevel:			Guild Level: {0}	
-Scripts.Player.Guild.InfoMotd:				Message:  {0}	
-Scripts.Player.Guild.InfoOMotd:				OfficerMessage: {0}	
-Scripts.Player.Guild.InfoRPBPMP:			Realm Points: {0} Bounty Points: {1} Merit Points: {2}	
-Scripts.Player.Guild.InfoWebpage:			Webpage: {0}	
-Scripts.Player.Guild.InvalidLetters:			Some of the characters entered are invalid.	
-Scripts.Player.Guild.InvalidRank:			That is not a valid rank.	
-Scripts.Player.Guild.InviteDead:			You cannot invite a dead player to your guild.	
-Scripts.Player.Guild.InviteNoSelected:			You must select a player.	
-Scripts.Player.Guild.InviteNoSelf:			You can't invite your self.	
-Scripts.Player.Guild.InviteNotThis:			You cannot invite this member.	
-Scripts.Player.Guild.InviteRecieved:			{0} has invited you to join thier guild.	
-Scripts.Player.Guild.InviteSent:			You have invited {0} to join your guild.	
-Scripts.Player.Guild.Keep:				Your Guild has currently Claimed {0}.	
-Scripts.Player.Guild.LevelUp:				[Guild] Your guild has advanced to level {0}!	
-Scripts.Player.Guild.LoginsOff:				You will no longer be notified of guild members logging in, type /gc logins to start receiving notifications.	
-Scripts.Player.Guild.LoginsOn:				You will once again be notified of guild members logging in, type /gc logins to stop receiving notifications.	
-Scripts.Player.Guild.MadeLeader:			You are now the leader of {0}.	
-Scripts.Player.Guild.MadeLeaderOther:			{0} has been made the leader of {1}.	
-Scripts.Player.Guild.MemberLogin:			{0} has logged into the game.	
-Scripts.Player.Guild.MemberLogoff:			{0} has logged out of the game.	
-Scripts.Player.Guild.MemberRemoved:			{0} has removed {1} from the guild.	
-Scripts.Player.Guild.MeritPointReq:			Your guild does not have the required merit points.	
-Scripts.Player.Guild.MotdSet:				You have set the motd for the guild.	
-Scripts.Player.Guild.NoKeep:				You must have a keep before using that command.	
-Scripts.Player.Guild.NoPlayerSelected:			You must select a player.	
-Scripts.Player.Guild.NoPlayersInAcc:			There are no players from this account in your guild.	
-Scripts.Player.Guild.NoPrivilages:			You do not have high enough privilage in the guild to use that command.	
-Scripts.Player.Guild.NoteSet:				You set your guild note to: {0}	
-Scripts.Player.Guild.NotInYourGuild:			That player is not in your guild.	
-Scripts.Player.Guild.NotMember:				You must be in a guild before you can use any guild commands.	
-Scripts.Player.Guild.OMotdSet:				You have set the officer motd for the guild.	
-Scripts.Player.Guild.PlayerNotFound:			That player could not be found in the game.	
-Scripts.Player.Guild.PromotedOther:			{0} has been promoted to {1}.	
-Scripts.Player.Guild.PromotedSelf:			You have been promoted to {0}.	
-Scripts.Player.Guild.PromoteHigherThanPlayer:		You can only promote to ranks below your own.	
-Scripts.Player.Guild.Purged:				{0} has been purged.	
-Scripts.Player.Guild.RankACHearSet:			You have {0} the ACHear of the rank {1}.	
-Scripts.Player.Guild.RankACSpeakSet:			You have {0} the ACSpeak of the rank {1}.	
-Scripts.Player.Guild.RankAlliSet:			You have {0} the Alliance of the rank {1}.	
-Scripts.Player.Guild.RankClaimSet:			You have {0} the Claim of the rank {1}.	
-Scripts.Player.Guild.RankDuesSet:			You have {0} the Dues of the rank {1}.	
-Scripts.Player.Guild.RankEmblemSet:			You have {0} the emblem of the rank {1}.	
-Scripts.Player.Guild.RankGCHearSet:			You have {0} the GCHear of the rank {1}.	
-Scripts.Player.Guild.RankGCSpeakSet:			You have {0} the GCSpeak of the rank {1}.	
-Scripts.Player.Guild.RankInviteSet:			You have {0} the Invite of the rank {1}.	
-Scripts.Player.Guild.RankLevelSet:			You have set the level of the rank to {0}.	
-Scripts.Player.Guild.RankOCHearSet:			You have {0} the OCHear of the rank {1}.	
-Scripts.Player.Guild.RankOCSpeakSet:			You have {0} the OCSpeak of the rank {1}.	
-Scripts.Player.Guild.RankPromoteSet:			You have {0} the Promote of the rank {1}.	
-Scripts.Player.Guild.RankReleaseSet:			You have {0} the Release of the rank {1}.	
-Scripts.Player.Guild.RankRemoveSet:			You have {0} the Remove of the rank {1}.	
-Scripts.Player.Guild.RankTitleSet:			You have set the title of the rank to {0}.	
-Scripts.Player.Guild.RankUpgradeSet:			You have {0} the Upgrade of the rank {1}.	
-Scripts.Player.Guild.RankViewSet:			You have {0} the View of the rank {1}.	
-Scripts.Player.Guild.RankWithdrawSet:			You have {0} the Withdraw of the rank {1}.	
-Scripts.Player.Guild.ThirdArgNotNum:			The third argument must be a number.	
-Scripts.Player.Guild.UnableToCreate:			The guild {0} was unable to be created.	
-Scripts.Player.Guild.UnableToCreateLead:		The guild {0} was unable to be created {1} as leader.	
-Scripts.Player.Guild.UnknownCommand:			Unknown command. Type /gc help for info.	
-Scripts.Player.Guild.UpgradeNoLevel:			You must specify a level to target for upgrade.	
-Scripts.Player.Guild.UpgradeScndArg:			The second argument must be a number.	
-Scripts.Player.Guild.WebpageSet:			You have set the guild webpage to {0}.	
-Scripts.Player.Guild.WithdrawAmmount:			You withdraw {0} from the guild bank.	
-Scripts.Player.Guild.WithdrawInvalid:			That is an invalid ammount to withdraw.	
-Scripts.Player.Guild.WithdrawTooMuch:			You cannot withdraw that much money from the guild bank.	
+Scripts.Player.Guild.InfoAMotd:				Allianznachricht: {0}	
+Scripts.Player.Guild.InfoCEmail:			Kontaktemail: {0}	
+Scripts.Player.Guild.InfoGDuesBank:			Abgabe: {0} Kasse: {1} Kupfer	
+Scripts.Player.Guild.InfoGuild:				Guildeninfo für {0}:	
+Scripts.Player.Guild.InfoGuildLevel:			Gildenstufe: {0}	
+Scripts.Player.Guild.InfoMotd:				Nachricht:  {0}	
+Scripts.Player.Guild.InfoOMotd:				Offiziersnachricht: {0}	
+Scripts.Player.Guild.InfoRPBPMP:			Reichspunkte: {0} Kopfgeldpunkte: {1} Erfolgspunkte: {2}	
+Scripts.Player.Guild.InfoWebpage:			Webseite: {0}	
+Scripts.Player.Guild.InvalidLetters:			Einige dieser Zeichen können nicht verwendet werden.	
+Scripts.Player.Guild.InvalidRank:			Das ist kein zugelassener Rang.
+Scripts.Player.Guild.InviteDead:			Ihr könnt keinen toten Spieler in Eure Gilde einladen.
+Scripts.Player.Guild.InviteNoSelected:			Ihr müsst erst einen Spieler auswählen.
+Scripts.Player.Guild.InviteNoSelf:			Ihr könnt Euch nicht selbst einladen.
+Scripts.Player.Guild.InviteNotThis:			Dieses Mitglied könnt Ihr nicht einladen.
+Scripts.Player.Guild.InviteRecieved:			{0} hat Euch eingeladen seiner Gilde beizutreten.	
+Scripts.Player.Guild.InviteSent:			Ihr habt {0} in Eure Gilde eingeladen.	
+Scripts.Player.Guild.Keep:				Eure Gilde hat auf {0} Anspruch erhoben.	
+Scripts.Player.Guild.LevelUp:				[Guilde] Eure Gilde hat Stufe {0} erreicht!	
+Scripts.Player.Guild.LoginsOff:				Ihr werdet nicht länger über die Anmeldung eines Gildenmitgliedes informiert, gebt "/gc logins" ein, um wieder eine Mitteilung zu bekommen.
+Scripts.Player.Guild.LoginsOn:				Ihr werdet wieder über die Anmeldung eines Gildenmitgliedes informiert, gebt "/gc logins" ein, um keine Mitteilung mehr zu bekommen.
+Scripts.Player.Guild.MadeLeader:			Ihr seid nun der Leiter von {0}.	
+Scripts.Player.Guild.MadeLeaderOther:			{0} wurde zum Leiter von {1} gemacht.
+Scripts.Player.Guild.MemberLogin:			{0} hat diese Welt betreten.
+Scripts.Player.Guild.MemberLogoff:			{0} hat diese Welt verlassen.
+Scripts.Player.Guild.MemberRemoved:			{0} hat {1} aus der Gilde entlassen.
+Scripts.Player.Guild.MeritPointReq:			Eure Gilde hat nicht die erforderliche Anzahl von Erfogspunkten.
+Scripts.Player.Guild.MotdSet:				Ihr habt die "Nachricht des Tages" für die Gilde erstellt.
+Scripts.Player.Guild.NoKeep:				Für diesen Befehl braucht Ihr eine Festung.
+Scripts.Player.Guild.NoPlayerSelected:			Ihr müsst erst einen Spieler auswählen.	
+Scripts.Player.Guild.NoPlayersInAcc:			Diesen Spieler gibt es in Eurer Gilde nicht.	
+Scripts.Player.Guild.NoPrivilages:			Ihr habt nicht die erforderliche Berechtigung in Eurer Gilde für diesen Befehl.	
+Scripts.Player.Guild.NoteSet:				Die Gildennotiz wurde von Euch geändert auf: {0}
+Scripts.Player.Guild.NotInYourGuild:			Dieser Spieler gehört nicht zu Eurer Gilde.
+Scripts.Player.Guild.NotMember:				Gildenbefehle können nur von Euch genutzt werden, wenn Ihr Mitglied einer Gilde seid.	
+Scripts.Player.Guild.OMotdSet:				Ihr habt die "Nachricht des Tages" für die Offiziere Eurer Gilde erstellt.	
+Scripts.Player.Guild.PlayerNotFound:			Dieser Spieler ist nicht auf dieser Welt.
+Scripts.Player.Guild.PromotedOther:			{0} wurde zum {1} befördert.	
+Scripts.Player.Guild.PromotedSelf:			Ihr wurdet zum {0} befördert.	
+Scripts.Player.Guild.PromoteHigherThanPlayer:		Ihr könnt nur Ränge vergeben, die unter dem Euren liegen.	
+Scripts.Player.Guild.Purged:				{0} wurde gepurged.
+Scripts.Player.Guild.RankACHearSet:			Ihr habt {0} the ACHear of the rank {1}.	
+Scripts.Player.Guild.RankACSpeakSet:			Ihr habt {0} the ACSpeak of the rank {1}.	
+Scripts.Player.Guild.RankAlliSet:			Ihr habt {0} the Alliance of the rank {1}.	
+Scripts.Player.Guild.RankClaimSet:			Ihr habt {0} the Claim of the rank {1}.	
+Scripts.Player.Guild.RankDuesSet:			Ihr habt {0} the Dues of the rank {1}.	
+Scripts.Player.Guild.RankEmblemSet:			Ihr habt {0} the emblem of the rank {1}.	
+Scripts.Player.Guild.RankGCHearSet:			Ihr habt {0} the GCHear of the rank {1}.	
+Scripts.Player.Guild.RankGCSpeakSet:			Ihr habt {0} the GCSpeak of the rank {1}.	
+Scripts.Player.Guild.RankInviteSet:			Ihr habt {0} the Invite of the rank {1}.	
+Scripts.Player.Guild.RankLevelSet:			Ihr habt die Stufes des Ranges auf {0} geändert.	
+Scripts.Player.Guild.RankOCHearSet:			Ihr habt {0} the OCHear of the rank {1}.	
+Scripts.Player.Guild.RankOCSpeakSet:			Ihr habt {0} the OCSpeak of the rank {1}.	
+Scripts.Player.Guild.RankPromoteSet:			Ihr habt {0} the Promote of the rank {1}.	
+Scripts.Player.Guild.RankReleaseSet:			Ihr habt {0} the Release of the rank {1}.	
+Scripts.Player.Guild.RankRemoveSet:			Ihr habt {0} the Remove of the rank {1}.	
+Scripts.Player.Guild.RankTitleSet:			Ihr habt den Titel des Ranges auf {0} geändert.	
+Scripts.Player.Guild.RankUpgradeSet:			Ihr habt {0} the Upgrade of the rank {1}.	
+Scripts.Player.Guild.RankViewSet:			Ihr habt {0} the View of the rank {1}.	
+Scripts.Player.Guild.RankWithdrawSet:			Ihr habt {0} the Withdraw of the rank {1}.	
+Scripts.Player.Guild.ThirdArgNotNum:			Das dritte Argument muss eine Zahl sein.
+Scripts.Player.Guild.UnableToCreate:			Die Gilde"{0}" konnte nicht erstellt werden.	
+Scripts.Player.Guild.UnableToCreateLead:		Die Gilde "{0}" konnte nicht mit "{1}" als Leiter erstellt werden.	
+Scripts.Player.Guild.UnknownCommand:			Unbekannter Befehl. Gebt "/gc help" ein, um mehr Informationen zu erhalten.	
+Scripts.Player.Guild.UpgradeNoLevel:			Ihr müsst eine Stufe als Ziel für diese Änderung angeben.	
+Scripts.Player.Guild.UpgradeScndArg:			Das zweite Argument muss eine Zahl sein.	
+Scripts.Player.Guild.WebpageSet:			Ihr habt die Gildenwebseite auf {0} geändert.	
+Scripts.Player.Guild.WithdrawAmmount:			Ihr nehmt {0} aus der Gildenkasse.	
+Scripts.Player.Guild.WithdrawInvalid:			Diese Menge kann nicht entnommen werden.	
+Scripts.Player.Guild.WithdrawTooMuch:			Ihr könnt dieses viele Geld nicht aus der Gildenkasse entnehmen.	
 
 # /GC
 Scripts.Players.Guild.AllianceInfo:			Allianzinformation für {0}:
