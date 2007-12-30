@@ -140,6 +140,7 @@
     </Compile>
     <Compile Include="ai\brain\TurretBrain.cs" />
     <Compile Include="ai\brain\Necromancer\NecromancerPetBrain.cs" />
+    <Compile Include="ai\Theurgist\TheurgistPetBrain.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1976,6 +1977,7 @@
     <Compile Include="spells\EnduranceHealSpellHandler.cs" />
     <Compile Include="spells\FacilisSpellHandler.cs" />
     <Compile Include="spells\Fury.cs" />
+    <Compile Include="spells\SummonTheurgistPet.cs" />
     <Compile Include="spells\Teleport\GatewayPersonalBind.cs" />
     <Compile Include="spells\HealthToFatigue.cs" />
     <Compile Include="spells\Heretic\HereticDamageLostOnPulse.cs" />

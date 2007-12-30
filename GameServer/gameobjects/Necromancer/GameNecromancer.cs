@@ -203,6 +203,20 @@ namespace DOL.GS
 			}
 		}
 
+		/// <summary>
+		/// Called when player is removed from world.
+		/// </summary>
+		/// <returns></returns>
+		public override bool RemoveFromWorld()
+		{
+			// Force caster form.
+
+			if (IsShade)
+				Shade(false);
+
+			return base.RemoveFromWorld();
+		}
+
 		public GameNecromancer(GameClient client, Character theChar)
 			: base(client, theChar)
 		{
