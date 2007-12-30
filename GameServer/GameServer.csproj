@@ -147,6 +147,7 @@
     <Compile Include="behaviour\AbstractTrigger.cs" />
     <Compile Include="behaviour\AbstractRequirement.cs" />
     <Compile Include="behaviour\Actions\AnimationAction.cs" />
+    <Compile Include="behaviour\Actions\TrainerWindowAction.cs" />
     <Compile Include="behaviour\BaseBehaviour.cs" />
     <Compile Include="behaviour\BehaviourBuilder.cs" />
     <Compile Include="behaviour\BehaviourMgr.cs" />
@@ -766,6 +767,7 @@
     <Compile Include="gameutils\MailMgr.cs" />
     <Compile Include="gameutils\NewsMgr.cs" />
     <Compile Include="gameutils\PlayerStatistics.cs" />
+    <Compile Include="gameutils\StartupEquipment.cs" />
     <Compile Include="gameutils\StatPrint.cs" />
     <Compile Include="gameutils\StatSave.cs" />
     <Compile Include="gameutils\XFireSupport.cs" />
@@ -1457,18 +1459,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="housing\OutdoorItem.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="items\DefaultAlbionItems.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="items\DefaultHiberniaItems.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="items\DefaultItems.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="items\DefaultMidgardItems.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="keeps\AbstractGameKeep.cs">
