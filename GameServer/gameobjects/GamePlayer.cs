@@ -10018,19 +10018,10 @@ namespace DOL.GS
 		/// <param name="obj">DOLCharacter</param>
 		public override void LoadFromDatabase(DataObject obj)
 		{
-			//
-			//TODO: WORK ON HERE (VaNaTiC)
-			//
 			base.LoadFromDatabase(obj);
 			if (!(obj is Character))
 				return;
-			//DOLConsole.WriteLine("load from database");
 			my_character = (Character)obj;
-
-			//m_Name = m_character.Name; // OBSOLETE (VaNaTiC)
-			//m_race = m_character.Race; // OBSOLETE (VaNaTiC)
-			//Lastname needs not be set explicitely
-			//it is read and written to the char directly
 
 			m_customFaceAttributes[(int)eCharFacePart.EyeSize] = my_character.EyeSize;
 			m_customFaceAttributes[(int)eCharFacePart.LipSize] = my_character.LipSize;
@@ -10092,13 +10083,6 @@ namespace DOL.GS
 			}
 			#endregion
 
-			//m_spellQueue = m_character.SpellQueue; // OBSOLETE (VaNaTiC)
-			//m_Realm = (byte)m_character.Realm; // OBSOLETE (VaNaTiC)
-			//m_totalConLostAtDeath = m_character.ConLostAtDeath; // OBSOLETE (VaNaTiC)
-			//m_isLevelSecondStage = m_character.IsLevelSecondStage; // OBSOLETE (VaNaTiC)
-			//Level = (byte)my_character.Level; //TODO: should we do this for notification the world ??? (VaNaTiC)
-			//m_Model = (ushort)m_character.CurrentModel; // OBSOLETE (VaNaTiC)
-
 			// stats first
 			m_charStat[eStat.STR - eStat._First] = (short)my_character.Strength;
 			m_charStat[eStat.DEX - eStat._First] = (short)my_character.Dexterity;
@@ -10112,25 +10096,14 @@ namespace DOL.GS
 			SetCharacterClass(my_character.Class);
 
 			m_currentSpeed = 0;
-			//m_maxSpeedBase = m_character.MaxSpeed; // OBSOLETE (VaNaTiC)
 			if (MaxSpeedBase == 0)
 				MaxSpeedBase = PLAYER_BASE_SPEED;
 
-			//m_maxHealth = m_character.MaxHealth;
-			//m_maxMana = m_character.MaxMana;
-			//m_maxEndurance = m_character.MaxEndurance; // OBSOLETE (VaNaTiC)
 			m_currentXP = my_character.Experience;
 			m_inventory.LoadFromDatabase(InternalID);
-			//m_isCloakHoodUp = m_character.IsCloakHoodUp; // OBSOLETE (VaNaTiC)
 
 			SwitchQuiver((eActiveQuiverSlot)(my_character.ActiveWeaponSlot & 0xF0), false);
 			SwitchWeapon((eActiveWeaponSlot)(my_character.ActiveWeaponSlot & 0x0F));
-
-			//m_safetyFlag = m_character.SafetyFlag; // OBSOLETE (VaNaTiC)
-			//m_respecAmountAllSkill = m_character.RespecAmountAllSkill; // OBSOLETE (VaNaTiC)
-			//m_respecAmountSingleSkill = m_character.RespecAmountSingleSkill; // OBSOLETE (VaNaTiC)
-			//m_respecAmountRealmSkill = m_character.RespecAmountRealmSkill; // OBSOLETE (VaNaTiC)
-			//m_isLevelRespecUsed = m_character.IsLevelRespecUsed; // OBSOLETE (VaNaTiC)
 
 			if (my_character.PlayedTime == 0)
 			{
@@ -10152,20 +10125,8 @@ namespace DOL.GS
 				Health = MaxHealth;
 			}
 
-			//m_realmPts = m_character.RealmPoints; // OBSOLETE (VaNaTiC)
-			//m_bntyPts = m_character.BountyPoints; // OBSOLETE (VaNaTiC)
-			//m_skillSpecPts = m_character.SkillSpecialtyPoints; // OBSOLETE (VaNaTiC)
-			//m_realmSpecPts = m_character.RealmSpecialtyPoints; // OBSOLETE (VaNaTiC)
-			//m_realmLevel = m_character.RealmLevel; // OBSOLETE (VaNaTiC)
 			if (RealmLevel == 0)
-				//{
 				RealmLevel = CalculateRealmLevelFromRPs(RealmPoints);
-			//m_character.RealmLevel = m_realmLevel; // OBSOLETE (VaNaTiC)
-			//}
-
-			//m_cancelStyle = m_character.CancelStyle; // OBSOLETE (VaNaTiC)
-			//if (ServerProperties.Properties.ANON_MODIFIER != -1) // OBSOLETE (VaNaTiC)
-			//	m_isAnonymous = m_character.IsAnonymous; // OBSOLETE (VaNaTiC)
 
 			//Need to load the skills at the end, so the stored values modify the
 			//existing skill levels for this player
@@ -10205,30 +10166,6 @@ namespace DOL.GS
 				foreach (DBCharacterXMasterLevel mlstep in mlsteps)
 					m_mlsteps.Add(mlstep);
 			}
-			
-			// statistics
-			/*// OBSOLETE (VaNaTiC)
-			m_killsAlbionPlayers = m_character.KillsAlbionPlayers;
-			m_killsMidgardPlayers = m_character.KillsMidgardPlayers;
-			m_killsHiberniaPlayers = m_character.KillsHiberniaPlayers;
-			m_killsAlbionDeathBlows = m_character.KillsAlbionDeathBlows;
-			m_killsMidgardDeathBlows = m_character.KillsMidgardDeathBlows;
-			m_killsHiberniaDeathBlows = m_character.KillsHiberniaDeathBlows;
-			m_killsAlbionSolo = m_character.KillsAlbionSolo;
-			m_killsMidgardSolo = m_character.KillsMidgardSolo;
-			m_killsHiberniaSolo = m_character.KillsHiberniaSolo;
-			m_capturedKeeps = m_character.CapturedKeeps;
-			m_capturedTowers = m_character.CapturedTowers;
-			m_killsDragon = m_character.KillsDragon;
-			m_deathsPvP = m_character.DeathsPvP;
-			m_killsLegion = m_character.KillsLegion;
-			m_killsEpicBoss = m_character.KillsEpicBoss;
-
-			m_gainXP = m_character.GainXP;
-			m_gainRP = m_character.GainRP;
-			m_autoloot = m_character.Autoloot;
-			m_advisor = m_character.Advisor;
-			*/
 
 			// Has to be updated on load to ensure time offline isn't
 			// added to character /played.
@@ -10261,9 +10198,6 @@ namespace DOL.GS
 		/// </summary>
 		public override void SaveIntoDatabase()
 		{
-			//
-			//TODO: WORK ON HERE (VaNaTiC)
-			//
 			try
 			{
 				SaveSkillsToCharacter();
@@ -10276,11 +10210,6 @@ namespace DOL.GS
 					lock (m_lastUniqueLocations)
 					{
 						GameLocation loc = m_lastUniqueLocations[m_lastUniqueLocations.Length - 1];
-						//						if (log.IsDebugEnabled)
-						//						{
-						//							log.Debug(string.Format("current pos={0} {1} {2}", m_character.Xpos, m_character.Ypos, m_character.Zpos));
-						//							log.Debug(string.Format("setting pos={0} {1} {2}", loc.X, loc.Y, loc.Z));
-						//						}
 						my_character.Xpos = loc.X;
 						my_character.Ypos = loc.Y;
 						my_character.Zpos = loc.Z;

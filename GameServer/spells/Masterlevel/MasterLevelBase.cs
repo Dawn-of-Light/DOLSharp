@@ -6,7 +6,6 @@ using DOL.GS.PacketHandler;
 using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Events;
-using DOL.GS.Items;
 using DOL.GS.ServerRules;
 using DOL.Database;
 
