@@ -188,6 +188,7 @@ namespace DOLGameServerConsole
 		public void SendHouse(House house) { }
 		public void SendRemoveHouse(House house) { }
 		public void SendHousePermissions(House house) { }
+		public void SendGarden(House house, int i) { }
 		public void SendHousePayRentDialog(string title) { }
 		public void SendGarden(House house) { }
 		public void SendRemoveGarden(House house) { }
