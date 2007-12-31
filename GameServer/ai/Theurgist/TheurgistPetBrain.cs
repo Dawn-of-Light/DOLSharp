@@ -21,19 +21,34 @@ using System.Collections.Generic;
 using System.Text;
 using DOL.Events;
 using DOL.GS;
+using log4net;
+using System.Reflection;
 
 namespace DOL.AI.Brain
 {
-	public class TheurgistPetBrain : StandardMobBrain
+	public class TheurgistPetBrain : StandardMobBrain, IControlledBrain
 	{
-		private GamePlayer m_owner;
+		/// <summary>
+		/// Defines a logger for this class.
+		/// </summary>
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		private GamePlayer m_owner;
+		private bool m_melee = false;
+
+		/// <summary>
+		/// Create a new TheurgistPetBrain.
+		/// </summary>
+		/// <param name="owner"></param>
 		public TheurgistPetBrain(GamePlayer owner)
 		{
 			m_owner = owner;
 			AggroLevel = 100;
 		}
 
+		/// <summary>
+		/// Brain main loop.
+		/// </summary>
 		public override void Think()
 		{
 			AttackMostWanted();
@@ -49,22 +64,123 @@ namespace DOL.AI.Brain
 		{
 			if (!IsActive) return;
 
-			if (sender == Body)
+			if (sender == Body && e == GameLivingEvent.AttackedByEnemy)
 			{
-				if (e == GameLivingEvent.Dying)
-				{
-					ClearAggroList();
-					return;
-				}
+				m_melee = true;
+				GameLiving target = CalculateNextAttackTarget();
+				if (target != null)
+					Body.StartAttack(target);
+				return;
+			}
 
-				if (e == GameNPCEvent.FollowLostTarget)
+			if (e == GameNPCEvent.CastFailed)
+			{
+				switch ((args as CastFailedEventArgs).Reason)
 				{
-					FollowLostTargetEventArgs eArgs = args as FollowLostTargetEventArgs;
-					if (eArgs == null) return;
-					OnFollowLostTarget(eArgs.LostTarget);
-					return;
+					case CastFailedEventArgs.Reasons.TargetTooFarAway:
+						GameLiving target = CalculateNextAttackTarget();
+						if (target != null)
+							Body.StartAttack(target);
+						return;
 				}
 			}
 		}
+
+		/// <summary>
+		/// Select and attacks the next target.
+		/// </summary>
+		protected override void AttackMostWanted()
+		{
+			if (!IsActive)
+				return;
+
+			GameLiving target = CalculateNextAttackTarget();
+			if (target != null)
+			{
+				if (!m_melee)
+					if (!CastSpell(target))
+						Body.StartAttack(target);
+			}
+		}
+
+		/// <summary>
+		/// Try to cast a spell on the target.
+		/// </summary>
+		/// <param name="target"></param>
+		/// <returns>True, if cast successful or already casting, false otherwise.</returns>
+		private bool CastSpell(GameLiving target)
+		{
+			if (m_melee)
+				return false;
+
+			if (Body.IsBeingInterrupted)
+			{
+				m_melee = true;
+				return false;
+			}
+
+			if (Body.IsCasting)
+				return true;
+
+			Body.TargetObject = target;
+			Body.TurnTo(target);
+
+			foreach (Spell spell in Body.Spells)
+			{
+				if (spell.Target.ToLower() != "enemy")
+					continue;
+
+				if (LivingHasEffect((GameLiving)Body.TargetObject, spell))
+					continue;
+
+				if (Body.GetSkillDisabledDuration(spell) > 0)
+					continue;
+
+				spell.Level = Body.Level;
+				Body.CastSpell(spell, m_mobSpellLine);
+				return true;
+			}
+
+			return false;
+		}
+
+		#region IControlledBrain Members
+
+		public eWalkState WalkState
+		{
+			get { return eWalkState.Stay; }
+		}
+
+		public eAggressionState AggressionState
+		{
+			get	{ return eAggressionState.Aggressive; }
+			set { }
+		}
+
+		public GameLiving Owner
+		{
+			get { return m_owner; }
+		}
+
+		public void Attack(GameObject target) { }
+		public void Follow(GameObject target) { }
+		public void FollowOwner() { }
+		public void Stay() { }
+		public void ComeHere() { }
+		public void Goto(GameObject target) { }
+		public void UpdatePetWindow() { }
+
+		public GamePlayer GetPlayerOwner()
+		{
+			return m_owner;
+		}
+
+		public bool IsMainPet
+		{
+			get { return false; }
+			set { }
+		}
+
+		#endregion
 	}
 }

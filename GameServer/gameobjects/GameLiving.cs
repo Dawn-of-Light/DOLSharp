@@ -2449,7 +2449,9 @@ namespace DOL.GS
 				}
 
 				//Notify the target of our attack (sends damage messages, should be before damage)
-				if (mainHandAD.Target != null)
+				// ...but certainly not if the attack never took place, like when the living
+				// is out of range!
+				if (mainHandAD.Target != null && mainHandAD.AttackResult != eAttackResult.OutOfRange)
 				{
 					mainHandAD.Target.AddAttacker(owner);
 					mainHandAD.Target.OnAttackedByEnemy(mainHandAD);
@@ -5588,7 +5590,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 
 		public virtual bool IsCasting
 		{
-			get { return m_runningSpellHandler != null;/*&& m_runningSpellHandler.IsCasting;*/ }
+			get { return m_runningSpellHandler != null && m_runningSpellHandler.IsCasting; }
 		}
 
 		/// <summary>
