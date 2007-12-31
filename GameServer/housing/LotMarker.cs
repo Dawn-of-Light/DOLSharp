@@ -25,7 +25,8 @@ namespace DOL.GS.Housing
 {
 	public class GameLotMarker : GameStaticItem
 	{
-		public GameLotMarker() : base()
+		public GameLotMarker()
+			: base()
 		{
 			SaveInDB = false;
 		}
@@ -55,18 +56,18 @@ namespace DOL.GS.Housing
 			{
 				return false;
 			}
-            if (HouseMgr.GetHouseNumberByPlayer(player) != 0)
-            {
-                player.Out.SendMessage("You already own a house!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                return false;
-            }
+			if (HouseMgr.GetHouseNumberByPlayer(player) != 0)
+			{
+				player.Out.SendMessage("You already own a house!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
 			if (DatabaseItem.OwnerIDs == null || DatabaseItem.OwnerIDs == "")
 			{
 				player.Out.SendCustomDialog("Do you want to buy this lot?\r\n It costs " + Money.GetString(HouseTemplateMgr.GetLotPrice(DatabaseItem)) + "!", new CustomDialogResponse(BuyLot));
 			}
 			else
 			{
-				if (HouseMgr.IsOwner(DatabaseItem, player))
+				if (HouseMgr.IsOwner(DatabaseItem, player, true))
 				{
 					player.Out.SendMerchantWindow(HouseTemplateMgr.GetLotMarkerItems(this), eMerchantWindowType.Normal);
 				}
@@ -92,7 +93,7 @@ namespace DOL.GS.Housing
 				if (player.RemoveMoney(HouseTemplateMgr.GetLotPrice(DatabaseItem), "You just bought this lot for {0}.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow))
 				{
 					DatabaseItem.LastPaid = DateTime.Now;
-					HouseMgr.AddOwner(DatabaseItem,player);
+					HouseMgr.AddOwner(DatabaseItem, player);
 				}
 				else
 				{
@@ -106,8 +107,8 @@ namespace DOL.GS.Housing
 			if (source == null || item == null) return false;
 			if (!(source is GamePlayer)) return false;
 
-			GamePlayer player = (GamePlayer) source;
-			if (HouseMgr.IsOwner(DatabaseItem, player))
+			GamePlayer player = (GamePlayer)source;
+			if (HouseMgr.IsOwner(DatabaseItem, player, true))
 			{
 				switch (item.Id_nb)
 				{
@@ -147,9 +148,9 @@ namespace DOL.GS.Housing
 					case "hib_mansion_deed":
 						CreateHouse(player, 12);
 						break;
-                    default:
+					default:
 						player.Out.SendMessage("That would make no sense!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return false;
+						return false;
 				}
 				player.Inventory.RemoveItem(item);
 				return true;
@@ -188,7 +189,7 @@ namespace DOL.GS.Housing
 
 		public virtual bool OnPlayerBuy(GamePlayer player, int item_slot, int number)
 		{
-			GameMerchant.OnPlayerBuy(player, item_slot,number, HouseTemplateMgr.GetLotMarkerItems(this));
+			GameMerchant.OnPlayerBuy(player, item_slot, number, HouseTemplateMgr.GetLotMarkerItems(this));
 			return true;
 		}
 
@@ -208,7 +209,7 @@ namespace DOL.GS.Housing
 				return 0;
 
 			int itemCount = Math.Max(1, item.Count);
-			return item.Value*itemCount/2;
+			return item.Value * itemCount / 2;
 		}
 
 		public override void SaveIntoDatabase()
@@ -223,7 +224,7 @@ namespace DOL.GS.Housing
 			obj.Y = house.Y;
 			obj.Z = house.Z;
 			obj.CurrentRegionID = (ushort)house.RegionID;
-			obj.Heading = (ushort) house.Heading;
+			obj.Heading = (ushort)house.Heading;
 			obj.Name = "Lot Marker";
 			obj.Model = 1308;
 			obj.DatabaseItem = house;
@@ -248,5 +249,5 @@ namespace DOL.GS.Housing
 			}
 			obj.AddToWorld();
 		}
-    }
+	}
 }
