@@ -44,7 +44,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return 1;
 			if (client.Player == null) return 1;
 
-			if (!house.IsOwner(client.Player))
+			if (!house.HasOwnerPermissions(client.Player))
 				return 1;
 			IndoorItem iitem = ((IndoorItem)house.IndoorItems[position]);
 			if (iitem == null)

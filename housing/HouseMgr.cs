@@ -225,15 +225,21 @@ namespace DOL.GS.Housing
 		/// <param name="house">The house object</param>
 		/// <param name="player">The player to check</param>
 		/// <returns>True if the player is the owner</returns>
-		public static bool IsOwner(DBHouse house, GamePlayer player)
+		public static bool IsOwner(DBHouse house, GamePlayer player, bool realOwner)
 		{
 			if (house == null || player == null) return false;
 			if (house.OwnerIDs == null || house.OwnerIDs == "") return false;
 
-			foreach (Character c in player.Client.Account.Characters)
+			if (realOwner)
+				return house.OwnerIDs.Contains(player.PlayerCharacter.ObjectId);
+			else
 			{
-				if (house.OwnerIDs.Contains(c.ObjectId))
-					return true;
+
+				foreach (Character c in player.Client.Account.Characters)
+				{
+					if (house.OwnerIDs.Contains(c.ObjectId))
+						return true;
+				}
 			}
 			return false;
 		}
@@ -269,7 +275,7 @@ namespace DOL.GS.Housing
 					House house = (House)Entry.Value;
 					if (house.OwnerIDs == null)
 						continue;
-					if (house.IsOwner(p))
+					if (house.IsRealOwner(p))
 						return house.HouseNumber;
 				}
 			}
@@ -290,7 +296,7 @@ namespace DOL.GS.Housing
 					House house = (House)Entry.Value;
 					if (house.OwnerIDs == null)
 						continue;
-					if (house.IsOwner(p))
+					if (house.HasOwnerPermissions(p))
 						return house;
 				}
 			}
