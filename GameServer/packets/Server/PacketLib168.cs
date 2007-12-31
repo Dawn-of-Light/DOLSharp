@@ -2903,6 +2903,10 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
+		public virtual void SendGarden(House house, int i)
+		{
+		}
+
 		public virtual void SendRemoveGarden(House house)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseChangeGarden));

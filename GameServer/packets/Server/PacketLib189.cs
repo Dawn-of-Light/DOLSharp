@@ -23,6 +23,7 @@ using DOL.GS.Quests;
 using System.Reflection;
 using DOL.Database;
 using System.Collections;
+using DOL.GS.Housing;
 
 namespace DOL.GS.PacketHandler
 {
@@ -272,6 +273,107 @@ namespace DOL.GS.PacketHandler
 						pak.WritePascalString(item.Name);
 				}
 			}
+			SendTCP(pak);
+		}
+
+		public override void SendHouse(House house)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseCreate));
+			pak.WriteShort((ushort)house.HouseNumber);
+			pak.WriteShort((ushort)house.Z);
+			pak.WriteInt((uint)house.X);
+			pak.WriteInt((uint)house.Y);
+			pak.WriteShort((ushort)house.Heading);
+			pak.WriteShort((ushort)house.PorchRoofColor);
+			int flagPorchAndGuildEmblem = (house.Emblem & 0x010000) >> 13;//new Guild Emblem
+			if (house.Porch)
+				flagPorchAndGuildEmblem |= 1;
+			if (house.OutdoorGuildBanner)
+				flagPorchAndGuildEmblem |= 2;
+			if (house.OutdoorGuildShield)
+				flagPorchAndGuildEmblem |= 4;
+			pak.WriteShort((ushort)flagPorchAndGuildEmblem);
+			pak.WriteShort((ushort)house.Emblem);
+			pak.WriteShort(0); // new in 1.89b+ (scheduled for resposession XXX hourses ago)
+			pak.WriteByte((byte)house.Model);
+			pak.WriteByte((byte)house.RoofMaterial);
+			pak.WriteByte((byte)house.WallMaterial);
+			pak.WriteByte((byte)house.DoorMaterial);
+			pak.WriteByte((byte)house.TrussMaterial);
+			pak.WriteByte((byte)house.PorchMaterial);
+			pak.WriteByte((byte)house.WindowMaterial);
+			pak.WriteByte(0);
+			pak.WriteShort(0); // new in 1.89b+
+			pak.WritePascalString(house.Name);
+
+			SendTCP(pak);
+		}
+
+		public override void SendGarden(House house)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseChangeGarden));
+			pak.WriteShort((ushort)house.HouseNumber);
+			pak.WriteShort(0); // new in 1.89b+
+			pak.WriteByte((byte)house.OutdoorItems.Count);
+			pak.WriteByte(0x80);
+			foreach (DictionaryEntry entry in new SortedList(house.OutdoorItems))
+			{
+				OutdoorItem item = (OutdoorItem)entry.Value;
+				pak.WriteByte((byte)((int)entry.Key));
+				pak.WriteShort((ushort)item.Model);
+				pak.WriteByte((byte)item.Position);
+				pak.WriteByte((byte)item.Rotation);
+			}
+			SendTCP(pak);
+		}
+
+		public override void SendGarden(House house, int i)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseChangeGarden));
+			pak.WriteShort((ushort)house.HouseNumber);
+			pak.WriteShort(0); // new in 1.89b+
+			pak.WriteByte(0x01);
+			pak.WriteByte(0x00); // update
+			OutdoorItem item = (OutdoorItem)house.OutdoorItems[i];
+			pak.WriteByte((byte)i);
+			pak.WriteShort((ushort)item.Model);
+			pak.WriteByte((byte)item.Position);
+			pak.WriteByte((byte)item.Rotation);
+			SendTCP(pak);
+		}
+
+		public override void SendEnterHouse(House house)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseEnter));
+
+			pak.WriteShort((ushort)house.HouseNumber);
+			pak.WriteShort((ushort)25000);         //constant!
+			pak.WriteInt((uint)house.X);
+			pak.WriteInt((uint)house.Y);
+			pak.WriteShort((ushort)house.Heading); //useless/ignored by client.
+			pak.WriteByte(0x00);
+			int flagGuildEmblem = (house.Emblem & 0x010000) >> 14;//new Guild Emblem
+			if (house.IndoorGuildBanner)
+				flagGuildEmblem |= 1;
+			if (house.IndoorGuildShield)
+				flagGuildEmblem |= 2;
+			pak.WriteByte((byte)flagGuildEmblem); //emblem style
+			pak.WriteShort((ushort)house.Emblem);	//emblem
+			pak.WriteByte(0x00);
+			pak.WriteByte(0x00);
+			pak.WriteByte((byte)house.Model);
+			pak.WriteByte(0x00);
+			pak.WriteByte(0x00);
+			pak.WriteByte(0x00);
+			pak.WriteByte((byte)house.Rug1Color);
+			pak.WriteByte((byte)house.Rug2Color);
+			pak.WriteByte((byte)house.Rug3Color);
+			pak.WriteByte((byte)house.Rug4Color);
+			pak.WriteByte(0x00);
+			pak.WriteByte(0x00); // houses codemned ?
+			pak.WriteShort(0); // 0xFFBF = condemned door model
+			pak.WriteByte(0x00);
+
 			SendTCP(pak);
 		}
 	}

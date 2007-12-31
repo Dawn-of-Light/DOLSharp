@@ -140,7 +140,7 @@
     </Compile>
     <Compile Include="ai\brain\TurretBrain.cs" />
     <Compile Include="ai\brain\Necromancer\NecromancerPetBrain.cs" />
-    <Compile Include="ai\Theurgist\TheurgistPetBrain.cs" />
+    <Compile Include="ai\brain\Theurgist\TheurgistPetBrain.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
