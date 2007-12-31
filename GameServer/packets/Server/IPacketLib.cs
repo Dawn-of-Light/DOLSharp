@@ -517,6 +517,7 @@ namespace DOL.GS.PacketHandler
 		void SendHouse(House house);
 		void SendRemoveHouse(House house);
 		void SendGarden(House house);
+		void SendGarden(House house, int i);
 		void SendRemoveGarden(House house);
 		void SendEnterHouse(House house);
 		void SendFurniture(House house);
