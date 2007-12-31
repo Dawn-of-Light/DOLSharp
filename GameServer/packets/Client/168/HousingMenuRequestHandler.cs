@@ -45,25 +45,25 @@ namespace DOL.GS.PacketHandler.Client.v168
 			switch (menuid)
 			{
 				case 0: // Exterior decoration (Garden)
-					if (!house.IsOwner(client.Player) && !house.CanAddGarden(client.Player))
+					if (!house.HasOwnerPermissions(client.Player) && !house.CanAddGarden(client.Player))
 						return 1;
 					client.Player.Out.SendMerchantWindow(HouseTemplateMgr.OutdoorShopItems, eMerchantWindowType.HousingOutsideShop);
 					break;
 
 				case 1: // Interior decoration
-					if (!house.IsOwner(client.Player) && !house.CanAddInterior(client.Player))
+					if (!house.HasOwnerPermissions(client.Player) && !house.CanAddInterior(client.Player))
 						return 1;
 					client.Player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorShopItems, eMerchantWindowType.HousingInsideShop);
 					break;
 
 				case 2: // Exterior menu
-					if (!house.IsOwner(client.Player) && !house.CanAddGarden(client.Player))
+					if (!house.HasOwnerPermissions(client.Player) && !house.CanAddGarden(client.Player))
 						return 1;
 					client.Player.Out.SendMerchantWindow(HouseTemplateMgr.OutdoorMenuItems, eMerchantWindowType.HousingOutsideMenu);
 					break;
 				case 3: // interior npc
 					{
-						if (!house.IsOwner(client.Player) && !house.CanAddInterior(client.Player))
+						if (!house.HasOwnerPermissions(client.Player) && !house.CanAddInterior(client.Player))
 							return 1;
 
 						client.Player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorNPCMenuItems, eMerchantWindowType.HousingNPC);
@@ -71,7 +71,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 				case 4: // vault menu
 					{
-						if (!house.IsOwner(client.Player) && !house.CanAddInterior(client.Player))
+						if (!house.HasOwnerPermissions(client.Player) && !house.CanAddInterior(client.Player))
 							return 1;
 
 						client.Player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorVaultMenuItems, eMerchantWindowType.HousingVault);
@@ -79,7 +79,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 				case 5: // craft menu
 					{
-						if (!house.IsOwner(client.Player) && !house.CanAddInterior(client.Player))
+						if (!house.HasOwnerPermissions(client.Player) && !house.CanAddInterior(client.Player))
 							return 1;
 
 						client.Player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorCraftMenuItems, eMerchantWindowType.HousingCrafting);
@@ -87,7 +87,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 				case 6: // bindstone menu
 					{
-						if (!house.IsOwner(client.Player) && !house.CanAddInterior(client.Player))
+						if (!house.HasOwnerPermissions(client.Player) && !house.CanAddInterior(client.Player))
 							return 1;
 
 						client.Player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorBindstoneMenuItems, eMerchantWindowType.HousingBindstone);
@@ -98,7 +98,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					break;
 
 				case 8: // Interior menu (flag = 0x00 - roof, 0xFF - floor or wall)
-					if (!house.IsOwner(client.Player) && !house.CanAddInterior(client.Player))
+					if (!house.HasOwnerPermissions(client.Player) && !house.CanAddInterior(client.Player))
 						return 1;
 					client.Player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorMenuItems, eMerchantWindowType.HousingInsideMenu);
 					break;

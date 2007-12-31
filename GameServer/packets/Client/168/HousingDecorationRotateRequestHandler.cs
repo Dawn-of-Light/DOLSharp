@@ -43,7 +43,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			// Working only for inside items.
 			if (!client.Player.InHouse) return 1;
 			
-			if (!house.IsOwner(client.Player) && !house.CanAddInterior(client.Player))
+			if (!house.HasOwnerPermissions(client.Player) && !house.CanAddInterior(client.Player))
 				return 1;
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(client.Out.GetPacketCode(ePackets.HouseDecorationRotate));

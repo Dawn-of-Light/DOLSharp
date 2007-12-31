@@ -784,7 +784,9 @@ namespace DOL.GS
 			if (m_script_guilds[(int)realm] == null)
 			{
 				Hashtable allScriptGuilds = new Hashtable();
-				foreach (Assembly asm in Scripts)
+				ArrayList asms = new ArrayList(Scripts);
+				asms.Add(typeof(GameServer).Assembly);
+				foreach (Assembly asm in asms)
 				{
 					Hashtable scriptGuilds = FindAllNPCGuildScriptClasses(realm, asm);
 					if (scriptGuilds == null) continue;
@@ -859,44 +861,11 @@ namespace DOL.GS
 			if (handlerConstructor == null)
 			{
 				Type[] constructorParams = new Type[] { typeof(GameLiving), typeof(Spell), typeof(SpellLine) };
-				// first search in scripts
-				foreach (Assembly script in Scripts)
+				ArrayList asms = new ArrayList(Scripts);
+				asms.Add(typeof(GameServer).Assembly);
+				foreach (Assembly script in asms)
 				{
 					foreach (Type type in script.GetTypes())
-					{
-						if (type.IsClass != true) continue;
-						if (type.GetInterface("DOL.GS.Spells.ISpellHandler") == null) continue;
-
-						// look for attribute
-						try
-						{
-							object[] objs = type.GetCustomAttributes(typeof(SpellHandlerAttribute), false);
-							if (objs.Length == 0) continue;
-
-							foreach (SpellHandlerAttribute attrib in objs)
-							{
-								if (attrib.SpellType == spell.SpellType)
-								{
-									handlerConstructor = type.GetConstructor(constructorParams);
-									if (log.IsDebugEnabled)
-										log.Debug("Found spell handler " + type);
-									break;
-								}
-							}
-						}
-						catch (Exception e)
-						{
-							if (log.IsErrorEnabled)
-								log.Error("CreateSpellHandler", e);
-						}
-						if (handlerConstructor != null) break;
-					}
-				}
-
-				if (handlerConstructor == null)
-				{
-					// second search in gameserver
-					foreach (Type type in Assembly.GetAssembly(typeof(GameServer)).GetTypes())
 					{
 						if (type.IsClass != true) continue;
 						if (type.GetInterface("DOL.GS.Spells.ISpellHandler") == null) continue;

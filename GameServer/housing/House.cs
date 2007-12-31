@@ -288,38 +288,38 @@ namespace DOL.GS.Housing
 		{
 			if (Porch == add_porch) //we cannot remove if removed, or add if added
 				return false;
-            Porch = add_porch;
+			Porch = add_porch;
 			this.SendUpdate();
 			this.SaveIntoDatabase();
-			
+
 			return true;
 		}
 
-        public bool IsInPerm(string name, ePermsTypes type, int lvl)
-        {
-            // todo modify when type is account, to check if name == one of charnames on the account
-            foreach (DBHouseCharsXPerms perm in CharsPermissions)
-            {
-                if (type == ePermsTypes.All && perm.Type == (byte)type && perm.PermLevel == lvl)
-                    return true;
-                if (perm.Name == name && perm.Type == (byte)type && perm.PermLevel == lvl)
-                    return true;
-            }
-            return false;
-        }
+		public bool IsInPerm(string name, ePermsTypes type, int lvl)
+		{
+			// todo modify when type is account, to check if name == one of charnames on the account
+			foreach (DBHouseCharsXPerms perm in CharsPermissions)
+			{
+				if (type == ePermsTypes.All && perm.Type == (byte)type && perm.PermLevel == lvl)
+					return true;
+				if (perm.Name == name && perm.Type == (byte)type && perm.PermLevel == lvl)
+					return true;
+			}
+			return false;
+		}
 
 		public bool CanPayRent(GamePlayer p)
 		{
-			if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
+			if (HasOwnerPermissions(p) || p.Client.Account.PrivLevel > 1)
 				return true;
-            if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName && p.Guild.GotAccess(p, eGuildRank.Leader))
-                return true;
-            foreach (DBHousePermissions perm in HouseAccess)
+			if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName && p.Guild.GotAccess(p, eGuildRank.Leader))
+				return true;
+			foreach (DBHousePermissions perm in HouseAccess)
 			{
 				if (perm.PayRent == 0)// optim
 					continue;
-                if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
-                    return true;
+				if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
+					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
 					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
@@ -330,16 +330,16 @@ namespace DOL.GS.Housing
 
 		public bool CanEnter(GamePlayer p)
 		{
-			if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
+			if (HasOwnerPermissions(p) || p.Client.Account.PrivLevel > 1)
 				return true;
-            if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName)
-                return true;
-            foreach (DBHousePermissions perm in HouseAccess)
+			if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName)
+				return true;
+			foreach (DBHousePermissions perm in HouseAccess)
 			{
 				if (perm.Enter == 0)// optim
 					continue;
-                if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
-                    return true;
+				if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
+					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
 					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
@@ -350,16 +350,16 @@ namespace DOL.GS.Housing
 
 		public bool CanAddInterior(GamePlayer p)
 		{
-			if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
+			if (HasOwnerPermissions(p) || p.Client.Account.PrivLevel > 1)
 				return true;
-            if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName && p.Guild.GotAccess(p, eGuildRank.Leader))
-                return true;
-            foreach (DBHousePermissions perm in HouseAccess)
+			if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName && p.Guild.GotAccess(p, eGuildRank.Leader))
+				return true;
+			foreach (DBHousePermissions perm in HouseAccess)
 			{
 				if ((perm.Interior & 0x01) == 0)// optim
 					continue;
-                if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
-                    return true;
+				if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
+					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
 					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
@@ -370,16 +370,16 @@ namespace DOL.GS.Housing
 
 		public bool CanRemoveInterior(GamePlayer p)
 		{
-			if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
+			if (HasOwnerPermissions(p) || p.Client.Account.PrivLevel > 1)
 				return true;
-            if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName && p.Guild.GotAccess(p, eGuildRank.Leader))
-                return true;
-            foreach (DBHousePermissions perm in HouseAccess)
+			if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName && p.Guild.GotAccess(p, eGuildRank.Leader))
+				return true;
+			foreach (DBHousePermissions perm in HouseAccess)
 			{
 				if ((perm.Interior & 0x02) == 0)// optim
 					continue;
-                if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
-                    return true;
+				if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
+					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
 					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
@@ -390,16 +390,16 @@ namespace DOL.GS.Housing
 
 		public bool CanAddGarden(GamePlayer p)
 		{
-			if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
+			if (HasOwnerPermissions(p) || p.Client.Account.PrivLevel > 1)
 				return true;
-            if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName && p.Guild.GotAccess(p, eGuildRank.Leader))
-                return true;
-            foreach (DBHousePermissions perm in HouseAccess)
+			if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName && p.Guild.GotAccess(p, eGuildRank.Leader))
+				return true;
+			foreach (DBHousePermissions perm in HouseAccess)
 			{
 				if ((perm.Garden & 0x01) == 0)// optim
 					continue;
-                if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
-                    return true;
+				if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
+					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
 					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
@@ -410,16 +410,16 @@ namespace DOL.GS.Housing
 
 		public bool CanRemoveGarden(GamePlayer p)
 		{
-			if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
+			if (HasOwnerPermissions(p) || p.Client.Account.PrivLevel > 1)
 				return true;
-            if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName && p.Guild.GotAccess(p, eGuildRank.Leader))
-                return true;
-            foreach (DBHousePermissions perm in HouseAccess)
+			if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName && p.Guild.GotAccess(p, eGuildRank.Leader))
+				return true;
+			foreach (DBHousePermissions perm in HouseAccess)
 			{
 				if ((perm.Garden & 0x02) == 0)// optim
 					continue;
-                if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
-                    return true;
+				if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
+					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
 					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
@@ -430,16 +430,16 @@ namespace DOL.GS.Housing
 
 		public bool CanEditAppearance(GamePlayer p)
 		{
-			if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
+			if (HasOwnerPermissions(p) || p.Client.Account.PrivLevel > 1)
 				return true;
-            if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName && p.Guild.GotAccess(p, eGuildRank.Leader))
-                return true;
-            foreach (DBHousePermissions perm in HouseAccess)
+			if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName && p.Guild.GotAccess(p, eGuildRank.Leader))
+				return true;
+			foreach (DBHousePermissions perm in HouseAccess)
 			{
 				if (perm.Appearance == 0)// optim
 					continue;
-                if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
-                    return true;
+				if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
+					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
 					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
@@ -450,16 +450,16 @@ namespace DOL.GS.Housing
 
 		public bool CanViewHouseVault(GamePlayer p)
 		{
-			if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
+			if (HasOwnerPermissions(p) || p.Client.Account.PrivLevel > 1)
 				return true;
-            if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName && p.Guild.GotAccess(p, eGuildRank.Leader))
-                return true;
-            foreach (DBHousePermissions perm in HouseAccess)
+			if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName && p.Guild.GotAccess(p, eGuildRank.Leader))
+				return true;
+			foreach (DBHousePermissions perm in HouseAccess)
 			{
 				if (perm.Vault1 == 0)// optim
 					continue;
-                if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
-                    return true;
+				if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
+					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
 					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
@@ -470,16 +470,16 @@ namespace DOL.GS.Housing
 
 		public bool CanUseHouseVault(GamePlayer p)
 		{
-			if (IsOwner(p) || p.Client.Account.PrivLevel > 1)
+			if (HasOwnerPermissions(p) || p.Client.Account.PrivLevel > 1)
 				return true;
-            if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName && p.Guild.GotAccess(p, eGuildRank.Leader))
-                return true;
-            foreach (DBHousePermissions perm in HouseAccess)
+			if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName && p.Guild.GotAccess(p, eGuildRank.Leader))
+				return true;
+			foreach (DBHousePermissions perm in HouseAccess)
 			{
 				if (perm.Vault1 == 0)// optim
 					continue;
-                if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
-                    return true;
+				if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
+					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
 					return true;
 				if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
@@ -718,12 +718,23 @@ namespace DOL.GS.Housing
 		}
 
 		/// <summary>
-		/// Returns true if the player is a owner of the house
+		/// Returns true if the player has owner permissions for this house
 		/// </summary>
 		/// <param name="player">the player to check</param>
-		public bool IsOwner(GamePlayer player)
+		/// <returns>true if the player has owner permissions for this house</returns>
+		public bool HasOwnerPermissions(GamePlayer player)
 		{
-			return HouseMgr.IsOwner(m_databaseItem, player);
+			return HouseMgr.IsOwner(m_databaseItem, player, false);
+		}
+
+		/// <summary>
+		/// Returns true if the player is the real owner of this house
+		/// </summary>
+		/// <param name="player">the player to check</param>
+		/// <returns>true if the player is the real owner of this house</returns>
+		public bool IsRealOwner(GamePlayer player)
+		{
+			return HouseMgr.IsOwner(m_databaseItem, player, true);
 		}
 
 		/// <summary>
@@ -1008,33 +1019,33 @@ namespace DOL.GS.Housing
 			}
 		}
 
-        public void EmptyHookpoint(GamePlayer player, GameObject obj)
-        {
+		public void EmptyHookpoint(GamePlayer player, GameObject obj)
+		{
 
-            //get the item template
-            ItemTemplate template = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "Name = '" + GameServer.Database.Escape(obj.Name) + "'");
-            if (template == null)
-                return;
+			//get the item template
+			ItemTemplate template = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "Name = '" + GameServer.Database.Escape(obj.Name) + "'");
+			if (template == null)
+				return;
 
-            //get the housepoint item
-            DBHousepointItem item = (DBHousepointItem)GameServer.Database.SelectObject(typeof(DBHousepointItem), "ItemTemplateID = '" + GameServer.Database.Escape(template.Id_nb) + "'");
-            if (item == null)
-                return;
+			//get the housepoint item
+			DBHousepointItem item = (DBHousepointItem)GameServer.Database.SelectObject(typeof(DBHousepointItem), "ItemTemplateID = '" + GameServer.Database.Escape(template.Id_nb) + "'");
+			if (item == null)
+				return;
 
-            obj.Delete();
-            GameServer.Database.DeleteObject(item);
+			obj.Delete();
+			GameServer.Database.DeleteObject(item);
 
-            // Need to clear the current house points so we can replace items
-            player.CurrentHouse.HousepointItems.Clear();
-            foreach (DBHousepointItem hpitem in GameServer.Database.SelectObjects(typeof(DBHousepointItem), "HouseID = '" + player.CurrentHouse.HouseNumber + "'"))
-            {
-                FillHookpoint(null, hpitem.Position, hpitem.ItemTemplateID);
-                this.HousepointItems[hpitem.Position] = hpitem;
-            }
-            player.CurrentHouse.SendUpdate();
+			// Need to clear the current house points so we can replace items
+			player.CurrentHouse.HousepointItems.Clear();
+			foreach (DBHousepointItem hpitem in GameServer.Database.SelectObjects(typeof(DBHousepointItem), "HouseID = '" + player.CurrentHouse.HouseNumber + "'"))
+			{
+				FillHookpoint(null, hpitem.Position, hpitem.ItemTemplateID);
+				this.HousepointItems[hpitem.Position] = hpitem;
+			}
+			player.CurrentHouse.SendUpdate();
 
-            player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, new InventoryItem(template));
-        }
+			player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, new InventoryItem(template));
+		}
 
 		public House(DBHouse house)
 		{
