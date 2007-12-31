@@ -88,7 +88,7 @@ namespace DOL.GS.PacketHandler.Client.v168
             }
             if (orgitem.Name == "deed of guild transfer" 
                 && client.Player.Guild != null && !client.Player.Guild.GuildOwnsHouse() 
-                && house.IsOwner(client.Player))
+                && house.HasOwnerPermissions(client.Player))
             {
                 HouseMgr.HouseTransferToGuild(client.Player);
                 client.Player.Inventory.RemoveItem(orgitem);
@@ -270,7 +270,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
                 case 4:
                     {
-                        if (!house.IsOwner(client.Player) && !house.CanAddGarden(client.Player))
+                        if (!house.HasOwnerPermissions(client.Player) && !house.CanAddGarden(client.Player))
                         {
                             client.Out.SendInventorySlotsUpdate(new int[] { slot });
                             return 1;
