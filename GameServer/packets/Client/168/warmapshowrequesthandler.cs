@@ -57,12 +57,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 							if (keep != null && keep.Realm != client.Player.Realm)
 								return 0;
 							bool found = false;
-							foreach (GameStaticItem item in client.Player.GetItemsInRadius(WorldMgr.INTERACT_DISTANCE))
+							if (client.Player.CurrentRegionID == 163)
 							{
-								if (item is FrontiersPortalStone)
+								foreach (GameStaticItem item in client.Player.GetItemsInRadius(WorldMgr.INTERACT_DISTANCE))
 								{
-									found = true;
-									break;
+									if (item is FrontiersPortalStone)
+									{
+										found = true;
+										break;
+									}
 								}
 							}
 							if (!found)

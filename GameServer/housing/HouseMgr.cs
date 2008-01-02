@@ -303,6 +303,27 @@ namespace DOL.GS.Housing
 			return null; // no house
 		}
 
+		/// <summary>
+		/// Gets the house object by real owner
+		/// </summary>
+		/// <param name="p"></param>
+		/// <returns></returns>
+		public static House GetRealHouseByPlayer(GamePlayer p)
+		{
+			foreach (DictionaryEntry regs in m_houselists)
+			{
+				foreach (DictionaryEntry Entry in (Hashtable)(regs.Value))
+				{
+					House house = (House)Entry.Value;
+					if (house.OwnerIDs == null)
+						continue;
+					if (house.IsRealOwner(p))
+						return house;
+				}
+			}
+			return null; // no house
+		}
+
         public static bool IsGuildHouse(House house)
         {
             Hashtable hash = (Hashtable)m_houselists[house.RegionID];
