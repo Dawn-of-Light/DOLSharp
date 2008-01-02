@@ -3992,7 +3992,7 @@ namespace DOL.GS
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.AttainedRank", currenttitle), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 
-			// spec points
+			// spec points 
 			int specpoints = 0;
 			for (int i = Level; i > previouslevel; i--)
 			{
@@ -4003,8 +4003,17 @@ namespace DOL.GS
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.YouGetSpec", specpoints), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 
-			SkillSpecialtyPoints += specpoints;
-
+            // Graveen: spec points change to match correct values
+            // prev spec points calc kept for delta specpoints display
+            specpoints = -1;
+            for (int i = 1; i <= Level; i++)
+            {
+                if (i <= 5) specpoints += i; //start levels
+                if (i>5) specpoints += CharacterClass.SpecPointsMultiplier * i / 10; //normal levels
+                if (i>40) specpoints += CharacterClass.SpecPointsMultiplier * (i-1) / 20; //half levels
+            }
+            SkillSpecialtyPoints = specpoints;
+            
 			// old hp
 			int oldhp = CalculateMaxHealth(previouslevel, GetBaseStat(eStat.CON));
 
@@ -4090,7 +4099,7 @@ namespace DOL.GS
 			}
 
 			SkillSpecialtyPoints += specpoints;
-			//TODO: here we reset the death count because the character has mini dinged he will restart his con loss and xp penalties, is this correct?
+			//death penalty reset on mini-ding
 			if (PlayerCharacter != null)
 				PlayerCharacter.DeathCount = 0;
 
