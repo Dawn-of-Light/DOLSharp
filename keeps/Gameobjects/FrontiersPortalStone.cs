@@ -85,7 +85,8 @@ namespace DOL.GS.Keeps
 			if (!base.Interact(player))
 				return false;
 
-			if (player.Client.Account.PrivLevel == 1)
+			//For players in New Frontiers only
+			if (player.Client.Account.PrivLevel == 1 && player.CurrentRegionID == 163)
 			{
 				if (player.Realm != this.Realm)
 					return false;
@@ -94,39 +95,21 @@ namespace DOL.GS.Keeps
 					if ((Component.Keep as GameKeep).OwnsAllTowers == false)
 						return false;
 				}
+
+				eDialogCode code = eDialogCode.SimpleWarning;
+				switch (player.Realm)
+				{
+					case eRealm.Albion: code = eDialogCode.WarmapWindowAlbion; break;
+					case eRealm.Midgard: code = eDialogCode.WarmapWindowMidgard; break;
+					case eRealm.Hibernia: code = eDialogCode.WarmapWindowHibernia; break;
+				}
+
+				player.Out.SendDialogBox(code, 0, 0, 0, 0, eDialogType.YesNo, false, "");
 			}
 
 			//if no component assigned, teleport to the border keep
-			if (Component == null)
-			{
-				string location = "";
-				switch (player.Realm)
-				{
-					case eRealm.Albion: location = "Castle Sauvage"; break;
-					case eRealm.Midgard: location = "Svasudheim Faste"; break;
-					case eRealm.Hibernia: location = "Druim Ligen"; break;
-				}
-
-				if (location != "")
-				{
-					Teleport t = (Teleport)GameServer.Database.SelectObject(typeof(Teleport), "`TeleportID` = '" + location + "'");
-					if (t != null)
-					{
-						player.MoveTo((ushort)t.RegionID, t.X, t.Y, t.Z, (ushort)t.Heading);
-						return true;
-					}
-				}
-			}
-
-			eDialogCode code = eDialogCode.SimpleWarning;
-			switch (player.Realm)
-			{
-				case eRealm.Albion: code = eDialogCode.WarmapWindowAlbion; break;
-				case eRealm.Midgard: code = eDialogCode.WarmapWindowMidgard; break;
-				case eRealm.Hibernia: code = eDialogCode.WarmapWindowHibernia; break;
-			}
-
-			player.Out.SendDialogBox(code, 0, 0, 0, 0, eDialogType.YesNo, false, "");
+			if (Component == null && player.CurrentRegionID != 163)
+				KeepMgr.ExitBattleground(player);
 
 			return true;
 		}

@@ -329,7 +329,6 @@ namespace DOL.GS
 				data.DivingEnabled = config[ENTRY_REG_DIVING_ENABLE].GetBoolean(false);
 				data.HousingEnabled = config[ENTRY_REG_HOUSING_ENABLE].GetBoolean(false);
 				data.Expansion = config[ENTRY_REG_EXPANSION].GetInt();
-				//				data.Mobs = (Mob[])GameServer.Database.SelectObjects(typeof(Mob), "Region = '" + data.Id + "'");
 				ArrayList mobs = (ArrayList)mobsByRegionId[data.Id];
 				if (mobs == null)
 					data.Mobs = new Mob[0];
@@ -340,8 +339,6 @@ namespace DOL.GS
 			}
 
 			regions.Sort();
-
-			/////
 
 			log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - w2");
 
@@ -1751,48 +1748,6 @@ namespace DOL.GS
 			return GetItemsCloseToObject(obj, radiusToCheck, false);
 		}
 
-		/// <summary>
-		/// Saves the world to the DB
-		/// </summary>
-		public static void SaveToDatabase()
-		{
-			// region entries are not dynamically changed, so we can iterate without lock
-			//lock(m_regions.SyncRoot)
-			//{
-			IDictionaryEnumerator iter = m_regions.GetEnumerator();
-			/*
-							using(WorldSaveProgress dlg = new WorldSaveProgress())
-							{
-								dlg.progBar.Minimum = 0;
-								dlg.progBar.Minimum = m_regions.Count;
-								dlg.progBar.Step = 1;
-								dlg.lblTxt.Select(dlg.lblTxt.Text.Length-1, 0);
-
-								dlg.Show();
-
-								while(iter.MoveNext())
-								{
-									Region reg = (Region)iter.Value;
-
-									reg.SaveToDatabase();
-									dlg.progBar.PerformStep();
-								}
-
-								dlg.Close();
-							}
-							*/
-			while (iter.MoveNext())
-			{
-				Region reg = (Region)iter.Value;
-				if (log.IsDebugEnabled)
-					log.Debug("saving region " + reg.Description + " " + reg.Name + " " + iter.Key);
-				reg.SaveToDatabase();
-				if (log.IsDebugEnabled)
-					log.Debug("Saved region " + reg.Description);
-				Thread.Sleep(0);
-			}
-			//}
-		}
 
 		private static void CheckRegionAndZoneConfigs()
 		{

@@ -37,6 +37,7 @@ namespace DOL.GS.Keeps
 		/// list of all keeps
 		/// </summary>
 		private static readonly Hashtable m_keeps = new Hashtable();
+		private static readonly List<Battleground> m_battlegrounds = new List<Battleground>();
 
 		/// <summary>
 		/// Defines a logger for this class.
@@ -110,6 +111,8 @@ namespace DOL.GS.Keeps
 
 			if (ServerProperties.Properties.USE_LIVE_KEEP_BONUSES)
 				KeepBonusMgr.UpdateCounts();
+
+			LoadBattlegroundCaps();
 			return true;
 		}
 
@@ -242,13 +245,14 @@ namespace DOL.GS.Keeps
 			//iterate through keeps and find all those which we aren't capped out for
 			foreach (AbstractGameKeep keep in m_keeps.Values)
 			{
-				//not in NF, not a PK, keep cap greater then player level
-				if (keep.Region != 163 && !keep.IsPortalKeep && keep.BaseLevel >= player.Level)
-				{
-					//find the lowest level keep
-					if (tempKeep == null || keep.BaseLevel < tempKeep.BaseLevel)
-						tempKeep = keep;
-				}
+				// find keeps in the battlegrounds that arent portal keeps
+				if (keep.Region != 163 && !keep.IsPortalKeep) continue;
+				Battleground bg = GetBattleground(keep.Region);
+				if (bg == null) continue;
+				if (player.Level >= bg.MinLevel &&
+					player.Level <= bg.MaxLevel &&
+					player.RealmLevel < bg.MaxRealmLevel)
+					tempKeep = keep;
 			}
 
 			//if we haven't found a CK, we're not going to find a PK
@@ -590,6 +594,41 @@ namespace DOL.GS.Keeps
 						TemplateMgr.SetGuardLevel(guard);
 					}
 				}
+			}
+		}
+
+		private static void LoadBattlegroundCaps()
+		{
+			Battleground[] bgs = (Battleground[])GameServer.Database.SelectAllObjects(typeof(Battleground));
+			foreach (Battleground bg in bgs)
+				m_battlegrounds.Add(bg);
+		}
+
+		public static Battleground GetBattleground(ushort region)
+		{
+			foreach (Battleground bg in m_battlegrounds)
+			{
+				if (bg.RegionID == region)
+					return bg;
+			}
+			return null;
+		}
+
+		public static void ExitBattleground(GamePlayer player)
+		{
+			string location = "";
+			switch (player.Realm)
+			{
+				case eRealm.Albion: location = "Castle Sauvage"; break;
+				case eRealm.Midgard: location = "Svasudheim Faste"; break;
+				case eRealm.Hibernia: location = "Druim Ligen"; break;
+			}
+
+			if (location != "")
+			{
+				Teleport t = (Teleport)GameServer.Database.SelectObject(typeof(Teleport), "`TeleportID` = '" + location + "'");
+				if (t != null)
+					player.MoveTo((ushort)t.RegionID, t.X, t.Y, t.Z, (ushort)t.Heading);
 			}
 		}
 	}
