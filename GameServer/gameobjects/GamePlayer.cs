@@ -3977,18 +3977,39 @@ namespace DOL.GS
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.YouGetSpec", specpoints), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
+            SkillSpecialtyPoints += specpoints;
 
-            // Graveen: spec points change to match correct values
-            // prev spec points calc kept for delta specpoints display
-            specpoints = -1;
+            // Graveen - check if total specpoints is correct, reset spec & points if not
+            int allpoints = -1;
             for (int i = 1; i <= Level; i++)
             {
-                if (i <= 5) specpoints += i; //start levels
-                if (i>5) specpoints += CharacterClass.SpecPointsMultiplier * i / 10; //normal levels
-                if (i>40) specpoints += CharacterClass.SpecPointsMultiplier * (i-1) / 20; //half levels
+                if (i <= 5) allpoints += i; //start levels
+                if (i>5) allpoints += CharacterClass.SpecPointsMultiplier * i / 10; //normal levels
+                if (i>40) allpoints += CharacterClass.SpecPointsMultiplier * (i-1) / 20; //half levels
             }
-            SkillSpecialtyPoints = specpoints;
-            
+            int spentpoints = 0;
+            int autopoints = 0;
+            int normalpoints = SkillSpecialtyPoints;
+            foreach (Specialization spec in m_specList  )
+            {
+                spentpoints += (spec.Level * (spec.Level + 1) - 2) / 2;
+                foreach (string autotrain in CharacterClass.AutoTrainableSkills())
+                    {
+                        if (autotrain == spec.KeyName)
+                        {
+                            autopoints = Level / 4;
+                            spentpoints -= (autopoints * (autopoints + 1) - 2) / 2;
+                            break;
+                        }
+                    }
+            }
+            normalpoints = allpoints - SkillSpecialtyPoints - spentpoints;
+            if (normalpoints != 0)
+            {
+                foreach (Specialization spec in m_specList) RespecSingleLine(spec);
+                SkillSpecialtyPoints = allpoints;
+            }
+                   
 			// old hp
 			int oldhp = CalculateMaxHealth(previouslevel, GetBaseStat(eStat.CON));
 
@@ -7952,6 +7973,10 @@ namespace DOL.GS
 					player.Out.SendPlayerCreate(this);
 			}
 			UpdateEquipmentAppearance();
+
+            // Graveen spec points respec check for level 50
+            if (this.SkillSpecialtyPoints >= 5000) this.OnLevelUp(49);
+
 			return true;
 		}
 

@@ -148,7 +148,7 @@ namespace DOL.GS
 			if (TrainerType > 0 && player.Level >= 50)
 				player.Out.SendChampionTrainerWindow(TrainerType);
 
-			return true;
+            return true;
 		}
 
 		/// <summary>
