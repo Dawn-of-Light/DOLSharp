@@ -1264,6 +1264,7 @@
     <Compile Include="realmabilities\handlers\WildMinionAbility.cs" />
     <Compile Include="realmabilities\handlers\LifterAbility.cs" />
     <Compile Include="realmabilities\handlers\VeilRecoveryAbility.cs" />
+    <Compile Include="serverrules\DemonsBreachJumpPoint.cs" />
     <Compile Include="serverrules\TaskDungeonJumpPoint.cs" />
     <Compile Include="skillhandler\BodyguardAbilityHandler.cs" />
     <Compile Include="skillhandler\BolsteringRoarAbilityHandler.cs" />

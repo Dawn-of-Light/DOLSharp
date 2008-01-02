@@ -758,7 +758,7 @@ namespace DOL.GS.ServerRules
 					{
 						double conLevel = highestPlayer.GetConLevel(killedNPC);
 						//challenge success, the xp needs to be reduced to the proper con
-						expCap = GameServer.ServerRules.GetExperienceForLiving(GameObject.GetLevelFromCon(living.Level, conLevel));
+						expCap = (long)(GameServer.ServerRules.GetExperienceForLiving(GameObject.GetLevelFromCon(living.Level, conLevel)) * ServerProperties.Properties.XP_RATE);
 					}
 					if (xpReward > expCap)
 						xpReward = expCap;
@@ -1073,28 +1073,33 @@ namespace DOL.GS.ServerRules
 					if (living is GamePlayer)
 					{
 						GamePlayer killerPlayer = living as GamePlayer;
-						realmPoints = (int)(realmPoints * (1.0 + 2.0 * (killedPlayer.RealmLevel - killerPlayer.RealmLevel) / 900.0));
-						if (killerPlayer.Group != null && killerPlayer.Group.MemberCount > 1)
+						//only gain rps in a battleground if you are under the cap
+						Battleground bg = KeepMgr.GetBattleground(killerPlayer.CurrentRegionID);
+						if (bg == null || (killerPlayer.RealmLevel < bg.MaxRealmLevel))
 						{
-							lock (killerPlayer.Group)
+							realmPoints = (int)(realmPoints * (1.0 + 2.0 * (killedPlayer.RealmLevel - killerPlayer.RealmLevel) / 900.0));
+							if (killerPlayer.Group != null && killerPlayer.Group.MemberCount > 1)
 							{
-								int count = 0;
-								foreach (GamePlayer player in killerPlayer.Group.GetPlayersInTheGroup())
+								lock (killerPlayer.Group)
 								{
-									if (!WorldMgr.CheckDistance(player, killedPlayer, WorldMgr.MAX_EXPFORKILL_DISTANCE)) continue;
-									count++;
+									int count = 0;
+									foreach (GamePlayer player in killerPlayer.Group.GetPlayersInTheGroup())
+									{
+										if (!WorldMgr.CheckDistance(player, killedPlayer, WorldMgr.MAX_EXPFORKILL_DISTANCE)) continue;
+										count++;
+									}
+									realmPoints = (int)(realmPoints * (1.0 + count * 0.125));
 								}
-								realmPoints = (int)(realmPoints * (1.0 + count * 0.125));
 							}
 						}
-					}
-					if (realmPoints > rpCap)
-						realmPoints = rpCap;
-					if (realmPoints > 0)
-					{
-						if (living is GamePlayer)
-							killedPlayer.LastDeathRealmPoints += realmPoints;
-						living.GainRealmPoints(realmPoints);
+						if (realmPoints > rpCap)
+							realmPoints = rpCap;
+						if (realmPoints > 0)
+						{
+							if (living is GamePlayer)
+								killedPlayer.LastDeathRealmPoints += realmPoints;
+							living.GainRealmPoints(realmPoints);
+						}
 					}
 
 					// bounty points
