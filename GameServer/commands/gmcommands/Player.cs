@@ -221,9 +221,10 @@ namespace DOL.GS.Commands
 							if (newLevel != curLevel || !curSecondStage)
 								player.Level = newLevel;
 
+                            // Graveen: obsolete, it now relies on OnLevelUp
 							// If new level is more than 40, then we have
 							// to add the skill points from half-levels
-							if (newLevel > 40)
+							/*if (newLevel > 40)
 							{
 								if (curLevel < 40)
 									curLevel = 40;
@@ -235,7 +236,7 @@ namespace DOL.GS.Commands
 									else
 										player.SkillSpecialtyPoints += player.CharacterClass.SpecPointsMultiplier * i / 20;
 								}
-							}
+							}*/
 
 							client.Out.SendMessage("You changed " + player.Name + "'s level successfully to " + newLevel.ToString() + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 							player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has changed your level to " + newLevel.ToString() + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
