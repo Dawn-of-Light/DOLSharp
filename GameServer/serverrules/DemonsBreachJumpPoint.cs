@@ -17,29 +17,27 @@
  *
  */
 using System;
+
 using DOL.Database;
-using DOL.GS.Housing;
+using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
+using DOL.Events;
 
-namespace DOL.GS.Commands
+namespace DOL.GS.ServerRules
 {
-	[CmdAttribute(
-		"&house",
-		ePrivLevel.Player,
-		"Show various housing information"
-		)]
-	public class HouseCommanHandler : AbstractCommandHandler, ICommandHandler
+	public class NergalsBreachJumpPoint : IJumpPointHandler
 	{
-		public void OnCommand(GameClient client, string[] args)
+		public bool IsAllowedToJump(ZonePoint targetPoint, GamePlayer player)
 		{
-			House house = HouseMgr.GetRealHouseByPlayer(client.Player);
-			if (house == null)
-			{
-				DisplayMessage(client, "You do not own a house.");
-				return;
-			}
+			return player.Level < 5;
+		}
+	}
 
-			house.SendHouseInfo(client.Player);
+	public class BalbansBreachJumpPoint : IJumpPointHandler
+	{
+		public bool IsAllowedToJump(ZonePoint targetPoint, GamePlayer player)
+		{
+			return player.Level < 10 && player.Level > 4;
 		}
 	}
 }

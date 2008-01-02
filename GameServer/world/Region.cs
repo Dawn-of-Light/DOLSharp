@@ -124,51 +124,6 @@ namespace DOL.GS
 		protected readonly ushort[] m_ZoneAreasCount;
 
 		/// <summary>
-		/// The Region Name eg. "Region000"
-		/// </summary>
-		protected readonly string m_Name;
-
-		/// <summary>
-		/// The Region Description eg. "Camelot Hills"
-		/// </summary>
-		protected readonly string m_Description;
-
-		/// <summary>
-		/// The Region ID eg. 11
-		/// </summary>
-		protected readonly ushort m_ID;
-
-		/// <summary>
-		/// The region Server IP ... for future use
-		/// </summary>
-		protected readonly string m_ServerIP;
-
-		/// <summary>
-		/// The region Server Port ... for future use
-		/// </summary>
-		protected readonly ushort m_ServerPort;
-
-		/// <summary>
-		/// Z coordinate after which water starts in this region
-		/// </summary>
-		protected readonly int m_waterLevel;
-
-		/// <summary>
-		/// The region expansion
-		/// </summary>
-		protected readonly int m_expansion;
-
-		/// <summary>
-		/// Is diving enabled in region
-		/// </summary>
-		protected readonly bool m_divingEnabled;
-
-		/// <summary>
-		/// Is housing enabled in region
-		/// </summary>
-		protected readonly bool m_housingEnabled;
-
-		/// <summary>
 		/// How often shall we remove unused objects
 		/// </summary>
 		protected static readonly int CLEANUPTIMER = 60000;
@@ -231,16 +186,6 @@ namespace DOL.GS
 			m_Areas = new ArrayList(1);
 
 			m_timeManager = time;
-			m_Name = data.Name;
-			m_Description = data.Description;
-			m_ID = data.Id;
-			m_ServerIP = data.Ip;
-			m_ServerPort = data.Port;
-			m_waterLevel = data.WaterLevel;
-			m_divingEnabled = data.DivingEnabled;
-			m_housingEnabled = data.HousingEnabled;
-			//expansion type is client type + 1
-			m_expansion = data.Expansion + 1;
 
 			string[] list = ServerProperties.Properties.DISABLED_REGIONS.Split(';');
 			foreach (string region in list)
@@ -255,7 +200,7 @@ namespace DOL.GS
 			list = ServerProperties.Properties.DISABLED_EXPANSIONS.Split(';');
 			foreach (string expansion in list)
 			{
-				if (expansion.ToString() == m_expansion.ToString())
+				if (expansion.ToString() == m_regionData.Expansion.ToString())
 				{
 					m_isDisabled = true;
 					break;
@@ -271,7 +216,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				switch (m_ID)
+				switch (m_regionData.Id)
 				{
 					case 163://new frontiers
 					case 165://cathal valley
@@ -306,7 +251,7 @@ namespace DOL.GS
 
 				foreach (Region r in WorldMgr.Regions.Values)
 				{
-					if (r.ID != ID && r.Description == Description)
+					if (r.ID != ID && r.Description == Description && r.Expansion == (int)GameClient.eClientType.Catacombs)
 						return true;
 				}
 				return false;
@@ -348,7 +293,7 @@ namespace DOL.GS
 		/// </summary>
 		public string Name
 		{
-			get { return m_Name; }
+			get { return m_regionData.Name; }
 		}
 
 		/// <summary>
@@ -356,7 +301,7 @@ namespace DOL.GS
 		/// </summary>
 		public string Description
 		{
-			get { return m_Description; }
+			get { return m_regionData.Description; }
 		}
 
 		/// <summary>
@@ -364,7 +309,7 @@ namespace DOL.GS
 		/// </summary>
 		public ushort ID
 		{
-			get { return m_ID; }
+			get { return m_regionData.Id; }
 		}
 
 		/// <summary>
@@ -372,7 +317,7 @@ namespace DOL.GS
 		/// </summary>
 		public string ServerIP
 		{
-			get { return m_ServerIP; }
+			get { return m_regionData.Ip; }
 		}
 
 		/// <summary>
@@ -380,7 +325,7 @@ namespace DOL.GS
 		/// </summary>
 		public ushort ServerPort
 		{
-			get { return m_ServerPort; }
+			get { return m_regionData.Port; }
 		}
 
 		/// <summary>
@@ -400,11 +345,11 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets or Sets the region expansion
+		/// Gets or Sets the region expansion (we use client expansion + 1)
 		/// </summary>
 		public int Expansion
 		{
-			get { return m_expansion; }
+			get { return m_regionData.Expansion + 1; }
 		}
 
 		/// <summary>
@@ -412,7 +357,7 @@ namespace DOL.GS
 		/// </summary>
 		public int WaterLevel
 		{
-			get { return m_waterLevel; }
+			get { return m_regionData.WaterLevel; }
 		}
 
 		/// <summary>
@@ -420,7 +365,7 @@ namespace DOL.GS
 		/// </summary>
 		public bool DivingEnabled
 		{
-			get { return m_divingEnabled; }
+			get { return m_regionData.DivingEnabled; }
 		}
 
 		/// <summary>
@@ -428,7 +373,7 @@ namespace DOL.GS
 		/// </summary>
 		public bool HousingEnabled
 		{
-			get { return m_housingEnabled; }
+			get { return m_regionData.HousingEnabled; }
 		}
 
 		/// <summary>
@@ -698,39 +643,6 @@ namespace DOL.GS
 			merchantCount += myMerchantCount;
 			itemCount += myItemCount;
 			bindCount += myBindCount;
-		}
-
-		/// <summary>
-		/// Saves the Region information to the DB
-		/// </summary>
-		public void SaveToDatabase()
-		{
-			for (int i = 0; i < m_objects.Length; i++)
-			{
-				GameObject obj = m_objects[i];
-				if (obj != null)
-				{
-					if (obj.ObjectState == GameObject.eObjectState.Deleted)
-					{
-						if (log.IsErrorEnabled)
-							log.Error("object " + obj.Name + " deleted but still in region " + Description);
-						continue;
-					}
-					if (obj.SaveInDB)
-					{
-						try
-						{
-							obj.SaveIntoDatabase();
-							Thread.Sleep(0); // give other threads a chance
-						}
-						catch (Exception e)
-						{
-							if (log.IsErrorEnabled)
-								log.Error("CANNOT save object " + obj.Name + "!", e);
-						}
-					}
-				}
-			}
 		}
 
 		/// <summary>

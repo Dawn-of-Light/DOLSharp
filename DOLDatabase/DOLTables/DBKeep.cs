@@ -29,11 +29,11 @@ namespace DOL.Database
 	{
 		static bool m_autoSave;
 		private string m_name;
-		private int m_region;
+		private ushort m_region;
 		private int m_x;
 		private int m_y;
 		private int m_z;
-		private int m_heading;
+		private ushort m_heading;
 		private byte m_realm;
 		private byte m_level;
 		private int m_keepID;
@@ -111,7 +111,7 @@ namespace DOL.Database
 		/// Region of keep
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public int Region
+		public ushort Region
 		{
 			get
 			{
@@ -179,7 +179,7 @@ namespace DOL.Database
 		/// heading of keep
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public int Heading
+		public ushort Heading
 		{
 			get
 			{

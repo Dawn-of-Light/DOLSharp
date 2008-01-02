@@ -514,10 +514,6 @@ namespace DOL.GS
 			GameEventMgr.RemoveHandler(m_inventory, PlayerInventoryEvent.ItemUnequipped, new DOLEventHandler(OnItemUnequipped));
 			GameEventMgr.RemoveHandler(m_inventory, PlayerInventoryEvent.ItemBonusChanged, new DOLEventHandler(OnItemBonusChanged));
 
-			//TODO perhaps pull out the whole group-handing from
-			//the packet handler and from the Player into a own class
-			//Something on the same line like my suggested new inventory
-			//code (see TWiki) --SH
 			if (Group != null)
 				Group.RemoveMember(this);
 
@@ -549,6 +545,16 @@ namespace DOL.GS
 
 			if (CurrentRegion.IsInstance)
 				MoveTo((ushort)PlayerCharacter.BindRegion, PlayerCharacter.BindXpos, PlayerCharacter.BindYpos, PlayerCharacter.BindZpos, (ushort)PlayerCharacter.BindHeading);
+
+			//check for battleground caps
+			Battleground bg = KeepMgr.GetBattleground(CurrentRegionID);
+			if (bg != null)
+			{
+				if (Level > bg.MaxLevel || RealmLevel >= bg.MaxRealmLevel)
+				{
+					KeepMgr.ExitBattleground(this);
+				}
+			}
 
 			// Remove champion dedicated spell line
 			SkillBase.UnRegisterSpellLine("Champion Abilities" + Name);
@@ -834,42 +840,11 @@ namespace DOL.GS
 			if (character == null) return;
 
 			//battlegrounds caps
-			foreach (AbstractGameKeep keep in KeepMgr.GetKeepsOfRegion(CurrentRegionID))
+			Battleground bg = KeepMgr.GetBattleground(CurrentRegionID);
+			if (bg != null && releaseCommand == eReleaseType.RvR)
 			{
-				if (keep.DBKeep.BaseLevel < 50 && Level > keep.DBKeep.BaseLevel)
-				{
-					switch (Realm)
-					{
-						case eRealm.Albion:
-							{
-								character.BindRegion = 1;
-								character.BindXpos = 560372;
-								character.BindYpos = 511823;
-								character.BindZpos = 2280;
-								character.BindHeading = 3006;
-								break;
-							}
-						case eRealm.Midgard:
-							{
-								character.BindRegion = 100;
-								character.BindXpos = 804000;
-								character.BindYpos = 726500;
-								character.BindZpos = 4680;
-								character.BindHeading = 3580;
-								break;
-							}
-						case eRealm.Hibernia:
-							{
-								character.BindHeading = 200;
-								character.BindXpos = 345869;
-								character.BindYpos = 490556;
-								character.BindZpos = 5200;
-								character.BindHeading = 756;
-								break;
-							}
-					}
-					break;
-				}
+				if (Level > bg.MaxLevel)
+					releaseCommand = eReleaseType.Normal;
 			}
 
 			if (IsAlive)

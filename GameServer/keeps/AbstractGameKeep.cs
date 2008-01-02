@@ -324,7 +324,7 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// The Keep Region ID linked to the DBKeep
 		/// </summary>
-		public int Region
+		public ushort Region
 		{
 			get	{ return DBKeep.Region; }
 			set	{ DBKeep.Region = value; }
@@ -360,7 +360,7 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// The Keep Heading linked to the DBKeep
 		/// </summary>
-		public int Heading
+		public ushort Heading
 		{
 			get	{ return DBKeep.Heading; }
 			set	{ DBKeep.Heading = value; }
