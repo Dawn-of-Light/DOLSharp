@@ -74,29 +74,33 @@ namespace DOL.GS.Quests.Albion
 
 		private static GameNPC godelevaDowden = null;
 
-		private static ItemTemplate woodenBucket= null;
-		private static ItemTemplate fullWoodenBucket= null;
-		
+		private static ItemTemplate woodenBucket = null;
+		private static ItemTemplate fullWoodenBucket = null;
+
 		private static ItemTemplate reedBracer = null;
 
 		private static GameLocation cotswoldVillageBridge = new GameLocation("Bridge Location", 1, 557671, 512396, 1876);
-		
+
 		/* We need to define the constructors from the base class here, else there might be problems
 		 * when loading this quest...
 		 */
-		public GodelevasNeed() : base()
+		public GodelevasNeed()
+			: base()
 		{
 		}
 
-		public GodelevasNeed(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		public GodelevasNeed(GamePlayer questingPlayer)
+			: this(questingPlayer, 1)
 		{
 		}
 
-		public GodelevasNeed(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		public GodelevasNeed(GamePlayer questingPlayer, int step)
+			: base(questingPlayer, step)
 		{
 		}
 
-		public GodelevasNeed(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		public GodelevasNeed(GamePlayer questingPlayer, DBQuest dbQuest)
+			: base(questingPlayer, dbQuest)
 		{
 		}
 
@@ -183,7 +187,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			woodenBucket = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "wooden_bucket");
+			woodenBucket = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "wooden_bucket");
 			if (woodenBucket == null)
 			{
 				if (log.IsWarnEnabled)
@@ -194,14 +198,14 @@ namespace DOL.GS.Quests.Albion
 				woodenBucket.Weight = 10;
 				woodenBucket.Model = 1610;
 
-				woodenBucket.Object_Type = (int) eObjectType.GenericItem;
+				woodenBucket.Object_Type = (int)eObjectType.GenericItem;
 				woodenBucket.Id_nb = "wooden_bucket";
 				woodenBucket.Gold = 0;
 				woodenBucket.Silver = 0;
 				woodenBucket.Copper = 0;
 				woodenBucket.IsPickable = false;
 				woodenBucket.IsDropable = false;
-				
+
 				woodenBucket.Quality = 100;
 				woodenBucket.Condition = 1000;
 				woodenBucket.MaxCondition = 1000;
@@ -217,7 +221,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			fullWoodenBucket = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "full_wooden_bucket");
+			fullWoodenBucket = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "full_wooden_bucket");
 			if (fullWoodenBucket == null)
 			{
 				if (log.IsWarnEnabled)
@@ -228,14 +232,14 @@ namespace DOL.GS.Quests.Albion
 				fullWoodenBucket.Weight = 250;
 				fullWoodenBucket.Model = 1610;
 
-				fullWoodenBucket.Object_Type = (int) eObjectType.GenericItem;
+				fullWoodenBucket.Object_Type = (int)eObjectType.GenericItem;
 				fullWoodenBucket.Id_nb = "full_wooden_bucket";
 				fullWoodenBucket.Gold = 0;
 				fullWoodenBucket.Silver = 0;
 				fullWoodenBucket.Copper = 0;
 				fullWoodenBucket.IsPickable = false;
 				fullWoodenBucket.IsDropable = false;
-				
+
 				fullWoodenBucket.Quality = 100;
 				fullWoodenBucket.Condition = 1000;
 				fullWoodenBucket.MaxCondition = 1000;
@@ -251,7 +255,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			reedBracer = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "reed_bracer");
+			reedBracer = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "reed_bracer");
 			if (reedBracer == null)
 			{
 				if (log.IsWarnEnabled)
@@ -262,8 +266,8 @@ namespace DOL.GS.Quests.Albion
 				reedBracer.Weight = 1;
 				reedBracer.Model = 598;
 
-				reedBracer.Object_Type = (int) eObjectType.Magical;
-				reedBracer.Item_Type = (int) eEquipmentItems.L_BRACER;
+				reedBracer.Object_Type = (int)eObjectType.Magical;
+				reedBracer.Item_Type = (int)eEquipmentItems.L_BRACER;
 				reedBracer.Id_nb = "reed_bracer";
 
 				reedBracer.Gold = 0;
@@ -307,12 +311,12 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
 			GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
-			
+
 			GameEventMgr.AddHandler(godelevaDowden, GameLivingEvent.Interact, new DOLEventHandler(TalkToGodelevaDowden));
 			GameEventMgr.AddHandler(godelevaDowden, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToGodelevaDowden));
 
 			/* Now we bring to Ydenia the possibility to give this quest to players */
-			godelevaDowden.AddQuestToGive(typeof (GodelevasNeed));
+			godelevaDowden.AddQuestToGive(typeof(GodelevasNeed));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -347,7 +351,7 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.RemoveHandler(godelevaDowden, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToGodelevaDowden));
 
 			/* Now we remove to Ydenia the possibility to give this quest to players */
-			godelevaDowden.RemoveQuestToGive(typeof (GodelevasNeed));
+			godelevaDowden.RemoveQuestToGive(typeof(GodelevasNeed));
 		}
 
 		protected static void PlayerEnterWorld(DOLEvent e, object sender, EventArgs args)
@@ -356,7 +360,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			GodelevasNeed quest = player.IsDoingQuest(typeof (GodelevasNeed)) as GodelevasNeed;
+			GodelevasNeed quest = player.IsDoingQuest(typeof(GodelevasNeed)) as GodelevasNeed;
 			if (quest != null)
 			{
 				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
@@ -370,7 +374,7 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			GodelevasNeed quest = player.IsDoingQuest(typeof (GodelevasNeed)) as GodelevasNeed;
+			GodelevasNeed quest = player.IsDoingQuest(typeof(GodelevasNeed)) as GodelevasNeed;
 			if (quest != null)
 			{
 				GameEventMgr.RemoveHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
@@ -387,15 +391,15 @@ namespace DOL.GS.Quests.Albion
 		protected static void TalkToGodelevaDowden(DOLEvent e, object sender, EventArgs args)
 		{
 			//We get the player from the event arguments and check if he qualifies		
-			GamePlayer player = ((SourceEventArgs) args).Source as GamePlayer;
+			GamePlayer player = ((SourceEventArgs)args).Source as GamePlayer;
 			if (player == null)
 				return;
 
-			if(godelevaDowden.CanGiveQuest(typeof (GodelevasNeed), player)  <= 0)
+			if (godelevaDowden.CanGiveQuest(typeof(GodelevasNeed), player) <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
-			GodelevasNeed quest = player.IsDoingQuest(typeof (GodelevasNeed)) as GodelevasNeed;
+			GodelevasNeed quest = player.IsDoingQuest(typeof(GodelevasNeed)) as GodelevasNeed;
 
 			godelevaDowden.TurnTo(player);
 			//Did the player rightclick on NPC?
@@ -411,30 +415,30 @@ namespace DOL.GS.Quests.Albion
 				{
 					if (quest.Step == 2)
 					{
-						godelevaDowden.SayTo(player, "Do you have the full bucket for me, "+player.Name+"?");
+						godelevaDowden.SayTo(player, "Do you have the full bucket for me, " + player.Name + "?");
 					}
 					return;
 				}
 			}
-				// The player whispered to NPC (clicked on the text inside the [])
+			// The player whispered to NPC (clicked on the text inside the [])
 			else if (e == GameLivingEvent.WhisperReceive)
 			{
-				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs) args;
+				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs)args;
 				if (quest == null)
 				{
 					//Do some small talk :)
 					switch (wArgs.Text)
 					{
 						case "looking":
-							godelevaDowden.SayTo(player, "Oh yes!  I have met someone who is very interesting.  I think about him all the time when we are apart, which is often.  His name is Elvar Tambor, and he is a weapons merchant in Prydwen Keep.  We [met] about six months ago.");
+							godelevaDowden.SayTo(player, "Oh yes! I have met someone who is very interesting. I think about him all the time when we are apart, which is often. His name is Elvar Tambor, and he is a weapons merchant in Prydwen Keep. We [met] about six months ago.");
 							break;
 						case "met":
-							godelevaDowden.SayTo(player, "Great, because I have something that I need done.  I need to get some fresh water to clean my floors with, but I simply don't have time to run to the water to get some.  Will you [fetch] some for me?");
+							godelevaDowden.SayTo(player, "Great, because I have something that I need done. I need to get some fresh water to clean my floors with, but I simply don't have time to run to the water to get some. Will you [fetch] some for me?");
 							break;
-						
-							//If the player offered his help, we send the quest dialog now!
+
+						//If the player offered his help, we send the quest dialog now!
 						case "fetch":
-							player.Out.SendQuestSubscribeCommand(godelevaDowden, QuestMgr.GetIDForQuestType(typeof(GodelevasNeed)), "Will you take the bucket\ndown to the river and\nretrieve some water for\nGodeleva?\n[Level " + player.Level + "]");
+							player.Out.SendQuestSubscribeCommand(godelevaDowden, QuestMgr.GetIDForQuestType(typeof(GodelevasNeed)), "Will you take the bucket down to the river and retrieve some water for Godeleva? [Level " + player.Level + "]");
 							break;
 					}
 				}
@@ -467,15 +471,15 @@ namespace DOL.GS.Quests.Albion
 
 		protected static void PlayerUseSlot(DOLEvent e, object sender, EventArgs args)
 		{
-			GamePlayer player = (GamePlayer) sender;
+			GamePlayer player = (GamePlayer)sender;
 
-			GodelevasNeed quest = (GodelevasNeed) player.IsDoingQuest(typeof (GodelevasNeed));
+			GodelevasNeed quest = (GodelevasNeed)player.IsDoingQuest(typeof(GodelevasNeed));
 			if (quest == null)
 				return;
 
 			if (quest.Step == 1)
 			{
-				UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
+				UseSlotEventArgs uArgs = (UseSlotEventArgs)args;
 
 				InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
 				if (item != null && item.Id_nb == woodenBucket.Id_nb)
@@ -503,7 +507,7 @@ namespace DOL.GS.Quests.Albion
 		public override bool CheckQuestQualification(GamePlayer player)
 		{
 			// if the player is already doing the quest his level is no longer of relevance
-			if (player.IsDoingQuest(typeof (GodelevasNeed)) != null)
+			if (player.IsDoingQuest(typeof(GodelevasNeed)) != null)
 				return true;
 
 			// This checks below are only performed is player isn't doing quest already
@@ -514,7 +518,7 @@ namespace DOL.GS.Quests.Albion
 			return true;
 		}
 
-		
+
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
@@ -522,14 +526,14 @@ namespace DOL.GS.Quests.Albion
 
 		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
 		{
-			GodelevasNeed quest = player.IsDoingQuest(typeof (GodelevasNeed)) as GodelevasNeed;
+			GodelevasNeed quest = player.IsDoingQuest(typeof(GodelevasNeed)) as GodelevasNeed;
 
 			if (quest == null)
 				return;
 
 			if (response == 0x00)
 			{
-				SendSystemMessage(player, "Good, no go out there and finish your work!");
+				SendSystemMessage(player, "Good, now go out there and finish your work!");
 			}
 			else
 			{
@@ -547,10 +551,10 @@ namespace DOL.GS.Quests.Albion
 		{
 			//We recheck the qualification, because we don't talk to players
 			//who are not doing the quest
-			if(godelevaDowden.CanGiveQuest(typeof (GodelevasNeed), player)  <= 0)
+			if (godelevaDowden.CanGiveQuest(typeof(GodelevasNeed), player) <= 0)
 				return;
 
-			if (player.IsDoingQuest(typeof (GodelevasNeed)) != null)
+			if (player.IsDoingQuest(typeof(GodelevasNeed)) != null)
 				return;
 
 			if (response == 0x00)
@@ -560,13 +564,13 @@ namespace DOL.GS.Quests.Albion
 			else
 			{
 				//Check if we can add the quest!
-				if (!godelevaDowden.GiveQuest(typeof (GodelevasNeed), player, 1))
+				if (!godelevaDowden.GiveQuest(typeof(GodelevasNeed), player, 1))
 					return;
 
 				// give letter                
 				GiveItem(godelevaDowden, player, woodenBucket);
 
-				SendReply(player, "Great!  Thanks a lot.  Here, take this bucket down the river's edge and use it to get me some water.  Bring the full bucket back to me.  Hurry now!  I need to get things cleaned up!");
+				SendReply(player, "Great!  Thanks a lot.  Here, take this bucket down the river's edge and use it to get me some water.  Bring the full bucket back to me.  Hurry now! I need to get things cleaned up!");
 
 				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 				GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
@@ -610,21 +614,21 @@ namespace DOL.GS.Quests.Albion
 		{
 			GamePlayer player = sender as GamePlayer;
 
-			if (player == null || player.IsDoingQuest(typeof (GodelevasNeed)) == null)
+			if (player == null || player.IsDoingQuest(typeof(GodelevasNeed)) == null)
 				return;
 
 			if (e == GamePlayerEvent.GiveItem)
 			{
-				if(Step == 2)
+				if (Step == 2)
 				{
-					GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+					GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
 					if (gArgs.Target.Name == godelevaDowden.Name && gArgs.Item.Id_nb == fullWoodenBucket.Id_nb)
 					{
 						RemoveItem(godelevaDowden, m_questPlayer, fullWoodenBucket);
 
 						godelevaDowden.TurnTo(m_questPlayer);
-						godelevaDowden.SayTo(m_questPlayer, "Ah, great!  This is a good and full bucket!  Thank you friend!  Here is a little something for you.  A traveler gave it to me, but it's not much use to me now.  It will serve you better.  Now, I'm off to clean.  Be safe friend!");
-						
+						godelevaDowden.SayTo(m_questPlayer, "Ah, great! This is a good and full bucket! Thank you friend! Here is a little something for you. A traveler gave it to me, but it's not much use to me now. It will serve you better. Now, I'm off to clean. Be safe friend!");
+
 						FinishQuest();
 					}
 				}
@@ -652,7 +656,7 @@ namespace DOL.GS.Quests.Albion
 
 			m_questPlayer.GainExperience(40 + (m_questPlayer.Level - 1) * 4, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 7, Util.Random(50)), "You are awarded 7 silver and some copper!");
-		
+
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 		}

@@ -61,6 +61,9 @@ namespace DOL.GS.Keeps
 		public static GameNpcInventoryTemplate Albion_Healer = new GameNpcInventoryTemplate();
 		public static GameNpcInventoryTemplate Albion_Stealther = new GameNpcInventoryTemplate();
 		public static GameNpcInventoryTemplate Albion_Lord = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Albion_FighterPK = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Albion_ArcherPK = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Albion_CasterPK = new GameNpcInventoryTemplate();
 		#endregion
 		#region Midgard
 		public static GameNpcInventoryTemplate Midgard_Archer = new GameNpcInventoryTemplate();
@@ -69,6 +72,9 @@ namespace DOL.GS.Keeps
 		public static GameNpcInventoryTemplate Midgard_Healer = new GameNpcInventoryTemplate();
 		public static GameNpcInventoryTemplate Midgard_Stealther = new GameNpcInventoryTemplate();
 		public static GameNpcInventoryTemplate Midgard_Lord = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Midgard_FighterPK = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Midgard_ArcherPK = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Midgard_CasterPK = new GameNpcInventoryTemplate();
 		#endregion
 		#region Hibernia
 		public static GameNpcInventoryTemplate Hibernia_Archer = new GameNpcInventoryTemplate();
@@ -77,6 +83,9 @@ namespace DOL.GS.Keeps
 		public static GameNpcInventoryTemplate Hibernia_Healer = new GameNpcInventoryTemplate();
 		public static GameNpcInventoryTemplate Hibernia_Stealther = new GameNpcInventoryTemplate();
 		public static GameNpcInventoryTemplate Hibernia_Lord = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Hibernia_FighterPK = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Hibernia_ArcherPK = new GameNpcInventoryTemplate();
+		public static GameNpcInventoryTemplate Hibernia_CasterPK = new GameNpcInventoryTemplate();
 		#endregion
 
 		/// <summary>
@@ -177,6 +186,11 @@ namespace DOL.GS.Keeps
 			Albion_Stealther.GetItem(eInventorySlot.LeftHandWeapon).Hand = (int)eHandFlag.Left;
 			Albion_Stealther.GetItem(eInventorySlot.LeftHandWeapon).SlotPosition = Slot.LEFTHAND;
 			#endregion
+			#region PK
+			Albion_FighterPK.LoadFromDatabase("alb_fighter_pk");
+			Albion_ArcherPK.LoadFromDatabase("alb_archer_pk");
+			Albion_CasterPK.LoadFromDatabase("alb_caster_pk");
+			#endregion
 			#endregion
 			#region Midgard
 			#region Archer
@@ -270,6 +284,11 @@ namespace DOL.GS.Keeps
 			Midgard_Stealther.GetItem(eInventorySlot.LeftHandWeapon).Hand = (int)eHandFlag.Left;
 			Albion_Stealther.GetItem(eInventorySlot.LeftHandWeapon).SlotPosition = Slot.LEFTHAND;
 			#endregion
+			#region PK
+			Midgard_FighterPK.LoadFromDatabase("mid_fighter_pk");
+			Midgard_ArcherPK.LoadFromDatabase("mid_archer_pk");
+			Midgard_CasterPK.LoadFromDatabase("mid_caster_pk");
+			#endregion
 			#endregion
 			#region Hibernia
 			#region Archer
@@ -362,6 +381,11 @@ namespace DOL.GS.Keeps
 			Hibernia_Stealther.GetItem(eInventorySlot.LeftHandWeapon).Hand = (int)eHandFlag.Left;
 			Albion_Stealther.GetItem(eInventorySlot.LeftHandWeapon).SlotPosition = Slot.LEFTHAND;
 			#endregion
+			#region PK
+			Hibernia_FighterPK.LoadFromDatabase("hib_fighter_pk");
+			Hibernia_ArcherPK.LoadFromDatabase("hib_archer_pk");
+			Hibernia_CasterPK.LoadFromDatabase("hib_caster_pk");
+			#endregion
 			#endregion
 		}
 
@@ -380,15 +404,27 @@ namespace DOL.GS.Keeps
 				case eRealm.Albion:
 					{
 						if (guard is GuardFighter)
-							guard.Inventory = ClothingMgr.Albion_Fighter.CloneTemplate();
+						{
+							if (guard.IsPortalKeepGuard)
+								guard.Inventory = ClothingMgr.Albion_FighterPK.CloneTemplate();
+							else guard.Inventory = ClothingMgr.Albion_Fighter.CloneTemplate();
+						}
 						else if (guard is GuardLord || guard is MissionMaster)
 							guard.Inventory = ClothingMgr.Albion_Lord.CloneTemplate();
 						else if (guard is GuardHealer)
 							guard.Inventory = ClothingMgr.Albion_Healer.CloneTemplate();
 						else if (guard is GuardArcher)
-							guard.Inventory = ClothingMgr.Albion_Archer.CloneTemplate();
+						{
+							if (guard.IsPortalKeepGuard)
+								guard.Inventory = ClothingMgr.Albion_ArcherPK.CloneTemplate();
+							else guard.Inventory = ClothingMgr.Albion_Archer.CloneTemplate();
+						}
 						else if (guard is GuardCaster)
-							guard.Inventory = ClothingMgr.Albion_Caster.CloneTemplate();
+						{
+							if (guard.IsPortalKeepGuard)
+								guard.Inventory = ClothingMgr.Albion_CasterPK.CloneTemplate();
+							else guard.Inventory = ClothingMgr.Albion_Caster.CloneTemplate();
+						}
 						else if (guard is GuardStealther)
 							guard.Inventory = ClothingMgr.Albion_Stealther.CloneTemplate();
 						break;
@@ -396,15 +432,27 @@ namespace DOL.GS.Keeps
 				case eRealm.Midgard:
 					{
 						if (guard is GuardFighter)
-							guard.Inventory = ClothingMgr.Midgard_Fighter.CloneTemplate();
+						{
+							if (guard.IsPortalKeepGuard)
+								guard.Inventory = ClothingMgr.Midgard_FighterPK.CloneTemplate();
+							else guard.Inventory = ClothingMgr.Midgard_Fighter.CloneTemplate();
+						}
 						else if (guard is GuardLord || guard is MissionMaster)
 							guard.Inventory = ClothingMgr.Midgard_Lord.CloneTemplate();
 						else if (guard is GuardHealer)
 							guard.Inventory = ClothingMgr.Midgard_Healer.CloneTemplate();
 						else if (guard is GuardArcher)
-							guard.Inventory = ClothingMgr.Midgard_Archer.CloneTemplate();
+						{
+							if (guard.IsPortalKeepGuard)
+								guard.Inventory = ClothingMgr.Midgard_ArcherPK.CloneTemplate();
+							else guard.Inventory = ClothingMgr.Midgard_Archer.CloneTemplate();
+						}
 						else if (guard is GuardCaster)
-							guard.Inventory = ClothingMgr.Midgard_Caster.CloneTemplate();
+						{
+							if (guard.IsPortalKeepGuard)
+								guard.Inventory = ClothingMgr.Midgard_CasterPK.CloneTemplate();
+							else guard.Inventory = ClothingMgr.Midgard_Caster.CloneTemplate();
+						}
 						else if (guard is GuardStealther)
 							guard.Inventory = ClothingMgr.Midgard_Stealther.CloneTemplate();
 						break;
@@ -412,15 +460,27 @@ namespace DOL.GS.Keeps
 				case eRealm.Hibernia:
 					{
 						if (guard is GuardFighter)
-							guard.Inventory = ClothingMgr.Hibernia_Fighter.CloneTemplate();
+						{
+							if (guard.IsPortalKeepGuard)
+								guard.Inventory = ClothingMgr.Hibernia_FighterPK.CloneTemplate();
+							else guard.Inventory = ClothingMgr.Hibernia_Fighter.CloneTemplate();
+						}
 						else if (guard is GuardLord || guard is MissionMaster)
 							guard.Inventory = ClothingMgr.Hibernia_Lord.CloneTemplate();
 						else if (guard is GuardHealer)
 							guard.Inventory = ClothingMgr.Hibernia_Healer.CloneTemplate();
 						else if (guard is GuardArcher)
-							guard.Inventory = ClothingMgr.Hibernia_Archer.CloneTemplate();
+						{
+							if (guard.IsPortalKeepGuard)
+								guard.Inventory = ClothingMgr.Hibernia_ArcherPK.CloneTemplate();
+							else guard.Inventory = ClothingMgr.Hibernia_Archer.CloneTemplate();
+						}
 						else if (guard is GuardCaster)
-							guard.Inventory = ClothingMgr.Hibernia_Caster.CloneTemplate();
+						{
+							if (guard.IsPortalKeepGuard)
+								guard.Inventory = ClothingMgr.Hibernia_CasterPK.CloneTemplate();
+							else guard.Inventory = ClothingMgr.Hibernia_Caster.CloneTemplate();
+						}
 						else if (guard is GuardStealther)
 							guard.Inventory = ClothingMgr.Hibernia_Stealther.CloneTemplate();
 						break;
