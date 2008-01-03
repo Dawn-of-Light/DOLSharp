@@ -292,7 +292,7 @@ namespace DOL.GS.Keeps
 		public void LoadPositions()
 		{
 			//bgs before thidranki we wont load positions
-			if (CurrentRegionID != 263 && CurrentRegionID < 238)
+			if (CurrentRegionID != 163 && CurrentRegionID < 238)
 				return;
 
 			this.Positions.Clear();
