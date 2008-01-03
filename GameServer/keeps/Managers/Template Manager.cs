@@ -80,9 +80,15 @@ namespace DOL.GS.Keeps
 
 		private static void SetGuardGender(GameKeepGuard guard)
 		{
-			if (Util.Chance(50))
+			//portal keep guards are always male
+			if (guard.IsPortalKeepGuard)
 				guard.IsMale = true;
-			else guard.IsMale = false;
+			else
+			{
+				if (Util.Chance(50))
+					guard.IsMale = true;
+				else guard.IsMale = false;
+			}
 		}
 
 
@@ -628,17 +634,28 @@ namespace DOL.GS.Keeps
 					{
 						if (guard is GuardArcher)
 						{
-							guard.Name = "Scout";
+							if (guard.IsPortalKeepGuard)
+								guard.Name = "Bowman Commander";
+							else guard.Name = "Scout";
 						}
 						else if (guard is GuardCaster)
 						{
-							guard.Name = "Wizard";
+							if (guard.IsPortalKeepGuard)
+								guard.Name = "Master Wizard";
+							else guard.Name = "Wizard";
 						}
 						else if (guard is GuardFighter)
 						{
-							if (guard.IsMale)
-								guard.Name = "Armsman";
-							else guard.Name = "Armswoman";
+							if (guard.IsPortalKeepGuard)
+							{
+								guard.Name = "Knight Commander";
+							}
+							else
+							{
+								if (guard.IsMale)
+									guard.Name = "Armsman";
+								else guard.Name = "Armswoman";
+							}
 						}
 						else if (guard is GuardHealer)
 						{
@@ -666,15 +683,21 @@ namespace DOL.GS.Keeps
 					{
 						if (guard is GuardArcher)
 						{
-							guard.Name = "Hunter";
+							if (guard.IsPortalKeepGuard)
+								guard.Name = "Nordic Hunter";
+							else guard.Name = "Hunter";
 						}
 						else if (guard is GuardCaster)
 						{
-							guard.Name = "Runemaster";
+							if (guard.IsPortalKeepGuard)
+								guard.Name = "Master of Runes";
+							else guard.Name = "Runemaster";
 						}
 						else if (guard is GuardFighter)
 						{
-							guard.Name = "Huscarl";
+							if (guard.IsPortalKeepGuard)
+								guard.Name = "Nordic Jarl";
+							else guard.Name = "Huscarl";
 						}
 						else if (guard is GuardHealer)
 						{
@@ -700,15 +723,21 @@ namespace DOL.GS.Keeps
 					{
 						if (guard is GuardArcher)
 						{
-							guard.Name = "Ranger";
+							if (guard.IsPortalKeepGuard)
+								guard.Name = "Master Ranger";
+							else guard.Name = "Ranger";
 						}
 						else if (guard is GuardCaster)
 						{
-							guard.Name = "Eldritch";
+							if (guard.IsPortalKeepGuard)
+								guard.Name = "Master Eldritch";
+							else guard.Name = "Eldritch";
 						}
 						else if (guard is GuardFighter)
 						{
-							guard.Name = "Guardian";
+							if (guard.IsPortalKeepGuard)
+								guard.Name = "Champion";
+							else guard.Name = "Guardian";
 						}
 						else if (guard is GuardHealer)
 						{
@@ -732,8 +761,6 @@ namespace DOL.GS.Keeps
 			}
 			if ((eRealm)guard.Realm == eRealm.None)
 				guard.Name = "Renegade " + guard.Name;
-			if (guard.IsPortalKeepGuard)
-				guard.Name = "Master " + guard.Name;
 		}
 
 		/// <summary>
