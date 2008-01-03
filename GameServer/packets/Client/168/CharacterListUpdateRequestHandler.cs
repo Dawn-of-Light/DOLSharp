@@ -388,6 +388,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						if (log.IsInfoEnabled)
 							log.Info(String.Format("Character {0} created!", charname));
+
+						client.Out.SendCharacterOverview((eRealm)ch.Realm);
 					}
 				}
 			}
@@ -400,7 +402,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				GameServer.Database.WriteDatabaseTable(typeof(Character));
 				GameServer.Database.FillObjectRelations(client.Account);
-				client.Out.SendCharacterOverview((eRealm)client.Account.Realm);
 			}
 			return 1;
 		}
