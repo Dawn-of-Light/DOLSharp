@@ -4008,6 +4008,7 @@ namespace DOL.GS
             {
                 foreach (Specialization spec in m_specList) RespecSingleLine(spec);
                 SkillSpecialtyPoints = allpoints;
+                Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, "Modified points, you must now see your class trainer.");
             }
                    
 			// old hp
