@@ -251,7 +251,7 @@ namespace DOL.GS.Keeps
 				if (bg == null) continue;
 				if (player.Level >= bg.MinLevel &&
 					player.Level <= bg.MaxLevel &&
-					player.RealmLevel < bg.MaxRealmLevel)
+					(bg.MaxRealmLevel == 0 || player.RealmLevel < bg.MaxRealmLevel))
 					tempKeep = keep;
 			}
 
