@@ -138,9 +138,9 @@
     <Compile Include="ai\brain\StandardMobBrain.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ai\brain\Theurgist\TheurgistPetBrain.cs" />
     <Compile Include="ai\brain\TurretBrain.cs" />
     <Compile Include="ai\brain\Necromancer\NecromancerPetBrain.cs" />
-    <Compile Include="ai\brain\Theurgist\TheurgistPetBrain.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -771,6 +771,7 @@
     <Compile Include="gameutils\StatPrint.cs" />
     <Compile Include="gameutils\StatSave.cs" />
     <Compile Include="gameutils\XFireSupport.cs" />
+    <Compile Include="housing\IHouseHookpointItem.cs" />
     <Compile Include="keeps\Gameobjects\FrontiersPortalStone.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Archer.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Caster.cs" />
