@@ -57,7 +57,6 @@ namespace DOL.GS.Commands
      "/player info",
      "/player showgroup",
      "/player showeffects",
-     "/player stats",
      "/player articredit"
    )]
 
@@ -92,39 +91,6 @@ namespace DOL.GS.Commands
                         }
 
                         ArtifactMgr.GrantArtifactCredit(player, args[2]);
-                        break;
-                    }
-                #endregion
-                #region stats
-                case "stats":
-                    {
-                        GamePlayer player = client.Player.TargetObject as GamePlayer;
-                        if (player == null)
-                        {
-                            DisplayMessage(client, "You need a valid target!");
-                            return;
-                        }
-                        ArrayList info = new ArrayList();
-                        info.Add("Player Modified stats:");
-                        info.Add("");
-                        for (eProperty property = eProperty.Stat_First; property <= eProperty.Stat_Last; ++property)
-                            info.Add(String.Format("{0}: {1}",
-                                GlobalConstants.PropertyToName(property),
-                                player.GetModified(property)));
-                        info.Add("");
-                        info.Add("Modified resists:");
-                        info.Add("");
-                        for (eProperty property = eProperty.Resist_First + 1; property <= eProperty.Resist_Last; ++property)
-                            info.Add(String.Format("{0}: {1}",
-                                GlobalConstants.PropertyToName(property),
-                                player.GetModified(property)));
-                        info.Add("");
-                        info.Add("Miscellaneous:");
-                        info.Add("");
-                        info.Add(String.Format("Maximum Health: {0}", player.MaxHealth));
-                        info.Add(String.Format("Armor Factor (AF): {0}", player.GetModified(eProperty.ArmorFactor)));
-                        info.Add(String.Format("Absorption (ABS): {0}", player.GetModified(eProperty.ArmorAbsorbtion)));
-                        client.Out.SendCustomTextWindow("[ " + player.Name + " ]", info);
                         break;
                     }
                 #endregion
