@@ -685,9 +685,33 @@ namespace DOL.GS
 				return;
 			}
 
-			Region reg = WorldMgr.GetRegion((ushort)character.BindRegion); // TODO : Display Area or zone name so ex: Prydwen Keep in Camelot Hills.
+			string description = "";
+
+			Region reg = WorldMgr.GetRegion((ushort)character.BindRegion);
+			Zone zon = null;
 			if (reg != null)
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.LastBindPoint", reg.Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				zon = reg.GetZone(character.BindXpos, character.BindYpos);
+			if (zon != null)
+			{
+				IList areas = zon.GetAreasOfSpot(character.BindXpos, character.BindYpos, character.BindZpos);
+
+				foreach (AbstractArea area in areas)
+				{
+					if (!area.DisplayMessage) continue;
+					description = area.Description;
+					break;
+				}
+			}
+			if (description == "")
+			{
+				if (zon != null)
+					description = zon.Description;
+			}
+			else
+			{
+				description += " in " + zon.Description;
+			}
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.LastBindPoint", description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			if (!IsAlive)
 			{

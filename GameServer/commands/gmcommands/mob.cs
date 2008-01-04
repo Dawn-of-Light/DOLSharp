@@ -786,24 +786,22 @@ namespace DOL.GS.Commands
 					}
 					break;
 
-				//Disabled tether for now
-				/*case "tether":
+				case "tether":
 					{
 						try
 						{
 							int tether = Convert.ToInt32(args[2]);
 							targetMob.TetherRange = tether;
-							//targetMob.SaveIntoDatabase();
 							client.Out.SendMessage("Mob tether range changed to: " + tether, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							client.Out.SendMessage("Keep in mind that this setting is volatile, it needs to be set in this NPC's template to become permanent.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						catch (Exception)
 						{
 							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 					}
-					break;*/
+					break;
 
 				case "damagetype":
 					{

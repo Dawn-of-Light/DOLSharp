@@ -30,8 +30,8 @@ namespace DOL.GS.Commands
 			if (args.Length == 6)
 			{
 				ushort zoneID = 0;
-				ushort.TryParse(args[1], out zoneID);
-				if (zoneID == 0)
+
+				if (!ushort.TryParse(args[1], out zoneID))
 				{
 					DisplayMessage(client, "Invalid zoneID: " + args[1]);
 					return;
