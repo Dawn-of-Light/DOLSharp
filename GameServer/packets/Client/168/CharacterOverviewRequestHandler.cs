@@ -42,28 +42,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 				client.Account.Realm = (int)eRealm.None;
 			}
 
-			//fix old chars slot for compatibility
-			//TODO: remove after some time or with next realease
-			if(client.Account.Characters != null)
-			{
-				foreach(Character ch in client.Account.Characters)
-				{
-					bool changes = false;
-					if(ch.AccountSlot < 8)
-					{
-						ch.AccountSlot += ch.Realm*100;
-						changes = true;
-					}
-					else if(ch.AccountSlot < 100)
-					{
-						ch.AccountSlot = ch.AccountSlot/8*100 + ch.AccountSlot%8;
-						changes = true;
-					}
-					if (changes)
-						GameServer.Database.SaveObject(ch);
-				}
-			}
-
 			if(accountName.EndsWith("-X")) 
 			{
 				if(GameServer.ServerRules.IsAllowedCharsInAllRealms(client))
@@ -115,9 +93,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 					// use saved realm ignoring what user has chosen if server rules do not allow to choose the realm
 					chosenRealm = (eRealm)client.Account.Realm;
 				}
-
-				//GameServer.Database.FillObjectRelations(client.Account);
-				//DOLConsole.WriteLine("Sending overview! realm="+client.Account.Realm);
 				client.ClientState=GameClient.eClientState.CharScreen;
 				client.Player = null;
 				client.Out.SendCharacterOverview(chosenRealm);
