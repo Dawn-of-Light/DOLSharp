@@ -495,9 +495,16 @@ namespace DOL.GS.Keeps
 			guard.Inventory = new GameNPCInventory(template);
 
 			//special extensions
-			guard.Inventory.GetItem(eInventorySlot.TorsoArmor).Extension = (int)eExtension.Five;
-			guard.Inventory.GetItem(eInventorySlot.HandsArmor).Extension = (int)eExtension.Five;
-			guard.Inventory.GetItem(eInventorySlot.FeetArmor).Extension = (int)eExtension.Five;
+			InventoryItem item = null;
+			item = guard.Inventory.GetItem(eInventorySlot.TorsoArmor);
+			if (item != null)
+				item.Extension = (int)eExtension.Five;
+			item = guard.Inventory.GetItem(eInventorySlot.HandsArmor);
+			if (item != null)
+				item.Extension = (int)eExtension.Five;
+			item = guard.Inventory.GetItem(eInventorySlot.FeetArmor);
+			if (item != null)
+				item.Extension = (int)eExtension.Five;
 
 			// set the active slot
 			// casters and midgard archers use two handed weapons as default
