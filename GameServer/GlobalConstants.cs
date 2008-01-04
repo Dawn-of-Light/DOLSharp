@@ -1376,6 +1376,7 @@ namespace DOL.GS
 				case eProperty.Piety: return "Piety";
 				case eProperty.Empathy: return "Empathy";
 				case eProperty.Charisma: return "Charisma";
+                case eProperty.Resist_Body: return "Body Resist";
 				case eProperty.Resist_Cold: return "Cold Resist";
 				case eProperty.Resist_Crush: return "Crush Resist";
 				case eProperty.Resist_Energy: return "Energy Resist";
