@@ -66,6 +66,11 @@ namespace DOL.GS
 		/// (renamed and private, cause if derive is needed overwrite PlayerCharacter)
 		/// </summary>
 		private Character my_character;
+        /// <summary>
+        /// This is set if a point spec is needed
+        /// this warn not to raise stats again
+        /// </summary>
+        private Boolean Redistribute = false;
 		/// <summary>
 		/// The database id this character belong to
 		/// </summary>
@@ -3899,81 +3904,84 @@ namespace DOL.GS
 		{
 			IsLevelSecondStage = false;
 
-			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.YouRaise", Level), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-			if (Experience < GameServer.ServerRules.GetExperienceForLevel(Level + 1))
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.YouAchived", Level), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
-			Out.SendPlayerFreeLevelUpdate();
-			if (FreeLevelState == 2)
-				Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.FreeLevelEligible"));
-			switch (Level)
-			{
-				// full respec on level 5 since 1.70
-				case 5:
-					RespecAmountAllSkill++;
-					IsLevelRespecUsed = false;
-					break;
-				case 6:
-					if (IsLevelRespecUsed) break;
-					RespecAmountAllSkill--;
-					break;
+            if (Redistribute == false)
+            {
+                Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.YouRaise", Level), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                if (Experience < GameServer.ServerRules.GetExperienceForLevel(Level + 1))
+                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.YouAchived", Level), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
+                Out.SendPlayerFreeLevelUpdate();
+                if (FreeLevelState == 2)
+                    Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.FreeLevelEligible"));
 
-				// single line respec
-				case 20:
-				case 40:
-					{
-						RespecAmountSingleSkill++; // Give character their free respecs at 20 and 40
-						IsLevelRespecUsed = false;
-						break;
-					}
-				case 21:
-				case 41:
-					{
-						if (IsLevelRespecUsed) break;
-						RespecAmountSingleSkill--; // Remove free respecs if it wasn't used
-						break;
-					}
-				case 50:
-					{
-						if (Client.Account.PrivLevel == 1)
-						{
-							string message = LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.Reached", Name, Level, LastPositionUpdateZone.Description);
-							string newsmessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.OnLevelUp.Reached", Name, Level, LastPositionUpdateZone.Description);
-							NewsMgr.CreateNews(newsmessage, Realm, eNewsType.PvE, true);
-						}
-						break;
-					}
-			}
+                switch (Level)
+                {
+                    // full respec on level 5 since 1.70
+                    case 5:
+                        RespecAmountAllSkill++;
+                        IsLevelRespecUsed = false;
+                        break;
+                    case 6:
+                        if (IsLevelRespecUsed) break;
+                        RespecAmountAllSkill--;
+                        break;
 
-			//level 20 changes realm title and gives 1 realm skill point
-			if (Level == 20)
-				GainRealmPoints(0);
+                    // single line respec
+                    case 20:
+                    case 40:
+                        {
+                            RespecAmountSingleSkill++; // Give character their free respecs at 20 and 40
+                            IsLevelRespecUsed = false;
+                            break;
+                        }
+                    case 21:
+                    case 41:
+                        {
+                            if (IsLevelRespecUsed) break;
+                            RespecAmountSingleSkill--; // Remove free respecs if it wasn't used
+                            break;
+                        }
+                    case 50:
+                        {
+                            if (Client.Account.PrivLevel == 1)
+                            {
+                                string message = LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.Reached", Name, Level, LastPositionUpdateZone.Description);
+                                string newsmessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.OnLevelUp.Reached", Name, Level, LastPositionUpdateZone.Description);
+                                NewsMgr.CreateNews(newsmessage, Realm, eNewsType.PvE, true);
+                            }
+                            break;
+                        }
+                }
 
-			// Adjust stats
-			bool statsChanged = false;
-			for (int i = Level; i > previouslevel; i--)
-			{
-				if (CharacterClass.PrimaryStat != eStat.UNDEFINED)
-				{
-					ChangeBaseStat(CharacterClass.PrimaryStat, 1);
-					statsChanged = true;
-				}
-				if (CharacterClass.SecondaryStat != eStat.UNDEFINED && ((i - 6) % 2 == 0))
-				{ // base level to start adding stats is 6
-					ChangeBaseStat(CharacterClass.SecondaryStat, 1);
-					statsChanged = true;
-				}
-				if (CharacterClass.TertiaryStat != eStat.UNDEFINED && ((i - 6) % 3 == 0))
-				{ // base level to start adding stats is 6
-					ChangeBaseStat(CharacterClass.TertiaryStat, 1);
-					statsChanged = true;
-				}
-			}
+                //level 20 changes realm title and gives 1 realm skill point
+                if (Level == 20)
+                    GainRealmPoints(0);
 
+                // Adjust stats
+                bool statsChanged = false;
+                for (int i = Level; i > previouslevel; i--)
+                {
+                    if (CharacterClass.PrimaryStat != eStat.UNDEFINED)
+                    {
+                        ChangeBaseStat(CharacterClass.PrimaryStat, 1);
+                        statsChanged = true;
+                    }
+                    if (CharacterClass.SecondaryStat != eStat.UNDEFINED && ((i - 6) % 2 == 0))
+                    { // base level to start adding stats is 6
+                        ChangeBaseStat(CharacterClass.SecondaryStat, 1);
+                        statsChanged = true;
+                    }
+                    if (CharacterClass.TertiaryStat != eStat.UNDEFINED && ((i - 6) % 3 == 0))
+                    { // base level to start adding stats is 6
+                        ChangeBaseStat(CharacterClass.TertiaryStat, 1);
+                        statsChanged = true;
+                    }
+                }
 
-			if (statsChanged)
-			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.StatRaise"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-			}
+                if (statsChanged)
+                {
+                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.StatRaise"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                }
+            }
 
 			CharacterClass.OnLevelUp(this);
 
@@ -3997,13 +4005,13 @@ namespace DOL.GS
 			{
 				specpoints += CharacterClass.SpecPointsMultiplier * i / 10;
 			}
-			if (specpoints > 0)
+			if (specpoints > 0 && Redistribute == false)
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.YouGetSpec", specpoints), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
             SkillSpecialtyPoints += specpoints;
 
-            // Graveen - check if total specpoints is correct, reset spec & points if not
+            // Check if total specpoints is correct (ie multiplier class changed) then reset spec & refund all points if not
             int allpoints = -1;
             for (int i = 1; i <= Level; i++)
             {
@@ -4014,7 +4022,7 @@ namespace DOL.GS
             int spentpoints = 0;
             int autopoints = 0;
             int normalpoints = SkillSpecialtyPoints;
-            foreach (Specialization spec in m_specList  )
+            foreach (Specialization spec in GetSpecList() )
             {
                 spentpoints += (spec.Level * (spec.Level + 1) - 2) / 2;
                 foreach (string autotrain in CharacterClass.AutoTrainableSkills())
@@ -4030,37 +4038,42 @@ namespace DOL.GS
             normalpoints = allpoints - SkillSpecialtyPoints - spentpoints;
             if (normalpoints != 0)
             {
-                foreach (Specialization spec in m_specList) RespecSingleLine(spec);
+                foreach (Specialization spec in GetSpecList()) RespecSingleLine(spec);
                 SkillSpecialtyPoints = allpoints;
-                Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, "Modified points, you must now see your class trainer.");
+                String sWarn = "Total amount of spec points has been corrected. You must now see your class trainer.";
+                Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, sWarn );
+                Out.SendMessage(sWarn, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
             }
-                   
-			// old hp
-			int oldhp = CalculateMaxHealth(previouslevel, GetBaseStat(eStat.CON));
 
-			// old power
-			int oldpow = 0;
-			if (CharacterClass.ManaStat != eStat.UNDEFINED)
-			{
-				oldpow = CalculateMaxMana(previouslevel, GetBaseStat(CharacterClass.ManaStat));
-			}
+            if (Redistribute == false)
+            {
+                // old hp
+                int oldhp = CalculateMaxHealth(previouslevel, GetBaseStat(eStat.CON));
 
-			// hp upgrade
-			int newhp = CalculateMaxHealth(Level, GetBaseStat(eStat.CON));
-			if (oldhp > 0 && oldhp < newhp)
-			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.HitsRaise", (newhp - oldhp)), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-			}
+                // old power
+                int oldpow = 0;
+                if (CharacterClass.ManaStat != eStat.UNDEFINED)
+                {
+                    oldpow = CalculateMaxMana(previouslevel, GetBaseStat(CharacterClass.ManaStat));
+                }
 
-			// power upgrade
-			if (CharacterClass.ManaStat != eStat.UNDEFINED)
-			{
-				int newpow = CalculateMaxMana(Level, GetBaseStat(CharacterClass.ManaStat));
-				if (newpow > 0 && oldpow < newpow)
-				{
-					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.PowerRaise", (newpow - oldpow)), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-				}
-			}
+                // hp upgrade
+                int newhp = CalculateMaxHealth(Level, GetBaseStat(eStat.CON));
+                if (oldhp > 0 && oldhp < newhp)
+                {
+                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.HitsRaise", (newhp - oldhp)), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                }
+
+                // power upgrade
+                if (CharacterClass.ManaStat != eStat.UNDEFINED)
+                {
+                    int newpow = CalculateMaxMana(Level, GetBaseStat(CharacterClass.ManaStat));
+                    if (newpow > 0 && oldpow < newpow)
+                    {
+                        Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.PowerRaise", (newpow - oldpow)), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                    }
+                }
+            }
 
 			if (IsAlive)
 			{
@@ -7999,8 +8012,14 @@ namespace DOL.GS
 			}
 			UpdateEquipmentAppearance();
 
-            // Graveen spec points respec check for level 50
-            if (this.SkillSpecialtyPoints >= 5000) this.OnLevelUp(49);
+            // spec points respec check for level 50
+            // all level 50 classes to be checked with db SkillSpecialtyPoints > 5000 and PrivLevel = 1
+            if (this.SkillSpecialtyPoints >= 5000 && this.Client.Account.PrivLevel == (uint)ePrivLevel.Player )
+            {
+                Redistribute = true ;
+                this.OnLevelUp(49);
+            }
+            Redistribute = false;
 
 			return true;
 		}
