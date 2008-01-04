@@ -260,14 +260,31 @@ namespace DOL.GS.RealmAbilities
 			return false;
 		}
 
+		/*
+		 * Stored in hex, different values in binary
+		 * e.g.
+		 * 16|8|4|2|1
+		 * ----------
+		 * 1
+		 * 0|0|0|0|1 stored as 0x00000001
+		 * 2
+		 * 0|0|0|1|0 stored as 0x00000002
+		 * 4
+		 * 0|0|1|0|0 stored as 0x00000004
+		 * 8
+		 * 0|1|0|0|0 stored as 0x00000008
+		 * 16
+		 * 1|0|0|0|0 stored as 0x00000010
+		 */
 		public const long DEAD = 0x00000001;
-		public const long SITTING = 0x00000010;
-		public const long MEZZED = 0x00000100;
-		public const long STUNNED = 0x00001000;
-		public const long INCOMBAT = 0x00010000;
-		public const long NOTINCOMBAT = 0x00100000;
-		public const long NOTINGROUP = 0x01000000;
-		public const long STEALTHED = 0x10000000;
+		public const long SITTING = 0x00000002;
+		public const long MEZZED = 0x00000004;
+		public const long STUNNED = 0x00000008;
+		public const long INCOMBAT = 0x00000010;
+		public const long NOTINCOMBAT = 0x00000020;
+		public const long NOTINGROUP = 0x00000040;
+		public const long STEALTHED = 0x000000080;
+		public const long TARGET = 0x000000100;
 	}
 
 

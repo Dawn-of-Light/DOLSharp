@@ -18,7 +18,7 @@ namespace DOL.GS.SkillHandler
 		{
 			get
 			{
-				return DEAD | SITTING | MEZZED | STUNNED;
+				return DEAD | SITTING | MEZZED | STUNNED | TARGET;
 			}
 		}
 
