@@ -104,23 +104,40 @@ namespace DOL.GS.PacketHandler
 		protected override void SendInventorySlotsUpdateBase(ICollection slots, byte preAction)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.InventoryUpdate));
+			GameHouseVault houseVault = m_gameClient.Player.ActiveVault;
 			pak.WriteByte((byte)(slots == null ? 0 : slots.Count));
-            pak.WriteByte(0); // new in 189b+, show shield in left hand 
+            pak.WriteByte(0x00); // new in 189b+, show shield in left hand 
             pak.WriteByte((byte)((m_gameClient.Player.IsCloakInvisible ? 0x01 : 0x00) | (m_gameClient.Player.IsHelmInvisible ? 0x02 : 0x00))); // new in 189b+, cloack/helm visibility 
-			pak.WriteByte((byte)((m_gameClient.Player.IsCloakHoodUp ? 0x01 : 0x00) | (int)m_gameClient.Player.ActiveQuiverSlot)); //bit0 is hood up bit4 to 7 is active quiver
+			if (preAction == 0x04 && houseVault != null)
+				pak.WriteByte((byte)(houseVault.Index + 1));	// Add the vault number to the window caption
+			else
+				pak.WriteByte((byte)((m_gameClient.Player.IsCloakHoodUp ? 0x01 : 0x00) | (int)m_gameClient.Player.ActiveQuiverSlot)); //bit0 is hood up bit4 to 7 is active quiver
             // ^ in 1.89b+, 0 bit - showing hooded cloack, if not hooded not show cloack at all ? 
             pak.WriteByte((byte)m_gameClient.Player.VisibleActiveWeaponSlots);
-            pak.WriteByte(preAction); //preAction (0x00 - Do nothing) 
-            //pak.WriteByte(0x00);
-            //pak.WriteByte(0x00);
+			pak.WriteByte(preAction); //preAction (0x00 - Do nothing) 
 			if (slots != null)
 			{
+				// If player is viewing a hause vault do some calculations
+				// in advance to save CPU time later on.
+
+				int inventoryFirst = 0, inventoryLast = 0;
+				if (houseVault != null)
+				{
+					inventoryFirst = (int)(eInventorySlot.HouseVault_First)
+						+ 100 * houseVault.Index;
+					inventoryLast = (int)(eInventorySlot.HouseVault_First)
+						+ 100 * houseVault.Index + 99;
+				}
+
 				foreach (int updatedSlot in slots)
 				{
-					pak.WriteByte((byte)updatedSlot);
+					if (houseVault != null && updatedSlot >= inventoryFirst && updatedSlot <= inventoryLast)
+						pak.WriteByte((byte)(updatedSlot - inventoryFirst + (int)(eInventorySlot.HousingInventory_First)));
+					else
+						pak.WriteByte((byte)(updatedSlot));
 
 					InventoryItem item = null;
-					item = m_gameClient.Player.Inventory.GetItem((eInventorySlot)updatedSlot);
+					item = m_gameClient.Player.Inventory.GetItem((eInventorySlot)(updatedSlot));
 
 					if (item == null)
 					{
