@@ -318,7 +318,7 @@ namespace DOL.GS
 				//				|| ( slot >= eInventorySlot.Mithril && slot <= eInventorySlot.Copper ) // can't place items in money slots, is it?
 				|| (slot >= eInventorySlot.HorseArmor && slot <= eInventorySlot.Horse)
 				|| (slot >= eInventorySlot.FirstVault && slot <= eInventorySlot.LastVault)
-				|| (slot >= eInventorySlot.FirstHousingVault_First && slot <= eInventorySlot.FirstHousingVault_Last)
+				|| (slot >= eInventorySlot.HouseVault_First && slot <= eInventorySlot.HouseVault_Last)
 				|| (slot == eInventorySlot.PlayerPaperDoll))
 				return slot;
 

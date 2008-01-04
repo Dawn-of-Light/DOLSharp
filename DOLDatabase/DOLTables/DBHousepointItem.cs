@@ -33,6 +33,7 @@ namespace DOL.Database
 		private int m_houseID; // the number of the house
 		private uint m_position; // the housepoint slot
 		private string m_templateID; // the item template id of the item placed
+		private byte m_index;
 
 		static bool m_autoSave;
 
@@ -83,6 +84,21 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_templateID = value;
+			}
+		}
+
+		/// <summary>
+		/// Index of this item in case there is more than 1 
+		/// of the same type.
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public byte Index
+		{
+			get { return m_index; }
+			set 
+			{ 
+				Dirty = true; 
+				m_index = value; 
 			}
 		}
 	}
