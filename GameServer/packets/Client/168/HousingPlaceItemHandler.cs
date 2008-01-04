@@ -44,7 +44,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			int rotation	= packet.ReadByte();		// garden items only
 			short xpos	= (short)packet.ReadShort();	// x for inside objs
 			short ypos	= (short)packet.ReadShort();	// y for inside objs.
-
 			//log.Info("U1: " + unknow1 + " - U2: " + unknow2);
 
 			House house = (House) HouseMgr.GetHouse(client.Player.CurrentRegionID,housenumber);
@@ -129,30 +128,31 @@ namespace DOL.GS.PacketHandler.Client.v168
                 return 0;
             }
 
-            if (orgitem.Object_Type == 49) // Garden items 
-                method = 1;
-            else if (orgitem.Id_nb == "porch_deed" || orgitem.Id_nb == "porch_remove_deed")
-                method = 4;
-            else if (orgitem.Object_Type == 50) // Indoor wall items
-                method = 2;
-            else if (orgitem.Object_Type == 51) // Indoor floor items
-                method = 3;
-            else if (orgitem.Object_Type >= 59 && orgitem.Object_Type <= 64) // Outdoor Roof/Wall/Door/Porch/Wood/Shutter/awning Material item type
-            {
-                client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HouseUseMaterials"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                return 1;
-            }
-            else if (orgitem.Object_Type == 56 || orgitem.Object_Type == 52 || (orgitem.Object_Type >= 69 && orgitem.Object_Type <= 71)) // Indoor carpets 1-4
-            {
-                client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HouseUseCarpets"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                return 1;
-            }
-            else if (orgitem.Object_Type == 57 || orgitem.Object_Type == 58  // Exterior banner/shield
-                || orgitem.Object_Type == 66 || orgitem.Object_Type == 67) // Interior banner/shield
-                method = 6;
-            else if (orgitem.Object_Type == 53 || orgitem.Object_Type == 54 || orgitem.Object_Type == 55 || orgitem.Object_Type == 68)
-                method = 5;
-
+			if (orgitem.Object_Type == 49) // Garden items 
+				method = 1;
+			else if (orgitem.Id_nb == "porch_deed" || orgitem.Id_nb == "porch_remove_deed")
+				method = 4;
+			else if (orgitem.Object_Type == 50) // Indoor wall items
+				method = 2;
+			else if (orgitem.Object_Type == 51) // Indoor floor items
+				method = 3;
+			else if (orgitem.Object_Type >= 59 && orgitem.Object_Type <= 64) // Outdoor Roof/Wall/Door/Porch/Wood/Shutter/awning Material item type
+			{
+				client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HouseUseMaterials"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return 1;
+			}
+			else if (orgitem.Object_Type == 56 || orgitem.Object_Type == 52 || (orgitem.Object_Type >= 69 && orgitem.Object_Type <= 71)) // Indoor carpets 1-4
+			{
+				client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HouseUseCarpets"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return 1;
+			}
+			else if (orgitem.Object_Type == 57 || orgitem.Object_Type == 58  // Exterior banner/shield
+				|| orgitem.Object_Type == 66 || orgitem.Object_Type == 67) // Interior banner/shield
+				method = 6;
+			else if (orgitem.Object_Type == 53 || orgitem.Object_Type == 55 || orgitem.Object_Type == 68)
+				method = 5;
+			else if (orgitem.Object_Type == 54)
+				method = 7;
             int pos;
 			switch (method)
 			{
@@ -334,10 +334,8 @@ namespace DOL.GS.PacketHandler.Client.v168
                                     return 1;
                                 }
                             }
-
                             GameServer.Database.AddNewObject(point);
-
-                            house.FillHookpoint(orgitem, (uint)position, orgitem.Id_nb);
+                            GameObject obj = house.FillHookpoint(orgitem, (uint)position, orgitem.Id_nb);
                             house.HousepointItems[point.Position] = point;
                             client.Player.Inventory.RemoveItem(orgitem);
                             client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointAdded"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -385,6 +383,21 @@ namespace DOL.GS.PacketHandler.Client.v168
                     house.SaveIntoDatabase();
                     house.SendUpdate();
                     break;
+				case 7: // House vault.
+					int vaultIndex = house.GetFreeVaultNumber();
+					if (vaultIndex < 0)
+					{
+						client.Player.Out.SendMessage("You can't add any more vaults to this house",
+							eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendInventorySlotsUpdate(new int[] { slot });
+						return 1;
+					}
+					GameHouseVault houseVault = new GameHouseVault(orgitem, vaultIndex);
+					houseVault.Attach(house, (uint)position);
+					client.Player.Inventory.RemoveItem(orgitem);
+					house.SaveIntoDatabase();
+					house.SendUpdate();
+					return 0;
 				default:
 					break;
 			}

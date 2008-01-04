@@ -6898,7 +6898,18 @@ namespace DOL.GS
 		}
 		#endregion
 
-		#region Money/Items/Trading/UseSlot/ApplyPoison
+		#region Vault/Money/Items/Trading/UseSlot/ApplyPoison
+
+		private GameHouseVault m_activeVault;
+
+		/// <summary>
+		/// The currently active house vault.
+		/// </summary>
+		public GameHouseVault ActiveVault
+		{
+			get { return m_activeVault; }
+			set { m_activeVault = value; }
+		}
 
 		/// <summary>
 		/// Property that holds tick when charged item was used last time
@@ -6906,7 +6917,6 @@ namespace DOL.GS
 		public const string LAST_CHARGED_ITEM_USE_TICK = "LastChargedItemUsedTick";
 		public const string ITEM_USE_DELAY = "ItemUseDelay";
 		public const string LAST_POTION_ITEM_USE_TICK = "LastPotionItemUsedTick";
-		public const string LAST_PERSONAL_BIND_RECALL_STONE_USE_TICK = "LastPersonalBindRecallStoneUseTick";
 
 		/// <summary>
 		/// Called when this player receives a trade item
@@ -9721,6 +9731,18 @@ namespace DOL.GS
 				if (!InCombat)
 					MountSteed(floorObject as GameBoat, false);
 
+				return true;
+			}
+			else if (floorObject is GameHouseVault && floorObject.CurrentHouse != null)
+			{
+				GameHouseVault houseVault = floorObject as GameHouseVault;
+				if (houseVault.Detach())
+				{
+					ItemTemplate template =
+						(ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), houseVault.TemplateID);
+					Inventory.AddItem(eInventorySlot.FirstEmptyBackpack,
+						new InventoryItem(template));
+				}
 				return true;
 			}
 			else if ((floorObject is GameNPC || floorObject is GameStaticItem) && floorObject.CurrentHouse != null)

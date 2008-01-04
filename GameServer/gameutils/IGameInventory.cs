@@ -61,10 +61,11 @@ namespace DOL.GS
 		FirstVault        = 110,
 		LastVault         = 149,
 
-		Max_Inv			  = 149,
+		HousingInventory_First = 150,
+		HousingInventory_Last = 249,	
 
-		FirstHousingVault_First = 150,
-		FirstHousingVault_Last = 249,
+		HouseVault_First = 1000,
+		HouseVault_Last = 1399,
 
 		//Consignment_First = 150,
 		//Consignment_last = 249,
@@ -80,6 +81,8 @@ namespace DOL.GS
 		Silver178		  = 503,
 		Copper178		  = 504,
 		NewPlayerPaperDoll= 600,
+
+		Max_Inv = 249,
 	}
 
 	/// <summary>

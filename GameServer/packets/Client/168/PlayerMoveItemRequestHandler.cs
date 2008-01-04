@@ -191,11 +191,63 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return 0;
 			}
 
+			// Move an item from the backpack to a house vault (CMs will be added later).
+
+			if ((fromSlot >= (ushort)eInventorySlot.FirstBackpack && fromSlot <= (ushort)eInventorySlot.LastBackpack) &&
+				(toSlot >= (ushort)eInventorySlot.HousingInventory_First && toSlot <= (ushort)eInventorySlot.HousingInventory_Last))
+			{
+				GameHouseVault houseVault = client.Player.ActiveVault;
+				if (houseVault == null)
+				{
+					client.Out.SendMessage("You are not actively viewing a vault!", 
+						eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return 0;
+				}
+
+				int oldSlot = toSlot; // debug
+
+				toSlot += (ushort)((int)(eInventorySlot.HouseVault_First)
+					+ 100 * houseVault.Index - (int)(eInventorySlot.HousingInventory_First));
+
+				if (client.Account.PrivLevel > 1)
+					client.Out.SendMessage(String.Format("Moving item from slot {0} to slot {1}[{2}].",
+						fromSlot, oldSlot, toSlot), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+
+				client.Player.Inventory.MoveItem((eInventorySlot)fromSlot, (eInventorySlot)toSlot, itemCount);
+				return 1;
+			}
+
+			// Move an item from a house vault to the backpack (CMs will be added later).
+
+			if ((fromSlot >= (ushort)eInventorySlot.HousingInventory_First && fromSlot <= (ushort)eInventorySlot.HousingInventory_Last) &&
+				(toSlot >= (ushort)eInventorySlot.FirstBackpack && toSlot <= (ushort)eInventorySlot.LastBackpack))
+			{
+				GameHouseVault houseVault = client.Player.ActiveVault;
+				if (houseVault == null)
+				{
+					client.Out.SendMessage("You are not actively viewing a vault!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return 0;
+				}
+
+				int oldSlot = fromSlot; // debug
+
+				fromSlot += (ushort)((int)(eInventorySlot.HouseVault_First)
+					+ 100 * houseVault.Index - (int)(eInventorySlot.HousingInventory_First));
+
+				if (client.Account.PrivLevel > 1)
+					client.Out.SendMessage(String.Format("Moving item from slot {0}[{1}] to slot {2}.",
+						oldSlot, fromSlot, toSlot), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+
+				client.Player.Inventory.MoveItem((eInventorySlot)fromSlot, (eInventorySlot)toSlot, itemCount);
+				return 1;
+			}
+
 			//Do we want to move an item from inventory/vault/quiver into inventory/vault/quiver?
 			if (((fromSlot>=(ushort)eInventorySlot.Ground && fromSlot<=(ushort)eInventorySlot.LastBackpack)
 				|| (fromSlot>=(ushort)eInventorySlot.FirstVault && fromSlot<=(ushort)eInventorySlot.LastVault))
 				&&((toSlot>=(ushort)eInventorySlot.Ground && toSlot<=(ushort)eInventorySlot.LastBackpack)
-				|| (toSlot>=(ushort)eInventorySlot.FirstVault && toSlot<=(ushort)eInventorySlot.LastVault)))
+				|| (toSlot>=(ushort)eInventorySlot.FirstVault && toSlot<=(ushort)eInventorySlot.LastVault))
+				|| (toSlot>=(ushort)eInventorySlot.HousingInventory_First && toSlot<=(ushort)eInventorySlot.HousingInventory_Last))
 			{
 				//We want to drop the item
 				if (toSlot==(ushort)eInventorySlot.Ground)
@@ -227,6 +279,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					client.Out.SendInventoryItemsUpdate(null);
 					return 0;
 				}
+
 				//We want to move the item in inventory
 				client.Player.Inventory.MoveItem((eInventorySlot)fromSlot, (eInventorySlot)toSlot, itemCount);
 				return 1;
