@@ -1688,6 +1688,14 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
+		public virtual void SendInventoryItemsUpdate(IDictionary<int, InventoryItem> updateItems, byte windowType)
+		{
+		}
+
+		public virtual void SendInventoryItemsPartialUpdate(IDictionary<int, InventoryItem> items, byte windowType)
+		{
+		}
+
 		public virtual void SendInventoryItemsUpdate(ICollection itemsToUpdate)
 		{
 			SendInventoryItemsUpdate(0, itemsToUpdate);
@@ -1724,6 +1732,10 @@ namespace DOL.GS.PacketHandler
 			{
 				SendInventorySlotsUpdateBase(slotsToUpdate, preAction);
 			}
+		}
+
+		public virtual void SendInventoryItemsPartialUpdate(List<InventoryItem> items, byte windowType)
+		{
 		}
 
 		public virtual void SendDoorState(IDoor door)

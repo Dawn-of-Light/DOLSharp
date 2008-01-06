@@ -1480,8 +1480,6 @@ namespace DOL.GS.Housing
 
 			foreach (DBHousePermissions dbperm in GameServer.Database.SelectObjects(typeof(DBHousePermissions), "HouseNumber = '" + this.HouseNumber + "'"))
 			{
-				log.Info(String.Format("Loading data for access level {0}, permissions for vault 1 set to 0x{1:X2}",
-					dbperm.PermLevel, dbperm.Vault1));
 				this.HouseAccess[dbperm.PermLevel] = dbperm;
 			}
 
