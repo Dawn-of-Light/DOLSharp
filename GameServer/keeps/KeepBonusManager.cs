@@ -45,8 +45,6 @@ namespace DOL.GS.Keeps
 				return false;
 
 			int count = 0;
-			//let's not use this for performance reasons
-			//KeepMgr.GetKeepCountByRealm(realm);
 			switch (realm)
 			{
 				case eRealm.Albion: count = albCount; break;

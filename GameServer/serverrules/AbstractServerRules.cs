@@ -802,9 +802,9 @@ namespace DOL.GS.ServerRules
 
 						//FIXME: [WARN] this is a guess, I do not know the real way this is applied
 						//apply the keep bonus for experience
-						if (Keeps.KeepBonusMgr.RealmHasBonus(eKeepBonusType.Experience_5, (eRealm)living.Realm))
+						if (Keeps.KeepBonusMgr.RealmHasBonus(eKeepBonusType.Experience_5, living.Realm))
 							outpostXP += (xpReward / 100) * 5;
-						else if (Keeps.KeepBonusMgr.RealmHasBonus(eKeepBonusType.Experience_3, (eRealm)living.Realm))
+						else if (Keeps.KeepBonusMgr.RealmHasBonus(eKeepBonusType.Experience_3, living.Realm))
 							outpostXP += (xpReward / 100) * 3;
 					}
 

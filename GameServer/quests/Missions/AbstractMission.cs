@@ -244,7 +244,7 @@ namespace DOL.GS.Quests
 					case eMissionType.Group:
 						{
 							Group group = m_owner as Group;
-							return group.GetMembersInTheGroup() as List<GamePlayer>;
+							return group.GetPlayersInTheGroup() as List<GamePlayer>;
 						}
 					case eMissionType.Realm:
 					case eMissionType.None:
