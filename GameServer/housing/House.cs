@@ -1036,6 +1036,7 @@ namespace DOL.GS.Housing
 					}
 				case eObjectType.HouseBindstone:
 					{
+						sItem = new GameStaticItem();
 						sItem.CurrentHouse = this;
 						sItem.InHouse = true;
 						sItem.X = x;
