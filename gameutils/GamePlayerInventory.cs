@@ -354,7 +354,12 @@ namespace DOL.GS
 				fromSlot = GetValidInventorySlot(fromSlot);
 				toSlot = GetValidInventorySlot(toSlot);
 				if (fromSlot == eInventorySlot.Invalid || toSlot == eInventorySlot.Invalid)
+				{
+					if (Player.Client.Account.PrivLevel > 1)
+						Player.Out.SendMessage("Invalid slot.",
+							eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
 					return false;
+				}
 
 				// just change active weapon if placed in same slot
 				if (fromSlot == toSlot)

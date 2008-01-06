@@ -21,6 +21,9 @@ using DOL.Database;
 using DOL.GS.Housing;
 using System;
 using DOL.GS.PacketHandler;
+using System.Collections.Generic;
+using log4net;
+using System.Reflection;
 
 namespace DOL.GS
 {
@@ -30,6 +33,11 @@ namespace DOL.GS
 	/// <author>Aredhel</author>
 	public class GameHouseVault : GameStaticItem, IHouseHookpointItem
 	{
+		/// <summary>
+		/// Defines a logger for this class.
+		/// </summary>
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
 		public enum Permissions
 		{
 			None = 0x00,
@@ -37,6 +45,11 @@ namespace DOL.GS
 			Add = 0x02,
 			View = 0x04
 		}
+
+		/// <summary>
+		/// Number of items a single vault can hold.
+		/// </summary>
+		public const int Size = 100;
 
 		/// <summary>
 		/// Create a new house vault.
@@ -77,21 +90,203 @@ namespace DOL.GS
 			}
 
 			player.ActiveVault = this;
-			ArrayList vaultItems = null;
-			String sqlWhere = String.Format("OwnerID = '{0}' and SlotPosition >= {1} and SlotPosition <= {2}",
-				GameServer.Database.Escape((HouseMgr.GetOwners(CurrentHouse.DatabaseItem)[0] as Character).ObjectId),
-				((int)eInventorySlot.HouseVault_First) + 100 * Index,
-				((int)eInventorySlot.HouseVault_First) + 100 * Index + 99);
-			DataObject[] items = GameServer.Database.SelectObjects(typeof(InventoryItem), sqlWhere);
-			foreach (InventoryItem item in items)
+			player.Out.SendInventoryItemsUpdate(Inventory, 0x04);
+			return true;
+		}
+
+		/// <summary>
+		/// First slot in the DB.
+		/// </summary>
+		public int FirstSlot
+		{
+			get { return (int)(eInventorySlot.HouseVault_First) + Size * Index; }
+		}
+
+		/// <summary>
+		/// Last slot in the DB.
+		/// </summary>
+		public int LastSlot
+		{
+			get { return (int)(eInventorySlot.HouseVault_First) + Size * (Index + 1) - 1; }
+		}
+
+		/// <summary>
+		/// Inventory for this vault.
+		/// </summary>
+		public Dictionary<int, InventoryItem> Inventory
+		{
+			get
 			{
-				if (vaultItems == null)
-					vaultItems = new ArrayList();
-				vaultItems.Add(item);
+				Dictionary<int, InventoryItem> inventory = new Dictionary<int, InventoryItem>();
+				int slotOffset = - FirstSlot + (int)(eInventorySlot.HousingInventory_First);
+				foreach (InventoryItem item in Items)
+					if (item != null)
+						inventory.Add(item.SlotPosition + slotOffset, item);
+				return inventory;
+			}
+		}
+
+		/// <summary>
+		/// List of items in the vault.
+		/// </summary>
+		public InventoryItem[] Items
+		{
+			get
+			{
+				String sqlWhere = String.Format("OwnerID = '{0}' and SlotPosition >= {1} and SlotPosition <= {2}",
+					GameServer.Database.Escape((HouseMgr.GetOwners(CurrentHouse.DatabaseItem)[0] as Character).ObjectId),
+					FirstSlot, LastSlot);
+				return (InventoryItem[])(GameServer.Database.SelectObjects(typeof(InventoryItem), sqlWhere));
+			}
+		}
+
+		/// <summary>
+		/// Move an item from, to or inside a house vault.
+		/// </summary>
+		/// <param name="playerInventory"></param>
+		/// <param name="fromSlot"></param>
+		/// <param name="toSlot"></param>
+		/// <returns></returns>
+		public IDictionary<int, InventoryItem> MoveItem(IGameInventory playerInventory,
+			eInventorySlot fromSlot, eInventorySlot toSlot)
+		{
+			if (fromSlot == toSlot)
+				return null;
+
+			if (fromSlot >= eInventorySlot.HousingInventory_First &&
+				fromSlot <= eInventorySlot.HousingInventory_Last)
+			{
+				if (toSlot >= eInventorySlot.HousingInventory_First &&
+					toSlot <= eInventorySlot.HousingInventory_Last)
+					return MoveItemInsideVault(fromSlot, toSlot);
+
+				return MoveItemFromVault(playerInventory, fromSlot, toSlot);
 			}
 
-			player.Out.SendInventoryItemsUpdate(0x04, vaultItems);
-			return true;
+			if (toSlot >= eInventorySlot.HousingInventory_First &&
+				toSlot <= eInventorySlot.HousingInventory_Last)
+				return MoveItemToVault(playerInventory, fromSlot, toSlot);
+
+			// Neither slot is a vault slot, who the heck called us?
+
+			return null;
+		}
+
+		/// <summary>
+		/// Move an item from the vault.
+		/// </summary>
+		/// <param name="playerInventory"></param>
+		/// <param name="fromSlot"></param>
+		/// <param name="toSlot"></param>
+		/// <returns></returns>
+		protected IDictionary<int, InventoryItem> MoveItemFromVault(IGameInventory playerInventory,
+			eInventorySlot fromSlot, eInventorySlot toSlot)
+		{
+			// We will only allow moving to the backpack.
+
+			if (toSlot < eInventorySlot.FirstBackpack || toSlot > eInventorySlot.LastBackpack)
+				return null;
+
+			Dictionary<int, InventoryItem> inventory = Inventory;
+
+			if (!inventory.ContainsKey((int)fromSlot))
+				return null;
+
+			Dictionary<int, InventoryItem> updateItems = new Dictionary<int, InventoryItem>(1);
+			InventoryItem fromItem = inventory[(int)fromSlot];
+			InventoryItem toItem = playerInventory.GetItem(toSlot);
+
+			if (toItem != null)
+			{
+				playerInventory.RemoveItem(toItem);
+				toItem.SlotPosition = fromItem.SlotPosition;
+				GameServer.Database.AddNewObject(toItem);
+				GameServer.Database.SaveObject(toItem);
+			}
+
+			GameServer.Database.DeleteObject(fromItem);
+			playerInventory.AddItem(toSlot, fromItem);
+			updateItems.Add((int)fromSlot, toItem);
+			return updateItems;
+		}
+
+		/// <summary>
+		/// Move an item to the vault.
+		/// </summary>
+		/// <param name="playerInventory"></param>
+		/// <param name="fromSlot"></param>
+		/// <param name="toSlot"></param>
+		/// <returns></returns>
+		protected IDictionary<int, InventoryItem> MoveItemToVault(IGameInventory playerInventory, 
+			eInventorySlot fromSlot, eInventorySlot toSlot)
+		{
+			// We will only allow moving from the backpack.
+
+			if (fromSlot < eInventorySlot.FirstBackpack || fromSlot > eInventorySlot.LastBackpack)
+				return null;
+
+			InventoryItem fromItem = playerInventory.GetItem(fromSlot);
+
+			if (fromItem == null)
+				return null;
+
+			Dictionary<int, InventoryItem> inventory = Inventory;
+			Dictionary<int, InventoryItem> updateItems = new Dictionary<int, InventoryItem>(1);
+
+			playerInventory.RemoveItem(fromItem);
+
+			if (inventory.ContainsKey((int)toSlot))
+			{
+				InventoryItem toItem = inventory[(int)toSlot];
+				GameServer.Database.DeleteObject(toItem);
+				playerInventory.AddItem(fromSlot, toItem);
+			}
+
+			fromItem.OwnerID = (HouseMgr.GetOwners(CurrentHouse.DatabaseItem)[0] as Character).ObjectId;
+			fromItem.SlotPosition = (int)(toSlot) -
+				(int)(eInventorySlot.HousingInventory_First) +
+				FirstSlot;
+			GameServer.Database.AddNewObject(fromItem);
+			GameServer.Database.SaveObject(fromItem);
+
+			updateItems.Add((int)toSlot, fromItem);
+			return updateItems;
+		}
+
+		/// <summary>
+		/// Move an item around inside the vault.
+		/// </summary>
+		/// <param name="fromSlot"></param>
+		/// <param name="toSlot"></param>
+		/// <returns></returns>
+		protected IDictionary<int, InventoryItem> MoveItemInsideVault(eInventorySlot fromSlot,
+			eInventorySlot toSlot)
+		{
+			Dictionary<int, InventoryItem> inventory = Inventory;
+
+			if (!inventory.ContainsKey((int)fromSlot))
+				return null;
+
+			Dictionary<int, InventoryItem> updateItems = new Dictionary<int, InventoryItem>(2);
+			InventoryItem fromItem = null, toItem = null;
+
+			fromItem = inventory[(int)fromSlot];
+
+			if (inventory.ContainsKey((int)toSlot))
+			{
+				toItem = inventory[(int)toSlot];
+				toItem.SlotPosition = fromItem.SlotPosition;
+				GameServer.Database.SaveObject(toItem);
+			}
+
+			fromItem.SlotPosition = (int)(toSlot) -
+				(int)(eInventorySlot.HousingInventory_First) +
+				FirstSlot;
+			GameServer.Database.SaveObject(fromItem);
+
+			updateItems.Add((int)fromSlot, toItem);
+			updateItems.Add((int)toSlot, fromItem);
+			return updateItems;
 		}
 
 		#endregion
@@ -109,8 +304,6 @@ namespace DOL.GS
 			if (IsOwner(player) || player.Client.Account.PrivLevel > 1)
 				return true;
 
-			player.Out.SendMessage(String.Format("Vault permissions: 0x{0:X2}", GetPlayerPermissions(player)),
-				eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
 			return ((GetPlayerPermissions(player) & (byte)(Permissions.View)) > 0);
 		}
 
