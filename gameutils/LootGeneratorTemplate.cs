@@ -187,7 +187,10 @@ namespace DOL.GS
 			if (lootTemplates != null)
 			{
 				foreach (DBLootTemplate lootTemplate in lootTemplates)
-					loot.AddRandom(lootTemplate.Chance, lootTemplate.ItemTemplate);
+				{
+					if (lootTemplate.ItemTemplate.Realm == 0 || lootTemplate.ItemTemplate.Realm == (int)killer.Realm)
+						loot.AddRandom(lootTemplate.Chance, lootTemplate.ItemTemplate);
+				}
 			}
 
 			return loot;
