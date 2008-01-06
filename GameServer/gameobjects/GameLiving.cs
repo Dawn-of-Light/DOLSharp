@@ -4926,15 +4926,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			}
 			set
 			{
-				GameObject previousTarget = m_targetObjectWeakReference.Target as GameObject;
-				if (previousTarget is GameLiving)
-					((GameLiving)previousTarget).RemoveAttacker(this);
-
-				GameObject newTarget = value;
-				m_targetObjectWeakReference.Target = newTarget;
-
-				if (AttackState && newTarget is GameLiving)
-					((GameLiving)newTarget).AddAttacker(this);
+				m_targetObjectWeakReference.Target = value;
 			}
 		}
 		/// <summary>
