@@ -23,6 +23,7 @@ using DOL.GS;
 using System.Reflection;
 using log4net;
 using DOL.Language;
+using System.Collections.Generic;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
@@ -191,54 +192,26 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return 0;
 			}
 
-			// Move an item from the backpack to a house vault (CMs will be added later).
+			// Move an item from, to or inside a vault.
 
-			if ((fromSlot >= (ushort)eInventorySlot.FirstBackpack && fromSlot <= (ushort)eInventorySlot.LastBackpack) &&
-				(toSlot >= (ushort)eInventorySlot.HousingInventory_First && toSlot <= (ushort)eInventorySlot.HousingInventory_Last))
+			if ((fromSlot >= (ushort)eInventorySlot.HousingInventory_First &&
+				fromSlot <= (ushort)eInventorySlot.HousingInventory_Last) ||
+				(toSlot >= (ushort)eInventorySlot.HousingInventory_First &&
+				toSlot <= (ushort)eInventorySlot.HousingInventory_Last))
 			{
 				GameHouseVault houseVault = client.Player.ActiveVault;
 				if (houseVault == null)
 				{
-					client.Out.SendMessage("You are not actively viewing a vault!", 
+					client.Out.SendMessage("You are not actively viewing a vault!",
 						eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 0;
 				}
 
-				int oldSlot = toSlot; // debug
+				IDictionary<int, InventoryItem> updateItems
+					= houseVault.MoveItem(client.Player.Inventory,
+						(eInventorySlot)fromSlot, (eInventorySlot)toSlot);
 
-				toSlot += (ushort)((int)(eInventorySlot.HouseVault_First)
-					+ 100 * houseVault.Index - (int)(eInventorySlot.HousingInventory_First));
-
-				if (client.Account.PrivLevel > 1)
-					client.Out.SendMessage(String.Format("Moving item from slot {0} to slot {1}[{2}].",
-						fromSlot, oldSlot, toSlot), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-
-				client.Player.Inventory.MoveItem((eInventorySlot)fromSlot, (eInventorySlot)toSlot, itemCount);
-				return 1;
-			}
-
-			// Move an item from a house vault to the backpack (CMs will be added later).
-
-			if ((fromSlot >= (ushort)eInventorySlot.HousingInventory_First && fromSlot <= (ushort)eInventorySlot.HousingInventory_Last) &&
-				(toSlot >= (ushort)eInventorySlot.FirstBackpack && toSlot <= (ushort)eInventorySlot.LastBackpack))
-			{
-				GameHouseVault houseVault = client.Player.ActiveVault;
-				if (houseVault == null)
-				{
-					client.Out.SendMessage("You are not actively viewing a vault!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 0;
-				}
-
-				int oldSlot = fromSlot; // debug
-
-				fromSlot += (ushort)((int)(eInventorySlot.HouseVault_First)
-					+ 100 * houseVault.Index - (int)(eInventorySlot.HousingInventory_First));
-
-				if (client.Account.PrivLevel > 1)
-					client.Out.SendMessage(String.Format("Moving item from slot {0}[{1}] to slot {2}.",
-						oldSlot, fromSlot, toSlot), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-
-				client.Player.Inventory.MoveItem((eInventorySlot)fromSlot, (eInventorySlot)toSlot, itemCount);
+				client.Out.SendInventoryItemsUpdate(updateItems, 0);
 				return 1;
 			}
 
