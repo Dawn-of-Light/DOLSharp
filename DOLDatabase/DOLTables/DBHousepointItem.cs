@@ -32,6 +32,7 @@ namespace DOL.Database
 	{
 		private int m_houseID; // the number of the house
 		private uint m_position; // the housepoint slot
+		private ushort m_heading;
 		private string m_templateID; // the item template id of the item placed
 		private byte m_index;
 
@@ -73,6 +74,17 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_position = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public ushort Heading
+		{
+			get { return m_heading; }
+			set
+			{
+				Dirty = true;
+				m_heading = value;
 			}
 		}
 

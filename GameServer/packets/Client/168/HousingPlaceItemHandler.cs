@@ -387,13 +387,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 					int vaultIndex = house.GetFreeVaultNumber();
 					if (vaultIndex < 0)
 					{
-						client.Player.Out.SendMessage("You can't add any more vaults to this house",
+						client.Player.Out.SendMessage("You can't add any more vaults to this house!",
 							eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						client.Out.SendInventorySlotsUpdate(new int[] { slot });
 						return 1;
 					}
 					GameHouseVault houseVault = new GameHouseVault(orgitem, vaultIndex);
-					houseVault.Attach(house, (uint)position);
+					houseVault.Attach(house, (uint)position, (ushort)((client.Player.Heading + 2048) % 4096));
 					client.Player.Inventory.RemoveItem(orgitem);
 					house.SaveIntoDatabase();
 					house.SendUpdate();

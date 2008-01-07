@@ -204,14 +204,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					client.Out.SendMessage("You are not actively viewing a vault!",
 						eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendInventoryItemsUpdate(null);
 					return 0;
 				}
 
-				IDictionary<int, InventoryItem> updateItems
-					= houseVault.MoveItem(client.Player.Inventory,
-						(eInventorySlot)fromSlot, (eInventorySlot)toSlot);
+				houseVault.MoveItem(client.Player.Inventory, (eInventorySlot)fromSlot, 
+					(eInventorySlot)toSlot);
 
-				client.Out.SendInventoryItemsUpdate(updateItems, 0);
 				return 1;
 			}
 
