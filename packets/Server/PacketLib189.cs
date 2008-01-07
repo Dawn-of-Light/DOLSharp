@@ -116,7 +116,7 @@ namespace DOL.GS.PacketHandler
 
 			Dictionary<int, InventoryItem> items = new Dictionary<int, InventoryItem>();
 
-			if (updateItems == null)
+			if (updateItems == null || updateItems.Count == 0)
 			{
 				SendInventoryItemsPartialUpdate(items, windowType);
 				return;
