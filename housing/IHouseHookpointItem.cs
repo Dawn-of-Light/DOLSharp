@@ -11,7 +11,7 @@ namespace DOL.GS.Housing
 	/// <author>Aredhel</author>
 	public interface IHouseHookpointItem
 	{
-		bool Attach(House house, uint hookpointID);
+		bool Attach(House house, uint hookpointID, ushort heading);
 		bool Attach(House house, DBHousepointItem hookedItem);
 		bool Detach();
 		int Index { get; }

@@ -461,7 +461,7 @@ namespace DOL.GS
 
 
 			// actually this should be only for Named mobs (like dragon, legion) but there is no way to find that out
-			if (char.IsUpper(Name[0])) // proper noun
+			if (char.IsUpper(Name[0]) && this is GameLiving) // proper noun
 			{
 				return Name;
 			}
@@ -745,7 +745,7 @@ namespace DOL.GS
 		{
 			if (player.Client.Account.PrivLevel == 1 && !WorldMgr.CheckDistance(this, player, WorldMgr.INTERACT_DISTANCE))
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameObject.Interact.TooFarAway", GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameObject.Interact.TooFarAway", GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				Notify(GameObjectEvent.InteractFailed, this, new InteractEventArgs(player));
 				return false;
 			}

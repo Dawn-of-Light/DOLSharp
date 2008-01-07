@@ -73,6 +73,13 @@ namespace DOL.GS
 		#region Interact
 
 		/// <summary>
+		/// This list holds all the players that are currently viewing
+		/// the vault; it is needed to update the contents of the vault
+		/// for any one observer if there is a change.
+		/// </summary>
+		private Dictionary<String, GamePlayer> m_observers = new Dictionary<String, GamePlayer>();
+
+		/// <summary>
 		/// Player interacting with this vault.
 		/// </summary>
 		/// <param name="player"></param>
@@ -88,6 +95,9 @@ namespace DOL.GS
 					eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
+
+			if (!m_observers.ContainsKey(player.Name))
+				m_observers.Add(player.Name, player);
 
 			player.ActiveVault = this;
 			player.Out.SendInventoryItemsUpdate(Inventory, 0x04);
@@ -141,35 +151,38 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// This is used to synchronize actions on the vault.
+		/// </summary>
+		private object m_vaultSync = new object();
+
+		/// <summary>
 		/// Move an item from, to or inside a house vault.
 		/// </summary>
 		/// <param name="playerInventory"></param>
 		/// <param name="fromSlot"></param>
 		/// <param name="toSlot"></param>
 		/// <returns></returns>
-		public IDictionary<int, InventoryItem> MoveItem(IGameInventory playerInventory,
-			eInventorySlot fromSlot, eInventorySlot toSlot)
+		public void MoveItem(IGameInventory playerInventory, eInventorySlot fromSlot, eInventorySlot toSlot)
 		{
 			if (fromSlot == toSlot)
-				return null;
+				return;
 
-			if (fromSlot >= eInventorySlot.HousingInventory_First &&
-				fromSlot <= eInventorySlot.HousingInventory_Last)
+			lock (m_vaultSync)
 			{
-				if (toSlot >= eInventorySlot.HousingInventory_First &&
+				if (fromSlot == toSlot) NotifyObservers(null);
+				else if (fromSlot >= eInventorySlot.HousingInventory_First &&
+					fromSlot <= eInventorySlot.HousingInventory_Last)
+				{
+					if (toSlot >= eInventorySlot.HousingInventory_First &&
+						toSlot <= eInventorySlot.HousingInventory_Last)
+						NotifyObservers(MoveItemInsideVault(fromSlot, toSlot));
+
+					NotifyObservers(MoveItemFromVault(playerInventory, fromSlot, toSlot));
+				}
+				else if (toSlot >= eInventorySlot.HousingInventory_First &&
 					toSlot <= eInventorySlot.HousingInventory_Last)
-					return MoveItemInsideVault(fromSlot, toSlot);
-
-				return MoveItemFromVault(playerInventory, fromSlot, toSlot);
+					NotifyObservers(MoveItemToVault(playerInventory, fromSlot, toSlot));
 			}
-
-			if (toSlot >= eInventorySlot.HousingInventory_First &&
-				toSlot <= eInventorySlot.HousingInventory_Last)
-				return MoveItemToVault(playerInventory, fromSlot, toSlot);
-
-			// Neither slot is a vault slot, who the heck called us?
-
-			return null;
 		}
 
 		/// <summary>
@@ -187,12 +200,12 @@ namespace DOL.GS
 			if (toSlot < eInventorySlot.FirstBackpack || toSlot > eInventorySlot.LastBackpack)
 				return null;
 
-			Dictionary<int, InventoryItem> inventory = Inventory;
+			IDictionary<int, InventoryItem> inventory = Inventory;
 
 			if (!inventory.ContainsKey((int)fromSlot))
 				return null;
 
-			Dictionary<int, InventoryItem> updateItems = new Dictionary<int, InventoryItem>(1);
+			IDictionary<int, InventoryItem> updateItems = new Dictionary<int, InventoryItem>(1);
 			InventoryItem fromItem = inventory[(int)fromSlot];
 			InventoryItem toItem = playerInventory.GetItem(toSlot);
 
@@ -201,7 +214,6 @@ namespace DOL.GS
 				playerInventory.RemoveItem(toItem);
 				toItem.SlotPosition = fromItem.SlotPosition;
 				GameServer.Database.AddNewObject(toItem);
-				GameServer.Database.SaveObject(toItem);
 			}
 
 			GameServer.Database.DeleteObject(fromItem);
@@ -230,8 +242,8 @@ namespace DOL.GS
 			if (fromItem == null)
 				return null;
 
-			Dictionary<int, InventoryItem> inventory = Inventory;
-			Dictionary<int, InventoryItem> updateItems = new Dictionary<int, InventoryItem>(1);
+			IDictionary<int, InventoryItem> inventory = Inventory;
+			IDictionary<int, InventoryItem> updateItems = new Dictionary<int, InventoryItem>(1);
 
 			playerInventory.RemoveItem(fromItem);
 
@@ -247,7 +259,6 @@ namespace DOL.GS
 				(int)(eInventorySlot.HousingInventory_First) +
 				FirstSlot;
 			GameServer.Database.AddNewObject(fromItem);
-			GameServer.Database.SaveObject(fromItem);
 
 			updateItems.Add((int)toSlot, fromItem);
 			return updateItems;
@@ -262,12 +273,12 @@ namespace DOL.GS
 		protected IDictionary<int, InventoryItem> MoveItemInsideVault(eInventorySlot fromSlot,
 			eInventorySlot toSlot)
 		{
-			Dictionary<int, InventoryItem> inventory = Inventory;
+			IDictionary<int, InventoryItem> inventory = Inventory;
 
 			if (!inventory.ContainsKey((int)fromSlot))
 				return null;
 
-			Dictionary<int, InventoryItem> updateItems = new Dictionary<int, InventoryItem>(2);
+			IDictionary<int, InventoryItem> updateItems = new Dictionary<int, InventoryItem>(2);
 			InventoryItem fromItem = null, toItem = null;
 
 			fromItem = inventory[(int)fromSlot];
@@ -287,6 +298,38 @@ namespace DOL.GS
 			updateItems.Add((int)fromSlot, toItem);
 			updateItems.Add((int)toSlot, fromItem);
 			return updateItems;
+		}
+
+		/// <summary>
+		/// Send inventory updates to all players actively viewing this vault;
+		/// players that are too far away will be considered inactive.
+		/// </summary>
+		/// <param name="updateItems"></param>
+		protected void NotifyObservers(IDictionary<int, InventoryItem> updateItems)
+		{
+			IList<String> inactiveList = new List<String>();
+			foreach (GamePlayer observer in m_observers.Values)
+			{
+				if (observer.ActiveVault != this)
+				{
+					inactiveList.Add(observer.Name);
+					continue;
+				}
+
+				if (!WorldMgr.CheckDistance(observer, this, WorldMgr.INTERACT_DISTANCE))
+				{
+					observer.ActiveVault = null;
+					inactiveList.Add(observer.Name);
+					continue;
+				}
+
+				observer.Client.Out.SendInventoryItemsUpdate(updateItems, 0);
+			}
+
+			// Now remove all inactive observers.
+
+			foreach (String observerName in inactiveList)
+				m_observers.Remove(observerName);
 		}
 
 		#endregion
@@ -360,7 +403,7 @@ namespace DOL.GS
 		/// <param name="house"></param>
 		/// <param name="hookpointID"></param>
 		/// <returns></returns>
-		public bool Attach(House house, uint hookpointID)
+		public bool Attach(House house, uint hookpointID, ushort heading)
 		{
 			if (house == null)
 				return false;
@@ -370,6 +413,7 @@ namespace DOL.GS
 			DBHousepointItem hookedItem = new DBHousepointItem();
 			hookedItem.HouseID = house.HouseNumber;
 			hookedItem.Position = hookpointID;
+			hookedItem.Heading = (ushort)(heading % 4096);
 			hookedItem.ItemTemplateID = m_templateID;
 			hookedItem.Index = (byte)Index;
 			GameServer.Database.AddNewObject(hookedItem);
@@ -402,7 +446,7 @@ namespace DOL.GS
 			X = position.X;
 			Y = position.Y;
 			Z = position.Z;
-			Heading = house.GetHookpointHeading(hookedItem.Position);
+			Heading = (ushort)(hookedItem.Heading % 4096);
 			AddToWorld();
 			return true;
 		}
@@ -416,12 +460,16 @@ namespace DOL.GS
 			if (m_hookedItem == null)
 				return false;
 
-			RemoveFromWorld();
+			lock (m_vaultSync)
+			{
+				RemoveFromWorld();
 
-			// Unregister this vault from the DB.
+				// Unregister this vault from the DB.
 
-			GameServer.Database.DeleteObject(m_hookedItem);
-			m_hookedItem = null;
+				GameServer.Database.DeleteObject(m_hookedItem);
+				m_hookedItem = null;
+			}
+
 			return true;
 		}
 
