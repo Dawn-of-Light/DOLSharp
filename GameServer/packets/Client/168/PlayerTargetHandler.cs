@@ -106,7 +106,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						foreach (string message in myTarget.GetExamineMessages(player))
 						{
-							player.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(message, eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 						}
 					}
 					// Then no LOS message; not sure which bit to use so use both :)
