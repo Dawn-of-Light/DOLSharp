@@ -141,7 +141,7 @@ GameObject.GetPronoun.Pronoun3:				Its
 GameObject.GetPronoun.Pronoun4:				its
 GameObject.GetPronoun.Pronoun5:				It
 GameObject.GetPronoun.Pronoun6:				it
-GameObject.Interact.TooFarAway:				You are too far away to interact with {0}.
+GameObject.Interact.TooFarAway:				{0} is too far away!
 
 # GAMEPLAYER
 GamePlayer.AddAbility.YouLearn:				You learn the {0} ability!	
