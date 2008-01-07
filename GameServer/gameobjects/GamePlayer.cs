@@ -3983,6 +3983,26 @@ namespace DOL.GS
                 }
             }
 
+            // is spec points invested into autotrainable skill ?
+            int spentpoints = 0;
+            foreach (Specialization spec in GetSpecList())
+            {
+                spentpoints += (spec.Level * (spec.Level + 1) - 2) / 2;
+                foreach (string autotrain in CharacterClass.AutoTrainableSkills())
+                {
+                    if (autotrain == spec.KeyName)
+                    {
+                        int autopoints = Level / 4;
+                        spentpoints -= (autopoints * (autopoints + 1) - 2) / 2;
+                        if (Level % 4 == 0)
+                            if (spec.Level >= autopoints) SkillSpecialtyPoints += autopoints;
+                            else spentpoints += autopoints;
+                        break;
+                    }
+                }
+            }
+
+            // process, among others, autotrain
 			CharacterClass.OnLevelUp(this);
 
 			UpdateSpellLineLevels(true);
@@ -4019,28 +4039,13 @@ namespace DOL.GS
                 if (i>5) allpoints += CharacterClass.SpecPointsMultiplier * i / 10; //normal levels
                 if (i>40) allpoints += CharacterClass.SpecPointsMultiplier * (i-1) / 20; //half levels
             }
-            int spentpoints = 0;
-            int autopoints = 0;
-            int normalpoints = SkillSpecialtyPoints;
-            foreach (Specialization spec in GetSpecList() )
-            {
-                spentpoints += (spec.Level * (spec.Level + 1) - 2) / 2;
-                foreach (string autotrain in CharacterClass.AutoTrainableSkills())
-                    {
-                        if (autotrain == spec.KeyName)
-                        {
-                            autopoints = Level / 4;
-                            spentpoints -= (autopoints * (autopoints + 1) - 2) / 2;
-                            break;
-                        }
-                    }
-            }
-            normalpoints = allpoints - SkillSpecialtyPoints - spentpoints;
-            if (normalpoints != 0)
+
+            if (allpoints != SkillSpecialtyPoints + spentpoints)
             {
                 foreach (Specialization spec in GetSpecList()) RespecSingleLine(spec);
+                SkillSpecialtyPoints += spentpoints;
+                String sWarn = "Total amount of spec points (was " + SkillSpecialtyPoints + ") is now correct. You must now see your class trainer.";
                 SkillSpecialtyPoints = allpoints;
-                String sWarn = "Total amount of spec points has been corrected. You must now see your class trainer.";
                 Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, sWarn );
                 Out.SendMessage(sWarn, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
             }
@@ -10077,7 +10082,8 @@ namespace DOL.GS
 			}
 		}
 
-		public virtual void WipeAllSkills()
+        // seems to never be used
+		/*public virtual void WipeAllSkills()
 		{
 			m_styles.Clear();
 			m_specialization.Clear();
@@ -10085,7 +10091,7 @@ namespace DOL.GS
 			m_disabledSkills.Clear();
 			m_spelllines.Clear();
 			m_skillList.Clear();
-		}
+		}*/
 
 		/// <summary>
 		/// Loads this player from a character table slot
