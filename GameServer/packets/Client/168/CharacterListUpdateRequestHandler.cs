@@ -198,12 +198,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 						// check if client tried to create invalid char
 						if (!CheckCharacter.IsCharacterValid(ch))
 						{
-							invalidChar = true;
 							if (log.IsWarnEnabled)
 								log.Warn(ch.AccountName + " tried to create invalid character:" +
 								"\nchar name=" + ch.Name + ", race=" + ch.Race + ", realm=" + ch.Realm + ", class=" + ch.Class + ", region=" + ch.Region +
 								"\nstr=" + ch.Strength + ", con=" + ch.Constitution + ", dex=" + ch.Dexterity + ", qui=" + ch.Quickness + ", int=" + ch.Intelligence + ", pie=" + ch.Piety + ", emp=" + ch.Empathy + ", chr=" + ch.Charisma);
-							continue;
+
+							if (client.Account.Realm == 0) client.Out.SendRealm(eRealm.None);
+							else client.Out.SendCharacterOverview((eRealm)client.Account.Realm);
+							return 1;
 						}
 
 						ch.CreationDate = DateTime.Now;
@@ -389,19 +391,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (log.IsInfoEnabled)
 							log.Info(String.Format("Character {0} created!", charname));
 
+
+						GameServer.Database.WriteDatabaseTable(typeof(Character));
+						GameServer.Database.FillObjectRelations(client.Account);
 						client.Out.SendCharacterOverview((eRealm)ch.Realm);
 					}
 				}
-			}
-			if (invalidChar)
-			{
-				if (client.Account.Realm == 0) client.Out.SendRealm(eRealm.None);
-				else client.Out.SendCharacterOverview((eRealm)client.Account.Realm);
-			}
-			else
-			{
-				GameServer.Database.WriteDatabaseTable(typeof(Character));
-				GameServer.Database.FillObjectRelations(client.Account);
 			}
 			return 1;
 		}
