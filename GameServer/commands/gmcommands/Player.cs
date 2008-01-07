@@ -42,6 +42,7 @@ namespace DOL.GS.Commands
      "/player lastname <change|reset> <newLastName>",
      "/player level <newLevel>",
      "/player realm <newRealm>",
+     "/player inventory",
      "/player <rps|bps|xp|clxp> <amount>",
      "/player stat <typeofStat> <value>",
      "/player money <copp|silv|gold|plat|mith> <amount>",
@@ -186,10 +187,9 @@ namespace DOL.GS.Commands
                             if (newLevel != curLevel || !curSecondStage)
                                 player.Level = newLevel;
 
-                            // Graveen: obsolete, it now relies on OnLevelUp
                             // If new level is more than 40, then we have
                             // to add the skill points from half-levels
-                            /*if (newLevel > 40)
+                            if (newLevel > 40)
                             {
                                 if (curLevel < 40)
                                     curLevel = 40;
@@ -201,7 +201,7 @@ namespace DOL.GS.Commands
                                     else
                                         player.SkillSpecialtyPoints += player.CharacterClass.SpecPointsMultiplier * i / 20;
                                 }
-                            }*/
+                            }
 
                             client.Out.SendMessage("You changed " + player.Name + "'s level successfully to " + newLevel.ToString() + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                             player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has changed your level to " + newLevel.ToString() + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -1457,80 +1457,8 @@ namespace DOL.GS.Commands
                             client.Out.SendMessage("You need a valid target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                             return;
                         }
+                        Show_Info(player, client);
 
-                        ArrayList text = new ArrayList();
-                        text.Add(" ");
-                        text.Add("PLAYER INFORMATION ");
-                        text.Add("  - Name Lastname : " + player.Name + " " +player.LastName);
-                        text.Add("  - Realm Level Class : " + player.Realm + " " + player.Level + " " + player.CharacterClass.Name);
-                        text.Add("  - Guild : " + player.GuildName);
-                        text.Add("  - RPs/BPs : " + player.RealmPoints+ " rps, " + player.BountyPoints + " bps");
-                        text.Add("  - Craftingskill : " + player.CraftingPrimarySkill + "");
-                        text.Add("  - Money : " + Money.GetString(player.GetCurrentMoney()) + "");
-                        text.Add("  - Model ID : " + player.Model);
-                        text.Add("  - AFK Message: " + player.TempProperties.getProperty(GamePlayer.AFK_MESSAGE, null) + "");
-                        text.Add(" ");
-                        text.Add("ACCOUNT INFORMATION ");
-                        text.Add("  - Account Name & IP : " + player.Client.Account.Name + " from " + player.Client.Account.LastLoginIP);
-                        text.Add("  - Priv. Level : " + player.Client.Account.PrivLevel);
-                        text.Add(" ");
-                        text.Add("CHARACTER STATS ");
-                    
-                        ArrayList info = new ArrayList();
-                        String sCurrent = "";
-                        String sTitle = "";
-                        int cnt = 0;
-
-                        for (eProperty stat = eProperty.Stat_First; stat <= eProperty.Stat_Last; stat++, cnt++)
-                        {
-                            sTitle += GlobalConstants.PropertyToName(stat) + "/";
-                            sCurrent += player.GetModified(stat) + "/";
-                            if (cnt == 3)
-                            {
-                                text.Add("  - Current stats " + sTitle + " : " + sCurrent);
-                                 sTitle = "";
-                                sCurrent = "";  
-                            }
-                        }
-                        text.Add("  - Current stats " + sTitle + " : " + sCurrent);
- 
-                        sCurrent = "";
-                        sTitle = "";
-                        cnt = 0;
-                        for (eProperty res = eProperty.Resist_First; res <= eProperty.Resist_Last; res++, cnt++)
-                        {
-                            sTitle += GlobalConstants.PropertyToName(res) + "/";
-                            sCurrent += player.GetModified(res) + "/";
-                            if (cnt == 2)
-                            {
-                                text.Add("  - Current " + sTitle + " : " + sCurrent);
-                                sCurrent = "";
-                                sTitle = "";
-                            }
-                            if (cnt == 5) 
-                            {
-                                text.Add("  - Current " + sTitle + " : " + sCurrent);
-                                sCurrent = "";
-                                sTitle = "";
-                            }
-                        }
-                        text.Add("  - Current " + sTitle + " : " + sCurrent);
-
-                        text.Add("  - Maximum Health : " + player.MaxHealth );
-                        text.Add("  - Current AF and ABS : " + player.GetModified(eProperty.ArmorFactor) + " AF, " + player.GetModified(eProperty.ArmorAbsorbtion) + " ABS");
-                        text.Add(" ");
-                        text.Add("SPECCING INFORMATIONS ");
-                        text.Add("  - Respecs availables : " + player.RespecAmountSingleSkill  + " single, " + player.RespecAmountAllSkill + " full");
-                        text.Add("  - Remaining spec. points : " + player.SkillSpecialtyPoints);
-                        sTitle = "  - Player specialisations : ";
-                        sCurrent = "";
-                        foreach(Specialization spec in player.GetSpecList())
-                        {
-                            sCurrent +=  spec.Name + " = " + spec.Level + " ; ";
-                        }
-                        text.Add(sTitle + sCurrent);
-
-                        client.Out.SendCustomTextWindow("~*PLAYER & ACCOUNT INFORMATION*~", text);
                     }
                     break;
                 #endregion
@@ -1592,6 +1520,29 @@ namespace DOL.GS.Commands
                         break;
                     }
                 #endregion
+                #region inventory
+                case "inventory":
+                    {
+                        GamePlayer player = client.Player.TargetObject as GamePlayer;
+
+                        if (player == null)
+                        {
+                            client.Out.SendMessage("You need a valid target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return;
+                        }
+
+                        if (args.Length == 2)
+                        {
+                            Show_Inventory(player, client);
+                        }
+                        else
+                        {
+                            DisplaySyntax(client);
+                            return;
+                        }
+                        break;
+                    }
+                #endregion
             }
         }
 
@@ -1611,6 +1562,100 @@ namespace DOL.GS.Commands
             int damage = player.Health;
             if (damage > 0)
                 player.TakeDamage(killer, eDamageType.Natural, damage, 0);
+        }
+
+        private void Show_Inventory(GamePlayer player, GameClient client)
+        {
+            ArrayList text = new ArrayList();
+            text.Add(" ");
+            text.Add("PLAYER INVENTORY ");
+            text.Add(" ");
+            text.Add("  - Name Lastname : " + player.Name + " " + player.LastName);
+            text.Add("  - Realm Level Class : " + player.Realm + " " + player.Level + " " + player.CharacterClass.Name);
+            text.Add("  - Inventory list: ");
+
+            foreach(InventoryItem item in player.Inventory.AllItems )
+            {
+                text.Add("     . " + item.Name );
+            }
+            client.Out.SendCustomTextWindow("~*PLAYER INVENTORY LISTING*~", text);
+        }
+
+        private void Show_Info(GamePlayer player, GameClient client)
+        {
+            ArrayList text = new ArrayList();
+            text.Add(" ");
+            text.Add("PLAYER INFORMATION ");
+            text.Add("  - Name Lastname : " + player.Name + " " + player.LastName);
+            text.Add("  - Realm Level Class : " + player.Realm + " " + player.Level + " " + player.CharacterClass.Name);
+            text.Add("  - Guild : " + player.GuildName);
+            text.Add("  - RPs/BPs : " + player.RealmPoints + " rps, " + player.BountyPoints + " bps");
+            text.Add("  - Craftingskill : " + player.CraftingPrimarySkill + "");
+            text.Add("  - Money : " + Money.GetString(player.GetCurrentMoney()) + "");
+            text.Add("  - Model ID : " + player.Model);
+            text.Add("  - AFK Message: " + player.TempProperties.getProperty(GamePlayer.AFK_MESSAGE, null) + "");
+            text.Add(" ");
+            text.Add("ACCOUNT INFORMATION ");
+            text.Add("  - Account Name & IP : " + player.Client.Account.Name + " from " + player.Client.Account.LastLoginIP);
+            text.Add("  - Priv. Level : " + player.Client.Account.PrivLevel);
+            text.Add(" ");
+            text.Add("CHARACTER STATS ");
+
+            ArrayList info = new ArrayList();
+            String sCurrent = "";
+            String sTitle = "";
+            int cnt = 0;
+
+            for (eProperty stat = eProperty.Stat_First; stat <= eProperty.Stat_Last; stat++, cnt++)
+            {
+                sTitle += GlobalConstants.PropertyToName(stat) + "/";
+                sCurrent += player.GetModified(stat) + "/";
+                if (cnt == 3)
+                {
+                    text.Add("  - Current stats " + sTitle + " : " + sCurrent);
+                    sTitle = "";
+                    sCurrent = "";
+                }
+            }
+            text.Add("  - Current stats " + sTitle + " : " + sCurrent);
+
+            sCurrent = "";
+            sTitle = "";
+            cnt = 0;
+            for (eProperty res = eProperty.Resist_First; res <= eProperty.Resist_Last; res++, cnt++)
+            {
+                sTitle += GlobalConstants.PropertyToName(res) + "/";
+                sCurrent += player.GetModified(res) + "/";
+                if (cnt == 2)
+                {
+                    text.Add("  - Current " + sTitle + " : " + sCurrent);
+                    sCurrent = "";
+                    sTitle = "";
+                }
+                if (cnt == 5)
+                {
+                    text.Add("  - Current " + sTitle + " : " + sCurrent);
+                    sCurrent = "";
+                    sTitle = "";
+                }
+            }
+            text.Add("  - Current " + sTitle + " : " + sCurrent);
+
+            text.Add("  - Maximum Health : " + player.MaxHealth);
+            text.Add("  - Current AF and ABS : " + player.GetModified(eProperty.ArmorFactor) + " AF, " + player.GetModified(eProperty.ArmorAbsorbtion) + " ABS");
+            text.Add(" ");
+            text.Add("SPECCING INFORMATIONS ");
+            text.Add("  - Respecs availables : " + player.RespecAmountSingleSkill + " single, " + player.RespecAmountAllSkill + " full");
+            text.Add("  - Remaining spec. points : " + player.SkillSpecialtyPoints);
+            sTitle = "  - Player specialisations : ";
+            sCurrent = "";
+            foreach (Specialization spec in player.GetSpecList())
+            {
+                sCurrent += spec.Name + " = " + spec.Level + " ; ";
+            }
+            text.Add(sTitle + sCurrent);
+
+            client.Out.SendCustomTextWindow("~*PLAYER & ACCOUNT INFORMATION*~", text);
         }
     }
 }
