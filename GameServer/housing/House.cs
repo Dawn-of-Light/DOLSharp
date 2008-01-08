@@ -20,8 +20,9 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using DOL.GS.PacketHandler;
 using DOL.Database;
+using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Housing
@@ -302,8 +303,8 @@ namespace DOL.GS.Housing
 				return HouseAccess[0];
 
 			int accessLevel = GetPlayerAccessLevel(player);
-			player.Out.SendMessage(String.Format("Access level {0}", accessLevel),
-				eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+//			player.Out.SendMessage(String.Format("Access level {0}", accessLevel), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client, "House.DBHousePermissions.AccessLevel", accessLevel)), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
 			if (accessLevel < 0 || accessLevel > 9)
 				return HouseAccess[0];
 
@@ -683,7 +684,8 @@ namespace DOL.GS.Housing
 					break;
 			}
 
-			client.Out.SendMessage("You have entered house number " + this.HouseNumber + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+//			client.Out.SendMessage("You have entered house number " + this.HouseNumber + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "House.Enter.EnteredHouse", this.HouseNumber), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		/// <summary>
@@ -700,7 +702,8 @@ namespace DOL.GS.Housing
 			player.MoveTo(RegionID, x, y, Z, heading);
 			if (!silent)
 			{
-				player.Out.SendMessage("You have left house number " + HouseNumber + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+//				player.Out.SendMessage("You have left house number " + HouseNumber + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "House.Exit.LeftHouse", HouseNumber), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				GSTCPPacketOut pak = new GSTCPPacketOut(player.Client.Out.GetPacketCode(ePackets.HouseEnter));
 
 				pak.WriteShort((ushort)this.HouseNumber);
@@ -736,49 +739,79 @@ namespace DOL.GS.Housing
 		public void SendHouseInfo(GamePlayer player)
 		{
 			ArrayList text = new ArrayList();
-			text.Add("Owner: " + this.Name);
-			text.Add("Lotnum: " + HouseNumber);
+//			text.Add("Owner: " + this.Name);
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Owner", this.Name));
+//			text.Add("Lotnum: " + HouseNumber);
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Lotnum", HouseNumber));
 			int level = Model - (int)((Model - 1) / 4) * 4;
-			text.Add("Level: " + level);
+//			text.Add("Level: " + level);
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Level", level));
 			text.Add(" ");
-			text.Add("Porch: ");
-			text.Add("-Enabled: " + (Porch ? "Y" : "N"));
-			text.Add("-Color: " + PorchRoofColor);
+//			text.Add("Porch: ");
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Porch"));
+//			text.Add("-Enabled: " + (Porch ? "Y" : "N"));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.PorchEnabled", (Porch ? "Y" : "N")));
+//			text.Add("-Color: " + PorchRoofColor);
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.PorchRoofColor", PorchRoofColor));
 			text.Add(" ");
-			text.Add("Exterior Materials:");
-			text.Add("-Roof: " + RoofMaterial);
-			text.Add("-Wall: " + WallMaterial);
-			text.Add("-Door: " + DoorMaterial);
-			text.Add("-Support: " + TrussMaterial);
-			text.Add("-Porch: " + PorchMaterial);
-			text.Add("-Shutter: " + WindowMaterial);
+//			text.Add("Exterior Materials:");
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.ExteriorMaterials"));
+//			text.Add("-Roof: " + RoofMaterial);
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.RoofMaterial", RoofMaterial));
+//			text.Add("-Wall: " + WallMaterial);
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.WallMaterial", WallMaterial));
+//			text.Add("-Door: " + DoorMaterial);
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.DoorMaterial", DoorMaterial));
+//			text.Add("-Support: " + TrussMaterial);
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.TrussMaterial", TrussMaterial));
+//			text.Add("-Porch: " + PorchMaterial);
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.PorchMaterial", PorchMaterial));
+//			text.Add("-Shutter: " + WindowMaterial);
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.WindowMaterial", WindowMaterial));
 			text.Add(" ");
-			text.Add("Exterior Upgrades:");
-			text.Add("-Banner: " + ((OutdoorGuildBanner) ? "Y" : "N"));
-			text.Add("-Shield: " + ((OutdoorGuildShield) ? "Y" : "N"));
+//			text.Add("Exterior Upgrades:");
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.ExteriorUpgrades"));
+//			text.Add("-Banner: " + ((OutdoorGuildBanner) ? "Y" : "N"));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.OutdoorGuildBanner", ((OutdoorGuildBanner) ? "Y" : "N")));
+//			text.Add("-Shield: " + ((OutdoorGuildShield) ? "Y" : "N"));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.OutdoorGuildShield", ((OutdoorGuildShield) ? "Y" : "N")));
 			text.Add(" ");
-			text.Add("Interior Upgrades:");
-			text.Add("-Banner: " + ((IndoorGuildBanner) ? "Y" : "N"));
-			text.Add("-Shield: " + ((IndoorGuildShield) ? "Y" : "N"));
+//			text.Add("Interior Upgrades:");
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.InteriorUpgrades"));
+//			text.Add("-Banner: " + ((IndoorGuildBanner) ? "Y" : "N"));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.IndoorGuildBanner", ((IndoorGuildBanner) ? "Y" : "N")));
+//			text.Add("-Shield: " + ((IndoorGuildShield) ? "Y" : "N"));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.IndoorGuildShield", ((IndoorGuildShield) ? "Y" : "N")));
 			text.Add(" ");
-			text.Add("Interior Carpets:");
-			text.Add("-First Color: " + Rug1Color);
-			text.Add("-Second Color: " + Rug2Color);
-			text.Add("-Third Color: " + Rug3Color);
-			text.Add("-Fourth Color: " + Rug4Color);
+//			text.Add("Interior Carpets:");
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.InteriorCarpets"));
+//			text.Add("-First Color: " + Rug1Color);
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Rug1Color", Rug1Color));
+//			text.Add("-Second Color: " + Rug2Color);
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Rug2Color", Rug2Color));
+//			text.Add("-Third Color: " + Rug3Color);
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Rug3Color", Rug3Color));
+//			text.Add("-Fourth Color: " + Rug4Color);
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Rug4Color", Rug4Color));
 			text.Add(" ");
-			text.Add("Lockbox: " + Money.GetString(KeptMoney));
-			text.Add("Rental Price: " + Money.GetString(HouseMgr.GetRentByModel(Model)));
-			text.Add("Max in Lockbox: " + Money.GetString(HouseMgr.GetRentByModel(Model) * 4));
+//			text.Add("Lockbox: " + Money.GetString(KeptMoney));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Lockbox", Money.GetString(KeptMoney)));
+//			text.Add("Rental Price: " + Money.GetString(HouseMgr.GetRentByModel(Model)));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.RentalPrice", Money.GetString(HouseMgr.GetRentByModel(Model))));
+//			text.Add("Max in Lockbox: " + Money.GetString(HouseMgr.GetRentByModel(Model) * 4));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.MaxLockbox", Money.GetString(HouseMgr.GetRentByModel(Model) * 4)));
 			TimeSpan due = (LastPaid.AddDays(7).AddHours(1) - DateTime.Now);
-			text.Add("Rent due in: " + due.Days + " days, " + due.Hours + " hours");
+//			text.Add("Rent due in: " + due.Days + " days, " + due.Hours + " hours");
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.RentDueIn", due.Days, due.Hours));
 			text.Add(" ");
-			text.Add("Owners:");
+//			text.Add("Owners:");
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Owners"));
 			foreach (Character character in HouseMgr.GetOwners(this.m_databaseItem))
 			{
 				text.Add("-" + character.Name);
 			}
-			player.Out.SendCustomTextWindow(this.Name + " 's house", text);
+//			player.Out.SendCustomTextWindow(this.Name + " 's house", text);
+			player.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.HouseOwner", this.Name), text);
 
 		}
 
@@ -879,10 +912,12 @@ namespace DOL.GS.Housing
 					price += Money.GetMoney(0, 0, item.Gold, item.Silver, item.Copper);
 				}
 			}
-
-			if (!player.RemoveMoney(price, "You pay " + Money.GetString(price) + " for your changes."))
-			{
-				player.Out.SendMessage("You don't have enough money to do that!", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+			//LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Owners")
+//			if (!player.RemoveMoney(price, "You pay " + Money.GetString(price) + " for your changes."))
+			if (!player.RemoveMoney(price, LanguageMgr.GetTranslation(player.Client, "House.Edit.PayForChanges", Money.GetString(price))))
+				{
+//				player.Out.SendMessage("You don't have enough money to do that!", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "House.Edit.NotEnoughMoney"), eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
