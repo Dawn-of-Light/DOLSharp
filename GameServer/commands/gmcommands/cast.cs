@@ -34,7 +34,7 @@ namespace DOL.GS.Commands
 			if (args.Length < 2)
 			{
 				client.Out.SendMessage("Usage: /cast <spellid> Cast the ID of the spell", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("Usage: /cast <case> Cast the ID and the spell (/cast 10 t)", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("Usage: /cast <spellid> <case> Cast the ID and the spell (/cast 10 t)", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			int spellID = 0;
@@ -43,8 +43,9 @@ namespace DOL.GS.Commands
 				spellID = Convert.ToInt32(args[1]);
 				Spell spell = SkillBase.GetSpellByID(spellID);
 				if (args.Length >= 3 && args[2].ToLower() == "t")
-				{		
-					client.Player.CastSpell(spell, null);
+				{	
+					if (spell != null)
+						client.Player.CastSpell(spell, null);
 				}
 				else
 				{
@@ -55,13 +56,13 @@ namespace DOL.GS.Commands
 					else if (obj is GameLiving)
 						target = (GameLiving)obj;
 					foreach (GamePlayer plr in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-						plr.Out.SendSpellEffectAnimation(client.Player, target, spell.ClientEffect, 0, false, 1);
+						plr.Out.SendSpellEffectAnimation(client.Player, target, (ushort)spellID, 0, false, 1);
 				}
 			}
 			catch
 			{
 				client.Out.SendMessage("Usage: /cast <spellid> Cast the ID of the spell", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("Usage: /cast <case> Cast the ID and the spell (/cast 10 t)", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("Usage: /cast <spellid> <case> Cast the ID and the spell (/cast 10 t)", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 		}
 	}

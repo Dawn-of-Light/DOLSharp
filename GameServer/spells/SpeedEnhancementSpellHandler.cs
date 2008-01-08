@@ -83,15 +83,15 @@ namespace DOL.GS.Spells
 
 			if (player == null || !player.IsStealthed)
 			{
-				effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, Spell.Value/100.0);
+				effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, Spell.Value / 100.0);
 				SendUpdates(effect.Owner);
 			}
 
 			GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
 			GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackFinished, new DOLEventHandler(OnAttack));
-            GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.CastFinished, new DOLEventHandler(OnAttack));
-            if (player != null)
-			    GameEventMgr.AddHandler(player, GamePlayerEvent.StealthStateChanged, new DOLEventHandler(OnStealthStateChanged));
+			GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.CastFinished, new DOLEventHandler(OnAttack));
+			if (player != null)
+				GameEventMgr.AddHandler(player, GamePlayerEvent.StealthStateChanged, new DOLEventHandler(OnStealthStateChanged));
 		}
 
 		/// <summary>
@@ -107,7 +107,7 @@ namespace DOL.GS.Spells
 			GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
 			GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.AttackFinished, new DOLEventHandler(OnAttack));
 			if (player != null)
-			GameEventMgr.RemoveHandler(player, GamePlayerEvent.StealthStateChanged, new DOLEventHandler(OnStealthStateChanged));
+				GameEventMgr.RemoveHandler(player, GamePlayerEvent.StealthStateChanged, new DOLEventHandler(OnStealthStateChanged));
 
 			effect.Owner.BuffBonusMultCategory1.Remove((int)eProperty.MaxSpeed, this);
 
@@ -119,7 +119,7 @@ namespace DOL.GS.Spells
 			return 0;
 		}
 
-		
+
 		/// <summary>
 		/// Sends updates on effect start/stop
 		/// </summary>
@@ -154,23 +154,23 @@ namespace DOL.GS.Spells
 			if (living == null) return;
 			AttackedByEnemyEventArgs attackedByEnemy = arguments as AttackedByEnemyEventArgs;
 			AttackFinishedEventArgs attackFinished = arguments as AttackFinishedEventArgs;
-            CastSpellEventArgs castFinished = arguments as CastSpellEventArgs;
-            AttackData ad = null;
-            ISpellHandler sp = null;
-            if (attackedByEnemy != null)
-                ad = attackedByEnemy.AttackData;
-            else if (attackFinished != null)
-                ad = attackFinished.AttackData;
-            else if (castFinished != null)
-                sp = castFinished.SpellHandler;
+			CastSpellEventArgs castFinished = arguments as CastSpellEventArgs;
+			AttackData ad = null;
+			ISpellHandler sp = null;
+			if (attackedByEnemy != null)
+				ad = attackedByEnemy.AttackData;
+			else if (attackFinished != null)
+				ad = attackFinished.AttackData;
+			else if (castFinished != null)
+				sp = castFinished.SpellHandler;
 
-            // Speed should drop if the player casts an offensive spell
-            if (sp == null && ad == null)
-                return;
-            else if (sp == null && (ad.AttackResult != GameLiving.eAttackResult.HitStyle && ad.AttackResult != GameLiving.eAttackResult.HitUnstyled))
-                return;
-            else if (sp != null && sp.HasPositiveEffect)
-                return;
+			// Speed should drop if the player casts an offensive spell
+			if (sp == null && ad == null)
+				return;
+			else if (sp == null && (ad.AttackResult != GameLiving.eAttackResult.HitStyle && ad.AttackResult != GameLiving.eAttackResult.HitUnstyled))
+				return;
+			else if (sp != null && sp.HasPositiveEffect)
+				return;
 
 			// remove speed buff if in combat
 			GameSpellEffect speed = SpellHandler.FindEffectOnTarget(living, this);
@@ -189,16 +189,16 @@ namespace DOL.GS.Spells
 			GamePlayer player = (GamePlayer)sender;
 			if (player.IsStealthed)
 				player.BuffBonusMultCategory1.Remove((int)eProperty.MaxSpeed, this);
-			else player.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, Spell.Value/100.0);
+			else player.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, Spell.Value / 100.0);
 			// max speed update is sent in setalth method
 		}
 
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public override IList DelveInfo 
+		public override IList DelveInfo
 		{
-			get 
+			get
 			{
 				/*
 				<Begin Info: Motivation Sng>
@@ -229,6 +229,6 @@ namespace DOL.GS.Spells
 		/// <param name="caster"></param>
 		/// <param name="spell"></param>
 		/// <param name="line"></param>
-		public SpeedEnhancementSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+		public SpeedEnhancementSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}
 }
