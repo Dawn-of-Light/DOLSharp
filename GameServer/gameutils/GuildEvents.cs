@@ -1,3 +1,22 @@
+/*
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
+
 using System;
 using System.Collections;
 using System.Threading;
@@ -6,92 +25,84 @@ using DOL.GS;
 using log4net;
 using DOL.GS.PacketHandler;
 
-/*
- * Added Guildlevels based on GainedRealmPoints (Guild.Realmpoints)
- * Added some guild messages for the guildlevels
- * Added Realm Buffs RPS/BPS
- * by aalion for Instant 50  http://www.instant50rvr.de
- * modified by Sumy
-*/
-
 namespace DOL.Regiment
 {
-    public class SocialPlayerEvent : GamePlayerEvent
-    {
-        /// <summary>
-        /// Constructs a new GamePlayer Event
-        /// </summary>
-        /// <param name="name">the event name</param>
-        protected SocialPlayerEvent(string name) : base(name) { }
-    }
+	public class SocialPlayerEvent : GamePlayerEvent
+	{
+		/// <summary>
+		/// Constructs a new GamePlayer Event
+		/// </summary>
+		/// <param name="name">the event name</param>
+		protected SocialPlayerEvent(string name) : base(name) { }
+	}
 
-    public class SocialEventHandler
-    {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+	public class SocialEventHandler
+	{
+		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        #region guildbuffdeclaration
-        /// <summary>
-        /// Bonus to Realm Points
-        /// </summary>
-        public static readonly double BUFF_RPS = 5.0; // 5%
+		#region guildbuffdeclaration
+		/// <summary>
+		/// Bonus to Realm Points
+		/// </summary>
+		public static readonly double BUFF_RPS = 5.0; // 5%
 
-        /// <summary>
-        /// Bonus to Bounty Points
-        /// </summary>
-        public static readonly double BUFF_BPS = 5.0; // 5%
+		/// <summary>
+		/// Bonus to Bounty Points
+		/// </summary>
+		public static readonly double BUFF_BPS = 5.0; // 5%
 
-        /// <summary>
-        /// Time Interval to check for expired guild buffs
-        /// </summary>
-        public static readonly int BUFFCHECK_INTERVAL = 60 * 1000; // 1 Minute
+		/// <summary>
+		/// Time Interval to check for expired guild buffs
+		/// </summary>
+		public static readonly int BUFFCHECK_INTERVAL = 60 * 1000; // 1 Minute
 
-        /// <summary>
-        /// Static Timer for the Timer to check for expired guild buffs
-        /// </summary>
-        private static Timer m_timer;
-        #endregion
+		/// <summary>
+		/// Static Timer for the Timer to check for expired guild buffs
+		/// </summary>
+		private static Timer m_timer;
+		#endregion
 
-        #region ScriptLoadedEvent
-        [ScriptLoadedEvent]
-        public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
-        {
-            // Realm Points Check
-            GameEventMgr.AddHandler(GamePlayerEvent.GainedRealmPoints, new DOLEventHandler(RealmPointsGain));
-            // Bounty Points Check
-            GameEventMgr.AddHandler(GamePlayerEvent.GainedBountyPoints, new DOLEventHandler(BountyPointsGain));
-            // Realm Rank Check
-            GameEventMgr.AddHandler(GamePlayerEvent.RRLevelUp, new DOLEventHandler(RealmRankUp));
-            GameEventMgr.AddHandler(GamePlayerEvent.RLLevelUp, new DOLEventHandler(RealmRankUp));
-            // Guild Buff Check
-            m_timer = new Timer(new TimerCallback(StartCheck), m_timer, 0, BUFFCHECK_INTERVAL);
-        }
-        #endregion
+		#region ScriptLoadedEvent
+		[ScriptLoadedEvent]
+		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
+		{
+			// Realm Points Check
+			GameEventMgr.AddHandler(GamePlayerEvent.GainedRealmPoints, new DOLEventHandler(RealmPointsGain));
+			// Bounty Points Check
+			GameEventMgr.AddHandler(GamePlayerEvent.GainedBountyPoints, new DOLEventHandler(BountyPointsGain));
+			// Realm Rank Check
+			GameEventMgr.AddHandler(GamePlayerEvent.RRLevelUp, new DOLEventHandler(RealmRankUp));
+			GameEventMgr.AddHandler(GamePlayerEvent.RLLevelUp, new DOLEventHandler(RealmRankUp));
+			// Guild Buff Check
+			m_timer = new Timer(new TimerCallback(StartCheck), m_timer, 0, BUFFCHECK_INTERVAL);
+		}
+		#endregion
 
-        #region ScriptUnloadedEvent
-        [ScriptUnloadedEvent]
-        public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
-        {
-            // Realm Points Check
-            GameEventMgr.RemoveHandler(GamePlayerEvent.GainedRealmPoints, new DOLEventHandler(RealmPointsGain));
-            // Bounty Points Check
-            GameEventMgr.RemoveHandler(GamePlayerEvent.GainedBountyPoints, new DOLEventHandler(BountyPointsGain));
-            // Realm Rank Check/Announce
-            GameEventMgr.RemoveHandler(GamePlayerEvent.RRLevelUp, new DOLEventHandler(RealmRankUp));
-            GameEventMgr.RemoveHandler(GamePlayerEvent.RLLevelUp, new DOLEventHandler(RealmRankUp));
-            // Guild Buff Check
-            if (m_timer != null)
-            {
-                m_timer.Dispose();
-                m_timer = null;
-            }
-        }
-        #endregion
+		#region ScriptUnloadedEvent
+		[ScriptUnloadedEvent]
+		public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
+		{
+			// Realm Points Check
+			GameEventMgr.RemoveHandler(GamePlayerEvent.GainedRealmPoints, new DOLEventHandler(RealmPointsGain));
+			// Bounty Points Check
+			GameEventMgr.RemoveHandler(GamePlayerEvent.GainedBountyPoints, new DOLEventHandler(BountyPointsGain));
+			// Realm Rank Check/Announce
+			GameEventMgr.RemoveHandler(GamePlayerEvent.RRLevelUp, new DOLEventHandler(RealmRankUp));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.RLLevelUp, new DOLEventHandler(RealmRankUp));
+			// Guild Buff Check
+			if (m_timer != null)
+			{
+				m_timer.Dispose();
+				m_timer = null;
+			}
+		}
+		#endregion
 
 
-        /// <summary>
-        /// Holds realm points needed for special guild level
-        /// </summary>
-        public static readonly long[] REALMPOINTS_FOR_GUILDLEVEL =
+		/// <summary>
+		/// Holds realm points needed for special guild level
+		/// </summary>
+		public static readonly long[] REALMPOINTS_FOR_GUILDLEVEL =
 			{
                 #region guildrps
 				0,	        // for level 0
@@ -218,187 +229,187 @@ namespace DOL.Regiment
                 #endregion
 			};
 
-        #region RealmRankUp
-        public static void RealmRankUp(DOLEvent e, object sender, EventArgs args)
-        {
-            GamePlayer player = sender as GamePlayer;
+		#region RealmRankUp
+		public static void RealmRankUp(DOLEvent e, object sender, EventArgs args)
+		{
+			GamePlayer player = sender as GamePlayer;
 
-            if (player == null || player.Guild == null) return;
+			if (player == null || player.Guild == null) return;
 
-            GainedRealmPointsEventArgs rpsArgs = args as GainedRealmPointsEventArgs;
+			GainedRealmPointsEventArgs rpsArgs = args as GainedRealmPointsEventArgs;
 
-            if (player.RealmLevel % 10 == 0)
-            {
-                int newRR = 0;
-                newRR = ((player.RealmLevel / 10) + 1);
-                if (player.Guild != null && player.RealmLevel > 45)
-                {
-                    int a = (int)Math.Pow((3 * (newRR - 1)), 2);
-                    player.Guild.GainMeritPoints(a);
-                    GameServer.Database.SaveObject(player.Guild.theGuildDB);
-                    player.Out.SendMessage("Your guild is awarded " + (int)Math.Pow((3 * (newRR - 1)), 2) + " Merit Points!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                }
-            }
-            else if (player.RealmLevel > 60)
-            {
-                int RRHigh = ((int)Math.Floor(player.RealmLevel * 0.1) + 1);
-                int RRLow = (player.RealmLevel % 10);
-                if (player.Guild != null)
-                {
-                    int a = (int)Math.Pow((3 * (RRHigh - 1)), 2);
-                    player.Guild.GainMeritPoints(a);
-                    GameServer.Database.SaveObject(player.Guild.theGuildDB);
-                    player.Out.SendMessage("Your guild is awarded " + (int)Math.Pow((3 * (RRHigh - 1)), 2) + " Merit Points!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                }
-            }
-            else
-            {
-                if (player.RealmLevel > 10)
-                {
-                    if (player.Guild != null)
-                    {
-                        int RRHigh = ((int)Math.Floor(player.RealmLevel * 0.1) + 1);
-                        int a = (int)Math.Pow((3 * (RRHigh - 1)), 2);
-                        player.Guild.GainMeritPoints(a);
-                        GameServer.Database.SaveObject(player.Guild.theGuildDB);
-                        player.Out.SendMessage("Your guild is awarded " + (int)Math.Pow((3 * (RRHigh - 1)), 2) + " Merit Points!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                    }
-                }
-            }
+			if (player.RealmLevel % 10 == 0)
+			{
+				int newRR = 0;
+				newRR = ((player.RealmLevel / 10) + 1);
+				if (player.Guild != null && player.RealmLevel > 45)
+				{
+					int a = (int)Math.Pow((3 * (newRR - 1)), 2);
+					player.Guild.GainMeritPoints(a);
+					GameServer.Database.SaveObject(player.Guild.theGuildDB);
+					player.Out.SendMessage("Your guild is awarded " + (int)Math.Pow((3 * (newRR - 1)), 2) + " Merit Points!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				}
+			}
+			else if (player.RealmLevel > 60)
+			{
+				int RRHigh = ((int)Math.Floor(player.RealmLevel * 0.1) + 1);
+				int RRLow = (player.RealmLevel % 10);
+				if (player.Guild != null)
+				{
+					int a = (int)Math.Pow((3 * (RRHigh - 1)), 2);
+					player.Guild.GainMeritPoints(a);
+					GameServer.Database.SaveObject(player.Guild.theGuildDB);
+					player.Out.SendMessage("Your guild is awarded " + (int)Math.Pow((3 * (RRHigh - 1)), 2) + " Merit Points!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				}
+			}
+			else
+			{
+				if (player.RealmLevel > 10)
+				{
+					if (player.Guild != null)
+					{
+						int RRHigh = ((int)Math.Floor(player.RealmLevel * 0.1) + 1);
+						int a = (int)Math.Pow((3 * (RRHigh - 1)), 2);
+						player.Guild.GainMeritPoints(a);
+						GameServer.Database.SaveObject(player.Guild.theGuildDB);
+						player.Out.SendMessage("Your guild is awarded " + (int)Math.Pow((3 * (RRHigh - 1)), 2) + " Merit Points!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					}
+				}
+			}
 
-            if (player.Guild != null)
-                player.Guild.UpdateGuildWindow();
-        }
-        #endregion
+			if (player.Guild != null)
+				player.Guild.UpdateGuildWindow();
+		}
+		#endregion
 
-        #region RealmPointsGain
+		#region RealmPointsGain
 
-        public static void RealmPointsGain(DOLEvent e, object sender, EventArgs args)
-        {
-            GamePlayer player = sender as GamePlayer;
+		public static void RealmPointsGain(DOLEvent e, object sender, EventArgs args)
+		{
+			GamePlayer player = sender as GamePlayer;
 
-            if (player == null || player.Guild == null) return;
+			if (player == null || player.Guild == null) return;
 
-            GainedRealmPointsEventArgs rpsArgs = args as GainedRealmPointsEventArgs;
+			GainedRealmPointsEventArgs rpsArgs = args as GainedRealmPointsEventArgs;
 
-                if (player.Guild != null)
-                {
-                    long OldRealmPoints = player.Guild.theGuildDB.RealmPoints;
-                    long NewRealmPoints = rpsArgs.RealmPoints;
+			if (player.Guild != null)
+			{
+				long OldRealmPoints = player.Guild.theGuildDB.RealmPoints;
+				long NewRealmPoints = rpsArgs.RealmPoints;
 
-                    #region Buff Bonus to RPS
-                    if (player.Guild.theGuildDB.BuffType == 1)
-                    {
-                        player.RealmPoints += (long)Math.Ceiling(rpsArgs.RealmPoints * BUFF_RPS / 100);
-                        player.SaveIntoDatabase();
+				#region Buff Bonus to RPS
+				if (player.Guild.theGuildDB.BuffType == 1)
+				{
+					player.RealmPoints += (long)Math.Ceiling(rpsArgs.RealmPoints * BUFF_RPS / 100);
+					player.SaveIntoDatabase();
 
-                        player.Guild.theGuildDB.RealmPoints += (long)Math.Ceiling(rpsArgs.RealmPoints * BUFF_RPS / 100);
-                        GameServer.Database.SaveObject(player.Guild.theGuildDB);
+					player.Guild.theGuildDB.RealmPoints += (long)Math.Ceiling(rpsArgs.RealmPoints * BUFF_RPS / 100);
+					GameServer.Database.SaveObject(player.Guild.theGuildDB);
 
-                        player.Out.SendMessage("You get an additional " + (long)Math.Ceiling(rpsArgs.RealmPoints * BUFF_RPS / 100) + " Realm Points due to your Guilds Buff!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                    }
-                    #endregion
+					player.Out.SendMessage("You get an additional " + (long)Math.Ceiling(rpsArgs.RealmPoints * BUFF_RPS / 100) + " Realm Points due to your Guilds Buff!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				}
+				#endregion
 
-                    long GuildLevel = player.Guild.GuildLevel;
+				long GuildLevel = player.Guild.GuildLevel;
 
-                    if ((OldRealmPoints < 100000000) && (player.Guild.theGuildDB.RealmPoints > 100000000))
-                    {
-                        // Report to Newsmgr
-                        string message = player.Guild.theGuildDB.GuildName + " [" + GlobalConstants.RealmToName((eRealm)player.Realm) + "] has reached 100,000,000 Realm Points!";
-                        NewsMgr.CreateNews(message, player.Realm, eNewsType.RvRGlobal, false);
-                    }
+				if ((OldRealmPoints < 100000000) && (player.Guild.theGuildDB.RealmPoints > 100000000))
+				{
+					// Report to Newsmgr
+					string message = player.Guild.theGuildDB.GuildName + " [" + GlobalConstants.RealmToName((eRealm)player.Realm) + "] has reached 100,000,000 Realm Points!";
+					NewsMgr.CreateNews(message, player.Realm, eNewsType.RvRGlobal, false);
+				}
 
-                    #region Guild Levels
-                    if (player.Guild.GuildLevel < 120)
-                    {
-                        if (player.Guild.RealmPoints >= REALMPOINTS_FOR_GUILDLEVEL[(GuildLevel + 1)])
-                        {
-                            player.Guild.GainGuildLevel(1);
-                            GameServer.Database.SaveObject(player.Guild.theGuildDB);
+				#region Guild Levels
+				if (player.Guild.GuildLevel < 120)
+				{
+					if (player.Guild.RealmPoints >= REALMPOINTS_FOR_GUILDLEVEL[(GuildLevel + 1)])
+					{
+						player.Guild.GainGuildLevel(1);
+						GameServer.Database.SaveObject(player.Guild.theGuildDB);
 
-                            string message1 = "[Guild] Your guild has reached Level " + player.Guild.GuildLevel + "!";
-                            foreach (GamePlayer ply in player.Guild.ListOnlineMembers())
-                            {
-                                ply.Out.SendMessage(message1, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
-                            }
-                        }
-                    }
-                    #endregion
+						string message1 = "[Guild] Your guild has reached Level " + player.Guild.GuildLevel + "!";
+						foreach (GamePlayer ply in player.Guild.ListOnlineMembers())
+						{
+							ply.Out.SendMessage(message1, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
+						}
+					}
+				}
+				#endregion
 
-                    if (player.Guild != null)
-                        player.Guild.UpdateGuildWindow();
-                }
-        }
+				if (player.Guild != null)
+					player.Guild.UpdateGuildWindow();
+			}
+		}
 
-        #endregion
+		#endregion
 
-        #region Bounty Points Gained
+		#region Bounty Points Gained
 
-        public static void BountyPointsGain(DOLEvent e, object sender, EventArgs args)
-        {
-            GamePlayer player = sender as GamePlayer;
+		public static void BountyPointsGain(DOLEvent e, object sender, EventArgs args)
+		{
+			GamePlayer player = sender as GamePlayer;
 
-            if (player == null || player.Guild == null) return;
+			if (player == null || player.Guild == null) return;
 
-            GainedBountyPointsEventArgs bpsArgs = args as GainedBountyPointsEventArgs;
+			GainedBountyPointsEventArgs bpsArgs = args as GainedBountyPointsEventArgs;
 
-            #region Buff Bonus to BPS
-            if (player.Guild != null)
-            {
-                if (player.Guild.theGuildDB.BuffType == 2)
-                {
-                    player.BountyPoints += (long)Math.Ceiling(bpsArgs.BountyPoints * BUFF_BPS / 100);
-                    player.SaveIntoDatabase();
+			#region Buff Bonus to BPS
+			if (player.Guild != null)
+			{
+				if (player.Guild.theGuildDB.BuffType == 2)
+				{
+					player.BountyPoints += (long)Math.Ceiling(bpsArgs.BountyPoints * BUFF_BPS / 100);
+					player.SaveIntoDatabase();
 
-                    player.Guild.theGuildDB.BountyPoints += (long)Math.Ceiling(bpsArgs.BountyPoints * BUFF_BPS / 100);
-                    GameServer.Database.SaveObject(player.Guild.theGuildDB);
+					player.Guild.theGuildDB.BountyPoints += (long)Math.Ceiling(bpsArgs.BountyPoints * BUFF_BPS / 100);
+					GameServer.Database.SaveObject(player.Guild.theGuildDB);
 
-                    player.Out.SendMessage("You get an additional " + (long)Math.Ceiling(bpsArgs.BountyPoints * BUFF_BPS / 100) + " Bounty Points due to your Guilds Buff!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                }
-            }
-            #endregion
+					player.Out.SendMessage("You get an additional " + (long)Math.Ceiling(bpsArgs.BountyPoints * BUFF_BPS / 100) + " Bounty Points due to your Guilds Buff!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				}
+			}
+			#endregion
 
-            if (player.Guild != null)
-                player.Guild.UpdateGuildWindow();
-        }
+			if (player.Guild != null)
+				player.Guild.UpdateGuildWindow();
+		}
 
-        #endregion
+		#endregion
 
-        #region Guild Buff GameTimer Check
+		#region Guild Buff GameTimer Check
 
-        public static void StartCheck(object timer)
-        {
-            Thread th = new Thread(new ThreadStart(StartCheckThread));
-            th.Start();
-        }
+		public static void StartCheck(object timer)
+		{
+			Thread th = new Thread(new ThreadStart(StartCheckThread));
+			th.Start();
+		}
 
-        public static void StartCheckThread()
-        {
-            //log.Warn("Starting BuffTimer Check...");
+		public static void StartCheckThread()
+		{
+			//log.Warn("Starting BuffTimer Check...");
 
-            foreach (Guild checkGuild in GuildMgr.ListGuild())
-            {
-                if (checkGuild.theGuildDB.BuffType != 0)
-                {
-                    TimeSpan buffDate = DateTime.Now.Subtract(checkGuild.theGuildDB.BuffTime);
+			foreach (Guild checkGuild in GuildMgr.ListGuild())
+			{
+				if (checkGuild.theGuildDB.BuffType != 0)
+				{
+					TimeSpan buffDate = DateTime.Now.Subtract(checkGuild.theGuildDB.BuffTime);
 
-                    //int TimeLeft;
-                    if (buffDate.Days > 0)
-                    {
-                        checkGuild.theGuildDB.BuffType = 0;
+					//int TimeLeft;
+					if (buffDate.Days > 0)
+					{
+						checkGuild.theGuildDB.BuffType = 0;
 
-                        checkGuild.SaveIntoDatabase();
+						checkGuild.SaveIntoDatabase();
 
-                        string message1 = "[Guild Buff] Your Guild Buff has now worn off!";
-                        foreach (GamePlayer player in checkGuild.ListOnlineMembers())
-                        {
-                            player.Out.SendMessage(message1, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
-                        }
-                    }
-                }
-            }
-        }
+						string message1 = "[Guild Buff] Your Guild Buff has now worn off!";
+						foreach (GamePlayer player in checkGuild.ListOnlineMembers())
+						{
+							player.Out.SendMessage(message1, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
+						}
+					}
+				}
+			}
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }
