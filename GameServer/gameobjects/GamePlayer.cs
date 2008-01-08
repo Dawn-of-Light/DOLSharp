@@ -990,37 +990,40 @@ namespace DOL.GS
 					}
 				default:
 					{
-						//Tutorial
-						if (character.BindRegion == 27)
+						if (!ServerProperties.Properties.DISABLE_TUTORIAL)
 						{
-							switch (Realm)
+							//Tutorial
+							if (character.BindRegion == 27)
 							{
-								case eRealm.Albion:
-									{
-										relRegion = 1; // Cotswold
-										relX = 8192 + 553251;
-										relY = 8192 + 502936;
-										relZ = 2280;
-										break;
-									}
-								case eRealm.Midgard:
-									{
-										relRegion = 100; // Mularn
-										relX = 8192 + 795621;
-										relY = 8192 + 719590;
-										relZ = 4680;
-										break;
-									}
-								case eRealm.Hibernia:
-									{
-										relRegion = 200; // MagMell
-										relX = 8192 + 338652;
-										relY = 8192 + 482335;
-										relZ = 5200;
-										break;
-									}
+								switch (Realm)
+								{
+									case eRealm.Albion:
+										{
+											relRegion = 1; // Cotswold
+											relX = 8192 + 553251;
+											relY = 8192 + 502936;
+											relZ = 2280;
+											break;
+										}
+									case eRealm.Midgard:
+										{
+											relRegion = 100; // Mularn
+											relX = 8192 + 795621;
+											relY = 8192 + 719590;
+											relZ = 4680;
+											break;
+										}
+									case eRealm.Hibernia:
+										{
+											relRegion = 200; // MagMell
+											relX = 8192 + 338652;
+											relY = 8192 + 482335;
+											relZ = 5200;
+											break;
+										}
+								}
+								break;
 							}
-							break;
 						}
 						switch (CurrentRegionID)
 						{
