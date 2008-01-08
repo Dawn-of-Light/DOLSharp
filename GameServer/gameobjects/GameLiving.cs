@@ -2795,8 +2795,6 @@ namespace DOL.GS
 			m_attackState = false;
 			if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 				InterruptRangeAttack();
-
-			//			log.Debug(this.Name+": StopAttack()");
 		}
 
 
