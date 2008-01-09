@@ -427,6 +427,7 @@
     <Compile Include="events\database\CharacterEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="events\database\NewsEventArgs.cs" />
     <Compile Include="events\database\DatabaseEvent.cs">
       <SubType>Code</SubType>
     </Compile>
