@@ -47,5 +47,9 @@ namespace DOL.Events
 		/// <seealso cref="CharacterEventArgs"/>
 		/// </summary>
 		public static readonly DatabaseEvent CharacterDeleted = new DatabaseEvent("Database.CharacterDeleted");
+		/// <summary>
+		/// The NewsCreated event is fired whenever news is created
+		/// </summary>
+		public static readonly DatabaseEvent NewsCreated = new DatabaseEvent("Database.NewsCreated");
 	}
 }

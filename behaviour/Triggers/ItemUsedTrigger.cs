@@ -75,7 +75,8 @@ namespace DOL.GS.Behaviour.Triggers
             {
                 UseSlotEventArgs uArgs = (UseSlotEventArgs)args;
                 InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot) as InventoryItem;
-                result = I.Name == item.Name;
+				if (item != null && I != null)
+					result = I.Name == item.Name;
             }
             
             return result;

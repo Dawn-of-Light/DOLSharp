@@ -1,6 +1,7 @@
 using System;
 
 using DOL.Database;
+using DOL.Events;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
@@ -34,6 +35,7 @@ namespace DOL.GS
 			news.Realm = (byte)realm;
 			news.Text = message;
 			GameServer.Database.AddNewObject(news);
+			GameEventMgr.Notify(DatabaseEvent.NewsCreated, new NewsEventArgs(news));
 		}
 
 		public static void DisplayNews(GameClient client)
