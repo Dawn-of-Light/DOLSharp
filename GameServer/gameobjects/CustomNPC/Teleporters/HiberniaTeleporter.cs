@@ -25,6 +25,7 @@ using System.Collections;
 using DOL.GS.Spells;
 using log4net;
 using System.Reflection;
+using DOL.GS.Quests.Catacombs.Obelisks;
 
 namespace DOL.GS
 {
@@ -131,8 +132,19 @@ namespace DOL.GS
 					}
 					SayTo(player, "You will soon arrive in the Haven of Oceanus.");
 					break;
+				case "personal":
+					break;
 				case "shannon estuary":
 					SayTo(player, "You shall soon arrive in the Shannon Estuary.");
+					break;
+				case "shar labyrinth":
+					if (player.HasFinishedQuest(typeof(SharLabyrinth)) <= 0)
+					{
+						SayTo(player, String.Format("I may only send those who know the way to this {0} {1}",
+							"city. Seek out the path to the city and in future times I will aid you in",
+							"this journey."));
+						return;
+					}
 					break;
 				case "tir na nog":
 					SayTo(player, "The great city awaits!");
