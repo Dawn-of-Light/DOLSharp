@@ -1576,3 +1576,39 @@ SendMasterLevelWindow.Uncomplete.ML9.Step10:		The phoenix is not yet weakend, an
 
 # 1. Completed steps
 SendMasterLevelWindow.Complete.ML1.Step1:	[Completed] Ianetor has been defeated !	
+
+# /horse
+HorseEmote.MustBeOnMount:					You can only do that while mounted.
+HorseEmote.You:							you
+HorseEmote.courbette.ToOthers:				-
+HorseEmote.courbette.ToSource:				-
+HorseEmote.courbette.NoTargetToOthers:			{0}'s mount performs a courbette.
+HorseEmote.courbette.NoTargetToSource:			Your mount performs a courbette.
+HorseEmote.graze.ToOthers:					-
+HorseEmote.graze.ToSource:					-
+HorseEmote.graze.NoTargetToOthers:				{0} lets {1} mount graze.
+HorseEmote.graze.NoTargetToSource:				You let your mount graze.
+HorseEmote.halt.ToOthers:					{0} orders {1} to halt.
+HorseEmote.halt.ToSource:					You order {0} to halt.
+HorseEmote.halt.NoTargetToOthers:				{0} orders everyone to halt.
+HorseEmote.halt.NoTargetToSource:				You order everyone to halt.
+HorseEmote.nod.ToOthers:						{0}'s mount nods at {1}.
+HorseEmote.nod.ToSource:						Your mount nods at {0}.
+HorseEmote.nod.NoTargetToOthers:				{0}'s mount nods.
+HorseEmote.nod.NoTargetToSource:				Your mount nods.
+HorseEmote.pet.ToOthers:						-
+HorseEmote.pet.ToSource:						-
+HorseEmote.pet.NoTargetToOthers:				{0} pets {1} mount.
+HorseEmote.pet.NoTargetToSource:				You pet your mount.
+HorseEmote.rear.ToOthers:					{0}'s mount rears at the sight of {1}.
+HorseEmote.rear.ToSource:					Your mount rears at the sight of {0}.
+HorseEmote.rear.NoTargetToOthers:				{0}'s mount rears.
+HorseEmote.rear.NoTargetToSource:				Your mount rears.
+HorseEmote.startle.ToOthers:					{0}'s mount is startled by {1}.
+HorseEmote.startle.ToSource:					Your mount is startled by {0}.
+HorseEmote.startle.NoTargetToOthers:			{0}'s mount is startled.
+HorseEmote.startle.NoTargetToSource:			Your mount is startled.
+HorseEmote.trick.ToOthers:					{0} stands on {2} mount to impress {1}.
+HorseEmote.trick.ToSource:					You stand on your mount to impress {0}.
+HorseEmote.trick.NoTargetToOthers:				{0} stands on {1} mount to impress everyone.
+HorseEmote.trick.NoTargetToSource:				You stand on your mount to impress everyone.
