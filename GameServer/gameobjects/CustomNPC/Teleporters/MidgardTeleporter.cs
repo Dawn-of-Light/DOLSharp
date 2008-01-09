@@ -25,6 +25,7 @@ using System.Collections;
 using DOL.GS.Spells;
 using log4net;
 using System.Reflection;
+using DOL.GS.Quests.Catacombs.Obelisks;
 
 namespace DOL.GS
 {
@@ -120,6 +121,15 @@ namespace DOL.GS
 					break;
 				case "knarr":
 					break;	// No text?
+				case "kobold undercity":
+					if (player.HasFinishedQuest(typeof(KoboldUndercity)) <= 0)
+					{
+						SayTo(player, String.Format("I may only send those who know the way to this {0} {1}",
+							"city. Seek out the path to the city and in future times I will aid you in",
+							"this journey."));
+						return;
+					}
+					break;
 				case "oceanus":
 					if (player.Client.Account.PrivLevel < ServerProperties.Properties.ATLANTIS_TELEPORT_PLVL)
 					{
@@ -127,6 +137,8 @@ namespace DOL.GS
 						return;
 					}
 					SayTo(player, "You will soon arrive in the Haven of Oceanus.");
+					break;
+				case "personal":
 					break;
 				case "svasud faste":
 					SayTo(player, "Svasud Faste is what you seek, and Svasud Faste is what you shall find.");
