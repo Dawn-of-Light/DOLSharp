@@ -687,6 +687,22 @@ namespace DOL.GS.Housing
 		}
 
 		/// <summary>
+		/// The spot you are teleported to when you exit this house.
+		/// </summary>
+		public IGameLocation OutdoorJumpPoint
+		{
+			get
+			{
+				double angle = Heading * ((Math.PI * 2) / 360); // angle*2pi/360;
+				int x = (int)(X + (0 * Math.Cos(angle) + 500 * Math.Sin(angle)));
+				int y = (int)(Y - (500 * Math.Cos(angle) - 0 * Math.Sin(angle)));
+				ushort heading = (ushort)((Heading < 180 ? Heading + 180 : Heading - 180) / 0.08789);
+
+				return new GameLocation("Housing", RegionID, x, y, Z, heading);
+			}
+		}
+
+		/// <summary>
 		/// Used to leave a house
 		/// </summary>
 		/// <param name="player">the player who wants to get in</param>
