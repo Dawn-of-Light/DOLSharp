@@ -38,6 +38,9 @@ namespace DOL.GS
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		/// <summary>
+		/// House vault permission bits.
+		/// </summary>
 		public enum Permissions
 		{
 			None = 0x00,
@@ -318,6 +321,10 @@ namespace DOL.GS
 
 				if (!WorldMgr.CheckDistance(observer, this, WorldMgr.INTERACT_DISTANCE))
 				{
+					if (observer.Client.Account.PrivLevel > 1)
+						observer.Out.SendMessage(String.Format("You are too far away from house vault {0} and will not receive any more updates.",
+							Index + 1), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+
 					observer.ActiveVault = null;
 					inactiveList.Add(observer.Name);
 					continue;
@@ -462,6 +469,10 @@ namespace DOL.GS
 
 			lock (m_vaultSync)
 			{
+				foreach (GamePlayer observer in m_observers.Values)
+					observer.ActiveVault = null;
+
+				m_observers.Clear();
 				RemoveFromWorld();
 
 				// Unregister this vault from the DB.

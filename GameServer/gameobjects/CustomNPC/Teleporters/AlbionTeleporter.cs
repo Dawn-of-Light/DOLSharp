@@ -25,6 +25,8 @@ using System.Collections;
 using DOL.GS.Spells;
 using log4net;
 using System.Reflection;
+using DOL.GS.Quests.Catacombs.Obelisks;
+using DOL.GS.Housing;
 
 namespace DOL.GS
 {
@@ -144,6 +146,15 @@ namespace DOL.GS
 					break;
 				case "gwyntell":
 					break;	// No text?
+				case "inconnu crypt":
+					if (player.HasFinishedQuest(typeof(InconnuCrypt)) <= 0)
+					{
+						SayTo(player, String.Format("I may only send those who know the way to this {0} {1}",
+							"city. Seek out the path to the city and in future times I will aid you in",
+							"this journey."));
+						return;
+					}
+					break;
 				case "oceanus":
 					if (player.Client.Account.PrivLevel < ServerProperties.Properties.ATLANTIS_TELEPORT_PLVL)
 					{
@@ -151,6 +162,8 @@ namespace DOL.GS
 						return;
 					}
 					SayTo(player, "You will soon arrive in the Haven of Oceanus.");
+					break;
+				case "personal":
 					break;
 				case "snowdonia fortress":
 					SayTo(player, "Snowdonia Fortress is what you seek, and Snowdonia Fortress is what you shall find.");

@@ -103,6 +103,30 @@ namespace DOL.GS
 				}
 			}
 
+			// Another special case is personal house, as there is no location
+			// that will work for every player.
+
+			if (text.ToLower() == "personal")
+			{
+				House house = HouseMgr.GetHouseByPlayer(player);
+				if (house == null)
+					text = "entrance";	// Fall through, port to housing entrance.
+				else
+				{
+					IGameLocation location = house.OutdoorJumpPoint;
+					Teleport teleport = new Teleport();
+					teleport.TeleportID = "personal";
+					teleport.Realm = (int)Realm;
+					teleport.RegionID = location.RegionID;
+					teleport.X = location.X;
+					teleport.Y = location.Y;
+					teleport.Z = location.Z;
+					teleport.Heading = location.Heading;
+					OnDestinationPicked(player, teleport);
+					return true;
+				}
+			}
+
 			// Find the teleport location in the database.
 
 			List<Teleport> teleports = WorldMgr.GetTeleportLocations((eRealm)Realm);

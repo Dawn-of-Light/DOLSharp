@@ -984,6 +984,9 @@
     <Compile Include="quests\Atlantis\Encounters\ShieldOfKhaos.cs" />
     <Compile Include="quests\Atlantis\Encounters\Snatcher.cs" />
     <Compile Include="quests\Atlantis\Encounters\StoneOfAtlantis.cs" />
+    <Compile Include="quests\Catacombs\Obelisks\InconnuCrypt.cs" />
+    <Compile Include="quests\Catacombs\Obelisks\KoboldUndercity.cs" />
+    <Compile Include="quests\Catacombs\Obelisks\SharLabyrinth.cs" />
     <Compile Include="quests\Missions\AbstractMission.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1051,6 +1054,7 @@
     <Compile Include="behaviour\Requirements\EquippedItemRequirement.cs" />
     <Compile Include="behaviour\Requirements\GuildRequirement.cs" />
     <Compile Include="behaviour\Requirements\RealmPointsRequirement.cs" />
+    <Compile Include="quests\Catacombs\ObeliskCredit.cs" />
     <Compile Include="quests\Quests\QuestScripts\albion\AFewRepairs.cs" />
     <Compile Include="quests\Quests\QuestScripts\albion\AfterTheAccident.cs" />
     <Compile Include="quests\Quests\QuestScripts\albion\AgainstTheGrain.cs" />
