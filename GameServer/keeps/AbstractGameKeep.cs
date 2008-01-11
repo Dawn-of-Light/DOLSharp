@@ -611,7 +611,7 @@ namespace DOL.GS.Keeps
 			if (player.Group != null)
 			{
 				int count = 0;
-				foreach (GamePlayer p in player.Group)
+				foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 				{
 					if (KeepMgr.getKeepCloseToSpot(p.CurrentRegionID, p, WorldMgr.VISIBILITY_DISTANCE) == this)
 						count++;

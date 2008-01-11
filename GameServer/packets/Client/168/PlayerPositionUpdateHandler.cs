@@ -479,14 +479,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					int safeFallLevel = client.Player.GetAbilityLevel(Abilities.SafeFall);
 					int fallSpeed = (flyingflag & 0xFFF) - 100 * safeFallLevel; // 0x7FF fall speed and 0x800 bit = fall speed overcaped
-					if (fallSpeed > 400)
+					int fallMinSpeed = 400;
+					int fallDivide = 6;
+					if (client.Version >= GameClient.eClientVersion.Version188)
+					{
+						fallMinSpeed = 500;
+						fallDivide = 15;
+					}
+					if (fallSpeed > fallMinSpeed)
 					{
 						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.FallingDamage"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-						int fallPercent = Math.Min(99, (fallSpeed - 401) / 6);
-						if (client.Version > GameClient.eClientVersion.Version188)
-						{
-							fallPercent = fallPercent / 10;
-						}
+						int fallPercent = Math.Min(99, (fallSpeed - (fallMinSpeed + 1)) / fallDivide);
 						if (fallPercent > 0)
 						{
 							if (safeFallLevel > 0)
@@ -499,8 +502,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 							//Update the player's health to all other players around
 							foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 								player.Out.SendCombatAnimation(null, client.Player, 0, 0, 0, 0, 0, client.Player.HealthPercent);
-
-//							client.Player.ChangeHealth(client.Player, GameLiving.eHealthChangeType.Unknown, -0.01*fallPercent*(client.Player.MaxHealth - 1));
 						}
 						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.Endurance"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 					}

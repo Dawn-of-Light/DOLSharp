@@ -64,7 +64,7 @@ namespace DOL.GS.Effects
 			GamePlayer mostInjuredLiving = owner as GamePlayer;
 			if (mostInjuredLiving == null) return;
 
-			foreach (GamePlayer p in player.Group)
+			foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 			{
 				if (p == player)
 					continue;
@@ -79,25 +79,22 @@ namespace DOL.GS.Effects
 			int targetHealCap = args.AttackData.Damage;
 			if (player.Group.MemberCount > 2)
 			{
-				lock (player.Group)
+				groupHealCap *= (player.Group.MemberCount);
+				targetHealCap *= 2;
+				foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 				{
-					groupHealCap *= (player.Group.MemberCount);
-					targetHealCap *= 2;
-					foreach (GamePlayer p in player.Group)
+					if (!p.IsAlive) continue;
+					if (p == player) continue;
+					if (WorldMgr.CheckDistance(p, player, 2000))
 					{
-						if (!p.IsAlive) continue;
-						if (p == player) continue;
-						if (WorldMgr.CheckDistance(p, player, 2000))
+						double playerHealthPercent = p.Health / (double)p.MaxHealth;
+						if (playerHealthPercent < 1)
 						{
-							double playerHealthPercent = p.Health / (double)p.MaxHealth;
-							if (playerHealthPercent < 1)
+							injuredTargets.Add(p, playerHealthPercent);
+							if (playerHealthPercent < mostInjuredPercent)
 							{
-								injuredTargets.Add(p, playerHealthPercent);
-								if (playerHealthPercent < mostInjuredPercent)
-								{
-									mostInjuredLiving = p;
-									mostInjuredPercent = playerHealthPercent;
-								}
+								mostInjuredLiving = p;
+								mostInjuredPercent = playerHealthPercent;
 							}
 						}
 					}

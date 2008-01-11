@@ -74,7 +74,7 @@ namespace DOL.GS.Trainer
         /// </summary>
         /// <param name="player"></param>
         /// <returns></returns>
-        public override bool CanPromotePlayer(GamePlayer player)
+        public static bool CanPromotePlayer(GamePlayer player)
         {
             return (player.Level >= 5 && player.CharacterClass.ID == (int)eCharacterClass.Viking && (player.Race == (int)eRace.Norseman
                 || player.Race == (int)eRace.MidgardMinotaur));
