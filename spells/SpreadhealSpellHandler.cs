@@ -64,28 +64,25 @@ namespace DOL.GS.Spells
 			int groupHealCap = targetHealCap;
 
 			Group group = target.Group;
-			if (group != null) 
+			if (group != null)
 			{
-				lock (group)
-				{
-					groupHealCap *= group.MemberCount;
-					targetHealCap *= 2;
+				groupHealCap *= group.MemberCount;
+				targetHealCap *= 2;
 
-					foreach (GameLiving living in group)
+				foreach (GameLiving living in group.GetMembersInTheGroup())
+				{
+					if (!living.IsAlive) continue;
+					//heal only if target is in range
+					if (WorldMgr.CheckDistance(target, living, m_spell.Range))
 					{
-						if (!living.IsAlive) continue;
-						//heal only if target is in range
-						if (WorldMgr.CheckDistance(target, living, m_spell.Range))
+						double livingHealthPercent = living.Health / (double)living.MaxHealth;
+						if (livingHealthPercent < 1)
 						{
-							double livingHealthPercent = living.Health / (double)living.MaxHealth;
-							if (livingHealthPercent < 1)
+							injuredTargets.Add(living, livingHealthPercent);
+							if (livingHealthPercent < mostInjuredPercent)
 							{
-								injuredTargets.Add(living, livingHealthPercent);
-								if (livingHealthPercent < mostInjuredPercent)
-								{
-									mostInjuredLiving = living;
-									mostInjuredPercent = livingHealthPercent;
-								}
+								mostInjuredLiving = living;
+								mostInjuredPercent = livingHealthPercent;
 							}
 						}
 					}

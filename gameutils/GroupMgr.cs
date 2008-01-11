@@ -70,19 +70,16 @@ namespace DOL.GS
 			lock (m_groups)
 			{
 				group = (Group)m_groups[key];
-				if(group == null)
+				if (group == null)
 				{
 					return false;
 				}
 				m_groups.Remove(key);
 			}
 
-			lock (group)
+			foreach (GameLiving living in group.GetMembersInTheGroup())
 			{
-				foreach(GameLiving living in group)
-				{
-					group.RemoveMember(living);
-				}
+				group.RemoveMember(living);
 			}
 
 			return true;

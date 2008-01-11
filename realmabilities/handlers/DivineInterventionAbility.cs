@@ -32,16 +32,13 @@ namespace DOL.GS.RealmAbilities
                 case 3: poolValue = 3000; break;
             }
 
-			lock (playerGroup)
+			foreach (GamePlayer groupMember in playerGroup.GetPlayersInTheGroup())
 			{
-				foreach (GamePlayer groupMember in playerGroup)
+				DivineInterventionEffect DIEffect = (DivineInterventionEffect)groupMember.EffectList.GetOfType(typeof(DivineInterventionEffect));
+				if (DIEffect != null)
 				{
-					DivineInterventionEffect DIEffect = (DivineInterventionEffect)groupMember.EffectList.GetOfType(typeof(DivineInterventionEffect));
-					if (DIEffect != null)
-					{
-                        player.Out.SendMessage("You are already protected by a pool of healing", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-						return;
-					}
+					player.Out.SendMessage("You are already protected by a pool of healing", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+					return;
 				}
 			}
             DisableSkill(living);
