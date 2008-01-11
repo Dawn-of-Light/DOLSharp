@@ -483,6 +483,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.FallingDamage"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 						int fallPercent = Math.Min(99, (fallSpeed - 401) / 6);
+						if (client.Version > GameClient.eClientVersion.Version188)
+						{
+							fallPercent = fallPercent / 10;
+						}
 						if (fallPercent > 0)
 						{
 							if (safeFallLevel > 0)
