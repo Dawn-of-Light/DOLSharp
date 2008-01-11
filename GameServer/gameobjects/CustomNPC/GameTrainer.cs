@@ -245,11 +245,6 @@ namespace DOL.GS
 			return base.ReceiveItem(source, item);
 		}
 
-		public virtual bool CanPromotePlayer(GamePlayer player)
-		{
-			return true;
-		}
-
 		public void PromotePlayer(GamePlayer player)
 		{
 			if (TrainedClass != eCharacterClass.Unknown)

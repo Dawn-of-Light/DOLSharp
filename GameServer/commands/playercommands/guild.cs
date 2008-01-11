@@ -648,7 +648,7 @@ namespace DOL.GS.Commands
 									return;
 								}
 							}
-							foreach (GamePlayer playa in client.Player.Group)
+							foreach (GamePlayer playa in client.Player.Group.GetPlayersInTheGroup())
 							{
 								if (playa.IsCarryingGuildBanner)
 								{
@@ -916,7 +916,7 @@ namespace DOL.GS.Commands
 										}
 
 										// a member of group have a guild already, so quit!
-										foreach (GamePlayer ply in group)
+										foreach (GamePlayer ply in group.GetPlayersInTheGroup())
 										{
 											if (ply.Guild != null)
 											{
@@ -932,7 +932,7 @@ namespace DOL.GS.Commands
 										}
 										else
 										{
-											foreach (GamePlayer ply in group)
+											foreach (GamePlayer ply in group.GetPlayersInTheGroup())
 											{
 												newGuild.AddPlayer(ply);
 											}

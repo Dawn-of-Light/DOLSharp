@@ -35,7 +35,7 @@ namespace DOL.GS.RealmAbilities
 			if (player.Group == null)
 				return;
 
-			foreach (GamePlayer member in player.Group)
+			foreach (GamePlayer member in player.Group.GetPlayersInTheGroup())
 			{
 				Spell subspell = SkillBase.GetSpellByID(7063);
 				ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(player, subspell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));

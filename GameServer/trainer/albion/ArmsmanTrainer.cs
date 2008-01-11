@@ -80,7 +80,7 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public override bool CanPromotePlayer(GamePlayer player) 
+		public static bool CanPromotePlayer(GamePlayer player) 
 		{
 			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Fighter && (player.Race == (int) eRace.Briton || player.Race == (int) eRace.Avalonian
 				|| player.Race == (int) eRace.Highlander || player.Race == (int) eRace.Saracen || player.Race == (int) eRace.Inconnu || player.Race == (int) eRace.HalfOgre

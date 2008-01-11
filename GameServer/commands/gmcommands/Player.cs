@@ -1336,7 +1336,7 @@ namespace DOL.GS.Commands
 
                                         if (name == pname.Player.Name)
                                         {
-                                            foreach (GamePlayer groupedplayers in pname.Player.Group)
+                                            foreach (GameLiving groupedplayers in pname.Player.Group.GetMembersInTheGroup())
                                             {
                                                 groupedplayers.MoveTo(client.Player.CurrentRegionID, client.Player.X, client.Player.Y, client.Player.Z, client.Player.Heading);
                                                 count++;

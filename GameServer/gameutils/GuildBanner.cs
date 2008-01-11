@@ -29,7 +29,7 @@ namespace DOL.GS
             {
                 if (m_player != null)
                 {
-                    foreach (GamePlayer playa in m_player.Group)
+                    foreach (GamePlayer playa in m_player.Group.GetPlayersInTheGroup())
                     {
                         if (!playa.IsCarryingGuildBanner)
                         {
