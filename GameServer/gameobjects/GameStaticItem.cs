@@ -101,6 +101,8 @@ namespace DOL.GS
 		/// <returns>name of this object (includes article if needed)</returns>
 		public override string GetName(int article, bool firstLetterUppercase)
 		{
+			if (Name == "")
+				return "";
 			if(char.IsUpper(Name[0]))
 			{
 				// proper name

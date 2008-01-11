@@ -28,7 +28,7 @@ namespace DOL.GS.RealmAbilities
 				if (player.Group != null)
 				{
 					SendCasterSpellEffectAndCastMessage(living, 7066, true);
-					foreach (GamePlayer member in player.Group)
+					foreach (GamePlayer member in player.Group.GetPlayersInTheGroup())
 					{
 						if (!CheckPreconditions(member, DEAD) && member.CurrentRegionID == living.CurrentRegionID
 							&& member.CurrentRegionID == living.CurrentRegionID

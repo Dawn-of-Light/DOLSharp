@@ -7215,6 +7215,11 @@ namespace DOL.GS
 									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.MustDismountBefore"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
 								}
+								if (CurrentZone.IsDungeon)
+								{
+									Out.SendMessage("You cannot summon a mount in a dungeon!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
 								if (CurrentRegion.IsRvR && !ActiveHorse.IsSummonRvR)
 								{
 									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantSummonRvR"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -9680,16 +9685,14 @@ namespace DOL.GS
 					{
 						//Spread the money in the group
 						ArrayList eligibleMembers = new ArrayList(8);
-						lock (group)
+
+						foreach (GamePlayer ply in group.GetPlayersInTheGroup())
 						{
-							foreach (GamePlayer ply in group)
+							if (ply.IsAlive
+								&& ply.CanSeeObject(ply, floorObject)
+								&& (ply.ObjectState == eObjectState.Active))
 							{
-								if (ply.IsAlive
-								    && ply.CanSeeObject(ply, floorObject)
-								    && (ply.ObjectState == eObjectState.Active))
-								{
-									eligibleMembers.Add(ply);
-								}
+								eligibleMembers.Add(ply);
 							}
 						}
 						if (eligibleMembers.Count <= 0)

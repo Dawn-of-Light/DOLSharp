@@ -40,67 +40,64 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendGroupWindowUpdate()
 		{
-			if (m_gameClient.Player==null) return;
+			if (m_gameClient.Player == null) return;
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
 			pak.WriteByte(0x06);
 
 			Group group = m_gameClient.Player.Group;
-			if(group==null)
+			if (group == null)
 			{
 				pak.WriteByte(0x00);
 			}
 			else
 			{
-				pak.WriteByte((byte) group.MemberCount);
+				pak.WriteByte((byte)group.MemberCount);
 			}
 
 			pak.WriteByte(0x01);
 			pak.WriteByte(0x00);
 
-			if(group != null)
+			if (group != null)
 			{
-				lock (group)
+				foreach (GameLiving living in group.GetMembersInTheGroup())
 				{
-					foreach (GameLiving living in group)
+					bool sameRegion = living.CurrentRegion == m_gameClient.Player.CurrentRegion;
+
+					pak.WriteByte(living.Level);
+					if (sameRegion)
 					{
-						bool sameRegion = living.CurrentRegion == m_gameClient.Player.CurrentRegion;
+						pak.WriteByte(living.HealthPercentGroupWindow);
+						pak.WriteByte(living.ManaPercent);
+						pak.WriteByte(living.EndurancePercent); //new in 1.69
 
-						pak.WriteByte(living.Level);
-						if (sameRegion)
-						{
-							pak.WriteByte(living.HealthPercentGroupWindow);
-							pak.WriteByte(living.ManaPercent);
-							pak.WriteByte(living.EndurancePercent); //new in 1.69
+						byte playerStatus = 0;
+						if (!living.IsAlive)
+							playerStatus |= 0x01;
+						if (living.IsMezzed)
+							playerStatus |= 0x02;
+						if (living.IsDiseased)
+							playerStatus |= 0x04;
+						if (SpellHandler.FindEffectOnTarget(living, "DamageOverTime") != null)
+							playerStatus |= 0x08;
+						if (living is GamePlayer && ((GamePlayer)living).Client.ClientState == GameClient.eClientState.Linkdead)
+							playerStatus |= 0x10;
+						if (living.CurrentRegion != m_gameClient.Player.CurrentRegion)
+							playerStatus |= 0x20;
 
-							byte playerStatus = 0;
-							if (!living.IsAlive)
-								playerStatus |= 0x01;
-							if (living.IsMezzed)
-								playerStatus |= 0x02;
-							if (living.IsDiseased)
-								playerStatus |= 0x04;
-							if (SpellHandler.FindEffectOnTarget(living, "DamageOverTime") != null)
-								playerStatus |= 0x08;
-							if (living is GamePlayer && ((GamePlayer)living).Client.ClientState == GameClient.eClientState.Linkdead)
-								playerStatus |= 0x10;
-							if (living.CurrentRegion != m_gameClient.Player.CurrentRegion)
-								playerStatus |= 0x20;
+						pak.WriteByte(playerStatus);
+						// 0x00 = Normal , 0x01 = Dead , 0x02 = Mezzed , 0x04 = Diseased , 
+						// 0x08 = Poisoned , 0x10 = Link Dead , 0x20 = In Another Region
 
-							pak.WriteByte(playerStatus);
-							// 0x00 = Normal , 0x01 = Dead , 0x02 = Mezzed , 0x04 = Diseased , 
-							// 0x08 = Poisoned , 0x10 = Link Dead , 0x20 = In Another Region
-
-							pak.WriteShort((ushort)living.ObjectID);//or session id?
-						}
-						else
-						{
-							pak.WriteInt(0x20);
-							pak.WriteShort(0);
-						}
-						pak.WritePascalString(living.Name);
-						pak.WritePascalString(living is GamePlayer ? ((GamePlayer)living).CharacterClass.Name : "NPC");//classname
+						pak.WriteShort((ushort)living.ObjectID);//or session id?
 					}
+					else
+					{
+						pak.WriteInt(0x20);
+						pak.WriteShort(0);
+					}
+					pak.WritePascalString(living.Name);
+					pak.WritePascalString(living is GamePlayer ? ((GamePlayer)living).CharacterClass.Name : "NPC");//classname
 				}
 			}
 			SendTCP(pak);

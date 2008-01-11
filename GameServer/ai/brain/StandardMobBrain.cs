@@ -827,7 +827,7 @@ namespace DOL.AI.Brain
 
 			ArrayList attackersInRange = new ArrayList();
 
-			foreach (GamePlayer player in attackerGroup)
+			foreach (GamePlayer player in attackerGroup.GetPlayersInTheGroup())
 				if (WorldMgr.CheckDistance(attacker, player, BAFTargetPlayerRange))
 					attackersInRange.Add(player);
 

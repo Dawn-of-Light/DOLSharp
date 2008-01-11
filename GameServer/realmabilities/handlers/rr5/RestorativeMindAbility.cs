@@ -29,7 +29,7 @@ namespace DOL.GS.RealmAbilities
 				if (player.Group != null)
 				{
 					SendCasterSpellEffectAndCastMessage(living, 7071, true);
-					foreach (GamePlayer member in player.Group)
+					foreach (GamePlayer member in player.Group.GetPlayersInTheGroup())
 					{
 						RestorativeMindEffect aog = (RestorativeMindEffect)member.EffectList.GetOfType(typeof(RestorativeMindEffect));
 						if (!CheckPreconditions(member, DEAD) && aog == null
