@@ -23,9 +23,11 @@ System.ReleaseTimer:					Automatischer Release
 # CRAFTING
 # (All)
 Crafting.CheckTool.AlchemyKit:				Alchemiekasten
+Crafting.CheckTool.FindAlchemyKit:			Ihr benötigt noch einen Alchemiekasten!
 Crafting.CheckTool.FindAlchemyTable:			Ihr müsst dafür erstmal einen Alchemietisch finden!
 Crafting.CheckTool.FindForge:				Ihr müsst dafür erstmal eine Schmiede finden!
 Crafting.CheckTool.FindLathe:				Ihr müsst dafür erstmal eine Werkbank finden!
+Crafting.CheckTool.FindMortarPestle:			Ihr benötigt noch einen Mörser mit Pistill!
 Crafting.CheckTool.FindPlaningTool:			Ihr benötigt noch einen Hobel!
 Crafting.CheckTool.FindSewingKit:			Ihr benötigt noch ein Nähset!
 Crafting.CheckTool.FindSmithTool:			Ihr benötigt noch einen Schmiedehammer!
@@ -36,6 +38,7 @@ Crafting.CheckTool.PlaningTool:				Hobel
 Crafting.CheckTool.SewingKit:				Nähset
 Crafting.CheckTool.SmithsHammer:			Schmiedehammer
 Crafting.CheckTool.SpellcraftKit:			Bannzauberkasten
+Crafting.GainCraftingSkillPoints.RaiseAlchemy:		Ihr müsst Euch zu Eurem Ausbilder begeben, um Eure Fertigkeiten als Alchemist zu verbessern!
 Crafting.GainCraftingSkillPoints.RaiseArmorcraft:	Ihr müsst Euch zu Eurem Ausbilder begeben, um Eure Fertigkeiten als Rüstungsschmied zu verbessern!
 Crafting.GainCraftingSkillPoints.RaiseFletching:	Ihr müsst Euch zu Eurem Ausbilder begeben, um Eure Fertigkeiten als Pfeilhersteller zu verbessern!
 Crafting.GainCraftingSkillPoints.RaiseSpellcraft:	Ihr müsst Euch zu Eurem Ausbilder begeben, um Eure Fertigkeiten als Bannzauberer zu verbessern!
@@ -61,12 +64,14 @@ AbstractCraftingSkill.BuildCraftedItem.BackpackFull:	Euer Rucksack ist voll. {0}
 AbstractCraftingSkill.BuildCraftedItem.Masterpiece:	Es ist ein Meisterstück!
 AbstractCraftingSkill.BuildCraftedItem.Successfully:	Ihr habt es geschafft, {0} wurde erfolgreich hergestellt. ({1})
 AbstractCraftingSkill.CheckRawMaterial.NoIngredients:	Ihr könnt nicht anfangen, {0} erfordert Rohstoffe.
+AbstractCraftingSkill.CheckRawMaterial.RawMaterial:	Der Gegenstand mit der ID {0} ist nicht verfügbar. Bitte meldet das!
 AbstractCraftingSkill.CheckRawMaterial.YouAreMissing:	Ihr benötigt:
 
 AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoClothworkingSkill:		Ihr habt im Bereich "Stoffhandwerk" weniger als ({0}) Erfahrungspunkte, {1} konnte nicht hergestellt werden!
 AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoLeathercraftingSkill:	Ihr habt im Bereich "Lederhandwerk" weniger als ({0}) Erfahrungspunkte, {1} konnte nicht hergestellt werden!
 AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoMetalworkingSkill:		Ihr habt im Bereich "Schmiedekunst" weniger als ({0}) Erfahrungspunkte, {1} konnte nicht hergestellt werden!
 AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoWoodworkingSkill:		Ihr habt im Bereich "Schreinerei" weniger als ({0}) Erfahrungspunkte, {1} konnte nicht hergestellt werden!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.Rawmaterial:			Der Gegenstand mit der ID {0} ist nicht verfügbar. Bitte meldet das!
 
 AbstractCraftingSkill.CraftItem.BeginWork:		Ihr macht Euch an die Arbeit, {0} nimmt langsam Gestalt an ...({1}%).
 AbstractCraftingSkill.CraftItem.ChanceToGainPoint:	Die Chance Punkte in Eurem primären Handwerk zu erhalten beträgt {0}%.
@@ -77,6 +82,68 @@ AbstractCraftingSkill.LooseRawMaterial.Count:		Ihr verliert ({0}) {1}.
 AbstractCraftingSkill.LooseRawMaterial.Materials:	Ihr habt die Herstellung von {0} nicht geschafft und verliert einiges Material!
 AbstractCraftingSkill.MakeItem.LoseNoMaterials:		Ihr habt die Herstellung von {0} nicht geschafft, aber verliert kein Material!
 AbstractCraftingSkill.MakeItem.NotAllMaterials:		Ihr habt nicht alles Ausgangsmaterial um diesen Gegenstand herzustellen.
+
+# /AdvancedCraftingSkill
+AdvancedCraftingSkill.CombineItems.OnlyCombine:		Ihr könnt Eure Gegenstände nur in einem Gegenstand zusammenführen!
+AdvancedCraftingSkill.IsAllowedToCombine.CraftedItems:	Nur von Spielern hergestellte Gegenstände können verzaubert werden!
+AdvancedCraftingSkill.IsAllowedToCombine.Imbue:		Ihr braucht irgendetwas um {0} zu verzaubern!
+AdvancedCraftingSkill.IsAllowedToCombine.NoEnchanted:	Dieser Gegenstand kann nicht verzaubert werden!
+
+# /Alchemy
+Alchemy.IsAllowedToCombine.AlchemyTinctures:		Ihr könnt nur Alchemietinkturen vermischen!
+Alchemy.IsAllowedToCombine.AlreadyImbued:		{0} ist bereits mit einem magischen Effekt versehen!
+Alchemy.IsAllowedToCombine.OneTincture:			Ihr könnt nur eine Tinktur auf einen Gegenstand auftragen!
+
+# /Repair
+Repair.BeginWork.BeginRepair:				Ihr beginnt mit der Reparatur von {0}.
+Repair.BeginWork.BeginRepairing1:			Ihr beginnt mit der Reparatur von {0} ({1}%).
+Repair.BeginWork.BeginRepairing2:			{0} beginnt mit der Reparatur von {1}.
+Repair.BeginWork.Repairing:				Reparatur: {0}
+Repair.BeginWork.StopRepair1:				Ihr bewegt Euch und unterbrecht damit die Reparatur von {0}.
+Repair.BeginWork.StopRepair2:				{0} bewegt sich und unterbricht damit die Reparatur von {1}.
+Repair.IsAllowedToBeginWork.BackpackItems:		Ihr könnt nur Gegenstände reparieren, die sich in Eurem Gepäck befinden!
+Repair.IsAllowedToBeginWork.CantRepair:			Ihr könnt {0} nicht reparieren!
+Repair.IsAllowedToBeginWork.EndCurrentAction:		Ihr müsst erst Eure laufende Handlung beenden, bevor Ihr repariren könnt!
+Repair.IsAllowedToBeginWork.FullyRepaired:		{0} wurde erfolgreich repariert!
+Repair.IsAllowedToBeginWork.NoEnoughSkill:		Ihr habt nicht genug Erfahrung um {0} reparieren zu können!
+Repair.IsAllowedToBeginWork.WeaponCrafter:		Ihr müsst ein Waffenschmied sein, um Belagerungswaffen reparieren zu können.
+Repair.Proceed.FailImprove1:				Ihr konntet den Zustand von {0} nicht verbessern.
+Repair.Proceed.FailImprove2:				{0} konnte den Zustand von {1} nicht verbessern.
+Repair.Proceed.FullyRepaired1:				Ihr habt die Reparatur von {0} abgeschlossen!
+Repair.Proceed.FullyRepaired2:				{0} hat die Reparatur von {1} abgeschlossen!
+Repair.ProceedSiegeWeapon.FailRepair:			Ihr konntet {0} nicht reparieren!
+
+# /Salvage
+Salvage.BeginWork.BeginSalvage:				Ihr beginnt mit der Verwertung von {0}.
+Salvage.BeginWork.InterruptSalvage:			Ihr bewegt Euch und unterbrecht damit die Verwertung.
+Salvage.BeginWork.NoRoom:				Ihr habt nicht genug Platz in Eurem Gepäck...
+Salvage.BeginWork.NoSalvage:				Ihr könnt {0} nicht verwerten!
+Salvage.BeginWork.Salvaging:				Verwertung: {0}
+Salvage.IsAllowedToBeginWork.BackpackItems:		Ihr könnt nur Gegenstände verwerten, die sich in Eurem Gepäck befinden!
+Salvage.IsAllowedToBeginWork.EndCurrentAction:		Ihr müsst erst Eure laufende Handlung beenden, bevor Ihr verwerten könnt!
+Salvage.IsAllowedToBeginWork.NoEnoughSkill:		Ihr habt nicht genug Erfahrung um {0} verwerten zu können!
+Salvage.Proceed.GetBackMaterial:			Ihr bekommt {0} {1} durch die Verwertung von {2} zurück.
+
+# /SpellCrafting
+SpellCrafting.ApplySpellcraftGems.ImbuedItem:		{0} verzaubert einen Gegenstand.
+SpellCrafting.ApplySpellcraftGems.Failed:		Die Verzauberung hat nicht funktioniert!
+SpellCrafting.ApplySpellcraftGems.PowerExplodes:	Die Energie der Verzauberungen explodiert vor Euren Augen!
+SpellCrafting.IsAllowedToCombine.AlreadyImbued:		{0} ist bereits mit vier verschiedenen magischen Eigenschaften verzaubert!
+SpellCrafting.IsAllowedToCombine.DifferentTypes:	{0} kann nur mit vier verschiedenen magischen Eigenschaften verzaubert werden!
+SpellCrafting.IsAllowedToCombine.FalseItem:		Dieser Gegenstand kann nicht für die Bannzauberei benutzt werden!
+SpellCrafting.IsAllowedToCombine.FalseMaterial:		{0} kann nicht verwendet werden, um einen Gegenstand zu verzaubern!
+SpellCrafting.IsAllowedToCombine.NoEnchanted:		Dieser Gegenstand kann nicht verzaubert werden!
+SpellCrafting.IsAllowedToCombine.NoMoreLevels:		Ihr könnt {0} nicht mit mehr als fünf Stufen aufladen!
+SpellCrafting.IsAllowedToCombine.NoSameBonus:		Ihr könnt keinen Gegenstand mit dem gleichen Bonus mehrfach belegen!
+SpellCrafting.IsAllowedToCombine.NotEnoughSkill:	Ihr habt nicht genug Erfahrung, um diese Verzauberung durch zuführen!
+SpellCrafting.ShowSpellCraftingInfos.CurrentBonus:	Aktueller Bonus auf {0}:
+SpellCrafting.ShowSpellCraftingInfos.GemBonuses:	Gem-Bonus:
+SpellCrafting.ShowSpellCraftingInfos.ImbueCapacity:	Used {0} of {1} imbue point capacity.
+SpellCrafting.ShowSpellCraftingInfos.Losing:		{0}% of losing item during SC.
+SpellCrafting.ShowSpellCraftingInfos.Modified:		(Diese Penality wird außerdem durch die Qualität des Gegenstandes und Eure Erfahrung beeinflusst!)
+SpellCrafting.ShowSpellCraftingInfos.Penality:		{0} overcharge penality.
+SpellCrafting.ShowSpellCraftingInfos.Success:		{0}% overcharge success.
+SpellCrafting.ShowSpellCraftingInfos.TotalImbue:	Spellcrafting the {0} ({1} total imbue points).
 
 # GAMELIVING
 GameLiving.ReceiveItem:					{0} will diesen Gegenstand nicht!
@@ -850,16 +917,17 @@ PlayerPositionUpdateHandler.UnknownZone:		Unbekannte Zone! Ihr werdet zu Eurem l
 # /packets/server
 # /PacketLib168
 SendMasterLevelWindow.Complete.ML1.Step1:		[Completed] Ianetor has been defeated !	
-SendMasterLevelWindow.Uncomplete.ML1.Step1:		Ianetor likes to play with fire, and is seeking adventurers to participate in an explosive game in Oceanus Anatole! This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML1.Step2:		The thief that robbed Lornas still lives! This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML1.Step3:		The Zhton and Kynhroe clans of tritons in Messothalassa and Oceanus Boreal are dying, yet they still war with each other! Each clan seeks adventurers to fight for their cause! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML1.Step4:		The barrier still holds those taken in by the cursed sea of Oceanus Hesperos! This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML1.Step5:		You have not yet proven yourself agaisnt the might of Lord Krojer's champions in single combat! This is a solo encounter.
-SendMasterLevelWindow.Uncomplete.ML1.Step6:		Kirkleis still looks upon himself with hatred in the mirror that mocks his curse! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML1.Step7:		The portals lie dark and silent still! The Rassa remains locked away from those who would seek its power! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML1.Step8:		The ruby lies in the sand beneath the head that stares one eye into the eternal depth! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML1.Step9:		Desmona still wears her crown, the token needed remains unfound! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML1.Step10:		Face Cetus with a ring, a ruby, a mirror and a crown! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML1.Step1:		Ianetor spielt gerne mit dem Feuer und sucht Abenteurer, die an einem explosiven Spiel in Oceanus Anatole teilnehmen wollen! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step2:		Der Dieb, der Lornas bestohlen hat, lebt noch immer! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step3:		Die Triton-Sippen der Zhton und Kyhnroe in Messothalassa und Oceanus Boreal sterben, trotzdem bekriegen sie sich noch immer! Beide Sippen suchen nach Abenteurern, die für ihre Sache kämpfen! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step4:		Die Barriere hält noch immer jene zurück, die durch die verfluchte See von Oceanus Hesperos genommen wurden. Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step5:		Ihr habt Euch noch nicht gegen die Macht von Lord Krojers Champions im einzelenen Kampf bewiesen. Dies ist eine Einzelbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step6:		Kirkleis betrachtet sich noch immer mit Hass in dem Spiegel, der seinen Fluch lächerlich macht! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step7:		Das Portal liegt ruhig und dunkel! Der Rassa bleibt weiterhin vor jenen, die seine Macht wollen, verschlossen. Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step8:		Der Rubin liegt im Sand neben dem Kopf, dessen Auge in die ewigen Tiefen start! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step9:		Desmona trägt ihre Krone noch immer, das benötigte Zeichen bleibt verschollen! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step10:		Tretet Cestus mit einem Ring, einem Rubin, einem Spiegel und einer Krone entgegen! Dies ist eine Kampfgruppenbegegnung.
+
 SendMasterLevelWindow.Uncomplete.ML2.Step1:		Death stalks you from the shadows in the Temple of the Sobekite Eternal! This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML2.Step2:		The imposter's assasins are slaying the keepers of the Temple of the Sobekite Eternal! This is a battlegroup encounter.
 SendMasterLevelWindow.Uncomplete.ML2.Step3:		The triton chiefs and their followers in the flooded depths of the Temple of the Sobekite Eternal hoard stolen goods! This is a battlegroup encounter. 

@@ -34,7 +34,7 @@ namespace DOL.GS
 			: base()
 		{
 			Icon = 0x03;
-			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.Name.Siegecraft");
+			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.Name.Siegecraft");
 			eSkill = eCraftingSkill.SiegeCrafting;
 		}
 
@@ -52,17 +52,17 @@ namespace DOL.GS
 			{
 				if (item == null || item.Object_Type != 0) continue;
 
-				if (item.Name == LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.PlaningTool"))
+				if (item.Name == LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.PlaningTool"))
 				{
 					if ((flags & 0x01) == 0) flags |= 0x01;
 					if (flags >= 0x07) break;
 				}
-				else if (item.Name == LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.SmithsHammer"))
+				else if (item.Name == LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.SmithsHammer"))
 				{
 					if ((flags & 0x02) == 0) flags |= 0x02;
 					if (flags >= 0x07) break;
 				}
-				else if (item.Name == LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.SewingKit"))
+				else if (item.Name == LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.SewingKit"))
 				{
 					if ((flags & 0x04) == 0) flags |= 0x04;
 					if (flags >= 0x07) break;
@@ -74,21 +74,21 @@ namespace DOL.GS
 				if ((flags & 0x01) == 0)
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.FindPlaningTool"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindPlaningTool"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 
 				if ((flags & 0x02) == 0)
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.FindSmithTool"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindSmithTool"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 
 				if ((flags & 0x04) == 0)
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.FindSewingKit"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindSewingKit"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 			}

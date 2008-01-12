@@ -21,6 +21,7 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
 using DOL.Database;
+using DOL.Language;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -81,25 +82,25 @@ namespace DOL.GS
 			DBSalvage material = (DBSalvage) GameServer.Database.SelectObject(typeof(DBSalvage),"ObjectType ='"+item.Object_Type+"' AND SalvageLevel ='"+salvageLevel+"'");
 			if (material == null || material.RawMaterial == null)
 			{
-				player.Out.SendMessage("Salvage material for object type ("+item.Object_Type+") not implemented yet.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("Salvage material for object type (" + item.Object_Type + ") not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 0;
 			}
 
 			if (player.IsMoving || player.IsStrafing)
 			{
-				player.Out.SendMessage("You move and interrupt your salvage.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Salvage.BeginWork.InterruptSalvage"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 0;
 			}
 			
-			player.Out.SendMessage("You begin salvaging the "+item.Name+".",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Salvage.BeginWork.BeginSalvage", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			
 			int count = CalculateMaterialCount(player, item, material);
 			if (count < 1)
 			{
-				player.Out.SendMessage("You can't salvage " + item.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Salvage.BeginWork.NoSalvage", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 0;
 			}
-			player.Out.SendTimerWindow("Salvaging: "+item.Name, count);
+			player.Out.SendTimerWindow(LanguageMgr.GetTranslation(player.Client, "Salvage.BeginWork.Salvaging", item.Name), count);
 			player.CraftTimer = new RegionTimer(player);
 			player.CraftTimer.Callback = new RegionTimerCallback(Proceed);
 			player.CraftTimer.Properties.setProperty(PLAYER_CRAFTER, player);
@@ -144,7 +145,7 @@ namespace DOL.GS
 				}
 			}
 			if (error)
-				player.Out.SendMessage("You don't have enough room in your inventory...", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Salvage.BeginWork.NoRoom"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return 1;
 		}
 
@@ -227,7 +228,7 @@ namespace DOL.GS
 			}
 			player.Inventory.CommitChanges();
 
-			player.Out.SendMessage("You get back " +materialCount+ " "+ material.RawMaterial.Name+ " after salvaging the " +itemToSalvage.Name+ ".",eChatType.CT_Important,eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Salvage.Proceed.GetBackMaterial", materialCount, material.RawMaterial.Name, itemToSalvage.Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			
 			return 0;
 		}
@@ -246,26 +247,26 @@ namespace DOL.GS
 		{
 			if(item.SlotPosition < (int)eInventorySlot.FirstBackpack || item.SlotPosition > (int)eInventorySlot.LastBackpack)
 			{
-				player.Out.SendMessage("You can only salvage items in your backpack!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Salvage.IsAllowedToBeginWork.BackpackItems"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
 			eCraftingSkill skill = CraftingMgr.GetSecondaryCraftingSkillToWorkOnItem(item);
 			if(skill == eCraftingSkill.NoCrafting)
 			{
-				player.Out.SendMessage("You can't salvage "+item.Name+"!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Salvage.BeginWork.NoSalvage", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
 			if (player.IsCrafting)
 			{
-				player.Out.SendMessage("You must end your current action before you salvage anything!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Salvage.IsAllowedToBeginWork.EndCurrentAction"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
 			if (player.GetCraftingSkillValue(skill) < (0.75 * CraftingMgr.GetItemCraftLevel(item)))
 			{
-				player.Out.SendMessage("You don't have enough skill to salvage the "+item.Name+"!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Salvage.IsAllowedToBeginWork.NotEnoughSkill", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 

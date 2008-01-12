@@ -19,6 +19,7 @@
 using System;
 using System.Reflection;
 using DOL.Database;
+using DOL.Language;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -73,16 +74,16 @@ namespace DOL.GS
 
 			if (player.IsMoving || player.IsStrafing)
 			{
-				player.Out.SendMessage("You move and stop to repair the " + item.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				if (tradePartner != null) tradePartner.Out.SendMessage(player.Name + " move and stop to repair the " + item.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.BeginWork.StopRepair1", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				if (tradePartner != null) tradePartner.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.BeginWork.StopRepair2", player.Name, item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 0;
 			}
 
-			player.Out.SendMessage("You begin repairing the " + item.Name + " (" + CalculateSuccessChances(player, item).ToString() + "%).", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			if (tradePartner != null) tradePartner.Out.SendMessage(player.Name + " begin repairing the " + item.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.BeginWork.BeginRepairing2", item.Name, CalculateSuccessChances(player, item).ToString()), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			if (tradePartner != null) tradePartner.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.BeginWork.BeginRepairing2", player.Name, item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			int workDuration = GetCraftingTime(player, item);
-			player.Out.SendTimerWindow("Repairing: " + item.Name, workDuration);
+			player.Out.SendTimerWindow(LanguageMgr.GetTranslation(player.Client, "Repair.BeginWork.Repairing", item.Name), workDuration);
 			player.CraftTimer = new RegionTimer(player);
 			player.CraftTimer.Callback = new RegionTimerCallback(Proceed);
 			player.CraftTimer.Properties.setProperty(PLAYER_CRAFTER, player);
@@ -129,13 +130,13 @@ namespace DOL.GS
 
 				player.Out.SendInventorySlotsUpdate(new int[] { item.SlotPosition });
 
-				player.Out.SendMessage("You have fully repaired the " + item.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				if (tradePartner != null) tradePartner.Out.SendMessage(player.Name + " have fully repaired the " + item.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.Proceed.FullyRepaired1", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				if (tradePartner != null) tradePartner.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.Proceed.FullyRepaired2", player.Name, item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
 			{
-				player.Out.SendMessage("You fail to improve the " + item.Name + "'s condition.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				if (tradePartner != null) tradePartner.Out.SendMessage(player.Name + " fail to improve the " + item.Name + "'s condition.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.Proceed.FailImprove1", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				if (tradePartner != null) tradePartner.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.Proceed.FailImprove2", player.Name, item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 
 			return 0;
@@ -156,32 +157,32 @@ namespace DOL.GS
 		{
 			if (item.SlotPosition < (int)eInventorySlot.FirstBackpack || item.SlotPosition > (int)eInventorySlot.LastBackpack)
 			{
-				player.Out.SendMessage("You can only repair items in your backpack!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.IsAllowedToBeginWork.BackpackItems"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
 			eCraftingSkill skill = CraftingMgr.GetSecondaryCraftingSkillToWorkOnItem(item);
 			if (skill == eCraftingSkill.NoCrafting)
 			{
-				player.Out.SendMessage("You can't repair " + item.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.IsAllowedToBeginWork.CantRepair", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
 			if (player.IsCrafting)
 			{
-				player.Out.SendMessage("You must end your current action before you repair anything!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.IsAllowedToBeginWork.EndCurrentAction"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
 			if (item.Condition >= item.MaxCondition)
 			{
-				player.Out.SendMessage("The " + item.Name + " is fully repaired!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.IsAllowedToBeginWork.FullyRepaired", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
 			if (player.GetCraftingSkillValue(skill) < ((percentNeeded / 100) * CraftingMgr.GetItemCraftLevel(item)))
 			{
-				player.Out.SendMessage("You don't have enough skill to repair the " + item.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.IsAllowedToBeginWork.NotEnoughSkill", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
@@ -238,14 +239,14 @@ namespace DOL.GS
 			//chance with Woodworking 
 			if (player.IsMoving || player.IsStrafing)
 			{
-				player.Out.SendMessage("You move and stop to repair the " + siegeWeapon.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.BeginWork.StopRepair1", siegeWeapon.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 0;
 			}
 
-			player.Out.SendMessage("You begin repairing the " + siegeWeapon.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.BeginWork.BeginRepair", siegeWeapon.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			int workDuration = GetCraftingTime(player, siegeWeapon);
-			player.Out.SendTimerWindow("Repairing: " + siegeWeapon.Name, workDuration);
+			player.Out.SendTimerWindow(LanguageMgr.GetTranslation(player.Client, "Repair.BeginWork.Repairing", siegeWeapon.Name), workDuration);
 			player.CraftTimer = new RegionTimer(player);
 			player.CraftTimer.Callback = new RegionTimerCallback(ProceedSiegeWeapon);
 			player.CraftTimer.Properties.setProperty(PLAYER_CRAFTER, player);
@@ -272,14 +273,14 @@ namespace DOL.GS
 			}
 			if (!Util.Chance(CalculateSuccessChances(player, siegeWeapon)))
 			{
-				player.Out.SendMessage("You fail to repair the " + siegeWeapon.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.ProceedSiegeWeapon.FailRepair", siegeWeapon.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 0;
 			}
 			siegeWeapon.Health = siegeWeapon.MaxHealth;
 			player.CraftTimer.Stop();
 			player.Out.SendCloseTimerWindow();
 			player.Out.SendObjectUpdate(siegeWeapon);//not sure if good packet for update
-			player.Out.SendMessage("You have fully repaired the " + siegeWeapon.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.Proceed.FullyRepaired1", siegeWeapon.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return 0;
 		}
 		#endregion
@@ -297,19 +298,19 @@ namespace DOL.GS
 		{
 			if (player.GetCraftingSkillValue(eCraftingSkill.WeaponCrafting) < 301)
 			{
-				player.Out.SendMessage("You must be a weapon crafter to repair the siegeweapon.", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.IsAllowedToBeginWork.WeaponCrafter"), eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
 			if (player.IsCrafting)
 			{
-				player.Out.SendMessage("You must end your current action before you repair anything!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.IsAllowedToBeginWork.EndCurrentAction"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
 			if (siegeWeapon.Health >= siegeWeapon.MaxHealth)
 			{
-				player.Out.SendMessage("The " + siegeWeapon.Name + " is fully repaired!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.IsAllowedToBeginWork.FullyRepaired", siegeWeapon.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			return true;
