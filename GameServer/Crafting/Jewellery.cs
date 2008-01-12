@@ -37,7 +37,7 @@ namespace DOL.GS
 		public Jewellery()
 		{
 			Icon = 0x05;
-			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.Name.Jewelcraft");
+			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.Name.Jewelcraft");
 			eSkill = eCraftingSkill.Jewellery;
 		}
 
