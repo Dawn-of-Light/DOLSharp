@@ -37,7 +37,7 @@ namespace DOL.GS
 		public Alchemy()
 		{
 			Icon = 0x04;
-			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.Name.Alchemy");
+			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.Name.Alchemy");
 			eSkill = eCraftingSkill.Alchemy;
 		}
 
@@ -58,12 +58,12 @@ namespace DOL.GS
 			{
 				if(item == null || item.Object_Type != 0) continue;
 
-				if (item.Name == LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.AlchemyKit"))
+				if (item.Name == LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.AlchemyKit"))
 				{
 					if((flags & 0x01) == 0) flags |= 0x01;
 					if(flags >= 0x03) break;
 				}
-				else if (item.Name == LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.MortarAndPestle"))
+				else if (item.Name == LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.MortarAndPestle"))
 				{
 					if((flags & 0x02) == 0) flags |= 0x02;
 					if(flags >= 0x03) break;
@@ -75,14 +75,14 @@ namespace DOL.GS
 				if((flags & 0x01) == 0)
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					player.Out.SendMessage("You must find a alchemy kit!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindAlchemyKit"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 
 				if((flags & 0x02) == 0)
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					player.Out.SendMessage("You must find a mortar and pestle!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindMortarPestle"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 			}
@@ -103,7 +103,7 @@ namespace DOL.GS
 			{
 				if(player.GetCraftingSkillValue(eCraftingSkill.Alchemy)%100 == 99)
 				{
-					player.Out.SendMessage("You must see your trainer to raise your Alchemy further!",eChatType.CT_Important,eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.GainCraftingSkillPoints.RaiseAlchemy"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					return;
 				}
 			}
@@ -153,19 +153,19 @@ namespace DOL.GS
 			
 			if(((InventoryItem)player.TradeWindow.TradeItems[0]).Object_Type != (int)eObjectType.AlchemyTincture)
 			{
-				player.Out.SendMessage("You can only combine alchemy tinctures!",PacketHandler.eChatType.CT_System,PacketHandler.eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Alchemy.IsAllowedToCombine.AlchemyTinctures"), PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
 			if(player.TradeWindow.ItemsCount > 1)
 			{
-				player.Out.SendMessage("You can only combine one tincture on one item!",PacketHandler.eChatType.CT_System,PacketHandler.eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Alchemy.IsAllowedToCombine.OneTincture"), PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
 			if(item.ProcSpellID != 0 || item.SpellID != 0)
 			{
-				player.Out.SendMessage("The "+item.Name+" is already imbued with a magical effect!",PacketHandler.eChatType.CT_System,PacketHandler.eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Alchemy.IsAllowedToCombine.AlreadyImbued", item.Name), PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
 				return false;
 			}
 

@@ -37,7 +37,7 @@ namespace DOL.GS
 		public HerbalCrafting()
 		{
 			Icon = 0x0A;
-			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.Name.Herbcrafting");
+			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.Name.Herbcrafting");
 			eSkill = eCraftingSkill.HerbalCrafting;
 		}
 
