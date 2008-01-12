@@ -37,7 +37,7 @@ namespace DOL.GS
 		public ClothWorking()
 		{
 			Icon = 0x08;
-			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.Name.Clothworking");
+			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.Name.Clothworking");
 			eSkill = eCraftingSkill.ClothWorking;
 		}
 
@@ -49,10 +49,10 @@ namespace DOL.GS
 		/// <returns>true if the player hold all needed tools</returns>
 		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
-			if (player.Inventory.GetFirstItemByName(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.SewingKit"), eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null)
+			if (player.Inventory.GetFirstItemByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.SewingKit"), eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null)
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.FindSewingKit"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindSewingKit"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 

@@ -50,7 +50,7 @@ namespace DOL.GS
 			}
 
 			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.FindAlchemyTable"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.CheckTool.FindAlchemyTable"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			
 			return false;
 		}
@@ -95,7 +95,7 @@ namespace DOL.GS
 		{
 			if(player.TradeWindow.PartnerTradeItems == null || player.TradeWindow.PartnerItemsCount != 1)
 			{
-				player.Out.SendMessage("You can only combine your items into one item!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AdvancedCraftingSkill.CombineItems.OnlyCombine"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
@@ -123,19 +123,19 @@ namespace DOL.GS
 			
 			if(player.TradeWindow.ItemsCount <= 0)
 			{
-				player.Out.SendMessage("You need something to imbue "+item.Name+" with!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AdvancedCraftingSkill.IsAllowedToCombine.Imbue", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;	
 			}
 
 			if(item.CrafterName == null || item.CrafterName == "")
 			{
-				player.Out.SendMessage("Only crafted items can be enchanted!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AdvancedCraftingSkill.IsAllowedToCombine.CraftedItems"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
 			if (!GlobalConstants.IsArmor(item.Object_Type) && !GlobalConstants.IsWeapon(item.Object_Type))
 			{
-				player.Out.SendMessage("This item can't be enchanted!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AdvancedCraftingSkill.IsAllowedToCombine.NoEnchanted"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;	
 			}
 

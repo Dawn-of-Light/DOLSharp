@@ -239,7 +239,7 @@ namespace DOL.GS
 			{
 				if (rawmaterial.ItemTemplate == null)
 				{
-					player.Out.SendMessage("Cannot find an item by the ID of " + rawmaterial.IngredientId_nb + " please report this!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.MakeItem.LoseNoMaterials", rawmaterial.IngredientId_nb), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					log.Error("Cannot find an item by the ID of " + rawmaterial.IngredientId_nb);
 					return false;
 				}
@@ -307,7 +307,7 @@ namespace DOL.GS
 					bool result = false;
 					if (rawmaterial.ItemTemplate == null)
 					{
-						player.Out.SendMessage("Cannot find an item by the ID of " + rawmaterial.IngredientId_nb + " please report this!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckRawMaterial.RawMaterial", rawmaterial.IngredientId_nb), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						log.Error("Cannot find an item by the ID of " + rawmaterial.IngredientId_nb);
 						return false;
 					}

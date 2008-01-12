@@ -90,7 +90,7 @@ namespace DOL.GS
 		public SpellCrafting()
 		{
 			Icon = 0x0D;
-			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.Name.Evocation");
+			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.Name.Evocation");
 			eSkill = eCraftingSkill.SpellCrafting;
 		}
 
@@ -106,10 +106,10 @@ namespace DOL.GS
 		{
 			if (!base.CheckTool(player, craftItemData)) return false;
 
-			if (player.Inventory.GetFirstItemByName(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.SpellcraftKit"), eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null)
+			if (player.Inventory.GetFirstItemByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.SpellcraftKit"), eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null)
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.FindSpellcraftKit"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindSpellcraftKit"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
@@ -181,7 +181,7 @@ namespace DOL.GS
 			{
 				if (item.Level < 15)
 				{
-					player.Out.SendMessage("This item can't be enchanted!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.IsAllowedToCombine.NoEnchanted"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 
@@ -191,7 +191,7 @@ namespace DOL.GS
 					{
 						if (materialToCombine.Model != 525)
 						{
-							player.Out.SendMessage(materialToCombine.Name + " can't be used to enchant a item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.IsAllowedToCombine.FalseMaterial", materialToCombine.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return false;
 						}
 					}
@@ -211,7 +211,7 @@ namespace DOL.GS
 							bonusToApply.Add(item.Bonus3Type);
 							if (item.Bonus4Type != 0)
 							{
-								player.Out.SendMessage("The " + item.Name + " is already imbued with 4 different types of magical properties!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.IsAllowedToCombine.AlreadyImbued", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return false;
 							}
 						}
@@ -226,19 +226,19 @@ namespace DOL.GS
 
 						if (currentItem.Object_Type != (int)eObjectType.SpellcraftGem)
 						{
-							player.Out.SendMessage("This item can't be used to Spellcraft!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.IsAllowedToCombine.FalseItem"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return false;
 						}
 
 						if (bonusToApply.Contains(currentItem.Bonus1Type))
 						{
-							player.Out.SendMessage("You can't put the same bonus on an item multiple times!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.IsAllowedToCombine.NoSameBonus"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return false;
 						}
 
 						if (bonusToApply.Count >= 4)
 						{
-							player.Out.SendMessage("The " + item.Name + " can only be imbued with 4 different types of magical properties!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.IsAllowedToCombine.DifferentTypes", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return false;
 						}
 
@@ -249,13 +249,13 @@ namespace DOL.GS
 				int bonusLevel = GetTotalImbuePoints(player, item);
 				if (bonusLevel > player.GetCraftingSkillValue(eCraftingSkill.SpellCrafting) / 20)
 				{
-					player.Out.SendMessage("You have not enough skill to imbue that much!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.IsAllowedToCombine.NotEnoughSkill"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 
 				if (bonusLevel - GetItemMaxImbuePoints(item) > 5)
 				{
-					player.Out.SendMessage("You can't overcharge your " + item.Name + " more than 5 levels!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.IsAllowedToCombine.NoMoreLevels", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 			}
@@ -403,13 +403,13 @@ namespace DOL.GS
 
 				if (tradePartner != null)
 				{
-					tradePartner.Out.SendMessage(player.Name + " imbued 1 item.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					tradePartner.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ApplySpellcraftGems.ImbuedItem", player.Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				}
-				player.Out.SendMessage(player.Name + " imbued 1 item.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ApplySpellcraftGems.ImbuedItem", player.Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 			else if (Util.Chance(destroyChance))
 			{
-				player.Out.SendMessage("The power of the enchantments explodes before your eyes!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ApplySpellcraftGems.PowerExplodes"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 				lock (player.TradeWindow.Sync)
 				{
@@ -432,7 +432,7 @@ namespace DOL.GS
 
 				player.Emote(eEmote.SpellGoBoom);
 				player.Die(player); // On official you take damages
-				player.Out.SendMessage("Spellcraft failed!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ApplySpellcraftGems.Failed"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 				if (tradePartner != null)
 				{
@@ -441,15 +441,15 @@ namespace DOL.GS
 						tradePartner.Emote(eEmote.SpellGoBoom);
 						tradePartner.Die(player);
 					}
-					tradePartner.Out.SendMessage("Spellcraft failed!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					tradePartner.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ApplySpellcraftGems.Failed"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				}
 			}
 			else
 			{
-				player.Out.SendMessage("Spellcraft failed!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ApplySpellcraftGems.Failed"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				if (tradePartner != null)
 				{
-					tradePartner.Out.SendMessage("Spellcraft failed!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					tradePartner.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ApplySpellcraftGems.Failed"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				}
 			}
 		}
@@ -472,8 +472,8 @@ namespace DOL.GS
 			int totalItemCharges = GetItemMaxImbuePoints(item);
 			int totalGemmesCharges = GetTotalImbuePoints(player, item);
 
-			spellcraftInfos.Add("Spellcrafting the " + item.Name + " (" + totalItemCharges + " total imbue points)");
-			spellcraftInfos.Add("Bonus currently on the " + item.Name + " :");
+			spellcraftInfos.Add(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ShowSpellCraftingInfos.TotalImbue", item.Name, totalItemCharges));
+			spellcraftInfos.Add(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ShowSpellCraftingInfos.CurrentBonus", item.Name));
 			if (item.Bonus1Type != 0)
 			{
 				spellcraftInfos.Add("\t" + SkillBase.GetPropertyName((eProperty)item.Bonus1Type) + ": " + item.Bonus1 + " " + ((item.Bonus1Type >= (int)eProperty.Resist_First && item.Bonus1Type <= (int)eProperty.Resist_Last) ? "%" : " pts"));
@@ -490,7 +490,7 @@ namespace DOL.GS
 					}
 				}
 			}
-			spellcraftInfos.Add("Gem Bonuses:");
+			spellcraftInfos.Add(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ShowSpellCraftingInfos.GemBonuses"));
 			lock (player.TradeWindow.Sync)
 			{
 				for (int i = 0; i < player.TradeWindow.ItemsCount; i++)
@@ -499,15 +499,18 @@ namespace DOL.GS
 					spellcraftInfos.Add("\t" + currentGem.Name + " - " + SkillBase.GetPropertyName((eProperty)currentGem.Bonus1Type) + ": (" + GetGemImbuePoints(currentGem.Bonus1Type, currentGem.Bonus1) + ") " + currentGem.Bonus1 + " " + ((currentGem.Bonus1Type >= (int)eProperty.Resist_First && currentGem.Bonus1Type <= (int)eProperty.Resist_Last) ? "%" : "pts"));
 				}
 			}
-			spellcraftInfos.Add("Used " + totalGemmesCharges + " of " + totalItemCharges + " imbue point capacity.");
+			spellcraftInfos.Add(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ShowSpellCraftingInfos.ImbueCapacity", totalGemmesCharges, totalItemCharges));
 
 			if (totalGemmesCharges > totalItemCharges)
 			{
 				int maxBonusLevel = GetItemMaxImbuePoints(item);
 				int bonusLevel = GetTotalImbuePoints(player, item);
-				spellcraftInfos.Add("\t" + GetOverchargePenality(totalItemCharges, totalGemmesCharges) + " overcharge penality");
-				spellcraftInfos.Add("\t" + CalculateChanceToOverchargeItem(player, item, maxBonusLevel, bonusLevel) + "% overcharge success.");
-				spellcraftInfos.Add("\t" + (100 - CalculateChanceToPreserveItem(player, item, maxBonusLevel, bonusLevel)) + "% of losing item during SC.");
+				spellcraftInfos.Add("\t");
+				spellcraftInfos.Add(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ShowSpellCraftingInfos.Penality", GetOverchargePenality(totalItemCharges, totalGemmesCharges)));
+				spellcraftInfos.Add("\t");
+				spellcraftInfos.Add(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ShowSpellCraftingInfos.Success", CalculateChanceToOverchargeItem(player, item, maxBonusLevel, bonusLevel)));
+				spellcraftInfos.Add("\t");
+				spellcraftInfos.Add(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ShowSpellCraftingInfos.Losing", (100 - CalculateChanceToPreserveItem(player, item, maxBonusLevel, bonusLevel))));
 			}
 
 			GamePlayer partner = player.TradeWindow.Partner;
@@ -519,7 +522,7 @@ namespace DOL.GS
 
 			if (totalGemmesCharges > totalItemCharges)
 			{
-				player.Out.SendMessage("(This penality is further modified by item quality and your skill!)", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ShowSpellCraftingInfos.Modified"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 		}
 
