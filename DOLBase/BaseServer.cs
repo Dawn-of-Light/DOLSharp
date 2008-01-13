@@ -463,12 +463,21 @@ namespace DOL
 			try
 			{
 				client.OnDisconnect();
-				client.CloseConnections();
 			}
 			catch(Exception e)
 			{
 				if(log.IsErrorEnabled)
-					log.Error("Exception",e);
+					log.Error("Exception", e);
+			}
+
+			try
+			{
+				client.CloseConnections();
+			}
+			catch (Exception e)
+			{
+				if (log.IsErrorEnabled)
+					log.Error("Exception", e);
 			}
 			return true;
 		}

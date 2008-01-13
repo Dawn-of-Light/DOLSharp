@@ -45,8 +45,12 @@ namespace DOL.GS.GameEvents
 		private static long m_lastPacketsOut = 0;
 		private static long m_lastMeasureTick = DateTime.Now.Ticks;
 		private static int m_statFrequency = 30000; // 30s
+
 		private static PerformanceCounter m_systemCpuUsedCounter;
 		private static PerformanceCounter m_processCpuUsedCounter;
+		private static PerformanceCounter m_memoryPages;
+		private static PerformanceCounter m_physycalDisk;
+
 		private static Hashtable m_timerStatsByMgr;
 
 		[GameServerStartedEvent]
@@ -56,28 +60,12 @@ namespace DOL.GS.GameEvents
 			{
 				m_timerStatsByMgr = new Hashtable();
 				m_timer = new Timer(new TimerCallback(PrintStats), null, 10000, 0);
-				try
-				{
-					m_systemCpuUsedCounter = new PerformanceCounter("Processor", "% processor time", "_total");
-					m_systemCpuUsedCounter.NextValue();
-				}
-				catch (Exception ex)
-				{
-					m_systemCpuUsedCounter = null;
-					if (log.IsWarnEnabled)
-						log.Warn(ex.GetType().Name + " SystemCpuUsedCounter won't be available: " + ex.Message);
-				}
-				try
-				{
-					m_processCpuUsedCounter = new PerformanceCounter("Process", "% processor time", GetProcessCounterName());
-					m_processCpuUsedCounter.NextValue();
-				}
-				catch (Exception ex)
-				{
-					m_processCpuUsedCounter = null;
-					if (log.IsWarnEnabled)
-						log.Warn(ex.GetType().Name + " ProcessCpuUsedCounter won't be available: " + ex.Message);
-				}
+
+				// Create performance counters
+				m_systemCpuUsedCounter	= CreatePerformanceCounter("Processor",				"% processor time",		"_total");
+				m_processCpuUsedCounter	= CreatePerformanceCounter("Process",				"% processor time",		GetProcessCounterName());
+				m_memoryPages			= CreatePerformanceCounter("Memory",				"Pages/sec",			null);
+				m_physycalDisk			= CreatePerformanceCounter("PhysicalDisk",			"Disk Transfers/sec",	"_Total");
 			}
 		}
 		
@@ -110,16 +98,12 @@ namespace DOL.GS.GameEvents
 					m_timer.Dispose();
 					m_timer = null;
 				}
-				if (m_systemCpuUsedCounter != null)
-				{
-					m_systemCpuUsedCounter.Close();
-					m_systemCpuUsedCounter = null;
-				}
-				if (m_processCpuUsedCounter != null)
-				{
-					m_processCpuUsedCounter.Close();
-					m_processCpuUsedCounter = null;
-				}
+
+				// Release performance counters
+				ReleasePerformanceCounter(ref m_systemCpuUsedCounter);
+				ReleasePerformanceCounter(ref m_processCpuUsedCounter);
+				ReleasePerformanceCounter(ref m_memoryPages);
+				ReleasePerformanceCounter(ref m_physycalDisk);
 			}
 		}
 
@@ -194,6 +178,10 @@ namespace DOL.GS.GameEvents
 						stats.Append("  CPU=").Append(m_systemCpuUsedCounter.NextValue().ToString("0.0")).Append('%');
 					if (m_processCpuUsedCounter != null)
 						stats.Append("  DOL=").Append(m_processCpuUsedCounter.NextValue().ToString("0.0")).Append('%');
+					if (m_memoryPages != null)
+						stats.Append("  pg/s=").Append(m_memoryPages.NextValue().ToString("0.0"));
+					if (m_physycalDisk != null)
+						stats.Append("  dsk/s=").Append(m_physycalDisk.NextValue().ToString("0.0"));
 
 					log.Info(stats);
 				}
@@ -241,6 +229,44 @@ namespace DOL.GS.GameEvents
 		{
 			public long InvokedCount;
 			public long Time = -1;
+		}
+
+		/// <summary>
+		/// Creates the performance counter.
+		/// </summary>
+		/// <param name="categoryName">Name of the category.</param>
+		/// <param name="counterName">Name of the counter.</param>
+		/// <param name="instanceName">Name of the instance.</param>
+		/// <returns></returns>
+		private static PerformanceCounter CreatePerformanceCounter(string categoryName, string counterName, string instanceName)
+		{
+			PerformanceCounter ret = null;
+			try
+			{
+				ret = new PerformanceCounter(categoryName, counterName, instanceName);
+				ret.NextValue();
+			}
+			catch (Exception ex)
+			{
+				ret = null;
+				if (log.IsWarnEnabled)
+					log.Warn(ex.GetType().Name + " '" + categoryName + "/" + counterName + "' counter won't be available: " + ex.Message);
+			}
+
+			return ret;
+		}
+
+		/// <summary>
+		/// Releases the performance counter.
+		/// </summary>
+		/// <param name="performanceCounter">The performance counter.</param>
+		private static void ReleasePerformanceCounter(ref PerformanceCounter performanceCounter)
+		{
+			if (performanceCounter != null)
+			{
+				performanceCounter.Close();
+				performanceCounter = null;
+			}
 		}
 	}
 }

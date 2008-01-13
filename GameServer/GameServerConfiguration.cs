@@ -365,12 +365,17 @@ namespace DOL.GS
 			m_autoSave = true;
 			m_saveInterval = 10;
 			m_maxClientCount = 500;
-			
-			try
+
+			// Get count of CPUs
+			m_cpuCount = Environment.ProcessorCount;
+			if (m_cpuCount < 1)
 			{
-				m_cpuCount = int.Parse(Environment.GetEnvironmentVariable("NUMBER_OF_PROCESSORS"));
+				try
+				{
+					m_cpuCount = int.Parse(Environment.GetEnvironmentVariable("NUMBER_OF_PROCESSORS"));
+				}
+				catch { m_cpuCount = -1; }
 			}
-			catch { m_cpuCount = -1; }
 			if (m_cpuCount < 1)
 				m_cpuCount = 1;
 		}
