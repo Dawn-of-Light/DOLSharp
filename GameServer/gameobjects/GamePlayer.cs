@@ -380,16 +380,22 @@ namespace DOL.GS
 		protected int LinkdeathTimerCallback(RegionTimer callingTimer)
 		{
 			//If we died during our callback time we release
-			if (!IsAlive)
+			try
 			{
-				Release(m_releaseType, true);
-				if (log.IsInfoEnabled)
-					log.Info("Linkdead player " + Name + "(" + Client.Account.Name + ") was auto-released from death!");
+				if (!IsAlive)
+				{
+					Release(m_releaseType, true);
+					if (log.IsInfoEnabled)
+						log.Info("Linkdead player " + Name + "(" + Client.Account.Name + ") was auto-released from death!");
+				}
+
+				SaveIntoDatabase();
+			}
+			finally
+			{
+				Client.Quit();
 			}
 
-			SaveIntoDatabase();
-
-			Client.Quit();
 			return 0;
 		}
 
