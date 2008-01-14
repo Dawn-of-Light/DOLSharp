@@ -3735,8 +3735,6 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 				GameServer.ServerRules.OnLivingKilled(this, killer);
 			}
 
-			Notify(GameLivingEvent.Dying, this, new DyingEventArgs(killer));
-
 			//Stop attacks
 			StopAttack();
 
@@ -3764,6 +3762,9 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 
 			//Reduce health to zero
 			Health = 0;
+
+			//Let's send the notification at the end
+			Notify(GameLivingEvent.Dying, this, new DyingEventArgs(killer));
 		}
 
 		/// <summary>
@@ -5751,80 +5752,6 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// </summary>
 		/// <param name="controlledNpc"></param>
 		public virtual void SetControlledNpc(IControlledBrain controlledNpc)
-		{
-		}
-
-		/// <summary>
-		/// Checks if player controls a brain and send any needed messages
-		/// </summary>
-		/// <param name="npc">The Npc from local var to avoid changes but other threads</param>
-		/// <returns>success</returns>
-		protected bool CheckControlledNpc(IControlledBrain npc)
-		{
-			return npc != null;
-		}
-
-		/// <summary>
-		/// Commands controlled object to attack
-		/// </summary>
-		public virtual void CommandNpcAttack()
-		{
-		}
-
-		/// <summary>
-		/// Releases controlled object
-		/// </summary>
-		public virtual void CommandNpcRelease()
-		{
-			//TODO: implement this for .Stop() on ControlledNpc
-		}
-
-		/// <summary>
-		/// Commands controlled object to follow
-		/// </summary>
-		public virtual void CommandNpcFollow()
-		{
-		}
-
-		/// <summary>
-		/// Commands controlled object to stay where it is
-		/// </summary>
-		public virtual void CommandNpcStay()
-		{
-		}
-
-		/// <summary>
-		/// Commands controlled object to go to players location
-		/// </summary>
-		public virtual void CommandNpcComeHere()
-		{
-		}
-
-		/// <summary>
-		/// Commands controlled object to go to target
-		/// </summary>
-		public virtual void CommandNpcGoTarget()
-		{
-		}
-
-		/// <summary>
-		/// Changes controlled object state to passive
-		/// </summary>
-		public virtual void CommandNpcPassive()
-		{
-		}
-
-		/// <summary>
-		/// Changes controlled object state to aggressive
-		/// </summary>
-		public virtual void CommandNpcAgressive()
-		{
-		}
-
-		/// <summary>
-		/// Changes controlled object state to defensive
-		/// </summary>
-		public virtual void CommandNpcDefensive()
 		{
 		}
 

@@ -55,6 +55,14 @@ namespace DOL.AI.Brain
 		}
 
 		/// <summary>
+		/// Doesn't do anything for us here
+		/// </summary>
+		/// <param name="state"></param>
+		public void SetAggressionState(eAggressionState state)
+		{
+		}
+
+		/// <summary>
 		/// Receives all messages of the body.
 		/// </summary>
 		/// <param name="e"></param>

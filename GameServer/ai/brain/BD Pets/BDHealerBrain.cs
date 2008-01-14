@@ -47,14 +47,6 @@ namespace DOL.AI.Brain
 		/// <param name="owner"></param>
 		public BDHealerBrain(GameLiving owner) : base(owner) { }
 
-		/// <summary>
-		/// The interval for thinking, 1.5 seconds
-		/// </summary>
-		public override int ThinkInterval
-		{
-			get { return 1500; }
-		}
-
 		#region Control
 
 		/// <summary>
@@ -75,17 +67,6 @@ namespace DOL.AI.Brain
 		#endregion
 
 		#region AI
-
-		/// <summary>
-		/// Do the mob AI
-		/// </summary>
-		public override void Think()
-		{
-			base.Think();
-
-			//Check for buffs, heals, etc
-			CheckSpells(eCheckSpellType.Defensive);
-		}
 
 		/// <summary>
 		/// Checks the Abilities
