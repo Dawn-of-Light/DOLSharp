@@ -1274,11 +1274,11 @@
     <Compile Include="realmabilities\handlers\WildMinionAbility.cs" />
     <Compile Include="realmabilities\handlers\LifterAbility.cs" />
     <Compile Include="realmabilities\handlers\VeilRecoveryAbility.cs" />
-    <Compile Include="Relic.cs" />
-    <Compile Include="RelicGate.cs" />
-    <Compile Include="RelicMgr.cs" />
-    <Compile Include="RelicPad.cs" />
-    <Compile Include="RelicPillar.cs" />
+    <Compile Include="relics\Relic.cs" />
+    <Compile Include="relics\RelicGate.cs" />
+    <Compile Include="relics\RelicMgr.cs" />
+    <Compile Include="relics\RelicPad.cs" />
+    <Compile Include="relics\RelicPillar.cs" />
     <Compile Include="serverrules\DemonsBreachJumpPoint.cs" />
     <Compile Include="serverrules\TaskDungeonJumpPoint.cs" />
     <Compile Include="skillhandler\BodyguardAbilityHandler.cs" />
@@ -2414,9 +2414,6 @@
     <Content Include="language\Language-ES.txt" />
     <Content Include="language\Language-FR.txt" />
     <Content Include="language\Language-IT.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="NewFolder1\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
