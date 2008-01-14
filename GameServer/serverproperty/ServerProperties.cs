@@ -524,6 +524,12 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("slash_level_requirement", "What level should you have on your account be able to use /level?", 50)]
 		public static readonly int SLASH_LEVEL_REQUIREMENT;
 
+		/// <summary>
+		/// How many players are required on the relic pad to trigger the pillar?
+		/// </summary>
+		[ServerProperty("relic_players_required_on_pad", "How many players are required on the relic pad to trigger the pillar?", 16)]
+		public static readonly int RELIC_PLAYERS_REQUIRED_ON_PAD;
+
         /// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
