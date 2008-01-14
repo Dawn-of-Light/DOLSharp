@@ -11400,6 +11400,7 @@ namespace DOL.GS
 			if (controlledNpc == null)
 			{
 				Out.SendPetWindow(null, ePetWindowAction.Close, 0, 0);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SetControlledNpc.ReleaseTarget2", ControlledNpc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SetControlledNpc.ReleaseTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
@@ -11416,18 +11417,13 @@ namespace DOL.GS
 		/// <summary>
 		/// Commands controlled object to attack
 		/// </summary>
-		public override void CommandNpcAttack()
+		public virtual void CommandNpcAttack()
 		{
 			IControlledBrain npc = ControlledNpc;
-			if (!CheckControlledNpc(npc))
+			if (npc == null || npc.Body.IsConfused || !GameServer.ServerRules.IsAllowedToAttack(this, TargetObject as GameLiving, false))
 				return;
 
-			if (npc.Body.IsConfused) return;
-
-			GameLiving target = TargetObject as GameLiving;
-			if (!GameServer.ServerRules.IsAllowedToAttack(this, target, false))
-				return;
-			if (WorldMgr.GetDistance(target, this) > 1500)
+			if (WorldMgr.GetDistance(TargetObject, this) > 1500)
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.TooFarAwayForPet"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -11441,136 +11437,77 @@ namespace DOL.GS
 
 			Out.SendMessage("You command " + npc.Body.GetName(0, false) + " to kill your target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.Attack(TargetObject);
-
-			//Check for any abilities
-			if (npc is ControlledNpc)
-			{
-				((ControlledNpc)npc).CheckAbilities();
-			}
-
-			//If this pet controls any minions, have them attack!
-			if (npc.Body.ControlledNpcList != null)
-			{
-				foreach (IControlledBrain icb in npc.Body.ControlledNpcList)
-				{
-					if (icb != null)
-					{
-						icb.Body.TargetObject = TargetObject;
-						icb.Body.CommandNpcAttack();
-						if (icb is ControlledNpc)
-							((ControlledNpc)icb).CheckAbilities();
-					}
-				}
-			}
 		}
 
 		/// <summary>
 		/// Releases controlled object
 		/// </summary>
-		public override void CommandNpcRelease()
+		public virtual void CommandNpcRelease()
 		{
 			IControlledBrain npc = ControlledNpc;
-			if (!CheckControlledNpc(npc))
+			if (npc == null)
 				return;
-			GameObject target = TargetObject;
-			if (target is GameNPC && ((GameNPC)target).Brain is BDPetBrain && ControlledNpc.Body.ControlledNpcList != null)
+			BDPet subpet = TargetObject as BDPet;
+			if (subpet != null && subpet.Brain is BDPetBrain && ControlledNpc is CommanderBrain && (ControlledNpc as CommanderBrain).FindPet(subpet.Brain as IControlledBrain))
 			{
-				//Notify(GameLivingEvent.Dying, target, null);
-				(target as GameNPC).CommandNpcRelease();
+				Notify(GameLivingEvent.PetReleased, subpet);
 				return;
 			}
-
-			if (npc.Body.ControlledNpcList != null)
-			{
-				//release minions
-				foreach (IControlledBrain icb in npc.Body.ControlledNpcList)
-				{
-					if (icb != null)
-						icb.Body.CommandNpcRelease();
-				}
-			}
-			Notify(GamePlayerEvent.CommandNpcRelease, this);
+			Notify(GameLivingEvent.PetReleased, ControlledNpc.Body);
 		}
 
 		/// <summary>
 		/// Commands controlled object to follow
 		/// </summary>
-		public override void CommandNpcFollow()
+		public virtual void CommandNpcFollow()
 		{
 			IControlledBrain npc = ControlledNpc;
-			if (!CheckControlledNpc(npc))
+			if (npc == null)
 				return;
 
 			if (npc.Body.IsConfused) return;
 
 			Out.SendMessage("You command " + npc.Body.GetName(0, false) + " to follow you!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.Follow(this);
-
-			if (npc.Body.ControlledNpcList != null)
-			{
-				foreach (IControlledBrain icb in npc.Body.ControlledNpcList)
-				{
-					if (icb != null)
-						icb.Body.CommandNpcFollow();
-				}
-			}
 		}
 
 		/// <summary>
 		/// Commands controlled object to stay where it is
 		/// </summary>
-		public override void CommandNpcStay()
+		public virtual void CommandNpcStay()
 		{
 			IControlledBrain npc = ControlledNpc;
-			if (!CheckControlledNpc(npc))
+			if (npc == null)
 				return;
 
 			if (npc.Body.IsConfused) return;
 
 			Out.SendMessage("You command " + npc.Body.GetName(0, false) + " to stay in this position!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.Stay();
-
-			if (npc.Body.ControlledNpcList != null)
-			{
-				foreach (IControlledBrain icb in npc.Body.ControlledNpcList)
-				{
-					if (icb != null)
-						icb.Body.CommandNpcStay();
-				}
-			}
 		}
 
 		/// <summary>
 		/// Commands controlled object to go to players location
 		/// </summary>
-		public override void CommandNpcComeHere()
+		public virtual void CommandNpcComeHere()
 		{
 			IControlledBrain npc = ControlledNpc;
-			if (!CheckControlledNpc(npc))
+			if (npc == null)
 				return;
 
 			if (npc.Body.IsConfused) return;
 
 			Out.SendMessage("You command " + npc.Body.GetName(0, false) + " to come to you.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.ComeHere();
-
-			if (npc.Body.ControlledNpcList != null)
-			{
-				foreach (IControlledBrain icb in npc.Body.ControlledNpcList)
-				{
-					if (icb != null)
-						icb.Body.CommandNpcComeHere();
-				}
-			}
 		}
 
 		/// <summary>
 		/// Commands controlled object to go to target
 		/// </summary>
-		public override void CommandNpcGoTarget()
+		public virtual void CommandNpcGoTarget()
 		{
 			IControlledBrain npc = ControlledNpc;
-			if (!CheckControlledNpc(npc))
+			if (npc == null)
 				return;
 
 			if (npc.Body.IsConfused) return;
@@ -11583,90 +11520,54 @@ namespace DOL.GS
 			}
 			Out.SendMessage("You command " + npc.Body.GetName(0, false) + " to go to your target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.Goto(target);
-
-			if (npc.Body.ControlledNpcList != null)
-			{
-				foreach (IControlledBrain icb in npc.Body.ControlledNpcList)
-				{
-					if (icb != null)
-						icb.Body.CommandNpcGoTarget();
-				}
-			}
 		}
 
 		/// <summary>
 		/// Changes controlled object state to passive
 		/// </summary>
-		public override void CommandNpcPassive()
+		public virtual void CommandNpcPassive()
 		{
 			IControlledBrain npc = ControlledNpc;
-			if (!CheckControlledNpc(npc))
+			if (npc == null)
 				return;
 
 			if (npc.Body.IsConfused) return;
 
 			Out.SendMessage("You command " + npc.Body.GetName(0, false) + " to disengage from combat!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			npc.AggressionState = eAggressionState.Passive;
+			npc.SetAggressionState(eAggressionState.Passive);
 			npc.Body.StopAttack();
 			npc.Body.StopCurrentSpellcast();
 			npc.Follow(this);
-
-			if (npc.Body.ControlledNpcList != null)
-			{
-				foreach (IControlledBrain icb in npc.Body.ControlledNpcList)
-				{
-					if (icb != null)
-						icb.Body.CommandNpcPassive();
-				}
-			}
 		}
 
 		/// <summary>
 		/// Changes controlled object state to aggressive
 		/// </summary>
-		public override void CommandNpcAgressive()
+		public virtual void CommandNpcAgressive()
 		{
 			IControlledBrain npc = ControlledNpc;
-			if (!CheckControlledNpc(npc))
+			if (npc == null)
 				return;
 
 			if (npc.Body.IsConfused) return;
 
 			Out.SendMessage("You command " + npc.Body.GetName(0, false) + " to attack all enemies!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			npc.AggressionState = eAggressionState.Aggressive;
-
-			if (npc.Body.ControlledNpcList != null)
-			{
-				foreach (IControlledBrain icb in npc.Body.ControlledNpcList)
-				{
-					if (icb != null)
-						icb.Body.CommandNpcAgressive();
-				}
-			}
+			npc.SetAggressionState(eAggressionState.Aggressive);
 		}
 
 		/// <summary>
 		/// Changes controlled object state to defensive
 		/// </summary>
-		public override void CommandNpcDefensive()
+		public virtual void CommandNpcDefensive()
 		{
 			IControlledBrain npc = ControlledNpc;
-			if (!CheckControlledNpc(npc))
+			if (npc == null)
 				return;
 
 			if (npc.Body.IsConfused) return;
 
 			Out.SendMessage("You command " + npc.Body.GetName(0, false) + " to defend you!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			npc.AggressionState = eAggressionState.Defensive;
-
-			if (npc.Body.ControlledNpcList != null)
-			{
-				foreach (IControlledBrain icb in npc.Body.ControlledNpcList)
-				{
-					if (icb != null)
-						icb.Body.CommandNpcDefensive();
-				}
-			}
+			npc.SetAggressionState(eAggressionState.Defensive);
 		}
 
 		/// <summary>

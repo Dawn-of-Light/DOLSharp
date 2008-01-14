@@ -424,7 +424,8 @@ GamePlayer.SendReceive.Afk:				{0} is currently AFK.
 GamePlayer.SendReceive.AfkMessage:			<AFK> {0} sends, "{1}"
 GamePlayer.Send.DontUnderstandYou:			{0} doesn't seem to understand you!
 GamePlayer.Send.YouSendTo:				You send, "{0}" to {1}.
-GamePlayer.SetControlledNpc.ReleaseTarget:		You release control of your controlled target.			
+GamePlayer.SetControlledNpc.ReleaseTarget:		You release control of your controlled target.
+GamePlayer.SetControlledNpc.ReleaseTarget2:		You lose control of the {0}.		
 GamePlayer.Shade.AlreadyShade:				You are already a shade!	
 GamePlayer.Shade.NoLongerShade:				You are no longer a shade!	
 GamePlayer.Sit.AlreadySitting:				You are already sitting!	

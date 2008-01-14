@@ -47,44 +47,7 @@ namespace DOL.AI.Brain
 		/// <param name="owner"></param>
 		public BDArcherBrain(GameLiving owner) : base(owner) { }
 
-		/// <summary>
-		/// The interval for thinking, 1.5 seconds
-		/// </summary>
-		public override int ThinkInterval
-		{
-			get { return 1500; }
-		}
-
 		#region AI
-
-		/// <summary>
-		/// Starts the brain thinking and resets the inactivity countdown
-		/// </summary>
-		/// <returns>true if started</returns>
-		public override bool Start()
-		{
-			if (!base.Start())
-				return false;
-
-			//Add a handler for the player is attacked
-			GameEventMgr.AddHandler(this.GetPlayerOwner(), GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnOwnerAttacked));
-			return true;
-		}
-
-		/// <summary>
-		/// Do the mob AI
-		/// </summary>
-		public override void Think()
-		{
-			base.Think();
-
-			if (AggressionState == eAggressionState.Aggressive)
-			{
-				CheckPlayerAggro();
-				CheckNPCAggro();
-				AttackMostWanted();
-			}
-		}
 
 		/// <summary>
 		/// No Abilities or spells
@@ -93,6 +56,12 @@ namespace DOL.AI.Brain
 		protected override bool CheckDefensiveSpells(Spell spell) { return false; }
 		protected override bool CheckOffensiveSpells(Spell spell) { return false; }
 		protected override bool CheckInstantSpells(Spell spell) { return false; }
+
+		public override void Attack(GameObject target)
+		{
+			Body.SwitchWeapon(GameLiving.eActiveWeaponSlot.Distance);
+			base.Attack(target);
+		}
 
 		#endregion
 	}

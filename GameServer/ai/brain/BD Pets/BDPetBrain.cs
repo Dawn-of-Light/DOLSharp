@@ -24,7 +24,12 @@ namespace DOL.AI.Brain
 {
 	public abstract class BDPetBrain : ControlledNpc
 	{
-		public BDPetBrain(GameLiving Owner) : base(Owner) { }
+		protected const int BASEFORMATIONDIST = 50;
+
+		public BDPetBrain(GameLiving Owner) : base(Owner)
+		{
+			IsMainPet = false;
+		}
 
 		/// <summary>
 		/// Find the player owner of the pets at the top of the tree
@@ -54,10 +59,7 @@ namespace DOL.AI.Brain
 		{
 			if (!base.Stop()) return false;
 
-			GameEventMgr.RemoveHandler(((IControlledBrain)((GameNPC)Owner).Brain).Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnOwnerAttacked));
-
-			if (IsActive && Body.IsAlive)
-				Body.CommandNpcRelease();
+			GameEventMgr.Notify(GameLivingEvent.PetReleased, Body);
 			return true;
 		}
 
@@ -79,7 +81,7 @@ namespace DOL.AI.Brain
 		/// <returns></returns>
 		public override bool CheckFormation(ref int x, ref int y, ref int z)
 		{
-			if (!Body.AttackState)
+			if (!Body.AttackState && Body.Attackers.Count == 0)
 			{
 				GameNPC commander = (GameNPC)Owner;
 				double heading = ((double)commander.Heading) / GameLiving.HEADING_CONST;
@@ -90,30 +92,30 @@ namespace DOL.AI.Brain
 				int par_slide = 0;
 				for (; i < commander.ControlledNpcList.Length; i++)
 				{
-					if (commander.ControlledMinion(i) == this)
+					if (commander.ControlledNpcList[i] == this)
 						break;
 				}
 				switch (commander.Formation)
 				{
 					case GameNPC.eFormationType.Triangle:
-						par_slide = 100;
-						perp_slide = 100;
+						par_slide = BASEFORMATIONDIST;
+						perp_slide = BASEFORMATIONDIST;
 						if (i != 0)
-							par_slide = 200;
+							par_slide = BASEFORMATIONDIST * 2;
 						break;
 					case GameNPC.eFormationType.Line:
-						par_slide = 100 * (i + 1);
+						par_slide = BASEFORMATIONDIST * (i + 1);
 						break;
 					case GameNPC.eFormationType.Protect:
 						switch (i)
 						{
 							case 0:
-								par_slide = -200;
+								par_slide = -BASEFORMATIONDIST * 2;
 								break;
 							case 1:
 							case 2:
-								par_slide = -100;
-								perp_slide = 100;
+								par_slide = -BASEFORMATIONDIST;
+								perp_slide = BASEFORMATIONDIST;
 								break;
 						}
 						break;
@@ -146,10 +148,18 @@ namespace DOL.AI.Brain
 		{
 			if (target == Owner)
 			{
-				Body.CommandNpcRelease();
+				GameEventMgr.Notify(GameLivingEvent.PetReleased, Body);
 				return;
 			}
 			FollowOwner();
+		}
+
+		/// <summary>
+		/// The interval for thinking, 1.5 seconds
+		/// </summary>
+		public override int ThinkInterval
+		{
+			get { return 1500; }
 		}
 
 		/// <summary>
@@ -168,15 +178,41 @@ namespace DOL.AI.Brain
 			//See if the pet is too far away, if so release it!
 			if (!WorldMgr.CheckDistance(Body, Owner, MAX_OWNER_FOLLOW_DIST))
 			{
-				//Remember, this works differently than a gameplayer's CommandNpcRelease().  Since npcs can control more than one
-				//pet we call the CommandNpcRelease() from the pet, not the pet's owner.
-				Body.CommandNpcRelease();
+				GameEventMgr.Notify(GameLivingEvent.PetReleased, Body);
 			}
 
-			if ((!Body.AttackState && !Body.IsCasting && !Body.InCombat) || AggressionState == eAggressionState.Passive)
+			if ((!Body.AttackState && !Body.IsCasting && !Body.InCombat && m_orderAttackTarget == null) || AggressionState == eAggressionState.Passive)
 			{
 				FollowOwner();
 			}
+
+			//Check for buffs, heals, etc
+			CheckSpells(eCheckSpellType.Defensive);
+
+			if (AggressionState == eAggressionState.Aggressive)
+			{
+				CheckPlayerAggro();
+				CheckNPCAggro();
+			}
+
+			if (AggressionState != eAggressionState.Passive)
+				AttackMostWanted();
+		}
+
+		public override void Attack(GameObject target)
+		{
+			base.Attack(target);
+			//Check for any abilities
+			CheckAbilities();
+		}
+
+		public override eWalkState WalkState
+		{
+			get
+			{
+				return eWalkState.Follow;
+			}
+			set	{ }
 		}
 	}
 }
