@@ -31,7 +31,8 @@ namespace DOL.Events
 		/// Constructs a new GamePlayer event
 		/// </summary>
 		/// <param name="name">the event name</param>
-		protected GamePlayerEvent(string name) : base(name)
+		protected GamePlayerEvent(string name)
+			: base(name)
 		{
 		}
 
@@ -94,25 +95,21 @@ namespace DOL.Events
 		/// </summary>
 		public static readonly GamePlayerEvent LevelUp = new GamePlayerEvent("GamePlayer.LevelUp");
 		/// <summary>
-		/// The CommandNpcRelease event is fired whenever the player commands to release controlled NPC
+		/// The AcceptQuest event is fired whenever the player accepts a quest offer generated via BaseQuestPart.AddAction(eActionType.OfferQuest)
 		/// </summary>
-		public static readonly GamePlayerEvent CommandNpcRelease = new GamePlayerEvent("GamePlayer.CommandNpcRelease");
+		public static readonly GamePlayerEvent AcceptQuest = new GamePlayerEvent("GamePlayer.AcceptQuest");
 		/// <summary>
-        /// The AcceptQuest event is fired whenever the player accepts a quest offer generated via BaseQuestPart.AddAction(eActionType.OfferQuest)
-        /// </summary>
-        public static readonly GamePlayerEvent AcceptQuest = new GamePlayerEvent("GamePlayer.AcceptQuest");
-        /// <summary>
-        /// The DeclineQuest event is fired whenever the player declines a quest offer generated via BaseQuestPart.AddAction(eActionType.OfferQuest)
-        /// </summary>
-        public static readonly GamePlayerEvent DeclineQuest = new GamePlayerEvent("GamePlayer.DeclineQuest");
-        /// <summary>
-        /// The ContinueQuest event is fired whenever the player continues a quest abort generated via BaseQuestPart.AddAction(eActionType.OfferQuestAbort)
-        /// </summary>
-        public static readonly GamePlayerEvent ContinueQuest = new GamePlayerEvent("GamePlayer.ContinueQuest");
-        /// <summary>
-        /// The AbortQuest event is fired whenever the player aborts a quest generated via BaseQuestPart.AddAction(eActionType.OfferQuestAbort)
-        /// </summary>
-        public static readonly GamePlayerEvent AbortQuest = new GamePlayerEvent("GamePlayer.AbortQuest");
+		/// The DeclineQuest event is fired whenever the player declines a quest offer generated via BaseQuestPart.AddAction(eActionType.OfferQuest)
+		/// </summary>
+		public static readonly GamePlayerEvent DeclineQuest = new GamePlayerEvent("GamePlayer.DeclineQuest");
+		/// <summary>
+		/// The ContinueQuest event is fired whenever the player continues a quest abort generated via BaseQuestPart.AddAction(eActionType.OfferQuestAbort)
+		/// </summary>
+		public static readonly GamePlayerEvent ContinueQuest = new GamePlayerEvent("GamePlayer.ContinueQuest");
+		/// <summary>
+		/// The AbortQuest event is fired whenever the player aborts a quest generated via BaseQuestPart.AddAction(eActionType.OfferQuestAbort)
+		/// </summary>
+		public static readonly GamePlayerEvent AbortQuest = new GamePlayerEvent("GamePlayer.AbortQuest");
 		/// <summary>
 		/// The UseAbility event is fired whenever the player uses ability
 		/// </summary>

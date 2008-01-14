@@ -220,7 +220,7 @@ namespace DOL.GS.Spells
                     npc.AddBrain(m_controlledBrain);
                     m_isBrainSet = true;
 
-                    GameEventMgr.AddHandler(player, GamePlayerEvent.CommandNpcRelease, new DOLEventHandler(ReleaseEventHandler));
+				GameEventMgr.AddHandler(npc, GameLivingEvent.PetReleased, new DOLEventHandler(ReleaseEventHandler));
                     //					GameEventMgr.AddHandler(npc, GameLivingEvent.Dying, new DOLEventHandler(ReleaseEventHandler)); // must be canceled by Die() method anyway, makes some problems with attackers list this way
                 }
 
@@ -259,7 +259,7 @@ namespace DOL.GS.Spells
         private void ReleaseEventHandler(DOLEvent e, object sender, EventArgs arguments)
         {
             IControlledBrain npc = null;
-            if (e == GamePlayerEvent.CommandNpcRelease)
+		  if (e == GameLivingEvent.PetReleased)
                 npc = ((GamePlayer)sender).ControlledNpc;
             else if (e == GameLivingEvent.Dying)
                 npc = ((GameNPC)sender).Brain as IControlledBrain;
@@ -297,7 +297,7 @@ namespace DOL.GS.Spells
             {
                 if (!noMessages) // no overwrite
                 {
-                    GameEventMgr.RemoveHandler(player, GamePlayerEvent.CommandNpcRelease, new DOLEventHandler(ReleaseEventHandler));
+				 GameEventMgr.RemoveHandler(npc, GameLivingEvent.PetReleased, new DOLEventHandler(ReleaseEventHandler));
                     //					GameEventMgr.RemoveHandler(npc, GameLivingEvent.Dying, new DOLEventHandler(ReleaseEventHandler));
 
                     player.SetControlledNpc(null);

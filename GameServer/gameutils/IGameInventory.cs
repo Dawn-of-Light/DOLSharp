@@ -22,8 +22,8 @@ namespace DOL.GS
 		HorseBarding      = 8, // Equipment, horse barding
 		Horse             = 9, // Equipment, horse
 
+		RightHandWeapon = 10,//Equipment, Visible
 		MinEquipable	  = 10,
-		RightHandWeapon   = 10,//Equipment, Visible
 		LeftHandWeapon    = 11,//Equipment, Visible
 		TwoHandWeapon     = 12,//Equipment, Visible
 		DistanceWeapon    = 13,//Equipment, Visible
