@@ -45,7 +45,7 @@ namespace DOL.GS
 
 		#region Pet Control
 
-		private String m_petName = "";
+		//private String m_petName = "";
 		private int m_savedPetHealthPercent = 0;
 
 		/// <summary>
@@ -54,18 +54,19 @@ namespace DOL.GS
 		/// <param name="controlledNpc"></param>
 		public override void SetControlledNpc(DOL.AI.Brain.IControlledBrain controlledNpc)
 		{
-			m_savedPetHealthPercent = (ControlledNpc != null) 
-				? (int) ControlledNpc.Body.HealthPercent : 0;
+			m_savedPetHealthPercent = (ControlledNpc != null)
+				? (int)ControlledNpc.Body.HealthPercent : 0;
 
 			base.SetControlledNpc(controlledNpc);
 			if (controlledNpc == null)
 			{
 				OnPetReleased();
-				Out.SendMessage(String.Format("You lose control of the {0}.", m_petName),
-					eChatType.CT_SpellExpires, eChatLoc.CL_SystemWindow);
+				//See GamePlayer.SetControlledNpc.ReleaseTarget2
+				//Out.SendMessage(String.Format("You lose control of the {0}.", m_petName),
+					//eChatType.CT_SpellExpires, eChatLoc.CL_SystemWindow);
 			}
-			else
-				m_petName = controlledNpc.Body.Name;
+			//else
+				//m_petName = controlledNpc.Body.Name;
 		}
 
 		/// <summary>
@@ -73,8 +74,8 @@ namespace DOL.GS
 		/// </summary>
 		public override void CommandNpcRelease()
 		{
-				m_savedPetHealthPercent = (ControlledNpc != null) 
-				? (int) ControlledNpc.Body.HealthPercent : 0;
+			m_savedPetHealthPercent = (ControlledNpc != null)
+			? (int)ControlledNpc.Body.HealthPercent : 0;
 
 			base.CommandNpcRelease();
 			OnPetReleased();
@@ -97,45 +98,45 @@ namespace DOL.GS
 		/// <param name="attackTarget"></param>
 		public override void StartAttack(GameObject attackTarget)
 		{
-            if (!IsShade)
-                base.StartAttack(attackTarget);
-            else
-                Out.SendMessage("You cannot enter combat while in shade form!",
-                    eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+			if (!IsShade)
+				base.StartAttack(attackTarget);
+			else
+				Out.SendMessage("You cannot enter combat while in shade form!",
+				    eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 		}
 
-        /// <summary>
-        /// If the pet is up, show the pet's health in the group window.
-        /// </summary>
-        public override byte HealthPercentGroupWindow
-        {
-            get
-            {
-                if (ControlledNpc == null)
-                    return base.HealthPercentGroupWindow;
-                return ControlledNpc.Body.HealthPercent;
-            }
-        }
+		/// <summary>
+		/// If the pet is up, show the pet's health in the group window.
+		/// </summary>
+		public override byte HealthPercentGroupWindow
+		{
+			get
+			{
+				if (ControlledNpc == null)
+					return base.HealthPercentGroupWindow;
+				return ControlledNpc.Body.HealthPercent;
+			}
+		}
 
-        /// <summary>
-        /// Set the tether timer if pet gets out of range or comes back into range.
-        /// </summary>
-        /// <param name="seconds"></param>
-        public void SetTetherTimer(int seconds)
-        {
-			NecromancerShadeEffect shadeEffect = 
+		/// <summary>
+		/// Set the tether timer if pet gets out of range or comes back into range.
+		/// </summary>
+		/// <param name="seconds"></param>
+		public void SetTetherTimer(int seconds)
+		{
+			NecromancerShadeEffect shadeEffect =
 				EffectList.GetOfType(typeof(NecromancerShadeEffect)) as NecromancerShadeEffect;
 
-            if (shadeEffect != null)
-            {
-                lock (shadeEffect)
-                    shadeEffect.SetTetherTimer(seconds);
-                ArrayList effectList = new ArrayList(1);
-                effectList.Add(shadeEffect);
-                int effectsCount = 1;
-                Out.SendUpdateIcons(effectList, ref effectsCount);
-            }
-        }
+			if (shadeEffect != null)
+			{
+				lock (shadeEffect)
+					shadeEffect.SetTetherTimer(seconds);
+				ArrayList effectList = new ArrayList(1);
+				effectList.Add(shadeEffect);
+				int effectsCount = 1;
+				Out.SendUpdateIcons(effectList, ref effectsCount);
+			}
+		}
 
 		/// <summary>
 		/// Create a necromancer shade effect for this player.

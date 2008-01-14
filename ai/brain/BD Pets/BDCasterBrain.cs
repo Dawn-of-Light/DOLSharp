@@ -47,43 +47,7 @@ namespace DOL.AI.Brain
 		/// <param name="owner"></param>
 		public BDCasterBrain(GameLiving owner) : base(owner) { }
 
-		/// <summary>
-		/// The interval for thinking, 1.5 seconds
-		/// </summary>
-		public override int ThinkInterval
-		{
-			get { return 1500; }
-		}
-
 		#region AI
-
-		/// <summary>
-		/// Starts the brain thinking and resets the inactivity countdown
-		/// </summary>
-		/// <returns>true if started</returns>
-		public override bool Start()
-		{
-			if (!base.Start()) return false;
-
-			GameEventMgr.AddHandler(((IControlledBrain)((GameNPC)Owner).Brain).Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnOwnerAttacked));
-
-			return true;
-		}
-
-		/// <summary>
-		/// Do the mob AI
-		/// </summary>
-		public override void Think()
-		{
-			base.Think();
-
-			if (AggressionState == eAggressionState.Aggressive)
-			{
-				CheckPlayerAggro();
-				CheckNPCAggro();
-				AttackMostWanted();
-			}
-		}
 
 		/// <summary>
 		/// Checks the Abilities

@@ -74,6 +74,7 @@ namespace DOL.AI.Brain
 		void Goto(GameObject target);
 		void UpdatePetWindow();
 		GamePlayer GetPlayerOwner();
+		void SetAggressionState(eAggressionState state);
 		bool IsMainPet { get; set; }
 	}
 }

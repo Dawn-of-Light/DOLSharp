@@ -155,7 +155,7 @@ namespace DOL.AI.Brain
 		/// <summary>
 		/// Gets or sets the walk state of the brain
 		/// </summary>
-		public eWalkState WalkState
+		public virtual eWalkState WalkState
 		{
 			get { return m_walkState; }
 			set
@@ -209,7 +209,7 @@ namespace DOL.AI.Brain
 		/// Follow the target on command
 		/// </summary>
 		/// <param name="target"></param>
-		public void Follow(GameObject target)
+		public virtual void Follow(GameObject target)
 		{
 			WalkState = eWalkState.Follow;
 			Body.Follow(target, MIN_OWNER_FOLLOW_DIST, MAX_OWNER_FOLLOW_DIST);
@@ -218,7 +218,7 @@ namespace DOL.AI.Brain
 		/// <summary>
 		/// Stay at current position on command
 		/// </summary>
-		public void Stay()
+		public virtual void Stay()
 		{
 			m_tempX = Body.X;
 			m_tempY = Body.Y;
@@ -230,7 +230,7 @@ namespace DOL.AI.Brain
 		/// <summary>
 		/// Go to owner on command
 		/// </summary>
-		public void ComeHere()
+		public virtual void ComeHere()
 		{
 			m_tempX = Body.X;
 			m_tempY = Body.Y;
@@ -244,7 +244,7 @@ namespace DOL.AI.Brain
 		/// Go to targets location on command
 		/// </summary>
 		/// <param name="target"></param>
-		public void Goto(GameObject target)
+		public virtual void Goto(GameObject target)
 		{
 			m_tempX = Body.X;
 			m_tempY = Body.Y;
@@ -252,6 +252,12 @@ namespace DOL.AI.Brain
 			WalkState = eWalkState.GoTarget;
 			Body.StopFollow();
 			Body.WalkTo(target, Body.MaxSpeed);
+		}
+
+		public virtual void SetAggressionState(eAggressionState state)
+		{
+			AggressionState = state;
+			UpdatePetWindow();
 		}
 
 		/// <summary>
@@ -310,8 +316,7 @@ namespace DOL.AI.Brain
 			if (!base.Stop()) return false;
 			GameEventMgr.RemoveHandler(Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnOwnerAttacked));
 
-			if (IsMainPet)
-				Owner.CommandNpcRelease();
+			GameEventMgr.Notify(GameLivingEvent.PetReleased, Body);
 			return true;
 		}
 
@@ -320,7 +325,6 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public override void Think()
 		{
-			//edit for BD
 			GamePlayer playerowner = GetPlayerOwner();
 			if (!playerowner.CurrentUpdateArray[Body.ObjectID - 1])
 			{
@@ -571,10 +575,7 @@ namespace DOL.AI.Brain
 		{
 			if (target == Owner)
 			{
-				if (Owner is GamePlayer)
-					Owner.CommandNpcRelease();
-				else
-					Body.CommandNpcRelease();
+				GameEventMgr.Notify(GameLivingEvent.PetReleased, Body);
 				return;
 			}
 

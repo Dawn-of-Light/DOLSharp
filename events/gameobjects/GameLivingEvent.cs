@@ -95,8 +95,8 @@ namespace DOL.Events
 		/// The GainRealmPoints event is fired whenever the living gains realm points
 		/// </summary>
 		public static readonly GameLivingEvent GainedRealmPoints = new GameLivingEvent("GameLiving.GainedRealmPoints");
-        public static readonly GameLivingEvent GainedBountyPoints = new GameLivingEvent("GameLiving.GainedBountyPoints");
-        /// <summary>
+		public static readonly GameLivingEvent GainedBountyPoints = new GameLivingEvent("GameLiving.GainedBountyPoints");
+		/// <summary>
 		/// The Dying event is fired just before the living died
 		/// </summary>
 		public static readonly GameLivingEvent Dying = new GameLivingEvent("GameLiving.Dying");
@@ -138,5 +138,9 @@ namespace DOL.Events
 		/// The HealthChanged event is fired whenever the GameLiving's health is changed
 		/// </summary>
 		public static readonly GameLivingEvent HealthChanged = new GameLivingEvent("GameLiving.HealthChanged");
+		/// <summary>
+		/// The PetReleased event is fired whenever the player commands to release controlled NPC
+		/// </summary>
+		public static readonly GameLivingEvent PetReleased = new GameLivingEvent("GamePlayer.PetReleased");
 	}
 }

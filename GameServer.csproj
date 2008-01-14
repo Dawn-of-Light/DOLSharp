@@ -112,6 +112,7 @@
     <Compile Include="ai\brain\BD Pets\BDHealerBrain.cs" />
     <Compile Include="ai\brain\BD Pets\BDMeleeBrain.cs" />
     <Compile Include="ai\brain\BD Pets\BDPetBrain.cs" />
+    <Compile Include="ai\brain\BD Pets\CommanderBrain.cs" />
     <Compile Include="ai\brain\BlankBrain.cs" />
     <Compile Include="ai\brain\ControlledNpc.cs">
       <SubType>Code</SubType>
@@ -626,6 +627,9 @@
     <Compile Include="gameobjects\Atlantis\Arbiter.cs" />
     <Compile Include="gameobjects\Atlantis\ArtifactScholar.cs" />
     <Compile Include="gameobjects\Atlantis\HeadScholar.cs" />
+    <Compile Include="gameobjects\Bonedancer\BDPet.cs" />
+    <Compile Include="gameobjects\Bonedancer\BDSubPet.cs" />
+    <Compile Include="gameobjects\Bonedancer\CommanderPet.cs" />
     <Compile Include="gameobjects\craft master\AlchemyMaster.cs" />
     <Compile Include="gameobjects\craft master\ArmorCraftingMaster.cs" />
     <Compile Include="gameobjects\craft master\FletchingMaster.cs" />
@@ -1950,6 +1954,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="spells\BomberSpellHandler.cs" />
+    <Compile Include="spells\Bonedancer\SummonCommanderPet.cs" />
     <Compile Include="spells\BuffShear.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -2010,7 +2015,7 @@
     <Compile Include="spells\SilenceSpellHandler.cs" />
     <Compile Include="spells\StyleDamageToPower.cs" />
     <Compile Include="spells\StyleTaunt.cs" />
-    <Compile Include="spells\SummonMinionHandler.cs" />
+    <Compile Include="spells\Bonedancer\SummonMinionHandler.cs" />
     <Compile Include="spells\TurretSpellHandler.cs" />
     <Compile Include="spells\Teleport\UniPortal.cs" />
     <Compile Include="spells\Valkyrie\ValkyrieProc.cs" />

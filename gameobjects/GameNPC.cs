@@ -1300,6 +1300,8 @@ namespace DOL.GS
 			//			string targName = followTarget==null ? "(null)" : followTarget.Name;
 			//			log.Debug(this.Name+": Follow("+targName+","+minDistance+","+maxDistance+")");
 			//First stop the active timer
+			//System.Diagnostics.StackTrace st = new System.Diagnostics.StackTrace();
+			//log.Debug(st);
 			if (m_followTimer.IsAlive)
 				m_followTimer.Stop();
 			if (followTarget == null || followTarget.ObjectState != eObjectState.Active) return;
@@ -3228,8 +3230,6 @@ namespace DOL.GS
 			return base.OnInterruptTick(attacker, attackType);
 		}
 
-
-
 		/// <summary>
 		/// The time to wait before each mob respawn
 		/// </summary>
@@ -3268,7 +3268,6 @@ namespace DOL.GS
 				m_respawnInterval = value;
 			}
 		}
-
 
 		/// <summary>
 		/// Is the mob alive
@@ -3586,9 +3585,8 @@ namespace DOL.GS
 			}
 			//DealDamage needs to be called after addxpgainer!
 		}
-
-
 		#endregion
+
 		#region Spell
 		private IList m_spells = new ArrayList(1);
 		/// <summary>
@@ -3711,7 +3709,7 @@ namespace DOL.GS
 				else
 				{
 					//If we aren't a distance NPC, lets make sure we are in range to attack the target!
-					if (WorldMgr.GetDistance(owner, owner.TargetObject) > 90)
+					if (owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance && WorldMgr.GetDistance(owner, owner.TargetObject) > 90)
 						((GameNPC)owner).Follow(owner.TargetObject, 90, 5000);
 				}
 				Interval = 500;
@@ -3738,33 +3736,6 @@ namespace DOL.GS
 
 		#endregion
 		#region ControlledNPCs
-		/// <summary>
-		/// Gets all the minions/subpets of this NPC - uses recursion to find all of its
-		/// pet's pets
-		/// </summary>
-		/// <returns>List of all pets</returns>
-		public List<GameNPC> GetAllPets()
-		{
-			//No pets, return null
-			if (ControlledNpcList == null)
-				return null;
-
-			List<GameNPC> pets = new List<GameNPC>();
-
-			foreach (IControlledBrain icb in ControlledNpcList)
-			{
-				//Is this really a necessary check?
-				if (icb == null)
-					continue;
-				//Add this pet
-				pets.Add(icb.Body);
-				//Add this pet's pets
-				List<GameNPC> petsSubPets = icb.Body.GetAllPets();
-				if (petsSubPets != null)
-					pets.AddRange(petsSubPets);
-			}
-			return pets;
-		}
 
 		/// <summary>
 		/// Gets the controlled object of this NPC
@@ -3787,42 +3758,12 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets the controlled object of this player at the position in the array
-		/// </summary>
-		/// <param name="pet_position"></param>
-		public IControlledBrain ControlledMinion(int pet_position)
-		{
-			return m_controlledNpc[pet_position];
-		}
-
-		/// <summary>
 		/// Adds a pet to the current array of pets
 		/// </summary>
 		/// <param name="controlledNpc">The brain to add to the list</param>
 		/// <returns>Whether the pet was added or not</returns>
-		public bool AddControlledNpc(IControlledBrain controlledNpc)
+		public virtual bool AddControlledNpc(IControlledBrain controlledNpc)
 		{
-			IControlledBrain[] brainlist = ControlledNpcList;
-			foreach (IControlledBrain icb in brainlist)
-			{
-				if (icb == controlledNpc)
-					return false;
-			}
-
-			if (controlledNpc.Owner != this)
-				throw new ArgumentException("ControlledNpc with wrong owner is set (player=" + Name + ", owner=" + controlledNpc.Owner.Name + ")", "controlledNpc");
-			//Find the next spot for this new pet
-			int i = 0;
-			for (; i < m_controlledNpc.Length; i++)
-			{
-				if (ControlledMinion(i) == null)
-					break;
-			}
-			//If we didn't find a spot return false
-			if (i >= m_controlledNpc.Length)
-				return false;
-			m_controlledNpc[i] = controlledNpc;
-			PetCounter++;
 			return true;
 		}
 
@@ -3831,177 +3772,9 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="controlledNpc">The brain to find and remove</param>
 		/// <returns>Whether the pet was removed</returns>
-		public bool RemoveControlledNpc(IControlledBrain controlledNpc)
+		public virtual bool RemoveControlledNpc(IControlledBrain controlledNpc)
 		{
-			if (controlledNpc == null) return false;
-			IControlledBrain[] brainlist = ControlledNpcList;
-			int i = 0;
-			bool found = false;
-			//Try to find the minion in the list
-			for (; i < brainlist.Length; i++)
-			{
-				//Found it
-				if (brainlist[i] == controlledNpc)
-				{
-					found = true;
-					break;
-				}
-			}
-			lock (ControlledNpcList)
-			{
-				//Found it, lets remove it
-				if (found)
-				{
-					//TODO: this prints two messages - what's a better way to do this
-					if (m_controlledNpc[i].Body.IsAlive)
-						m_controlledNpc[i].Body.Die(this);
-					m_controlledNpc[i] = null;
-
-					//Only decrement, we just lost one pet
-					PetCounter--;
-				}
-			}
-
-			return found;
-		}
-
-		///// <summary>
-		///// Sets the controlled minions for the player's commander
-		///// </summary>
-		///// <remarks>This function should only be used for making minions</remarks>
-		///// <param name="controlledNpc"></param>
-		///// <param name="pet_position">When a pet dies, we need to know which one</param>
-		//public bool SetControlledNpc(IControlledBrain controlledNpc, int pet_position)
-		//{
-		//    if (pet_position >= m_controlledNpc.Length || pet_position < 0) return false;
-		//    if (controlledNpc == ControlledMinion(pet_position)) return false;
-		//    if (controlledNpc == null)
-		//    {
-		//        if (m_controlledNpc[pet_position] == null)
-		//            return false;
-		//        if(m_controlledNpc[pet_position].Body.IsAlive)
-		//            m_controlledNpc[pet_position].Body.Die(this);
-		//        m_controlledNpc[pet_position] = null;
-
-		//        //Only decrement, we just lost one pet
-		//        PetCounter--;
-		//        return true;
-		//    }
-		//    else
-		//    {
-		//        if (controlledNpc.Owner != this)
-		//            throw new ArgumentException("ControlledNpc with wrong owner is set (player=" + Name + ", owner=" + controlledNpc.Owner.Name + ")", "controlledNpc");
-		//        //Find the next spot for this new pet
-		//        int i = 0;
-		//        for (; i < m_controlledNpc.Length; i++)
-		//        {
-		//            if (ControlledMinion(i) == null)
-		//                break;
-		//        }
-		//        //If we didn't find a spot return false
-		//        if (i >= m_controlledNpc.Length)
-		//            return false;
-		//        m_controlledNpc[i] = controlledNpc;
-		//        PetCounter++;
-		//        return true;
-		//    }
-		//}
-
-		/// <summary>
-		/// Commands controlled object to attack
-		/// </summary>
-		public override void CommandNpcAttack()
-		{
-			if (Brain is IControlledBrain)
-			{
-				((IControlledBrain)Brain).Attack(TargetObject);
-			}
-		}
-
-		/// <summary>
-		/// Releases controlled object
-		/// </summary>
-		/// <remarks>This works differently than GamePlayer's.  Since an npc can have more than one pet,
-		/// we don't call owner.CommandNpcRelease().  Instead we call a body.CommandNpcRelease(), it gets its owner, finds its place in the array and then removes ITSELF!</remarks>
-		public override void CommandNpcRelease()
-		{
-			IControlledBrain npc = Brain as IControlledBrain;
-			//This method shouldn't be called if this is the player's main pet.  Only minions and subpets
-			//should call this method.
-			if (npc == null) return;
-			GameNPC owner = (GameNPC)npc.Owner;
-
-			//Added function in GameNPC to kill the pet for us
-			owner.RemoveControlledNpc(npc);
-
-			Notify(GamePlayerEvent.CommandNpcRelease, this);
-		}
-
-		/// <summary>
-		/// Commands controlled object to follow
-		/// </summary>
-		public override void CommandNpcFollow()
-		{
-			if (Brain is IControlledBrain)
-				((IControlledBrain)Brain).Follow(((IControlledBrain)Brain).Owner);
-		}
-
-		/// <summary>
-		/// Commands controlled object to stay where it is
-		/// </summary>
-		public override void CommandNpcStay()
-		{
-			if (Brain is IControlledBrain)
-				((IControlledBrain)Brain).Follow(((IControlledBrain)Brain).Owner);
-		}
-
-		/// <summary>
-		/// Commands controlled object to go to players location
-		/// </summary>
-		public override void CommandNpcComeHere()
-		{
-			if (Brain is IControlledBrain)
-				((IControlledBrain)Brain).Follow(((IControlledBrain)Brain).Owner);
-		}
-
-		/// <summary>
-		/// Commands controlled object to go to target
-		/// </summary>
-		public override void CommandNpcGoTarget()
-		{
-			if (Brain is IControlledBrain)
-				((IControlledBrain)Brain).Follow(((IControlledBrain)Brain).Owner);
-		}
-
-		/// <summary>
-		/// Changes controlled object state to passive
-		/// </summary>
-		public override void CommandNpcPassive()
-		{
-			if (Brain is IControlledBrain)
-			{
-				((IControlledBrain)Brain).AggressionState = eAggressionState.Passive;
-				StopAttack();
-				StopCurrentSpellcast();
-			}
-		}
-
-		/// <summary>
-		/// Changes controlled object state to aggressive
-		/// </summary>
-		public override void CommandNpcAgressive()
-		{
-			if (Brain is IControlledBrain)
-				((IControlledBrain)Brain).AggressionState = eAggressionState.Aggressive;
-		}
-
-		/// <summary>
-		/// Changes controlled object state to defensive
-		/// </summary>
-		public override void CommandNpcDefensive()
-		{
-			if (Brain is IControlledBrain)
-				((IControlledBrain)Brain).AggressionState = eAggressionState.Defensive;
+			return true;
 		}
 
 		#endregion
