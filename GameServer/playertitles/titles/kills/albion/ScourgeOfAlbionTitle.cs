@@ -26,9 +26,8 @@
 using System;
 using DOL.Language;
 using DOL.Events;
-using DOL.GS.PlayerTitles;
 
-namespace DOL.GS.Scripts
+namespace DOL.GS.PlayerTitles
 {
 	/// <summary>
 	/// "Scourge of Albion" title granted to everyone who killed 25000+ alb players.
