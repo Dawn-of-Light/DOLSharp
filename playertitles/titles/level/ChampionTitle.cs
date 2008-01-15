@@ -20,9 +20,8 @@
 using System;
 using DOL.Language;
 using DOL.Events;
-using DOL.GS.PlayerTitles;
 
-namespace DOL.GS.Scripts
+namespace DOL.GS.PlayerTitles
 {
   	/// <summary>
 	/// Example...
