@@ -25,9 +25,8 @@
  */
 using System;
 using DOL.Language;
-using DOL.GS.PlayerTitles;
 
-namespace DOL.GS.Scripts
+namespace DOL.GS.PlayerTitles
 {
 	/// <summary>
 	/// "Elder" title granted to all chars on all accounts that created for at least one year.
