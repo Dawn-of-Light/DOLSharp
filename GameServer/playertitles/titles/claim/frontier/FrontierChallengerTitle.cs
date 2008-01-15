@@ -26,9 +26,8 @@
 using System;
 using DOL.Language;
 using DOL.Events;
-using DOL.GS.PlayerTitles;
 
-namespace DOL.GS.Scripts
+namespace DOL.GS.PlayerTitles
 {
 	/// <summary>
 	/// "Frontier Challenger" title granted to everyone who captured 10+ keeps.
