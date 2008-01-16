@@ -622,7 +622,7 @@ House.SendHouseInfo.InteriorUpgrades:			Erweiterungen im Innenbereich:
 House.SendHouseInfo.Level:				Ausbaustufe: {0}	
 House.SendHouseInfo.Lockbox:				Schließfach: {0}	
 House.SendHouseInfo.Lotnum:				Grundstücksnummer: {0}	
-House.SendHouseInfo.MaxLockbox:				Schließfach(Fassungsvermögen): {0}	
+House.SendHouseInfo.MaxLockbox:				Schließfach(max): {0}	
 House.SendHouseInfo.OutdoorGuildBanner:			- Banner: {0}		
 House.SendHouseInfo.OutdoorGuildShield:			- Schild: {0}		
 House.SendHouseInfo.Owner:				Eigentümer: {0}	
@@ -682,6 +682,9 @@ GameTrainer.AddGift.NotEnoughSpace:			Es ist nicht genug Platz in Eurem Gepäck f
 GameTrainer.GetExamineMessages.RightClick:		
 GameTrainer.GetExamineMessages.YouExamine:		Es interessiert Euch {0}. {0} steht Euch {2} und bildet als {3} den Nachwuchs aus.
 GameTrainer.GetExamineMessages.YouTarget:		Es wird {0} als Ziel erfasst.
+GameTrainer.Interact.CaseRespecialize:			spezialisieren
+GameTrainer.Interact.RegainPoints:			Ihr bekommt {0} Spezialisierungspunkte zurück!
+GameTrainer.Interact.Respecialize:			{0} sagt: "{1}, falls Ihr es wünscht, kann ich Eure bisherige Ausbildung rückgängig machen und Euch ermöglichen, erneut zu trainieren. Dadurch könnt Ihr Euch neu [spezialisieren]. Sagt es mir, wenn Ihr Interesse habt."
 GameTrainer.PromotePlayer.Accepted:			{0} hat Euch als Mitglied akzeptiert!
 GameTrainer.PromotePlayer.Says:				{0} sagt: "{1}"
 GameTrainer.PromotePlayer.Upgraded:			Ihr wurdet befördert und gehört nun der {0}-Klasse an!
@@ -1336,7 +1339,7 @@ Scripts.Player.Guild.EmblemNPCNotSelected:		Ihr müßt mit dem Abzeichenmacher spr
 Scripts.Player.Guild.EmblemRedo:			Wollt Ihr ein neues Gildenabzeichen für 100 Gold erwerben?
 Scripts.Player.Guild.FormNoGroup:			Ihr müßt einer Gruppe angehören um eine Gilde zu gründen.
 Scripts.Player.Guild.FormNoMembers:			Ihr benötigt {0} Spieler in Eurer Gruppe, um eine Gilde zu gründen.
-Scripts.Player.Guild.GuildCreated:			Die Gilde {0} wurde gegründet, ihr Anführer ist {1}.
+Scripts.Player.Guild.GuildCreated:			Die Gilde "{0}" wurde gegründet mit {1} als Anführer.
 Scripts.Player.Guild.GuildExists:			Diese Gilde gibt es schon.
 Scripts.Player.Guild.GuildForceLeave:			{0} hat Dich aus {1} entfernt.
 Scripts.Player.Guild.GuildLeave:			Ihr habt Eure Gilde verlassen.
@@ -1351,8 +1354,8 @@ Scripts.Player.Guild.Help.GuildAlli:			/gc alliance - Informationen zu einer All
 Scripts.Player.Guild.Help.GuildAMotd:			/gc amotd <text> - Willkommensbotschaft für eine Allianz ändern	
 Scripts.Player.Guild.Help.GuildARemove:			/gc aremove - aus der Allianz austreten (betrifft alle in der Gilde)	
 Scripts.Player.Guild.Help.GuildARemoveAlli:		/gc aremove alliance [#] - eine Gilde aus der Allianz ausschliessen (ID erforderlich)
-Scripts.Player.Guild.Help.GuildAutoRemove:		/gc autoremove <playername> - 	
-Scripts.Player.Guild.Help.GuildAutoRemoveAcc:		/gc autoremove account <playername> -
+Scripts.Player.Guild.Help.GuildAutoRemove:		/gc autoremove <playername> - entfernt einen Charakter aus der Gilde, auch wenn dieser nicht eingeloggt ist
+Scripts.Player.Guild.Help.GuildAutoRemoveAcc:		/gc autoremove account <playername> - entfernt alle Charakter eines Spielers aus der Gilde, auch wenn dieser nicht eingeloggt ist
 Scripts.Player.Guild.Help.GuildBannerSummon:		/gc summon - hisst das Gildenbanner, sofern vorhanden	
 Scripts.Player.Guild.Help.GuildBuff:			/gc buff <realmpoints/bountypoints> - einen Bonuszauber für die Gilde kaufen	
 Scripts.Player.Guild.Help.GuildBuyBanner:		/gc buybanner - ein Gildenbanner kaufen	
@@ -1363,50 +1366,50 @@ Scripts.Player.Guild.Help.GuildDemote:			/gc demote <rank#> [name] - einen Spiel
 Scripts.Player.Guild.Help.GuildDeposit:			/gc deposit <ammount> - Geld auf das Gildenkonto einzahlen	
 Scripts.Player.Guild.Help.GuildDues:			/gc dues <ammount> - Gildenabgaben verlangen (0-100%)	
 Scripts.Player.Guild.Help.GuildEdit:			/gc edit - zeige eine Liste der für /gc edit verfügbaren Optionen an	
-Scripts.Player.Guild.Help.GuildEditACHear:		/gc edit <ranknum> achear <y/n> - edits this rank to be able to hear Alliance chat	
-Scripts.Player.Guild.Help.GuildEditACSpeak:		/gc edit <ranknum> acspeak <y/n> - edits this rank to be able to speak in Alliance chat	
-Scripts.Player.Guild.Help.GuildEditAlli:		/gc edit <ranknum> alli <y/n>-  to allow a rank to enter/leave alliances (create a diplomatic officer)	
-Scripts.Player.Guild.Help.GuildEditClaim:		/gc edit <ranknum> claim <y/n> - to allow a rank to enter/leave alliances (create a diplomatic officer)	
-Scripts.Player.Guild.Help.GuildEditDues:		/gc edit <ranknum> dues <y/n> -  to be able to change guild dues	
-Scripts.Player.Guild.Help.GuildEditEmblem:		/gc edit <ranknum> emblem <y/n> - used the edit the rank of members who are allowed to wear the guild emblem on their cloak or shield.	
-Scripts.Player.Guild.Help.GuildEditGCHear:		/gc edit <ranknum> gchear <y/n> - edits this rank to be able to hear guild chat	
-Scripts.Player.Guild.Help.GuildEditGCSpeak:		/gc edit <ranknum> gcspeak <y/n> - edits this rank to be able to speak in guild chat	
-Scripts.Player.Guild.Help.GuildEditInvite:		/gc edit <ranknum> invite <y/n> - edits this rank with the ability to invite members into the guild	
-Scripts.Player.Guild.Help.GuildEditOCHear:		/gc edit <ranknum> ochear <y/n> - edits this rank to be able to hear Officer chat	
-Scripts.Player.Guild.Help.GuildEditOCSpeak:		/gc edit <ranknum> ocspeak <y/n> - edits this rank to be able to speak in Officer chat	
-Scripts.Player.Guild.Help.GuildEditPromote:		/gc edit <ranknum> promote <y/n> - edits this rank with the ability to promote/demote lower in rank	
-Scripts.Player.Guild.Help.GuildEditRankLevel:		/gc edit <ranknum> ranklevel <level> - used to set the rank hierarchy	
-Scripts.Player.Guild.Help.GuildEditRelease:		/gc edit <ranknum> release <y/n> - to set release the keep you have claim before	
-Scripts.Player.Guild.Help.GuildEditRemove:		/gc edit <ranknum> remove <y/n> - edits this rank with the ability to remove those below him in rank	
-Scripts.Player.Guild.Help.GuildEditTitle:		/gc edit <ranknum> title <text> - sets the title for a specific rank <#> for this guild	
-Scripts.Player.Guild.Help.GuildEditUpgrade:		/gc edit <ranknum> upgrade <y/n> -  to allow a rank to enter/leave alliances (create a diplomatic officer)	
+Scripts.Player.Guild.Help.GuildEditACHear:		/gc edit <ranknum> achear <y/n> - bestimmt ob der Rang den Allianz-Chat hören kann oder nicht
+Scripts.Player.Guild.Help.GuildEditACSpeak:		/gc edit <ranknum> acspeak <y/n> - bestimmt ob der Rang im Allianz-Chat schreiben kann oder nicht
+Scripts.Player.Guild.Help.GuildEditAlli:		/gc edit <ranknum> alli <y/n>-  bestimmt ob der Rang einer Allianz beitreten oder diese verlassen kann (ernennt einen Diplomaten)
+Scripts.Player.Guild.Help.GuildEditClaim:		/gc edit <ranknum> claim <y/n> - bestimmt ob der Rang eine Festung/einen Turm beanspruchen kann
+Scripts.Player.Guild.Help.GuildEditDues:		/gc edit <ranknum> dues <y/n> - bestimmt ob der Rang die Gildensteuer aktivieren/deaktivieren kann oder nicht
+Scripts.Player.Guild.Help.GuildEditEmblem:		/gc edit <ranknum> emblem <y/n> - bestimmt ob der Rang das Gildenwappen tragen darf oder nicht
+Scripts.Player.Guild.Help.GuildEditGCHear:		/gc edit <ranknum> gchear <y/n> - bestimmt ob der Rang den Gildenchat hören kann oder nicht	
+Scripts.Player.Guild.Help.GuildEditGCSpeak:		/gc edit <ranknum> gcspeak <y/n> - bestimmt ob der Rang im Gildenchat reden kann oder nicht
+Scripts.Player.Guild.Help.GuildEditInvite:		/gc edit <ranknum> invite <y/n> - bestimmt ob der Rang neue Gildenmitglieder einladen darf oder nicht
+Scripts.Player.Guild.Help.GuildEditOCHear:		/gc edit <ranknum> ochear <y/n> - bestimmt ob der Rang den Offizierschat hören kann oder nicht
+Scripts.Player.Guild.Help.GuildEditOCSpeak:		/gc edit <ranknum> ocspeak <y/n> - bestimmt ob der Rang im Offizierschat reden kann oder nicht
+Scripts.Player.Guild.Help.GuildEditPromote:		/gc edit <ranknum> promote <y/n> - bestimmt ob der Rang andere Gildenmitglieder befördern oder degradieren darf (maximal bis ein Rang unter seinem eigenen)
+Scripts.Player.Guild.Help.GuildEditRankLevel:		/gc edit <ranknum> ranklevel <level> - bestimmt die Rangordnung
+Scripts.Player.Guild.Help.GuildEditRelease:		/gc edit <ranknum> release <y/n> - bestimmt ob der Rang eine Festung/einen Turm aufgeben darf
+Scripts.Player.Guild.Help.GuildEditRemove:		/gc edit <ranknum> remove <y/n> - bestimmt ob der Rang andere Gildenmitglieder aus der Gilde entfernen darf (maximal bis ein Rang unter seinem eignen)
+Scripts.Player.Guild.Help.GuildEditTitle:		/gc edit <ranknum> title <text> - teilt einen Titel dem Rang zu
+Scripts.Player.Guild.Help.GuildEditUpgrade:		/gc edit <ranknum> upgrade <y/n> -  bestimmt ob der Rang eine Festung oder einen Turm upgraden (also im Level verändern) darf	
 Scripts.Player.Guild.Help.GuildEditView:		/gc edit <ranknum> view <y/n> - edits this rank with the ability to display the /gc info screen	
-Scripts.Player.Guild.Help.GuildEditWithdraw:		/gc edit <ranknum> withdraw <y/n> -  to be able to withdraw from guild bank	
-Scripts.Player.Guild.Help.GuildEmail:			/gc email <contact@guildpage.com> - is an additional line set by the leader that can be displayed in a /gc info command, as well as on the Herald.	
-Scripts.Player.Guild.Help.GuildEmblem:			/gc emblem - to set emblem	
-Scripts.Player.Guild.Help.GuildForm:			/gc form <Name> - to create a new guilde with all player of group	
+Scripts.Player.Guild.Help.GuildEditWithdraw:		/gc edit <ranknum> withdraw <y/n> -  bestimmt ob der Rang Geld vom Gildensteuerkonto abheben kann oder nicht
+Scripts.Player.Guild.Help.GuildEmail:			/gc email <contact@guildpage.com> - Legt die Emailadresse der Gilde fest. Diese Informationen werden mit /gc info und in den Chroniken angezeigt.
+Scripts.Player.Guild.Help.GuildEmblem:			/gc emblem - das Gildenwappen durch einen Gildenregistrar erstellen lassen
+Scripts.Player.Guild.Help.GuildForm:			/gc form <Name> - eine Gilde mit allen Gruppenmitgliedern gründen	
 Scripts.Player.Guild.Help.GuildGMAddPlayer:		/gc addplayer <player> to <guild> - to add player to guild	
 Scripts.Player.Guild.Help.GuildGMCommands:		Game Master commands:	
 Scripts.Player.Guild.Help.GuildGMCreate:		/gc create <Name> - Create a new guild with targeted player as leader	
 Scripts.Player.Guild.Help.GuildGMPurge:			/gc purge <Name> - Purge a guild completely	
 Scripts.Player.Guild.Help.GuildGMRemovePlayer:		/gc removeplayer <player> from <guild> - to remove player from a guild	
 Scripts.Player.Guild.Help.GuildGMRename:		/gc rename <OldName> to <NewName - Rename guild from OldName to NewName	
-Scripts.Player.Guild.Help.GuildInfo:			/gc info - to show information on the guild	
-Scripts.Player.Guild.Help.GuildInvite:			/gc invite [name] - to invite targeted player to join the guild	
-Scripts.Player.Guild.Help.GuildLeader:			/gc leader [name] - to set leader successor	
-Scripts.Player.Guild.Help.GuildList:			/gc list - to show all guild in your realm	
-Scripts.Player.Guild.Help.GuildMotd:			/gc motd <text> - to set the message of the day of the guild	
-Scripts.Player.Guild.Help.GuildNoteSelf:		/gc noteself <note> - to set a note about your character for the guild	
-Scripts.Player.Guild.Help.GuildOMotd:			/gc omotd <text> - to set the message of the day of the officier's guild	
-Scripts.Player.Guild.Help.GuildPromote:			/gc promote <rank#> [name] - to promote player to a superior rank	
-Scripts.Player.Guild.Help.GuildQuit:			/gc quit - to leave the guild	
-Scripts.Player.Guild.Help.GuildRanks:			/gc ranks - to show rank information for the guild	
-Scripts.Player.Guild.Help.GuildRemAccount:		/gc removeaccount <accountname> - to remove every character of the account from the guild	
-Scripts.Player.Guild.Help.GuildRemove:			/gc remove <playername> - to remove the player from the guild	
+Scripts.Player.Guild.Help.GuildInfo:			/gc info - Anzeige der Gildeninformationen
+Scripts.Player.Guild.Help.GuildInvite:			/gc invite [name] -  Spieler in die Gilde einladen, ohne Namensangabe wird anvisierter Spieler eingeladen
+Scripts.Player.Guild.Help.GuildLeader:			/gc leader [name] - einen neuen Gildenanführer ernennen
+Scripts.Player.Guild.Help.GuildList:			/gc list - Anzeige aller Gilden im Reich
+Scripts.Player.Guild.Help.GuildMotd:			/gc motd <text> - Die "Nachricht des Tages" für die Gilde erstellen
+Scripts.Player.Guild.Help.GuildNoteSelf:		/gc noteself <note> - erstellt eine Bemerkung zu Eurem Charakter für die Gilde
+Scripts.Player.Guild.Help.GuildOMotd:			/gc omotd <text> - Die "Nachricht des Tages" für die Offiziere der Gilde erstellen
+Scripts.Player.Guild.Help.GuildPromote:			/gc promote <rank#> [name] - einen Spieler befördern (gültige Ränge: 0-10)
+Scripts.Player.Guild.Help.GuildQuit:			/gc quit - die aktuelle Gilde verlassen
+Scripts.Player.Guild.Help.GuildRanks:			/gc ranks - Anzeige der Gildenränge
+Scripts.Player.Guild.Help.GuildRemAccount:		/gc removeaccount <accountname> - jeden Charakter des Spielers aus der Gilde entlassen
+Scripts.Player.Guild.Help.GuildRemove:			/gc remove <playername> - einen Spieler aus der Gilde entlassen
 Scripts.Player.Guild.Help.GuildUsage:			Usage:
-Scripts.Player.Guild.Help.GuildWebpage:			/gc webpage <the.guildpage.com> - is an additional line set by the leader that can be display in a /gc info command, as well as on the Herald.	
-Scripts.Player.Guild.Help.GuildWho:			/gc who - to show all player in your guild	
-Scripts.Player.Guild.Help.GuildWithdraw:		/gc withdraw <ammount> - gets money from the guild bank account.	
+Scripts.Player.Guild.Help.GuildWebpage:			/gc webpage <the.guildpage.com> - Legt die Gildenwebseite fest. Diese Informationen werden mit /gc info und in den Chroniken angezeigt.
+Scripts.Player.Guild.Help.GuildWho:			/gc who - Anzeige aller Gildenmitglieder im Spiel
+Scripts.Player.Guild.Help.GuildWithdraw:		/gc withdraw <ammount> - hebt eine Summe (in Kupferstücken) vom Gildensteuerkonto ab 	
 Scripts.Player.Guild.InCombat:				Ihr könnt das Banner nicht mitten im Kampf einholen!	
 Scripts.Player.Guild.InfoAMotd:				Allianznachricht: {0}	
 Scripts.Player.Guild.InfoCEmail:			Kontaktemail: {0}	
