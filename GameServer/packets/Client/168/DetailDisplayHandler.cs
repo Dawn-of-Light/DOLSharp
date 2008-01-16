@@ -1248,7 +1248,7 @@ Type    Description           Id
 		}
 		public void WriteUsableClasses(ArrayList output, ItemTemplate item, GameClient client)
 		{
-			if (item.AllowedClasses == "" || item.AllowedClasses == null)
+			if (item.AllowedClasses == "" || item.AllowedClasses == null || item.AllowedClasses == "0")
 				return;
 			output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteUsableClasses.UsableBy"));
 			string[] allowedclasses = item.AllowedClasses.Split(';');
