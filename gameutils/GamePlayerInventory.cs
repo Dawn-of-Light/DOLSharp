@@ -388,24 +388,27 @@ namespace DOL.GS
 					goto apply_poison;
 				}
 
-				if (valid && !Util.IsEmpty(fromItem.AllowedClasses))
-				{
-					valid = false;
-					string[] allowedclasses = fromItem.AllowedClasses.Split(';');
-					foreach (string allowed in allowedclasses)
-					{
-						if (m_player.CharacterClass.ID.ToString() == allowed
-							|| m_player.Client.Account.PrivLevel > 1)
-						{
-							valid = true;
-							break;
-						}
-					}
-					if (!valid)
-					{
-						m_player.Out.SendMessage("Your class cannot use this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					}
-				}
+                if (valid && !Util.IsEmpty(fromItem.AllowedClasses))
+                {
+                    if (fromItem.AllowedClasses != "0")
+                    {
+                        valid = false;
+                        string[] allowedclasses = fromItem.AllowedClasses.Split(';');
+                        foreach (string allowed in allowedclasses)
+                        {
+                            if (m_player.CharacterClass.ID.ToString() == allowed
+                                || m_player.Client.Account.PrivLevel > 1)
+                            {
+                                valid = true;
+                                break;
+                            }
+                        }
+                        if (!valid)
+                        {
+                            m_player.Out.SendMessage("Your class cannot use this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        }
+                    }
+                }
 
 				if (valid && (fromItem.Realm > 0 && (int)m_player.Realm != fromItem.Realm) && ((int)toSlot >= (int)eInventorySlot.HorseArmor && (int)toSlot <= (int)eInventorySlot.HorseBarding))
 				{
