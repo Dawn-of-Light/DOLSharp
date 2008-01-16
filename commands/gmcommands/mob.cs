@@ -71,7 +71,7 @@ namespace DOL.GS.Commands
 		"'/mob equiptemplate save <templateID> [replace]' to save the inventory template with a new name",
 		"'/mob equiptemplate load <templateID>' to load the inventory template from the database, it is open for modifications after",
 		"'/mob addloot <ItemTemplateID> [chance]' to add loot to the mob's unique drop table",
-		"'/mob viewloot' to view the selected mob's loot table",
+		"'/mob viewloot [random]' to view the selected mob's loot table random or complete",
 		"'/mob removeloot <ItemTemplateID>' to remove loot from the mob's unique drop table",
 		"'/mob copy' copies a mob exactly and places it at your location",
 		"'/mob npctemplate <NPCTemplateID>' creates a mob with npc template, or modifies target",
@@ -1337,17 +1337,32 @@ namespace DOL.GS.Commands
 					break;
 				case "viewloot":
 					{
-						DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(targetMob.Name) + "'");
-						DisplayMessage(client, "[ " + targetMob.Name + "'s Loot Table ]\n\n");
-
-						foreach (DBLootTemplate loot in template)
+						if (args.Length == 3 && args[2] == "random")
 						{
-							string message = "";
-							if (loot.ItemTemplate == null)
-								message += loot.ItemTemplateID + " (Template Not Found)";
-							else message += loot.ItemTemplate.Name + " (" + loot.ItemTemplate.Id_nb + ")";
-							message += " Chance: " + loot.Chance.ToString() + "\n\n";
-							DisplayMessage(client, message);
+							ItemTemplate[] templates = LootMgr.GetLoot(targetMob, client.Player);
+							DisplayMessage(client, "[ " + targetMob.Name + "'s Loot Table ]\n\n");
+
+							foreach (ItemTemplate temp in templates)
+							{
+								string message = string.Format("Name: {0}, Id_nb: {1}", temp.Name, temp.Id_nb);
+								DisplayMessage(client, message);
+							}
+						}
+						else
+						{
+							DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(targetMob.Name) + "'");
+							DisplayMessage(client, "[ " + targetMob.Name + "'s Loot Table ]\n\n");
+
+							foreach (DBLootTemplate loot in template)
+							{
+								string message = "";
+								if (loot.ItemTemplate == null)
+									message += loot.ItemTemplateID + " (Template Not Found)";
+								else
+									message += loot.ItemTemplate.Name + " (" + loot.ItemTemplate.Id_nb + ")";
+								message += " Chance: " + loot.Chance.ToString() + "\n\n";
+								DisplayMessage(client, message);
+							}
 						}
 					}
 					break;

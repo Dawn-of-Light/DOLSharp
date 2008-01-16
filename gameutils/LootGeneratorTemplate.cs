@@ -179,7 +179,7 @@ namespace DOL.GS
 
 				lootTemplates = new ArrayList();
 				foreach (DBMobXLootTemplate mobXLootTemplate in mobXLootTemplates)
-					GenerateLootFromTemplate(mobXLootTemplate, (ArrayList) lootTemplates, loot, killer);
+					GenerateLootFromTemplate(mobXLootTemplate, (ArrayList)lootTemplates, loot, killer);
 			}
 
 			// Add random drops to loot list.
@@ -205,25 +205,25 @@ namespace DOL.GS
 		/// <param name="lootTemplates">List of templates for random drops.</param>
 		/// <param name="loot">List to hold loot.</param>
 		private void GenerateLootFromTemplate(DBMobXLootTemplate mobXLootTemplate,
-            ArrayList lootTemplates, LootList loot, GameObject killer)
+		  ArrayList lootTemplates, LootList loot, GameObject killer)
 		{
 			if (mobXLootTemplate == null) return;
 
 			IList templateList = (IList)m_templateNameXLootTemplate[mobXLootTemplate.LootTemplateName.ToLower()];
 			if (templateList != null)
 			{
-                GamePlayer player = null;
-                if (killer is GamePlayer)
-                    player = killer as GamePlayer;
-                else if (killer is GameNPC && (killer as GameNPC).Brain is IControlledBrain)
-                    player = ((killer as GameNPC).Brain as ControlledNpc).GetPlayerOwner();
-                foreach (DBLootTemplate lootTemplate in templateList)
+				GamePlayer player = null;
+				if (killer is GamePlayer)
+					player = killer as GamePlayer;
+				else if (killer is GameNPC && (killer as GameNPC).Brain is IControlledBrain)
+					player = ((killer as GameNPC).Brain as ControlledNpc).GetPlayerOwner();
+				foreach (DBLootTemplate lootTemplate in templateList)
 				{
-                    if (player != null
-                        && (eRealm)lootTemplate.ItemTemplate.Realm != player.Realm
-                        && (lootTemplate.ItemTemplate.Realm == 1 || lootTemplate.ItemTemplate.Realm == 2 || lootTemplate.ItemTemplate.Realm == 3)
-                        )
-                        continue;
+					if (player != null
+					    && (eRealm)lootTemplate.ItemTemplate.Realm != player.Realm
+					    && (lootTemplate.ItemTemplate.Realm == 1 || lootTemplate.ItemTemplate.Realm == 2 || lootTemplate.ItemTemplate.Realm == 3)
+					    )
+						continue;
 					if (lootTemplate.Chance == 100)
 						loot.AddFixed(lootTemplate.ItemTemplate, mobXLootTemplate.DropCount);
 					else
