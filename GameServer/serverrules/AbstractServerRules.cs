@@ -288,8 +288,6 @@ namespace DOL.GS.ServerRules
 			return true;
 		}
 
-
-
 		public virtual bool IsAllowedToSpeak(GamePlayer source, string communicationType)
 		{
 			if (source.IsAlive == false)

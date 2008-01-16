@@ -796,7 +796,7 @@ namespace DOL.GS
 			}
 		}
 
-	   #endregion
+		#endregion
 		#region Movement
 		/// <summary>
 		/// Target X coordinate to walk to
@@ -1995,7 +1995,7 @@ namespace DOL.GS
 					equip.AddNPCEquipment((DOL.GS.eInventorySlot)x, y);
 					equipHasItems = true;
 				}
-				
+
 			}
 			if (equipHasItems)
 				this.Inventory = new GameNPCInventory(equip);
@@ -2863,7 +2863,7 @@ namespace DOL.GS
 		{
 			if (target == null)
 				return;
-			
+
 			TurnTo(target);
 			string resultText = LanguageMgr.GetTranslation(target.Client, "GameNPC.SayTo.Says", GetName(0, true), message);
 			switch (loc)
@@ -3458,31 +3458,31 @@ namespace DOL.GS
 						loot.Name = lootTemplate.Name;
 						loot.Model = (ushort)lootTemplate.Model;
 					}
-                    else if (lootTemplate.Name.StartsWith("scroll|"))
-                    {
-                        String[] scrollData = lootTemplate.Name.Split('|');
-                        String artifactID = scrollData[1];
-                        int pageNumber = UInt16.Parse(scrollData[2]);
-                        loot = ArtifactMgr.CreateScroll(artifactID, pageNumber);
-                        loot.X = X;
-                        loot.Y = Y;
-                        loot.Z = Z;
-                        loot.Heading = Heading;
-                        loot.CurrentRegion = CurrentRegion;
-                    }
-                    else
-                    {
-                        loot = new GameInventoryItem(new InventoryItem(lootTemplate));
-                        loot.X = X;
-                        loot.Y = Y;
-                        loot.Z = Z;
-                        loot.Heading = Heading;
-                        loot.CurrentRegion = CurrentRegion;
-                        if (((GameInventoryItem)loot).Item.Id_nb == "aurulite")
-                        {
-                            ((GameInventoryItem)loot).Item.Count = ((GameInventoryItem)loot).Item.PackSize;
-                        }
-                    }
+					else if (lootTemplate.Name.StartsWith("scroll|"))
+					{
+						String[] scrollData = lootTemplate.Name.Split('|');
+						String artifactID = scrollData[1];
+						int pageNumber = UInt16.Parse(scrollData[2]);
+						loot = ArtifactMgr.CreateScroll(artifactID, pageNumber);
+						loot.X = X;
+						loot.Y = Y;
+						loot.Z = Z;
+						loot.Heading = Heading;
+						loot.CurrentRegion = CurrentRegion;
+					}
+					else
+					{
+						loot = new GameInventoryItem(new InventoryItem(lootTemplate));
+						loot.X = X;
+						loot.Y = Y;
+						loot.Z = Z;
+						loot.Heading = Heading;
+						loot.CurrentRegion = CurrentRegion;
+						if (((GameInventoryItem)loot).Item.Id_nb == "aurulite")
+						{
+							((GameInventoryItem)loot).Item.Count = ((GameInventoryItem)loot).Item.PackSize;
+						}
+					}
 
 					bool playerAttacker = false;
 					foreach (GameObject gainer in m_xpGainers.Keys)
@@ -3500,7 +3500,7 @@ namespace DOL.GS
 							if (brain != null)
 							{
 								playerAttacker = true;
-								loot.AddOwner(brain.Owner);
+								loot.AddOwner(brain.GetPlayerOwner());
 							}
 						}
 					}
