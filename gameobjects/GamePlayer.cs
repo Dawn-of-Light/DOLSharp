@@ -3246,7 +3246,7 @@ namespace DOL.GS
 				}
 				else
 					Notify(GamePlayerEvent.RLLevelUp, this);
-				if (this.Client.Account.PrivLevel == 1 && (RealmLevel >= 20 && RealmLevel % 10 == 0) || RealmLevel >= 60)
+				if (this.Client.Account.PrivLevel == 1 && ((RealmLevel >= 20 && RealmLevel % 10 == 0) || RealmLevel >= 60))
 				{
 					string message = LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.ReachedRank", Name, RealmLevel + 10, LastPositionUpdateZone.Description);
 					string newsmessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.GainRealmPoints.ReachedRank", Name, RealmLevel + 10, LastPositionUpdateZone.Description);
