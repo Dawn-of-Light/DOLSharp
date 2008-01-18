@@ -32,7 +32,7 @@ namespace DOL.GS
 		public GameHastener() : base() { }
 		public GameHastener(INpcTemplate template) : base(template) { }
 
-		private const int SPEEDOFTHEREALMID = 2430;
+		public const int SPEEDOFTHEREALMID = 2430;
 		private const int STROFTHEREALMID = 2431;
 
 		public override bool Interact(GamePlayer player)
