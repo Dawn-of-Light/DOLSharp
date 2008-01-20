@@ -292,6 +292,8 @@ GamePlayer.DrowningTimerCallback.CannotBreath:		Ihr könnt unter Wasser nicht atm
 GamePlayer.DrowningTimerCallback.Take5%Damage:		Ihr verliert 5% Eurer Trefferpunkte durch Schaden.			
 GamePlayer.DuelStop.DuelEnds:				Euer Duell ist beendet!	
 GamePlayer.GainBountyPoints.YouGet:			Ihr bekommt {0} Kopfgeldpunkte!
+GamePlayer.GainCraftingSkill.GainSkill:			Ihr bekommt Erfahrung in {0}! ({1})
+GamePlayer.GainCraftingSkill.ReachedSkill:		{0} erreicht 1000 Erfahrung in {1}.
 GamePlayer.GainExperience.CampBonus:			({0} Lagerbonus)
 GamePlayer.GainExperience.CannotRaise:			Ihr könnt nicht zur Stufe 6 aufsteigen, bevor Ihr nicht einen Beruf gewählt habt!		
 GamePlayer.GainExperience.GroupBonus:			({0} Gruppenbonus)
@@ -603,6 +605,10 @@ Scripts.Recharger.RechargerDialogResponse.FullyCharged:	Hier, bitte, es ist nun 
 Scripts.Recharger.RechargerDialogResponse.GiveMoney:	{0} erhält von Euch {1}.
 Scripts.Recharger.RechargerDialogResponse.InvalidItem:	Falscher Gegenstand.
 Scripts.Recharger.RechargerDialogResponse.NotMoney:	Ihr habt dafür nicht genug Geld!
+
+# GAMEUTILS
+# /PlayerClass
+PlayerClass.OnLevelUp.Autotrain:			Ihr trainiert "{0}" automatisch auf Stufe {1}.
 
 # HOUSING
 # /house
