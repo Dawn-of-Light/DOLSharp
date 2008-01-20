@@ -17,10 +17,11 @@
  *
  */
 using System;
-using DOL.Database;
 using System.Collections;
 using System.Collections.Generic;
+using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS
 {
@@ -392,7 +393,7 @@ namespace DOL.GS
 							{
 								spec.Level = player.Level / 4;
 								player.CharacterClass.OnSkillTrained(player, spec);
-								player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, "You autotrain " + spec.Name + " to level " + spec.Level);
+								player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, LanguageMgr.GetTranslation(player.Client, "PlayerClass.OnLevelUp.Autotrain", spec.Name, spec.Level));
 								found = true;
 							}
 						}
