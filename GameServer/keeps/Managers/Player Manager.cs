@@ -51,8 +51,7 @@ namespace DOL.GS.Keeps
 					}
 			}*/
 			BroadcastMessage(message, eRealm.None);
-			if (keep.DBKeep.BaseLevel == 50)
-				NewsMgr.CreateNews(message, keep.Realm, eNewsType.RvRGlobal, false);
+			NewsMgr.CreateNews(message, keep.Realm, eNewsType.RvRGlobal, false);
 		}
 
 		/// <summary>
@@ -64,7 +63,7 @@ namespace DOL.GS.Keeps
 		{
 			string message = string.Format("{1} has been razed by the forces of {0}!", GlobalConstants.RealmToName(realm), keep.Name);
 			BroadcastMessage(message, eRealm.None);
-			NewsMgr.CreateNews(message, eRealm.None, eNewsType.RvRGlobal, false);
+			NewsMgr.CreateNews(message, keep.Realm, eNewsType.RvRGlobal, false);
 		}
 
 		/// <summary>
