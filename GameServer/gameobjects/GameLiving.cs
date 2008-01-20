@@ -5630,16 +5630,6 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(this, spell, line);
 			if (spellhandler != null)
 			{
-				// If played is engage when casting cancel engage
-				if (IsEngaging)
-				{
-					EngageEffect engage = (EngageEffect)EffectList.GetOfType(typeof(EngageEffect));
-					if (engage != null)
-					{
-						engage.Cancel(false);
-					}
-				}
-
 				m_runningSpellHandler = spellhandler;
 				spellhandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
 				spellhandler.CastSpell();
