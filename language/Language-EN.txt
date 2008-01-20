@@ -292,6 +292,8 @@ GamePlayer.DrowningTimerCallback.CannotBreath:		You cannot breathe underwater an
 GamePlayer.DrowningTimerCallback.Take5%Damage:		You take 5% of your max hits in damage.			
 GamePlayer.DuelStop.DuelEnds:				Your duel ends!	
 GamePlayer.GainBountyPoints.YouGet:			You get {0} bounty points!		
+GamePlayer.GainCraftingSkill.GainSkill:			You gain skill in {0}! ({1})
+GamePlayer.GainCraftingSkill.ReachedSkill:		{0} reached 1000 skill in {1}
 GamePlayer.GainExperience.CampBonus:			({0} camp bonus)
 GamePlayer.GainExperience.CannotRaise:			You cannot raise to the 6th level until you join an advanced guild!		
 GamePlayer.GainExperience.GroupBonus:			({0} group bonus)
@@ -602,6 +604,10 @@ Scripts.Recharger.RechargerDialogResponse.FullyCharged:	There, it is now fully c
 Scripts.Recharger.RechargerDialogResponse.GiveMoney:	You give to {0} {1}.
 Scripts.Recharger.RechargerDialogResponse.InvalidItem:	Invalid item.
 Scripts.Recharger.RechargerDialogResponse.NotMoney:	You don't have enough money.
+
+# GAMEUTILS
+# /PlayerClass
+PlayerClass.OnLevelUp.Autotrain:			You autotrain {0} to level {1}.
 
 # HOUSING
 # /house

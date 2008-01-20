@@ -11057,11 +11057,11 @@ namespace DOL.GS
 				if (craftingSkill != null)
 				{
 					craftingSkills[(int)skill] = count + Convert.ToInt32(craftingSkills[(int)skill]);
-					Out.SendMessage("You gain skill in " + craftingSkill.Name + "! (" + craftingSkills[(int)skill] + ").", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainCraftingSkill.GainSkill", craftingSkill.Name, craftingSkills[(int)skill]), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					int amount = GetCraftingSkillValue(skill);
 					if (this.Client.Account.PrivLevel == 1 && amount >= 1000 && amount - count < 1000)
 					{
-						string message = string.Format("{0} reached 1000 skill in {1}", Name, craftingSkill.Name);
+						string message = string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.GainCraftingSkill.ReachedSkill", Name, craftingSkill.Name));
 						NewsMgr.CreateNews(message, Realm, eNewsType.PvE, true);
 					}
 				}
