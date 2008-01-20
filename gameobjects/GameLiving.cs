@@ -1872,9 +1872,10 @@ namespace DOL.GS
 		/// <param name="attacker">The source of interrupts</param>
 		public virtual void StartInterruptTimer(int duration, AttackData.eAttackType attackType, GameLiving attacker)
 		{
+			//Well, we should make it interrupt on every melee swing anyways.  That is how it works on live.
 			// Can't be interrupted if living is not casting
-			if (!IsCasting)
-				return;
+			//if (!IsCasting)
+				//return;
 
 			IsBeingInterrupted = true;
 			new InterruptAction(this, attacker, duration, attackType).Start(1);
