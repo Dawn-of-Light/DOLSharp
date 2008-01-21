@@ -6,6 +6,10 @@ namespace DOL.GS.SkillHandler
 	public class SpellCastingAbilityHandler : IAbilityActionHandler 
 	{
 		protected Ability m_ability = null;
+		public Ability Ability
+		{
+			get { return m_ability; }
+		}
 		public virtual int SpellID
 		{
 			get { return 0; }
@@ -16,6 +20,28 @@ namespace DOL.GS.SkillHandler
 			get { return 0; }
 		}
 
+		protected Spell m_spell = null;
+		public virtual Spell Spell
+		{
+			get
+			{
+				if (m_spell == null)
+					m_spell = SkillBase.GetSpellByID(SpellID);
+				return m_spell;
+			}
+		}
+
+		protected SpellLine m_spellLine = null;
+		public virtual SpellLine SpellLine
+		{
+			get
+			{
+				if (m_spellLine == null)
+					m_spellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Character_Abilities);
+				return m_spellLine;
+			}
+		}
+
 		public void Execute(Ability ab, GamePlayer player)
 		{
 			if (player == null)
@@ -24,14 +50,10 @@ namespace DOL.GS.SkillHandler
 			m_ability = ab;
 
 			if (CheckPreconditions(player, Preconditions)) return;
-
-			SpellLine spline = SkillBase.GetSpellLine(GlobalSpellsLines.Character_Abilities);
- 			Spell abSpell = SkillBase.GetSpellByID(SpellID);
  
-			if (spline != null && abSpell != null)
+			if (SpellLine != null && Spell != null)
 			{
-				player.CastSpell(abSpell, spline);
-				player.DisableSkill(ab, (abSpell.RecastDelay==0 ? 3 : abSpell.RecastDelay));
+				player.CastSpell(this);
 			}
 		}
 
