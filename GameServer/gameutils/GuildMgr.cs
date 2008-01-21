@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
 using DOL.Database;
@@ -47,11 +48,57 @@ namespace DOL.GS
 		/// <summary>
 		/// ArrayList of all GuildIDs to GuildNames
 		/// </summary>
-		static private readonly HybridDictionary m_guildids = new HybridDictionary();		
-		
+		static private readonly HybridDictionary m_guildids = new HybridDictionary();
+
 		/// <summary>
-		/// ArrayList of all guilds in the game
+		/// Holds all the players combined with their guilds for the social window
 		/// </summary>
+		/// <remarks>Sorted on the player name in order to optimize the initial refresh (sorted by name)</remarks>
+		private static readonly Dictionary<string, SortedList<string, SocialWindowMemeber>> m_guildXAllPlayers = new Dictionary<string, SortedList<string, SocialWindowMemeber>>();
+
+		/// <summary>
+		/// Gets the sorted dictionary for a guild to display in the social window
+		/// </summary>
+		/// <param name="guildID">The guild id for a player</param>
+		/// <returns>The dictionary sorted on the player's name</returns>
+		public static SortedList<string, SocialWindowMemeber> GetSocialWindowGuild(string guildID)
+		{
+			if (m_guildXAllPlayers.ContainsKey(guildID))
+				return m_guildXAllPlayers[guildID];
+			return null;
+		}
+
+		/// <summary>
+		/// Add a player to the social window hash table
+		/// </summary>
+		/// <param name="player">Player to add</param>
+		public static void AddPlayerToSocialWindow(GamePlayer player)
+		{
+			if (m_guildXAllPlayers.ContainsKey(player.GuildID))
+			{
+				if (!m_guildXAllPlayers[player.GuildID].ContainsKey(player.Name))
+				{
+					SortedList<string, SocialWindowMemeber> tempList = m_guildXAllPlayers[player.GuildID];
+					SocialWindowMemeber member = new SocialWindowMemeber(player.Name, player.Level.ToString(), player.CharacterClass.ID.ToString(), player.GuildRank.RankLevel.ToString(), player.Group != null ? player.Group.MemberCount.ToString() : "1", player.CurrentZone.Description, player.GuildNote);
+					tempList.Add(player.Name, member);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Remove a player from the social window hash table
+		/// </summary>
+		/// <param name="player">Player to remove</param>
+		/// <returns>True if player was removed, else false.</returns>
+		public static bool RemovePlayerFromSocialWindow(GamePlayer player)
+		{
+			if (m_guildXAllPlayers.ContainsKey(player.GuildID))
+			{
+				return m_guildXAllPlayers[player.GuildID].Remove(player.Name);
+			}
+			return false;
+		}
+		
 		static private ushort m_lastID = 0;
 
 		/// <summary>
@@ -364,6 +411,14 @@ namespace DOL.GS
 				AddGuild(myguild);
 				if (((DBGuild)obj).Ranks.Length == 0)
 					CreateRanks(myguild);
+				DataObject[] guildCharacters = GameServer.Database.SelectObjects(typeof(Character), string.Format("GuildID = '" + GameServer.Database.Escape(myguild.GuildID) + "'"));
+				SortedList<string, SocialWindowMemeber> tempList = new SortedList<string, SocialWindowMemeber>(guildCharacters.Length);
+				foreach (Character ch in guildCharacters)
+				{
+					SocialWindowMemeber member = new SocialWindowMemeber(ch.Name, ch.Level.ToString(), ch.Class.ToString(), ch.GuildRank.ToString(), "0", ch.LastPlayed.ToShortDateString(), ch.GuildNote);
+					tempList.Add(ch.Name, member);
+				}
+				m_guildXAllPlayers.Add(myguild.GuildID, tempList);
 			}
 
 			//load alliances
@@ -409,6 +464,7 @@ namespace DOL.GS
 					log.Error("Error saving guilds.", e);
 			}
 		}
+
 		/// <summary>
 		/// Returns true if a guild is using the emblem
 		/// </summary>
@@ -449,9 +505,9 @@ namespace DOL.GS
 			}
 		}
 
-		public static ArrayList GetAllGuilds()
+		public static List<Guild> GetAllGuilds()
 		{
-			ArrayList guilds = new ArrayList();
+			List<Guild> guilds = new List<Guild>(m_guilds.Count);
 			lock (m_guilds.SyncRoot)
 			{
 				foreach (Guild guild in m_guilds.Values)
@@ -460,6 +516,147 @@ namespace DOL.GS
 				}
 			}
 			return guilds;
+		}
+
+		public class SocialWindowMemeber
+		{
+			#region Members
+			string m_name;
+			public string Name
+			{
+				get { return m_name; }
+			} 
+			string m_level;
+			public string Level
+			{
+				get { return m_level; }
+				set { m_level = value; } 
+			} 
+			string m_characterClassID;
+			public string ClassID
+			{
+				get { return m_characterClassID; }
+				set { m_characterClassID = value; }
+			}
+			string m_rank;
+			public string Rank
+			{
+				get { return m_rank; }
+				set { m_rank = value; }
+			}
+			string m_group = "0";
+			public string GroupSize
+			{
+				get { return m_group; }
+				set { m_group = value; }
+			}
+			string m_zoneOnline;
+			public string ZoneOrOnline
+			{
+				get { return m_zoneOnline; }
+				set { m_zoneOnline = value; }
+			}
+			string m_guildNote = "";
+			public string Note
+			{
+				get { return m_guildNote; }
+				set { m_guildNote = value; }
+			}
+			#endregion
+
+			public string this[int i]
+			{
+				get
+				{
+					switch ((eSocialWindowIndex)i)
+					{
+						case eSocialWindowIndex.Name:
+							return Name;
+						case eSocialWindowIndex.ClassID:
+							return ClassID;
+						case eSocialWindowIndex.Group:
+							return GroupSize;
+						case eSocialWindowIndex.Level:
+							return Level;
+						case eSocialWindowIndex.Note:
+							return Note;
+						case eSocialWindowIndex.Rank:
+							return Rank;
+						case eSocialWindowIndex.ZoneOrOnline:
+							return ZoneOrOnline;
+						default:
+							return "";
+					}
+				}
+			}
+
+			public SocialWindowMemeber(string name, string level, string classID, string rank, string group, string zoneOrOnline, string note)
+			{
+				m_name = name;
+				m_level = level;
+				m_characterClassID = classID;
+				m_rank = rank;
+				m_group = group;
+				m_zoneOnline = zoneOrOnline;
+				m_guildNote = note;
+			}
+
+            public SocialWindowMemeber(GamePlayer player)
+            {
+                m_name = player.Name;
+				m_level = player.Level.ToString();
+				m_characterClassID = player.CharacterClass.ID.ToString();
+                m_rank = player.GuildRank.RankLevel.ToString(); ;
+				m_group = player.Group == null ? "1" : player.Group.MemberCount.ToString();
+				m_zoneOnline = player.CurrentZone.ToString();
+				m_guildNote = player.GuildNote;
+            }
+
+
+			public string ToString(int position, int guildPop)
+			{
+				return string.Format("E,{0},{1},{2},{3},{4},{5},{6},\"{7}\",\"{8}\"",
+					position, guildPop, m_name, m_level, m_characterClassID, m_rank, m_group, m_zoneOnline, m_guildNote);
+			}
+
+			public void UpdateMember(GamePlayer player)
+			{
+				Level = player.Level.ToString();
+				ClassID = player.CharacterClass.ID.ToString();
+				Rank = player.GuildRank.RankLevel.ToString();
+				GroupSize = player.Group == null ? "1" : player.Group.MemberCount.ToString();
+				Note = player.GuildNote;
+				ZoneOrOnline = player.CurrentZone.Description;
+			}
+
+			public enum eSocialWindowSort : int
+			{
+				NameDesc = -1,
+				NameAsc = 1,
+				LevelDesc = -2,
+				LevelAsc = 2,
+				ClassDesc = -3,
+				ClassAsc = 3,
+				RankDesc = -4,
+				RankAsc = 4,
+				GroupDesc = -5,
+				GroupAsc = 5,
+				ZoneOrOnlineDesc = 6,
+				ZoneOrOnlineAsc = -6,
+				NoteDesc = 7,
+				NoteAsc = -7
+			}
+
+			public enum eSocialWindowIndex : int
+			{
+				Name = 0,
+				Level = 1,
+				ClassID = 2,
+				Rank = 3,
+				Group = 4,
+				ZoneOrOnline = 5,
+				Note = 6
+			}
 		}
 	}
 }
