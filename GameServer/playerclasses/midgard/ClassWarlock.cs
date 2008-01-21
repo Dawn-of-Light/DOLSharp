@@ -57,8 +57,8 @@ namespace DOL.GS.PlayerClass
 			base.OnLevelUp(player);
 
 			//Remove
-			player.RemoveSpellLine(SkillBase.GetSpellLine("Darkness"));
-			player.RemoveSpellLine(SkillBase.GetSpellLine("Suppression"));
+			player.RemoveSpellLine("Darkness");
+			player.RemoveSpellLine("Suppression");
 			player.RemoveSpecialization(Specs.Darkness);
 			player.RemoveSpecialization(Specs.Suppression);
 		

@@ -129,6 +129,11 @@ namespace DOL.GS.Spells
 		GameLiving Caster { get; }
 
 		/// <summary>
+		/// The ability casting the spell
+		/// </summary>
+		SkillHandler.SpellCastingAbilityHandler Ability { get;set;}
+
+		/// <summary>
 		/// The Spell
 		/// </summary>
 		Spell Spell { get; }
@@ -156,6 +161,7 @@ namespace DOL.GS.Spells
 		PlayerXEffect getSavedEffect(GameSpellEffect e);
 		void OnEffectRestored(GameSpellEffect effect, int[] RestoreVars);
 		int OnRestoredEffectExpires(GameSpellEffect effect, int[] RestoreVars, bool noMessages);
+		bool CheckBeginCast(GameLiving selectedTarget);
 	}
 
 	/// <summary>
