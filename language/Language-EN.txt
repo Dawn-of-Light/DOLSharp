@@ -691,7 +691,6 @@ GameTrainer.Train.SeekElsewhere:			You must seek elsewhere for your training.
 # /EnchanterTrainer
 EnchanterTrainer.Interact.PathOfEssence:		{0} says, "Do you choose to train as an Enchanter and follow the Path of Essence? Life as an [Enchanter] is as rewarding as it is dangerous, but it is yours for the asking."
 EnchanterTrainer.Interact.QuickStudy:			{0} says, "You are a quick study, {1}. But do not be too hasty. There is always more to learn."
-EnchanterTrainer.Interact.SeekElsewhere:		{0} says, "You must seek elsewhere for your training."
 EnchanterTrainer.WhisperReceive.CaseEnchanter:		Enchanter
 EnchanterTrainer.WhisperReceive.Welcome:		Welcome, {0}. From this day forth you shall be known as an Enchanter. Here, {0}. Take this gift to aid you on your path.
 
