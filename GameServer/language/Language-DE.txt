@@ -698,12 +698,11 @@ GameTrainer.ReceiveItem.RespecFull:			Ein schöner {0}! Ich gewähre Euch eine vol
 GameTrainer.ReceiveItem.RespecRealm:			Danke, ich gewähre Euch eine Reichsfähigkeitenrespezialisierung. Gebt "/respec realm" ein.
 GameTrainer.ReceiveItem.RespecSingle:			Danke, ich gewähre Euch eine einzelne Fähigkeitsrespezialisierung. Gebt "/respec <Zauberlinie>"
 GameTrainer.Train.WouldYouLikeTo:			Sucht Ihre eine Ausbildung?
-GameTrainer.Train.SeekElsewhere:			Es tut mir leid, da kann ich Euch leider nicht helfen.
+GameTrainer.Train.SeekElsewhere:			Es tut mir leid, aber Ihr müsst Euch einen anderen Ausbilder suchen.
 
 # /EnchanterTrainer
 EnchanterTrainer.Interact.PathOfEssence:		{0} sagt: "Wollt Ihr als Beschwörer trainieren und dem Pfad der Essenz folgen? Das Leben als [Beschwörer] ist so lohnend wie gefährlich, aber es ist an Euch."
 EnchanterTrainer.Interact.QuickStudy:			{0} sagt: "Ihr lernt rasch, {1}. Ihr solltet es jedoch nicht überhasten. Es gibt noch soviel zu lernen."
-EnchanterTrainer.Interact.SeekElsewhere:		{0} sagt: "Ich kann Euch leider nicht ausbilden."
 EnchanterTrainer.WhisperReceive.CaseEnchanter:		Beschwörer
 EnchanterTrainer.WhisperReceive.Welcome:		Willkommen, {0}. Von diesem Tage an gehört Ihr zu den Reihen der Beschwörer. Hier, {0}. Nehmt dies als Geschenk. Es soll Euch auf dem Weg beistehen.
 

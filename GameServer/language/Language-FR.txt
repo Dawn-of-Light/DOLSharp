@@ -635,6 +635,7 @@ GameTrainer.PromotePlayer.Upgraded:			vous avez été promu(e) à la classe de {0} 
 GameTrainer.ReceiveItem.RespecFull:			Un superbe {0}! J'ai recu une possibilité de re-spécialisation totale. Pour l'utiliser : /respec all.
 GameTrainer.ReceiveItem.RespecRealm:		Merci, j'ai recu une possibilité de re-spécialisation de royaume. Pour l'utiliser : /respec realm.
 GameTrainer.ReceiveItem.RespecSingle:		Merci, j'ai recu une possibilité de re-spécialisation simple. Pour l'utiliser : /respec <linename>
+GameTrainer.Train.SeekElsewhere:			{0} dit, "Vous devez allez ailleurs pour votre entraînement."
 
 # KING THRONE NPC
 CLWeaponNPC.ReceiveItem.RespecCL:				Merci, j'ai recu une possibilité de re-spécialisation des compétences de champion. Pour l'utiliser : /respec cl.
@@ -647,7 +648,6 @@ ThroneTeleporterNPC.Interact.AskForExit			{0} dit, Désirez-vous quitter la salle
 # /EnchanterTrainer
 EnchanterTrainer.Interact.PathOfEssence:		{0} dit, "Voulez-vous vous devenir un Enchanteur et suivre la voix des magiciens?  La vie d'un [Enchanteur] en vaut la peine mais elle est dangereuse, mais cela est votre demande."
 EnchanterTrainer.Interact.QuickStudy:			{0} dit, "Vous êtes un bon élève, {1}. Mais ne soyez pas trop rapide dans votre approche du combat. Il y a toujours plus à apprendre."
-EnchanterTrainer.Interact.SeekElsewhere:		{0} dit, "Vous devez allez ailleurs pour votre entraînement."
 EnchanterTrainer.WhisperReceive.CaseEnchanter:		Enchanteur
 EnchanterTrainer.WhisperReceive.Welcome:		Bienvenue, {0}. À partir de ce jour, vous serez connu(e) comme un Enchanteur. Ici {0}. Prenez ce cadeau pour vous aider dans votre aventure.
 

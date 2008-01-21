@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Trainer
 {
@@ -48,7 +49,8 @@ namespace DOL.GS.Trainer
  			if (!base.Interact(player)) return false;
 								
 			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Eldritch) {
+			if (player.CharacterClass.ID == (int) eCharacterClass.Eldritch)
+			{
 
 				// popup the training window
 				player.Out.SendTrainerWindow();
@@ -59,10 +61,13 @@ namespace DOL.GS.Trainer
 			else 
 			{
 				// perhaps player can be promoted
-				if (CanPromotePlayer(player)) {
+				if (CanPromotePlayer(player)) 
+				{
 					player.Out.SendMessage(this.Name + " says, \"Greetings, " + player.Name + ". It is my understanding that you have chosen the Path of Focus, and wish to train as an [Eldritch].\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-				} else {
-					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
+				}
+				else 
+				{
+					DismissPlayer(player);
 				}
 			}
 			return true;

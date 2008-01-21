@@ -64,7 +64,7 @@ namespace DOL.GS.Trainer
 				}
 				else
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "EnchanterTrainer.Interact.SeekElsewhere", this.Name), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+					DismissPlayer(player);
 				}
 			}
 			return true;
