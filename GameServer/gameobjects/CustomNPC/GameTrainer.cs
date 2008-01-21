@@ -136,9 +136,9 @@ namespace DOL.GS
 				player.PlayerCharacter.LastFreeLeveled = DateTime.Now;
 				player.Out.SendPlayerFreeLevelUpdate();
 			}
-
-            if (player.Level == 5)
-            {
+			//base trainer can not respecialize
+			if ((TrainedClass.ToString() != player.CharacterClass.BaseName) && (player.Level == 5))
+			{
 				player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client, "GameTrainer.Interact.Respecialize", this.Name, player.Name)), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 			}
 			            
@@ -239,8 +239,6 @@ namespace DOL.GS
 						}						
 				}
 			}
-
-
 			return base.ReceiveItem(source, item);
 		}
 
