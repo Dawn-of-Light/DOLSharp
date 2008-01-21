@@ -73,6 +73,11 @@ namespace DOL.GS.Spells
 		protected bool m_startReuseTimer = true;
 
 		/// <summary>
+		/// Ability that casts a spell
+		/// </summary>
+		protected SpellCastingAbilityHandler m_ability = null;
+
+		/// <summary>
 		/// Stores the current delve info depth
 		/// </summary>
 		private byte m_delveInfoDepth;
@@ -1162,20 +1167,6 @@ namespace DOL.GS.Spells
 			if (Caster is GamePlayer)
 				((GamePlayer)Caster).Stealth(false);
 
-			//This is handled further down on the recast
-			////A simple function to disable Spells
-			//if (m_spell.SharedTimerGroup != 0)
-			//{
-			//     foreach (Spell sp in SkillBase.GetSpellList(m_spellLine.KeyName))
-			//          foreach (GamePlayer player in m_caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
-			//          {
-			//               if (sp.SharedTimerGroup == m_spell.SharedTimerGroup && sp.ID != m_spell.ID)
-			//               {
-			//                    ((GamePlayer)m_caster).DisableSkill(sp, sp.RecastDelay);
-			//               }
-			//          }
-			//}
-
 			// messages
 			if (Spell.InstrumentRequirement == 0 && Spell.ClientEffect != 0 && Spell.CastTime > 0)
 			{
@@ -1234,12 +1225,15 @@ namespace DOL.GS.Spells
 				QuickCastEffect quickcast = (QuickCastEffect)m_caster.EffectList.GetOfType(typeof(QuickCastEffect));
 				if (quickcast != null && Spell.CastTime > 0)
 				{
-					((GamePlayer)m_caster).TempProperties.setProperty(GamePlayer.QUICK_CAST_CHANGE_TICK, m_caster.CurrentRegion.Time);
+					m_caster.TempProperties.setProperty(GamePlayer.QUICK_CAST_CHANGE_TICK, m_caster.CurrentRegion.Time);
 					((GamePlayer)m_caster).DisableSkill(SkillBase.GetAbility(Abilities.Quickcast), QuickCastAbilityHandler.DISABLE_DURATION);
 					quickcast.Cancel(false);
 				}
 			}
 
+
+			if (m_ability != null)
+				m_caster.DisableSkill(m_ability.Ability, (m_spell.RecastDelay == 0 ? 3 : m_spell.RecastDelay));
 			// disable spells with recasttimer (Disables group of same type with same delay)
 			if (m_spell.RecastDelay > 0 && m_startReuseTimer)
 			{
@@ -2014,6 +2008,14 @@ namespace DOL.GS.Spells
 		}
 		#endregion
 
+		/// <summary>
+		/// Ability to cast a spell
+		/// </summary>
+		public SpellCastingAbilityHandler Ability
+		{
+			get { return m_ability; }
+			set { m_ability = value; }
+		}
 		/// <summary>
 		/// The Spell
 		/// </summary>
