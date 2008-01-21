@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Trainer
 {
@@ -63,8 +64,8 @@ namespace DOL.GS.Trainer
                 }
                 else
                 {
-                    player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
-                }
+					DismissPlayer(player);
+				}
             }
             return true;
         }

@@ -17,8 +17,9 @@
  *
  */
 using System;
-using DOL.GS.PacketHandler;
 using DOL.Database;
+using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Trainer
 {
@@ -68,18 +69,18 @@ namespace DOL.GS.Trainer
 				}
 
 				// ask for basic equipment if player doesnt own it
-				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
+				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.MinEquipable, eInventorySlot.LastBackpack) == null)
 				{
 					player.Out.SendMessage(this.Name + " says, \"Do you require a [practice weapon]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 				}
-				if (player.Inventory.GetFirstItemByID(PRACTICE_SHIELD_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
+				if (player.Inventory.GetFirstItemByID(PRACTICE_SHIELD_ID, eInventorySlot.MinEquipable, eInventorySlot.LastBackpack) == null)
 				{
 					player.Out.SendMessage(this.Name + " says, \"Do you require a [training shield]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 				}
 			}
 			else
 			{
-				player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+				DismissPlayer(player);
 			}
 			return true;
 		}
