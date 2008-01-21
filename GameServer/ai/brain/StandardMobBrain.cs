@@ -943,62 +943,6 @@ namespace DOL.AI.Brain
 							Body.TargetObject = Body;
 							break;
 						}
-
-						//ControlledNpc now overrides this part
-						//if (spell.Target == "Realm" && this is IControlledBrain)
-						//{
-						//    GameLiving owner = (this as IControlledBrain).Owner;
-						//    GamePlayer player = null;
-						//    //Buff owner
-						//    if (!LivingHasEffect(owner, spell))
-						//    {
-						//        Body.TargetObject = owner;
-						//        break;
-						//    }
-
-						//    if (owner is GameNPC)
-						//    {
-						//        //Buff other minions
-						//        foreach (IControlledBrain icb in ((GameNPC)owner).ControlledNpcList)
-						//        {
-						//            if (icb == null)
-						//                continue;
-						//            if (!LivingHasEffect(icb.Body, spell))
-						//            {
-						//                Body.TargetObject = icb.Body;
-						//                break;
-						//            }
-						//        }
-						//        player = (GamePlayer)((IControlledBrain)((GameNPC)owner).Brain).Owner;
-						//    }
-						//    else
-						//        player = (GamePlayer)owner;
-
-						//    //Buff player
-						//    if (player != null)
-						//    {
-						//        if (!LivingHasEffect(player, spell))
-						//        {
-						//            Body.TargetObject = player;
-						//            break;
-						//        }
-
-						//        ////Buff group
-						//        //if (player.PlayerGroup != null)
-						//        //{
-						//        //    foreach (GamePlayer gplayer in player.PlayerGroup.GetPlayersInTheGroup())
-						//        //    {
-						//        //        if (!HasEffect(gplayer, spell))
-						//        //        {
-						//        //            this.TargetObject = gplayer;
-						//        //            this.CastSpell(spell, spellline);
-						//        //            this.TargetObject = lastTarget;
-						//        //            return;
-						//        //        }
-						//        //    }
-						//        //}
-						//    }
-						//}
 						break;
 					}
 				#endregion
@@ -1043,72 +987,6 @@ namespace DOL.AI.Brain
 						break;
 					}
 
-					//ControlledNpc now overrides this part
-					//if (this is IControlledBrain)
-					//{
-					//    //Heal owner
-					//    GameLiving owner = (this as IControlledBrain).Owner;
-					//    if (owner.HealthPercent < 75)
-					//    {
-					//        Body.TargetObject = owner;
-					//        break;
-					//    }
-
-					//    GamePlayer player;
-					//    //Get the minion's GamePlayer
-					//    if (owner is GamePlayer)
-					//        player = (GamePlayer)owner;
-					//    else
-					//        player = (GamePlayer)((IControlledBrain)((GameNPC)owner).Brain).Owner;
-
-					//    //If minion, heal player and other minions
-					//    if (Body.IsMinion)
-					//    {
-					//        if (player.HealthPercent < 75)
-					//        {
-					//            Body.TargetObject = player;
-					//            break;
-					//        }
-
-					//        if (owner is GameNPC)
-					//        {
-					//            //Heal other minions
-					//            foreach (IControlledBrain icb in ((GameNPC)owner).ControlledNpcList)
-					//            {
-					//                if (icb == null)
-					//                    continue;
-					//                if (icb.Body.HealthPercent < 75)
-					//                {
-					//                    Body.TargetObject = icb.Body;
-					//                    break;
-					//                }
-					//            }
-					//        }
-					//        //Heal group
-					//        /*
-					//        if (player.PlayerGroup != null)
-					//        {
-					//            foreach (GamePlayer gplayer in player.PlayerGroup.GetPlayersInTheGroup())
-					//            {
-					//                if (gplayer.HealthPercent < 75)
-					//                    CheckSpellsByType("Heal", gplayer);
-
-					//            }
-					//        }*/
-					//    }
-
-					//    if (player.PlayerGroup != null && player.CharacterClass.ID == (int)eCharacterClass.Enchanter)
-					//    {
-					//        foreach (GamePlayer gplayer in player.PlayerGroup.GetPlayersInTheGroup())
-					//        {
-					//            if (gplayer.HealthPercent < 75)
-					//            {
-					//                Body.TargetObject = gplayer;
-					//                break;
-					//            }
-					//        }
-					//    }
-					//}
 					break;
 				#endregion
 			}
