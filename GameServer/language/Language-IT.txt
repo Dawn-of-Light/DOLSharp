@@ -447,11 +447,11 @@ GameTrainer.PromotePlayer.Upgraded:			Sei stato promosso alla classe {0}!
 GameTrainer.ReceiveItem.RespecFull:			Un simpatico {0}! Ti ho aggiunto un full respec da usare con /respec all.
 GameTrainer.ReceiveItem.RespecRealm:			Grazie, ti ho aggiunto un realm respec da usare con /respec realm.
 GameTrainer.ReceiveItem.RespecSingle:			Grazie, ti ho aggiunto un single spec respec da usare con /respec <linename>
+GameTrainer.Train.SeekElsewhere:			{0} dice, "Devi cercare altro per allenarti."
 
 # /EnchanterTrainer
 EnchanterTrainer.Interact.PathOfEssence:		{0} dice, "Scegli di allenarti come Enchanter e seguire il Percorso dell'Essenza? La vita da [Enchanter] e' tanto gratificante quanto pericolosa, ma sara' tua se la scegli."
 EnchanterTrainer.Interact.QuickStudy:			{0} dice, "Impari velocemente, {1}. Ma non essere troppo affrettato. C'e' sempre altro da imparare."
-EnchanterTrainer.Interact.SeekElsewhere:		{0} dice, "Devi cercare altro per allenarti."
 EnchanterTrainer.WhisperReceive.CaseEnchanter:		Enchanter
 EnchanterTrainer.WhisperReceive.Welcome:		Benvenuto, {0}. Da oggi in poi sarai riconosciuto come Enchanter. Ecco, {0}. Prendi questo dono per aiutarti nel tuo percorso.
 

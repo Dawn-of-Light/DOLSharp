@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Trainer
 {
@@ -46,18 +47,24 @@ namespace DOL.GS.Trainer
  			if (!base.Interact(player)) return false;
 								
 			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Healer) {
+			if (player.CharacterClass.ID == (int) eCharacterClass.Healer)
+			{
 
 				// popup the training window
 				player.Out.SendTrainerWindow();
 				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
 
-			} else {
+			}
+			else 
+			{
 				// perhaps player can be promoted
-				if (CanPromotePlayer(player)) {
+				if (CanPromotePlayer(player))
+				{
 					player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the House of Eir] and defend our realm as a Healer?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
-				} else {
-					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
+				}
+				else 
+				{
+					DismissPlayer(player);
 				}
 			}
 			return true;
