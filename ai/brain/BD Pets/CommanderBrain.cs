@@ -99,11 +99,14 @@ namespace DOL.AI.Brain
 		/// </summary>
 		private void SubpetFollow()
 		{
-			lock (Body.ControlledNpcList)
+			if (Body.ControlledNpcList != null)
 			{
-				foreach (BDPetBrain icb in Body.ControlledNpcList)
-					if (icb != null)
-						icb.FollowOwner();
+				lock (Body.ControlledNpcList)
+				{
+					foreach (BDPetBrain icb in Body.ControlledNpcList)
+						if (icb != null)
+							icb.FollowOwner();
+				}
 			}
 		}
 
