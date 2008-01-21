@@ -18,7 +18,7 @@ using System;
  *
  */
 
-using DOL.Database;
+using DOL.Database2;
 using DOL.Language;
 using DOL.GS.Keeps;
 
@@ -138,10 +138,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 					//create a bug report
 					BugReport report = new BugReport();
 					report.DateSubmitted = DateTime.Now;
-					report.ID = GameServer.Database.GetObjectCount(typeof(BugReport)) + 1;
+					report.ID = GameServer.GS.GetObjectCount(typeof(BugReport)) + 1;
 					report.Message = "There is a missing door at location Region: " + player.CurrentRegionID + " X:" + player.X + " Y: " + player.Y + " Z: " + player.Z;
 					report.Submitter = player.Name;
-					GameServer.Database.AddNewObject(report);
+					GameServer.GS.AddNewObject(report);
 					 */
 
 					//else basic quick hack

@@ -19,7 +19,7 @@
 using System;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
-using DOL.Database;
+using DOL.Database2;
 using System.Collections;
 using DOL.Events;
 using DOL.GS.SkillHandler;

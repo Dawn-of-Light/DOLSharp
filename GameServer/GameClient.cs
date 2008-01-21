@@ -19,7 +19,7 @@
 using System;
 using System.Text;
 using System.Threading;
-using DOL.Database;
+using DOL.Database2;
 using System.Net;
 using System.Reflection;
 using DOL.Events;

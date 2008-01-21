@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using System.Net.Sockets;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS;
 using DOL.Tests;

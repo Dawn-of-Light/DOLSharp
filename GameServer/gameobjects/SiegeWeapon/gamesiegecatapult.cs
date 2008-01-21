@@ -17,7 +17,7 @@
  *
  */
 using System;
-using DOL.Database;
+using DOL.Database2;
 using System.Collections;
 
 namespace DOL.GS
@@ -100,7 +100,7 @@ namespace DOL.GS
 			}
 			return;
 		}
-		public override bool ReceiveItem(GameLiving source, DOL.Database.InventoryItem item)
+		public override bool ReceiveItem(GameLiving source, DOL.GS.InventoryItem item)
 		{
 			//todo check if bullet
 			return base.ReceiveItem(source, item);

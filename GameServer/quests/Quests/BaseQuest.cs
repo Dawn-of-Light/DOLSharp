@@ -28,7 +28,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.PacketHandler;
 using log4net;
 using DOL.Events;
@@ -39,7 +39,7 @@ using DOL.GS.Behaviour;
  *       DOL.GS.Quests.Hibernia
  * Also this is the name that will show up in the database as QuestName
  * so setting good values here will result in easier to read and cleaner
- * Database Code
+ * GS Code
  */
 
 namespace DOL.GS.Quests
@@ -333,7 +333,7 @@ namespace DOL.GS.Quests
 
 		protected static ItemTemplate CreateTicketTo(String location)
 		{
-			ItemTemplate ticket = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ticket_to_" + GameServer.Database.Escape(location.ToLower()));
+            ItemTemplate ticket = (ItemTemplate)DatabaseLayer.Instance.SelectObject(typeof(ItemTemplate), "Id_nb", "ticket_to_" + location.ToLower());
 			if (ticket == null)
 			{
 				if (log.IsWarnEnabled)
@@ -360,12 +360,12 @@ namespace DOL.GS.Quests
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				GameServer.Database.AddNewObject(ticket);
+                ticket.WriteToDatabase = true;
 			}
 			return ticket;
 		}
 
-		protected static ItemTemplate CreateTicketTo(String destination, String ticket_Id)
+		protected static ItemTemplate CreateTicketTo(String destination,UInt64 TicketID)
 		{
 			ItemTemplate ticket = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), GameServer.Database.Escape(ticket_Id.ToLower()));
 			if (ticket == null)
@@ -375,8 +375,6 @@ namespace DOL.GS.Quests
 
 				ticket = new ItemTemplate();
 				ticket.Name = "ticket to " + destination;
-
-				ticket.Id_nb = ticket_Id.ToLower();
 
 				ticket.Model = 499;
 
@@ -393,8 +391,7 @@ namespace DOL.GS.Quests
 				ticket.PackSize = 1;
 				ticket.Weight = 0;
 
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(ticket);
+                ticket.WriteToDatabase = SAVE_INTO_DATABASE;
 			}
 			return ticket;
 		}

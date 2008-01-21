@@ -24,7 +24,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
-using DOL.Database;
+using DOL.Database2;
 using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
@@ -255,10 +255,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 						else
 						{
 //							// autoconvert all
-//							foreach (Account acc in GameServer.Database.SelectAllObjects(typeof(Account))) {
+//							foreach (Account acc in GameServer.GS.SelectAllObjects(typeof(Account))) {
 //								if (acc.Password != null && !acc.Password.StartsWith("##")) {
 //									acc.Password = CryptPassword(acc.Password);
-//									GameServer.Database.SaveObject(acc);
+//									GameServer.GS.SaveObject(acc);
 //								}
 //							}
 

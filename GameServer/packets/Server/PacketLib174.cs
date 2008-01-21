@@ -22,7 +22,7 @@ using System.Collections;
 using System.Reflection;
 
 using DOL.GS.Effects;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.Keeps;
 using DOL.GS.Spells;
 using DOL.GS.Styles;

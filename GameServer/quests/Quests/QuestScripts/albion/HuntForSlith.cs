@@ -31,7 +31,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -41,7 +41,7 @@ using log4net;
  *       DOL.GS.Quests.Hibernia
  * Also this is the name that will show up in the database as QuestName
  * so setting good values here will result in easier to read and cleaner
- * Database Code
+ * GS Code
  */
 
 namespace DOL.GS.Quests.Albion
@@ -133,7 +133,7 @@ namespace DOL.GS.Quests.Albion
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Commander Burcrif", eRealm.Albion);
 
 			/* Whops, if the npcs array length is 0 then no npc exists in
-				* this users Mob Database, so we simply create one ;-)
+				* this users Mob GS, so we simply create one ;-)
 				* else we take the existing one. And if more than one exist, we take
 				* the first ...
 				*/
@@ -184,7 +184,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			slithsTail = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sliths_tail");
+			slithsTail = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "sliths_tail");
 			if (slithsTail == null)
 			{
 				slithsTail = new ItemTemplate();

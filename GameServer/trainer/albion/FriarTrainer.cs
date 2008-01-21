@@ -17,6 +17,7 @@
  *
  */
 using System;
+using DOL.Database2;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Trainer
@@ -90,7 +91,7 @@ namespace DOL.GS.Trainer
 				// promote player to other class
 				if (CanPromotePlayer(player)) {
 					PromotePlayer(player, (int)eCharacterClass.Friar, "We welcome you into our society as an equal! We are at your disposal. We will now issue your Robes of the Novice. Wear them always and let it serve to remind you of your faith. When you have reached the title of Lesser Chaplain, return them to me. We shall then see if you require another.", null);
-					player.ReceiveItem(this,ARMOR_ID1);
+					player.ReceiveItem(this,DatabaseLayer.Instance.SelectObject(typeof(ItemTemplate),"Id_nb",ARMOR_ID1));
 				}
 				break;
 			}

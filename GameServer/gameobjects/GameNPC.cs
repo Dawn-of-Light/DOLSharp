@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Threading;
 using DOL.AI;
 using DOL.AI.Brain;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.Language;
 using DOL.GS.Effects;
@@ -42,7 +42,8 @@ namespace DOL.GS
 	/// This class is the baseclass for all Non Player Characters like
 	/// Monsters, Merchants, Guards, Steeds ...
 	/// </summary>
-	public class GameNPC : GameLiving
+	[Serializable]
+    public class GameNPC : GameLiving
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -152,7 +153,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the owner of this npc
 		/// </summary>
-		public string BoatOwnerID
+		public UInt64 BoatOwnerID
 		{
 			get { return m_boatowner_id; }
 			set
@@ -295,25 +296,36 @@ namespace DOL.GS
 				}
 			}
 		}
-
+        [NonSerialized]
 		private Faction m_faction = null;
+        private UInt64 m_factionid;
 		/// <summary>
 		/// Gets the Faction of the NPC
 		/// </summary>
 		public Faction Faction
 		{
-			get { return m_faction; }
+			get 
+            {
+                if (m_faction == null)
+                {
+                    if (!DatabaseLayer.Instance.DatabaseObjects.TryGetValue(m_factionid, m_faction))
+                        log.Error("Could not get Faction " + m_factionid);
+                }
+                return m_faction; 
+            }
 			set
 			{
 				m_faction = value;
+                m_factionid = value.ID;
 			}
 		}
-
+        [NonSerialized]
 		private ArrayList m_linkedFactions;
 		/// <summary>
 		/// The linked factions for this NPC
 		/// </summary>
-		public ArrayList LinkedFactions
+		[NonSerialized]
+        public ArrayList LinkedFactions
 		{
 			get { return m_linkedFactions; }
 			set { m_linkedFactions = value; }
@@ -1708,7 +1720,8 @@ namespace DOL.GS
 		/// Load a npc from the npc template
 		/// </summary>
 		/// <param name="obj">template to load from</param>
-		public override void LoadFromDatabase(DataObject obj)
+		/*
+        public override void LoadFromDatabase(DatabaseObject obj)
 		{
 			if (obj == null) return;
 			base.LoadFromDatabase(obj);
@@ -1804,87 +1817,9 @@ namespace DOL.GS
 			m_houseNumber = npc.HouseNumber;
 			m_maxdistance = npc.MaxDistance;
 		}
-
-		/// <summary>
-		/// Deletes the mob from the database
-		/// </summary>
-		public override void DeleteFromDatabase()
-		{
-			if (InternalID != null)
-			{
-				Mob mob = (Mob)GameServer.Database.FindObjectByKey(typeof(Mob), InternalID);
-				if (mob != null)
-					GameServer.Database.DeleteObject(mob);
-			}
-		}
-
-		/// <summary>
-		/// Saves a mob into the db if it exists, it is
-		/// updated, else it creates a new object in the DB
-		/// </summary>
-		public override void SaveIntoDatabase()
-		{
-			Mob mob = null;
-			if (InternalID != null)
-				mob = (Mob)GameServer.Database.FindObjectByKey(typeof(Mob), InternalID);
-			if (mob == null)
-				mob = new Mob();
-
-			mob.Name = Name;
-			mob.Guild = GuildName;
-			mob.X = X;
-			mob.Y = Y;
-			mob.Z = Z;
-			mob.Heading = Heading;
-			mob.Speed = MaxSpeedBase;
-			mob.Region = CurrentRegionID;
-			mob.Realm = (byte)Realm;
-			mob.Model = Model;
-			mob.Size = Size;
-			mob.Level = Level;
-
-			// Stats
-			mob.Constitution = Constitution;
-			mob.Dexterity = Dexterity;
-			mob.Strength = Strength;
-			mob.Quickness = Quickness;
-			mob.Intelligence = Intelligence;
-			mob.Piety = Piety;
-			mob.Empathy = Empathy;
-			mob.Charisma = Charisma;
-
-			mob.ClassType = this.GetType().ToString();
-			mob.Flags = Flags;
-			mob.Speed = MaxSpeedBase;
-			mob.RespawnInterval = m_respawnInterval / 1000;
-			mob.HouseNumber = HouseNumber;
-			if (Brain.GetType().FullName != typeof(StandardMobBrain).FullName)
-				mob.Brain = Brain.GetType().FullName;
-			IAggressiveBrain aggroBrain = Brain as IAggressiveBrain;
-			if (aggroBrain != null)
-			{
-				mob.AggroLevel = aggroBrain.AggroLevel;
-				mob.AggroRange = aggroBrain.AggroRange;
-			}
-			mob.EquipmentTemplateID = EquipmentTemplateID;
-			if (m_faction != null)
-				mob.FactionID = m_faction.ID;
-			mob.MeleeDamageType = (int)MeleeDamageType;
-			if (NPCTemplate != null)
-				mob.NPCTemplateID = NPCTemplate.TemplateId;
-			mob.PathID = PathID;
-			mob.MaxDistance = m_maxdistance;
-
-			if (InternalID == null)
-			{
-				GameServer.Database.AddNewObject(mob);
-				InternalID = mob.ObjectId;
-			}
-			else
-				GameServer.Database.SaveObject(mob);
-		}
-
-		/// <summary>
+        */
+	
+        /// <summary>
 		/// Load a NPC template onto this NPC
 		/// </summary>
 		/// <param name="template"></param>
@@ -2208,7 +2143,8 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds the rider of this NPC as weak reference
 		/// </summary>
-		public GamePlayer[] Riders;
+		[NonSerialized]
+        public GamePlayer[] Riders;
 
 		/// <summary>
 		/// This function is called when a rider mounts this npc
@@ -4083,7 +4019,7 @@ namespace DOL.GS
 				Strength = (short)(20 + Level * 6);
 		}
 
-		private string m_boatowner_id;
+		private UInt64 m_boatowner_id;
 		/// <summary>
 		/// Constructs a NPC
 		/// </summary>
@@ -4155,7 +4091,7 @@ namespace DOL.GS
 			Empathy = (short)template.Empathy;
 			CheckStats();
 
-			m_boatowner_id = "";
+			m_boatowner_id = 0;
 		}
 	}
 }

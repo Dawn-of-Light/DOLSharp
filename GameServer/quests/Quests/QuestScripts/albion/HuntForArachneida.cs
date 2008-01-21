@@ -34,7 +34,7 @@
 
 using System;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -44,7 +44,7 @@ using log4net;
  *       DOL.GS.Quests.Hibernia
  * Also this is the name that will show up in the database as QuestName
  * so setting good values here will result in easier to read and cleaner
- * Database Code
+ * GS Code
  */
 
 namespace DOL.GS.Quests.Albion
@@ -150,7 +150,7 @@ namespace DOL.GS.Quests.Albion
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Kealan", eRealm.Albion);
 
 			/* Whops, if the npcs array length is 0 then no Sir Quait exists in
-				* this users Mob Database, so we simply create one ;-)
+				* this users Mob GS, so we simply create one ;-)
 				* else we take the existing one. And if more than one exist, we take
 				* the first ...
 				*/
@@ -222,7 +222,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineItems
 
-			spiderSilkenRobe = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "spider_silken_robe");
+			spiderSilkenRobe = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "spider_silken_robe");
 			if (spiderSilkenRobe == null)
 			{
 				spiderSilkenRobe = new ItemTemplate();
@@ -271,7 +271,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(spiderSilkenRobe);
 			}
 
-			ringedSpiderChitinTunic = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ringed_spider_chitin_tunic");
+			ringedSpiderChitinTunic = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "ringed_spider_chitin_tunic");
 			if (ringedSpiderChitinTunic == null)
 			{
 				ringedSpiderChitinTunic = new ItemTemplate();
@@ -319,7 +319,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(ringedSpiderChitinTunic);
 			}
 
-			studdedSpiderEyeVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "studded_spider_eye_vest");
+			studdedSpiderEyeVest = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "studded_spider_eye_vest");
 			if (studdedSpiderEyeVest == null)
 			{
 				studdedSpiderEyeVest = new ItemTemplate();
@@ -367,7 +367,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(studdedSpiderEyeVest);
 			}
 
-			spiderEmblazonedTunic = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "spider_emblazoned_tunic");
+			spiderEmblazonedTunic = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "spider_emblazoned_tunic");
 			if (spiderEmblazonedTunic == null)
 			{
 				spiderEmblazonedTunic = new ItemTemplate();
@@ -414,7 +414,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(spiderEmblazonedTunic);
 			}
 
-			embossedSpiderTunic = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "embossed_spider_tunic");
+			embossedSpiderTunic = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "embossed_spider_tunic");
 			if (embossedSpiderTunic == null)
 			{
 				embossedSpiderTunic = new ItemTemplate();
@@ -462,7 +462,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(embossedSpiderTunic);
 			}
 
-			bloatedFang = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "bloated_spider_fang");
+			bloatedFang = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "bloated_spider_fang");
 			if (bloatedFang == null)
 			{
 				if (log.IsWarnEnabled)
@@ -483,7 +483,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(bloatedFang);
 			}
 
-			spiderChitin = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "arachneida_spider_chitin");
+			spiderChitin = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "arachneida_spider_chitin");
 			if (spiderChitin == null)
 			{
 				if (log.IsWarnEnabled)

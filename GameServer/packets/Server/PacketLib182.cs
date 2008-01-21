@@ -21,7 +21,7 @@ using System;
 using log4net;
 using System.Collections;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS.PacketHandler
 {

@@ -55,7 +55,7 @@ namespace DOL.GS.Commands
 			text.Append("using DOL;\n");
 			text.Append("using DOL.AI;\n");
 			text.Append("using DOL.AI.Brain;\n");
-			text.Append("using DOL.Database;\n");
+			text.Append("using DOL.GS;\n");
 			text.Append("using DOL.GS;\n");
 			text.Append("using DOL.GS.Movement;\n");
 			text.Append("using DOL.GS.Housing;\n");

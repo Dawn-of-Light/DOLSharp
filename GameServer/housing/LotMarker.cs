@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Housing
@@ -211,12 +211,6 @@ namespace DOL.GS.Housing
 			int itemCount = Math.Max(1, item.Count);
 			return item.Value * itemCount / 2;
 		}
-
-		public override void SaveIntoDatabase()
-		{
-			// do nothing !!!
-		}
-
 		public static void SpawnLotMarker(DBHouse house)
 		{
 			GameLotMarker obj = new GameLotMarker();

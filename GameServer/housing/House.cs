@@ -21,7 +21,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 using DOL.GS.PacketHandler;
-using DOL.Database;
+using DOL.Database2;
 using log4net;
 
 namespace DOL.GS.Housing
@@ -37,8 +37,8 @@ namespace DOL.GS.Housing
 		Class = 0x06,
 		Race = 0x07
 	}
-
-	public class House : IPoint3D
+    [Serializable]
+	public class House : DatabaseObject, IPoint3D
 	{
 		public const string HOUSEFORHOUSERENT = "HouseForHouseRent";
 		public const string MONEYFORHOUSERENT = "MoneyForHouseRent";
@@ -261,8 +261,7 @@ namespace DOL.GS.Housing
 			get { return m_charspermissions; }
 			set { m_charspermissions = value; }
 		}
-
-		DBHouse m_databaseItem;
+        
 
 		DBHousePermissions[] m_houseAccess;
 
@@ -736,15 +735,6 @@ namespace DOL.GS.Housing
 		{
 			return HouseMgr.IsOwner(m_databaseItem, player, true);
 		}
-
-		/// <summary>
-		/// Saves this house into the database
-		/// </summary>
-		public void SaveIntoDatabase()
-		{
-			GameServer.Database.SaveObject(m_databaseItem);
-		}
-
 		public int GetPorchAndGuildEmblemFlags()
 		{
 			int flag = 0;
@@ -1361,11 +1351,12 @@ namespace DOL.GS.Housing
 			return (ushort)(Heading + RELATIVE_HOOKPOINTS_COORDS[Model][n][3]);
 		}
 		#endregion
-
+        /*
 		/// <summary>
 		/// Load a house from the database
 		/// </summary>
-		public void LoadFromDatabase()
+		
+        public void LoadFromDatabase()
 		{
 			int i = 0;
 			foreach (DBHouseIndoorItem dbiitem in GameServer.Database.SelectObjects(typeof(DBHouseIndoorItem), "HouseNumber = '" + this.HouseNumber + "'"))
@@ -1397,6 +1388,6 @@ namespace DOL.GS.Housing
 				FillHookpoint(null, item.Position, item.ItemTemplateID);
 				this.HousepointItems[item.Position] = item;
 			}
-		}
+		}*/
 	}
 }

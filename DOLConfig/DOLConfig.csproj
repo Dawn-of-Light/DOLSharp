@@ -80,10 +80,6 @@
       <Project>{A4A0FB22-124C-45CA-A653-2887DE0CC3E0}</Project>
       <Name>DOLBase</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj">
-      <Project>{43BFC675-13B7-4AA8-97F6-6109948849CC}</Project>
-      <Name>DOLDatabase</Name>
-    </ProjectReference>
     <ProjectReference Include="..\GameServer\GameServer.csproj">
       <Project>{ACB92917-3D42-4F40-97F9-EA904A41DE36}</Project>
       <Name>GameServer</Name>

@@ -7,7 +7,7 @@ using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Events;
 using DOL.GS.ServerRules;
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS.Spells
 {

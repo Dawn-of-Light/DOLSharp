@@ -33,7 +33,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -43,7 +43,7 @@ using log4net;
  *       DOL.GS.Quests.Hibernia
  * Also this is the name that will show up in the database as QuestName
  * so setting good values here will result in easier to read and cleaner
- * Database Code
+ * GS Code
  */
 
 namespace DOL.GS.Quests.Albion
@@ -139,7 +139,7 @@ namespace DOL.GS.Quests.Albion
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Andrew Wyatt", eRealm.Albion);
 
 			/* Whops, if the npcs array length is 0 then no npc exists in
-				* this users Mob Database, so we simply create one ;-)
+				* this users Mob GS, so we simply create one ;-)
 				* else we take the existing one. And if more than one exist, we take
 				* the first ...
 				*/
@@ -265,7 +265,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			bundleOfBearSkins = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "bundle_of_bear_skins");
+			bundleOfBearSkins = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "bundle_of_bear_skins");
 			if (bundleOfBearSkins == null)
 			{
 				bundleOfBearSkins = new ItemTemplate();
@@ -299,7 +299,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			spoolOfLeatherworkingThread = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "spool_of_leatherworking_thread");
+			spoolOfLeatherworkingThread = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "spool_of_leatherworking_thread");
 			if (spoolOfLeatherworkingThread == null)
 			{
 				spoolOfLeatherworkingThread = new ItemTemplate();
@@ -333,7 +333,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			chokerOfTheBear = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "choker_of_the_bear");
+			chokerOfTheBear = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "choker_of_the_bear");
 			if (chokerOfTheBear == null)
 			{
 				chokerOfTheBear = new ItemTemplate();

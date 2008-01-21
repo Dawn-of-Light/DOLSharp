@@ -17,7 +17,7 @@
  *
  */
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
@@ -116,7 +116,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					chosenRealm = (eRealm)client.Account.Realm;
 				}
 
-				//GameServer.Database.FillObjectRelations(client.Account);
+				//GameServer.GS.FillObjectRelations(client.Account);
 				//DOLConsole.WriteLine("Sending overview! realm="+client.Account.Realm);
 				client.ClientState=GameClient.eClientState.CharScreen;
 				client.Player = null;

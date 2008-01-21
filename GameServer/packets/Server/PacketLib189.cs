@@ -21,7 +21,7 @@ using System;
 using log4net;
 using DOL.GS.Quests;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using System.Collections;
 using DOL.GS.Housing;
 

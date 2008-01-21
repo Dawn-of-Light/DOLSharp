@@ -19,8 +19,9 @@
 using System;
 using System.Collections;
 
+using DOL.Database2;
 using DOL.AI.Brain;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.PacketHandler;
 using DOL.Events;
 
@@ -421,7 +422,7 @@ namespace DOL.GS.Keeps
 				GuardSpam(this);
 			base.Die(killer);
 			if (RespawnInterval == -1)
-				Delete();
+				DeleteGuard();
 		}
 
 		#region Guard Spam
@@ -599,13 +600,14 @@ namespace DOL.GS.Keeps
 			return s;
 		}
 
-		#region Database
+		#region GS
 
 		/// <summary>
 		/// Load the guard from the database
 		/// </summary>
 		/// <param name="mobobject">The database mobobject</param>
-		public override void LoadFromDatabase(DataObject mobobject)
+		/*
+        public override void LoadFromDatabase(DatabaseObject mobobject)
 		{
 			base.LoadFromDatabase(mobobject);
 			foreach (AbstractArea area in this.CurrentAreas)
@@ -621,27 +623,13 @@ namespace DOL.GS.Keeps
 			}
 			TemplateMgr.RefreshTemplate(this);
 		}
-
-		public override void Delete()
+        */
+		public void DeleteGuard()
 		{
 			if (HookPoint != null && Component != null)
 				Component.Keep.Guards.Remove(this.ObjectID);
 			base.Delete();
 		}
-
-		public override void DeleteFromDatabase()
-		{
-			foreach (AbstractArea area in this.CurrentAreas)
-			{
-				if (area is KeepArea)
-				{
-					Component.Keep.Guards.Remove(this.InternalID);
-					break;
-				}
-			}
-			base.DeleteFromDatabase();
-		}
-
 		/// <summary>
 		/// Load the guard from a position
 		/// </summary>
@@ -686,7 +674,7 @@ namespace DOL.GS.Keeps
 
 			int emblem = 0;
 			if (guild != null)
-				emblem = guild.theGuildDB.Emblem;
+				emblem = guild.Emblem;
 			InventoryItem lefthand = this.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
 			if (lefthand != null)
 				lefthand.Emblem = emblem;

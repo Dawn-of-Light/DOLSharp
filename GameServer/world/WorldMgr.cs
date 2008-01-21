@@ -22,7 +22,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.PacketHandler;
 using DOL.GS.Utils;
 using log4net;
@@ -275,7 +275,7 @@ namespace DOL.GS
 
 			// Load available teleport locations.
 
-			DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(Teleport));
+			DatabaseObject[] objs = GameServer.Database.SelectAllObjects(typeof(Teleport));
 			m_teleportLocations = new Dictionary<eRealm, List<Teleport>>();
 			int[] numTeleports = new int[3];
 			foreach (Teleport teleport in objs)
@@ -329,7 +329,7 @@ namespace DOL.GS
 				data.DivingEnabled = config[ENTRY_REG_DIVING_ENABLE].GetBoolean(false);
 				data.HousingEnabled = config[ENTRY_REG_HOUSING_ENABLE].GetBoolean(false);
 				data.Expansion = config[ENTRY_REG_EXPANSION].GetInt();
-				//				data.Mobs = (Mob[])GameServer.Database.SelectObjects(typeof(Mob), "Region = '" + data.Id + "'");
+				//				data.Mobs = (Mob[])GameServer.GS.SelectObjects(typeof(Mob), "Region = '" + data.Id + "'");
 				ArrayList mobs = (ArrayList)mobsByRegionId[data.Id];
 				if (mobs == null)
 					data.Mobs = new Mob[0];

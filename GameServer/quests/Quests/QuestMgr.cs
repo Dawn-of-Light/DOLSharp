@@ -21,7 +21,7 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Text;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -134,7 +134,7 @@ namespace DOL.GS.Quests
 			return ResolveLiving(identifier, defaultLiving, false);
 		}
 		/// <summary>
-        /// Searches for a GameLiving with the given id or name either in worldMgr or Database if lookukDB is true
+        /// Searches for a GameLiving with the given id or name either in worldMgr or GS if lookukDB is true
 		/// </summary>
 		/// <param name="identifier"></param>
 		/// <param name="defaultLiving"></param>
@@ -158,12 +158,12 @@ namespace DOL.GS.Quests
                 else if (livings.Length > 1)
                 {
                     if (log.IsWarnEnabled)
-                        log.Warn("Found more than one living with name :" + tempID + " in " + (lookupDB ? "Database" : "WorldMgr"));
+                        log.Warn("Found more than one living with name :" + tempID + " in " + (lookupDB ? "GS" : "WorldMgr"));
                 }
                 else
                 {
                     if (log.IsWarnEnabled)
-                        log.Warn("Couldn't find GameLiving with id or name:" + tempID + " in " + (lookupDB ? "Database" : "WorldMgr"));
+                        log.Warn("Couldn't find GameLiving with id or name:" + tempID + " in " + (lookupDB ? "GS" : "WorldMgr"));
                 }
 			}
 			else if (identifier is GameLiving)
@@ -198,7 +198,7 @@ namespace DOL.GS.Quests
 			return ResolveNPC(identifier,defaultNPC, false);
 		}
 		/// <summary>
-        /// Searches for a NPC with the given id or name either in worldMgr or Database if lookukDB is true
+        /// Searches for a NPC with the given id or name either in worldMgr or GS if lookukDB is true
 		/// </summary>
 		/// <param name="identifier"></param>
 		/// <param name="defaultNPC"></param>

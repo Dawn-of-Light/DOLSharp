@@ -162,7 +162,7 @@ namespace DOLConfig
 			this.groupBox2.Size = new System.Drawing.Size(217, 142);
 			this.groupBox2.TabIndex = 1;
 			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = "Database Settings";
+			this.groupBox2.Text = "GS Settings";
 			// 
 			// mysqlPasswordTextBox
 			// 
@@ -222,7 +222,7 @@ namespace DOLConfig
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(94, 13);
 			this.label6.TabIndex = 3;
-			this.label6.Text = "MySQL Database:";
+			this.label6.Text = "MySQL GS:";
 			// 
 			// label5
 			// 
@@ -254,7 +254,7 @@ namespace DOLConfig
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(83, 13);
 			this.label4.TabIndex = 0;
-			this.label4.Text = "Database Type:";
+			this.label4.Text = "GS Type:";
 			// 
 			// saveButton
 			// 

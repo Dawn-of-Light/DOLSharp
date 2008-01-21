@@ -21,7 +21,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using DOL.GS;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Language;
 using DOL.GS.Keeps;
 using DOL.GS.Housing;
@@ -540,7 +540,7 @@ namespace DOL.GS.Commands
 									client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InfoOMotd", omotd), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 								if (client.Player.Guild.alliance != null)
 								{
-									string amotd = client.Player.Guild.alliance.Dballiance.Motd;
+									string amotd = client.Player.Guild.alliance.Motd;
 									if (!Util.IsEmpty(amotd) && client.Player.GuildRank.AcHear)
 										client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InfoaMotd", amotd), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 								}
@@ -1180,7 +1180,7 @@ namespace DOL.GS.Commands
 								/*if (showOffline)
 								{
 									List<Character> chars = new List<Character>();
-									chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(Character), "GuildID = '" + client.Player.GuildID + "'"));
+									chars.AddRange((Character[])GameServer.GS.SelectObjects(typeof(Character), "GuildID = '" + client.Player.GuildID + "'"));
 
 									foreach (Character ply in chars)
 									{
@@ -1470,7 +1470,7 @@ namespace DOL.GS.Commands
 								{
 									Character c = (Character)GameServer.Database.SelectObject(typeof(Character), "Name = '" + GameServer.Database.Escape(playername) + "'");
 									//if (c == null)
-									//c = (Character)GameServer.Database.SelectObject(typeof(CharacterArchive), "Name = '" + GameServer.Database.Escape(playername) + "'");
+									//c = (Character)GameServer.GS.SelectObject(typeof(CharacterArchive), "Name = '" + GameServer.GS.Escape(playername) + "'");
 
 									if (c == null)
 									{
@@ -1482,7 +1482,7 @@ namespace DOL.GS.Commands
 								}
 								List<Character> chars = new List<Character>();
 								chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(Character), "AccountID = '" + accountId + "'"));
-								//chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(CharacterArchive), "AccountID = '" + accountId + "'"));
+								//chars.AddRange((Character[])GameServer.GS.SelectObjects(typeof(CharacterArchive), "AccountID = '" + accountId + "'"));
 
 								foreach (Character ply in chars)
 								{
@@ -1504,7 +1504,7 @@ namespace DOL.GS.Commands
 								{
 									Character c = (Character)GameServer.Database.SelectObject(typeof(Character), "Name = '" + GameServer.Database.Escape(args[2]) + "'");
 									//if (c == null)
-									//    c = (Character)GameServer.Database.SelectObject(typeof(CharacterArchive), "Name = '" + GameServer.Database.Escape(args[2]) + "'");
+									//    c = (Character)GameServer.GS.SelectObject(typeof(CharacterArchive), "Name = '" + GameServer.GS.Escape(args[2]) + "'");
 									if (c == null)
 									{
 										client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.PlayerNotFound"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
@@ -1570,8 +1570,7 @@ namespace DOL.GS.Commands
 								return;
 							}
 							message = String.Join(" ", args, 2, args.Length - 2);
-							client.Player.Guild.alliance.Dballiance.Motd = message;
-							GameServer.Database.SaveObject(client.Player.Guild.alliance.Dballiance);
+                            client.Player.Guild.alliance.Motd = message;
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.AMotdSet"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 							client.Player.Guild.UpdateGuildWindow();
 						}

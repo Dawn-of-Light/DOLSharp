@@ -16,10 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
+using System.Runtime.Serialization;
 using System.Collections.Specialized;
 using System.Collections;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Language;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -29,7 +31,8 @@ namespace DOL.GS
 	/// <summary>
 	/// AdvancedCraftingSkill is the skill for alchemy and spellcrafting whitch add all combine system
 	/// </summary>
-	public abstract class AdvancedCraftingSkill : AbstractCraftingSkill
+	[Serializable]
+    public abstract class AdvancedCraftingSkill : AbstractCraftingSkill
 	{
 		#region Classic craft function
 

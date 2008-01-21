@@ -17,8 +17,8 @@
  *
  */
 using System;
-using System.Collections;
-using DOL.Database;
+using System.Collections.Generic;
+using DOL.Database2;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
@@ -26,7 +26,7 @@ namespace DOL.GS
 	/// <summary>
 	/// Faction of mob
 	/// </summary>
-	public class Faction
+	public class Faction : DatabaseObject
 	{
 		private const int DECREASE_AGGRO_AMOUNT = -1;
 		private const int INCREASE_AGGRO_AMOUNT = 1;
@@ -34,6 +34,7 @@ namespace DOL.GS
 		private const int MIN_AGGRO_VALUE = -100;
 
 		public Faction()
+            :base()
 		{
 			m_name = String.Empty;
 			m_friendFactions = new ArrayList(1);
@@ -41,44 +42,6 @@ namespace DOL.GS
 			m_playerxFaction = new Hashtable(1);
 			m_updatePlayer = new ArrayList(1);
 		}
-
-		#region DB
-		/// <summary>
-		/// load faction from DB
-		/// </summary>
-		/// <param name="dbfaction"></param>
-		public void LoadFromDatabase(DBFaction dbfaction)
-		{
-			m_name = dbfaction.Name;
-			m_id = dbfaction.ID;
-			m_baseAggroLevel = dbfaction.BaseAggroLevel;
-		}
-		public void SaveAggroToFaction()
-		{
-			foreach (string charID in m_updatePlayer)
-			{
-				SaveAggroToFaction(charID);
-			}
-			m_updatePlayer.Clear();
-		}
-		public void SaveAggroToFaction(string charID)
-		{
-			DBFactionAggroLevel dbfactionAggroLevel = (DBFactionAggroLevel)GameServer.Database.SelectObject(typeof(DBFactionAggroLevel), "CharacterID = '" + GameServer.Database.Escape(charID) + "' AND FactionID =" + this.ID);
-			if (dbfactionAggroLevel == null)
-			{
-				dbfactionAggroLevel = new DBFactionAggroLevel();
-				dbfactionAggroLevel.AggroLevel = (int)m_playerxFaction[charID];
-				dbfactionAggroLevel.CharacterID = charID;
-				dbfactionAggroLevel.FactionID = this.ID;
-				GameServer.Database.AddNewObject(dbfactionAggroLevel);
-			}
-			else
-			{
-				dbfactionAggroLevel.AggroLevel = (int)m_playerxFaction[charID];
-				GameServer.Database.SaveObject(dbfactionAggroLevel);
-			}
-		}
-		#endregion
 
 		#region Properties
 
@@ -98,11 +61,11 @@ namespace DOL.GS
 		/// <summary>
 		/// hold friend factions
 		/// </summary>
-		private ArrayList m_friendFactions;
+		private List<Faction> m_friendFactions;
 		/// <summary>
 		/// friend factions
 		/// </summary>
-		public ArrayList FriendFactions
+		public List<Faction> FriendFactions
 		{
 			get { return m_friendFactions; }
 		}
@@ -110,26 +73,26 @@ namespace DOL.GS
 		/// <summary>
 		/// hold enemy factions
 		/// </summary>
-		private ArrayList m_enemyFactions;
+        [NonSerialized]
+        private List<Faction> m_enemyFactions_secret = new List<Faction>();
+        private List<Faction> m_enemyFactions
+        {
+            get
+            {
+                if (m_enemyFactions_secret == null)
+                {
+                }
+            }
+        }
+        private List<UInt64> m_enemyFactionIDs = new List<ulong>();
 		/// <summary>
 		/// enemy factions
 		/// </summary>
-		public ArrayList EnemyFactions
+		public List<Faction> EnemyFactions
 		{
 			get { return m_enemyFactions; }
 		}
 
-		/// <summary>
-		/// hold id of faction
-		/// </summary>
-		private int m_id;
-		/// <summary>
-		/// id of faction
-		/// </summary>
-		public int ID
-		{
-			get { return m_id; }
-		}
 
 		/// <summary>
 		/// hold base aggro level
@@ -146,14 +109,14 @@ namespace DOL.GS
 		/// <summary>
 		/// this is the table of player aggrolevel
 		/// </summary>
-		private Hashtable m_playerxFaction;
+		private Dictionary<UInt64,int>  m_playerxFaction = new Dictionary<UInt64,int>();
 
-		private ArrayList m_updatePlayer;
+		private List<GamePlayer> m_updatePlayer;
 
 		/// <summary>
 		/// table of player and aggrolevel (characterid/aggrolevel)
 		/// </summary>
-		public Hashtable PlayerxFaction
+		public Dictionary<UInt64,int> PlayerxFaction
 		{
 			get { return m_playerxFaction; }
 		}
@@ -227,20 +190,20 @@ namespace DOL.GS
 		public void ChangeAggroLevel(GamePlayer player, int amount)
 		{
 			// remember the player
-			if (!m_updatePlayer.Contains(player.PlayerCharacter.ObjectId))
+			if (!m_updatePlayer.Contains(player.PlayerCharacter.ID))
 			{
-				m_updatePlayer.Add(player.PlayerCharacter.ObjectId);
+				m_updatePlayer.Add(player.PlayerCharacter.ID);
 			}
 			int oldAggro;
 			// remember the player's relation to the faction
-			if (m_playerxFaction.ContainsKey(player.PlayerCharacter.ObjectId))
+			if (m_playerxFaction.ContainsKey(player.PlayerCharacter.ID))
 			{
-				oldAggro = (int)m_playerxFaction[player.PlayerCharacter.ObjectId];
+				oldAggro = (int)m_playerxFaction[player.PlayerCharacter.ID];
 			}
 			else
 			{
 				oldAggro = BaseAggroLevel;
-				m_playerxFaction.Add(player.PlayerCharacter.ObjectId, BaseAggroLevel);
+				m_playerxFaction.Add(player.PlayerCharacter.ID, BaseAggroLevel);
 			}
 			// get the new relation
 			int newAggro = oldAggro + amount;
@@ -257,7 +220,7 @@ namespace DOL.GS
 			if (newAggro != oldAggro)
 			{
 				// save the change
-				m_playerxFaction[player.PlayerCharacter.ObjectId] = newAggro;
+				m_playerxFaction[player.PlayerCharacter.ID] = newAggro;
 				// tell the player
 				string msg = "Your relationship with " + this.Name + " has ";
 				if (amount > 0)
@@ -279,8 +242,8 @@ namespace DOL.GS
 		/// <returns></returns>
 		public int GetAggroToFaction(GamePlayer player)
 		{
-			if (m_playerxFaction.ContainsKey(player.PlayerCharacter.ObjectId))
-				return (int)m_playerxFaction[player.PlayerCharacter.ObjectId];
+			if (m_playerxFaction.ContainsKey(player.PlayerCharacter.ID))
+				return (int)m_playerxFaction[player.PlayerCharacter.ID];
 			else
 				return BaseAggroLevel;
 		}

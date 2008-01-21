@@ -21,7 +21,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -356,8 +356,8 @@ namespace DOL.GS
 			m_lastID = 0;
 
 			//load guilds
-			DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(DBGuild));
-			foreach (DataObject obj in objs)
+			DatabaseObject[] objs = GameServer.Database.SelectAllObjects(typeof(DBGuild));
+			foreach (DatabaseObject obj in objs)
 			{
 				Guild myguild = new Guild();
 				myguild.LoadFromDatabase(obj);
@@ -440,7 +440,7 @@ namespace DOL.GS
 			if (oldemblem != 0)
 			{
 				player.RemoveMoney(COST_RE_EMBLEM, null);
-				DataObject[] objs = GameServer.Database.SelectObjects(typeof(InventoryItem), "Emblem = " + GameServer.Database.Escape(oldemblem.ToString()));
+				DatabaseObject[] objs = GameServer.Database.SelectObjects(typeof(InventoryItem), "Emblem = " + GameServer.Database.Escape(oldemblem.ToString()));
 				foreach (InventoryItem item in objs)
 				{
 					item.Emblem = newemblem;

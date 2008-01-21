@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.Effects;
 
 namespace DOL.GS.Spells
@@ -62,7 +62,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Returns true when spell is in casting phase
 		/// </summary>
-		bool IsCasting { get; }
+        bool IsCasting { get; }
 
 		/// <summary>
 		/// Gets wether this spell has positive or negative impact on targets

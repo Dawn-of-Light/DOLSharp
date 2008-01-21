@@ -45,7 +45,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -55,7 +55,7 @@ using log4net;
  *       DOL.GS.Quests.Hibernia
  * Also this is the name that will show up in the database as QuestName
  * so setting good values here will result in easier to read and cleaner
- * Database Code
+ * GS Code
  */
 
 namespace DOL.GS.Quests.Albion
@@ -292,7 +292,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineItems
 
-			swampRatTail = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "swamp_rat_tail");
+			swampRatTail = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "swamp_rat_tail");
 			if (swampRatTail == null)
 			{
 				swampRatTail = new ItemTemplate();
@@ -316,7 +316,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(swampRatTail);
 			}
 
-			swampSlimeItem = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "swamp_slime");
+			swampSlimeItem = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "swamp_slime");
 			if (swampSlimeItem == null)
 			{
 				swampSlimeItem = new ItemTemplate();
@@ -340,7 +340,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(swampSlimeItem);
 			}
 
-			scrollDunwyn = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "scroll_for_dunwyn");
+			scrollDunwyn = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "scroll_for_dunwyn");
 			if (scrollDunwyn == null)
 			{
 				scrollDunwyn = new ItemTemplate();
@@ -364,7 +364,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(scrollDunwyn);
 			}
 
-			listDunwyn = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "list_for_dunwyn");
+			listDunwyn = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "list_for_dunwyn");
 			if (listDunwyn == null)
 			{
 				listDunwyn = new ItemTemplate();
@@ -388,7 +388,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(listDunwyn);
 			}
 
-			riverSpritlingClaw = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "river_spritling_claw");
+			riverSpritlingClaw = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "river_spritling_claw");
 			if (riverSpritlingClaw == null)
 			{
 				riverSpritlingClaw = new ItemTemplate();
@@ -412,7 +412,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(riverSpritlingClaw);
 			}
 
-			princessOberasHead = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "princess_oberas_head");
+			princessOberasHead = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "princess_oberas_head");
 			if (princessOberasHead == null)
 			{
 				princessOberasHead = new ItemTemplate();
@@ -437,7 +437,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_helm");
+			recruitsHelm = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_studded_helm");
 			if (recruitsHelm == null)
 			{
 				recruitsHelm = new ItemTemplate();
@@ -487,7 +487,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsCap = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_cap");
+			recruitsCap = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_quilted_cap");
 			if (recruitsCap == null)
 			{
 				recruitsCap = new ItemTemplate();
@@ -536,7 +536,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(recruitsCap);
 			}
 
-			recruitsRing = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_silver_ring");
+			recruitsRing = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_silver_ring");
 			if (recruitsRing == null)
 			{
 				recruitsRing = new ItemTemplate();

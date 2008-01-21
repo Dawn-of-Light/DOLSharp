@@ -7,7 +7,7 @@ using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Events;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.Spells;
 
 namespace DOL.GS.RealmAbilities

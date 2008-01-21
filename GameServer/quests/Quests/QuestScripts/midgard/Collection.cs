@@ -33,7 +33,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -43,7 +43,7 @@ using log4net;
  *       DOL.GS.Quests.Hibernia
  * Also this is the name that will show up in the database as QuestName
  * so setting good values here will result in easier to read and cleaner
- * Database Code
+ * GS Code
  */
 
 namespace DOL.GS.Quests.Midgard
@@ -191,45 +191,44 @@ namespace DOL.GS.Quests.Midgard
 			/*
 			 * TODO Model for Campfire doesn't work. Very Stange!
 			 */
-			/*
-			// Add campfires to generals 
-			for (int i = 0; i < generalLocations.Length; i++)
-			{
-				GameStaticItem campfire = null;
+            /*
+            // Add campfires to generals 
+            for (int i = 0; i < generalLocations.Length; i++)
+            {
+                GameStaticItem campfire = null;
 				
-				IEnumerable items =  WorldMgr.GetItemsCloseToSpot(generalLocations[i].RegionID,generalLocations[i].X, generalLocations[i].Y, generalLocations[i].Z, 400,true);
-				foreach (GameObject obj in items)
-				{
-					if (obj is GameStaticItem && obj.Name=="Camp Fire")
-					{
-						campfire= (GameStaticItem) obj;
-						break;
-					}
-				}
+                IEnumerable items =  WorldMgr.GetItemsCloseToSpot(generalLocations[i].RegionID,generalLocations[i].X, generalLocations[i].Y, generalLocations[i].Z, 400,true);
+                foreach (GameObject obj in items)
+                {
+                    if (obj is GameStaticItem && obj.Name=="Camp Fire")
+                    {
+                        campfire= (GameStaticItem) obj;
+                        break;
+                    }
+                }
 
-				if (campfire==null) 
-				{				
-					campfire = new GameStaticItem();
-					campfire.Name="Camp Fire";
+                if (campfire==null) 
+                {				
+                    campfire = new GameStaticItem();
+                    campfire.Name="Camp Fire";
 					
-					campfire.Model = 2593;				
-					campfire.Heading = generalLocations[i].Heading;
-					campfire.X = generalLocations[i].X;
-					campfire.Y = generalLocations[i].Y;
-					campfire.Z = generalLocations[i].Z;
-					campfire.CurrentRegionID = generalLocations[i].RegionID;
+                    campfire.Model = 2593;				
+                    campfire.Heading = generalLocations[i].Heading;
+                    campfire.X = generalLocations[i].X;
+                    campfire.Y = generalLocations[i].Y;
+                    campfire.Z = generalLocations[i].Z;
+                    campfire.CurrentRegionID = generalLocations[i].RegionID;
 					
-					if (SAVE_INTO_DATABASE) 
-						campfire.SaveIntoDatabase();
+                    item.WriteToDatabase = SAVE_INTO_DATABASE;
 					
-					campfire.AddToWorld();
+                    campfire.AddToWorld();
 
-					DOLConsole.WriteLine("Camp Fire added"+generalNames[i]);
-				}
-			}
+                    DOLConsole.WriteLine("Camp Fire added"+generalNames[i]);
+                }
+            }
 */
 
-			askefruerWings = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "askefruer_wings");
+            askefruerWings = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "askefruer_wings");
 			if (askefruerWings == null)
 			{
 				askefruerWings = new ItemTemplate();
@@ -249,11 +248,10 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(askefruerWings);
+                askefruerWings.AutoSave == SAVE_INTO_DATABASE;
 			}
 
-			dustyOldMap = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "dusty_old_map");
+			dustyOldMap = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "dusty_old_map");
 			if (dustyOldMap == null)
 			{
 				dustyOldMap = new ItemTemplate();
@@ -273,13 +271,12 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(dustyOldMap);
+                dustyOldMap.AutoSave = SAVE_INTO_DATABASE;
 			}
 
 
 			// item db check
-			recruitsArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_arms_mid");
+			recruitsArms = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_studded_arms_mid");
 			if (recruitsArms == null)
 			{
 				recruitsArms = new ItemTemplate();
@@ -321,11 +318,10 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsArms);
+                recruitsArms.AutoSave = SAVE_INTO_DATABASE;
 			}
 
-			recruitsSleeves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_sleeves");
+			recruitsSleeves = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_quilted_sleeves");
 			if (recruitsSleeves == null)
 			{
 				recruitsSleeves = new ItemTemplate();
@@ -367,8 +363,7 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsSleeves);
+                recruitsSleeves.AutoSave = SAVE_INTO_DATABASE;
 			}
 
 			#endregion

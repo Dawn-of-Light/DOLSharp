@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;

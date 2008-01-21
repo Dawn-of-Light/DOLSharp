@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 namespace DOL.GS
 {
@@ -42,7 +42,7 @@ namespace DOL.GS
         [ScriptLoadedEvent]
         public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
         {
-            DataObject[] specs = GameServer.Database.SelectAllObjects(typeof(DBChampSpecs));
+            DatabaseObject[] specs = GameServer.Database.SelectAllObjects(typeof(DBChampSpecs));
             foreach (DBChampSpecs spec in specs)
             {
                 ChampSpec newspec = new ChampSpec(spec.IdLine, spec.SkillIndex, spec.Index, spec.Cost, spec.SpellID);

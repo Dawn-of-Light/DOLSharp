@@ -91,11 +91,9 @@
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj">
-      <Name>DOLDatabase</Name>
-      <Project>{43BFC675-13B7-4AA8-97F6-6109948849CC}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-      <Private>True</Private>
+    <ProjectReference Include="..\DOLDatabase2\DOLDatabase2.csproj">
+      <Project>{9DBDD582-A8C8-4FE9-9BDC-E12CA28BFE71}</Project>
+      <Name>DOLDatabase2</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -341,6 +339,66 @@
     <Compile Include="Crafting\WoodWorking.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="database_classes\Account.cs" />
+    <Compile Include="database_classes\Account_Archive.cs" />
+    <Compile Include="database_classes\Artifact.cs" />
+    <Compile Include="database_classes\ArtifactBonus.cs" />
+    <Compile Include="database_classes\ArtifactXItem.cs" />
+    <Compile Include="database_classes\BindPoint.cs" />
+    <Compile Include="database_classes\BugReport.cs" />
+    <Compile Include="database_classes\Character.cs" />
+    <Compile Include="database_classes\Character_Archive.cs" />
+    <Compile Include="database_classes\ClassXRealmAbility.cs" />
+    <Compile Include="database_classes\DBAbility.cs" />
+    <Compile Include="database_classes\DBArea.cs" />
+    <Compile Include="database_classes\DBBanedAccount.cs" />
+    <Compile Include="database_classes\DBBoat.cs" />
+    <Compile Include="database_classes\DBCharacterXMasterLevel.cs" />
+    <Compile Include="database_classes\DBCraftedItem.cs" />
+    <Compile Include="database_classes\DBCraftedXItem.cs" />
+    <Compile Include="database_classes\DBDoor.cs" />
+    <Compile Include="database_classes\DBFaction.cs" />
+    <Compile Include="database_classes\DBFactionAggroLevel.cs" />
+    <Compile Include="database_classes\DBHouse.cs" />
+    <Compile Include="database_classes\DBHouseCharsXPerms.cs" />
+    <Compile Include="database_classes\DBHouseIndoorItem.cs" />
+    <Compile Include="database_classes\DBHouseOutdoorItem.cs" />
+    <Compile Include="database_classes\DBHousePermissions.cs" />
+    <Compile Include="database_classes\DBHousepointItem.cs" />
+    <Compile Include="database_classes\DBKeepPosition.cs" />
+    <Compile Include="database_classes\DBLinkedFaction.cs" />
+    <Compile Include="database_classes\DBLootGenerator.cs" />
+    <Compile Include="database_classes\DBLootOTD.cs" />
+    <Compile Include="database_classes\DBLootTemplate.cs" />
+    <Compile Include="database_classes\DBMobXLootTemplate.cs" />
+    <Compile Include="database_classes\DBNews.cs" />
+    <Compile Include="database_classes\DBNpcTemplate.cs" />
+    <Compile Include="database_classes\DBOTDXCharacter.cs" />
+    <Compile Include="database_classes\DBPath.cs" />
+    <Compile Include="database_classes\DBPathPoint.cs" />
+    <Compile Include="database_classes\DBPlayerXEffect.cs" />
+    <Compile Include="database_classes\DBQuest.cs" />
+    <Compile Include="database_classes\DBRank.cs" />
+    <Compile Include="database_classes\DBRelic.cs" />
+    <Compile Include="database_classes\DBSalvage.cs" />
+    <Compile Include="database_classes\DBSinglePermission.cs" />
+    <Compile Include="database_classes\DBSpecialization.cs" />
+    <Compile Include="database_classes\DBSpecXAbility.cs" />
+    <Compile Include="database_classes\DBSpell.cs" />
+    <Compile Include="database_classes\DBSpellLine.cs" />
+    <Compile Include="database_classes\DBStyleXSpell.cs" />
+    <Compile Include="database_classes\DBTask.cs" />
+    <Compile Include="database_classes\InventoryItem.cs" />
+    <Compile Include="database_classes\InventoryItem_Archive.cs" />
+    <Compile Include="database_classes\ItemTemplate.cs" />
+    <Compile Include="database_classes\MerchantItem.cs" />
+    <Compile Include="database_classes\Mob.cs" />
+    <Compile Include="database_classes\NPCEquipment.cs" />
+    <Compile Include="database_classes\ServerProperty.cs" />
+    <Compile Include="database_classes\StarterEquipment.cs" />
+    <Compile Include="database_classes\Teleport.cs" />
+    <Compile Include="database_classes\WorldObject.cs" />
+    <Compile Include="database_classes\ZonePoint.cs" />
     <Compile Include="dbconverters\Version004.cs" />
     <Compile Include="dbconverters\Version003.cs" />
     <Compile Include="dbconverters\DatabaseConverterAttribute.cs">
@@ -2396,6 +2454,11 @@
     <Content Include="language\Language-ES.txt" />
     <Content Include="language\Language-FR.txt" />
     <Content Include="language\Language-IT.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram4.cd" />
+    <None Include="ClassDiagram5.cd" />
+    <None Include="ClassDiagram6.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -33,7 +33,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -43,7 +43,7 @@ using log4net;
  *       DOL.GS.Quests.Hibernia
  * Also this is the name that will show up in the database as QuestName
  * so setting good values here will result in easier to read and cleaner
- * Database Code
+ * GS Code
  */
 
 namespace DOL.GS.Quests.Albion
@@ -189,7 +189,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineItems
 
-			fairyGeneralWings = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "fairy_general_wings");
+			fairyGeneralWings = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "fairy_general_wings");
 			if (fairyGeneralWings == null)
 			{
 				fairyGeneralWings = new ItemTemplate();
@@ -213,7 +213,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(fairyGeneralWings);
 			}
 
-			dustyOldMap = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "dusty_old_map");
+			dustyOldMap = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "dusty_old_map");
 			if (dustyOldMap == null)
 			{
 				dustyOldMap = new ItemTemplate();
@@ -239,7 +239,7 @@ namespace DOL.GS.Quests.Albion
 
 
 			// item db check
-			recruitsArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_arms");
+			recruitsArms = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_studded_arms");
 			if (recruitsArms == null)
 			{
 				recruitsArms = new ItemTemplate();
@@ -285,7 +285,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(recruitsArms);
 			}
 
-			recruitsSleeves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_sleeves");
+			recruitsSleeves = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_quilted_sleeves");
 			if (recruitsSleeves == null)
 			{
 				recruitsSleeves = new ItemTemplate();

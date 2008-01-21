@@ -22,7 +22,7 @@ using System.Text;
 using DOL.GS.PacketHandler;
 using DOL.Events;
 using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
-using DOL.Database;
+using DOL.Database2;
 using System.Collections;
 
 namespace DOL.GS.Behaviour.Actions

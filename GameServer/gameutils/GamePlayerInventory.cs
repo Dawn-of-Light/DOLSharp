@@ -18,7 +18,7 @@
  */
 using System;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using System.Collections;
 using DOL.GS.PacketHandler;
 using DOL.Events;
@@ -75,7 +75,7 @@ namespace DOL.GS
 			{
 				try
 				{
-					DataObject[] items = GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + GameServer.Database.Escape(inventoryID) + "'");
+					DatabaseObject[] items = GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + GameServer.Database.Escape(inventoryID) + "'");
 					foreach (InventoryItem item in items)
 					{
 						if (item.CanUseEvery > 0)

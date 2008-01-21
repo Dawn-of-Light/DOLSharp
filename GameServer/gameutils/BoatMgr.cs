@@ -19,9 +19,9 @@
 
 using System;
 using System.Collections;
-using System.Collections.Specialized;
+using System.Collections.Generic;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -41,12 +41,11 @@ namespace DOL.GS
         /// <summary>
         /// ArrayList of all player boats in the game
         /// </summary>
-        static private readonly HybridDictionary m_boats = new HybridDictionary();
-
+        static private readonly Dictionary<string,GameBoat> m_boats = new Dictionary<string,GameBoat>();
         /// <summary>
         /// ArrayList of all boatid's to BoatNames
         /// </summary>
-        static private readonly HybridDictionary m_boatids = new HybridDictionary();
+        static private readonly Dictionary<string, string> m_boatids = new Dictionary<string, string>();
 
         /// <summary>
         /// Adds a player boat to the list of boats
@@ -128,17 +127,12 @@ namespace DOL.GS
 
 
                 //create table of GameBoat
-                boat.theBoatDB = new DBBoat();
-                boat.theBoatDB.BoatOwner = creator.InternalID;
-                boat.theBoatDB.BoatID = boat.BoatID;
-                boat.theBoatDB.BoatMaxSpeedBase = boat.MaxSpeedBase;
-                boat.theBoatDB.BoatModel = boat.Model;
-                boat.theBoatDB.BoatName = boat.Name;
-                boat.BoatOwnerID = creator.InternalID;
+                boat.OwnerID = creator.ID;
+                boat.BoatOwnerID = creator.ID;
                 boat.Flags ^= (uint)GameNPC.eFlags.PEACE;
 
                 AddBoat(boat);
-                GameServer.Database.AddNewObject(boat.theBoatDB);
+                
                 return boat;
             }
             catch (Exception e)
@@ -167,7 +161,7 @@ namespace DOL.GS
                 DBBoat[] boats = (DBBoat[])GameServer.Database.SelectObjects(typeof(DBBoat), "BoatName='" + GameServer.Database.Escape(boatName) + "'");
                 foreach (DBBoat boat in boats)
                 {
-                    GameServer.Database.DeleteObject(boat);
+                    
                 }
 
                 RemoveBoat(removeBoat);
@@ -218,11 +212,11 @@ namespace DOL.GS
         /// Returns a database ID for a matching boat name.
         /// </summary>
         /// <returns>Boat</returns>
-        public static string BoatNameToBoatID(string boatName)
+        public static UInt64 BoatNameToBoatID(string boatName)
         {
             GameBoat b = GetBoatByName(boatName);
             if (b == null)
-                return "";
+                return 0;
             return b.BoatID;
         }
 
@@ -230,11 +224,10 @@ namespace DOL.GS
         /// Returns a boat according to the matching database boat Owner.
         /// </summary>
         /// <returns>Boat</returns>
-        public static GameBoat GetBoatByOwner(string owner)
+        public static GameBoat GetBoatByOwner(UInt64 owner)
         {
+            //TODO: If database crashes occur , this might have to be locked again
             if (owner == null) return null;
-
-            lock (m_boatids.SyncRoot)
             {
                 foreach (GameBoat boat in m_boats.Values)
                 {
@@ -265,11 +258,9 @@ namespace DOL.GS
             }
 
             //load boats
-            DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(DBBoat));
-            foreach (DataObject obj in objs)
+            IEnumerable<GameBoat> objs = DatabaseLayer.Instance.SelectObjects(GameBoat);
+            foreach (DatabaseObject obj in objs)
             {
-                GameBoat myboat = new GameBoat();
-                myboat.LoadFromDatabase(obj);
                 AddBoat(myboat);
             }
 
@@ -285,13 +276,11 @@ namespace DOL.GS
                 log.Debug("Saving all boats...");
             try
             {
-                lock (m_boats.SyncRoot)
+                foreach (GameBoat b in m_boats.Values)
                 {
-                    foreach (GameBoat b in m_boats.Values)
-                    {
-                        b.SaveIntoDatabase();
-                    }
+                    b.SaveIntoDatabase();
                 }
+                
             }
             catch (Exception e)
             {

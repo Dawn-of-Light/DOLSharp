@@ -18,7 +18,7 @@
  */
 using System;
 using System.Threading;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Tests;
 using NUnit.Framework;
 

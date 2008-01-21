@@ -22,7 +22,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using DOL.Config;
-using DOL.Database.Connection;
 
 namespace DOL.GS
 {
@@ -121,17 +120,23 @@ namespace DOL.GS
 		protected string m_invalidNamesFile = "";
 
 		#endregion
-		#region Database
+		#region GS
 
 		/// <summary>
 		/// The path to the XML database folder
 		/// </summary>
 		protected string m_dbConnectionString;
 
-		/// <summary>
-		/// Type database type
-		/// </summary>
-		protected ConnectionType m_dbType;
+        /// <summary>
+        /// The database provider assembly file name
+        /// </summary>
+        private string m_DatabaseProviderAssembly;
+
+
+        /// <summary>
+        /// The database provider class name
+        /// </summary>
+        private string m_DatabaseProviderClassName;
 
 		/// <summary>
 		/// True if the server shall autosave the db
@@ -201,28 +206,8 @@ namespace DOL.GS
 
 
 
-			string db = root["Server"]["DBType"].GetString("XML");
-			switch (db.ToLower())
-			{
-				case "xml":
-					m_dbType = ConnectionType.DATABASE_XML;
-					break;
-				case "mysql":
-					m_dbType = ConnectionType.DATABASE_MYSQL;
-					break;
-				case "mssql":
-					m_dbType = ConnectionType.DATABASE_MSSQL;
-					break;
-				case "odbc":
-					m_dbType = ConnectionType.DATABASE_ODBC;
-					break;
-				case "oledb":
-					m_dbType = ConnectionType.DATABASE_OLEDB;
-					break;
-				default:
-					m_dbType = ConnectionType.DATABASE_XML;
-					break;
-			}
+            m_DatabaseProviderClassName  = root["Server"]["DatabaseProvider"].GetString("DOL.Database2.Providers.PostgresProvider");
+            m_DatabaseProviderAssembly = root["Server"]["DatabaseProviderAssembly"].GetString(null);
 			m_dbConnectionString = root["Server"]["DBConnectionString"].GetString(m_dbConnectionString);
 			m_autoSave = root["Server"]["DBAutosave"].GetBoolean(m_autoSave);
 			m_saveInterval = root["Server"]["DBAutosaveInterval"].GetInt(m_saveInterval);
@@ -297,30 +282,8 @@ namespace DOL.GS
 			root["Server"]["GMActionLoggerName"].Set(m_gmActionsLoggerName);
 			root["Server"]["InvalidNamesFile"].Set(m_invalidNamesFile);
 
-			string db = "XML";
-			
-			switch (m_dbType)
-			{
-			case ConnectionType.DATABASE_XML:
-				db = "XML";
-					break;
-			case ConnectionType.DATABASE_MYSQL:
-				db = "MYSQL";
-					break;
-			case ConnectionType.DATABASE_MSSQL:
-				db = "MSSQL";
-					break;
-			case ConnectionType.DATABASE_ODBC:
-				db = "ODBC";
-					break;
-			case ConnectionType.DATABASE_OLEDB:
-				db = "OLEDB";
-					break;
-				default:
-					m_dbType = ConnectionType.DATABASE_XML;
-					break;
-			}
-			root["Server"]["DBType"].Set(db);
+            root["Server"]["DatabaseProvider"].Set(m_DatabaseProviderClassName);
+            root["Server"]["DatabaseProviderAssembly"].Set(m_DatabaseProviderAssembly);
 			root["Server"]["DBConnectionString"].Set(m_dbConnectionString);
 			root["Server"]["DBAutosave"].Set(m_autoSave);
 			root["Server"]["DBAutosaveInterval"].Set(m_saveInterval);
@@ -543,15 +506,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets or sets the DB type
-		/// </summary>
-		public ConnectionType DBType
-		{
-			get { return m_dbType; }
-			set { m_dbType = value; }
-		}
-
-		/// <summary>
 		/// Gets or sets the autosave flag
 		/// </summary>
 		public bool AutoSave
@@ -596,5 +550,17 @@ namespace DOL.GS
 			get { return m_udpOutEndpoint; }
 			set { m_udpOutEndpoint = value; }
 		}
+
+        public string DatabaseProviderAssembly
+        {
+            get { return m_DatabaseProviderAssembly; }
+            set { m_DatabaseProviderAssembly = value; }
+        }
+
+        public string DatabaseProviderClassName
+        {
+            get { return m_DatabaseProviderClassName; }
+            set { m_DatabaseProviderClassName = value; }
+        }
 	}
 }

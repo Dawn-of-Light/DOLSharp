@@ -16,8 +16,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.Database;
-using DOL.Database.Attributes;
+using System;
+using System.Runtime.Serialization;
+using DOL.Database2;
+using DOL.Database2;
 using DOL.GS.PacketHandler;
 //This script demonstrates how to create a data aware custom NPC
 
@@ -28,36 +30,17 @@ namespace DOL.GS.Scripts
 		/// <summary>
 		/// The data object that represents a town crier message
 		/// </summary>
-		[DataTable(TableName="TownCrierMessages")]
-		public class TownCrierMessage : DataObject
+		[Serializable]
+		public class TownCrierMessage : DatabaseObject
 		{
 			private string m_msg;
 			private string m_id;
-			private static bool autoSave;
 
 			public TownCrierMessage()
 			{
 				m_msg = "Dawn of Light r0x my world!";
 			}
-
-			public override bool AutoSave
-			{
-				get { return autoSave; }
-				set { autoSave = value; }
-			}
-
-			[PrimaryKey]
-			public string TownCrierID
-			{
-				get { return m_id; }
-				set
-				{
-					Dirty = true;
-					m_id = value;
-				}
-			}
-
-			[DataElement(AllowDbNull = true)]
+			[OptionalField]
 			public string Message
 			{
 				get { return m_msg; }
@@ -108,7 +91,7 @@ namespace DOL.GS.Scripts
 			return res;
 		}
 
-		public override void LoadFromDatabase(DataObject mob)
+		public override void LoadFromDatabase(DatabaseObject mob)
 		{
 			base.LoadFromDatabase(mob);
 			if (GameServer.Database != null)

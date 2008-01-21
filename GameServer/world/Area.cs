@@ -18,7 +18,7 @@
  */
 using DOL.Events;
 using DOL.GS.PacketHandler;
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS
 {		
@@ -29,6 +29,7 @@ namespace DOL.GS
 	/// </summary>
 	public class Area 
 	{
+        
 		public class Square : AbstractArea
 		{
 			/// <summary>

@@ -21,7 +21,7 @@ using System.Collections;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using DOL.Database;
+using DOL.Database2;
 using log4net;
 
 namespace DOL.GS
@@ -247,7 +247,7 @@ namespace DOL.GS
 		protected static Hashtable m_npcEquipmentCache = null;
 		
 		/// <summary>
-		/// Loads the inventory template from the Database
+		/// Loads the inventory template from the GS
 		/// </summary>
 		/// <returns>success</returns>
 		public override bool LoadFromDatabase(string templateID)
@@ -296,7 +296,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Save the inventory template to Database
+		/// Save the inventory template to GS
 		/// </summary>
 		/// <returns>success</returns>
 		public override bool SaveIntoDatabase(string templateID)
@@ -308,7 +308,7 @@ namespace DOL.GS
 					if (templateID == null)
 						throw new ArgumentNullException("templateID");
 
-					DataObject[] npcEquipment = GameServer.Database.SelectObjects(typeof(NPCEquipment), "TemplateID = '" + GameServer.Database.Escape(templateID) + "'");
+					DatabaseObject[] npcEquipment = GameServer.Database.SelectObjects(typeof(NPCEquipment), "TemplateID = '" + GameServer.Database.Escape(templateID) + "'");
 
 					// delete removed item templates
 					foreach (NPCEquipment npcItem in npcEquipment)

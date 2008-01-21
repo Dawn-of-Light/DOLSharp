@@ -20,7 +20,7 @@
 using System;
 using System.Reflection;
 using System.Collections;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.Housing;
 using log4net;
 

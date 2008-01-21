@@ -21,7 +21,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 using System.Threading;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Language;
 using DOL.GS.PacketHandler;
 using DOL.GS.Housing;
@@ -187,30 +187,30 @@ namespace DOL.GS.Housing
             house.DatabaseItem.GuildHouse = false;
 
             #region Remove indoor/outdoor items & permissions
-            DataObject[] objs;
+            DatabaseObject[] objs;
 
             // Remove all indoor items
             objs = GameServer.Database.SelectObjects(typeof(DBHouseIndoorItem), "HouseNumber = " + house.HouseNumber);
             if (objs.Length > 0)
-                foreach (DataObject item in objs)
+                foreach (DatabaseObject item in objs)
                     GameServer.Database.DeleteObject(item);
 
             // Remove all outdoor items
             objs = GameServer.Database.SelectObjects(typeof(DBHouseOutdoorItem), "HouseNumber = " + house.HouseNumber);
             if (objs.Length > 0)
-                foreach (DataObject item in objs)
+                foreach (DatabaseObject item in objs)
                     GameServer.Database.DeleteObject(item);
 
             // Remove all permissions
             objs = GameServer.Database.SelectObjects(typeof(DBHousePermissions), "HouseNumber = " + house.HouseNumber);
             if (objs.Length > 0)
-                foreach (DataObject item in objs)
+                foreach (DatabaseObject item in objs)
                     GameServer.Database.DeleteObject(item);
 
             // Remove all char x permissions
             objs = GameServer.Database.SelectObjects(typeof(DBHouseCharsXPerms), "HouseNumber = " + house.HouseNumber);
             if (objs.Length > 0)
-                foreach (DataObject item in objs)
+                foreach (DatabaseObject item in objs)
                     GameServer.Database.DeleteObject(item);
             #endregion
 

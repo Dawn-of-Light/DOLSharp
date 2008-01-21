@@ -4,7 +4,7 @@ using System.Collections;
 using DOL.Events;
 using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.Database;
+using DOL.Database2;
 using log4net;
 
 namespace DOL.GS
@@ -362,10 +362,11 @@ namespace DOL.GS
 
 		#region database load/save
 		/// <summary>
-		/// Loads the GameRelic from Database
+		/// Loads the GameRelic from GS
 		/// </summary>
 		/// <param name="obj">The DBRelic-object for this relic</param>
-		public override void LoadFromDatabase(DataObject obj)
+		/*
+        public override void LoadFromDatabase(DatabaseObject obj)
 		{
 			InternalID = obj.ObjectId;
 			m_dbRelic = obj as DBRelic;
@@ -402,16 +403,17 @@ namespace DOL.GS
 			m_itemTemp.Level = 99;
 			m_itemTemp.Quality = 100;
 			m_itemTemp.PackSize = 1;
-			m_itemTemp.AutoSave = false;
 			m_itemTemp.Weight = 1000;
 			m_itemTemp.Id_nb = "ARelic";
 			m_item = new InventoryItem(m_itemTemp);
 			//m_item.ObjectId = System.Guid.NewGuid().ToString();
 		}
+         * */
 		/// <summary>
 		/// Saves the current GameRelic to the database
 		/// </summary>
-		public override void SaveIntoDatabase()
+		
+        /*public override void SaveIntoDatabase()
 		{
 			m_dbRelic.Realm = (int)Realm;
 			m_dbRelic.OriginalRealm = (int)OriginalRealm;
@@ -429,7 +431,7 @@ namespace DOL.GS
 			}
 			else
 				GameServer.Database.SaveObject(m_dbRelic);
-		}
+		}*/
 		#endregion
 
 		#region utils

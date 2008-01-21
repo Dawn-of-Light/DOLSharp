@@ -18,7 +18,7 @@
  */
 using System;
 
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 
@@ -57,7 +57,6 @@ namespace DOL.GS.Commands
 				dbkeephp.Y = client.Player.Y - compo.Y;
 				dbkeephp.Z = client.Player.Z - compo.Z;
 				dbkeephp.Heading = client.Player.Heading - compo.Heading;
-				GameServer.Database.AddNewObject(dbkeephp);
 			}
 			catch(Exception e)
 			{

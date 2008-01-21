@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using log4net;
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS.DatabaseConverters
 {
@@ -39,7 +39,7 @@ namespace DOL.GS.DatabaseConverters
 		/// </summary>
 		public void ConvertDatabase()
 		{
-			log.Info("Database Version 3 Convert Started");
+			log.Info("GS Version 3 Convert Started");
 
 			if (GameServer.Instance.Configuration.DBType == DOL.Database.Connection.ConnectionType.DATABASE_XML)
 			{
@@ -113,7 +113,7 @@ namespace DOL.GS.DatabaseConverters
 
 			log.Info("Converted " + count + " items");
 
-			log.Info("Database Version 3 Convert Finished");
+			log.Info("GS Version 3 Convert Finished");
 		}
 	}
 }

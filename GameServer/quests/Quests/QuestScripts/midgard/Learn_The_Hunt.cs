@@ -28,7 +28,7 @@
 
 using System;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -153,7 +153,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		clawofblackmauler = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "clawofblackmauler");
+		clawofblackmauler = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "clawofblackmauler");
 			if (clawofblackmauler == null)
 			{
 				clawofblackmauler = new ItemTemplate();

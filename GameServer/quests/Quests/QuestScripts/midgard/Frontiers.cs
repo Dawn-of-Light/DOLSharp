@@ -35,7 +35,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -45,7 +45,7 @@ using log4net;
  *       DOL.GS.Quests.Hibernia
  * Also this is the name that will show up in the database as QuestName
  * so setting good values here will result in easier to read and cleaner
- * Database Code
+ * GS Code
  */
 
 namespace DOL.GS.Quests.Midgard
@@ -396,7 +396,7 @@ namespace DOL.GS.Quests.Midgard
 			#region DefineItems
 
 			// item db check
-			noteForNjiedi = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "njiedi_note");
+			noteForNjiedi = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "njiedi_note");
 			if (noteForNjiedi == null)
 			{
 				if (log.IsWarnEnabled)
@@ -422,7 +422,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			askefruerPlans = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "askefruer_plans");
+			askefruerPlans = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "askefruer_plans");
 			if (askefruerPlans == null)
 			{
 				askefruerPlans = new ItemTemplate();
@@ -446,7 +446,7 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(askefruerPlans);
 			}
 
-			translatedPlans = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "translated_askefruer_plans");
+			translatedPlans = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "translated_askefruer_plans");
 			if (translatedPlans == null)
 			{
 				translatedPlans = new ItemTemplate();
@@ -471,7 +471,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_legs_mid");
+			recruitsLegs = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_studded_legs_mid");
 			if (recruitsLegs == null)
 			{
 				recruitsLegs = new ItemTemplate();
@@ -522,7 +522,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsPants = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_pants");
+			recruitsPants = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_quilted_pants");
 			if (recruitsPants == null)
 			{
 				recruitsPants = new ItemTemplate();

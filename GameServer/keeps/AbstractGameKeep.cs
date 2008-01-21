@@ -21,7 +21,7 @@ using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 using System.Timers;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -137,19 +137,6 @@ namespace DOL.GS.Keeps
 			set { m_doors = value; }
 		}
 
-		/// <summary>
-		/// the keep db object
-		/// </summary>
-		private DBKeep m_dbkeep;
-
-		/// <summary>
-		/// the keepdb object
-		/// </summary>
-		public DBKeep DBKeep
-		{
-			get	{ return m_dbkeep; }
-			set { m_dbkeep = value;}
-		}
 
 		/// <summary>
 		/// This hold list of all guards of keep
@@ -267,21 +254,13 @@ namespace DOL.GS.Keeps
 
 		#region DBKeep Properties
 		/// <summary>
-		/// The Keep ID linked to the DBKeep
-		/// </summary>
-		public int KeepID
-		{
-			get	{ return DBKeep.KeepID; }
-			set	{ DBKeep.KeepID = value; }
-		}
-
-		/// <summary>
 		/// The Keep Level linked to the DBKeep
 		/// </summary>
+        protected byte m_Level;
 		public byte Level
 		{
-			get	{ return DBKeep.Level; }
-			set	{ DBKeep.Level = value; }
+			get	{ return m_Level; }
+			set	{ m_Level = value; }
 		}
 
 		private byte m_baseLevel = 0;
@@ -428,40 +407,42 @@ namespace DOL.GS.Keeps
 		/// load keep from Db object and load keep component and object of keep
 		/// </summary>
 		/// <param name="keep"></param>
-		public void Load(DBKeep keep)
-		{
-			CurrentRegion = WorldMgr.GetRegion((ushort)keep.Region);
-			InitialiseTimers();
-			LoadFromDatabase(keep);
-			GameEventMgr.AddHandler(CurrentRegion, RegionEvent.PlayerEnter, new DOLEventHandler(SendKeepInit));
-			KeepArea area = null;
-			//see if any keep areas for this keep have already been added via DBArea
-			foreach (AbstractArea a in CurrentRegion.GetAreasOfSpot(keep.X, keep.Y, keep.Z))
-			{
-				if (a is KeepArea && a.Description == keep.Name)
-				{
-					log.Debug("Found a DBArea entry for " + keep.Name + ", loading that instead of creating a new one.");
-					area = a as KeepArea;
-					break;
-				}
-			}
+        /*
+         public void Load(DBKeep keep)
+        {
+            CurrentRegion = WorldMgr.GetRegion((ushort)keep.Region);
+            InitialiseTimers();
+            LoadFromDatabase(keep);
+            GameEventMgr.AddHandler(CurrentRegion, RegionEvent.PlayerEnter, new DOLEventHandler(SendKeepInit));
+            KeepArea area = null;
+            //see if any keep areas for this keep have already been added via DBArea
+            foreach (AbstractArea a in CurrentRegion.GetAreasOfSpot(keep.X, keep.Y, keep.Z))
+            {
+                if (a is KeepArea && a.Description == keep.Name)
+                {
+                    log.Debug("Found a DBArea entry for " + keep.Name + ", loading that instead of creating a new one.");
+                    area = a as KeepArea;
+                    break;
+                }
+            }
+         
 
-			if (area == null)
-			{
-				area = new KeepArea(this);
-				area.CanBroadcast = true;
-				area.CheckLOS = true;
-				CurrentRegion.AddArea(area);
-			}
-			area.Keep = this;
-			this.Area = area;
-		}
-
-		public void Unload(KeepArea area)
+            if (area == null)
+            {
+                area = new KeepArea(this);
+                area.CanBroadcast = true;
+                area.CheckLOS = true;
+                CurrentRegion.AddArea(area);
+            }
+            area.Keep = this;
+            this.Area = area;
+        }
+        */
+        public void Unload(KeepArea area)
 		{
 			foreach (GameKeepGuard guard in (m_guards.Clone() as Hashtable).Values)
 			{
-				guard.Delete();
+				guard.DeleteGuard();
 				guard.DeleteFromDatabase();
 			}
 
@@ -500,7 +481,7 @@ namespace DOL.GS.Keeps
 		/// load keep from DB
 		/// </summary>
 		/// <param name="keep"></param>
-		public void LoadFromDatabase(DataObject keep)
+		public void LoadFromDatabase(DatabaseObject keep)
 		{
 			m_dbkeep = keep as DBKeep;
 			InternalID = keep.ObjectId;

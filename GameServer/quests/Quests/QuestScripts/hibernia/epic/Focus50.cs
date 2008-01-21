@@ -32,7 +32,7 @@
 
 using System;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -168,7 +168,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			#region Item Declarations
 
-			GreenMaw_key = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "GreenMaw_key");
+			GreenMaw_key = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "GreenMaw_key");
 			if (GreenMaw_key == null)
 			{
 				if (log.IsWarnEnabled)
@@ -195,7 +195,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 // end item			
-			RangerEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "RangerEpicBoots");
+			RangerEpicBoots = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "RangerEpicBoots");
 			if (RangerEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -239,7 +239,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 //end item
 			//Mist Shrouded Coif 
-			RangerEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "RangerEpicHelm");
+			RangerEpicHelm = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "RangerEpicHelm");
 			if (RangerEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -283,7 +283,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 //end item
 			//Mist Shrouded Gloves 
-			RangerEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "RangerEpicGloves");
+			RangerEpicGloves = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "RangerEpicGloves");
 			if (RangerEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -326,7 +326,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Mist Shrouded Hauberk 
-			RangerEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "RangerEpicVest");
+			RangerEpicVest = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "RangerEpicVest");
 			if (RangerEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -369,7 +369,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Mist Shrouded Legs 
-			RangerEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "RangerEpicLegs");
+			RangerEpicLegs = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "RangerEpicLegs");
 			if (RangerEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -413,7 +413,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Mist Shrouded Sleeves 
-			RangerEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "RangerEpicArms");
+			RangerEpicArms = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "RangerEpicArms");
 			if (RangerEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -456,7 +456,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 //Hero Epic Sleeves End
-			HeroEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HeroEpicBoots");
+			HeroEpicBoots = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "HeroEpicBoots");
 			if (HeroEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -500,7 +500,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 //end item
 			//Misted Coif 
-			HeroEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HeroEpicHelm");
+			HeroEpicHelm = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "HeroEpicHelm");
 			if (HeroEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -544,7 +544,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 //end item
 			//Misted Gloves 
-			HeroEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HeroEpicGloves");
+			HeroEpicGloves = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "HeroEpicGloves");
 			if (HeroEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -587,7 +587,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Misted Hauberk 
-			HeroEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HeroEpicVest");
+			HeroEpicVest = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "HeroEpicVest");
 			if (HeroEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -627,7 +627,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Misted Legs 
-			HeroEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HeroEpicLegs");
+			HeroEpicLegs = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "HeroEpicLegs");
 			if (HeroEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -670,7 +670,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Misted Sleeves 
-			HeroEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HeroEpicArms");
+			HeroEpicArms = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "HeroEpicArms");
 			if (HeroEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -712,7 +712,7 @@ namespace DOL.GS.Quests.Hibernia
 				}
 
 			}
-			WardenEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WardenEpicBoots");
+			WardenEpicBoots = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "WardenEpicBoots");
 			if (WardenEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -756,7 +756,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 //end item
 			//Mystical Coif 
-			WardenEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WardenEpicHelm");
+			WardenEpicHelm = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "WardenEpicHelm");
 			if (WardenEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -800,7 +800,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 //end item
 			//Mystical Gloves 
-			WardenEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WardenEpicGloves");
+			WardenEpicGloves = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "WardenEpicGloves");
 			if (WardenEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -844,7 +844,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Mystical Hauberk 
-			WardenEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WardenEpicVest");
+			WardenEpicVest = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "WardenEpicVest");
 			if (WardenEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -887,7 +887,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Mystical Legs 
-			WardenEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WardenEpicLegs");
+			WardenEpicLegs = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "WardenEpicLegs");
 			if (WardenEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -930,7 +930,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Mystical Sleeves 
-			WardenEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WardenEpicArms");
+			WardenEpicArms = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "WardenEpicArms");
 			if (WardenEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -972,7 +972,7 @@ namespace DOL.GS.Quests.Hibernia
 				}
 
 			}
-			EldritchEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "EldritchEpicBoots");
+			EldritchEpicBoots = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "EldritchEpicBoots");
 			if (EldritchEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1016,7 +1016,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 //end item
 			//Mist Woven Coif 
-			EldritchEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "EldritchEpicHelm");
+			EldritchEpicHelm = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "EldritchEpicHelm");
 			if (EldritchEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1060,7 +1060,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 //end item
 			//Mist Woven Gloves 
-			EldritchEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "EldritchEpicGloves");
+			EldritchEpicGloves = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "EldritchEpicGloves");
 			if (EldritchEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1103,7 +1103,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Mist Woven Hauberk 
-			EldritchEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "EldritchEpicVest");
+			EldritchEpicVest = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "EldritchEpicVest");
 			if (EldritchEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1143,7 +1143,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Mist Woven Legs 
-			EldritchEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "EldritchEpicLegs");
+			EldritchEpicLegs = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "EldritchEpicLegs");
 			if (EldritchEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1186,7 +1186,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Mist Woven Sleeves 
-			EldritchEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "EldritchEpicArms");
+			EldritchEpicArms = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "EldritchEpicArms");
 			if (EldritchEpicArms == null)
 			{
 				if (log.IsWarnEnabled)

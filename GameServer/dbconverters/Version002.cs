@@ -18,7 +18,7 @@
  */
 using System;
 using log4net;
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS.DatabaseConverters
 {
@@ -39,7 +39,7 @@ namespace DOL.GS.DatabaseConverters
 		/// </summary>
 		public void ConvertDatabase()
 		{
-			log.Info("Database Version 2 Convert Started");
+			log.Info("GS Version 2 Convert Started");
 
 			log.Info("Converting Styles");
 			DBStyle[] styles = (DBStyle[])GameServer.Database.SelectAllObjects(typeof(DBStyle));
@@ -74,7 +74,7 @@ namespace DOL.GS.DatabaseConverters
 			}
 			log.Info(mobs.Length + " Mobs Processed");
 
-			log.Info("Database Version 2 Convert Finished");
+			log.Info("GS Version 2 Convert Finished");
 		}
 	}
 }

@@ -28,7 +28,7 @@
 
 using System;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -155,7 +155,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		silverringofhealth = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "silverringofhealth");
+		silverringofhealth = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "silverringofhealth");
 			if (silverringofhealth == null)
 			{
 				silverringofhealth = new ItemTemplate();
@@ -231,7 +231,7 @@ using DOL.AI.Brain;
 				if (SAVE_INTO_DATABASE)
 					GameServer.Database.AddNewObject(silverringofhealth);
 				}
-			blackmaulercubpelt = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "blackmaulercubpelt");
+			blackmaulercubpelt = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "blackmaulercubpelt");
 			if (blackmaulercubpelt == null)
 			{
 				blackmaulercubpelt = new ItemTemplate();

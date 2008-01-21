@@ -20,7 +20,7 @@ using System;
 using System.Collections;
 
 using DOL.AI.Brain;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;

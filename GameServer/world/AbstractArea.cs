@@ -17,7 +17,8 @@
  *
  */
 using System;
-using DOL.Database;
+using System.Runtime.Serialization;
+using DOL.Database2;
 using DOL.Events;
 using DOL.Language;
 using DOL.GS;
@@ -29,9 +30,10 @@ namespace DOL.GS
 	/// AbstractArea extend this if you wish to implement e new custom area.
 	/// For examples see Area.Cricle, Area.Square
 	/// </summary>
-	public abstract class AbstractArea : IArea
+	[Serializable]
+    public abstract class AbstractArea : DatabaseObject, IArea
 	{
-		protected DBArea m_dbArea = null;
+        [OptionalField]
 		protected bool m_canBroadcast = false;
 		/// <summary>
 		/// Variable holding whether or not players can broadcast in this area
@@ -41,7 +43,7 @@ namespace DOL.GS
 			get { return m_canBroadcast; }
 			set { m_canBroadcast = value; }
 		}
-
+        [OptionalField]
 		protected bool m_checkLOS = false;
 		/// <summary>
 		/// Variable holding whether or not to check for LOS for spells in this area
@@ -51,7 +53,7 @@ namespace DOL.GS
 			get { return m_checkLOS; }
 			set { m_checkLOS = value; }
 		}
-
+        [OptionalField]
 		protected bool m_displayMessage = true;
 		/// <summary>
 		/// Display entered message
@@ -61,7 +63,7 @@ namespace DOL.GS
 			get { return m_displayMessage; }
 			set { m_displayMessage = value; }
 		}
-
+        [OptionalField]
 		protected bool m_safeArea = false;
 		/// <summary>
 		/// Can players be attacked by other players in this area
@@ -78,20 +80,18 @@ namespace DOL.GS
 		/// </summary>		
 		public const ushort MAX_AREAS_PER_ZONE = 50;
 
-		/// <summary>
-		/// The ID of the Area eg. 15 ( == index in Region.m_areas array)
-		/// </summary>
-		protected ushort m_ID;
 
 		/// <summary>
 		/// The description of the Area eg. "Camelot Hills"
 		/// </summary>
-		protected string m_Description;
+		[OptionalField]
+        protected string m_Description;
 
 		/// <summary>
 		/// The area sound to play on enter/leave events
 		/// </summary>
-		protected byte m_sound;
+		[OptionalField]
+        protected byte m_sound;
 
 		/// <summary>
 		/// Constructs a new AbstractArea
@@ -110,10 +110,9 @@ namespace DOL.GS
 		/// <summary>
 		/// Returns the ID of this Area
 		/// </summary>
-		public ushort ID
+		public UInt64 ID
 		{
-			get { return m_ID; }
-			set { m_ID = value; }
+			get { return ID; }
 		}
 
 		/// <summary>

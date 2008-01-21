@@ -17,11 +17,12 @@
  *
  */
 using System;
+using System.Runtime.Serialization;
 using System.Collections;
 using System.Reflection;
 using System.Text;
 
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.Language;
 using DOL.GS.Housing;
@@ -36,13 +37,26 @@ namespace DOL.GS
 	/// This class holds all information that
 	/// EVERY object in the game world needs!
 	/// </summary>
-	public abstract class GameObject : IPoint3D
+    [Serializable]
+	public abstract class GameObject : DatabaseObject, IPoint3D
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        
+        [OnDeserialized]
+        public void OnDeserialize()
+        {
+            switch (m_ObjectState)
+            {
+                case eObjectState.Active:
+                    AddToWorld();
+                    break;
+                default:
+                    break;
+            }
+        }
 		#region State/Random/Type
 
 		/// <summary>
@@ -112,6 +126,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The Object's current Region
 		/// </summary>
+        [NonSerialized]
 		protected Region m_CurrentRegion;
 
 		/// <summary>
@@ -125,7 +140,7 @@ namespace DOL.GS
 		public virtual int X
 		{
 			get { return m_X; }
-			set { m_X = value; }
+            set { m_X = value; Dirty = true; }
 		}
 
 		/// <summary>
@@ -134,7 +149,7 @@ namespace DOL.GS
 		public virtual int Y
 		{
 			get { return m_Y; }
-			set { m_Y = value; }
+            set { m_Y = value; Dirty = true; }
 		}
 
 		/// <summary>
@@ -143,7 +158,7 @@ namespace DOL.GS
 		public virtual int Z
 		{
 			get { return m_Z; }
-			set { m_Z = value; }
+            set { m_Z = value; Dirty = true; }
 		}
 
 		/// <summary>
@@ -157,7 +172,7 @@ namespace DOL.GS
 		public virtual eRealm Realm
 		{
 			get { return m_Realm; }
-			set { m_Realm = value; }
+            set { m_Realm = value; Dirty = true; }
 		}
 
 		/// <summary>
@@ -165,8 +180,13 @@ namespace DOL.GS
 		/// </summary>
 		public virtual Region CurrentRegion
 		{
-			get { return m_CurrentRegion; }
-			set { m_CurrentRegion = value; }
+			get {
+                if (m_CurrentRegion == null)
+                {
+                    m_CurrentRegion = WorldMgr.GetRegion(CurrentRegionID);
+                }
+                return m_CurrentRegion; }
+            set { m_CurrentRegion = value; Dirty = true; }
 		}
 
 		/// <summary>
@@ -372,12 +392,29 @@ namespace DOL.GS
 			}
 			set { }
 		}
-
+        [NonSerialized]
 		private House m_currentHouse;
+        private UInt64 m_currenthouseID;
 		public House CurrentHouse
 		{
-			get { return m_currentHouse; }
-			set { m_currentHouse = value; }
+			get {
+                if (m_currentHouse == null)
+                {
+                    //TODO:tweak
+                    if(!DatabaseLayer.Instance.DatabaseObjects.ContainsKey(m_currenthouseID))
+                    {
+                        log.Error("Could not retrieve House "+m_currenthouseID+" for WorldObject "+m_Name + ID);
+                    }
+                    else
+                    {
+                        m_currentHouse = (House)DatabaseLayer.Instance.DatabaseObjects[m_currenthouseID];
+                    }
+                }                   
+            
+                return m_currentHouse; }
+			set { m_currentHouse = value;
+            m_currenthouseID = value.ID;
+        }
 		}
 		private bool m_inHouse;
 		public bool InHouse
@@ -536,22 +573,22 @@ namespace DOL.GS
 
 		#endregion
 
-		#region IDs/Database
+		#region IDs/GS
 
 		/// <summary>
 		/// True if this object is saved in the DB
 		/// </summary>
-		protected bool m_saveInDB;
-
+		protected bool m_saveInDB
+        {
+            get { return WriteToDatabase; }
+            set{ WriteToDatabase = value; }
+        }
 		/// <summary>
 		/// The objectID. This is -1 as long as the object is not added to a region!
 		/// </summary>
 		protected int m_ObjectID = -1;
 
-		/// <summary>
-		/// The internalID. This is the unique ID of the object in the DB!
-		/// </summary>
-		protected string m_InternalID;
+
 
 		/// <summary>
 		/// Gets or Sets the current ObjectID of the Object
@@ -569,14 +606,6 @@ namespace DOL.GS
 			}
 		}
 
-		/// <summary>
-		/// Gets or Sets the internal ID (DB ID) of the Object
-		/// </summary>
-		public string InternalID
-		{
-			get { return m_InternalID; }
-			set { m_InternalID = value; }
-		}
 
 		/// <summary>
 		/// Sets the state for this object on whether or not it is saved in the database
@@ -590,27 +619,17 @@ namespace DOL.GS
 		/// <summary>
 		/// Saves an object into the database
 		/// </summary>
-		public virtual void SaveIntoDatabase()
+		public void SaveIntoDatabase()
 		{
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="obj"></param>
-		public virtual void LoadFromDatabase(DataObject obj)
-		{
-			InternalID = obj.ObjectId;
+            Save();
 		}
 
 		/// <summary>
 		/// Deletes a character from the DB
 		/// </summary>
-		public virtual void DeleteFromDatabase()
+		public  void DeleteFromDatabase()
 		{
-            GameBoat boat = BoatMgr.GetBoatByOwner(InternalID);
-            if (boat != null)
-                boat.DeleteFromDatabase();
+            Delete();
         }
 
 		#endregion
@@ -710,7 +729,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Marks this object as deleted!
+		/// Deletes this Object in the Database ( world deletion is done by the GarbageCollector) 
 		/// </summary>
 		public virtual void Delete()
 		{
@@ -1248,9 +1267,9 @@ namespace DOL.GS
 		/// <param name="source">Source from where to get the item</param>
 		/// <param name="templateID">templateID for item to add</param>
 		/// <returns>true if the item was successfully received</returns>
-		public virtual bool ReceiveItem(GameLiving source, string templateID)
+		public virtual bool ReceiveItem(GameLiving source, UInt64 templateID)
 		{
-			ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), templateID);
+            ItemTemplate template =(ItemTemplate) DatabaseLayer.Instance.DatabaseObjects[templateID];
 			if (template == null)
 			{
 				if (log.IsErrorEnabled)
@@ -1295,7 +1314,7 @@ namespace DOL.GS
 			return new StringBuilder(128)
 				.Append(GetType().FullName)
 				.Append(" name=").Append(Name)
-				.Append(" DB_ID=").Append(InternalID)
+				.Append(" DB_ID=").Append(ID)
 				.Append(" oid=").Append(ObjectID.ToString())
 				.Append(" state=").Append(ObjectState.ToString())
 				.Append(" reg=").Append(reg == null ? "null" : reg.ID.ToString())
@@ -1307,6 +1326,7 @@ namespace DOL.GS
 		/// Constructs a new empty GameObject
 		/// </summary>
 		public GameObject()
+            :base()
 		{
 			//Objects should NOT be saved back to the DB
 			//as standard! We want our mobs/items etc. at

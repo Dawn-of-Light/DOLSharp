@@ -82,7 +82,7 @@ namespace DOL.GS
 			//m_spellHandler.StartSpell(player);
 			base.DoDamage();//anim mut be called after damage
 		}
-		public override bool ReceiveItem(GameLiving source, DOL.Database.InventoryItem item)
+		public override bool ReceiveItem(GameLiving source, DOL.GS.InventoryItem item)
 		{
 			//todo check if bullet
 			return base.ReceiveItem(source, item);

@@ -17,8 +17,8 @@
  *
  */
 using System;
-using DOL.Database;
-
+using DOL.Database2;
+using DOL.Database2;
 namespace DOL.GS
 {
 	/// <summary>
@@ -50,7 +50,7 @@ namespace DOL.GS
 		/// Loads this door from a door table slot
 		/// </summary>
 		/// <param name="obj">DBDoor</param>
-		public override void LoadFromDatabase(DataObject obj)
+		/*public override void LoadFromDatabase(DatabaseObject obj)
 		{
 			base.LoadFromDatabase(obj);
 			DBDoor m_dbdoor = obj as DBDoor;
@@ -69,8 +69,9 @@ namespace DOL.GS
 
 			DoorMgr.Doors[m_doorID] = this;
 			this.AddToWorld();
-		}
-		/// <summary>
+		}*/
+		/*
+        /// <summary>
 		/// save this door to a door table slot
 		/// </summary>
 		public override void SaveIntoDatabase()
@@ -94,7 +95,7 @@ namespace DOL.GS
 			else
 				GameServer.Database.SaveObject(obj);
 		}
-
+        */
 		#region Properties
 
 		/// <summary>

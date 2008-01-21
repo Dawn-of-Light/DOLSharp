@@ -20,7 +20,7 @@ using System.Collections;
 using System;
 using System.Reflection;
 
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.Keeps;
 
 using log4net;
@@ -44,7 +44,7 @@ namespace DOL.GS
 		/// </summary>	
 		public static bool Init()
 		{
-			DataObject[] dbdoors = GameServer.Database.SelectAllObjects(typeof(DBDoor));
+			DatabaseObject[] dbdoors = GameServer.Database.SelectAllObjects(typeof(DBDoor));
 			foreach (DBDoor door in dbdoors)
 			{
 				if (m_doors[door.InternalID] == null)

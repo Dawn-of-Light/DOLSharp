@@ -17,7 +17,7 @@
  *
  */
 using System;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS;
 using DOL.GS.Effects;

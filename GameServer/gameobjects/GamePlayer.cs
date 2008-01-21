@@ -19,13 +19,15 @@
  */
 using System;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Collections;
 using System.Text;
 
 using DOL.AI.Brain;
 using DOL.GS;
 using DOL.Events;
-using DOL.Database;
+using DOL.Database2;
+using DOL.Database2;
 using DOL.GS.Effects;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
@@ -678,8 +680,7 @@ namespace DOL.GS
 				GameServer.Database.SaveObject(character);
 				return;
 			}
-
-			Region reg = WorldMgr.GetRegion((ushort)character.BindRegion); // TODO : Display Area or zone name so ex: Prydwen Keep in Camelot Hills.
+            Region reg = WorldMgr.GetRegion((ushort)character.BindRegion); // TODO : Display Area or zone name so ex: Prydwen Keep in Camelot Hills.
 			if (reg != null)
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.LastBindPoint", reg.Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
@@ -743,17 +744,20 @@ namespace DOL.GS
 		/// <summary>
 		/// tick when player is died
 		/// </summary>
-		protected int m_deathTick;
+		[NonSerialized]
+        protected int m_deathTick;
 
 		/// <summary>
 		/// choosed the player to release as soon as possible?
 		/// </summary>
-		protected bool m_automaticRelease = false;
+		[NonSerialized]
+        protected bool m_automaticRelease = false;
 
 		/// <summary>
 		/// The release timer for this player
 		/// </summary>
-		protected RegionTimer m_releaseTimer;
+		[NonSerialized]
+        protected RegionTimer m_releaseTimer;
 
 		/// <summary>
 		/// Stops release timer and closes timer window
@@ -9700,7 +9704,7 @@ namespace DOL.GS
 			return false;
 		}
 
-		#region Database
+		#region GS
 
 		/// <summary>
 		/// Subtracts the current time from the last time the character was saved
@@ -10016,7 +10020,7 @@ namespace DOL.GS
 		/// Loads this player from a character table slot
 		/// </summary>
 		/// <param name="obj">DOLCharacter</param>
-		public override void LoadFromDatabase(DataObject obj)
+		/*public override void LoadFromDatabase(DatabaseObject obj)
 		{
 			base.LoadFromDatabase(obj);
 			if (!(obj is Character))
@@ -10236,7 +10240,7 @@ namespace DOL.GS
 				if (log.IsErrorEnabled)
 					log.Error("Error saving player " + Name + "!", e);
 			}
-		}
+		}*/
 
 		#endregion
 

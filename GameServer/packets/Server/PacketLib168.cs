@@ -25,7 +25,7 @@ using System.Collections.Specialized;
 using System.Net;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.Housing;
@@ -652,8 +652,8 @@ namespace DOL.GS.PacketHandler
 				pak.WriteInt(0x00);
 			else
 			{
-				pak.WriteShort(guild.ID);
-				pak.WriteShort(guild.ID);
+				pak.WriteShort(guild.RuntimeID);
+                pak.WriteShort(guild.RuntimeID);
 			}
 			pak.WriteShort(0x00); //seems random, not used by the client
 			SendTCP(pak);
@@ -1759,7 +1759,7 @@ namespace DOL.GS.PacketHandler
 						if (!itemsInPage.Contains(i))
 							continue;
 
-						ItemTemplate item = (ItemTemplate)itemsInPage[i];//(ItemTemplate) GameServer.Database.FindObjectByKey(typeof(ItemTemplate),((MerchantItem)tradeItemsList.ItemsList[page*MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS+i]).ItemTemplateID);
+						ItemTemplate item = (ItemTemplate)itemsInPage[i];//(ItemTemplate) GameServer.GS.FindObjectByKey(typeof(ItemTemplate),((MerchantItem)tradeItemsList.ItemsList[page*MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS+i]).ItemTemplateID);
 						if (item != null)
 						{
 							//DOLConsole.WriteLine("Item i="+itemIndex);
@@ -2064,7 +2064,7 @@ namespace DOL.GS.PacketHandler
 								pak.WriteByte(type);
 								pak.WriteShort(0);
 								pak.WriteByte(0);
-								pak.WriteShort(skill.ID);
+								pak.WriteShort(skill.ClientID);
 								string str = "";
 								if (m_gameClient.Player.CharacterClass.ID == (int)eCharacterClass.Vampiir)
 								{

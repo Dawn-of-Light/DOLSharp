@@ -20,7 +20,7 @@ using System;
 using System.Reflection;
 using DOL.GS;
 using DOL.Events;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.ServerProperties;
 using log4net;
 
@@ -376,7 +376,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						ch.RespecAmountRealmSkill += 2;
 
 						//Save the character in the database
-						GameServer.Database.AddNewObject(ch);
+                        ch.WriteToDatabase = true;
 						//Fire the character creation event
 						GameEventMgr.Notify(DatabaseEvent.CharacterCreated, null, new CharacterEventArgs(ch, client));
 						//add equipment

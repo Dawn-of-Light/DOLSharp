@@ -7,7 +7,7 @@ using Hashtable = DOL.GS.Collections.Hashtable;
 using DictionaryEntry = DOL.GS.Collections.DictionaryEntry;
 
 namespace DOL.GS.Collections {
-	class DictionaryEntry {
+	public class DictionaryEntry {
 		public object key = null;
 		public object value = null;
 	}

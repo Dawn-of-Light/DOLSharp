@@ -57,7 +57,7 @@ namespace DOLConfig
 							switch (result[0])
 							{
 								case "Server": MainForm.mysqlHostTextBox.Text = result[1]; break;
-								case "Database": MainForm.mysqlDatabaseTextBox.Text = result[1]; break;
+								case "GS": MainForm.mysqlDatabaseTextBox.Text = result[1]; break;
 								case "User ID": MainForm.mysqlUsernameTextBox.Text = result[1]; break;
 								case "Password": MainForm.mysqlPasswordTextBox.Text = result[1]; break;
 							}
@@ -93,7 +93,7 @@ namespace DOLConfig
 					case "MySQL": Config.DBType = DOL.Database.Connection.ConnectionType.DATABASE_MYSQL; break;
 				}
 				if (Config.DBType == DOL.Database.Connection.ConnectionType.DATABASE_MYSQL)
-					Config.DBConnectionString = "Server=" + MainForm.mysqlHostTextBox.Text + ";Database=" + MainForm.mysqlDatabaseTextBox.Text + ";User ID=" + MainForm.mysqlUsernameTextBox.Text + ";Password=" + MainForm.mysqlPasswordTextBox.Text;
+					Config.DBConnectionString = "Server=" + MainForm.mysqlHostTextBox.Text + ";GS=" + MainForm.mysqlDatabaseTextBox.Text + ";User ID=" + MainForm.mysqlUsernameTextBox.Text + ";Password=" + MainForm.mysqlPasswordTextBox.Text;
 				Config.SaveToXMLFile(ConfigFile);
 				MessageBox.Show("Settings saved successfully");
 			}

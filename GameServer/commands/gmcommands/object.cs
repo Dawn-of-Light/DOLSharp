@@ -20,7 +20,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 using DOL.GS;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
@@ -167,14 +167,14 @@ namespace DOL.GS.Commands
 				case "save":
 					{
 						targetObject.SaveIntoDatabase();
-						DisplayMessage(client, "Object saved to Database");
+						DisplayMessage(client, "Object saved to GS");
 						break;
 					}
 				case "remove":
 					{
 						targetObject.DeleteFromDatabase();
 						targetObject.Delete();
-						DisplayMessage(client, "Object removed from Clients and Database");
+						DisplayMessage(client, "Object removed from Clients and GS");
 						break;
 					}
 				case "target":

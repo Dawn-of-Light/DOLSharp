@@ -22,7 +22,7 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.PacketHandler;
 using DOL.Events;
 using DOL.GS.Utils;
@@ -517,7 +517,7 @@ namespace DOL.GS
 		/// <param name="merchantCount"></param>
 		/// <param name="itemCount"></param>
 		/// <param name="bindCount"></param>
-		public void LoadFromDatabase(Mob[] mobObjs, ref long mobCount, ref long merchantCount, ref long itemCount, ref long bindCount)
+		/*public void LoadFromDatabase(Mob[] mobObjs, ref long mobCount, ref long merchantCount, ref long itemCount, ref long bindCount)
 		{
 			Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
 			WorldObject[] staticObjs = (WorldObject[])GameServer.Database.SelectObjects(typeof(WorldObject), "Region = " + ID);
@@ -732,7 +732,7 @@ namespace DOL.GS
 				}
 			}
 		}
-
+        */
 		/// <summary>
 		/// Adds an object to the region and assigns the object an id
 		/// </summary>

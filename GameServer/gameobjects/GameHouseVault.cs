@@ -17,7 +17,7 @@
  *
  */
 using System.Collections;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.Housing;
 
 namespace DOL.GS
@@ -42,7 +42,7 @@ namespace DOL.GS
 			if (CurrentHouse != null && CurrentHouse.CanViewHouseVault(player))
 			{
 				ArrayList vaultItems = null;
-				DataObject[] items = GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + GameServer.Database.Escape((HouseMgr.GetOwners(CurrentHouse.DatabaseItem)[0] as Character).ObjectId) + "'");
+				DatabaseObject[] items = GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + GameServer.Database.Escape((HouseMgr.GetOwners(CurrentHouse.DatabaseItem)[0] as Character).ObjectId) + "'");
 				foreach (InventoryItem item in items)
 				{
 					if (vaultItems == null)

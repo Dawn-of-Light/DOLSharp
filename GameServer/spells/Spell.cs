@@ -18,7 +18,7 @@
  */
 using System;
 using System.Text;
-using DOL.Database;
+using DOL.Database2;
 using System.Collections.Generic;
 
 namespace DOL.GS

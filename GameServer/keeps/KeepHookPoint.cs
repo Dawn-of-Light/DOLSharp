@@ -17,7 +17,8 @@
  *
  */
 using System;
-using DOL.Database;
+using DOL.GS;
+using DOL.Database2;
 using DOL.Events;
 
 namespace DOL.GS.Keeps
@@ -25,7 +26,7 @@ namespace DOL.GS.Keeps
 	/// <summary>
 	/// A keepComponent
 	/// </summary>
-	public class GameKeepHookPoint : IPoint3D
+	public class GameKeepHookPoint : DatabaseObject, IPoint3D
 	{
 		public GameKeepHookPoint(int id, GameKeepComponent component)
 		{
@@ -38,34 +39,7 @@ namespace DOL.GS.Keeps
 			this.Heading = component.Heading;
 		}
 
-		public GameKeepHookPoint(DBKeepHookPoint dbhookPoint, GameKeepComponent component)
-		{
-			double angle = component.Keep.Heading * ((Math.PI * 2) / 360); // angle*2pi/360;
-			switch (component.ComponentHeading)
-			{
-				case 0:
-					X = (int)(component.X + Math.Cos(angle) * dbhookPoint.X + Math.Sin(angle) * dbhookPoint.Y);
-					Y = (int)(component.Y - Math.Cos(angle) * dbhookPoint.Y + Math.Sin(angle) * dbhookPoint.X);
-					break;
-				case 1:
-					X = (int)(component.X + Math.Cos(angle) * dbhookPoint.Y - Math.Sin(angle) * dbhookPoint.X);
-					Y = (int)(component.Y + Math.Cos(angle) * dbhookPoint.X + Math.Sin(angle) * dbhookPoint.Y);
-					break;
-				case 2:
-					X = (int)(component.X - Math.Cos(angle) * dbhookPoint.X - Math.Sin(angle) * dbhookPoint.Y);
-					Y = (int)(component.Y + Math.Cos(angle) * dbhookPoint.Y - Math.Sin(angle) * dbhookPoint.X);
-					break;
-				case 3:
-					X = (int)(component.X - Math.Cos(angle) * dbhookPoint.Y + Math.Sin(angle) * dbhookPoint.X);
-					Y = (int)(component.Y - Math.Cos(angle) * dbhookPoint.X - Math.Sin(angle) * dbhookPoint.Y);
-					break;
-			}
-			this.Z = component.Z + dbhookPoint.Z;
-			this.Heading = (ushort)(component.Heading + dbhookPoint.Heading);
-			this.m_index = dbhookPoint.HookPointID;
-			this.Component = component;
-			m_hookpointTimer = new HookpointTimer(this, this.Component);
-		}
+
 
 		#region properties
 
@@ -76,13 +50,28 @@ namespace DOL.GS.Keeps
 			get { return m_index; }
 			set { m_index = value; }
 		}
-		private HookpointTimer m_hookpointTimer;
-		private GameKeepComponent m_component;
+        [NonSerialized]
+		private HookpointTimer m_hookpointTimer = null;
+        [NonSerialized]
+		private GameKeepComponent m_component = null;
+        [NonSerialized]
 		public GameKeepComponent Component
 		{
-			get { return m_component; }
-			set { m_component = value; }
+			get {
+                if (m_component == null)
+                {
+                    if (!DatabaseLayer.Instance.DatabaseObjects.TryGetValue(m_componentID, m_component))
+                    {
+                        throw new Exception("Could not find KeepComponent " + m_componentID + " for Hook Point " + ID);
+                    }
+                }
+                return m_component; }
+			set { m_component = value;
+            m_componentID = value.ID;
+        }
 		}
+
+        private UInt64 m_componentID;
 
 		public bool IsFree
 		{
@@ -93,42 +82,55 @@ namespace DOL.GS.Keeps
 		public int Z
 		{
 			get { return m_z; }
-			set { m_z = value; }
+            set { m_z = value; Dirty = true; }
 		}
 
 		private int m_x;
 		public int X
 		{
 			get { return m_x; }
-			set { m_x = value; }
+            set { m_x = value; Dirty = true; }
 		}
 
 		private int m_y;
 		public int Y
 		{
 			get { return m_y; }
-			set { m_y = value; }
+            set { m_y = value; Dirty = true; }
 		}
 
 		private ushort m_heading;
 		public ushort Heading
 		{
 			get { return m_heading; }
-			set { m_heading = value; }
+            set { m_heading = value; Dirty = true; }
 		}
+        private UInt64 m_objectid;
+        [NonSerialized]
 		private GameLiving m_object;
 
 		public GameLiving Object
 		{
-			get { return m_object; }
+			get {
+                if (m_object == null)
+                {
+                    if (DatabaseLayer.Instance.DatabaseObjects.TryGetValue(m_objectid, m_object))
+                    {
+                        throw new Exception("Could not retrieve Object" + m_objectid + " for KeepHookPoint " + ID);
+                    }
+                }
+                return m_object; 
+                }
 			set
 			{
 				m_object = value;
+                m_objectid = value.ID;
 				if (value != null)
 				{
 					m_hookpointTimer.Start(1800000);//30*60*1000 = 30 min
 					GameEventMgr.AddHandler(value, GameLivingEvent.Dying, new DOLEventHandler(ObjectDie));
 				}
+                Dirty = true;
 			}
 		}
 
@@ -138,6 +140,7 @@ namespace DOL.GS.Keeps
 		{
 			m_hookpointTimer.Start(300000);//5*60*1000 = 5 min
 			GameEventMgr.RemoveHandler(m_object, GameLivingEvent.Dying, new DOLEventHandler(ObjectDie));
+            //TODO: Fix this query here ..., we should keep a cross reference
 			DBKeepHookPointItem item = (DBKeepHookPointItem)GameServer.Database.SelectObject(typeof(DBKeepHookPointItem), "KeepID = '" + Component.Keep.KeepID + "' AND ComponentID = '" + Component.ID + "' AND HookPointID = '" + ID + "'");
 			if (item != null)
 				GameServer.Database.DeleteObject(item);

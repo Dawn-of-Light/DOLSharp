@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using DOL.GS.PacketHandler;
-using DOL.Database;
+using DOL.Database2;
 using log4net;
 using System.Reflection;
 using DOL.Events;
@@ -81,14 +81,15 @@ namespace DOL.GS
 		/// Create dragon's lair after it was loaded from the DB.
 		/// </summary>
 		/// <param name="obj"></param>
-		public override void LoadFromDatabase(DataObject obj)
+        /*
+		public override void LoadFromDatabase(DatabaseObject obj)
 		{
 			base.LoadFromDatabase(obj);
 			String[] dragonName = Name.Split(new char[] { ' ' });
 			WorldMgr.GetRegion(CurrentRegionID).AddArea(new Area.Circle(String.Format("{0}'s Lair",
 				dragonName[0]),
 				X, Y, 0, LairRadius + 200));
-		}
+		}*/
 
 		/// <summary>
 		/// Melee attack Range.
@@ -765,7 +766,6 @@ namespace DOL.GS
 				if (m_stun == null)
 				{
 					DBSpell spell = new DBSpell();
-					spell.AutoSave = false;
 					spell.CastTime = 0;
 					spell.Uninterruptible = true;
 					spell.ClientEffect = 4123;

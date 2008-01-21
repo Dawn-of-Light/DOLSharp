@@ -22,7 +22,7 @@ using System.Collections.Specialized;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
 using DOL.GS.Styles;
@@ -52,11 +52,11 @@ namespace DOL.GS
 	/// <summary>
 	/// base class for skills
 	/// </summary>
-	public abstract class Skill
+	public abstract class Skill : DatabaseObject
 	{
-		protected ushort m_id;
 		protected string m_name;
 		protected int m_level;
+        private ushort m_clientID;
 
 		/// <summary>
 		/// Construct a Skill from the name, an id, and a level
@@ -64,21 +64,12 @@ namespace DOL.GS
 		/// <param name="name"></param>
 		/// <param name="id"></param>
 		/// <param name="level"></param>
-		public Skill(string name, ushort id, int level)
+		public Skill(string name, int level)
 		{
-			m_id = id;
 			m_name = name;
 			m_level = level;
 		}
 
-		/// <summary>
-		/// in most cases it is icon id or other specifiing id for client
-		/// like spell id or style id in spells
-		/// </summary>
-		public virtual ushort ID
-		{
-			get { return m_id; }
-		}
 
 		/// <summary>
 		/// The Skill Name
@@ -105,7 +96,13 @@ namespace DOL.GS
 		{
 			get { return eSkillPage.Abilities; }
 		}
-
+        /// <summary>
+        /// Internal ID , like a logo
+        /// </summary>
+        protected ushort ClientID
+        {
+            get { return m_clientID; }
+        }
 		/// <summary>
 		/// Clone a skill
 		/// </summary>
@@ -132,8 +129,8 @@ namespace DOL.GS
 		/// <param name="name">The name</param>
 		/// <param name="id">The ID</param>
 		/// <param name="level">The level</param>
-		public NamedSkill(string keyName, string name, ushort id, int level)
-			: base(name, id, level)
+		public NamedSkill(string keyName, string name, int level)
+			: base(name, level)
 		{
 			m_keyName = keyName;
 		}
@@ -283,7 +280,7 @@ namespace DOL.GS
 			if (log.IsInfoEnabled)
 				log.Info("Loading spells...");
 			Hashtable spells = new Hashtable(5000);
-			DataObject[] spelldb = GameServer.Database.SelectAllObjects(typeof(DBSpell));
+			DatabaseObject[] spelldb = GameServer.Database.SelectAllObjects(typeof(DBSpell));
 			for (int i = 0; i < spelldb.Length; i++)
 			{
 				DBSpell spell = (DBSpell)spelldb[i];
@@ -295,7 +292,7 @@ namespace DOL.GS
 
 
 			// load all spell lines
-			DataObject[] dbo = GameServer.Database.SelectAllObjects(typeof(DBSpellLine));
+			DatabaseObject[] dbo = GameServer.Database.SelectAllObjects(typeof(DBSpellLine));
 			for (int i = 0; i < dbo.Length; i++)
 			{
 				string lineID = ((DBSpellLine)dbo[i]).KeyName;
@@ -331,7 +328,7 @@ namespace DOL.GS
 
 			// load Abilities
 			log.Info("Loading Abilities...");
-			DataObject[] abilities = GameServer.Database.SelectAllObjects(typeof(DBAbility));
+			DatabaseObject[] abilities = GameServer.Database.SelectAllObjects(typeof(DBAbility));
 			if (abilities != null)
 			{
 				foreach (DBAbility dba in abilities)
@@ -365,7 +362,7 @@ namespace DOL.GS
 				log.Info("Total abilities loaded: " + ((abilities != null) ? abilities.Length : 0));
 
 			log.Info("Loading class to realm ability associations...");
-			DataObject[] classxra = GameServer.Database.SelectAllObjects(typeof(ClassXRealmAbility));
+			DatabaseObject[] classxra = GameServer.Database.SelectAllObjects(typeof(ClassXRealmAbility));
 			int count = 0;
 			if (classxra != null)
 			{
@@ -401,7 +398,7 @@ namespace DOL.GS
 			//(procs) load all Procs
 			if (log.IsInfoEnabled)
 				log.Info("Loading procs...");
-			DataObject[] stylespells = GameServer.Database.SelectAllObjects(typeof(DBStyleXSpell));
+			DatabaseObject[] stylespells = GameServer.Database.SelectAllObjects(typeof(DBStyleXSpell));
 			if (stylespells != null)
 			{
 				foreach (DBStyleXSpell proc in stylespells)
@@ -434,7 +431,7 @@ namespace DOL.GS
 			// load Specialization & styles
 			if (log.IsInfoEnabled)
 				log.Info("Loading specialization & styles...");
-			DataObject[] specabilities = GameServer.Database.SelectAllObjects(typeof(DBSpecXAbility));
+			DatabaseObject[] specabilities = GameServer.Database.SelectAllObjects(typeof(DBSpecXAbility));
 			if (specabilities != null)
 			{
 				foreach (DBSpecXAbility sxa in specabilities)
@@ -458,7 +455,7 @@ namespace DOL.GS
 				}
 			}
 
-			DataObject[] specs = GameServer.Database.SelectAllObjects(typeof(DBSpecialization));
+			DatabaseObject[] specs = GameServer.Database.SelectAllObjects(typeof(DBSpecialization));
 			if (specs != null)
 			{
 				foreach (DBSpecialization spec in specs)

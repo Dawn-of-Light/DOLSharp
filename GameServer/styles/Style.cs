@@ -18,9 +18,9 @@
  */
 using System;
 using System.Collections.Generic;
-using DOL.Database.Attributes;
+using DOL.Database2;
 using DOL.GS;
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS.Styles
 {
@@ -125,26 +125,11 @@ namespace DOL.GS.Styles
 			public const int AnyWeapon = 1001;
 		}
 
-		/// <summary>
-		/// The database style object, used to retrieve information for this object
-		/// </summary>
-		protected DBStyle baseStyle = null;
 
 		/// <summary>
 		/// (readonly) The list of procs available for this style
 		/// </summary>
 		protected List<DBStyleXSpell> m_Procs;
-
-		/// <summary>
-		/// Constructs a new Style object based on a database Style object
-		/// </summary>
-		/// <param name="style">The database style object this object is based on</param>
-		public Style(DBStyle style)
-			: base(style.Name, (ushort)style.ID, style.SpecLevelRequirement)
-		{
-			baseStyle = style;
-			m_Procs = new List<DBStyleXSpell>();
-		}
 
 		/// <summary>
 		/// (readonly)(procs) The list of procs available for this style

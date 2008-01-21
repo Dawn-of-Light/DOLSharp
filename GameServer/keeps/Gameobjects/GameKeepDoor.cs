@@ -20,7 +20,8 @@ using System;
 using System.Collections;
 using System.Reflection;
 
-using DOL.Database;
+using DOL.Database2;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 
@@ -425,20 +426,11 @@ namespace DOL.GS.Keeps
 		#endregion
 
 		#region Save/load DB
-
-		/// <summary>
-		/// save the keep door object in DB
-		/// </summary>
-		public override void SaveIntoDatabase()
-		{
-
-		}
-
 		/// <summary>
 		/// load the keep door object from DB object
 		/// </summary>
 		/// <param name="obj"></param>
-		public override void LoadFromDatabase(DataObject obj)
+		/*public override void LoadFromDatabase(DatabaseObject obj)
 		{
 			DBDoor door = obj as DBDoor;
 			if (door == null)
@@ -475,7 +467,7 @@ namespace DOL.GS.Keeps
 
 			m_health = MaxHealth;
 			StartHealthRegeneration();
-		}
+		}*/
 
 		public void LoadFromPosition(DBKeepPosition pos, GameKeepComponent component)
 		{

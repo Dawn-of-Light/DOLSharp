@@ -28,7 +28,7 @@
 
 using System;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -203,7 +203,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		marinefungusroot = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "marinefungusroot");
+		marinefungusroot = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "marinefungusroot");
 			if (marinefungusroot == null)
 			{
 				marinefungusroot = new ItemTemplate();

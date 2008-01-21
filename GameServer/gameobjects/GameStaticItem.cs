@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Language;
 
 namespace DOL.GS
@@ -128,8 +128,8 @@ namespace DOL.GS
 			return list;
 		}
 		#endregion
-
-		public override void LoadFromDatabase(DataObject obj)
+        /*
+		public override void LoadFromDatabase(DatabaseObject obj)
 		{
 			WorldObject item = obj as WorldObject;
 			base.LoadFromDatabase(obj);
@@ -142,7 +142,7 @@ namespace DOL.GS
 			Y = item.Y;
 			Z = item.Z;
 		}
-
+        */
 		/// <summary>
 		/// Gets or sets the heading of this item
 		/// </summary>
@@ -192,49 +192,6 @@ namespace DOL.GS
 						player.Out.SendObjectCreate(this);
 				}
 			}
-		}
-
-		/// <summary>
-		/// Saves this Item in the WorldObject DB
-		/// </summary>
-		public override void SaveIntoDatabase()
-		{
-			WorldObject obj = null;
-			if(InternalID != null)
-				obj = (WorldObject) GameServer.Database.FindObjectByKey(typeof(WorldObject), InternalID);
-			if(obj == null)
-			  obj = new WorldObject();
-			obj.Name = Name;
-			obj.Model = Model;
-			obj.Emblem = Emblem;
-			obj.Heading = Heading;
-			obj.Region = CurrentRegionID;
-			obj.X = X;
-			obj.Y = Y;
-			obj.Z = Z;
-			obj.ClassType = this.GetType().ToString();
-
-			if(InternalID == null)
-			{
-				GameServer.Database.AddNewObject(obj);
-				InternalID = obj.ObjectId;
-			}
-			else
-				GameServer.Database.SaveObject(obj);
-		}
-
-		/// <summary>
-		/// Deletes this item from the WorldObject DB
-		/// </summary>
-		public override void DeleteFromDatabase()
-		{
-			if(InternalID != null)
-			{
-				WorldObject obj = (WorldObject) GameServer.Database.FindObjectByKey(typeof(WorldObject), InternalID);
-				if(obj != null)
-				  GameServer.Database.DeleteObject(obj);
-			}
-			InternalID = null;
 		}
 
 		/// <summary>

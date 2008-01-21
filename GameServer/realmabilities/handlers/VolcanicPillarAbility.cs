@@ -6,7 +6,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.GS.Spells;
 using DOL.Events;
-using DOL.Database;
+using DOL.Database2;
 namespace DOL.GS.RealmAbilities
 {
 	public class VolcanicPillarAbility : TimedRealmAbility

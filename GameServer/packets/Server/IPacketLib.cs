@@ -23,7 +23,7 @@ using DOL.GS;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
 using DOL.GS.Quests;
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS.PacketHandler
 {

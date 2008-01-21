@@ -33,7 +33,7 @@
 
 using System;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.Language;
 using DOL.GS.PacketHandler;
@@ -44,7 +44,7 @@ using log4net;
  *       DOL.GS.Quests.Hibernia
  * Also this is the name that will show up in the database as QuestName
  * so setting good values here will result in easier to read and cleaner
- * Database Code
+ * GS Code
  */
 
 namespace DOL.GS.Quests.Hibernia
@@ -293,7 +293,7 @@ namespace DOL.GS.Quests.Hibernia
                     GameServer.Database.AddNewObject(recruitsDiary);
 			}
 
-			sackOfSupplies = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sack_of_supplies");
+			sackOfSupplies = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "sack_of_supplies");
 			if (sackOfSupplies == null)
 			{
 				sackOfSupplies = new ItemTemplate();
@@ -317,7 +317,7 @@ namespace DOL.GS.Quests.Hibernia
 					GameServer.Database.AddNewObject(sackOfSupplies);
 			}
 
-			crateOfVegetables = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "crate_of_vegetables");
+			crateOfVegetables = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "crate_of_vegetables");
 			if (crateOfVegetables == null)
 			{
 				crateOfVegetables = new ItemTemplate();
@@ -342,7 +342,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 
 			// item db check
-			recruitsCloak = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_cloak_hib");
+			recruitsCloak = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_cloak_hib");
 			if (recruitsCloak == null)
 			{
 				if (log.IsWarnEnabled)

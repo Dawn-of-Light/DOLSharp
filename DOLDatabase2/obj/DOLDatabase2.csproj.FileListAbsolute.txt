@@ -1,0 +1,6 @@
+C:\Dokumente und Einstellungen\Juli\Eigene Dateien\Visual Studio 2005\Projects\DOL\DOLSharp\branch\doldatabase2\DOLDatabase2\bin\Debug\DOLDatabase2.dll
+C:\Dokumente und Einstellungen\Juli\Eigene Dateien\Visual Studio 2005\Projects\DOL\DOLSharp\branch\doldatabase2\DOLDatabase2\bin\Debug\DOLDatabase2.pdb
+C:\Dokumente und Einstellungen\Juli\Eigene Dateien\Visual Studio 2005\Projects\DOL\DOLSharp\branch\doldatabase2\DOLDatabase2\obj\Debug\ResolveAssemblyReference.cache
+C:\Dokumente und Einstellungen\Juli\Eigene Dateien\Visual Studio 2005\Projects\DOL\DOLSharp\branch\doldatabase2\DOLDatabase2\obj\Debug\DOLDatabase2.dll
+C:\Dokumente und Einstellungen\Juli\Eigene Dateien\Visual Studio 2005\Projects\DOL\DOLSharp\branch\doldatabase2\DOLDatabase2\obj\Debug\DOLDatabase2.pdb
+C:\Dokumente und Einstellungen\Juli\Eigene Dateien\Visual Studio 2005\Projects\DOL\DOLSharp\branch\doldatabase2\DOLDatabase2\bin\Debug\log4net.dll

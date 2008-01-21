@@ -21,7 +21,7 @@ using System.Collections;
 using System.Reflection;
 using System.Text;
 
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.Spells;
 using DOL.GS.PacketHandler;
 

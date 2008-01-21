@@ -33,7 +33,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -43,7 +43,7 @@ using log4net;
  *       DOL.GS.Quests.Hibernia
  * Also this is the name that will show up in the database as QuestName
  * so setting good values here will result in easier to read and cleaner
- * Database Code
+ * GS Code
  */
 
 namespace DOL.GS.Quests.Albion
@@ -237,7 +237,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineItems
 
-			queenTatianasHead = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "queen_tatianas_head");
+			queenTatianasHead = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "queen_tatianas_head");
 			if (queenTatianasHead == null)
 			{
 				queenTatianasHead = new ItemTemplate();
@@ -262,7 +262,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsGauntlets = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_gauntlets");
+			recruitsGauntlets = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_studded_gauntlets");
 			if (recruitsGauntlets == null)
 			{
 				recruitsGauntlets = new ItemTemplate();
@@ -309,7 +309,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_gloves");
+			recruitsGloves = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_quilted_gloves");
 			if (recruitsGloves == null)
 			{
 				recruitsGloves = new ItemTemplate();
@@ -355,7 +355,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(recruitsGloves);
 			}
 
-			recruitsJewel = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_cloudy_jewel");
+			recruitsJewel = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_cloudy_jewel");
 			if (recruitsJewel == null)
 			{
 				recruitsJewel = new ItemTemplate();
@@ -394,7 +394,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(recruitsJewel);
 			}
 
-			recruitsJewelCloth = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_cloudy_jewel_cloth");
+			recruitsJewelCloth = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_cloudy_jewel_cloth");
 			if (recruitsJewelCloth == null)
 			{
 				recruitsJewelCloth = new ItemTemplate();
@@ -439,7 +439,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(recruitsJewelCloth);
 			}
 
-			recruitsBracer = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_golden_bracer");
+			recruitsBracer = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_golden_bracer");
 			if (recruitsBracer == null)
 			{
 				recruitsBracer = new ItemTemplate();

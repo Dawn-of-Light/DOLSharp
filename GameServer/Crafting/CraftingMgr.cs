@@ -17,7 +17,7 @@
  *
  */
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.PacketHandler;
 using log4net;
 

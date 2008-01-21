@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands

@@ -23,7 +23,7 @@ using System.Text;
 using DOL.GS;
 using DOL.GS.Spells;
 using DOL.GS.PacketHandler;
-using DOL.Database;
+using DOL.Database2;
 using log4net;
 using DOL.Events;
 using DOL.GS.Effects;

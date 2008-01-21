@@ -21,7 +21,7 @@ using System;
 using System.Collections;
 using DOL.AI.Brain;
 using DOL.Events;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
 using DOL.GS.Spells;

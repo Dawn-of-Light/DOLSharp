@@ -17,10 +17,11 @@
  *
  */
 using System;
+using System.Runtime.Serialization;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Text;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.Language;
@@ -32,28 +33,49 @@ namespace DOL.GS.Quests
 	/// Declares the abstract quest class from which all user created
 	/// quests must derive!
 	/// </summary>
-	public abstract class AbstractQuest
+	[Serializable]
+    public abstract class AbstractQuest : DatabaseObject
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        [NonSerialized]
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
 		/// The level of the quest.
 		/// </summary>
 		protected int m_questLevel = 1;
-
+        /// <summary>
+        /// Current Quest Step
+        /// </summary>
+        protected int m_step;
+        /// <summary>
+        /// Quest Name
+        /// </summary>
+        protected string m_name;
 		/// <summary>
 		/// The player doing the quest
 		/// </summary>
-		protected GamePlayer m_questPlayer = null;
-		/// <summary>
-		/// The quest database object, storing the information for the player
-		/// and the quest. Eg. QuestStep etc.
-		/// </summary>
-		private DBQuest m_dbQuest = null;
-
+        [NonSerialized]
+        private GamePlayer m_secretquestplayer = null;
+        protected GamePlayer m_questPlayer
+        {
+            get
+            {
+                if (m_questPlayer == null && m_questPlayerid != null)
+                {
+                    if (!DatabaseLayer.Instance.DatabaseObjects.TryGetValue(m_questPlayerid, m_secretquestplayer))
+                        log.Error("Could not find QuestPlayer" + m_secretquestplayer + " for AbstractQuest " + ID);
+                }
+            }
+            set
+            {
+                m_secretquestplayer = value;
+                m_questPlayerid = value.ID;
+            }
+        }
+        private UInt64 m_questPlayerid;
 		/// <summary>
 		/// Constructs a new empty Quest
 		/// </summary>		
@@ -80,12 +102,7 @@ namespace DOL.GS.Quests
 		public AbstractQuest(GamePlayer questingPlayer,int step)
 		{
 			m_questPlayer = questingPlayer;
-			
-			DBQuest dbQuest = new DBQuest();
-			dbQuest.CharName = questingPlayer.Name;
-			dbQuest.Name = GetType().FullName;
-			dbQuest.Step = step;
-			m_dbQuest = dbQuest;
+            m_questPlayerid = questingPlayer.ID;
 			SaveIntoDatabase();
 		}
 
@@ -133,10 +150,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public virtual void SaveIntoDatabase()
 		{
-			if(m_dbQuest.IsValid)
-				GameServer.Database.SaveObject(m_dbQuest);
-			else
-				GameServer.Database.AddNewObject(m_dbQuest);
+            Save();
 		}
 		  
 		/// <summary>
@@ -144,11 +158,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public virtual void DeleteFromDatabase()
 		{
-			if(!m_dbQuest.IsValid) return;
-
-			DBQuest dbQuest = (DBQuest) GameServer.Database.FindObjectByKey(typeof(DBQuest), m_dbQuest.ObjectId);
-			if(dbQuest!=null)
-				GameServer.Database.DeleteObject(dbQuest);
+            DeleteDB();
 		}
 
 		/// <summary>
@@ -264,7 +274,6 @@ namespace DOL.GS.Quests
 		/// <param name="sender">The sender of the event</param>
 		/// <param name="args">The event arguments</param>
 		public abstract void Notify(DOLEvent e, object sender, EventArgs args);
-
 		/// <summary>
 		/// Called when this player has acquired the quest.
 		/// </summary>
@@ -278,104 +287,5 @@ namespace DOL.GS.Quests
 		/// This HybridDictionary holds all the custom properties of this quest
 		/// </summary>
 		protected readonly HybridDictionary m_customProperties = new HybridDictionary();
-
-		#region Custom Properties
-
-		/// <summary>
-		/// This method parses the custom properties string of the m_dbQuest
-		/// into the HybridDictionary for easier use and access
-		/// </summary>
-		public void ParseCustomProperties()
-		{
-			if(m_dbQuest.CustomPropertiesString == null)
-				return;
-
-			lock(m_customProperties)
-			{
-				m_customProperties.Clear();
-				string[] properties = m_dbQuest.CustomPropertiesString.Split(';');
-				foreach(string property in properties)
-				if(property.Length>0)
-				{
-					string[] values = property.Split('=');
-					m_customProperties[values[0]] = values[1];
-				}
-			}
-		}
-
-		/// <summary>
-		/// This method sets a custom Property to a specific value
-		/// </summary>
-		/// <param name="key">The name of the property</param>
-		/// <param name="value">The value of the property</param>
-		public void SetCustomProperty(string key, string value)
-		{
-			if(key==null)
-				throw new ArgumentNullException("key");
-			if(value==null)
-				throw new ArgumentNullException("value");
-
-			//Make the string safe
-			key = key.Replace(';',',');
-			key = key.Replace('=','-');
-			value = value.Replace(';',',');
-			value = value.Replace('=','-');
-			lock(m_customProperties)
-			{
-				m_customProperties[key]=value;
-			}
-			SaveCustomProperties();
-		}
-
-		/// <summary>
-		/// Saves the custom properties into the database
-		/// </summary>
-		protected void SaveCustomProperties()
-		{
-			StringBuilder builder = new StringBuilder();
-			lock(m_customProperties)
-			{
-				foreach(string hKey in m_customProperties.Keys)
-				{
-					builder.Append(hKey);
-					builder.Append("=");
-					builder.Append(m_customProperties[hKey]);
-					builder.Append(";");
-				}
-			}
-			m_dbQuest.CustomPropertiesString = builder.ToString();
-			SaveIntoDatabase();
-		}
-		
-		/// <summary>
-		/// Removes a custom property from the database
-		/// </summary>
-		/// <param name="key">The key name of the property</param>
-		public void RemoveCustomProperty(string key)
-		{
-			if(key==null)
-				throw new ArgumentNullException("key");
-
-			lock(m_customProperties)
-			{
-				m_customProperties.Remove(key);
-			}
-			SaveCustomProperties();
-		}
-
-		/// <summary>
-		/// This method retrieves a custom property from the database
-		/// </summary>
-		/// <param name="key">The property key</param>
-		/// <returns>The property value</returns>
-		public string GetCustomProperty(string key)
-		{
-			if(key==null)
-				throw new ArgumentNullException("key");
-
-			return (string)m_customProperties[key];
-		}
-
-		#endregion
 	}
 }

@@ -20,7 +20,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 
@@ -76,7 +76,7 @@ namespace DOL.GS
 				}
 
 
-				DataObject[] relics = GameServer.Database.SelectAllObjects(typeof(DBRelic));
+				DatabaseObject[] relics = GameServer.Database.SelectAllObjects(typeof(DBRelic));
 				foreach (DBRelic datarelic in relics)
 				{
 					if (datarelic.relicType < 0 || datarelic.relicType > 1

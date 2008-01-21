@@ -20,7 +20,7 @@ using System.Collections;
 using System.Collections.Specialized;
 using System;
 
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS
 {

@@ -361,7 +361,7 @@ namespace DOL.GS.Spells
 											if (inven.GetItem(eInventorySlot.RightHandWeapon).Model == 3463) break;
 											inven.RemoveItem(inven.GetItem(eInventorySlot.RightHandWeapon));
 										}
-										Database.InventoryItem newItem = new Database.InventoryItem();
+										InventoryItem newItem = new InventoryItem();
 										newItem.Model = 3463;
 										newItem.Object_Type = (int)eObjectType.Sword;
 										newItem.Hand = (int)eInventorySlot.RightHandWeapon;
@@ -379,7 +379,7 @@ namespace DOL.GS.Spells
 											if (inven.GetItem(eInventorySlot.RightHandWeapon).Model == 3466) break;
 											inven.RemoveItem(inven.GetItem(eInventorySlot.RightHandWeapon));
 										}
-										Database.InventoryItem newItem = new Database.InventoryItem();
+										InventoryItem newItem = new InventoryItem();
 										newItem.Model = 3466;
 										newItem.Object_Type = (int)eObjectType.Hammer;
 										newItem.Hand = (int)eInventorySlot.RightHandWeapon;
@@ -396,7 +396,7 @@ namespace DOL.GS.Spells
 											if (inven.GetItem(eInventorySlot.RightHandWeapon).Model == 3469) break;
 											inven.RemoveItem(inven.GetItem(eInventorySlot.RightHandWeapon));
 										}
-										Database.InventoryItem newItem = new Database.InventoryItem();
+										InventoryItem newItem = new InventoryItem();
 										newItem.Model = 3469;
 										newItem.Object_Type = (int)eObjectType.Axe;
 										newItem.Hand = (int)eInventorySlot.RightHandWeapon;
@@ -423,7 +423,7 @@ namespace DOL.GS.Spells
 											if (inven.GetItem(eInventorySlot.TwoHandWeapon).Model == 3462) break;
 											inven.RemoveItem(inven.GetItem(eInventorySlot.TwoHandWeapon));
 										}
-										Database.InventoryItem newItem = new Database.InventoryItem();
+										InventoryItem newItem = new InventoryItem();
 										newItem.Model = 3462;
 										newItem.Object_Type = (int)eObjectType.TwoHandedWeapon;
 										newItem.Hand = (int)eInventorySlot.TwoHandWeapon;
@@ -441,7 +441,7 @@ namespace DOL.GS.Spells
 											if (inven.GetItem(eInventorySlot.TwoHandWeapon).Model == 3465) break;
 											inven.RemoveItem(inven.GetItem(eInventorySlot.TwoHandWeapon));
 										}
-										Database.InventoryItem newItem = new Database.InventoryItem();
+										InventoryItem newItem = new InventoryItem();
 										newItem.Model = 3465;
 										newItem.Object_Type = (int)eObjectType.TwoHandedWeapon;
 										newItem.Hand = (int)eInventorySlot.TwoHandWeapon;
@@ -459,7 +459,7 @@ namespace DOL.GS.Spells
 											if (inven.GetItem(eInventorySlot.TwoHandWeapon).Model == 3468) break;
 											inven.RemoveItem(inven.GetItem(eInventorySlot.TwoHandWeapon));
 										}
-										Database.InventoryItem newItem = new Database.InventoryItem();
+										InventoryItem newItem = new InventoryItem();
 										newItem.Model = 3468;
 										newItem.Object_Type = (int)eObjectType.TwoHandedWeapon;
 										newItem.Hand = (int)eInventorySlot.TwoHandWeapon;

@@ -24,9 +24,9 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Threading;
 
-using DOL.Database;
-using DOL.Database.Attributes;
-using DOL.Database.Connection;
+using DOL.Database2;
+using DOL.Database2;
+
 using DOL.Events;
 using DOL.GS.DatabaseConverters;
 using DOL.GS.Housing;
@@ -102,11 +102,6 @@ namespace DOL
 			protected const int MAX_UDPBUF = 4096;
 
 			/// <summary>
-			/// Database instance
-			/// </summary>
-			protected ObjectDatabase m_database = null;
-
-			/// <summary>
 			/// Contains a list of invalid names
 			/// </summary>
 			protected ArrayList m_invalidNames = new ArrayList();
@@ -180,13 +175,7 @@ namespace DOL
 				}
 			}
 
-			/// <summary>
-			/// Gets the database instance
-			/// </summary>
-			public static ObjectDatabase Database
-			{
-				get { return Instance.m_database; }
-			}
+
 
 			/// <summary>
 			/// Gets or sets the world save interval
@@ -1149,7 +1138,7 @@ namespace DOL
 
 			#endregion
 
-			#region Database
+			#region GS
 
 			/// <summary>
 			/// Initializes the database
@@ -1157,56 +1146,7 @@ namespace DOL
 			/// <returns>True if the database was successfully initialized</returns>
 			public bool InitDB()
 			{
-				if (m_database == null)
-				{
-					DataConnection con = new DataConnection(Configuration.DBType, Configuration.DBConnectionString);
-					m_database = new ObjectDatabase(con);
-					try
-					{
-						//We will search our assemblies for DataTables by reflection so 
-						//it is not neccessary anymore to register new tables with the 
-						//server, it is done automatically!
-						foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-						{
-							// Walk through each type in the assembly
-							foreach (Type type in assembly.GetTypes())
-							{
-								// Pick up a class
-								// Aredhel: Ok, I know checking for InventoryArtifact type
-								// is a hack, but I currently have no better idea.
-								if (type.IsClass != true || type == typeof(InventoryArtifact))
-									continue;
-								object[] attrib = type.GetCustomAttributes(typeof(DataTable), true);
-								if (attrib.Length > 0)
-								{
-									if (log.IsInfoEnabled)
-										log.Info("Registering table: " + type.FullName);
-									m_database.RegisterDataObject(type);
-								}
-							}
-						}
-					}
-					catch (DatabaseException e)
-					{
-						if (log.IsErrorEnabled)
-							log.Error("Error registering Tables", e);
-						return false;
-					}
-
-					try
-					{
-						m_database.LoadDatabaseTables();
-					}
-					catch (DatabaseException e)
-					{
-						if (log.IsErrorEnabled)
-							log.Error("Error loading Database", e);
-						return false;
-					}
-				}
-				if (log.IsInfoEnabled)
-					log.Info("Database Initialization: true");
-				return true;
+#warning rewrite
 			}
 
 			/// <summary>
@@ -1214,8 +1154,7 @@ namespace DOL
 			/// </summary>
 			public void SaveDatabase()
 			{
-				if (m_database != null)
-					m_database.WriteDatabaseTables();
+                DatabaseLayer.Instance.SaveWorldState();
 			}
 
 			/// <summary>
@@ -1232,26 +1171,18 @@ namespace DOL
 					if (log.IsDebugEnabled)
 						log.Debug("Save ThreadId=" + Thread.CurrentThread.ManagedThreadId);
 					int saveCount = 0;
-					if (m_database != null)
-					{
-						ThreadPriority oldprio = Thread.CurrentThread.Priority;
-						Thread.CurrentThread.Priority = ThreadPriority.Lowest;
+					ThreadPriority oldprio = Thread.CurrentThread.Priority;
+					Thread.CurrentThread.Priority = ThreadPriority.Lowest;
 
-						//Only save the players, NOT any other object!
-						saveCount = WorldMgr.SavePlayers();
+					//Only save the players, NOT any other object!
+					//saveCount = WorldMgr.SavePlayers();
 
-						//The following line goes through EACH region and EACH object
-						//is tested for savability. A real waste of time, so it is commented out
-						//WorldMgr.SaveToDatabase();
+					//The following line goes through EACH region and EACH object
+					//is tested for savability. A real waste of time, so it is commented out
+					//WorldMgr.SaveToDatabase();
 
-						GuildMgr.SaveAllGuilds();
-                        BoatMgr.SaveAllBoats();
-
-						FactionMgr.SaveAllAggroToFaction();
-
-						m_database.WriteDatabaseTables();
-						Thread.CurrentThread.Priority = oldprio;
-					}
+                    DatabaseLayer.Instance.SaveWorldState();
+					Thread.CurrentThread.Priority = oldprio;
 					if (log.IsInfoEnabled)
 						log.Info("Saving database complete!");
 					startTick = Environment.TickCount - startTick;

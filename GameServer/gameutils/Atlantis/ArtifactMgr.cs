@@ -20,7 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using DOL.Database;
+using DOL.Database2;
 using System.Reflection;
 using log4net;
 using DOL.GS.PacketHandler;
@@ -59,7 +59,7 @@ namespace DOL.GS
         {
 			// Load artifacts and books.
 
-            DataObject[] dbo = GameServer.Database.SelectAllObjects(typeof(Artifact));
+            DatabaseObject[] dbo = GameServer.Database.SelectAllObjects(typeof(Artifact));
 			m_artifacts = new Dictionary<String, Artifact>();
             foreach (Artifact artifact in dbo)
                 m_artifacts.Add(artifact.ArtifactID, artifact);

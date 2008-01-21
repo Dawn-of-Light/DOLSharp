@@ -20,7 +20,7 @@
 
 using System.Collections;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.Quests;
 using log4net;
 

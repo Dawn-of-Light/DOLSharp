@@ -16,48 +16,78 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System;
-using DOL.Database;
+using System.Runtime.Serialization;
+using DOL.Database2;
 
 namespace DOL.GS
 {
 	/// <summary>
 	/// Alliance are the alliance between guild in game
 	/// </summary>
-	public class Alliance
+	public class Alliance : DatabaseObject
 	{
-		protected ArrayList m_guilds;
-		protected DBAlliance m_dballiance;
+        [NonSerialized]
+		protected List<Guild> m_guilds = null;
+        private string m_Motd;
+        private string m_AllianceName;
+
+        public string AllianceName
+        {
+            get { return m_AllianceName; }
+            set { m_AllianceName = value; }
+        }
+        protected string Motd
+        {
+            get { return m_Motd; }
+            set { m_Motd = value;
+            Dirty = true;
+        }
+        }
+        protected List<UInt64> m_guildids = null;
 		public Alliance()
 		{
-			m_dballiance = null;
 			m_guilds = new ArrayList(2);
+            m_guildids = new ArrayList(2);
 		}
-		public ArrayList Guilds
+        public List<Guild> Guilds
 		{
 			get
-			{
+			{                
+                //runtime context creation
+                if (m_guilds = null)
+                {
+                    m_guilds = new ArrayList(m_guildids.Count);
+                    foreach (UInt64 guildid in m_guildids)
+                    {
+                        Guild guild;
+                        if (!DatabaseLayer.Instance.DatabaseObjects.TryGetValue(guild, guild))
+                        {
+                            log.Error("Could not get Guild in Alliance " + m_name + "with key" + m_alliance_id);
+                        }
+                        else
+                        {
+                            m_guilds.Add(guild);
+                        }
+                    }
+                }
 				return m_guilds;
 			}
 			set
 			{
 				m_guilds = value;
+                Dirty = true;
 			}
 		}
-		public DBAlliance Dballiance
-		{
-			get
-			{
-				return m_dballiance;
-			}
-			set
-			{
-				m_dballiance = value;
-			}
-		}
-
+        [OnSerializing]
+        public void StoreContext()
+        {
+            m_guildids = new List<ulong>();
+            foreach (Guild g in m_guilds)
+                m_guildids.Add(g.ID);
+        }
 		#region IList
 		public void AddGuild(Guild myguild)
 		{
@@ -65,11 +95,6 @@ namespace DOL.GS
 			{
 				myguild.alliance = this;
 				Guilds.Add(myguild);
-				myguild.theGuildDB.AllianceID = m_dballiance.ObjectId;
-				m_dballiance.DBguilds = null;
-				//sirru 23.12.06 Add the new object instead of trying to save it
-				GameServer.Database.AddNewObject(m_dballiance);
-				GameServer.Database.FillObjectRelations(m_dballiance);
 				//sirru 23.12.06 save changes to db for each guild
 				SaveIntoDatabase();
 				SendMessageToAllianceMembers(myguild.Name + " has joined the alliance of " + m_dballiance.AllianceName, PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
@@ -128,31 +153,5 @@ namespace DOL.GS
 			}
 		}
 
-		/// <summary>
-		/// Loads this alliance from an alliance table
-		/// </summary>
-		/// <param name="obj"></param>
-		public void LoadFromDatabase(DataObject obj)
-		{
-			if (!(obj is DBAlliance))
-				return;
-
-			m_dballiance = (DBAlliance)obj;
-		}
-
-		/// <summary>
-		/// Saves this alliance to database
-		/// </summary>
-		public void SaveIntoDatabase()
-		{
-			GameServer.Database.SaveObject(m_dballiance);
-			lock (Guilds.SyncRoot)
-			{
-				foreach (Guild guild in Guilds)
-				{
-					guild.SaveIntoDatabase();
-				}
-			}
-		}
 	}
 }

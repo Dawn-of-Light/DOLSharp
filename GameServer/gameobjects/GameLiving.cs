@@ -23,7 +23,7 @@ using System.Collections.Specialized;
 using System.Reflection;
 
 using DOL.AI.Brain;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.Language;
 using DOL.GS.Effects;
@@ -296,18 +296,19 @@ namespace DOL.GS
 	}
 
 	#endregion
-
+    
 	/// <summary>
 	/// This class holds all information that each
 	/// living object in the world uses
 	/// </summary>
-	public abstract class GameLiving : GameObject
+    [Serializable]
+	public abstract class GameLiving : GameObject 
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
+        [NonSerialized]
+        static ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 		#region Combat
 		/// <summary>
 		/// Holds the Attack Data object of last attack
@@ -2676,7 +2677,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Make a proc or poison on the weapon go off.
 		/// </summary>
-		private void StartWeaponMagicalEffect(AttackData ad, SpellLine spellLine, int spellID)
+		private void StartWeaponMagicalEffect(AttackData ad, SpellLine spellLine, UInt64 spellID)
 		{
 			if (spellLine == null)
 				return;
@@ -4786,11 +4787,19 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <summary>
 		/// Holds the concentration effects list
 		/// </summary>
-		private readonly ConcentrationList m_concEffects;
+		[NonSerialized]
+        private  ConcentrationList m_concEffects;
 		/// <summary>
 		/// Gets the concentration effects list
 		/// </summary>
-		public ConcentrationList ConcentrationEffects { get { return m_concEffects; } }
+		public ConcentrationList ConcentrationEffects {
+            get
+            {
+                if (m_concEffects == null)
+                    m_concEffects = new ConcentrationList(this);
+                return m_concEffects; 
+            } 
+            }
 
 		/// <summary>
 		/// Cancels all concentration effects by this living and on this living
@@ -4835,7 +4844,8 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// means that the gameobject can be cleaned up even
 		/// when this living has a reference on it ...
 		/// </summary>
-		protected readonly WeakReference m_targetObjectWeakReference;
+		[NonSerialized]
+        protected readonly WeakReference m_targetObjectWeakReference;
 		/// <summary>
 		/// The current speed of this living
 		/// </summary>
@@ -4851,7 +4861,8 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <summary>
 		/// Holds the Living's Coordinate inside the current Region
 		/// </summary>
-		protected Point3D m_groundTarget;
+		[NonSerialized]
+        protected Point3D m_groundTarget;
 
 		/// <summary>
 		/// Gets the current direction the Object is facing
@@ -4948,7 +4959,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <summary>
 		/// Gets the Living's ground-target Coordinate inside the current Region
 		/// </summary>
-		public virtual Point3D GroundTarget
+        public virtual Point3D GroundTarget
 		{
 			get { return m_groundTarget; }
 		}
@@ -5346,7 +5357,8 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <summary>
 		/// currently applied effects
 		/// </summary>
-		protected readonly GameEffectList m_effects;
+        [NonSerialized]
+        protected  GameEffectList m_effects;
 
 		/// <summary>
 		/// gets a list of active effects
@@ -5354,7 +5366,10 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <returns></returns>
 		public GameEffectList EffectList
 		{
-			get { return m_effects; }
+			get {
+                if (m_effects == null)
+                    m_effects = new GameEffectList(this);
+                return m_effects; }
 		}
 
 		/// <summary>
@@ -5371,8 +5386,30 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <summary>
 		/// Holds all abilities of the player (KeyName -> Ability)
 		/// </summary>
-		protected readonly Hashtable m_abilities = new Hashtable();
-
+        [NonSerialized]
+        private Hashtable m_abilities_secret = new Hashtable();
+        protected  Hashtable m_abilities
+        {
+            get
+            {
+                if (m_abilities_secret != null)
+                    return m_abilities_secret;
+                else
+                {
+                    m_abilities_secret = new Hashtable(m_abilityids.Count);
+                    foreach (UInt64 id in m_abilityids)
+                    {
+                        Ability ab;
+                        if (!DatabaseLayer.Instance.DatabaseObjects.TryGetValue(id,ab))
+                            log.Error("Could not retrieve Ability with ID" + id);
+                        else
+                            m_abilities_secret.Add(id, ab);
+                    }
+                }
+            }
+        }
+        
+        protected readonly List<UInt64> m_abilityids = new List<UInt64>();
 		/// <summary>
 		/// Asks for existence of specific ability
 		/// </summary>
@@ -5596,7 +5633,8 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <summary>
 		/// Holds the currently running spell handler
 		/// </summary>
-		protected ISpellHandler m_runningSpellHandler;
+		[NonSerialized]
+        protected ISpellHandler m_runningSpellHandler;
 		/// <summary>
 		/// active spellhandler (casting phase) or null
 		/// </summary>
@@ -5723,6 +5761,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <summary>
 		/// Holds the controlled object
 		/// </summary>
+        [NonSerialized]
 		protected IControlledBrain[] m_controlledNpc = null;
 
 		/// <summary>
@@ -5844,16 +5883,18 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <summary>
 		/// Holds the group of this player
 		/// </summary>
+        [NonSerialized]
 		protected Group m_group;
 		/// <summary>
 		/// Holds the index of this player inside of the group
 		/// </summary>
-		protected int m_groupIndex;
+		[NonSerialized]
+        protected int m_groupIndex;
 
 		/// <summary>
 		/// Gets or sets the player's group
 		/// </summary>
-		public Group Group
+        public Group Group
 		{
 			get { return m_group; }
 			set { m_group = value; }

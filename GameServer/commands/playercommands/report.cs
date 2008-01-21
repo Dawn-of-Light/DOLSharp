@@ -21,7 +21,7 @@ using System;
 
 using DOL.GS.PacketHandler;
 using DOL.GS.GameEvents;
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS.Commands
 {

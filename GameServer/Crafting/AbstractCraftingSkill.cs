@@ -20,7 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Language;
 using DOL.GS.ServerProperties;
 using DOL.GS.PacketHandler;
@@ -62,7 +62,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The player currently crafting
 		/// </summary>
-		protected const string PLAYER_CRAFTER = "PLAYER_CRAFTER";
+        protected const string PLAYER_CRAFTER = "PLAYER_CRAFTER";
 
 		/// <summary>
 		/// The item in construction

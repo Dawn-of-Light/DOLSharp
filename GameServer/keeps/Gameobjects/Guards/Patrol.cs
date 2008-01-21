@@ -5,7 +5,7 @@ using System.Reflection;
 using DOL.GS;
 using DOL.GS.Movement;
 using DOL.Events;
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS.Keeps
 {

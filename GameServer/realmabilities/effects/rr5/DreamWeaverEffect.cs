@@ -3,7 +3,7 @@ using System;
 using DOL;
 using DOL.GS;
 using DOL.Events;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Effects

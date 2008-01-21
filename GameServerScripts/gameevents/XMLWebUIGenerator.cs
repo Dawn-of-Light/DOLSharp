@@ -18,9 +18,10 @@
  */
 using System;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.IO;
-using DOL.Database;
-using DOL.Database.Attributes;
+using DOL.Database2;
+using DOL.Database2;
 using DOL.Database.Connection;
 using DOL.Events;
 using DOL.GS.PacketHandler;
@@ -55,8 +56,8 @@ namespace DOL.GS.Scripts
 
 		private static System.Timers.Timer m_timer = null;
 
-		[DataTable(TableName="ServerInfo")]
-		public class ServerInfo : DataObject
+		[Serializable]
+		public class ServerInfo : DatabaseObject
 		{
 			private string m_dateTime = "NA";
 			private string m_srvrName = "NA";
@@ -71,99 +72,92 @@ namespace DOL.GS.Scripts
 			private int m_numMerchantItems = 0;
 			private int m_numItemTemplates = 0;
 			private int m_numWorldObj = 0;
-			private static bool m_autoSave = true;
 
-			public override bool AutoSave
-			{
-				get { return m_autoSave; }
-				set { m_autoSave = value; }
-			}
-
-			[DataElement(AllowDbNull=true)]
+			[OptionalField]
 			public string Time
 			{
 				get { return m_dateTime; }
 				set { m_dateTime = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[OptionalField]
 			public string ServerName
 			{
 				get { return m_srvrName; }
 				set { m_srvrName = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[OptionalField]
 			public string AAC
 			{
 				get { return m_aac; }
 				set { m_aac = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[OptionalField]
 			public string ServerType
 			{
 				get { return m_srvrType; }
 				set { m_srvrType = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[OptionalField]
 			public string ServerStatus
 			{
 				get { return m_srvrStatus; }
 				set { m_srvrStatus = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[OptionalField]
 			public int NumClients
 			{
 				get { return m_numClients; }
 				set { m_numClients = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[OptionalField]
 			public int NumAccounts
 			{
 				get { return m_numAccts; }
 				set { m_numAccts = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[OptionalField]
 			public int NumMobs
 			{
 				get { return m_numMobs; }
 				set { m_numMobs = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[OptionalField]
 			public int NumInventoryItems
 			{
 				get { return m_numInvItems; }
 				set { m_numInvItems = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[OptionalField]
 			public int NumPlayerChars
 			{
 				get { return m_numPlrChars; }
 				set { m_numPlrChars = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[OptionalField]
 			public int NumMerchantItems
 			{
 				get { return m_numMerchantItems; }
 				set { m_numMerchantItems = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[OptionalField]
 			public int NumItemTemplates
 			{
 				get { return m_numItemTemplates; }
 				set { m_numItemTemplates = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[OptionalField]
 			public int NumWorldObjects
 			{
 				get { return m_numWorldObj; }
@@ -171,8 +165,8 @@ namespace DOL.GS.Scripts
 			}
 		}
 
-		[DataTable(TableName="PlayerInfo")]
-		public class PlayerInfo : DataObject
+		[Serializable]
+		public class PlayerInfo : DatabaseObject
 		{
 			private string m_name = "NA";
 			private string m_lastName = "NA";
@@ -186,85 +180,78 @@ namespace DOL.GS.Scripts
 			private int m_x = 0;
 			private int m_y = 0;
 
-			private static bool m_autoSave = true;
 
-			public override bool AutoSave
-			{
-				get { return m_autoSave; }
-				set { m_autoSave = value; }
-			}
-
-			[DataElement(AllowDbNull=true)]
+			
 			public string Name
 			{
 				get { return m_name; }
 				set { m_name = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[OptionalField]
 			public string LastName
 			{
 				get { return m_lastName; }
 				set { m_lastName = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[OptionalField]
 			public string Guild
 			{
 				get { return m_guild; }
 				set { m_guild = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[OptionalField]
 			public string Race
 			{
 				get { return m_race; }
 				set { m_race = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[OptionalField]
 			public string Class
 			{
 				get { return m_class; }
 				set { m_class = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[OptionalField]
 			public string Alive
 			{
 				get { return m_alive; }
 				set { m_alive = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[OptionalField]
 			public string Realm
 			{
 				get { return m_realm; }
 				set { m_realm = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[OptionalField]
 			public string Region
 			{
 				get { return m_region; }
 				set { m_region = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[OptionalField]
 			public int Level
 			{
 				get { return m_lvl; }
 				set { m_lvl = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[OptionalField]
 			public int X
 			{
 				get { return m_x; }
 				set { m_x = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[OptionalField]
 			public int Y
 			{
 				get { return m_y; }

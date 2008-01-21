@@ -31,7 +31,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -41,7 +41,7 @@ using log4net;
  *       DOL.GS.Quests.Hibernia
  * Also this is the name that will show up in the database as QuestName
  * so setting good values here will result in easier to read and cleaner
- * Database Code
+ * GS Code
  */
 
 namespace DOL.GS.Quests.Hibernia
@@ -145,7 +145,7 @@ namespace DOL.GS.Quests.Hibernia
 			#region defineItems
 
 			// item db check
-			emptyMagicBox = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "empty_wodden_magic_box");
+			emptyMagicBox = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "empty_wodden_magic_box");
 			if (emptyMagicBox == null)
 			{
 				if (log.IsWarnEnabled)
@@ -170,7 +170,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 
 			// item db check
-			fullMagicBox = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "full_wodden_magic_box");
+			fullMagicBox = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "full_wodden_magic_box");
 			if (fullMagicBox == null)
 			{
 				if (log.IsWarnEnabled)
@@ -195,7 +195,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 
 			// item db check
-			recruitsShortSword = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_short_sword_hib");
+			recruitsShortSword = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_short_sword_hib");
 			if (recruitsShortSword == null)
 			{
 				if (log.IsWarnEnabled)
@@ -246,7 +246,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 
 			// item db check
-			recruitsStaff = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_staff");
+			recruitsStaff = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_staff");
 			if (recruitsStaff == null)
 			{
 				recruitsStaff = new ItemTemplate();

@@ -19,7 +19,7 @@
 using System;
 using System.IO;
 using System.Net.Sockets;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS;
 using NUnit.Framework;
 

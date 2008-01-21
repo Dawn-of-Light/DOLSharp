@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Language;
 using DOL.GS.Housing;
 using System.Reflection;
@@ -245,7 +245,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//its a housing item, so lets take it!
 						client.Player.Inventory.RemoveItem(orgitem);
 						//set right base item, so we can recreate it on take.
-						iitem.BaseItem = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), orgitem.Id_nb);
+						iitem.BaseItem = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", orgitem.Id_nb);
 					}
 
 					DBHouseIndoorItem idbitem = iitem.CreateDBIndoorItem(housenumber);

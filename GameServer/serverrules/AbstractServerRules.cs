@@ -21,7 +21,7 @@ using System.Collections;
 using System.Net;
 using System.Reflection;
 
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
@@ -57,8 +57,8 @@ namespace DOL.GS.ServerRules
 			string accip = ((IPEndPoint)client.Socket.RemoteEndPoint).Address.ToString();
 
 			// Ban account
-			DataObject[] objs;
-			//objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "(Type ='Account' AND Account ='" + GameServer.Database.Escape(username) + "') OR (Type ='Account+Ip' AND Account ='" + GameServer.Database.Escape(username) + "')");
+			DatabaseObject[] objs;
+			//objs = GameServer.GS.SelectObjects(typeof(DBBannedAccount), "(Type ='Account' AND Account ='" + GameServer.GS.Escape(username) + "') OR (Type ='Account+Ip' AND Account ='" + GameServer.GS.Escape(username) + "')");
             objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(username) + "')");
 			if (objs.Length > 0)
 			{
@@ -67,7 +67,7 @@ namespace DOL.GS.ServerRules
 			}
 
 			// Ban IP Adress
-			//objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "(Type = 'Ip' AND Ip ='" + GameServer.Database.Escape(accip) + "') OR (Type ='Account+Ip' AND Ip ='" + GameServer.Database.Escape(accip) + "')");
+			//objs = GameServer.GS.SelectObjects(typeof(DBBannedAccount), "(Type = 'Ip' AND Ip ='" + GameServer.GS.Escape(accip) + "') OR (Type ='Account+Ip' AND Ip ='" + GameServer.GS.Escape(accip) + "')");
             objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='I' OR Type='B') AND Ip ='" + GameServer.Database.Escape(accip) + "')");
 			if (objs.Length > 0)
 			{

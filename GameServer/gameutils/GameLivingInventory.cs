@@ -21,7 +21,7 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Threading;
-using DOL.Database;
+using DOL.Database2;
 using log4net;
 
 namespace DOL.GS

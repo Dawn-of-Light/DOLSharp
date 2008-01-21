@@ -28,7 +28,7 @@
 
 using System;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -198,7 +198,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		enchantedflask = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "enchantedflask");
+		enchantedflask = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "enchantedflask");
 			if (enchantedflask == null)
 			{
 				enchantedflask = new ItemTemplate();
@@ -274,7 +274,7 @@ using DOL.AI.Brain;
 				if (SAVE_INTO_DATABASE)
 					GameServer.Database.AddNewObject(enchantedflask);
 				}
-			Flaskofetherealessence = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "Flaskofetherealessence");
+			Flaskofetherealessence = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "Flaskofetherealessence");
 			if (Flaskofetherealessence == null)
 			{
 				Flaskofetherealessence = new ItemTemplate();

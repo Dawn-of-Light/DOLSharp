@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using DOL.GS;
-using DOL.Database;
+using DOL.Database2;
 using System.Collections;
 using DOL.GS.Spells;
 using log4net;
@@ -59,7 +59,7 @@ namespace DOL.GS
 			SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded);
 			return base.AddToWorld();
 		}
-
+        [NonSerialized]
 		private String[] m_destination = { 
 			"Caer Gothwaite",
 			"Wearyall Village",

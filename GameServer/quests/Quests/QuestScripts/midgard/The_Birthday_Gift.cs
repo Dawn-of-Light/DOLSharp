@@ -28,7 +28,7 @@
 
 using System;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -205,7 +205,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		rattlingskeletonpendant = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "rattlingskeletonpendant");
+		rattlingskeletonpendant = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "rattlingskeletonpendant");
 			if (rattlingskeletonpendant == null)
 			{
 				rattlingskeletonpendant = new ItemTemplate();
@@ -281,7 +281,7 @@ using DOL.AI.Brain;
 				if (SAVE_INTO_DATABASE)
 					GameServer.Database.AddNewObject(rattlingskeletonpendant);
 				}
-			giftandnoteforprugar = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "giftandnoteforprugar");
+			giftandnoteforprugar = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "giftandnoteforprugar");
 			if (giftandnoteforprugar == null)
 			{
 				giftandnoteforprugar = new ItemTemplate();

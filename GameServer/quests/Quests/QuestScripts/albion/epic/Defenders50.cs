@@ -15,7 +15,7 @@
 
 using System;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -154,7 +154,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineItems
 
-			sealed_pouch = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sealed_pouch");
+			sealed_pouch = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "sealed_pouch");
 			if (sealed_pouch == null)
 			{
 				if (log.IsWarnEnabled)
@@ -386,9 +386,7 @@ namespace DOL.GS.Quests.Albion
 
                     i.Bonus4 = 6;
                     i.Bonus4Type = (int)eResist.Spirit;
-                    {
-                        GameServer.Database.AddNewObject(i);
-                    }
+                    i.WriteToDatabase = true;
                     ScoutEpicLegs = i;
 
                 }
@@ -1155,7 +1153,7 @@ namespace DOL.GS.Quests.Albion
 
                 }
                 //of Shielding Power Sleeves
-                TheurgistEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "TheurgistEpicArms");
+                TheurgistEpicArms = (ItemTemplate)DatabaseLayer.Instance.SelectObject(typeof(ItemTemplate),"Id_nb","TheurgistEpicArms");
 				if (TheurgistEpicArms == null)
 				{
 					i = new ItemTemplate();
@@ -1187,7 +1185,7 @@ namespace DOL.GS.Quests.Albion
 					i.Bonus3 = 16;
 					i.Bonus3Type = (int)eStat.DEX;
 
-					GameServer.Database.AddNewObject(i);
+                    item.WriteToDatabase = true;
 
 					TheurgistEpicArms = i;
 

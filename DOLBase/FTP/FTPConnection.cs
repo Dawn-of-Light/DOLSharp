@@ -203,7 +203,7 @@ namespace DOL.FTP
 		{
 			ArrayList aTmpList = Dir();
 
-			DataTable aTable = new DataTable();
+            DataTable aTable = new DataTable();
 			aTable.Columns.Add("Name");
 			for(int i = 0; i < aTmpList.Count; i++)
 			{

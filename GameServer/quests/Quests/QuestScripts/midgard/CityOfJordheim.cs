@@ -35,7 +35,7 @@
 
 using System;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -45,7 +45,7 @@ using log4net;
  *       DOL.GS.Quests.Hibernia
  * Also this is the name that will show up in the database as QuestName
  * so setting good values here will result in easier to read and cleaner
- * Database Code
+ * GS Code
  */
 
 namespace DOL.GS.Quests.Midgard
@@ -225,7 +225,7 @@ namespace DOL.GS.Quests.Midgard
 
 			ticketToMularn = CreateTicketTo("ticket to Mularn", "");
 
-			scrollYuliwyf = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "scroll_for_yuliwyf");
+			scrollYuliwyf = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "scroll_for_yuliwyf");
 			if (scrollYuliwyf == null)
 			{
 				scrollYuliwyf = new ItemTemplate();
@@ -250,7 +250,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 
-			receiptHarlfug = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "receipt_for_harlfug");
+			receiptHarlfug = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "receipt_for_harlfug");
 			if (receiptHarlfug == null)
 			{
 				receiptHarlfug = new ItemTemplate();
@@ -274,7 +274,7 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(receiptHarlfug);
 			}
 
-			chestOfCoins = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "small_chest_of_coins");
+			chestOfCoins = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "small_chest_of_coins");
 			if (chestOfCoins == null)
 			{
 				chestOfCoins = new ItemTemplate();
@@ -298,7 +298,7 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(chestOfCoins);
 			}
 
-			letterDalikor = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "letter_for_dalikor");
+			letterDalikor = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "letter_for_dalikor");
 			if (letterDalikor == null)
 			{
 				letterDalikor = new ItemTemplate();
@@ -322,7 +322,7 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(letterDalikor);
 			}
 
-			assistantNecklace = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "assistant_necklace");
+			assistantNecklace = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "assistant_necklace");
 			if (assistantNecklace == null)
 			{
 				assistantNecklace = new ItemTemplate();
@@ -348,7 +348,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsRoundShield = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_round_shield_mid");
+			recruitsRoundShield = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_round_shield_mid");
 			if (recruitsRoundShield == null)
 			{
 				if (log.IsWarnEnabled)
@@ -397,7 +397,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsBracer = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_silver_bracer");
+			recruitsBracer = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_silver_bracer");
 			if (recruitsBracer == null)
 			{
 				recruitsBracer = new ItemTemplate();

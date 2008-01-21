@@ -20,7 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -55,7 +55,7 @@ namespace DOL.GS.Keeps
 			{
 				m_keeps.Clear();
 
-				DataObject[] keeps = GameServer.Database.SelectAllObjects(typeof(DBKeep));
+				DatabaseObject[] keeps = GameServer.Database.SelectAllObjects(typeof(DBKeep));
 				foreach (DBKeep datakeep in keeps)
 				{
 					if (WorldMgr.GetRegion((ushort)datakeep.Region) == null)

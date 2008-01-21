@@ -20,7 +20,7 @@ using System.Collections;
 using System.Globalization;
 using System;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using log4net;
 
 namespace DOL.GS.ServerProperties
@@ -417,7 +417,7 @@ namespace DOL.GS.ServerProperties
 		public static readonly bool LOAD_HOOKPOINTS;
 
 		/// <summary>
-		/// Save QuestItems into Database
+		/// Save QuestItems into GS
 		/// </summary>
 		[ServerProperty("save_questitems_into_database", "set false if you don't want this", true)]
 		public static readonly bool SAVE_QUESTITEMS_INTO_DATABASE;

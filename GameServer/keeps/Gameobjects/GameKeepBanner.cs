@@ -16,7 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.Database;
+using DOL.Database2;
+using DOL.Database2;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Keeps
@@ -77,7 +78,7 @@ namespace DOL.GS.Keeps
 			set { m_position = value; }
 		}
 
-		public override void LoadFromDatabase(DataObject obj)
+		/*public override void LoadFromDatabase(DatabaseObject obj)
 		{
 			base.LoadFromDatabase(obj);
 			foreach (AbstractArea area in this.CurrentAreas)
@@ -97,20 +98,7 @@ namespace DOL.GS.Keeps
 					break;
 				}
 			}
-		}
-
-		public override void DeleteFromDatabase()
-		{
-			foreach (AbstractArea area in this.CurrentAreas)
-			{
-				if (area is KeepArea)
-				{
-					Component.Keep.Banners.Remove(this.InternalID);
-					break;
-				}
-			}
-			base.DeleteFromDatabase();
-		}
+		}*/
 
 		public void LoadFromPosition(DBKeepPosition pos, GameKeepComponent component)
 		{

@@ -31,7 +31,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -41,7 +41,7 @@ using log4net;
  *       DOL.GS.Quests.Hibernia
  * Also this is the name that will show up in the database as QuestName
  * so setting good values here will result in easier to read and cleaner
- * Database Code
+ * GS Code
  */
 
 namespace DOL.GS.Quests.Albion
@@ -137,7 +137,7 @@ namespace DOL.GS.Quests.Albion
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Godeleva Dowden", eRealm.Albion);
 
 			/* Whops, if the npcs array length is 0 then no npc exists in
-				* this users Mob Database, so we simply create one ;-)
+				* this users Mob GS, so we simply create one ;-)
 				* else we take the existing one. And if more than one exist, we take
 				* the first ...
 				*/
@@ -183,7 +183,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			woodenBucket = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "wooden_bucket");
+			woodenBucket = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "wooden_bucket");
 			if (woodenBucket == null)
 			{
 				if (log.IsWarnEnabled)
@@ -217,7 +217,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			fullWoodenBucket = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "full_wooden_bucket");
+			fullWoodenBucket = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "full_wooden_bucket");
 			if (fullWoodenBucket == null)
 			{
 				if (log.IsWarnEnabled)
@@ -251,7 +251,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			reedBracer = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "reed_bracer");
+			reedBracer = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "reed_bracer");
 			if (reedBracer == null)
 			{
 				if (log.IsWarnEnabled)

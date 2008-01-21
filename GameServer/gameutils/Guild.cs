@@ -19,7 +19,9 @@
 using System.Collections;
 using System;
 using System.Reflection;
-using DOL.Database;
+using System.Runtime.Serialization;
+using DOL.Database2;
+using DOL.Database2;
 using DOL.Language;
 using DOL.GS.Keeps;
 using log4net;
@@ -32,7 +34,8 @@ namespace DOL.GS
 	//-----------------------------------------------------------------------------------------------
 	// GuildEntry
 	//-----------------------------------------------------------------------------------------------
-	public enum eGuildRank : int
+	[Serializable]
+    public enum eGuildRank : int
 	{
 		Emblem,
 		AcHear,
@@ -59,11 +62,14 @@ namespace DOL.GS
 	/// Summary description for a Guild inside the game.
 	/// </summary>
 	/// 
-	public class Guild
+    [Serializable]
+    
+	public class Guild :DatabaseObject
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
+        [NonSerialized]
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
@@ -74,29 +80,19 @@ namespace DOL.GS
 		/// <summary>
 		/// This holds all players inside the guild
 		/// </summary>
+        [NonSerialized]
 		protected Alliance  m_alliance=null;
 
-
-		/// <summary>
-		/// This holds the DB instance of the guild
-		/// </summary>
-		protected DBGuild m_DBguild;
-
-		/// <summary>
-		/// unique id of the guild
-		/// </summary>
-		protected string m_guildid;
+        /// <summary>
+        /// Alliance Id
+        /// </summary>
+        protected UInt64 m_alliance_id;
 
 		/// <summary>
 		/// the name of the guild
 		/// </summary>
 		protected string m_name;
 		
-		/// <summary>
-		/// the runtime ID of the guild
-		/// </summary>
-		protected ushort m_id;		
-
 		/// <summary>
 		/// Holds the guild realm points
 		/// </summary>
@@ -110,7 +106,10 @@ namespace DOL.GS
 		/// <summary>
 		/// Stores claimed keep (unique)
 		/// </summary>
+        [NonSerialized]
 		protected AbstractGameKeep m_claimedKeep;
+
+        protected UInt64 m_claimedKeepId;
 
         protected double m_guildBank;
         protected bool guildDues;
@@ -118,6 +117,9 @@ namespace DOL.GS
         protected bool haveGuildHouse;
         protected int GuildHouseNumber;
 
+        public DBRank[] Ranks;
+
+        public ushort RuntimeID;
         public int GetGuildHouseNumber()
         {
             return GuildHouseNumber;
@@ -142,12 +144,10 @@ namespace DOL.GS
         public void SetGuildHouseNumber(int num)
         {
             GuildHouseNumber = num;
-            m_DBguild.GuildHouseNumber = GuildHouseNumber;
         }
         public void SetGuildHouse(bool owns)
         {
             haveGuildHouse = owns;
-            m_DBguild.HaveGuildHouse = haveGuildHouse;
         }
         public void SetGuildDues(bool dues)
         {
@@ -159,7 +159,6 @@ namespace DOL.GS
             {
                 guildDues = false;
             }
-            m_DBguild.Dues = guildDues;
         }
         public void SetGuildDuesPercent(long dues)
         {
@@ -171,7 +170,6 @@ namespace DOL.GS
             {
                 guildDuesPercent = 0;
             }
-            m_DBguild.DuesPercent = guildDuesPercent;
         }
         /// <summary>
         /// Set guild bank command 
@@ -199,7 +197,6 @@ namespace DOL.GS
                 m_guildBank = m_guildBank + ammount;
 
             donating.Guild.UpdateGuildWindow();
-            m_DBguild.Bank = m_guildBank;
             return;
         }
         public void WithdrawGuildBank(GamePlayer withdraw, double ammount)
@@ -218,7 +215,6 @@ namespace DOL.GS
             withdraw.Out.SendMessage(LanguageMgr.GetTranslation(withdraw.Client, "Scripts.Player.Guild.WithdrawAmmount", ammount), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
             m_guildBank = m_guildBank - ammount;
             withdraw.Guild.UpdateGuildWindow();
-            m_DBguild.Bank = m_guildBank;
             return;
         }
         /// <summary>
@@ -237,44 +233,47 @@ namespace DOL.GS
             set
             {
                 m_guildBanner = value;
-                theGuildDB.GuildBanner = value;
             }
         }
-        /// <summary>
-		/// Gets or sets the guild db
-		/// </summary>
-		public DBGuild theGuildDB
-		{
-			get	{	return m_DBguild; }
-			set	{	m_DBguild = value;	}
-		}
+
 
 		/// <summary>
 		/// Gets or sets the guild alliance
 		/// </summary>
 		public Alliance  alliance
 		{
-			get	{	return m_alliance; }
-			set	{	m_alliance = value;	}
+			get	
+            {
+                //runtime initialization
+                if(m_alliance ==null)
+                if (m_alliance_id != null)
+                {
+                    if (!DatabaseLayer.Instance.DatabaseObjects.TryGetValue(m_alliance_id, m_alliance))
+                    {
+                        log.Error("Could not get Alliance of Guild " + m_name + "with key" + m_alliance_id);
+                    }
+                }
+                return m_alliance; 
+            }
+            set 
+            { 
+                m_alliance = value;
+                if (value != null)
+                    m_alliance_id = value.ID;
+                else
+                    m_alliance_id = null;
+            }
 		}
 
 		/// <summary>
 		/// Gets or sets the constant guild id
 		/// </summary>
-		public string GuildID
+		public UInt64 GuildID
 		{
-			get	{	return m_guildid; }
-			set	{	m_guildid = value; }
+			get	{	return ID ; }
 		}
 
-		/// <summary>
-		/// Gets or sets the runtime guild id
-		/// </summary>
-		public ushort ID
-		{
-			get	{	return m_id; }
-			set	{	m_id = value; }
-		}
+
 
 		/// <summary>
 		/// Gets or sets the guild name
@@ -306,7 +305,17 @@ namespace DOL.GS
 		/// </summary>
 		public AbstractGameKeep ClaimedKeep
 		{
-			get { return m_claimedKeep; }
+			get {
+                //runtime initialization
+
+                if(m_claimedKeepId != null)
+                {
+                    if (!DatabaseLayer.Instance.DatabaseObjects.TryGetValue(m_claimedKeepId, m_claimedKeep))
+                    {
+                        log.Error("Could not get Keep of Guild " + m_name + "with key" + m_claimedKeepId);
+                    }
+                }
+                return m_claimedKeep; }
 			set	{ m_claimedKeep = value; }
 		}
 
@@ -606,7 +615,7 @@ namespace DOL.GS
 		{
 			try
 			{
-				foreach (DBRank rank in theGuildDB.Ranks)
+				foreach (DBRank rank in Ranks)
 				{
 					if ( rank.RankLevel == index )
 						return rank;
@@ -679,7 +688,6 @@ namespace DOL.GS
 		public virtual void GainRealmPoints(long amount)
 		{
 			m_realmPoints += amount;
-			m_DBguild.RealmPoints = m_realmPoints;
 		}
 
 		/// <summary>
@@ -689,7 +697,6 @@ namespace DOL.GS
 		public virtual void GainBountyPoints(long amount)
 		{
 			m_bountyPoints += amount;
-			m_DBguild.BountyPoints = m_bountyPoints;
 		}
 
 		/// <summary>
@@ -702,7 +709,6 @@ namespace DOL.GS
 				amount = m_bountyPoints;
 
 			m_bountyPoints -= amount;
-			m_DBguild.BountyPoints = m_bountyPoints;
 			return true;
 		}
 
@@ -710,7 +716,7 @@ namespace DOL.GS
 		/// Loads this guild from a guild table
 		/// </summary>
 		/// <param name="obj"></param>
-		public void LoadFromDatabase(DataObject obj)
+		/*public void LoadFromDatabase(DatabaseObject obj)
 		{
 			if(!(obj is DBGuild))
 				return;
@@ -728,7 +734,7 @@ namespace DOL.GS
             m_meritPoints = m_DBguild.MeritPoints;
             guildDuesPercent = m_DBguild.DuesPercent;
             bannerStatus = "None";
-		}
+		}*/
 
         /// <summary>
         /// Gets or sets the guild merit points
@@ -774,7 +780,6 @@ namespace DOL.GS
         public virtual void GainMeritPoints(long amount)
         {
             MeritPoints += amount;
-            m_DBguild.MeritPoints = MeritPoints;
             UpdateGuildWindow();
         }
 
@@ -788,7 +793,6 @@ namespace DOL.GS
                 amount = MeritPoints;
 
             MeritPoints -= amount;
-            m_DBguild.MeritPoints = MeritPoints;
             UpdateGuildWindow();
             return true;
         }
@@ -800,7 +804,6 @@ namespace DOL.GS
         public virtual void GainGuildLevel(int amount)
         {
             GuildLevel += amount;
-            m_DBguild.GuildLevel = GuildLevel;
             UpdateGuildWindow();
         }
 
@@ -824,13 +827,6 @@ namespace DOL.GS
         /// </summary>
         private DateTime m_BuffTime;
 
-        /// <summary>
-		/// Saves this guild to database
-		/// </summary>
-		public void SaveIntoDatabase()
-		{
-			GameServer.Database.SaveObject(theGuildDB);
-		}
         public GamePlayer GetGuildLeader(GamePlayer plr)
         {
     		if (!m_guildMembers.Contains(plr))
