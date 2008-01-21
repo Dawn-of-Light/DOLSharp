@@ -2225,11 +2225,11 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Removes the existing specialization from the player
+		/// Removes the existing specialization from the player, the line instance should be called with GamePlayer.GetSpellLine ONLY and NEVER SkillBase.GetSpellLine!!!!!
 		/// </summary>
 		/// <param name="line">The spell line to remove</param>
 		/// <returns>true if removed</returns>
-		public bool RemoveSpellLine(SpellLine line)
+		private bool RemoveSpellLine(SpellLine line)
 		{
 			if (!m_spelllines.Contains(line))
 				return false;
@@ -6886,6 +6886,22 @@ namespace DOL.GS
 			}
 		}
 
+		public void CastSpell(SpellCastingAbilityHandler ab)
+		{
+			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(this, ab.Spell, ab.SpellLine);
+			if (spellhandler != null)
+			{
+				m_runningSpellHandler = spellhandler;
+				m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
+				spellhandler.Ability = ab;
+				spellhandler.CastSpell();
+			}
+			else
+			{
+				Out.SendMessage(ab.Spell.Name + " not implemented yet (" + ab.Spell.SpellType + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+		}
+
 		#endregion
 
 		#region Realm Abilities
@@ -7594,7 +7610,8 @@ namespace DOL.GS
 				if (IsOnHorse && !spellHandler.HasPositiveEffect)
 					IsOnHorse = false;
 				Stealth(false);
-				spellHandler.CastSpell();
+				if (spellHandler.CheckBeginCast(TargetObject as GameLiving))
+					spellHandler.CastSpell();
 				return true;
 			}
 			return false;
