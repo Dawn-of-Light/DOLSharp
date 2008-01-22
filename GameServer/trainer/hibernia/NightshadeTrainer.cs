@@ -49,11 +49,9 @@ namespace DOL.GS.Trainer
 			// check if class matches.				
 			if (player.CharacterClass.ID == (int) eCharacterClass.Nightshade)
 			{
-
 				// popup the training window
 				player.Out.SendTrainerWindow();
 				player.Out.SendMessage(this.Name + " says, \"Here for a bit of training, " + player.Name + "? Step up and get it!\"", eChatType.CT_System, eChatLoc.CL_PopupWindow); //popup window on live
-
 			} 
 			else 
 			{
@@ -61,6 +59,10 @@ namespace DOL.GS.Trainer
 				if (CanPromotePlayer(player))
 				{
 					player.Out.SendMessage(this.Name + " says, \"You have thought this through, I'm sure. Tell me now if you wish to train as a [Nightshade] and follow the Path of Essence.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					if (!player.IsLevelRespecUsed)
+					{
+						OfferRespecialize(player);
+					}
 				} 
 				else
 				{

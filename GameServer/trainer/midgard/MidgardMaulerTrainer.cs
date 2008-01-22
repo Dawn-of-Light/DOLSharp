@@ -49,11 +49,8 @@ namespace DOL.GS.Trainer
             // check if class matches.				
             if (player.CharacterClass.ID > 59 && player.CharacterClass.ID < 63)
             {
-
                 // popup the training window
                 player.Out.SendTrainerWindow();
-                //player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
-
             }
             else
             {
@@ -61,7 +58,11 @@ namespace DOL.GS.Trainer
                 if (CanPromotePlayer(player))
                 {
                     player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the Temple of the Iron Fist] and fight for the glorious realm of Midgard?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-                }
+					if (!player.IsLevelRespecUsed)
+					{
+						OfferRespecialize(player);
+					}
+				}
                 else
                 {
 					DismissPlayer(player);

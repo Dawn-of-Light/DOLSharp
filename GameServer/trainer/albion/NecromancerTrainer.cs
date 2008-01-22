@@ -59,6 +59,10 @@ namespace DOL.GS.Trainer
                     String message = "Hail, young Disciple. Have you come seeking to imbue yourself with the power of ";
                     message += "Arawn and serve as one of his [Necromancers]?";
                     SayTo(player, message);
+					if (!player.IsLevelRespecUsed)
+					{
+						OfferRespecialize(player);
+					}
 				} 
                 else 
                     DismissPlayer(player);					
