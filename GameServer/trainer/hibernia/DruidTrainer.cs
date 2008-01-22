@@ -51,12 +51,9 @@ namespace DOL.GS.Trainer
 			// check if class matches.				
 			if (player.CharacterClass.ID == (int) eCharacterClass.Druid)
 			{
-
 				// popup the training window
 				player.Out.SendTrainerWindow();
-				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				player.Out.SendMessage(this.Name + " says, \"I shall impart all that I know, young Druid.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
-
 			} 
 			else 
 			{
@@ -64,6 +61,10 @@ namespace DOL.GS.Trainer
 				if (CanPromotePlayer(player))
 				{
 					player.Out.SendMessage(this.Name + " says, \"Do you wish to walk the Path of Harmony and learn the ways of the [Druid]?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					if (!player.IsLevelRespecUsed)
+					{
+						OfferRespecialize(player);
+					}
 				}
 				else
 				{

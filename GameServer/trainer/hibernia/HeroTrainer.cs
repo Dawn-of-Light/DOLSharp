@@ -51,12 +51,9 @@ namespace DOL.GS.Trainer
 			// check if class matches.				
 			if (player.CharacterClass.ID == (int) eCharacterClass.Hero) 
 			{
-
 				// popup the training window
 				player.Out.SendTrainerWindow();
-				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				player.Out.SendMessage(this.Name + " says, \"Training makes for a strong, healthy Hero! Keep up the good work, " + player.Name + "!\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
-
 			} 
 			else 
 			{
@@ -64,6 +61,10 @@ namespace DOL.GS.Trainer
 				if (CanPromotePlayer(player))
 				{
 					player.Out.SendMessage(this.Name + " says, \"You wish for the life of a [hero]? You wish to walk the Path of Focus?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					if (!player.IsLevelRespecUsed)
+					{
+						OfferRespecialize(player);
+					}
 				}
 				else
 				{

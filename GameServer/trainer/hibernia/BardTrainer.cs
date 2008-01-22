@@ -53,7 +53,6 @@ namespace DOL.GS.Trainer
 			{
 				// popup the training window
 				player.Out.SendTrainerWindow();
-				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);												
 				player.Out.SendMessage(this.Name + " says, \"Ahh, well met " + player.Name + ". Back for more lore and knowledge, eh.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			} 
 			else 
@@ -62,6 +61,10 @@ namespace DOL.GS.Trainer
 				if (CanPromotePlayer(player))
 				{
 					player.Out.SendMessage(this.Name + " says, \"Do you wish to walk the Path of Essence, pursuing a life of storytelling and [song]? Of brave deeds which grow braver with every telling?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					if (!player.IsLevelRespecUsed)
+					{
+						OfferRespecialize(player);
+					}
 				}
 				else 
 				{

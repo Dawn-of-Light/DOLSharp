@@ -53,12 +53,9 @@ namespace DOL.GS.Trainer
 			// check if class matches.				
 			if (player.CharacterClass.ID == (int)eCharacterClass.Vampiir)
 			{
-
 				// popup the training window
 				player.Out.SendTrainerWindow();
-				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow;
 				player.Out.SendMessage(this.Name + " says, \"Do you wish to learn some more, " + player.Name + "? Step up and receive your training!\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
-
 			}
 			else
 			{
@@ -66,6 +63,10 @@ namespace DOL.GS.Trainer
 				if (CanPromotePlayer(player))
 				{
 					player.Out.SendMessage(this.Name + " says, \"" + player.Name + ", do you choose the Path of Affinity, and life as a [Vampiir]?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					if (!player.IsLevelRespecUsed)
+					{
+						OfferRespecialize(player);
+					}
 				}
 				else
 				{

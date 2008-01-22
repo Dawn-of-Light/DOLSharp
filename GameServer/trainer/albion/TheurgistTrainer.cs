@@ -51,11 +51,8 @@ namespace DOL.GS.Trainer
 			// check if class matches.				
 			if (player.CharacterClass.ID == (int) eCharacterClass.Theurgist)
 			{
-
 				// popup the training window
 				player.Out.SendTrainerWindow();
-				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
-
 			}
 			else 
 			{
@@ -63,6 +60,10 @@ namespace DOL.GS.Trainer
 				if (CanPromotePlayer(player))
 				{
 					player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the Defenders of Albion] and feel the magic of creation as a Theurgist?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+					if (!player.IsLevelRespecUsed)
+					{
+						OfferRespecialize(player);
+					}
 				} 
 				else 
 				{

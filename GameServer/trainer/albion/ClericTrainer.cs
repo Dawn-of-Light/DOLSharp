@@ -53,7 +53,6 @@ namespace DOL.GS.Trainer
 			{
 				// popup the training window
 				player.Out.SendTrainerWindow();
-				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
 			}
 			else 
 			{
@@ -61,6 +60,10 @@ namespace DOL.GS.Trainer
 				if (CanPromotePlayer(player))
 				{
 					player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the Church of Albion] and walk the path of a Cleric?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+					if (!player.IsLevelRespecUsed)
+					{
+						OfferRespecialize(player);
+					}
 				} 
 				else 
 				{
