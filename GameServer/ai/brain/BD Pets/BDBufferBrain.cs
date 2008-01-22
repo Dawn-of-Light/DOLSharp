@@ -70,48 +70,51 @@ namespace DOL.AI.Brain
 				case "DamageShield":
 				case "Bladeturn":
 					{
-						//Buff self
-						if (!LivingHasEffect(Body, spell))
+						if (!Body.IsAttacking)
 						{
-							Body.TargetObject = Body;
-							break;
-						}
-
-						if (spell.Target != "Self")
-						{
-
-							owner = (this as IControlledBrain).Owner;
-
-							//Buff owner
-							if (owner != null)
+							//Buff self
+							if (!LivingHasEffect(Body, spell))
 							{
-								if (!LivingHasEffect(owner, spell))
-								{
-									Body.TargetObject = owner;
-									break;
-								}
+								Body.TargetObject = Body;
+								break;
+							}
 
-								//Buff other minions
-								foreach (IControlledBrain icb in ((GameNPC)owner).ControlledNpcList)
+							if (spell.Target != "Self")
+							{
+
+								owner = (this as IControlledBrain).Owner;
+
+								//Buff owner
+								if (owner != null)
 								{
-									if (icb == null)
-										continue;
-									if (!LivingHasEffect(icb.Body, spell))
+									if (!LivingHasEffect(owner, spell))
 									{
-										Body.TargetObject = icb.Body;
+										Body.TargetObject = owner;
 										break;
 									}
-								}
 
-								player = GetPlayerOwner();
-
-								//Buff player
-								if (player != null)
-								{
-									if (!LivingHasEffect(player, spell))
+									//Buff other minions
+									foreach (IControlledBrain icb in ((GameNPC)owner).ControlledNpcList)
 									{
-										Body.TargetObject = player;
-										break;
+										if (icb == null)
+											continue;
+										if (!LivingHasEffect(icb.Body, spell))
+										{
+											Body.TargetObject = icb.Body;
+											break;
+										}
+									}
+
+									player = GetPlayerOwner();
+
+									//Buff player
+									if (player != null)
+									{
+										if (!LivingHasEffect(player, spell))
+										{
+											Body.TargetObject = player;
+											break;
+										}
 									}
 								}
 							}
