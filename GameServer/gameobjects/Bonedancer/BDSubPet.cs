@@ -107,5 +107,13 @@ namespace DOL.GS
 			// Create a brain for the pet.
 			SetOwnBrain(controlledBrain);
 		}
+
+		public override int MaxSpeed
+		{
+			get
+			{
+				return (Brain as IControlledBrain).Owner.MaxSpeed;
+			}
+		}
 	}
 }
