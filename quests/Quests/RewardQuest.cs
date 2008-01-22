@@ -562,7 +562,12 @@ namespace DOL.GS.Quests
 			public long Experience
 			{
 				get { return m_experience; }
-				set { m_experience = value; }
+				set
+                {
+                    m_experience = value;
+                    if (m_experience < 0)
+                        m_experience = 0;
+                }
 			}
 
 			/// <summary>

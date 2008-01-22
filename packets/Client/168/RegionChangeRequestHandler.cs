@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using DOL.Events;
 using DOL.Database;
 using DOL.GS.ServerRules;
 using log4net;
@@ -123,6 +124,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 
 			new RegionChangeRequestHandler(client.Player, zonePoint, check).Start(1);
+
+			GameEventMgr.Notify(GameLivingEvent.RegionChanging, client.Player);
 
 			return 1;
 		}

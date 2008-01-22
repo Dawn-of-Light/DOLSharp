@@ -83,7 +83,7 @@ namespace DOL.GS.Quests.Hibernia
 		{
 			#region defineItems
 			RecruitsIntelligentBelt = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "RecruitsIntelligentBelt");
-			if (RecruitsIntelligentBelt == null) ;
+			if (RecruitsIntelligentBelt == null)
 			{
 				RecruitsIntelligentBelt = new ItemTemplate();
 				RecruitsIntelligentBelt.Name = "Recruit's Intelligent Belt";
