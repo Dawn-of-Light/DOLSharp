@@ -136,12 +136,7 @@ namespace DOL.GS
 				player.PlayerCharacter.LastFreeLeveled = DateTime.Now;
 				player.Out.SendPlayerFreeLevelUpdate();
 			}
-			//base trainer can not respecialize
-			if ((TrainedClass.ToString() != player.CharacterClass.BaseName) && (player.Level == 5))
-			{
-				player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client, "GameTrainer.Interact.Respecialize", this.Name, player.Name)), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-			}
-			            
+
 			// Turn to face player
 			TurnTo(player, 10000);
 
@@ -199,6 +194,17 @@ namespace DOL.GS
 			TurnTo(player, 10000);
 
 			return true;
+		}
+
+		/// <summary>
+		/// Offer respecialize to the player.
+		/// </summary>
+		/// <param name="player"></param>
+		protected virtual void OfferRespecialize(GamePlayer player)
+		{
+			player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation
+				(player.Client, "GameTrainer.Interact.Respecialize", this.Name, player.Name)),
+				eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 		}
 
 		/// <summary>
