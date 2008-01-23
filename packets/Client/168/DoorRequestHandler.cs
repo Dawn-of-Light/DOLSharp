@@ -1,4 +1,3 @@
-using System;
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  * 
@@ -17,7 +16,8 @@ using System;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
+using System;
+using System.Collections.Generic;
 using DOL.Database;
 using DOL.Language;
 using DOL.GS.Keeps;
@@ -98,35 +98,37 @@ namespace DOL.GS.PacketHandler.Client.v168
 			protected override void OnTick()
 			{
 				GamePlayer player = (GamePlayer)m_actionSource;
-				IDoor mydoor = DoorMgr.getDoorByID(m_doorId);
+				List<IDoor> doorList = DoorMgr.getDoorByID(m_doorId);
 
-				if (mydoor != null)
+				if (doorList.Count > 0)
 				{
-					if (mydoor is GameKeepDoor)
+					bool success = false;
+					foreach (IDoor mydoor in doorList)
 					{
-						GameKeepDoor door = mydoor as GameKeepDoor;
-						//portal keeps left click = right click
-						if (door.Component.Keep is GameKeepTower && door.Component.Keep.KeepComponents.Count > 1)
-							door.Interact(player);
-					}
-					else
-					{
-						if (!WorldMgr.CheckDistance(player, mydoor, WorldMgr.PICKUP_DISTANCE))
+						if (success)
+							break;
+						if (mydoor is GameKeepDoor)
 						{
-							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "DoorRequestHandler.OnTick.TooFarAway", mydoor.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-							
-							return;
-						}
-						if (m_doorState == 0x01)
-						{
-							mydoor.Open();
+							GameKeepDoor door = mydoor as GameKeepDoor;
+							//portal keeps left click = right click
+							if (door.Component.Keep is GameKeepTower && door.Component.Keep.KeepComponents.Count > 1)
+								door.Interact(player);
+							success = true;
 						}
 						else
 						{
-							mydoor.Close();
+							if (WorldMgr.CheckDistance(player, mydoor, WorldMgr.PICKUP_DISTANCE))
+							{
+								if (m_doorState == 0x01)
+									mydoor.Open();
+								else
+									mydoor.Close();
+								success = true;
+							}
 						}
 					}
+					if (!success)
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "DoorRequestHandler.OnTick.TooFarAway", doorList[0].Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				else
 				{

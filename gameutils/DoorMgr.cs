@@ -17,6 +17,7 @@
  *
  */
 using System.Collections;
+using System.Collections.Generic;
 using System;
 using System.Reflection;
 
@@ -32,12 +33,7 @@ namespace DOL.GS
 	/// </summary>		
 	public sealed class DoorMgr
 	{
-		private static Hashtable m_doors = new Hashtable();
-
-		public static Hashtable Doors
-		{
-			get { return m_doors; }
-		}
+		private static Dictionary<int, List<IDoor>> m_doors = new Dictionary<int, List<IDoor>>();
 
 		/// <summary>
 		/// this function load all door from DB
@@ -47,37 +43,56 @@ namespace DOL.GS
 			DataObject[] dbdoors = GameServer.Database.SelectAllObjects(typeof(DBDoor));
 			foreach (DBDoor door in dbdoors)
 			{
-				if (m_doors[door.InternalID] == null)
+				IDoor mydoor = null;
+				ushort zone = (ushort)(door.InternalID / 1000000);
+				//check if the door is a keep door
+				foreach (AbstractArea area in WorldMgr.GetZone(zone).GetAreasOfSpot(door.X, door.Y, door.Z))
 				{
-					bool loaded = false;
-					ushort zone = (ushort)(door.InternalID / 1000000);
-					foreach (AbstractArea area in WorldMgr.GetZone(zone).GetAreasOfSpot(door.X, door.Y, door.Z))
+					if (area is KeepArea)
 					{
-						if (area is KeepArea)
-						{
-							GameKeepDoor mydoor = new GameKeepDoor();
-							mydoor.LoadFromDatabase(door);
-							loaded = true;
-							break;
-						}
-					}
-					if (!loaded)
-					{
-						GameDoor mydoor = new GameDoor();
+						mydoor = new GameKeepDoor();
 						mydoor.LoadFromDatabase(door);
+						break;
 					}
+				}
+
+				//if the door is not a keep door, create a standard door
+				if (mydoor == null)
+				{
+					mydoor = new GameDoor();
+					mydoor.LoadFromDatabase(door);
+				}
+
+				//add to the list of doors
+				if (mydoor != null)
+				{
+					RegisterDoor(mydoor);
 				}
 			}
 			return true;
+		}
+
+		public static void RegisterDoor(IDoor door)
+		{
+			if (!m_doors.ContainsKey(door.DoorID))
+			{
+				List<IDoor> createDoorList = new List<IDoor>();
+				m_doors.Add(door.DoorID, createDoorList);
+			}
+
+			List<IDoor> addDoorList = m_doors[door.DoorID] as List<IDoor>;
+			addDoorList.Add(door);
 		}
 
 		/// <summary>
 		/// This function get the door object by door index
 		/// </summary>
 		/// <returns>return the door with the index</returns>
-		public static IDoor getDoorByID(int id)
+		public static List<IDoor> getDoorByID(int id)
 		{
-			return m_doors[id] as IDoor;
+			if (m_doors.ContainsKey(id))
+				return m_doors[id];
+			else return new List<IDoor>();
 		}
 	}
 }
