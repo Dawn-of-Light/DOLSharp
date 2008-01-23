@@ -486,7 +486,7 @@ namespace DOL.GS.Keeps
 				d.X = door.X;
 				d.Y = door.Y;
 				d.Z = door.Z;
-				DoorMgr.Doors[d.DoorID] = d;
+				DoorMgr.RegisterDoor(door);
 				d.AddToWorld();
 			}
 

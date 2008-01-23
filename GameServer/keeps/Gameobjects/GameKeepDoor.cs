@@ -457,8 +457,6 @@ namespace DOL.GS.Keeps
 			m_Model = 0xFFFF;
 			m_doorID = door.InternalID;
 			m_state = eDoorState.Closed;
-
-			DoorMgr.Doors[m_doorID] = this;
 			this.AddToWorld();
 
 			foreach (AbstractArea area in this.CurrentAreas)
@@ -492,8 +490,6 @@ namespace DOL.GS.Keeps
 			m_doorID = GenerateDoorID();
 			this.m_Model = 0xFFFF;
 			m_state = eDoorState.Closed;
-
-			DoorMgr.Doors[m_doorID] = this;
 			this.AddToWorld();
 			StartHealthRegeneration();
 		}
