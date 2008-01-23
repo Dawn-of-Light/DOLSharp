@@ -2008,7 +2008,7 @@ namespace DOL.GS.Commands
 							d.DoorID = door.DoorID;
 							d.State = eDoorState.Closed;
 
-							DoorMgr.Doors[d.DoorID] = d;
+							DoorMgr.RegisterDoor(d);
 							d.AddToWorld();
 
 							d.Component = new GameKeepComponent();
