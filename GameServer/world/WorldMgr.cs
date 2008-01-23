@@ -104,18 +104,21 @@ namespace DOL.GS
 		/// <summary>
 		/// All available teleport locations.
 		/// </summary>
-		private static Dictionary<eRealm, List<Teleport>> m_teleportLocations;
+		private static Dictionary<eRealm, Dictionary<string, Teleport>> m_teleportLocations;
 
 		/// <summary>
-		/// Returns a list of all teleport locations available for this realm.
+		/// Returns the teleport given an ID and a realm
 		/// </summary>
-		/// <param name="realm"></param>
+		/// <param name="realm">First Key to search for</param>
+		/// <param name="teleportID">Second key to search for</param>
 		/// <returns></returns>
-		public static List<Teleport> GetTeleportLocations(eRealm realm)
+		public static Teleport GetTeleportLocation(eRealm realm, string teleportID)
 		{
-			return (m_teleportLocations.ContainsKey(realm))
-				? m_teleportLocations[realm]
-				: null;
+			return (m_teleportLocations.ContainsKey(realm)) ?
+				(m_teleportLocations[realm].ContainsKey(teleportID) ?
+					m_teleportLocations[realm][teleportID] : 
+					null) :
+				null;
 		}
 
 		/// <summary>
@@ -276,19 +279,19 @@ namespace DOL.GS
 			// Load available teleport locations.
 
 			DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(Teleport));
-			m_teleportLocations = new Dictionary<eRealm, List<Teleport>>();
+			m_teleportLocations = new Dictionary<eRealm, Dictionary<string, Teleport>>();
 			int[] numTeleports = new int[3];
 			foreach (Teleport teleport in objs)
 			{
-				List<Teleport> teleportList;
+				Dictionary<string, Teleport> teleportList;
 				if (m_teleportLocations.ContainsKey((eRealm)teleport.Realm))
 					teleportList = m_teleportLocations[(eRealm)teleport.Realm];
 				else
 				{
-					teleportList = new List<Teleport>();
+					teleportList = new Dictionary<string, Teleport>();
 					m_teleportLocations.Add((eRealm)teleport.Realm, teleportList);
 				}
-				teleportList.Add(teleport);
+				teleportList.Add(teleport.TeleportID, teleport);
 				if (teleport.Realm >= 1 && teleport.Realm <= 3)
 					numTeleports[teleport.Realm - 1]++;
 			}

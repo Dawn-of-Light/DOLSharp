@@ -8167,6 +8167,7 @@ namespace DOL.GS
 
 			if (regionID != CurrentRegionID)
 			{
+				GameEventMgr.Notify(GamePlayerEvent.RegionChanging, this);
 				if (!RemoveFromWorld())
 					return false;
 				//notify event

@@ -128,21 +128,17 @@ namespace DOL.GS
 			}
 
 			// Find the teleport location in the database.
-
-			List<Teleport> teleports = WorldMgr.GetTeleportLocations((eRealm)Realm);
-			foreach (Teleport teleport in teleports)
+			Teleport port = WorldMgr.GetTeleportLocation(Realm, text.ToLower());
+			if (port != null)
 			{
-				if (teleport.TeleportID.ToLower() == text.ToLower())
-				{
-					if (teleport.RegionID == 0 &&
-						teleport.X == 0 &&
-						teleport.Y == 0 &&
-						teleport.Z == 0)
-						OnSubSelectionPicked(player, teleport);
-					else
-						OnDestinationPicked(player, teleport);
-					return false;
-				}
+				if (port.RegionID == 0 &&
+						port.X == 0 &&
+						port.Y == 0 &&
+						port.Z == 0)
+					OnSubSelectionPicked(player, port);
+				else
+					OnDestinationPicked(player, port);
+				return false;
 			}
 
 			return true;	// Needs further processing.

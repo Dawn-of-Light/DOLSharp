@@ -124,9 +124,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 
 			new RegionChangeRequestHandler(client.Player, zonePoint, check).Start(1);
-
-			GameEventMgr.Notify(GameLivingEvent.RegionChanging, client.Player);
-
 			return 1;
 		}
 
