@@ -1,6 +1,7 @@
 using DOL.Database;
 using DOL.GS;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Keeps
 {
@@ -34,7 +35,8 @@ namespace DOL.GS.Keeps
 		/// <param name="keep">The keep object</param>
 		public static void BroadcastCapture(AbstractGameKeep keep)
 		{
-			string message = string.Format("The forces of {0} have captured {1}!", GlobalConstants.RealmToName((eRealm)keep.Realm), keep.Name);
+			string message = string.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerManager.BroadcastCapture.Captured", GlobalConstants.RealmToName((eRealm)keep.Realm), keep.Name));
+
 			/*
 			switch (GameServer.Instance.Configuration.ServerType)
 			{
@@ -61,7 +63,7 @@ namespace DOL.GS.Keeps
 		/// <param name="realm">The raizing realm</param>
 		public static void BroadcastRaize(AbstractGameKeep keep, eRealm realm)
 		{
-			string message = string.Format("{1} has been razed by the forces of {0}!", GlobalConstants.RealmToName(realm), keep.Name);
+			string message = string.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerManager.BroadcastRaize.Razed", keep.Name, GlobalConstants.RealmToName(realm)));
 			BroadcastMessage(message, eRealm.None);
 			NewsMgr.CreateNews(message, keep.Realm, eNewsType.RvRGlobal, false);
 		}
@@ -72,7 +74,7 @@ namespace DOL.GS.Keeps
 		/// <param name="keep">The keep object</param>
 		public static void BroadcastClaim(AbstractGameKeep keep)
 		{
-			BroadcastMessage(string.Format("{0} has claimed {1}!", keep.Guild.Name, keep.Name), (eRealm)keep.Realm);
+			BroadcastMessage(string.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerManager.BroadcastClaim.Claimed", keep.Guild.Name, keep.Name)), (eRealm)keep.Realm);
 		}
 
 		/// <summary>
@@ -81,7 +83,7 @@ namespace DOL.GS.Keeps
 		/// <param name="keep">The keep object</param>
 		public static void BroadcastRelease(AbstractGameKeep keep)
 		{
-			BroadcastMessage(string.Format("{0} has lost control of {1}!", keep.Guild.Name, keep.Name), (eRealm)keep.Realm);
+			BroadcastMessage(string.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerManager.BroadcastRelease.LostControl", keep.Guild.Name, keep.Name)), (eRealm)keep.Realm);
 		}
 
 		/// <summary>

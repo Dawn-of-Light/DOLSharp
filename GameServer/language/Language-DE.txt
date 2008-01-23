@@ -634,19 +634,31 @@ House.SendHouseInfo.OutdoorGuildShield:			- Schild: {0}
 House.SendHouseInfo.Owner:				Eigentümer: {0}	
 House.SendHouseInfo.Owners:				Bewohner:	
 House.SendHouseInfo.Porch:				Veranda: 	
-House.SendHouseInfo.PorchEnabled:			- vorhanden: {0}		
-House.SendHouseInfo.PorchMaterial:			- Veranda: {0}		
-House.SendHouseInfo.PorchRoofColor:			- Farbe: {0}		
-House.SendHouseInfo.RentalPrice:			Mietpreis: {0}		
-House.SendHouseInfo.RentDueIn:				Miete fällig in: {0} Tag(en), {1} Stunde(n)	
-House.SendHouseInfo.RoofMaterial:			- Dach: {0}		
-House.SendHouseInfo.Rug1Color:				- Erste Farbe: {0}	
-House.SendHouseInfo.Rug2Color:				- Zweite Farbe: {0}	
-House.SendHouseInfo.Rug3Color:				- Dritte Farbe: {0}	
-House.SendHouseInfo.Rug4Color:				- Vierte Farbe: {0}	
-House.SendHouseInfo.TrussMaterial:			- Support/Truss: {0}		
-House.SendHouseInfo.WallMaterial:			- Mauer: {0}		
-House.SendHouseInfo.WindowMaterial:			- Fensterladen: {0}		
+House.SendHouseInfo.PorchEnabled:			- vorhanden: {0}
+House.SendHouseInfo.PorchMaterial:			- Veranda: {0}
+House.SendHouseInfo.PorchRoofColor:			- Farbe: {0}
+House.SendHouseInfo.RentalPrice:			Mietpreis: {0}
+House.SendHouseInfo.RentDueIn:				Miete fällig in: {0} Tag(en), {1} Stunde(n)
+House.SendHouseInfo.RoofMaterial:			- Dach: {0}
+House.SendHouseInfo.Rug1Color:				- Erste Farbe: {0}
+House.SendHouseInfo.Rug2Color:				- Zweite Farbe: {0}
+House.SendHouseInfo.Rug3Color:				- Dritte Farbe: {0}
+House.SendHouseInfo.Rug4Color:				- Vierte Farbe: {0}
+House.SendHouseInfo.TrussMaterial:			- Support/Truss: {0}
+House.SendHouseInfo.WallMaterial:			- Mauer: {0}
+House.SendHouseInfo.WindowMaterial:			- Fensterladen: {0}
+
+# KEEPS
+# Managers/Player Manager
+PlayerManager.BroadcastCapture.Captured:		Die Streitmacht von {0} kontrolliert nun {1}!
+PlayerManager.BroadcastClaim.Claimed:			Die Gilde "{0}" hat {1} in Besitz genommen!
+PlayerManager.BroadcastRaize.Razed:			{0} wurde zerstört. Die Streitmacht kam aus {1}!
+PlayerManager.BroadcastRelease.LostControl:		Die Gilde "{0}" hat {1} aufgegeben!
+
+# Relics/GameRelicPad
+GameRelicPad.MountRelic.Captured:			{0} kontrolliert nun {1}.
+GameRelicPad.MountRelic.Stored:				{0} from {1} has stored the {2} to the {3}.
+GameRelicPad.RemoveRelic.Removed:			{0} from {1} has removed the {2} from the {3}.
 
 # VIEWREPORTS 
 Scripts.Player.ViewReport.Help.Close:			'/viewreport close <report #>' Schließt den Bericht mit der ID #. 
