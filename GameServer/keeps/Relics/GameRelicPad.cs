@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DOL.Events;
 using DOL.Database;
 using DOL.GS;
 using DOL.GS.PacketHandler;
-using System;
+using DOL.Language;
 
 namespace DOL.GS
 {
@@ -138,11 +139,11 @@ namespace DOL.GS
 			if (relic.CurrentCarrier != null)
 			{
 				/* Sending broadcast */
-				string message = relic.CurrentCarrier.Name + " from " + GlobalConstants.RealmToName((eRealm)relic.CurrentCarrier.Realm) + " has stored the " + relic.Name + " to the " + Name;
+				string message = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameRelicPad.MountRelic.Stored", relic.CurrentCarrier.Name, GlobalConstants.RealmToName((eRealm)relic.CurrentCarrier.Realm), relic.Name, Name);
 				foreach (GameClient cl in WorldMgr.GetAllPlayingClients())
 				{
 					if (cl.Player.ObjectState != eObjectState.Active) continue;
-					cl.Out.SendMessage(GlobalConstants.RealmToName((eRealm)relic.CurrentCarrier.Realm) + " has captured the " + relic.Name, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
+					cl.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameRelicPad.MountRelic.Captured", GlobalConstants.RealmToName((eRealm)relic.CurrentCarrier.Realm), relic.Name), eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
 					cl.Out.SendMessage(message + "\n" + message + "\n" + message, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				}
 				NewsMgr.CreateNews(message, 0, eNewsType.RvRGlobal, false);
@@ -173,7 +174,7 @@ namespace DOL.GS
 
 			if (relic.CurrentCarrier != null)
 			{
-				string message = relic.CurrentCarrier.Name + " from " + GlobalConstants.RealmToName((eRealm)relic.CurrentCarrier.Realm) + " has removed the " + relic.Name + " from the " + Name;
+				string message = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameRelicPad.RemoveRelic.Removed", relic.CurrentCarrier.Name, GlobalConstants.RealmToName((eRealm)relic.CurrentCarrier.Realm), relic.Name, Name);
 				foreach (GameClient cl in WorldMgr.GetAllPlayingClients())
 				{
 					if (cl.Player.ObjectState != eObjectState.Active) continue;
