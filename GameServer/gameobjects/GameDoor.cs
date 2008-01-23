@@ -66,8 +66,6 @@ namespace DOL.GS
 			m_Level = 0;
 			m_Model = 0xFFFF;
 			m_doorID = m_dbdoor.InternalID;
-
-			DoorMgr.Doors[m_doorID] = this;
 			this.AddToWorld();
 		}
 		/// <summary>
