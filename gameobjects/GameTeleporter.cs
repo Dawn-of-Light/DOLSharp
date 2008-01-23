@@ -128,7 +128,7 @@ namespace DOL.GS
 			}
 
 			// Find the teleport location in the database.
-			Teleport port = WorldMgr.GetTeleportLocation(Realm, text.ToLower());
+			Teleport port = WorldMgr.GetTeleportLocation(Realm, text);
 			if (port != null)
 			{
 				if (port.RegionID == 0 &&
