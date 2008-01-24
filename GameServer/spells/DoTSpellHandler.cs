@@ -54,11 +54,7 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public override bool IsOverwritable(GameSpellEffect compare)
 		{
-			if (Spell.EffectGroup != 0)
-				return Spell.EffectGroup == compare.Spell.EffectGroup;
-			if (base.IsOverwritable(compare) == false) return false;
-			if (compare.Spell.Duration != Spell.Duration) return false;
-			return true;
+			return Spell.DamageType == compare.Spell.DamageType;
 		}
 
 		/// <summary>
