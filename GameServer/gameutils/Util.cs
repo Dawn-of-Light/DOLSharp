@@ -124,7 +124,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static bool IsEmpty(string str)
 		{
-			return (str == null || str.Length == 0);
+			return (str == null || str.Length == 0 || str.ToLower() == "null");
 		}
 
 		/// <summary>

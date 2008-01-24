@@ -390,10 +390,7 @@ namespace DOL.GS
 
                 if (valid && !Util.IsEmpty(fromItem.AllowedClasses))
                 {
-                    if (fromItem.AllowedClasses != "0" || 
-                        fromItem.AllowedClasses != "null" || 
-                        fromItem.AllowedClasses != "Null" || 
-                        fromItem.AllowedClasses != null)
+                    if (fromItem.AllowedClasses != "0")
                     {
                         valid = false;
                         string[] allowedclasses = fromItem.AllowedClasses.Split(';');
