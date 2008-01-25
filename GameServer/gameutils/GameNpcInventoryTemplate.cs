@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -143,17 +144,21 @@ namespace DOL.GS
 					if (m_items.Contains((int)slot)) return false;
 
 					string itemID = string.Format("{0}:{1},{2},{3}", slot, model, color, effect, extension);
-					InventoryItem item = (InventoryItem)m_usedInventoryItems[itemID];
-					if (item == null)
+					InventoryItem item = null;
+
+					if (!m_usedInventoryItems.ContainsKey(itemID))
 					{
-						item = new InventoryItem();
-						item.Id_nb = itemID;
-						item.Model = model;
-						item.Color = color;
-						item.Effect = effect;
-						item.Extension = (byte)extension;
-						item.SlotPosition = (int)slot;
+							item = new InventoryItem();
+							item.Id_nb = itemID;
+							item.Model = model;
+							item.Color = color;
+							item.Effect = effect;
+							item.Extension = (byte)extension;
+							item.SlotPosition = (int)slot;
 					}
+					else
+						return false;
+
 					m_items.Add((int)slot, item);
 					return true;
 				}
@@ -193,7 +198,7 @@ namespace DOL.GS
 					lock (m_usedInventoryItems.SyncRoot)
 					{
 						m_isClosed = true;
-						StringBuilder templateID = new StringBuilder(m_items.Count*16);
+						StringBuilder templateID = new StringBuilder(m_items.Count * 16);
 						foreach (InventoryItem item in new SortedList(m_items).Values)
 						{
 							if (templateID.Length > 0)
@@ -240,41 +245,31 @@ namespace DOL.GS
 		#endregion
 
 		#region LoadFromDatabase/SaveIntoDatabase
-		
+
 		/// <summary>
 		/// Cache for fast loading of npc equipment
 		/// </summary>
-		protected static Hashtable m_npcEquipmentCache = null;
-		
+		protected static Dictionary<string, List<NPCEquipment>> m_npcEquipmentCache = null;
+
 		/// <summary>
 		/// Loads the inventory template from the Database
 		/// </summary>
 		/// <returns>success</returns>
 		public override bool LoadFromDatabase(string templateID)
 		{
+			if (templateID == null || templateID == "")
+			{
+				if (log.IsWarnEnabled)
+					log.Warn("Null or empty string template reference");
+
+				return false;
+			}
+
 			lock (m_items.SyncRoot)
 			{
-				try
+				if (m_npcEquipmentCache.ContainsKey(templateID))
 				{
-					if (templateID == null)
-						throw new ArgumentNullException("templateID");
-
-					if (m_npcEquipmentCache == null) {
-						log.Info("PreCaching NPC equipment...");
-						m_npcEquipmentCache = new Hashtable(1000);
-						foreach (NPCEquipment equip in GameServer.Database.SelectAllObjects(typeof(NPCEquipment))) {
-							ArrayList list = (ArrayList)m_npcEquipmentCache[equip.TemplateID];
-							if (list == null) {
-								list = new ArrayList();
-								m_npcEquipmentCache[equip.TemplateID] = list;
-							}
-							list.Add(equip);
-						}
-						log.Info("NPC equipments loaded.");
-					}
-
-					ArrayList npcEquip = (ArrayList)m_npcEquipmentCache[templateID];
-					if (npcEquip == null) return false;
+					List<NPCEquipment> npcEquip = m_npcEquipmentCache[templateID];
 
 					foreach (NPCEquipment npcItem in npcEquip)
 					{
@@ -286,13 +281,43 @@ namespace DOL.GS
 					}
 					return true;
 				}
-				catch (Exception e)
-				{
-					if (log.IsErrorEnabled)
-						log.Error("Loading NPC inventory template (" + templateID + "): ",e);
-					return false;
-				}
 			}
+
+			if (log.IsWarnEnabled)
+				log.Warn(string.Format("Failed loading NPC inventory template: {0}", templateID));
+			return false;
+		}
+
+		/// <summary>
+		/// Create the hash table
+		/// </summary>
+		public static bool Init()
+		{
+			try
+			{
+				m_npcEquipmentCache = new Dictionary<string, List<NPCEquipment>>(1000);
+				foreach (NPCEquipment equip in GameServer.Database.SelectAllObjects(typeof(NPCEquipment)))
+				{
+					List<NPCEquipment> list;
+					if (m_npcEquipmentCache.ContainsKey(equip.TemplateID))
+					{
+						list = m_npcEquipmentCache[equip.TemplateID];
+					}
+					else
+					{
+						list = new List<NPCEquipment>();
+						m_npcEquipmentCache[equip.TemplateID] = list;
+					}
+
+					list.Add(equip);
+				}
+				return true;
+			}
+			catch (Exception e)
+			{
+				log.Error(e);
+			}
+			return false;
 		}
 
 		/// <summary>
@@ -408,7 +433,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-        /// Overridden. Inventory template cannot be modified.
+		/// Overridden. Inventory template cannot be modified.
 		/// </summary>
 		/// <param name="fromSlot"></param>
 		/// <param name="toSlot"></param>

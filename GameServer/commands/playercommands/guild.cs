@@ -1299,9 +1299,19 @@ namespace DOL.GS.Commands
 												//Add based on the new index
 												string key = member[(int)index];
 												if (sortedList.ContainsKey(key))
+												{
 													key += sortedList.Count.ToString();
+												}
 
-												sortedList.Add(key, member);
+												try
+												{
+													sortedList.Add(key, member);
+												}
+												catch
+												{
+													if (log.IsErrorEnabled)
+														log.Error(string.Format("Sorted List duplicate entry - Key: {0} Member: {1}. Replacing - Member: {2}.  Sorted count: {3}.  Guild ID: {4}", key, member.Name, sortedList[key].Name, sortedList.Count, client.Player.GuildID));
+												}
 											}
 										}
 

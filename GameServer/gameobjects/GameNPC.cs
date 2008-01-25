@@ -1687,20 +1687,32 @@ namespace DOL.GS
 				}
 				else
 				{
-					if (log.IsDebugEnabled)
-					{
-						//log.Warn("Error loading NPC inventory: InventoryID="+EquipmentTemplateID+", NPC name="+Name+".");
-					}
+					//if (log.IsDebugEnabled)
+					//{
+					//    //log.Warn("Error loading NPC inventory: InventoryID="+EquipmentTemplateID+", NPC name="+Name+".");
+					//}
 				}
 				if (Inventory != null)
 				{
-					// if the two handed slot isnt empty we use that
-					// or if the distance slot isnt empty we use that
-					if (Inventory.GetItem(eInventorySlot.TwoHandWeapon) != null)
-						SwitchWeapon(eActiveWeaponSlot.TwoHanded);
-					else if (Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
+					//if the distance slot isnt empty we use that
+					//Seems to always
+					if (Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
 						SwitchWeapon(eActiveWeaponSlot.Distance);
-					else SwitchWeapon(eActiveWeaponSlot.Standard); // sets visible left and right hand slots
+					else
+					{
+						InventoryItem twohand = Inventory.GetItem(eInventorySlot.TwoHandWeapon);
+						InventoryItem onehand = Inventory.GetItem(eInventorySlot.RightHandWeapon);
+
+						if (twohand != null && onehand != null)
+							//Let's add some random chance
+							SwitchWeapon(Util.Chance(50) ? eActiveWeaponSlot.TwoHanded : eActiveWeaponSlot.Standard);
+						else if (twohand != null)
+							//Hmm our right hand weapon may have been null
+							SwitchWeapon(eActiveWeaponSlot.TwoHanded);
+						else if (onehand != null)
+							//Hmm twohand was null lets default down here
+							SwitchWeapon(eActiveWeaponSlot.Standard);
+					}
 				}
 			}
 		}
@@ -1897,10 +1909,11 @@ namespace DOL.GS
 			IList m_levels = new ArrayList();
 			IList m_equipLoc = new ArrayList();
 			Hashtable m_equipModel = new Hashtable();
-			GameNpcInventoryTemplate equip = new GameNpcInventoryTemplate();
-			bool equipHasItems = equip.LoadFromDatabase(template.TemplateId.ToString());
+			
 			this.Name = template.Name;
 			this.GuildName = template.GuildName;
+
+			#region Models
 			foreach (string str in template.Model.Split(';'))
 			{
 				if (str.Length == 0) continue;
@@ -1908,7 +1921,9 @@ namespace DOL.GS
 				m_models.Add(i);
 			}
 			this.Model = (ushort)m_models[Util.Random(m_models.Count - 1)];
+			#endregion
 
+			#region Size
 			byte size = 50;
 			if (!Util.IsEmpty(template.Size))
 			{
@@ -1918,7 +1933,9 @@ namespace DOL.GS
 				else size = (byte)Util.Random(int.Parse(splitSize[0]), int.Parse(splitSize[1]));
 			}
 			this.Size = size;
+			#endregion
 
+			#region Level
 			byte level = 0;
 			if (!Util.IsEmpty(template.Level))
 			{
@@ -1928,7 +1945,9 @@ namespace DOL.GS
 				else level = (byte)Util.Random(int.Parse(splitLevel[0]), int.Parse(splitLevel[1]));
 			}
 			this.Level = level;
+			#endregion
 
+			#region Stats
 			// Stats
 			this.Constitution = (short)template.Constitution;
 			this.Dexterity = (short)template.Dexterity;
@@ -1938,7 +1957,9 @@ namespace DOL.GS
 			this.Piety = (short)template.Piety;
 			this.Empathy = (short)template.Empathy;
 			this.Charisma = (short)template.Charisma;
+			#endregion
 
+			#region Misc Stats
 			this.MaxDistance = template.MaxDistance;
 			this.TetherRange = template.TetherRange;
 			this.BodyType = template.BodyType;
@@ -1949,6 +1970,13 @@ namespace DOL.GS
 			this.EvadeChance = template.EvadeChance;
 			this.BlockChance = template.BlockChance;
 			this.LeftHandSwingChance = template.LeftHandSwingChance;
+			#endregion
+
+			#region Inventory
+			GameNpcInventoryTemplate equip = new GameNpcInventoryTemplate();
+
+			bool equipHasItems = equip.LoadFromDatabase(template.TemplateId.ToString());
+
 			if (template.Inventory != null && template.Inventory.Length > 0)
 			{
 				m_models.Clear();
@@ -1997,8 +2025,10 @@ namespace DOL.GS
 				}
 
 			}
+
 			if (equipHasItems)
 				this.Inventory = new GameNPCInventory(equip);
+
 			if (this.Inventory != null)
 			{
 				if (this.Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
@@ -2006,6 +2036,8 @@ namespace DOL.GS
 				else if (Inventory.GetItem(eInventorySlot.TwoHandWeapon) != null)
 					this.SwitchWeapon(eActiveWeaponSlot.TwoHanded);
 			}
+			#endregion
+
 			this.Spells = template.Spells;
 			this.Styles = template.Styles;
 			if (template.Abilities != null)

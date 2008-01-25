@@ -1,3 +1,6 @@
+using System;
+using log4net;
+using System.Reflection;
 using DOL.GS;
 using DOL.GS.Keeps;
 using DOL.GS.Movement;
@@ -9,6 +12,11 @@ namespace DOL.AI.Brain
 	/// </summary>
 	public class KeepGuardBrain : StandardMobBrain
 	{
+		/// <summary>
+		/// Defines a logger for this class.
+		/// </summary>
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
 		public GameKeepGuard guard;
 		/// <summary>
 		/// Constructor for the Brain setting default values
@@ -70,14 +78,24 @@ namespace DOL.AI.Brain
 				return;
 			foreach (GamePlayer player in Body.GetPlayersInRadius((ushort)AggroRange))
 			{
-				if (GameServer.ServerRules.IsAllowedToAttack(Body, player, false)
-					&& KeepMgr.IsEnemy(Body as GameKeepGuard, player))
+				try
 				{
-					if (Body is GuardStealther == false && player.IsStealthed)
-						continue;
-					Body.StartAttack(player);
-					AddToAggroList(player, player.EffectiveLevel << 1);
-					return;
+					if (GameServer.ServerRules.IsAllowedToAttack(Body, player, false)
+						&& KeepMgr.IsEnemy(Body as GameKeepGuard, player))
+					{
+						if (Body is GuardStealther == false && player.IsStealthed)
+							continue;
+						Body.StartAttack(player);
+						AddToAggroList(player, player.EffectiveLevel << 1);
+						return;
+					}
+				}
+				catch (Exception e)
+				{
+					if (log.IsErrorEnabled)
+					{
+						log.Error(string.Format("Keep guard error again.  Is rules null: {0} Report: {1} \n {2}", GameServer.ServerRules == null ? "Yes" : "No", e.Message, e.StackTrace));
+					}
 				}
 			}
 		}
