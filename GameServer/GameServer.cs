@@ -175,7 +175,13 @@ namespace DOL
 				get
 				{
 					if (Instance.m_serverRules == null)
+					{
 						Instance.m_serverRules = ScriptMgr.CreateServerRules(Instance.Configuration.ServerType);
+						if (Instance.m_serverRules == null && log.IsErrorEnabled)
+						{
+							log.Error("Something errored in created new server rules.  This is a test to see if this is what is causing the weird keep guard brain bug");
+						}
+					}
 					return Instance.m_serverRules;
 				}
 			}
@@ -645,6 +651,11 @@ namespace DOL
 					//---------------------------------------------------------------
 					//Load all calculators
 					if (!InitComponent(GameLiving.LoadCalculators(), "GameLiving.LoadCalculators()"))
+						return false;
+
+					//---------------------------------------------------------------
+					//Try to start the npc equipment
+					if (!InitComponent(GameNpcInventoryTemplate.Init(), "Npc Equipment"))
 						return false;
 
 					//---------------------------------------------------------------
