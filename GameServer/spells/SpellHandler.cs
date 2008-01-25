@@ -1271,9 +1271,7 @@ namespace DOL.GS.Spells
 			GameSpellEffect TargetMod = SpellHandler.FindEffectOnTarget(m_caster, "TargetModifier");
 			if (TargetMod != null)
 			{
-				if ((m_spell.Target.ToLower() == "enemy")
-				   || (m_spell.Target.ToLower() == "realm")
-				   || (m_spell.Target.ToLower() == "group"))
+				if (NewTarget == "enemy" || NewTarget == "realm" || NewTarget == "group")
 				{
 					newtarget = (int)TargetMod.Spell.Value;
 
@@ -1322,8 +1320,10 @@ namespace DOL.GS.Spells
 				}
 			}
 
+			#region Process the targets
 			switch (NewTarget)
 			{
+				#region GTAoE
 				// GTAoE
 				case "area":
 					if (NewRadius > 0)
@@ -1346,45 +1346,72 @@ namespace DOL.GS.Spells
 						}
 					}
 					break;
-
+				#endregion
+				#region Corpse
 				case "corpse":
 					if (target != null && !target.IsAlive)
 						list.Add(target);
 					break;
-
+				#endregion
+				#region Pet - single target
 				case "pet":
-					if (Caster is GamePlayer)
-					{
-						IControlledBrain npc = ((GamePlayer)Caster).ControlledNpc;
-						if (npc != null)
-							list.Add(npc.Body);
-					}
-					else
-					{
-						// Pet casting itself.
 
-						if (Caster is GameNPC && (Caster as GameNPC).Brain is IControlledBrain)
-							list.Add(Caster);
-					}
-					break;
+					ControlledNpc brain = Caster.ControlledNpc as ControlledNpc;
+					GameNPC petBody = brain == null ? null : brain.Body;
 
-				case "pets":
-					if (Caster is GamePlayer)
+					//Make sure we actually have a pet
+					if (petBody != null)
 					{
-						GamePlayer player = Caster as GamePlayer;
-						GameObject tar = player.TargetObject;
-						ControlledNpc cnpc = ((GameNPC)target).Brain as ControlledNpc;
-						if (tar is GameNPC && ((GameNPC)tar).Brain is IControlledBrain && cnpc != null && cnpc.GetPlayerOwner() == Caster)
+						//Single target pet buff has radius 0
+						if (Spell.Radius == 0)
 						{
-							list.Add(tar);
-							break;
+							//If we have our p
+							if (petBody != castTarget)
+							{
+								//Make sure we have some subpets
+								if (petBody.ControlledNpcList != null)
+								{
+									//Go through each subpet and see if we have it targeted
+									foreach (IControlledBrain icb in petBody.ControlledNpcList)
+									{
+										if (icb != null && icb.Body == castTarget)
+										{
+											list.Add(icb.Body);
+											break;
+										}
+									}
+								}
+							}
+							
+							//If we didn't find any of our subpets as our target then we add our main pet
+							if (list.Count == 0)
+								list.Add(petBody);
 						}
-						IControlledBrain npc = ((GamePlayer)Caster).ControlledNpc;
-						if (npc != null)
-							list.Add(npc.Body);
-					}
-					break;
+						//Our buff affects every pet in the area (our pets)
+						else
+						{
+							//Obviously, add our main pet
+							if (WorldMgr.CheckDistance(m_caster, petBody, Spell.Radius))
+								list.Add(petBody);
 
+							//Make sure we have some subpets
+							if (petBody.ControlledNpcList != null)
+							{
+								//Go through each subpet and make sure they're in our radius, then add if so
+								foreach (IControlledBrain icb in petBody.ControlledNpcList)
+								{
+									if (icb != null && WorldMgr.CheckDistance(m_caster, icb.Body, Spell.Radius))
+									{
+										list.Add(icb.Body);
+									}
+								}
+							}
+						}
+					}
+
+					break;
+				#endregion
+				#region Enemy
 				case "enemy":
 					if (NewRadius > 0)
 					{
@@ -1411,7 +1438,8 @@ namespace DOL.GS.Spells
 							list.Add(target);
 					}
 					break;
-
+				#endregion
+				#region Realm
 				case "realm":
 					if (NewRadius > 0)
 					{
@@ -1438,7 +1466,8 @@ namespace DOL.GS.Spells
 							list.Add(target);
 					}
 					break;
-
+				#endregion
+				#region Self
 				case "self":
 					{
 						if (NewRadius > 0)
@@ -1466,40 +1495,76 @@ namespace DOL.GS.Spells
 						}
 						break;
 					}
+				#endregion
+				#region Group
 				case "group":
 					{
 						Group group = m_caster.Group;
 						int spellRange = CalculateSpellRange();
 						if (spellRange == 0)
 							spellRange = NewRadius;
+
+						//Just add ourself
 						if (group == null)
 						{
 							list.Add(m_caster);
+
 							IControlledBrain npc = m_caster.ControlledNpc;
 							if (npc != null)
 							{
-								if (WorldMgr.CheckDistance(m_caster, npc.Body, spellRange))
-									list.Add(npc.Body);
+								//Add our first pet
+								GameNPC petBody2 = npc.Body;
+								if (WorldMgr.CheckDistance(m_caster, petBody2, spellRange))
+									list.Add(petBody2);
+
+								//Now lets add any subpets!
+								if (petBody2 != null && petBody2.ControlledNpcList != null)
+								{
+									foreach (IControlledBrain icb in petBody2.ControlledNpcList)
+									{
+										if (icb != null && WorldMgr.CheckDistance(m_caster, petBody2, spellRange))
+											list.Add(petBody2);
+									}
+								}
 							}
+							
 						}
+						//We need to add the entire group
 						else
 						{
 							foreach (GameLiving living in group.GetMembersInTheGroup())
 							{
 								// only players in range
 								if (WorldMgr.CheckDistance(m_caster, living, spellRange))
+								{
 									list.Add(living);
 
-								IControlledBrain npc = living.ControlledNpc;
-								if (npc != null)
-								{
-									if (WorldMgr.CheckDistance(m_caster, npc.Body, spellRange))
-										list.Add(npc.Body);
+									IControlledBrain npc = living.ControlledNpc;
+									if (npc != null)
+									{
+										//Add our first pet
+										GameNPC petBody2 = npc.Body;
+										if (WorldMgr.CheckDistance(m_caster, petBody2, spellRange))
+											list.Add(petBody2);
+
+										//Now lets add any subpets!
+										if (petBody2 != null && petBody2.ControlledNpcList != null)
+										{
+											foreach (IControlledBrain icb in petBody2.ControlledNpcList)
+											{
+												if (icb != null && WorldMgr.CheckDistance(m_caster, icb.Body, spellRange))
+													list.Add(icb.Body);
+											}
+										}
+									}
 								}
 							}
-						}
+						}						
+
 						break;
 					}
+				#endregion
+				#region Cone AoE
 				case "cone":
 					{
 						target = Caster;
@@ -1530,8 +1595,9 @@ namespace DOL.GS.Spells
 						}
 						break;
 					}
-
+				#endregion
 			}
+			#endregion
 			return list;
 		}
 
