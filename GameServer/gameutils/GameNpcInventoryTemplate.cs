@@ -257,10 +257,10 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public override bool LoadFromDatabase(string templateID)
 		{
-			if (templateID == null || templateID == "")
+			if (templateID == null || templateID == "" || templateID == "NULL" || templateID == "\r\n")
 			{
-				if (log.IsWarnEnabled)
-					log.Warn("Null or empty string template reference");
+				//if (log.IsWarnEnabled)
+					//log.Warn("Null or empty string template reference");
 
 				return false;
 			}
