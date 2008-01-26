@@ -1278,14 +1278,14 @@ namespace DOL.GS.Spells
 					switch (newtarget)
 					{
 						case 0: // Apply on heal single
-							if (m_spell.SpellType.ToLower() == "heal" && m_spell.Target.ToLower() == "realm")
+							if (m_spell.SpellType.ToLower() == "heal" && NewTarget == "realm")
 							{
 								NewTarget = "group";
 								targetchanged = true;
 							}
 							break;
 						case 1: // Apply on heal group
-							if (m_spell.SpellType.ToLower() == "heal" && m_spell.Target.ToLower() == "group")
+							if (m_spell.SpellType.ToLower() == "heal" && NewTarget == "group")
 							{
 								NewTarget = "realm";
 								NewRadius = (ushort)m_spell.Range;
@@ -1293,7 +1293,7 @@ namespace DOL.GS.Spells
 							}
 							break;
 						case 2: // apply on enemy
-							if (m_spell.Target.ToLower() == "enemy")
+							if (NewTarget == "enemy")
 							{
 								if (m_spell.Radius == 0)
 									NewRadius = 450;
@@ -1353,7 +1353,7 @@ namespace DOL.GS.Spells
 						list.Add(target);
 					break;
 				#endregion
-				#region Pet - single target
+				#region Pet
 				case "pet":
 
 					ControlledNpc brain = Caster.ControlledNpc as ControlledNpc;
