@@ -106,7 +106,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//**********************************
 						//show info for all types of weapons
 						//**********************************
-						if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type <= (int)eObjectType.MaulerStaff) ||
+						if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type <= (int)eObjectType._LastWeapon) ||
 							item.Object_Type == (int)eObjectType.Instrument)
 						{
 							WriteUsableClasses(objectInfo, item, client);
