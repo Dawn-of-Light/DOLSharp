@@ -37,7 +37,7 @@
 
 	<!-- Define our file output -->
 	<appender name="GameServerLogFile" type="log4net.Appender.RollingFileAppender" >
-		<appendtofile value="false" />
+		<appendtofile value="true" />
 		<file value="./logs/GameServer.log" />
 		<maximumFileSize value="100MB" />
 		<datePattern value="yyyy-MM-dd" />
