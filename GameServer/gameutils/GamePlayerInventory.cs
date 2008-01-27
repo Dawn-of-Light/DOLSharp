@@ -367,9 +367,9 @@ namespace DOL.GS
 					switch (toSlot)
 					{
 						case eInventorySlot.RightHandWeapon:
-						case eInventorySlot.LeftHandWeapon: goto switch_weapon_standard;
-						case eInventorySlot.TwoHandWeapon: goto switch_weapon_twohanded;
-						case eInventorySlot.DistanceWeapon: goto switch_weapon_distance;
+						case eInventorySlot.LeftHandWeapon: m_player.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard); return false;
+						case eInventorySlot.TwoHandWeapon: m_player.SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded); return false;
+						case eInventorySlot.DistanceWeapon: m_player.SwitchWeapon(GameLiving.eActiveWeaponSlot.Distance); return false;
 					}
 				}
 
@@ -385,7 +385,9 @@ namespace DOL.GS
 				if (valid && toItem != null && fromItem.Object_Type == (int)eObjectType.Poison && GlobalConstants.IsWeapon(toItem.Object_Type))
 				{
 					valid = false;
-					goto apply_poison;
+					m_player.ApplyPoison(fromItem, toItem);
+					m_player.Out.SendInventorySlotsUpdate(null);
+					return valid;
 				}
 
                 if (valid && !Util.IsEmpty(fromItem.AllowedClasses))
@@ -409,13 +411,6 @@ namespace DOL.GS
                         }
                     }
                 }
-
-				if (valid && (fromItem.Realm > 0 && (int)m_player.Realm != fromItem.Realm) && ((int)toSlot >= (int)eInventorySlot.HorseArmor && (int)toSlot <= (int)eInventorySlot.HorseBarding))
-				{
-					if (m_player.Client.Account.PrivLevel == 1)
-						valid = false;
-					m_player.Out.SendMessage("You cannot put an item from this realm!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
 
 				if (valid == true)
 				{
@@ -799,19 +794,7 @@ namespace DOL.GS
 
 			m_player.Out.SendInventorySlotsUpdate(null);
 
-			return valid;
-
-		apply_poison:
-			m_player.ApplyPoison(fromItem, toItem);
-
-			m_player.Out.SendInventorySlotsUpdate(null);
-
-			return valid;
-
-			// moved outside of the lock
-		switch_weapon_standard: m_player.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard); return false;
-		switch_weapon_twohanded: m_player.SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded); return false;
-		switch_weapon_distance: m_player.SwitchWeapon(GameLiving.eActiveWeaponSlot.Distance); return false;
+			return valid;		
 		}
 		#endregion Move Item
 

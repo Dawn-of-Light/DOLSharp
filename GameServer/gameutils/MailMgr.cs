@@ -312,7 +312,8 @@ namespace DOL.Mail
 					foreach (string file in archivedLogsUrls)
 					{
 						File.Delete(file);
-						File.Delete(file + ".gz");
+						//Keep the .gz file
+						//File.Delete(file + ".gz");
 					}
 				}
 				else
