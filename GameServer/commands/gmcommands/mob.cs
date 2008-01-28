@@ -45,6 +45,7 @@ namespace DOL.GS.Commands
 		"'/mob aggro <level>' set mob aggro level 0..100%",
 		"'/mob range <distance>' set mob aggro range",
 		"'/mob distance <maxdistance>' set mob max distance from its spawn (>0=real, 0=no check, <0=procent)",
+		"'/mob roaming <distance>' set mob random range radius (0=noroaming,-1=standard,>0=individual)",
 		"'/mob damagetype <eDamageType>' set mob damage type",
 		"'/mob movehere'",
 		"'/mob remove' to remove this mob from the DB",
@@ -288,6 +289,7 @@ namespace DOL.GS.Commands
 						{
 							info.Add(" + Not aggressive brain");
 						}
+						info.Add(" + Roaming Range: " + targetMob.RoamingRange);
 						//info.Add(" + Tether Range: " + targetMob.TetherRange);
 						TimeSpan respawn = TimeSpan.FromMilliseconds(targetMob.RespawnInterval);
 						if (targetMob.RespawnInterval <= 0)
@@ -764,6 +766,24 @@ namespace DOL.GS.Commands
 						catch
 						{
 							DisplayMessage(client, "Type /mob for command overview.");
+							return;
+						}
+					}
+					break;
+
+				case "roaming":
+					{
+						int maxRoamingRange;
+						try
+						{
+							maxRoamingRange = Convert.ToInt32(args[2]);
+							targetMob.RoamingRange = maxRoamingRange;
+							targetMob.SaveIntoDatabase();
+							client.Out.SendMessage("Mob Roaming Range changed to: " + targetMob.RoamingRange, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						catch (Exception)
+						{
+							client.Out.SendMessage("Type /mob for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 					}
@@ -1346,12 +1366,12 @@ namespace DOL.GS.Commands
 							{
 								string message = string.Format("Name: {0}, Id_nb: {1}", temp.Name, temp.Id_nb);
 								DisplayMessage(client, message);
-							}                           
+							}
 						}
 						else
 						{
-                            ArrayList text = new ArrayList();
-                            text.Add(".");
+							ArrayList text = new ArrayList();
+							text.Add(".");
 							DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(targetMob.Name) + "'");
 
 							foreach (DBLootTemplate loot in template)
@@ -1362,10 +1382,9 @@ namespace DOL.GS.Commands
 								else
 									message += loot.ItemTemplate.Name + " (" + loot.ItemTemplate.Id_nb + ")";
 								message += " Chance: " + loot.Chance.ToString();
-
-                                text.Add("-> " + message);
+								text.Add("-> " + message);
 							}
-                            client.Out.SendCustomTextWindow( targetMob.Name + "'s Loot Table", text);
+							client.Out.SendCustomTextWindow(targetMob.Name + "'s Loot Table", text);
 						}
 					}
 					break;

@@ -1118,23 +1118,27 @@ namespace DOL.AI.Brain
 			{
 				if (!DOL.GS.ServerProperties.Properties.ALLOW_ROAM)
 					return false;
-				if (Body.MaxSpeedBase == 0)
+				if (Body.RoamingRange == 0)
 					return false;
-				if (Body.InCombat || Body.IsMoving || Body.IsCasting)
-					return false;
-				if (Body.Realm != 0)
-					return false;
-				if (Body.Name == "horse")
-					return false;
-				//				if (!char.IsLower(Body.Name[0]))
-				if (!char.IsLower(Body.Name[0]) && (DOL.GS.ServerProperties.Properties.SERV_LANGUAGE != "DE"))
-					return false;
-				if (Body.CurrentRegion.IsDungeon)
-					return false;
-				//if (Body.Name.StartsWith("ambient"))
-				//return false;
-				if (Util.Chance(70))
-					return false;
+				if (Body.RoamingRange < 0)
+				{
+					if (Body.MaxSpeedBase == 0)
+						return false;
+					if (Body.InCombat || Body.IsMoving || Body.IsCasting)
+						return false;
+					if (Body.Realm != 0)
+						return false;
+					if (Body.Name == "horse")
+						return false;
+					if (!char.IsLower(Body.Name[0]) && (DOL.GS.ServerProperties.Properties.SERV_LANGUAGE != "DE"))
+						return false;
+					if (Body.CurrentRegion.IsDungeon)
+						return false;
+					//if (Body.Name.StartsWith("ambient"))
+					//return false;
+					if (Util.Chance(70))
+						return false;
+				}
 				return true;
 			}
 		}
@@ -1142,6 +1146,12 @@ namespace DOL.AI.Brain
 		public virtual IPoint3D CalcRandomWalkTarget()
 		{
 			int roamingRadius = 300;
+
+			if (Body.RoamingRange > 0)
+			{
+				roamingRadius = Body.RoamingRange;
+			}
+
 			roamingRadius = Util.Random(0, Math.Max(100, roamingRadius));
 
 			double angle = Util.Random(0, 360) / (2 * Math.PI);
