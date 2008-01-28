@@ -1346,12 +1346,13 @@ namespace DOL.GS.Commands
 							{
 								string message = string.Format("Name: {0}, Id_nb: {1}", temp.Name, temp.Id_nb);
 								DisplayMessage(client, message);
-							}
+							}                           
 						}
 						else
 						{
+                            ArrayList text = new ArrayList();
+                            text.Add(".");
 							DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(targetMob.Name) + "'");
-							DisplayMessage(client, "[ " + targetMob.Name + "'s Loot Table ]\n\n");
 
 							foreach (DBLootTemplate loot in template)
 							{
@@ -1360,9 +1361,11 @@ namespace DOL.GS.Commands
 									message += loot.ItemTemplateID + " (Template Not Found)";
 								else
 									message += loot.ItemTemplate.Name + " (" + loot.ItemTemplate.Id_nb + ")";
-								message += " Chance: " + loot.Chance.ToString() + "\n\n";
-								DisplayMessage(client, message);
+								message += " Chance: " + loot.Chance.ToString();
+
+                                text.Add("-> " + message);
 							}
+                            client.Out.SendCustomTextWindow( targetMob.Name + "'s Loot Table", text);
 						}
 					}
 					break;
