@@ -71,6 +71,7 @@ namespace DOL.Database
 		private string m_pathID;
 		private int m_maxdistance;
         private string m_boat_ownerid;
+		private int m_roamingRange;
 
 		static bool m_autoSave;
 
@@ -100,6 +101,7 @@ namespace DOL.Database
             m_Empathy = 30;
             m_Charisma = 30;
             m_boat_ownerid = "";
+			m_roamingRange = -1;
 		}
 
 		/// <summary>
@@ -678,6 +680,26 @@ namespace DOL.Database
                 m_boat_ownerid = value;
             }
         }
+
+		/// <summary>
+		/// The Mob's max roaming radius from its spawn
+		/// if RoamingRange = -1 ... standard radius 300
+		/// if RoamingRange = 0 ... no roaming
+		/// if RoamingRange > 0 ... the mob's individual roaming radius
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int RoamingRange
+		{
+			get
+			{
+				return m_roamingRange;
+			}
+			set
+			{
+				Dirty = true;
+				m_roamingRange = value;
+			}
+		}
     }
 }
 
