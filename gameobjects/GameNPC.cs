@@ -768,6 +768,16 @@ namespace DOL.GS
 			set { m_maxdistance = value; }
 		}
 
+		protected int m_roamingRange;
+		/// <summary>
+		/// radius for roaming
+		/// </summary>
+		public int RoamingRange
+		{
+			get { return m_roamingRange; }
+			set { m_roamingRange = value; }
+		}
+
 		protected int m_tetherRange;
 
 		/// <summary>
@@ -1817,6 +1827,7 @@ namespace DOL.GS
 			m_bodyType = npc.BodyType;
 			m_houseNumber = npc.HouseNumber;
 			m_maxdistance = npc.MaxDistance;
+			m_roamingRange = npc.RoamingRange;
 		}
 
 		/// <summary>
@@ -1872,6 +1883,7 @@ namespace DOL.GS
 			mob.Speed = MaxSpeedBase;
 			mob.RespawnInterval = m_respawnInterval / 1000;
 			mob.HouseNumber = HouseNumber;
+			mob.RoamingRange = RoamingRange;
 			if (Brain.GetType().FullName != typeof(StandardMobBrain).FullName)
 				mob.Brain = Brain.GetType().FullName;
 			IAggressiveBrain aggroBrain = Brain as IAggressiveBrain;
