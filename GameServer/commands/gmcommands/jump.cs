@@ -26,14 +26,13 @@ namespace DOL.GS.Commands
 		ePrivLevel.GM, //minimum privelege level
 		"Teleports a player or yourself to the specified location xp", //command description
 		//Usage
+        "Playername can be [me]:",
 		"/jump to <PlayerName>",
 		"/jump to <Name> <RealmID>",
-		"/jump to <x> <y> <z>",
-		"/jump to <x> <y> <z> <RegionID>",
+		"/jump to <x> <y> <z> [<RegionID>]",
 		"/jump <PlayerName> to <x> <y> <z>",
-		"/jump <PlayerName> to <x> <y> <z> <RegionID>",
+		"/jump <PlayerName> to <x> <y> <z> [<RegionID>]",
 		"/jump <PlayerName> to <PlayerName>",
-		"/jump <PlayerName> to me",
 		"/jump to GT",
 		"/jump rel <x> <y> <z>")]
 	public class JumpCommandHandler : AbstractCommandHandler, ICommandHandler
@@ -194,16 +193,16 @@ namespace DOL.GS.Commands
 			}
 			else
 			{
-				client.Out.SendMessage("Usage : /Jump to PlayerName", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("Usage : /Jump to <PlayerName>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				client.Out.SendMessage("Usage : /Jump to <Name> <RealmID>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				client.Out.SendMessage("Usage : /Jump to X Y Z", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("Usage : /Jump to X Y Z RegionID", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("Usage : /Jump to X Y Z [RegionID]", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				client.Out.SendMessage("Usage : /Jump rel [-]X [-]Y [-]Z", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				client.Out.SendMessage("Usage : /Jump to GT", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				client.Out.SendMessage("Usage : /Jump PlayerName to PlayerCible", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("Usage : /Jump PlayerName to X Y Z", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("Usage : /Jump PlayerName to X Y Z RegionID", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("PlayerCible can be [me].", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("Usage : /Jump PlayerName to X Y Z [RegionID]", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				//client.Out.SendMessage("Usage : /Jump RegionName|RegionID", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("PlayerName can be [me].", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 		}

@@ -1576,7 +1576,7 @@ namespace DOL.GS.Commands
 
             foreach(InventoryItem item in player.Inventory.AllItems )
             {
-                text.Add("     . " + item.Name );
+                text.Add("      . " + item.Name);
             }
             client.Out.SendCustomTextWindow("~*PLAYER INVENTORY LISTING*~", text);
         }
@@ -1589,7 +1589,7 @@ namespace DOL.GS.Commands
             text.Add("  - Name Lastname : " + player.Name + " " + player.LastName);
             text.Add("  - Realm Level Class : " + player.Realm + " " + player.Level + " " + player.CharacterClass.Name);
             text.Add("  - Guild : " + player.GuildName);
-            text.Add("  - RPs/BPs : " + player.RealmPoints + " rps, " + player.BountyPoints + " bps");
+            text.Add("  - XPs/RPs/BPs : " + player.Experience + " xps, " + player.RealmPoints + " rps, " + player.BountyPoints + " bps");
             text.Add("  - Craftingskill : " + player.CraftingPrimarySkill + "");
             text.Add("  - Money : " + Money.GetString(player.GetCurrentMoney()) + "");
             text.Add("  - Model ID : " + player.Model);
