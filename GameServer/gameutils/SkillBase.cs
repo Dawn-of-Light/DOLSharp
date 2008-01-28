@@ -998,6 +998,11 @@ namespace DOL.GS
 			m_propertyNames[eProperty.Skill_Nightshade] = "Nightshade Magic";
 			m_propertyNames[eProperty.Skill_Pathfinding] = "Pathfinding";
 			m_propertyNames[eProperty.Skill_Summoning] = "Summoning";
+
+            // Mauler
+            m_propertyNames[eProperty.Skill_FistWraps] = "Fist Wraps";
+            m_propertyNames[eProperty.Skill_MaulerStaff] = "Mauler Staff";
+
 			//Catacombs skills
 			m_propertyNames[eProperty.Skill_Dementia] = "Dementia";
 			m_propertyNames[eProperty.Skill_ShadowMastery] = "Shadow Mastery";
