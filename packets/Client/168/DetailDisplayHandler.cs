@@ -1063,14 +1063,15 @@ Type    Description           Id
 
 		public void WriteTechnicalInfo(ArrayList output, ItemTemplate item)
 		{
+            output.Add(" ");
 			output.Add("----------Technical informations----------");
 			output.Add("Item Template: " + item.Id_nb);
 			output.Add("         Name: " + item.Name);
 			output.Add("        Level: " + item.Level);
 			output.Add("        Model: " + item.Model);
 			output.Add("    Extension: " + item.Extension);
-			output.Add("         Type: " + GlobalConstants.ObjectTypeToName(item.Object_Type) + " (" + item.Object_Type + ")");
-			output.Add("         Slot: " + GlobalConstants.SlotToName(item.Item_Type) + " (" + item.Item_Type + ")");
+			output.Add("       Object: " + GlobalConstants.ObjectTypeToName(item.Object_Type) + " (" + item.Object_Type + ")");
+			output.Add("         Type: " + GlobalConstants.SlotToName(item.Item_Type) + " (" + item.Item_Type + ")");
 			output.Add("        Color: " + item.Color);
 			output.Add("       Emblem: " + item.Emblem);
 			output.Add("       Effect: " + item.Effect);
@@ -1091,10 +1092,10 @@ Type    Description           Id
 
 			if (GlobalConstants.IsWeapon(item.Object_Type))
 			{
-				output.Add("         Hand: " + GlobalConstants.ItemHandToName(item.Hand));
+				output.Add("         Hand: " + GlobalConstants.ItemHandToName(item.Hand) + " (" + item.Type_Damage + ")");
 				output.Add("Damage/Second: " + (item.DPS_AF / 10.0f));
 				output.Add("        Speed: " + (item.SPD_ABS / 10.0f));
-				output.Add("  Damage type: " + GlobalConstants.WeaponDamageTypeToName(item.Type_Damage));
+				output.Add("  Damage type: " + GlobalConstants.WeaponDamageTypeToName(item.Type_Damage) + " (" + item.Type_Damage + ")");
 				output.Add("        Bonus: " + item.Bonus);
 			}
 			else if (GlobalConstants.IsArmor(item.Object_Type))
@@ -1107,7 +1108,7 @@ Type    Description           Id
 			{
 				output.Add("Damage/Second: " + (item.DPS_AF / 10.0f));
 				output.Add("        Speed: " + (item.SPD_ABS / 10.0f));
-				output.Add("  Shield type: " + GlobalConstants.ShieldTypeToName(item.Type_Damage));
+                output.Add("  Shield type: " + GlobalConstants.ShieldTypeToName(item.Type_Damage) + " (" + item.Type_Damage + ")");
 				output.Add("        Bonus: " + item.Bonus);
 			}
 			else if (item.Object_Type == (int)eObjectType.Arrow || item.Object_Type == (int)eObjectType.Bolt)

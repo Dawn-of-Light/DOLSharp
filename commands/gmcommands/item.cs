@@ -299,8 +299,8 @@ namespace DOL.GS.Commands
 							client.Out.SendMessage("Item Template: " + obj.Id_nb, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("         Name: " + obj.Name, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("        Level: " + obj.Level, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("         Type: " + GlobalConstants.ObjectTypeToName(obj.Object_Type), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("         Slot: " + GlobalConstants.SlotToName(obj.Item_Type), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("       Object: " + GlobalConstants.ObjectTypeToName(obj.Object_Type), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("         Type: " + GlobalConstants.SlotToName(obj.Item_Type), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("        Realm: " + obj.Realm, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("  Value/Price: " + obj.Gold + "g " + obj.Silver + "s " + obj.Copper + "c", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("       Weight: " + (obj.Weight / 10.0f) + " lbs", eChatType.CT_System, eChatLoc.CL_PopupWindow);
@@ -312,10 +312,10 @@ namespace DOL.GS.Commands
 							client.Out.SendMessage(" Is stackable: " + (obj.IsStackable ? "yes" : "no"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							if (GlobalConstants.IsWeapon(obj.Object_Type))
 							{
-								client.Out.SendMessage("         Hand: " + GlobalConstants.ItemHandToName(obj.Hand), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+								client.Out.SendMessage("         Hand: " + GlobalConstants.ItemHandToName(obj.Hand)+ " (" + obj.Hand + ")", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 								client.Out.SendMessage("Damage/Second: " + (obj.DPS_AF / 10.0f), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 								client.Out.SendMessage("        Speed: " + (obj.SPD_ABS / 10.0f), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-								client.Out.SendMessage("  Damage type: " + GlobalConstants.WeaponDamageTypeToName(obj.Type_Damage), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+								client.Out.SendMessage("  Damage type: " + GlobalConstants.WeaponDamageTypeToName(obj.Type_Damage) + " (" + obj.Type_Damage + ")", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 								client.Out.SendMessage("        Bonus: " + obj.Bonus, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							}
 							else if (GlobalConstants.IsArmor(obj.Object_Type))
