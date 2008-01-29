@@ -3431,7 +3431,7 @@ namespace DOL.GS
 			{
 				IControlledBrain brain = ((GameNPC)source).Brain as IControlledBrain;
 				if (brain != null)
-					source = brain.Owner;
+					source = brain.GetPlayerOwner();
 			}
 
 			GamePlayer attackerPlayer = source as GamePlayer;
@@ -3740,11 +3740,41 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			StopAttack();
 
 			//Send our attackers some note
-			foreach (GameObject obj in m_attackers.Clone() as ArrayList)
+			ArrayList clone = m_attackers.Clone() as ArrayList;
+			//If any of the pet's attacked, this will hold the gameplayer to send the message to
+			List<GamePlayer> virtualAttackers = null;
+
+			foreach (GameObject obj in clone)
 			{
 				if (obj is GameLiving)
 				{
+					//Fix for players receiving multiple kills
+					//First, let's check to see if we're a pet
+					if (obj is GameNPC && (obj as GameNPC).Brain is IControlledBrain)
+					{
+						//Ok, we're a pet - if our Player owner isn't in the attacker list, let's make them a 'virtual' attacker
+						GamePlayer player = ((obj as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
+						if (!clone.Contains(player))
+						{
+							//Make the list if it's null
+							if (virtualAttackers == null)
+								virtualAttackers = new List<GamePlayer>();
+							//Ok, this is important.  If they aren't already in the list, we should add them ONLY ONCE!
+							if (!virtualAttackers.Contains(player))
+								virtualAttackers.Add(player);
+						}
+					}
+
 					((GameLiving)obj).EnemyKilled(this);
+				}
+			}
+
+			//Now that we properly redirected to the player only once, lets notify them!
+			if (virtualAttackers != null)
+			{
+				foreach (GamePlayer player in virtualAttackers)
+				{
+					player.EnemyKilled(this);
 				}
 			}
 
@@ -3752,6 +3782,10 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 
 			// cancel all concentration effects
 			ConcentrationEffects.CancelAll();
+
+			// clear all of our targets
+			RangeAttackTarget = null;
+			TargetObject = null;
 
 			// cancel all left effects
 			EffectList.CancelAll();
@@ -3824,20 +3858,6 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		{
 			RemoveAttacker(enemy);
 			Notify(GameLivingEvent.EnemyKilled, this, new EnemyKilledEventArgs(enemy));
-			
-			// Killed by a pet?
-
-			if (this is GameNPC && (this as GameNPC).Brain is IControlledBrain)
-			{
-				GamePlayer owner = ((this as GameNPC).Brain as IControlledBrain).Owner
-					as GamePlayer;
-
-				// Need to set sender = owner here, so QuestBehaviour takes
-				// the right action.
-
-				if (owner != null)
-					owner.Notify(GameLivingEvent.EnemyKilled, owner, new EnemyKilledEventArgs(enemy));
-			}
 		}
 		/// <summary>
 		/// Checks whether Living has ability to use lefthanded weapons

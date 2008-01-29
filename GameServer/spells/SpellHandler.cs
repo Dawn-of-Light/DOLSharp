@@ -1522,8 +1522,8 @@ namespace DOL.GS.Spells
 								{
 									foreach (IControlledBrain icb in petBody2.ControlledNpcList)
 									{
-										if (icb != null && WorldMgr.CheckDistance(m_caster, petBody2, spellRange))
-											list.Add(petBody2);
+										if (icb != null && WorldMgr.CheckDistance(m_caster, icb.Body, spellRange))
+											list.Add(icb.Body);
 									}
 								}
 							}

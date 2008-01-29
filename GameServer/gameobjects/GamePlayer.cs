@@ -3767,9 +3767,12 @@ namespace DOL.GS
 				//we only want to modify the base rate, not the group or camp bonus
 				expTotal -= expGroupBonus;
 				expTotal -= expCampBonus;
+				expTotal -= expOutpostBonus;
 				if (this.CurrentRegion.IsRvR)
 					expTotal = (long)(expTotal * ServerProperties.Properties.RvR_XP_RATE);
-				else expTotal = (long)(expTotal * ServerProperties.Properties.XP_RATE);
+				else
+					expTotal = (long)(expTotal * ServerProperties.Properties.XP_RATE);
+				expTotal += expOutpostBonus;
 				expTotal += expGroupBonus;
 				expTotal += expCampBonus;
 			}
