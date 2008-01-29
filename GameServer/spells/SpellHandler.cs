@@ -1658,7 +1658,7 @@ namespace DOL.GS.Spells
 					int dist = WorldMgr.GetDistance(t, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z);
 					if (dist >= 0)
 					{
-						ApplyEffectOnTarget(t, (effectiveness - dist / (double)Spell.Radius));
+						ApplyEffectOnTarget(t, (effectiveness - CalculateAreaVariance(dist, Spell.Radius)));
 					}
 				}
 				else
@@ -1666,10 +1666,21 @@ namespace DOL.GS.Spells
 					int dist = WorldMgr.GetDistance(target, t);
 					if (dist >= 0)
 					{
-						ApplyEffectOnTarget(t, (effectiveness - dist / (double)Spell.Radius));
+						ApplyEffectOnTarget(t, (effectiveness - CalculateAreaVariance(dist, Spell.Radius)));
 					}
 				}
 			}
+		}
+
+		/// <summary>
+		/// Calculate the variance due to the radius of the spell
+		/// </summary>
+		/// <param name="distance">The distance away from center of the spell</param>
+		/// <param name="radius">The radius of the spell</param>
+		/// <returns></returns>
+		protected virtual double CalculateAreaVariance(int distance, int radius)
+		{
+			return (double)(distance / radius);
 		}
 
 		/// <summary>
@@ -1980,6 +1991,7 @@ namespace DOL.GS.Spells
 			ad.Target = target;
 			ad.AttackType = AttackData.eAttackType.Spell;
 			ad.AttackResult = GameLiving.eAttackResult.Missed;
+			ad.IsSpellResisted = true;
 			target.OnAttackedByEnemy(ad);
 
 			// Spells that would have caused damage or are not instant will still
@@ -2368,16 +2380,11 @@ namespace DOL.GS.Spells
 
 			if (m_caster is GameNPC && ((GameNPC)m_caster).Brain is IControlledBrain)
 			{
-				//TODO: add variance depending on owner's spec level
-				//Mobs seem to cast Mob Spells spellline
-				//if (((GameNPC)m_caster).IsMinion)
-				//    speclevel = ((GamePlayer)((IControlledBrain)((GameNPC)((IControlledBrain)((GameNPC)m_caster).Brain).Owner).Brain).Owner).GetModifiedSpecLevel(m_spellLine.Spec);
-				//else
-				//    speclevel = ((GamePlayer)((IControlledBrain)((GameNPC)m_caster).Brain).Owner).GetModifiedSpecLevel(m_spellLine.Spec);
-				//Temporary fix
-				speclevel = 50;
+				#warning This needs to be changed when GamePet is made
+				IControlledBrain brain = (m_caster as GameNPC).Brain as IControlledBrain;
+				speclevel = brain.GetPlayerOwner().GetModifiedSpecLevel(m_spellLine.Spec);
 			}
-			if (m_caster is GamePlayer)
+			else if (m_caster is GamePlayer)
 			{
 				int a = ((GamePlayer)m_caster).GetModifiedSpecLevel(m_spellLine.Spec);
 				if (m_spellLine.Name == "Archery")
@@ -2571,10 +2578,13 @@ namespace DOL.GS.Spells
 
 			// apply effectiveness
 			finalDamage = (int)(finalDamage * effectiveness);
-			if ((m_caster is GamePlayer || (m_caster is GameNPC && (m_caster as GameNPC).Brain is IControlledBrain && m_caster.Realm != 0)) && target is GamePlayer)
-				finalDamage = (int)((double)finalDamage * ServerProperties.Properties.PVP_DAMAGE);
-			else if ((m_caster is GamePlayer || (m_caster is GameNPC && (m_caster as GameNPC).Brain is IControlledBrain && m_caster.Realm != 0)) && target is GameNPC)
-				finalDamage = (int)((double)finalDamage * ServerProperties.Properties.PVE_DAMAGE);
+			if ((m_caster is GamePlayer || (m_caster is GameNPC && (m_caster as GameNPC).Brain is IControlledBrain && m_caster.Realm != 0)))
+			{
+				if (target is GamePlayer)
+					finalDamage = (int)((double)finalDamage * ServerProperties.Properties.PVP_DAMAGE);
+				else if (target is GameNPC)
+					finalDamage = (int)((double)finalDamage * ServerProperties.Properties.PVE_DAMAGE);
+			}
 
 			// Well the PenetrateResistBuff is NOT ResistPierce
 			GameSpellEffect penPierce = SpellHandler.FindEffectOnTarget(m_caster, "PenetrateResists");
