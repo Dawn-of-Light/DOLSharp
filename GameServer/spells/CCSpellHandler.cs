@@ -252,7 +252,8 @@ namespace DOL.GS.Spells
 						break;
 				}
 			}
-			else
+			//If the spell was resisted - then we don't break mezz
+			else if (!attackArgs.AttackData.IsSpellResisted)
 			{
 				//temporary fix for DirectDamageDebuff not breaking mez
 				if (attackArgs.AttackData.SpellHandler is PropertyChangingSpell && attackArgs.AttackData.SpellHandler.HasPositiveEffect == false && attackArgs.AttackData.Damage > 0)
