@@ -1002,6 +1002,10 @@ namespace DOL.GS
             // Mauler
             m_propertyNames[eProperty.Skill_FistWraps] = "Fist Wraps";
             m_propertyNames[eProperty.Skill_MaulerStaff] = "Mauler Staff";
+            m_propertyNames[eProperty.Skill_Power_Strikes] = "Power Strikes";
+			m_propertyNames[eProperty.Skill_Magnetism] = "Magnetism";
+			m_propertyNames[eProperty.Skill_Aura_Manipulation] = "Aura Manipulation";
+
 
 			//Catacombs skills
 			m_propertyNames[eProperty.Skill_Dementia] = "Dementia";
