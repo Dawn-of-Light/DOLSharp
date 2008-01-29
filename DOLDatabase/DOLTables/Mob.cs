@@ -85,7 +85,7 @@ namespace DOL.Database
 			m_equipmentTemplateID = "";
 			m_npcTemplateID = -1;
 			m_meleeDamageType = 2; // slash by default
-			m_respawnInterval = -1; // randow respawn by default
+			m_respawnInterval = -1; // random respawn by default
 			m_guild = "";
 			m_bodyType = 0;
 			m_inHouse = -1;
@@ -687,7 +687,7 @@ namespace DOL.Database
 		/// if RoamingRange = 0 ... no roaming
 		/// if RoamingRange > 0 ... the mob's individual roaming radius
 		/// </summary>
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull = true)]
 		public int RoamingRange
 		{
 			get
