@@ -582,16 +582,14 @@ namespace DOL.AI.Brain
 					AddToAggroList((GameLiving)eArgs.DamageSource, aggro);
 					return;
 				}
-
-				if (e == GameLivingEvent.AttackedByEnemy)
+				else if (e == GameLivingEvent.AttackedByEnemy)
 				{
 					AttackedByEnemyEventArgs eArgs = args as AttackedByEnemyEventArgs;
 					if (eArgs == null) return;
 					OnAttackedByEnemy(eArgs.AttackData);
 					return;
 				}
-
-				if (e == GameLivingEvent.EnemyHealed)
+				else if (e == GameLivingEvent.EnemyHealed)
 				{
 					EnemyHealedEventArgs eArgs = args as EnemyHealedEventArgs;
 					if (eArgs != null && eArgs.HealSource is GameLiving)
@@ -604,8 +602,7 @@ namespace DOL.AI.Brain
 					}
 					return;
 				}
-
-				if (e == GameLivingEvent.EnemyKilled)
+				else if (e == GameLivingEvent.EnemyKilled)
 				{
 					EnemyKilledEventArgs eArgs = args as EnemyKilledEventArgs;
 					if (eArgs != null)
@@ -624,22 +621,19 @@ namespace DOL.AI.Brain
 					}
 					return;
 				}
-
-				if (e == GameLivingEvent.Dying)
+				else if (e == GameLivingEvent.Dying)
 				{
 					// clean aggro table
 					ClearAggroList();
 					return;
 				}
-
-				if (e == GameNPCEvent.FollowLostTarget)
+				else if (e == GameNPCEvent.FollowLostTarget)
 				{
 					FollowLostTargetEventArgs eArgs = args as FollowLostTargetEventArgs;
 					if (eArgs == null) return;
 					OnFollowLostTarget(eArgs.LostTarget);
 					return;
 				}
-
 			}
 		}
 

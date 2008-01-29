@@ -54,7 +54,7 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public override bool IsOverwritable(GameSpellEffect compare)
 		{
-			return Spell.DamageType == compare.Spell.DamageType;
+			return Spell.SpellType == compare.Spell.SpellType && Spell.DamageType == compare.Spell.DamageType && SpellLine.IsBaseLine == compare.SpellHandler.SpellLine.IsBaseLine;
 		}
 
 		/// <summary>
