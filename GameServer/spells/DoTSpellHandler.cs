@@ -46,6 +46,17 @@ namespace DOL.GS.Spells
 		}
 
 		/// <summary>
+		/// There is no area variance for dots
+		/// </summary>
+		/// <param name="distance"></param>
+		/// <param name="radius"></param>
+		/// <returns></returns>
+		protected override double CalculateAreaVariance(int distance, int radius)
+		{
+			return 0;
+		}
+
+		/// <summary>
 		/// Determines wether this spell is compatible with given spell
 		/// and therefore overwritable by better versions
 		/// spells that are overwritable cannot stack
