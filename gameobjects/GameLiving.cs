@@ -64,6 +64,7 @@ namespace DOL.GS
 		private int m_weaponSpeed;
 		private bool m_isOffHand;
 		private InventoryItem m_weapon;
+		private bool m_isSpellResisted = false;
 
 		/// <summary>
 		/// Constructs new AttackData
@@ -80,6 +81,20 @@ namespace DOL.GS
 		{
 			get { return m_modifier; }
 			set { m_modifier = value; }
+		}
+
+		/// <summary>
+		/// Was the spell resisted
+		/// </summary>
+		public bool IsSpellResisted
+		{
+			get
+			{
+				if (SpellHandler == null)
+					return false;
+				return m_isSpellResisted;
+			}
+			set { m_isSpellResisted = value; }
 		}
 
 		/// <summary>
