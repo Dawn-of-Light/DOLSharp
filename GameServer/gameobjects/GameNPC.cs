@@ -3629,6 +3629,7 @@ namespace DOL.GS
 			}
 			//DealDamage needs to be called after addxpgainer!
 		}
+
 		#endregion
 
 		#region Spell
