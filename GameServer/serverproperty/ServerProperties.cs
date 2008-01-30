@@ -431,8 +431,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Crafting speed bonus in capital cities
 		/// </summary>
-		[ServerProperty("capital_city_crafting_speed_bonus", "Crafting speed bonus in capital cities, 0.5 = 50% increase, 1 = standard", 1)]
-		public static readonly int CAPITAL_CITY_CRAFTING_SPEED_BONUS;
+		[ServerProperty("capital_city_crafting_speed_bonus", "Crafting speed bonus in capital cities, 0.5 = 50% increase, 1 = standard", 1.0)]
+		public static readonly double CAPITAL_CITY_CRAFTING_SPEED_BONUS;
 
 		/// <summary>
 		/// Allow Bounty Points to be gained in Battlegrounds

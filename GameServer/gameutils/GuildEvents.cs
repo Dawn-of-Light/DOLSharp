@@ -234,7 +234,7 @@ namespace DOL.Regiment
 		{
 			GamePlayer player = sender as GamePlayer;
 
-			if (player == null || player.Guild == null) return;
+			if (player == null || player.Guild == null || player.Client.Account.PrivLevel > 1) return;
 
 			GainedRealmPointsEventArgs rpsArgs = args as GainedRealmPointsEventArgs;
 
