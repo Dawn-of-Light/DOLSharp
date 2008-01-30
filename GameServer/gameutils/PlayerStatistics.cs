@@ -39,12 +39,6 @@ namespace DOL.GS
 			set
 			{
 				m_TotalRP = value;
-
-				if (log.IsDebugEnabled)
-					if (m_Player != null)
-						log.Debug("Statistics: " + m_Player.Name + " now has " + value + " TotalRP");
-					else
-						log.Debug("Statistics: (m_Player is null) now has " + value + " TotalRP");
 			}
 		}
 
@@ -54,12 +48,6 @@ namespace DOL.GS
 			set
 			{
 				m_RealmPointsEarnedFromKills = value;
-
-				if (log.IsDebugEnabled)
-					if (m_Player != null)
-						log.Debug("Statistics: " + m_Player.Name + " now has " + value + " Realmpoints");
-					else
-						log.Debug("Statistics: (m_Player is null) now has " + value + " Realmpoints");
 			}
 		}
 
@@ -69,12 +57,6 @@ namespace DOL.GS
 			set
 			{
 				m_KillsThatHaveEarnedRPs = value;
-
-				if (log.IsDebugEnabled)
-					if (m_Player != null)
-						log.Debug("Statistics: " + m_Player.Name + " now has " + value + " kills in total.");
-					else
-						log.Debug("Statistics: (m_Player is null) now has " + value + " kills in total.");
 			}
 		}
 
@@ -84,12 +66,6 @@ namespace DOL.GS
 			set
 			{
 				m_Deathblows = value;
-
-				if (log.IsDebugEnabled)
-					if (m_Player != null)
-						log.Debug("Statistics: " + m_Player.Name + " now has " + value + " Deathblows.");
-					else
-						log.Debug("Statistics: (m_Player is null) now has " + value + " Deathblows.");
 			}
 		}
 
@@ -99,12 +75,6 @@ namespace DOL.GS
 			set
 			{
 				m_Deaths = value;
-
-				if (log.IsDebugEnabled)
-					if (m_Player != null)
-						log.Debug("Statistics: " + m_Player.Name + " now has " + value + " Deaths.");
-					else
-						log.Debug("Statistics: (m_Player is null) now has " + value + " Deaths.");
 			}
 		}
 
@@ -114,12 +84,6 @@ namespace DOL.GS
 			set
 			{
 				m_HitpointsHealed = value;
-
-				if (log.IsDebugEnabled)
-					if (m_Player != null)
-						log.Debug("Statistics: " + m_Player.Name + " now has healed " + value + " Hitpoints.");
-					else
-						log.Debug("Statistics: (m_Player is null) now has healed " + value + " Hitpoints.");
 			}
 		}
 
@@ -129,12 +93,6 @@ namespace DOL.GS
 			set
 			{
 				m_RessurectionsPerformed = value;
-
-				if (log.IsDebugEnabled)
-					if (m_Player != null)
-						log.Debug("Statistics: " + m_Player.Name + " now has performed " + value + " Ressurections.");
-					else
-						log.Debug("Statistics: (m_Player is null) now has performed " + value + " Ressurections.");
 			}
 		}
 
