@@ -3221,7 +3221,7 @@ namespace DOL.GS
 
 			base.GainRealmPoints(amount);
 			RealmPoints += amount;
-			if (m_guild != null)
+			if (m_guild != null && Client.Account.PrivLevel == 1)
 				m_guild.GainRealmPoints(amount);
 
 			if (amount > 0)
@@ -3319,7 +3319,7 @@ namespace DOL.GS
 
 			base.GainBountyPoints(amount);
 			BountyPoints += amount;
-			if (m_guild != null)
+			if (m_guild != null && Client.Account.PrivLevel == 1)
 				m_guild.GainBountyPoints(amount);
 			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainBountyPoints.YouGet", amount.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			Out.SendUpdatePoints();
