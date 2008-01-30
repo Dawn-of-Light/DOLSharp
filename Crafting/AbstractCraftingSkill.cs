@@ -753,7 +753,7 @@ namespace DOL.GS
 			// In capital cities bonuses to crafting apply (patch 1.86)
 			if (player.CurrentRegion.IsCapitalCity)
 			{
-				double speedbonus = (100.0 - Properties.CAPITAL_CITY_CRAFTING_SPEED_BONUS) / 100.0;
+				double speedbonus = Properties.CAPITAL_CITY_CRAFTING_SPEED_BONUS;
 				if (speedbonus < 0) speedbonus = 0.0;
 				if (speedbonus > 1) speedbonus = 1.0;
 				craftingTime = (int)(craftingTime * speedbonus);

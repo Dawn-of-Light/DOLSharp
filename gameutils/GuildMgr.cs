@@ -372,7 +372,7 @@ namespace DOL.GS
 
 		/// <summary>
 		/// Returns a database ID for a matching guild name.
-		/// </summary>i'm no
+		/// </summary>
 		/// <returns>Guild</returns>
 		public static string GuildNameToGuildID(string guildName)
 		{
