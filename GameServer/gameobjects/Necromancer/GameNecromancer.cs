@@ -223,7 +223,9 @@ namespace DOL.GS
 		{
 			// Force caster form when creating this player in the world.
 
-			Model = (ushort)client.Account.Characters[m_client.ActiveCharIndex].CreationModel;
+			//Model = (ushort)client.Account.Characters[m_client.ActiveCharIndex].CreationModel;
+			//We need to clear the spell effect too!
+			Shade(false);
 		}
 	}
 }
