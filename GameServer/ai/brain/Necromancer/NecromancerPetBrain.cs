@@ -223,15 +223,24 @@ namespace DOL.AI.Brain
 				// Cast spell on the target, but don't automatically
 				// make it our new target.
 
-				Body.TargetObject = spellTarget;
+				//Hopefully this will fix the server crashes - this may be a temporary fix when we gain more information
+				if (spellTarget.IsAlive)
+				{
+					Body.TargetObject = spellTarget;
 
-				if (spellTarget != Body)
-					Body.TurnTo(spellTarget);
+					if (spellTarget != Body)
+						Body.TurnTo(spellTarget);
 
-				Body.CastSpell(spell, spellQueueEntry.SpellLine);
+					Body.CastSpell(spell, spellQueueEntry.SpellLine);
 
-				if (previousTarget != null)
-					Body.TargetObject = previousTarget;
+					if (previousTarget != null)
+						Body.TargetObject = previousTarget;
+				}
+				else
+				{
+					//This spell will have no affect - lets remove it so we don't crash the system
+					RemoveSpellFromQueue();
+				}
 			}
 		}
 
@@ -271,7 +280,7 @@ namespace DOL.AI.Brain
 			}
 		}
 
-		private ArrayList m_spellQueue = new ArrayList(2);
+		private Queue<SpellQueueEntry> m_spellQueue = new Queue<SpellQueueEntry>(2);
 
 		/// <summary>
 		/// Fetches a spell from the queue without removing it; the spell is
@@ -280,14 +289,12 @@ namespace DOL.AI.Brain
 		/// <returns>The next spell or null, if no spell is in the queue.</returns>
 		private SpellQueueEntry GetSpellFromQueue()
 		{
-			lock (m_spellQueue.SyncRoot)
+			lock (m_spellQueue)
 			{
-				if (m_spellQueue.Count == 0)
-					return null;
-
-				SpellQueueEntry newEntry = new SpellQueueEntry((SpellQueueEntry)(m_spellQueue[0]));
-				return newEntry;
+				if (m_spellQueue.Count > 0)
+					return m_spellQueue.Peek();
 			}
+			return null;
 		}
 
 		/// <summary>
@@ -297,7 +304,7 @@ namespace DOL.AI.Brain
 		{
 			get
 			{
-				lock (m_spellQueue.SyncRoot)
+				lock (m_spellQueue)
 					return (m_spellQueue.Count > 0);
 			}
 		}
@@ -307,10 +314,10 @@ namespace DOL.AI.Brain
 		/// </summary>
 		private void RemoveSpellFromQueue()
 		{
-			lock (m_spellQueue.SyncRoot)
+			lock (m_spellQueue)
 			{
 				if (m_spellQueue.Count > 0)
-					m_spellQueue.RemoveAt(0);
+					m_spellQueue.Dequeue();
 			}
 		}
 
@@ -323,15 +330,14 @@ namespace DOL.AI.Brain
 		/// <param name="target">The target to cast the spell on.</param>
 		private void AddToSpellQueue(Spell spell, SpellLine spellLine, GameLiving target)
 		{
-			lock (m_spellQueue.SyncRoot)
+			lock (m_spellQueue)
 			{
 				if (m_spellQueue.Count >= 2)
 				{
 					MessageToOwner(String.Format("The {0} spell is no longer in the {1}'s queue.",
-						((SpellQueueEntry)m_spellQueue[0]).Spell.Name, Body.Name), eChatType.CT_Spell);
-					m_spellQueue.RemoveAt(0);
+						(m_spellQueue.Dequeue()).Spell.Name, Body.Name), eChatType.CT_Spell);
 				}
-				m_spellQueue.Add(new SpellQueueEntry(spell, spellLine, target));
+				m_spellQueue.Enqueue(new SpellQueueEntry(spell, spellLine, target));
 			}
 		}
 
