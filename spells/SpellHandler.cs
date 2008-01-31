@@ -311,10 +311,8 @@ namespace DOL.GS.Spells
 				{
                    // instant cast
                     bool sendcast = true;
-		        	if (m_caster.ControlledNpc!=null)
-		        		if(m_caster.ControlledNpc.Body!=null)
-		        			if(m_caster.ControlledNpc.Body is NecromancerPet)
-		        				sendcast = false;
+		        	if (m_caster.ControlledNpc!=null && m_caster.ControlledNpc.Body!=null && m_caster.ControlledNpc.Body is NecromancerPet)
+		        		sendcast = false;
                     
                     if(sendcast) SendCastAnimation(0);
 					FinishSpellCast(target);
