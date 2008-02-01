@@ -110,10 +110,7 @@ namespace DOL.GS.RealmAbilities
 
 		public void DisableSkill(GameLiving living)
 		{
-			if (living is GamePlayer)
-			{
-				((GamePlayer)living).DisableSkill(this, GetReUseDelay(Level) * 1000);
-			}
+			living.DisableSkill(this, GetReUseDelay(Level) * 1000);
 		}
 
 		public override IList DelveInfo

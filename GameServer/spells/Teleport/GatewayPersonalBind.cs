@@ -71,6 +71,12 @@ namespace DOL.GS.Spells
 				(ushort)character.BindHeading);
 		}
 
+		public override void InterruptCasting()
+		{
+			m_startReuseTimer = false;
+			base.InterruptCasting();
+		}
+
 		public override IList DelveInfo
 		{
 			get
