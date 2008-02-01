@@ -1504,7 +1504,7 @@ namespace DOL.GS
 			ad.Damage = 0;
 			ad.CriticalDamage = 0;
 			ad.Style = style;
-			ad.WeaponSpeed = (weapon == null ? AttackSpeed(null) / 100 : AttackSpeed(weapon) / 100);
+			ad.WeaponSpeed = AttackSpeed(weapon) / 100;
 			ad.DamageType = AttackDamageType(weapon);
 			ad.ArmorHitLocation = eArmorSlot.UNKNOWN;
 			ad.Weapon = weapon;

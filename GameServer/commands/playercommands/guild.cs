@@ -1075,6 +1075,7 @@ namespace DOL.GS.Commands
                             catch
                             {
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildPromote"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+								return;
                             }
                             if ((newrank >= guildRank && guildRank != 0) || (newrank < 0))
                             {
