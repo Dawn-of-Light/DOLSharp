@@ -376,7 +376,7 @@ namespace DOL.AI.Brain
 								if (WorldMgr.GetDistance(Body.TargetObject, Body) >= 500)
 								{
 									ChargeAbility charge = Body.GetAbility(typeof(ChargeAbility)) as ChargeAbility;
-									if (charge != null && Body.GetSkillDisabledDuration(charge) == 0)
+									if (charge != null && Body.GetSkillDisabledDuration(charge) <= 0)
 									{
 										charge.Execute(Body);
 									}
