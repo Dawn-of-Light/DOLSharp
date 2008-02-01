@@ -51,13 +51,15 @@ namespace DOL.GS.Spells
 			if (vampiir != null && HasPositiveEffect && vampiir.CharacterClass.ID == (int)eCharacterClass.Vampiir && m_caster != vampiir)
 			{
 				//restrictions
-				if (this is PropertyChangingSpell
-					&& this is ArmorFactorBuff == false
-					&& this is CombatSpeedBuff == false
-                    && this is AbstractResistBuff == false
-                    && this is EnduranceRegenSpellHandler == false
-                    && this is EvadeChanceBuff == false
-                    && this is ParryChanceBuff == false)
+				//if (this is PropertyChangingSpell
+				//    && this is ArmorFactorBuff == false
+				//    && this is CombatSpeedBuff == false
+				//    && this is AbstractResistBuff == false
+				//    && this is EnduranceRegenSpellHandler == false
+				//    && this is EvadeChanceBuff == false
+				//    && this is ParryChanceBuff == false)
+				//{
+				if (this is StrengthBuff || this is DexterityBuff || this is ConstitutionBuff || this is QuicknessBuff || this is StrengthConBuff || this is DexterityQuiBuff)
 				{
 					GamePlayer caster = m_caster as GamePlayer;
 					if (caster != null)

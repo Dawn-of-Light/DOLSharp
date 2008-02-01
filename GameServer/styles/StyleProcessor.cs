@@ -548,13 +548,15 @@ namespace DOL.GS.Styles
 					// shield is not a weapon here
 					InventoryItem rightHand = player.AttackWeapon;
 					InventoryItem leftHand = player.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
-					if (rightHand == null) return false;
-					if (leftHand == null) return false;
-					if (rightHand.Item_Type != Slot.RIGHTHAND && rightHand.Item_Type != Slot.LEFTHAND) return false;
-					if (style.Spec == Specs.HandToHand
-						&& (rightHand.Object_Type != (int)eObjectType.HandToHand
-						|| leftHand.Object_Type != (int)eObjectType.HandToHand))
+
+					if (rightHand == null || leftHand == null || (rightHand.Item_Type != Slot.RIGHTHAND && rightHand.Item_Type != Slot.LEFTHAND))
 						return false;
+
+					if (style.Spec == Specs.HandToHand && (rightHand.Object_Type != (int)eObjectType.HandToHand || leftHand.Object_Type != (int)eObjectType.HandToHand))
+						return false;
+					else if (style.Spec == Specs.Fist_Wraps && (rightHand.Object_Type != (int)eObjectType.FistWraps || leftHand.Object_Type != (int)eObjectType.FistWraps))
+						return false;
+
 					return leftHand.Object_Type != (int)eObjectType.Shield;
 
 				case Style.SpecialWeaponType.AnyWeapon:

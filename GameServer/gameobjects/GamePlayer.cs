@@ -2625,9 +2625,9 @@ namespace DOL.GS
 			if (GetBaseSpecLevel(Specs.Left_Axe) > 0)
 				return 1; // always use left axe
 
-			// DW chance
+			// DW/FW chance
 			int specLevel = Math.Max(GetModifiedSpecLevel(Specs.Celtic_Dual), GetModifiedSpecLevel(Specs.Dual_Wield));
-			if (specLevel > 0)
+			if (specLevel > 0 || GetBaseSpecLevel(Specs.Fist_Wraps) > 0)
 			{
 				return Util.Chance(25 + (specLevel - 1) * 68 / 100) ? 1 : 0;
 			}

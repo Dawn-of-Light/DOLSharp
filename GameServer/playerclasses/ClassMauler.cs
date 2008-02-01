@@ -96,6 +96,10 @@ namespace DOL.GS.PlayerClass
                             player.RemoveSpecialization(Specs.Crush);
                             player.RemoveAllStyles();
                             player.RemoveAbility(Abilities.AlbArmor);
+							player.RemoveAbility(Abilities.Shield);
+							player.RemoveAbility(Abilities.Weapon_Slashing);
+							player.RemoveAbility(Abilities.Weapon_Thrusting);
+							player.RemoveAbility(Abilities.Weapon_Crushing);
                             player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Leather));
                             break;
                         }
@@ -107,6 +111,9 @@ namespace DOL.GS.PlayerClass
                             player.RemoveSpecialization(Specs.Parry);
                             player.RemoveAllStyles();
                             player.RemoveAbility(Abilities.MidArmor);
+							player.RemoveAbility(Abilities.Weapon_Axes);
+							player.RemoveAbility(Abilities.Weapon_Hammers);
+							player.RemoveAbility(Abilities.Weapon_Swords);
                             player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Leather));
                             break;
                         }
@@ -118,6 +125,10 @@ namespace DOL.GS.PlayerClass
                             player.RemoveSpecialization(Specs.Blunt);
                             player.RemoveAllStyles();
                             player.RemoveAbility(Abilities.HibArmor);
+							player.RemoveAbility(Abilities.Shield);
+							player.RemoveAbility(Abilities.Weapon_Blades);
+							player.RemoveAbility(Abilities.Weapon_Blunt);
+							player.RemoveAbility(Abilities.Weapon_Piercing);
                             player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Leather));
                             break;
                         }
