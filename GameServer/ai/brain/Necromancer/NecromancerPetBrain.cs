@@ -224,7 +224,7 @@ namespace DOL.AI.Brain
 				// make it our new target.
 
 				//Hopefully this will fix the server crashes - this may be a temporary fix when we gain more information
-				if (spellTarget.IsAlive)
+				if ((spellTarget != null && spellTarget.IsAlive) || spell.Target == "Self")
 				{
 					Body.TargetObject = spellTarget;
 
