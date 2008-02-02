@@ -8156,7 +8156,7 @@ namespace DOL.GS
 			//Get the destination region based on the ID
 			Region rgn = WorldMgr.GetRegion(regionID);
 			//If the region doesn't exist, return false or if they aren't allowed to zone here
-			if (rgn == null || GameServer.ServerRules.IsAllowedToZone(this, rgn))
+			if (rgn == null || !GameServer.ServerRules.IsAllowedToZone(this, rgn))
 				return false;
 			//If the x,y inside this region don't point to a zone
 			//return false
