@@ -322,6 +322,11 @@ namespace DOL.GS.ServerRules
 			return true;
 		}
 
+		public virtual bool IsAllowedToZone(GamePlayer player, Region region)
+		{
+			return true;
+		}
+
 		public virtual bool CanTakeFallDamage(GamePlayer player)
 		{
 			if (player.Client.Account.PrivLevel > 1)

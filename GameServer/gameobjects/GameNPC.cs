@@ -1727,6 +1727,12 @@ namespace DOL.GS
 			}
 		}
 
+		private bool m_loadedFromScript = true;
+		public bool LoadedFromScript
+		{
+			get { return m_loadedFromScript; }
+		}
+
 
 		/// <summary>
 		/// Load a npc from the npc template
@@ -1737,6 +1743,7 @@ namespace DOL.GS
 			if (obj == null) return;
 			base.LoadFromDatabase(obj);
 			if (!(obj is Mob)) return;
+			m_loadedFromScript = false;
 			Mob npc = (Mob)obj;
 			INpcTemplate npcTemplate = NpcTemplateMgr.GetTemplate(npc.NPCTemplateID);
 			if (npcTemplate != null)
@@ -1853,7 +1860,7 @@ namespace DOL.GS
 			if (InternalID != null)
 				mob = (Mob)GameServer.Database.FindObjectByKey(typeof(Mob), InternalID);
 			if (mob == null)
-				mob = new Mob();
+				return;
 
 			mob.Name = Name;
 			mob.Guild = GuildName;
@@ -1901,13 +1908,7 @@ namespace DOL.GS
 			mob.PathID = PathID;
 			mob.MaxDistance = m_maxdistance;
 
-			if (InternalID == null)
-			{
-				GameServer.Database.AddNewObject(mob);
-				InternalID = mob.ObjectId;
-			}
-			else
-				GameServer.Database.SaveObject(mob);
+			GameServer.Database.SaveObject(mob);
 		}
 
 		/// <summary>
