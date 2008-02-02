@@ -270,6 +270,9 @@ namespace DOL.GS.Commands
 				case "info":
 					{
 						ArrayList info = new ArrayList();
+						if (targetMob.LoadedFromScript)
+							info.Add(" + Loaded: from Script");
+						else info.Add(" + Loaded: from Database");
 						info.Add(" + Class: " + targetMob.GetType().ToString());
 						info.Add(" + Realm: " + targetMob.Realm);
 						info.Add(" + Level: " + targetMob.Level);
