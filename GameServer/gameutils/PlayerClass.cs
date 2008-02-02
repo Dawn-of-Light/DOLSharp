@@ -161,6 +161,7 @@ namespace DOL.GS
 			get;
 		}
 		void SwitchToFemaleName();
+		bool HasAdvancedFromBaseClass();
 	}
 
 	/// <summary>
@@ -446,6 +447,11 @@ namespace DOL.GS
 		public virtual bool CanUseLefthandedWeapon(GamePlayer player)
 		{
 			return false;
+		}
+
+		public virtual bool HasAdvancedFromBaseClass()
+		{
+			return true;
 		}
 	}
 

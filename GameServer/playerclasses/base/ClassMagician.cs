@@ -61,5 +61,10 @@ namespace DOL.GS.PlayerClass
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
 			player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Cloth));
 		}
+
+		public override bool HasAdvancedFromBaseClass()
+		{
+			return false;
+		}
 	}
 }
