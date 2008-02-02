@@ -56,5 +56,10 @@ namespace DOL.GS.PlayerClass
 			player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Leather));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Piercing));
 		}
+
+		public override bool HasAdvancedFromBaseClass()
+		{
+			return false;
+		}
 	}
 }
