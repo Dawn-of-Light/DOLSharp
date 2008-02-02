@@ -60,5 +60,10 @@ namespace DOL.GS.PlayerClass
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Parry));
 			}
 		}
+
+		public override bool HasAdvancedFromBaseClass()
+		{
+			return false;
+		}
 	}
 }

@@ -57,5 +57,10 @@ namespace DOL.GS.PlayerClass
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Thrusting));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
 		}
+
+		public override bool HasAdvancedFromBaseClass()
+		{
+			return false;
+		}
 	}
 }
