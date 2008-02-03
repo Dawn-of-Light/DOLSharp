@@ -309,6 +309,9 @@ namespace DOL.AI.Brain
 		{
 			if (m_body.IsConfused) return;
 
+			// tolakram - duration spell effects will attempt to add to aggro after npc is dead
+			if (!m_body.IsAlive) return;
+
 			if (living == null) return;
 			//			log.Debug(Body.Name + ": AddToAggroList="+(living==null?"(null)":living.Name)+", "+aggroamount);
 
