@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Threading;
@@ -513,6 +514,18 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Removes all items from the inventory
+		/// </summary>
+		public virtual void ClearInventory()
+		{
+			List<InventoryItem> tempList = new List<InventoryItem>(m_items.Values.Count);
+			foreach (InventoryItem item in m_items.Values)
+				tempList.Add(item);
+			foreach (InventoryItem item in tempList)
+				RemoveItem(item);
+		}
+
+		/// <summary>
 		/// Removes an item from the inventory
 		/// </summary>
 		/// <param name="item">the item to remove</param>
@@ -587,7 +600,7 @@ namespace DOL.GS
 					int itemSlot = item.SlotPosition;
 					if(item.Count == count)
 					{
-						goto remove_item;
+						return RemoveItem(item);
 					}
 					else
 					{
@@ -603,9 +616,6 @@ namespace DOL.GS
 				}
 				return false;
 			}
-
-			remove_item:
-				return RemoveItem(item);
 		}
 
 		/// <summary>
