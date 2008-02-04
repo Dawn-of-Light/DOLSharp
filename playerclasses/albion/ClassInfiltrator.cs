@@ -128,5 +128,10 @@ namespace DOL.GS.PlayerClass
                     break;
             }
 		}
+
+		public override bool HasAdvancedFromBaseClass()
+		{
+			return true;
+		}
 	}
 }

@@ -164,5 +164,10 @@ namespace DOL.GS.PlayerClass
 				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 3));
 			}
 		}
+
+		public override bool HasAdvancedFromBaseClass()
+		{
+			return true;
+		}
 	}
 }

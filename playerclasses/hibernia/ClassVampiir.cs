@@ -128,5 +128,10 @@ namespace DOL.GS.PlayerClass
 				player.AddAbility(SkillBase.GetAbility(Abilities.VampiirBolt, 7));
 			}
 		}
+
+		public override bool HasAdvancedFromBaseClass()
+		{
+			return true;
+		}
 	}
 }

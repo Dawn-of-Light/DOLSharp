@@ -70,5 +70,10 @@ namespace DOL.GS.PlayerClass
 				player.AddSpellLine(SkillBase.GetSpellLine("Death Servant Spec"));
 			}
 		}
+
+		public override bool HasAdvancedFromBaseClass()
+		{
+			return true;
+		}
 	}
 }
