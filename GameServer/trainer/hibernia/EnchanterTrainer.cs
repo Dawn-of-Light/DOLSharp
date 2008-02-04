@@ -53,7 +53,7 @@ namespace DOL.GS.Trainer
 			{
 				// popup the training window
 				player.Out.SendTrainerWindow();
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "EnchanterTrainer.Interact.QuickStudy", this.Name, player.Name), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "EnchanterTrainer.Interact.SmallTalk", this.Name, player.Name), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			} 
 			else 
 			{
