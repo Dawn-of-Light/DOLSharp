@@ -631,8 +631,12 @@ namespace DOL.GS
 				m_X = X;
 				m_Y = Y;
 				m_Z = Z;
-				base.CurrentSpeed = value;
-				BroadcastUpdate();
+
+				if (base.CurrentSpeed != value)
+				{
+					base.CurrentSpeed = value;
+					BroadcastUpdate();
+				}
 			}
 		}
 		/*
@@ -945,20 +949,45 @@ namespace DOL.GS
 		/// <param name="ty">Target Y</param>
 		public virtual void TurnTo(int tx, int ty)
 		{
-			if (this.IsStunned || this.IsMezzed) return;
-			Notify(GameNPCEvent.TurnTo, this, new TurnToEventArgs(tx, ty));
-			Heading = GetHeadingToSpot(tx, ty);
+			TurnTo(tx, ty, true);
 		}
 
+		/// <summary>
+		/// Turns the npc towards a specific spot
+		/// optionally sends update to client
+		/// </summary>
+		/// <param name="tx">Target X</param>
+		/// <param name="ty">Target Y</param>
+		public virtual void TurnTo(int tx, int ty, bool sendUpdate)
+		{
+			if (this.IsStunned || this.IsMezzed) return;
+			Notify(GameNPCEvent.TurnTo, this, new TurnToEventArgs(tx, ty));
+			if (sendUpdate)
+				Heading = GetHeadingToSpot(tx, ty);
+			else
+				base.Heading = GetHeadingToSpot(tx, ty);
+		}
 		/// <summary>
 		/// Turns the npc towards a specific heading
 		/// </summary>
 		/// <param name="newHeading">the new heading</param>
 		public virtual void TurnTo(ushort newHeading)
 		{
+			TurnTo(newHeading, true);
+		}
+		/// <summary>
+		/// Turns the npc towards a specific heading
+		/// optionally sends update to client
+		/// </summary>
+		/// <param name="newHeading">the new heading</param>
+		public virtual void TurnTo(ushort newHeading, bool sendUpdate)
+		{
 			if (this.IsStunned || this.IsMezzed) return;
 			Notify(GameNPCEvent.TurnToHeading, this, new TurnToHeadingEventArgs(newHeading));
-			Heading = newHeading;
+			if (sendUpdate)
+				Heading = newHeading;
+			else
+				base.Heading = newHeading;
 		}
 		/// <summary>
 		/// Turns the NPC towards a specific gameObject
@@ -967,10 +996,22 @@ namespace DOL.GS
 		/// <param name="target">GameObject to turn towards</param>
 		public virtual void TurnTo(GameObject target)
 		{
+			TurnTo(target, true);
+		}
+
+		/// <summary>
+		/// Turns the NPC towards a specific gameObject
+		/// which can be anything ... a player, item, mob, npc ...
+		/// optionally sends update to client
+		/// </summary>
+		/// <param name="target">GameObject to turn towards</param>
+		public virtual void TurnTo(GameObject target, bool sendUpdate)
+		{
 			if (target == null) return;
 			if (target.CurrentRegion != CurrentRegion) return;
-			TurnTo(target.X, target.Y);
+			TurnTo(target.X, target.Y, sendUpdate);
 		}
+
 		/// <summary>
 		/// Turns the NPC towards a specific gameObject
 		/// which can be anything ... a player, item, mob, npc ...
@@ -1137,8 +1178,20 @@ namespace DOL.GS
 			if (IsTurningDisabled)
 				return; // can't walk when turning is disabled
 
-			if (IsMoving)
-				StopMoving();
+			// tolakram - changed, we don't want to stop, this creates the herky jerky motion
+			// instead we clear everything and set the new target
+			if (m_arriveAtTargetAction != null)
+			{
+				m_arriveAtTargetAction.Stop();
+				m_arriveAtTargetAction = null;
+			}
+			if (m_closeToTargetAction != null)
+			{
+				m_closeToTargetAction.Stop();
+				m_closeToTargetAction = null;
+			}
+			m_isReturningHome = false;
+
 
 			//Slow mobs down when they are hurt!
 			int maxSpeed = MaxSpeed;
@@ -1171,11 +1224,6 @@ namespace DOL.GS
 				timeToTarget = (int)(dist * 1000 / speed);
 			}
 
-			if (m_arriveAtTargetAction != null)
-			{
-				m_arriveAtTargetAction.Stop();
-			}
-
 			m_arriveAtTargetAction = new ArriveAtTargetAction(this);
 			if (timeToTarget > 1)
 			{
@@ -1184,11 +1232,6 @@ namespace DOL.GS
 			else
 			{
 				m_arriveAtTargetAction.Start(1);
-			}
-
-			if (m_closeToTargetAction != null)
-			{
-				m_closeToTargetAction.Stop();
 			}
 
 			m_closeToTargetAction = new CloseToTargetAction(this);
