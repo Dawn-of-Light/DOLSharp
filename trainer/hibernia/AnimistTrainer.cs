@@ -53,13 +53,15 @@ namespace DOL.GS.Trainer
 			{
 				// popup the training window
 				player.Out.SendTrainerWindow();
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AnimistTrainer.Interact.SmallTalk", this.Name, player.Name), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+
 			} 
 			else 
 			{
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
 				{
-					player.Out.SendMessage(this.Name + " says, \"Is the [Path of Affinity] the path you desire to walk?\"",eChatType.CT_System,eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AnimistTrainer.Interact.PathOfAffinity", this.Name), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					if (!player.IsLevelRespecUsed)
 					{
 						OfferRespecialize(player);
@@ -95,14 +97,14 @@ namespace DOL.GS.Trainer
 			if (!base.WhisperReceive(source, text)) return false;			
 			GamePlayer player = source as GamePlayer;			
 	
-			switch (text) {
-			case "Path of Affinity":
+			if (text == LanguageMgr.GetTranslation(player.Client, "AnimistTrainer.WhisperReceive.CasePath"))
+			{
 				// promote player to other class
-				if (CanPromotePlayer(player)) {
-					PromotePlayer(player, (int)eCharacterClass.Animist, "You are now an Animist, " + source.GetName(0, false) + ". Welcome to the Path of Affinity.", null);
-					player.ReceiveItem(this,WEAPON_ID1);
+				if (CanPromotePlayer(player))
+				{
+					PromotePlayer(player, (int)eCharacterClass.Animist, LanguageMgr.GetTranslation(player.Client, "AnimistTrainer.WhisperReceive.Welcome", source.GetName(0, false)), null);
+					player.ReceiveItem(this, WEAPON_ID1);
 				}
-				break;
 			}
 			return true;		
 		}
