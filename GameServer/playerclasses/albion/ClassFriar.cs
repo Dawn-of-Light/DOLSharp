@@ -98,5 +98,10 @@ namespace DOL.GS.PlayerClass
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
 			}
 		}
+
+		public override bool HasAdvancedFromBaseClass()
+		{
+			return true;
+		}
 	}
 }

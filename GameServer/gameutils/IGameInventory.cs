@@ -105,6 +105,7 @@ namespace DOL.GS
 
 		void            BeginChanges();
 		void            CommitChanges();
+		void			ClearInventory();
 
 		int				CountSlots(bool countUsed, eInventorySlot minSlot, eInventorySlot maxSlot);
 		int				CountItemTemplate(string itemtemplateID, eInventorySlot minSlot, eInventorySlot maxSlot);
