@@ -182,7 +182,6 @@ namespace DOL
             private byte m_ml;
             private long m_mlExperience;
             private int m_mlLevel;
-            private int m_mlStep;
             private bool m_mlGranted;
 			
 			static bool m_autoSave;

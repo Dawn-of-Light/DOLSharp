@@ -71,5 +71,10 @@ namespace DOL.GS.PlayerClass
 				player.AddAbility(SkillBase.GetAbility(Abilities.Quickcast));
 			}
 		}
+		public override bool HasAdvancedFromBaseClass()
+		{
+			return true;
+		}
+
 	}
 }
