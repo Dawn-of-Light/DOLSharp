@@ -2627,8 +2627,9 @@ namespace DOL.GS
 
 				//mobs dont update the heading after they start attacking
 				//so here they update it after they swing
+				//update internal heading, do not send update to client
 				if (owner is GameNPC)
-					(owner as GameNPC).TurnTo(mainHandAD.Target);
+					(owner as GameNPC).TurnTo(mainHandAD.Target, false);
 
 				Stop();
 				return;
@@ -4896,8 +4897,10 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			get { return base.Heading; }
 			set
 			{
+				ushort oldHeading = base.Heading;
 				base.Heading = value;
-				RecalculatePostionAddition();
+				if (base.Heading != oldHeading)
+					RecalculatePostionAddition();
 			}
 		}
 		/// <summary>
