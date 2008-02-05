@@ -1327,7 +1327,6 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void StopMoving()
 		{
-			//if(!IsMoving) return;
 			if (m_arriveAtTargetAction != null)
 			{
 				m_arriveAtTargetAction.Stop();
@@ -1338,9 +1337,12 @@ namespace DOL.GS
 				m_closeToTargetAction.Stop();
 				m_closeToTargetAction = null;
 			}
-			//This broadcasts an update!
-			CurrentSpeed = 0;
+
 			m_isReturningHome = false;
+
+			// This broadcasts an update so check to see if we are moving before calling - tolakram
+			if (IsMoving)
+				CurrentSpeed = 0;
 		}
 		/// <summary>
 		/// Follow given object
