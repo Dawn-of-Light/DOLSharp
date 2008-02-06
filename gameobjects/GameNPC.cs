@@ -2031,68 +2031,69 @@ namespace DOL.GS
 			#endregion
 
 			#region Inventory
-			GameNpcInventoryTemplate equip = new GameNpcInventoryTemplate();
-
-			bool equipHasItems = equip.LoadFromDatabase(template.TemplateId.ToString());
-
-			if (template.Inventory != null && template.Inventory.Length > 0)
+			//Ok lets start loading the npc equipment - only if there is a value!
+			if (!Util.IsEmpty(template.Inventory))
 			{
-				m_models.Clear();
-				int x = 0;
-				int y = 0;
-				foreach (string str in template.Inventory.Split(';'))
+				bool equipHasItems = false;
+				GameNpcInventoryTemplate equip = new GameNpcInventoryTemplate();
+				//First let's try to reach the npcequipment table and load that!
+				//We use a ';' split to allow npctemplates to support more than one equipmentIDs
+				string[] equipIDs = template.Inventory.Split(';');
+				if (!template.Inventory.Contains(":"))
 				{
-					//Get the armor location
-					string[] loc = str.Split(':');
-					x = Convert.ToInt32(loc[0]);
-					if (!str.Contains("|")) y = Convert.ToInt32(loc[1]);
-					if (x == 10 || x == 12 || x == 13)
+					foreach (string str in equipIDs)
 					{
-						m_equipLoc.Add(x);
-						//Get the Equipment model
-						m_equipModel.Add(x, loc[1]);
-					}
-					else
-					{
-						equip.AddNPCEquipment((DOL.GS.eInventorySlot)x, y);
-						equipHasItems = true;
+						equipHasItems |= equip.LoadFromDatabase(str);
 					}
 				}
-				if (m_equipLoc.Count > 1)
+
+				#region Legacy Equipment Code
+				//Nope, nothing in the npcequipment table, lets do the crappy parsing
+				//This is legacy code
+				if (!equipHasItems)
 				{
-					x = Util.Random(m_equipLoc.Count - 1);
-					x = Convert.ToInt32(m_equipLoc[x]);
-				}
-				if (m_equipModel.ContainsKey(x))
-				{
-					string str = m_equipModel[x].ToString();
-					if (!str.Contains("|")) y = Convert.ToInt32(m_equipModel[x]);
-					else
+					//Temp list to store our models
+					List<int> tempModels = new List<int>();
+
+					//Let's go through all of our ';' seperated slots
+					foreach (string str in equipIDs)
 					{
-						foreach (string st in str.Split('|'))
+						tempModels.Clear();
+						//Split the equipment into slot and model(s)
+						string[] slotXModels = str.Split(':');
+						//It should only be two in length SLOT : MODELS
+						if (slotXModels.Length == 2)
 						{
-							if (st.Length == 0) continue;
-							y = Convert.ToInt32(st);
-							m_models.Add(y);
+							int slot;
+							//Let's try to get our slot
+							if (Int32.TryParse(slotXModels[0], out slot))
+							{
+								//Now lets go through and add all the models to the list
+								string[] models = slotXModels[1].Split('|');
+								foreach (string strModel in models)
+								{
+									//We'll add it to the list if we successfully parse it!
+									int model;
+									if (Int32.TryParse(strModel, out model))
+										tempModels.Add(model);
+								}
+
+								//If we found some models let's randomly pick one and add it the equipment
+								if (tempModels.Count > 0)
+									equipHasItems |= equip.AddNPCEquipment((eInventorySlot)slot, tempModels[Util.Random(tempModels.Count - 1)]);
+							}
 						}
-						y = Util.Random(m_models.Count - 1);
-						y = Convert.ToInt32(m_models[y]);
 					}
-					equip.AddNPCEquipment((DOL.GS.eInventorySlot)x, y);
-					equipHasItems = true;
 				}
+				#endregion
 
-			}
-
-			if (equipHasItems)
-				this.Inventory = new GameNPCInventory(equip);
-
-			if (this.Inventory != null)
-			{
-				if (this.Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
-					this.SwitchWeapon(eActiveWeaponSlot.Distance);
-				else if (Inventory.GetItem(eInventorySlot.TwoHandWeapon) != null)
-					this.SwitchWeapon(eActiveWeaponSlot.TwoHanded);
+				//We added some items - let's make it the new inventory
+				if (equipHasItems)
+				{
+					this.Inventory = new GameNPCInventory(equip);
+					if (this.Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
+						this.SwitchWeapon(eActiveWeaponSlot.Distance);
+				}
 			}
 			#endregion
 
