@@ -1248,9 +1248,9 @@ Scripts.Player.Guild.ConfirmLeave:			Do you really want to leave {0}?
 Scripts.Player.Guild.DemotedHigherThanPlayer:		You can only demote to ranks below your own.	
 Scripts.Player.Guild.DemotedOther:			{0} has been demoted to {1}.	
 Scripts.Player.Guild.DemotedSelf:			You have been demoted to {0}.	
-Scripts.Player.Guild.DepositAmmount:			You deposit {0} into your guilds bank account.	
+Scripts.Player.Guild.Depositamount:			You deposit {0} into your guilds bank account.	
 Scripts.Player.Guild.DepositFull:			The guild bank seems to be full.	
-Scripts.Player.Guild.DepositInvalid:			That is an invalid deposit ammount.	
+Scripts.Player.Guild.DepositInvalid:			That is an invalid deposit amount.	
 Scripts.Player.Guild.DuesOff:				Guild dues are currently turned off.	
 Scripts.Player.Guild.DuesOn:				Guild dues are currently set at {0} percent.	
 Scripts.Player.Guild.EmailSet:				You have set the guild email to {0}.	
@@ -1285,8 +1285,8 @@ Scripts.Player.Guild.Help.GuildCancel:			'/gc cancel <option> [value]' to cancel
 Scripts.Player.Guild.Help.GuildClaim:			'/gc claim' to claim a keep	
 Scripts.Player.Guild.Help.GuildDecline:			'/gc decline' to decline the enter in guild	
 Scripts.Player.Guild.Help.GuildDemote:			'/gc demote <rank#> [name]' to set the rank from 0 to 10 of the player to an inferior rank	
-Scripts.Player.Guild.Help.GuildDeposit:			'/gc deposit <ammount>' puts money into the guild bank account.	
-Scripts.Player.Guild.Help.GuildDues:			'/gc dues <ammount>' to set your guild dues %. 1-100% <0 is off>	
+Scripts.Player.Guild.Help.GuildDeposit:			'/gc deposit <amount>' puts money into the guild bank account.	
+Scripts.Player.Guild.Help.GuildDues:			'/gc dues <amount>' to set your guild dues %. 1-100% <0 is off>	
 Scripts.Player.Guild.Help.GuildEdit:			'/gc edit' to show list of all option in guild edit	
 Scripts.Player.Guild.Help.GuildEditACHear:		'/gc edit <ranknum> achear <y/n>' edits this rank to be able to hear Alliance chat	
 Scripts.Player.Guild.Help.GuildEditACSpeak:		'/gc edit <ranknum> acspeak <y/n>' edits this rank to be able to speak in Alliance chat	
@@ -1331,7 +1331,7 @@ Scripts.Player.Guild.Help.GuildRemove:			'/gc remove <playername>' to remove the
 Scripts.Player.Guild.Help.GuildUsage:			Usage:	
 Scripts.Player.Guild.Help.GuildWebpage:			'/gc webpage <the.guildpage.com>' is an additional line set by the leader that can be display in a /gc info command, as well as on the Herald.	
 Scripts.Player.Guild.Help.GuildWho:			'/gc who' to show all player in your guild	
-Scripts.Player.Guild.Help.GuildWithdraw:		'/gc withdraw <ammount>' gets money from the guild bank account.	
+Scripts.Player.Guild.Help.GuildWithdraw:		'/gc withdraw <amount>' gets money from the guild bank account.	
 Scripts.Player.Guild.InCombat:				You can't unsummon your Banner while you're in Combat!	
 Scripts.Player.Guild.InfoAMotd:				AllianceMessage: {0}	
 Scripts.Player.Guild.InfoCEmail:			Contact Email: {0}	
@@ -1400,8 +1400,8 @@ Scripts.Player.Guild.UnknownCommand:			Unknown command. Type /gc help for info.
 Scripts.Player.Guild.UpgradeNoLevel:			You must specify a level to target for upgrade.	
 Scripts.Player.Guild.UpgradeScndArg:			The second argument must be a number.	
 Scripts.Player.Guild.WebpageSet:			You have set the guild webpage to {0}.	
-Scripts.Player.Guild.WithdrawAmmount:			You withdraw {0} from the guild bank.	
-Scripts.Player.Guild.WithdrawInvalid:			That is an invalid ammount to withdraw.	
+Scripts.Player.Guild.Withdrawamount:			You withdraw {0} from the guild bank.	
+Scripts.Player.Guild.WithdrawInvalid:			That is an invalid amount to withdraw.	
 Scripts.Player.Guild.WithdrawTooMuch:			You cannot withdraw that much money from the guild bank.	
 
 # /GC

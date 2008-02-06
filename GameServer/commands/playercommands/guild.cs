@@ -2040,20 +2040,20 @@ namespace DOL.GS.Commands
                                 return;
                             }
 
-                            long ammount = long.Parse(args[2]);
-                            if (ammount == 0)
+                            long amount = long.Parse(args[2]);
+                            if (amount == 0)
                             {
                                 client.Player.Guild.SetGuildDues(false);
                                 client.Player.Guild.SetGuildDuesPercent(0);
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.DuesOff"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                             }
-                            else if (ammount > 0 || ammount < 100)
+                            else if (amount > 0 || amount < 100)
                             {
                                 client.Player.Guild.SetGuildDues(true);
                                 if (ServerProperties.Properties.NEW_GUILD_DUES)
                                 {
-                                    client.Player.Guild.SetGuildDuesPercent(ammount);
-                                    client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.DuesOn", ammount), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                                    client.Player.Guild.SetGuildDuesPercent(amount);
+                                    client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.DuesOn", amount), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                                 }
                                 else
                                 {
@@ -2061,7 +2061,7 @@ namespace DOL.GS.Commands
                                     client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.DuesOn", 2), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                                 }
 
-                                client.Player.Guild.SetGuildDuesPercent(ammount);
+                                client.Player.Guild.SetGuildDuesPercent(amount);
                             }
                             else
                             {
@@ -2079,14 +2079,15 @@ namespace DOL.GS.Commands
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                             }
 
-                            double ammount = double.Parse(args[2]);
-                            if (ammount < 0 || ammount > 1000000001)
+                            double amount = double.Parse(args[2]);
+                            if (amount < 0 || amount > 1000000001)
                             {
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.DepositInvalid"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                             }
                             else
                             {
-                                client.Player.Guild.SetGuildBank(client.Player, ammount);
+                                client.Player.Guild.SetGuildBank(client.Player, amount);
+                                client.Player.RemoveMoney(long.Parse(args[2]));
                             }
                             client.Player.Guild.UpdateGuildWindow();
                         }
@@ -2105,14 +2106,15 @@ namespace DOL.GS.Commands
                                 return;
                             }
 
-                            double ammount = double.Parse(args[2]);
-                            if (ammount < 0 || ammount > 1000000001)
+                            double amount = double.Parse(args[2]);
+                            if (amount < 0 || amount > 1000000001)
                             {
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.WithdrawInvalid"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                             }
                             else
                             {
-                                client.Player.Guild.WithdrawGuildBank(client.Player, ammount);
+                                client.Player.Guild.WithdrawGuildBank(client.Player, amount);
+                                client.Player.AddMoney(long.Parse(args[2]));
                             }
                             client.Player.Guild.UpdateGuildWindow();
                         }

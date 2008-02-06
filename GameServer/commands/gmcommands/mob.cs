@@ -77,7 +77,7 @@ namespace DOL.GS.Commands
 		"'/mob copy' copies a mob exactly and places it at your location",
 		"'/mob npctemplate <NPCTemplateID>' creates a mob with npc template, or modifies target",
 		"'/mob path <PathID>' associate the mob to the specified path",
-        "'/mob <stat> <ammount>' Set the mobs stats (str, con, etc)",
+        "'/mob <stat> <amount>' Set the mobs stats (str, con, etc)",
 		"'/mob tether <tether range>' set mob tether range (>0=check, 0=no check, <0=no check)"
 		)]
 	public class MobCommandHandler : AbstractCommandHandler, ICommandHandler
