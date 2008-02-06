@@ -36,15 +36,15 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-			int ammount;
+			int amount;
 
 			try
 			{
-				ammount = Convert.ToInt16(args[1]);
+				amount = Convert.ToInt16(args[1]);
 				GameLiving living = client.Player.TargetObject as GameLiving;
 				if (living != null)
 				{
-					living.TakeDamage(client.Player, eDamageType.Natural, ammount, 0);
+					living.TakeDamage(client.Player, eDamageType.Natural, amount, 0);
 				}
 				else
 				{

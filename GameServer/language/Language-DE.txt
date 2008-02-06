@@ -1355,7 +1355,7 @@ Scripts.Player.Guild.ConfirmLeave:			Wollt Ihr {0} wirklich verlassen?
 Scripts.Player.Guild.DemotedHigherThanPlayer:		Das steht Euch nicht zu!
 Scripts.Player.Guild.DemotedOther:			{0} wurde zum {1} degradiert.	
 Scripts.Player.Guild.DemotedSelf:			Ihr wurdet zum {0} degradiert.	
-Scripts.Player.Guild.DepositAmmount:			Ihr zahlt {0} auf das Konto Eurer Gilde ein.
+Scripts.Player.Guild.Depositamount:			Ihr zahlt {0} auf das Konto Eurer Gilde ein.
 Scripts.Player.Guild.DepositFull:			Es scheint, als ob das Konto Eurer Gilde voll ist.
 Scripts.Player.Guild.DepositInvalid:			Das ist kein gültiger Betrag.
 Scripts.Player.Guild.DuesOff:				Es werden zur Zeit keine Gildenabgaben gefordert.
@@ -1392,8 +1392,8 @@ Scripts.Player.Guild.Help.GuildCancel:			/gc cancel <option> [value] - alle vorh
 Scripts.Player.Guild.Help.GuildClaim:			/gc claim - eine Festung für die Gilde in Anspruch nehmen
 Scripts.Player.Guild.Help.GuildDecline:			/gc decline - eine Einladung für eine Gilde ausschlagen	
 Scripts.Player.Guild.Help.GuildDemote:			/gc demote <rank#> [name] - einen Spieler degradieren (gültige Ränge: 0-10)	
-Scripts.Player.Guild.Help.GuildDeposit:			/gc deposit <ammount> - Geld auf das Gildenkonto einzahlen	
-Scripts.Player.Guild.Help.GuildDues:			/gc dues <ammount> - Gildenabgaben verlangen (0-100%)	
+Scripts.Player.Guild.Help.GuildDeposit:			/gc deposit <amount> - Geld auf das Gildenkonto einzahlen	
+Scripts.Player.Guild.Help.GuildDues:			/gc dues <amount> - Gildenabgaben verlangen (0-100%)	
 Scripts.Player.Guild.Help.GuildEdit:			/gc edit - zeige eine Liste der für /gc edit verfügbaren Optionen an	
 Scripts.Player.Guild.Help.GuildEditACHear:		/gc edit <ranknum> achear <y/n> - bestimmt ob der Rang den Allianz-Chat hören kann oder nicht
 Scripts.Player.Guild.Help.GuildEditACSpeak:		/gc edit <ranknum> acspeak <y/n> - bestimmt ob der Rang im Allianz-Chat schreiben kann oder nicht
@@ -1438,7 +1438,7 @@ Scripts.Player.Guild.Help.GuildRemove:			/gc remove <playername> - einen Spieler
 Scripts.Player.Guild.Help.GuildUsage:			Usage:
 Scripts.Player.Guild.Help.GuildWebpage:			/gc webpage <the.guildpage.com> - Legt die Gildenwebseite fest. Diese Informationen werden mit /gc info und in den Chroniken angezeigt.
 Scripts.Player.Guild.Help.GuildWho:			/gc who - Anzeige aller Gildenmitglieder im Spiel
-Scripts.Player.Guild.Help.GuildWithdraw:		/gc withdraw <ammount> - hebt eine Summe (in Kupferstücken) vom Gildensteuerkonto ab 	
+Scripts.Player.Guild.Help.GuildWithdraw:		/gc withdraw <amount> - hebt eine Summe (in Kupferstücken) vom Gildensteuerkonto ab 	
 Scripts.Player.Guild.InCombat:				Ihr könnt das Banner nicht mitten im Kampf einholen!	
 Scripts.Player.Guild.InfoAMotd:				Allianznachricht: {0}	
 Scripts.Player.Guild.InfoCEmail:			Kontaktemail: {0}	
@@ -1507,7 +1507,7 @@ Scripts.Player.Guild.UnknownCommand:			Unbekannter Befehl. Gebt "/gc help" ein, 
 Scripts.Player.Guild.UpgradeNoLevel:			Ihr müsst eine Stufe als Ziel für diese Änderung angeben.	
 Scripts.Player.Guild.UpgradeScndArg:			Das zweite Argument muss eine Zahl sein.	
 Scripts.Player.Guild.WebpageSet:			Ihr habt die Gildenwebseite auf {0} geändert.	
-Scripts.Player.Guild.WithdrawAmmount:			Ihr nehmt {0} aus der Gildenkasse.	
+Scripts.Player.Guild.Withdrawamount:			Ihr nehmt {0} aus der Gildenkasse.	
 Scripts.Player.Guild.WithdrawInvalid:			Diese Menge kann nicht entnommen werden.	
 Scripts.Player.Guild.WithdrawTooMuch:			Ihr könnt dieses viele Geld nicht aus der Gildenkasse entnehmen.	
 

@@ -742,7 +742,7 @@ Scripts.Player.Guild.ConfirmLeave:			Voulez-vous vraiment partir {0}?
 Scripts.Player.Guild.DemotedHigherThanPlayer:		Vous pouvez seulement rétrograder les grades au-dessous du votre.	
 Scripts.Player.Guild.DemotedOther:			{0} a rétrogradé au rang {1}.	
 Scripts.Player.Guild.DemotedSelf:			Vous avez été rétrogradé(e) au rang {0}.	
-Scripts.Player.Guild.DepositAmmount:			Vous déposez {0} dans la caisse de guilde.	
+Scripts.Player.Guild.Depositamount:			Vous déposez {0} dans la caisse de guilde.	
 Scripts.Player.Guild.DepositFull:			La caisse de guilde semble être pleine.	
 Scripts.Player.Guild.DepositInvalid:			Ce n'est pas un dépôt valide.	
 Scripts.Player.Guild.DuesOff:				La cotisation de guilde n'est actuellement pas fonctionnelle.	
@@ -779,8 +779,8 @@ Scripts.Player.Guild.Help.GuildCancel:			'/gc cancel <option> [value]' Annule un
 Scripts.Player.Guild.Help.GuildClaim:			'/gc claim' Réclame une tour ou un fort pour la guilde.
 Scripts.Player.Guild.Help.GuildDecline:			'/gc decline' Décline une invitation à rejoindre la guilde.
 Scripts.Player.Guild.Help.GuildDemote:			'/gc demote <rank#> [name]' Rétrograde le joueur indiqué au rang désiré.
-Scripts.Player.Guild.Help.GuildDeposit:			'/gc deposit <ammount>' Dépose une somme dans la caisse de guilde.	
-Scripts.Player.Guild.Help.GuildDues:			'/gc dues <ammount>' Active ou désactive le système de taxation de la guilde (2% de l'argent gagné sur des monstres).
+Scripts.Player.Guild.Help.GuildDeposit:			'/gc deposit <amount>' Dépose une somme dans la caisse de guilde.	
+Scripts.Player.Guild.Help.GuildDues:			'/gc dues <amount>' Active ou désactive le système de taxation de la guilde (2% de l'argent gagné sur des monstres).
 Scripts.Player.Guild.Help.GuildEdit:			'/gc edit' Listes les parties modifiables de la structure de guilde.
 Scripts.Player.Guild.Help.GuildEditACHear:		'/gc edit <ranknum> achear <y/n>' Permet à un rang de pouvoir lire le canal d'alliance.
 Scripts.Player.Guild.Help.GuildEditACSpeak:		'/gc edit <ranknum> acspeak <y/n>' Permet à un rang de pouvoir parler sur le canal alliance.
@@ -825,7 +825,7 @@ Scripts.Player.Guild.Help.GuildRemove:			'/gc remove <Nom du joueur>' Retire le 
 Scripts.Player.Guild.Help.GuildUsage:			Usage :	
 Scripts.Player.Guild.Help.GuildWebpage:			'/gc webpage <la.pagedeguilde.fr>' Option non obligatoire qui permet d'indiquer le site de guilde aux membres et sur le herald officiel.	
 Scripts.Player.Guild.Help.GuildWho:			'/gc who' Montre les joueurs de la guilde connectés.	
-Scripts.Player.Guild.Help.GuildWithdraw:		'/gc withdraw <ammount>' Retire les fonds de votre caisse de guilde.
+Scripts.Player.Guild.Help.GuildWithdraw:		'/gc withdraw <amount>' Retire les fonds de votre caisse de guilde.
 Scripts.Player.Guild.InCombat:				Vous ne pouvez pas invoquer la bannière de guilde en combat !	
 Scripts.Player.Guild.InfoAMotd:				Message de l'alliance: {0}	
 Scripts.Player.Guild.InfoCEmail:			Contact Email: {0}	
@@ -894,7 +894,7 @@ Scripts.Player.Guild.UnknownCommand:			Commande Inconnue. Tappez /gc help pour l
 Scripts.Player.Guild.UpgradeNoLevel:			Vous devez spécifier un niveau pour les améliorations des tours/forts.	
 Scripts.Player.Guild.UpgradeScndArg:			Le deuxième argument doit être un nombre.	
 Scripts.Player.Guild.WebpageSet:			Vous avez défini la page internet de la guilde comme {0}.	
-Scripts.Player.Guild.WithdrawAmmount:			Votre taxe de {0} va dans la caisse de guilde.	
+Scripts.Player.Guild.Withdrawamount:			Votre taxe de {0} va dans la caisse de guilde.	
 Scripts.Player.Guild.WithdrawInvalid:			Ce n'est pas un montant valide.	
 Scripts.Player.Guild.WithdrawTooMuch:			Vous ne pouvez plus ajouter d'argent dans la caisse de guilde.
 
