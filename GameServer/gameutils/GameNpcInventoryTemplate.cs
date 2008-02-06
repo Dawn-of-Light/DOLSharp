@@ -138,11 +138,21 @@ namespace DOL.GS
 			{
 				lock (m_usedInventoryItems.SyncRoot)
 				{
-					if (m_isClosed) return false;
+					if (m_isClosed)
+						return false;
 					slot = GetValidInventorySlot(slot);
-					if (slot == eInventorySlot.Invalid) return false;
-					if (m_items.Contains((int)slot)) return false;
-
+					if (slot == eInventorySlot.Invalid)
+						return false;
+					//Changed to support randomization of slots - if we try to load a weapon in the same spot with a different model,
+					//let's make it random 50% chance to either overwrite the item or leave it be
+					if (m_items.Contains((int)slot))
+					{
+						//50% chance to keep the item we have
+						if (Util.Chance(50))
+							return false;
+						//Let's remove the old item!
+						m_items.Remove((int)slot);
+					}
 					string itemID = string.Format("{0}:{1},{2},{3}", slot, model, color, effect, extension);
 					InventoryItem item = null;
 
@@ -160,9 +170,9 @@ namespace DOL.GS
 						return false;
 
 					m_items.Add((int)slot, item);
-					return true;
 				}
 			}
+			return true;
 		}
 
 		/// <summary>
@@ -257,7 +267,7 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public override bool LoadFromDatabase(string templateID)
 		{
-			if (templateID == null || templateID == "" || templateID == "NULL" || templateID == "\r\n")
+			if (Util.IsEmpty(templateID) || templateID == "\r\n" || templateID == "0")
 			{
 				//if (log.IsWarnEnabled)
 					//log.Warn("Null or empty string template reference");
