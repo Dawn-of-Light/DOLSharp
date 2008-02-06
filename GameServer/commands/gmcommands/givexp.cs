@@ -25,7 +25,7 @@ namespace DOL.GS.Commands
 		"&givexp",
 		ePrivLevel.GM,
 		"Gives XP to your target",
-		"/givexp <ammount>")]
+		"/givexp <amount>")]
 	public class GiveXPCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
