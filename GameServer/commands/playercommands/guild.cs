@@ -542,7 +542,7 @@ namespace DOL.GS.Commands
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InfoGuild", client.Player.Guild.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InfoRPBPMP", client.Player.Guild.RealmPoints, client.Player.Guild.BountyPoints, client.Player.Guild.MeritPoints), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InfoGuildLevel", client.Player.Guild.GuildLevel), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-                                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InfoGDuesBank", client.Player.Guild.GetGuildDuesPercent().ToString() + "%", client.Player.Guild.GetGuildBank()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InfoGDuesBank", client.Player.Guild.GetGuildDuesPercent().ToString() + "%", Money.GetString(long.Parse(client.Player.Guild.GetGuildBank().ToString()))), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InfoWebpage", client.Player.Guild.theGuildDB.Webpage), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InfoCEmail", client.Player.Guild.theGuildDB.Email), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 
@@ -2084,10 +2084,13 @@ namespace DOL.GS.Commands
                             {
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.DepositInvalid"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                             }
+                            else if (client.Player.GetCurrentMoney() < amount)
+                            {
+                                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.DepositTooMuch"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            }
                             else
                             {
                                 client.Player.Guild.SetGuildBank(client.Player, amount);
-                                client.Player.RemoveMoney(long.Parse(args[2]));
                             }
                             client.Player.Guild.UpdateGuildWindow();
                         }
@@ -2111,10 +2114,15 @@ namespace DOL.GS.Commands
                             {
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.WithdrawInvalid"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                             }
+                            else if ((client.Player.Guild.GetGuildBank() - amount) < 0)
+                            {
+                                client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Player.Client, "Scripts.Player.Guild.WithdrawTooMuch"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                                return;
+                            }
                             else
                             {
                                 client.Player.Guild.WithdrawGuildBank(client.Player, amount);
-                                client.Player.AddMoney(long.Parse(args[2]));
+
                             }
                             client.Player.Guild.UpdateGuildWindow();
                         }

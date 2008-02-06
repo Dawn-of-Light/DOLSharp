@@ -1251,6 +1251,7 @@ Scripts.Player.Guild.DemotedSelf:			You have been demoted to {0}.
 Scripts.Player.Guild.Depositamount:			You deposit {0} into your guilds bank account.	
 Scripts.Player.Guild.DepositFull:			The guild bank seems to be full.	
 Scripts.Player.Guild.DepositInvalid:			That is an invalid deposit amount.	
+Scripts.Player.Guild.DepositTooMuch:				You don't have enough money to do that!
 Scripts.Player.Guild.DuesOff:				Guild dues are currently turned off.	
 Scripts.Player.Guild.DuesOn:				Guild dues are currently set at {0} percent.	
 Scripts.Player.Guild.EmailSet:				You have set the guild email to {0}.	
