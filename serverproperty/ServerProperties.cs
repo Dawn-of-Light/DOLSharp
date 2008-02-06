@@ -459,7 +459,7 @@ namespace DOL.GS.ServerProperties
         public static readonly int TURRET_AREA_CAP_RADIUS;
 
         /// <summary>
-        /// This specifies the max ammount of people in one battlegroup.
+        /// This specifies the max amount of people in one battlegroup.
         /// </summary>
         [ServerProperty("battlegroup_max_member", "Max number of members allowed in a battlegroup.", 64)]
         public static readonly int BATTLEGROUP_MAX_MEMBER;
