@@ -1851,7 +1851,7 @@ namespace DOL.GS
 									owner.Out.SendMessage(ad.Attacker.GetName(0, true) + " hits your " + ad.Target.Name + " for " + ad.Damage + modmessage + " damage.", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 									if (ad.CriticalDamage > 0)
 									{
-										owner.Out.SendMessage(ad.Attacker.GetName(0, true) + " critically hits your " + ad.Target.Name + " for an additional " + ad.CriticalDamage + " damage.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										owner.Out.SendMessage(ad.Attacker.GetName(0, true) + " critically hits your " + ad.Target.Name + " for an additional " + ad.CriticalDamage + " damage.", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 									}
 									break;
 								}
