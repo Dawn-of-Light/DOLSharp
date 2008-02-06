@@ -187,7 +187,7 @@ namespace DOL.GS
 				donating.Out.SendMessage(LanguageMgr.GetTranslation(donating.Client, "Scripts.Player.Guild.DepositInvalid"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			else if (donating.Guild.GetGuildBank() >= 1000000001 || (donating.Guild.GetGuildBank() + amount) >= 1000000001)
+			else if ((donating.Guild.GetGuildBank() + amount) >= 1000000001)
 			{
 				donating.Out.SendMessage(LanguageMgr.GetTranslation(donating.Client, "Scripts.Player.Guild.DepositFull"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 				return;
@@ -201,16 +201,21 @@ namespace DOL.GS
 
 			donating.Guild.UpdateGuildWindow();
 			m_DBguild.Bank = m_guildBank;
+
+            donating.RemoveMoney(long.Parse(amount.ToString()));
+            donating.Out.SendUpdatePlayer();
+            donating.SaveIntoDatabase();
+            donating.Guild.SaveIntoDatabase();
 			return;
 		}
 		public void WithdrawGuildBank(GamePlayer withdraw, double amount)
 		{
-			if (amount < 0)
+            if ((withdraw.Guild.GetGuildBank() + amount) >= 1000000001 || amount < 0)
 			{
 				withdraw.Out.SendMessage(LanguageMgr.GetTranslation(withdraw.Client, "Scripts.Player.Guild.WithdrawInvalid"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			else if (withdraw.Guild.GetGuildBank() >= 1000000001 || (withdraw.Guild.GetGuildBank() - amount) < 0)
+			else if ((withdraw.Guild.GetGuildBank() - amount) < 0)
 			{
 				withdraw.Out.SendMessage(LanguageMgr.GetTranslation(withdraw.Client, "Scripts.Player.Guild.WithdrawTooMuch"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 				return;
@@ -220,6 +225,11 @@ namespace DOL.GS
 			m_guildBank = m_guildBank - amount;
 			withdraw.Guild.UpdateGuildWindow();
 			m_DBguild.Bank = m_guildBank;
+
+            withdraw.AddMoney(long.Parse(amount.ToString()));
+            withdraw.Out.SendUpdatePlayer();
+            withdraw.SaveIntoDatabase();
+            withdraw.Guild.SaveIntoDatabase();
 			return;
 		}
 		/// <summary>
