@@ -177,6 +177,7 @@ GameMerchant.OnPlayerSell.IsntInterested:		{0} interessiert sich nicht für {1}.
 GameMerchant.OnPlayerSell.TooFarAway:			{0} ist zu weit entfernt!
 
 # GAMENPC
+GameNPC.DropLoot.AdditionalMoney:			Ihr bekommt zusätzlich {0}, da Euer Reich im Grenzgebiet einen Außenposten kontrolliert!
 GameNPC.GetAggroLevelString.Aggressive1:		ausgesprochen aggressiv
 GameNPC.GetAggroLevelString.Aggressive2:		Aggressiv
 GameNPC.GetAggroLevelString.Friendly1:			freundlich
@@ -613,7 +614,7 @@ PlayerClass.OnLevelUp.Autotrain:			Ihr trainiert "{0}" automatisch auf Stufe {1}
 # HOUSING
 # /house
 House.DBHousePermissions.AccessLevel:			Access level {0}		
-House.Edit.NotEnoughMoney:				Ihr habt nicht genug Geld, um die machen zu können!	
+House.Edit.NotEnoughMoney:				Ihr habt nicht genug Geld, um dies machen zu können!	
 House.Edit.PayForChanges:				Ihr zahlt {0} für diese Änderungen.	
 House.Enter.EnteredHouse:				Ihr habt das Haus Nummer {0} betreten.	
 House.Exit.LeftHouse:					Ihr habt das Haus Nummer {0} verlassen.
@@ -1358,6 +1359,7 @@ Scripts.Player.Guild.DemotedSelf:			Ihr wurdet zum {0} degradiert.
 Scripts.Player.Guild.Depositamount:			Ihr zahlt {0} auf das Konto Eurer Gilde ein.
 Scripts.Player.Guild.DepositFull:			Es scheint, als ob das Konto Eurer Gilde voll ist.
 Scripts.Player.Guild.DepositInvalid:			Das ist kein gültiger Betrag.
+Scripts.Player.Guild.DepositTooMuch:			Ihr habt dafür nicht genug Geld!
 Scripts.Player.Guild.DuesOff:				Es werden zur Zeit keine Gildenabgaben gefordert.
 Scripts.Player.Guild.DuesOn:				Die Gildenabgaben belaufen sich zur Zeit auf {0} Prozent.
 Scripts.Player.Guild.EmailSet:				Ihr habt die E-Mail-Adresse für die Gilde auf {0} geändert.
