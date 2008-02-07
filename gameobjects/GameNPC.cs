@@ -3542,7 +3542,7 @@ namespace DOL.GS
 						{
 							GamePlayer killerPlayer = killer as GamePlayer;
 							if (killerPlayer != null)
-								killerPlayer.Out.SendMessage("You find an additional " + Money.GetString(value - lootTemplate.Value) + " thanks to your realm owning outposts!", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+								killerPlayer.Out.SendMessage(LanguageMgr.GetTranslation(killerPlayer.Client, "GameNPC.DropLoot.AdditionalMoney", Money.GetString(value - lootTemplate.Value)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
 						}
 
 						loot = new GameMoney(value, this);
