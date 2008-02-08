@@ -67,8 +67,8 @@ namespace DOL.GS
 		HouseVault_First = 1000,
 		HouseVault_Last = 1399,
 
-		//Consignment_First = 150,
-		//Consignment_last = 249,
+		Consignment_First = 1500,
+		Consignment_Last = 1599,
 
 		//FirstFixLoot      = 256, //You can define drops that will ALWAYS occur (eg quest drops etc.)
 		//LastFixLoot       = 356, //100 drops should be enough ... if not, just raise this var, we have thousands free

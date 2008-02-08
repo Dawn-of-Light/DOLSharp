@@ -3212,37 +3212,79 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendMarketExplorerWindow()
 		{
-			/*
-			 * 0:01:18.360 S=>C 0x1F market merchant (count:-1 page:0 pages:0 unk1:0x00)
-			 * itemCount = byte
-			 * page = byte
-			 * maxPages = byte
-			 * unk1 = byte
-			 * 
-			 * if (itemCount > 0)
-			 * for each item
-			 * item.index = byte
-			 * item.level = ReadByte();
-			 * item.value1 = ReadByte(); // DPS_AF
-			 * item.value2 = ReadByte(); // SPD_ABS
-			 * item.hand = ReadByte();
-			 * item.damageAndObjectType = ReadByte(); // Hand + ObjectType ?
-			 * item.canUse = ReadByte();
-			 * item.weight = ReadShort();
-			 * item.condition = ReadByte();
-			 * item.durability = ReadByte();
-			 * item.quality = ReadByte();
-			 * item.bonus = ReadByte();
-			 * item.model = ReadShort();
-			 * item.color = ReadShort();
-			 * item.effect = ReadShort();
-			 * item.lot = ReadShort();
-			 * item.price = ReadInt();
-			 * item.name = ReadPascalString(); // max length = 0x2F ?
-			 */
 			GSTCPPacketOut pak = new GSTCPPacketOut((byte)ePackets.MarketExplorerWindow);
 			pak.WriteByte(255);
 			pak.Fill(0, 3);
+			SendTCP(pak);
+		}
+
+		public virtual void SendMarketExplorerWindow(List<InventoryItem> items, byte page, byte maxpage)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut((byte)ePackets.MarketExplorerWindow);
+
+			pak.WriteByte((byte)items.Count);
+			pak.WriteByte(page);
+			pak.WriteByte(maxpage);
+			pak.WriteByte(0);
+			foreach (InventoryItem item in items)
+			{
+				pak.WriteByte((byte)items.IndexOf(item));
+				pak.WriteByte((byte)item.Level);
+				int value1; // some object types use this field to display count
+				int value2; // some object types use this field to display count
+				switch (item.Object_Type)
+				{
+					case (int)eObjectType.Arrow:
+					case (int)eObjectType.Bolt:
+					case (int)eObjectType.Poison:
+					case (int)eObjectType.GenericItem:
+						value1 = item.PackSize;
+						value2 = item.SPD_ABS; break;
+					case (int)eObjectType.Thrown:
+						value1 = item.DPS_AF;
+						value2 = item.PackSize; break;
+					case (int)eObjectType.Instrument:
+						value1 = (item.DPS_AF == 2 ? 0 : item.DPS_AF); // 0x00 = Lute ; 0x01 = Drum ; 0x03 = Flute
+						value2 = 0; break; // unused
+					case (int)eObjectType.Shield:
+						value1 = item.Type_Damage;
+						value2 = item.DPS_AF; break;
+					case (int)eObjectType.GardenObject:
+					case (int)eObjectType.HouseWallObject:
+					case (int)eObjectType.HouseFloorObject:
+						value1 = 0;
+						value2 = item.SPD_ABS; break;
+					default:
+						value1 = item.DPS_AF;
+						value2 = item.SPD_ABS; break;
+				}
+				pak.WriteByte((byte)value1);
+				pak.WriteByte((byte)value2);
+				if (item.Object_Type == (int)eObjectType.GardenObject)
+					pak.WriteByte((byte)(item.DPS_AF));
+				else
+					pak.WriteByte((byte)(item.Hand << 6));
+				pak.WriteByte((byte)((item.Type_Damage > 3 ? 0 : item.Type_Damage << 6) | item.Object_Type));
+				pak.WriteByte((byte)(m_gameClient.Player.HasAbilityToUseItem(item) ? 0 : 1));
+				pak.WriteShort((ushort)(item.PackSize > 1 ? item.Weight * item.PackSize : item.Weight));
+				pak.WriteByte((byte)item.ConditionPercent);
+				pak.WriteByte((byte)item.DurabilityPercent);
+				pak.WriteByte((byte)item.Quality);
+				pak.WriteByte((byte)item.Bonus);
+				pak.WriteShort((ushort)item.Model);
+				if (item.Emblem != 0)
+					pak.WriteShort((ushort)item.Emblem);
+				else
+					pak.WriteShort((ushort)item.Color);
+				pak.WriteShort((byte)item.Effect);
+				pak.WriteShort((ushort)items.IndexOf(item));//lot
+				pak.WriteInt((uint)item.SellPrice);
+				if (item.PackSize > 1)
+					pak.WritePascalString(item.PackSize + " " + item.Name);
+				else
+					pak.WritePascalString(item.Name);
+			}
+
 			SendTCP(pak);
 		}
 

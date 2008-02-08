@@ -319,6 +319,7 @@ namespace DOL.GS
 				|| (slot >= eInventorySlot.HorseArmor && slot <= eInventorySlot.Horse)
 				|| (slot >= eInventorySlot.FirstVault && slot <= eInventorySlot.LastVault)
 				|| (slot >= eInventorySlot.HouseVault_First && slot <= eInventorySlot.HouseVault_Last)
+				|| (slot >= eInventorySlot.Consignment_First && slot <= eInventorySlot.Consignment_Last)
 				|| (slot == eInventorySlot.PlayerPaperDoll))
 				return slot;
 
