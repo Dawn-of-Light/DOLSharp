@@ -178,7 +178,10 @@ namespace DOL.AI.Brain
 			//See if the pet is too far away, if so release it!
 			if (!WorldMgr.CheckDistance(Body, Owner, MAX_OWNER_FOLLOW_DIST))
 			{
-				GameEventMgr.Notify(GameLivingEvent.PetReleased, Body);
+				if (Body.IsCasting)
+					Body.StopCurrentSpellcast();
+				else
+					GameEventMgr.Notify(GameLivingEvent.PetReleased, Body);
 			}
 
 			if ((!Body.AttackState && !Body.IsCasting && !Body.InCombat && m_orderAttackTarget == null) || AggressionState == eAggressionState.Passive)

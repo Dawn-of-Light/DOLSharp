@@ -327,5 +327,17 @@ namespace DOL.GS
 				}
 			}
 		}
+
+		public override bool IsObjectGreyCon(GameObject obj)
+		{
+			GameObject tempobj = obj;
+			if (Brain is IControlledBrain)
+			{
+				GamePlayer player = (Brain as IControlledBrain).GetPlayerOwner();
+				if (player != null)
+					tempobj = player;
+			}
+			return base.IsObjectGreyCon(tempobj);
+		}
 	}
 }
