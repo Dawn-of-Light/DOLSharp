@@ -1423,7 +1423,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="obj"></param>
 		/// <returns></returns>
-		public bool IsObjectGreyCon(GameObject obj)
+		public virtual bool IsObjectGreyCon(GameObject obj)
 		{
 			return IsObjectGreyCon(this, obj);
 		}
