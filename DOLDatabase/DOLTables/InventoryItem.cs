@@ -269,6 +269,7 @@ namespace DOL.Database
 		protected int m_count;
 		static bool m_autoSave;
         protected string m_internalID;
+		protected int m_sellPrice;
 
 		public InventoryItem()
 			: base()
@@ -277,6 +278,7 @@ namespace DOL.Database
 			m_id_nb = "default";
 			m_count = 1;
             m_internalID = this.ObjectId;
+			m_sellPrice = 0;
 		}
 
 		/// <summary>
@@ -366,6 +368,20 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_slot_pos = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int SellPrice
+		{
+			get
+			{
+				return m_sellPrice;
+			}
+			set
+			{
+				Dirty = true;
+				m_sellPrice = value;
 			}
 		}
 
