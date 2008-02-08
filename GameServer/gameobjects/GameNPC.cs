@@ -3649,6 +3649,8 @@ namespace DOL.GS
 				return;
 			if (enemy == healSource)
 				return;
+			if (!IsAlive)
+				return;
 
 			GamePlayer attackerPlayer = healSource as GamePlayer;
 			if (attackerPlayer == null)
