@@ -291,6 +291,9 @@ namespace DOL.AI.Brain
 			// TODO: This should actually be the other way round, but access
 			// to m_aggroTable is restricted and needs to be threadsafe.
 
+			// tolakram - do not modify aggro list if dead
+			if (!brain.Body.IsAlive) return;
+
 			lock (m_aggroTable.SyncRoot)
 			{
 				IDictionaryEnumerator dictEnum = m_aggroTable.GetEnumerator();
