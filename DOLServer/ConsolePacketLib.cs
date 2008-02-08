@@ -218,6 +218,7 @@ namespace DOLGameServerConsole
 		public void SendStarterHelp() { }
 		public void SendXFireInfo(byte flag) { }
 		public void SendMarketExplorerWindow() { }
+		public void SendMarketExplorerWindow(List<InventoryItem> items, byte page, byte maxpage) { }
 		public void SendConsignmentMerchantMoney(ushort mithril, ushort plat, ushort gold, byte silver, byte copper) { }
 		/// <summary>
 		/// The bow prepare animation
