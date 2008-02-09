@@ -729,6 +729,10 @@ namespace DOL.GS
 			if (Properties.CRAFTING_SPEED != 0)
 				craftingTime = (int)(craftingTime / Properties.CRAFTING_SPEED);
 
+			// In capital cities bonuses to crafting apply (patch 1.86)
+			if (player.CurrentRegion.IsCapitalCity && Properties.CAPITAL_CITY_CRAFTING_SPEED_BONUS != 0)
+				craftingTime = (int)(craftingTime / Properties.CAPITAL_CITY_CRAFTING_SPEED_BONUS);
+
 			//keep bonuses reduction in crafting time
 			if (Keeps.KeepBonusMgr.RealmHasBonus(DOL.GS.Keeps.eKeepBonusType.Craft_Timers_5, (eRealm)player.Realm))
 				craftingTime = (int)(craftingTime / 1.05);
@@ -749,15 +753,6 @@ namespace DOL.GS
 			}
 
 			craftingTime = (int)(craftingTime * mod);
-
-			// In capital cities bonuses to crafting apply (patch 1.86)
-			if (player.CurrentRegion.IsCapitalCity)
-			{
-				double speedbonus = Properties.CAPITAL_CITY_CRAFTING_SPEED_BONUS;
-				if (speedbonus < 0) speedbonus = 0.0;
-				if (speedbonus > 1) speedbonus = 1.0;
-				craftingTime = (int)(craftingTime * speedbonus);
-			}
 
 			if (craftingTime < 1) craftingTime = 1;
 			return craftingTime;
