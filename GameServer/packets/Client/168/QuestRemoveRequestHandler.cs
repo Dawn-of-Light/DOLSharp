@@ -28,8 +28,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			ushort questIndex = packet.ReadShort();
 			ushort unk1 = packet.ReadShort();
+			ushort questIndex = packet.ReadShort();
 			ushort unk2 = packet.ReadShort();
 			ushort unk3 = packet.ReadShort();
 
@@ -40,21 +40,22 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				foreach (AbstractQuest q in client.Player.QuestList)
 				{
-					if (q.Step != -1)
-						index++;
+					// ignore completed quests
+					if (q.Step == -1)
+						continue;
 
 					if (index == questIndex)
 					{
 						quest = q;
 						break;
 					}
+
+				index++;
 				}
 			}
 
 			if (quest != null)
-			{
 				quest.AbortQuest();
-			}
 
 			return 1;
 		}
