@@ -1776,6 +1776,7 @@ namespace DOL.GS
 		public bool LoadedFromScript
 		{
 			get { return m_loadedFromScript; }
+			set { m_loadedFromScript = value; }
 		}
 
 
@@ -1904,8 +1905,12 @@ namespace DOL.GS
 			Mob mob = null;
 			if (InternalID != null)
 				mob = (Mob)GameServer.Database.FindObjectByKey(typeof(Mob), InternalID);
+
 			if (mob == null)
-				return;
+				if (LoadedFromScript == false)
+					mob = new Mob();
+				else
+					return;
 
 			mob.Name = Name;
 			mob.Guild = GuildName;
@@ -1953,7 +1958,13 @@ namespace DOL.GS
 			mob.PathID = PathID;
 			mob.MaxDistance = m_maxdistance;
 
-			GameServer.Database.SaveObject(mob);
+			if (InternalID == null)
+			{
+				GameServer.Database.AddNewObject(mob);
+				InternalID = mob.ObjectId;
+			}
+			else
+				GameServer.Database.SaveObject(mob);
 		}
 
 		/// <summary>
