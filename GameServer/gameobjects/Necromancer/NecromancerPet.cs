@@ -661,6 +661,12 @@ namespace DOL.GS
 
 		#endregion
 
+
+		public override bool SayReceive(GameLiving source, string str)
+		{
+			return WhisperReceive(source, str);
+		}
+
 		/// <summary>
         /// Actions to be taken when the pet receives a whisper.
         /// </summary>
