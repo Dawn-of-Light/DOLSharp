@@ -6339,6 +6339,7 @@ namespace DOL.GS
 					{
 						Notify(GameLivingEvent.EnemyKilled, player, new EnemyKilledEventArgs(enemy));
 					}
+					if (player.Attackers.Contains(enemy)) player.RemoveAttacker(enemy);
 				}
 			}
 			base.EnemyKilled(enemy);
