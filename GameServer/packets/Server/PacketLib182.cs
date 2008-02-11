@@ -53,7 +53,10 @@ namespace DOL.GS.PacketHandler
 			{
 				foreach (int updatedSlot in slots)
 				{
-					pak.WriteByte((byte)updatedSlot);
+					if (updatedSlot >= (int)eInventorySlot.Consignment_First && updatedSlot <= (int)eInventorySlot.Consignment_Last)
+						pak.WriteByte((byte)(updatedSlot - (int)eInventorySlot.Consignment_First + (int)eInventorySlot.HousingInventory_First));
+					else
+						pak.WriteByte((byte)(updatedSlot));
 
 					InventoryItem item = null;
 					item = m_gameClient.Player.Inventory.GetItem((eInventorySlot)updatedSlot);
@@ -203,10 +206,12 @@ namespace DOL.GS.PacketHandler
 						pak.WritePascalString(spell_name2);
 					}
 					pak.WriteByte((byte)item.Effect);
+					string name = item.Name;
 					if (item.Count > 1)
-						pak.WritePascalString(item.Count + " " + item.Name);
-					else
-						pak.WritePascalString(item.Name);
+						name = item.Count + " " + name;
+					if (preAction == 0x05)
+						name += "[" + Money.GetString(item.SellPrice) + "]";
+					pak.WritePascalString(name);
 				}
 			}
 			SendTCP(pak);
