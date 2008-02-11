@@ -160,7 +160,6 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(windowType); //preAction (0x00 - Do nothing) 
 			foreach (int slot in items.Keys)
 			{
-				GameServer.Instance.Logger.Error("Sending update for slot " + slot + " byte " + (byte)slot);
 				pak.WriteByte((byte)(slot));
 				WriteItemData(pak, items[slot], windowType);
 			}
