@@ -1872,7 +1872,10 @@ namespace DOL.GS
 						else
 							aggroBrain.AggroRange = 400;
 
-						aggroBrain.AggroLevel = (Level > 5) ? 30 : 0;
+						if (Name != Name.ToLower())
+							aggroBrain.AggroLevel = 30;
+						else
+							aggroBrain.AggroLevel = (Level > 5) ? 30 : 0;
 					}
 					else if (Realm != eRealm.None)
 					{
