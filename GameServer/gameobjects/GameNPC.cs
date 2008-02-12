@@ -186,7 +186,10 @@ namespace DOL.GS
 			get { return base.Level; }
 			set
 			{
+				byte oldlevel = base.Level;
 				base.Level = value;
+				CheckStats(); // make sure stats are sane
+
 				//MaxHealth = (ushort)(value * 20 + 20);	// MaxHealth depends from mob level
 				if (!InCombat)
 					m_health = MaxHealth;
@@ -1860,12 +1863,18 @@ namespace DOL.GS
 			{
 				if (npc.AggroRange == 0)
 				{
-					if (Char.IsLower(Name[0]))
-					{ // make some default on basic mobs
-						aggroBrain.AggroRange = 450;
-						aggroBrain.AggroLevel = (Level > 3) ? 30 : 0;
+					if (Realm == eRealm.None)
+					{
+						if (CurrentRegion.IsDungeon)
+							aggroBrain.AggroRange = 300;
+						else if (Name != Name.ToLower())
+							aggroBrain.AggroRange = 500;
+						else
+							aggroBrain.AggroRange = 400;
+
+						aggroBrain.AggroLevel = (Level > 5) ? 30 : 0;
 					}
-					else if (Realm != 0)
+					else if (Realm != eRealm.None)
 					{
 						aggroBrain.AggroRange = 500;
 						aggroBrain.AggroLevel = 60;
@@ -3472,7 +3481,7 @@ namespace DOL.GS
 		protected override int HealthRegenerationTimerCallback(RegionTimer selfRegenerationTimer)
 		{
 			int period = m_healthRegenerationPeriod;
-			if (!InCombat || Util.Chance(25)) // mobs have only 25% chance to heal itself 
+			if (!InCombat)
 			{
 				period = base.HealthRegenerationTimerCallback(selfRegenerationTimer);
 				BroadcastUpdate();
@@ -3950,11 +3959,15 @@ namespace DOL.GS
 		{
 			// Mob stats should be a minimum of 30 each and strength should
 			// be on par with that of a templated player.
+			// This is only changed if values are 0 or less, allowing for unusually slow mobs
 
 			for (eStat stat = eStat._First; stat <= eStat.CHR; ++stat)
 				if (m_charStat[stat - eStat._First] <= 0) m_charStat[stat - eStat._First] = 30;
 
-			if (Strength < (20 + Level * 6))
+			// primary weapon stat for npc's is Strength and this should be adjusted for level and added to original template
+			if (m_template != null && m_template.Strength < m_template.Strength + 20 + Level * 6)
+				Strength = (short)(m_template.Strength + 20 + Level * 6);
+			else if (Strength < (20 + Level * 6))
 				Strength = (short)(20 + Level * 6);
 		}
 
@@ -3985,15 +3998,18 @@ namespace DOL.GS
 			m_followMaxDist = 3000;
 			m_flags = 0;
 			m_maxdistance = 0;
+			m_roamingRange = -1; // default to normal roaming mob
 			m_boatowner_id = "";
 
 			// Mob stats should be a minimum of 30 each and strength should
 			// be on par with that of a templated player.
 
-			for (eStat stat = eStat._First; stat <= eStat.CHR; ++stat)
-				m_charStat[stat - eStat._First] = 30;
+			if (Strength <= 0)
+				Strength = (short)(20 + Level * 6);
 
-			Strength = (short)(20 + Level * 6);
+			for (eStat stat = eStat._First; stat <= eStat.CHR; ++stat)
+				if (m_charStat[stat - eStat._First] <= 0) m_charStat[stat - eStat._First] = 30;
+
 
 			//m_factionName = "";
 			LinkedFactions = new ArrayList(1);
@@ -4004,6 +4020,8 @@ namespace DOL.GS
 			}
 		}
 
+		INpcTemplate m_template = null;
+
 		/// <summary>
 		/// create npc from template
 		/// </summary>
@@ -4012,6 +4030,9 @@ namespace DOL.GS
 			: this()
 		{
 			if (template == null) return;
+
+			// save the original template so we can do calculations off the original values
+			m_template = template;
 
 			// Load template.
 
@@ -4028,6 +4049,7 @@ namespace DOL.GS
 			Piety = (short)template.Piety;
 			Charisma = (short)template.Charisma;
 			Empathy = (short)template.Empathy;
+
 			CheckStats();
 
 			m_boatowner_id = "";
