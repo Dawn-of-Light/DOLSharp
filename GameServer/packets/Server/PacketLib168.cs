@@ -791,6 +791,9 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendObjectCreate(GameObject obj)
 		{
+			if (obj == null)
+				return;
+
 			if (obj.CurrentHouse != m_gameClient.Player.CurrentHouse)
 				return;
 
