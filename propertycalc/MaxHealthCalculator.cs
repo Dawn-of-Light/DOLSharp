@@ -74,8 +74,8 @@ namespace DOL.GS.PropertyCalc
 
 					hp += hpmod;
 				}
-				else // any mob with less than 30 con will have reduced hitpoints
-					hp = hp / (31 - living.GetModified(eProperty.Constitution));
+				//else // any mob with less than 30 con will have reduced hitpoints
+				//    hp = hp / (31 - living.GetModified(eProperty.Constitution));
 
 				return hp;
 			}
