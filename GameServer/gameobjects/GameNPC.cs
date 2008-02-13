@@ -3013,6 +3013,9 @@ namespace DOL.GS
 		/// <param name="attackTarget">The object to attack</param>
 		public override void StartAttack(GameObject attackTarget)
 		{
+			if (attackTarget == null)
+				return;
+
 			if (IsMovingOnPath)
 				StopMoveOnPath();
 
