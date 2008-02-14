@@ -322,11 +322,32 @@ GamePlayer.IsHelmInvisible.Invisible:			You will now don't see your helm.
 GamePlayer.IsHelmInvisible.Visible:			You will now see your helm.		
 GamePlayer.IsOnHorse.DismountSteed:			You dismount your steed.
 GamePlayer.IsOnHorse.MountSteed:			You mount your steed.
+GamePlayer.ItemBonusName.Bonus1:			Strength
+GamePlayer.ItemBonusName.Bonus2:			Dextery
+GamePlayer.ItemBonusName.Bonus3:			Constitution
+GamePlayer.ItemBonusName.Bonus4:			Quickness
+GamePlayer.ItemBonusName.Bonus5:			Intelligence
+GamePlayer.ItemBonusName.Bonus6:			Piety
+GamePlayer.ItemBonusName.Bonus7:			Empathy
+GamePlayer.ItemBonusName.Bonus8:			Charisma
+GamePlayer.ItemBonusName.Bonus9:			Power
+GamePlayer.ItemBonusName.Bonus10:			Hits
+GamePlayer.ItemBonusName.Bonus11:			Body resistance
+GamePlayer.ItemBonusName.Bonus12:			Cold resistance
+GamePlayer.ItemBonusName.Bonus13:			Crush resistance
+GamePlayer.ItemBonusName.Bonus14:			Energy resistance
+GamePlayer.ItemBonusName.Bonus15:			Heat resistance
+GamePlayer.ItemBonusName.Bonus16:			Matter resistance
+GamePlayer.ItemBonusName.Bonus17:			Slash resistance
+GamePlayer.ItemBonusName.Bonus18:			Spirit resistance
+GamePlayer.ItemBonusName.Bonus19:			Thrust resistance
+GamePlayer.OnItemEquipped.Increased:			Your {0} has increased.
 GamePlayer.OnItemEquipped.Magic:			The magic of {0} flows through you.
 GamePlayer.OnItemEquipped.WieldBothHands:		You wield {0} in both hands.
 GamePlayer.OnItemEquipped.WieldLeftHand:		You wield {0} in your left hand.
 GamePlayer.OnItemEquipped.WieldRightHand:		You wield {0} in your right hand.
 GamePlayer.OnItemUnequipped.BothHandsFree:		You sheathe {0}. Both hands are now free.
+GamePlayer.OnItemUnequipped.Decreased:			Your {0} has decreased.
 GamePlayer.OnItemUnequipped.LeftHandFree:		You sheathe {0} from your left hand.
 GamePlayer.OnItemUnequipped.RightHandFree:		You sheathe {0} from your right hand.
 GamePlayer.OnLevelUp.AttainedRank:			You have attained the rank of {0}!		
