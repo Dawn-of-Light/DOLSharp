@@ -64,20 +64,23 @@ namespace DOL.GS.PropertyCalc
 						hp += 20;
 				}
 
-				// adjust hit points based on constitution above 30
+				int basecon = (living as GameNPC).Constitution;
+				int conmod = 20; // at level 50 +75 con ~= +300 hit points
+
+				if (basecon < 30) // any mob with less than 30 base con will have reduced hitpoints (this is a DOL specific hack to reduce hitpoints)
+					hp = (int)Math.Ceiling(hp / ((31 - (living as GameNPC).Constitution) * 0.75));
+
+				// adjust hit points based on constitution difference from base con
 				// modified from http://www.btinternet.com/~challand/hp_calculator.htm
-				if (living.GetModified(eProperty.Constitution) >= 30)
-				{
-					int basecon = 30;
-					int conmod = 20; // at level 50 +75 con = +300 hit points
-					int hpmod = (conmod * living.Level * (living.GetModified(eProperty.Constitution) - basecon) / 250);
+				int conhp = hp + (conmod * living.Level * (living.GetModified(eProperty.Constitution) - basecon) / 250);
 
-					hp += hpmod;
-				}
-				//else // any mob with less than 30 con will have reduced hitpoints
-				//    hp = hp / (31 - living.GetModified(eProperty.Constitution));
+				// 50% buff / debuff cap
+				if (conhp > hp * 1.5)
+					conhp = (int)(hp * 1.5);
+				else if (conhp < hp / 2)
+					conhp = hp / 2;
 
-				return hp;
+				return conhp;
 			}
             else
             {
