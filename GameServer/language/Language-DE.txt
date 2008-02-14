@@ -153,14 +153,14 @@ GameLiving.ReceiveMoney:				{0} will Euer Geld nicht!
 GameGravestone.GameGravestone.Grave:			Grabstein von {0}
 
 # GAMEGUARD
-GameGuard.GetExamineMessages.Examine:			Es interessiert Euch {0}. {0} steht Euch {2} und gehört der Wache an.
+GameGuard.GetExamineMessages.Examine:			Es interessiert Euch {0}. {0} steht Euch {2} und gehört der Reichswache an.
 
 # GAMEMERCHANT
 GameMerchant.GetExamineMessages.BuyItemsFor:		{0} sagt: "Ihr machen Geschäft mit {0}? Geben {0} einfach {1} für seine Dinge."
 GameMerchant.GetExamineMessages.Nothing:		Nichts
-GameMerchant.GetExamineMessages.RightClick:		
+GameMerchant.GetExamineMessages.RightClick:		(Ein Rechtsklick öffnet das Handeslsfenster.)
 GameMerchant.GetExamineMessages.YouExamine:		Es interessiert Euch {0}. {0} steht Euch {2} und treibt Handel.
-GameMerchant.OnPlayerAppraise.Offers:			{0} bietet Euch {1} für {2}.
+GameMerchant.OnPlayerAppraise.Offers:			{0} bietet Euch {1}, {2} ist nicht mehr wert.
 GameMerchant.OnPlayerBuy.Bought:			Ihr habt gerade {0} gekauft für {1}.
 GameMerchant.OnPlayerBuy.Bought2:			Ihr habt gerade {0} gekauft für {1} {2}.
 GameMerchant.OnPlayerBuy.BoughtBP:			Ihr habt gerade {0} gekauft für {1} Kopfgeldpunkte.
@@ -320,13 +320,34 @@ GamePlayer.IsCloakInvisible.Invisible:			Ihr könnt Euren Umhang jetzt nicht mehr
 GamePlayer.IsCloakInvisible.Visible:			Ihr könnt Euren Umhang jetzt wieder sehen.
 GamePlayer.IsHelmInvisible.Invisible:			Ihr könnt Eure Kopfbedeckung jetzt nicht mehr sehen.
 GamePlayer.IsHelmInvisible.Visible:			Ihr könnt Eure Kopfbedeckung jetzt wieder sehen.
-GamePlayer.IsOnHorse.DismountSteed:			Ihr steigt von Eurem Pferd ab.		
+GamePlayer.IsOnHorse.DismountSteed:			Ihr steigt von Eurem Pferd ab.
+GamePlayer.ItemBonusName.Bonus1:			Stärke
+GamePlayer.ItemBonusName.Bonus2:			Geschicklichkeit
+GamePlayer.ItemBonusName.Bonus3:			Konstitution
+GamePlayer.ItemBonusName.Bonus4:			Schnelligkeit
+GamePlayer.ItemBonusName.Bonus5:			Intelligenz
+GamePlayer.ItemBonusName.Bonus6:			Frömmigkeit
+GamePlayer.ItemBonusName.Bonus7:			Empathie
+GamePlayer.ItemBonusName.Bonus8:			Charisma
+GamePlayer.ItemBonusName.Bonus9:			Magiekraft
+GamePlayer.ItemBonusName.Bonus10:			Trefferpunktzahl
+GamePlayer.ItemBonusName.Bonus11:			Körperresistenz
+GamePlayer.ItemBonusName.Bonus12:			Kälteresistenz
+GamePlayer.ItemBonusName.Bonus13:			Schlagresistenz
+GamePlayer.ItemBonusName.Bonus14:			Energieresistenz
+GamePlayer.ItemBonusName.Bonus15:			Hitzeresistenz
+GamePlayer.ItemBonusName.Bonus16:			Materieresistenz
+GamePlayer.ItemBonusName.Bonus17:			Schnittresistenz
+GamePlayer.ItemBonusName.Bonus18:			Geistresistenz
+GamePlayer.ItemBonusName.Bonus19:			Stoßresistenz
+GamePlayer.OnItemEquipped.Increased:			Eure {0} hat sich erhöht.
 GamePlayer.IsOnHorse.MountSteed:			Ihr besteigt Euer Pferd.
 GamePlayer.OnItemEquipped.Magic:			{0} lässt reine Magie durch Euren Körper strömen.		
 GamePlayer.OnItemEquipped.WieldBothHands:		{0} liegt kampfbereit in Euren Händen.
 GamePlayer.OnItemEquipped.WieldLeftHand:		{0} liegt kampfbereit in Eurer linken Hand.
 GamePlayer.OnItemEquipped.WieldRightHand:		{0} liegt kampfbereit in Eurer rechten Hand.
 GamePlayer.OnItemUnequipped.BothHandsFree:		Es wird {0} von Euch weggesteckt, Ihr habt jetzt beide Hände frei.
+GamePlayer.OnItemUnequipped.Decreased:			Eure {0} hat sich verringert.
 GamePlayer.OnItemUnequipped.LeftHandFree:		Es wird {0} von Euch weggesteckt, Eure linke Hand ist jetzt frei.
 GamePlayer.OnItemUnequipped.RightHandFree:		Es wird {0} von Euch weggesteckt, Eure rechte Hand ist jetzt frei.
 GamePlayer.OnLevelUp.AttainedRank:			Ihr habt den Rang eines {0} erreicht!		
