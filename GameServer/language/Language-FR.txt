@@ -1494,3 +1494,7 @@ HorseEmote.trick.ToOthers:					{0} se tient debout sur sa monture pour impressio
 HorseEmote.trick.ToSource:					Vous vous tenez debout sur votre monture pour impressionner {0}.
 HorseEmote.trick.NoTargetToOthers:				{0} se tient debout sur sa monture pour impressionner l'assistance.
 HorseEmote.trick.NoTargetToSource:				Vous vous tenez debout sur votre monture pour impressionner l'assistance.
+
+# GAMEUTILS
+# /PlayerClass
+PlayerClass.OnLevelUp.Autotrain:			Vous pouvez vous spécialiser gratuitement en {0} jusqu'au niveau {1}.

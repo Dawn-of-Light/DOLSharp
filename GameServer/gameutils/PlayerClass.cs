@@ -376,42 +376,21 @@ namespace DOL.GS
 		/// Add all skills and other things that are required for current level
 		/// </summary>
 		/// <param name="player">player to modify</param>
-		public virtual void OnLevelUp(GamePlayer player)
-		{
-			if (!player.PlayerCharacter.UsedLevelCommand)
-			{
-				//Autotrain
-				IList playerSpecs = player.GetSpecList();
-				bool found = false;
-				//				lock (playerSpecs.SyncRoot)
-				{
-					foreach (Specialization spec in playerSpecs)
-					{
-						foreach (string autotrainKey in AutoTrainableSkills())
-						{
-							if (autotrainKey != spec.KeyName) continue;
-							if (spec.Level < player.Level / 4)
-							{
-								spec.Level = player.Level / 4;
-								player.CharacterClass.OnSkillTrained(player, spec);
-								player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, LanguageMgr.GetTranslation(player.Client, "PlayerClass.OnLevelUp.Autotrain", spec.Name, spec.Level));
-								found = true;
-							}
-						}
-					}
-				}
-				if (found)
-				{
-					player.RefreshSpecDependantSkills(true);
-					player.UpdateSpellLineLevels(true);
-					if (player.ObjectState == GameObject.eObjectState.Active)
-					{
-						player.Out.SendUpdatePlayerSkills();
-					}
-					//					player.SaveIntoDatabase(); // saved in game player
-				}
-			}
-		}
+        public virtual void OnLevelUp(GamePlayer player)
+        {
+            // Graveen - livelike autotrain 1.87 
+            // if spent points and autotrain raise, these points are refund
+            if (player.Level % 4 == 0)
+            {
+                    foreach (Specialization spec in player.GetSpecList())
+                        foreach (string autotrainKey in AutoTrainableSkills())
+                        {
+                            if (autotrainKey != spec.KeyName) continue;
+                            if (spec.Level < player.Level / 4)
+                                player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, LanguageMgr.GetTranslation(player.Client, "PlayerClass.OnLevelUp.Autotrain", spec.Name, (int)(player.Level / 4)));
+                        }
+            }
+        }
 
 		/// <summary>
 		/// Add various skills as the player levels his realm rank up
