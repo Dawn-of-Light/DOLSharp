@@ -1984,7 +1984,6 @@
     <Compile Include="spells\EnduranceHealSpellHandler.cs" />
     <Compile Include="spells\FacilisSpellHandler.cs" />
     <Compile Include="spells\Fury.cs" />
-    <Compile Include="spells\PowerDrainSpell.cs" />
     <Compile Include="spells\SpeedOfTheRealmHandler.cs" />
     <Compile Include="spells\SummonTheurgistPet.cs" />
     <Compile Include="spells\Teleport\GatewayPersonalBind.cs" />
