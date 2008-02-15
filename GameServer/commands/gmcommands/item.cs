@@ -1647,14 +1647,25 @@ namespace DOL.GS.Commands
 					case "findid":
 						{
 							string name = string.Join(" ", args, 2, args.Length - 2);
-							ItemTemplate[] items = (ItemTemplate[])GameServer.Database.SelectObjects(typeof(ItemTemplate), "Name like '%" + GameServer.Database.Escape(name) + "%'");
+							ItemTemplate[] items = (ItemTemplate[])GameServer.Database.SelectObjects(typeof(ItemTemplate), "id_nb like '%" + GameServer.Database.Escape(name) + "%'");
 							DisplayMessage(client, "Matching ID's for " + name + " count " + items.Length, new object[] { });
 							foreach (ItemTemplate item in items)
 							{
-								DisplayMessage(client, item.Id_nb, new object[] { });
+                                DisplayMessage(client, item.Id_nb  + "  (" + item.Name + ")", new object[] { });
 							}
 							break;
 						}
+                    case "findname":
+                        {
+                            string name = string.Join(" ", args, 2, args.Length - 2);
+                            ItemTemplate[] items = (ItemTemplate[])GameServer.Database.SelectObjects(typeof(ItemTemplate), "name like '%" + GameServer.Database.Escape(name) + "%'");
+                            DisplayMessage(client, "Matching Names for " + name + " count " + items.Length, new object[] { });
+                            foreach (ItemTemplate item in items)
+                            {
+                                DisplayMessage(client, item.Name + "  (" + item.Id_nb + ")", new object[] { });
+                            }
+                            break;
+                        }
 				}
 			}
 			catch (Exception e)
