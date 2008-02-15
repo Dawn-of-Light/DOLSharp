@@ -3937,37 +3937,37 @@ namespace DOL.GS
                         }
                         break;
                     }
-
-                    //level 20 changes realm title and gives 1 realm skill point
-                    if (Level == 20)
-                        GainRealmPoints(0);
-
-                    // Adjust stats
-                    bool statsChanged = false;
-                    for (int i = Level; i > previouslevel; i--)
-                    {
-                        if (CharacterClass.PrimaryStat != eStat.UNDEFINED)
-                        {
-                            ChangeBaseStat(CharacterClass.PrimaryStat, 1);
-                            statsChanged = true;
-                        }
-                        if (CharacterClass.SecondaryStat != eStat.UNDEFINED && ((i - 6) % 2 == 0))
-                        { // base level to start adding stats is 6
-                            ChangeBaseStat(CharacterClass.SecondaryStat, 1);
-                            statsChanged = true;
-                        }
-                        if (CharacterClass.TertiaryStat != eStat.UNDEFINED && ((i - 6) % 3 == 0))
-                        { // base level to start adding stats is 6
-                            ChangeBaseStat(CharacterClass.TertiaryStat, 1);
-                            statsChanged = true;
-                        }
-                    }
-
-                    if (statsChanged)
-                    {
-                        Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.StatRaise"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                    }
             }
+
+            //level 20 changes realm title and gives 1 realm skill point
+            if (Level == 20)
+                  GainRealmPoints(0);
+
+              // Adjust stats
+              bool statsChanged = false;
+              for (int i = Level; i > previouslevel; i--)
+              {
+                  if (CharacterClass.PrimaryStat != eStat.UNDEFINED)
+                  {
+                      ChangeBaseStat(CharacterClass.PrimaryStat, 1);
+                      statsChanged = true;
+                  }
+                  if (CharacterClass.SecondaryStat != eStat.UNDEFINED && ((i - 6) % 2 == 0))
+                  { // base level to start adding stats is 6
+                      ChangeBaseStat(CharacterClass.SecondaryStat, 1);
+                      statsChanged = true;
+                  }
+                  if (CharacterClass.TertiaryStat != eStat.UNDEFINED && ((i - 6) % 3 == 0))
+                  { // base level to start adding stats is 6
+                      ChangeBaseStat(CharacterClass.TertiaryStat, 1);
+                      statsChanged = true;
+                  }
+              }
+
+              if (statsChanged)
+              {
+                  Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.StatRaise"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+              }
 
             CharacterClass.OnLevelUp(this);
 
