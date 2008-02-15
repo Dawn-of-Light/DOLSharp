@@ -46,8 +46,8 @@ namespace DOL.GS.Commands
      "/player <rps|bps|xp|clxp> <amount>",
      "/player stat <typeofStat> <value>",
      "/player money <copp|silv|gold|plat|mith> <amount>",
-     "/player respec <all|line|realm> <lineName>",
-     "/player model <change|reset> <modelid>",
+     "/player respec <all|line|realm|dol>",
+     "/player model <reset|[change]> <modelid>",
      "/player friend <list|playerName>",
      "/player <rez|kill> <albs|mids|hibs|self|all>", // if realm not specified, it will rez target.
      "/player jump <group|guild|cg> <name>", // to jump a group to you, just type in a player's name and his or her entire group will come with.
@@ -303,6 +303,17 @@ namespace DOL.GS.Commands
                                         player.SaveIntoDatabase();
                                     }
                                     break;
+
+                                default:
+                                    {
+                                        ushort modelid = Convert.ToUInt16(args[2]);
+                                        player.Model = modelid;
+                                        client.Out.SendMessage("You successfully changed " + player.Name + "'s form! (ID:#" + modelid + ")", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                                        player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has changed your form! (ID:#" + modelid + ")", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                                        player.Out.SendUpdatePlayer();
+                                        player.SaveIntoDatabase();
+                                    }
+                                    break;
                             }
                         }
 
@@ -344,6 +355,10 @@ namespace DOL.GS.Commands
                                         player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has given you some copper!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                                         return;
                                     }
+
+
+
+
 
                                 case "silv":
                                     {
@@ -769,23 +784,7 @@ namespace DOL.GS.Commands
                         {
                             case "line":
                                 {
-                                    string lineName = string.Join(" ", args, 3, args.Length - 3);
-                                    Specialization specLine = player.Client.Player.GetSpecializationByName(lineName, false);
-
-                                    if (specLine == null)
-                                    {
-                                        client.Out.SendMessage("No line with name '" + lineName + "' found on " + player.Name + ".", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                                        return;
-                                    }
-
-                                    if (specLine.Level < 2)
-                                    {
-                                        client.Out.SendMessage("Level of " + specLine.Name + " line is less than 2. ", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                        return;
-                                    }
-
                                     player.RespecAmountSingleSkill++;
-
                                     player.Client.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has awarded you a single respec!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                                     client.Out.SendMessage("Single respec given successfully to " + player.Name + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                                     break;
@@ -802,6 +801,13 @@ namespace DOL.GS.Commands
                                     player.RespecAmountRealmSkill++;
                                     player.Client.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has awarded you a realm respec!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                                     client.Out.SendMessage("Realm respec given successfully to " + player.Name + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                                    break;
+                                }
+                            case "dol":
+                                {
+                                    player.RespecAmountDOL++;
+                                    player.Client.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has awarded you a DOL (full) respec!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                                    client.Out.SendMessage("DOL (full) respec given successfully to " + player.Name + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                                     break;
                                 }
                             /*case "champion":
@@ -1573,10 +1579,18 @@ namespace DOL.GS.Commands
             text.Add("  - Name Lastname : " + player.Name + " " + player.LastName);
             text.Add("  - Realm Level Class : " + player.Realm + " " + player.Level + " " + player.CharacterClass.Name);
             text.Add("  - Inventory list: ");
+            text.Add(" ");
+            text.Add("  ----- WEAR");
 
-            foreach(InventoryItem item in player.Inventory.AllItems )
+            foreach (InventoryItem item in player.Inventory.EquippedItems)
             {
-                text.Add("      . " + item.Name);
+                text.Add("     [" + GlobalConstants.SlotToName(item.Item_Type) + "] " + item.Name);
+            }
+            text.Add(" ");
+            text.Add("  ----- BAG");
+            foreach (InventoryItem item in player.Inventory.AllItems)
+            {
+                if (item.SlotPosition >= 30) text.Add("    " + item.Name);
             }
             client.Out.SendCustomTextWindow("~*PLAYER INVENTORY LISTING*~", text);
         }

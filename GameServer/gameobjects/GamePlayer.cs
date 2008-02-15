@@ -2329,18 +2329,8 @@ namespace DOL.GS
         private int RespecSingleLine(Specialization specLine)
         {
             int specPoints = (specLine.Level * (specLine.Level + 1) - 2) / 2;
-
-            // graveen - livelike autotrain 1.87
-            foreach (string lineKey in CharacterClass.AutoTrainableSkills())
-            {
-                if (lineKey != specLine.KeyName) continue;
-                // found autotrain spec - refund points
-                int max_autotrain = Level / 4;
-                if (Level < 4) max_autotrain = 1;
-                int pts_to_refund = Math.Min(max_autotrain, specLine.Level);
-                specPoints -= (pts_to_refund * (pts_to_refund + 1) - 2) / 2;
-            }
-            
+            // Graveen - livelike autotrain 1.87
+            specPoints -= GetAutoTrainPoints(specLine, 0);          
             specLine.Level = 1;
 
             return specPoints;
@@ -4007,18 +3997,10 @@ namespace DOL.GS
                 Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.YouGetSpec", specpoints), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
             }
             SkillSpecialtyPoints += specpoints;
-
-            // Graveen - autotrain 1.87 give back points
-            if (Level % 4 == 0)
-                foreach (Specialization spec in GetSpecList())
-                {
-                    foreach (string autotrainKey in CharacterClass.AutoTrainableSkills())
-                    {
-                        if (autotrainKey != spec.KeyName) continue;
-                        if (spec.Level >= Level / 4)
-                            SkillSpecialtyPoints += Level / 4;
-                    }
-                }
+ 
+            // graveen 1.87 Autotrain
+            foreach (Specialization spec in GetSpecList())
+                    SkillSpecialtyPoints += GetAutoTrainPoints(spec, 1);
 
             // old hp
             int oldhp = CalculateMaxHealth(previouslevel, GetBaseStat(eStat.CON));
@@ -4120,6 +4102,46 @@ namespace DOL.GS
             UpdatePlayerStatus();
         }
 
+        /// <summary>
+        /// Calculate the Autotrain points.
+        /// </summary>
+        /// <param name="spec">Specialization</param>
+        /// <param name="mode">0 for all AT points, 1 for AT levels</param>
+        public virtual int GetAutoTrainPoints(Specialization spec, int Mode)
+        {
+            int max_autotrain = Level / 4;
+            if (max_autotrain == 0) max_autotrain = 1;
+            
+            foreach (string autotrainKey in CharacterClass.AutoTrainableSkills())
+                {
+                    if (autotrainKey == spec.KeyName)
+                    switch (Mode)
+                    {
+                        case 0:// return sum of all AT points in the spec
+                            {
+                                int pts_to_refund = Math.Min(max_autotrain, spec.Level);
+                                return ((pts_to_refund * (pts_to_refund + 1) - 2) / 2);
+                            }
+                        case 1: // return max AT + message
+                            {
+                                if (Level %4 == 0)
+                                if (spec.Level >= max_autotrain )
+                                    return max_autotrain;
+                                else
+                                    Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, LanguageMgr.GetTranslation(Client, "PlayerClass.OnLevelUp.Autotrain", spec.Name, max_autotrain));
+                                return 0;
+                            }
+                       case 2: // return max AT or AT reach by the player
+                            {
+                                if (spec.Level < max_autotrain)
+                                    return (spec.Level + 1);
+                                else
+                                    return 0;
+                            }
+                        }
+                }
+            return 0;
+        }
         #endregion
 
         #region Combat
@@ -5546,7 +5568,7 @@ namespace DOL.GS
             return GameServer.ServerRules.GetObjectSpecLevel(this, (eObjectType)weapon.Object_Type);
         }
 
-        public virtual String getWeaponSpec(InventoryItem weapon)
+        public virtual String GetWeaponSpec(InventoryItem weapon)
         {
             if (weapon == null)
                 return null;
@@ -9897,8 +9919,6 @@ namespace DOL.GS
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Checks to see if an object is viewable from the players perspective
         /// </summary>
@@ -9914,6 +9934,8 @@ namespace DOL.GS
             }
             return false;
         }
+
+        #endregion
 
         #region Database
 
@@ -10364,21 +10386,13 @@ namespace DOL.GS
             foreach (Specialization spec in GetSpecList())
             {
                 mypoints += (spec.Level * (spec.Level + 1) - 2) / 2;
-                foreach (string autotrainKey in CharacterClass.AutoTrainableSkills())
-                {
-                    if (autotrainKey != spec.KeyName) continue;
-                    // found autotrain spec - refund points
-                    int max_autotrain = Level / 4;
-                    if (Level < 4) max_autotrain = 1;
-                    int pts_to_refund = Math.Min(max_autotrain, spec.Level);
-                    mypoints -= (pts_to_refund * (pts_to_refund + 1) - 2) / 2;
-                }
+                mypoints -= GetAutoTrainPoints(spec, 0);
             }
 
             // check if correct, if not respec 
-            if (allpoints != mypoints)
+            if (allpoints != mypoints && Client.Account.PrivLevel != 1)
             {
-                log.WarnFormat("Spec points for {0} is incorrect, should be {1} is {2}: reset specs", my_character.Name, allpoints, mypoints);
+                log.WarnFormat("Spec points for {0} is incorrect, should be {1} but is {2}", my_character.Name, allpoints, mypoints);
                 mypoints = RespecAllLines();
                 SkillSpecialtyPoints = allpoints;
                 SpecPointsOk = false;

@@ -99,16 +99,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 				if (client.Player.SkillSpecialtyPoints >= spec.Level + 1)
 				{
-                    // Grav - 1.87 livelike autotrain processing: 
-                    foreach (string autotrainKey in client.Player.CharacterClass.AutoTrainableSkills ())
-                    {
-                        if (autotrainKey != spec.KeyName) continue;                  
-                        // found autotrain spec - refund points
-                        if (spec.Level < client.Player.Level / 4)
-                            client.Player.SkillSpecialtyPoints += (ushort)(spec.Level + 1);
-                    }
+                    // Graveen - autotrain 1.87
+                    foreach (string autotrainKey in client.Player.CharacterClass.AutoTrainableSkills())
+                       client.Player.SkillSpecialtyPoints += client.Player.GetAutoTrainPoints(spec, 2);
 
-					client.Player.SkillSpecialtyPoints -= (ushort)(spec.Level + 1);
+                    client.Player.SkillSpecialtyPoints -= (ushort)(spec.Level + 1);
 					spec.Level++;
 					client.Player.OnSkillTrained(spec);
 
