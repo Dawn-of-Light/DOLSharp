@@ -72,9 +72,9 @@ namespace DOL.GS
         /// </summary>
         protected string m_guildid;
         /// <summary>
-        /// Char spec points
+        /// Char spec points checked on load
         /// </summary>
-        private bool SpecPointsOk = true;
+        protected bool SpecPointsOk = false;
         /// <summary>
         /// Has this player entered the game, will be
         /// true after the first time the char enters
@@ -2328,33 +2328,20 @@ namespace DOL.GS
         /// <returns>Amount of points spent in that line</returns>
         private int RespecSingleLine(Specialization specLine)
         {
-            /*
-            //Autotrain...
-            //get total spec points
-            int currentSpecPoints = (specLine.Level * specLine.Level + specLine.Level - 2) / 2;
-            //get normal spec points
-            int normalSpecPoints = 1;
-            //calculate if there has been any autotraining
-            int autotrainPool = currentSpecPoints - normalSpecPoints;
-            if (autotrainPool != 0)
-            {
-                //calculate the level, and spec back up to the level
-            }
-             */
             int specPoints = (specLine.Level * (specLine.Level + 1) - 2) / 2;
-            specLine.Level = 1;
-            if (!PlayerCharacter.UsedLevelCommand)
+
+            // graveen - livelike autotrain 1.87
+            foreach (string lineKey in CharacterClass.AutoTrainableSkills())
             {
-                foreach (string lineKey in CharacterClass.AutoTrainableSkills())
-                {
-                    if (lineKey == specLine.KeyName)
-                    {
-                        specLine.Level = Level / 4;
-                        specPoints -= (specLine.Level * (specLine.Level + 1) - 2) / 2;
-                        break;
-                    }
-                }
+                if (lineKey != specLine.KeyName) continue;
+                // found autotrain spec - refund points
+                int max_autotrain = Level / 4;
+                if (Level < 4) max_autotrain = 1;
+                int pts_to_refund = Math.Min(max_autotrain, specLine.Level);
+                specPoints -= (pts_to_refund * (pts_to_refund + 1) - 2) / 2;
             }
+            
+            specLine.Level = 1;
 
             return specPoints;
         }
@@ -3992,7 +3979,6 @@ namespace DOL.GS
                     }
             }
 
-            // process, among others, autotrain
             CharacterClass.OnLevelUp(this);
 
             UpdateSpellLineLevels(true);
@@ -4013,13 +3999,26 @@ namespace DOL.GS
             int specpoints = 0;
             for (int i = Level; i > previouslevel; i--)
             {
-                specpoints += CharacterClass.SpecPointsMultiplier * i / 10;
+                if (i <= 5) specpoints += i; //start levels
+                else specpoints += CharacterClass.SpecPointsMultiplier * i / 10; //spec levels
             }
             if (specpoints > 0)
             {
                 Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.YouGetSpec", specpoints), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
             }
             SkillSpecialtyPoints += specpoints;
+
+            // Graveen - autotrain 1.87 give back points
+            if (Level % 4 == 0)
+                foreach (Specialization spec in GetSpecList())
+                {
+                    foreach (string autotrainKey in CharacterClass.AutoTrainableSkills())
+                    {
+                        if (autotrainKey != spec.KeyName) continue;
+                        if (spec.Level >= Level / 4)
+                            SkillSpecialtyPoints += Level / 4;
+                    }
+                }
 
             // old hp
             int oldhp = CalculateMaxHealth(previouslevel, GetBaseStat(eStat.CON));
@@ -9204,34 +9203,34 @@ namespace DOL.GS
             Out.SendEncumberance();
         }
 
-		/// <summary>
-		/// Get the bonus names
-		/// </summary>
-		public string ItemBonusName(int BonusType)
-		{
-			string BonusName = "";
+        /// <summary>
+        /// Get the bonus names
+        /// </summary>
+        public string ItemBonusName(int BonusType)
+        {
+            string BonusName = "";
 
-			if (BonusType == 1) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus1");//Strength
-			if (BonusType == 2) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus2");//Dextery
-			if (BonusType == 3) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus3");//Constitution
-			if (BonusType == 4) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus4");//Quickness
-			if (BonusType == 5) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus5");//Intelligence
-			if (BonusType == 6) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus6");//Piety
-			if (BonusType == 7) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus7");//Empathy
-			if (BonusType == 8) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus8");//Charisma
-			if (BonusType == 9) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus9");//Power
-			if (BonusType == 10) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus10");//Hits
-			if (BonusType == 11) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus11");//Body
-			if (BonusType == 12) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus12");//Cold
-			if (BonusType == 13) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus13");//Crush
-			if (BonusType == 14) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus14");//Energy
-			if (BonusType == 15) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus15");//Heat
-			if (BonusType == 16) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus16");//Matter
-			if (BonusType == 17) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus17");//Slash
-			if (BonusType == 18) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus18");//Spirit
-			if (BonusType == 19) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus19");//Thrust
-			return BonusName;
-		}
+            if (BonusType == 1) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus1");//Strength
+            if (BonusType == 2) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus2");//Dextery
+            if (BonusType == 3) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus3");//Constitution
+            if (BonusType == 4) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus4");//Quickness
+            if (BonusType == 5) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus5");//Intelligence
+            if (BonusType == 6) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus6");//Piety
+            if (BonusType == 7) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus7");//Empathy
+            if (BonusType == 8) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus8");//Charisma
+            if (BonusType == 9) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus9");//Power
+            if (BonusType == 10) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus10");//Hits
+            if (BonusType == 11) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus11");//Body
+            if (BonusType == 12) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus12");//Cold
+            if (BonusType == 13) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus13");//Crush
+            if (BonusType == 14) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus14");//Energy
+            if (BonusType == 15) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus15");//Heat
+            if (BonusType == 16) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus16");//Matter
+            if (BonusType == 17) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus17");//Slash
+            if (BonusType == 18) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus18");//Spirit
+            if (BonusType == 19) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus19");//Thrust
+            return BonusName;
+        }
 
         /// <summary>
         /// Adds magical bonuses whenever item was equipped
@@ -9292,72 +9291,72 @@ namespace DOL.GS
 
             Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Magic", item.GetName(0, false))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
 
-			if (item.Bonus1 != 0)
-			{
-				ItemBonus[item.Bonus1Type] += item.Bonus1;
-				if (item.Bonus1Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus1Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus2 != 0)
-			{
-				ItemBonus[item.Bonus2Type] += item.Bonus2;
-				if (item.Bonus2Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus2Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus3 != 0)
-			{
-				ItemBonus[item.Bonus3Type] += item.Bonus3;
-				if (item.Bonus3Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus3Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus4 != 0)
-			{
-				ItemBonus[item.Bonus4Type] += item.Bonus4;
-				if (item.Bonus4Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus4Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus5 != 0)
-			{
-				ItemBonus[item.Bonus5Type] += item.Bonus5;
-				if (item.Bonus5Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus5Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus6 != 0)
-			{
-				ItemBonus[item.Bonus6Type] += item.Bonus6;
-				if (item.Bonus6Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus6Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus7 != 0)
-			{
-				ItemBonus[item.Bonus7Type] += item.Bonus7;
-				if (item.Bonus7Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus7Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus8 != 0)
-			{
-				ItemBonus[item.Bonus8Type] += item.Bonus8;
-				if (item.Bonus8Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus8Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus9 != 0)
-			{
-				ItemBonus[item.Bonus9Type] += item.Bonus9;
-				if (item.Bonus9Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus9Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus10 != 0)
-			{
-				ItemBonus[item.Bonus10Type] += item.Bonus10;
-				if (item.Bonus10Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus10Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.ExtraBonus != 0)
-			{
-				ItemBonus[item.ExtraBonusType] += item.ExtraBonus;
-				//if (item.ExtraBonusType < 20)
-					//Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.ExtraBonusType))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
+            if (item.Bonus1 != 0)
+            {
+                ItemBonus[item.Bonus1Type] += item.Bonus1;
+                if (item.Bonus1Type < 20)
+                    Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus1Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+            }
+            if (item.Bonus2 != 0)
+            {
+                ItemBonus[item.Bonus2Type] += item.Bonus2;
+                if (item.Bonus2Type < 20)
+                    Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus2Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+            }
+            if (item.Bonus3 != 0)
+            {
+                ItemBonus[item.Bonus3Type] += item.Bonus3;
+                if (item.Bonus3Type < 20)
+                    Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus3Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+            }
+            if (item.Bonus4 != 0)
+            {
+                ItemBonus[item.Bonus4Type] += item.Bonus4;
+                if (item.Bonus4Type < 20)
+                    Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus4Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+            }
+            if (item.Bonus5 != 0)
+            {
+                ItemBonus[item.Bonus5Type] += item.Bonus5;
+                if (item.Bonus5Type < 20)
+                    Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus5Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+            }
+            if (item.Bonus6 != 0)
+            {
+                ItemBonus[item.Bonus6Type] += item.Bonus6;
+                if (item.Bonus6Type < 20)
+                    Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus6Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+            }
+            if (item.Bonus7 != 0)
+            {
+                ItemBonus[item.Bonus7Type] += item.Bonus7;
+                if (item.Bonus7Type < 20)
+                    Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus7Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+            }
+            if (item.Bonus8 != 0)
+            {
+                ItemBonus[item.Bonus8Type] += item.Bonus8;
+                if (item.Bonus8Type < 20)
+                    Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus8Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+            }
+            if (item.Bonus9 != 0)
+            {
+                ItemBonus[item.Bonus9Type] += item.Bonus9;
+                if (item.Bonus9Type < 20)
+                    Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus9Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+            }
+            if (item.Bonus10 != 0)
+            {
+                ItemBonus[item.Bonus10Type] += item.Bonus10;
+                if (item.Bonus10Type < 20)
+                    Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus10Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+            }
+            if (item.ExtraBonus != 0)
+            {
+                ItemBonus[item.ExtraBonusType] += item.ExtraBonus;
+                //if (item.ExtraBonusType < 20)
+                //Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.ExtraBonusType))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+            }
 
             if (ObjectState == eObjectState.Active)
             {
@@ -9438,72 +9437,72 @@ namespace DOL.GS
 
             if (!item.IsMagical) return;
 
-			if (item.Bonus1 != 0)
-			{
-				ItemBonus[item.Bonus1Type] -= item.Bonus1;
-				if (item.Bonus1Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus1Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus2 != 0)
-			{
-				ItemBonus[item.Bonus2Type] -= item.Bonus2;
-				if (item.Bonus2Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus2Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus3 != 0)
-			{
-				ItemBonus[item.Bonus3Type] -= item.Bonus3;
-				if (item.Bonus3Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus3Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus4 != 0)
-			{
-				ItemBonus[item.Bonus4Type] -= item.Bonus4;
-				if (item.Bonus4Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus4Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus5 != 0)
-			{
-				ItemBonus[item.Bonus5Type] -= item.Bonus5;
-				if (item.Bonus5Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus5Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus6 != 0)
-			{
-				ItemBonus[item.Bonus6Type] -= item.Bonus6;
-				if (item.Bonus6Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus6Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus7 != 0)
-			{
-				ItemBonus[item.Bonus7Type] -= item.Bonus7;
-				if (item.Bonus7Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus7Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus8 != 0)
-			{
-				ItemBonus[item.Bonus8Type] -= item.Bonus8;
-				if (item.Bonus8Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus8Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus9 != 0)
-			{
-				ItemBonus[item.Bonus9Type] -= item.Bonus9;
-				if (item.Bonus9Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus9Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus10 != 0)
-			{
-				ItemBonus[item.Bonus10Type] -= item.Bonus10;
-				if (item.Bonus10Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus10Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.ExtraBonus != 0)
-			{
-				ItemBonus[item.ExtraBonusType] -= item.ExtraBonus;
-				//if (item.ExtraBonusType < 20)
-					//Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.ExtraBonusType))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
+            if (item.Bonus1 != 0)
+            {
+                ItemBonus[item.Bonus1Type] -= item.Bonus1;
+                if (item.Bonus1Type < 20)
+                    Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus1Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+            }
+            if (item.Bonus2 != 0)
+            {
+                ItemBonus[item.Bonus2Type] -= item.Bonus2;
+                if (item.Bonus2Type < 20)
+                    Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus2Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+            }
+            if (item.Bonus3 != 0)
+            {
+                ItemBonus[item.Bonus3Type] -= item.Bonus3;
+                if (item.Bonus3Type < 20)
+                    Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus3Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+            }
+            if (item.Bonus4 != 0)
+            {
+                ItemBonus[item.Bonus4Type] -= item.Bonus4;
+                if (item.Bonus4Type < 20)
+                    Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus4Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+            }
+            if (item.Bonus5 != 0)
+            {
+                ItemBonus[item.Bonus5Type] -= item.Bonus5;
+                if (item.Bonus5Type < 20)
+                    Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus5Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+            }
+            if (item.Bonus6 != 0)
+            {
+                ItemBonus[item.Bonus6Type] -= item.Bonus6;
+                if (item.Bonus6Type < 20)
+                    Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus6Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+            }
+            if (item.Bonus7 != 0)
+            {
+                ItemBonus[item.Bonus7Type] -= item.Bonus7;
+                if (item.Bonus7Type < 20)
+                    Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus7Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+            }
+            if (item.Bonus8 != 0)
+            {
+                ItemBonus[item.Bonus8Type] -= item.Bonus8;
+                if (item.Bonus8Type < 20)
+                    Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus8Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+            }
+            if (item.Bonus9 != 0)
+            {
+                ItemBonus[item.Bonus9Type] -= item.Bonus9;
+                if (item.Bonus9Type < 20)
+                    Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus9Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+            }
+            if (item.Bonus10 != 0)
+            {
+                ItemBonus[item.Bonus10Type] -= item.Bonus10;
+                if (item.Bonus10Type < 20)
+                    Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus10Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+            }
+            if (item.ExtraBonus != 0)
+            {
+                ItemBonus[item.ExtraBonusType] -= item.ExtraBonus;
+                //if (item.ExtraBonusType < 20)
+                //Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.ExtraBonusType))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+            }
 
             if (ObjectState == eObjectState.Active)
             {
@@ -10350,46 +10349,42 @@ namespace DOL.GS
             LoadSkillsFromCharacter();
             LoadCraftingSkills();
 
-            //Skillspecpoints correct value is checked here
-            if (this.Client.Account.PrivLevel == (uint)ePrivLevel.Player)
+            # region SkillSpecialtypoints coherence check
+            // calc normal spec points for the level & classe
+            int allpoints = -1;
+            for (int i = 1; i <= Level; i++)
             {
-                // Check if total specpoints is correct (ie multiplier class changed) then reset spec & refund all points if not
-                int allpoints = -1;
-                for (int i = 1; i <= Level; i++)
-                {
-                    if (i <= 5) allpoints += i; //start levels
-                    if (i > 5) allpoints += CharacterClass.SpecPointsMultiplier * i / 10; //normal levels
-                    if (i > 40) allpoints += CharacterClass.SpecPointsMultiplier * (i - 1) / 20; //half levels
-                }
-
-                // is any spec points invested into autotrainable skill ?
-                int spentpoints = 0;
-                foreach (Specialization spec in GetSpecList())
-                {
-                    spentpoints += (spec.Level * (spec.Level + 1) - 2) / 2;
-                    foreach (string autotrain in CharacterClass.AutoTrainableSkills())
-                    {
-                        if (autotrain == spec.KeyName)
-                        {
-                            int autopoints = Level / 4;
-                            spentpoints -= (autopoints * (autopoints + 1) - 2) / 2;
-                            if (Level % 4 == 0)
-                                if (spec.Level >= autopoints) SkillSpecialtyPoints += autopoints;
-                                else spentpoints += autopoints;
-                            break;
-                        }
-                    }
-                }
-
-                if (allpoints != SkillSpecialtyPoints + spentpoints)
-                {
-                    foreach (Specialization spec in GetSpecList()) RespecSingleLine(spec);
-                    SkillSpecialtyPoints += spentpoints;
-                    SkillSpecialtyPoints = allpoints;
-                    SpecPointsOk = false;
-                }
-                else SpecPointsOk = true;
+                if (i <= 5) allpoints += i; //start levels
+                if (i > 5) allpoints += CharacterClass.SpecPointsMultiplier * i / 10; //normal levels
+                if (i > 40) allpoints += CharacterClass.SpecPointsMultiplier * (i - 1) / 20; //half levels
             }
+
+            // calc spec points player have (autotrain is not anymore processed here - 1.87 livelike)
+            int mypoints = SkillSpecialtyPoints;
+            foreach (Specialization spec in GetSpecList())
+            {
+                mypoints += (spec.Level * (spec.Level + 1) - 2) / 2;
+                foreach (string autotrainKey in CharacterClass.AutoTrainableSkills())
+                {
+                    if (autotrainKey != spec.KeyName) continue;
+                    // found autotrain spec - refund points
+                    int max_autotrain = Level / 4;
+                    if (Level < 4) max_autotrain = 1;
+                    int pts_to_refund = Math.Min(max_autotrain, spec.Level);
+                    mypoints -= (pts_to_refund * (pts_to_refund + 1) - 2) / 2;
+                }
+            }
+
+            // check if correct, if not respec 
+            if (allpoints != mypoints)
+            {
+                log.WarnFormat("Spec points for {0} is incorrect, should be {1} is {2}: reset specs", my_character.Name, allpoints, mypoints);
+                mypoints = RespecAllLines();
+                SkillSpecialtyPoints = allpoints;
+                SpecPointsOk = false;
+            }
+            else SpecPointsOk = true;
+            #endregion
 
             //Load the quests for this player
             DBQuest[] quests = (DBQuest[])GameServer.Database.SelectObjects(typeof(DBQuest), "CharName ='" + GameServer.Database.Escape(Name) + "'");

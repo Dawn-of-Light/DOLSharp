@@ -629,7 +629,7 @@ Scripts.Recharger.RechargerDialogResponse.NotMoney:	You don't have enough money.
 
 # GAMEUTILS
 # /PlayerClass
-PlayerClass.OnLevelUp.Autotrain:			You autotrain {0} to level {1}.
+PlayerClass.OnLevelUp.Autotrain:			You can now train {0} to level {1} for free.
 
 # HOUSING
 # /house
