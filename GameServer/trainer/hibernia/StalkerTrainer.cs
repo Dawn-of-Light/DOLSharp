@@ -62,7 +62,7 @@ namespace DOL.GS.Trainer
 				// player can be promoted
 				if (player.Level>=5)
 				{
-					player.Out.SendMessage(this.Name + " says, \"You must now seek your training elsewhere. Which path would you like to follow? [Ranger] or [Nightshades]?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);												
+					player.Out.SendMessage(this.Name + " says, \"You must now seek your training elsewhere. Which path would you like to follow? [Ranger] or [Nightshade]?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);												
 				}
 				else
 				{
