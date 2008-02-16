@@ -65,7 +65,8 @@ namespace DOL.GS.Commands
 		"'/item realm <num> [slot #]' - change items realm",
 		"'/item savetemplate <TemplateID> [slot #]' - create a new template",
 		"'/item templateid <TemplateID> [slot #] - change an items template ID'",
-		"'/item findid <name>'")]
+		"'/item findid <part_of_id>'",
+        "'/item findname <part_of_name>'")]
 	public class ItemCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)

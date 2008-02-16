@@ -74,7 +74,7 @@ namespace DOL.GS
         /// <summary>
         /// Char spec points checked on load
         /// </summary>
-        protected bool SpecPointsOk = false;
+        protected bool SpecPointsOk = true;
         /// <summary>
         /// Has this player entered the game, will be
         /// true after the first time the char enters
@@ -10389,15 +10389,16 @@ namespace DOL.GS
                 mypoints -= GetAutoTrainPoints(spec, 0);
             }
 
-            // check if correct, if not respec 
-            if (allpoints != mypoints && Client.Account.PrivLevel != 1)
+            // check if correct, if not respec. Not applicable to GMs
+            if (allpoints != mypoints && Client.Account .PrivLevel == 1)
             {
-                log.WarnFormat("Spec points for {0} is incorrect, should be {1} but is {2}", my_character.Name, allpoints, mypoints);
+                log.WarnFormat("Spec points for {0} is incorrect, should be {1} but is {2}", Name, allpoints, mypoints);
                 mypoints = RespecAllLines();
                 SkillSpecialtyPoints = allpoints;
                 SpecPointsOk = false;
             }
             else SpecPointsOk = true;
+
             #endregion
 
             //Load the quests for this player
