@@ -1659,7 +1659,7 @@ namespace DOL.GS.Commands
             text.Add("  - Current AF and ABS : " + player.GetModified(eProperty.ArmorFactor) + " AF, " + player.GetModified(eProperty.ArmorAbsorbtion) + " ABS");
             text.Add(" ");
             text.Add("SPECCING INFORMATIONS ");
-            text.Add("  - Respecs availables : " + player.RespecAmountSingleSkill + " single, " + player.RespecAmountAllSkill + " full");
+            text.Add("  - Respecs availables : " + player.RespecAmountDOL + " dol, " + player.RespecAmountSingleSkill + " single, " + player.RespecAmountAllSkill + " full");
             text.Add("  - Remaining spec. points : " + player.SkillSpecialtyPoints);
             sTitle = "  - Player specialisations : ";
             sCurrent = "";
