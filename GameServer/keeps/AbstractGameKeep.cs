@@ -555,24 +555,6 @@ namespace DOL.GS.Keeps
 
 		#region Claim
 
-		/// <summary>
-		/// table of claim bounty point take from guild each cycle
-		/// </summary>
-		public static readonly int[] ClaimBountyPointCost =
-		{
-			0,
-			50,
-			50,
-			50,
-			50,
-			100,
-			200,
-			300,
-			400,
-			500,
-			1000,
-		};
-
 		public virtual bool CheckForClaim(GamePlayer player)
 		{
 			if(player.Realm != this.Realm)
@@ -699,17 +681,8 @@ namespace DOL.GS.Keeps
 			if (Guild == null)
 				return 0;
 
-			if (this.Guild.BountyPoints < 50 * this.Level)
-			{
-				this.Guild.GainBountyPoints(-this.Guild.BountyPoints);
-				this.Release();
-				return 0;
-			}
 			int amount = CalculRP();
 			this.Guild.GainRealmPoints(amount);
-
-			int cost = ClaimBountyPointCost[this.Level];
-			this.Guild.GainBountyPoints(-cost);
 
 			return timer.Interval;
 		}

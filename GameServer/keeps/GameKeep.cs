@@ -104,12 +104,6 @@ namespace DOL.GS.Keeps
 				return false;
 			}
 
-			if (player.Guild.BountyPoints < 500)
-			{
-				player.Out.SendMessage("Your guild must have at least 500 guild bounty points to claim.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
-
 			return base.CheckForClaim(player);
 		}
 
