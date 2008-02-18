@@ -558,22 +558,16 @@ namespace DOL.GS.Commands
                                 return;
                             }
 
-                            if (value < 0)
+                            // Graveen: /player stat is adding the value to stats. Allow it negative values
+                            // coherent positive/non-zero value is checked in gameplayer::changebasestat
+                            /*if (value < 0)
                             {
                                 client.Out.SendMessage("Please use a positive integer.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 return;
-                            }
+                            }*/
 
                             switch (args[2])
                             {
-
-                                case "default":
-                                    {
-                                        client.Out.SendMessage("Try using: dex, str, con, emp, int, pie, qui, cha, or all as a type of stat.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                    }
-                                    break;
-
-
                                 /*1*/
                                 case "dex":
                                     {
@@ -659,6 +653,12 @@ namespace DOL.GS.Commands
                                         player.ChangeBaseStat(DOL.GS.eStat.DEX, value); //8
                                         player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has given you " + value + " to all stats!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                                         client.Out.SendMessage("You gave " + player.Name + " " + value + " to all stats successfully!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                                    }
+                                    break;
+
+                                default:
+                                    {
+                                        client.Out.SendMessage("Try using: dex, str, con, emp, int, pie, qui, cha, or all as a type of stat.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                     }
                                     break;
                             }
