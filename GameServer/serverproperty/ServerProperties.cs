@@ -531,6 +531,12 @@ namespace DOL.GS.ServerProperties
 		public static readonly int RELIC_PLAYERS_REQUIRED_ON_PAD;
 
         /// <summary>
+        /// What levels did we allow a DOL respec ? serialized
+        /// </summary>
+        [ServerProperty("give_dol_respec_at_level", "What levels does we give a DOL respec? (serialized)", "0")]
+        public static readonly string GIVE_DOL_RESPEC_AT_LEVEL;
+
+        /// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
 		/// type of the default value
