@@ -1586,8 +1586,6 @@ namespace DOL.GS
 			set { if (PlayerCharacter != null) PlayerCharacter.ConLostAtDeath = value; }
 		}
 
-
-<<<<<<< .mine
         /// <summary>
         /// Change a stat value
         /// (delegate to PlayerCharacter)
@@ -1617,35 +1615,6 @@ namespace DOL.GS
                 }
             }
         }
-=======
-		/// <summary>
-		/// Change a stat value
-		/// (delegate to PlayerCharacter)
-		/// </summary>
-		/// <param name="stat">The stat to change</param>
-		/// <param name="val">The new value</param>
-		public override void ChangeBaseStat(eStat stat, short val)
-		{
-			int oldstat = GetBaseStat(stat);
-			base.ChangeBaseStat(stat, val);
-			int newstat = GetBaseStat(stat);
-			Character character = PlayerCharacter; // to call it only once, if in future there will be some special code to get the character
-			if (character != null && oldstat != newstat)
-			{
-				switch (stat)
-				{
-					case eStat.STR: character.Strength = newstat; break;
-					case eStat.DEX: character.Dexterity = newstat; break;
-					case eStat.CON: character.Constitution = newstat; break;
-					case eStat.QUI: character.Quickness = newstat; break;
-					case eStat.INT: character.Intelligence = newstat; break;
-					case eStat.PIE: character.Piety = newstat; break;
-					case eStat.EMP: character.Empathy = newstat; break;
-					case eStat.CHR: character.Charisma = newstat; break;
-				}
-			}
-		}
->>>>>>> .r1089
 
 		/// <summary>
 		/// Gets player's constitution
@@ -3971,7 +3940,6 @@ namespace DOL.GS
 					}
 			}
 
-<<<<<<< .mine
             // Graveen: give a DOL respec on the GIVE_DOL_RESPEC_ON_LEVELS levels
             Byte level_respec;
             foreach (string str in ServerProperties.Properties.GIVE_DOL_RESPEC_AT_LEVEL.Split(';'))
@@ -3995,13 +3963,8 @@ namespace DOL.GS
             //level 20 changes realm title and gives 1 realm skill point
             if (Level == 20)
                   GainRealmPoints(0);
-=======
-			//level 20 changes realm title and gives 1 realm skill point
-			if (Level == 20)
-				GainRealmPoints(0);
->>>>>>> .r1089
 
-			// Adjust stats
+            // Adjust stats
 			bool statsChanged = false;
 			for (int i = Level; i > previouslevel; i--)
 			{
@@ -10448,7 +10411,6 @@ namespace DOL.GS
 				mypoints -= GetAutoTrainPoints(spec, 0);
 			}
 
-<<<<<<< .mine
             // check if correct, if not respec. Not applicable to GMs
             if (allpoints != mypoints && Client.Account.PrivLevel == 1)
             {
@@ -10458,17 +10420,6 @@ namespace DOL.GS
                 SpecPointsOk = false;
             }
             else SpecPointsOk = true;
-=======
-			// check if correct, if not respec. Not applicable to GMs
-			if (allpoints != mypoints && Client.Account.PrivLevel == 1)
-			{
-				log.WarnFormat("Spec points for {0} is incorrect, should be {1} but is {2}", Name, allpoints, mypoints);
-				mypoints = RespecAllLines();
-				SkillSpecialtyPoints = allpoints;
-				SpecPointsOk = false;
-			}
-			else SpecPointsOk = true;
->>>>>>> .r1089
 
 			#endregion
 
