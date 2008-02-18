@@ -161,7 +161,7 @@ namespace DOL.GS.PacketHandler
 			foreach (int slot in items.Keys)
 			{
 				pak.WriteByte((byte)(slot));
-				WriteItemData(pak, items[slot], windowType);
+				WriteItemData(pak, items[slot]);
 			}
 			SendTCP(pak);
 		}
@@ -194,13 +194,13 @@ namespace DOL.GS.PacketHandler
 						pak.WriteByte((byte)(updatedSlot - (int)eInventorySlot.Consignment_First + (int)eInventorySlot.HousingInventory_First));
 					else
 						pak.WriteByte((byte)(updatedSlot));
-					WriteItemData(pak, m_gameClient.Player.Inventory.GetItem((eInventorySlot)(updatedSlot)), preAction);
+					WriteItemData(pak, m_gameClient.Player.Inventory.GetItem((eInventorySlot)(updatedSlot)));
 				}
 			}
 			SendTCP(pak);
 		}
 
-		protected void WriteItemData(GSTCPPacketOut pak, InventoryItem item, byte windowType)
+		protected void WriteItemData(GSTCPPacketOut pak, InventoryItem item)
 		{
 			if (item == null)
 			{
@@ -351,7 +351,7 @@ namespace DOL.GS.PacketHandler
 			string name = item.Name;
 			if (item.Count > 1)
 				name = item.Count + " " + name;
-			if (windowType == 0x05)
+			if (item.SellPrice > 0)
 				name += "[" + Money.GetString(item.SellPrice) + "]";
 			pak.WritePascalString(name);
 		}
