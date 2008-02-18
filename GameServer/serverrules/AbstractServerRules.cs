@@ -1432,6 +1432,19 @@ namespace DOL.GS.ServerRules
 			PlayerMgr.UpdateStats(lord);
 		}
 
+		/// <summary>
+		/// Is the player allowed to generate news
+		/// </summary>
+		/// <param name="player">the player</param>
+		/// <returns>true if the player is allowed to generate news</returns>
+		public virtual bool CanGenerateNews(GamePlayer player)
+		{
+			if (player.Client.Account.PrivLevel > 1)
+				return false;
+
+			return true;
+		}
+
 		#region MessageToLiving
 		/// <summary>
 		/// Send system text message to system window

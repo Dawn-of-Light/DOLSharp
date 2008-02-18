@@ -1652,7 +1652,7 @@ namespace DOL.GS.PacketHandler
 					string name = item.Name;
 					if (item.Count > 1)
 						name = item.Count + " " + name;
-					if (preAction == 0x05)
+					if (item.SellPrice > 0)
 						name += "[" + Money.GetString(item.SellPrice) + "]";
 					pak.WritePascalString(name);
 				}
