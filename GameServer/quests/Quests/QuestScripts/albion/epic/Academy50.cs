@@ -1142,7 +1142,7 @@ namespace DOL.GS.Quests.Albion
 				// Nag to finish quest
 				if (quest != null)
 				{
-					Ferowl.SayTo(player, "Where you able to [fulfill] your given task? Albions fate lies in you hands. ");
+					Ferowl.SayTo(player, "Were you able to [fulfill] your given task? Albions fate lies in you hands. ");
 				}
 				else
 				{
