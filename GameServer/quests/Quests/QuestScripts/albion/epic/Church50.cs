@@ -783,7 +783,7 @@ namespace DOL.GS.Quests.Albion
 							Roben.SayTo(player, "You must not let this occur " + player.GetName(0, false) + "! I am familar with [Lyonesse]. I suggest that you gather a strong group of adventurers in order to succeed in this endeavor!");
 							break;
 						case 2:
-							Roben.SayTo(player, "Where you able to defeat the cult of the dark lord Arawn?");
+							Roben.SayTo(player, "Were you able to defeat the cult of the dark lord Arawn?");
 							break;
 					}
 				}
@@ -922,7 +922,7 @@ namespace DOL.GS.Quests.Albion
 				switch (Step)
 				{
 					case 1:
-						return "[Step #1] Gather a strong group of adventures and travel to the ancient temple of Arwan. This temple can be found within Lyonesse, surrounded by the dark one's priests. Only by slaying their leader can this evil be stopped!";
+						return "[Step #1] Gather a strong group of adventures and travel to the ancient temple of Arawn. This temple can be found within Lyonesse, surrounded by the dark one's priests. Only by slaying their leader can this evil be stopped!";
 					case 2:
 						return "[Step #2] Return the statue of Arawn to Roben Fraomar for your reward!";
 				}
