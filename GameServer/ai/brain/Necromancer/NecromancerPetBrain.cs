@@ -198,8 +198,10 @@ namespace DOL.AI.Brain
 			base.AttackMostWanted();
 			if (Body.TargetObject is GameNPC && TauntMode)
 			{
-				if ((Body.TargetObject as GameNPC).TargetObject != Body)
-					(Body as NecromancerPet).Taunt();
+                if ((Body.TargetObject as GameNPC).TargetObject != Body && ((Body.TargetObject as GameNPC).IsAlive))
+                {
+                    (Body as NecromancerPet).Taunt();
+                }
 			}
 		}
 
@@ -224,13 +226,13 @@ namespace DOL.AI.Brain
 				// make it our new target.
 
 				//Hopefully this will fix the server crashes - this may be a temporary fix when we gain more information
-				if ((spellTarget != null && spellTarget.IsAlive) || spell.Target == "Self")
+				if ((spellTarget != null && spellTarget.IsAlive) || spell.Target.ToLower() == "self")
 				{
 					Body.TargetObject = spellTarget;
 
 					if (spellTarget != Body)
 						Body.TurnTo(spellTarget);
-
+                    
 					Body.CastSpell(spell, spellQueueEntry.SpellLine);
 
 					if (previousTarget != null)
