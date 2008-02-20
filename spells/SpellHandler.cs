@@ -567,7 +567,7 @@ namespace DOL.GS.Spells
 					return false;
 				}
 
-				if (m_spell.Target != "Corpse" && !selectedTarget.IsAlive)
+				if (m_spell.Target.ToLower() != "corpse" && !selectedTarget.IsAlive)
 				{
 					MessageToCaster(selectedTarget.GetName(0, true) + " is dead!", eChatType.CT_SpellResisted);
 					return false;
