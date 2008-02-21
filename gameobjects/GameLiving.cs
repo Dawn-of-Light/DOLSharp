@@ -3652,12 +3652,12 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			{
 				IList attackers;
 				lock (m_attackers.SyncRoot) { attackers = (IList)m_attackers.Clone(); }
-
+				EnemyHealedEventArgs args = new EnemyHealedEventArgs(this, changeSource, healthChangeType, changeAmount);
 				foreach (GameObject attacker in attackers)
 				{
 					if (attacker is GameLiving && attacker != TargetObject)
 					{
-						(attacker as GameLiving).Notify(GameLivingEvent.EnemyHealed, (GameLiving)attacker, new EnemyHealedEventArgs(this, changeSource, healthChangeType, changeAmount));
+						(attacker as GameLiving).Notify(GameLivingEvent.EnemyHealed, (GameLiving)attacker, args);
 						(attacker as GameLiving).AddXPGainer(changeSource, healthChanged);
 					}
 				}
