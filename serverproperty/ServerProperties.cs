@@ -513,6 +513,12 @@ namespace DOL.GS.ServerProperties
 		public static readonly bool ALLOW_CROSS_REALM_GUILDS;
 
 		/// <summary>
+		/// Do we want to allow items to be equipped regardless of realm?
+		/// </summary>
+		[ServerProperty("allow_cross_realm_items", "Do we want to allow items to be equipped regardless of realm?", false)]
+		public static readonly bool ALLOW_CROSS_REALM_ITEMS;
+
+		/// <summary>
 		/// What level should /level bring you to?
 		/// </summary>
 		[ServerProperty("slash_level_target", "What level should /level bring you to? ", 20)]
