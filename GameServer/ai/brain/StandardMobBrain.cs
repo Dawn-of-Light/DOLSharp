@@ -601,9 +601,7 @@ namespace DOL.AI.Brain
 					if (eArgs != null && eArgs.HealSource is GameLiving)
 					{
 						//Higher Aggro amount and NO peace flag npcs!
-						if (eArgs.HealSource is GamePlayer)
-							AddToAggroList((GameLiving)eArgs.HealSource, (eArgs.HealAmount * 2));
-						if ((eArgs.HealSource is GameNPC && (((GameNPC)eArgs.HealSource).Flags & (uint)GameNPC.eFlags.PEACE) == 0))
+						if (eArgs.HealSource is GamePlayer || (eArgs.HealSource is GameNPC && (((GameNPC)eArgs.HealSource).Flags & (uint)GameNPC.eFlags.PEACE) == 0))
 							AddToAggroList((GameLiving)eArgs.HealSource, (eArgs.HealAmount * 2));
 					}
 					return;
