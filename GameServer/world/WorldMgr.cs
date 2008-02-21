@@ -996,6 +996,52 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Searches for all NPCs with the given type and realm in ALL regions!
+		/// </summary>
+		/// <param name="type"></param>
+		/// <param name="realm"></param>
+		/// <returns></returns>
+		public static List<GameNPC> GetNPCsByType(Type type, eRealm realm)
+		{
+			List<GameNPC> returnNPCs = new List<GameNPC>();
+			foreach (Region r in m_regions.Values)
+			{
+				foreach (GameObject obj in r.Objects)
+				{
+					GameNPC npc = obj as GameNPC;
+					if (npc == null)
+						continue;
+					if (npc.Realm == realm && type.IsInstanceOfType(npc))
+						returnNPCs.Add(npc);
+				}
+			}
+			return returnNPCs;
+		}
+
+		/// <summary>
+		/// Searches for all NPCs with the given type and realm in a specific region
+		/// </summary>
+		/// <param name="type"></param>
+		/// <param name="realm"></param>
+		/// <returns></returns>
+		public static List<GameNPC> GetNPCsByType(Type type, eRealm realm, ushort region)
+		{
+			List<GameNPC> returnNPCs = new List<GameNPC>();
+			Region r = GetRegion(region);
+			if (r == null)
+				return returnNPCs;
+			foreach (GameObject obj in r.Objects)
+			{
+				GameNPC npc = obj as GameNPC;
+				if (npc == null)
+					continue;
+				if (npc.Realm == realm && type.IsInstanceOfType(npc))
+					returnNPCs.Add(npc);
+			}
+			return returnNPCs;
+		}
+
+		/// <summary>
 		/// Fetch a GameClient based on it's ID
 		/// </summary>
 		/// <param name="id">ID to search</param>
