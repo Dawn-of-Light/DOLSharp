@@ -95,7 +95,7 @@ namespace DOL.GS.Spells
 					eChatType.CT_SpellResisted);
 				return false;
 			}
-
+            if (!base.CheckBeginCast(selectedTarget)) return false;
 			return true;
 		}
 
@@ -128,6 +128,23 @@ namespace DOL.GS.Spells
                         new PetSpellEventArgs(spell, SpellLine, target));
                 }
 			}
+
+            //For Facilitate Painworking
+            if (m_spell.RecastDelay > 0 && m_startReuseTimer)
+            {
+                if (m_caster is GamePlayer)
+                {
+                    foreach (Spell sp in SkillBase.GetSpellList(m_spellLine.KeyName))
+                    {
+                        if (sp.SpellType == m_spell.SpellType && sp.RecastDelay == m_spell.RecastDelay && sp.Group == m_spell.Group)
+                        {
+                            m_caster.DisableSkill(sp, sp.RecastDelay);
+                        }
+                    }
+                }
+                else if (m_caster is GameNPC)
+                    m_caster.DisableSkill(m_spell, m_spell.RecastDelay);
+            }
 		}
 
 		/// <summary>
