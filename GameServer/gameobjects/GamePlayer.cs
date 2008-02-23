@@ -2058,7 +2058,7 @@ namespace DOL.GS
 				m_class.SwitchToFemaleName();
 			PlayerCharacter.Class = m_class.ID;
 
-			if (Group != null)
+            if (Group != null)
 			{
 				Group.UpdateMember(this, false, true);
 			}
@@ -2272,9 +2272,7 @@ namespace DOL.GS
 
 			RespecAmountDOL--; // Decriment players respecs available.
 
-			if (Level == 5)
-				IsLevelRespecUsed = true;
-			return specPoints;
+            return specPoints;
 		}
 
 		public int RespecSingle(Specialization specLine)
@@ -2330,7 +2328,7 @@ namespace DOL.GS
 		private int RespecSingleLine(Specialization specLine)
 		{
 			int specPoints = (specLine.Level * (specLine.Level + 1) - 2) / 2;
-			// Graveen - livelike autotrain 1.87
+			// Graveen - autotrain 1.87
 			specPoints -= GetAutoTrainPoints(specLine, 0);
 			specLine.Level = 1;
 
@@ -3948,7 +3946,7 @@ namespace DOL.GS
                 {
                     level_respec = Convert.ToByte(str);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     level_respec = 0;
                 }
@@ -4126,7 +4124,7 @@ namespace DOL.GS
 		/// Calculate the Autotrain points.
 		/// </summary>
 		/// <param name="spec">Specialization</param>
-		/// <param name="mode">0 for all AT points, 1 for AT levels</param>
+		/// <param name="mode">various AT related calculations (amount of points, level of AT...)</param>
 		public virtual int GetAutoTrainPoints(Specialization spec, int Mode)
 		{
 			int max_autotrain = Level / 4;
@@ -4142,7 +4140,7 @@ namespace DOL.GS
 								int pts_to_refund = Math.Min(max_autotrain, spec.Level);
 								return ((pts_to_refund * (pts_to_refund + 1) - 2) / 2);
 							}
-						case 1: // return max AT + message
+						case 1: // return max AT level + message
 							{
 								if (Level % 4 == 0)
 									if (spec.Level >= max_autotrain)
@@ -4151,13 +4149,24 @@ namespace DOL.GS
 										Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, LanguageMgr.GetTranslation(Client, "PlayerClass.OnLevelUp.Autotrain", spec.Name, max_autotrain));
 								return 0;
 							}
-						case 2: // return max AT or AT reach by the player
+                        case 2: // return next free points due to AT change on levelup
 							{
 								if (spec.Level < max_autotrain)
 									return (spec.Level + 1);
 								else
 									return 0;
 							}
+                        case 3: // return sum of all free AT points 
+                            {
+                                if (spec.Level < max_autotrain) 
+                                    return (((max_autotrain * ( max_autotrain + 1) - 2) / 2) - ((spec.Level  * ( spec.Level  + 1) - 2) / 2));
+                                else
+                                    return ((max_autotrain * ( max_autotrain + 1) - 2) / 2);
+                            }
+                        case 4: // spec is autotrainable
+                            {
+                                return 1;
+                            }
 					}
 			}
 			return 0;
@@ -10400,7 +10409,7 @@ namespace DOL.GS
 				if (i > 5) allpoints += CharacterClass.SpecPointsMultiplier * i / 10; //normal levels
 				if (i > 40) allpoints += CharacterClass.SpecPointsMultiplier * (i - 1) / 20; //half levels
 			}
-            if (IsLevelSecondStage == true)
+            if (IsLevelSecondStage == true && Level != 50)
                 allpoints += CharacterClass.SpecPointsMultiplier * Level  / 20; // add current half level
 
 			// calc spec points player have (autotrain is not anymore processed here - 1.87 livelike)
@@ -10412,6 +10421,7 @@ namespace DOL.GS
 			}
 
             // check if correct, if not respec. Not applicable to GMs
+            SpecPointsOk = true;
             if (allpoints != mypoints && Client.Account.PrivLevel == 1)
             {
                 log.WarnFormat("Spec points for {0} is incorrect, should be {1} but is {2}", Name, allpoints, mypoints);
@@ -10419,7 +10429,6 @@ namespace DOL.GS
                 SkillSpecialtyPoints = allpoints;
                 SpecPointsOk = false;
             }
-            else SpecPointsOk = true;
 
 			#endregion
 
