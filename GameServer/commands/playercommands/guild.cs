@@ -1649,8 +1649,11 @@ namespace DOL.GS.Commands
                     // --------------------------------------------------------------------------------
                     case "alliance":
                         {
-                            if (client.Player.Guild == null)
-                                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							if (client.Player.Guild == null)
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
 
                             Alliance A = null;
                             if (client.Player.Guild.theGuildDB.AllianceID != null)

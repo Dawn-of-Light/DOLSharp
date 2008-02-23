@@ -36,19 +36,12 @@ namespace DOL.GS.Spells
             if (ad == null) return;
             if (!m_caster.IsAlive) return;
 
-			GameServer.Instance.Logger.Error("DamageToPower check called");
-			GameServer.Instance.Logger.Error("(" + ad.Damage + " + "  + ad.CriticalDamage + ")" + " * " + m_spell.LifeDrainReturn + " / 100");
             int heal = (ad.Damage + ad.CriticalDamage) * m_spell.LifeDrainReturn / 100;
-			GameServer.Instance.Logger.Error("heal result: " + heal);
             // Return the spell power? + % calculated on HP value and caster maxmana
-			GameServer.Instance.Logger.Error(m_spell.Power.ToString() + " + " + "(" + heal + " / " + m_caster.MaxHealth + " * " + m_caster.MaxMana + ")");
-			double manareturned = m_spell.Power + (heal / m_caster.MaxHealth * m_caster.MaxMana);
-			GameServer.Instance.Logger.Error("mana returned result: " + manareturned);
+			double manareturned = (heal * m_caster.MaxMana / 100);
             
             if (heal <= 0) return;
             heal = m_caster.ChangeMana(m_caster, GameLiving.eManaChangeType.Spell, (int)manareturned);
-
-			GameServer.Instance.Logger.Error("changemana result: " + heal);
 
             if (heal > 0)
             {
