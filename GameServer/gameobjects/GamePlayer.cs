@@ -12622,6 +12622,14 @@ namespace DOL.GS
 			get { return PlayerCharacter != null ? PlayerCharacter.ChampionLevel : 0; }
 			set { if (PlayerCharacter != null) PlayerCharacter.ChampionLevel = value; }
 		}
+
+		/// <summary>
+		/// Max champion level for the player
+		/// </summary>
+		public virtual int ChampionMaxLevel
+		{
+			get { return CL_MAX_LEVEL; }
+		}
 		/// <summary>
 		/// Champion Experience
 		/// </summary>		
@@ -12696,7 +12704,7 @@ namespace DOL.GS
 				return CLXPLevel[GamePlayer.CL_MAX_LEVEL]; // exp for level 51, needed to get exp after 50 
 			if (level <= 0)
 				return CLXPLevel[0];
-			return CLXPLevel[level - 1];
+			return CLXPLevel[level];
 		}
 		/// <summary> 
 		/// The process that gains exp 
@@ -12734,12 +12742,7 @@ namespace DOL.GS
 
 			ChampionExperience += experience; // force usage of this method, Experience property cannot be set 
 
-			if (experience >= 0)
-			{
-				//Level up 
-				if (ChampionLevel < CL_MAX_LEVEL && ChampionExperience >= ChampionExperienceForNextLevel)
-					ChampionLevelUp();
-			}
+			Out.SendUpdatePoints();
 		}
 		/// <summary> 
 		/// Holds what happens when your champion level goes up; 
