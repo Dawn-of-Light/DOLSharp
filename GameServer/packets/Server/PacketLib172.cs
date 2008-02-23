@@ -266,6 +266,8 @@ namespace DOL.GS.PacketHandler
 		{
 			if (m_gameClient.Player == null)
 				return;
+			if (m_gameClient.Player.TradeWindow == null)
+				return;
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.TradeWindow));
 			lock (m_gameClient.Player.TradeWindow.Sync)
 			{
