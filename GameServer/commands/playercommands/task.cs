@@ -21,6 +21,9 @@
  * Author:	LightBringer
  * Date:	20040817
 */
+/*
+ * Suncheck: Bring the /task-System more like real servers
+ */
 
 using System.Collections;
 using DOL.GS.PacketHandler;
@@ -28,7 +31,8 @@ using DOL.GS.Quests;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&task", ePrivLevel.Player, "Ask for a Task from Guards or Merchants", "/task")]
+	//[CmdAttribute("&task", ePrivLevel.Player, "Ask for a Task from Guards or Merchants", "/task")]
+	[CmdAttribute("&task", ePrivLevel.Player, "Show the actuell task", "/task")]
 	public class TaskCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
@@ -43,7 +47,31 @@ namespace DOL.GS.Commands
 			}
 			else
 			{
-				TaskCommand(client.Player);
+				GamePlayer player = client.Player;
+				//TaskCommand(client.Player);
+				if (player.Task != null)
+					player.Task.CheckTaskExpired();
+				
+				AbstractTask task = player.Task;
+				
+				if (task != null && task.TaskActive)
+				{
+					IList messages = new ArrayList(4);
+					messages.Add("You are on " + task.Name);
+					messages.Add("What to do: " + task.Description);
+					messages.Add(" ");
+					messages.Add("Task will expire at " + task.TimeOut.ToShortTimeString());
+					messages.Add("You have done " + task.TasksDone + " tasks out of " + AbstractTask.MaxTasksDone(player.Level) + " until now.");
+					player.Out.SendCustomTextWindow("Tasks (Snapshot)", messages);
+				}
+				else if (task != null && task.TasksDone >= AbstractTask.MaxTasksDone(player.Level))
+				{
+					player.Out.SendMessage("You can do no more tasks at your current level", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+				else
+				{
+					player.Out.SendMessage("You have currently no pending task", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
 			}
 		}
 
@@ -53,7 +81,7 @@ namespace DOL.GS.Commands
 		/// </summary>
 		/// <param name="player">The GamePlayer Object</param>
 		/// <returns>True if Command Execute Succesfully</returns>
-		public static bool TaskCommand(GamePlayer player)
+		/*public static bool TaskCommand(GamePlayer player)
 		{
 			if (player.Task != null)
 				player.Task.CheckTaskExpired();
@@ -115,7 +143,7 @@ namespace DOL.GS.Commands
 					return false;
 				}
 			}
-		}
+		}*/
 	}
 
 }
