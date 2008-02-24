@@ -5221,11 +5221,21 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			{
 				if (npc != this)
 					npc.SayReceive(this, str);
-			}
+			}			
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.SAY_DISTANCE))
 			{
 				if (player != this)
 					player.SayReceive(this, str);
+			}
+			if (TargetObject != null &&TargetObject is GameNPC)
+			{
+				GameNPC targetNPC = (GameNPC) TargetObject;
+				char[] separators = new char[] {' ', ',', '.', '?', '!'};
+				foreach (string sstr in str.Split(separators))
+		        {
+					if(sstr != "")
+		        		targetNPC.WhisperReceive(this, sstr);
+		        }
 			}
 			return true;
 		}

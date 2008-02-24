@@ -2907,7 +2907,7 @@ namespace DOL.GS
 					}
 				}*/
 		#endregion
-		#region Interact/SayTo
+		#region Interact/WhisperReceive/SayTo
 		/// <summary>
 		/// This function is called from the ObjectInteractRequestHandler
 		/// </summary>
@@ -2954,6 +2954,45 @@ namespace DOL.GS
 
 				player.MountSteed(this, true);
 			}
+			return true;
+		}
+		
+		/// <summary>
+		/// ToDo
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="text"></param>
+		/// <returns></returns>
+		public override bool WhisperReceive(GameLiving source, string text)
+		{
+			if (!base.WhisperReceive(source, text))
+				return false;
+			if (source is GamePlayer == false)
+				return true;			
+			
+			GamePlayer player = (GamePlayer) source;
+			
+			//TODO: Guards in rvr areas doesn't need check
+			if (text == "task")
+		    {
+				if (source.TargetObject == null)
+					return false;
+				if (KillTask.CheckAvailability(player, (GameLiving) source.TargetObject))
+				{
+					KillTask.BuildTask(player, (GameLiving) source.TargetObject);
+					return true;
+				}
+				else if (MoneyTask.CheckAvailability(player, (GameLiving) source.TargetObject))
+				{
+					MoneyTask.BuildTask(player, (GameLiving) source.TargetObject);
+					return true;
+				}
+				else if (CraftTask.CheckAvailability(player, (GameLiving) source.TargetObject))
+				{
+					CraftTask.BuildTask(player, (GameLiving) source.TargetObject);
+					return true;
+				}
+		    }
 			return true;
 		}
 
