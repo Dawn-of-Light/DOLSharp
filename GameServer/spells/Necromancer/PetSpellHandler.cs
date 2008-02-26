@@ -95,7 +95,6 @@ namespace DOL.GS.Spells
 					eChatType.CT_SpellResisted);
 				return false;
 			}
-            if (!base.CheckBeginCast(selectedTarget)) return false;
 			return true;
 		}
 
