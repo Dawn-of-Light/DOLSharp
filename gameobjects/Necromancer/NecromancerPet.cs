@@ -726,9 +726,10 @@ namespace DOL.GS
 						SayTo(owner, eChatLoc.CL_SystemWindow, "As you command.");
 					}
 					return true;
-				case "taunt":
+                //Temporarily disabled until a suitable fix can be found.
+				/*case "taunt":
 					ToggleTauntMode();
-                    return true;
+                    return true;*/
 				case "weapons":
 					{
 						if (Name != "abomination")
