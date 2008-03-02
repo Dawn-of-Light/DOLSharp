@@ -1686,23 +1686,53 @@ Type    Description           Id
 		{
 			if (bonusCat != 0 && bonusValue != 0 && !SkillBase.CheckPropertyType((eProperty)bonusCat, ePropertyType.Focus))
 			{
-				//- Axe: 5 pts
-				//- Strength: 15 pts
-				//- Constitution: 15 pts
-				//- Hits: 40 pts
-				//- Fatigue: 8 pts
-				//- Heat: 7%
-				//Bonus to casting speed: 2%
-				//Bonus to armor factor (AF): 18
-				//Power: 6 % of power pool.
-				list.Add(string.Format(
-					"- {0}: {1}{2}",
-					SkillBase.GetPropertyName((eProperty)bonusCat),
-					bonusValue.ToString("+0;-0;0"),
-					((bonusCat == (int)eProperty.PowerPool) || (bonusCat >= (int)eProperty.Resist_First && bonusCat <= (int)eProperty.Resist_Last))
-					? ((bonusCat == (int)eProperty.PowerPool) ? "% of power pool." : "%")
-						: " pts"
-				));
+				if (IsPvEBonus((eProperty)bonusCat))
+				{
+					// Evade: {0}% (PvE Only)
+					list.Add(string.Format(SkillBase.GetPropertyName((eProperty)bonusCat), bonusValue));
+				}
+				else
+				{
+					//- Axe: 5 pts
+					//- Strength: 15 pts
+					//- Constitution: 15 pts
+					//- Hits: 40 pts
+					//- Fatigue: 8 pts
+					//- Heat: 7%
+					//Bonus to casting speed: 2%
+					//Bonus to armor factor (AF): 18
+					//Power: 6 % of power pool.
+					list.Add(string.Format(
+						"- {0}: {1}{2}",
+						SkillBase.GetPropertyName((eProperty)bonusCat),
+						bonusValue.ToString("+0;-0;0"),
+						((bonusCat == (int)eProperty.PowerPool) || (bonusCat >= (int)eProperty.Resist_First && bonusCat <= (int)eProperty.Resist_Last))
+						? ((bonusCat == (int)eProperty.PowerPool) ? "% of power pool." : "%")
+							: " pts"
+					));
+				}
+			}
+		}
+
+		protected bool IsPvEBonus(eProperty property)
+		{
+			switch (property)
+			{
+				case eProperty.BlockChance:
+				case eProperty.ParryChance:
+				case eProperty.EvadeChance:
+				case eProperty.DefensiveBonus:
+				case eProperty.BladeturnReinforcement:
+				case eProperty.NegativeReduction:
+				case eProperty.PieceAblative:
+				case eProperty.ReactionaryStyleDamage:
+				case eProperty.SpellPowerCost:
+				case eProperty.StyleCostReduction:
+				case eProperty.ToHitBonus:
+					return true;
+
+				default:
+					return false;
 			}
 		}
 
