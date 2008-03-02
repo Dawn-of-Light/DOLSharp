@@ -26,6 +26,7 @@ using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
 using DOL.GS.Styles;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS
@@ -895,242 +896,446 @@ namespace DOL.GS
 		public static void RegisterPropertyNames()
 		{
 			#region register...
-			m_propertyNames[eProperty.Strength] = "Strength";
-			m_propertyNames[eProperty.Dexterity] = "Dexterity";
-			m_propertyNames[eProperty.Constitution] = "Constitution";
-			m_propertyNames[eProperty.Quickness] = "Quickness";
-			m_propertyNames[eProperty.Intelligence] = "Intelligence";
-			m_propertyNames[eProperty.Piety] = "Piety";
-			m_propertyNames[eProperty.Empathy] = "Empathy";
-			m_propertyNames[eProperty.Charisma] = "Charisma";
+			m_propertyNames[eProperty.Strength] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Strength");
+			m_propertyNames[eProperty.Dexterity] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Dexterity");
+			m_propertyNames[eProperty.Constitution] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Constitution");
+			m_propertyNames[eProperty.Quickness] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Quickness");
+			m_propertyNames[eProperty.Intelligence] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Intelligence");
+			m_propertyNames[eProperty.Piety] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Piety");
+			m_propertyNames[eProperty.Empathy] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Empathy");
+			m_propertyNames[eProperty.Charisma] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Charisma");
 
-			m_propertyNames[eProperty.MaxMana] = "Power";
-			m_propertyNames[eProperty.MaxHealth] = "Hits";
+			m_propertyNames[eProperty.MaxMana] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Power");
+			m_propertyNames[eProperty.MaxHealth] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Hits");
 
 			// resists (does not say "resist" on live server)
-			m_propertyNames[eProperty.Resist_Body] = "Body";
-			m_propertyNames[eProperty.Resist_Cold] = "Cold";
-			m_propertyNames[eProperty.Resist_Crush] = "Crush";
-			m_propertyNames[eProperty.Resist_Energy] = "Energy";
-			m_propertyNames[eProperty.Resist_Heat] = "Heat";
-			m_propertyNames[eProperty.Resist_Matter] = "Matter";
-			m_propertyNames[eProperty.Resist_Slash] = "Slash";
-			m_propertyNames[eProperty.Resist_Spirit] = "Spirit";
-			m_propertyNames[eProperty.Resist_Thrust] = "Thrust";
+			m_propertyNames[eProperty.Resist_Body] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Body");
+			m_propertyNames[eProperty.Resist_Cold] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Cold");
+			m_propertyNames[eProperty.Resist_Crush] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Crush");
+			m_propertyNames[eProperty.Resist_Energy] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Energy");
+			m_propertyNames[eProperty.Resist_Heat] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Heat");
+			m_propertyNames[eProperty.Resist_Matter] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Matter");
+			m_propertyNames[eProperty.Resist_Slash] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Slash");
+			m_propertyNames[eProperty.Resist_Spirit] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Spirit");
+			m_propertyNames[eProperty.Resist_Thrust] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Thrust");
 
 			// skills
-			m_propertyNames[eProperty.Skill_Two_Handed] = "Two Handed";
-			m_propertyNames[eProperty.Skill_Body] = "Body Magic";
-			m_propertyNames[eProperty.Skill_Chants] = "Chants";
-			m_propertyNames[eProperty.Skill_Critical_Strike] = "Critical Strike";
-			m_propertyNames[eProperty.Skill_Cross_Bows] = "Crossbows";
-			m_propertyNames[eProperty.Skill_Crushing] = "Crushing";
-			m_propertyNames[eProperty.Skill_Death_Servant] = "Death Servant";
-			m_propertyNames[eProperty.Skill_DeathSight] = "Deathsight";
-			m_propertyNames[eProperty.Skill_Dual_Wield] = "Dual Wield";
-			m_propertyNames[eProperty.Skill_Earth] = "Earth Magic";
-			m_propertyNames[eProperty.Skill_Enhancement] = "Enhancement";
-			m_propertyNames[eProperty.Skill_Envenom] = "Envenom";
-			m_propertyNames[eProperty.Skill_Fire] = "Fire Magic";
-			m_propertyNames[eProperty.Skill_Flexible_Weapon] = "Flexible Weapon";
-			m_propertyNames[eProperty.Skill_Cold] = "Cold Magic";
-			m_propertyNames[eProperty.Skill_Instruments] = "Instruments";
-			m_propertyNames[eProperty.Skill_Long_bows] = "Longbows";
-			m_propertyNames[eProperty.Skill_Matter] = "Matter Magic";
-			m_propertyNames[eProperty.Skill_Mind] = "Mind Magic";
-			m_propertyNames[eProperty.Skill_Pain_working] = "Painworking";
-			m_propertyNames[eProperty.Skill_Parry] = "Parry";
-			m_propertyNames[eProperty.Skill_Polearms] = "Polearms";
-			m_propertyNames[eProperty.Skill_Rejuvenation] = "Rejuvenation";
-			m_propertyNames[eProperty.Skill_Shields] = "Shields";
-			m_propertyNames[eProperty.Skill_Slashing] = "Slashing";
-			m_propertyNames[eProperty.Skill_Smiting] = "Smiting";
-			m_propertyNames[eProperty.Skill_SoulRending] = "Soulrending";
-			m_propertyNames[eProperty.Skill_Spirit] = "Spirit Magic";
-			m_propertyNames[eProperty.Skill_Staff] = "Staff";
-			m_propertyNames[eProperty.Skill_Stealth] = "Stealth";
-			m_propertyNames[eProperty.Skill_Thrusting] = "Thrusting";
-			m_propertyNames[eProperty.Skill_Wind] = "Wind Magic";
-			m_propertyNames[eProperty.Skill_Sword] = "Sword";
-			m_propertyNames[eProperty.Skill_Hammer] = "Hammer";
-			m_propertyNames[eProperty.Skill_Axe] = "Axe";
-			m_propertyNames[eProperty.Skill_Left_Axe] = "Left Axe";
-			m_propertyNames[eProperty.Skill_Spear] = "Spear";
-			m_propertyNames[eProperty.Skill_Mending] = "Mending";
-			m_propertyNames[eProperty.Skill_Augmentation] = "Augmentation";
-			//m_propertyNames[eProperty.Skill_Cave_Magic] = "Cave Magic";
-			m_propertyNames[eProperty.Skill_Darkness] = "Darkness";
-			m_propertyNames[eProperty.Skill_Suppression] = "Suppression";
-			m_propertyNames[eProperty.Skill_Runecarving] = "Runecarving";
-			m_propertyNames[eProperty.Skill_Stormcalling] = "Stormcalling";
-			m_propertyNames[eProperty.Skill_BeastCraft] = "Beastcraft";
-			m_propertyNames[eProperty.Skill_Light] = "Light Magic";
-			m_propertyNames[eProperty.Skill_Void] = "Void Magic";
-			m_propertyNames[eProperty.Skill_Mana] = "Mana Magic";
-			m_propertyNames[eProperty.Skill_Composite] = "Composite";
-			m_propertyNames[eProperty.Skill_Battlesongs] = "Battlesongs";
-			m_propertyNames[eProperty.Skill_Enchantments] = "Enchantment";
+			m_propertyNames[eProperty.Skill_Two_Handed] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.TwoHanded");
+			m_propertyNames[eProperty.Skill_Body] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.BodyMagic");
+			m_propertyNames[eProperty.Skill_Chants] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Chants");
+			m_propertyNames[eProperty.Skill_Critical_Strike] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.CriticalStrike");
+			m_propertyNames[eProperty.Skill_Cross_Bows] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Crossbows");
+			m_propertyNames[eProperty.Skill_Crushing] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Crushing");
+			m_propertyNames[eProperty.Skill_Death_Servant] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.DeathServant");
+			m_propertyNames[eProperty.Skill_DeathSight] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Deathsight");
+			m_propertyNames[eProperty.Skill_Dual_Wield] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.DualWield");
+			m_propertyNames[eProperty.Skill_Earth] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.EarthMagic");
+			m_propertyNames[eProperty.Skill_Enhancement] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Enhancement");
+			m_propertyNames[eProperty.Skill_Envenom] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Envenom");
+			m_propertyNames[eProperty.Skill_Fire] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.FireMagic");
+			m_propertyNames[eProperty.Skill_Flexible_Weapon] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.FlexibleWeapon");
+			m_propertyNames[eProperty.Skill_Cold] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.ColdMagic");
+			m_propertyNames[eProperty.Skill_Instruments] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Instruments");
+			m_propertyNames[eProperty.Skill_Long_bows] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Longbows");
+			m_propertyNames[eProperty.Skill_Matter] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.MatterMagic");
+			m_propertyNames[eProperty.Skill_Mind] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.MindMagic");
+			m_propertyNames[eProperty.Skill_Pain_working] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Painworking");
+			m_propertyNames[eProperty.Skill_Parry] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Parry");
+			m_propertyNames[eProperty.Skill_Polearms] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Polearms");
+			m_propertyNames[eProperty.Skill_Rejuvenation] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Rejuvenation");
+			m_propertyNames[eProperty.Skill_Shields] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Shields");
+			m_propertyNames[eProperty.Skill_Slashing] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Slashing");
+			m_propertyNames[eProperty.Skill_Smiting] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Smiting");
+			m_propertyNames[eProperty.Skill_SoulRending] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Soulrending");
+			m_propertyNames[eProperty.Skill_Spirit] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.SpiritMagic");
+			m_propertyNames[eProperty.Skill_Staff] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Staff");
+			m_propertyNames[eProperty.Skill_Stealth] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Stealth");
+			m_propertyNames[eProperty.Skill_Thrusting] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Thrusting");
+			m_propertyNames[eProperty.Skill_Wind] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.WindMagic");
+			m_propertyNames[eProperty.Skill_Sword] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Sword");
+			m_propertyNames[eProperty.Skill_Hammer] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Hammer");
+			m_propertyNames[eProperty.Skill_Axe] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Axe");
+			m_propertyNames[eProperty.Skill_Left_Axe] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.LeftAxe");
+			m_propertyNames[eProperty.Skill_Spear] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Spear");
+			m_propertyNames[eProperty.Skill_Mending] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Mending");
+			m_propertyNames[eProperty.Skill_Augmentation] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Augmentation");
+			m_propertyNames[eProperty.Skill_Darkness] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Darkness");
+			m_propertyNames[eProperty.Skill_Suppression] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Suppression");
+			m_propertyNames[eProperty.Skill_Runecarving] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Runecarving");
+			m_propertyNames[eProperty.Skill_Stormcalling] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Stormcalling");
+			m_propertyNames[eProperty.Skill_BeastCraft] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.BeastCraft");
+			m_propertyNames[eProperty.Skill_Light] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.LightMagic");
+			m_propertyNames[eProperty.Skill_Void] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.VoidMagic");
+			m_propertyNames[eProperty.Skill_Mana] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.ManaMagic");
+			m_propertyNames[eProperty.Skill_Composite] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Composite");
+			m_propertyNames[eProperty.Skill_Battlesongs] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Battlesongs");
+			m_propertyNames[eProperty.Skill_Enchantments] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Enchantment");
 
-			m_propertyNames[eProperty.Skill_Blades] = "Blades";
-			m_propertyNames[eProperty.Skill_Blunt] = "Blunt";
-			m_propertyNames[eProperty.Skill_Piercing] = "Piercing";
-			m_propertyNames[eProperty.Skill_Large_Weapon] = "Large Weapon";
-			m_propertyNames[eProperty.Skill_Mentalism] = "Mentalism";
-			m_propertyNames[eProperty.Skill_Regrowth] = "Regrowth";
-			m_propertyNames[eProperty.Skill_Nurture] = "Nurture";
-			m_propertyNames[eProperty.Skill_Nature] = "Nature";
-			m_propertyNames[eProperty.Skill_Music] = "Music";
-			m_propertyNames[eProperty.Skill_Celtic_Dual] = "Celtic Dual";
-			m_propertyNames[eProperty.Skill_Celtic_Spear] = "Celtic Spear";
-			m_propertyNames[eProperty.Skill_RecurvedBow] = "Recurved Bow";
-			m_propertyNames[eProperty.Skill_Valor] = "Valor";
-			m_propertyNames[eProperty.Skill_Subterranean] = "Cave Magic";
-			m_propertyNames[eProperty.Skill_BoneArmy] = "Bone Army";
-			m_propertyNames[eProperty.Skill_Verdant] = "Verdant";
-			m_propertyNames[eProperty.Skill_Creeping] = "Creeping";
-			m_propertyNames[eProperty.Skill_Arboreal] = "Arboreal";
-			m_propertyNames[eProperty.Skill_Scythe] = "Scythe";
-			m_propertyNames[eProperty.Skill_Thrown_Weapons] = "Thrown Weapons";
-			m_propertyNames[eProperty.Skill_HandToHand] = "Hand To Hand";
-			m_propertyNames[eProperty.Skill_ShortBow] = "Short Bow";
-			m_propertyNames[eProperty.Skill_Pacification] = "Pacification";
-			m_propertyNames[eProperty.Skill_Savagery] = "Savagery";
-			m_propertyNames[eProperty.Skill_Nightshade] = "Nightshade Magic";
-			m_propertyNames[eProperty.Skill_Pathfinding] = "Pathfinding";
-			m_propertyNames[eProperty.Skill_Summoning] = "Summoning";
+			m_propertyNames[eProperty.Skill_Blades] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Blades");
+			m_propertyNames[eProperty.Skill_Blunt] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Blunt");
+			m_propertyNames[eProperty.Skill_Piercing] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Piercing");
+			m_propertyNames[eProperty.Skill_Large_Weapon] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.LargeWeapon");
+			m_propertyNames[eProperty.Skill_Mentalism] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Mentalism");
+			m_propertyNames[eProperty.Skill_Regrowth] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Regrowth");
+			m_propertyNames[eProperty.Skill_Nurture] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Nurture");
+			m_propertyNames[eProperty.Skill_Nature] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Nature");
+			m_propertyNames[eProperty.Skill_Music] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Music");
+			m_propertyNames[eProperty.Skill_Celtic_Dual] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.CelticDual");
+			m_propertyNames[eProperty.Skill_Celtic_Spear] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.CelticSpear");
+			m_propertyNames[eProperty.Skill_RecurvedBow] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.RecurvedBow");
+			m_propertyNames[eProperty.Skill_Valor] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Valor");
+			m_propertyNames[eProperty.Skill_Subterranean] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.CaveMagic");
+			m_propertyNames[eProperty.Skill_BoneArmy] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.BoneArmy");
+			m_propertyNames[eProperty.Skill_Verdant] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Verdant");
+			m_propertyNames[eProperty.Skill_Creeping] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Creeping");
+			m_propertyNames[eProperty.Skill_Arboreal] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Arboreal");
+			m_propertyNames[eProperty.Skill_Scythe] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Scythe");
+			m_propertyNames[eProperty.Skill_Thrown_Weapons] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.ThrownWeapons");
+			m_propertyNames[eProperty.Skill_HandToHand] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.HandToHand");
+			m_propertyNames[eProperty.Skill_ShortBow] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.ShortBow");
+			m_propertyNames[eProperty.Skill_Pacification] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Pacification");
+			m_propertyNames[eProperty.Skill_Savagery] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Savagery");
+			m_propertyNames[eProperty.Skill_Nightshade] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.NightshadeMagic");
+			m_propertyNames[eProperty.Skill_Pathfinding] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Pathfinding");
+			m_propertyNames[eProperty.Skill_Summoning] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Summoning");
 
             // Mauler
-            m_propertyNames[eProperty.Skill_FistWraps] = "Fist Wraps";
-            m_propertyNames[eProperty.Skill_MaulerStaff] = "Mauler Staff";
-            m_propertyNames[eProperty.Skill_Power_Strikes] = "Power Strikes";
-			m_propertyNames[eProperty.Skill_Magnetism] = "Magnetism";
-			m_propertyNames[eProperty.Skill_Aura_Manipulation] = "Aura Manipulation";
+			m_propertyNames[eProperty.Skill_FistWraps] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.FistWraps");
+			m_propertyNames[eProperty.Skill_MaulerStaff] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.MaulerStaff");
+			m_propertyNames[eProperty.Skill_Power_Strikes] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.PowerStrikes");
+			m_propertyNames[eProperty.Skill_Magnetism] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Magnetism");
+			m_propertyNames[eProperty.Skill_Aura_Manipulation] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.AuraManipulation");
 
 
 			//Catacombs skills
-			m_propertyNames[eProperty.Skill_Dementia] = "Dementia";
-			m_propertyNames[eProperty.Skill_ShadowMastery] = "Shadow Mastery";
-			m_propertyNames[eProperty.Skill_VampiiricEmbrace] = "Vampiiric Embrace";
-			m_propertyNames[eProperty.Skill_EtherealShriek] = "Ethereal Shriek";
-			m_propertyNames[eProperty.Skill_PhantasmalWail] = "Phantasmal Wail";
-			m_propertyNames[eProperty.Skill_SpectralForce] = "Spectral Force";
-            m_propertyNames[eProperty.Skill_SpectralGuard] = "Spectral Guard";
-			m_propertyNames[eProperty.Skill_OdinsWill] = "Odin's Will";
-			m_propertyNames[eProperty.Skill_Cursing] = "Cursing";
-			m_propertyNames[eProperty.Skill_Hexing] = "Hexing";
-			m_propertyNames[eProperty.Skill_Witchcraft] = "Witchcraft";
+			m_propertyNames[eProperty.Skill_Dementia] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Dementia");
+			m_propertyNames[eProperty.Skill_ShadowMastery] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.ShadowMastery");
+			m_propertyNames[eProperty.Skill_VampiiricEmbrace] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.VampiiricEmbrace");
+			m_propertyNames[eProperty.Skill_EtherealShriek] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.EtherealShriek");
+			m_propertyNames[eProperty.Skill_PhantasmalWail] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.PhantasmalWail");
+			m_propertyNames[eProperty.Skill_SpectralForce] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.SpectralForce");
+			m_propertyNames[eProperty.Skill_SpectralGuard] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.SpectralGuard");
+			m_propertyNames[eProperty.Skill_OdinsWill] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.OdinsWill");
+			m_propertyNames[eProperty.Skill_Cursing] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Cursing");
+			m_propertyNames[eProperty.Skill_Hexing] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Hexing");
+			m_propertyNames[eProperty.Skill_Witchcraft] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Witchcraft");
 
 
 			// Classic Focii
-			m_propertyNames[eProperty.Focus_Darkness] = "Darkness Focus";
-			m_propertyNames[eProperty.Focus_Suppression] = "Suppression Focus";
-			m_propertyNames[eProperty.Focus_Runecarving] = "Runecarving Focus";
-			m_propertyNames[eProperty.Focus_Spirit] = "Spirit Magic Focus";
-			m_propertyNames[eProperty.Focus_Fire] = "Fire Magic Focus";
-			m_propertyNames[eProperty.Focus_Air] = "Wind Magic Focus";
-			m_propertyNames[eProperty.Focus_Cold] = "Cold Magic Focus";
-			m_propertyNames[eProperty.Focus_Earth] = "Earth Magic Focus";
-			m_propertyNames[eProperty.Focus_Light] = "Light Magic Focus";
-			m_propertyNames[eProperty.Focus_Body] = "Body Magic Focus";
-			m_propertyNames[eProperty.Focus_Matter] = "Matter Magic Focus";
-			m_propertyNames[eProperty.Focus_Mind] = "Mind Magic Focus";
-			m_propertyNames[eProperty.Focus_Void] = "Void Magic Focus";
-			m_propertyNames[eProperty.Focus_Mana] = "Mana Magic Focus";
-			m_propertyNames[eProperty.Focus_Enchantments] = "Enchantment Focus";
-			m_propertyNames[eProperty.Focus_Mentalism] = "Mentalism Focus";
-			m_propertyNames[eProperty.Focus_Summoning] = "Summoning Focus";
+			m_propertyNames[eProperty.Focus_Darkness] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.DarknessFocus");
+			m_propertyNames[eProperty.Focus_Suppression] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.SuppressionFocus");
+			m_propertyNames[eProperty.Focus_Runecarving] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.RunecarvingFocus");
+			m_propertyNames[eProperty.Focus_Spirit] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.SpiritMagicFocus");
+			m_propertyNames[eProperty.Focus_Fire] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.FireMagicFocus");
+			m_propertyNames[eProperty.Focus_Air] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.WindMagicFocus");
+			m_propertyNames[eProperty.Focus_Cold] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.ColdMagicFocus");
+			m_propertyNames[eProperty.Focus_Earth] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.EarthMagicFocus");
+			m_propertyNames[eProperty.Focus_Light] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.LightMagicFocus");
+			m_propertyNames[eProperty.Focus_Body] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.BodyMagicFocus");
+			m_propertyNames[eProperty.Focus_Matter] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.MatterMagicFocus");
+			m_propertyNames[eProperty.Focus_Mind] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.MindMagicFocus");
+			m_propertyNames[eProperty.Focus_Void] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.VoidMagicFocus");
+			m_propertyNames[eProperty.Focus_Mana] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.ManaMagicFocus");
+			m_propertyNames[eProperty.Focus_Enchantments] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.EnchantmentFocus");
+			m_propertyNames[eProperty.Focus_Mentalism] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.MentalismFocus");
+			m_propertyNames[eProperty.Focus_Summoning] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.SummoningFocus");
 			// SI Focii
 			// Mid
-			m_propertyNames[eProperty.Focus_BoneArmy] = "Bone Army Focus";
+			m_propertyNames[eProperty.Focus_BoneArmy] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.BoneArmyFocus");
 			// Alb
-			m_propertyNames[eProperty.Focus_PainWorking] = "Painworking Focus";
-			m_propertyNames[eProperty.Focus_DeathSight] = "Deathsight Focus";
-			m_propertyNames[eProperty.Focus_DeathServant] = "Deathservant Focus";
+			m_propertyNames[eProperty.Focus_PainWorking] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.PainworkingFocus");
+			m_propertyNames[eProperty.Focus_DeathSight] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.DeathsightFocus");
+			m_propertyNames[eProperty.Focus_DeathServant] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.DeathservantFocus");
 			// Hib
-			m_propertyNames[eProperty.Focus_Verdant] = "Verdant Focus";
-			m_propertyNames[eProperty.Focus_CreepingPath] = "Creeping Path Focus";
-			m_propertyNames[eProperty.Focus_Arboreal] = "Arboreal Focus";
+			m_propertyNames[eProperty.Focus_Verdant] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.VerdantFocus");
+			m_propertyNames[eProperty.Focus_CreepingPath] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.CreepingPathFocus");
+			m_propertyNames[eProperty.Focus_Arboreal] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.ArborealFocus");
 			// Catacombs Focii
-			m_propertyNames[eProperty.Focus_EtherealShriek] = "Ethereal Shriek Focus";
-			m_propertyNames[eProperty.Focus_PhantasmalWail] = "Phantasmal Wail Focus";
-			m_propertyNames[eProperty.Focus_SpectralForce] = "Spectral Force Focus";
-			m_propertyNames[eProperty.Focus_Cursing] = "Cursing Focus";
-			m_propertyNames[eProperty.Focus_Hexing] = "Hexing Focus";
-			m_propertyNames[eProperty.Focus_Witchcraft] = "Witchcraft Focus";
+			m_propertyNames[eProperty.Focus_EtherealShriek] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.EtherealShriekFocus");
+			m_propertyNames[eProperty.Focus_PhantasmalWail] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.PhantasmalWailFocus");
+			m_propertyNames[eProperty.Focus_SpectralForce] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.SpectralForceFocus");
+			m_propertyNames[eProperty.Focus_Cursing] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.CursingFocus");
+			m_propertyNames[eProperty.Focus_Hexing] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.HexingFocus");
+			m_propertyNames[eProperty.Focus_Witchcraft] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.WitchcraftFocus");
 
-			m_propertyNames[eProperty.MaxSpeed] = "Maximum Speed";
-			m_propertyNames[eProperty.MaxConcentration] = "Concentration";
+			m_propertyNames[eProperty.MaxSpeed] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.MaximumSpeed");
+			m_propertyNames[eProperty.MaxConcentration] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Concentration");
 
-			m_propertyNames[eProperty.ArmorFactor] = "Bonus to armor factor (AF)";
-			m_propertyNames[eProperty.ArmorAbsorbtion] = "Bonus to armor absorption (ABS)";
+			m_propertyNames[eProperty.ArmorFactor] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.BonusToArmorFactor");
+			m_propertyNames[eProperty.ArmorAbsorbtion] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.BonusToArmorAbsorption");
 
-			m_propertyNames[eProperty.HealthRegenerationRate] = "Health Regeneration";
-			m_propertyNames[eProperty.PowerRegenerationRate] = "Power Regeneration";
-			m_propertyNames[eProperty.EnduranceRegenerationRate] = "Endurance Regeneration";
-			m_propertyNames[eProperty.SpellRange] = "Spell Range";
-			m_propertyNames[eProperty.ArcheryRange] = "Archery Range";
-			m_propertyNames[eProperty.Acuity] = "Acuity";
+			m_propertyNames[eProperty.HealthRegenerationRate] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.HealthRegeneration");
+			m_propertyNames[eProperty.PowerRegenerationRate] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.PowerRegeneration");
+			m_propertyNames[eProperty.EnduranceRegenerationRate] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.EnduranceRegeneration");
+			m_propertyNames[eProperty.SpellRange] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.SpellRange");
+			m_propertyNames[eProperty.ArcheryRange] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.ArcheryRange");
+			m_propertyNames[eProperty.Acuity] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Acuity");
 
-			m_propertyNames[eProperty.AllMagicSkills] = "ALL magic skills";
-			m_propertyNames[eProperty.AllMeleeWeaponSkills] = "ALL melee weapon skills";
-			m_propertyNames[eProperty.AllFocusLevels] = "ALL spell lines";
-			m_propertyNames[eProperty.AllDualWieldingSkills] = "ALL Dual Wielding Skills";
-			m_propertyNames[eProperty.AllArcherySkills] = "ALL Archery Skills";
+			m_propertyNames[eProperty.AllMagicSkills] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.AllMagicSkills");
+			m_propertyNames[eProperty.AllMeleeWeaponSkills] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.AllMeleeWeaponSkills");
+			m_propertyNames[eProperty.AllFocusLevels] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.ALLSpellLines");
+			m_propertyNames[eProperty.AllDualWieldingSkills] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.AllDualWieldingSkills");
+			m_propertyNames[eProperty.AllArcherySkills] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.AllArcherySkills");
 
-			m_propertyNames[eProperty.LivingEffectiveLevel] = "Effective level";
+			m_propertyNames[eProperty.LivingEffectiveLevel] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.EffectiveLevel");
 
 
 			//Added by Fooljam : Missing TOA/Catacomb bonusses names in item properties.
 			//Date : 20-Jan-2005
 			//Missing bonusses begin
-			m_propertyNames[eProperty.EvadeChance] = "Evade Chance";
-			m_propertyNames[eProperty.BlockChance] = "Block Chance";
-			m_propertyNames[eProperty.ParryChance] = "Parry Chance";
-			m_propertyNames[eProperty.FumbleChance] = "Fumble Chance";
-			m_propertyNames[eProperty.MeleeDamage] = "Bonus to melee damage";
-			m_propertyNames[eProperty.RangedDamage] = "all Ranged Damage";
-			m_propertyNames[eProperty.MesmerizeDuration] = "Mesmerize Duration";
-			m_propertyNames[eProperty.StunDuration] = "Stun Duration";
-			m_propertyNames[eProperty.SpeedDecreaseDuration] = "Speed Decrease Duration";
-			m_propertyNames[eProperty.BladeturnReinforcement] = "Bladeturn Reinforcement";
-			m_propertyNames[eProperty.DefensiveBonus] = "Defensive Bonus";
-			m_propertyNames[eProperty.PieceAblative] = "Piece Ablative";
-			m_propertyNames[eProperty.NegativeReduction] = "Negative Reduction";
-			m_propertyNames[eProperty.ReactionaryStyleDamage] = "Reactionary Style Damage";
-			m_propertyNames[eProperty.SpellPowerCost] = "Spell Power Cost Reduction";
-			m_propertyNames[eProperty.StyleCostReduction] = "Style Cost Reduction";
-			m_propertyNames[eProperty.ToHitBonus] = "To Hit Bonus";
-			m_propertyNames[eProperty.ArcherySpeed] = "Archery Speed";
-			m_propertyNames[eProperty.ArrowRecovery] = "Arrow Recovery";
-			m_propertyNames[eProperty.BuffEffectiveness] = "all Stat Buff Spells";
-			m_propertyNames[eProperty.CastingSpeed] = "Bonus to casting speed";
-			m_propertyNames[eProperty.DeathExpLoss] = "Death Experience Loss Reduction";
-			m_propertyNames[eProperty.DebuffEffectivness] = "Debuff Effectivness";
-			m_propertyNames[eProperty.Fatigue] = "Fatigue";
-			m_propertyNames[eProperty.HealingEffectiveness] = "Bonus to healing effectiveness";
-			m_propertyNames[eProperty.PowerPool] = "Power Pool";
-			m_propertyNames[eProperty.ResistPierce] = "Resist Pierce";
-			m_propertyNames[eProperty.SpellDamage] = "Bonus to magic damage";
-			m_propertyNames[eProperty.SpellDuration] = "Spell Duration";
-			m_propertyNames[eProperty.StyleDamage] = "Bonus to style damage";
-			m_propertyNames[eProperty.MeleeSpeed] = "Bonus to melee combat speed";
+			m_propertyNames[eProperty.EvadeChance] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.EvadeChance");
+			m_propertyNames[eProperty.BlockChance] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.BlockChance");
+			m_propertyNames[eProperty.ParryChance] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.ParryChance");
+			m_propertyNames[eProperty.FumbleChance] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.FumbleChance");
+			m_propertyNames[eProperty.MeleeDamage] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.MeleeDamage");
+			m_propertyNames[eProperty.RangedDamage] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.RangedDamage");
+			m_propertyNames[eProperty.MesmerizeDuration] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.MesmerizeDuration");
+			m_propertyNames[eProperty.StunDuration] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.StunDuration");
+			m_propertyNames[eProperty.SpeedDecreaseDuration] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.SpeedDecreaseDuration");
+			m_propertyNames[eProperty.BladeturnReinforcement] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.BladeturnReinforcement");
+			m_propertyNames[eProperty.DefensiveBonus] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.DefensiveBonus");
+			m_propertyNames[eProperty.PieceAblative] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.PieceAblative");
+			m_propertyNames[eProperty.NegativeReduction] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.NegativeReduction");
+			m_propertyNames[eProperty.ReactionaryStyleDamage] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.ReactionaryStyleDamage");
+			m_propertyNames[eProperty.SpellPowerCost] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.SpellPowerCost");
+			m_propertyNames[eProperty.StyleCostReduction] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.StyleCostReduction");
+			m_propertyNames[eProperty.ToHitBonus] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.ToHitBonus");
+			m_propertyNames[eProperty.ArcherySpeed] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.ArcherySpeed");
+			m_propertyNames[eProperty.ArrowRecovery] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.ArrowRecovery");
+			m_propertyNames[eProperty.BuffEffectiveness] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.StatBuffSpells");
+			m_propertyNames[eProperty.CastingSpeed] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.CastingSpeed");
+			m_propertyNames[eProperty.DeathExpLoss] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.ExperienceLoss");
+			m_propertyNames[eProperty.DebuffEffectivness] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.DebuffEffectivness");
+			m_propertyNames[eProperty.Fatigue] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.Fatigue");
+			m_propertyNames[eProperty.HealingEffectiveness] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.HealingEffectiveness");
+			m_propertyNames[eProperty.PowerPool] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.PowerPool");
+			//Magiekraftvorrat
+			m_propertyNames[eProperty.ResistPierce] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.ResistPierce");
+			m_propertyNames[eProperty.SpellDamage] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.MagicDamageBonus");
+			m_propertyNames[eProperty.SpellDuration] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.SpellDuration");
+			m_propertyNames[eProperty.StyleDamage] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.StyleDamage");
+			m_propertyNames[eProperty.MeleeSpeed] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.MeleeSpeed");
 			//Missing bonusses end
 
-			m_propertyNames[eProperty.StrCapBonus] = "Bonus to Strength attribute bonus cap";
-			m_propertyNames[eProperty.DexCapBonus] = "Bonus to Dexterity attribute bonus cap";
-			m_propertyNames[eProperty.ConCapBonus] = "Bonus to Constitution attribute bonus cap";
-			m_propertyNames[eProperty.QuiCapBonus] = "Bonus to Quickness attribute bonus cap";
-			m_propertyNames[eProperty.IntCapBonus] = "Bonus to Intelligence attribute bonus cap";
-			m_propertyNames[eProperty.PieCapBonus] = "Bonus to Piety attribute bonus cap";
-			m_propertyNames[eProperty.ChaCapBonus] = "Bonus to Charisma attribute bonus cap";
-			m_propertyNames[eProperty.EmpCapBonus] = "Bonus to Empathy attribute bonus cap";
-			m_propertyNames[eProperty.AcuCapBonus] = "Bonus to Acuity attribute bonus cap";
-			m_propertyNames[eProperty.MaxHealthCapBonus] = "Bonus to hit points bonus cap";
-			m_propertyNames[eProperty.PowerPoolCapBonus] = "Bonus to power bonus cap";
-			m_propertyNames[eProperty.WeaponSkill] = "Bonus to Weaponskill";
-			m_propertyNames[eProperty.AllSkills] = "All Skills";
-			m_propertyNames[eProperty.CriticalArcheryHitChance] = "Bonus to critical archery hit chance";
-			m_propertyNames[eProperty.CriticalMeleeHitChance] = "Bonus to critical melee hit chance";
+			m_propertyNames[eProperty.StrCapBonus] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.StrengthBonusCap");
+			m_propertyNames[eProperty.DexCapBonus] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.DexterityBonusCap");
+			m_propertyNames[eProperty.ConCapBonus] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.ConstitutionBonusCap");
+			m_propertyNames[eProperty.QuiCapBonus] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.QuicknessBonusCap");
+			m_propertyNames[eProperty.IntCapBonus] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.IntelligenceBonusCap");
+			m_propertyNames[eProperty.PieCapBonus] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.PietyBonusCap");
+			m_propertyNames[eProperty.ChaCapBonus] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.CharismaBonusCap");
+			m_propertyNames[eProperty.EmpCapBonus] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.EmpathyBonusCap");
+			m_propertyNames[eProperty.AcuCapBonus] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.AcuityBonusCap");
+			m_propertyNames[eProperty.MaxHealthCapBonus] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.HitPointsBonusCap");
+			m_propertyNames[eProperty.PowerPoolCapBonus] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.PowerBonusCap");
+			m_propertyNames[eProperty.WeaponSkill] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.WeaponSkill");
+			m_propertyNames[eProperty.AllSkills] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.AllSkills");
+			m_propertyNames[eProperty.CriticalArcheryHitChance] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.CriticalArcheryHit");
+			m_propertyNames[eProperty.CriticalMeleeHitChance] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+				"SkillBase.RegisterPropertyNames.CriticalMeleeHit");
 			#endregion
 		}
 
