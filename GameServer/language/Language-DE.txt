@@ -652,8 +652,8 @@ SkillBase.RegisterPropertyNames.Axe:			Axt
 SkillBase.RegisterPropertyNames.Battlesongs:		Schlachtengesang
 SkillBase.RegisterPropertyNames.BeastCraft:		Tierherrschaft
 SkillBase.RegisterPropertyNames.Blades:			Klingen
-SkillBase.RegisterPropertyNames.BladeturnReinforcement:	Bladeturn Reinforcement
-SkillBase.RegisterPropertyNames.BlockChance:		Block Chance
+SkillBase.RegisterPropertyNames.BladeturnReinforcement:	- Bladeturn reinforcement: {0}% (PvE Only)
+SkillBase.RegisterPropertyNames.BlockChance:		- Block: {0}% (PvE Only)
 SkillBase.RegisterPropertyNames.Blunt:			Blunt
 SkillBase.RegisterPropertyNames.Body:			Körper
 SkillBase.RegisterPropertyNames.BodyMagic:		Körpermagie
@@ -693,7 +693,7 @@ SkillBase.RegisterPropertyNames.DeathservantFocus:	Todesdiener
 SkillBase.RegisterPropertyNames.Deathsight:		Deathsight
 SkillBase.RegisterPropertyNames.DeathsightFocus:	Deathsight
 SkillBase.RegisterPropertyNames.DebuffEffectivness:	Debuff Effectivness
-SkillBase.RegisterPropertyNames.DefensiveBonus:		Defensive Bonus
+SkillBase.RegisterPropertyNames.DefensiveBonus:		- Defensive Bonus: {0}% (PvE Only)
 SkillBase.RegisterPropertyNames.Dementia:		Dementia
 SkillBase.RegisterPropertyNames.Dexterity:		Geschick
 SkillBase.RegisterPropertyNames.DexterityBonusCap:	Bonus auf Geschickbonuslimit
@@ -711,7 +711,7 @@ SkillBase.RegisterPropertyNames.Enhancement:		Verbesserungen
 SkillBase.RegisterPropertyNames.Envenom:		Envenom
 SkillBase.RegisterPropertyNames.EtherealShriek:		Ätherisches Kreischen
 SkillBase.RegisterPropertyNames.EtherealShriekFocus:	Ätherisches Kreischen
-SkillBase.RegisterPropertyNames.EvadeChance:		Evade Chance
+SkillBase.RegisterPropertyNames.EvadeChance:		- Evade: {0}% (PvE Only)
 SkillBase.RegisterPropertyNames.ExperienceLoss:		Death Experience Loss Reduction
 SkillBase.RegisterPropertyNames.Fatigue:		Fatigue
 SkillBase.RegisterPropertyNames.FireMagic:		Feuermagie
@@ -755,7 +755,7 @@ SkillBase.RegisterPropertyNames.MindMagic:		Geistesmagie
 SkillBase.RegisterPropertyNames.MindMagicFocus:		Geistesmagie
 SkillBase.RegisterPropertyNames.Music:			Musik
 SkillBase.RegisterPropertyNames.Nature:			Naturnähe
-SkillBase.RegisterPropertyNames.NegativeReduction:	Negative Reduction
+SkillBase.RegisterPropertyNames.NegativeReduction:	- Negative effect duration reduction: {0}% (PvE Only)
 SkillBase.RegisterPropertyNames.NightshadeMagic:	Nachtschattenmagie
 SkillBase.RegisterPropertyNames.Nurture:		Nähren
 SkillBase.RegisterPropertyNames.OdinsWill:		Odins Wille
@@ -763,11 +763,11 @@ SkillBase.RegisterPropertyNames.Pacification:		Pacification
 SkillBase.RegisterPropertyNames.Painworking:		Painworking
 SkillBase.RegisterPropertyNames.PainworkingFocus:	Painworking
 SkillBase.RegisterPropertyNames.Parry:			Parieren
-SkillBase.RegisterPropertyNames.ParryChance:		Parry Chance
+SkillBase.RegisterPropertyNames.ParryChance:		- Parry: {0}% (PvE Only)
 SkillBase.RegisterPropertyNames.Pathfinding:		Pathfinding
 SkillBase.RegisterPropertyNames.PhantasmalWail:		Geisterhaftes Heulen
 SkillBase.RegisterPropertyNames.PhantasmalWailFocus:	Geisterhaftes Heulen
-SkillBase.RegisterPropertyNames.PieceAblative:		Piece Ablative
+SkillBase.RegisterPropertyNames.PieceAblative:		- Piece Ablative: {0}% (PvE Only)
 SkillBase.RegisterPropertyNames.Piercing:		Stichwaffen
 SkillBase.RegisterPropertyNames.Piety:			Frömmigkeit
 SkillBase.RegisterPropertyNames.PietyBonusCap:		Bonus to Piety attribute bonus cap
@@ -780,7 +780,7 @@ SkillBase.RegisterPropertyNames.PowerStrikes:		Power Strikes
 SkillBase.RegisterPropertyNames.Quickness:		Schnelligkeit
 SkillBase.RegisterPropertyNames.QuicknessBonusCap:	Bonus auf Schnelligkeitsbonuslimit
 SkillBase.RegisterPropertyNames.RangedDamage:		all Ranged Damage
-SkillBase.RegisterPropertyNames.ReactionaryStyleDamage:	Reactionary Style Damage
+SkillBase.RegisterPropertyNames.ReactionaryStyleDamage:	- Reactionary Style Damage Bonus: {0}% (PvE Only)
 SkillBase.RegisterPropertyNames.RecurvedBow:		Reflexbogen
 SkillBase.RegisterPropertyNames.Regrowth:		Nachwachsen
 SkillBase.RegisterPropertyNames.Rejuvenation:		Verjüngung
@@ -802,7 +802,7 @@ SkillBase.RegisterPropertyNames.SpectralForceFocus:	Schemenhafte Stärke
 SkillBase.RegisterPropertyNames.SpectralGuard:		Schemenhafte Wache
 SkillBase.RegisterPropertyNames.SpeedDecreaseDuration:	Speed Decrease Duration
 SkillBase.RegisterPropertyNames.SpellDuration:		Spell Duration
-SkillBase.RegisterPropertyNames.SpellPowerCost:		Spell Power Cost Reduction
+SkillBase.RegisterPropertyNames.SpellPowerCost:		- Spell Power Cost Reduction: {0}% (PvE Only)
 SkillBase.RegisterPropertyNames.SpellRange:		Spell Range
 SkillBase.RegisterPropertyNames.Spirit:			Geist
 SkillBase.RegisterPropertyNames.SpiritMagic:		Beschwörung
@@ -814,7 +814,7 @@ SkillBase.RegisterPropertyNames.Stormcalling:		Stormcalling
 SkillBase.RegisterPropertyNames.Strength:		Stärke
 SkillBase.RegisterPropertyNames.StrengthBonusCap:	Bonus auf Stärkebonuslimit
 SkillBase.RegisterPropertyNames.StunDuration:		Stun Duration
-SkillBase.RegisterPropertyNames.StyleCostReduction:	Style Cost Reduction
+SkillBase.RegisterPropertyNames.StyleCostReduction:	- Style Cost Reduction: {0} pts (PvE Only)
 SkillBase.RegisterPropertyNames.StyleDamage:		Bonus to style damage
 SkillBase.RegisterPropertyNames.Summoning:		Summoning
 SkillBase.RegisterPropertyNames.SummoningFocus:		Summoning
@@ -824,7 +824,7 @@ SkillBase.RegisterPropertyNames.Sword:			Schwert
 SkillBase.RegisterPropertyNames.ThrownWeapons:		Wurfwaffen
 SkillBase.RegisterPropertyNames.Thrust:			Stoß
 SkillBase.RegisterPropertyNames.Thrusting:		Thrusting
-SkillBase.RegisterPropertyNames.ToHitBonus:		To Hit Bonus
+SkillBase.RegisterPropertyNames.ToHitBonus:		- To-hit bonus: {0}% (PvE Only)
 SkillBase.RegisterPropertyNames.TwoHanded:		Zweihänder
 SkillBase.RegisterPropertyNames.Valor:			Valor
 SkillBase.RegisterPropertyNames.VampiiricEmbrace:	Vampyrumarmung
