@@ -77,7 +77,13 @@ namespace DOL.GS.Quests.Hibernia
 		private static ItemTemplate WardenEpicGloves = null; //Subterranean Gloves 
 		private static ItemTemplate WardenEpicVest = null; //Subterranean Hauberk 
 		private static ItemTemplate WardenEpicLegs = null; //Subterranean Legs 
-		private static ItemTemplate WardenEpicArms = null; //Subterranean Sleeves                 
+		private static ItemTemplate WardenEpicArms = null; //Subterranean Sleeves 
+		private static ItemTemplate MaulerEpicBoots = null;
+		private static ItemTemplate MaulerEpicHelm = null;
+		private static ItemTemplate MaulerEpicGloves = null;
+		private static ItemTemplate MaulerEpicVest = null;
+		private static ItemTemplate MaulerEpicLegs = null;
+		private static ItemTemplate MaulerEpicArms = null;     
 
 		// Constructors
 		public Focus_50() : base()
@@ -1228,7 +1234,14 @@ namespace DOL.GS.Quests.Hibernia
 				}
 
 			}
-
+			#region Mauler
+			MaulerEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicBoots");
+			MaulerEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicHelm");
+			MaulerEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicGloves");
+			MaulerEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicVest");
+			MaulerEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicLegs");
+			MaulerEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicArms");
+			#endregion
 //Hero Epic Sleeves End
 //Item Descriptions End
 
@@ -1325,7 +1338,8 @@ namespace DOL.GS.Quests.Hibernia
 			if (player.CharacterClass.ID != (byte) eCharacterClass.Hero &&
 				player.CharacterClass.ID != (byte) eCharacterClass.Ranger &&
 				player.CharacterClass.ID != (byte) eCharacterClass.Warden &&
-				player.CharacterClass.ID != (byte) eCharacterClass.Eldritch)
+				player.CharacterClass.ID != (byte) eCharacterClass.Eldritch &&
+				player.CharacterClass.ID != (byte) eCharacterClass.Mauler_Hib)
 				return false;
 
 			// This checks below are only performed is player isn't doing quest already
@@ -1502,6 +1516,15 @@ namespace DOL.GS.Quests.Hibernia
 				GiveItem(m_questPlayer, WardenEpicHelm);
 				GiveItem(m_questPlayer, WardenEpicLegs);
 				GiveItem(m_questPlayer, WardenEpicVest);
+			}
+			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Mauler_Hib)
+			{
+				GiveItem(m_questPlayer, MaulerEpicArms);
+				GiveItem(m_questPlayer, MaulerEpicBoots);
+				GiveItem(m_questPlayer, MaulerEpicGloves);
+				GiveItem(m_questPlayer, MaulerEpicHelm);
+				GiveItem(m_questPlayer, MaulerEpicLegs);
+				GiveItem(m_questPlayer, MaulerEpicVest);
 			}
 
 

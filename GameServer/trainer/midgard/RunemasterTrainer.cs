@@ -33,6 +33,8 @@ namespace DOL.GS.Trainer
 			get { return eCharacterClass.Runemaster; }
 		}
 
+        public const string WEAPON_ID = "runemaster_item";
+
 		public RunemasterTrainer() : base()
 		{
 		}
@@ -97,7 +99,8 @@ namespace DOL.GS.Trainer
 			case "join the House of Odin":
 				// promote player to other class
 				if (CanPromotePlayer(player)) {
-					PromotePlayer(player, (int)eCharacterClass.Runemaster, "Welcome young Runemaster! May your time in Midgard army be rewarding!", null);	// TODO: gifts
+					PromotePlayer(player, (int)eCharacterClass.Runemaster, "Welcome young Runemaster! May your time in Midgard army be rewarding!", null);
+                    player.ReceiveItem(this, WEAPON_ID);
 				}
 				break;
 			}

@@ -33,6 +33,8 @@ namespace DOL.GS.Trainer
 			get { return eCharacterClass.Hunter; }
 		}
 
+        public const string WEAPON_ID = "hunter_item";
+
 		/// <summary>
 		/// Interact with trainer
 		/// </summary>
@@ -93,7 +95,8 @@ namespace DOL.GS.Trainer
 			case "join the House of Skadi":
 				// promote player to other class
 				if (CanPromotePlayer(player)) {
-					PromotePlayer(player, (int)eCharacterClass.Hunter, "Welcome young Hunter! May your time in Midgard army be rewarding!", null);	// TODO: gifts
+					PromotePlayer(player, (int)eCharacterClass.Hunter, "Welcome young Hunter! May your time in Midgard army be rewarding!", null);
+                    player.ReceiveItem(this, WEAPON_ID);
 				}
 				break;
 			}
