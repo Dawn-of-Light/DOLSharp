@@ -1031,6 +1031,8 @@ DetailDisplayHandler.HandlePacket.YouFumble:		Ihr verstolpert
 DetailDisplayHandler.HandlePacket.YouHit:		Ihr trefft
 DetailDisplayHandler.HandlePacket.YouMiss:		Ihr trefft nicht
 DetailDisplayHandler.HandlePacket.YouParry:		Ihr pariert
+DetailDisplayHandler.WriteBonusLine.Points:		 Punkte
+DetailDisplayHandler.WriteBonusLine.PowerPool:		% vom Magiekraftvorrat.
 DetailDisplayHandler.WriteClassicArmorInfos.Absorption:	- {0}% Absorption
 DetailDisplayHandler.WriteClassicArmorInfos.ArmorMod:	Rüstungsmodifikator:
 DetailDisplayHandler.WriteClassicArmorInfos.BaseFactor:	- RF {0} Ausgangswert

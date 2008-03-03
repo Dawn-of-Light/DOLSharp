@@ -1707,8 +1707,8 @@ Type    Description           Id
 						SkillBase.GetPropertyName((eProperty)bonusCat),
 						bonusValue.ToString("+0;-0;0"),
 						((bonusCat == (int)eProperty.PowerPool) || (bonusCat >= (int)eProperty.Resist_First && bonusCat <= (int)eProperty.Resist_Last))
-						? ((bonusCat == (int)eProperty.PowerPool) ? "% of power pool." : "%")
-							: " pts"
+						? ((bonusCat == (int)eProperty.PowerPool) ? LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DetailDisplayHandler.WriteBonusLine.PowerPool") : "%")
+							: LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DetailDisplayHandler.WriteBonusLine.Points")
 					));
 				}
 			}
