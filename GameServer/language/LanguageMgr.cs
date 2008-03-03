@@ -149,7 +149,8 @@ namespace DOL.Language
 			{
                 try
                 {
-                    translated = string.Format(translated, args);
+					if (args.Length > 0) // only do this if args are passed in; this avoid errors on translated strings with {0} args used post translation
+	                    translated = string.Format(translated, args);
                 }
                 catch
                 {

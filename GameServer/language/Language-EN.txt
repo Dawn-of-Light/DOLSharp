@@ -827,13 +827,14 @@ SkillBase.RegisterPropertyNames.ToHitBonus:		- To-hit bonus: {0}% (PvE Only)
 SkillBase.RegisterPropertyNames.TwoHanded:		Two Handed	
 SkillBase.RegisterPropertyNames.Valor:			Valor
 SkillBase.RegisterPropertyNames.VampiiricEmbrace:	Vampiiric Embrace		
-SkillBase.RegisterPropertyNames.Verdant:		Verdant	
+SkillBase.RegisterPropertyNames.Verdant:		Verdant	Path
 SkillBase.RegisterPropertyNames.VerdantFocus:		Verdant Focus	
 SkillBase.RegisterPropertyNames.VoidMagic:		Void Magic	
 SkillBase.RegisterPropertyNames.VoidMagicFocus:		Void Magic Focus	
 SkillBase.RegisterPropertyNames.WeaponSkill:		Bonus to Weaponskill	
 SkillBase.RegisterPropertyNames.WindMagic:		Wind Magic	
 SkillBase.RegisterPropertyNames.WindMagicFocus:		Wind Magic Focus	
+SkillBase.RegisterPropertyNames.Witchcraft:			Witchcraft
 SkillBase.RegisterPropertyNames.WitchcraftFocus:	Witchcraft Focus		
 
 # HOUSING
