@@ -33,6 +33,8 @@ namespace DOL.GS.Trainer
 			get { return eCharacterClass.Spiritmaster; }
 		}
 
+        public const string WEAPON_ID = "spiritmaster_item";
+
 		/// <summary>
 		/// Interact with trainer
 		/// </summary>
@@ -93,7 +95,8 @@ namespace DOL.GS.Trainer
 			case "join the House of Hel":
 				// promote player to other class
 				if (CanPromotePlayer(player)) {
-					PromotePlayer(player, (int)eCharacterClass.Spiritmaster, "Welcome young Spiritmaster! May your time in Midgard army be rewarding!", null);	// TODO: gifts
+					PromotePlayer(player, (int)eCharacterClass.Spiritmaster, "Welcome young Spiritmaster! May your time in Midgard army be rewarding!", null);
+                    player.ReceiveItem(this, WEAPON_ID);
 				}
 				break;
 			}

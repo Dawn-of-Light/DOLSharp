@@ -34,6 +34,8 @@ namespace DOL.GS.Trainer
 			get { return eCharacterClass.Thane; }
 		}
 
+        public const string WEAPON_ID = "thane_item";
+
 		/// <summary>
 		/// Interact with trainer
 		/// </summary>
@@ -94,7 +96,8 @@ namespace DOL.GS.Trainer
 			case "join the House of Thor":
 				// promote player to other class
 				if (CanPromotePlayer(player)) {
-					PromotePlayer(player, (int)eCharacterClass.Thane, "Welcome young Thane! May your time in Midgard army be rewarding!", null);	// TODO: gifts
+					PromotePlayer(player, (int)eCharacterClass.Thane, "Welcome young Thane! May your time in Midgard army be rewarding!", null);
+                    player.ReceiveItem(this, WEAPON_ID);
 				}
 				break;
 			}
