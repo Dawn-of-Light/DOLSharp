@@ -33,6 +33,8 @@ namespace DOL.GS.Trainer
 			get { return eCharacterClass.Valkyrie; }
 		}
 
+        public const string WEAPON_ID = "valkyrie_item";
+
 		/// <summary>
 		/// Interact with trainer
 		/// </summary>
@@ -95,7 +97,8 @@ namespace DOL.GS.Trainer
 					// promote player to other class
 					if (CanPromotePlayer(player))
 					{
-						PromotePlayer(player, (int)eCharacterClass.Valkyrie, "Welcome young Valkyrie! May your time in Midgard army be rewarding!", null);	// TODO: gifts
+						PromotePlayer(player, (int)eCharacterClass.Valkyrie, "Welcome young Valkyrie! May your time in Midgard army be rewarding!", null);
+                        player.ReceiveItem(this, WEAPON_ID);
 					}
 					break;
 			}

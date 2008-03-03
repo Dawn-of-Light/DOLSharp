@@ -33,6 +33,8 @@ namespace DOL.GS.Trainer
 			get { return eCharacterClass.Warrior; }
 		}
 
+        public const string WEAPON_ID = "warrior_item";
+
 		/// <summary>
 		/// Interact with trainer
 		/// </summary>
@@ -93,7 +95,8 @@ namespace DOL.GS.Trainer
 			case "join the House of Tyr":
 				// promote player to other class
 				if (CanPromotePlayer(player)) {
-					PromotePlayer(player, (int)eCharacterClass.Warrior, "Welcome young Warrior! May your time in Midgard army be rewarding!", null);	// TODO: gifts
+					PromotePlayer(player, (int)eCharacterClass.Warrior, "Welcome young Warrior! May your time in Midgard army be rewarding!", null);
+                    player.ReceiveItem(this, WEAPON_ID);
 				}
 				break;
 			}

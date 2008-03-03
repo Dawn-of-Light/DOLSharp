@@ -59,8 +59,14 @@ namespace DOL.GS.Quests.Albion
 		private static ItemTemplate FriarEpicHelm = null; //Subterranean Coif 
 		private static ItemTemplate FriarEpicGloves = null; //Subterranean Gloves 
 		private static ItemTemplate FriarEpicVest = null; //Subterranean Hauberk 
-		private static ItemTemplate FriarEpicLegs = null; //Subterranean Legs 
-		private static ItemTemplate FriarEpicArms = null; //Subterranean Sleeves         
+		private static ItemTemplate FriarEpicLegs = null; //Subterranean Legs
+		private static ItemTemplate FriarEpicArms = null; //Subterranean Sleeves
+		private static ItemTemplate MaulerEpicBoots = null;
+		private static ItemTemplate MaulerEpicHelm = null;
+		private static ItemTemplate MaulerEpicGloves = null;
+		private static ItemTemplate MaulerEpicVest = null;
+		private static ItemTemplate MaulerEpicLegs = null;
+		private static ItemTemplate MaulerEpicArms = null;
 
 		// Constructors
 		public Defenders_50() : base()
@@ -89,17 +95,17 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineNPCs
 
-            GameNPC[] npcs = WorldMgr.GetNPCsByName("Lidmann Halsey", eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetNPCsByName("Lidmann Halsey", eRealm.Albion);
 
 			if (npcs.Length == 0)
 			{
-				
+
 				Lidmann = new GameNPC();
 				Lidmann.Model = 64;
 				Lidmann.Name = "Lidmann Halsey";
-                
-                if (log.IsWarnEnabled)
-                    log.Warn("Could not find "+Lidmann.Name+", creating it ...");
+
+				if (log.IsWarnEnabled)
+					log.Warn("Could not find " + Lidmann.Name + ", creating it ...");
 
 				Lidmann.GuildName = "";
 				Lidmann.Realm = eRealm.Albion;
@@ -154,7 +160,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineItems
 
-			sealed_pouch = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sealed_pouch");
+			sealed_pouch = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "sealed_pouch");
 			if (sealed_pouch == null)
 			{
 				if (log.IsWarnEnabled)
@@ -180,1030 +186,1037 @@ namespace DOL.GS.Quests.Albion
 				}
 
 			}
-// end item
+			// end item
 			ItemTemplate i = null;
-                ScoutEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ScoutEpicBoots");
-                if (ScoutEpicBoots == null)
-                {
-                    i = new ItemTemplate();
-                    i.Id_nb = "ScoutEpicBoots";
-                    i.Name = "Brigandine Boots of Vigilant Defense";
-                    i.Level = 50;
-                    i.Item_Type = 23;
-                    i.Model = 731;
-                    i.IsDropable = true;
-                    i.IsPickable = true;
-                    i.DPS_AF = 100;
-                    i.SPD_ABS = 19;
-                    i.Object_Type = 34;
-                    i.Quality = 100;
-                    i.Weight = 22;
-                    i.Bonus = 35;
-                    i.MaxCondition = 50000;
-                    i.MaxDurability = 50000;
-                    i.Condition = 50000;
-                    i.Durability = 50000;
-
-                                       //bonuses: Con +10, Dex +18, Qui +15, Spirit +8%
-                    i.Bonus1 = 10;
-                    i.Bonus1Type = (int)eStat.CON;
-
-                    i.Bonus2 = 18;
-                    i.Bonus2Type = (int)eStat.DEX;
-
-                    i.Bonus3 = 15;
-                    i.Bonus3Type = (int)eStat.QUI;
-
-                    i.Bonus4 = 8;
-                    i.Bonus4Type = (int)eResist.Spirit;
-                    {
-                        GameServer.Database.AddNewObject(i);
-                    }
-                    ScoutEpicBoots = i;
-
-                }
-//end item
-                //Brigandine of Vigilant Defense  Coif
-                ScoutEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ScoutEpicHelm");
-                if (ScoutEpicHelm == null)
-                {
-                    i = new ItemTemplate();
-                    i.Id_nb = "ScoutEpicHelm";
-                    i.Name = "Brigandine Coif of Vigilant Defense";
-                    i.Level = 50;
-                    i.Item_Type = 21;
-                    i.Model = 1290; //NEED TO WORK ON..
-                    i.IsDropable = true;
-                    i.IsPickable = true;
-                    i.DPS_AF = 100;
-                    i.SPD_ABS = 19;
-                    i.Object_Type = 34;
-                    i.Quality = 100;
-                    i.Weight = 22;
-                    i.Bonus = 35;
-                    i.MaxCondition = 50000;
-                    i.MaxDurability = 50000;
-                    i.Condition = 50000;
-                    i.Durability = 50000;
-
-                                       //bonuses: Dex +12, Qui +22, Crush +8%, Heat +8%
-                    i.Bonus1 = 12;
-                    i.Bonus1Type = (int)eStat.DEX;
-
-                    i.Bonus2 = 22;
-                    i.Bonus2Type = (int)eStat.QUI;
-
-                    i.Bonus3 = 8;
-                    i.Bonus3Type = (int)eResist.Crush;
-
-                    i.Bonus4 = 8;
-                    i.Bonus4Type = (int)eResist.Heat;
-                    {
-                        GameServer.Database.AddNewObject(i);
-                    }
-
-                    ScoutEpicHelm = i;
-
-                }
-//end item
-                //Brigandine of Vigilant Defense  Gloves
-                ScoutEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ScoutEpicGloves");
-                if (ScoutEpicGloves == null)
-                {
-                    i = new ItemTemplate();
-                    i.Id_nb = "ScoutEpicGloves";
-                    i.Name = "Brigandine Gloves of Vigilant Defense";
-                    i.Level = 50;
-                    i.Item_Type = 22;
-                    i.Model = 732;
-                    i.IsDropable = true;
-                    i.IsPickable = true;
-                    i.DPS_AF = 100;
-                    i.SPD_ABS = 19;
-                    i.Object_Type = 34;
-                    i.Quality = 100;
-                    i.Weight = 22;
-                    i.Bonus = 35;
-                    i.MaxCondition = 50000;
-                    i.MaxDurability = 50000;
-                    i.Condition = 50000;
-                    i.Durability = 50000;
-
-                                       //bonuses: Dex +21, Longbow +5, Body +8%, Slash +8%
-                    i.Bonus1 = 21;
-                    i.Bonus1Type = (int)eStat.DEX;
-
-                    i.Bonus2 = 5;
-                    i.Bonus2Type = (int)eProperty.Skill_Long_bows;
-
-                    i.Bonus3 = 8;
-                    i.Bonus3Type = (int)eResist.Body;
-
-                    i.Bonus4 = 8;
-                    i.Bonus4Type = (int)eResist.Slash;
-
-                    {
-                        GameServer.Database.AddNewObject(i);
-                    }
-
-                    ScoutEpicGloves = i;
-
-                }
-                //Brigandine of Vigilant Defense  Hauberk
-                ScoutEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ScoutEpicVest");
-                if (ScoutEpicVest == null)
-                {
-                    i = new ItemTemplate();
-                    i.Id_nb = "ScoutEpicVest";
-                    i.Name = "Brigandine Jerkin of Vigilant Defense";
-                    i.Level = 50;
-                    i.Item_Type = 25;
-                    i.Model = 728;
-                    i.IsDropable = true;
-                    i.IsPickable = true;
-                    i.DPS_AF = 100;
-                    i.SPD_ABS = 19;
-                    i.Object_Type = 34;
-                    i.Quality = 100;
-                    i.Weight = 22;
-                    i.Bonus = 35;
-                    i.MaxCondition = 50000;
-                    i.MaxDurability = 50000;
-                    i.Condition = 50000;
-                    i.Durability = 50000;
-
-                                       //bonuses: Str +18, HP +45, Spirit +4%, Thrust +4%
-                    i.Bonus1 = 18;
-                    i.Bonus1Type = (int)eStat.STR;
-
-                    i.Bonus2 = 4;
-                    i.Bonus2Type = (int)eResist.Thrust;
-
-                    i.Bonus3 = 4;
-                    i.Bonus3Type = (int)eResist.Spirit;
-
-                    i.Bonus4 = 45;
-                    i.Bonus4Type = (int)eProperty.MaxHealth;
-                    {
-                        GameServer.Database.AddNewObject(i);
-                    }
-
-                    ScoutEpicVest = i;
-
-                }
-                //Brigandine of Vigilant Defense  Legs
-                ScoutEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ScoutEpicLegs");
-                if (ScoutEpicLegs == null)
-                {
-                    i = new ItemTemplate();
-                    i.Id_nb = "ScoutEpicLegs";
-                    i.Name = "Brigandine Legs of Vigilant Defense";
-                    i.Level = 50;
-                    i.Item_Type = 27;
-                    i.Model = 729;
-                    i.IsDropable = true;
-                    i.IsPickable = true;
-                    i.DPS_AF = 100;
-                    i.SPD_ABS = 19;
-                    i.Object_Type = 34;
-                    i.Quality = 100;
-                    i.Weight = 22;
-                    i.Bonus = 35;
-                    i.MaxCondition = 50000;
-                    i.MaxDurability = 50000;
-                    i.Condition = 50000;
-                    i.Durability = 50000;
-
-                                       //bonuses: Con +22, Dex +15, Qui +7, Spirit +6%
-                    i.Bonus1 = 22;
-                    i.Bonus1Type = (int)eStat.CON;
-
-                    i.Bonus2 = 15;
-                    i.Bonus2Type = (int)eStat.DEX;
-
-                    i.Bonus3 = 7;
-                    i.Bonus3Type = (int)eStat.QUI;
-
-                    i.Bonus4 = 6;
-                    i.Bonus4Type = (int)eResist.Spirit;
-                    {
-                        GameServer.Database.AddNewObject(i);
-                    }
-                    ScoutEpicLegs = i;
-
-                }
-                //Brigandine of Vigilant Defense  Sleeves
-                ScoutEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ScoutEpicArms");
-                if (ScoutEpicArms == null)
-                {
-                    i = new ItemTemplate();
-                    i.Id_nb = "ScoutEpicArms";
-                    i.Name = "Brigandine Sleeves of Vigilant Defense";
-                    i.Level = 50;
-                    i.Item_Type = 28;
-                    i.Model = 730;
-                    i.IsDropable = true;
-                    i.IsPickable = true;
-                    i.DPS_AF = 100;
-                    i.SPD_ABS = 19;
-                    i.Object_Type = 34;
-                    i.Quality = 100;
-                    i.Weight = 22;
-                    i.Bonus = 35;
-                    i.MaxCondition = 50000;
-                    i.MaxDurability = 50000;
-                    i.Condition = 50000;
-                    i.Durability = 50000;
-
-                                       //bonuses: Con +22, Str +18, Energy +8%, Slash +4%
-                    i.Bonus1 = 22;
-                    i.Bonus1Type = (int)eStat.CON;
-
-                    i.Bonus2 = 18;
-                    i.Bonus2Type = (int)eStat.STR;
-
-                    i.Bonus3 = 4;
-                    i.Bonus3Type = (int)eResist.Energy;
-
-                    i.Bonus4 = 4;
-                    i.Bonus4Type = (int)eResist.Slash;
-                    {
-                        GameServer.Database.AddNewObject(i);
-                    }
-
-                    ScoutEpicArms = i;
-
-                }
-                               //Scout Epic Sleeves End
-
-                               //Armsman Epic Boots Start
-                ArmsmanEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ArmsmanEpicBoots");
-                if (ArmsmanEpicBoots == null)
-                {
-                    i = new ItemTemplate();
-                    i.Id_nb = "ArmsmanEpicBoots";
-                    i.Name = "Sabaton of the Stalwart Arm";
-                    i.Level = 50;
-                    i.Item_Type = 23;
-                    i.Model = 692;
-                    i.IsDropable = true;
-                    i.IsPickable = true;
-                    i.DPS_AF = 100;
-                    i.SPD_ABS = 34;
-                    i.Object_Type = 36;
-                    i.Quality = 100;
-                    i.Weight = 22;
-                    i.Bonus = 35;
-                    i.MaxCondition = 50000;
-                    i.MaxDurability = 50000;
-                    i.Condition = 50000;
-                    i.Durability = 50000;
-
-                                       //bonuses: Str +15, Qui +15, Spirit +8%
-                    i.Bonus1 = 15;
-                    i.Bonus1Type = (int)eStat.STR;
-
-                    i.Bonus2 = 15;
-                    i.Bonus2Type = (int)eStat.QUI;
-
-                    i.Bonus3 = 8;
-                    i.Bonus3Type = (int)eResist.Spirit;
-
-
-                    {
-                        GameServer.Database.AddNewObject(i);
-                    }
-                    ArmsmanEpicBoots = i;
-
-                }
-//end item
-                //of the Stalwart Arm Coif
-                ArmsmanEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ArmsmanEpicHelm");
-                if (ArmsmanEpicHelm == null)
-                {
-                    i = new ItemTemplate();
-                    i.Id_nb = "ArmsmanEpicHelm";
-                    i.Name = "Coif of the Stalwart Arm";
-                    i.Level = 50;
-                    i.Item_Type = 21;
-                    i.Model = 1290; //NEED TO WORK ON..
-                    i.IsDropable = true;
-                    i.IsPickable = true;
-                    i.DPS_AF = 100;
-                    i.SPD_ABS = 34;
-                    i.Object_Type = 36;
-                    i.Quality = 100;
-                    i.Weight = 22;
-                    i.Bonus = 35;
-                    i.MaxCondition = 50000;
-                    i.MaxDurability = 50000;
-                    i.Condition = 50000;
-                    i.Durability = 50000;
-
-                                       //bonuses: Con +19, Qui +18, Body +6%, Crush +6%
-                    i.Bonus1 = 19;
-                    i.Bonus1Type = (int)eStat.CON;
-
-                    i.Bonus2 = 18;
-                    i.Bonus2Type = (int)eStat.QUI;
-
-                    i.Bonus3 = 6;
-                    i.Bonus3Type = (int)eResist.Body;
-
-                    i.Bonus4 = 6;
-                    i.Bonus4Type = (int)eResist.Crush;
-                    {
-                        GameServer.Database.AddNewObject(i);
-                    }
-
-                    ArmsmanEpicHelm = i;
-
-                }
-//end item
-                //of the Stalwart Arm Gloves
-                ArmsmanEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ArmsmanEpicGloves");
-                if (ArmsmanEpicGloves == null)
-                {
-                    i = new ItemTemplate();
-                    i.Id_nb = "ArmsmanEpicGloves";
-                    i.Name = "Gloves of the Stalwart Arm";
-                    i.Level = 50;
-                    i.Item_Type = 22;
-                    i.Model = 691;
-                    i.IsDropable = true;
-                    i.IsPickable = true;
-                    i.DPS_AF = 100;
-                    i.SPD_ABS = 34;
-                    i.Object_Type = 36;
-                    i.Quality = 100;
-                    i.Weight = 22;
-                    i.Bonus = 35;
-                    i.MaxCondition = 50000;
-                    i.MaxDurability = 50000;
-                    i.Condition = 50000;
-                    i.Durability = 50000;
-
-                                       //bonuses: Str +22, Dex +15, Cold +6%, Slash +6
-                    i.Bonus1 = 22;
-                    i.Bonus1Type = (int)eStat.STR;
-
-                    i.Bonus2 = 15;
-                    i.Bonus2Type = (int)eStat.DEX;
-
-                    i.Bonus3 = 6;
-                    i.Bonus3Type = (int)eResist.Cold;
-
-                    i.Bonus4 = 6;
-                    i.Bonus4Type = (int)eResist.Slash;
-                    {
-                        GameServer.Database.AddNewObject(i);
-                    }
-
-                    ArmsmanEpicGloves = i;
-
-                }
-                //of the Stalwart Arm Hauberk
-                ArmsmanEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ArmsmanEpicVest");
-                if (ArmsmanEpicVest == null)
-                {
-                    i = new ItemTemplate();
-                    i.Id_nb = "ArmsmanEpicVest";
-                    i.Name = "Jerkin of the Stalwart Arm";
-                    i.Level = 50;
-                    i.Item_Type = 25;
-                    i.Model = 688;
-                    i.IsDropable = true;
-                    i.IsPickable = true;
-                    i.DPS_AF = 100;
-                    i.SPD_ABS = 34;
-                    i.Object_Type = 36;
-                    i.Quality = 100;
-                    i.Weight = 22;
-                    i.Bonus = 35;
-                    i.MaxCondition = 50000;
-                    i.MaxDurability = 50000;
-                    i.Condition = 50000;
-                    i.Durability = 50000;
-
-                                       //bonuses: HP +45, Str +18, Energy +4%, Slash +4%
-                                       // there is an additional bonus here I couldn't figure out how to add
-                                       // 3 charges of 75 point shield ???
-                    i.Bonus1 = 18;
-                    i.Bonus1Type = (int)eStat.STR;
-
-                    i.Bonus2 = 4;
-                    i.Bonus2Type = (int)eResist.Slash;
-
-                    i.Bonus3 = 4;
-                    i.Bonus3Type = (int)eResist.Energy;
-
-                    i.Bonus4 = 45;
-                    i.Bonus4Type = (int)eProperty.MaxHealth;
-
-                    {
-                        GameServer.Database.AddNewObject(i);
-                    }
-
-                    ArmsmanEpicVest = i;
-
-                }
-                //of the Stalwart Arm Legs
-                ArmsmanEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ArmsmanEpicLegs");
-                if (ArmsmanEpicLegs == null)
-                {
-                    i = new ItemTemplate();
-                    i.Id_nb = "ArmsmanEpicLegs";
-                    i.Name = "Legs of the Stalwart Arm";
-                    i.Level = 50;
-                    i.Item_Type = 27;
-                    i.Model = 689;
-                    i.IsDropable = true;
-                    i.IsPickable = true;
-                    i.DPS_AF = 100;
-                    i.SPD_ABS = 34;
-                    i.Object_Type = 36;
-                    i.Quality = 100;
-                    i.Weight = 22;
-                    i.Bonus = 35;
-                    i.MaxCondition = 50000;
-                    i.MaxDurability = 50000;
-                    i.Condition = 50000;
-                    i.Durability = 50000;
-
-                                       //bonuses: Con +24, Str +10, Matter +8%, Crush +8%
-                    i.Bonus1 = 24;
-                    i.Bonus1Type = (int)eStat.CON;
-
-                    i.Bonus2 = 10;
-                    i.Bonus2Type = (int)eStat.STR;
-
-                    i.Bonus3 = 8;
-                    i.Bonus3Type = (int)eResist.Matter;
-
-                    i.Bonus4 = 8;
-                    i.Bonus4Type = (int)eResist.Crush;
-                    {
-                        GameServer.Database.AddNewObject(i);
-                    }
-
-                    ArmsmanEpicLegs = i;
-
-                }
-                //of the Stalwart Arm Sleeves
-                ArmsmanEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ArmsmanEpicArms");
-                if (ArmsmanEpicArms == null)
-                {
-                    i = new ItemTemplate();
-                    i.Id_nb = "ArmsmanEpicArms";
-                    i.Name = "Sleeves of the Stalwart Arm";
-                    i.Level = 50;
-                    i.Item_Type = 28;
-                    i.Model = 690;
-                    i.IsDropable = true;
-                    i.IsPickable = true;
-                    i.DPS_AF = 100;
-                    i.SPD_ABS = 34;
-                    i.Object_Type = 36;
-                    i.Quality = 100;
-                    i.Weight = 22;
-                    i.Bonus = 35;
-                    i.MaxCondition = 50000;
-                    i.MaxDurability = 50000;
-                    i.Condition = 50000;
-                    i.Durability = 50000;
-
-                                       //bonuses: Con +19, Dex +18, Heat +6%, Thrust +6%
-                    i.Bonus1 = 19;
-                    i.Bonus1Type = (int)eStat.CON;
-
-                    i.Bonus2 = 18;
-                    i.Bonus2Type = (int)eStat.DEX;
-
-                    i.Bonus3 = 6;
-                    i.Bonus3Type = (int)eResist.Heat;
-
-                    i.Bonus4 = 6;
-                    i.Bonus4Type = (int)eResist.Thrust;
-                    {
-                        GameServer.Database.AddNewObject(i);
-                    }
-
-                    ArmsmanEpicArms = i;
-
-                }
-                FriarEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "FriarEpicBoots");
-                if (FriarEpicBoots == null)
-                {
-                    i = new ItemTemplate();
-                    i.Id_nb = "FriarEpicBoots";
-                    i.Name = "Prayer-bound Boots";
-                    i.Level = 50;
-                    i.Item_Type = 23;
-                    i.Model = 40;
-                    i.IsDropable = true;
-                    i.IsPickable = true;
-                    i.DPS_AF = 100;
-                    i.SPD_ABS = 10;
-                    i.Object_Type = 33;
-                    i.Quality = 100;
-                    i.Weight = 22;
-                    i.Bonus = 35;
-                    i.MaxCondition = 50000;
-                    i.MaxDurability = 50000;
-                    i.Condition = 50000;
-                    i.Durability = 50000;
-
-                                       //bonuses: Qui +18, Dex +15, Spirit +10%, Con +12
-                    i.Bonus1 = 18;
-                    i.Bonus1Type = (int)eStat.QUI;
-
-                    i.Bonus2 = 15;
-                    i.Bonus2Type = (int)eStat.DEX;
-
-                    i.Bonus3 = 12;
-                    i.Bonus3Type = (int)eStat.CON;
-
-                    i.Bonus4 = 10;
-                    i.Bonus4Type = (int)eResist.Spirit;
-                    {
-                        GameServer.Database.AddNewObject(i);
-                    }
-
-                    FriarEpicBoots = i;
-
-                }
-//end item
-                //Prayer-bound Coif
-                FriarEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "FriarEpicHelm");
-                if (FriarEpicHelm == null)
-                {
-                    i = new ItemTemplate();
-                    i.Id_nb = "FriarEpicHelm";
-                    i.Name = "Prayer-bound Coif";
-                    i.Level = 50;
-                    i.Item_Type = 21;
-                    i.Model = 1290; //NEED TO WORK ON..
-                    i.IsDropable = true;
-                    i.IsPickable = true;
-                    i.DPS_AF = 100;
-                    i.SPD_ABS = 10;
-                    i.Object_Type = 33;
-                    i.Quality = 100;
-                    i.Weight = 22;
-                    i.Bonus = 35;
-                    i.MaxCondition = 50000;
-                    i.MaxDurability = 50000;
-                    i.Condition = 50000;
-                    i.Durability = 50000;
-
-                                       //bonuses: Dex +15, Pie +12, Con +10, Enchantment +4
-                    i.Bonus1 = 15;
-                    i.Bonus1Type = (int)eStat.DEX;
-
-                    i.Bonus2 = 12;
-                    i.Bonus2Type = (int)eStat.PIE;
-
-                    i.Bonus3 = 10;
-                    i.Bonus3Type = (int)eStat.CON;
-
-                    i.Bonus4 = 4;
-                    i.Bonus4Type = (int)eProperty.Skill_Enhancement; //guessing here
-                    {
-                        GameServer.Database.AddNewObject(i);
-                    }
-
-                    FriarEpicHelm = i;
-
-                }
-//end item
-                //Prayer-bound Gloves
-                FriarEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "FriarEpicGloves");
-                if (FriarEpicGloves == null)
-                {
-                    i = new ItemTemplate();
-                    i.Id_nb = "FriarEpicGloves";
-                    i.Name = "Prayer-bound Gloves";
-                    i.Level = 50;
-                    i.Item_Type = 22;
-                    i.Model = 39;
-                    i.IsDropable = true;
-                    i.IsPickable = true;
-                    i.DPS_AF = 100;
-                    i.SPD_ABS = 10;
-                    i.Object_Type = 33;
-                    i.Quality = 100;
-                    i.Weight = 22;
-                    i.Bonus = 35;
-                    i.MaxCondition = 50000;
-                    i.MaxDurability = 50000;
-                    i.Condition = 50000;
-                    i.Durability = 50000;
-
-                                       //bonuses: Pie +15, Rejuvination +4, Qui +15, Crush +6%
-                    i.Bonus1 = 15;
-                    i.Bonus1Type = (int)eStat.PIE;
-
-                    i.Bonus2 = 15;
-                    i.Bonus2Type = (int)eStat.QUI;
-
-                    i.Bonus3 = 6;
-                    i.Bonus3Type = (int)eResist.Crush;
-
-                    i.Bonus4 = 6;
-                    i.Bonus4Type = (int)eProperty.Skill_Rejuvenation; //guessing here
-                    {
-                        GameServer.Database.AddNewObject(i);
-                    }
-
-                    FriarEpicGloves = i;
-
-                }
-                //Prayer-bound Hauberk
-                FriarEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "FriarEpicVest");
-                if (FriarEpicVest == null)
-                {
-                    i = new ItemTemplate();
-                    i.Id_nb = "FriarEpicVest";
-                    i.Name = "Prayer-bound Jerkin";
-                    i.Level = 50;
-                    i.Item_Type = 25;
-                    i.Model = 797;
-                    i.IsDropable = true;
-                    i.IsPickable = true;
-                    i.DPS_AF = 100;
-                    i.SPD_ABS = 10;
-                    i.Object_Type = 33;
-                    i.Quality = 100;
-                    i.Weight = 22;
-                    i.Bonus = 35;
-                    i.MaxCondition = 50000;
-                    i.MaxDurability = 50000;
-                    i.Condition = 50000;
-                    i.Durability = 50000;
-
-                                       //bonuses: HP +33, Pwr +10, Spirit 4%, Crush 6%
-                                       // Charged (3 Max) Self-Only Shield -- 75 AF, Duration 10 mins (no clue how to add this)
-                    i.Bonus1 = 10;
-                    i.Bonus1Type = (int)eProperty.MaxMana;
-
-                    i.Bonus2 = 6;
-                    i.Bonus2Type = (int)eResist.Crush;
-
-                    i.Bonus3 = 4;
-                    i.Bonus3Type = (int)eResist.Spirit;
-
-                    i.Bonus4 = 33;
-                    i.Bonus4Type = (int)eProperty.MaxHealth;
-                    {
-                        GameServer.Database.AddNewObject(i);
-                    }
-
-                    FriarEpicVest = i;
-
-                }
-                //Prayer-bound Legs
-                FriarEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "FriarEpicLegs");
-                if (FriarEpicLegs == null)
-                {
-                    i = new ItemTemplate();
-                    i.Id_nb = "FriarEpicLegs";
-                    i.Name = "Prayer-bound Legs";
-                    i.Level = 50;
-                    i.Item_Type = 27;
-                    i.Model = 37;
-                    i.IsDropable = true;
-                    i.IsPickable = true;
-                    i.DPS_AF = 100;
-                    i.SPD_ABS = 10;
-                    i.Object_Type = 33;
-                    i.Quality = 100;
-                    i.Weight = 22;
-                    i.Bonus = 35;
-                    i.MaxCondition = 50000;
-                    i.MaxDurability = 50000;
-                    i.Condition = 50000;
-                    i.Durability = 50000;
-
-                                       //bonuses: Con +22, Str +15, Heat +6%, Slash +6%
-                    i.Bonus1 = 15;
-                    i.Bonus1Type = (int)eStat.STR;
-
-                    i.Bonus2 = 22;
-                    i.Bonus2Type = (int)eStat.CON;
-
-                    i.Bonus3 = 6;
-                    i.Bonus3Type = (int)eResist.Heat;
-
-                    i.Bonus4 = 6;
-                    i.Bonus4Type = (int)eResist.Slash;
-                    {
-                        GameServer.Database.AddNewObject(i);
-                    }
-
-                    FriarEpicLegs = i;
-
-                }
-                //Prayer-bound Sleeves
-                FriarEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "FriarEpicArms");
-                if (FriarEpicArms == null)
-                {
-                    i = new ItemTemplate();
-                    i.Id_nb = "FriarEpicArms";
-                    i.Name = "Prayer-bound Sleeves";
-                    i.Level = 50;
-                    i.Item_Type = 28;
-                    i.Model = 38;
-                    i.IsDropable = true;
-                    i.IsPickable = true;
-                    i.DPS_AF = 100;
-                    i.SPD_ABS = 10;
-                    i.Object_Type = 33;
-                    i.Quality = 100;
-                    i.Weight = 22;
-                    i.Bonus = 35;
-                    i.MaxCondition = 50000;
-                    i.MaxDurability = 50000;
-                    i.Condition = 50000;
-                    i.Durability = 50000;
-
-                                       //bonuses: Pie +18, Dex +16, Cold +8%, Thrust +8%
-                    i.Bonus1 = 18;
-                    i.Bonus1Type = (int)eStat.PIE;
-
-                    i.Bonus2 = 16;
-                    i.Bonus2Type = (int)eStat.DEX;
-
-                    i.Bonus3 = 8;
-                    i.Bonus3Type = (int)eResist.Cold;
-
-                    i.Bonus4 = 8;
-                    i.Bonus4Type = (int)eResist.Thrust;
-                    {
-                        GameServer.Database.AddNewObject(i);
-                    }
-
-                    FriarEpicArms = i;
-
-                }
-                TheurgistEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "TheurgistEpicBoots");
-                if (TheurgistEpicBoots == null)
-                {
-                    i = new ItemTemplate();
-                    i.Id_nb = "TheurgistEpicBoots";
-                    i.Name = "Boots of Shielding Power";
-                    i.Level = 50;
-                    i.Item_Type = 23;
-                    i.Model = 143;
-                    i.IsDropable = true;
-                    i.IsPickable = true;
-                    i.DPS_AF = 50;
-                    i.SPD_ABS = 0;
-                    i.Object_Type = 32;
-                    i.Quality = 100;
-                    i.Weight = 22;
-                    i.Bonus = 35;
-                    i.MaxCondition = 50000;
-                    i.MaxDurability = 50000;
-                    i.Condition = 50000;
-                    i.Durability = 50000;
-
-                                       //bonuses: Dex +16, Cold +6%, Body +8%, Energy +8%
-                    i.Bonus1 = 16;
-                    i.Bonus1Type = (int)eStat.DEX;
-
-                    i.Bonus2 = 6;
-                    i.Bonus2Type = (int)eResist.Cold;
-
-                    i.Bonus3 = 8;
-                    i.Bonus3Type = (int)eResist.Body;
-
-                    i.Bonus4 = 8;
-                    i.Bonus4Type = (int)eResist.Energy;
-                    {
-                        GameServer.Database.AddNewObject(i);
-                    }
-
-                    TheurgistEpicBoots = i;
-
-                }
-//end item
-                //of Shielding Power Coif
-                TheurgistEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "TheurgistEpicHelm");
-                if (TheurgistEpicHelm == null)
-                {
-                    i = new ItemTemplate();
-                    i.Id_nb = "TheurgistEpicHelm";
-                    i.Name = "Coif of Shielding Power";
-                    i.Level = 50;
-                    i.Item_Type = 21;
-                    i.Model = 1290; //NEED TO WORK ON..
-                    i.IsDropable = true;
-                    i.IsPickable = true;
-                    i.DPS_AF = 50;
-                    i.SPD_ABS = 0;
-                    i.Object_Type = 32;
-                    i.Quality = 100;
-                    i.Weight = 22;
-                    i.Bonus = 35;
-                    i.MaxCondition = 50000;
-                    i.MaxDurability = 50000;
-                    i.Condition = 50000;
-                    i.Durability = 50000;
-
-                                       //bonuses: Int +21, Dex +13, Spirit +8%, Crush +8%
-                    i.Bonus1 = 21;
-                    i.Bonus1Type = (int)eStat.INT;
-
-                    i.Bonus2 = 13;
-                    i.Bonus2Type = (int)eStat.DEX;
-
-                    i.Bonus3 = 8;
-                    i.Bonus3Type = (int)eResist.Spirit;
-
-                    i.Bonus4 = 8;
-                    i.Bonus4Type = (int)eResist.Crush;
-                    {
-                        GameServer.Database.AddNewObject(i);
-                    }
-
-                    TheurgistEpicHelm = i;
-
-                }
-//end item
-                //of Shielding Power Gloves
-                TheurgistEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "TheurgistEpicGloves");
-                if (TheurgistEpicGloves == null)
-                {
-                    i = new ItemTemplate();
-                    i.Id_nb = "TheurgistEpicGloves";
-                    i.Name = "Gloves of Shielding Power";
-                    i.Level = 50;
-                    i.Item_Type = 22;
-                    i.Model = 142;
-                    i.IsDropable = true;
-                    i.IsPickable = true;
-                    i.DPS_AF = 50;
-                    i.SPD_ABS = 0;
-                    i.Object_Type = 32;
-                    i.Quality = 100;
-                    i.Weight = 22;
-                    i.Bonus = 35;
-                    i.MaxCondition = 50000;
-                    i.MaxDurability = 50000;
-                    i.Condition = 50000;
-                    i.Durability = 50000;
-
-                                       //bonuses: Dex +16, Int +18, Heat +8%, Matter +8%
-                    i.Bonus1 = 16;
-                    i.Bonus1Type = (int)eStat.DEX;
-
-                    i.Bonus2 = 18;
-                    i.Bonus2Type = (int)eStat.INT;
-
-                    i.Bonus3 = 8;
-                    i.Bonus3Type = (int)eResist.Heat;
-
-                    i.Bonus4 = 8;
-                    i.Bonus4Type = (int)eResist.Matter;
-                    {
-                        GameServer.Database.AddNewObject(i);
-                    }
-
-                    TheurgistEpicGloves = i;
-
-                }
-                //of Shielding Power Hauberk
-                TheurgistEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "TheurgistEpicVest");
-                if (TheurgistEpicVest == null)
-                {
-                    i = new ItemTemplate();
-                    i.Id_nb = "TheurgistEpicVest";
-                    i.Name = "Jerkin of Shielding Power";
-                    i.Level = 50;
-                    i.Item_Type = 25;
-                    i.Model = 733;
-                    i.IsDropable = true;
-                    i.IsPickable = true;
-                    i.DPS_AF = 50;
-                    i.SPD_ABS = 0;
-                    i.Object_Type = 32;
-                    i.Quality = 100;
-                    i.Weight = 22;
-                    i.Bonus = 35;
-                    i.MaxCondition = 50000;
-                    i.MaxDurability = 50000;
-                    i.Condition = 50000;
-                    i.Durability = 50000;
-
-                                       //bonuses: HP +24, Power +14, Cold +4%,
-                                       //triggered effect: Shield (3 charges max) duration 10 mins  (no clue how to implement)
-                    i.Bonus1 = 24;
-                    i.Bonus1Type = (int)eProperty.MaxHealth;
-
-                    i.Bonus2 = 14;
-                    i.Bonus2Type = (int)eProperty.MaxMana;
-
-                    i.Bonus3 = 4;
-                    i.Bonus3Type = (int)eResist.Cold;
-                    {
-                        GameServer.Database.AddNewObject(i);
-                    }
-
-                    TheurgistEpicVest = i;
-
-                }
-                //of Shielding Power Legs
-                TheurgistEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "TheurgistEpicLegs");
-                if (TheurgistEpicLegs == null)
-                {
-                    i = new ItemTemplate();
-                    i.Id_nb = "TheurgistEpicLegs";
-                    i.Name = "Legs of Shielding Power";
-                    i.Level = 50;
-                    i.Item_Type = 27;
-                    i.Model = 140;
-                    i.IsDropable = true;
-                    i.IsPickable = true;
-                    i.DPS_AF = 50;
-                    i.SPD_ABS = 0;
-                    i.Object_Type = 32;
-                    i.Quality = 100;
-                    i.Weight = 22;
-                    i.Bonus = 35;
-                    i.MaxCondition = 50000;
-                    i.MaxDurability = 50000;
-                    i.Condition = 50000;
-                    i.Durability = 50000;
-
-                                       //bonuses: Con +19, Wind +4, Energy +10%, Cold +10%
-                    i.Bonus1 = 19;
-                    i.Bonus1Type = (int)eStat.CON;
-
-                    i.Bonus2 = 4;
-                    i.Bonus2Type = (int)eProperty.Skill_Wind;
-
-                    i.Bonus3 = 10;
-                    i.Bonus3Type = (int)eResist.Energy;
-
-                    i.Bonus4 = 10;
-                    i.Bonus4Type = (int)eResist.Cold;
-                    {
-                        GameServer.Database.AddNewObject(i);
-                    }
-
-                    TheurgistEpicLegs = i;
-
-                }
-                //of Shielding Power Sleeves
-                TheurgistEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "TheurgistEpicArms");
-				if (TheurgistEpicArms == null)
+			ScoutEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ScoutEpicBoots");
+			if (ScoutEpicBoots == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "ScoutEpicBoots";
+				i.Name = "Brigandine Boots of Vigilant Defense";
+				i.Level = 50;
+				i.Item_Type = 23;
+				i.Model = 731;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 19;
+				i.Object_Type = 34;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				//bonuses: Con +10, Dex +18, Qui +15, Spirit +8%
+				i.Bonus1 = 10;
+				i.Bonus1Type = (int)eStat.CON;
+
+				i.Bonus2 = 18;
+				i.Bonus2Type = (int)eStat.DEX;
+
+				i.Bonus3 = 15;
+				i.Bonus3Type = (int)eStat.QUI;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Spirit;
 				{
-					i = new ItemTemplate();
-					i.Id_nb = "TheurgistEpicArms";
-					i.Name = "Sleeves of Shielding Power";
-					i.Level = 50;
-					i.Item_Type = 28;
-					i.Model = 141;
-					i.IsDropable = true;
-					i.IsPickable = true;
-					i.DPS_AF = 50;
-					i.SPD_ABS = 0;
-					i.Object_Type = 32;
-					i.Quality = 100;
-					i.Weight = 22;
-					i.Bonus = 35;
-					i.MaxCondition = 50000;
-					i.MaxDurability = 50000;
-					i.Condition = 50000;
-					i.Durability = 50000;
-
-					//bonuses: Int +18, Earth +4, Dex +16
-					i.Bonus1 = 18;
-					i.Bonus1Type = (int)eStat.INT;
-
-					i.Bonus2 = 4;
-					i.Bonus2Type = (int)eProperty.Skill_Earth;
-
-					i.Bonus3 = 16;
-					i.Bonus3Type = (int)eStat.DEX;
-
 					GameServer.Database.AddNewObject(i);
-
-					TheurgistEpicArms = i;
-
 				}
-//Item Descriptions End
+				ScoutEpicBoots = i;
+
+			}
+			//end item
+			//Brigandine of Vigilant Defense  Coif
+			ScoutEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ScoutEpicHelm");
+			if (ScoutEpicHelm == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "ScoutEpicHelm";
+				i.Name = "Brigandine Coif of Vigilant Defense";
+				i.Level = 50;
+				i.Item_Type = 21;
+				i.Model = 1290; //NEED TO WORK ON..
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 19;
+				i.Object_Type = 34;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				//bonuses: Dex +12, Qui +22, Crush +8%, Heat +8%
+				i.Bonus1 = 12;
+				i.Bonus1Type = (int)eStat.DEX;
+
+				i.Bonus2 = 22;
+				i.Bonus2Type = (int)eStat.QUI;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Crush;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Heat;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+
+				ScoutEpicHelm = i;
+
+			}
+			//end item
+			//Brigandine of Vigilant Defense  Gloves
+			ScoutEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ScoutEpicGloves");
+			if (ScoutEpicGloves == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "ScoutEpicGloves";
+				i.Name = "Brigandine Gloves of Vigilant Defense";
+				i.Level = 50;
+				i.Item_Type = 22;
+				i.Model = 732;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 19;
+				i.Object_Type = 34;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				//bonuses: Dex +21, Longbow +5, Body +8%, Slash +8%
+				i.Bonus1 = 21;
+				i.Bonus1Type = (int)eStat.DEX;
+
+				i.Bonus2 = 5;
+				i.Bonus2Type = (int)eProperty.Skill_Long_bows;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Body;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Slash;
+
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+
+				ScoutEpicGloves = i;
+
+			}
+			//Brigandine of Vigilant Defense  Hauberk
+			ScoutEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ScoutEpicVest");
+			if (ScoutEpicVest == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "ScoutEpicVest";
+				i.Name = "Brigandine Jerkin of Vigilant Defense";
+				i.Level = 50;
+				i.Item_Type = 25;
+				i.Model = 728;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 19;
+				i.Object_Type = 34;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				//bonuses: Str +18, HP +45, Spirit +4%, Thrust +4%
+				i.Bonus1 = 18;
+				i.Bonus1Type = (int)eStat.STR;
+
+				i.Bonus2 = 4;
+				i.Bonus2Type = (int)eResist.Thrust;
+
+				i.Bonus3 = 4;
+				i.Bonus3Type = (int)eResist.Spirit;
+
+				i.Bonus4 = 45;
+				i.Bonus4Type = (int)eProperty.MaxHealth;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+
+				ScoutEpicVest = i;
+
+			}
+			//Brigandine of Vigilant Defense  Legs
+			ScoutEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ScoutEpicLegs");
+			if (ScoutEpicLegs == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "ScoutEpicLegs";
+				i.Name = "Brigandine Legs of Vigilant Defense";
+				i.Level = 50;
+				i.Item_Type = 27;
+				i.Model = 729;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 19;
+				i.Object_Type = 34;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				//bonuses: Con +22, Dex +15, Qui +7, Spirit +6%
+				i.Bonus1 = 22;
+				i.Bonus1Type = (int)eStat.CON;
+
+				i.Bonus2 = 15;
+				i.Bonus2Type = (int)eStat.DEX;
+
+				i.Bonus3 = 7;
+				i.Bonus3Type = (int)eStat.QUI;
+
+				i.Bonus4 = 6;
+				i.Bonus4Type = (int)eResist.Spirit;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+				ScoutEpicLegs = i;
+
+			}
+			//Brigandine of Vigilant Defense  Sleeves
+			ScoutEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ScoutEpicArms");
+			if (ScoutEpicArms == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "ScoutEpicArms";
+				i.Name = "Brigandine Sleeves of Vigilant Defense";
+				i.Level = 50;
+				i.Item_Type = 28;
+				i.Model = 730;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 19;
+				i.Object_Type = 34;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				//bonuses: Con +22, Str +18, Energy +8%, Slash +4%
+				i.Bonus1 = 22;
+				i.Bonus1Type = (int)eStat.CON;
+
+				i.Bonus2 = 18;
+				i.Bonus2Type = (int)eStat.STR;
+
+				i.Bonus3 = 4;
+				i.Bonus3Type = (int)eResist.Energy;
+
+				i.Bonus4 = 4;
+				i.Bonus4Type = (int)eResist.Slash;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+
+				ScoutEpicArms = i;
+
+			}
+			//Scout Epic Sleeves End
+
+			//Armsman Epic Boots Start
+			ArmsmanEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ArmsmanEpicBoots");
+			if (ArmsmanEpicBoots == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "ArmsmanEpicBoots";
+				i.Name = "Sabaton of the Stalwart Arm";
+				i.Level = 50;
+				i.Item_Type = 23;
+				i.Model = 692;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 34;
+				i.Object_Type = 36;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				//bonuses: Str +15, Qui +15, Spirit +8%
+				i.Bonus1 = 15;
+				i.Bonus1Type = (int)eStat.STR;
+
+				i.Bonus2 = 15;
+				i.Bonus2Type = (int)eStat.QUI;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Spirit;
+
+
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+				ArmsmanEpicBoots = i;
+
+			}
+			//end item
+			//of the Stalwart Arm Coif
+			ArmsmanEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ArmsmanEpicHelm");
+			if (ArmsmanEpicHelm == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "ArmsmanEpicHelm";
+				i.Name = "Coif of the Stalwart Arm";
+				i.Level = 50;
+				i.Item_Type = 21;
+				i.Model = 1290; //NEED TO WORK ON..
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 34;
+				i.Object_Type = 36;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				//bonuses: Con +19, Qui +18, Body +6%, Crush +6%
+				i.Bonus1 = 19;
+				i.Bonus1Type = (int)eStat.CON;
+
+				i.Bonus2 = 18;
+				i.Bonus2Type = (int)eStat.QUI;
+
+				i.Bonus3 = 6;
+				i.Bonus3Type = (int)eResist.Body;
+
+				i.Bonus4 = 6;
+				i.Bonus4Type = (int)eResist.Crush;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+
+				ArmsmanEpicHelm = i;
+
+			}
+			//end item
+			//of the Stalwart Arm Gloves
+			ArmsmanEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ArmsmanEpicGloves");
+			if (ArmsmanEpicGloves == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "ArmsmanEpicGloves";
+				i.Name = "Gloves of the Stalwart Arm";
+				i.Level = 50;
+				i.Item_Type = 22;
+				i.Model = 691;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 34;
+				i.Object_Type = 36;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				//bonuses: Str +22, Dex +15, Cold +6%, Slash +6
+				i.Bonus1 = 22;
+				i.Bonus1Type = (int)eStat.STR;
+
+				i.Bonus2 = 15;
+				i.Bonus2Type = (int)eStat.DEX;
+
+				i.Bonus3 = 6;
+				i.Bonus3Type = (int)eResist.Cold;
+
+				i.Bonus4 = 6;
+				i.Bonus4Type = (int)eResist.Slash;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+
+				ArmsmanEpicGloves = i;
+
+			}
+			//of the Stalwart Arm Hauberk
+			ArmsmanEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ArmsmanEpicVest");
+			if (ArmsmanEpicVest == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "ArmsmanEpicVest";
+				i.Name = "Jerkin of the Stalwart Arm";
+				i.Level = 50;
+				i.Item_Type = 25;
+				i.Model = 688;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 34;
+				i.Object_Type = 36;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				//bonuses: HP +45, Str +18, Energy +4%, Slash +4%
+				// there is an additional bonus here I couldn't figure out how to add
+				// 3 charges of 75 point shield ???
+				i.Bonus1 = 18;
+				i.Bonus1Type = (int)eStat.STR;
+
+				i.Bonus2 = 4;
+				i.Bonus2Type = (int)eResist.Slash;
+
+				i.Bonus3 = 4;
+				i.Bonus3Type = (int)eResist.Energy;
+
+				i.Bonus4 = 45;
+				i.Bonus4Type = (int)eProperty.MaxHealth;
+
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+
+				ArmsmanEpicVest = i;
+
+			}
+			//of the Stalwart Arm Legs
+			ArmsmanEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ArmsmanEpicLegs");
+			if (ArmsmanEpicLegs == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "ArmsmanEpicLegs";
+				i.Name = "Legs of the Stalwart Arm";
+				i.Level = 50;
+				i.Item_Type = 27;
+				i.Model = 689;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 34;
+				i.Object_Type = 36;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				//bonuses: Con +24, Str +10, Matter +8%, Crush +8%
+				i.Bonus1 = 24;
+				i.Bonus1Type = (int)eStat.CON;
+
+				i.Bonus2 = 10;
+				i.Bonus2Type = (int)eStat.STR;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Matter;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Crush;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+
+				ArmsmanEpicLegs = i;
+
+			}
+			//of the Stalwart Arm Sleeves
+			ArmsmanEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ArmsmanEpicArms");
+			if (ArmsmanEpicArms == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "ArmsmanEpicArms";
+				i.Name = "Sleeves of the Stalwart Arm";
+				i.Level = 50;
+				i.Item_Type = 28;
+				i.Model = 690;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 34;
+				i.Object_Type = 36;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				//bonuses: Con +19, Dex +18, Heat +6%, Thrust +6%
+				i.Bonus1 = 19;
+				i.Bonus1Type = (int)eStat.CON;
+
+				i.Bonus2 = 18;
+				i.Bonus2Type = (int)eStat.DEX;
+
+				i.Bonus3 = 6;
+				i.Bonus3Type = (int)eResist.Heat;
+
+				i.Bonus4 = 6;
+				i.Bonus4Type = (int)eResist.Thrust;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+
+				ArmsmanEpicArms = i;
+
+			}
+			FriarEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "FriarEpicBoots");
+			if (FriarEpicBoots == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "FriarEpicBoots";
+				i.Name = "Prayer-bound Boots";
+				i.Level = 50;
+				i.Item_Type = 23;
+				i.Model = 40;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 10;
+				i.Object_Type = 33;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				//bonuses: Qui +18, Dex +15, Spirit +10%, Con +12
+				i.Bonus1 = 18;
+				i.Bonus1Type = (int)eStat.QUI;
+
+				i.Bonus2 = 15;
+				i.Bonus2Type = (int)eStat.DEX;
+
+				i.Bonus3 = 12;
+				i.Bonus3Type = (int)eStat.CON;
+
+				i.Bonus4 = 10;
+				i.Bonus4Type = (int)eResist.Spirit;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+
+				FriarEpicBoots = i;
+
+			}
+			//end item
+			//Prayer-bound Coif
+			FriarEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "FriarEpicHelm");
+			if (FriarEpicHelm == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "FriarEpicHelm";
+				i.Name = "Prayer-bound Coif";
+				i.Level = 50;
+				i.Item_Type = 21;
+				i.Model = 1290; //NEED TO WORK ON..
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 10;
+				i.Object_Type = 33;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				//bonuses: Dex +15, Pie +12, Con +10, Enchantment +4
+				i.Bonus1 = 15;
+				i.Bonus1Type = (int)eStat.DEX;
+
+				i.Bonus2 = 12;
+				i.Bonus2Type = (int)eStat.PIE;
+
+				i.Bonus3 = 10;
+				i.Bonus3Type = (int)eStat.CON;
+
+				i.Bonus4 = 4;
+				i.Bonus4Type = (int)eProperty.Skill_Enhancement; //guessing here
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+
+				FriarEpicHelm = i;
+
+			}
+			//end item
+			//Prayer-bound Gloves
+			FriarEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "FriarEpicGloves");
+			if (FriarEpicGloves == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "FriarEpicGloves";
+				i.Name = "Prayer-bound Gloves";
+				i.Level = 50;
+				i.Item_Type = 22;
+				i.Model = 39;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 10;
+				i.Object_Type = 33;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				//bonuses: Pie +15, Rejuvination +4, Qui +15, Crush +6%
+				i.Bonus1 = 15;
+				i.Bonus1Type = (int)eStat.PIE;
+
+				i.Bonus2 = 15;
+				i.Bonus2Type = (int)eStat.QUI;
+
+				i.Bonus3 = 6;
+				i.Bonus3Type = (int)eResist.Crush;
+
+				i.Bonus4 = 6;
+				i.Bonus4Type = (int)eProperty.Skill_Rejuvenation; //guessing here
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+
+				FriarEpicGloves = i;
+
+			}
+			//Prayer-bound Hauberk
+			FriarEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "FriarEpicVest");
+			if (FriarEpicVest == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "FriarEpicVest";
+				i.Name = "Prayer-bound Jerkin";
+				i.Level = 50;
+				i.Item_Type = 25;
+				i.Model = 797;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 10;
+				i.Object_Type = 33;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				//bonuses: HP +33, Pwr +10, Spirit 4%, Crush 6%
+				// Charged (3 Max) Self-Only Shield -- 75 AF, Duration 10 mins (no clue how to add this)
+				i.Bonus1 = 10;
+				i.Bonus1Type = (int)eProperty.MaxMana;
+
+				i.Bonus2 = 6;
+				i.Bonus2Type = (int)eResist.Crush;
+
+				i.Bonus3 = 4;
+				i.Bonus3Type = (int)eResist.Spirit;
+
+				i.Bonus4 = 33;
+				i.Bonus4Type = (int)eProperty.MaxHealth;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+
+				FriarEpicVest = i;
+
+			}
+			//Prayer-bound Legs
+			FriarEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "FriarEpicLegs");
+			if (FriarEpicLegs == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "FriarEpicLegs";
+				i.Name = "Prayer-bound Legs";
+				i.Level = 50;
+				i.Item_Type = 27;
+				i.Model = 37;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 10;
+				i.Object_Type = 33;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				//bonuses: Con +22, Str +15, Heat +6%, Slash +6%
+				i.Bonus1 = 15;
+				i.Bonus1Type = (int)eStat.STR;
+
+				i.Bonus2 = 22;
+				i.Bonus2Type = (int)eStat.CON;
+
+				i.Bonus3 = 6;
+				i.Bonus3Type = (int)eResist.Heat;
+
+				i.Bonus4 = 6;
+				i.Bonus4Type = (int)eResist.Slash;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+
+				FriarEpicLegs = i;
+
+			}
+			//Prayer-bound Sleeves
+			FriarEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "FriarEpicArms");
+			if (FriarEpicArms == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "FriarEpicArms";
+				i.Name = "Prayer-bound Sleeves";
+				i.Level = 50;
+				i.Item_Type = 28;
+				i.Model = 38;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 100;
+				i.SPD_ABS = 10;
+				i.Object_Type = 33;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				//bonuses: Pie +18, Dex +16, Cold +8%, Thrust +8%
+				i.Bonus1 = 18;
+				i.Bonus1Type = (int)eStat.PIE;
+
+				i.Bonus2 = 16;
+				i.Bonus2Type = (int)eStat.DEX;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Cold;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Thrust;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+
+				FriarEpicArms = i;
+
+			}
+			TheurgistEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "TheurgistEpicBoots");
+			if (TheurgistEpicBoots == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "TheurgistEpicBoots";
+				i.Name = "Boots of Shielding Power";
+				i.Level = 50;
+				i.Item_Type = 23;
+				i.Model = 143;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				//bonuses: Dex +16, Cold +6%, Body +8%, Energy +8%
+				i.Bonus1 = 16;
+				i.Bonus1Type = (int)eStat.DEX;
+
+				i.Bonus2 = 6;
+				i.Bonus2Type = (int)eResist.Cold;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Body;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Energy;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+
+				TheurgistEpicBoots = i;
+
+			}
+			//end item
+			//of Shielding Power Coif
+			TheurgistEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "TheurgistEpicHelm");
+			if (TheurgistEpicHelm == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "TheurgistEpicHelm";
+				i.Name = "Coif of Shielding Power";
+				i.Level = 50;
+				i.Item_Type = 21;
+				i.Model = 1290; //NEED TO WORK ON..
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				//bonuses: Int +21, Dex +13, Spirit +8%, Crush +8%
+				i.Bonus1 = 21;
+				i.Bonus1Type = (int)eStat.INT;
+
+				i.Bonus2 = 13;
+				i.Bonus2Type = (int)eStat.DEX;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Spirit;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Crush;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+
+				TheurgistEpicHelm = i;
+
+			}
+			//end item
+			//of Shielding Power Gloves
+			TheurgistEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "TheurgistEpicGloves");
+			if (TheurgistEpicGloves == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "TheurgistEpicGloves";
+				i.Name = "Gloves of Shielding Power";
+				i.Level = 50;
+				i.Item_Type = 22;
+				i.Model = 142;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				//bonuses: Dex +16, Int +18, Heat +8%, Matter +8%
+				i.Bonus1 = 16;
+				i.Bonus1Type = (int)eStat.DEX;
+
+				i.Bonus2 = 18;
+				i.Bonus2Type = (int)eStat.INT;
+
+				i.Bonus3 = 8;
+				i.Bonus3Type = (int)eResist.Heat;
+
+				i.Bonus4 = 8;
+				i.Bonus4Type = (int)eResist.Matter;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+
+				TheurgistEpicGloves = i;
+
+			}
+			//of Shielding Power Hauberk
+			TheurgistEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "TheurgistEpicVest");
+			if (TheurgistEpicVest == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "TheurgistEpicVest";
+				i.Name = "Jerkin of Shielding Power";
+				i.Level = 50;
+				i.Item_Type = 25;
+				i.Model = 733;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				//bonuses: HP +24, Power +14, Cold +4%,
+				//triggered effect: Shield (3 charges max) duration 10 mins  (no clue how to implement)
+				i.Bonus1 = 24;
+				i.Bonus1Type = (int)eProperty.MaxHealth;
+
+				i.Bonus2 = 14;
+				i.Bonus2Type = (int)eProperty.MaxMana;
+
+				i.Bonus3 = 4;
+				i.Bonus3Type = (int)eResist.Cold;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+
+				TheurgistEpicVest = i;
+
+			}
+			//of Shielding Power Legs
+			TheurgistEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "TheurgistEpicLegs");
+			if (TheurgistEpicLegs == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "TheurgistEpicLegs";
+				i.Name = "Legs of Shielding Power";
+				i.Level = 50;
+				i.Item_Type = 27;
+				i.Model = 140;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				//bonuses: Con +19, Wind +4, Energy +10%, Cold +10%
+				i.Bonus1 = 19;
+				i.Bonus1Type = (int)eStat.CON;
+
+				i.Bonus2 = 4;
+				i.Bonus2Type = (int)eProperty.Skill_Wind;
+
+				i.Bonus3 = 10;
+				i.Bonus3Type = (int)eResist.Energy;
+
+				i.Bonus4 = 10;
+				i.Bonus4Type = (int)eResist.Cold;
+				{
+					GameServer.Database.AddNewObject(i);
+				}
+
+				TheurgistEpicLegs = i;
+
+			}
+			//of Shielding Power Sleeves
+			TheurgistEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "TheurgistEpicArms");
+			if (TheurgistEpicArms == null)
+			{
+				i = new ItemTemplate();
+				i.Id_nb = "TheurgistEpicArms";
+				i.Name = "Sleeves of Shielding Power";
+				i.Level = 50;
+				i.Item_Type = 28;
+				i.Model = 141;
+				i.IsDropable = true;
+				i.IsPickable = true;
+				i.DPS_AF = 50;
+				i.SPD_ABS = 0;
+				i.Object_Type = 32;
+				i.Quality = 100;
+				i.Weight = 22;
+				i.Bonus = 35;
+				i.MaxCondition = 50000;
+				i.MaxDurability = 50000;
+				i.Condition = 50000;
+				i.Durability = 50000;
+
+				//bonuses: Int +18, Earth +4, Dex +16
+				i.Bonus1 = 18;
+				i.Bonus1Type = (int)eStat.INT;
+
+				i.Bonus2 = 4;
+				i.Bonus2Type = (int)eProperty.Skill_Earth;
+
+				i.Bonus3 = 16;
+				i.Bonus3Type = (int)eStat.DEX;
+
+				GameServer.Database.AddNewObject(i);
+
+				TheurgistEpicArms = i;
+
+			}
+
+			MaulerEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicBoots");
+			MaulerEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicHelm");
+			MaulerEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicGloves");
+			MaulerEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicVest");
+			MaulerEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicLegs");
+			MaulerEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicArms");
+			//Item Descriptions End
 
 			#endregion
 
-				GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
-				GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
 			GameEventMgr.AddHandler(Lidmann, GameObjectEvent.Interact, new DOLEventHandler(TalkToLidmann));
 			GameEventMgr.AddHandler(Lidmann, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToLidmann));
 
 			/* Now we bring to masterFrederick the possibility to give this quest to players */
-			Lidmann.AddQuestToGive(typeof (Defenders_50));
+			Lidmann.AddQuestToGive(typeof(Defenders_50));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -1293,7 +1306,8 @@ namespace DOL.GS.Quests.Albion
 			if (player.CharacterClass.ID != (byte) eCharacterClass.Armsman &&
 				player.CharacterClass.ID != (byte) eCharacterClass.Scout &&
 				player.CharacterClass.ID != (byte) eCharacterClass.Theurgist &&
-				player.CharacterClass.ID != (byte) eCharacterClass.Friar)
+				player.CharacterClass.ID != (byte) eCharacterClass.Friar &&
+				player.CharacterClass.ID != (byte) eCharacterClass.Mauler_Alb)
 				return false;
 
 			// This checks below are only performed is player isn't doing quest already
@@ -1471,6 +1485,15 @@ namespace DOL.GS.Quests.Albion
 				GiveItem(m_questPlayer, FriarEpicHelm);
 				GiveItem(m_questPlayer, FriarEpicLegs);
 				GiveItem(m_questPlayer, FriarEpicVest);
+			}
+			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Mauler_Alb)
+			{
+				GiveItem(m_questPlayer, MaulerEpicArms);
+				GiveItem(m_questPlayer, MaulerEpicBoots);
+				GiveItem(m_questPlayer, MaulerEpicGloves);
+				GiveItem(m_questPlayer, MaulerEpicHelm);
+				GiveItem(m_questPlayer, MaulerEpicLegs);
+				GiveItem(m_questPlayer, MaulerEpicVest);
 			}
 
 			m_questPlayer.GainExperience(1937768448, true);
