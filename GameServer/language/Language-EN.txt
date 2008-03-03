@@ -1019,6 +1019,8 @@ DetailDisplayHandler.HandlePacket.YouFumble:		You Fumble
 DetailDisplayHandler.HandlePacket.YouHit:		You Hit
 DetailDisplayHandler.HandlePacket.YouMiss:		You Miss
 DetailDisplayHandler.HandlePacket.YouParry:		You Parry
+DetailDisplayHandler.WriteBonusLine.Points:		 pts
+DetailDisplayHandler.WriteBonusLine.PowerPool:		% of power pool.
 DetailDisplayHandler.WriteClassicArmorInfos.Absorption:	- {0}% Absorption
 DetailDisplayHandler.WriteClassicArmorInfos.ArmorMod:	Armor Modifiers:
 DetailDisplayHandler.WriteClassicArmorInfos.BaseFactor:	- {0} Base Factor
