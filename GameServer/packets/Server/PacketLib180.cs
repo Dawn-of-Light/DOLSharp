@@ -112,6 +112,20 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendPlayerCreate(GamePlayer playerToCreate)
 		{
+			if (playerToCreate == null)
+			{
+				if (log.IsErrorEnabled)
+					log.Error("SendPlayerCreate: playerToCreate == null");
+				return;
+			}
+
+			if (m_gameClient.Player == null)
+			{
+				if (log.IsErrorEnabled)
+					log.Error("SendPlayerCreate: m_gameClient.Player == null");
+				return;
+			}
+
 			Region playerRegion = playerToCreate.CurrentRegion;
 			if (playerRegion == null)
 			{

@@ -85,7 +85,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// The property key for the interrupt timeout
 		/// </summary>
-		protected const string INTERRUPT_TIMEOUT_PROPERTY = "CAST_INTERRUPT_TIMEOUT";
+		public const string INTERRUPT_TIMEOUT_PROPERTY = "CAST_INTERRUPT_TIMEOUT";
 		/// <summary>
 		/// The duration for the spell interrupt duration
 		/// </summary>

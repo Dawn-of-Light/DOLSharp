@@ -40,6 +40,7 @@ namespace DOL.GS.Effects
 			base.Start(living);
 			if (m_owner is GamePlayer)
 				(m_owner as GamePlayer).Out.SendMessage("You have activated quickcast.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			m_owner.TempProperties.removeProperty(Spells.SpellHandler.INTERRUPT_TIMEOUT_PROPERTY);
 		}
 
 		/// <summary>

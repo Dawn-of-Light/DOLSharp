@@ -95,6 +95,12 @@ namespace DOL.GS.Quests.Midgard
 		private static ItemTemplate ValkyrieEpicVest = null;
 		private static ItemTemplate ValkyrieEpicLegs = null;
 		private static ItemTemplate ValkyrieEpicArms = null;
+		private static ItemTemplate MaulerEpicBoots = null;
+		private static ItemTemplate MaulerEpicHelm = null;
+		private static ItemTemplate MaulerEpicGloves = null;
+		private static ItemTemplate MaulerEpicVest = null;
+		private static ItemTemplate MaulerEpicLegs = null;
+		private static ItemTemplate MaulerEpicArms = null;
 
 		// Constructors
 		public Viking_50() : base()
@@ -1839,6 +1845,14 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			#endregion
+			#region Mauler
+			MaulerEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicBoots");
+			MaulerEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicHelm");
+			MaulerEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicGloves");
+			MaulerEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicVest");
+			MaulerEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicLegs");
+			MaulerEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicArms");
+			#endregion
 			//Savage Epic Sleeves End
 //Item Descriptions End
 
@@ -1987,7 +2001,8 @@ namespace DOL.GS.Quests.Midgard
 				player.CharacterClass.ID != (byte) eCharacterClass.Thane &&
 				player.CharacterClass.ID != (byte) eCharacterClass.Skald &&
 				player.CharacterClass.ID != (byte) eCharacterClass.Savage &&
-				player.CharacterClass.ID != (byte) eCharacterClass.Valkyrie)
+				player.CharacterClass.ID != (byte) eCharacterClass.Valkyrie &&
+				player.CharacterClass.ID != (byte) eCharacterClass.Mauler_Mid)
 				return false;
 
 			// This checks below are only performed is player isn't doing quest already
@@ -2206,6 +2221,15 @@ namespace DOL.GS.Quests.Midgard
 						GiveItem(m_questPlayer, ValkyrieEpicLegs);
 						GiveItem(m_questPlayer, ValkyrieEpicVest);
 						break;
+					}
+				case eCharacterClass.Mauler_Mid:
+					{
+						GiveItem(m_questPlayer, MaulerEpicArms);
+						GiveItem(m_questPlayer, MaulerEpicBoots);
+						GiveItem(m_questPlayer, MaulerEpicGloves);
+						GiveItem(m_questPlayer, MaulerEpicHelm);
+						GiveItem(m_questPlayer, MaulerEpicLegs);
+						GiveItem(m_questPlayer, MaulerEpicVest);
 					}
 			}
 

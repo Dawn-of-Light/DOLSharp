@@ -33,6 +33,8 @@ namespace DOL.GS.Trainer
 			get { return eCharacterClass.Skald; }
 		}
 
+        public const string WEAPON_ID = "skald_item";
+
 		/// <summary>
 		/// Interact with trainer
 		/// </summary>
@@ -93,7 +95,8 @@ namespace DOL.GS.Trainer
 			case "join the House of Bragi":
 				// promote player to other class
 				if (CanPromotePlayer(player)) {
-					PromotePlayer(player, (int)eCharacterClass.Skald, "Welcome young Skald! May your time in Midgard army be rewarding!", null);	// TODO: gifts
+					PromotePlayer(player, (int)eCharacterClass.Skald, "Welcome young Skald! May your time in Midgard army be rewarding!", null);
+                    player.ReceiveItem(this, WEAPON_ID);
 				}
 				break;
 			}
