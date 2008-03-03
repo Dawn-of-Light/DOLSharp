@@ -2230,6 +2230,7 @@ namespace DOL.GS.Quests.Midgard
 						GiveItem(m_questPlayer, MaulerEpicHelm);
 						GiveItem(m_questPlayer, MaulerEpicLegs);
 						GiveItem(m_questPlayer, MaulerEpicVest);
+						break;
 					}
 			}
 
