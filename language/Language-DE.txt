@@ -835,6 +835,7 @@ SkillBase.RegisterPropertyNames.VoidMagicFocus:		Leerenmagie
 SkillBase.RegisterPropertyNames.WeaponSkill:		Bonus to Weaponskill
 SkillBase.RegisterPropertyNames.WindMagic:		Windmagie
 SkillBase.RegisterPropertyNames.WindMagicFocus:		Windmagie
+SkillBase.RegisterPropertyNames.Witchcraft:			Witchcraft
 SkillBase.RegisterPropertyNames.WitchcraftFocus:	Witchcraft
 
 # HOUSING
