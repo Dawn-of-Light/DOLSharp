@@ -1223,40 +1223,6 @@ namespace DOL.GS.Commands
 							}
 							break;
 						}
-                    case "isstackable":
-                        {
-                            int slot = (int)eInventorySlot.LastBackpack;
-
-                            if (args.Length >= 4)
-                            {
-                                try
-                                {
-                                    slot = Convert.ToInt32(args[3]);
-                                }
-                                catch
-                                {
-                                    slot = (int)eInventorySlot.LastBackpack;
-                                }
-                            }
-
-                            InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
-
-                            if (item == null)
-                            {
-                                client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return;
-                            }
-
-                            try
-                            {
-                                item.IsStackable = Convert.ToBoolean(args[2]);
-                            }
-                            catch
-                            {
-                                client.Out.SendMessage("'/item isstackable <true or false> <slot #>' to change allow item to be stackable or not", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            }
-                            break;
-                        }
 					case "ispickable":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
