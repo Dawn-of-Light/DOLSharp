@@ -1,9 +1,10 @@
 using System.Reflection;
 using System.Collections;
+using DOL.Database;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
-using DOL.Database;
+using DOL.Language;
 
 namespace DOL.GS.RealmAbilities
 {
@@ -24,8 +25,8 @@ namespace DOL.GS.RealmAbilities
             if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
             if (player.TempProperties.getProperty(Dashing, false))
             {
-                player.Out.SendMessage("You already an effect of that type!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-                return;
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "DashingDefenseAbility.Execute.AlreadyEffect"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+				return;
             }
 
             switch (Level)
@@ -41,8 +42,8 @@ namespace DOL.GS.RealmAbilities
             ArrayList targets = new ArrayList();
             if (player.Group == null)
                 {
-                    player.Out.SendMessage("You must be in a group to use this ability!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-                    return;
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "DashingDefenseAbility.Execute.MustInGroup"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+					return;
                 }
             else foreach (GamePlayer grpMate in player.Group.GetPlayersInTheGroup())
                     if (WorldMgr.CheckDistance(grpMate, player, m_range) && grpMate.IsAlive)
@@ -67,5 +68,13 @@ namespace DOL.GS.RealmAbilities
         {
             return 420;
         }
+
+		public override void AddEffectsInfo(System.Collections.IList list)
+		{
+			list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DashingDefenseAbility.AddEffectsInfo.Info1"));
+			list.Add("");
+			list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DashingDefenseAbility.AddEffectsInfo.Info2"));
+			list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DashingDefenseAbility.AddEffectsInfo.Info3"));
+		}
     }
 }
