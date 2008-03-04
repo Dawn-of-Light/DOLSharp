@@ -3,6 +3,7 @@ using System.Collections;
 using DOL.Database;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.RealmAbilities
 {
@@ -78,7 +79,7 @@ namespace DOL.GS.RealmAbilities
 				}
 				if (removed)
 				{
-					player.Out.SendMessage("All negative effects fall from you.", eChatType.CT_Advise, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PurgeAbility.RemoveNegativeEffects.FallFromYou"), eChatType.CT_Advise, eChatLoc.CL_SystemWindow);
 				}
 				else
 				{
@@ -117,7 +118,7 @@ namespace DOL.GS.RealmAbilities
 					GamePlayer player = m_caster as GamePlayer;
 					if (player != null)
 					{
-						player.Out.SendMessage("Purge activates in " + counter + " seconds!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PurgeAbility.OnTick.PurgeActivate", counter), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					counter--;
 					return;
@@ -135,10 +136,10 @@ namespace DOL.GS.RealmAbilities
 
 		public override void AddEffectsInfo(System.Collections.IList list)
 		{
-			list.Add("Level 1 of this ability has a five second delay when triggering this ability before it activates. Higher levels of Purge do not have this delay.");
+			list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PurgeAbility.AddEffectsInfo.Info1"));
 			list.Add("");
-			list.Add("Target: Self");
-			list.Add("Casting time: instant");
+			list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PurgeAbility.AddEffectsInfo.Info2"));
+			list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PurgeAbility.AddEffectsInfo.Info3"));
 		}
 	}
 }

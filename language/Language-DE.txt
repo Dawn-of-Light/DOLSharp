@@ -633,8 +633,8 @@ Scripts.Recharger.RechargerDialogResponse.NotMoney:	Ihr habt dafür nicht genug G
 PlayerClass.OnLevelUp.Autotrain:			Ihr trainiert "{0}" automatisch auf Stufe {1}.
 
 # /SkillBase
-SkillBase.RegisterPropertyNames.Acuity:			Acuity
-SkillBase.RegisterPropertyNames.AcuityBonusCap:		Bonus to Acuity attribute bonus cap
+SkillBase.RegisterPropertyNames.Acuity:			Sinnesschärfe
+SkillBase.RegisterPropertyNames.AcuityBonusCap:		Bonus auf Sinnesschärfebonuslimit
 SkillBase.RegisterPropertyNames.AllArcherySkills:	ALLE Bogenfähigkeiten
 SkillBase.RegisterPropertyNames.AllDualWieldingSkills:	ALL Dual Wielding Skills
 SkillBase.RegisterPropertyNames.AllMagicSkills:		ALLE Magietalente
@@ -654,7 +654,7 @@ SkillBase.RegisterPropertyNames.BeastCraft:		Tierherrschaft
 SkillBase.RegisterPropertyNames.Blades:			Klingen
 SkillBase.RegisterPropertyNames.BladeturnReinforcement:	- Bladeturn reinforcement: {0}% (PvE Only)
 SkillBase.RegisterPropertyNames.BlockChance:		- Block: {0}% (PvE Only)
-SkillBase.RegisterPropertyNames.Blunt:			Blunt
+SkillBase.RegisterPropertyNames.Blunt:			Stumpfe Waffen
 SkillBase.RegisterPropertyNames.Body:			Körper
 SkillBase.RegisterPropertyNames.BodyMagic:		Körpermagie
 SkillBase.RegisterPropertyNames.BodyMagicFocus:		Körpermagie
@@ -1296,6 +1296,49 @@ ArtifactTurnInQuest.FinishQuest.Completed:		Ihr habt die Quest "{0}" abgeschloss
 # /AbstractQuest
 AbstractQuest.FinishQuest.Completed:			Ihr habt die Quest "{0}" abgeschlossen!
 AbstractQuest.OnQuestAssigned.GetQuest:			Euch wurde die Quest "{0}" anvertraut.
+
+# REALMABILITIES
+# /Handlers
+# REALMABILITIES
+# /Handlers
+# /DashingDefenseAbility
+DashingDefenseAbility.AddEffectsInfo.Info1:		Nur ein Spieler pro Gruppe kann für die ganze Gruppe parieren und abblocken.
+DashingDefenseAbility.AddEffectsInfo.Info2:		Ziel: Selbst
+DashingDefenseAbility.AddEffectsInfo.Info3:		Zauberzeit: Sofort
+DashingDefenseAbility.Execute.AlreadyEffect:		You already an effect of that type!
+DashingDefenseAbility.Execute.MustInGroup:		Ihr müsst in einer Gruppe sein, um diese Fähigkeit nutzen zu können!
+
+# /FirstAidAbility
+FirstAidAbility.AddEffectsInfo.Info1:			Stufe 1: Wert: 25%
+FirstAidAbility.AddEffectsInfo.Info2:			Stufe 2: Wert: 60%
+FirstAidAbility.AddEffectsInfo.Info3:			Stufe 3: Wert: 100%
+FirstAidAbility.AddEffectsInfo.Info4:			Ziel: Selbst
+FirstAidAbility.AddEffectsInfo.Info5:			Zauberzeit: Sofort
+FirstAidAbility.AddEffectsInfo.Info6:			Dieser Zauberspruch kann nicht während eines Kampfes ausgesprochen werden.
+FirstAidAbility.Execute.FullyHealed:			Ihr seit wieder geheilt.
+FirstAidAbility.Execute.HealYourself:			Ihr habt Euch selbst um {0} Trefferpunkte geheilt.
+
+# /PurgeAbility
+PurgeAbility.AddEffectsInfo.Info1:			Bei der Aktivierung der Stufe 1 dieser Fähigkeit gibt es eine fünf Sekunden lange Verzögerung. Bei höheren Stufen der Reinigung gibt es diese Verzögerung nicht.
+PurgeAbility.AddEffectsInfo.Info2:			Ziel: Selbst
+PurgeAbility.AddEffectsInfo.Info3:			Zauberzeit: Sofort
+PurgeAbility.OnTick.PurgeActivate:			Reinigung wird in {0} Sekunden wirksam!
+PurgeAbility.RemoveNegativeEffects.FallFromYou:		Alle negativen Auswirkungen fallen von Euch ab.
+
+# /RealmAbility
+RealmAbility.AddReUseDelayInfo.Every:			Stufe {0}: Nutzbar alle: {1}
+RealmAbility..CheckPreconditions.BeInCombat:		Dieser Zauberspruch kann nur während eines Kampfes ausgesprochen werden!
+RealmAbility..CheckPreconditions.BeInGroup:		Dieser Zauberspruch kann nur als Mitglied einer Gruppe ausgesprochen werden!
+RealmAbility..CheckPreconditions.Combat:		Dieser Zauberspruch kann nicht während eines Kampfes ausgesprochen werden!
+RealmAbility..CheckPreconditions.Dead:			Ihr könnt diese Fähigkeit nicht nutzen, da Ihr tot seit!
+RealmAbility..CheckPreconditions.Mesmerized:		Ihr könnt diese Fähigkeit nicht nutzen,while mesmerized!
+RealmAbility..CheckPreconditions.Sitting:		Ihr könnt diese Fähigkeit nicht nutzen,while sitting!
+RealmAbility..CheckPreconditions.Stealthed:		Ihr könnt diese Fähigkeit nicht nutzen,while stealthed!
+RealmAbility..CheckPreconditions.Stunned:		Ihr könnt diese Fähigkeit nicht nutzen,while stunned!
+RealmAbility.SendCasterSpellEffectAndCastMessage.Caster:{0} zaubert!
+RealmAbility.SendCasterSpellEffectAndCastMessage.You:	Ihr bereitet den Zauber "{0}" vor...
+RealmAbility.SendCastMessage.PlayerCasts:		{0} zaubert!
+RealmAbility.SendCastMessage.YouCast:			Ihr bereitet den Zauber "{0}" vor...
 
 # WORLD
 # /AbstractArea
