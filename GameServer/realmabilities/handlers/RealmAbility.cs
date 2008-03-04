@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.RealmAbilities
 {
@@ -92,7 +93,7 @@ namespace DOL.GS.RealmAbilities
 			for (int i = 1; i <= MaxLevel; i++)
 			{
 				int reUseTime = GetReUseDelay(i);
-				list.Add("Level " + i + ": Can use every: " + ((reUseTime == 0) ? "always" : FormatTimespan(reUseTime)));
+				list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RealmAbility.AddReUseDelayInfo.Every", i, ((reUseTime == 0) ? "always" : FormatTimespan(reUseTime))));
 			}
 		}
 
@@ -151,11 +152,11 @@ namespace DOL.GS.RealmAbilities
 				{
 					if (player == caster)
 					{
-						player.Out.SendMessage("You cast a " + m_name + " Spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "RealmAbility.SendCasterSpellEffectAndCastMessage.You", m_name), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 					}
 					else
 					{
-						player.Out.SendMessage(caster.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "RealmAbility.SendCasterSpellEffectAndCastMessage.Caster", caster.Name), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 					}
 				}
 			}
@@ -173,11 +174,11 @@ namespace DOL.GS.RealmAbilities
 				{
 					if (player == caster)
 					{
-						player.Out.SendMessage("You cast a " + m_name + " Spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "RealmAbility.SendCastMessage.YouCast", m_name), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 					}
 					else
 					{
-						player.Out.SendMessage(player.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "RealmAbility.SendCastMessage.PlayerCasts", player.Name), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 					}
 				}
 			}
@@ -197,7 +198,7 @@ namespace DOL.GS.RealmAbilities
 			{
 				if (player != null)
 				{
-					player.Out.SendMessage("You cannot use this ability while dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "RealmAbility..CheckPreconditions.Dead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				return true;
 			}
@@ -205,7 +206,7 @@ namespace DOL.GS.RealmAbilities
 			{
 				if (player != null)
 				{
-					player.Out.SendMessage("You cannot use this ability while mesmerized!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "RealmAbility..CheckPreconditions.Mesmerized"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				return true;
 			}
@@ -213,7 +214,7 @@ namespace DOL.GS.RealmAbilities
 			{
 				if (player != null)
 				{
-					player.Out.SendMessage("You cannot use this ability while stunned!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "RealmAbility..CheckPreconditions.Stunned"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				return true;
 			}
@@ -221,7 +222,7 @@ namespace DOL.GS.RealmAbilities
 			{
 				if (player != null)
 				{
-					player.Out.SendMessage("You cannot use this ability while sitting!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "RealmAbility..CheckPreconditions.Sitting"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				return true;
 			}
@@ -229,7 +230,7 @@ namespace DOL.GS.RealmAbilities
 			{
 				if (player != null)
 				{
-					player.Out.SendMessage("You have been in combat recently and cannot use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "RealmAbility..CheckPreconditions.Combat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				return true;
 			}
@@ -237,7 +238,7 @@ namespace DOL.GS.RealmAbilities
 			{
 				if (player != null)
 				{
-					player.Out.SendMessage("You must be in combat recently to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "RealmAbility..CheckPreconditions.BeInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				return true;
 			}
@@ -245,13 +246,13 @@ namespace DOL.GS.RealmAbilities
 			{
 				if (player != null)
 				{
-					player.Out.SendMessage("You cannot use this ability while stealthed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "RealmAbility..CheckPreconditions.Stealthed"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				return true;
 			}
 			if (player != null && (bitmask & NOTINGROUP) != 0 && player.Group == null)
 			{
-				player.Out.SendMessage("You must be in a group use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "RealmAbility..CheckPreconditions.BeInGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return true;
 			}
 			return false;
