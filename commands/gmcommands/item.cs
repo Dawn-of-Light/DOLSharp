@@ -52,6 +52,7 @@ namespace DOL.GS.Commands
 		"'/item ispickable <true or false> [slot #]' - sets whether or not an item can be picked up",
 		"'/item isdropable <true or false> [slot #]' - sets whether or not an item can be dropped",
 		"'/item istradable <true or false> [slot #]' - sets whether or not an item can be traded",
+        "'/item isstackable <true or false> [slot #]' - sets whether or not an item is stackable",
 		"'/item candropasloot <true or false> [slot #]' - sets whether or not an item can be looted",
 		"'/item bonus <bonus> [slot #]' - sets the item bonus",
 		"'/item mbonus <num> <bonus type> <value> [slot #]' - sets the item magical bonus (num 0 = ExtraBonus)",
@@ -1222,6 +1223,40 @@ namespace DOL.GS.Commands
 							}
 							break;
 						}
+                    case "isstackable":
+                        {
+                            int slot = (int)eInventorySlot.LastBackpack;
+
+                            if (args.Length >= 4)
+                            {
+                                try
+                                {
+                                    slot = Convert.ToInt32(args[3]);
+                                }
+                                catch
+                                {
+                                    slot = (int)eInventorySlot.LastBackpack;
+                                }
+                            }
+
+                            InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
+
+                            if (item == null)
+                            {
+                                client.Out.SendMessage("No item in slot " + slot + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                return;
+                            }
+
+                            try
+                            {
+                                item.IsStackable = Convert.ToBoolean(args[2]);
+                            }
+                            catch
+                            {
+                                client.Out.SendMessage("'/item isstackable <true or false> <slot #>' to change allow item to be stackable or not", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            }
+                            break;
+                        }
 					case "ispickable":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
