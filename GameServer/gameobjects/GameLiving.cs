@@ -1147,20 +1147,19 @@ namespace DOL.GS
 		{
 			get { return Health > 0; }
 		}
-		/*
-		protected bool m_silenced = false;
-		/// <summary>
-		/// Is the living silenced
-		/// </summary>
-		public bool IsSilenced
-		{
-			get { return m_silenced; }
-			set
-			{
-				m_silenced = value;
-			}
-		}
-		*/
+        
+        protected bool m_muzzled = false;
+        /// <summary>
+        /// returns if this living is muzzled
+        /// </summary>
+        public virtual bool IsMuzzled
+        {
+            get { return m_muzzled; }
+            set
+            {
+                m_muzzled = value;
+            }
+        }
 
 		/// <summary>
 		/// Check this flag to see wether this living is involved in combat
