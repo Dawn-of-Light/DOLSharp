@@ -170,6 +170,11 @@ namespace DOL.GS.ServerRules
 		public abstract bool IsAllowedToUnderstand(GameLiving source, GamePlayer target);
 		public abstract string RulesDescription();
 
+		public virtual bool CountsTowardsSlashLevel(Character player)
+		{
+			return true;
+		}
+
 		/// <summary>
 		/// Is attacker allowed to attack defender.
 		/// </summary>

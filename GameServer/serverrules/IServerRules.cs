@@ -295,5 +295,12 @@ namespace DOL.GS.ServerRules
 		/// <param name="player">the player</param>
 		/// <returns>true if the player is allowed to generate news</returns>
 		bool CanGenerateNews(GamePlayer player);
+
+		/// <summary>
+		/// Is the player allowed to /level
+		/// </summary>
+		/// <param name="player">The player</param>
+		/// <returns>True if the player can use /level</returns>
+		bool CountsTowardsSlashLevel(Character player);
 	}
 }
