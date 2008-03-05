@@ -10484,7 +10484,7 @@ namespace DOL.GS
 			foreach (Character plr in Client.Account.Characters)
 			{
 				//where the level of one of the characters if 50
-				if (plr.Level == ServerProperties.Properties.SLASH_LEVEL_REQUIREMENT)
+				if (plr.Level == ServerProperties.Properties.SLASH_LEVEL_REQUIREMENT && GameServer.ServerRules.CountsTowardsSlashLevel(plr))
 				{
 					m_canUseSlashLevel = true;
 					break;
