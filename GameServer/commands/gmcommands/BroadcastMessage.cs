@@ -18,26 +18,53 @@
  */
 using System.Collections;
 
-namespace DOL.GS.Commands
+namespace DOL.GS.Scripts
 {
-	[CmdAttribute(
-		"&announce2",
-		ePrivLevel.GM,
-		"Broadcast something to all players in the DAOC",
-		"/broadcast <message>")]
-	public class AnnounceCommandHandler : AbstractCommandHandler, ICommandHandler
-	{
-		public void OnCommand(GameClient client, string[] args)
-		{
-			string message = string.Join(" ", args, 1, args.Length - 1);
-			foreach (GameClient clientz in WorldMgr.GetAllPlayingClients())
-			{
-				IList textList = new ArrayList();
-				textList.Add("HOST Broadcasts: ");
-				textList.Add("");
-				textList.Add(message);
-				clientz.Player.Out.SendCustomTextWindow("Broadcast", textList);
-			}
-		}
-	}
+    [CmdAttribute(
+        "&announce2",
+        (uint)ePrivLevel.GM,
+        "Broadcast something to all players in the DAOC",
+        "/broadcast <message>")]
+    public class AnnounceCommandHandler : ICommandHandler
+    {
+        public int OnCommand(GameClient client, string[] args)
+        {
+            string message = string.Join(" ", args, 1, args.Length - 1);
+            foreach (GameClient clientz in WorldMgr.GetAllPlayingClients())
+            {
+                IList textList = new ArrayList();
+                switch (client.Account.PrivLevel)
+                {
+                    case 2:
+                        {
+                            textList.Add("[GM]\n" + client.Player.Name + " Broadcasts: ");
+                        }
+                        break;
+                    case 3:
+                        {
+                            textList.Add("[Admin]\n" + client.Player.Name + " Broadcasts: ");
+                        }
+                        break;
+                }
+                textList.Add("");
+                textList.Add(message);
+                switch (client.Account.PrivLevel)
+                {
+                    case 2:
+                        {
+                            clientz.Player.Out.SendCustomTextWindow("Broadcast from GM " + client.Player.Name + "", textList);
+                        }
+                        break;
+                    case 3:
+                        {
+                            clientz.Player.Out.SendCustomTextWindow("Broadcast from Admin " + client.Player.Name + "", textList);
+                        }
+                        break;
+                    default: break;
+                }
+
+            }
+            return 1;
+        }
+    }
 }
