@@ -18,16 +18,16 @@
  */
 using System.Collections;
 
-namespace DOL.GS.Scripts
+namespace DOL.GS.Commands
 {
     [CmdAttribute(
         "&announce2",
-        (uint)ePrivLevel.GM,
+        ePrivLevel.GM,
         "Broadcast something to all players in the DAOC",
         "/broadcast <message>")]
     public class AnnounceCommandHandler : ICommandHandler
     {
-        public int OnCommand(GameClient client, string[] args)
+        public void OnCommand(GameClient client, string[] args)
         {
             string message = string.Join(" ", args, 1, args.Length - 1);
             foreach (GameClient clientz in WorldMgr.GetAllPlayingClients())
@@ -64,7 +64,6 @@ namespace DOL.GS.Scripts
                 }
 
             }
-            return 1;
         }
     }
 }
