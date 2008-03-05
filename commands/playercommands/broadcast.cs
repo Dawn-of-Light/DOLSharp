@@ -51,7 +51,11 @@ namespace DOL.GS.Commands
 				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Broadcast.NoText"));
 				return;
 			}
-
+            if (client.Player.IsMuzzled)
+            {
+                client.Player.Out.SendMessage("You are muzzled. You cannot broadcast.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+                return;
+            }
 			string message = string.Join(" ", args, 1, args.Length - 1);
 
 			Broadcast(client.Player, message);
