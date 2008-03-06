@@ -29,6 +29,9 @@
  * 
  * TODO: include autotrains in the formula
  * TODO: realm respec
+ * 
+ * Suncheck:
+ * 	Added: /respec buy
  */
 
 
@@ -48,6 +51,62 @@ namespace DOL.GS.Commands
 		const string ALL_RESPEC = "all_respec";
 		const string LINE_RESPEC = "line_respec";
 		const string DOL_RESPEC = "dol_respec";
+		const string BUY_RESPEC = "buy_respec";
+		
+		
+		public static readonly int[] canbuyonlevel =
+			{
+				1,1,1,1,1, //1-5
+				2,2,2,2,2,2,2, //6-12
+				3,3,3,3, //13-16
+				4,4,4,4,4,4, //17-22
+				5,5,5,5,5, //23-27
+				6,6,6,6,6,6, //28-33
+				7,7,7,7,7, //34-38
+				8,8,8,8,8,8, //39-44
+				9,9,9,9,9, //45-49
+				10}; //50
+		
+		public static readonly int[] priceforbuy =
+			{
+				1,2,3, //13
+				2,5,9, //14
+				3,9,17, //15
+				6,16,30, //16
+				10,26,48,75, //17
+				16,40,72,112, //18
+				22,56,102,159, //19
+				31,78,140,218, //20
+				41,103,187,291, //21
+				54,135,243,378, //22
+				68,171,308,480,652, //23
+				85,214,385,600,814, //24
+				105,263,474,738,1001, //25
+				128,320,576,896,1216, //26
+				153,383,690,1074,1458, //27
+				182,455,820,1275,1731,2278, //28
+				214,535,964,1500,2036,2679, //29
+				250,625,1125,1750,2375,3125, //30
+				289,723,1302,2025,2749,3617, //31
+				332,831,1497,2329,3161,4159, //32
+				380,950,1710,2661,3612,4752, //33
+				432,1080,1944,3024,4104,5400,6696, //34
+				488,1220,2197,3417,4638,6103,7568, //35
+				549,1373,2471,3844,5217,6865,8513, //36
+				615,1537,2767,4305,5843,7688,9533, //37
+				686,1715,3087,4802,6517,8575,10633, //38
+				762,1905,3429,5335,7240,9526,11813,14099, //39
+				843,2109,3796,5906,8015,10546,13078,15609, //40
+				930,2327,4189,6516,8844,11637,14430,17222, //41
+				1024,2560,4608,7168,9728,1280,15872,18944, //42
+				1123,2807,5053,7861,10668,14037,17406,20776, //43
+				1228,3070,5527,8597,11668,15353,19037,22722, //44
+				1339,3349,6029,9378,12725,16748,20767,24787,28806, //45
+				1458,3645,6561,10206,13851,18225,22599,26973,31347, //46
+				1582,3957,7123,11080,15037,19786,24535,29283,34032, //47
+				1714,4286,7716,12003,16290,21434,26578,31722,36867, //48
+				1853,4634,8341,12976,17610,23171,28732,34293,39854, //49
+				2000,5000,9000,14000,19000,25000,31000,37000,43000,50000}; //50
 
 		public void OnCommand(GameClient client, string[] args)
 		{
@@ -60,6 +119,7 @@ namespace DOL.GS.Commands
 					&& client.Player.RespecAmountRealmSkill < 1)
 				{
 					DisplayMessage(client, "You don't seem to have any respecs available.");
+					DisplayMessage(client, "Use /respec buy to buy an single-line respec.");
 					return;
 				}
 
@@ -83,11 +143,12 @@ namespace DOL.GS.Commands
 					DisplayMessage(client, "You have " + client.Player.RespecAmountDOL + " DOL ( full skill ) respecs available.");
 					DisplayMessage(client, "Target any trainer and use /respec DOL");
 				}
+				DisplayMessage(client, "Use /respec buy to buy an single-line respec.");
 				return;
-			}
+			}			
 
 			// Player must be speaking with trainer to respec.  (Thus have trainer targeted.) Prevents losing points out in the wild.
-			if (client.Player.TargetObject is GameTrainer == false)
+			if (client.Player.TargetObject is GameTrainer == false && args[1].ToLower() != "buy")
 			{
 				DisplayMessage(client, "You must be speaking with your trainer to respec.");
 				return;
@@ -95,6 +156,24 @@ namespace DOL.GS.Commands
 
 			switch (args[1].ToLower())
 			{
+				case "buy":
+					{
+						// Buy respec
+						if (!canbuy(client.Player))
+						{
+							DisplayMessage(client, "You cann't buy a respec on this level again.");
+							return;
+						}
+						long mgold = getmoney(client.Player);
+						if ((client.Player.PlayerCharacter.Gold + 1000 * client.Player.PlayerCharacter.Platinum) < mgold)
+						{
+							DisplayMessage(client, "You don't have enough money! You need " + mgold + " gold!");
+							return;
+						}
+						client.Out.SendCustomDialog("It costs " + mgold + " gold. Want you really buy?", new CustomDialogResponse(RespecDialogResponse));
+						client.Player.TempProperties.setProperty(BUY_RESPEC, true);
+						break;
+					}
 				case "all":
 					{
 						// Check for full respecs.
@@ -161,6 +240,30 @@ namespace DOL.GS.Commands
 					}
 			}
 		}
+		
+		private bool canbuy(GamePlayer player)
+		{
+			if (player.RespecBought < canbuyonlevel[player.Level-1])
+				return true;
+			return false;
+		}
+
+		private long getmoney(GamePlayer player)
+		{
+			if (player.Level <= 12) //1-12
+				return priceforbuy[0];
+			if (player.Level > 12) //13-50
+			{
+				if (canbuy(player))
+				{
+					int t = 0;
+					for (int i = 13; i < player.Level; i++)
+						t += canbuyonlevel[i - 1];
+					return priceforbuy[t + player.RespecBought];
+				}
+			}
+			return 0;
+		}
 
 		protected void RespecDialogResponse(GamePlayer player, byte response)
 		{
@@ -191,6 +294,15 @@ namespace DOL.GS.Commands
 				specPoints = player.RespecSingle(specLine);
 				player.TempProperties.removeProperty(LINE_RESPEC);
 			}
+			if (player.TempProperties.getProperty(BUY_RESPEC, false))
+			{
+				player.RespecAmountSingleSkill++;
+				player.RespecBought++;
+				player.TempProperties.removeProperty(BUY_RESPEC);
+				player.RemoveMoney(getmoney(player)*10000);
+				DisplayMessage(player, "You bought a single line respec!");
+				player.Out.SendUpdateMoney();
+			}			
 			// Assign full points returned
 			if (specPoints > 0)
 			{
