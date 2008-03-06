@@ -2171,6 +2171,16 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Gets/Sets amount of bought respecs
+		/// (delegate to PlayerCharacter)
+		/// </summary>
+		public int RespecBought
+		{
+			get { return PlayerCharacter != null ? PlayerCharacter.RespecBought : 0; }
+			set { if (PlayerCharacter != null) PlayerCharacter.RespecBought = value; }
+		}
+
+		/// <summary>
 		/// give player a new Specialization
 		/// </summary>
 		/// <param name="skill"></param>

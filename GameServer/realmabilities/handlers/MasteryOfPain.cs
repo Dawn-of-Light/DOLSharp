@@ -57,7 +57,7 @@ namespace DOL.GS.RealmAbilities
 	}
 
 	/// <summary>
-	/// Mastery of Parry ability
+	/// Mastery of Blocking ability
 	/// </summary>
 	public class MasteryOfBlocking : RAPropertyEnhancer
 	{

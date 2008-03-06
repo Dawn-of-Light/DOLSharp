@@ -145,6 +145,7 @@ namespace DOL
 			private int m_respecAmountDOL; // Patch 1.84 /respec Mythic
 			private int m_respecAmountChampionSkill; // CL Respecs
 			private bool m_isLevelRespecUsed;
+			private int m_respecBought; // /respec buy
 			private bool m_safetyFlag;
 			private int m_craftingPrimarySkill = 0;
 			private bool m_cancelStyle;
@@ -207,6 +208,7 @@ namespace DOL
 				m_respecAmountSingleSkill = 0;
 				m_respecAmountRealmSkill = 0;
 				m_respecAmountDOL = 0;
+				m_respecBought = 0;
 				
 				m_isLevelRespecUsed = true;
 				m_safetyFlag = true;
@@ -1501,6 +1503,19 @@ namespace DOL
 					m_isLevelRespecUsed = value;
 				}
 			}
+			/// <summary>
+			/// Gets/Sets level respec bought
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public int RespecBought
+			{
+				get { return m_respecBought; }
+				set
+				{
+					Dirty = true;
+					m_respecBought = value;
+				}
+			}						
 			/// <summary>
 			/// Gets/sets the characters safety flag
 			/// </summary>
