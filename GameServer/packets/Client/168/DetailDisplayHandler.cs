@@ -833,23 +833,28 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						else
 						{
-							//realm abilities
+							//delve on realm abilities [by Suncheck]
 							if (objectID >= 50)
 							{
 								int clientclassID = client.Player.CharacterClass.ID;
+								int sub = 50;
 								IList ra_list = SkillBase.GetClassRealmAbilities(clientclassID);
-								Ability rr5abil = SkillBase.getClassRealmAbility(clientclassID);
-								RealmAbility ab = (RealmAbility)ra_list[objectID - 50];
-								if (rr5abil != null)
+								Ability ra5abil = SkillBase.getClassRealmAbility(clientclassID);
+								RealmAbility ab = (RealmAbility)ra_list[objectID - sub];
+								if (ra5abil != null) //check if player have rr
 								{
-									for (int i = 0; i <= (objectID - 50); i++)
-									{
-										RealmAbility rrabil = (RealmAbility)ra_list[i];
-										if (rrabil.KeyName == ab.KeyName)
-											ab = (RealmAbility)ra_list[objectID - 49];
-									}
-
+									if(client.Player.RealmPoints < 513500) //player have not rr5 abilty
+										sub--;
 								}
+								for (int i = 0; i <= (objectID - sub); i++) //get all ra's at full level
+								{
+									RealmAbility raabil = (RealmAbility)ra_list[i];
+									RealmAbility playerra = (RealmAbility)client.Player.GetAbility(raabil.KeyName);
+									if (playerra != null)
+										if (playerra.Level >= playerra.MaxLevel)
+											sub--;
+								}
+								ab = (RealmAbility)ra_list[objectID - sub];
 								if (ab != null)
 								{
 									caption = ab.Name;
@@ -893,12 +898,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 						objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.LevName"));
 						foreach (Style style in styles)
 						{
-							//						objectInfo.Add(" ");
 							objectInfo.Add(style.Level + ": " + style.Name);
 						}
 						foreach (Spell spell in spells)
 						{
-							//						objectInfo.Add(" ");
 							objectInfo.Add(spell.Level + ": " + spell.Name);
 						}
 						break;

@@ -19,6 +19,8 @@
 using System;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
+using System.Collections;
+using DOL.AI.Brain;
 
 namespace DOL.GS.SkillHandler
 {
@@ -136,8 +138,30 @@ namespace DOL.GS.SkillHandler
 					return;
 				}
 			}
-
-			//TODO: i'm sure you cannot unstealth if mezzed/stunned
+			//since 1.88 (?), players which stealth, doesn't be followed by mobs [by Suncheck]
+			//TODO: Some further checks need?
+			ArrayList attackers = new ArrayList();
+			attackers.AddRange(player.Attackers);
+			foreach (GameLiving attacker in attackers)
+			{
+				if (attacker.TargetObject == (GameLiving)player)
+				{
+					attacker.TargetObject = null;
+					if (attacker is GamePlayer)
+					{
+						((GamePlayer)attacker).Out.SendChangeTarget(attacker.TargetObject);
+					}
+					if (attacker is GameNPC)
+					{
+						GameNPC npc = (GameNPC)attacker;
+						if (npc.Brain is IAggressiveBrain)
+						{
+							((IAggressiveBrain)npc.Brain).RemoveFromAggroList(player);
+						}
+						attacker.StopAttack();
+					}
+				}
+			}
 			player.Stealth(!player.IsStealthed);
 		}
 
