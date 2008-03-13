@@ -2408,12 +2408,49 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="language\Language-CZ.txt" />
-    <Content Include="language\Language-DE.txt" />
-    <Content Include="language\Language-EN.txt" />
-    <Content Include="language\Language-ES.txt" />
-    <Content Include="language\Language-FR.txt" />
-    <Content Include="language\Language-IT.txt" />
+    <Content Include="language\CZ\Language-CZ.txt" />
+    <Content Include="language\DE\Language-DE.txt" />
+    <Content Include="language\EN\AI.txt" />
+    <Content Include="language\EN\Atlantis.txt" />
+    <Content Include="language\EN\Behaviour.txt" />
+    <Content Include="language\EN\Commands.txt" />
+    <Content Include="language\EN\Crafting.txt" />
+    <Content Include="language\EN\Effects.txt" />
+    <Content Include="language\EN\GameObjects\CustomNPC\Blacksmith.txt" />
+    <Content Include="language\EN\GameObjects\CustomNPC\CraftNPC.txt" />
+    <Content Include="language\EN\GameObjects\CustomNPC\GameStableMaster.txt" />
+    <Content Include="language\EN\GameObjects\CustomNPC\Other.txt" />
+    <Content Include="language\EN\GameObjects\CustomNPC\Recharger.txt" />
+    <Content Include="language\EN\GameObjects\GameLiving.txt" />
+    <Content Include="language\EN\GameObjects\GameMerchant.txt" />
+    <Content Include="language\EN\GameObjects\GameNPC.txt" />
+    <Content Include="language\EN\GameObjects\GameObject.txt" />
+    <Content Include="language\EN\GameObjects\GamePlayer.txt" />
+    <Content Include="language\EN\GameObjects\Other.txt" />
+    <Content Include="language\EN\GameUtils.txt" />
+    <Content Include="language\EN\Housing.txt" />
+    <Content Include="language\EN\Keeps.txt" />
+    <Content Include="language\EN\Language-EN.txt" />
+    <Content Include="language\EN\OtherSentences.txt" />
+    <Content Include="language\EN\Packets.txt" />
+    <Content Include="language\EN\PlayerClasses.txt" />
+    <Content Include="language\EN\PlayerTitles.txt" />
+    <Content Include="language\EN\Quests.txt" />
+    <Content Include="language\EN\Quests\Albion\A Few Repairs.txt" />
+    <Content Include="language\EN\Quests\BaseQuest.txt" />
+    <Content Include="language\EN\RealmAbilities.txt" />
+    <Content Include="language\EN\ServerRules.txt" />
+    <Content Include="language\EN\SkillHandler.txt" />
+    <Content Include="language\EN\Spells.txt" />
+    <Content Include="language\EN\Trainer.txt" />
+    <Content Include="language\EN\World.txt" />
+    <Content Include="language\ES\Language-ES.txt" />
+    <Content Include="language\FR\Language-FR.txt" />
+    <Content Include="language\IT\Language-IT.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="language\EN\Quests\Hibernia\" />
+    <Folder Include="language\EN\Quests\Midgard\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
