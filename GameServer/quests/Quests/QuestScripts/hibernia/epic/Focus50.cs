@@ -77,13 +77,13 @@ namespace DOL.GS.Quests.Hibernia
 		private static ItemTemplate WardenEpicGloves = null; //Subterranean Gloves 
 		private static ItemTemplate WardenEpicVest = null; //Subterranean Hauberk 
 		private static ItemTemplate WardenEpicLegs = null; //Subterranean Legs 
-		private static ItemTemplate WardenEpicArms = null; //Subterranean Sleeves 
-		private static ItemTemplate MaulerEpicBoots = null;
-		private static ItemTemplate MaulerEpicHelm = null;
-		private static ItemTemplate MaulerEpicGloves = null;
-		private static ItemTemplate MaulerEpicVest = null;
-		private static ItemTemplate MaulerEpicLegs = null;
-		private static ItemTemplate MaulerEpicArms = null;     
+		private static ItemTemplate WardenEpicArms = null; //Subterranean Sleeves    
+        private static ItemTemplate NewMaulerEpicBoots = null;
+        private static ItemTemplate NewMaulerEpicHelm = null;
+        private static ItemTemplate NewMaulerEpicGloves = null;
+        private static ItemTemplate NewMaulerEpicVest = null;
+        private static ItemTemplate NewMaulerEpicLegs = null;
+        private static ItemTemplate NewMaulerEpicArms = null;      
 
 		// Constructors
 		public Focus_50() : base()
@@ -1234,15 +1234,18 @@ namespace DOL.GS.Quests.Hibernia
 				}
 
 			}
-			#region Mauler
-			MaulerEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicBoots");
-			MaulerEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicHelm");
-			MaulerEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicGloves");
-			MaulerEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicVest");
-			MaulerEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicLegs");
-			MaulerEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicArms");
-			#endregion
+
 //Hero Epic Sleeves End
+
+            // Graveen: we assume items are existing in the DB
+            // TODO: insert here creation of items if they do not exists
+            NewMaulerEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicBoots");
+            NewMaulerEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicHelm");
+            NewMaulerEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicGloves");
+            NewMaulerEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicVest");
+            NewMaulerEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicLegs");
+            NewMaulerEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicArms");
+
 //Item Descriptions End
 
 			#endregion
@@ -1337,9 +1340,9 @@ namespace DOL.GS.Quests.Hibernia
 
 			if (player.CharacterClass.ID != (byte) eCharacterClass.Hero &&
 				player.CharacterClass.ID != (byte) eCharacterClass.Ranger &&
-				player.CharacterClass.ID != (byte) eCharacterClass.Warden &&
-				player.CharacterClass.ID != (byte) eCharacterClass.Eldritch &&
-				player.CharacterClass.ID != (byte) eCharacterClass.Mauler_Hib)
+                player.CharacterClass.ID != (byte) eCharacterClass.Mauler_Hib &&
+                player.CharacterClass.ID != (byte) eCharacterClass.Warden &&
+				player.CharacterClass.ID != (byte) eCharacterClass.Eldritch)
 				return false;
 
 			// This checks below are only performed is player isn't doing quest already
@@ -1458,7 +1461,16 @@ namespace DOL.GS.Quests.Hibernia
 			}
 
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
-			{
+            {
+                // Graveen: if not existing maulerepic in DB
+                // player is not allowed to finish this quest until we fix this problem
+                if (NewMaulerEpicArms == null || NewMaulerEpicBoots == null || NewMaulerEpicGloves == null ||
+                    NewMaulerEpicHelm == null || NewMaulerEpicLegs == null || NewMaulerEpicVest == null)
+                {
+                    Ainrebh.SayTo(player, "Dark forces are still voiding this quest, your armor is not ready.");
+                    return;
+                }
+
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
 				if (gArgs.Target.Name == Ainrebh.Name && gArgs.Item.Id_nb == GreenMaw_key.Id_nb)
 				{
@@ -1517,16 +1529,15 @@ namespace DOL.GS.Quests.Hibernia
 				GiveItem(m_questPlayer, WardenEpicLegs);
 				GiveItem(m_questPlayer, WardenEpicVest);
 			}
-			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Mauler_Hib)
-			{
-				GiveItem(m_questPlayer, MaulerEpicArms);
-				GiveItem(m_questPlayer, MaulerEpicBoots);
-				GiveItem(m_questPlayer, MaulerEpicGloves);
-				GiveItem(m_questPlayer, MaulerEpicHelm);
-				GiveItem(m_questPlayer, MaulerEpicLegs);
-				GiveItem(m_questPlayer, MaulerEpicVest);
-			}
-
+            else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Mauler_Hib)
+            {
+                GiveItem(m_questPlayer, NewMaulerEpicBoots);
+                GiveItem(m_questPlayer, NewMaulerEpicArms);
+                GiveItem(m_questPlayer, NewMaulerEpicGloves);
+                GiveItem(m_questPlayer, NewMaulerEpicHelm);
+                GiveItem(m_questPlayer, NewMaulerEpicVest);
+                GiveItem(m_questPlayer, NewMaulerEpicLegs);
+            }
 
 			m_questPlayer.GainExperience(1937768448, true);
 			//m_questPlayer.AddMoney(Money.GetMoney(0,0,0,2,Util.Random(50)), "You recieve {0} as a reward.");		

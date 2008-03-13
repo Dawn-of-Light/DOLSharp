@@ -1067,7 +1067,7 @@ Type    Description           Id
 		public void WriteTechnicalInfo(ArrayList output, ItemTemplate item)
 		{
             output.Add(" ");
-			output.Add("----------Technical informations----------");
+            output.Add("----------------code technical informations---------");
 			output.Add("Item Template: " + item.Id_nb);
 			output.Add("         Name: " + item.Name);
 			output.Add("        Level: " + item.Level);
@@ -1078,7 +1078,7 @@ Type    Description           Id
 			output.Add("        Color: " + item.Color);
 			output.Add("       Emblem: " + item.Emblem);
 			output.Add("       Effect: " + item.Effect);
-			output.Add("  Value/Price: " + item.Gold + "g " + item.Silver + "s " + item.Copper + "c");
+			output.Add("  Value/Price: " + item.Platinum + "p " + item.Gold + "g " + item.Silver + "s " + item.Copper + "c");
 			output.Add("       Weight: " + (item.Weight / 10.0f) + "lbs");
 			output.Add("      Quality: " + item.Quality + "%");
 			output.Add("   Durability: " + item.Durability + "/" + item.MaxDurability + "(max)");
