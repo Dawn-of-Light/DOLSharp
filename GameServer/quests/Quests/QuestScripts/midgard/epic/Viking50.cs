@@ -95,12 +95,13 @@ namespace DOL.GS.Quests.Midgard
 		private static ItemTemplate ValkyrieEpicVest = null;
 		private static ItemTemplate ValkyrieEpicLegs = null;
 		private static ItemTemplate ValkyrieEpicArms = null;
-		private static ItemTemplate MaulerEpicBoots = null;
-		private static ItemTemplate MaulerEpicHelm = null;
-		private static ItemTemplate MaulerEpicGloves = null;
-		private static ItemTemplate MaulerEpicVest = null;
-		private static ItemTemplate MaulerEpicLegs = null;
-		private static ItemTemplate MaulerEpicArms = null;
+        private static ItemTemplate NewMaulerEpicBoots = null;
+        private static ItemTemplate NewMaulerEpicHelm = null;
+        private static ItemTemplate NewMaulerEpicGloves = null;
+        private static ItemTemplate NewMaulerEpicVest = null;
+        private static ItemTemplate NewMaulerEpicLegs = null;
+        private static ItemTemplate NewMaulerEpicArms = null; 
+
 
 		// Constructors
 		public Viking_50() : base()
@@ -1845,15 +1846,16 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			#endregion
-			#region Mauler
-			MaulerEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicBoots");
-			MaulerEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicHelm");
-			MaulerEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicGloves");
-			MaulerEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicVest");
-			MaulerEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicLegs");
-			MaulerEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicArms");
-			#endregion
-			//Savage Epic Sleeves End
+
+            // Graveen: we assume items are existing in the DB
+            // TODO: insert here creation of items if they do not exists
+            NewMaulerEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicBoots");
+            NewMaulerEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicHelm");
+            NewMaulerEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicGloves");
+            NewMaulerEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicVest");
+            NewMaulerEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicLegs");
+            NewMaulerEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicArms");
+
 //Item Descriptions End
 
 			#endregion
@@ -1966,9 +1968,21 @@ namespace DOL.GS.Quests.Midgard
 				{
 					switch (quest.Step)
 					{
-						case 4:
-							Elizabeth.SayTo(player, "There are six parts to your reward, so make sure you have room for them. Just let me know when you are ready, and then you can [take them] with our thanks!");
-							break;
+                        case 4:
+                            {
+                                // Graveen: if not existing maulerepic in DB
+                                // player is not allowed to finish this quest until we fix this problem
+                                if (NewMaulerEpicArms == null || NewMaulerEpicBoots == null || NewMaulerEpicGloves == null ||
+                                    NewMaulerEpicHelm == null || NewMaulerEpicLegs == null || NewMaulerEpicVest == null)
+                                {
+                                    Elizabeth.SayTo(player, "Dark forces are still voiding this quest, your armor is not ready.");
+                                    return;
+                                }
+
+                                Elizabeth.SayTo(player, "There are six parts to your reward, so make sure you have room for them. Just let me know when you are ready, and then you can [take them] with our thanks!");
+                                break;
+                            }
+
 					}
 				}
 			}
@@ -2001,8 +2015,8 @@ namespace DOL.GS.Quests.Midgard
 				player.CharacterClass.ID != (byte) eCharacterClass.Thane &&
 				player.CharacterClass.ID != (byte) eCharacterClass.Skald &&
 				player.CharacterClass.ID != (byte) eCharacterClass.Savage &&
-				player.CharacterClass.ID != (byte) eCharacterClass.Valkyrie &&
-				player.CharacterClass.ID != (byte) eCharacterClass.Mauler_Mid)
+                player.CharacterClass.ID != (byte) eCharacterClass.Mauler_Mid &&
+				player.CharacterClass.ID != (byte) eCharacterClass.Valkyrie)
 				return false;
 
 			// This checks below are only performed is player isn't doing quest already
@@ -2126,7 +2140,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
-				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+        		GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
 				if (gArgs.Target.Name == Lynnleigh.Name && gArgs.Item.Id_nb == tome_enchantments.Id_nb)
 				{
 					RemoveItem(Lynnleigh, player, tome_enchantments);
@@ -2222,16 +2236,16 @@ namespace DOL.GS.Quests.Midgard
 						GiveItem(m_questPlayer, ValkyrieEpicVest);
 						break;
 					}
-				case eCharacterClass.Mauler_Mid:
-					{
-						GiveItem(m_questPlayer, MaulerEpicArms);
-						GiveItem(m_questPlayer, MaulerEpicBoots);
-						GiveItem(m_questPlayer, MaulerEpicGloves);
-						GiveItem(m_questPlayer, MaulerEpicHelm);
-						GiveItem(m_questPlayer, MaulerEpicLegs);
-						GiveItem(m_questPlayer, MaulerEpicVest);
-						break;
-					}
+                case eCharacterClass.Mauler_Mid:
+                    {
+                        GiveItem(m_questPlayer, NewMaulerEpicArms);
+                        GiveItem(m_questPlayer, NewMaulerEpicBoots);
+                        GiveItem(m_questPlayer, NewMaulerEpicGloves);
+                        GiveItem(m_questPlayer, NewMaulerEpicHelm);
+                        GiveItem(m_questPlayer, NewMaulerEpicLegs);
+                        GiveItem(m_questPlayer, NewMaulerEpicVest);
+                        break;
+                    }
 			}
 
 			m_questPlayer.GainExperience(1937768448, true);

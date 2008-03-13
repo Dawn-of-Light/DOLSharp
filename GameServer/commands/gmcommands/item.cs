@@ -45,7 +45,7 @@ namespace DOL.GS.Commands
 		"'/item hand <HandID> [slot #]' - change item hand",
 		"'/item damagetype <DamageTypeID> [slot #]' - change item damage type",
 		"'/item emblem <EmblemID> [slot #]' - change item emblem",
-		"'/item price <gold> <silver> <copper> [slot #]' - change the price of an item",
+		"'/item price <platinum> <gold> <silver> <copper> [slot #]' - change the price of an item",
 		"'/item condition <con> <maxCon> [slot #]' - change the condition of an item",
 		"'/item quality <qua> [slot #]' - change the quality of an item",
 		"'/item durability <dur> <maxDur> [slot #]' - change the durability of an item",
@@ -297,14 +297,14 @@ namespace DOL.GS.Commands
 								return;
 
 							}
-							client.Out.SendMessage("--------------------------------------------------------------", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("---------------/item technical informations---------", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("Item Template: " + obj.Id_nb, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("         Name: " + obj.Name, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("        Level: " + obj.Level, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("       Object: " + GlobalConstants.ObjectTypeToName(obj.Object_Type), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("         Type: " + GlobalConstants.SlotToName(obj.Item_Type), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("        Realm: " + obj.Realm, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("  Value/Price: " + obj.Gold + "g " + obj.Silver + "s " + obj.Copper + "c", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("  Value/Price: " + obj.Platinum + "p " + obj.Gold + "g " + obj.Silver + "s " + obj.Copper + "c", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("       Weight: " + (obj.Weight / 10.0f) + " lbs", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("      Quality: " + obj.Quality + "%", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("   Durability: " + obj.Durability + "/" + obj.MaxDurability + "(max)", eChatType.CT_System, eChatLoc.CL_PopupWindow);
@@ -769,11 +769,11 @@ namespace DOL.GS.Commands
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
 
-							if (args.Length >= 6)
+							if (args.Length >= 7)
 							{
 								try
 								{
-									slot = Convert.ToInt32(args[5]);
+									slot = Convert.ToInt32(args[6]);
 								}
 								catch
 								{
@@ -790,9 +790,10 @@ namespace DOL.GS.Commands
 							}
 							try
 							{
-								item.Gold = (short)(Convert.ToInt16(args[2]) % 1000);
-								item.Silver = (byte)(Convert.ToByte(args[3]) % 100);
-								item.Copper = (byte)(Convert.ToByte(args[4]) % 100);
+								item.Platinum = (short)(Convert.ToInt16(args[2]) % 1000);
+								item.Gold = (short)(Convert.ToInt16(args[3]) % 1000);
+								item.Silver = (byte)(Convert.ToByte(args[4]) % 100);
+								item.Copper = (byte)(Convert.ToByte(args[5]) % 100);
 								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							}
 							catch
@@ -1595,6 +1596,7 @@ namespace DOL.GS.Commands
 							temp.Bonus8Type = item.Bonus8Type;
 							temp.Bonus9Type = item.Bonus9Type;
 							temp.Bonus10Type = item.Bonus10Type;
+							temp.Platinum = item.Platinum;
 							temp.Gold = item.Gold;
 							temp.Silver = item.Silver;
 							temp.Copper = item.Copper;

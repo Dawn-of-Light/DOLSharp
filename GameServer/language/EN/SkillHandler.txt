@@ -1,0 +1,209 @@
+
+
+# /SkillBase
+SkillBase.RegisterPropertyNames.Acuity:					Acuity
+SkillBase.RegisterPropertyNames.AcuityBonusCap:			Bonus to Acuity attribute bonus cap
+SkillBase.RegisterPropertyNames.AllArcherySkills:		ALL archery skills
+SkillBase.RegisterPropertyNames.AllDualWieldingSkills:	ALL dual wielding skills
+SkillBase.RegisterPropertyNames.AllMagicSkills:			ALL magic skills
+SkillBase.RegisterPropertyNames.AllMeleeWeaponSkills:	ALL melee weapon skills
+SkillBase.RegisterPropertyNames.AllSkills:				All Skills
+SkillBase.RegisterPropertyNames.ALLSpellLines:			ALL spell lines
+SkillBase.RegisterPropertyNames.Arboreal:				Arboreal
+SkillBase.RegisterPropertyNames.ArborealFocus:			Arboreal Focus
+SkillBase.RegisterPropertyNames.ArcheryRange:			Archery Range
+SkillBase.RegisterPropertyNames.ArcherySpeed:			Archery Speed
+SkillBase.RegisterPropertyNames.ArrowRecovery:			Arrow Recovery
+SkillBase.RegisterPropertyNames.Augmentation:			Augmentation
+SkillBase.RegisterPropertyNames.AuraManipulation:		Aura Manipulation
+SkillBase.RegisterPropertyNames.Axe:					Axe
+SkillBase.RegisterPropertyNames.Battlesongs:			Battlesongs
+SkillBase.RegisterPropertyNames.BeastCraft:				Beastcraft
+SkillBase.RegisterPropertyNames.Blades:					Blades
+SkillBase.RegisterPropertyNames.BladeturnReinforcement:	- Bladeturn reinforcement: {0}% (PvE Only)
+SkillBase.RegisterPropertyNames.BlockChance:			- Block: {0}% (PvE Only)
+SkillBase.RegisterPropertyNames.Blunt:					Blunt
+SkillBase.RegisterPropertyNames.Body:					Body
+SkillBase.RegisterPropertyNames.BodyMagic:				Body Magic
+SkillBase.RegisterPropertyNames.BodyMagicFocus:			Body Magic Focus
+SkillBase.RegisterPropertyNames.BoneArmy:				Bone Army
+SkillBase.RegisterPropertyNames.BoneArmyFocus:			Bone Army Focus
+SkillBase.RegisterPropertyNames.BonusToArmorAbsorption:	Bonus to armor absorption (ABS)
+SkillBase.RegisterPropertyNames.BonusToArmorFactor:		Bonus to armor factor (AF)
+SkillBase.RegisterPropertyNames.CastingSpeed:			Bonus to casting speed
+SkillBase.RegisterPropertyNames.CaveMagic:				Cave Magic
+SkillBase.RegisterPropertyNames.CelticDual:				Celtic Dual
+SkillBase.RegisterPropertyNames.CelticSpear:			Celtic Spear
+SkillBase.RegisterPropertyNames.Chants:					Chants
+SkillBase.RegisterPropertyNames.Charisma:				Charisma
+SkillBase.RegisterPropertyNames.CharismaBonusCap:		Bonus to Charisma attribute bonus cap
+SkillBase.RegisterPropertyNames.Cold:					Cold
+SkillBase.RegisterPropertyNames.ColdMagic:				Cold Magic
+SkillBase.RegisterPropertyNames.ColdMagicFocus:			Cold Magic Focus
+SkillBase.RegisterPropertyNames.Composite:				Composite
+SkillBase.RegisterPropertyNames.Concentration:			Concentration
+SkillBase.RegisterPropertyNames.Constitution:			Constitution
+SkillBase.RegisterPropertyNames.ConstitutionBonusCap:	Bonus to Constitution attribute bonus cap
+SkillBase.RegisterPropertyNames.Creeping:				Creeping
+SkillBase.RegisterPropertyNames.CreepingPathFocus:		Creeping Path Focus
+SkillBase.RegisterPropertyNames.CriticalArcheryHit:		Bonus to critical archery hit chance
+SkillBase.RegisterPropertyNames.CriticalMeleeHit:		Bonus to critical melee hit chance
+SkillBase.RegisterPropertyNames.CriticalStrike:			Critical Strike
+SkillBase.RegisterPropertyNames.Crossbows:				Crossbows
+SkillBase.RegisterPropertyNames.Crush:					Crush
+SkillBase.RegisterPropertyNames.Crushing:				Crushing
+SkillBase.RegisterPropertyNames.Cursing:				Cursing
+SkillBase.RegisterPropertyNames.CursingFocus:			Cursing Focus
+SkillBase.RegisterPropertyNames.Darkness:				Darkness
+SkillBase.RegisterPropertyNames.DarknessFocus:			Darkness Focus
+SkillBase.RegisterPropertyNames.DeathServant:			Death Servant
+SkillBase.RegisterPropertyNames.DeathservantFocus:		Deathservant Focus
+SkillBase.RegisterPropertyNames.Deathsight:				Deathsight
+SkillBase.RegisterPropertyNames.DeathsightFocus:		Deathsight Focus
+SkillBase.RegisterPropertyNames.DebuffEffectivness:		Debuff Effectivness
+SkillBase.RegisterPropertyNames.DefensiveBonus:			- Defensive Bonus: {0}% (PvE Only)
+SkillBase.RegisterPropertyNames.Dementia:				Dementia
+SkillBase.RegisterPropertyNames.Dexterity:				Dexterity
+SkillBase.RegisterPropertyNames.DexterityBonusCap:		Bonus to Dexterity attribute bonus cap
+SkillBase.RegisterPropertyNames.DualWield:				Dual Wield
+SkillBase.RegisterPropertyNames.EarthMagic:				Earth Magic
+SkillBase.RegisterPropertyNames.EarthMagicFocus:		Earth Magic Focus
+SkillBase.RegisterPropertyNames.EffectiveLevel:			Effective level
+SkillBase.RegisterPropertyNames.Empathy:				Empathy
+SkillBase.RegisterPropertyNames.EmpathyBonusCap:		Bonus to Empathy attribute bonus cap
+SkillBase.RegisterPropertyNames.Enchantment:			Enchantment
+SkillBase.RegisterPropertyNames.EnchantmentFocus:		Enchantment Focus
+SkillBase.RegisterPropertyNames.EnduranceRegeneration:	Endurance Regeneration
+SkillBase.RegisterPropertyNames.Energy:					Energy
+SkillBase.RegisterPropertyNames.Enhancement:			Enhancement
+SkillBase.RegisterPropertyNames.Envenom:				Envenom
+SkillBase.RegisterPropertyNames.EtherealShriek:			Ethereal Shriek
+SkillBase.RegisterPropertyNames.EtherealShriekFocus:	Ethereal Shriek Focus
+SkillBase.RegisterPropertyNames.EvadeChance:			- Evade: {0}% (PvE Only)
+SkillBase.RegisterPropertyNames.ExperienceLoss:			Death Experience Loss Reduction
+SkillBase.RegisterPropertyNames.Fatigue:				Fatigue
+SkillBase.RegisterPropertyNames.FireMagic:				Fire Magic
+SkillBase.RegisterPropertyNames.FireMagicFocus:			Fire Magic Focus
+SkillBase.RegisterPropertyNames.FistWraps:				Fist Wraps
+SkillBase.RegisterPropertyNames.FlexibleWeapon:			Flexible Weapon
+SkillBase.RegisterPropertyNames.FumbleChance:			Fumble Chance
+SkillBase.RegisterPropertyNames.Hammer:					Hammer
+SkillBase.RegisterPropertyNames.HandToHand:				Hand To Hand
+SkillBase.RegisterPropertyNames.HealingEffectiveness:	Bonus to healing effectiveness
+SkillBase.RegisterPropertyNames.HealthRegeneration:		Health Regeneration
+SkillBase.RegisterPropertyNames.Heat:					Heat
+SkillBase.RegisterPropertyNames.Hexing:					Hexing
+SkillBase.RegisterPropertyNames.HexingFocus:			Hexing Focus
+SkillBase.RegisterPropertyNames.HitPointsBonusCap:		Bonus to hit points bonus cap
+SkillBase.RegisterPropertyNames.Hits:					Hits
+SkillBase.RegisterPropertyNames.Instruments:			Instruments
+SkillBase.RegisterPropertyNames.Intelligence:			Intelligence
+SkillBase.RegisterPropertyNames.IntelligenceBonusCap:	Bonus to Intelligence attribute bonus cap
+SkillBase.RegisterPropertyNames.LargeWeapon:			Large Weapon
+SkillBase.RegisterPropertyNames.LeftAxe:				Left Axe
+SkillBase.RegisterPropertyNames.LightMagic:				Light Magic
+SkillBase.RegisterPropertyNames.LightMagicFocus:		Light Magic Focus
+SkillBase.RegisterPropertyNames.Longbows:				Longbows
+SkillBase.RegisterPropertyNames.MagicDamageBonus:		Bonus to magic damage
+SkillBase.RegisterPropertyNames.Magnetism:				Magnetism
+SkillBase.RegisterPropertyNames.ManaMagic:				Mana Magic
+SkillBase.RegisterPropertyNames.ManaMagicFocus:			Mana Magic Focus
+SkillBase.RegisterPropertyNames.Matter:					Matter
+SkillBase.RegisterPropertyNames.MatterMagic:			Matter Magic
+SkillBase.RegisterPropertyNames.MatterMagicFocus:		MatterMagicFocus
+SkillBase.RegisterPropertyNames.MaulerStaff:			Mauler Staff
+SkillBase.RegisterPropertyNames.MaximumSpeed:			Maximum Speed
+SkillBase.RegisterPropertyNames.MeleeDamage:			Bonus to melee damage
+SkillBase.RegisterPropertyNames.MeleeSpeed:				Bonus to melee combat speed
+SkillBase.RegisterPropertyNames.Mending:				Mending
+SkillBase.RegisterPropertyNames.Mentalism:				Mentalism
+SkillBase.RegisterPropertyNames.MentalismFocus:			Mentalism Focus
+SkillBase.RegisterPropertyNames.MesmerizeDuration:		Mesmerize Duration
+SkillBase.RegisterPropertyNames.MindMagic:				Mind Magic
+SkillBase.RegisterPropertyNames.MindMagicFocus:			Mind Magic Focus
+SkillBase.RegisterPropertyNames.Music:					Music
+SkillBase.RegisterPropertyNames.Nature:					Nature
+SkillBase.RegisterPropertyNames.NegativeReduction:		- Negative effect duration reduction: {0}% (PvE Only)
+SkillBase.RegisterPropertyNames.NightshadeMagic:		Nightshade Magic
+SkillBase.RegisterPropertyNames.Nurture:				Nurture
+SkillBase.RegisterPropertyNames.OdinsWill:				Odin's Will
+SkillBase.RegisterPropertyNames.Pacification:			Pacification
+SkillBase.RegisterPropertyNames.Painworking:			Painworking
+SkillBase.RegisterPropertyNames.PainworkingFocus:		Painworking Focus
+SkillBase.RegisterPropertyNames.Parry:					Parry
+SkillBase.RegisterPropertyNames.ParryChance:			- Parry: {0}% (PvE Only)
+SkillBase.RegisterPropertyNames.Pathfinding:			Pathfinding
+SkillBase.RegisterPropertyNames.PhantasmalWail:			Phantasmal Wail
+SkillBase.RegisterPropertyNames.PhantasmalWailFocus:	Phantasmal Wail Focus
+SkillBase.RegisterPropertyNames.PieceAblative:			- Piece Ablative: {0}% (PvE Only)
+SkillBase.RegisterPropertyNames.Piercing:				Piercing
+SkillBase.RegisterPropertyNames.Piety:					Piety
+SkillBase.RegisterPropertyNames.PietyBonusCap:			Bonus to Piety attribute bonus cap
+SkillBase.RegisterPropertyNames.Polearms:				Polearms
+SkillBase.RegisterPropertyNames.Power:					Power
+SkillBase.RegisterPropertyNames.PowerBonusCap:			Bonus to power bonus cap
+SkillBase.RegisterPropertyNames.PowerPool:				Power Pool
+SkillBase.RegisterPropertyNames.PowerRegeneration:		Power Regeneration
+SkillBase.RegisterPropertyNames.PowerStrikes:			Power Strikes
+SkillBase.RegisterPropertyNames.Quickness:				Quickness
+SkillBase.RegisterPropertyNames.QuicknessBonusCap:		Bonus to Quickness attribute bonus cap
+SkillBase.RegisterPropertyNames.RangedDamage:			all Ranged Damage
+SkillBase.RegisterPropertyNames.ReactionaryStyleDamage:	- Reactionary Style Damage Bonus: {0}% (PvE Only)
+SkillBase.RegisterPropertyNames.RecurvedBow:			Recurved Bow
+SkillBase.RegisterPropertyNames.Regrowth:				Regrowth
+SkillBase.RegisterPropertyNames.Rejuvenation:			Rejuvenation
+SkillBase.RegisterPropertyNames.ResistPierce:			Resist Pierce
+SkillBase.RegisterPropertyNames.Runecarving:			Runecarving
+SkillBase.RegisterPropertyNames.RunecarvingFocus:		Runecarving Focus
+SkillBase.RegisterPropertyNames.Savagery:				Savagery
+SkillBase.RegisterPropertyNames.Scythe:					Scythe
+SkillBase.RegisterPropertyNames.ShadowMastery:			Shadow Mastery
+SkillBase.RegisterPropertyNames.Shields:				Shields
+SkillBase.RegisterPropertyNames.ShortBow:				Short Bow
+SkillBase.RegisterPropertyNames.Slash:					Slash
+SkillBase.RegisterPropertyNames.Slashing:				Slashing
+SkillBase.RegisterPropertyNames.Smiting:				Smiting
+SkillBase.RegisterPropertyNames.Soulrending:			Soulrending
+SkillBase.RegisterPropertyNames.Spear:					Spear
+SkillBase.RegisterPropertyNames.SpectralForce:			Spectral Force
+SkillBase.RegisterPropertyNames.SpectralForceFocus:		Spectral Force Focus
+SkillBase.RegisterPropertyNames.SpectralGuard:			Spectral Guard
+SkillBase.RegisterPropertyNames.SpeedDecreaseDuration:	Speed Decrease Duration
+SkillBase.RegisterPropertyNames.SpellDuration:			Spell Duration
+SkillBase.RegisterPropertyNames.SpellPowerCost:			- Spell Power Cost Reduction: {0}% (PvE Only)
+SkillBase.RegisterPropertyNames.SpellRange:				Spell Range
+SkillBase.RegisterPropertyNames.Spirit:					Spirit
+SkillBase.RegisterPropertyNames.SpiritMagic:			Spirit Magic
+SkillBase.RegisterPropertyNames.SpiritMagicFocus:		Spirit Magic Focus
+SkillBase.RegisterPropertyNames.Staff:					Staff
+SkillBase.RegisterPropertyNames.StatBuffSpells:			all Stat Buff Spells
+SkillBase.RegisterPropertyNames.Stealth:				Stealth
+SkillBase.RegisterPropertyNames.Stormcalling:			Stormcalling
+SkillBase.RegisterPropertyNames.Strength:				Strength
+SkillBase.RegisterPropertyNames.StrengthBonusCap:		Bonus to Strength attribute bonus cap
+SkillBase.RegisterPropertyNames.StunDuration:			Stun Duration
+SkillBase.RegisterPropertyNames.StyleCostReduction:		- Style Cost Reduction: {0} pts (PvE Only)
+SkillBase.RegisterPropertyNames.StyleDamage:			Bonus to style damage
+SkillBase.RegisterPropertyNames.Summoning:				Summoning
+SkillBase.RegisterPropertyNames.SummoningFocus:			Summoning Focus
+SkillBase.RegisterPropertyNames.Suppression:			Suppression
+SkillBase.RegisterPropertyNames.SuppressionFocus:		Suppression Focus
+SkillBase.RegisterPropertyNames.Sword:					Sword
+SkillBase.RegisterPropertyNames.ThrownWeapons:			Thrown Weapons
+SkillBase.RegisterPropertyNames.Thrust:					Thrust
+SkillBase.RegisterPropertyNames.Thrusting:				Thrusting
+SkillBase.RegisterPropertyNames.ToHitBonus:				- To-hit bonus: {0}% (PvE Only)
+SkillBase.RegisterPropertyNames.TwoHanded:				Two Handed
+SkillBase.RegisterPropertyNames.Valor:					Valor
+SkillBase.RegisterPropertyNames.VampiiricEmbrace:		Vampiiric Embrace
+SkillBase.RegisterPropertyNames.Verdant:				Verdant	Path
+SkillBase.RegisterPropertyNames.VerdantFocus:			Verdant Focus
+SkillBase.RegisterPropertyNames.VoidMagic:				Void Magic
+SkillBase.RegisterPropertyNames.VoidMagicFocus:			Void Magic Focus
+SkillBase.RegisterPropertyNames.WeaponSkill:			Bonus to Weaponskill
+SkillBase.RegisterPropertyNames.WindMagic:				Wind Magic
+SkillBase.RegisterPropertyNames.WindMagicFocus:			Wind Magic Focus
+SkillBase.RegisterPropertyNames.Witchcraft:				Witchcraft
+SkillBase.RegisterPropertyNames.WitchcraftFocus:		Witchcraft Focus
+
+

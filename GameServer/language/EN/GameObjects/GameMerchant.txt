@@ -1,0 +1,22 @@
+
+
+GameMerchant.GetExamineMessages.BuyItemsFor:		{0} says, "You can buy items here for {1}."
+GameMerchant.GetExamineMessages.Nothing:		nothing
+GameMerchant.GetExamineMessages.RightClick:		[Right click to display a shop window]
+GameMerchant.GetExamineMessages.YouExamine:		You examine {0}. {1} is {2} and is a merchant.
+GameMerchant.OnPlayerAppraise.Offers:			{0} offers you {1} for {2}.
+GameMerchant.OnPlayerBuy.Bought:			You just bought {0} for {1}.
+GameMerchant.OnPlayerBuy.Bought2:			You just bought {0} for {1} {2}.
+GameMerchant.OnPlayerBuy.BoughtBP:			You just bought {0} for {1} BPs.
+GameMerchant.OnPlayerBuy.BoughtPieces:			You just bought {0} pieces of {1} for {2}.
+GameMerchant.OnPlayerBuy.BoughtPieces2:			You just bought {0} pieces of {1} for {2} {3}.
+GameMerchant.OnPlayerBuy.BoughtPiecesBP:		You just bought {0} pieces of {1} for {0} BPs.
+GameMerchant.OnPlayerBuy.NotInventorySpace:		Not enough inventory space to buy that.
+GameMerchant.OnPlayerBuy.YouNeed:			You need {0} to buy this.
+GameMerchant.OnPlayerBuy.YouNeed2:			You need {0} {1} to buy this.
+GameMerchant.OnPlayerBuy.YouNeedBP:			You need {0} BPs to buy this.
+GameMerchant.OnPlayerSell.CantBeSold:			This item can't be sold.
+GameMerchant.OnPlayerSell.GivesYou:			{0} gives you {1} for {2}.
+GameMerchant.OnPlayerSell.IsntInterested:		{0} isn't interested in {1}.
+GameMerchant.OnPlayerSell.TooFarAway:			{0} is too far away!
+

@@ -1426,9 +1426,18 @@ namespace DOL.GS.Quests.Albion
 				}
 			}
 
-			if (Step == 2 && e == GamePlayerEvent.GiveItem)
-			{
-				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+            if (Step == 2 && e == GamePlayerEvent.GiveItem)
+            {
+                // Graveen: if not existing maulerepic in DB
+                // player is not allowed to finish this quest until we fix this problem
+                if (MaulerEpicArms == null || MaulerEpicBoots == null || MaulerEpicGloves == null ||
+                    MaulerEpicHelm == null || MaulerEpicLegs == null || MaulerEpicVest == null)
+                {
+                    Lidmann.SayTo(player, "Dark forces are still voiding this quest, your armor is not ready.");
+                    return;
+                }
+
+                GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
 				if (gArgs.Target.Name == Lidmann.Name && gArgs.Item.Id_nb == sealed_pouch.Id_nb)
 				{
 					RemoveItem(Lidmann, player, sealed_pouch);
