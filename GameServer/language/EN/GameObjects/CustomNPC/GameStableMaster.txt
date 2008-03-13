@@ -1,0 +1,7 @@
+
+
+GameStableMaster.ReceiveItem.HorseName:			horse
+#----> Attention! this must ends with blank character:	"ticket to "
+GameStableMaster.ReceiveItem.TicketTo:			ticket to 
+GameStableMaster.ReceiveItem.UnknownWay:		My horse doesn't know the way to {0} yet.
+

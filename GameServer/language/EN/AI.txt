@@ -1,0 +1,12 @@
+
+
+AI.Brain.Necromancer.CastSpellAfterAction:	The {0} will begin casting this spell after its current action is finished.
+AI.Brain.Necromancer.ServantFarAwayToCast:	Your servant is too far away from your target to cast that spell!
+AI.Brain.Necromancer.PetCantSeeTarget:		Your controlled {0} can't see its target!
+AI.Brain.Necromancer.PetCastingSpell:		The {0} begins casting the spell!
+AI.Brain.Necromancer.PetTooFarBeLostSecIm:	Your servant is too far from you and will be lost in {0} seconds or immediately if you move further away.
+AI.Brain.Necromancer.PetTooFarBeLostSec:	Your servant is too far from you and will be lost in {0} seconds.
+AI.Brain.Necromancer.HaveLostBondToPet:		You have lost your bond to your servant.
+AI.Brain.Necromancer.SpellNoLongerInQueue:	The {0} spell is no longer in the {1}'s queue.
+AI.Brain.StandardMobBrain.YouProtDist:		You are protecting {0} and distract {1}.
+
