@@ -702,14 +702,14 @@ Scripts.Player.Guild.DuesOn:				Guild dues are currently set at {0} percent.
 Scripts.Player.Guild.EmailSet:				You have set the guild email to {0}.	
 Scripts.Player.Guild.EmblemAlready:			Your guild already has an emblem but you may change it for a hefty fee of 100 gold. You must select the EmblemNPC again for this proceedure to happen.	
 Scripts.Player.Guild.EmblemNeedGold:			You must have 200 gold to re emblem your guild.	
-Scripts.Player.Guild.EmblemNeedNPC:			You must select the EmblemNPC.	
-Scripts.Player.Guild.EmblemNPCNotSelected:		You must select the EmblemNPC.	
+Scripts.Player.Guild.EmblemNeedNPC:			You must be near a valid emblemeer.	
+Scripts.Player.Guild.EmblemNPCNotSelected:		You must be near a valid emblemeer.	
 Scripts.Player.Guild.EmblemRedo:			Would you like to re-emblem your guild for 100 gold?	
 Scripts.Player.Guild.FormNoGroup:			You must be in a group to form a guild.	
 Scripts.Player.Guild.FormNoMembers:			You need {0} members in your group to form a guild.	
-Scripts.Player.Guild.GuildCreated:			The guild {0} was created with {1} as leader.	
+Scripts.Player.Guild.GuildCreated:			The guild {0} has been formed. {1} is the leader.	
 Scripts.Player.Guild.GuildExists:			That guild cannot be created because it already exists.	
-Scripts.Player.Guild.GuildForceLeave:			{0} has removed you from {1}.	
+Scripts.Player.Guild.GuildForceLeave:			You have been removed from {1} by {0}.
 Scripts.Player.Guild.GuildLeave:			You have left your guild.	
 Scripts.Player.Guild.GuildLevelReq:			Your guild is not high enough level for this command.	
 Scripts.Player.Guild.GuildNotExist:			That guild does not exist.	
@@ -804,7 +804,7 @@ Scripts.Player.Guild.MadeLeader:			You are now the leader of {0}.
 Scripts.Player.Guild.MadeLeaderOther:			{0} has been made the leader of {1}.	
 Scripts.Player.Guild.MemberLogin:			{0} has logged into the game.	
 Scripts.Player.Guild.MemberLogoff:			{0} has logged out of the game.	
-Scripts.Player.Guild.MemberRemoved:			{0} has removed {1} from the guild.	
+Scripts.Player.Guild.MemberRemoved:			{1} was removed from the guild.
 Scripts.Player.Guild.MeritPointReq:			Your guild does not have the required merit points.	
 Scripts.Player.Guild.MotdSet:				You have set the motd for the guild.	
 Scripts.Player.Guild.NoKeep:				You must have a keep before using that command.	
