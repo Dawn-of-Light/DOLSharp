@@ -1503,7 +1503,7 @@ namespace DOL.GS.Housing
 				if (item.ItemTemplateID.EndsWith("_vault"))
 				{
 					ItemTemplate template = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate),
-						"Id_nb = '" + GameServer.Database.Escape(item.ItemTemplateID) + "'");
+						"TemplateID = '" + GameServer.Database.Escape(item.ItemTemplateID) + "'");
 					if (template == null)
 						continue;
 					GameHouseVault houseVault = new GameHouseVault(template, item.Index);
