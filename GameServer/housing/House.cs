@@ -992,7 +992,7 @@ namespace DOL.GS.Housing
 		{
 			if (item == null)
 			{
-				item = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "Id_nb = '" + GameServer.Database.Escape(templateID) + "'");
+				item = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "TemplateID = '" + GameServer.Database.Escape(templateID) + "'");
 				if (item == null)
 					return null;
 			}
