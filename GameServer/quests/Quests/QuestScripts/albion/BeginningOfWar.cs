@@ -291,290 +291,15 @@ namespace DOL.GS.Quests.Albion
 			#endregion
 
 			#region defineItems
-
 			swampRatTail = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "swamp_rat_tail");
-			if (swampRatTail == null)
-			{
-				swampRatTail = new ItemTemplate();
-				swampRatTail.Name = "Swamp Rat Tail";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + swampRatTail.Name + " , creating it ...");
-
-				swampRatTail.Weight = 110;
-				swampRatTail.Model = 515;
-
-				swampRatTail.Object_Type = (int) eObjectType.GenericItem;
-
-				swampRatTail.Id_nb = "swamp_rat_tail";
-				swampRatTail.IsPickable = true;
-				swampRatTail.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(swampRatTail);
-			}
-
 			swampSlimeItem = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "swamp_slime");
-			if (swampSlimeItem == null)
-			{
-				swampSlimeItem = new ItemTemplate();
-				swampSlimeItem.Name = "Swamp Slime";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + swampSlimeItem.Name + " , creating it ...");
-
-				swampSlimeItem.Weight = 10;
-				swampSlimeItem.Model = 553;
-
-				swampSlimeItem.Object_Type = (int) eObjectType.GenericItem;
-
-				swampSlimeItem.Id_nb = "swamp_slime";
-				swampSlimeItem.IsPickable = true;
-				swampSlimeItem.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(swampSlimeItem);
-			}
-
 			scrollDunwyn = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "scroll_for_dunwyn");
-			if (scrollDunwyn == null)
-			{
-				scrollDunwyn = new ItemTemplate();
-				scrollDunwyn.Name = "Scroll for Master Dunwyn";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + scrollDunwyn.Name + " , creating it ...");
-
-				scrollDunwyn.Weight = 10;
-				scrollDunwyn.Model = 498;
-
-				scrollDunwyn.Object_Type = (int) eObjectType.GenericItem;
-
-				scrollDunwyn.Id_nb = "scroll_for_dunwyn";
-				scrollDunwyn.IsPickable = true;
-				scrollDunwyn.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(scrollDunwyn);
-			}
-
 			listDunwyn = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "list_for_dunwyn");
-			if (listDunwyn == null)
-			{
-				listDunwyn = new ItemTemplate();
-				listDunwyn.Name = "List for Master Dunwyn";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + listDunwyn.Name + " , creating it ...");
-
-				listDunwyn.Weight = 10;
-				listDunwyn.Model = 498;
-
-				listDunwyn.Object_Type = (int) eObjectType.GenericItem;
-
-				listDunwyn.Id_nb = "list_for_dunwyn";
-				listDunwyn.IsPickable = true;
-				listDunwyn.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(listDunwyn);
-			}
-
 			riverSpritlingClaw = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "river_spritling_claw");
-			if (riverSpritlingClaw == null)
-			{
-				riverSpritlingClaw = new ItemTemplate();
-				riverSpritlingClaw.Name = "River Spriteling Claw";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + riverSpritlingClaw.Name + " , creating it ...");
-
-				riverSpritlingClaw.Weight = 2;
-				riverSpritlingClaw.Model = 106;
-
-				riverSpritlingClaw.Object_Type = (int) eObjectType.GenericItem;
-
-				riverSpritlingClaw.Id_nb = "river_spritling_claw";
-				riverSpritlingClaw.IsPickable = true;
-				riverSpritlingClaw.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(riverSpritlingClaw);
-			}
-
 			princessOberasHead = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "princess_oberas_head");
-			if (princessOberasHead == null)
-			{
-				princessOberasHead = new ItemTemplate();
-				princessOberasHead.Name = "Princess Obera's Head";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + princessOberasHead.Name + " , creating it ...");
-
-				princessOberasHead.Weight = 15;
-				princessOberasHead.Model = 503;
-
-				princessOberasHead.Object_Type = (int) eObjectType.GenericItem;
-
-				princessOberasHead.Id_nb = "princess_oberas_head";
-				princessOberasHead.IsPickable = true;
-				princessOberasHead.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(princessOberasHead);
-			}
-
-			// item db check
 			recruitsHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_helm");
-			if (recruitsHelm == null)
-			{
-				recruitsHelm = new ItemTemplate();
-				recruitsHelm.Name = "Recruit's Studded Helm";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + recruitsHelm.Name + ", creating it ...");
-				recruitsHelm.Level = 8;
-
-				recruitsHelm.Weight = 24;
-				recruitsHelm.Model = 824; // studded vest
-
-				recruitsHelm.DPS_AF = 12; // Armour
-				recruitsHelm.SPD_ABS = 19; // Absorption
-
-				recruitsHelm.Object_Type = (int) eObjectType.Studded;
-				recruitsHelm.Item_Type = (int) eEquipmentItems.HEAD;
-				recruitsHelm.Id_nb = "recruits_studded_helm";
-				recruitsHelm.Gold = 0;
-				recruitsHelm.Silver = 9;
-				recruitsHelm.Copper = 0;
-				recruitsHelm.IsPickable = true;
-				recruitsHelm.IsDropable = true;
-				recruitsHelm.Color = 9; // red leather
-
-				recruitsHelm.Bonus = 5; // default bonus
-
-				recruitsHelm.Bonus1 = 4;
-				recruitsHelm.Bonus1Type = (int) eStat.DEX;
-
-				recruitsHelm.Bonus2 = 1;
-				recruitsHelm.Bonus2Type = (int) eResist.Spirit;
-
-				recruitsHelm.Bonus3 = 12;
-				recruitsHelm.Bonus3Type = (int) eProperty.MaxHealth;
-
-				recruitsHelm.Quality = 100;
-				recruitsHelm.Condition = 1000;
-				recruitsHelm.MaxCondition = 1000;
-				recruitsHelm.Durability = 1000;
-				recruitsHelm.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsHelm);
-			}
-
-			// item db check
 			recruitsCap = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_cap");
-			if (recruitsCap == null)
-			{
-				recruitsCap = new ItemTemplate();
-				recruitsCap.Name = "Recruit's Quilted Cap";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + recruitsCap.Name + ", creating it ...");
-				recruitsCap.Level = 8;
-
-				recruitsCap.Weight = 8;
-				recruitsCap.Model = 822; // studded vest
-
-				recruitsCap.DPS_AF = 6; // Armour
-				recruitsCap.SPD_ABS = 0; // Absorption
-
-				recruitsCap.Object_Type = (int) eObjectType.Cloth;
-				recruitsCap.Item_Type = (int) eEquipmentItems.HEAD;
-				recruitsCap.Id_nb = "recruits_quilted_cap";
-				recruitsCap.Gold = 0;
-				recruitsCap.Silver = 9;
-				recruitsCap.Copper = 0;
-				recruitsCap.IsPickable = true;
-				recruitsCap.IsDropable = true;
-				recruitsCap.Color = 27; // red cloth
-
-				recruitsCap.Bonus = 5; // default bonus
-
-				recruitsCap.Bonus1 = 4;
-				recruitsCap.Bonus1Type = (int) eStat.DEX;
-
-				recruitsCap.Bonus2 = 20;
-				recruitsCap.Bonus2Type = (int) eProperty.MaxHealth;
-
-				recruitsCap.Bonus3 = 1;
-				recruitsCap.Bonus3Type = (int) eResist.Spirit;
-
-				recruitsCap.Quality = 100;
-				recruitsCap.Condition = 1000;
-				recruitsCap.MaxCondition = 1000;
-				recruitsCap.Durability = 1000;
-				recruitsCap.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsCap);
-			}
-
 			recruitsRing = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_silver_ring");
-			if (recruitsRing == null)
-			{
-				recruitsRing = new ItemTemplate();
-				recruitsRing.Name = "Recruit's Silver Ring";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + recruitsRing.Name + ", creating it ...");
-				recruitsRing.Level = 6;
-
-				recruitsRing.Weight = 2;
-				recruitsRing.Model = 103; // studded vest                
-
-				recruitsRing.Object_Type = (int) eObjectType.Magical;
-				recruitsRing.Item_Type = (int) eEquipmentItems.R_RING;
-				recruitsRing.Id_nb = "recruits_silver_ring";
-				recruitsRing.Gold = 0;
-				recruitsRing.Silver = 9;
-				recruitsRing.Copper = 0;
-				recruitsRing.IsPickable = true;
-				recruitsRing.IsDropable = true;
-
-				recruitsRing.Bonus = 5; // default bonus
-
-				recruitsRing.Bonus1 = 20;
-				recruitsRing.Bonus1Type = (int) eProperty.MaxHealth;
-
-				recruitsRing.Quality = 100;
-				recruitsRing.Condition = 1000;
-				recruitsRing.MaxCondition = 1000;
-				recruitsRing.Durability = 1000;
-				recruitsRing.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsRing);
-			}
-
 			#endregion
 
 			/* Now we add some hooks to the npc we found.
@@ -1126,7 +851,7 @@ namespace DOL.GS.Quests.Albion
 			UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
 			InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
-			if (item != null && item.Id_nb == listDunwyn.Id_nb)
+			if (item != null && item.TemplateID == listDunwyn.TemplateID)
 			{
 				if (quest.Step >= 4 && quest.Step <= 8)
 				{
@@ -1331,7 +1056,7 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == dunwyn.Name && gArgs.Item.Id_nb == scrollDunwyn.Id_nb)
+				if (gArgs.Target.Name == dunwyn.Name && gArgs.Item.TemplateID == scrollDunwyn.TemplateID)
 				{
 					dunwyn.SayTo(player, "What? What's this? A letter, for me? Hrm...Let me see what it says. Yes...one moment.");
 					RemoveItem(dunwyn, player, scrollDunwyn);
@@ -1383,21 +1108,21 @@ namespace DOL.GS.Quests.Albion
 
 				if (gArgs.Target.Name == dunwyn.Name)
 				{
-					if (Step == 10 && gArgs.Item.Id_nb == swampSlimeItem.Id_nb)
+					if (Step == 10 && gArgs.Item.TemplateID == swampSlimeItem.TemplateID)
 					{
 						dunwyn.SayTo(player, "Well, least you managed to get a good amount of it. Ok, now give me the spriteling claw.");
 						RemoveItem(dunwyn, player, swampSlimeItem);
 						Step = 11;
 						return;
 					}
-					else if (Step == 11 && gArgs.Item.Id_nb == riverSpritlingClaw.Id_nb)
+					else if (Step == 11 && gArgs.Item.TemplateID == riverSpritlingClaw.TemplateID)
 					{
 						dunwyn.SayTo(player, "Good, good. A nice sharp one. I like it. Now, give me the swamp rat tail. This had better be a good, thick one!");
 						RemoveItem(dunwyn, player, riverSpritlingClaw);
 						Step = 12;
 						return;
 					}
-					else if (Step == 12 && gArgs.Item.Id_nb == swampRatTail.Id_nb)
+					else if (Step == 12 && gArgs.Item.TemplateID == swampRatTail.TemplateID)
 					{
 						dunwyn.SayTo(player, "Yes yes, this will have to do. Now listen here whipersnapper. I have a few things to do yet, so why don't you get yourself back to your trainer and I'll be along promptly. In fact, let me [teleport] you home. *hehe*");
 						RemoveItem(dunwyn, player, swampRatTail);
@@ -1425,7 +1150,7 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 18 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == masterFrederick.Name && gArgs.Item.Id_nb == princessOberasHead.Id_nb)
+				if (gArgs.Target.Name == masterFrederick.Name && gArgs.Item.TemplateID == princessOberasHead.TemplateID)
 				{
 					masterFrederick.SayTo(player, "Excellent work recruit! My, this is a rather large fairy head, don't you think? Well, nevermind that. I'm sure we won't hear from those fairies ever again. And, as per our usual agreement, I have a [reward] for you.");
 					RemoveItem(masterFrederick, player, princessOberasHead);

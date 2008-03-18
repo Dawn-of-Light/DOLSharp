@@ -365,7 +365,7 @@ namespace DOL.GS.Commands
 					if (template != null && template.Name.ToLower() == ticket.ToLower())
 					{
 						ticketFound = true;
-						pathname = template.Id_nb;
+						pathname = template.TemplateID;
 						break;
 					}
 

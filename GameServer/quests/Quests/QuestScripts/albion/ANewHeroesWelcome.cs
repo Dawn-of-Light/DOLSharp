@@ -77,57 +77,8 @@ namespace DOL.GS.Quests.Albion
         private void Init()
         {
             #region defineItems
-
-            // item db check
-            RecruitsCloak = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_cloak");
-            if (RecruitsCloak == null)
-            {
-                RecruitsCloak = new ItemTemplate();
-                RecruitsCloak.Name = "Recruit's Cloak";
-                if (log.IsWarnEnabled)
-                    log.Warn("Could not find " + RecruitsCloak.Name + ", creating it ...");
-
-                RecruitsCloak.Level = 5;
-                RecruitsCloak.Weight = 3;
-                RecruitsCloak.Model = 443;
-                RecruitsCloak.Color = 36;
-
-                RecruitsCloak.Object_Type = (int)eObjectType.Magical;
-                RecruitsCloak.Item_Type = (int)eEquipmentItems.CLOAK;
-                RecruitsCloak.Id_nb = "k109_recruits_cloak";
-                RecruitsCloak.Gold = 0;
-                RecruitsCloak.Silver = 0;
-                RecruitsCloak.Copper = 0;
-                RecruitsCloak.IsPickable = true;
-                RecruitsCloak.IsDropable = false; // can't be sold to merchand
-
-                RecruitsCloak.Bonus1 = 6;
-                RecruitsCloak.Bonus1Type = (int)eProperty.MaxHealth;
-
-                RecruitsCloak.Quality = 100;
-                RecruitsCloak.Condition = 50000;
-                RecruitsCloak.MaxCondition = 50000;
-                RecruitsCloak.Durability = 50000;
-                RecruitsCloak.MaxDurability = 50000;
-
-                if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(RecruitsCloak);
-            }
+			RecruitsCloak = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_cloak");
             LetterToPompin = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "letter_to_pompin");
-            if (LetterToPompin == null)
-            {
-                LetterToPompin = new ItemTemplate();
-                LetterToPompin.Weight = 0;
-                LetterToPompin.Condition = 50000;
-                LetterToPompin.MaxCondition = 50000;
-                LetterToPompin.Model = 499;
-                LetterToPompin.Extension = 1;
-                LetterToPompin.Name = "Letter To Pompin";
-				LetterToPompin.Id_nb = "letter_to_pompin";
-
-                if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(LetterToPompin);
-            }
             #endregion
             Level = 1;
             QuestGiver = MasterClaistan;

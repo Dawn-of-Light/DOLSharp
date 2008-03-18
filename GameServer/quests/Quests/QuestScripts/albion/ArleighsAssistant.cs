@@ -199,7 +199,7 @@ namespace DOL.GS.Quests.Albion
                      log.Warn("Could not find Spriteling Toes, creating it ...");
                  spritelingToes = new ItemTemplate();
                  spritelingToes.Object_Type = 0;
-                 spritelingToes.Id_nb = "spriteling_toes";
+                 spritelingToes.TemplateID = "spriteling_toes";
                  spritelingToes.Name = "Spriteling Toes";
                  spritelingToes.Level = 1;
                  spritelingToes.Model = 508; 
@@ -221,7 +221,7 @@ namespace DOL.GS.Quests.Albion
                      log.Warn("Could not find Worm Rot, creating it ...");
                  wormRot = new ItemTemplate();
                  wormRot.Object_Type = 0;
-                 wormRot.Id_nb = "worm_rot";
+                 wormRot.TemplateID = "worm_rot";
                  wormRot.Name = "Worm Rot";
                  wormRot.Level = 1;
                  spritelingToes.Model = 102; //TODO Model-ID 
@@ -242,7 +242,7 @@ namespace DOL.GS.Quests.Albion
                      log.Warn("Could not find Green Skin, creating it ...");
                  snakeSkin = new ItemTemplate();
                  snakeSkin.Object_Type = 0;
-                 snakeSkin.Id_nb = "green_skin";
+                 snakeSkin.TemplateID = "green_skin";
                  snakeSkin.Name = "Green Skin";
                  snakeSkin.Level = 1;
                  snakeSkin.Model = 107; 
@@ -577,7 +577,7 @@ namespace DOL.GS.Quests.Albion
             else if (Step == 5 && e == GamePlayerEvent.GiveItem)
             {
                 GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
-                if (gArgs.Target.Name == arleighPenn.Name && gArgs.Item.Id_nb == spritelingToes.Id_nb)
+                if (gArgs.Target.Name == arleighPenn.Name && gArgs.Item.TemplateID == spritelingToes.TemplateID)
                 {
                     RemoveItem(arleighPenn, player, spritelingToes);
                     arleighPenn.SayTo(player, "Ah, these toes are perfect, and quite large too! Arthw will be able to make this into quite a bit of dye.");
@@ -590,7 +590,7 @@ namespace DOL.GS.Quests.Albion
             else if (Step == 6 && e == GamePlayerEvent.GiveItem)
             {
                 GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
-                if (gArgs.Target.Name == arleighPenn.Name && gArgs.Item.Id_nb == wormRot.Id_nb)
+                if (gArgs.Target.Name == arleighPenn.Name && gArgs.Item.TemplateID == wormRot.TemplateID)
                 {
                     RemoveItem(arleighPenn, player, wormRot);
                     arleighPenn.SayTo(player, "Oh, this is superb rot! It will make the most brilliant shade of gray. I am very pleased! Now for the final item, the green skin.");
@@ -601,7 +601,7 @@ namespace DOL.GS.Quests.Albion
             else if (Step == 7 && e == GamePlayerEvent.GiveItem)
             {
                 GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
-                if (gArgs.Target.Name == arleighPenn.Name && gArgs.Item.Id_nb == snakeSkin.Id_nb)
+                if (gArgs.Target.Name == arleighPenn.Name && gArgs.Item.TemplateID == snakeSkin.TemplateID)
                 {
                     RemoveItem(arleighPenn, player, snakeSkin);
                     arleighPenn.SayTo(player, "Excellent! This skin will keep me in business for quite a while. I am very pleased with your work. Now, here is the reward I promised. I hope the dye meets with your approval. I worked very hard to prepare it especially for you! Fare thee well, " + player.Name + "!");

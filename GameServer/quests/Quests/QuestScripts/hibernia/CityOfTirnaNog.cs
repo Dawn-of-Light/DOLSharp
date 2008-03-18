@@ -265,225 +265,12 @@ namespace DOL.GS.Quests.Hibernia
 				ticketToMagMell = CreateTicketTo("Mag Mell", "hs_ardee_magmell");
 
 			scrollHylvian = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "scroll_for_hylvian");
-			if (scrollHylvian == null)
-			{
-				scrollHylvian = new ItemTemplate();
-				scrollHylvian.Name = "Scroll for Vault Keeper Hylvian";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + scrollHylvian.Name + " , creating it ...");
-
-				scrollHylvian.Weight = 3;
-				scrollHylvian.Model = 498;
-
-				scrollHylvian.Object_Type = (int) eObjectType.GenericItem;
-
-				scrollHylvian.Id_nb = "scroll_for_hylvian";
-				scrollHylvian.IsPickable = true;
-				scrollHylvian.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(scrollHylvian);
-			}
-
-
 			receiptFreagus = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "receipt_for_freagus");
-			if (receiptFreagus == null)
-			{
-				receiptFreagus = new ItemTemplate();
-				receiptFreagus.Name = "Receipt for Freagus";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + receiptFreagus.Name + " , creating it ...");
-
-				receiptFreagus.Weight = 3;
-				receiptFreagus.Model = 498;
-
-				receiptFreagus.Object_Type = (int) eObjectType.GenericItem;
-
-				receiptFreagus.Id_nb = "receipt_for_freagus";
-				receiptFreagus.IsPickable = true;
-				receiptFreagus.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(receiptFreagus);
-			}
-
 			chestOfCoins = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "small_chest_of_coins");
-			if (chestOfCoins == null)
-			{
-				chestOfCoins = new ItemTemplate();
-				chestOfCoins.Name = "Small Chest of Coins";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + chestOfCoins.Name + " , creating it ...");
-
-				chestOfCoins.Weight = 15;
-				chestOfCoins.Model = 602;
-
-				chestOfCoins.Object_Type = (int) eObjectType.GenericItem;
-
-				chestOfCoins.Id_nb = "small_chest_of_coins";
-				chestOfCoins.IsPickable = true;
-				chestOfCoins.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(chestOfCoins);
-			}
-
 			letterAddrir = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "letter_for_addrir");
-			if (letterAddrir == null)
-			{
-				letterAddrir = new ItemTemplate();
-				letterAddrir.Name = "Letter for Addrir";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + letterAddrir.Name + " , creating it ...");
-
-				letterAddrir.Weight = 3;
-				letterAddrir.Model = 498;
-
-				letterAddrir.Object_Type = (int) eObjectType.GenericItem;
-
-				letterAddrir.Id_nb = "letter_for_addrir";
-				letterAddrir.IsPickable = true;
-				letterAddrir.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(letterAddrir);
-			}
-
 			assistantNecklace = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "assistant_necklace");
-			if (assistantNecklace == null)
-			{
-				assistantNecklace = new ItemTemplate();
-				assistantNecklace.Name = "Assistant's Necklace";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + assistantNecklace.Name + " , creating it ...");
-
-				assistantNecklace.Weight = 3;
-				assistantNecklace.Model = 101;
-
-				assistantNecklace.Object_Type = (int) eObjectType.Magical;
-				assistantNecklace.Item_Type = (int) eEquipmentItems.NECK;
-
-				assistantNecklace.Id_nb = "assistant_necklace";
-				assistantNecklace.IsPickable = true;
-				assistantNecklace.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(assistantNecklace);
-			}
-
-			// item db check
 			recruitsRoundShield = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_round_shield_hib");
-			if (recruitsRoundShield == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Recruit's Round Shield, creating it ...");
-				recruitsRoundShield = new ItemTemplate();
-				recruitsRoundShield.Name = "Recruit's Round Shield (Hib)";
-				recruitsRoundShield.Level = 4;
-
-				recruitsRoundShield.Weight = 31;
-				recruitsRoundShield.Model = 59; // studded Boots                
-
-				recruitsRoundShield.Object_Type = 0x2A; // (int)eObjectType.Shield;
-				recruitsRoundShield.Item_Type = (int) eEquipmentItems.LEFT_HAND;
-				recruitsRoundShield.Id_nb = "recruits_round_shield_hib";
-				recruitsRoundShield.Gold = 0;
-				recruitsRoundShield.Silver = 4;
-				recruitsRoundShield.Copper = 0;
-				recruitsRoundShield.IsPickable = true;
-				recruitsRoundShield.IsDropable = true;
-				recruitsRoundShield.Color = 69;
-				recruitsRoundShield.Hand = 2;
-				recruitsRoundShield.DPS_AF = 1;
-				recruitsRoundShield.SPD_ABS = 1;
-
-				recruitsRoundShield.Type_Damage = 1;
-
-				recruitsRoundShield.Bonus = 1; // default bonus
-
-				recruitsRoundShield.Bonus1 = 1;
-				recruitsRoundShield.Bonus1Type = (int) eStat.STR;
-
-				recruitsRoundShield.Bonus2 = 1;
-				recruitsRoundShield.Bonus2Type = (int) eResist.Body;
-
-				recruitsRoundShield.Quality = 100;
-				recruitsRoundShield.Condition = 1000;
-				recruitsRoundShield.MaxCondition = 1000;
-				recruitsRoundShield.Durability = 1000;
-				recruitsRoundShield.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsRoundShield);
-			}
-
-			// item db check
 			recruitsBracer = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_silver_bracer");
-			if (recruitsBracer == null)
-			{
-				recruitsBracer = new ItemTemplate();
-				recruitsBracer.Name = "Recruit's Silver Bracer";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + recruitsBracer.Name + ", creating it ...");
-				recruitsBracer.Level = 4;
-
-				recruitsBracer.Weight = 10;
-				recruitsBracer.Model = 130;
-
-				recruitsBracer.Object_Type = (int) eObjectType.Magical;
-				recruitsBracer.Item_Type = (int) eEquipmentItems.L_BRACER;
-				recruitsBracer.Id_nb = "recruits_silver_bracer";
-				recruitsBracer.Gold = 0;
-				recruitsBracer.Silver = 4;
-				recruitsBracer.Copper = 0;
-				recruitsBracer.IsPickable = true;
-				recruitsBracer.IsDropable = true;
-				//recruitsBracer.Color = 36;
-				//recruitsBracer.Hand = 2;
-				//recruitsBracer.DPS_AF = 1;
-				//recruitsBracer.SPD_ABS = 1;
-
-				//recruitsBracer.Type_Damage = 1;
-
-				recruitsBracer.Bonus = 1; // default bonus
-
-				recruitsBracer.Bonus1 = 8;
-				recruitsBracer.Bonus1Type = (int) eProperty.MaxHealth;
-
-				recruitsBracer.Bonus2 = 1;
-				recruitsBracer.Bonus2Type = (int) eResist.Crush;
-
-				recruitsBracer.Quality = 100;
-				recruitsBracer.Condition = 1000;
-				recruitsBracer.MaxCondition = 1000;
-				recruitsBracer.Durability = 1000;
-				recruitsBracer.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsBracer);
-			}
-
 			#endregion
 
 			/* Now we add some hooks to the npc we found.
@@ -909,7 +696,7 @@ namespace DOL.GS.Quests.Hibernia
 			UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
 			InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
-			if (item != null && item.Id_nb == assistantNecklace.Id_nb)
+			if (item != null && item.TemplateID == assistantNecklace.TemplateID)
 			{
 				foreach (GamePlayer visPlayer in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
@@ -1141,7 +928,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (Step <= 4 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == hylvian.Name && gArgs.Item.Id_nb == scrollHylvian.Id_nb)
+				if (gArgs.Target.Name == hylvian.Name && gArgs.Item.TemplateID == scrollHylvian.TemplateID)
 				{
 					hylvian.SayTo(player, "Ah, from Freagus. He wishes to make a deposit. Alright then, if you will, please hand me the Small Chest of Coins.");
 					RemoveItem(hylvian, player, scrollHylvian);
@@ -1153,7 +940,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (Step == 5 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == hylvian.Name && gArgs.Item.Id_nb == chestOfCoins.Id_nb)
+				if (gArgs.Target.Name == hylvian.Name && gArgs.Item.TemplateID == chestOfCoins.TemplateID)
 				{
 					hylvian.SayTo(player, "This chest is quite heavy. Business must be booming for Freagus. Now, if you will just wait but a moment, I will be sure to get a receipt for you to take back to him.");
 					RemoveItem(hylvian, player, chestOfCoins);
@@ -1167,7 +954,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (Step == 8 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == freagus.Name && gArgs.Item.Id_nb == receiptFreagus.Id_nb)
+				if (gArgs.Target.Name == freagus.Name && gArgs.Item.TemplateID == receiptFreagus.TemplateID)
 				{
 					freagus.SayTo(player, "Ah! My receipt. Thank you so much Lirone. Here, take this note back to Addrir in Mag Mell for me please. I would like to let him know what a fine person you are for assisting me twice now! Be safe on your journey back to Mag Mell.");
 
@@ -1184,7 +971,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (Step == 9 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == addrir.Name && gArgs.Item.Id_nb == letterAddrir.Id_nb)
+				if (gArgs.Target.Name == addrir.Name && gArgs.Item.TemplateID == letterAddrir.TemplateID)
 				{
 					addrir.SayTo(player, "Hmm...What's this?");
 					SendSystemMessage(player, "Addrir reads over the note carefully then returns his attentions to you.");

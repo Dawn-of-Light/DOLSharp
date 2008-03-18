@@ -302,126 +302,9 @@ namespace DOL.GS.Quests.Albion
 			#endregion
 
 			#region defineItems
-
 			dragonflyWhip = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "dragonfly_whip");
-			if (dragonflyWhip == null)
-			{
-				dragonflyWhip = new ItemTemplate();
-				dragonflyWhip.Name = "Dragonfly Whip";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + dragonflyWhip.Name + " , creating it ...");
-
-				dragonflyWhip.Weight = 15;
-				dragonflyWhip.Model = 859;
-
-				dragonflyWhip.Object_Type = (int) eObjectType.GenericItem;
-
-				dragonflyWhip.Id_nb = "dragonfly_whip";
-				dragonflyWhip.IsPickable = true;
-				dragonflyWhip.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(dragonflyWhip);
-			}
-
-			// item db check
 			recruitsVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_vest");
-			if (recruitsVest == null)
-			{
-				recruitsVest = new ItemTemplate();
-				recruitsVest.Name = "Recruit's Studded Vest";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + recruitsVest.Name + ", creating it ...");
-				recruitsVest.Level = 8;
-
-				recruitsVest.Weight = 60;
-				recruitsVest.Model = 81; // studded vest
-
-				recruitsVest.DPS_AF = 12; // Armour
-				recruitsVest.SPD_ABS = 19; // Absorption
-
-				recruitsVest.Object_Type = (int) eObjectType.Studded;
-				recruitsVest.Item_Type = (int) eEquipmentItems.TORSO;
-				recruitsVest.Id_nb = "recruits_studded_vest";
-				recruitsVest.Gold = 0;
-				recruitsVest.Silver = 9;
-				recruitsVest.Copper = 0;
-				recruitsVest.IsPickable = true;
-				recruitsVest.IsDropable = true;
-				recruitsVest.CanDropAsLoot = false;
-				recruitsVest.Color = 9; // red leather
-
-				recruitsVest.Bonus = 5; // default bonus
-
-				recruitsVest.Bonus1 = 4;
-				recruitsVest.Bonus1Type = (int) eStat.STR;
-
-				recruitsVest.Bonus2 = 3;
-				recruitsVest.Bonus2Type = (int) eStat.CON;
-
-				recruitsVest.Quality = 100;
-				recruitsVest.Condition = 1000;
-				recruitsVest.MaxCondition = 1000;
-				recruitsVest.Durability = 1000;
-				recruitsVest.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsVest);
-			}
-
-			// item db check
 			recruitsQuiltedVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_vest");
-			if (recruitsQuiltedVest == null)
-			{
-				recruitsQuiltedVest = new ItemTemplate();
-				recruitsQuiltedVest.Name = "Recruit's Quilted Vest";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + recruitsQuiltedVest.Name + ", creating it ...");
-				recruitsQuiltedVest.Level = 8;
-
-				recruitsQuiltedVest.Weight = 20;
-				recruitsQuiltedVest.Model = 151; // studded vest
-
-				recruitsQuiltedVest.DPS_AF = 6; // Armour
-				recruitsQuiltedVest.SPD_ABS = 0; // Absorption
-
-				recruitsQuiltedVest.Object_Type = (int) eObjectType.Cloth;
-				recruitsQuiltedVest.Item_Type = (int) eEquipmentItems.TORSO;
-				recruitsQuiltedVest.Id_nb = "recruits_quilted_vest";
-				recruitsQuiltedVest.Gold = 0;
-				recruitsQuiltedVest.Silver = 9;
-				recruitsQuiltedVest.Copper = 0;
-				recruitsQuiltedVest.IsPickable = true;
-				recruitsQuiltedVest.IsDropable = true;
-				recruitsQuiltedVest.Color = 9; // red leather
-
-				recruitsQuiltedVest.Bonus = 5; // default bonus
-
-				recruitsQuiltedVest.Bonus1 = 4;
-				recruitsQuiltedVest.Bonus1Type = (int) eStat.INT;
-
-				recruitsQuiltedVest.Bonus2 = 3;
-				recruitsQuiltedVest.Bonus2Type = (int) eStat.DEX;
-
-				recruitsQuiltedVest.Quality = 100;
-				recruitsQuiltedVest.Condition = 1000;
-				recruitsQuiltedVest.MaxCondition = 1000;
-				recruitsQuiltedVest.Durability = 1000;
-				recruitsQuiltedVest.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsQuiltedVest);
-			}
-
 			#endregion
 
 			/* Now we add some hooks to the npc we found.
@@ -1003,7 +886,7 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 5 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == colm.Name && gArgs.Item.Id_nb == dragonflyWhip.Id_nb)
+				if (gArgs.Target.Name == colm.Name && gArgs.Item.TemplateID == dragonflyWhip.TemplateID)
 				{
 					colm.SayTo(player, "A whip?! This is outrageous! I see they were just trying to torture him. These Ire Fairies are truly malicious creatures. I hope you wipe them out one day Vinde. Here, take this as a sign of my [appreciation] for the return of the little one.");
 					RemoveItem(colm, player, dragonflyWhip);

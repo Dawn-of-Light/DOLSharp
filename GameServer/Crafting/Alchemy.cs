@@ -189,10 +189,16 @@ namespace DOL.GS
 			
 			if(tincture.ProcSpellID != 0)
 			{
+				//create database entry so this proc is saved
+				GameServer.Database.AddNewObject(new ItemBonus(item.ObjectId, ItemBonus.PROC1, tincture.ProcSpellID));
+				//apply change to item in memory
 				item.ProcSpellID = tincture.ProcSpellID;
 			}
 			else
 			{
+				//create database entry so this charge is saved
+				GameServer.Database.AddNewObject(new ItemBonus(item.ObjectId, ItemBonus.CHARGE1, tincture.SpellID));
+				//apply change to item in memory
 				item.MaxCharges = GetItemMaxCharges(item);
 				item.Charges = item.MaxCharges;
 				item.SpellID = tincture.SpellID;
@@ -209,7 +215,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="item"></param>
 		/// <returns></returns>
-		public int GetItemMaxCharges(InventoryItem item)
+		public byte GetItemMaxCharges(InventoryItem item)
 		{
 			if (item.Quality <= 94) return 2;
 			else if (item.Quality <= 95) return 3;

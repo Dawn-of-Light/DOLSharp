@@ -225,7 +225,7 @@ namespace DOL.GS.Quests.Albion
                     log.Warn("Could not find Elder Wood, creating it ...");
                 elderWood = new ItemTemplate();
                 elderWood.Object_Type = 0;
-                elderWood.Id_nb = "elder_wood";
+                elderWood.TemplateID = "elder_wood";
                 elderWood.Name = "Elder Wood";
                 elderWood.Level = 1;
                 elderWood.Model = 520; 
@@ -247,7 +247,7 @@ namespace DOL.GS.Quests.Albion
                     log.Warn("Could not find Boogey Teeth, creating it ...");
                 boogeyTeeth = new ItemTemplate();
                 boogeyTeeth.Object_Type = 0;
-                boogeyTeeth.Id_nb = "boogey_teeth";
+                boogeyTeeth.TemplateID = "boogey_teeth";
                 boogeyTeeth.Name = "Boogey Teeth";
                 boogeyTeeth.Level = 1;
                 boogeyTeeth.Model = 106; 
@@ -658,7 +658,7 @@ namespace DOL.GS.Quests.Albion
                 switch (Step)
                 {
                     case 4:
-                        if (gArgs.Target.Name == patrickYarley.Name && gArgs.Item.Id_nb == elderWood.Id_nb)
+                        if (gArgs.Target.Name == patrickYarley.Name && gArgs.Item.TemplateID == elderWood.TemplateID)
                         {
                             RemoveItem(patrickYarley, player, elderWood);
                             patrickYarley.SayTo(player, "This should do the trick. Were you able to get any more wood?");
@@ -666,7 +666,7 @@ namespace DOL.GS.Quests.Albion
                         }
                         return;
                     case 5:
-                        if (gArgs.Target.Name == patrickYarley.Name && gArgs.Item.Id_nb == elderWood.Id_nb)
+                        if (gArgs.Target.Name == patrickYarley.Name && gArgs.Item.TemplateID == elderWood.TemplateID)
                         {
                             RemoveItem(patrickYarley, player, elderWood);
                             patrickYarley.SayTo(player, "That is more than enough wood. There is one other thing I will need to complete this project. Would you be able to help out with this [last errand]?");
@@ -674,7 +674,7 @@ namespace DOL.GS.Quests.Albion
                         }
                         return;
                     case 8:
-                        if (gArgs.Target.Name == patrickYarley.Name && gArgs.Item.Id_nb == boogeyTeeth.Id_nb)
+                        if (gArgs.Target.Name == patrickYarley.Name && gArgs.Item.TemplateID == boogeyTeeth.TemplateID)
                         {
                             RemoveItem(patrickYarley, player, boogeyTeeth);
                             patrickYarley.SayTo(player, "I will get started on the repairs immediately. Here is your reward for a job well done.");

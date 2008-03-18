@@ -403,8 +403,8 @@ namespace DOL.GS
 			m_itemTemp.Quality = 100;
 			m_itemTemp.PackSize = 1;
 			m_itemTemp.AutoSave = false;
-			m_itemTemp.Weight = 1000;
-			m_itemTemp.Id_nb = "ARelic";
+			m_itemTemp.Weight = 100;
+			m_itemTemp.TemplateID = "ARelic";
 			m_item = new InventoryItem(m_itemTemp);
 			//m_item.ObjectId = System.Guid.NewGuid().ToString();
 		}

@@ -64,7 +64,7 @@ namespace DOL.GS
 					}
 
 					String destination = item.Name.Substring(item.Name.IndexOf(" to ") + 4);
-					PathPoint path = MovementMgr.LoadPath(item.Id_nb);
+					PathPoint path = MovementMgr.LoadPath(item.TemplateID);
 					//PathPoint path = MovementMgr.Instance.LoadPath(this.Name + "=>" + destination);
 					if (path != null)
 					{

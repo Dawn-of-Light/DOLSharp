@@ -394,184 +394,11 @@ namespace DOL.GS.Quests.Midgard
 			#endregion
 
 			#region DefineItems
-
-			// item db check
 			noteForNjiedi = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "njiedi_note");
-			if (noteForNjiedi == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Njiedi's Note, creating it ...");
-				noteForNjiedi = new ItemTemplate();
-				noteForNjiedi.Name = "Njiedi's Note";
-
-				noteForNjiedi.Weight = 3;
-				noteForNjiedi.Model = 498;
-
-				noteForNjiedi.Object_Type = (int) eObjectType.GenericItem;
-
-				noteForNjiedi.Id_nb = "njiedi_note";
-				noteForNjiedi.IsPickable = true;
-				noteForNjiedi.IsDropable = false;
-
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(noteForNjiedi);
-			}
-
-			// item db check
 			askefruerPlans = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "askefruer_plans");
-			if (askefruerPlans == null)
-			{
-				askefruerPlans = new ItemTemplate();
-				askefruerPlans.Name = "Askefruer Plans";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + askefruerPlans.Name + ", creating it ...");
-
-				askefruerPlans.Weight = 3;
-				askefruerPlans.Model = 498;
-
-				askefruerPlans.Object_Type = (int) eObjectType.GenericItem;
-
-				askefruerPlans.Id_nb = "askefruer_plans";
-				askefruerPlans.IsPickable = true;
-				askefruerPlans.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(askefruerPlans);
-			}
-
 			translatedPlans = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "translated_askefruer_plans");
-			if (translatedPlans == null)
-			{
-				translatedPlans = new ItemTemplate();
-				translatedPlans.Name = "Translated Askefruer Plans";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + translatedPlans.Name + ", creating it ...");
-
-				translatedPlans.Weight = 3;
-				translatedPlans.Model = 498;
-
-				translatedPlans.Object_Type = (int) eObjectType.GenericItem;
-
-				translatedPlans.Id_nb = "translated_askefruer_plans";
-				translatedPlans.IsPickable = true;
-				translatedPlans.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(translatedPlans);
-			}
-
-			// item db check
 			recruitsLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_legs_mid");
-			if (recruitsLegs == null)
-			{
-				recruitsLegs = new ItemTemplate();
-				recruitsLegs.Name = "Recruit's Studded Legs (Mid)";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + recruitsLegs.Name + ", creating it ...");
-				recruitsLegs.Level = 7;
-
-				recruitsLegs.Weight = 42;
-				recruitsLegs.Model = 82; // Studded Legs
-
-				recruitsLegs.DPS_AF = 10; // Armour
-				recruitsLegs.SPD_ABS = 19; // Absorption
-
-				recruitsLegs.Object_Type = (int) eObjectType.Studded;
-				recruitsLegs.Item_Type = (int) eEquipmentItems.LEGS;
-				recruitsLegs.Id_nb = "recruits_studded_legs_mid";
-				recruitsLegs.Gold = 0;
-				recruitsLegs.Silver = 10;
-				recruitsLegs.Copper = 0;
-				recruitsLegs.IsPickable = true;
-				recruitsLegs.IsDropable = true;
-				recruitsLegs.Color = 14; // blue leather
-
-				recruitsLegs.Bonus = 5; // default bonus
-
-				recruitsLegs.Bonus1 = 12;
-				recruitsLegs.Bonus1Type = (int) eProperty.MaxHealth; // hit
-
-
-				recruitsLegs.Bonus2 = 2;
-				recruitsLegs.Bonus2Type = (int) eResist.Slash;
-
-				recruitsLegs.Bonus3 = 1;
-				recruitsLegs.Bonus3Type = (int) eResist.Cold;
-
-				recruitsLegs.Quality = 100;
-				recruitsLegs.Condition = 1000;
-				recruitsLegs.MaxCondition = 1000;
-				recruitsLegs.Durability = 1000;
-				recruitsLegs.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsLegs);
-			}
-
-			// item db check
 			recruitsPants = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_pants");
-			if (recruitsPants == null)
-			{
-				recruitsPants = new ItemTemplate();
-				recruitsPants.Name = "Recruit's Quilted Pants";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + recruitsPants.Name + ", creating it ...");
-				recruitsPants.Level = 7;
-
-				recruitsPants.Weight = 14;
-				recruitsPants.Model = 152; // cloth Legs
-
-				recruitsPants.DPS_AF = 5; // Armour
-				recruitsPants.SPD_ABS = 0; // Absorption
-
-				recruitsPants.Object_Type = (int) eObjectType.Cloth;
-				recruitsPants.Item_Type = (int) eEquipmentItems.LEGS;
-				recruitsPants.Id_nb = "recruits_quilted_pants";
-				recruitsPants.Gold = 0;
-				recruitsPants.Silver = 10;
-				recruitsPants.Copper = 0;
-				recruitsPants.IsPickable = true;
-				recruitsPants.IsDropable = true;
-				recruitsPants.Color = 36;
-
-				recruitsPants.Bonus = 5; // default bonus
-
-				recruitsPants.Bonus1 = 12;
-				recruitsPants.Bonus1Type = (int) eProperty.MaxHealth; // hit
-
-
-				recruitsPants.Bonus2 = 2;
-				recruitsPants.Bonus2Type = (int) eResist.Slash;
-
-				recruitsPants.Bonus3 = 1;
-				recruitsPants.Bonus3Type = (int) eResist.Cold;
-
-				recruitsPants.Quality = 100;
-				recruitsPants.Condition = 1000;
-				recruitsPants.MaxCondition = 1000;
-				recruitsPants.Durability = 1000;
-				recruitsPants.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsPants);
-			}
-
 			#endregion						
 
 			/* Now we add some hooks to the npc we found.
@@ -1033,7 +860,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 1 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == njiedi.Name && gArgs.Item.Id_nb == noteForNjiedi.Id_nb)
+				if (gArgs.Target.Name == njiedi.Name && gArgs.Item.TemplateID == noteForNjiedi.TemplateID)
 				{
 					RemoveItem(njiedi, player, noteForNjiedi);
 
@@ -1048,7 +875,7 @@ namespace DOL.GS.Quests.Midgard
 			else if ((Step == 3 || Step == 2) && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == idora.Name && gArgs.Item.Id_nb == askefruerPlans.Id_nb)
+				if (gArgs.Target.Name == idora.Name && gArgs.Item.TemplateID == askefruerPlans.TemplateID)
 				{
 					RemoveItem(idora, player, askefruerPlans);
 
@@ -1066,7 +893,7 @@ namespace DOL.GS.Quests.Midgard
 			else if (Step == 5 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.Id_nb == translatedPlans.Id_nb)
+				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.TemplateID == translatedPlans.TemplateID)
 				{
 					RemoveItem(dalikor, player, translatedPlans);
 
@@ -1086,7 +913,7 @@ namespace DOL.GS.Quests.Midgard
 		{
 			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
-			if (Step < 3 && m_questPlayer.Inventory.GetFirstItemByID(ticketToSvasudFaste.Id_nb, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
+			if (Step < 3 && m_questPlayer.Inventory.GetFirstItemByID(ticketToSvasudFaste.TemplateID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
 			{
 				m_questPlayer.RemoveMoney(Money.GetMoney(0, 0, 0, 6, 0), null);
 			}

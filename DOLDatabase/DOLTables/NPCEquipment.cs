@@ -36,23 +36,23 @@ namespace DOL.Database
 		/// <summary>
 		/// The Item Slot
 		/// </summary>
-		protected int		m_slot;
+		protected byte		m_slot;
 		/// <summary>
 		/// The Item Model
 		/// </summary>
-		protected int		m_model;
+		protected ushort		m_model;
 		/// <summary>
 		/// The Item Color
 		/// </summary>
-		protected int		m_color;
+		protected byte		m_color;
 		/// <summary>
 		/// The Item Effect
 		/// </summary>
-		protected int		m_effect;
+		protected byte		m_effect;
 		/// <summary>
 		/// The Item Extension
 		/// </summary>
-		protected int		m_extension; 
+		protected byte		m_extension; 
 
 		static bool			m_autoSave;
 
@@ -100,7 +100,7 @@ namespace DOL.Database
 		/// Slot
 		/// </summary>
 		[DataElement(AllowDbNull=false)]
-		public int Slot
+		public byte Slot
 		{
 			get
 			{
@@ -117,7 +117,7 @@ namespace DOL.Database
 		/// Model
 		/// </summary>
 		[DataElement(AllowDbNull=false)]
-		public int Model
+		public ushort Model
 		{
 			get
 			{
@@ -134,7 +134,7 @@ namespace DOL.Database
 		/// Color
 		/// </summary>
 		[DataElement(AllowDbNull=true)]
-		public int Color
+		public byte Color
 		{
 			get
 			{
@@ -151,7 +151,7 @@ namespace DOL.Database
 		/// Effect
 		/// </summary>
 		[DataElement(AllowDbNull=true)]
-		public int Effect
+		public byte Effect
 		{
 			get
 			{
@@ -168,7 +168,7 @@ namespace DOL.Database
 		/// Extension
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
-		public int Extension
+		public byte Extension
 		{
 			get
 			{

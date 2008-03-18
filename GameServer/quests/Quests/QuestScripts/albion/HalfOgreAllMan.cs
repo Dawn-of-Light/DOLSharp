@@ -79,6 +79,8 @@ namespace DOL.GS.Quests.Albion
 		private static GameNPC serawen = null;
 		
 		private static ItemTemplate sealedLovePoem = null;
+		private static ItemTemplate unsealedLovePoem = null;
+		private static ItemTemplate rewrittenLovePoem = null;
 		private static ItemTemplate beautifulRedRose = null;
 
 		private static ItemTemplate adnilsMagicalOrb = null;
@@ -325,7 +327,7 @@ namespace DOL.GS.Quests.Albion
 				sealedLovePoem.Model = 498;
 
 				sealedLovePoem.Object_Type = (int) eObjectType.GenericItem;
-				sealedLovePoem.Id_nb = "sealed_love_poem";
+				sealedLovePoem.TemplateID = "sealed_love_poem";
 				sealedLovePoem.Gold = 0;
 				sealedLovePoem.Silver = 0;
 				sealedLovePoem.Copper = 0;
@@ -346,6 +348,74 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(sealedLovePoem);
 			}
 
+			unsealedLovePoem = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "unsealed_love_poem");
+			if (unsealedLovePoem == null)
+			{
+				unsealedLovePoem = new ItemTemplate();
+				unsealedLovePoem.Name = "Unsealed Love Poem";
+				if (log.IsWarnEnabled)
+					log.Warn("Could not find " + unsealedLovePoem.Name + ", creating it ...");
+				unsealedLovePoem.Level = 0;
+				unsealedLovePoem.Weight = 1;
+				unsealedLovePoem.Model = 498;
+
+				unsealedLovePoem.Object_Type = (int)eObjectType.GenericItem;
+				unsealedLovePoem.TemplateID = "unsealed_love_poem";
+				unsealedLovePoem.Gold = 0;
+				unsealedLovePoem.Silver = 0;
+				unsealedLovePoem.Copper = 0;
+				unsealedLovePoem.IsPickable = false;
+				unsealedLovePoem.IsDropable = false;
+
+				unsealedLovePoem.Quality = 100;
+				unsealedLovePoem.Condition = 1000;
+				unsealedLovePoem.MaxCondition = 1000;
+				unsealedLovePoem.Durability = 1000;
+				unsealedLovePoem.MaxDurability = 1000;
+
+
+				//You don't have to store the created item in the db if you don't want,
+				//it will be recreated each time it is not found, just comment the following
+				//line if you rather not modify your database
+				if (SAVE_INTO_DATABASE)
+					GameServer.Database.AddNewObject(unsealedLovePoem);
+			}
+
+
+			rewrittenLovePoem = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "sealed_love_poem");
+			if (rewrittenLovePoem == null)
+			{
+				rewrittenLovePoem = new ItemTemplate();
+				rewrittenLovePoem.Name = "Rewritten Love Poem";
+				if (log.IsWarnEnabled)
+					log.Warn("Could not find " + rewrittenLovePoem.Name + ", creating it ...");
+				rewrittenLovePoem.Level = 0;
+				rewrittenLovePoem.Weight = 1;
+				rewrittenLovePoem.Model = 498;
+
+				rewrittenLovePoem.Object_Type = (int)eObjectType.GenericItem;
+				rewrittenLovePoem.TemplateID = "rewritten_love_poem";
+				rewrittenLovePoem.Gold = 0;
+				rewrittenLovePoem.Silver = 0;
+				rewrittenLovePoem.Copper = 0;
+				rewrittenLovePoem.IsPickable = false;
+				rewrittenLovePoem.IsDropable = false;
+
+				rewrittenLovePoem.Quality = 100;
+				rewrittenLovePoem.Condition = 1000;
+				rewrittenLovePoem.MaxCondition = 1000;
+				rewrittenLovePoem.Durability = 1000;
+				rewrittenLovePoem.MaxDurability = 1000;
+
+
+				//You don't have to store the created item in the db if you don't want,
+				//it will be recreated each time it is not found, just comment the following
+				//line if you rather not modify your database
+				if (SAVE_INTO_DATABASE)
+					GameServer.Database.AddNewObject(rewrittenLovePoem);
+			}
+
+
 			// item db check
 			beautifulRedRose = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "beautiful_red_rose");
 			if (beautifulRedRose == null)
@@ -359,7 +429,7 @@ namespace DOL.GS.Quests.Albion
 				beautifulRedRose.Model = 618;
 
 				beautifulRedRose.Object_Type = (int) eObjectType.GenericItem;
-				beautifulRedRose.Id_nb = "beautiful_red_rose";
+				beautifulRedRose.TemplateID = "beautiful_red_rose";
 				beautifulRedRose.Gold = 0;
 				beautifulRedRose.Silver = 0;
 				beautifulRedRose.Copper = 0;
@@ -393,7 +463,7 @@ namespace DOL.GS.Quests.Albion
 					adnilsMagicalOrb.Model = 525;
 
 					adnilsMagicalOrb.Object_Type = (int) eObjectType.GenericItem;
-					adnilsMagicalOrb.Id_nb = "adnils_magical_orb";
+					adnilsMagicalOrb.TemplateID = "adnils_magical_orb";
 					adnilsMagicalOrb.Gold = 0;
 					adnilsMagicalOrb.Silver = 0;
 					adnilsMagicalOrb.Copper = 0;
@@ -820,15 +890,11 @@ namespace DOL.GS.Quests.Albion
 								SendMessage(player, "Scribe Veral sits down at the table, taking out a piece of paper, an inkwell, and a gaudy quill.  With sweeping gestures, he begins composing the perfect love poem.  He seems oblivious to your presence as he pens each line, finishing it with a theatrical flourish. The Scribe continues writing until he nears the bottom of the sheet, then sets aside the quill, deftly folds the paper, and hands it to you.", 0, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 								scribeVeral.SayTo(player, "There we are! This is sure to make her fall madly in love with your gentleman friend.  No payment is necessary. Just knowing that I've been able to help a young man is reward enough!");
 
-								InventoryItem item = player.Inventory.GetFirstItemByID(sealedLovePoem.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
-								if (item != null)
-								{
-									item.Name = "Rewritten Love Poem";
-									player.Out.SendInventorySlotsUpdate(new int[] {item.SlotPosition});
-						
-									if(quest.Step == 2) quest.Step = 4;
-									else if(quest.Step == 3) quest.Step = 5;
-								}
+								ReplaceItem(player, sealedLovePoem, rewrittenLovePoem);
+								ReplaceItem(player, unsealedLovePoem, rewrittenLovePoem);
+														
+								if(quest.Step == 2) quest.Step = 4;
+								else if(quest.Step == 3) quest.Step = 5;
 								break;
 						}
 					}
@@ -1033,7 +1099,7 @@ namespace DOL.GS.Quests.Albion
 			UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
 			InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
-			if (item != null && item.Id_nb == sealedLovePoem.Id_nb)
+			if (item != null && item.TemplateID == sealedLovePoem.TemplateID)
 			{
 				if (quest.Step == 1)
 				{
@@ -1043,9 +1109,8 @@ namespace DOL.GS.Quests.Albion
 					SendMessage(player, "I've never been quite so happy", 0, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 					SendMessage(player, "as I feel when thinking of you.", 0, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 					SendMessage(player, "Chuckling as you read the poem, you realize that Madissair's words, while sincere, may not win Serawen's heart on their own.  You quickly think up a couple of ideas to help Madissair get Serawen's attention.  In Camelot City, Scribe Veral is renowned for his poems in praise of Arthur's deeds. He might be able to help you craft a more suitable poem.  You can also seek out Eileen Morton in the tavern in Cotswold, and ask her for a red rose from her garden, to accompany whichever poem you choose to deliver.", 0, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				
-					item.Name = "Unsealed Love Poem";
-					player.Out.SendInventorySlotsUpdate(new int[] {item.SlotPosition});
+
+					ReplaceItem(player, sealedLovePoem, unsealedLovePoem);
 						
 					quest.Step = 2;
 				}
@@ -1228,7 +1293,7 @@ namespace DOL.GS.Quests.Albion
 				{
 					case 2:
 					case 3:
-						if (gArgs.Target.Name == scribeVeral.Name && gArgs.Item.Id_nb == sealedLovePoem.Id_nb)
+						if (gArgs.Target.Name == scribeVeral.Name && gArgs.Item.TemplateID == sealedLovePoem.TemplateID)
 						{
 							m_questPlayer.Out.SendEmoteAnimation(scribeVeral, eEmote.Ponder);
 						
@@ -1239,7 +1304,7 @@ namespace DOL.GS.Quests.Albion
 
 					case 6: // rose + rewrite poem
 					case 10: // only rose
-						if (gArgs.Target.Name == serawen.Name && gArgs.Item.Id_nb == beautifulRedRose.Id_nb)
+						if (gArgs.Target.Name == serawen.Name && gArgs.Item.TemplateID == beautifulRedRose.TemplateID)
 						{
 							RemoveItem(serawen, m_questPlayer, beautifulRedRose);
 
@@ -1253,7 +1318,7 @@ namespace DOL.GS.Quests.Albion
 						break;
 
 					case 7 : // only rewrited letter
-						if (gArgs.Target.Name == serawen.Name && gArgs.Item.Id_nb == sealedLovePoem.Id_nb)
+						if (gArgs.Target.Name == serawen.Name && gArgs.Item.TemplateID == sealedLovePoem.TemplateID)
 						{
 							RemoveItem(serawen, m_questPlayer, sealedLovePoem);
 
@@ -1266,7 +1331,7 @@ namespace DOL.GS.Quests.Albion
 						break;
 
 					case 8 : // rose + rewrited letter
-						if (gArgs.Target.Name == serawen.Name && gArgs.Item.Id_nb == sealedLovePoem.Id_nb)
+						if (gArgs.Target.Name == serawen.Name && gArgs.Item.TemplateID == sealedLovePoem.TemplateID)
 						{
 							RemoveItem(serawen, m_questPlayer, sealedLovePoem);
 
@@ -1279,7 +1344,7 @@ namespace DOL.GS.Quests.Albion
 						break;
 
 					case 9: // letter non open
-						if (gArgs.Target.Name == serawen.Name && gArgs.Item.Id_nb == sealedLovePoem.Id_nb)
+						if (gArgs.Target.Name == serawen.Name && gArgs.Item.TemplateID == sealedLovePoem.TemplateID)
 						{
 							RemoveItem(serawen, m_questPlayer, sealedLovePoem);
 
@@ -1293,7 +1358,7 @@ namespace DOL.GS.Quests.Albion
 						break;
 
 					case 11: // only rose
-						if (gArgs.Target.Name == serawen.Name && gArgs.Item.Id_nb == sealedLovePoem.Id_nb)
+						if (gArgs.Target.Name == serawen.Name && gArgs.Item.TemplateID == sealedLovePoem.TemplateID)
 						{
 							RemoveItem(serawen, m_questPlayer, sealedLovePoem);
 

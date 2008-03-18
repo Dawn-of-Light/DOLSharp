@@ -408,14 +408,14 @@ namespace DOL.GS.ServerRules
 
 			//doors need special handling
 			if (target is GameKeepDoor && source is GamePlayer)
-				return KeepMgr.IsEnemy(target as GameKeepDoor, source as GamePlayer);
+				return !KeepMgr.IsEnemy(target as GameKeepDoor, source as GamePlayer);
 
 			if (source is GameKeepDoor && target is GamePlayer)
-				return KeepMgr.IsEnemy(source as GameKeepDoor, target as GamePlayer);
+				return !KeepMgr.IsEnemy(source as GameKeepDoor, target as GamePlayer);
 
 			//components need special handling
 			if (target is GameKeepComponent && source is GamePlayer)
-				return KeepMgr.IsEnemy(target as GameKeepComponent, source as GamePlayer);
+				return !KeepMgr.IsEnemy(target as GameKeepComponent, source as GamePlayer);
 
 			//Peace flag NPCs are same realm
 			if (target is GameNPC)

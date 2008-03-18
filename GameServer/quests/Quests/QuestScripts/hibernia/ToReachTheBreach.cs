@@ -87,7 +87,7 @@ namespace DOL.GS.Quests.Hibernia
 			{
 				RecruitsIntelligentBelt = new ItemTemplate();
 				RecruitsIntelligentBelt.Name = "Recruit's Intelligent Belt";
-				RecruitsIntelligentBelt.Id_nb = "RecruitsIntelligentBelt";
+				RecruitsIntelligentBelt.TemplateID = "RecruitsIntelligentBelt";
 				RecruitsIntelligentBelt.Level = 4;
 				RecruitsIntelligentBelt.Weight = 3;
 				RecruitsIntelligentBelt.Model = 597;
@@ -102,22 +102,22 @@ namespace DOL.GS.Quests.Hibernia
 				RecruitsIntelligentBelt.MaxCondition = 50000;
 				RecruitsIntelligentBelt.Durability = 50000;
 				RecruitsIntelligentBelt.MaxDurability = 50000;
-				RecruitsIntelligentBelt.Bonus1 = 3;
-				RecruitsIntelligentBelt.Bonus1Type = (int)eProperty.Acuity;
-				RecruitsIntelligentBelt.Bonus2 = 3;
-				RecruitsIntelligentBelt.Bonus2Type = (int)eProperty.Dexterity;
-				RecruitsIntelligentBelt.Bonus3 = 1;
-				RecruitsIntelligentBelt.Bonus3Type = (int)eProperty.Constitution;
-				RecruitsIntelligentBelt.Bonus4 = 8;
-				RecruitsIntelligentBelt.Bonus4Type = (int)eProperty.MaxHealth;
 				RecruitsIntelligentBelt.IsDropable = false;
+
+				RecruitsIntelligentBelt.AddBonus((byte)eProperty.Acuity, 3);
+				RecruitsIntelligentBelt.AddBonus((byte)eStat.DEX, 3);
+				RecruitsIntelligentBelt.AddBonus((byte)eStat.CON, 1);
+				RecruitsIntelligentBelt.AddBonus((byte)eProperty.MaxHealth, 8);
+
+				GameServer.Database.AddNewObject(RecruitsIntelligentBelt);
 			}
+
 			RecruitsMightyBelt = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "RecruitsMightyBelt");
 			if (RecruitsMightyBelt == null)
 			{
 				RecruitsMightyBelt = new ItemTemplate();
 				RecruitsMightyBelt.Name = "Recruit's Mighty Belt";
-				RecruitsMightyBelt.Id_nb = "RecruitsMightyBelt";
+				RecruitsMightyBelt.TemplateID = "RecruitsMightyBelt";
 				RecruitsMightyBelt.Level = 4;
 				RecruitsMightyBelt.Weight = 3;
 				RecruitsMightyBelt.Model = 597;
@@ -132,22 +132,22 @@ namespace DOL.GS.Quests.Hibernia
 				RecruitsMightyBelt.MaxCondition = 50000;
 				RecruitsMightyBelt.Durability = 50000;
 				RecruitsMightyBelt.MaxDurability = 50000;
-				RecruitsMightyBelt.Bonus1 = 3;
-				RecruitsMightyBelt.Bonus1Type = (int)eProperty.Strength;
-				RecruitsMightyBelt.Bonus2 = 3;
-				RecruitsMightyBelt.Bonus2Type = (int)eProperty.Dexterity;
-				RecruitsMightyBelt.Bonus3 = 1;
-				RecruitsMightyBelt.Bonus3Type = (int)eProperty.Quickness;
-				RecruitsMightyBelt.Bonus4 = 8;
-				RecruitsMightyBelt.Bonus4Type = (int)eProperty.MaxHealth;
 				RecruitsMightyBelt.IsDropable = false;
+
+				RecruitsMightyBelt.AddBonus((byte)eStat.STR, 3);
+				RecruitsMightyBelt.AddBonus((byte)eStat.DEX, 3);
+				RecruitsMightyBelt.AddBonus((byte)eStat.QUI, 3);
+				RecruitsMightyBelt.AddBonus((byte)eProperty.MaxHealth, 8);
+
+				GameServer.Database.AddNewObject(RecruitsMightyBelt);
 			}
+
 			RecruitsPiousBelt = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "RecruitsPiousBelt");
 			if (RecruitsPiousBelt == null)
 			{
 				RecruitsPiousBelt = new ItemTemplate();
 				RecruitsPiousBelt.Name = "Recruit's Pious Belt";
-				RecruitsPiousBelt.Id_nb = "RecruitsPiousBelt";
+				RecruitsPiousBelt.TemplateID = "RecruitsPiousBelt";
 				RecruitsPiousBelt.Level = 4;
 				RecruitsPiousBelt.Weight = 3;
 				RecruitsPiousBelt.Model = 597;
@@ -162,15 +162,14 @@ namespace DOL.GS.Quests.Hibernia
 				RecruitsPiousBelt.MaxCondition = 50000;
 				RecruitsPiousBelt.Durability = 50000;
 				RecruitsPiousBelt.MaxDurability = 50000;
-				RecruitsPiousBelt.Bonus1 = 3;
-				RecruitsPiousBelt.Bonus1Type = (int)eProperty.Acuity;
-				RecruitsPiousBelt.Bonus2 = 1;
-				RecruitsPiousBelt.Bonus2Type = (int)eProperty.AllMagicSkills;
-				RecruitsPiousBelt.Bonus3 = 3;
-				RecruitsPiousBelt.Bonus3Type = (int)eProperty.Dexterity;
-				RecruitsPiousBelt.Bonus4 = 8;
-				RecruitsPiousBelt.Bonus4Type = (int)eProperty.MaxHealth;
 				RecruitsPiousBelt.IsDropable = false;
+
+				RecruitsPiousBelt.AddBonus((byte)eProperty.Acuity, 3);
+				RecruitsPiousBelt.AddBonus((byte)eProperty.AllMagicSkills, 1);
+				RecruitsPiousBelt.AddBonus((byte)eStat.DEX, 3);
+				RecruitsPiousBelt.AddBonus((byte)eProperty.MaxHealth, 8);
+
+				GameServer.Database.AddNewObject(RecruitsPiousBelt);
 			}
 			#endregion
 

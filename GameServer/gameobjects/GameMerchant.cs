@@ -122,7 +122,7 @@ namespace DOL.GS
 		/// <param name="item_slot">slot of the item to be bought</param>
 		/// <param name="number">Number to be bought</param>
 		/// <returns>true if buying is allowed, false if buying should be prevented</returns>
-		public virtual void OnPlayerBuy(GamePlayer player, int item_slot, int number)
+		public virtual void OnPlayerBuy(GamePlayer player, byte item_slot, byte number)
 		{
 			//Get the template
 			int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
@@ -132,7 +132,7 @@ namespace DOL.GS
 			if (template == null) return;
 
 			//Calculate the amout of items
-			int amountToBuy = number;
+			byte amountToBuy = number;
 			if (template.PackSize > 0)
 				amountToBuy *= template.PackSize;
 
@@ -180,7 +180,7 @@ namespace DOL.GS
 		/// <param name="number">Number to be bought</param>
 		/// <param name="TradeItems"></param>
 		/// <returns>true if buying is allowed, false if buying should be prevented</returns>
-		public static void OnPlayerBuy(GamePlayer player, int item_slot, int number, MerchantTradeItems TradeItems)
+		public static void OnPlayerBuy(GamePlayer player, byte item_slot, byte number, MerchantTradeItems TradeItems)
 		{
 			//Get the template
 			int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
@@ -190,7 +190,7 @@ namespace DOL.GS
 			if (template == null) return;
 
 			//Calculate the amout of items
-			int amountToBuy = number;
+			byte amountToBuy = number;
 			if (template.PackSize > 0)
 				amountToBuy *= template.PackSize;
 
@@ -279,8 +279,8 @@ namespace DOL.GS
 			if (item == null)
 				return 0;
 
-			int itemCount = Math.Max(1, item.Count);
-			int packSize = Math.Max(1, item.PackSize);
+			byte itemCount = Math.Max((byte)1, item.Count);
+			byte packSize = Math.Max((byte)1, item.PackSize);
 			long val = item.Value * itemCount / packSize / 2;
 
 			if (!item.IsDropable) val = 0;
@@ -413,7 +413,7 @@ namespace DOL.GS
 			((GamePlayer)state).Out.SendMerchantWindow(m_tradeItems, eMerchantWindowType.Bp);
 		}
 
-		public override void OnPlayerBuy(GamePlayer player, int item_slot, int number)
+		public override void OnPlayerBuy(GamePlayer player, byte item_slot, byte number)
 		{
 			//Get the template
 			int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
@@ -423,11 +423,9 @@ namespace DOL.GS
 			if (template == null) return;
 
 			//Calculate the amout of items
-			int amountToBuy = number;
+			byte amountToBuy = number;
 			if (template.PackSize > 0)
 				amountToBuy *= template.PackSize;
-
-			if (amountToBuy <= 0) return;
 
 			//Calculate the value of items
 			long totalValue = number * template.Value;
@@ -460,7 +458,7 @@ namespace DOL.GS
 
 	public class GameChampionMerchant : GameMerchant
 	{
-		public override void OnPlayerBuy(GamePlayer player, int item_slot, int number)
+		public override void OnPlayerBuy(GamePlayer player, byte item_slot, byte number)
 		{
 			/*
 			int page = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
@@ -514,7 +512,7 @@ namespace DOL.GS
 			((GamePlayer)state).Out.SendMerchantWindow(m_tradeItems, eMerchantWindowType.Count);
 		}
 
-		public override void OnPlayerBuy(GamePlayer player, int item_slot, int number)
+		public override void OnPlayerBuy(GamePlayer player, byte item_slot, byte number)
 		{
 			if (m_moneyItem == null || m_moneyItem.Item == null)
 				return;
@@ -526,18 +524,16 @@ namespace DOL.GS
 			if (template == null) return;
 
 			//Calculate the amout of items
-			int amountToBuy = number;
+			byte amountToBuy = number;
 			if (template.PackSize > 0)
 				amountToBuy *= template.PackSize;
-
-			if (amountToBuy <= 0) return;
 
 			//Calculate the value of items
 			long totalValue = number * template.Value;
 
 			lock (player.Inventory)
 			{
-				if (player.Inventory.CountItemTemplate(m_moneyItem.Item.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) < totalValue)
+				if (player.Inventory.CountItemTemplate(m_moneyItem.Item.TemplateID, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) < totalValue)
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.YouNeed2", totalValue, m_countText), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
@@ -560,9 +556,9 @@ namespace DOL.GS
 
 				foreach (InventoryItem item in items)
 				{
-					if (item.Id_nb != m_moneyItem.Item.Id_nb)
+					if (item.TemplateID != m_moneyItem.Item.TemplateID)
 						continue;
-					int remFromStack = Math.Min(item.Count, (int)(totalValue - removed));
+					byte remFromStack = Math.Min(item.Count, (byte)(totalValue - removed));
 					player.Inventory.RemoveCountFromStack(item, remFromStack);
 					removed += remFromStack;
 					if (removed == totalValue)

@@ -143,156 +143,10 @@ namespace DOL.GS.Quests.Hibernia
 			#endregion
 
 			#region defineItems
-
-			// item db check
 			emptyMagicBox = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "empty_wodden_magic_box");
-			if (emptyMagicBox == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Empty Wodden Magic Box, creating it ...");
-				emptyMagicBox = new ItemTemplate();
-				emptyMagicBox.Name = "Empty Wodden Magic Box";
-
-				emptyMagicBox.Weight = 5;
-				emptyMagicBox.Model = 602;
-
-				emptyMagicBox.Object_Type = (int) eObjectType.GenericItem;
-				emptyMagicBox.Id_nb = "empty_wodden_magic_box";
-
-				emptyMagicBox.IsPickable = true;
-				emptyMagicBox.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(emptyMagicBox);
-			}
-
-			// item db check
 			fullMagicBox = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "full_wodden_magic_box");
-			if (fullMagicBox == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Full Wodden Magic Box, creating it ...");
-				fullMagicBox = new ItemTemplate();
-				fullMagicBox.Name = "Full Wodden Magic Box";
-
-				fullMagicBox.Weight = 3;
-				fullMagicBox.Model = 602;
-
-				fullMagicBox.Object_Type = (int) eObjectType.GenericItem;
-
-				fullMagicBox.Id_nb = "full_wodden_magic_box";
-				fullMagicBox.IsPickable = true;
-				fullMagicBox.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(fullMagicBox);
-			}
-
-			// item db check
 			recruitsShortSword = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_short_sword_hib");
-			if (recruitsShortSword == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Recruit's Short Sword (Hib), creating it ...");
-				recruitsShortSword = new ItemTemplate();
-				recruitsShortSword.Name = "Recruit's Short Sword (Hib)";
-				recruitsShortSword.Level = 4;
-
-				recruitsShortSword.Weight = 18;
-				recruitsShortSword.Model = 3; // studded Boots
-
-				recruitsShortSword.DPS_AF = 24; // Armour
-				recruitsShortSword.SPD_ABS = 30; // Absorption
-
-				recruitsShortSword.Type_Damage = (int) eDamageType.Slash;
-				recruitsShortSword.Object_Type = (int) eObjectType.Blades;
-				recruitsShortSword.Item_Type = (int) eEquipmentItems.LEFT_HAND;
-				recruitsShortSword.Id_nb = "recruits_short_sword_hib";
-				recruitsShortSword.Gold = 0;
-				recruitsShortSword.Silver = 2;
-				recruitsShortSword.Copper = 0;
-				recruitsShortSword.IsPickable = true;
-				recruitsShortSword.IsDropable = true;
-				recruitsShortSword.Color = 46; // green metal
-
-				recruitsShortSword.Bonus = 1; // default bonus
-
-				recruitsShortSword.Bonus1 = 3;
-				recruitsShortSword.Bonus1Type = (int) eStat.STR;
-
-				recruitsShortSword.Bonus2 = 1;
-				recruitsShortSword.Bonus2Type = (int) eStat.QUI;
-
-				recruitsShortSword.Bonus3 = 1;
-				recruitsShortSword.Bonus3Type = (int) eResist.Body;
-
-				recruitsShortSword.Quality = 100;
-				recruitsShortSword.Condition = 1000;
-				recruitsShortSword.MaxCondition = 1000;
-				recruitsShortSword.Durability = 1000;
-				recruitsShortSword.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsShortSword);
-			}
-
-			// item db check
 			recruitsStaff = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_staff");
-			if (recruitsStaff == null)
-			{
-				recruitsStaff = new ItemTemplate();
-				recruitsStaff.Name = "Recruit's Staff";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + recruitsStaff.Name + ", creating it ...");
-				recruitsStaff.Level = 4;
-
-				recruitsStaff.Weight = 45;
-				recruitsStaff.Model = 442;
-
-				recruitsStaff.DPS_AF = 24;
-				recruitsStaff.SPD_ABS = 45;
-
-				recruitsStaff.Type_Damage = (int) eDamageType.Slash;
-				recruitsStaff.Object_Type = (int) eObjectType.Staff;
-				recruitsStaff.Item_Type = (int) eEquipmentItems.LEFT_HAND;
-				recruitsStaff.Id_nb = "recruits_staff";
-				recruitsStaff.Gold = 0;
-				recruitsStaff.Silver = 2;
-				recruitsStaff.Copper = 0;
-				recruitsStaff.IsPickable = true;
-				recruitsStaff.IsDropable = true;
-				recruitsStaff.Color = 45; // blue metal
-
-				recruitsStaff.Bonus = 1; // default bonus
-
-				recruitsStaff.Bonus1 = 3;
-				recruitsStaff.Bonus1Type = (int) eStat.INT;
-
-				recruitsStaff.Bonus2 = 1;
-				recruitsStaff.Bonus2Type = (int) eResist.Crush;
-
-				recruitsStaff.Quality = 100;
-				recruitsStaff.Condition = 1000;
-				recruitsStaff.MaxCondition = 1000;
-				recruitsStaff.Durability = 1000;
-				recruitsStaff.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsStaff);
-			}
-
 			#endregion
 
 			sluaghArea = WorldMgr.GetRegion(sluaghLocation.RegionID).AddArea(new Area.Circle("Sluagh contamined Area", sluaghLocation.X, sluaghLocation.Y, 0, 1500));
@@ -418,7 +272,7 @@ namespace DOL.GS.Quests.Hibernia
 				UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
 				InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
-				if (item != null && item.Id_nb == emptyMagicBox.Id_nb)
+				if (item != null && item.TemplateID == emptyMagicBox.TemplateID)
 				{
 					if (WorldMgr.GetDistance(player, quest.sluagh) < 500)
 					{
@@ -691,7 +545,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == addrir.Name && gArgs.Item.Id_nb == fullMagicBox.Id_nb)
+				if (gArgs.Target.Name == addrir.Name && gArgs.Item.TemplateID == fullMagicBox.TemplateID)
 				{
 					RemoveItem(addrir, m_questPlayer, fullMagicBox);
 

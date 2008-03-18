@@ -450,6 +450,7 @@ namespace DOL.GS.PacketHandler
 			if (playerToCreate.IsAlive == false) flags |= 0x01;
 			if (playerToCreate.IsUnderwater) flags |= 0x02; //swimming
 			if (playerToCreate.IsStealthed)  flags |= 0x10;
+			if (playerToCreate.CharacterClass.ID == (int)eCharacterClass.Vampiir) flags |= 0x40; //Vamp fly
 			// 0x20 = wireframe
 			pak.WriteByte((byte)flags);
 			pak.WriteByte(0x00); // new in 1.74

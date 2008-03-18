@@ -260,90 +260,9 @@ namespace DOL.GS.Quests.Albion
 			#endregion
 
 			#region defineItems
-
 			wolfPeltCloak = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "wolf_pelt_cloak");
-			if (wolfPeltCloak == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Wolf Pelt Cloak, creating it ...");
-				wolfPeltCloak = new ItemTemplate();
-				wolfPeltCloak.Name = "Wolf Pelt Cloak";
-				wolfPeltCloak.Level = 3;
-				wolfPeltCloak.Weight = 3;
-				wolfPeltCloak.Model = 326;
-				wolfPeltCloak.Bonus = 1;
-				wolfPeltCloak.Bonus1 = 1;
-				wolfPeltCloak.Bonus1Type = (int) eStat.QUI;
-				;
-
-				wolfPeltCloak.Bonus2 = -1;
-				wolfPeltCloak.Bonus2Type = (int) eStat.CHR;
-
-				wolfPeltCloak.Object_Type = (int) eObjectType.Magical;
-				wolfPeltCloak.Item_Type = (int) eEquipmentItems.CLOAK;
-				wolfPeltCloak.Id_nb = "wolf_pelt_cloak";
-				wolfPeltCloak.Gold = 0;
-				wolfPeltCloak.Silver = 4;
-				wolfPeltCloak.Copper = 3;
-				wolfPeltCloak.IsPickable = true;
-				wolfPeltCloak.IsDropable = true;
-				wolfPeltCloak.Color = 44;
-				wolfPeltCloak.Quality = 100;
-				wolfPeltCloak.Condition = 1000;
-				wolfPeltCloak.MaxCondition = 1000;
-				wolfPeltCloak.Durability = 1000;
-				wolfPeltCloak.MaxDurability = 1000;
-
-
-				//You don't have to store the created wolfPeltCloak in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(wolfPeltCloak);
-			}
-
 			wolfFur = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "wolf_fur");
-			if (wolfFur == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Wolf Fur, creating it ...");
-				wolfFur = new ItemTemplate();
-				wolfFur.Object_Type = 0;
-				wolfFur.Id_nb = "wolf_fur";
-				wolfFur.Name = "Wolf Fur";
-				wolfFur.Level = 1;
-				wolfFur.Model = 57;
-				wolfFur.IsDropable = false;
-				wolfFur.IsPickable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(wolfFur);
-			}
-
 			wolfHeadToken = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "wolf_head_token");
-			if (wolfHeadToken == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Wolf Head Token, creating it ...");
-				wolfHeadToken = new ItemTemplate();
-				wolfHeadToken.Object_Type = 0;
-				wolfHeadToken.Id_nb = "wolf_head_token";
-				wolfHeadToken.Name = "Wolf Head Token";
-				wolfHeadToken.Level = 1;
-				wolfHeadToken.Model = 1366;
-				wolfHeadToken.IsDropable = false;
-				wolfHeadToken.IsPickable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(wolfHeadToken);
-			}
-
 			#endregion
 
 			/* Now we add some hooks to the Sir Quait we found.
@@ -433,9 +352,9 @@ namespace DOL.GS.Quests.Albion
 				if (quest != null)
 				{
 					//If the player is already doing the quest, we ask if he found the fur!
-					if (player.Inventory.GetFirstItemByID(wolfFur.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != null)
+					if (player.Inventory.GetFirstItemByID(wolfFur.TemplateID, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != null)
 						stewardWillie.SayTo(player, "Ah, well done! His Lordship will be pleased to know there is one less mongrel in the pack! Give me the fur so I can throw it with the others.");
-					else if (player.Inventory.GetFirstItemByID(wolfHeadToken.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != null)
+					else if (player.Inventory.GetFirstItemByID(wolfHeadToken.TemplateID, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != null)
 						stewardWillie.SayTo(player, "Give the token to Seamstress Lynnet in Ludlow, she'll give ye your reward. Thank ye for your fine services to His Lordship.");
 					else
 						stewardWillie.SayTo(player, "Good! I know we ca'count on ye. I will reward ye for the pelt ye bring me from one of those vile beasts!");
@@ -546,7 +465,7 @@ namespace DOL.GS.Quests.Albion
 			if (e == GameObjectEvent.Interact)
 			{
 				//If the player qualifies, we begin talking...
-				if (player.Inventory.GetFirstItemByID(wolfPeltCloak.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != null)
+				if (player.Inventory.GetFirstItemByID(wolfPeltCloak.TemplateID, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != null)
 					don.SayTo(player, "Hail! You don't perhaps have one of those fine wolf pelt cloaks? If you no longer have need of it, we could greatly use it at the [orphanage].");
 				return;
 			}
@@ -682,7 +601,7 @@ namespace DOL.GS.Quests.Albion
 			if (e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == don.Name && gArgs.Item.Id_nb == wolfPeltCloak.Id_nb)
+				if (gArgs.Target.Name == don.Name && gArgs.Item.TemplateID == wolfPeltCloak.TemplateID)
 				{
 					don.SayTo(player, "Thank you! Your service to the church will been noted!");
 					RemoveItem(don, m_questPlayer, wolfPeltCloak);
@@ -713,7 +632,7 @@ namespace DOL.GS.Quests.Albion
 			else if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == stewardWillie.Name && gArgs.Item.Id_nb == wolfFur.Id_nb)
+				if (gArgs.Target.Name == stewardWillie.Name && gArgs.Item.TemplateID == wolfFur.TemplateID)
 				{
 					stewardWillie.TurnTo(m_questPlayer);
 					stewardWillie.SayTo(m_questPlayer, "Take this token from His Lordship. If ye give it to Seamstress Lynnet in Ludlow, she'll give ye your reward. Thank ye for your fine services to His Lordship.");
@@ -727,7 +646,7 @@ namespace DOL.GS.Quests.Albion
 			else if (Step == 3 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == lynnet.Name && gArgs.Item.Id_nb == wolfHeadToken.Id_nb)
+				if (gArgs.Target.Name == lynnet.Name && gArgs.Item.TemplateID == wolfHeadToken.TemplateID)
 				{
 					RemoveItem(lynnet, player, wolfHeadToken);
 					lynnet.SayTo(player, "Well done! Here's your fine wolf pelt cloak. Wear it with pride knowing you have helped his Lordship.");

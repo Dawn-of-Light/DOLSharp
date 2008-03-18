@@ -91,7 +91,7 @@ namespace DOL.GS.Quests.Albion
                 lightredclothdye.Color = 0;
 
                 lightredclothdye.Object_Type = (int)eObjectType.GenericItem;
-                lightredclothdye.Id_nb = "light_red_cloth_dye";
+                lightredclothdye.TemplateID = "light_red_cloth_dye";
                 lightredclothdye.Gold = 0;
                 lightredclothdye.Silver = 0;
                 lightredclothdye.Copper = 40;
@@ -124,7 +124,7 @@ namespace DOL.GS.Quests.Albion
                 lightredleatherdye.Color = 0;
 
                 lightredleatherdye.Object_Type = (int)eObjectType.GenericItem;
-                lightredleatherdye.Id_nb = "light_red_leather_dye";
+                lightredleatherdye.TemplateID = "light_red_leather_dye";
                 lightredleatherdye.Gold = 0;
                 lightredleatherdye.Silver = 0;
                 lightredleatherdye.Copper = 40;
@@ -157,7 +157,7 @@ namespace DOL.GS.Quests.Albion
                 lightredenamel.Color = 0;
 
                 lightredenamel.Object_Type = (int)eObjectType.GenericItem;
-                lightredenamel.Id_nb = "light_red_enamel";
+                lightredenamel.TemplateID = "light_red_enamel";
                 lightredenamel.Gold = 0;
                 lightredenamel.Silver = 0;
                 lightredenamel.Copper = 40;

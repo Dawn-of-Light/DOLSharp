@@ -21,12 +21,13 @@ using System;
 using DOL.Database;
 using DOL.Database.Attributes;
 using System.Collections;
+using System.Collections.Generic;
 using log4net;
 using System.Reflection;
 
 namespace DOL.Database
 {
-	[DataTable(TableName = "ItemTemplate", PreCache = true)]
+	[DataTable(TableName = "ItemTemplate")]
 	public class ItemTemplate : DataObject
 	{
 		/// <summary>
@@ -34,50 +35,26 @@ namespace DOL.Database
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		protected string m_id_nb;
+		protected string m_templateID;
 		protected string m_name;
-		protected int m_level;
+		protected byte m_level;
 		protected int m_durability;
 		protected int m_maxdurability;
 		protected int m_condition;
 		protected int m_maxcondition;
-		protected int m_quality;
-		protected int m_dps_af;
-		protected int m_spd_abs;
-		protected int m_hand;
-		protected int m_type_damage;
-		protected int m_object_type;
-		protected int m_item_type;
-		protected int m_color;
-		protected int m_emblem;
-		protected int m_effect;
-		protected int m_weight;
-		protected int m_model;
+		protected byte m_quality;
+		protected byte m_dps_af;
+		protected byte m_spd_abs;
+		protected byte m_hand;
+		protected byte m_type_damage;
+		protected byte m_object_type;
+		protected byte m_item_type;
+		protected byte m_color;
+		protected byte m_effect;
+		protected byte m_weight;
+		protected ushort m_model;
 		protected byte m_extension;
-		protected int m_bonus;
-		protected int m_bonus1;
-		protected int m_bonus2;
-		protected int m_bonus3;
-		protected int m_bonus4;
-		protected int m_bonus5;
-		protected int m_bonus6;
-		protected int m_bonus7;
-		protected int m_bonus8;
-		protected int m_bonus9;
-		protected int m_bonus10;
-		protected int m_extrabonus;
-		protected int m_bonusType;
-		protected int m_bonus1Type;
-		protected int m_bonus2Type;
-		protected int m_bonus3Type;
-		protected int m_bonus4Type;
-		protected int m_bonus5Type;
-		protected int m_bonus6Type;
-		protected int m_bonus7Type;
-		protected int m_bonus8Type;
-		protected int m_bonus9Type;
-		protected int m_bonus10Type;
-		protected int m_extrabonusType;
+		protected byte m_bonus;
 		protected short m_platinum;
 		protected short m_gold;
 		protected byte m_silver;
@@ -86,27 +63,27 @@ namespace DOL.Database
 		protected bool m_isPickable;
 		protected bool m_isTradable;
 		protected bool m_canDropAsLoot;
-		protected int m_maxCount;
-		protected int m_packSize;
-		protected int m_spellID;
-		protected int m_procSpellID;
-		protected int m_maxCharges;
-		protected int m_charges;
-		protected int m_spellID1;
-		protected int m_procSpellID1;
-		protected int m_charges1;
-		protected int m_maxCharges1;
-		protected int m_poisonSpellID;
-		protected int m_poisonMaxCharges;
-		protected int m_poisonCharges;
-		protected int m_realm;
+		protected byte m_maxCount;
+		protected byte m_packSize;
+		protected ushort m_spellID;
+		protected ushort m_procSpellID;
+		protected byte m_maxCharges;
+		protected byte m_charges;
+		protected ushort m_spellID1;
+		protected ushort m_procSpellID1;
+		protected byte m_charges1;
+		protected byte m_maxCharges1;
+		protected byte m_realm;
 		private string m_allowedClasses = "";
+		private string m_description = "";
 		private int m_canUseEvery;
+
+		//internal
 		static bool m_autoSave;
 
 		public ItemTemplate()
 		{
-			m_id_nb = "XXX_useless_junk_XXX";
+			m_templateID = "XXX_useless_junk_XXX";
 			m_name = "Some usless junk";
 			m_level = 0;
 			m_durability = 1;
@@ -121,35 +98,11 @@ namespace DOL.Database
 			m_object_type = 0;
 			m_item_type = 0;
 			m_color = 0;
-			m_emblem = 0;
 			m_effect = 0;
 			m_weight = 0;
 			m_model = 488; //bag
 			m_extension = 0;
 			m_bonus = 0;
-			m_bonus1 = 0;
-			m_bonus2 = 0;
-			m_bonus3 = 0;
-			m_bonus4 = 0;
-			m_bonus5 = 0;
-			m_bonus6 = 0;
-			m_bonus7 = 0;
-			m_bonus8 = 0;
-			m_bonus9 = 0;
-			m_bonus10 = 0;
-			m_extrabonus = 0;
-			m_bonusType = 0;
-			m_bonus1Type = 0;
-			m_bonus2Type = 0;
-			m_bonus3Type = 0;
-			m_bonus4Type = 0;
-			m_bonus5Type = 0;
-			m_bonus6Type = 0;
-			m_bonus7Type = 0;
-			m_bonus8Type = 0;
-			m_bonus9Type = 0;
-			m_bonus10Type = 0;
-			m_extrabonusType = 0;
 			m_platinum = 0;
 			m_gold = 0;
 			m_silver = 0;
@@ -168,24 +121,21 @@ namespace DOL.Database
 			m_procSpellID1 = 0;
 			m_charges1 = 0;
 			m_maxCharges1 = 0;
-			m_poisonCharges = 0;
-			m_poisonMaxCharges = 0;
-			m_poisonSpellID = 0;
 			m_realm = 0;
 			m_autoSave = false;
 		}
 
 		[PrimaryKey]
-		public virtual string Id_nb
+		public virtual string TemplateID
 		{
 			get
 			{
-				return m_id_nb;
+				return m_templateID;
 			}
 			set
 			{
 				Dirty = true;
-				m_id_nb = value;
+				m_templateID = value;
 			}
 		}
 
@@ -215,7 +165,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = false)]
-		public int Level
+		public byte Level
 		{
 			get
 			{
@@ -238,13 +188,6 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_durability = value;
-			}
-		}
-		public byte DurabilityPercent
-		{
-			get
-			{
-				return (byte)((m_maxdurability > 0) ? m_durability * 100 / m_maxdurability : 0);
 			}
 		}
 
@@ -274,13 +217,6 @@ namespace DOL.Database
 				m_condition = value;
 			}
 		}
-		public byte ConditionPercent
-		{
-			get
-			{
-				return (byte)Math.Round((m_maxcondition > 0) ? (double)m_condition / m_maxcondition * 100 : 0);
-			}
-		}
 		[DataElement(AllowDbNull = true)]
 		public int MaxCondition
 		{
@@ -295,7 +231,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Quality
+		public byte Quality
 		{
 			get
 			{
@@ -308,7 +244,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int DPS_AF
+		public byte DPS_AF
 		{
 			get
 			{
@@ -321,7 +257,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int SPD_ABS
+		public byte SPD_ABS
 		{
 			get
 			{
@@ -334,7 +270,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Hand
+		public byte Hand
 		{
 			get
 			{
@@ -347,7 +283,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Type_Damage
+		public byte Type_Damage
 		{
 			get
 			{
@@ -360,7 +296,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Object_Type
+		public byte Object_Type
 		{
 			get
 			{
@@ -373,7 +309,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Item_Type
+		public byte Item_Type
 		{
 			get
 			{
@@ -386,7 +322,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Color
+		public byte Color
 		{
 			get
 			{
@@ -399,20 +335,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Emblem
-		{
-			get
-			{
-				return m_emblem;
-			}
-			set
-			{
-				Dirty = true;
-				m_emblem = value;
-			}
-		}
-		[DataElement(AllowDbNull = true)]
-		public int Effect
+		public byte Effect
 		{
 			get
 			{
@@ -425,7 +348,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Weight
+		public byte Weight
 		{
 			get
 			{
@@ -438,7 +361,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = false)]
-		public int Model
+		public ushort Model
 		{
 			get
 			{
@@ -464,7 +387,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int Bonus
+		public byte Bonus
 		{
 			get
 			{
@@ -476,292 +399,7 @@ namespace DOL.Database
 				m_bonus = value;
 			}
 		}
-		[DataElement(AllowDbNull = true)]
-		public virtual int Bonus1
-		{
-			get
-			{
-				return m_bonus1;
-			}
-			set
-			{
-				Dirty = true;
-				m_bonus1 = value;
-			}
-		}
-		[DataElement(AllowDbNull = true)]
-		public virtual int Bonus2
-		{
-			get
-			{
-				return m_bonus2;
-			}
-			set
-			{
-				Dirty = true;
-				m_bonus2 = value;
-			}
-		}
-		[DataElement(AllowDbNull = true)]
-		public virtual int Bonus3
-		{
-			get
-			{
-				return m_bonus3;
-			}
-			set
-			{
-				Dirty = true;
-				m_bonus3 = value;
-			}
-		}
-		[DataElement(AllowDbNull = true)]
-		public virtual int Bonus4
-		{
-			get
-			{
-				return m_bonus4;
-			}
-			set
-			{
-				Dirty = true;
-				m_bonus4 = value;
-			}
-		}
-		[DataElement(AllowDbNull = true)]
-		public virtual int Bonus5
-		{
-			get
-			{
-				return m_bonus5;
-			}
-			set
-			{
-				Dirty = true;
-				m_bonus5 = value;
-			}
-		}
-		[DataElement(AllowDbNull = true)]
-		public virtual int Bonus6
-		{
-			get
-			{
-				return m_bonus6;
-			}
-			set
-			{
-				Dirty = true;
-				m_bonus6 = value;
-			}
-		}
-		[DataElement(AllowDbNull = true)]
-		public virtual int Bonus7
-		{
-			get
-			{
-				return m_bonus7;
-			}
-			set
-			{
-				Dirty = true;
-				m_bonus7 = value;
-			}
-		}
-		[DataElement(AllowDbNull = true)]
-		public virtual int Bonus8
-		{
-			get
-			{
-				return m_bonus8;
-			}
-			set
-			{
-				Dirty = true;
-				m_bonus8 = value;
-			}
-		}
-		[DataElement(AllowDbNull = true)]
-		public virtual int Bonus9
-		{
-			get
-			{
-				return m_bonus9;
-			}
-			set
-			{
-				Dirty = true;
-				m_bonus9 = value;
-			}
-		}
-		[DataElement(AllowDbNull = true)]
-		public virtual int Bonus10
-		{
-			get
-			{
-				return m_bonus10;
-			}
-			set
-			{
-				Dirty = true;
-				m_bonus10 = value;
-			}
-		}
-		[DataElement(AllowDbNull = true)]
-		public int ExtraBonus
-		{
-			get
-			{
-				return m_extrabonus;
-			}
-			set
-			{
-				Dirty = true;
-				m_extrabonus = value;
-			}
-		}
-		[DataElement(AllowDbNull = true)]
-		public virtual int Bonus1Type
-		{
-			get
-			{
-				return m_bonus1Type;
-			}
-			set
-			{
-				Dirty = true;
-				m_bonus1Type = value;
-			}
-		}
-		[DataElement(AllowDbNull = true)]
-		public virtual int Bonus2Type
-		{
-			get
-			{
-				return m_bonus2Type;
-			}
-			set
-			{
-				Dirty = true;
-				m_bonus2Type = value;
-			}
-		}
-		[DataElement(AllowDbNull = true)]
-		public virtual int Bonus3Type
-		{
-			get
-			{
-				return m_bonus3Type;
-			}
-			set
-			{
-				Dirty = true;
-				m_bonus3Type = value;
-			}
-		}
-		[DataElement(AllowDbNull = true)]
-		public virtual int Bonus4Type
-		{
-			get
-			{
-				return m_bonus4Type;
-			}
-			set
-			{
-				Dirty = true;
-				m_bonus4Type = value;
-			}
-		}
-		[DataElement(AllowDbNull = true)]
-		public virtual int Bonus5Type
-		{
-			get
-			{
-				return m_bonus5Type;
-			}
-			set
-			{
-				Dirty = true;
-				m_bonus5Type = value;
-			}
-		}
-		[DataElement(AllowDbNull = true)]
-		public virtual int Bonus6Type
-		{
-			get
-			{
-				return m_bonus6Type;
-			}
-			set
-			{
-				Dirty = true;
-				m_bonus6Type = value;
-			}
-		}
-		[DataElement(AllowDbNull = true)]
-		public virtual int Bonus7Type
-		{
-			get
-			{
-				return m_bonus7Type;
-			}
-			set
-			{
-				Dirty = true;
-				m_bonus7Type = value;
-			}
-		}
-		[DataElement(AllowDbNull = true)]
-		public virtual int Bonus8Type
-		{
-			get
-			{
-				return m_bonus8Type;
-			}
-			set
-			{
-				Dirty = true;
-				m_bonus8Type = value;
-			}
-		}
-		[DataElement(AllowDbNull = true)]
-		public virtual int Bonus9Type
-		{
-			get
-			{
-				return m_bonus9Type;
-			}
-			set
-			{
-				Dirty = true;
-				m_bonus9Type = value;
-			}
-		}
-		[DataElement(AllowDbNull = true)]
-		public virtual int Bonus10Type
-		{
-			get
-			{
-				return m_bonus10Type;
-			}
-			set
-			{
-				Dirty = true;
-				m_bonus10Type = value;
-			}
-		}
-		[DataElement(AllowDbNull = true)]
-		public int ExtraBonusType
-		{
-			get
-			{
-				return m_extrabonusType;
-			}
-			set
-			{
-				Dirty = true;
-				m_extrabonusType = value;
-			}
-		}
+		
 		[DataElement(AllowDbNull = true)]
 		public bool IsPickable
 		{
@@ -885,7 +523,7 @@ namespace DOL.Database
 		/// Max amount allowed in one stack
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
-		public int MaxCount
+		public byte MaxCount
 		{
 			get { return m_maxCount; }
 			set
@@ -895,19 +533,11 @@ namespace DOL.Database
 			}
 		}
 
-		public bool IsStackable
-		{
-			get
-			{
-				return m_maxCount > 1;
-			}
-		}
-
 		/// <summary>
 		/// Amount of items sold at once
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
-		public int PackSize
+		public byte PackSize
 		{
 			get { return m_packSize; }
 			set
@@ -921,7 +551,7 @@ namespace DOL.Database
 		/// Charge of item when he have some charge of a spell
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
-		public int Charges
+		public byte Charges
 		{
 			get { return m_charges; }
 			set
@@ -935,7 +565,7 @@ namespace DOL.Database
 		/// Max charge of item when he have some charge of a spell
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
-		public int MaxCharges
+		public byte MaxCharges
 		{
 			get { return m_maxCharges; }
 			set
@@ -946,7 +576,7 @@ namespace DOL.Database
 		}
 
 		[DataElement(AllowDbNull = true)]
-		public int Charges1
+		public byte Charges1
 		{
 			get { return m_charges1; }
 			set
@@ -960,7 +590,7 @@ namespace DOL.Database
 		/// Max charge of item when he have some charge of a spell
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
-		public int MaxCharges1
+		public byte MaxCharges1
 		{
 			get { return m_maxCharges1; }
 			set
@@ -974,7 +604,7 @@ namespace DOL.Database
 		/// Spell id for items with charge
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
-		public virtual int SpellID
+		public virtual ushort SpellID
 		{
 			get { return m_spellID; }
 			set
@@ -988,7 +618,7 @@ namespace DOL.Database
 		/// Spell id for items with charge
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
-		public virtual int SpellID1
+		public virtual ushort SpellID1
 		{
 			get { return m_spellID1; }
 			set
@@ -1002,7 +632,7 @@ namespace DOL.Database
 		/// ProcSpell id for items
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
-		public virtual int ProcSpellID
+		public virtual ushort ProcSpellID
 		{
 			get { return m_procSpellID; }
 			set
@@ -1013,7 +643,7 @@ namespace DOL.Database
 		}
 
 		[DataElement(AllowDbNull = true)]
-		public virtual int ProcSpellID1
+		public virtual ushort ProcSpellID1
 		{
 			get { return m_procSpellID1; }
 			set
@@ -1024,40 +654,7 @@ namespace DOL.Database
 		}
 
 		[DataElement(AllowDbNull = true)]
-		public int PoisonSpellID
-		{
-			get { return m_poisonSpellID; }
-			set
-			{
-				Dirty = true;
-				m_poisonSpellID = value;
-			}
-		}
-
-		[DataElement(AllowDbNull = true)]
-		public int PoisonMaxCharges
-		{
-			get { return m_poisonMaxCharges; }
-			set
-			{
-				Dirty = true;
-				m_poisonMaxCharges = value;
-			}
-		}
-
-		[DataElement(AllowDbNull = true)]
-		public int PoisonCharges
-		{
-			get { return m_poisonCharges; }
-			set
-			{
-				Dirty = true;
-				m_poisonCharges = value;
-			}
-		}
-
-		[DataElement(AllowDbNull = true)]
-		public int Realm
+		public byte Realm
 		{
 			get { return m_realm; }
 			set
@@ -1092,26 +689,19 @@ namespace DOL.Database
 			}
 		}
 
-		public virtual bool IsMagical
+		[DataElement(AllowDbNull = true)]
+		public string Description
 		{
-			get
+			get { return m_description; }
+			set
 			{
-				return
-					(Bonus1 != 0 && Bonus1Type != 0) ||
-					(Bonus2 != 0 && Bonus2Type != 0) ||
-					(Bonus3 != 0 && Bonus3Type != 0) ||
-					(Bonus4 != 0 && Bonus4Type != 0) ||
-					(Bonus5 != 0 && Bonus5Type != 0) ||
-					(Bonus6 != 0 && Bonus6Type != 0) ||
-					(Bonus7 != 0 && Bonus7Type != 0) ||
-					(Bonus8 != 0 && Bonus8Type != 0) ||
-					(Bonus9 != 0 && Bonus9Type != 0) ||
-					(Bonus10 != 0 && Bonus10Type != 0) ||
-					(ExtraBonus != 0 && ExtraBonusType != 0);
+				m_description = value;
+				Dirty = true;
 			}
 		}
 
 		private const string m_vowels = "aeuio";
+
 		/// <summary>
 		/// Returns name with article for nouns
 		/// </summary>
@@ -1153,176 +743,35 @@ namespace DOL.Database
 			}
 		}
 
-		/// <summary>
-		/// Get the bonus amount.
-		/// </summary>
-		/// <param name="bonusID"></param>
-		/// <returns></returns>
-		public int GetBonusAmount(ArtifactBonus.ID bonusID)
+		public byte DurabilityPercent
 		{
-			switch ((int)bonusID)
+			get
 			{
-				case 0:
-					return Bonus1;
-				case 1:
-					return Bonus2;
-				case 2:
-					return Bonus3;
-				case 3:
-					return Bonus4;
-				case 4:
-					return Bonus5;
-				case 5:
-					return Bonus6;
-				case 6:
-					return Bonus7;
-				case 7:
-					return Bonus8;
-				case 8:
-					return Bonus9;
-				case 9:
-					return Bonus10;
+				return (byte)((MaxDurability > 0) ? m_durability * 100 / MaxDurability : 0);
 			}
-
-			return 0;
 		}
 
-		/// <summary>
-		/// Get the bonus type.
-		/// </summary>
-		/// <param name="bonusID"></param>
-		/// <returns></returns>
-		public int GetBonusType(ArtifactBonus.ID bonusID)
+		public byte ConditionPercent
 		{
-			switch ((int)bonusID)
+			get
 			{
-				case 0:
-					return Bonus1Type;
-				case 1:
-					return Bonus2Type;
-				case 2:
-					return Bonus3Type;
-				case 3:
-					return Bonus4Type;
-				case 4:
-					return Bonus5Type;
-				case 5:
-					return Bonus6Type;
-				case 6:
-					return Bonus7Type;
-				case 7:
-					return Bonus8Type;
-				case 8:
-					return Bonus9Type;
-				case 9:
-					return Bonus10Type;
-				case 10:
-					return SpellID;
-				case 11:
-					return SpellID1;
-				case 12:
-					return ProcSpellID;
-				case 13:
-					return ProcSpellID1;
-			}
-
-			return 0;
-		}
-
-		/// <summary>
-		/// Set the bonus amount.
-		/// </summary>
-		/// <param name="bonusID"></param>
-		/// <returns></returns>
-		public void SetBonusAmount(ArtifactBonus.ID bonusID, int bonusAmount)
-		{
-			switch ((int)bonusID)
-			{
-				case 0:
-					Bonus1 = bonusAmount;
-					break;
-				case 1:
-					Bonus2 = bonusAmount;
-					break;
-				case 2:
-					Bonus3 = bonusAmount;
-					break;
-				case 3:
-					Bonus4 = bonusAmount;
-					break;
-				case 4:
-					Bonus5 = bonusAmount;
-					break;
-				case 5:
-					Bonus6 = bonusAmount;
-					break;
-				case 6:
-					Bonus7 = bonusAmount;
-					break;
-				case 7:
-					Bonus8 = bonusAmount;
-					break;
-				case 8:
-					Bonus9 = bonusAmount;
-					break;
-				case 9:
-					Bonus10 = bonusAmount;
-					break;
+				return (byte)Math.Round((MaxCondition > 0) ? (double)m_condition / MaxCondition * 100 : 0);
 			}
 		}
 
 		/// <summary>
-		/// Set the bonus type.
+		/// Item specific bonuses from ROG or SpellCrafting
 		/// </summary>
-		/// <param name="bonusID"></param>
-		/// <returns></returns>
-		public void SetBonusType(ArtifactBonus.ID bonusID, int bonusType)
+		[Relation(LocalField = "TemplateID", RemoteField = "ItemID", AutoLoad = true, AutoDelete = true)]
+		public ItemBonus[] MagicalBonuses = new ItemBonus[0];
+
+		public ItemBonus AddBonus(byte type, int amount)
 		{
-			switch ((int)bonusID)
-			{
-				case 0:
-					Bonus1Type = bonusType;
-					break;
-				case 1:
-					Bonus2Type = bonusType;
-					break;
-				case 2:
-					Bonus3Type = bonusType;
-					break;
-				case 3:
-					Bonus4Type = bonusType;
-					break;
-				case 4:
-					Bonus5Type = bonusType;
-					break;
-				case 5:
-					Bonus6Type = bonusType;
-					break;
-				case 6:
-					Bonus7Type = bonusType;
-					break;
-				case 7:
-					Bonus8Type = bonusType;
-					break;
-				case 8:
-					Bonus9Type = bonusType;
-					break;
-				case 9:
-					Bonus10Type = bonusType;
-					break;
-				case 10:
-					SpellID = bonusType;
-					break;
-				case 11:
-					SpellID1 = bonusType;
-					break;
-				case 12:
-					ProcSpellID = bonusType;
-					break;
-				case 13:
-					ProcSpellID1 = bonusType;
-					break;
-			}
+			List<ItemBonus> list = new List<ItemBonus>(MagicalBonuses);
+			ItemBonus bonus = new ItemBonus(TemplateID, type, amount);
+			list.Add(bonus);
+			MagicalBonuses = list.ToArray();
+			return bonus;
 		}
 	}
 }

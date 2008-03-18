@@ -261,129 +261,9 @@ namespace DOL.GS.Quests.Midgard
 			#endregion
 
 			#region defineItems
-
 			trainerWhip = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "askefruer_whip");
-			if (trainerWhip == null)
-			{
-				trainerWhip = new ItemTemplate();
-				trainerWhip.Name = "Askefruer Trainer's Whip";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + trainerWhip.Name + " , creating it ...");
-
-				trainerWhip.Weight = 15;
-				trainerWhip.Model = 859;
-
-				trainerWhip.Object_Type = (int) eObjectType.GenericItem;
-
-				trainerWhip.Id_nb = "askefruer_whip";
-				trainerWhip.IsPickable = true;
-				trainerWhip.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(trainerWhip);
-			}
-
-			// item db check
 			recruitsVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_vest_mid");
-			if (recruitsVest == null)
-			{
-				recruitsVest = new ItemTemplate();
-				recruitsVest.Name = "Recruit's Studded Vest (Mid)";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + recruitsVest.Name + ", creating it ...");
-				recruitsVest.Level = 8;
-
-				recruitsVest.Weight = 60;
-				recruitsVest.Model = 81; // studded vest
-
-				recruitsVest.DPS_AF = 12; // Armour
-				recruitsVest.SPD_ABS = 19; // Absorption
-
-				recruitsVest.Object_Type = (int) eObjectType.Studded;
-				recruitsVest.Item_Type = (int) eEquipmentItems.TORSO;
-				recruitsVest.Id_nb = "recruits_studded_vest_mid";
-				recruitsVest.Gold = 0;
-				recruitsVest.Silver = 9;
-				recruitsVest.Copper = 0;
-				recruitsVest.IsPickable = true;
-				recruitsVest.IsDropable = true;
-				recruitsVest.CanDropAsLoot = false;
-				recruitsVest.Color = 14; // blue leather
-
-				recruitsVest.Bonus = 5; // default bonus
-
-				recruitsVest.Bonus1 = 3;
-				recruitsVest.Bonus1Type = (int) eStat.STR;
-
-				recruitsVest.Bonus2 = 4;
-				recruitsVest.Bonus2Type = (int) eStat.CON;
-
-				recruitsVest.Bonus3 = 1;
-				recruitsVest.Bonus3Type = (int) eResist.Body;
-
-				recruitsVest.Quality = 100;
-				recruitsVest.Condition = 1000;
-				recruitsVest.MaxCondition = 1000;
-				recruitsVest.Durability = 1000;
-				recruitsVest.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsVest);
-			}
-
-			// item db check
 			recruitsQuiltedVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_vest");
-			if (recruitsQuiltedVest == null)
-			{
-				recruitsQuiltedVest = new ItemTemplate();
-				recruitsQuiltedVest.Name = "Recruit's Quilted Vest";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + recruitsQuiltedVest.Name + ", creating it ...");
-				recruitsQuiltedVest.Level = 8;
-
-				recruitsQuiltedVest.Weight = 20;
-				recruitsQuiltedVest.Model = 151; // studded vest
-
-				recruitsQuiltedVest.DPS_AF = 6; // Armour
-				recruitsQuiltedVest.SPD_ABS = 0; // Absorption
-
-				recruitsQuiltedVest.Object_Type = (int) eObjectType.Cloth;
-				recruitsQuiltedVest.Item_Type = (int) eEquipmentItems.TORSO;
-				recruitsQuiltedVest.Id_nb = "recruits_quilted_vest";
-				recruitsQuiltedVest.Gold = 0;
-				recruitsQuiltedVest.Silver = 9;
-				recruitsQuiltedVest.Copper = 0;
-				recruitsQuiltedVest.IsPickable = true;
-				recruitsQuiltedVest.IsDropable = true;
-				recruitsQuiltedVest.Color = 36;
-
-				recruitsQuiltedVest.Bonus = 5; // default bonus
-
-				recruitsQuiltedVest.Bonus1 = 4;
-				recruitsQuiltedVest.Bonus1Type = (int) eStat.INT;
-
-				recruitsQuiltedVest.Bonus2 = 3;
-				recruitsQuiltedVest.Bonus2Type = (int) eStat.DEX;
-
-				recruitsQuiltedVest.Quality = 100;
-				recruitsQuiltedVest.Condition = 1000;
-				recruitsQuiltedVest.MaxCondition = 1000;
-				recruitsQuiltedVest.Durability = 1000;
-				recruitsQuiltedVest.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsQuiltedVest);
-			}
-
 			#endregion
 
 			/* Now we add some hooks to the npc we found.
@@ -960,7 +840,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 5 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == njiedi.Name && gArgs.Item.Id_nb == trainerWhip.Id_nb)
+				if (gArgs.Target.Name == njiedi.Name && gArgs.Item.TemplateID == trainerWhip.TemplateID)
 				{
 					njiedi.SayTo(player, "A whip?! This is outrageous! I see they were just trying to torture him. These Askefruer are truly malicious creatures. I hope you wipe them out one day Eeinken. Here, take this as a sign of my [appreciation] for the return of the little one.");
 					RemoveItem(njiedi, player, trainerWhip);

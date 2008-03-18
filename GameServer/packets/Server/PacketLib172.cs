@@ -119,7 +119,7 @@ namespace DOL.GS.PacketHandler
 					if (updatedSlot >= (int)eInventorySlot.Consignment_First && updatedSlot <= (int)eInventorySlot.Consignment_Last)
 						pak.WriteByte((byte)(updatedSlot - (int)eInventorySlot.Consignment_First + (int)eInventorySlot.HousingInventory_First));
 					else
-						pak.WriteByte((byte)(updatedSlot));
+						pak.WriteByte((byte)updatedSlot);
 					InventoryItem item = null;
 					item = m_gameClient.Player.Inventory.GetItem((eInventorySlot)updatedSlot);
 
@@ -147,7 +147,7 @@ namespace DOL.GS.PacketHandler
 							value2 = item.Count;
 							break;
 						case (int)eObjectType.Instrument:
-							value1 = (item.DPS_AF == 2 ? 0 : item.DPS_AF);
+							value1 = (item.DPS_AF == 2 ? (byte)0 : item.DPS_AF);
 							value2 = 0;
 							break; // unused
 						case (int)eObjectType.Shield:

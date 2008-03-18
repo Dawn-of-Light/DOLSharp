@@ -2036,7 +2036,7 @@ namespace DOL.GS
 		/// Gets/Sets the item that is used for ranged attack
 		/// </summary>
 		/// <returns>Item that will be used for range/accuracy/damage modifications</returns>
-		protected virtual ItemTemplate RangeAttackAmmo
+		protected virtual InventoryItem RangeAttackAmmo
 		{
 			get { return null; }
 			set { }
@@ -2131,11 +2131,11 @@ namespace DOL.GS
 						return;
 					}
 
-					int model = (attackWeapon == null ? 0 : attackWeapon.Model);
+					ushort model = (attackWeapon == null ? (ushort)0 : attackWeapon.Model);
 					foreach (GamePlayer player in owner.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
 						if (player == null) continue;
-						player.Out.SendCombatAnimation(owner, attackTarget, (ushort)model, 0x00, player.Out.BowShoot, 0x01, 0, ((GameLiving)attackTarget).HealthPercent);
+						player.Out.SendCombatAnimation(owner, attackTarget, model, 0x00, player.Out.BowShoot, 0x01, 0, ((GameLiving)attackTarget).HealthPercent);
 					}
 
 					interruptDuration = owner.AttackSpeed(attackWeapon);
@@ -2325,10 +2325,10 @@ namespace DOL.GS
 
 						int speed = owner.AttackSpeed(attackWeapon);
 						byte attackSpeed = (byte)(speed / 100);
-						int model = (attackWeapon == null ? 0 : attackWeapon.Model);
+						ushort model = (attackWeapon == null ? (ushort)0 : attackWeapon.Model);
 						foreach (GamePlayer player in owner.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						{
-							player.Out.SendCombatAnimation(owner, null, (ushort)model, 0x00, player.Out.BowPrepare, attackSpeed, 0x00, 0x00);
+							player.Out.SendCombatAnimation(owner, null, model, 0x00, player.Out.BowPrepare, attackSpeed, 0x00, 0x00);
 						}
 
 						if (owner.RangeAttackType == eRangeAttackType.RapidFire)
@@ -2663,7 +2663,7 @@ namespace DOL.GS
 
 			// Poison
 
-			if (weapon.PoisonSpellID != 0)
+			if (weapon.PoisonTemplate != null)
 			{
 				if (ad.Target.EffectList.GetOfType(typeof(RemedyEffect)) != null)
 				{
@@ -2674,7 +2674,7 @@ namespace DOL.GS
 				}
 
 				StartWeaponMagicalEffect(ad, SkillBase.GetSpellLine(GlobalSpellsLines.Mundane_Poisons),
-					weapon.PoisonSpellID);
+					weapon.PoisonTemplate.SpellID);
 
 				// Spymaster Enduring Poison
 
@@ -2685,7 +2685,7 @@ namespace DOL.GS
 						if (Util.ChanceDouble((double)(15 * 0.0001))) return;
 				}
 				weapon.PoisonCharges--;
-				if (weapon.PoisonCharges <= 0) { weapon.PoisonMaxCharges = 0; weapon.PoisonSpellID = 0; }
+				if (weapon.PoisonCharges <= 0) { weapon.PoisonTemplate.MaxCharges = 0; weapon.PoisonTemplateID = ""; weapon.PoisonTemplate = null; }
 			}
 		}
 
@@ -2759,10 +2759,10 @@ namespace DOL.GS
 				{
 					RangeAttackState = eRangeAttackState.Aim;
 					byte attackSpeed = (byte)(speed / 100);
-					int model = (weapon == null ? 0 : weapon.Model);
+					ushort model = weapon == null ? (ushort)0 : weapon.Model;
 					foreach (GamePlayer p in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
-						p.Out.SendCombatAnimation(this, null, (ushort)model, 0x00, p.Out.BowPrepare, attackSpeed, 0x00, 0x00);
+						p.Out.SendCombatAnimation(this, null, model, 0x00, p.Out.BowPrepare, attackSpeed, 0x00, 0x00);
 					}
 
 					// From : http://www.camelotherald.com/more/888.shtml
@@ -3118,7 +3118,7 @@ namespace DOL.GS
 					if (blockChance < 0.01) blockChance = 0.01;
 
 					// Reduce block chance if the shield used is too small (valable only for player because npc inventory does not store the shield size but only the model of item)
-					int shieldSize = 0;
+					byte shieldSize = 0;
 					if (lefthand != null)
 						shieldSize = lefthand.Type_Damage;
 					if (player != null && m_attackers.Count > shieldSize)
@@ -3326,7 +3326,7 @@ namespace DOL.GS
 			}
 			if (ad.Attacker.ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 			{
-				ItemTemplate ammo = RangeAttackAmmo;
+				InventoryItem ammo = RangeAttackAmmo;
 				if (ammo != null)
 					switch ((ammo.SPD_ABS >> 4) & 0x3)
 					{
@@ -3403,7 +3403,7 @@ namespace DOL.GS
 				|| (ad.AttackType == AttackData.eAttackType.Ranged && ad.Target != bladeturn.SpellHandler.Caster && ad.Attacker is GamePlayer && ((GamePlayer)ad.Attacker).HasAbility(Abilities.PenetratingArrow)))  // penetrating arrow attack pierce bladeturn
 					penetrate = true;
 
-				if (ad.IsMeleeAttack && Util.ChanceDouble((double)(bladeturn.SpellHandler.Caster.Level / ad.Attacker.Level)))
+				if (ad.IsMeleeAttack && !Util.ChanceDouble((double)((double)bladeturn.SpellHandler.Caster.Level / (double)ad.Attacker.Level)))
 					penetrate = true;
 
 				if (penetrate)
@@ -3560,8 +3560,8 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			{
 				//http://dolserver.sourceforge.net/forum/showthread.php?s=&threadid=836
 				byte resultByte = 0;
-				int attackersWeapon = (weapon == null) ? 0 : weapon.Model;
-				int defendersWeapon = 0;
+				ushort attackersWeapon = (weapon == null) ? (ushort)0 : weapon.Model;
+				ushort defendersWeapon = 0;
 
 				switch (ad.AttackResult)
 				{
@@ -3595,7 +3595,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 				foreach (GamePlayer player in ad.Target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
 					if (player == null) continue;
-					player.Out.SendCombatAnimation(this, ad.Target, (ushort)attackersWeapon, (ushort)defendersWeapon, ad.AnimationId, 0, resultByte, ad.Target.HealthPercent);
+					player.Out.SendCombatAnimation(this, ad.Target, attackersWeapon, defendersWeapon, ad.AnimationId, 0, resultByte, ad.Target.HealthPercent);
 				}
 			}
 		}
@@ -5427,6 +5427,11 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// </summary>
 		/// <param name="item"></param>
 		/// <returns>true if player has ability to use item</returns>
+		public virtual bool HasAbilityToUseItem(InventoryItem item)
+		{
+			return GameServer.ServerRules.CheckAbilityToUseItem(this, item.Template);
+		}
+
 		public virtual bool HasAbilityToUseItem(ItemTemplate item)
 		{
 			return GameServer.ServerRules.CheckAbilityToUseItem(this, item);

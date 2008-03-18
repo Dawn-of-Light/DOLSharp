@@ -187,7 +187,7 @@ namespace DOL.GS.Quests.Albion
                     log.Warn("Could not find Elder Wood, creating it ...");
                 boarCarcass = new ItemTemplate();
                 boarCarcass.Object_Type = 0;
-                boarCarcass.Id_nb = "huge_boar_carcass";
+                boarCarcass.TemplateID = "huge_boar_carcass";
                 boarCarcass.Name = "Huge Boar Carcass";
                 boarCarcass.Level = 1;
                 boarCarcass.Model = 540;
@@ -473,7 +473,7 @@ namespace DOL.GS.Quests.Albion
                 switch (Step)
                 {
                     case 2:
-                        if (gArgs.Target.Name == masterGerol.Name && gArgs.Item.Id_nb == boarCarcass.Id_nb)
+                        if (gArgs.Target.Name == masterGerol.Name && gArgs.Item.TemplateID == boarCarcass.TemplateID)
                         {
                             RemoveItem(masterGerol, player, boarCarcass);
                             masterGerol.SayTo(player, "Wow, this has got to be the largest boar I have seen yet! Here, have some coins for payment of your task, as well as the knowledge you are helping out the health of Albion.");

@@ -27,220 +27,6 @@ using System.Timers;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// The Bonus Type ID
-	/// </summary>
-	public enum eItemBonusType
-	{
-		/// <summary>
-		/// Strength
-		/// </summary>
-		Strength = 1,
-		/// <summary>
-		/// Dexterity
-		/// </summary>
-		Dexterity = 2,
-		/// <summary>
-		/// Constitution
-		/// </summary>
-		Constitution = 3,
-		/// <summary>
-		/// Quickness
-		/// </summary>
-		Quickness = 4,
-		/// <summary>
-		/// Intelligence
-		/// </summary>
-		Intelligence = 5,
-		/// <summary>
-		/// Piety
-		/// </summary>
-		Piety = 6,
-		/// <summary>
-		/// Empathy
-		/// </summary>
-		Empathy = 7,
-		/// <summary>
-		/// Charisma
-		/// </summary>
-		Charisma = 8,
-		/// <summary>
-		/// Max Mana
-		/// </summary>
-		Mana = 9,
-		/// <summary>
-		/// Max Health
-		/// </summary>
-		Health = 10,
-		/// <summary>
-		/// Body Resist
-		/// </summary>
-		Resist_Body = 11,
-		/// <summary>
-		/// Cold Resist
-		/// </summary>
-		Resist_Cold = 12,
-		/// <summary>
-		/// Crush Resist
-		/// </summary>
-		Resist_Crush = 13,
-		/// <summary>
-		/// Energy Resist
-		/// </summary>
-		Resist_Energy = 14,
-		/// <summary>
-		/// Heat Resist
-		/// </summary>
-		Resist_Heat = 15,
-		/// <summary>
-		/// Matter Resist
-		/// </summary>
-		Resist_Matter = 16,
-		/// <summary>
-		/// Slash Resist
-		/// </summary>
-		Resist_Slash = 17,
-		/// <summary>
-		/// Spirit Resist
-		/// </summary>
-		Resist_Spirit = 18,
-		/// <summary>
-		/// Thrust Resist
-		/// </summary>
-		Resist_Thrust = 19,
-		/// <summary>
-		/// Two Handed Skill
-		/// </summary>
-		Skill_Two_Handed = 20,
-		/// <summary>
-		/// Body Magic Skill
-		/// </summary>
-		Skill_Body = 21,
-		/// <summary>
-		/// Chants Skill
-		/// </summary>
-		Skill_Chants = 22,
-		/// <summary>
-		/// Critical Strike Skill
-		/// </summary>
-		Skill_Critical_Strike = 23,
-		/// <summary>
-		/// Cross Bows Skill
-		/// </summary>
-		Skill_Cross_Bows = 24,
-		/// <summary>
-		/// Crushing Skill
-		/// </summary>
-		Skill_Crushing = 25,
-		/// <summary>
-		/// Death Servant Magic Skill
-		/// </summary>
-		Skill_Death_Servant = 26,
-		/// <summary>
-		/// Death Sight Magic Skill
-		/// </summary>
-		Skill_DeathSight = 27,
-		/// <summary>
-		/// Dual Wield Skill
-		/// </summary>
-		Skill_Dual_Wield = 28,
-		/// <summary>
-		/// Earth Magic Skill
-		/// </summary>
-		Skill_Earth = 29,
-		/// <summary>
-		/// Enhancement Magic Skill
-		/// </summary>
-		Skill_Enhancement = 30,
-		/// <summary>
-		/// Envenom Skill
-		/// </summary>
-		Skill_Envenom = 31,
-		/// <summary>
-		/// Fire Magic Skill
-		/// </summary>
-		Skill_Fire = 32,
-		/// <summary>
-		/// Flexible Weapon Skill
-		/// </summary>
-		Skill_Flexible_Weapon = 33,
-		/// <summary>
-		/// Ice Magic Skill
-		/// </summary>
-		Skill_Ice = 34,
-		/// <summary>
-		/// Instruments Skill
-		/// </summary>
-		Skill_Instruments = 35,
-		/// <summary>
-		/// Longbow Skill
-		/// </summary>
-		Skill_Longbows = 36,
-		/// <summary>
-		/// Matter Magic Skill
-		/// </summary>
-		Skill_Matter = 37,
-		/// <summary>
-		/// Mind Magic Skill
-		/// </summary>
-		Skill_Mind = 38,
-		/// <summary>
-		/// Painworking Magic Skill
-		/// </summary>
-		Skill_Painworking = 39,
-		/// <summary>
-		/// Parry Skill
-		/// </summary>
-		Skill_Parry = 40,
-		/// <summary>
-		/// Polearms Skill
-		/// </summary>
-		Skill_Polearms = 41,
-		/// <summary>
-		/// Rejuvenation Skill
-		/// </summary>
-		Skill_Rejuvenation = 42,
-		/// <summary>
-		/// Shields Skill
-		/// </summary>
-		Skill_Shields = 43,
-		/// <summary>
-		/// Slashing Skill
-		/// </summary>
-		Skill_Slashing = 44,
-		/// <summary>
-		/// Smiting Skill
-		/// </summary>
-		Skill_Smiting = 45,
-		/// <summary>
-		/// Soulrending Skill
-		/// </summary>
-		Skill_SoulRending = 46,
-		/// <summary>
-		/// Spirit Magic Skill
-		/// </summary>
-		Skill_Spirit = 47,
-		/// <summary>
-		/// Staff Skill
-		/// </summary>
-		Skill_Staff = 48,
-		/// <summary>
-		/// Stealth Skill
-		/// </summary>
-		Skill_Stealth = 49,
-		/// <summary>
-		/// Thrusting Skill
-		/// </summary>
-		Skill_Thrusting = 50,
-		/// <summary>
-		/// Wind Magic Skill
-		/// </summary>
-		Skill_Wind = 51,
-		/// <summary>
-		/// Focus Magics.....
-		/// </summary>
-		Focus = 52,//add all focus
-	};
 
 	/// <summary>
 	/// The InventoryItem table holds all values from the
@@ -248,60 +34,70 @@ namespace DOL.Database
 	/// are neccessary to store the inventory position
 	/// </summary>
 	[DataTable(TableName = "InventoryItem")]
-	public class InventoryItem : ItemTemplate
+	public class InventoryItem : DataObject
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		protected string m_ownerID;
-		protected int m_slot_pos;
-		protected string craftername;
-		protected int m_canUseAgainIn;
-        protected long item_exp;
+		private string m_ownerID;
+		private string m_templateID;
+		private byte m_count;
+		private int m_slot_pos;
+		private string m_description;
+		private int m_durability;
+		private int m_condition;
+		private byte m_color;
+		private int m_emblem;
+		private byte m_effect;
+		protected long item_exp;
 		private int m_cooldown;
-		private DateTime m_lastUsedDateTime;
+		protected long m_sellPrice;
+		private string m_poisonTemplateID;
+		private byte m_poisonCharges;
+		private byte m_quality;
+		private byte m_bonus;
+		private byte m_extension;
+		private byte m_charges;
+		private byte m_charges1;
+		private byte m_maxCharges;
+		private string m_name;
+		private ushort m_model;
 
-		/// <summary>
-		/// The count of items (for stack!)
-		/// </summary>
-		protected int m_count;
-		static bool m_autoSave;
-        protected string m_internalID;
-		protected int m_sellPrice;
+		//internal
+		static bool m_autoSave = false;
+		private DateTime m_lastUsedDateTime;
+		private ItemTemplate m_template = null;
 
 		public InventoryItem()
 			: base()
 		{
-			m_autoSave = false;
-			m_id_nb = "default";
-			m_count = 1;
-            m_internalID = this.ObjectId;
-			m_sellPrice = 0;
 		}
-
 		/// <summary>
 		/// Creates a new Inventoryitem based on the given ItemTemplate
 		/// </summary>
 		/// <param name="itemTemplate"></param>
 		public InventoryItem(ItemTemplate itemTemplate)
-			: this()
+			: base()
 		{
-			CopyFrom(itemTemplate);
-            m_internalID = this.ObjectId;
-        }
+			m_templateID = itemTemplate.TemplateID;
+			m_template = itemTemplate;
+			m_name = itemTemplate.Name;
+			m_model = itemTemplate.Model;
+			m_maxCharges = itemTemplate.MaxCharges;
+			m_quality = itemTemplate.Quality;
+			m_condition = itemTemplate.MaxCondition;
+			m_durability = itemTemplate.MaxDurability;
+			m_description = itemTemplate.Description;
+		}
 
-		/// <summary>
-		/// Creates a new Inventoryitem based on the given ItemTemplate
-		/// </summary>
-		/// <param name="inventoryItem"></param>
-		public InventoryItem(InventoryItem inventoryItem)
-			: this()
+		public InventoryItem(ItemTemplate itemTemplate, byte amount)
+			: this(itemTemplate)
 		{
-			CopyFrom(inventoryItem);
-            m_internalID = this.ObjectId;
-        }
+			if (IsStackable)
+				m_count = amount;
+		}
 
 		override public bool AutoSave
 		{
@@ -316,16 +112,16 @@ namespace DOL.Database
 		}
 
 		[DataElement(AllowDbNull = false)]
-		public override string Id_nb
+		public string TemplateID
 		{
 			get
 			{
-				return m_id_nb;
+				return m_templateID;
 			}
 			set
 			{
 				Dirty = true;
-				m_id_nb = value;
+				m_templateID = value;
 			}
 		}
 
@@ -344,7 +140,7 @@ namespace DOL.Database
 		}
 
 		[DataElement(AllowDbNull = true)]
-		public int Count
+		public byte Count
 		{
 			get
 			{
@@ -372,7 +168,7 @@ namespace DOL.Database
 		}
 
 		[DataElement(AllowDbNull = true)]
-		public int SellPrice
+		public long SellPrice
 		{
 			get
 			{
@@ -386,16 +182,44 @@ namespace DOL.Database
 		}
 
 		[DataElement(AllowDbNull = true)]
-		public string CrafterName
+		public string Description
 		{
 			get
 			{
-				return craftername;
+				return m_description;
 			}
 			set
 			{
 				Dirty = true;
-				craftername = value;
+				m_description = value;
+			}
+		}
+
+		/// <summary>
+		/// Item Name
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public string Name
+		{
+			get { return m_name; }
+			set
+			{
+				Dirty = true;
+				m_name = value;
+			}
+		}
+
+		/// <summary>
+		/// Item Model
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public ushort Model
+		{
+			get { return m_model; }
+			set
+			{
+				Dirty = true;
+				m_model = value;
 			}
 		}
 
@@ -422,15 +246,15 @@ namespace DOL.Database
 		/// </summary>
 		public int CanUseAgainIn
 		{
-			get 
+			get
 			{
 				try
 				{
 					TimeSpan elapsed = DateTime.Now.Subtract(m_lastUsedDateTime);
-					TimeSpan reuse = new TimeSpan(0, 0, CanUseEvery);
-					return (reuse.CompareTo(elapsed) < 0) 
-						? 0 
-						: CanUseEvery - elapsed.Seconds - 60 * elapsed.Minutes - 3600 * elapsed.Hours;
+					TimeSpan reuse = new TimeSpan(0, 0, Template.CanUseEvery);
+					return (reuse.CompareTo(elapsed) < 0)
+						? 0
+						: Template.CanUseEvery - elapsed.Seconds - 60 * elapsed.Minutes - 3600 * elapsed.Hours;
 				}
 				catch (ArgumentOutOfRangeException)
 				{
@@ -439,21 +263,173 @@ namespace DOL.Database
 			}
 			set
 			{
-				m_lastUsedDateTime = DateTime.Now.AddSeconds(value - CanUseEvery);
+				m_lastUsedDateTime = DateTime.Now.AddSeconds(value - Template.CanUseEvery);
 				Dirty = true;
 			}
 		}
 
-        [DataElement(AllowDbNull = false)]
-        public virtual long Experience
-        {
-            get { return item_exp; }
-            set
-            {
-                Dirty = true;
-                item_exp = value;
-            }
-        }
+		[DataElement(AllowDbNull = true)]
+		public virtual long Experience
+		{
+			get { return item_exp; }
+			set
+			{
+				Dirty = true;
+				item_exp = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public string PoisonTemplateID
+		{
+			get { return m_poisonTemplateID; }
+			set
+			{
+				Dirty = true;
+				m_poisonTemplateID = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public byte PoisonCharges
+		{
+			get { return m_poisonCharges; }
+			set
+			{
+				Dirty = true;
+				m_poisonCharges = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public byte Quality
+		{
+			get { return m_quality; }
+			set
+			{
+				Dirty = true;
+				m_quality = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public byte Bonus
+		{
+			get { return m_bonus; }
+			set
+			{
+				Dirty = true;
+				m_bonus = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int Condition
+		{
+			get { return m_condition; }
+			set
+			{
+				Dirty = true;
+				m_condition = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int Durability
+		{
+			get { return m_durability; }
+			set
+			{
+				Dirty = true;
+				m_durability = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int Emblem
+		{
+			get { return m_emblem; }
+			set
+			{
+				Dirty = true;
+				m_emblem = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public byte Color
+		{
+			get { return m_color; }
+			set
+			{
+				Dirty = true;
+				m_color = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public byte Effect
+		{
+			get { return m_effect; }
+			set
+			{
+				Dirty = true;
+				m_effect = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public byte Extension
+		{
+			get
+			{
+				if (Template != null)
+				{
+					if (m_extension > Template.Extension)
+						return m_extension;
+					else return Template.Extension;
+				}
+				else return m_extension;
+			}
+			set
+			{
+				Dirty = true;
+				m_extension = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public byte Charges
+		{
+			get { return m_charges; }
+			set
+			{
+				Dirty = true;
+				m_charges = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public byte Charges1
+		{
+			get { return m_charges1; }
+			set
+			{
+				Dirty = true;
+				m_charges1 = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public byte MaxCharges
+		{
+			get { return m_maxCharges; }
+			set
+			{
+				Dirty = true;
+				m_maxCharges = value;
+			}
+		}
 
 		/// <summary>
 		/// Whether to save this object or not.
@@ -464,7 +440,7 @@ namespace DOL.Database
 			{
 				// Items with reuse timers will ALWAYS be saved.
 
-				return (base.Dirty || CanUseEvery > 0);
+				return (base.Dirty || Template.CanUseEvery > 0);
 			}
 			set
 			{
@@ -472,88 +448,246 @@ namespace DOL.Database
 			}
 		}
 
-        public void CopyFrom(InventoryItem template)
+		#region Properties we refer to itemtemplate for
+		public byte Item_Type
 		{
-			CopyFrom((ItemTemplate)template);
-			OwnerID = template.OwnerID;
-			Count = template.Count;
-			SlotPosition = template.SlotPosition;
-			CrafterName = template.CrafterName;
-			Experience = template.Experience;
-			//CopyFrom((ItemTemplate)template);
+			get { return Template.Item_Type; }
 		}
 
-		public void CopyFrom(ItemTemplate template)
+		public byte Hand
 		{
-			OwnerID = null;
-			SlotPosition = 0;
-			Bonus = template.Bonus;
-			Bonus1 = template.Bonus1;
-			Bonus2 = template.Bonus2;
-			Bonus3 = template.Bonus3;
-			Bonus4 = template.Bonus4;
-			Bonus5 = template.Bonus5;
-			Bonus6 = template.Bonus6;
-			Bonus7 = template.Bonus7;
-			Bonus8 = template.Bonus8;
-			Bonus9 = template.Bonus9;
-			Bonus10 = template.Bonus10;
-			Color = template.Color;
-			Condition = template.Condition;
-			DPS_AF = template.DPS_AF;
-			Durability = template.Durability;
-			Effect = template.Effect;
-			Emblem = template.Emblem;
-			ExtraBonus = template.ExtraBonus;
-			Hand = template.Hand;
-			Id_nb = template.Id_nb;
-			IsDropable = template.IsDropable;
-			IsPickable = template.IsPickable;
-			IsTradable = template.IsTradable;
-			CanDropAsLoot = template.CanDropAsLoot;
-			MaxCount = template.MaxCount;
-			PackSize = template.PackSize;
-			Item_Type = template.Item_Type;
-			Level = template.Level;
-			MaxCondition = template.MaxCondition;
-			MaxDurability = template.MaxDurability;
-			Model = template.Model;
-			Extension = template.Extension;
-			Name = template.Name;
-			Object_Type = template.Object_Type;
-			Quality = template.Quality;
-			SPD_ABS = template.SPD_ABS;
-			Type_Damage = template.Type_Damage;
-			Weight = template.Weight;
-			Platinum = template.Platinum;
-			Gold = template.Gold;
-			Silver = template.Silver;
-			Copper = template.Copper;
-			Bonus1Type = template.Bonus1Type;
-			Bonus2Type = template.Bonus2Type;
-			Bonus3Type = template.Bonus3Type;
-			Bonus4Type = template.Bonus4Type;
-			Bonus5Type = template.Bonus5Type;
-			Bonus6Type = template.Bonus6Type;
-			Bonus7Type = template.Bonus7Type;
-			Bonus8Type = template.Bonus8Type;
-			Bonus9Type = template.Bonus9Type;
-			Bonus10Type = template.Bonus10Type;
-			ExtraBonusType = template.ExtraBonusType;
-			Charges = template.Charges;
-			MaxCharges = template.MaxCharges;
-			Charges1 = template.Charges1;
-			MaxCharges1 = template.MaxCharges1;
-			SpellID = template.SpellID;
-			SpellID1 = template.SpellID1;
-			ProcSpellID = template.ProcSpellID;
-			ProcSpellID1 = template.ProcSpellID1;
-			PoisonSpellID = template.PoisonSpellID;
-			PoisonCharges = template.PoisonCharges;
-			PoisonMaxCharges = template.PoisonMaxCharges;
-			Realm = template.Realm;
-			AllowedClasses = template.AllowedClasses;
-			CanUseEvery = template.CanUseEvery;
+			get { return Template.Hand; }
+			set { Template.Hand = value; }
+		}
+
+		public byte SPD_ABS
+		{
+			get { return Template.SPD_ABS; }
+			set { Template.SPD_ABS = value; }
+		}
+
+		public byte DPS_AF
+		{
+			get { return Template.DPS_AF; }
+			set { Template.DPS_AF = value; }
+		}
+
+		public ushort ProcSpellID
+		{
+			get { return Template.ProcSpellID; }
+			set { Template.ProcSpellID = value; }
+		}
+
+		public ushort ProcSpellID1
+		{
+			get { return Template.ProcSpellID1; }
+			set { Template.ProcSpellID1 = value; }
+		}
+
+		public byte Object_Type
+		{
+			get { return Template.Object_Type; }
+			set { Template.Object_Type = value; }
+		}
+
+		public byte Type_Damage
+		{
+			get { return Template.Type_Damage; }
+		}
+
+		public byte PackSize
+		{
+			get { return Template.PackSize; }
+		}
+
+		public byte Level
+		{
+			get { return Template.Level; }
+		}
+
+		public int MaxCondition
+		{
+			get { return Template.MaxCondition; }
+		}
+
+		public int MaxDurability
+		{
+			get { return Template.MaxDurability; }
+		}
+
+		public byte Weight
+		{
+			get { return (byte)(Template.Weight * m_count); }
+		}
+
+		public byte DurabilityPercent
+		{
+			get
+			{
+				return (byte)((MaxDurability > 0) ? m_durability * 100 / MaxDurability : 0);
+			}
+		}
+
+		public byte ConditionPercent
+		{
+			get
+			{
+				return (byte)Math.Round((MaxCondition > 0) ? (double)m_condition / MaxCondition * 100 : 0);
+			}
+		}
+
+		public byte Realm
+		{
+			get { return Template.Realm; }
+		}
+
+		public byte MaxCount
+		{
+			get { return Template.MaxCount; }
+		}
+
+		public bool IsDropable
+		{
+			get { return Template.IsDropable; }
+		}
+
+		public bool IsPickable
+		{
+			get { return Template.IsPickable; }
+		}
+
+		public bool IsTradable
+		{
+			get { return Template.IsTradable; }
+		}
+
+		public ushort SpellID
+		{
+			get { return Template.SpellID; }
+			set { Template.SpellID = value; }
+		}
+
+		public ushort SpellID1
+		{
+			get { return Template.SpellID1; }
+			set { Template.SpellID1 = value; }
+		}
+
+		public byte MaxCharges1
+		{
+			get { return Template.MaxCharges1; }
+		}
+
+		public virtual bool IsMagical
+		{
+			get { return MagicalBonuses.Length > 0; }
+		}
+
+		public string AllowedClasses
+		{
+			get { return Template.AllowedClasses; }
+		}
+
+		public bool IsStackable
+		{
+			get
+			{
+				return MaxCount > 1;
+			}
+		}
+
+		public long Value
+		{
+			get
+			{
+				return (((0 * 1000L + Template.Platinum) * 1000L + Template.Gold) * 100L + Template.Silver) * 100L + Template.Copper;
+			}
+		}
+
+		private const string m_vowels = "aeuio";
+
+		/// <summary>
+		/// Returns name with article for nouns
+		/// </summary>
+		/// <param name="article">0=definite, 1=indefinite</param>
+		/// <param name="firstLetterUppercase"></param>
+		/// <returns>name of this object (includes article if needed)</returns>
+		public virtual string GetName(int article, bool firstLetterUppercase)
+		{
+			/*			if(char.IsUpper(Name[0]))
+						{
+							// proper name
+							if(firstLetterUppercase) return "The "+Name; else return "the "+Name;
+						}
+						else // common noun*/
+			if (article == 0)
+			{
+				if (firstLetterUppercase)
+					return "The " + Name;
+				else
+					return "the " + Name;
+			}
+			else
+			{
+				// if first letter is a vowel
+				if (m_vowels.IndexOf(Name[0]) != -1)
+				{
+					if (firstLetterUppercase)
+						return "An " + Name;
+					else
+						return "an " + Name;
+				}
+				else
+				{
+					if (firstLetterUppercase)
+						return "A " + Name;
+					else
+						return "a " + Name;
+				}
+			}
+		}
+
+		#endregion
+		/// <summary>
+		/// Template this inventoryitem is based on
+		/// </summary>
+		[Relation(LocalField = "TemplateID", RemoteField = "TemplateID", AutoLoad = true, AutoDelete = false)]
+		public ItemTemplate Template
+		{
+			get { return m_template; }
+			set { m_template = value; }
+		}
+
+		/// <summary>
+		/// Template poison is based on
+		/// </summary>
+		[Relation(LocalField = "PoisonTemplateID", RemoteField = "TemplateID", AutoLoad = true, AutoDelete = false)]
+		public ItemTemplate PoisonTemplate;
+
+		/// <summary>
+		/// Item specific bonuses from ROG or SpellCrafting
+		/// </summary>
+		[Relation(LocalField = "InventoryItem_ID", RemoteField = "ItemID", AutoLoad = true, AutoDelete = true)]
+		protected ItemBonus[] ItemSpecificBonuses = new ItemBonus[0];
+
+		/// <summary>
+		/// Magical bonuses for item, if no specific item bonuses are set, we use the template bonuses
+		/// </summary>
+		public virtual ItemBonus[] MagicalBonuses
+		{
+			get
+			{
+				if (ItemSpecificBonuses.Length > 0)
+					return ItemSpecificBonuses;
+				return Template.MagicalBonuses;
+			}
+		}
+
+		public ItemBonus AddBonus(byte type, int amount)
+		{
+			ItemBonus bonus = new ItemBonus(ObjectId, type, amount);
+			MagicalBonuses.SetValue(bonus, MagicalBonuses.Length - 1);
+			return bonus;
 		}
 	}
 }

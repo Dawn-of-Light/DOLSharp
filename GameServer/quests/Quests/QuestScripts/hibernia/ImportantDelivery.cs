@@ -276,115 +276,9 @@ namespace DOL.GS.Quests.Hibernia
 				ticketToArdee = CreateTicketTo("Ardee", "hs_tirnambeo_ardee");
 
             recruitsDiary = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "recruits_diary");
-			if (recruitsDiary == null)
-			{
-				recruitsDiary = new ItemTemplate();
-				recruitsDiary.Name = "Recruits Diary";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + recruitsDiary.Name + " , creating it ...");
-				recruitsDiary.Weight = 3;
-				recruitsDiary.Model = 500;
-				recruitsDiary.Object_Type = (int)eObjectType.GenericItem;
-				recruitsDiary.Id_nb = "recruits_diary";
-				recruitsDiary.IsPickable = true;
-				recruitsDiary.IsDropable = false;
-
-                if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(recruitsDiary);
-			}
-
 			sackOfSupplies = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sack_of_supplies");
-			if (sackOfSupplies == null)
-			{
-				sackOfSupplies = new ItemTemplate();
-				sackOfSupplies.Name = "Sack of Supplies";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + sackOfSupplies.Name + " , creating it ...");
-
-				sackOfSupplies.Weight = 10;
-				sackOfSupplies.Model = 488;
-
-				sackOfSupplies.Object_Type = (int) eObjectType.GenericItem;
-
-				sackOfSupplies.Id_nb = "sack_of_supplies";
-				sackOfSupplies.IsPickable = true;
-				sackOfSupplies.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(sackOfSupplies);
-			}
-
 			crateOfVegetables = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "crate_of_vegetables");
-			if (crateOfVegetables == null)
-			{
-				crateOfVegetables = new ItemTemplate();
-				crateOfVegetables.Name = "Crate of Vegetables";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + crateOfVegetables.Name + " , creating it ...");
-
-				crateOfVegetables.Weight = 15;
-				crateOfVegetables.Model = 602;
-
-				crateOfVegetables.Object_Type = (int) eObjectType.GenericItem;
-
-				crateOfVegetables.Id_nb = "crate_of_vegetables";
-				crateOfVegetables.IsPickable = true;
-				crateOfVegetables.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(crateOfVegetables);
-			}
-
-			// item db check
 			recruitsCloak = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_cloak_hib");
-			if (recruitsCloak == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Recruit's Cloak, creating it ...");
-				recruitsCloak = new ItemTemplate();
-				recruitsCloak.Name = "Recruit's Cloak (Hib)";
-				recruitsCloak.Level = 3;
-
-				recruitsCloak.Weight = 3;
-				recruitsCloak.Model = 57;
-
-				recruitsCloak.Object_Type = (int) eObjectType.Cloth;
-				recruitsCloak.Item_Type = (int) eEquipmentItems.CLOAK;
-				recruitsCloak.Id_nb = "recruits_cloak_hib";
-				recruitsCloak.Gold = 0;
-				recruitsCloak.Silver = 1;
-				recruitsCloak.Copper = 0;
-				recruitsCloak.IsPickable = true;
-				recruitsCloak.IsDropable = true;
-				recruitsCloak.Color = 69;
-
-				recruitsCloak.Bonus = 1; // default bonus
-
-				recruitsCloak.Bonus1 = 1;
-				recruitsCloak.Bonus1Type = (int) eStat.CON;
-
-				recruitsCloak.Bonus2 = 1;
-				recruitsCloak.Bonus2Type = (int) eResist.Slash;
-
-				recruitsCloak.Quality = 100;
-				recruitsCloak.Condition = 1000;
-				recruitsCloak.MaxCondition = 1000;
-				recruitsCloak.Durability = 1000;
-				recruitsCloak.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsCloak);
-			}
-
 			#endregion
 
 			/* Now we add some hooks to the npc we found.
@@ -817,7 +711,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (Step == 3 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == rumdor.Name && gArgs.Item.Id_nb == ticketToTirnamBeo.Id_nb)
+				if (gArgs.Target.Name == rumdor.Name && gArgs.Item.TemplateID == ticketToTirnamBeo.TemplateID)
 				{
 					rumdor.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.Notify.RentingHorse", player.Name));
 					Step = 4;
@@ -828,7 +722,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (Step >= 3 && Step <= 4 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == aethic.Name && gArgs.Item.Id_nb == sackOfSupplies.Id_nb)
+				if (gArgs.Target.Name == aethic.Name && gArgs.Item.TemplateID == sackOfSupplies.TemplateID)
 				{
 					aethic.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.Notify.Supplies", player.Name));
 					RemoveItem(aethic, player, sackOfSupplies);
@@ -840,7 +734,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (Step == 6 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == truichon.Name && gArgs.Item.Id_nb == ticketToArdee.Id_nb)
+				if (gArgs.Target.Name == truichon.Name && gArgs.Item.TemplateID == ticketToArdee.TemplateID)
 				{
 					Step = 7;
 					return;
@@ -850,7 +744,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (Step >= 6 && Step <= 7 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == freagus.Name && gArgs.Item.Id_nb == crateOfVegetables.Id_nb)
+				if (gArgs.Target.Name == freagus.Name && gArgs.Item.TemplateID == crateOfVegetables.TemplateID)
 				{
 					freagus.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ImportantDelivery.Notify.Vegetables"));
 					RemoveItem(freagus, player, crateOfVegetables);

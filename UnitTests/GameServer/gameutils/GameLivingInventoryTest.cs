@@ -44,7 +44,7 @@ namespace DOL.Tests
 
 			ItemTemplate template = new ItemTemplate();
 			Random rand = new Random();
-			template.Id_nb = "blankItem" + rand.Next().ToString();
+			template.TemplateID = "blankItem" + rand.Next().ToString();
 			template.Name = "a blank item";
 			template.MaxCount = 10;
 			if (template == null)

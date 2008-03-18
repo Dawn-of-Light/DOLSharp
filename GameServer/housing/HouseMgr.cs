@@ -436,7 +436,7 @@ namespace DOL.GS.Housing
 				RemoveHouse(h);
 		}
 
-		internal static void SpecialBuy(GamePlayer gamePlayer, ushort item_slot, byte item_count, byte menu_id)
+		internal static void SpecialBuy(GamePlayer gamePlayer, byte item_slot, byte item_count, byte menu_id)
 		{
 			MerchantTradeItems items = null;
 

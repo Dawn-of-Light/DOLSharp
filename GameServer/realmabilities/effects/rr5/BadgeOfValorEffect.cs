@@ -57,7 +57,7 @@ namespace DOL.GS.Effects
             if (armor == null || armor.SPD_ABS == 0)
                 return;
             //cap at 50%
-            int bonusPercent = Math.Min(armor.SPD_ABS,50);
+            int bonusPercent = Math.Min(armor.SPD_ABS,(byte)50);
                         
 
             //add 2times percentual of abs, one time will be substracted later

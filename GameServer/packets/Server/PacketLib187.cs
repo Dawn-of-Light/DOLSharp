@@ -115,7 +115,7 @@ namespace DOL.GS.PacketHandler
 					value2 = count; // Count
 					break;
 				case (int)eObjectType.Instrument:
-					value1 = (template.DPS_AF == 2 ? 0 : template.DPS_AF);
+					value1 = (template.DPS_AF == 2 ? (byte)0 : template.DPS_AF);
 					value2 = 0;
 					break;
 				case (int)eObjectType.Shield:
@@ -153,20 +153,17 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte((byte)(template.DPS_AF));
 			else
 				pak.WriteByte((byte)(template.Hand << 6));
-			pak.WriteByte((byte)((template.Type_Damage > 3 
+			pak.WriteByte((byte)((template.Type_Damage > 3
 				? 0
 				: template.Type_Damage << 6) | template.Object_Type));
 			pak.WriteShort((ushort)template.Weight);
-			pak.WriteByte(template.ConditionPercent); 
-			pak.WriteByte(template.DurabilityPercent); 
+			pak.WriteByte(template.ConditionPercent);
+			pak.WriteByte(template.DurabilityPercent);
 			pak.WriteByte((byte)template.Quality);
 			pak.WriteByte((byte)template.Bonus);
 			pak.WriteShort((ushort)template.Model);
 			pak.WriteByte((byte)template.Extension);
-			if (template.Emblem != 0)
-				pak.WriteShort((ushort)template.Emblem);
-			else
-				pak.WriteShort((ushort)template.Color);
+			pak.WriteShort((ushort)template.Color);
 			pak.WriteShort((ushort)template.Effect);
 			if (count > 1)
 				pak.WritePascalString(String.Format("{0} {1}", count, template.Name));

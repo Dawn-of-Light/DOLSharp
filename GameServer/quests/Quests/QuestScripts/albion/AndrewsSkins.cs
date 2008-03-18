@@ -263,118 +263,9 @@ namespace DOL.GS.Quests.Albion
 			#endregion
 			
 			#region defineItems
-
-			// item db check
 			bundleOfBearSkins = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "bundle_of_bear_skins");
-			if (bundleOfBearSkins == null)
-			{
-				bundleOfBearSkins = new ItemTemplate();
-				bundleOfBearSkins.Name = "Bundle of Bear Skins";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find "+bundleOfBearSkins.Name+", creating it ...");
-				bundleOfBearSkins.Level = 0;
-				bundleOfBearSkins.Weight = 0;
-				bundleOfBearSkins.Model = 100;
-
-				bundleOfBearSkins.Object_Type = (int) eObjectType.GenericItem;
-				bundleOfBearSkins.Id_nb = "bundle_of_bear_skins";
-				bundleOfBearSkins.Gold = 0;
-				bundleOfBearSkins.Silver = 0;
-				bundleOfBearSkins.Copper = 0;
-				bundleOfBearSkins.IsPickable = false;
-				bundleOfBearSkins.IsDropable = false;
-				
-				bundleOfBearSkins.Quality = 100;
-				bundleOfBearSkins.Condition = 1000;
-				bundleOfBearSkins.MaxCondition = 1000;
-				bundleOfBearSkins.Durability = 1000;
-				bundleOfBearSkins.MaxDurability = 1000;
-
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(bundleOfBearSkins);
-			}
-
-			// item db check
 			spoolOfLeatherworkingThread = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "spool_of_leatherworking_thread");
-			if (spoolOfLeatherworkingThread == null)
-			{
-				spoolOfLeatherworkingThread = new ItemTemplate();
-				spoolOfLeatherworkingThread.Name = "Spool of Leatherworking Thread";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find "+spoolOfLeatherworkingThread.Name+", creating it ...");
-				spoolOfLeatherworkingThread.Level = 0;
-				spoolOfLeatherworkingThread.Weight = 0;
-				spoolOfLeatherworkingThread.Model = 537;
-
-				spoolOfLeatherworkingThread.Object_Type = (int) eObjectType.GenericItem;
-				spoolOfLeatherworkingThread.Id_nb = "spool_of_leatherworking_thread";
-				spoolOfLeatherworkingThread.Gold = 0;
-				spoolOfLeatherworkingThread.Silver = 0;
-				spoolOfLeatherworkingThread.Copper = 0;
-				spoolOfLeatherworkingThread.IsPickable = false;
-				spoolOfLeatherworkingThread.IsDropable = false;
-
-				spoolOfLeatherworkingThread.Quality = 100;
-				spoolOfLeatherworkingThread.Condition = 1000;
-				spoolOfLeatherworkingThread.MaxCondition = 1000;
-				spoolOfLeatherworkingThread.Durability = 1000;
-				spoolOfLeatherworkingThread.MaxDurability = 1000;
-
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(spoolOfLeatherworkingThread);
-			}
-
-			// item db check
 			chokerOfTheBear = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "choker_of_the_bear");
-			if (chokerOfTheBear == null)
-			{
-				chokerOfTheBear = new ItemTemplate();
-				chokerOfTheBear.Name = "Choker of the Bear";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find "+chokerOfTheBear.Name+", creating it ...");
-				
-				chokerOfTheBear.Level = 5;
-				chokerOfTheBear.Weight = 6;
-				chokerOfTheBear.Model = 101;
-
-				chokerOfTheBear.Object_Type = (int) eObjectType.Magical;
-				chokerOfTheBear.Item_Type = (int) eEquipmentItems.NECK;
-				chokerOfTheBear.Id_nb = "choker_of_the_bear";
-
-				chokerOfTheBear.Gold = 0;
-				chokerOfTheBear.Silver = 0;
-				chokerOfTheBear.Copper = 30;
-				chokerOfTheBear.IsPickable = true;
-				chokerOfTheBear.IsDropable = true;
-
-				chokerOfTheBear.Bonus = 1;
-				chokerOfTheBear.Bonus1Type = (int)eProperty.Strength;
-				chokerOfTheBear.Bonus1 = 4;
-				chokerOfTheBear.Bonus2Type = (int)eProperty.Resist_Thrust;
-				chokerOfTheBear.Bonus2 = 1;
-
-				chokerOfTheBear.Quality = 100;
-				chokerOfTheBear.Condition = 1000;
-				chokerOfTheBear.MaxCondition = 1000;
-				chokerOfTheBear.Durability = 1000;
-				chokerOfTheBear.MaxDurability = 1000;
-
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(chokerOfTheBear);
-			}
-
 			#endregion
 
 			/* Now we add some hooks to the npc we found.
@@ -765,7 +656,7 @@ namespace DOL.GS.Quests.Albion
 				if(Step == 1)
 				{
 					GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-					if (gArgs.Target.Name == georNadren.Name && gArgs.Item.Id_nb == bundleOfBearSkins.Id_nb)
+					if (gArgs.Target.Name == georNadren.Name && gArgs.Item.TemplateID == bundleOfBearSkins.TemplateID)
 					{
 						RemoveItem(georNadren, m_questPlayer, bundleOfBearSkins);
 
@@ -779,7 +670,7 @@ namespace DOL.GS.Quests.Albion
 				else if(Step == 3)
 				{
 					GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-					if (gArgs.Target.Name == georNadren.Name && gArgs.Item.Id_nb == spoolOfLeatherworkingThread.Id_nb)
+					if (gArgs.Target.Name == georNadren.Name && gArgs.Item.TemplateID == spoolOfLeatherworkingThread.TemplateID)
 					{
 						RemoveItem(georNadren, m_questPlayer, spoolOfLeatherworkingThread);
 

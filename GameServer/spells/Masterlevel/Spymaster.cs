@@ -385,13 +385,7 @@ namespace DOL.GS.Spells
             ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "Meschgift");
             if (template != null)
             {
-                item = new InventoryItem();
-                item.CopyFrom(template);
-                if (item.IsStackable)
-                {
-                    item.Count = 1;
-                    item.Weight = item.Count * item.Weight;
-                }
+                item = new InventoryItem(template);
             }
         }
     }

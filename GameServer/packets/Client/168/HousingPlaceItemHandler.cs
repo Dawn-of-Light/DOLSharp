@@ -130,7 +130,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			if (orgitem.Object_Type == 49) // Garden items 
 				method = 1;
-			else if (orgitem.Id_nb == "porch_deed" || orgitem.Id_nb == "porch_remove_deed")
+			else if (orgitem.TemplateID == "porch_deed" || orgitem.TemplateID == "porch_remove_deed")
 				method = 4;
 			else if (orgitem.Object_Type == 50) // Indoor wall items
 				method = 2;
@@ -170,7 +170,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 
                     OutdoorItem oitem = new OutdoorItem();
-                    oitem.BaseItem = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), orgitem.Id_nb);
+                    oitem.BaseItem = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), orgitem.TemplateID);
                     oitem.Model = orgitem.Model;
                     oitem.Position = Convert.ToByte(position);
 					oitem.Rotation = Convert.ToByte(rotation);
@@ -245,7 +245,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//its a housing item, so lets take it!
 						client.Player.Inventory.RemoveItem(orgitem);
 						//set right base item, so we can recreate it on take.
-						iitem.BaseItem = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), orgitem.Id_nb);
+						iitem.BaseItem = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), orgitem.TemplateID);
 					}
 
 					DBHouseIndoorItem idbitem = iitem.CreateDBIndoorItem(housenumber);
@@ -275,7 +275,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                             client.Out.SendInventorySlotsUpdate(new int[] { slot });
                             return 1;
                         }
-                        switch (orgitem.Id_nb)
+                        switch (orgitem.TemplateID)
                         {
                             case "porch_deed":
                                 if (house.EditPorch(true))
@@ -322,7 +322,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                         {
                             DBHousepointItem point = new DBHousepointItem();
                             point.HouseID = house.HouseNumber;
-                            point.ItemTemplateID = orgitem.Id_nb;
+                            point.ItemTemplateID = orgitem.TemplateID;
                             point.Position = (uint)position;
 
                             // If we already have soemthing here, do not place more
@@ -335,7 +335,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                                 }
                             }
                             GameServer.Database.AddNewObject(point);
-                            GameObject obj = house.FillHookpoint(orgitem, (uint)position, orgitem.Id_nb);
+                            GameObject obj = house.FillHookpoint(orgitem.Template, (uint)position, orgitem.TemplateID);
                             house.HousepointItems[point.Position] = point;
                             client.Player.Inventory.RemoveItem(orgitem);
                             client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointAdded"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -392,7 +392,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						client.Out.SendInventorySlotsUpdate(new int[] { slot });
 						return 1;
 					}
-					GameHouseVault houseVault = new GameHouseVault(orgitem, vaultIndex);
+					GameHouseVault houseVault = new GameHouseVault(orgitem.Template, vaultIndex);
 					houseVault.Attach(house, (uint)position, (ushort)((client.Player.Heading + 2048) % 4096));
 					client.Player.Inventory.RemoveItem(orgitem);
 					house.SaveIntoDatabase();

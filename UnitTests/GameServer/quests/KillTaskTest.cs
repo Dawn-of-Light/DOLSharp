@@ -63,8 +63,11 @@ namespace DOL.GS.Quests.Tests
 				Console.WriteLine(""+ task.Description);
 
 				// Check Notify Event handling
-				InventoryItem item = new InventoryItem();
-				item.Name = task.ItemName;
+				string id = task.ItemName;
+				id = task.ItemName.Replace(' ','_');
+				id = task.ItemName.ToLower();
+				ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), id);
+				InventoryItem item = new InventoryItem(template);
 
 				GameNPC mob = new GameNPC();
 				mob.Name = task.MobName;

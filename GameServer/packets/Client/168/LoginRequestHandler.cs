@@ -181,33 +181,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						playerAccount = (Account)GameServer.Database.FindObjectByKey(typeof(Account), userName);
 
-						//if we cant find the account, lets check the archive
-						if (playerAccount == null)
-						{
-							log.Debug("Cannot find account in normal table, trying archive table");
-							playerAccount = (AccountArchive)GameServer.Database.FindObjectByKey(typeof(AccountArchive), userName);
-							//if we found the account in the archive, reactivate it
-							if (playerAccount != null)
-							{
-								log.Debug("Reactivating account " + playerAccount.Name + "...");
-								GameServer.Database.MoveObject(typeof(Account), typeof(AccountArchive), "WHERE `Name` = '" + GameServer.Database.Escape(playerAccount.Name) + "'");
-
-								log.Debug("Reactivating characters for " + playerAccount.Name + "...");
-								GameServer.Database.MoveObject(typeof(Character), typeof(CharacterArchive), "WHERE `AccountName` = '" + GameServer.Database.Escape(playerAccount.Name) + "'");
-
-								log.Debug("Reactivating inventory for " + playerAccount.Name + "...");
-								Character[] chars = (Character[])GameServer.Database.SelectObjects(typeof(Character), "`AccountName` = '" + GameServer.Database.Escape(playerAccount.Name) + "'");
-								foreach (Character c in chars)
-								{
-									GameServer.Database.MoveObject(typeof(InventoryItem), typeof(InventoryItemArchive), "WHERE `OwnerID` = '" + c.ObjectId + "'");
-								}
-
-								log.Debug("Finished reactivating account " + playerAccount.Name);
-
-								playerAccount = (Account)GameServer.Database.FindObjectByKey(typeof(Account), userName);
-							}
-						}
-
 						client.PingTime = DateTime.Now.Ticks;
 
 						if (playerAccount == null)

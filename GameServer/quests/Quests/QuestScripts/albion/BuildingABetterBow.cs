@@ -191,7 +191,7 @@ namespace DOL.GS.Quests.Albion
 				wellPreservedBones.Model = 497;
 				
 				wellPreservedBones.Object_Type = (int) eObjectType.GenericItem;
-				wellPreservedBones.Id_nb = "well_preserved_bone";
+				wellPreservedBones.TemplateID = "well_preserved_bone";
 				wellPreservedBones.Gold = 0;
 				wellPreservedBones.Silver = 0;
 				wellPreservedBones.Copper = 0;
@@ -226,7 +226,7 @@ namespace DOL.GS.Quests.Albion
 				twoWellPreservedBones.Model = 497;
 				
 				twoWellPreservedBones.Object_Type = (int) eObjectType.GenericItem;
-				twoWellPreservedBones.Id_nb = "two_well_preserved_bones";
+				twoWellPreservedBones.TemplateID = "two_well_preserved_bones";
 				twoWellPreservedBones.Gold = 0;
 				twoWellPreservedBones.Silver = 0;
 				twoWellPreservedBones.Copper = 0;
@@ -556,7 +556,7 @@ namespace DOL.GS.Quests.Albion
 				if(Step == 4)
 				{
 					GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-					if (gArgs.Target.Name == elvarIronhand.Name && gArgs.Item.Id_nb == twoWellPreservedBones.Id_nb)
+					if (gArgs.Target.Name == elvarIronhand.Name && gArgs.Item.TemplateID == twoWellPreservedBones.TemplateID)
 					{
 						RemoveItem(elvarIronhand, m_questPlayer, twoWellPreservedBones);
 

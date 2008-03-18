@@ -252,8 +252,8 @@ using DOL.AI.Brain;
 				snakevenom.Weight = 1;
 				snakevenom.Model = 488;
 				snakevenom.Object_Type = 46;
-				snakevenom.Item_Type = -1;
-				snakevenom.Id_nb = "snakevenom";
+				snakevenom.Item_Type = 0;
+				snakevenom.TemplateID = "snakevenom";
 				snakevenom.Hand = 0;
 				snakevenom.Platinum = 0;
 				snakevenom.Gold = 0;
@@ -264,31 +264,8 @@ using DOL.AI.Brain;
 				snakevenom.IsTradable = true;
 				snakevenom.CanDropAsLoot = true;
 				snakevenom.Color = 0;
-				snakevenom.Bonus = 0; // default bonus				
-				snakevenom.Bonus1 = 0;
-				snakevenom.Bonus1Type = (int) 0;
-				snakevenom.Bonus2 = 0;
-				snakevenom.Bonus2Type = (int) 0;
-				snakevenom.Bonus3 = 0;
-				snakevenom.Bonus3Type = (int) 0;
-				snakevenom.Bonus4 = 0;
-				snakevenom.Bonus4Type = (int) 0;
-				snakevenom.Bonus5 = 0;
-				snakevenom.Bonus5Type = (int) 0;
-				snakevenom.Bonus6 = 0;
-				snakevenom.Bonus6Type = (int) 0;
-				snakevenom.Bonus7 = 0;
-				snakevenom.Bonus7Type = (int) 0;
-				snakevenom.Bonus8 = 0;
-				snakevenom.Bonus8Type = (int) 0;
-				snakevenom.Bonus9 = 0;
-				snakevenom.Bonus9Type = (int) 0;
-				snakevenom.Bonus10 = 0;
-				snakevenom.Bonus10Type = (int) 0;
-				snakevenom.ExtraBonus = 0;
-				snakevenom.ExtraBonusType = (int) 0;
+				snakevenom.Bonus = 0; // default bonus
 				snakevenom.Effect = 0;
-				snakevenom.Emblem = 0;
 				snakevenom.Charges = 0;
 				snakevenom.MaxCharges = 0;
 				snakevenom.SpellID = 0;
@@ -303,13 +280,6 @@ using DOL.AI.Brain;
 				snakevenom.MaxCondition = 100;
 				snakevenom.Durability = 100;
 				snakevenom.MaxDurability = 100;
-				snakevenom.PoisonCharges = 0;
-				snakevenom.PoisonMaxCharges = 0;
-				snakevenom.PoisonSpellID = 0;
-				snakevenom.ProcSpellID1 = 0;
-				snakevenom.SpellID1 = 0;
-				snakevenom.MaxCharges1 = 0;
-				snakevenom.Charges1 = 0;
 				
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following

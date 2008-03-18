@@ -49,7 +49,7 @@ namespace DOL.GS.Behaviour.Actions
             ItemTemplate newItem = Q;
 
             //TODO: what about stacked items???
-            if (player.Inventory.RemoveTemplate(oldItem.Id_nb, 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+            if (player.Inventory.RemoveTemplate(oldItem.TemplateID, 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
             {
                 InventoryItem inventoryItem = new InventoryItem(newItem);
                 player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, inventoryItem);

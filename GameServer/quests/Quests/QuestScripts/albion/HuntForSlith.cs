@@ -182,46 +182,7 @@ namespace DOL.GS.Quests.Albion
 			#endregion
 
 			#region defineItems
-
-			// item db check
 			slithsTail = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sliths_tail");
-			if (slithsTail == null)
-			{
-				slithsTail = new ItemTemplate();
-				slithsTail.Name = "Slith's Tail";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find "+slithsTail.Name+", creating it ...");
-				
-				slithsTail.Level = 7;
-				slithsTail.Weight = 10;
-				slithsTail.Model = 515;
-				
-				slithsTail.Object_Type = (int) eObjectType.Magical;
-				slithsTail.Item_Type = (int) eEquipmentItems.L_RING;
-				slithsTail.Id_nb = "sliths_tail";
-				slithsTail.Gold = 0;
-				slithsTail.Silver = 0;
-				slithsTail.Copper = 30;
-				slithsTail.IsPickable = true;
-				slithsTail.IsDropable = true;
-
-				slithsTail.Bonus1 = 3;
-				slithsTail.Bonus1Type = (int)eProperty.Dexterity;
-				
-				slithsTail.Quality = 100;
-				slithsTail.Condition = 1000;
-				slithsTail.MaxCondition = 1000;
-				slithsTail.Durability = 1000;
-				slithsTail.MaxDurability = 1000;
-
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(slithsTail);
-			}
-
 			#endregion
 
 

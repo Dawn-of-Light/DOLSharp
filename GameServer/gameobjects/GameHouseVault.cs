@@ -58,18 +58,18 @@ namespace DOL.GS
 		/// Create a new house vault.
 		/// </summary>
 		/// <param name="vaultIndex"></param>
-		public GameHouseVault(ItemTemplate itemTemplate, int vaultIndex)
+		public GameHouseVault(ItemTemplate template, int vaultIndex)
 		{
 			if (vaultIndex < 0 || vaultIndex > 3)
 				throw new ArgumentOutOfRangeException();
 
-			if (itemTemplate == null)
+			if (template == null)
 				throw new ArgumentNullException();
 
-			Name = itemTemplate.Name;
-			Model = (ushort)(itemTemplate.Model);
+			Name = template.Name;
+			Model = template.Model;
 
-			m_templateID = itemTemplate.Id_nb;
+			m_templateID = template.TemplateID;
 			m_vaultIndex = vaultIndex;
 		}
 
@@ -258,9 +258,9 @@ namespace DOL.GS
 			}
 
 			fromItem.OwnerID = (HouseMgr.GetOwners(CurrentHouse.DatabaseItem)[0] as Character).ObjectId;
-			fromItem.SlotPosition = (int)(toSlot) -
-				(int)(eInventorySlot.HousingInventory_First) +
-				FirstSlot;
+			fromItem.SlotPosition = (byte)((byte)toSlot -
+				(byte)eInventorySlot.HousingInventory_First +
+				FirstSlot);
 			GameServer.Database.AddNewObject(fromItem);
 
 			updateItems.Add((int)toSlot, fromItem);
@@ -293,9 +293,9 @@ namespace DOL.GS
 				GameServer.Database.SaveObject(toItem);
 			}
 
-			fromItem.SlotPosition = (int)(toSlot) -
-				(int)(eInventorySlot.HousingInventory_First) +
-				FirstSlot;
+			fromItem.SlotPosition = (byte)((byte)toSlot -
+				(byte)eInventorySlot.HousingInventory_First +
+				FirstSlot);
 			GameServer.Database.SaveObject(fromItem);
 
 			updateItems.Add((int)fromSlot, toItem);

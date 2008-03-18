@@ -265,103 +265,11 @@ namespace DOL.GS.Quests.Midgard
 			#endregion
 
 			#region defineItems
-
 			ticketToHaggerfel = CreateTicketTo("ticket to Haggerfel", "");
 			ticketToVasudheim = CreateTicketTo("ticket to Vasudheim", "");
-
-
 			sackOfSupplies = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sack_of_supplies");
-			if (sackOfSupplies == null)
-			{
-				sackOfSupplies = new ItemTemplate();
-				sackOfSupplies.Name = "Sack of Supplies";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + sackOfSupplies.Name + " , creating it ...");
-
-				sackOfSupplies.Weight = 10;
-				sackOfSupplies.Model = 488;
-
-				sackOfSupplies.Object_Type = (int) eObjectType.GenericItem;
-
-				sackOfSupplies.Id_nb = "sack_of_supplies";
-				sackOfSupplies.IsPickable = true;
-				sackOfSupplies.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(sackOfSupplies);
-			}
-
 			crateOfVegetables = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "crate_of_vegetables");
-			if (crateOfVegetables == null)
-			{
-				crateOfVegetables = new ItemTemplate();
-				crateOfVegetables.Name = "Crate of Vegetables";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + crateOfVegetables.Name + " , creating it ...");
-
-				crateOfVegetables.Weight = 15;
-				crateOfVegetables.Model = 602;
-
-				crateOfVegetables.Object_Type = (int) eObjectType.GenericItem;
-
-				crateOfVegetables.Id_nb = "crate_of_vegetables";
-				crateOfVegetables.IsPickable = true;
-				crateOfVegetables.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(crateOfVegetables);
-			}
-
-			// item db check
 			recruitsCloak = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_cloak_mid");
-			if (recruitsCloak == null)
-			{
-				recruitsCloak = new ItemTemplate();
-				recruitsCloak.Name = "Recruit's Cloak (Mid)";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + recruitsCloak.Name + ", creating it ...");
-				recruitsCloak.Level = 3;
-
-				recruitsCloak.Weight = 3;
-				recruitsCloak.Model = 57;
-
-				recruitsCloak.Object_Type = (int) eObjectType.Cloth;
-				recruitsCloak.Item_Type = (int) eEquipmentItems.CLOAK;
-				recruitsCloak.Id_nb = "recruits_cloak_mid";
-				recruitsCloak.Gold = 0;
-				recruitsCloak.Silver = 1;
-				recruitsCloak.Copper = 0;
-				recruitsCloak.IsPickable = true;
-				recruitsCloak.IsDropable = true;
-				recruitsCloak.Color = 44; // brown
-
-				recruitsCloak.Bonus = 1; // default bonus
-
-				recruitsCloak.Bonus1 = 1;
-				recruitsCloak.Bonus1Type = (int) eStat.CON;
-
-				recruitsCloak.Bonus2 = 1;
-				recruitsCloak.Bonus2Type = (int) eResist.Slash;
-
-				recruitsCloak.Quality = 100;
-				recruitsCloak.Condition = 1000;
-				recruitsCloak.MaxCondition = 1000;
-				recruitsCloak.Durability = 1000;
-				recruitsCloak.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsCloak);
-			}
-
 			#endregion
 
 			/* Now we add some hooks to the npc we found.
@@ -785,7 +693,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 3 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == gularg.Name && gArgs.Item.Id_nb == ticketToHaggerfel.Id_nb)
+				if (gArgs.Target.Name == gularg.Name && gArgs.Item.TemplateID == ticketToHaggerfel.TemplateID)
 				{
 					Step = 4;
 					return;
@@ -795,7 +703,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step >= 3 && Step <= 4 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == abohas.Name && gArgs.Item.Id_nb == sackOfSupplies.Id_nb)
+				if (gArgs.Target.Name == abohas.Name && gArgs.Item.TemplateID == sackOfSupplies.TemplateID)
 				{
 					abohas.SayTo(player, "Oh, I see. Yes, from Dalikor. We've been waiting for these supplies for a while. It's good to have them. I don't suppose you're up for one more [errand], are you?");
 					RemoveItem(abohas, player, sackOfSupplies);
@@ -807,7 +715,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step == 6 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == yolafson.Name && gArgs.Item.Id_nb == ticketToVasudheim.Id_nb)
+				if (gArgs.Target.Name == yolafson.Name && gArgs.Item.TemplateID == ticketToVasudheim.TemplateID)
 				{
 					Step = 7;
 					return;
@@ -817,7 +725,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step >= 6 && Step <= 7 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == harlfug.Name && gArgs.Item.Id_nb == crateOfVegetables.Id_nb)
+				if (gArgs.Target.Name == harlfug.Name && gArgs.Item.TemplateID == crateOfVegetables.TemplateID)
 				{
 					harlfug.SayTo(player, "Ah, the vegetables I've been waiting for from Abohas. Thank you for delivering them to me. I couldn't find anyone to look after my stable so I could go and get them. Let me see, I think a [reward] is in order for your hard work.");
 					RemoveItem(harlfug, player, crateOfVegetables);

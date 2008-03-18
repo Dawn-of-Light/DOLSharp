@@ -221,289 +221,13 @@ namespace DOL.GS.Quests.Albion
 			#endregion
 
 			#region defineItems
-
 			spiderSilkenRobe = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "spider_silken_robe");
-			if (spiderSilkenRobe == null)
-			{
-				spiderSilkenRobe = new ItemTemplate();
-				spiderSilkenRobe.Name = "Spider Silken Robe";
-
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + spiderSilkenRobe.Name + ", creating it ...");
-				spiderSilkenRobe.Level = 20;
-				spiderSilkenRobe.Weight = 5;
-				spiderSilkenRobe.Model = 58;
-
-				spiderSilkenRobe.Bonus = 5;
-				spiderSilkenRobe.Bonus1 = 3;
-				spiderSilkenRobe.Bonus1Type = (int) eStat.DEX;
-				;
-
-				spiderSilkenRobe.Bonus2 = 3;
-				spiderSilkenRobe.Bonus2Type = (int) eStat.INT;
-
-				spiderSilkenRobe.Bonus3 = 6;
-				spiderSilkenRobe.Bonus3Type = (int) eProperty.MaxHealth;
-
-				spiderSilkenRobe.DPS_AF = 18;
-				spiderSilkenRobe.SPD_ABS = 0;
-
-				spiderSilkenRobe.Object_Type = (int) eObjectType.Cloth;
-				spiderSilkenRobe.Item_Type = (int) eEquipmentItems.TORSO;
-				spiderSilkenRobe.Id_nb = "spider_silken_robe";
-				spiderSilkenRobe.Gold = 0;
-				spiderSilkenRobe.Silver = 8;
-				spiderSilkenRobe.Copper = 3;
-				spiderSilkenRobe.IsPickable = true;
-				spiderSilkenRobe.IsDropable = true;
-				//spiderSilkenRobe.Color = 44;
-				spiderSilkenRobe.Quality = 100;
-				spiderSilkenRobe.Condition = 1000;
-				spiderSilkenRobe.MaxCondition = 1000;
-				spiderSilkenRobe.Durability = 1000;
-				spiderSilkenRobe.MaxDurability = 1000;
-
-
-				//You don't have to store the created wolfPeltCloak in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(spiderSilkenRobe);
-			}
-
 			ringedSpiderChitinTunic = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ringed_spider_chitin_tunic");
-			if (ringedSpiderChitinTunic == null)
-			{
-				ringedSpiderChitinTunic = new ItemTemplate();
-				ringedSpiderChitinTunic.Name = "Ringed Spider Chitin Tunic";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + ringedSpiderChitinTunic.Name + ", creating it ...");
-
-				ringedSpiderChitinTunic.Level = 17;
-				ringedSpiderChitinTunic.Weight = 80;
-				ringedSpiderChitinTunic.Model = 41;
-
-				ringedSpiderChitinTunic.Bonus = 5;
-				ringedSpiderChitinTunic.Bonus1 = 4;
-				ringedSpiderChitinTunic.Bonus1Type = (int) eStat.STR;
-
-				ringedSpiderChitinTunic.Bonus2 = 3;
-				ringedSpiderChitinTunic.Bonus2Type = (int) eStat.QUI;
-
-				ringedSpiderChitinTunic.Bonus3 = 9;
-				ringedSpiderChitinTunic.Bonus3Type = (int) eProperty.MaxHealth;
-
-				ringedSpiderChitinTunic.DPS_AF = 28;
-				ringedSpiderChitinTunic.SPD_ABS = 27;
-
-				ringedSpiderChitinTunic.Object_Type = (int) eObjectType.Chain;
-				ringedSpiderChitinTunic.Item_Type = (int) eEquipmentItems.TORSO;
-				ringedSpiderChitinTunic.Id_nb = "ringed_spider_chitin_tunic";
-				ringedSpiderChitinTunic.Gold = 0;
-				ringedSpiderChitinTunic.Silver = 9;
-				ringedSpiderChitinTunic.Copper = 3;
-				ringedSpiderChitinTunic.IsPickable = true;
-				ringedSpiderChitinTunic.IsDropable = true;
-
-				ringedSpiderChitinTunic.Color = 45;
-				ringedSpiderChitinTunic.Quality = 100;
-				ringedSpiderChitinTunic.Condition = 1000;
-				ringedSpiderChitinTunic.MaxCondition = 1000;
-				ringedSpiderChitinTunic.Durability = 1000;
-				ringedSpiderChitinTunic.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(ringedSpiderChitinTunic);
-			}
-
 			studdedSpiderEyeVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "studded_spider_eye_vest");
-			if (studdedSpiderEyeVest == null)
-			{
-				studdedSpiderEyeVest = new ItemTemplate();
-				studdedSpiderEyeVest.Name = "Studded Spider Eye Vest";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + studdedSpiderEyeVest.Name + ", creating it ...");
-
-				studdedSpiderEyeVest.Level = 17;
-				studdedSpiderEyeVest.Weight = 60;
-				studdedSpiderEyeVest.Model = 51;
-
-				studdedSpiderEyeVest.Bonus = 5;
-				studdedSpiderEyeVest.Bonus1 = 3;
-				studdedSpiderEyeVest.Bonus1Type = (int) eStat.QUI;
-
-				studdedSpiderEyeVest.Bonus2 = 2;
-				studdedSpiderEyeVest.Bonus2Type = (int) eStat.PIE;
-
-				studdedSpiderEyeVest.Bonus3 = 9;
-				studdedSpiderEyeVest.Bonus3Type = (int) eProperty.MaxHealth;
-
-				studdedSpiderEyeVest.DPS_AF = 28;
-				studdedSpiderEyeVest.SPD_ABS = 19;
-
-				studdedSpiderEyeVest.Object_Type = (int) eObjectType.Studded;
-				studdedSpiderEyeVest.Item_Type = (int) eEquipmentItems.TORSO;
-				studdedSpiderEyeVest.Id_nb = "studded_spider_eye_vest";
-				studdedSpiderEyeVest.Gold = 0;
-				studdedSpiderEyeVest.Silver = 9;
-				studdedSpiderEyeVest.Copper = 3;
-				studdedSpiderEyeVest.IsPickable = true;
-				studdedSpiderEyeVest.IsDropable = true;
-
-				studdedSpiderEyeVest.Color = 45;
-				studdedSpiderEyeVest.Quality = 100;
-				studdedSpiderEyeVest.Condition = 1000;
-				studdedSpiderEyeVest.MaxCondition = 1000;
-				studdedSpiderEyeVest.Durability = 1000;
-				studdedSpiderEyeVest.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(studdedSpiderEyeVest);
-			}
-
 			spiderEmblazonedTunic = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "spider_emblazoned_tunic");
-			if (spiderEmblazonedTunic == null)
-			{
-				spiderEmblazonedTunic = new ItemTemplate();
-				spiderEmblazonedTunic.Name = "Spider Emblazoned Tunic";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + spiderEmblazonedTunic.Name + ", creating it ...");
-				spiderEmblazonedTunic.Level = 17;
-				spiderEmblazonedTunic.Weight = 40;
-				spiderEmblazonedTunic.Model = 31;
-
-				spiderEmblazonedTunic.Bonus = 5;
-				spiderEmblazonedTunic.Bonus1 = 2;
-				spiderEmblazonedTunic.Bonus1Type = (int) eStat.STR;
-
-				spiderEmblazonedTunic.Bonus2 = 3;
-				spiderEmblazonedTunic.Bonus2Type = (int) eStat.PIE;
-
-				spiderEmblazonedTunic.Bonus3 = 9;
-				spiderEmblazonedTunic.Bonus3Type = (int) eProperty.MaxHealth;
-
-				spiderEmblazonedTunic.DPS_AF = 28;
-				spiderEmblazonedTunic.SPD_ABS = 10;
-
-				spiderEmblazonedTunic.Object_Type = (int) eObjectType.Leather;
-				spiderEmblazonedTunic.Item_Type = (int) eEquipmentItems.TORSO;
-				spiderEmblazonedTunic.Id_nb = "spider_emblazoned_tunic";
-				spiderEmblazonedTunic.Gold = 0;
-				spiderEmblazonedTunic.Silver = 9;
-				spiderEmblazonedTunic.Copper = 3;
-				spiderEmblazonedTunic.IsPickable = true;
-				spiderEmblazonedTunic.IsDropable = true;
-
-				spiderEmblazonedTunic.Color = 45;
-				spiderEmblazonedTunic.Quality = 100;
-				spiderEmblazonedTunic.Condition = 1000;
-				spiderEmblazonedTunic.MaxCondition = 1000;
-				spiderEmblazonedTunic.Durability = 1000;
-				spiderEmblazonedTunic.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(spiderEmblazonedTunic);
-			}
-
 			embossedSpiderTunic = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "embossed_spider_tunic");
-			if (embossedSpiderTunic == null)
-			{
-				embossedSpiderTunic = new ItemTemplate();
-				embossedSpiderTunic.Name = "Embossed Spider Tunic";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + embossedSpiderTunic.Name + ", creating it ...");
-
-				embossedSpiderTunic.Level = 17;
-				embossedSpiderTunic.Weight = 40;
-				embossedSpiderTunic.Model = 31;
-
-				embossedSpiderTunic.Bonus = 5;
-				embossedSpiderTunic.Bonus1 = 2;
-				embossedSpiderTunic.Bonus1Type = (int) eStat.STR;
-
-				embossedSpiderTunic.Bonus2 = 2;
-				embossedSpiderTunic.Bonus2Type = (int) eStat.DEX;
-
-				embossedSpiderTunic.Bonus3 = 12;
-				embossedSpiderTunic.Bonus3Type = (int) eProperty.MaxHealth;
-
-				embossedSpiderTunic.DPS_AF = 28;
-				embossedSpiderTunic.SPD_ABS = 10;
-
-				embossedSpiderTunic.Object_Type = (int) eObjectType.Leather;
-				embossedSpiderTunic.Item_Type = (int) eEquipmentItems.TORSO;
-				embossedSpiderTunic.Id_nb = "embossed_spider_tunic";
-				embossedSpiderTunic.Gold = 0;
-				embossedSpiderTunic.Silver = 9;
-				embossedSpiderTunic.Copper = 3;
-				embossedSpiderTunic.IsPickable = true;
-				embossedSpiderTunic.IsDropable = true;
-
-				embossedSpiderTunic.Color = 45;
-				embossedSpiderTunic.Quality = 100;
-				embossedSpiderTunic.Condition = 1000;
-				embossedSpiderTunic.MaxCondition = 1000;
-				embossedSpiderTunic.Durability = 1000;
-				embossedSpiderTunic.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(embossedSpiderTunic);
-			}
-
 			bloatedFang = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "bloated_spider_fang");
-			if (bloatedFang == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find  Bloated spider fang, creating it ...");
-				bloatedFang = new ItemTemplate();
-				bloatedFang.Object_Type = (int) eObjectType.GenericItem;
-				bloatedFang.Weight = 10;
-				bloatedFang.Id_nb = "bloated_spider_fang";
-				bloatedFang.Name = "Bloated spider fang";
-				bloatedFang.Model = 106;
-				bloatedFang.IsDropable = false;
-				bloatedFang.IsPickable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(bloatedFang);
-			}
-
 			spiderChitin = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "arachneida_spider_chitin");
-			if (spiderChitin == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Arachneida's Chitin, creating it ...");
-				spiderChitin = new ItemTemplate();
-				spiderChitin.Object_Type = (int) eObjectType.GenericItem;
-				spiderChitin.Weight = 25;
-				spiderChitin.Id_nb = "arachneida_spider_chitin";
-				spiderChitin.Name = "Arachneida's Chitin";
-				spiderChitin.Model = 108;
-				spiderChitin.IsDropable = false;
-				spiderChitin.IsPickable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(spiderChitin);
-			}
-
 			#endregion
 
 			/* Now we add some hooks to the Sir Quait we found.
@@ -592,9 +316,9 @@ namespace DOL.GS.Quests.Albion
 				else
 				{
 					//If the player is already doing the quest, we ask if he found the fur!
-					if (player.Inventory.GetFirstItemByID(bloatedFang.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != null)
+					if (player.Inventory.GetFirstItemByID(bloatedFang.TemplateID, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != null)
 						kealan.SayTo(player, "Good, you managed to retrieve a bloated spider fang, but did you also slay Arachneida?");
-					else if (player.Inventory.GetFirstItemByID(spiderChitin.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != null)
+					else if (player.Inventory.GetFirstItemByID(spiderChitin.TemplateID, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != null)
 						kealan.SayTo(player, "Ah, I see you killed her, I knew you were other than the rest. Now hand me over the chitin and fang so that I can give you your reward.");
 					else
 						kealan.SayTo(player, "Go now, and bring back her chitin as prof of your success.");
@@ -694,7 +418,7 @@ namespace DOL.GS.Quests.Albion
 				UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
 				InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
-				if (item != null && item.Id_nb == bloatedFang.Id_nb)
+				if (item != null && item.TemplateID == bloatedFang.TemplateID)
 				{
 					if (WorldMgr.GetDistance(player, arachneida) < 500 && !arachneida.IsAlive)
 					{
@@ -857,18 +581,18 @@ namespace DOL.GS.Quests.Albion
 			else if (Step >= 4 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == kealan.Name && (gArgs.Item.Id_nb == bloatedFang.Id_nb || gArgs.Item.Id_nb == spiderChitin.Id_nb))
+				if (gArgs.Target.Name == kealan.Name && (gArgs.Item.TemplateID == bloatedFang.TemplateID || gArgs.Item.TemplateID == spiderChitin.TemplateID))
 				{
 					kealan.TurnTo(m_questPlayer);
 					if (Step == 4)
 					{
 						kealan.SayTo(player, "Very well now hand me over the rest and you will revieve your reward...");
-						RemoveItem(kealan, player, gArgs.Item);
+						RemoveItem(kealan, player, gArgs.Item.Template);
 						Step = 5;
 					}
 					else if (Step == 5)
 					{
-						RemoveItem(kealan, player, gArgs.Item);
+						RemoveItem(kealan, player, gArgs.Item.Template);
 						FinishQuest();
 					}
 					return;

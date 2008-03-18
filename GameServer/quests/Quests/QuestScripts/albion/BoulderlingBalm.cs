@@ -196,7 +196,7 @@ namespace DOL.GS.Quests.Albion
                     log.Warn("Could not find Ludlow Magical Wood, creating it ...");
                 boulderlingRemains = new ItemTemplate();
                 boulderlingRemains.Object_Type = 0;
-                boulderlingRemains.Id_nb = "boulderling_remains";
+                boulderlingRemains.TemplateID = "boulderling_remains";
                 boulderlingRemains.Name = "Boulderling Remains";
                 boulderlingRemains.Level = 1;
                 boulderlingRemains.Model = 110;
@@ -520,7 +520,7 @@ namespace DOL.GS.Quests.Albion
             else if (Step == 4 && e == GamePlayerEvent.GiveItem)
             {
                 GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
-                if (gArgs.Target.Name == brotherMaynard.Name && gArgs.Item.Id_nb == boulderlingRemains.Id_nb)
+                if (gArgs.Target.Name == brotherMaynard.Name && gArgs.Item.TemplateID == boulderlingRemains.TemplateID)
                 {
                     RemoveItem(brotherMaynard, player, boulderlingRemains);
                     brotherMaynard.SayTo(player, "Ah, yes, these will provide quite a lot of powder. May I have the second set of remains?");
@@ -531,7 +531,7 @@ namespace DOL.GS.Quests.Albion
             else if (Step == 5 && e == GamePlayerEvent.GiveItem)
             {
                 GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
-                if (gArgs.Target.Name == brotherMaynard.Name && gArgs.Item.Id_nb == boulderlingRemains.Id_nb)
+                if (gArgs.Target.Name == brotherMaynard.Name && gArgs.Item.TemplateID == boulderlingRemains.TemplateID)
                 {
                     RemoveItem(brotherMaynard, player, boulderlingRemains);
                     brotherMaynard.SayTo(player, "Thank you, "+player.Name+". I should be able to make a lot of hand blam from these remains. It's going to take quite some time to grind them down, so I'd better get to work. Please accept this money as a reward for your help.");

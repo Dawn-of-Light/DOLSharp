@@ -109,9 +109,9 @@ namespace DOL.GS
 		protected long m_bountyPoints;
 
 		/// <summary>
-		/// Stores claimed keep (unique)
+		/// Stores claimed keeps (unique)
 		/// </summary>
-		protected AbstractGameKeep m_claimedKeep;
+		protected List<AbstractGameKeep> m_claimedKeeps;
 
 		protected double m_guildBank;
 		protected bool guildDues;
@@ -315,10 +315,10 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the guild claimed keep
 		/// </summary>
-		public AbstractGameKeep ClaimedKeep
+		public List<AbstractGameKeep> ClaimedKeeps
 		{
-			get { return m_claimedKeep; }
-			set { m_claimedKeep = value; }
+			get { return m_claimedKeeps; }
+			set { m_claimedKeeps = value; }
 		}
 
 		/// <summary>

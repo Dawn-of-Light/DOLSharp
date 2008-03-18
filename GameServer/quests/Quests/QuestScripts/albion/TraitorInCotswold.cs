@@ -175,168 +175,9 @@ namespace DOL.GS.Quests.Albion
 			#endregion
 
 			#region defineItems
-
-			// item db check
-			necklaceOfDoppelganger = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "necklace_of_the_doppelganger");
-			if (necklaceOfDoppelganger == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Necklace of the Doppelganger, creating it ...");
-				necklaceOfDoppelganger = new ItemTemplate();
-				necklaceOfDoppelganger.Name = "Necklace of the Doppelganger";
-				necklaceOfDoppelganger.Level = 2;
-				necklaceOfDoppelganger.Weight = 2;
-				necklaceOfDoppelganger.Model = 101;
-
-				necklaceOfDoppelganger.Object_Type = (int) eObjectType.Magical;
-				necklaceOfDoppelganger.Item_Type = (int) eEquipmentItems.NECK;
-				necklaceOfDoppelganger.Id_nb = "necklace_of_the_doppelganger";
-				necklaceOfDoppelganger.Gold = 0;
-				necklaceOfDoppelganger.Silver = 0;
-				necklaceOfDoppelganger.Copper = 0;
-				necklaceOfDoppelganger.IsPickable = true;
-				necklaceOfDoppelganger.IsDropable = false;
-
-				necklaceOfDoppelganger.Quality = 100;
-				necklaceOfDoppelganger.Condition = 1000;
-				necklaceOfDoppelganger.MaxCondition = 1000;
-				necklaceOfDoppelganger.Durability = 1000;
-				necklaceOfDoppelganger.MaxDurability = 1000;
-
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(necklaceOfDoppelganger);
-			}
-
-			// item db check
 			fairyPlans = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ire_fairy_plans");
-			if (fairyPlans == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Ire Fairy Plans, creating it ...");
-				fairyPlans = new ItemTemplate();
-				fairyPlans.Name = "Ire Fairy Plans";
-
-				fairyPlans.Weight = 3;
-				fairyPlans.Model = 498;
-
-				fairyPlans.Object_Type = (int) eObjectType.GenericItem;
-
-				fairyPlans.Id_nb = "ire_fairy_plans";
-				fairyPlans.IsPickable = true;
-				fairyPlans.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(fairyPlans);
-			}
-
-			// item db check
 			recruitsBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_boots");
-			if (recruitsBoots == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Recruit's Studded Boots, creating it ...");
-				recruitsBoots = new ItemTemplate();
-				recruitsBoots.Name = "Recruit's Studded Boots";
-				recruitsBoots.Level = 7;
-
-				recruitsBoots.Weight = 24;
-				recruitsBoots.Model = 84; // studded Boots
-
-				recruitsBoots.DPS_AF = 12; // Armour
-				recruitsBoots.SPD_ABS = 19; // Absorption
-
-				recruitsBoots.Object_Type = (int) eObjectType.Studded;
-				recruitsBoots.Item_Type = (int) eEquipmentItems.FEET;
-				recruitsBoots.Id_nb = "recruits_studded_boots";
-				recruitsBoots.Gold = 0;
-				recruitsBoots.Silver = 10;
-				recruitsBoots.Copper = 0;
-				recruitsBoots.IsPickable = true;
-				recruitsBoots.IsDropable = true;
-				recruitsBoots.Color = 9; // red leather
-
-				recruitsBoots.Bonus = 5; // default bonus
-
-				recruitsBoots.Bonus1 = 1;
-				recruitsBoots.Bonus1Type = (int) eStat.STR;
-
-				recruitsBoots.Bonus2 = 3;
-				recruitsBoots.Bonus2Type = (int) eStat.CON;
-
-				recruitsBoots.Bonus3 = 1;
-				recruitsBoots.Bonus3Type = (int) eResist.Spirit;
-
-				recruitsBoots.Quality = 100;
-				recruitsBoots.Condition = 1000;
-				recruitsBoots.MaxCondition = 1000;
-				recruitsBoots.Durability = 1000;
-				recruitsBoots.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsBoots);
-			}
-
-			// item db check
 			recruitsQuiltedBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_boots");
-			if (recruitsQuiltedBoots == null)
-			{
-				recruitsQuiltedBoots = new ItemTemplate();
-				recruitsQuiltedBoots.Name = "Recruit's Quilted Boots";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + recruitsQuiltedBoots.Name + ", creating it ...");
-				recruitsQuiltedBoots.Level = 7;
-
-				recruitsQuiltedBoots.Weight = 8;
-				recruitsQuiltedBoots.Model = 155; // studded Boots
-
-				recruitsQuiltedBoots.DPS_AF = 6; // Armour
-				recruitsQuiltedBoots.SPD_ABS = 0; // Absorption
-
-				recruitsQuiltedBoots.Object_Type = (int) eObjectType.Cloth;
-				recruitsQuiltedBoots.Item_Type = (int) eEquipmentItems.FEET;
-				recruitsQuiltedBoots.Id_nb = "recruits_quilted_boots";
-				recruitsQuiltedBoots.Gold = 0;
-				recruitsQuiltedBoots.Silver = 10;
-				recruitsQuiltedBoots.Copper = 0;
-				recruitsQuiltedBoots.IsPickable = true;
-				recruitsQuiltedBoots.IsDropable = true;
-				recruitsQuiltedBoots.Color = 27; // red leather
-
-				recruitsQuiltedBoots.Bonus = 5; // default bonus
-
-				recruitsQuiltedBoots.Bonus1 = 3;
-				recruitsQuiltedBoots.Bonus1Type = (int) eStat.CON;
-
-
-				recruitsQuiltedBoots.Bonus2 = 1;
-				recruitsQuiltedBoots.Bonus2Type = (int) eStat.STR;
-
-				recruitsQuiltedBoots.Bonus3 = 1;
-				recruitsQuiltedBoots.Bonus3Type = (int) eResist.Spirit;
-
-				recruitsQuiltedBoots.Quality = 100;
-				recruitsQuiltedBoots.Condition = 1000;
-				recruitsQuiltedBoots.MaxCondition = 1000;
-				recruitsQuiltedBoots.Durability = 1000;
-				recruitsQuiltedBoots.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsQuiltedBoots);
-			}
-
 			#endregion
 
 			/* Now we add some hooks to the npc we found.
@@ -445,7 +286,7 @@ namespace DOL.GS.Quests.Albion
 				UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
 				InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
-				if (item != null && item.Id_nb == necklaceOfDoppelganger.Id_nb)
+				if (item != null && item.TemplateID == necklaceOfDoppelganger.TemplateID)
 				{
 					if (WorldMgr.GetDistance(player, felinEnd.X, felinEnd.Y, felinEnd.Z) < 2500)
 					{
@@ -825,7 +666,7 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 4 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == masterFrederick.Name && gArgs.Item.Id_nb == fairyPlans.Id_nb)
+				if (gArgs.Target.Name == masterFrederick.Name && gArgs.Item.TemplateID == fairyPlans.TemplateID)
 				{
 					RemoveItem(masterFrederick, m_questPlayer, fairyPlans);
 

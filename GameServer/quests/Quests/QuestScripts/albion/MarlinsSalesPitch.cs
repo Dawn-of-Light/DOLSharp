@@ -193,7 +193,7 @@ namespace DOL.GS.Quests.Albion
                     log.Warn("Could not find Finely Crafted Drum from a wolf cub, creating it ...");
                 drum = new ItemTemplate();
                 drum.Object_Type = 0;
-                drum.Id_nb = "finely_crafted_drum";
+                drum.TemplateID = "finely_crafted_drum";
                 drum.Name = "Finely Crafted Drum";
                 drum.Level = 1;
                 drum.Model = 2977;
@@ -496,7 +496,7 @@ namespace DOL.GS.Quests.Albion
             else if (Step == 2 && e == GamePlayerEvent.GiveItem)
             {
                 GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
-                if (gArgs.Target.Name == marlinThuler.Name && gArgs.Item.Id_nb == drum.Id_nb)
+                if (gArgs.Target.Name == marlinThuler.Name && gArgs.Item.TemplateID == drum.TemplateID)
                 {
                     RemoveItem(marlinThuler, player, drum);
                     marlinThuler.SayTo(player, "Hallelujah! You found my drum, thank you! I will never be able to fully repay you, but perhaps these coins will at least start to show my appreciation for your service.");

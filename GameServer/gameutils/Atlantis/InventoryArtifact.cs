@@ -43,7 +43,7 @@ namespace DOL.GS
 
 		private String m_artifactID;
 		private int m_artifactLevel;
-		private int[] m_levelRequirements;
+		private ItemBonus[] artifactBonuses;
 
 		/// <summary>
 		/// This constructor shouldn't be called, so we prevent anyone
@@ -58,20 +58,9 @@ namespace DOL.GS
 		public InventoryArtifact(ItemTemplate template)
 			: base(template)
 		{
-			ArtifactID = ArtifactMgr.GetArtifactIDFromItemID(template.Id_nb);
+			ArtifactID = ArtifactMgr.GetArtifactIDFromItemID(template.TemplateID);
 			ArtifactLevel = 0;
-			m_levelRequirements = ArtifactMgr.GetLevelRequirements(ArtifactID);
-
-			for (ArtifactBonus.ID bonusID = ArtifactBonus.ID.Min; bonusID <= ArtifactBonus.ID.Max; ++bonusID)
-			{
-				// Clear all bonuses except the base (L0) bonuses.
-
-				if (m_levelRequirements[(int)bonusID] > 0)
-				{
-					SetBonusType(bonusID, 0);
-					SetBonusAmount(bonusID, 0);
-				}
-			}
+			artifactBonuses = ArtifactMgr.GetArtifactBonuses(this, true);
 		}
 
 		/// <summary>
@@ -79,14 +68,14 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="item"></param>
 		public InventoryArtifact(InventoryItem item)
-			: base(item)
+			: base(item.Template)
 		{
 			if (item != null)
 			{
 				this.ObjectId = item.ObjectId;	// This is the key for the 'inventoryitem' table
-				ArtifactID = ArtifactMgr.GetArtifactIDFromItemID(Id_nb);
+				ArtifactID = ArtifactMgr.GetArtifactIDFromItemID(item.TemplateID);
 				ArtifactLevel = ArtifactMgr.GetCurrentLevel(this);
-				m_levelRequirements = ArtifactMgr.GetLevelRequirements(ArtifactID);
+				artifactBonuses = ArtifactMgr.GetArtifactBonuses(this, true);
 			}
 		}
 
@@ -118,47 +107,13 @@ namespace DOL.GS
 			if (artifactLevel > ArtifactLevel && artifactLevel <= 10)
 			{
 				ArtifactLevel = artifactLevel;
-				if (AddAbilities(player, ArtifactLevel) && player != null)
-					player.Out.SendMessage(String.Format("Your {0} has gained a new ability!", Name),
-						eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-			}
-		}
-
-		/// <summary>
-		/// Add all abilities for this level.
-		/// </summary>
-		/// <param name="artifactLevel">The level to add abilities for.</param>
-		/// <param name="player"></param>
-		/// <returns>True, if artifact gained 1 or more abilities, else false.</returns>
-		private bool AddAbilities(GamePlayer player, int artifactLevel)
-		{
-			ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), 
-				Id_nb);
-
-			if (template == null)
-			{
-				log.Warn(String.Format("Item template missing for artifact '{0}'", Name));
-				return false;
-			}
-
-			bool abilityGained = false;
-
-			for (ArtifactBonus.ID bonusID = ArtifactBonus.ID.Min; bonusID <= ArtifactBonus.ID.Max; ++bonusID)
-			{
-				if (m_levelRequirements[(int)bonusID] == artifactLevel)
+				foreach (ItemBonus bonus in artifactBonuses)
 				{
-					SetBonusType(bonusID, template.GetBonusType(bonusID));
-					SetBonusAmount(bonusID, template.GetBonusAmount(bonusID));
-
-					if (bonusID <= ArtifactBonus.ID.MaxStat)
-						player.Notify(PlayerInventoryEvent.ItemBonusChanged, this,
-							new ItemBonusChangedEventArgs(GetBonusType(bonusID), GetBonusAmount(bonusID)));
-
-					abilityGained = true;
+					if (bonus.BonusLevel == artifactLevel)
+						player.Out.SendMessage(String.Format("Your {0} has gained a new ability!", Name),
+							eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				}
 			}
-
-			return abilityGained;
 		}
 
 		#region Delve
@@ -194,22 +149,24 @@ namespace DOL.GS
 			delve.Add("");
 			delve.Add("Magical Bonuses:");
 
-			for (ArtifactBonus.ID bonusID = ArtifactBonus.ID.MinStat; bonusID <= ArtifactBonus.ID.MaxStat; ++bonusID)
-				DelveMagicalBonus(delve, GetBonusAmount(bonusID), GetBonusType(bonusID),
-					m_levelRequirements[(int)bonusID]);
+			foreach (ItemBonus bonus in MagicalBonusesAll)
+			{
+				DelveMagicalBonus(delve, bonus);
+			}
 
 			delve.Add("");
 
-			for (ArtifactBonus.ID bonusID = ArtifactBonus.ID.MinStat; bonusID <= ArtifactBonus.ID.MaxStat; ++bonusID)
-				DelveBonus(delve, GetBonusAmount(bonusID), GetBonusType(bonusID),
-					m_levelRequirements[(int)bonusID]);
+			foreach (ItemBonus bonus in MagicalBonusesAll)
+			{
+				DelveBonus(delve, bonus);
+			}
 
 			// Spells & Procs
 
-			DelveMagicalAbility(delve, ArtifactBonus.ID.Spell, m_levelRequirements[(int)ArtifactBonus.ID.Spell]);
-			DelveMagicalAbility(delve, ArtifactBonus.ID.ProcSpell, m_levelRequirements[(int)ArtifactBonus.ID.ProcSpell]);
-			DelveMagicalAbility(delve, ArtifactBonus.ID.Spell1, m_levelRequirements[(int)ArtifactBonus.ID.Spell1]);
-			DelveMagicalAbility(delve, ArtifactBonus.ID.ProcSpell1, m_levelRequirements[(int)ArtifactBonus.ID.ProcSpell1]);
+			DelveMagicalAbility(delve, ItemBonus.CHARGE1);
+			DelveMagicalAbility(delve, ItemBonus.PROC1);
+			DelveMagicalAbility(delve, ItemBonus.CHARGE2);
+			DelveMagicalAbility(delve, ItemBonus.PROC2);
 
 			delve.Add("");
 
@@ -243,28 +200,27 @@ namespace DOL.GS
 		/// <param name="bonusAmount"></param>
 		/// <param name="bonusType"></param>
 		/// <param name="levelRequirement"></param>
-		protected virtual void DelveMagicalBonus(List<String> delve, int bonusAmount, int bonusType,
-			int levelRequirement)
+		protected virtual void DelveMagicalBonus(List<String> delve, ItemBonus bonus)
 		{
-			String levelTag = (levelRequirement > 0) 
-				? String.Format("[L{0}]: ", levelRequirement) 
+			String levelTag = (bonus.BonusLevel > 0) 
+				? String.Format("[L{0}]: ", bonus.BonusLevel) 
 				: "";
 
-			if (IsStatBonus(bonusType) || IsSkillBonus(bonusType))
+			if (IsStatBonus(bonus.BonusType) || IsSkillBonus(bonus.BonusType))
 				delve.Add(String.Format("- {0}{1}: {2} pts",
 					levelTag,
-					SkillBase.GetPropertyName((eProperty)bonusType),
-					bonusAmount.ToString("+0;-0;0")));
-			else if (IsResistBonus(bonusType))
+					SkillBase.GetPropertyName((eProperty)bonus.BonusType),
+					bonus.BonusAmount.ToString("+0;-0;0")));
+			else if (IsResistBonus(bonus.BonusType))
 				delve.Add(String.Format("- {0}{1}: {2}%",
 					levelTag,
-					SkillBase.GetPropertyName((eProperty)bonusType),
-					bonusAmount.ToString("+0;-0;0")));
-			else if (bonusType == (int)eProperty.PowerPool)
+					SkillBase.GetPropertyName((eProperty)bonus.BonusType),
+					bonus.BonusAmount.ToString("+0;-0;0")));
+			else if (bonus.BonusType == (int)eProperty.PowerPool)
 				delve.Add(String.Format("- {0}{1}: {2}% of power pool.",
 					levelTag,
-					SkillBase.GetPropertyName((eProperty)bonusType),
-					bonusAmount.ToString("+0;-0;0")));
+					SkillBase.GetPropertyName((eProperty)bonus.BonusType),
+					bonus.BonusAmount.ToString("+0;-0;0")));
 		}
 
 		/// <summary>
@@ -274,26 +230,25 @@ namespace DOL.GS
 		/// <param name="bonusAmount"></param>
 		/// <param name="bonusType"></param>
 		/// <param name="levelRequirement"></param>
-		protected virtual void DelveBonus(List<String> delve, int bonusAmount, int bonusType,
-			int levelRequirement)
+		protected virtual void DelveBonus(List<String> delve, ItemBonus bonus)
 		{
-			if (!IsToABonus(bonusType))
+			if (!IsToABonus(bonus.BonusType))
 				return;
 
-			String levelTag = (levelRequirement > 0)
-				? String.Format("[L{0}]: ", levelRequirement)
+			String levelTag = (bonus.BonusLevel > 0)
+				? String.Format("[L{0}]: ", bonus.BonusLevel)
 				: "";
 
-			if (IsCapIncreaseBonus(bonusType) || bonusType == (int)eProperty.ArmorFactor)
+			if (IsCapIncreaseBonus(bonus.BonusType) || bonus.BonusType == (int)eProperty.ArmorFactor)
 				delve.Add(String.Format("{0}{1}: {2}",
 					levelTag,
-					SkillBase.GetPropertyName((eProperty)bonusType),
-					bonusAmount));
+					SkillBase.GetPropertyName((eProperty)bonus.BonusType),
+					bonus.BonusAmount));
 			else
 				delve.Add(String.Format("{0}{1}: {2}%",
 					levelTag,
-					SkillBase.GetPropertyName((eProperty)bonusType),
-					bonusAmount));
+					SkillBase.GetPropertyName((eProperty)bonus.BonusType),
+					bonus.BonusAmount));
 		}
 
 		/// <summary>
@@ -302,35 +257,43 @@ namespace DOL.GS
 		/// <param name="delve"></param>
 		/// <param name="bonusID"></param>
 		/// <param name="levelRequirement"></param>
-		public virtual void DelveMagicalAbility(List<String> delve, ArtifactBonus.ID bonusID, 
-			int levelRequirement)
+		public virtual void DelveMagicalAbility(List<String> delve, byte bonusType)
 		{
-			String levelTag = (levelRequirement > 0)
-				? String.Format("[L{0}]: ", levelRequirement)
+			//get magical ability
+			ItemBonus b = null;
+			foreach (ItemBonus bonus in artifactBonuses)
+				if (bonus.BonusType == bonusType)
+					b = bonus;
+
+			if (b == null)
+				return;
+
+			String levelTag = (b.BonusLevel > 0)
+				? String.Format("[L{0}]: ", b.BonusLevel)
 				: "";
 
 			bool isProc = false;
 			bool isSecondary = false;
 			int spellID = 0;
 
-			switch (bonusID)
+			switch (b.BonusType)
 			{
-				case ArtifactBonus.ID.Spell:
+				case ItemBonus.CHARGE1:
 					spellID = SpellID;
 					isProc = false;
 					isSecondary = false;
 					break;
-				case ArtifactBonus.ID.Spell1:
+				case ItemBonus.CHARGE2:
 					spellID = SpellID1;
 					isProc = false;
 					isSecondary = true;
 					break;
-				case ArtifactBonus.ID.ProcSpell:
+				case ItemBonus.PROC1:
 					spellID = ProcSpellID;
 					isProc = true;
 					isSecondary = false;
 					break;
-				case ArtifactBonus.ID.ProcSpell1:
+				case ItemBonus.PROC2:
 					spellID = ProcSpellID1;
 					isProc = true;
 					isSecondary = true;
@@ -464,11 +427,20 @@ namespace DOL.GS
 		/// ability.
 		/// </summary>
 		/// <returns></returns>
-		private int GainsNewAbilityAtLevel()
+		private byte GainsNewAbilityAtLevel()
 		{
-			for (ArtifactBonus.ID bonusID = ArtifactBonus.ID.Min; bonusID <= ArtifactBonus.ID.Max; ++bonusID)
-				if (m_levelRequirements[(int)bonusID] > ArtifactLevel)
-					return m_levelRequirements[(int)bonusID];
+			ItemBonus candidate = null;
+			foreach (ItemBonus bonus in artifactBonuses)
+			{
+				if (bonus.BonusLevel > ArtifactLevel)
+				{
+					if (candidate != null && candidate.BonusLevel > bonus.BonusLevel)
+						continue;
+					candidate = bonus;
+				}
+			}
+			if (candidate != null)
+				return candidate.BonusLevel;
 
 			return 10;
 		}
@@ -571,5 +543,15 @@ namespace DOL.GS
 		}
 
 		#endregion
+
+		public override ItemBonus[] MagicalBonuses
+		{
+			get { return ArtifactMgr.GetArtifactBonuses(this, true); }
+		}
+
+		public ItemBonus[] MagicalBonusesAll
+		{
+			get { return ArtifactMgr.GetArtifactBonuses(this, false); }
+		}
 	}
 }

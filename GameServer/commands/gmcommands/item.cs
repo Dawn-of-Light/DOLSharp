@@ -82,6 +82,7 @@ namespace DOL.GS.Commands
 
 				switch (args[1].ToLower())
 				{
+						/*
 					case "blank":
 						{
 							InventoryItem item = new InventoryItem();
@@ -97,7 +98,7 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage("Error in item creation.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 							break;
-						}
+						}*/
                     case "scroll":
                         {
                             //Create an artifact scroll
@@ -134,27 +135,15 @@ namespace DOL.GS.Commands
 								}
 								else
 								{
-									int count = 1;
+									byte count = 1;
 									if (args.Length >= 4)
 									{
-										try
-										{
-											count = Convert.ToInt32(args[3]);
-											if (count < 1)
-												count = 1;
-										}
-										catch (Exception)
-										{
-										}
+										byte.TryParse(args[3], out count);
+										if (count < 1)
+											count = 1;
 									}
 
-									InventoryItem item = new InventoryItem();
-									item.CopyFrom(template);
-									if (item.IsStackable)
-									{
-										item.Count = count;
-										item.Weight = item.Count * item.Weight;
-									}
+									InventoryItem item = new InventoryItem(template, count);
 									if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 									{
 										string countStr = "";
@@ -164,9 +153,10 @@ namespace DOL.GS.Commands
 									}
 								}
 							}
-							catch (Exception)
+							catch (Exception e)
 							{
 								client.Out.SendMessage("Type /item for command overview", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								GameServer.Instance.Logger.Error(e);
 							}
 
 							break;
@@ -200,16 +190,12 @@ namespace DOL.GS.Commands
 							}
 							try
 							{
-								if (Convert.ToInt32(args[2]) < 1)
-								{
-									item.Weight = item.Weight / item.Count;
-									item.Count = 1;
-								}
-								else
-								{
-									item.Weight = Convert.ToInt32(args[2]) * item.Weight / item.Count;
-									item.Count = Convert.ToInt32(args[2]);
-								}
+
+								byte count = 1;
+								byte.TryParse(args[2], out count);
+								if (count < 1)
+									count = 1;
+								item.Count = count;
 								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 								client.Player.UpdateEncumberance();
 							}
@@ -219,6 +205,7 @@ namespace DOL.GS.Commands
 							}
 							break;
 						}
+						/*
 					case "maxcount":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -286,7 +273,7 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage("'/item packsize <amount> [slot #]' to change amount of items sold at once", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 							break;
-						}
+						}*/
 					case "info":
 						{
 							ItemTemplate obj = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), args[2]);
@@ -297,21 +284,21 @@ namespace DOL.GS.Commands
 								return;
 
 							}
-							client.Out.SendMessage("---------------/item technical informations---------", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("Item Template: " + obj.Id_nb, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("--------------------------------------------------------------", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("Item Template: " + obj.TemplateID, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("         Name: " + obj.Name, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("        Level: " + obj.Level, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("       Object: " + GlobalConstants.ObjectTypeToName(obj.Object_Type), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("         Type: " + GlobalConstants.SlotToName(obj.Item_Type), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("        Realm: " + obj.Realm, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("  Value/Price: " + obj.Platinum + "p " + obj.Gold + "g " + obj.Silver + "s " + obj.Copper + "c", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage("  Value/Price: " + Money.GetString(obj.Value), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("       Weight: " + (obj.Weight / 10.0f) + " lbs", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("      Quality: " + obj.Quality + "%", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("   Durability: " + obj.Durability + "/" + obj.MaxDurability + "(max)", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("    Condition: " + obj.Condition + "/" + obj.MaxCondition + "(max)", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("  Is dropable: " + (obj.IsDropable ? "yes" : "no"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							client.Out.SendMessage("  Is pickable: " + (obj.IsPickable ? "yes" : "no"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage(" Is stackable: " + (obj.IsStackable ? "yes" : "no"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							client.Out.SendMessage(" Is stackable: " + (obj.MaxCount > 1 ? "yes" : "no"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							if (GlobalConstants.IsWeapon(obj.Object_Type))
 							{
 								client.Out.SendMessage("         Hand: " + GlobalConstants.ItemHandToName(obj.Hand)+ " (" + obj.Hand + ")", eChatType.CT_System, eChatLoc.CL_PopupWindow);
@@ -345,6 +332,7 @@ namespace DOL.GS.Commands
 							}
 							break;
 						}
+						/*
 					case "model":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -660,7 +648,8 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage("'/item name <Name> <slot #>' to change item name", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 							break;
-						}
+						}*/
+					case "description":
 					case "craftername":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -686,7 +675,7 @@ namespace DOL.GS.Commands
 							}
 							try
 							{
-								item.CrafterName = args[2];
+								item.Description = args[2];
 								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							}
 							catch
@@ -731,6 +720,7 @@ namespace DOL.GS.Commands
 							}
 							break;
 						}
+						/*
 					case "level":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -769,11 +759,11 @@ namespace DOL.GS.Commands
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
 
-							if (args.Length >= 7)
+							if (args.Length >= 6)
 							{
 								try
 								{
-									slot = Convert.ToInt32(args[6]);
+									slot = Convert.ToInt32(args[5]);
 								}
 								catch
 								{
@@ -790,10 +780,9 @@ namespace DOL.GS.Commands
 							}
 							try
 							{
-								item.Platinum = (short)(Convert.ToInt16(args[2]) % 1000);
-								item.Gold = (short)(Convert.ToInt16(args[3]) % 1000);
-								item.Silver = (byte)(Convert.ToByte(args[4]) % 100);
-								item.Copper = (byte)(Convert.ToByte(args[5]) % 100);
+								item.Gold = (short)(Convert.ToInt16(args[2]) % 1000);
+								item.Silver = (byte)(Convert.ToByte(args[3]) % 100);
+								item.Copper = (byte)(Convert.ToByte(args[4]) % 100);
 								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							}
 							catch
@@ -801,7 +790,7 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage("'/item price <gold> <silver> <copper> <slot #>' to change item price", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 							break;
-						}
+						}*/
 					case "condition":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -830,7 +819,7 @@ namespace DOL.GS.Commands
 								int con = Convert.ToInt32(args[2]);
 								int maxcon = Convert.ToInt32(args[3]);
 								item.Condition = con;
-								item.MaxCondition = maxcon;
+								//item.MaxCondition = maxcon;
 								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							}
 							catch
@@ -867,7 +856,7 @@ namespace DOL.GS.Commands
 								int Dur = Convert.ToInt32(args[2]);
 								int MaxDur = Convert.ToInt32(args[3]);
 								item.Durability = Dur;
-								item.MaxDurability = MaxDur;
+								//item.MaxDurability = MaxDur;
 
 								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							}
@@ -903,7 +892,8 @@ namespace DOL.GS.Commands
 
 							try
 							{
-								int Qua = Convert.ToInt32(args[2]);
+								byte Qua = 0;
+								byte.TryParse(args[2], out Qua);
 								item.Quality = Qua;
 
 								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
@@ -939,7 +929,8 @@ namespace DOL.GS.Commands
 							}
 							try
 							{
-								int Bonus = Convert.ToInt32(args[2]);
+								byte Bonus = 0;
+								byte.TryParse(args[2], out Bonus);
 								item.Bonus = Bonus;
 
 								client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
@@ -949,7 +940,7 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage("'/item bonus <Bonus> <slot #>' to change item bonus %", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 							break;
-						}
+						}/*
 					case "mbonus":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -1117,7 +1108,7 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage("'/item weight <Weight> <slot #>' to change item weight", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 							break;
-						}
+						}*/
 					case "dps_af":
 					case "dps":
 					case "af":
@@ -1190,6 +1181,7 @@ namespace DOL.GS.Commands
 							}
 							break;
 						}
+						/*
 					case "isdropable":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -1479,7 +1471,7 @@ namespace DOL.GS.Commands
 							}
 
 							break;
-						}
+						}*/
 					case "templateid":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -1506,7 +1498,7 @@ namespace DOL.GS.Commands
 
 							try
 							{
-								item.Id_nb = args[2];
+								item.TemplateID = args[2];
 							}
 							catch
 							{
@@ -1574,42 +1566,22 @@ namespace DOL.GS.Commands
 								temp = new ItemTemplate();
 							}
 
-							item.Id_nb = name;
+							item.TemplateID = name;
 							temp.Bonus = item.Bonus;
-							temp.Bonus1 = item.Bonus1;
-							temp.Bonus2 = item.Bonus2;
-							temp.Bonus3 = item.Bonus3;
-							temp.Bonus4 = item.Bonus4;
-							temp.Bonus5 = item.Bonus5;
-							temp.Bonus6 = item.Bonus6;
-							temp.Bonus7 = item.Bonus7;
-							temp.Bonus8 = item.Bonus8;
-							temp.Bonus9 = item.Bonus9;
-							temp.Bonus10 = item.Bonus10;
-							temp.Bonus1Type = item.Bonus1Type;
-							temp.Bonus2Type = item.Bonus2Type;
-							temp.Bonus3Type = item.Bonus3Type;
-							temp.Bonus4Type = item.Bonus4Type;
-							temp.Bonus5Type = item.Bonus5Type;
-							temp.Bonus6Type = item.Bonus6Type;
-							temp.Bonus7Type = item.Bonus7Type;
-							temp.Bonus8Type = item.Bonus8Type;
-							temp.Bonus9Type = item.Bonus9Type;
-							temp.Bonus10Type = item.Bonus10Type;
-							temp.Platinum = item.Platinum;
-							temp.Gold = item.Gold;
-							temp.Silver = item.Silver;
-							temp.Copper = item.Copper;
+							foreach (ItemBonus bonus in item.MagicalBonuses)
+								temp.AddBonus(bonus.BonusType, bonus.BonusAmount);
+							temp.Platinum = (short)Money.GetPlatinum(item.Value);
+							temp.Gold = (short)Money.GetGold(item.Value);
+							temp.Silver = (byte)Money.GetSilver(item.Value);
+							temp.Copper = (byte)Money.GetCopper(item.Value);
+							temp.Platinum = (short)Money.GetPlatinum(item.Value);
 							temp.Color = item.Color;
 							temp.Condition = item.Condition;
 							temp.DPS_AF = item.DPS_AF;
 							temp.Durability = item.Durability;
 							temp.Effect = item.Effect;
-							temp.Emblem = item.Emblem;
-							temp.ExtraBonus = item.ExtraBonus;
-							temp.ExtraBonusType = item.ExtraBonusType;
+							//temp.Emblem = item.Emblem;
 							temp.Hand = item.Hand;
-							temp.Id_nb = item.Id_nb;
 							temp.IsDropable = item.IsDropable;
 							temp.IsPickable = item.IsPickable;
 							temp.IsTradable = item.IsTradable;
@@ -1632,9 +1604,9 @@ namespace DOL.GS.Commands
 							temp.SpellID = item.SpellID;
 							temp.ProcSpellID = item.ProcSpellID;
 							temp.Realm = item.Realm;
-							temp.PoisonCharges = item.PoisonCharges;
-							temp.PoisonMaxCharges = item.PoisonMaxCharges;
-							temp.PoisonSpellID = item.PoisonSpellID;
+							//temp.PoisonCharges = item.PoisonCharges;
+							//temp.PoisonMaxCharges = item.PoisonMaxCharges;
+							//temp.PoisonSpellID = item.PoisonSpellID;
 
 							if (add)
 							{
@@ -1651,22 +1623,22 @@ namespace DOL.GS.Commands
 					case "findid":
 						{
 							string name = string.Join(" ", args, 2, args.Length - 2);
-							ItemTemplate[] items = (ItemTemplate[])GameServer.Database.SelectObjects(typeof(ItemTemplate), "id_nb like '%" + GameServer.Database.Escape(name) + "%'");
+							ItemTemplate[] items = (ItemTemplate[])GameServer.Database.SelectObjects(typeof(ItemTemplate), "`TemplateID` LIKE '%" + GameServer.Database.Escape(name) + "%'");
 							DisplayMessage(client, "Matching ID's for " + name + " count " + items.Length, new object[] { });
 							foreach (ItemTemplate item in items)
 							{
-                                DisplayMessage(client, item.Id_nb  + "  (" + item.Name + ")", new object[] { });
+                                DisplayMessage(client, item.TemplateID  + "  (" + item.Name + ")", new object[] { });
 							}
 							break;
 						}
                     case "findname":
                         {
                             string name = string.Join(" ", args, 2, args.Length - 2);
-                            ItemTemplate[] items = (ItemTemplate[])GameServer.Database.SelectObjects(typeof(ItemTemplate), "name like '%" + GameServer.Database.Escape(name) + "%'");
+                            ItemTemplate[] items = (ItemTemplate[])GameServer.Database.SelectObjects(typeof(ItemTemplate), "`Name` LIKE '%" + GameServer.Database.Escape(name) + "%'");
                             DisplayMessage(client, "Matching Names for " + name + " count " + items.Length, new object[] { });
                             foreach (ItemTemplate item in items)
                             {
-                                DisplayMessage(client, item.Name + "  (" + item.Id_nb + ")", new object[] { });
+                                DisplayMessage(client, item.Name + "  (" + item.TemplateID + ")", new object[] { });
                             }
                             break;
                         }

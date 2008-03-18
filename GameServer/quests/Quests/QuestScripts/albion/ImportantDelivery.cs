@@ -266,97 +266,8 @@ namespace DOL.GS.Quests.Albion
 
 
 			sackOfSupplies = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sack_of_supplies");
-			if (sackOfSupplies == null)
-			{
-				sackOfSupplies = new ItemTemplate();
-				sackOfSupplies.Name = "Sack of Supplies";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + sackOfSupplies.Name + " , creating it ...");
-
-				sackOfSupplies.Weight = 10;
-				sackOfSupplies.Model = 488;
-
-				sackOfSupplies.Object_Type = (int) eObjectType.GenericItem;
-
-				sackOfSupplies.Id_nb = "sack_of_supplies";
-				sackOfSupplies.IsPickable = true;
-				sackOfSupplies.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(sackOfSupplies);
-			}
-
 			crateOfVegetables = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "crate_of_vegetables");
-			if (crateOfVegetables == null)
-			{
-				crateOfVegetables = new ItemTemplate();
-				crateOfVegetables.Name = "Crate of Vegetables";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + crateOfVegetables.Name + " , creating it ...");
-
-				crateOfVegetables.Weight = 15;
-				crateOfVegetables.Model = 602;
-
-				crateOfVegetables.Object_Type = (int) eObjectType.GenericItem;
-
-				crateOfVegetables.Id_nb = "crate_of_vegetables";
-				crateOfVegetables.IsPickable = true;
-				crateOfVegetables.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(crateOfVegetables);
-			}
-
-			// item db check
 			recruitsCloak = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_cloak");
-			if (recruitsCloak == null)
-			{
-				recruitsCloak = new ItemTemplate();
-				recruitsCloak.Name = "Recruit's Cloak";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + recruitsCloak.Name + ", creating it ...");
-				recruitsCloak.Level = 3;
-
-				recruitsCloak.Weight = 3;
-				recruitsCloak.Model = 57; // studded Boots                
-
-				recruitsCloak.Object_Type = (int) eObjectType.Cloth;
-				recruitsCloak.Item_Type = (int) eEquipmentItems.CLOAK;
-				recruitsCloak.Id_nb = "recruits_cloak";
-				recruitsCloak.Gold = 0;
-				recruitsCloak.Silver = 1;
-				recruitsCloak.Copper = 0;
-				recruitsCloak.IsPickable = true;
-				recruitsCloak.IsDropable = true;
-				recruitsCloak.Color = 36;
-
-				recruitsCloak.Bonus = 1; // default bonus
-
-				recruitsCloak.Bonus1 = 1;
-				recruitsCloak.Bonus1Type = (int) eStat.CON;
-
-				recruitsCloak.Bonus2 = 1;
-				recruitsCloak.Bonus2Type = (int) eResist.Slash;
-
-				recruitsCloak.Quality = 100;
-				recruitsCloak.Condition = 1000;
-				recruitsCloak.MaxCondition = 1000;
-				recruitsCloak.Durability = 1000;
-				recruitsCloak.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsCloak);
-			}
-
 			#endregion
 
 			/* Now we add some hooks to the npc we found.
@@ -781,7 +692,7 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 3 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == vuloch.Name && gArgs.Item.Id_nb == ticketToLudlow.Id_nb)
+				if (gArgs.Target.Name == vuloch.Name && gArgs.Item.TemplateID == ticketToLudlow.TemplateID)
 				{
 					Step = 4;
 					return;
@@ -791,7 +702,7 @@ namespace DOL.GS.Quests.Albion
 			if (Step >= 3 && Step <= 4 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == dunan.Name && gArgs.Item.Id_nb == sackOfSupplies.Id_nb)
+				if (gArgs.Target.Name == dunan.Name && gArgs.Item.TemplateID == sackOfSupplies.TemplateID)
 				{
 					dunan.SayTo(player, "Oh, I see. Yes, from Master Frederick. We've been waiting for these supplies for a while. It's good to have them. I don't suppose you're up for one more [errand], are you?");
 					RemoveItem(dunan, player, sackOfSupplies);
@@ -803,7 +714,7 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 6 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == yaren.Name && gArgs.Item.Id_nb == ticketToBombard.Id_nb)
+				if (gArgs.Target.Name == yaren.Name && gArgs.Item.TemplateID == ticketToBombard.TemplateID)
 				{
 					Step = 7;
 					return;
@@ -813,7 +724,7 @@ namespace DOL.GS.Quests.Albion
 			if (Step >= 6 && Step <= 7 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == bombard.Name && gArgs.Item.Id_nb == crateOfVegetables.Id_nb)
+				if (gArgs.Target.Name == bombard.Name && gArgs.Item.TemplateID == crateOfVegetables.TemplateID)
 				{
 					bombard.SayTo(player, "Ah, the vegetables I've been waiting for from Dunan. Thank you for delivering them to me. I couldn't find anyone to look after my stable so I could go and get them. Let me see, I think a [reward] is in order for your hard work.");
 					RemoveItem(bombard, player, crateOfVegetables);

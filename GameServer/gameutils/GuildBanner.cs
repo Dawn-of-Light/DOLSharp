@@ -37,6 +37,7 @@ namespace DOL.GS
                             m_player.Stealth(false);
                             AddHandlers();
                             InventoryItem item = new InventoryItem(GuildBannerItem);
+							item.Emblem = m_player.Guild.theGuildDB.Emblem;
                             m_item = item;
                             m_player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item);
                             if (m_timer != null)
@@ -184,7 +185,7 @@ namespace DOL.GS
                 {
                     m_guildBanner = new ItemTemplate();
                     m_guildBanner.CanDropAsLoot = false;
-                    m_guildBanner.Id_nb = "GuildBanner";
+                    m_guildBanner.TemplateID = "GuildBanner";
                     m_guildBanner.IsDropable = true;
                     m_guildBanner.IsPickable = true;
                     m_guildBanner.IsTradable = false;
@@ -192,7 +193,6 @@ namespace DOL.GS
                     m_guildBanner.Level = 1;
                     m_guildBanner.MaxCharges = 1;
                     m_guildBanner.MaxCount = 2;
-                    m_guildBanner.Emblem = m_player.Guild.theGuildDB.Emblem;
                     /*
                        3223 Guild Banner Albion 
                        3224 Guild Banner Midgard 

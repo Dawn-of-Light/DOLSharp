@@ -51,7 +51,7 @@ namespace DOL.GS
 			eInventorySlot.Cloak,
 			eInventorySlot.LegsArmor,
 			eInventorySlot.ArmsArmor
-		};    
+		};
 
 		//Defines all the slots that hold equipment
 		public static readonly eInventorySlot[] EQUIP_SLOTS = 
@@ -81,7 +81,7 @@ namespace DOL.GS
 			eInventorySlot.RightBracer,
 			eInventorySlot.LeftRing,
 			eInventorySlot.RightRing,
-		};    
+		};
 
 		#region Constructor/Declaration/LoadDatabase/SaveDatabase
 		/// <summary>
@@ -89,7 +89,7 @@ namespace DOL.GS
 		/// for players the vault, the equipped items and the backpack
 		/// and for mob the quest drops ect ...
 		/// </summary>
-		protected readonly HybridDictionary  m_items;
+		protected readonly HybridDictionary m_items;
 
 		/// <summary>
 		/// Holds the begin changes counter for slot updates
@@ -119,7 +119,7 @@ namespace DOL.GS
 		{
 			return false;
 		}
-		
+
 		/// <summary>
 		/// SaveIntoDatabase
 		/// </summary>
@@ -138,11 +138,11 @@ namespace DOL.GS
 		/// <returns>the slot if it's valid or eInventorySlot.Invalid if not</returns>
 		protected virtual eInventorySlot GetValidInventorySlot(eInventorySlot slot)
 		{
-			if(    ( slot >= eInventorySlot.RightHandWeapon && slot <= eInventorySlot.FourthQuiver)
-				|| ( slot >= eInventorySlot.HeadArmor && slot <= eInventorySlot.Neck)
-				|| ( slot >= eInventorySlot.HorseArmor && slot <= eInventorySlot.Horse)
-				|| ( slot >= eInventorySlot.Waist && slot <= eInventorySlot.Mythical)
-				|| ( slot == eInventorySlot.Ground))
+			if ((slot >= eInventorySlot.RightHandWeapon && slot <= eInventorySlot.FourthQuiver)
+				|| (slot >= eInventorySlot.HeadArmor && slot <= eInventorySlot.Neck)
+				|| (slot >= eInventorySlot.HorseArmor && slot <= eInventorySlot.Horse)
+				|| (slot >= eInventorySlot.Waist && slot <= eInventorySlot.Mythical)
+				|| (slot == eInventorySlot.Ground))
 				return slot;
 
 			return eInventorySlot.Invalid;
@@ -157,7 +157,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public int CountSlots(bool countUsed, eInventorySlot minSlot, eInventorySlot maxSlot)
 		{
-			if(minSlot > maxSlot)
+			if (minSlot > maxSlot)
 			{
 				eInventorySlot tmp = minSlot;
 				minSlot = maxSlot;
@@ -168,7 +168,7 @@ namespace DOL.GS
 
 			lock (m_items.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
-				for(int i = (int)minSlot; i <= (int)(maxSlot); i++)
+				for (int i = (int)minSlot; i <= (int)(maxSlot); i++)
 				{
 					if (m_items.Contains(i))
 					{
@@ -196,7 +196,7 @@ namespace DOL.GS
 		public int CountItemTemplate(string itemtemplateID, eInventorySlot minSlot, eInventorySlot maxSlot)
 		{
 			lock (m_items.SyncRoot)// Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
-			{ 
+			{
 				int count = 0;
 				if (minSlot > maxSlot)
 				{
@@ -208,7 +208,7 @@ namespace DOL.GS
 				for (int i = (int)minSlot; i <= (int)(maxSlot); i++)
 				{
 					InventoryItem item = (InventoryItem)m_items[i];
-					if (item != null && item.Id_nb == itemtemplateID) count += item.Count;
+					if (item != null && item.TemplateID == itemtemplateID) count += item.Count;
 				}
 				return count++;
 			}
@@ -223,8 +223,8 @@ namespace DOL.GS
 		/// <returns></returns>
 		public bool IsSlotsFree(int count, eInventorySlot minSlot, eInventorySlot maxSlot)
 		{
-			if(count < 1) return true;
-			if(minSlot > maxSlot)
+			if (count < 1) return true;
+			if (minSlot > maxSlot)
 			{
 				eInventorySlot tmp = minSlot;
 				minSlot = maxSlot;
@@ -233,7 +233,7 @@ namespace DOL.GS
 
 			lock (m_items.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
-				for(int i = (int)minSlot; i <= (int)(maxSlot); i++)
+				for (int i = (int)minSlot; i <= (int)(maxSlot); i++)
 				{
 					if (m_items.Contains(i)) continue;
 					count--;
@@ -259,29 +259,29 @@ namespace DOL.GS
 			{
 				first = GetValidInventorySlot(first);
 				last = GetValidInventorySlot(last);
-				if(first == eInventorySlot.Invalid || last == eInventorySlot.Invalid)
+				if (first == eInventorySlot.Invalid || last == eInventorySlot.Invalid)
 					return eInventorySlot.Invalid;
 
-				if(first == last)
+				if (first == last)
 				{
-					if((m_items[(int)first]==null) == searchNull)
+					if ((m_items[(int)first] == null) == searchNull)
 						return first;
-      
+
 					return eInventorySlot.Invalid;
 				}
-    
-				if(first > last)
+
+				if (first > last)
 				{
 					eInventorySlot tmp = first;
 					first = last;
 					last = tmp;
 				}
 
-				for(int i = 0; i <= last-first; i++)
+				for (int i = 0; i <= last - first; i++)
 				{
-					int testSlot = (int)(searchFirst?(first+i):(last-i));
-					if((m_items[testSlot]==null) == searchNull)
-						return (eInventorySlot) testSlot;
+					int testSlot = (int)(searchFirst ? (first + i) : (last - i));
+					if ((m_items[testSlot] == null) == searchNull)
+						return (eInventorySlot)testSlot;
 				}
 				return eInventorySlot.Invalid;
 			}
@@ -295,7 +295,7 @@ namespace DOL.GS
 		/// <returns>the empty inventory slot or eInventorySlot.Invalid if they are all full</returns>
 		public virtual eInventorySlot FindFirstEmptySlot(eInventorySlot first, eInventorySlot last)
 		{
-			return FindSlot(first,last,true,true);
+			return FindSlot(first, last, true, true);
 		}
 
 		/// <summary>
@@ -306,7 +306,7 @@ namespace DOL.GS
 		/// <returns>the empty inventory slot or eInventorySlot.Invalid</returns>
 		public virtual eInventorySlot FindLastEmptySlot(eInventorySlot first, eInventorySlot last)
 		{
-			return FindSlot(first,last,false,true);
+			return FindSlot(first, last, false, true);
 		}
 
 		/// <summary>
@@ -317,7 +317,7 @@ namespace DOL.GS
 		/// <returns>the empty inventory slot or eInventorySlot.Invalid</returns>
 		public virtual eInventorySlot FindFirstFullSlot(eInventorySlot first, eInventorySlot last)
 		{
-			return FindSlot(first,last,true,false);
+			return FindSlot(first, last, true, false);
 		}
 
 		/// <summary>
@@ -328,7 +328,7 @@ namespace DOL.GS
 		/// <returns>the empty inventory slot or eInventorySlot.Invalid</returns>
 		public virtual eInventorySlot FindLastFullSlot(eInventorySlot first, eInventorySlot last)
 		{
-			return FindSlot(first,last,false,false);
+			return FindSlot(first, last, false, false);
 		}
 		#endregion
 
@@ -395,7 +395,7 @@ namespace DOL.GS
 					InventoryItem item = m_items[i] as InventoryItem;
 					if (item != null)
 					{
-						if (item.Id_nb == uniqueID)
+						if (item.TemplateID == uniqueID)
 							return item;
 					}
 				}
@@ -495,11 +495,11 @@ namespace DOL.GS
 				if (m_items.Contains((int)slot))
 				{
 					if (log.IsErrorEnabled)
-						log.Error("Inventory.AddItem -> Destination slot is not empty ("+(int)slot+")\n\n" + Environment.StackTrace);
+						log.Error("Inventory.AddItem -> Destination slot is not empty (" + (int)slot + ")\n\n" + Environment.StackTrace);
 					return false;
 				}
 				m_items.Add((int)slot, item);
-				item.SlotPosition=(int)slot;
+				item.SlotPosition = (byte)slot;
 				if (item.OwnerID != null)
 				{
 					item.OwnerID = null; // owner ID for NPC
@@ -559,17 +559,14 @@ namespace DOL.GS
 		/// <param name="item"></param>
 		/// <param name="count"></param>
 		/// <returns></returns>
-		public virtual bool AddCountToStack(InventoryItem item, int count)
+		public virtual bool AddCountToStack(InventoryItem item, byte count)
 		{
 			if (item == null) return false;
-			if (count <= 0) return false;
 			lock (m_items.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				if (m_items.Contains(item.SlotPosition))
 				{
-					if(item.Count+count > item.MaxCount) return false;
-
-					item.Weight += item.Weight/item.Count*count;
+					if (item.Count + count > item.MaxCount) return false;
 					item.Count += count;
 
 					if (!m_changedSlots.Contains(item.SlotPosition))
@@ -588,7 +585,7 @@ namespace DOL.GS
 		/// <param name="item">the item to remove</param>
 		/// <param name="count">the count of items to be removed from the stack</param>
 		/// <returns>true one item removed</returns>
-		public virtual bool RemoveCountFromStack(InventoryItem item, int count)
+		public virtual bool RemoveCountFromStack(InventoryItem item, byte count)
 		{
 			if (item == null) return false;
 			if (count <= 0) return false;
@@ -596,15 +593,14 @@ namespace DOL.GS
 			{
 				if (m_items.Contains(item.SlotPosition))
 				{
-					if(item.Count < count) return false;
+					if (item.Count < count) return false;
 					int itemSlot = item.SlotPosition;
-					if(item.Count == count)
+					if (item.Count == count)
 					{
 						return RemoveItem(item);
 					}
 					else
 					{
-						item.Weight -= item.Weight/item.Count*count;
 						item.Count -= count;
 
 						if (!m_changedSlots.Contains(itemSlot))
@@ -640,7 +636,7 @@ namespace DOL.GS
 		/// <param name="toSlot">Destination slot</param>
 		/// <param name="itemCount"></param>
 		/// <returns>true if successfull false if not</returns>
-		public virtual bool MoveItem(eInventorySlot fromSlot,eInventorySlot toSlot, int itemCount)
+		public virtual bool MoveItem(eInventorySlot fromSlot, eInventorySlot toSlot, byte itemCount)
 		{
 			lock (m_items.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
@@ -649,16 +645,16 @@ namespace DOL.GS
 				if (fromSlot == eInventorySlot.Invalid || toSlot == eInventorySlot.Invalid)
 					return false;
 
-				if (!CombineItems((InventoryItem)m_items[(int)fromSlot], (InventoryItem)m_items[(int)toSlot]) &&
-					!StackItems((int)fromSlot, (int)toSlot, itemCount)) 
+				if (!CombineItems((InventoryItem)m_items[(byte)fromSlot], (InventoryItem)m_items[(byte)toSlot]) &&
+					!StackItems((byte)fromSlot, (byte)toSlot, itemCount))
 				{
-					ExchangeItems((int)fromSlot, (int)toSlot);
+					ExchangeItems((byte)fromSlot, (byte)toSlot);
 				}
 
-				if (!m_changedSlots.Contains((int)fromSlot))
-					m_changedSlots.Add((int)fromSlot);
-				if (!m_changedSlots.Contains((int)toSlot))
-					m_changedSlots.Add((int)toSlot);
+				if (!m_changedSlots.Contains(fromSlot))
+					m_changedSlots.Add(fromSlot);
+				if (!m_changedSlots.Contains(toSlot))
+					m_changedSlots.Add(toSlot);
 				if (m_changesCounter <= 0)
 					UpdateChangedSlots();
 				return true;
@@ -668,17 +664,17 @@ namespace DOL.GS
 		/// <summary>
 		/// Get the list of all visible items
 		/// </summary>
-		public virtual ICollection VisibleItems  
+		public virtual ICollection VisibleItems
 		{
 			get
 			{
 				ArrayList items = new ArrayList(VISIBLE_SLOTS.Length);
 				lock (m_items.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 				{
-					foreach(eInventorySlot slot in VISIBLE_SLOTS)
+					foreach (eInventorySlot slot in VISIBLE_SLOTS)
 					{
 						object item = m_items[(int)slot];
-						if(item!=null) items.Add(item);
+						if (item != null) items.Add(item);
 					}
 				}
 				return items;
@@ -688,20 +684,20 @@ namespace DOL.GS
 		/// <summary>
 		/// Get the list of all equipped items
 		/// </summary>
-		public virtual ICollection EquippedItems 
-		{ 
+		public virtual ICollection EquippedItems
+		{
 			get
 			{
 				ArrayList items = new ArrayList();
 				lock (m_items.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 				{
-					foreach(eInventorySlot slot in EQUIP_SLOTS)
+					foreach (eInventorySlot slot in EQUIP_SLOTS)
 					{
 						object item = m_items[(int)slot];
-						if(item!=null) items.Add(item);
+						if (item != null) items.Add(item);
 					}
 				}
-				return items;    
+				return items;
 			}
 		}
 
@@ -726,10 +722,9 @@ namespace DOL.GS
 		/// <param name="minSlot">The first slot</param>
 		/// <param name="maxSlot">The last slot</param>
 		/// <returns>True if all items were added</returns>
-		public virtual bool AddTemplate(ItemTemplate template, int count, eInventorySlot minSlot, eInventorySlot maxSlot)
+		public virtual bool AddTemplate(ItemTemplate template, byte count, eInventorySlot minSlot, eInventorySlot maxSlot)
 		{
 			if (template == null) return false;
-			if (count <= 0) return false;
 			if (minSlot > maxSlot)
 			{
 				eInventorySlot tmp = minSlot;
@@ -753,11 +748,11 @@ namespace DOL.GS
 
 					InventoryItem curItem = (InventoryItem)m_items[(int)curSlot];
 					if (curItem == null) continue; // skip empty slots
-					if (curItem.Id_nb != template.Id_nb) continue;
+					if (curItem.TemplateID != template.TemplateID) continue;
 					if (curItem.Count >= curItem.MaxCount) continue;
 
-					int countFree = curItem.MaxCount - curItem.Count;
-					int countAdd = count;
+					byte countFree = (byte)(curItem.MaxCount - curItem.Count);
+					byte countAdd = count;
 					if (countAdd > countFree)
 						countAdd = countFree;
 					changedSlots[(int)curSlot] = countAdd; // existing item should be changed
@@ -784,7 +779,7 @@ namespace DOL.GS
 						if (changedSlots.Contains((int)curSlot)) continue; // skip reserved slots
 						if (m_items.Contains((int)curSlot)) continue; // skip used slots
 
-						int countAdd = count;
+						byte countAdd = count;
 						if (countAdd > template.MaxCount)
 							countAdd = template.MaxCount;
 						changedSlots[(int)curSlot] = -countAdd; // new item should be added
@@ -812,7 +807,7 @@ namespace DOL.GS
 					foreach (DictionaryEntry de in changedSlots)
 					{
 						int slot = (int)de.Key;
-						int value = (int)de.Value;
+						byte value = (byte)de.Value;
 						if (value > 0) // existing item should be changed
 						{
 							InventoryItem item = (InventoryItem)m_items[slot];
@@ -821,8 +816,7 @@ namespace DOL.GS
 						else if (value < 0) // new item should be added
 						{
 							InventoryItem item = new InventoryItem(template);
-							item.Count = -value;
-							item.Weight = (template.Weight / itemcount) * -value;
+							item.Count = (byte)(item.Count - value);
 							AddItem((eInventorySlot)slot, item);
 						}
 					}
@@ -845,7 +839,7 @@ namespace DOL.GS
 		/// <param name="minSlot">The first slot</param>
 		/// <param name="maxSlot">The last slot</param>
 		/// <returns>True if all items were added</returns>
-		public virtual bool RemoveTemplate(string templateID, int count, eInventorySlot minSlot, eInventorySlot maxSlot)
+		public virtual bool RemoveTemplate(string templateID, byte count, eInventorySlot minSlot, eInventorySlot maxSlot)
 		{
 			if (templateID == null) return false;
 			if (count <= 0) return false;
@@ -866,7 +860,7 @@ namespace DOL.GS
 				{
 					InventoryItem item = (InventoryItem)m_items[(int)i];
 					if (item == null) continue;
-					if (item.Id_nb != templateID) continue;
+					if (item.TemplateID != templateID) continue;
 
 					if (count >= item.Count)
 					{
@@ -908,7 +902,7 @@ namespace DOL.GS
 								throw new Exception("Error removing item.");
 							}
 						}
-						else if (!RemoveCountFromStack(item, (int)de.Value))
+						else if (!RemoveCountFromStack(item, (byte)de.Value))
 						{
 							CommitChanges();
 							throw new Exception("Error removing count from stack.");
@@ -946,7 +940,7 @@ namespace DOL.GS
 		/// <param name="toSlot">Second SlotPosition</param>
 		/// <param name="itemCount">How many items to move</param>
 		/// <returns>true if items stacked successfully</returns>
-		protected virtual bool StackItems(int fromSlot,int toSlot, int itemCount)
+		protected virtual bool StackItems(int fromSlot, int toSlot, byte itemCount)
 		{
 			return false;
 		}
@@ -983,23 +977,23 @@ namespace DOL.GS
 		/// Gets the inventory weight
 		/// </summary>
 		public virtual int InventoryWeight
-		{ 
+		{
 			get
 			{
 				InventoryItem item = null;
 				int weight = 0;
 				lock (m_items.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 				{
-					foreach(eInventorySlot slot in EQUIP_SLOTS)
+					foreach (eInventorySlot slot in EQUIP_SLOTS)
 					{
 						item = m_items[(int)slot] as InventoryItem;
-						if(item != null)
+						if (item != null)
 							weight += item.Weight;
 					}
 				}
-				return weight/10;
+				return weight / 10;
 			}
-		}	
+		}
 		#endregion
 
 		#region BeginChanges/CommitChanges/UpdateSlots

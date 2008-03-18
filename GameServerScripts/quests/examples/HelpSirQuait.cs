@@ -196,86 +196,8 @@ using DOL.AI.Brain;
 		#endregion
 
 		#region defineItems
-
 	    SirQuaitsSword = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SirQuaitsSword");
-		if (SirQuaitsSword == null)
-		{
-			SirQuaitsSword = new ItemTemplate();
-			SirQuaitsSword.Name = "Sir Quait's Sword";
-			if (log.IsWarnEnabled)
-				log.Warn("Could not find " + SirQuaitsSword.Name + ", creating it ...");
-			SirQuaitsSword.Level = 1;
-			SirQuaitsSword.Weight = 0;
-			SirQuaitsSword.Model = 847;
-			SirQuaitsSword.Object_Type = 0;
-			SirQuaitsSword.Item_Type = 0;
-			SirQuaitsSword.Id_nb = "SirQuaitsSword";
-			SirQuaitsSword.Hand = 0;
-			SirQuaitsSword.Platinum = 0;
-			SirQuaitsSword.Gold = 0;
-			SirQuaitsSword.Silver = 0;
-			SirQuaitsSword.Copper = 0;
-			SirQuaitsSword.IsPickable = false;
-			SirQuaitsSword.IsDropable = false;
-			SirQuaitsSword.IsTradable = true;
-			SirQuaitsSword.CanDropAsLoot = true;
-			SirQuaitsSword.Color = 0;
-			SirQuaitsSword.Bonus = 0; // default bonus				
-			SirQuaitsSword.Bonus1 = 0;
-			SirQuaitsSword.Bonus1Type = (int) 0;
-			SirQuaitsSword.Bonus2 = 0;
-			SirQuaitsSword.Bonus2Type = (int) 0;
-			SirQuaitsSword.Bonus3 = 0;
-			SirQuaitsSword.Bonus3Type = (int) 0;
-			SirQuaitsSword.Bonus4 = 0;
-			SirQuaitsSword.Bonus4Type = (int) 0;
-			SirQuaitsSword.Bonus5 = 0;
-			SirQuaitsSword.Bonus5Type = (int) 0;
-			SirQuaitsSword.Bonus6 = 0;
-			SirQuaitsSword.Bonus6Type = (int) 0;
-			SirQuaitsSword.Bonus7 = 0;
-			SirQuaitsSword.Bonus7Type = (int) 0;
-			SirQuaitsSword.Bonus8 = 0;
-			SirQuaitsSword.Bonus8Type = (int) 0;
-			SirQuaitsSword.Bonus9 = 0;
-			SirQuaitsSword.Bonus9Type = (int) 0;
-			SirQuaitsSword.Bonus10 = 0;
-			SirQuaitsSword.Bonus10Type = (int) 0;
-			SirQuaitsSword.ExtraBonus = 0;
-			SirQuaitsSword.ExtraBonusType = (int) 0;
-			SirQuaitsSword.Effect = 0;
-			SirQuaitsSword.Emblem = 0;
-			SirQuaitsSword.Charges = 0;
-			SirQuaitsSword.MaxCharges = 0;
-			SirQuaitsSword.SpellID = 0;
-			SirQuaitsSword.ProcSpellID = 0;
-			SirQuaitsSword.Type_Damage = 0;
-			SirQuaitsSword.Realm = 0;
-			SirQuaitsSword.MaxCount = 1;
-			SirQuaitsSword.PackSize = 1;
-			SirQuaitsSword.Extension = 0;
-			SirQuaitsSword.Quality = 1;				
-			SirQuaitsSword.Condition = 1;
-			SirQuaitsSword.MaxCondition = 1;
-			SirQuaitsSword.Durability = 1;
-			SirQuaitsSword.MaxDurability = 1;
-			SirQuaitsSword.PoisonCharges = 0;
-			SirQuaitsSword.PoisonMaxCharges = 0;
-			SirQuaitsSword.PoisonSpellID = 0;
-			SirQuaitsSword.ProcSpellID1 = 0;
-			SirQuaitsSword.SpellID1 = 0;
-			SirQuaitsSword.MaxCharges1 = 0;
-			SirQuaitsSword.Charges1 = 0;
-			
-			//You don't have to store the created item in the db if you don't want,
-			//it will be recreated each time it is not found, just comment the following
-			//line if you rather not modify your database
-			if (SAVE_INTO_DATABASE)
-				GameServer.Database.AddNewObject(SirQuaitsSword);
-			}
-		
-
-		    #endregion
+		#endregion
 
 		    #region defineAreas
     		

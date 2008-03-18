@@ -39,8 +39,8 @@ namespace DOL.GS.DatabaseConverters
 		/// </summary>
 		public void ConvertDatabase()
 		{
-			log.Info("Database Version 3 Convert Started");
-
+			log.Info("Database Version 3 Convert Will No Longer Run!");
+			/*
 			if (GameServer.Instance.Configuration.DBType == DOL.Database.Connection.ConnectionType.DATABASE_XML)
 			{
 				log.Info("You have an XML database loaded, this converter will only work with MySQL, skipping");
@@ -113,7 +113,7 @@ namespace DOL.GS.DatabaseConverters
 
 			log.Info("Converted " + count + " items");
 
-			log.Info("Database Version 3 Convert Finished");
+			log.Info("Database Version 3 Convert Finished");*/
 		}
 	}
 }

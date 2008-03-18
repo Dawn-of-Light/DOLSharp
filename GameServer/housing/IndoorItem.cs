@@ -114,7 +114,7 @@ namespace DOL.GS.Housing
 			dbitem.Y = Y;
 			if (BaseItem != null)
 			{
-				dbitem.BaseItemID = BaseItem.Id_nb;
+				dbitem.BaseItemID = BaseItem.TemplateID;
 			}
 			else
 			{

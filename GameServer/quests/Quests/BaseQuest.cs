@@ -235,7 +235,7 @@ namespace DOL.GS.Quests
 			}
 			lock (player.Inventory)
 			{
-				InventoryItem item = player.Inventory.GetFirstItemByID(itemTemplate.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+				InventoryItem item = player.Inventory.GetFirstItemByID(itemTemplate.TemplateID, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 				if (item != null)
 				{
 					player.Inventory.RemoveItem(item);
@@ -347,7 +347,7 @@ namespace DOL.GS.Quests
 				ticket.Object_Type = (int)eObjectType.GenericItem;
 				ticket.Item_Type = 40;
 
-				ticket.Id_nb = "ticket_to_" + location.ToLower();
+				ticket.TemplateID = "ticket_to_" + location.ToLower();
 
 				ticket.IsPickable = true;
 				ticket.IsDropable = true;
@@ -376,7 +376,7 @@ namespace DOL.GS.Quests
 				ticket = new ItemTemplate();
 				ticket.Name = "ticket to " + destination;
 
-				ticket.Id_nb = ticket_Id.ToLower();
+				ticket.TemplateID = ticket_Id.ToLower();
 
 				ticket.Model = 499;
 

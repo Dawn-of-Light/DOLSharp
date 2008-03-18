@@ -94,15 +94,14 @@ namespace DOL.GS.Quests.Hibernia
 
                 RecruitsCloak.Object_Type = (int)eObjectType.Magical;
                 RecruitsCloak.Item_Type = (int)eEquipmentItems.CLOAK;
-                RecruitsCloak.Id_nb = "k109_recruits_cloak";
+                RecruitsCloak.TemplateID = "k109_recruits_cloak";
                 RecruitsCloak.Gold = 0;
                 RecruitsCloak.Silver = 0;
                 RecruitsCloak.Copper = 0;
                 RecruitsCloak.IsPickable = true;
                 RecruitsCloak.IsDropable = false; // can't be sold to merchand
 
-                RecruitsCloak.Bonus1 = 6;
-                RecruitsCloak.Bonus1Type = (int)eProperty.MaxHealth;
+				RecruitsCloak.AddBonus((byte)eProperty.MaxHealth, 6);
 
                 RecruitsCloak.Quality = 100;
                 RecruitsCloak.Condition = 50000;
@@ -113,6 +112,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(RecruitsCloak);
             }
+
             LetterToEpona = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "letter_to_epona");
             if (LetterToEpona == null)
             {
@@ -123,7 +123,7 @@ namespace DOL.GS.Quests.Hibernia
                 LetterToEpona.Model = 499;
                 LetterToEpona.Extension = 1;
                 LetterToEpona.Name = "Letter To Epona";
-				LetterToEpona.Id_nb = "letter_to_epona";
+				LetterToEpona.TemplateID = "letter_to_epona";
 
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(LetterToEpona);

@@ -302,7 +302,7 @@ namespace DOL.GS.Quests.Atlantis
 	        if (Step == 0)
 	        {
 				//Lets see if they gave us a valid artifact
-	            string ArtID = ArtifactMgr.GetArtifactIDFromItemID(item.Id_nb);
+	            string ArtID = ArtifactMgr.GetArtifactIDFromItemID(item.TemplateID);
 				Dictionary<String, ItemTemplate> versions = ArtifactMgr.GetArtifactVersions(ArtID, 
 					(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
 				//If this artifact has more than one option for them, give them the quest

@@ -69,7 +69,7 @@ namespace DOL.GS
 			if (player == null)
 				return false;
 
-			if (item.Id_nb == "Music_Ticket")
+			if (item.TemplateID == "Music_Ticket")
 			{
 				TargetObject = player;
 				CastSpell(SkillBase.GetSpellByID(GameHastener.SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells));

@@ -61,8 +61,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						    continue;
 						int i = (int)entry.Key;
 						GameServer.Database.DeleteObject(((OutdoorItem) house.OutdoorItems[i]).DatabaseItem); //delete the database instance
-						InventoryItem invitem = new InventoryItem();
-						invitem.CopyFrom(((OutdoorItem) house.OutdoorItems[i]).BaseItem);
+						InventoryItem invitem = new InventoryItem(((OutdoorItem)house.OutdoorItems[i]).BaseItem);
 						client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, invitem);
 						house.OutdoorItems.Remove(i);
 						client.Out.SendGarden(house);
@@ -87,8 +86,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 					if (iitem.BaseItem != null)
 					{
-						InventoryItem item = new InventoryItem();
-						item.CopyFrom(((IndoorItem) house.IndoorItems[(position)]).BaseItem);
+						InventoryItem item = new InventoryItem(((IndoorItem)house.IndoorItems[(position)]).BaseItem);
 						if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 						{
 							if (method == 2)

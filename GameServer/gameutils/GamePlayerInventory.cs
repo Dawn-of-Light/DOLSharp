@@ -70,15 +70,16 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public override bool LoadFromDatabase(string inventoryID)
 		{
-            //ArtifactManager.LoadArtifacts(); //loading artifacts
-            lock (m_items.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			//ArtifactManager.LoadArtifacts(); //loading artifacts
+			lock (m_items.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				try
 				{
 					DataObject[] items = GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + GameServer.Database.Escape(inventoryID) + "'");
 					foreach (InventoryItem item in items)
 					{
-						if (item.CanUseEvery > 0)
+						//set cooldown for items
+						if (item.Template.CanUseEvery > 0)
 							item.SetCooldown();
 
 						if (GetValidInventorySlot((eInventorySlot)item.SlotPosition) == eInventorySlot.Invalid)
@@ -88,7 +89,7 @@ namespace DOL.GS
 							continue;
 						}
 
-                        if (m_items[item.SlotPosition] != null)
+						if (m_items[item.SlotPosition] != null)
 						{
 							if (log.IsErrorEnabled)
 								log.Error("Error loading " + m_player.Name + "'s inventory OwnerID " + inventoryID + " slot " + item.SlotPosition + " duplicate item found, skipping!");
@@ -155,7 +156,7 @@ namespace DOL.GS
 							if (GetValidInventorySlot((eInventorySlot)currentItem.SlotPosition) == eInventorySlot.Invalid)
 							{
 								if (log.IsErrorEnabled)
-									log.Error("item's slot position is invanlid. item slot=" + currentItem.SlotPosition + " id=" + currentItem.ObjectId);
+									log.Error("item's slot position is invalid. item slot=" + currentItem.SlotPosition + " id=" + currentItem.ObjectId);
 								continue;
 							}
 							if (currentItem.OwnerID != m_player.InternalID)
@@ -208,8 +209,8 @@ namespace DOL.GS
 			if (!base.AddItem(slot, item)) return false;
 			item.OwnerID = m_player.InternalID;
 			GameServer.Database.AddNewObject(item);
-            
-            if (IsEquippedSlot((eInventorySlot)item.SlotPosition))
+
+			if (IsEquippedSlot((eInventorySlot)item.SlotPosition))
 				Player.Notify(PlayerInventoryEvent.ItemEquipped, this, new ItemEquippedArgs(item, (int)eInventorySlot.Invalid));
 			return true;
 		}
@@ -235,8 +236,10 @@ namespace DOL.GS
 
 			if (!base.RemoveItem(item)) return false;
 
-			GameServer.Database.DeleteObject(item);            
-            ITradeWindow window = m_player.TradeWindow;
+			if (item.Description == "Unique Object" || item.Description == "Quest Reward")
+				GameServer.Database.DeleteObject(item.Template);
+			GameServer.Database.DeleteObject(item);
+			ITradeWindow window = m_player.TradeWindow;
 			if (window != null)
 				window.RemoveItemToTrade(item);
 
@@ -266,7 +269,7 @@ namespace DOL.GS
 		/// <param name="item"></param>
 		/// <param name="count"></param>
 		/// <returns></returns>
-		public override bool AddCountToStack(InventoryItem item, int count)
+		public override bool AddCountToStack(InventoryItem item, byte count)
 		{
 			if (item != null && item.OwnerID != m_player.InternalID)
 			{
@@ -283,7 +286,7 @@ namespace DOL.GS
 		/// <param name="item">the item to remove</param>
 		/// <param name="count">the count of items to be removed from the stack</param>
 		/// <returns>true one item removed</returns>
-		public override bool RemoveCountFromStack(InventoryItem item, int count)
+		public override bool RemoveCountFromStack(InventoryItem item, byte count)
 		{
 			if (item != null && item.OwnerID != m_player.InternalID)
 			{
@@ -337,7 +340,7 @@ namespace DOL.GS
 		/// <param name="toSlot">Second SlotPosition</param>
 		/// <param name="itemCount">How many items to move</param>
 		/// <returns>true if items switched successfully</returns>
-		public override bool MoveItem(eInventorySlot fromSlot, eInventorySlot toSlot, int itemCount)
+		public override bool MoveItem(eInventorySlot fromSlot, eInventorySlot toSlot, byte itemCount)
 		{
 			if (!m_player.IsAlive)
 			{
@@ -391,27 +394,27 @@ namespace DOL.GS
 					return valid;
 				}
 
-                if (valid && !Util.IsEmpty(fromItem.AllowedClasses))
-                {
-                    if (fromItem.AllowedClasses != "0")
-                    {
-                        valid = false;
-                        string[] allowedclasses = fromItem.AllowedClasses.Split(';');
-                        foreach (string allowed in allowedclasses)
-                        {
-                            if (m_player.CharacterClass.ID.ToString() == allowed
-                                || m_player.Client.Account.PrivLevel > 1)
-                            {
-                                valid = true;
-                                break;
-                            }
-                        }
-                        if (!valid)
-                        {
-                            m_player.Out.SendMessage("Your class cannot use this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        }
-                    }
-                }
+				if (valid && !Util.IsEmpty(fromItem.AllowedClasses))
+				{
+					if (fromItem.AllowedClasses != "0")
+					{
+						valid = false;
+						string[] allowedclasses = fromItem.AllowedClasses.Split(';');
+						foreach (string allowed in allowedclasses)
+						{
+							if (m_player.CharacterClass.ID.ToString() == allowed
+								|| m_player.Client.Account.PrivLevel > 1)
+							{
+								valid = true;
+								break;
+							}
+						}
+						if (!valid)
+						{
+							m_player.Out.SendMessage("Your class cannot use this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+					}
+				}
 
 				if (valid == true)
 				{
@@ -795,7 +798,7 @@ namespace DOL.GS
 
 			m_player.Out.SendInventorySlotsUpdate(null);
 
-			return valid;		
+			return valid;
 		}
 		#endregion Move Item
 
@@ -834,7 +837,7 @@ namespace DOL.GS
 		/// <param name="toSlot">Second SlotPosition</param>
 		/// <param name="itemCount">How many items to move</param>
 		/// <returns>true if items stacked successfully</returns>
-		protected override bool StackItems(int fromSlot, int toSlot, int itemCount)
+		protected override bool StackItems(int fromSlot, int toSlot, byte itemCount)
 		{
 			InventoryItem fromItem = m_items[fromSlot] as InventoryItem;
 			InventoryItem toItem = m_items[toSlot] as InventoryItem;
@@ -853,19 +856,16 @@ namespace DOL.GS
 					itemCount = 1;
 			}
 
-			if (toItem != null && toItem.Id_nb.Equals(fromItem.Id_nb) && toItem.IsStackable)
+			if (toItem != null && toItem.TemplateID.Equals(fromItem.TemplateID) && toItem.IsStackable)
 			{
 				if (fromItem.Count + toItem.Count > fromItem.MaxCount)
 				{
-					fromItem.Count -= (toItem.MaxCount - toItem.Count);
-					fromItem.Weight = fromItem.Count * (toItem.Weight / toItem.Count);
+					fromItem.Count -= (byte)(toItem.MaxCount - toItem.Count);
 					toItem.Count = toItem.MaxCount;
-					toItem.Weight = toItem.Count * (fromItem.Weight / fromItem.Count);
 				}
 				else
 				{
 					toItem.Count += fromItem.Count;
-					toItem.Weight += fromItem.Weight;
 					RemoveItem(fromItem);
 				}
 				return true;
@@ -875,9 +875,7 @@ namespace DOL.GS
 				InventoryItem newItem = (InventoryItem)fromItem.Clone();
 				m_items[toSlot] = newItem;
 				newItem.Count = itemCount;
-				newItem.Weight = itemCount * (fromItem.Weight / fromItem.Count);
 				newItem.SlotPosition = toSlot;
-				fromItem.Weight -= itemCount * (fromItem.Weight / fromItem.Count);
 				fromItem.Count -= itemCount;
 				GameServer.Database.AddNewObject(newItem);
 				return true;
@@ -1006,7 +1004,7 @@ namespace DOL.GS
 					if (objectToDye.Object_Type == 41 && objectToDye.Item_Type == 8) // horse barding
 					{
 						canApply = true;
-					} 
+					}
 
 					break;
 				case 494: //Dye pack
@@ -1115,10 +1113,10 @@ namespace DOL.GS
 		}
 
 		#endregion
-        #region Artifacts
+		#region Artifacts
 
-        public ArrayList Artifacts = new ArrayList();
+		public ArrayList Artifacts = new ArrayList();
 
-        #endregion
-    }
+		#endregion
+	}
 }

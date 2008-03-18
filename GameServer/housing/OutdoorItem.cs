@@ -74,7 +74,7 @@ namespace DOL.GS.Housing
 			dbitem.HouseNumber = HouseNumber;
 			dbitem.Model = Model;
 			dbitem.Position = Position;
-			dbitem.BaseItemID = BaseItem.Id_nb;
+			dbitem.BaseItemID = BaseItem.TemplateID;
 			dbitem.Rotation = Rotation;
 			return dbitem;
 		}

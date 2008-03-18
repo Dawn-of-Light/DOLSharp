@@ -42,7 +42,7 @@ namespace DOL.GS
 
         private static Dictionary<String, Artifact> m_artifacts;
         private static Dictionary<String, List<ArtifactXItem>> m_artifactVersions;
-		private static List<ArtifactBonus> m_artifactBonuses;
+		private static List<ItemBonus> m_artifactBonuses;
 
         public enum Book { NoPage = 0x0, Page1 = 0x1, Page2 = 0x2, Page3 = 0x4, AllPages = 0x7 };
 
@@ -83,9 +83,9 @@ namespace DOL.GS
 
 			// Load artifact bonuses.
 
-			dbo = GameServer.Database.SelectAllObjects(typeof(ArtifactBonus));
-			m_artifactBonuses = new List<ArtifactBonus>();
-			foreach (ArtifactBonus artifactBonus in dbo)
+			dbo = GameServer.Database.SelectAllObjects(typeof(ItemBonus));
+			m_artifactBonuses = new List<ItemBonus>();
+			foreach (ItemBonus artifactBonus in dbo)
 				m_artifactBonuses.Add(artifactBonus);
 
 			// Install event handlers.
@@ -95,6 +95,22 @@ namespace DOL.GS
 
             log.Info(String.Format("{0} artifacts loaded", m_artifacts.Count));
             return true;
+		}
+
+		public static ItemBonus[] GetArtifactBonuses(InventoryArtifact artifact, bool all)
+		{
+			List<ItemBonus> bonusList = new List<ItemBonus>();
+			foreach (ItemBonus artifactBonus in m_artifactBonuses)
+			{
+				if (artifactBonus.ItemID == artifact.ArtifactID)
+				{
+					if (!all && artifactBonus.BonusLevel > artifact.ArtifactLevel)
+						continue;
+					
+					bonusList.Add(artifactBonus);
+				}
+			}
+			return bonusList.ToArray();
 		}
 
 		/// <summary>
@@ -154,7 +170,7 @@ namespace DOL.GS
 			if (item == null)
 				return 0;
 
-			String artifactID = GetArtifactIDFromItemID(item.Id_nb);
+			String artifactID = GetArtifactIDFromItemID(item.TemplateID);
 			lock (m_artifacts)
 			{
 				if (!m_artifacts.ContainsKey(artifactID))
@@ -199,7 +215,7 @@ namespace DOL.GS
 			lock (m_artifactVersions)
 				foreach (List<ArtifactXItem> versions in m_artifactVersions.Values)
 					foreach (ArtifactXItem version in versions)
-						if (version.ItemID == item.Id_nb)
+						if (version.ItemID == item.TemplateID)
 							return true;
 			return false;
 		}
@@ -255,23 +271,6 @@ namespace DOL.GS
 				}
 			}
 			return 0;
-		}
-
-		/// <summary>
-		/// Get a list of all level requirements for this artifact.
-		/// </summary>
-		/// <param name="artifactID"></param>
-		/// <returns></returns>
-		public static int[] GetLevelRequirements(String artifactID)
-		{
-			int[] requirements = new int[ArtifactBonus.ID.Max - ArtifactBonus.ID.Min + 1];
-
-			lock (m_artifactBonuses)
-				foreach (ArtifactBonus bonus in m_artifactBonuses)
-					if (bonus.ArtifactID == artifactID)
-						requirements[bonus.BonusID] = bonus.Level;
-
-			return requirements;
 		}
 
 		/// <summary>
@@ -438,7 +437,7 @@ namespace DOL.GS
                             catch
                             {
                                 log.Warn(String.Format("Invalid class ID '{0}' for item template '{1}'",
-                                    classID, itemTemplate.Id_nb));
+                                    classID, itemTemplate.TemplateID));
                             }
                         }
                     }
@@ -621,7 +620,7 @@ namespace DOL.GS
 			{
 				foreach (InventoryItem item in player.Inventory.AllItems)
 				{
-					String artifactID = GetArtifactIDFromItemID(item.Id_nb);
+					String artifactID = GetArtifactIDFromItemID(item.TemplateID);
 					if (artifactID != null)
 						artifacts.Add(artifactID);
 				}

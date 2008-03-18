@@ -94,12 +94,12 @@ namespace DOL.GS
 		bool            SaveIntoDatabase(string inventoryID);
 
 		bool			AddItem(eInventorySlot slot, InventoryItem item);
-		bool			AddCountToStack(InventoryItem item, int count);
-		bool			AddTemplate(ItemTemplate template, int count, eInventorySlot minSlot, eInventorySlot maxSlot);
+		bool			AddCountToStack(InventoryItem item, byte count);
+		bool			AddTemplate(ItemTemplate template, byte count, eInventorySlot minSlot, eInventorySlot maxSlot);
 		bool            RemoveItem(InventoryItem item);
-		bool			RemoveCountFromStack(InventoryItem item, int count);
-		bool			RemoveTemplate(string templateID, int count, eInventorySlot minSlot, eInventorySlot maxSlot);
-		bool            MoveItem(eInventorySlot fromSlot, eInventorySlot toSlot, int itemCount);
+		bool			RemoveCountFromStack(InventoryItem item, byte count);
+		bool			RemoveTemplate(string templateID, byte count, eInventorySlot minSlot, eInventorySlot maxSlot);
+		bool            MoveItem(eInventorySlot fromSlot, eInventorySlot toSlot, byte itemCount);
 		InventoryItem   GetItem(eInventorySlot slot);
 		ICollection     GetItemRange(eInventorySlot minSlot, eInventorySlot maxSlot);
 

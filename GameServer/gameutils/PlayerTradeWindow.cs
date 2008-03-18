@@ -41,7 +41,7 @@ namespace DOL.GS
 		{
 			if (owner == null)
 				throw new ArgumentNullException("owner");
-			
+
 			m_owner = owner;
 			m_tradeAccept = false;
 			m_tradeItems = new ArrayList(10);
@@ -61,11 +61,11 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds money we offer to the other player
 		/// </summary>
-		protected long	m_tradeMoney;
+		protected long m_tradeMoney;
 		/// <summary>
 		/// Holds if we have accepted the trade or not
 		/// </summary>
-		protected bool	m_tradeAccept;
+		protected bool m_tradeAccept;
 		/// <summary>
 		/// Holds the owner of this window and items in it
 		/// </summary>
@@ -73,7 +73,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds our trade partner
 		/// </summary>
-		protected PlayerTradeWindow	m_partnerWindow;
+		protected PlayerTradeWindow m_partnerWindow;
 		/// <summary>
 		/// Holds the flag for repair
 		/// </summary>
@@ -187,16 +187,16 @@ namespace DOL.GS
 		public bool Repairing
 		{
 			get { return m_repair; }
-			set 
-			{ 		
-				if(value == false)
+			set
+			{
+				if (value == false)
 				{
 					m_partnerWindow.m_repair = false;
 					m_repair = false;
 					return;
 				}
 
-				if(!m_recipiant)
+				if (!m_recipiant)
 				{
 					m_owner.Out.SendMessage("Only a recipient of a trade can initiate a repair.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					m_partnerWindow.m_repair = false;
@@ -204,31 +204,31 @@ namespace DOL.GS
 					return;
 				}
 
-				if(m_partnerWindow.ItemsCount != 1)
+				if (m_partnerWindow.ItemsCount != 1)
 				{
-					m_owner.Out.SendMessage("You can only repair one item at a time!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					m_owner.Out.SendMessage("You can only repair one item at a time!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					m_partnerWindow.m_repair = false;
 					m_repair = false;
 					return;
 				}
 
-				if(ItemsCount > 0)
+				if (ItemsCount > 0)
 				{
-					m_owner.Out.SendMessage("Your trade windows side must be empty to repair!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					m_owner.Out.SendMessage("Your trade windows side must be empty to repair!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					m_partnerWindow.m_repair = false;
 					m_repair = false;
-					return;	
+					return;
 				}
 
-				InventoryItem itemToRepair = (InventoryItem) m_partnerWindow.TradeItems[0];
-				if(itemToRepair == null)
+				InventoryItem itemToRepair = (InventoryItem)m_partnerWindow.TradeItems[0];
+				if (itemToRepair == null)
 				{
 					m_partnerWindow.m_repair = false;
 					m_repair = false;
 					return;
 				}
 
-				if(Repair.IsAllowedToBeginWork(m_owner, itemToRepair, 100))
+				if (Repair.IsAllowedToBeginWork(m_owner, itemToRepair, 100))
 				{
 					m_partnerWindow.m_repair = true;
 					m_repair = true;
@@ -249,16 +249,16 @@ namespace DOL.GS
 		public bool Combine
 		{
 			get { return m_combine; }
-			set 
-			{ 
-				if(value == false)
+			set
+			{
+				if (value == false)
 				{
 					m_partnerWindow.m_combine = false;
 					m_combine = false;
 					return;
 				}
 
-				if(!m_recipiant)
+				if (!m_recipiant)
 				{
 					m_owner.Out.SendMessage("Only a recipient of a trade can initiate a combine.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					m_partnerWindow.m_combine = false;
@@ -266,16 +266,16 @@ namespace DOL.GS
 					return;
 				}
 
-				if(m_partnerWindow.ItemsCount != 1)
+				if (m_partnerWindow.ItemsCount != 1)
 				{
-					m_owner.Out.SendMessage("You can only combine your items into one item!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					m_owner.Out.SendMessage("You can only combine your items into one item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					m_partnerWindow.m_combine = false;
 					m_combine = false;
 					return;
 				}
 
-				InventoryItem itemToCombine = (InventoryItem) m_partnerWindow.TradeItems[0];
-				if(itemToCombine == null)
+				InventoryItem itemToCombine = (InventoryItem)m_partnerWindow.TradeItems[0];
+				if (itemToCombine == null)
 				{
 					m_partnerWindow.m_combine = false;
 					m_combine = false;
@@ -283,11 +283,11 @@ namespace DOL.GS
 				}
 
 				AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(m_owner.CraftingPrimarySkill);
-				if(skill != null && skill is AdvancedCraftingSkill)
+				if (skill != null && skill is AdvancedCraftingSkill)
 				{
-					if(((AdvancedCraftingSkill)skill).IsAllowedToCombine(m_owner, itemToCombine))
+					if (((AdvancedCraftingSkill)skill).IsAllowedToCombine(m_owner, itemToCombine))
 					{
-						if(skill is SpellCrafting)
+						if (skill is SpellCrafting)
 							((SpellCrafting)skill).ShowSpellCraftingInfos(m_owner, itemToCombine);
 
 						m_partnerWindow.m_combine = true;
@@ -299,7 +299,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					m_owner.Out.SendMessage("You don't have enough skill to combine items.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					m_owner.Out.SendMessage("You don't have enough skill to combine items.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 
 				m_partnerWindow.m_combine = false;
@@ -324,9 +324,9 @@ namespace DOL.GS
 		/// <returns>true if added</returns>
 		public bool AddItemToTrade(InventoryItem itemForTrade)
 		{
-			lock(Sync)
+			lock (Sync)
 			{
-				if(!itemForTrade.IsDropable || !itemForTrade.IsPickable)
+				if (!itemForTrade.IsDropable || !itemForTrade.IsPickable)
 					return false;
 				if (TradeItems.Contains(itemForTrade))
 					return false;
@@ -348,7 +348,7 @@ namespace DOL.GS
 		/// <param name="money">Array of money values to add</param>
 		public void AddMoneyToTrade(long money)
 		{
-			lock(Sync)
+			lock (Sync)
 			{
 				TradeMoney += money;
 				TradeUpdate();
@@ -364,10 +364,10 @@ namespace DOL.GS
 			if (itemToRemove == null)
 				return;
 
-			lock(Sync)
+			lock (Sync)
 			{
 				TradeItems.Remove(itemToRemove);
-				if(!m_tradeAccept || !m_partnerWindow.m_tradeAccept) TradeUpdate();
+				if (!m_tradeAccept || !m_partnerWindow.m_tradeAccept) TradeUpdate();
 			}
 		}
 
@@ -394,10 +394,10 @@ namespace DOL.GS
 			}
 		}
 
-		#endregion	
+		#endregion
 
 		#region AcceptTrade/CloseTraide
-		
+
 		/// <summary>
 		/// Called each time a player push the accept button to accept the trade
 		/// </summary>
@@ -418,7 +418,7 @@ namespace DOL.GS
 					logTrade = true;
 
 				//Test if we and our partner have enough money
-				bool enoughMoney        = m_owner.RemoveMoney(TradeMoney);
+				bool enoughMoney = m_owner.RemoveMoney(TradeMoney);
 				bool partnerEnoughMoney = partner.RemoveMoney(m_partnerWindow.TradeMoney);
 
 				//Check the preconditions
@@ -450,20 +450,20 @@ namespace DOL.GS
 					return false;
 				}
 
-				if(m_combine == true)
+				if (m_combine == true)
 				{
 					GamePlayer crafter = (m_recipiant == true ? m_owner : partner);
 					AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(crafter.CraftingPrimarySkill);
-					if(skill != null && skill is AdvancedCraftingSkill)
+					if (skill != null && skill is AdvancedCraftingSkill)
 					{
 						((AdvancedCraftingSkill)skill).CombineItems(crafter);
 					}
 				}
-				else if(m_repair == true)
+				else if (m_repair == true)
 				{
 					GamePlayer crafter = (m_recipiant == true ? m_owner : partner);
 					InventoryItem itemToRepair = (InventoryItem)(m_recipiant == true ? m_partnerWindow.TradeItems[0] : TradeItems[0]);
-					if(itemToRepair != null)
+					if (itemToRepair != null)
 					{
 						crafter.RepairItem(itemToRepair);
 					}
@@ -475,9 +475,9 @@ namespace DOL.GS
 					int partnerTradeItemsCount = m_partnerWindow.TradeItems.Count;
 
 					//Test if we and our partner have enough space in inventory
-					int mySpaceNeeded      = Math.Max(0, partnerTradeItemsCount - myTradeItemsCount);
+					int mySpaceNeeded = Math.Max(0, partnerTradeItemsCount - myTradeItemsCount);
 					int partnerSpaceNeeded = Math.Max(0, myTradeItemsCount - partnerTradeItemsCount);
-					bool enoughSpace        = m_owner.Inventory.IsSlotsFree(mySpaceNeeded, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+					bool enoughSpace = m_owner.Inventory.IsSlotsFree(mySpaceNeeded, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 					bool partnerEnoughSpace = partner.Inventory.IsSlotsFree(partnerSpaceNeeded, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 
 					//Check the preconditions
@@ -506,35 +506,35 @@ namespace DOL.GS
 					m_partnerWindow.m_changesCount++;
 
 					// must be cloned because Inventory.RemoveItem removes it from trade window
-					ArrayList ownerTradeItems = (ArrayList) TradeItems.Clone();
-					ArrayList partnerTradeItems = (ArrayList) m_partnerWindow.TradeItems.Clone();
+					ArrayList ownerTradeItems = (ArrayList)TradeItems.Clone();
+					ArrayList partnerTradeItems = (ArrayList)m_partnerWindow.TradeItems.Clone();
 
 					// remove all items first to make sure there is enough space
 					// if inventory is full but removed items count >= received count
-					foreach(InventoryItem item in ownerTradeItems)
+					foreach (InventoryItem item in ownerTradeItems)
 						m_owner.Inventory.RemoveItem(item);
-					foreach(InventoryItem item in partnerTradeItems)
+					foreach (InventoryItem item in partnerTradeItems)
 						partner.Inventory.RemoveItem(item);
 
-					foreach(InventoryItem item in ownerTradeItems)
+					foreach (InventoryItem item in ownerTradeItems)
 					{
 						if (m_owner.Guild != partner.Guild)
 							item.Emblem = 0;
 						if (!partner.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 							if (log.IsWarnEnabled)
-								log.Warn("Item was not added to first free slot. Player="+partner.Name+"; Item="+item.Id_nb);
-						if(logTrade)
-							GameServer.Instance.LogGMAction("   Item: "+m_owner.Name+"("+m_owner.Client.Account.Name+") -> "+partner.Name+"("+partner.Client.Account.Name+") : "+item.Name+"("+item.Id_nb+")");
+								log.Warn("Item was not added to first free slot. Player=" + partner.Name + "; Item=" + item.TemplateID);
+						if (logTrade)
+							GameServer.Instance.LogGMAction("   Item: " + m_owner.Name + "(" + m_owner.Client.Account.Name + ") -> " + partner.Name + "(" + partner.Client.Account.Name + ") : " + item.Name + "(" + item.TemplateID + ")");
 					}
-					foreach(InventoryItem item in partnerTradeItems)
+					foreach (InventoryItem item in partnerTradeItems)
 					{
 						if (m_owner.Guild != partner.Guild)
 							item.Emblem = 0;
 						if (!m_owner.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 							if (log.IsWarnEnabled)
-								log.Warn("Item was not added to first free slot. Player="+m_owner.Name+"; Item="+item.Id_nb);
-						if(logTrade)
-							GameServer.Instance.LogGMAction("   Item: "+partner.Name+"("+partner.Client.Account.Name+") -> "+m_owner.Name+"("+m_owner.Client.Account.Name+") : "+item.Name+"("+item.Id_nb+")");
+								log.Warn("Item was not added to first free slot. Player=" + m_owner.Name + "; Item=" + item.TemplateID);
+						if (logTrade)
+							GameServer.Instance.LogGMAction("   Item: " + partner.Name + "(" + partner.Client.Account.Name + ") -> " + m_owner.Name + "(" + m_owner.Client.Account.Name + ") : " + item.Name + "(" + item.TemplateID + ")");
 					}
 
 					m_owner.Inventory.CommitChanges();
@@ -549,12 +549,12 @@ namespace DOL.GS
 					partner.Inventory.SaveIntoDatabase(partner.InternalID);
 				}
 
-				if(logTrade)
+				if (logTrade)
 				{
-					if(m_partnerWindow.TradeMoney > 0)
-						GameServer.Instance.LogGMAction("  Money: "+partner.Name+"("+partner.Client.Account.Name+") -> "+m_owner.Name+"("+m_owner.Client.Account.Name+") : "+m_partnerWindow.TradeMoney+"coppers");
-					if(TradeMoney > 0)
-						GameServer.Instance.LogGMAction("  Money: "+m_owner.Name+"("+m_owner.Client.Account.Name+") -> "+partner.Name+"("+partner.Client.Account.Name+") : "+TradeMoney+"coppers");
+					if (m_partnerWindow.TradeMoney > 0)
+						GameServer.Instance.LogGMAction("  Money: " + partner.Name + "(" + partner.Client.Account.Name + ") -> " + m_owner.Name + "(" + m_owner.Client.Account.Name + ") : " + m_partnerWindow.TradeMoney + "coppers");
+					if (TradeMoney > 0)
+						GameServer.Instance.LogGMAction("  Money: " + m_owner.Name + "(" + m_owner.Client.Account.Name + ") -> " + partner.Name + "(" + partner.Client.Account.Name + ") : " + TradeMoney + "coppers");
 				}
 
 				if (TradeMoney > 0 || m_partnerWindow.TradeMoney > 0)
@@ -577,7 +577,7 @@ namespace DOL.GS
 		/// </summary>
 		public void CloseTrade()
 		{
-			lock(Sync)
+			lock (Sync)
 			{
 				m_owner.Out.SendCloseTradeWindow();
 				m_partnerWindow.Owner.Out.SendCloseTradeWindow();

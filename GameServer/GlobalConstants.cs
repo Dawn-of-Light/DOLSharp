@@ -216,34 +216,34 @@ namespace DOL.GS
 	/// </summary>
 	public class Slot
 	{
-		public const int HORSEARMOR = 7;
-		public const int HORSEBARDING = 8;
-		public const int HORSE = 9;
-		public const int RIGHTHAND = 10;
-		public const int LEFTHAND = 11;
-		public const int TWOHAND = 12;
-		public const int RANGED = 13;
-		public const int FIRSTQUIVER = 14;
-		public const int SECONDQUIVER = 15;
-		public const int THIRDQUIVER = 16;
-		public const int FOURTHQUIVER = 17;
-		public const int HELM = 21;
-		public const int HANDS = 22;
-		public const int FEET = 23;
-		public const int JEWELRY = 24;
-		public const int TORSO = 25;
-		public const int CLOAK = 26;
-		public const int LEGS = 27;
-		public const int ARMS = 28;
-		public const int NECK = 29;
-		public const int FOREARMS = 30;
-		public const int SHIELD = 31;
-		public const int WAIST = 32;
-		public const int LEFTWRIST = 33;
-		public const int RIGHTWRIST = 34;
-		public const int LEFTRING = 35;
-		public const int RIGHTRING = 36;
-		public const int MYTHICAL = 37;
+		public const byte HORSEARMOR = 7;
+		public const byte HORSEBARDING = 8;
+		public const byte HORSE = 9;
+		public const byte RIGHTHAND = 10;
+		public const byte LEFTHAND = 11;
+		public const byte TWOHAND = 12;
+		public const byte RANGED = 13;
+		public const byte FIRSTQUIVER = 14;
+		public const byte SECONDQUIVER = 15;
+		public const byte THIRDQUIVER = 16;
+		public const byte FOURTHQUIVER = 17;
+		public const byte HELM = 21;
+		public const byte HANDS = 22;
+		public const byte FEET = 23;
+		public const byte JEWELRY = 24;
+		public const byte TORSO = 25;
+		public const byte CLOAK = 26;
+		public const byte LEGS = 27;
+		public const byte ARMS = 28;
+		public const byte NECK = 29;
+		public const byte FOREARMS = 30;
+		public const byte SHIELD = 31;
+		public const byte WAIST = 32;
+		public const byte LEFTWRIST = 33;
+		public const byte RIGHTWRIST = 34;
+		public const byte LEFTRING = 35;
+		public const byte RIGHTRING = 36;
+		public const byte MYTHICAL = 37;
 	};
 
 	/// <summary>
@@ -628,6 +628,7 @@ namespace DOL.GS
         #endregion
 
         #region Focus
+		Focus_First = 120,
         // Classic Focii
 		Focus_Darkness = 120,
 		Focus_Suppression = 121,
@@ -665,6 +666,7 @@ namespace DOL.GS
 		Focus_Cursing = 160,
 		Focus_Hexing = 161,
 		Focus_Witchcraft = 162,
+		Focus_Last = 162,
         #endregion
 
         MaxSpeed = 145,
@@ -1513,38 +1515,13 @@ namespace DOL.GS
 
 			eRealm realm = eRealm.None;
 
-			if (item.Bonus1Type > 0 && (realm = GetBonusRealm((eProperty)item.Bonus1Type)) != eRealm.None)
-				return new eRealm[] { realm };
-
-			if (item.Bonus2Type > 0 && (realm = GetBonusRealm((eProperty)item.Bonus2Type)) != eRealm.None)
-				return new eRealm[] { realm };
-
-			if (item.Bonus3Type > 0 && (realm = GetBonusRealm((eProperty)item.Bonus3Type)) != eRealm.None)
-				return new eRealm[] { realm };
-
-			if (item.Bonus4Type > 0 && (realm = GetBonusRealm((eProperty)item.Bonus4Type)) != eRealm.None)
-				return new eRealm[] { realm };
-
-			if (item.Bonus5Type > 0 && (realm = GetBonusRealm((eProperty)item.Bonus5Type)) != eRealm.None)
-				return new eRealm[] { realm };
-
-			if (item.Bonus6Type > 0 && (realm = GetBonusRealm((eProperty)item.Bonus6Type)) != eRealm.None)
-				return new eRealm[] { realm };
-
-			if (item.Bonus7Type > 0 && (realm = GetBonusRealm((eProperty)item.Bonus7Type)) != eRealm.None)
-				return new eRealm[] { realm };
-
-			if (item.Bonus8Type > 0 && (realm = GetBonusRealm((eProperty)item.Bonus8Type)) != eRealm.None)
-				return new eRealm[] { realm };
-
-			if (item.Bonus9Type > 0 && (realm = GetBonusRealm((eProperty)item.Bonus9Type)) != eRealm.None)
-				return new eRealm[] { realm };
-
-			if (item.Bonus10Type > 0 && (realm = GetBonusRealm((eProperty)item.Bonus10Type)) != eRealm.None)
-				return new eRealm[] { realm };
+			foreach (ItemBonus bonus in item.MagicalBonuses)
+			{
+				if ((realm = GetBonusRealm((eProperty)bonus.BonusType)) != eRealm.None)
+					return new eRealm[] { realm };
+			}
 
 			return new eRealm[] { realm };
-
 		}
 
 		public static byte GetSpecToInternalIndex(string name)

@@ -167,7 +167,7 @@ namespace DOL.GS.PacketHandler
 							value2 = item.Count;
 							break;
 						case (int)eObjectType.Instrument:
-							value1 = (item.DPS_AF == 2 ? 0 : item.DPS_AF);
+							value1 = (item.DPS_AF == 2 ? (byte)0 : item.DPS_AF);
 							value2 = 0;
 							break; // unused
 						case (int)eObjectType.Shield:
@@ -218,7 +218,7 @@ namespace DOL.GS.PacketHandler
 					if (item.Emblem != 0)
 					{
 						pak.WriteShort((ushort)item.Emblem);
-						item.Effect |= (item.Emblem & 0x010000) >> 8; // = 1 for newGuildEmblem
+						item.Effect |= (byte)((item.Emblem & 0x010000) >> 8); // = 1 for newGuildEmblem
 					}
 					else
 						pak.WriteShort((ushort)item.Color);

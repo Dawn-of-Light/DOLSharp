@@ -1112,7 +1112,7 @@ namespace DOL.GS.Housing
 
 			//get the housepoint item
 			String sqlWhere = String.Format("ItemTemplateID = '{0}'",
-				GameServer.Database.Escape(template.Id_nb));
+				GameServer.Database.Escape(template.TemplateID));
 			DBHousepointItem item = (DBHousepointItem)GameServer.Database.SelectObject(typeof(DBHousepointItem), sqlWhere);
 			if (item == null)
 				return;

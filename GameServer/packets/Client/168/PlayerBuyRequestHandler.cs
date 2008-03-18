@@ -40,7 +40,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			uint X = packet.ReadInt();
 			uint Y = packet.ReadInt();
 			ushort id = packet.ReadShort();
-			ushort item_slot = packet.ReadShort();
+			byte item_slot = (byte)packet.ReadShort();
 			byte item_count = (byte)packet.ReadByte();
 			byte menu_id = (byte)packet.ReadByte();
 

@@ -230,147 +230,9 @@ namespace DOL.GS.Quests.Midgard
 */
 
 			askefruerWings = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "askefruer_wings");
-			if (askefruerWings == null)
-			{
-				askefruerWings = new ItemTemplate();
-				askefruerWings.Name = "Wings of Askefruer";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + askefruerWings.Name + " , creating it ...");
-
-				askefruerWings.Weight = 2;
-				askefruerWings.Model = 551;
-
-				askefruerWings.Object_Type = (int) eObjectType.GenericItem;
-
-				askefruerWings.Id_nb = "askefruer_wings";
-				askefruerWings.IsPickable = true;
-				askefruerWings.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(askefruerWings);
-			}
-
 			dustyOldMap = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "dusty_old_map");
-			if (dustyOldMap == null)
-			{
-				dustyOldMap = new ItemTemplate();
-				dustyOldMap.Name = "Dusty Old Map";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + dustyOldMap.Name + " , creating it ...");
-
-				dustyOldMap.Weight = 10;
-				dustyOldMap.Model = 498;
-
-				dustyOldMap.Object_Type = (int) eObjectType.GenericItem;
-
-				dustyOldMap.Id_nb = "dusty_old_map";
-				dustyOldMap.IsPickable = true;
-				dustyOldMap.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(dustyOldMap);
-			}
-
-
-			// item db check
 			recruitsArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_arms_mid");
-			if (recruitsArms == null)
-			{
-				recruitsArms = new ItemTemplate();
-				recruitsArms.Name = "Recruit's Studded Arms (Mid)";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + recruitsArms.Name + ", creating it ...");
-				recruitsArms.Level = 7;
-
-				recruitsArms.Weight = 36;
-				recruitsArms.Model = 83; // studded Boots
-
-				recruitsArms.DPS_AF = 10; // Armour
-				recruitsArms.SPD_ABS = 19; // Absorption
-
-				recruitsArms.Object_Type = (int) eObjectType.Studded;
-				recruitsArms.Item_Type = (int) eEquipmentItems.ARMS;
-				recruitsArms.Id_nb = "recruits_studded_arms_mid";
-				recruitsArms.Gold = 0;
-				recruitsArms.Silver = 4;
-				recruitsArms.Copper = 0;
-				recruitsArms.IsPickable = true;
-				recruitsArms.IsDropable = true;
-				recruitsArms.Color = 36; // blue cloth
-
-				recruitsArms.Bonus = 5; // default bonus
-
-				recruitsArms.Bonus1 = 4;
-				recruitsArms.Bonus1Type = (int) eStat.QUI;
-
-				recruitsArms.Bonus2 = 1;
-				recruitsArms.Bonus2Type = (int) eResist.Body;
-
-				recruitsArms.Quality = 100;
-				recruitsArms.Condition = 1000;
-				recruitsArms.MaxCondition = 1000;
-				recruitsArms.Durability = 1000;
-				recruitsArms.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsArms);
-			}
-
 			recruitsSleeves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_sleeves");
-			if (recruitsSleeves == null)
-			{
-				recruitsSleeves = new ItemTemplate();
-				recruitsSleeves.Name = "Recruit's Quilted Sleeves";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + recruitsSleeves.Name + ", creating it ...");
-				recruitsSleeves.Level = 7;
-
-				recruitsSleeves.Weight = 12;
-				recruitsSleeves.Model = 153;
-
-				recruitsSleeves.DPS_AF = 6; // Armour
-				recruitsSleeves.SPD_ABS = 0; // Absorption
-
-				recruitsSleeves.Object_Type = (int) eObjectType.Cloth;
-				recruitsSleeves.Item_Type = (int) eEquipmentItems.ARMS;
-				recruitsSleeves.Id_nb = "recruits_quilted_sleeves";
-				recruitsSleeves.Gold = 0;
-				recruitsSleeves.Silver = 4;
-				recruitsSleeves.Copper = 0;
-				recruitsSleeves.IsPickable = true;
-				recruitsSleeves.IsDropable = true;
-				recruitsSleeves.Color = 27; // red cloth
-
-				recruitsSleeves.Bonus = 5; // default bonus
-
-				recruitsSleeves.Bonus1 = 4;
-				recruitsSleeves.Bonus1Type = (int) eStat.DEX;
-
-				recruitsSleeves.Bonus2 = 1;
-				recruitsSleeves.Bonus2Type = (int) eResist.Body;
-
-				recruitsSleeves.Quality = 100;
-				recruitsSleeves.Condition = 1000;
-				recruitsSleeves.MaxCondition = 1000;
-				recruitsSleeves.Durability = 1000;
-				recruitsSleeves.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsSleeves);
-			}
-
 			#endregion
 
 			/* Now we add some hooks to the npc we found.
@@ -587,7 +449,7 @@ namespace DOL.GS.Quests.Midgard
 			UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
 			InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
-			if (item != null && item.Id_nb == dustyOldMap.Id_nb)
+			if (item != null && item.TemplateID == dustyOldMap.TemplateID)
 			{
 				if (quest.Step == 2)
 				{
@@ -759,7 +621,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step >= 6 && Step <= 8 && e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.Id_nb == askefruerWings.Id_nb)
+				if (gArgs.Target.Name == dalikor.Name && gArgs.Item.TemplateID == askefruerWings.TemplateID)
 				{
 					if (Step == 6)
 					{

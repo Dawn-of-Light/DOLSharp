@@ -179,46 +179,7 @@ namespace DOL.GS.Quests.Albion
 			#endregion
 
 			#region defineItems
-
-			// item db check
 			beltOfAnimation = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "belt_of_animation");
-			if (beltOfAnimation == null)
-			{
-				beltOfAnimation = new ItemTemplate();
-				beltOfAnimation.Name = "Belt of Animation";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find "+beltOfAnimation.Name+", creating it ...");
-				
-				beltOfAnimation.Level = 5;
-				beltOfAnimation.Weight = 3;
-				beltOfAnimation.Model = 597;
-				
-				beltOfAnimation.Object_Type = (int) eObjectType.Magical;
-				beltOfAnimation.Item_Type = (int) eEquipmentItems.WAIST;
-				beltOfAnimation.Id_nb = "belt_of_animation";
-				beltOfAnimation.Gold = 0;
-				beltOfAnimation.Silver = 0;
-				beltOfAnimation.Copper = 0;
-				beltOfAnimation.IsPickable = true;
-				beltOfAnimation.IsDropable = false; // can't be sold to merchand
-
-				beltOfAnimation.Bonus1 = 6;
-				beltOfAnimation.Bonus1Type = (int)eProperty.MaxHealth;
-				
-				beltOfAnimation.Quality = 100;
-				beltOfAnimation.Condition = 1000;
-				beltOfAnimation.MaxCondition = 1000;
-				beltOfAnimation.Durability = 1000;
-				beltOfAnimation.MaxDurability = 1000;
-
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(beltOfAnimation);
-			}
-
 			#endregion
 
 

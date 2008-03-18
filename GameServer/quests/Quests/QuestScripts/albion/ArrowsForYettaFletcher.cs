@@ -185,7 +185,7 @@ namespace DOL.GS.Quests.Albion
 				bundleOfDecayedZombieLegs.Model = 497;
 				
 				bundleOfDecayedZombieLegs.Object_Type = (int) eObjectType.GenericItem;
-				bundleOfDecayedZombieLegs.Id_nb = "bundle_of_decayed_zombie_legs";
+				bundleOfDecayedZombieLegs.TemplateID = "bundle_of_decayed_zombie_legs";
 				bundleOfDecayedZombieLegs.Gold = 0;
 				bundleOfDecayedZombieLegs.Silver = 0;
 				bundleOfDecayedZombieLegs.Copper = 0;
@@ -521,7 +521,7 @@ namespace DOL.GS.Quests.Albion
 			else if (e == GamePlayerEvent.GiveItem)
 			{
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-				if (gArgs.Target.Name == yettaFletcher.Name && gArgs.Item.Id_nb == bundleOfDecayedZombieLegs.Id_nb)
+				if (gArgs.Target.Name == yettaFletcher.Name && gArgs.Item.TemplateID == bundleOfDecayedZombieLegs.TemplateID)
 				{
 					if(Step == 5)
 					{

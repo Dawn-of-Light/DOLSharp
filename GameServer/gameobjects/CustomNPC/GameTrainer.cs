@@ -220,7 +220,7 @@ namespace DOL.GS
 			GamePlayer player = source as GamePlayer;
 			if (player != null)
 			{
-				switch (item.Id_nb)
+				switch (item.TemplateID)
 				{
 					case "respec_single":
 						{

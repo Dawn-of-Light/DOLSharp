@@ -194,7 +194,7 @@ namespace DOL.GS.Quests.Albion
 				farmerAsmasMap.Model = 499;
 
 				farmerAsmasMap.Object_Type = (int) eObjectType.GenericItem;
-				farmerAsmasMap.Id_nb = "farmer_asma_map";
+				farmerAsmasMap.TemplateID = "farmer_asma_map";
 				farmerAsmasMap.Gold = 0;
 				farmerAsmasMap.Silver = 0;
 				farmerAsmasMap.Copper = 0;
@@ -432,7 +432,7 @@ namespace DOL.GS.Quests.Albion
 			UseSlotEventArgs uArgs = (UseSlotEventArgs) args;
 
 			InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
-			if (item != null && item.Id_nb == farmerAsmasMap.Id_nb)
+			if (item != null && item.TemplateID == farmerAsmasMap.TemplateID)
 			{
 				switch (quest.Step)
 				{
@@ -616,7 +616,7 @@ namespace DOL.GS.Quests.Albion
 				if(Step == 4)
 				{
 					GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-					if (gArgs.Target.Name == farmerAsma.Name && gArgs.Item.Id_nb == farmerAsmasMap.Id_nb)
+					if (gArgs.Target.Name == farmerAsma.Name && gArgs.Item.TemplateID == farmerAsmasMap.TemplateID)
 					{
 						RemoveItem(farmerAsma, m_questPlayer, farmerAsmasMap);
 

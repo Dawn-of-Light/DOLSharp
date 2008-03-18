@@ -84,7 +84,7 @@ namespace DOL.GS.PacketHandler
 							value2 = item.Count;
 							break;
 						case (int)eObjectType.Instrument:
-							value1 = (item.DPS_AF == 2 ? 0 : item.DPS_AF);
+							value1 = (item.DPS_AF == 2 ? (byte)0 : item.DPS_AF);
 							value2 = 0;
 							break; // unused
 						case (int)eObjectType.Shield:

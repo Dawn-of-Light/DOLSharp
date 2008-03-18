@@ -513,7 +513,7 @@ namespace DOL.GS.Keeps
 				if (myguild != null)
 				{
 					this.m_guild = myguild;
-					this.m_guild.ClaimedKeep = this;
+					this.m_guild.ClaimedKeeps.Add(this);
 					StartDeductionTimer();
 				}
 			}
@@ -584,10 +584,31 @@ namespace DOL.GS.Keeps
 				player.Out.SendMessage("The keep is already claimed.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			if (player.Guild.ClaimedKeep != null)
+			switch (ServerProperties.Properties.GUILDS_CLAIM_LIMIT)
 			{
-				player.Out.SendMessage("Your guild already owns a keep.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				return false;
+				case 0:
+					{
+						player.Out.SendMessage("Keep claiming is disabled!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return false;
+					}
+				case 1:
+					{
+						if (player.Guild.ClaimedKeeps.Count == 1)
+						{
+							player.Out.SendMessage("Your guild already owns a keep.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return false;
+						}
+						break;
+					}
+				default:
+					{
+						if (player.Guild.ClaimedKeeps.Count >= ServerProperties.Properties.GUILDS_CLAIM_LIMIT)
+						{
+							player.Out.SendMessage("Your guild already owns the limit of keeps (" + ServerProperties.Properties.GUILDS_CLAIM_LIMIT + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return false;
+						}
+						break;
+					}
 			}
 
 			if (player.Group != null)
@@ -620,7 +641,9 @@ namespace DOL.GS.Keeps
 		public void Claim(GamePlayer player)
 		{
 			this.m_guild = player.Guild;
-			player.Guild.ClaimedKeep = this;
+			player.Guild.ClaimedKeeps.Add(this);
+			if (ServerProperties.Properties.GUILDS_CLAIM_LIMIT > 1)
+				player.Guild.SendMessageToGuildMembers("Your guild has currently claimed " + player.Guild.ClaimedKeeps.Count + " keeps of a maximum of " + ServerProperties.Properties.GUILDS_CLAIM_LIMIT, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
 
 			ChangeLevel(1);
 
@@ -701,7 +724,7 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public void Release()
 		{
-			this.Guild.ClaimedKeep = null;
+			this.Guild.ClaimedKeeps.Remove(this);
 			PlayerMgr.BroadcastRelease(this);
 			this.m_guild = null;
 			StopDeductionTimer();
@@ -905,7 +928,7 @@ namespace DOL.GS.Keeps
 		/// reset the realm when the lord have been killed
 		/// </summary>
 		/// <param name="realm"></param>
-		public void Reset(eRealm realm)
+		public virtual void Reset(eRealm realm)
 		{
 			LastAttackedByEnemyTick = 0;
 

@@ -62,53 +62,75 @@ namespace DOL.GS.Quests.Albion
 
 		private void Init()
 		{
-			ItemTemplate intelligentBracer = CreateBracer();
-			intelligentBracer.Id_nb = "recruits_intelligent_bracer";
-			intelligentBracer.Name = "Recruit's Intelligent Bracer";
-			intelligentBracer.Bonus1 = 4;
-			intelligentBracer.Bonus1Type = (int)eProperty.Acuity;
-			intelligentBracer.Bonus2 = 3;
-			intelligentBracer.Bonus2Type = (int)eProperty.Constitution;
-			intelligentBracer.Bonus3 = 2;
-			intelligentBracer.Bonus3Type = (int)eProperty.Resist_Slash;
+			ItemTemplate intelligentBracer = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "recruits_intelligent_bracer");
+			if (intelligentBracer == null)
+			{
+				intelligentBracer = CreateBracer();
+				intelligentBracer.TemplateID = "recruits_intelligent_bracer";
+				intelligentBracer.Name = "Recruit's Intelligent Bracer";
 
-			ItemTemplate mightyBracer = CreateBracer();
-			mightyBracer.Id_nb = "recruits_mighty_bracer";
-			mightyBracer.Name = "Recruit's Mighty Bracer";
-			mightyBracer.Bonus1 = 4;
-			mightyBracer.Bonus1Type = (int)eProperty.Strength;
-			mightyBracer.Bonus2 = 4;
-			mightyBracer.Bonus2Type = (int)eProperty.Constitution;
-			mightyBracer.Bonus3 = 2;
-			mightyBracer.Bonus3Type = (int)eProperty.Resist_Slash;
+				intelligentBracer.AddBonus((byte)eProperty.Acuity, 4);
+				intelligentBracer.AddBonus((byte)eStat.CON, 3);
+				intelligentBracer.AddBonus((byte)eResist.Slash, 2);
 
-			ItemTemplate slyBracer = CreateBracer();
-			slyBracer.Id_nb = "recruits_sly_bracer";
-			slyBracer.Name = "Recruit's Sly Bracer";
-			slyBracer.Bonus1 = 4;
-			slyBracer.Bonus1Type = (int)eProperty.Dexterity;
-			slyBracer.Bonus2 = 4;
-			slyBracer.Bonus2Type = (int)eProperty.Quickness;
-			slyBracer.Bonus3 = 2;
-			slyBracer.Bonus3Type = (int)eProperty.Resist_Slash;
+				AddDBItem(intelligentBracer);
+			}
 
-			ItemTemplate piousBracer = CreateBracer();
-			piousBracer.Id_nb = "recruits_pious_bracer";
-			piousBracer.Name = "Recruit's Pious Bracer";
-			piousBracer.Bonus1 = 4;
-			piousBracer.Bonus1Type = (int)eProperty.Acuity;
-			piousBracer.Bonus2 = 3;
-			piousBracer.Bonus2Type = (int)eProperty.Dexterity;
-			piousBracer.Bonus3 = 2;
-			piousBracer.Bonus3Type = (int)eProperty.Resist_Slash;
+			ItemTemplate mightyBracer = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "recruits_mighty_bracer");
+			if (mightyBracer == null)
+			{
+				mightyBracer = CreateBracer();
+				mightyBracer.TemplateID = "recruits_mighty_bracer";
+				mightyBracer.Name = "Recruit's Mighty Bracer";
 
-			ItemTemplate banditCloak = new ItemTemplate();
-			banditCloak.Weight = 0;
-			banditCloak.Condition = 50000;
-			banditCloak.MaxCondition = 50000;
-			banditCloak.Model = 669;
-			banditCloak.Extension = 1;
-			banditCloak.Name = "Bandit Cloak";
+				mightyBracer.AddBonus((byte)eStat.STR, 4);
+				mightyBracer.AddBonus((byte)eStat.CON, 3);
+				mightyBracer.AddBonus((byte)eResist.Slash, 2);
+
+				AddDBItem(mightyBracer);
+			}
+
+			ItemTemplate slyBracer = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "recruits_sly_bracer");
+			if (slyBracer == null)
+			{
+				slyBracer = CreateBracer();
+				slyBracer.TemplateID = "recruits_sly_bracer";
+				slyBracer.Name = "Recruit's Sly Bracer";
+
+				slyBracer.AddBonus((byte)eStat.DEX, 4);
+				slyBracer.AddBonus((byte)eStat.CON, 3);
+				slyBracer.AddBonus((byte)eResist.Slash, 2);
+
+				AddDBItem(slyBracer);
+			}
+
+			ItemTemplate piousBracer = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "recruits_pious_bracer");
+			if (piousBracer == null)
+			{
+				piousBracer = CreateBracer();
+				piousBracer.TemplateID = "recruits_pious_bracer";
+				piousBracer.Name = "Recruit's Pious Bracer";
+
+				piousBracer.AddBonus((byte)eProperty.Acuity, 4);
+				piousBracer.AddBonus((byte)eStat.DEX, 3);
+				piousBracer.AddBonus((byte)eResist.Slash, 2);
+
+				AddDBItem(piousBracer);
+			}
+
+			ItemTemplate banditCloak = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate),"bandit_cloak");
+			if (banditCloak == null)
+			{
+				banditCloak = new ItemTemplate();
+				banditCloak.Weight = 0;
+				banditCloak.Condition = 50000;
+				banditCloak.MaxCondition = 50000;
+				banditCloak.Model = 669;
+				banditCloak.Extension = 1;
+				banditCloak.Name = "Bandit Cloak";
+				banditCloak.TemplateID = "bandit_cloak";
+				AddDBItem(banditCloak);
+			}
 
 			Level = 1;
 			QuestGiver = sirDorian;

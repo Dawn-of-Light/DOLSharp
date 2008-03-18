@@ -33,7 +33,7 @@ namespace DOL.GS
 	{
 		private const string ENCHANT_ITEM_WEAK = "enchanting item";
 		private const string TOWARDSTR = " towards you.";
-		private int[] BONUS_TABLE = new int[] {5, 5, 10, 15, 20, 25, 30, 30};
+		private byte[] BONUS_TABLE = new byte[] { 5, 5, 10, 15, 20, 25, 30, 30 };
 
 		public override IList GetExamineMessages(GamePlayer player)
 		{
@@ -72,9 +72,9 @@ namespace DOL.GS
 			if (t == null || item == null)
 				return false;
 
-			if (item.Level >= 10 && item.CrafterName != "")
+			if (item.Level >= 10 && item.Description != "")
 			{
-				if (item.Object_Type != (int) eObjectType.Magical && item.Object_Type != (int) eObjectType.Bolt && item.Object_Type != (int) eObjectType.Poison)
+				if (item.Object_Type != (int)eObjectType.Magical && item.Object_Type != (int)eObjectType.Bolt && item.Object_Type != (int)eObjectType.Poison)
 				{
 					if (item.Bonus == 0)
 					{
@@ -96,18 +96,18 @@ namespace DOL.GS
 		protected void EnchanterDialogResponse(GamePlayer player, byte response)
 		{
 			WeakReference itemWeak =
-				(WeakReference) player.TempProperties.getObjectProperty(
+				(WeakReference)player.TempProperties.getObjectProperty(
 					ENCHANT_ITEM_WEAK,
 					new WeakRef(null)
 					);
 			player.TempProperties.removeProperty(ENCHANT_ITEM_WEAK);
 
 
-			if (response != 0x01 || !WorldMgr.CheckDistance(this, player,WorldMgr.INTERACT_DISTANCE))
+			if (response != 0x01 || !WorldMgr.CheckDistance(this, player, WorldMgr.INTERACT_DISTANCE))
 				return;
 
-			InventoryItem item = (InventoryItem) itemWeak.Target;
-			if (item == null || item.SlotPosition == (int) eInventorySlot.Ground
+			InventoryItem item = (InventoryItem)itemWeak.Target;
+			if (item == null || item.SlotPosition == (int)eInventorySlot.Ground
 				|| item.OwnerID == null || item.OwnerID != player.InternalID)
 			{
 				player.Out.SendMessage("Invalid item.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -122,7 +122,7 @@ namespace DOL.GS
 				return;
 			}
 			if (item.Level < 50)
-				item.Bonus = BONUS_TABLE[(item.Level/5) - 2];
+				item.Bonus = BONUS_TABLE[(item.Level / 5) - 2];
 			else
 				item.Bonus = 35;
 
@@ -136,7 +136,7 @@ namespace DOL.GS
 
 		public long CalculEnchantPrice(InventoryItem item)
 		{
-			return (Money.GetMoney(0, 0, item.Gold, item.Silver, item.Copper)/5);
+			return (item.Value / 5);
 		}
 	}
 }

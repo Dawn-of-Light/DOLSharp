@@ -603,6 +603,12 @@ namespace DOL.GS
 		private const int ARMORTYPE_BITCOUNT = 3;
 		private static readonly int[] m_armorResists = new int[1 << (REALM_BITCOUNT + DAMAGETYPE_BITCOUNT + ARMORTYPE_BITCOUNT)];
 
+		public static int GetArmorResist(InventoryItem armor, eDamageType damageType)
+		{
+			if (armor == null || armor.Template == null)
+				return 0;
+			return GetArmorResist(armor.Template, damageType);
+		}
 		/// <summary>
 		/// Gets the natural armor resist to the give damage type
 		/// </summary>

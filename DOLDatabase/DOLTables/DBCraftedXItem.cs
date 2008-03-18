@@ -32,7 +32,7 @@ namespace DOL
 		{
 			static bool	m_autoSave;
 			private string m_ingredientId_nb;
-			private int m_count;
+			private byte m_count;
 			private string m_craftedItemId_nb;
 
 			/// <summary>
@@ -93,7 +93,7 @@ namespace DOL
 			/// The count of the raw material to use
 			/// </summary>
 			[DataElement(AllowDbNull=false)]
-			public int Count
+			public byte Count
 			{
 				get
 				{

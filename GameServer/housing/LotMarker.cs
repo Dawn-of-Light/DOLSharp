@@ -110,7 +110,7 @@ namespace DOL.GS.Housing
 			GamePlayer player = (GamePlayer)source;
 			if (HouseMgr.IsOwner(DatabaseItem, player, true))
 			{
-				switch (item.Id_nb)
+				switch (item.TemplateID)
 				{
 					case "alb_cottage_deed":
 						CreateHouse(player, 1);
@@ -187,7 +187,7 @@ namespace DOL.GS.Housing
 			this.Delete();
 		}
 
-		public virtual bool OnPlayerBuy(GamePlayer player, int item_slot, int number)
+		public virtual bool OnPlayerBuy(GamePlayer player, byte item_slot, byte number)
 		{
 			GameMerchant.OnPlayerBuy(player, item_slot, number, HouseTemplateMgr.GetLotMarkerItems(this));
 			return true;
@@ -208,7 +208,7 @@ namespace DOL.GS.Housing
 			if (item == null)
 				return 0;
 
-			int itemCount = Math.Max(1, item.Count);
+			byte itemCount = Math.Max((byte)1, item.Count);
 			return item.Value * itemCount / 2;
 		}
 

@@ -224,7 +224,7 @@ namespace DOL.GS.Quests.Albion
                     log.Warn("Could not find Elder Wood, creating it ...");
                 enchantedHalberd = new ItemTemplate();
                 enchantedHalberd.Object_Type = 0;
-                enchantedHalberd.Id_nb = "enchanted_halberd";
+                enchantedHalberd.TemplateID = "enchanted_halberd";
                 enchantedHalberd.Name = "Enchanted Halberd";
                 enchantedHalberd.Level = 1;
                 enchantedHalberd.Model = 67;
@@ -561,7 +561,7 @@ namespace DOL.GS.Quests.Albion
                 switch (Step)
                 {
                     case 1:
-                        if (gArgs.Target.Name == guardCynon.Name && gArgs.Item.Id_nb == enchantedHalberd.Id_nb)
+                        if (gArgs.Target.Name == guardCynon.Name && gArgs.Item.TemplateID == enchantedHalberd.TemplateID)
                         {
                             RemoveItem(guardCynon, player, enchantedHalberd);
                             SendSystemMessage(player, "Guard Cynon accepts the polearm and inspects it closely, falling into a combat stance. Before he can swing the weapon, a disembodied voice strikes up a conversation with him. Cynon's eyes widen and his jaw drops.");
@@ -570,7 +570,7 @@ namespace DOL.GS.Quests.Albion
                         }
                         return;
                     case 3:
-                        if (gArgs.Target.Name == palune.Name && gArgs.Item.Id_nb == enchantedHalberd.Id_nb)
+                        if (gArgs.Target.Name == palune.Name && gArgs.Item.TemplateID == enchantedHalberd.TemplateID)
                         {
                             RemoveItem(palune, player, enchantedHalberd);
                             palune.SayTo(player, "Thank you. Oh, I see what I did wrong now. He's right, I'm sure it was talking to him nonstop when he tried to use it. I'll have to find the time to fix it and someone else to deliver it. Well, thank you for bringing it back, and here's your payment.");

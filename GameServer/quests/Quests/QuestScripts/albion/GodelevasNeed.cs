@@ -185,117 +185,9 @@ namespace DOL.GS.Quests.Albion
 			#endregion
 
 			#region defineItems
-
-			// item db check
 			woodenBucket = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "wooden_bucket");
-			if (woodenBucket == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Wooden Bucket, creating it ...");
-				woodenBucket = new ItemTemplate();
-				woodenBucket.Name = "Wooden Bucket";
-				woodenBucket.Level = 1;
-				woodenBucket.Weight = 10;
-				woodenBucket.Model = 1610;
-
-				woodenBucket.Object_Type = (int)eObjectType.GenericItem;
-				woodenBucket.Id_nb = "wooden_bucket";
-				woodenBucket.Gold = 0;
-				woodenBucket.Silver = 0;
-				woodenBucket.Copper = 0;
-				woodenBucket.IsPickable = false;
-				woodenBucket.IsDropable = false;
-
-				woodenBucket.Quality = 100;
-				woodenBucket.Condition = 1000;
-				woodenBucket.MaxCondition = 1000;
-				woodenBucket.Durability = 1000;
-				woodenBucket.MaxDurability = 1000;
-
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(woodenBucket);
-			}
-
-			// item db check
 			fullWoodenBucket = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "full_wooden_bucket");
-			if (fullWoodenBucket == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Full Wooden Bucket, creating it ...");
-				fullWoodenBucket = new ItemTemplate();
-				fullWoodenBucket.Name = "Full Wooden Bucket";
-				fullWoodenBucket.Level = 1;
-				fullWoodenBucket.Weight = 250;
-				fullWoodenBucket.Model = 1610;
-
-				fullWoodenBucket.Object_Type = (int)eObjectType.GenericItem;
-				fullWoodenBucket.Id_nb = "full_wooden_bucket";
-				fullWoodenBucket.Gold = 0;
-				fullWoodenBucket.Silver = 0;
-				fullWoodenBucket.Copper = 0;
-				fullWoodenBucket.IsPickable = false;
-				fullWoodenBucket.IsDropable = false;
-
-				fullWoodenBucket.Quality = 100;
-				fullWoodenBucket.Condition = 1000;
-				fullWoodenBucket.MaxCondition = 1000;
-				fullWoodenBucket.Durability = 1000;
-				fullWoodenBucket.MaxDurability = 1000;
-
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(fullWoodenBucket);
-			}
-
-			// item db check
 			reedBracer = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "reed_bracer");
-			if (reedBracer == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Reed Bracer of Health creating it ...");
-				reedBracer = new ItemTemplate();
-				reedBracer.Name = "Reed Bracer";
-				reedBracer.Level = 3;
-				reedBracer.Weight = 1;
-				reedBracer.Model = 598;
-
-				reedBracer.Object_Type = (int)eObjectType.Magical;
-				reedBracer.Item_Type = (int)eEquipmentItems.L_BRACER;
-				reedBracer.Id_nb = "reed_bracer";
-
-				reedBracer.Gold = 0;
-				reedBracer.Silver = 0;
-				reedBracer.Copper = 30;
-				reedBracer.IsPickable = true;
-				reedBracer.IsDropable = true;
-
-				reedBracer.Bonus = 1;
-				reedBracer.Bonus1Type = (int)eProperty.MaxHealth;
-				reedBracer.Bonus1 = 8;
-				reedBracer.Bonus2Type = (int)eProperty.Resist_Cold;
-				reedBracer.Bonus2 = 1;
-
-				reedBracer.Quality = 100;
-				reedBracer.Condition = 1000;
-				reedBracer.MaxCondition = 1000;
-				reedBracer.Durability = 1000;
-				reedBracer.MaxDurability = 1000;
-
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(reedBracer);
-			}
-
 			#endregion
 
 
@@ -482,7 +374,7 @@ namespace DOL.GS.Quests.Albion
 				UseSlotEventArgs uArgs = (UseSlotEventArgs)args;
 
 				InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
-				if (item != null && item.Id_nb == woodenBucket.Id_nb)
+				if (item != null && item.TemplateID == woodenBucket.TemplateID)
 				{
 					if (WorldMgr.CheckDistance(player, cotswoldVillageBridge, 500))
 					{
@@ -622,7 +514,7 @@ namespace DOL.GS.Quests.Albion
 				if (Step == 2)
 				{
 					GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
-					if (gArgs.Target.Name == godelevaDowden.Name && gArgs.Item.Id_nb == fullWoodenBucket.Id_nb)
+					if (gArgs.Target.Name == godelevaDowden.Name && gArgs.Item.TemplateID == fullWoodenBucket.TemplateID)
 					{
 						RemoveItem(godelevaDowden, m_questPlayer, fullWoodenBucket);
 

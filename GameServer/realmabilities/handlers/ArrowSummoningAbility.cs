@@ -37,15 +37,15 @@ namespace DOL.GS.RealmAbilities
             GameInventoryItem as2 = GameInventoryItem.CreateFromTemplate("arrow_summoning2");
             GameInventoryItem as3 = GameInventoryItem.CreateFromTemplate("arrow_summoning3");
 
-			if(!player.Inventory.AddTemplate(as1.Item,10,eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+			if(!player.Inventory.AddTemplate(as1.Item.Template,10,eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
 				player.Out.SendMessage("You do not have enough inventory space to place this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
-			else if(!player.Inventory.AddTemplate(as2.Item,10,eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+			else if(!player.Inventory.AddTemplate(as2.Item.Template,10,eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
                 player.Out.SendMessage("You do not have enough inventory space to place this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
-			else if(!player.Inventory.AddTemplate(as3.Item,10,eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+			else if(!player.Inventory.AddTemplate(as3.Item.Template,10,eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
                 player.Out.SendMessage("You do not have enough inventory space to place this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}			
@@ -115,10 +115,10 @@ namespace DOL.GS.RealmAbilities
 				arrow_summoning1.IsDropable = false;
 				arrow_summoning1.IsTradable = false;
 				arrow_summoning1.MaxCount = 20;
-				arrow_summoning1.Id_nb = "arrow_summoning1";
+				arrow_summoning1.TemplateID = "arrow_summoning1";
 				GameServer.Database.AddNewObject(arrow_summoning1);
 				if (log.IsDebugEnabled)
-					log.Debug("Added " + arrow_summoning1.Id_nb);
+					log.Debug("Added " + arrow_summoning1.TemplateID);
 			}
 			ItemTemplate arrow_summoning2 = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "arrow_summoning2");
 			if (arrow_summoning2 == null)
@@ -143,10 +143,10 @@ namespace DOL.GS.RealmAbilities
 				arrow_summoning2.IsDropable = false;
 				arrow_summoning2.IsTradable = false;
 				arrow_summoning2.MaxCount = 20;
-				arrow_summoning2.Id_nb = "arrow_summoning2";
+				arrow_summoning2.TemplateID = "arrow_summoning2";
 				GameServer.Database.AddNewObject(arrow_summoning2);
 				if (log.IsDebugEnabled)
-					log.Debug("Added " + arrow_summoning2.Id_nb);
+					log.Debug("Added " + arrow_summoning2.TemplateID);
 			}
 			ItemTemplate arrow_summoning3 = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "arrow_summoning3");
 			if (arrow_summoning3 == null)
@@ -171,10 +171,10 @@ namespace DOL.GS.RealmAbilities
 				arrow_summoning3.IsDropable = false;
 				arrow_summoning3.IsTradable = false;
 				arrow_summoning3.MaxCount = 20;
-				arrow_summoning3.Id_nb = "arrow_summoning3";
+				arrow_summoning3.TemplateID = "arrow_summoning3";
 				GameServer.Database.AddNewObject(arrow_summoning3);
 				if (log.IsDebugEnabled)
-					log.Debug("Added " + arrow_summoning3.Id_nb);
+					log.Debug("Added " + arrow_summoning3.TemplateID);
 			}
 		}
 	}

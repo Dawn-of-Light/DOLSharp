@@ -2076,7 +2076,7 @@ namespace DOL.GS
 				if (!equipHasItems)
 				{
 					//Temp list to store our models
-					List<int> tempModels = new List<int>();
+					List<ushort> tempModels = new List<ushort>();
 
 					//Let's go through all of our ';' seperated slots
 					foreach (string str in equipIDs)
@@ -2087,17 +2087,17 @@ namespace DOL.GS
 						//It should only be two in length SLOT : MODELS
 						if (slotXModels.Length == 2)
 						{
-							int slot;
+							byte slot;
 							//Let's try to get our slot
-							if (Int32.TryParse(slotXModels[0], out slot))
+							if (byte.TryParse(slotXModels[0], out slot))
 							{
 								//Now lets go through and add all the models to the list
 								string[] models = slotXModels[1].Split('|');
 								foreach (string strModel in models)
 								{
 									//We'll add it to the list if we successfully parse it!
-									int model;
-									if (Int32.TryParse(strModel, out model))
+									ushort model;
+									if (UInt16.TryParse(strModel, out model))
 										tempModels.Add(model);
 								}
 
@@ -3634,7 +3634,7 @@ namespace DOL.GS
 						loot.Z = Z;
 						loot.Heading = Heading;
 						loot.CurrentRegion = CurrentRegion;
-						if (((GameInventoryItem)loot).Item.Id_nb == "aurulite")
+						if (((GameInventoryItem)loot).Item.TemplateID == "aurulite")
 						{
 							((GameInventoryItem)loot).Item.Count = ((GameInventoryItem)loot).Item.PackSize;
 						}

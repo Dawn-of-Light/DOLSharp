@@ -470,7 +470,7 @@ namespace DOL.GS
 					}
 					else
 					{
-						player.Inventory.RemoveCountFromStack(item, (int)de.Value);
+						player.Inventory.RemoveCountFromStack(item, (byte)de.Value);
 					}
 				}
 			}
@@ -491,11 +491,11 @@ namespace DOL.GS
 
 			lock (player.Inventory)
 			{
-				int count = craftItemData.ItemTemplate.PackSize < 1 ? 1 : craftItemData.ItemTemplate.PackSize;
+				int count = craftItemData.ItemTemplate.PackSize < 1 ? (byte)1 : craftItemData.ItemTemplate.PackSize;
 				foreach (InventoryItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 				{
 					if (item == null) continue;
-					if (item.Id_nb != craftItemData.ItemTemplate.Id_nb) continue;
+					if (item.TemplateID != craftItemData.ItemTemplate.TemplateID) continue;
 					if (item.Count >= item.MaxCount) continue;
 
 					int countFree = item.MaxCount - item.Count;
@@ -535,15 +535,14 @@ namespace DOL.GS
 					if (countToAdd > 0)	// Add to exiting item
 					{
 						newItem = player.Inventory.GetItem((eInventorySlot)de.Key);
-						player.Inventory.AddCountToStack(newItem, countToAdd);
+						player.Inventory.AddCountToStack(newItem, (byte)countToAdd);
 					}
 					else
 					{
 						newItem = new InventoryItem(craftItemData.ItemTemplate);
-						newItem.CrafterName = player.Name;
+						newItem.Description = player.Name;
 						newItem.Quality = GetQuality(player, craftItemData);
-						newItem.Count = -countToAdd;
-						newItem.Weight *= -countToAdd;
+						newItem.Count = (byte)-countToAdd;
 
 						if ((int)de.Key > 0)		// Create new item in the backpack
 						{
@@ -642,7 +641,7 @@ namespace DOL.GS
 						}
 						else
 						{
-							player.Inventory.RemoveCountFromStack(item, (int)de.Value);
+							player.Inventory.RemoveCountFromStack(item, (byte)de.Value);
 						}
 					}
 				}
@@ -769,7 +768,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Calculate crafted item quality
 		/// </summary>
-		public int GetQuality(GamePlayer player, DBCraftedItem item)
+		public byte GetQuality(GamePlayer player, DBCraftedItem item)
 		{
 			// 2% chance to get masterpiece, 1:6 chance to get 94-99%, if legendary or if grey con
 			// otherwise moving the most load towards 94%, the higher the item con to the crafter skill
@@ -782,14 +781,14 @@ namespace DOL.GS
 				{
 					return 100;	// 2% chance for master piece
 				}
-				return 96 + Util.Random(3);
+				return (byte)(96 + Util.Random(3));
 			}
 
 			int delta = GetItemCon(player.GetCraftingSkillValue(m_eskill), item.CraftingLevel);
 			if (delta < -2)
 			{
 				if (Util.Chance(2)) return 100; // grey items get 2% chance to be master piece
-				return 96 + Util.Random(3); // handle grey items like legendary
+				return (byte)(96 + Util.Random(3)); // handle grey items like legendary
 			}
 
 			// this is a type of roulette selection, imagine a roulette wheel where all chances get different sized
@@ -817,7 +816,7 @@ namespace DOL.GS
 			int rand = Util.Random(sum);
 			for (int i = 3; i >= 0; i--)
 			{
-				if (rand < chancePart[i]) return 96 + i;
+				if (rand < chancePart[i]) return (byte)(96 + i);
 				rand -= chancePart[i];
 			}
 

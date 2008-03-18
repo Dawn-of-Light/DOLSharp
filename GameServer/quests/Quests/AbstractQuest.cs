@@ -272,7 +272,6 @@ namespace DOL.GS.Quests
 		public virtual void OnQuestAssigned(GamePlayer player)
 		{
 			player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client, "AbstractQuest.OnQuestAssigned.GetQuest", Name)), eChatType.CT_Group, eChatLoc.CL_ChatWindow);
-
 		}
 		/// <summary>
 		/// This HybridDictionary holds all the custom properties of this quest
@@ -377,5 +376,12 @@ namespace DOL.GS.Quests
 		}
 
 		#endregion
+
+		public static void AddDBItem(ItemTemplate item)
+		{
+			GameServer.Database.AddNewObject(item);
+			foreach (ItemBonus bonus in item.MagicalBonuses)
+				GameServer.Database.AddNewObject(bonus);
+		}
 	}
 }

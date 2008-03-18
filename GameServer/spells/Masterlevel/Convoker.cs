@@ -23,13 +23,7 @@ namespace DOL.GS.Spells
             ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "mysticwood_wooden_boards");
             if (template != null)
             {
-                item = new InventoryItem();
-                item.CopyFrom(template);
-                if (item.IsStackable)
-                {
-                    item.Count = 100;
-                    item.Weight = item.Count * item.Weight;
-                }
+				item = new InventoryItem(template, 100);
             }
         }
     }
@@ -251,13 +245,7 @@ namespace DOL.GS.Spells
             ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), ammo);
             if (template != null)
             {
-                item = new InventoryItem();
-                item.CopyFrom(template);
-                if (item.IsStackable)
-                {
-                    item.Count = 10;
-                    item.Weight = item.Count * item.Weight;
-                }
+				item = new InventoryItem(template, 10);
             }
         }
     }

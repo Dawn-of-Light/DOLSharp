@@ -773,7 +773,7 @@ namespace DOL.GS
 					InventoryItem item;
 					if ((item = Inventory.GetItem(eInventorySlot.TwoHandWeapon)) != null)
 					{
-						item.DPS_AF = (int)(Level * 3.3);
+						item.DPS_AF = (byte)(Level * 3.3);
 						item.SPD_ABS = 50;
 						switch (templateID)
 						{
@@ -796,12 +796,12 @@ namespace DOL.GS
 					{
 						if ((item = Inventory.GetItem(eInventorySlot.RightHandWeapon)) != null)
 						{
-							item.DPS_AF = (int)(Level * 3.3);
+							item.DPS_AF = (byte)(Level * 3.3);
 							item.SPD_ABS = 37;
 						}
 						if ((item = Inventory.GetItem(eInventorySlot.LeftHandWeapon)) != null)
 						{
-							item.DPS_AF = (int)(Level * 3.3);
+							item.DPS_AF = (byte)(Level * 3.3);
 							item.SPD_ABS = 37;
 						}
 						SwitchWeapon(eActiveWeaponSlot.Standard);

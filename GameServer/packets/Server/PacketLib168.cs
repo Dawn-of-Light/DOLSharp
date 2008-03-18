@@ -1614,7 +1614,7 @@ namespace DOL.GS.PacketHandler
 							value2 = item.Count;
 							break;
 						case (int)eObjectType.Instrument:
-							value1 = (item.DPS_AF == 2 ? 0 : item.DPS_AF); // 0x00 = Lute ; 0x01 = Drum ; 0x03 = Flute
+							value1 = (item.DPS_AF == 2 ? (byte)0 : item.DPS_AF); // 0x00 = Lute ; 0x01 = Drum ; 0x03 = Flute
 							value2 = 0;
 							break; // unused
 						case (int)eObjectType.Shield:
@@ -1641,9 +1641,9 @@ namespace DOL.GS.PacketHandler
 					pak.WriteShort((ushort)item.Weight);
 					pak.WriteByte(item.ConditionPercent); // % of con
 					pak.WriteByte(item.DurabilityPercent); // % of dur
-					pak.WriteByte((byte)item.Quality); // % of qua
-					pak.WriteByte((byte)item.Bonus); // % bonus
-					pak.WriteShort((ushort)item.Model);
+					pak.WriteByte(item.Quality); // % of qua
+					pak.WriteByte(item.Bonus); // % bonus
+					pak.WriteShort(item.Model);
 					if (item.Emblem != 0)
 						pak.WriteShort((ushort)item.Emblem);
 					else
@@ -1903,17 +1903,17 @@ namespace DOL.GS.PacketHandler
 					foreach (InventoryItem item in items)
 					{
 						pak.WriteByte((byte)item.SlotPosition);
-						pak.WriteByte((byte)item.Level);
-						pak.WriteByte((byte)item.DPS_AF); // dps_af
-						pak.WriteByte((byte)item.SPD_ABS); //spd_abs
+						pak.WriteByte(item.Level);
+						pak.WriteByte(item.DPS_AF); // dps_af
+						pak.WriteByte(item.SPD_ABS); //spd_abs
 						pak.WriteByte((byte)(item.Hand << 6));
 						pak.WriteByte((byte)((item.Type_Damage > 3 ? 0 : item.Type_Damage << 6) | item.Object_Type));
 						pak.WriteShort((ushort)item.Weight); // weight
 						pak.WriteByte(item.ConditionPercent); // con %
 						pak.WriteByte(item.DurabilityPercent); // dur %
-						pak.WriteByte((byte)item.Quality); // qua %
-						pak.WriteByte((byte)item.Bonus); // bon %
-						pak.WriteShort((ushort)item.Model); //model
+						pak.WriteByte(item.Quality); // qua %
+						pak.WriteByte(item.Bonus); // bon %
+						pak.WriteShort(item.Model); //model
 						pak.WriteShort((ushort)item.Color); //color
 						pak.WriteShort((ushort)item.Effect); //weaponproc
 						if (item.Count > 1)
@@ -3252,7 +3252,7 @@ namespace DOL.GS.PacketHandler
 						value1 = item.DPS_AF;
 						value2 = item.PackSize; break;
 					case (int)eObjectType.Instrument:
-						value1 = (item.DPS_AF == 2 ? 0 : item.DPS_AF); // 0x00 = Lute ; 0x01 = Drum ; 0x03 = Flute
+						value1 = (item.DPS_AF == 2 ? (byte)0 : item.DPS_AF); // 0x00 = Lute ; 0x01 = Drum ; 0x03 = Flute
 						value2 = 0; break; // unused
 					case (int)eObjectType.Shield:
 						value1 = item.Type_Damage;

@@ -181,116 +181,9 @@ namespace DOL.GS.Quests.Albion
 			#endregion
 
 			#region defineItems
-
-			// item db check
 			sephucothsHeart = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sephucoths_heart");
-			if (sephucothsHeart == null)
-			{
-				sephucothsHeart = new ItemTemplate();
-				sephucothsHeart.Name = "Sephucoth's Heart";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find "+sephucothsHeart.Name+", creating it ...");
-				sephucothsHeart.Level = 0;
-				sephucothsHeart.Weight = 0;
-				sephucothsHeart.Model = 595;
-
-				sephucothsHeart.Object_Type = (int) eObjectType.GenericItem;
-				sephucothsHeart.Id_nb = "sephucoths_heart";
-				sephucothsHeart.Gold = 0;
-				sephucothsHeart.Silver = 0;
-				sephucothsHeart.Copper = 0;
-				sephucothsHeart.IsPickable = false;
-				sephucothsHeart.IsDropable = false;
-				
-				sephucothsHeart.Quality = 100;
-				sephucothsHeart.Condition = 1000;
-				sephucothsHeart.MaxCondition = 1000;
-				sephucothsHeart.Durability = 1000;
-				sephucothsHeart.MaxDurability = 1000;
-
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(sephucothsHeart);
-			}
-
-			// item db check
 			polishedBone = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "polished_bone");
-			if (polishedBone == null)
-			{
-				polishedBone = new ItemTemplate();
-				polishedBone.Name = "Polished Bone";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find "+polishedBone.Name+", creating it ...");
-				polishedBone.Level = 0;
-				polishedBone.Weight = 15;
-				polishedBone.Model = 497;
-
-				polishedBone.Object_Type = (int) eObjectType.GenericItem;
-				polishedBone.Id_nb = "polished_bone";
-				polishedBone.Gold = 0;
-				polishedBone.Silver = 0;
-				polishedBone.Copper = 0;
-				polishedBone.IsPickable = false;
-				polishedBone.IsDropable = false;
-				
-				polishedBone.Quality = 100;
-				polishedBone.Condition = 1000;
-				polishedBone.MaxCondition = 1000;
-				polishedBone.Durability = 1000;
-				polishedBone.MaxDurability = 1000;
-
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(polishedBone);
-			}
-
-			// item db check
 			fieryCrystalPendant = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "fiery_crystal_pendant");
-			if (fieryCrystalPendant == null)
-			{
-				fieryCrystalPendant = new ItemTemplate();
-				fieryCrystalPendant.Name = "Fiery Crystal Pendant";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find "+fieryCrystalPendant.Name+", creating it ...");
-			
-				fieryCrystalPendant.Level = 8;
-				fieryCrystalPendant.Weight = 8;
-				fieryCrystalPendant.Model = 101;
-			
-				fieryCrystalPendant.Object_Type = (int) eObjectType.Magical;
-				fieryCrystalPendant.Item_Type = (int) eEquipmentItems.NECK;
-				fieryCrystalPendant.Id_nb = "fiery_crystal_pendant";
-				fieryCrystalPendant.Gold = 0;
-				fieryCrystalPendant.Silver = 0;
-				fieryCrystalPendant.Copper = 30;
-				fieryCrystalPendant.IsPickable = true;
-				fieryCrystalPendant.IsDropable = true;
-
-				fieryCrystalPendant.Bonus1 = 1;
-				fieryCrystalPendant.Bonus1Type = (int)eProperty.Skill_Fire;
-				fieryCrystalPendant.Bonus2 = 1;
-				fieryCrystalPendant.Bonus2Type = (int)eProperty.Intelligence;
-			
-				fieryCrystalPendant.Quality = 100;
-				fieryCrystalPendant.Condition = 1000;
-				fieryCrystalPendant.MaxCondition = 1000;
-				fieryCrystalPendant.Durability = 1000;
-				fieryCrystalPendant.MaxDurability = 1000;
-
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(fieryCrystalPendant);
-			}
-
 			#endregion
 
 
@@ -613,7 +506,7 @@ namespace DOL.GS.Quests.Albion
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
 				if (gArgs.Target.Name == eowylnAstos.Name)
 				{
-					if(gArgs.Item.Id_nb == sephucothsHeart.Id_nb && Step == 2)
+					if(gArgs.Item.TemplateID == sephucothsHeart.TemplateID && Step == 2)
 					{
 						RemoveItem(eowylnAstos, m_questPlayer, sephucothsHeart);
 
@@ -621,7 +514,7 @@ namespace DOL.GS.Quests.Albion
 						eowylnAstos.SayTo(m_questPlayer, "You have done well traveler! I will still require one final object to complete the pendant. Seek out a large skeleton and bring from it a piece of polished bone! Return this to me and I shall finish your pendant.");
 						Step = 3;
 					}
-					else if(gArgs.Item.Id_nb == polishedBone.Id_nb && Step == 4)
+					else if(gArgs.Item.TemplateID == polishedBone.TemplateID && Step == 4)
 					{
 						RemoveItem(eowylnAstos, m_questPlayer, polishedBone);
 

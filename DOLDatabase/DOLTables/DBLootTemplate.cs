@@ -84,7 +84,7 @@ namespace DOL.Database
 			}
 		}
 
-		[Relation(LocalField = "ItemTemplateID", RemoteField = "Id_nb", AutoLoad = true, AutoDelete=false)]
+		[Relation(LocalField = "ItemTemplateID", RemoteField = "TemplateID", AutoLoad = true, AutoDelete=false)]
 		public ItemTemplate ItemTemplate;		
 	}
 }

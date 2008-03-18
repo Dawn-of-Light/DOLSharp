@@ -136,7 +136,7 @@ namespace DOL
 			/// <summary>
 			/// The item to craft
 			/// </summary>
-			[Relation(LocalField = "Id_nb", RemoteField = "Id_nb", AutoLoad = true, AutoDelete=false)]
+			[Relation(LocalField = "Id_nb", RemoteField = "TemplateID", AutoLoad = true, AutoDelete=false)]
 			public ItemTemplate ItemTemplate;
 		}
 	}

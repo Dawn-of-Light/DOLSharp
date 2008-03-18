@@ -110,7 +110,7 @@ namespace DOL.GS.Behaviour.Actions
                     }
                     else
                     {
-                        playerInventory.RemoveCountFromStack((InventoryItem)de.Key, (int)de.Value);
+                        playerInventory.RemoveCountFromStack((InventoryItem)de.Key, (byte)de.Value);
                     }
                 }
                 playerInventory.CommitChanges();

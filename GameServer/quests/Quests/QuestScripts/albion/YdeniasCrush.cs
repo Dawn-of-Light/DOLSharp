@@ -225,117 +225,9 @@ namespace DOL.GS.Quests.Albion
 			#endregion
 
 			#region defineItems
-
-			// item db check
 			letterToElvar = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "letter_to_elvar_tambor");
-			if (letterToElvar == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Letter to Healvar, creating it ...");
-				letterToElvar = new ItemTemplate();
-				letterToElvar.Name = "Letter to Elvar";
-				letterToElvar.Level = 0;
-				letterToElvar.Weight = 10;
-				letterToElvar.Model = 499;
-
-				letterToElvar.Object_Type = (int) eObjectType.GenericItem;
-				letterToElvar.Id_nb = "letter_to_elvar_tambor";
-				letterToElvar.Gold = 0;
-				letterToElvar.Silver = 0;
-				letterToElvar.Copper = 0;
-				letterToElvar.IsPickable = false;
-				letterToElvar.IsDropable = false;
-				
-				letterToElvar.Quality = 100;
-				letterToElvar.Condition = 1000;
-				letterToElvar.MaxCondition = 1000;
-				letterToElvar.Durability = 1000;
-				letterToElvar.MaxDurability = 1000;
-
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(letterToElvar);
-			}
-
-			// item db check
 			letterToYdenia = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "letter_to_yderia_philpott");
-			if (letterToYdenia == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Letter to Yderia creating it ...");
-				letterToYdenia = new ItemTemplate();
-				letterToYdenia.Name = "Letter to Ydenia";
-				letterToYdenia.Level = 0;
-				letterToYdenia.Weight = 10;
-				letterToYdenia.Model = 499;
-
-				letterToYdenia.Object_Type = (int) eObjectType.GenericItem;
-				letterToYdenia.Id_nb = "letter_to_yderia_philpott";
-				letterToYdenia.Gold = 0;
-				letterToYdenia.Silver = 0;
-				letterToYdenia.Copper = 0;
-				letterToYdenia.IsPickable = false;
-				letterToYdenia.IsDropable = false;
-
-				letterToYdenia.Quality = 100;
-				letterToYdenia.Condition = 1000;
-				letterToYdenia.MaxCondition = 1000;
-				letterToYdenia.Durability = 1000;
-				letterToYdenia.MaxDurability = 1000;
-
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(letterToYdenia);
-			}
-
-			// item db check
 			silverRingOfHealth = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "silver_ring_of_health");
-			if (silverRingOfHealth == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Silver Ring of Health creating it ...");
-				silverRingOfHealth = new ItemTemplate();
-				silverRingOfHealth.Name = "Silver Ring of Health";
-				silverRingOfHealth.Level = 3;
-				silverRingOfHealth.Weight = 1;
-				silverRingOfHealth.Model = 103;
-
-				silverRingOfHealth.Object_Type = (int) eObjectType.Magical;
-				silverRingOfHealth.Item_Type = (int) eEquipmentItems.L_RING;
-				silverRingOfHealth.Id_nb = "silver_ring_of_health";
-
-				silverRingOfHealth.Gold = 0;
-				silverRingOfHealth.Silver = 0;
-				silverRingOfHealth.Copper = 30;
-				silverRingOfHealth.IsPickable = true;
-				silverRingOfHealth.IsDropable = true;
-
-				silverRingOfHealth.Bonus = 1;
-				silverRingOfHealth.Bonus1Type = (int)eProperty.MaxHealth;
-				silverRingOfHealth.Bonus1 = 8;
-				silverRingOfHealth.Bonus2Type = (int)eProperty.Resist_Slash;
-				silverRingOfHealth.Bonus2 = 1;
-
-				silverRingOfHealth.Quality = 100;
-				silverRingOfHealth.Condition = 1000;
-				silverRingOfHealth.MaxCondition = 1000;
-				silverRingOfHealth.Durability = 1000;
-				silverRingOfHealth.MaxDurability = 1000;
-
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(silverRingOfHealth);
-			}
-
 			#endregion
 
 			/* Now we add some hooks to the npc we found.
@@ -661,7 +553,7 @@ namespace DOL.GS.Quests.Albion
 				if(Step == 1)
 				{
 					GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-					if (gArgs.Target.Name == elvarTambor.Name && gArgs.Item.Id_nb == letterToElvar.Id_nb)
+					if (gArgs.Target.Name == elvarTambor.Name && gArgs.Item.TemplateID == letterToElvar.TemplateID)
 					{
 						RemoveItem(elvarTambor, m_questPlayer, letterToElvar);
 
@@ -676,7 +568,7 @@ namespace DOL.GS.Quests.Albion
 				if(Step == 3)
 				{
 					GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-					if (gArgs.Target.Name == ydeniaPhilpott.Name && gArgs.Item.Id_nb == letterToYdenia.Id_nb)
+					if (gArgs.Target.Name == ydeniaPhilpott.Name && gArgs.Item.TemplateID == letterToYdenia.TemplateID)
 					{
 						RemoveItem(ydeniaPhilpott, m_questPlayer, letterToYdenia);
 

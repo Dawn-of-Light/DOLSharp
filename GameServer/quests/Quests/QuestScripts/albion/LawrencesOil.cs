@@ -75,25 +75,30 @@ namespace DOL.GS.Quests.Albion
 		private static GameNPC brotherLawrence = null;
 
 		private static ItemTemplate lawrencesEmptyFlask = null;
-		private static ItemTemplate lawrencesFilledFlask= null;
-		
-		
+		private static ItemTemplate lawrencesFilledFlask = null;
+		private static ItemTemplate lawrencesHalfFullFlask = null;
+
+
 		/* We need to define the constructors from the base class here, else there might be problems
 		 * when loading this quest...
 		 */
-		public LawrencesOil() : base()
+		public LawrencesOil()
+			: base()
 		{
 		}
 
-		public LawrencesOil(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		public LawrencesOil(GamePlayer questingPlayer)
+			: this(questingPlayer, 1)
 		{
 		}
 
-		public LawrencesOil(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		public LawrencesOil(GamePlayer questingPlayer, int step)
+			: base(questingPlayer, step)
 		{
 		}
 
-		public LawrencesOil(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		public LawrencesOil(GamePlayer questingPlayer, DBQuest dbQuest)
+			: base(questingPlayer, dbQuest)
 		{
 		}
 
@@ -179,26 +184,26 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			lawrencesEmptyFlask = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "lawrences_empty_flask");
+			lawrencesEmptyFlask = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "lawrences_empty_flask");
 			if (lawrencesEmptyFlask == null)
 			{
 				lawrencesEmptyFlask = new ItemTemplate();
 				lawrencesEmptyFlask.Name = "Lawrence's Empty Flask";
 				if (log.IsWarnEnabled)
-					log.Warn("Could not find "+lawrencesEmptyFlask.Name+", creating it ...");
-				
+					log.Warn("Could not find " + lawrencesEmptyFlask.Name + ", creating it ...");
+
 				lawrencesEmptyFlask.Level = 0;
 				lawrencesEmptyFlask.Weight = 1;
 				lawrencesEmptyFlask.Model = 490;
-				
-				lawrencesEmptyFlask.Object_Type = (int) eObjectType.GenericItem;
-				lawrencesEmptyFlask.Id_nb = "lawrences_empty_flask";
+
+				lawrencesEmptyFlask.Object_Type = (int)eObjectType.GenericItem;
+				lawrencesEmptyFlask.TemplateID = "lawrences_empty_flask";
 				lawrencesEmptyFlask.Gold = 0;
 				lawrencesEmptyFlask.Silver = 0;
 				lawrencesEmptyFlask.Copper = 0;
 				lawrencesEmptyFlask.IsPickable = false;
 				lawrencesEmptyFlask.IsDropable = false;
-				
+
 				lawrencesEmptyFlask.Quality = 100;
 				lawrencesEmptyFlask.Condition = 1000;
 				lawrencesEmptyFlask.MaxCondition = 1000;
@@ -213,27 +218,61 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(lawrencesEmptyFlask);
 			}
 
+			lawrencesHalfFullFlask = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "lawrences_half_full_flask");
+			if (lawrencesHalfFullFlask == null)
+			{
+				lawrencesHalfFullFlask = new ItemTemplate();
+				lawrencesHalfFullFlask.Name = "Lawrence's Flask (Half Full)";
+				if (log.IsWarnEnabled)
+					log.Warn("Could not find " + lawrencesHalfFullFlask.Name + ", creating it ...");
+
+				lawrencesHalfFullFlask.Level = 0;
+				lawrencesHalfFullFlask.Weight = 1;
+				lawrencesHalfFullFlask.Model = 490;
+
+				lawrencesHalfFullFlask.Object_Type = (int)eObjectType.GenericItem;
+				lawrencesHalfFullFlask.TemplateID = "lawrences_half_full_flask";
+				lawrencesHalfFullFlask.Gold = 0;
+				lawrencesHalfFullFlask.Silver = 0;
+				lawrencesHalfFullFlask.Copper = 0;
+				lawrencesHalfFullFlask.IsPickable = false;
+				lawrencesHalfFullFlask.IsDropable = false;
+
+				lawrencesHalfFullFlask.Quality = 100;
+				lawrencesHalfFullFlask.Condition = 1000;
+				lawrencesHalfFullFlask.MaxCondition = 1000;
+				lawrencesHalfFullFlask.Durability = 1000;
+				lawrencesHalfFullFlask.MaxDurability = 1000;
+
+
+				//You don't have to store the created item in the db if you don't want,
+				//it will be recreated each time it is not found, just comment the following
+				//line if you rather not modify your database
+				if (SAVE_INTO_DATABASE)
+					GameServer.Database.AddNewObject(lawrencesHalfFullFlask);
+			}
+
 			// item db check
-			lawrencesFilledFlask = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "lawrences_filled_flask");
+			lawrencesFilledFlask = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "lawrences_filled_flask");
 			if (lawrencesFilledFlask == null)
 			{
 				lawrencesFilledFlask = new ItemTemplate();
 				lawrencesFilledFlask.Name = "Lawrence's Filled Flask";
 				if (log.IsWarnEnabled)
-					log.Warn("Could not find "+lawrencesFilledFlask.Name+", creating it ...");
-				
+					log.Warn("Could not find " + lawrencesFilledFlask.Name + ", creating it ...");
+
 				lawrencesFilledFlask.Level = 0;
 				lawrencesFilledFlask.Weight = 1;
 				lawrencesFilledFlask.Model = 490;
-				
-				lawrencesFilledFlask.Object_Type = (int) eObjectType.GenericItem;
-				lawrencesFilledFlask.Id_nb = "lawrences_filled_flask";
+
+				lawrencesFilledFlask.Object_Type = (int)eObjectType.GenericItem;
+				lawrencesFilledFlask.TemplateID = "lawrences_filled_flask";
 				lawrencesFilledFlask.Gold = 0;
 				lawrencesFilledFlask.Silver = 0;
 				lawrencesFilledFlask.Copper = 0;
 				lawrencesFilledFlask.IsPickable = false;
 				lawrencesFilledFlask.IsDropable = false;
-				
+
 				lawrencesFilledFlask.Quality = 100;
 				lawrencesFilledFlask.Condition = 1000;
 				lawrencesFilledFlask.MaxCondition = 1000;
@@ -261,12 +300,12 @@ namespace DOL.GS.Quests.Albion
 
 			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
 			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
-			
+
 			GameEventMgr.AddHandler(brotherLawrence, GameLivingEvent.Interact, new DOLEventHandler(TalkToBrotherLawrence));
 			GameEventMgr.AddHandler(brotherLawrence, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToBrotherLawrence));
 
 			/* Now we bring to Ydenia the possibility to give this quest to players */
-			brotherLawrence.AddQuestToGive(typeof (LawrencesOil));
+			brotherLawrence.AddQuestToGive(typeof(LawrencesOil));
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -294,12 +333,12 @@ namespace DOL.GS.Quests.Albion
 
 			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
 			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
-			
+
 			GameEventMgr.RemoveHandler(brotherLawrence, GameLivingEvent.Interact, new DOLEventHandler(TalkToBrotherLawrence));
 			GameEventMgr.RemoveHandler(brotherLawrence, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToBrotherLawrence));
 
 			/* Now we remove to Ydenia the possibility to give this quest to players */
-			brotherLawrence.RemoveQuestToGive(typeof (LawrencesOil));
+			brotherLawrence.RemoveQuestToGive(typeof(LawrencesOil));
 		}
 
 		/* This is the method we declared as callback for the hooks we set to
@@ -310,15 +349,15 @@ namespace DOL.GS.Quests.Albion
 		protected static void TalkToBrotherLawrence(DOLEvent e, object sender, EventArgs args)
 		{
 			//We get the player from the event arguments and check if he qualifies		
-			GamePlayer player = ((SourceEventArgs) args).Source as GamePlayer;
+			GamePlayer player = ((SourceEventArgs)args).Source as GamePlayer;
 			if (player == null)
 				return;
 
-			if(brotherLawrence.CanGiveQuest(typeof (LawrencesOil), player)  <= 0)
+			if (brotherLawrence.CanGiveQuest(typeof(LawrencesOil), player) <= 0)
 				return;
 
 			//We also check if the player is already doing the quest
-			LawrencesOil quest = player.IsDoingQuest(typeof (LawrencesOil)) as LawrencesOil;
+			LawrencesOil quest = player.IsDoingQuest(typeof(LawrencesOil)) as LawrencesOil;
 
 			brotherLawrence.TurnTo(player);
 			//Did the player rightclick on NPC?
@@ -334,15 +373,15 @@ namespace DOL.GS.Quests.Albion
 				{
 					if (quest.Step == 4)
 					{
-						brotherLawrence.SayTo(player, "Welcome back, "+player.CharacterClass.Name+". I've almost finished making my preparations for the demonstration. May I have the flask of oil?");
+						brotherLawrence.SayTo(player, "Welcome back, " + player.CharacterClass.Name + ". I've almost finished making my preparations for the demonstration. May I have the flask of oil?");
 					}
 					return;
 				}
 			}
-				// The player whispered to NPC (clicked on the text inside the [])
+			// The player whispered to NPC (clicked on the text inside the [])
 			else if (e == GameLivingEvent.WhisperReceive)
 			{
-				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs) args;
+				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs)args;
 				if (quest == null)
 				{
 					//Do some small talk :)
@@ -352,7 +391,7 @@ namespace DOL.GS.Quests.Albion
 							brotherLawrence.SayTo(player, "Even in a small community like Cotswold, I'm almost always busy.  The Church teaches us to use prayers and magic to speed the natural healing process, but that requires a lot of energy. It's not uncommon for healers to be worn out at the end of the [day].");
 							break;
 
-							//If the player offered his help, we send the quest dialog now!
+						//If the player offered his help, we send the quest dialog now!
 						case "day":
 							brotherLawrence.SayTo(player, "It's exhausting work, but I believe I've found my calling.  I think I may have discovered a way to help deal with minor injuries and preserve the use of magic for more serious cases. Are you willing to help me prepare for a demonstration of my methods?");
 							player.Out.SendQuestSubscribeCommand(brotherLawrence, QuestMgr.GetIDForQuestType(typeof(LawrencesOil)), "Will you help Brother Lawrence gather \nthe oil he needs for his demonstration? \n[Levels 4-7]");
@@ -364,25 +403,25 @@ namespace DOL.GS.Quests.Albion
 					switch (wArgs.Text)
 					{
 						case "healing":
-							if(quest.Step == 1)
+							if (quest.Step == 1)
 							{
 								brotherLawrence.SayTo(player, "So far, I've used it as the base for a variety of salves and other treatments. It's proven very valuable in healing minor injuries, rashes and infections.  If we work quickly, I can have all my supplies ready in time for the [demonstration].");
 							}
 							break;
 
 						case "demonstration":
-							if(quest.Step == 1)
+							if (quest.Step == 1)
 							{
 								brotherLawrence.SayTo(player, "Here's a flask to store the oil in. Killing two of the river spritelings should provide enough oil for the demonstration and the next week's use. To find the spritelings, cross the bridge toward Camelot, but turn south before you get to the gates. Continue following the west bank of the river to the south, and you should see the spritelings before you come to the entrance to the Housing areas.");
-								
+
 								GiveItem(brotherLawrence, player, lawrencesEmptyFlask);
-								
+
 								quest.Step = 2;
 							}
-							break;	
+							break;
 
 						case "methods":
-							if(quest.Step == 5)
+							if (quest.Step == 5)
 							{
 								brotherLawrence.SayTo(player, "Here's a bit of copper for your trouble. I wish I could offer more, but times are tough right now. If you are ever in need of healing, please don't hesitate to visit me.");
 								quest.FinishQuest();
@@ -419,7 +458,7 @@ namespace DOL.GS.Quests.Albion
 		public override bool CheckQuestQualification(GamePlayer player)
 		{
 			// if the player is already doing the quest his level is no longer of relevance
-			if (player.IsDoingQuest(typeof (LawrencesOil)) != null)
+			if (player.IsDoingQuest(typeof(LawrencesOil)) != null)
 				return true;
 
 			// This checks below are only performed is player isn't doing quest already
@@ -430,7 +469,7 @@ namespace DOL.GS.Quests.Albion
 			return true;
 		}
 
-		
+
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
 		 * declines here...
@@ -438,7 +477,7 @@ namespace DOL.GS.Quests.Albion
 
 		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
 		{
-			LawrencesOil quest = player.IsDoingQuest(typeof (LawrencesOil)) as LawrencesOil;
+			LawrencesOil quest = player.IsDoingQuest(typeof(LawrencesOil)) as LawrencesOil;
 
 			if (quest == null)
 				return;
@@ -463,10 +502,10 @@ namespace DOL.GS.Quests.Albion
 		{
 			//We recheck the qualification, because we don't talk to players
 			//who are not doing the quest
-			if(brotherLawrence.CanGiveQuest(typeof (LawrencesOil), player)  <= 0)
+			if (brotherLawrence.CanGiveQuest(typeof(LawrencesOil), player) <= 0)
 				return;
 
-			if (player.IsDoingQuest(typeof (LawrencesOil)) != null)
+			if (player.IsDoingQuest(typeof(LawrencesOil)) != null)
 				return;
 
 			if (response == 0x00)
@@ -476,7 +515,7 @@ namespace DOL.GS.Quests.Albion
 			else
 			{
 				//Check if we can add the quest!
-				if (!brotherLawrence.GiveQuest(typeof (LawrencesOil), player, 1))
+				if (!brotherLawrence.GiveQuest(typeof(LawrencesOil), player, 1))
 					return;
 
 				SendReply(player, "Thank you for agreeing to help! This should make things go much more smoothly. I was concerned I might not have enough time to gather all the materials. I've found that the oil from river sprites and spritelings is a very versatile compound for [healing].");
@@ -513,7 +552,7 @@ namespace DOL.GS.Quests.Albion
 					case 3:
 						return "[Step #3] Search for river spritelings by crossing the bridge from Cotswold toward Camelot and heading south before you get to the city gates. Kill two of the spritelings and gather their oil in the flask provided by Brother Lawrence.";
 					case 4:
-						return "[Step #4] Return to Brother Lawrence with the filled flask and hand it to him when he asks."; 
+						return "[Step #4] Return to Brother Lawrence with the filled flask and hand it to him when he asks.";
 					case 5:
 						return "[Step #5] Continue speaking with Brother Lawrence about the demonstration of his healing [methods].";
 				}
@@ -525,40 +564,38 @@ namespace DOL.GS.Quests.Albion
 		{
 			GamePlayer player = sender as GamePlayer;
 
-			if (player == null || player.IsDoingQuest(typeof (LawrencesOil)) == null)
+			if (player == null || player.IsDoingQuest(typeof(LawrencesOil)) == null)
 				return;
 
 			if (e == GameLivingEvent.EnemyKilled)
 			{
-				if(Step == 2)
+				if (Step == 2)
 				{
-					EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs) args;
+					EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;
 					if (gArgs.Target.Name == "river spriteling")
 					{
 						if (Util.Chance(50))
 						{
 							player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "You gather oil from the spriteling in Brother \nLawrence's Flask. Your journal \nhas been updated.");
-							InventoryItem item = player.Inventory.GetFirstItemByID(lawrencesEmptyFlask.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+							InventoryItem item = player.Inventory.GetFirstItemByID(lawrencesEmptyFlask.TemplateID, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 							if (item != null)
 							{
-								item.Name = "Lawrence's Flask (Half Full)";
-								player.Out.SendInventorySlotsUpdate(new int[] {item.SlotPosition});
-						
+								ReplaceItem(player, lawrencesEmptyFlask, lawrencesHalfFullFlask);
 								Step = 3;
 							}
 						}
 						return;
 					}
 				}
-				else if(Step == 3)
+				else if (Step == 3)
 				{
-					EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs) args;
+					EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;
 					if (gArgs.Target.Name == "river spriteling")
 					{
 						if (Util.Chance(50))
 						{
 							player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "You gather oil from the spriteling in Brother \nLawrence's Flask. Your journal \nhas been updated.");
-							ReplaceItem(player, lawrencesEmptyFlask, lawrencesFilledFlask);
+							ReplaceItem(player, lawrencesHalfFullFlask, lawrencesFilledFlask);
 							Step = 4;
 						}
 						return;
@@ -567,10 +604,10 @@ namespace DOL.GS.Quests.Albion
 			}
 			else if (e == GamePlayerEvent.GiveItem)
 			{
-				if(Step == 4)
+				if (Step == 4)
 				{
-					GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
-					if (gArgs.Target.Name == brotherLawrence.Name && gArgs.Item.Id_nb == lawrencesFilledFlask.Id_nb)
+					GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
+					if (gArgs.Target.Name == brotherLawrence.Name && gArgs.Item.TemplateID == lawrencesFilledFlask.TemplateID)
 					{
 						RemoveItem(brotherLawrence, m_questPlayer, lawrencesFilledFlask);
 
@@ -595,7 +632,7 @@ namespace DOL.GS.Quests.Albion
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
 			//Give reward to player here ...
-			m_questPlayer.GainExperience((long)(m_questPlayer.ExperienceForNextLevel/15.5), true);
+			m_questPlayer.GainExperience((long)(m_questPlayer.ExperienceForNextLevel / 15.5), true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 0, 67), "You are awarded 67 copper!");
 		}
 	}

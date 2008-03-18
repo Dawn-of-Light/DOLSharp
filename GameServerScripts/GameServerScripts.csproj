@@ -147,6 +147,7 @@
     <Compile Include="gameevents\XMLWebUIGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DBConvert.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

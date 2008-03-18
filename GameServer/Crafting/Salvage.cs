@@ -181,7 +181,7 @@ namespace DOL.GS
 				foreach (InventoryItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 				{
 					if (item == null) continue;
-					if (item.Id_nb != material.RawMaterial.Id_nb) continue;
+					if (item.TemplateID != material.RawMaterial.TemplateID) continue;
 					if (item.Count >= item.MaxCount) continue;
 
 					int countFree = item.MaxCount - item.Count;
@@ -216,13 +216,12 @@ namespace DOL.GS
 				if(countToAdd > 0)	// Add to exiting item
 				{
 					newItem = player.Inventory.GetItem((eInventorySlot)de.Key);
-					player.Inventory.AddCountToStack(newItem, countToAdd);
+					player.Inventory.AddCountToStack(newItem, (byte)countToAdd);
 				}
 				else
 				{
 					newItem = new InventoryItem(material.RawMaterial);
-					newItem.Count = -countToAdd;
-					newItem.Weight *= -countToAdd;
+					newItem.Count = (byte)(newItem.Count - countToAdd);
 					player.Inventory.AddItem((eInventorySlot)de.Key, newItem);
 				}
 			}
@@ -282,8 +281,8 @@ namespace DOL.GS
 		/// </summary>
 		protected static int CalculateMaterialCount(GamePlayer player, InventoryItem item, DBSalvage material)
 		{
-			int maxCount = (int)Math.Floor(Money.GetMoney(0, 0, item.Gold, item.Silver ,item.Copper) * 0.45 / Money.GetMoney(0, 0, material.RawMaterial.Gold, material.RawMaterial.Silver ,material.RawMaterial.Copper)); // crafted item return max 45% of the item value in material
-			if(item.CrafterName == null || item.CrafterName == "") maxCount = (int)Math.Ceiling((double)maxCount / 2); // merchand item return max the number of material of the same item if it was crafted crafted / 2 and Ceiling (it give max 30% of the base value)
+			int maxCount = (int)Math.Floor(item.Value * 0.45 / material.RawMaterial.Value); // crafted item return max 45% of the item value in material
+			if(item.Description == null || item.Description == "") maxCount = (int)Math.Ceiling((double)maxCount / 2); // merchand item return max the number of material of the same item if it was crafted crafted / 2 and Ceiling (it give max 30% of the base value)
 	
 			int playerPercent = player.GetCraftingSkillValue(CraftingMgr.GetSecondaryCraftingSkillToWorkOnItem(item)) * 100 / CraftingMgr.GetItemCraftLevel(item);
 			if(playerPercent > 100) playerPercent = 100;

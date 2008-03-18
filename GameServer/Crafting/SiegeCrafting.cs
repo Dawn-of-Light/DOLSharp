@@ -198,7 +198,7 @@ namespace DOL.GS
 			}
 
 			//actually stores the Id_nb of the siegeweapon
-			siegeweapon.ItemId = craftItemData.ItemTemplate.Id_nb;
+			siegeweapon.ItemId = craftItemData.ItemTemplate.TemplateID;
 
 			siegeweapon.LoadFromDatabase(craftItemData.ItemTemplate);
 			siegeweapon.CurrentRegion = player.CurrentRegion;

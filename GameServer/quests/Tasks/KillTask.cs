@@ -43,7 +43,7 @@ namespace DOL.GS.Quests
 		// used to build generic mob item
 		private static readonly string[] StrFormat = {"{0}'s {1}","{1} of {0}"};
 		private static readonly string[] TaskObjects = {"Skin","Meat","Bones","Tooth","Claw","Skin","Legs","Collar","Bone","Ear","Head","Hair","Carapace","Skull","Pile of dirt","dust","Slice","Wings","egg","heart","mandible"};
-		private static readonly int[] ObjectModels = {629,102,105,106,106,629,108,109,497,501,503,506,517,540,541,541,548,551,587,595,614};
+		private static readonly ushort[] ObjectModels = {629,102,105,106,106,629,108,109,497,501,503,506,517,540,541,541,548,551,587,595,614};
 		/// <summary>
 		/// Constructs a new task
 		/// </summary>

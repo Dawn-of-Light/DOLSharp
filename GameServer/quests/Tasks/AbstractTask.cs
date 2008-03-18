@@ -48,7 +48,7 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// Time player must wait after failed task check to get new chance for a task, in milliseconds
 		/// </summary>
-		protected const int CHECK_TASK_DELAY = 5*60*1000; // 5 minutes to avoid tasks overruns...
+		protected const int CHECK_TASK_DELAY = 5 * 60 * 1000; // 5 minutes to avoid tasks overruns...
 
 		/// <summary>
 		/// Chance of npc having task for player
@@ -57,7 +57,7 @@ namespace DOL.GS.Quests
 
 		// allowed number of tasks per level
 		//private static int[] m_maxTasksDone = new int[20] {1,2,3,5,6,7,9,10,12,14,16,18,20,22,24,26,28,30,32,34};
-		private static readonly int[] m_maxTasksDone = new int[20] {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+		private static readonly int[] m_maxTasksDone = new int[20] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 };
 
 		protected const string RECIEVER_NAME = "recieverName";
 		protected const string ITEM_NAME = "itemName";
@@ -80,31 +80,31 @@ namespace DOL.GS.Quests
 		{
 			m_taskPlayer = taskPlayer;
 
-			DBTask dbTask=null;
+			DBTask dbTask = null;
 
 			// Check if player already has a task
 			// if yes reuse dbtask object to keep TasksDone from old dbtask object.
-			if (taskPlayer.Task!=null)
+			if (taskPlayer.Task != null)
 			{
 				dbTask = taskPlayer.Task.m_dbTask;
 			}
 			else // if player has no active task, load dbtask an use tasksdone
 			{
 				// Load Task object of player ...
-				DBTask[] tasks = (DBTask[]) GameServer.Database.SelectObjects(typeof(DBTask),"CharName ='"+GameServer.Database.Escape(taskPlayer.Name)+"'");
-				if (tasks.Length==1)
+				DBTask[] tasks = (DBTask[])GameServer.Database.SelectObjects(typeof(DBTask), "CharName ='" + GameServer.Database.Escape(taskPlayer.Name) + "'");
+				if (tasks.Length == 1)
 				{
 					dbTask = tasks[0];
 				}
-				else if (tasks.Length>1)
+				else if (tasks.Length > 1)
 				{
 					if (log.IsErrorEnabled)
-						log.Error("More than one DBTask Object found for player "+taskPlayer.Name);
+						log.Error("More than one DBTask Object found for player " + taskPlayer.Name);
 				}
 			}
 
 			// this should happen only if player never did a task and has no entry in DBTask.
-			if (dbTask==null)
+			if (dbTask == null)
 			{
 				dbTask = new DBTask();
 				dbTask.CharName = taskPlayer.Name;
@@ -138,20 +138,20 @@ namespace DOL.GS.Quests
 		{
 			get
 			{
-				return m_dbTask.TaskType != null && m_dbTask.TaskType != "" && m_dbTask.TaskType!= typeof(AbstractTask).ToString();
+				return m_dbTask.TaskType != null && m_dbTask.TaskType != "" && m_dbTask.TaskType != typeof(AbstractTask).ToString();
 			}
 		}
 
 		public DateTime TimeOut
 		{
-			get { return m_dbTask.TimeOut;}
-			set{ m_dbTask.TimeOut = value;}
+			get { return m_dbTask.TimeOut; }
+			set { m_dbTask.TimeOut = value; }
 		}
 
 		public int TasksDone
 		{
-			get { return m_dbTask.TasksDone;}
-			set{ m_dbTask.TasksDone = value;}
+			get { return m_dbTask.TasksDone; }
+			set { m_dbTask.TasksDone = value; }
 		}
 
 		// Characters under level 20 can do the same number of tasks as their level.
@@ -162,16 +162,17 @@ namespace DOL.GS.Quests
 			get
 			{
 				long XPNeeded = m_taskPlayer.ExperienceForNextLevel - m_taskPlayer.ExperienceForCurrentLevel;
-				if (m_taskPlayer.Level<19)
-					return (long)(XPNeeded*0.30/(m_taskPlayer.Level)); // 30% of total xp for level
+				if (m_taskPlayer.Level < 19)
+					return (long)(XPNeeded * 0.30 / (m_taskPlayer.Level)); // 30% of total xp for level
 				else
-					return (long)(XPNeeded*0.25/(m_taskPlayer.Level)); // 25% of total xp for level
+					return (long)(XPNeeded * 0.25 / (m_taskPlayer.Level)); // 25% of total xp for level
 			}
 		}
 
 		public virtual long RewardMoney
 		{
-			get{
+			get
+			{
 				return 0;
 			}
 		}
@@ -186,8 +187,8 @@ namespace DOL.GS.Quests
 
 		public virtual String RecieverName
 		{
-			get { return GetCustomProperty(RECIEVER_NAME);}
-			set { SetCustomProperty(RECIEVER_NAME,value);}
+			get { return GetCustomProperty(RECIEVER_NAME); }
+			set { SetCustomProperty(RECIEVER_NAME, value); }
 		}
 
 		/// <summary>
@@ -195,8 +196,8 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public virtual String ItemName
 		{
-			get { return GetCustomProperty(ITEM_NAME);}
-			set { SetCustomProperty(ITEM_NAME,value);}
+			get { return GetCustomProperty(ITEM_NAME); }
+			set { SetCustomProperty(ITEM_NAME, value); }
 		}
 
 		/// <summary>
@@ -208,7 +209,7 @@ namespace DOL.GS.Quests
 		public static AbstractTask LoadFromDatabase(GamePlayer targetPlayer, DBTask dbTask)
 		{
 			// if we have a active task load it, else the taksdone will be updated on creation of first task instance in AbstractTask(GamePlayer) constructor
-			if (dbTask.TaskType!=null && dbTask.TaskType!= "")
+			if (dbTask.TaskType != null && dbTask.TaskType != "")
 			{
 				Type taskType = null;
 				foreach (Assembly asm in ScriptMgr.Scripts)
@@ -217,12 +218,12 @@ namespace DOL.GS.Quests
 					if (taskType != null)
 						break;
 				}
-				if(taskType==null)
+				if (taskType == null)
 					taskType = Assembly.GetAssembly(typeof(GameServer)).GetType(dbTask.TaskType);
-				if(taskType==null)
+				if (taskType == null)
 				{
 					if (log.IsErrorEnabled)
-						log.Error("Could not find task: "+dbTask.TaskType+"!!!");
+						log.Error("Could not find task: " + dbTask.TaskType + "!!!");
 					return null;
 				}
 				return (AbstractTask)Activator.CreateInstance(taskType, new object[] { targetPlayer, dbTask });
@@ -238,7 +239,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public virtual void SaveIntoDatabase()
 		{
-			if(m_dbTask.IsValid)
+			if (m_dbTask.IsValid)
 				GameServer.Database.SaveObject(m_dbTask);
 			else
 				GameServer.Database.AddNewObject(m_dbTask);
@@ -249,10 +250,10 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public virtual void DeleteFromDatabase()
 		{
-			if(!m_dbTask.IsValid) return;
+			if (!m_dbTask.IsValid) return;
 
-			DBTask dbTask = (DBTask) GameServer.Database.FindObjectByKey(typeof(DBTask), m_dbTask.ObjectId);
-			if(dbTask!=null)
+			DBTask dbTask = (DBTask)GameServer.Database.FindObjectByKey(typeof(DBTask), m_dbTask.ObjectId);
+			if (dbTask != null)
 				GameServer.Database.DeleteObject(dbTask);
 		}
 		/// <summary>
@@ -282,15 +283,15 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public void ParseCustomProperties()
 		{
-			if(m_dbTask.CustomPropertiesString == null)
+			if (m_dbTask.CustomPropertiesString == null)
 				return;
 
-			lock(m_customProperties)
+			lock (m_customProperties)
 			{
 				m_customProperties.Clear();
 				string[] properties = m_dbTask.CustomPropertiesString.Split(';');
-				foreach(string property in properties)
-					if(property.Length>0)
+				foreach (string property in properties)
+					if (property.Length > 0)
 					{
 						string[] values = property.Split('=');
 						m_customProperties[values[0]] = values[1];
@@ -305,19 +306,19 @@ namespace DOL.GS.Quests
 		/// <param name="value">The value of the property</param>
 		public void SetCustomProperty(string key, string value)
 		{
-			if(key==null)
+			if (key == null)
 				throw new ArgumentNullException("key");
-			if(value==null)
+			if (value == null)
 				throw new ArgumentNullException("value");
 
 			//Make the string safe
-			key = key.Replace(';',',');
-			key = key.Replace('=','-');
-			value = value.Replace(';',',');
-			value = value.Replace('=','-');
-			lock(m_customProperties)
+			key = key.Replace(';', ',');
+			key = key.Replace('=', '-');
+			value = value.Replace(';', ',');
+			value = value.Replace('=', '-');
+			lock (m_customProperties)
 			{
-				m_customProperties[key]=value;
+				m_customProperties[key] = value;
 			}
 			SaveCustomProperties();
 		}
@@ -328,9 +329,9 @@ namespace DOL.GS.Quests
 		protected void SaveCustomProperties()
 		{
 			StringBuilder builder = new StringBuilder();
-			lock(m_customProperties)
+			lock (m_customProperties)
 			{
-				foreach(string hKey in m_customProperties.Keys)
+				foreach (string hKey in m_customProperties.Keys)
 				{
 					builder.Append(hKey);
 					builder.Append("=");
@@ -348,10 +349,10 @@ namespace DOL.GS.Quests
 		/// <param name="key">The key name of the property</param>
 		public void RemoveCustomProperty(string key)
 		{
-			if(key==null)
+			if (key == null)
 				throw new ArgumentNullException("key");
 
-			lock(m_customProperties)
+			lock (m_customProperties)
 			{
 				m_customProperties.Remove(key);
 			}
@@ -365,7 +366,7 @@ namespace DOL.GS.Quests
 		/// <returns>The property value</returns>
 		public string GetCustomProperty(string key)
 		{
-			if(key==null)
+			if (key == null)
 				throw new ArgumentNullException("key");
 
 			return (string)m_customProperties[key];
@@ -377,13 +378,13 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public virtual void FinishTask()
 		{
-			if (RewardXP>0)
+			if (RewardXP > 0)
 				m_taskPlayer.GainExperience(RewardXP);
 
-			if (RewardMoney>0)
-				m_taskPlayer.AddMoney(RewardMoney,"You recieve {0} for completing your task.");
+			if (RewardMoney > 0)
+				m_taskPlayer.AddMoney(RewardMoney, "You recieve {0} for completing your task.");
 
-			if (RewardItems!=null && RewardItems.Count>0)
+			if (RewardItems != null && RewardItems.Count > 0)
 			{
 				m_taskPlayer.Inventory.BeginChanges();
 				foreach (InventoryItem item in RewardItems)
@@ -392,7 +393,7 @@ namespace DOL.GS.Quests
 				}
 				m_taskPlayer.Inventory.CommitChanges();
 			}
-			m_taskPlayer.Out.SendMessage("You finish the "+Name+"!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+			m_taskPlayer.Out.SendMessage("You finish the " + Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			m_dbTask.TaskType = typeof(AbstractTask).ToString();
 			m_dbTask.CustomPropertiesString = null;
 			m_customProperties.Clear();
@@ -406,7 +407,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public virtual void ExpireTask()
 		{
-			if (ItemName!=null)
+			if (ItemName != null)
 			{
 				lock (m_taskPlayer.Inventory)
 				{
@@ -417,7 +418,7 @@ namespace DOL.GS.Quests
 				m_taskPlayer.Out.SendMessage("Your task related item has been removed from your inventory.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 
-			m_taskPlayer.Out.SendMessage("Your "+Name+" has expired!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+			m_taskPlayer.Out.SendMessage("Your " + Name + " has expired!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			m_dbTask.TaskType = typeof(AbstractTask).ToString();
 			m_dbTask.CustomPropertiesString = null;
 			m_customProperties.Clear();
@@ -443,7 +444,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public bool CheckTaskExpired()
 		{
-			if(TaskActive && DateTime.Compare(TimeOut, DateTime.Now) < 0)
+			if (TaskActive && DateTime.Compare(TimeOut, DateTime.Now) < 0)
 			{
 				//DOLConsole.WriteError("TimeOut: "+m_Tasks[i].TimeOut+" - Now: "+DateTime.Now);
 				ExpireTask();
@@ -454,8 +455,8 @@ namespace DOL.GS.Quests
 
 		public static int MaxTasksDone(int level)
 		{
-			if (level<=20)
-				return m_maxTasksDone[level-1];
+			if (level <= 20)
+				return m_maxTasksDone[level - 1];
 			else
 				return 20;
 		}
@@ -467,38 +468,28 @@ namespace DOL.GS.Quests
 		/// <param name="ItemLevel">Level to give to the object</param>
 		/// <param name="Model">Model for the object</param>
 		/// <returns>InventoryItem of given Name and Level</returns>
-		public static InventoryItem GenerateItem(string ItemName, int ItemLevel, int Model)
+		public static InventoryItem GenerateItem(string ItemName, byte ItemLevel, ushort Model)
 		{
-			InventoryItem TaskItems = new InventoryItem();
-			TaskItems.Name = ItemName;
-			TaskItems.Level = ItemLevel;
-			TaskItems.DPS_AF = 0;
-			TaskItems.SPD_ABS = 0;
-			TaskItems.Hand = 0;
-			//TaskItems.Type_Damage = 0;
-			TaskItems.Object_Type = 0;
-			TaskItems.Item_Type = 1;
-			TaskItems.Weight = 1;
-			TaskItems.Model = Model;
-			TaskItems.Gold = 0;
-			TaskItems.Silver = 0;
-			TaskItems.Copper = 0;
-			TaskItems.Color = 0;
-			TaskItems.IsDropable = true;
-			TaskItems.IsPickable = true;
-			//TaskItems.IsStackable = false;
-			TaskItems.AutoSave = false;
-			TaskItems.Condition = 90;
-			TaskItems.Durability = 1000;
-			TaskItems.Quality = 80+ItemLevel;
-			TaskItems.MaxCondition = TaskItems.Condition;
-			TaskItems.MaxDurability = TaskItems.Durability;
-			return TaskItems;
+			//generate id
+			string id = ItemName;
+			id = ItemName.Replace(' ', '_');
+			id = ItemName.ToLower();
+			//check if itemtemplate exists
+			ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), id);
+			if (template == null)
+			{
+				template.TemplateID = id;
+				template.Name = ItemName;
+				template.Level = ItemLevel;
+				template.Model = Model;
+			}
+			InventoryItem TaskItem = new InventoryItem(template);
+			return TaskItem;
 		}
 
 		public static bool CheckAvailability(GamePlayer player, GameLiving target)
 		{
-			return CheckAvailability(player,target,CHANCE);
+			return CheckAvailability(player, target, CHANCE);
 		}
 
 		/// <summary>
@@ -510,33 +501,33 @@ namespace DOL.GS.Quests
 		/// <returns>True Player have no other Chart</returns>
 		protected static bool CheckAvailability(GamePlayer player, GameLiving target, int chanceOfSuccess)
 		{
-			if (target==null)
+			if (target == null)
 				return false;
 
-			if (target.Realm==0)
+			if (target.Realm == 0)
 				return false;
 
-			if (GameServer.ServerRules.IsAllowedToUnderstand(target,player) == false)
+			if (GameServer.ServerRules.IsAllowedToUnderstand(target, player) == false)
 				return false;
 
-			if(player.Level > 20)
+			if (player.Level > 20)
 			{
-				player.Out.SendMessage("Tasks are available only for level 20 or less!", eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("Tasks are available only for level 20 or less!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			else if(player.Task!=null && player.Task.TaskActive)
+			else if (player.Task != null && player.Task.TaskActive)
 			{
-				player.Out.SendMessage("You already have a Task. Select yourself and type /Task for more Information.",eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You already have a Task. Select yourself and type /Task for more Information.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			else if(player.Task!=null && player.Task.TasksDone >= MaxTasksDone(player.Level))
+			else if (player.Task != null && player.Task.TasksDone >= MaxTasksDone(player.Level))
 			{
-				player.Out.SendMessage("You cannot do more than "+MaxTasksDone(player.Level).ToString()+" tasks at your level!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You cannot do more than " + MaxTasksDone(player.Level).ToString() + " tasks at your level!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			else if (player.TempProperties.getIntProperty(CHECK_TASK_TICK, 0) > Environment.TickCount)
 			{
-				player.Out.SendMessage("I have no tasks for you at the moment.  Come back sometime later, perhaps then you can help we with something.",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+				player.Out.SendMessage("I have no tasks for you at the moment.  Come back sometime later, perhaps then you can help we with something.", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 				return false;
 			}
 			else if (Util.Chance(chanceOfSuccess))
@@ -545,7 +536,7 @@ namespace DOL.GS.Quests
 			}
 			else
 			{
-				player.Out.SendMessage("I have no tasks for you at the moment. Come back sometime later, perhaps then you can help we with something.",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+				player.Out.SendMessage("I have no tasks for you at the moment. Come back sometime later, perhaps then you can help we with something.", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 				// stored time of try to disable task for defined time.
 				player.TempProperties.setProperty(CHECK_TASK_TICK, Environment.TickCount + CHECK_TASK_DELAY);
 				return false;

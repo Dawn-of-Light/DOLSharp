@@ -558,8 +558,11 @@ namespace DOL.GS.Commands
                                     if (!Util.IsEmpty(amotd) && client.Player.GuildRank.AcHear)
                                         client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InfoaMotd", amotd), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                                 }
-                                if (client.Player.Guild.ClaimedKeep != null)
-                                    client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Keep", client.Player.Guild.ClaimedKeep.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+								if (client.Player.Guild.ClaimedKeeps.Count > 0)
+								{
+									foreach (AbstractGameKeep keep in client.Player.Guild.ClaimedKeeps)
+										client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Keep", keep.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+								}
                             }
                             else
                             {
@@ -1908,7 +1911,7 @@ namespace DOL.GS.Commands
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 return;
                             }
-                            if (client.Player.Guild.ClaimedKeep == null)
+                            if (client.Player.Guild.ClaimedKeeps.Count == 0)
                             {
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoKeep"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 return;
@@ -1918,7 +1921,19 @@ namespace DOL.GS.Commands
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 return;
                             }
-                            client.Player.Guild.ClaimedKeep.Release();
+							if (client.Player.Guild.ClaimedKeeps.Count == 1)
+							{
+								foreach (AbstractGameKeep keep in client.Player.Guild.ClaimedKeeps)
+									keep.Release();
+							}
+							else
+							{
+								foreach (AbstractArea area in client.Player.CurrentAreas)
+								{
+									if (area is KeepArea && ((KeepArea)area).Keep.Guild == client.Player.Guild)
+										((KeepArea)area).Keep.Release();
+								}
+							}
                             client.Player.Guild.UpdateGuildWindow();
                             return;
                         }
@@ -1934,7 +1949,7 @@ namespace DOL.GS.Commands
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 return;
                             }
-                            if (client.Player.Guild.ClaimedKeep == null)
+                            if (client.Player.Guild.ClaimedKeeps.Count == 0)
                             {
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoKeep"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 return;
@@ -1961,7 +1976,19 @@ namespace DOL.GS.Commands
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.UpgradeScndArg"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                                 return;
                             }
-                            client.Player.Guild.ClaimedKeep.StartChangeLevel(targetlevel);
+							if (client.Player.Guild.ClaimedKeeps.Count == 1)
+							{
+								foreach (AbstractGameKeep keep in client.Player.Guild.ClaimedKeeps)
+									keep.StartChangeLevel(targetlevel);
+							}
+							else
+							{
+								foreach (AbstractArea area in client.Player.CurrentAreas)
+								{
+									if (area is KeepArea && ((KeepArea)area).Keep.Guild == client.Player.Guild)
+										((KeepArea)area).Keep.StartChangeLevel(targetlevel);
+								}
+							}
                             client.Player.Guild.UpdateGuildWindow();
                             return;
                         }
@@ -1976,7 +2003,7 @@ namespace DOL.GS.Commands
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 return;
                             }
-                            if (client.Player.Guild.ClaimedKeep == null)
+                            if (client.Player.Guild.ClaimedKeeps.Count == 0)
                             {
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoKeep"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 return;

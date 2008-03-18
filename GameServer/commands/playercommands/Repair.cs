@@ -258,7 +258,7 @@ namespace DOL.GS.Commands
 						{
 							if (item.Count * woodvalue < removeamount)
 							{
-								int removecount = Math.Min(1, removeamount / woodvalue);
+								byte removecount = Math.Min((byte)1, (byte)(removeamount / woodvalue));
 								removeamount -= removecount * woodvalue;
 								player.Inventory.RemoveCountFromStack(item, removecount);
 							}

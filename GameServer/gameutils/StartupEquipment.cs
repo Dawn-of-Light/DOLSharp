@@ -46,7 +46,6 @@ namespace DOL.GS
 
 				InventoryItem inventoryItem = new InventoryItem(item.Template);
 				inventoryItem.OwnerID = c.ObjectId;
-				inventoryItem.Realm = c.Realm;
 
 				//if equipable item, equip
 				foreach (eInventorySlot slot in GameLivingInventory.EQUIP_SLOTS)
@@ -65,7 +64,7 @@ namespace DOL.GS
 							if (slot == eInventorySlot.LeftHandWeapon && (eObjectType)inventoryItem.Object_Type != eObjectType.Shield)
 								chosenSlot = eInventorySlot.RightHandWeapon;
 							else chosenSlot = slot;
-							inventoryItem.SlotPosition = (int)chosenSlot;
+							inventoryItem.SlotPosition = (byte)chosenSlot;
 							usedSlots[chosenSlot] = true;
 							if (c.ActiveWeaponSlot == 0)
 							{
@@ -88,7 +87,7 @@ namespace DOL.GS
 				if (inventoryItem.SlotPosition == 0)
 				{
 					//otherwise stick the item in the backpack
-					for (int i = (int)eInventorySlot.FirstBackpack; i < (int)eInventorySlot.LastBackpack; i++)
+					for (byte i = (int)eInventorySlot.FirstBackpack; i < (int)eInventorySlot.LastBackpack; i++)
 					{
 						if (usedSlots[i] == null)
 						{
