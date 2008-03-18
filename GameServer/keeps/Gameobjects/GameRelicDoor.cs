@@ -121,7 +121,7 @@ namespace DOL.GS.Keeps
 
 		public override int ChangeHealth(GameObject changeSource, GameLiving.eHealthChangeType healthChangeType, int changeAmount)
 		{
-			return;
+			return 0;
 		}
 
 		/// <summary>
@@ -154,9 +154,9 @@ namespace DOL.GS.Keeps
 				int y = 0;
 				//calculate x y
 				if (IsObjectInFront(player, 180, false))
-					GetSpotFromHeading(-distance, out x, out y);
+					GetSpotFromHeading(-500, out x, out y);
 				else
-					GetSpotFromHeading(distance, out x, out y);
+					GetSpotFromHeading(500, out x, out y);
 
 				//move player
 				player.MoveTo(CurrentRegionID, x, y, player.Z, player.Heading);
@@ -179,7 +179,7 @@ namespace DOL.GS.Keeps
 
 			IList list = base.GetExamineMessages(player);
 			string text = "You select the " + Name + ".";
-			if (!KeepMgr.IsEnemy(this, player))
+			if (this.Realm == player.Realm)
 				text = text + " It belongs to your realm.";
 			else
 			{
