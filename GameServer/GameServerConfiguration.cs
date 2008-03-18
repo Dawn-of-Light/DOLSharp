@@ -199,8 +199,6 @@ namespace DOL.GS
 			m_gmActionsLoggerName = root["Server"]["GMActionLoggerName"].GetString(m_gmActionsLoggerName);
 			m_invalidNamesFile = root["Server"]["InvalidNamesFile"].GetString(m_invalidNamesFile);
 
-
-
 			string db = root["Server"]["DBType"].GetString("XML");
 			switch (db.ToLower())
 			{
@@ -230,6 +228,7 @@ namespace DOL.GS
 			m_cpuCount = root["Server"]["CpuCount"].GetInt(m_cpuCount);
 			if (m_cpuCount < 1)
 				m_cpuCount = 1;
+			m_cpuUse = root["Server"]["CpuUse"].GetInt(m_cpuUse);
 			
 			// Parse UDP out endpoint
 			IPAddress	address = null;
@@ -324,6 +323,7 @@ namespace DOL.GS
 			root["Server"]["DBConnectionString"].Set(m_dbConnectionString);
 			root["Server"]["DBAutosave"].Set(m_autoSave);
 			root["Server"]["DBAutosaveInterval"].Set(m_saveInterval);
+			root["Server"]["CpuUse"].Set(m_cpuUse);
 
 			// Store UDP out endpoint
 			if (m_udpOutEndpoint != null)
@@ -378,6 +378,7 @@ namespace DOL.GS
 			}
 			if (m_cpuCount < 1)
 				m_cpuCount = 1;
+			m_cpuUse = 1;
 		}
 
 		#endregion
@@ -600,6 +601,13 @@ namespace DOL.GS
 		{
 			get { return m_udpOutEndpoint; }
 			set { m_udpOutEndpoint = value; }
+		}
+
+		private int m_cpuUse;
+		public int CPUUse
+		{
+			get { return m_cpuUse; }
+			set { m_cpuUse = value; }
 		}
 	}
 }
