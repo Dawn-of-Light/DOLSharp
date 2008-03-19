@@ -556,7 +556,7 @@ namespace DOL.GS.Commands
                                 {
                                     string amotd = client.Player.Guild.alliance.Dballiance.Motd;
                                     if (!Util.IsEmpty(amotd) && client.Player.GuildRank.AcHear)
-                                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InfoaMotd", amotd), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InfoAMotd", amotd), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                                 }
                                 if (client.Player.Guild.ClaimedKeep != null)
                                     client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Keep", client.Player.Guild.ClaimedKeep.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);

@@ -1,0 +1,78 @@
+
+Effects.DelveInfo.MinutesRemaining:		- Rimangono {0}: {1} minuti
+Effects.DelveInfo.SecondsRemaining:		- Rimangono {0} secondi.
+Effects.Necro.TauntEffect.SeemsChange:		{0} sembra che sta per cambiare comportamento, mentre sta comportandosi sempre più aggressivo rispetto a prima.
+Effects.Necro.TauntEffect.SeemsLessAgg:		{0} sembra essere meno aggressivo rispetto a prima.
+Effects.BerserkEffect.GoBerserkerFrenzy:	Vai nella modalità frenesia del berserker!
+Effects.BerserkEffect.BerserkerFrenzyEnds:	La tua modalità frenesia del berserker è finita.
+Effects.BerserkEffect.InfoEffect:		Questa abilità trasforma il giocatore in un mostro di Vendo e ad ogni colpo che subisce il nemico aggiunge un colpo critico, alla spesa di alcune abilità difensive. Si può usare ogni sette minuti.
+
+Effects.BodyguardEffect.NowBGXButSC:		Ora stai proteggendo {0}, ma è necessaria una posizione più vicina.
+Effects.BodyguardEffect.XNowBGYouButSC:		{0} ora è protetto, ma è necessario stare in una posizione più vicina.
+Effects.BodyguardEffect.YouAreNowBGX:		Ora sei protetto da {0}.
+Effects.BodyguardEffect.XIsBGYou:		{0} è ora protetto da te.
+Effects.BodyguardEffect.YouAreNoLongerBGX:	Non stai più proteggendo {0}.
+Effects.BodyguardEffect.XIsNoLongerBGYou:	{0} non ti protegge più.
+Effects.BodyguardEffect.XIsBodyguardingY:	{0} protegge {1}
+Effects.BodyguardEffect.InfoEffect:		Abilità che se và a segno riesce a proteggere il giocatore da un'attacco. Bloccherà il suo obiettivo.
+
+Effects.CamouflageEffect.YouAreNowCF:		Ora sei camuffato.
+Effects.CamouflageEffect.YourCFIsGone:		Il suo camuffamento è finito.
+Effects.CamouflageEffect.InfoEffect:		Disponibile sulle classi arcieri. Questa abilità renderà l'arciere refurtivo alla padronanza dell'abilità di reame "Maestro del Silenzio" per un periodo di tempo. Estraendo un'arma o entrando nella modalità di combattimento l'effetto si annullerà e causerà la visibilità del giocatore sotto camuffamento.
+
+Effects.EngageEffect.ConcOnBlockingX:		Ti concentri a bloccare i colpi di {0}!
+Effects.EngageEffect.YouNoConcOnBlock:		Non se più concentrato a bloccare i colpi!
+Effects.EngageEffect.YouNoAttemptToEngageT:	Non ti stai piu concendrando a bloccare i colpi!
+Effects.EngageEffect.XEngagesY:			{0} tieni impegnato {1}
+Effects.EngageEffect.InfoEffect:		Consuma resistenza (END) in cambio di un incremento significativo del tasso di blocco. Il bloccaggio può essere usato solamente a serie, o mentre state cercando di chiudere un attacco. Appena inizii ad attaccare questa abilità si disattiva.
+
+Effects.GameSpellEffect.CantRemoveEffect:	Non puoi rimuovere questo effetto!
+
+Effects.GuardEffect.YouAreNowGuardingYBut:	Stai proteggendo {0}, ma devi stare più vicino.
+Effects.GuardEffect.XIsNowGuardingYouBut:	{0} è protetto, ma devi stare più vicino.
+Effects.GuardEffect.YouAreNoewGuardingY:	Sei protetto da {0}.
+Effects.GuardEffect.XIsNowGuardingYou:		{0} ora è protetto.
+Effects.GuardEffect.YourNoLongerGuardingY:	Smetti di proteggere {0}
+Effects.GuardEffect.XNoLongerGuardingYoy:	{0} non è piu protetto.
+Effects.GuardEffect.InfoEffect:			Abilità che se va a segno proteggerà da un'attacco.
+Effects.GuardEffect.XIsGuardingY:		{0} sta proteggendo {1}
+
+Effects.BannerOfWardingEffect.Description:	Aggiunge il 10% di bonus a tutte le resistenze magiche.
+Effects.BannerOfShieldingEffect.Description:	Aggiunge un 6% di bonus a tutte le resistenze di attacco.
+Effects.BannerOfFreedomEffect.Description:	Riduce tutti i controlli al 6%
+Effects.BannerOfBesiegingEffect.Description:	Riduce la velocità di fuoco delle armi d'assedio del 6%
+
+Effects.InterceptEffect.YouAttemtInterceptYBut:	Stai cercando di intercettare un'attacco di {0}, ma devi stare più vicino.
+Effects.InterceptEffect.XAttemtInterceptYouBut:	{0} sta cercando di intercettare un tuo attacco, ma deve stare più vicino.
+Effects.InterceptEffect.YouAttemtInterceptY:	Stai cercando di intercettare un'attacco di {0}.
+Effects.InterceptEffect.XAttemptInterceptYou:	{0} sta cercando di intercettare un tuo attacco.
+Effects.InterceptEffect.YouNoAttemptInterceptY:	Non sta cercando più di intercettare un'attacco di {0}
+Effects.InterceptEffect.XNoAttemptInterceptYou:	{0} non sta cercando più di intercettare un tuo attacco.
+Effects.InterceptEffect.InfoEffect:		Abilità che se va a segno intercetta un'attacco. Prenderai danno nel luogo dell'obiettivo.
+Effects.InterceptEffect.XInterceptingY:		{0} sta intercettando {0}
+
+Effects.ProtectEffect.YouProtectingYBut:	Ora stai proteggendo {0}, ma devi stare più vicino.
+Effects.ProtectEffect.XProtectingYouBut:	{0} ti stà proteggendo, ma deve essere più vicino.
+Effects.ProtectEffect.YouProtectingY:		Stai proteggendo {0}.
+Effects.ProtectEffect.XProtectingYou:		{0} è protetto
+Effects.ProtectEffect.YouNoProtectY:		Non stai più proteggendo {0}.
+Effects.ProtectEffect.XNoProtectYou:		{0} non sei piu protetto.
+Effects.ProtectEffect.InfoEffect:		Abilità che se va a segno riesce a proteggere un'attacco. Riduce l'aggro in un'azione che puoi subire.
+Effects.ProtectEffect.XProtectingY:		{0} stà proteggendo {1}
+
+Effects.QuickCastEffect.YouActivatedQC:		Hai attivato la magia rapida.
+Effects.QuickCastEffect.YourNextSpellNoQCed:	La sua prossima magia non sarà più rapida.
+Effects.QuickCastEffect.InfoEffect:		Questo permette ai maghi di lanciare una sola magia veloce ma costa due volte il potere. Non può essere interrotto da armi e magie. L'unica eccezione sono per i necromancer che formano la magia rapida (sulle magie "Lavoro Doloroso"). Consente ai pet non-morti del Necromancer di avere sei secondi di tempo per lanciare gli incantesimi senza interruzioni.
+
+Effects.RapidFireEffect.YouSwitchRFMode:	Entri nella modalità "Fuoco Rapido"!
+
+Effects.StagEffect.HuntsSpiritChannel:		Evochi lo spirito della caccia.
+Effects.StagEffect.YourHuntsSpiritEnds:		Il tuo spirito della caccia è finito.
+Effects.StagEffect.InfoEffect:			Utilizzata solo dai eroi. Unica abilità che traforma il giocatore in un capocaccia speculare. Questa abilità dura per 30 secondi, e dà al giocatore un'aumento di danno. Può essere usato ogni 30 minuti. Inizi = 20% bonus di danno. Membro = 30%, Capo = 40%, Padrone = 50%.
+
+Effects.StaticEffect.YouCantRemoveThisEffect:	Non puoi rimuovere questo effetto.
+Effects.SureShotEffect.YouSwitchToSSMode:	Entri nella modalità colpo sicuro.
+
+Effects.TripleWieldEffect.MBHitsExtraDamage:	La tua arma magica colpisce {0} per {1} danni addizionali.
+Effects.TripleWieldEffect.XMBExtraDamageToYou:	{0} arma magica ti fa {1} danni addizionali!
+Effects.TripleWieldEffect.InfoEffect:		L'arma magica fa un danno supplementare.

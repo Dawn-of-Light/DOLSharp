@@ -742,7 +742,7 @@ Scripts.Player.Guild.ConfirmLeave:			Voulez-vous vraiment partir {0}?
 Scripts.Player.Guild.DemotedHigherThanPlayer:		Vous pouvez seulement rétrograder les grades au-dessous du votre.	
 Scripts.Player.Guild.DemotedOther:			{0} a rétrogradé au rang {1}.	
 Scripts.Player.Guild.DemotedSelf:			Vous avez été rétrogradé(e) au rang {0}.	
-Scripts.Player.Guild.Depositamount:			Vous déposez {0} dans la caisse de guilde.	
+Scripts.Player.Guild.DepositAmount:			Vous déposez {0} dans la caisse de guilde.	
 Scripts.Player.Guild.DepositFull:			La caisse de guilde semble être pleine.	
 Scripts.Player.Guild.DepositInvalid:			Ce n'est pas un dépôt valide.	
 Scripts.Player.Guild.DuesOff:				La cotisation de guilde n'est actuellement pas fonctionnelle.	
