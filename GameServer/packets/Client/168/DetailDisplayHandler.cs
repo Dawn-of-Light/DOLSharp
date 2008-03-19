@@ -1067,14 +1067,15 @@ Type    Description           Id
 		public void WriteTechnicalInfo(ArrayList output, ItemTemplate item)
 		{
             output.Add(" ");
-            output.Add("----------------code technical informations---------");
+            output.Add("--- Item technical information ---");
+            output.Add(" ");
 			output.Add("Item Template: " + item.Id_nb);
-			output.Add("         Name: " + item.Name);
+   			output.Add("         Name: " + item.Name);
 			output.Add("        Level: " + item.Level);
-			output.Add("        Model: " + item.Model);
-			output.Add("    Extension: " + item.Extension);
-			output.Add("       Object: " + GlobalConstants.ObjectTypeToName(item.Object_Type) + " (" + item.Object_Type + ")");
-			output.Add("         Type: " + GlobalConstants.SlotToName(item.Item_Type) + " (" + item.Item_Type + ")");
+            output.Add("       Object: " + GlobalConstants.ObjectTypeToName(item.Object_Type) + " (" + item.Object_Type + ")");
+            output.Add("         Type: " + GlobalConstants.SlotToName(item.Item_Type) + " (" + item.Item_Type + ")");
+            output.Add("    Extension: " + item.Extension);
+            output.Add("        Model: " + item.Model);
 			output.Add("        Color: " + item.Color);
 			output.Add("       Emblem: " + item.Emblem);
 			output.Add("       Effect: " + item.Effect);

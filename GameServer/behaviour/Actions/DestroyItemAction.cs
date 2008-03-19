@@ -21,9 +21,11 @@ using System.Collections.Generic;
 using System.Text;
 using DOL.GS.PacketHandler;
 using DOL.Events;
-using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
+using DOL.GS.Behaviour.Attributes;
+using DOL.GS.Behaviour;
 using DOL.Database;
 using System.Collections;
+using DOL.Language;
 
 namespace DOL.GS.Behaviour.Actions
 {
@@ -117,7 +119,7 @@ namespace DOL.GS.Behaviour.Actions
             playerInventory.CommitChanges();
 
 
-            player.Out.SendMessage(itemToDestroy.Name + " is destroyed.", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Behaviour.DestroyItemAction.Destroyed", itemToDestroy.Name), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
         }
     }
 }
