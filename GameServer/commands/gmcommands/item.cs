@@ -19,6 +19,8 @@
 using System;
 using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.GS.PacketHandler.Client.v168;
+using System.Collections;
 
 namespace DOL.GS.Commands
 {
@@ -297,52 +299,14 @@ namespace DOL.GS.Commands
 								return;
 
 							}
-							client.Out.SendMessage("---------------/item technical informations---------", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("Item Template: " + obj.Id_nb, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("         Name: " + obj.Name, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("        Level: " + obj.Level, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("       Object: " + GlobalConstants.ObjectTypeToName(obj.Object_Type), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("         Type: " + GlobalConstants.SlotToName(obj.Item_Type), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("        Realm: " + obj.Realm, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("  Value/Price: " + obj.Platinum + "p " + obj.Gold + "g " + obj.Silver + "s " + obj.Copper + "c", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("       Weight: " + (obj.Weight / 10.0f) + " lbs", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("      Quality: " + obj.Quality + "%", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("   Durability: " + obj.Durability + "/" + obj.MaxDurability + "(max)", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("    Condition: " + obj.Condition + "/" + obj.MaxCondition + "(max)", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("  Is dropable: " + (obj.IsDropable ? "yes" : "no"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage("  Is pickable: " + (obj.IsPickable ? "yes" : "no"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							client.Out.SendMessage(" Is stackable: " + (obj.IsStackable ? "yes" : "no"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							if (GlobalConstants.IsWeapon(obj.Object_Type))
-							{
-								client.Out.SendMessage("         Hand: " + GlobalConstants.ItemHandToName(obj.Hand)+ " (" + obj.Hand + ")", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-								client.Out.SendMessage("Damage/Second: " + (obj.DPS_AF / 10.0f), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-								client.Out.SendMessage("        Speed: " + (obj.SPD_ABS / 10.0f), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-								client.Out.SendMessage("  Damage type: " + GlobalConstants.WeaponDamageTypeToName(obj.Type_Damage) + " (" + obj.Type_Damage + ")", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-								client.Out.SendMessage("        Bonus: " + obj.Bonus, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							}
-							else if (GlobalConstants.IsArmor(obj.Object_Type))
-							{
-								client.Out.SendMessage("  Armorfactor: " + obj.DPS_AF, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-								client.Out.SendMessage("    Absorbage: " + obj.SPD_ABS, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-								client.Out.SendMessage("        Bonus: " + obj.Bonus, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							}
-							else if (obj.Object_Type == (int)eObjectType.Shield)
-							{
-								client.Out.SendMessage("  Shield type: " + GlobalConstants.ShieldTypeToName(obj.DPS_AF), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-								client.Out.SendMessage("        Bonus: " + obj.Bonus, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							}
-							else if (obj.Object_Type == (int)eObjectType.Arrow || obj.Object_Type == (int)eObjectType.Bolt)
-							{
-								client.Out.SendMessage(" Ammunition #: " + obj.DPS_AF, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-								client.Out.SendMessage("       Damage: " + GlobalConstants.AmmunitionTypeToDamageName(obj.SPD_ABS), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-								client.Out.SendMessage("        Range: " + GlobalConstants.AmmunitionTypeToRangeName(obj.SPD_ABS), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-								client.Out.SendMessage("     Accuracy: " + GlobalConstants.AmmunitionTypeToAccuracyName(obj.SPD_ABS), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-								client.Out.SendMessage("        Bonus: " + obj.Bonus, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							}
-							else if (obj.Object_Type == (int)eObjectType.Instrument)
-							{
-								client.Out.SendMessage("   Instrument: " + GlobalConstants.InstrumentTypeToName(obj.DPS_AF), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							}
+
+                            // we use already present DDH for this
+                            DetailDisplayHandler itemhandler = new DetailDisplayHandler();
+                            ArrayList objectInfo = new ArrayList();
+
+                            itemhandler.WriteTechnicalInfo(objectInfo, obj);
+                            client.Out.SendCustomTextWindow("Item " + obj.Id_nb + " Informations", objectInfo);
+    
 							break;
 						}
 					case "model":

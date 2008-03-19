@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
+
 using DOL.Database;
 using DOL.Events;
 using DOL.GS;
@@ -28,6 +29,7 @@ using DOL.GS.SkillHandler;
 using DOL.GS.Spells;
 using DOL.GS.Movement;
 using DOL.GS.RealmAbilities;
+using DOL.Language;
 using log4net;
 
 namespace DOL.AI.Brain
@@ -291,8 +293,8 @@ namespace DOL.AI.Brain
 			// TODO: This should actually be the other way round, but access
 			// to m_aggroTable is restricted and needs to be threadsafe.
 
-			// tolakram - do not modify aggro list if dead
-			if (!brain.Body.IsAlive) return;
+            // do not modify aggro list if dead
+            if (!brain.Body.IsAlive) return;
 
 			lock (m_aggroTable.SyncRoot)
 			{
@@ -311,9 +313,9 @@ namespace DOL.AI.Brain
 		public virtual void AddToAggroList(GameLiving living, int aggroamount)
 		{
 			if (m_body.IsConfused) return;
-
-			// tolakram - duration spell effects will attempt to add to aggro after npc is dead
-			if (!m_body.IsAlive) return;
+            
+            // tolakram - duration spell effects will attempt to add to aggro after npc is dead
+            if (!m_body.IsAlive) return;
 
 			if (living == null) return;
 			//			log.Debug(Body.Name + ": AddToAggroList="+(living==null?"(null)":living.Name)+", "+aggroamount);
@@ -364,8 +366,8 @@ namespace DOL.AI.Brain
 					if (protectAmount > 0)
 					{
 						aggroamount -= protectAmount;
-						protect.ProtectSource.Out.SendMessage("You are protecting " + player.GetName(0, false) + " and distract " + Body.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						//						player.Out.SendMessage("You are protected by " + protect.ProtectSource.GetName(0, false) + " from " + Body.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        protect.ProtectSource.Out.SendMessage(LanguageMgr.GetTranslation(protect.ProtectSource.Client, "AI.Brain.StandardMobBrain.YouProtDist", player.GetName(0, false), Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						//player.Out.SendMessage("You are protected by " + protect.ProtectSource.GetName(0, false) + " from " + Body.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 						lock (m_aggroTable.SyncRoot)
 						{
@@ -601,7 +603,7 @@ namespace DOL.AI.Brain
 					if (eArgs != null && eArgs.HealSource is GameLiving)
 					{
 						//Higher Aggro amount and NO peace flag npcs!
-						if (eArgs.HealSource is GamePlayer || (eArgs.HealSource is GameNPC && (((GameNPC)eArgs.HealSource).Flags & (uint)GameNPC.eFlags.PEACE) == 0))
+                        if (eArgs.HealSource is GamePlayer || (eArgs.HealSource is GameNPC && (((GameNPC)eArgs.HealSource).Flags & (uint)GameNPC.eFlags.PEACE) == 0))
 							AddToAggroList((GameLiving)eArgs.HealSource, (eArgs.HealAmount * 2));
 					}
 					return;
@@ -1126,9 +1128,9 @@ namespace DOL.AI.Brain
 						return false;
 					if (Body.Realm != 0)
 						return false;
-					if (Body.Name == "horse")
+					if (Body.Name.ToLower() == "horse")
 						return false;
-					if (!char.IsLower(Body.Name[0]) && (DOL.GS.ServerProperties.Properties.SERV_LANGUAGE != "DE"))
+					if (!char.IsLower(Body.Name[0]))
 						return false;
 					if (Body.CurrentRegion.IsDungeon)
 						return false;
@@ -1155,7 +1157,8 @@ namespace DOL.AI.Brain
 			double angle = Util.Random(0, 360) / (2 * Math.PI);
 			double targetX = Body.SpawnX + Util.Random(-roamingRadius, roamingRadius);
 			double targetY = Body.SpawnY + Util.Random(-roamingRadius, roamingRadius);
-			//double targetZ = (Body.IsUnderwater) ? Body.SpawnZ : 0; /*(Body.Flags & (uint)GameNPC.eFlags.FLYING) == (uint)GameNPC.eFlags.FLYING ||  + Util.Random(-100, 100)*/
+			//double targetZ = (Body.IsUnderwater) ? Body.SpawnZ : 0;
+            /*(Body.Flags & (uint)GameNPC.eFlags.FLYING) == (uint)GameNPC.eFlags.FLYING ||  + Util.Random(-100, 100)*/
 
 			return new Point3D((int)targetX, (int)targetY, Body.SpawnZ);
 		}

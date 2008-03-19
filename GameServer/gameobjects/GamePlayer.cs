@@ -5015,7 +5015,9 @@ namespace DOL.GS
 							&& target is GameKeepDoor == false
 							&& target is GameSiegeWeapon == false)
 						{
-							this.Mana += (7 * this.MaxMana) / 100;
+                            int perc = ad.Damage + ad.CriticalDamage;
+                            perc = (perc < 1) ? 1 : ((perc > 12) ? 12 : perc);
+                            this.Mana += Convert.ToInt32(Math.Ceiling(((Decimal)(perc * this.MaxMana) / 100)));
 						}
 
 						//only miss when strafing when attacking a player

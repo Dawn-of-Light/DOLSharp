@@ -1,0 +1,9 @@
+
+Behaviour.DestroyItemAction.Destroyed:		{0} è distrutto.
+Behaviour.DropItemAction.DropsFrontYou:		{0} lasci l'oggetto di fronte a te.
+Behaviour.GiveItemAction.GiveButInventFull:	Qualcuno vuole darti {0}, ma il tuo zaino è pieno!
+Behaviour.GiveItemAction.YouReceiveItem:	Ricevi {0}.
+Behaviour.MessageAction.ReadMessage:		Leggi: "{0}"
+Behaviour.TakeItemAction.YouGiveItemToNPC:	Ricevi {0} per {1}.
+Behaviour.TakeItemAction.YouGiveItem:		Ricevi {0}.
+Behaviour.TeleportAction.TeleportedToLoc:	{0} stai per essere teleportato a {1}.

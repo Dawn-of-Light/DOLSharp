@@ -21,8 +21,10 @@ using System.Collections.Generic;
 using System.Text;
 using DOL.GS.PacketHandler;
 using DOL.Events;
-using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
+using DOL.GS.Behaviour.Attributes;
+using DOL.GS.Behaviour;
 using DOL.Database;
+using DOL.Language;
 
 namespace DOL.GS.Behaviour.Actions
 {
@@ -51,11 +53,11 @@ namespace DOL.GS.Behaviour.Actions
 
                 if (!player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, inventoryItem))
                 {
-                    player.Out.SendMessage("Someone wanted to give you " + inventoryItem.GetName(0, false) + ", but your inventory is full!", eChatType.CT_System, eChatLoc.CL_SystemWindow);                    
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Behaviour.GiveItemAction.GiveButInventFull", inventoryItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);                    
                 }
                 else
                 {
-                    player.Out.SendMessage("You receive " + inventoryItem.GetName(0, false) + ".", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Behaviour.GiveItemAction.YouReceiveItem", inventoryItem.GetName(0, false)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
                 }
             }
             else
