@@ -21,7 +21,9 @@ using System.Collections.Generic;
 using System.Text;
 using DOL.GS.PacketHandler;
 using DOL.Events;
-using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
+using DOL.GS.Behaviour.Attributes;
+using DOL.GS.Behaviour;
+using DOL.Language;
 
 namespace DOL.GS.Behaviour.Actions
 {
@@ -68,7 +70,7 @@ namespace DOL.GS.Behaviour.Actions
                     }
                     break;
                 case eTextType.Read:
-                    player.Out.SendMessage("You read: \"" + message + "\"", eChatType.CT_Emote, eChatLoc.CL_PopupWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Behaviour.MessageAction.ReadMessage", message), eChatType.CT_Emote, eChatLoc.CL_PopupWindow);
                     break;  
                 case eTextType.None:
                     //nohting

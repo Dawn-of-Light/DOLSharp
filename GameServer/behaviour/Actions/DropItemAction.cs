@@ -21,8 +21,10 @@ using System.Collections.Generic;
 using System.Text;
 using DOL.GS.PacketHandler;
 using DOL.Events;
-using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
+using DOL.GS.Behaviour.Attributes;
+using DOL.GS.Behaviour;
 using DOL.Database;
+using DOL.Language;
 
 namespace DOL.GS.Behaviour.Actions
 {
@@ -47,7 +49,7 @@ namespace DOL.GS.Behaviour.Actions
             InventoryItem inventoryItem = new InventoryItem(P);
 
             player.CreateItemOnTheGround(inventoryItem);
-            player.Out.SendMessage(inventoryItem.Name + " drops in front of you.", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Behaviour.DropItemAction.DropsFrontYou", inventoryItem.Name), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
         }
     }
 }

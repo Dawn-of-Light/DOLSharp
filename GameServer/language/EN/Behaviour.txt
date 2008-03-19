@@ -1,5 +1,4 @@
 
-
 Behaviour.DestroyItemAction.Destroyed:		{0} is destroyed.
 Behaviour.DropItemAction.DropsFrontYou:		{0} drops in front of you.
 Behaviour.GiveItemAction.GiveButInventFull:	Someone wanted to give you {0}, but your inventory is full!

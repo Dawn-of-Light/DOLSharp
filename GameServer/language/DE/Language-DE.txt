@@ -1639,7 +1639,7 @@ Scripts.Player.Guild.ConfirmLeave:			Wollt Ihr {0} wirklich verlassen?
 Scripts.Player.Guild.DemotedHigherThanPlayer:		Das steht Euch nicht zu!
 Scripts.Player.Guild.DemotedOther:			{0} wurde zum {1} degradiert.	
 Scripts.Player.Guild.DemotedSelf:			Ihr wurdet zum {0} degradiert.	
-Scripts.Player.Guild.Depositamount:			Ihr zahlt {0} auf das Konto Eurer Gilde ein.
+Scripts.Player.Guild.DepositAmount:			Ihr zahlt {0} auf das Konto Eurer Gilde ein.
 Scripts.Player.Guild.DepositFull:			Es scheint, als ob das Konto Eurer Gilde voll ist.
 Scripts.Player.Guild.DepositInvalid:			Das ist kein gültiger Betrag.
 Scripts.Player.Guild.DepositTooMuch:			Ihr habt dafür nicht genug Geld!

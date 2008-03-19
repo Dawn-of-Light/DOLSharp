@@ -21,7 +21,9 @@ using System.Collections.Generic;
 using System.Text;
 using DOL.GS.PacketHandler;
 using DOL.Events;
-using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
+using DOL.GS.Behaviour.Attributes;
+using DOL.GS.Behaviour;
+using DOL.Language;
 
 namespace DOL.GS.Behaviour.Actions
 {
@@ -48,13 +50,12 @@ namespace DOL.GS.Behaviour.Actions
 
             if (location.Name != null)
             {
-                player.Out.SendMessage(player + " is being teleported to " + location.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Behaviour.TeleportAction.TeleportedToLoc", player, location.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
             }
 
             location.X += Util.Random(-radius, radius);
             location.Y += Util.Random(-radius, radius);
             player.MoveTo(location.RegionID, location.X, location.Y, location.Z, location.Heading);
-            
         }
     }
 }

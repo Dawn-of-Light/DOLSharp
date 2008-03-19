@@ -1345,7 +1345,7 @@ namespace DOL
 				{
 					if (log.IsFatalEnabled)
 						log.Fatal("GameServer initialization failed!", e);
-					throw new ApplicationException("Fatal Error: Could not initialize Game Server", e);
+                    throw new ApplicationException("Fatal Error: Could not initialize Game Server", e);
 				}
 			}
 			#endregion

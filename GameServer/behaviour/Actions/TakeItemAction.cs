@@ -21,9 +21,11 @@ using System.Collections.Generic;
 using System.Text;
 using DOL.GS.PacketHandler;
 using DOL.Events;
-using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
+using DOL.GS.Behaviour.Attributes;
+using DOL.GS.Behaviour;
 using DOL.Database;
 using System.Collections;
+using DOL.Language;
 
 namespace DOL.GS.Behaviour.Actions
 {
@@ -117,11 +119,11 @@ namespace DOL.GS.Behaviour.Actions
 
                 if (NPC != null)
                 {
-                    player.Out.SendMessage("You give " + itemToRemove.Name + " to " + NPC.GetName(0, false) + ".", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Behaviour.TakeItemAction.YouGiveItemToNPC", itemToRemove.Name, NPC.GetName(0, false)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
                 }
                 else
                 {
-                    player.Out.SendMessage("You give " + itemToRemove.Name + ".", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Behaviour.TakeItemAction.YouGiveItem", itemToRemove.Name), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
                 }
             }
         }
