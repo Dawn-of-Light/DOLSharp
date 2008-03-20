@@ -693,7 +693,7 @@ Scripts.Player.Guild.ConfirmLeave:			Do you really want to leave {0}?
 Scripts.Player.Guild.DemotedHigherThanPlayer:		You can only demote to ranks below your own.	
 Scripts.Player.Guild.DemotedOther:			{0} has been demoted to {1}.	
 Scripts.Player.Guild.DemotedSelf:			You have been demoted to {0}.	
-Scripts.Player.Guild.DepositAmount:			You deposit {0} into your guilds bank account.	
+Scripts.Player.Guild.Depositamount:			You deposit {0} into your guilds bank account.	
 Scripts.Player.Guild.DepositFull:			The guild bank seems to be full.	
 Scripts.Player.Guild.DepositInvalid:		That is an invalid deposit amount.
 Scripts.Player.Guild.DepositTooMuch:		You don't have enough money to do that!
