@@ -1192,7 +1192,7 @@ namespace DOL.Database
 					continue;
 				}
 				//does a suitable template exist
-				ItemTemplate template = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "`Name` = '" + old.Name + "'");
+				ItemTemplate template = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "`Name` = '" + GameServer.Database.Escape(old.Name) + "'");
 				if (template == null)
 				{
 					template = new ItemTemplate();
@@ -1304,11 +1304,9 @@ namespace DOL.Database
 				return 5000;
 
 			TimeSpan elapsed = DateTime.Now.Subtract(convertStarted);
-			double modifier = total / count;
-			DateTime estimated = DateTime.Now.AddMinutes(elapsed.TotalMinutes * modifier);
-			TimeSpan to = estimated.Subtract(DateTime.Now);
+			int totalmin = (total / count) * elapsed.Minutes;
 
-			GameServer.Instance.Logger.Error("Converted " + count + " items of " + total + " in " + (double)elapsed.TotalMinutes + " minutes completion estimated in " + (int)(elapsed.TotalMinutes - to.TotalMinutes) + " minutes!");
+			GameServer.Instance.Logger.Error("Converted " + count + " items of " + total + " in " + (double)elapsed.TotalMinutes + " minutes completion estimated in " + (totalmin - elapsed.Minutes) + " minutes!");
 
 			return 5000;
 		}
