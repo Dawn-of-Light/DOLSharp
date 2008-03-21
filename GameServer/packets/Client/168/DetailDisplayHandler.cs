@@ -56,15 +56,26 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ArrayList objectInfo = new ArrayList();
 			//log.Debug("DetailDisplayHandler: type=" + objectType + " id=" + objectID);
 
-			switch (objectType)
+				switch (objectType)
 			{
 				#region Inventory Item
 				case 1: //Display Infos on inventory item
+				case 10: // market search
 					{
-						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
-						if (item == null)
-							return 1;
-
+						InventoryItem item = null;
+						if (objectType == 1)
+						{
+							item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
+							if (item == null)
+								return 1;
+						}
+						else
+						{
+							List<InventoryItem> list = client.Player.TempProperties.getObjectProperty("TempSearchKey", null) as List<InventoryItem>;
+							item = list[objectID];
+							if (item == null)
+								return 1;
+						}
 
 						caption = item.Name;
 
@@ -99,8 +110,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//**********************************
 						if (item.CrafterName != null && item.CrafterName != "")
 						{
-							objectInfo.Add(" ");//empty line
 							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CrafterName", item.CrafterName));
+						}
+						else if (item.Id_nb == "UniqueObject") // tolakram - force display of unique object
+						{
+							objectInfo.Add("Unique Object");
+							objectInfo.Add(" ");//empty line
 						}
 
 						//**********************************
@@ -288,15 +303,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 							}
 							if (client.Account.PrivLevel > 1)
 							{
-								objectInfo.Add("----------Technical informations----------");
-								objectInfo.Add("Line             :" + spellHandler.SpellLine.Name);
-								objectInfo.Add("HasPositiveEffect:" + spellHandler.HasPositiveEffect);
+                                objectInfo.Add(" ");
+                                objectInfo.Add("--- Spell technical informations ---");
+                                objectInfo.Add(" ");
+								objectInfo.Add("Line              :  " + spellHandler.SpellLine.Name);
+								objectInfo.Add("HasPositiveEffect :  " + spellHandler.HasPositiveEffect);
 							}
 						}
 						break;
 					}
-				#endregion
-				#region Spell
 				case 3: //spell
 					{
 						IList skillList = client.Player.GetNonTrainableSkillList();
@@ -1067,7 +1082,7 @@ Type    Description           Id
 		public void WriteTechnicalInfo(ArrayList output, ItemTemplate item)
 		{
             output.Add(" ");
-            output.Add("--- Item technical information ---");
+            output.Add("--- Item technical informations ---");
             output.Add(" ");
 			output.Add("Item Template: " + item.Id_nb);
    			output.Add("         Name: " + item.Name);
