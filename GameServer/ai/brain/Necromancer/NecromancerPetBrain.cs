@@ -90,6 +90,8 @@ namespace DOL.AI.Brain
 					CheckSpellQueue();
 				else
 					AttackMostWanted();
+
+				Owner.Notify(GamePlayerEvent.CastFinished, Owner, args);
 			}
 			else if (e == GameNPCEvent.CastFailed)
 			{
@@ -148,6 +150,8 @@ namespace DOL.AI.Brain
 					CheckSpellQueue();
 				else
 					AttackMostWanted();
+
+				Owner.Notify(GamePlayerEvent.AttackFinished, Owner, args);
 			}
             else if (e == GameNPCEvent.OutOfTetherRange)
             {
