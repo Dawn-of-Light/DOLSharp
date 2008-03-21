@@ -250,7 +250,7 @@ namespace DOL.GS.Quests
         /// <param name="type"></param>
         public static void RegisterQuestType(Type type)
         {
-            ushort typeId =(ushort) type.GetHashCode();
+            uint typeId =(uint) type.GetHashCode();
             if (m_questTypeMap.Contains(typeId))
             {
                 if (log.IsErrorEnabled)
