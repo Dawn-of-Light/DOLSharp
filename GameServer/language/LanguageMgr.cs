@@ -194,37 +194,38 @@ namespace DOL.Language
 		public static string GetTranslation(string lang, string TranslationID, params object [] args)
 		{
 			Langs Language = NameToLangs(lang);
+
 			string translated = (string)LangsSentences[(int)Language][TranslationID];
-			
-			if (translated == null && lang != DOL.GS.ServerProperties.Properties.SERV_LANGUAGE)
+
+			if ((translated == null) && (lang != DOL.GS.ServerProperties.Properties.SERV_LANGUAGE))
 			{
 				translated = (string)LangsSentences[(int)NameToLangs(DOL.GS.ServerProperties.Properties.SERV_LANGUAGE)][TranslationID];
-				log.Warn("Tanslation ID: \"" + TranslationID + "\" doesn't exists in " + lang + " language.");
+				//log.Warn("Tanslation ID: \"" + TranslationID + "\" doesn't exists in " + lang + " language.");
 			}
 
-			if (translated == null && lang != "EN")
+			if ((translated == null) && (lang != "EN") && (DOL.GS.ServerProperties.Properties.SERV_LANGUAGE != "EN"))
 			{
 				translated = (string)LangsSentences[(int)NameToLangs("EN")][TranslationID];
-				log.Warn("Tanslation ID: \"" + TranslationID + "\" doesn't exists in English language.");
+				//log.Warn("Tanslation ID: \"" + TranslationID + "\" doesn't exists in English language.");
 			}
 
 			if (translated == null)
 			{
-				translated = "Error during translation, contact your shard admin with error name: \"" + TranslationID + "\". Thanks!";
-				log.Error("Error during translation with ID: " + TranslationID);
+				translated = TranslationID;
+				//log.Warn("Error during translation with ID: " + TranslationID);
 			}
 			else
 			{
-                try
-                {
+				try
+				{
 					if (args.Length > 0)
 						translated = string.Format(translated, args);
-                }
-                catch
-                {
-                    log.Error("Parameters number error, ID: " + TranslationID + " (Arg count=" + args.Length + ").");
-                }
-            }
+				}
+				catch
+				{
+					log.Warn("Parameters number error, ID: " + TranslationID + " (Arg count=" + args.Length + ").");
+				}
+			}
 
 			return translated;
 		}

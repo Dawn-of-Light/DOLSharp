@@ -1,47 +1,47 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- *
+ * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- */
-/*
- * Author: Smallhorse
- * Date: 11.Aug.2004
- * This script was inspired by the "handy recompile" script
- * I just added some more features ;-)
  */
 using System;
 using System.CodeDom.Compiler;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using DOL.GS.PacketHandler;
-using log4net;
 using Microsoft.CSharp;
+using DOL.GS.PacketHandler;
+using DOL.Language;
+using log4net;
 
 namespace DOL.GS.Commands
 {
 	[Cmd(
 		"&code",
 		ePrivLevel.Admin,
-		"Executes custom code!",
-		"/code <codesnippet>")]
+		"AdminCommands.Code.Description",
+		"AdminCommands.Code.Usage")]
 	public class DynCodeCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
+		/// <summary>
+		/// Defines a logger for this class.
+		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-		public static void ExecuteCode(GameClient client, string code)		
+		
+
+		public static void ExecuteCode(GameClient client, string code)
 		{
 			CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp");
 			if (provider == null)
@@ -86,7 +86,7 @@ namespace DOL.GS.Commands
 
 			if (cr.Errors.HasErrors)
 			{
-				client.Out.SendMessage("Error Compiling Expression: ", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "AdminCommands.Code.ErrorCompiling"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 
 				foreach (CompilerError err in cr.Errors)
 					client.Out.SendMessage(err.ErrorText, eChatType.CT_System, eChatLoc.CL_PopupWindow);
@@ -99,7 +99,7 @@ namespace DOL.GS.Commands
 			try
 			{
 				methodinf.Invoke(null, new object[] { client.Player == null ? null : client.Player.TargetObject, client.Player });
-				client.Out.SendMessage("Code executed...", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "AdminCommands.Code.CodeExecuted"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			catch (Exception ex)
 			{
@@ -108,6 +108,7 @@ namespace DOL.GS.Commands
 					client.Out.SendMessage(error, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 			}
 		}
+
 
 		public void OnCommand(GameClient client, string[] args)
 		{

@@ -19,6 +19,7 @@
 using System;
 using DOL.GS;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -31,30 +32,35 @@ namespace DOL.GS.Commands
 		{
 			DisplayMessage(player.Client, message, new object[] { });
 		}
+
+
 		public virtual void DisplayMessage(GameClient client, string message)
 		{
 			DisplayMessage(client, message, new object[] { });
 		}
 
+
 		public virtual void DisplayMessage(GameClient client, string message, params object[] objs)
 		{
 			if (client == null || !client.IsPlaying)
 				return;
-			client.Out.SendMessage(String.Format(message,objs),eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage(String.Format(message, objs), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return;
 		}
+
 
 		public virtual void DisplaySyntax(GameClient client)
 		{
 			if (client == null || !client.IsPlaying)
 				return;
-		  CmdAttribute[] attrib = (CmdAttribute[]) this.GetType().GetCustomAttributes(typeof(CmdAttribute), false);
-		  if (attrib.Length == 0)
-			  return;
-			
-			client.Out.SendMessage(attrib[0].Description,eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			foreach(string str in attrib[0].Usage)
-				client.Out.SendMessage(str,eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+			CmdAttribute[] attrib = (CmdAttribute[])this.GetType().GetCustomAttributes(typeof(CmdAttribute), false);
+			if (attrib.Length == 0)
+				return;
+
+			client.Out.SendMessage(LanguageMgr.GetTranslation(client, attrib[0].Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			foreach (string sentence in attrib[0].Usage)
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, sentence), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return;
 		}
 	}

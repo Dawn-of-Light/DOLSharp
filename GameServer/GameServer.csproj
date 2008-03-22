@@ -154,15 +154,14 @@
     <Compile Include="behaviour\BehaviourMgr.cs" />
     <Compile Include="commands\admincommands\Account.cs" />
     <Compile Include="commands\admincommands\code.cs" />
-    <Compile Include="commands\admincommands\serverproperties.cs" />
+    <Compile Include="commands\admincommands\ServerProperties.cs" />
     <Compile Include="commands\admincommands\plvl.cs" />
     <Compile Include="commands\gmcommands\addbind.cs" />
     <Compile Include="commands\gmcommands\AddHookPoint.cs" />
+    <Compile Include="commands\gmcommands\Announce.cs" />
     <Compile Include="commands\gmcommands\area.cs" />
     <Compile Include="commands\gmcommands\Ban.cs" />
-    <Compile Include="commands\gmcommands\BroadcastMessage.cs" />
     <Compile Include="commands\gmcommands\cast.cs" />
-    <Compile Include="commands\gmcommands\Centeranno.cs" />
     <Compile Include="commands\gmcommands\crafting.cs" />
     <Compile Include="commands\gmcommands\debug.cs" />
     <Compile Include="commands\gmcommands\debugjump.cs" />
@@ -2414,6 +2413,8 @@
     <Content Include="language\EN\Atlantis.txt" />
     <Content Include="language\EN\Behaviour.txt" />
     <Content Include="language\EN\Commands.txt" />
+    <Content Include="language\EN\Commands\AdminCommands.txt" />
+    <Content Include="language\EN\Commands\GMCommands.txt" />
     <Content Include="language\EN\Crafting.txt" />
     <Content Include="language\EN\Effects.txt" />
     <Content Include="language\EN\GameObjects\CustomNPC\Blacksmith.txt" />
@@ -2436,7 +2437,6 @@
     <Content Include="language\EN\PlayerClasses.txt" />
     <Content Include="language\EN\PlayerTitles.txt" />
     <Content Include="language\EN\Quests.txt" />
-    <Content Include="language\EN\Quests\Albion\A Few Repairs.txt" />
     <Content Include="language\EN\Quests\BaseQuest.txt" />
     <Content Include="language\EN\RealmAbilities.txt" />
     <Content Include="language\EN\ServerRules.txt" />
@@ -2446,11 +2446,11 @@
     <Content Include="language\EN\World.txt" />
     <Content Include="language\ES\Language-ES.txt" />
     <Content Include="language\FR\Language-FR.txt" />
+    <Content Include="language\IT\AI.txt" />
+    <Content Include="language\IT\Behaviour.txt" />
+    <Content Include="language\IT\Commands\AdminCommands.txt" />
+    <Content Include="language\IT\Effects.txt" />
     <Content Include="language\IT\Language-IT.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="language\EN\Quests\Hibernia\" />
-    <Folder Include="language\EN\Quests\Midgard\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -17,19 +17,19 @@
  *
  */
 using System;
-
 using DOL.Database;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		 "&addhookpoint",
 		 ePrivLevel.GM,
-		 "add hookpoint on a keep component",
-		 "'/addhookpoint <skin> <id>' to add a hookpoint (select the gamekeepcomponent)")]
-	public class HookPointCommandHandler : AbstractCommandHandler,ICommandHandler
+		 "GMCommands.HookPoint.Description",
+		 "GMCommands.HookPoint.Usage")]
+	public class HookPointCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
@@ -42,10 +42,10 @@ namespace DOL.GS.Commands
 			int skin = 0;
 			try
 			{
-				GameKeepComponent compo = client.Player.TargetObject as GameKeepComponent;
-				if (compo == null)
+				GameKeepComponent comp = client.Player.TargetObject as GameKeepComponent;
+				if (comp == null)
 				{
-					DisplayMessage(client, "You are not targeting a GameKeepComponent!");
+					DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.HookPoint.NoGKCTarget"));
 					return;
 				}
 				skin = Convert.ToInt32(args[1]);
@@ -53,15 +53,15 @@ namespace DOL.GS.Commands
 				DBKeepHookPoint dbkeephp = new DBKeepHookPoint();
 				dbkeephp.HookPointID = id;
 				dbkeephp.KeepComponentSkinID = skin;
-				dbkeephp.X = client.Player.X - compo.X;
-				dbkeephp.Y = client.Player.Y - compo.Y;
-				dbkeephp.Z = client.Player.Z - compo.Z;
-				dbkeephp.Heading = client.Player.Heading - compo.Heading;
+				dbkeephp.X = client.Player.X - comp.X;
+				dbkeephp.Y = client.Player.Y - comp.Y;
+				dbkeephp.Z = client.Player.Z - comp.Z;
+				dbkeephp.Heading = client.Player.Heading - comp.Heading;
 				GameServer.Database.AddNewObject(dbkeephp);
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
-				DisplayMessage(client,e.ToString());
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Error", e.Message));
 			}
 		}
 	}
