@@ -20,14 +20,15 @@ using System;
 using System.Reflection;
 using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&area",
 		ePrivLevel.GM,
-		"various commands to help you with areas",
-		"/area create <name> <type(circle/square>) <radius> <broadcast(y/n)> <soundid>")]
+		"GMCommands.Area.Description",
+		"GMCommands.Area.Usage.Create")]
 	public class AreaCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
@@ -40,6 +41,7 @@ namespace DOL.GS.Commands
 
 			switch (args[1].ToLower())
 			{
+				#region Create
 				case "create":
 					{
 						if (args.Length != 7)
@@ -67,14 +69,11 @@ namespace DOL.GS.Commands
 						}
 
 						area.Radius = Convert.ToInt16(args[4]);
-						if (args[5].ToLower() == "y")
-							area.CanBroadcast = true;
-						else if (args[5].ToLower() == "n")
-							area.CanBroadcast = false;
-						else
+						switch (args[5].ToLower())
 						{
-							DisplaySyntax(client);
-							return;
+							case "y": { area.CanBroadcast = true; break; }
+							case "n": { area.CanBroadcast = false; break; }
+							default: { DisplaySyntax(client); return; }
 						}
 						area.Sound = byte.Parse(args[6]);
 						area.Region = client.Player.CurrentRegionID;
@@ -90,11 +89,17 @@ namespace DOL.GS.Commands
 						newArea.CanBroadcast = area.CanBroadcast;
 						WorldMgr.GetRegion(client.Player.CurrentRegionID).AddArea(newArea);
 						GameServer.Database.AddNewObject(area);
-						DisplayMessage(client, "Area created - Description:" + area.Description + " X:" + area.X +
-							" Y:" + area.Y + " Z:" + area.Z + " Radius:" + area.Radius + " Broadcast:" + area.CanBroadcast.ToString() +
-							" Sound:" + area.Sound);
-							break;
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Area.AreaCreated", area.Description, area.X, area.Z, area.Radius, area.CanBroadcast.ToString(), area.Sound));
+						break;
 					}
+				#endregion Create
+				#region Default
+				default:
+					{
+						DisplaySyntax(client);
+						break;
+					}
+				#endregion Default
 			}
 		}
 	}

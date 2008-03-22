@@ -1,0 +1,46 @@
+
+
+# General Sentences
+GMCommands.Error:							Error: {0}
+
+
+# /addbind Command
+GMCommands.AddBind.Description:				Adds a bindpoint to the game.
+GMCommands.AddBind.Usage:					/addbind [raggio=750]
+GMCommands.AddBind.BindPointAdded:			Bindpoint added: X={0}, Y={1}, Z={2}, Radius={3}, Region={4}
+
+
+# /addhookpoint Command
+GMCommands.HookPoint.Description:			Add hookpoint on a keep component.
+GMCommands.HookPoint.Usage:					'/addhookpoint <skin> <id>' to add a hookpoint (select the GameKeepComponent)
+GMCommands.HookPoint.NoGKCTarget:			You are not targeting a GameKeepComponent!
+
+
+# /annunce Command
+GMCommands.Announce.Description:			Send message to all players online
+GMCommands.Announce.Usage:					/announce <log|window|send|center|confirm> <message>
+GMCommands.Announce.LogAnnounce:			[Announce]: {0}
+GMCommands.Announce.WindowAnnounce:			Announce from {0}
+GMCommands.Announce.SendAnnounce:			[Announce]: {0}
+GMCommands.Announce.ConfirmAnnounce:		Announce from {0}: {1}
+
+
+# /area Command
+GMCommands.Area.Description:				Various commands to help you with areas
+GMCommands.Area.Usage.Create:				/area create <name> <type(circle|square)> <radius> <broadcast(y|n)> <soundid>
+GMCommands.Area.AreaCreated:				Area created - Description: {0}, X={1}, Y={2}, Z={3}, Radius={4}, Broadcast={5}, Sound={6}.
+
+
+# /ban Command
+GMCommands.Ban.Description:					Usage of /ban command: 
+GMCommands.Ban.Usage.IP:					'/ban ip <reason>' Ban target's IP adress
+GMCommands.Ban.Usage.Account:				'/ban account <reason>' Ban target's account
+GMCommands.Ban.Usage.Both:					'/ban both <reason>' Ban target's account and its related IP adress
+GMCommands.Ban.MustTarget:					You must select a target!
+GMCommands.Ban.AAlreadyBanned:				This account has already been banned.
+GMCommands.Ban.ABanned:						Account {0} has been banned.
+GMCommands.Ban.IAlreadyBanned:				This IP has already been banned.
+GMCommands.Ban.IBanned:						IP {0} has been banned.
+GMCommands.Ban.BAlreadyBanned:				These account and IP have already been banned.
+GMCommands.Ban.BBanned:						Account {0} and IP {1} have been banned.
+
