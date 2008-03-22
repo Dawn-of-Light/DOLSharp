@@ -19,14 +19,15 @@
 using System;
 using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&addbind",
 		ePrivLevel.GM,
-		"adds a bindpoint to the game",
-		"/addbind [radius=750]")]
+		"GMCommands.AddBind.Description",
+		"GMCommands.AddBind.Usage")]
 	public class AddBindCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
@@ -38,8 +39,10 @@ namespace DOL.GS.Commands
 				{
 					bindRadius = UInt16.Parse(args[1]);
 				}
-				catch
+				catch (Exception e)
 				{
+					DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Error", e.Message));
+					return;
 				}
 			}
 			BindPoint bp = new BindPoint();
@@ -50,7 +53,7 @@ namespace DOL.GS.Commands
 			bp.Radius = bindRadius;
 			GameServer.Database.AddNewObject(bp);
 			client.Player.CurrentRegion.AddArea(new Area.BindArea("bind point", bp));
-			client.Out.SendMessage("Bindpoint added: X=" + bp.X + " Y=" + bp.Y + " Z=" + bp.Z + " Radius=" + bp.Radius + " Region=" + bp.Region, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.AddBind.BindPointAdded", bp.X, bp.Y, bp.Z, bp.Radius, bp.Region));
 		}
 	}
 }

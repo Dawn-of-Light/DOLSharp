@@ -16,36 +16,35 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.Database;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&account",
 		ePrivLevel.Admin,
-		"Account modification command",
-		"/account changepassword <AccountName> <NewPassword>",
-		"/account delete <AccountName>",
-		"/account deletecharacter <CharacterName>",
-		"/account movecharacter <CharacterName> <NewAccountName>",
-		"/account getaccountname <CharacterName>")]
+		"AdminCommands.Account.Description",
+		"AdminCommands.Account.Usage.ChangePassword",
+		"AdminCommands.Account.Usage.Delete",
+		"AdminCommands.Account.Usage.DeleteChar",
+		"AdminCommands.Account.Usage.MoveChar")]
 	public class AccountCommand : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
-			//Test for parameters, if none provided, display the syntax
 			if (args.Length < 2)
 			{
 				DisplaySyntax(client);
 				return;
 			}
+
 			switch (args[1])
 			{
-				//Change the password for an account
+				#region ChangePassword
 				case "changepassword":
 					{
-						//Test correct parameters for password change
 						if (args.Length < 4)
 						{
 							DisplaySyntax(client);
@@ -55,54 +54,45 @@ namespace DOL.GS.Commands
 						string accountname = args[2];
 						string newpass = args[3];
 
-						//Test if the account can be found
 						Account acc = GetAccount(accountname);
 						if (acc == null)
 						{
-							DisplayMessage(client, "Account {0} not found!", accountname);
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountNotFound", accountname));
 							return;
 						}
 
-						//Set new password
 						acc.Password = newpass;
-						//Save the changed account
 						GameServer.Database.SaveObject(acc);
-
 					}
 					break;
-
-				//Delete an account
+				#endregion ChangePassword
+				#region Delete
 				case "delete":
 					{
-						//Test correct parameters 
 						if (args.Length < 3)
 						{
 							DisplaySyntax(client);
 							return;
 						}
 
-						//Test if the account can be found
 						string accountname = args[2];
 						Account acc = GetAccount(accountname);
+
 						if (acc == null)
 						{
-							DisplayMessage(client, "Account {0} not found!", accountname);
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountNotFound", accountname));
 							return;
 						}
 
-						//Kick the player if active
 						KickAccount(acc);
-
-						//Delete the account object
 						GameServer.Database.DeleteObject(acc);
-						DisplayMessage(client, "Account {0} deleted!", acc.Name);
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountDeleted", acc.Name));
 						return;
 					}
-
-				//Delete a character from an account
+				#endregion Delete
+				#region DeleteCharacter
 				case "deletecharacter":
 					{
-						//Test correct parameters 
 						if (args.Length < 3)
 						{
 							DisplaySyntax(client);
@@ -111,23 +101,22 @@ namespace DOL.GS.Commands
 
 						string charname = args[2];
 						Character cha = GetCharacter(charname);
+
 						if (cha == null)
 						{
-							DisplayMessage(client, "Character {0} not found!", charname);
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharacterNotFound", charname));
 							return;
 						}
 
-						//Kick the player if active
 						KickCharacter(cha);
-
-						//Delete the character object
 						GameServer.Database.DeleteObject(cha);
-						DisplayMessage(client, "Character {0} deleted!", cha.Name);
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharacterDeleted", cha.Name));
 						return;
 					}
+				#endregion DeleteCharacter
+				#region MoveCharacter
 				case "movecharacter":
 					{
-						//Test correct parameters 
 						if (args.Length < 4)
 						{
 							DisplaySyntax(client);
@@ -140,14 +129,14 @@ namespace DOL.GS.Commands
 						Character cha = GetCharacter(charname);
 						if (cha == null)
 						{
-							DisplayMessage(client, "Character {0} not found!", charname);
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharacterNotFound", charname));
 							return;
 						}
 
 						Account acc = GetAccount(accountname);
 						if (acc == null)
 						{
-							DisplayMessage(client, "Account {0} not found!", accountname);
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountNotFound", accountname));
 							return;
 						}
 
@@ -164,7 +153,7 @@ namespace DOL.GS.Commands
 								firstAccountSlot = 3 * 8;
 								break;
 							default:
-								DisplayMessage(client, "The character is not from a valid realm!");
+								DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharNotFromValidRealm"));
 								return;
 						}
 
@@ -187,15 +176,13 @@ namespace DOL.GS.Commands
 
 						if (freeslot == 0)
 						{
-							DisplayMessage(client, "Account {0} has no free character slots for this realm anymore!", accountname);
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountHasNoFreeSlots", accountname));
 							return;
 						}
 
-						//Check if the player is online
 						GameClient playingclient = WorldMgr.GetClientByPlayerName(cha.Name, true, false);
 						if (playingclient != null)
 						{
-							//IF the player is online, kick him out
 							playingclient.Out.SendPlayerQuit(true);
 							playingclient.Disconnect();
 						}
@@ -204,31 +191,10 @@ namespace DOL.GS.Commands
 						cha.AccountSlot = freeslot;
 
 						GameServer.Database.SaveObject(cha);
-						DisplayMessage(client, "Character {0} moved to Account {1}!", cha.Name, acc.Name);
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharacterMovedToAccount", cha.Name, acc.Name));
 						return;
 					}
-
-				case "getaccountname":
-					{
-						//Test correct parameters 
-						if (args.Length < 3)
-						{
-							DisplaySyntax(client);
-							return;
-						}
-
-						string charname = args[2];
-						Character cha = GetCharacter(charname);
-						if (cha == null)
-						{
-							DisplayMessage(client, "Character {0} not found!", charname);
-							return;
-						}
-
-						string accname = GetAccountName(charname);
-						DisplayMessage(client, "Account name for character " + cha.Name + " is : " + accname);
-						return;
-					}
+				#endregion MoveCharacter
 			}
 		}
 
@@ -239,12 +205,9 @@ namespace DOL.GS.Commands
 		/// <returns>the found account or null</returns>
 		private Account GetAccount(string name)
 		{
-			//Seek players ingame first
 			GameClient client = WorldMgr.GetClientByAccountName(name, true);
 			if (client != null)
 				return client.Account;
-
-			//Return database object
 			return (Account)GameServer.Database.SelectObject(typeof(Account), "Name ='" + GameServer.Database.Escape(name) + "'");
 		}
 
@@ -255,12 +218,9 @@ namespace DOL.GS.Commands
 		/// <returns>the found character or null</returns>
 		private Character GetCharacter(string charname)
 		{
-			//Seek players ingame first
 			GameClient client = WorldMgr.GetClientByPlayerName(charname, true, false);
 			if (client != null)
 				return client.Player.PlayerCharacter;
-
-			//Return database object
 			return (Character)GameServer.Database.SelectObject(typeof(Character), "Name='" + GameServer.Database.Escape(charname) + "'");
 		}
 
@@ -270,11 +230,9 @@ namespace DOL.GS.Commands
 		/// <param name="acc">The account</param>
 		private void KickAccount(Account acc)
 		{
-			//Check if the player is online
 			GameClient playingclient = WorldMgr.GetClientByAccountName(acc.Name, true);
 			if (playingclient != null)
 			{
-				//IF the player is online, kick him out
 				playingclient.Out.SendPlayerQuit(true);
 				playingclient.Disconnect();
 			}
@@ -286,11 +244,9 @@ namespace DOL.GS.Commands
 		/// <param name="cha">the character</param>
 		private void KickCharacter(Character cha)
 		{
-			//Check if the player is online
 			GameClient playingclient = WorldMgr.GetClientByPlayerName(cha.Name, true, false);
 			if (playingclient != null)
 			{
-				//IF the player is online, kick him out
 				playingclient.Out.SendPlayerQuit(true);
 				playingclient.Disconnect();
 			}
@@ -303,12 +259,10 @@ namespace DOL.GS.Commands
 		/// <returns>the account name or null</returns>
 		private string GetAccountName(string charname)
 		{
-			//Seek players ingame first
 			GameClient client = WorldMgr.GetClientByPlayerName(charname, true, false);
 			if (client != null)
 				return client.Account.Name;
 
-			//Return database object
 			Character ch = (Character)GameServer.Database.SelectObject(typeof(Character), "Name='" + GameServer.Database.Escape(charname) + "'");
 			if (ch != null)
 				return ch.AccountName;
