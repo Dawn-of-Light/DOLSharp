@@ -1545,11 +1545,8 @@ namespace DOL.GS.Quests.Albion
         [ScriptUnloadedEvent]
         public static void ScriptUnloaded(DOLEvent e, object sender, EventArgs args)
         {
-
-            // Custom Scriptunloaded Code Begin
-
-            // Custom Scriptunloaded Code End
-
+            if (!ServerProperties.Properties.LOAD_QUESTS)
+                return;
             Albion_Statue_Area.UnRegisterPlayerEnter(new DOLEventHandler(PlayerEnterStatueArea));
             WorldMgr.GetRegion(Albion_Statue.RegionID).RemoveArea(Albion_Statue_Area);
             if (Charles == null)
