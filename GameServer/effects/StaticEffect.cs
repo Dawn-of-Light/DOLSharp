@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Effects
 {
@@ -14,13 +15,6 @@ namespace DOL.GS.Effects
 		protected GameLiving m_owner = null;
 
 		/// <summary>
-		/// create static effect
-		/// </summary>
-		public StaticEffect()
-		{
-		}
-
-		/// <summary>
 		/// Cancel effect
 		/// </summary>
 		/// <param name="playerCanceled"></param>
@@ -29,7 +23,7 @@ namespace DOL.GS.Effects
 			if (playerCanceled && HasNegativeEffect)
 			{
 				if (Owner is GamePlayer)
-					((GamePlayer)Owner).Out.SendMessage("You can't remove this effect!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					((GamePlayer)Owner).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.StaticEffect.YouCantRemoveThisEffect"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			Stop();
@@ -59,7 +53,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-		public virtual string Name { get { return "Noname"; } }
+		public virtual string Name { get { return "NoName"; } }
 
 		/// <summary>
 		/// Remaining Time of the effect in milliseconds

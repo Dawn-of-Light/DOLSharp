@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Effects
 {
@@ -27,11 +28,6 @@ namespace DOL.GS.Effects
 	/// </summary>
 	public class EngageEffect : StaticEffect, IGameEffect
 	{
-		/// <summary>
-		/// The ability description
-		/// </summary>
-		protected const String delveString = "Endurance is drained in return for a significantly increased blocking rate. Engage can only be used at range, or while closing to attack. Once you attack, it is disabled.";
-
 		/// <summary>
 		/// The player that is defended by the engage source
 		/// </summary>
@@ -47,14 +43,6 @@ namespace DOL.GS.Effects
 		}
 
 		/// <summary>
-		/// Creates a new engage effect
-		/// </summary>
-		public EngageEffect()
-			: base()
-		{
-		}
-
-		/// <summary>
 		/// Start the berserk on player
 		/// </summary>
 		public override void Start(GameLiving engageSource)
@@ -65,7 +53,7 @@ namespace DOL.GS.Effects
 			engageSource.IsEngaging = true;
 
 			if (m_owner is GamePlayer)
-				(m_owner as GamePlayer).Out.SendMessage("You concentrate on blocking the blows of " + m_engageTarget.GetName(0, false) + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				(m_owner as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((m_owner as GamePlayer).Client, "Effects.EngageEffect.ConcOnBlockingX", m_engageTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			// only emulate attack mode so it works more like on live servers
 			// entering real attack mode while engaging someone stops engage
@@ -89,9 +77,9 @@ namespace DOL.GS.Effects
 			if (m_owner is GamePlayer)
 			{
 				if (playerCancel)
-					(m_owner as GamePlayer).Out.SendMessage("You no longer concentrate on blocking the blows!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					(m_owner as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((m_owner as GamePlayer).Client, "Effects.EngageEffect.YouNoConcOnBlock"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				else
-					(m_owner as GamePlayer).Out.SendMessage("You are no longer attempting to engage a target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					(m_owner as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((m_owner as GamePlayer).Client, "Effects.EngageEffect.YouNoAttemptToEngageT"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 		}
 
@@ -109,8 +97,8 @@ namespace DOL.GS.Effects
 			get
 			{
 				if (m_engageTarget != null)
-					return "Engage: " + m_engageTarget.GetName(0, false);
-				return "Engage";
+					return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.EngageEffect.EngageName", m_engageTarget.GetName(0, false));
+				return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.EngageEffect.Name");
 			}
 		}
 
@@ -127,9 +115,9 @@ namespace DOL.GS.Effects
 			get
 			{
 				IList delveInfoList = new ArrayList(3);
-				delveInfoList.Add(delveString);
+				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.EngageEffect.InfoEffect"));
 				delveInfoList.Add(" ");
-				delveInfoList.Add(m_owner.GetName(0, true) + " engages " + m_engageTarget.GetName(0, false));
+				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.EngageEffect.XEngagesY", m_owner.GetName(0, true), m_engageTarget.GetName(0, false)));
 				return delveInfoList;
 			}
 		}

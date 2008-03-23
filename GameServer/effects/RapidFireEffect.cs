@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Effects
 {
@@ -27,15 +28,6 @@ namespace DOL.GS.Effects
 	/// </summary>
 	public class RapidFireEffect : StaticEffect, IGameEffect
 	{
-
-		/// <summary>
-		/// Creates a new sure shot effect
-		/// </summary>
-		public RapidFireEffect()
-			: base()
-		{
-		}
-
 		/// <summary>
 		/// Start the effect on player
 		/// </summary>
@@ -44,13 +36,13 @@ namespace DOL.GS.Effects
 		{
 			base.Start(living);
 			if (living is GamePlayer)
-				(living as GamePlayer).Out.SendMessage("You switch to rapid fire mode!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				(living as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((living as GamePlayer).Client, "Effects.RapidFireEffect.YouSwitchRFMode"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-		public override string Name { get { return "Rapid Fire"; } }
+		public override string Name { get { return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.RapidFireEffect.Name"); } }
 
 		/// <summary>
 		/// Icon to show on players, can be id
