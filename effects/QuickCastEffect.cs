@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Effects
 {
@@ -28,18 +29,13 @@ namespace DOL.GS.Effects
 	public class QuickCastEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
-		/// The ability description
-		/// </summary>
-		protected const String delveString = "This allows them to cast a single spell with a quickened casting time, but costs twice the power. It cannot be interrupted by melee or spells. The only exception to this is the Necromancer form of Quickcast (Facilitate Painworking). It allows the Necromancer's summoned undead pet to have six seconds of uninterrupted casting time.";
-
-		/// <summary>
 		/// Start the quickcast on player
 		/// </summary>
 		public override void Start(GameLiving living)
 		{
 			base.Start(living);
 			if (m_owner is GamePlayer)
-				(m_owner as GamePlayer).Out.SendMessage("You have activated quickcast.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				(m_owner as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((m_owner as GamePlayer).Client, "Effects.QuickCastEffect.YouActivatedQC"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			m_owner.TempProperties.removeProperty(Spells.SpellHandler.INTERRUPT_TIMEOUT_PROPERTY);
 		}
 
@@ -50,13 +46,13 @@ namespace DOL.GS.Effects
 		{
 			base.Cancel(playerCancel);
 			if (m_owner is GamePlayer)
-				(m_owner as GamePlayer).Out.SendMessage("Your next spell will not be quickcasted.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				(m_owner as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((m_owner as GamePlayer).Client, "Effects.QuickCastEffect.YourNextSpellNoQCed"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-		public override string Name { get { return "QuickCast"; } }
+		public override string Name { get { return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.QuickCastEffect.Name"); } }
 
 		/// <summary>
 		/// Remaining Time of the effect in milliseconds
@@ -76,7 +72,7 @@ namespace DOL.GS.Effects
 			get
 			{
 				IList delveInfoList = new ArrayList(1);
-				delveInfoList.Add(delveString);
+				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.QuickCastEffect.InfoEffect"));
 				return delveInfoList;
 			}
 		}
