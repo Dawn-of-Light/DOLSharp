@@ -188,8 +188,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//***********************************
 						//shows info for Magic Items
 						//***********************************
-						log.Debug("reached line where it should write magical bonuses");
-						log.Debug("object type is " + ((eObjectType)item.Object_Type).ToString());
 						if (item.Object_Type == (byte)eObjectType.Magical || item.Object_Type == (byte)eObjectType.AlchemyTincture || item.Object_Type == (byte)eObjectType.SpellcraftGem)
 						{
 							WriteMagicalBonuses(objectInfo, item, client, false);

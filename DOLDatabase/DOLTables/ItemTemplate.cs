@@ -77,6 +77,7 @@ namespace DOL.Database
 		private string m_allowedClasses = "";
 		private string m_description = "";
 		private int m_canUseEvery;
+		private bool m_disposable;
 
 		//internal
 		static bool m_autoSave;
@@ -122,6 +123,7 @@ namespace DOL.Database
 			m_charges1 = 0;
 			m_maxCharges1 = 0;
 			m_realm = 0;
+			m_disposable = false;
 			m_autoSave = false;
 		}
 
@@ -696,6 +698,20 @@ namespace DOL.Database
 			set
 			{
 				m_description = value;
+				Dirty = true;
+			}
+		}
+
+		/// <summary>
+		/// We use the disposable field to set if an itemtemplate should be deleted when an inventoryitem is, this is good for ROG etc
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public bool Disposable
+		{
+			get { return m_disposable; }
+			set
+			{
+				m_disposable = value;
 				Dirty = true;
 			}
 		}

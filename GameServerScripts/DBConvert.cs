@@ -1105,6 +1105,29 @@ namespace DOL.Database
 
 			foreach (OldItemTemplate old in oldTemplates)
 			{
+				if (old.ProcSpellID > ushort.MaxValue)
+				{
+					GameServer.Instance.Logger.Error(old.Name + " has a proc spell ID of " + old.ProcSpellID + " this is above 65535 max!");
+					continue;
+				}
+
+				if (old.ProcSpellID1 > ushort.MaxValue)
+				{
+					GameServer.Instance.Logger.Error(old.Name + " has a proc spell 1 ID of " + old.ProcSpellID1 + " this is above 65535 max!");
+					continue;
+				}
+
+				if (old.SpellID > ushort.MaxValue)
+				{
+					GameServer.Instance.Logger.Error(old.Name + " has a spell ID of " + old.SpellID + " this is above 65535 max!");
+					continue;
+				}
+
+				if (old.SpellID1 > ushort.MaxValue)
+				{
+					GameServer.Instance.Logger.Error(old.Name + " has a spell ID 1 of " + old.SpellID1 + " this is above 65535 max!");
+					continue;
+				}
 				ItemTemplate template = new ItemTemplate();
 				template.AllowedClasses = old.AllowedClasses;
 				template.Bonus = (byte)old.Bonus;
@@ -1191,11 +1214,31 @@ namespace DOL.Database
 					GameServer.Database.DeleteObject(old);
 					continue;
 				}
+				if (old.ProcSpellID > ushort.MaxValue)
+				{
+					GameServer.Instance.Logger.Error(old.Name + " has a proc spell ID of " + old.ProcSpellID + " this is above 65535 max!");
+					continue;
+				}
+
+				if (old.ProcSpellID1 > ushort.MaxValue)
+				{
+					GameServer.Instance.Logger.Error(old.Name + " has a proc spell 1 ID of " + old.ProcSpellID1 + " this is above 65535 max!");
+					continue;
+				}
+
+
+				if (old.SpellID > ushort.MaxValue)
+				{
+					GameServer.Instance.Logger.Error(old.Name + " has a spell ID of " + old.SpellID + " this is above 65535 max!");
+					continue;
+				}
 				//does a suitable template exist
 				ItemTemplate template = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "`Name` = '" + GameServer.Database.Escape(old.Name) + "'");
 				if (template == null)
 				{
+
 					template = new ItemTemplate();
+					template.Disposable = true;
 					template.AllowedClasses = old.AllowedClasses;
 					template.Bonus = (byte)old.Bonus;
 					template.CanDropAsLoot = old.CanDropAsLoot;
@@ -1234,9 +1277,10 @@ namespace DOL.Database
 					template.SPD_ABS = (byte)old.SPD_ABS;
 					template.SpellID = (byte)old.SpellID;
 					template.SpellID1 = (byte)old.SpellID1;
-					template.TemplateID = old.Id_nb;
+					template.TemplateID = DOL.Database.UniqueID.IdGenerator.generateId();
 					template.Type_Damage = (byte)old.Type_Damage;
 					template.Weight = (byte)old.Weight;
+					template.CanDropAsLoot = false;
 
 					if (old.Bonus1Type > 0)
 						template.AddBonus((byte)old.Bonus1Type, old.Bonus1);

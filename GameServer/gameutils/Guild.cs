@@ -111,7 +111,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Stores claimed keeps (unique)
 		/// </summary>
-		protected List<AbstractGameKeep> m_claimedKeeps;
+		protected List<AbstractGameKeep> m_claimedKeeps = new List<AbstractGameKeep>();
 
 		protected double m_guildBank;
 		protected bool guildDues;

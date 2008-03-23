@@ -236,8 +236,11 @@ namespace DOL.GS
 
 			if (!base.RemoveItem(item)) return false;
 
-			if (item.Description == "Unique Object" || item.Description == "Quest Reward")
+			if (item.Template.Disposable)
+			{
+				log.Debug("player " + m_player.Name + " removed a disposable object, deleting template + " + item.Template.TemplateID);
 				GameServer.Database.DeleteObject(item.Template);
+			}
 			GameServer.Database.DeleteObject(item);
 			ITradeWindow window = m_player.TradeWindow;
 			if (window != null)

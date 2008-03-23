@@ -86,6 +86,7 @@ namespace DOL.Database
 			m_name = itemTemplate.Name;
 			m_model = itemTemplate.Model;
 			m_maxCharges = itemTemplate.MaxCharges;
+			m_charges = m_maxCharges;
 			m_quality = itemTemplate.Quality;
 			m_condition = itemTemplate.MaxCondition;
 			m_durability = itemTemplate.MaxDurability;

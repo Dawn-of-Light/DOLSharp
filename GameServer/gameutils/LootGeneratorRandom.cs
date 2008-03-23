@@ -79,7 +79,7 @@ namespace DOL.GS
 					{
 						try
 						{
-							itemTemplates = GameServer.Database.SelectObjects(typeof(ItemTemplate), "Level>=" + (i * LEVEL_RANGE) + " AND Level<=" + ((i + 1) * LEVEL_RANGE) + " AND IsPickable = 1 AND IsDropable = 1 AND CanDropAsloot = 1");
+							itemTemplates = GameServer.Database.SelectObjects(typeof(ItemTemplate), "Level>=" + (i * LEVEL_RANGE) + " AND Level<=" + ((i + 1) * LEVEL_RANGE) + " AND IsPickable = 1 AND IsDropable = 1 AND CanDropAsloot = 1 AND `Disposable` = '0'");
 						}
 						catch (Exception e)
 						{
