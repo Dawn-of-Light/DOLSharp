@@ -21,6 +21,7 @@ using System.Collections;
 using DOL.GS.PacketHandler;
 using DOL.Events;
 using DOL.GS.SkillHandler;
+using DOL.Language;
 
 namespace DOL.GS.Effects
 {
@@ -29,11 +30,6 @@ namespace DOL.GS.Effects
 	/// </summary>
 	public class GuardEffect : StaticEffect, IGameEffect
 	{
-		/// <summary>
-		/// The ability description
-		/// </summary>
-		protected const String delveString = "Ability that if successful will guard an attack meant for the ability's target. You will block in the target's place.";
-
 		/// <summary>
 		/// Holds guarder
 		/// </summary>
@@ -97,13 +93,13 @@ namespace DOL.GS.Effects
 
 			if (!WorldMgr.CheckDistance(guardSource, guardTarget, GuardAbilityHandler.GUARD_DISTANCE))
 			{
-				guardSource.Out.SendMessage(string.Format("You are now guarding {0}, but you must stand closer.", guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				guardTarget.Out.SendMessage(string.Format("{0} is now guarding you, but you must stand closer.", guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				guardSource.Out.SendMessage(LanguageMgr.GetTranslation(guardSource.Client, "Effects.GuardEffect.YouAreNowGuardingYBut", guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				guardTarget.Out.SendMessage(LanguageMgr.GetTranslation(guardTarget.Client, "Effects.GuardEffect.XIsNowGuardingYouBut", guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
 			{
-				guardSource.Out.SendMessage(string.Format("You are now guarding {0}.", guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				guardTarget.Out.SendMessage(string.Format("{0} is now guarding you.", guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				guardSource.Out.SendMessage(LanguageMgr.GetTranslation(guardSource.Client, "Effects.GuardEffect.YouAreNowGuardingY", guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				guardTarget.Out.SendMessage(LanguageMgr.GetTranslation(guardTarget.Client, "Effects.GuardEffect.XIsNowGuardingYou", guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 		}
 
@@ -132,8 +128,8 @@ namespace DOL.GS.Effects
 			m_guardSource.EffectList.Remove(this);
 			m_guardTarget.EffectList.Remove(this);
 
-			m_guardSource.Out.SendMessage(string.Format("You are no longer guarding {0}.", m_guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			m_guardTarget.Out.SendMessage(string.Format("{0} is no longer guarding you.", m_guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			m_guardSource.Out.SendMessage(LanguageMgr.GetTranslation(m_guardSource.Client, "Effects.GuardEffect.YourNoLongerGuardingY", m_guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			m_guardTarget.Out.SendMessage(LanguageMgr.GetTranslation(m_guardTarget.Client, "Effects.GuardEffect.XNoLongerGuardingYoy", m_guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			m_playerGroup = null;
 		}
@@ -146,8 +142,8 @@ namespace DOL.GS.Effects
 			get
 			{
 				if (m_guardSource != null && m_guardTarget != null)
-					return m_guardTarget.GetName(0, false) + " guarded by " + m_guardSource.GetName(0, false);
-				return "Guard";
+					return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.GuardEffect.GuardedByName", m_guardTarget.GetName(0, false), m_guardSource.GetName(0, false));
+				return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.GuardEffect.Name");
 			}
 		}
 
@@ -167,25 +163,6 @@ namespace DOL.GS.Effects
 			get { return 412; }
 		}
 
-		//VaNaTiC->
-		/*
-		/// <summary>
-		/// The internal unique effect ID
-		/// </summary>
-		ushort m_id;
-
-		/// <summary>
-		/// unique id for identification in effect list
-		/// </summary>
-		public ushort InternalID
-		{
-			get { return m_id; }
-			set { m_id = value; }
-		}
-		*/
-		//VaNaTiC<-
-
-
 		/// <summary>
 		/// Delve Info
 		/// </summary>
@@ -194,9 +171,9 @@ namespace DOL.GS.Effects
 			get
 			{
 				IList delveInfoList = new ArrayList(3);
-				delveInfoList.Add(delveString);
+				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.GuardEffect.InfoEffect"));
 				delveInfoList.Add(" ");
-				delveInfoList.Add(GuardSource.GetName(0, true) + " is guarding " + GuardTarget.GetName(0, false));
+				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.GuardEffect.XIsGuardingY", GuardSource.GetName(0, true), GuardTarget.GetName(0, false)));
 				return delveInfoList;
 			}
 		}

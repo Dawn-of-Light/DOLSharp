@@ -21,6 +21,7 @@ using System.Collections;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
+using DOL.Language;
 
 namespace DOL.GS.Effects
 {
@@ -98,7 +99,7 @@ namespace DOL.GS.Effects
 			if (living is GamePlayer)
 			{
 				(living as GamePlayer).Out.SendUpdatePlayer();
-				(living as GamePlayer).Out.SendMessage("You channel the spirit of the Hunt!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+				(living as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((living as GamePlayer).Client, "Effects.StagEffect.HuntsSpiritChannel"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 			}
 		}
 
@@ -117,9 +118,14 @@ namespace DOL.GS.Effects
 			{
 				(m_owner as GamePlayer).Out.SendUpdatePlayer();
 				// there is no animation on end of the effect
-				(m_owner as GamePlayer).Out.SendMessage("Your Spirit of the Hunt ends.", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+				(m_owner as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((m_owner as GamePlayer).Client, "Effects.StagEffect.YourHuntsSpiritEnds"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 			}
 		}
+
+		/// <summary>
+		/// Name of the effect
+		/// </summary>
+		public override string Name { get { return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.StagEffect.Name"); } }
 
 		/// <summary>
 		/// Icon to show on players, can be id
@@ -134,16 +140,16 @@ namespace DOL.GS.Effects
 			get
 			{
 				IList delveInfoList = new ArrayList(4);
-				delveInfoList.Add("Hero-only ability, that transforms a player into a stag-headed Huntsman. This lasts 30 seconds, and gives the player a burst in hitpoints. May be used once every 30 minutes. Initiate = 20% bonus to hitpoints. Member =30%, Leader = 40%, Master = 50%");
+				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.StagEffect.InfoEffect"));
 
 				int seconds = RemainingTime / 1000;
 				if (seconds > 0)
 				{
 					delveInfoList.Add(" "); //empty line
 					if (seconds > 60)
-						delveInfoList.Add("- " + seconds / 60 + ":" + (seconds % 60).ToString("00") + " minutes remaining.");
+						delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.DelveInfo.MinutesRemaining", (seconds / 60), (seconds % 60).ToString("00")));
 					else
-						delveInfoList.Add("- " + seconds + " seconds remaining.");
+						delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.DelveInfo.SecondsRemaining", seconds));
 				}
 
 				return delveInfoList;

@@ -21,6 +21,7 @@ using System.Collections;
 using DOL.GS.PacketHandler;
 using DOL.Events;
 using DOL.GS.SkillHandler;
+using DOL.Language;
 
 namespace DOL.GS.Effects
 {
@@ -29,11 +30,6 @@ namespace DOL.GS.Effects
     /// </summary>
     public class BodyguardEffect : StaticEffect, IGameEffect
     {
-        /// <summary>
-        /// The ability description
-        /// </summary>
-        protected const String delveString = "Ability that if successful will guard an attack meant for the ability's target. You will block in the target's place.";
-
         /// <summary>
         /// Holds guarder
         /// </summary>
@@ -95,16 +91,16 @@ namespace DOL.GS.Effects
             m_guardSource.EffectList.Add(this);
             m_guardTarget.EffectList.Add(this);
 
-            if (!WorldMgr.CheckDistance(guardSource, guardTarget, BodyguardAbilityHandler.BODYGUARD_DISTANCE))
-            {
-                guardSource.Out.SendMessage(string.Format("You are now Bodyguarding {0}, but you must stand closer.", guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                guardTarget.Out.SendMessage(string.Format("{0} is now Bodyguarding you, but you must stand closer.", guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-            }
-            else
-            {
-                guardSource.Out.SendMessage(string.Format("You are now Bodyguarding {0}.", guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                guardTarget.Out.SendMessage(string.Format("{0} is now Bodyguarding you.", guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-            }
+			if (!WorldMgr.CheckDistance(guardSource, guardTarget, BodyguardAbilityHandler.BODYGUARD_DISTANCE))
+			{
+				guardSource.Out.SendMessage(LanguageMgr.GetTranslation(guardSource.Client, "Effects.BodyguardEffect.NowBGXButSC", guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				guardTarget.Out.SendMessage(LanguageMgr.GetTranslation(guardTarget.Client, "Effects.BodyguardEffect.XNowBGYouButSC", guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+			else
+			{
+				guardSource.Out.SendMessage(LanguageMgr.GetTranslation(guardSource.Client, "Effects.BodyguardEffect.YouAreNowBGX", guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				guardTarget.Out.SendMessage(LanguageMgr.GetTranslation(guardTarget.Client, "Effects.BodyguardEffect.XIsBGYou", guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
         }
 
         /// <summary>
@@ -133,8 +129,8 @@ namespace DOL.GS.Effects
             m_guardSource.EffectList.Remove(this);
             m_guardTarget.EffectList.Remove(this);
 
-            m_guardSource.Out.SendMessage(string.Format("You are no longer Bodyguarding {0}.", m_guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-            m_guardTarget.Out.SendMessage(string.Format("{0} is no longer Bodyguarding you.", m_guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			m_guardSource.Out.SendMessage(LanguageMgr.GetTranslation(m_guardSource.Client, "Effects.BodyguardEffect.YouAreNoLongerBGX", m_guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			m_guardTarget.Out.SendMessage(LanguageMgr.GetTranslation(m_guardTarget.Client, "Effects.BodyguardEffect.XIsNoLongerBGYou", m_guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
             m_playerGroup = null;
         }
@@ -145,11 +141,11 @@ namespace DOL.GS.Effects
         public override string Name
         {
             get
-            {
-                if (m_guardSource != null && m_guardTarget != null)
-                    return m_guardTarget.GetName(0, false) + " bodyguarded by " + m_guardSource.GetName(0, false);
-                return "Bodyguard";
-            }
+			{
+				if (m_guardSource != null && m_guardTarget != null)
+					return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BodyguardEffect.BodyguardedByName", m_guardTarget.GetName(0, false), m_guardSource.GetName(0, false));
+				return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BodyguardEffect.Name");
+			}
         }
 
         /// <summary>
@@ -176,9 +172,9 @@ namespace DOL.GS.Effects
             get
             {
                 IList delveInfoList = new ArrayList(3);
-                delveInfoList.Add(delveString);
+				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BodyguardEffect.InfoEffect"));
                 delveInfoList.Add(" ");
-                delveInfoList.Add(GuardSource.GetName(0, true) + " is Bodyguarding " + GuardTarget.GetName(0, false));
+				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BodyguardEffect.XIsBodyguardingY", GuardSource.GetName(0, true), GuardTarget.GetName(0, false)));
                 return delveInfoList;
             }
         }

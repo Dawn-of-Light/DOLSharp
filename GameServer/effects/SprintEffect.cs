@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using DOL.Language;
 
 using DOL.GS.RealmAbilities;
 
@@ -37,13 +38,6 @@ namespace DOL.GS.Effects
 		/// The amount of timer ticks player was not moving
 		/// </summary>
 		int m_idleTicks = 0;
-
-		/// <summary>
-		/// Creates a new sprint effect
-		/// </summary>
-		public SprintEffect()
-		{
-		}
 
 		/// <summary>
 		/// Start the sprinting on player
@@ -122,7 +116,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-		public override string Name { get { return "Sprint"; } }
+		public override string Name { get { return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.SprintEffect.Name"); } }
 
 		/// <summary>
 		/// Remaining Time of the effect in milliseconds
