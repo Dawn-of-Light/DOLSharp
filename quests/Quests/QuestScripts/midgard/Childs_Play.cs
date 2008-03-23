@@ -1548,12 +1548,8 @@ namespace DOL.GS.Quests.Midgard
         [ScriptUnloadedEvent]
         public static void ScriptUnloaded(DOLEvent e, object sender, EventArgs args)
         {
-
-            // Custom Scriptunloaded Code Begin
-
-            // Custom Scriptunloaded Code End
-
-
+            if (!ServerProperties.Properties.LOAD_QUESTS)
+                return;
             //Region StatuaRegion = WorldMgr.GetRegion(489);
             //if (StatuaRegion != null)
             //    StatuaRegion.RemoveArea(Statua);
