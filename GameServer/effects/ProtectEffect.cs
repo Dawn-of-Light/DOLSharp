@@ -21,6 +21,7 @@ using System.Collections;
 using DOL.GS.PacketHandler;
 using DOL.Events;
 using DOL.GS.SkillHandler;
+using DOL.Language;
 
 namespace DOL.GS.Effects
 {
@@ -30,11 +31,6 @@ namespace DOL.GS.Effects
 	/// </summary>
 	public class ProtectEffect : StaticEffect, IGameEffect
 	{
-		/// <summary>
-		/// The ability description
-		/// </summary>
-		protected const String delveString = "Ability that if successful will protect an attack meant for the ability's target. You reduce tha aggro an action would have caused.";
-
 		/// <summary>
 		/// The player protecting the target
 		/// </summary>
@@ -95,13 +91,13 @@ namespace DOL.GS.Effects
 
 			if (!WorldMgr.CheckDistance(protectSource, protectTarget, ProtectAbilityHandler.PROTECT_DISTANCE))
 			{
-				protectSource.Out.SendMessage(string.Format("You are now protecting {0}, but you must stand closer.", protectTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				protectTarget.Out.SendMessage(string.Format("{0} is now protecting you, but you must stand closer.", protectSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				protectSource.Out.SendMessage(LanguageMgr.GetTranslation(protectSource.Client, "Effects.ProtectEffect.YouProtectingYBut", protectTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				protectTarget.Out.SendMessage(LanguageMgr.GetTranslation(protectTarget.Client, "Effects.ProtectEffect.XProtectingYouBut", protectSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
 			{
-				protectSource.Out.SendMessage(string.Format("You are now protecting {0}.", protectTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				protectTarget.Out.SendMessage(string.Format("{0} is now protecting you.", protectSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				protectSource.Out.SendMessage(LanguageMgr.GetTranslation(protectSource.Client, "Effects.ProtectEffect.YouProtectingY", protectTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				protectTarget.Out.SendMessage(LanguageMgr.GetTranslation(protectTarget.Client, "Effects.ProtectEffect.XProtectingYou", protectSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 		}
 
@@ -131,8 +127,8 @@ namespace DOL.GS.Effects
 			m_protectSource.EffectList.Remove(this);
 			m_protectTarget.EffectList.Remove(this);
 
-			m_protectSource.Out.SendMessage(string.Format("You are no longer protecting {0}.", m_protectTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			m_protectTarget.Out.SendMessage(string.Format("{0} is no longer protecting you.", m_protectSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			m_protectSource.Out.SendMessage(LanguageMgr.GetTranslation(m_protectSource.Client, "Effects.ProtectEffect.YouNoProtectY", m_protectTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			m_protectTarget.Out.SendMessage(LanguageMgr.GetTranslation(m_protectTarget.Client, "Effects.ProtectEffect.XNoProtectYou", m_protectSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			m_playerGroup = null;
 		}
@@ -146,8 +142,8 @@ namespace DOL.GS.Effects
 			get
 			{
 				if (m_protectSource != null && m_protectTarget != null)
-					return m_protectTarget.GetName(0, false) + " protected by " + m_protectSource.GetName(0, false);
-				return "Protect";
+					return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.ProtectEffect.ProtectByName", m_protectTarget.GetName(0, false), m_protectSource.GetName(0, false));
+				return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.ProtectEffect.Name");
 			}
 		}
 
@@ -167,24 +163,6 @@ namespace DOL.GS.Effects
 			get { return 411; }
 		}
 
-		//VaNaTiC->
-		/*
-		/// <summary>
-		/// The internal unique ID
-		/// </summary>
-		private override ushort m_id;
-
-		/// <summary>
-		/// unique id for identification in effect list
-		/// </summary>
-		public ushort InternalID
-		{
-			get { return m_id; }
-			set { m_id = value; }
-		}
-		*/
-		//VaNaTiC<-
-
 		/// <summary>
 		/// Delve Info
 		/// </summary>
@@ -193,9 +171,9 @@ namespace DOL.GS.Effects
 			get
 			{
 				IList delveInfoList = new ArrayList(3);
-				delveInfoList.Add(delveString);
+				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.ProtectEffect.InfoEffect"));
 				delveInfoList.Add(" ");
-				delveInfoList.Add(ProtectSource.GetName(0, true) + " is protecting " + ProtectTarget.GetName(0, false));
+				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.ProtectEffect.XProtectingY", ProtectSource.GetName(0, true), ProtectTarget.GetName(0, false)));
 				return delveInfoList;
 			}
 		}

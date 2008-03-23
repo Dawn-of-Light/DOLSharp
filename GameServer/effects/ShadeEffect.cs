@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using DOL.Language;
 
 namespace DOL.GS.Effects
 {
@@ -30,11 +31,6 @@ namespace DOL.GS.Effects
 		/// The effect owner
 		/// </summary>
 		GamePlayer m_player;
-
-		/// <summary>
-		/// Creates a new shade effect.
-		/// </summary>
-		public ShadeEffect() { }
 
 		/// <summary>
 		/// Start the shade effect on a player.
@@ -69,7 +65,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Name of the effect.
 		/// </summary>
-		public override string Name { get { return "Shade"; } }	
+		public override string Name { get { return LanguageMgr.GetTranslation(m_player.Client, "Effects.ShadeEffect.Name"); } }	
 
 
 		/// <summary>

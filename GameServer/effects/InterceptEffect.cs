@@ -21,6 +21,7 @@ using System.Collections;
 using DOL.GS.PacketHandler;
 using DOL.Events;
 using DOL.GS.SkillHandler;
+using DOL.Language;
 
 namespace DOL.GS.Effects
 {
@@ -75,14 +76,6 @@ namespace DOL.GS.Effects
 		}
 
 		/// <summary>
-		/// Creates a new intercept effect
-		/// </summary>
-		public InterceptEffect()
-			: base()
-		{
-		}
-
-		/// <summary>
 		/// Start the intercepting on player
 		/// </summary>
 		/// <param name="interceptor">The interceptor</param>
@@ -102,16 +95,16 @@ namespace DOL.GS.Effects
 			if (!WorldMgr.CheckDistance(interceptor, intercepted, InterceptAbilityHandler.INTERCEPT_DISTANCE))
 			{
 				if (interceptor is GamePlayer)
-					((GamePlayer)interceptor).Out.SendMessage(string.Format("You are now attempting to intercept an attack for {0}, but you must stand closer.", intercepted.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					((GamePlayer)interceptor).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)interceptor).Client, "Effects.InterceptEffect.YouAttemtInterceptYBut", intercepted.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				if (intercepted is GamePlayer && interceptor is GamePlayer)
-					((GamePlayer)intercepted).Out.SendMessage(string.Format("{0} is now attempting to intercept an attack for you, but you must stand closer.", interceptor.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					((GamePlayer)intercepted).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)intercepted).Client, "Effects.InterceptEffect.XAttemtInterceptYouBut", interceptor.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
 			{
 				if (interceptor is GamePlayer)
-					((GamePlayer)interceptor).Out.SendMessage(string.Format("You are now attempting to intercept an attack for {0}.", intercepted.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					((GamePlayer)interceptor).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)interceptor).Client, "Effects.InterceptEffect.YouAttemtInterceptY", intercepted.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				if (intercepted is GamePlayer && interceptor is GamePlayer)
-					((GamePlayer)intercepted).Out.SendMessage(string.Format("{0} is now attempting to intercept an attack for you.", interceptor.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					((GamePlayer)intercepted).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)intercepted).Client, "Effects.InterceptEffect.XAttemptInterceptYou", interceptor.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			interceptor.EffectList.Add(this);
 			intercepted.EffectList.Add(this);
@@ -132,9 +125,9 @@ namespace DOL.GS.Effects
 			if (playerCancel)
 			{
 				if (InterceptSource is GamePlayer)
-					((GamePlayer)InterceptSource).Out.SendMessage("You are no longer attempting to intercept an attack for " + InterceptTarget.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					((GamePlayer)InterceptSource).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)InterceptSource).Client, "Effects.InterceptEffect.YouNoAttemtInterceptY", InterceptTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				if (InterceptTarget is GamePlayer && InterceptSource is GamePlayer)
-					((GamePlayer)InterceptTarget).Out.SendMessage(InterceptSource.GetName(0, true) + " is no longer attempting to intercept an attack for you.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					((GamePlayer)InterceptTarget).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)InterceptTarget).Client, "Effects.InterceptEffect.XNoAttemptInterceptYou", InterceptSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 		}
 
@@ -162,8 +155,8 @@ namespace DOL.GS.Effects
 			get
 			{
 				if (m_interceptSource != null && m_interceptTarget != null)
-					return m_interceptTarget.GetName(0, false) + " intercepted by " + m_interceptSource.GetName(0, false);
-				return "Intercept";
+					return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.InterceptEffect.InterceptedByName", m_interceptTarget.GetName(0, false), m_interceptSource.GetName(0, false));
+				return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.InterceptEffect.Name");
 			}
 		}
 
@@ -189,9 +182,9 @@ namespace DOL.GS.Effects
 			get
 			{
 				IList delveInfoList = new ArrayList(3);
-				delveInfoList.Add("Ability that if successful will intercept an attack meant for the ability's target. You will take damage in the target's place.");
+				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.InterceptEffect.InfoEffect"));
 				delveInfoList.Add(" ");
-				delveInfoList.Add(InterceptSource.GetName(0, true) + " is intercepting for " + InterceptTarget.GetName(0, false));
+				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.InterceptEffect.XInterceptingY", InterceptSource.GetName(0, true), InterceptTarget.GetName(0, false)));
 				return delveInfoList;
 			}
 		}

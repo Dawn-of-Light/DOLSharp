@@ -21,6 +21,7 @@ using System.Collections;
 using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
 using DOL.Events;
+using DOL.Language;
 
 namespace DOL.GS.Effects
 {
@@ -49,7 +50,7 @@ namespace DOL.GS.Effects
 			living.Emote(eEmote.MidgardFrenzy);
 
 			if (living is GamePlayer)
-				(living as GamePlayer).Out.SendMessage("You go into a berserker frenzy!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				(living as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((living as GamePlayer).Client, "Effects.BerserkEffect.GoBerserkerFrenzy"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		public override void Stop()
@@ -59,13 +60,13 @@ namespace DOL.GS.Effects
 
 			// there is no animation on end of the effect
 			if (m_owner is GamePlayer)
-				(m_owner as GamePlayer).Out.SendMessage("Your berserker frenzy ends.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				(m_owner as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((m_owner as GamePlayer).Client, "Effects.BerserkEffect.BerserkerFrenzyEnds"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-		public override string Name { get { return "Berserk"; } }
+		public override string Name { get { return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BerserkEffect.Name"); } }
 
 		/// <summary>
 		/// Icon to show on players, can be id
@@ -81,16 +82,16 @@ namespace DOL.GS.Effects
 			get
 			{
 				IList delveInfoList = new ArrayList(4);
-				delveInfoList.Add("This ability transforms the player into a Vendo beast and makes each hit that lands a critical hit, at the expense of any defensive abilities. It can be used one every seven minutes.");
+				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BerserkEffect.InfoEffect"));
 
 				int seconds = RemainingTime / 1000;
 				if (seconds > 0)
 				{
 					delveInfoList.Add(" "); //empty line
-					if(seconds > 60)
-						delveInfoList.Add("- " + seconds/60 + ":" + (seconds%60).ToString("00") + " minutes remaining.");
+					if (seconds > 60)
+						delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.DelveInfo.MinutesRemaining", (seconds / 60), ((seconds % 60).ToString("00"))));
 					else
-						delveInfoList.Add("- " + seconds + " seconds remaining.");
+						delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.DelveInfo.SecondsRemaining", seconds));
 				}
 
 				return delveInfoList; 

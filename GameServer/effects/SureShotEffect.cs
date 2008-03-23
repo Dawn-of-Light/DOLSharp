@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Effects
 {
@@ -33,13 +34,6 @@ namespace DOL.GS.Effects
 		GamePlayer m_player;
 
 		/// <summary>
-		/// Creates a new sure shot effect
-		/// </summary>
-		public SureShotEffect()
-		{
-		}
-
-		/// <summary>
 		/// Start the effect on player
 		/// </summary>
 		/// <param name="player">The effect target</param>
@@ -47,7 +41,7 @@ namespace DOL.GS.Effects
 		{
 			m_player = player;
 			m_player.EffectList.Add(this);
-			m_player.Out.SendMessage("You switch to sure shot mode!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			m_player.Out.SendMessage(LanguageMgr.GetTranslation(m_player.Client, "Effects.SureShotEffect.YouSwitchToSSMode"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		/// <summary>
@@ -61,7 +55,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-		public override string Name { get { return "Sure Shot"; } }
+		public override string Name { get { return LanguageMgr.GetTranslation(m_player.Client, "Effects.SureShotEffect.Name"); } }
 
 		/// <summary>
 		/// Remaining Time of the effect in seconds
@@ -72,24 +66,6 @@ namespace DOL.GS.Effects
 		/// Icon to show on players, can be id
 		/// </summary>
 		public override ushort Icon { get { return 485; } }
-
-		//VaNaTiC->
-		/*
-		/// <summary>
-		/// unique id for identification in effect list
-		/// </summary>
-		private ushort m_id;
-
-		/// <summary>
-		/// unique id for identification in effect list
-		/// </summary>
-		public ushort InternalID
-		{
-			get { return m_id; }
-			set { m_id = value; }
-		}
-		*/
-		//VaNaTiC<-
 
 		/// <summary>
 		/// Delve Info
