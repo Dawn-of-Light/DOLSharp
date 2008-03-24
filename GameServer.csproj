@@ -2405,10 +2405,45 @@
     <EmbeddedResource Include="config\zones.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <None Include="language\DE\AI.txt" />
+    <None Include="language\DE\Atlantis.txt" />
+    <None Include="language\DE\Behaviour.txt" />
+    <None Include="language\DE\Commands\AdminCommands.txt" />
+    <None Include="language\DE\Commands\PlayerCommands.txt" />
+    <None Include="language\DE\Commands\GMCommands.txt" />
+    <None Include="language\DE\Crafting.txt" />
+    <None Include="language\DE\Effects.txt" />
+    <None Include="language\DE\GameObjects\CustomNPC\Blacksmith.txt" />
+    <None Include="language\DE\GameObjects\CustomNPC\CraftNPC.txt" />
+    <None Include="language\DE\GameObjects\CustomNPC\GameStableMaster.txt" />
+    <None Include="language\DE\GameObjects\CustomNPC\Other.txt" />
+    <None Include="language\DE\GameObjects\CustomNPC\Recharger.txt" />
+    <None Include="language\DE\GameObjects\GameLiving.txt" />
+    <None Include="language\DE\GameObjects\GameMerchant.txt" />
+    <None Include="language\DE\GameObjects\GameNPC.txt" />
+    <None Include="language\DE\GameObjects\GameObject.txt" />
+    <None Include="language\DE\GameObjects\GamePlayer.txt" />
+    <None Include="language\DE\GameObjects\GameTrainer.txt" />
+    <None Include="language\DE\GameObjects\Other.txt" />
+    <None Include="language\DE\GameUtils.txt" />
+    <None Include="language\DE\Housing.txt" />
+    <None Include="language\DE\Keeps.txt" />
+    <None Include="language\DE\OtherSentences.txt" />
+    <None Include="language\DE\Packets.txt" />
+    <None Include="language\DE\PlayerClasses.txt" />
+    <None Include="language\DE\PlayerTitles.txt" />
+    <None Include="language\DE\Quests.txt" />
+    <None Include="language\DE\Quests\Hibernia\ImportantDelivery.txt" />
+    <None Include="language\DE\RealmAbilities.txt" />
+    <None Include="language\DE\ServerRules.txt" />
+    <None Include="language\DE\SkillHandler.txt" />
+    <None Include="language\DE\Spells.txt" />
+    <None Include="language\DE\Styles.txt" />
+    <None Include="language\DE\Trainer.txt" />
+    <None Include="language\DE\World.txt" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="language\CZ\Language-CZ.txt" />
-    <Content Include="language\DE\Language-DE.txt" />
     <Content Include="language\EN\AI.txt" />
     <Content Include="language\EN\Atlantis.txt" />
     <Content Include="language\EN\Behaviour.txt" />
@@ -2451,6 +2486,13 @@
     <Content Include="language\IT\Commands\AdminCommands.txt" />
     <Content Include="language\IT\Effects.txt" />
     <Content Include="language\IT\Language-IT.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="language\DE\Commands" />
+    <Folder Include="language\DE\GameObjects" />
+    <Folder Include="language\DE\GameObjects\CustomNPC" />
+    <Folder Include="language\DE\Quests" />
+    <Folder Include="language\DE\Quests\Hibernia" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

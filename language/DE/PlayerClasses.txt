@@ -1,0 +1,1 @@
+﻿PlayerClass.OnLevelUp.Autotrain:			Ihr trainiert "{0}" automatisch auf Stufe {1}.
