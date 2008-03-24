@@ -1,0 +1,3 @@
+# GAMELIVING
+GameLiving.ReceiveItem:					{0} will diesen Gegenstand nicht!
+GameLiving.ReceiveMoney:				{0} will Euer Geld nicht!
