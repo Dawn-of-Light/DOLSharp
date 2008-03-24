@@ -1,0 +1,315 @@
+﻿# /DetailDisplayHandler
+DetailDisplayHandler.GetShortItemInfo.CrafterName:	Crafter : {0}
+DetailDisplayHandler.GetShortItemInfo.NoDrop:		 Nicht ablegbar.
+DetailDisplayHandler.GetShortItemInfo.NoSell:		 Nicht verkaufbar.
+DetailDisplayHandler.GetShortItemInfo.NoTrade:		 Nicht handelbar.
+DetailDisplayHandler.HandlePacket.Any:			Egal
+DetailDisplayHandler.HandlePacket.Back:			(von Hinten)
+DetailDisplayHandler.HandlePacket.CannotDropped:	Kann nicht abgelegt oder beim Schatzhüter hinterlegt werden.
+DetailDisplayHandler.HandlePacket.CannotSold:		Kann nicht an Händler verkauft werden.
+DetailDisplayHandler.HandlePacket.CannotTraded:		Kann nicht gehandelt werden.
+DetailDisplayHandler.HandlePacket.ChampionLevel:	- Benötigt: Championstufe {0}
+DetailDisplayHandler.HandlePacket.ChatItem:		[Chat] {0}/Item: "{1}"
+DetailDisplayHandler.HandlePacket.CrafterName:		Crafter : {0}
+DetailDisplayHandler.HandlePacket.Damage:		Schaden: 
+DetailDisplayHandler.HandlePacket.Defense:		Defensiv: 
+DetailDisplayHandler.HandlePacket.DontBelongGuild:	Ihr gehört keiner Gilde an.
+DetailDisplayHandler.HandlePacket.FatigueCost:		Erschöpfungskosten: 
+DetailDisplayHandler.HandlePacket.FollowupStyle:	Folgekampfstil: {0}
+DetailDisplayHandler.HandlePacket.Front:		(von Vorne)	
+DetailDisplayHandler.HandlePacket.GuildItem:		[Guild] {0}/Item: "{1}"
+DetailDisplayHandler.HandlePacket.High:			Hoch
+DetailDisplayHandler.HandlePacket.HighBonus:		Hoher Bonus
+DetailDisplayHandler.HandlePacket.HighPenalty:		Hoher Abzug
+DetailDisplayHandler.HandlePacket.Item:			{0}/Item: "{1}
+DetailDisplayHandler.HandlePacket.LevName:		Stufe   Name
+DetailDisplayHandler.HandlePacket.Low:			Niedrig
+DetailDisplayHandler.HandlePacket.LowBonus:		Niedriger Bonus
+DetailDisplayHandler.HandlePacket.LowPenalty:		Niedriger Abzug
+DetailDisplayHandler.HandlePacket.Medium:		Normal
+DetailDisplayHandler.HandlePacket.MediumBonus:		Normaler Bonus
+DetailDisplayHandler.HandlePacket.MediumPenalty:	Normaler Abzug
+DetailDisplayHandler.HandlePacket.MustBeInChatGroup:	Ihr müsst in einer Chatgruppe sein.
+DetailDisplayHandler.HandlePacket.MustBeInBattleGroup:	Ihr müsst in einer Battlegruppe sein.
+DetailDisplayHandler.HandlePacket.NoBonus:		Kein Bonus
+DetailDisplayHandler.HandlePacket.NoGroup:		Ihr seit kein Mitglied einer Gruppe.
+DetailDisplayHandler.HandlePacket.NoInformation:	Keine besonderen Informationen!
+DetailDisplayHandler.HandlePacket.NoPermissionToSpeak:	Ihr habt nicht das Recht um mit der Gilde zu reden.	
+DetailDisplayHandler.HandlePacket.OnlyModerator:	Nur der Moderator darf in dieser Chatgruppe reden.
+DetailDisplayHandler.HandlePacket.Opening:		Benötigt: 
+DetailDisplayHandler.HandlePacket.OpeningStyle:		Eröffnungskampfstil: 
+DetailDisplayHandler.HandlePacket.Or:			 oder {0}
+DetailDisplayHandler.HandlePacket.Positional:		Positionsabhängig 
+DetailDisplayHandler.HandlePacket.Side:			(von der Seite)
+DetailDisplayHandler.HandlePacket.TargetBlocks:		Ziel blockt ab
+DetailDisplayHandler.HandlePacket.TargetEffect:		Zieleffekt: 
+DetailDisplayHandler.HandlePacket.TargetEvades:		Ziel weicht aus
+DetailDisplayHandler.HandlePacket.TargetFumbles:	Ziel verstolpert
+DetailDisplayHandler.HandlePacket.TargetHits:		Ziel trifft
+DetailDisplayHandler.HandlePacket.TargetMisses:		Ziel trifft nicht
+DetailDisplayHandler.HandlePacket.TargetParrys:		Ziel pariert
+DetailDisplayHandler.HandlePacket.TargetStyle:		Ziel Style
+DetailDisplayHandler.HandlePacket.ToHit:		Trefferchance: 
+DetailDisplayHandler.HandlePacket.VeryHigh:		Sehr Hoch
+DetailDisplayHandler.HandlePacket.VeryHighBonus:	Sehr hoher Bonus	
+DetailDisplayHandler.HandlePacket.VeryHighPenalty:	Sehr hoher Abzug
+DetailDisplayHandler.HandlePacket.VeryLow:		Sehr Niedrig
+DetailDisplayHandler.HandlePacket.VeryLowBonus:		Sehr niedriger Bonus
+DetailDisplayHandler.HandlePacket.VeryLowPenalty:	Sehr niedriger Abzug
+DetailDisplayHandler.HandlePacket.VeryStrange:		It's very strange, i cant recognise this item.
+DetailDisplayHandler.HandlePacket.WeaponType:		Waffentyp: {0}
+DetailDisplayHandler.HandlePacket.YouBlock:		Ihr blockt ab
+DetailDisplayHandler.HandlePacket.YouEvade:		Ihr weicht aus
+DetailDisplayHandler.HandlePacket.YouFumble:		Ihr verstolpert
+DetailDisplayHandler.HandlePacket.YouHit:		Ihr trefft
+DetailDisplayHandler.HandlePacket.YouMiss:		Ihr trefft nicht
+DetailDisplayHandler.HandlePacket.YouParry:		Ihr pariert
+DetailDisplayHandler.WriteBonusLine.Points:		 Punkte
+DetailDisplayHandler.WriteBonusLine.PowerPool:		% vom Magiekraftvorrat.
+DetailDisplayHandler.WriteClassicArmorInfos.Absorption:	- {0}% Absorption
+DetailDisplayHandler.WriteClassicArmorInfos.ArmorMod:	Rüstungsmodifikator:
+DetailDisplayHandler.WriteClassicArmorInfos.BaseFactor:	- RF {0} Ausgangswert
+DetailDisplayHandler.WriteClassicArmorInfos.ClampFact:	- RF {0} für Euch nutzbar
+DetailDisplayHandler.WriteClassicArmorInfos.Condition:	- {0}% Zustand
+DetailDisplayHandler.WriteClassicArmorInfos.EffArmor:	Effektive Rüstung:
+DetailDisplayHandler.WriteClassicArmorInfos.Factor:	- {0} Rüstfaktor
+DetailDisplayHandler.WriteClassicArmorInfos.Quality:	- {0}% Qualität
+DetailDisplayHandler.WriteClassicShieldInfos.BaseDPS:	- {0} DPS Ausgangswert
+DetailDisplayHandler.WriteClassicShieldInfos.ClampDPS:	- {0} DPS für Euch nutzbar
+DetailDisplayHandler.WriteClassicShieldInfos.DamageMod:	Schadensmodifikator (bei Verwendung von Schildstilen):
+DetailDisplayHandler.WriteClassicShieldInfos.Large:	- Schildgröße: Groß
+DetailDisplayHandler.WriteClassicShieldInfos.Medium:	- Schildgröße: Mittel
+DetailDisplayHandler.WriteClassicShieldInfos.Small:	- Schildgröße: Klein
+DetailDisplayHandler.WriteClassicShieldInfos.SPD:	- {0} Schildgeschwindigkeit
+DetailDisplayHandler.WriteClassicWeaponInfos.BaseDPS:	- {0} DPS Ausgangswert
+DetailDisplayHandler.WriteClassicWeaponInfos.ClampDPS:	- {0} DPS für Euch nutzbar
+DetailDisplayHandler.WriteClassicWeaponInfos.Condition:	- {0}% Zustand
+DetailDisplayHandler.WriteClassicWeaponInfos.DamageMod:	Schadensmodifikator:
+DetailDisplayHandler.WriteClassicWeaponInfos.DamageType:- Schadensart: {0}
+DetailDisplayHandler.WriteClassicWeaponInfos.EffDamage:	Effektiver Schaden:
+DetailDisplayHandler.WriteClassicWeaponInfos.Quality:	- {0}% Qualität
+DetailDisplayHandler.WriteClassicWeaponInfos.SPD:	- {0} Waffengeschwindigkeit
+DetailDisplayHandler.WriteHorseInfo.AdvancedHorse:	Dies ist ein Pferd der gehobenen Klasse.
+DetailDisplayHandler.WriteHorseInfo.Armor:		- Rüstung: {0}
+DetailDisplayHandler.WriteHorseInfo.Barding:		- Pferderüstung: Keine.
+DetailDisplayHandler.WriteHorseInfo.BasicHorse:		Das ist ein einfaches Pferd.
+DetailDisplayHandler.WriteHorseInfo.Food:		- Lieblingsfutter: Heu und gelegentlich Äpfel
+DetailDisplayHandler.WriteHorseInfo.MountWindow:	Um dieses Pferd zum aktiven Reittier zu machen, müsst Ihr das Symbol in den entsprechenden Slot Eures Reittierfensters legen.
+DetailDisplayHandler.WriteHorseInfo.Name:		- Name: {0}.
+DetailDisplayHandler.WriteHorseInfo.NameMount:		  (Verwendet /namemount um Eurem Pferd einen Namen zu geben.)
+DetailDisplayHandler.WriteHorseInfo.Quickbar:		Um dieses Pferd zu rufen, zieht das Pferdesymbol aus Eurem Reittierfenster in Eure Schnellstartleiste und ruft es dann von dort aus auf.
+DetailDisplayHandler.WriteHorseInfo.RvRZzones:		Dieses Reittier könnt Ihr nicht in einer RvR-Zone rufen.
+DetailDisplayHandler.WriteHorseInfo.Speed1:		(+35% Geschwindigkeit)
+DetailDisplayHandler.WriteHorseInfo.Speed2:		(+45% Geschwindigkeit)
+DetailDisplayHandler.WriteHorseInfo.Summon:		Klickt auf das Symbol in Eurer Schnellstartleiste um Euer Pferd zu rufen.
+DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic:	Charged Magic Fähigkeit:
+DetailDisplayHandler.WriteMagicalBonuses.Charges:	- {0} Ladungen
+DetailDisplayHandler.WriteMagicalBonuses.FocusBonus:	Fokusboni:
+DetailDisplayHandler.WriteMagicalBonuses.Level:		- Stufe {0}
+DetailDisplayHandler.WriteMagicalBonuses.LevelRequired:	Benötigte Erfahrung:
+DetailDisplayHandler.WriteMagicalBonuses.LevelRequired2:Benötigte Erfahrung: Stufe {0}
+DetailDisplayHandler.WriteMagicalBonuses.MagicAbility:	Magiefähigkeit:
+DetailDisplayHandler.WriteMagicalBonuses.MagicBonus:	Magieboni:
+DetailDisplayHandler.WriteMagicalBonuses.MaxCharges:	- {0} Max
+DetailDisplayHandler.WriteMagicalBonuses.StrikeArmor:	- Zauber wird aktiv, wenn enemy strikes at this armor.
+DetailDisplayHandler.WriteMagicalBonuses.StrikeEnemy:	- Zauber wird aktiv, wenn this weapon strikes an enemy.
+DetailDisplayHandler.WriteMagicalBonuses.UsedItem:	- Zauber wird aktiv, wenn der Gegenstand benutzt wird.
+DetailDisplayHandler.WriteMagicalBonuses.UseItem1:	Wiederverwendbar alle {0} Minuten.
+DetailDisplayHandler.WriteMagicalBonuses.UseItem2:	Wiederverwendbar alle 3:00 Minuten.
+DetailDisplayHandler.WriteMagicalBonuses.UseItem3:	Kann wieder verwendet werden in: {0}.
+DetailDisplayHandler.WritePoisonInfo.Charges:		- {0} Ladungen
+DetailDisplayHandler.WritePoisonInfo.Level:		- Stufe {0}
+DetailDisplayHandler.WritePoisonInfo.LevelRequired:	Benötigte Erfahrung:
+DetailDisplayHandler.WritePoisonInfo.MaxCharges:	- {0} Max
+DetailDisplayHandler.WritePoisonInfo.ProcAbility:	Offensive Proc Fähigkeit:
+DetailDisplayHandler.WritePotionInfo.ChargedMagic:	Charged Magic Fähigkeit:
+DetailDisplayHandler.WritePotionInfo.Charges:		- {0} Ladungen
+DetailDisplayHandler.WritePotionInfo.Level:		- Stufe {0}
+DetailDisplayHandler.WritePotionInfo.LevelRequired:	Benötigte Erfahrung:
+DetailDisplayHandler.WritePotionInfo.MaxCharges:	- {0} Max
+DetailDisplayHandler.WritePotionInfo.NoUseInCombat:	Kann nicht im Kampf verwendet werden.
+DetailDisplayHandler.WritePotionInfo.UseItem2:		Wiederverwendbar jede Minute.
+DetailDisplayHandler.WritePotionInfo.UseItem3:		Kann wieder verwendet werden in: {0}.
+DetailDisplayHandler.WriteUsableClasses.UsableBy:	Geeignet für: 
+
+# /DoorRequestHandler.cs
+DoorRequestHandler.OnTick.TooFarAway:			Ihr seid zu weit weg von {0}!
+
+# /HousingPlaceItemHandler
+Scripts.Player.Housing.BadShieldBanner:			Das ist kein gültiges Schild oder Banner.	
+Scripts.Player.Housing.CantBeSold:			Ihr könnt diesen Gegenstand nicht verkaufen!	
+Scripts.Player.Housing.CarpetsRemoved:			Eure Teppiche wurden entfernt.	
+Scripts.Player.Housing.ClearHookPoint:			Wollt Ihr diesen Stellplatz räumen?	
+Scripts.Player.Housing.EnteredHouse:			Ihr habt Haus Nr. {0} betreten.	
+Scripts.Player.Housing.GardenItemPlaced:		Gartenartikel aufgestellt. Es verbleiben {0} Stellmöglichkeiten.		
+Scripts.Player.Housing.GardenItemPlacedName:		Ihr habt {0} in Eurem Garten aufgestellt.		
+Scripts.Player.Housing.GardenMaxObjects:		Ihr habt bereits 30 Artikel in Eurem Garten aufgestellt. Mehr geht nicht.		
+Scripts.Player.Housing.GuildNowOwns:			[Gilde] {0} besitzt nun ein Gildenhaus für {1}!	
+Scripts.Player.Housing.HookPointAdded:			Der Gegenstand wurde Eurem Haus hinzugefügt.	
+Scripts.Player.Housing.HookPointAlready:		Dieser Stellplatz ist bereits belegt!		
+Scripts.Player.Housing.HookPointCleared:		Der Stellplatz wurde geräumt.		
+Scripts.Player.Housing.HookPointCloser:			Geht so nahe an den Stellplatz heran wie möglich, blickt in die richtige Richtung und akzeptiert.	
+Scripts.Player.Housing.HookPointID:			Die Stellplatz-ID ist: {0}	
+Scripts.Player.Housing.HookPointLogged:			Die Position von Stellplatz {0} wurde ins error.log geschrieben!	
+Scripts.Player.Housing.HookPointLogLoc:			Wollt Ihr die Position dieses Stellplatzes in die Logdatei schreiben?	
+Scripts.Player.Housing.HookPointNot:			Dieser Gegenstand ist nicht für einen Stellplatz bestimmt!	
+Scripts.Player.Housing.HookPointNotPlaced:		Der Gegenstand wurde nicht aufgestellt.		
+Scripts.Player.Housing.HouseUseMaterial:		Ihr müßt die Umschalttaste gedrückt halten und dann mit der Maus auf Euer Haus rechts-clicken um das Material zu verändern.		
+Scripts.Player.Housing.HouseUseMaterial:		Ihr müßt die Umschalttaste gedrückt halten und dann mit der Maus auf Euer Haus rechts-clicken um Eure Teppiche auszutauschen.		
+Scripts.Player.Housing.IndoorFloorPlaced:		Ihr habt {0} auf den Boden Eures Hauses gestellt.		
+Scripts.Player.Housing.IndoorItemPlaced:		Inneneinrichtung aufgestellt. {0} freie Plätze verbleibend.		
+Scripts.Player.Housing.IndoorMaxItems:			Ihr habt bereits {0} Gegenstände platziert. Mehr geht nicht.	
+Scripts.Player.Housing.IndoorWallPlaced:		Ihr habt {0} an der Wand Eures Hauses aufgehangen.		
+Scripts.Player.Housing.InteriorBannersAdded:		Die Gildenbanner in Eurem Haus wurden verändert.		
+Scripts.Player.Housing.InteriorBannersRemoved:		Die Gildenbanner in Eurem Haus wurden entfernt.		
+Scripts.Player.Housing.InteriorShieldsAdded:		Die Gildenschilde in Eurem Haus wurden verändert.		
+Scripts.Player.Housing.InteriorShieldsRemoved:		Die Gildenschilde in Eurem Haus wurden entfernt.		
+Scripts.Player.Housing.LeftHouse:			Ihr habt Haus Nr. {0} verlassen.	
+Scripts.Player.Housing.LotAlready:			Ihr besitzt bereits ein Haus oder Grundstück (Nr. {0})!	
+Scripts.Player.Housing.LotBought:			Ihr habt soeben dieses Grundstück für {0} erworben!	
+Scripts.Player.Housing.LotCost:				Für {0} ist dieses Grundstück nicht zu haben.
+Scripts.Player.Housing.LotNotItem:			Das ist keine gültige Besitzurkunde.	
+Scripts.Player.Housing.LotNotYours:			Dieses Grundstück gehört Euch nicht!	
+Scripts.Player.Housing.LotOffer:			Wünscht Ihr dieses Grundstück zu kaufen? Es kostet {0}.	
+Scripts.Player.Housing.LotTargeted:			Es interessiert Euch Grundstück Nr. {0}.	
+Scripts.Player.Housing.NotFloorObject:			Dieser Gegenstand kann nicht auf den Boden gestellt werden!	
+Scripts.Player.Housing.NotHookPoint:			Dieser Gegenstand gehört nicht auf einen Stellplatz!	
+Scripts.Player.Housing.NotWallObject:			Dieser Gegenstand kann nicht aufgehangen werden!	
+Scripts.Player.Housing.OutdoorBannersAdded:		Die Gildenbanner an Eurem Haus wurden verändert.		
+Scripts.Player.Housing.OutdoorBannersRemoved:		Die Gildenbanner an Eurem Haus wurden entfernt.		
+Scripts.Player.Housing.OutdoorShieldsAdded:		Die Gildenschilde an Eurem Haus wurden verändert.		
+Scripts.Player.Housing.OutdoorShieldsRemoved:		Die Gildenschilde an Eurem Haus wurden entfernt.		
+Scripts.Player.Housing.PaidChanges:			Ihr habt {0} für die Änderungen ausgegeben.	
+Scripts.Player.Housing.PaidNotEnough:			Ihr habt dafür nicht genug Geld!	
+Scripts.Player.Housing.PorchAlready:			Dieses Haus verfügt bereits über eine Veranda!	
+Scripts.Player.Housing.PorchNone:			Dieses Haus verfügt über keine Veranda!	
+Scripts.Player.Housing.PorchNotItem:			Das ist keine Veranda!	
+Scripts.Player.Housing.TransferToGuild:			Möchtet Ihr dieses Haus an {0} übertragen?
+
+# /PlayerBonusesListRequestHandler
+PlayerBonusesListRequestHandler.HandlePacket.Bonuses:	Momentane Boni
+PlayerBonusesListRequestHandler.HandlePacket.Magic:	Magiebonus: {0}%
+PlayerBonusesListRequestHandler.HandlePacket.Melee:	Nahkampfbonus: {0}%
+PlayerBonusesListRequestHandler.HandlePacket.Outpost:	Festungsboni:
+PlayerBonusesListRequestHandler.HandlePacket.Realm:	Realm Rank Bonuses
+PlayerBonusesListRequestHandler.HandlePacket.Relic:	Reliktboni:
+PlayerBonusesListRequestHandler.HandlePacket.Resist:	Resistenzen:
+PlayerBonusesListRequestHandler.HandlePacket.Special:	Besondere Gegenstandsboni:
+PlayerBonusesListRequestHandler.HandlePacket.Specs:	 +{0} auf ALLE Spezialisierungen
+
+# /PlayerInitRequestHandler
+PlayerInitRequestHandler.AllianceMessage:		Allianznachricht: {0}
+PlayerInitRequestHandler.FreeLevel:			Ihr seid nun würdig, eine freie Stufe zu erhalten. Klickt auf Euren Ausbilder, um sie zu bekommen!
+PlayerInitRequestHandler.GuildMessage:			Gildennachricht: 
+PlayerInitRequestHandler.LevelCap:			Ihr habt für dieses Schlachtfeld die Stufenobergrenze erreicht!
+PlayerInitRequestHandler.OfficerMessage:		Offiziersnachricht: {0}
+PlayerInitRequestHandler.SaferLocation:			Diese Gegend ist im Moment nicht sicher. Ihr werdet an einen sicheren Ort versetzt.
+
+# /PlayerMoveItemRequestHandler
+PlayerMoveItemRequestHandler.TooFarAway:		Ihr seit zu weit weg, um {0} etwas zu geben.
+
+# /PlayerPickUpRequestHandler
+PlayerPickUpRequestHandler.HandlePacket.InvalidTarget:	Dieses Ziel könnt Ihr nicht auswählen!
+PlayerPickUpRequestHandler.HandlePacket.Target:		Ihr müsst erst ein Ziel auswählen, um etwas zu nehmen!
+
+# /PlayerPositionUpdateHandler
+PlayerPositionUpdateHandler.Endurance:			Ihr verliert Ausdauer!
+PlayerPositionUpdateHandler.Entered:			Ihr befindet Euch nun {0}.
+PlayerPositionUpdateHandler.FallingDamage:		Ihr erleidet Sturzschaden!
+PlayerPositionUpdateHandler.FallPercent:		Ihr erleidet Schaden und verliert {0}% Eurer Trefferpunkte.
+PlayerPositionUpdateHandler.SafeFall:			Der Schaden wurde durch Eure Fallschutz-Fähigkeit vermindert!
+PlayerPositionUpdateHandler.UnknownZone:		Unbekannte Zone! Ihr werdet zu Eurem letzten Bindepunkt gebracht.
+
+# /PacketLib168
+SendMasterLevelWindow.Complete.ML1.Step1:		[Completed] Ianetor has been defeated !	
+SendMasterLevelWindow.Uncomplete.ML1.Step1:		Ianetor spielt gerne mit dem Feuer und sucht Abenteurer, die an einem explosiven Spiel in Oceanus Anatole teilnehmen wollen! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step2:		Der Dieb, der Lornas bestohlen hat, lebt noch immer! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step3:		Die Triton-Sippen der Zhton und Kyhnroe in Messothalassa und Oceanus Boreal sterben, trotzdem bekriegen sie sich noch immer! Beide Sippen suchen nach Abenteurern, die für ihre Sache kämpfen! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step4:		Die Barriere hält noch immer jene zurück, die durch die verfluchte See von Oceanus Hesperos genommen wurden. Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step5:		Ihr habt Euch noch nicht gegen die Macht von Lord Krojers Champions im einzelenen Kampf bewiesen. Dies ist eine Einzelbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step6:		Kirkleis betrachtet sich noch immer mit Hass in dem Spiegel, der seinen Fluch lächerlich macht! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step7:		Das Portal liegt ruhig und dunkel! Der Rassa bleibt weiterhin vor jenen, die seine Macht wollen, verschlossen. Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step8:		Der Rubin liegt im Sand neben dem Kopf, dessen Auge in die ewigen Tiefen start! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step9:		Desmona trägt ihre Krone noch immer, das benötigte Zeichen bleibt verschollen! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step10:		Tretet Cestus mit einem Ring, einem Rubin, einem Spiegel und einer Krone entgegen! Dies ist eine Kampfgruppenbegegnung.
+
+SendMasterLevelWindow.Uncomplete.ML2.Step1:		Death stalks you from the shadows in the Temple of the Sobekite Eternal! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML2.Step2:		The imposter's assasins are slaying the keepers of the Temple of the Sobekite Eternal! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML2.Step3:		The triton chiefs and their followers in the flooded depths of the Temple of the Sobekite Eternal hoard stolen goods! This is a battlegroup encounter. 
+SendMasterLevelWindow.Uncomplete.ML2.Step4:		Rrionnes' reflection holds the key to her invulerability! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML2.Step5:		You have not beaten Chaths' Test of Strategy! This is a group encounter.
+SendMasterLevelWindow.Uncomplete.ML2.Step6:		Kanahkt's test seems to be too difficult for you! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML2.Step7:		You mush face fear, terror, or horror! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML2.Step8:		To prove victorious, you must face yourself! This is a group encounter.
+SendMasterLevelWindow.Uncomplete.ML2.Step9:		Defeat the Battle Masters who once defeated the trial of the Sobekite Eternal! This is a battle group encounter.
+SendMasterLevelWindow.Uncomplete.ML2.Step10:		An imposter has stolen the Ankh of Life, granting him immortality as long as he resides in the Temple of the Sobekite Eternal! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML3.Step1:		Moirai still holds the runic power behind her magical shielding!
+SendMasterLevelWindow.Uncomplete.ML3.Step2:		Kepa has agreed to give you her runic power, will you help?
+SendMasterLevelWindow.Uncomplete.ML3.Step3:		Casta still uses her artifacts to slay anyone who enters her lair!
+SendMasterLevelWindow.Uncomplete.ML3.Step4:		Laodamedia still rigorously guards her lair!
+SendMasterLevelWindow.Uncomplete.ML3.Step5:		Antioos asks for your help in exchange for another runic power!
+SendMasterLevelWindow.Uncomplete.ML3.Step6:		A strange barracuda resides in the darkness, glowing with power!
+SendMasterLevelWindow.Uncomplete.ML3.Step7:		Shraogh still strikes fear into the heart of those who oppose him!
+SendMasterLevelWindow.Uncomplete.ML3.Step8:		The sting ray swarm with an unnatural glowing power!
+SendMasterLevelWindow.Uncomplete.ML3.Step9:		Sinovia the octopus devours those who come near!
+SendMasterLevelWindow.Uncomplete.ML3.Step10:		Medusa still turns anyone who opposes her into stone! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML4.Step1:		Colossal has yet to be summoned from the scorpions of the Stygian Desert! This is a group encounter.
+SendMasterLevelWindow.Uncomplete.ML4.Step2:		The Fortress of Storms has not been taken! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML4.Step3:		The Mighty One, the Eye of Ra, is rumored to roam the desert Land of Atum still! This is a group encounter.
+SendMasterLevelWindow.Uncomplete.ML4.Step4:		A valuable stone to some is but a bauble to a child! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML4.Step5:		The Jann of the Land of Atum whirl among the dunes! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML4.Step6:		Oukesson the Ghillian is still multiplying when fought! This is a group encounter.
+SendMasterLevelWindow.Uncomplete.ML4.Step7:		The guardians of the river Iter have yet to waken! This is a group encounter.
+SendMasterLevelWindow.Uncomplete.ML4.Step8:		The blood of Daehien still flows in the Land of Atum! This is a battlegroup encounter. 
+SendMasterLevelWindow.Uncomplete.ML4.Step9:		The marid, Gaurmaes, is still safe behind tornados and dust! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML4.Step10:		Martikhoras reigns in his pyramid still! This is a battlegroup encounter. 
+SendMasterLevelWindow.Uncomplete.ML5.Step1:		The Canopic Jar - Intestines must be stolen from the Echo of Qebehsenuef! This is a group encounter.
+SendMasterLevelWindow.Uncomplete.ML5.Step2:		Another Canopic Jar - Stomach must be stolen from the Echo of Duamutef! This is a group encounter. 
+SendMasterLevelWindow.Uncomplete.ML5.Step3:		Another Canopic Jar - Lungs must be stolen from the Echo of Hapy! This is a group encounter.
+SendMasterLevelWindow.Uncomplete.ML5.Step4:		Another Canopic Jar - Liver must be stolen from the Echo of Imsety! This is a group encounter.
+SendMasterLevelWindow.Uncomplete.ML5.Step5:		The gorgons of Aeurs still hold Cau Suraes mirror of Ra! This is a group encounter.
+SendMasterLevelWindow.Uncomplete.ML5.Step6:		The bound ones hold the resin that preserves! This is a group encounter.
+SendMasterLevelWindow.Uncomplete.ML5.Step7:		The bound ones hold a mask still needed to face Ammut! This is a group encounter.
+SendMasterLevelWindow.Uncomplete.ML5.Step8:		Wrappings can be found amongst the bound ones. This is a group encounter.
+SendMasterLevelWindow.Uncomplete.ML5.Step9:		You must drink the poisoned waters for the aid of Mahaf! This is a group encounter.
+SendMasterLevelWindow.Uncomplete.ML5.Step10:		You must face Ammut in the depths of the Halls of Ma'ati and be judged! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML6.Step1:		Look for a rare uraeus from where they appear. This is a group encounter.
+SendMasterLevelWindow.Uncomplete.ML6.Step2:		The sacrifice has yet to take place, the salamander has yet to be born! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML6.Step3:		Lateef laments his fate as follower of Am-he and wishes to return to the desert! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML6.Step4:		Pallida-uraei has yet to appear! Seek out the homes of the Uraeus! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML6.Step5:		The flame spouts in easternmost Volcanus guard the objects, the flames must be cooled! This is a solo encounter. 
+SendMasterLevelWindow.Uncomplete.ML6.Step6:		Seek out the sacrificer Siraadi amongst the pillars of vengenance in Typhon's Reach! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML6.Step7:		Three of Ankhkare guardians guard him well. This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML6.Step8:		In the center of the island braziers still call efreet! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML6.Step9:		Vazul's Fortress in the Azhen Isles has yet to be breached! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML6.Step10:		The Chimera still holds strong in her fortress in East Ashen Isles! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML7.Step1:		You must acquire the gauntlet of fire! This is a group encounter.
+SendMasterLevelWindow.Uncomplete.ML7.Step2:		You can learn all there is to know of your opponent through combat, but time multiplies when there are four. It is not for you to end the feud, but you can't move on until they have all seen you as a threat. This is a group encounter.
+SendMasterLevelWindow.Uncomplete.ML7.Step3:		The Apophians wish to test your endurance. This is a group encounter.
+SendMasterLevelWindow.Uncomplete.ML7.Step4:		The Volurgons wish to test your endurance. This is a group encounter.
+SendMasterLevelWindow.Uncomplete.ML7.Step5:		The Shaitan wish to test your endurance. This is a group encounter.
+SendMasterLevelWindow.Uncomplete.ML7.Step6:		The Hephaestians wish to test your endurance. This is a group encounter.
+SendMasterLevelWindow.Uncomplete.ML7.Step7:		You must face a challeng in the Chamber of flame! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML7.Step8:		Katorii's gaze destroys all life it falls upon, yes she must be destroyed! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML7.Step9:		A mysterious force blocks your path! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML7.Step10:		Typhon lies in the lava pool in the center of Volcanus deep! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML8.Step1:		Bisul the jinni still has the control crystal! This is a battlegroup encounter. 
+SendMasterLevelWindow.Uncomplete.ML8.Step2:		Agnes shield was destroyed long ago, but it has a twin in his brother Tholoss prossession! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML8.Step3:		The sword the great Agne is now in the hands of a mischievous Jinn! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML8.Step4:		Once noble and proud Agnes, now bits strewn about a Centaur's home. This is a group encounter. 
+SendMasterLevelWindow.Uncomplete.ML8.Step5:		Kratos has not handed over the leg of Agne! This is a group encounter. 
+SendMasterLevelWindow.Uncomplete.ML8.Step6:		Dawars servant bears the head of Agne! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML8.Step7:		Find the torso of Agne amongst the statues of Aerus! This is a group encounter. 
+SendMasterLevelWindow.Uncomplete.ML8.Step8:		A group of gorgons have collaborated to thwart your effort to rebuild Agne by hiding his left arm because the trials resulted in many gorgon deaths in the past! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML8.Step9:		The right arm lies in the once great hall of a wreaked Atlantean temple. This is a group encounter.
+SendMasterLevelWindow.Uncomplete.ML8.Step10:		First you must defeat Agnes army on his battlefield then you must topple Talos in his temple! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML9.Step1:		Long ago Kyros demonstrated himself to be the ultimate warrior serving many different roles in combat, would you dare challenge him? This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML9.Step2:		Lachlen was a great explorer who was always prepared to face the unique dangers lurking in each new land! This is a group encounter.
+SendMasterLevelWindow.Uncomplete.ML9.Step3:		Long ago Evzen unified three warring territories after each territorys warlord was slain then ruled the combined landsd with an iron fist! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML9.Step4:		Four kings likenesses are dormant and must be awakened! This is a battlegroup encounter. 
+SendMasterLevelWindow.Uncomplete.ML9.Step5:		Nelos would like to teach you a lesson that you might not survive! This a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML9.Step6:		Centaur patrols led by Katri hinder you from reaching your goal! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML9.Step7:		Only the strongest Iaculi survive as they cannibalize each other. This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML9.Step8:		You have not yet proven yourself worthy to the Phoenix's Guardians! This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML9.Step9:		Neola still guards her sisters well. This is a battlegroup encounter.
+SendMasterLevelWindow.Uncomplete.ML9.Step10:		The phoenix is not yet weakend, and still reigns above! This is a battlegroup encounter.

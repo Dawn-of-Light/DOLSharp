@@ -1,0 +1,13 @@
+﻿# /Atlantis
+# /ArtifactQuest
+ArtifactQuest.GiveItem.BackpackFull:			Euer Rucksack ist voll. {0} wurde auf dem Boden abgelegt
+
+# /ArtifactTurnInQuest
+ArtifactTurnInQuest.Init.ArtifactScholarMale:		Artefaktgelehrter
+ArtifactTurnInQuest.Init.ArtifactScholarFemale:		Artefaktgelehrte
+ArtifactTurnInQuest.FinishQuest.Completed:		Ihr habt die Quest "{0}" abgeschlossen!
+
+# /Quests
+# /AbstractQuest
+AbstractQuest.FinishQuest.Completed:			Ihr habt die Quest "{0}" abgeschlossen!
+AbstractQuest.OnQuestAssigned.GetQuest:			Euch wurde die Quest "{0}" anvertraut.
