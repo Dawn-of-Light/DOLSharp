@@ -17,34 +17,35 @@
  *
  */
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&debug",
 		ePrivLevel.GM,
-		"activate or deactivate debug command",
-		"/debug <on/off>")]
+		"GMCommands.Debug.Description",
+		"GMCommands.Debug.Usage")]
 	public class DebugCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 2)
 			{
-				client.Out.SendMessage("Usage: /debug {on/off}", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplaySyntax(client);
 				return;
 			}
 			if (args[1].ToLower().Equals("on"))
 			{
 				client.Player.TempProperties.setProperty(GamePlayer.DEBUG_MODE_PROPERTY, this);
 				client.Out.SendDebugMode(true);
-				client.Out.SendMessage("debug mode ON", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Debug.ModeON"));
 			}
 			else if (args[1].ToLower().Equals("off"))
 			{
 				client.Player.TempProperties.removeProperty(GamePlayer.DEBUG_MODE_PROPERTY);
 				client.Out.SendDebugMode(false);
-				client.Out.SendMessage("debug mode OFF", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Debug.ModeOFF"));
 			}
 		}
 	}
