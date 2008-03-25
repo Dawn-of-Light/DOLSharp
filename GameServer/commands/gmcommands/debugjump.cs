@@ -18,42 +18,49 @@
  */
 using System;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[Cmd("]jump", ePrivLevel.GM, "Teleports yourself to the specified location",
-			"']jump <zoneID> <locX> <locY> <locZ> <heading>' (Autoused for *jump in debug mode)")]
+	[Cmd(
+		"]jump",
+		ePrivLevel.GM,
+		"GMCommands.DebugJump.Description",
+		"GMCommands.DebugJump.Usage")]
 	public class OnDebugJump : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
-			if (args.Length == 6)
-			{
-				ushort zoneID = 0;
-
-				if (!ushort.TryParse(args[1], out zoneID))
-				{
-					DisplayMessage(client, "Invalid zoneID: " + args[1]);
-					return;
-				}
-				Zone z = WorldMgr.GetZone(zoneID);
-				if (z == null)
-				{
-					DisplayMessage(client, "Unknown zone ID: " + args[1]);
-					return;
-				}
-				ushort RegionID = z.ZoneRegion.ID;
-				int X = z.XOffset + Convert.ToInt32(args[2]);
-				int Y = z.YOffset + Convert.ToInt32(args[3]);
-				int Z = Convert.ToInt32(args[4]);
-				ushort Heading = Convert.ToUInt16(args[5]);
-				if (!CheckExpansion(client, RegionID)) return;
-				client.Player.MoveTo(RegionID, X, Y, Z, Heading);
-			}
-			else
+			if (args.Length != 6)
 			{
 				DisplaySyntax(client);
+				return;
 			}
+
+			ushort zoneID = 0;
+			if (!ushort.TryParse(args[1], out zoneID))
+			{
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.DebugJump.InvalidZoneID", args[1]));
+				return;
+			}
+
+			Zone z = WorldMgr.GetZone(zoneID);
+			if (z == null)
+			{
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.DebugJump.UnknownZoneID", args[1]));
+				return;
+			}
+			
+			ushort RegionID = z.ZoneRegion.ID;
+			int X = z.XOffset + Convert.ToInt32(args[2]);
+			int Y = z.YOffset + Convert.ToInt32(args[3]);
+			int Z = Convert.ToInt32(args[4]);
+			ushort Heading = Convert.ToUInt16(args[5]);
+
+			if (!CheckExpansion(client, RegionID))
+				return;
+
+			client.Player.MoveTo(RegionID, X, Y, Z, Heading);
 		}
 
 		public bool CheckExpansion(GameClient client, ushort RegionID)
@@ -61,12 +68,12 @@ namespace DOL.GS.Commands
 			Region reg = WorldMgr.GetRegion(RegionID);
 			if (reg == null)
 			{
-				DisplayMessage(client, "Unknown region (" + RegionID.ToString() + ").");
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.DebugJump.UnknownRegion", RegionID.ToString()));
 				return false;
 			}
 			else if (reg.Expansion >= (int)client.ClientType)
 			{
-				DisplayMessage(client, "Region (" + reg.Description + ") is not supported by your client.");
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.DebugJump.RegionNotSuppByClient", reg.Description));
 				return false;
 			}
 			return true;

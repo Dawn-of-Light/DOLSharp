@@ -6,10 +6,10 @@ GMCommands.Ban.Description:					Usage of /ban command:
 GMCommands.Ban.Usage.IP:					'/ban ip <reason>' Ban target's IP adress
 GMCommands.Ban.Usage.Account:				'/ban account <reason>' Ban target's account
 GMCommands.Ban.Usage.Both:					'/ban both <reason>' Ban target's account and its related IP adress
-Scripts.GM.Ban.AAlreadyBanned:				Der Account ist bereits gesperrt!
-Scripts.GM.Ban.ABanned:						Der Account {0} wurde gesperrt.
-Scripts.GM.Ban.BAlreadyBanned:				Dieser Account/IP-Adresse ist bereits gesperrt!
-Scripts.GM.Ban.BBanned:						Der Account {0} und die IP-Adresse {1} wurde gesperrt.
-Scripts.GM.Ban.IAlreadyBanned:				Diese IP-Adresse ist bereits gesperrt!
-Scripts.GM.Ban.IBanned:						Die IP-Adresse {0} wurde gesperrt.
-Scripts.GM.Ban.MustTarget:					Ihr müsst erst ein Ziel auswählen!
+GMCommands.Ban.AAlreadyBanned:				Der Account ist bereits gesperrt!
+GMCommands.Ban.ABanned:						Der Account {0} wurde gesperrt.
+GMCommands.Ban.BAlreadyBanned:				Dieser Account/IP-Adresse ist bereits gesperrt!
+GMCommands.Ban.BBanned:						Der Account {0} und die IP-Adresse {1} wurde gesperrt.
+GMCommands.Ban.IAlreadyBanned:				Diese IP-Adresse ist bereits gesperrt!
+GMCommands.Ban.IBanned:						Die IP-Adresse {0} wurde gesperrt.
+GMCommands.Ban.MustTarget:					Ihr müsst erst ein Ziel auswählen!
