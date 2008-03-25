@@ -19,42 +19,85 @@
 using System;
 using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
 	[CmdAttribute(
-		"&adddoor",
+		"&door",
 		ePrivLevel.GM,
-		"adds a door to the game",
-		"/adddoor <doorID>")]
-	public class AddDoorCommandHandler : AbstractCommandHandler, ICommandHandler
+		"GMCommands.Door.Description",
+		"GMCommands.Door.Usage.Add",
+		"GMCommands.Door.Usage.Remove")]
+	public class DoorCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
-			int doorid = 0;
-			if (args.Length == 2)
+			if (args.Length < 2)
 			{
-				try
-				{
-					doorid = Convert.ToInt32( args[1] );
-				}
-				catch
-				{
-					DisplayMessage(client, "doorid must be a ushort whitch are equal to real door id");
-					return;
-				}
-				DBDoor door = new DBDoor();
-				door.X = client.Player.X;
-				door.Y = client.Player.Y;
-				door.Z = client.Player.Z;
-				door.Heading = client.Player.Heading;
-				door.InternalID = doorid;
-				GameServer.Database.AddNewObject(door);
-				DisplayMessage(client, "door created with id = " + door.ObjectId);
+				DisplaySyntax(client);
+				return;
 			}
-			else
+
+			int DoorID = 0;
+			try
 			{
-				DisplayMessage(client, "/adddoor <id> this id must be same that door select packet and you must hit command when you are on door");
+				DoorID = Convert.ToInt32(args[2]);
+			}
+			catch
+			{
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Door.InvalidDoorID"));
+				return;
+			}
+
+			switch (args[1].ToLower())
+			{
+				#region Add
+				case "add":
+					{
+						DBDoor door = (DBDoor)GameServer.Database.SelectObject(typeof(DBDoor), "InternalID='" + DoorID.ToString() + "'");
+						if (door == null)
+						{
+							door = new DBDoor();
+							door.X = client.Player.X;
+							door.Y = client.Player.Y;
+							door.Z = client.Player.Z;
+							door.Heading = client.Player.Heading;
+							door.InternalID = DoorID;
+							GameServer.Database.AddNewObject(door);
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Door.Created", door.ObjectId));
+						}
+						else
+						{
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Door.DoorExist", DoorID));
+						}
+						break;
+					}
+				#endregion Add
+				#region Remove
+				case "remove":
+					{
+						DBDoor door = (DBDoor)GameServer.Database.SelectObject(typeof(DBDoor), "InternalID='" + DoorID.ToString() + "'");
+						if (door != null)
+						{
+							door.AutoSave = false;
+							GameServer.Database.DeleteObject(door);
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Door.Removed", door.InternalID));
+						}
+						else
+						{
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Door.NoDoor", DoorID));
+						}
+						break;
+					}
+				#endregion Remove
+				#region Default
+				default:
+					{
+						DisplaySyntax(client);
+						break;
+					}
+				#endregion Default
 			}
 		}
 	}
