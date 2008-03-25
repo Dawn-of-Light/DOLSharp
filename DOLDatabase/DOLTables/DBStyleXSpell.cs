@@ -28,7 +28,7 @@ namespace DOL.Database
     public class DBStyleXSpell : DataObject
     {
         static bool m_autoSave = false;
-        protected int m_SpellID;
+        protected ushort m_SpellID;
         protected int m_ClassID;
         protected int m_StyleID;
         protected int m_Chance;
@@ -46,7 +46,7 @@ namespace DOL.Database
         /// The Spell ID
         /// </summary>
         [DataElement(AllowDbNull = false)]
-        public int SpellID
+        public ushort SpellID
         {
             get { return m_SpellID; }
             set { m_SpellID = value; Dirty = true; }

@@ -28,9 +28,9 @@ namespace DOL.Database
 	public class DBSpell : DataObject
 	{
 		protected string m_id_unique;
-		protected int m_spellid;
-		protected int m_effectid;
-		protected int m_icon;
+		protected ushort m_spellid;
+		protected ushort m_effectid;
+		protected ushort m_icon;
 		protected string m_name;
 		protected string m_description;
 		protected string m_target = "";
@@ -91,7 +91,7 @@ namespace DOL.Database
 		}
 
 		[DataElement(AllowDbNull = false, Unique = true)]
-		public int SpellID
+		public ushort SpellID
 		{
 			get
 			{
@@ -105,7 +105,7 @@ namespace DOL.Database
 		}
 
 		[DataElement(AllowDbNull = false)]
-		public int ClientEffect
+		public ushort ClientEffect
 		{
 			get
 			{
@@ -119,7 +119,7 @@ namespace DOL.Database
 		}
 
 		[DataElement(AllowDbNull = false)]
-		public int Icon
+		public ushort Icon
 		{
 			get
 			{

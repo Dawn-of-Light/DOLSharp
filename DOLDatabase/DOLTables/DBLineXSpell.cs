@@ -28,8 +28,8 @@ namespace DOL.Database
 	public class DBLineXSpell : DataObject
 	{
 		protected string m_line_name;
-		protected int m_spellid;
-		protected int m_level;
+		protected ushort m_spellid;
+		protected byte m_level;
 
 		static bool	m_autoSave;
 
@@ -65,7 +65,7 @@ namespace DOL.Database
 		}
 
 		[DataElement(AllowDbNull=false)]
-		public int SpellID
+		public ushort SpellID
 		{
 			get
 			{
@@ -79,7 +79,7 @@ namespace DOL.Database
 		}
 
 		[DataElement(AllowDbNull=false)]
-		public int Level
+		public byte Level
 		{
 			get
 			{

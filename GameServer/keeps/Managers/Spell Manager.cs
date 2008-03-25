@@ -240,7 +240,7 @@ namespace DOL.GS.Keeps
 					spell.Value = 350;
 					spell.Name = "Guard Heal";
 					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
-					spell.SpellID = 90001;
+					spell.SpellID = 30300;
 					spell.Target = "Realm";
 					spell.Type = "Heal";
 					spell.Uninterruptible = true;
@@ -266,7 +266,7 @@ namespace DOL.GS.Keeps
 					spell.Value = 350;
 					spell.Name = "Guard Heal";
 					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
-					spell.SpellID = 90002;
+					spell.SpellID = 30301;
 					spell.Target = "Realm";
 					spell.Type = "Heal";
 					spell.Uninterruptible = true;
@@ -292,7 +292,7 @@ namespace DOL.GS.Keeps
 					spell.Value = 350;
 					spell.Name = "Guard Heal";
 					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
-					spell.SpellID = 90003;
+					spell.SpellID = 30302;
 					spell.Target = "Realm";
 					spell.Type = "Heal";
 					spell.Uninterruptible = true;
@@ -322,7 +322,7 @@ namespace DOL.GS.Keeps
 					spell.Value = 200;
 					spell.Name = "Guard Heal";
 					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
-					spell.SpellID = 90004;
+					spell.SpellID = 30303;
 					spell.Target = "Realm";
 					spell.Type = "Heal";
 					//spell.Interruptable = 1;
@@ -348,7 +348,7 @@ namespace DOL.GS.Keeps
 					spell.Value = 200;
 					spell.Name = "Guard Heal";
 					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
-					spell.SpellID = 90005;
+					spell.SpellID = 30304;
 					spell.Target = "Realm";
 					spell.Type = "Heal";
 					//spell.Interruptable = 1;
@@ -374,7 +374,7 @@ namespace DOL.GS.Keeps
 					spell.Value = 200;
 					spell.Name = "Guard Heal";
 					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
-					spell.SpellID = 90006;
+					spell.SpellID = 30305;
 					spell.Target = "Realm";
 					spell.Type = "Heal";
 					//spell.Interruptable = 1;

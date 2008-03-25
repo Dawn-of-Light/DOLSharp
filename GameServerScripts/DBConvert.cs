@@ -22,6 +22,7 @@ using DOL.Events;
 using DOL.Database;
 using DOL.Database.Attributes;
 using System.Collections;
+using System.Collections.Generic;
 using log4net;
 using System.Reflection;
 using DOL.GS;
@@ -1073,287 +1074,6 @@ namespace DOL.Database
 				Dirty = true;
 			}
 		}
-
-		[ScriptLoadedEvent]
-		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
-		{
-			GameServer.Database.RegisterDataObject(typeof(OldItemTemplate));
-			GameServer.Database.LoadDatabaseTable(typeof(OldItemTemplate));
-
-			
-			GameServer.Database.RegisterDataObject(typeof(OldInventoryItem));
-			GameServer.Database.LoadDatabaseTable(typeof(OldInventoryItem));
-
-			convertThread = new Thread(Convert);
-			convertThread.Start();
-			RegionTimer timer = new RegionTimer(WorldMgr.GetRegion(1).TimeManager);
-			timer.Callback = CallBack;
-			timer.Start(1);
-		}
-
-		private static Thread convertThread;
-		private static int count = 0;
-		private static int total = 0;
-		private static DateTime convertStarted;
-
-		private static void Convert()
-		{
-			OldItemTemplate[] oldTemplates = (OldItemTemplate[])GameServer.Database.SelectAllObjects(typeof(OldItemTemplate));
-			total = oldTemplates.Length;
-			GameServer.Instance.Logger.Error("Beginning convert of " + total + " item templates!");
-			convertStarted = DateTime.Now;
-
-			foreach (OldItemTemplate old in oldTemplates)
-			{
-				if (old.ProcSpellID > ushort.MaxValue)
-				{
-					GameServer.Instance.Logger.Error(old.Name + " has a proc spell ID of " + old.ProcSpellID + " this is above 65535 max!");
-					continue;
-				}
-
-				if (old.ProcSpellID1 > ushort.MaxValue)
-				{
-					GameServer.Instance.Logger.Error(old.Name + " has a proc spell 1 ID of " + old.ProcSpellID1 + " this is above 65535 max!");
-					continue;
-				}
-
-				if (old.SpellID > ushort.MaxValue)
-				{
-					GameServer.Instance.Logger.Error(old.Name + " has a spell ID of " + old.SpellID + " this is above 65535 max!");
-					continue;
-				}
-
-				if (old.SpellID1 > ushort.MaxValue)
-				{
-					GameServer.Instance.Logger.Error(old.Name + " has a spell ID 1 of " + old.SpellID1 + " this is above 65535 max!");
-					continue;
-				}
-				ItemTemplate template = new ItemTemplate();
-				template.AllowedClasses = old.AllowedClasses;
-				template.Bonus = (byte)old.Bonus;
-				template.CanDropAsLoot = old.CanDropAsLoot;
-				template.CanUseEvery = old.CanUseEvery;
-				template.Charges = (byte)old.Charges;
-				template.Charges1 = (byte)old.Charges1;
-				template.Color = (byte)old.Color;
-				template.Condition = old.Condition;
-				template.Copper = old.Copper;
-				template.DPS_AF = (byte)old.DPS_AF;
-				template.Durability = old.Durability;
-				template.Effect = (byte)old.Effect;
-				template.Extension = old.Extension;
-				template.Gold = old.Gold;
-				template.Hand = (byte)old.Hand;
-				template.IsDropable = old.IsDropable;
-				template.IsPickable = old.IsPickable;
-				template.IsTradable = old.IsTradable;
-				template.Item_Type = (byte)old.Item_Type;
-				template.Level = (byte)old.Level;
-				template.MaxCharges = (byte)old.MaxCharges;
-				template.MaxCharges1 = (byte)old.MaxCharges1;
-				template.MaxCondition = old.MaxCondition;
-				template.MaxCount = (byte)old.MaxCount;
-				template.MaxDurability = old.MaxDurability;
-				template.Model = (ushort)old.Model;
-				template.Name = old.Name;
-				template.Object_Type = (byte)old.Object_Type;
-				template.PackSize = (byte)old.PackSize;
-				template.Platinum = old.Platinum;
-				template.ProcSpellID = (ushort)old.ProcSpellID;
-				template.ProcSpellID1 = (ushort)old.ProcSpellID1;
-				template.Quality = (byte)old.Quality;
-				template.Realm = (byte)old.Realm;
-				template.Silver = old.Silver;
-				template.SPD_ABS = (byte)old.SPD_ABS;
-				template.SpellID = (byte)old.SpellID;
-				template.SpellID1 = (byte)old.SpellID1;
-				template.TemplateID = old.Id_nb;
-				template.Type_Damage = (byte)old.Type_Damage;
-				template.Weight = (byte)old.Weight;
-
-				if (old.Bonus1Type > 0)
-					template.AddBonus((byte)old.Bonus1Type, old.Bonus1);
-				if (old.Bonus2Type > 0)
-					template.AddBonus((byte)old.Bonus2Type, old.Bonus2);
-				if (old.Bonus3Type > 0)
-					template.AddBonus((byte)old.Bonus3Type, old.Bonus3);
-				if (old.Bonus4Type > 0)
-					template.AddBonus((byte)old.Bonus4Type, old.Bonus4);
-				if (old.Bonus5Type > 0)
-					template.AddBonus((byte)old.Bonus5Type, old.Bonus5);
-				if (old.Bonus6Type > 0)
-					template.AddBonus((byte)old.Bonus6Type, old.Bonus6);
-				if (old.Bonus7Type > 0)
-					template.AddBonus((byte)old.Bonus7Type, old.Bonus7);
-				if (old.Bonus8Type > 0)
-					template.AddBonus((byte)old.Bonus8Type, old.Bonus8);
-				if (old.Bonus9Type > 0)
-					template.AddBonus((byte)old.Bonus9Type, old.Bonus9);
-				if (old.Bonus10Type > 0)
-					template.AddBonus((byte)old.Bonus10Type, old.Bonus10);
-				if (old.ExtraBonusType > 0)
-					template.AddBonus((byte)old.ExtraBonusType, old.ExtraBonus);
-
-				GameServer.Database.AddNewObject(template);
-				foreach (ItemBonus bonus in template.MagicalBonuses)
-					GameServer.Database.AddNewObject(bonus);
-
-				GameServer.Database.DeleteObject(old);
-				count++;
-			}
-
-			OldInventoryItem[] items = (OldInventoryItem[]) GameServer.Database.SelectAllObjects(typeof(OldInventoryItem));
-			total = items.Length;
-			count = 0;
-			GameServer.Instance.Logger.Error("Beginning convert of " + total + " inventory items!");
-			convertStarted = DateTime.Now;
-			foreach (OldInventoryItem old in items)
-			{
-				if (old.Id_nb == "Free")
-				{
-					GameServer.Database.DeleteObject(old);
-					continue;
-				}
-				if (old.ProcSpellID > ushort.MaxValue)
-				{
-					GameServer.Instance.Logger.Error(old.Name + " has a proc spell ID of " + old.ProcSpellID + " this is above 65535 max!");
-					continue;
-				}
-
-				if (old.ProcSpellID1 > ushort.MaxValue)
-				{
-					GameServer.Instance.Logger.Error(old.Name + " has a proc spell 1 ID of " + old.ProcSpellID1 + " this is above 65535 max!");
-					continue;
-				}
-
-
-				if (old.SpellID > ushort.MaxValue)
-				{
-					GameServer.Instance.Logger.Error(old.Name + " has a spell ID of " + old.SpellID + " this is above 65535 max!");
-					continue;
-				}
-				//does a suitable template exist
-				ItemTemplate template = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "`Name` = '" + GameServer.Database.Escape(old.Name) + "'");
-				if (template == null)
-				{
-
-					template = new ItemTemplate();
-					template.Disposable = true;
-					template.AllowedClasses = old.AllowedClasses;
-					template.Bonus = (byte)old.Bonus;
-					template.CanDropAsLoot = old.CanDropAsLoot;
-					template.CanUseEvery = old.CanUseEvery;
-					template.Charges = (byte)old.Charges;
-					template.Charges1 = (byte)old.Charges1;
-					template.Color = (byte)old.Color;
-					template.Condition = old.Condition;
-					template.Copper = old.Copper;
-					template.DPS_AF = (byte)old.DPS_AF;
-					template.Durability = old.Durability;
-					template.Effect = (byte)old.Effect;
-					template.Extension = old.Extension;
-					template.Gold = old.Gold;
-					template.Hand = (byte)old.Hand;
-					template.IsDropable = old.IsDropable;
-					template.IsPickable = old.IsPickable;
-					template.IsTradable = old.IsTradable;
-					template.Item_Type = (byte)old.Item_Type;
-					template.Level = (byte)old.Level;
-					template.MaxCharges = (byte)old.MaxCharges;
-					template.MaxCharges1 = (byte)old.MaxCharges1;
-					template.MaxCondition = old.MaxCondition;
-					template.MaxCount = (byte)old.MaxCount;
-					template.MaxDurability = old.MaxDurability;
-					template.Model = (ushort)old.Model;
-					template.Name = old.Name;
-					template.Object_Type = (byte)old.Object_Type;
-					template.PackSize = (byte)old.PackSize;
-					template.Platinum = old.Platinum;
-					template.ProcSpellID = (ushort)old.ProcSpellID;
-					template.ProcSpellID1 = (ushort)old.ProcSpellID1;
-					template.Quality = (byte)old.Quality;
-					template.Realm = (byte)old.Realm;
-					template.Silver = old.Silver;
-					template.SPD_ABS = (byte)old.SPD_ABS;
-					template.SpellID = (byte)old.SpellID;
-					template.SpellID1 = (byte)old.SpellID1;
-					template.TemplateID = DOL.Database.UniqueID.IdGenerator.generateId();
-					template.Type_Damage = (byte)old.Type_Damage;
-					template.Weight = (byte)old.Weight;
-					template.CanDropAsLoot = false;
-
-					if (old.Bonus1Type > 0)
-						template.AddBonus((byte)old.Bonus1Type, old.Bonus1);
-					if (old.Bonus2Type > 0)
-						template.AddBonus((byte)old.Bonus2Type, old.Bonus2);
-					if (old.Bonus3Type > 0)
-						template.AddBonus((byte)old.Bonus3Type, old.Bonus3);
-					if (old.Bonus4Type > 0)
-						template.AddBonus((byte)old.Bonus4Type, old.Bonus4);
-					if (old.Bonus5Type > 0)
-						template.AddBonus((byte)old.Bonus5Type, old.Bonus5);
-					if (old.Bonus6Type > 0)
-						template.AddBonus((byte)old.Bonus6Type, old.Bonus6);
-					if (old.Bonus7Type > 0)
-						template.AddBonus((byte)old.Bonus7Type, old.Bonus7);
-					if (old.Bonus8Type > 0)
-						template.AddBonus((byte)old.Bonus8Type, old.Bonus8);
-					if (old.Bonus9Type > 0)
-						template.AddBonus((byte)old.Bonus9Type, old.Bonus9);
-					if (old.Bonus10Type > 0)
-						template.AddBonus((byte)old.Bonus10Type, old.Bonus10);
-					if (old.ExtraBonusType > 0)
-						template.AddBonus((byte)old.ExtraBonusType, old.ExtraBonus);
-
-					GameServer.Database.AddNewObject(template);
-					foreach (ItemBonus bonus in template.MagicalBonuses)
-						GameServer.Database.AddNewObject(bonus);
-
-					count++;
-				}
-
-
-				InventoryItem item = new InventoryItem(template);
-				item.SlotPosition = old.SlotPosition;
-				item.OwnerID = old.OwnerID;
-				item.Count = (byte)old.Count;
-				item.SellPrice = old.SellPrice;
-				item.Description = old.CrafterName;
-				item.Cooldown = old.Cooldown;
-				item.Experience = old.Experience;
-				item.Quality = (byte)old.Quality;
-				item.Bonus = (byte)old.Bonus;
-				item.Condition = old.Condition;
-				item.Durability = old.Durability;
-				item.Emblem = old.Emblem;
-				item.Color = (byte)old.Color;
-				item.Effect = (byte)old.Effect;
-				item.Extension = old.Extension;
-				item.Charges = (byte)old.Charges;
-				item.Charges1 = (byte)old.Charges1;
-				item.MaxCharges = (byte)old.MaxCharges;
-
-				GameServer.Database.AddNewObject(item);
-
-				GameServer.Database.DeleteObject(old);
-			}
-		}
-
-		public static int CallBack(object state)
-		{
-			if (!convertThread.IsAlive)
-				return 0;
-
-			if (total == 0 || count == 0)
-				return 5000;
-
-			TimeSpan elapsed = DateTime.Now.Subtract(convertStarted);
-			int totalmin = (total / count) * elapsed.Minutes;
-
-			GameServer.Instance.Logger.Error("Converted " + count + " items of " + total + " in " + (double)elapsed.TotalMinutes + " minutes completion estimated in " + (totalmin - elapsed.Minutes) + " minutes!");
-
-			return 5000;
-		}
 	}
 }
 
@@ -1568,3 +1288,1101 @@ namespace DOL.Database
 		}
 	}
 }
+
+namespace DOL.Database
+{
+	public class ConvertMgr
+	{
+		[ScriptLoadedEvent]
+		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
+		{
+			GameServer.Database.RegisterDataObject(typeof(OldItemTemplate));
+			GameServer.Database.LoadDatabaseTable(typeof(OldItemTemplate));
+
+
+			GameServer.Database.RegisterDataObject(typeof(OldInventoryItem));
+			GameServer.Database.LoadDatabaseTable(typeof(OldInventoryItem));
+
+			convertThread = new Thread(Convert);
+			convertThread.Start();
+			RegionTimer timer = new RegionTimer(WorldMgr.GetRegion(1).TimeManager);
+			timer.Callback = CallBack;
+			timer.Start(1);
+		}
+
+		private static Thread convertThread;
+		private static int count = 0;
+		private static int total = 0;
+		private static DateTime convertStarted;
+		private static List<string> excludes = new List<string>();
+
+		private static void Convert()
+		{
+
+			//SPELL ID IS NOW A USHORT
+			//get all spells with id > ushort.max
+			OldDBSpell[] spells = (OldDBSpell[])GameServer.Database.SelectObjects(typeof(OldDBSpell), "`SpellID` > '" + ushort.MaxValue + "'");
+			GameServer.Instance.Logger.Info("Starting convert of " + spells.Length + " spells!");
+			foreach (OldDBSpell spell in spells)
+				ConvertSpell(spell);
+
+
+			OldItemTemplate[] oldTemplates = (OldItemTemplate[])GameServer.Database.SelectAllObjects(typeof(OldItemTemplate));
+			total = oldTemplates.Length;
+			GameServer.Instance.Logger.Error("Beginning convert of " + total + " item templates!");
+			convertStarted = DateTime.Now;
+
+			foreach (OldItemTemplate old in oldTemplates)
+			{
+				if (old.ProcSpellID > ushort.MaxValue)
+				{
+					GameServer.Instance.Logger.Error(old.Name + " has a proc spell ID of " + old.ProcSpellID + " this is above 65535 max!");
+					excludes.Add(old.Id_nb);
+					continue;
+				}
+
+				if (old.ProcSpellID1 > ushort.MaxValue)
+				{
+					GameServer.Instance.Logger.Error(old.Name + " has a proc spell 1 ID of " + old.ProcSpellID1 + " this is above 65535 max!");
+					excludes.Add(old.Id_nb); 
+					continue;
+				}
+
+				if (old.SpellID > ushort.MaxValue)
+				{
+					GameServer.Instance.Logger.Error(old.Name + " has a spell ID of " + old.SpellID + " this is above 65535 max!");
+					excludes.Add(old.Id_nb); 
+					continue;
+				}
+
+				if (old.SpellID1 > ushort.MaxValue)
+				{
+					GameServer.Instance.Logger.Error(old.Name + " has a spell ID 1 of " + old.SpellID1 + " this is above 65535 max!");
+					excludes.Add(old.Id_nb); 
+					continue;
+				}
+				ItemTemplate template = new ItemTemplate();
+				template.AllowedClasses = old.AllowedClasses;
+				template.Bonus = (byte)old.Bonus;
+				template.CanDropAsLoot = old.CanDropAsLoot;
+				template.CanUseEvery = old.CanUseEvery;
+				template.Charges = (byte)old.Charges;
+				template.Charges1 = (byte)old.Charges1;
+				template.Color = (byte)old.Color;
+				template.Condition = old.Condition;
+				template.Copper = old.Copper;
+				template.DPS_AF = (byte)old.DPS_AF;
+				template.Durability = old.Durability;
+				template.Effect = (byte)old.Effect;
+				template.Extension = old.Extension;
+				template.Gold = old.Gold;
+				template.Hand = (byte)old.Hand;
+				template.IsDropable = old.IsDropable;
+				template.IsPickable = old.IsPickable;
+				template.IsTradable = old.IsTradable;
+				template.Item_Type = (byte)old.Item_Type;
+				template.Level = (byte)old.Level;
+				template.MaxCharges = (byte)old.MaxCharges;
+				template.MaxCharges1 = (byte)old.MaxCharges1;
+				template.MaxCondition = old.MaxCondition;
+				template.MaxCount = (byte)old.MaxCount;
+				template.MaxDurability = old.MaxDurability;
+				template.Model = (ushort)old.Model;
+				template.Name = old.Name;
+				template.Object_Type = (byte)old.Object_Type;
+				template.PackSize = (byte)old.PackSize;
+				template.Platinum = old.Platinum;
+				template.ProcSpellID = (ushort)old.ProcSpellID;
+				template.ProcSpellID1 = (ushort)old.ProcSpellID1;
+				template.Quality = (byte)old.Quality;
+				template.Realm = (byte)old.Realm;
+				template.Silver = old.Silver;
+				template.SPD_ABS = (byte)old.SPD_ABS;
+				template.SpellID = (byte)old.SpellID;
+				template.SpellID1 = (byte)old.SpellID1;
+				template.TemplateID = old.Id_nb;
+				template.Type_Damage = (byte)old.Type_Damage;
+				template.Weight = (byte)old.Weight;
+
+				if (old.Bonus1Type > 0)
+					template.AddBonus((byte)old.Bonus1Type, old.Bonus1);
+				if (old.Bonus2Type > 0)
+					template.AddBonus((byte)old.Bonus2Type, old.Bonus2);
+				if (old.Bonus3Type > 0)
+					template.AddBonus((byte)old.Bonus3Type, old.Bonus3);
+				if (old.Bonus4Type > 0)
+					template.AddBonus((byte)old.Bonus4Type, old.Bonus4);
+				if (old.Bonus5Type > 0)
+					template.AddBonus((byte)old.Bonus5Type, old.Bonus5);
+				if (old.Bonus6Type > 0)
+					template.AddBonus((byte)old.Bonus6Type, old.Bonus6);
+				if (old.Bonus7Type > 0)
+					template.AddBonus((byte)old.Bonus7Type, old.Bonus7);
+				if (old.Bonus8Type > 0)
+					template.AddBonus((byte)old.Bonus8Type, old.Bonus8);
+				if (old.Bonus9Type > 0)
+					template.AddBonus((byte)old.Bonus9Type, old.Bonus9);
+				if (old.Bonus10Type > 0)
+					template.AddBonus((byte)old.Bonus10Type, old.Bonus10);
+				if (old.ExtraBonusType > 0)
+					template.AddBonus((byte)old.ExtraBonusType, old.ExtraBonus);
+
+				GameServer.Database.AddNewObject(template);
+				foreach (ItemBonus bonus in template.MagicalBonuses)
+					GameServer.Database.AddNewObject(bonus);
+
+				GameServer.Database.DeleteObject(old);
+				count++;
+			}
+
+			OldInventoryItem[] items = (OldInventoryItem[])GameServer.Database.SelectAllObjects(typeof(OldInventoryItem));
+			total = items.Length;
+			count = 0;
+			GameServer.Instance.Logger.Error("Beginning convert of " + total + " inventory items!");
+			convertStarted = DateTime.Now;
+			foreach (OldInventoryItem old in items)
+			{
+				if (excludes.Contains(old.Id_nb))
+					continue;
+				if (old.Id_nb == "Free")
+				{
+					GameServer.Database.DeleteObject(old);
+					continue;
+				}
+				if (old.ProcSpellID > ushort.MaxValue)
+				{
+					GameServer.Instance.Logger.Error(old.Name + " has a proc spell ID of " + old.ProcSpellID + " this is above 65535 max!");
+					continue;
+				}
+
+				if (old.ProcSpellID1 > ushort.MaxValue)
+				{
+					GameServer.Instance.Logger.Error(old.Name + " has a proc spell 1 ID of " + old.ProcSpellID1 + " this is above 65535 max!");
+					continue;
+				}
+
+
+				if (old.SpellID > ushort.MaxValue)
+				{
+					GameServer.Instance.Logger.Error(old.Name + " has a spell ID of " + old.SpellID + " this is above 65535 max!");
+					continue;
+				}
+				//does a suitable template exist
+				ItemTemplate template = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "`Name` = '" + GameServer.Database.Escape(old.Name) + "'");
+				if (template == null)
+				{
+
+					template = new ItemTemplate();
+					template.Disposable = true;
+					template.AllowedClasses = old.AllowedClasses;
+					template.Bonus = (byte)old.Bonus;
+					template.CanDropAsLoot = old.CanDropAsLoot;
+					template.CanUseEvery = old.CanUseEvery;
+					template.Charges = (byte)old.Charges;
+					template.Charges1 = (byte)old.Charges1;
+					template.Color = (byte)old.Color;
+					template.Condition = old.Condition;
+					template.Copper = old.Copper;
+					template.DPS_AF = (byte)old.DPS_AF;
+					template.Durability = old.Durability;
+					template.Effect = (byte)old.Effect;
+					template.Extension = old.Extension;
+					template.Gold = old.Gold;
+					template.Hand = (byte)old.Hand;
+					template.IsDropable = old.IsDropable;
+					template.IsPickable = old.IsPickable;
+					template.IsTradable = old.IsTradable;
+					template.Item_Type = (byte)old.Item_Type;
+					template.Level = (byte)old.Level;
+					template.MaxCharges = (byte)old.MaxCharges;
+					template.MaxCharges1 = (byte)old.MaxCharges1;
+					template.MaxCondition = old.MaxCondition;
+					template.MaxCount = (byte)old.MaxCount;
+					template.MaxDurability = old.MaxDurability;
+					template.Model = (ushort)old.Model;
+					template.Name = old.Name;
+					template.Object_Type = (byte)old.Object_Type;
+					template.PackSize = (byte)old.PackSize;
+					template.Platinum = old.Platinum;
+					template.ProcSpellID = (ushort)old.ProcSpellID;
+					template.ProcSpellID1 = (ushort)old.ProcSpellID1;
+					template.Quality = (byte)old.Quality;
+					template.Realm = (byte)old.Realm;
+					template.Silver = old.Silver;
+					template.SPD_ABS = (byte)old.SPD_ABS;
+					template.SpellID = (byte)old.SpellID;
+					template.SpellID1 = (byte)old.SpellID1;
+					template.TemplateID = DOL.Database.UniqueID.IdGenerator.generateId();
+					template.Type_Damage = (byte)old.Type_Damage;
+					template.Weight = (byte)old.Weight;
+					template.CanDropAsLoot = false;
+
+					if (old.Bonus1Type > 0)
+						template.AddBonus((byte)old.Bonus1Type, old.Bonus1);
+					if (old.Bonus2Type > 0)
+						template.AddBonus((byte)old.Bonus2Type, old.Bonus2);
+					if (old.Bonus3Type > 0)
+						template.AddBonus((byte)old.Bonus3Type, old.Bonus3);
+					if (old.Bonus4Type > 0)
+						template.AddBonus((byte)old.Bonus4Type, old.Bonus4);
+					if (old.Bonus5Type > 0)
+						template.AddBonus((byte)old.Bonus5Type, old.Bonus5);
+					if (old.Bonus6Type > 0)
+						template.AddBonus((byte)old.Bonus6Type, old.Bonus6);
+					if (old.Bonus7Type > 0)
+						template.AddBonus((byte)old.Bonus7Type, old.Bonus7);
+					if (old.Bonus8Type > 0)
+						template.AddBonus((byte)old.Bonus8Type, old.Bonus8);
+					if (old.Bonus9Type > 0)
+						template.AddBonus((byte)old.Bonus9Type, old.Bonus9);
+					if (old.Bonus10Type > 0)
+						template.AddBonus((byte)old.Bonus10Type, old.Bonus10);
+					if (old.ExtraBonusType > 0)
+						template.AddBonus((byte)old.ExtraBonusType, old.ExtraBonus);
+
+					GameServer.Database.AddNewObject(template);
+					foreach (ItemBonus bonus in template.MagicalBonuses)
+						GameServer.Database.AddNewObject(bonus);
+				}
+
+
+				InventoryItem item = new InventoryItem(template);
+				item.SlotPosition = old.SlotPosition;
+				item.OwnerID = old.OwnerID;
+				item.Count = (byte)old.Count;
+				item.SellPrice = old.SellPrice;
+				item.Description = old.CrafterName;
+				item.Cooldown = old.Cooldown;
+				item.Experience = old.Experience;
+				item.Quality = (byte)old.Quality;
+				item.Bonus = (byte)old.Bonus;
+				item.Condition = old.Condition;
+				item.Durability = old.Durability;
+				item.Emblem = old.Emblem;
+				item.Color = (byte)old.Color;
+				item.Effect = (byte)old.Effect;
+				item.Extension = old.Extension;
+				item.Charges = (byte)old.Charges;
+				item.Charges1 = (byte)old.Charges1;
+				item.MaxCharges = (byte)old.MaxCharges;
+
+				GameServer.Database.AddNewObject(item);
+				GameServer.Database.DeleteObject(old);
+
+				count++;
+			}
+
+		}
+
+		public static int CallBack(object state)
+		{
+			if (!convertThread.IsAlive)
+				return 0;
+
+			if (total == 0 || count == 0)
+				return 5000;
+
+			TimeSpan elapsed = DateTime.Now.Subtract(convertStarted);
+			int totalmin = (total / count) * elapsed.Minutes;
+
+			GameServer.Instance.Logger.Info("Converted " + count + " items of " + total + " in " + (double)elapsed.TotalMinutes + " minutes completion estimated in " + (totalmin - elapsed.Minutes) + " minutes!");
+
+			return 5000;
+		}
+
+		private static void ConvertSpell(OldDBSpell spell)
+		{
+			//record old id
+			int oldID = spell.SpellID;
+			//calculate new id
+			ushort newID = 0;
+			for (ushort i = 1; i < ushort.MaxValue; i++)
+			{
+				if (SkillBase.GetSpellByID(i) != null)
+					continue;
+
+				newID = i;
+				break;
+			}
+			if (newID == 0)
+			{
+				GameServer.Instance.Logger.Error("Cannot convert spell " + oldID + " no new id can be found!");
+				return;
+			}
+			//update linexspell
+			OldDBLineXSpell[] oldlinexs = (OldDBLineXSpell[])GameServer.Database.SelectObjects(typeof(OldDBLineXSpell), "`SpellID` = '" + oldID + "'");
+			foreach (OldDBLineXSpell oldlinex in oldlinexs)
+			{
+				oldlinex.SpellID = newID;
+				GameServer.Database.SaveObject(oldlinex);
+			}
+			//update stylexspell
+			OldDBStyleXSpell[] oldstylexs = (OldDBStyleXSpell[])GameServer.Database.SelectObjects(typeof(OldDBStyleXSpell), "`SpellID` = '" + oldID + "'");
+			foreach (OldDBStyleXSpell oldstylex in oldstylexs)
+			{
+				oldstylex.SpellID = newID;
+				GameServer.Database.SaveObject(oldstylex);
+			}
+			//update itembonus
+			ItemBonus[] bonuses = (ItemBonus[])GameServer.Database.SelectObjects(typeof(ItemBonus), "`BonusType` >= 15 AND `BonusAmount` = '" + oldID + "'");
+			foreach (ItemBonus bonus in bonuses)
+			{
+				bonus.BonusAmount = newID;
+				GameServer.Database.SaveObject(bonus);
+			}
+
+			GameServer.Instance.Logger.Info("Spell " + oldID + " is now " + newID);
+		}
+	}
+}
+
+namespace DOL.Database
+{
+	/// <summary>
+	/// 
+	/// </summary>
+	[DataTable(TableName = "OldSpell")]
+	public class OldDBSpell : DataObject
+	{
+		protected string m_id_unique;
+		protected int m_spellid;
+		protected int m_effectid;
+		protected int m_icon;
+		protected string m_name;
+		protected string m_description;
+		protected string m_target = "";
+
+		protected string m_spelltype = "";
+		protected int m_range = 0;
+		protected int m_radius = 0;
+		protected double m_value = 0;
+		protected double m_damage = 0;
+		protected int m_damageType = 0;
+		protected int m_concentration = 0;
+		protected int m_duration = 0;
+		protected int m_pulse = 0;
+		protected int m_frequency = 0;
+		protected int m_pulse_power = 0;
+		protected int m_power = 0;
+		protected double m_casttime = 0;
+		protected int m_recastdelay = 0;
+		protected int m_reshealth = 1;
+		protected int m_resmana = 0;
+		protected int m_lifedrain_return = 0;
+		protected int m_amnesia_chance = 0;
+		protected string m_message1 = "";
+		protected string m_message2 = "";
+		protected string m_message3 = "";
+		protected string m_message4 = "";
+		protected int m_instrumentRequirement;
+		protected int m_spellGroup;
+		protected int m_effectGroup;
+		protected int m_subSpellID = 0;
+		protected bool m_moveCast = false;
+		protected bool m_uninterruptible = false;
+		protected int m_healthPenalty = 0;
+		protected bool m_isfocus = false;
+        	protected int m_sharedtimergroup; 
+        
+		// warlock
+		protected bool m_isprimary;
+		protected bool m_issecondary;
+		protected bool m_allowbolt;
+		static bool m_autoSave;
+
+		public OldDBSpell()
+		{
+			m_autoSave = false;
+		}
+
+		override public bool AutoSave
+		{
+			get
+			{
+				return m_autoSave;
+			}
+			set
+			{
+				m_autoSave = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false, Unique = true)]
+		public int SpellID
+		{
+			get
+			{
+				return m_spellid;
+			}
+			set
+			{
+				Dirty = true;
+				m_spellid = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public int ClientEffect
+		{
+			get
+			{
+				return m_effectid;
+			}
+			set
+			{
+				Dirty = true;
+				m_effectid = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public int Icon
+		{
+			get
+			{
+				return m_icon;
+			}
+			set
+			{
+				Dirty = true;
+				m_icon = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public string Name
+		{
+			get
+			{
+				return m_name;
+			}
+			set
+			{
+				Dirty = true;
+				m_name = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public string Description
+		{
+			get
+			{
+				return m_description;
+			}
+			set
+			{
+				Dirty = true;
+				m_description = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public string Target
+		{
+			get
+			{
+				return m_target;
+			}
+			set
+			{
+				Dirty = true;
+				m_target = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int Range
+		{
+			get
+			{
+				return m_range;
+			}
+			set
+			{
+				Dirty = true;
+				m_range = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int Power
+		{
+			get
+			{
+				return m_power;
+			}
+			set
+			{
+				Dirty = true;
+				m_power = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public double CastTime
+		{
+			get
+			{
+				return m_casttime;
+			}
+			set
+			{
+				Dirty = true;
+				m_casttime = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public double Damage
+		{
+			get
+			{
+				return m_damage;
+			}
+			set
+			{
+				Dirty = true;
+				m_damage = value;
+			}
+		}
+
+
+		[DataElement(AllowDbNull = true)]
+		public int DamageType
+		{
+			get
+			{
+				return m_damageType;
+			}
+			set
+			{
+				Dirty = true;
+				m_damageType = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public string Type
+		{
+			get
+			{
+				return m_spelltype;
+			}
+			set
+			{
+				Dirty = true;
+				m_spelltype = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int Duration
+		{
+			get
+			{
+				return m_duration;
+			}
+			set
+			{
+				Dirty = true;
+				m_duration = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int Frequency
+		{
+			get
+			{
+				return m_frequency;
+			}
+			set
+			{
+				Dirty = true;
+				m_frequency = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int Pulse
+		{
+			get
+			{
+				return m_pulse;
+			}
+			set
+			{
+				Dirty = true;
+				m_pulse = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int PulsePower
+		{
+			get
+			{
+				return m_pulse_power;
+			}
+			set
+			{
+				Dirty = true;
+				m_pulse_power = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int Radius
+		{
+			get
+			{
+				return m_radius;
+			}
+			set
+			{
+				Dirty = true;
+				m_radius = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int RecastDelay
+		{
+			get
+			{
+				return m_recastdelay;
+			}
+			set
+			{
+				Dirty = true;
+				m_recastdelay = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int ResurrectHealth
+		{
+			get
+			{
+				return m_reshealth;
+			}
+			set
+			{
+				Dirty = true;
+				m_reshealth = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int ResurrectMana
+		{
+			get
+			{
+				return m_resmana;
+			}
+			set
+			{
+				Dirty = true;
+				m_resmana = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public double Value
+		{
+			get
+			{
+				return m_value;
+			}
+			set
+			{
+				Dirty = true;
+				m_value = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int Concentration
+		{
+			get
+			{
+				return m_concentration;
+			}
+			set
+			{
+				Dirty = true;
+				m_concentration = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int LifeDrainReturn
+		{
+			get
+			{
+				return m_lifedrain_return;
+			}
+			set
+			{
+				Dirty = true;
+				m_lifedrain_return = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int AmnesiaChance
+		{
+			get
+			{
+				return m_amnesia_chance;
+			}
+			set
+			{
+				Dirty = true;
+				m_amnesia_chance = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public string Message1
+		{
+			get { return m_message1; }
+			set
+			{
+				Dirty = true;
+				m_message1 = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public string Message2
+		{
+			get { return m_message2; }
+			set
+			{
+				Dirty = true;
+				m_message2 = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public string Message3
+		{
+			get { return m_message3; }
+			set
+			{
+				Dirty = true;
+				m_message3 = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public string Message4
+		{
+			get { return m_message4; }
+			set
+			{
+				Dirty = true;
+				m_message4 = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int InstrumentRequirement
+		{
+			get { return m_instrumentRequirement; }
+			set
+			{
+				Dirty = true;
+				m_instrumentRequirement = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int SpellGroup
+		{
+			get
+			{
+				return m_spellGroup;
+			}
+			set
+			{
+				Dirty = true;
+				m_spellGroup = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int EffectGroup
+		{
+			get
+			{
+				return m_effectGroup;
+			}
+			set
+			{
+				Dirty = true;
+				m_effectGroup = value;
+			}
+		}
+
+		//Multiple spells
+		[DataElement(AllowDbNull = true)]
+		public int SubSpellID
+		{
+			get
+			{
+				return m_subSpellID;
+			}
+			set
+			{
+				Dirty = true;
+				m_subSpellID = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public bool MoveCast
+		{
+			get { return m_moveCast; }
+			set
+			{
+				Dirty = true;
+				m_moveCast = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public bool Uninterruptible
+		{
+			get { return m_uninterruptible; }
+			set
+			{
+				Dirty = true;
+				m_uninterruptible = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int HealthPenalty
+		{
+			get { return m_healthPenalty; }
+			set
+			{
+				Dirty = true;
+				m_healthPenalty = value;
+			}
+		}
+		
+		[DataElement(AllowDbNull = true)]
+		public bool IsFocus
+		{
+			get { return m_isfocus; }
+			set
+			{
+				Dirty = true;
+				m_isfocus = value;
+			}
+		}
+        [DataElement(AllowDbNull = true)]
+        public int SharedTimerGroup
+        {
+            get
+            {
+                return m_sharedtimergroup;
+            }
+            set
+            {
+                Dirty = true;
+                m_sharedtimergroup = value;
+            }
+        }
+
+		#region warlock
+		[DataElement(AllowDbNull = true)]
+		public bool IsPrimary
+		{
+			get
+			{
+				return (bool)m_isprimary;
+			}
+			set
+			{
+				Dirty = true;
+				m_isprimary = (bool)value;
+			}
+		}
+		[DataElement(AllowDbNull = true)]
+		public bool IsSecondary
+		{
+			get
+			{
+				return (bool)m_issecondary;
+			}
+			set
+			{
+				Dirty = true;
+				m_issecondary = (bool)value;
+			}
+		}
+		[DataElement(AllowDbNull = true)]
+		public bool AllowBolt
+		{
+			get
+			{
+				return (bool)m_allowbolt;
+			}
+			set
+			{
+				Dirty = true;
+				m_allowbolt = (bool)value;
+			}
+		}
+		#endregion
+	}
+
+	[DataTable(TableName = "OldLineXSpell")]
+	public class OldDBLineXSpell : DataObject
+	{
+		protected string m_line_name;
+		protected int m_spellid;
+		protected int m_level;
+
+		static bool m_autoSave;
+
+		public OldDBLineXSpell()
+		{
+			m_autoSave = false;
+		}
+
+		override public bool AutoSave
+		{
+			get
+			{
+				return m_autoSave;
+			}
+			set
+			{
+				m_autoSave = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false, Index = true)]
+		public string LineName
+		{
+			get
+			{
+				return m_line_name;
+			}
+			set
+			{
+				Dirty = true;
+				m_line_name = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public int SpellID
+		{
+			get
+			{
+				return m_spellid;
+			}
+			set
+			{
+				Dirty = true;
+				m_spellid = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public int Level
+		{
+			get
+			{
+				return m_level;
+			}
+			set
+			{
+				Dirty = true;
+				m_level = value;
+			}
+		}
+	}
+
+	[DataTable(TableName = "OldStyleXSpell")]
+	public class OldDBStyleXSpell : DataObject
+	{
+		static bool m_autoSave = false;
+		protected int m_SpellID;
+		protected int m_ClassID;
+		protected int m_StyleID;
+		protected int m_Chance;
+
+
+		/// <summary>
+		/// The Constructor
+		/// </summary>
+		public OldDBStyleXSpell()
+			: base()
+		{
+		}
+
+		/// <summary>
+		/// The Spell ID
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int SpellID
+		{
+			get { return m_SpellID; }
+			set { m_SpellID = value; Dirty = true; }
+		}
+
+		/// <summary>
+		/// The ClassID, required for style subsitute procs (0 is not a substitute style)
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int ClassID
+		{
+			get { return m_ClassID; }
+			set { m_ClassID = value; Dirty = true; }
+		}
+
+		/// <summary>
+		/// The StyleID
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int StyleID
+		{
+			get { return m_StyleID; }
+			set { m_StyleID = value; Dirty = true; }
+		}
+
+		/// <summary>
+		/// The Chance to add to the styleeffect list
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int Chance
+		{
+			get { return m_Chance; }
+			set { m_Chance = value; Dirty = true; }
+		}
+
+		/// <summary>
+		/// Auto save is not needed the value aren't changed in game
+		/// </summary>
+		override public bool AutoSave
+		{
+			get
+			{
+				return m_autoSave;
+			}
+			set
+			{
+				m_autoSave = value;
+			}
+		}
+	}
+}
+

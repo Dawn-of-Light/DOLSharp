@@ -305,7 +305,7 @@ namespace DOL.GS
 		}
 
 		public Spell(DBSpell dbspell, int requiredLevel)
-			: base(dbspell.Name, (ushort)dbspell.SpellID, requiredLevel)
+			: base(dbspell.Name, dbspell.SpellID, requiredLevel)
 		{
 
 			m_description = dbspell.Description;
