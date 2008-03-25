@@ -2447,7 +2447,6 @@
     <Content Include="language\EN\AI.txt" />
     <Content Include="language\EN\Atlantis.txt" />
     <Content Include="language\EN\Behaviour.txt" />
-    <Content Include="language\EN\Commands.txt" />
     <Content Include="language\EN\Commands\AdminCommands.txt" />
     <Content Include="language\EN\Commands\GMCommands.txt" />
     <Content Include="language\EN\Crafting.txt" />
@@ -2484,15 +2483,9 @@
     <Content Include="language\IT\AI.txt" />
     <Content Include="language\IT\Behaviour.txt" />
     <Content Include="language\IT\Commands\AdminCommands.txt" />
+    <Content Include="language\IT\Commands\GMCommands.txt" />
     <Content Include="language\IT\Effects.txt" />
     <Content Include="language\IT\Language-IT.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="language\DE\Commands" />
-    <Folder Include="language\DE\GameObjects" />
-    <Folder Include="language\DE\GameObjects\CustomNPC" />
-    <Folder Include="language\DE\Quests" />
-    <Folder Include="language\DE\Quests\Hibernia" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

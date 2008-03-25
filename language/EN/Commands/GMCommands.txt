@@ -6,7 +6,7 @@ GMCommands.Error:							Error: {0}
 
 # /addbind Command
 GMCommands.AddBind.Description:				Adds a bindpoint to the game.
-GMCommands.AddBind.Usage:					/addbind [raggio=750]
+GMCommands.AddBind.Usage:					/addbind [radius=750]
 GMCommands.AddBind.BindPointAdded:			Bindpoint added: X={0}, Y={1}, Z={2}, Radius={3}, Region={4}
 
 
@@ -43,4 +43,59 @@ GMCommands.Ban.IAlreadyBanned:				This IP has already been banned.
 GMCommands.Ban.IBanned:						IP {0} has been banned.
 GMCommands.Ban.BAlreadyBanned:				These account and IP have already been banned.
 GMCommands.Ban.BBanned:						Account {0} and IP {1} have been banned.
+
+
+# /cast Command
+GMCommands.Cast.Description:				Cast a spell/effect
+GMCommands.Cast.Usage:						'/cast <id> <effect|cast|spell>' Cast the Spell/VisualEffect associated with <SpellID>
+GMCommands.Cast.InvalidId:					Invalid ID.
+GMCommands.Cast.IdNegative:					ID can't be negative.
+GMCommands.Cast.EffectExecuted:				Effect animation executed. Id={0}
+GMCommands.Cast.CastExecuted:				Cast animation executed. Id={0}
+GMCommands.Cast.Spell.CastOnLiving:			You cast {0} on {1}.
+GMCommands.Cast.Spell.CastOnSelf:			You cast {0} on self.
+GMCommands.Cast.Spell.GMCastOnYou:			{0} {1} cast {2} on you.
+GMCommands.Cast.Spell.Inexistent:			Spell inexistent. Id={0}
+
+
+# /crafting Command
+GMCommands.Crafting.Description:			Change the crafting level of your target
+GMCommands.Crafting.Usage.Add:				'/crafting add <craftingSkillID> <startLevel>' To add a new crating skill to your target
+GMCommands.Crafting.Usage.Change:			'/crafting change <craftingSkillID> <amount>' To increase or decrease the crafting skill level of your target
+GMCommands.Crafting.Usage.List:				'/crafting list' To have the list of all crafting skill with their id
+GMCommands.Crafting.SkillDescription:		Crafting Skill ID description:
+GMCommands.Crafting.NoPlayerTarget:			You must target a player to use this command.
+GMCommands.Crafting.InvalidSkill:			You must enter a valid crafting skill id, type /crafting for command overview.
+GMCommands.Crafting.SkillAdded:				Crafting skill {0} correctly added.
+GMCommands.Crafting.AlreadyHaveSkill:		{0} already have the crafting skill {1}.
+GMCommands.Crafting.NotHaveSkillAddIt:		{0} does not have the crafting skill {1}, add it first.
+GMCommands.Crafting.SkillChanged:			Crafting skill {1} correctly changed.
+GMCommands.Crafting.NowHasSkillPoints:		{0} now has {} in {}.
+
+
+# /debug Command
+GMCommands.Debug.Description:				Activate or deactivate debug command
+GMCommands.Debug.Usage:						/debug <on/off>
+GMCommands.Debug.ModeON:					Debug mode ON
+GMCommands.Debug.ModeOFF:					Debug mode OFF
+
+
+# ]jump Command
+GMCommands.DebugJump.Description:			Teleports yourself to the specified location
+GMCommands.DebugJump.Usage:					']jump <zoneID> <locX> <locY> <locZ> <heading>' Autoused for *jump in debug mode
+GMCommands.DebugJump.InvalidZoneID:			Invalid zone Id: {0}
+GMCommands.DebugJump.UnknownZoneID:			Unknown zone Id: {0}
+GMCommands.DebugJump.UnknownRegion:			Unknown region ({0}).
+GMCommands.DebugJump.RegionNotSuppByClient:	Region ({0}) is not supported by your client.
+
+
+# /door Command
+GMCommands.Door.Description:				Manage the doors
+GMCommands.Door.Usage.Add:					'/door add <DoorID>' Id must be same that door select packet and you must hit command when you are on door
+GMCommands.Door.Usage.Remove:				'/door remove <DoorID>' Id must be same that door select packet
+GMCommands.Door.InvalidDoorID:				Door id must be a ushort whitch are equal to real door id
+GMCommands.Door.Created:					Door created with Id={0}
+GMCommands.Door.DoorExist:					Door exist. Impossible create it. Id={0}
+GMCommands.Door.Removed:					Door removed with Id={0}
+GMCommands.Door.InexistentDoor:				Inexistent door. Impossible remove it. Id={0}
 
