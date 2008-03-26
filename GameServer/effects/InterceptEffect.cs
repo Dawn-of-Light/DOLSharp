@@ -88,7 +88,7 @@ namespace DOL.GS.Effects
 				if (m_group == null) return;
 				GameEventMgr.AddHandler(m_group, GroupEvent.MemberDisbanded, new DOLEventHandler(GroupDisbandCallback));
 			}
-
+			m_owner = m_interceptSource;
 			m_interceptSource = interceptor;
 			m_interceptTarget = intercepted;
 
