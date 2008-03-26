@@ -76,6 +76,7 @@ namespace DOL.GS.Effects
 			if (protectSource == null || protectTarget == null)
 				return;
 
+			m_owner = protectSource;
 			m_playerGroup = protectSource.Group;
 
 			if (m_playerGroup != protectTarget.Group)

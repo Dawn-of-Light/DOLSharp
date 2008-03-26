@@ -85,6 +85,7 @@ namespace DOL.GS.Effects
 
             m_guardSource = guardSource;
             m_guardTarget = guardTarget;
+			m_owner = m_guardSource;
 
             GameEventMgr.AddHandler(m_playerGroup, GroupEvent.MemberDisbanded, new DOLEventHandler(GroupDisbandCallback1));
 
