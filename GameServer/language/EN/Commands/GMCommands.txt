@@ -99,3 +99,41 @@ GMCommands.Door.DoorExist:					Door exist. Impossible create it. Id={0}
 GMCommands.Door.Removed:					Door removed with Id={0}
 GMCommands.Door.InexistentDoor:				Inexistent door. Impossible remove it. Id={0}
 
+
+# /faction Command
+GMCommands.Faction.Description:				Create a faction and assign friend and enemy faction
+GMCommands.Faction.Usage.Create:			'/faction create <name> <base aggro level>' to create a faction
+GMCommands.Faction.Usage.Assign:			'/faction assign' to assign the faction to the target mob
+GMCommands.Faction.Usage.AddFriend:			'/faction addfriend <factionid>' to add faction friend to current faction
+GMCommands.Faction.Usage.AddEnemy:			'/faction addenemy  <factionid>' to add enemy to the current faction
+GMCommands.Faction.Usage.List:				'/faction list' to have a list of all faction
+GMCommands.Faction.Usage.Select:			'/faction select <factionid>' to select the faction with this id
+GMCommands.Faction.MustSelectFaction:		You must select a faction first.
+GMCommands.Faction.IndexMustBeNumber:		The index must be a number.
+GMCommands.Faction.FactionNotLoaded:		This Faction is not loaded
+GMCommands.Faction.Create.BAMustBeNumber:	The baseAggro must be a number.
+GMCommands.Faction.Create.NewCreated:		New faction created
+GMCommands.Faction.Assign.MustSelectMob:	You must select a mob first.
+GMCommands.Faction.Assign.MobHasJoinedFact:	The mob {0} has joined the faction of {1}.
+
+
+# /gmrelic Command
+GMCommands.GMRelic.Description:				Create a new Relic
+GMCommands.GMRelic.Usage:					/gmrelic <magic|strength> <realm>
+
+
+# /gmrelicpad Command
+GMCommands.GMRelicPad.Description:			Create a new RelicPad
+GMCommands.GMRelicPad.Usage:				/gmrelic <magic|strength> <name> <realm>
+
+
+# /harm Command
+GMCommands.Harm.Description:				Harms your target (health)
+GMCommands.Harm.Usage:						/harm <amount>
+GMCommands.Harm.InvalidTarget:				You have not selected a valid target
+
+
+# /heal Command
+GMCommands.Heal.Description:				Heals your target (health, endu, mana)
+GMCommands.Heal.Usage:						/heal
+

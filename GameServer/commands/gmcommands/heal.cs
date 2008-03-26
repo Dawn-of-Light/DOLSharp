@@ -24,27 +24,22 @@ namespace DOL.GS.Commands
 	[CmdAttribute(
 		"&heal",
 		ePrivLevel.GM,
-		"Heals your target (health,endu,mana)",
-		"/heal")]
+		"GMCommands.Heal.Description",
+		"GMCommands.Heal.Usage")]
 	public class HealCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
 			try
 			{
-				GameLiving living = client.Player.TargetObject as GameLiving;
-				if (living != null)
-				{
-					living.Health = living.MaxHealth;
-					living.Endurance = living.MaxEndurance;
-					living.Mana = living.MaxMana;
-				}
-				else
-				{
-					client.Player.Health = client.Player.MaxHealth;
-					client.Player.Endurance = client.Player.MaxEndurance;
-					client.Player.Mana = client.Player.MaxMana;
-				}
+				GameLiving target = client.Player.TargetObject as GameLiving;
+				
+				if (target == null)
+					target = (GameLiving)client.Player;
+
+				target.Health = target.MaxHealth;
+				target.Endurance = target.MaxEndurance;
+				target.Mana = target.MaxMana;
 			}
 			catch (Exception)
 			{
