@@ -24,10 +24,10 @@ using DOL.Database;
 namespace DOL.GS.Commands
 {
 	[CmdAttribute(
-	"&gmrelic", //command to handle
-	ePrivLevel.GM, //minimum privelege level
-   "Create a new Relic", "usage: /gmrelic magic/strength <realm>")] //command description
-
+		"&gmrelic",
+		ePrivLevel.GM,
+		"GMCommands.GMRelic.Description",
+		"GMCommands.GMRelic.Usage")]
 	public class GMRelicCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)

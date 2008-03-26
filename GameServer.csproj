@@ -167,8 +167,6 @@
     <Compile Include="commands\gmcommands\debugjump.cs" />
     <Compile Include="commands\gmcommands\door.cs" />
     <Compile Include="commands\gmcommands\Faction.cs" />
-    <Compile Include="commands\gmcommands\giverespec.cs" />
-    <Compile Include="commands\gmcommands\givexp.cs" />
     <Compile Include="commands\gmcommands\gmrelic.cs" />
     <Compile Include="commands\gmcommands\gmrelicpad.cs" />
     <Compile Include="commands\gmcommands\harm.cs" />
