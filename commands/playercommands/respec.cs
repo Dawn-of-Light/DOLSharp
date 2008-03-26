@@ -161,7 +161,7 @@ namespace DOL.GS.Commands
 						// Buy respec
 						if (!canbuy(client.Player))
 						{
-							DisplayMessage(client, "You cann't buy a respec on this level again.");
+							DisplayMessage(client, "You can't buy a respec on this level again.");
 							return;
 						}
 						long mgold = getmoney(client.Player);
