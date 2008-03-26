@@ -14,8 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * Based on code from Leet
+ * 
  */
 
 using System;
@@ -38,7 +37,7 @@ namespace DOL.GS.Commands
      "&player",
      ePrivLevel.GM,
      "Various Admin/GM commands to edit characters.",
-     "/player name <newName>",
+     //"/player name <newName>",
      "/player lastname <change|reset> <newLastName>",
      "/player level <newLevel>",
      "/player realm <newRealm>",
@@ -46,7 +45,7 @@ namespace DOL.GS.Commands
      "/player <rps|bps|xp|clxp> <amount>",
      "/player stat <typeofStat> <value>",
      "/player money <copp|silv|gold|plat|mith> <amount>",
-     "/player respec <all|line|realm|dol>",
+	 "/player respec <all|line|realm|dol|champion> <amount=1>",
      "/player model <reset|[change]> <modelid>",
      "/player friend <list|playerName>",
      "/player <rez|kill> <albs|mids|hibs|self|all>", // if realm not specified, it will rez target.
@@ -96,7 +95,8 @@ namespace DOL.GS.Commands
                     }
                 #endregion
                 #region name
-                case "name":
+				/*// Cause loss of data in the database
+				case "name":
                     {
                         GamePlayer player = client.Player.TargetObject as GamePlayer;
                         if (args.Length != 3)
@@ -114,10 +114,10 @@ namespace DOL.GS.Commands
                         client.Out.SendMessage("You successfully changed this players name to " + player.Name + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                         player.SaveIntoDatabase();
                         break;
-                    }
-                #endregion
-                #region lastname
-                case "lastname":
+                    }*/
+				#endregion
+				#region lastname
+				case "lastname":
                     {
                         GamePlayer player = client.Player.TargetObject as GamePlayer;
                         if (args.Length > 4)
@@ -780,44 +780,57 @@ namespace DOL.GS.Commands
                             return;
                         }
 
+						int amount = 1;
+						if (args.Length == 4)
+						{
+							try
+							{
+								amount = Convert.ToInt32(args[3]);
+							}
+							catch
+							{
+								amount = 1;
+							}
+						}
+
                         switch (args[2])
                         {
                             case "line":
                                 {
-                                    player.RespecAmountSingleSkill++;
-                                    player.Client.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has awarded you a single respec!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                                    client.Out.SendMessage("Single respec given successfully to " + player.Name + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+									player.RespecAmountSingleSkill += amount;
+                                    player.Client.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has awarded you " + amount + " single respec!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                                    client.Out.SendMessage(amount + " single respec given successfully to " + player.Name + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                                     break;
                                 }
                             case "all":
                                 {
-                                    player.RespecAmountAllSkill++;
-                                    player.Client.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has awarded you a full respec!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                                    client.Out.SendMessage("Full respec given successfully to " + player.Name + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+									player.RespecAmountAllSkill += amount;
+                                    player.Client.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has awarded you " + amount + " full respec!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+									client.Out.SendMessage(amount + " full respec given successfully to " + player.Name + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                                     break;
                                 }
                             case "realm":
                                 {
-                                    player.RespecAmountRealmSkill++;
-                                    player.Client.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has awarded you a realm respec!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                                    client.Out.SendMessage("Realm respec given successfully to " + player.Name + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+									player.RespecAmountRealmSkill += amount;
+                                    player.Client.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has awarded you " + amount + " realm respec!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+									client.Out.SendMessage(amount + " realm respec given successfully to " + player.Name + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                                     break;
                                 }
                             case "dol":
                                 {
-                                    player.RespecAmountDOL++;
-                                    player.Client.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has awarded you a DOL (full) respec!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                                    client.Out.SendMessage("DOL (full) respec given successfully to " + player.Name + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+									player.RespecAmountDOL += amount;
+                                    player.Client.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has awarded you " + amount + " DOL (full) respec!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                                    client.Out.SendMessage(amount + " DOL (full) respec given successfully to " + player.Name + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                                     break;
                                 }
-                            /*case "champion":
+                            case "champion":
                                 {
-                                    player.RespecAmountChampionSkill++;
-                                    player.Client.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has awarded you a Champion respec!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                                    client.Out.SendMessage("Champion respec given successfully to " + player.Name + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+									player.RespecAmountChampionSkill += amount;
+                                    player.Client.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has awarded you " + amount + " Champion respec!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                                    client.Out.SendMessage(amount + " champion respec given successfully to " + player.Name + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                                     break;
                                 }
-                            case "ml":
+                            /*case "ml":
                                 {
                                     //
                                     player.Client.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has awarded you an ML respec!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
