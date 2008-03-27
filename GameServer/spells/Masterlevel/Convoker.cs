@@ -578,33 +578,14 @@ namespace DOL.GS.Spells
         private int x, y, z;
 		GameNPC summoned = null;
 		RegionTimer m_growTimer;
+		private const int C_GROWTIMER = 2000;
 		
         public Convoker10SpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
         public override bool CheckBeginCast(GameLiving selectedTarget)
         {
-            if (Spell.Target.ToLower() == "area")
-            {
-                if (Caster.GroundTargetInView && Caster.GroundTarget != null)
-                {
-                    x = Caster.GroundTarget.X;
-                    y = Caster.GroundTarget.Y;
-                    z = Caster.GroundTarget.Z;
-                }
-                else
-                {
-                    if (Caster.GroundTarget == null)
-                    {
-                        MessageToCaster("You must set a groundtarget!", eChatType.CT_SpellResisted);
-                        return false;
-                    }
-                    else
-                    {
-                        MessageToCaster("Your area target is not in view.", eChatType.CT_SpellResisted);
-                        return false;
-                    }
-                }
-            }
+        	if(!CheckCastLocation())
+        		return false;
             return base.CheckBeginCast(selectedTarget);
         }
 
@@ -638,59 +619,77 @@ namespace DOL.GS.Spells
                 MessageToCaster("NPC template " + Spell.LifeDrainReturn + " not found!", eChatType.CT_System);
                 return;
             }
-
             GameSpellEffect effect = CreateSpellEffect(target, effectiveness);
-            {
-                TitanBrain controlledBrain = new TitanBrain(player);
-                controlledBrain.IsMainPet = false;
-                controlledBrain.WalkState = eWalkState.Stay;
-                summoned = new GameNPC(template);
-                summoned.SetOwnBrain(controlledBrain);
-                summoned.X = x;
-                summoned.Y = y;
-                summoned.Z = z;
-                summoned.CurrentRegion = Caster.CurrentRegion;
-                summoned.Heading = (ushort)((Caster.Heading + 2048) % 4096);
-                summoned.Realm = target.Realm;
-                summoned.CurrentSpeed = 0;
-                summoned.Size = 10;
-                summoned.Level = 100;
-                summoned.Flags |= (uint)GameNPC.eFlags.PEACE;
-                summoned.AddToWorld();
-                controlledBrain.AggressionState = eAggressionState.Aggressive;
-                effect.Start(summoned);
-                StartTimers();
-            }
+            TitanBrain controlledBrain = new TitanBrain(player);
+            controlledBrain.IsMainPet = false;
+            controlledBrain.WalkState = eWalkState.Stay;
+            summoned = new GameNPC(template);
+            summoned.SetOwnBrain(controlledBrain);
+            //Suncheck:
+            //	Is needed, else it can cause error (i.e. /cast-command)
+            if (x == 0 || y == 0)
+            	CheckCastLocation();
+            summoned.X = x;
+            summoned.Y = y;
+            summoned.Z = z;
+            summoned.CurrentRegion = player.CurrentRegion;
+            summoned.Heading = (ushort)((player.Heading + 2048) % 4096);
+            summoned.Realm = player.Realm;
+            summoned.CurrentSpeed = 0;
+            summoned.Size = 10;
+            summoned.Level = 100;
+            summoned.Flags |= (uint)GameNPC.eFlags.PEACE;
+            summoned.AddToWorld();
+            controlledBrain.AggressionState = eAggressionState.Aggressive;
+            effect.Start(summoned);
+            m_growTimer = new RegionTimer((GameObject)m_caster, new RegionTimerCallback(TitanGrows), C_GROWTIMER);
         }
-        // Start grow timer
-        private void StartTimers()
-        {
-            StopTimers();
-            m_growTimer = new RegionTimer((GameObject)m_caster, new RegionTimerCallback(TitanGrows), 2 * 1000);
-        }
-        // Stop Grow timer
-        private void StopTimers()
-        {
-            if (m_growTimer != null)
-            {
-                m_growTimer.Stop();
-                m_growTimer = null;
-            }
-        }
+        
         // Make titan growing, and activate it on completition
         private int TitanGrows(RegionTimer timer)
         {
-        	if(summoned!=null && summoned.Size!=60)
+        	if(summoned != null && summoned.Size != 60)
         	{
-        		summoned.Size+=10;
-        		StartTimers();
+        		summoned.Size +=10;
+        		return C_GROWTIMER;
         	}
         	else
         	{
         		summoned.Flags = 0;
-        		StopTimers();
+        		m_growTimer.Stop();
+                m_growTimer = null;
         	}
             return 0;
+        }
+        
+        private bool CheckCastLocation()
+        {
+        	x = Caster.X;
+            y = Caster.Y;
+            z = Caster.Z;
+        	if (Spell.Target.ToLower() == "area")
+            {
+                if (Caster.GroundTargetInView && Caster.GroundTarget != null)
+                {
+                    x = Caster.GroundTarget.X;
+                    y = Caster.GroundTarget.Y;
+                    z = Caster.GroundTarget.Z;
+                }
+                else
+                {
+                    if (Caster.GroundTarget == null)
+                    {
+                        MessageToCaster("You must set a groundtarget!", eChatType.CT_SpellResisted);
+                        return false;
+                    }
+                    else
+                    {
+                        MessageToCaster("Your area target is not in view.", eChatType.CT_SpellResisted);
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
         /// <summary>
         /// When an applied effect expires.
