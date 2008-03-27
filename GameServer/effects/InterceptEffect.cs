@@ -154,9 +154,13 @@ namespace DOL.GS.Effects
 		{
 			get
 			{
-				if (m_interceptSource != null && m_interceptTarget != null)
-					return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.InterceptEffect.InterceptedByName", m_interceptTarget.GetName(0, false), m_interceptSource.GetName(0, false));
-				return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.InterceptEffect.Name");
+				if (Owner is GamePlayer)
+				{
+					if (m_interceptSource != null && m_interceptTarget != null)
+						return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.InterceptEffect.InterceptedByName", m_interceptTarget.GetName(0, false), m_interceptSource.GetName(0, false));
+					return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.InterceptEffect.Name");
+				}
+				return "";
 			}
 		}
 
