@@ -94,7 +94,7 @@ namespace DOL.AI.Brain
 				{
 					if (log.IsErrorEnabled)
 					{
-						log.Error(string.Format("Keep guard error again.  Is rules null: {0} Report: {1} \n {2}", GameServer.ServerRules == null ? "Yes" : "No", e.Message, e.StackTrace));
+						log.Error(string.Format("Keep guard error again.  \nRules: {0} Body: {3} - {5} Player: {4} - {6}\nReport: {1} \nStack: {2}", GameServer.ServerRules == null ? "Yes" : "No", e.Message, e.StackTrace, Body == null ? "Yes" : "No", player == null ? "Yes" : "No", Body.GetType(), player.GetType()));
 					}
 				}
 			}
