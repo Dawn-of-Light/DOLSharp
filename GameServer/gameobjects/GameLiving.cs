@@ -3403,7 +3403,8 @@ namespace DOL.GS
 				|| (ad.AttackType == AttackData.eAttackType.Ranged && ad.Target != bladeturn.SpellHandler.Caster && ad.Attacker is GamePlayer && ((GamePlayer)ad.Attacker).HasAbility(Abilities.PenetratingArrow)))  // penetrating arrow attack pierce bladeturn
 					penetrate = true;
 
-				if (ad.IsMeleeAttack && Util.ChanceDouble((double)(bladeturn.SpellHandler.Caster.Level / ad.Attacker.Level)))
+
+				if (ad.IsMeleeAttack && !Util.ChanceDouble((double)bladeturn.SpellHandler.Caster.Level /(double)ad.Attacker.Level))
 					penetrate = true;
 
 				if (penetrate)
