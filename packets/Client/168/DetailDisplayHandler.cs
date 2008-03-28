@@ -1111,7 +1111,7 @@ Type    Description           Id
 
 			if (GlobalConstants.IsWeapon(item.Object_Type))
 			{
-				output.Add("         Hand: " + GlobalConstants.ItemHandToName(item.Hand) + " (" + item.Type_Damage + ")");
+				output.Add("         Hand: " + GlobalConstants.ItemHandToName(item.Hand) + " (" + item.Hand + ")");
 				output.Add("Damage/Second: " + (item.DPS_AF / 10.0f));
 				output.Add("        Speed: " + (item.SPD_ABS / 10.0f));
 				output.Add("  Damage type: " + GlobalConstants.WeaponDamageTypeToName(item.Type_Damage) + " (" + item.Type_Damage + ")");
