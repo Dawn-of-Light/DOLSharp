@@ -119,6 +119,7 @@ namespace DOL.GS.PlayerClass
 			if (player.Level >= 40)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Rampage));
+                player.AddAbility(SkillBase.GetAbility(Abilities.ScarsOfBattle));
 			}
 			if (player.Level >= 50)
 			{

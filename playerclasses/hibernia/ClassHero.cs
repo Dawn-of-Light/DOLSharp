@@ -114,10 +114,11 @@ namespace DOL.GS.PlayerClass
 				player.AddAbility(SkillBase.GetAbility(Abilities.Stag, 3));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Stoicism));
 			}
-			if (player.Level >= 40)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Rampage));
-			}
+            if (player.Level >= 40)
+            {
+                player.AddAbility(SkillBase.GetAbility(Abilities.Rampage));
+                player.AddAbility(SkillBase.GetAbility(Abilities.ScarsOfBattle));
+            }
 			if (player.Level >= 45) 
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Stag, 4));
