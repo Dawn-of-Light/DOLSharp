@@ -765,6 +765,8 @@ namespace DOL.GS.Keeps
 		/// <param name="targetLevel">The target level</param>
 		public void StartChangeLevel(byte targetLevel)
 		{
+			//don't allow upgrading for now
+			return;
 			if (this.Level == targetLevel)
 				return;
 			this.TargetLevel = targetLevel;
