@@ -106,6 +106,10 @@ namespace DOL.GS.PlayerClass
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 2));
 			}
+			if (player.Level >= 24)
+			{
+				player.AddAbility(SkillBase.GetAbility(Abilities.PreventFlight));
+			}
 			if (player.Level >= 30)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Flurry));
