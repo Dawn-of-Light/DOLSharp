@@ -2089,21 +2089,7 @@ namespace DOL.GS
 					return;
 				}
 
-				if (owner is GamePlayer)
-				{
-					if ((owner as GamePlayer).CharacterClass.ID != (int)eCharacterClass.Vampiir
-						&& (owner as GamePlayer).CharacterClass.ID != (int)eCharacterClass.Mauler_Alb
-						&& (owner as GamePlayer).CharacterClass.ID != (int)eCharacterClass.Mauler_Hib
-						&& (owner as GamePlayer).CharacterClass.ID != (int)eCharacterClass.Mauler_Mid)
-					{
-						if (owner.IsCasting)
-						{
-							Interval = 100;
-							return;
-						}
-					}
-				}
-				else if (owner.IsCasting)
+				if (owner.IsCasting && !owner.CurrentSpellHandler.Spell.Uninterruptible)
 				{
 					Interval = 100;
 					return;
