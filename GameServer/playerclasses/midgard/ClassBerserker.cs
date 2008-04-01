@@ -89,7 +89,11 @@ namespace DOL.GS.PlayerClass
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 3));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Berserk, 4));
-			}	
+			}
+			if (player.Level >= 24)
+			{
+				player.AddAbility(SkillBase.GetAbility(Abilities.PreventFlight));
+			}
 			if (player.Level >= 35)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Advanced_Evade));

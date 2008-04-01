@@ -1768,7 +1768,8 @@ namespace DOL.GS
 											{
 												spellHandler.StartSpell(ad.Target);
 											}
-										} break;
+											break;
+										}
 									}
 								}
 							}
@@ -1886,7 +1887,7 @@ namespace DOL.GS
 		/// <param name="attacker">The source of interrupts</param>
 		public virtual void StartInterruptTimer(int duration, AttackData.eAttackType attackType, GameLiving attacker)
 		{
-			//Well, we should make it interrupt on every melee swing anyways.  That is how it works on live.
+			//Well, we should make it interrupt on every melee swing anyways. That is how it works on live.
 			// Can't be interrupted if living is not casting
 			//if (!IsCasting)
 				//return;
@@ -2082,7 +2083,27 @@ namespace DOL.GS
 			{
 				GameLiving owner = (GameLiving)m_actionSource;
 
-				if (owner.IsMezzed || owner.IsStunned || owner.IsCasting)
+				if (owner.IsMezzed || owner.IsStunned)
+				{
+					Interval = 100;
+					return;
+				}
+
+				if (owner is GamePlayer)
+				{
+					if ((owner as GamePlayer).CharacterClass.ID != (int)eCharacterClass.Vampiir
+						&& (owner as GamePlayer).CharacterClass.ID != (int)eCharacterClass.Mauler_Alb
+						&& (owner as GamePlayer).CharacterClass.ID != (int)eCharacterClass.Mauler_Hib
+						&& (owner as GamePlayer).CharacterClass.ID != (int)eCharacterClass.Mauler_Mid)
+					{
+						if (owner.IsCasting)
+						{
+							Interval = 100;
+							return;
+						}
+					}
+				}
+				else if (owner.IsCasting)
 				{
 					Interval = 100;
 					return;
