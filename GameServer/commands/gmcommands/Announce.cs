@@ -51,7 +51,8 @@ namespace DOL.GS.Commands
 				case "log":
 					{
 						foreach (GameClient clients in WorldMgr.GetAllPlayingClients())
-							clients.Out.SendMessage(LanguageMgr.GetTranslation(clients, "GMCommands.Announce.LogAnnounce", message), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                            if(clients != null)
+							    clients.Out.SendMessage(LanguageMgr.GetTranslation(clients, "GMCommands.Announce.LogAnnounce", message), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						break;
 					}
 				#endregion Log
@@ -61,7 +62,8 @@ namespace DOL.GS.Commands
 						IList messages = new ArrayList();
 						messages.Add(message);
 						foreach (GameClient clients in WorldMgr.GetAllPlayingClients())
-							clients.Player.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(clients, "GMCommands.Announce.WindowAnnounce", client.Player.Name), messages);
+                            if(clients != null)
+							    clients.Player.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(clients, "GMCommands.Announce.WindowAnnounce", client.Player.Name), messages);
 						break;
 					}
 				#endregion Window
@@ -69,15 +71,17 @@ namespace DOL.GS.Commands
 				case "send":
 					{
 						foreach (GameClient clients in WorldMgr.GetAllPlayingClients())
-							clients.Out.SendMessage(LanguageMgr.GetTranslation(clients, "GMCommands.Announce.SendAnnounce", message), eChatType.CT_Send, eChatLoc.CL_ChatWindow);
+                            if(clients != null)
+							    clients.Out.SendMessage(LanguageMgr.GetTranslation(clients, "GMCommands.Announce.SendAnnounce", message), eChatType.CT_Send, eChatLoc.CL_ChatWindow);
 						break;
 					}
 				#endregion Send
 				#region Center
 				case "center":
 					{
-						foreach (GameClient clients in WorldMgr.GetAllPlayingClients())
-							clients.Out.SendMessage(message, eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
+                        foreach (GameClient clients in WorldMgr.GetAllPlayingClients())
+                            if (clients != null)
+							    clients.Out.SendMessage(message, eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
 						break;
 					}
 				#endregion Center
@@ -85,7 +89,8 @@ namespace DOL.GS.Commands
 				case "confirm":
 					{
 						foreach (GameClient clients in WorldMgr.GetAllPlayingClients())
-							clients.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, LanguageMgr.GetTranslation(clients, "GMCommands.Announce.ConfirmAnnounce", client.Player.Name, message));
+                            if(clients != null)
+							    clients.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, LanguageMgr.GetTranslation(clients, "GMCommands.Announce.ConfirmAnnounce", client.Player.Name, message));
 						break;
 					}
 				#endregion Confirm
