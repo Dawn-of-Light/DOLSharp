@@ -1017,6 +1017,12 @@ namespace DOL.GS.Housing
 						if (npt == null)
 							return null;
 
+						if (npt.ClassType == "")
+						{
+							log.Error("NPC Template: " + npt.TemplateId + " ClassType is blank whilst Filling Hookpoint for a house");
+							return null;
+						}
+
 						GameNPC hNPC = (GameNPC)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(npt.ClassType, false);
 
 						if (hNPC == null)

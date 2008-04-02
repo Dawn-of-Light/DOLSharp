@@ -1590,6 +1590,8 @@ namespace DOL.Database
 			return 5000;
 		}
 
+		private static List<ushort> usedIDs = new List<ushort>();
+
 		private static void ConvertSpell(OldDBSpell spell)
 		{
 			//record old id
@@ -1600,8 +1602,11 @@ namespace DOL.Database
 			{
 				if (SkillBase.GetSpellByID(i) != null)
 					continue;
+				if (usedIDs.Contains(i))
+					continue;
 
 				newID = i;
+				usedIDs.Add(i);
 				break;
 			}
 			if (newID == 0)
@@ -1609,6 +1614,7 @@ namespace DOL.Database
 				GameServer.Instance.Logger.Error("Cannot convert spell " + oldID + " no new id can be found!");
 				return;
 			}
+			GameServer.Database.SaveObject(spell);
 			//update linexspell
 			OldDBLineXSpell[] oldlinexs = (OldDBLineXSpell[])GameServer.Database.SelectObjects(typeof(OldDBLineXSpell), "`SpellID` = '" + oldID + "'");
 			foreach (OldDBLineXSpell oldlinex in oldlinexs)
@@ -1631,6 +1637,7 @@ namespace DOL.Database
 				GameServer.Database.SaveObject(bonus);
 			}
 
+			GameServer.Database.SaveObject(spell);
 			GameServer.Instance.Logger.Info("Spell " + oldID + " is now " + newID);
 		}
 	}
