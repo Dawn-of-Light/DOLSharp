@@ -229,6 +229,34 @@ namespace DOL.GS.ServerRules
 					return false;
 				}
 
+
+                //Xarik: Player can't hit other members of the same BattleGroup
+                BattleGroup mybattlegroup = (BattleGroup)playerDefender.TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
+                BattleGroup oldbattlegroup = (BattleGroup)playerDefender.TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
+
+                //BG LEADER can't attack BG member
+                if (playerAttacker.isInBG == true && playerDefender.isInBG == true && (bool)mybattlegroup.Members[playerAttacker] == true)
+                {
+                    if (!quiet) MessageToLiving(playerAttacker, "You can't attack a member of your battlegroup.");
+                    return false;
+                }
+
+                //BG member can't attack BG Leader
+                if (playerAttacker.isInBG == true && playerDefender.isInBG == true && (bool)mybattlegroup.Members[playerDefender] == true)
+                {
+                    if (!quiet) MessageToLiving(playerAttacker, "You can't attack a member of your battlegroup.");
+                    return false;
+                }
+
+                // BG member can't attack BG membrer
+                if (playerAttacker.isInBG == true && playerDefender.isInBG == true && (bool)mybattlegroup.Members[playerAttacker] == (bool)mybattlegroup.Members[playerDefender])
+                {
+                    if (!quiet) MessageToLiving(playerAttacker, "You can't attack a member of your battlegroup.");
+                    return false;
+                }
+                //--
+
+
 				if (playerAttacker.DuelTarget != defender)
 				{
 					//check guild
