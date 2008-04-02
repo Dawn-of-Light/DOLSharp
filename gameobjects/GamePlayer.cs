@@ -139,6 +139,18 @@ namespace DOL.GS
 			set { m_groundtargetInView = value; }
 		}
 
+
+        /// <summary>
+        /// Player is in BG ?
+        /// </summary>
+        protected bool m_isInBG;
+        public bool isInBG
+        {
+            get { return m_isInBG; }
+            set { m_isInBG = value; }
+        }
+
+
 		/// <summary>
 		/// Returns the Object update array that was used the last time
 		/// </summary>
