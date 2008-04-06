@@ -30,6 +30,377 @@ using System.Threading;
 
 namespace DOL.Database
 {
+	public class ConvertMgr
+	{
+		[GameServerStartedEvent]
+		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
+		{
+			GameServer.Database.RegisterDataObject(typeof(OldItemTemplate));
+			GameServer.Database.LoadDatabaseTable(typeof(OldItemTemplate));
+
+
+			GameServer.Database.RegisterDataObject(typeof(OldInventoryItem));
+			GameServer.Database.LoadDatabaseTable(typeof(OldInventoryItem));
+
+			GameServer.Database.RegisterDataObject(typeof(OldDBSpell));
+			GameServer.Database.LoadDatabaseTable(typeof(OldDBSpell));
+
+			GameServer.Database.RegisterDataObject(typeof(OldDBLineXSpell));
+			GameServer.Database.LoadDatabaseTable(typeof(OldDBLineXSpell));
+
+			GameServer.Database.RegisterDataObject(typeof(OldDBStyleXSpell));
+			GameServer.Database.LoadDatabaseTable(typeof(OldDBStyleXSpell));
+
+			convertThread = new Thread(Convert);
+			convertThread.Start();
+			RegionTimer timer = new RegionTimer(WorldMgr.GetRegion(1).TimeManager);
+			timer.Callback = CallBack;
+			timer.Start(1);
+		}
+
+		private static Thread convertThread;
+		private static int count = 0;
+		private static int total = 0;
+		private static DateTime convertStarted;
+		private static List<string> excludes = new List<string>();
+		private static List<int> m_spellIDs = new List<int>();
+
+		private static void Convert()
+		{
+
+			//SPELL ID IS NOW A USHORT
+			//get all spells with id > ushort.max
+			OldDBSpell[] allSpells = (OldDBSpell[])GameServer.Database.SelectAllObjects(typeof(OldDBSpell));
+			foreach (OldDBSpell spell in allSpells)
+				m_spellIDs.Add(spell.SpellID);
+			OldDBSpell[] spells = (OldDBSpell[])GameServer.Database.SelectObjects(typeof(OldDBSpell), "`SpellID` > '" + ushort.MaxValue + "'");
+			GameServer.Instance.Logger.Info("Starting convert of " + spells.Length + " spells!");
+			foreach (OldDBSpell spell in spells)
+				ConvertSpell(spell);
+
+
+			OldItemTemplate[] oldTemplates = (OldItemTemplate[])GameServer.Database.SelectAllObjects(typeof(OldItemTemplate));
+			total = oldTemplates.Length;
+			GameServer.Instance.Logger.Error("Beginning convert of " + total + " item templates!");
+			convertStarted = DateTime.Now;
+
+			foreach (OldItemTemplate old in oldTemplates)
+			{
+				if (old.ProcSpellID > ushort.MaxValue)
+				{
+					GameServer.Instance.Logger.Error(old.Name + " has a proc spell ID of " + old.ProcSpellID + " this is above 65535 max!");
+					excludes.Add(old.Id_nb);
+					continue;
+				}
+
+				if (old.ProcSpellID1 > ushort.MaxValue)
+				{
+					GameServer.Instance.Logger.Error(old.Name + " has a proc spell 1 ID of " + old.ProcSpellID1 + " this is above 65535 max!");
+					excludes.Add(old.Id_nb);
+					continue;
+				}
+
+				if (old.SpellID > ushort.MaxValue)
+				{
+					GameServer.Instance.Logger.Error(old.Name + " has a spell ID of " + old.SpellID + " this is above 65535 max!");
+					excludes.Add(old.Id_nb);
+					continue;
+				}
+
+				if (old.SpellID1 > ushort.MaxValue)
+				{
+					GameServer.Instance.Logger.Error(old.Name + " has a spell ID 1 of " + old.SpellID1 + " this is above 65535 max!");
+					excludes.Add(old.Id_nb);
+					continue;
+				}
+				ItemTemplate template = new ItemTemplate();
+				template.AllowedClasses = old.AllowedClasses;
+				template.Bonus = (byte)old.Bonus;
+				template.CanDropAsLoot = old.CanDropAsLoot;
+				template.CanUseEvery = old.CanUseEvery;
+				template.Charges = (byte)old.Charges;
+				template.Charges1 = (byte)old.Charges1;
+				template.Color = (byte)old.Color;
+				template.Condition = old.Condition;
+				template.Copper = old.Copper;
+				template.DPS_AF = (byte)old.DPS_AF;
+				template.Durability = old.Durability;
+				template.Effect = (byte)old.Effect;
+				template.Extension = old.Extension;
+				template.Gold = old.Gold;
+				template.Hand = (byte)old.Hand;
+				template.IsDropable = old.IsDropable;
+				template.IsPickable = old.IsPickable;
+				template.IsTradable = old.IsTradable;
+				template.Item_Type = (byte)old.Item_Type;
+				template.Level = (byte)old.Level;
+				template.MaxCharges = (byte)old.MaxCharges;
+				template.MaxCharges1 = (byte)old.MaxCharges1;
+				template.MaxCondition = old.MaxCondition;
+				template.MaxCount = (byte)old.MaxCount;
+				template.MaxDurability = old.MaxDurability;
+				template.Model = (ushort)old.Model;
+				template.Name = old.Name;
+				template.Object_Type = (byte)old.Object_Type;
+				template.PackSize = (byte)old.PackSize;
+				template.Platinum = old.Platinum;
+				template.ProcSpellID = (ushort)old.ProcSpellID;
+				template.ProcSpellID1 = (ushort)old.ProcSpellID1;
+				template.Quality = (byte)old.Quality;
+				template.Realm = (byte)old.Realm;
+				template.Silver = old.Silver;
+				template.SPD_ABS = (byte)old.SPD_ABS;
+				template.SpellID = (ushort)old.SpellID;
+				template.SpellID1 = (ushort)old.SpellID1;
+				template.TemplateID = old.Id_nb;
+				template.Type_Damage = (byte)old.Type_Damage;
+				template.Weight = (byte)old.Weight;
+
+				if (old.Bonus1Type > 0)
+					template.AddBonus((byte)old.Bonus1Type, old.Bonus1);
+				if (old.Bonus2Type > 0)
+					template.AddBonus((byte)old.Bonus2Type, old.Bonus2);
+				if (old.Bonus3Type > 0)
+					template.AddBonus((byte)old.Bonus3Type, old.Bonus3);
+				if (old.Bonus4Type > 0)
+					template.AddBonus((byte)old.Bonus4Type, old.Bonus4);
+				if (old.Bonus5Type > 0)
+					template.AddBonus((byte)old.Bonus5Type, old.Bonus5);
+				if (old.Bonus6Type > 0)
+					template.AddBonus((byte)old.Bonus6Type, old.Bonus6);
+				if (old.Bonus7Type > 0)
+					template.AddBonus((byte)old.Bonus7Type, old.Bonus7);
+				if (old.Bonus8Type > 0)
+					template.AddBonus((byte)old.Bonus8Type, old.Bonus8);
+				if (old.Bonus9Type > 0)
+					template.AddBonus((byte)old.Bonus9Type, old.Bonus9);
+				if (old.Bonus10Type > 0)
+					template.AddBonus((byte)old.Bonus10Type, old.Bonus10);
+				if (old.ExtraBonusType > 0)
+					template.AddBonus((byte)old.ExtraBonusType, old.ExtraBonus);
+
+				GameServer.Database.AddNewObject(template);
+				foreach (ItemBonus bonus in template.MagicalBonuses)
+					GameServer.Database.AddNewObject(bonus);
+
+				GameServer.Database.DeleteObject(old);
+				count++;
+			}
+
+			OldInventoryItem[] items = (OldInventoryItem[])GameServer.Database.SelectAllObjects(typeof(OldInventoryItem));
+			total = items.Length;
+			count = 0;
+			GameServer.Instance.Logger.Error("Beginning convert of " + total + " inventory items!");
+			convertStarted = DateTime.Now;
+			foreach (OldInventoryItem old in items)
+			{
+				if (excludes.Contains(old.Id_nb))
+					continue;
+				if (old.Id_nb == "Free")
+				{
+					GameServer.Database.DeleteObject(old);
+					continue;
+				}
+				//does a suitable template exist
+				ItemTemplate template = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "`Name` = '" + GameServer.Database.Escape(old.Name) + "'");
+				if (template == null)
+				{
+
+					if (old.ProcSpellID > ushort.MaxValue)
+					{
+						GameServer.Instance.Logger.Error(old.Name + " has a proc spell ID of " + old.ProcSpellID + " this is above 65535 max!");
+						continue;
+					}
+
+					if (old.ProcSpellID1 > ushort.MaxValue)
+					{
+						GameServer.Instance.Logger.Error(old.Name + " has a proc spell 1 ID of " + old.ProcSpellID1 + " this is above 65535 max!");
+						continue;
+					}
+
+
+					if (old.SpellID > ushort.MaxValue)
+					{
+						GameServer.Instance.Logger.Error(old.Name + " has a spell ID of " + old.SpellID + " this is above 65535 max!");
+						continue;
+					}
+					template = new ItemTemplate();
+					template.Disposable = true;
+					template.AllowedClasses = old.AllowedClasses;
+					template.Bonus = (byte)old.Bonus;
+					template.CanDropAsLoot = old.CanDropAsLoot;
+					template.CanUseEvery = old.CanUseEvery;
+					template.Charges = (byte)old.Charges;
+					template.Charges1 = (byte)old.Charges1;
+					template.Color = (byte)old.Color;
+					template.Condition = old.Condition;
+					template.Copper = old.Copper;
+					template.DPS_AF = (byte)old.DPS_AF;
+					template.Durability = old.Durability;
+					template.Effect = (byte)old.Effect;
+					template.Extension = old.Extension;
+					template.Gold = old.Gold;
+					template.Hand = (byte)old.Hand;
+					template.IsDropable = old.IsDropable;
+					template.IsPickable = old.IsPickable;
+					template.IsTradable = old.IsTradable;
+					template.Item_Type = (byte)old.Item_Type;
+					template.Level = (byte)old.Level;
+					template.MaxCharges = (byte)old.MaxCharges;
+					template.MaxCharges1 = (byte)old.MaxCharges1;
+					template.MaxCondition = old.MaxCondition;
+					template.MaxCount = (byte)old.MaxCount;
+					template.MaxDurability = old.MaxDurability;
+					template.Model = (ushort)old.Model;
+					template.Name = old.Name;
+					template.Object_Type = (byte)old.Object_Type;
+					template.PackSize = (byte)old.PackSize;
+					template.Platinum = old.Platinum;
+					template.ProcSpellID = (ushort)old.ProcSpellID;
+					template.ProcSpellID1 = (ushort)old.ProcSpellID1;
+					template.Quality = (byte)old.Quality;
+					template.Realm = (byte)old.Realm;
+					template.Silver = old.Silver;
+					template.SPD_ABS = (byte)old.SPD_ABS;
+					template.SpellID = (ushort)old.SpellID;
+					template.SpellID1 = (ushort)old.SpellID1;
+					template.TemplateID = DOL.Database.UniqueID.IdGenerator.generateId();
+					template.Type_Damage = (byte)old.Type_Damage;
+					template.Weight = (byte)old.Weight;
+					template.CanDropAsLoot = false;
+
+					if (old.Bonus1Type > 0)
+						template.AddBonus((byte)old.Bonus1Type, old.Bonus1);
+					if (old.Bonus2Type > 0)
+						template.AddBonus((byte)old.Bonus2Type, old.Bonus2);
+					if (old.Bonus3Type > 0)
+						template.AddBonus((byte)old.Bonus3Type, old.Bonus3);
+					if (old.Bonus4Type > 0)
+						template.AddBonus((byte)old.Bonus4Type, old.Bonus4);
+					if (old.Bonus5Type > 0)
+						template.AddBonus((byte)old.Bonus5Type, old.Bonus5);
+					if (old.Bonus6Type > 0)
+						template.AddBonus((byte)old.Bonus6Type, old.Bonus6);
+					if (old.Bonus7Type > 0)
+						template.AddBonus((byte)old.Bonus7Type, old.Bonus7);
+					if (old.Bonus8Type > 0)
+						template.AddBonus((byte)old.Bonus8Type, old.Bonus8);
+					if (old.Bonus9Type > 0)
+						template.AddBonus((byte)old.Bonus9Type, old.Bonus9);
+					if (old.Bonus10Type > 0)
+						template.AddBonus((byte)old.Bonus10Type, old.Bonus10);
+					if (old.ExtraBonusType > 0)
+						template.AddBonus((byte)old.ExtraBonusType, old.ExtraBonus);
+
+					GameServer.Database.AddNewObject(template);
+					foreach (ItemBonus bonus in template.MagicalBonuses)
+						GameServer.Database.AddNewObject(bonus);
+				}
+
+
+				InventoryItem item = new InventoryItem(template);
+				item.SlotPosition = old.SlotPosition;
+				item.OwnerID = old.OwnerID;
+				item.Count = (byte)old.Count;
+				item.SellPrice = old.SellPrice;
+				item.Description = old.CrafterName;
+				item.Cooldown = old.Cooldown;
+				item.Experience = old.Experience;
+				item.Quality = (byte)old.Quality;
+				item.Bonus = (byte)old.Bonus;
+				item.Condition = old.Condition;
+				item.Durability = old.Durability;
+				item.Emblem = old.Emblem;
+				item.Color = (byte)old.Color;
+				item.Effect = (byte)old.Effect;
+				item.Extension = old.Extension;
+				item.Charges = (byte)old.Charges;
+				item.Charges1 = (byte)old.Charges1;
+				item.MaxCharges = (byte)old.MaxCharges;
+
+				GameServer.Database.AddNewObject(item);
+				GameServer.Database.DeleteObject(old);
+
+				count++;
+			}
+
+		}
+
+		public static int CallBack(object state)
+		{
+			if (!convertThread.IsAlive)
+				return 0;
+
+			if (total == 0 || count == 0)
+				return 5000;
+
+			TimeSpan elapsed = DateTime.Now.Subtract(convertStarted);
+			int totalmin = (total / count) * elapsed.Minutes;
+
+			GameServer.Instance.Logger.Info("Converted " + count + " items of " + total + " in " + (double)elapsed.TotalMinutes + " minutes completion estimated in " + (totalmin - elapsed.Minutes) + " minutes!");
+
+			return 5000;
+		}
+
+		private static List<ushort> usedIDs = new List<ushort>();
+
+		private static void ConvertSpell(OldDBSpell spell)
+		{
+			//record old id
+			int oldID = spell.SpellID;
+			//calculate new id
+			ushort newID = 0;
+			for (ushort i = 30000; i < ushort.MaxValue; i++)
+			{
+				/*
+				 * we can't use this because we are loading spells from a different table
+				if (SkillBase.GetSpellByID(i) != null)
+					continue;
+				 */
+				if (m_spellIDs.Contains(i))
+					continue;
+				if (usedIDs.Contains(i))
+					continue;
+
+				newID = i;
+				usedIDs.Add(i);
+				break;
+			}
+			if (newID == 0)
+			{
+				GameServer.Instance.Logger.Error("Cannot convert spell " + oldID + " no new id can be found!");
+				return;
+			}
+			spell.SpellID = newID;
+			GameServer.Database.SaveObject(spell);
+			//update linexspell
+			OldDBLineXSpell[] oldlinexs = (OldDBLineXSpell[])GameServer.Database.SelectObjects(typeof(OldDBLineXSpell), "`SpellID` = '" + oldID + "'");
+			foreach (OldDBLineXSpell oldlinex in oldlinexs)
+			{
+				oldlinex.SpellID = newID;
+				GameServer.Database.SaveObject(oldlinex);
+			}
+			//update stylexspell
+			OldDBStyleXSpell[] oldstylexs = (OldDBStyleXSpell[])GameServer.Database.SelectObjects(typeof(OldDBStyleXSpell), "`SpellID` = '" + oldID + "'");
+			foreach (OldDBStyleXSpell oldstylex in oldstylexs)
+			{
+				oldstylex.SpellID = newID;
+				GameServer.Database.SaveObject(oldstylex);
+			}
+			//update itembonus
+			ItemBonus[] bonuses = (ItemBonus[])GameServer.Database.SelectObjects(typeof(ItemBonus), "`BonusType` >= 15 AND `BonusAmount` = '" + oldID + "'");
+			foreach (ItemBonus bonus in bonuses)
+			{
+				bonus.BonusAmount = newID;
+				GameServer.Database.SaveObject(bonus);
+			}
+			GameServer.Instance.Logger.Info("Spell " + oldID + " is now " + newID);
+		}
+	}
+}
+
+namespace DOL.Database
+{
 	[DataTable(TableName = "OldItemTemplate")]
 	public class OldItemTemplate : DataObject
 	{
@@ -1285,360 +1656,6 @@ namespace DOL.Database
 			{
 				base.Dirty = value;
 			}
-		}
-	}
-}
-
-namespace DOL.Database
-{
-	public class ConvertMgr
-	{
-		[ScriptLoadedEvent]
-		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
-		{
-			GameServer.Database.RegisterDataObject(typeof(OldItemTemplate));
-			GameServer.Database.LoadDatabaseTable(typeof(OldItemTemplate));
-
-
-			GameServer.Database.RegisterDataObject(typeof(OldInventoryItem));
-			GameServer.Database.LoadDatabaseTable(typeof(OldInventoryItem));
-
-			convertThread = new Thread(Convert);
-			convertThread.Start();
-			RegionTimer timer = new RegionTimer(WorldMgr.GetRegion(1).TimeManager);
-			timer.Callback = CallBack;
-			timer.Start(1);
-		}
-
-		private static Thread convertThread;
-		private static int count = 0;
-		private static int total = 0;
-		private static DateTime convertStarted;
-		private static List<string> excludes = new List<string>();
-
-		private static void Convert()
-		{
-
-			//SPELL ID IS NOW A USHORT
-			//get all spells with id > ushort.max
-			OldDBSpell[] spells = (OldDBSpell[])GameServer.Database.SelectObjects(typeof(OldDBSpell), "`SpellID` > '" + ushort.MaxValue + "'");
-			GameServer.Instance.Logger.Info("Starting convert of " + spells.Length + " spells!");
-			foreach (OldDBSpell spell in spells)
-				ConvertSpell(spell);
-
-
-			OldItemTemplate[] oldTemplates = (OldItemTemplate[])GameServer.Database.SelectAllObjects(typeof(OldItemTemplate));
-			total = oldTemplates.Length;
-			GameServer.Instance.Logger.Error("Beginning convert of " + total + " item templates!");
-			convertStarted = DateTime.Now;
-
-			foreach (OldItemTemplate old in oldTemplates)
-			{
-				if (old.ProcSpellID > ushort.MaxValue)
-				{
-					GameServer.Instance.Logger.Error(old.Name + " has a proc spell ID of " + old.ProcSpellID + " this is above 65535 max!");
-					excludes.Add(old.Id_nb);
-					continue;
-				}
-
-				if (old.ProcSpellID1 > ushort.MaxValue)
-				{
-					GameServer.Instance.Logger.Error(old.Name + " has a proc spell 1 ID of " + old.ProcSpellID1 + " this is above 65535 max!");
-					excludes.Add(old.Id_nb); 
-					continue;
-				}
-
-				if (old.SpellID > ushort.MaxValue)
-				{
-					GameServer.Instance.Logger.Error(old.Name + " has a spell ID of " + old.SpellID + " this is above 65535 max!");
-					excludes.Add(old.Id_nb); 
-					continue;
-				}
-
-				if (old.SpellID1 > ushort.MaxValue)
-				{
-					GameServer.Instance.Logger.Error(old.Name + " has a spell ID 1 of " + old.SpellID1 + " this is above 65535 max!");
-					excludes.Add(old.Id_nb); 
-					continue;
-				}
-				ItemTemplate template = new ItemTemplate();
-				template.AllowedClasses = old.AllowedClasses;
-				template.Bonus = (byte)old.Bonus;
-				template.CanDropAsLoot = old.CanDropAsLoot;
-				template.CanUseEvery = old.CanUseEvery;
-				template.Charges = (byte)old.Charges;
-				template.Charges1 = (byte)old.Charges1;
-				template.Color = (byte)old.Color;
-				template.Condition = old.Condition;
-				template.Copper = old.Copper;
-				template.DPS_AF = (byte)old.DPS_AF;
-				template.Durability = old.Durability;
-				template.Effect = (byte)old.Effect;
-				template.Extension = old.Extension;
-				template.Gold = old.Gold;
-				template.Hand = (byte)old.Hand;
-				template.IsDropable = old.IsDropable;
-				template.IsPickable = old.IsPickable;
-				template.IsTradable = old.IsTradable;
-				template.Item_Type = (byte)old.Item_Type;
-				template.Level = (byte)old.Level;
-				template.MaxCharges = (byte)old.MaxCharges;
-				template.MaxCharges1 = (byte)old.MaxCharges1;
-				template.MaxCondition = old.MaxCondition;
-				template.MaxCount = (byte)old.MaxCount;
-				template.MaxDurability = old.MaxDurability;
-				template.Model = (ushort)old.Model;
-				template.Name = old.Name;
-				template.Object_Type = (byte)old.Object_Type;
-				template.PackSize = (byte)old.PackSize;
-				template.Platinum = old.Platinum;
-				template.ProcSpellID = (ushort)old.ProcSpellID;
-				template.ProcSpellID1 = (ushort)old.ProcSpellID1;
-				template.Quality = (byte)old.Quality;
-				template.Realm = (byte)old.Realm;
-				template.Silver = old.Silver;
-				template.SPD_ABS = (byte)old.SPD_ABS;
-				template.SpellID = (byte)old.SpellID;
-				template.SpellID1 = (byte)old.SpellID1;
-				template.TemplateID = old.Id_nb;
-				template.Type_Damage = (byte)old.Type_Damage;
-				template.Weight = (byte)old.Weight;
-
-				if (old.Bonus1Type > 0)
-					template.AddBonus((byte)old.Bonus1Type, old.Bonus1);
-				if (old.Bonus2Type > 0)
-					template.AddBonus((byte)old.Bonus2Type, old.Bonus2);
-				if (old.Bonus3Type > 0)
-					template.AddBonus((byte)old.Bonus3Type, old.Bonus3);
-				if (old.Bonus4Type > 0)
-					template.AddBonus((byte)old.Bonus4Type, old.Bonus4);
-				if (old.Bonus5Type > 0)
-					template.AddBonus((byte)old.Bonus5Type, old.Bonus5);
-				if (old.Bonus6Type > 0)
-					template.AddBonus((byte)old.Bonus6Type, old.Bonus6);
-				if (old.Bonus7Type > 0)
-					template.AddBonus((byte)old.Bonus7Type, old.Bonus7);
-				if (old.Bonus8Type > 0)
-					template.AddBonus((byte)old.Bonus8Type, old.Bonus8);
-				if (old.Bonus9Type > 0)
-					template.AddBonus((byte)old.Bonus9Type, old.Bonus9);
-				if (old.Bonus10Type > 0)
-					template.AddBonus((byte)old.Bonus10Type, old.Bonus10);
-				if (old.ExtraBonusType > 0)
-					template.AddBonus((byte)old.ExtraBonusType, old.ExtraBonus);
-
-				GameServer.Database.AddNewObject(template);
-				foreach (ItemBonus bonus in template.MagicalBonuses)
-					GameServer.Database.AddNewObject(bonus);
-
-				GameServer.Database.DeleteObject(old);
-				count++;
-			}
-
-			OldInventoryItem[] items = (OldInventoryItem[])GameServer.Database.SelectAllObjects(typeof(OldInventoryItem));
-			total = items.Length;
-			count = 0;
-			GameServer.Instance.Logger.Error("Beginning convert of " + total + " inventory items!");
-			convertStarted = DateTime.Now;
-			foreach (OldInventoryItem old in items)
-			{
-				if (excludes.Contains(old.Id_nb))
-					continue;
-				if (old.Id_nb == "Free")
-				{
-					GameServer.Database.DeleteObject(old);
-					continue;
-				}
-				if (old.ProcSpellID > ushort.MaxValue)
-				{
-					GameServer.Instance.Logger.Error(old.Name + " has a proc spell ID of " + old.ProcSpellID + " this is above 65535 max!");
-					continue;
-				}
-
-				if (old.ProcSpellID1 > ushort.MaxValue)
-				{
-					GameServer.Instance.Logger.Error(old.Name + " has a proc spell 1 ID of " + old.ProcSpellID1 + " this is above 65535 max!");
-					continue;
-				}
-
-
-				if (old.SpellID > ushort.MaxValue)
-				{
-					GameServer.Instance.Logger.Error(old.Name + " has a spell ID of " + old.SpellID + " this is above 65535 max!");
-					continue;
-				}
-				//does a suitable template exist
-				ItemTemplate template = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "`Name` = '" + GameServer.Database.Escape(old.Name) + "'");
-				if (template == null)
-				{
-
-					template = new ItemTemplate();
-					template.Disposable = true;
-					template.AllowedClasses = old.AllowedClasses;
-					template.Bonus = (byte)old.Bonus;
-					template.CanDropAsLoot = old.CanDropAsLoot;
-					template.CanUseEvery = old.CanUseEvery;
-					template.Charges = (byte)old.Charges;
-					template.Charges1 = (byte)old.Charges1;
-					template.Color = (byte)old.Color;
-					template.Condition = old.Condition;
-					template.Copper = old.Copper;
-					template.DPS_AF = (byte)old.DPS_AF;
-					template.Durability = old.Durability;
-					template.Effect = (byte)old.Effect;
-					template.Extension = old.Extension;
-					template.Gold = old.Gold;
-					template.Hand = (byte)old.Hand;
-					template.IsDropable = old.IsDropable;
-					template.IsPickable = old.IsPickable;
-					template.IsTradable = old.IsTradable;
-					template.Item_Type = (byte)old.Item_Type;
-					template.Level = (byte)old.Level;
-					template.MaxCharges = (byte)old.MaxCharges;
-					template.MaxCharges1 = (byte)old.MaxCharges1;
-					template.MaxCondition = old.MaxCondition;
-					template.MaxCount = (byte)old.MaxCount;
-					template.MaxDurability = old.MaxDurability;
-					template.Model = (ushort)old.Model;
-					template.Name = old.Name;
-					template.Object_Type = (byte)old.Object_Type;
-					template.PackSize = (byte)old.PackSize;
-					template.Platinum = old.Platinum;
-					template.ProcSpellID = (ushort)old.ProcSpellID;
-					template.ProcSpellID1 = (ushort)old.ProcSpellID1;
-					template.Quality = (byte)old.Quality;
-					template.Realm = (byte)old.Realm;
-					template.Silver = old.Silver;
-					template.SPD_ABS = (byte)old.SPD_ABS;
-					template.SpellID = (byte)old.SpellID;
-					template.SpellID1 = (byte)old.SpellID1;
-					template.TemplateID = DOL.Database.UniqueID.IdGenerator.generateId();
-					template.Type_Damage = (byte)old.Type_Damage;
-					template.Weight = (byte)old.Weight;
-					template.CanDropAsLoot = false;
-
-					if (old.Bonus1Type > 0)
-						template.AddBonus((byte)old.Bonus1Type, old.Bonus1);
-					if (old.Bonus2Type > 0)
-						template.AddBonus((byte)old.Bonus2Type, old.Bonus2);
-					if (old.Bonus3Type > 0)
-						template.AddBonus((byte)old.Bonus3Type, old.Bonus3);
-					if (old.Bonus4Type > 0)
-						template.AddBonus((byte)old.Bonus4Type, old.Bonus4);
-					if (old.Bonus5Type > 0)
-						template.AddBonus((byte)old.Bonus5Type, old.Bonus5);
-					if (old.Bonus6Type > 0)
-						template.AddBonus((byte)old.Bonus6Type, old.Bonus6);
-					if (old.Bonus7Type > 0)
-						template.AddBonus((byte)old.Bonus7Type, old.Bonus7);
-					if (old.Bonus8Type > 0)
-						template.AddBonus((byte)old.Bonus8Type, old.Bonus8);
-					if (old.Bonus9Type > 0)
-						template.AddBonus((byte)old.Bonus9Type, old.Bonus9);
-					if (old.Bonus10Type > 0)
-						template.AddBonus((byte)old.Bonus10Type, old.Bonus10);
-					if (old.ExtraBonusType > 0)
-						template.AddBonus((byte)old.ExtraBonusType, old.ExtraBonus);
-
-					GameServer.Database.AddNewObject(template);
-					foreach (ItemBonus bonus in template.MagicalBonuses)
-						GameServer.Database.AddNewObject(bonus);
-				}
-
-
-				InventoryItem item = new InventoryItem(template);
-				item.SlotPosition = old.SlotPosition;
-				item.OwnerID = old.OwnerID;
-				item.Count = (byte)old.Count;
-				item.SellPrice = old.SellPrice;
-				item.Description = old.CrafterName;
-				item.Cooldown = old.Cooldown;
-				item.Experience = old.Experience;
-				item.Quality = (byte)old.Quality;
-				item.Bonus = (byte)old.Bonus;
-				item.Condition = old.Condition;
-				item.Durability = old.Durability;
-				item.Emblem = old.Emblem;
-				item.Color = (byte)old.Color;
-				item.Effect = (byte)old.Effect;
-				item.Extension = old.Extension;
-				item.Charges = (byte)old.Charges;
-				item.Charges1 = (byte)old.Charges1;
-				item.MaxCharges = (byte)old.MaxCharges;
-
-				GameServer.Database.AddNewObject(item);
-				GameServer.Database.DeleteObject(old);
-
-				count++;
-			}
-
-		}
-
-		public static int CallBack(object state)
-		{
-			if (!convertThread.IsAlive)
-				return 0;
-
-			if (total == 0 || count == 0)
-				return 5000;
-
-			TimeSpan elapsed = DateTime.Now.Subtract(convertStarted);
-			int totalmin = (total / count) * elapsed.Minutes;
-
-			GameServer.Instance.Logger.Info("Converted " + count + " items of " + total + " in " + (double)elapsed.TotalMinutes + " minutes completion estimated in " + (totalmin - elapsed.Minutes) + " minutes!");
-
-			return 5000;
-		}
-
-		private static List<ushort> usedIDs = new List<ushort>();
-
-		private static void ConvertSpell(OldDBSpell spell)
-		{
-			//record old id
-			int oldID = spell.SpellID;
-			//calculate new id
-			ushort newID = 0;
-			for (ushort i = 1; i < ushort.MaxValue; i++)
-			{
-				if (SkillBase.GetSpellByID(i) != null)
-					continue;
-				if (usedIDs.Contains(i))
-					continue;
-
-				newID = i;
-				usedIDs.Add(i);
-				break;
-			}
-			if (newID == 0)
-			{
-				GameServer.Instance.Logger.Error("Cannot convert spell " + oldID + " no new id can be found!");
-				return;
-			}
-			GameServer.Database.SaveObject(spell);
-			//update linexspell
-			OldDBLineXSpell[] oldlinexs = (OldDBLineXSpell[])GameServer.Database.SelectObjects(typeof(OldDBLineXSpell), "`SpellID` = '" + oldID + "'");
-			foreach (OldDBLineXSpell oldlinex in oldlinexs)
-			{
-				oldlinex.SpellID = newID;
-				GameServer.Database.SaveObject(oldlinex);
-			}
-			//update stylexspell
-			OldDBStyleXSpell[] oldstylexs = (OldDBStyleXSpell[])GameServer.Database.SelectObjects(typeof(OldDBStyleXSpell), "`SpellID` = '" + oldID + "'");
-			foreach (OldDBStyleXSpell oldstylex in oldstylexs)
-			{
-				oldstylex.SpellID = newID;
-				GameServer.Database.SaveObject(oldstylex);
-			}
-			//update itembonus
-			ItemBonus[] bonuses = (ItemBonus[])GameServer.Database.SelectObjects(typeof(ItemBonus), "`BonusType` >= 15 AND `BonusAmount` = '" + oldID + "'");
-			foreach (ItemBonus bonus in bonuses)
-			{
-				bonus.BonusAmount = newID;
-				GameServer.Database.SaveObject(bonus);
-			}
-
-			GameServer.Database.SaveObject(spell);
-			GameServer.Instance.Logger.Info("Spell " + oldID + " is now " + newID);
 		}
 	}
 }
