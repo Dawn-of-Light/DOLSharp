@@ -394,6 +394,35 @@ namespace DOL.Database
 				bonus.BonusAmount = newID;
 				GameServer.Database.SaveObject(bonus);
 			}
+
+			//update old itemtemplate
+			OldItemTemplate[] templates = (OldItemTemplate[])GameServer.Database.SelectObjects(typeof(OldItemTemplate), "`SpellID` = '" + oldID + "' OR `SpellID1` = '" + oldID + "' OR `ProcSpellID` = '" + oldID + "' or `ProcSpellID1` = '" + oldID + "'");
+			foreach (OldItemTemplate template in templates)
+			{
+				if (template.SpellID == oldID)
+					template.SpellID = newID;
+				if (template.SpellID1 == oldID)
+					template.SpellID1 = newID;
+				if (template.ProcSpellID == oldID)
+					template.ProcSpellID = newID;
+				if (template.ProcSpellID1 == oldID)
+					template.ProcSpellID1 = newID;
+				GameServer.Database.SaveObject(template);
+			}
+			//update old inventoryitem
+			OldInventoryItem[] items = (OldInventoryItem[])GameServer.Database.SelectObjects(typeof(OldInventoryItem), "`SpellID` = '" + oldID + "' OR `SpellID1` = '" + oldID + "' OR `ProcSpellID` = '" + oldID + "' or `ProcSpellID1` = '" + oldID + "'");
+			foreach (OldInventoryItem item in items)
+			{
+				if (item.SpellID == oldID)
+					item.SpellID = newID;
+				if (item.SpellID1 == oldID)
+					item.SpellID1 = newID;
+				if (item.ProcSpellID == oldID)
+					item.ProcSpellID = newID;
+				if (item.ProcSpellID1 == oldID)
+					item.ProcSpellID1 = newID;
+				GameServer.Database.SaveObject(item);
+			}
 			GameServer.Instance.Logger.Info("Spell " + oldID + " is now " + newID);
 		}
 	}
