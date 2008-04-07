@@ -86,7 +86,7 @@ namespace DOL.GS
     #region ChampSpec class
     public class ChampSpec 
     {
-        public ChampSpec(int idline, int skillindex, int index, int cost, int spellid)
+        public ChampSpec(int idline, int skillindex, int index, int cost, ushort spellid)
         {
             m_idline = idline;
             m_skillIndex = skillindex;
@@ -100,8 +100,8 @@ namespace DOL.GS
             get { return m_idline; }
             set { m_idline = value; }
         }
-        protected int m_spellid;
-        public int SpellID
+        protected ushort m_spellid;
+        public ushort SpellID
         {
             get { return m_spellid; }
             set { m_spellid = value; }

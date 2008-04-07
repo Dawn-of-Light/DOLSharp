@@ -631,55 +631,55 @@ namespace DOL.GS.Housing
 			{
 				//thx to sp4m
 				default:
-					client.Player.MoveTo((ushort)this.RegionID, this.X, this.Y, 25022, client.Player.Heading);
+					client.Player.MoveTo(this.RegionID, this.X, this.Y, 25022, client.Player.Heading);
 					break;
 
 				case 1:
-					client.Player.MoveTo((ushort)this.RegionID, this.X + 80, this.Y + 100, ((ushort)(25025)), client.Player.Heading);
+					client.Player.MoveTo(this.RegionID, this.X + 80, this.Y + 100, ((ushort)(25025)), client.Player.Heading);
 					break;
 
 				case 2:
-					client.Player.MoveTo((ushort)this.RegionID, this.X - 260, this.Y + 100, ((ushort)(24910)), client.Player.Heading);
+					client.Player.MoveTo(this.RegionID, this.X - 260, this.Y + 100, ((ushort)(24910)), client.Player.Heading);
 					break;
 
 				case 3:
-					client.Player.MoveTo((ushort)this.RegionID, this.X - 200, this.Y + 100, ((ushort)(24800)), client.Player.Heading);
+					client.Player.MoveTo(this.RegionID, this.X - 200, this.Y + 100, ((ushort)(24800)), client.Player.Heading);
 					break;
 
 				case 4:
-					client.Player.MoveTo((ushort)this.RegionID, this.X - 350, this.Y - 30, ((ushort)(24660)), client.Player.Heading);
+					client.Player.MoveTo(this.RegionID, this.X - 350, this.Y - 30, ((ushort)(24660)), client.Player.Heading);
 					break;
 
 				case 5:
-					client.Player.MoveTo((ushort)this.RegionID, this.X + 230, this.Y - 480, ((ushort)(25100)), client.Player.Heading);
+					client.Player.MoveTo(this.RegionID, this.X + 230, this.Y - 480, ((ushort)(25100)), client.Player.Heading);
 					break;
 
 				case 6:
-					client.Player.MoveTo((ushort)this.RegionID, this.X - 80, this.Y - 660, ((ushort)(24700)), client.Player.Heading);
+					client.Player.MoveTo(this.RegionID, this.X - 80, this.Y - 660, ((ushort)(24700)), client.Player.Heading);
 					break;
 
 				case 7:
-					client.Player.MoveTo((ushort)this.RegionID, this.X - 80, this.Y - 660, ((ushort)(24700)), client.Player.Heading);
+					client.Player.MoveTo(this.RegionID, this.X - 80, this.Y - 660, ((ushort)(24700)), client.Player.Heading);
 					break;
 
 				case 8:
-					client.Player.MoveTo((ushort)this.RegionID, this.X - 90, this.Y - 625, ((ushort)(24670)), client.Player.Heading);
+					client.Player.MoveTo(this.RegionID, this.X - 90, this.Y - 625, ((ushort)(24670)), client.Player.Heading);
 					break;
 
 				case 9:
-					client.Player.MoveTo((ushort)this.RegionID, this.X + 400, this.Y - 160, ((ushort)(25150)), client.Player.Heading);
+					client.Player.MoveTo(this.RegionID, this.X + 400, this.Y - 160, ((ushort)(25150)), client.Player.Heading);
 					break;
 
 				case 10:
-					client.Player.MoveTo((ushort)this.RegionID, this.X + 400, this.Y - 80, ((ushort)(25060)), client.Player.Heading);
+					client.Player.MoveTo(this.RegionID, this.X + 400, this.Y - 80, ((ushort)(25060)), client.Player.Heading);
 					break;
 
 				case 11:
-					client.Player.MoveTo((ushort)this.RegionID, this.X + 400, this.Y - 60, ((ushort)(24900)), client.Player.Heading);
+					client.Player.MoveTo(this.RegionID, this.X + 400, this.Y - 60, ((ushort)(24900)), client.Player.Heading);
 					break;
 
 				case 12:
-					client.Player.MoveTo((ushort)this.RegionID, this.X, this.Y - 620, ((ushort)(24595)), client.Player.Heading);
+					client.Player.MoveTo(this.RegionID, this.X, this.Y - 620, ((ushort)(24595)), client.Player.Heading);
 					break;
 			}
 

@@ -294,8 +294,8 @@ namespace DOL.GS
 				}
 			}
 
-			if (log.IsWarnEnabled)
-				log.Warn(string.Format("Failed loading NPC inventory template: {0}", templateID));
+			if (log.IsErrorEnabled)
+				log.Error(string.Format("Failed loading NPC inventory template: {0}", templateID));
 			return false;
 		}
 

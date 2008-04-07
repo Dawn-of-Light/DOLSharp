@@ -387,6 +387,15 @@ namespace DOL.Database
 				oldstylex.SpellID = newID;
 				GameServer.Database.SaveObject(oldstylex);
 			}
+
+			//update champspec
+			OldDBChampSpecs[] oldspecs = (OldDBChampSpecs[])GameServer.Database.SelectObjects(typeof(OldDBChampSpecs), "`SpellID` = '" + oldID + "'");
+			foreach (OldDBChampSpecs spec in oldspecs)
+			{
+				spec.SpellID = newID;
+				GameServer.Database.SaveObject(spec);
+			}
+
 			//update itembonus
 			ItemBonus[] bonuses = (ItemBonus[])GameServer.Database.SelectObjects(typeof(ItemBonus), "`BonusType` >= 15 AND `BonusAmount` = '" + oldID + "'");
 			foreach (ItemBonus bonus in bonuses)
@@ -1475,15 +1484,7 @@ namespace DOL.Database
 			}
 		}
 	}
-}
 
-namespace DOL.Database
-{
-	/// <summary>
-	/// The InventoryItem table holds all values from the
-	/// ItemTemplate table and also some more values that
-	/// are neccessary to store the inventory position
-	/// </summary>
 	[DataTable(TableName = "OldInventoryItem")]
 	public class OldInventoryItem : OldItemTemplate
 	{
@@ -1496,7 +1497,7 @@ namespace DOL.Database
 		protected int m_slot_pos;
 		protected string craftername;
 		protected int m_canUseAgainIn;
-        protected long item_exp;
+		protected long item_exp;
 		private int m_cooldown;
 		private DateTime m_lastUsedDateTime;
 
@@ -1505,7 +1506,7 @@ namespace DOL.Database
 		/// </summary>
 		protected int m_count;
 		static bool m_autoSave;
-        protected string m_internalID;
+		protected string m_internalID;
 		protected int m_sellPrice;
 
 		public OldInventoryItem()
@@ -1514,7 +1515,7 @@ namespace DOL.Database
 			m_autoSave = false;
 			m_id_nb = "default";
 			m_count = 1;
-            m_internalID = this.ObjectId;
+			m_internalID = this.ObjectId;
 			m_sellPrice = 0;
 		}
 
@@ -1637,14 +1638,14 @@ namespace DOL.Database
 		/// </summary>
 		public int CanUseAgainIn
 		{
-			get 
+			get
 			{
 				try
 				{
 					TimeSpan elapsed = DateTime.Now.Subtract(m_lastUsedDateTime);
 					TimeSpan reuse = new TimeSpan(0, 0, CanUseEvery);
-					return (reuse.CompareTo(elapsed) < 0) 
-						? 0 
+					return (reuse.CompareTo(elapsed) < 0)
+						? 0
 						: CanUseEvery - elapsed.Seconds - 60 * elapsed.Minutes - 3600 * elapsed.Hours;
 				}
 				catch (ArgumentOutOfRangeException)
@@ -1659,16 +1660,16 @@ namespace DOL.Database
 			}
 		}
 
-        [DataElement(AllowDbNull = false)]
-        public virtual long Experience
-        {
-            get { return item_exp; }
-            set
-            {
-                Dirty = true;
-                item_exp = value;
-            }
-        }
+		[DataElement(AllowDbNull = false)]
+		public virtual long Experience
+		{
+			get { return item_exp; }
+			set
+			{
+				Dirty = true;
+				item_exp = value;
+			}
+		}
 
 		/// <summary>
 		/// Whether to save this object or not.
@@ -1687,13 +1688,7 @@ namespace DOL.Database
 			}
 		}
 	}
-}
 
-namespace DOL.Database
-{
-	/// <summary>
-	/// 
-	/// </summary>
 	[DataTable(TableName = "OldSpell")]
 	public class OldDBSpell : DataObject
 	{
@@ -1735,8 +1730,8 @@ namespace DOL.Database
 		protected bool m_uninterruptible = false;
 		protected int m_healthPenalty = 0;
 		protected bool m_isfocus = false;
-        	protected int m_sharedtimergroup; 
-        
+		protected int m_sharedtimergroup;
+
 		// warlock
 		protected bool m_isprimary;
 		protected bool m_issecondary;
@@ -2227,7 +2222,7 @@ namespace DOL.Database
 				m_healthPenalty = value;
 			}
 		}
-		
+
 		[DataElement(AllowDbNull = true)]
 		public bool IsFocus
 		{
@@ -2238,19 +2233,19 @@ namespace DOL.Database
 				m_isfocus = value;
 			}
 		}
-        [DataElement(AllowDbNull = true)]
-        public int SharedTimerGroup
-        {
-            get
-            {
-                return m_sharedtimergroup;
-            }
-            set
-            {
-                Dirty = true;
-                m_sharedtimergroup = value;
-            }
-        }
+		[DataElement(AllowDbNull = true)]
+		public int SharedTimerGroup
+		{
+			get
+			{
+				return m_sharedtimergroup;
+			}
+			set
+			{
+				Dirty = true;
+				m_sharedtimergroup = value;
+			}
+		}
 
 		#region warlock
 		[DataElement(AllowDbNull = true)]
@@ -2434,6 +2429,88 @@ namespace DOL.Database
 			set
 			{
 				m_autoSave = value;
+			}
+		}
+	}
+
+	[DataTable(TableName = "OldChampSpecs")]
+	public class OldDBChampSpecs : DataObject
+	{
+		protected int m_idLine;
+		protected int m_skillIndex;
+		protected int m_index;
+		protected int m_spellid;
+		protected int m_order;
+		protected int m_cost;
+
+		static bool m_autoSave;
+
+		public OldDBChampSpecs()
+		{
+			m_autoSave = false;
+		}
+
+		override public bool AutoSave
+		{
+			get { return m_autoSave; }
+			set
+			{
+				m_autoSave = value;
+			}
+		}
+		// how much spell costs
+		[DataElement(AllowDbNull = false)]
+		public int Cost
+		{
+			get { return m_cost; }
+			set
+			{
+				Dirty = true;
+				m_cost = value;
+			}
+		}
+		// MAIN identifying number, first tier and all spells that are on same training window share this
+		[DataElement(AllowDbNull = false)]
+		public int IdLine
+		{
+			get { return m_idLine; }
+			set
+			{
+				Dirty = true;
+				m_idLine = value;
+			}
+		}
+		// SECOND tier, this is a row and all spells that share this number + idline build off each other
+		[DataElement(AllowDbNull = false)]
+		public int SkillIndex
+		{
+			get { return m_skillIndex; }
+			set
+			{
+				Dirty = true;
+				m_skillIndex = value;
+			}
+		}
+		// THIRD tier, identifier for ordering in ascending order 
+		[DataElement(AllowDbNull = false)]
+		public int Index
+		{
+			get { return m_index; }
+			set
+			{
+				Dirty = true;
+				m_index = value;
+			}
+		}
+		// SPELL ID from DBSpell that the player is buying
+		[DataElement(AllowDbNull = false)]
+		public int SpellID
+		{
+			get { return m_spellid; }
+			set
+			{
+				Dirty = true;
+				m_spellid = value;
 			}
 		}
 	}

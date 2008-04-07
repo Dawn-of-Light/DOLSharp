@@ -32,7 +32,7 @@ namespace DOL.Database
 		protected int m_idLine;
         protected int m_skillIndex;
         protected int m_index;
-        protected int m_spellid;
+        protected ushort m_spellid;
         protected int m_order;
         protected int m_cost;
 
@@ -96,7 +96,7 @@ namespace DOL.Database
         }
         // SPELL ID from DBSpell that the player is buying
         [DataElement(AllowDbNull = false)]
-        public int SpellID
+        public ushort SpellID
         {
             get { return m_spellid; }
             set

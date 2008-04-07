@@ -52,7 +52,8 @@ namespace DOL.GS.Spells
             : base(caster, spell, spellLine)
         {
             m_procSpellLine = SkillBase.GetSpellLine(SubSpellLineName);
-            m_procSpell = SkillBase.GetSpellByID((int)spell.Value);
+			#warning There is a danger here of someone having a spell entry > ushort.Max here, and it being cast to ushort
+            m_procSpell = SkillBase.GetSpellByID((ushort)spell.Value);
         }
 
         /// <summary>
@@ -132,9 +133,10 @@ namespace DOL.GS.Spells
         /// </summary>
         /// <returns>true if this spell is better version than compare spell</returns>
         public override bool IsNewEffectBetter(GameSpellEffect oldeffect, GameSpellEffect neweffect)
-        {
-            Spell oldProcSpell = SkillBase.GetSpellByID((int)oldeffect.Spell.Value);
-            Spell newProcSpell = SkillBase.GetSpellByID((int)neweffect.Spell.Value);
+		{
+			#warning There is a danger here of someone having a spell entry > ushort.Max here, and it being cast to ushort
+			Spell oldProcSpell = SkillBase.GetSpellByID((ushort)oldeffect.Spell.Value);
+            Spell newProcSpell = SkillBase.GetSpellByID((ushort)neweffect.Spell.Value);
 
             if (oldProcSpell == null || newProcSpell == null)
                 return true;
@@ -164,8 +166,9 @@ namespace DOL.GS.Spells
                 return Spell.Group == compare.Spell.Group;
             if (compare.Spell.SpellType != Spell.SpellType)
                 return false;
-            Spell oldProcSpell = SkillBase.GetSpellByID((int)Spell.Value);
-            Spell newProcSpell = SkillBase.GetSpellByID((int)compare.Spell.Value);
+			#warning There is a danger here of someone having a spell entry > ushort.Max here, and it being cast to ushort
+			Spell oldProcSpell = SkillBase.GetSpellByID((ushort)Spell.Value);
+            Spell newProcSpell = SkillBase.GetSpellByID((ushort)compare.Spell.Value);
             if (oldProcSpell == null || newProcSpell == null)
                 return true;
             if (oldProcSpell.SpellType != newProcSpell.SpellType)

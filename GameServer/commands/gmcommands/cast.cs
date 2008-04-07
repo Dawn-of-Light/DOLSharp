@@ -40,13 +40,13 @@ namespace DOL.GS.Commands
                 client.Out.SendMessage("Usage: /cast <whateveryouwant> <spellid> cast the spell <spellid> (/cast dol 10)", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
-            int spellID = 0;
+            ushort spellID = 0;
             try
             {
 
                 if (args.Length >= 3)
                 {
-                    spellID = Convert.ToInt32(args[2]);
+					ushort.TryParse(args[2], out spellID);
                     Spell spell = SkillBase.GetSpellByID(spellID);
                     SpellLine line = new SpellLine("GMCast", "GM Cast", "unknown", false);
                     GameLiving caster = client.Player;
@@ -65,7 +65,7 @@ namespace DOL.GS.Commands
                 }
                 else
                 {
-                    spellID = Convert.ToInt32(args[1]);
+					ushort.TryParse(args[1], out spellID);
                     Spell spell = SkillBase.GetSpellByID(spellID);
                     GameObject obj = client.Player.TargetObject;
                     GameLiving target = null;

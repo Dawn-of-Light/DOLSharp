@@ -1519,7 +1519,7 @@ namespace DOL.GS
 		}
 
        // FOR CHAMPION ABILITIES :D
-        public static void AddSpellToList(string spellLineID, int SpellID)
+        public static void AddSpellToList(string spellLineID, ushort SpellID)
         {
             ArrayList spell_list = new ArrayList();
             int insertpos = 0;
@@ -1651,7 +1651,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="spellID"></param>
 		/// <returns></returns>
-		public static Spell GetSpellByID(int spellID)
+		public static Spell GetSpellByID(ushort spellID)
 		{
 			return m_spells[spellID] as Spell;
 		}

@@ -36,7 +36,7 @@ namespace DOL.GS.SkillHandler
 				return DEAD | SITTING | MEZZED | STUNNED | NOTINGROUP;
 			}
 		}
- 		public override int SpellID
+ 		public override ushort SpellID
 		{
 			get
 			{

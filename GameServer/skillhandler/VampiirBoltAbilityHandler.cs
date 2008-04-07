@@ -22,11 +22,11 @@ namespace DOL.GS.SkillHandler
 			}
 		}
 
-		public override int SpellID
+		public override ushort SpellID
 		{
 			get
 			{
-				return 13200 + m_ability.Level;
+				return (ushort)(13200 + m_ability.Level);
 			}
 		}
 	}

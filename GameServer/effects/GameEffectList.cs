@@ -164,7 +164,8 @@ namespace DOL.GS.Effects
 			foreach (PlayerXEffect eff in effs)
 			{
 				bool good = true;
-				Spell spell = SkillBase.GetSpellByID(eff.Var1);
+				#warning There is a danger here of someone having a spell entry > ushort.Max here, and it being cast to ushort
+				Spell spell = SkillBase.GetSpellByID((ushort)eff.Var1);
 				if (spell == null)
 					good = false;
 

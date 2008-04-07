@@ -8170,6 +8170,14 @@ namespace DOL.GS
 		/// <returns>true if move succeeded, false if failed</returns>
 		public override bool MoveTo(ushort regionID, int x, int y, int z, ushort heading)
 		{
+			//if we are jumping somewhere away from our house not using house.Exit
+			//we need to make the server know we have left the house
+			if (CurrentHouse != null && CurrentHouse.RegionID != regionID)
+			{
+				InHouse = false;
+				CurrentHouse = null;
+			}
+			//if we send a jump, we get off the horse
 			if (IsOnHorse)
 				IsOnHorse = false;
 			//Get the destination region based on the ID
@@ -12690,7 +12698,7 @@ namespace DOL.GS
 			{
 				foreach (DictionaryEntry de in championSpellsh)
 				{
-					SkillBase.AddSpellToList("Champion Abilities" + Name, (int)de.Value);
+					SkillBase.AddSpellToList("Champion Abilities" + Name, (ushort)de.Value);
 				}
 				AddSpellLine(line);
 			}

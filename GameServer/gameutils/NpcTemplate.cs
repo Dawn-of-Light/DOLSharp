@@ -114,7 +114,7 @@ namespace DOL.GS
 				string[] spells = data.Spells.Split(';');
 				for (int k = 0; k < spells.Length; k++)
 				{
-					int id = int.Parse(spells[k]);
+					ushort id = ushort.Parse(spells[k]);
 					Spell sp = SkillBase.GetSpellByID(id);
 					if (sp != null)
 						m_spells.Add(sp);

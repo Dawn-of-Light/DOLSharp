@@ -10,7 +10,7 @@ namespace DOL.GS.SkillHandler
 		{
 			get { return m_ability; }
 		}
-		public virtual int SpellID
+		public virtual ushort SpellID
 		{
 			get { return 0; }
 		}

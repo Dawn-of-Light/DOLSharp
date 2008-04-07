@@ -73,8 +73,9 @@ namespace DOL.GS.Spells
             }
 
             if (Util.Chance(15))
-            {
-                Spell m_procSpell = SkillBase.GetSpellByID((int)Spell.Value);
+			{
+				#warning There is a danger here of someone having a spell entry > ushort.Max here, and it being cast to ushort
+				Spell m_procSpell = SkillBase.GetSpellByID((ushort)Spell.Value);
                 ISpellHandler handler = ScriptMgr.CreateSpellHandler((GameLiving)sender, m_procSpell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
                 if (handler != null)
                 {
