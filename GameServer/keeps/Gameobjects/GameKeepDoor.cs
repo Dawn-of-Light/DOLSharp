@@ -131,8 +131,7 @@ namespace DOL.GS.Keeps
 		{
 			get 
 			{
-				//return (byte)this.Component.Keep.Level;
-				return (byte)this.Component.Level; 
+				return (byte)this.Component.Keep.Level;
 			}
 		}
 

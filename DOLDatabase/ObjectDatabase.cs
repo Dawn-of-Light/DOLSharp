@@ -184,7 +184,14 @@ namespace DOL.Database
 			return 0;
 		}
 
-		private void SQLAddNewObject(DataObject dataObject)
+		public void AddNewObjectDelayed(DataObject dataObject)
+		{
+			if (connection.IsSQLConnection)
+				SQLAddNewObject(dataObject, true);
+			else AddNewObject(dataObject);
+		}
+
+		private void SQLAddNewObject(DataObject dataObject, bool delayed)
 		{
 			try
 			{
@@ -254,7 +261,11 @@ namespace DOL.Database
 					}
 				}
 
-				string sql = "INSERT INTO `" + tableName + "` (" + columns.ToString() + ") VALUES (" + values.ToString() + ")";
+				string sql = "";
+				string delayedString = "";
+				if (delayed)
+					delayedString = "DELAYED ";
+				sql += "INSERT " + delayedString + "INTO `" + tableName + "` (" + columns.ToString() + ") VALUES (" + values.ToString() + ")";
 				if(log.IsDebugEnabled)
 					log.Debug(sql);
 				int res = connection.ExecuteNonQuery(sql);
@@ -344,7 +355,7 @@ namespace DOL.Database
 		{
 			if (connection.IsSQLConnection)
 			{
-				SQLAddNewObject(dataObject);
+				SQLAddNewObject(dataObject, false);
 				return;
 			}
 

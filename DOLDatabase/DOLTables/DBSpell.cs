@@ -60,7 +60,7 @@ namespace DOL.Database
 		protected int m_instrumentRequirement;
 		protected int m_spellGroup;
 		protected int m_effectGroup;
-		protected int m_subSpellID = 0;
+		protected ushort m_subSpellID = 0;
 		protected bool m_moveCast = false;
 		protected bool m_uninterruptible = false;
 		protected int m_healthPenalty = 0;
@@ -512,7 +512,7 @@ namespace DOL.Database
 
 		//Multiple spells
 		[DataElement(AllowDbNull = true)]
-		public int SubSpellID
+		public ushort SubSpellID
 		{
 			get
 			{

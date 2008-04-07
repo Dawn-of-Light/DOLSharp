@@ -57,7 +57,7 @@ namespace DOL.GS
 		protected readonly int m_instrumentRequirement = 0;
 		protected readonly int m_spellGroup = 0;
 		protected readonly int m_effectGroup = 0;
-		protected readonly int m_subSpellID = 0;
+		protected readonly ushort m_subSpellID = 0;
         protected readonly int m_sharedtimergroup = 0; 
 		protected readonly bool m_moveCast = false;
 		protected readonly bool m_uninterruptible = false;
@@ -265,7 +265,7 @@ namespace DOL.GS
 			get { return m_effectGroup; }
 		}
 
-		public int SubSpellID
+		public ushort SubSpellID
 		{
 			get { return m_subSpellID; }
 		}

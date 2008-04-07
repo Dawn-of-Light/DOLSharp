@@ -27,7 +27,7 @@ using System.Reflection;
 
 namespace DOL.Database
 {
-	[DataTable(TableName = "ItemTemplate")]
+	[DataTable(TableName = "ItemTemplate", PreCache = true)]
 	public class ItemTemplate : DataObject
 	{
 		/// <summary>
@@ -401,7 +401,7 @@ namespace DOL.Database
 				m_bonus = value;
 			}
 		}
-		
+
 		[DataElement(AllowDbNull = true)]
 		public bool IsPickable
 		{
