@@ -775,6 +775,7 @@
     <Compile Include="gameutils\XFireSupport.cs" />
     <Compile Include="housing\IHouseHookpointItem.cs" />
     <Compile Include="keeps\Gameobjects\FrontiersPortalStone.cs" />
+    <Compile Include="keeps\Gameobjects\GameRelicDoor.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Archer.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Caster.cs" />
     <Compile Include="keeps\Gameobjects\Guards\MissionMaster.cs" />
@@ -790,6 +791,7 @@
     <Compile Include="keeps\KeepArea.cs" />
     <Compile Include="keeps\KeepBonusManager.cs" />
     <Compile Include="keeps\Managers\Clothing Manager.cs" />
+    <Compile Include="keeps\Managers\RelicGateMgr.cs" />
     <Compile Include="keeps\Managers\RelicMgr.cs" />
     <Compile Include="keeps\Managers\Template Manager.cs" />
     <Compile Include="keeps\Managers\Guild Manager.cs" />
@@ -905,6 +907,10 @@
     <Compile Include="packets\Server\PacketLib186.cs" />
     <Compile Include="packets\Server\PacketLib187.cs" />
     <Compile Include="packets\Server\PacketLib189.cs" />
+    <Compile Include="packets\Server\PacketLib190.cs" />
+    <Compile Include="packets\Server\PacketLib191.cs" />
+    <Compile Include="packets\Server\PacketLib192.cs" />
+    <Compile Include="packets\Server\PacketLib193.cs" />
     <Compile Include="packets\Server\PacketLibAttribute.cs" />
     <Compile Include="packets\Server\PacketProcessor.cs" />
     <Compile Include="playerclasses\ClassMauler.cs" />

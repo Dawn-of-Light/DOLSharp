@@ -282,19 +282,6 @@ namespace DOL.Database
 			}
 		}
 
-		public void ArchiveTables()
-		{
-			if (!connection.IsSQLConnection)
-				return;
-			log.Info("Archiving Tables...");
-
-			//we do it in this order, because if we move account first, the rest of the queries fail
-			MoveObject(typeof(InventoryItemArchive), typeof(InventoryItem), "INNER JOIN `DOLCharacters` dc ON i.OwnerId = dc.DOLCharacters_ID INNER JOIN `Account` ac ON dc.AccountName = ac.Name WHERE DATE_SUB(CURDATE(), INTERVAL 30 DAY) > ac.LastLogin");
-			MoveObject(typeof(CharacterArchive), typeof(Character), "INNER JOIN `Account` ac ON d.AccountName = ac.Name WHERE DATE_SUB(CURDATE(), INTERVAL 30 DAY) > ac.LastLogin");
-			MoveObject(typeof(AccountArchive), typeof(Account), "WHERE DATE_SUB(CURDATE(), INTERVAL 30 DAY) > `LastLogin`");
-			log.Info("Archiving Complete!");
-		}
-
 		public void MoveObject(Type targetType, Type sourceType, string query)
 		{
 			if (!connection.IsSQLConnection)

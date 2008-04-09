@@ -30,6 +30,9 @@ namespace DOL.Mail
 		{
 			foreach (string file in filesPathsList)
 			{
+				//let's not try and compress already compressed files
+				if (file.Contains(".gz"))
+					continue;
 				Console.WriteLine(file);
 				if (!compressFile(file, file + ".gz"))
 					return false;

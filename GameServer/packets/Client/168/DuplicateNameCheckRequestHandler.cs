@@ -31,11 +31,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			string select = string.Format("Name = '{0}'",GameServer.Database.Escape(name));
 			Character character = (Character) GameServer.Database.SelectObject(typeof(Character), select);
 			bool nameExists = (character != null);
-			if (!nameExists)
-			{
-				character = (CharacterArchive)GameServer.Database.SelectObject(typeof(CharacterArchive), select);
-				nameExists = (character != null);
-			}
 
 			client.Out.SendDupNameCheckReply(name,nameExists);
 			return 1;
