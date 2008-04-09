@@ -317,7 +317,7 @@ namespace DOL.GS.PacketHandler
 			// 0x20 = wireframe
 			pak.WriteByte((byte)flags);
 			pak.WriteByte(0x00); // new in 1.74
-
+			if (playerToCreate.CharacterClass.ID == (int)eCharacterClass.Vampiir) flags |= 0x40; //Vamp fly
 			pak.WritePascalString(GameServer.ServerRules.GetPlayerName(m_gameClient.Player, playerToCreate));
 			pak.WritePascalString(GameServer.ServerRules.GetPlayerGuildName(m_gameClient.Player, playerToCreate));
 			pak.WritePascalString(GameServer.ServerRules.GetPlayerLastName(m_gameClient.Player, playerToCreate));
@@ -380,7 +380,11 @@ namespace DOL.GS.PacketHandler
 		protected override void WriteGroupMemberUpdate(GSTCPPacketOut pak, bool updateIcons, GameLiving living)
 		{
 			base.WriteGroupMemberUpdate(pak, updateIcons, living);
+			WriteGroupMemberMapUpdate(pak, living);
+		}
 
+		protected virtual void WriteGroupMemberMapUpdate(GSTCPPacketOut pak, GameLiving living)
+		{
 			bool sameRegion = living.CurrentRegion == m_gameClient.Player.CurrentRegion;
 			if (sameRegion && living.CurrentSpeed != 0)//todo : find a better way to detect when player change coord
 			{

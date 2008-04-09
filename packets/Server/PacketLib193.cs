@@ -1,4 +1,4 @@
-/*
+ /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  *
  * This program is free software; you can redistribute it and/or
@@ -16,24 +16,28 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+#define NOENCRYPTION
 using System;
-using DOL.Database;
+using System.Reflection;
+using log4net;
 
-
-namespace DOL.GS.PacketHandler.Client.v168
+namespace DOL.GS.PacketHandler
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0x63^168,"Checks if a character name already exists")]
-	public class DupNameCheckRequestHandler : IPacketHandler
+	[PacketLib(193, GameClient.eClientVersion.Version193)]
+	public class PacketLib193 : PacketLib192
 	{
-		public int HandlePacket(GameClient client, GSPacketIn packet)
-		{
-			string name=packet.ReadString(30);
-			string select = string.Format("Name = '{0}'",GameServer.Database.Escape(name));
-			Character character = (Character) GameServer.Database.SelectObject(typeof(Character), select);
-			bool nameExists = (character != null);
+		/// <summary>
+		/// Defines a logger for this class.
+		/// </summary>
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-			client.Out.SendDupNameCheckReply(name,nameExists);
-			return 1;
+		/// <summary>
+		/// Constructs a new PacketLib for Version 1.93 clients
+		/// </summary>
+		/// <param name="client">the gameclient this lib is associated with</param>
+		public PacketLib193(GameClient client)
+			: base(client)
+		{
 		}
 	}
 }

@@ -23,6 +23,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Threading;
+using System.Diagnostics;
 
 using DOL.Database;
 using DOL.Database.Attributes;
@@ -577,6 +578,8 @@ namespace DOL
 			{
 				try
 				{
+					Process pro = Process.GetCurrentProcess();
+					pro.ProcessorAffinity = new IntPtr(GameServer.Instance.Configuration.CPUUse);
 					if (debugMemory)
 						log.Debug("Starting Server, Memory is " + GC.GetTotalMemory(false)/1024/1024);
 					m_status = eGameServerStatus.GSS_Closed;
@@ -1047,9 +1050,6 @@ namespace DOL
 				if (m_database != null)
 				{
 					m_database.WriteDatabaseTables();
-					//move inactive accounts, characters, quests TODO and inventoryitems to archive
-					if (ServerProperties.Properties.USE_ARCHIVING)
-						m_database.ArchiveTables();
 				}
 
 				m_serverRules = null;
@@ -1345,7 +1345,7 @@ namespace DOL
 				{
 					if (log.IsFatalEnabled)
 						log.Fatal("GameServer initialization failed!", e);
-                    throw new ApplicationException("Fatal Error: Could not initialize Game Server", e);
+					throw new ApplicationException("Fatal Error: Could not initialize Game Server", e);
 				}
 			}
 			#endregion
