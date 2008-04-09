@@ -297,7 +297,7 @@ namespace DOL.GS.Keeps
 			this.TempProperties.setProperty(Last_LOS_Target_Property, attackTarget);
 			this.TempProperties.setProperty(Last_LOS_Tick_Property, CurrentRegion.Time);
 			TargetObject = attackTarget;
-			LOSChecker.Out.SendCheckLOS(this, attackTarget, new CheckLOSResponse(this.GuardStartAttackCheckLOS));
+			LOSChecker.Out.SendCheckLOS(this, attackTarget, GuardStartAttackCheckLOS);
 
 		}
 

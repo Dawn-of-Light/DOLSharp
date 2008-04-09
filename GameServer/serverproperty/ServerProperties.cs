@@ -303,12 +303,6 @@ namespace DOL.GS.ServerProperties
 		public static readonly bool USE_KEEP_BALANCING;
 
 		/// <summary>
-		/// Use Archiving
-		/// </summary>
-		[ServerProperty("use_archiving", "Set to true if you want to move old records to an archive table", false)]
-		public static readonly bool USE_ARCHIVING;
-
-		/// <summary>
 		/// Use Live Keep Bonuses
 		/// </summary>
 		[ServerProperty("use_live_keep_bonuses", "Set to true if you want to use the live keeps bonuses, for example 3% extra xp", false)]
@@ -541,6 +535,12 @@ namespace DOL.GS.ServerProperties
         /// </summary>
         [ServerProperty("give_dol_respec_at_level", "What levels does we give a DOL respec? (serialized)", "0")]
         public static readonly string GIVE_DOL_RESPEC_AT_LEVEL;
+
+		/// <summary>
+		/// How many things do we allow guilds to claim?
+		/// </summary>
+		[ServerProperty("guilds_claim_limit", "How many things do we allow guilds to claim?", 1)]
+		public static readonly int GUILDS_CLAIM_LIMIT;
 
         /// <summary>
 		/// This method loads the property from the database and returns

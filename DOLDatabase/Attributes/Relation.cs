@@ -34,7 +34,7 @@ namespace DOL.Database.Attributes
 
 		/// <summary>
 		/// Constructor for the Relation-Attribute.
-		/// Standartsettings are:
+		/// Standard settings are:
 		///		AutoLoad = true
 		///		AutoDelete = false
 		/// </summary>
@@ -42,7 +42,7 @@ namespace DOL.Database.Attributes
 		{
 			localField = null;
 			remoteField = null;
-			autoLoad=true;
+			autoLoad = true;
 			autoDelete = false;
 		}
 
@@ -104,14 +104,8 @@ namespace DOL.Database.Attributes
 		/// <value><c>true</c> if related objects are deleted as well</value>
 		public bool AutoDelete
 		{
-			get
-			{
-				return autoDelete;
-			}
-			set
-			{
-				autoDelete = value;
-			}
+			get { return autoDelete; }
+			set { autoDelete = value; }
 		}
 
 	}
