@@ -419,6 +419,8 @@ namespace DOL.GS.Keeps
 					return keep.Realm != target.Realm;
 				case eGameServerType.GST_PvP:
 					{
+						if (keep.Guild == null)
+							return false;
 						//friendly player in group
 						if (checkGroup && target.Group != null)
 						{

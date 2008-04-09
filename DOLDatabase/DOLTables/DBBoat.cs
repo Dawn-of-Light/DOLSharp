@@ -24,7 +24,7 @@ namespace DOL.Database
     /// <summary>
     /// DBBoat is database of Player Boats
     /// </summary>
-    [DataTable(TableName = "PlayerBoats", PreCache = true)]
+    [DataTable(TableName = "PlayerBoats")]
     public class DBBoat : DataObject
     {
         static bool m_autoSave;
