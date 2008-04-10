@@ -2469,7 +2469,7 @@ namespace DOL.GS
 					&& CharacterClass.ID != 49
 					&& CharacterClass.ID != 23
 					&& CharacterClass.ID != 58
-					&& ability.KeyName == Abilities.ClimbWalls)
+					&& ability.KeyName == Abilities.Climbing)
 			{
 				return;
 			}

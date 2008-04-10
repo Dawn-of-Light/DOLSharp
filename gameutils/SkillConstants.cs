@@ -177,7 +177,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Advanced Evade Ability
 		/// </summary>
-		public const string Advanced_Evade = "Advanced Evade Ability";
+		public const string Advanced_Evade = "Advanced Evade";
 		/// <summary>
 		/// Evade Ability
 		/// </summary>
@@ -217,7 +217,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Triple Wield Ability
 		/// </summary>
-		public const string Triple_Wield = "Triple Wield Ability";
+		public const string Triple_Wield = "Triple Wield";
 		/// <summary>
 		/// Distraction Ability
 		/// </summary>
@@ -233,7 +233,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Climb Walls Ability
 		/// </summary>
-		public const string ClimbWalls = "Climb Walls";
+		public const string Climbing = "Climbing";
 		/// <summary>
 		/// Danger Sense Ability
 		/// </summary>
