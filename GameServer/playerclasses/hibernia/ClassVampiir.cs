@@ -102,7 +102,7 @@ namespace DOL.GS.PlayerClass
 			}
 			if (player.Level >= 25)
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.ClimbWalls));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Climbing));
 			}
 			if (player.Level >= 30)
 			{
