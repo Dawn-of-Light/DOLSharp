@@ -43,7 +43,7 @@ namespace DOL.GS.Effects
         /// <summary>
         /// Name of the effect
         /// </summary>
-        public override string Name { get { return "Sputins Legacy"; } }
+        public override string Name { get { return "Sputin's Legacy"; } }
 
         /// <summary>
         /// Icon to show on players, can be id

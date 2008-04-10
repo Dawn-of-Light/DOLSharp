@@ -131,7 +131,7 @@ namespace DOL.GS.PlayerClass
                     if (skill.Level >= 10) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 1));
 					if(skill.Level >= 16) player.AddAbility(SkillBase.GetAbility(Abilities.DetectHidden));
                     if (skill.Level >= 20) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 2));
-                    if (skill.Level >= 25) player.AddAbility(SkillBase.GetAbility(Abilities.ClimbWalls));
+					if (skill.Level >= 25) player.AddAbility(SkillBase.GetAbility(Abilities.Climbing));
                     if (skill.Level >= 30) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 3));
                     if (skill.Level >= 40) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 4));
                     if (skill.Level >= 50) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 5));
