@@ -924,6 +924,11 @@ namespace DOL.GS.Commands
                             }
 
                             string guildname = String.Join(" ", args, 2, args.Length - 2);
+							if (guildname.Length > 30)
+							{
+								client.Out.SendMessage("Sorry, your guild name is too long.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
                             guildname = GameServer.Database.Escape(guildname);
 
                             if (!IsValidGuildName(guildname))
