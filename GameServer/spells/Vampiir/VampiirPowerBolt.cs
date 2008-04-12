@@ -1,133 +1,107 @@
+//Andraste v2.0 - Vico
+
 using System;
-using System.Collections;
 using DOL.GS.PacketHandler;
+using DOL.GS.Effects;
+using DOL.GS.Keeps;
+using DOL.GS.SkillHandler;
 
 namespace DOL.GS.Spells
 {
-	[SpellHandlerAttribute("VampiirPowerBolt")]
-	public class VampiirPowerBolt : SpellHandler //DirectDamageSpellHandler
+	[SpellHandlerAttribute("VampiirBolt")]
+	public class VampiirBoltSpellHandler : SpellHandler
 	{
-		public VampiirPowerBolt(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
-
-        // cannot be casted in combat
-        public override bool CheckBeginCast(GameLiving selectedTarget)
-        {
-            if (Caster.InCombat == true)
-            {
-                MessageToCaster("You cannot cast this spell in combat!", eChatType.CT_SpellResisted);
-                return false;
-            }
-            return base.CheckBeginCast(selectedTarget);
-        }
-				
-		public override void OnDirectEffect(GameLiving target, double effectiveness)
+		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
-
-			if (target == null) return;
-			if (!target.IsAlive || target.ObjectState!=GameLiving.eObjectState.Active) return;
-
-            if (target.MaxMana > 0)
-            {
-                int power = (int) Spell.Value; //((target.Level * 5 * (int)(Spell.Value)) / 100)
-
-                //if ( target is GameNPC)
-                m_caster.Mana += power;
-               
-                if (target is GamePlayer)
-                {
-                    target.Mana -= power;
-                    ((GamePlayer)target).Out.SendMessage(m_caster.Name + " takes " + power + " power!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
-                }
-                
-                if (target.Mana < 0) target.Mana = 0;
-
-                if (m_caster is GamePlayer)
-                {
-                    ((GamePlayer)m_caster).Out.SendMessage("You receive " + power + " power from " + target.Name + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-                }
-            }
-            else
-                ((GamePlayer)m_caster).Out.SendMessage("You did not receive any power from " + target.Name + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-			AttackData ad = CalculateDamageToTarget(target, effectiveness);
-			DamageTarget(ad, true);
-			target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
-		}
-        public override int CalculateSpellResistChance(GameLiving target)
-        {
-            return 0;
-        }
-
-		public override int CalculateNeededPower(GameLiving target)
-		{
-			return 0;
-		}
-
-
-		public override IList DelveInfo 
-		{
-			get 
+			if (Caster.InCombat == true)
 			{
-				ArrayList list = new ArrayList();
-				//Name
-				list.Add("Name: " + Spell.Name);
-				//Description
-				list.Add("Description: " + Spell.Description);
-				//Target
-				list.Add("Target: " + Spell.Target);
-				//Cast
-				list.Add("Casting time: " + (Spell.CastTime*0.001).ToString("0.0## sec;-0.0## sec;'instant'"));
-				//Duration
-				if (Spell.Duration >= ushort.MaxValue*1000)
-					list.Add("Duration: Permanent.");
-				else if (Spell.Duration > 60000)
-					list.Add(string.Format("Duration: {0}:{1} min", Spell.Duration/60000, (Spell.Duration%60000/1000).ToString("00")));
-				else if (Spell.Duration != 0)
-					list.Add("Duration: " + (Spell.Duration/1000).ToString("0' sec';'Permanent.';'Permanent.'"));
-				//Recast
-				if (Spell.RecastDelay > 60000)
-					list.Add("Recast time: " + (Spell.RecastDelay/60000).ToString() + ":" + (Spell.RecastDelay%60000/1000).ToString("00") + " min");
-				else if (Spell.RecastDelay > 0)
-					list.Add("Recast time: " + (Spell.RecastDelay/1000).ToString() + " sec");
-				//Range
-				if(Spell.Range != 0) list.Add("Range: " + Spell.Range);
-				//Radius
-				if(Spell.Radius != 0) list.Add("Radius: " + Spell.Radius);
-				//Cost
-				if(Spell.Power != 0) list.Add("Power cost: " + Spell.Power.ToString("0;0'%'"));
-				//Effect
-				list.Add("Drain Endurance By: " + Spell.Value);
-
-				if (Spell.Frequency != 0)
-					list.Add("Frequency: " + (Spell.Frequency*0.001).ToString("0.0"));
-								
-				return list;
+				MessageToCaster("You cannot cast this spell in combat!", eChatType.CT_SpellResisted);
+				return false;
+			}
+			return base.CheckBeginCast(selectedTarget);
+		}
+		public override void StartSpell(GameLiving target)
+		{
+			foreach (GameLiving targ in SelectTargets(target))
+			{
+				DealDamage(targ);
 			}
 		}
-		
-		
 
+		private void DealDamage(GameLiving target)
+		{
+			int ticksToTarget = WorldMgr.GetDistance(m_caster, target) * 100 / 85; // 85 units per 1/10s
+			int delay = 1 + ticksToTarget / 100;
+			foreach (GamePlayer player in target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			{
+				player.Out.SendSpellEffectAnimation(m_caster, target, m_spell.ClientEffect, (ushort)(delay), false, 1);
+			}
+			BoltOnTargetAction bolt = new BoltOnTargetAction(Caster, target, this);
+			bolt.Start(1 + ticksToTarget);
+		}
+
+		public override void FinishSpellCast(GameLiving target)
+		{
+			if (target is Keeps.GameKeepDoor || target is Keeps.GameKeepComponent)
+			{
+				MessageToCaster("Your spell has no effect on the keep component!", eChatType.CT_SpellResisted);
+				return;
+			}
+			base.FinishSpellCast(target);
+		}
+
+		protected class BoltOnTargetAction : RegionAction
+		{
+			protected readonly GameLiving m_boltTarget;
+			protected readonly VampiirBoltSpellHandler m_handler;
+
+			public BoltOnTargetAction(GameLiving actionSource, GameLiving boltTarget, VampiirBoltSpellHandler spellHandler)
+				: base(actionSource)
+			{
+				if (boltTarget == null)
+					throw new ArgumentNullException("boltTarget");
+				if (spellHandler == null)
+					throw new ArgumentNullException("spellHandler");
+				m_boltTarget = boltTarget;
+				m_handler = spellHandler;
+			}
+
+			protected override void OnTick()
+			{
+				GameLiving target = m_boltTarget;
+				GameLiving caster = (GameLiving)m_actionSource;
+				if (target == null) return;
+				if (target.CurrentRegionID != caster.CurrentRegionID) return;
+				if (target.ObjectState != GameObject.eObjectState.Active) return;
+				if (!target.IsAlive) return;
+
+				if (target == null) return;
+				if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
+
+				int power = 0;
+
+				if (target is GameNPC || target.Mana > 0)
+				{
+					if (target is GameNPC) power = (int)Math.Round(((double)(target.Level) * (double)(m_handler.Spell.Value) * 2) / 100);
+					else power = (int)Math.Round((double)(target.MaxMana) * (((double)m_handler.Spell.Value) / 250));
+					if (target.Mana < power) power = target.Mana;
+					caster.Mana += power;
+					if (target is GamePlayer)
+					{
+						target.Mana -= power;
+						((GamePlayer)target).Out.SendMessage(caster.Name + " takes " + power + " power!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
+					}
+					if (target.Mana < 0) target.Mana = 0;
+					if (caster is GamePlayer)
+					{
+						((GamePlayer)caster).Out.SendMessage("You receive " + power + " power from " + target.Name + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+					}
+				}
+				else ((GamePlayer)caster).Out.SendMessage("You did not receive any power from " + target.Name + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, caster);
+			}
+		}
+
+		public VampiirBoltSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
