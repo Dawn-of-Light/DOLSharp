@@ -5431,6 +5431,60 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		}
 
 		/// <summary>
+		/// Adds a new Ability to the player
+		/// </summary>
+		/// <param name="ability"></param>
+		public void AddAbility(Ability ability)
+		{
+			AddAbility(ability, true);
+		}
+
+		/// <summary>
+		/// Adds a new Ability to the player
+		/// </summary>
+		/// <param name="ability"></param>
+		/// <param name="sendUpdates"></param>
+		public virtual void AddAbility(Ability ability, bool sendUpdates)
+		{
+			if (ability == null)
+				return;
+			lock (m_abilities.SyncRoot)
+			{
+				Ability oldability = (Ability)m_abilities[ability.KeyName];
+
+					if (oldability == null)
+					{
+						m_abilities[ability.KeyName] = ability;
+						ability.Activate(this, sendUpdates);
+					}
+					else if (oldability.Level < ability.Level)
+					{
+						oldability.Level = ability.Level;
+						oldability.Name = ability.Name;
+					}
+			}
+		}
+
+		/// <summary>
+		/// Removes the existing ability from the player
+		/// </summary>
+		/// <param name="abilityKeyName">The ability keyname to remove</param>
+		/// <returns>true if removed</returns>
+		public virtual bool RemoveAbility(string abilityKeyName)
+		{
+			Ability ability = null;
+			lock (m_abilities.SyncRoot)
+			{
+				ability = (Ability)m_abilities[abilityKeyName];
+				if (ability == null)
+					return false;
+				ability.Deactivate(this, true);
+				m_abilities.Remove(ability.KeyName);
+			}
+			return true;
+		}
+
+		/// <summary>
 		/// Checks if player has ability to use items of this type
 		/// </summary>
 		/// <param name="item"></param>
