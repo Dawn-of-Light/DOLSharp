@@ -63,22 +63,13 @@ namespace DOL.GS.ServerRules
 				return false;
 			}
 
-			if (attacker.Realm != 0 && defender.Realm != 0)
+			if (attacker.Realm != eRealm.None && defender.Realm != eRealm.None)
 			{
-				if (attacker is GamePlayer && ((GamePlayer)attacker).DuelTarget != defender)
-				{
-					// allow mobs to attack mobs
-					if (attacker.Realm == 0)
-						return true;
-
-					if(quiet == false) MessageToLiving(attacker, "You can not attack other players on this server!");
-					return false;
-				}
-			}
-
-			// mobs can't attack mobs
-			if(attacker.Realm == 0 && defender.Realm == 0)
+				if (attacker is GamePlayer && ((GamePlayer)attacker).DuelTarget == defender)
+					return true;
+				if (quiet == false) MessageToLiving(attacker, "You can not attack other players on this server!");
 				return false;
+			}
 
 			return true;
 		}
