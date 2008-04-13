@@ -52,7 +52,7 @@ namespace DOL.GS.Effects
 			}
 			m_tickTimer = new RegionTimer(target);
 			m_tickTimer.Callback = new RegionTimerCallback(PulseCallback);
-			m_tickTimer.Start(1000);
+			m_tickTimer.Start(1);
 		}
 
 		/// <summary>

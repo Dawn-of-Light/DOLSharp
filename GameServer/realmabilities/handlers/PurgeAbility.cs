@@ -86,6 +86,8 @@ namespace DOL.GS.RealmAbilities
 					player.DisableSkill(purge, 5);
 				}
 			}
+			if (removed)
+				player.Stealth(false);
 			return removed;
 		}
 
