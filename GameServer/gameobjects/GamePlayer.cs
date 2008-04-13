@@ -5272,12 +5272,12 @@ namespace DOL.GS
 						}
 
 						if (hitLocName != null)
-							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.HitsYour", ad.Attacker.GetName(0, true), hitLocName, ad.Damage, modmessage), eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
+							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.HitsYour", ad.Attacker.GetName(0, true), hitLocName, ad.Damage, modmessage), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 						else
-							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.HitsYou", ad.Attacker.IsAlive ? ad.Attacker.GetName(0, true) : "A dead enemy", ad.Damage, modmessage), eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
+							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.HitsYou", ad.Attacker.IsAlive ? ad.Attacker.GetName(0, true) : "A dead enemy", ad.Damage, modmessage), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 
 						if (ad.CriticalDamage > 0)
-							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.HitsYouCritical", ad.Attacker.GetName(0, true), ad.CriticalDamage), eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
+							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.HitsYouCritical", ad.Attacker.GetName(0, true), ad.CriticalDamage), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 
 						// decrease condition of hitted armor piece
 						if (ad.ArmorHitLocation != eArmorSlot.UNKNOWN)
@@ -12847,9 +12847,23 @@ namespace DOL.GS
 		public virtual bool IsCSAvailable(int idline, int skillindex, int index)
 		{
 			// TODO : this has to be reviewed. Original code has some problem with cross lines etc.
-			ChampSpec spec = ChampSpecMgr.GetAbilityFromIndex(idline, skillindex, index - 1);
-			if (spec != null) return HaveChampionSpell(spec.SpellID);
-			else return true;
+			// Andraste - reviewed by Vico
+			ChampSpec spec = null;
+			ChampSpec specA = null;
+			ChampSpec specB = null;
+			if (index == 1) return true;
+			else
+			{
+				spec = ChampSpecMgr.GetAbilityFromIndex(idline, skillindex, index - 1);
+				if (spec == null)
+				{
+					specA = ChampSpecMgr.GetAbilityFromIndex(idline, skillindex - 1, index - 1);
+					specB = ChampSpecMgr.GetAbilityFromIndex(idline, skillindex + 1, index - 1);
+					if ((specA != null && HaveChampionSpell(specA.SpellID)) || (specB != null && HaveChampionSpell(specB.SpellID))) return true;
+					else return false;
+				}
+				else return HaveChampionSpell(spec.SpellID);
+			}
 		}
 		#endregion
 

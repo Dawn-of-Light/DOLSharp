@@ -12,18 +12,14 @@ namespace DOL.GS.Effects
     /// </summary>
     public class RetributionOfTheFaithfulStunEffect : TimedEffect
     {
-
-
-        public RetributionOfTheFaithfulStunEffect()
-            : base(3000)
-        {
-            ;
-        }
+		public RetributionOfTheFaithfulStunEffect()
+			: base(3000)
+		{ }
 
         private GameLiving owner;
 
         public override void Start(GameLiving target)
-        {
+		{
             base.Start(target);
             owner = target;
             foreach (GamePlayer p in target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
@@ -121,14 +117,14 @@ namespace DOL.GS.Effects
             if (args.AttackData == null) return;
             if (!args.AttackData.IsMeleeAttack) return;
 			//FIXME: [WARN] this has been commented out, it should be handled somewhere
-            //if (args.AttackData.Attacker.HasCrowdControlImmunity) return; 
+			if (args.AttackData.Attacker.EffectList.GetOfType(typeof(ChargeEffect)) != null || args.AttackData.Attacker.TempProperties.getProperty("Charging", false))
+				return;
             if (WorldMgr.GetDistance(owner,args.AttackData.Attacker) > 300) return;
             if (Util.Chance(10))
             {
                 RetributionOfTheFaithfulStunEffect effect = new RetributionOfTheFaithfulStunEffect();
                 effect.Start(args.AttackData.Attacker);
             }
-    
         }
 
         public override string Name { get { return "Retribution Of The Faithful"; } }

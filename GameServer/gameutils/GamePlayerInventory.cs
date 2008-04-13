@@ -391,27 +391,30 @@ namespace DOL.GS
 					return valid;
 				}
 
-                if (valid && !Util.IsEmpty(fromItem.AllowedClasses))
-                {
-                    if (fromItem.AllowedClasses != "0")
-                    {
-                        valid = false;
-                        string[] allowedclasses = fromItem.AllowedClasses.Split(';');
-                        foreach (string allowed in allowedclasses)
-                        {
-                            if (m_player.CharacterClass.ID.ToString() == allowed
-                                || m_player.Client.Account.PrivLevel > 1)
-                            {
-                                valid = true;
-                                break;
-                            }
-                        }
-                        if (!valid)
-                        {
-                            m_player.Out.SendMessage("Your class cannot use this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        }
-                    }
-                }
+				//Andraste - Vico / fixing a bugexploit : when player switch from his char slot to an inventory slot, allowedclasses were not checked
+				bool check = false; if (toItem != null) check = true;
+				if (check) if (Util.IsEmpty(toItem.AllowedClasses)) check = false;
+				if (valid && (!Util.IsEmpty(fromItem.AllowedClasses) || check))
+				{
+					if ((fromItem.AllowedClasses != "0" || toItem.AllowedClasses != "0") && !((int)fromSlot >= 40 && (int)fromSlot <= 79 && (int)toSlot >= 40 && (int)toSlot <= 79))
+					{
+						valid = false;
+						string[] allowedclasses = fromItem.AllowedClasses.Split(';');
+						foreach (string allowed in allowedclasses)
+						{
+							if (m_player.CharacterClass.ID.ToString() == allowed
+								|| m_player.Client.Account.PrivLevel > 1)
+							{
+								valid = true;
+								break;
+							}
+						}
+						if (!valid)
+						{
+							m_player.Out.SendMessage("Your class cannot use this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+					}
+				}
 
 				if (valid == true)
 				{
@@ -795,7 +798,7 @@ namespace DOL.GS
 
 			m_player.Out.SendInventorySlotsUpdate(null);
 
-			return valid;		
+			return valid;
 		}
 		#endregion Move Item
 
