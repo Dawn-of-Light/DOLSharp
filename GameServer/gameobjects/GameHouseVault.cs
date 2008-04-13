@@ -92,6 +92,9 @@ namespace DOL.GS
 			if (!base.Interact(player) || CurrentHouse == null)
 				return false;
 
+			if (!player.InHouse)
+				return false;
+
 			if (!CanView(player))
 			{
 				player.Out.SendMessage("You don't have permission to view this vault!",

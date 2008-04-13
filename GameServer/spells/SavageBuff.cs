@@ -38,18 +38,6 @@ namespace DOL.GS.Spells
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			base.OnEffectStart(effect);
-
-			BlissfulIgnoranceEffect BlissfulIgnorance = (BlissfulIgnoranceEffect)m_caster.EffectList.GetOfType(typeof(BlissfulIgnoranceEffect));
-			if (BlissfulIgnorance == null)
-			{
-				int cost = 0;
-				if(m_spell.Power<0)
-					cost = (int)(m_caster.MaxHealth * Math.Abs(m_spell.Power) * 0.01);
-				else
-					cost = m_spell.Power;
-				
-				effect.Owner.ChangeHealth(effect.Owner, GameLiving.eHealthChangeType.Spell, -cost);
-			}
 			SendUpdates(effect.Owner);
 		}
 
@@ -62,6 +50,17 @@ namespace DOL.GS.Spells
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			base.OnEffectExpires(effect, noMessages);
+			BlissfulIgnoranceEffect BlissfulIgnorance = (BlissfulIgnoranceEffect)m_caster.EffectList.GetOfType(typeof(BlissfulIgnoranceEffect));
+			if (BlissfulIgnorance == null)
+			{
+				int cost = 0;
+				if (m_spell.Power < 0)
+					cost = (int)(m_caster.MaxHealth * Math.Abs(m_spell.Power) * 0.01);
+				else
+					cost = m_spell.Power;
+				if (effect.Owner.Health > cost)
+					effect.Owner.ChangeHealth(effect.Owner, GameLiving.eHealthChangeType.Spell, -cost);
+			}
 			SendUpdates(effect.Owner);
 			return 0;
 		}

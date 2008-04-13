@@ -58,12 +58,18 @@ namespace DOL.GS.Effects
 			target.IsStunned = true;
 			target.StopAttack();
 			target.StopCurrentSpellcast();
+			target.DisableTurning(true);
+			if (target is GamePlayer)
+				(target as GamePlayer).Out.SendUpdateMaxSpeed();
 		}
 
 		public override void Stop()
 		{
 			base.Stop();
 			m_owner.IsStunned = false;
+			m_owner.DisableTurning(false);
+			if (m_owner is GamePlayer)
+				(m_owner as GamePlayer).Out.SendUpdateMaxSpeed();
 		}
 
 		public override string Name { get { return "Desperate Bowman"; } }
