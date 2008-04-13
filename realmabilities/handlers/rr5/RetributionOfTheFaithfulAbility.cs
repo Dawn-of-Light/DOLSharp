@@ -19,8 +19,6 @@ namespace DOL.GS.RealmAbilities
 		{
 			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
 
-
-
 			GamePlayer player = living as GamePlayer;
 			if (player != null)
 			{
