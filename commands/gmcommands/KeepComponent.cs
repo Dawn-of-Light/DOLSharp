@@ -89,7 +89,7 @@ namespace DOL.GS.Commands
 							int keepid = 0;
 							try
 							{
-								keepid = Convert.ToInt32(args[2]);
+								keepid = Convert.ToInt32(args[3]);
 								myKeep = KeepMgr.getKeepByID(keepid);
 							}
 							catch
@@ -124,11 +124,15 @@ namespace DOL.GS.Commands
 						component.Model = INVISIBLE_MODEL;
 						component.Skin = skin;
 						component.Level = (byte)myKeep.Level;
-						component.Health = 100;
 						component.CurrentRegion = client.Player.CurrentRegion;
+						component.Health = component.MaxHealth;
 						component.ID = myKeep.KeepComponents.Count;
+						component.Keep.KeepComponents.Add(component);
 						component.SaveInDB = true;
 						component.AddToWorld();
+						component.SaveIntoDatabase();
+						client.Out.SendKeepInfo(myKeep);
+						client.Out.SendKeepComponentInfo(component);
 						client.Out.SendMessage("You have created a keep component", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					} break;
 				case "skin":
