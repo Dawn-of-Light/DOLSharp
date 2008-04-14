@@ -287,9 +287,24 @@ namespace DOL.GS.Housing
 		public int GetPlayerAccessLevel(GamePlayer player)
 		{
 			foreach (DBHouseCharsXPerms permissions in CharsPermissions)
-				if (permissions.Name == player.Name)
-					return permissions.PermLevel;
-			return 0;
+                if (permissions.Name == player.Name)
+                    return permissions.PermLevel;
+			
+			//if the player is not in the permissions check for its guild
+            if (player.Guild != null)
+            {
+                foreach (DBHouseCharsXPerms permissions in CharsPermissions)
+                    if (permissions.Name == player.GuildName)
+                        return permissions.PermLevel;
+            
+            }
+			
+            //at the end check if there are permissions for everybody
+            foreach (DBHouseCharsXPerms permissions in CharsPermissions)
+                if (permissions.Name == "All")
+                    return permissions.PermLevel;
+
+            return 0;
 		}
 
 		/// <summary>
@@ -612,7 +627,72 @@ namespace DOL.GS.Housing
 			GameServer.Database.AddNewObject(perm);
 			return true;
 		}
+		
+		public bool AddGuildToPerm(Guild g, ePermsTypes type, int lvl)
+        {
+            if (IsInPerm(g.Name, type, lvl))
+                return false;
+            DBHouseCharsXPerms perm = new DBHouseCharsXPerms();
+            perm.HouseNumber = HouseNumber;
+            perm.Type = (byte)type;
+            perm.Name = g.Name;
+            perm.PermLevel = lvl;
+            int slot = 0;
+            bool ok = false;
+            while (!ok)
+            {
+                ok = true;
+                foreach (DBHouseCharsXPerms pe in CharsPermissions)
+                {
+                    if (pe.Slot == slot)
+                    {
+                        ok = false;
+                        slot++;
+                        break;
+                    }
+                }
+            }
+            if (!ok)
+                return false;
+            perm.Slot = slot;
+            CharsPermissions.Add(perm);
+            GameServer.Database.AddNewObject(perm);
+            return true;
+        }
 
+        public bool AddAllToPerm(ePermsTypes type, int lvl)
+        {
+            string pname = "All";
+            if (IsInPerm(pname, type, lvl))
+                return false;
+            DBHouseCharsXPerms perm = new DBHouseCharsXPerms();
+            perm.HouseNumber = HouseNumber;
+            perm.Type = (byte)type;
+            perm.Name = pname;
+            perm.PermLevel = lvl;
+            int slot = 0;
+            bool ok = false;
+            while (!ok)
+            {
+                ok = true;
+                foreach (DBHouseCharsXPerms pe in CharsPermissions)
+                {
+                    if (pe.Slot == slot)
+                    {
+                        ok = false;
+                        slot++;
+                        break;
+                    }
+                }
+            }
+            if (!ok)
+                return false;
+            perm.Slot = slot;
+            CharsPermissions.Add(perm);
+            GameServer.Database.AddNewObject(perm);
+            return true;
+        }		
+		
 		/// <summary>
 		/// Used to get into a house
 		/// </summary>
