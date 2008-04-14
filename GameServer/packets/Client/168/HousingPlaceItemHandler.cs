@@ -233,6 +233,8 @@ namespace DOL.GS.PacketHandler.Client.v168
                     {
                         ProperRotation = 0;
                     }
+					if (orgitem.Object_Type == 50)
+                        ProperRotation = 360;
                     iitem.Rotation = ProperRotation;
 
 					iitem.Size = 100; //? dont know how this is defined. maybe DPS_AF or something.
