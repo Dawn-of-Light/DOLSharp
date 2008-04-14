@@ -80,6 +80,8 @@ namespace DOL.GS
 								horse.Size = npc.Size;
 								horse.Name = npc.Name;
 								horse.Level = npc.Level;
+                                if (npc.Name == "Gryphon" || npc.Name == "Dragon Fly" || npc.Name == "Ampheretere")
+                                 horse.Flags = (uint)eFlags.FLYING;
 								break;
 							}
 						}
