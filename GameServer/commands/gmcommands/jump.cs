@@ -18,48 +18,46 @@
  */
 using System;
 using DOL.GS.PacketHandler;
-//Jump script, created by Crystal!
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&jump", //command to handle
-		ePrivLevel.GM, //minimum privelege level
-		"Teleports a player or yourself to the specified location xp", //command description
-		//Usage
-        "Playername can be [me]:",
-		"/jump to <PlayerName>",
-		"/jump to <Name> <RealmID>",
-		"/jump to <x> <y> <z> [<RegionID>]",
-		"/jump <PlayerName> to <x> <y> <z>",
-		"/jump <PlayerName> to <x> <y> <z> [<RegionID>]",
-		"/jump <PlayerName> to <PlayerName>",
-		"/jump to GT",
-		"/jump rel <x> <y> <z>")]
+	[CmdAttribute("&jump",
+		ePrivLevel.GM,
+		"GMCommands.Jump.Description",
+		"GMCommands.Jump.Information",
+		"GMCommands.Jump.Usage.ToPlayerName",
+		"GMCommands.Jump.Usage.ToNameRealmID",
+		"GMCommands.Jump.Usage.ToXYZRegionID",
+		"GMCommands.Jump.Usage.PlayerNameToXYZ",
+		"GMCommands.Jump.Usage.PlayerNameToXYZRegID",
+		"GMCommands.Jump.Usage.PlayerNToPlayerN",
+		"GMCommands.Jump.Usage.ToGT",
+		"GMCommands.Jump.Usage.RelXYZ")]
 	public class JumpCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
-			if (args.Length == 3 && args[1] == "to" && (args[2] == "GT" || args[2] == "gt")) // /Jump to GT
+			#region Jump to GT
+			if (args.Length == 3 && args[1] == "to" && (args[2] == "GT" || args[2] == "gt"))
 			{
-				client.Player.MoveTo(client.Player.CurrentRegionID,
-									 client.Player.GroundTarget.X,
-									 client.Player.GroundTarget.Y,
-									 client.Player.GroundTarget.Z,
-									 client.Player.Heading);
+				client.Player.MoveTo(client.Player.CurrentRegionID, client.Player.GroundTarget.X, client.Player.GroundTarget.Y, client.Player.GroundTarget.Z, client.Player.Heading);
 				return;
 			}
-			if (args.Length == 3 && args[1] == "to") // /Jump to PlayerName
+			#endregion Jump to GT
+			#region Jump to PlayerName
+			if (args.Length == 3 && args[1] == "to")
 			{
 				GameClient clientc;
 				clientc = WorldMgr.GetClientByPlayerName(args[2], false, true);
 				if (clientc == null)
 				{
-					client.Out.SendMessage(args[2] + " cannot be found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Jump.CannotBeFound", args[2]), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 				if (CheckExpansion(client, clientc, clientc.Player.CurrentRegionID))
 				{
-					client.Out.SendMessage("/Jump to " + clientc.Player.CurrentRegion, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Jump.JumpToX", clientc.Player.CurrentRegion), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					if (clientc.Player.CurrentHouse != null)
 						clientc.Player.CurrentHouse.Enter(client.Player);
 					else
@@ -68,7 +66,9 @@ namespace DOL.GS.Commands
 				}
 				return;
 			}
-			else if (args.Length == 4 && args[1] == "to") // /Jump to Name Realm
+			#endregion Jump to PlayerName
+			#region Jump to Name Realm
+			else if (args.Length == 4 && args[1] == "to")
 			{
 				GameClient clientc;
 				clientc = WorldMgr.GetClientByPlayerName(args[2], false, true);
@@ -79,22 +79,22 @@ namespace DOL.GS.Commands
 					GameNPC[] npcs = WorldMgr.GetNPCsByName(args[2], (eRealm)realm);
 					if (npcs.Length > 0)
 					{
-						client.Out.SendMessage("/Jump to " + npcs[0].CurrentRegion.Description, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Jump.JumpToX", npcs[0].CurrentRegion.Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						client.Player.MoveTo(npcs[0].CurrentRegionID, npcs[0].X, npcs[0].Y, npcs[0].Z, npcs[0].Heading);
 						return;
 					}
 
-					client.Out.SendMessage(args[2] + " cannot be found in realm " + realm + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Jump.CannotBeFoundInRealm", args[2], realm), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 				if (CheckExpansion(client, clientc, clientc.Player.CurrentRegionID))
 				{
 					if (clientc.Player.InHouse)
 					{
-						client.Out.SendMessage("Cannot jump to someone inside a house", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Jump.CannotJumpToInsideHouse"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;
 					}
-					client.Out.SendMessage("/Jump to " + clientc.Player.CurrentRegion, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Jump.JumpToX", clientc.Player.CurrentRegion), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					if (clientc.Player.CurrentHouse != null)
 						clientc.Player.CurrentHouse.Enter(client.Player);
 					else
@@ -103,12 +103,16 @@ namespace DOL.GS.Commands
 				}
 				return;
 			}
-			else if (args.Length == 5 && args[1] == "to") // /Jump to X Y Z
+			#endregion Jump to Name Realm
+			#region Jump to X Y Z
+			else if (args.Length == 5 && args[1] == "to")
 			{
 				client.Player.MoveTo(client.Player.CurrentRegionID, Convert.ToInt32(args[2]), Convert.ToInt32(args[3]), Convert.ToInt32(args[4]), client.Player.Heading);
 				return;
 			}
-			else if (args.Length == 5 && args[1] == "rel") // /Jump rel +/-X +/-Y +/-Z
+			#endregion Jump to X Y Z
+			#region Jump rel +/-X +/-Y +/-Z
+			else if (args.Length == 5 && args[1] == "rel")
 			{
 				client.Player.MoveTo(client.Player.CurrentRegionID,
 									 client.Player.X + Convert.ToInt32(args[2]),
@@ -117,7 +121,9 @@ namespace DOL.GS.Commands
 									 client.Player.Heading);
 				return;
 			}
-			else if (args.Length == 6 && args[1] == "to") // /Jump to X Y Z RegionID
+			#endregion Jump rel +/-X +/-Y +/-Z
+			#region Jump to X Y Z RegionID
+			else if (args.Length == 6 && args[1] == "to")
 			{
 				if (CheckExpansion(client, client, (ushort)Convert.ToUInt16(args[5])))
 				{
@@ -126,25 +132,29 @@ namespace DOL.GS.Commands
 				}
 				return;
 			}
-			else if (args.Length == 6 && args[2] == "to") // /Jump PlayerName to X Y Z
+			#endregion Jump to X Y Z RegionID
+			#region Jump PlayerName to X Y Z
+			else if (args.Length == 6 && args[2] == "to")
 			{
 				GameClient clientc;
 				clientc = WorldMgr.GetClientByPlayerName(args[1], false, true);
 				if (clientc == null)
 				{
-					client.Out.SendMessage(args[1] + " is not in the game.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Jump.PlayerIsNotInGame", args[1]), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 				clientc.Player.MoveTo(clientc.Player.CurrentRegionID, Convert.ToInt32(args[3]), Convert.ToInt32(args[4]), Convert.ToInt32(args[5]), clientc.Player.Heading);
 				return;
 			}
-			else if (args.Length == 7 && args[2] == "to") // /Jump PlayerName to X Y Z RegionID
+			#endregion Jump PlayerName to X Y Z
+			#region Jump PlayerName to X Y Z RegionID
+			else if (args.Length == 7 && args[2] == "to")
 			{
 				GameClient clientc;
 				clientc = WorldMgr.GetClientByPlayerName(args[1], false, true);
 				if (clientc == null)
 				{
-					client.Out.SendMessage(args[1] + " is not in the game.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Jump.PlayerIsNotInGame", args[1]), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 				if (CheckExpansion(clientc, clientc, (ushort)Convert.ToUInt16(args[6])))
@@ -154,17 +164,19 @@ namespace DOL.GS.Commands
 				}
 				return;
 			}
-			else if (args.Length == 4 && args[2] == "to") // /Jump PlayerName to PlayerCible
+			#endregion Jump PlayerName to X Y Z RegionID
+			#region Jump PlayerName to PlayerCible
+			else if (args.Length == 4 && args[2] == "to")
 			{
 				GameClient clientc;
 				GameClient clientto;
 				clientc = WorldMgr.GetClientByPlayerName(args[1], false, true);
 				if (clientc == null)
 				{
-					client.Out.SendMessage(args[1] + " is not in the game.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Jump.PlayerIsNotInGame", args[1]), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
-				if (args[3] == "me") // /Jump PlayerName to me
+				if (args[3] == "me")
 				{
 					clientto = client;
 				}
@@ -175,7 +187,7 @@ namespace DOL.GS.Commands
 
 				if (clientto == null)
 				{
-					client.Out.SendMessage(args[3] + " is not in the game.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Jump.PlayerIsNotInGame", args[3]), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 				else
@@ -191,20 +203,14 @@ namespace DOL.GS.Commands
 					return;
 				}
 			}
+			#endregion Jump PlayerName to PlayerCible
+			#region DisplaySyntax
 			else
 			{
-				client.Out.SendMessage("Usage : /Jump to <PlayerName>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("Usage : /Jump to <Name> <RealmID>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("Usage : /Jump to X Y Z", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("Usage : /Jump to X Y Z [RegionID]", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("Usage : /Jump rel [-]X [-]Y [-]Z", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("Usage : /Jump to GT", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("Usage : /Jump PlayerName to PlayerCible", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("Usage : /Jump PlayerName to X Y Z [RegionID]", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				//client.Out.SendMessage("Usage : /Jump RegionName|RegionID", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("PlayerName can be [me].", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplaySyntax(client);
 				return;
 			}
+			#endregion DisplaySyntax
 		}
 
 		public bool CheckExpansion(GameClient clientJumper, GameClient clientJumpee, ushort RegionID)
@@ -212,9 +218,9 @@ namespace DOL.GS.Commands
 			Region reg = WorldMgr.GetRegion(RegionID);
 			if (reg != null && reg.Expansion > (int)clientJumpee.ClientType)
 			{
-				clientJumper.Out.SendMessage(clientJumpee.Player.Name + " cannot jump to Destination region (" + reg.Description + ") because it is not supported by his/her client type.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				clientJumper.Out.SendMessage(LanguageMgr.GetTranslation(clientJumper, "GMCommands.Jump.CheckExpansion.CannotJump", clientJumpee.Player.Name, reg.Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				if (clientJumper != clientJumpee)
-					clientJumpee.Out.SendMessage(clientJumper.Player.Name + " tried to jump you to Destination region (" + reg.Description + ") but it is not supported by your client type.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					clientJumpee.Out.SendMessage(LanguageMgr.GetTranslation(clientJumpee, "GMCommands.Jump.CheckExpansion.ClientNoSup", clientJumper.Player.Name, reg.Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			return true;

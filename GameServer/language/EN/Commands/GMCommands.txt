@@ -137,3 +137,168 @@ GMCommands.Harm.InvalidTarget:				You have not selected a valid target
 GMCommands.Heal.Description:				Heals your target (health, endu, mana)
 GMCommands.Heal.Usage:						/heal
 
+
+# /item Command
+GMCommands.Item.Description:				Various Item commands!
+GMCommands.Item.Information:				Slot numbers are optional, if not included the default is 79 (the last backpack slot). Names with spaces are given in quotes "<name>".
+GMCommands.Item.Usage.Blank:				'/item blank' - Create a blank item
+GMCommands.Item.Usage.Info:					'/item info <ItemTemplateName>' - Get Info on a ItemTemplate
+GMCommands.Item.Usage.Create:				'/item create <ItemTemplateName> [count]' - Create a new item from a template
+GMCommands.Item.Usage.Count:				'/item count <Amount> [slot #]' - Change item count
+GMCommands.Item.Usage.MaxCount:				'/item maxcount <Amount> [slot #]' - Change max amount allowed in one slot
+GMCommands.Item.Usage.PackSize:				'/item packsize <Amount> [slot #]' - Change amount of items sold at once
+GMCommands.Item.Usage.Model:				'/item model <ModelID> [slot #]' - Change item model
+GMCommands.Item.Usage.Extension:			'/item extension <ExtensionID> [slot #]' - Change item extension
+GMCommands.Item.Usage.Color:				'/item color <ColorID> [slot #]' - Change item color
+GMCommands.Item.Usage.Effect:				'/item effect <EffectID> [slot #]' - Change item effect
+GMCommands.Item.Usage.Name:					'/item name <NameID> [slot #]' - Change item name
+GMCommands.Item.Usage.CrafterName:			'/item craftername <CrafterNameID> [slot #]' - Change item crafter name
+GMCommands.Item.Usage.Type:					'/item type <TypeID> [slot #]' - Change item type
+GMCommands.Item.Usage.Object:				'/item object <ObjectID> [slot #]' - Change object type
+GMCommands.Item.Usage.Hand:					'/item hand <HandID> [slot #]' - Change item hand
+GMCommands.Item.Usage.DamageType:			'/item damagetype <DamageTypeID> [slot #]' - Change item damage type
+GMCommands.Item.Usage.Emblem:				'/item emblem <EmblemID> [slot #]' - Change item emblem
+GMCommands.Item.Usage.Price:				'/item price <platinum> <gold> <silver> <copper> [slot #]' - Change the price of an item
+GMCommands.Item.Usage.Condition:			'/item condition <con> <maxCon> [slot #]' - Change the condition of an item
+GMCommands.Item.Usage.Quality:				'/item quality <qua> [slot #]' - Change the quality of an item
+GMCommands.Item.Usage.Durability:			'/item durability <dur> <maxDur> [slot #]' - Change the durability of an item
+GMCommands.Item.Usage.isPickable:			'/item ispickable <true|false> [slot #]' - Sets whether or not an item can be picked up
+GMCommands.Item.Usage.isDropable:			'/item isdropable <true|false> [slot #]' - Sets whether or not an item can be dropped
+GMCommands.Item.Usage.IsTradable:			'/item istradable <true|false> [slot #]' - Sets whether or not an item can be traded
+GMCommands.Item.Usage.IsStackable:			'/item isstackable <true|false> [slot #]' - Sets whether or not an item is stackable
+GMCommands.Item.Usage.CanDropAsLoot:		'/item candropasloot <true|false> [slot #]' - Sets whether or not an item can be looted
+GMCommands.Item.Usage.Bonus:				'/item bonus <bonus> [slot #]' - Sets the item bonus
+GMCommands.Item.Usage.mBonus:				'/item mbonus <num> <BonusType> <value> [slot #]' - Sets the item magical bonus (num 0 = ExtraBonus)
+GMCommands.Item.Usage.Weight:				'/item weight <weight> [slot #]' - Sets the item weight
+GMCommands.Item.Usage.DPS_AF:				'/item dps_af <NewDPS_AF> [slot #]' - Change item DPS_AF
+GMCommands.Item.Usage.SPD_ABS:				'/item spd_abs <NewSPD_ABS> [slot #]' - Change item SPD_ABS
+GMCommands.Item.Usage.Material:				'/item material <Material> <MaterialLevel> [slot #]' - Change item material
+GMCommands.Item.Usage.Scroll:				'/items scroll <ArtifactID> <PageNumber>' - Create an artifact scroll
+GMCommands.Item.Usage.Spell:				'/item spell <Charges> <MaxCharges> <SpellID> [slot #]' - Change item spell charges
+GMCommands.Item.Usage.Proc:					'/item proc <SpellID> [slot #]' - Change item proc
+GMCommands.Item.Usage.Poison:				'/item poison <Charges> <MaxCharges> <SpellID> [slot #]' - Change item poison
+GMCommands.Item.Usage.Realm:				'/item realm <num> [slot #]' - Change items realm
+GMCommands.Item.Usage.SaveTemplate:			'/item savetemplate <TemplateID> [slot #]' - Create a new template
+GMCommands.Item.Usage.TemplateID:			'/item templateid <TemplateID> [slot #]' - Change an items template ID
+GMCommands.Item.Usage.FindID:				'/item findid <part_of_id>'
+GMCommands.Item.Usage.FindName:				'/item findname <part_of_name>'
+GMCommands.Item.Blank.ItemCreated:			Blank item created in first free backpack slot.
+GMCommands.Item.Blank.CreationError:		Error in item creation.
+GMCommands.Item.Scroll.NotFound:			Scroll page {0} for artifact {1} could not be found.
+GMCommands.Item.Scroll.Created:				Scroll {0} created.
+GMCommands.Item.Create.NotFound:			ItemTemplate with id {0} could not be found!
+GMCommands.Item.Create.Created:				Item created: Level={0}, Name={1}, Count={2}
+GMCommands.Item.Count.NoItemInSlot:			No item in slot {0}!
+GMCommands.Item.Count.NotStackable:			{0} is not stackable.
+GMCommands.Item.Info.ItemTemplateUnknown:	ItemTemplate with ID={0} is unknown!
+GMCommands.Item.Info.Informations:			Item {0} Informations
+GMCommands.Item.mBonus.NonSetBonusNumber:	Not set bonus number!
+GMCommands.Item.mBonus.TypeShouldBeInRange:	Bonus type should be in range from 0 to {0}.
+GMCommands.Item.mBonus.NonSetBonusType:		Not set bonus type!
+GMCommands.Item.mBonus.NotSetBonusValue:	Not set bonus value!
+GMCommands.Item.mBonus.UnknownBonusNumber:	Unknown bonus number: {0}
+GMCommands.Item.SaveTemplate.ItemSaved:		The ItemTemplate {0} was successfully saved.
+GMCommands.Item.FindID.MatchingIDsForX:		Matching ID's for {0} count {1}.
+GMCommands.Item.FindName.MatchingNamesForX:	Matching Names for {0} count {1}.
+
+
+# /jump Command
+GMCommands.Jump.Description:				Teleports a player or yourself to the specified location xp
+GMCommands.Jump.Information:				Playername can be [me]:
+GMCommands.Jump.Usage.ToPlayerName:			/jump to <PlayerName>
+GMCommands.Jump.Usage.ToNameRealmID:		/jump to <Name> <RealmID>
+GMCommands.Jump.Usage.ToXYZRegionID:		/jump to <x> <y> <z> [<RegionID>]
+GMCommands.Jump.Usage.PlayerNameToXYZ:		/jump <PlayerName> to <x> <y> <z>
+GMCommands.Jump.Usage.PlayerNameToXYZRegID:	/jump <PlayerName> to <x> <y> <z> [<RegionID>]
+GMCommands.Jump.Usage.PlayerNToPlayerN:		/jump <PlayerName> to <PlayerName>
+GMCommands.Jump.Usage.ToGT:					/jump to GT
+GMCommands.Jump.Usage.RelXYZ:				/jump rel <x> <y> <z>
+GMCommands.Jump.CannotBeFound:				{0} cannot be found.
+GMCommands.Jump.JumpToX:					/Jump to {0}.
+GMCommands.Jump.CannotBeFoundInRealm:		{0} cannot be found in realm {1}.
+GMCommands.Jump.CannotJumpToInsideHouse:	Cannot jump to someone inside a house.
+GMCommands.Jump.PlayerIsNotInGame:			{0} is not in the game.
+GMCommands.Jump.CheckExpansion.CannotJump:	{0} cannot jump to Destination region ({1}) because it is not supported by his/her client type.
+GMCommands.Jump.CheckExpansion.ClientNoSup:	{0} tried to jump you to Destination region ({1}) but it is not supported by your client type.
+		
+
+# /keep Command
+GMCommands.Keep.Description:				Various keep creation commands!
+GMCommands.Keep.Usage.FastCreate:			'/keep fastcreate <type> <id> <name>' To create a keep with base template
+GMCommands.Keep.Usage.FastCreate.Info:		'/keep fastcreate ' To show all template available in fast create
+GMCommands.Keep.Usage.Create:				'/keep create <keepid> <baselevel> <radius (set to 0 for default)> <name>' To create a keep
+GMCommands.Keep.Usage.TowerCreate:			'/keep towercreate <keepid> <baselevel> <name>' To create a tower
+GMCommands.Keep.Usage.Remove:				'/keep remove' To remove a keep
+GMCommands.Keep.Usage.Name:					'/keep name <Name>' To change name
+GMCommands.Keep.Usage.KeepID:				'/keep keepid <keepID>' To assign keepid to keep
+GMCommands.Keep.Usage.Level:				'/keep level <level>' To change level of keep
+GMCommands.Keep.Usage.BaseLevel:			'/keep baselevel <level>' To change base level of keep
+# GMCommands.Keep.Usage.MoveHere:			'/keep movehere' To move keep to player position
+# GMCommands.Keep.Usage.AddComponent:		'/keep addcomponent <compx> <compy> <comphead> <skin> <height>' To add component to current keep
+GMCommands.Keep.Usage.Save:					'/keep save' To save keep into DB
+GMCommands.Keep.Usage.AddTeleporter:		'/keep addteleporter' To create a teleporter stone
+GMCommands.Keep.Usage.AddBanner:			'/keep addbanner <realm|guild>' To create a banner
+GMCommands.Keep.Usage.Realm:				'/keep realm <newrealm>' To change the realm of a keep
+GMCommands.Keep.Usage.Radius:				'/keep radius <newRadius (set to 0 for default)>' To change the radius of a keep
+GMCommands.Keep.FastCreate.TypeOfKeep:		Type of keep:
+GMCommands.Keep.FastCreate.CompCreated:		CompID={0}; KeepID={1}
+GMCommands.Keep.FastCreate.KeepCreated:		You have created a keep.
+GMCommands.Keep.TowerCreate.InvalidKeepID:	Invalid entry for KeepID!
+GMCommands.Keep.TowerCreate.KeepIDExists:	KeepID {0} already exists!
+GMCommands.Keep.TowerCreate.WrongKeepID:	Wrong KeepID ({0}): a tower KeepID must be higher than 255!
+GMCommands.Keep.TowerCreate.InvalidBaseLev:	Invalid entry for BaseLevel!
+GMCommands.Keep.TowerCreate.CreatedSaved:	Tower created and saved at your location!
+GMCommands.Keep.Remove.YourNotInAKeepArea:	Your not in a keep area!
+GMCommands.Keep.Remove.KeepUnloaded:		Keep Unloaded!
+GMCommands.Keep.Remove.MustCreateKeepFirst:	You must create a keep first.
+GMCommands.Keep.Remove.YouChangeKeepName:	You change the name of the current keep to {0}.
+GMCommands.Keep.Level.YouChangeKeepLevel:	You change the level of the current keep to {0}.
+GMCommands.Keep.BaseLevel.YouChangeBaseLev:	You change the base level of the current keep to 
+GMCommands.Keep.Realm.YouChangeKeepRealm:	You change the realm of the current keep to 
+GMCommands.Keep.Radius.YouChangeKeepRadius:	You change the radius of the current keep to 
+GMCommands.Keep.Save.KeepSavedInDatabase:	Keep saved in database.
+GMCommands.Keep.AddTeleport.StoneAdded:		Teleport Stone added!
+
+
+# /keepcomponent Command
+GMCommands.KeepComponents.Description:		Various keep component creation commands!
+GMCommands.KeepComponents.Usage.Create.TID:	'/keepcomponent create <type> <keepid>' To create a keep component.
+GMCommands.KeepComponents.Usage.Create.T:	'/keepcomponent create <type>' To create a keep component assign to nearest keep.
+GMCommands.KeepComponents.Usage.Skin:		'/keepcomponent skin <skin>' to change the skin.
+GMCommands.KeepComponents.Usage.Delete:		'/keepcomponent delete' to delete the component.
+GMCommands.KeepComponents.Create.KCCreated:	You have created a keep component.
+GMCommands.KeepComponents.Skin.YChangeSkin:	You change the skin of current keep component.
+GMCommands.KeepComponents.Delete.YDeleteKC:	You delete the current component.
+
+
+# /keepguard Command
+GMCommands.KeepGuard.Description:			Various keep guard commands!
+GMCommands.KeepGuard.Information:			Use '/mob' command if you want to change other param of guard.
+GMCommands.KeepGuard.Usage.Create:			'/keepguard create <lord|fighter|archer|healer|stealther|caster|hastener|mission|patrol> <static(optional for archer and caster)>'.
+GMCommands.KeepGuard.Usage.Position.Add:	'/keepguard position add <height(optional)>'.
+GMCommands.KeepGuard.Usage.Position.Remove:	'/keepguard position remove'.
+GMCommands.KeepGuard.Usage.Path.Create:		'/keepguard path create'.
+GMCommands.KeepGuard.Usage.Path.Add:		'/keepguard path add'.
+GMCommands.KeepGuard.Usage.Path.Save:		'/keepguard path save'.
+GMCommands.KeepGuard.Create.NoKCompTarget:	You need to target a keep component to create a patrol!
+GMCommands.KeepGuard.Create.GuardAdded:		Guard added!
+GMCommands.KeepGuard.Position.PAlreadyAss:	You already have a position assigned for height {0}, remove first!
+GMCommands.KeepGuard.Position.GuardPAdded:	Guard position added
+GMCommands.KeepGuard.Position.TargetGuard:	Target a Guard first!
+GMCommands.KeepGuard.Position.GuardRemoved:	Guard position removed!
+GMCommands.KeepGuard.Path.CreationStarted:	Path creation started! You can add new pathpoints via '/keepguard path add' now!
+GMCommands.KeepGuard.Path.NoPathCreatedYet:	No path created yet! Use '/keepguard path create' first!
+GMCommands.KeepGuard.Path.NoValidSpLimit:	No valid speedlimit '{0}'!
+GMCommands.KeepGuard.Path.PPAdded:			PathPoint added. Current PathLength = {0}.
+GMCommands.KeepGuard.Path.TargPatrolGuard:	Target a patrol guard first!
+GMCommands.KeepGuard.Path.Saved:			Path saved
+
+
+# /kick Command
+GMCommands.Kick.Description:				Kicks the player offline of whom you select.
+GMCommands.Kick.Usage:						'/kick <PlayerName>' To kick the player.
+GMCommands.Kick.NoPlayerOnLine:				No one with that name is online to Kick!
+GMCommands.Kick.RemovedFromServer:			You have been removed from the server!
+GMCommands.Kick.RemovedFromServerByGM:		You have been removed from the server by GM {0}!
+
+

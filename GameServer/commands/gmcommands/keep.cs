@@ -24,29 +24,30 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
 	[CmdAttribute(
-		"&keep", //command to handle
-		ePrivLevel.GM, //minimum privelege level
-		"Various keep creation commands!", //command description
-		"'/keep fastcreate <type> <id> <name>' to create a keep with base template",
-		"'/keep fastcreate ' to show all template available in fast create",
-		"'/keep create <keepid> <baselevel> <radius (set to 0 for default)> <name>' to create a keep",
-	   "'/keep towercreate <keepid> <baselevel> <name>' to create a tower",
-		"'/keep remove'",
-		"'/keep name <Name>' to change name",
-		"'/keep keepid <keepID>' to assign keepid to keep",
-		"'/keep level <level>' to change level of keep",
-		"'/keep baselevel <level>' to change base level of keep",
-		//"'/keep movehere' to move keep to player position",
-		//"'/keep addcomponent <compx> <compy> <comphead> <skin> <height>' to add component to current keep",
-		"'/keep save' to save keep into DB",
-		"'/keep addteleporter' to create a teleporter stone",
-		"'/keep addbanner <realm|guild>' to create a banner",
-		"'/keep realm <newrealm>'",
-		"'/keep radius <newRadius (set to 0 for default)>' to change the radius of a keep")]
+		"&keep",
+		ePrivLevel.GM,
+		"GMCommands.Keep.Description",
+		"GMCommands.Keep.Usage.FastCreate",
+		"GMCommands.Keep.Usage.FastCreate.Info",
+		"GMCommands.Keep.Usage.Create",
+		"GMCommands.Keep.Usage.TowerCreate",
+		"GMCommands.Keep.Usage.Remove",
+		"GMCommands.Keep.Usage.Name",
+		"GMCommands.Keep.Usage.KeepID",
+		"GMCommands.Keep.Usage.Level",
+		"GMCommands.Keep.Usage.BaseLevel",
+		//"GMCommands.Keep.Usage.MoveHere",
+		//"GMCommands.Keep.Usage.AddComponent",
+		"GMCommands.Keep.Usage.Save",
+		"GMCommands.Keep.Usage.AddTeleporter",
+		"GMCommands.Keep.Usage.AddBanner",
+		"GMCommands.Keep.Usage.Realm",
+		"GMCommands.Keep.Usage.Radius")]
 	public class KeepCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		protected string TEMP_KEEP_LAST = "TEMP_KEEP_LAST";
@@ -91,27 +92,33 @@ namespace DOL.GS.Commands
 				DisplaySyntax(client);
 				return;
 			}
+
 			AbstractGameKeep myKeep = (AbstractGameKeep)client.Player.TempProperties.getObjectProperty(TEMP_KEEP_LAST, null);
 			if (myKeep == null) myKeep = KeepMgr.getKeepCloseToSpot(client.Player.CurrentRegionID, client.Player, 10000);
+			
 			switch (args[1])
 			{
-				#region fastcreate
+				#region FastCreate
 				case "fastcreate":
 					{
+						#region DisplayTemplates
 						if (args.Length < 5)
 						{
-							DisplayMessage(client, "type of keep :");
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.FastCreate.TypeOfKeep"));
 							int i = 0;
 							foreach (string str in Enum.GetNames(typeof(eKeepTypes)))
 							{
-								DisplayMessage(client, "#" + i + " : " + str);
+								DisplayMessage(client, "#" + i + ": " + str);
 								i++;
 							}
 							return;
 						}
+						#endregion DisplayTemplates
+
 						int keepType = 0;
 						int keepID = 0;
 						string keepName = "New Keep";
+
 						try
 						{
 							keepType = Convert.ToInt32(args[2]);
@@ -123,6 +130,7 @@ namespace DOL.GS.Commands
 							DisplaySyntax(client);
 							return;
 						}
+
 						GameKeep keep = new GameKeep();
 						keep.DBKeep = new DBKeep();
 						keep.Name = keepName;
@@ -133,10 +141,12 @@ namespace DOL.GS.Commands
 						keep.Y = client.Player.Y;
 						keep.Z = client.Player.Z;
 						keep.Heading = client.Player.Heading;
-						//todo add keep component to list in keep classB
+						// TODO: Add keep component to list in keep classB
 						GameKeepComponent keepComp = null;
+						
 						switch ((eKeepTypes)keepType)
 						{
+							#region DunCrauchonBledmeerFasteCaerBenowyc
 							case eKeepTypes.DunCrauchonBledmeerFasteCaerBenowyc:
 								{
 									keepComp = new GameKeepComponent();
@@ -202,7 +212,10 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(20, 14, 2, 9, 1, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion DunCrauchonBledmeerFasteCaerBenowyc
+							#region DunCrimthainnNottmoorFasteCaerBerkstead
 							case eKeepTypes.DunCrimthainnNottmoorFasteCaerBerkstead:
 								{
 									keepComp = new GameKeepComponent();
@@ -265,7 +278,10 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(19, 13, 249, 6, 1, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion DunCrimthainnNottmoorFasteCaerBerkstead
+							#region DunBolgHlidskialfFasteCaerErasleigh
 							case eKeepTypes.DunBolgHlidskialfFasteCaerErasleigh:
 								{
 									keepComp = new GameKeepComponent();
@@ -337,7 +353,10 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(22, 20, 249, 6, 0, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion DunBolgHlidskialfFasteCaerErasleigh
+							#region DunnGedGlenlockFasteCaerBoldiam
 							case eKeepTypes.DunnGedGlenlockFasteCaerBoldiam:
 								{
 									keepComp = new GameKeepComponent();
@@ -409,7 +428,10 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(22, 20, 249, 2, 0, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion DunnGedGlenlockFasteCaerBoldiam
+							#region DundaBehnnBlendrakeFasteCaerSursbrooke
 							case eKeepTypes.DundaBehnnBlendrakeFasteCaerSursbrooke:
 								{
 									keepComp = new GameKeepComponent();
@@ -483,7 +505,10 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(22, 17, 6, 250, 3, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion DundaBehnnBlendrakeFasteCaerSursbrooke
+							#region DunScathaigFensalirFasteCaerRenaris
 							case eKeepTypes.DunScathaigFensalirFasteCaerRenaris:
 								{
 									keepComp = new GameKeepComponent();
@@ -555,7 +580,10 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(22, 18, 252, 6, 1, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion DunScathaigFensalirFasteCaerRenaris
+							#region DunAilinneArvakrFasteCaerHurbury
 							case eKeepTypes.DunAilinneArvakrFasteCaerHurbury:
 								{
 									keepComp = new GameKeepComponent();
@@ -639,7 +667,10 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(26, 14, 249, 4, 0, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion DunAilinneArvakrFasteCaerHurbury
+							#region FortBrolorn
 							case eKeepTypes.FortBrolorn:
 								{
 									keepComp = new GameKeepComponent();
@@ -690,7 +721,10 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(15, 19, 1, 11, 2, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion FortBrolorn
+							#region BG1_4
 							case eKeepTypes.BG1_4:
 								{
 									keepComp = new GameKeepComponent();
@@ -744,7 +778,10 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(16, 9, 0, 3, 2, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion BG1_4
+							#region ClaimBG5_9
 							case eKeepTypes.ClaimBG5_9:
 								{
 									keepComp = new GameKeepComponent();
@@ -795,7 +832,10 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(15, 19, 255, 249, 0, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion ClaimBG5_9
+							#region BG5_9
 							case eKeepTypes.BG5_9:
 								{
 									keepComp = new GameKeepComponent();
@@ -849,7 +889,10 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(16, 9, 0, 3, 2, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion BG5_9
+							#region CaerClaret
 							case eKeepTypes.CaerClaret:
 								{
 									keepComp = new GameKeepComponent();
@@ -885,7 +928,10 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(10, 9, 3, 4, 2, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion CaerClaret
+							#region BG10_14
 							case eKeepTypes.BG10_14:
 								{
 									keepComp = new GameKeepComponent();
@@ -939,7 +985,10 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(16, 9, 0, 3, 2, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion BG10_14
+							#region CKBG15_19
 							case eKeepTypes.CKBG15_19:
 								{
 									keepComp = new GameKeepComponent();
@@ -1002,7 +1051,10 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(19, 9, 250, 000, 1, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion CKBG15_19
+							#region BG15_19
 							case eKeepTypes.BG15_19:
 								{
 									keepComp = new GameKeepComponent();
@@ -1056,7 +1108,10 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(16, 9, 000, 003, 2, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion BG15_19
+							#region CKBG20_24
 							case eKeepTypes.CKBG20_24:
 								{
 									keepComp = new GameKeepComponent();
@@ -1125,7 +1180,10 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(21, 10, 253, 005, 0, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion CKBG20_24
+							#region BG20_24
 							case eKeepTypes.BG20_24:
 								{
 									keepComp = new GameKeepComponent();
@@ -1179,7 +1237,10 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(16, 9, 000, 003, 2, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion BG20_24
+							#region CKBG25_29
 							case eKeepTypes.CKBG25_29:
 								{
 									keepComp = new GameKeepComponent();
@@ -1248,7 +1309,10 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(21, 10, 006, 253, 2, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion CKBG25_29
+							#region BG25_29
 							case eKeepTypes.BG25_29:
 								{
 									keepComp = new GameKeepComponent();
@@ -1302,7 +1366,10 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(16, 9, 000, 003, 2, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion BG25_29
+							#region CKBG30_34
 							case eKeepTypes.CKBG30_34:
 								{
 									keepComp = new GameKeepComponent();
@@ -1368,7 +1435,10 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(20, 10, 250, 004, 0, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion CKBG30_34
+							#region BG30_34
 							case eKeepTypes.BG30_34:
 								{
 									keepComp = new GameKeepComponent();
@@ -1422,7 +1492,10 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(16, 9, 000, 003, 2, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion BG30_34
+							#region CKBG35_39
 							case eKeepTypes.CKBG35_39:
 								{
 									keepComp = new GameKeepComponent();
@@ -1491,7 +1564,10 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(21, 7, 000, 009, 2, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion CKBG35_39
+							#region BG35_39
 							case eKeepTypes.BG35_39:
 								{
 									keepComp = new GameKeepComponent();
@@ -1545,13 +1621,19 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(16, 9, 000, 003, 2, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion BG35_39
+							#region TBG35_39
 							case eKeepTypes.TBG35_39:
 								{
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(0, 11, 253, 004, 0, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion TBG35_39
+							#region TestCKBG40_44
 							case eKeepTypes.TestCKBG40_44:
 								{
 									keepComp = new GameKeepComponent();
@@ -1631,7 +1713,10 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(24, 10, 254, 252, 3, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion TestCKBG40_44
+							#region TestBG40_44
 							case eKeepTypes.TestBG40_44:
 								{
 									keepComp = new GameKeepComponent();
@@ -1685,13 +1770,19 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(16, 9, 000, 003, 2, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion TestBG40_44
+							#region TestTBG40_44
 							case eKeepTypes.TestTBG40_44:
 								{
 									keep.KeepComponents.Add(keepComp);
 									keepComp.LoadFromDatabase(new DBKeepComponent(0, 11, 253, 004, 0, 0, 100, keep.KeepID), keep);
 									keepComp = new GameKeepComponent();
-								} break;
+									break;
+								}
+							#endregion TestTBG40_44
+							#region CKBG40_44
 							case eKeepTypes.CKBG40_44:
 								{
 									keepComp = new GameKeepComponent();
@@ -1769,7 +1860,10 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(24, 10, 254, 252, 3, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion CKBG40_44
+							#region BG40_44
 							case eKeepTypes.BG40_44:
 								{
 									keepComp = new GameKeepComponent();
@@ -1823,25 +1917,32 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(16, 9, 000, 003, 2, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion BG40_44
+							#region TBG40_44
 							case eKeepTypes.TBG40_44:
 								{
 									keepComp = new GameKeepComponent();
 									keepComp.LoadFromDatabase(new DBKeepComponent(0, 11, 253, 004, 0, 0, 100, keep.KeepID), keep);
 									keep.KeepComponents.Add(keepComp);
-								} break;
+									break;
+								}
+							#endregion TBG40_44
+							#region Default
 							default:
 								DisplayMessage(client, "Wrong type of keep");
 								return;
+							#endregion Default
 						}
+
 						client.Player.TempProperties.setProperty(TEMP_KEEP_LAST, keep);
 						foreach (GameKeepComponent comp in keep.KeepComponents)
 						{
 							if (comp.InternalID != null)
-								DisplayMessage(client, "CompID=" + comp.InternalID + ";KeepID = " + comp.Keep.KeepID);
+								DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.FastCreate.CompCreated", comp.InternalID, comp.Keep.KeepID));
 						}
-						DisplayMessage(client, "You have created a keep.");
-						//send the creation packets
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.FastCreate.KeepCreated"));
 						foreach (GameClient c in WorldMgr.GetClientsOfRegion(client.Player.CurrentRegionID))
 						{
 							c.Out.SendKeepInfo(keep);
@@ -1850,8 +1951,10 @@ namespace DOL.GS.Commands
 								c.Out.SendKeepComponentInfo(keepComponent);
 							}
 						}
-					} break;
-				#endregion
+						break;
+					}
+				#endregion FastCreate
+				#region TowerCreate
 				case "towercreate":
 					{
 						if (args.Length < 5)
@@ -1863,13 +1966,13 @@ namespace DOL.GS.Commands
 						int keepid = -1;
 						if (!int.TryParse(args[2], out keepid))
 						{
-							DisplayMessage(client, "Invalid entry for KeepID!");
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.TowerCreate.InvalidKeepID"));
 							return;
 						}
 
 						if (KeepMgr.getKeepByID(keepid) != null)
 						{
-							DisplayMessage(client, "KeepID {0} already exists!", keepid);
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.TowerCreate.KeepIDExists", keepid));
 							return;
 						}
 
@@ -1878,14 +1981,14 @@ namespace DOL.GS.Commands
 						// We must check that the client is not trying to create a tower with a lower KeepID
 						if ((keepid >> 8) == 0)
 						{
-							DisplayMessage(client, "Wrong KeepID ({0}) : a tower KeepID must be higher than 255 !", keepid);
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.TowerCreate.WrongKeepID", keepid));
 							return;
 						}
 
 						byte baseLevel = 50;
 						if (!byte.TryParse(args[3], out baseLevel))
 						{
-							DisplayMessage(client, "Invalid entry for BaseLevel!");
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.TowerCreate.InvalidBaseLev"));
 							return;
 						}
 
@@ -1907,7 +2010,7 @@ namespace DOL.GS.Commands
 						GameKeepTower k = new GameKeepTower();
 						k.Load(keep);
 						new GameKeepComponent().LoadFromDatabase(towerComponent);
-						DisplayMessage(client, "Tower created and saved at your location!");
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.TowerCreate.CreatedSaved"));
 						//send the creation packets
 						foreach (GameClient c in WorldMgr.GetClientsOfRegion(client.Player.CurrentRegionID))
 						{
@@ -1919,6 +2022,8 @@ namespace DOL.GS.Commands
 						}
 						break;
 					}
+				#endregion TowerCreate
+				#region Create
 				case "create":
 					{
 						if (args.Length < 6)
@@ -1940,7 +2045,7 @@ namespace DOL.GS.Commands
 
 						if (KeepMgr.getKeepByID(keepid) != null)
 						{
-							DisplayMessage(client, "KeepID {0} already exists!", keepid);
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.TowerCreate.KeepIDExists", keepid));
 							return;
 						}
 
@@ -1949,7 +2054,7 @@ namespace DOL.GS.Commands
 						// We must check that the client is not trying to create a keep with a higher KeepID
 						if ((keepid >> 8) != 0)
 						{
-							DisplayMessage(client, "Wrong KeepID ({0}) : a keep KeepID must be lower than 256 !", keepid);
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.TowerCreate.WrongKeepID", keepid));
 							return;
 						}
 
@@ -2021,7 +2126,7 @@ namespace DOL.GS.Commands
 							(door as GameObject).Delete();
 						}
 						client.Player.TempProperties.setProperty(TEMP_KEEP_LAST, k);
-						DisplayMessage(client, "You have created a keep");
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.FastCreate.KeepCreated"));
 
 						//send the creation packets
 						foreach (GameClient c in WorldMgr.GetClientsOfRegion(client.Player.CurrentRegionID))
@@ -2034,6 +2139,8 @@ namespace DOL.GS.Commands
 						}
 						break;
 					}
+				#endregion Create
+				#region Remove
 				case "remove":
 					{
 						KeepArea karea = null;
@@ -2048,15 +2155,16 @@ namespace DOL.GS.Commands
 
 						if (karea == null)
 						{
-							DisplayMessage(client, "Your not in a keep area!");
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.YourNotInAKeepArea"));
 							return;
 						}
 
 						karea.Keep.Unload(karea);
-						DisplayMessage(client, "Keep Unloaded!");
-
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.KeepUnloaded"));
 						break;
 					}
+				#endregion Remove
+				#region Name
 				case "name":
 					{
 						if (args.Length < 3)
@@ -2066,12 +2174,15 @@ namespace DOL.GS.Commands
 						}
 						if (myKeep == null)
 						{
-							DisplayMessage(client, "You must create a keep first");
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
 							return;
 						}
 						myKeep.Name = String.Join(" ", args, 2, args.Length - 2);
-						DisplayMessage(client, "You change the name of the current keep to " + myKeep.Name);
-					} break;
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.YouChangeKeepName", myKeep.Name));
+						break;
+					}
+				#endregion Name
+				#region KeepID
 				case "keepid":
 					{
 						if (args.Length < 3)
@@ -2081,7 +2192,7 @@ namespace DOL.GS.Commands
 						}
 						if (myKeep == null)
 						{
-							DisplayMessage(client, "You must create a keep first");
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
 							return;
 						}
 						int keepid = 0;
@@ -2096,8 +2207,10 @@ namespace DOL.GS.Commands
 						}
 						myKeep.KeepID = keepid;
 						DisplayMessage(client, "You change the id of the current keep to " + keepid);
-
-					} break;
+						break;
+					}
+				#endregion KeepID
+				#region Level
 				case "level":
 					{
 						if (args.Length < 3)
@@ -2107,7 +2220,7 @@ namespace DOL.GS.Commands
 						}
 						if (myKeep == null)
 						{
-							DisplayMessage(client, "You must create a keep first");
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
 							return;
 						}
 						byte keepLevel = 0;
@@ -2121,9 +2234,11 @@ namespace DOL.GS.Commands
 							return;
 						}
 						myKeep.ChangeLevel(keepLevel);
-						DisplayMessage(client, "You change the level of the current keep to " + keepLevel);
-
-					} break;
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Level.YouChangeKeepLevel", keepLevel));
+						break;
+					}
+				#endregion Level
+				#region BaseLevel
 				case "baselevel":
 					{
 						if (args.Length < 3)
@@ -2133,7 +2248,7 @@ namespace DOL.GS.Commands
 						}
 						if (myKeep == null)
 						{
-							DisplayMessage(client, "You must create a keep first");
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
 							return;
 						}
 						byte keepLevel = 0;
@@ -2148,18 +2263,24 @@ namespace DOL.GS.Commands
 						}
 						myKeep.DBKeep.BaseLevel = keepLevel;
 						myKeep.ChangeLevel(myKeep.Level);
-						DisplayMessage(client, "You change the base level of the current keep to " + keepLevel);
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.BaseLevel.YouChangeBaseLev", keepLevel));
 
 						break;
 					}
-				/*	case "movehere":
+				#endregion BaseLevel
+				#region MoveHere
+				/*case "movehere":
 					{
-					
-					}break;
-					case "addcomponent":
+						break;
+					}*/
+				#endregion MoveHere
+				#region AddComponent
+				/*case "addcomponent":
 					{
-					
-					}break;*/
+						break;
+					}*/
+				#endregion AddComponent
+				#region Realm
 				case "realm":
 					{
 						if (args.Length < 3)
@@ -2169,7 +2290,7 @@ namespace DOL.GS.Commands
 						}
 						if (myKeep == null)
 						{
-							DisplayMessage(client, "You must create a keep first");
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
 							return;
 						}
 						eRealm realm = eRealm.None;
@@ -2183,9 +2304,11 @@ namespace DOL.GS.Commands
 							return;
 						}
 						myKeep.Reset(realm);
-						DisplayMessage(client, "You change the realm of the current keep to " + GlobalConstants.RealmToName(realm));
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Realm.YouChangeKeepRealm", GlobalConstants.RealmToName(realm)));
 						break;
 					}
+				#endregion Realm
+				#region Radius
 				case "radius":
 					{
 						if (args.Length < 3)
@@ -2195,7 +2318,7 @@ namespace DOL.GS.Commands
 						}
 						if (myKeep == null)
 						{
-							DisplayMessage(client, "You must create a keep first");
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
 							return;
 						}
 						int radius = 0;
@@ -2209,19 +2332,24 @@ namespace DOL.GS.Commands
 							return;
 						}
 						myKeep.Area.ChangeRadius(radius);
-						DisplayMessage(client, "You change the radius of the current keep to " + radius);
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Radius.YouChangeKeepRadius", radius));
 						break;
 					}
+				#endregion Radius
+				#region Save
 				case "save":
 					{
 						if (myKeep == null)
 						{
-							DisplayMessage(client, "You must create a keep first!");
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
 							return;
 						}
 						myKeep.SaveIntoDatabase();
-						DisplayMessage(client, "Keep saved in database.");
-					} break;
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Save.KeepSavedInDatabase"));
+						break;
+					}
+				#endregion Save
+				#region AddTeleport
 				case "addteleporter":
 					{
 						GameKeepComponent component = client.Player.TargetObject as GameKeepComponent;
@@ -2242,9 +2370,11 @@ namespace DOL.GS.Commands
 							stone.SaveIntoDatabase();
 							stone.AddToWorld();
 						}
-						DisplayMessage(client, "Teleport Stone added!");
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.AddTeleport.StoneAdded"));
 						break;
 					}
+				#endregion AddTeleport
+				#region AddBanner
 				case "addbanner":
 					{
 						GameKeepBanner.eBannerType bannerType = GameKeepBanner.eBannerType.Realm;
@@ -2254,11 +2384,7 @@ namespace DOL.GS.Commands
 							{
 								case "realm": bannerType = GameKeepBanner.eBannerType.Realm; break;
 								case "guild": bannerType = GameKeepBanner.eBannerType.Guild; break;
-								default:
-									{
-										DisplayMessage(client, "Usage: /keep addbanner <realm|guild>");
-										return;
-									}
+								default: return;
 							}
 						}
 
@@ -2302,11 +2428,14 @@ namespace DOL.GS.Commands
 						DisplayMessage(client, "Banner added!");
 						break;
 					}
+				#endregion Addbanner
+				#region Default
 				default:
 					{
 						DisplaySyntax(client);
 						break;
 					}
+				#endregion Default
 			}
 		}
 	}
