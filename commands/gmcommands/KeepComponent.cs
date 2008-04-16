@@ -17,21 +17,21 @@
  *
  */
 using System;
-
 using DOL.Database;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
 	[CmdAttribute(
-		 "&keepcomponent", //command to handle
-		 ePrivLevel.GM, //minimum privelege level
-		 "Various keep component creation commands!", //command description
-		 "'/keepcomponent create <type> <keepid>' to create a keep component",
-		 "'/keepcomponent create <type>' to create a keep component assign to nearest keep",
-		 "'/keepcomponent skin <skin>' to change the skin",
-		 "'/keepcomponent delete' to delete the component")]
+		 "&keepcomponent",
+		 ePrivLevel.GM,
+		 "GMCommands.KeepComponents.Description",
+		 "GMCommands.KeepComponents.Usage.Create.TID",
+		 "GMCommands.KeepComponents.Usage.Create.T",
+		 "GMCommands.KeepComponents.Usage.Skin",
+		 "GMCommands.KeepComponents.Usage.Delete")]
 	public class KeepComponentCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		private readonly ushort INVISIBLE_MODEL = 150;
@@ -47,6 +47,7 @@ namespace DOL.GS.Commands
 			AbstractGameKeep myKeep = KeepMgr.getKeepCloseToSpot(client.Player.CurrentRegionID, client.Player, WorldMgr.OBJ_UPDATE_DISTANCE);
 			switch (args[1])
 			{
+				#region Create
 				case "create":
 					{
 						if (args.Length < 3)
@@ -54,7 +55,7 @@ namespace DOL.GS.Commands
 							int i = 0;
 							foreach (string str in Enum.GetNames(typeof(GameKeepComponent.eComponentSkin)))
 							{
-								client.Out.SendMessage("#" + i + " : " + str, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage("#" + i + ": " + str, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								i++;
 							}
 							DisplaySyntax(client);
@@ -77,7 +78,7 @@ namespace DOL.GS.Commands
 							int i = 0;
 							foreach (string str in Enum.GetNames(typeof(GameKeepComponent.eComponentSkin)))
 							{
-								client.Out.SendMessage("#" + i + " : " + str, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage("#" + i + ": " + str, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								i++;
 							}
 							DisplaySyntax(client);
@@ -133,8 +134,10 @@ namespace DOL.GS.Commands
 						component.SaveIntoDatabase();
 						client.Out.SendKeepInfo(myKeep);
 						client.Out.SendKeepComponentInfo(component);
-						client.Out.SendMessage("You have created a keep component", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.KeepComponents.Create.KCCreated"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					} break;
+				#endregion Create
+				#region Skin
 				case "skin":
 					{
 						if (args.Length < 3)
@@ -142,7 +145,7 @@ namespace DOL.GS.Commands
 							int i = 0;
 							foreach (string str in Enum.GetNames(typeof(GameKeepComponent.eComponentSkin)))
 							{
-								client.Out.SendMessage("#" + i + " : " + str, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage("#" + i + ": " + str, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								i++;
 							}
 							DisplaySyntax(client);
@@ -168,9 +171,11 @@ namespace DOL.GS.Commands
 						component.Skin = skin;
 						//todo update view of player
 						component.SaveInDB = true;
-						client.Out.SendMessage("You change the skin of current keep component", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.KeepComponents.Skin.YChangeSkin"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 					} break;
+				#endregion Skin
+				#region Delete
 				case "delete":
 					{
 						GameKeepComponent component = client.Player.TargetObject as GameKeepComponent;
@@ -181,14 +186,17 @@ namespace DOL.GS.Commands
 						}
 						component.RemoveFromWorld();
 						component.Delete();
-						client.Out.SendMessage("You delete the current component", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.KeepComponents.Delete.YDeleteKC"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 					} break;
+				#endregion Delete
+				#region Default
 				default:
 					{
 						DisplaySyntax(client);
 						return;
 					}
+				#endregion Default
 			}
 		}
 	}
