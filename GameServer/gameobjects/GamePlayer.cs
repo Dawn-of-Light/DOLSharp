@@ -20,6 +20,7 @@
 using System;
 using System.Reflection;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 
 using DOL.AI.Brain;
@@ -2471,24 +2472,26 @@ namespace DOL.GS
 				return;
 			}
 
+			Ability oldability = (Ability)m_abilities[ability.KeyName];
+			if (oldability == null || oldability.Level < ability.Level)
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.AddAbility.YouLearn", ability.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
 			base.AddAbility(ability, sendUpdates);
-			lock (m_skillList.SyncRoot)
+			lock (m_skillList)
 			{
-				if (!m_skillList.Contains(ability))
+				bool found = false;
+				foreach (Skill skill in m_skillList)
+				{
+					if (skill is Ability && (skill as Ability).KeyName == ability.KeyName)
+					{
+						skill.Level = ability.Level;
+						found = true;
+					}
+				}
+				if (!found)
 					m_skillList.Add(ability);
 			}
-
-			bool newAbility = false;
-			Ability oldability = (Ability)m_abilities[ability.KeyName];
-			if (oldability == null)
-				newAbility = true;
-			else if (oldability.Level < ability.Level)
-					newAbility = true;
-			if (newAbility)
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.AddAbility.YouLearn", ability.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
-			
-	
 
 		/// <summary>
 		/// Removes the existing ability from the player
@@ -10008,17 +10011,18 @@ namespace DOL.GS
 			string ab = "";
 			string sp = "";
 			string styleList = "";
-			lock (m_skillList.SyncRoot)
+			lock (m_skillList)
 			{
-				foreach (Skill skill in m_skillList)
+				foreach(Skill skill in m_skillList)
 				{
-					if (skill is Ability)
+					Ability ability = skill as Ability;
+					if (ability != null)
 					{
 						if (ab.Length > 0)
 						{
 							ab += ";";
 						}
-						ab += ((Ability)skill).KeyName + "|" + skill.Level;
+						ab += ability.KeyName + "|" + ability.Level;
 					}
 				}
 			}
@@ -10100,185 +10104,140 @@ namespace DOL.GS
 
 			//Lohx - champion abilities
 			LoadChampionSpells();
+			string tmpStr;
 
-			Hashtable disabledAbilities = new Hashtable();
-			Hashtable disabledSpells = new Hashtable();
-
-			string tmpStr = character.DisabledAbilities; // get this from char only 1time
-			if (tmpStr != null && tmpStr.Length > 0)
-			{
-				try
-				{
-					foreach (string str in tmpStr.Split(';'))
-					{
-						string[] values = str.Split('|');
-						if (values.Length < 2) continue;
-						disabledAbilities.Add(values[0], int.Parse(values[1]));
-					}
-				}
-				catch (Exception e)
-				{
-					if (log.IsErrorEnabled)
-						log.Error(Name + ": error in loading disabled abilities => '" + tmpStr + "'", e);
-				}
-			}
-
-			tmpStr = character.DisabledSpells;
-			if (tmpStr != null && tmpStr.Length > 0)
-			{
-				try
-				{
-					foreach (string str in tmpStr.Split(';'))
-					{
-						string[] values = str.Split('|');
-						if (values.Length < 2) continue;
-						disabledSpells.Add(ushort.Parse(values[0]), int.Parse(values[1]));
-					}
-				}
-				catch (Exception e)
-				{
-					if (log.IsErrorEnabled)
-						log.Error(Name + ": error in loading disabled spells => '" + tmpStr + "'", e);
-				}
-			}
-
-			lock (m_skillList.SyncRoot)
+			#region Load Abilities
+			//Load up the player skills
+			//1. Load all abilities
+			//2. Disable appropriate abilities
+			lock (m_skillList)
 			{
 				tmpStr = character.SerializedAbilities;
 				if (tmpStr != null && tmpStr.Length > 0)
 				{
-					try
-					{
-						string[] abilities = tmpStr.Split(';');
-						foreach (string ability in abilities)
-						{
-							string[] values = ability.Split('|');
-							if (values.Length < 2) continue;
-							if (!HasAbility(values[0]))
-								AddAbility(SkillBase.GetAbility(values[0], int.Parse(values[1])), true);
-						}
-						foreach (Skill skill in m_skillList)
-						{
-							Ability ab = skill as Ability;
-							if (ab == null) continue;
-							foreach (string ability in abilities)
-							{
-								string[] values = ability.Split('|');
-								if (ab.KeyName.Equals(values[0]))
-								{
-									skill.Level = Convert.ToInt32(values[1]);
-									//DOLConsole.WriteLine("Setting Level for Ability "+skill.Name+" to level "+skill.Level);
-									break;
-								}
-							}
+					string[] abilities = tmpStr.Split(';');
 
-							try
-							{
-								foreach (DictionaryEntry de in disabledAbilities)
-								{
-									if (ab.KeyName != (string)de.Key) continue;
-									DisableSkill(ab, (int)de.Value);
-									break;
-								}
-							}
-							catch (Exception e)
-							{
-								if (log.IsErrorEnabled)
-									log.Error("Disabling abilities '" + tmpStr + "'", e);
-							}
+					//Add the abilities to our skill list!
+					foreach (string ability in abilities)
+					{
+						string[] values = ability.Split('|');
+						if (values.Length >= 2 && !HasAbility(values[0]))
+						{
+							string keyname = values[0];
+							int level;
+							if (int.TryParse(values[1], out level))
+								AddAbility(SkillBase.GetAbility(keyname, level), true);
 						}
 					}
-					catch (Exception e)
+
+					//Since we added all the abilities that this character has, let's now disable the disabled ones!
+					tmpStr = character.DisabledAbilities;
+					if (tmpStr != null && tmpStr.Length > 0)
 					{
-						if (log.IsErrorEnabled)
-							log.Error(Name + ": error in loading abilities => '" + tmpStr + "'", e);
+						foreach (string str in tmpStr.Split(';'))
+						{
+							string[] values = str.Split('|');
+							if (values.Length >= 2)
+							{
+								string keyname = values[0];
+								int duration;
+								if (int.TryParse(values[1], out duration) && HasAbility(keyname))
+									DisableSkill(GetAbility(keyname), duration);
+								else if (log.IsErrorEnabled)
+									log.Error(Name + ": error in loading disabled abilities => '" + tmpStr + "'");
+							}
+						}
 					}
 				}
-
 			}
+			#endregion
 
+			#region Load Specs
 			lock (m_specList.SyncRoot)
 			{
 				tmpStr = character.SerializedSpecs;
 				if (tmpStr != null && tmpStr.Length > 0)
 				{
-					try
+					string[] specs = tmpStr.Split(';');
+					foreach (string spec in specs)
 					{
-						string[] specs = tmpStr.Split(';');
-						foreach (string spec in specs)
+						string[] values = spec.Split('|');
+						if (values.Length >= 2)
 						{
-							string[] values = spec.Split('|');
-							if (values.Length < 2) continue;
-							if (!HasSpecialization(values[0]))
-								AddSpecialization(SkillBase.GetSpecialization(values[0]));
-						}
-						foreach (string spec in specs)
-						{
-							string[] values = spec.Split('|');
-							foreach (Specialization cspec in m_specList)
+							Specialization tempspec = SkillBase.GetSpecialization(values[0]);
+							int level;
+							if (int.TryParse(values[1], out level))
 							{
-								if (cspec.KeyName.Equals(values[0]))
-								{
-									cspec.Level = Convert.ToInt32(values[1]);
-									CharacterClass.OnSkillTrained(this, cspec);
-									//DOLConsole.WriteLine("Setting Level for Specialization "+cspec.Name+" to level "+cspec.Level);
-								}
+								tempspec.Level = level;
+								if (!HasSpecialization(values[0]))
+									AddSpecialization(tempspec);
+								CharacterClass.OnSkillTrained(this, tempspec);
 							}
+							else if (log.IsErrorEnabled)
+								log.Error(Name + ": error in loading specs => '" + tmpStr + "'");
 						}
-					}
-					catch (Exception e)
-					{
-						if (log.IsErrorEnabled)
-							log.Error(Name + ": error in loading specs => '" + tmpStr + "'", e);
 					}
 				}
 			}
+			#endregion
+
+			#region Load Spell Lines
+			Hashtable disabledSpells = new Hashtable();
+
+			//Load the disabled spells
+			tmpStr = character.DisabledSpells;
+			if (tmpStr != null && tmpStr.Length > 0)
+			{
+				foreach (string str in tmpStr.Split(';'))
+				{
+					string[] values = str.Split('|');
+					ushort spellid;
+					int duration;
+					if (values.Length >= 2 && ushort.TryParse(values[0], out spellid) && int.TryParse(values[1], out duration))
+						disabledSpells.Add(spellid, duration);
+					else if (log.IsErrorEnabled)
+						log.Error(Name + ": error in loading disabled spells => '" + tmpStr + "'");
+				}
+			}
+
+			//Load the spell lines and then check to see if an spells in the spell lines should be disabled
 			lock (m_spelllines.SyncRoot)
 			{
 				m_spelllines.Clear();
 				tmpStr = character.SerializedSpellLines;
 				if (tmpStr != null && tmpStr.Length > 0)
+				{
 					foreach (string serializedSpellLine in tmpStr.Split(';'))
 					{
-						try
+						string[] values = serializedSpellLine.Split('|');
+						if (values.Length >= 2)
 						{
-							string[] values = serializedSpellLine.Split('|');
-							if (values.Length < 2) continue;
 							SpellLine splLine = SkillBase.GetSpellLine(values[0]);
-							splLine.Level = int.Parse(values[1]);
-							AddSpellLine(splLine);
-						}
-						catch (Exception e)
-						{
-							if (log.IsErrorEnabled)
-								log.Error("Error loading SpellLine '" + serializedSpellLine + "' from character '" + character.Name + "'", e);
+							int level;
+							if (int.TryParse(values[1], out level))
+							{
+								splLine.Level = level;
+								AddSpellLine(splLine);
+
+								foreach (Spell spell in SkillBase.GetSpellList(splLine.KeyName))
+								{
+									if (disabledSpells.ContainsKey(spell.ID))
+										DisableSkill(spell, (int)disabledSpells[spell.ID]);
+								}
+							}
+							else if (log.IsErrorEnabled)
+								log.Error("Error loading SpellLine '" + serializedSpellLine + "' from character '" + character.Name + "'");
 						}
 					}
+				}
 			}
+
+			#endregion
+
 			CharacterClass.OnLevelUp(this); // load all skills from DB first to keep the order
 			CharacterClass.OnRealmLevelUp(this);
 			RefreshSpecDependantSkills(false);
 			UpdateSpellLineLevels(false);
-			try
-			{
-				IList lines = GetSpellLines();
-				lock (lines.SyncRoot)
-				{
-					foreach (SpellLine line in lines)
-						foreach (Spell spl in SkillBase.GetSpellList(line.KeyName))
-							foreach (DictionaryEntry de in disabledSpells)
-							{
-								if (spl.ID != (ushort)de.Key) continue;
-								DisableSkill(spl, (int)de.Value);
-								break;
-							}
-				}
-			}
-			catch (Exception e)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("Disabling spells (" + character.DisabledSpells + ")", e);
-			}
 		}
 
 		// seems to never be used
