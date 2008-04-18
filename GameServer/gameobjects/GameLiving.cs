@@ -5452,16 +5452,16 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			{
 				Ability oldability = (Ability)m_abilities[ability.KeyName];
 
-					if (oldability == null)
-					{
-						m_abilities[ability.KeyName] = ability;
-						ability.Activate(this, sendUpdates);
-					}
-					else if (oldability.Level < ability.Level)
-					{
-						oldability.Level = ability.Level;
-						oldability.Name = ability.Name;
-					}
+				if (oldability == null)
+				{
+					m_abilities[ability.KeyName] = ability;
+					ability.Activate(this, sendUpdates);
+				}
+				else if (oldability.Level < ability.Level)
+				{
+					oldability.Level = ability.Level;
+					oldability.Name = ability.Name;
+				}
 			}
 		}
 
