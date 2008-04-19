@@ -1855,7 +1855,14 @@ namespace DOL.GS
 				constitution *= 2;
 			int hp1 = CharacterClass.BaseHP * level;
 			int hp2 = hp1 * constitution / 10000;
-			return Math.Max(1, 20 + hp1 / 50 + hp2);
+			
+			//Andraste - Vico : Champion Level HP gain
+			double hp3 = 0;
+			if(ChampionLevel>=1) hp3=Math.Floor(((double)CharacterClass.BaseHP / 27)*ChampionLevel); // CL's - need correct formula
+			double hp4=20 + hp1 / 50 + hp2 + hp3;
+			if(HasAbility(Abilities.MemoriesOfWar)) hp4*=1.1; //10% HP for heavy tanks
+			
+			return Math.Max(1, (int)hp4);
 		}
 
 		/// <summary>
@@ -4035,6 +4042,11 @@ namespace DOL.GS
 			{
 				oldpow = CalculateMaxMana(previouslevel, GetBaseStat(CharacterClass.ManaStat));
 			}
+			else if (CharacterClass.ManaStat == eStat.UNDEFINED && ChampionLevel>=1)
+			{
+				oldpow = CalculateMaxMana(previouslevel, GetBaseStat(eStat.EMP)); //We shouldn't use Emp stat, but.. it's not really important
+			}
+			
 
 			// hp upgrade
 			int newhp = CalculateMaxHealth(Level, GetBaseStat(eStat.CON));
@@ -4047,6 +4059,15 @@ namespace DOL.GS
 			if (CharacterClass.ManaStat != eStat.UNDEFINED)
 			{
 				int newpow = CalculateMaxMana(Level, GetBaseStat(CharacterClass.ManaStat));
+				if (newpow > 0 && oldpow < newpow)
+				{
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.PowerRaise", (newpow - oldpow)), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				}
+			}
+			//Andraste
+			else if (CharacterClass.ManaStat == eStat.UNDEFINED && ChampionLevel>=1)
+			{
+				int newpow = CalculateMaxMana(Level, GetBaseStat(eStat.EMP));
 				if (newpow > 0 && oldpow < newpow)
 				{
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.PowerRaise", (newpow - oldpow)), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -5013,7 +5034,7 @@ namespace DOL.GS
 						{
                             int perc = ad.Damage + ad.CriticalDamage;
                             perc = (perc < 1) ? 1 : ((perc > 12) ? 12 : perc);
-                            this.Mana += Convert.ToInt32(Math.Ceiling(((Decimal)(perc * this.MaxMana) / 100)));
+                            this.Mana += Convert.ToInt32(Math.Ceiling(((Decimal)(perc * this.MaxMana) / 350))); //old value: 100, its really too much.. but till need correct formula
 						}
 
 						//only miss when strafing when attacking a player
@@ -6644,6 +6665,8 @@ namespace DOL.GS
 			if (spell.SpellType == "StyleHandler")
 			{
 				Style style = SkillBase.GetStyleByID((int)spell.Value, CharacterClass.ID);
+				//Andraste - Vico : try to use classID=0 (easy way to implement CL Styles)
+				if(style==null) style = SkillBase.GetStyleByID((int)spell.Value, 0);
 				if (style != null)
 				{
 					StyleProcessor.TryToUseStyle(this, style);
@@ -7532,13 +7555,30 @@ namespace DOL.GS
 								long lastChargedItemUseTick = TempProperties.getLongProperty(LAST_CHARGED_ITEM_USE_TICK, 0L);
 								long changeTime = CurrentRegion.Time - lastChargedItemUseTick;
 								long delay = TempProperties.getLongProperty(ITEM_USE_DELAY, 0L);
-								if (Client.Account.PrivLevel == 1 && changeTime < delay) //2 minutes reuse timer
+								//Andraste - Vico : CanUseEvery field from ItemTemplate/IventoryItem ?
+								long itemdelay = TempProperties.getLongProperty("andrasteuseditem"+useItem.Id_nb, 0L);
+								long itemreuse = (long)useItem.CanUseEvery*1000;
+								if(itemdelay==0) itemdelay=CurrentRegion.Time-itemreuse;
+								
+								
+								if (IsMezzed || IsStunned || IsSitting || !IsAlive)
 								{
-									Out.SendMessage("You must wait " + (delay - changeTime) / 1000 + " more second before discharge another object!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									Out.SendMessage("In your state you can't discharge any object.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								}
+								else if (Client.Account.PrivLevel == 1 && (changeTime < delay /*Andraste*/ || (CurrentRegion.Time-itemdelay)<itemreuse )) //2 minutes reuse timer
+								{
+									//Andraste
+									if((CurrentRegion.Time-itemdelay)<itemreuse) Out.SendMessage("You must wait " + (itemreuse - (CurrentRegion.Time-itemdelay)) / 1000 + " more second before discharge "+useItem.Name+"!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									else Out.SendMessage("You must wait " + (delay - changeTime) / 1000 + " more second before discharge another object!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
 								}
 								else
 								{
+									//Andraste
+									TempProperties.setProperty("andrasteuseditem"+useItem.Id_nb, CurrentRegion.Time);
+									
+									
+									
 									SpellLine chargeEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
 
 									if (chargeEffectLine != null)
@@ -10755,9 +10795,14 @@ namespace DOL.GS
 				{
 					cam.Stop();
 				}
+				//Andraste
+				try {
+					GameSpellEffect effect=SpellHandler.FindEffectOnTarget(this,"BlanketOfCamouflage");
+					if (effect!=null) effect.Cancel(false);
+				} catch (Exception) {}
 
 				Out.SendPlayerModelTypeChange(this, 2);
-				m_stealthEffect.Stop();
+				if(m_stealthEffect!=null) m_stealthEffect.Stop();
 				m_stealthEffect = null;
 				GameEventMgr.RemoveHandler(this, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(Unstealth));
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
@@ -10953,6 +10998,14 @@ namespace DOL.GS
 			}
 
 			range += BuffBonusCategory1[(int)eProperty.Skill_Stealth];
+			
+			//Andraste
+			GameSpellEffect iVampiirEffect = SpellHandler.FindEffectOnTarget((GameLiving)enemy, "VampiirStealthDetection");
+			if (iVampiirEffect != null)
+			{
+				range -= (int)iVampiirEffect.Spell.Value;
+				if (range < 0) range = 0;
+			}
 
 			// Apply Blanket of camouflage effect
 			GameSpellEffect iSpymasterEffect1 = SpellHandler.FindEffectOnTarget((GameLiving)enemy, "BlanketOfCamouflage");
@@ -12575,7 +12628,7 @@ namespace DOL.GS
 				if (Champion && ChampionLevel > 0)
 					return LanguageMgr.GetTranslation(Client, String.Format("Titles.CL.Level{0}", ChampionLevel));
 				else
-					return "None";
+					return "";
 			}
 		}
 		/// <summary>
@@ -12640,7 +12693,9 @@ namespace DOL.GS
 				//No progess after maximum level 
 				if (ChampionLevel > CL_MAX_LEVEL) // needed to get exp after 10 
 					return 0;
-				return (ushort)(1000 * (ChampionExperience - ChampionExperienceForCurrentLevel) / (ChampionExperienceForNextLevel - ChampionExperienceForCurrentLevel));
+				if((ChampionExperienceForNextLevel - ChampionExperienceForCurrentLevel)>0)
+					return (ushort)(1000 * (ChampionExperience - ChampionExperienceForCurrentLevel) / (ChampionExperienceForNextLevel - ChampionExperienceForCurrentLevel));
+				else return 0;
 
 			}
 		}
@@ -12723,31 +12778,32 @@ namespace DOL.GS
 		{
 			ChampionLevel++;
 			ChampionSpecialtyPoints++;
-			/*
+
+
 			//Code for w/e happens when your CL goes up... 
 			if (ChampionLevel == 3) 
 			{ 
 				switch (Realm) 
 				{ 
-				   case 1: 
+				   case eRealm.Albion: 
 					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Slashing)); 
 					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Thrusting)); 
 					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Crushing)); 
-					  break; 
-				   case 2: 
+					  break;
+                  case eRealm.Midgard: 
 					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Axes)); 
 					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Hammers)); 
 					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Swords)); 
-					  break; 
-				   case 3: 
+					  break;
+                  case eRealm.Hibernia: 
 					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Blades)); 
 					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Blunt)); 
 					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Piercing)); 
 					  break; 
 				} 
 				AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small)); 
-			} 
-			*/
+			}
+
 			Notify(GamePlayerEvent.ChampionLevelUp, this);
 			Out.SendMessage("You have gained one champion level!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			Out.SendUpdatePlayer();
@@ -12758,9 +12814,10 @@ namespace DOL.GS
 		/// Load champion spells of this player 
 		/// </summary>  
 		protected virtual void LoadChampionSpells()
-		{
-			string championSpells = ChampionSpells;
-			Hashtable championSpellsh = new Hashtable();
+ 		{
+ 			string championSpells = ChampionSpells;
+ 			Hashtable championSpellsh = new Hashtable();
+ 			SkillBase.CleanSpellList("Champion Abilities" + Name);
 			SpellLine line = new SpellLine("Champion Abilities" + Name, "Champion Abilities", "Champion Abilities", true);
 			line.Level = 50;
 			SkillBase.RegisterSpellLine(line);
