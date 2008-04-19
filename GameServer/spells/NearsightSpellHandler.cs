@@ -36,6 +36,8 @@ namespace DOL.GS.Spells
 		/// <param name="effect"></param>
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
+			GameSpellEffect mezz = SpellHandler.FindEffectOnTarget(effect.Owner, "Mesmerize");
+ 			if(mezz != null) mezz.Cancel(false);
 			// percent category
 			effect.Owner.BuffBonusCategory3[(int)eProperty.ArcheryRange] += (int)Spell.Value;
 			effect.Owner.BuffBonusCategory3[(int)eProperty.SpellRange] += (int)Spell.Value;
