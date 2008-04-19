@@ -938,6 +938,19 @@ namespace DOL.GS
 			m_propertyNames[eProperty.Resist_Thrust] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
 				"SkillBase.RegisterPropertyNames.Thrust");
 
+			// Andraste - Vico : Mythirian bonus
+			m_propertyNames[eProperty.BodyResCapBonus] = "Body cap";
+            m_propertyNames[eProperty.ColdResCapBonus] = "Cold cap";
+			m_propertyNames[eProperty.CrushResCapBonus] = "Crush cap";
+			m_propertyNames[eProperty.EnergyResCapBonus] = "Energy cap";
+			m_propertyNames[eProperty.HeatResCapBonus] = "Heat cap";
+			m_propertyNames[eProperty.MatterResCapBonus] = "Matter cap";
+			m_propertyNames[eProperty.SlashResCapBonus] = "Slash cap";
+			m_propertyNames[eProperty.SpiritResCapBonus] = "Spirit cap";
+			m_propertyNames[eProperty.ThrustResCapBonus] = "Thrust cap";
+			m_propertyNames[eProperty.ArcaneSyphon] = "Arcane Syphon";
+			m_propertyNames[eProperty.RealmPoints] = "Realm Points";
+
 			// skills
 			m_propertyNames[eProperty.Skill_Two_Handed] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
 				"SkillBase.RegisterPropertyNames.TwoHanded");
@@ -1500,7 +1513,7 @@ namespace DOL.GS
 		{
 			if (keyname == GlobalSpellsLines.Mob_Spells)
 			{
-				return new SpellLine("mob spells", "mob spells", "", true);
+				return new SpellLine("Mob Spells", "Mob Spells", "", true);
 			}
 			SpellLine line = m_spellLinesByName[keyname] as SpellLine;
 			if (line != null)
@@ -1513,6 +1526,10 @@ namespace DOL.GS
 		}
 
        // FOR CHAMPION ABILITIES :D
+		public static void CleanSpellList(string spellLineID)
+        {
+			m_spellLists[spellLineID]=null;
+		}
         public static void AddSpellToList(string spellLineID, int SpellID)
         {
             ArrayList spell_list = new ArrayList();
@@ -1523,19 +1540,12 @@ namespace DOL.GS
             {
                 foreach (Spell spell in list)
                 {
-                	if(spell.Name==spl.Name) return;
-                }          
-                foreach (Spell spell in list)
-                {                	
-                    // find right position for insert
-                    for (insertpos = 1; insertpos <= spell_list.Count; insertpos++)
-                    {
-                        if (spell.Level < ((Spell)spell_list[insertpos-1]).Level)
-                            break;
-                    }
-                    spell_list.Insert(insertpos-1, spell);
+                    spell.Level = insertpos+1;
+                    spell_list.Insert(insertpos, spell);
+					insertpos++;
                 }
-            }     
+            }
+			spl.Level=insertpos+1;
             spell_list.Insert(insertpos, spl);
             m_spellLists[spellLineID] = spell_list;
         }
