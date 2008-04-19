@@ -1724,8 +1724,8 @@ Type    Description           Id
 					list.Add(string.Format(
 						"- {0}: {1}{2}",
 						SkillBase.GetPropertyName((eProperty)bonusCat),
-						bonusValue.ToString("+0;-0;0"),
-						((bonusCat == (int)eProperty.PowerPool) || (bonusCat >= (int)eProperty.Resist_First && bonusCat <= (int)eProperty.Resist_Last))
+						bonusValue.ToString("+0;-0;0"), //Andraste
+						((bonusCat == (int)eProperty.PowerPool) || (bonusCat >= (int)eProperty.Resist_First && bonusCat <= (int)eProperty.Resist_Last) || (bonusCat >= (int)eProperty.ResCapBonus_First && bonusCat <= (int)eProperty.ResCapBonus_Last) || bonusCat==(int)eProperty.RealmPoints )
 						? ((bonusCat == (int)eProperty.PowerPool) ? LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DetailDisplayHandler.WriteBonusLine.PowerPool") : "%")
 							: LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DetailDisplayHandler.WriteBonusLine.Points")
 					));
@@ -1737,9 +1737,9 @@ Type    Description           Id
 		{
 			switch (property)
 			{
-				case eProperty.BlockChance:
-				case eProperty.ParryChance:
-				case eProperty.EvadeChance:
+				//case eProperty.BlockChance:
+				//case eProperty.ParryChance:
+				//case eProperty.EvadeChance:
 				case eProperty.DefensiveBonus:
 				case eProperty.BladeturnReinforcement:
 				case eProperty.NegativeReduction:
