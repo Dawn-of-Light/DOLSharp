@@ -208,7 +208,8 @@ namespace DOL.GS
 		L_BRACER = 0x21,
 		R_BRACER = 0x22,
 		L_RING = 0x23,
-		R_RING = 0x24
+		R_RING = 0x24,
+		MYTHICAL = 0x25
 	};
 
 	/// <summary>
@@ -780,6 +781,10 @@ namespace DOL.GS
 		ThrustResCapBonus = 229,
 		ResCapBonus_Last = 229,
         #endregion
+		
+		//Andraste - Vico : new Mythirian bonus (in progress)
+		RealmPoints = 253,
+		ArcaneSyphon = 254,
 
         MaxProperty = 255,
 	}
