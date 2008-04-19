@@ -159,7 +159,9 @@ namespace DOL.AI.Brain
             {
                 if (Spell.Range == 0 && Spell.Radius > 0)
                 {
-                    Body.CastSpell(Spell, SkillBase.GetSpellLine("Reserved Spells"));
+                    //Andraste
+					Spell.Level=Body.Level;
+					Body.CastSpell(Spell, SkillBase.GetSpellLine("Reserved Spells"));
                     return;
                 }
                 else
