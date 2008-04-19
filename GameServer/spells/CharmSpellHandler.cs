@@ -100,7 +100,7 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
-			if (selectedTarget == null && !selectedTarget.IsAlive)
+			if (selectedTarget == null || !selectedTarget.IsAlive)
 			{
 				MessageToCaster("You must select a target for this spell!", eChatType.CT_SpellResisted);
 				return false;
