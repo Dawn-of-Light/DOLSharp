@@ -396,7 +396,12 @@ namespace DOL.GS
 				if (check) if (Util.IsEmpty(toItem.AllowedClasses)) check = false;
 				if (valid && (!Util.IsEmpty(fromItem.AllowedClasses) || check))
 				{
-					if ((fromItem.AllowedClasses != "0" || toItem.AllowedClasses != "0") && !((int)fromSlot >= 40 && (int)fromSlot <= 79 && (int)toSlot >= 40 && (int)toSlot <= 79))
+					if ((fromItem.AllowedClasses != "0" 
+						|| (toItem!=null && toItem.AllowedClasses != "0"))
+							&& !(fromSlot >= eInventorySlot.FirstBackpack  // but we allow the player to switch the item inside his inventory (check only char slots)
+							&& fromSlot <= eInventorySlot.LastBackpack
+							&& toSlot >= eInventorySlot.FirstBackpack
+							&& toSlot <= eInventorySlot.LastBackpack))
 					{
 						valid = false;
 						string[] allowedclasses = fromItem.AllowedClasses.Split(';');
