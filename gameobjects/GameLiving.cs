@@ -5434,55 +5434,59 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// Adds a new Ability to the player
 		/// </summary>
 		/// <param name="ability"></param>
-		public void AddAbility(Ability ability)
-		{
-			AddAbility(ability, true);
-		}
-
-		/// <summary>
-		/// Adds a new Ability to the player
-		/// </summary>
-		/// <param name="ability"></param>
-		/// <param name="sendUpdates"></param>
+		#region Abilities
+		protected readonly ArrayList m_skillList = new ArrayList();
+		public virtual void AddAbility(Ability ability) 	 
+	    { 	 
+	        AddAbility(ability, true); 	 
+	    }
 		public virtual void AddAbility(Ability ability, bool sendUpdates)
 		{
-			if (ability == null)
-				return;
+			bool newAbility = false;
 			lock (m_abilities.SyncRoot)
 			{
 				Ability oldability = (Ability)m_abilities[ability.KeyName];
-
-				if (oldability == null)
+				lock (m_skillList.SyncRoot)
 				{
-					m_abilities[ability.KeyName] = ability;
-					ability.Activate(this, sendUpdates);
-				}
-				else if (oldability.Level < ability.Level)
-				{
-					oldability.Level = ability.Level;
-					oldability.Name = ability.Name;
+					if (oldability == null)
+					{
+						newAbility = true;
+						m_abilities[ability.KeyName] = ability;
+						m_skillList.Add(ability);
+						ability.Activate(this, sendUpdates);
+					}
+					else if (oldability.Level < ability.Level)
+					{
+						newAbility = true;
+						oldability.Level = ability.Level;
+						oldability.Name = ability.Name;
+					}
+					if (newAbility&&(this is GamePlayer))
+					{
+						(this as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((this as GamePlayer).Client, "GamePlayer.AddAbility.YouLearn", ability.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
 				}
 			}
 		}
-
-		/// <summary>
-		/// Removes the existing ability from the player
-		/// </summary>
-		/// <param name="abilityKeyName">The ability keyname to remove</param>
-		/// <returns>true if removed</returns>
 		public virtual bool RemoveAbility(string abilityKeyName)
 		{
 			Ability ability = null;
 			lock (m_abilities.SyncRoot)
 			{
-				ability = (Ability)m_abilities[abilityKeyName];
-				if (ability == null)
-					return false;
-				ability.Deactivate(this, true);
-				m_abilities.Remove(ability.KeyName);
+				lock (m_skillList.SyncRoot)
+				{
+					ability = (Ability)m_abilities[abilityKeyName];
+					if (ability == null)
+						return false;
+					ability.Deactivate(this, true);
+					m_abilities.Remove(ability.KeyName);
+					m_skillList.Remove(ability);
+				}
 			}
+			if(this is GamePlayer) (this as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((this as GamePlayer).Client, "GamePlayer.RemoveAbility.YouLose", ability.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return true;
 		}
+		#endregion Abilities
 
 		/// <summary>
 		/// Checks if player has ability to use items of this type
