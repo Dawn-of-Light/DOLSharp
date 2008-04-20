@@ -5005,7 +5005,7 @@ namespace DOL.GS
 						{
                             int perc = ad.Damage + ad.CriticalDamage;
                             perc = (perc < 1) ? 1 : ((perc > 12) ? 12 : perc);
-                            this.Mana += Convert.ToInt32(Math.Ceiling(((Decimal)(perc * this.MaxMana) / 350))); //old value: 100, its really too much.. but till need correct formula
+                            this.Mana += Convert.ToInt32(Math.Ceiling(((Decimal)(perc * this.MaxMana) / 192))); //old value: 100, its really too much.. but till need correct formula
 						}
 
 						//only miss when strafing when attacking a player
