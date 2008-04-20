@@ -2128,7 +2128,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds all non trainable skills in determined order without styles
 		/// </summary>
-		protected readonly ArrayList m_skillList = new ArrayList();
+		//protected readonly ArrayList m_skillList = new ArrayList();
 
 		/// <summary>
 		/// Temporary Stats Boni
@@ -2450,6 +2450,12 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="ability"></param>
 		/// <param name="sendUpdates"></param>
+		#region Abilities
+		public void AddAbility(Ability ability) 	 
+	    { 	 
+	        AddAbility(ability, true); 	 
+	    } 	 
+	
 		public override void AddAbility(Ability ability, bool sendUpdates)
 		{
 			if (ability == null)
@@ -2478,49 +2484,14 @@ namespace DOL.GS
 			{
 				return;
 			}
-
-			Ability oldability = (Ability)m_abilities[ability.KeyName];
-			if (oldability == null || oldability.Level < ability.Level)
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.AddAbility.YouLearn", ability.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
 			base.AddAbility(ability, sendUpdates);
-			lock (m_skillList)
-			{
-				bool found = false;
-				foreach (Skill skill in m_skillList)
-				{
-					if (skill is Ability && (skill as Ability).KeyName == ability.KeyName)
-					{
-						skill.Level = ability.Level;
-						found = true;
-					}
-				}
-				if (!found)
-					m_skillList.Add(ability);
-			}
 		}
 
-		/// <summary>
-		/// Removes the existing ability from the player
-		/// </summary>
-		/// <param name="abilityKeyName">The ability keyname to remove</param>
-		/// <returns>true if removed</returns>
 		public override bool RemoveAbility(string abilityKeyName)
 		{
-			if (!base.RemoveAbility(abilityKeyName))
-				return false;
-
-			Ability ability = (Ability)m_abilities[abilityKeyName];
-			if (ability != null)
-			{
-				lock (m_skillList.SyncRoot)
-				{
-					m_skillList.Remove(ability);
-				}
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.RemoveAbility.YouLose", ability.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			}
-			return true;
+			return base.RemoveAbility(abilityKeyName);
 		}
+		#endregion Abilities
 
 		public void RemoveAllSkills()
 		{
