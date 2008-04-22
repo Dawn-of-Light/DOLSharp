@@ -220,6 +220,8 @@ namespace DOLGameServerConsole
 		public void SendMarketExplorerWindow() { }
 		public void SendMarketExplorerWindow(List<InventoryItem> items, byte page, byte maxpage) { }
 		public void SendConsignmentMerchantMoney(ushort mithril, ushort plat, ushort gold, byte silver, byte copper) { }
+        public virtual void SendMinotaurRelicWindow(GamePlayer player, int spell, bool flag) { }
+        public virtual void SendMinotaurRelicBarUpdate(GamePlayer player, int xp) { }
 		/// <summary>
 		/// The bow prepare animation
 		/// </summary>

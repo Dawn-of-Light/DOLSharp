@@ -148,6 +148,7 @@
     </Compile>
     <Compile Include="DOLTables\ClassXRealmAbility.cs" />
     <Compile Include="DOLTables\Battleground.cs" />
+    <Compile Include="DOLTables\DBMinotaurRelic.cs" />
     <Compile Include="DOLTables\StarterEquipment.cs" />
     <Compile Include="DOLTables\DBBoat.cs" />
     <Compile Include="DOLTables\DBChampSpec.cs" />

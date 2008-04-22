@@ -178,6 +178,7 @@
     <Compile Include="commands\GMCommands\keepguard.cs" />
     <Compile Include="commands\GMCommands\kick.cs" />
     <Compile Include="commands\GMCommands\merchant.cs" />
+    <Compile Include="commands\GMCommands\Minorelic.cs" />
     <Compile Include="commands\GMCommands\mob.cs" />
     <Compile Include="commands\GMCommands\morph.cs" />
     <Compile Include="commands\GMCommands\mountgm.cs" />
@@ -212,6 +213,7 @@
     <Compile Include="commands\PlayerCommands\disband.cs" />
     <Compile Include="commands\PlayerCommands\discard.cs" />
     <Compile Include="commands\PlayerCommands\dismount.cs" />
+    <Compile Include="commands\PlayerCommands\dropmr.cs" />
     <Compile Include="commands\PlayerCommands\duel.cs" />
     <Compile Include="commands\PlayerCommands\email.cs" />
     <Compile Include="commands\PlayerCommands\emote.cs" />
@@ -801,6 +803,8 @@
     <Compile Include="keeps\Relics\GameRelic.cs" />
     <Compile Include="keeps\Relics\GameRelicPad.cs" />
     <Compile Include="language\LanguageMgr.cs" />
+    <Compile Include="minotaurrelics\MinotaurRelic.cs" />
+    <Compile Include="minotaurrelics\MinotaurRelicManager.cs" />
     <Compile Include="packets\Client\168\BadNameCheckRequestHandler.cs" />
     <Compile Include="packets\Client\168\BuyHookPointHandler.cs" />
     <Compile Include="packets\Client\168\CharacterDeleteRequestHandler.cs" />

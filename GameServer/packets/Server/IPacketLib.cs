@@ -542,6 +542,8 @@ namespace DOL.GS.PacketHandler
 		void SendListCastersSpell();
 		void SendCrash(string str);
 		void SendXFireInfo(byte flag);
+        void SendMinotaurRelicWindow(GamePlayer player, int spell, bool flag);
+        void SendMinotaurRelicBarUpdate(GamePlayer player, int xp);
 		/// <summary>
 		/// The bow prepare animation
 		/// </summary>
