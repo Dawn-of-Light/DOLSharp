@@ -3343,6 +3343,12 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
+        public virtual void SendMinotaurRelicWindow(GamePlayer player, int spell, bool flag)
+        { }
+
+        public virtual void SendMinotaurRelicBarUpdate(GamePlayer player, int xp)
+        { }
+
 		/// <summary>
 		/// The bow prepare animation
 		/// </summary>
