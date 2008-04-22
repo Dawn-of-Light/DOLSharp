@@ -611,6 +611,22 @@ namespace DOL.GS.PacketHandler.Client.v168
 				if (player.CurrentHouse != client.Player.CurrentHouse)
 					continue;
 
+                if (client.Player.CharacterClass.ID == (int)eCharacterClass.Warlock)
+                {
+                    //Send Chamber effect
+                    client.Player.Out.SendWarlockChamberEffect(client.Player);
+                }
+
+                if (client.Player.MinotaurRelic != null)
+                {
+                    MinotaurRelic relic = client.Player.MinotaurRelic;
+                    if (!relic.Playerlist.Contains(player) && player != client.Player)
+                    {
+                        relic.Playerlist.Add(player);
+                        player.Out.SendMinotaurRelicWindow(client.Player, client.Player.MinotaurRelic.Effect, true);
+                    }
+                }
+
 				//Check stealth
 				if (!client.Player.IsStealthed || player.CanDetect(client.Player))
 				{

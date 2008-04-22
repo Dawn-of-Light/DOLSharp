@@ -63,6 +63,7 @@ namespace DOL.GS
 		protected readonly bool m_uninterruptible = false;
 		protected readonly int m_healthPenalty = 0;
 		protected readonly bool m_isfocus = false;
+        protected readonly bool m_minotaurspell = false;
 		// warlocks
 		protected readonly bool m_isprimary = false;
 		protected readonly bool m_issecondary = false;
@@ -304,7 +305,12 @@ namespace DOL.GS
 				.ToString();
 		}
 
-		public Spell(DBSpell dbspell, int requiredLevel)
+        public Spell(DBSpell dbspell, int requiredLevel)
+            : this(dbspell, requiredLevel, false)
+        {
+        }
+
+        public Spell(DBSpell dbspell, int requiredLevel, bool minotaur)
 			: base(dbspell.Name, (ushort)dbspell.SpellID, requiredLevel)
 		{
 
@@ -347,6 +353,7 @@ namespace DOL.GS
 			m_issecondary = dbspell.IsSecondary;
 			m_allowbolt = dbspell.AllowBolt;
             m_sharedtimergroup = dbspell.SharedTimerGroup;
+            m_minotaurspell = minotaur;
 		}
 		// add for warlocks
 		public virtual Spell Copy()

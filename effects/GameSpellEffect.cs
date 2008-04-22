@@ -74,6 +74,10 @@ namespace DOL.GS.Effects
 		/// The timer for pulsing effects
 		/// </summary>
 		protected PulsingEffectTimer m_timer;
+        /// <summary>
+        /// Is it a Minotaur Relic Effect?
+        /// </summary>
+        protected bool m_minotaur = false;
 
 		/// <summary>
 		/// Creates a new game spell effect
@@ -100,6 +104,12 @@ namespace DOL.GS.Effects
 			m_effectiveness = effectiveness;
 			m_expired = true; // not started = expired
 		}
+
+        public GameSpellEffect(ISpellHandler handler, int duration, int pulsefreq, bool mino)
+            : this(handler, duration, pulsefreq, 1)
+        {
+            m_minotaur = mino;
+        }
 
 		/// <summary>
 		/// Returns the string representation of the GameSpellEffect

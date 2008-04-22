@@ -12998,6 +12998,19 @@ namespace DOL.GS
 		}
 		#endregion
 
+        #region Minotaur Relics
+        protected MinotaurRelic m_minoRelic = null;
+
+        /// <summary>
+        /// sets or sets the Minotaur Relic of this Player
+        /// </summary>
+        public MinotaurRelic MinotaurRelic
+        {
+            get { return m_minoRelic; }
+            set { m_minoRelic = value; }
+        }
+        #endregion
+
 
 		/// <summary>
 		/// Returns the string representation of the GamePlayer
