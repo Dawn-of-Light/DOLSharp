@@ -128,7 +128,7 @@ namespace DOL.GS.PacketHandler
 		public override void SendPetWindow(GameLiving pet, ePetWindowAction windowAction, eAggressionState aggroState, eWalkState walkState)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.PetWindow));
-			pak.WriteShort((ushort)(pet==null ? 0 : pet.ObjectID));
+			pak.WriteShort((ushort)(pet == null ? 0 : pet.ObjectID));
 			pak.WriteByte(0x00); //unused
 			pak.WriteByte(0x00); //unused
 			switch (windowAction) //0-released, 1-normal, 2-just charmed? | Roach: 0-close window, 1-update window, 2-create window

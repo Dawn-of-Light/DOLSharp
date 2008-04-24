@@ -1053,14 +1053,21 @@ namespace DOL.GS.PacketHandler
 		{
 			if (m_gameClient.Player == null)
 				return;
+			SendStatusUpdate((byte)(m_gameClient.Player.IsSitting ? 0x02 : 0x00));
+		}
+
+		public virtual void SendStatusUpdate(byte sittingFlag)
+		{
+			if (m_gameClient.Player == null)
+				return;
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.CharacterStatusUpdate));
 			pak.WriteByte(m_gameClient.Player.HealthPercent);
 			pak.WriteByte(m_gameClient.Player.ManaPercent);
-			pak.WriteShort((byte)(m_gameClient.Player.IsAlive ? 0x00 : 0x0f)); // 0x0F if dead
-			pak.WriteByte((byte)(m_gameClient.Player.IsSitting ? 0x02 : 0x00));
+			pak.WriteShort((byte) (m_gameClient.Player.IsAlive ? 0x00 : 0x0f)); // 0x0F if dead
+			pak.WriteByte(sittingFlag);
 			pak.WriteByte(m_gameClient.Player.EndurancePercent);
 			pak.WriteByte(m_gameClient.Player.ConcentrationPercent);
-			pak.WriteByte(0x00);
+			pak.WriteByte(0);
 			SendTCP(pak);
 		}
 

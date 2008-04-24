@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -124,6 +124,49 @@ namespace DOL
 		}
 
 		/// <summary>
+		/// Writes a 4 byte value to the stream in host byte order
+		/// </summary>
+		/// <param name="val">Value to write</param>
+		public virtual void WriteIntLowEndian(uint val)
+		{
+			WriteByte((byte)((val & 0xffff) & 0xff));
+			WriteByte((byte)((val & 0xffff) >> 8));
+			WriteByte((byte)((val >> 16) & 0xff));
+			WriteByte((byte)(val >> 24));
+		}
+
+		/// <summary>
+		/// Writes a 8 byte value to the stream in host byte order
+		/// </summary>
+		/// <param name="val">Value to write</param>
+		public virtual void WriteLong(ulong val)
+		{
+			WriteByte((byte)(val >> 56));
+			WriteByte((byte)((val >> 48) & 0xff));
+			WriteByte((byte)((val >> 40) & 0xff));
+			WriteByte((byte)((val >> 32) & 0xff));
+			WriteByte((byte)((val >> 24) & 0xff));
+			WriteByte((byte)((val >> 16) & 0xff));
+			WriteByte((byte)((val >> 8) & 0xff));
+			WriteByte((byte)(val & 0xff));
+		}
+		/// <summary>
+		/// Writes a 8 byte value to the stream in host byte order
+		/// </summary>
+		/// <param name="val">Value to write</param>
+		public virtual void WriteLongLowEndian(ulong val)
+		{
+			WriteByte((byte)(val & 0xff));
+			WriteByte((byte)((val >> 8) & 0xff));
+			WriteByte((byte)((val >> 16) & 0xff));
+			WriteByte((byte)((val >> 24) & 0xff));
+			WriteByte((byte)((val >> 32) & 0xff));
+			WriteByte((byte)((val >> 40) & 0xff));
+			WriteByte((byte)((val >> 48) & 0xff));
+			WriteByte((byte)(val >> 56));
+		}
+
+		/// <summary>
 		/// Calculates the checksum for the internal buffer
 		/// </summary>
 		/// <returns>The checksum of the internal buffer</returns>
@@ -131,7 +174,7 @@ namespace DOL
 		{
 			byte val = 0;
 			byte[] buf = GetBuffer();
-      for(int i = 0; i < this.Position - 6; ++i)
+			for(int i = 0; i < this.Position - 6; ++i)
 			{
 				val += buf[i+8];
 			}
