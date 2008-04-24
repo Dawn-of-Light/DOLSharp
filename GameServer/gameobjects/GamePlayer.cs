@@ -9163,6 +9163,8 @@ namespace DOL.GS
 				}
 			}
 			//Update the client
+			if (sit && !IsSitting)
+				Out.SendStatusUpdate(2);// unknown why on begin sit it send 2 in sitting flag like player begin sitting
 			IsSitting = sit;
 			UpdatePlayerStatus();
 		}

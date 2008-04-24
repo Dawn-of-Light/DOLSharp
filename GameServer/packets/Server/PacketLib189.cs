@@ -55,7 +55,7 @@ namespace DOL.GS.PacketHandler
 
             pak.WriteShort((ushort)living.ObjectID);
             pak.WriteByte((byte)living.VisibleActiveWeaponSlots);
-            pak.WriteByte(0); // new in 189b+, show shield in left hand ? 
+			pak.WriteByte((byte)living.CurrentSpeed); // new in 189b+, speed
             pak.WriteByte((byte)((living.IsCloakInvisible ? 0x01 : 0x00) | (living.IsHelmInvisible ? 0x02 : 0x00))); // new in 189b+, cloack/helm visibility 
             pak.WriteByte((byte)((living.IsCloakHoodUp ? 0x01 : 0x00) | (int)living.ActiveQuiverSlot)); //bit0 is hood up bit4 to 7 is active quiver 
 
@@ -457,41 +457,5 @@ namespace DOL.GS.PacketHandler
 
 			SendTCP(pak);
 		}
-
-        public override void SendMinotaurRelicWindow(GamePlayer player, int effect, bool flag)
-        {
-            GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
-
-            pak.WriteShort((ushort)player.ObjectID);
-            pak.WriteByte((byte)13);
-            if (flag)
-            {
-                pak.WriteByte(0);
-                pak.WriteInt((uint)effect);
-            }
-            else
-            {
-                pak.WriteByte(1);
-                pak.WriteInt((uint)effect);
-            }
-
-            SendTCP(pak);
-        }
-
-        public override void SendMinotaurRelicBarUpdate(GamePlayer player, int xp)
-        {
-            GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
-
-            pak.WriteShort((ushort)player.ObjectID);
-            pak.WriteByte((byte)14);
-            pak.WriteByte(0);
-            //4k maximum
-            if (xp > 4000) xp = 4000;
-            if (xp < 0) xp = 0;
-
-            pak.WriteInt((uint)xp);
-
-            SendTCP(pak);
-        }
 	}
 }
