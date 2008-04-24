@@ -431,6 +431,7 @@ namespace DOL.GS.PacketHandler
 		void SendUpdateMaxSpeed();
 		void SendCombatAnimation(GameObject attacker, GameObject defender, ushort weaponID, ushort shieldID, int style, byte stance, byte result, byte targetHealthPercent);
 		void SendStatusUpdate();
+		void SendStatusUpdate(byte sittingFlag);
 		void SendSpellCastAnimation(GameLiving spellCaster, ushort spellID, ushort castingTime);
 		void SendSpellEffectAnimation(GameObject spellCaster, GameObject spellTarget,ushort spellid, ushort boltTime, bool noSound, byte success);
 		void SendRiding(GameObject rider, GameObject steed, bool dismount);

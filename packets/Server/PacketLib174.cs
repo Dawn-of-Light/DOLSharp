@@ -324,7 +324,6 @@ namespace DOL.GS.PacketHandler
             //RR 12 / 13
             pak.WritePascalString(GameServer.ServerRules.GetPlayerPrefixName(m_gameClient.Player, playerToCreate)); 
             pak.WritePascalString(playerToCreate.CurrentTitle.GetValue(playerToCreate)); // new in 1.74, NewTitle
-			pak.WriteByte(0x00);
 			SendTCP(pak);
 
 			//if (GameServer.ServerRules.GetColorHandling(m_gameClient) == 1) // PvP
