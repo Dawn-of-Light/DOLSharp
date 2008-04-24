@@ -238,6 +238,7 @@
     <Compile Include="commands\PlayerCommands\houseface.cs" />
     <Compile Include="commands\PlayerCommands\housefriend.cs" />
     <Compile Include="commands\PlayerCommands\housepoints.cs" />
+    <Compile Include="commands\PlayerCommands\ignore.cs" />
     <Compile Include="commands\PlayerCommands\invite.cs" />
     <Compile Include="commands\PlayerCommands\knock.cs" />
     <Compile Include="commands\PlayerCommands\language.cs" />
