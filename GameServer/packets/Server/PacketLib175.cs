@@ -107,7 +107,7 @@ namespace DOL.GS.PacketHandler
 
 			pak.WriteShort((ushort)player.ObjectID);
 			pak.WriteByte(0x0B); // subcode
-			IPlayerTitle title = m_gameClient.Player.CurrentTitle;
+			IPlayerTitle title = player.CurrentTitle;
 			if (title == PlayerTitleMgr.ClearTitle)
 			{
 				pak.WriteByte(0); // flag
@@ -461,7 +461,6 @@ namespace DOL.GS.PacketHandler
             //RR 12 / 13
             pak.WritePascalString(GameServer.ServerRules.GetPlayerPrefixName(m_gameClient.Player, playerToCreate));
             pak.WritePascalString(playerToCreate.CurrentTitle.GetValue(playerToCreate)); // new in 1.74, NewTitle
-            //pak.WriteByte(0x00);
 			pak.WriteByte(0x00); // new in 1.75
 			SendTCP(pak);
 

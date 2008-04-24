@@ -110,6 +110,7 @@ namespace DOLGameServerConsole
 		public void SendUpdateMaxSpeed() { }
 		public void SendCombatAnimation(GameObject attacker, GameObject defender, ushort weaponID, ushort shieldID, int style, byte stance, byte result, byte targetHealthPercent) { }
 		public void SendStatusUpdate() { }
+		public void SendStatusUpdate(byte sittingFlag) { }
 		public void SendSpellCastAnimation(GameLiving spellCaster, ushort spellID, ushort castingTime) { }
 		public void SendSpellEffectAnimation(GameObject spellCaster, GameObject spellTarget, ushort spellid, ushort boltTime, bool noSound, byte success) { }
 		public void SendRiding(GameObject rider, GameObject steed, bool dismount) { }
