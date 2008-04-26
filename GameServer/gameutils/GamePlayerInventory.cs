@@ -320,7 +320,8 @@ namespace DOL.GS
 				|| (slot >= eInventorySlot.FirstVault && slot <= eInventorySlot.LastVault)
 				|| (slot >= eInventorySlot.HouseVault_First && slot <= eInventorySlot.HouseVault_Last)
 				|| (slot >= eInventorySlot.Consignment_First && slot <= eInventorySlot.Consignment_Last)
-				|| (slot == eInventorySlot.PlayerPaperDoll))
+				|| (slot == eInventorySlot.PlayerPaperDoll)
+				|| (slot == eInventorySlot.Mythical))
 				return slot;
 
 
@@ -392,39 +393,46 @@ namespace DOL.GS
 				}
 
 				//Andraste - Vico / fixing a bugexploit : when player switch from his char slot to an inventory slot, allowedclasses were not checked
-				bool check = false; if (toItem != null) check = true;
-				if (check) if (Util.IsEmpty(toItem.AllowedClasses)) check = false;
-				if (valid && (!Util.IsEmpty(fromItem.AllowedClasses) || check))
+				if (valid && !Util.IsEmpty(fromItem.AllowedClasses))
 				{
-					if ((fromItem.AllowedClasses != "0" 
-						|| (toItem!=null && toItem.AllowedClasses != "0"))
-							&& !(fromSlot >= eInventorySlot.FirstBackpack  // but we allow the player to switch the item inside his inventory (check only char slots)
-							&& fromSlot <= eInventorySlot.LastBackpack
-							&& toSlot >= eInventorySlot.FirstBackpack
-							&& toSlot <= eInventorySlot.LastBackpack))
+					if (fromItem.AllowedClasses != "0" && !(toSlot >= eInventorySlot.FirstBackpack && toSlot <= eInventorySlot.LastBackpack)) // but we allow the player to switch the item inside his inventory (check only char slots)
 					{
 						valid = false;
 						string[] allowedclasses = fromItem.AllowedClasses.Split(';');
-						foreach (string allowed in allowedclasses)
-						{
-							if (m_player.CharacterClass.ID.ToString() == allowed
-								|| m_player.Client.Account.PrivLevel > 1)
-							{
-								valid = true;
-								break;
-							}
-						}
-						if (!valid)
-						{
-							m_player.Out.SendMessage("Your class cannot use this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						}
+						foreach (string allowed in allowedclasses) if (m_player.CharacterClass.ID.ToString() == allowed || m_player.Client.Account.PrivLevel > 1) { valid = true; break; }
+						if (!valid) m_player.Out.SendMessage("Your class cannot use this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 				}
+				if (valid && toItem!=null && !Util.IsEmpty(toItem.AllowedClasses))
+				{
+					if (toItem.AllowedClasses != "0" && !(fromSlot >= eInventorySlot.FirstBackpack && fromSlot <= eInventorySlot.LastBackpack)) // but we allow the player to switch the item inside his inventory (check only char slots)
+					{
+						valid = false;
+						string[] allowedclasses = toItem.AllowedClasses.Split(';');
+						foreach (string allowed in allowedclasses) if (m_player.CharacterClass.ID.ToString() == allowed || m_player.Client.Account.PrivLevel > 1) { valid = true; break; }
+						if (!valid)	m_player.Out.SendMessage("Your class cannot use this item2!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+				}
+				
+				
 
 				if (valid == true)
 				{
 					switch (toSlot)
 					{
+						//Andraste - Vico : Mythical
+						case eInventorySlot.Mythical:
+							if (fromItem.Item_Type != (int)eInventorySlot.Mythical)
+							{
+								valid = false;
+								m_player.Out.SendMessage(fromItem.GetName(0, true) + " can't go there!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							if (valid && fromItem.Level > 0 && fromItem.Level > m_player.ChampionLevel)
+							{
+								valid = false;
+								m_player.Out.SendMessage("You can't use " + fromItem.GetName(0, true) + " , you should increase your champion level.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
 						//horse slots
 						case eInventorySlot.HorseBarding:
 							if (fromItem.Item_Type != (int)eInventorySlot.HorseBarding)
@@ -588,6 +596,19 @@ namespace DOL.GS
 				{
 					switch (fromSlot)
 					{
+						//Andraste
+						case eInventorySlot.Mythical:
+							if (toItem.Item_Type != (int)eInventorySlot.Mythical)
+							{
+								valid = false;
+								m_player.Out.SendMessage(toItem.GetName(0, true) + " can't go there!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							if (valid && toItem.Level > 0 && toItem.Level > m_player.ChampionLevel)
+							{
+								valid = false;
+								m_player.Out.SendMessage("You can't use " + toItem.GetName(0, true) + " , you should increase your champion level.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							break;
 						//horse slots
 						case eInventorySlot.HorseBarding:
 							if (toItem.Item_Type != (int)eInventorySlot.HorseBarding)
