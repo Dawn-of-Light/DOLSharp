@@ -173,6 +173,7 @@ namespace DOL.Database
 			m_poisonSpellID = 0;
 			m_realm = 0;
 			m_autoSave = false;
+            m_allowedClasses = "0";
 		}
 
 		[PrimaryKey]

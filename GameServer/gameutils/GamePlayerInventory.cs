@@ -155,7 +155,7 @@ namespace DOL.GS
 							if (GetValidInventorySlot((eInventorySlot)currentItem.SlotPosition) == eInventorySlot.Invalid)
 							{
 								if (log.IsErrorEnabled)
-									log.Error("item's slot position is invanlid. item slot=" + currentItem.SlotPosition + " id=" + currentItem.ObjectId);
+									log.Error("item's slot position is invalid. item slot=" + currentItem.SlotPosition + " id=" + currentItem.ObjectId);
 								continue;
 							}
 							if (currentItem.OwnerID != m_player.InternalID)
@@ -392,10 +392,14 @@ namespace DOL.GS
 					return valid;
 				}
 
+                // graveen = fix for allowedclasses is empty or null
+                if (Util.IsEmpty(fromItem.AllowedClasses)) fromItem.AllowedClasses = "0";
+                if (Util.IsEmpty(toItem.AllowedClasses)) fromItem.AllowedClasses = "0";
+
 				//Andraste - Vico / fixing a bugexploit : when player switch from his char slot to an inventory slot, allowedclasses were not checked
-				if (valid && !Util.IsEmpty(fromItem.AllowedClasses))
+				if (valid && fromItem.AllowedClasses !="0")
 				{
-					if (fromItem.AllowedClasses != "0" && !(toSlot >= eInventorySlot.FirstBackpack && toSlot <= eInventorySlot.LastBackpack)) // but we allow the player to switch the item inside his inventory (check only char slots)
+					if (!(toSlot >= eInventorySlot.FirstBackpack && toSlot <= eInventorySlot.LastBackpack)) // but we allow the player to switch the item inside his inventory (check only char slots)
 					{
 						valid = false;
 						string[] allowedclasses = fromItem.AllowedClasses.Split(';');
@@ -403,14 +407,14 @@ namespace DOL.GS
 						if (!valid) m_player.Out.SendMessage("Your class cannot use this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 				}
-				if (valid && toItem!=null && !Util.IsEmpty(toItem.AllowedClasses))
+				if (valid && toItem!=null && toItem.AllowedClasses!="0")
 				{
-					if (toItem.AllowedClasses != "0" && !(fromSlot >= eInventorySlot.FirstBackpack && fromSlot <= eInventorySlot.LastBackpack)) // but we allow the player to switch the item inside his inventory (check only char slots)
+					if (!(fromSlot >= eInventorySlot.FirstBackpack && fromSlot <= eInventorySlot.LastBackpack)) // but we allow the player to switch the item inside his inventory (check only char slots)
 					{
 						valid = false;
 						string[] allowedclasses = toItem.AllowedClasses.Split(';');
 						foreach (string allowed in allowedclasses) if (m_player.CharacterClass.ID.ToString() == allowed || m_player.Client.Account.PrivLevel > 1) { valid = true; break; }
-						if (!valid)	m_player.Out.SendMessage("Your class cannot use this item2!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						if (!valid)	m_player.Out.SendMessage("Your class cannot use this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 				}
 				
