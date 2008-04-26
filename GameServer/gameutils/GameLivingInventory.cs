@@ -81,6 +81,7 @@ namespace DOL.GS
 			eInventorySlot.RightBracer,
 			eInventorySlot.LeftRing,
 			eInventorySlot.RightRing,
+			eInventorySlot.Mythical,
 		};    
 
 		#region Constructor/Declaration/LoadDatabase/SaveDatabase
