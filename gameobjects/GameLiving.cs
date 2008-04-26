@@ -4548,7 +4548,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			{
 				double MinMana = MaxMana * 0.15;
 				if (Mana < MinMana) return 0;
-				else ChangeMana(this, eManaChangeType.Regenerate, -1 * GetModified(eProperty.PowerRegenerationRate));
+                else if (!InCombat) ChangeMana(this, eManaChangeType.Regenerate, -1 * GetModified(eProperty.PowerRegenerationRate));
 
 				if (!InCombat)
 				{
