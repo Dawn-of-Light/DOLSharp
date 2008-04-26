@@ -1189,6 +1189,7 @@ namespace DOL.GS
 				case 0x22: return "rightbracer";
 				case 0x23: return "leftring";
 				case 0x24: return "rightring";
+				case 0x25: return "mythirian";
 			}
 			return "generic inventory";
 		}
@@ -1343,6 +1344,11 @@ namespace DOL.GS
 				case "rri": return 0x24;
 				case "rir": return 0x24;
 				case "rr": return 0x24;
+				
+				//Mythirians
+				case "myth": return 0x25;
+				case "mythirian": return 0x25;
+				case "mythirians": return 0x25;
 			}
 			return 0x00;
 		}
