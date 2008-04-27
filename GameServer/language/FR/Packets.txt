@@ -133,7 +133,7 @@ DetailDisplayHandler.WritePotionInfo.UseItem3:		Peut être réutilisé dans: {0}.
 DetailDisplayHandler.WriteUsableClasses.UsableBy:	Utilisable par: 
 
 # /DoorRequestHandler.cs
-DoorRequestHandler.OnTick.TooFarAway:			The {0} is too far away!
+DoorRequestHandler.OnTick.TooFarAway:			Le {0} est trop loin!
 
 HousingPickupItemHandler.GardenRemoved:		Objet de jardin retiré.
 HousingPickupItemHandler.PickUp:			Vous mettez {0} dans votre inventaire.
@@ -154,14 +154,14 @@ HousingPlaceItemHandler.PutMoney:			Vous déposez de l'argent sur le compte de vo
 
 # /PlayerBonusesListRequestHandler
 PlayerBonusesListRequestHandler.HandlePacket.Bonuses:	Bonuses (snapshot)
-PlayerBonusesListRequestHandler.HandlePacket.Magic:		Magic bonus: {0}%
-PlayerBonusesListRequestHandler.HandlePacket.Melee:		Melee bonus: {0}%
+PlayerBonusesListRequestHandler.HandlePacket.Magic:		Bonus Magique: {0}%
+PlayerBonusesListRequestHandler.HandlePacket.Melee:		Bonus de melee: {0}%
 PlayerBonusesListRequestHandler.HandlePacket.Outpost:	Outpost Bonuses
-PlayerBonusesListRequestHandler.HandlePacket.Realm:		Realm Rank Bonuses
-PlayerBonusesListRequestHandler.HandlePacket.Relic:		Relic Bonuses
+PlayerBonusesListRequestHandler.HandlePacket.Realm:		Primes de Royaume
+PlayerBonusesListRequestHandler.HandlePacket.Relic:		Bonus de Relique
 PlayerBonusesListRequestHandler.HandlePacket.Resist:	Resistances
-PlayerBonusesListRequestHandler.HandlePacket.Special:	Special Item Bonuses
-PlayerBonusesListRequestHandler.HandlePacket.Specs:		+{0} to ALL Specs
+PlayerBonusesListRequestHandler.HandlePacket.Special:	Bonus d'objets speciaux
+PlayerBonusesListRequestHandler.HandlePacket.Specs:		+{0} pour toutes les spé
 
 # /PlayerInitRequestHandler
 PlayerInitRequestHandler.AllianceMessage:	Message d'Alliance : {0}

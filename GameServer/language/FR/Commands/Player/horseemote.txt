@@ -2,11 +2,11 @@
 # Horse Emotes
 HorseEmote.MustBeOnMount:					Vous devez chevaucher votre monture pour utiliser cette commande!
 HorseEmote.You:							vous
-HorseEmote.courbette.ToOthers:				-
+HorseEmote.courbette.ToOthers:				La monture de {0} fait une courbette.
 HorseEmote.courbette.ToSource:				-
 HorseEmote.courbette.NoTargetToOthers:			La monture de {0} effectue une courbette.
 HorseEmote.courbette.NoTargetToSource:			Votre monture effectue une courbette.
-HorseEmote.graze.ToOthers:					-
+HorseEmote.graze.ToOthers:					La monture de {0} broute
 HorseEmote.graze.ToSource:					-
 HorseEmote.graze.NoTargetToOthers:				{0} laisse sa monture brouter.
 HorseEmote.graze.NoTargetToSource:				Vous laissez votre monture brouter.
