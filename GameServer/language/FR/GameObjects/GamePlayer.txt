@@ -232,12 +232,12 @@ GamePlayer.SaveIntoDatabase.CharacterSaved:	Votre personnage a été sauvegardé.
 GamePlayer.Say.YouSay:						Vous dites, "{0}"
 GamePlayer.SayReceive.Says:					{0} dit, "{1}"
 GamePlayer.SayReceive.FalseLanguage:		{0} dit quelque chose dans une langue que vous ne comprenez pas.
-GamePlayer.SendReceive.Sends:               {0} envoi, "{1}"
+GamePlayer.SendReceive.Sends:				{0} envoie, "{1}"
 GamePlayer.SendReceive.FalseLanguage:         {0} envoi quelquechose dans un langage que vous ne comprenez pas.
 GamePlayer.SendReceive.Afk:                  {0} est AFK.
 GamePlayer.SendReceive.AfkMessage:            <AFK> {0} envoi, "{1}"
 GamePlayer.Send.DontUnderstandYou:            {0} ne vous comprend pas!
-GamePlayer.Send.YouSendTo:                  Vous envoyez, "{0}" à {1}.
+
 GamePlayer.SetControlledNpc.ReleaseTarget:	Vous relâchez le contrôle de votre cible.
 GamePlayer.SetControlledNpc.ReleaseTarget2:      Vous perdez le controle de {0}.
 GamePlayer.Shade.AlreadyShade:				Vous êtes déjà dissimulé(e) !
