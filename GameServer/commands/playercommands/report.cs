@@ -32,6 +32,8 @@ namespace DOL.GS.Commands
 		"Usage: /report <message>")]
 	public class ReportCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
+		private const ushort MAX_REPORTS = 100;
+		
 		public void OnCommand(GameClient client, string[] args)
 		{
 			if (ServerProperties.Properties.DISABLE_BUG_REPORTS)
@@ -48,7 +50,24 @@ namespace DOL.GS.Commands
 
 			string message = string.Join(" ", args, 1, args.Length - 1);
 			BugReport report = new BugReport();
-			report.ID = GameServer.Database.GetObjectCount(typeof(BugReport)) + 1;
+			
+			//Andraste
+			BugReport[] reports=(BugReport[])GameServer.Database.SelectAllObjects(typeof(BugReport));
+            bool found = false; int i = 0;
+            for(i=0;i<MAX_REPORTS;i++)
+			{
+				found=false;
+				foreach(BugReport rep in reports) if(rep.ID==i) found=true;
+				if(!found) break;
+			}
+			if(found)
+			{
+				client.Player.Out.SendMessage("There are too many reports, please contact a GM or wait until they are cleaned.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+			
+			//report.ID = GameServer.Database.GetObjectCount(typeof(BugReport)) + 1;
+			report.ID = i;
 			report.Message = message;
 			report.Submitter = client.Player.Name + " [" + client.Account.Name + "]";
 			GameServer.Database.AddNewObject(report);
