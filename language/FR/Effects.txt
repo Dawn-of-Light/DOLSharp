@@ -1,3 +1,4 @@
+#EFFECT
 
 Effects.DelveInfo.MinutesRemaining:				- {0}: {1} minutes remaining.
 Effects.DelveInfo.SecondsRemaining:				- {0} seconds remaining.

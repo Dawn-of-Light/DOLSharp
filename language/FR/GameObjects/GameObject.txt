@@ -18,7 +18,7 @@ GameObject.Interact.TooFarAway:					Vous êtes trop loin pour interagir avec {0}.
 
 # GAMEOBJECTS/ATLANTIS
 # /Researcher
-Researcher.GetExamineMessages.YouExamine:		You examine {0}. {1} is {2}.
-Researcher.GetExamineMessages.She:				She
-Researcher.GetExamineMessages.He:				He
+Researcher.GetExamineMessages.YouExamine:		Vous regardez {0}. {1} est {2}.
+Researcher.GetExamineMessages.She:				elle
+Researcher.GetExamineMessages.He:				il
 

@@ -1,14 +1,14 @@
 
 
-Scripts.Recharger.GetExamineMessages:			You examine {0}. {1} is {2} and can recharge your equipment.
-Scripts.Recharger.Interact:				I can recharge weapons or armor for you, Just hand me the item you want recharged and I'll see what I can do, for a small fee.
-Scripts.Recharger.ReceiveItem.CantThat:			I can't recharge that.
-Scripts.Recharger.ReceiveItem.Cost:			It will cost {0} to recharge that. Do you accept?
-Scripts.Recharger.ReceiveItem.FullyCharged:		Item is fully charged!
-Scripts.Recharger.ReceiveItem.StackedObjects:		{0} can't recharge stacked objects.
-Scripts.Recharger.RechargerDialogResponse.Decline:	You decline to have your {0} recharged.
-Scripts.Recharger.RechargerDialogResponse.FullyCharged:	There, it is now fully charged!
-Scripts.Recharger.RechargerDialogResponse.GiveMoney:	You give to {0} {1}.
-Scripts.Recharger.RechargerDialogResponse.InvalidItem:	Invalid item.
-Scripts.Recharger.RechargerDialogResponse.NotMoney:	You don't have enough money.
+Scripts.Recharger.GetExamineMessages:			Vous regardez {0}. {1} est {2} et il peut recharger votre equipement.
+Scripts.Recharger.Interact:						Je peux recharger les armes ou armures pour vous, donnez moi l'élément que vous souhaitez recharger et je vais voir ce que je peux faire, pour une somme modique.
+Scripts.Recharger.ReceiveItem.CantThat:			Je ne peut recharger cela.
+Scripts.Recharger.ReceiveItem.Cost:			cela vous coutera {0} pour recharger ceci. Acceptez vous?
+Scripts.Recharger.ReceiveItem.FullyCharged:		L'objet est deja entierement rechargé!
+Scripts.Recharger.ReceiveItem.StackedObjects:		{0} ne recharge pas les objets empilé.
+Scripts.Recharger.RechargerDialogResponse.Decline:	Vous refusez de recharger l'objet: {0} .
+Scripts.Recharger.RechargerDialogResponse.FullyCharged:	Voila , votre item est entierement restauré!
+Scripts.Recharger.RechargerDialogResponse.GiveMoney:	Vous donnez {0} {1}.
+Scripts.Recharger.RechargerDialogResponse.InvalidItem:	Objet invalide.
+Scripts.Recharger.RechargerDialogResponse.NotMoney:	Vous n'avez pas assez d'argent.
 
