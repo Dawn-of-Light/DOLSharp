@@ -15,11 +15,11 @@ FirstAidAbility.AddEffectsInfo.Info3:			Niveau 3: Value: 100%
 FirstAidAbility.AddEffectsInfo.Info4:			Cible: Vous
 FirstAidAbility.AddEffectsInfo.Info5:			Temps d'invocation: Instantané
 FirstAidAbility.AddEffectsInfo.Info6:			
-FirstAidAbility.Execute.FullyHealed:			Vous etes entierement soigné.
+FirstAidAbility.Execute.FullyHealed:			Vous etes entièrement soigné.
 FirstAidAbility.Execute.HealYourself:			Vous vous soignez pour {0} points de vie.
 
 # /PurgeAbility
-PurgeAbility.AddEffectsInfo.Info1:			Level 1 of this ability has a five second delay when triggering this ability before it activates. Higher levels of Purge do not have this delay.
+PurgeAbility.AddEffectsInfo.Info1:			Le niveau 1 de cette capacité a un delay de 5 secondes. Les niveaux superieure de Purge ne sont pas assujetti a ce delais.
 PurgeAbility.AddEffectsInfo.Info2:			Cible: Vous
 PurgeAbility.AddEffectsInfo.Info3:			Temps d'invocation: Instantané
 PurgeAbility.OnTick.PurgeActivate:			Purge activé dans {0} secondes!
