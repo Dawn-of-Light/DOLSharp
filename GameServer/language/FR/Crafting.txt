@@ -1,0 +1,126 @@
+
+# CRAFTING
+# (All)
+Crafting.CheckTool.AlchemyKit:            Kit d'alchimie
+Crafting.CheckTool.FindAlchemyKit:			You must find a alchemy kit!
+Crafting.CheckTool.FindAlchemyTable:         Vous devez trouver une table d'alchimie !
+Crafting.CheckTool.FindForge:            Vous devez trouver une forge !
+Crafting.CheckTool.FindLathe:            Vous devez trouver une lathe !
+Crafting.CheckTool.FindMortarPestle:		You must find a mortar and pestle!
+Crafting.CheckTool.FindPlaningTool:         Vous devez trouver un outil de rabotage !
+Crafting.CheckTool.FindSewingKit:         Vous devez trouver un kit de couture !
+Crafting.CheckTool.FindSmithTool:         Vous devez trouver des outils de forgeron !
+Crafting.CheckTool.FindSpellcraftKit:         Vous devez trouver un kit de spellcraft !
+Crafting.CheckTool.MortarAndPestle:         Mortier et pilon
+Crafting.CheckTool.NotHaveTools:         Vous n'avez pas les outils pour le {0}.
+Crafting.CheckTool.PlaningTool:            Outil de rabotage
+Crafting.CheckTool.SewingKit:            Kit de couture
+Crafting.CheckTool.SmithsHammer:         Le marteau de forgeron
+Crafting.CheckTool.SpellcraftKit:         Kit d'arcanisme
+Crafting.GainCraftingSkillPoints.RaiseAlchemy:		You must see your trainer to raise your Alchemy further!
+Crafting.GainCraftingSkillPoints.RaiseArmorcraft:   Vous devez voir votre entraîneur pour augmenter votre niveau en Armurerie pour allez plus loin!
+Crafting.GainCraftingSkillPoints.RaiseFletching:   Vous devez voir votre entraîneur pour augmenter votre niveau en Empennage pour allez plus loin!
+Crafting.GainCraftingSkillPoints.RaiseSpellcraft:   Vous devez voir votre entraîneur pour augmenter votre niveau en Alchimie pour allez plus loin!
+Crafting.GainCraftingSkillPoints.RaiseTailoring:   Vous devez voir votre entraîneur pour augmenter votre niveau en Couture pour allez plus loin!
+Crafting.GainCraftingSkillPoints.RaiseWeaponcraft:   Vous devez voir votre entraîneur pour augmenter votre niveau en Forge pour allez plus loin!
+Crafting.Name.Alchemy:					Alchemy
+Crafting.Name.Armorcraft:				Armorcraft
+Crafting.Name.Clothworking:				Clothworking
+Crafting.Name.Evocation:				Evocation
+Crafting.Name.Fletching:				Fletching
+Crafting.Name.Gemcutting:				Gemcutting
+Crafting.Name.Herbcrafting:				Herbcrafting
+Crafting.Name.Jewelcraft:				Jewelcraft
+Crafting.Name.Leathercrafting:				Leathercrafting
+Crafting.Name.Metalworking:				Metalworking
+Crafting.Name.Siegecraft:				Siegecraft
+Crafting.Name.Tailoring:				Tailoring
+Crafting.Name.Weaponcraft:				Weaponcraft
+Crafting.Name.Woodworking:				Woodworking
+
+# /AbstractCraftingSkill
+AbstractCraftingSkill.BuildCraftedItem.BackpackFull:   Votre sac est plein. {0} est déposé sur le sol.
+AbstractCraftingSkill.BuildCraftedItem.Masterpiece:   Bravo, Vous avez créé un chez-d'oeuvre !
+AbstractCraftingSkill.BuildCraftedItem.Successfully:   Vous avez correctement fabriqué {0}! ({1})
+AbstractCraftingSkill.CheckRawMaterial.NoIngredients:   Vous n'avez pas les ingredients pour faire le {0}.
+AbstractCraftingSkill.CheckRawMaterial.RawMaterial:	Cannot find an item by the ID of {0} please report this!
+AbstractCraftingSkill.CheckRawMaterial.YouAreMissing:   Il vous manque :
+
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoClothworkingSkill:      Vous n'avez pas le niveau minimum dans la compétence en Armurie ({0}) Pour confectionner le {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoLeathercraftingSkill:   Vous n'avez pas le niveau minimum dans la compétence  en Couture ({0}) Pour confectionner le {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoMetalworkingSkill:      Vous n'avez pas le niveau minimum dans la compétence  en Ingénierie ({0}) Pour confectionner le {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoWoodworkingSkill:      Vous n'avez pas le niveau minimum dans la compétence  en Forge ({0}) Pour confectionner le {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.Rawmaterial:			Cannot find an item by the ID of {0} please report this!
+
+AbstractCraftingSkill.CraftItem.BeginWork:      Vous commencez a travailler sur le {0} ({1}%).
+AbstractCraftingSkill.CraftItem.ChanceToGainPoint:   Chance de gagner des points sur votre compétence primaire {0}%.
+AbstractCraftingSkill.CraftItem.CurrentlyMaking:   En train de faire: {0}
+AbstractCraftingSkill.CraftItem.MoveAndInterrupt:   vous bougez et interrompez votre travail.
+AbstractCraftingSkill.CraftItem.StopWork:      Vous arretez votre travail.
+AbstractCraftingSkill.LooseRawMaterial.Count:      Vous perdez ({0}) {1}.
+AbstractCraftingSkill.LooseRawMaterial.Materials:   Vous n'arrivez pas à faire le {0}, et perdez des matériaux !
+AbstractCraftingSkill.MakeItem.LoseNoMaterials:      Vous n'arrivez pas à faire le {0} mais ne perdez pas de matériaux !
+AbstractCraftingSkill.MakeItem.NotAllMaterials:      Vous n'avez pas tout les composants nécessaires à la confection de cet objet.
+
+# /AdvancedCraftingSkill
+AdvancedCraftingSkill.CombineItems.OnlyCombine:		You can only combine your items into one item!
+AdvancedCraftingSkill.IsAllowedToCombine.CraftedItems:	Only crafted items can be enchanted!
+AdvancedCraftingSkill.IsAllowedToCombine.Imbue:		You need something to imbue {0} with!
+AdvancedCraftingSkill.IsAllowedToCombine.NoEnchanted:	This item can't be enchanted!
+
+# /Alchemy
+Alchemy.IsAllowedToCombine.AlchemyTinctures:		You can only combine alchemy tinctures!
+Alchemy.IsAllowedToCombine.AlreadyImbued:		The {0} is already imbued with a magical effect!
+Alchemy.IsAllowedToCombine.OneTincture:			You can only combine one tincture on one item!
+
+# /Repair
+Repair.BeginWork.BeginRepair:				You begin repairing the {0}.
+Repair.BeginWork.BeginRepairing1:			You begin repairing the {0} ({1}%).
+Repair.BeginWork.BeginRepairing2:			{0} begin repairing the {1}.
+Repair.BeginWork.Repairing:				Repairing: {0}
+Repair.BeginWork.StopRepair1:				You move and stop to repair the {0}.
+Repair.BeginWork.StopRepair2:				{0} move and stop to repair the {1}.
+Repair.IsAllowedToBeginWork.BackpackItems:		You can only repair items in your backpack!
+Repair.IsAllowedToBeginWork.CantRepair:			You can't repair {0}!
+Repair.IsAllowedToBeginWork.EndCurrentAction:		You must end your current action before you repair anything!
+Repair.IsAllowedToBeginWork.FullyRepaired:		The {0} is fully repaired!
+Repair.IsAllowedToBeginWork.NotEnoughSkill:		You don't have enough skill to repair the {0}!
+Repair.IsAllowedToBeginWork.WeaponCrafter:		You must be a weapon crafter to repair the siegeweapon.
+Repair.Proceed.FailImprove1:				You fail to improve the {0}'s condition.
+Repair.Proceed.FailImprove2:				{0} fail to improve the {1}'s condition.
+Repair.Proceed.FullyRepaired1:				You have fully repaired the {0}!
+Repair.Proceed.FullyRepaired2:				{0} have fully repaired the {1}!
+Repair.ProceedSiegeWeapon.FailRepair:			You fail to repair the {0}!
+
+# /Salvage
+Salvage.BeginWork.BeginSalvage:				You begin salvaging the {0}.
+Salvage.BeginWork.InterruptSalvage:			You move and interrupt your salvage.
+Salvage.BeginWork.NoRoom:				You don't have enough room in your inventory...
+Salvage.BeginWork.NoSalvage:				You can't salvage {0}!
+Salvage.BeginWork.Salvaging:				Salvaging: {0}
+Salvage.IsAllowedToBeginWork.BackpackItems:		You can only salvage items in your backpack!
+Salvage.IsAllowedToBeginWork.EndCurrentAction:		You must end your current action before you salvage anything!
+Salvage.IsAllowedToBeginWork.NotEnoughSkill:		You don't have enough skill to salvage the {0}!
+Salvage.Proceed.GetBackMaterial:			You get back {0} {1} after salvaging the {2}.
+
+# /SpellCrafting
+SpellCrafting.ApplySpellcraftGems.ImbuedItem:		{0} imbued 1 item.
+SpellCrafting.ApplySpellcraftGems.Failed:		Spellcraft failed!
+SpellCrafting.ApplySpellcraftGems.PowerExplodes:	The power of the enchantments explodes before your eyes!
+SpellCrafting.IsAllowedToCombine.AlreadyImbued:		The {0} is already imbued with 4 different types of magical properties!
+SpellCrafting.IsAllowedToCombine.DifferentTypes:	The {0} can only be imbued with 4 different types of magical properties!
+SpellCrafting.IsAllowedToCombine.FalseItem:		This item can't be used to Spellcraft!
+SpellCrafting.IsAllowedToCombine.FalseMaterial:		{0} can't be used to enchant a item!
+SpellCrafting.IsAllowedToCombine.NoEnchanted:		This item can't be enchanted!
+SpellCrafting.IsAllowedToCombine.NoMoreLevels:		You can't overcharge your {0} more than 5 levels!
+SpellCrafting.IsAllowedToCombine.NoSameBonus:		You can't put the same bonus on an item multiple times!
+SpellCrafting.IsAllowedToCombine.NotEnoughSkill:	You have not enough skill to imbue that much!
+SpellCrafting.ShowSpellCraftingInfos.CurrentBonus:	Bonus currently on the {0} :
+SpellCrafting.ShowSpellCraftingInfos.GemBonuses:	Gem Bonuses:
+SpellCrafting.ShowSpellCraftingInfos.ImbueCapacity:	Used {0} of {1} imbue point capacity.
+SpellCrafting.ShowSpellCraftingInfos.Losing:		{0}% of losing item during SC.
+SpellCrafting.ShowSpellCraftingInfos.Modified:		(This penality is further modified by item quality and your skill!)
+SpellCrafting.ShowSpellCraftingInfos.Penality:		{0} overcharge penality.
+SpellCrafting.ShowSpellCraftingInfos.Success:		{0}% overcharge success.
+SpellCrafting.ShowSpellCraftingInfos.TotalImbue:	Spellcrafting the {0} ({1} total imbue points).
+
