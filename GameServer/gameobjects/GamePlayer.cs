@@ -8028,6 +8028,7 @@ namespace DOL.GS
 		{
 			if (Steed == null)
 				return false;
+			if(Steed.Name=="Forceful Zephyr") return false;
 			if (OnDismountSteed != null && !OnDismountSteed(this, Steed, forced) && !forced)
 				return false;
 			GameObject steed = Steed;
