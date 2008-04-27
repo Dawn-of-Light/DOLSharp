@@ -1,0 +1,10 @@
+
+# GMCommands
+# /ban
+Scripts.GM.Ban.AAlreadyBanned:				Ce compte a déjà été banni.
+Scripts.GM.Ban.ABanned:						Le compte {0} a été banni.
+Scripts.GM.Ban.BAlreadyBanned:				Ce compte et cette IP ont déjà été bannis.
+Scripts.GM.Ban.BBanned:						Le compte {0} et l'adresse IP {1} ont été bannis.
+Scripts.GM.Ban.IAlreadyBanned:				Cette adresse IP a déjà été bannie.
+Scripts.GM.Ban.IBanned:						L'adresse IP {0} a été bannie.
+Scripts.GM.Ban.MustTarget:					Vous devez sélectionner une cible !

@@ -1,0 +1,36 @@
+
+# Horse Emotes
+HorseEmote.MustBeOnMount:					Vous devez chevaucher votre monture pour utiliser cette commande!
+HorseEmote.You:							vous
+HorseEmote.courbette.ToOthers:				-
+HorseEmote.courbette.ToSource:				-
+HorseEmote.courbette.NoTargetToOthers:			La monture de {0} effectue une courbette.
+HorseEmote.courbette.NoTargetToSource:			Votre monture effectue une courbette.
+HorseEmote.graze.ToOthers:					-
+HorseEmote.graze.ToSource:					-
+HorseEmote.graze.NoTargetToOthers:				{0} laisse sa monture brouter.
+HorseEmote.graze.NoTargetToSource:				Vous laissez votre monture brouter.
+HorseEmote.halt.ToOthers:					{0} fait signe à {1} de s'arrêter.
+HorseEmote.halt.ToSource:					Vous faites signe à {0} de s'arrêter.
+HorseEmote.halt.NoTargetToOthers:				{0} fait signe à tout le monde de s'arrêter.
+HorseEmote.halt.NoTargetToSource:				Vous faites signe à tout le monde de s'arrêter.
+HorseEmote.nod.ToOthers:						La monture de {0} incline la tête devant {1}!
+HorseEmote.nod.ToSource:						Votre monture incline la tête devant {0}.
+HorseEmote.nod.NoTargetToOthers:				La monture de {0} incline la tête.
+HorseEmote.nod.NoTargetToSource:				Votre monture incline la tête.
+HorseEmote.pet.ToOthers:						-
+HorseEmote.pet.ToSource:						-
+HorseEmote.pet.NoTargetToOthers:				{0} caresse sa monture.
+HorseEmote.pet.NoTargetToSource:				Vous caressez votre monture.
+HorseEmote.rear.ToOthers:					La monture de {0} se cabre face à {1}!
+HorseEmote.rear.ToSource:					Votre monture se cabre face à {0}.
+HorseEmote.rear.NoTargetToOthers:				La monture de {0} se cabre.
+HorseEmote.rear.NoTargetToSource:				Votre monture se cabre.
+HorseEmote.startle.ToOthers:					La monture de {0} a un mouvement de crainte face à {1}!
+HorseEmote.startle.ToSource:					Votre monture a un mouvement de crainte face à {0}.
+HorseEmote.startle.NoTargetToOthers:			La monture de {0} a un mouvement de crainte.
+HorseEmote.startle.NoTargetToSource:			Votre monture a un mouvement de crainte.
+HorseEmote.trick.ToOthers:					{0} se tient debout sur sa monture pour impressionner {1}!
+HorseEmote.trick.ToSource:					Vous vous tenez debout sur votre monture pour impressionner {0}.
+HorseEmote.trick.NoTargetToOthers:				{0} se tient debout sur sa monture pour impressionner l'assistance.
+HorseEmote.trick.NoTargetToSource:				Vous vous tenez debout sur votre monture pour impressionner l'assistance.

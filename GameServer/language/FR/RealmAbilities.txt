@@ -1,0 +1,41 @@
+
+# REALMABILITIES
+# /Handlers
+# /DashingDefenseAbility
+DashingDefenseAbility.AddEffectsInfo.Info1:		
+DashingDefenseAbility.AddEffectsInfo.Info2:		Target: Self
+DashingDefenseAbility.AddEffectsInfo.Info3:		Casting time: instant
+DashingDefenseAbility.Execute.AlreadyEffect:		You already an effect of that type!
+DashingDefenseAbility.Execute.MustInGroup:		You must be in a group to use this ability!
+
+# /FirstAidAbility
+FirstAidAbility.AddEffectsInfo.Info1:			Level 1: Value: 25%
+FirstAidAbility.AddEffectsInfo.Info2:			Level 2: Value: 60%
+FirstAidAbility.AddEffectsInfo.Info3:			Level 3: Value: 100%
+FirstAidAbility.AddEffectsInfo.Info4:			Target: Self
+FirstAidAbility.AddEffectsInfo.Info5:			Casting time: instant
+FirstAidAbility.AddEffectsInfo.Info6:			
+FirstAidAbility.Execute.FullyHealed:			You are fully healed.
+FirstAidAbility.Execute.HealYourself:			You heal yourself for {0} hit points.
+
+# /PurgeAbility
+PurgeAbility.AddEffectsInfo.Info1:			Level 1 of this ability has a five second delay when triggering this ability before it activates. Higher levels of Purge do not have this delay.
+PurgeAbility.AddEffectsInfo.Info2:			Target: Self
+PurgeAbility.AddEffectsInfo.Info3:			Casting time: instant
+PurgeAbility.OnTick.PurgeActivate:			Purge activates in {0} seconds!
+PurgeAbility.RemoveNegativeEffects.FallFromYou:		All negative effects fall from you.
+
+# /RealmAbility
+RealmAbility.AddReUseDelayInfo.Every:			Level {0}: Can use every: {1}
+RealmAbility..CheckPreconditions.BeInCombat:		You must be in combat recently to use this ability!
+RealmAbility..CheckPreconditions.BeInGroup:		You must be in a group use this ability!
+RealmAbility..CheckPreconditions.Combat:		You have been in combat recently and cannot use this ability!
+RealmAbility..CheckPreconditions.Dead:			You cannot use this ability while dead!
+RealmAbility..CheckPreconditions.Mesmerized:		You cannot use this ability while mesmerized!
+RealmAbility..CheckPreconditions.Sitting:		You cannot use this ability while sitting!
+RealmAbility..CheckPreconditions.Stealthed:		You cannot use this ability while stealthed!
+RealmAbility..CheckPreconditions.Stunned:		You cannot use this ability while stunned!
+RealmAbility.SendCasterSpellEffectAndCastMessage.Caster:{0} casts a spell!
+RealmAbility.SendCasterSpellEffectAndCastMessage.You:	You cast a {0} Spell!
+RealmAbility.SendCastMessage.PlayerCasts:		{0} casts a spell!
+RealmAbility.SendCastMessage.YouCast:			You cast a {0} Spell!
