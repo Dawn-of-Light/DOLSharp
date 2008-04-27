@@ -1,5 +1,5 @@
 
 
 # /GameHousingHastener
-GameHousingHastener.GetExamineMessages.Examine:		You examine {0}. {1} is {2} and is a hastener.
+GameHousingHastener.GetExamineMessages.Examine:		Vous observez {0}. {1} est {2} et c'est un boosteur de vitesse.
 
