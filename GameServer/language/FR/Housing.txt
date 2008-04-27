@@ -1,40 +1,40 @@
 
 # HOUSING
 House.DBHousePermissions.AccessLevel:			Access level {0}
-House.Edit.NotEnoughMoney:				You don't have enough money to do that!
-House.Edit.PayForChanges:				You pay {0} for your changes.
-House.Enter.EnteredHouse:				You have entered house number {0}.
-House.Exit.LeftHouse:					You have left house number {0}.
-House.SendHouseInfo.DoorMaterial:			-Door: {0}	
+House.Edit.NotEnoughMoney:				Vous n'avez pas assez d'argent pour faire cela!
+House.Edit.PayForChanges:				Vous payez {0} pour les modifications.
+House.Enter.EnteredHouse:				Vous etes entré dans la maison numéro {0}.
+House.Exit.LeftHouse:					Vous avez quitté la maison numéro {0}.
+House.SendHouseInfo.DoorMaterial:			-Porte: {0}	
 House.SendHouseInfo.ExteriorMaterials:			Exterior Materials:	
 House.SendHouseInfo.ExteriorUpgrades:			Exterior Upgrades:	
 House.SendHouseInfo.HouseOwner:				{0}'s house
-House.SendHouseInfo.IndoorGuildBanner:			-Banner: {0}	
-House.SendHouseInfo.IndoorGuildShield:			-Shield: {0}	
-House.SendHouseInfo.InteriorCarpets:			Interior Carpets:	
-House.SendHouseInfo.InteriorUpgrades:			Interior Upgrades:	
-House.SendHouseInfo.Level:				Level: {0}
+House.SendHouseInfo.IndoorGuildBanner:			-Bannieres: {0}	
+House.SendHouseInfo.IndoorGuildShield:			-Boucliers: {0}	
+House.SendHouseInfo.InteriorCarpets:			Tapis Interieur:	
+House.SendHouseInfo.InteriorUpgrades:			Ajouts Interieur:	
+House.SendHouseInfo.Level:				Niveau: {0}
 House.SendHouseInfo.Lockbox:				Lockbox: {0}
-House.SendHouseInfo.Lotnum:				Lotnum: {0}
+House.SendHouseInfo.Lotnum:				Lot numéro: {0}
 House.SendHouseInfo.MaxLockbox:				Max in Lockbox: {0}
-House.SendHouseInfo.OutdoorGuildBanner:			-Banner: {0}	
-House.SendHouseInfo.OutdoorGuildShield:			-Shield: {0}	
-House.SendHouseInfo.Owner:				Owner: {0}
-House.SendHouseInfo.Owners:				Owners:
-House.SendHouseInfo.Porch:				Porch: 
+House.SendHouseInfo.OutdoorGuildBanner:			-Bannieres: {0}	
+House.SendHouseInfo.OutdoorGuildShield:			-Boucliers: {0}	
+House.SendHouseInfo.Owner:				Propriétaire: {0}
+House.SendHouseInfo.Owners:				Propriétaires:
+House.SendHouseInfo.Porch:				Porche: 
 House.SendHouseInfo.PorchEnabled:			-Enabled: {0}	
-House.SendHouseInfo.PorchMaterial:			-Porch: {0}	
-House.SendHouseInfo.PorchRoofColor:			-Color: {0}	
-House.SendHouseInfo.RentalPrice:			Rental Price: {0}	
-House.SendHouseInfo.RentDueIn:				Rent due in: {0} days, {1} hours
-House.SendHouseInfo.RoofMaterial:			-Roof: {0}	
-House.SendHouseInfo.Rug1Color:				-First Color: {0}
-House.SendHouseInfo.Rug2Color:				-Second Color: {0}
-House.SendHouseInfo.Rug3Color:				-Third Color: {0}
-House.SendHouseInfo.Rug4Color:				-Fourth Color: {0}
+House.SendHouseInfo.PorchMaterial:			-Porche: {0}	
+House.SendHouseInfo.PorchRoofColor:			-Couleur: {0}	
+House.SendHouseInfo.RentalPrice:			Loyer: {0}	
+House.SendHouseInfo.RentDueIn:				Date du paiement : {0} jours, {1} heures
+House.SendHouseInfo.RoofMaterial:			-Toit: {0}	
+House.SendHouseInfo.Rug1Color:				-Couleur 1: {0}
+House.SendHouseInfo.Rug2Color:				-Couleur 2: {0}
+House.SendHouseInfo.Rug3Color:				-Couleur 3: {0}
+House.SendHouseInfo.Rug4Color:				-Couleur 4: {0}
 House.SendHouseInfo.TrussMaterial:			-Support: {0}	
-House.SendHouseInfo.WallMaterial:			-Wall: {0}	
-House.SendHouseInfo.WindowMaterial:			-Shutter: {0}	
+House.SendHouseInfo.WallMaterial:			-Murs: {0}	
+House.SendHouseInfo.WindowMaterial:			-Volets: {0}	
 
 
 HouseEnterLeave.TooFarAway:					Vous êtes trop loin pour entrer dans la maison {0}.

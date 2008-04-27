@@ -2,7 +2,7 @@
 #Patou
 
 # GAMEPLAYER
-GamePlayer.AddAbility.YouLearn:					Vous apprenez l'habilité {0} !
+GamePlayer.AddAbility.YouLearn:					Vous apprenez la capacité {0} !
 GamePlayer.AddSpecialisation.YouLearn:			Vous apprenez la compétence {0} !
 GamePlayer.AddSpellLine.YouLearn:				Vous apprenez la liste de sorts {0} !		
 GamePlayer.ApplyPoison.CantApplyRecentCombat:	Vous avez été en combat récemment et ne pouvez pas appliquer de poison pour le moment.
@@ -155,11 +155,11 @@ GamePlayer.OnPlayerMove.CannotCallMount:	Vous bougez et ne pouvez pas appeler vo
 GamePlayer.OnPlayerMove.InterruptCrafting:	Vous bougez, et interrompez votre fabrication.
 GamePlayer.OnSkillTrained.TrainsInVarious:	{0} s'entraîne dans différentes spécialisations.
 GamePlayer.OnSkillTrained.YouHave:			Il vous reste {0} points de spécialisation pour ce niveau.
-GamePlayer.OnSkillTrained.YouSpend:			Vous dépensez {0} points et vous vous spécialisez mieux dans {1}.
+GamePlayer.OnSkillTrained.YouSpend:			Vous dépensez {0} points et vous augmentez votre specialisation dans {1}.
 GamePlayer.OpenSelfCraft.AlreadySelfCrafting:	Vous êtes déjà en train d'enchanter.
 GamePlayer.OpenSelfCraft.CanOnlyCraftBackpack:	Vous ne pouvez combiner que des objets dans votre sac!
 GamePlayer.PickupObject.Autosplit:				(Autosplit) {0} va à {1}.
-GamePlayer.PickupObject.BackpackFull:			Votre sac à dos est plein, vous devez faire de la place.
+GamePlayer.PickupObject.BackpackFull:			Votre inventaire est plein, vous devez faire de la place.
 GamePlayer.PickupObject.CantGetThat:			Vous ne pouvez pas ramasser ça !
 GamePlayer.PickupObject.GroupMemberPicksUp:		{0} ramasse {1}.
 GamePlayer.PickupObject.ItemBelowBGThreshold: Cet objet est inférieur au niveau de votre groupe de combat.
@@ -171,7 +171,7 @@ GamePlayer.PickupObject.ObjectTooFarAway:		{0} est trop loin pour être ramassé(e
 GamePlayer.PickupObject.TooFarFromBoat:			Vous êtes trop loin du bateau pour embarquer !
 GamePlayer.PickupObject.YouGet:					Vous ramassez {0} et le mettez dans votre sac.
 GamePlayer.PickupObject.YouPickUp:				Vous ramassez {0}.
-GamePlayer.PickupObject.YourLootShare:			votre part du butin est {0}.
+GamePlayer.PickupObject.YourLootShare:			votre part du butin est de {0}.
 GamePlayer.Pray.AlreadyPraying:				Vous priez déjà !
 GamePlayer.Pray.Begin:						Vous commencez vos prières.
 GamePlayer.Pray.CantPrayNow:				Vous ne pouvez pas prier maintenant !
