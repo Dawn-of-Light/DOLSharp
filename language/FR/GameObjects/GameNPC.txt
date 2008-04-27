@@ -1,0 +1,18 @@
+
+# GAMENPC
+GameNPC.DropLoot.AdditionalMoney:			You find an additional {0} thanks to your realm owning outposts!
+GameNPC.GetAggroLevelString.Aggressive1:		agressif
+GameNPC.GetAggroLevelString.Aggressive2:		Agressive
+GameNPC.GetAggroLevelString.Friendly1:			amical
+GameNPC.GetAggroLevelString.Friendly2:			Amicale
+GameNPC.GetAggroLevelString.Hostile1:			hostile
+GameNPC.GetAggroLevelString.Hostile2:			Hostile
+GameNPC.GetAggroLevelString.Neutral1:			neutre
+GameNPC.GetAggroLevelString.Neutral2:			Neutre
+GameNPC.GetAggroLevelString.TowardsYou:			{0} envers vous
+GameNPC.GetExamineMessages.YouExamine:			Vous examinez {0}. Il (elle) se trouve être {2}.
+GameNPC.Interact.AlreadyRiding:				You are already riding this {0}.
+GameNPC.Interact.DirtyLook:					{0} gives you a dirty look.
+GameNPC.Interact.IsFull:					This {0} is full.
+GameNPC.SayTo.Says:							{0} says, "{1}"
+GameNPC.SayTo.SpeaksTo:						{0} speaks to {1}
