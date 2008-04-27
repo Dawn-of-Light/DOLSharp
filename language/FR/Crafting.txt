@@ -17,12 +17,12 @@ Crafting.CheckTool.PlaningTool:            Outil de rabotage
 Crafting.CheckTool.SewingKit:            Kit de couture
 Crafting.CheckTool.SmithsHammer:         Le marteau de forgeron
 Crafting.CheckTool.SpellcraftKit:         Kit d'arcanisme
-Crafting.GainCraftingSkillPoints.RaiseAlchemy:		You must see your trainer to raise your Alchemy further!
-Crafting.GainCraftingSkillPoints.RaiseArmorcraft:   Vous devez voir votre entraîneur pour augmenter votre niveau en Armurerie pour allez plus loin!
-Crafting.GainCraftingSkillPoints.RaiseFletching:   Vous devez voir votre entraîneur pour augmenter votre niveau en Empennage pour allez plus loin!
-Crafting.GainCraftingSkillPoints.RaiseSpellcraft:   Vous devez voir votre entraîneur pour augmenter votre niveau en Alchimie pour allez plus loin!
-Crafting.GainCraftingSkillPoints.RaiseTailoring:   Vous devez voir votre entraîneur pour augmenter votre niveau en Couture pour allez plus loin!
-Crafting.GainCraftingSkillPoints.RaiseWeaponcraft:   Vous devez voir votre entraîneur pour augmenter votre niveau en Forge pour allez plus loin!
+Crafting.GainCraftingSkillPoints.RaiseAlchemy:		Vous devez voir votre entraîneur pour augmenter votre niveau en Alchimie !
+Crafting.GainCraftingSkillPoints.RaiseArmorcraft:   Vous devez voir votre entraîneur pour augmenter votre niveau en Armurerie!
+Crafting.GainCraftingSkillPoints.RaiseFletching:   Vous devez voir votre entraîneur pour augmenter votre niveau en Empennage !
+Crafting.GainCraftingSkillPoints.RaiseSpellcraft:   Vous devez voir votre entraîneur pour augmenter votre niveau en Alchimie !
+Crafting.GainCraftingSkillPoints.RaiseTailoring:   Vous devez voir votre entraîneur pour augmenter votre niveau en Couture !
+Crafting.GainCraftingSkillPoints.RaiseWeaponcraft:   Vous devez voir votre entraîneur pour augmenter votre niveau en Forge !
 Crafting.Name.Alchemy:					Alchemy
 Crafting.Name.Armorcraft:				Armorcraft
 Crafting.Name.Clothworking:				Clothworking
@@ -66,7 +66,7 @@ AbstractCraftingSkill.MakeItem.NotAllMaterials:      Vous n'avez pas tout les co
 AdvancedCraftingSkill.CombineItems.OnlyCombine:		You can only combine your items into one item!
 AdvancedCraftingSkill.IsAllowedToCombine.CraftedItems:	Only crafted items can be enchanted!
 AdvancedCraftingSkill.IsAllowedToCombine.Imbue:		You need something to imbue {0} with!
-AdvancedCraftingSkill.IsAllowedToCombine.NoEnchanted:	This item can't be enchanted!
+AdvancedCraftingSkill.IsAllowedToCombine.NoEnchanted:	Cet objet ne peut etre enchanté!
 
 # /Alchemy
 Alchemy.IsAllowedToCombine.AlchemyTinctures:		You can only combine alchemy tinctures!
@@ -74,23 +74,23 @@ Alchemy.IsAllowedToCombine.AlreadyImbued:		The {0} is already imbued with a magi
 Alchemy.IsAllowedToCombine.OneTincture:			You can only combine one tincture on one item!
 
 # /Repair
-Repair.BeginWork.BeginRepair:				You begin repairing the {0}.
-Repair.BeginWork.BeginRepairing1:			You begin repairing the {0} ({1}%).
-Repair.BeginWork.BeginRepairing2:			{0} begin repairing the {1}.
-Repair.BeginWork.Repairing:				Repairing: {0}
-Repair.BeginWork.StopRepair1:				You move and stop to repair the {0}.
-Repair.BeginWork.StopRepair2:				{0} move and stop to repair the {1}.
+Repair.BeginWork.BeginRepair:				Vous commencez a reparer {0}.
+Repair.BeginWork.BeginRepairing1:			Vous commencez a reparer {0} ({1}%).
+Repair.BeginWork.BeginRepairing2:			{0} commence a reparer {1}.
+Repair.BeginWork.Repairing:				Reparation: {0}
+Repair.BeginWork.StopRepair1:				Vous bougez et interrompé la reparation de: {0}.
+Repair.BeginWork.StopRepair2:				{0} bouge et arrete la reparationde: {1}.
 Repair.IsAllowedToBeginWork.BackpackItems:		You can only repair items in your backpack!
-Repair.IsAllowedToBeginWork.CantRepair:			You can't repair {0}!
-Repair.IsAllowedToBeginWork.EndCurrentAction:		You must end your current action before you repair anything!
-Repair.IsAllowedToBeginWork.FullyRepaired:		The {0} is fully repaired!
-Repair.IsAllowedToBeginWork.NotEnoughSkill:		You don't have enough skill to repair the {0}!
-Repair.IsAllowedToBeginWork.WeaponCrafter:		You must be a weapon crafter to repair the siegeweapon.
+Repair.IsAllowedToBeginWork.CantRepair:			Vous ne pouvez pas reparer {0}!
+Repair.IsAllowedToBeginWork.EndCurrentAction:		Vous devez finir votre action avant de lancer une reparation!
+Repair.IsAllowedToBeginWork.FullyRepaired:		{0} est entierement reparé!
+Repair.IsAllowedToBeginWork.NotEnoughSkill:		Vous ne possedez pas les competences pour reparer {0}!
+Repair.IsAllowedToBeginWork.WeaponCrafter:		Vous devez etre un crafteur d'Armes pour reparer les armes de sieges.
 Repair.Proceed.FailImprove1:				You fail to improve the {0}'s condition.
 Repair.Proceed.FailImprove2:				{0} fail to improve the {1}'s condition.
-Repair.Proceed.FullyRepaired1:				You have fully repaired the {0}!
-Repair.Proceed.FullyRepaired2:				{0} have fully repaired the {1}!
-Repair.ProceedSiegeWeapon.FailRepair:			You fail to repair the {0}!
+Repair.Proceed.FullyRepaired1:				Vous avez entierement reparé {0}!
+Repair.Proceed.FullyRepaired2:				{0} a entierement reparé {1}!
+Repair.ProceedSiegeWeapon.FailRepair:			Vous echouez dans la reparation de {0}!
 
 # /Salvage
 Salvage.BeginWork.BeginSalvage:				You begin salvaging the {0}.

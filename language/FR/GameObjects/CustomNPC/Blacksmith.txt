@@ -1,8 +1,8 @@
 
 
 # /Blacksmith
-Scripts.Blacksmith.AbortRepair:				You refuse letting you repair the {0}.
-Scripts.Blacksmith.CantRepairThat:			I can't repair that.
+Scripts.Blacksmith.AbortRepair:				Vous refusez la reparation de {0}.
+Scripts.Blacksmith.CantRepairThat:			Je ne peux pas reparer cela.
 Scripts.Blacksmith.GiveObject:				[Donnez lui un objet à réparer]
 Scripts.Blacksmith.InvalidItem:				Objet invalide.
 Scripts.Blacksmith.ItsDone:					C'est fait. Votre {0} est prêt(e) pour le combat !
