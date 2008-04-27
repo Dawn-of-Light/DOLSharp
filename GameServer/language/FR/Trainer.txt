@@ -1,0 +1,43 @@
+
+# TRAINER
+# /GameTrainer
+GameTrainer.AddGift.NotEnoughSpace:			Plus de place dans votre inventaire pour recevoir votre cadeau. Faites de la place !
+
+GameTrainer.GetExamineMessages.RightClick:	[Cliquez-droit pour afficher une fenêtre d'entrainement]
+GameTrainer.GetExamineMessages.YouExamine:	Vous observez {0}. {1} est {2} et entraîne les membres de la classe {3}.
+GameTrainer.GetExamineMessages.YouTarget:	Vous ciblez [{0}].
+
+GameTrainer.Interact.CaseRespecialize:			respecialize
+GameTrainer.Interact.RegainPoints:			You regain {0} specialization points!
+GameTrainer.Interact.Respecialize:			{0} says, "{1}, if you wish, I can undo the training you've done so far and give you the ability to train again. This would allow you to [respecialize] your skills. If you are interested, you must simply let me know."
+
+GameTrainer.PromotePlayer.Accepted:			Vous avez été accepté(e) par le {0} !
+GameTrainer.PromotePlayer.Says:				{0} dit, "{1}"
+GameTrainer.PromotePlayer.Upgraded:			vous avez été promu(e) à la classe de {0} !
+
+GameTrainer.ReceiveItem.RespecFull:			Un superbe {0}! J'ai recu une possibilité de re-spécialisation totale. Pour l'utiliser : /respec all.
+GameTrainer.ReceiveItem.RespecRealm:		Merci, j'ai recu une possibilité de re-spécialisation de royaume. Pour l'utiliser : /respec realm.
+GameTrainer.ReceiveItem.RespecSingle:		Merci, j'ai recu une possibilité de re-spécialisation simple. Pour l'utiliser : /respec <linename>
+
+GameTrainer.Train.WouldYouLikeTo:			Would you like to do some training?
+GameTrainer.Train.SeekElsewhere:			{0} dit, "Vous devez allez ailleurs pour votre entraînement."
+
+
+# /EnchanterTrainer
+EnchanterTrainer.Interact.PathOfEssence:		{0} dit, "Voulez-vous vous devenir un Enchanteur et suivre la voix des magiciens?  La vie d'un [Enchanteur] en vaut la peine mais elle est dangereuse, mais cela est votre demande."
+EnchanterTrainer.Interact.SmallTalk:			{0} dit, "Vous êtes un bon élève, {1}. Mais ne soyez pas trop rapide dans votre approche du combat. Il y a toujours plus à apprendre."
+EnchanterTrainer.WhisperReceive.CaseEnchanter:		Enchanteur
+EnchanterTrainer.WhisperReceive.Welcome:		Bienvenue, {0}. À partir de ce jour, vous serez connu(e) comme un Enchanteur. Ici {0}. Prenez ce cadeau pour vous aider dans votre aventure.
+
+
+# /HeroTrainer
+HeroTrainer.Interact.PathOfFocus:			{0} says, "You wish for the life of a [hero]? You wish to walk the Path of Focus?"
+HeroTrainer.Interact.SmallTalk:				{0} says, "Training makes for a strong, healthy Hero! Keep up the good work, {1}!"
+HeroTrainer.WhisperReceive.CaseHero:			hero
+HeroTrainer.WhisperReceive.Welcome:			Let me welcome you then, {0}. Go, honor us with your deeds. Here is a gift for you. Try not to drop it, eh {1}.
+
+# /AnimistTrainer
+AnimistTrainer.Interact.PathOfAffinity:			{0} says, "Is the [Path of Affinity] the path you desire to walk?"
+AnimistTrainer.Interact.SmallTalk:			
+AnimistTrainer.WhisperReceive.CasePath:			Path of Affinity
+AnimistTrainer.WhisperReceive.Welcome:			You are now an Animist, {0}. Welcome to the Path of Affinity.

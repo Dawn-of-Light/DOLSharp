@@ -1,0 +1,7 @@
+# /ArtifactQuest
+ArtifactQuest.GiveItem.BackpackFull:			Your backpack is full, {0} is dropped on the ground.
+
+# /ArtifactTurnInQuest
+ArtifactTurnInQuest.Init.ArtifactScholarMale:		Artifact Scholar
+ArtifactTurnInQuest.Init.ArtifactScholarFemale:		Artifact Scholar
+ArtifactTurnInQuest.FinishQuest.Completed:		You have completed the {0} quest!
