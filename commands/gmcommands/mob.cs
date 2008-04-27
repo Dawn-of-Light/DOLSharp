@@ -1429,6 +1429,18 @@ namespace DOL.GS.Commands
                         mob.Flags = targetMob.Flags;
                         mob.MeleeDamageType = targetMob.MeleeDamageType;
                         mob.RespawnInterval = targetMob.RespawnInterval;
+						
+						// also copies the stats
+
+                        mob.Strength = targetMob.Strength;
+                        mob.Constitution = targetMob.Constitution;
+                        mob.Dexterity = targetMob.Dexterity;
+                        mob.Quickness = targetMob.Quickness;
+                        mob.Piety = targetMob.Piety;
+                        mob.Intelligence = targetMob.Intelligence;
+                        mob.Empathy = targetMob.Empathy;
+                        mob.Charisma = targetMob.Charisma;
+
                         //Fill the living variables
                         mob.CurrentSpeed = 0;
                         mob.MaxSpeedBase = targetMob.MaxSpeedBase;
@@ -1448,7 +1460,14 @@ namespace DOL.GS.Commands
                             client.Out.SendMessage("Cannot create brain, standard brain being applied", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                             mob.SetOwnBrain(new StandardMobBrain());
                         }
-                        else mob.SetOwnBrain(brain);
+                        else // Copies the Range, aggro etc...
+                        {
+							StandardMobBrain sbrain = (StandardMobBrain)brain;
+                            StandardMobBrain tsbrain = (StandardMobBrain)targetMob.Brain;
+                            sbrain.AggroLevel = tsbrain.AggroLevel;
+                            sbrain.AggroRange = tsbrain.AggroRange;
+                            mob.SetOwnBrain(sbrain);
+                        } //modif de Xa
                         mob.AddToWorld();
                         mob.LoadedFromScript = false;
                         mob.SaveIntoDatabase();
