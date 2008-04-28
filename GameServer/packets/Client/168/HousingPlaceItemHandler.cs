@@ -30,7 +30,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	public class HousingPlaceItemHandler : IPacketHandler
 	{
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
+		private const string DEED_WEAK = "deedItem";
 		private int position;
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
@@ -79,10 +79,30 @@ namespace DOL.GS.PacketHandler.Client.v168
 			InventoryItem orgitem = client.Player.Inventory.GetItem((eInventorySlot)slot);
 			if (orgitem == null) return 1;
 
-            if (orgitem.Name == "House removal deed")
-            {
-                client.Player.Inventory.RemoveItem(orgitem);
+            if (orgitem.Id_nb == "house_removal_deed")
+            {                
+                client.Out.SendInventorySlotsUpdate(null);
+                if (HouseMgr.GetRealHouseByPlayer(client.Player) != house)
+                {
+                    client.Player.Out.SendMessage("You may not remove Houses that you don't own", eChatType.CT_System, eChatLoc.CL_SystemWindow);                   
+                    return 1;
+                }
+                client.Player.TempProperties.setProperty(DEED_WEAK, new WeakRef(orgitem));                
                 client.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HouseRemoveOffer"), new CustomDialogResponse(HouseRemovalDialogue));
+                return 0;
+            }
+			if (orgitem.Id_nb.Contains("cottage_deed") || orgitem.Id_nb.Contains("house_deed") || orgitem.Id_nb.Contains("villa_deed") || orgitem.Id_nb.Contains("mansion_deed"))
+            {
+                client.Out.SendInventorySlotsUpdate(null);
+                if (HouseMgr.GetRealHouseByPlayer(client.Player) != house)
+                {
+                    client.Player.Out.SendMessage("You may not change other peoples houses", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    
+                    return 1;
+                }
+                client.Player.TempProperties.setProperty(DEED_WEAK, new WeakRef(orgitem)); 
+                client.Player.Out.SendMessage("Warning:\n This will remove all items from your current house!", eChatType.CT_System, eChatLoc.CL_PopupWindow);                
+                client.Player.Out.SendCustomDialog("Are you sure you want to upgrade your House?", new CustomDialogResponse(HouseUpgradeDialogue));
                 return 0;
             }
             if (orgitem.Name == "deed of guild transfer" 
@@ -436,9 +456,42 @@ namespace DOL.GS.PacketHandler.Client.v168
             if (response != 0x01)
                 return;
 
-            House house = HouseMgr.GetHouse((HouseMgr.GetHouseNumberByPlayer(player)));
+
+            WeakReference itemWeak = (WeakReference)player.TempProperties.getObjectProperty(DEED_WEAK, new WeakRef(null));
+            player.TempProperties.removeProperty(DEED_WEAK);
+            InventoryItem item = (InventoryItem)itemWeak.Target;
+
+            if (item == null || item.SlotPosition == (int)eInventorySlot.Ground
+                || item.OwnerID == null || item.OwnerID != player.InternalID)
+            {
+                player.Out.SendMessage("You need a House removal Deed for this.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+
+            player.Inventory.RemoveItem(item);
+            House house = HouseMgr.GetHouse((HouseMgr.GetHouseNumberByPlayer(player)));            
             HouseMgr.RemoveHouse(house);
             player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Housing.HouseRemoved"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+        }
+        protected static void HouseUpgradeDialogue(GamePlayer player, byte response)
+        {
+            if (response != 0x01)
+                return;
+
+
+            WeakReference itemWeak = (WeakReference)player.TempProperties.getObjectProperty(DEED_WEAK, new WeakRef(null));
+            player.TempProperties.removeProperty(DEED_WEAK);
+            InventoryItem item = (InventoryItem)itemWeak.Target;
+
+            if (item == null || item.SlotPosition == (int)eInventorySlot.Ground
+                || item.OwnerID == null || item.OwnerID != player.InternalID)
+            {
+                player.Out.SendMessage("This does not work without a House Deed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+            House house = HouseMgr.GetHouse((HouseMgr.GetHouseNumberByPlayer(player)));
+            HouseMgr.UpgradeHouse(house, item);
+            player.Inventory.RemoveItem(item);
         }
     }
 }
