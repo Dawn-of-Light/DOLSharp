@@ -163,6 +163,74 @@ namespace DOL.GS.Housing
 			house.SendUpdate();
 		}
 
+		public static void UpgradeHouse(House house, InventoryItem deed)
+        {
+            foreach (GamePlayer player in house.GetAllPlayersInHouse())
+                player.LeaveHouse();
+
+            #region Remove indoor/outdoor items
+            DataObject[] objs;
+
+            // Remove all indoor items
+            objs = GameServer.Database.SelectObjects(typeof(DBHouseIndoorItem), "HouseNumber = " + house.HouseNumber);
+            if (objs.Length > 0)
+                foreach (DataObject item in objs)
+                    GameServer.Database.DeleteObject(item);
+
+            // Remove all outdoor items
+            objs = GameServer.Database.SelectObjects(typeof(DBHouseOutdoorItem), "HouseNumber = " + house.HouseNumber);
+            if (objs.Length > 0)
+                foreach (DataObject item in objs)
+                    GameServer.Database.DeleteObject(item);
+            #endregion
+
+            #region newmodel
+            int newmodel = 1;
+            switch (deed.Id_nb)
+            {
+                case "alb_cottage_deed":
+                    newmodel = 1;
+                    break;
+                case "alb_house_deed":
+                    newmodel = 2;
+                    break;
+                case "alb_villa_deed":
+                    newmodel = 3;
+                    break;
+                case "alb_mansion_deed":
+                    newmodel = 4;
+                    break;
+                case "mid_cottage_deed":
+                    newmodel = 5;
+                    break;
+                case "mid_house_deed":
+                    newmodel = 6;
+                    break;
+                case "mid_villa_deed":
+                    newmodel = 7;
+                    break;
+                case "mid_mansion_deed":
+                    newmodel = 8;
+                    break;
+                case "hib_cottage_deed":
+                    newmodel = 9;
+                    break;
+                case "hib_house_deed":
+                    newmodel = 10;
+                    break;
+                case "hib_villa_deed":
+                    newmodel = 11;
+                    break;
+                case "hib_mansion_deed":
+                    newmodel = 12;
+                    break;
+            }
+            #endregion
+            house.Model = newmodel;
+            house.SaveIntoDatabase();
+            house.SendUpdate();
+        }
+		
 		public static void RemoveHouse(House house)
 		{
 			Logger.Debug("House " + house.UniqueID + " removed");
