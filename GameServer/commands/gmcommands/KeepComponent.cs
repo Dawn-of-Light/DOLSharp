@@ -186,6 +186,7 @@ namespace DOL.GS.Commands
 						}
 						component.RemoveFromWorld();
 						component.Delete();
+						component.DeleteFromDatabase();
 						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.KeepComponents.Delete.YDeleteKC"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 					} break;
