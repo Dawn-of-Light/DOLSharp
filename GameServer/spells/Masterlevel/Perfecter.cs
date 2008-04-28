@@ -66,6 +66,10 @@ namespace DOL.GS.Spells
             dbs.Power = 0;
             dbs.CastTime = 0;
             dbs.Range = WorldMgr.VISIBILITY_DISTANCE;
+			dbs.Message1 = spell.Message1;
+			dbs.Message2 = spell.Message2;
+			dbs.Message3 = spell.Message3;
+			dbs.Message4 = spell.Message4;
             sRadius = 350;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
@@ -115,6 +119,10 @@ namespace DOL.GS.Spells
             dbs.Power = 0;
             dbs.CastTime = 0;
             dbs.Range = WorldMgr.VISIBILITY_DISTANCE;
+			dbs.Message1 = spell.Message1;
+			dbs.Message2 = spell.Message2;
+			dbs.Message3 = spell.Message3;
+			dbs.Message4 = spell.Message4;
             sRadius = 350;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
