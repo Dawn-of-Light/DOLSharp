@@ -376,10 +376,21 @@ namespace DOL.GS
 		/// Add all skills and other things that are required for current level
 		/// </summary>
 		/// <param name="player">player to modify</param>
-        public virtual void OnLevelUp(GamePlayer player)
-        {
-            // Grav: autotrain in player.OnLevelUp()
-        }
+		public virtual void OnLevelUp(GamePlayer player)
+		{
+			// Grav: autotrain in player.OnLevelUp()
+			// If this is a PvE server, issue one realm specialty point
+			// for each level starting at level 20.
+			if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE)
+			{
+				// Somewhere in the code, regardless of server type, one RA point
+				// is being assigned at lvl 20 already (I don't know where that's
+				// coming from).  That's why the following is <= 20 and not just < 20.
+				if (player.Level <= 20) return;
+				player.RealmSpecialtyPoints++;
+				player.SaveIntoDatabase();
+			}
+		}
 
 		/// <summary>
 		/// Add various skills as the player levels his realm rank up
