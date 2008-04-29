@@ -104,21 +104,21 @@ namespace DOL.GS
 		/// <summary>
 		/// All available teleport locations.
 		/// </summary>
-		private static Dictionary<eRealm, Dictionary<string, Teleport>> m_teleportLocations;
+		private static Dictionary<string, Teleport> m_teleportLocations;
 
 		/// <summary>
 		/// Returns the teleport given an ID and a realm
 		/// </summary>
-		/// <param name="realm">First Key to search for</param>
 		/// <param name="teleportID">Second key to search for</param>
 		/// <returns></returns>
-		public static Teleport GetTeleportLocation(eRealm realm, string teleportID)
+		public static Teleport GetTeleportLocation(string teleportID)
 		{
-			return (m_teleportLocations.ContainsKey(realm)) ?
-				(m_teleportLocations[realm].ContainsKey(teleportID) ?
-					m_teleportLocations[realm][teleportID] : 
-					null) :
-				null;
+			// The TeleportID fields from the 'teleport' table are converted 
+			// to lowercase as they're added to the dictionary, so we need
+			// to search for the lowercase version as well.
+			teleportID = teleportID.ToLower();
+			if (m_teleportLocations.ContainsKey(teleportID)) return m_teleportLocations[teleportID];
+			return null;
 		}
 
 		/// <summary>
@@ -279,19 +279,11 @@ namespace DOL.GS
 			// Load available teleport locations.
 
 			DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(Teleport));
-			m_teleportLocations = new Dictionary<eRealm, Dictionary<string, Teleport>>();
+			m_teleportLocations = new Dictionary<string, Teleport>();
 			int[] numTeleports = new int[3];
 			foreach (Teleport teleport in objs)
 			{
-				Dictionary<string, Teleport> teleportList;
-				if (m_teleportLocations.ContainsKey((eRealm)teleport.Realm))
-					teleportList = m_teleportLocations[(eRealm)teleport.Realm];
-				else
-				{
-					teleportList = new Dictionary<string, Teleport>();
-					m_teleportLocations.Add((eRealm)teleport.Realm, teleportList);
-				}
-				teleportList.Add(teleport.TeleportID, teleport);
+				m_teleportLocations.Add(teleport.TeleportID.ToLower(), teleport);
 				if (teleport.Realm >= 1 && teleport.Realm <= 3)
 					numTeleports[teleport.Realm - 1]++;
 			}
