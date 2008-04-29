@@ -10,9 +10,9 @@ GameNPC.GetAggroLevelString.Hostile2:			Hostile
 GameNPC.GetAggroLevelString.Neutral1:			neutre
 GameNPC.GetAggroLevelString.Neutral2:			Neutre
 GameNPC.GetAggroLevelString.TowardsYou:			{0} envers vous
-GameNPC.GetExamineMessages.YouExamine:			Vous examinez {0}. Il (elle) se trouve être {2}.
+GameNPC.GetExamineMessages.YouExamine:			Vous examinez {0}. Il (elle) se trouve etre {2}.
 GameNPC.Interact.AlreadyRiding:				Vous montez deja {0}.
-GameNPC.Interact.DirtyLook:					{0} vous jettes un regard étrange.
+GameNPC.Interact.DirtyLook:					{0} vous jettes un regard etrange.
 GameNPC.Interact.IsFull:					Ce {0} est plein.
 GameNPC.SayTo.Says:							{0} dit, "{1}"
 GameNPC.SayTo.SpeaksTo:						{0} parle avec {1}
