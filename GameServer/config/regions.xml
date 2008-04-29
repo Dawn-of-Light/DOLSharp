@@ -28,15 +28,6 @@
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
 	</Region010>
-	<Region245>
-		<description>Labyrinth</description>
-		<isDivingEnabled>True</isDivingEnabled>
-		<waterLevel>0</waterLevel>
-		<id>245</id>
-		<port>10400</port>
-		<ip>127.0.0.1</ip>
-		<expansion>0</expansion>
-	</Region245>
 	<Region020>
 		<description>Stonehenge Barrows</description>
 		<isDivingEnabled>False</isDivingEnabled>
@@ -790,6 +781,38 @@
 		<ip>127.0.0.1</ip>
 		<expansion>1</expansion>
 	</Region191>
+	<!-- MIG -->
+	<Region192>
+		<description>Le Sanctuaire Du Haut Consule</description>
+		<isDivingEnabled>False</isDivingEnabled>
+		<waterLevel>0</waterLevel>
+		<id>192</id>
+		<port>10400</port>
+		<ip>127.0.0.1</ip>
+		<expansion>1</expansion>
+		<instance>True</instance>
+	</Region192>
+	<Region193>
+		<description>Le Sanctuaire Du Haut Consule</description>
+		<isDivingEnabled>False</isDivingEnabled>
+		<waterLevel>0</waterLevel>
+		<id>193</id>
+		<port>10400</port>
+		<ip>127.0.0.1</ip>
+		<expansion>1</expansion>
+		<instance>True</instance>
+	</Region193>
+	<Region194>
+		<description>Le Sanctuaire Du Haut Consule</description>
+		<isDivingEnabled>False</isDivingEnabled>
+		<waterLevel>0</waterLevel>
+		<id>194</id>
+		<port>10400</port>
+		<ip>127.0.0.1</ip>
+		<expansion>1</expansion>
+		<instance>True</instance>
+	</Region194>
+	<!-- MIG -->
 	<Region195>
 		<description>The Otherworld</description>
 		<isDivingEnabled>False</isDivingEnabled>
@@ -1079,6 +1102,15 @@
 		<ip>127.0.0.1</ip>
 		<expansion>0</expansion>
 	</Region244>
+	<Region245>
+		<description>Labyrinth</description>
+		<isDivingEnabled>True</isDivingEnabled>
+		<waterLevel>0</waterLevel>
+		<id>245</id>
+		<port>10400</port>
+		<ip>127.0.0.1</ip>
+		<expansion>0</expansion>
+	</Region245>
 	<Region247>
 		<description></description>
 		<isDivingEnabled>False</isDivingEnabled>
@@ -2237,6 +2269,18 @@
 		<expansion>3</expansion>
 		<instance>True</instance>
 	</Region390>
+	<!-- MIG -->
+	<Region391>
+		<description>La Tour Des Arcanes ALB</description>
+		<isDivingEnabled>False</isDivingEnabled>
+		<waterLevel>0</waterLevel>
+		<id>391</id>
+		<port>10400</port>
+		<ip>127.0.0.1</ip>
+		<expansion>3</expansion>
+		<instance>True</instance>
+	</Region391>
+	<!-- MIG -->
 	<Region392>
 		<description>The Hall of Reawakening</description>
 		<isDivingEnabled>False</isDivingEnabled>
@@ -2297,6 +2341,28 @@
 		<expansion>3</expansion>
 		<instance>True</instance>
 	</Region397>
+	<!-- MIG -->
+	<Region398>
+		<description>La Tour des Arcanes MID</description>
+		<isDivingEnabled>False</isDivingEnabled>
+		<waterLevel>0</waterLevel>
+		<id>398</id>
+		<port>10400</port>
+		<ip>127.0.0.1</ip>
+		<expansion>3</expansion>
+		<instance>True</instance>
+	</Region398>
+	<Region399>
+		<description>La Tour des Arcanes HIB</description>
+		<isDivingEnabled>False</isDivingEnabled>
+		<waterLevel>0</waterLevel>
+		<id>399</id>
+		<port>10400</port>
+		<ip>127.0.0.1</ip>
+		<expansion>3</expansion>
+		<instance>True</instance>
+	</Region399>
+	<!-- MIG -->
 	<Region400>
 		<description>Burial Tomb</description>
 		<isDivingEnabled>False</isDivingEnabled>
