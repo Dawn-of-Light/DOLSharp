@@ -63,11 +63,15 @@ namespace DOL.GS
 		/// <summary>
 		/// Talk to the teleporter.
 		/// </summary>
-		/// <param name="source"></param>
-		/// <param name="text"></param>
+		/// <param name="source">The player doing the teleporting</param>
+		/// <param name="text">The name of the teleport destination as defined by the TeleportID field in the 'teleport' table</param>
 		/// <returns></returns>
 		public override bool WhisperReceive(GameLiving source, string text)
 		{
+			// teleport destinations from the 'teleport' table are converted
+			// to lowercase as they're read in, so we must also use all
+			// lowercase for the destination name
+			text = text.ToLower();
 			if (!base.WhisperReceive(source, text))
 				return false;
 
@@ -78,7 +82,7 @@ namespace DOL.GS
 			// Battlegrounds is special, as the teleport location depends on
 			// the level of the player, so let's deal with that first.
 
-			if (text.ToLower() == "battlegrounds")
+			if (text == "battlegrounds")
 			{
 				AbstractGameKeep portalKeep = KeepMgr.GetBGPK(player);
 				if (portalKeep != null)
@@ -106,7 +110,7 @@ namespace DOL.GS
 			// Another special case is personal house, as there is no location
 			// that will work for every player.
 
-			if (text.ToLower() == "personal")
+			if (text == "personal")
 			{
 				House house = HouseMgr.GetHouseByPlayer(player);
 				if (house == null)
@@ -128,7 +132,7 @@ namespace DOL.GS
 			}
 
 			// Find the teleport location in the database.
-			Teleport port = WorldMgr.GetTeleportLocation(Realm, text);
+			Teleport port = WorldMgr.GetTeleportLocation(text);
 			if (port != null)
 			{
 				if (port.RegionID == 0 &&
@@ -137,10 +141,17 @@ namespace DOL.GS
 						port.Z == 0)
 					OnSubSelectionPicked(player, port);
 				else
-					OnDestinationPicked(player, port);
+				{
+					// Only permit the port if the player belongs to the destination realm
+					// or the player is playing on a PvE (co-op) server (in which case,
+					// inter-realm ports are fine)
+					if ((Realm == (eRealm)port.Realm) || (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE))
+					{
+						OnDestinationPicked(player, port);
+					}
+				}
 				return false;
 			}
-
 			return true;	// Needs further processing.
 		}
 
