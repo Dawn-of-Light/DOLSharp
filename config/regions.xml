@@ -1019,7 +1019,7 @@
 	<Region238>
 		<description>Thidranki</description>
 		<isDivingEnabled>True</isDivingEnabled>
-		<waterLevel>0</waterLevel>
+		<waterLevel>3760</waterLevel>
 		<id>238</id>
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
