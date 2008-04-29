@@ -4,28 +4,28 @@ Effects.DelveInfo.MinutesRemaining:            - {0}: {1} minutes restantes.
 Effects.DelveInfo.SecondsRemaining:            - {0} secondes restantes.
 
 Effects.Necro.TauntEffect.SeemsChange:         {0} semble changer dans son comportement, il apparait plus aggressif envers vous qu'avant.
-Effects.Necro.TauntEffect.SeemsLessAgg:         {0} semble être moins aggressif envers vous qu'avant.
+Effects.Necro.TauntEffect.SeemsLessAgg:         {0} semble etre moins aggressif envers vous qu'avant.
 
 Effects.BerserkEffect.GoBerserkerFrenzy:      Vous rentrez dans une rage berserker!
 Effects.BerserkEffect.BerserkerFrenzyEnds:      Votre rage berserker prend fin.
 Effects.BerserkEffect.Name:                  Berserk
-Effects.BerserkEffect.InfoEffect:            Cette compétence transforme le joueur en une bête Vendo et fait de chaque coup réussi un coup critique, au détriment des capacités défensives. Peut être utilisé toutes les sept minutes.
+Effects.BerserkEffect.InfoEffect:            Cette competence transforme le joueur en une bete Vendo et fait de chaque coup reussi un coup critique, au detriment des capacites defensives. Peut etre utilise toutes les sept minutes.
 
-Effects.BodyguardEffect.NowBGXButSC:         Vous êtes maintenant le garde du corps de {0}, mais vous devez rester proche de lui.
+Effects.BodyguardEffect.NowBGXButSC:         Vous etes maintenant le garde du corps de {0}, mais vous devez rester proche de lui.
 Effects.BodyguardEffect.XNowBGYouButSC:         {0} est maintenant votre garde du corps, mais vous devez rester proche de lui.
-Effects.BodyguardEffect.YouAreNowBGX:         Vous êtes maintenant le garde du corps de  {0}.
+Effects.BodyguardEffect.YouAreNowBGX:         Vous etes maintenant le garde du corps de  {0}.
 Effects.BodyguardEffect.XIsBGYou:            {0} est maintenant votre garde du corps.
-Effects.BodyguardEffect.YouAreNoLongerBGX:      Vous n'êtes plus le garde du corps de {0}.
+Effects.BodyguardEffect.YouAreNoLongerBGX:      Vous n'etes plus le garde du corps de {0}.
 Effects.BodyguardEffect.XIsNoLongerBGYou:      {0} n'est plus votre garde du corps.
 Effects.BodyguardEffect.XIsBodyguardingY:      {0} est le garde du corps de {1}
 Effects.BodyguardEffect.BodyguardedByName:      {0} a pour garde du corps {1}
 Effects.BodyguardEffect.Name:               Garde du corps
-Effects.BodyguardEffect.InfoEffect:            Cette capacité si elle est réussi, protege la cible d'une attaque. Vous allez bloquer le coup destiné à votre cible.
+Effects.BodyguardEffect.InfoEffect:            Cette capacite si elle est reussi, protege la cible d'une attaque. Vous allez bloquer le coup destine à votre cible.
 
-Effects.CamouflageEffect.YouAreCamouflaged:      Vous êtes maintenant camouflé!
+Effects.CamouflageEffect.YouAreCamouflaged:      Vous etes maintenant camoufle!
 Effects.CamouflageEffect.YourCFIsGone:         Votre camouflage a disparu.
 Effects.CamouflageEffect.Name:               Camouflage
-Effects.CamouflageEffect.InfoEffect:         Disponible pour les classes d'archer. Cette compétence va rendre l'archer indetectable à l'Abilité de Royaume Maître en furtivité pour une période de temps. Changer d'arme ou engager le combat annulera l'effet et rendra le joueur visible. Ne modifie pas la compétence de furtivité.
+Effects.CamouflageEffect.InfoEffect:         Disponible pour les classes d'archer. Cette competence va rendre l'archer indetectable à l'Abilite de Royaume Maître en furtivite pour une periode de temps. Changer d'arme ou engager le combat annulera l'effet et rendra le joueur visible. Ne modifie pas la competence de furtivite.
 
 Effects.EngageEffect.ConcOnBlockingX:         {0}!
 Effects.EngageEffect.YouNoConcOnBlock:         Vous ne plus se concentrer sur le blocage des coups!
@@ -43,22 +43,22 @@ Effects.GuardEffect.YouAreNowGuardingY:         Vous gardez maintenant {0}.
 Effects.GuardEffect.XIsNowGuardingYou:         {0} vous garde maintenant.
 Effects.GuardEffect.YourNoLongerGuardingY:      Vous ne gardez plus {0}.
 Effects.GuardEffect.XNoLongerGuardingYoy:      {0} ne vous garde plus.
-Effects.GuardEffect.InfoEffect:               Cette capacité si elle est réussit va protéger une attaque destinée à la cible. Vous allez bloquer un coup destiné à la cible.
-Effects.GuardEffect.GuardedByName:            {0} est gardé par {1}
+Effects.GuardEffect.InfoEffect:               Cette capacite si elle est reussit va proteger une attaque destinee à la cible. Vous allez bloquer un coup destine à la cible.
+Effects.GuardEffect.GuardedByName:            {0} est garde par {1}
 Effects.GuardEffect.Name:                  Garder
 Effects.GuardEffect.XIsGuardingY:            {0} garde {1}
 
 Effects.BannerOfWardingEffect.Name:            Banner of Warding
-Effects.BannerOfWardingEffect.Description:      Accorde un bonus de 10% dans toutes les résistances magiques.
+Effects.BannerOfWardingEffect.Description:      Accorde un bonus de 10% dans toutes les resistances magiques.
 
-Effects.BannerOfShieldingEffect.Name         	Bannière de protection
-Effects.BannerOfShieldingEffect.Description:   Accorde un bonus de 6% dans toutes les résistances physiques.
+Effects.BannerOfShieldingEffect.Name         	Banniere de protection
+Effects.BannerOfShieldingEffect.Description:   Accorde un bonus de 6% dans toutes les resistances physiques.
 
-Effects.BannerOfFreedomEffect.Name            	Bannière de la liberté
+Effects.BannerOfFreedomEffect.Name            	Banniere de la liberte
 Effects.BannerOfFreedomEffect.Description:      Reduces all Crowd Controls by 6%.
 
-Effects.BannerOfBesiegingEffect.Name:         Bannière de siège
-Effects.BannerOfBesiegingEffect.Description:   Réduit la vitesse d'attaque des armes de siège de 6%.
+Effects.BannerOfBesiegingEffect.Name:         Banniere de siege
+Effects.BannerOfBesiegingEffect.Description:   Reduit la vitesse d'attaque des armes de siege de 6%.
 
 Effects.InterceptEffect.YouAttemtInterceptYBut:   Vous essayez maintenant d'intercepter une attaque visant {0}, mais vous devez rester proche.
 Effects.InterceptEffect.XAttemtInterceptYouBut:   {0} essaye maintenant d'intercepter une attaque vous visant, mais vous devez rester proche.
@@ -66,26 +66,26 @@ Effects.InterceptEffect.YouAttemtInterceptY:   Vous essayez maintenant d'interce
 Effects.InterceptEffect.XAttemptInterceptYou:   {0} essaye maintenant d'intercepter une attaque vous visant.
 Effects.InterceptEffect.YouNoAttemptInterceptY:   Vous n'essayez plus d'intercepter une attaque visant {0}.
 Effects.InterceptEffect.XNoAttemptInterceptYou:   {0} n'essaye plus d'intercepter une attaque vous visant.
-Effects.InterceptEffect.InterceptedByName:      {0} Intercepté par {1}
+Effects.InterceptEffect.InterceptedByName:      {0} Intercepte par {1}
 Effects.InterceptEffect.Name:               Intercepter
-Effects.InterceptEffect.InfoEffect:           Si cette capacité réussit vous intercepterez une attaque visant votre cible. Vous prendrez les dégats à sa place.
+Effects.InterceptEffect.InfoEffect:           Si cette capacite reussit vous intercepterez une attaque visant votre cible. Vous prendrez les degats à sa place.
 Effects.InterceptEffect.XInterceptingY:         {0} is intercepting for {0}
 
-Effects.ProtectEffect.YouProtectingYBut:      Vous protégez {0}, mais vous devez rester proche.
-Effects.ProtectEffect.XProtectingYouBut:      {0} vous protège, mais vous devez rester proche.
-Effects.ProtectEffect.YouProtectingY:         Vous protégez {0}.
-Effects.ProtectEffect.XProtectingYou:         {0} vous protège.
-Effects.ProtectEffect.YouNoProtectY:         Vous ne protégez plus {0}.
-Effects.ProtectEffect.XNoProtectYou:         {0} ne vous protège plus.
-Effects.ProtectEffect.ProtectByName:         {0} est protégé par {1}
+Effects.ProtectEffect.YouProtectingYBut:      Vous protegez {0}, mais vous devez rester proche.
+Effects.ProtectEffect.XProtectingYouBut:      {0} vous protege, mais vous devez rester proche.
+Effects.ProtectEffect.YouProtectingY:         Vous protegez {0}.
+Effects.ProtectEffect.XProtectingYou:         {0} vous protege.
+Effects.ProtectEffect.YouNoProtectY:         Vous ne protegez plus {0}.
+Effects.ProtectEffect.XNoProtectYou:         {0} ne vous protege plus.
+Effects.ProtectEffect.ProtectByName:         {0} est protege par {1}
 Effects.ProtectEffect.Name:                  Protection
-Effects.ProtectEffect.InfoEffect:            Si cette capacité réussit vous récupérez une partie de l'agressivité du monstre attaqué par votre cible.
+Effects.ProtectEffect.InfoEffect:            Si cette capacite reussit vous recuperez une partie de l'agressivite du monstre attaque par votre cible.
 Effects.ProtectEffect.XProtectingY:            {0} is protecting {1}
 
-Effects.QuickCastEffect.YouActivatedQC:         Vous avez activé votre Incantation Rapide.
-Effects.QuickCastEffect.YourNextSpellNoQCed:   Votre prochain sort ne sera pas incanté rapidement.
+Effects.QuickCastEffect.YouActivatedQC:         Vous avez active votre Incantation Rapide.
+Effects.QuickCastEffect.YourNextSpellNoQCed:   Votre prochain sort ne sera pas incante rapidement.
 Effects.QuickCastEffect.Name:               Incantation Rapide
-Effects.QuickCastEffect.InfoEffect:            Cette capacité permet d'incanter un sort avec un temps d'incantation plus rapide, mais double le coût en mana. L'incantation ne peut pas être interrompu par les attaques physiques et magiques. L'unique exception est le prêtre d'Arawn en forme d'ombre. Elle permet au serviteur invoqué du prêtre d'Arawn d'avoir 6 secondes d'incantation ininterrompue.
+Effects.QuickCastEffect.InfoEffect:            Cette capacite permet d'incanter un sort avec un temps d'incantation plus rapide, mais double le coût en mana. L'incantation ne peut pas etre interrompu par les attaques physiques et magiques. L'unique exception est le pretre d'Arawn en forme d'ombre. Elle permet au serviteur invoque du pretre d'Arawn d'avoir 6 secondes d'incantation ininterrompue.
 
 Effects.RapidFireEffect.YouSwitchRFMode:      Vous passez en mode Tir Rapide!
 Effects.RapidFireEffect.Name:               Tir Rapide
@@ -99,12 +99,12 @@ Effects.StagEffect.Name:                  Stag
 Effects.StagEffect.InfoEffect:               Hero-only ability, that transforms a player into a stag-headed Huntsman. This lasts 30 seconds, and gives the player a burst in hitpoints. May be used once every 30 minutes. Initiate = 20% bonus to hitpoints. Member =30%, Leader = 40%, Master = 50%
 
 Effects.StaticEffect.YouCantRemoveThisEffect:   Vous ne pouvez pas annuler cet effet!
-Effects.StealthEffect.Name:                  Furtivité
+Effects.StealthEffect.Name:                  Furtivite
 
-Effects.SureShotEffect.YouSwitchToSSMode:      Vous passez en mode Tir Assuré!
-Effects.SureShotEffect.Name:               Tir Assuré
+Effects.SureShotEffect.YouSwitchToSSMode:      Vous passez en mode Tir Assure!
+Effects.SureShotEffect.Name:               Tir Assure
 
-Effects.TripleWieldEffect.MBHitsExtraDamage:   Votre lame magique touche {0} pour {1} dommages supplémentaires!
+Effects.TripleWieldEffect.MBHitsExtraDamage:   Votre lame magique touche {0} pour {1} dommages supplementaires!
 Effects.TripleWieldEffect.XMBExtraDamageToYou:  La lame magique de {0} vous touche pour {1} dommages!
 Effects.TripleWieldEffect.Name:               Lame Spectrale
-Effects.TripleWieldEffect.InfoEffect:         Lame spectrale ajoutes des dégats additionnels à vos attaques.
+Effects.TripleWieldEffect.InfoEffect:         Lame spectrale ajoutes des degats additionnels à vos attaques.

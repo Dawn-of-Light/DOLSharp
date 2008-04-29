@@ -10,14 +10,14 @@ HorseEmote.graze.ToOthers:					La monture de {0} broute
 HorseEmote.graze.ToSource:					-
 HorseEmote.graze.NoTargetToOthers:				{0} laisse sa monture brouter.
 HorseEmote.graze.NoTargetToSource:				Vous laissez votre monture brouter.
-HorseEmote.halt.ToOthers:					{0} fait signe à {1} de s'arrêter.
-HorseEmote.halt.ToSource:					Vous faites signe à {0} de s'arrêter.
-HorseEmote.halt.NoTargetToOthers:				{0} fait signe à tout le monde de s'arrêter.
-HorseEmote.halt.NoTargetToSource:				Vous faites signe à tout le monde de s'arrêter.
-HorseEmote.nod.ToOthers:						La monture de {0} incline la tête devant {1}!
-HorseEmote.nod.ToSource:						Votre monture incline la tête devant {0}.
-HorseEmote.nod.NoTargetToOthers:				La monture de {0} incline la tête.
-HorseEmote.nod.NoTargetToSource:				Votre monture incline la tête.
+HorseEmote.halt.ToOthers:					{0} fait signe à {1} de s'arreter.
+HorseEmote.halt.ToSource:					Vous faites signe à {0} de s'arreter.
+HorseEmote.halt.NoTargetToOthers:				{0} fait signe à tout le monde de s'arreter.
+HorseEmote.halt.NoTargetToSource:				Vous faites signe à tout le monde de s'arreter.
+HorseEmote.nod.ToOthers:						La monture de {0} incline la tete devant {1}!
+HorseEmote.nod.ToSource:						Votre monture incline la tete devant {0}.
+HorseEmote.nod.NoTargetToOthers:				La monture de {0} incline la tete.
+HorseEmote.nod.NoTargetToSource:				Votre monture incline la tete.
 HorseEmote.pet.ToOthers:						-
 HorseEmote.pet.ToSource:						-
 HorseEmote.pet.NoTargetToOthers:				{0} caresse sa monture.
