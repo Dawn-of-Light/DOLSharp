@@ -1692,6 +1692,35 @@
 		<offsetx>1</offsetx>
 		<regionID>191</regionID>
 	</Zone191>
+	<!-- MIG -->
+	<Zone192>
+		<description>Le Sanctuaire Du Haut Consule</description>
+		<width>8</width>
+		<zoneID>192</zoneID>
+		<height>8</height>
+		<offsety>1</offsety>
+		<offsetx>1</offsetx>
+		<regionID>192</regionID>
+	</Zone192>
+	<Zone193>
+		<description>Le Sanctuaire Du Haut Consule</description>
+		<width>8</width>
+		<zoneID>193</zoneID>
+		<height>8</height>
+		<offsety>1</offsety>
+		<offsetx>1</offsetx>
+		<regionID>193</regionID>
+	</Zone193>
+	<Zone194>
+		<description>Le Sanctuaire Du Haut Consule</description>
+		<width>8</width>
+		<zoneID>194</zoneID>
+		<height>8</height>
+		<offsety>1</offsety>
+		<offsetx>1</offsetx>
+		<regionID>194</regionID>
+	</Zone194>
+	<!-- MIG -->
 	<Zone195>
 		<description>Midgard's Otherworld</description>
 		<width>8</width>
@@ -3267,6 +3296,17 @@
 		<offsetx>1</offsetx>
 		<regionID>390</regionID>
 	</Zone390>
+	<!-- MIG -->
+	<Zone391>
+		<description>La Tour des Arcanes ALB</description>
+		<width>8</width>
+		<zoneID>391</zoneID>
+		<height>8</height>
+		<offsety>1</offsety>
+		<offsetx>1</offsetx>
+		<regionID>391</regionID>
+	</Zone391>
+	<!-- MIG -->
 	<Zone392>
 		<description>The Hall of Reawakening</description>
 		<width>8</width>
@@ -3321,6 +3361,26 @@
 		<offsetx>1</offsetx>
 		<regionID>397</regionID>
 	</Zone397>
+	<!-- MIG -->
+	<Zone398>
+		<description>La Tour des Arcanes MID</description>
+		<width>8</width>
+		<zoneID>398</zoneID>
+		<height>8</height>
+		<offsety>1</offsety>
+		<offsetx>1</offsetx>
+		<regionID>398</regionID>
+	</Zone398>
+	<Zone399>
+		<description>La Tour des Arcanes HIB</description>
+		<width>8</width>
+		<zoneID>399</zoneID>
+		<height>8</height>
+		<offsety>1</offsety>
+		<offsetx>1</offsetx>
+		<regionID>399</regionID>
+	</Zone399>
+	<!-- MIG -->
 	<Zone400>
 		<description>Burial Tomb</description>
 		<width>8</width>
