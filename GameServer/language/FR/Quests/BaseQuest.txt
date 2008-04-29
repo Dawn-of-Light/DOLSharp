@@ -2,11 +2,11 @@
 
 BaseQuest.RemoveItem.GiveItemToPlayer:				Vous donnez {0} a {1}
 BaseQuest.RemoveItem.CannotRemoveBecouseDontHave:	Vous ne pouvez pas retirer {0} car vous ne le possedez pas.
-BaseQuest.GiveItem.BackpackIsFullCreatedOnGround:	Votre sac est plein. {0} est créé sur le sol.
-BaseQuest.TeleportTo.BeingTeleported:				{0} est téléporté à {1}.
+BaseQuest.GiveItem.BackpackIsFullCreatedOnGround:	Votre sac est plein. {0} est cree sur le sol.
+BaseQuest.TeleportTo.BeingTeleported:				{0} est teleporte à {1}.
 
-RewardQuest.Notify.ChooseReward:					Vous devez choisir une récompense!
-RewardQuest.Notify.AcquiredQuest:					Vous avez acquis la quête: {0}.
-AbstractQuest.FinishQuest.Completed:				Vous avez terminé la quête: {0}!
-AbstractQuest.OnQuestAssigned.GetQuest:				Vous avez reçu la quête: {0}.
+RewardQuest.Notify.ChooseReward:					Vous devez choisir une recompense!
+RewardQuest.Notify.AcquiredQuest:					Vous avez acquis la quete: {0}.
+AbstractQuest.FinishQuest.Completed:				Vous avez termine la quete: {0}!
+AbstractQuest.OnQuestAssigned.GetQuest:				Vous avez reçu la quete: {0}.
 

@@ -13,6 +13,6 @@ System.LanguagesName.English:					Anglais
 System.LanguagesName.French:					Français
 System.LanguagesName.German:					Allemand
 System.LanguagesName.Spanish:					Espagnol
-System.LanguagesName.Czech:					Tchèque
+System.LanguagesName.Czech:						Tcheque
 System.LanguagesName.Italian:					Italien 
 
