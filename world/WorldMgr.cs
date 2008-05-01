@@ -283,6 +283,11 @@ namespace DOL.GS
 			int[] numTeleports = new int[3];
 			foreach (Teleport teleport in objs)
 			{
+				if (m_teleportLocations.ContainsKey(teleport.TeleportID.ToLower()))
+				{
+					log.Error("Global Teleport list already contains an entry for: " + teleport.TeleportID.ToLower() + " skipping this one!");
+					continue;
+				}
 				m_teleportLocations.Add(teleport.TeleportID.ToLower(), teleport);
 				if (teleport.Realm >= 1 && teleport.Realm <= 3)
 					numTeleports[teleport.Realm - 1]++;
