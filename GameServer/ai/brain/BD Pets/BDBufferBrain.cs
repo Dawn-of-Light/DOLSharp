@@ -47,46 +47,7 @@ namespace DOL.AI.Brain
 		/// <param name="owner"></param>
 		public BDBufferBrain(GameLiving owner) : base(owner) { }
 
-		/// <summary>
-		/// The interval for thinking, 1.5 seconds
-		/// </summary>
-		public override int ThinkInterval
-		{
-			get { return 1500; }
-		}
-
 		#region AI
-
-		/// <summary>
-		/// Starts the brain thinking and resets the inactivity countdown
-		/// </summary>
-		/// <returns>true if started</returns>
-		public override bool Start()
-		{
-			if (!base.Start()) return false;
-
-			GameEventMgr.AddHandler(((IControlledBrain)((GameNPC)Owner).Brain).Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnOwnerAttacked));
-
-			return true;
-		}
-
-		/// <summary>
-		/// Do the mob AI
-		/// </summary>
-		public override void Think()
-		{
-			base.Think();
-
-			//Check for buffs, heals, etc
-			CheckSpells(eCheckSpellType.Defensive);
-
-			if (AggressionState == eAggressionState.Aggressive)
-			{
-				CheckPlayerAggro();
-				CheckNPCAggro();
-				AttackMostWanted();
-			}
-		}
 
 		/// <summary>
 		/// Checks the Abilities
@@ -109,48 +70,51 @@ namespace DOL.AI.Brain
 				case "DamageShield":
 				case "Bladeturn":
 					{
-						//Buff self
-						if (!LivingHasEffect(Body, spell))
+						if (!Body.IsAttacking)
 						{
-							Body.TargetObject = Body;
-							break;
-						}
-
-						if (spell.Target != "Self")
-						{
-
-							owner = (this as IControlledBrain).Owner;
-
-							//Buff owner
-							if (owner != null)
+							//Buff self
+							if (!LivingHasEffect(Body, spell))
 							{
-								if (!LivingHasEffect(owner, spell))
-								{
-									Body.TargetObject = owner;
-									break;
-								}
+								Body.TargetObject = Body;
+								break;
+							}
 
-								//Buff other minions
-								foreach (IControlledBrain icb in ((GameNPC)owner).ControlledNpcList)
+							if (spell.Target != "Self")
+							{
+
+								owner = (this as IControlledBrain).Owner;
+
+								//Buff owner
+								if (owner != null)
 								{
-									if (icb == null)
-										continue;
-									if (!LivingHasEffect(icb.Body, spell))
+									if (!LivingHasEffect(owner, spell))
 									{
-										Body.TargetObject = icb.Body;
+										Body.TargetObject = owner;
 										break;
 									}
-								}
 
-								player = GetPlayerOwner();
-
-								//Buff player
-								if (player != null)
-								{
-									if (!LivingHasEffect(player, spell))
+									//Buff other minions
+									foreach (IControlledBrain icb in ((GameNPC)owner).ControlledNpcList)
 									{
-										Body.TargetObject = player;
-										break;
+										if (icb == null)
+											continue;
+										if (!LivingHasEffect(icb.Body, spell))
+										{
+											Body.TargetObject = icb.Body;
+											break;
+										}
+									}
+
+									player = GetPlayerOwner();
+
+									//Buff player
+									if (player != null)
+									{
+										if (!LivingHasEffect(player, spell))
+										{
+											Body.TargetObject = player;
+											break;
+										}
 									}
 								}
 							}

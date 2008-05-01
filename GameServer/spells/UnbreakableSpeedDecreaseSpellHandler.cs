@@ -82,7 +82,7 @@ namespace DOL.GS.Spells
 
 			GameTimer timer = (GameTimer)effect.Owner.TempProperties.getObjectProperty(effect, null);
 			effect.Owner.TempProperties.removeProperty(effect);
-			timer.Stop();
+			if(timer!=null) timer.Stop();
 
 			effect.Owner.BuffBonusMultCategory1.Remove((int)eProperty.MaxSpeed, effect);
 

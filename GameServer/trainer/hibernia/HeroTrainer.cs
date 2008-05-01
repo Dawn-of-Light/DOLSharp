@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Trainer
 {
@@ -48,21 +49,26 @@ namespace DOL.GS.Trainer
  			if (!base.Interact(player)) return false;
 								
 			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Hero) {
-
+			if (player.CharacterClass.ID == (int) eCharacterClass.Hero) 
+			{
 				// popup the training window
 				player.Out.SendTrainerWindow();
-				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-				player.Out.SendMessage(this.Name + " says, \"Training makes for a strong, healthy Hero! Keep up the good work, " + player.Name + "!\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
-
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "HeroTrainer.Interact.SmallTalk", this.Name, player.Name), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			} 
 			else 
 			{
 				// perhaps player can be promoted
-				if (CanPromotePlayer(player)) {
-					player.Out.SendMessage(this.Name + " says, \"You wish for the life of a [hero]? You wish to walk the Path of Focus?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-				} else {
-					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
+				if (CanPromotePlayer(player))
+				{
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "HeroTrainer.Interact.PathOfFocus", this.Name), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					if (!player.IsLevelRespecUsed)
+					{
+						OfferRespecialize(player);
+					}
+				}
+				else
+				{
+					DismissPlayer(player);
 				}
 			}
 			return true;
@@ -73,7 +79,7 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public override bool CanPromotePlayer(GamePlayer player) 
+		public static bool CanPromotePlayer(GamePlayer player) 
 		{
 			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Guardian && (player.Race == (int) eRace.Celt || player.Race == (int) eRace.Firbolg
 				|| player.Race == (int)eRace.Lurikeen || player.Race == (int)eRace.Shar || player.Race == (int)eRace.Sylvan || player.Race == (int)eRace.HiberniaMinotaur));
@@ -90,15 +96,15 @@ namespace DOL.GS.Trainer
 			if (!base.WhisperReceive(source, text)) return false;			
 			GamePlayer player = source as GamePlayer;			
 	
-			switch (text) {
-			case "hero":
+				if (text == LanguageMgr.GetTranslation(player.Client, "HeroTrainer.WhisperReceive.CaseHero"))
+				{
 				// promote player to other class
-				if (CanPromotePlayer(player)) {
-					PromotePlayer(player, (int)eCharacterClass.Hero, "Let me welcome you then, " + source.GetName(0, false) + ". Go, honor us with your deeds. Here is a gift for you. Try not to drop it, eh " + source.GetName(0, false) + ".", null);
-					player.ReceiveItem(this,ARMOR_ID1);
+					if (CanPromotePlayer(player))
+					{
+						PromotePlayer(player, (int)eCharacterClass.Hero, LanguageMgr.GetTranslation(player.Client, "HeroTrainer.WhisperReceive.Welcome", source.GetName(0, false), source.GetName(0, false)), null);
+						player.ReceiveItem(this, ARMOR_ID1);
+					}
 				}
-				break;
-			}
 			return true;		
 		}
 	}

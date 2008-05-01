@@ -20,7 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Language;
 using DOL.GS.ServerProperties;
 using DOL.GS.PacketHandler;
@@ -62,7 +62,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The player currently crafting
 		/// </summary>
-        protected const string PLAYER_CRAFTER = "PLAYER_CRAFTER";
+		protected const string PLAYER_CRAFTER = "PLAYER_CRAFTER";
 
 		/// <summary>
 		/// The item in construction
@@ -239,7 +239,7 @@ namespace DOL.GS
 			{
 				if (rawmaterial.ItemTemplate == null)
 				{
-					player.Out.SendMessage("Cannot find an item by the ID of " + rawmaterial.IngredientId_nb + " please report this!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.MakeItem.LoseNoMaterials", rawmaterial.IngredientId_nb), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					log.Error("Cannot find an item by the ID of " + rawmaterial.IngredientId_nb);
 					return false;
 				}
@@ -307,7 +307,7 @@ namespace DOL.GS
 					bool result = false;
 					if (rawmaterial.ItemTemplate == null)
 					{
-						player.Out.SendMessage("Cannot find an item by the ID of " + rawmaterial.IngredientId_nb + " please report this!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckRawMaterial.RawMaterial", rawmaterial.IngredientId_nb), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						log.Error("Cannot find an item by the ID of " + rawmaterial.IngredientId_nb);
 						return false;
 					}
@@ -729,6 +729,10 @@ namespace DOL.GS
 			if (Properties.CRAFTING_SPEED != 0)
 				craftingTime = (int)(craftingTime / Properties.CRAFTING_SPEED);
 
+			// In capital cities bonuses to crafting apply (patch 1.86)
+			if (player.CurrentRegion.IsCapitalCity && Properties.CAPITAL_CITY_CRAFTING_SPEED_BONUS != 0)
+				craftingTime = (int)(craftingTime / Properties.CAPITAL_CITY_CRAFTING_SPEED_BONUS);
+
 			//keep bonuses reduction in crafting time
 			if (Keeps.KeepBonusMgr.RealmHasBonus(DOL.GS.Keeps.eKeepBonusType.Craft_Timers_5, (eRealm)player.Realm))
 				craftingTime = (int)(craftingTime / 1.05);
@@ -749,15 +753,6 @@ namespace DOL.GS
 			}
 
 			craftingTime = (int)(craftingTime * mod);
-
-			// In capital cities bonuses to crafting apply (patch 1.86)
-			if (player.CurrentRegion.IsCapitalCity)
-			{
-				double speedbonus = (100.0 - Properties.CAPITAL_CITY_CRAFTING_SPEED_BONUS) / 100.0;
-				if (speedbonus < 0) speedbonus = 0.0;
-				if (speedbonus > 1) speedbonus = 1.0;
-				craftingTime = (int)(craftingTime * speedbonus);
-			}
 
 			if (craftingTime < 1) craftingTime = 1;
 			return craftingTime;

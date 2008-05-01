@@ -54,8 +54,8 @@ namespace DOL.GS.Keeps
 				return false;
 
 			TurnTo(player, 5000);
-
-			CastSpell(SpellMgr.HastenerSpell, SpellMgr.GuardSpellLine);
+			TargetObject = this;
+			CastSpell(SkillBase.GetSpellByID(GameHastener.SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells));
 			return true;
 		}
 		#endregion Examine/Interact Message

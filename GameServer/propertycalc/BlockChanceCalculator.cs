@@ -39,7 +39,7 @@ namespace DOL.GS.PropertyCalc
 			{
 				int shield = (player.GetModifiedSpecLevel(Specs.Shields) - 1) * (10 / 2);
 				int ability = player.AbilityBonus[(int)property] * 10;
-				return 50 + shield + (player.Dexterity * 2 - 100) / 4 + ability;
+				return 50 + shield + ((player.Dexterity * 2 - 100) / 4) + ability;
 			}
 
 			GameNPC npc = living as GameNPC;

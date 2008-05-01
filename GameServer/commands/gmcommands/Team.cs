@@ -20,7 +20,7 @@
 using System;
 using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.Database2;
+using DOL.Database;
 
 namespace DOL.GS.Commands
 {

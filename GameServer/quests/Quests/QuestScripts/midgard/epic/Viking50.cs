@@ -35,7 +35,7 @@
 
 using System;
 using System.Reflection;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -95,6 +95,13 @@ namespace DOL.GS.Quests.Midgard
 		private static ItemTemplate ValkyrieEpicVest = null;
 		private static ItemTemplate ValkyrieEpicLegs = null;
 		private static ItemTemplate ValkyrieEpicArms = null;
+        private static ItemTemplate NewMaulerEpicBoots = null;
+        private static ItemTemplate NewMaulerEpicHelm = null;
+        private static ItemTemplate NewMaulerEpicGloves = null;
+        private static ItemTemplate NewMaulerEpicVest = null;
+        private static ItemTemplate NewMaulerEpicLegs = null;
+        private static ItemTemplate NewMaulerEpicArms = null; 
+
 
 		// Constructors
 		public Viking_50() : base()
@@ -214,7 +221,7 @@ namespace DOL.GS.Quests.Midgard
 
 			#region defineItems
 
-			tome_enchantments = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "tome_enchantments");
+			tome_enchantments = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "tome_enchantments");
 			if (tome_enchantments == null)
 			{
 				if (log.IsWarnEnabled)
@@ -241,7 +248,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 
-			sealed_pouch = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "sealed_pouch");
+			sealed_pouch = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sealed_pouch");
 			if (sealed_pouch == null)
 			{
 				if (log.IsWarnEnabled)
@@ -267,7 +274,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 
-			WarriorEpicBoots = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "WarriorEpicBoots");
+			WarriorEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WarriorEpicBoots");
 			if (WarriorEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -310,7 +317,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 //end item
-			WarriorEpicHelm = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "WarriorEpicHelm");
+			WarriorEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WarriorEpicHelm");
 			if (WarriorEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -353,7 +360,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 //end item
-			WarriorEpicGloves = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "WarriorEpicGloves");
+			WarriorEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WarriorEpicGloves");
 			if (WarriorEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -396,7 +403,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 
-			WarriorEpicVest = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "WarriorEpicVest");
+			WarriorEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WarriorEpicVest");
 			if (WarriorEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -439,7 +446,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 
-			WarriorEpicLegs = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "WarriorEpicLegs");
+			WarriorEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WarriorEpicLegs");
 			if (WarriorEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -482,7 +489,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 
-			WarriorEpicArms = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "WarriorEpicArms");
+			WarriorEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WarriorEpicArms");
 			if (WarriorEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -524,7 +531,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 
 			}
-			BerserkerEpicBoots = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "BerserkerEpicBoots");
+			BerserkerEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BerserkerEpicBoots");
 			if (BerserkerEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -567,7 +574,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 //end item
-			BerserkerEpicHelm = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "BerserkerEpicHelm");
+			BerserkerEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BerserkerEpicHelm");
 			if (BerserkerEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -609,7 +616,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 //end item
-			BerserkerEpicGloves = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "BerserkerEpicGloves");
+			BerserkerEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BerserkerEpicGloves");
 			if (BerserkerEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -651,7 +658,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 
-			BerserkerEpicVest = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "BerserkerEpicVest");
+			BerserkerEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BerserkerEpicVest");
 			if (BerserkerEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -693,7 +700,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 
-			BerserkerEpicLegs = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "BerserkerEpicLegs");
+			BerserkerEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BerserkerEpicLegs");
 			if (BerserkerEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -735,7 +742,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 
-			BerserkerEpicArms = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "BerserkerEpicArms");
+			BerserkerEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BerserkerEpicArms");
 			if (BerserkerEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -777,7 +784,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 
 			}
-			ThaneEpicBoots = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "ThaneEpicBoots");
+			ThaneEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ThaneEpicBoots");
 			if (ThaneEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -820,7 +827,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 //end item
-			ThaneEpicHelm = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "ThaneEpicHelm");
+			ThaneEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ThaneEpicHelm");
 			if (ThaneEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -864,7 +871,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 //end item
-			ThaneEpicGloves = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "ThaneEpicGloves");
+			ThaneEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ThaneEpicGloves");
 			if (ThaneEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -907,7 +914,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 
-			ThaneEpicVest = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "ThaneEpicVest");
+			ThaneEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ThaneEpicVest");
 			if (ThaneEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -950,7 +957,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 
-			ThaneEpicLegs = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "ThaneEpicLegs");
+			ThaneEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ThaneEpicLegs");
 			if (ThaneEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -992,7 +999,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 
-			ThaneEpicArms = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "ThaneEpicArms");
+			ThaneEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ThaneEpicArms");
 			if (ThaneEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1034,7 +1041,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 			//Valhalla Touched Boots
-			SkaldEpicBoots = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "SkaldEpicBoots");
+			SkaldEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SkaldEpicBoots");
 			if (SkaldEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1077,7 +1084,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 //end item
 			//Valhalla Touched Coif 
-			SkaldEpicHelm = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "SkaldEpicHelm");
+			SkaldEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SkaldEpicHelm");
 			if (SkaldEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1117,7 +1124,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 //end item
 			//Valhalla Touched Gloves 
-			SkaldEpicGloves = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "SkaldEpicGloves");
+			SkaldEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SkaldEpicGloves");
 			if (SkaldEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1160,7 +1167,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			//Valhalla Touched Hauberk 
-			SkaldEpicVest = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "SkaldEpicVest");
+			SkaldEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SkaldEpicVest");
 			if (SkaldEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1202,7 +1209,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 			//Valhalla Touched Legs 
-			SkaldEpicLegs = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "SkaldEpicLegs");
+			SkaldEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SkaldEpicLegs");
 			if (SkaldEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1244,7 +1251,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 			//Valhalla Touched Sleeves 
-			SkaldEpicArms = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "SkaldEpicArms");
+			SkaldEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SkaldEpicArms");
 			if (SkaldEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1286,7 +1293,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 			//Subterranean Boots 
-			SavageEpicBoots = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "SavageEpicBoots");
+			SavageEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SavageEpicBoots");
 			if (SavageEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1328,7 +1335,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 			//Subterranean Coif 
-			SavageEpicHelm = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "SavageEpicHelm");
+			SavageEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SavageEpicHelm");
 			if (SavageEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1370,7 +1377,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 			//Subterranean Gloves 
-			SavageEpicGloves = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "SavageEpicGloves");
+			SavageEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SavageEpicGloves");
 			if (SavageEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1412,7 +1419,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 			//Subterranean Hauberk 
-			SavageEpicVest = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "SavageEpicVest");
+			SavageEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SavageEpicVest");
 			if (SavageEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1454,7 +1461,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 			//Subterranean Legs 
-			SavageEpicLegs = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "SavageEpicLegs");
+			SavageEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SavageEpicLegs");
 			if (SavageEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1496,7 +1503,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 			//Subterranean Sleeves 
-			SavageEpicArms = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "SavageEpicArms");
+			SavageEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SavageEpicArms");
 			if (SavageEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1839,7 +1846,16 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			#endregion
-			//Savage Epic Sleeves End
+
+            // Graveen: we assume items are existing in the DB
+            // TODO: insert here creation of items if they do not exists
+            NewMaulerEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicBoots");
+            NewMaulerEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicHelm");
+            NewMaulerEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicGloves");
+            NewMaulerEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicVest");
+            NewMaulerEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicLegs");
+            NewMaulerEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicArms");
+
 //Item Descriptions End
 
 			#endregion
@@ -1952,9 +1968,21 @@ namespace DOL.GS.Quests.Midgard
 				{
 					switch (quest.Step)
 					{
-						case 4:
-							Elizabeth.SayTo(player, "There are six parts to your reward, so make sure you have room for them. Just let me know when you are ready, and then you can [take them] with our thanks!");
-							break;
+                        case 4:
+                            {
+                                // Graveen: if not existing maulerepic in DB
+                                // player is not allowed to finish this quest until we fix this problem
+                                if (NewMaulerEpicArms == null || NewMaulerEpicBoots == null || NewMaulerEpicGloves == null ||
+                                    NewMaulerEpicHelm == null || NewMaulerEpicLegs == null || NewMaulerEpicVest == null)
+                                {
+                                    Elizabeth.SayTo(player, "Dark forces are still voiding this quest, your armor is not ready.");
+                                    return;
+                                }
+
+                                Elizabeth.SayTo(player, "There are six parts to your reward, so make sure you have room for them. Just let me know when you are ready, and then you can [take them] with our thanks!");
+                                break;
+                            }
+
 					}
 				}
 			}
@@ -1987,6 +2015,7 @@ namespace DOL.GS.Quests.Midgard
 				player.CharacterClass.ID != (byte) eCharacterClass.Thane &&
 				player.CharacterClass.ID != (byte) eCharacterClass.Skald &&
 				player.CharacterClass.ID != (byte) eCharacterClass.Savage &&
+                player.CharacterClass.ID != (byte) eCharacterClass.Mauler_Mid &&
 				player.CharacterClass.ID != (byte) eCharacterClass.Valkyrie)
 				return false;
 
@@ -2111,7 +2140,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (Step == 2 && e == GamePlayerEvent.GiveItem)
 			{
-				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
+        		GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
 				if (gArgs.Target.Name == Lynnleigh.Name && gArgs.Item.Id_nb == tome_enchantments.Id_nb)
 				{
 					RemoveItem(Lynnleigh, player, tome_enchantments);
@@ -2207,6 +2236,16 @@ namespace DOL.GS.Quests.Midgard
 						GiveItem(m_questPlayer, ValkyrieEpicVest);
 						break;
 					}
+                case eCharacterClass.Mauler_Mid:
+                    {
+                        GiveItem(m_questPlayer, NewMaulerEpicArms);
+                        GiveItem(m_questPlayer, NewMaulerEpicBoots);
+                        GiveItem(m_questPlayer, NewMaulerEpicGloves);
+                        GiveItem(m_questPlayer, NewMaulerEpicHelm);
+                        GiveItem(m_questPlayer, NewMaulerEpicLegs);
+                        GiveItem(m_questPlayer, NewMaulerEpicVest);
+                        break;
+                    }
 			}
 
 			m_questPlayer.GainExperience(1937768448, true);

@@ -1,0 +1,41 @@
+
+# REALMABILITIES
+# /Handlers
+# /DashingDefenseAbility
+DashingDefenseAbility.AddEffectsInfo.Info1:		
+DashingDefenseAbility.AddEffectsInfo.Info2:		Cible: Vous
+DashingDefenseAbility.AddEffectsInfo.Info3:		Temps d'invocation: Instantane
+DashingDefenseAbility.Execute.AlreadyEffect:		Vous etes deja sous l'effet d'un tel sort
+DashingDefenseAbility.Execute.MustInGroup:		Vous devez etre en groupe pour utiliser cette capacite!
+
+# /FirstAidAbility
+FirstAidAbility.AddEffectsInfo.Info1:			Niveau 1: Valeur: 25%
+FirstAidAbility.AddEffectsInfo.Info2:			Niveau 2: Value: 60%
+FirstAidAbility.AddEffectsInfo.Info3:			Niveau 3: Value: 100%
+FirstAidAbility.AddEffectsInfo.Info4:			Cible: Vous
+FirstAidAbility.AddEffectsInfo.Info5:			Temps d'invocation: Instantane
+FirstAidAbility.AddEffectsInfo.Info6:			
+FirstAidAbility.Execute.FullyHealed:			Vous etes entierement soigne.
+FirstAidAbility.Execute.HealYourself:			Vous vous soignez pour {0} points de vie.
+
+# /PurgeAbility
+PurgeAbility.AddEffectsInfo.Info1:			Le niveau 1 de cette capacite a un delay de 5 secondes. Les niveaux superieure de Purge ne sont pas assujetti a ce delais.
+PurgeAbility.AddEffectsInfo.Info2:			Cible: Vous
+PurgeAbility.AddEffectsInfo.Info3:			Temps d'invocation: Instantane
+PurgeAbility.OnTick.PurgeActivate:			Purge active dans {0} secondes!
+PurgeAbility.RemoveNegativeEffects.FallFromYou:		Tous les effets negatif s'estompent.
+
+# /RealmAbility
+RealmAbility.AddReUseDelayInfo.Every:			Niveau {0}: peut s'utiliser tout les: {1}
+RealmAbility..CheckPreconditions.BeInCombat:	Pour utiliser cette capacite, vous devez avoir combattu recemment!
+RealmAbility..CheckPreconditions.BeInGroup:		Vous devez etre en groupe pour utiliser cette capacite!
+RealmAbility..CheckPreconditions.Combat:		Vous avez ete en combat recemment et ne pouvez utiliser cette capacite!
+RealmAbility..CheckPreconditions.Dead:			Vous ne pouvez utiliser cette capacite en etant mort!
+RealmAbility..CheckPreconditions.Mesmerized:		Vous ne pouvez pas utiliser cette capacite quand vous etes hypnotise!
+RealmAbility..CheckPreconditions.Sitting:		Vous ne pouvez pas utiliser cette capacite en etant assis!
+RealmAbility..CheckPreconditions.Stealthed:		Vous ne pouvez pas utiliser cette capacite quand vous etes furtif!
+RealmAbility..CheckPreconditions.Stunned:		Vous ne pouvez pas utiliser cette capacite quand vous etes assomme!
+RealmAbility.SendCasterSpellEffectAndCastMessage.Caster:	{0} lance un sort!
+RealmAbility.SendCasterSpellEffectAndCastMessage.You:	Vous lancez le sort: {0}!
+RealmAbility.SendCastMessage.PlayerCasts:		{0} lance un sort!
+RealmAbility.SendCastMessage.YouCast:			Vous lancez {0}!

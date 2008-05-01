@@ -22,8 +22,8 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using DOL.Database2;
-using DOL.Database2;
+using DOL.Database;
+using DOL.Database.Attributes;
 using DOL.Events;
 using DOL.GS;
 using DOL.GS.PacketHandler;
@@ -175,13 +175,13 @@ namespace DOL.GS.GameEvents
 }
 
 
-namespace DOL.GS
+namespace DOL.Database
 {
 	/// <summary>
-	/// GS Storage of ServerStats
+	/// Database Storage of ServerStats
 	/// </summary>
-	[Serializable]
-	public class DBServerStats : DatabaseObject
+	[DataTable(TableName = "serverstats")]
+	public class DBServerStats : DataObject
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -192,6 +192,8 @@ namespace DOL.GS
 		protected int m_download;
 		protected long m_memory;
 
+		static bool m_autoSave;
+
 		public DBServerStats()
 		{
 			m_statdate = DateTime.Now;
@@ -200,10 +202,16 @@ namespace DOL.GS
 			m_upload = 0;
 			m_download = 0;
 			m_memory = 0;
+			m_autoSave = false;
 		}
 
+		override public bool AutoSave
+		{
+			get { return m_autoSave; }
+			set { m_autoSave = value; }
+		}
 
-		
+		[DataElement(AllowDbNull = false)]
 		public DateTime StatDate
 		{
 			get { return m_statdate; }
@@ -214,7 +222,7 @@ namespace DOL.GS
 			}
 		}
 
-		
+		[DataElement(AllowDbNull = false)]
 		public int Clients
 		{
 			get { return m_clients; }
@@ -224,7 +232,7 @@ namespace DOL.GS
 				m_clients = value;
 			}
 		}
-		
+		[DataElement(AllowDbNull = false)]
 		public float CPU
 		{
 			get { return m_cpu; }
@@ -234,7 +242,7 @@ namespace DOL.GS
 				m_cpu = value;
 			}
 		}
-		
+		[DataElement(AllowDbNull = false)]
 		public int Upload
 		{
 			get { return m_upload; }
@@ -244,7 +252,7 @@ namespace DOL.GS
 				m_upload = value;
 			}
 		}
-		
+		[DataElement(AllowDbNull = false)]
 		public int Download
 		{
 			get { return m_download; }
@@ -255,7 +263,7 @@ namespace DOL.GS
 			}
 		}
 
-		
+		[DataElement(AllowDbNull = false)]
 		public long Memory
 		{
 			get { return m_memory; }
@@ -270,11 +278,11 @@ namespace DOL.GS
 		//[GameServerStartedEvent]
 		//public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
 		//{
-		//     if (!m_init && (GameServer.GS != null))
+		//     if (!m_init && (GameServer.Database != null))
 		//     {
 		//          log.Info("DATABASE ServerStats LOADED");
-		//          GameServer.GS.RegisterDataObject(typeof(DBServerStats));
-		//          GameServer.GS.LoadDatabaseTable(typeof(DBServerStats));
+		//          GameServer.Database.RegisterDataObject(typeof(DBServerStats));
+		//          GameServer.Database.LoadDatabaseTable(typeof(DBServerStats));
 		//          m_init = true;
 		//     }
 		//}

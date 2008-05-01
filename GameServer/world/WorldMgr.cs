@@ -22,7 +22,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading;
-using DOL.Database2;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Utils;
 using log4net;
@@ -104,18 +104,21 @@ namespace DOL.GS
 		/// <summary>
 		/// All available teleport locations.
 		/// </summary>
-		private static Dictionary<eRealm, List<Teleport>> m_teleportLocations;
+		private static Dictionary<string, Teleport> m_teleportLocations;
 
 		/// <summary>
-		/// Returns a list of all teleport locations available for this realm.
+		/// Returns the teleport given an ID and a realm
 		/// </summary>
-		/// <param name="realm"></param>
+		/// <param name="teleportID">Second key to search for</param>
 		/// <returns></returns>
-		public static List<Teleport> GetTeleportLocations(eRealm realm)
+		public static Teleport GetTeleportLocation(string teleportID)
 		{
-			return (m_teleportLocations.ContainsKey(realm))
-				? m_teleportLocations[realm]
-				: null;
+			// The TeleportID fields from the 'teleport' table are converted 
+			// to lowercase as they're added to the dictionary, so we need
+			// to search for the lowercase version as well.
+			teleportID = teleportID.ToLower();
+			if (m_teleportLocations.ContainsKey(teleportID)) return m_teleportLocations[teleportID];
+			return null;
 		}
 
 		/// <summary>
@@ -275,20 +278,17 @@ namespace DOL.GS
 
 			// Load available teleport locations.
 
-			DatabaseObject[] objs = GameServer.Database.SelectAllObjects(typeof(Teleport));
-			m_teleportLocations = new Dictionary<eRealm, List<Teleport>>();
+			DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(Teleport));
+			m_teleportLocations = new Dictionary<string, Teleport>();
 			int[] numTeleports = new int[3];
 			foreach (Teleport teleport in objs)
 			{
-				List<Teleport> teleportList;
-				if (m_teleportLocations.ContainsKey((eRealm)teleport.Realm))
-					teleportList = m_teleportLocations[(eRealm)teleport.Realm];
-				else
+				if (m_teleportLocations.ContainsKey(teleport.TeleportID.ToLower()))
 				{
-					teleportList = new List<Teleport>();
-					m_teleportLocations.Add((eRealm)teleport.Realm, teleportList);
+					log.Error("Global Teleport list already contains an entry for: " + teleport.TeleportID.ToLower() + " skipping this one!");
+					continue;
 				}
-				teleportList.Add(teleport);
+				m_teleportLocations.Add(teleport.TeleportID.ToLower(), teleport);
 				if (teleport.Realm >= 1 && teleport.Realm <= 3)
 					numTeleports[teleport.Realm - 1]++;
 			}
@@ -329,7 +329,6 @@ namespace DOL.GS
 				data.DivingEnabled = config[ENTRY_REG_DIVING_ENABLE].GetBoolean(false);
 				data.HousingEnabled = config[ENTRY_REG_HOUSING_ENABLE].GetBoolean(false);
 				data.Expansion = config[ENTRY_REG_EXPANSION].GetInt();
-				//				data.Mobs = (Mob[])GameServer.GS.SelectObjects(typeof(Mob), "Region = '" + data.Id + "'");
 				ArrayList mobs = (ArrayList)mobsByRegionId[data.Id];
 				if (mobs == null)
 					data.Mobs = new Mob[0];
@@ -340,8 +339,6 @@ namespace DOL.GS
 			}
 
 			regions.Sort();
-
-			/////
 
 			log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - w2");
 
@@ -991,6 +988,52 @@ namespace DOL.GS
 					if (npc.Realm == realm && npc.GuildName == guild)
 						returnNPCs.Add(npc);
 				}
+			}
+			return returnNPCs;
+		}
+
+		/// <summary>
+		/// Searches for all NPCs with the given type and realm in ALL regions!
+		/// </summary>
+		/// <param name="type"></param>
+		/// <param name="realm"></param>
+		/// <returns></returns>
+		public static List<GameNPC> GetNPCsByType(Type type, eRealm realm)
+		{
+			List<GameNPC> returnNPCs = new List<GameNPC>();
+			foreach (Region r in m_regions.Values)
+			{
+				foreach (GameObject obj in r.Objects)
+				{
+					GameNPC npc = obj as GameNPC;
+					if (npc == null)
+						continue;
+					if (npc.Realm == realm && type.IsInstanceOfType(npc))
+						returnNPCs.Add(npc);
+				}
+			}
+			return returnNPCs;
+		}
+
+		/// <summary>
+		/// Searches for all NPCs with the given type and realm in a specific region
+		/// </summary>
+		/// <param name="type"></param>
+		/// <param name="realm"></param>
+		/// <returns></returns>
+		public static List<GameNPC> GetNPCsByType(Type type, eRealm realm, ushort region)
+		{
+			List<GameNPC> returnNPCs = new List<GameNPC>();
+			Region r = GetRegion(region);
+			if (r == null)
+				return returnNPCs;
+			foreach (GameObject obj in r.Objects)
+			{
+				GameNPC npc = obj as GameNPC;
+				if (npc == null)
+					continue;
+				if (npc.Realm == realm && type.IsInstanceOfType(npc))
+					returnNPCs.Add(npc);
 			}
 			return returnNPCs;
 		}
@@ -1751,48 +1794,6 @@ namespace DOL.GS
 			return GetItemsCloseToObject(obj, radiusToCheck, false);
 		}
 
-		/// <summary>
-		/// Saves the world to the DB
-		/// </summary>
-		public static void SaveToDatabase()
-		{
-			// region entries are not dynamically changed, so we can iterate without lock
-			//lock(m_regions.SyncRoot)
-			//{
-			IDictionaryEnumerator iter = m_regions.GetEnumerator();
-			/*
-							using(WorldSaveProgress dlg = new WorldSaveProgress())
-							{
-								dlg.progBar.Minimum = 0;
-								dlg.progBar.Minimum = m_regions.Count;
-								dlg.progBar.Step = 1;
-								dlg.lblTxt.Select(dlg.lblTxt.Text.Length-1, 0);
-
-								dlg.Show();
-
-								while(iter.MoveNext())
-								{
-									Region reg = (Region)iter.Value;
-
-									reg.SaveToDatabase();
-									dlg.progBar.PerformStep();
-								}
-
-								dlg.Close();
-							}
-							*/
-			while (iter.MoveNext())
-			{
-				Region reg = (Region)iter.Value;
-				if (log.IsDebugEnabled)
-					log.Debug("saving region " + reg.Description + " " + reg.Name + " " + iter.Key);
-				reg.SaveToDatabase();
-				if (log.IsDebugEnabled)
-					log.Debug("Saved region " + reg.Description);
-				Thread.Sleep(0);
-			}
-			//}
-		}
 
 		private static void CheckRegionAndZoneConfigs()
 		{

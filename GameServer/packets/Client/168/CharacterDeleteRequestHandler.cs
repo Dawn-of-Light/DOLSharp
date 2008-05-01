@@ -18,7 +18,7 @@
  */
 using System;
 using System.Reflection;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Events;
 using log4net;
 
@@ -53,7 +53,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					// delete items
 					try
 					{
-						DatabaseObject[] objs = GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + GameServer.Database.Escape(chars[i].ObjectId) + "'");
+						DataObject[] objs = GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + GameServer.Database.Escape(chars[i].ObjectId) + "'");
 						foreach (InventoryItem item in objs)
 						{
 							GameServer.Database.DeleteObject(item);
@@ -69,7 +69,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					// delete quests
 					try
 					{
-						DatabaseObject[] objs = GameServer.Database.SelectObjects(typeof(DBQuest), "CharName = '" + GameServer.Database.Escape(chars[i].Name) + "'");
+						DataObject[] objs = GameServer.Database.SelectObjects(typeof(DBQuest), "CharName = '" + GameServer.Database.Escape(chars[i].Name) + "'");
 						foreach (DBQuest quest in objs)
 						{
 							GameServer.Database.DeleteObject(quest);
@@ -85,7 +85,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					// delete ML steps
 					try
 					{
-						DatabaseObject[] objs = GameServer.Database.SelectObjects(typeof(DBCharacterXMasterLevel), "CharName = '" + GameServer.Database.Escape(chars[i].Name) + "'");
+						DataObject[] objs = GameServer.Database.SelectObjects(typeof(DBCharacterXMasterLevel), "CharName = '" + GameServer.Database.Escape(chars[i].Name) + "'");
 						foreach (DBCharacterXMasterLevel mlstep in objs)
 						{
 							GameServer.Database.DeleteObject(mlstep);

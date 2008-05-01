@@ -29,6 +29,10 @@ namespace DOL.GS
 	/// </summary>
 	public interface IArea
 	{					
+		/// <summary>
+		/// Returns the ID of this zone
+		/// </summary>
+		ushort ID{ get; set;}		
 
 		void UnRegisterPlayerEnter(DOLEventHandler callback);
 		void UnRegisterPlayerLeave(DOLEventHandler callback);

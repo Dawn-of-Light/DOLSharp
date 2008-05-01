@@ -28,7 +28,7 @@
 
 using System;
 using System.Reflection;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -205,7 +205,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		emptybottle = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "emptybottle");
+		emptybottle = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "emptybottle");
 			if (emptybottle == null)
 			{
 				emptybottle = new ItemTemplate();
@@ -281,7 +281,7 @@ using DOL.AI.Brain;
 				if (SAVE_INTO_DATABASE)
 					GameServer.Database.AddNewObject(emptybottle);
 				}
-			bottleofmead = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "bottleofmead");
+			bottleofmead = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "bottleofmead");
 			if (bottleofmead == null)
 			{
 				bottleofmead = new ItemTemplate();

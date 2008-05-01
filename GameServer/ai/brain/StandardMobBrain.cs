@@ -19,7 +19,8 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using DOL.Database2;
+
+using DOL.Database;
 using DOL.Events;
 using DOL.GS;
 using DOL.GS.Effects;
@@ -28,6 +29,7 @@ using DOL.GS.SkillHandler;
 using DOL.GS.Spells;
 using DOL.GS.Movement;
 using DOL.GS.RealmAbilities;
+using DOL.Language;
 using log4net;
 
 namespace DOL.AI.Brain
@@ -291,6 +293,9 @@ namespace DOL.AI.Brain
 			// TODO: This should actually be the other way round, but access
 			// to m_aggroTable is restricted and needs to be threadsafe.
 
+            // do not modify aggro list if dead
+            if (!brain.Body.IsAlive) return;
+
 			lock (m_aggroTable.SyncRoot)
 			{
 				IDictionaryEnumerator dictEnum = m_aggroTable.GetEnumerator();
@@ -308,6 +313,9 @@ namespace DOL.AI.Brain
 		public virtual void AddToAggroList(GameLiving living, int aggroamount)
 		{
 			if (m_body.IsConfused) return;
+            
+            // tolakram - duration spell effects will attempt to add to aggro after npc is dead
+            if (!m_body.IsAlive) return;
 
 			if (living == null) return;
 			//			log.Debug(Body.Name + ": AddToAggroList="+(living==null?"(null)":living.Name)+", "+aggroamount);
@@ -358,8 +366,8 @@ namespace DOL.AI.Brain
 					if (protectAmount > 0)
 					{
 						aggroamount -= protectAmount;
-						protect.ProtectSource.Out.SendMessage("You are protecting " + player.GetName(0, false) + " and distract " + Body.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						//						player.Out.SendMessage("You are protected by " + protect.ProtectSource.GetName(0, false) + " from " + Body.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        protect.ProtectSource.Out.SendMessage(LanguageMgr.GetTranslation(protect.ProtectSource.Client, "AI.Brain.StandardMobBrain.YouProtDist", player.GetName(0, false), Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						//player.Out.SendMessage("You are protected by " + protect.ProtectSource.GetName(0, false) + " from " + Body.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 						lock (m_aggroTable.SyncRoot)
 						{
@@ -582,30 +590,25 @@ namespace DOL.AI.Brain
 					AddToAggroList((GameLiving)eArgs.DamageSource, aggro);
 					return;
 				}
-
-				if (e == GameLivingEvent.AttackedByEnemy)
+				else if (e == GameLivingEvent.AttackedByEnemy)
 				{
 					AttackedByEnemyEventArgs eArgs = args as AttackedByEnemyEventArgs;
 					if (eArgs == null) return;
 					OnAttackedByEnemy(eArgs.AttackData);
 					return;
 				}
-
-				if (e == GameLivingEvent.EnemyHealed)
+				else if (e == GameLivingEvent.EnemyHealed)
 				{
 					EnemyHealedEventArgs eArgs = args as EnemyHealedEventArgs;
 					if (eArgs != null && eArgs.HealSource is GameLiving)
 					{
 						//Higher Aggro amount and NO peace flag npcs!
-						if (eArgs.HealSource is GamePlayer)
-							AddToAggroList((GameLiving)eArgs.HealSource, (eArgs.HealAmount * 2));
-						if ((eArgs.HealSource is GameNPC && (((GameNPC)eArgs.HealSource).Flags & (uint)GameNPC.eFlags.PEACE) == 0))
+                        if (eArgs.HealSource is GamePlayer || (eArgs.HealSource is GameNPC && (((GameNPC)eArgs.HealSource).Flags & (uint)GameNPC.eFlags.PEACE) == 0))
 							AddToAggroList((GameLiving)eArgs.HealSource, (eArgs.HealAmount * 2));
 					}
 					return;
 				}
-
-				if (e == GameLivingEvent.EnemyKilled)
+				else if (e == GameLivingEvent.EnemyKilled)
 				{
 					EnemyKilledEventArgs eArgs = args as EnemyKilledEventArgs;
 					if (eArgs != null)
@@ -624,22 +627,19 @@ namespace DOL.AI.Brain
 					}
 					return;
 				}
-
-				if (e == GameLivingEvent.Dying)
+				else if (e == GameLivingEvent.Dying)
 				{
 					// clean aggro table
 					ClearAggroList();
 					return;
 				}
-
-				if (e == GameNPCEvent.FollowLostTarget)
+				else if (e == GameNPCEvent.FollowLostTarget)
 				{
 					FollowLostTargetEventArgs eArgs = args as FollowLostTargetEventArgs;
 					if (eArgs == null) return;
 					OnFollowLostTarget(eArgs.LostTarget);
 					return;
 				}
-
 			}
 		}
 
@@ -827,7 +827,7 @@ namespace DOL.AI.Brain
 
 			ArrayList attackersInRange = new ArrayList();
 
-			foreach (GamePlayer player in attackerGroup)
+			foreach (GamePlayer player in attackerGroup.GetPlayersInTheGroup())
 				if (WorldMgr.CheckDistance(attacker, player, BAFTargetPlayerRange))
 					attackersInRange.Add(player);
 
@@ -943,62 +943,6 @@ namespace DOL.AI.Brain
 							Body.TargetObject = Body;
 							break;
 						}
-
-						//ControlledNpc now overrides this part
-						//if (spell.Target == "Realm" && this is IControlledBrain)
-						//{
-						//    GameLiving owner = (this as IControlledBrain).Owner;
-						//    GamePlayer player = null;
-						//    //Buff owner
-						//    if (!LivingHasEffect(owner, spell))
-						//    {
-						//        Body.TargetObject = owner;
-						//        break;
-						//    }
-
-						//    if (owner is GameNPC)
-						//    {
-						//        //Buff other minions
-						//        foreach (IControlledBrain icb in ((GameNPC)owner).ControlledNpcList)
-						//        {
-						//            if (icb == null)
-						//                continue;
-						//            if (!LivingHasEffect(icb.Body, spell))
-						//            {
-						//                Body.TargetObject = icb.Body;
-						//                break;
-						//            }
-						//        }
-						//        player = (GamePlayer)((IControlledBrain)((GameNPC)owner).Brain).Owner;
-						//    }
-						//    else
-						//        player = (GamePlayer)owner;
-
-						//    //Buff player
-						//    if (player != null)
-						//    {
-						//        if (!LivingHasEffect(player, spell))
-						//        {
-						//            Body.TargetObject = player;
-						//            break;
-						//        }
-
-						//        ////Buff group
-						//        //if (player.PlayerGroup != null)
-						//        //{
-						//        //    foreach (GamePlayer gplayer in player.PlayerGroup.GetPlayersInTheGroup())
-						//        //    {
-						//        //        if (!HasEffect(gplayer, spell))
-						//        //        {
-						//        //            this.TargetObject = gplayer;
-						//        //            this.CastSpell(spell, spellline);
-						//        //            this.TargetObject = lastTarget;
-						//        //            return;
-						//        //        }
-						//        //    }
-						//        //}
-						//    }
-						//}
 						break;
 					}
 				#endregion
@@ -1043,72 +987,6 @@ namespace DOL.AI.Brain
 						break;
 					}
 
-					//ControlledNpc now overrides this part
-					//if (this is IControlledBrain)
-					//{
-					//    //Heal owner
-					//    GameLiving owner = (this as IControlledBrain).Owner;
-					//    if (owner.HealthPercent < 75)
-					//    {
-					//        Body.TargetObject = owner;
-					//        break;
-					//    }
-
-					//    GamePlayer player;
-					//    //Get the minion's GamePlayer
-					//    if (owner is GamePlayer)
-					//        player = (GamePlayer)owner;
-					//    else
-					//        player = (GamePlayer)((IControlledBrain)((GameNPC)owner).Brain).Owner;
-
-					//    //If minion, heal player and other minions
-					//    if (Body.IsMinion)
-					//    {
-					//        if (player.HealthPercent < 75)
-					//        {
-					//            Body.TargetObject = player;
-					//            break;
-					//        }
-
-					//        if (owner is GameNPC)
-					//        {
-					//            //Heal other minions
-					//            foreach (IControlledBrain icb in ((GameNPC)owner).ControlledNpcList)
-					//            {
-					//                if (icb == null)
-					//                    continue;
-					//                if (icb.Body.HealthPercent < 75)
-					//                {
-					//                    Body.TargetObject = icb.Body;
-					//                    break;
-					//                }
-					//            }
-					//        }
-					//        //Heal group
-					//        /*
-					//        if (player.PlayerGroup != null)
-					//        {
-					//            foreach (GamePlayer gplayer in player.PlayerGroup.GetPlayersInTheGroup())
-					//            {
-					//                if (gplayer.HealthPercent < 75)
-					//                    CheckSpellsByType("Heal", gplayer);
-
-					//            }
-					//        }*/
-					//    }
-
-					//    if (player.PlayerGroup != null && player.CharacterClass.ID == (int)eCharacterClass.Enchanter)
-					//    {
-					//        foreach (GamePlayer gplayer in player.PlayerGroup.GetPlayersInTheGroup())
-					//        {
-					//            if (gplayer.HealthPercent < 75)
-					//            {
-					//                Body.TargetObject = gplayer;
-					//                break;
-					//            }
-					//        }
-					//    }
-					//}
 					break;
 				#endregion
 			}
@@ -1240,23 +1118,27 @@ namespace DOL.AI.Brain
 			{
 				if (!DOL.GS.ServerProperties.Properties.ALLOW_ROAM)
 					return false;
-				if (Body.MaxSpeedBase == 0)
+				if (Body.RoamingRange == 0)
 					return false;
-				if (Body.InCombat || Body.IsMoving || Body.IsCasting)
-					return false;
-				if (Body.Realm != 0)
-					return false;
-				if (Body.Name == "horse")
-					return false;
-				//				if (!char.IsLower(Body.Name[0]))
-				if (!char.IsLower(Body.Name[0]) && (DOL.GS.ServerProperties.Properties.SERV_LANGUAGE != "DE"))
-					return false;
-				if (Body.CurrentRegion.IsDungeon)
-					return false;
-				//if (Body.Name.StartsWith("ambient"))
-				//return false;
-				if (Util.Chance(70))
-					return false;
+				if (Body.RoamingRange < 0)
+				{
+					if (Body.MaxSpeedBase == 0)
+						return false;
+					if (Body.InCombat || Body.IsMoving || Body.IsCasting)
+						return false;
+					if (Body.Realm != 0)
+						return false;
+					if (Body.Name.ToLower() == "horse")
+						return false;
+					if (!char.IsLower(Body.Name[0]) && (DOL.GS.ServerProperties.Properties.SERV_LANGUAGE != "DE"))
+						return false;
+					if (Body.CurrentRegion.IsDungeon)
+						return false;
+					//if (Body.Name.StartsWith("ambient"))
+					//return false;
+					if (Util.Chance(70))
+						return false;
+				}
 				return true;
 			}
 		}
@@ -1264,12 +1146,19 @@ namespace DOL.AI.Brain
 		public virtual IPoint3D CalcRandomWalkTarget()
 		{
 			int roamingRadius = 300;
+
+			if (Body.RoamingRange > 0)
+			{
+				roamingRadius = Body.RoamingRange;
+			}
+
 			roamingRadius = Util.Random(0, Math.Max(100, roamingRadius));
 
 			double angle = Util.Random(0, 360) / (2 * Math.PI);
 			double targetX = Body.SpawnX + Util.Random(-roamingRadius, roamingRadius);
 			double targetY = Body.SpawnY + Util.Random(-roamingRadius, roamingRadius);
-			//double targetZ = (Body.IsUnderwater) ? Body.SpawnZ : 0; /*(Body.Flags & (uint)GameNPC.eFlags.FLYING) == (uint)GameNPC.eFlags.FLYING ||  + Util.Random(-100, 100)*/
+			//double targetZ = (Body.IsUnderwater) ? Body.SpawnZ : 0;
+            /*(Body.Flags & (uint)GameNPC.eFlags.FLYING) == (uint)GameNPC.eFlags.FLYING ||  + Util.Random(-100, 100)*/
 
 			return new Point3D((int)targetX, (int)targetY, Body.SpawnZ);
 		}

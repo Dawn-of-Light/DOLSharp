@@ -87,6 +87,8 @@ namespace DOL.GS.PropertyCalc
 				if (player.IsStealthed)
 				{
 					double stealthSpec = player.GetModifiedSpecLevel(Specs.Stealth);
+					if (stealthSpec > player.Level)
+						stealthSpec = player.Level;
 					speed *= 0.3 + (stealthSpec + 10) * 0.3 / (player.Level + 10);
 					VanishEffect vanish = player.EffectList.GetOfType(typeof(VanishEffect)) as VanishEffect;
 					if (vanish != null)

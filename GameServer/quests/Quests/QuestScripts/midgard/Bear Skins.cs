@@ -28,7 +28,7 @@
 
 using System;
 using System.Reflection;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -153,7 +153,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		smallmaulerskin = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "smallmaulerskin");
+		smallmaulerskin = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "smallmaulerskin");
 			if (smallmaulerskin == null)
 			{
 				smallmaulerskin = new ItemTemplate();

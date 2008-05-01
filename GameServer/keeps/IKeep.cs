@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using DOL.Database2;
+using DOL.Database;
 
 
 namespace DOL.GS.Keeps
@@ -29,7 +29,8 @@ namespace DOL.GS.Keeps
 		List<GameKeepComponent> KeepComponents { get;}
 		Hashtable Guards { get;}
 		Hashtable Banners { get;}
-		void LoadFromDatabase(DatabaseObject keep);
+		void Load(DBKeep keep);
+		void LoadFromDatabase(DataObject keep);
 		void SaveIntoDatabase();
 	}
 }

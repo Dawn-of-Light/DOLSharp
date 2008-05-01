@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using DOL.GS;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Language;
 using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
@@ -16,8 +16,8 @@ namespace DOL.GS
 	{
         private byte m_type = 0;
         protected DBBoat m_DBboat;
-        private UInt64 boat_id;
-        private UInt64 boat_owner;
+        private string boat_id;
+        private string boat_owner;
         private string boat_name;
         private ushort boat_model;
         private int boat_maxspeedbase;
@@ -54,9 +54,13 @@ namespace DOL.GS
         /// <summary>
         /// Gets or sets the boats db
         /// </summary>
-       
+        public DBBoat theBoatDB
+        {
+            get { return m_DBboat; }
+            set { m_DBboat = value; }
+        }
 
-        public UInt64 BoatID
+        public string BoatID
         {
             get
             {
@@ -104,7 +108,7 @@ namespace DOL.GS
             }
         }
 
-        public UInt64 OwnerID
+        public string OwnerID
         {
             get
             {
@@ -230,7 +234,7 @@ namespace DOL.GS
         /// Loads this boat from a boat table
         /// </summary>
         /// <param name="obj"></param>
-        /*public override void LoadFromDatabase(DatabaseObject obj)
+        public override void LoadFromDatabase(DataObject obj)
         {
             if (!(obj is DBBoat))
                 return;
@@ -255,6 +259,11 @@ namespace DOL.GS
             }
             theBoatDB = m_DBboat;
             base.LoadFromDatabase(obj);
-        }*/
+        }
+
+        public override void SaveIntoDatabase()
+        {
+            GameServer.Database.SaveObject(theBoatDB);
+        }
     }
 }

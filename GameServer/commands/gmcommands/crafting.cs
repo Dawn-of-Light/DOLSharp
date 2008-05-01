@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -18,54 +18,48 @@
  */
 using System;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
 	[CmdAttribute(
-		 "&crafting",
-		 ePrivLevel.GM,
-		 "Change the crafting level of your target",
-		 "'/crafting add <craftingSkillID> <startLevel>' to add a new crating skill to your target",
-		 "'/crafting change <craftingSkillID> <amount>' to increase or decrease the crafting skill level of your target",
-		 "'/crafting list' to have the list of all crafting skill with their id")]
+		"&crafting",
+		ePrivLevel.GM,
+		"GMCommands.Crafting.Description",
+		"GMCommands.Crafting.Usage.Add",
+		"GMCommands.Crafting.Usage.Change",
+		"GMCommands.Crafting.Usage.List")]
 	public class CraftCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
-			if (args.Length == 1)
+			if (args.Length < 2)
 			{
 				DisplaySyntax(client);
 				return;
 			}
 
-			if (args[1] == "list")
+			#region List
+			if (args[1].ToLower() == "list")
 			{
-				client.Out.SendMessage("Crafting Skill ID description :", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Crafting.SkillDescription"));
+				foreach (int value in Enum.GetValues(typeof(eCraftingSkill)))
+					DisplayMessage(client, value + " = " + Enum.GetName(typeof(eCraftingSkill), value));
+			}
+			#endregion List
 
-				foreach (int valeur in Enum.GetValues(typeof(eCraftingSkill)))
-				{
-					client.Out.SendMessage(valeur + " = " + Enum.GetName(typeof(eCraftingSkill), valeur), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
+			GamePlayer target = null;
+			if ((client.Player.TargetObject != null) && (client.Player.TargetObject is GamePlayer))
+				target = client.Player.TargetObject as GamePlayer;
+			else
+			{
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Crafting.NoPlayerTarget"));
 				return;
 			}
 
-			GamePlayer targetPlayer = null;
-			if (client.Player.TargetObject != null && client.Player.TargetObject is GamePlayer)
-				targetPlayer = (GamePlayer)client.Player.TargetObject;
-
-			if (targetPlayer == null)
+			switch (args[1].ToLower())
 			{
-				if (client.Player.TargetObject != null)
-				{
-					client.Out.SendMessage("You can't use " + client.Player.TargetObject + " for /crafting command.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
-				}
-				client.Out.SendMessage("You must target a player to use this command.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
-
-			switch (args[1])
-			{
+				#region Add
 				case "add":
 					{
 						eCraftingSkill craftingSkillID = eCraftingSkill.NoCrafting;
@@ -73,34 +67,35 @@ namespace DOL.GS.Commands
 						try
 						{
 							craftingSkillID = (eCraftingSkill)Convert.ToUInt16(args[2]);
-							if (args.Length > 3) startLevel = Convert.ToUInt16(args[3]);
+							if (args.Length > 3)
+								startLevel = Convert.ToUInt16(args[3]);
 
 							AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(craftingSkillID);
 							if (skill == null)
 							{
-								client.Out.SendMessage("You must enter a valid crafting skill id, type /crafting for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Crafting.InvalidSkill"));
 							}
 							else
 							{
-								if (targetPlayer.AddCraftingSkill(craftingSkillID, startLevel))
+								if (target.AddCraftingSkill(craftingSkillID, startLevel))
 								{
-									targetPlayer.Out.SendUpdateCraftingSkills();
-									client.Out.SendMessage("Crafting skill " + skill.Name + " correctly added.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									target.Out.SendUpdateCraftingSkills();
+									DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Crafting.SkillAdded", skill.Name));
 								}
 								else
 								{
-									client.Out.SendMessage(targetPlayer.Name + " already have the crafting skill " + skill.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Crafting.AlreadyHaveSkill", target.Name, skill.Name));
 								}
 							}
 						}
 						catch (Exception)
 						{
-							client.Out.SendMessage("Type /crafting for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return;
+							DisplaySyntax(client);
 						}
+						break;
 					}
-					break;
-
+				#endregion Add
+				#region Change
 				case "change":
 					{
 						eCraftingSkill craftingSkillID = eCraftingSkill.NoCrafting;
@@ -108,40 +103,43 @@ namespace DOL.GS.Commands
 						try
 						{
 							craftingSkillID = (eCraftingSkill)Convert.ToUInt16(args[2]);
-							if (args.Length > 3) amount = Convert.ToUInt16(args[3]);
+							if (args.Length > 3)
+								amount = Convert.ToUInt16(args[3]);
 
 							AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(craftingSkillID);
 							if (skill == null)
 							{
-								client.Out.SendMessage("You must enter a valid crafting skill id, type /crafting for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Crafting.InvalidSkill"));
 							}
 							else
 							{
-								if (targetPlayer.GetCraftingSkillValue(craftingSkillID) < 0)
+								if (target.GetCraftingSkillValue(craftingSkillID) < 0)
 								{
-									client.Out.SendMessage(targetPlayer.Name + " does not have the crafting skill " + skill.Name + ", add it first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Crafting.NotHaveSkillAddIt", target.Name, skill.Name));
 									return;
 								}
 
-								targetPlayer.GainCraftingSkill(craftingSkillID, amount);
-								targetPlayer.Out.SendUpdateCraftingSkills();
-								client.Out.SendMessage("Crafting skill " + skill.Name + " correctly changed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								client.Out.SendMessage(targetPlayer.Name + " now has " + targetPlayer.GetCraftingSkillValue(craftingSkillID) + " in " + skill.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								target.GainCraftingSkill(craftingSkillID, amount);
+								target.Out.SendUpdateCraftingSkills();
+								DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Crafting.SkillChanged", skill.Name));
+								DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Crafting.NowHasSkillPoints", target.Name, target.GetCraftingSkillValue(craftingSkillID)));
 							}
 						}
 						catch (Exception)
 						{
-							client.Out.SendMessage("Type /crafting for command overview.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							DisplaySyntax(client);
 							return;
 						}
+						break;
 					}
-					break;
-
+				#endregion Change
+				#region Default
 				default:
 					{
 						DisplaySyntax(client);
+						break;
 					}
-					break;
+				#endregion Default
 			}
 		}
 	}

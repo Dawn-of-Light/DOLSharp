@@ -19,9 +19,8 @@
 using System;
 using System.Collections;
 
-using DOL.Database2;
 using DOL.AI.Brain;
-using DOL.Database2;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.Events;
 
@@ -298,7 +297,7 @@ namespace DOL.GS.Keeps
 			this.TempProperties.setProperty(Last_LOS_Target_Property, attackTarget);
 			this.TempProperties.setProperty(Last_LOS_Tick_Property, CurrentRegion.Time);
 			TargetObject = attackTarget;
-			LOSChecker.Out.SendCheckLOS(this, attackTarget, new CheckLOSResponse(this.GuardStartAttackCheckLOS));
+			LOSChecker.Out.SendCheckLOS(this, attackTarget, GuardStartAttackCheckLOS);
 
 		}
 
@@ -422,7 +421,7 @@ namespace DOL.GS.Keeps
 				GuardSpam(this);
 			base.Die(killer);
 			if (RespawnInterval == -1)
-				DeleteGuard();
+				Delete();
 		}
 
 		#region Guard Spam
@@ -600,14 +599,13 @@ namespace DOL.GS.Keeps
 			return s;
 		}
 
-		#region GS
+		#region Database
 
 		/// <summary>
 		/// Load the guard from the database
 		/// </summary>
 		/// <param name="mobobject">The database mobobject</param>
-		/*
-        public override void LoadFromDatabase(DatabaseObject mobobject)
+		public override void LoadFromDatabase(DataObject mobobject)
 		{
 			base.LoadFromDatabase(mobobject);
 			foreach (AbstractArea area in this.CurrentAreas)
@@ -623,13 +621,27 @@ namespace DOL.GS.Keeps
 			}
 			TemplateMgr.RefreshTemplate(this);
 		}
-        */
-		public void DeleteGuard()
+
+		public override void Delete()
 		{
 			if (HookPoint != null && Component != null)
 				Component.Keep.Guards.Remove(this.ObjectID);
 			base.Delete();
 		}
+
+		public override void DeleteFromDatabase()
+		{
+			foreach (AbstractArea area in this.CurrentAreas)
+			{
+				if (area is KeepArea)
+				{
+					Component.Keep.Guards.Remove(this.InternalID);
+					break;
+				}
+			}
+			base.DeleteFromDatabase();
+		}
+
 		/// <summary>
 		/// Load the guard from a position
 		/// </summary>
@@ -674,7 +686,7 @@ namespace DOL.GS.Keeps
 
 			int emblem = 0;
 			if (guild != null)
-				emblem = guild.Emblem;
+				emblem = guild.theGuildDB.Emblem;
 			InventoryItem lefthand = this.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
 			if (lefthand != null)
 				lefthand.Emblem = emblem;

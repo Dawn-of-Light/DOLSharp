@@ -20,7 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.Database2;
+using DOL.Database;
 using log4net;
 
 namespace DOL.GS
@@ -75,7 +75,7 @@ namespace DOL.GS
 			if (log.IsInfoEnabled)
 				log.Info("Loading LootGenerators...");
 
-			DatabaseObject[] m_lootGenerators;
+			DataObject[] m_lootGenerators;
 			try
 			{
 				m_lootGenerators = GameServer.Database.SelectAllObjects(typeof(DBLootGenerator));

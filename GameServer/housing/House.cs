@@ -20,8 +20,9 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using DOL.Database;
 using DOL.GS.PacketHandler;
-using DOL.Database2;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Housing
@@ -37,9 +38,14 @@ namespace DOL.GS.Housing
 		Class = 0x06,
 		Race = 0x07
 	}
-    [Serializable]
-	public class House : DatabaseObject, IPoint3D
+
+	public class House : IPoint3D
 	{
+		/// <summary>
+		/// Defines a logger for this class.
+		/// </summary>
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
 		public const string HOUSEFORHOUSERENT = "HouseForHouseRent";
 		public const string MONEYFORHOUSERENT = "MoneyForHouseRent";
 		public const string BPSFORHOUSERENT = "BPsForHouseRent";
@@ -261,7 +267,8 @@ namespace DOL.GS.Housing
 			get { return m_charspermissions; }
 			set { m_charspermissions = value; }
 		}
-        
+
+		DBHouse m_databaseItem;
 
 		DBHousePermissions[] m_houseAccess;
 
@@ -270,6 +277,80 @@ namespace DOL.GS.Housing
 			get { return m_houseAccess; }
 		}
 		#endregion
+
+		/****************** AREDHEL ACCESS HANDLING START **********************/
+		/// <summary>
+		/// Get the access level of this player for this house.
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns></returns>
+		public int GetPlayerAccessLevel(GamePlayer player)
+		{
+			foreach (DBHouseCharsXPerms permissions in CharsPermissions)
+                if (permissions.Name == player.Name)
+                    return permissions.PermLevel;
+			
+			//if the player is not in the permissions check for its guild
+            if (player.Guild != null)
+            {
+                foreach (DBHouseCharsXPerms permissions in CharsPermissions)
+                    if (permissions.Name == player.GuildName)
+                        return permissions.PermLevel;
+            
+            }
+			
+            //at the end check if there are permissions for everybody
+            foreach (DBHouseCharsXPerms permissions in CharsPermissions)
+                if (permissions.Name == "All")
+                    return permissions.PermLevel;
+
+            return 0;
+		}
+
+		/// <summary>
+		/// Get a set of permissions this player has in this house.
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns></returns>
+		public DBHousePermissions GetPlayerPermissions(GamePlayer player)
+		{
+			if (player == null)
+				return HouseAccess[0];
+
+			int accessLevel = GetPlayerAccessLevel(player);
+			player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client, "House.DBHousePermissions.AccessLevel", accessLevel)), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+			if (accessLevel < 0 || accessLevel > 9)
+				return HouseAccess[0];
+
+			return HouseAccess[accessLevel];
+		}
+
+		/// <summary>
+		/// Whether or not this player is the owner of this house.
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns></returns>
+		public bool IsOwner(GamePlayer player)
+		{
+			return HouseMgr.IsOwner(m_databaseItem, player, false);
+		}
+
+		/// <summary>
+		/// Whether or not this player is allowed to enter this house.
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns></returns>
+		public bool CanEnter(GamePlayer player)
+		{
+			if (IsOwner(player) || player.Client.Account.PrivLevel > 1)
+				return true;
+
+			DBHousePermissions housePermissions = GetPlayerPermissions(player);
+			return (housePermissions.Enter > 0);
+		}
+
+
+		/****************** AREDHEL ACCESS HANDLING END **********************/
 
 		/// <summary>
 		/// Sends a update of the house and the garden to all players in range
@@ -327,25 +408,25 @@ namespace DOL.GS.Housing
 			return false;
 		}
 
-		public bool CanEnter(GamePlayer p)
-		{
-			if (HasOwnerPermissions(p) || p.Client.Account.PrivLevel > 1)
-				return true;
-			if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName)
-				return true;
-			foreach (DBHousePermissions perm in HouseAccess)
-			{
-				if (perm.Enter == 0)// optim
-					continue;
-				if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
-					return true;
-				if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
-					return true;
-				if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
-					return true;
-			}
-			return false;
-		}
+		//public bool CanEnter(GamePlayer p)
+		//{
+		//    if (HasOwnerPermissions(p) || p.Client.Account.PrivLevel > 1)
+		//        return true;
+		//    if (this.DatabaseItem.GuildHouse && this.DatabaseItem.GuildName == p.GuildName)
+		//        return true;
+		//    foreach (DBHousePermissions perm in HouseAccess)
+		//    {
+		//        if (perm.Enter == 0)// optim
+		//            continue;
+		//        if (IsInPerm(null, ePermsTypes.All, perm.PermLevel))
+		//            return true;
+		//        if (IsInPerm(p.Name, ePermsTypes.Player, perm.PermLevel))
+		//            return true;
+		//        if (IsInPerm(p.Name, ePermsTypes.Account, perm.PermLevel))
+		//            return true;
+		//    }
+		//    return false;
+		//}
 
 		public bool CanAddInterior(GamePlayer p)
 		{
@@ -447,7 +528,7 @@ namespace DOL.GS.Housing
 			return false;
 		}
 
-		public bool CanViewHouseVault(GamePlayer p)
+		public bool CanViewHouseVault(GamePlayer p, int vaultIndex)
 		{
 			if (HasOwnerPermissions(p) || p.Client.Account.PrivLevel > 1)
 				return true;
@@ -546,7 +627,72 @@ namespace DOL.GS.Housing
 			GameServer.Database.AddNewObject(perm);
 			return true;
 		}
+		
+		public bool AddGuildToPerm(Guild g, ePermsTypes type, int lvl)
+        {
+            if (IsInPerm(g.Name, type, lvl))
+                return false;
+            DBHouseCharsXPerms perm = new DBHouseCharsXPerms();
+            perm.HouseNumber = HouseNumber;
+            perm.Type = (byte)type;
+            perm.Name = g.Name;
+            perm.PermLevel = lvl;
+            int slot = 0;
+            bool ok = false;
+            while (!ok)
+            {
+                ok = true;
+                foreach (DBHouseCharsXPerms pe in CharsPermissions)
+                {
+                    if (pe.Slot == slot)
+                    {
+                        ok = false;
+                        slot++;
+                        break;
+                    }
+                }
+            }
+            if (!ok)
+                return false;
+            perm.Slot = slot;
+            CharsPermissions.Add(perm);
+            GameServer.Database.AddNewObject(perm);
+            return true;
+        }
 
+        public bool AddAllToPerm(ePermsTypes type, int lvl)
+        {
+            string pname = "All";
+            if (IsInPerm(pname, type, lvl))
+                return false;
+            DBHouseCharsXPerms perm = new DBHouseCharsXPerms();
+            perm.HouseNumber = HouseNumber;
+            perm.Type = (byte)type;
+            perm.Name = pname;
+            perm.PermLevel = lvl;
+            int slot = 0;
+            bool ok = false;
+            while (!ok)
+            {
+                ok = true;
+                foreach (DBHouseCharsXPerms pe in CharsPermissions)
+                {
+                    if (pe.Slot == slot)
+                    {
+                        ok = false;
+                        slot++;
+                        break;
+                    }
+                }
+            }
+            if (!ok)
+                return false;
+            perm.Slot = slot;
+            CharsPermissions.Add(perm);
+            GameServer.Database.AddNewObject(perm);
+            return true;
+        }		
+		
 		/// <summary>
 		/// Used to get into a house
 		/// </summary>
@@ -617,7 +763,23 @@ namespace DOL.GS.Housing
 					break;
 			}
 
-			client.Out.SendMessage("You have entered house number " + this.HouseNumber + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "House.Enter.EnteredHouse", this.HouseNumber), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+		}
+
+		/// <summary>
+		/// The spot you are teleported to when you exit this house.
+		/// </summary>
+		public IGameLocation OutdoorJumpPoint
+		{
+			get
+			{
+				double angle = Heading * ((Math.PI * 2) / 360); // angle*2pi/360;
+				int x = (int)(X + (0 * Math.Cos(angle) + 500 * Math.Sin(angle)));
+				int y = (int)(Y - (500 * Math.Cos(angle) - 0 * Math.Sin(angle)));
+				ushort heading = (ushort)((Heading < 180 ? Heading + 180 : Heading - 180) / 0.08789);
+
+				return new GameLocation("Housing", RegionID, x, y, Z, heading);
+			}
 		}
 
 		/// <summary>
@@ -634,7 +796,7 @@ namespace DOL.GS.Housing
 			player.MoveTo(RegionID, x, y, Z, heading);
 			if (!silent)
 			{
-				player.Out.SendMessage("You have left house number " + HouseNumber + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "House.Exit.LeftHouse", HouseNumber), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				GSTCPPacketOut pak = new GSTCPPacketOut(player.Client.Out.GetPacketCode(ePackets.HouseEnter));
 
 				pak.WriteShort((ushort)this.HouseNumber);
@@ -670,49 +832,49 @@ namespace DOL.GS.Housing
 		public void SendHouseInfo(GamePlayer player)
 		{
 			ArrayList text = new ArrayList();
-			text.Add("Owner: " + this.Name);
-			text.Add("Lotnum: " + HouseNumber);
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Owner", this.Name));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Lotnum", HouseNumber));
 			int level = Model - (int)((Model - 1) / 4) * 4;
-			text.Add("Level: " + level);
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Level", level));
 			text.Add(" ");
-			text.Add("Porch: ");
-			text.Add("-Enabled: " + (Porch ? "Y" : "N"));
-			text.Add("-Color: " + PorchRoofColor);
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Porch"));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.PorchEnabled", (Porch ? "Y" : "N")));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.PorchRoofColor", PorchRoofColor));
 			text.Add(" ");
-			text.Add("Exterior Materials:");
-			text.Add("-Roof: " + RoofMaterial);
-			text.Add("-Wall: " + WallMaterial);
-			text.Add("-Door: " + DoorMaterial);
-			text.Add("-Support: " + TrussMaterial);
-			text.Add("-Porch: " + PorchMaterial);
-			text.Add("-Shutter: " + WindowMaterial);
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.ExteriorMaterials"));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.RoofMaterial", RoofMaterial));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.WallMaterial", WallMaterial));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.DoorMaterial", DoorMaterial));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.TrussMaterial", TrussMaterial));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.PorchMaterial", PorchMaterial));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.WindowMaterial", WindowMaterial));
 			text.Add(" ");
-			text.Add("Exterior Upgrades:");
-			text.Add("-Banner: " + ((OutdoorGuildBanner) ? "Y" : "N"));
-			text.Add("-Shield: " + ((OutdoorGuildShield) ? "Y" : "N"));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.ExteriorUpgrades"));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.OutdoorGuildBanner", ((OutdoorGuildBanner) ? "Y" : "N")));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.OutdoorGuildShield", ((OutdoorGuildShield) ? "Y" : "N")));
 			text.Add(" ");
-			text.Add("Interior Upgrades:");
-			text.Add("-Banner: " + ((IndoorGuildBanner) ? "Y" : "N"));
-			text.Add("-Shield: " + ((IndoorGuildShield) ? "Y" : "N"));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.InteriorUpgrades"));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.IndoorGuildBanner", ((IndoorGuildBanner) ? "Y" : "N")));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.IndoorGuildShield", ((IndoorGuildShield) ? "Y" : "N")));
 			text.Add(" ");
-			text.Add("Interior Carpets:");
-			text.Add("-First Color: " + Rug1Color);
-			text.Add("-Second Color: " + Rug2Color);
-			text.Add("-Third Color: " + Rug3Color);
-			text.Add("-Fourth Color: " + Rug4Color);
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.InteriorCarpets"));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Rug1Color", Rug1Color));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Rug2Color", Rug2Color));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Rug3Color", Rug3Color));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Rug4Color", Rug4Color));
 			text.Add(" ");
-			text.Add("Lockbox: " + Money.GetString(KeptMoney));
-			text.Add("Rental Price: " + Money.GetString(HouseMgr.GetRentByModel(Model)));
-			text.Add("Max in Lockbox: " + Money.GetString(HouseMgr.GetRentByModel(Model) * 4));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Lockbox", Money.GetString(KeptMoney)));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.RentalPrice", Money.GetString(HouseMgr.GetRentByModel(Model))));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.MaxLockbox", Money.GetString(HouseMgr.GetRentByModel(Model) * 4)));
 			TimeSpan due = (LastPaid.AddDays(7).AddHours(1) - DateTime.Now);
-			text.Add("Rent due in: " + due.Days + " days, " + due.Hours + " hours");
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.RentDueIn", due.Days, due.Hours));
 			text.Add(" ");
-			text.Add("Owners:");
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Owners"));
 			foreach (Character character in HouseMgr.GetOwners(this.m_databaseItem))
 			{
 				text.Add("-" + character.Name);
 			}
-			player.Out.SendCustomTextWindow(this.Name + " 's house", text);
+			player.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.HouseOwner", this.Name), text);
 
 		}
 
@@ -735,6 +897,15 @@ namespace DOL.GS.Housing
 		{
 			return HouseMgr.IsOwner(m_databaseItem, player, true);
 		}
+
+		/// <summary>
+		/// Saves this house into the database
+		/// </summary>
+		public void SaveIntoDatabase()
+		{
+			GameServer.Database.SaveObject(m_databaseItem);
+		}
+
 		public int GetPorchAndGuildEmblemFlags()
 		{
 			int flag = 0;
@@ -804,10 +975,9 @@ namespace DOL.GS.Housing
 					price += Money.GetMoney(0, 0, item.Gold, item.Silver, item.Copper);
 				}
 			}
-
-			if (!player.RemoveMoney(price, "You pay " + Money.GetString(price) + " for your changes."))
-			{
-				player.Out.SendMessage("You don't have enough money to do that!", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+			if (!player.RemoveMoney(price, LanguageMgr.GetTranslation(player.Client, "House.Edit.PayForChanges", Money.GetString(price))))
+				{
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "House.Edit.NotEnoughMoney"), eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -898,25 +1068,26 @@ namespace DOL.GS.Housing
 		/// <param name="item">The itemtemplate of the item used to fill the hookpoint (can be null if templateid is filled)</param>
 		/// <param name="position">The position of the hookpoint</param>
 		/// <param name="templateID">The template id of the item (can be blank if item is filled)</param>
-		public void FillHookpoint(ItemTemplate item, uint position, string templateID)
+		public GameObject FillHookpoint(ItemTemplate item, uint position, string templateID)
 		{
 			if (item == null)
 			{
 				item = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "Id_nb = '" + GameServer.Database.Escape(templateID) + "'");
 				if (item == null)
-					return;
+					return null;
 			}
 
 
 			//get location from slot
 			IPoint3D location = GetHookpointLocation(position);
 			if (location == null)
-				return;
+				return null;
 
 			int x = location.X;
 			int y = location.Y;
 			int z = location.Z;
 			ushort heading = GetHookpointHeading(position);
+			GameStaticItem sItem = null;
 
 			switch ((eObjectType)item.Object_Type)
 			{
@@ -924,7 +1095,7 @@ namespace DOL.GS.Housing
 					{
 						NpcTemplate npt = NpcTemplateMgr.GetTemplate(item.Bonus);
 						if (npt == null)
-							return;
+							return null;
 
 						GameNPC hNPC = (GameNPC)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(npt.ClassType, false);
 
@@ -940,7 +1111,7 @@ namespace DOL.GS.Housing
 						if (hNPC == null)
 						{
 							HouseMgr.Logger.Error("Can't create instance of type: " + npt.ClassType);
-							return;
+							return null;
 						}
 
 						hNPC.LoadTemplate(npt);
@@ -960,7 +1131,7 @@ namespace DOL.GS.Housing
 					}
 				case eObjectType.HouseBindstone:
 					{
-						GameStaticItem sItem = new GameStaticItem();
+						sItem = new GameStaticItem();
 						sItem.CurrentHouse = this;
 						sItem.InHouse = true;
 						sItem.X = x;
@@ -977,7 +1148,7 @@ namespace DOL.GS.Housing
 					}
 				case eObjectType.HouseInteriorObject:
 					{
-						GameStaticItem sItem = new GameStaticItem();
+						sItem = new GameStaticItem();
 						sItem.CurrentHouse = this;
 						sItem.InHouse = true;
 						sItem.X = x;
@@ -990,35 +1161,39 @@ namespace DOL.GS.Housing
 						sItem.AddToWorld();
 						break;
 					}
-				case eObjectType.HouseVault:
-					{
-						//0:08:07.734 S=>C 0xD9 item/door create v171 (oid:0x0DDC emblem:0x0000 heading:0x0145 x:596823 y:530336 z:24718 model:0x05D3 health:  0% flags:0x04(realm:0) extraBytes:0 unk1_171:0x0096220C name:"Hibernia vault")
-						GameHouseVault sItem = new GameHouseVault();
-						sItem.CurrentHouse = this;
-						sItem.InHouse = true;
-						sItem.X = x;
-						sItem.Y = y;
-						sItem.Z = z;
-						sItem.Heading = heading;
-						sItem.CurrentRegionID = RegionID;
-						sItem.Name = item.Name;
-						sItem.Model = (ushort)item.Model;
-						sItem.AddToWorld();
-						break;
-					}
+				//case eObjectType.HouseVault:
+				//    {
+				//        //0:08:07.734 S=>C 0xD9 item/door create v171 (oid:0x0DDC emblem:0x0000 heading:0x0145 x:596823 y:530336 z:24718 model:0x05D3 health:  0% flags:0x04(realm:0) extraBytes:0 unk1_171:0x0096220C name:"Hibernia vault")
+				//        if (vaultNumber == 0)
+				//            vaultNumber = GetFreeVaultNumber();
+				//        sItem = new GameHouseVault(vaultNumber);
+				//        sItem.CurrentHouse = this;
+				//        sItem.InHouse = true;
+				//        sItem.X = x;
+				//        sItem.Y = y;
+				//        sItem.Z = z;
+				//        sItem.Heading = heading;
+				//        sItem.CurrentRegionID = RegionID;
+				//        sItem.Name = item.Name;
+				//        sItem.Model = (ushort)item.Model;
+				//        sItem.AddToWorld();
+				//        break;
+				//    }
 			}
+			return sItem;
 		}
 
 		public void EmptyHookpoint(GamePlayer player, GameObject obj)
 		{
-
 			//get the item template
 			ItemTemplate template = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "Name = '" + GameServer.Database.Escape(obj.Name) + "'");
 			if (template == null)
 				return;
 
 			//get the housepoint item
-			DBHousepointItem item = (DBHousepointItem)GameServer.Database.SelectObject(typeof(DBHousepointItem), "ItemTemplateID = '" + GameServer.Database.Escape(template.Id_nb) + "'");
+			String sqlWhere = String.Format("ItemTemplateID = '{0}'",
+				GameServer.Database.Escape(template.Id_nb));
+			DBHousepointItem item = (DBHousepointItem)GameServer.Database.SelectObject(typeof(DBHousepointItem), sqlWhere);
 			if (item == null)
 				return;
 
@@ -1035,6 +1210,27 @@ namespace DOL.GS.Housing
 			player.CurrentHouse.SendUpdate();
 
 			player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, new InventoryItem(template));
+		}
+
+		/// <summary>
+		/// Find a number that can be used for this vault.
+		/// </summary>
+		/// <returns></returns>
+		public int GetFreeVaultNumber()
+		{
+			bool[] usedVaults = new bool[4] { false, false, false, false };
+			String sqlWhere = String.Format("HouseID = '{0}' and ItemTemplateID like '%_vault'",
+				HouseNumber);
+
+			foreach (DBHousepointItem housePointItem in GameServer.Database.SelectObjects(typeof(DBHousepointItem), sqlWhere))
+				if (housePointItem.Index >= 0 && housePointItem.Index <= 3)
+					usedVaults[housePointItem.Index] = true;
+
+			for (int freeVault = 0; freeVault <= 3; ++freeVault)
+				if (!usedVaults[freeVault])
+					return freeVault;
+
+			return -1;
 		}
 
 		public House(DBHouse house)
@@ -1346,17 +1542,16 @@ namespace DOL.GS.Housing
 			}
 		}
 
-		ushort GetHookpointHeading(uint n)
+		public ushort GetHookpointHeading(uint n)
 		{
 			return (ushort)(Heading + RELATIVE_HOOKPOINTS_COORDS[Model][n][3]);
 		}
 		#endregion
-        /*
+
 		/// <summary>
 		/// Load a house from the database
 		/// </summary>
-		
-        public void LoadFromDatabase()
+		public void LoadFromDatabase()
 		{
 			int i = 0;
 			foreach (DBHouseIndoorItem dbiitem in GameServer.Database.SelectObjects(typeof(DBHouseIndoorItem), "HouseNumber = '" + this.HouseNumber + "'"))
@@ -1385,9 +1580,19 @@ namespace DOL.GS.Housing
 
 			foreach (DBHousepointItem item in GameServer.Database.SelectObjects(typeof(DBHousepointItem), "HouseID = '" + this.HouseNumber + "'"))
 			{
-				FillHookpoint(null, item.Position, item.ItemTemplateID);
+				if (item.ItemTemplateID.EndsWith("_vault"))
+				{
+					ItemTemplate template = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate),
+						"Id_nb = '" + GameServer.Database.Escape(item.ItemTemplateID) + "'");
+					if (template == null)
+						continue;
+					GameHouseVault houseVault = new GameHouseVault(template, item.Index);
+					houseVault.Attach(this, item);
+				}
+				else
+					FillHookpoint(null, item.Position, item.ItemTemplateID);
 				this.HousepointItems[item.Position] = item;
 			}
-		}*/
+		}
 	}
 }

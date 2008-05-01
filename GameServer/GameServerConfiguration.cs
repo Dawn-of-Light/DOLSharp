@@ -22,6 +22,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using DOL.Config;
+using DOL.Database.Connection;
 
 namespace DOL.GS
 {
@@ -120,23 +121,17 @@ namespace DOL.GS
 		protected string m_invalidNamesFile = "";
 
 		#endregion
-		#region GS
+		#region Database
 
 		/// <summary>
 		/// The path to the XML database folder
 		/// </summary>
 		protected string m_dbConnectionString;
 
-        /// <summary>
-        /// The database provider assembly file name
-        /// </summary>
-        private string m_DatabaseProviderAssembly;
-
-
-        /// <summary>
-        /// The database provider class name
-        /// </summary>
-        private string m_DatabaseProviderClassName;
+		/// <summary>
+		/// Type database type
+		/// </summary>
+		protected ConnectionType m_dbType;
 
 		/// <summary>
 		/// True if the server shall autosave the db
@@ -204,10 +199,28 @@ namespace DOL.GS
 			m_gmActionsLoggerName = root["Server"]["GMActionLoggerName"].GetString(m_gmActionsLoggerName);
 			m_invalidNamesFile = root["Server"]["InvalidNamesFile"].GetString(m_invalidNamesFile);
 
-
-
-            m_DatabaseProviderClassName  = root["Server"]["DatabaseProvider"].GetString("DOL.Database2.Providers.PostgresProvider");
-            m_DatabaseProviderAssembly = root["Server"]["DatabaseProviderAssembly"].GetString(null);
+			string db = root["Server"]["DBType"].GetString("XML");
+			switch (db.ToLower())
+			{
+				case "xml":
+					m_dbType = ConnectionType.DATABASE_XML;
+					break;
+				case "mysql":
+					m_dbType = ConnectionType.DATABASE_MYSQL;
+					break;
+				case "mssql":
+					m_dbType = ConnectionType.DATABASE_MSSQL;
+					break;
+				case "odbc":
+					m_dbType = ConnectionType.DATABASE_ODBC;
+					break;
+				case "oledb":
+					m_dbType = ConnectionType.DATABASE_OLEDB;
+					break;
+				default:
+					m_dbType = ConnectionType.DATABASE_XML;
+					break;
+			}
 			m_dbConnectionString = root["Server"]["DBConnectionString"].GetString(m_dbConnectionString);
 			m_autoSave = root["Server"]["DBAutosave"].GetBoolean(m_autoSave);
 			m_saveInterval = root["Server"]["DBAutosaveInterval"].GetInt(m_saveInterval);
@@ -215,6 +228,7 @@ namespace DOL.GS
 			m_cpuCount = root["Server"]["CpuCount"].GetInt(m_cpuCount);
 			if (m_cpuCount < 1)
 				m_cpuCount = 1;
+			m_cpuUse = root["Server"]["CpuUse"].GetInt(m_cpuUse);
 			
 			// Parse UDP out endpoint
 			IPAddress	address = null;
@@ -282,11 +296,34 @@ namespace DOL.GS
 			root["Server"]["GMActionLoggerName"].Set(m_gmActionsLoggerName);
 			root["Server"]["InvalidNamesFile"].Set(m_invalidNamesFile);
 
-            root["Server"]["DatabaseProvider"].Set(m_DatabaseProviderClassName);
-            root["Server"]["DatabaseProviderAssembly"].Set(m_DatabaseProviderAssembly);
+			string db = "XML";
+			
+			switch (m_dbType)
+			{
+			case ConnectionType.DATABASE_XML:
+				db = "XML";
+					break;
+			case ConnectionType.DATABASE_MYSQL:
+				db = "MYSQL";
+					break;
+			case ConnectionType.DATABASE_MSSQL:
+				db = "MSSQL";
+					break;
+			case ConnectionType.DATABASE_ODBC:
+				db = "ODBC";
+					break;
+			case ConnectionType.DATABASE_OLEDB:
+				db = "OLEDB";
+					break;
+				default:
+					m_dbType = ConnectionType.DATABASE_XML;
+					break;
+			}
+			root["Server"]["DBType"].Set(db);
 			root["Server"]["DBConnectionString"].Set(m_dbConnectionString);
 			root["Server"]["DBAutosave"].Set(m_autoSave);
 			root["Server"]["DBAutosaveInterval"].Set(m_saveInterval);
+			root["Server"]["CpuUse"].Set(m_cpuUse);
 
 			// Store UDP out endpoint
 			if (m_udpOutEndpoint != null)
@@ -328,14 +365,20 @@ namespace DOL.GS
 			m_autoSave = true;
 			m_saveInterval = 10;
 			m_maxClientCount = 500;
-			
-			try
+
+			// Get count of CPUs
+			m_cpuCount = Environment.ProcessorCount;
+			if (m_cpuCount < 1)
 			{
-				m_cpuCount = int.Parse(Environment.GetEnvironmentVariable("NUMBER_OF_PROCESSORS"));
+				try
+				{
+					m_cpuCount = int.Parse(Environment.GetEnvironmentVariable("NUMBER_OF_PROCESSORS"));
+				}
+				catch { m_cpuCount = -1; }
 			}
-			catch { m_cpuCount = -1; }
 			if (m_cpuCount < 1)
 				m_cpuCount = 1;
+			m_cpuUse = 1;
 		}
 
 		#endregion
@@ -506,6 +549,15 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Gets or sets the DB type
+		/// </summary>
+		public ConnectionType DBType
+		{
+			get { return m_dbType; }
+			set { m_dbType = value; }
+		}
+
+		/// <summary>
 		/// Gets or sets the autosave flag
 		/// </summary>
 		public bool AutoSave
@@ -551,16 +603,11 @@ namespace DOL.GS
 			set { m_udpOutEndpoint = value; }
 		}
 
-        public string DatabaseProviderAssembly
-        {
-            get { return m_DatabaseProviderAssembly; }
-            set { m_DatabaseProviderAssembly = value; }
-        }
-
-        public string DatabaseProviderClassName
-        {
-            get { return m_DatabaseProviderClassName; }
-            set { m_DatabaseProviderClassName = value; }
-        }
+		private int m_cpuUse;
+		public int CPUUse
+		{
+			get { return m_cpuUse; }
+			set { m_cpuUse = value; }
+		}
 	}
 }

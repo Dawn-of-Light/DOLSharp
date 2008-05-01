@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using DOL.AI.Brain;
-using DOL.Database2;
+using DOL.Database;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.GS.Styles;
@@ -239,8 +239,12 @@ namespace DOL.GS.ServerRules
 			if(living == null || item == null)
 				return false;
 
-			if(item.Realm != 0 && item.Realm != (int)living.Realm)
-				return false;
+			//on some servers we may wish for dropped items to be used by all realms regardless of what is set in the db
+			if (!ServerProperties.Properties.ALLOW_CROSS_REALM_ITEMS)
+			{
+				if (item.Realm != 0 && item.Realm != (int)living.Realm)
+					return false;
+			}
 
 			//armor
 			if (item.Object_Type >= (int)eObjectType._FirstArmor && item.Object_Type <= (int)eObjectType._LastArmor)

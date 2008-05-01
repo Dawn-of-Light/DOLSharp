@@ -27,7 +27,7 @@
 using System;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Events;
 using log4net;
 

@@ -88,6 +88,8 @@ namespace DOL.GS
 					member.Out.SendMessage(player.Name+" has joined the battle group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				m_battlegroupMembers.Add(player,leader);
+
+                player.isInBG = true; //Xarik: Player is in BG
 			}
 			return true;
 		}
@@ -226,6 +228,8 @@ namespace DOL.GS
 						RemoveBattlePlayer(plr);
 					}
 				}
+
+                player.isInBG = false; //Xarik: Player is no more in the BG
 			}
 			return true;
 		}

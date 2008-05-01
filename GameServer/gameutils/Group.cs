@@ -28,7 +28,7 @@ namespace DOL.GS
 	/// <summary>
 	/// This class represents a Group inside the game
 	/// </summary>
-	public class Group : IEnumerable
+	public class Group
 	{
 		/// <summary>
 		/// This holds all players inside the group
@@ -262,7 +262,7 @@ namespace DOL.GS
 			{
 				for (int i = 0; i < m_groupMembers.Count; i++)
 				{
-					((GameLiving)m_groupMembers[i]).GroupIndex = i;
+					(m_groupMembers[i]).GroupIndex = i;
 				}
 			}
 		}
@@ -291,13 +291,9 @@ namespace DOL.GS
 
 		public virtual void SendMessageToGroupMembers(string msg, eChatType type, eChatLoc loc)
 		{
-			lock (m_groupMembers)
+			foreach (GamePlayer player in GetPlayersInTheGroup())
 			{
-				foreach (GameLiving member in m_groupMembers)
-				{
-					if (member is GamePlayer == false) continue;
-					((GamePlayer)member).Out.SendMessage(msg, type, loc);
-				}
+				player.Out.SendMessage(msg, type, loc);
 			}
 		}
 
@@ -344,13 +340,9 @@ namespace DOL.GS
 		/// </summary>
 		public void UpdateGroupWindow()
 		{
-			lock (m_groupMembers)
+			foreach (GamePlayer player in GetPlayersInTheGroup())
 			{
-				foreach (GameLiving living in m_groupMembers)
-				{
-					if (living is GamePlayer)
-						((GamePlayer)living).Out.SendGroupWindowUpdate();
-				}
+				player.Out.SendGroupWindowUpdate();
 			}
 		}
 
@@ -360,13 +352,10 @@ namespace DOL.GS
 		/// <returns>true if group in combat</returns>
 		public bool IsGroupInCombat()
 		{
-			lock (m_groupMembers) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			foreach (GameLiving living in GetMembersInTheGroup())
 			{
-				foreach (GameLiving living in m_groupMembers)
-				{
-					if (living.InCombat)
-						return true;
-				}
+				if (living.InCombat)
+					return true;
 			}
 			return false;
 		}
@@ -489,14 +478,5 @@ namespace DOL.GS
 		{
 			get { return m_groupMembers.Count; }
 		}
-
-		#region IEnumerable Members
-
-		public IEnumerator GetEnumerator()
-		{
-			return m_groupMembers.GetEnumerator();
-		}
-
-		#endregion
 	}
 }

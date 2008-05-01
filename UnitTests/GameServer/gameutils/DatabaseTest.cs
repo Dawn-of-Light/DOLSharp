@@ -18,7 +18,7 @@
  */
 using System;
 using DOL;
-using DOL.Database2;
+using DOL.Database;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.Tests;
@@ -40,7 +40,7 @@ namespace DOL.GS.Tests
 		[Test] public void TestSelect()
 		{
 			Console.WriteLine("TestSelect();");
-			DatabaseObject[] obs = GameServer.Database.SelectAllObjects(typeof(ItemTemplate));
+			DataObject[] obs = GameServer.Database.SelectAllObjects(typeof(ItemTemplate));
 			Console.WriteLine("ItemTemplates Type="+obs.GetType());
 			MerchantItem[] items = (MerchantItem[])GameServer.Database.SelectAllObjects(typeof(MerchantItem));
 			Console.WriteLine("MerchantItems Type="+items.GetType());

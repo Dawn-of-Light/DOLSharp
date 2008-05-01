@@ -1,11 +1,11 @@
 using System;
 using System.Collections;
-using DOL.Database2;
+using DOL.Database;
 
 namespace DOL.GS.RealmAbilities
 {
 	/// <summary>
-	/// Falcons Eye RA
+	/// Falcon's Eye RA
 	/// </summary>
 	public class FalconsEyeAbility : RAPropertyEnhancer
 	{

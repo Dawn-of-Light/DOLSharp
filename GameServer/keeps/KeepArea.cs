@@ -1,12 +1,13 @@
 using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.Database2;
+using DOL.Database;
 
 namespace DOL.GS.Keeps
 {
 	public class KeepArea : Area.Circle
 	{
 		public AbstractGameKeep Keep = null;
+		private const int PK_RADIUS = 4000;
 		private const int KEEP_RADIUS = 3000;
 		private const int TOWER_RADIUS = 1500;
 
@@ -15,7 +16,7 @@ namespace DOL.GS.Keeps
 		{ }
 
 		public KeepArea(AbstractGameKeep keep)
-			: base(keep.Name, keep.X, keep.Y, 0, keep is GameKeep ? KEEP_RADIUS : TOWER_RADIUS)
+			: base(keep.Name, keep.X, keep.Y, 0, keep is GameKeep ? (keep.IsPortalKeep ? PK_RADIUS : KEEP_RADIUS) : TOWER_RADIUS)
 		{
 		}
 
@@ -35,10 +36,7 @@ namespace DOL.GS.Keeps
 			{
 				if (m_dbArea != null)
 					GameServer.Database.DeleteObject(m_dbArea);
-				if (Keep is GameKeep)
-					m_Radius = KEEP_RADIUS;
-				else
-					m_Radius = TOWER_RADIUS;
+				m_Radius = Keep is GameKeep ? (Keep.IsPortalKeep ? PK_RADIUS : KEEP_RADIUS) : TOWER_RADIUS;
 				return;
 			}
 

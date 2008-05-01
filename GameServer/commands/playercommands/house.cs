@@ -17,7 +17,7 @@
  *
  */
 using System;
-using DOL.Database2;
+using DOL.Database;
 using DOL.GS.Housing;
 using DOL.GS.PacketHandler;
 
@@ -32,7 +32,7 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
-			House house = HouseMgr.GetHouseByPlayer(client.Player);
+			House house = HouseMgr.GetRealHouseByPlayer(client.Player);
 			if (house == null)
 			{
 				DisplayMessage(client, "You do not own a house.");

@@ -23,7 +23,7 @@ using System.Collections;
 using DOL.AI.Brain;
 using DOL.Language;
 using DOL.GS.PacketHandler;
-using DOL.Database2;
+using DOL.Database;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
 using DOL.GS.Spells;
@@ -63,11 +63,15 @@ namespace DOL.GS
 		/// <summary>
 		/// Talk to the teleporter.
 		/// </summary>
-		/// <param name="source"></param>
-		/// <param name="text"></param>
+		/// <param name="source">The player doing the teleporting</param>
+		/// <param name="text">The name of the teleport destination as defined by the TeleportID field in the 'teleport' table</param>
 		/// <returns></returns>
 		public override bool WhisperReceive(GameLiving source, string text)
 		{
+			// teleport destinations from the 'teleport' table are converted
+			// to lowercase as they're read in, so we must also use all
+			// lowercase for the destination name
+			text = text.ToLower();
 			if (!base.WhisperReceive(source, text))
 				return false;
 
@@ -78,7 +82,7 @@ namespace DOL.GS
 			// Battlegrounds is special, as the teleport location depends on
 			// the level of the player, so let's deal with that first.
 
-			if (text.ToLower() == "battlegrounds")
+			if (text == "battlegrounds")
 			{
 				AbstractGameKeep portalKeep = KeepMgr.GetBGPK(player);
 				if (portalKeep != null)
@@ -103,24 +107,51 @@ namespace DOL.GS
 				}
 			}
 
-			// Find the teleport location in the database.
+			// Another special case is personal house, as there is no location
+			// that will work for every player.
 
-			List<Teleport> teleports = WorldMgr.GetTeleportLocations((eRealm)Realm);
-			foreach (Teleport teleport in teleports)
+			if (text == "personal")
 			{
-				if (teleport.TeleportID.ToLower() == text.ToLower())
+				House house = HouseMgr.GetHouseByPlayer(player);
+				if (house == null)
+					text = "entrance";	// Fall through, port to housing entrance.
+				else
 				{
-					if (teleport.RegionID == 0 &&
-						teleport.X == 0 &&
-						teleport.Y == 0 &&
-						teleport.Z == 0)
-						OnSubSelectionPicked(player, teleport);
-					else
-						OnDestinationPicked(player, teleport);
-					return false;
+					IGameLocation location = house.OutdoorJumpPoint;
+					Teleport teleport = new Teleport();
+					teleport.TeleportID = "personal";
+					teleport.Realm = (int)Realm;
+					teleport.RegionID = location.RegionID;
+					teleport.X = location.X;
+					teleport.Y = location.Y;
+					teleport.Z = location.Z;
+					teleport.Heading = location.Heading;
+					OnDestinationPicked(player, teleport);
+					return true;
 				}
 			}
 
+			// Find the teleport location in the database.
+			Teleport port = WorldMgr.GetTeleportLocation(text);
+			if (port != null)
+			{
+				if (port.RegionID == 0 &&
+						port.X == 0 &&
+						port.Y == 0 &&
+						port.Z == 0)
+					OnSubSelectionPicked(player, port);
+				else
+				{
+					// Only permit the port if the player belongs to the destination realm
+					// or the player is playing on a PvE (co-op) server (in which case,
+					// inter-realm ports are fine)
+					if ((Realm == (eRealm)port.Realm) || (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE))
+					{
+						OnDestinationPicked(player, port);
+					}
+				}
+				return false;
+			}
 			return true;	// Needs further processing.
 		}
 

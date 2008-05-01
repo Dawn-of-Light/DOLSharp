@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Effects
 {
@@ -84,10 +85,10 @@ namespace DOL.GS.Effects
 
 			GamePlayer owner = attacker as GamePlayer;
 			if (owner != null) {
-				owner.Out.SendMessage(String.Format("Your magical blade hits {0} for {1} extra damage!", target.GetName(0, false), ad.Damage), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				owner.Out.SendMessage(LanguageMgr.GetTranslation(owner.Client, "Effects.TripleWieldEffect.MBHitsExtraDamage", target.GetName(0, false), ad.Damage), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 				GamePlayer playerTarget = target as GamePlayer;
 				if (playerTarget != null) {
-					owner.Out.SendMessage(String.Format("{0}'s magical blade does {1} extra damage to you!", attacker.GetName(0, false), ad.Damage), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);					
+					owner.Out.SendMessage(LanguageMgr.GetTranslation(owner.Client, "Effects.TripleWieldEffect.XMBExtraDamageToYou", attacker.GetName(0, false), ad.Damage), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 				}
 			}
 			
@@ -98,20 +99,18 @@ namespace DOL.GS.Effects
 			{
 				player.Out.SendCombatAnimation(null, target, 0, 0, 0, 0, 0x0A, target.HealthPercent);
 			}
-			//			log.Debug(String.Format("spell damage: {0}; damage: {1}; resisted damage: {2}; damage type {3}; minSpread {4}.", Spell.Damage, ad.Damage, ad.Modifier, ad.DamageType, m_minDamageSpread));
-			//			log.Debug(String.Format("dpsCap: {0}; dps: {1}; dmg {2}; spread: {6}; resDmg: {3}; atkSpeed: {4}; resist: {5}.", dpsCap, dps, damage, damageResisted, attacker.AttackSpeed(null), ad.Target.GetResist(Spell.DamageType), spread));
-		}		
+		}
 
-		public override string Name { get { return "Triple Wield"; } }
+		public override string Name { get { return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.TripleWieldEffect.Name"); } }
 
 		public override ushort Icon { get { return 7102; } }
 
-		public override System.Collections.IList DelveInfo
+		public override IList DelveInfo
 		{
 			get
 			{
 				ArrayList list = new ArrayList();
-				list.Add("Magical blade that does additional damage.");
+				list.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.TripleWieldEffect.InfoEffect"));
 				list.AddRange(base.DelveInfo);
 				return list;
 			}

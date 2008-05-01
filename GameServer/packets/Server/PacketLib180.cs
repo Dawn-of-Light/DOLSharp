@@ -112,6 +112,20 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendPlayerCreate(GamePlayer playerToCreate)
 		{
+			if (playerToCreate == null)
+			{
+				if (log.IsErrorEnabled)
+					log.Error("SendPlayerCreate: playerToCreate == null");
+				return;
+			}
+
+			if (m_gameClient.Player == null)
+			{
+				if (log.IsErrorEnabled)
+					log.Error("SendPlayerCreate: m_gameClient.Player == null");
+				return;
+			}
+
 			Region playerRegion = playerToCreate.CurrentRegion;
 			if (playerRegion == null)
 			{
@@ -158,6 +172,7 @@ namespace DOL.GS.PacketHandler
 			if (playerToCreate.IsAlive == false) flags |= 0x01;
 			if (playerToCreate.IsUnderwater) flags |= 0x02; //swimming
 			if (playerToCreate.IsStealthed) flags |= 0x10;
+			if (playerToCreate.CharacterClass.ID == (int)eCharacterClass.Vampiir) flags |= 0x40; //Vamp fly
 			// 0x20 = wireframe
 			// 0x40 = blueface (for underground race)
 			pak.WriteByte((byte)flags);
@@ -169,7 +184,6 @@ namespace DOL.GS.PacketHandler
             //RR 12 / 13
             pak.WritePascalString(GameServer.ServerRules.GetPlayerPrefixName(m_gameClient.Player, playerToCreate)); 
             pak.WritePascalString(playerToCreate.CurrentTitle.GetValue(playerToCreate)); // new in 1.74, NewTitle
-			pak.WriteByte(0x00);
 			if (playerToCreate.IsOnHorse)
 			{
 				pak.WriteByte(playerToCreate.ActiveHorse.ID);

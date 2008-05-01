@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
@@ -302,21 +302,18 @@ namespace DOL.GS.Spells
                         GamePlayer player = Caster as GamePlayer;
                         if (Caster is GamePlayer)
                         {
-                            if (player.Group != null)
-                            {
-                                lock (player.Group)
-                                {
-                                    foreach (GamePlayer groupPlayer in player.Group)
-                                    {
-                                        if (WorldMgr.CheckDistance(player, groupPlayer, m_procSpell.Range))
-                                        {
-                                            handler.StartSpell(groupPlayer);
-                                        }
-                                    }
-                                }
-                            }
-                            else
-                                handler.StartSpell(player);
+							if (player.Group != null)
+							{
+								foreach (GameLiving groupPlayer in player.Group.GetMembersInTheGroup())
+								{
+									if (WorldMgr.CheckDistance(player, groupPlayer, m_procSpell.Range))
+									{
+										handler.StartSpell(groupPlayer);
+									}
+								}
+							}
+							else
+								handler.StartSpell(player);
                         }
                     }
                 }

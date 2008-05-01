@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Trainer
 {
@@ -46,20 +47,26 @@ namespace DOL.GS.Trainer
  			if (!base.Interact(player)) return false;
 								
 			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Nightshade) {
-
+			if (player.CharacterClass.ID == (int) eCharacterClass.Nightshade)
+			{
 				// popup the training window
 				player.Out.SendTrainerWindow();
 				player.Out.SendMessage(this.Name + " says, \"Here for a bit of training, " + player.Name + "? Step up and get it!\"", eChatType.CT_System, eChatLoc.CL_PopupWindow); //popup window on live
-
 			} 
 			else 
 			{
 				// perhaps player can be promoted
-				if (CanPromotePlayer(player)) {
+				if (CanPromotePlayer(player))
+				{
 					player.Out.SendMessage(this.Name + " says, \"You have thought this through, I'm sure. Tell me now if you wish to train as a [Nightshade] and follow the Path of Essence.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-				} else {
-					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
+					if (!player.IsLevelRespecUsed)
+					{
+						OfferRespecialize(player);
+					}
+				} 
+				else
+				{
+					DismissPlayer(player);
 				}
 			}
 			return true;
@@ -70,7 +77,7 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public override bool CanPromotePlayer(GamePlayer player) 
+		public static bool CanPromotePlayer(GamePlayer player) 
 		{
 			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Stalker && (player.Race == (int) eRace.Elf || player.Race == (int) eRace.Lurikeen));
 		}

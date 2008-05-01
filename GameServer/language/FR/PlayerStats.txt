@@ -1,0 +1,33 @@
+
+
+# PLAYER STATISTIC
+# /Kills
+PlayerStatistic.Kill.Title: Ennemis tues
+PlayerStatistic.Kill.AlbionPlayer: Albionnais tues
+PlayerStatistic.Kill.HiberniaPlayer: Hiberniens tues
+PlayerStatistic.Kill.MidgardPlayer: Midgardiens tues
+PlayerStatistic.Kill.TotalPlayers: Total d'ennemis tues
+
+# /Deathblows
+PlayerStatistic.Deathblows.AlbionPlayer: Coups fatals, Albion
+PlayerStatistic.Deathblows.HiberniaPlayer: Coups fatals, Hibernia
+PlayerStatistic.Deathblows.MidgardPlayer: Coups fatals, Midgard
+PlayerStatistic.Deathblows.TotalPlayers: Total Coups fatals
+
+# /Solo
+PlayerStatistic.Solo.AlbionPlayer: Albionnais tues seul
+PlayerStatistic.Solo.HiberniaPlayer: Hiberniens tues seul
+PlayerStatistic.Solo.MidgardPlayer: Midgardiens tues seul
+PlayerStatistic.Solo.TotalPlayers: Total d'ennemis tues seul
+
+# /Capture
+PlayerStatistic.Capture.Title: Captures de fort
+PlayerStatistic.Capture.Keeps: Forts captures
+PlayerStatistic.Capture.Towers: Tours capturees
+
+# /PvE
+PlayerStatistic.PvE.Title: Reports PvE
+PlayerStatistic.PvE.KillsDragon: Nombre de Dragons tues
+PlayerStatistic.PvE.KillsEpic: Nombre de Boss epiques tues
+PlayerStatistic.PvE.KillsLegion: Nombre de Legion tues
+

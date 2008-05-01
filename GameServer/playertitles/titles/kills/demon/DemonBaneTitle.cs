@@ -26,9 +26,8 @@
 using System;
 using DOL.Language;
 using DOL.Events;
-using DOL.GS.PlayerTitles;
 
-namespace DOL.GS.Scripts
+namespace DOL.GS.PlayerTitles
 {
 	/// <summary>
 	/// "Demon Bane" title granted to everyone who kills Legion 25+ times.

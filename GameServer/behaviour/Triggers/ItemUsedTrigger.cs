@@ -19,7 +19,7 @@
 using System;
 using System.Text;
 using DOL.Events;
-using DOL.Database2;
+using DOL.Database;
 using log4net;
 using System.Reflection;
 using DOL.GS.Behaviour.Attributes;
@@ -75,7 +75,8 @@ namespace DOL.GS.Behaviour.Triggers
             {
                 UseSlotEventArgs uArgs = (UseSlotEventArgs)args;
                 InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot) as InventoryItem;
-                result = I.Name == item.Name;
+				if (item != null && I != null)
+					result = I.Name == item.Name;
             }
             
             return result;

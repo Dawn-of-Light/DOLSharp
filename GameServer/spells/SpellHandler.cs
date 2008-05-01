@@ -23,7 +23,7 @@ using System.Reflection;
 using System.Text;
 
 using DOL.AI.Brain;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
@@ -73,6 +73,11 @@ namespace DOL.GS.Spells
 		protected bool m_startReuseTimer = true;
 
 		/// <summary>
+		/// Ability that casts a spell
+		/// </summary>
+		protected SpellCastingAbilityHandler m_ability = null;
+
+		/// <summary>
 		/// Stores the current delve info depth
 		/// </summary>
 		private byte m_delveInfoDepth;
@@ -80,7 +85,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// The property key for the interrupt timeout
 		/// </summary>
-		protected const string INTERRUPT_TIMEOUT_PROPERTY = "CAST_INTERRUPT_TIMEOUT";
+		public const string INTERRUPT_TIMEOUT_PROPERTY = "CAST_INTERRUPT_TIMEOUT";
 		/// <summary>
 		/// The duration for the spell interrupt duration
 		/// </summary>
@@ -306,10 +311,8 @@ namespace DOL.GS.Spells
 				{
                    // instant cast
                     bool sendcast = true;
-		        	if (m_caster.ControlledNpc!=null)
-		        		if(m_caster.ControlledNpc.Body!=null)
-		        			if(m_caster.ControlledNpc.Body is NecromancerPet)
-		        				sendcast = false;
+		        	if (m_caster.ControlledNpc!=null && m_caster.ControlledNpc.Body!=null && m_caster.ControlledNpc.Body is NecromancerPet)
+		        		sendcast = false;
                     
                     if(sendcast) SendCastAnimation(0);
 					FinishSpellCast(target);
@@ -443,8 +446,7 @@ namespace DOL.GS.Spells
 				if (m_caster is GamePlayer)
 				{
 					GamePlayer player = m_caster as GamePlayer;
-					if ((player.CharacterClass.ID == (int)eCharacterClass.Vampiir) == false
-					    && player.CharacterClass is PlayerClass.ClassMauler == false)
+					if (!(player.CharacterClass is PlayerClass.ClassVampiir) && !(player.CharacterClass is PlayerClass.ClassMauler))
 					{
 						m_caster.StopAttack();
 						return false;
@@ -565,7 +567,7 @@ namespace DOL.GS.Spells
 					return false;
 				}
 
-				if (m_spell.Target != "Corpse" && !selectedTarget.IsAlive)
+				if (m_spell.Target.ToLower() != "corpse" && !selectedTarget.IsAlive)
 				{
 					MessageToCaster(selectedTarget.GetName(0, true) + " is dead!", eChatType.CT_SpellResisted);
 					return false;
@@ -1162,20 +1164,6 @@ namespace DOL.GS.Spells
 			if (Caster is GamePlayer)
 				((GamePlayer)Caster).Stealth(false);
 
-			//This is handled further down on the recast
-			////A simple function to disable Spells
-			//if (m_spell.SharedTimerGroup != 0)
-			//{
-			//     foreach (Spell sp in SkillBase.GetSpellList(m_spellLine.KeyName))
-			//          foreach (GamePlayer player in m_caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
-			//          {
-			//               if (sp.SharedTimerGroup == m_spell.SharedTimerGroup && sp.ID != m_spell.ID)
-			//               {
-			//                    ((GamePlayer)m_caster).DisableSkill(sp, sp.RecastDelay);
-			//               }
-			//          }
-			//}
-
 			// messages
 			if (Spell.InstrumentRequirement == 0 && Spell.ClientEffect != 0 && Spell.CastTime > 0)
 			{
@@ -1234,12 +1222,15 @@ namespace DOL.GS.Spells
 				QuickCastEffect quickcast = (QuickCastEffect)m_caster.EffectList.GetOfType(typeof(QuickCastEffect));
 				if (quickcast != null && Spell.CastTime > 0)
 				{
-					((GamePlayer)m_caster).TempProperties.setProperty(GamePlayer.QUICK_CAST_CHANGE_TICK, m_caster.CurrentRegion.Time);
+					m_caster.TempProperties.setProperty(GamePlayer.QUICK_CAST_CHANGE_TICK, m_caster.CurrentRegion.Time);
 					((GamePlayer)m_caster).DisableSkill(SkillBase.GetAbility(Abilities.Quickcast), QuickCastAbilityHandler.DISABLE_DURATION);
 					quickcast.Cancel(false);
 				}
 			}
 
+
+			if (m_ability != null)
+				m_caster.DisableSkill(m_ability.Ability, (m_spell.RecastDelay == 0 ? 3 : m_spell.RecastDelay));
 			// disable spells with recasttimer (Disables group of same type with same delay)
 			if (m_spell.RecastDelay > 0 && m_startReuseTimer)
 			{
@@ -1277,23 +1268,21 @@ namespace DOL.GS.Spells
 			GameSpellEffect TargetMod = SpellHandler.FindEffectOnTarget(m_caster, "TargetModifier");
 			if (TargetMod != null)
 			{
-				if ((m_spell.Target.ToLower() == "enemy")
-				   || (m_spell.Target.ToLower() == "realm")
-				   || (m_spell.Target.ToLower() == "group"))
+				if (NewTarget == "enemy" || NewTarget == "realm" || NewTarget == "group")
 				{
 					newtarget = (int)TargetMod.Spell.Value;
 
 					switch (newtarget)
 					{
 						case 0: // Apply on heal single
-							if (m_spell.SpellType.ToLower() == "heal" && m_spell.Target.ToLower() == "realm")
+							if (m_spell.SpellType.ToLower() == "heal" && NewTarget == "realm")
 							{
 								NewTarget = "group";
 								targetchanged = true;
 							}
 							break;
 						case 1: // Apply on heal group
-							if (m_spell.SpellType.ToLower() == "heal" && m_spell.Target.ToLower() == "group")
+							if (m_spell.SpellType.ToLower() == "heal" && NewTarget == "group")
 							{
 								NewTarget = "realm";
 								NewRadius = (ushort)m_spell.Range;
@@ -1301,7 +1290,7 @@ namespace DOL.GS.Spells
 							}
 							break;
 						case 2: // apply on enemy
-							if (m_spell.Target.ToLower() == "enemy")
+							if (NewTarget == "enemy")
 							{
 								if (m_spell.Radius == 0)
 									NewRadius = 450;
@@ -1328,8 +1317,10 @@ namespace DOL.GS.Spells
 				}
 			}
 
+			#region Process the targets
 			switch (NewTarget)
 			{
+				#region GTAoE
 				// GTAoE
 				case "area":
 					if (NewRadius > 0)
@@ -1352,45 +1343,72 @@ namespace DOL.GS.Spells
 						}
 					}
 					break;
-
+				#endregion
+				#region Corpse
 				case "corpse":
 					if (target != null && !target.IsAlive)
 						list.Add(target);
 					break;
-
+				#endregion
+				#region Pet
 				case "pet":
-					if (Caster is GamePlayer)
-					{
-						IControlledBrain npc = ((GamePlayer)Caster).ControlledNpc;
-						if (npc != null)
-							list.Add(npc.Body);
-					}
-					else
-					{
-						// Pet casting itself.
 
-						if (Caster is GameNPC && (Caster as GameNPC).Brain is IControlledBrain)
-							list.Add(Caster);
-					}
-					break;
+					ControlledNpc brain = Caster.ControlledNpc as ControlledNpc;
+					GameNPC petBody = brain == null ? null : brain.Body;
 
-				case "pets":
-					if (Caster is GamePlayer)
+					//Make sure we actually have a pet
+					if (petBody != null)
 					{
-						GamePlayer player = Caster as GamePlayer;
-						GameObject tar = player.TargetObject;
-						ControlledNpc cnpc = ((GameNPC)target).Brain as ControlledNpc;
-						if (tar is GameNPC && ((GameNPC)tar).Brain is IControlledBrain && cnpc != null && cnpc.GetPlayerOwner() == Caster)
+						//Single target pet buff has radius 0
+						if (Spell.Radius == 0)
 						{
-							list.Add(tar);
-							break;
+							//If we have our p
+							if (petBody != castTarget)
+							{
+								//Make sure we have some subpets
+								if (petBody.ControlledNpcList != null)
+								{
+									//Go through each subpet and see if we have it targeted
+									foreach (IControlledBrain icb in petBody.ControlledNpcList)
+									{
+										if (icb != null && icb.Body == castTarget)
+										{
+											list.Add(icb.Body);
+											break;
+										}
+									}
+								}
+							}
+							
+							//If we didn't find any of our subpets as our target then we add our main pet
+							if (list.Count == 0)
+								list.Add(petBody);
 						}
-						IControlledBrain npc = ((GamePlayer)Caster).ControlledNpc;
-						if (npc != null)
-							list.Add(npc.Body);
-					}
-					break;
+						//Our buff affects every pet in the area (our pets)
+						else
+						{
+							//Obviously, add our main pet
+							if (WorldMgr.CheckDistance(m_caster, petBody, Spell.Radius))
+								list.Add(petBody);
 
+							//Make sure we have some subpets
+							if (petBody.ControlledNpcList != null)
+							{
+								//Go through each subpet and make sure they're in our radius, then add if so
+								foreach (IControlledBrain icb in petBody.ControlledNpcList)
+								{
+									if (icb != null && WorldMgr.CheckDistance(m_caster, icb.Body, Spell.Radius))
+									{
+										list.Add(icb.Body);
+									}
+								}
+							}
+						}
+					}
+
+					break;
+				#endregion
+				#region Enemy
 				case "enemy":
 					if (NewRadius > 0)
 					{
@@ -1417,7 +1435,8 @@ namespace DOL.GS.Spells
 							list.Add(target);
 					}
 					break;
-
+				#endregion
+				#region Realm
 				case "realm":
 					if (NewRadius > 0)
 					{
@@ -1444,7 +1463,8 @@ namespace DOL.GS.Spells
 							list.Add(target);
 					}
 					break;
-
+				#endregion
+				#region Self
 				case "self":
 					{
 						if (NewRadius > 0)
@@ -1472,43 +1492,76 @@ namespace DOL.GS.Spells
 						}
 						break;
 					}
+				#endregion
+				#region Group
 				case "group":
 					{
 						Group group = m_caster.Group;
 						int spellRange = CalculateSpellRange();
 						if (spellRange == 0)
 							spellRange = NewRadius;
+
+						//Just add ourself
 						if (group == null)
 						{
 							list.Add(m_caster);
+
 							IControlledBrain npc = m_caster.ControlledNpc;
 							if (npc != null)
 							{
-								if (WorldMgr.CheckDistance(m_caster, npc.Body, spellRange))
-									list.Add(npc.Body);
+								//Add our first pet
+								GameNPC petBody2 = npc.Body;
+								if (WorldMgr.CheckDistance(m_caster, petBody2, spellRange))
+									list.Add(petBody2);
+
+								//Now lets add any subpets!
+								if (petBody2 != null && petBody2.ControlledNpcList != null)
+								{
+									foreach (IControlledBrain icb in petBody2.ControlledNpcList)
+									{
+										if (icb != null && WorldMgr.CheckDistance(m_caster, icb.Body, spellRange))
+											list.Add(icb.Body);
+									}
+								}
 							}
+							
 						}
+						//We need to add the entire group
 						else
 						{
-							lock (group)
+							foreach (GameLiving living in group.GetMembersInTheGroup())
 							{
-								foreach (GameLiving living in group)
+								// only players in range
+								if (WorldMgr.CheckDistance(m_caster, living, spellRange))
 								{
-									// only players in range
-									if (WorldMgr.CheckDistance(m_caster, living, spellRange))
-										list.Add(living);
+									list.Add(living);
 
 									IControlledBrain npc = living.ControlledNpc;
 									if (npc != null)
 									{
-										if (WorldMgr.CheckDistance(m_caster, npc.Body, spellRange))
-											list.Add(npc.Body);
+										//Add our first pet
+										GameNPC petBody2 = npc.Body;
+										if (WorldMgr.CheckDistance(m_caster, petBody2, spellRange))
+											list.Add(petBody2);
+
+										//Now lets add any subpets!
+										if (petBody2 != null && petBody2.ControlledNpcList != null)
+										{
+											foreach (IControlledBrain icb in petBody2.ControlledNpcList)
+											{
+												if (icb != null && WorldMgr.CheckDistance(m_caster, icb.Body, spellRange))
+													list.Add(icb.Body);
+											}
+										}
 									}
 								}
 							}
-						}
+						}						
+
 						break;
 					}
+				#endregion
+				#region Cone AoE
 				case "cone":
 					{
 						target = Caster;
@@ -1539,8 +1592,9 @@ namespace DOL.GS.Spells
 						}
 						break;
 					}
-
+				#endregion
 			}
+			#endregion
 			return list;
 		}
 
@@ -1601,7 +1655,7 @@ namespace DOL.GS.Spells
 					int dist = WorldMgr.GetDistance(t, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z);
 					if (dist >= 0)
 					{
-						ApplyEffectOnTarget(t, (effectiveness - dist / (double)Spell.Radius));
+						ApplyEffectOnTarget(t, (effectiveness - CalculateAreaVariance(dist, Spell.Radius)));
 					}
 				}
 				else
@@ -1609,10 +1663,21 @@ namespace DOL.GS.Spells
 					int dist = WorldMgr.GetDistance(target, t);
 					if (dist >= 0)
 					{
-						ApplyEffectOnTarget(t, (effectiveness - dist / (double)Spell.Radius));
+						ApplyEffectOnTarget(t, (effectiveness - CalculateAreaVariance(dist, Spell.Radius)));
 					}
 				}
 			}
+		}
+
+		/// <summary>
+		/// Calculate the variance due to the radius of the spell
+		/// </summary>
+		/// <param name="distance">The distance away from center of the spell</param>
+		/// <param name="radius">The radius of the spell</param>
+		/// <returns></returns>
+		protected virtual double CalculateAreaVariance(int distance, int radius)
+		{
+			return (double)(distance / radius);
 		}
 
 		/// <summary>
@@ -1923,6 +1988,7 @@ namespace DOL.GS.Spells
 			ad.Target = target;
 			ad.AttackType = AttackData.eAttackType.Spell;
 			ad.AttackResult = GameLiving.eAttackResult.Missed;
+			ad.IsSpellResisted = true;
 			target.OnAttackedByEnemy(ad);
 
 			// Spells that would have caused damage or are not instant will still
@@ -2017,6 +2083,14 @@ namespace DOL.GS.Spells
 		}
 		#endregion
 
+		/// <summary>
+		/// Ability to cast a spell
+		/// </summary>
+		public SpellCastingAbilityHandler Ability
+		{
+			get { return m_ability; }
+			set { m_ability = value; }
+		}
 		/// <summary>
 		/// The Spell
 		/// </summary>
@@ -2303,16 +2377,11 @@ namespace DOL.GS.Spells
 
 			if (m_caster is GameNPC && ((GameNPC)m_caster).Brain is IControlledBrain)
 			{
-				//TODO: add variance depending on owner's spec level
-				//Mobs seem to cast Mob Spells spellline
-				//if (((GameNPC)m_caster).IsMinion)
-				//    speclevel = ((GamePlayer)((IControlledBrain)((GameNPC)((IControlledBrain)((GameNPC)m_caster).Brain).Owner).Brain).Owner).GetModifiedSpecLevel(m_spellLine.Spec);
-				//else
-				//    speclevel = ((GamePlayer)((IControlledBrain)((GameNPC)m_caster).Brain).Owner).GetModifiedSpecLevel(m_spellLine.Spec);
-				//Temporary fix
-				speclevel = 50;
+				#warning This needs to be changed when GamePet is made
+				IControlledBrain brain = (m_caster as GameNPC).Brain as IControlledBrain;
+				speclevel = brain.GetPlayerOwner().GetModifiedSpecLevel(m_spellLine.Spec);
 			}
-			if (m_caster is GamePlayer)
+			else if (m_caster is GamePlayer)
 			{
 				int a = ((GamePlayer)m_caster).GetModifiedSpecLevel(m_spellLine.Spec);
 				if (m_spellLine.Name == "Archery")
@@ -2506,10 +2575,13 @@ namespace DOL.GS.Spells
 
 			// apply effectiveness
 			finalDamage = (int)(finalDamage * effectiveness);
-			if ((m_caster is GamePlayer || (m_caster is GameNPC && (m_caster as GameNPC).Brain is IControlledBrain && m_caster.Realm != 0)) && target is GamePlayer)
-				finalDamage = (int)((double)finalDamage * ServerProperties.Properties.PVP_DAMAGE);
-			else if ((m_caster is GamePlayer || (m_caster is GameNPC && (m_caster as GameNPC).Brain is IControlledBrain && m_caster.Realm != 0)) && target is GameNPC)
-				finalDamage = (int)((double)finalDamage * ServerProperties.Properties.PVE_DAMAGE);
+			if ((m_caster is GamePlayer || (m_caster is GameNPC && (m_caster as GameNPC).Brain is IControlledBrain && m_caster.Realm != 0)))
+			{
+				if (target is GamePlayer)
+					finalDamage = (int)((double)finalDamage * ServerProperties.Properties.PVP_DAMAGE);
+				else if (target is GameNPC)
+					finalDamage = (int)((double)finalDamage * ServerProperties.Properties.PVE_DAMAGE);
+			}
 
 			// Well the PenetrateResistBuff is NOT ResistPierce
 			GameSpellEffect penPierce = SpellHandler.FindEffectOnTarget(m_caster, "PenetrateResists");

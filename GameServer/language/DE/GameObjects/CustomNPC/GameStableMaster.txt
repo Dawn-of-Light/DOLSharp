@@ -1,0 +1,4 @@
+# ---->	Anpassung ---					---Muss an die Bezeichnung eurer Reitpferde angepasst werden!---
+GameStableMaster.ReceiveItem.HorseName:			Reitpferd
+GameStableMaster.ReceiveItem.TicketTo:			ticket nach 
+GameStableMaster.ReceiveItem.UnknownWay:		Tut mir leid, dieses Ticket nach {0} ist hier nicht gültig.

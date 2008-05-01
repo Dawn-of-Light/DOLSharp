@@ -1,6 +1,25 @@
+/*
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
 using System.Collections;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Effects
 {
@@ -14,19 +33,19 @@ namespace DOL.GS.Effects
 		{
 			base.Start(target);
 			if (target is GamePlayer)
-				(target as GamePlayer).Out.SendMessage("You are now camouflaged!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				(target as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((target as GamePlayer).Client, "Effects.CamouflageEffect.YouAreCamouflaged"), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 		}
 
 		public override void Stop()
 		{
 			base.Stop();
 			if (m_owner is GamePlayer)
-				(m_owner as GamePlayer).Out.SendMessage("Your camouflage is gone.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				(m_owner as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((m_owner as GamePlayer).Client, "Effects.CamouflageEffect.YourCFIsGone"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 		
 		public override string Name
 		{
-			get { return "Camouflage"; }
+			get { return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.CamouflageEffect.Name"); }
 		}
 		
 		public override ushort Icon
@@ -42,7 +61,7 @@ namespace DOL.GS.Effects
 			get
 			{
 				IList delveInfoList = new ArrayList(1);
-				delveInfoList.Add("Available to the archer classes. This ability will make the archer undectable to the Mastery of Stealth Realm Ability for a period of time. Drawing a weapon or engaging in combat will cancel the effect and cause the player to be visible. This does not modify stealth skill.");
+				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.CamouflageEffect.InfoEffect"));
 				return delveInfoList;
 			}
 		}

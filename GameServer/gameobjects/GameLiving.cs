@@ -23,7 +23,7 @@ using System.Collections.Specialized;
 using System.Reflection;
 
 using DOL.AI.Brain;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Events;
 using DOL.Language;
 using DOL.GS.Effects;
@@ -64,6 +64,7 @@ namespace DOL.GS
 		private int m_weaponSpeed;
 		private bool m_isOffHand;
 		private InventoryItem m_weapon;
+		private bool m_isSpellResisted = false;
 
 		/// <summary>
 		/// Constructs new AttackData
@@ -80,6 +81,20 @@ namespace DOL.GS
 		{
 			get { return m_modifier; }
 			set { m_modifier = value; }
+		}
+
+		/// <summary>
+		/// Was the spell resisted
+		/// </summary>
+		public bool IsSpellResisted
+		{
+			get
+			{
+				if (SpellHandler == null)
+					return false;
+				return m_isSpellResisted;
+			}
+			set { m_isSpellResisted = value; }
 		}
 
 		/// <summary>
@@ -296,19 +311,18 @@ namespace DOL.GS
 	}
 
 	#endregion
-    
+
 	/// <summary>
 	/// This class holds all information that each
 	/// living object in the world uses
 	/// </summary>
-    [Serializable]
-	public abstract class GameLiving : GameObject 
+	public abstract class GameLiving : GameObject
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
-        [NonSerialized]
-        static ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
 		#region Combat
 		/// <summary>
 		/// Holds the Attack Data object of last attack
@@ -1133,20 +1147,19 @@ namespace DOL.GS
 		{
 			get { return Health > 0; }
 		}
-		/*
-		protected bool m_silenced = false;
-		/// <summary>
-		/// Is the living silenced
-		/// </summary>
-		public bool IsSilenced
-		{
-			get { return m_silenced; }
-			set
-			{
-				m_silenced = value;
-			}
-		}
-		*/
+        
+        protected bool m_muzzled = false;
+        /// <summary>
+        /// returns if this living is muzzled
+        /// </summary>
+        public virtual bool IsMuzzled
+        {
+            get { return m_muzzled; }
+            set
+            {
+                m_muzzled = value;
+            }
+        }
 
 		/// <summary>
 		/// Check this flag to see wether this living is involved in combat
@@ -1409,7 +1422,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="obj"></param>
 		/// <returns></returns>
-		public bool IsObjectGreyCon(GameObject obj)
+		public virtual bool IsObjectGreyCon(GameObject obj)
 		{
 			return IsObjectGreyCon(this, obj);
 		}
@@ -1490,7 +1503,7 @@ namespace DOL.GS
 			ad.Damage = 0;
 			ad.CriticalDamage = 0;
 			ad.Style = style;
-			ad.WeaponSpeed = (weapon == null ? AttackSpeed(null) / 100 : AttackSpeed(weapon) / 100);
+			ad.WeaponSpeed = AttackSpeed(weapon) / 100;
 			ad.DamageType = AttackDamageType(weapon);
 			ad.ArmorHitLocation = eArmorSlot.UNKNOWN;
 			ad.Weapon = weapon;
@@ -1755,7 +1768,8 @@ namespace DOL.GS
 											{
 												spellHandler.StartSpell(ad.Target);
 											}
-										} break;
+											break;
+										}
 									}
 								}
 							}
@@ -1834,10 +1848,10 @@ namespace DOL.GS
 									string modmessage = "";
 									if (ad.Modifier > 0) modmessage = " (+" + ad.Modifier + ")";
 									if (ad.Modifier < 0) modmessage = " (" + ad.Modifier + ")";
-									owner.Out.SendMessage(ad.Attacker.GetName(0, true) + " hits your " + ad.Target.Name + " for " + ad.Damage + modmessage + " damage.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									owner.Out.SendMessage(ad.Attacker.GetName(0, true) + " hits your " + ad.Target.Name + " for " + ad.Damage + modmessage + " damage.", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 									if (ad.CriticalDamage > 0)
 									{
-										owner.Out.SendMessage(ad.Attacker.GetName(0, true) + " critically hits your " + ad.Target.Name + " for an additional " + ad.CriticalDamage + " damage.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										owner.Out.SendMessage(ad.Attacker.GetName(0, true) + " critically hits your " + ad.Target.Name + " for an additional " + ad.CriticalDamage + " damage.", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 									}
 									break;
 								}
@@ -1873,9 +1887,10 @@ namespace DOL.GS
 		/// <param name="attacker">The source of interrupts</param>
 		public virtual void StartInterruptTimer(int duration, AttackData.eAttackType attackType, GameLiving attacker)
 		{
+			//Well, we should make it interrupt on every melee swing anyways. That is how it works on live.
 			// Can't be interrupted if living is not casting
-			if (!IsCasting)
-				return;
+			//if (!IsCasting)
+				//return;
 
 			IsBeingInterrupted = true;
 			new InterruptAction(this, attacker, duration, attackType).Start(1);
@@ -2068,7 +2083,13 @@ namespace DOL.GS
 			{
 				GameLiving owner = (GameLiving)m_actionSource;
 
-				if (owner.IsMezzed || owner.IsStunned || owner.IsCasting)
+				if (owner.IsMezzed || owner.IsStunned)
+				{
+					Interval = 100;
+					return;
+				}
+
+				if (owner.IsCasting && !owner.CurrentSpellHandler.Spell.Uninterruptible)
 				{
 					Interval = 100;
 					return;
@@ -2612,8 +2633,9 @@ namespace DOL.GS
 
 				//mobs dont update the heading after they start attacking
 				//so here they update it after they swing
+				//update internal heading, do not send update to client
 				if (owner is GameNPC)
-					(owner as GameNPC).TurnTo(mainHandAD.Target);
+					(owner as GameNPC).TurnTo(mainHandAD.Target, false);
 
 				Stop();
 				return;
@@ -2677,7 +2699,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Make a proc or poison on the weapon go off.
 		/// </summary>
-		private void StartWeaponMagicalEffect(AttackData ad, SpellLine spellLine, UInt64 spellID)
+		private void StartWeaponMagicalEffect(AttackData ad, SpellLine spellLine, int spellID)
 		{
 			if (spellLine == null)
 				return;
@@ -2796,8 +2818,6 @@ namespace DOL.GS
 			m_attackState = false;
 			if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 				InterruptRangeAttack();
-
-			//			log.Debug(this.Name+": StopAttack()");
 		}
 
 
@@ -3390,7 +3410,8 @@ namespace DOL.GS
 				|| (ad.AttackType == AttackData.eAttackType.Ranged && ad.Target != bladeturn.SpellHandler.Caster && ad.Attacker is GamePlayer && ((GamePlayer)ad.Attacker).HasAbility(Abilities.PenetratingArrow)))  // penetrating arrow attack pierce bladeturn
 					penetrate = true;
 
-				if (ad.IsMeleeAttack && !Util.ChanceDouble(bladeturn.SpellHandler.Caster.Level / ad.Attacker.Level))
+
+				if (ad.IsMeleeAttack && !Util.ChanceDouble((double)bladeturn.SpellHandler.Caster.Level /(double)ad.Attacker.Level))
 					penetrate = true;
 
 				if (penetrate)
@@ -3433,7 +3454,7 @@ namespace DOL.GS
 			{
 				IControlledBrain brain = ((GameNPC)source).Brain as IControlledBrain;
 				if (brain != null)
-					source = brain.Owner;
+					source = brain.GetPlayerOwner();
 			}
 
 			GamePlayer attackerPlayer = source as GamePlayer;
@@ -3638,12 +3659,12 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			{
 				IList attackers;
 				lock (m_attackers.SyncRoot) { attackers = (IList)m_attackers.Clone(); }
-
+				EnemyHealedEventArgs args = new EnemyHealedEventArgs(this, changeSource, healthChangeType, changeAmount);
 				foreach (GameObject attacker in attackers)
 				{
 					if (attacker is GameLiving && attacker != TargetObject)
 					{
-						(attacker as GameLiving).Notify(GameLivingEvent.EnemyHealed, (GameLiving)attacker, new EnemyHealedEventArgs(this, changeSource, healthChangeType, changeAmount));
+						(attacker as GameLiving).Notify(GameLivingEvent.EnemyHealed, (GameLiving)attacker, args);
 						(attacker as GameLiving).AddXPGainer(changeSource, healthChanged);
 					}
 				}
@@ -3738,17 +3759,45 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 				GameServer.ServerRules.OnLivingKilled(this, killer);
 			}
 
-			Notify(GameLivingEvent.Dying, this, new DyingEventArgs(killer));
-
 			//Stop attacks
 			StopAttack();
 
 			//Send our attackers some note
-			foreach (GameObject obj in m_attackers.Clone() as ArrayList)
+			ArrayList clone = m_attackers.Clone() as ArrayList;
+			//If any of the pet's attacked, this will hold the gameplayer to send the message to
+			List<GamePlayer> virtualAttackers = null;
+
+			foreach (GameObject obj in clone)
 			{
 				if (obj is GameLiving)
 				{
+					//Fix for players receiving multiple kills
+					//First, let's check to see if we're a pet
+					if (obj is GameNPC && (obj as GameNPC).Brain is IControlledBrain)
+					{
+						//Ok, we're a pet - if our Player owner isn't in the attacker list, let's make them a 'virtual' attacker
+						GamePlayer player = ((obj as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
+						if (!clone.Contains(player))
+						{
+							//Make the list if it's null
+							if (virtualAttackers == null)
+								virtualAttackers = new List<GamePlayer>();
+							//Ok, this is important.  If they aren't already in the list, we should add them ONLY ONCE!
+							if (!virtualAttackers.Contains(player))
+								virtualAttackers.Add(player);
+						}
+					}
+
 					((GameLiving)obj).EnemyKilled(this);
+				}
+			}
+
+			//Now that we properly redirected to the player only once, lets notify them!
+			if (virtualAttackers != null)
+			{
+				foreach (GamePlayer player in virtualAttackers)
+				{
+					player.EnemyKilled(this);
 				}
 			}
 
@@ -3756,6 +3805,10 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 
 			// cancel all concentration effects
 			ConcentrationEffects.CancelAll();
+
+			// clear all of our targets
+			RangeAttackTarget = null;
+			TargetObject = null;
 
 			// cancel all left effects
 			EffectList.CancelAll();
@@ -3767,6 +3820,9 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 
 			//Reduce health to zero
 			Health = 0;
+
+			//Let's send the notification at the end
+			Notify(GameLivingEvent.Dying, this, new DyingEventArgs(killer));
 		}
 
 		/// <summary>
@@ -3825,20 +3881,6 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		{
 			RemoveAttacker(enemy);
 			Notify(GameLivingEvent.EnemyKilled, this, new EnemyKilledEventArgs(enemy));
-			
-			// Killed by a pet?
-
-			if (this is GameNPC && (this as GameNPC).Brain is IControlledBrain)
-			{
-				GamePlayer owner = ((this as GameNPC).Brain as IControlledBrain).Owner
-					as GamePlayer;
-
-				// Need to set sender = owner here, so QuestBehaviour takes
-				// the right action.
-
-				if (owner != null)
-					owner.Notify(GameLivingEvent.EnemyKilled, owner, new EnemyKilledEventArgs(enemy));
-			}
 		}
 		/// <summary>
 		/// Checks whether Living has ability to use lefthanded weapons
@@ -4506,7 +4548,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			{
 				double MinMana = MaxMana * 0.15;
 				if (Mana < MinMana) return 0;
-				else ChangeMana(this, eManaChangeType.Regenerate, -1 * GetModified(eProperty.PowerRegenerationRate));
+                else if (!InCombat) ChangeMana(this, eManaChangeType.Regenerate, -1 * GetModified(eProperty.PowerRegenerationRate));
 
 				if (!InCombat)
 				{
@@ -4787,19 +4829,11 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <summary>
 		/// Holds the concentration effects list
 		/// </summary>
-		[NonSerialized]
-        private  ConcentrationList m_concEffects;
+		private readonly ConcentrationList m_concEffects;
 		/// <summary>
 		/// Gets the concentration effects list
 		/// </summary>
-		public ConcentrationList ConcentrationEffects {
-            get
-            {
-                if (m_concEffects == null)
-                    m_concEffects = new ConcentrationList(this);
-                return m_concEffects; 
-            } 
-            }
+		public ConcentrationList ConcentrationEffects { get { return m_concEffects; } }
 
 		/// <summary>
 		/// Cancels all concentration effects by this living and on this living
@@ -4844,8 +4878,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// means that the gameobject can be cleaned up even
 		/// when this living has a reference on it ...
 		/// </summary>
-		[NonSerialized]
-        protected readonly WeakReference m_targetObjectWeakReference;
+		protected readonly WeakReference m_targetObjectWeakReference;
 		/// <summary>
 		/// The current speed of this living
 		/// </summary>
@@ -4861,8 +4894,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <summary>
 		/// Holds the Living's Coordinate inside the current Region
 		/// </summary>
-		[NonSerialized]
-        protected Point3D m_groundTarget;
+		protected Point3D m_groundTarget;
 
 		/// <summary>
 		/// Gets the current direction the Object is facing
@@ -4872,8 +4904,10 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			get { return base.Heading; }
 			set
 			{
+				ushort oldHeading = base.Heading;
 				base.Heading = value;
-				RecalculatePostionAddition();
+				if (base.Heading != oldHeading)
+					RecalculatePostionAddition();
 			}
 		}
 		/// <summary>
@@ -4937,15 +4971,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			}
 			set
 			{
-				GameObject previousTarget = m_targetObjectWeakReference.Target as GameObject;
-				if (previousTarget is GameLiving)
-					((GameLiving)previousTarget).RemoveAttacker(this);
-
-				GameObject newTarget = value;
-				m_targetObjectWeakReference.Target = newTarget;
-
-				if (AttackState && newTarget is GameLiving)
-					((GameLiving)newTarget).AddAttacker(this);
+				m_targetObjectWeakReference.Target = value;
 			}
 		}
 		/// <summary>
@@ -4959,7 +4985,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <summary>
 		/// Gets the Living's ground-target Coordinate inside the current Region
 		/// </summary>
-        public virtual Point3D GroundTarget
+		public virtual Point3D GroundTarget
 		{
 			get { return m_groundTarget; }
 		}
@@ -5202,11 +5228,21 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			{
 				if (npc != this)
 					npc.SayReceive(this, str);
-			}
+			}			
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.SAY_DISTANCE))
 			{
 				if (player != this)
 					player.SayReceive(this, str);
+			}
+			if (TargetObject != null &&TargetObject is GameNPC)
+			{
+				GameNPC targetNPC = (GameNPC) TargetObject;
+				char[] separators = new char[] {' ', ',', '.', '?', '!'};
+				foreach (string sstr in str.Split(separators))
+		        {
+					if(sstr != "")
+		        		targetNPC.WhisperReceive(this, sstr);
+		        }
 			}
 			return true;
 		}
@@ -5357,8 +5393,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <summary>
 		/// currently applied effects
 		/// </summary>
-        [NonSerialized]
-        protected  GameEffectList m_effects;
+		protected readonly GameEffectList m_effects;
 
 		/// <summary>
 		/// gets a list of active effects
@@ -5366,10 +5401,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <returns></returns>
 		public GameEffectList EffectList
 		{
-			get {
-                if (m_effects == null)
-                    m_effects = new GameEffectList(this);
-                return m_effects; }
+			get { return m_effects; }
 		}
 
 		/// <summary>
@@ -5386,30 +5418,8 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <summary>
 		/// Holds all abilities of the player (KeyName -> Ability)
 		/// </summary>
-        [NonSerialized]
-        private Hashtable m_abilities_secret = new Hashtable();
-        protected  Hashtable m_abilities
-        {
-            get
-            {
-                if (m_abilities_secret != null)
-                    return m_abilities_secret;
-                else
-                {
-                    m_abilities_secret = new Hashtable(m_abilityids.Count);
-                    foreach (UInt64 id in m_abilityids)
-                    {
-                        Ability ab;
-                        if (!DatabaseLayer.Instance.DatabaseObjects.TryGetValue(id,ab))
-                            log.Error("Could not retrieve Ability with ID" + id);
-                        else
-                            m_abilities_secret.Add(id, ab);
-                    }
-                }
-            }
-        }
-        
-        protected readonly List<UInt64> m_abilityids = new List<UInt64>();
+		protected readonly Hashtable m_abilities = new Hashtable();
+
 		/// <summary>
 		/// Asks for existence of specific ability
 		/// </summary>
@@ -5419,6 +5429,64 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		{
 			return m_abilities[keyName] is Ability;
 		}
+
+		/// <summary>
+		/// Adds a new Ability to the player
+		/// </summary>
+		/// <param name="ability"></param>
+		#region Abilities
+		protected readonly ArrayList m_skillList = new ArrayList();
+		public virtual void AddAbility(Ability ability) 	 
+	    { 	 
+	        AddAbility(ability, true); 	 
+	    }
+		public virtual void AddAbility(Ability ability, bool sendUpdates)
+		{
+			bool newAbility = false;
+			lock (m_abilities.SyncRoot)
+			{
+				Ability oldability = (Ability)m_abilities[ability.KeyName];
+				lock (m_skillList.SyncRoot)
+				{
+					if (oldability == null)
+					{
+						newAbility = true;
+						m_abilities[ability.KeyName] = ability;
+						m_skillList.Add(ability);
+						ability.Activate(this, sendUpdates);
+					}
+					else if (oldability.Level < ability.Level)
+					{
+						newAbility = true;
+						oldability.Level = ability.Level;
+						oldability.Name = ability.Name;
+					}
+					if (newAbility&&(this is GamePlayer))
+					{
+						(this as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((this as GamePlayer).Client, "GamePlayer.AddAbility.YouLearn", ability.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+				}
+			}
+		}
+		public virtual bool RemoveAbility(string abilityKeyName)
+		{
+			Ability ability = null;
+			lock (m_abilities.SyncRoot)
+			{
+				lock (m_skillList.SyncRoot)
+				{
+					ability = (Ability)m_abilities[abilityKeyName];
+					if (ability == null)
+						return false;
+					ability.Deactivate(this, true);
+					m_abilities.Remove(ability.KeyName);
+					m_skillList.Remove(ability);
+				}
+			}
+			if(this is GamePlayer) (this as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((this as GamePlayer).Client, "GamePlayer.RemoveAbility.YouLose", ability.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			return true;
+		}
+		#endregion Abilities
 
 		/// <summary>
 		/// Checks if player has ability to use items of this type
@@ -5633,8 +5701,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <summary>
 		/// Holds the currently running spell handler
 		/// </summary>
-		[NonSerialized]
-        protected ISpellHandler m_runningSpellHandler;
+		protected ISpellHandler m_runningSpellHandler;
 		/// <summary>
 		/// active spellhandler (casting phase) or null
 		/// </summary>
@@ -5677,16 +5744,6 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(this, spell, line);
 			if (spellhandler != null)
 			{
-				// If played is engage when casting cancel engage
-				if (IsEngaging)
-				{
-					EngageEffect engage = (EngageEffect)EffectList.GetOfType(typeof(EngageEffect));
-					if (engage != null)
-					{
-						engage.Cancel(false);
-					}
-				}
-
 				m_runningSpellHandler = spellhandler;
 				spellhandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
 				spellhandler.CastSpell();
@@ -5761,7 +5818,6 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <summary>
 		/// Holds the controlled object
 		/// </summary>
-        [NonSerialized]
 		protected IControlledBrain[] m_controlledNpc = null;
 
 		/// <summary>
@@ -5803,98 +5859,22 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		{
 		}
 
-		/// <summary>
-		/// Checks if player controls a brain and send any needed messages
-		/// </summary>
-		/// <param name="npc">The Npc from local var to avoid changes but other threads</param>
-		/// <returns>success</returns>
-		protected bool CheckControlledNpc(IControlledBrain npc)
-		{
-			return npc != null;
-		}
-
-		/// <summary>
-		/// Commands controlled object to attack
-		/// </summary>
-		public virtual void CommandNpcAttack()
-		{
-		}
-
-		/// <summary>
-		/// Releases controlled object
-		/// </summary>
-		public virtual void CommandNpcRelease()
-		{
-			//TODO: implement this for .Stop() on ControlledNpc
-		}
-
-		/// <summary>
-		/// Commands controlled object to follow
-		/// </summary>
-		public virtual void CommandNpcFollow()
-		{
-		}
-
-		/// <summary>
-		/// Commands controlled object to stay where it is
-		/// </summary>
-		public virtual void CommandNpcStay()
-		{
-		}
-
-		/// <summary>
-		/// Commands controlled object to go to players location
-		/// </summary>
-		public virtual void CommandNpcComeHere()
-		{
-		}
-
-		/// <summary>
-		/// Commands controlled object to go to target
-		/// </summary>
-		public virtual void CommandNpcGoTarget()
-		{
-		}
-
-		/// <summary>
-		/// Changes controlled object state to passive
-		/// </summary>
-		public virtual void CommandNpcPassive()
-		{
-		}
-
-		/// <summary>
-		/// Changes controlled object state to aggressive
-		/// </summary>
-		public virtual void CommandNpcAgressive()
-		{
-		}
-
-		/// <summary>
-		/// Changes controlled object state to defensive
-		/// </summary>
-		public virtual void CommandNpcDefensive()
-		{
-		}
-
 		#endregion
 
 		#region Group
 		/// <summary>
 		/// Holds the group of this player
 		/// </summary>
-        [NonSerialized]
 		protected Group m_group;
 		/// <summary>
 		/// Holds the index of this player inside of the group
 		/// </summary>
-		[NonSerialized]
-        protected int m_groupIndex;
+		protected int m_groupIndex;
 
 		/// <summary>
 		/// Gets or sets the player's group
 		/// </summary>
-        public Group Group
+		public Group Group
 		{
 			get { return m_group; }
 			set { m_group = value; }

@@ -17,12 +17,13 @@
  *
  */
 using System;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS;
 using System.Reflection;
 using log4net;
 using DOL.Language;
+using System.Collections.Generic;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
@@ -191,11 +192,34 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return 0;
 			}
 
+			// Move an item from, to or inside a vault.
+
+			if ((fromSlot >= (ushort)eInventorySlot.HousingInventory_First &&
+				fromSlot <= (ushort)eInventorySlot.HousingInventory_Last) ||
+				(toSlot >= (ushort)eInventorySlot.HousingInventory_First &&
+				toSlot <= (ushort)eInventorySlot.HousingInventory_Last))
+			{
+				GameHouseVault houseVault = client.Player.ActiveVault;
+				if (houseVault == null)
+				{
+					client.Out.SendMessage("You are not actively viewing a vault!",
+						eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendInventoryItemsUpdate(null);
+					return 0;
+				}
+
+				houseVault.MoveItem(client.Player.Inventory, (eInventorySlot)fromSlot, 
+					(eInventorySlot)toSlot);
+
+				return 1;
+			}
+
 			//Do we want to move an item from inventory/vault/quiver into inventory/vault/quiver?
 			if (((fromSlot>=(ushort)eInventorySlot.Ground && fromSlot<=(ushort)eInventorySlot.LastBackpack)
 				|| (fromSlot>=(ushort)eInventorySlot.FirstVault && fromSlot<=(ushort)eInventorySlot.LastVault))
 				&&((toSlot>=(ushort)eInventorySlot.Ground && toSlot<=(ushort)eInventorySlot.LastBackpack)
-				|| (toSlot>=(ushort)eInventorySlot.FirstVault && toSlot<=(ushort)eInventorySlot.LastVault)))
+				|| (toSlot>=(ushort)eInventorySlot.FirstVault && toSlot<=(ushort)eInventorySlot.LastVault))
+				|| (toSlot>=(ushort)eInventorySlot.HousingInventory_First && toSlot<=(ushort)eInventorySlot.HousingInventory_Last))
 			{
 				//We want to drop the item
 				if (toSlot==(ushort)eInventorySlot.Ground)
@@ -227,6 +251,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					client.Out.SendInventoryItemsUpdate(null);
 					return 0;
 				}
+
 				//We want to move the item in inventory
 				client.Player.Inventory.MoveItem((eInventorySlot)fromSlot, (eInventorySlot)toSlot, itemCount);
 				return 1;

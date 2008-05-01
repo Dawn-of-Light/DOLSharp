@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 
-using DOL.Database2;
+using DOL.Database;
 using DOL.GS.Effects;
 
 namespace DOL.GS.Spells
@@ -62,7 +62,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Returns true when spell is in casting phase
 		/// </summary>
-        bool IsCasting { get; }
+		bool IsCasting { get; }
 
 		/// <summary>
 		/// Gets wether this spell has positive or negative impact on targets
@@ -129,6 +129,11 @@ namespace DOL.GS.Spells
 		GameLiving Caster { get; }
 
 		/// <summary>
+		/// The ability casting the spell
+		/// </summary>
+		SkillHandler.SpellCastingAbilityHandler Ability { get;set;}
+
+		/// <summary>
 		/// The Spell
 		/// </summary>
 		Spell Spell { get; }
@@ -156,6 +161,7 @@ namespace DOL.GS.Spells
 		PlayerXEffect getSavedEffect(GameSpellEffect e);
 		void OnEffectRestored(GameSpellEffect effect, int[] RestoreVars);
 		int OnRestoredEffectExpires(GameSpellEffect effect, int[] RestoreVars, bool noMessages);
+		bool CheckBeginCast(GameLiving selectedTarget);
 	}
 
 	/// <summary>

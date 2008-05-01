@@ -17,8 +17,7 @@
  *
  */
 using System;
-using DOL.GS;
-using DOL.Database2;
+using DOL.Database;
 
 namespace DOL.Events
 {

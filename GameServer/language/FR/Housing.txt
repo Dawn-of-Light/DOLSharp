@@ -1,0 +1,97 @@
+
+# HOUSING
+House.DBHousePermissions.AccessLevel:			Access level {0}
+House.Edit.NotEnoughMoney:				Vous n'avez pas assez d'argent pour faire cela!
+House.Edit.PayForChanges:				Vous payez {0} pour les modifications.
+House.Enter.EnteredHouse:				Vous etes entre dans la maison numero {0}.
+House.Exit.LeftHouse:					Vous avez quitte la maison numero {0}.
+House.SendHouseInfo.DoorMaterial:			-Porte: {0}	
+House.SendHouseInfo.ExteriorMaterials:			Exterior Materials:	
+House.SendHouseInfo.ExteriorUpgrades:			Exterior Upgrades:	
+House.SendHouseInfo.HouseOwner:				{0}'s house
+House.SendHouseInfo.IndoorGuildBanner:			-Bannieres: {0}	
+House.SendHouseInfo.IndoorGuildShield:			-Boucliers: {0}	
+House.SendHouseInfo.InteriorCarpets:			Tapis Interieur:	
+House.SendHouseInfo.InteriorUpgrades:			Ajouts Interieur:	
+House.SendHouseInfo.Level:				Niveau: {0}
+House.SendHouseInfo.Lockbox:				Lockbox: {0}
+House.SendHouseInfo.Lotnum:				Lot numero: {0}
+House.SendHouseInfo.MaxLockbox:				Max in Lockbox: {0}
+House.SendHouseInfo.OutdoorGuildBanner:			-Bannieres: {0}	
+House.SendHouseInfo.OutdoorGuildShield:			-Boucliers: {0}	
+House.SendHouseInfo.Owner:				Proprietaire: {0}
+House.SendHouseInfo.Owners:				Proprietaires:
+House.SendHouseInfo.Porch:				Porche: 
+House.SendHouseInfo.PorchEnabled:			-Enabled: {0}	
+House.SendHouseInfo.PorchMaterial:			-Porche: {0}	
+House.SendHouseInfo.PorchRoofColor:			-Couleur: {0}	
+House.SendHouseInfo.RentalPrice:			Loyer: {0}	
+House.SendHouseInfo.RentDueIn:				Date du paiement : {0} jours, {1} heures
+House.SendHouseInfo.RoofMaterial:			-Toit: {0}	
+House.SendHouseInfo.Rug1Color:				-Couleur 1: {0}
+House.SendHouseInfo.Rug2Color:				-Couleur 2: {0}
+House.SendHouseInfo.Rug3Color:				-Couleur 3: {0}
+House.SendHouseInfo.Rug4Color:				-Couleur 4: {0}
+House.SendHouseInfo.TrussMaterial:			-Support: {0}	
+House.SendHouseInfo.WallMaterial:			-Murs: {0}	
+House.SendHouseInfo.WindowMaterial:			-Volets: {0}	
+
+
+HouseEnterLeave.TooFarAway:					Vous etes trop loin pour entrer dans la maison {0}.
+HouseEnterLeave.CantEnter:					Vous ne pouvez pas entrer dans la maison {0}.
+
+HousingDecorationRotate.Rotated:			Objet d'interieur pivote de {0} degres à {1} degres.
+
+
+# /Housing
+Scripts.Player.Housing.BadShieldBanner:			Ce n'est pas un objet ou une banniere valide.
+Scripts.Player.Housing.CantBeSold:				Cet objet ne peut etre vendu!
+Scripts.Player.Housing.CarpetsRemoved:			Votre tapis a ete retire.
+Scripts.Player.Housing.ClearHookPoint:			Voulez vous retirer l'objet du point d'ancrage ?
+Scripts.Player.Housing.EnteredHouse:			Vous entrez dans la maison numero {0}.
+Scripts.Player.Housing.GardenItemPlaced:		Objets du jardin places. {0} places restante.
+Scripts.Player.Housing.GardenItemPlacedName:	Vous deposez l'objet {0} dans votre jardin.
+Scripts.Player.Housing.GardenMaxObjects:		Vous avez depose un nombre de 30 objets dans votre jardin. Vous n'avez plus de place.
+Scripts.Player.Housing.GuildNowOwns:			[Guild] {0} possede maintenant une maison de guilde de {1}!
+Scripts.Player.Housing.HookPointAdded:			Cet objet a ete ajoute à votre maison.
+Scripts.Player.Housing.HookPointAlready:		Cet ancrage possede dejà un objet!
+Scripts.Player.Housing.HookPointCleared:		Le point d'ancrage est maintenant vide.
+Scripts.Player.Housing.HookPointCloser:			Tenez vous le plus pres possible du lot desire et appuyez sur "accepter".
+Scripts.Player.Housing.HookPointID:				L'id du point d'ancrage est : {0}
+Scripts.Player.Housing.HookPointLogged:			La position du point d'ancrage {0} est dans error.log !
+Scripts.Player.Housing.HookPointLogLoc:			Afficher les points d'ancrage ?
+Scripts.Player.Housing.HookPointNot:			Ce n'est pas un item utilisable sur les ancrages!
+Scripts.Player.Housing.HookPointNotPlaced:		L'objet n'a pas ete place sur cet ancrage.
+Scripts.Player.Housing.HouseUseMaterial:		Utilisez shift+clic-droit dans votre maison pour changer l'apparence de votre maison.
+Scripts.Player.Housing.HouseUseMaterial:		Utilisez shift+clic-droit dans votre maison pour changer vos tapis.
+Scripts.Player.Housing.IndoorFloorPlaced:		Vous avez place {0} à l'etage de votre maison.
+Scripts.Player.Housing.IndoorItemPlaced:		Objet interieur place. {0} place restante.
+Scripts.Player.Housing.IndoorMaxItems:			Vous avez actuellement place {0} objets dans votre maison. Vous ne pouvez plus en placer.
+Scripts.Player.Housing.IndoorWallPlaced:		Vous venez de placer {0} sur le mur de votre maison.
+Scripts.Player.Housing.InteriorBannersAdded:		Votre banniere de guilde interieure a ete changee.
+Scripts.Player.Housing.InteriorBannersRemoved:		Votre banniere de guilde interieure a ete retiree.
+Scripts.Player.Housing.InteriorShieldsAdded:		Votre embleme de guilde interieur a ete change.
+Scripts.Player.Housing.InteriorShieldsRemoved:		Votre embleme de guilde interieur a ete retire.
+Scripts.Player.Housing.LeftHouse:			Sortie de la maison {0}.
+Scripts.Player.Housing.LotAlready:			Vous possedez dejà un autre lot ou une maison (numero {0})
+Scripts.Player.Housing.LotBought:			Vous venez d'acheter ce lot pour {0} !
+Scripts.Player.Housing.LotCost:				Il peut etre achete pour {0}.
+Scripts.Player.Housing.LotNotItem:			Ce n'est pas un acte de propriete valide.
+Scripts.Player.Housing.LotNotYours:			Vous ne possedez pas ce lot!
+Scripts.Player.Housing.LotOffer:			Voulez-vous acheter ce lot? Il coûte {0}.
+Scripts.Player.Housing.LotTargeted:			Vous selectionnez le lot numero {0}.
+Scripts.Player.Housing.NotFloorObject:			Cet objet ne peut pas etre place à l'etage !
+Scripts.Player.Housing.NotHookPoint:			Cet objet ne peut pas etre place sur l'ancrage !
+Scripts.Player.Housing.NotWallObject:			Cet objet ne peut pas etre place sur le mur !
+Scripts.Player.Housing.OutdoorBannersAdded:		Votre banniere de guilde exterieure a ete changee.
+Scripts.Player.Housing.OutdoorBannersRemoved:		Votre banniere de guilde exterieure a ete retiree.
+Scripts.Player.Housing.OutdoorShieldsAdded:		Votre embleme de guilde exterieur a ete change.
+Scripts.Player.Housing.OutdoorShieldsRemoved:		Votre embleme de guilde exterieur a ete retire.
+Scripts.Player.Housing.PaidChanges:			Vous payez {0} pour effectuer les changements.
+Scripts.Player.Housing.PaidNotEnough:			Vous n'avez pas assez d'argent pour faire cela !
+Scripts.Player.Housing.PorchAlready:			Cette maison a dejà un porche !
+Scripts.Player.Housing.PorchNone:			Cette maison ne contient pas de porche !
+Scripts.Player.Housing.PorchNotItem:			Ce n'est pas un item pour le porche !
+Scripts.Player.Housing.TransferToGuild:			Vous voulez transferer cette maison à {0} ?
+
+

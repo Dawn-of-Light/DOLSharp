@@ -18,7 +18,7 @@
  */
 
 using System;
-using DOL.Database2;
+using DOL.Database;
 using DOL.GS.Effects;
 
 namespace DOL.GS.RealmAbilities

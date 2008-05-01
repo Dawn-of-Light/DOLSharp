@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using DOL.Database2;
+using DOL.Database;
 
 namespace DOL.GS.RealmAbilities
 {

@@ -33,7 +33,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -227,7 +227,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region Item Declarations
 
-			sealed_pouch = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "sealed_pouch");
+			sealed_pouch = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sealed_pouch");
 			if (sealed_pouch == null)
 			{
 				if (log.IsWarnEnabled)
@@ -248,13 +248,14 @@ namespace DOL.GS.Quests.Albion
 				sealed_pouch.Quality = 100;
 				sealed_pouch.Weight = 12;
 
-                item.WriteToDatabase = SAVE_INTO_DATABASE;
+				if (SAVE_INTO_DATABASE)
+					GameServer.Database.AddNewObject(sealed_pouch);
 			}
 // end item
 
 			ItemTemplate item = null;
 
-			WizardEpicBoots = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "WizardEpicBoots");
+			WizardEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WizardEpicBoots");
 			if (WizardEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -297,7 +298,7 @@ namespace DOL.GS.Quests.Albion
 			}
 //end item
 			//Bernor's Numinous Coif 
-			WizardEpicHelm = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "WizardEpicHelm");
+			WizardEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WizardEpicHelm");
 			if (WizardEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -332,13 +333,15 @@ namespace DOL.GS.Quests.Albion
 
 				item.Bonus4 = 8;
 				item.Bonus4Type = (int) eResist.Spirit;
-                item.WriteToDatabase = SAVE_INTO_DATABASE;
+
+				if (SAVE_INTO_DATABASE)
+					GameServer.Database.AddNewObject(item);
 
 				WizardEpicHelm = item;
 			}
 //end item
 			//Bernor's Numinous Gloves 
-			WizardEpicGloves = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "WizardEpicGloves");
+			WizardEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WizardEpicGloves");
 			if (WizardEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -374,13 +377,14 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4 = 8;
 				item.Bonus4Type = (int) eResist.Heat;
 
-                item.WriteToDatabase = SAVE_INTO_DATABASE;
+				if (SAVE_INTO_DATABASE)
+					GameServer.Database.AddNewObject(item);
 
 				WizardEpicGloves = item;
 			}
 
 			//Bernor's Numinous Hauberk 
-			WizardEpicVest = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "WizardEpicVest");
+			WizardEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WizardEpicVest");
 			if (WizardEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -412,13 +416,15 @@ namespace DOL.GS.Quests.Albion
 
 				item.Bonus3 = 24;
 				item.Bonus3Type = (int) eProperty.MaxHealth;
-                item.WriteToDatabase = SAVE_INTO_DATABASE;
+
+				if (SAVE_INTO_DATABASE)
+					GameServer.Database.AddNewObject(item);
 
 				WizardEpicVest = item;
 
 			}
 			//Bernor's Numinous Legs 
-			WizardEpicLegs = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "WizardEpicLegs");
+			WizardEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WizardEpicLegs");
 			if (WizardEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -450,13 +456,15 @@ namespace DOL.GS.Quests.Albion
 
 				item.Bonus3 = 8;
 				item.Bonus3Type = (int) eResist.Energy;
-                item.WriteToDatabase = SAVE_INTO_DATABASE;
+
+				if (SAVE_INTO_DATABASE)
+					GameServer.Database.AddNewObject(item);
 
 				WizardEpicLegs = item;
 
 			}
 			//Bernor's Numinous Sleeves 
-			WizardEpicArms = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "WizardEpicArms");
+			WizardEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WizardEpicArms");
 			if (WizardEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -489,13 +497,14 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus3 = 16;
 				item.Bonus3Type = (int) eStat.INT;
 
-                item.WriteToDatabase = SAVE_INTO_DATABASE;
+				if (SAVE_INTO_DATABASE)
+					GameServer.Database.AddNewObject(item);
 
 				WizardEpicArms = item;
 
 			}
 //Minstrel Epic Sleeves End
-			MinstrelEpicBoots = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "MinstrelEpicBoots");
+			MinstrelEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "MinstrelEpicBoots");
 			if (MinstrelEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -531,14 +540,15 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4 = 8;
 				item.Bonus4Type = (int) eResist.Cold;
 
-                item.WriteToDatabase = SAVE_INTO_DATABASE;
+				if (SAVE_INTO_DATABASE)
+					GameServer.Database.AddNewObject(item);
 
 				MinstrelEpicBoots = item;
 
 			}
 //end item
 			//of Coruscating Harmony  Coif 
-			MinstrelEpicHelm = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "MinstrelEpicHelm");
+			MinstrelEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "MinstrelEpicHelm");
 			if (MinstrelEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -574,14 +584,15 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4 = 8;
 				item.Bonus4Type = (int) eResist.Energy;
 
-                item.WriteToDatabase = SAVE_INTO_DATABASE;
+				if (SAVE_INTO_DATABASE)
+					GameServer.Database.AddNewObject(item);
 
 				MinstrelEpicHelm = item;
 
 			}
 //end item
 			//of Coruscating Harmony  Gloves 
-			MinstrelEpicGloves = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "MinstrelEpicGloves");
+			MinstrelEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "MinstrelEpicGloves");
 			if (MinstrelEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -617,13 +628,14 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4 = 8;
 				item.Bonus4Type = (int) eResist.Heat;
 
-                item.WriteToDatabase = SAVE_INTO_DATABASE;
+				if (SAVE_INTO_DATABASE)
+					GameServer.Database.AddNewObject(item);
 
 				MinstrelEpicGloves = item;
 
 			}
 			//of Coruscating Harmony  Hauberk 
-			MinstrelEpicVest = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "MinstrelEpicVest");
+			MinstrelEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "MinstrelEpicVest");
 			if (MinstrelEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -658,13 +670,15 @@ namespace DOL.GS.Quests.Albion
 
 				item.Bonus4 = 6;
 				item.Bonus4Type = (int) eResist.Energy;
-                item.WriteToDatabase = SAVE_INTO_DATABASE;
+
+				if (SAVE_INTO_DATABASE)
+					GameServer.Database.AddNewObject(item);
 
 				MinstrelEpicVest = item;
 
 			}
 			//of Coruscating Harmony  Legs 
-			MinstrelEpicLegs = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "MinstrelEpicLegs");
+			MinstrelEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "MinstrelEpicLegs");
 			if (MinstrelEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -700,13 +714,14 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4 = 8;
 				item.Bonus4Type = (int) eResist.Heat;
 
-                item.WriteToDatabase = SAVE_INTO_DATABASE;
+				if (SAVE_INTO_DATABASE)
+					GameServer.Database.AddNewObject(item);
 
 				MinstrelEpicLegs = item;
 
 			}
 			//of Coruscating Harmony  Sleeves 
-			MinstrelEpicArms = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "MinstrelEpicArms");
+			MinstrelEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "MinstrelEpicArms");
 			if (MinstrelEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -742,12 +757,13 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4 = 8;
 				item.Bonus4Type = (int) eResist.Body;
 
-                item.WriteToDatabase = SAVE_INTO_DATABASE;
+				if (SAVE_INTO_DATABASE)
+					GameServer.Database.AddNewObject(item);
 
 				MinstrelEpicArms = item;
 			}
 
-			SorcerorEpicBoots = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "SorcerorEpicBoots");
+			SorcerorEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SorcerorEpicBoots");
 			if (SorcerorEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -783,14 +799,15 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4 = 8;
 				item.Bonus4Type = (int) eResist.Energy;
 
-                item.WriteToDatabase = SAVE_INTO_DATABASE;
+				if (SAVE_INTO_DATABASE)
+					GameServer.Database.AddNewObject(item);
 
 				SorcerorEpicBoots = item;
 
 			}
 //end item
 			//of Mental Acuity Coif 
-			SorcerorEpicHelm = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "SorcerorEpicHelm");
+			SorcerorEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SorcerorEpicHelm");
 			if (SorcerorEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -826,14 +843,15 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4 = 8;
 				item.Bonus4Type = (int) eResist.Thrust;
 
-                item.WriteToDatabase = SAVE_INTO_DATABASE;
+				if (SAVE_INTO_DATABASE)
+					GameServer.Database.AddNewObject(item);
 
 				SorcerorEpicHelm = item;
 
 			}
 //end item
 			//of Mental Acuity Gloves 
-			SorcerorEpicGloves = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "SorcerorEpicGloves");
+			SorcerorEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SorcerorEpicGloves");
 			if (SorcerorEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -876,7 +894,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of Mental Acuity Hauberk 
-			SorcerorEpicVest = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "SorcerorEpicVest");
+			SorcerorEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SorcerorEpicVest");
 			if (SorcerorEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -916,7 +934,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of Mental Acuity Legs 
-			SorcerorEpicLegs = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "SorcerorEpicLegs");
+			SorcerorEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SorcerorEpicLegs");
 			if (SorcerorEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -959,7 +977,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of Mental Acuity Sleeves 
-			SorcerorEpicArms = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "SorcerorEpicArms");
+			SorcerorEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SorcerorEpicArms");
 			if (SorcerorEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1124,7 +1142,7 @@ namespace DOL.GS.Quests.Albion
 				// Nag to finish quest
 				if (quest != null)
 				{
-					Ferowl.SayTo(player, "Where you able to [fulfill] your given task? Albions fate lies in you hands. ");
+					Ferowl.SayTo(player, "Were you able to [fulfill] your given task? Albions fate lies in you hands. ");
 				}
 				else
 				{

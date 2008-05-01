@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections;
-using DOL.Database2;
+using DOL.Database;
 using DOL.GS.Styles;
 using DOL.GS.Keeps;
 
@@ -127,6 +127,14 @@ namespace DOL.GS.ServerRules
 		/// <param name="item"></param>
 		/// <returns></returns>
 		bool IsAllowedToCraft(GamePlayer player, ItemTemplate item);
+
+		/// <summary>
+		/// Is this player allowed to move to this region
+		/// </summary>
+		/// <param name="player">The player trying to move</param>
+		/// <param name="region">The region trying to be moved to</param>
+		/// <returns></returns>
+		bool IsAllowedToZone(GamePlayer player, Region region);
 
 		/// <summary>
 		/// Short description of server rules
@@ -279,5 +287,20 @@ namespace DOL.GS.ServerRules
 		/// <param name="lord">The lord that was killed</param>
 		/// <param name="killer">The lord's killer</param>
 		void ResetKeep(GuardLord lord, GameObject killer);
+
+		/// <summary>
+		/// Is the player allowed to generate news
+		/// </summary>
+		/// <param name="type">the type of news</param>
+		/// <param name="player">the player</param>
+		/// <returns>true if the player is allowed to generate news</returns>
+		bool CanGenerateNews(GamePlayer player);
+
+		/// <summary>
+		/// Is the player allowed to /level
+		/// </summary>
+		/// <param name="player">The player</param>
+		/// <returns>True if the player can use /level</returns>
+		bool CountsTowardsSlashLevel(Character player);
 	}
 }

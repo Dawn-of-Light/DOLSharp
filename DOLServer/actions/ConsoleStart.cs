@@ -114,10 +114,18 @@ namespace DOL.DOLServer.Actions
 
 				switch (line.ToLower())
 				{
-					case "exit": run = false; break;
-					case "stacktrace": log.Debug(PacketProcessor.GetConnectionThreadpoolStacks()); break;
+					case "exit":
+						run = false;
+						break;
+					case "stacktrace":
+						log.Debug(PacketProcessor.GetConnectionThreadpoolStacks());
+						break;
+					case "clear":
+						Console.Clear();
+						break;
 					default:
-						if (line.Length <= 0) break;
+						if (line.Length <= 0)
+							break;
 						if (line[0] == '/')
 						{
 							line = line.Remove(0, 1);

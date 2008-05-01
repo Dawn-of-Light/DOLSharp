@@ -19,15 +19,15 @@
 using System;
 using DOL.GS.PacketHandler;
 using DOL.GS;
-using DOL.Database2;
+using DOL.Database;
 
 namespace DOL.GS.Commands
 {
 	[CmdAttribute(
-	"&gmrelicpad", //command to handle
-	ePrivLevel.GM, //minimum privelege level
-	"Create a new RelicPad", "usage: /gmrelic magic/strength \"Name\" <realm>")] //command description
-
+		"&gmrelicpad",
+		ePrivLevel.GM,
+		"GMCommands.GMRelicPad.Description",
+		"GMCommands.GMRelicPad.Usage")]
 	public class GMRelicPadCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)

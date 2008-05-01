@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using DOL.GS;
-using DOL.Database2;
+using DOL.Database;
 using System.Collections;
 using DOL.GS.Spells;
 using log4net;

@@ -1,6 +1,6 @@
 using System;
 
-using DOL.Database2;
+using DOL.Database;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 
@@ -37,12 +37,7 @@ namespace DOL.GS.Keeps
 
 		public static void SendLevelChangeMessage(AbstractGameKeep keep)
 		{
-			int amount = 0;
-			if (keep is GameKeep)
-				amount = GameKeep.ClaimBountyPointCost[keep.Level];
-			else amount = GameKeepTower.ClaimBountyPointCost[keep.Level];
-
-			string message = "Your guild's keep " + keep.Name + " is now level " + keep.Level + " it will now cost " + amount + " bounty points per hour";
+			string message = "Your guild's keep " + keep.Name + " is now level " + keep.Level;
 			if (keep.Level != keep.TargetLevel && keep.TargetLevel != 0)
 				message += ", it is on the way to level " + keep.TargetLevel;
 			SendMessageToGuild(message, keep.Guild);

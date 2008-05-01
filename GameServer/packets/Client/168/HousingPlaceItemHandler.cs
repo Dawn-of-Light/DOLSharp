@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Language;
 using DOL.GS.Housing;
 using System.Reflection;
@@ -30,7 +30,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	public class HousingPlaceItemHandler : IPacketHandler
 	{
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
+		private const string DEED_WEAK = "deedItem";
 		private int position;
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
@@ -44,7 +44,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			int rotation	= packet.ReadByte();		// garden items only
 			short xpos	= (short)packet.ReadShort();	// x for inside objs
 			short ypos	= (short)packet.ReadShort();	// y for inside objs.
-
 			//log.Info("U1: " + unknow1 + " - U2: " + unknow2);
 
 			House house = (House) HouseMgr.GetHouse(client.Player.CurrentRegionID,housenumber);
@@ -80,10 +79,30 @@ namespace DOL.GS.PacketHandler.Client.v168
 			InventoryItem orgitem = client.Player.Inventory.GetItem((eInventorySlot)slot);
 			if (orgitem == null) return 1;
 
-            if (orgitem.Name == "House removal deed")
-            {
-                client.Player.Inventory.RemoveItem(orgitem);
+            if (orgitem.Id_nb == "house_removal_deed")
+            {                
+                client.Out.SendInventorySlotsUpdate(null);
+                if (HouseMgr.GetRealHouseByPlayer(client.Player) != house)
+                {
+                    client.Player.Out.SendMessage("You may not remove Houses that you don't own", eChatType.CT_System, eChatLoc.CL_SystemWindow);                   
+                    return 1;
+                }
+                client.Player.TempProperties.setProperty(DEED_WEAK, new WeakRef(orgitem));                
                 client.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HouseRemoveOffer"), new CustomDialogResponse(HouseRemovalDialogue));
+                return 0;
+            }
+			if (orgitem.Id_nb.Contains("cottage_deed") || orgitem.Id_nb.Contains("house_deed") || orgitem.Id_nb.Contains("villa_deed") || orgitem.Id_nb.Contains("mansion_deed"))
+            {
+                client.Out.SendInventorySlotsUpdate(null);
+                if (HouseMgr.GetRealHouseByPlayer(client.Player) != house)
+                {
+                    client.Player.Out.SendMessage("You may not change other peoples houses", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    
+                    return 1;
+                }
+                client.Player.TempProperties.setProperty(DEED_WEAK, new WeakRef(orgitem)); 
+                client.Player.Out.SendMessage("Warning:\n This will remove all items from your current house!", eChatType.CT_System, eChatLoc.CL_PopupWindow);                
+                client.Player.Out.SendCustomDialog("Are you sure you want to upgrade your House?", new CustomDialogResponse(HouseUpgradeDialogue));
                 return 0;
             }
             if (orgitem.Name == "deed of guild transfer" 
@@ -129,30 +148,31 @@ namespace DOL.GS.PacketHandler.Client.v168
                 return 0;
             }
 
-            if (orgitem.Object_Type == 49) // Garden items 
-                method = 1;
-            else if (orgitem.Id_nb == "porch_deed" || orgitem.Id_nb == "porch_remove_deed")
-                method = 4;
-            else if (orgitem.Object_Type == 50) // Indoor wall items
-                method = 2;
-            else if (orgitem.Object_Type == 51) // Indoor floor items
-                method = 3;
-            else if (orgitem.Object_Type >= 59 && orgitem.Object_Type <= 64) // Outdoor Roof/Wall/Door/Porch/Wood/Shutter/awning Material item type
-            {
-                client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HouseUseMaterials"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                return 1;
-            }
-            else if (orgitem.Object_Type == 56 || orgitem.Object_Type == 52 || (orgitem.Object_Type >= 69 && orgitem.Object_Type <= 71)) // Indoor carpets 1-4
-            {
-                client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HouseUseCarpets"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                return 1;
-            }
-            else if (orgitem.Object_Type == 57 || orgitem.Object_Type == 58  // Exterior banner/shield
-                || orgitem.Object_Type == 66 || orgitem.Object_Type == 67) // Interior banner/shield
-                method = 6;
-            else if (orgitem.Object_Type == 53 || orgitem.Object_Type == 54 || orgitem.Object_Type == 55 || orgitem.Object_Type == 68)
-                method = 5;
-
+			if (orgitem.Object_Type == 49) // Garden items 
+				method = 1;
+			else if (orgitem.Id_nb == "porch_deed" || orgitem.Id_nb == "porch_remove_deed")
+				method = 4;
+			else if (orgitem.Object_Type == 50) // Indoor wall items
+				method = 2;
+			else if (orgitem.Object_Type == 51) // Indoor floor items
+				method = 3;
+			else if (orgitem.Object_Type >= 59 && orgitem.Object_Type <= 64) // Outdoor Roof/Wall/Door/Porch/Wood/Shutter/awning Material item type
+			{
+				client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HouseUseMaterials"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return 1;
+			}
+			else if (orgitem.Object_Type == 56 || orgitem.Object_Type == 52 || (orgitem.Object_Type >= 69 && orgitem.Object_Type <= 71)) // Indoor carpets 1-4
+			{
+				client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HouseUseCarpets"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return 1;
+			}
+			else if (orgitem.Object_Type == 57 || orgitem.Object_Type == 58  // Exterior banner/shield
+				|| orgitem.Object_Type == 66 || orgitem.Object_Type == 67) // Interior banner/shield
+				method = 6;
+			else if (orgitem.Object_Type == 53 || orgitem.Object_Type == 55 || orgitem.Object_Type == 68)
+				method = 5;
+			else if (orgitem.Object_Type == 54)
+				method = 7;
             int pos;
 			switch (method)
 			{
@@ -233,6 +253,8 @@ namespace DOL.GS.PacketHandler.Client.v168
                     {
                         ProperRotation = 0;
                     }
+					if (orgitem.Object_Type == 50)
+                        ProperRotation = 360;
                     iitem.Rotation = ProperRotation;
 
 					iitem.Size = 100; //? dont know how this is defined. maybe DPS_AF or something.
@@ -245,7 +267,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//its a housing item, so lets take it!
 						client.Player.Inventory.RemoveItem(orgitem);
 						//set right base item, so we can recreate it on take.
-						iitem.BaseItem = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", orgitem.Id_nb);
+						iitem.BaseItem = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), orgitem.Id_nb);
 					}
 
 					DBHouseIndoorItem idbitem = iitem.CreateDBIndoorItem(housenumber);
@@ -334,10 +356,8 @@ namespace DOL.GS.PacketHandler.Client.v168
                                     return 1;
                                 }
                             }
-
                             GameServer.Database.AddNewObject(point);
-
-                            house.FillHookpoint(orgitem, (uint)position, orgitem.Id_nb);
+                            GameObject obj = house.FillHookpoint(orgitem, (uint)position, orgitem.Id_nb);
                             house.HousepointItems[point.Position] = point;
                             client.Player.Inventory.RemoveItem(orgitem);
                             client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointAdded"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -385,6 +405,21 @@ namespace DOL.GS.PacketHandler.Client.v168
                     house.SaveIntoDatabase();
                     house.SendUpdate();
                     break;
+				case 7: // House vault.
+					int vaultIndex = house.GetFreeVaultNumber();
+					if (vaultIndex < 0)
+					{
+						client.Player.Out.SendMessage("You can't add any more vaults to this house!",
+							eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendInventorySlotsUpdate(new int[] { slot });
+						return 1;
+					}
+					GameHouseVault houseVault = new GameHouseVault(orgitem, vaultIndex);
+					houseVault.Attach(house, (uint)position, (ushort)((client.Player.Heading + 2048) % 4096));
+					client.Player.Inventory.RemoveItem(orgitem);
+					house.SaveIntoDatabase();
+					house.SendUpdate();
+					return 0;
 				default:
 					break;
 			}
@@ -421,9 +456,42 @@ namespace DOL.GS.PacketHandler.Client.v168
             if (response != 0x01)
                 return;
 
-            House house = HouseMgr.GetHouse((HouseMgr.GetHouseNumberByPlayer(player)));
+
+            WeakReference itemWeak = (WeakReference)player.TempProperties.getObjectProperty(DEED_WEAK, new WeakRef(null));
+            player.TempProperties.removeProperty(DEED_WEAK);
+            InventoryItem item = (InventoryItem)itemWeak.Target;
+
+            if (item == null || item.SlotPosition == (int)eInventorySlot.Ground
+                || item.OwnerID == null || item.OwnerID != player.InternalID)
+            {
+                player.Out.SendMessage("You need a House removal Deed for this.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+
+            player.Inventory.RemoveItem(item);
+            House house = HouseMgr.GetHouse((HouseMgr.GetHouseNumberByPlayer(player)));            
             HouseMgr.RemoveHouse(house);
             player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Housing.HouseRemoved"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+        }
+        protected static void HouseUpgradeDialogue(GamePlayer player, byte response)
+        {
+            if (response != 0x01)
+                return;
+
+
+            WeakReference itemWeak = (WeakReference)player.TempProperties.getObjectProperty(DEED_WEAK, new WeakRef(null));
+            player.TempProperties.removeProperty(DEED_WEAK);
+            InventoryItem item = (InventoryItem)itemWeak.Target;
+
+            if (item == null || item.SlotPosition == (int)eInventorySlot.Ground
+                || item.OwnerID == null || item.OwnerID != player.InternalID)
+            {
+                player.Out.SendMessage("This does not work without a House Deed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+            House house = HouseMgr.GetHouse((HouseMgr.GetHouseNumberByPlayer(player)));
+            HouseMgr.UpgradeHouse(house, item);
+            player.Inventory.RemoveItem(item);
         }
     }
 }

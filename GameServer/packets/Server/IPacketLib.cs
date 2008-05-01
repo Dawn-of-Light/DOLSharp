@@ -23,7 +23,7 @@ using DOL.GS;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
 using DOL.GS.Quests;
-using DOL.Database2;
+using DOL.Database;
 
 namespace DOL.GS.PacketHandler
 {
@@ -431,6 +431,7 @@ namespace DOL.GS.PacketHandler
 		void SendUpdateMaxSpeed();
 		void SendCombatAnimation(GameObject attacker, GameObject defender, ushort weaponID, ushort shieldID, int style, byte stance, byte result, byte targetHealthPercent);
 		void SendStatusUpdate();
+		void SendStatusUpdate(byte sittingFlag);
 		void SendSpellCastAnimation(GameLiving spellCaster, ushort spellID, ushort castingTime);
 		void SendSpellEffectAnimation(GameObject spellCaster, GameObject spellTarget,ushort spellid, ushort boltTime, bool noSound, byte success);
 		void SendRiding(GameObject rider, GameObject steed, bool dismount);
@@ -451,6 +452,8 @@ namespace DOL.GS.PacketHandler
 		void SendInventoryItemsUpdate(ICollection itemsToUpdate);
 		void SendInventorySlotsUpdate(ICollection slots);
 		void SendInventoryItemsUpdate(byte preAction, ICollection itemsToUpdate);
+		void SendInventoryItemsUpdate(IDictionary<int, InventoryItem> updateItems, byte windowType);
+		void SendInventoryItemsPartialUpdate(IDictionary<int, InventoryItem> items, byte windowType);
 		void SendDoorState(IDoor door);
 		void SendMerchantWindow(MerchantTradeItems itemlist, eMerchantWindowType windowType);
 		void SendTradeWindow();
@@ -526,6 +529,7 @@ namespace DOL.GS.PacketHandler
 		void SendHousePayRentDialog(string title);
 		void SendToggleHousePoints(House house);
 		void SendRentReminder(House house);
+		void SendMarketExplorerWindow(List<InventoryItem> items, byte page, byte maxpage);
 		void SendMarketExplorerWindow();
 		void SendConsignmentMerchantMoney(ushort mithril, ushort plat, ushort gold, byte silver, byte copper);
 
@@ -539,6 +543,8 @@ namespace DOL.GS.PacketHandler
 		void SendListCastersSpell();
 		void SendCrash(string str);
 		void SendXFireInfo(byte flag);
+        void SendMinotaurRelicWindow(GamePlayer player, int spell, bool flag);
+        void SendMinotaurRelicBarUpdate(GamePlayer player, int xp);
 		/// <summary>
 		/// The bow prepare animation
 		/// </summary>

@@ -20,7 +20,7 @@ using System;
 using System.Reflection;
 using System.Collections;
 using System.Text;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Events;
 
 namespace DOL.GS.Keeps
@@ -250,7 +250,6 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// load component from db object
 		/// </summary>
-        /*
 		public void LoadFromDatabase(DBKeepComponent component, AbstractGameKeep keep)
 		{
 			Region myregion = WorldMgr.GetRegion((ushort)keep.Region);
@@ -289,9 +288,13 @@ namespace DOL.GS.Keeps
 			this.RepairedHealth = this.MaxHealth;
 			StartHealthRegeneration();
 		}
-        */
+
 		public void LoadPositions()
 		{
+			//bgs before thidranki we wont load positions
+			if (CurrentRegionID != 163 && CurrentRegionID < 238)
+				return;
+
 			this.Positions.Clear();
 
 			string query = "`ComponentSkin` = '" + this.Skin + "'";
@@ -423,7 +426,7 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// save component in DB
 		/// </summary>
-		/*public override void SaveIntoDatabase()
+		public override void SaveIntoDatabase()
 		{
 			DBKeepComponent obj = null;
 			bool New = false;
@@ -452,7 +455,7 @@ namespace DOL.GS.Keeps
 				GameServer.Database.SaveObject(obj);
 			}
 			base.SaveIntoDatabase();
-		}*/
+		}
 
 		/// <summary>
 		/// broadcast life of keep component

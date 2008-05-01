@@ -32,7 +32,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -42,7 +42,7 @@ using log4net;
  *       DOL.GS.Quests.Hibernia
  * Also this is the name that will show up in the database as QuestName
  * so setting good values here will result in easier to read and cleaner
- * GS Code
+ * Database Code
  */
 
 namespace DOL.GS.Quests.Albion
@@ -177,7 +177,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			necklaceOfDoppelganger = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "necklace_of_the_doppelganger");
+			necklaceOfDoppelganger = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "necklace_of_the_doppelganger");
 			if (necklaceOfDoppelganger == null)
 			{
 				if (log.IsWarnEnabled)
@@ -212,7 +212,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			fairyPlans = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "ire_fairy_plans");
+			fairyPlans = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ire_fairy_plans");
 			if (fairyPlans == null)
 			{
 				if (log.IsWarnEnabled)
@@ -237,7 +237,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsBoots = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_studded_boots");
+			recruitsBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_boots");
 			if (recruitsBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -287,7 +287,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsQuiltedBoots = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_quilted_boots");
+			recruitsQuiltedBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_boots");
 			if (recruitsQuiltedBoots == null)
 			{
 				recruitsQuiltedBoots = new ItemTemplate();

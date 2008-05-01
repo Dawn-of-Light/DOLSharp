@@ -207,7 +207,7 @@ namespace DOL.GS.Commands
                                 client.Out.SendMessage(text.ToString(), eChatType.CT_BattleGroup, eChatLoc.CL_SystemWindow);
                             }
 
-                            foreach (GamePlayer gpl in grouped.Group)
+                            foreach (GamePlayer gpl in grouped.Group.GetPlayersInTheGroup())
                             {
                                 if (mybattlegroup.IsInTheBattleGroup(gpl))
                                     ListedPeople.Add(gpl);
@@ -285,7 +285,7 @@ namespace DOL.GS.Commands
                            client.Out.SendMessage(text.ToString(), eChatType.CT_BattleGroup, eChatLoc.CL_SystemWindow);
                        }
 
-                       foreach (GamePlayer gpl in grouped.Group)
+                       foreach (GamePlayer gpl in grouped.Group.GetPlayersInTheGroup())
                        {
                            if (mybattlegroup.IsInTheBattleGroup(gpl))
                                ListedPeople.Add(gpl);

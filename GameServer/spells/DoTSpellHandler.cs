@@ -46,6 +46,17 @@ namespace DOL.GS.Spells
 		}
 
 		/// <summary>
+		/// There is no area variance for dots
+		/// </summary>
+		/// <param name="distance"></param>
+		/// <param name="radius"></param>
+		/// <returns></returns>
+		protected override double CalculateAreaVariance(int distance, int radius)
+		{
+			return 0;
+		}
+
+		/// <summary>
 		/// Determines wether this spell is compatible with given spell
 		/// and therefore overwritable by better versions
 		/// spells that are overwritable cannot stack
@@ -54,11 +65,7 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public override bool IsOverwritable(GameSpellEffect compare)
 		{
-			if (Spell.EffectGroup != 0)
-				return Spell.EffectGroup == compare.Spell.EffectGroup;
-			if (base.IsOverwritable(compare) == false) return false;
-			if (compare.Spell.Duration != Spell.Duration) return false;
-			return true;
+			return Spell.SpellType == compare.Spell.SpellType && Spell.DamageType == compare.Spell.DamageType && SpellLine.IsBaseLine == compare.SpellHandler.SpellLine.IsBaseLine;
 		}
 
 		/// <summary>

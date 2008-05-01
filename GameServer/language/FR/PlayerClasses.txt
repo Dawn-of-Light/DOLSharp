@@ -1,0 +1,2 @@
+# /PlayerClass
+PlayerClass.OnLevelUp.Autotrain:			Vous pouvez vous specialiser gratuitement en {0} jusqu'au niveau {1}.

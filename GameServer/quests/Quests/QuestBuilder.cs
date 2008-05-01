@@ -19,7 +19,7 @@
 using System;
 using System.Text;
 using System.Reflection;
-using DOL.Database2;
+using DOL.Database;
 
 namespace DOL.GS.Quests
 {

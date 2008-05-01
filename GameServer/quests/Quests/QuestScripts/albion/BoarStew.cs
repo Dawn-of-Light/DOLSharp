@@ -26,7 +26,7 @@
 
 using System;
 using System.Reflection;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -36,7 +36,7 @@ using log4net;
  *       DOL.GS.Quests.Hibernia
  * Also this is the name that will show up in the database as QuestName
  * so setting good values here will result in easier to read and cleaner
- * GS Code
+ * Database Code
  */
 
 namespace DOL.GS.Quests.Albion

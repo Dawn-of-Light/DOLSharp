@@ -178,8 +178,7 @@ namespace DOL.GS.Spells
 
 			summoned.AddToWorld();
 
-			GameEventMgr.AddHandler(player, GamePlayerEvent.CommandNpcRelease, new DOLEventHandler(OnNpcReleaseCommand));
-			GameEventMgr.AddHandler(summoned, GameLivingEvent.WhisperReceive, new DOLEventHandler(OnWhisperReceive));
+			GameEventMgr.AddHandler(summoned, GameLivingEvent.PetReleased, new DOLEventHandler(OnNpcReleaseCommand));
 
 			player.SetControlledNpc((IControlledBrain)summoned.Brain);
 			effect.Start(summoned);

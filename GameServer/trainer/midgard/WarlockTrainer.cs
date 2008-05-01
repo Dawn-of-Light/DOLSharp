@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Trainer
 {
@@ -32,6 +33,8 @@ namespace DOL.GS.Trainer
 			get { return eCharacterClass.Warlock; }
 		}
 
+        public const string WEAPON_ID = "warlock_item";
+
 		/// <summary>
 		/// Interact with trainer
 		/// </summary>
@@ -44,11 +47,8 @@ namespace DOL.GS.Trainer
 			// check if class matches.				
 			if (player.CharacterClass.ID == (int)eCharacterClass.Warlock)
 			{
-
 				// popup the training window
 				player.Out.SendTrainerWindow();
-				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
-
 			}
 			else
 			{
@@ -56,10 +56,14 @@ namespace DOL.GS.Trainer
 				if (CanPromotePlayer(player))
 				{
 					player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the House of Hel] and defend our realm as a Warlock?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					if (!player.IsLevelRespecUsed)
+					{
+						OfferRespecialize(player);
+					}
 				}
 				else
 				{
-					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+					DismissPlayer(player);
 				}
 			}
 			return true;
@@ -70,7 +74,7 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public override bool CanPromotePlayer(GamePlayer player)
+		public static bool CanPromotePlayer(GamePlayer player)
 		{
 			return (player.Level >= 5 && player.CharacterClass.ID == (int)eCharacterClass.Mystic && (player.Race == (int)eRace.Frostalf || player.Race == (int)eRace.Norseman
 				|| player.Race == (int)eRace.Kobold));
@@ -99,7 +103,8 @@ namespace DOL.GS.Trainer
 						player.RemoveAllStyles();
 						player.Out.SendUpdatePlayerSkills();
 						player.SkillSpecialtyPoints = 14;//lvl 5 skill points full
-						PromotePlayer(player, (int)eCharacterClass.Warlock, "Welcome young Warlock! May your time in Midgard army be rewarding!", null);	// TODO: gifts
+						PromotePlayer(player, (int)eCharacterClass.Warlock, "Welcome young Warlock! May your time in Midgard army be rewarding!", null);
+                        player.ReceiveItem(this, WEAPON_ID);
 					}
 					break;
 			}

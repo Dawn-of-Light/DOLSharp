@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using DOL.GS;
-using DOL.Database2;
+using DOL.Database;
 
 namespace DOL.GS
 {

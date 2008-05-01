@@ -85,6 +85,7 @@ namespace DOL.GS.PlayerClass
 			if (player.Level >= 7)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Engage));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 1));
 			}
 			if (player.Level >= 10)
 			{
@@ -100,6 +101,15 @@ namespace DOL.GS.PlayerClass
 				player.AddAbility(SkillBase.GetAbility(Abilities.Guard, 3));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
 			}
+			if (player.Level >= 20)
+			{
+				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 2));
+			}
+		}
+
+		public override bool HasAdvancedFromBaseClass()
+		{
+			return true;
 		}
 	}
 }

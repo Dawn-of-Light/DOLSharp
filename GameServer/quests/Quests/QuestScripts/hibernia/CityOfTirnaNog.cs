@@ -33,7 +33,7 @@
 
 using System;
 using System.Reflection;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -43,7 +43,7 @@ using log4net;
  *       DOL.GS.Quests.Hibernia
  * Also this is the name that will show up in the database as QuestName
  * so setting good values here will result in easier to read and cleaner
- * GS Code
+ * Database Code
  */
 
 namespace DOL.GS.Quests.Hibernia
@@ -252,11 +252,19 @@ namespace DOL.GS.Quests.Hibernia
 
 			#region defineItems
 
-			ticketToArdee = CreateTicketTo("ticket to Ardee", "");
-			ticketToMagMell = CreateTicketTo("ticket to Mag Mell", "");
-			ticketToTirnaNog = CreateTicketTo("ticket to Tir na Nog", "");
+			ticketToTirnaNog = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "hs_ardee_northtirnanog");
+			if (ticketToTirnaNog == null)
+				ticketToTirnaNog = CreateTicketTo("Tir na nOgh", "hs_ardee_northtirnanog");
 
-			scrollHylvian = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "scroll_for_hylvian");
+			ticketToArdee = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "hs_easttirnanogh_ardee");
+			if (ticketToArdee == null)
+				ticketToArdee = CreateTicketTo("Ardee", "hs_easttirnanogh_ardee");
+			
+			ticketToMagMell = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "hs_ardee_magmell");
+			if (ticketToMagMell == null)
+				ticketToMagMell = CreateTicketTo("Mag Mell", "hs_ardee_magmell");
+
+			scrollHylvian = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "scroll_for_hylvian");
 			if (scrollHylvian == null)
 			{
 				scrollHylvian = new ItemTemplate();
@@ -281,7 +289,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 
 
-			receiptFreagus = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "receipt_for_freagus");
+			receiptFreagus = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "receipt_for_freagus");
 			if (receiptFreagus == null)
 			{
 				receiptFreagus = new ItemTemplate();
@@ -305,7 +313,7 @@ namespace DOL.GS.Quests.Hibernia
 					GameServer.Database.AddNewObject(receiptFreagus);
 			}
 
-			chestOfCoins = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "small_chest_of_coins");
+			chestOfCoins = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "small_chest_of_coins");
 			if (chestOfCoins == null)
 			{
 				chestOfCoins = new ItemTemplate();
@@ -329,7 +337,7 @@ namespace DOL.GS.Quests.Hibernia
 					GameServer.Database.AddNewObject(chestOfCoins);
 			}
 
-			letterAddrir = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "letter_for_addrir");
+			letterAddrir = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "letter_for_addrir");
 			if (letterAddrir == null)
 			{
 				letterAddrir = new ItemTemplate();
@@ -353,7 +361,7 @@ namespace DOL.GS.Quests.Hibernia
 					GameServer.Database.AddNewObject(letterAddrir);
 			}
 
-			assistantNecklace = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "assistant_necklace");
+			assistantNecklace = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "assistant_necklace");
 			if (assistantNecklace == null)
 			{
 				assistantNecklace = new ItemTemplate();
@@ -379,7 +387,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 
 			// item db check
-			recruitsRoundShield = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_round_shield_hib");
+			recruitsRoundShield = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_round_shield_hib");
 			if (recruitsRoundShield == null)
 			{
 				if (log.IsWarnEnabled)
@@ -428,7 +436,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 
 			// item db check
-			recruitsBracer = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_silver_bracer");
+			recruitsBracer = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_silver_bracer");
 			if (recruitsBracer == null)
 			{
 				recruitsBracer = new ItemTemplate();

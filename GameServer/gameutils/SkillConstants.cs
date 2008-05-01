@@ -177,7 +177,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Advanced Evade Ability
 		/// </summary>
-		public const string Advanced_Evade = "Advanced Evade Ability";
+		public const string Advanced_Evade = "Advanced Evade";
 		/// <summary>
 		/// Evade Ability
 		/// </summary>
@@ -217,7 +217,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Triple Wield Ability
 		/// </summary>
-		public const string Triple_Wield = "Triple Wield Ability";
+		public const string Triple_Wield = "Triple Wield";
 		/// <summary>
 		/// Distraction Ability
 		/// </summary>
@@ -233,7 +233,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Climb Walls Ability
 		/// </summary>
-		public const string ClimbWalls = "Climb Walls";
+		public const string Climbing = "Climb Walls";
 		/// <summary>
 		/// Danger Sense Ability
 		/// </summary>
@@ -307,6 +307,9 @@ namespace DOL.GS
 		/// <summary>
 		/// Scars of Battle Ability
 		/// </summary>
+        /// Upon reaching level 41, the Hero, Warrior and Armsman will begin to gain more 
+        /// hitpoints as they progress towards level 50. At each level beyond 41 they 
+        /// gain 1% extra Hit points per level. At level 50, they will have the full 10% benefit.
 		public const string ScarsOfBattle = "Scars of Battle";
 		/// <summary>
 		/// Memories of War Ability

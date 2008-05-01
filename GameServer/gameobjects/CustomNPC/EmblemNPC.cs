@@ -17,7 +17,7 @@
  *
  */
 using System;
-using DOL.Database2;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS

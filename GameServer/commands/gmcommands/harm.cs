@@ -18,14 +18,15 @@
  */
 using System;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&harm",
 		ePrivLevel.GM,
-		"Harms your target (health)",
-		"/harm <amount>")]
+		"GMCommands.Harm.Description",
+		"GMCommands.Harm.Usage")]
 	public class HarmCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
@@ -36,20 +37,16 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-			int ammount;
+			int amount;
 
 			try
 			{
-				ammount = Convert.ToInt16(args[1]);
+				amount = Convert.ToInt16(args[1]);
 				GameLiving living = client.Player.TargetObject as GameLiving;
 				if (living != null)
-				{
-					living.TakeDamage(client.Player, eDamageType.Natural, ammount, 0);
-				}
+					living.TakeDamage(client.Player, eDamageType.Natural, amount, 0);
 				else
-				{
-					client.Out.SendMessage("You have not selected a valid target", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
+					DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Harm.InvalidTarget"));
 			}
 			catch (Exception)
 			{

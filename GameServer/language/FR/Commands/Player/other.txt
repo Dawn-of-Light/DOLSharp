@@ -1,0 +1,164 @@
+
+# PlayerCommands
+# /Advice
+Scripts.Players.Advice.Advice:				[CONSEIL{0}] {1}: "{2}"
+Scripts.Players.Advice.AdvicersOn:			Il y a {0} conseillers en ligne !
+
+# /Advisor
+Scripts.Players.Advisor.Off:				Vous ne recevrez desormais plus de message du canal conseil.
+Scripts.Players.Advisor.On:					Vous recevrez desormais des messages du canal conseil.
+
+# /Afk
+Scripts.Players.Afk.Off:					Vous n'etes plus considere(e) comme etant AFK.
+Scripts.Players.Afk.On:						Vous etes maintenant considere(e) comme etant AFK.
+
+# /Anonymous
+Scripts.Players.Anonymous.Error:			Le mode anonyme est desactive.
+Scripts.Players.Anonymous.Off:				Vous n'etes plus anonyme.
+Scripts.Players.Anonymous.On:				Vous etes maintenant anonyme.
+
+# /Assist
+Scripts.Players.Assist.CantAssistYourself:	Vous ne pouvez pas vous assister vous-meme.
+Scripts.Players.Assist.DoesntHaveTarget:	 n'a pas de cible actuellement.
+Scripts.Players.Assist.DontSee:				Vous ne voyez pas {0} aux alentours!
+Scripts.Players.Assist.NoTarget:			Vous n'avez pas de cible.
+Scripts.Players.Assist.NotValid:			La cible n'est pas valide.
+Scripts.Players.Assist.YouAssist:			Vous assistez {0}.
+
+# /Autoloot
+Scripts.Players.Autoloot.Off:				Votre autoloot est desactive. Vous ne ramasserez plus automatiquement les drops alentours.
+Scripts.Players.Autoloot.On:				Votre autoloot est active. Vous ramasserez desormais automatiquement les drops alentours.
+
+# /Autosplit
+Scripts.Players.Autosplit.Coins:			The leader switched 
+Scripts.Players.Autosplit.InGroup:			Vous devez etre dans un groupe pour utiliser cette commande.
+Scripts.Players.Autosplit.Leader:			Vous devez etre le chef de groupe pour utiliser cette commande.
+Scripts.Players.Autosplit.Loot:				The leader switched 
+Scripts.Players.Autosplit.Off:				Le chef de groupe a desactive l'autosplit.
+Scripts.Players.Autosplit.On:				Le chef de groupe a active l'autosplit.
+Scripts.Players.Autosplit.Self:				{0} switched
+
+
+# Boats
+Scripts.Player.Boat.AlreadyOnBoat:			Ce joueur est dejà sur le bateau!
+Scripts.Player.Boat.BoardingDenied:			Votre demande pour {0} est refusee.
+Scripts.Player.Boat.BoardingGranted:			Vous avez accepte la demande de contrôle du navire.
+Scripts.Player.Boat.BoardingRequest:			{0} essaye de prendre contrôle de votre bateau. Accepter ?
+Scripts.Player.Boat.BoatTooFar:				{0} est trop loin de vous.
+Scripts.Player.Boat.BootedBy:				Vous venez de vous faire sortir du bateau par {0}.
+Scripts.Player.Boat.BootedTarget:			Vous avez fait sortir {0} du bateau.
+Scripts.Player.Boat.DeleteConfirmation:			Vous voulez vraiment retirer votre bateau {0}?
+Scripts.Player.Boat.FullBoat:				Le navire est actuellement plein.
+Scripts.Player.Boat.Help.Board:				'/boat board' - Fait face au bateau cible.
+Scripts.Player.Boat.Help.Boot:				'/boat boot' - Sort du bateau le joueur selectionne.
+Scripts.Player.Boat.Help.Delete:			'/boat delete' - Donne la confirmation pour effacer votre bateau !!permanent!!
+Scripts.Player.Boat.Help.Follow:			'/boat follow' - Donne l'ordre à votre navire de suivre votre cible.
+Scripts.Player.Boat.Help.StopFollow:			'/boat stopfollow' - Donne l'ordre à votre navire d'arreter de suivre votre cible.
+Scripts.Player.Boat.Help.Summon:			'/boat summon' - Mise à l'eau de votre bateau.
+Scripts.Player.Boat.Help.Unsummon:			'/boat unsummon' - Range votre bateau.
+Scripts.Player.Boat.InviteNoSelf:			Vous ne pouvez pas vous inviter !
+Scripts.Player.Boat.InviteRecieved:			{0} est invite(e) à joindre le navire.
+Scripts.Player.Boat.InviteSent:				Vous avez invite {0} à rejoindre le bateau.
+Scripts.Player.Boat.MoveFollow:				Votre navire suis maintenant {0}.
+Scripts.Player.Boat.NoBoatSelected:			Vous devez choisir un bateau !
+Scripts.Player.Boat.NoPlayerSelected:			Vous devez selectionner un joueur.
+Scripts.Player.Boat.NotInWater:				Vous devez etre dans l'eau pour invoquer votre navire !
+Scripts.Player.Boat.NotOwnBoat:				Vous ne possedez pas de bateau.
+Scripts.Player.Boat.OwnerNotOn:				Le proprietaire de ce bateau n'est pas en ligne.
+Scripts.Player.Boat.PlayerIsDead:			Vous ne pouvez pas faire cela avec un joueur mort !
+Scripts.Player.Boat.StopFollow:				Vous arretez votre bateau.
+Scripts.Player.Boat.Summoned:				Votre {0} a ete mis à l'eau.
+Scripts.Player.Boat.TargetNotInBoat:			{0} n'est pas dans votre bateau.
+Scripts.Player.Boat.UnknownCommand:			Ce n'est pas une commande valide pour les navires. /boat pour de l'aide.
+Scripts.Player.Boat.Unsummoned:				Votre {0} a ete range.
+Scripts.Player.Boat.Usage:				Utilisation:
+Scripts.Player.Boat.YouBoard:				Votre bateau le {0}.
+
+# /Boot
+Scripts.Players.Boot.InHouseError:			Vous devez etre dans votre maison pour utiliser cette commande !
+Scripts.Players.Boot.NoHouseError:			Vous ne possedez pas de maison !
+Scripts.Players.Boot.NoOneOnline:			Aucun joueur portant ce nom n'est en ligne !
+Scripts.Players.Boot.YouRemoved:			Vous avez ete ejecte(e) de la maison par {0} !
+
+# /Bountyrent
+Scripts.Players.Bountyrent.InHouseError:	Vous devez etre dans votre maison pour utiliser cette commande !
+Scripts.Players.Bountyrent.NoHouseError:	Vous ne possedez pas de maison !
+
+
+# /Broadcast
+Scripts.Players.Broadcast.Message:			[Region] {0} : {1}
+Scripts.Players.Broadcast.NoHere:			Vous ne pouvez pas diffuser dans le canal regional ici.
+Scripts.Players.Broadcast.NoText:			Vous devez dire quelque-chose...
+
+# /Cancelstyle
+Scripts.Players.Cancelstyle.Set:			L'annulation de style est maintenant {0}.
+Scripts.Players.Cancelstyle.On: ON
+Scripts.Players.Cancelstyle.Off: OFF
+
+# /Cmdhelp
+Scripts.Players.Cmdhelp.NoCommand:			La commande {0} n'existe pas.
+Scripts.Players.Cmdhelp.PlvlCommands:		<----------Commandes disponibles pour le niveau de privilege {0}---------->
+Scripts.Players.Cmdhelp.Usage:				>----------Usage pour {0}----------<
+
+# /Disband
+Scripts.Players.Disband.Disbanded:			{o} a quitte le groupe.
+Scripts.Players.Disband.NoPlayer:			Pas de joueur de ce nom dans le groupe.
+Scripts.Players.Disband.NotInGroup:			Vous n'etes pas dans un groupe.
+Scripts.Players.Disband.NotLeader:			Vous n'etes pas le chef du groupe.
+Scripts.Players.Disband.NoYourself:			Vous ne pouvez pas vous degrouper de cette maniere.
+
+# /Dismount
+Scripts.Players.Dismount:					Vous n'etes pas à cheval.
+
+# /Duel
+Scripts.Players.Duel.ChallengesYou:			{0} vous defie en duel! /duel accept pour accepter, /duel decline pour refuser.
+Scripts.Players.Duel.DuelOptions:			/duel options : challenge/decline/cancel/surrender/accept
+Scripts.Players.Duel.EnemyRealm:			Vous ne pouvez pas defier un membre d'un royaume ennemi.
+Scripts.Players.Duel.NeedTarget:			Vous devez cibler quelqu'un pour le defier !
+Scripts.Players.Duel.ConsideringDuel:		Vous n'etes pas defie(e) en duel.
+Scripts.Players.Duel.NotInDuel:				Vous n'etes pas en duel !
+Scripts.Players.Duel.PlayerVsPlayer:		{0} se rend à {1} !
+Scripts.Players.Duel.SafeZone:				Vous etes dans une zone securisee et ne pouvez vous battre en duel ici !
+Scripts.Players.Duel.TargetAccept:			{0} accepte le duel.  Le combat peut commencer!
+Scripts.Players.Duel.TargetAlreadyChallenging:		{0} a dejà defie quelqu'un en duel.
+Scripts.Players.Duel.TargetAlreadyConsidering:		{0} est dejà defie(e) par quelqu'un d'autre.
+Scripts.Players.Duel.TargetCancel:			{0} son invitation au duel.	
+Scripts.Players.Duel.TargetDeclines:		{0} decline votre invitation.
+Scripts.Players.Duel.TargetHealth:			Votre cible doit avoir sa vie au maximum.
+Scripts.Players.Duel.TargetInCombat:		{0} est en combat.
+Scripts.Players.Duel.TargetInDuel:			{0} est dejà en duel.
+Scripts.Players.Duel.TargetInGroup:			{0} est dans un groupe.
+Scripts.Players.Duel.TargetSurrender:		{0} se rend à vous !
+Scripts.Players.Duel.YouAccept:				Vous acceptez le duel !  Le combat peut commencer !
+Scripts.Players.Duel.YouAlreadyChallenging:	Vous avez dejà defie {0} en duel. Annulez cette invitation pour defier quelqu'un d'autre.
+Scripts.Players.Duel.YouAlreadyConsidering:	Vous etes dejà defie(e) en duel par {0}. Refusez son invitation avant de defier quelqu'un d'autre.
+Scripts.Players.Duel.YouCancel:				Vous annulez votre invitation au duel.
+Scripts.Players.Duel.YouChallenge:			Vous defiez {0} en duel !
+Scripts.Players.Duel.YouDecline:			Vous refusez l'invitation en duel de {0}.
+Scripts.Players.Duel.YouHaventChallenged:	Vous n'avez defie personne en duel.
+Scripts.Players.Duel.YouHealth:				Vous devez avoir votre maximum de points de vie.
+Scripts.Players.Duel.YouInCombat:			Vous etes en combat.
+Scripts.Players.Duel.YouInDuel:				Vous etes dejà en duel.
+Scripts.Players.Duel.YouInGroup:			Vous etes dans un groupe.
+Scripts.Players.Duel.YouSurrender:			Vous vous rendez à {0} !
+
+# /Language
+Scripts.Players.Language.Set:				Vous changez la langue d'affichage du serveur en {0}.
+Scripts.Players.Language.Current:			La langue d'affichage est actuellement : {0}.
+
+# /Range
+Scripts.Players.Range.InvalidObject:			Cette commande fonctionne uniquement sur les objets.
+Scripts.Players.Range.NeedTarget:			Distance de la cible : Vous n'avez pas une cible valide selectionnee.
+Scripts.Players.Range.NotVisible:			 (Cible hors champ de vision)
+Scripts.Players.Range.Result:				Distance de la cible : {0} unites. {1}
+
+
+# VIEWREPORTS
+Scripts.Player.VeiwReport.Usage: Usage:
+Scripts.Player.ViewReport.Help.Close: '/viewreport close <report #>' Ferme le report de bug d'id #.
+Scripts.Player.ViewReport.Help.Delete: '/viewreport delete <report #' Efface les reports d'id #.
+Scripts.Player.ViewReport.InvalidReport: Ce n'est pas un report de bug valide.
+Scripts.Player.ViewReport.UnknownCommand: Ce n'est pas une commande valide.
+Scripts.Player.ViewReport.ReportDeleted: Report {0} est maintenant efface.
+Scripts.Player.ViewReport.NoPriv: Vous n'avez pas les privileges pour editer les reports.
+

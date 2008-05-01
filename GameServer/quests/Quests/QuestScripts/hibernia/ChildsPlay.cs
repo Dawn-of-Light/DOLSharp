@@ -24,7 +24,7 @@
 * Date:		11/26/07
 *
 * Notes: Changed this quest to work like live server.
-* UPDATE:  You must edit the GS if you want this quest to work correctly.
+* UPDATE:  You must edit the Database if you want this quest to work correctly.
 * remove any reference in the DB to "Statue Demons Breach", there will be 200+ if using rev 818DB
 * also run this script: update mob set aggrolevel = 0 where flags = 12 and region = 489;
 * the ambient corpses are all agro, and will attack if you get to close. 
@@ -32,7 +32,7 @@
 
 using System;
 using System.Reflection;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -1545,11 +1545,8 @@ namespace DOL.GS.Quests.Hibernia
         [ScriptUnloadedEvent]
         public static void ScriptUnloaded(DOLEvent e, object sender, EventArgs args)
         {
-
-            // Custom Scriptunloaded Code Begin
-
-            // Custom Scriptunloaded Code End
-
+            if (!ServerProperties.Properties.LOAD_QUESTS)
+                return;
             Hib_Statue_Area.UnRegisterPlayerEnter(new DOLEventHandler(PlayerEnterStatueArea));
             WorldMgr.GetRegion(Hib_Statue.RegionID).RemoveArea(Hib_Statue_Area);
             if (Charles == null)

@@ -59,6 +59,10 @@ namespace DOL.GS.Trainer
                     String message = "Hail, young Disciple. Have you come seeking to imbue yourself with the power of ";
                     message += "Arawn and serve as one of his [Necromancers]?";
                     SayTo(player, message);
+					if (!player.IsLevelRespecUsed)
+					{
+						OfferRespecialize(player);
+					}
 				} 
                 else 
                     DismissPlayer(player);					
@@ -71,7 +75,7 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public override bool CanPromotePlayer(GamePlayer player)
+		public static bool CanPromotePlayer(GamePlayer player)
 		{
 			return (player.Level >= 5 && player.CharacterClass.ID == (int) eCharacterClass.Disciple 
                 && (player.Race == (int) eRace.Briton || player.Race == (int) eRace.Saracen 

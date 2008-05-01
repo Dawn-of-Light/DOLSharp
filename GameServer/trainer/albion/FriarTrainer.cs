@@ -17,8 +17,8 @@
  *
  */
 using System;
-using DOL.Database2;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Trainer
 {
@@ -48,18 +48,25 @@ namespace DOL.GS.Trainer
  			if (!base.Interact(player)) return false;
 								
 			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Friar) {
-
+			if (player.CharacterClass.ID == (int) eCharacterClass.Friar)
+			{
 				// popup the training window
 				player.Out.SendTrainerWindow();
-				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
-
-			} else {
+			}
+			else 
+			{
 				// perhaps player can be promoted
-				if (CanPromotePlayer(player)) {
+				if (CanPromotePlayer(player)) 
+				{
 					player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the Defenders of Albion] and defend our realm as a Friar?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
-				} else {
-					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);							
+					if (!player.IsLevelRespecUsed)
+					{
+						OfferRespecialize(player);
+					}
+				} 
+				else 
+				{
+					DismissPlayer(player);
 				}
 			}
 			return true;
@@ -70,7 +77,7 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public override bool CanPromotePlayer(GamePlayer player)
+		public static bool CanPromotePlayer(GamePlayer player)
 		{
 			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Acolyte && player.Race == (int) eRace.Briton);
 		}
@@ -91,7 +98,7 @@ namespace DOL.GS.Trainer
 				// promote player to other class
 				if (CanPromotePlayer(player)) {
 					PromotePlayer(player, (int)eCharacterClass.Friar, "We welcome you into our society as an equal! We are at your disposal. We will now issue your Robes of the Novice. Wear them always and let it serve to remind you of your faith. When you have reached the title of Lesser Chaplain, return them to me. We shall then see if you require another.", null);
-					player.ReceiveItem(this,DatabaseLayer.Instance.SelectObject(typeof(ItemTemplate),"Id_nb",ARMOR_ID1));
+					player.ReceiveItem(this,ARMOR_ID1);
 				}
 				break;
 			}

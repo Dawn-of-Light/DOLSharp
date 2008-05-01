@@ -51,6 +51,11 @@ namespace DOL.GS.Commands
 				client.Player.Out.SendMessage("Slow down! Think before you say each word!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
+            if (client.Player.IsMuzzled)
+            {
+                client.Player.Out.SendMessage("You are muzzled. You cannot talk.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+                return;
+            }
 
 			client.Player.Say(message);
 			client.Player.TempProperties.setProperty(SAY_TICK, client.Player.CurrentRegion.Time);

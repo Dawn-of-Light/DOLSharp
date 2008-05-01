@@ -35,7 +35,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -45,7 +45,7 @@ using log4net;
  *       DOL.GS.Quests.Hibernia
  * Also this is the name that will show up in the database as QuestName
  * so setting good values here will result in easier to read and cleaner
- * GS Code
+ * Database Code
  */
 
 namespace DOL.GS.Quests.Albion
@@ -440,7 +440,7 @@ namespace DOL.GS.Quests.Albion
 			#region DefineItems
 
 			// item db check
-			noteFormColm = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "colms_note");
+			noteFormColm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "colms_note");
 			if (noteFormColm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -466,7 +466,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			fairyPlans = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "ire_fairy_plans");
+			fairyPlans = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ire_fairy_plans");
 			if (fairyPlans == null)
 			{
 				if (log.IsWarnEnabled)
@@ -490,7 +490,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(fairyPlans);
 			}
 
-			translatedPlans = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "translated_ire_fairy_plans");
+			translatedPlans = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "translated_ire_fairy_plans");
 			if (translatedPlans == null)
 			{
 				if (log.IsWarnEnabled)
@@ -515,7 +515,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsLegs = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_studded_legs");
+			recruitsLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_legs");
 			if (recruitsLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -566,7 +566,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsPants = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "recruits_quilted_pants");
+			recruitsPants = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_pants");
 			if (recruitsPants == null)
 			{
 				recruitsPants = new ItemTemplate();

@@ -1,0 +1,184 @@
+# /DetailDisplayHandler
+DetailDisplayHandler.GetShortItemInfo.CrafterName:	Artisan : {0}
+DetailDisplayHandler.GetShortItemInfo.NoDrop:		 Ne peut etre jete.
+DetailDisplayHandler.GetShortItemInfo.NoSell:		 Ne peut etre vendu.
+DetailDisplayHandler.GetShortItemInfo.NoTrade:		 Ne peut etre echange.
+DetailDisplayHandler.HandlePacket.Any:			Tous
+DetailDisplayHandler.HandlePacket.Back:			(Dos)
+DetailDisplayHandler.HandlePacket.CannotDropped:	Ne peut etre jete ou mis au coffre.
+DetailDisplayHandler.HandlePacket.CannotSold:		Ne peut etre vendu.
+DetailDisplayHandler.HandlePacket.CannotTraded:		Ne peut etre echange.
+DetailDisplayHandler.HandlePacket.ChampionLevel:	 - Requis: Niveau de Champion {0}
+DetailDisplayHandler.HandlePacket.ChatItem:		[Chat] {0}/Objet: "{1}"
+DetailDisplayHandler.HandlePacket.CrafterName:		Artisan : {0}
+DetailDisplayHandler.HandlePacket.Damage:		Degats: 
+DetailDisplayHandler.HandlePacket.Defense:		Defense: 
+DetailDisplayHandler.HandlePacket.DontBelongGuild:	Cela appartient à un joueur.
+DetailDisplayHandler.HandlePacket.FatigueCost:		Coût en endurance: 
+DetailDisplayHandler.HandlePacket.FollowupStyle:	Style à suivre : {0}
+DetailDisplayHandler.HandlePacket.Front:		(Face)	
+DetailDisplayHandler.HandlePacket.GuildItem:		[Guilde] {0}/Objet: "{1}"
+DetailDisplayHandler.HandlePacket.High:			Haut
+DetailDisplayHandler.HandlePacket.HighBonus:		Haut bonus
+DetailDisplayHandler.HandlePacket.HighPenalty:		Haute penalite
+DetailDisplayHandler.HandlePacket.Item:			{0}/objet: "{1}
+DetailDisplayHandler.HandlePacket.LevName:		Niv   Nom
+DetailDisplayHandler.HandlePacket.Low:			Bas
+DetailDisplayHandler.HandlePacket.LowBonus:		Bonus bas
+DetailDisplayHandler.HandlePacket.LowPenalty:		Basse penalite
+DetailDisplayHandler.HandlePacket.Medium:		Moyen
+DetailDisplayHandler.HandlePacket.MediumBonus:		Bonus moyen
+DetailDisplayHandler.HandlePacket.MediumPenalty:	Penalite moyenne
+DetailDisplayHandler.HandlePacket.MustBeInChatGroup:	Vous devez etre dans un groupe de discussion.
+DetailDisplayHandler.HandlePacket.MustBeInBattleGroup:	Vous devez etre dans un groupe de combat.
+DetailDisplayHandler.HandlePacket.NoBonus:		Aucun Bonus
+DetailDisplayHandler.HandlePacket.NoGroup:		Vous ne faites pas partie d'un groupe.
+DetailDisplayHandler.HandlePacket.NoInformation:	Aucune information speciale !
+DetailDisplayHandler.HandlePacket.NoPermissionToSpeak:	Vous n'avez pas les droits pour parler sur le canal de guilde.	
+DetailDisplayHandler.HandlePacket.OnlyModerator:	Seuls les moderateurs peuvent parler sur ce canal.
+DetailDisplayHandler.HandlePacket.Opening:		Ouverture: 
+DetailDisplayHandler.HandlePacket.OpeningStyle:		Style d'ouverture: 
+DetailDisplayHandler.HandlePacket.Or:			 ou {0}
+DetailDisplayHandler.HandlePacket.Positional:		Positionnel
+DetailDisplayHandler.HandlePacket.Side:			(côte)
+DetailDisplayHandler.HandlePacket.TargetBlocks:		La cible bloque
+DetailDisplayHandler.HandlePacket.TargetEffect:		Target Effect : 
+DetailDisplayHandler.HandlePacket.TargetEvades:		La cible esquive
+DetailDisplayHandler.HandlePacket.TargetFumbles:	La cible rate lamentablement
+DetailDisplayHandler.HandlePacket.TargetHits:		La cible touche
+DetailDisplayHandler.HandlePacket.TargetMisses:		La cible loupe
+DetailDisplayHandler.HandlePacket.TargetParrys:		La cible pare
+DetailDisplayHandler.HandlePacket.TargetStyle:		La cible execute un style
+DetailDisplayHandler.HandlePacket.ToHit:		Toucher: 
+DetailDisplayHandler.HandlePacket.VeryHigh:		Tres haut
+DetailDisplayHandler.HandlePacket.VeryHighBonus:	Tres haut Bonus	
+DetailDisplayHandler.HandlePacket.VeryHighPenalty:	Tres haute penalite
+DetailDisplayHandler.HandlePacket.VeryLow:		Tres bas
+DetailDisplayHandler.HandlePacket.VeryLowBonus:		Tres bas Bonus
+DetailDisplayHandler.HandlePacket.VeryLowPenalty:	Tres basse penalite
+DetailDisplayHandler.HandlePacket.VeryStrange:		C'est tres etrange, je ne reconnais pas ce type d'objets.
+DetailDisplayHandler.HandlePacket.WeaponType:		Type d'arme: {0}
+DetailDisplayHandler.HandlePacket.YouBlock:		Vous bloquez
+DetailDisplayHandler.HandlePacket.YouEvade:		Vous esquivez
+DetailDisplayHandler.HandlePacket.YouFumble:		Vous loupez lamentablement
+DetailDisplayHandler.HandlePacket.YouHit:		Vous touchez
+DetailDisplayHandler.HandlePacket.YouMiss:		Vous loupez
+DetailDisplayHandler.HandlePacket.YouParry:		Vous parez
+DetailDisplayHandler.WriteBonusLine.Points:		 pts
+DetailDisplayHandler.WriteBonusLine.PowerPool:		% of power pool.
+DetailDisplayHandler.WriteClassicArmorInfos.Absorption:	- {0}% Absorption
+DetailDisplayHandler.WriteClassicArmorInfos.ArmorMod:	Modificateur d'armure:
+DetailDisplayHandler.WriteClassicArmorInfos.BaseFactor:	- {0} Armure de base
+DetailDisplayHandler.WriteClassicArmorInfos.ClampFact:	- {0} Armure reelle
+DetailDisplayHandler.WriteClassicArmorInfos.Condition:	- {0}% Condition
+DetailDisplayHandler.WriteClassicArmorInfos.EffArmor:	Armure:
+DetailDisplayHandler.WriteClassicArmorInfos.Factor:	- {0} Armure
+DetailDisplayHandler.WriteClassicArmorInfos.Quality:	- {0}% Qualite
+DetailDisplayHandler.WriteClassicShieldInfos.BaseDPS:	- {0} DPS de base
+DetailDisplayHandler.WriteClassicShieldInfos.ClampDPS:	- {0} DPS Reel
+DetailDisplayHandler.WriteClassicShieldInfos.DamageMod:	Modificateur de degats (quand utilise avec les styles Bouclier):
+DetailDisplayHandler.WriteClassicShieldInfos.Large:	- Taille du Bouclier : Grand
+DetailDisplayHandler.WriteClassicShieldInfos.Medium:	- Taille du Bouclier : Moyen
+DetailDisplayHandler.WriteClassicShieldInfos.Small:	- Taille du Bouclier : Petit
+DetailDisplayHandler.WriteClassicShieldInfos.SPD:	- {0} Vitesse du bouclier
+DetailDisplayHandler.WriteClassicWeaponInfos.BaseDPS:	- {0} DPS de base
+DetailDisplayHandler.WriteClassicWeaponInfos.ClampDPS:	- {0} DPS Reel
+DetailDisplayHandler.WriteClassicWeaponInfos.Condition:	- {0}% Condition
+DetailDisplayHandler.WriteClassicWeaponInfos.DamageMod:	Modificateur de degats:
+DetailDisplayHandler.WriteClassicWeaponInfos.DamageType:Type de degats: {0}
+DetailDisplayHandler.WriteClassicWeaponInfos.EffDamage:	Degats effectifs :
+DetailDisplayHandler.WriteClassicWeaponInfos.Quality:	- {0}% Qualite
+DetailDisplayHandler.WriteClassicWeaponInfos.SPD:	- {0} Vitesse de l'arme
+DetailDisplayHandler.WriteHorseInfo.AdvancedHorse:	C'est une monture avancee.
+DetailDisplayHandler.WriteHorseInfo.Armor:		- Armure : {0}
+DetailDisplayHandler.WriteHorseInfo.Barding:		- Barding : Aucun
+DetailDisplayHandler.WriteHorseInfo.BasicHorse:		C'est une monture classique.
+DetailDisplayHandler.WriteHorseInfo.Food:		- Nourriture favorite : Foin, et occasionnellement une pomme.
+DetailDisplayHandler.WriteHorseInfo.MountWindow:	Pour faire de cette monture votre monture active, deplacez cette icône dans l'emplacement dedie de votre fenetre de monture.
+DetailDisplayHandler.WriteHorseInfo.Name:		- Nom: {0}.
+DetailDisplayHandler.WriteHorseInfo.NameMount:		  (Utilisez /namemount pour donner un nom à votre monture.)
+DetailDisplayHandler.WriteHorseInfo.Quickbar:		Pour invoquer cette monture, depuis la fenetre de monture deplacez l'icône sur votre barre de lancement rapide, et cliquez sur le bouton creer.
+DetailDisplayHandler.WriteHorseInfo.RvRZzones:		Ne peut etre invoque en zone RVR.
+DetailDisplayHandler.WriteHorseInfo.Speed1:		(+35% vitesse)
+DetailDisplayHandler.WriteHorseInfo.Speed2:		(+45% vitesse)
+DetailDisplayHandler.WriteHorseInfo.Summon:		Cliquez sur cette icône dans votre barre de lancement pour invoquer (ou renvoyer) votre monture.
+DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic:	Charged Magic Ability:
+DetailDisplayHandler.WriteMagicalBonuses.Charges:	- {0} Charges
+DetailDisplayHandler.WriteMagicalBonuses.FocusBonus:	Bonus au focus:
+DetailDisplayHandler.WriteMagicalBonuses.Level:		- {0} Niveau
+DetailDisplayHandler.WriteMagicalBonuses.LevelRequired:	Niveau requis
+DetailDisplayHandler.WriteMagicalBonuses.LevelRequired2:	Level Requirement: {0} Level
+DetailDisplayHandler.WriteMagicalBonuses.MagicAbility:	Bonus Magiques:
+DetailDisplayHandler.WriteMagicalBonuses.MagicBonus:	Bonus Magiques:
+DetailDisplayHandler.WriteMagicalBonuses.MaxCharges:	- {0} Max
+DetailDisplayHandler.WriteMagicalBonuses.StrikeArmor:	- Le sort a une chance d'etre lance quand un ennemi touche cette armure.
+DetailDisplayHandler.WriteMagicalBonuses.StrikeEnemy:	- Le sort a une chance d'etre lance quand cette arme touche un ennemi.
+DetailDisplayHandler.WriteMagicalBonuses.UsedItem:	- Le sort a une chance d'etre lance quand l'objet est utilise.
+DetailDisplayHandler.WriteMagicalBonuses.UseItem1:	Peut etre utilise toutes les: {0}
+DetailDisplayHandler.WriteMagicalBonuses.UseItem2:	Peut etre utilise toutes les: 3:00 min.
+DetailDisplayHandler.WriteMagicalBonuses.UseItem3:	Peut etre reutilise dans: {0}.
+DetailDisplayHandler.WritePoisonInfo.Charges:		- {0} Charges
+DetailDisplayHandler.WritePoisonInfo.Level:		- {0} Niveau
+DetailDisplayHandler.WritePoisonInfo.LevelRequired:	Niveau requis:
+DetailDisplayHandler.WritePoisonInfo.MaxCharges:	- {0} Max
+DetailDisplayHandler.WritePoisonInfo.ProcAbility:	Effet offensif:
+DetailDisplayHandler.WritePotionInfo.ChargedMagic:	Effet magique:
+DetailDisplayHandler.WritePotionInfo.Charges:		- {0} Charges
+DetailDisplayHandler.WritePotionInfo.Level:		- {0} Niveau
+DetailDisplayHandler.WritePotionInfo.LevelRequired:	Niveau requis:
+DetailDisplayHandler.WritePotionInfo.MaxCharges:	- {0} Max
+DetailDisplayHandler.WritePotionInfo.NoUseInCombat:	Ne peut etre utilise en combat.
+DetailDisplayHandler.WritePotionInfo.UseItem2:		Pout etre utilise toutes les: 1:00 min
+DetailDisplayHandler.WritePotionInfo.UseItem3:		Peut etre reutilise dans: {0}.
+DetailDisplayHandler.WriteUsableClasses.UsableBy:	Utilisable par: 
+
+# /DoorRequestHandler.cs
+DoorRequestHandler.OnTick.TooFarAway:			Le {0} est trop loin!
+
+HousingPickupItemHandler.GardenRemoved:		Objet de jardin retire.
+HousingPickupItemHandler.PickUp:			Vous mettez {0} dans votre inventaire.
+
+HousingPlaceItemHandler.30objects:			Vous avez dejà place 30 objets. Vous ne pouvez pas en placer plus.
+HousingPlaceItemHandler.40objects:			Vous avez dejà place 40 objets. Vous ne pouvez pas en placer plus.
+HousingPlaceItemHandler.CantFloor:			Cet objet ne peut pas etre place sur le sol !
+HousingPlaceItemHandler.CantWall:			Cet objet ne peut pas etre place sur un mur !
+HousingPlaceItemHandler.DropOnFloor:		Vous deposez l'objet {0} sur le sol de votre maison.
+HousingPlaceItemHandler.DropOnGarden:		Vous deposez l'objet {0} dans votre jardin.
+HousingPlaceItemHandler.DropOnWall:			Vous deposez l'objet {0} sur le mur de votre maison.
+HousingPlaceItemHandler.GardenObjectPlaced:	Objet de jardin place. {0} places restantes.
+HousingPlaceItemHandler.HasPorch:			Cette maison a dejà un porche !
+HousingPlaceItemHandler.HasNoPorch:			Cette maison n'a pas de porche !
+HousingPlaceItemHandler.IndoorObjectPlaced:	Objet interieur place. {0} places restantes.
+HousingPlaceItemHandler.NoHookpoint:		Il n'y a plus de point d'ancrage !
+HousingPlaceItemHandler.PutMoney:			Vous deposez de l'argent sur le compte de votre maison.
+
+# /PlayerBonusesListRequestHandler
+PlayerBonusesListRequestHandler.HandlePacket.Bonuses:	Bonuses (snapshot)
+PlayerBonusesListRequestHandler.HandlePacket.Magic:		Bonus Magique: {0}%
+PlayerBonusesListRequestHandler.HandlePacket.Melee:		Bonus de melee: {0}%
+PlayerBonusesListRequestHandler.HandlePacket.Outpost:	Outpost Bonuses
+PlayerBonusesListRequestHandler.HandlePacket.Realm:		Primes de Royaume
+PlayerBonusesListRequestHandler.HandlePacket.Relic:		Bonus de Relique
+PlayerBonusesListRequestHandler.HandlePacket.Resist:	Resistances
+PlayerBonusesListRequestHandler.HandlePacket.Special:	Bonus d'objets speciaux
+PlayerBonusesListRequestHandler.HandlePacket.Specs:		+{0} pour toutes les spe
+
+# /PlayerInitRequestHandler
+PlayerInitRequestHandler.AllianceMessage:	Message d'Alliance : {0}
+PlayerInitRequestHandler.FreeLevel:			Vous etes eligible pour un niveau gratuit ! Cliquez sur votre entraîneur pour le recevoir (ou tapez "/freelevel decline" pour refuser votre niveau gratuit).
+PlayerInitRequestHandler.GuildMessage:		Message de Guilde : 
+PlayerInitRequestHandler.LevelCap:			Vous avez excede la limite de niveau pour ce champs de bataille !
+PlayerInitRequestHandler.OfficerMessage:	Message Officiers : {0}
+PlayerInitRequestHandler.SaferLocation:		Cette zone n'est actuellement pas securisee et vous etes transporte(e) vers un endroit plus sûr.
+
+# /PlayerMoveItemRequestHandler
+PlayerMoveItemRequestHandler.TooFarAway:	Vous etes trop loin pour donner quoi que ce soit à {0}.
+
+# /PlayerPositionUpdateHandler
+PlayerPositionUpdateHandler.Endurance:		Vous perdez de l'endurance !
+PlayerPositionUpdateHandler.Entered:		Vous etes entre(e) dans {0}.
+PlayerPositionUpdateHandler.FallingDamage:	Vous encaissez des degats de chute!
+PlayerPositionUpdateHandler.FallPercent:	Vous perdez {0}% de votre total de points de vie.
+PlayerPositionUpdateHandler.SafeFall:		Les dommages ont ete reduits grâce à votre habilete de chute contrôlee!
+PlayerPositionUpdateHandler.UnknownZone:	Zone inconnue, Votre client ne possede pas les fichiers necessaires, allez sur le forum MADEINGOULAG.FORUMACTIF.FR pour telecharger le patch pour acceder a cette zone.
+

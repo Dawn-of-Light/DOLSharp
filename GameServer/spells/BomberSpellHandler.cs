@@ -68,7 +68,7 @@ namespace DOL.GS.Spells
 
                 m_bombertarget = Caster.TargetObject as GameLiving;
                 GameEventMgr.AddHandler(bomber, GameNPCEvent.ArriveAtTarget, new DOLEventHandler(BomberArriveAtTarget));
-                bomber.Follow(target, 10, Spell.Range);
+                bomber.Follow(target, 10, Spell.Range*5); // with Toa bonus, if the bomber was fired > Spell.Range base, it didnt move..
             }
         }
 
@@ -91,7 +91,9 @@ namespace DOL.GS.Spells
                 Spell subspell = SkillBase.GetSpellByID(m_spell.SubSpellID);
                 if (subspell != null)
                 {
-                    if (WorldMgr.CheckDistance(living, bomber, 500))
+                    //Andraste
+					subspell.Level=m_spell.Level;
+					if (WorldMgr.CheckDistance(living, bomber, 500))
                     {
                         ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(Caster, subspell, SkillBase.GetSpellLine(this.SpellLine.KeyName));
                         spellhandler.StartSpell(living);

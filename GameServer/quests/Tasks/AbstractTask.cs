@@ -21,7 +21,7 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Text;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -33,7 +33,7 @@ namespace DOL.GS.Quests
 	/// Declares the abstract quest class from which all user created
 	/// quests must derive!
 	/// </summary>
-	public class AbstractTask :DatabaseObject
+	public class AbstractTask
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -238,7 +238,10 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public virtual void SaveIntoDatabase()
 		{
-            Save();
+			if(m_dbTask.IsValid)
+				GameServer.Database.SaveObject(m_dbTask);
+			else
+				GameServer.Database.AddNewObject(m_dbTask);
 		}
 
 		/// <summary>
@@ -246,7 +249,11 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public virtual void DeleteFromDatabase()
 		{
-            DeleteDB();
+			if(!m_dbTask.IsValid) return;
+
+			DBTask dbTask = (DBTask) GameServer.Database.FindObjectByKey(typeof(DBTask), m_dbTask.ObjectId);
+			if(dbTask!=null)
+				GameServer.Database.DeleteObject(dbTask);
 		}
 		/// <summary>
 		/// Retrieves the name of the quest

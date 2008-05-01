@@ -29,6 +29,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.Quests;
 
 using log4net;
+using DOL.Database;
 
 namespace DOLGameServerConsole
 {
@@ -109,6 +110,7 @@ namespace DOLGameServerConsole
 		public void SendUpdateMaxSpeed() { }
 		public void SendCombatAnimation(GameObject attacker, GameObject defender, ushort weaponID, ushort shieldID, int style, byte stance, byte result, byte targetHealthPercent) { }
 		public void SendStatusUpdate() { }
+		public void SendStatusUpdate(byte sittingFlag) { }
 		public void SendSpellCastAnimation(GameLiving spellCaster, ushort spellID, ushort castingTime) { }
 		public void SendSpellEffectAnimation(GameObject spellCaster, GameObject spellTarget, ushort spellid, ushort boltTime, bool noSound, byte success) { }
 		public void SendRiding(GameObject rider, GameObject steed, bool dismount) { }
@@ -127,6 +129,8 @@ namespace DOLGameServerConsole
 		public void SendInventoryItemsUpdate(ICollection itemsToUpdate) { }
 		public void SendInventorySlotsUpdate(ICollection slots) { }
 		public void SendInventoryItemsUpdate(byte preAction, ICollection itemsToUpdate) { }
+		public void SendInventoryItemsUpdate(IDictionary<int, InventoryItem> updateItems, byte windowType) { }
+		public void SendInventoryItemsPartialUpdate(IDictionary<int, InventoryItem> items, byte windowType) { }
 		public void SendDoorState(IDoor door) { }
 		public void SendMerchantWindow(MerchantTradeItems itemlist, eMerchantWindowType windowType) { }
 		public void SendTradeWindow() { }
@@ -215,7 +219,10 @@ namespace DOLGameServerConsole
 		public void SendStarterHelp() { }
 		public void SendXFireInfo(byte flag) { }
 		public void SendMarketExplorerWindow() { }
+		public void SendMarketExplorerWindow(List<InventoryItem> items, byte page, byte maxpage) { }
 		public void SendConsignmentMerchantMoney(ushort mithril, ushort plat, ushort gold, byte silver, byte copper) { }
+        public virtual void SendMinotaurRelicWindow(GamePlayer player, int spell, bool flag) { }
+        public virtual void SendMinotaurRelicBarUpdate(GamePlayer player, int xp) { }
 		/// <summary>
 		/// The bow prepare animation
 		/// </summary>

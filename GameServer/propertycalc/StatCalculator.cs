@@ -113,7 +113,7 @@ namespace DOL.GS.PropertyCalc
                 GamePlayer player = living as GamePlayer;
                 if (property == (eProperty)(player.CharacterClass.ManaStat))
                     if (player.CharacterClass.ClassType == eClassType.ListCaster)
-                        baseBuffBonus += player.BuffBonusCategory1[(int)eProperty.Acuity];
+                        specBuffBonus += player.BuffBonusCategory1[(int)eProperty.Acuity];
             }
 
             // Caps and cap increases. Only players actually have a buff bonus cap, 

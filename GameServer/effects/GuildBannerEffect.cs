@@ -20,6 +20,7 @@
 using System;
 using System.Collections;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Effects
 {
@@ -146,13 +147,13 @@ namespace DOL.GS.Effects
 		{
 			get
 			{
-				return "Banner of Warding";
+				return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BannerOfWardingEffect.Name");
 			}
 		}
 
 		protected override string Description
 		{
-			get { return "Grants a 10% bonus to all magical resists."; }
+			get { return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BannerOfWardingEffect.Description"); }
 		}
 
 		//5949,Spell Resist Banner,54,0,0,0,0,0,0,0,0,0,0,0,13,0,332,,,
@@ -210,13 +211,13 @@ namespace DOL.GS.Effects
 		{
 			get
 			{
-				return "Banner of Shielding";
+				return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BannerOfShieldingEffect.Name");
 			}
 		}
 
 		protected override string Description
 		{
-			get { return "Grants a 6% bonus to all melee resists."; }
+			get { return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BannerOfShieldingEffect.Description"); }
 		}
 
 		//5950,Melee Resist Banner,49,0,0,0,0,0,0,0,0,0,0,0,13,0,332,,,
@@ -269,13 +270,13 @@ namespace DOL.GS.Effects
 		{
 			get
 			{
-				return "Banner of Freedom";
+				return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BannerOfFreedomEffect.Name");
 			}
 		}
 
 		protected override string Description
 		{
-			get { return "Reduces all Crowd Controls by 6%."; }
+			get { return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BannerOfFreedomEffect.Description"); }
 		}
 
 		//5951,CC Duration Banner,2309,0,0,0,0,0,0,0,0,0,0,0,13,0,332,,,
@@ -324,13 +325,13 @@ namespace DOL.GS.Effects
 		{
 			get
 			{
-				return "Banner of Besieging";
+				return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BannerOfBesiegingEffect.Name");
 			}
 		}
 
 		protected override string Description
 		{
-			get { return "Reduces the fireing speed of siegeweapons by 6%."; }
+			get { return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BannerOfBesiegingEffect.Description"); }
 		}
 
 		//5952,Siege Banner,1419,0,0,0,0,0,0,0,0,0,0,0,13,0,332,,,

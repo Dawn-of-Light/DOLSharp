@@ -4,7 +4,7 @@
 using System;
 using DOL;
 using DOL.GS;
-using DOL.Database2;
+using DOL.Database;
 using System.Collections;
 using DOL.GS.PacketHandler;
 using DOL.GS.Commands;

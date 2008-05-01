@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Threading;
 using DOL.AI;
 using DOL.AI.Brain;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Events;
 using DOL.Language;
 using DOL.GS.Effects;
@@ -42,8 +42,7 @@ namespace DOL.GS
 	/// This class is the baseclass for all Non Player Characters like
 	/// Monsters, Merchants, Guards, Steeds ...
 	/// </summary>
-	[Serializable]
-    public class GameNPC : GameLiving
+	public class GameNPC : GameLiving
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -153,7 +152,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the owner of this npc
 		/// </summary>
-		public UInt64 BoatOwnerID
+		public string BoatOwnerID
 		{
 			get { return m_boatowner_id; }
 			set
@@ -187,7 +186,10 @@ namespace DOL.GS
 			get { return base.Level; }
 			set
 			{
+				byte oldlevel = base.Level;
 				base.Level = value;
+				CheckStats(); // make sure stats are sane
+
 				//MaxHealth = (ushort)(value * 20 + 20);	// MaxHealth depends from mob level
 				if (!InCombat)
 					m_health = MaxHealth;
@@ -296,36 +298,25 @@ namespace DOL.GS
 				}
 			}
 		}
-        [NonSerialized]
+
 		private Faction m_faction = null;
-        private UInt64 m_factionid;
 		/// <summary>
 		/// Gets the Faction of the NPC
 		/// </summary>
 		public Faction Faction
 		{
-			get 
-            {
-                if (m_faction == null)
-                {
-                    if (!DatabaseLayer.Instance.DatabaseObjects.TryGetValue(m_factionid, m_faction))
-                        log.Error("Could not get Faction " + m_factionid);
-                }
-                return m_faction; 
-            }
+			get { return m_faction; }
 			set
 			{
 				m_faction = value;
-                m_factionid = value.ID;
 			}
 		}
-        [NonSerialized]
+
 		private ArrayList m_linkedFactions;
 		/// <summary>
 		/// The linked factions for this NPC
 		/// </summary>
-		[NonSerialized]
-        public ArrayList LinkedFactions
+		public ArrayList LinkedFactions
 		{
 			get { return m_linkedFactions; }
 			set { m_linkedFactions = value; }
@@ -643,8 +634,12 @@ namespace DOL.GS
 				m_X = X;
 				m_Y = Y;
 				m_Z = Z;
-				base.CurrentSpeed = value;
-				BroadcastUpdate();
+
+				if (base.CurrentSpeed != value)
+				{
+					base.CurrentSpeed = value;
+					BroadcastUpdate();
+				}
 			}
 		}
 		/*
@@ -780,6 +775,16 @@ namespace DOL.GS
 			set { m_maxdistance = value; }
 		}
 
+		protected int m_roamingRange;
+		/// <summary>
+		/// radius for roaming
+		/// </summary>
+		public int RoamingRange
+		{
+			get { return m_roamingRange; }
+			set { m_roamingRange = value; }
+		}
+
 		protected int m_tetherRange;
 
 		/// <summary>
@@ -808,7 +813,7 @@ namespace DOL.GS
 			}
 		}
 
-	   #endregion
+		#endregion
 		#region Movement
 		/// <summary>
 		/// Target X coordinate to walk to
@@ -947,20 +952,45 @@ namespace DOL.GS
 		/// <param name="ty">Target Y</param>
 		public virtual void TurnTo(int tx, int ty)
 		{
-			if (this.IsStunned || this.IsMezzed) return;
-			Notify(GameNPCEvent.TurnTo, this, new TurnToEventArgs(tx, ty));
-			Heading = GetHeadingToSpot(tx, ty);
+			TurnTo(tx, ty, true);
 		}
 
+		/// <summary>
+		/// Turns the npc towards a specific spot
+		/// optionally sends update to client
+		/// </summary>
+		/// <param name="tx">Target X</param>
+		/// <param name="ty">Target Y</param>
+		public virtual void TurnTo(int tx, int ty, bool sendUpdate)
+		{
+			if (this.IsStunned || this.IsMezzed) return;
+			Notify(GameNPCEvent.TurnTo, this, new TurnToEventArgs(tx, ty));
+			if (sendUpdate)
+				Heading = GetHeadingToSpot(tx, ty);
+			else
+				base.Heading = GetHeadingToSpot(tx, ty);
+		}
 		/// <summary>
 		/// Turns the npc towards a specific heading
 		/// </summary>
 		/// <param name="newHeading">the new heading</param>
 		public virtual void TurnTo(ushort newHeading)
 		{
+			TurnTo(newHeading, true);
+		}
+		/// <summary>
+		/// Turns the npc towards a specific heading
+		/// optionally sends update to client
+		/// </summary>
+		/// <param name="newHeading">the new heading</param>
+		public virtual void TurnTo(ushort newHeading, bool sendUpdate)
+		{
 			if (this.IsStunned || this.IsMezzed) return;
 			Notify(GameNPCEvent.TurnToHeading, this, new TurnToHeadingEventArgs(newHeading));
-			Heading = newHeading;
+			if (sendUpdate)
+				Heading = newHeading;
+			else
+				base.Heading = newHeading;
 		}
 		/// <summary>
 		/// Turns the NPC towards a specific gameObject
@@ -969,10 +999,22 @@ namespace DOL.GS
 		/// <param name="target">GameObject to turn towards</param>
 		public virtual void TurnTo(GameObject target)
 		{
+			TurnTo(target, true);
+		}
+
+		/// <summary>
+		/// Turns the NPC towards a specific gameObject
+		/// which can be anything ... a player, item, mob, npc ...
+		/// optionally sends update to client
+		/// </summary>
+		/// <param name="target">GameObject to turn towards</param>
+		public virtual void TurnTo(GameObject target, bool sendUpdate)
+		{
 			if (target == null) return;
 			if (target.CurrentRegion != CurrentRegion) return;
-			TurnTo(target.X, target.Y);
+			TurnTo(target.X, target.Y, sendUpdate);
 		}
+
 		/// <summary>
 		/// Turns the NPC towards a specific gameObject
 		/// which can be anything ... a player, item, mob, npc ...
@@ -1139,8 +1181,20 @@ namespace DOL.GS
 			if (IsTurningDisabled)
 				return; // can't walk when turning is disabled
 
-			if (IsMoving)
-				StopMoving();
+			// tolakram - changed, we don't want to stop, this creates the herky jerky motion
+			// instead we clear everything and set the new target
+			if (m_arriveAtTargetAction != null)
+			{
+				m_arriveAtTargetAction.Stop();
+				m_arriveAtTargetAction = null;
+			}
+			if (m_closeToTargetAction != null)
+			{
+				m_closeToTargetAction.Stop();
+				m_closeToTargetAction = null;
+			}
+			m_isReturningHome = false;
+
 
 			//Slow mobs down when they are hurt!
 			int maxSpeed = MaxSpeed;
@@ -1173,11 +1227,6 @@ namespace DOL.GS
 				timeToTarget = (int)(dist * 1000 / speed);
 			}
 
-			if (m_arriveAtTargetAction != null)
-			{
-				m_arriveAtTargetAction.Stop();
-			}
-
 			m_arriveAtTargetAction = new ArriveAtTargetAction(this);
 			if (timeToTarget > 1)
 			{
@@ -1186,11 +1235,6 @@ namespace DOL.GS
 			else
 			{
 				m_arriveAtTargetAction.Start(1);
-			}
-
-			if (m_closeToTargetAction != null)
-			{
-				m_closeToTargetAction.Stop();
 			}
 
 			m_closeToTargetAction = new CloseToTargetAction(this);
@@ -1286,7 +1330,6 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void StopMoving()
 		{
-			//if(!IsMoving) return;
 			if (m_arriveAtTargetAction != null)
 			{
 				m_arriveAtTargetAction.Stop();
@@ -1297,9 +1340,12 @@ namespace DOL.GS
 				m_closeToTargetAction.Stop();
 				m_closeToTargetAction = null;
 			}
-			//This broadcasts an update!
-			CurrentSpeed = 0;
+
 			m_isReturningHome = false;
+
+			// This broadcasts an update so check to see if we are moving before calling - tolakram
+			if (IsMoving)
+				CurrentSpeed = 0;
 		}
 		/// <summary>
 		/// Follow given object
@@ -1312,6 +1358,8 @@ namespace DOL.GS
 			//			string targName = followTarget==null ? "(null)" : followTarget.Name;
 			//			log.Debug(this.Name+": Follow("+targName+","+minDistance+","+maxDistance+")");
 			//First stop the active timer
+			//System.Diagnostics.StackTrace st = new System.Diagnostics.StackTrace();
+			//log.Debug(st);
 			if (m_followTimer.IsAlive)
 				m_followTimer.Stop();
 			if (followTarget == null || followTarget.ObjectState != eObjectState.Active) return;
@@ -1697,22 +1745,41 @@ namespace DOL.GS
 				}
 				else
 				{
-					if (log.IsDebugEnabled)
-					{
-						//log.Warn("Error loading NPC inventory: InventoryID="+EquipmentTemplateID+", NPC name="+Name+".");
-					}
+					//if (log.IsDebugEnabled)
+					//{
+					//    //log.Warn("Error loading NPC inventory: InventoryID="+EquipmentTemplateID+", NPC name="+Name+".");
+					//}
 				}
 				if (Inventory != null)
 				{
-					// if the two handed slot isnt empty we use that
-					// or if the distance slot isnt empty we use that
-					if (Inventory.GetItem(eInventorySlot.TwoHandWeapon) != null)
-						SwitchWeapon(eActiveWeaponSlot.TwoHanded);
-					else if (Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
+					//if the distance slot isnt empty we use that
+					//Seems to always
+					if (Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
 						SwitchWeapon(eActiveWeaponSlot.Distance);
-					else SwitchWeapon(eActiveWeaponSlot.Standard); // sets visible left and right hand slots
+					else
+					{
+						InventoryItem twohand = Inventory.GetItem(eInventorySlot.TwoHandWeapon);
+						InventoryItem onehand = Inventory.GetItem(eInventorySlot.RightHandWeapon);
+
+						if (twohand != null && onehand != null)
+							//Let's add some random chance
+							SwitchWeapon(Util.Chance(50) ? eActiveWeaponSlot.TwoHanded : eActiveWeaponSlot.Standard);
+						else if (twohand != null)
+							//Hmm our right hand weapon may have been null
+							SwitchWeapon(eActiveWeaponSlot.TwoHanded);
+						else if (onehand != null)
+							//Hmm twohand was null lets default down here
+							SwitchWeapon(eActiveWeaponSlot.Standard);
+					}
 				}
 			}
+		}
+
+		private bool m_loadedFromScript = true;
+		public bool LoadedFromScript
+		{
+			get { return m_loadedFromScript; }
+			set { m_loadedFromScript = value; }
 		}
 
 
@@ -1720,12 +1787,12 @@ namespace DOL.GS
 		/// Load a npc from the npc template
 		/// </summary>
 		/// <param name="obj">template to load from</param>
-		/*
-        public override void LoadFromDatabase(DatabaseObject obj)
+		public override void LoadFromDatabase(DataObject obj)
 		{
 			if (obj == null) return;
 			base.LoadFromDatabase(obj);
 			if (!(obj is Mob)) return;
+			m_loadedFromScript = false;
 			Mob npc = (Mob)obj;
 			INpcTemplate npcTemplate = NpcTemplateMgr.GetTemplate(npc.NPCTemplateID);
 			if (npcTemplate != null)
@@ -1796,12 +1863,21 @@ namespace DOL.GS
 			{
 				if (npc.AggroRange == 0)
 				{
-					if (Char.IsLower(Name[0]))
-					{ // make some default on basic mobs
-						aggroBrain.AggroRange = 450;
-						aggroBrain.AggroLevel = (Level > 3) ? 30 : 0;
+					if (Realm == eRealm.None)
+					{
+						if (CurrentRegion.IsDungeon)
+							aggroBrain.AggroRange = 300;
+						else if (Name != Name.ToLower())
+							aggroBrain.AggroRange = 500;
+						else
+							aggroBrain.AggroRange = 400;
+
+						if (Name != Name.ToLower())
+							aggroBrain.AggroLevel = 30;
+						else
+							aggroBrain.AggroLevel = (Level > 5) ? 30 : 0;
 					}
-					else if (Realm != 0)
+					else if (Realm != eRealm.None)
 					{
 						aggroBrain.AggroRange = 500;
 						aggroBrain.AggroLevel = 60;
@@ -1816,10 +1892,94 @@ namespace DOL.GS
 			m_bodyType = npc.BodyType;
 			m_houseNumber = npc.HouseNumber;
 			m_maxdistance = npc.MaxDistance;
+			m_roamingRange = npc.RoamingRange;
 		}
-        */
-	
-        /// <summary>
+
+		/// <summary>
+		/// Deletes the mob from the database
+		/// </summary>
+		public override void DeleteFromDatabase()
+		{
+			if (InternalID != null)
+			{
+				Mob mob = (Mob)GameServer.Database.FindObjectByKey(typeof(Mob), InternalID);
+				if (mob != null)
+					GameServer.Database.DeleteObject(mob);
+			}
+		}
+
+		/// <summary>
+		/// Saves a mob into the db if it exists, it is
+		/// updated, else it creates a new object in the DB
+		/// </summary>
+		public override void SaveIntoDatabase()
+		{
+			Mob mob = null;
+			if (InternalID != null)
+				mob = (Mob)GameServer.Database.FindObjectByKey(typeof(Mob), InternalID);
+
+			if (mob == null)
+				if (LoadedFromScript == false)
+					mob = new Mob();
+				else
+					return;
+
+			mob.Name = Name;
+			mob.Guild = GuildName;
+			mob.X = X;
+			mob.Y = Y;
+			mob.Z = Z;
+			mob.Heading = Heading;
+			mob.Speed = MaxSpeedBase;
+			mob.Region = CurrentRegionID;
+			mob.Realm = (byte)Realm;
+			mob.Model = Model;
+			mob.Size = Size;
+			mob.Level = Level;
+
+			// Stats
+			mob.Constitution = Constitution;
+			mob.Dexterity = Dexterity;
+			mob.Strength = Strength;
+			mob.Quickness = Quickness;
+			mob.Intelligence = Intelligence;
+			mob.Piety = Piety;
+			mob.Empathy = Empathy;
+			mob.Charisma = Charisma;
+
+			mob.ClassType = this.GetType().ToString();
+			mob.Flags = Flags;
+			mob.Speed = MaxSpeedBase;
+			mob.RespawnInterval = m_respawnInterval / 1000;
+			mob.HouseNumber = HouseNumber;
+			mob.RoamingRange = RoamingRange;
+			if (Brain.GetType().FullName != typeof(StandardMobBrain).FullName)
+				mob.Brain = Brain.GetType().FullName;
+			IAggressiveBrain aggroBrain = Brain as IAggressiveBrain;
+			if (aggroBrain != null)
+			{
+				mob.AggroLevel = aggroBrain.AggroLevel;
+				mob.AggroRange = aggroBrain.AggroRange;
+			}
+			mob.EquipmentTemplateID = EquipmentTemplateID;
+			if (m_faction != null)
+				mob.FactionID = m_faction.ID;
+			mob.MeleeDamageType = (int)MeleeDamageType;
+			if (NPCTemplate != null)
+				mob.NPCTemplateID = NPCTemplate.TemplateId;
+			mob.PathID = PathID;
+			mob.MaxDistance = m_maxdistance;
+
+			if (InternalID == null)
+			{
+				GameServer.Database.AddNewObject(mob);
+				InternalID = mob.ObjectId;
+			}
+			else
+				GameServer.Database.SaveObject(mob);
+		}
+
+		/// <summary>
 		/// Load a NPC template onto this NPC
 		/// </summary>
 		/// <param name="template"></param>
@@ -1830,10 +1990,11 @@ namespace DOL.GS
 			IList m_levels = new ArrayList();
 			IList m_equipLoc = new ArrayList();
 			Hashtable m_equipModel = new Hashtable();
-			GameNpcInventoryTemplate equip = new GameNpcInventoryTemplate();
-			bool equipHasItems = equip.LoadFromDatabase(template.TemplateId.ToString());
+			
 			this.Name = template.Name;
 			this.GuildName = template.GuildName;
+
+			#region Models
 			foreach (string str in template.Model.Split(';'))
 			{
 				if (str.Length == 0) continue;
@@ -1841,7 +2002,9 @@ namespace DOL.GS
 				m_models.Add(i);
 			}
 			this.Model = (ushort)m_models[Util.Random(m_models.Count - 1)];
+			#endregion
 
+			#region Size
 			byte size = 50;
 			if (!Util.IsEmpty(template.Size))
 			{
@@ -1851,7 +2014,9 @@ namespace DOL.GS
 				else size = (byte)Util.Random(int.Parse(splitSize[0]), int.Parse(splitSize[1]));
 			}
 			this.Size = size;
+			#endregion
 
+			#region Level
 			byte level = 0;
 			if (!Util.IsEmpty(template.Level))
 			{
@@ -1861,7 +2026,9 @@ namespace DOL.GS
 				else level = (byte)Util.Random(int.Parse(splitLevel[0]), int.Parse(splitLevel[1]));
 			}
 			this.Level = level;
+			#endregion
 
+			#region Stats
 			// Stats
 			this.Constitution = (short)template.Constitution;
 			this.Dexterity = (short)template.Dexterity;
@@ -1871,7 +2038,9 @@ namespace DOL.GS
 			this.Piety = (short)template.Piety;
 			this.Empathy = (short)template.Empathy;
 			this.Charisma = (short)template.Charisma;
+			#endregion
 
+			#region Misc Stats
 			this.MaxDistance = template.MaxDistance;
 			this.TetherRange = template.TetherRange;
 			this.BodyType = template.BodyType;
@@ -1882,63 +2051,75 @@ namespace DOL.GS
 			this.EvadeChance = template.EvadeChance;
 			this.BlockChance = template.BlockChance;
 			this.LeftHandSwingChance = template.LeftHandSwingChance;
-			if (template.Inventory != null && template.Inventory.Length > 0)
+			#endregion
+
+			#region Inventory
+			//Ok lets start loading the npc equipment - only if there is a value!
+			if (!Util.IsEmpty(template.Inventory))
 			{
-				m_models.Clear();
-				int x = 0;
-				int y = 0;
-				foreach (string str in template.Inventory.Split(';'))
+				bool equipHasItems = false;
+				GameNpcInventoryTemplate equip = new GameNpcInventoryTemplate();
+				//First let's try to reach the npcequipment table and load that!
+				//We use a ';' split to allow npctemplates to support more than one equipmentIDs
+				string[] equipIDs = template.Inventory.Split(';');
+				if (!template.Inventory.Contains(":"))
 				{
-					//Get the armor location
-					string[] loc = str.Split(':');
-					x = Convert.ToInt32(loc[0]);
-					if (!str.Contains("|")) y = Convert.ToInt32(loc[1]);
-					if (x == 10 || x == 12 || x == 13)
+					foreach (string str in equipIDs)
 					{
-						m_equipLoc.Add(x);
-						//Get the Equipment model
-						m_equipModel.Add(x, loc[1]);
-					}
-					else
-					{
-						equip.AddNPCEquipment((DOL.GS.eInventorySlot)x, y);
-						equipHasItems = true;
+						equipHasItems |= equip.LoadFromDatabase(str);
 					}
 				}
-				if (m_equipLoc.Count > 1)
+
+				#region Legacy Equipment Code
+				//Nope, nothing in the npcequipment table, lets do the crappy parsing
+				//This is legacy code
+				if (!equipHasItems)
 				{
-					x = Util.Random(m_equipLoc.Count - 1);
-					x = Convert.ToInt32(m_equipLoc[x]);
-				}
-				if (m_equipModel.ContainsKey(x))
-				{
-					string str = m_equipModel[x].ToString();
-					if (!str.Contains("|")) y = Convert.ToInt32(m_equipModel[x]);
-					else
+					//Temp list to store our models
+					List<int> tempModels = new List<int>();
+
+					//Let's go through all of our ';' seperated slots
+					foreach (string str in equipIDs)
 					{
-						foreach (string st in str.Split('|'))
+						tempModels.Clear();
+						//Split the equipment into slot and model(s)
+						string[] slotXModels = str.Split(':');
+						//It should only be two in length SLOT : MODELS
+						if (slotXModels.Length == 2)
 						{
-							if (st.Length == 0) continue;
-							y = Convert.ToInt32(st);
-							m_models.Add(y);
+							int slot;
+							//Let's try to get our slot
+							if (Int32.TryParse(slotXModels[0], out slot))
+							{
+								//Now lets go through and add all the models to the list
+								string[] models = slotXModels[1].Split('|');
+								foreach (string strModel in models)
+								{
+									//We'll add it to the list if we successfully parse it!
+									int model;
+									if (Int32.TryParse(strModel, out model))
+										tempModels.Add(model);
+								}
+
+								//If we found some models let's randomly pick one and add it the equipment
+								if (tempModels.Count > 0)
+									equipHasItems |= equip.AddNPCEquipment((eInventorySlot)slot, tempModels[Util.Random(tempModels.Count - 1)]);
+							}
 						}
-						y = Util.Random(m_models.Count - 1);
-						y = Convert.ToInt32(m_models[y]);
 					}
-					equip.AddNPCEquipment((DOL.GS.eInventorySlot)x, y);
-					equipHasItems = true;
 				}
-				
+				#endregion
+
+				//We added some items - let's make it the new inventory
+				if (equipHasItems)
+				{
+					this.Inventory = new GameNPCInventory(equip);
+					if (this.Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
+						this.SwitchWeapon(eActiveWeaponSlot.Distance);
+				}
 			}
-			if (equipHasItems)
-				this.Inventory = new GameNPCInventory(equip);
-			if (this.Inventory != null)
-			{
-				if (this.Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
-					this.SwitchWeapon(eActiveWeaponSlot.Distance);
-				else if (Inventory.GetItem(eInventorySlot.TwoHandWeapon) != null)
-					this.SwitchWeapon(eActiveWeaponSlot.TwoHanded);
-			}
+			#endregion
+
 			this.Spells = template.Spells;
 			this.Styles = template.Styles;
 			if (template.Abilities != null)
@@ -2143,8 +2324,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds the rider of this NPC as weak reference
 		/// </summary>
-		[NonSerialized]
-        public GamePlayer[] Riders;
+		public GamePlayer[] Riders;
 
 		/// <summary>
 		/// This function is called when a rider mounts this npc
@@ -2727,7 +2907,7 @@ namespace DOL.GS
 					}
 				}*/
 		#endregion
-		#region Interact/SayTo
+		#region Interact/WhisperReceive/SayTo
 		/// <summary>
 		/// This function is called from the ObjectInteractRequestHandler
 		/// </summary>
@@ -2776,6 +2956,45 @@ namespace DOL.GS
 			}
 			return true;
 		}
+		
+		/// <summary>
+		/// ToDo
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="text"></param>
+		/// <returns></returns>
+		public override bool WhisperReceive(GameLiving source, string text)
+		{
+			if (!base.WhisperReceive(source, text))
+				return false;
+			if (source is GamePlayer == false)
+				return true;			
+			
+			GamePlayer player = (GamePlayer) source;
+			
+			//TODO: Guards in rvr areas doesn't need check
+			if (text == "task")
+		    {
+				if (source.TargetObject == null)
+					return false;
+				if (KillTask.CheckAvailability(player, (GameLiving) source.TargetObject))
+				{
+					KillTask.BuildTask(player, (GameLiving) source.TargetObject);
+					return true;
+				}
+				else if (MoneyTask.CheckAvailability(player, (GameLiving) source.TargetObject))
+				{
+					MoneyTask.BuildTask(player, (GameLiving) source.TargetObject);
+					return true;
+				}
+				else if (CraftTask.CheckAvailability(player, (GameLiving) source.TargetObject))
+				{
+					CraftTask.BuildTask(player, (GameLiving) source.TargetObject);
+					return true;
+				}
+		    }
+			return true;
+		}
 
 		/// <summary>
 		/// Format "say" message and send it to target in popup window
@@ -2797,7 +3016,7 @@ namespace DOL.GS
 		{
 			if (target == null)
 				return;
-			
+
 			TurnTo(target);
 			string resultText = LanguageMgr.GetTranslation(target.Client, "GameNPC.SayTo.Says", GetName(0, true), message);
 			switch (loc)
@@ -2833,6 +3052,9 @@ namespace DOL.GS
 		/// <param name="attackTarget">The object to attack</param>
 		public override void StartAttack(GameObject attackTarget)
 		{
+			if (attackTarget == null)
+				return;
+
 			if (IsMovingOnPath)
 				StopMoveOnPath();
 
@@ -3164,8 +3386,6 @@ namespace DOL.GS
 			return base.OnInterruptTick(attacker, attackType);
 		}
 
-
-
 		/// <summary>
 		/// The time to wait before each mob respawn
 		/// </summary>
@@ -3204,7 +3424,6 @@ namespace DOL.GS
 				m_respawnInterval = value;
 			}
 		}
-
 
 		/// <summary>
 		/// Is the mob alive
@@ -3307,7 +3526,7 @@ namespace DOL.GS
 		protected override int HealthRegenerationTimerCallback(RegionTimer selfRegenerationTimer)
 		{
 			int period = m_healthRegenerationPeriod;
-			if (!InCombat || Util.Chance(25)) // mobs have only 25% chance to heal itself 
+			if (!InCombat)
 			{
 				period = base.HealthRegenerationTimerCallback(selfRegenerationTimer);
 				BroadcastUpdate();
@@ -3388,38 +3607,38 @@ namespace DOL.GS
 						{
 							GamePlayer killerPlayer = killer as GamePlayer;
 							if (killerPlayer != null)
-								killerPlayer.Out.SendMessage("You find an additional " + Money.GetString(value - lootTemplate.Value) + " thanks to your realm owning outposts!", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+								killerPlayer.Out.SendMessage(LanguageMgr.GetTranslation(killerPlayer.Client, "GameNPC.DropLoot.AdditionalMoney", Money.GetString(value - lootTemplate.Value)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
 						}
 
 						loot = new GameMoney(value, this);
 						loot.Name = lootTemplate.Name;
 						loot.Model = (ushort)lootTemplate.Model;
 					}
-                    else if (lootTemplate.Name.StartsWith("scroll|"))
-                    {
-                        String[] scrollData = lootTemplate.Name.Split('|');
-                        String artifactID = scrollData[1];
-                        int pageNumber = UInt16.Parse(scrollData[2]);
-                        loot = ArtifactMgr.CreateScroll(artifactID, pageNumber);
-                        loot.X = X;
-                        loot.Y = Y;
-                        loot.Z = Z;
-                        loot.Heading = Heading;
-                        loot.CurrentRegion = CurrentRegion;
-                    }
-                    else
-                    {
-                        loot = new GameInventoryItem(new InventoryItem(lootTemplate));
-                        loot.X = X;
-                        loot.Y = Y;
-                        loot.Z = Z;
-                        loot.Heading = Heading;
-                        loot.CurrentRegion = CurrentRegion;
-                        if (((GameInventoryItem)loot).Item.Id_nb == "aurulite")
-                        {
-                            ((GameInventoryItem)loot).Item.Count = ((GameInventoryItem)loot).Item.PackSize;
-                        }
-                    }
+					else if (lootTemplate.Name.StartsWith("scroll|"))
+					{
+						String[] scrollData = lootTemplate.Name.Split('|');
+						String artifactID = scrollData[1];
+						int pageNumber = UInt16.Parse(scrollData[2]);
+						loot = ArtifactMgr.CreateScroll(artifactID, pageNumber);
+						loot.X = X;
+						loot.Y = Y;
+						loot.Z = Z;
+						loot.Heading = Heading;
+						loot.CurrentRegion = CurrentRegion;
+					}
+					else
+					{
+						loot = new GameInventoryItem(new InventoryItem(lootTemplate));
+						loot.X = X;
+						loot.Y = Y;
+						loot.Z = Z;
+						loot.Heading = Heading;
+						loot.CurrentRegion = CurrentRegion;
+						if (((GameInventoryItem)loot).Item.Id_nb == "aurulite")
+						{
+							((GameInventoryItem)loot).Item.Count = ((GameInventoryItem)loot).Item.PackSize;
+						}
+					}
 
 					bool playerAttacker = false;
 					foreach (GameObject gainer in m_xpGainers.Keys)
@@ -3437,7 +3656,7 @@ namespace DOL.GS
 							if (brain != null)
 							{
 								playerAttacker = true;
-								loot.AddOwner(brain.Owner);
+								loot.AddOwner(brain.GetPlayerOwner());
 							}
 						}
 					}
@@ -3495,6 +3714,8 @@ namespace DOL.GS
 				return;
 			if (enemy == healSource)
 				return;
+			if (!IsAlive)
+				return;
 
 			GamePlayer attackerPlayer = healSource as GamePlayer;
 			if (attackerPlayer == null)
@@ -3504,14 +3725,11 @@ namespace DOL.GS
 			if (attackerGroup != null)
 			{
 				ArrayList xpGainers = new ArrayList(8);
-				lock (attackerGroup)
+				// collect "helping" group players in range
+				foreach (GameLiving living in attackerGroup.GetMembersInTheGroup())
 				{
-					// collect "helping" group players in range
-					foreach (GamePlayer player in attackerGroup)
-					{
-						if (WorldMgr.CheckDistance(player, this, WorldMgr.MAX_EXPFORKILL_DISTANCE) && player.IsAlive && player.ObjectState == eObjectState.Active)
-							xpGainers.Add(player);
-					}
+					if (WorldMgr.CheckDistance(living, this, WorldMgr.MAX_EXPFORKILL_DISTANCE) && living.IsAlive && living.ObjectState == eObjectState.Active)
+						xpGainers.Add(living);
 				}
 				// add players in range for exp to exp gainers
 				for (int i = 0; i < xpGainers.Count; i++)
@@ -3526,8 +3744,8 @@ namespace DOL.GS
 			//DealDamage needs to be called after addxpgainer!
 		}
 
-
 		#endregion
+
 		#region Spell
 		private IList m_spells = new ArrayList(1);
 		/// <summary>
@@ -3650,7 +3868,7 @@ namespace DOL.GS
 				else
 				{
 					//If we aren't a distance NPC, lets make sure we are in range to attack the target!
-					if (WorldMgr.GetDistance(owner, owner.TargetObject) > 90)
+					if (owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance && WorldMgr.GetDistance(owner, owner.TargetObject) > 90)
 						((GameNPC)owner).Follow(owner.TargetObject, 90, 5000);
 				}
 				Interval = 500;
@@ -3677,33 +3895,6 @@ namespace DOL.GS
 
 		#endregion
 		#region ControlledNPCs
-		/// <summary>
-		/// Gets all the minions/subpets of this NPC - uses recursion to find all of its
-		/// pet's pets
-		/// </summary>
-		/// <returns>List of all pets</returns>
-		public List<GameNPC> GetAllPets()
-		{
-			//No pets, return null
-			if (ControlledNpcList == null)
-				return null;
-
-			List<GameNPC> pets = new List<GameNPC>();
-
-			foreach (IControlledBrain icb in ControlledNpcList)
-			{
-				//Is this really a necessary check?
-				if (icb == null)
-					continue;
-				//Add this pet
-				pets.Add(icb.Body);
-				//Add this pet's pets
-				List<GameNPC> petsSubPets = icb.Body.GetAllPets();
-				if (petsSubPets != null)
-					pets.AddRange(petsSubPets);
-			}
-			return pets;
-		}
 
 		/// <summary>
 		/// Gets the controlled object of this NPC
@@ -3726,42 +3917,12 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets the controlled object of this player at the position in the array
-		/// </summary>
-		/// <param name="pet_position"></param>
-		public IControlledBrain ControlledMinion(int pet_position)
-		{
-			return m_controlledNpc[pet_position];
-		}
-
-		/// <summary>
 		/// Adds a pet to the current array of pets
 		/// </summary>
 		/// <param name="controlledNpc">The brain to add to the list</param>
 		/// <returns>Whether the pet was added or not</returns>
-		public bool AddControlledNpc(IControlledBrain controlledNpc)
+		public virtual bool AddControlledNpc(IControlledBrain controlledNpc)
 		{
-			IControlledBrain[] brainlist = ControlledNpcList;
-			foreach (IControlledBrain icb in brainlist)
-			{
-				if (icb == controlledNpc)
-					return false;
-			}
-
-			if (controlledNpc.Owner != this)
-				throw new ArgumentException("ControlledNpc with wrong owner is set (player=" + Name + ", owner=" + controlledNpc.Owner.Name + ")", "controlledNpc");
-			//Find the next spot for this new pet
-			int i = 0;
-			for (; i < m_controlledNpc.Length; i++)
-			{
-				if (ControlledMinion(i) == null)
-					break;
-			}
-			//If we didn't find a spot return false
-			if (i >= m_controlledNpc.Length)
-				return false;
-			m_controlledNpc[i] = controlledNpc;
-			PetCounter++;
 			return true;
 		}
 
@@ -3770,177 +3931,9 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="controlledNpc">The brain to find and remove</param>
 		/// <returns>Whether the pet was removed</returns>
-		public bool RemoveControlledNpc(IControlledBrain controlledNpc)
+		public virtual bool RemoveControlledNpc(IControlledBrain controlledNpc)
 		{
-			if (controlledNpc == null) return false;
-			IControlledBrain[] brainlist = ControlledNpcList;
-			int i = 0;
-			bool found = false;
-			//Try to find the minion in the list
-			for (; i < brainlist.Length; i++)
-			{
-				//Found it
-				if (brainlist[i] == controlledNpc)
-				{
-					found = true;
-					break;
-				}
-			}
-			lock (ControlledNpcList)
-			{
-				//Found it, lets remove it
-				if (found)
-				{
-					//TODO: this prints two messages - what's a better way to do this
-					if (m_controlledNpc[i].Body.IsAlive)
-						m_controlledNpc[i].Body.Die(this);
-					m_controlledNpc[i] = null;
-
-					//Only decrement, we just lost one pet
-					PetCounter--;
-				}
-			}
-
-			return found;
-		}
-
-		///// <summary>
-		///// Sets the controlled minions for the player's commander
-		///// </summary>
-		///// <remarks>This function should only be used for making minions</remarks>
-		///// <param name="controlledNpc"></param>
-		///// <param name="pet_position">When a pet dies, we need to know which one</param>
-		//public bool SetControlledNpc(IControlledBrain controlledNpc, int pet_position)
-		//{
-		//    if (pet_position >= m_controlledNpc.Length || pet_position < 0) return false;
-		//    if (controlledNpc == ControlledMinion(pet_position)) return false;
-		//    if (controlledNpc == null)
-		//    {
-		//        if (m_controlledNpc[pet_position] == null)
-		//            return false;
-		//        if(m_controlledNpc[pet_position].Body.IsAlive)
-		//            m_controlledNpc[pet_position].Body.Die(this);
-		//        m_controlledNpc[pet_position] = null;
-
-		//        //Only decrement, we just lost one pet
-		//        PetCounter--;
-		//        return true;
-		//    }
-		//    else
-		//    {
-		//        if (controlledNpc.Owner != this)
-		//            throw new ArgumentException("ControlledNpc with wrong owner is set (player=" + Name + ", owner=" + controlledNpc.Owner.Name + ")", "controlledNpc");
-		//        //Find the next spot for this new pet
-		//        int i = 0;
-		//        for (; i < m_controlledNpc.Length; i++)
-		//        {
-		//            if (ControlledMinion(i) == null)
-		//                break;
-		//        }
-		//        //If we didn't find a spot return false
-		//        if (i >= m_controlledNpc.Length)
-		//            return false;
-		//        m_controlledNpc[i] = controlledNpc;
-		//        PetCounter++;
-		//        return true;
-		//    }
-		//}
-
-		/// <summary>
-		/// Commands controlled object to attack
-		/// </summary>
-		public override void CommandNpcAttack()
-		{
-			if (Brain is IControlledBrain)
-			{
-				((IControlledBrain)Brain).Attack(TargetObject);
-			}
-		}
-
-		/// <summary>
-		/// Releases controlled object
-		/// </summary>
-		/// <remarks>This works differently than GamePlayer's.  Since an npc can have more than one pet,
-		/// we don't call owner.CommandNpcRelease().  Instead we call a body.CommandNpcRelease(), it gets its owner, finds its place in the array and then removes ITSELF!</remarks>
-		public override void CommandNpcRelease()
-		{
-			IControlledBrain npc = Brain as IControlledBrain;
-			//This method shouldn't be called if this is the player's main pet.  Only minions and subpets
-			//should call this method.
-			if (npc == null) return;
-			GameNPC owner = (GameNPC)npc.Owner;
-
-			//Added function in GameNPC to kill the pet for us
-			owner.RemoveControlledNpc(npc);
-
-			Notify(GamePlayerEvent.CommandNpcRelease, this);
-		}
-
-		/// <summary>
-		/// Commands controlled object to follow
-		/// </summary>
-		public override void CommandNpcFollow()
-		{
-			if (Brain is IControlledBrain)
-				((IControlledBrain)Brain).Follow(((IControlledBrain)Brain).Owner);
-		}
-
-		/// <summary>
-		/// Commands controlled object to stay where it is
-		/// </summary>
-		public override void CommandNpcStay()
-		{
-			if (Brain is IControlledBrain)
-				((IControlledBrain)Brain).Follow(((IControlledBrain)Brain).Owner);
-		}
-
-		/// <summary>
-		/// Commands controlled object to go to players location
-		/// </summary>
-		public override void CommandNpcComeHere()
-		{
-			if (Brain is IControlledBrain)
-				((IControlledBrain)Brain).Follow(((IControlledBrain)Brain).Owner);
-		}
-
-		/// <summary>
-		/// Commands controlled object to go to target
-		/// </summary>
-		public override void CommandNpcGoTarget()
-		{
-			if (Brain is IControlledBrain)
-				((IControlledBrain)Brain).Follow(((IControlledBrain)Brain).Owner);
-		}
-
-		/// <summary>
-		/// Changes controlled object state to passive
-		/// </summary>
-		public override void CommandNpcPassive()
-		{
-			if (Brain is IControlledBrain)
-			{
-				((IControlledBrain)Brain).AggressionState = eAggressionState.Passive;
-				StopAttack();
-				StopCurrentSpellcast();
-			}
-		}
-
-		/// <summary>
-		/// Changes controlled object state to aggressive
-		/// </summary>
-		public override void CommandNpcAgressive()
-		{
-			if (Brain is IControlledBrain)
-				((IControlledBrain)Brain).AggressionState = eAggressionState.Aggressive;
-		}
-
-		/// <summary>
-		/// Changes controlled object state to defensive
-		/// </summary>
-		public override void CommandNpcDefensive()
-		{
-			if (Brain is IControlledBrain)
-				((IControlledBrain)Brain).AggressionState = eAggressionState.Defensive;
+			return true;
 		}
 
 		#endregion
@@ -4011,15 +4004,19 @@ namespace DOL.GS
 		{
 			// Mob stats should be a minimum of 30 each and strength should
 			// be on par with that of a templated player.
+			// This is only changed if values are 0 or less, allowing for unusually slow mobs
 
 			for (eStat stat = eStat._First; stat <= eStat.CHR; ++stat)
 				if (m_charStat[stat - eStat._First] <= 0) m_charStat[stat - eStat._First] = 30;
 
-			if (Strength < (20 + Level * 6))
+			// primary weapon stat for npc's is Strength and this should be adjusted for level and added to original template
+			if (m_template != null && m_template.Strength < m_template.Strength + 20 + Level * 6)
+				Strength = (short)(m_template.Strength + 20 + Level * 6);
+			else if (Strength < (20 + Level * 6))
 				Strength = (short)(20 + Level * 6);
 		}
 
-		private UInt64 m_boatowner_id;
+		private string m_boatowner_id;
 		/// <summary>
 		/// Constructs a NPC
 		/// </summary>
@@ -4046,15 +4043,18 @@ namespace DOL.GS
 			m_followMaxDist = 3000;
 			m_flags = 0;
 			m_maxdistance = 0;
+			m_roamingRange = -1; // default to normal roaming mob
 			m_boatowner_id = "";
 
 			// Mob stats should be a minimum of 30 each and strength should
 			// be on par with that of a templated player.
 
-			for (eStat stat = eStat._First; stat <= eStat.CHR; ++stat)
-				m_charStat[stat - eStat._First] = 30;
+			if (Strength <= 0)
+				Strength = (short)(20 + Level * 6);
 
-			Strength = (short)(20 + Level * 6);
+			for (eStat stat = eStat._First; stat <= eStat.CHR; ++stat)
+				if (m_charStat[stat - eStat._First] <= 0) m_charStat[stat - eStat._First] = 30;
+
 
 			//m_factionName = "";
 			LinkedFactions = new ArrayList(1);
@@ -4065,6 +4065,8 @@ namespace DOL.GS
 			}
 		}
 
+		INpcTemplate m_template = null;
+
 		/// <summary>
 		/// create npc from template
 		/// </summary>
@@ -4073,6 +4075,9 @@ namespace DOL.GS
 			: this()
 		{
 			if (template == null) return;
+
+			// save the original template so we can do calculations off the original values
+			m_template = template;
 
 			// Load template.
 
@@ -4089,9 +4094,10 @@ namespace DOL.GS
 			Piety = (short)template.Piety;
 			Charisma = (short)template.Charisma;
 			Empathy = (short)template.Empathy;
+
 			CheckStats();
 
-			m_boatowner_id = 0;
+			m_boatowner_id = "";
 		}
 	}
 }

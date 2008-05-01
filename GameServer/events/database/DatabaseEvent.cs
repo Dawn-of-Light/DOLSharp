@@ -36,16 +36,20 @@ namespace DOL.Events
 		/// The AccountCreated event is fired whenever an account is created.
 		/// <seealso cref="AccountEventArgs"/>
 		/// </summary>
-		public static readonly DatabaseEvent AccountCreated = new DatabaseEvent("GS.AccountCreated");
+		public static readonly DatabaseEvent AccountCreated = new DatabaseEvent("Database.AccountCreated");
 		/// <summary>
 		/// The CharacterCreated event is fired whenever a new character is created
 		/// <seealso cref="CharacterEventArgs"/>
 		/// </summary>
-		public static readonly DatabaseEvent CharacterCreated = new DatabaseEvent("GS.CharacterCreated");
+		public static readonly DatabaseEvent CharacterCreated = new DatabaseEvent("Database.CharacterCreated");
 		/// <summary>
 		/// The CharacterDeleted event is fired whenever an account is deleted
 		/// <seealso cref="CharacterEventArgs"/>
 		/// </summary>
-		public static readonly DatabaseEvent CharacterDeleted = new DatabaseEvent("GS.CharacterDeleted");
+		public static readonly DatabaseEvent CharacterDeleted = new DatabaseEvent("Database.CharacterDeleted");
+		/// <summary>
+		/// The NewsCreated event is fired whenever news is created
+		/// </summary>
+		public static readonly DatabaseEvent NewsCreated = new DatabaseEvent("Database.NewsCreated");
 	}
 }

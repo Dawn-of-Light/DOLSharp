@@ -17,10 +17,9 @@
  *
  */
 using System;
-using System.Runtime.Serialization;
 using System.Collections;
 using System.Reflection;
-using DOL.Database2;
+using DOL.Database;
 using log4net;
 
 namespace DOL.GS
@@ -38,26 +37,35 @@ namespace DOL.GS
 	/// nontrainable abilities have level 0
 	/// trainable abilities have level > 0, level is displayed in roman numbers	
 	/// </summary>
-	[Serializable]
-    public class Ability : NamedSkill
+	public class Ability : NamedSkill
 	{
 
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        [OptionalField]
+
 		protected string m_spec;
-        [OptionalField]
 		protected string m_serializedNames;
-        [OptionalField]
 		protected string m_description;
-        [OptionalField]
 		protected int m_speclevel;
-		[NonSerialized]
-        protected GameLiving activeOnLiving = null;
+		protected GameLiving activeOnLiving = null;
 
 
+		public Ability(DBAbility dba)
+			: this(dba, 0)
+		{
+		}
+
+		public Ability(DBAbility dba, int level)
+			: this(dba.KeyName, dba.Name, dba.Description, (ushort)dba.IconID, level)
+		{
+		}
+
+		public Ability(DBAbility dba, int level, string spec, int speclevel)
+			: this(dba.KeyName, dba.Name, dba.Description, (ushort)dba.IconID, level, spec, speclevel)
+		{
+		}
 
 		public Ability(string keyname, string displayname, string description, ushort icon, int level)
 			: this(keyname, displayname, description, icon, level, "", 0)
@@ -166,7 +174,7 @@ namespace DOL.GS
 		/// <summary>
 		/// icon id (>=0x190) or 0 if ability is not activatable
 		/// </summary>
-		public virtual UInt64 Icon
+		public virtual ushort Icon
 		{
 			get { return base.ID; }
 		}

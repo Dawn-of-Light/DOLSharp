@@ -53,7 +53,7 @@ namespace DOL.GS.Trainer
 			{
 				// popup the training window
 				player.Out.SendTrainerWindow();
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "EnchanterTrainer.Interact.QuickStudy", this.Name, player.Name), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "EnchanterTrainer.Interact.SmallTalk", this.Name, player.Name), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			} 
 			else 
 			{
@@ -61,10 +61,14 @@ namespace DOL.GS.Trainer
 				if (CanPromotePlayer(player))
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "EnchanterTrainer.Interact.PathOfEssence", this.Name), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					if (!player.IsLevelRespecUsed)
+					{
+						OfferRespecialize(player);
+					}
 				}
 				else
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "EnchanterTrainer.Interact.SeekElsewhere", this.Name), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+					DismissPlayer(player);
 				}
 			}
 			return true;
@@ -75,7 +79,7 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public override bool CanPromotePlayer(GamePlayer player) 
+		public static bool CanPromotePlayer(GamePlayer player) 
 		{
 			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Magician && (player.Race == (int) eRace.Elf || player.Race == (int) eRace.Lurikeen));
 		}

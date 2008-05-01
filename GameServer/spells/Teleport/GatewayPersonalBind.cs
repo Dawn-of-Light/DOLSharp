@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using DOL.GS.Effects;
-using DOL.Database2;
+using DOL.Database;
 using System.Collections;
 
 namespace DOL.GS.Spells
@@ -69,6 +69,12 @@ namespace DOL.GS.Spells
 			player.MoveTo((ushort)character.BindRegion,
 				character.BindXpos, character.BindYpos, character.BindZpos,
 				(ushort)character.BindHeading);
+		}
+
+		public override void InterruptCasting()
+		{
+			m_startReuseTimer = false;
+			base.InterruptCasting();
 		}
 
 		public override IList DelveInfo

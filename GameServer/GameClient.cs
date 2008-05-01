@@ -19,7 +19,7 @@
 using System;
 using System.Text;
 using System.Threading;
-using DOL.Database2;
+using DOL.Database;
 using System.Net;
 using System.Reflection;
 using DOL.Events;
@@ -178,14 +178,15 @@ namespace DOL
 					{
 						Player.SaveIntoDatabase();
 					}
-
-					Quit();
 				}
 				catch (Exception e)
 				{
 					if (log.IsErrorEnabled)
 						log.Error("OnDisconnect", e);
 				}
+
+				// Make sure the client is diconnected even on errors
+				Quit();
 			}
 
 			/// <summary>
@@ -309,16 +310,18 @@ namespace DOL
 					log.Debug("Linkdeath called (" + Account.Name + ")  client state=" + ClientState);
 
 				//If we have no sessionid we simply disconnect
-				if (m_sessionID == 0 || Player == null)
+				GamePlayer curPlayer = Player;
+				if (m_sessionID == 0 || curPlayer == null)
 				{
 					Quit();
-					return;
 				}
-
-				ClientState = eClientState.Linkdead;
-				//If we have a good sessionid, we won't
-				//remove the client yet!
-				Player.OnLinkdeath();
+				else
+				{
+					ClientState = eClientState.Linkdead;
+					// If we have a good sessionid, we won't remove the client yet!
+					// OnLinkdeath() can start a timer to remove the client "a bit later"
+					curPlayer.OnLinkdeath();
+				}
 			}
 
 
@@ -471,7 +474,7 @@ namespace DOL
 			public int SessionID
 			{
 				get { return m_sessionID; }
-				set { m_sessionID = value; }
+				internal set { m_sessionID = value; }
 			}
 
 			/// <summary>
@@ -569,7 +572,10 @@ namespace DOL
 				Version188 = 188,
 				Version189 = 189,
 				Version190 = 190,
-				_LastVersion = 190,
+				Version191 = 191,
+				Version192 = 192,
+				Version193 = 193,
+				_LastVersion = 193,
 			}
 			protected eClientVersion m_clientVersion;
 			/// <summary>

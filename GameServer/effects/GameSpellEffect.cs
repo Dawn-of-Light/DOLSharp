@@ -21,9 +21,10 @@ using System.Collections;
 using System.Reflection;
 using System.Text;
 
-using DOL.Database2;
+using DOL.Database;
 using DOL.GS.Spells;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 using log4net;
 
@@ -73,6 +74,10 @@ namespace DOL.GS.Effects
 		/// The timer for pulsing effects
 		/// </summary>
 		protected PulsingEffectTimer m_timer;
+        /// <summary>
+        /// Is it a Minotaur Relic Effect?
+        /// </summary>
+        protected bool m_minotaur = false;
 
 		/// <summary>
 		/// Creates a new game spell effect
@@ -99,6 +104,12 @@ namespace DOL.GS.Effects
 			m_effectiveness = effectiveness;
 			m_expired = true; // not started = expired
 		}
+
+        public GameSpellEffect(ISpellHandler handler, int duration, int pulsefreq, bool mino)
+            : this(handler, duration, pulsefreq, 1)
+        {
+            m_minotaur = mino;
+        }
 
 		/// <summary>
 		/// Returns the string representation of the GameSpellEffect
@@ -174,7 +185,7 @@ namespace DOL.GS.Effects
 				log.Debug(Owner.Name+": CancelEffect playerCanceled="+playerCanceled+"  SpellType="+Spell.SpellType);
 			if (playerCanceled && !m_handler.HasPositiveEffect) {
 				if (Owner is GamePlayer)
-					((GamePlayer) Owner).Out.SendMessage("You can't remove this effect!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					((GamePlayer)Owner).Out.SendMessage(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "Effects.GameSpellEffect.CantRemoveEffect"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -489,10 +500,10 @@ namespace DOL.GS.Effects
 				if (seconds > 0)
 				{
 					list.Add(" "); //empty line
-					if(seconds > 60)
-						list.Add("- " + seconds/60 + ":" + (seconds%60).ToString("00") + " minutes remaining.");
+					if (seconds > 60)
+						list.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.DelveInfo.MinutesRemaining", (seconds / 60), (seconds % 60).ToString("00")));
 					else
-						list.Add("- " + seconds + " seconds remaining.");
+						list.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.DelveInfo.SecondsRemaining", seconds));
 				}
 
 				return list;

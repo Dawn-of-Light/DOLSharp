@@ -7,7 +7,7 @@ using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Events;
-using DOL.Database2;
+using DOL.Database;
 using DOL.GS.Spells;
 
 namespace DOL.GS.RealmAbilities
@@ -35,7 +35,7 @@ namespace DOL.GS.RealmAbilities
 			if (player.Group == null)
 				return;
 
-			foreach (GamePlayer member in player.Group)
+			foreach (GamePlayer member in player.Group.GetPlayersInTheGroup())
 			{
 				Spell subspell = SkillBase.GetSpellByID(7063);
 				ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(player, subspell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));

@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using DOL.Database2;
+using DOL.Database;
 
 namespace DOL.GS
 {
@@ -22,8 +22,8 @@ namespace DOL.GS
 		HorseBarding      = 8, // Equipment, horse barding
 		Horse             = 9, // Equipment, horse
 
+		RightHandWeapon = 10,//Equipment, Visible
 		MinEquipable	  = 10,
-		RightHandWeapon   = 10,//Equipment, Visible
 		LeftHandWeapon    = 11,//Equipment, Visible
 		TwoHandWeapon     = 12,//Equipment, Visible
 		DistanceWeapon    = 13,//Equipment, Visible
@@ -61,13 +61,14 @@ namespace DOL.GS
 		FirstVault        = 110,
 		LastVault         = 149,
 
-		Max_Inv			  = 149,
+		HousingInventory_First = 150,
+		HousingInventory_Last = 249,	
 
-		FirstHousingVault_First = 150,
-		FirstHousingVault_Last = 249,
+		HouseVault_First = 1000,
+		HouseVault_Last = 1399,
 
-		//Consignment_First = 150,
-		//Consignment_last = 249,
+		Consignment_First = 1500,
+		Consignment_Last = 1599,
 
 		//FirstFixLoot      = 256, //You can define drops that will ALWAYS occur (eg quest drops etc.)
 		//LastFixLoot       = 356, //100 drops should be enough ... if not, just raise this var, we have thousands free
@@ -80,6 +81,8 @@ namespace DOL.GS
 		Silver178		  = 503,
 		Copper178		  = 504,
 		NewPlayerPaperDoll= 600,
+
+		Max_Inv = 249,
 	}
 
 	/// <summary>
@@ -102,6 +105,7 @@ namespace DOL.GS
 
 		void            BeginChanges();
 		void            CommitChanges();
+		void			ClearInventory();
 
 		int				CountSlots(bool countUsed, eInventorySlot minSlot, eInventorySlot maxSlot);
 		int				CountItemTemplate(string itemtemplateID, eInventorySlot minSlot, eInventorySlot maxSlot);

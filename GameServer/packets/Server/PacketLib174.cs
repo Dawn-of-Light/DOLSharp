@@ -22,7 +22,7 @@ using System.Collections;
 using System.Reflection;
 
 using DOL.GS.Effects;
-using DOL.Database2;
+using DOL.Database;
 using DOL.GS.Keeps;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
@@ -317,14 +317,13 @@ namespace DOL.GS.PacketHandler
 			// 0x20 = wireframe
 			pak.WriteByte((byte)flags);
 			pak.WriteByte(0x00); // new in 1.74
-
+			if (playerToCreate.CharacterClass.ID == (int)eCharacterClass.Vampiir) flags |= 0x40; //Vamp fly
 			pak.WritePascalString(GameServer.ServerRules.GetPlayerName(m_gameClient.Player, playerToCreate));
 			pak.WritePascalString(GameServer.ServerRules.GetPlayerGuildName(m_gameClient.Player, playerToCreate));
 			pak.WritePascalString(GameServer.ServerRules.GetPlayerLastName(m_gameClient.Player, playerToCreate));
             //RR 12 / 13
             pak.WritePascalString(GameServer.ServerRules.GetPlayerPrefixName(m_gameClient.Player, playerToCreate)); 
             pak.WritePascalString(playerToCreate.CurrentTitle.GetValue(playerToCreate)); // new in 1.74, NewTitle
-			pak.WriteByte(0x00);
 			SendTCP(pak);
 
 			//if (GameServer.ServerRules.GetColorHandling(m_gameClient) == 1) // PvP
@@ -380,7 +379,11 @@ namespace DOL.GS.PacketHandler
 		protected override void WriteGroupMemberUpdate(GSTCPPacketOut pak, bool updateIcons, GameLiving living)
 		{
 			base.WriteGroupMemberUpdate(pak, updateIcons, living);
+			WriteGroupMemberMapUpdate(pak, living);
+		}
 
+		protected virtual void WriteGroupMemberMapUpdate(GSTCPPacketOut pak, GameLiving living)
+		{
 			bool sameRegion = living.CurrentRegion == m_gameClient.Player.CurrentRegion;
 			if (sameRegion && living.CurrentSpeed != 0)//todo : find a better way to detect when player change coord
 			{

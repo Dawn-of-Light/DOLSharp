@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Trainer
 {
@@ -51,11 +52,8 @@ namespace DOL.GS.Trainer
 			// check if class matches.				
 			if (player.CharacterClass.ID == (int)eCharacterClass.Heretic)
 			{
-
 				// popup the training window
 				player.Out.SendTrainerWindow();
-				//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
-
 			}
 			else
 			{
@@ -63,10 +61,14 @@ namespace DOL.GS.Trainer
 				if (CanPromotePlayer(player))
 				{
 					player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the Temple of Arawn] and defend our realm as a Heretic?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					if (!player.IsLevelRespecUsed)
+					{
+						OfferRespecialize(player);
+					}
 				}
 				else
 				{
-					player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+					DismissPlayer(player);
 				}
 			}
 			return true;
@@ -77,7 +79,7 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public override bool CanPromotePlayer(GamePlayer player)
+		public static bool CanPromotePlayer(GamePlayer player)
 		{
 			return (player.Level >= 5 && player.CharacterClass.ID == (int)eCharacterClass.Acolyte && (player.Race == (int)eRace.Briton || player.Race == (int)eRace.Avalonian
 				|| player.Race == (int)eRace.Inconnu || player.Race == (int)eRace.AlbionMinotaur));

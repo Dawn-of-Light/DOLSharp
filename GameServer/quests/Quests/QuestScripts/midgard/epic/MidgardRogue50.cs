@@ -36,7 +36,7 @@
 
 using System;
 using System.Reflection;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -192,7 +192,7 @@ namespace DOL.GS.Quests.Midgard
 
 			#region defineItems
 
-			oona_head = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "oona_head");
+			oona_head = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "oona_head");
 			if (oona_head == null)
 			{
 				if (log.IsWarnEnabled)
@@ -219,7 +219,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 
-			sealed_pouch = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "sealed_pouch");
+			sealed_pouch = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sealed_pouch");
 			if (sealed_pouch == null)
 			{
 				if (log.IsWarnEnabled)
@@ -247,7 +247,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 // end item
 
-			HunterEpicBoots = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "HunterEpicBoots");
+			HunterEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HunterEpicBoots");
 			if (HunterEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -288,7 +288,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 //end item
 			//Call of the Hunt Coif 
-			HunterEpicHelm = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "HunterEpicHelm");
+			HunterEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HunterEpicHelm");
 			if (HunterEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -332,7 +332,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 //end item
 			//Call of the Hunt Gloves 
-			HunterEpicGloves = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "HunterEpicGloves");
+			HunterEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HunterEpicGloves");
 			if (HunterEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -372,7 +372,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			//Call of the Hunt Hauberk 
-			HunterEpicVest = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "HunterEpicVest");
+			HunterEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HunterEpicVest");
 			if (HunterEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -415,7 +415,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			//Call of the Hunt Legs 
-			HunterEpicLegs = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "HunterEpicLegs");
+			HunterEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HunterEpicLegs");
 			if (HunterEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -458,7 +458,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			//Call of the Hunt Sleeves 
-			HunterEpicArms = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "HunterEpicArms");
+			HunterEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HunterEpicArms");
 			if (HunterEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -501,7 +501,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			//Shadow Shrouded Boots 
-			ShadowbladeEpicBoots = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "ShadowbladeEpicBoots");
+			ShadowbladeEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ShadowbladeEpicBoots");
 			if (ShadowbladeEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -544,7 +544,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			//Shadow Shrouded Coif 
-			ShadowbladeEpicHelm = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "ShadowbladeEpicHelm");
+			ShadowbladeEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ShadowbladeEpicHelm");
 			if (ShadowbladeEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -587,7 +587,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			//Shadow Shrouded Gloves 
-			ShadowbladeEpicGloves = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "ShadowbladeEpicGloves");
+			ShadowbladeEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ShadowbladeEpicGloves");
 			if (ShadowbladeEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -631,7 +631,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			//Shadow Shrouded Hauberk 
-			ShadowbladeEpicVest = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "ShadowbladeEpicVest");
+			ShadowbladeEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ShadowbladeEpicVest");
 			if (ShadowbladeEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -674,7 +674,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			//Shadow Shrouded Legs 
-			ShadowbladeEpicLegs = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "ShadowbladeEpicLegs");
+			ShadowbladeEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ShadowbladeEpicLegs");
 			if (ShadowbladeEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -717,7 +717,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			//Shadow Shrouded Sleeves 
-			ShadowbladeEpicArms = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "ShadowbladeEpicArms");
+			ShadowbladeEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ShadowbladeEpicArms");
 			if (ShadowbladeEpicArms == null)
 			{
 				if (log.IsWarnEnabled)

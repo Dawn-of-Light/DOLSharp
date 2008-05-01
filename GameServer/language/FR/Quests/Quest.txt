@@ -1,0 +1,5 @@
+
+# /Quests
+# AbstractQuest
+AbstractQuest.FinishQuest.Completed:		Vous avez termine la quete: {0} !
+AbstractQuest.OnQuestAssigned.GetQuest:		Vous avez reçu la quete: {0} !

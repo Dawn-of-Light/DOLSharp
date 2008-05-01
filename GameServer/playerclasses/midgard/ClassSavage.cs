@@ -89,6 +89,10 @@ namespace DOL.GS.PlayerClass
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 2));
 			}
+			if (player.Level >= 24)
+			{
+				player.AddAbility(SkillBase.GetAbility(Abilities.PreventFlight));
+			}
 			if (player.Level >= 30)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 4));
@@ -102,6 +106,11 @@ namespace DOL.GS.PlayerClass
 				player.AddAbility(SkillBase.GetAbility(Abilities.Advanced_Evade));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Stoicism));
 			}
+		}
+
+		public override bool HasAdvancedFromBaseClass()
+		{
+			return true;
 		}
 	}
 }

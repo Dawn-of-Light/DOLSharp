@@ -32,7 +32,7 @@
 
 using System;
 using System.Reflection;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -151,7 +151,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineItems
 
-			statue_of_arawn = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "statue_of_arawn");
+			statue_of_arawn = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "statue_of_arawn");
 			if (statue_of_arawn == null)
 			{
 				if (log.IsWarnEnabled)
@@ -179,7 +179,7 @@ namespace DOL.GS.Quests.Albion
 			}
 // end item
 			ItemTemplate i = null;
-			ClericEpicBoots = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "ClericEpicBoots");
+			ClericEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ClericEpicBoots");
 			if (ClericEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -224,7 +224,7 @@ namespace DOL.GS.Quests.Albion
 			}
 //end item
 			//of the Defiant Soul  Coif 
-			ClericEpicHelm = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "ClericEpicHelm");
+			ClericEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ClericEpicHelm");
 			if (ClericEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -270,7 +270,7 @@ namespace DOL.GS.Quests.Albion
 			}
 //end item
 			//of the Defiant Soul  Gloves 
-			ClericEpicGloves = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "ClericEpicGloves");
+			ClericEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ClericEpicGloves");
 			if (ClericEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -315,7 +315,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of the Defiant Soul  Hauberk 
-			ClericEpicVest = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "ClericEpicVest");
+			ClericEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ClericEpicVest");
 			if (ClericEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -359,7 +359,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of the Defiant Soul  Legs 
-			ClericEpicLegs = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "ClericEpicLegs");
+			ClericEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ClericEpicLegs");
 			if (ClericEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -404,7 +404,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of the Defiant Soul  Sleeves 
-			ClericEpicArms = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "ClericEpicArms");
+			ClericEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ClericEpicArms");
 			if (ClericEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -448,7 +448,7 @@ namespace DOL.GS.Quests.Albion
 				ClericEpicArms = i;
 			}
 
-			PaladinEpicBoots = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "PaladinEpicBoots");
+			PaladinEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "PaladinEpicBoots");
 			if (PaladinEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -494,7 +494,7 @@ namespace DOL.GS.Quests.Albion
 			}
 //end item
 			//of the Iron Will Coif 
-			PaladinEpicHelm = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "PaladinEpicHelm");
+			PaladinEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "PaladinEpicHelm");
 			if (PaladinEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -540,7 +540,7 @@ namespace DOL.GS.Quests.Albion
 			}
 //end item
 			//of the Iron Will Gloves 
-			PaladinEpicGloves = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "PaladinEpicGloves");
+			PaladinEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "PaladinEpicGloves");
 			if (PaladinEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -585,7 +585,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of the Iron Will Hauberk 
-			PaladinEpicVest = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "PaladinEpicVest");
+			PaladinEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "PaladinEpicVest");
 			if (PaladinEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -630,7 +630,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of the Iron Will Legs 
-			PaladinEpicLegs = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "PaladinEpicLegs");
+			PaladinEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "PaladinEpicLegs");
 			if (PaladinEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -675,7 +675,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of the Iron Will Sleeves 
-			PaladinEpicArms = (ItemTemplate) DatabaseLayer.Instance.SelectObject(typeof (ItemTemplate),"Id_nb", "PaladinEpicArms");
+			PaladinEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "PaladinEpicArms");
 			if (PaladinEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -783,7 +783,7 @@ namespace DOL.GS.Quests.Albion
 							Roben.SayTo(player, "You must not let this occur " + player.GetName(0, false) + "! I am familar with [Lyonesse]. I suggest that you gather a strong group of adventurers in order to succeed in this endeavor!");
 							break;
 						case 2:
-							Roben.SayTo(player, "Where you able to defeat the cult of the dark lord Arawn?");
+							Roben.SayTo(player, "Were you able to defeat the cult of the dark lord Arawn?");
 							break;
 					}
 				}
@@ -922,7 +922,7 @@ namespace DOL.GS.Quests.Albion
 				switch (Step)
 				{
 					case 1:
-						return "[Step #1] Gather a strong group of adventures and travel to the ancient temple of Arwan. This temple can be found within Lyonesse, surrounded by the dark one's priests. Only by slaying their leader can this evil be stopped!";
+						return "[Step #1] Gather a strong group of adventures and travel to the ancient temple of Arawn. This temple can be found within Lyonesse, surrounded by the dark one's priests. Only by slaying their leader can this evil be stopped!";
 					case 2:
 						return "[Step #2] Return the statue of Arawn to Roben Fraomar for your reward!";
 				}

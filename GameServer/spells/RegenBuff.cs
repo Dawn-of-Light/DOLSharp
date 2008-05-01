@@ -21,6 +21,8 @@ using System.Collections;
 using System.Collections.Specialized;
 using DOL.GS.Effects;
 using DOL.GS.PropertyCalc;
+using System.Reflection;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
@@ -42,6 +44,15 @@ namespace DOL.GS.Spells
 	[SpellHandler("PowerRegenBuff")]
 	public class PowerRegenSpellHandler : PropertyChangingSpell
 	{
+		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+		{
+			if (target.HasAbility(Abilities.VampiirStrength))
+			{
+				MessageToCaster("Vampiirs can't be affected by any power regeneration spell!", eChatType.CT_Spell);
+				return;
+			}
+			base.ApplyEffectOnTarget(target, effectiveness);
+		}
 		public override int BonusCategory1 { get { return 1; } }
 		public override eProperty Property1 { get { return eProperty.PowerRegenerationRate; } }
 

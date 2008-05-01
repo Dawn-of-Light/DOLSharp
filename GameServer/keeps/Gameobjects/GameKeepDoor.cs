@@ -20,8 +20,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 
-using DOL.Database2;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 
@@ -132,8 +131,7 @@ namespace DOL.GS.Keeps
 		{
 			get 
 			{
-				//return (byte)this.Component.Keep.Level;
-				return (byte)this.Component.Level; 
+				return (byte)this.Component.Keep.Level;
 			}
 		}
 
@@ -426,11 +424,20 @@ namespace DOL.GS.Keeps
 		#endregion
 
 		#region Save/load DB
+
+		/// <summary>
+		/// save the keep door object in DB
+		/// </summary>
+		public override void SaveIntoDatabase()
+		{
+
+		}
+
 		/// <summary>
 		/// load the keep door object from DB object
 		/// </summary>
 		/// <param name="obj"></param>
-		/*public override void LoadFromDatabase(DatabaseObject obj)
+		public override void LoadFromDatabase(DataObject obj)
 		{
 			DBDoor door = obj as DBDoor;
 			if (door == null)
@@ -449,8 +456,6 @@ namespace DOL.GS.Keeps
 			m_Model = 0xFFFF;
 			m_doorID = door.InternalID;
 			m_state = eDoorState.Closed;
-
-			DoorMgr.Doors[m_doorID] = this;
 			this.AddToWorld();
 
 			foreach (AbstractArea area in this.CurrentAreas)
@@ -467,7 +472,7 @@ namespace DOL.GS.Keeps
 
 			m_health = MaxHealth;
 			StartHealthRegeneration();
-		}*/
+		}
 
 		public void LoadFromPosition(DBKeepPosition pos, GameKeepComponent component)
 		{
@@ -484,8 +489,6 @@ namespace DOL.GS.Keeps
 			m_doorID = GenerateDoorID();
 			this.m_Model = 0xFFFF;
 			m_state = eDoorState.Closed;
-
-			DoorMgr.Doors[m_doorID] = this;
 			this.AddToWorld();
 			StartHealthRegeneration();
 		}

@@ -21,7 +21,7 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
 
-using DOL.Database2;
+using DOL.Database;
 using DOL.Language;
 using DOL.GS.Effects;
 using DOL.GS.RealmAbilities;
@@ -56,15 +56,26 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ArrayList objectInfo = new ArrayList();
 			//log.Debug("DetailDisplayHandler: type=" + objectType + " id=" + objectID);
 
-			switch (objectType)
+				switch (objectType)
 			{
 				#region Inventory Item
 				case 1: //Display Infos on inventory item
+				case 10: // market search
 					{
-						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
-						if (item == null)
-							return 1;
-
+						InventoryItem item = null;
+						if (objectType == 1)
+						{
+							item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
+							if (item == null)
+								return 1;
+						}
+						else
+						{
+							List<InventoryItem> list = client.Player.TempProperties.getObjectProperty("TempSearchKey", null) as List<InventoryItem>;
+							item = list[objectID];
+							if (item == null)
+								return 1;
+						}
 
 						caption = item.Name;
 
@@ -99,14 +110,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//**********************************
 						if (item.CrafterName != null && item.CrafterName != "")
 						{
-							objectInfo.Add(" ");//empty line
 							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CrafterName", item.CrafterName));
+						}
+						else if (item.Id_nb == "UniqueObject") // tolakram - force display of unique object
+						{
+							objectInfo.Add("Unique Object");
+							objectInfo.Add(" ");//empty line
 						}
 
 						//**********************************
 						//show info for all types of weapons
 						//**********************************
-						if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type <= (int)eObjectType.MaulerStaff) ||
+						if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type <= (int)eObjectType._LastWeapon) ||
 							item.Object_Type == (int)eObjectType.Instrument)
 						{
 							WriteUsableClasses(objectInfo, item, client);
@@ -288,15 +303,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 							}
 							if (client.Account.PrivLevel > 1)
 							{
-								objectInfo.Add("----------Technical informations----------");
-								objectInfo.Add("Line             :" + spellHandler.SpellLine.Name);
-								objectInfo.Add("HasPositiveEffect:" + spellHandler.HasPositiveEffect);
+                                objectInfo.Add(" ");
+                                objectInfo.Add("--- Spell technical informations ---");
+                                objectInfo.Add(" ");
+								objectInfo.Add("Line              :  " + spellHandler.SpellLine.Name);
+								objectInfo.Add("HasPositiveEffect :  " + spellHandler.HasPositiveEffect);
 							}
 						}
 						break;
 					}
-				#endregion
-				#region Spell
 				case 3: //spell
 					{
 						IList skillList = client.Player.GetNonTrainableSkillList();
@@ -833,23 +848,28 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						else
 						{
-							//realm abilities
+							//delve on realm abilities [by Suncheck]
 							if (objectID >= 50)
 							{
 								int clientclassID = client.Player.CharacterClass.ID;
+								int sub = 50;
 								IList ra_list = SkillBase.GetClassRealmAbilities(clientclassID);
-								Ability rr5abil = SkillBase.getClassRealmAbility(clientclassID);
-								RealmAbility ab = (RealmAbility)ra_list[objectID - 50];
-								if (rr5abil != null)
+								Ability ra5abil = SkillBase.getClassRealmAbility(clientclassID);
+								RealmAbility ab = (RealmAbility)ra_list[objectID - sub];
+								if (ra5abil != null) //check if player have rr
 								{
-									for (int i = 0; i <= (objectID - 50); i++)
-									{
-										RealmAbility rrabil = (RealmAbility)ra_list[i];
-										if (rrabil.KeyName == ab.KeyName)
-											ab = (RealmAbility)ra_list[objectID - 49];
-									}
-
+									if(client.Player.RealmPoints < 513500) //player have not rr5 abilty
+										sub--;
 								}
+								for (int i = 0; i <= (objectID - sub); i++) //get all ra's at full level
+								{
+									RealmAbility raabil = (RealmAbility)ra_list[i];
+									RealmAbility playerra = (RealmAbility)client.Player.GetAbility(raabil.KeyName);
+									if (playerra != null)
+										if (playerra.Level >= playerra.MaxLevel)
+											sub--;
+								}
+								ab = (RealmAbility)ra_list[objectID - sub];
 								if (ab != null)
 								{
 									caption = ab.Name;
@@ -893,12 +913,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 						objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.LevName"));
 						foreach (Style style in styles)
 						{
-							//						objectInfo.Add(" ");
 							objectInfo.Add(style.Level + ": " + style.Name);
 						}
 						foreach (Spell spell in spells)
 						{
-							//						objectInfo.Add(" ");
 							objectInfo.Add(spell.Level + ": " + spell.Name);
 						}
 						break;
@@ -1063,18 +1081,20 @@ Type    Description           Id
 
 		public void WriteTechnicalInfo(ArrayList output, ItemTemplate item)
 		{
-			output.Add("----------Technical informations----------");
+            output.Add(" ");
+            output.Add("--- Item technical informations ---");
+            output.Add(" ");
 			output.Add("Item Template: " + item.Id_nb);
-			output.Add("         Name: " + item.Name);
+   			output.Add("         Name: " + item.Name);
 			output.Add("        Level: " + item.Level);
-			output.Add("        Model: " + item.Model);
-			output.Add("    Extension: " + item.Extension);
-			output.Add("         Type: " + GlobalConstants.ObjectTypeToName(item.Object_Type) + " (" + item.Object_Type + ")");
-			output.Add("         Slot: " + GlobalConstants.SlotToName(item.Item_Type) + " (" + item.Item_Type + ")");
+            output.Add("       Object: " + GlobalConstants.ObjectTypeToName(item.Object_Type) + " (" + item.Object_Type + ")");
+            output.Add("         Type: " + GlobalConstants.SlotToName(item.Item_Type) + " (" + item.Item_Type + ")");
+            output.Add("    Extension: " + item.Extension);
+            output.Add("        Model: " + item.Model);
 			output.Add("        Color: " + item.Color);
 			output.Add("       Emblem: " + item.Emblem);
 			output.Add("       Effect: " + item.Effect);
-			output.Add("  Value/Price: " + item.Gold + "g " + item.Silver + "s " + item.Copper + "c");
+			output.Add("  Value/Price: " + item.Platinum + "p " + item.Gold + "g " + item.Silver + "s " + item.Copper + "c");
 			output.Add("       Weight: " + (item.Weight / 10.0f) + "lbs");
 			output.Add("      Quality: " + item.Quality + "%");
 			output.Add("   Durability: " + item.Durability + "/" + item.MaxDurability + "(max)");
@@ -1091,10 +1111,10 @@ Type    Description           Id
 
 			if (GlobalConstants.IsWeapon(item.Object_Type))
 			{
-				output.Add("         Hand: " + GlobalConstants.ItemHandToName(item.Hand));
+				output.Add("         Hand: " + GlobalConstants.ItemHandToName(item.Hand) + " (" + item.Hand + ")");
 				output.Add("Damage/Second: " + (item.DPS_AF / 10.0f));
 				output.Add("        Speed: " + (item.SPD_ABS / 10.0f));
-				output.Add("  Damage type: " + GlobalConstants.WeaponDamageTypeToName(item.Type_Damage));
+				output.Add("  Damage type: " + GlobalConstants.WeaponDamageTypeToName(item.Type_Damage) + " (" + item.Type_Damage + ")");
 				output.Add("        Bonus: " + item.Bonus);
 			}
 			else if (GlobalConstants.IsArmor(item.Object_Type))
@@ -1107,7 +1127,7 @@ Type    Description           Id
 			{
 				output.Add("Damage/Second: " + (item.DPS_AF / 10.0f));
 				output.Add("        Speed: " + (item.SPD_ABS / 10.0f));
-				output.Add("  Shield type: " + GlobalConstants.ShieldTypeToName(item.Type_Damage));
+                output.Add("  Shield type: " + GlobalConstants.ShieldTypeToName(item.Type_Damage) + " (" + item.Type_Damage + ")");
 				output.Add("        Bonus: " + item.Bonus);
 			}
 			else if (item.Object_Type == (int)eObjectType.Arrow || item.Object_Type == (int)eObjectType.Bolt)
@@ -1248,7 +1268,7 @@ Type    Description           Id
 		}
 		public void WriteUsableClasses(ArrayList output, ItemTemplate item, GameClient client)
 		{
-			if (item.AllowedClasses == "" || item.AllowedClasses == null)
+			if (item.AllowedClasses == "" || item.AllowedClasses == null || item.AllowedClasses == "0")
 				return;
 			output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteUsableClasses.UsableBy"));
 			string[] allowedclasses = item.AllowedClasses.Split(';');
@@ -1685,23 +1705,53 @@ Type    Description           Id
 		{
 			if (bonusCat != 0 && bonusValue != 0 && !SkillBase.CheckPropertyType((eProperty)bonusCat, ePropertyType.Focus))
 			{
-				//- Axe: 5 pts
-				//- Strength: 15 pts
-				//- Constitution: 15 pts
-				//- Hits: 40 pts
-				//- Fatigue: 8 pts
-				//- Heat: 7%
-				//Bonus to casting speed: 2%
-				//Bonus to armor factor (AF): 18
-				//Power: 6 % of power pool.
-				list.Add(string.Format(
-					"- {0}: {1}{2}",
-					SkillBase.GetPropertyName((eProperty)bonusCat),
-					bonusValue.ToString("+0;-0;0"),
-					((bonusCat == (int)eProperty.PowerPool) || (bonusCat >= (int)eProperty.Resist_First && bonusCat <= (int)eProperty.Resist_Last))
-					? ((bonusCat == (int)eProperty.PowerPool) ? "% of power pool." : "%")
-						: " pts"
-				));
+				if (IsPvEBonus((eProperty)bonusCat))
+				{
+					// Evade: {0}% (PvE Only)
+					list.Add(string.Format(SkillBase.GetPropertyName((eProperty)bonusCat), bonusValue));
+				}
+				else
+				{
+					//- Axe: 5 pts
+					//- Strength: 15 pts
+					//- Constitution: 15 pts
+					//- Hits: 40 pts
+					//- Fatigue: 8 pts
+					//- Heat: 7%
+					//Bonus to casting speed: 2%
+					//Bonus to armor factor (AF): 18
+					//Power: 6 % of power pool.
+					list.Add(string.Format(
+						"- {0}: {1}{2}",
+						SkillBase.GetPropertyName((eProperty)bonusCat),
+						bonusValue.ToString("+0;-0;0"), //Andraste
+						((bonusCat == (int)eProperty.PowerPool) || (bonusCat >= (int)eProperty.Resist_First && bonusCat <= (int)eProperty.Resist_Last) || (bonusCat >= (int)eProperty.ResCapBonus_First && bonusCat <= (int)eProperty.ResCapBonus_Last) || bonusCat==(int)eProperty.RealmPoints )
+						? ((bonusCat == (int)eProperty.PowerPool) ? LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DetailDisplayHandler.WriteBonusLine.PowerPool") : "%")
+							: LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DetailDisplayHandler.WriteBonusLine.Points")
+					));
+				}
+			}
+		}
+
+		protected bool IsPvEBonus(eProperty property)
+		{
+			switch (property)
+			{
+				//case eProperty.BlockChance:
+				//case eProperty.ParryChance:
+				//case eProperty.EvadeChance:
+				case eProperty.DefensiveBonus:
+				case eProperty.BladeturnReinforcement:
+				case eProperty.NegativeReduction:
+				case eProperty.PieceAblative:
+				case eProperty.ReactionaryStyleDamage:
+				case eProperty.SpellPowerCost:
+				case eProperty.StyleCostReduction:
+				case eProperty.ToHitBonus:
+					return true;
+
+				default:
+					return false;
 			}
 		}
 

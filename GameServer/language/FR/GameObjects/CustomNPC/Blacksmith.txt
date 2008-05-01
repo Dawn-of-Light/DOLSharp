@@ -1,0 +1,20 @@
+
+
+# /Blacksmith
+Scripts.Blacksmith.AbortRepair:				Vous refusez la reparation de {0}.
+Scripts.Blacksmith.CantRepairThat:			Je ne peux pas reparer cela.
+Scripts.Blacksmith.GiveObject:				[Donnez lui un objet à reparer]
+Scripts.Blacksmith.InvalidItem:				Objet invalide.
+Scripts.Blacksmith.ItsDone:					C'est fait. Votre {0} est pret(e) pour le combat !
+Scripts.Blacksmith.NoNeedRepair:			Cet objet n'a pas besoin d'etre repare.
+Scripts.Blacksmith.NotEnoughMoney:			Vous n'avez pas assez d'argent.
+Scripts.Blacksmith.ObjectCantRepaired:		Cet objet ne peut pas etre repare.
+Scripts.Blacksmith.ObjectRatherOld:			Uhh, Cet objet est deja relativement vieux, je ne serais pas en mesure de le reparer de nouveau, faites-y attention !
+Scripts.Blacksmith.RepairAccept:			Acceptez vous de reparer {0} ?
+Scripts.Blacksmith.RepairCost:				Cela vous coûtera {0} pour reparer {1}.
+Scripts.Blacksmith.RepairFinished:			Bien, c'est termine. Votre {0} est comme neuf. Revenez si vous avez à nouveau besoin de mes services !
+Scripts.Blacksmith.Say:						Je peux reparer armes et armures pour vous, donnez-moi juste l'objet que vous souhaitez reparer et je verrai ce que je peux faire, pour un petit coût bien entendu.
+Scripts.Blacksmith.StackedObjets:			{0} ne peut pas reparer d'objets empiles.
+Scripts.Blacksmith.YouExamine:				Vous observez {0}. C'est un forgeron {1}.
+Scripts.Blacksmith.YouPay:					Vous payez {0} {1}.
+Scripts.Blacksmith.YouTarget:				Vous ciblez [{0}].

@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections;
-using DOL.Database2;
+using DOL.Database;
 
 namespace DOL.GS.Effects
 {

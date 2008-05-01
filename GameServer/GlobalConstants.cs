@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using DOL.GS.PacketHandler;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Language;
 
 namespace DOL.GS
@@ -208,7 +208,8 @@ namespace DOL.GS
 		L_BRACER = 0x21,
 		R_BRACER = 0x22,
 		L_RING = 0x23,
-		R_RING = 0x24
+		R_RING = 0x24,
+		MYTHICAL = 0x25
 	};
 
 	/// <summary>
@@ -780,6 +781,10 @@ namespace DOL.GS
 		ThrustResCapBonus = 229,
 		ResCapBonus_Last = 229,
         #endregion
+		
+		//Andraste - Vico : new Mythirian bonus (in progress)
+		RealmPoints = 253,
+		ArcaneSyphon = 254,
 
         MaxProperty = 255,
 	}
@@ -1184,6 +1189,7 @@ namespace DOL.GS
 				case 0x22: return "rightbracer";
 				case 0x23: return "leftring";
 				case 0x24: return "rightring";
+				case 0x25: return "mythirian";
 			}
 			return "generic inventory";
 		}
@@ -1338,6 +1344,11 @@ namespace DOL.GS
 				case "rri": return 0x24;
 				case "rir": return 0x24;
 				case "rr": return 0x24;
+				
+				//Mythirians
+				case "myth": return 0x25;
+				case "mythirian": return 0x25;
+				case "mythirians": return 0x25;
 			}
 			return 0x00;
 		}
@@ -1376,6 +1387,7 @@ namespace DOL.GS
 				case eProperty.Piety: return "Piety";
 				case eProperty.Empathy: return "Empathy";
 				case eProperty.Charisma: return "Charisma";
+                case eProperty.Resist_Body: return "Body Resist";
 				case eProperty.Resist_Cold: return "Cold Resist";
 				case eProperty.Resist_Crush: return "Crush Resist";
 				case eProperty.Resist_Energy: return "Energy Resist";

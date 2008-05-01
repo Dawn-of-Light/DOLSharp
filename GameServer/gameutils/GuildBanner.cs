@@ -4,7 +4,7 @@ using System.Collections;
 using DOL.Events;
 using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.Database2;
+using DOL.Database;
 using log4net;
 using DOL.GS.Effects;
 
@@ -29,7 +29,7 @@ namespace DOL.GS
             {
                 if (m_player != null)
                 {
-                    foreach (GamePlayer playa in m_player.Group)
+                    foreach (GamePlayer playa in m_player.Group.GetPlayersInTheGroup())
                     {
                         if (!playa.IsCarryingGuildBanner)
                         {

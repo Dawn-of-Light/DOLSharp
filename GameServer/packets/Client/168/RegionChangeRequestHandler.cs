@@ -19,7 +19,8 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using DOL.Database2;
+using DOL.Events;
+using DOL.Database;
 using DOL.GS.ServerRules;
 using log4net;
 
@@ -65,13 +66,26 @@ namespace DOL.GS.PacketHandler.Client.v168
 				client.Out.SendMessage("JumpSpotID = " + JumpSpotID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			Region reg = WorldMgr.GetRegion(zonePoint.Region);
-			if (reg != null && reg.IsDisabled)
+			if (reg != null)
 			{
-				if ((client.Player.Mission is Quests.TaskDungeonMission && (client.Player.Mission as Quests.TaskDungeonMission).TaskRegion.Description == reg.Description) == false)
+				if (reg.IsDisabled)
 				{
-					client.Out.SendMessage("This region has been disabled", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+					if ((client.Player.Mission is Quests.TaskDungeonMission && (client.Player.Mission as Quests.TaskDungeonMission).TaskRegion.Description == reg.Description) == false)
+					{
+						client.Out.SendMessage("This region has been disabled!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return 1;
+					}
 				}
+			}
+
+			//check caps for battleground
+			Battleground bg = Keeps.KeepMgr.GetBattleground(zonePoint.Region);
+			if (bg != null)
+			{
+				if (client.Player.Level < bg.MinLevel &&
+					client.Player.Level > bg.MaxLevel &&
+					client.Player.RealmLevel >= bg.MaxRealmLevel)
+					return 1;
 			}
 
 			IJumpPointHandler check = null;
@@ -110,7 +124,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 
 			new RegionChangeRequestHandler(client.Player, zonePoint, check).Start(1);
-
 			return 1;
 		}
 

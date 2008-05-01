@@ -97,15 +97,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 					client.Out.SendMessage("You can't train in this specialization again this level!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 1;
 				}
-				if (client.Player.SkillSpecialtyPoints >= spec.Level + 1)
+
+                // Graveen - autotrain 1.87 - allow players to train their AT specs even if no pts left
+                client.Player.SkillSpecialtyPoints += client.Player.GetAutoTrainPoints(spec, 2);
+
+                if (client.Player.SkillSpecialtyPoints >= spec.Level + 1)
 				{
-					client.Player.SkillSpecialtyPoints -= (ushort)(spec.Level + 1);
+                    client.Player.SkillSpecialtyPoints -= (ushort)(spec.Level + 1);
 					spec.Level++;
 					client.Player.OnSkillTrained(spec);
+
 					client.Out.SendUpdatePoints();
-					//client.Player.CharacterClass.OnLevelUp(client.Player);
-					//client.Player.CharacterClass.OnSkillTrained(client.Player, spec);
-					//client.Out.SendUpdatePlayerSkills();
 					client.Out.SendTrainerWindow();
 					return 1;
 				}

@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Effects
 {
@@ -31,22 +32,6 @@ namespace DOL.GS.Effects
 		/// The owner of the effect
 		/// </summary>
 		GamePlayer m_player;
-
-		//VaNaTiC->
-		/*
-		/// <summary>
-		/// The internal unique effect ID
-		/// </summary>
-		ushort m_id;
-		*/
-		//VaNaTiC<-		
-
-		/// <summary>
-		/// Creates a new stealth effect
-		/// </summary>
-		public StealthEffect()
-		{
-		}
 
 		/// <summary>
 		/// Start the stealth on player
@@ -82,7 +67,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-		public override string Name { get { return "Hidden"; } }
+		public override string Name { get { return LanguageMgr.GetTranslation(m_player.Client, "Effects.StealthEffect.Name"); } }
 
 		/// <summary>
 		/// Remaining Time of the effect in milliseconds
@@ -93,15 +78,6 @@ namespace DOL.GS.Effects
 		/// Icon to show on players, can be id
 		/// </summary>
 		public override ushort Icon { get { return 0x193; } }
-
-		//VaNaTiC->
-		/*
-		/// <summary>
-		/// unique id for identification in effect list
-		/// </summary>
-		public ushort InternalID { get { return m_id; } set { m_id = value; } }
-		*/
-		//VaNaTiC<-
 
 		/// <summary>
 		/// Delve Info

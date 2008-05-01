@@ -23,10 +23,11 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Threading;
+using System.Diagnostics;
 
-using DOL.Database2;
-using DOL.Database2;
-
+using DOL.Database;
+using DOL.Database.Attributes;
+using DOL.Database.Connection;
 using DOL.Events;
 using DOL.GS.DatabaseConverters;
 using DOL.GS.Housing;
@@ -102,6 +103,11 @@ namespace DOL
 			protected const int MAX_UDPBUF = 4096;
 
 			/// <summary>
+			/// Database instance
+			/// </summary>
+			protected ObjectDatabase m_database = null;
+
+			/// <summary>
 			/// Contains a list of invalid names
 			/// </summary>
 			protected ArrayList m_invalidNames = new ArrayList();
@@ -170,12 +176,24 @@ namespace DOL
 				get
 				{
 					if (Instance.m_serverRules == null)
+					{
 						Instance.m_serverRules = ScriptMgr.CreateServerRules(Instance.Configuration.ServerType);
+						if (Instance.m_serverRules == null && log.IsErrorEnabled)
+						{
+							log.Error("Something errored in created new server rules.  This is a test to see if this is what is causing the weird keep guard brain bug");
+						}
+					}
 					return Instance.m_serverRules;
 				}
 			}
 
-
+			/// <summary>
+			/// Gets the database instance
+			/// </summary>
+			public static ObjectDatabase Database
+			{
+				get { return Instance.m_database; }
+			}
 
 			/// <summary>
 			/// Gets or sets the world save interval
@@ -558,198 +576,215 @@ namespace DOL
 			/// <returns>True if the server was successfully started</returns>
 			public override bool Start()
 			{
-				if (debugMemory)
-					log.Debug("Starting Server, Memory is " + GC.GetTotalMemory(false) / 1024 / 1024);
-				m_status = eGameServerStatus.GSS_Closed;
-				Thread.CurrentThread.Priority = ThreadPriority.Normal;
-
-				AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-
-				//---------------------------------------------------------------
-				//Check and convert the database version if older that current
-				//if (!CheckDatabaseVersion())
-				//	return false;
-
-				//---------------------------------------------------------------
-				//Try to init the server port
-				if (!InitComponent(InitSocket(), "InitSocket()"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Packet buffers
-				if (!InitComponent(AllocatePacketBuffers(), "AllocatePacketBuffers()"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Try to start the udp port
-				if (!InitComponent(StartUDP(), "StartUDP()"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Try to init the RSA key
-				/* No Cryptlib currently
-				if (log.IsInfoEnabled)
-					log.Info("Generating RSA key, may take a minute, please wait...");
-				if (!InitComponent(CryptLib168.GenerateRSAKey(), "RSA key generation"))
-					return false;
-				*/
-
-				//---------------------------------------------------------------
-				//Try to start the Language Manager
-				if (!InitComponent(DOL.Language.LanguageMgr.Init(), "Multi Language Initialization"))
-					return false;
-
-				//Init the mail manager
-				InitComponent(Mail.MailMgr.Init(), "Mail Manager Initialization");
-
-
-				//---------------------------------------------------------------
-				//Load artifact manager
-				if (!InitComponent(ArtifactMgr.Init(), "Artifact Manager"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Try to initialize the WorldMgr in early state
-				RegionData[] regionsData;
-				if (!InitComponent(WorldMgr.EarlyInit(out regionsData), "World Manager PreInitialization"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Try to compile the Scripts
-				if (!InitComponent(RecompileScripts(), "Script compilation"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Try to initialize the script components
-				if (!InitComponent(StartScriptComponents(), "Script components"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Load all faction managers
-				if (!InitComponent(FactionMgr.Init(), "Faction Managers"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Load all calculators
-				if (!InitComponent(GameLiving.LoadCalculators(), "GameLiving.LoadCalculators()"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Try to start the Npc Templates Manager
-				if (!InitComponent(NpcTemplateMgr.Init(), "Npc Templates Manager"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Load the house manager
-				if (!InitComponent(HouseMgr.Start(), "House Manager"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Load the region managers
-				if (!InitComponent(WorldMgr.StartRegionMgrs(), "Region Managers"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Load the area manager
-				if (!InitComponent(AreaMgr.LoadAllAreas(), "Areas"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Enable Worldsave timer now
-				if (m_timer != null)
+				try
 				{
-					m_timer.Change(Timeout.Infinite, Timeout.Infinite);
-					m_timer.Dispose();
+					Process pro = Process.GetCurrentProcess();
+					pro.ProcessorAffinity = new IntPtr(GameServer.Instance.Configuration.CPUUse);
+					if (debugMemory)
+						log.Debug("Starting Server, Memory is " + GC.GetTotalMemory(false)/1024/1024);
+					m_status = eGameServerStatus.GSS_Closed;
+					Thread.CurrentThread.Priority = ThreadPriority.Normal;
+
+					AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+
+					//---------------------------------------------------------------
+					//Check and convert the database version if older that current
+					//if (!CheckDatabaseVersion())
+					//	return false;
+
+					//---------------------------------------------------------------
+					//Try to init the server port
+					if (!InitComponent(InitSocket(), "InitSocket()"))
+						return false;
+
+					//---------------------------------------------------------------
+					//Packet buffers
+					if (!InitComponent(AllocatePacketBuffers(), "AllocatePacketBuffers()"))
+						return false;
+
+					//---------------------------------------------------------------
+					//Try to start the udp port
+					if (!InitComponent(StartUDP(), "StartUDP()"))
+						return false;
+
+					//---------------------------------------------------------------
+					//Try to init the RSA key
+					/* No Cryptlib currently
+					if (log.IsInfoEnabled)
+						log.Info("Generating RSA key, may take a minute, please wait...");
+					if (!InitComponent(CryptLib168.GenerateRSAKey(), "RSA key generation"))
+						return false;
+					*/
+
+					//---------------------------------------------------------------
+					//Try to start the Language Manager
+					if (!InitComponent(DOL.Language.LanguageMgr.Init(), "Multi Language Initialization"))
+						return false;
+
+					//Init the mail manager
+					InitComponent(Mail.MailMgr.Init(), "Mail Manager Initialization");
+
+
+					//---------------------------------------------------------------
+					//Load artifact manager
+					if (!InitComponent(ArtifactMgr.Init(), "Artifact Manager"))
+						return false;
+
+					//---------------------------------------------------------------
+					//Try to initialize the WorldMgr in early state
+					RegionData[] regionsData;
+					if (!InitComponent(WorldMgr.EarlyInit(out regionsData), "World Manager PreInitialization"))
+						return false;
+
+					//---------------------------------------------------------------
+					//Try to compile the Scripts
+					if (!InitComponent(RecompileScripts(), "Script compilation"))
+						return false;
+
+					//---------------------------------------------------------------
+					//Try to initialize the script components
+					if (!InitComponent(StartScriptComponents(), "Script components"))
+						return false;
+
+					//---------------------------------------------------------------
+					//Load all faction managers
+					if (!InitComponent(FactionMgr.Init(), "Faction Managers"))
+						return false;
+
+					//---------------------------------------------------------------
+					//Load all calculators
+					if (!InitComponent(GameLiving.LoadCalculators(), "GameLiving.LoadCalculators()"))
+						return false;
+
+					//---------------------------------------------------------------
+					//Try to start the npc equipment
+					if (!InitComponent(GameNpcInventoryTemplate.Init(), "Npc Equipment"))
+						return false;
+
+					//---------------------------------------------------------------
+					//Try to start the Npc Templates Manager
+					if (!InitComponent(NpcTemplateMgr.Init(), "Npc Templates Manager"))
+						return false;
+
+					//---------------------------------------------------------------
+					//Load the house manager
+					if (!InitComponent(HouseMgr.Start(), "House Manager"))
+						return false;
+
+					//---------------------------------------------------------------
+					//Load the region managers
+					if (!InitComponent(WorldMgr.StartRegionMgrs(), "Region Managers"))
+						return false;
+
+					//---------------------------------------------------------------
+					//Load the area manager
+					if (!InitComponent(AreaMgr.LoadAllAreas(), "Areas"))
+						return false;
+
+					//---------------------------------------------------------------
+					//Enable Worldsave timer now
+					if (m_timer != null)
+					{
+						m_timer.Change(Timeout.Infinite, Timeout.Infinite);
+						m_timer.Dispose();
+					}
+					m_timer = new Timer(new TimerCallback(SaveTimerProc), null, SaveInterval*MINUTE_CONV, Timeout.Infinite);
+					if (log.IsInfoEnabled)
+						log.Info("World save timer: true");
+
+					//---------------------------------------------------------------
+					//Load all boats
+					if (!InitComponent(BoatMgr.LoadAllBoats(), "Boat Manager"))
+						return false;
+
+					//---------------------------------------------------------------
+					//Load all guilds
+					if (!InitComponent(GuildMgr.LoadAllGuilds(), "Guild Manager"))
+						return false;
+
+					//---------------------------------------------------------------
+					//Load the keep manager
+					if (!InitComponent(KeepMgr.Load(), "Keep Manager"))
+						return false;
+
+					//---------------------------------------------------------------
+					//Load the door manager
+					if (!InitComponent(DoorMgr.Init(), "Door Manager"))
+						return false;
+
+					//---------------------------------------------------------------
+					//Try to initialize the WorldMgr
+					if (!InitComponent(WorldMgr.Init(regionsData), "World Manager Initialization"))
+						return false;
+					regionsData = null;
+
+					//---------------------------------------------------------------
+					//Load the relic manager
+					if (!InitComponent(RelicMgr.Init(), "Relic Manager"))
+						return false;
+
+					//---------------------------------------------------------------
+					//Load all weather managers
+					if (!InitComponent(WeatherMgr.Load(), "Weather Managers"))
+						return false;
+
+					//---------------------------------------------------------------
+					//Load all crafting managers
+					if (!InitComponent(CraftingMgr.Init(), "Crafting Managers"))
+						return false;
+
+					//---------------------------------------------------------------
+					//Load player titles manager
+					if (!InitComponent(PlayerTitleMgr.Init(), "Player Titles Manager"))
+						return false;
+
+					//---------------------------------------------------------------
+					//Load behaviour manager
+					if (!InitComponent(BehaviourMgr.Init(), "Behaviour Manager"))
+						return false;
+
+					//Load the quest managers if enabled
+					if (ServerProperties.Properties.LOAD_QUESTS)
+					{
+						if (!InitComponent(QuestMgr.Init(), "Quest Manager"))
+							return false;
+					}
+
+					//---------------------------------------------------------------
+					//Notify our scripts that everything went fine!
+					GameEventMgr.Notify(ScriptEvent.Loaded);
+
+					//---------------------------------------------------------------
+					//Set the GameServer StartTick
+					m_startTick = System.Environment.TickCount;
+					//---------------------------------------------------------------
+					//Notify everyone that the server is now started!
+					GameEventMgr.Notify(GameServerEvent.Started, this);
+
+					//---------------------------------------------------------------
+					//Try to start the base server (open server port for connections)
+					if (!InitComponent(base.Start(), "base.Start()"))
+						return false;
+
+					GC.Collect(GC.MaxGeneration);
+
+					//---------------------------------------------------------------
+					//Open the server, players can now connect!
+					m_status = eGameServerStatus.GSS_Open;
+
+					if (log.IsInfoEnabled)
+						log.Info("GameServer is now open for connections!");
+
+					//INIT WAS FINE!
+					return true;
 				}
-				m_timer = new Timer(new TimerCallback(SaveTimerProc), null, SaveInterval * MINUTE_CONV, Timeout.Infinite);
-				if (log.IsInfoEnabled)
-					log.Info("World save timer: true");
+				catch (Exception e)
+				{
+					if (log.IsErrorEnabled)
+						log.Error("Failed to start the server", e);
 
-                //---------------------------------------------------------------
-                //Load all boats
-                if (!InitComponent(BoatMgr.LoadAllBoats(), "Boat Manager"))
-                    return false;
-                
-                //---------------------------------------------------------------
-				//Load all guilds
-				if (!InitComponent(GuildMgr.LoadAllGuilds(), "Guild Manager"))
 					return false;
-
-				//---------------------------------------------------------------
-				//Load the keep manager
-				if (!InitComponent(KeepMgr.Load(), "Keep Manager"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Load the door manager
-				if (!InitComponent(DoorMgr.Init(), "Door Manager"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Try to initialize the WorldMgr
-				if (!InitComponent(WorldMgr.Init(regionsData), "World Manager Initialization"))
-					return false;
-				regionsData = null;
-
-				//---------------------------------------------------------------
-				//Load the relic manager
-				if (!InitComponent(RelicMgr.Init(), "Relic Manager"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Load all weather managers
-				if (!InitComponent(WeatherMgr.Load(), "Weather Managers"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Load all crafting managers
-				if (!InitComponent(CraftingMgr.Init(), "Crafting Managers"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Load player titles manager
-				if (!InitComponent(PlayerTitleMgr.Init(), "Player Titles Manager"))
-					return false;
-
-                //---------------------------------------------------------------
-                //Load behaviour manager
-                if (!InitComponent(BehaviourMgr.Init(), "Behaviour Manager"))
-                    return false;
-
-                //Load the quest managers if enabled
-                if (ServerProperties.Properties.LOAD_QUESTS)
-                {
-                    if (!InitComponent(QuestMgr.Init(), "Quest Manager"))
-                        return false;
-                }
-
-				//---------------------------------------------------------------
-				//Notify our scripts that everything went fine!
-				GameEventMgr.Notify(ScriptEvent.Loaded);
-
-				//---------------------------------------------------------------
-				//Set the GameServer StartTick
-				m_startTick = System.Environment.TickCount;
-				//---------------------------------------------------------------
-				//Notify everyone that the server is now started!
-				GameEventMgr.Notify(GameServerEvent.Started, this);
-
-				//---------------------------------------------------------------
-				//Try to start the base server (open server port for connections)
-				if (!InitComponent(base.Start(), "base.Start()"))
-					return false;
-
-				GC.Collect(GC.MaxGeneration);
-
-				//---------------------------------------------------------------
-				//Open the server, players can now connect!
-				m_status = eGameServerStatus.GSS_Open;
-
-				if (log.IsInfoEnabled)
-					log.Info("GameServer is now open for connections!");
-
-				//INIT WAS FINE!
-				return true;
+				}
 			}
 
 			/// <summary>
@@ -1015,9 +1050,6 @@ namespace DOL
 				if (m_database != null)
 				{
 					m_database.WriteDatabaseTables();
-					//move inactive accounts, characters, quests TODO and inventoryitems to archive
-					if (ServerProperties.Properties.USE_ARCHIVING)
-						m_database.ArchiveTables();
 				}
 
 				m_serverRules = null;
@@ -1138,7 +1170,7 @@ namespace DOL
 
 			#endregion
 
-			#region GS
+			#region Database
 
 			/// <summary>
 			/// Initializes the database
@@ -1146,7 +1178,56 @@ namespace DOL
 			/// <returns>True if the database was successfully initialized</returns>
 			public bool InitDB()
 			{
-#warning rewrite
+				if (m_database == null)
+				{
+					DataConnection con = new DataConnection(Configuration.DBType, Configuration.DBConnectionString);
+					m_database = new ObjectDatabase(con);
+					try
+					{
+						//We will search our assemblies for DataTables by reflection so 
+						//it is not neccessary anymore to register new tables with the 
+						//server, it is done automatically!
+						foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+						{
+							// Walk through each type in the assembly
+							foreach (Type type in assembly.GetTypes())
+							{
+								// Pick up a class
+								// Aredhel: Ok, I know checking for InventoryArtifact type
+								// is a hack, but I currently have no better idea.
+								if (type.IsClass != true || type == typeof(InventoryArtifact))
+									continue;
+								object[] attrib = type.GetCustomAttributes(typeof(DataTable), true);
+								if (attrib.Length > 0)
+								{
+									if (log.IsInfoEnabled)
+										log.Info("Registering table: " + type.FullName);
+									m_database.RegisterDataObject(type);
+								}
+							}
+						}
+					}
+					catch (DatabaseException e)
+					{
+						if (log.IsErrorEnabled)
+							log.Error("Error registering Tables", e);
+						return false;
+					}
+
+					try
+					{
+						m_database.LoadDatabaseTables();
+					}
+					catch (DatabaseException e)
+					{
+						if (log.IsErrorEnabled)
+							log.Error("Error loading Database", e);
+						return false;
+					}
+				}
+				if (log.IsInfoEnabled)
+					log.Info("Database Initialization: true");
+				return true;
 			}
 
 			/// <summary>
@@ -1154,7 +1235,8 @@ namespace DOL
 			/// </summary>
 			public void SaveDatabase()
 			{
-                DatabaseLayer.Instance.SaveWorldState();
+				if (m_database != null)
+					m_database.WriteDatabaseTables();
 			}
 
 			/// <summary>
@@ -1171,18 +1253,26 @@ namespace DOL
 					if (log.IsDebugEnabled)
 						log.Debug("Save ThreadId=" + Thread.CurrentThread.ManagedThreadId);
 					int saveCount = 0;
-					ThreadPriority oldprio = Thread.CurrentThread.Priority;
-					Thread.CurrentThread.Priority = ThreadPriority.Lowest;
+					if (m_database != null)
+					{
+						ThreadPriority oldprio = Thread.CurrentThread.Priority;
+						Thread.CurrentThread.Priority = ThreadPriority.Lowest;
 
-					//Only save the players, NOT any other object!
-					//saveCount = WorldMgr.SavePlayers();
+						//Only save the players, NOT any other object!
+						saveCount = WorldMgr.SavePlayers();
 
-					//The following line goes through EACH region and EACH object
-					//is tested for savability. A real waste of time, so it is commented out
-					//WorldMgr.SaveToDatabase();
+						//The following line goes through EACH region and EACH object
+						//is tested for savability. A real waste of time, so it is commented out
+						//WorldMgr.SaveToDatabase();
 
-                    DatabaseLayer.Instance.SaveWorldState();
-					Thread.CurrentThread.Priority = oldprio;
+						GuildMgr.SaveAllGuilds();
+                        BoatMgr.SaveAllBoats();
+
+						FactionMgr.SaveAllAggroToFaction();
+
+						m_database.WriteDatabaseTables();
+						Thread.CurrentThread.Priority = oldprio;
+					}
 					if (log.IsInfoEnabled)
 						log.Info("Saving database complete!");
 					startTick = Environment.TickCount - startTick;

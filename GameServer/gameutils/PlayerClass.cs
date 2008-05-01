@@ -17,10 +17,11 @@
  *
  */
 using System;
-using DOL.Database2;
 using System.Collections;
 using System.Collections.Generic;
+using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS
 {
@@ -160,6 +161,7 @@ namespace DOL.GS
 			get;
 		}
 		void SwitchToFemaleName();
+		bool HasAdvancedFromBaseClass();
 	}
 
 	/// <summary>
@@ -376,38 +378,17 @@ namespace DOL.GS
 		/// <param name="player">player to modify</param>
 		public virtual void OnLevelUp(GamePlayer player)
 		{
-			if (!player.PlayerCharacter.UsedLevelCommand)
+			// Grav: autotrain in player.OnLevelUp()
+			// If this is a PvE server, issue one realm specialty point
+			// for each level starting at level 20.
+			if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE)
 			{
-				//Autotrain
-				IList playerSpecs = player.GetSpecList();
-				bool found = false;
-				//				lock (playerSpecs.SyncRoot)
-				{
-					foreach (Specialization spec in playerSpecs)
-					{
-						foreach (string autotrainKey in AutoTrainableSkills())
-						{
-							if (autotrainKey != spec.KeyName) continue;
-							if (spec.Level < player.Level / 4)
-							{
-								spec.Level = player.Level / 4;
-								player.CharacterClass.OnSkillTrained(player, spec);
-								player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, "You autotrain " + spec.Name + " to level " + spec.Level);
-								found = true;
-							}
-						}
-					}
-				}
-				if (found)
-				{
-					player.RefreshSpecDependantSkills(true);
-					player.UpdateSpellLineLevels(true);
-					if (player.ObjectState == GameObject.eObjectState.Active)
-					{
-						player.Out.SendUpdatePlayerSkills();
-					}
-					//					player.SaveIntoDatabase(); // saved in game player
-				}
+				// Somewhere in the code, regardless of server type, one RA point
+				// is being assigned at lvl 20 already (I don't know where that's
+				// coming from).  That's why the following is <= 20 and not just < 20.
+				if (player.Level <= 20) return;
+				player.RealmSpecialtyPoints++;
+				player.SaveIntoDatabase();
 			}
 		}
 
@@ -445,6 +426,11 @@ namespace DOL.GS
 		public virtual bool CanUseLefthandedWeapon(GamePlayer player)
 		{
 			return false;
+		}
+
+		public virtual bool HasAdvancedFromBaseClass()
+		{
+			return true;
 		}
 	}
 

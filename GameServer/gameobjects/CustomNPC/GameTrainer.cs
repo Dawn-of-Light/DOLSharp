@@ -20,7 +20,7 @@ using System;
 using System.Text;
 using System.Collections;
 using DOL.AI.Brain;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Events;
 using DOL.Language;
 using DOL.GS.PacketHandler;
@@ -137,18 +137,13 @@ namespace DOL.GS
 				player.Out.SendPlayerFreeLevelUpdate();
 			}
 
-            if (player.Level == 5)
-            {
-                player.Out.SendMessage(String.Format("{0} says, \" {1}, if you wish, I can undo the training you've done so far and give you the ability to train again. This would allow you to [respecialize] your skills. If you are interested, you must simply let me know.\"", this.Name, player.Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-            }
-			            
 			// Turn to face player
 			TurnTo(player, 10000);
 
 			if (TrainerType > 0 && player.Level >= 50)
 				player.Out.SendChampionTrainerWindow(TrainerType);
 
-			return true;
+            return true;
 		}
 
 		/// <summary>
@@ -162,44 +157,54 @@ namespace DOL.GS
 			if (!base.WhisperReceive(source, text)) return false;
 			GamePlayer player = source as GamePlayer;
 			if (player == null) return false;
+			
+			//level respec for players
+			if (text == LanguageMgr.GetTranslation(player.Client, "GameTrainer.Interact.CaseRespecialize"))
+			{
+				if (player.Level == 5 && !player.IsLevelRespecUsed)
+				{
+					int specPoints = 0;
 
-            switch (text)
-            {
-                //level respec for players
-                case "respecialize":
-                    if (player.Level == 5  && !player.IsLevelRespecUsed)
-                    {
-                        int specPoints = 0;
+					specPoints = player.RespecAll();
+					player.RespecAmountAllSkill++;
 
-                        specPoints = player.RespecAll();
-                        player.RespecAmountAllSkill++;
+					// Assign full points returned
+					if (specPoints > 0)
+					{
+						player.SkillSpecialtyPoints += specPoints;
+						lock (player.GetStyleList().SyncRoot)
+						{
+							player.GetStyleList().Clear(); // Kill styles
+						}
+						player.UpdateSpellLineLevels(false);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.Interact.RegainPoints", specPoints), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+					player.RefreshSpecDependantSkills(false);
+					// Notify Player of points
+					player.Out.SendUpdatePlayerSkills();
+					player.Out.SendUpdatePoints();
+					player.Out.SendUpdatePlayer();
+					player.Out.SendTrainerWindow();
+					player.SaveIntoDatabase();
+				}
 
-                        // Assign full points returned
-                        if (specPoints > 0)
-                        {
-                            player.SkillSpecialtyPoints += specPoints;
-                            lock (player.GetStyleList().SyncRoot)
-                            {
-                                player.GetStyleList().Clear(); // Kill styles
-                            }
-                            player.UpdateSpellLineLevels(false);
-                            player.Out.SendMessage("You regain " + specPoints + " specialization points!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        }
-                        player.RefreshSpecDependantSkills(false);
-                        // Notify Player of points
-                        player.Out.SendUpdatePlayerSkills();
-                        player.Out.SendUpdatePoints();
-                        player.Out.SendUpdatePlayer();
-                        player.Out.SendTrainerWindow();
-                        player.SaveIntoDatabase();
-                    }
-                    break;
-            }
+			}
 
 			//Now we turn the npc into the direction of the person
 			TurnTo(player, 10000);
 
 			return true;
+		}
+
+		/// <summary>
+		/// Offer respecialize to the player.
+		/// </summary>
+		/// <param name="player"></param>
+		protected virtual void OfferRespecialize(GamePlayer player)
+		{
+			player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation
+				(player.Client, "GameTrainer.Interact.Respecialize", this.Name, player.Name)),
+				eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 		}
 
 		/// <summary>
@@ -240,14 +245,7 @@ namespace DOL.GS
 						}						
 				}
 			}
-
-
 			return base.ReceiveItem(source, item);
-		}
-
-		public virtual bool CanPromotePlayer(GamePlayer player)
-		{
-			return true;
 		}
 
 		public void PromotePlayer(GamePlayer player)

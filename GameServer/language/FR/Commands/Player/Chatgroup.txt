@@ -1,0 +1,37 @@
+
+# /Chatgroup
+Scripts.Players.Chatgroup.Help.Help:			/cg help - Affiche toutes les commandes du groupe de discussion.
+Scripts.Players.Chatgroup.Help.Invite:			/cg invite [nom du joueur] - Invite le joueur specifie à rejoindre le groupe de discussion.
+Scripts.Players.Chatgroup.Help.JoinPrivate:		/cg join [moderateur] [mot de passe] - Rejoindre un groupe de discussion protege par un mot de passe.	
+Scripts.Players.Chatgroup.Help.JoinPublic:		/cg join [moderateur] - Rejoindre un groupe de discussion.
+Scripts.Players.Chatgroup.Help.Leader:			/cg leader <nom> - Promouvoir un autre joueur comme chef du groupe de discussion; Ce joueur peut inviter d'autre joueurs à rejoindre le canal et peut parler quand le canal est en mode ecoute.
+Scripts.Players.Chatgroup.Help.Leave:			/cg leave - Quitter le groupe de discussion.
+Scripts.Players.Chatgroup.Help.Listen:			/cg listen - Mettre le groupe de discussion en mode ecoute; seul le moderateur et les leads peuvent parler.
+Scripts.Players.Chatgroup.Help.PasswordClear:	/cg password clear - Efface le mot de passe actuel (moderateur uniquement).	
+Scripts.Players.Chatgroup.Help.PasswordDisplay:	/cg password - Affiche le mot de passe actuel (moderateur uniquement).	
+Scripts.Players.Chatgroup.Help.PasswordNew:		/cg password [nouveau mot de passe]	- Change le mot de passe actuel.
+Scripts.Players.Chatgroup.Help.Private:			/cg private - Definir le groupe de discussion comme etant prive.
+Scripts.Players.Chatgroup.Help.Public:			/cg public - Definir le groupe de discussion comme etant publique, tout le monde peut rejoindre.
+Scripts.Players.Chatgroup.Help.Remove:			/cg remove [nom du joueur] - Ejecte le joueur specifie du groupe de discussion.
+Scripts.Players.Chatgroup.Help.Usage:			/cg usage :
+Scripts.Players.Chatgroup.Help.Who:				/cg who - Liste tous les membres du groupe de discussion.
+Scripts.Players.Chatgroup.InChatGroup:			Vous devez etre dans un groupe de discussion pour utiliser cette commande.
+Scripts.Players.Chatgroup.InviteYourself:		Vous ne pouvez pas vous inviter vous meme dans un groupe de discussion.	
+Scripts.Players.Chatgroup.JoinChatGroup:		Voulez vous rejoindre le groupe de discussion de {0} ?	
+Scripts.Players.Chatgroup.LeaderCommand:		Vous devez etre le moderateur du groupe de discussion pour utiliser cette commande.	
+Scripts.Players.Chatgroup.LeaderInvite:			Vous devez etre le moderateur du groupe de discussion pour inviter un joueur à le rejoindre.
+Scripts.Players.Chatgroup.ListenMode:			Le mode d'ecoute du canal de discussion a change.
+Scripts.Players.Chatgroup.Moderator:			{0} est maintenant moderateur du groupe de discussion.
+Scripts.Players.Chatgroup.NoPlayer:				Il n'y a pas de joueur de ce nom.
+Scripts.Players.Chatgroup.NotChatGroupLeader:	Ce joueur n'est pas moderateur d'un groupe de discussion.	
+Scripts.Players.Chatgroup.NotChatGroupMember:	Ce joueur n'est pas membre d'un groupe de discussion.	
+Scripts.Players.Chatgroup.NotPublic:			Ce groupe de discussion n'est pas publique.
+Scripts.Players.Chatgroup.OnlyModerator:		Seul le moderateur peut parler dans ce groupe de discussion.	
+Scripts.Players.Chatgroup.OwnChatGroup:			Vous ne pouvez pas rejoindre votre propre groupe de discussion.
+Scripts.Players.Chatgroup.Password:				Mot de passe de ce groupe de discussion: {0}.
+Scripts.Players.Chatgroup.PasswordChanged:		Nouveau mot de passe du groupe de discussion: {0}.	
+Scripts.Players.Chatgroup.PlayerInChatgroup:	{0} est dejà membre d'un groupe de discussion.	
+Scripts.Players.Chatgroup.Private:				Le groupe de discussion est maintenant prive.
+Scripts.Players.Chatgroup.Public:				Le groupe de discussion est maintenant publique.
+Scripts.Players.Chatgroup.Usage:				Usage: /c <texte>
+Scripts.Players.Chatgroup.UsageInvite:			Usage: /cg invite <nom du joueur>"

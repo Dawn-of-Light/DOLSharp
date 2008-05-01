@@ -1,5 +1,5 @@
 using System;
-using DOL.Database2;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.RealmAbilities
@@ -40,7 +40,7 @@ namespace DOL.GS.RealmAbilities
 
 				SendCasterSpellEffectAndCastMessage(living, 7017, true);
 
-				foreach (GamePlayer p in player.Group)
+				foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 				{
 					if (p == player) continue;
 					if (!WorldMgr.CheckDistance(player, p, 2000)) continue;

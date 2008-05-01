@@ -1,0 +1,53 @@
+
+
+# CommanderPet
+GameObjects.Master:								Master
+GameObjects.Mistress:							Mistress
+GameObjects.CommanderPet.DreadGuardian:			dread guardian
+GameObjects.CommanderPet.DreadLich:				dread lich
+GameObjects.CommanderPet.DreadArcher:			dread archer
+GameObjects.CommanderPet.DreadCommander:		dread commander
+GameObjects.CommanderPet.DecayedCommander:		decayed commander
+GameObjects.CommanderPet.ReturnedCommander:		returned commander
+GameObjects.CommanderPet.SkeletalCommander:		skeletal commander
+GameObjects.CommanderPet.BoneCommander:			bone commander			
+GameObjects.CommanderPet.HailMaster:			Hail, {0}. As my summoner, you may target me and say Commander to learn more about the abilities I possess.
+GameObjects.CommanderPet.WR.Const.Commander:	commander
+GameObjects.CommanderPet.WR.Const.Spells:		spells
+GameObjects.CommanderPet.WR.Const.Empower:		empower
+GameObjects.CommanderPet.WR.Const.Combat:		combat
+GameObjects.CommanderPet.WR.Const.Snares:		snares
+GameObjects.CommanderPet.WR.Const.Debilitating:	debilitating
+GameObjects.CommanderPet.WR.Const.Damage:		damage
+GameObjects.CommanderPet.WR.Const.Assist:		assist
+GameObjects.CommanderPet.WR.Const.Taunt:		taunt
+GameObjects.CommanderPet.WR.Const.Weapons:		weapons
+GameObjects.CommanderPet.WR.Const.One:			one
+GameObjects.CommanderPet.WR.Const.Two:			two
+GameObjects.CommanderPet.WR.Const.Harm:			harm
+GameObjects.CommanderPet.WR.Const.Drain:		drain
+GameObjects.CommanderPet.WR.Const.Suppress:		suppress
+GameObjects.CommanderPet.WR.Const.1HandedSword:	one handed sword
+GameObjects.CommanderPet.WR.Const.2HandedSword:	two handed sword
+GameObjects.CommanderPet.WR.Const.1HandedHammer:	one handed hammer
+GameObjects.CommanderPet.WR.Const.2HandedHammer:	two handed hammer
+GameObjects.CommanderPet.WR.Const.1HandedAxe:	one handed axe
+GameObjects.CommanderPet.WR.Const.2HandedAxe:	two handed axe
+GameObjects.CommanderPet.WR.DreadGuardian:		The {0} says, "As one of Bogdar's chosen guardians, I have mastered the ability to {1} his enemies and {2} myself with extra defenses. I also have various {3} tactics at your disposal."
+GameObjects.CommanderPet.WR.DreadLich:			The {0} says, "As one of Bogdar's mystics, I have mastered many dark {1}. I also have the means to {2} my spells to be more effective. I also have various {3} tactics at your disposal."
+GameObjects.CommanderPet.WR.DreadArcher:		The {0} says, "As one of Bogdar's favored archers, you can {1} me to be more effective with my bow. I also have various {2} tactics at your disposal."
+GameObjects.CommanderPet.WR.XCommander:			The {0} says, "As one of Bogdar's commanders, I have mastered many of the fossil {1} within his bone army. Which weapon shall I wield for you? I also have various {2} tactics at your disposal."
+GameObjects.CommanderPet.WR.DreadLich2:			The {0} says, "My arsenal consists of {1}, {2}, and pure {3} spells. I cast debilitating spells when first summoned but you can command me to cast a particular type of spells if you so desire."
+GameObjects.CommanderPet.WR.Combat:				The {0} says, "From the start I order the minions under my control to {1} me with a target your choose for me to kill. Issuing the command again will make them cease assisting. I am also able to {2} your enemies so that they will focus on me instead of you."
+GameObjects.CommanderPet.WR.CommNoTaunt:		Your commander will no long taunt its enemies!
+GameObjects.CommanderPet.WR.CommStartTaunt:		Your commander will start to taunt its enemies!
+GameObjects.CommanderPet.WR.DiffCommander:		The {0} says, "I have mastered the {1}, the {2}, the {3}, the {4}, the {5} and the {6}."
+GameObjects.CommanderPet.WR.DreadGuardian:		The {0} says, "Bogdar has granted me with the ability to {1} the life of our enemies or to {2} and hurt their spirit. I cast spirit damaging spells when first summoned but you can command me to cast a particular type of spell if you so desire."
+
+
+# GAMEOBJECTS/ATLANTIS
+# /Researcher
+Researcher.GetExamineMessages.YouExamine:		You examine {0}. {1} is {2}.
+Researcher.GetExamineMessages.She:				She
+Researcher.GetExamineMessages.He:				He
+

@@ -26,7 +26,7 @@ using DOL.AI.Brain;
 using DOL.Events;
 using log4net;
 using DOL.GS.PacketHandler;
-using DOL.Database2;
+using DOL.Database;
 using System.Collections;
 using DOL.GS.Effects;
 using DOL.GS.Styles;
@@ -661,6 +661,12 @@ namespace DOL.GS
 
 		#endregion
 
+
+		public override bool SayReceive(GameLiving source, string str)
+		{
+			return WhisperReceive(source, str);
+		}
+
 		/// <summary>
         /// Actions to be taken when the pet receives a whisper.
         /// </summary>
@@ -720,9 +726,10 @@ namespace DOL.GS
 						SayTo(owner, eChatLoc.CL_SystemWindow, "As you command.");
 					}
 					return true;
-				case "taunt":
+                //Temporarily disabled until a suitable fix can be found.
+				/*case "taunt":
 					ToggleTauntMode();
-                    return true;
+                    return true;*/
 				case "weapons":
 					{
 						if (Name != "abomination")

@@ -1,0 +1,10 @@
+
+AI.Brain.Necromancer.CastSpellAfterAction:	Incantesimo {0} verrà lanciato dopo che l'azione corrente è finita.
+AI.Brain.Necromancer.ServantFarAwayToCast:	Il tuo pet è troppo lontano dal bersaglio per lanciare questo incantesimo!!
+AI.Brain.Necromancer.PetCantSeeTarget:		Il tuo pet {0} non riesce a vedere il suo obiettivo.
+AI.Brain.Necromancer.PetCastingSpell:		{0} incomincia a lanciare questo incantesimo!
+AI.Brain.Necromancer.PetTooFarBeLostSecIm:	Il tuo pet è troppo lontano da te e sarà rilasciato in {0} secondi o immediatamente se ti allontani!
+AI.Brain.Necromancer.PetTooFarBeLostSec:	Il tuo pet è troppo lontano da te e sarà rilasciato in {0} secondi.
+AI.Brain.Necromancer.HaveLostBondToPet:		Hai perso il tuo legame con il pet.
+AI.Brain.Necromancer.SpellNoLongerInQueue:	Incantesimo {0} non è più in coda {1}.
+AI.Brain.StandardMobBrain.YouProtDist:		Stai proteggendo {0} e distraendo {1}.

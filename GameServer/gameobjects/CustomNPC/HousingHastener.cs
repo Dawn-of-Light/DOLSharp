@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Language;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
@@ -71,7 +71,8 @@ namespace DOL.GS
 
 			if (item.Id_nb == "Music_Ticket")
 			{
-				CastSpell(SpellMgr.HastenerSpell, SpellMgr.GuardSpellLine);
+				TargetObject = player;
+				CastSpell(SkillBase.GetSpellByID(GameHastener.SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells));
 				player.Inventory.RemoveItem(item);
 			}
 			return true;

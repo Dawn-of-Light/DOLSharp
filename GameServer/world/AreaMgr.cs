@@ -1,4 +1,4 @@
-using DOL.Database2;
+using DOL.Database;
 using System;
 using log4net;
 using System.Reflection;
@@ -17,7 +17,7 @@ namespace DOL.GS
 			try
 			{
 				Assembly gasm = Assembly.GetExecutingAssembly();
-				DatabaseObject[] DBAreas = GameServer.Database.SelectAllObjects(typeof(DBArea));
+				DataObject[] DBAreas = GameServer.Database.SelectAllObjects(typeof(DBArea));
 				foreach (DBArea thisArea in DBAreas)
 				{
 					AbstractArea area = (AbstractArea)gasm.CreateInstance(thisArea.ClassType, false);

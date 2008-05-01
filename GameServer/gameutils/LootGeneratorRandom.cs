@@ -19,7 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using DOL.Database2;
+using DOL.Database;
 using log4net;
 
 namespace DOL.GS
@@ -74,7 +74,7 @@ namespace DOL.GS
 				lock (m_itemTemplates.SyncRoot)
 				{
 					// ** find our loot template **
-					DatabaseObject[] itemTemplates = null;
+					DataObject[] itemTemplates = null;
 					for (int i = 0; i <= LEVEL_SIZE; i++)
 					{
 						try

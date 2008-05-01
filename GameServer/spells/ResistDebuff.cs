@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using DOL.AI.Brain;
-using DOL.Database2;
+using DOL.Database;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.PropertyCalc;
@@ -80,7 +80,7 @@ namespace DOL.GS.Spells
 				if (aggroBrain != null)
 					aggroBrain.AddToAggroList(Caster, 1);
 			}
-			target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+			if(Spell.CastTime>0) target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
 		}
 
 		/// <summary>

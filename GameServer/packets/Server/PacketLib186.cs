@@ -78,5 +78,40 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
+        public override void SendMinotaurRelicWindow(GamePlayer player, int effect, bool flag)
+        {
+            GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
+
+            pak.WriteShort((ushort)player.ObjectID);
+            pak.WriteByte((byte)13);
+            if (flag)
+            {
+                pak.WriteByte(0);
+                pak.WriteInt((uint)effect);
+            }
+            else
+            {
+                pak.WriteByte(1);
+                pak.WriteInt((uint)effect);
+            }
+
+            SendTCP(pak);
+        }
+
+        public override void SendMinotaurRelicBarUpdate(GamePlayer player, int xp)
+        {
+            GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
+
+            pak.WriteShort((ushort)player.ObjectID);
+            pak.WriteByte((byte)14);
+            pak.WriteByte(0);
+            //4k maximum
+            if (xp > 4000) xp = 4000;
+            if (xp < 0) xp = 0;
+
+            pak.WriteInt((uint)xp);
+
+            SendTCP(pak);
+        }
 	}
 }

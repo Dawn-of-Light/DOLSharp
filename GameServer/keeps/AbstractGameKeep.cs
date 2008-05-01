@@ -21,7 +21,7 @@ using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 using System.Timers;
-using DOL.Database2;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -137,6 +137,19 @@ namespace DOL.GS.Keeps
 			set { m_doors = value; }
 		}
 
+		/// <summary>
+		/// the keep db object
+		/// </summary>
+		private DBKeep m_dbkeep;
+
+		/// <summary>
+		/// the keepdb object
+		/// </summary>
+		public DBKeep DBKeep
+		{
+			get	{ return m_dbkeep; }
+			set { m_dbkeep = value;}
+		}
 
 		/// <summary>
 		/// This hold list of all guards of keep
@@ -254,13 +267,21 @@ namespace DOL.GS.Keeps
 
 		#region DBKeep Properties
 		/// <summary>
+		/// The Keep ID linked to the DBKeep
+		/// </summary>
+		public int KeepID
+		{
+			get	{ return DBKeep.KeepID; }
+			set	{ DBKeep.KeepID = value; }
+		}
+
+		/// <summary>
 		/// The Keep Level linked to the DBKeep
 		/// </summary>
-        protected byte m_Level;
 		public byte Level
 		{
-			get	{ return m_Level; }
-			set	{ m_Level = value; }
+			get	{ return DBKeep.Level; }
+			set	{ DBKeep.Level = value; }
 		}
 
 		private byte m_baseLevel = 0;
@@ -303,7 +324,7 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// The Keep Region ID linked to the DBKeep
 		/// </summary>
-		public int Region
+		public ushort Region
 		{
 			get	{ return DBKeep.Region; }
 			set	{ DBKeep.Region = value; }
@@ -339,7 +360,7 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// The Keep Heading linked to the DBKeep
 		/// </summary>
-		public int Heading
+		public ushort Heading
 		{
 			get	{ return DBKeep.Heading; }
 			set	{ DBKeep.Heading = value; }
@@ -407,42 +428,40 @@ namespace DOL.GS.Keeps
 		/// load keep from Db object and load keep component and object of keep
 		/// </summary>
 		/// <param name="keep"></param>
-        /*
-         public void Load(DBKeep keep)
-        {
-            CurrentRegion = WorldMgr.GetRegion((ushort)keep.Region);
-            InitialiseTimers();
-            LoadFromDatabase(keep);
-            GameEventMgr.AddHandler(CurrentRegion, RegionEvent.PlayerEnter, new DOLEventHandler(SendKeepInit));
-            KeepArea area = null;
-            //see if any keep areas for this keep have already been added via DBArea
-            foreach (AbstractArea a in CurrentRegion.GetAreasOfSpot(keep.X, keep.Y, keep.Z))
-            {
-                if (a is KeepArea && a.Description == keep.Name)
-                {
-                    log.Debug("Found a DBArea entry for " + keep.Name + ", loading that instead of creating a new one.");
-                    area = a as KeepArea;
-                    break;
-                }
-            }
-         
+		public void Load(DBKeep keep)
+		{
+			CurrentRegion = WorldMgr.GetRegion((ushort)keep.Region);
+			InitialiseTimers();
+			LoadFromDatabase(keep);
+			GameEventMgr.AddHandler(CurrentRegion, RegionEvent.PlayerEnter, new DOLEventHandler(SendKeepInit));
+			KeepArea area = null;
+			//see if any keep areas for this keep have already been added via DBArea
+			foreach (AbstractArea a in CurrentRegion.GetAreasOfSpot(keep.X, keep.Y, keep.Z))
+			{
+				if (a is KeepArea && a.Description == keep.Name)
+				{
+					log.Debug("Found a DBArea entry for " + keep.Name + ", loading that instead of creating a new one.");
+					area = a as KeepArea;
+					break;
+				}
+			}
 
-            if (area == null)
-            {
-                area = new KeepArea(this);
-                area.CanBroadcast = true;
-                area.CheckLOS = true;
-                CurrentRegion.AddArea(area);
-            }
-            area.Keep = this;
-            this.Area = area;
-        }
-        */
-        public void Unload(KeepArea area)
+			if (area == null)
+			{
+				area = new KeepArea(this);
+				area.CanBroadcast = true;
+				area.CheckLOS = true;
+				CurrentRegion.AddArea(area);
+			}
+			area.Keep = this;
+			this.Area = area;
+		}
+
+		public void Unload(KeepArea area)
 		{
 			foreach (GameKeepGuard guard in (m_guards.Clone() as Hashtable).Values)
 			{
-				guard.DeleteGuard();
+				guard.Delete();
 				guard.DeleteFromDatabase();
 			}
 
@@ -467,7 +486,7 @@ namespace DOL.GS.Keeps
 				d.X = door.X;
 				d.Y = door.Y;
 				d.Z = door.Z;
-				DoorMgr.Doors[d.DoorID] = d;
+				DoorMgr.RegisterDoor(door);
 				d.AddToWorld();
 			}
 
@@ -481,7 +500,7 @@ namespace DOL.GS.Keeps
 		/// load keep from DB
 		/// </summary>
 		/// <param name="keep"></param>
-		public void LoadFromDatabase(DatabaseObject keep)
+		public void LoadFromDatabase(DataObject keep)
 		{
 			m_dbkeep = keep as DBKeep;
 			InternalID = keep.ObjectId;
@@ -494,7 +513,7 @@ namespace DOL.GS.Keeps
 				if (myguild != null)
 				{
 					this.m_guild = myguild;
-					this.m_guild.ClaimedKeep = this;
+					this.m_guild.ClaimedKeeps.Add(this);
 					StartDeductionTimer();
 				}
 			}
@@ -536,24 +555,6 @@ namespace DOL.GS.Keeps
 
 		#region Claim
 
-		/// <summary>
-		/// table of claim bounty point take from guild each cycle
-		/// </summary>
-		public static readonly int[] ClaimBountyPointCost =
-		{
-			0,
-			50,
-			50,
-			50,
-			50,
-			100,
-			200,
-			300,
-			400,
-			500,
-			1000,
-		};
-
 		public virtual bool CheckForClaim(GamePlayer player)
 		{
 			if(player.Realm != this.Realm)
@@ -583,16 +584,37 @@ namespace DOL.GS.Keeps
 				player.Out.SendMessage("The keep is already claimed.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			if (player.Guild.ClaimedKeep != null)
+			switch (ServerProperties.Properties.GUILDS_CLAIM_LIMIT)
 			{
-				player.Out.SendMessage("Your guild already owns a keep.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				return false;
+				case 0:
+					{
+						player.Out.SendMessage("Keep claiming is disabled!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return false;
+					}
+				case 1:
+					{
+						if (player.Guild.ClaimedKeeps.Count == 1)
+						{
+							player.Out.SendMessage("Your guild already owns a keep.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return false;
+						}
+						break;
+					}
+				default:
+					{
+						if (player.Guild.ClaimedKeeps.Count >= ServerProperties.Properties.GUILDS_CLAIM_LIMIT)
+						{
+							player.Out.SendMessage("Your guild already owns the limit of keeps (" + ServerProperties.Properties.GUILDS_CLAIM_LIMIT + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return false;
+						}
+						break;
+					}
 			}
 
 			if (player.Group != null)
 			{
 				int count = 0;
-				foreach (GamePlayer p in player.Group)
+				foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 				{
 					if (KeepMgr.getKeepCloseToSpot(p.CurrentRegionID, p, WorldMgr.VISIBILITY_DISTANCE) == this)
 						count++;
@@ -619,7 +641,9 @@ namespace DOL.GS.Keeps
 		public void Claim(GamePlayer player)
 		{
 			this.m_guild = player.Guild;
-			player.Guild.ClaimedKeep = this;
+			player.Guild.ClaimedKeeps.Add(this);
+			if (ServerProperties.Properties.GUILDS_CLAIM_LIMIT > 1)
+				player.Guild.SendMessageToGuildMembers("Your guild has currently claimed " + player.Guild.ClaimedKeeps.Count + " keeps of a maximum of " + ServerProperties.Properties.GUILDS_CLAIM_LIMIT, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
 
 			ChangeLevel(1);
 
@@ -680,17 +704,8 @@ namespace DOL.GS.Keeps
 			if (Guild == null)
 				return 0;
 
-			if (this.Guild.BountyPoints < 50 * this.Level)
-			{
-				this.Guild.GainBountyPoints(-this.Guild.BountyPoints);
-				this.Release();
-				return 0;
-			}
 			int amount = CalculRP();
 			this.Guild.GainRealmPoints(amount);
-
-			int cost = ClaimBountyPointCost[this.Level];
-			this.Guild.GainBountyPoints(-cost);
 
 			return timer.Interval;
 		}
@@ -709,7 +724,7 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public void Release()
 		{
-			this.Guild.ClaimedKeep = null;
+			this.Guild.ClaimedKeeps.Remove(this);
 			PlayerMgr.BroadcastRelease(this);
 			this.m_guild = null;
 			StopDeductionTimer();
@@ -773,6 +788,8 @@ namespace DOL.GS.Keeps
 		/// <param name="targetLevel">The target level</param>
 		public void StartChangeLevel(byte targetLevel)
 		{
+			//don't allow upgrading for now
+			return;
 			if (this.Level == targetLevel)
 				return;
 			this.TargetLevel = targetLevel;
@@ -913,7 +930,7 @@ namespace DOL.GS.Keeps
 		/// reset the realm when the lord have been killed
 		/// </summary>
 		/// <param name="realm"></param>
-		public void Reset(eRealm realm)
+		public virtual void Reset(eRealm realm)
 		{
 			LastAttackedByEnemyTick = 0;
 

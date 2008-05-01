@@ -1,6 +1,6 @@
 using System;
 using System.Reflection;
-using DOL.Database2;
+using DOL.Database;
 using System.Collections;
 using DOL.GS.PacketHandler;
 using DOL.Events;
@@ -23,11 +23,7 @@ namespace DOL.GS
 			foreach (InventoryItem item in template.AllItems)
 			{
 				InventoryItem newItem = new InventoryItem();
-				newItem.Model = item.Model;
-				newItem.Color = item.Color;
-				newItem.Effect = item.Effect;
-				newItem.Object_Type = item.Object_Type;
-				newItem.Hand = item.Hand;
+				newItem.CopyFrom(item);
 				AddItem((eInventorySlot)item.SlotPosition, newItem);
 			}
 		}

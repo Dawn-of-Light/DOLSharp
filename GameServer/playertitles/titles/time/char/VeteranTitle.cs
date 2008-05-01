@@ -25,9 +25,8 @@
  */
 using System;
 using DOL.Language;
-using DOL.GS.PlayerTitles;
 
-namespace DOL.GS.Scripts
+namespace DOL.GS.PlayerTitles
 {
 	/// <summary>
 	/// "Veteran" title granted to all chars that play for at least 180 days.

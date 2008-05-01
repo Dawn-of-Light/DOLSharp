@@ -20,7 +20,7 @@ using System.Collections;
 using System.Globalization;
 using System;
 using System.Reflection;
-using DOL.Database2;
+using DOL.Database;
 using log4net;
 
 namespace DOL.GS.ServerProperties
@@ -303,12 +303,6 @@ namespace DOL.GS.ServerProperties
 		public static readonly bool USE_KEEP_BALANCING;
 
 		/// <summary>
-		/// Use Archiving
-		/// </summary>
-		[ServerProperty("use_archiving", "Set to true if you want to move old records to an archive table", false)]
-		public static readonly bool USE_ARCHIVING;
-
-		/// <summary>
 		/// Use Live Keep Bonuses
 		/// </summary>
 		[ServerProperty("use_live_keep_bonuses", "Set to true if you want to use the live keeps bonuses, for example 3% extra xp", false)]
@@ -417,7 +411,7 @@ namespace DOL.GS.ServerProperties
 		public static readonly bool LOAD_HOOKPOINTS;
 
 		/// <summary>
-		/// Save QuestItems into GS
+		/// Save QuestItems into Database
 		/// </summary>
 		[ServerProperty("save_questitems_into_database", "set false if you don't want this", true)]
 		public static readonly bool SAVE_QUESTITEMS_INTO_DATABASE;
@@ -425,14 +419,14 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Crafting skill gain bonus in capital cities
 		/// </summary>
-		[ServerProperty("capital_city_crafting_skill_gain_bonus", "Crafting skill gain bonus in capital cities", 5)]
+		[ServerProperty("capital_city_crafting_skill_gain_bonus", "Crafting skill gain bonus % in capital cities; 5 = 5%", 5)]
 		public static readonly int CAPITAL_CITY_CRAFTING_SKILL_GAIN_BONUS;
 
 		/// <summary>
 		/// Crafting speed bonus in capital cities
 		/// </summary>
-		[ServerProperty("capital_city_crafting_speed_bonus", "Crafting speed bonus in capital cities", 10)]
-		public static readonly int CAPITAL_CITY_CRAFTING_SPEED_BONUS;
+		[ServerProperty("capital_city_crafting_speed_bonus", "Crafting speed bonus in capital cities; 2 = 2x, 3 = 3x, ..., 1 = standard", 1)]
+		public static readonly double CAPITAL_CITY_CRAFTING_SPEED_BONUS;
 
 		/// <summary>
 		/// Allow Bounty Points to be gained in Battlegrounds
@@ -459,7 +453,7 @@ namespace DOL.GS.ServerProperties
         public static readonly int TURRET_AREA_CAP_RADIUS;
 
         /// <summary>
-        /// This specifies the max ammount of people in one battlegroup.
+        /// This specifies the max amount of people in one battlegroup.
         /// </summary>
         [ServerProperty("battlegroup_max_member", "Max number of members allowed in a battlegroup.", 64)]
         public static readonly int BATTLEGROUP_MAX_MEMBER;
@@ -513,6 +507,12 @@ namespace DOL.GS.ServerProperties
 		public static readonly bool ALLOW_CROSS_REALM_GUILDS;
 
 		/// <summary>
+		/// Do we want to allow items to be equipped regardless of realm?
+		/// </summary>
+		[ServerProperty("allow_cross_realm_items", "Do we want to allow items to be equipped regardless of realm?", false)]
+		public static readonly bool ALLOW_CROSS_REALM_ITEMS;
+
+		/// <summary>
 		/// What level should /level bring you to?
 		/// </summary>
 		[ServerProperty("slash_level_target", "What level should /level bring you to? ", 20)]
@@ -523,6 +523,24 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("slash_level_requirement", "What level should you have on your account be able to use /level?", 50)]
 		public static readonly int SLASH_LEVEL_REQUIREMENT;
+
+		/// <summary>
+		/// How many players are required on the relic pad to trigger the pillar?
+		/// </summary>
+		[ServerProperty("relic_players_required_on_pad", "How many players are required on the relic pad to trigger the pillar?", 16)]
+		public static readonly int RELIC_PLAYERS_REQUIRED_ON_PAD;
+
+        /// <summary>
+        /// What levels did we allow a DOL respec ? serialized
+        /// </summary>
+        [ServerProperty("give_dol_respec_at_level", "What levels does we give a DOL respec? (serialized)", "0")]
+        public static readonly string GIVE_DOL_RESPEC_AT_LEVEL;
+
+		/// <summary>
+		/// How many things do we allow guilds to claim?
+		/// </summary>
+		[ServerProperty("guilds_claim_limit", "How many things do we allow guilds to claim?", 1)]
+		public static readonly int GUILDS_CLAIM_LIMIT;
 
         /// <summary>
 		/// This method loads the property from the database and returns

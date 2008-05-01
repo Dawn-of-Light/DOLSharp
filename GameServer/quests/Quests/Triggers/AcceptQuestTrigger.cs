@@ -19,7 +19,7 @@
 using System;
 using System.Text;
 using DOL.Events;
-using DOL.Database2;
+using DOL.Database;
 using log4net;
 using System.Reflection;
 using DOL.GS.Behaviour.Attributes;
@@ -72,9 +72,16 @@ namespace DOL.GS.Quests.Triggers
             
             if (e == GamePlayerEvent.AcceptQuest)
             {
-                GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
-                QuestEventArgs qArgs = (QuestEventArgs)args;
-                result = (qArgs.Player.ObjectID == player.ObjectID && QuestMgr.GetQuestTypeForID(qArgs.QuestID).Equals(I));
+				if (args is QuestEventArgs)
+				{
+					GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
+					QuestEventArgs qArgs = (QuestEventArgs)args;
+					result = (qArgs.Player.ObjectID == player.ObjectID && QuestMgr.GetQuestTypeForID(qArgs.QuestID).Equals(I));
+				}
+				else
+				{
+					log.Error(string.Format("Error in AcceptQuestTrigger line 76 - args: {0}", args));
+				}
             }
             
             return result;

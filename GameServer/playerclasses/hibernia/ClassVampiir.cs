@@ -37,6 +37,7 @@ namespace DOL.GS.PlayerClass
 			m_tertiaryStat = eStat.DEX;
 			m_manaStat = eStat.STR;
 			m_wsbase = 440;
+            m_baseHP = 878;
 		}
 
 		public override string GetTitle(int level)
@@ -101,7 +102,7 @@ namespace DOL.GS.PlayerClass
 			}
 			if (player.Level >= 25)
 			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.ClimbWalls));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Climbing));
 			}
 			if (player.Level >= 30)
 			{
@@ -126,6 +127,11 @@ namespace DOL.GS.PlayerClass
 				player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 5));
 				player.AddAbility(SkillBase.GetAbility(Abilities.VampiirBolt, 7));
 			}
+		}
+
+		public override bool HasAdvancedFromBaseClass()
+		{
+			return true;
 		}
 	}
 }

@@ -1,7 +1,8 @@
 using System;
 using System.Collections;
-using DOL.Database2;
+using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.RealmAbilities
 {
@@ -92,7 +93,7 @@ namespace DOL.GS.RealmAbilities
 			for (int i = 1; i <= MaxLevel; i++)
 			{
 				int reUseTime = GetReUseDelay(i);
-				list.Add("Level " + i + ": Can use every: " + ((reUseTime == 0) ? "always" : FormatTimespan(reUseTime)));
+				list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RealmAbility.AddReUseDelayInfo.Every", i, ((reUseTime == 0) ? "always" : FormatTimespan(reUseTime))));
 			}
 		}
 
@@ -110,10 +111,7 @@ namespace DOL.GS.RealmAbilities
 
 		public void DisableSkill(GameLiving living)
 		{
-			if (living is GamePlayer)
-			{
-				((GamePlayer)living).DisableSkill(this, GetReUseDelay(Level) * 1000);
-			}
+			living.DisableSkill(this, GetReUseDelay(Level) * 1000);
 		}
 
 		public override IList DelveInfo
@@ -154,11 +152,11 @@ namespace DOL.GS.RealmAbilities
 				{
 					if (player == caster)
 					{
-						player.Out.SendMessage("You cast a " + m_name + " Spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "RealmAbility.SendCasterSpellEffectAndCastMessage.You", m_name), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 					}
 					else
 					{
-						player.Out.SendMessage(caster.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "RealmAbility.SendCasterSpellEffectAndCastMessage.Caster", caster.Name), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 					}
 				}
 			}
@@ -176,11 +174,11 @@ namespace DOL.GS.RealmAbilities
 				{
 					if (player == caster)
 					{
-						player.Out.SendMessage("You cast a " + m_name + " Spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "RealmAbility.SendCastMessage.YouCast", m_name), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 					}
 					else
 					{
-						player.Out.SendMessage(player.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "RealmAbility.SendCastMessage.PlayerCasts", player.Name), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 					}
 				}
 			}
@@ -200,7 +198,7 @@ namespace DOL.GS.RealmAbilities
 			{
 				if (player != null)
 				{
-					player.Out.SendMessage("You cannot use this ability while dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "RealmAbility..CheckPreconditions.Dead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				return true;
 			}
@@ -208,7 +206,7 @@ namespace DOL.GS.RealmAbilities
 			{
 				if (player != null)
 				{
-					player.Out.SendMessage("You cannot use this ability while mesmerized!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "RealmAbility..CheckPreconditions.Mesmerized"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				return true;
 			}
@@ -216,7 +214,7 @@ namespace DOL.GS.RealmAbilities
 			{
 				if (player != null)
 				{
-					player.Out.SendMessage("You cannot use this ability while stunned!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "RealmAbility..CheckPreconditions.Stunned"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				return true;
 			}
@@ -224,7 +222,7 @@ namespace DOL.GS.RealmAbilities
 			{
 				if (player != null)
 				{
-					player.Out.SendMessage("You cannot use this ability while sitting!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "RealmAbility..CheckPreconditions.Sitting"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				return true;
 			}
@@ -232,7 +230,7 @@ namespace DOL.GS.RealmAbilities
 			{
 				if (player != null)
 				{
-					player.Out.SendMessage("You have been in combat recently and cannot use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "RealmAbility..CheckPreconditions.Combat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				return true;
 			}
@@ -240,7 +238,7 @@ namespace DOL.GS.RealmAbilities
 			{
 				if (player != null)
 				{
-					player.Out.SendMessage("You must be in combat recently to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "RealmAbility..CheckPreconditions.BeInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				return true;
 			}
@@ -248,26 +246,43 @@ namespace DOL.GS.RealmAbilities
 			{
 				if (player != null)
 				{
-					player.Out.SendMessage("You cannot use this ability while stealthed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "RealmAbility..CheckPreconditions.Stealthed"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				return true;
 			}
 			if (player != null && (bitmask & NOTINGROUP) != 0 && player.Group == null)
 			{
-				player.Out.SendMessage("You must be in a group use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "RealmAbility..CheckPreconditions.BeInGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return true;
 			}
 			return false;
 		}
 
+		/*
+		 * Stored in hex, different values in binary
+		 * e.g.
+		 * 16|8|4|2|1
+		 * ----------
+		 * 1
+		 * 0|0|0|0|1 stored as 0x00000001
+		 * 2
+		 * 0|0|0|1|0 stored as 0x00000002
+		 * 4
+		 * 0|0|1|0|0 stored as 0x00000004
+		 * 8
+		 * 0|1|0|0|0 stored as 0x00000008
+		 * 16
+		 * 1|0|0|0|0 stored as 0x00000010
+		 */
 		public const long DEAD = 0x00000001;
-		public const long SITTING = 0x00000010;
-		public const long MEZZED = 0x00000100;
-		public const long STUNNED = 0x00001000;
-		public const long INCOMBAT = 0x00010000;
-		public const long NOTINCOMBAT = 0x00100000;
-		public const long NOTINGROUP = 0x01000000;
-		public const long STEALTHED = 0x10000000;
+		public const long SITTING = 0x00000002;
+		public const long MEZZED = 0x00000004;
+		public const long STUNNED = 0x00000008;
+		public const long INCOMBAT = 0x00000010;
+		public const long NOTINCOMBAT = 0x00000020;
+		public const long NOTINGROUP = 0x00000040;
+		public const long STEALTHED = 0x000000080;
+		public const long TARGET = 0x000000100;
 	}
 
 

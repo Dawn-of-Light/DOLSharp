@@ -18,6 +18,8 @@
  */
 using System;
 using DOL.GS.PacketHandler;
+using DOL.Language;
+using DOL.Database;
 
 namespace DOL.GS.Trainer
 {
@@ -48,11 +50,8 @@ namespace DOL.GS.Trainer
             // check if class matches.				
             if (player.CharacterClass.ID > 59 && player.CharacterClass.ID < 63)
             {
-
                 // popup the training window
                 player.Out.SendTrainerWindow();
-                //player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);												
-
             }
             else
             {
@@ -60,11 +59,15 @@ namespace DOL.GS.Trainer
                 if (CanPromotePlayer(player))
                 {
                     player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the Temple of the Iron Fist] and fight for the glorious realm of Midgard?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-                }
+					if (!player.IsLevelRespecUsed)
+					{
+						OfferRespecialize(player);
+					}
+				}
                 else
                 {
-                    player.Out.SendMessage(this.Name + " says, \"You must seek elsewhere for your training.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
-                }
+					DismissPlayer(player);
+				}
             }
             return true;
         }
@@ -74,7 +77,7 @@ namespace DOL.GS.Trainer
         /// </summary>
         /// <param name="player"></param>
         /// <returns></returns>
-        public override bool CanPromotePlayer(GamePlayer player)
+        public static bool CanPromotePlayer(GamePlayer player)
         {
             return (player.Level >= 5 && player.CharacterClass.ID == (int)eCharacterClass.Viking && (player.Race == (int)eRace.Norseman
                 || player.Race == (int)eRace.MidgardMinotaur));
@@ -97,8 +100,25 @@ namespace DOL.GS.Trainer
                     // promote player to other class
                     if (CanPromotePlayer(player))
                     {
+                        // loose all spec lines
+                        player.RemoveAllSkills();
+                        player.RemoveAllStyles();
+
                         // Mauler_mid = 61
                         PromotePlayer(player, 61, "Welcome young Mauler. May your time in Midgard be rewarding.", null);
+
+                        // drop any equiped-non usable item, in inventory or on the ground if full
+                        lock (player.Inventory)
+                        {
+                            foreach (InventoryItem item in player.Inventory.EquippedItems)
+                            {
+                                if (!player.HasAbilityToUseItem(item))
+                                    if (player.Inventory.IsSlotsFree(item.Count, eInventorySlot.Consignment_First, eInventorySlot.Consignment_Last) == true)
+                                        player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack), item.Count);
+                                    else
+                                        player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, eInventorySlot.Ground, item.Count);
+                            }
+                        }
                     }
                     break;
             }

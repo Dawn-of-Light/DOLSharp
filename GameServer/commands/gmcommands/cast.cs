@@ -1,68 +1,127 @@
 /*
- * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- */
+* DAWN OF LIGHT - The first free open source DAoC server emulator
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*
+*/
+
 using System;
+using DOL.GS;
+using DOL.GS.Spells;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [CmdAttribute(
 		"&cast",
 		ePrivLevel.GM,
-		"cast a spell",
-		"/cast <spellid>",
-		"/cast <spellid> <case>")]
-	public class CastCommandHandler : AbstractCommandHandler, ICommandHandler
-	{
-		public void OnCommand(GameClient client, string[] args)
-		{
-			if (args.Length < 2)
-			{
-				client.Out.SendMessage("Usage: /cast <spellid> Cast the ID of the spell", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("Usage: /cast <case> Cast the ID and the spell (/cast 10 t)", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
-			int spellID = 0;
+		"GMCommands.Cast.Description",
+		"GMCommands.Cast.Usage")]
+    public class CastCommandHandler : AbstractCommandHandler, ICommandHandler
+    {
+        public void OnCommand(GameClient client, string[] args)
+        {
+            if (args.Length < 2)
+            {
+				DisplaySyntax(client);
+                return;
+            }
+
+			int id = 0;
 			try
 			{
-				spellID = Convert.ToInt32(args[1]);
-				Spell spell = SkillBase.GetSpellByID(spellID);
-				if (args.Length >= 3 && args[2].ToLower() == "t")
-				{		
-					client.Player.CastSpell(spell, null);
-				}
-				else
-				{
-					GameObject obj = client.Player.TargetObject;
-					GameLiving target = null;
-					if (obj == null)
-						target = client.Player;
-					else if (obj is GameLiving)
-						target = (GameLiving)obj;
-					foreach (GamePlayer plr in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-						plr.Out.SendSpellEffectAnimation(client.Player, target, spell.ClientEffect, 0, false, 1);
-				}
+				id = Convert.ToInt32(args[1]);
 			}
 			catch
 			{
-				client.Out.SendMessage("Usage: /cast <spellid> Cast the ID of the spell", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("Usage: /cast <case> Cast the ID and the spell (/cast 10 t)", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.InvalidId"));
+				return;
 			}
-		}
-	}
+			if (id < 0)
+			{
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.IdNegative"));
+				return;
+			}
+
+			string Type = "effect";
+			if (args.Length >= 3)
+			{
+				Type = args[2].ToLower();
+				if ((Type != "effect") && (Type != "spell"))
+					Type = "effect";
+			}
+
+			GameLiving target = client.Player.TargetObject as GameLiving;
+			if (target == null)
+				target = client.Player as GameLiving;
+
+			switch (Type)
+			{
+				#region Effect
+				case "effect":
+					{
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.EffectExecuted", id.ToString()));
+						foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+							player.Out.SendSpellEffectAnimation(client.Player, target, (ushort)id, 0, false, 1);
+						break;
+					}
+				#endregion Effect
+				#region Cast
+				case "cast":
+					{
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.CastExecuted", id.ToString()));
+						foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+							player.Out.SendSpellCastAnimation(client.Player, (ushort)id, 30);
+						break;
+					}
+				#endregion Cast
+				#region Spell
+				case "spell":
+					{
+						Spell spell = SkillBase.GetSpellByID(id);
+						SpellLine line = new SpellLine("GMCast", "GM Cast", "unknown", false);
+						if (spell != null)
+						{
+							if ((target is GamePlayer) && (target != client.Player) && (spell.Target.ToLower() != "self"))
+							{
+								DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.Spell.CastOnLiving", spell.Name, target.Name));
+								DisplayMessage(((GamePlayer)target).Client, LanguageMgr.GetTranslation(((GamePlayer)target).Client, "GMCommands.Cast.Spell.GMCastOnYou", ((client.Account.PrivLevel == 2) ? "GM" : "Admin"), client.Player.Name));
+							}
+							else if ((target == client.Player) || (spell.Target.ToLower() == "self"))
+								DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.Spell.CastOnSelf", spell.Name));
+
+							ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spell, line);
+							if (spellHandler != null)
+								spellHandler.StartSpell(target);
+						}
+						else
+						{
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.Spell.Inexistent", id.ToString()));
+						}
+						break;
+					}
+				#endregion Spell
+				#region Default
+				default:
+					{
+						DisplaySyntax(client);
+						break;
+					}
+				#endregion Default
+			}
+        }
+    }
 }

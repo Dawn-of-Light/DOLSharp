@@ -50,24 +50,37 @@ namespace DOL.GS.PropertyCalc
 			}
 			else if (living is GameNPC)
 			{
+				int hp = 0;
+
 				if (living.Level<10)
 				{
-					return living.Level * 20 + 20 + living.BuffBonusCategory1[(int)property];	// default
+					hp = living.Level * 20 + 20 + living.BuffBonusCategory1[(int)property];	// default
 				}
 				else
 				{
 					// approx to original formula, thx to mathematica :)
-					int hp = (int)(50 + 11*living.Level + 0.548331 * living.Level * living.Level) + living.BuffBonusCategory1[(int)property];
+					hp = (int)(50 + 11*living.Level + 0.548331 * living.Level * living.Level) + living.BuffBonusCategory1[(int)property];
 					if (living.Level < 25)
-					{
 						hp += 20;
-					}
-                    //Fix for theurg and animist pets
-                    if (((GameNPC)living).HealthMultiplicator)
-                        return hp / 2;
-                    else
-					    return hp;
 				}
+
+				int basecon = (living as GameNPC).Constitution;
+				int conmod = 20; // at level 50 +75 con ~= +300 hit points
+
+				if (basecon < 30) // any mob with less than 30 base con will have reduced hitpoints (this is a DOL specific hack to reduce hitpoints)
+					hp = (int)Math.Ceiling(hp / ((31 - (living as GameNPC).Constitution) * 0.75));
+
+				// adjust hit points based on constitution difference from base con
+				// modified from http://www.btinternet.com/~challand/hp_calculator.htm
+				int conhp = hp + (conmod * living.Level * (living.GetModified(eProperty.Constitution) - basecon) / 250);
+
+				// 50% buff / debuff cap
+				if (conhp > hp * 1.5)
+					conhp = (int)(hp * 1.5);
+				else if (conhp < hp / 2)
+					conhp = hp / 2;
+
+				return conhp;
 			}
             else
             {

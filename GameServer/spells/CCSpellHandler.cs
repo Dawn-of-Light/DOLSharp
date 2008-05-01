@@ -169,6 +169,8 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("Mesmerize")]
 	public class MesmerizeSpellHandler : AbstractCCSpellHandler
 	{
+		protected override void OnSpellResisted(GameLiving target) { target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster); return; }
+		
 		public override void OnEffectStart(GameSpellEffect effect)
 		{			
 			effect.Owner.IsMezzed = true;
@@ -201,7 +203,7 @@ namespace DOL.GS.Spells
 				MessageToCaster("Your target is immune!", eChatType.CT_System);
 				return;
 			}
-            GameSpellEffect mezblock = SpellHandler.FindEffectOnTarget(target, "CeremonialBracerMez");
+            GameSpellEffect mezblock = SpellHandler.FindEffectOnTarget(target, "CeremonialBracerMezz");
             if (mezblock != null)
             {
                 mezblock.Cancel(false);
@@ -252,7 +254,8 @@ namespace DOL.GS.Spells
 						break;
 				}
 			}
-			else
+			//If the spell was resisted - then we don't break mezz
+			else if (!attackArgs.AttackData.IsSpellResisted)
 			{
 				//temporary fix for DirectDamageDebuff not breaking mez
 				if (attackArgs.AttackData.SpellHandler is PropertyChangingSpell && attackArgs.AttackData.SpellHandler.HasPositiveEffect == false && attackArgs.AttackData.Damage > 0)

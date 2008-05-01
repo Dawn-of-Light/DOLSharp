@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -27,6 +26,7 @@ using log4net;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
+using DOL.Language;
 
 namespace DOL.AI.Brain
 {
@@ -78,8 +78,7 @@ namespace DOL.AI.Brain
                 if (!Body.IsCasting && !Body.AttackState)
                     CheckSpellQueue();
                 else
-					MessageToOwner(String.Format("The {0} will begin casting this spell after its current action is finished.", 
-						Body.Name), eChatType.CT_System);
+                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.CastSpellAfterAction", Body.Name), eChatType.CT_System);
 			}
 			else if (e == GameNPCEvent.CastFinished)
 			{
@@ -91,6 +90,8 @@ namespace DOL.AI.Brain
 					CheckSpellQueue();
 				else
 					AttackMostWanted();
+
+				Owner.Notify(GamePlayerEvent.CastFinished, Owner, args);
 			}
 			else if (e == GameNPCEvent.CastFailed)
 			{
@@ -99,12 +100,10 @@ namespace DOL.AI.Brain
 				switch ((args as CastFailedEventArgs).Reason)
 				{
 					case CastFailedEventArgs.Reasons.TargetTooFarAway:
-						MessageToOwner("Your servant is too far away from your target to cast that spell!",
-							eChatType.CT_SpellResisted);
+                        MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.ServantFarAwayToCast"), eChatType.CT_SpellResisted);
 						break;
 					case CastFailedEventArgs.Reasons.TargetNotInView:
-						MessageToOwner(String.Format("Your controlled {0} can't see its target!",
-							Body.Name), eChatType.CT_SpellResisted);
+                        MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.PetCantSeeTarget", Body.Name), eChatType.CT_SpellResisted);
 						break;
 				}
 			}
@@ -120,8 +119,7 @@ namespace DOL.AI.Brain
 				// it for insta cast buffs coming from the pet itself.
 
 				if (spellLine.Name != (Body as NecromancerPet).PetInstaSpellLine)
-					MessageToOwner(String.Format("The {0} begins casting the spell!", Body.Name),
-						eChatType.CT_System);
+                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.PetCastingSpell", Body.Name), eChatType.CT_System);
 
 				// If pet is casting an offensive spell and is not set to
 				// passive, put target on its aggro list; that way, even with
@@ -152,6 +150,8 @@ namespace DOL.AI.Brain
 					CheckSpellQueue();
 				else
 					AttackMostWanted();
+
+				Owner.Notify(GamePlayerEvent.AttackFinished, Owner, args);
 			}
             else if (e == GameNPCEvent.OutOfTetherRange)
             {
@@ -162,17 +162,15 @@ namespace DOL.AI.Brain
 				(Owner as GameNecromancer).SetTetherTimer(secondsRemaining);
 
 				if (secondsRemaining == 10)
-                    MessageToOwner(String.Format("Your servant is too far from you and will be lost in {0} seconds or immediately if you move further away.",
-						secondsRemaining), eChatType.CT_System);
+                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.PetTooFarBeLostSecIm", secondsRemaining), eChatType.CT_System);
 				else if (secondsRemaining == 5)
-                    MessageToOwner(String.Format("Your servant is too far from you and will be lost in {0} seconds.",
-						secondsRemaining), eChatType.CT_System);
+                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.PetTooFarBeLostSec", secondsRemaining), eChatType.CT_System);
             }
             else if (e == GameNPCEvent.PetLost)
             {
                 // Pet despawn is imminent, notify owner.
 
-                MessageToOwner("You have lost your bond to your servant.", eChatType.CT_System);
+                MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.HaveLostBondToPet"), eChatType.CT_System);
             }
 		}
 
@@ -198,8 +196,10 @@ namespace DOL.AI.Brain
 			base.AttackMostWanted();
 			if (Body.TargetObject is GameNPC && TauntMode)
 			{
-				if ((Body.TargetObject as GameNPC).TargetObject != Body)
-					(Body as NecromancerPet).Taunt();
+                if ((Body.TargetObject as GameNPC).TargetObject != Body && ((Body.TargetObject as GameNPC).IsAlive))
+                {
+                    (Body as NecromancerPet).Taunt();
+                }
 			}
 		}
 
@@ -223,15 +223,24 @@ namespace DOL.AI.Brain
 				// Cast spell on the target, but don't automatically
 				// make it our new target.
 
-				Body.TargetObject = spellTarget;
+				//Hopefully this will fix the server crashes - this may be a temporary fix when we gain more information
+                if ((spellTarget != null && spellTarget.IsAlive) || spell.Target.ToLower() == "self")
+				{
+					Body.TargetObject = spellTarget;
 
-				if (spellTarget != Body)
-					Body.TurnTo(spellTarget);
+					if (spellTarget != Body)
+						Body.TurnTo(spellTarget);
 
-				Body.CastSpell(spell, spellQueueEntry.SpellLine);
+					Body.CastSpell(spell, spellQueueEntry.SpellLine);
 
-				if (previousTarget != null)
-					Body.TargetObject = previousTarget;
+					if (previousTarget != null)
+						Body.TargetObject = previousTarget;
+				}
+				else
+				{
+					//This spell will have no affect - lets remove it so we don't crash the system
+					RemoveSpellFromQueue();
+				}
 			}
 		}
 
@@ -271,7 +280,7 @@ namespace DOL.AI.Brain
 			}
 		}
 
-		private ArrayList m_spellQueue = new ArrayList(2);
+		private Queue<SpellQueueEntry> m_spellQueue = new Queue<SpellQueueEntry>(2);
 
 		/// <summary>
 		/// Fetches a spell from the queue without removing it; the spell is
@@ -280,14 +289,12 @@ namespace DOL.AI.Brain
 		/// <returns>The next spell or null, if no spell is in the queue.</returns>
 		private SpellQueueEntry GetSpellFromQueue()
 		{
-			lock (m_spellQueue.SyncRoot)
+			lock (m_spellQueue)
 			{
-				if (m_spellQueue.Count == 0)
-					return null;
-
-				SpellQueueEntry newEntry = new SpellQueueEntry((SpellQueueEntry)(m_spellQueue[0]));
-				return newEntry;
+				if (m_spellQueue.Count > 0)
+					return m_spellQueue.Peek();
 			}
+			return null;
 		}
 
 		/// <summary>
@@ -297,7 +304,7 @@ namespace DOL.AI.Brain
 		{
 			get
 			{
-				lock (m_spellQueue.SyncRoot)
+				lock (m_spellQueue)
 					return (m_spellQueue.Count > 0);
 			}
 		}
@@ -307,10 +314,10 @@ namespace DOL.AI.Brain
 		/// </summary>
 		private void RemoveSpellFromQueue()
 		{
-			lock (m_spellQueue.SyncRoot)
+			lock (m_spellQueue)
 			{
 				if (m_spellQueue.Count > 0)
-					m_spellQueue.RemoveAt(0);
+					m_spellQueue.Dequeue();
 			}
 		}
 
@@ -323,15 +330,13 @@ namespace DOL.AI.Brain
 		/// <param name="target">The target to cast the spell on.</param>
 		private void AddToSpellQueue(Spell spell, SpellLine spellLine, GameLiving target)
 		{
-			lock (m_spellQueue.SyncRoot)
+			lock (m_spellQueue)
 			{
 				if (m_spellQueue.Count >= 2)
 				{
-					MessageToOwner(String.Format("The {0} spell is no longer in the {1}'s queue.",
-						((SpellQueueEntry)m_spellQueue[0]).Spell.Name, Body.Name), eChatType.CT_Spell);
-					m_spellQueue.RemoveAt(0);
+                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.SpellNoLongerInQueue", (m_spellQueue.Dequeue()).Spell.Name, Body.Name), eChatType.CT_Spell);
 				}
-				m_spellQueue.Add(new SpellQueueEntry(spell, spellLine, target));
+				m_spellQueue.Enqueue(new SpellQueueEntry(spell, spellLine, target));
 			}
 		}
 
@@ -423,7 +428,7 @@ namespace DOL.AI.Brain
 		private void MessageToOwner(String message, eChatType chatType)
 		{
 			GamePlayer owner = Owner as GamePlayer;
-			if (owner != null)
+			if ((owner != null) && (message.Length > 0))
 				owner.Out.SendMessage(message, chatType, eChatLoc.CL_SystemWindow);
 		}
 

@@ -1,6 +1,6 @@
 using System;
 using DOL.AI.Brain;
-using DOL.Database2;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.GS.SkillHandler;
