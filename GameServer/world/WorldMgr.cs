@@ -102,23 +102,36 @@ namespace DOL.GS
 		public const int PICKUP_DISTANCE = 256;
 
 		/// <summary>
-		/// All available teleport locations.
+		/// This will store available teleport destinations as read from the 'teleport' table.  These are 
+		/// stored in a dictionary of dictionaries because the name of the teleport destination (the
+		/// 'TeleportID' field from the table) does not have to be unique across realms.  Duplicate
+		/// 'TeleportID' fields are permitted so long as the 'Realm' field is different for each.
 		/// </summary>
-		private static Dictionary<string, Teleport> m_teleportLocations;
+		private static Dictionary<eRealm, Dictionary<string, Teleport>> m_teleportLocations;
 
 		/// <summary>
 		/// Returns the teleport given an ID and a realm
 		/// </summary>
+		/// <param name="realm">
+		/// The home realm identifier of the NPC doing the teleporting.  Whether or not a teleport is
+		/// permitted is determined by the home realm of the teleporter NPC, not the home realm of
+		/// the player who is teleporting.  A teleport will be allowed so long as the 'Realm' field in
+		/// the 'teleport' table matches the 'Realm' field for the teleporter's record in the 'mob' table.
+		/// For example, a Lurikeen teleporter with a 'mob' table entry that has the Realm field set to 3
+		/// (Hibernia), will happily teleport an Albion player to Jordheim so long as the Jordheim record 
+		/// in the 'teleport' table is also tagged as Realm 3.  So, the Realm field in the 'teleport' 
+		/// table is not the realm of the destination, but the realm of the NPCs that are allowed to 
+		/// teleport a player to that location.
+		/// </param>
 		/// <param name="teleportID">Second key to search for</param>
 		/// <returns></returns>
-		public static Teleport GetTeleportLocation(string teleportID)
+		public static Teleport GetTeleportLocation(eRealm realm, string teleportID)
 		{
-			// The TeleportID fields from the 'teleport' table are converted 
-			// to lowercase as they're added to the dictionary, so we need
-			// to search for the lowercase version as well.
-			teleportID = teleportID.ToLower();
-			if (m_teleportLocations.ContainsKey(teleportID)) return m_teleportLocations[teleportID];
-			return null;
+			return (m_teleportLocations.ContainsKey(realm)) ?
+				(m_teleportLocations[realm].ContainsKey(teleportID) ?
+					m_teleportLocations[realm][teleportID] :
+					null) :
+				null;
 		}
 
 		/// <summary>
@@ -279,16 +292,19 @@ namespace DOL.GS
 			// Load available teleport locations.
 
 			DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(Teleport));
-			m_teleportLocations = new Dictionary<string, Teleport>();
+			m_teleportLocations = new Dictionary<eRealm, Dictionary<string, Teleport>>();
 			int[] numTeleports = new int[3];
 			foreach (Teleport teleport in objs)
 			{
-				if (m_teleportLocations.ContainsKey(teleport.TeleportID.ToLower()))
+				Dictionary<string, Teleport> teleportList;
+				if (m_teleportLocations.ContainsKey((eRealm)teleport.Realm))
+					teleportList = m_teleportLocations[(eRealm)teleport.Realm];
+				else
 				{
-					log.Error("Global Teleport list already contains an entry for: " + teleport.TeleportID.ToLower() + " skipping this one!");
-					continue;
+					teleportList = new Dictionary<string, Teleport>();
+					m_teleportLocations.Add((eRealm)teleport.Realm, teleportList);
 				}
-				m_teleportLocations.Add(teleport.TeleportID.ToLower(), teleport);
+				teleportList.Add(teleport.TeleportID, teleport);
 				if (teleport.Realm >= 1 && teleport.Realm <= 3)
 					numTeleports[teleport.Realm - 1]++;
 			}
