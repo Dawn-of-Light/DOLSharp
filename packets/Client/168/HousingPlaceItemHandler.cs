@@ -33,6 +33,42 @@ namespace DOL.GS.PacketHandler.Client.v168
 		private const string DEED_WEAK = "deedItem";
 		private int position;
 
+        private int GetMaxIndoorItemsForHouse(int model)
+        {
+            int maxitems = ServerProperties.Properties.MAX_INDOOR_HOUSE_ITEMS;
+
+            if (ServerProperties.Properties.INDOOR_ITEMS_DEPEND_ON_SIZE == true)
+            {
+                switch (model)
+                {
+                    case 1:
+                    case 5:
+                    case 9:
+                        maxitems = 40;
+                        break;
+
+                    case 2:
+                    case 6:
+                    case 10:
+                        maxitems = 60;
+                        break;
+
+                    case 3:
+                    case 7:
+                    case 11:
+                        maxitems = 80;
+                        break;
+
+                    case 4:
+                    case 8:
+                    case 12:
+                        maxitems = 100;
+                        break;
+                }
+            }
+            return maxitems;
+        }
+
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int unknow1	= packet.ReadByte();		// 1=Money 0=Item (?)
@@ -105,10 +141,30 @@ namespace DOL.GS.PacketHandler.Client.v168
                 client.Player.Out.SendCustomDialog("Are you sure you want to upgrade your House?", new CustomDialogResponse(HouseUpgradeDialogue));
                 return 0;
             }
-            if (orgitem.Name == "deed of guild transfer" 
-                && client.Player.Guild != null && !client.Player.Guild.GuildOwnsHouse() 
-                && house.HasOwnerPermissions(client.Player))
+            if (orgitem.Name == "deed of guild transfer")
             {
+                #region checks
+                if (client.Player.Guild == null)
+                {
+                    client.Player.Out.SendMessage("You must be a member of a guild to do that", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return 1;
+                }
+                if (HouseMgr.GetRealHouseByPlayer(client.Player) != house)
+                {
+                    client.Player.Out.SendMessage("You do not own this house.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return 1;
+                }
+                if (client.Player.Guild.GuildOwnsHouse())
+                {
+                    client.Player.Out.SendMessage("Your Guild already owns a house.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return 1;
+                }
+                if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
+                {
+                    client.Player.Out.SendMessage("You are not the leader of a guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return 1;
+                }
+                #endregion
                 HouseMgr.HouseTransferToGuild(client.Player);
                 client.Player.Inventory.RemoveItem(orgitem);
                 client.Player.Guild.UpdateGuildWindow();
@@ -232,9 +288,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 						return 1;
 					}
 
-					if (house.IndoorItems.Count >= ServerProperties.Properties.MAX_INDOOR_HOUSE_ITEMS)
+                    if (house.IndoorItems.Count >= GetMaxIndoorItemsForHouse(house.Model))
 					{
-                        client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.IndoorMaxItems", ServerProperties.Properties.MAX_INDOOR_HOUSE_ITEMS), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.IndoorMaxItems", GetMaxIndoorItemsForHouse(house.Model)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                         client.Out.SendInventorySlotsUpdate(new int[] { slot });
 						return 1;
 					}
@@ -274,7 +330,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					iitem.DatabaseItem = idbitem;
 					GameServer.Database.AddNewObject(idbitem);
 					house.IndoorItems.Add(pos, iitem);
-                    client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.IndoorItemPlaced", (ServerProperties.Properties.MAX_INDOOR_HOUSE_ITEMS - house.IndoorItems.Count)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.IndoorItemPlaced", (GetMaxIndoorItemsForHouse(house.Model) - house.IndoorItems.Count)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 					switch (method)
 					{
