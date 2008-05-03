@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Language;
 
 namespace DOL.GS
@@ -131,7 +131,7 @@ namespace DOL.GS
 		}
 		#endregion
 
-		public override void LoadFromDatabase(DataObject obj)
+		public override void LoadFromDatabase(DatabaseObject obj)
 		{
 			WorldObject item = obj as WorldObject;
 			base.LoadFromDatabase(obj);

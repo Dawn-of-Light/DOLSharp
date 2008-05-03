@@ -21,7 +21,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -230,7 +230,7 @@ namespace DOL.GS
         /// Returns a boat according to the matching database boat Owner.
         /// </summary>
         /// <returns>Boat</returns>
-        public static GameBoat GetBoatByOwner(string owner)
+        public static GameBoat GetBoatByOwner(UInt64 owner)
         {
             if (owner == null) return null;
 
@@ -265,8 +265,8 @@ namespace DOL.GS
             }
 
             //load boats
-            DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(DBBoat));
-            foreach (DataObject obj in objs)
+            DatabaseObject[] objs = GameServer.Database.SelectObjects(typeof(DBBoat));
+            foreach (DatabaseObject obj in objs)
             {
                 GameBoat myboat = new GameBoat();
                 myboat.LoadFromDatabase(obj);

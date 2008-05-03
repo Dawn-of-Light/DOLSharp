@@ -18,7 +18,7 @@
  */
 using System;
 
-using DOL.Database;
+using DOL.Database2;
 using DOL.AI.Brain;
 using DOL.GS;
 using DOL.GS.Effects;

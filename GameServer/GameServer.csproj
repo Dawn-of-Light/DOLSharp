@@ -91,11 +91,9 @@
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj">
-      <Name>DOLDatabase</Name>
-      <Project>{43BFC675-13B7-4AA8-97F6-6109948849CC}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-      <Private>True</Private>
+    <ProjectReference Include="..\DOLDatabase2\DOLDatabase2.csproj">
+      <Project>{9DBDD582-A8C8-4FE9-9BDC-E12CA28BFE71}</Project>
+      <Name>DOLDatabase2</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -354,6 +352,74 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="dbconverters\Version005.cs" />
+    <Compile Include="DOLTables\Account.cs" />
+    <Compile Include="DOLTables\Artifact.cs" />
+    <Compile Include="DOLTables\ArtifactBonus.cs" />
+    <Compile Include="DOLTables\ArtifactXItem.cs" />
+    <Compile Include="DOLTables\Battleground.cs" />
+    <Compile Include="DOLTables\BindPoint.cs" />
+    <Compile Include="DOLTables\BugReport.cs" />
+    <Compile Include="DOLTables\Character.cs" />
+    <Compile Include="DOLTables\ClassXRealmAbility.cs" />
+    <Compile Include="DOLTables\DBAbility.cs" />
+    <Compile Include="DOLTables\DBAlliance.cs" />
+    <Compile Include="DOLTables\DBArea.cs" />
+    <Compile Include="DOLTables\DBBanedAccount.cs" />
+    <Compile Include="DOLTables\DBBoat.cs" />
+    <Compile Include="DOLTables\DBChampSpec.cs" />
+    <Compile Include="DOLTables\DBCharacterXMasterLevel.cs" />
+    <Compile Include="DOLTables\DBCraftedItem.cs" />
+    <Compile Include="DOLTables\DBCraftedXItem.cs" />
+    <Compile Include="DOLTables\DBDoor.cs" />
+    <Compile Include="DOLTables\DBFaction.cs" />
+    <Compile Include="DOLTables\DBFactionAggroLevel.cs" />
+    <Compile Include="DOLTables\DBguild.cs" />
+    <Compile Include="DOLTables\DBHouse.cs" />
+    <Compile Include="DOLTables\DBHouseCharsXPerms.cs" />
+    <Compile Include="DOLTables\DBHouseIndoorItem.cs" />
+    <Compile Include="DOLTables\DBHouseOutdoorItem.cs" />
+    <Compile Include="DOLTables\DBHousePermissions.cs" />
+    <Compile Include="DOLTables\DBHousepointItem.cs" />
+    <Compile Include="DOLTables\DBKeep.cs" />
+    <Compile Include="DOLTables\DBKeepComponent.cs" />
+    <Compile Include="DOLTables\DBKeepHookPoint.cs" />
+    <Compile Include="DOLTables\DBKeepHookPointItem.cs" />
+    <Compile Include="DOLTables\DBKeepPosition.cs" />
+    <Compile Include="DOLTables\DBLineXSpell.cs" />
+    <Compile Include="DOLTables\DBLinkedFaction.cs" />
+    <Compile Include="DOLTables\DBLootGenerator.cs" />
+    <Compile Include="DOLTables\DBLootOTD.cs" />
+    <Compile Include="DOLTables\DBLootTemplate.cs" />
+    <Compile Include="DOLTables\DBMinotaurRelic.cs" />
+    <Compile Include="DOLTables\DBMobXLootTemplate.cs" />
+    <Compile Include="DOLTables\DBNews.cs" />
+    <Compile Include="DOLTables\DBNpcTemplate.cs" />
+    <Compile Include="DOLTables\DBOTDXCharacter.cs" />
+    <Compile Include="DOLTables\DBPath.cs" />
+    <Compile Include="DOLTables\DBPathPoint.cs" />
+    <Compile Include="DOLTables\DBPlayerXEffect.cs" />
+    <Compile Include="DOLTables\DBQuest.cs" />
+    <Compile Include="DOLTables\DBRank.cs" />
+    <Compile Include="DOLTables\DBRelic.cs" />
+    <Compile Include="DOLTables\DBSalvage.cs" />
+    <Compile Include="DOLTables\DBSinglePermission.cs" />
+    <Compile Include="DOLTables\DBSpecialization.cs" />
+    <Compile Include="DOLTables\DBSpecXAbility.cs" />
+    <Compile Include="DOLTables\DBSpell.cs" />
+    <Compile Include="DOLTables\DBSpellLine.cs" />
+    <Compile Include="DOLTables\DBStyle.cs" />
+    <Compile Include="DOLTables\DBStyleXSpell.cs" />
+    <Compile Include="DOLTables\DBTask.cs" />
+    <Compile Include="DOLTables\InventoryItem.cs" />
+    <Compile Include="DOLTables\ItemTemplate.cs" />
+    <Compile Include="DOLTables\MerchantItem.cs" />
+    <Compile Include="DOLTables\Mob.cs" />
+    <Compile Include="DOLTables\NPCEquipment.cs" />
+    <Compile Include="DOLTables\ServerProperty.cs" />
+    <Compile Include="DOLTables\StarterEquipment.cs" />
+    <Compile Include="DOLTables\Teleport.cs" />
+    <Compile Include="DOLTables\WorldObject.cs" />
+    <Compile Include="DOLTables\ZonePoint.cs" />
     <Compile Include="effects\BerserkEffect.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -2495,11 +2561,11 @@
     <Content Include="language\FR\Quest\Behaviour.txt" />
     <Content Include="language\FR\Commands\AdminCommands.txt" />
     <Content Include="language\FR\Commands\GMCommands.txt" />
-	<Content Include="language\FR\Commands\Player\Battlegroup.txt" />
-	<Content Include="language\FR\Commands\Player\Chatgroup.txt" />
-	<Content Include="language\FR\Commands\Player\Guild.txt" />
-	<Content Include="language\FR\Commands\Player\Horseemote.txt" />
-	<Content Include="language\FR\Commands\Player\Other.txt" />
+    <Content Include="language\FR\Commands\Player\Battlegroup.txt" />
+    <Content Include="language\FR\Commands\Player\Chatgroup.txt" />
+    <Content Include="language\FR\Commands\Player\Guild.txt" />
+    <Content Include="language\FR\Commands\Player\Horseemote.txt" />
+    <Content Include="language\FR\Commands\Player\Other.txt" />
     <Content Include="language\FR\Crafting.txt" />
     <Content Include="language\FR\Effects.txt" />
     <Content Include="language\FR\GameObjects\CustomNPC\Blacksmith.txt" />
@@ -2521,20 +2587,20 @@
     <Content Include="language\FR\Packets.txt" />
     <Content Include="language\FR\PlayerClasses.txt" />
     <Content Include="language\FR\PlayerTitles.txt" />
-	<Content Include="language\FR\Quests\Albion\A Few Repairs.txt" />
-	<Content Include="language\FR\Quests\Artifact.txt" />
-	<Content Include="language\FR\Quests\Atlantis.txt" />
+    <Content Include="language\FR\Quests\Albion\A Few Repairs.txt" />
+    <Content Include="language\FR\Quests\Artifact.txt" />
+    <Content Include="language\FR\Quests\Atlantis.txt" />
     <Content Include="language\FR\Quests\BaseQuest.txt" />
-	<Content Include="language\FR\Quests\Behaviour.txt" />
-	<Content Include="language\FR\Quests\Hibernia\ImportantDelivery.txt" />
-	<Content Include="language\FR\Quests\ML.txt" />
-	<Content Include="language\FR\Quests\Quests.txt" />
+    <Content Include="language\FR\Quests\Behaviour.txt" />
+    <Content Include="language\FR\Quests\Hibernia\ImportantDelivery.txt" />
+    <Content Include="language\FR\Quests\ML.txt" />
+    <Content Include="language\FR\Quests\Quests.txt" />
     <Content Include="language\FR\RealmAbilities.txt" />
-	<Content Include="language\FR\Relic.txt" />
+    <Content Include="language\FR\Relic.txt" />
     <Content Include="language\FR\SkillHandler.txt" />
-	<Content Include="language\FR\StyleProcessor.txt" />
+    <Content Include="language\FR\StyleProcessor.txt" />
     <Content Include="language\FR\World\AbstractArea.txt" />
-	<Content Include="language\FR\World\Events.txt" />
+    <Content Include="language\FR\World\Events.txt" />
     <Content Include="language\IT\AI.txt" />
     <Content Include="language\IT\Behaviour.txt" />
     <Content Include="language\IT\Commands\AdminCommands.txt" />

@@ -20,7 +20,7 @@ using System;
 using System.Collections;
 using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.Keeps;
 
@@ -463,7 +463,7 @@ namespace DOL.GS
 		}
 		#endregion
 		#region override function
-		public override bool ReceiveItem(GameLiving source, DOL.Database.InventoryItem item)
+		public override bool ReceiveItem(GameLiving source, DOL.Database2.InventoryItem item)
 		{
 			//todo check if bullet
 			return base.ReceiveItem(source, item);
@@ -489,7 +489,7 @@ namespace DOL.GS
 			TakeControl(player);
 			return true;
 		}
-		public override void LoadFromDatabase(DataObject obj)
+		public override void LoadFromDatabase(DatabaseObject obj)
 		{
 			base.LoadFromDatabase(obj);
 			if (!(obj is ItemTemplate)) return;

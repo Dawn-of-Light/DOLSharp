@@ -2,7 +2,7 @@ using System.Reflection;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS.RealmAbilities
 {

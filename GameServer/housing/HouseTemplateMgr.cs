@@ -19,7 +19,7 @@
 
 using System;
 using System.Collections;
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS.Housing
 {
@@ -173,12 +173,12 @@ namespace DOL.GS.Housing
 
 		static void CheckMerchantItems(string merchantid, string[] itemids)
 		{
-			DataObject[] merchantitems = GameServer.Database.SelectObjects(typeof (MerchantItem), "ItemListID=\'" + GameServer.Database.Escape(merchantid) + "\'");
+			DatabaseObject[] merchantitems = GameServer.Database.SelectObjects(typeof (MerchantItem), "ItemListID=\'" + GameServer.Database.Escape(merchantid) + "\'");
 			int slot = 0;
 			foreach (string itemid in itemids)
 			{
 				bool found = false;
-				foreach (DataObject dbitem in merchantitems)
+				foreach (DatabaseObject dbitem in merchantitems)
 				{
 					if (((MerchantItem) dbitem).ItemTemplateID == itemid)
 					{

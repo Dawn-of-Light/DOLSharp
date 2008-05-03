@@ -3,7 +3,7 @@ using System.Collections;
 using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
 using DOL.Events;
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS.Effects
 {

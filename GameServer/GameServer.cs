@@ -25,9 +25,9 @@ using System.Reflection;
 using System.Threading;
 using System.Diagnostics;
 
-using DOL.Database;
-using DOL.Database.Attributes;
-using DOL.Database.Connection;
+using DOL.Database2;
+
+
 using DOL.Events;
 using DOL.GS.DatabaseConverters;
 using DOL.GS.Housing;
@@ -101,11 +101,6 @@ namespace DOL
 			/// Maximum UDP buffer size
 			/// </summary>
 			protected const int MAX_UDPBUF = 4096;
-
-			/// <summary>
-			/// Database instance
-			/// </summary>
-			protected ObjectDatabase m_database = null;
 
 			/// <summary>
 			/// Contains a list of invalid names
@@ -190,9 +185,9 @@ namespace DOL
 			/// <summary>
 			/// Gets the database instance
 			/// </summary>
-			public static ObjectDatabase Database
+			public static DatabaseLayer Database
 			{
-				get { return Instance.m_database; }
+                get { return DatabaseLayer.Instance; }
 			}
 
 			/// <summary>
@@ -1046,11 +1041,8 @@ namespace DOL
 				WorldMgr.Exit();
 
 
-				//Save the database
-				if (m_database != null)
-				{
-					m_database.WriteDatabaseTables();
-				}
+
+                DatabaseLayer.Instance.SaveWorldState();
 
 				m_serverRules = null;
 
@@ -1202,7 +1194,7 @@ namespace DOL
 								{
 									if (log.IsInfoEnabled)
 										log.Info("Registering table: " + type.FullName);
-									m_database.RegisterDataObject(type);
+									m_database.RegisterDatabaseObject(type);
 								}
 							}
 						}

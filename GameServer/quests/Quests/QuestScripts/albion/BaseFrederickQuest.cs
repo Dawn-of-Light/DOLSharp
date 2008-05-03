@@ -38,7 +38,7 @@
 using System;
 using System.Reflection;
 using DOL.AI.Brain;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests

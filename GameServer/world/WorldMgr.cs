@@ -22,7 +22,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.PacketHandler;
 using DOL.GS.Utils;
 using log4net;
@@ -278,7 +278,7 @@ namespace DOL.GS
 
 			// Load available teleport locations.
 
-			DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(Teleport));
+			DatabaseObject[] objs = GameServer.Database.SelectObjects(typeof(Teleport));
 			m_teleportLocations = new Dictionary<string, Teleport>();
 			int[] numTeleports = new int[3];
 			foreach (Teleport teleport in objs)
@@ -298,7 +298,7 @@ namespace DOL.GS
 			// sort the regions by mob count
 
 			log.Debug("loading mobs from DB...");
-			objs = GameServer.Database.SelectAllObjects(typeof(Mob));
+			objs = GameServer.Database.SelectObjects(typeof(Mob));
 
 			Hashtable mobsByRegionId = new Hashtable(512);
 			foreach (Mob mob in objs)

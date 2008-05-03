@@ -19,7 +19,7 @@
 using System;
 using DOL;
 using DOL.GS;
-using DOL.Database;
+using DOL.Database2;
 using NUnit.Framework;
 
 namespace DOL.Tests

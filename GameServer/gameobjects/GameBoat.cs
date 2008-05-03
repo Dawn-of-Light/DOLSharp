@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using DOL.GS;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Language;
 using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
@@ -16,8 +16,8 @@ namespace DOL.GS
 	{
         private byte m_type = 0;
         protected DBBoat m_DBboat;
-        private string boat_id;
-        private string boat_owner;
+        private UInt64 boat_id;
+        private UInt64 boat_owner;
         private string boat_name;
         private ushort boat_model;
         private int boat_maxspeedbase;
@@ -108,7 +108,7 @@ namespace DOL.GS
             }
         }
 
-        public string OwnerID
+        public UInt64 OwnerID
         {
             get
             {
@@ -234,7 +234,7 @@ namespace DOL.GS
         /// Loads this boat from a boat table
         /// </summary>
         /// <param name="obj"></param>
-        public override void LoadFromDatabase(DataObject obj)
+        public override void LoadFromDatabase(DatabaseObject obj)
         {
             if (!(obj is DBBoat))
                 return;

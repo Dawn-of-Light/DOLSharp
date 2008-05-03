@@ -20,7 +20,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Language;
 using DOL.GS.Keeps;
 using log4net;
@@ -716,7 +716,7 @@ namespace DOL.GS
 		/// Loads this guild from a guild table
 		/// </summary>
 		/// <param name="obj"></param>
-		public void LoadFromDatabase(DataObject obj)
+		public void LoadFromDatabase(DatabaseObject obj)
 		{
 			if (!(obj is DBGuild))
 				return;

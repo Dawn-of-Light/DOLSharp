@@ -21,8 +21,8 @@ using DOL.GS.PacketHandler;
 using System;
 using System.Reflection;
 using DOL.Language;
-using DOL.Database;
-using DOL.Database.Attributes;
+using DOL.Database2;
+
 using log4net;
 
 namespace DOL.GS.Commands
@@ -101,7 +101,7 @@ namespace DOL.GS.Commands
 							int count = 1;
 							GameServer.Database.DeleteObject(report);
 							// Get all Database'd Bug Reports since we have deleted one
-							DataObject[] bugReports = GameServer.Database.SelectAllObjects(typeof(BugReport));
+							DatabaseObject[] bugReports = GameServer.Database.SelectObjects(typeof(BugReport));
 							foreach (BugReport curReport in bugReports)
 							{
 								// Create new DB for bugreports without the one we deleted
@@ -126,7 +126,7 @@ namespace DOL.GS.Commands
 				e = new Exception();
 				// Display bug reports to player
 				string Reports = "---------- BUG REPORTS ------------\n";
-				DataObject[] dbo = GameServer.Database.SelectAllObjects(typeof(BugReport));
+				DatabaseObject[] dbo = GameServer.Database.SelectObjects(typeof(BugReport));
 				if (dbo.Length < 1)
 				{
 					Reports += "  - No Reports On File -\n";

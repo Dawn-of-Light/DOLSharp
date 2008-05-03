@@ -19,7 +19,7 @@
 using System;
 using DOL.GS.PacketHandler;
 using DOL.Language;
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS.Trainer
 {

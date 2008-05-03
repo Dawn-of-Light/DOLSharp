@@ -20,7 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Language;
 using DOL.GS.ServerProperties;
 using DOL.GS.PacketHandler;

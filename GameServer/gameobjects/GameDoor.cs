@@ -17,7 +17,7 @@
  *
  */
 using System;
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS
 {
@@ -50,7 +50,7 @@ namespace DOL.GS
 		/// Loads this door from a door table slot
 		/// </summary>
 		/// <param name="obj">DBDoor</param>
-		public override void LoadFromDatabase(DataObject obj)
+		public override void LoadFromDatabase(DatabaseObject obj)
 		{
 			base.LoadFromDatabase(obj);
 			DBDoor m_dbdoor = obj as DBDoor;

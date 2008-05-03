@@ -23,7 +23,7 @@ using System.Collections.Specialized;
 using System.Reflection;
 
 using DOL.AI.Brain;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.Language;
 using DOL.GS.Effects;
@@ -187,9 +187,9 @@ namespace DOL.GS
 			set { m_attackResult = value; }
 		}
 
-		///// <summary>
-		///// Sets or gets the attack spellhandler
-		///// </summary>
+		/// <summary>
+		/// Sets or gets the attack spellhandler
+		/// </summary>
 		public ISpellHandler SpellHandler
 		{
 			get { return m_spellHandler; }

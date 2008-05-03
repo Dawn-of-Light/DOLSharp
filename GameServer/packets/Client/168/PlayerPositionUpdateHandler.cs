@@ -23,7 +23,7 @@ using System.Collections;
 using System.Reflection;
 using System.Text;
 using DOL.GS;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Language;
 using System.Net;
 using DOL.GS.PacketHandler;

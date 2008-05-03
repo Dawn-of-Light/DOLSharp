@@ -19,7 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS.Quests.Catacombs.Obelisks
 {

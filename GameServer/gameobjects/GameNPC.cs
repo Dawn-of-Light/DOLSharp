@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Threading;
 using DOL.AI;
 using DOL.AI.Brain;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.Language;
 using DOL.GS.Effects;
@@ -1787,7 +1787,7 @@ namespace DOL.GS
 		/// Load a npc from the npc template
 		/// </summary>
 		/// <param name="obj">template to load from</param>
-		public override void LoadFromDatabase(DataObject obj)
+		public override void LoadFromDatabase(DatabaseObject obj)
 		{
 			if (obj == null) return;
 			base.LoadFromDatabase(obj);

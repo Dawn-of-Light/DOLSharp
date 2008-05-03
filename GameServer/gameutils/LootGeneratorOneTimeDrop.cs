@@ -20,7 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -62,10 +62,10 @@ namespace DOL.GS
 				m_OTDXMob = new HybridDictionary(500);
 				lock(m_OTDXMob)
 				{
-					DataObject[] m_lootOTDs=null;
+					DatabaseObject[] m_lootOTDs=null;
 					try
 					{
-						m_lootOTDs = GameServer.Database.SelectAllObjects(typeof(DBLootOTD));
+						m_lootOTDs = GameServer.Database.SelectObjects(typeof(DBLootOTD));
 					}
 					catch(Exception e)
 					{
@@ -105,7 +105,7 @@ namespace DOL.GS
 				{
 					if ( (lootOTD.MinLevel < player.Level))
 					{
-						DataObject obj = GameServer.Database.SelectObject(typeof(DBOTDXCharacter), "CharacterName = '" + GameServer.Database.Escape(player.Name) + "' AND LootOTD_ID = '" + GameServer.Database.Escape(lootOTD.ObjectId) + "'");
+						DatabaseObject obj = GameServer.Database.SelectObject(typeof(DBOTDXCharacter), "CharacterName = '" + GameServer.Database.Escape(player.Name) + "' AND LootOTD_ID = '" + GameServer.Database.Escape(lootOTD.ObjectId) + "'");
 						if (obj != null) continue;
 
 						string[] sclass = lootOTD.SerializedClassAllowed.Split(',');

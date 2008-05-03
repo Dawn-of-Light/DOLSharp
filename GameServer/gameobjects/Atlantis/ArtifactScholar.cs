@@ -23,7 +23,7 @@ using System.Text;
 using DOL.GS.PacketHandler;
 using DOL.GS.Quests;
 using DOL.GS.Quests.Atlantis;
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS
 {

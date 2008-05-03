@@ -18,7 +18,7 @@
  */
 using System;
 using System.Net.Sockets;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.Tests;
 using NUnit.Framework;

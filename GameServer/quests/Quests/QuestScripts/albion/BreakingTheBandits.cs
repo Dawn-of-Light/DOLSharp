@@ -28,7 +28,7 @@
 
 using System;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;

@@ -5,7 +5,7 @@ using System.Reflection;
 using DOL.GS;
 using DOL.GS.Movement;
 using DOL.Events;
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS.Keeps
 {
@@ -81,7 +81,7 @@ namespace DOL.GS.Keeps
 				guard.Component = Component;
 				guard.PatrolGroup = this;
 				TemplateMgr.RefreshTemplate(guard);
-				Component.Keep.Guards.Add(DOL.Database.UniqueID.IdGenerator.generateId(), guard);
+				Component.Keep.Guards.Add(DOL.Database2.UniqueID.IdGenerator.generateId(), guard);
 			}
 
 			foreach (GameKeepGuard guard in PatrolGuards)

@@ -189,25 +189,25 @@ namespace DOL.GS.Scripts
 			m_js.AppendFormat("var numAdminsConnected = {0}", admin);
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numAccts = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.Account)));
+			m_js.AppendFormat("var numAccts = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database2.Account)));
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numMobs = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.Mob)));
+			m_js.AppendFormat("var numMobs = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database2.Mob)));
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numInvItems = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.InventoryItem)));
+			m_js.AppendFormat("var numInvItems = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database2.InventoryItem)));
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numPlrChars = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.Character)));
+			m_js.AppendFormat("var numPlrChars = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database2.Character)));
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numMerchantItems = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.MerchantItem)));
+			m_js.AppendFormat("var numMerchantItems = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database2.MerchantItem)));
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numItemTemplates = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.ItemTemplate)));
+			m_js.AppendFormat("var numItemTemplates = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database2.ItemTemplate)));
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numWorldObjects = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.WorldObject)));
+			m_js.AppendFormat("var numWorldObjects = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database2.WorldObject)));
 			m_js.Append(nl.NewLine);
 
 			m_js.AppendFormat("var srvrType = \"{0}\"", GameServer.Instance.Configuration.ServerType.ToString());

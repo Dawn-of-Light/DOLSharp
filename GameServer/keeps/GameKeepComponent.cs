@@ -20,7 +20,7 @@ using System;
 using System.Reflection;
 using System.Collections;
 using System.Text;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 
 namespace DOL.GS.Keeps

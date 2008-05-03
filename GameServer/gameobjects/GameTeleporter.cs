@@ -23,7 +23,7 @@ using System.Collections;
 using DOL.AI.Brain;
 using DOL.Language;
 using DOL.GS.PacketHandler;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
 using DOL.GS.Spells;

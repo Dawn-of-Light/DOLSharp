@@ -105,7 +105,7 @@ namespace DOL.GS.Trainer
 						PromotePlayer(player, (int)eCharacterClass.Heretic, "Welcome to the Temple of Arawn, " + player.Name + ".", null);
 						lock (player.Inventory)
 						{
-							foreach (DOL.Database.InventoryItem item in player.Inventory.EquippedItems)
+							foreach (DOL.Database2.InventoryItem item in player.Inventory.EquippedItems)
 							{
 								if (!player.HasAbilityToUseItem(item))
 									player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack), item.Count);

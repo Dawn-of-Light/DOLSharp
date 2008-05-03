@@ -19,8 +19,8 @@
 
 using System;
 using System.Collections;
-using DOL.Database;
-using DOL.Database.Attributes;
+using DOL.Database2;
+
 using DOL.Events;
 using DOL.GS;
 using DOL.GS.Keeps;

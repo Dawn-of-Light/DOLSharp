@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 
 using DOL.Events;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.Spells;
 using DOL.GS.Effects;
 using log4net;
@@ -53,7 +53,7 @@ namespace DOL.GS
 
             try
             {
-                DataObject[] relics = GameServer.Database.SelectAllObjects(typeof(DBMinotaurRelic));
+                DatabaseObject[] relics = GameServer.Database.SelectObjects(typeof(DBMinotaurRelic));
                 foreach (DBMinotaurRelic dbrelic in relics)
                 {
                     if (WorldMgr.GetRegion((ushort)dbrelic.SpawnRegion) == null)

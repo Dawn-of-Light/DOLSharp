@@ -52,7 +52,7 @@ namespace DOL.GS.Effects
                 return;
             GamePlayer target = afea.AttackData.Target as GamePlayer;
             
-            Database.InventoryItem armor = target.Inventory.GetItem((eInventorySlot)((int)afea.AttackData.ArmorHitLocation));
+            Database2.InventoryItem armor = target.Inventory.GetItem((eInventorySlot)((int)afea.AttackData.ArmorHitLocation));
             
             if (armor == null || armor.SPD_ABS == 0)
                 return;

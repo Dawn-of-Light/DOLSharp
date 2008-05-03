@@ -97,11 +97,9 @@
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj">
-      <Name>DOLDatabase</Name>
-      <Project>{43BFC675-13B7-4AA8-97F6-6109948849CC}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-      <Private>True</Private>
+    <ProjectReference Include="..\DOLDatabase2\DOLDatabase2.csproj">
+      <Project>{9DBDD582-A8C8-4FE9-9BDC-E12CA28BFE71}</Project>
+      <Name>DOLDatabase2</Name>
     </ProjectReference>
     <ProjectReference Include="..\GameServer\GameServer.csproj">
       <Name>GameServer</Name>

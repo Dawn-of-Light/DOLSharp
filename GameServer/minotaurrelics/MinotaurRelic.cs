@@ -6,7 +6,7 @@ using System.Threading;
 using System.Reflection;
 
 using DOL.GS;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 
@@ -125,7 +125,7 @@ namespace DOL.GS
         /// Loads the GameRelic from Database
         /// </summary>
         /// <param name="obj">The DBRelic-object for this relic</param>
-        public override void LoadFromDatabase(DataObject obj)
+        public override void LoadFromDatabase(DatabaseObject obj)
         {
             InternalID = obj.ObjectId;
             m_dbRelic = obj as DBMinotaurRelic;

@@ -17,7 +17,7 @@
  *
  */
 
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS
 {
@@ -44,6 +44,6 @@ namespace DOL.GS
 		void Open();
 		void Close();
 		void NPCManipulateDoorRequest(GameNPC npc, bool open);
-		void LoadFromDatabase(DataObject obj);
+		void LoadFromDatabase(DatabaseObject obj);
 	}
 }

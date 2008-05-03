@@ -19,7 +19,7 @@
 using System;
 using System.Reflection;
 
-using DOL.Database;
+using DOL.Database2;
 using DOL.AI.Brain;
 using DOL.Events;
 using DOL.GS.Effects;

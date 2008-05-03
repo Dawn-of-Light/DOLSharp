@@ -16,8 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.Database;
-using DOL.Database.Attributes;
+using DOL.Database2;
+using DOL.Database2.Attributes;
 using DOL.GS.PacketHandler;
 //This script demonstrates how to create a data aware custom NPC
 
@@ -28,8 +28,8 @@ namespace DOL.GS.Scripts
 		/// <summary>
 		/// The data object that represents a town crier message
 		/// </summary>
-		[DataTable(TableName="TownCrierMessages")]
-		public class TownCrierMessage : DataObject
+		//[DataTable(TableName="TownCrierMessages")]
+		public class TownCrierMessage : DatabaseObject
 		{
 			private string m_msg;
 			private string m_id;
@@ -46,7 +46,7 @@ namespace DOL.GS.Scripts
 				set { autoSave = value; }
 			}
 
-			[PrimaryKey]
+			//[PrimaryKey]
 			public string TownCrierID
 			{
 				get { return m_id; }
@@ -57,7 +57,7 @@ namespace DOL.GS.Scripts
 				}
 			}
 
-			[DataElement(AllowDbNull = true)]
+			//[DataElement(AllowDbNull=true)]
 			public string Message
 			{
 				get { return m_msg; }

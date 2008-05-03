@@ -21,7 +21,7 @@ using System.Collections;
 using System.Reflection;
 using System.Text;
 
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.Language;
 using DOL.GS.Housing;
@@ -551,7 +551,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The internalID. This is the unique ID of the object in the DB!
 		/// </summary>
-		protected string m_InternalID;
+		protected UInt64 m_InternalID;
 
 		/// <summary>
 		/// Gets or Sets the current ObjectID of the Object
@@ -572,7 +572,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or Sets the internal ID (DB ID) of the Object
 		/// </summary>
-		public string InternalID
+		public UInt64 InternalID
 		{
 			get { return m_InternalID; }
 			set { m_InternalID = value; }
@@ -598,7 +598,7 @@ namespace DOL.GS
 		/// 
 		/// </summary>
 		/// <param name="obj"></param>
-		public virtual void LoadFromDatabase(DataObject obj)
+		public virtual void LoadFromDatabase(DatabaseObject obj)
 		{
 			InternalID = obj.ObjectId;
 		}

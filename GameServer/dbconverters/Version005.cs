@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using log4net;
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS.DatabaseConverters
 {
@@ -42,7 +42,7 @@ namespace DOL.GS.DatabaseConverters
 			log.Info("Database Version 5 Convert Started");
 			log.Info("This fixes some errors with the area classtypes");
 
-			DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(DBArea));
+			DatabaseObject[] objs = GameServer.Database.SelectObjects(typeof(DBArea));
 			int count = 0;
 			foreach (DBArea area in objs)
 			{

@@ -22,7 +22,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -403,15 +403,15 @@ namespace DOL.GS
 			m_lastID = 0;
 
 			//load guilds
-			DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(DBGuild));
-			foreach (DataObject obj in objs)
+			DatabaseObject[] objs = GameServer.Database.SelectObjects(typeof(DBGuild));
+			foreach (DatabaseObject obj in objs)
 			{
 				Guild myguild = new Guild();
 				myguild.LoadFromDatabase(obj);
 				AddGuild(myguild);
 				if (((DBGuild)obj).Ranks.Length == 0)
 					CreateRanks(myguild);
-				DataObject[] guildCharacters = GameServer.Database.SelectObjects(typeof(Character), string.Format("GuildID = '" + GameServer.Database.Escape(myguild.GuildID) + "'"));
+				DatabaseObject[] guildCharacters = GameServer.Database.SelectObjects(typeof(Character), string.Format("GuildID = '" + GameServer.Database.Escape(myguild.GuildID) + "'"));
 				SortedList<string, SocialWindowMemeber> tempList = new SortedList<string, SocialWindowMemeber>(guildCharacters.Length);
 				foreach (Character ch in guildCharacters)
 				{
@@ -422,7 +422,7 @@ namespace DOL.GS
 			}
 
 			//load alliances
-			objs = GameServer.Database.SelectAllObjects(typeof(DBAlliance));
+			objs = GameServer.Database.SelectObjects(typeof(DBAlliance));
 			foreach (DBAlliance dball in objs)
 			{
 				Alliance myalliance = new Alliance();
@@ -496,7 +496,7 @@ namespace DOL.GS
 			if (oldemblem != 0)
 			{
 				player.RemoveMoney(COST_RE_EMBLEM, null);
-				DataObject[] objs = GameServer.Database.SelectObjects(typeof(InventoryItem), "Emblem = " + GameServer.Database.Escape(oldemblem.ToString()));
+				DatabaseObject[] objs = GameServer.Database.SelectObjects(typeof(InventoryItem), "Emblem = " + GameServer.Database.Escape(oldemblem.ToString()));
 				foreach (InventoryItem item in objs)
 				{
 					item.Emblem = newemblem;

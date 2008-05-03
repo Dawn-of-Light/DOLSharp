@@ -20,7 +20,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 using DOL.Events;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.ServerRules;
 using log4net;
 

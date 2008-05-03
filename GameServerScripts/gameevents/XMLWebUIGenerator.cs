@@ -19,9 +19,9 @@
 using System;
 using System.Reflection;
 using System.IO;
-using DOL.Database;
-using DOL.Database.Attributes;
-using DOL.Database.Connection;
+using DOL.Database2;
+using DOL.Database2.Attributes;
+using DOL.Database2.Connection;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -55,8 +55,8 @@ namespace DOL.GS.Scripts
 
 		private static System.Timers.Timer m_timer = null;
 
-		[DataTable(TableName="ServerInfo")]
-		public class ServerInfo : DataObject
+		//[DataTable(TableName="ServerInfo")]
+		public class ServerInfo : DatabaseObject
 		{
 			private string m_dateTime = "NA";
 			private string m_srvrName = "NA";
@@ -79,91 +79,91 @@ namespace DOL.GS.Scripts
 				set { m_autoSave = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			//[DataElement(AllowDbNull=true)]
 			public string Time
 			{
 				get { return m_dateTime; }
 				set { m_dateTime = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			//[DataElement(AllowDbNull=true)]
 			public string ServerName
 			{
 				get { return m_srvrName; }
 				set { m_srvrName = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			//[DataElement(AllowDbNull=true)]
 			public string AAC
 			{
 				get { return m_aac; }
 				set { m_aac = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			//[DataElement(AllowDbNull=true)]
 			public string ServerType
 			{
 				get { return m_srvrType; }
 				set { m_srvrType = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			//[DataElement(AllowDbNull=true)]
 			public string ServerStatus
 			{
 				get { return m_srvrStatus; }
 				set { m_srvrStatus = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			//[DataElement(AllowDbNull=true)]
 			public int NumClients
 			{
 				get { return m_numClients; }
 				set { m_numClients = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			//[DataElement(AllowDbNull=true)]
 			public int NumAccounts
 			{
 				get { return m_numAccts; }
 				set { m_numAccts = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			//[DataElement(AllowDbNull=true)]
 			public int NumMobs
 			{
 				get { return m_numMobs; }
 				set { m_numMobs = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			//[DataElement(AllowDbNull=true)]
 			public int NumInventoryItems
 			{
 				get { return m_numInvItems; }
 				set { m_numInvItems = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			//[DataElement(AllowDbNull=true)]
 			public int NumPlayerChars
 			{
 				get { return m_numPlrChars; }
 				set { m_numPlrChars = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			//[DataElement(AllowDbNull=true)]
 			public int NumMerchantItems
 			{
 				get { return m_numMerchantItems; }
 				set { m_numMerchantItems = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			//[DataElement(AllowDbNull=true)]
 			public int NumItemTemplates
 			{
 				get { return m_numItemTemplates; }
 				set { m_numItemTemplates = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			//[DataElement(AllowDbNull=true)]
 			public int NumWorldObjects
 			{
 				get { return m_numWorldObj; }
@@ -171,8 +171,8 @@ namespace DOL.GS.Scripts
 			}
 		}
 
-		[DataTable(TableName="PlayerInfo")]
-		public class PlayerInfo : DataObject
+		//[DataTable(TableName="PlayerInfo")]
+		public class PlayerInfo : DatabaseObject
 		{
 			private string m_name = "NA";
 			private string m_lastName = "NA";
@@ -194,77 +194,77 @@ namespace DOL.GS.Scripts
 				set { m_autoSave = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			//[DataElement(AllowDbNull=true)]
 			public string Name
 			{
 				get { return m_name; }
 				set { m_name = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			//[DataElement(AllowDbNull=true)]
 			public string LastName
 			{
 				get { return m_lastName; }
 				set { m_lastName = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			//[DataElement(AllowDbNull=true)]
 			public string Guild
 			{
 				get { return m_guild; }
 				set { m_guild = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			//[DataElement(AllowDbNull=true)]
 			public string Race
 			{
 				get { return m_race; }
 				set { m_race = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			//[DataElement(AllowDbNull=true)]
 			public string Class
 			{
 				get { return m_class; }
 				set { m_class = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			//[DataElement(AllowDbNull=true)]
 			public string Alive
 			{
 				get { return m_alive; }
 				set { m_alive = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			//[DataElement(AllowDbNull=true)]
 			public string Realm
 			{
 				get { return m_realm; }
 				set { m_realm = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			//[DataElement(AllowDbNull=true)]
 			public string Region
 			{
 				get { return m_region; }
 				set { m_region = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			//[DataElement(AllowDbNull=true)]
 			public int Level
 			{
 				get { return m_lvl; }
 				set { m_lvl = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			//[DataElement(AllowDbNull=true)]
 			public int X
 			{
 				get { return m_x; }
 				set { m_x = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			//[DataElement(AllowDbNull=true)]
 			public int Y
 			{
 				get { return m_y; }
@@ -290,13 +290,13 @@ namespace DOL.GS.Scripts
 				si.Time = DateTime.Now.ToString();
 				si.ServerName = GameServer.Instance.Configuration.ServerName;
 				si.NumClients = GameServer.Instance.ClientCount;
-				si.NumAccounts = GameServer.Database.GetObjectCount(typeof (DOL.Database.Account));
-				si.NumMobs = GameServer.Database.GetObjectCount(typeof (DOL.Database.Mob));
-				si.NumInventoryItems = GameServer.Database.GetObjectCount(typeof (DOL.Database.InventoryItem));
-				si.NumPlayerChars = GameServer.Database.GetObjectCount(typeof (DOL.Database.Character));
-				si.NumMerchantItems = GameServer.Database.GetObjectCount(typeof (DOL.Database.MerchantItem));
-				si.NumItemTemplates = GameServer.Database.GetObjectCount(typeof (DOL.Database.ItemTemplate));
-				si.NumWorldObjects = GameServer.Database.GetObjectCount(typeof (DOL.Database.WorldObject));
+				si.NumAccounts = GameServer.Database.GetObjectCount(typeof (DOL.Database2.Account));
+				si.NumMobs = GameServer.Database.GetObjectCount(typeof (DOL.Database2.Mob));
+				si.NumInventoryItems = GameServer.Database.GetObjectCount(typeof (DOL.Database2.InventoryItem));
+				si.NumPlayerChars = GameServer.Database.GetObjectCount(typeof (DOL.Database2.Character));
+				si.NumMerchantItems = GameServer.Database.GetObjectCount(typeof (DOL.Database2.MerchantItem));
+				si.NumItemTemplates = GameServer.Database.GetObjectCount(typeof (DOL.Database2.ItemTemplate));
+				si.NumWorldObjects = GameServer.Database.GetObjectCount(typeof (DOL.Database2.WorldObject));
 				si.ServerType = GameServer.Instance.Configuration.ServerType.ToString();
 				si.ServerStatus = GameServer.Instance.ServerStatus.ToString();
 				si.AAC = GameServer.Instance.Configuration.AutoAccountCreation ? "enabled" : "disabled";

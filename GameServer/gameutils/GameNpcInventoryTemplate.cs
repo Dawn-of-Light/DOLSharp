@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using DOL.Database;
+using DOL.Database2;
 using log4net;
 
 namespace DOL.GS
@@ -306,7 +306,7 @@ namespace DOL.GS
 			try
 			{
 				m_npcEquipmentCache = new Dictionary<string, List<NPCEquipment>>(1000);
-				foreach (NPCEquipment equip in GameServer.Database.SelectAllObjects(typeof(NPCEquipment)))
+				foreach (NPCEquipment equip in GameServer.Database.SelectObjects(typeof(NPCEquipment)))
 				{
 					List<NPCEquipment> list;
 					if (m_npcEquipmentCache.ContainsKey(equip.TemplateID))
@@ -343,7 +343,7 @@ namespace DOL.GS
 					if (templateID == null)
 						throw new ArgumentNullException("templateID");
 
-					DataObject[] npcEquipment = GameServer.Database.SelectObjects(typeof(NPCEquipment), "TemplateID = '" + GameServer.Database.Escape(templateID) + "'");
+					DatabaseObject[] npcEquipment = GameServer.Database.SelectObjects(typeof(NPCEquipment), "TemplateID = '" + GameServer.Database.Escape(templateID) + "'");
 
 					// delete removed item templates
 					foreach (NPCEquipment npcItem in npcEquipment)

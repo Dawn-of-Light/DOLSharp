@@ -5,7 +5,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS;
 using DOL.Events;
 using DOL.GS.Spells;
-using DOL.Database;
+using DOL.Database2;
 using DOL.AI.Brain;
 
 namespace DOL.GS.Spells

@@ -21,7 +21,7 @@ using System;
 
 using DOL.GS.PacketHandler;
 using DOL.GS.GameEvents;
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS.Commands
 {
@@ -52,7 +52,7 @@ namespace DOL.GS.Commands
 			BugReport report = new BugReport();
 			
 			//Andraste
-			BugReport[] reports=(BugReport[])GameServer.Database.SelectAllObjects(typeof(BugReport));
+			BugReport[] reports=(BugReport[])GameServer.Database.SelectObjects(typeof(BugReport));
             bool found = false; int i = 0;
             for(i=0;i<MAX_REPORTS;i++)
 			{

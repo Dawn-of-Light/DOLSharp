@@ -18,7 +18,7 @@
  */
 using System;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.Housing;
 using log4net;
 

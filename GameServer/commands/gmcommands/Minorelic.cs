@@ -19,7 +19,7 @@
 using System;
 using DOL.GS.PacketHandler;
 using DOL.GS;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.Utils;
 using System.Collections;
 
@@ -279,7 +279,7 @@ namespace DOL.GS.Commands
                         MinotaurRelic relic = client.Player.TargetObject as MinotaurRelic;
                         
                         relic.RemoveFromWorld();
-                        DataObject obj = GameServer.Database.SelectObject(typeof(DBMinotaurRelic), "RelicID = '" + relic.RelicID + "'");
+                        DatabaseObject obj = GameServer.Database.SelectObject(typeof(DBMinotaurRelic), "RelicID = '" + relic.RelicID + "'");
                         if (obj != null) GameServer.Database.DeleteObject(obj);
                     }
                     break;

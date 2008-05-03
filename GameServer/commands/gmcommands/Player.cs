@@ -23,7 +23,7 @@ using System.Reflection;
 using System.Collections;
 using DOL;
 using DOL.Events;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS;
 using DOL.GS.Spells;
 using DOL.GS.Effects;

@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using log4net;
 
 namespace DOL.GS
@@ -73,7 +73,7 @@ namespace DOL.GS
 				lock (m_mobTemplates.SyncRoot)
 				{
 					m_mobTemplates.Clear();
-					DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(DBNpcTemplate));
+					DatabaseObject[] objs = GameServer.Database.SelectObjects(typeof(DBNpcTemplate));
 					foreach (DBNpcTemplate dbTemplate in objs)
 					{
 						AddTemplate(new NpcTemplate(dbTemplate));

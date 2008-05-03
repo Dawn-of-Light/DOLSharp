@@ -355,7 +355,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public override void CheckAbilities()
 		{
-			////load up abilities
+			//load up abilities
 			if (Body.Abilities != null && Body.Abilities.Count > 0)
 			{
 				foreach (Ability ab in Body.Abilities.Values)
@@ -469,7 +469,7 @@ namespace DOL.AI.Brain
 									break;
 								}
 
-								////Buff group
+								//Buff group
 								//if (player.PlayerGroup != null)
 								//{
 								//    foreach (GamePlayer gplayer in player.PlayerGroup.GetPlayersInTheGroup())

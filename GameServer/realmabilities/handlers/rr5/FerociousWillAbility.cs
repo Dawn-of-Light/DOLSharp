@@ -1,5 +1,5 @@
 using System;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.Effects;
 
 namespace DOL.GS.RealmAbilities

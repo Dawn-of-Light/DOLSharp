@@ -1,6 +1,6 @@
 using System;
 
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 

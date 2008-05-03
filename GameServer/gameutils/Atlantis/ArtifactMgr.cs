@@ -20,7 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using DOL.Database;
+using DOL.Database2;
 using System.Reflection;
 using log4net;
 using DOL.GS.PacketHandler;
@@ -59,14 +59,14 @@ namespace DOL.GS
         {
 			// Load artifacts and books.
 
-            DataObject[] dbo = GameServer.Database.SelectAllObjects(typeof(Artifact));
+            DatabaseObject[] dbo = GameServer.Database.SelectObjects(typeof(Artifact));
 			m_artifacts = new Dictionary<String, Artifact>();
             foreach (Artifact artifact in dbo)
                 m_artifacts.Add(artifact.ArtifactID, artifact);
 
 			// Load artifact versions.
 
-            dbo = GameServer.Database.SelectAllObjects(typeof(ArtifactXItem));
+            dbo = GameServer.Database.SelectObjects(typeof(ArtifactXItem));
 			m_artifactVersions = new Dictionary<String, List<ArtifactXItem>>();
 			List<ArtifactXItem> versionList;
             foreach (ArtifactXItem artifactVersion in dbo)
@@ -83,7 +83,7 @@ namespace DOL.GS
 
 			// Load artifact bonuses.
 
-			dbo = GameServer.Database.SelectAllObjects(typeof(ArtifactBonus));
+			dbo = GameServer.Database.SelectObjects(typeof(ArtifactBonus));
 			m_artifactBonuses = new List<ArtifactBonus>();
 			foreach (ArtifactBonus artifactBonus in dbo)
 				m_artifactBonuses.Add(artifactBonus);

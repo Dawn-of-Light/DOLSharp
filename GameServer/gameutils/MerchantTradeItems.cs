@@ -20,7 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using log4net;
 
 namespace DOL.GS
@@ -142,7 +142,7 @@ namespace DOL.GS
 				HybridDictionary itemsInPage = new HybridDictionary(MAX_ITEM_IN_TRADEWINDOWS);
 				if (m_itemsListID != null && m_itemsListID.Length > 0)
 				{
-					DataObject[] itemList = GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemListID = '" + GameServer.Database.Escape(m_itemsListID) + "' AND PageNumber = '" + page + "'");
+					DatabaseObject[] itemList = GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemListID = '" + GameServer.Database.Escape(m_itemsListID) + "' AND PageNumber = '" + page + "'");
 					foreach (MerchantItem merchantitem in itemList)
 					{
 						ItemTemplate item = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), merchantitem.ItemTemplateID);
@@ -227,7 +227,7 @@ namespace DOL.GS
 				Hashtable allItems = new Hashtable();
 				if (m_itemsListID != null)
 				{
-					DataObject[] itemList = GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemListID = '" + GameServer.Database.Escape(m_itemsListID) + "'");
+					DatabaseObject[] itemList = GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemListID = '" + GameServer.Database.Escape(m_itemsListID) + "'");
 					foreach (MerchantItem merchantitem in itemList)
 					{
 						ItemTemplate item = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), merchantitem.ItemTemplateID);

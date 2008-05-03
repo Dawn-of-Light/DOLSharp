@@ -29,7 +29,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.Quests;
 
 using log4net;
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOLGameServerConsole
 {

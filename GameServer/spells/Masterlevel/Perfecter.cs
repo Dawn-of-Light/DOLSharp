@@ -21,7 +21,7 @@ using DOL.GS;
 using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS.Spells
 {

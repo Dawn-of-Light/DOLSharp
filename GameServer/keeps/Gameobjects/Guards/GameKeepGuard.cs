@@ -20,7 +20,7 @@ using System;
 using System.Collections;
 
 using DOL.AI.Brain;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.PacketHandler;
 using DOL.Events;
 
@@ -605,7 +605,7 @@ namespace DOL.GS.Keeps
 		/// Load the guard from the database
 		/// </summary>
 		/// <param name="mobobject">The database mobobject</param>
-		public override void LoadFromDatabase(DataObject mobobject)
+		public override void LoadFromDatabase(DatabaseObject mobobject)
 		{
 			base.LoadFromDatabase(mobobject);
 			foreach (AbstractArea area in this.CurrentAreas)

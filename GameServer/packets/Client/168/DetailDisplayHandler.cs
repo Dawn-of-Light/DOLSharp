@@ -21,7 +21,7 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
 
-using DOL.Database;
+using DOL.Database2;
 using DOL.Language;
 using DOL.GS.Effects;
 using DOL.GS.RealmAbilities;

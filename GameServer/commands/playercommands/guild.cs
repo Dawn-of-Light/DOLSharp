@@ -21,7 +21,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using DOL.GS;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Language;
 using DOL.GS.Keeps;
 using DOL.GS.Housing;

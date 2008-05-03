@@ -18,7 +18,7 @@
  */
 using System;
 using DOL.AI.Brain;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.Spells;
 
 namespace DOL.GS.RealmAbilities

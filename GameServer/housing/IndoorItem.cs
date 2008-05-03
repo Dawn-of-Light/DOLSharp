@@ -23,7 +23,7 @@
 using System;
 using System.Collections;
 
-using DOL.Database; //yeah for the DBIndoorItem class!
+using DOL.Database2; //yeah for the DBIndoorItem class!
 
 namespace DOL.GS.Housing
 {

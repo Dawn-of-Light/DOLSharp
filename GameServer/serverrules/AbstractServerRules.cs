@@ -23,7 +23,7 @@ using System.Collections.Specialized;
 using System.Net;
 using System.Reflection;
 
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
@@ -59,7 +59,7 @@ namespace DOL.GS.ServerRules
 			string accip = ((IPEndPoint)client.Socket.RemoteEndPoint).Address.ToString();
 
 			// Ban account
-			DataObject[] objs;
+			DatabaseObject[] objs;
 			//objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "(Type ='Account' AND Account ='" + GameServer.Database.Escape(username) + "') OR (Type ='Account+Ip' AND Account ='" + GameServer.Database.Escape(username) + "')");
             objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(username) + "')");
 			if (objs.Length > 0)

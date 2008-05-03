@@ -48,7 +48,7 @@ namespace DOLConfig
 					MainForm.autoAccountCreationCheckBox.Checked = Config.AutoAccountCreation;
 					MainForm.databaseTypeComboBox.Text = Config.DBType.ToString().Replace("DATABASE_", "");
 					//parse connection string
-					if (Config.DBType == DOL.Database.Connection.ConnectionType.DATABASE_MYSQL)
+					if (Config.DBType == DOL.Database2.Connection.ConnectionType.DATABASE_MYSQL)
 					{
 						string[] sets = Config.DBConnectionString.Split(';');
 						foreach (string set in sets)
@@ -90,9 +90,9 @@ namespace DOLConfig
 				Config.AutoAccountCreation = MainForm.autoAccountCreationCheckBox.Checked;
 				switch (MainForm.databaseTypeComboBox.Text)
 				{
-					case "MySQL": Config.DBType = DOL.Database.Connection.ConnectionType.DATABASE_MYSQL; break;
+					case "MySQL": Config.DBType = DOL.Database2.Connection.ConnectionType.DATABASE_MYSQL; break;
 				}
-				if (Config.DBType == DOL.Database.Connection.ConnectionType.DATABASE_MYSQL)
+				if (Config.DBType == DOL.Database2.Connection.ConnectionType.DATABASE_MYSQL)
 					Config.DBConnectionString = "Server=" + MainForm.mysqlHostTextBox.Text + ";Database=" + MainForm.mysqlDatabaseTextBox.Text + ";User ID=" + MainForm.mysqlUsernameTextBox.Text + ";Password=" + MainForm.mysqlPasswordTextBox.Text;
 				Config.SaveToXMLFile(ConfigFile);
 				MessageBox.Show("Settings saved successfully");

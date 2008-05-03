@@ -19,7 +19,7 @@
 using System.Collections;
 using System.Collections.Specialized;
 using System;
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS
 {
@@ -132,7 +132,7 @@ namespace DOL.GS
 		/// Loads this alliance from an alliance table
 		/// </summary>
 		/// <param name="obj"></param>
-		public void LoadFromDatabase(DataObject obj)
+		public void LoadFromDatabase(DatabaseObject obj)
 		{
 			if (!(obj is DBAlliance))
 				return;

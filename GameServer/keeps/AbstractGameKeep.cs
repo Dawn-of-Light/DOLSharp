@@ -21,7 +21,7 @@ using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 using System.Timers;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -500,7 +500,7 @@ namespace DOL.GS.Keeps
 		/// load keep from DB
 		/// </summary>
 		/// <param name="keep"></param>
-		public void LoadFromDatabase(DataObject keep)
+		public void LoadFromDatabase(DatabaseObject keep)
 		{
 			m_dbkeep = keep as DBKeep;
 			InternalID = keep.ObjectId;

@@ -4,7 +4,7 @@ using System.Collections;
 using DOL.Events;
 using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.Database;
+using DOL.Database2;
 using log4net;
 
 namespace DOL.GS
@@ -365,7 +365,7 @@ namespace DOL.GS
 		/// Loads the GameRelic from Database
 		/// </summary>
 		/// <param name="obj">The DBRelic-object for this relic</param>
-		public override void LoadFromDatabase(DataObject obj)
+		public override void LoadFromDatabase(DatabaseObject obj)
 		{
 			InternalID = obj.ObjectId;
 			m_dbRelic = obj as DBRelic;

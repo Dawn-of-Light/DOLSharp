@@ -946,7 +946,7 @@ namespace DOL.GS
 								}
 								else
 								{
-									///// REINSERT all including rescheduled timers
+									/// REINSERT all including rescheduled timers
 									if ((tick & TIMER_RESCHEDULED) != 0)
 									{
 										current.m_tick = tick &= ~TIMER_RESCHEDULED;
@@ -993,7 +993,7 @@ namespace DOL.GS
 										m_buckets[tick] = current;
 									}
 
-									/////
+									///
 								}
 							}
 

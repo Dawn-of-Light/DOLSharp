@@ -21,7 +21,7 @@ using System.Collections;
 using System.Reflection;
 using DOL.AI;
 using DOL.AI.Brain;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.PacketHandler;
 using DOL.GS.Utils;
 using DOL.GS.Quests;
@@ -1281,10 +1281,10 @@ namespace DOL.GS.Commands
                                 DisplayMessage(client, "You cannot add the " + lootTemplateID + " to the " + targetMob.Name + " because the item does not exist.");
                                 return;
                             }
-                            DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(name) + "' AND ItemTemplateID = '" + GameServer.Database.Escape(lootTemplateID) + "'");
+                            DatabaseObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(name) + "' AND ItemTemplateID = '" + GameServer.Database.Escape(lootTemplateID) + "'");
                             if (template != null)
                             {
-                                foreach (DataObject loot in template)
+                                foreach (DatabaseObject loot in template)
                                 {
                                     GameServer.Database.DeleteObject(loot);
                                 }
@@ -1329,10 +1329,10 @@ namespace DOL.GS.Commands
                         string name = targetMob.Name;
                         if (lootTemplateID.ToLower().ToString() == "all")
                         {
-                            DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(name) + "'");
+                            DatabaseObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(name) + "'");
                             if (template != null)
                             {
-                                foreach (DataObject loot in template)
+                                foreach (DatabaseObject loot in template)
                                 {
                                     GameServer.Database.DeleteObject(loot);
                                 }
@@ -1347,10 +1347,10 @@ namespace DOL.GS.Commands
                         }
                         else
                         {
-                            DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(name) + "' AND ItemTemplateID = '" + GameServer.Database.Escape(lootTemplateID) + "'");
+                            DatabaseObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(name) + "' AND ItemTemplateID = '" + GameServer.Database.Escape(lootTemplateID) + "'");
                             if (template != null)
                             {
-                                foreach (DataObject loot in template)
+                                foreach (DatabaseObject loot in template)
                                 {
                                     GameServer.Database.DeleteObject(loot);
                                 }
@@ -1382,7 +1382,7 @@ namespace DOL.GS.Commands
                         {
                             ArrayList text = new ArrayList();
                             text.Add(".");
-                            DataObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(targetMob.Name) + "'");
+                            DatabaseObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(targetMob.Name) + "'");
 
                             foreach (DBLootTemplate loot in template)
                             {

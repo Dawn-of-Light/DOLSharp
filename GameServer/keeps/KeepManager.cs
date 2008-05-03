@@ -20,7 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -56,7 +56,7 @@ namespace DOL.GS.Keeps
 			{
 				m_keeps.Clear();
 
-				DataObject[] keeps = GameServer.Database.SelectAllObjects(typeof(DBKeep));
+				DatabaseObject[] keeps = GameServer.Database.SelectObjects(typeof(DBKeep));
 				foreach (DBKeep datakeep in keeps)
 				{
 					if (WorldMgr.GetRegion((ushort)datakeep.Region) == null)
@@ -80,7 +80,7 @@ namespace DOL.GS.Keeps
 					tower.Keep = mykeep;
 				}
 				//get with one command is more quick even if we look for keep in hashtable
-				DBKeepComponent[] keepcomponents = (DBKeepComponent[])GameServer.Database.SelectAllObjects(typeof(DBKeepComponent));
+				DBKeepComponent[] keepcomponents = (DBKeepComponent[])GameServer.Database.SelectObjects(typeof(DBKeepComponent));
 				foreach (DBKeepComponent component in keepcomponents)
 				{
 					AbstractGameKeep keep = getKeepByID(component.KeepID);
@@ -120,7 +120,7 @@ namespace DOL.GS.Keeps
 		{
 			Hashtable hookPointList = new Hashtable();
 
-			DBKeepHookPoint[] dbkeepHookPoints = (DBKeepHookPoint[])GameServer.Database.SelectAllObjects(typeof(DBKeepHookPoint));
+			DBKeepHookPoint[] dbkeepHookPoints = (DBKeepHookPoint[])GameServer.Database.SelectObjects(typeof(DBKeepHookPoint));
 			foreach (DBKeepHookPoint dbhookPoint in dbkeepHookPoints)
 			{
 				ArrayList currentArray;
@@ -601,7 +601,7 @@ namespace DOL.GS.Keeps
 
 		private static void LoadBattlegroundCaps()
 		{
-			Battleground[] bgs = (Battleground[])GameServer.Database.SelectAllObjects(typeof(Battleground));
+			Battleground[] bgs = (Battleground[])GameServer.Database.SelectObjects(typeof(Battleground));
 			foreach (Battleground bg in bgs)
 				m_battlegrounds.Add(bg);
 		}

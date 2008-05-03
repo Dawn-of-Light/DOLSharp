@@ -21,7 +21,7 @@ using System.Collections;
 using System.Collections.Specialized;
 
 using DOL.AI.Brain;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.Language;

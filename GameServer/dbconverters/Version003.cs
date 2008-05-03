@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using log4net;
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS.DatabaseConverters
 {
@@ -41,7 +41,7 @@ namespace DOL.GS.DatabaseConverters
 		{
 			log.Info("Database Version 3 Convert Started");
 
-			if (GameServer.Instance.Configuration.DBType == DOL.Database.Connection.ConnectionType.DATABASE_XML)
+			if (GameServer.Instance.Configuration.DBType == DOL.Database2.Connection.ConnectionType.DATABASE_XML)
 			{
 				log.Info("You have an XML database loaded, this converter will only work with MySQL, skipping");
 				return;

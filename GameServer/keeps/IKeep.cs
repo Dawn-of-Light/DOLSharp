@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using DOL.Database;
+using DOL.Database2;
 
 
 namespace DOL.GS.Keeps
@@ -30,7 +30,7 @@ namespace DOL.GS.Keeps
 		Hashtable Guards { get;}
 		Hashtable Banners { get;}
 		void Load(DBKeep keep);
-		void LoadFromDatabase(DataObject keep);
+		void LoadFromDatabase(DatabaseObject keep);
 		void SaveIntoDatabase();
 	}
 }

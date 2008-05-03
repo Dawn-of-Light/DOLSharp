@@ -22,7 +22,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using DOL.Config;
-using DOL.Database.Connection;
 
 namespace DOL.GS
 {
@@ -131,7 +130,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Type database type
 		/// </summary>
-		protected ConnectionType m_dbType;
+		protected Type m_ProviderType;
 
 		/// <summary>
 		/// True if the server shall autosave the db
@@ -551,10 +550,10 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the DB type
 		/// </summary>
-		public ConnectionType DBType
+		public Type ProviderType
 		{
-			get { return m_dbType; }
-			set { m_dbType = value; }
+			get { return m_ProviderType; }
+            set { m_ProviderType = value; }
 		}
 
 		/// <summary>

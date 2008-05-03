@@ -25,7 +25,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.AI.Brain;
 using DOL.GS.Utils;
 using log4net;
@@ -78,10 +78,10 @@ namespace DOL.GS
 				lock (m_templateNameXLootTemplate)
 				{
 					// ** find our loot template **
-					DataObject[] m_lootTemplates = null;
+					DatabaseObject[] m_lootTemplates = null;
 					try
 					{
-						m_lootTemplates = GameServer.Database.SelectAllObjects(typeof(DBLootTemplate));
+						m_lootTemplates = GameServer.Database.SelectObjects(typeof(DBLootTemplate));
 					}
 					catch (Exception e)
 					{
@@ -120,10 +120,10 @@ namespace DOL.GS
 				lock (m_mobXLootTemplates)
 				{
 					// ** find our mobs related with loot templates **
-					DataObject[] m_mobLootTemplates = null;
+					DatabaseObject[] m_mobLootTemplates = null;
 					try
 					{
-						m_mobLootTemplates = GameServer.Database.SelectAllObjects(typeof(DBMobXLootTemplate));
+						m_mobLootTemplates = GameServer.Database.SelectObjects(typeof(DBMobXLootTemplate));
 					}
 					catch (Exception e)
 					{

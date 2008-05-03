@@ -18,7 +18,7 @@
  */
 using System;
 using log4net;
-using DOL.Database;
+using DOL.Database2;
 
 namespace DOL.GS.DatabaseConverters
 {
@@ -42,7 +42,7 @@ namespace DOL.GS.DatabaseConverters
 			log.Info("Database Version 2 Convert Started");
 
 			log.Info("Converting Styles");
-			DBStyle[] styles = (DBStyle[])GameServer.Database.SelectAllObjects(typeof(DBStyle));
+			DBStyle[] styles = (DBStyle[])GameServer.Database.SelectObjects(typeof(DBStyle));
 			foreach (DBStyle style in styles)
 			{
 				style.Icon = style.ID;

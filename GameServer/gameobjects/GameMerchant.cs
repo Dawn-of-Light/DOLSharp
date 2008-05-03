@@ -21,7 +21,7 @@ using System.Collections;
 using System.Reflection;
 using System.Threading;
 using DOL.AI.Brain;
-using DOL.Database;
+using DOL.Database2;
 using DOL.Language;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -322,7 +322,7 @@ namespace DOL.GS
 		/// Loads a merchant from the DB
 		/// </summary>
 		/// <param name="merchantobject">The merchant DB object</param>
-		public override void LoadFromDatabase(DataObject merchantobject)
+		public override void LoadFromDatabase(DatabaseObject merchantobject)
 		{
 			base.LoadFromDatabase(merchantobject);
 			if (!(merchantobject is Mob)) return;

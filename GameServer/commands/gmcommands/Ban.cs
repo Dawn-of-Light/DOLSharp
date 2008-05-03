@@ -19,7 +19,7 @@
 using System;
 using System.Net;
 using System.Reflection;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 using log4net;
@@ -57,7 +57,7 @@ namespace DOL.GS.Commands
 
 			try
 			{
-				DataObject[] objs;
+				DatabaseObject[] objs;
 				DBBannedAccount b = new DBBannedAccount();
 				string accip = ((IPEndPoint)player.Client.Socket.RemoteEndPoint).Address.ToString();
 				string accname = GameServer.Database.Escape(player.Client.Account.Name);

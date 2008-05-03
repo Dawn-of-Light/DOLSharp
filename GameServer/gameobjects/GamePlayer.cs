@@ -26,7 +26,7 @@ using System.Text;
 using DOL.AI.Brain;
 using DOL.GS;
 using DOL.Events;
-using DOL.Database;
+using DOL.Database2;
 using DOL.GS.Effects;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
@@ -10270,7 +10270,7 @@ namespace DOL.GS
 		/// Loads this player from a character table slot
 		/// </summary>
 		/// <param name="obj">DOLCharacter</param>
-		public override void LoadFromDatabase(DataObject obj)
+		public override void LoadFromDatabase(DatabaseObject obj)
 		{
 			base.LoadFromDatabase(obj);
 			if (!(obj is Character))
