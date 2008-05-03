@@ -180,6 +180,9 @@ namespace DOL.GS.Commands
 			player.CraftTimer.Stop();
 			player.Out.SendCloseTimerWindow();
 
+            if (!PreFireChecks(player, obj))
+                return 0;
+
 			if (Util.ChanceDouble(CalculateRepairChance(player,obj)))
 			{
 				int start = obj.Health;
