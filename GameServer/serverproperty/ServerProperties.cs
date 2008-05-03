@@ -472,6 +472,8 @@ namespace DOL.GS.ServerProperties
         public static readonly int MAX_INDOOR_HOUSE_ITEMS;
         [ServerProperty("max_outdoor_house_items", "Max number of items allowed in a players garden.", 30)]
         public static readonly int MAX_OUTDOOR_HOUSE_ITEMS;
+        [ServerProperty("indoor_items_depend_on_size", "If true the max number of allowed House indoor items are set like live (40, 60, 80, 100)", true)]
+        public static readonly bool INDOOR_ITEMS_DEPEND_ON_SIZE;
 
         /// <summary>
         /// This is to set the baseHP For NPCs
