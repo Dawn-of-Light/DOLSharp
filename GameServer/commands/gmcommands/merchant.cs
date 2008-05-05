@@ -201,7 +201,7 @@ namespace DOL.GS.Commands
 												return;
 											}
 
-											ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), templateID);
+											ItemTemplate template = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), templateID);
 											if (template == null)
 											{
 												DisplayMessage(client, "ItemTemplate with id " + templateID + " could not be found!");

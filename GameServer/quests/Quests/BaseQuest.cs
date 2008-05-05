@@ -333,7 +333,7 @@ namespace DOL.GS.Quests
 
 		protected static ItemTemplate CreateTicketTo(String location)
 		{
-			ItemTemplate ticket = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ticket_to_" + GameServer.Database.Escape(location.ToLower()));
+			ItemTemplate ticket = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), "ticket_to_" +location.ToLower());
 			if (ticket == null)
 			{
 				if (log.IsWarnEnabled)
@@ -367,7 +367,7 @@ namespace DOL.GS.Quests
 
 		protected static ItemTemplate CreateTicketTo(String destination, String ticket_Id)
 		{
-			ItemTemplate ticket = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), GameServer.Database.Escape(ticket_Id.ToLower()));
+			ItemTemplate ticket = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), ticket_Id.ToLower());
 			if (ticket == null)
 			{
 				if (log.IsWarnEnabled)

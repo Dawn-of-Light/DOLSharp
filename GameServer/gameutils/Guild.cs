@@ -83,10 +83,6 @@ namespace DOL.GS
 		/// </summary>
 		protected DBGuild m_DBguild;
 
-		/// <summary>
-		/// unique id of the guild
-		/// </summary>
-		protected string m_guildid;
 
 		/// <summary>
 		/// the name of the guild
@@ -272,10 +268,9 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the constant guild id
 		/// </summary>
-		public string GuildID
+		public UInt64 GuildID
 		{
-			get { return m_guildid; }
-			set { m_guildid = value; }
+			get { return m_DBguild.ID; }
 		}
 
 		/// <summary>

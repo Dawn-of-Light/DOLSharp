@@ -312,14 +312,23 @@ namespace DOL.GS
 		/// <param name="template">the template ID of the item</param>
 		/// <param name="player">the player to give it to</param>
 		/// <returns>true if succesful</returns>
-		public virtual bool addGift(String template, GamePlayer player)
+		public virtual bool addGift(UInt64 template, GamePlayer player)
 		{
-			ItemTemplate temp = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), template);
-			if (!player.Inventory.AddTemplate(temp, 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
-			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.AddGift.NotEnoughSpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
+            try
+            {
+                ItemTemplate temp = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromID(template);
+                if (!player.Inventory.AddTemplate(temp, 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+                {
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.AddGift.NotEnoughSpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return false;
+                }
+            }
+            catch (System.Exception e)
+            {
+                //TODO: report that error
+                return false;
+            }
+			
 			return true;
 		}
 

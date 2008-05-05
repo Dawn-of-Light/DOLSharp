@@ -197,7 +197,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		marinefungus = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "marinefungus");
+		marinefungus = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "marinefungus");
 			if (marinefungus == null)
 			{
 				marinefungus = new ItemTemplate();

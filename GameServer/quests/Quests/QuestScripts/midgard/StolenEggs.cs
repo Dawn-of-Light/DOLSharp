@@ -262,7 +262,7 @@ namespace DOL.GS.Quests.Midgard
 
 			#region defineItems
 
-			trainerWhip = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "askefruer_whip");
+			trainerWhip = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "askefruer_whip");
 			if (trainerWhip == null)
 			{
 				trainerWhip = new ItemTemplate();
@@ -287,7 +287,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_vest_mid");
+			recruitsVest = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_studded_vest_mid");
 			if (recruitsVest == null)
 			{
 				recruitsVest = new ItemTemplate();
@@ -338,7 +338,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsQuiltedVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_vest");
+			recruitsQuiltedVest = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnby(typeof (ItemTemplate), "recruits_quilted_vest");
 			if (recruitsQuiltedVest == null)
 			{
 				recruitsQuiltedVest = new ItemTemplate();

@@ -19,12 +19,13 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.Database2;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 using log4net;
-
+using System.Linq;
 namespace DOL.GS.Housing
 {
 
@@ -92,7 +93,7 @@ namespace DOL.GS.Housing
 			set { m_databaseItem.Name = value; }
 		}
 
-		public string OwnerIDs
+		public List<UInt64> OwnerIDs
 		{
 			get { return m_databaseItem.OwnerIDs; }
 			set { m_databaseItem.OwnerIDs = value; }
@@ -1072,9 +1073,17 @@ namespace DOL.GS.Housing
 		{
 			if (item == null)
 			{
-				item = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "Id_nb = '" + GameServer.Database.Escape(templateID) + "'");
-				if (item == null)
-					return null;
+                try
+                {
+                    item = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), templateID);
+                }
+                catch (System.Exception e)
+                {
+                    if (item == null)
+                        return null;                	
+                }
+				
+				
 			}
 
 
@@ -1186,30 +1195,32 @@ namespace DOL.GS.Housing
 		public void EmptyHookpoint(GamePlayer player, GameObject obj)
 		{
 			//get the item template
-			ItemTemplate template = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "Name = '" + GameServer.Database.Escape(obj.Name) + "'");
+            ItemTemplate template = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "Name", obj.Name);
 			if (template == null)
 				return;
 
 			//get the housepoint item
-			String sqlWhere = String.Format("ItemTemplateID = '{0}'",
-				GameServer.Database.Escape(template.Id_nb));
-			DBHousepointItem item = (DBHousepointItem)GameServer.Database.SelectObject(typeof(DBHousepointItem), sqlWhere);
-			if (item == null)
-				return;
+            try
+            {
+                DBHousepointItem item = (DBHousepointItem)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(DBHousepointItem), template.Id_nb);
+                obj.Delete();
+                GameServer.Database.DeleteObject(item);
 
-			obj.Delete();
-			GameServer.Database.DeleteObject(item);
+                // Need to clear the current house points so we can replace items
+                player.CurrentHouse.HousepointItems.Clear();
+                foreach (DBHousepointItem hpitem in GameServer.Database.SelectObjects(typeof(DBHousepointItem),"HouseID",player.CurrentHouse.HouseNumber))
+                {
+                    FillHookpoint(null, hpitem.Position, hpitem.ItemTemplateID);
+                    this.HousepointItems[hpitem.Position] = hpitem;
+                }
+                player.CurrentHouse.SendUpdate();
 
-			// Need to clear the current house points so we can replace items
-			player.CurrentHouse.HousepointItems.Clear();
-			foreach (DBHousepointItem hpitem in GameServer.Database.SelectObjects(typeof(DBHousepointItem), "HouseID = '" + player.CurrentHouse.HouseNumber + "'"))
-			{
-				FillHookpoint(null, hpitem.Position, hpitem.ItemTemplateID);
-				this.HousepointItems[hpitem.Position] = hpitem;
-			}
-			player.CurrentHouse.SendUpdate();
-
-			player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, new InventoryItem(template));
+                player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, new InventoryItem(template));
+            }
+            catch (DatabaseObjectNotFoundException)
+            {
+                return;
+            }			
 		}
 
 		/// <summary>
@@ -1219,10 +1230,10 @@ namespace DOL.GS.Housing
 		public int GetFreeVaultNumber()
 		{
 			bool[] usedVaults = new bool[4] { false, false, false, false };
-			String sqlWhere = String.Format("HouseID = '{0}' and ItemTemplateID like '%_vault'",
-				HouseNumber);
-
-			foreach (DBHousepointItem housePointItem in GameServer.Database.SelectObjects(typeof(DBHousepointItem), sqlWhere))
+            IEnumerable<DBHousepointItem> result =from s in  GameServer.Database.OfType<DBHousepointItem>()
+                                                  where (s.HouseID == 0) && (s.ItemTemplateID.EndsWith("_vault"))
+                                                   select s;
+			foreach (DBHousepointItem housePointItem in result)
 				if (housePointItem.Index >= 0 && housePointItem.Index <= 3)
 					usedVaults[housePointItem.Index] = true;
 
@@ -1554,36 +1565,45 @@ namespace DOL.GS.Housing
 		public void LoadFromDatabase()
 		{
 			int i = 0;
-			foreach (DBHouseIndoorItem dbiitem in GameServer.Database.SelectObjects(typeof(DBHouseIndoorItem), "HouseNumber = '" + this.HouseNumber + "'"))
+			foreach (DBHouseIndoorItem dbiitem in (from s in DatabaseLayer.Instance.OfType<DBHouseIndoorItem>()
+                                                   where s.HouseNumber == this.HouseNumber
+                                                   select s))
 			{
 				IndoorItem iitem = new IndoorItem();
 				iitem.CopyFrom(dbiitem);
 				this.IndoorItems.Add(i++, iitem);
 			}
 			i = 0;
-			foreach (DBHouseOutdoorItem dboitem in GameServer.Database.SelectObjects(typeof(DBHouseOutdoorItem), "HouseNumber = '" + this.HouseNumber + "'"))
+			foreach (DBHouseOutdoorItem dboitem in (from s in DatabaseLayer.Instance.OfType<DBHouseOutdoorItem>()
+                                                   where s.HouseNumber == this.HouseNumber
+                                                   select s))
 			{
 				OutdoorItem oitem = new OutdoorItem();
 				oitem.CopyFrom(dboitem);
 				this.OutdoorItems.Add(i++, oitem);
 			}
 
-			foreach (DBHouseCharsXPerms d in GameServer.Database.SelectObjects(typeof(DBHouseCharsXPerms), "HouseNumber = '" + this.HouseNumber + "'"))
+			foreach (DBHouseCharsXPerms d in (from s in DatabaseLayer.Instance.OfType<DBHouseCharsXPerms>()
+                                                   where s.HouseNumber == this.HouseNumber
+                                                   select s))
 			{
 				this.CharsPermissions.Add(d);
 			}
 
-			foreach (DBHousePermissions dbperm in GameServer.Database.SelectObjects(typeof(DBHousePermissions), "HouseNumber = '" + this.HouseNumber + "'"))
+            foreach (DBHousePermissions dbperm in (from s in DatabaseLayer.Instance.OfType<DBHousePermissions>()
+                                                   where s.HouseNumber == this.HouseNumber
+                                                   select s))
 			{
 				this.HouseAccess[dbperm.PermLevel] = dbperm;
 			}
 
-			foreach (DBHousepointItem item in GameServer.Database.SelectObjects(typeof(DBHousepointItem), "HouseID = '" + this.HouseNumber + "'"))
+			foreach (DBHousepointItem item in (from s in DatabaseLayer.Instance.OfType<DBHousepointItem>()
+                                                   where s.HouseID == this.HouseNumber
+                                                   select s))
 			{
 				if (item.ItemTemplateID.EndsWith("_vault"))
 				{
-					ItemTemplate template = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate),
-						"Id_nb = '" + GameServer.Database.Escape(item.ItemTemplateID) + "'");
+					ItemTemplate template = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate),item.ItemTemplateID);
 					if (template == null)
 						continue;
 					GameHouseVault houseVault = new GameHouseVault(template, item.Index);

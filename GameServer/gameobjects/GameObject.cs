@@ -1248,19 +1248,42 @@ namespace DOL.GS
 		/// <param name="source">Source from where to get the item</param>
 		/// <param name="templateID">templateID for item to add</param>
 		/// <returns>true if the item was successfully received</returns>
-		public virtual bool ReceiveItem(GameLiving source, string templateID)
+		public virtual bool ReceiveItem(GameLiving source, UInt64 templateID)
 		{
-			ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), templateID);
-			if (template == null)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("Item Creation: ItemTemplate not found ID=" + templateID);
-				return false;
-			}
-
-			return ReceiveItem(source, new InventoryItem(template));
+            try
+            {
+                ItemTemplate template = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromID(templateID);
+                return ReceiveItem(source, new InventoryItem(template));
+            }
+            catch (DatabaseObjectNotFoundException e)
+            {
+                if (log.IsErrorEnabled)
+                    log.Error("Item Creation: ItemTemplate not found ID=" + templateID);
+                return false;
+            }
+			
 		}
+        /// <summary>
+        /// Called when the object is about to get an item from someone
+        /// </summary>
+        /// <param name="source">Source from where to get the item</param>
+        /// <param name="templateID">templateID for item to add</param>
+        /// <returns>true if the item was successfully received</returns>
+        public virtual bool ReceiveItem(GameLiving source, string templateID)
+        {
+            try
+            {
+                ItemTemplate template = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate),templateID);
+                return ReceiveItem(source, new InventoryItem(template));
+            }
+            catch (DatabaseObjectNotFoundException e)
+            {
+                if (log.IsErrorEnabled)
+                    log.Error("Item Creation: ItemTemplate not found IDNb=" + templateID);
+                return false;
+            }
 
+        }
 		/// <summary>
 		/// Receive an item from a living
 		/// </summary>

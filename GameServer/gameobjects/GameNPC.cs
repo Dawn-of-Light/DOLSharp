@@ -1894,20 +1894,6 @@ namespace DOL.GS
 			m_maxdistance = npc.MaxDistance;
 			m_roamingRange = npc.RoamingRange;
 		}
-
-		/// <summary>
-		/// Deletes the mob from the database
-		/// </summary>
-		public override void DeleteFromDatabase()
-		{
-			if (InternalID != null)
-			{
-				Mob mob = (Mob)GameServer.Database.FindObjectByKey(typeof(Mob), InternalID);
-				if (mob != null)
-					GameServer.Database.DeleteObject(mob);
-			}
-		}
-
 		/// <summary>
 		/// Saves a mob into the db if it exists, it is
 		/// updated, else it creates a new object in the DB
@@ -1916,7 +1902,7 @@ namespace DOL.GS
 		{
 			Mob mob = null;
 			if (InternalID != null)
-				mob = (Mob)GameServer.Database.FindObjectByKey(typeof(Mob), InternalID);
+				mob = (Mob)GameServer.Database.GetDatabaseObjectFromID(InternalID);
 
 			if (mob == null)
 				if (LoadedFromScript == false)

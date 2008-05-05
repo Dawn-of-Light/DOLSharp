@@ -1275,7 +1275,7 @@ namespace DOL.GS.Commands
                             int chance = Convert.ToInt16(args[3]);
                             string name = targetMob.Name;
 
-                            ItemTemplate item = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), lootTemplateID);
+                            ItemTemplate item = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), lootTemplateID);
                             if (item == null)
                             {
                                 DisplayMessage(client, "You cannot add the " + lootTemplateID + " to the " + targetMob.Name + " because the item does not exist.");
@@ -1297,7 +1297,7 @@ namespace DOL.GS.Commands
                             }
                             else
                             {
-                                ItemTemplate itemtemplate = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), lootTemplateID);
+                                ItemTemplate itemtemplate = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), lootTemplateID);
                                 if (itemtemplate == null)
                                 {
                                     DisplayMessage(client, "ItemTemplate " + lootTemplateID + " not found!");

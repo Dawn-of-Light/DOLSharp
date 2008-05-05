@@ -92,7 +92,7 @@ namespace DOL.GS.RealmAbilities
 		[ScriptLoadedEvent]
 		public static void OnScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
-			ItemTemplate arrow_summoning1 = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "arrow_summoning1");
+			ItemTemplate arrow_summoning1 = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), "arrow_summoning1");
 			if (arrow_summoning1 == null)
 			{
 				arrow_summoning1 = new ItemTemplate();
@@ -120,7 +120,7 @@ namespace DOL.GS.RealmAbilities
 				if (log.IsDebugEnabled)
 					log.Debug("Added " + arrow_summoning1.Id_nb);
 			}
-			ItemTemplate arrow_summoning2 = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "arrow_summoning2");
+			ItemTemplate arrow_summoning2 = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), "arrow_summoning2");
 			if (arrow_summoning2 == null)
 			{
 				arrow_summoning2 = new ItemTemplate();
@@ -148,7 +148,7 @@ namespace DOL.GS.RealmAbilities
 				if (log.IsDebugEnabled)
 					log.Debug("Added " + arrow_summoning2.Id_nb);
 			}
-			ItemTemplate arrow_summoning3 = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "arrow_summoning3");
+			ItemTemplate arrow_summoning3 = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), "arrow_summoning3");
 			if (arrow_summoning3 == null)
 			{
 				arrow_summoning3 = new ItemTemplate();

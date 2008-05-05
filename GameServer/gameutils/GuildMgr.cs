@@ -26,7 +26,7 @@ using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
-
+using System.Linq;
 namespace DOL.GS
 {
 	/// <summary>
@@ -54,17 +54,17 @@ namespace DOL.GS
 		/// Holds all the players combined with their guilds for the social window
 		/// </summary>
 		/// <remarks>Sorted on the player name in order to optimize the initial refresh (sorted by name)</remarks>
-		private static readonly Dictionary<string, SortedList<string, SocialWindowMemeber>> m_guildXAllPlayers = new Dictionary<string, SortedList<string, SocialWindowMemeber>>();
+		private static readonly Dictionary<UInt64, SortedList<string, SocialWindowMemeber>> m_guildXAllPlayers = new Dictionary<UInt64, SortedList<string, SocialWindowMemeber>>();
 
 		/// <summary>
 		/// Gets the sorted dictionary for a guild to display in the social window
 		/// </summary>
 		/// <param name="guildID">The guild id for a player</param>
 		/// <returns>The dictionary sorted on the player's name</returns>
-		public static SortedList<string, SocialWindowMemeber> GetSocialWindowGuild(string guildID)
+		public static SortedList<string, SocialWindowMemeber> GetSocialWindowGuild(UInt64 GuildID)
 		{
-			if (m_guildXAllPlayers.ContainsKey(guildID))
-				return m_guildXAllPlayers[guildID];
+			if (m_guildXAllPlayers.ContainsKey(GuildID))
+				return m_guildXAllPlayers[GuildID];
 			return null;
 		}
 
@@ -192,8 +192,6 @@ namespace DOL.GS
 				newguild.theGuildDB = new DBGuild();
 				newguild.Name = guildName;
 				newguild.theGuildDB.GuildName = guildName;
-				newguild.GuildID = System.Guid.NewGuid().ToString(); //Assume this is unique, which I don't like, but it seems to be commonly used elsewhere in the code.
-				newguild.theGuildDB.GuildID = newguild.GuildID;
 				CreateRanks(newguild);
 				
 				AddGuild(newguild);				
@@ -307,11 +305,14 @@ namespace DOL.GS
 					return false;
 				}
 
-				DBGuild[] guilds = (DBGuild[])GameServer.Database.SelectObjects(typeof(DBGuild), "GuildName='" + GameServer.Database.Escape(guildName) + "'");
-				foreach (DBGuild guild in guilds)
+				foreach (DBGuild guild in (from s in DatabaseLayer.Instance.OfType<DBGuild>()
+                                           where s.GuildName == guildName 
+                                           select s))
 				{
-					foreach (Character cha in GameServer.Database.SelectObjects(typeof(Character), "GuildID = '" + GameServer.Database.Escape(guild.GuildID) + "'"))
-						cha.GuildID = "";
+                    foreach (Character cha in (from s in DatabaseLayer.Instance.OfType<Character>()
+                                               where s.GuildID == guild.ID
+                                               select s)) 
+						cha.GuildID = 0;
 					GameServer.Database.DeleteObject(guild);
 				}
 
@@ -320,7 +321,7 @@ namespace DOL.GS
 					foreach (GamePlayer ply in removeGuild.ListOnlineMembers())
 					{
 						ply.Guild = null;
-						ply.GuildID = "";
+						ply.GuildID = 0;
 						ply.GuildName = "";
 						ply.GuildRank = null;
 					}
@@ -355,17 +356,17 @@ namespace DOL.GS
 		/// Returns a guild according to the matching database ID.
 		/// </summary>
 		/// <returns>Guild</returns>
-		public static Guild GetGuildByGuildID(string guildid)
+		public static Guild GetGuildByGuildID(UInt64 GuildID)
 		{
-			if(guildid == null) return null;
+			if(GuildID == 0) return null;
 			
 			lock (m_guildids.SyncRoot)
 			{
-				if(m_guildids[guildid] == null) return null;
+				if(m_guildids[GuildID] == null) return null;
 				
 				lock(m_guilds.SyncRoot)
 				{
-					return (Guild)m_guilds[m_guildids[guildid]];
+					return (Guild)m_guilds[m_guildids[GuildID]];
 				}
 			}
 		}
@@ -374,11 +375,11 @@ namespace DOL.GS
 		/// Returns a database ID for a matching guild name.
 		/// </summary>
 		/// <returns>Guild</returns>
-		public static string GuildNameToGuildID(string guildName)
+		public static UInt64 GuildNameToGuildID(string guildName)
 		{
 			Guild g = GetGuildByName(guildName);
 			if (g == null)
-				return "";
+				return 0;
 			return g.GuildID;
 		}
 
@@ -403,7 +404,7 @@ namespace DOL.GS
 			m_lastID = 0;
 
 			//load guilds
-			DatabaseObject[] objs = GameServer.Database.SelectObjects(typeof(DBGuild));
+			DatabaseObject[] objs = (DatabaseObject[] )GameServer.Database.SelectObjects(typeof(DBGuild));
 			foreach (DatabaseObject obj in objs)
 			{
 				Guild myguild = new Guild();
@@ -411,7 +412,9 @@ namespace DOL.GS
 				AddGuild(myguild);
 				if (((DBGuild)obj).Ranks.Length == 0)
 					CreateRanks(myguild);
-				DatabaseObject[] guildCharacters = GameServer.Database.SelectObjects(typeof(Character), string.Format("GuildID = '" + GameServer.Database.Escape(myguild.GuildID) + "'"));
+                Character[] guildCharacters = (Character[])from s in DatabaseLayer.Instance.OfType<Character>()
+                                              where s.GuildID == myguild.GuildID
+                                              select s;
 				SortedList<string, SocialWindowMemeber> tempList = new SortedList<string, SocialWindowMemeber>(guildCharacters.Length);
 				foreach (Character ch in guildCharacters)
 				{
@@ -422,7 +425,7 @@ namespace DOL.GS
 			}
 
 			//load alliances
-			objs = GameServer.Database.SelectObjects(typeof(DBAlliance));
+			objs = (DatabaseObject[])GameServer.Database.SelectObjects(typeof(DBAlliance));
 			foreach (DBAlliance dball in objs)
 			{
 				Alliance myalliance = new Alliance();
@@ -496,8 +499,9 @@ namespace DOL.GS
 			if (oldemblem != 0)
 			{
 				player.RemoveMoney(COST_RE_EMBLEM, null);
-				DatabaseObject[] objs = GameServer.Database.SelectObjects(typeof(InventoryItem), "Emblem = " + GameServer.Database.Escape(oldemblem.ToString()));
-				foreach (InventoryItem item in objs)
+				foreach (InventoryItem item in (from s in DatabaseLayer.Instance.OfType<InventoryItem>()
+                                                    where s.Emblem == oldemblem
+                                                    select s))
 				{
 					item.Emblem = newemblem;
 					GameServer.Database.SaveObject(item);

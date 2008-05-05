@@ -146,7 +146,7 @@ namespace DOL.GS.Quests
 		{
 			if(!m_dbQuest.IsValid) return;
 
-			DBQuest dbQuest = (DBQuest) GameServer.Database.FindObjectByKey(typeof(DBQuest), m_dbQuest.ObjectId);
+			DBQuest dbQuest = (DBQuest) GameServer.Database.GetDatabaseObjectFromID( m_dbQuest.ObjectId);
 			if(dbQuest!=null)
 				GameServer.Database.DeleteObject(dbQuest);
 		}

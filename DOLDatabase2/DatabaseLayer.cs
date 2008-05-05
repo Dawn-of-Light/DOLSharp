@@ -13,7 +13,7 @@ using log4net;
 namespace DOL.Database2
 {        
     //TODO: Rework with GENERICS
-    public class DatabaseLayer: IEnumerable
+    public class DatabaseLayer: System.Collections.Generic.IEnumerable<DatabaseObject> // Some c# compilers need that apparently xD
     {
         /// <summary>
         /// Defines a logger for this class.
@@ -171,6 +171,7 @@ namespace DOL.Database2
             }
             return list;
         }
+        [Obsolete]
         public IEnumerable<DatabaseObject> SelectObjects(Type type,string MemberName,object value)
         {
             FieldInfo field = type.GetField(MemberName);
@@ -229,10 +230,6 @@ namespace DOL.Database2
             return SelectObject(t, "id_nb", id_nb);
         }
         #endregion
-        IEnumerator GetEnumerator()
-        {
-            return DatabaseObjects.Values.GetEnumerator();
-        }
         public UInt64 GetNewUniqueID()
         {
             return m_provider.GetNewUniqueID();
@@ -254,7 +251,6 @@ namespace DOL.Database2
         [Obsolete]
         public void AddNewObject(DatabaseObject Object)
         {
-            Object.AutoSave = true;
         }
         public void DeleteObject(DatabaseObject Object)
         {
@@ -265,14 +261,16 @@ namespace DOL.Database2
 
 
 
-
         #region IEnumerable Members
 
+        IEnumerator<DatabaseObject> IEnumerable<DatabaseObject>.GetEnumerator()
+        {
+            return DatabaseObjects.Values.GetEnumerator() as IEnumerator<DatabaseObject>;
+        }
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return DatabaseObjects.Values.GetEnumerator();
+            return DatabaseObjects.Values.GetEnumerator() ;
         }
-
         #endregion
     }
 }

@@ -236,7 +236,7 @@ namespace DOL.GS
 				if(obj != null)
 				  GameServer.Database.DeleteObject(obj);
 			}
-			InternalID = null;
+			InternalID = 0;
 		}
 
 		/// <summary>

@@ -8466,7 +8466,7 @@ namespace DOL.GS
 		/// Gets or sets the database guildid of this player
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public string GuildID
+		public UInt64 GuildID
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.GuildID : string.Empty; }
 			set { if (PlayerCharacter != null) PlayerCharacter.GuildID = value; }
@@ -9961,7 +9961,7 @@ namespace DOL.GS
 				if (houseVault.Detach())
 				{
 					ItemTemplate template =
-						(ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), houseVault.TemplateID);
+						(ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), houseVault.TemplateID);
 					Inventory.AddItem(eInventorySlot.FirstEmptyBackpack,
 						new InventoryItem(template));
 				}

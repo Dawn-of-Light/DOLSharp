@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DOL.Database2
 {
-    class PropertyFieldNotFoundException : Exception
+    public class PropertyFieldNotFoundException : Exception
     {
         public PropertyFieldNotFoundException()
         {
@@ -24,7 +24,7 @@ namespace DOL.Database2
             
         }
     }
-    class DatabaseObjectNotFoundException : Exception
+    public class DatabaseObjectNotFoundException : Exception
     {
         public DatabaseObjectNotFoundException()
         {
@@ -34,7 +34,7 @@ namespace DOL.Database2
         {
         }
     }
-    class NotComparableException : Exception
+    public class NotComparableException : Exception
     {
         public NotComparableException(string SelectStatement,Type t)
             :base("Object of type " + t.Name + " in the statement " + SelectStatement +" do not implement IComparable")

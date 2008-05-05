@@ -265,7 +265,7 @@ namespace DOL.GS.Quests.Albion
 			ticketToBombard = CreateTicketTo("ticket to North Camelot Gates", "hs_ludlow_northcamelotgates");
 
 
-			sackOfSupplies = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sack_of_supplies");
+			sackOfSupplies = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "sack_of_supplies");
 			if (sackOfSupplies == null)
 			{
 				sackOfSupplies = new ItemTemplate();
@@ -289,7 +289,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(sackOfSupplies);
 			}
 
-			crateOfVegetables = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "crate_of_vegetables");
+			crateOfVegetables = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "crate_of_vegetables");
 			if (crateOfVegetables == null)
 			{
 				crateOfVegetables = new ItemTemplate();
@@ -314,7 +314,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsCloak = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_cloak");
+			recruitsCloak = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_cloak");
 			if (recruitsCloak == null)
 			{
 				recruitsCloak = new ItemTemplate();

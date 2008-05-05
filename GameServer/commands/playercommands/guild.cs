@@ -405,7 +405,7 @@ namespace DOL.GS.Commands
                                 return;
                             }
 
-                            string guildId = "";
+                            UInt64 GuildID = "";
                             ushort guildRank = 9;
                             string plyName = "";
                             GamePlayer ply = obj as GamePlayer;
@@ -1051,7 +1051,7 @@ namespace DOL.GS.Commands
                                 return;
                             }
 
-                            string guildId = "";
+                            UInt64 GuildID = "";
                             ushort guildRank = 9;
                             string plyName = "";
                             GamePlayer ply = obj as GamePlayer;
@@ -1150,7 +1150,7 @@ namespace DOL.GS.Commands
                                 return;
                             }
 
-                            string guildId = "";
+                            UInt64 GuildID = "";
                             ushort guildRank = 1;
                             string plyName = "";
                             GamePlayer ply = obj as GamePlayer;
