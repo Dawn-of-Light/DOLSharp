@@ -241,7 +241,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		snakevenom = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "snakevenom");
+		snakevenom = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "snakevenom");
 			if (snakevenom == null)
 			{
 				snakevenom = new ItemTemplate();

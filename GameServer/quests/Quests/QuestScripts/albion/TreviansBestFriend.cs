@@ -386,7 +386,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			treviansHoodedCloak = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "trevians_hooded_cloak");
+			treviansHoodedCloak = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "trevians_hooded_cloak");
 			if (treviansHoodedCloak == null)
 			{
 				if (log.IsWarnEnabled)
@@ -422,7 +422,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			bootsOfRescuer = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_rescuer_alb");
+			bootsOfRescuer = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "boots_of_rescuer_alb");
 			if (bootsOfRescuer == null)
 			{
 				if (log.IsWarnEnabled)
@@ -477,7 +477,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			bootsOfBaneful = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_baneful");
+			bootsOfBaneful = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "boots_of_baneful");
 			if (bootsOfBaneful == null)
 			{
 				if (log.IsWarnEnabled)
@@ -532,7 +532,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			bootsOfProtector = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_protector");
+			bootsOfProtector = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "boots_of_protector");
 			if (bootsOfProtector == null)
 			{
 				if (log.IsWarnEnabled)
@@ -586,7 +586,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			bootsOfErudition = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_erudition");
+			bootsOfErudition = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "boots_of_erudition");
 			if (bootsOfErudition == null)
 			{
 				if (log.IsWarnEnabled)
@@ -636,7 +636,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(bootsOfErudition);
 			}
 
-			bootsOfReverence = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_reverence");
+			bootsOfReverence = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "boots_of_reverence");
 			if (bootsOfReverence == null)
 			{
 				if (log.IsWarnEnabled)
@@ -689,7 +689,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(bootsOfReverence);
 			}
 
-			bootsOfShadow = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_shadow");
+			bootsOfShadow = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "boots_of_shadow");
 			if (bootsOfShadow == null)
 			{
 				if (log.IsWarnEnabled)
@@ -742,7 +742,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(bootsOfShadow);
 			}
 
-			bootsOfEvanescent = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_evanescent");
+			bootsOfEvanescent = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "boots_of_evanescent");
 			if (bootsOfEvanescent == null)
 			{
 				if (log.IsWarnEnabled)
@@ -795,7 +795,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(bootsOfEvanescent);
 			}
 
-			bootsOfInfluence = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_influence");
+			bootsOfInfluence = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "boots_of_influence");
 			if (bootsOfInfluence == null)
 			{
 				if (log.IsWarnEnabled)
@@ -845,7 +845,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(bootsOfInfluence);
 			}
 
-			bootsOfTheDevoted = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_the_devoted");
+			bootsOfTheDevoted = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "boots_of_the_devoted");
 			if (bootsOfTheDevoted == null)
 			{
 				if (log.IsWarnEnabled)
@@ -898,7 +898,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(bootsOfTheDevoted);
 			}
 
-			whistleReward = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "trevians_whistle");
+			whistleReward = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "trevians_whistle");
 			if (whistleReward == null)
 			{
 				if (log.IsWarnEnabled)

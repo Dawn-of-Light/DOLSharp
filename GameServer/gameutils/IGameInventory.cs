@@ -90,8 +90,8 @@ namespace DOL.GS
 	/// </summary>		
 	public interface IGameInventory
 	{
-		bool            LoadFromDatabase(string inventoryID);
-		bool            SaveIntoDatabase(string inventoryID);
+		bool            LoadFromDatabase(UInt64 inventoryID);
+		bool            SaveIntoDatabase(UInt64 inventoryID);
 
 		bool			AddItem(eInventorySlot slot, InventoryItem item);
 		bool			AddCountToStack(InventoryItem item, int count);

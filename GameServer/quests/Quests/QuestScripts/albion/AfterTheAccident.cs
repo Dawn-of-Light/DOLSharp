@@ -69,7 +69,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// Recruit's Necklace of Might
-			RecruitsNecklaceofMight = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "recruits_necklace_of_might");
+			RecruitsNecklaceofMight = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_necklace_of_might");
 			if (RecruitsNecklaceofMight == null)
 			{
 				RecruitsNecklaceofMight = new ItemTemplate();
@@ -110,7 +110,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(RecruitsNecklaceofMight);
 			}
 			//Recruit's Necklace of Insight
-			RecruitsNecklaceofInsight = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "recruits_necklace_of_insight");
+			RecruitsNecklaceofInsight = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_necklace_of_insight");
 			if (RecruitsNecklaceofInsight == null)
 			{
 				RecruitsNecklaceofInsight = new ItemTemplate();
@@ -151,7 +151,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(RecruitsNecklaceofInsight);
 			}
 			//Recruit's Necklace of Faith
-			RecruitsNecklaceofFaith = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "recruits_necklace_of_faith");
+			RecruitsNecklaceofFaith = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_necklace_of_faith");
 			if (RecruitsNecklaceofFaith == null)
 			{
 				RecruitsNecklaceofFaith = new ItemTemplate();

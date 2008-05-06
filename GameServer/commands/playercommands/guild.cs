@@ -106,7 +106,7 @@ namespace DOL.GS.Commands
 
                             GameLiving guildLeader = client.Player.TargetObject as GameLiving;
                             string guildname = String.Join(" ", args, 2, args.Length - 2);
-                            guildname = GameServer.Database.Escape(guildname);
+                            guildname = guildname; //TODO:ESCAPE this
                             if (!GuildMgr.DoesGuildExist(guildname))
                             {
                                 if (guildLeader == null)
@@ -394,7 +394,7 @@ namespace DOL.GS.Commands
                                 if (myclient == null)
                                 {
                                     // Patch 1.84: look for offline players
-                                    obj = (Character)GameServer.Database.SelectObject(typeof(Character), "Name='" + GameServer.Database.Escape(playername) + "'");
+                                    obj = (Character)GameServer.Database.SelectObject(typeof(Character), "Name" ,playername);
                                 }
                                 else
                                     obj = myclient.Player;
@@ -1139,7 +1139,7 @@ namespace DOL.GS.Commands
                                 if (myclient == null)
                                 {
                                     // Patch 1.84: look for offline players
-                                    obj = (Character)GameServer.Database.SelectObject(typeof(Character), "Name='" + GameServer.Database.Escape(playername) + "'");
+                                    obj = (Character)GameServer.Database.SelectObject(typeof(Character), "Name", playername);
                                 }
                                 else
                                     obj = myclient.Player;
@@ -1514,7 +1514,7 @@ namespace DOL.GS.Commands
                                 }
                                 else
                                 {
-                                    Character c = (Character)GameServer.Database.SelectObject(typeof(Character), "Name = '" + GameServer.Database.Escape(playername) + "'");
+                                    Character c = (Character)GameServer.Database.SelectObject(typeof(Character),playername);
                                     //if (c == null)
                                     //c = (Character)GameServer.Database.SelectObject(typeof(CharacterArchive), "Name = '" + GameServer.Database.Escape(playername) + "'");
 
@@ -1548,7 +1548,7 @@ namespace DOL.GS.Commands
                                 }
                                 else
                                 {
-                                    Character c = (Character)GameServer.Database.SelectObject(typeof(Character), "Name = '" + GameServer.Database.Escape(args[2]) + "'");
+                                    Character c = (Character)GameServer.Database.SelectObject(typeof(Character), "Name",args[2]);
                                     //if (c == null)
                                     //    c = (Character)GameServer.Database.SelectObject(typeof(CharacterArchive), "Name = '" + GameServer.Database.Escape(args[2]) + "'");
                                     if (c == null)

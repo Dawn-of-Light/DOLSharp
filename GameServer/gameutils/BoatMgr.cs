@@ -164,7 +164,7 @@ namespace DOL.GS
                     return false;
                 }
 
-                DBBoat[] boats = (DBBoat[])GameServer.Database.SelectObjects(typeof(DBBoat), "BoatName='" + GameServer.Database.Escape(boatName) + "'");
+                DBBoat[] boats = (DBBoat[])GameServer.Database.SelectObjects(typeof(DBBoat), "BoatName" ,boatName);
                 foreach (DBBoat boat in boats)
                 {
                     GameServer.Database.DeleteObject(boat);

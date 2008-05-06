@@ -303,7 +303,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineItems
 
-			dragonflyWhip = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "dragonfly_whip");
+			dragonflyWhip = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "dragonfly_whip");
 			if (dragonflyWhip == null)
 			{
 				dragonflyWhip = new ItemTemplate();
@@ -328,7 +328,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_vest");
+			recruitsVest = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_studded_vest");
 			if (recruitsVest == null)
 			{
 				recruitsVest = new ItemTemplate();
@@ -376,7 +376,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsQuiltedVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_vest");
+			recruitsQuiltedVest = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_quilted_vest");
 			if (recruitsQuiltedVest == null)
 			{
 				recruitsQuiltedVest = new ItemTemplate();

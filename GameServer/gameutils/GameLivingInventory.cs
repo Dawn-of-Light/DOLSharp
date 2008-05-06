@@ -116,7 +116,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="id"></param>
 		/// <returns></returns>
-		public virtual bool LoadFromDatabase(string id)
+		public virtual bool LoadFromDatabase(UInt64 id)
 		{
 			return false;
 		}
@@ -125,7 +125,7 @@ namespace DOL.GS
 		/// SaveIntoDatabase
 		/// </summary>
 		/// <returns></returns>
-		public virtual bool SaveIntoDatabase(string id)
+		public virtual bool SaveIntoDatabase(UInt64 id)
 		{
 			return false;
 		}

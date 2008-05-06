@@ -203,7 +203,7 @@ namespace DOL.GS
 		{
 			WorldObject obj = null;
 			if(InternalID != null)
-				obj = (WorldObject) GameServer.Database.FindObjectByKey(typeof(WorldObject), InternalID);
+				obj = (WorldObject) GameServer.Database.GetDatabaseObjectFromID(InternalID);
 			if(obj == null)
 			  obj = new WorldObject();
 			obj.Name = Name;
@@ -232,7 +232,7 @@ namespace DOL.GS
 		{
 			if(InternalID != null)
 			{
-				WorldObject obj = (WorldObject) GameServer.Database.FindObjectByKey(typeof(WorldObject), InternalID);
+				WorldObject obj = (WorldObject) GameServer.Database.GetDatabaseObjectFromID(InternalID);
 				if(obj != null)
 				  GameServer.Database.DeleteObject(obj);
 			}

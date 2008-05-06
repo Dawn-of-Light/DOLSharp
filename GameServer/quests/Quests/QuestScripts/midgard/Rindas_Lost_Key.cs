@@ -207,7 +207,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		rindaskey = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "rindaskey");
+		rindaskey = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "rindaskey");
 			if (rindaskey == null)
 			{
 				rindaskey = new ItemTemplate();
@@ -283,7 +283,7 @@ using DOL.AI.Brain;
 				if (SAVE_INTO_DATABASE)
 					GameServer.Database.AddNewObject(rindaskey);
 				}
-			ironkeychain = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ironkeychain");
+			ironkeychain = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ironkeychain");
 			if (ironkeychain == null)
 			{
 				ironkeychain = new ItemTemplate();
@@ -359,7 +359,7 @@ using DOL.AI.Brain;
 				if (SAVE_INTO_DATABASE)
 					GameServer.Database.AddNewObject(ironkeychain);
 				}
-			silverringofhealth = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "silverringofhealth");
+			silverringofhealth = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "silverringofhealth");
 			if (silverringofhealth == null)
 			{
 				silverringofhealth = new ItemTemplate();

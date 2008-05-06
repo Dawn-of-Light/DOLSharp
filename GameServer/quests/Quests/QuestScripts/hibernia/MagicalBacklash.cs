@@ -80,7 +80,7 @@ namespace DOL.GS.Quests.Hibernia
             #region defineItems
 
             // item db check
-            RecruitsShortSword = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "recruits_short_sword_hib");
+            RecruitsShortSword = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_short_sword_hib");
             if (RecruitsShortSword == null)
             {
                 RecruitsShortSword = new ItemTemplate();
@@ -127,7 +127,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(RecruitsShortSword);
             }
-            RecruitsDirk = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "recruits_dirk");
+            RecruitsDirk = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_dirk");
             if (RecruitsDirk == null)
             {
                 RecruitsDirk = new ItemTemplate();
@@ -174,7 +174,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(RecruitsDirk);
             }
-            RecruitsClub = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "recruits_club");
+            RecruitsClub = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_club");
             if (RecruitsClub == null)
             {
                 RecruitsClub = new ItemTemplate();
@@ -221,7 +221,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(RecruitsClub);
             }
-            RecruitsStaff = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "recruits_staff");
+            RecruitsStaff = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_staff");
             if (RecruitsStaff == null)
             {
                 RecruitsStaff = new ItemTemplate();

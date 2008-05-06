@@ -151,7 +151,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineItems
 
-			statue_of_arawn = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "statue_of_arawn");
+			statue_of_arawn = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "statue_of_arawn");
 			if (statue_of_arawn == null)
 			{
 				if (log.IsWarnEnabled)
@@ -179,7 +179,7 @@ namespace DOL.GS.Quests.Albion
 			}
 // end item
 			ItemTemplate i = null;
-			ClericEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ClericEpicBoots");
+			ClericEpicBoots = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ClericEpicBoots");
 			if (ClericEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -224,7 +224,7 @@ namespace DOL.GS.Quests.Albion
 			}
 //end item
 			//of the Defiant Soul  Coif 
-			ClericEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ClericEpicHelm");
+			ClericEpicHelm = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ClericEpicHelm");
 			if (ClericEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -270,7 +270,7 @@ namespace DOL.GS.Quests.Albion
 			}
 //end item
 			//of the Defiant Soul  Gloves 
-			ClericEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ClericEpicGloves");
+			ClericEpicGloves = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ClericEpicGloves");
 			if (ClericEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -315,7 +315,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of the Defiant Soul  Hauberk 
-			ClericEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ClericEpicVest");
+			ClericEpicVest = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ClericEpicVest");
 			if (ClericEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -359,7 +359,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of the Defiant Soul  Legs 
-			ClericEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ClericEpicLegs");
+			ClericEpicLegs = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ClericEpicLegs");
 			if (ClericEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -404,7 +404,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of the Defiant Soul  Sleeves 
-			ClericEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ClericEpicArms");
+			ClericEpicArms = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ClericEpicArms");
 			if (ClericEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -448,7 +448,7 @@ namespace DOL.GS.Quests.Albion
 				ClericEpicArms = i;
 			}
 
-			PaladinEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "PaladinEpicBoots");
+			PaladinEpicBoots = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "PaladinEpicBoots");
 			if (PaladinEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -494,7 +494,7 @@ namespace DOL.GS.Quests.Albion
 			}
 //end item
 			//of the Iron Will Coif 
-			PaladinEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "PaladinEpicHelm");
+			PaladinEpicHelm = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "PaladinEpicHelm");
 			if (PaladinEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -540,7 +540,7 @@ namespace DOL.GS.Quests.Albion
 			}
 //end item
 			//of the Iron Will Gloves 
-			PaladinEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "PaladinEpicGloves");
+			PaladinEpicGloves = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "PaladinEpicGloves");
 			if (PaladinEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -585,7 +585,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of the Iron Will Hauberk 
-			PaladinEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "PaladinEpicVest");
+			PaladinEpicVest = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "PaladinEpicVest");
 			if (PaladinEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -630,7 +630,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of the Iron Will Legs 
-			PaladinEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "PaladinEpicLegs");
+			PaladinEpicLegs = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "PaladinEpicLegs");
 			if (PaladinEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -675,7 +675,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of the Iron Will Sleeves 
-			PaladinEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "PaladinEpicArms");
+			PaladinEpicArms = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "PaladinEpicArms");
 			if (PaladinEpicArms == null)
 			{
 				if (log.IsWarnEnabled)

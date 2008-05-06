@@ -313,7 +313,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			sealedLovePoem = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sealed_love_poem");
+			sealedLovePoem = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "sealed_love_poem");
 			if (sealedLovePoem == null)
 			{
 				sealedLovePoem = new ItemTemplate();
@@ -347,7 +347,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			beautifulRedRose = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "beautiful_red_rose");
+			beautifulRedRose = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "beautiful_red_rose");
 			if (beautifulRedRose == null)
 			{
 				beautifulRedRose = new ItemTemplate();
@@ -381,7 +381,7 @@ namespace DOL.GS.Quests.Albion
 
 
 				// item db check
-				adnilsMagicalOrb = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "adnils_magical_orb");
+				adnilsMagicalOrb = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "adnils_magical_orb");
 				if (adnilsMagicalOrb == null)
 				{
 					adnilsMagicalOrb = new ItemTemplate();

@@ -192,7 +192,7 @@ namespace DOL.GS.Quests.Albion
 
 
 
-            spritelingToes = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "spriteling_toes");
+            spritelingToes = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "spriteling_toes");
             if (spritelingToes == null)
              {
                  if (log.IsWarnEnabled)
@@ -214,7 +214,7 @@ namespace DOL.GS.Quests.Albion
                      GameServer.Database.AddNewObject(spritelingToes);
              }
 
-             wormRot = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "worm_rot");
+             wormRot = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "worm_rot");
              if (wormRot == null)
              {
                  if (log.IsWarnEnabled)
@@ -235,7 +235,7 @@ namespace DOL.GS.Quests.Albion
                      GameServer.Database.AddNewObject(wormRot);
              }
 
-             snakeSkin = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "green_skin");
+             snakeSkin = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "green_skin");
              if (snakeSkin == null)
              {
                  if (log.IsWarnEnabled)
@@ -656,7 +656,7 @@ namespace DOL.GS.Quests.Albion
             base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
             //Give reward to player here ...
-            ItemTemplate dye = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "light_" + getRandomDyeColor() + "_cloth_dye");
+            ItemTemplate dye = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "light_" + getRandomDyeColor() + "_cloth_dye");
             if (dye != null)
                 GiveItem(arleighPenn, m_questPlayer, dye);
 

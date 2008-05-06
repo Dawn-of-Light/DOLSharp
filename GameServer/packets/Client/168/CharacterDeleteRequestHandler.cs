@@ -58,7 +58,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							GameServer.Database.DeleteObject(item);
 						}
-						GameServer.Database.WriteDatabaseTable(typeof (InventoryItem));
+						//GameServer.Database.WriteDatabaseTable(typeof (InventoryItem));
 					}
 					catch (Exception e)
 					{
@@ -69,12 +69,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 					// delete quests
 					try
 					{
-						DatabaseObject[] objs = GameServer.Database.SelectObjects(typeof(DBQuest), "CharName = '" + GameServer.Database.Escape(chars[i].Name) + "'");
+						DatabaseObject[] objs = GameServer.Database.SelectObject(typeof(DBQuest), "CharName",chars[i].Name);
 						foreach (DBQuest quest in objs)
 						{
 							GameServer.Database.DeleteObject(quest);
 						}
-						GameServer.Database.WriteDatabaseTable(typeof (DBQuest));
+						//GameServer.Database.WriteDatabaseTable(typeof (DBQuest));
 					}
 					catch (Exception e)
 					{
@@ -90,7 +90,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							GameServer.Database.DeleteObject(mlstep);
 						}
-						GameServer.Database.WriteDatabaseTable(typeof (DBCharacterXMasterLevel));
+						//GameServer.Database.WriteDatabaseTable(typeof (DBCharacterXMasterLevel));
 					}
 					catch (Exception e)
 					{
@@ -99,9 +99,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}					
 
 					GameServer.Database.DeleteObject(chars[i]);
-					GameServer.Database.WriteDatabaseTable(typeof (Character));
+					//GameServer.Database.WriteDatabaseTable(typeof (Character));
 					client.Account.Characters = null;
-					GameServer.Database.FillObjectRelations(client.Account);
 					client.Player = null;
 
 					if (client.Account.Characters == null || client.Account.Characters.Length == 0)
@@ -112,7 +111,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//the realm again!
 						client.Account.Realm = 0;
 						GameServer.Database.SaveObject(client.Account);
-						GameServer.Database.WriteDatabaseTable(typeof (Account));
 					}
 					break;
 				}

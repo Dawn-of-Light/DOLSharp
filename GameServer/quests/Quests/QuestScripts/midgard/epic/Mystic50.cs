@@ -178,7 +178,7 @@ namespace DOL.GS.Quests.Midgard
 
 			#region defineItems
 
-			kelics_totem = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "kelics_totem");
+			kelics_totem = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "kelics_totem");
 			if (kelics_totem == null)
 			{
 				if (log.IsWarnEnabled)
@@ -205,7 +205,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 
-			SpiritmasterEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SpiritmasterEpicBoots");
+			SpiritmasterEpicBoots = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "SpiritmasterEpicBoots");
 			if (SpiritmasterEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -248,7 +248,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 //end item
-			SpiritmasterEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SpiritmasterEpicHelm");
+			SpiritmasterEpicHelm = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "SpiritmasterEpicHelm");
 			if (SpiritmasterEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -291,7 +291,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 //end item
-			SpiritmasterEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SpiritmasterEpicGloves");
+			SpiritmasterEpicGloves = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "SpiritmasterEpicGloves");
 			if (SpiritmasterEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -334,7 +334,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 
-			SpiritmasterEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SpiritmasterEpicVest");
+			SpiritmasterEpicVest = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "SpiritmasterEpicVest");
 			if (SpiritmasterEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -377,7 +377,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 
-			SpiritmasterEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SpiritmasterEpicLegs");
+			SpiritmasterEpicLegs = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "SpiritmasterEpicLegs");
 			if (SpiritmasterEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -420,7 +420,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 
-			SpiritmasterEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SpiritmasterEpicArms");
+			SpiritmasterEpicArms = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "SpiritmasterEpicArms");
 			if (SpiritmasterEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -462,7 +462,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 
-			RunemasterEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "RunemasterEpicBoots");
+			RunemasterEpicBoots = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "RunemasterEpicBoots");
 			if (RunemasterEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -504,7 +504,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 //end item
-			RunemasterEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "RunemasterEpicHelm");
+			RunemasterEpicHelm = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "RunemasterEpicHelm");
 			if (RunemasterEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -546,7 +546,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 //end item
-			RunemasterEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "RunemasterEpicGloves");
+			RunemasterEpicGloves = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "RunemasterEpicGloves");
 			if (RunemasterEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -588,7 +588,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 
-			RunemasterEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "RunemasterEpicVest");
+			RunemasterEpicVest = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "RunemasterEpicVest");
 			if (RunemasterEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -630,7 +630,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 
-			RunemasterEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "RunemasterEpicLegs");
+			RunemasterEpicLegs = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "RunemasterEpicLegs");
 			if (RunemasterEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -672,7 +672,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 
-			RunemasterEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "RunemasterEpicArms");
+			RunemasterEpicArms = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "RunemasterEpicArms");
 			if (RunemasterEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -714,7 +714,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 
-			BonedancerEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BonedancerEpicBoots");
+			BonedancerEpicBoots = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "BonedancerEpicBoots");
 			if (BonedancerEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -757,7 +757,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 //end item
-			BonedancerEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BonedancerEpicHelm");
+			BonedancerEpicHelm = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "BonedancerEpicHelm");
 			if (BonedancerEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -801,7 +801,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 //end item
-			BonedancerEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BonedancerEpicGloves");
+			BonedancerEpicGloves = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "BonedancerEpicGloves");
 			if (BonedancerEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -843,7 +843,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 
-			BonedancerEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BonedancerEpicVest");
+			BonedancerEpicVest = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "BonedancerEpicVest");
 			if (BonedancerEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -885,7 +885,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 
-			BonedancerEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BonedancerEpicLegs");
+			BonedancerEpicLegs = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "BonedancerEpicLegs");
 			if (BonedancerEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -928,7 +928,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 
-			BonedancerEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BonedancerEpicArms");
+			BonedancerEpicArms = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "BonedancerEpicArms");
 			if (BonedancerEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -971,7 +971,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			#region Warlock
-			WarlockEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "WarlockEpicBoots");
+			WarlockEpicBoots = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "WarlockEpicBoots");
 			if (WarlockEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1021,7 +1021,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			//end item
-			WarlockEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "WarlockEpicHelm");
+			WarlockEpicHelm = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "WarlockEpicHelm");
 			if (WarlockEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1072,7 +1072,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			//end item
-			WarlockEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "WarlockEpicGloves");
+			WarlockEpicGloves = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "WarlockEpicGloves");
 			if (WarlockEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1121,7 +1121,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 
-			WarlockEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "WarlockEpicVest");
+			WarlockEpicVest = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "WarlockEpicVest");
 			if (WarlockEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1170,7 +1170,7 @@ namespace DOL.GS.Quests.Midgard
 				}
 			}
 
-			WarlockEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "WarlockEpicLegs");
+			WarlockEpicLegs = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "WarlockEpicLegs");
 			if (WarlockEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1220,7 +1220,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 
-			WarlockEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "WarlockEpicArms");
+			WarlockEpicArms = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "WarlockEpicArms");
 			if (WarlockEpicArms == null)
 			{
 				if (log.IsWarnEnabled)

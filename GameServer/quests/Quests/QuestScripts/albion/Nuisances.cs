@@ -147,7 +147,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			emptyMagicBox = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "empty_wodden_magic_box");
+			emptyMagicBox = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "empty_wodden_magic_box");
 			if (emptyMagicBox == null)
 			{
 				if (log.IsWarnEnabled)
@@ -172,7 +172,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			fullMagicBox = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "full_wodden_magic_box");
+			fullMagicBox = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "full_wodden_magic_box");
 			if (fullMagicBox == null)
 			{
 				if (log.IsWarnEnabled)
@@ -197,7 +197,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsShortSword = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_short_sword");
+			recruitsShortSword = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_short_sword");
 			if (recruitsShortSword == null)
 			{
 				if (log.IsWarnEnabled)
@@ -245,7 +245,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsStaff = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_staff");
+			recruitsStaff = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_staff");
 			if (recruitsStaff == null)
 			{
 				recruitsStaff = new ItemTemplate();

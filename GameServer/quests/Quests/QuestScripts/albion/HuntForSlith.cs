@@ -184,7 +184,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			slithsTail = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sliths_tail");
+			slithsTail = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "sliths_tail");
 			if (slithsTail == null)
 			{
 				slithsTail = new ItemTemplate();

@@ -227,7 +227,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			letterToElvar = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "letter_to_elvar_tambor");
+			letterToElvar = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "letter_to_elvar_tambor");
 			if (letterToElvar == null)
 			{
 				if (log.IsWarnEnabled)
@@ -261,7 +261,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			letterToYdenia = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "letter_to_yderia_philpott");
+			letterToYdenia = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "letter_to_yderia_philpott");
 			if (letterToYdenia == null)
 			{
 				if (log.IsWarnEnabled)
@@ -295,7 +295,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			silverRingOfHealth = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "silver_ring_of_health");
+			silverRingOfHealth = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "silver_ring_of_health");
 			if (silverRingOfHealth == null)
 			{
 				if (log.IsWarnEnabled)

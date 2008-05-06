@@ -79,7 +79,7 @@ namespace DOL.GS.Quests.Albion
 
             // item db check - All my quests with Recruit newbie items make a seperate
             // item then the older quests.
-            RecruitsQuiltedPants = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_quilted_pants");
+            RecruitsQuiltedPants = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "k109_recruits_quilted_pants");
             if (RecruitsQuiltedPants == null)
             {
                 RecruitsQuiltedPants = new ItemTemplate();
@@ -130,7 +130,7 @@ namespace DOL.GS.Quests.Albion
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(RecruitsQuiltedPants);
             }
-            RecruitsLeatherLeggings = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_leather_leggings");
+            RecruitsLeatherLeggings = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "k109_recruits_leather_leggings");
             if (RecruitsLeatherLeggings == null)
             {
                 RecruitsLeatherLeggings = new ItemTemplate();
@@ -182,7 +182,7 @@ namespace DOL.GS.Quests.Albion
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(RecruitsLeatherLeggings);
             }
-            RecruitsStuddedLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_studded_legs");
+            RecruitsStuddedLegs = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "k109_recruits_studded_legs");
             if (RecruitsStuddedLegs == null)
             {
                 RecruitsStuddedLegs = new ItemTemplate();

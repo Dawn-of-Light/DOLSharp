@@ -17,7 +17,8 @@
  *
  */
 using System.Collections;
-
+using System;
+using System.Collections.Generic;
 namespace DOL.GS
 {
 	/// <summary>
@@ -68,7 +69,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the template npc inventory
 		/// </summary>
-		string Inventory { get; }
+		List<UInt64> Inventory { get; }
 
 		/// <summary>
 		/// Gets the template npc melee damage type

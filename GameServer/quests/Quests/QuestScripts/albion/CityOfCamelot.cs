@@ -219,7 +219,7 @@ namespace DOL.GS.Quests.Albion
 
 			ticketToCotswold = CreateTicketTo("ticket to Camelot Hills", "");
 
-			scrollUrqhart = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "scroll_for_urqhart");
+			scrollUrqhart = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "scroll_for_urqhart");
 			if (scrollUrqhart == null)
 			{
 				scrollUrqhart = new ItemTemplate();
@@ -244,7 +244,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 
-			receiptBombard = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "receipt_for_bombard");
+			receiptBombard = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "receipt_for_bombard");
 			if (receiptBombard == null)
 			{
 				receiptBombard = new ItemTemplate();
@@ -268,7 +268,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(receiptBombard);
 			}
 
-			chestOfCoins = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "small_chest_of_coins");
+			chestOfCoins = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "small_chest_of_coins");
 			if (chestOfCoins == null)
 			{
 				chestOfCoins = new ItemTemplate();
@@ -292,7 +292,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(chestOfCoins);
 			}
 
-			letterFrederick = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "letter_for_frederick");
+			letterFrederick = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "letter_for_frederick");
 			if (letterFrederick == null)
 			{
 				letterFrederick = new ItemTemplate();
@@ -316,7 +316,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(letterFrederick);
 			}
 
-			assistantNecklace = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "assistant_necklace");
+			assistantNecklace = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "assistant_necklace");
 			if (assistantNecklace == null)
 			{
 				assistantNecklace = new ItemTemplate();
@@ -342,7 +342,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsRoundShield = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_round_shield");
+			recruitsRoundShield = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_round_shield");
 			if (recruitsRoundShield == null)
 			{
 				if (log.IsWarnEnabled)
@@ -391,7 +391,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsBracer = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_silver_bracer");
+			recruitsBracer = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_silver_bracer");
 			if (recruitsBracer == null)
 			{
 				recruitsBracer = new ItemTemplate();

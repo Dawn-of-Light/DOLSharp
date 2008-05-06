@@ -208,7 +208,7 @@ namespace DOL.GS.Quests.Midgard
 
 			#region defineItems
 
-			marinefungusroot = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "marinefungusroot");
+			marinefungusroot = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "marinefungusroot");
 			if (marinefungusroot == null)
 			{
 				marinefungusroot = new ItemTemplate();

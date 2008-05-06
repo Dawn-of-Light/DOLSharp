@@ -265,7 +265,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			bundleOfBearSkins = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "bundle_of_bear_skins");
+			bundleOfBearSkins = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "bundle_of_bear_skins");
 			if (bundleOfBearSkins == null)
 			{
 				bundleOfBearSkins = new ItemTemplate();
@@ -299,7 +299,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			spoolOfLeatherworkingThread = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "spool_of_leatherworking_thread");
+			spoolOfLeatherworkingThread = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "spool_of_leatherworking_thread");
 			if (spoolOfLeatherworkingThread == null)
 			{
 				spoolOfLeatherworkingThread = new ItemTemplate();
@@ -333,7 +333,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			chokerOfTheBear = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "choker_of_the_bear");
+			chokerOfTheBear = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "choker_of_the_bear");
 			if (chokerOfTheBear == null)
 			{
 				chokerOfTheBear = new ItemTemplate();

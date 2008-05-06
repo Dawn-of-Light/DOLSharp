@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -169,7 +170,10 @@ namespace DOL.GS.Keeps
 				{
 					foreach (GameKeepHookPoint hp in component.HookPoints.Values)
 					{
-						DBKeepHookPointItem item = (DBKeepHookPointItem)GameServer.Database.SelectObject(typeof(DBKeepHookPointItem), "KeepID = '" + component.Keep.KeepID + "' AND ComponentID = '" + component.ID + "' AND HookPointID = '" + hp.ID + "'");
+                        //TODO: tune
+                        DBKeepHookPointItem item = (from s in DatabaseLayer.Instance.OfType<DBKeepHookPoint>()
+                                                    where s.KeepID == component.Keep.KeepID && s.ComponentID == component.ID && s.HookPointID == hp.ID
+                                                    select s)[0];
 						if (item != null)
 							HookPointItem.Invoke(component.HookPoints[hp.ID] as GameKeepHookPoint, item.ClassType);
 					}

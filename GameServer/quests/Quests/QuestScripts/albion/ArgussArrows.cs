@@ -193,7 +193,7 @@ namespace DOL.GS.Quests.Albion
 
 
 
-            magicalWood = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ludlow_magical_wood");
+            magicalWood = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ludlow_magical_wood");
             if (magicalWood == null)
             {
                 if (log.IsWarnEnabled)
@@ -215,7 +215,7 @@ namespace DOL.GS.Quests.Albion
                     GameServer.Database.AddNewObject(magicalWood);
             }
 
-            dullBlackGem = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "dull_black_gem");
+            dullBlackGem = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "dull_black_gem");
             if (dullBlackGem == null)
             {
                 dullBlackGem = new ItemTemplate();

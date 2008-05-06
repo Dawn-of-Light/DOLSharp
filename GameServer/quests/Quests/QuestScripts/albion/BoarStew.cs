@@ -180,7 +180,7 @@ namespace DOL.GS.Quests.Albion
 
 
 
-            boarCarcass = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "huge_boar_carcass");
+            boarCarcass = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "huge_boar_carcass");
             if (boarCarcass == null)
             {
                 if (log.IsWarnEnabled)

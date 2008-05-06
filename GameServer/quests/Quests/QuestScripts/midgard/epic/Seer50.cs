@@ -192,7 +192,7 @@ namespace DOL.GS.Quests.Midgard
 
 			#region defineItems
 
-			ball_of_flame = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ball_of_flame");
+			ball_of_flame = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ball_of_flame");
 			if (ball_of_flame == null)
 			{
 				if (log.IsWarnEnabled)
@@ -219,7 +219,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 // end item
-			sealed_pouch = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sealed_pouch");
+			sealed_pouch = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "sealed_pouch");
 			if (sealed_pouch == null)
 			{
 				if (log.IsWarnEnabled)
@@ -247,7 +247,7 @@ namespace DOL.GS.Quests.Midgard
 // end item
 
 			//Valhalla Touched Boots
-			HealerEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HealerEpicBoots");
+			HealerEpicBoots = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "HealerEpicBoots");
 			if (HealerEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -290,7 +290,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 //end item
 			//Valhalla Touched Coif 
-			HealerEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HealerEpicHelm");
+			HealerEpicHelm = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "HealerEpicHelm");
 			if (HealerEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -334,7 +334,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 //end item
 			//Valhalla Touched Gloves 
-			HealerEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HealerEpicGloves");
+			HealerEpicGloves = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "HealerEpicGloves");
 			if (HealerEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -377,7 +377,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			//Valhalla Touched Hauberk 
-			HealerEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HealerEpicVest");
+			HealerEpicVest = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "HealerEpicVest");
 			if (HealerEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -420,7 +420,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			//Valhalla Touched Legs 
-			HealerEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HealerEpicLegs");
+			HealerEpicLegs = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "HealerEpicLegs");
 			if (HealerEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -463,7 +463,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			//Valhalla Touched Sleeves 
-			HealerEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HealerEpicArms");
+			HealerEpicArms = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "HealerEpicArms");
 			if (HealerEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -506,7 +506,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			//Subterranean Boots 
-			ShamanEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ShamanEpicBoots");
+			ShamanEpicBoots = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ShamanEpicBoots");
 			if (ShamanEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -546,7 +546,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			//Subterranean Coif 
-			ShamanEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ShamanEpicHelm");
+			ShamanEpicHelm = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ShamanEpicHelm");
 			if (ShamanEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -589,7 +589,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			//Subterranean Gloves 
-			ShamanEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ShamanEpicGloves");
+			ShamanEpicGloves = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ShamanEpicGloves");
 			if (ShamanEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -632,7 +632,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			//Subterranean Hauberk 
-			ShamanEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ShamanEpicVest");
+			ShamanEpicVest = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ShamanEpicVest");
 			if (ShamanEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -675,7 +675,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			//Subterranean Legs 
-			ShamanEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ShamanEpicLegs");
+			ShamanEpicLegs = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ShamanEpicLegs");
 			if (ShamanEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -718,7 +718,7 @@ namespace DOL.GS.Quests.Midgard
 
 			}
 			//Subterranean Sleeves 
-			ShamanEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ShamanEpicArms");
+			ShamanEpicArms = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ShamanEpicArms");
 			if (ShamanEpicArms == null)
 			{
 				if (log.IsWarnEnabled)

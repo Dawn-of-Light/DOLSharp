@@ -82,7 +82,7 @@ namespace DOL.GS.Quests.Albion
             #region defineItems
 
             // item db check
-            RecruitsQuiltedBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_quilted_boots");
+            RecruitsQuiltedBoots = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "k109_recruits_quilted_boots");
             if (RecruitsQuiltedBoots == null)
             {
                 RecruitsQuiltedBoots = new ItemTemplate();
@@ -130,7 +130,7 @@ namespace DOL.GS.Quests.Albion
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(RecruitsQuiltedBoots);
             }
-            RecruitsLeatherBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_leather_boots");
+            RecruitsLeatherBoots = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "k109_recruits_leather_boots");
             if (RecruitsLeatherBoots == null)
             {
                 RecruitsLeatherBoots = new ItemTemplate();
@@ -180,7 +180,7 @@ namespace DOL.GS.Quests.Albion
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(RecruitsLeatherBoots);
             }
-            RecruitsStuddedBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_studded_boots");
+            RecruitsStuddedBoots = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "k109_recruits_studded_boots");
             if (RecruitsStuddedBoots == null)
             {
                 RecruitsStuddedBoots = new ItemTemplate();

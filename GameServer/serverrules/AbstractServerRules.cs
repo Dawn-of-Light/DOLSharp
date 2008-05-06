@@ -131,7 +131,7 @@ namespace DOL.GS.ServerRules
 				if (WorldMgr.GetAllClients().Count > Properties.MAX_PLAYERS)
 				{
 					// GMs are still allowed to enter server
-					objs = GameServer.Database.SelectObjects(typeof(Account), string.Format("Name = '{0}'", GameServer.Database.Escape(username)));
+					objs = GameServer.Database.SelectObjects(typeof(Account),"Name",username);
 					if (objs.Length > 0)
 					{
 						Account account = objs[0] as Account;
@@ -148,7 +148,7 @@ namespace DOL.GS.ServerRules
 			if (Properties.STAFF_LOGIN)
 			{
 				// GMs are still allowed to enter server
-				objs = GameServer.Database.SelectObjects(typeof(Account), string.Format("Name = '{0}'", GameServer.Database.Escape(username)));
+				objs = GameServer.Database.SelectObjects(typeof(Account),"Name",username);
 				if (objs.Length > 0)
 				{
 					Account account = objs[0] as Account;

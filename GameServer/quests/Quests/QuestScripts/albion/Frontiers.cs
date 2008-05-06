@@ -440,7 +440,7 @@ namespace DOL.GS.Quests.Albion
 			#region DefineItems
 
 			// item db check
-			noteFormColm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "colms_note");
+			noteFormColm = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "colms_note");
 			if (noteFormColm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -466,7 +466,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			fairyPlans = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ire_fairy_plans");
+			fairyPlans = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ire_fairy_plans");
 			if (fairyPlans == null)
 			{
 				if (log.IsWarnEnabled)
@@ -490,7 +490,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(fairyPlans);
 			}
 
-			translatedPlans = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "translated_ire_fairy_plans");
+			translatedPlans = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "translated_ire_fairy_plans");
 			if (translatedPlans == null)
 			{
 				if (log.IsWarnEnabled)
@@ -515,7 +515,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_legs");
+			recruitsLegs = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_studded_legs");
 			if (recruitsLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -566,7 +566,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsPants = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_pants");
+			recruitsPants = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_quilted_pants");
 			if (recruitsPants == null)
 			{
 				recruitsPants = new ItemTemplate();

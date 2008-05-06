@@ -217,7 +217,7 @@ namespace DOL.GS.Quests.Albion
 
 
 
-            enchantedHalberd = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "enchanted_halberd");
+            enchantedHalberd = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "enchanted_halberd");
             if (enchantedHalberd == null)
             {
                 if (log.IsWarnEnabled)

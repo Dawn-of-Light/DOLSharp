@@ -160,7 +160,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		bronze_short_sword = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "bronze_short_sword");
+		bronze_short_sword = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "bronze_short_sword");
 			if (bronze_short_sword == null)
 			{
 				bronze_short_sword = new ItemTemplate();
@@ -236,7 +236,7 @@ using DOL.AI.Brain;
 				if (SAVE_INTO_DATABASE)
 					GameServer.Database.AddNewObject(bronze_short_sword);
 				}
-			sveawolftooth = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sveawolftooth");
+			sveawolftooth = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "sveawolftooth");
 			if (sveawolftooth == null)
 			{
 				sveawolftooth = new ItemTemplate();
@@ -312,7 +312,7 @@ using DOL.AI.Brain;
 				if (SAVE_INTO_DATABASE)
 					GameServer.Database.AddNewObject(sveawolftooth);
 				}
-			sveabone_hilt_sword = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sveabone_hilt_sword");
+			sveabone_hilt_sword = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "sveabone_hilt_sword");
 			if (sveabone_hilt_sword == null)
 			{
 				sveabone_hilt_sword = new ItemTemplate();

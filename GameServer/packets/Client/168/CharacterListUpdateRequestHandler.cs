@@ -392,7 +392,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							log.Info(String.Format("Character {0} created!", charname));
 
 
-						GameServer.Database.WriteDatabaseTable(typeof(Character));
+						//GameServer.Database.WriteDatabaseTable(typeof(Character));
 						GameServer.Database.FillObjectRelations(client.Account);
 						client.Out.SendCharacterOverview((eRealm)ch.Realm);
 					}

@@ -230,7 +230,7 @@ namespace DOL.GS
 			if (item != null)
 				Inventory.RemoveItem(item);
 
-			ItemTemplate temp = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), itemId);
+			ItemTemplate temp = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), itemId);
 
 			if (temp == null)
 			{

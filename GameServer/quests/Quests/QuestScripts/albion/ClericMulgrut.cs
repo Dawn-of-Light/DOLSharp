@@ -181,7 +181,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			beltOfAnimation = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "belt_of_animation");
+			beltOfAnimation = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "belt_of_animation");
 			if (beltOfAnimation == null)
 			{
 				beltOfAnimation = new ItemTemplate();

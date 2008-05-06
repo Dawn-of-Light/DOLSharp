@@ -302,7 +302,7 @@ namespace DOL.GS.Quests.Midgard
 
 			#region defineItems
 
-			coastalWolfBlood = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "coastal_wolf_blood");
+			coastalWolfBlood = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "coastal_wolf_blood");
 			if (coastalWolfBlood == null)
 			{
 				coastalWolfBlood = new ItemTemplate();
@@ -326,7 +326,7 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(coastalWolfBlood);
 			}
 
-			tatteredShirt = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "tattered_shirt");
+			tatteredShirt = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "tattered_shirt");
 			if (tatteredShirt == null)
 			{
 				tatteredShirt = new ItemTemplate();
@@ -350,7 +350,7 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(tatteredShirt);
 			}
 
-			scrollBriedi = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "scroll_for_briedi");
+			scrollBriedi = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "scroll_for_briedi");
 			if (scrollBriedi == null)
 			{
 				scrollBriedi = new ItemTemplate();
@@ -374,7 +374,7 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(scrollBriedi);
 			}
 
-			listBriedi = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "list_for_briedi");
+			listBriedi = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "list_for_briedi");
 			if (listBriedi == null)
 			{
 				listBriedi = new ItemTemplate();
@@ -398,7 +398,7 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(listBriedi);
 			}
 
-			smieraGattoClaw = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "smiera_gatto_claw");
+			smieraGattoClaw = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "smiera_gatto_claw");
 			if (smieraGattoClaw == null)
 			{
 				smieraGattoClaw = new ItemTemplate();
@@ -422,7 +422,7 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(smieraGattoClaw);
 			}
 
-			princessAiyrHead = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "princess_ayir_head");
+			princessAiyrHead = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "princess_ayir_head");
 			if (princessAiyrHead == null)
 			{
 				princessAiyrHead = new ItemTemplate();
@@ -447,7 +447,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_helm_mid");
+			recruitsHelm = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_studded_helm_mid");
 			if (recruitsHelm == null)
 			{
 				recruitsHelm = new ItemTemplate();
@@ -497,7 +497,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsCap = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_cap");
+			recruitsCap = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_quilted_cap");
 			if (recruitsCap == null)
 			{
 				recruitsCap = new ItemTemplate();
@@ -546,7 +546,7 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(recruitsCap);
 			}
 
-			recruitsRing = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_pewter_ring");
+			recruitsRing = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_pewter_ring");
 			if (recruitsRing == null)
 			{
 				recruitsRing = new ItemTemplate();

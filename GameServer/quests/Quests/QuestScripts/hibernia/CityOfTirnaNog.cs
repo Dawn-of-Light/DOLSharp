@@ -252,19 +252,19 @@ namespace DOL.GS.Quests.Hibernia
 
 			#region defineItems
 
-			ticketToTirnaNog = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "hs_ardee_northtirnanog");
+			ticketToTirnaNog = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "hs_ardee_northtirnanog");
 			if (ticketToTirnaNog == null)
 				ticketToTirnaNog = CreateTicketTo("Tir na nOgh", "hs_ardee_northtirnanog");
 
-			ticketToArdee = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "hs_easttirnanogh_ardee");
+			ticketToArdee = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "hs_easttirnanogh_ardee");
 			if (ticketToArdee == null)
 				ticketToArdee = CreateTicketTo("Ardee", "hs_easttirnanogh_ardee");
 			
-			ticketToMagMell = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "hs_ardee_magmell");
+			ticketToMagMell = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "hs_ardee_magmell");
 			if (ticketToMagMell == null)
 				ticketToMagMell = CreateTicketTo("Mag Mell", "hs_ardee_magmell");
 
-			scrollHylvian = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "scroll_for_hylvian");
+			scrollHylvian = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "scroll_for_hylvian");
 			if (scrollHylvian == null)
 			{
 				scrollHylvian = new ItemTemplate();
@@ -289,7 +289,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 
 
-			receiptFreagus = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "receipt_for_freagus");
+			receiptFreagus = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "receipt_for_freagus");
 			if (receiptFreagus == null)
 			{
 				receiptFreagus = new ItemTemplate();
@@ -313,7 +313,7 @@ namespace DOL.GS.Quests.Hibernia
 					GameServer.Database.AddNewObject(receiptFreagus);
 			}
 
-			chestOfCoins = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "small_chest_of_coins");
+			chestOfCoins = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "small_chest_of_coins");
 			if (chestOfCoins == null)
 			{
 				chestOfCoins = new ItemTemplate();
@@ -337,7 +337,7 @@ namespace DOL.GS.Quests.Hibernia
 					GameServer.Database.AddNewObject(chestOfCoins);
 			}
 
-			letterAddrir = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "letter_for_addrir");
+			letterAddrir = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "letter_for_addrir");
 			if (letterAddrir == null)
 			{
 				letterAddrir = new ItemTemplate();
@@ -361,7 +361,7 @@ namespace DOL.GS.Quests.Hibernia
 					GameServer.Database.AddNewObject(letterAddrir);
 			}
 
-			assistantNecklace = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "assistant_necklace");
+			assistantNecklace = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "assistant_necklace");
 			if (assistantNecklace == null)
 			{
 				assistantNecklace = new ItemTemplate();
@@ -387,7 +387,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 
 			// item db check
-			recruitsRoundShield = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_round_shield_hib");
+			recruitsRoundShield = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_round_shield_hib");
 			if (recruitsRoundShield == null)
 			{
 				if (log.IsWarnEnabled)
@@ -436,7 +436,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 
 			// item db check
-			recruitsBracer = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_silver_bracer");
+			recruitsBracer = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_silver_bracer");
 			if (recruitsBracer == null)
 			{
 				recruitsBracer = new ItemTemplate();

@@ -153,7 +153,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		clawofblackmauler = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "clawofblackmauler");
+		clawofblackmauler = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "clawofblackmauler");
 			if (clawofblackmauler == null)
 			{
 				clawofblackmauler = new ItemTemplate();

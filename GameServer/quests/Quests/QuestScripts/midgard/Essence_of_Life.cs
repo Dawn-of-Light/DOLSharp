@@ -198,7 +198,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		enchantedflask = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "enchantedflask");
+		enchantedflask = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "enchantedflask");
 			if (enchantedflask == null)
 			{
 				enchantedflask = new ItemTemplate();
@@ -274,7 +274,7 @@ using DOL.AI.Brain;
 				if (SAVE_INTO_DATABASE)
 					GameServer.Database.AddNewObject(enchantedflask);
 				}
-			Flaskofetherealessence = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "Flaskofetherealessence");
+			Flaskofetherealessence = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "Flaskofetherealessence");
 			if (Flaskofetherealessence == null)
 			{
 				Flaskofetherealessence = new ItemTemplate();

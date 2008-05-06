@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Linq;
 using System.Collections;
 using System.Reflection;
 using System.Threading;
@@ -172,7 +173,9 @@ namespace DOL.GS.Housing
             DatabaseObject[] objs;
 
             // Remove all indoor items
-            objs = GameServer.Database.SelectObjects(typeof(DBHouseIndoorItem), "HouseNumber = " + house.HouseNumber);
+            objs = (DatabaseObject[]) from s in DatabaseLayer.Instance.OfType<DBHouseIndoorItem>()
+                                      where s.HouseNumber == house.HouseNumber
+                                      select s;
             if (objs.Length > 0)
                 foreach (DatabaseObject item in objs)
                     GameServer.Database.DeleteObject(item);
@@ -315,13 +318,13 @@ namespace DOL.GS.Housing
 		public static void AddOwner(DBHouse house, GamePlayer player)
 		{
 			if (house == null || player == null) return;
-			if (house.OwnerIDs != null && house.OwnerIDs != "")
+			if (house.OwnerIDs != null && house.OwnerIDs.Count > 0)
 			{
-				if (house.OwnerIDs.IndexOf(player.InternalID) < 0)
+				if (house.OwnerIDs.Contains(player.InternalID))
 					return;
 			}
-			//house.OwnerIDs += player.InternalID+";";
-			house.OwnerIDs = player.InternalID; // unique owner
+            house.OwnerIDs.Clear();// unique owner
+			house.OwnerIDs.Add(player.InternalID); 
 
 			GameServer.Database.SaveObject(house);
 		}

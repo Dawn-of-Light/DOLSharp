@@ -153,7 +153,7 @@ namespace DOL.GS.Quests.Hibernia
 
             #region defineItems
 
-            daringpaddedboots_hib = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringpaddedboots_hib");
+            daringpaddedboots_hib = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "daringpaddedboots_hib");
             if (daringpaddedboots_hib == null)
             {
                 daringpaddedboots_hib = new ItemTemplate();
@@ -229,7 +229,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(daringpaddedboots_hib);
             }
-            daringpaddedcap_hib = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringpaddedcap_hib");
+            daringpaddedcap_hib = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "daringpaddedcap_hib");
             if (daringpaddedcap_hib == null)
             {
                 daringpaddedcap_hib = new ItemTemplate();
@@ -305,7 +305,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(daringpaddedcap_hib);
             }
-            daringpaddedgloves_hib = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringpaddedgloves_hib");
+            daringpaddedgloves_hib = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "daringpaddedgloves_hib");
             if (daringpaddedgloves_hib == null)
             {
                 daringpaddedgloves_hib = new ItemTemplate();
@@ -381,7 +381,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(daringpaddedgloves_hib);
             }
-            daringpaddedpants_hib = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringpaddedpants_hib");
+            daringpaddedpants_hib = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "daringpaddedpants_hib");
             if (daringpaddedpants_hib == null)
             {
                 daringpaddedpants_hib = new ItemTemplate();
@@ -457,7 +457,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(daringpaddedpants_hib);
             }
-            daringpaddedsleeves_hib = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringpaddedsleeves_hib");
+            daringpaddedsleeves_hib = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "daringpaddedsleeves_hib");
             if (daringpaddedsleeves_hib == null)
             {
                 daringpaddedsleeves_hib = new ItemTemplate();
@@ -533,7 +533,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(daringpaddedsleeves_hib);
             }
-            daringpaddedvest_hib = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringpaddedvest_hib");
+            daringpaddedvest_hib = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "daringpaddedvest_hib");
             if (daringpaddedvest_hib == null)
             {
                 daringpaddedvest_hib = new ItemTemplate();
@@ -609,7 +609,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(daringpaddedvest_hib);
             }
-            daringleatherboots_hib = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringleatherboots_hib");
+            daringleatherboots_hib = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "daringleatherboots_hib");
             if (daringleatherboots_hib == null)
             {
                 daringleatherboots_hib = new ItemTemplate();
@@ -685,7 +685,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(daringleatherboots_hib);
             }
-            daringleathercap_hib = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringleathercap_hib");
+            daringleathercap_hib = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "daringleathercap_hib");
             if (daringleathercap_hib == null)
             {
                 daringleathercap_hib = new ItemTemplate();
@@ -761,7 +761,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(daringleathercap_hib);
             }
-            daringleathergloves_hib = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringleathergloves_hib");
+            daringleathergloves_hib = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "daringleathergloves_hib");
             if (daringleathergloves_hib == null)
             {
                 daringleathergloves_hib = new ItemTemplate();
@@ -837,7 +837,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(daringleathergloves_hib);
             }
-            daringleatherjerkin_hib = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringleatherjerkin_hib");
+            daringleatherjerkin_hib = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "daringleatherjerkin_hib");
             if (daringleatherjerkin_hib == null)
             {
                 daringleatherjerkin_hib = new ItemTemplate();
@@ -913,7 +913,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(daringleatherjerkin_hib);
             }
-            daringleatherleggings_hib = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringleatherleggings_hib");
+            daringleatherleggings_hib = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "daringleatherleggings_hib");
             if (daringleatherleggings_hib == null)
             {
                 daringleatherleggings_hib = new ItemTemplate();
@@ -989,7 +989,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(daringleatherleggings_hib);
             }
-            daringleathersleeves_hib = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringleathersleeves_hib");
+            daringleathersleeves_hib = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "daringleathersleeves_hib");
             if (daringleathersleeves_hib == null)
             {
                 daringleathersleeves_hib = new ItemTemplate();
@@ -1065,7 +1065,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(daringleathersleeves_hib);
             }
-            daringstuddedboots_hib = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringstuddedboots_hib");
+            daringstuddedboots_hib = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "daringstuddedboots_hib");
             if (daringstuddedboots_hib == null)
             {
                 daringstuddedboots_hib = new ItemTemplate();
@@ -1141,7 +1141,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(daringstuddedboots_hib);
             }
-            daringstuddedcap_hib = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringstuddedcap_hib");
+            daringstuddedcap_hib = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "daringstuddedcap_hib");
             if (daringstuddedcap_hib == null)
             {
                 daringstuddedcap_hib = new ItemTemplate();
@@ -1217,7 +1217,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(daringstuddedcap_hib);
             }
-            daringstuddedgloves_hib = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringstuddedgloves_hib");
+            daringstuddedgloves_hib = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "daringstuddedgloves_hib");
             if (daringstuddedgloves_hib == null)
             {
                 daringstuddedgloves_hib = new ItemTemplate();
@@ -1293,7 +1293,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(daringstuddedgloves_hib);
             }
-            daringstuddedjerkin_hib = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringstuddedjerkin_hib");
+            daringstuddedjerkin_hib = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "daringstuddedjerkin_hib");
             if (daringstuddedjerkin_hib == null)
             {
                 daringstuddedjerkin_hib = new ItemTemplate();
@@ -1369,7 +1369,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(daringstuddedjerkin_hib);
             }
-            daringstuddedleggings_hib = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringstuddedleggings_hib");
+            daringstuddedleggings_hib = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "daringstuddedleggings_hib");
             if (daringstuddedleggings_hib == null)
             {
                 daringstuddedleggings_hib = new ItemTemplate();
@@ -1445,7 +1445,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(daringstuddedleggings_hib);
             }
-            daringstuddedsleeves_hib = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringstuddedsleeves_hib");
+            daringstuddedsleeves_hib = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "daringstuddedsleeves_hib");
             if (daringstuddedsleeves_hib == null)
             {
                 daringstuddedsleeves_hib = new ItemTemplate();

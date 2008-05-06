@@ -187,7 +187,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			woodenBucket = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "wooden_bucket");
+			woodenBucket = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "wooden_bucket");
 			if (woodenBucket == null)
 			{
 				if (log.IsWarnEnabled)
@@ -221,7 +221,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			fullWoodenBucket = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "full_wooden_bucket");
+			fullWoodenBucket = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "full_wooden_bucket");
 			if (fullWoodenBucket == null)
 			{
 				if (log.IsWarnEnabled)
@@ -255,7 +255,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			reedBracer = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "reed_bracer");
+			reedBracer = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "reed_bracer");
 			if (reedBracer == null)
 			{
 				if (log.IsWarnEnabled)

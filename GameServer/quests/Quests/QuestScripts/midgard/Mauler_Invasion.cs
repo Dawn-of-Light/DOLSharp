@@ -153,7 +153,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		blackmaulercubpelt = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "blackmaulercubpelt");
+		blackmaulercubpelt = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "blackmaulercubpelt");
 			if (blackmaulercubpelt == null)
 			{
 				blackmaulercubpelt = new ItemTemplate();

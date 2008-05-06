@@ -175,7 +175,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			#region Item Declarations
 
-			Horn = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "Horn");
+			Horn = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "Horn");
 			if (Horn == null)
 			{
 				if (log.IsWarnEnabled)
@@ -204,7 +204,7 @@ namespace DOL.GS.Quests.Hibernia
 			// end item
 			ItemTemplate i = null;
 
-			DruidEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "DruidEpicBoots");
+			DruidEpicBoots = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "DruidEpicBoots");
 			if (DruidEpicBoots == null)
 			{
 				i = new ItemTemplate();
@@ -246,7 +246,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 			//end item
 			//Sidhe Scale Coif
-			DruidEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "DruidEpicHelm");
+			DruidEpicHelm = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "DruidEpicHelm");
 			if (DruidEpicHelm == null)
 			{
 				i = new ItemTemplate();
@@ -287,7 +287,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 			//end item
 			//Sidhe Scale Gloves
-			DruidEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "DruidEpicGloves");
+			DruidEpicGloves = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "DruidEpicGloves");
 			if (DruidEpicGloves == null)
 			{
 				i = new ItemTemplate();
@@ -327,7 +327,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Sidhe Scale Hauberk
-			DruidEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "DruidEpicVest");
+			DruidEpicVest = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "DruidEpicVest");
 			if (DruidEpicVest == null)
 			{
 				i = new ItemTemplate();
@@ -367,7 +367,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Sidhe Scale Legs
-			DruidEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "DruidEpicLegs");
+			DruidEpicLegs = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "DruidEpicLegs");
 			if (DruidEpicLegs == null)
 			{
 				i = new ItemTemplate();
@@ -408,7 +408,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Sidhe Scale Sleeves
-			DruidEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "DruidEpicArms");
+			DruidEpicArms = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "DruidEpicArms");
 			if (DruidEpicArms == null)
 			{
 				i = new ItemTemplate();
@@ -449,7 +449,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Blademaster Epic Sleeves End
-			BlademasterEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BlademasterEpicBoots");
+			BlademasterEpicBoots = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "BlademasterEpicBoots");
 			if (BlademasterEpicBoots == null)
 			{
 				i = new ItemTemplate();
@@ -490,7 +490,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 			//end item
 			//Sidhe Studded Coif
-			BlademasterEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BlademasterEpicHelm");
+			BlademasterEpicHelm = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "BlademasterEpicHelm");
 			if (BlademasterEpicHelm == null)
 			{
 				i = new ItemTemplate();
@@ -532,7 +532,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 			//end item
 			//Sidhe Studded Gloves
-			BlademasterEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BlademasterEpicGloves");
+			BlademasterEpicGloves = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "BlademasterEpicGloves");
 			if (BlademasterEpicGloves == null)
 			{
 				i = new ItemTemplate();
@@ -573,7 +573,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Sidhe Studded Hauberk
-			BlademasterEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BlademasterEpicVest");
+			BlademasterEpicVest = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "BlademasterEpicVest");
 			if (BlademasterEpicVest == null)
 			{
 				i = new ItemTemplate();
@@ -614,7 +614,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Sidhe Studded Legs
-			BlademasterEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BlademasterEpicLegs");
+			BlademasterEpicLegs = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "BlademasterEpicLegs");
 			if (BlademasterEpicLegs == null)
 			{
 				i = new ItemTemplate();
@@ -655,7 +655,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Sidhe Studded Sleeves
-			BlademasterEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BlademasterEpicArms");
+			BlademasterEpicArms = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "BlademasterEpicArms");
 			if (BlademasterEpicArms == null)
 			{
 				i = new ItemTemplate();
@@ -695,7 +695,7 @@ namespace DOL.GS.Quests.Hibernia
 				BlademasterEpicArms = i;
 
 			}
-			AnimistEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "AnimistEpicBoots");
+			AnimistEpicBoots = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "AnimistEpicBoots");
 			if (AnimistEpicBoots == null)
 			{
 				i = new ItemTemplate();
@@ -736,7 +736,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 			//end item
 			//Brightly Woven Coif
-			AnimistEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "AnimistEpicHelm");
+			AnimistEpicHelm = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "AnimistEpicHelm");
 			if (AnimistEpicHelm == null)
 			{
 				i = new ItemTemplate();
@@ -778,7 +778,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 			//end item
 			//Brightly Woven Gloves
-			AnimistEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "AnimistEpicGloves");
+			AnimistEpicGloves = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "AnimistEpicGloves");
 			if (AnimistEpicGloves == null)
 			{
 				i = new ItemTemplate();
@@ -818,7 +818,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Brightly Woven Hauberk
-			AnimistEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "AnimistEpicVest");
+			AnimistEpicVest = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "AnimistEpicVest");
 			if (AnimistEpicVest == null)
 			{
 				i = new ItemTemplate();
@@ -858,7 +858,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Brightly Woven Legs
-			AnimistEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "AnimistEpicLegs");
+			AnimistEpicLegs = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "AnimistEpicLegs");
 			if (AnimistEpicLegs == null)
 			{
 				i = new ItemTemplate();
@@ -898,7 +898,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Brightly Woven Sleeves
-			AnimistEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "AnimistEpicArms");
+			AnimistEpicArms = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "AnimistEpicArms");
 			if (AnimistEpicArms == null)
 			{
 				i = new ItemTemplate();
@@ -937,7 +937,7 @@ namespace DOL.GS.Quests.Hibernia
 				AnimistEpicArms = i;
 
 			}
-			MentalistEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MentalistEpicBoots");
+			MentalistEpicBoots = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "MentalistEpicBoots");
 			if (MentalistEpicBoots == null)
 			{
 				i = new ItemTemplate();
@@ -978,7 +978,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 			//end item
 			//Sidhe Woven Coif
-			MentalistEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MentalistEpicHelm");
+			MentalistEpicHelm = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "MentalistEpicHelm");
 			if (MentalistEpicHelm == null)
 			{
 				i = new ItemTemplate();
@@ -1019,7 +1019,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 			//end item
 			//Sidhe Woven Gloves
-			MentalistEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MentalistEpicGloves");
+			MentalistEpicGloves = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "MentalistEpicGloves");
 			if (MentalistEpicGloves == null)
 			{
 				i = new ItemTemplate();
@@ -1059,7 +1059,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Sidhe Woven Hauberk
-			MentalistEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MentalistEpicVest");
+			MentalistEpicVest = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "MentalistEpicVest");
 			if (MentalistEpicVest == null)
 			{
 				i = new ItemTemplate();
@@ -1099,7 +1099,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Sidhe Woven Legs
-			MentalistEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MentalistEpicLegs");
+			MentalistEpicLegs = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "MentalistEpicLegs");
 			if (MentalistEpicLegs == null)
 			{
 				i = new ItemTemplate();
@@ -1139,7 +1139,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Sidhe Woven Sleeves
-			MentalistEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MentalistEpicArms");
+			MentalistEpicArms = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "MentalistEpicArms");
 			if (MentalistEpicArms == null)
 			{
 				i = new ItemTemplate();
@@ -1178,7 +1178,7 @@ namespace DOL.GS.Quests.Hibernia
 				MentalistEpicArms = i;
 
 			}
-			ValewalkerEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ValewalkerEpicBoots");
+			ValewalkerEpicBoots = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ValewalkerEpicBoots");
 			if (ValewalkerEpicBoots == null)
 			{
 				i = new ItemTemplate();
@@ -1219,7 +1219,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 			//end item
 			//Misty Glade Coif
-			ValewalkerEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ValewalkerEpicHelm");
+			ValewalkerEpicHelm = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ValewalkerEpicHelm");
 			if (ValewalkerEpicHelm == null)
 			{
 				i = new ItemTemplate();
@@ -1260,7 +1260,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 			//end item
 			//Misty Glade Gloves
-			ValewalkerEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ValewalkerEpicGloves");
+			ValewalkerEpicGloves = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ValewalkerEpicGloves");
 			if (ValewalkerEpicGloves == null)
 			{
 				i = new ItemTemplate();
@@ -1300,7 +1300,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Misty Glade Hauberk
-			ValewalkerEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ValewalkerEpicVest");
+			ValewalkerEpicVest = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ValewalkerEpicVest");
 			if (ValewalkerEpicVest == null)
 			{
 				i = new ItemTemplate();
@@ -1340,7 +1340,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Misty Glade Legs
-			ValewalkerEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ValewalkerEpicLegs");
+			ValewalkerEpicLegs = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ValewalkerEpicLegs");
 			if (ValewalkerEpicLegs == null)
 			{
 				i = new ItemTemplate();
@@ -1380,7 +1380,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Misty Glade Sleeves
-			ValewalkerEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ValewalkerEpicArms");
+			ValewalkerEpicArms = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ValewalkerEpicArms");
 			if (ValewalkerEpicArms == null)
 			{
 				i = new ItemTemplate();
@@ -1421,7 +1421,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 
 			#region Vampiir
-			VampiirEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "VampiirEpicBoots");
+			VampiirEpicBoots = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "VampiirEpicBoots");
 			if (VampiirEpicBoots == null)
 			{
 				i = new ItemTemplate();
@@ -1469,7 +1469,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 			//end item
 			//Misty Glade Coif
-			VampiirEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "VampiirEpicHelm");
+			VampiirEpicHelm = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "VampiirEpicHelm");
 			if (VampiirEpicHelm == null)
 			{
 				i = new ItemTemplate();
@@ -1517,7 +1517,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 			//end item
 			//Misty Glade Gloves
-			VampiirEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "VampiirEpicGloves");
+			VampiirEpicGloves = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "VampiirEpicGloves");
 			if (VampiirEpicGloves == null)
 			{
 				i = new ItemTemplate();
@@ -1564,7 +1564,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Misty Glade Hauberk
-			VampiirEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "VampiirEpicVest");
+			VampiirEpicVest = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "VampiirEpicVest");
 			if (VampiirEpicVest == null)
 			{
 				i = new ItemTemplate();
@@ -1611,7 +1611,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Misty Glade Legs
-			VampiirEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "VampiirEpicLegs");
+			VampiirEpicLegs = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "VampiirEpicLegs");
 			if (VampiirEpicLegs == null)
 			{
 				i = new ItemTemplate();
@@ -1658,7 +1658,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Misty Glade Sleeves
-			VampiirEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "VampiirEpicArms");
+			VampiirEpicArms = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "VampiirEpicArms");
 			if (VampiirEpicArms == null)
 			{
 				i = new ItemTemplate();
@@ -1706,7 +1706,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 			#endregion
 			#region Bainshee
-			BainsheeEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BainsheeEpicBoots");
+			BainsheeEpicBoots = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "BainsheeEpicBoots");
 			if (BainsheeEpicBoots == null)
 			{
 				i = new ItemTemplate();
@@ -1763,7 +1763,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 			//end item
 			//Misty Glade Coif
-			BainsheeEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BainsheeEpicHelm");
+			BainsheeEpicHelm = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "BainsheeEpicHelm");
 			if (BainsheeEpicHelm == null)
 			{
 				i = new ItemTemplate();
@@ -1819,7 +1819,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 			//end item
 			//Misty Glade Gloves
-			BainsheeEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BainsheeEpicGloves");
+			BainsheeEpicGloves = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "BainsheeEpicGloves");
 			if (BainsheeEpicGloves == null)
 			{
 				i = new ItemTemplate();
@@ -1875,7 +1875,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Keening Spirit Hauberk
-			BainsheeEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BainsheeEpicVest");
+			BainsheeEpicVest = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "BainsheeEpicVest");
 			if (BainsheeEpicVest == null)
 			{
 				i = new ItemTemplate();
@@ -1930,7 +1930,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Keening Spirit Legs
-			BainsheeEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BainsheeEpicLegs");
+			BainsheeEpicLegs = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "BainsheeEpicLegs");
 			if (BainsheeEpicLegs == null)
 			{
 				i = new ItemTemplate();
@@ -1985,7 +1985,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			}
 			//Keening Spirit Sleeves
-			BainsheeEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BainsheeEpicArms");
+			BainsheeEpicArms = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "BainsheeEpicArms");
 			if (BainsheeEpicArms == null)
 			{
 				i = new ItemTemplate();

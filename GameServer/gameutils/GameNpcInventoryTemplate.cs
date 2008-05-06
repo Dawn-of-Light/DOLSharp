@@ -259,15 +259,15 @@ namespace DOL.GS
 		/// <summary>
 		/// Cache for fast loading of npc equipment
 		/// </summary>
-		protected static Dictionary<string, List<NPCEquipment>> m_npcEquipmentCache = null;
+		protected static Dictionary<UInt64, List<NPCEquipment>> m_npcEquipmentCache = null;
 
 		/// <summary>
 		/// Loads the inventory template from the Database
 		/// </summary>
 		/// <returns>success</returns>
-		public override bool LoadFromDatabase(string templateID)
+		public override bool LoadFromDatabase(UInt64 templateID)
 		{
-			if (Util.IsEmpty(templateID) || templateID == "\r\n" || templateID == "0")
+			if (templateID == 0)
 			{
 				//if (log.IsWarnEnabled)
 					//log.Warn("Null or empty string template reference");
@@ -305,7 +305,7 @@ namespace DOL.GS
 		{
 			try
 			{
-				m_npcEquipmentCache = new Dictionary<string, List<NPCEquipment>>(1000);
+				m_npcEquipmentCache = new Dictionary<UInt64, List<NPCEquipment>>(1000);
 				foreach (NPCEquipment equip in GameServer.Database.SelectObjects(typeof(NPCEquipment)))
 				{
 					List<NPCEquipment> list;
@@ -334,7 +334,7 @@ namespace DOL.GS
 		/// Save the inventory template to Database
 		/// </summary>
 		/// <returns>success</returns>
-		public override bool SaveIntoDatabase(string templateID)
+		public override bool SaveIntoDatabase(UInt64 templateID)
 		{
 			lock (m_items.SyncRoot)
 			{
@@ -343,7 +343,7 @@ namespace DOL.GS
 					if (templateID == null)
 						throw new ArgumentNullException("templateID");
 
-					DatabaseObject[] npcEquipment = GameServer.Database.SelectObjects(typeof(NPCEquipment), "TemplateID = '" + GameServer.Database.Escape(templateID) + "'");
+					DatabaseObject[] npcEquipment = GameServer.Database.SelectObjects(typeof(NPCEquipment),"TemplateID",templateID);
 
 					// delete removed item templates
 					foreach (NPCEquipment npcItem in npcEquipment)

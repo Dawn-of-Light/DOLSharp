@@ -268,14 +268,14 @@ namespace DOL.GS.Quests.Hibernia
 
 			#region defineItems
 
-			ticketToTirnamBeo = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "hs_magmell_tirnambeo");
+			ticketToTirnamBeo = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), "hs_magmell_tirnambeo");
 			if (ticketToTirnamBeo == null)
 				ticketToTirnamBeo = CreateTicketTo("Tir na mBeo", "hs_magmell_tirnambeo");
-			ticketToArdee = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "hs_tirnambeo_ardee");
+            ticketToArdee = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), "hs_tirnambeo_ardee");
 			if (ticketToArdee == null)
 				ticketToArdee = CreateTicketTo("Ardee", "hs_tirnambeo_ardee");
 
-            recruitsDiary = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "recruits_diary");
+            recruitsDiary = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), "recruits_diary");
 			if (recruitsDiary == null)
 			{
 				recruitsDiary = new ItemTemplate();
@@ -293,7 +293,7 @@ namespace DOL.GS.Quests.Hibernia
                     GameServer.Database.AddNewObject(recruitsDiary);
 			}
 
-			sackOfSupplies = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sack_of_supplies");
+            sackOfSupplies = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), "sack_of_supplies");
 			if (sackOfSupplies == null)
 			{
 				sackOfSupplies = new ItemTemplate();
@@ -317,7 +317,7 @@ namespace DOL.GS.Quests.Hibernia
 					GameServer.Database.AddNewObject(sackOfSupplies);
 			}
 
-			crateOfVegetables = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "crate_of_vegetables");
+			crateOfVegetables = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "crate_of_vegetables");
 			if (crateOfVegetables == null)
 			{
 				crateOfVegetables = new ItemTemplate();
@@ -342,7 +342,7 @@ namespace DOL.GS.Quests.Hibernia
 			}
 
 			// item db check
-			recruitsCloak = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_cloak_hib");
+			recruitsCloak = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_cloak_hib");
 			if (recruitsCloak == null)
 			{
 				if (log.IsWarnEnabled)

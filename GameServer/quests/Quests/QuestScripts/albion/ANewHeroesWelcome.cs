@@ -79,7 +79,7 @@ namespace DOL.GS.Quests.Albion
             #region defineItems
 
             // item db check
-            RecruitsCloak = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_cloak");
+            RecruitsCloak = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "k109_recruits_cloak");
             if (RecruitsCloak == null)
             {
                 RecruitsCloak = new ItemTemplate();
@@ -113,7 +113,7 @@ namespace DOL.GS.Quests.Albion
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(RecruitsCloak);
             }
-            LetterToPompin = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "letter_to_pompin");
+            LetterToPompin = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "letter_to_pompin");
             if (LetterToPompin == null)
             {
                 LetterToPompin = new ItemTemplate();

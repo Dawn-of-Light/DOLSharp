@@ -270,7 +270,7 @@ namespace DOL.GS.Quests.Midgard
 			ticketToVasudheim = CreateTicketTo("ticket to Vasudheim", "");
 
 
-			sackOfSupplies = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sack_of_supplies");
+			sackOfSupplies = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "sack_of_supplies");
 			if (sackOfSupplies == null)
 			{
 				sackOfSupplies = new ItemTemplate();
@@ -294,7 +294,7 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(sackOfSupplies);
 			}
 
-			crateOfVegetables = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "crate_of_vegetables");
+			crateOfVegetables = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "crate_of_vegetables");
 			if (crateOfVegetables == null)
 			{
 				crateOfVegetables = new ItemTemplate();
@@ -319,7 +319,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsCloak = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_cloak_mid");
+			recruitsCloak = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_cloak_mid");
 			if (recruitsCloak == null)
 			{
 				recruitsCloak = new ItemTemplate();

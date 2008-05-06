@@ -167,7 +167,7 @@ namespace DOL.GS.Quests.Albion
 			#region Item Declarations
 
 			#region misc
-			sealed_pouch = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "sealed_pouch");
+			sealed_pouch = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "sealed_pouch");
 			if (sealed_pouch == null)
 			{
 				if (log.IsWarnEnabled)
@@ -196,7 +196,7 @@ namespace DOL.GS.Quests.Albion
 			// end item
 			ItemTemplate i = null;
 			#region Mercenary
-			MercenaryEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MercenaryEpicBoots");
+			MercenaryEpicBoots = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "MercenaryEpicBoots");
 			if (MercenaryEpicBoots == null)
 			{
 				i = new ItemTemplate();
@@ -239,7 +239,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			//end item
 			// of the Shadowy Embers  Coif
-			MercenaryEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MercenaryEpicHelm");
+			MercenaryEpicHelm = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "MercenaryEpicHelm");
 			if (MercenaryEpicHelm == null)
 			{
 				i = new ItemTemplate();
@@ -282,7 +282,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			//end item
 			// of the Shadowy Embers  Gloves
-			MercenaryEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MercenaryEpicGloves");
+			MercenaryEpicGloves = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "MercenaryEpicGloves");
 			if (MercenaryEpicGloves == null)
 			{
 				i = new ItemTemplate();
@@ -324,7 +324,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			// of the Shadowy Embers  Hauberk
-			MercenaryEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MercenaryEpicVest");
+			MercenaryEpicVest = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "MercenaryEpicVest");
 			if (MercenaryEpicVest == null)
 			{
 				i = new ItemTemplate();
@@ -366,7 +366,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			// of the Shadowy Embers  Legs
-			MercenaryEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MercenaryEpicLegs");
+			MercenaryEpicLegs = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "MercenaryEpicLegs");
 			if (MercenaryEpicLegs == null)
 			{
 				i = new ItemTemplate();
@@ -408,7 +408,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			// of the Shadowy Embers  Sleeves
-			MercenaryEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MercenaryEpicArms");
+			MercenaryEpicArms = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "MercenaryEpicArms");
 			if (MercenaryEpicArms == null)
 			{
 				i = new ItemTemplate();
@@ -451,7 +451,7 @@ namespace DOL.GS.Quests.Albion
 			#endregion
 			#region Reaver
 			//Reaver Epic Sleeves End
-			ReaverEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ReaverEpicBoots");
+			ReaverEpicBoots = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ReaverEpicBoots");
 			if (ReaverEpicBoots == null)
 			{
 				i = new ItemTemplate();
@@ -494,7 +494,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			//end item
 			//of Murky Secrets Coif
-			ReaverEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ReaverEpicHelm");
+			ReaverEpicHelm = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ReaverEpicHelm");
 			if (ReaverEpicHelm == null)
 			{
 				i = new ItemTemplate();
@@ -537,7 +537,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			//end item
 			//of Murky Secrets Gloves
-			ReaverEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ReaverEpicGloves");
+			ReaverEpicGloves = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ReaverEpicGloves");
 			if (ReaverEpicGloves == null)
 			{
 				i = new ItemTemplate();
@@ -579,7 +579,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of Murky Secrets Hauberk
-			ReaverEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ReaverEpicVest");
+			ReaverEpicVest = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ReaverEpicVest");
 			if (ReaverEpicVest == null)
 			{
 				i = new ItemTemplate();
@@ -621,7 +621,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of Murky Secrets Legs
-			ReaverEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ReaverEpicLegs");
+			ReaverEpicLegs = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ReaverEpicLegs");
 			if (ReaverEpicLegs == null)
 			{
 				i = new ItemTemplate();
@@ -663,7 +663,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of Murky Secrets Sleeves
-			ReaverEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ReaverEpicArms");
+			ReaverEpicArms = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ReaverEpicArms");
 			if (ReaverEpicArms == null)
 			{
 				i = new ItemTemplate();
@@ -705,7 +705,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			#endregion
 			#region Infiltrator
-			InfiltratorEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "InfiltratorEpicBoots");
+			InfiltratorEpicBoots = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "InfiltratorEpicBoots");
 			if (InfiltratorEpicBoots == null)
 			{
 				InfiltratorEpicBoots = new ItemTemplate();
@@ -745,7 +745,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			//end item
 			//Shadow-Woven Coif
-			InfiltratorEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "InfiltratorEpicHelm");
+			InfiltratorEpicHelm = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "InfiltratorEpicHelm");
 			if (InfiltratorEpicHelm == null)
 			{
 				InfiltratorEpicHelm = new ItemTemplate();
@@ -785,7 +785,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			//end item
 			//Shadow-Woven Gloves
-			InfiltratorEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "InfiltratorEpicGloves");
+			InfiltratorEpicGloves = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "InfiltratorEpicGloves");
 			if (InfiltratorEpicGloves == null)
 			{
 				InfiltratorEpicGloves = new ItemTemplate();
@@ -825,7 +825,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//Shadow-Woven Hauberk
-			InfiltratorEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "InfiltratorEpicVest");
+			InfiltratorEpicVest = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "InfiltratorEpicVest");
 			if (InfiltratorEpicVest == null)
 			{
 				InfiltratorEpicVest = new ItemTemplate();
@@ -864,7 +864,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//Shadow-Woven Legs
-			InfiltratorEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "InfiltratorEpicLegs");
+			InfiltratorEpicLegs = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "InfiltratorEpicLegs");
 			if (InfiltratorEpicLegs == null)
 			{
 				InfiltratorEpicLegs = new ItemTemplate();
@@ -903,7 +903,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//Shadow-Woven Sleeves
-			InfiltratorEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "InfiltratorEpicArms");
+			InfiltratorEpicArms = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "InfiltratorEpicArms");
 			if (InfiltratorEpicArms == null)
 			{
 				InfiltratorEpicArms = new ItemTemplate();
@@ -943,7 +943,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			#endregion
 			#region Cabalist
-			CabalistEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "CabalistEpicBoots");
+			CabalistEpicBoots = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "CabalistEpicBoots");
 			if (CabalistEpicBoots == null)
 			{
 				CabalistEpicBoots = new ItemTemplate();
@@ -983,7 +983,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			//end item
 			//Warm of the Construct Coif
-			CabalistEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "CabalistEpicHelm");
+			CabalistEpicHelm = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "CabalistEpicHelm");
 			if (CabalistEpicHelm == null)
 			{
 				i = new ItemTemplate();
@@ -1024,7 +1024,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			//end item
 			//Warm of the Construct Gloves
-			CabalistEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "CabalistEpicGloves");
+			CabalistEpicGloves = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "CabalistEpicGloves");
 			if (CabalistEpicGloves == null)
 			{
 				i = new ItemTemplate();
@@ -1065,7 +1065,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//Warm of the Construct Hauberk
-			CabalistEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "CabalistEpicVest");
+			CabalistEpicVest = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "CabalistEpicVest");
 			if (CabalistEpicVest == null)
 			{
 				i = new ItemTemplate();
@@ -1106,7 +1106,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//Warm of the Construct Legs
-			CabalistEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "CabalistEpicLegs");
+			CabalistEpicLegs = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "CabalistEpicLegs");
 			if (CabalistEpicLegs == null)
 			{
 				i = new ItemTemplate();
@@ -1148,7 +1148,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//Warm of the Construct Sleeves
-			CabalistEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "CabalistEpicArms");
+			CabalistEpicArms = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "CabalistEpicArms");
 			if (CabalistEpicArms == null)
 			{
 				i = new ItemTemplate();
@@ -1190,7 +1190,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			#endregion
 			#region Necromancer
-			NecromancerEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NecromancerEpicBoots");
+			NecromancerEpicBoots = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "NecromancerEpicBoots");
 			if (NecromancerEpicBoots == null)
 			{
 				i = new ItemTemplate();
@@ -1232,7 +1232,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			//end item
 			//of Forbidden Rites Coif
-			NecromancerEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NecromancerEpicHelm");
+			NecromancerEpicHelm = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "NecromancerEpicHelm");
 			if (NecromancerEpicHelm == null)
 			{
 				i = new ItemTemplate();
@@ -1274,7 +1274,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			//end item
 			//of Forbidden Rites Gloves
-			NecromancerEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NecromancerEpicGloves");
+			NecromancerEpicGloves = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "NecromancerEpicGloves");
 			if (NecromancerEpicGloves == null)
 			{
 				i = new ItemTemplate();
@@ -1315,7 +1315,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of Forbidden Rites Hauberk
-			NecromancerEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NecromancerEpicVest");
+			NecromancerEpicVest = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "NecromancerEpicVest");
 			if (NecromancerEpicVest == null)
 			{
 				i = new ItemTemplate();
@@ -1357,7 +1357,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of Forbidden Rites Legs
-			NecromancerEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NecromancerEpicLegs");
+			NecromancerEpicLegs = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "NecromancerEpicLegs");
 			if (NecromancerEpicLegs == null)
 			{
 				i = new ItemTemplate();
@@ -1398,7 +1398,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of Forbidden Rites Sleeves
-			NecromancerEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NecromancerEpicArms");
+			NecromancerEpicArms = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "NecromancerEpicArms");
 			if (NecromancerEpicArms == null)
 			{
 				i = new ItemTemplate();
@@ -1440,7 +1440,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			#endregion
 			#region Heretic
-			HereticEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "HereticEpicBoots");
+			HereticEpicBoots = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "HereticEpicBoots");
 			if (HereticEpicBoots == null)
 			{
 				i = new ItemTemplate();
@@ -1488,7 +1488,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			//end item
 			//of Forbidden Rites Coif
-			HereticEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "HereticEpicHelm");
+			HereticEpicHelm = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "HereticEpicHelm");
 			if (HereticEpicHelm == null)
 			{
 				i = new ItemTemplate();
@@ -1536,7 +1536,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			//end item
 			//of Forbidden Rites Gloves
-			HereticEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "HereticEpicGloves");
+			HereticEpicGloves = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "HereticEpicGloves");
 			if (HereticEpicGloves == null)
 			{
 				i = new ItemTemplate();
@@ -1579,7 +1579,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of Forbidden Rites Hauberk
-			HereticEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "HereticEpicVest");
+			HereticEpicVest = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "HereticEpicVest");
 			if (HereticEpicVest == null)
 			{
 				i = new ItemTemplate();
@@ -1627,7 +1627,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of Forbidden Rites Legs
-			HereticEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "HereticEpicLegs");
+			HereticEpicLegs = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "HereticEpicLegs");
 			if (HereticEpicLegs == null)
 			{
 				i = new ItemTemplate();
@@ -1674,7 +1674,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of Forbidden Rites Sleeves
-			HereticEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "HereticEpicArms");
+			HereticEpicArms = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "HereticEpicArms");
 			if (HereticEpicArms == null)
 			{
 				i = new ItemTemplate();

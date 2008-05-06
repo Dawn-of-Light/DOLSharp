@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.Database2;
 using DOL.GS.Styles;
@@ -49,7 +50,7 @@ namespace DOL.GS
 		protected byte m_blockChance;
 		protected byte m_leftHandSwingChance;
 		protected uint m_flags;
-		protected string m_inventory;
+		protected List<UInt64> m_inventory;
 		protected eDamageType m_meleeDamageType;
 		protected int m_strength;
 		protected int m_constitution;
@@ -103,7 +104,7 @@ namespace DOL.GS
 			m_piety = data.Piety;
 			m_charisma = data.Charisma;
 			m_empathy = data.Empathy;
-
+            m_inventory = new List<UInt64>();
 			//Time to add Spells/Styles and Abilties to the templates
 			m_abilities = new ArrayList();
 			m_spelllines = new ArrayList();
@@ -167,7 +168,7 @@ namespace DOL.GS
 			if (data.MeleeDamageType == 0)
 				m_meleeDamageType = eDamageType.Slash;
 
-			m_inventory = data.EquipmentTemplateID;
+			m_inventory.Add(data.EquipmentTemplateID);
 			m_aggroLevel = data.AggroLevel;
 			m_aggroRange = data.AggroRange;
 			m_bodyType = data.BodyType;
@@ -291,7 +292,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the template npc inventory
 		/// </summary>
-		public string Inventory
+		public List<UInt64> Inventory
 		{
 			get { return m_inventory; }
 			set { m_inventory = value; }

@@ -79,7 +79,7 @@ namespace DOL.GS.Quests.Albion
             #region defineItems
 
             // item db check
-            RecruitsQuiltedVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_quilted_vest");
+            RecruitsQuiltedVest = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "k109_recruits_quilted_vest");
             if (RecruitsQuiltedVest == null)
             {
                 RecruitsQuiltedVest = new ItemTemplate();
@@ -125,7 +125,7 @@ namespace DOL.GS.Quests.Albion
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(RecruitsQuiltedVest);
             }
-            RecruitsLeatherJerkin = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_leather_jerkin");
+            RecruitsLeatherJerkin = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "k109_recruits_leather_jerkin");
             if (RecruitsLeatherJerkin == null)
             {
                 RecruitsLeatherJerkin = new ItemTemplate();
@@ -171,7 +171,7 @@ namespace DOL.GS.Quests.Albion
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(RecruitsLeatherJerkin);
             }
-            RecruitsStuddedVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_studded_vest");
+            RecruitsStuddedVest = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "k109_recruits_studded_vest");
             if (RecruitsStuddedVest == null)
             {
                 RecruitsStuddedVest = new ItemTemplate();

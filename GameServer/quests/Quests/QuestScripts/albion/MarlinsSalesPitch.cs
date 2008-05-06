@@ -186,7 +186,7 @@ namespace DOL.GS.Quests.Albion
 
 
 
-            drum = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "finely_crafted_drum");
+            drum = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "finely_crafted_drum");
             if (drum == null)
             {
                 if (log.IsWarnEnabled)

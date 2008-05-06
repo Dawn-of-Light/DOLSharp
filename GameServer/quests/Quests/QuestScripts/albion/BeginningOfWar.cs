@@ -292,7 +292,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineItems
 
-			swampRatTail = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "swamp_rat_tail");
+			swampRatTail = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "swamp_rat_tail");
 			if (swampRatTail == null)
 			{
 				swampRatTail = new ItemTemplate();
@@ -316,7 +316,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(swampRatTail);
 			}
 
-			swampSlimeItem = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "swamp_slime");
+			swampSlimeItem = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "swamp_slime");
 			if (swampSlimeItem == null)
 			{
 				swampSlimeItem = new ItemTemplate();
@@ -340,7 +340,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(swampSlimeItem);
 			}
 
-			scrollDunwyn = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "scroll_for_dunwyn");
+			scrollDunwyn = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "scroll_for_dunwyn");
 			if (scrollDunwyn == null)
 			{
 				scrollDunwyn = new ItemTemplate();
@@ -364,7 +364,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(scrollDunwyn);
 			}
 
-			listDunwyn = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "list_for_dunwyn");
+			listDunwyn = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "list_for_dunwyn");
 			if (listDunwyn == null)
 			{
 				listDunwyn = new ItemTemplate();
@@ -388,7 +388,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(listDunwyn);
 			}
 
-			riverSpritlingClaw = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "river_spritling_claw");
+			riverSpritlingClaw = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "river_spritling_claw");
 			if (riverSpritlingClaw == null)
 			{
 				riverSpritlingClaw = new ItemTemplate();
@@ -412,7 +412,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(riverSpritlingClaw);
 			}
 
-			princessOberasHead = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "princess_oberas_head");
+			princessOberasHead = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "princess_oberas_head");
 			if (princessOberasHead == null)
 			{
 				princessOberasHead = new ItemTemplate();
@@ -437,7 +437,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_helm");
+			recruitsHelm = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_studded_helm");
 			if (recruitsHelm == null)
 			{
 				recruitsHelm = new ItemTemplate();
@@ -487,7 +487,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsCap = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_cap");
+			recruitsCap = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_quilted_cap");
 			if (recruitsCap == null)
 			{
 				recruitsCap = new ItemTemplate();
@@ -536,7 +536,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(recruitsCap);
 			}
 
-			recruitsRing = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_silver_ring");
+			recruitsRing = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_silver_ring");
 			if (recruitsRing == null)
 			{
 				recruitsRing = new ItemTemplate();

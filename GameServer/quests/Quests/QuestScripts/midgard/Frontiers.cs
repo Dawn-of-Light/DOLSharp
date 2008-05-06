@@ -396,7 +396,7 @@ namespace DOL.GS.Quests.Midgard
 			#region DefineItems
 
 			// item db check
-			noteForNjiedi = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "njiedi_note");
+			noteForNjiedi = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "njiedi_note");
 			if (noteForNjiedi == null)
 			{
 				if (log.IsWarnEnabled)
@@ -422,7 +422,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			askefruerPlans = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "askefruer_plans");
+			askefruerPlans = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "askefruer_plans");
 			if (askefruerPlans == null)
 			{
 				askefruerPlans = new ItemTemplate();
@@ -446,7 +446,7 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(askefruerPlans);
 			}
 
-			translatedPlans = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "translated_askefruer_plans");
+			translatedPlans = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "translated_askefruer_plans");
 			if (translatedPlans == null)
 			{
 				translatedPlans = new ItemTemplate();
@@ -471,7 +471,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_legs_mid");
+			recruitsLegs = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_studded_legs_mid");
 			if (recruitsLegs == null)
 			{
 				recruitsLegs = new ItemTemplate();
@@ -522,7 +522,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsPants = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_pants");
+			recruitsPants = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_quilted_pants");
 			if (recruitsPants == null)
 			{
 				recruitsPants = new ItemTemplate();

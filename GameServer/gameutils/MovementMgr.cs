@@ -44,7 +44,7 @@ namespace DOL.GS.Movement
         {
             SortedList sorted = new SortedList();
             pathID.Replace('\'', '/'); // we must replace the ', found no other way yet
-            DBPath dbpath = (DBPath)GameServer.Database.SelectObject(typeof(DBPath), "PathID='" + GameServer.Database.Escape(pathID) + "'");
+            DBPath dbpath = (DBPath)GameServer.Database.SelectObject(typeof(DBPath),"PathID",pathID);
             DBPathPoint[] pathpoints = null;
             ePathType pathType = ePathType.Once;
 
@@ -55,7 +55,7 @@ namespace DOL.GS.Movement
             }
             if (pathpoints == null)
             {
-                pathpoints = (DBPathPoint[])GameServer.Database.SelectObjects(typeof(DBPathPoint), "PathID='" + GameServer.Database.Escape(pathID) + "'");
+                pathpoints = (DBPathPoint[])GameServer.Database.SelectObjects(typeof(DBPathPoint), "PathID",pathID);
             }
 
             foreach (DBPathPoint point in pathpoints)
@@ -100,7 +100,7 @@ namespace DOL.GS.Movement
                 return;
 
             pathID.Replace('\'', '/'); // we must replace the ', found no other way yet
-            foreach (DBPath pp in GameServer.Database.SelectObjects(typeof(DBPath), "PathID='" + GameServer.Database.Escape(pathID) + "'"))
+            foreach (DBPath pp in GameServer.Database.SelectObjects(typeof(DBPath), pathID))
             {
                 GameServer.Database.DeleteObject(pp);
             }

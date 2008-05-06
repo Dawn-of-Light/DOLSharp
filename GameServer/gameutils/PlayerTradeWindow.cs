@@ -544,7 +544,7 @@ namespace DOL.GS
 
 					m_owner.Out.SendMessage("Trade Completed. " + myTradeItemsCount + " items for " + partnerTradeItemsCount + " items.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					partner.Out.SendMessage("Trade Completed. " + partnerTradeItemsCount + " items for " + myTradeItemsCount + " items.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
+                    
 					m_owner.Inventory.SaveIntoDatabase(m_owner.InternalID);
 					partner.Inventory.SaveIntoDatabase(partner.InternalID);
 				}

@@ -222,7 +222,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineItems
 
-			spiderSilkenRobe = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "spider_silken_robe");
+			spiderSilkenRobe = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "spider_silken_robe");
 			if (spiderSilkenRobe == null)
 			{
 				spiderSilkenRobe = new ItemTemplate();
@@ -271,7 +271,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(spiderSilkenRobe);
 			}
 
-			ringedSpiderChitinTunic = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ringed_spider_chitin_tunic");
+			ringedSpiderChitinTunic = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ringed_spider_chitin_tunic");
 			if (ringedSpiderChitinTunic == null)
 			{
 				ringedSpiderChitinTunic = new ItemTemplate();
@@ -319,7 +319,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(ringedSpiderChitinTunic);
 			}
 
-			studdedSpiderEyeVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "studded_spider_eye_vest");
+			studdedSpiderEyeVest = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "studded_spider_eye_vest");
 			if (studdedSpiderEyeVest == null)
 			{
 				studdedSpiderEyeVest = new ItemTemplate();
@@ -367,7 +367,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(studdedSpiderEyeVest);
 			}
 
-			spiderEmblazonedTunic = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "spider_emblazoned_tunic");
+			spiderEmblazonedTunic = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "spider_emblazoned_tunic");
 			if (spiderEmblazonedTunic == null)
 			{
 				spiderEmblazonedTunic = new ItemTemplate();
@@ -414,7 +414,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(spiderEmblazonedTunic);
 			}
 
-			embossedSpiderTunic = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "embossed_spider_tunic");
+			embossedSpiderTunic = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "embossed_spider_tunic");
 			if (embossedSpiderTunic == null)
 			{
 				embossedSpiderTunic = new ItemTemplate();
@@ -462,7 +462,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(embossedSpiderTunic);
 			}
 
-			bloatedFang = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "bloated_spider_fang");
+			bloatedFang = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "bloated_spider_fang");
 			if (bloatedFang == null)
 			{
 				if (log.IsWarnEnabled)
@@ -483,7 +483,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(bloatedFang);
 			}
 
-			spiderChitin = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "arachneida_spider_chitin");
+			spiderChitin = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "arachneida_spider_chitin");
 			if (spiderChitin == null)
 			{
 				if (log.IsWarnEnabled)

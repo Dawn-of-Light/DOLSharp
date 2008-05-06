@@ -1733,10 +1733,10 @@ namespace DOL.GS
 		/// Loads the equipment template of this npc
 		/// </summary>
 		/// <param name="equipmentTemplateID">The template id</param>
-		public virtual void LoadEquipmentTemplateFromDatabase(string equipmentTemplateID)
+		public virtual void LoadEquipmentTemplateFromDatabase(UInt64 equipmentTemplateID)
 		{
 			EquipmentTemplateID = equipmentTemplateID;
-			if (EquipmentTemplateID != null && EquipmentTemplateID.Length > 0)
+			if (EquipmentTemplateID != 0)
 			{
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				if (template.LoadFromDatabase(EquipmentTemplateID))
@@ -2041,24 +2041,22 @@ namespace DOL.GS
 
 			#region Inventory
 			//Ok lets start loading the npc equipment - only if there is a value!
-			if (!Util.IsEmpty(template.Inventory))
+			if (template.Inventory.Count> 0)
 			{
 				bool equipHasItems = false;
 				GameNpcInventoryTemplate equip = new GameNpcInventoryTemplate();
 				//First let's try to reach the npcequipment table and load that!
 				//We use a ';' split to allow npctemplates to support more than one equipmentIDs
-				string[] equipIDs = template.Inventory.Split(';');
-				if (!template.Inventory.Contains(":"))
+				foreach (UInt64 inv in template.Inventory)
 				{
-					foreach (string str in equipIDs)
-					{
-						equipHasItems |= equip.LoadFromDatabase(str);
-					}
+					equipHasItems |= equip.LoadFromDatabase(inv);
 				}
+				
 
-				#region Legacy Equipment Code
+				#region Legacy Equipment Code - support has been removed.... convert manually
 				//Nope, nothing in the npcequipment table, lets do the crappy parsing
 				//This is legacy code
+            /*
 				if (!equipHasItems)
 				{
 					//Temp list to store our models
@@ -2094,8 +2092,9 @@ namespace DOL.GS
 						}
 					}
 				}
-				#endregion
-
+				
+             * */
+                #endregion
 				//We added some items - let's make it the new inventory
 				if (equipHasItems)
 				{
@@ -2148,11 +2147,11 @@ namespace DOL.GS
 		/// <summary>
 		/// Equipment templateID
 		/// </summary>
-		protected string m_equipmentTemplateID;
+		protected UInt64 m_equipmentTemplateID;
 		/// <summary>
 		/// The equipment template id of this npc
 		/// </summary>
-		public string EquipmentTemplateID
+		public UInt64 EquipmentTemplateID
 		{
 			get { return m_equipmentTemplateID; }
 			set { m_equipmentTemplateID = value; }

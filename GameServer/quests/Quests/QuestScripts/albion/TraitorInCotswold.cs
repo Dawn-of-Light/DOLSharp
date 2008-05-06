@@ -177,7 +177,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			necklaceOfDoppelganger = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "necklace_of_the_doppelganger");
+			necklaceOfDoppelganger = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "necklace_of_the_doppelganger");
 			if (necklaceOfDoppelganger == null)
 			{
 				if (log.IsWarnEnabled)
@@ -212,7 +212,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			fairyPlans = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ire_fairy_plans");
+			fairyPlans = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ire_fairy_plans");
 			if (fairyPlans == null)
 			{
 				if (log.IsWarnEnabled)
@@ -237,7 +237,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_boots");
+			recruitsBoots = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_studded_boots");
 			if (recruitsBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -287,7 +287,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsQuiltedBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_boots");
+			recruitsQuiltedBoots = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_quilted_boots");
 			if (recruitsQuiltedBoots == null)
 			{
 				recruitsQuiltedBoots = new ItemTemplate();

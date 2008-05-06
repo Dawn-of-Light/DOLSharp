@@ -183,7 +183,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			sephucothsHeart = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sephucoths_heart");
+			sephucothsHeart = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "sephucoths_heart");
 			if (sephucothsHeart == null)
 			{
 				sephucothsHeart = new ItemTemplate();
@@ -217,7 +217,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			polishedBone = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "polished_bone");
+			polishedBone = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "polished_bone");
 			if (polishedBone == null)
 			{
 				polishedBone = new ItemTemplate();
@@ -251,7 +251,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			fieryCrystalPendant = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "fiery_crystal_pendant");
+			fieryCrystalPendant = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "fiery_crystal_pendant");
 			if (fieryCrystalPendant == null)
 			{
 				fieryCrystalPendant = new ItemTemplate();

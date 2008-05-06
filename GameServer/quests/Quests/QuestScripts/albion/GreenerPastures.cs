@@ -182,7 +182,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			farmerAsmasMap = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "farmer_asma_map");
+			farmerAsmasMap = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "farmer_asma_map");
 			if (farmerAsmasMap == null)
 			{
 				farmerAsmasMap = new ItemTemplate();

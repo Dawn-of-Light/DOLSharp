@@ -261,7 +261,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineItems
 
-			wolfPeltCloak = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "wolf_pelt_cloak");
+			wolfPeltCloak = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "wolf_pelt_cloak");
 			if (wolfPeltCloak == null)
 			{
 				if (log.IsWarnEnabled)
@@ -302,7 +302,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(wolfPeltCloak);
 			}
 
-			wolfFur = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "wolf_fur");
+			wolfFur = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "wolf_fur");
 			if (wolfFur == null)
 			{
 				if (log.IsWarnEnabled)
@@ -323,7 +323,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(wolfFur);
 			}
 
-			wolfHeadToken = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "wolf_head_token");
+			wolfHeadToken = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "wolf_head_token");
 			if (wolfHeadToken == null)
 			{
 				if (log.IsWarnEnabled)

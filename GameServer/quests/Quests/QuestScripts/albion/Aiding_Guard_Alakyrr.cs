@@ -164,7 +164,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		enchanterdtenebrousflask = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "enchanterdtenebrousflask");
+		enchanterdtenebrousflask = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "enchanterdtenebrousflask");
 			if (enchanterdtenebrousflask == null)
 			{
 				enchanterdtenebrousflask = new ItemTemplate();
@@ -240,7 +240,7 @@ using DOL.AI.Brain;
 				if (SAVE_INTO_DATABASE)
 					GameServer.Database.AddNewObject(enchanterdtenebrousflask);
 				}
-			quarterfulltenebrousflask = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "quarterfulltenebrousflask");
+			quarterfulltenebrousflask = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "quarterfulltenebrousflask");
 			if (quarterfulltenebrousflask == null)
 			{
 				quarterfulltenebrousflask = new ItemTemplate();
@@ -316,7 +316,7 @@ using DOL.AI.Brain;
 				if (SAVE_INTO_DATABASE)
 					GameServer.Database.AddNewObject(quarterfulltenebrousflask);
 				}
-			halffulltenebrousflask = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "halffulltenebrousflask");
+			halffulltenebrousflask = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "halffulltenebrousflask");
 			if (halffulltenebrousflask == null)
 			{
 				halffulltenebrousflask = new ItemTemplate();
@@ -392,7 +392,7 @@ using DOL.AI.Brain;
 				if (SAVE_INTO_DATABASE)
 					GameServer.Database.AddNewObject(halffulltenebrousflask);
 				}
-			threequarterfulltenebrousflask = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "threequarterfulltenebrousflask");
+			threequarterfulltenebrousflask = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "threequarterfulltenebrousflask");
 			if (threequarterfulltenebrousflask == null)
 			{
 				threequarterfulltenebrousflask = new ItemTemplate();
@@ -468,7 +468,7 @@ using DOL.AI.Brain;
 				if (SAVE_INTO_DATABASE)
 					GameServer.Database.AddNewObject(threequarterfulltenebrousflask);
 				}
-			fullflaskoftenebrousessence = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "fullflaskoftenebrousessence");
+			fullflaskoftenebrousessence = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "fullflaskoftenebrousessence");
 			if (fullflaskoftenebrousessence == null)
 			{
 				fullflaskoftenebrousessence = new ItemTemplate();

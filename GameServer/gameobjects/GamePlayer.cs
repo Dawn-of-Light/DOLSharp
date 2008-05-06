@@ -8468,7 +8468,7 @@ namespace DOL.GS
 		/// </summary>
 		public UInt64 GuildID
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.GuildID : string.Empty; }
+            get { return PlayerCharacter != null ? PlayerCharacter.GuildID : 0; }
 			set { if (PlayerCharacter != null) PlayerCharacter.GuildID = value; }
 		}
 
@@ -10420,7 +10420,7 @@ namespace DOL.GS
 			#endregion
 
 			//Load the quests for this player
-			DBQuest[] quests = (DBQuest[])GameServer.Database.SelectObjects(typeof(DBQuest), "CharName ='" + GameServer.Database.Escape(Name) + "'");
+			DBQuest[] quests = (DBQuest[])GameServer.Database.SelectObjects(typeof(DBQuest), "CharName" ,Name);
 			foreach (DBQuest dbquest in quests)
 			{
 				AbstractQuest quest = AbstractQuest.LoadFromDatabase(this, dbquest);
@@ -10434,7 +10434,7 @@ namespace DOL.GS
 			}
 
 			// Load Task object of player ...
-			DBTask[] tasks = (DBTask[])GameServer.Database.SelectObjects(typeof(DBTask), "CharName ='" + GameServer.Database.Escape(Name) + "'");
+			DBTask[] tasks = (DBTask[])GameServer.Database.SelectObjects(typeof(DBTask), "CharName", Name);
 			if (tasks.Length == 1)
 			{
 				m_task = AbstractTask.LoadFromDatabase(this, tasks[0]);
@@ -10446,7 +10446,7 @@ namespace DOL.GS
 			}
 
 			// Load ML steps of player ...
-			DBCharacterXMasterLevel[] mlsteps = (DBCharacterXMasterLevel[])GameServer.Database.SelectObjects(typeof(DBCharacterXMasterLevel), "CharName ='" + GameServer.Database.Escape(Name) + "'");
+			DBCharacterXMasterLevel[] mlsteps = (DBCharacterXMasterLevel[])GameServer.Database.SelectObjects(typeof(DBCharacterXMasterLevel), "CharName",Name);
 			if (mlsteps.Length > 0)
 			{
 				foreach (DBCharacterXMasterLevel mlstep in mlsteps)
@@ -11435,7 +11435,7 @@ namespace DOL.GS
 		/// </summary>
 		public void CraftItem(ushort itemID)
 		{
-			DBCraftedItem craftitem = (DBCraftedItem)GameServer.Database.SelectObject(typeof(DBCraftedItem), "CraftedItemID ='" + GameServer.Database.Escape(itemID.ToString()) + "'");
+			DBCraftedItem craftitem = (DBCraftedItem)GameServer.Database.SelectObject(typeof(DBCraftedItem), "CraftedItemID", itemID.ToString());
 			if (craftitem != null && craftitem.ItemTemplate != null && craftitem.RawMaterials != null)
 			{
 				AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum((eCraftingSkill)craftitem.CraftingSkillType);

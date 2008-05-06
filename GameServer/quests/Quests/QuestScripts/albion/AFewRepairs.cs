@@ -218,7 +218,7 @@ namespace DOL.GS.Quests.Albion
 
 
 
-            elderWood = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "elder_wood");
+            elderWood = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "elder_wood");
             if (elderWood == null)
             {
                 if (log.IsWarnEnabled)
@@ -240,7 +240,7 @@ namespace DOL.GS.Quests.Albion
                     GameServer.Database.AddNewObject(elderWood);
             }
 
-            boogeyTeeth = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "boogey_teeth");
+            boogeyTeeth = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "boogey_teeth");
             if (boogeyTeeth == null)
             {
                 if (log.IsWarnEnabled)

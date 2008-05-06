@@ -205,7 +205,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		emptybottle = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "emptybottle");
+		emptybottle = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "emptybottle");
 			if (emptybottle == null)
 			{
 				emptybottle = new ItemTemplate();
@@ -281,7 +281,7 @@ using DOL.AI.Brain;
 				if (SAVE_INTO_DATABASE)
 					GameServer.Database.AddNewObject(emptybottle);
 				}
-			bottleofmead = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "bottleofmead");
+			bottleofmead = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "bottleofmead");
 			if (bottleofmead == null)
 			{
 				bottleofmead = new ItemTemplate();

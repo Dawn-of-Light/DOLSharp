@@ -237,7 +237,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineItems
 
-			queenTatianasHead = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "queen_tatianas_head");
+			queenTatianasHead = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "queen_tatianas_head");
 			if (queenTatianasHead == null)
 			{
 				queenTatianasHead = new ItemTemplate();
@@ -262,7 +262,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsGauntlets = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_gauntlets");
+			recruitsGauntlets = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_studded_gauntlets");
 			if (recruitsGauntlets == null)
 			{
 				recruitsGauntlets = new ItemTemplate();
@@ -309,7 +309,7 @@ namespace DOL.GS.Quests.Albion
 			}
 
 			// item db check
-			recruitsGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_gloves");
+			recruitsGloves = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_quilted_gloves");
 			if (recruitsGloves == null)
 			{
 				recruitsGloves = new ItemTemplate();
@@ -355,7 +355,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(recruitsGloves);
 			}
 
-			recruitsJewel = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_cloudy_jewel");
+			recruitsJewel = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_cloudy_jewel");
 			if (recruitsJewel == null)
 			{
 				recruitsJewel = new ItemTemplate();
@@ -394,7 +394,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(recruitsJewel);
 			}
 
-			recruitsJewelCloth = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_cloudy_jewel_cloth");
+			recruitsJewelCloth = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_cloudy_jewel_cloth");
 			if (recruitsJewelCloth == null)
 			{
 				recruitsJewelCloth = new ItemTemplate();
@@ -439,7 +439,7 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddNewObject(recruitsJewelCloth);
 			}
 
-			recruitsBracer = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_golden_bracer");
+			recruitsBracer = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_golden_bracer");
 			if (recruitsBracer == null)
 			{
 				recruitsBracer = new ItemTemplate();

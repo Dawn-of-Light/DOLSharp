@@ -205,7 +205,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		rattlingskeletonpendant = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "rattlingskeletonpendant");
+		rattlingskeletonpendant = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "rattlingskeletonpendant");
 			if (rattlingskeletonpendant == null)
 			{
 				rattlingskeletonpendant = new ItemTemplate();
@@ -281,7 +281,7 @@ using DOL.AI.Brain;
 				if (SAVE_INTO_DATABASE)
 					GameServer.Database.AddNewObject(rattlingskeletonpendant);
 				}
-			giftandnoteforprugar = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "giftandnoteforprugar");
+			giftandnoteforprugar = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "giftandnoteforprugar");
 			if (giftandnoteforprugar == null)
 			{
 				giftandnoteforprugar = new ItemTemplate();

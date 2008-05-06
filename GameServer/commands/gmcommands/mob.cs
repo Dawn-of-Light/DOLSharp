@@ -1281,7 +1281,7 @@ namespace DOL.GS.Commands
                                 DisplayMessage(client, "You cannot add the " + lootTemplateID + " to the " + targetMob.Name + " because the item does not exist.");
                                 return;
                             }
-                            DatabaseObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(name) + "' AND ItemTemplateID = '" + GameServer.Database.Escape(lootTemplateID) + "'");
+                            DBLootTemplate[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(name) + "' AND ItemTemplateID = '" + GameServer.Database.Escape(lootTemplateID) + "'");
                             if (template != null)
                             {
                                 foreach (DatabaseObject loot in template)
@@ -1382,7 +1382,7 @@ namespace DOL.GS.Commands
                         {
                             ArrayList text = new ArrayList();
                             text.Add(".");
-                            DatabaseObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(targetMob.Name) + "'");
+                            DatabaseObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate),"TemplateName",targetMob.Name);
 
                             foreach (DBLootTemplate loot in template)
                             {

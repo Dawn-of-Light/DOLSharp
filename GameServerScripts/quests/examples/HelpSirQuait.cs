@@ -197,7 +197,7 @@ using DOL.AI.Brain;
 
 		#region defineItems
 
-	    SirQuaitsSword = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SirQuaitsSword");
+	    SirQuaitsSword = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "SirQuaitsSword");
 		if (SirQuaitsSword == null)
 		{
 			SirQuaitsSword = new ItemTemplate();

@@ -79,7 +79,7 @@ namespace DOL.GS.Quests.Hibernia
             #region defineItems
 
             // item db check
-            RecruitsCloak = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_cloak");
+            RecruitsCloak = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "k109_recruits_cloak");
             if (RecruitsCloak == null)
             {
                 RecruitsCloak = new ItemTemplate();
@@ -113,7 +113,7 @@ namespace DOL.GS.Quests.Hibernia
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(RecruitsCloak);
             }
-            LetterToEpona = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "letter_to_epona");
+            LetterToEpona = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "letter_to_epona");
             if (LetterToEpona == null)
             {
                 LetterToEpona = new ItemTemplate();

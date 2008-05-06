@@ -178,7 +178,7 @@ namespace DOL.GS.Quests.Midgard
 			#region defineItems
 
 			// item db check
-			necklaceOfDoppelganger = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "necklace_of_the_doppelganger");
+			necklaceOfDoppelganger = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "necklace_of_the_doppelganger");
 			if (necklaceOfDoppelganger == null)
 			{
 				if (log.IsWarnEnabled)
@@ -213,7 +213,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			askefruerPlans = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "askefruer_plans");
+			askefruerPlans = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "askefruer_plans");
 			if (askefruerPlans == null)
 			{
 				if (log.IsWarnEnabled)
@@ -238,7 +238,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_boots_mid");
+			recruitsBoots = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_studded_boots_mid");
 			if (recruitsBoots == null)
 			{
 				recruitsBoots = new ItemTemplate();
@@ -289,7 +289,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsQuiltedBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_boots");
+			recruitsQuiltedBoots = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_quilted_boots");
 			if (recruitsQuiltedBoots == null)
 			{
 				recruitsQuiltedBoots = new ItemTemplate();

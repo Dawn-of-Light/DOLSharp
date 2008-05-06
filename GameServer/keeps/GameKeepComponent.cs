@@ -501,7 +501,7 @@ namespace DOL.GS.Keeps
 			base.Delete();
 			DBKeepComponent obj = null;
 			if (this.InternalID != null)
-				obj = (DBKeepComponent)GameServer.Database.FindObjectByKey(typeof(DBKeepComponent), this.InternalID);
+				obj = (DBKeepComponent)GameServer.Database.GetDatabaseObjectFromID(this.InternalID);
 			if (obj != null)
 				GameServer.Database.DeleteObject(obj);
 			//todo find a packet to remove the keep

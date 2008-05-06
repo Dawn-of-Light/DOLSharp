@@ -88,7 +88,7 @@ namespace DOL.GS
 				//Range
 				case SubPetType.Archer:
 					controlledBrain = new BDArcherBrain(owner);
-					ItemTemplate temp = GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BD_Archer_Distance_bow") as ItemTemplate;
+					ItemTemplate temp = GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "BD_Archer_Distance_bow") as ItemTemplate;
 					if (temp == null)
 						log.Error("Unable to find Bonedancer Archer's Bow");
 					else

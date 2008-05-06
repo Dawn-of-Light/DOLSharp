@@ -203,7 +203,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		slimyswampgooskin = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "slimyswampgooskin");
+		slimyswampgooskin = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "slimyswampgooskin");
 			if (slimyswampgooskin == null)
 			{
 				slimyswampgooskin = new ItemTemplate();

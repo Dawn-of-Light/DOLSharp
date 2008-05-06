@@ -229,7 +229,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 */
 
-			askefruerWings = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "askefruer_wings");
+			askefruerWings = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "askefruer_wings");
 			if (askefruerWings == null)
 			{
 				askefruerWings = new ItemTemplate();
@@ -253,7 +253,7 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(askefruerWings);
 			}
 
-			dustyOldMap = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "dusty_old_map");
+			dustyOldMap = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "dusty_old_map");
 			if (dustyOldMap == null)
 			{
 				dustyOldMap = new ItemTemplate();
@@ -279,7 +279,7 @@ namespace DOL.GS.Quests.Midgard
 
 
 			// item db check
-			recruitsArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_arms_mid");
+			recruitsArms = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_studded_arms_mid");
 			if (recruitsArms == null)
 			{
 				recruitsArms = new ItemTemplate();
@@ -325,7 +325,7 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(recruitsArms);
 			}
 
-			recruitsSleeves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_sleeves");
+			recruitsSleeves = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_quilted_sleeves");
 			if (recruitsSleeves == null)
 			{
 				recruitsSleeves = new ItemTemplate();

@@ -237,7 +237,7 @@ namespace DOL.GS.Quests.Midgard
 
 			#region defineItems
 
-			queenVuunaHead = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "queen_vuuna_head");
+			queenVuunaHead = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "queen_vuuna_head");
 			if (queenVuunaHead == null)
 			{
 				queenVuunaHead = new ItemTemplate();
@@ -262,7 +262,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsGauntlets = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_gauntlets_mid");
+			recruitsGauntlets = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_studded_gauntlets_mid");
 			if (recruitsGauntlets == null)
 			{
 				recruitsGauntlets = new ItemTemplate();
@@ -309,7 +309,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_gloves");
+			recruitsGloves = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_quilted_gloves");
 			if (recruitsGloves == null)
 			{
 				recruitsGloves = new ItemTemplate();
@@ -355,7 +355,7 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(recruitsGloves);
 			}
 
-			recruitsJewel = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_tarnished_bauble");
+			recruitsJewel = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_tarnished_bauble");
 			if (recruitsJewel == null)
 			{
 				recruitsJewel = new ItemTemplate();
@@ -397,7 +397,7 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(recruitsJewel);
 			}
 
-			recruitsJewelCloth = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_cloudy_jewel_cloth");
+			recruitsJewelCloth = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_cloudy_jewel_cloth");
 			if (recruitsJewelCloth == null)
 			{
 				recruitsJewelCloth = new ItemTemplate();
@@ -442,7 +442,7 @@ namespace DOL.GS.Quests.Midgard
 					GameServer.Database.AddNewObject(recruitsJewelCloth);
 			}
 
-			recruitsBracer = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_golden_bracer");
+			recruitsBracer = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_golden_bracer");
 			if (recruitsBracer == null)
 			{
 				recruitsBracer = new ItemTemplate();

@@ -20,7 +20,7 @@ namespace DOL.GS.Spells
         public SummonWoodSpellHandler(GameLiving caster, Spell spell, SpellLine line)
             : base(caster, spell, line)
         {
-            ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "mysticwood_wooden_boards");
+            ItemTemplate template = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "mysticwood_wooden_boards");
             if (template != null)
             {
                 item = new InventoryItem();

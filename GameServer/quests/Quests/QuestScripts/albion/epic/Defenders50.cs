@@ -160,7 +160,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineItems
 
-			sealed_pouch = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "sealed_pouch");
+			sealed_pouch = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "sealed_pouch");
 			if (sealed_pouch == null)
 			{
 				if (log.IsWarnEnabled)
@@ -188,7 +188,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			// end item
 			ItemTemplate i = null;
-			ScoutEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ScoutEpicBoots");
+			ScoutEpicBoots = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ScoutEpicBoots");
 			if (ScoutEpicBoots == null)
 			{
 				i = new ItemTemplate();
@@ -230,7 +230,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			//end item
 			//Brigandine of Vigilant Defense  Coif
-			ScoutEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ScoutEpicHelm");
+			ScoutEpicHelm = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ScoutEpicHelm");
 			if (ScoutEpicHelm == null)
 			{
 				i = new ItemTemplate();
@@ -273,7 +273,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			//end item
 			//Brigandine of Vigilant Defense  Gloves
-			ScoutEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ScoutEpicGloves");
+			ScoutEpicGloves = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ScoutEpicGloves");
 			if (ScoutEpicGloves == null)
 			{
 				i = new ItemTemplate();
@@ -316,7 +316,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//Brigandine of Vigilant Defense  Hauberk
-			ScoutEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ScoutEpicVest");
+			ScoutEpicVest = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ScoutEpicVest");
 			if (ScoutEpicVest == null)
 			{
 				i = new ItemTemplate();
@@ -358,7 +358,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//Brigandine of Vigilant Defense  Legs
-			ScoutEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ScoutEpicLegs");
+			ScoutEpicLegs = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ScoutEpicLegs");
 			if (ScoutEpicLegs == null)
 			{
 				i = new ItemTemplate();
@@ -399,7 +399,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//Brigandine of Vigilant Defense  Sleeves
-			ScoutEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ScoutEpicArms");
+			ScoutEpicArms = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ScoutEpicArms");
 			if (ScoutEpicArms == null)
 			{
 				i = new ItemTemplate();
@@ -443,7 +443,7 @@ namespace DOL.GS.Quests.Albion
 			//Scout Epic Sleeves End
 
 			//Armsman Epic Boots Start
-			ArmsmanEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ArmsmanEpicBoots");
+			ArmsmanEpicBoots = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ArmsmanEpicBoots");
 			if (ArmsmanEpicBoots == null)
 			{
 				i = new ItemTemplate();
@@ -484,7 +484,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			//end item
 			//of the Stalwart Arm Coif
-			ArmsmanEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ArmsmanEpicHelm");
+			ArmsmanEpicHelm = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ArmsmanEpicHelm");
 			if (ArmsmanEpicHelm == null)
 			{
 				i = new ItemTemplate();
@@ -527,7 +527,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			//end item
 			//of the Stalwart Arm Gloves
-			ArmsmanEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ArmsmanEpicGloves");
+			ArmsmanEpicGloves = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ArmsmanEpicGloves");
 			if (ArmsmanEpicGloves == null)
 			{
 				i = new ItemTemplate();
@@ -569,7 +569,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of the Stalwart Arm Hauberk
-			ArmsmanEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ArmsmanEpicVest");
+			ArmsmanEpicVest = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ArmsmanEpicVest");
 			if (ArmsmanEpicVest == null)
 			{
 				i = new ItemTemplate();
@@ -614,7 +614,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of the Stalwart Arm Legs
-			ArmsmanEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ArmsmanEpicLegs");
+			ArmsmanEpicLegs = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ArmsmanEpicLegs");
 			if (ArmsmanEpicLegs == null)
 			{
 				i = new ItemTemplate();
@@ -656,7 +656,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of the Stalwart Arm Sleeves
-			ArmsmanEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ArmsmanEpicArms");
+			ArmsmanEpicArms = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "ArmsmanEpicArms");
 			if (ArmsmanEpicArms == null)
 			{
 				i = new ItemTemplate();
@@ -697,7 +697,7 @@ namespace DOL.GS.Quests.Albion
 				ArmsmanEpicArms = i;
 
 			}
-			FriarEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "FriarEpicBoots");
+			FriarEpicBoots = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "FriarEpicBoots");
 			if (FriarEpicBoots == null)
 			{
 				i = new ItemTemplate();
@@ -740,7 +740,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			//end item
 			//Prayer-bound Coif
-			FriarEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "FriarEpicHelm");
+			FriarEpicHelm = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "FriarEpicHelm");
 			if (FriarEpicHelm == null)
 			{
 				i = new ItemTemplate();
@@ -783,7 +783,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			//end item
 			//Prayer-bound Gloves
-			FriarEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "FriarEpicGloves");
+			FriarEpicGloves = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "FriarEpicGloves");
 			if (FriarEpicGloves == null)
 			{
 				i = new ItemTemplate();
@@ -825,7 +825,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//Prayer-bound Hauberk
-			FriarEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "FriarEpicVest");
+			FriarEpicVest = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "FriarEpicVest");
 			if (FriarEpicVest == null)
 			{
 				i = new ItemTemplate();
@@ -868,7 +868,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//Prayer-bound Legs
-			FriarEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "FriarEpicLegs");
+			FriarEpicLegs = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "FriarEpicLegs");
 			if (FriarEpicLegs == null)
 			{
 				i = new ItemTemplate();
@@ -910,7 +910,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//Prayer-bound Sleeves
-			FriarEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "FriarEpicArms");
+			FriarEpicArms = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "FriarEpicArms");
 			if (FriarEpicArms == null)
 			{
 				i = new ItemTemplate();
@@ -951,7 +951,7 @@ namespace DOL.GS.Quests.Albion
 				FriarEpicArms = i;
 
 			}
-			TheurgistEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "TheurgistEpicBoots");
+			TheurgistEpicBoots = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "TheurgistEpicBoots");
 			if (TheurgistEpicBoots == null)
 			{
 				i = new ItemTemplate();
@@ -994,7 +994,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			//end item
 			//of Shielding Power Coif
-			TheurgistEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "TheurgistEpicHelm");
+			TheurgistEpicHelm = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "TheurgistEpicHelm");
 			if (TheurgistEpicHelm == null)
 			{
 				i = new ItemTemplate();
@@ -1037,7 +1037,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			//end item
 			//of Shielding Power Gloves
-			TheurgistEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "TheurgistEpicGloves");
+			TheurgistEpicGloves = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "TheurgistEpicGloves");
 			if (TheurgistEpicGloves == null)
 			{
 				i = new ItemTemplate();
@@ -1079,7 +1079,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of Shielding Power Hauberk
-			TheurgistEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "TheurgistEpicVest");
+			TheurgistEpicVest = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "TheurgistEpicVest");
 			if (TheurgistEpicVest == null)
 			{
 				i = new ItemTemplate();
@@ -1119,7 +1119,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of Shielding Power Legs
-			TheurgistEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "TheurgistEpicLegs");
+			TheurgistEpicLegs = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "TheurgistEpicLegs");
 			if (TheurgistEpicLegs == null)
 			{
 				i = new ItemTemplate();
@@ -1161,7 +1161,7 @@ namespace DOL.GS.Quests.Albion
 
 			}
 			//of Shielding Power Sleeves
-			TheurgistEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "TheurgistEpicArms");
+			TheurgistEpicArms = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "TheurgistEpicArms");
 			if (TheurgistEpicArms == null)
 			{
 				i = new ItemTemplate();
@@ -1199,12 +1199,12 @@ namespace DOL.GS.Quests.Albion
 
 			}
 
-			MaulerEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicBoots");
-			MaulerEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicHelm");
-			MaulerEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicGloves");
-			MaulerEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicVest");
-			MaulerEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicLegs");
-			MaulerEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicArms");
+			MaulerEpicBoots = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "NewMaulerEpicBoots");
+			MaulerEpicHelm = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "NewMaulerEpicHelm");
+			MaulerEpicGloves = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "NewMaulerEpicGloves");
+			MaulerEpicVest = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "NewMaulerEpicVest");
+			MaulerEpicLegs = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "NewMaulerEpicLegs");
+			MaulerEpicArms = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "NewMaulerEpicArms");
 			//Item Descriptions End
 
 			#endregion

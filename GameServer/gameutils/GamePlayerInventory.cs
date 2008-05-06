@@ -68,7 +68,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="inventoryID">The inventory ID</param>
 		/// <returns>success</returns>
-		public override bool LoadFromDatabase(string inventoryID)
+		public override bool LoadFromDatabase(UInt64 inventoryID)
 		{
             //ArtifactManager.LoadArtifacts(); //loading artifacts
             lock (m_items.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
@@ -140,7 +140,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="inventoryID">The inventory ID</param>
 		/// <returns>success</returns>
-		public override bool SaveIntoDatabase(string inventoryID)
+		public override bool SaveIntoDatabase(UInt64 inventoryID)
 		{
 			lock (m_items.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
@@ -160,7 +160,7 @@ namespace DOL.GS
 							}
 							if (currentItem.OwnerID != m_player.InternalID)
 							{
-								string itemOwner = (currentItem.OwnerID == null ? "(null)" : currentItem.OwnerID);
+								string itemOwner = (currentItem.OwnerID == null ? 0 : currentItem.OwnerID);
 								if (log.IsErrorEnabled)
 									log.Error("item owner id (" + itemOwner + ") not equals player ID (" + m_player.InternalID + "); item ID=" + currentItem.ObjectId);
 								continue;

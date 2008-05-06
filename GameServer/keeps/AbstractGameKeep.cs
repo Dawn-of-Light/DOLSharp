@@ -383,11 +383,11 @@ namespace DOL.GS.Keeps
 			get	{ return (eRealm)DBKeep.OriginalRealm; }
 		}
 
-		private string m_InternalID;
+		private UInt64 m_InternalID;
 		/// <summary>
 		/// The Keep Internal ID
 		/// </summary>
-		public string InternalID
+		public UInt64 InternalID
 		{
 			get { return m_InternalID; }
 			set { m_InternalID = value; }

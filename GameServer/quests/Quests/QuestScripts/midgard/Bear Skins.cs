@@ -153,7 +153,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		smallmaulerskin = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "smallmaulerskin");
+		smallmaulerskin = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "smallmaulerskin");
 			if (smallmaulerskin == null)
 			{
 				smallmaulerskin = new ItemTemplate();

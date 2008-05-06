@@ -79,7 +79,7 @@ namespace DOL.GS.Quests.Albion
             #region defineItems
 
             // item db check
-            RecruitsShortSword = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_short_sword");
+            RecruitsShortSword = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "k109_recruits_short_sword");
             if (RecruitsShortSword == null)
             {
                 RecruitsShortSword = new ItemTemplate();
@@ -126,7 +126,7 @@ namespace DOL.GS.Quests.Albion
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(RecruitsShortSword);
             }
-            RecruitsDirk = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_dirk");
+            RecruitsDirk = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "k109_recruits_dirk");
             if (RecruitsDirk == null)
             {
                 RecruitsDirk = new ItemTemplate();
@@ -173,7 +173,7 @@ namespace DOL.GS.Quests.Albion
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(RecruitsDirk);
             }
-            RecruitsMace = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_mace");
+            RecruitsMace = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "k109_recruits_mace");
             if (RecruitsMace == null)
             {
                 RecruitsMace = new ItemTemplate();
@@ -220,7 +220,7 @@ namespace DOL.GS.Quests.Albion
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(RecruitsMace);
             }
-            RecruitsStaff = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_staff");
+            RecruitsStaff = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "k109_recruits_staff");
             if (RecruitsStaff == null)
             {
                 RecruitsStaff = new ItemTemplate();

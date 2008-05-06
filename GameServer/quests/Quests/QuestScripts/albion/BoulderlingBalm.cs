@@ -189,7 +189,7 @@ namespace DOL.GS.Quests.Albion
 
 
 
-            boulderlingRemains = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "boulderling_remains");
+            boulderlingRemains = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "boulderling_remains");
             if (boulderlingRemains == null)
             {
                 if (log.IsWarnEnabled)

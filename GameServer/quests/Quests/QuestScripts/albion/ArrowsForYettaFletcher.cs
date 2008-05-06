@@ -172,7 +172,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			bundleOfDecayedZombieLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "bundle_of_decayed_zombie_legs");
+			bundleOfDecayedZombieLegs = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "bundle_of_decayed_zombie_legs");
 			if (bundleOfDecayedZombieLegs == null)
 			{
 				bundleOfDecayedZombieLegs = new ItemTemplate();

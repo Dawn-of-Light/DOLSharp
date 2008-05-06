@@ -77,7 +77,7 @@ namespace DOL.GS.Quests.Albion
             #region defineItems
 
             // item db check
-            lightredclothdye = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "light_red_cloth_dye");
+            lightredclothdye = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "light_red_cloth_dye");
             if (lightredclothdye == null)
             {
                 lightredclothdye = new ItemTemplate();
@@ -110,7 +110,7 @@ namespace DOL.GS.Quests.Albion
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(lightredclothdye);
             }
-            lightredleatherdye = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "light_red_leather_dye");
+            lightredleatherdye = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "light_red_leather_dye");
             if (lightredleatherdye == null)
             {
                 lightredleatherdye = new ItemTemplate();
@@ -143,7 +143,7 @@ namespace DOL.GS.Quests.Albion
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(lightredleatherdye);
             }
-            lightredenamel = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "light_red_enamel");
+            lightredenamel = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "light_red_enamel");
             if (lightredenamel == null)
             {
                 lightredenamel = new ItemTemplate();
