@@ -81,7 +81,8 @@ namespace DOL.GS.Spells
             {
                 RealmAbilities.L3RAPropertyEnhancer ra = Caster.GetAbility(typeof(RealmAbilities.ViperAbility)) as RealmAbilities.L3RAPropertyEnhancer;
                 if (ra != null)
-                    ad.Damage *= 1 + (ra.Amount / 100);
+                    int additional =  (int)((float)ad.Damage * ((float)ra.Amount / 100));
+                    ad.Damage += additional; 
             }
             			
 			GameSpellEffect iWarLordEffect = SpellHandler.FindEffectOnTarget(target, "CleansingAura");
