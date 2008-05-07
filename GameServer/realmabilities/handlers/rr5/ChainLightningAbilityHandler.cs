@@ -16,68 +16,125 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Collections;
-using System.Reflection;
+
+using System;
 using DOL.Database;
-using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
-using log4net;
+using DOL.GS.PacketHandler;
+using DOL.GS.ServerRules;
 
 namespace DOL.GS.RealmAbilities
 {
-	//http://daocpedia.de/index.php/Kettenblitz
-	public class ChainLightningAbilityHandler : RR5RealmAbility
-	{
-		public ChainLightningAbilityHandler(DBAbility dba, int level) : base(dba, level) { }
+    /// <summary>
+    /// Chain Lightning RA (Thane)
+    /// </summary>
+    public class ChainLightningAbility : RR5RealmAbility
+    {
+        public ChainLightningAbility(DBAbility dba, int level) : base(dba, level) { }
 
-		const int m_reuseTime = 600;
-		const int m_range = 1875;
-		const ushort m_spellID = 0;
+        private double modifier;
+        private int damage;
+        private int resist;
+        private int basedamage;
+        /// <summary>
+        /// Action
+        /// </summary>
+        /// <param name="living"></param>
+        public override void Execute(GameLiving living)
+        {
+            if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
 
-		/// <summary>
-		/// Execute engage ability
-		/// </summary>
-		public override void Execute(GameLiving living)
-		{
-			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
+            bool deactivate = false;
+            AbstractServerRules rules = GameServer.ServerRules as AbstractServerRules;
+            GamePlayer player = living as GamePlayer;
+            GamePlayer target = living.TargetObject as GamePlayer;
+            if (player.TargetObject == null || target == null)
+            {
+                player.Out.SendMessage("You have no target!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                return;
+            }
+            if (!GameServer.ServerRules.IsAllowedToAttack(living, target, true))
+            {
+                player.Out.SendMessage("You must select an enemy target!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                return;
+            }
 
-			if (living.TargetObject == null || !(living.TargetObject is GameLiving) || !GameServer.ServerRules.IsAllowedToAttack(living, living.TargetObject as GameLiving, true))
-			{
-				if (living is GamePlayer)
-					(living as GamePlayer).Out.SendMessage("You cannot use this ability on this target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
-			int maxRange = (int)(m_range * living.GetModified(eProperty.SpellRange) * 0.01);
-			if (!WorldMgr.CheckDistance(living, living.TargetObject, maxRange))
-			{
-				if (living is GamePlayer)
-					(living as GamePlayer).Out.SendMessage(living.TargetObject.Name + " is too far away!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
+            if (WorldMgr.GetDistance(living, target) > 1500 * living.GetModified(eProperty.SpellRange) * 0.01)
+            {
+                Message.ChatToOthers(living, "You are too far away from your target to use this ability!", eChatType.CT_SpellResisted);
+                return;
+            }
+            SendCasterSpellEffectAndCastMessage(living, 3505, true);
+            DamageTarget(target, living, 0);
+            deactivate = true;
+            GamePlayer m_oldtarget = target;
+            GamePlayer m_newtarget = null;
+            for (int x = 1; x < 5; x++)
+            {
+                if (m_newtarget != null)
+                    m_oldtarget = m_newtarget;
+                foreach (GamePlayer p in m_oldtarget.GetPlayersInRadius(500))
+                {
+                    if (p != m_oldtarget && p != living && GameServer.ServerRules.IsAllowedToAttack(living, p, true))
+                    {
+                        DamageTarget(p, living, x);
+                        m_newtarget = p;
+                        break;
+                    }
+                }
+            }
+            if(deactivate)
+            DisableSkill(living);
+        }
+        private void DamageTarget(GameLiving target, GameLiving caster, double counter)
+        {
+            int level = caster.GetModifiedSpecLevel("Stormcalling");
+            if (level > 50)
+                level = 50;
+            modifier = 0.5 + (level * 0.01) * Math.Pow(0.75, counter);
+            basedamage = (int)(450 * modifier);
+            resist = basedamage * target.GetResist(eDamageType.Energy) / -100;
+            damage = basedamage + resist;
 
-			SpellLine abilitiesLine = SkillBase.GetSpellLine(GlobalSpellsLines.Character_Abilities);
-			if (abilitiesLine != null)
-			{
-				IList spells = SkillBase.GetSpellList(abilitiesLine.KeyName);
-				if (spells != null)
-				{
-					foreach (Spell spell in spells)
-					{
-						if (spell.ID == m_spellID)
-						{
-							living.CastSpell(spell, abilitiesLine);
-							living.DisableSkill(this, m_reuseTime * 1000);
-							break;
-						}
-					}
-				}
-				else
-					log.Warn("Chain Lightning Spell not found");
-			}
-			else
-				log.Warn("Chain Lightning SpellLine not found");
+            GamePlayer player = caster as GamePlayer;
+            if (player != null)
+                player.Out.SendMessage("You hit " + target.Name + " for " + damage + "(" + resist + ") points of damage!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 
+            GamePlayer targetPlayer = target as GamePlayer;
+            if (targetPlayer != null)
+            {
+                if (targetPlayer.IsStealthed)
+                    targetPlayer.Stealth(false);
+            }
 
-		}
-	}
+            foreach (GamePlayer p in target.GetPlayersInRadius(false, WorldMgr.VISIBILITY_DISTANCE))
+            {
+                p.Out.SendSpellEffectAnimation(caster, target, 3505, 0, false, 1);
+                p.Out.SendCombatAnimation(caster, target, 0, 0, 0, 0, 0x14, target.HealthPercent);
+            }
+
+            //target.TakeDamage(caster, eDamageType.Spirit, damage, 0);
+            AttackData ad = new AttackData();
+            ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
+            ad.Attacker = caster;
+            ad.Target = target;
+            ad.DamageType = eDamageType.Energy;
+            ad.Damage = damage;
+            target.OnAttackedByEnemy(ad);
+            caster.DealDamage(ad);
+        }
+        public override int GetReUseDelay(int level)
+        {
+            return 600;
+        }
+        public override void AddEffectsInfo(System.Collections.IList list)
+        {
+            list.Add("Casts a lightning bolt at the enemy target and hits up to 5 targets. If there is only one target available, the spell will hit once. If there are multiple targets, the spell has a chance to jump from target to target and back to the prior target. With each jump, the damage of the spell is reduced by 25%.");
+            list.Add("");
+            list.Add("Range: 1500");
+            list.Add("Target: Realm Enemy");
+            list.Add("Casting time: instant");
+        }
+
+    }
 }
