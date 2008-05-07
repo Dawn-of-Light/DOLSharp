@@ -1677,7 +1677,7 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		protected virtual double CalculateAreaVariance(int distance, int radius)
 		{
-			return (double)(distance / radius);
+			return ((double)distance / (double)radius);
 		}
 
 		/// <summary>
