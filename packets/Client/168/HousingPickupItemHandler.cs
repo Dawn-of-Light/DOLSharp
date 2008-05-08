@@ -89,6 +89,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						InventoryItem item = new InventoryItem();
 						item.CopyFrom(((IndoorItem) house.IndoorItems[(position)]).BaseItem);
+						if (GetItemBack(item) == true)
+                        {
 						if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 						{
 							if (method == 2)
@@ -100,6 +102,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 							client.Player.Out.SendMessage("You need place in your inventory !", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 1;
 						}
+						}
+						else
+                            client.Player.Out.SendMessage("The " + item.Name + " is cleared from the wall surface.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					else
 						if (method == 2)
@@ -122,5 +127,41 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 			return 1;
 		}
+		
+		private bool GetItemBack(InventoryItem item)
+        {
+            #region item types
+            switch (item.Object_Type)
+            {
+                case (int)eObjectType.Axe:
+                case (int)eObjectType.Blades:
+                case (int)eObjectType.Blunt:
+                case (int)eObjectType.CelticSpear:
+                case (int)eObjectType.CompositeBow:
+                case (int)eObjectType.Crossbow:
+                case (int)eObjectType.Flexible:
+                case (int)eObjectType.Hammer:
+                case (int)eObjectType.HandToHand:
+                case (int)eObjectType.LargeWeapons:
+                case (int)eObjectType.LeftAxe:
+                case (int)eObjectType.Longbow:
+                case (int)eObjectType.MaulerStaff:
+                case (int)eObjectType.Piercing:
+                case (int)eObjectType.PolearmWeapon:
+                case (int)eObjectType.RecurvedBow:
+                case (int)eObjectType.Scythe:
+                case (int)eObjectType.Shield:
+                case (int)eObjectType.SlashingWeapon:
+                case (int)eObjectType.Spear:
+                case (int)eObjectType.Staff:
+                case (int)eObjectType.Sword:
+                case (int)eObjectType.Thrown:
+                case (int)eObjectType.ThrustWeapon:
+                case (int)eObjectType.TwoHandedWeapon:
+                    return false;
+                default: return true;
+            }
+            #endregion
+        }
 	}
 }
