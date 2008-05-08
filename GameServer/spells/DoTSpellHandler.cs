@@ -80,9 +80,11 @@ namespace DOL.GS.Spells
             if (this.SpellLine.KeyName == GlobalSpellsLines.Mundane_Poisons)
             {
                 RealmAbilities.L3RAPropertyEnhancer ra = Caster.GetAbility(typeof(RealmAbilities.ViperAbility)) as RealmAbilities.L3RAPropertyEnhancer;
-                if (ra != null)
-                    int additional =  (int)((float)ad.Damage * ((float)ra.Amount / 100));
-                    ad.Damage += additional; 
+				if (ra != null)
+				{
+					int additional = (int)((float)ad.Damage * ((float)ra.Amount / 100));
+					ad.Damage += additional;
+				}
             }
             			
 			GameSpellEffect iWarLordEffect = SpellHandler.FindEffectOnTarget(target, "CleansingAura");
