@@ -50,15 +50,15 @@ namespace DOL.GS.Effects
             {
                 p.Out.SendSpellEffectAnimation(EffectOwner, EffectOwner, 7059, 0, false, 1);
             }
-          	GameEventMgr.AddHandler(EffectOwner, GameLivingEvent.AttackFinished, new DOLEventHandler(EventHandler));        
-           	GameEventMgr.AddHandler(EffectOwner, GameLivingEvent.CastFinished, new DOLEventHandler(EventHandler));                        
+          	GameEventMgr.AddHandler(EffectSource, GameLivingEvent.AttackFinished, new DOLEventHandler(EventHandler));        
+           	GameEventMgr.AddHandler(EffectSource, GameLivingEvent.CastFinished, new DOLEventHandler(EventHandler));                        
          }
         public override void Stop()
         {
             if (EffectOwner != null)
             {
-                GameEventMgr.RemoveHandler(EffectOwner, GameLivingEvent.AttackFinished, new DOLEventHandler(EventHandler));
-           	 	GameEventMgr.RemoveHandler(EffectOwner, GameLivingEvent.CastFinished, new DOLEventHandler(EventHandler));                              
+                GameEventMgr.RemoveHandler(EffectSource, GameLivingEvent.AttackFinished, new DOLEventHandler(EventHandler));
+           	 	GameEventMgr.RemoveHandler(EffectSource, GameLivingEvent.CastFinished, new DOLEventHandler(EventHandler));                              
            }
 
             base.Stop();
@@ -77,7 +77,7 @@ namespace DOL.GS.Effects
 
 
         public override string Name { get { return "Selective Blindness"; } }
-        public override ushort Icon { get { return 7059; } }
+        public override ushort Icon { get { return 3058; } }
 
         // Delve Info
         public override IList DelveInfo
