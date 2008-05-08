@@ -1585,7 +1585,7 @@ namespace DOL.GS
 					if (this is GamePlayer)
 						((GamePlayer)this).Out.SendMessage(string.Format("{0} is invisible to you!", ad.Target.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 					
-					ad.AttackResult = eAttackResult.Missed;
+					ad.AttackResult = eAttackResult.NoValidTarget;
 					return ad;
 				}
 			}				
@@ -5495,6 +5495,20 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <returns>true if player has ability to use item</returns>
 		public virtual bool HasAbilityToUseItem(ItemTemplate item)
 		{
+			//Andraste: Merchants show in gray items that the player class can't wear, i done it here
+			if(item==null) return false;
+			if(this is GamePlayer)
+			{
+				if(Util.IsEmpty(item.AllowedClasses)) item.AllowedClasses = "0";
+				if(item.AllowedClasses !="0")
+				{
+					bool valid=false;
+					string[] allowedclasses = item.AllowedClasses.Split(';');
+					foreach (string allowed in allowedclasses)
+						if ((this as GamePlayer).CharacterClass.ID.ToString() == allowed || (this as GamePlayer).Client.Account.PrivLevel > 1) { valid = true; break; }
+					if (!valid) return false;
+				}
+			}
 			return GameServer.ServerRules.CheckAbilityToUseItem(this, item);
 		}
 
