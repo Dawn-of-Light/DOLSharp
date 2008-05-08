@@ -32,6 +32,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 			int RealmMap = packet.ReadByte();
 			int keepId = packet.ReadByte();
 
+			//hack fix new keep ids
+			if ((int)client.Version >= (int)GameClient.eClientVersion.Version190)
+			{
+				if (keepId >= 82)
+					keepId -= 7;
+				else if (keepId >= 62)
+					keepId -= 12;
+			}
+
 			switch (code)
 			{
 				//warmap open
