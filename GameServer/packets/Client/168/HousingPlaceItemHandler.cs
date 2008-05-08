@@ -33,6 +33,43 @@ namespace DOL.GS.PacketHandler.Client.v168
 		private const string DEED_WEAK = "deedItem";
 		private int position;
 
+		private bool suitableForWall(InventoryItem item)
+        {
+            #region item types
+            switch (item.Object_Type)
+            {
+                case (int)eObjectType.HouseWallObject:
+                case (int)eObjectType.Axe:
+                case (int)eObjectType.Blades:
+                case (int)eObjectType.Blunt:
+                case (int)eObjectType.CelticSpear:
+                case (int)eObjectType.CompositeBow:
+                case (int)eObjectType.Crossbow:
+                case (int)eObjectType.Flexible:
+                case (int)eObjectType.Hammer:
+                case (int)eObjectType.HandToHand:
+                case (int)eObjectType.LargeWeapons:
+                case (int)eObjectType.LeftAxe:
+                case (int)eObjectType.Longbow:
+                case (int)eObjectType.MaulerStaff:
+                case (int)eObjectType.Piercing:
+                case (int)eObjectType.PolearmWeapon:
+                case (int)eObjectType.RecurvedBow:
+                case (int)eObjectType.Scythe:
+                case (int)eObjectType.Shield:
+                case (int)eObjectType.SlashingWeapon:
+                case (int)eObjectType.Spear:
+                case (int)eObjectType.Staff:
+                case (int)eObjectType.Sword:
+                case (int)eObjectType.Thrown:
+                case (int)eObjectType.ThrustWeapon:
+                case (int)eObjectType.TwoHandedWeapon:
+                    return true;
+                default: return false;
+            }
+            #endregion
+        }
+		
         private int GetMaxIndoorItemsForHouse(int model)
         {
             int maxitems = ServerProperties.Properties.MAX_INDOOR_HOUSE_ITEMS;
@@ -275,12 +312,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 						client.Out.SendInventorySlotsUpdate(new int[] { slot });
 						return 1;
 					}
-					if (orgitem.Object_Type != 50 && method == 2)
-					{
+					if (!suitableForWall(orgitem) && method == 2)
+                    {
                         client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.NotWallObject"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                         client.Out.SendInventorySlotsUpdate(new int[] { slot });
-						return 1;
-					}
+                        return 1;
+                    }
 					if (orgitem.Object_Type != 51 && method == 3)
 					{
                         client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.NotFloorObject"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -309,8 +346,12 @@ namespace DOL.GS.PacketHandler.Client.v168
                     {
                         ProperRotation = 0;
                     }
-					if (orgitem.Object_Type == 50)
+					if (method == 2 && suitableForWall(orgitem))
+                    {
                         ProperRotation = 360;
+                        if (orgitem.Object_Type != 50)
+                            client.Out.SendInventorySlotsUpdate(new int[] { slot });
+                    }
                     iitem.Rotation = ProperRotation;
 
 					iitem.Size = 100; //? dont know how this is defined. maybe DPS_AF or something.

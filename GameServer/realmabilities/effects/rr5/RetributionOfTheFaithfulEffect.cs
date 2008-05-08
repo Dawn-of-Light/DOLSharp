@@ -120,7 +120,7 @@ namespace DOL.GS.Effects
 			if (args.AttackData.Attacker.EffectList.GetOfType(typeof(ChargeEffect)) != null || args.AttackData.Attacker.TempProperties.getProperty("Charging", false))
 				return;
             if (WorldMgr.GetDistance(owner,args.AttackData.Attacker) > 300) return;
-            if (Util.Chance(10))
+            if (Util.Chance(50))
             {
                 RetributionOfTheFaithfulStunEffect effect = new RetributionOfTheFaithfulStunEffect();
                 effect.Start(args.AttackData.Attacker);
@@ -147,7 +147,7 @@ namespace DOL.GS.Effects
             get
             {
                 ArrayList list = new ArrayList();
-                list.Add("30 second buff that has a chance to proc a 3 second (duration undiminished by resists) stun on any melee attack on the cleric.");
+                list.Add("30 second buff that has a 50% chance to proc a 3 second (duration undiminished by resists) stun on any melee attack on the cleric.");
                 return list;
             }
         }
