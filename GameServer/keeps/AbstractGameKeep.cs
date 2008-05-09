@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
@@ -1038,7 +1039,9 @@ namespace DOL.GS.Keeps
 			int height = KeepMgr.GetHeightFromLevel(this.Level);
 
 			//predict Z
-			DBKeepHookPoint hp = (DBKeepHookPoint)GameServer.Database.SelectObject(typeof(DBKeepHookPoint), "HookPointID = '97' and Height = '" + height + "'");
+            DBKeepHookPoint hp = (from s in DatabaseLayer.Instance.OfType<DBKeepHookPoint>()
+                                  where s.HookPointID == 97 && s.Height == height
+                                  select s).Take(1).GetEnumerator().Current; // TODO: tune
 			if (hp == null)
 				return;
 			int z = component.Z + hp.Z;

@@ -248,7 +248,7 @@ namespace DOL.GS.Spells
                     ammo = "mystic_ammo_cold";
                     break;
             }
-            ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), ammo);
+            ItemTemplate template = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), ammo);
             if (template != null)
             {
                 item = new InventoryItem();

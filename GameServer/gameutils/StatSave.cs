@@ -212,7 +212,7 @@ namespace DOL.Database2
 			get { return m_statdate; }
 			set
 			{
-				Dirty = true;
+				m_Dirty = true;
 				m_statdate = value;
 			}
 		}
@@ -223,7 +223,7 @@ namespace DOL.Database2
 			get { return m_clients; }
 			set
 			{
-				Dirty = true;
+				m_Dirty = true;
 				m_clients = value;
 			}
 		}
@@ -233,7 +233,7 @@ namespace DOL.Database2
 			get { return m_cpu; }
 			set
 			{
-				Dirty = true;
+				m_Dirty = true;
 				m_cpu = value;
 			}
 		}
@@ -243,7 +243,7 @@ namespace DOL.Database2
 			get { return m_upload; }
 			set
 			{
-				Dirty = true;
+				m_Dirty = true;
 				m_upload = value;
 			}
 		}
@@ -253,7 +253,7 @@ namespace DOL.Database2
 			get { return m_download; }
 			set
 			{
-				Dirty = true;
+				m_Dirty = true;
 				m_download = value;
 			}
 		}
@@ -264,7 +264,7 @@ namespace DOL.Database2
 			get { return m_memory; }
 			set
 			{
-				Dirty = true;
+				m_Dirty = true;
 				m_memory = value;
 			}
 		}

@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -61,7 +62,9 @@ namespace DOL.GS.ServerRules
 			// Ban account
 			DatabaseObject[] objs;
 			//objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "(Type ='Account' AND Account ='" + GameServer.Database.Escape(username) + "') OR (Type ='Account+Ip' AND Account ='" + GameServer.Database.Escape(username) + "')");
-            objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(username) + "')");
+            objs = (DatabaseObject[]) (from s in GameServer.Database.OfType<DBBannedAccount>()
+                     where (s.Type == "A" || s.Type == "B") && s.Account == username
+                      select s);
 			if (objs.Length > 0)
 			{
 				client.Out.SendLoginDenied(eLoginError.AccountIsBannedFromThisServerType);
@@ -70,7 +73,9 @@ namespace DOL.GS.ServerRules
 
 			// Ban IP Adress
 			//objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "(Type = 'Ip' AND Ip ='" + GameServer.Database.Escape(accip) + "') OR (Type ='Account+Ip' AND Ip ='" + GameServer.Database.Escape(accip) + "')");
-            objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='I' OR Type='B') AND Ip ='" + GameServer.Database.Escape(accip) + "')");
+            objs = objs = (DatabaseObject[])(from s in GameServer.Database.OfType<DBBannedAccount>()
+                                             where (s.Type == "A" || s.Type == "B") && s.Ip == accip
+                                             select s);
 			if (objs.Length > 0)
 			{
 				client.Out.SendLoginDenied(eLoginError.AccountIsBannedFromThisServerType);
@@ -131,7 +136,7 @@ namespace DOL.GS.ServerRules
 				if (WorldMgr.GetAllClients().Count > Properties.MAX_PLAYERS)
 				{
 					// GMs are still allowed to enter server
-					objs = GameServer.Database.SelectObjects(typeof(Account),"Name",username);
+                    objs = (DatabaseObject[]) GameServer.Database.SelectObjects(typeof(Account), "Name", username);
 					if (objs.Length > 0)
 					{
 						Account account = objs[0] as Account;
@@ -148,7 +153,7 @@ namespace DOL.GS.ServerRules
 			if (Properties.STAFF_LOGIN)
 			{
 				// GMs are still allowed to enter server
-				objs = GameServer.Database.SelectObjects(typeof(Account),"Name",username);
+				objs = (DatabaseObject []) GameServer.Database.SelectObjects(typeof(Account),"Name",username);
 				if (objs.Length > 0)
 				{
 					Account account = objs[0] as Account;

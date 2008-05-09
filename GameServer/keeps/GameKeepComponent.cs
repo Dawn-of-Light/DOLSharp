@@ -17,6 +17,8 @@
  *
  */
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Collections;
 using System.Text;
@@ -296,13 +298,20 @@ namespace DOL.GS.Keeps
 				return;
 
 			this.Positions.Clear();
-
+            IEnumerable<DBKeepPosition> result;
 			string query = "`ComponentSkin` = '" + this.Skin + "'";
 			if (Skin != (int)eComponentSkin.Keep && Skin != (int)eComponentSkin.Tower && Skin != (int)eComponentSkin.Gate)
-				query = query + " AND `ComponentRotation` = '" + this.ComponentHeading + "'";
-
-			DBKeepPosition[] DBPositions = (DBKeepPosition[])GameServer.Database.SelectObjects(typeof(DBKeepPosition), query);
-			foreach (DBKeepPosition position in DBPositions)
+				result = (from s in DatabaseLayer.Instance.OfType<DBKeepPosition>()
+                                                     where s.ComponentSkin == this.Skin && s.ComponentRotation == this.ComponentHeading
+                                                     select s);
+            else 
+                result = (from s in DatabaseLayer.Instance.OfType<DBKeepPosition>()
+                                                     where s.ComponentSkin == this.Skin
+                                                     select s);
+                
+			
+			foreach (DBKeepPosition position in result)
+                               
 			{
 				DBKeepPosition[] list = this.Positions[position.TemplateID] as DBKeepPosition[];
 				if (list == null)
@@ -431,7 +440,7 @@ namespace DOL.GS.Keeps
 			DBKeepComponent obj = null;
 			bool New = false;
 			if (InternalID != null)
-				obj = (DBKeepComponent)GameServer.Database.FindObjectByKey(typeof(DBKeepComponent), InternalID);
+				obj = (DBKeepComponent)GameServer.Database.GetDatabaseObjectFromID(InternalID);
 			if (obj == null)
 			{
 				obj = new DBKeepComponent();

@@ -69,7 +69,7 @@ namespace DOL.GS.Commands
 								{
 									GameBoat playerBoat = new GameBoat();
 									InventoryItem item = client.Player.Inventory.GetFirstItemByID("scout_boat", eInventorySlot.Min_Inv, eInventorySlot.Max_Inv);
-									playerBoat.BoatID = System.Guid.NewGuid().ToString();
+                                    playerBoat.BoatID = DatabaseLayer.Instance.GetNewUniqueID(); // TODO: MIGHT CAUSE BUGS -review
 									playerBoat.Name = client.Player.Name + "'s scout boat";
 									playerBoat.X = client.Player.X;
 									playerBoat.Y = client.Player.Y;
@@ -100,7 +100,7 @@ namespace DOL.GS.Commands
 								{
 									GameBoat playerBoat = new GameBoat();
 									InventoryItem item = client.Player.Inventory.GetFirstItemByID("warship", eInventorySlot.Min_Inv, eInventorySlot.Max_Inv);
-									playerBoat.BoatID = System.Guid.NewGuid().ToString();
+									playerBoat.BoatID = DatabaseLayer.Instance.GetNewUniqueID();
 									playerBoat.Name = client.Player.Name + "'s warship";
 									playerBoat.X = client.Player.X;
 									playerBoat.Y = client.Player.Y;
@@ -131,7 +131,7 @@ namespace DOL.GS.Commands
 								{
 									GameBoat playerBoat = new GameBoat();
 									InventoryItem item = client.Player.Inventory.GetFirstItemByID("galleon", eInventorySlot.Min_Inv, eInventorySlot.Max_Inv);
-									playerBoat.BoatID = System.Guid.NewGuid().ToString();
+									playerBoat.BoatID = DatabaseLayer.Instance.GetNewUniqueID();
 									playerBoat.Name = client.Player.Name + "'s galleon";
 									playerBoat.X = client.Player.X;
 									playerBoat.Y = client.Player.Y;
@@ -162,7 +162,7 @@ namespace DOL.GS.Commands
 								{
 									GameBoat playerBoat = new GameBoat();
 									InventoryItem item = client.Player.Inventory.GetFirstItemByID("skiff", eInventorySlot.Min_Inv, eInventorySlot.Max_Inv);
-									playerBoat.BoatID = System.Guid.NewGuid().ToString();
+									playerBoat.BoatID = DatabaseLayer.Instance.GetNewUniqueID();
 									playerBoat.Name = client.Player.Name + "'s skiff";
 									playerBoat.X = client.Player.X;
 									playerBoat.Y = client.Player.Y;
@@ -193,7 +193,7 @@ namespace DOL.GS.Commands
 								{
 									GameBoat playerBoat = new GameBoat();
 									InventoryItem item = client.Player.Inventory.GetFirstItemByID("Viking_Longship", eInventorySlot.Min_Inv, eInventorySlot.Max_Inv);
-									playerBoat.BoatID = System.Guid.NewGuid().ToString();
+									playerBoat.BoatID = DatabaseLayer.Instance.GetNewUniqueID();
 									playerBoat.Name = client.Player.Name + "'s Viking longship";
 									playerBoat.X = client.Player.X;
 									playerBoat.Y = client.Player.Y;
@@ -224,7 +224,7 @@ namespace DOL.GS.Commands
 								{
 									GameBoat playerBoat = new GameBoat();
 									InventoryItem item = client.Player.Inventory.GetFirstItemByID("ps_longship", eInventorySlot.Min_Inv, eInventorySlot.Max_Inv);
-									playerBoat.BoatID = System.Guid.NewGuid().ToString();
+                                    playerBoat.BoatID = DatabaseLayer.Instance.GetNewUniqueID(); 
 									playerBoat.Name = client.Player.Name + "'s Longship";
 									playerBoat.X = client.Player.X;
 									playerBoat.Y = client.Player.Y;
@@ -255,7 +255,7 @@ namespace DOL.GS.Commands
 								{
 									GameBoat playerBoat = new GameBoat();
 									InventoryItem item = client.Player.Inventory.GetFirstItemByID("stygian_ship", eInventorySlot.Min_Inv, eInventorySlot.Max_Inv);
-									playerBoat.BoatID = System.Guid.NewGuid().ToString();
+                                    playerBoat.BoatID = DatabaseLayer.Instance.GetNewUniqueID();
 									playerBoat.Name = client.Player.Name + "'s Stygian ship";
 									playerBoat.X = client.Player.X;
 									playerBoat.Y = client.Player.Y;
@@ -286,7 +286,7 @@ namespace DOL.GS.Commands
 								{
 									GameBoat playerBoat = new GameBoat();
 									InventoryItem item = client.Player.Inventory.GetFirstItemByID("atlantean_ship", eInventorySlot.Min_Inv, eInventorySlot.Max_Inv);
-									playerBoat.BoatID = System.Guid.NewGuid().ToString();
+                                    playerBoat.BoatID = DatabaseLayer.Instance.GetNewUniqueID();
 									playerBoat.Name = client.Player.Name + "'s Atlantean ship";
 									playerBoat.X = client.Player.X;
 									playerBoat.Y = client.Player.Y;
@@ -317,7 +317,7 @@ namespace DOL.GS.Commands
 								{
 									GameBoat playerBoat = new GameBoat();
 									InventoryItem item = client.Player.Inventory.GetFirstItemByID("British_Cog", eInventorySlot.Min_Inv, eInventorySlot.Max_Inv);
-									playerBoat.BoatID = System.Guid.NewGuid().ToString();
+                                    playerBoat.BoatID = DatabaseLayer.Instance.GetNewUniqueID();
 									playerBoat.Name = client.Player.Name + "'s British Cog";
 									playerBoat.X = client.Player.X;
 									playerBoat.Y = client.Player.Y;

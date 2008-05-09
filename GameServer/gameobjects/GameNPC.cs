@@ -152,7 +152,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the owner of this npc
 		/// </summary>
-		public string BoatOwnerID
+		public UInt64 BoatOwnerID
 		{
 			get { return m_boatowner_id; }
 			set
@@ -1794,7 +1794,7 @@ namespace DOL.GS
 			if (!(obj is Mob)) return;
 			m_loadedFromScript = false;
 			Mob npc = (Mob)obj;
-			INpcTemplate npcTemplate = NpcTemplateMgr.GetTemplate(npc.NPCTemplateID);
+			INpcTemplate npcTemplate = (INpcTemplate) NpcTemplateMgr.GetTemplate(npc.NPCTemplateID);
 			if (npcTemplate != null)
 				LoadTemplate(npcTemplate);
 			Name = npc.Name;
@@ -4001,7 +4001,7 @@ namespace DOL.GS
 				Strength = (short)(20 + Level * 6);
 		}
 
-		private string m_boatowner_id;
+		private UInt64 m_boatowner_id;
 		/// <summary>
 		/// Constructs a NPC
 		/// </summary>
@@ -4029,7 +4029,7 @@ namespace DOL.GS
 			m_flags = 0;
 			m_maxdistance = 0;
 			m_roamingRange = -1; // default to normal roaming mob
-			m_boatowner_id = "";
+			m_boatowner_id = 0;
 
 			// Mob stats should be a minimum of 30 each and strength should
 			// be on par with that of a templated player.
@@ -4082,7 +4082,7 @@ namespace DOL.GS
 
 			CheckStats();
 
-			m_boatowner_id = "";
+			m_boatowner_id = 0;
 		}
 	}
 }

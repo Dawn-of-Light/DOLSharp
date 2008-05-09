@@ -338,7 +338,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			// item db check
-			recruitsQuiltedVest = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnby(typeof (ItemTemplate), "recruits_quilted_vest");
+			recruitsQuiltedVest = (ItemTemplate) GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), "recruits_quilted_vest");
 			if (recruitsQuiltedVest == null)
 			{
 				recruitsQuiltedVest = new ItemTemplate();

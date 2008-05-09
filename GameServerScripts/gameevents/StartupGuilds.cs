@@ -77,8 +77,6 @@ namespace DOL.GS.GameEvents
 				Guild newguild = new Guild();
 				newguild.theGuildDB = new DBGuild();
 				newguild.Name = guildName;
-				newguild.GuildID = System.Guid.NewGuid().ToString(); //Assume this is unique, which I don't like, but it seems to be commonly used elsewhere in the code.				
-				newguild.theGuildDB.GuildID = newguild.GuildID;
 				newguild.theGuildDB.GuildName = guildName;
 				GuildMgr.CreateRanks(newguild);
 				newguild.theGuildDB.Ranks[8].OcHear = true;

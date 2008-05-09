@@ -14,7 +14,11 @@ namespace DOL.Database2
         private  UInt64 m_ID = 0;
         [NonSerialized]
         private bool m_writetodatabase = false;
-        protected bool Dirty;
+        protected bool m_Dirty;
+        public bool Dirty
+        {
+            get { return m_Dirty; }
+        }
         /// <summary>
         /// Contains the DatabaseObjects UniqueID
         /// </summary>
@@ -31,7 +35,7 @@ namespace DOL.Database2
         /// </summary>
         public bool WriteToDatabase
         {
-            get { return (m_writetodatabase && Dirty); }
+            get { return (m_writetodatabase && m_Dirty); }
             set { m_writetodatabase = value; }
         }
         /// <summary>

@@ -160,7 +160,7 @@ namespace DOL.GS.Quests.Albion
 				dunan.Y = 479785;
 				dunan.Z = 2200;
 				dunan.Heading = 1579;
-				dunan.EquipmentTemplateID = "1707754";
+				dunan.EquipmentTemplateID = 1707754;
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
@@ -245,7 +245,7 @@ namespace DOL.GS.Quests.Albion
 				yaren.Y = 478091;
 				yaren.Z = 2200;
 				yaren.Heading = 3160;
-				yaren.EquipmentTemplateID = "11701347";
+				yaren.EquipmentTemplateID = 11701347;
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following

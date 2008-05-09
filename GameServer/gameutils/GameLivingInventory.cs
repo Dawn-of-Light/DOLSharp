@@ -120,13 +120,36 @@ namespace DOL.GS
 		{
 			return false;
 		}
-		
-		/// <summary>
-		/// SaveIntoDatabase
-		/// </summary>
-		/// <returns></returns>
-		public virtual bool SaveIntoDatabase(UInt64 id)
+        public virtual bool SaveIntoDatabase(UInt64 id)
+        {
+            return false;
+        }
+        /// <summary>
+        /// Loads the inventory template from the Database
+        /// </summary>
+        /// <returns>success</returns>
+        public  bool LoadFromDatabase(string templateID)
 		{
+			if (templateID.Length == 0)
+			{
+				//if (log.IsWarnEnabled)
+					//log.Warn("Null or empty string template reference");
+
+				return false;
+			}
+
+            return LoadFromDatabase(DatabaseLayer.Instance.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), templateID).ID);// TUNE
+		}
+        public bool SaveIntoDatabase(string templateID)
+		{
+			if (templateID.Length == 0)
+			{
+				//if (log.IsWarnEnabled)
+					//log.Warn("Null or empty string template reference");
+
+				return false;
+			}
+            SaveIntoDatabase(DatabaseLayer.Instance.GetDatabaseObjectFromIDnb(typeof(ItemTemplate),templateID).ID);// TUNE
 			return false;
 		}
 		#endregion
@@ -501,9 +524,9 @@ namespace DOL.GS
 				}
 				m_items.Add((int)slot, item);
 				item.SlotPosition=(int)slot;
-				if (item.OwnerID != null)
+				if (item.OwnerID != 0)
 				{
-					item.OwnerID = null; // owner ID for NPC
+					item.OwnerID = 0; // owner ID for NPC
 				}
 
 				if (!m_changedSlots.Contains((int)slot))
@@ -543,7 +566,7 @@ namespace DOL.GS
 					if (!m_changedSlots.Contains(item.SlotPosition))
 						m_changedSlots.Add(item.SlotPosition);
 
-					item.OwnerID = null;
+					item.OwnerID = 0;
 					item.SlotPosition = (int)eInventorySlot.Invalid;
 
 					if (m_changesCounter <= 0)

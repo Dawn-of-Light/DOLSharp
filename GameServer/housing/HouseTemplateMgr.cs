@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.Database2;
 
 namespace DOL.GS.Housing
@@ -173,12 +174,11 @@ namespace DOL.GS.Housing
 
 		static void CheckMerchantItems(string merchantid, string[] itemids)
 		{
-			DatabaseObject[] merchantitems = GameServer.Database.SelectObjects(typeof (MerchantItem), "ItemListID" ,merchantid);
 			int slot = 0;
 			foreach (string itemid in itemids)
 			{
 				bool found = false;
-				foreach (DatabaseObject dbitem in merchantitems)
+				foreach (DatabaseObject dbitem in GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemListID", merchantid))
 				{
 					if (((MerchantItem) dbitem).ItemTemplateID == itemid)
 					{
@@ -231,56 +231,56 @@ namespace DOL.GS.Housing
 		{
 			#region Hibernia
 			//Hastener
-			CheckNPCTemplate(500, "DOL.GS.GameHastener", "Hastener", "50", "");
+			CheckNPCTemplate(500, "DOL.GS.GameHastener", "Hastener", "50", null);
 			//Smith
-			CheckNPCTemplate(501, "DOL.GS.Blacksmith", "Smith", "50", "");
+            CheckNPCTemplate(501, "DOL.GS.Blacksmith", "Smith", "50", null);
 			//Enchanter
-			CheckNPCTemplate(502, "DOL.GS.Enchanter", "Enchanter", "50", "");
+            CheckNPCTemplate(502, "DOL.GS.Enchanter", "Enchanter", "50", null);
 			//Emblemeer
-			CheckNPCTemplate(503, "DOL.GS.EmblemNPC", "Emblemer", "50", "");
+            CheckNPCTemplate(503, "DOL.GS.EmblemNPC", "Emblemer", "50", null);
 			//Healer
-			CheckNPCTemplate(504, "DOL.GS.GameHealer", "Healer", "50", "");
+            CheckNPCTemplate(504, "DOL.GS.GameHealer", "Healer", "50", null);
 			//Recharger
-			CheckNPCTemplate(505, "DOL.GS.Recharger", "Recharger", "50", "");
+            CheckNPCTemplate(505, "DOL.GS.Recharger", "Recharger", "50", null);
 			//Teleporter
 			//TODO: [WARN] CheckNPCTemplate( ... Teleporter ... )
-			CheckNPCTemplate(506, "DOL.GS.GameNPC", "Teleporter", "50", "");
+            CheckNPCTemplate(506, "DOL.GS.GameNPC", "Teleporter", "50", null);
 			//Apprentice Merchant
 			//TODO: [WARN] merchant list
-			CheckNPCTemplate(507, "DOL.GS.GameMerchant", "Merchant", "50", "");
+            CheckNPCTemplate(507, "DOL.GS.GameMerchant", "Merchant", "50", null);
 			//Grandmaster Merchant
 			//TODO: [WARN] merchant list
-			CheckNPCTemplate(508, "DOL.GS.GameMerchant", "Merchant", "50", "");
+            CheckNPCTemplate(508, "DOL.GS.GameMerchant", "Merchant", "50", null);
 			//Incantation Merchant
 			//TODO: [WARN] merchant list
-			CheckNPCTemplate(509, "DOL.GS.GameMerchant", "Merchant", "50", "");
+            CheckNPCTemplate(509, "DOL.GS.GameMerchant", "Merchant", "50", null);
 			//Poison and Dye Supplies
 			//TODO: [WARN] merchant list
-			CheckNPCTemplate(510, "DOL.GS.GameMerchant", "Merchant", "50", "");
+            CheckNPCTemplate(510, "DOL.GS.GameMerchant", "Merchant", "50", null);
 			//Potion, Tincture, and Enchantment Supplies
 			//TODO: [WARN] merchant list
-			CheckNPCTemplate(511, "DOL.GS.GameMerchant", "Merchant", "50", "");
+            CheckNPCTemplate(511, "DOL.GS.GameMerchant", "Merchant", "50", null);
 			//Poison and Potion Supplies
 			//TODO: [WARN] merchant list
-			CheckNPCTemplate(512, "DOL.GS.GameMerchant", "Merchant", "50", "");
+            CheckNPCTemplate(512, "DOL.GS.GameMerchant", "Merchant", "50", null);
 			//Dye, Tincture, and Enchantment Supplies
 			//TODO: [WARN] merchant list
-			CheckNPCTemplate(513, "DOL.GS.GameMerchant", "Merchant", "50", "");
+            CheckNPCTemplate(513, "DOL.GS.GameMerchant", "Merchant", "50", null);
 			//Taxidermy Supplies
 			//TODO: [WARN] merchant list
-			CheckNPCTemplate(514, "DOL.GS.GameMerchant", "Merchant", "50", "");
+            CheckNPCTemplate(514, "DOL.GS.GameMerchant", "Merchant", "50", null);
 			//Siegecraft Supplies
 			//TODO: [WARN] merchant list
-			CheckNPCTemplate(515, "DOL.GS.GameMerchant", "Merchant", "50", "");
+            CheckNPCTemplate(515, "DOL.GS.GameMerchant", "Merchant", "50", null);
 			//Hibernia Vault Keeper
-			CheckNPCTemplate(516, "DOL.GS.GameVaultKeeper", "Vault Keeper", "50", "");
+            CheckNPCTemplate(516, "DOL.GS.GameVaultKeeper", "Vault Keeper", "50", null);
 			//Dye Supply Master
 			//TODO: [WARN] merchant list
-			CheckNPCTemplate(517, "DOL.GS.GameMerchant", "Merchant", "50", "");
+            CheckNPCTemplate(517, "DOL.GS.GameMerchant", "Merchant", "50", null);
 			#endregion
 		}
 
-		static void CheckNPCTemplate(int templateID, string classType, string guild, string model, string inventory)
+		static void CheckNPCTemplate(int templateID, string classType, string guild, string model, List<UInt64> inventory)
 		{
 			NpcTemplate template = NpcTemplateMgr.GetTemplate(templateID);
 			if (template == null)

@@ -191,7 +191,7 @@ namespace DOL.GS.Quests.Midgard
 				harlfug.Y = 754240;
 				harlfug.Z = 4600;
 				harlfug.Heading = 2707;
-				harlfug.EquipmentTemplateID = "5100798";
+				harlfug.EquipmentTemplateID = 5100798;
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -220,7 +220,7 @@ namespace DOL.GS.Quests.Midgard
 				gularg.Y = 721959;
 				gularg.Z = 4686;
 				gularg.Heading = 3925;
-				gularg.EquipmentTemplateID = "5100798";
+				gularg.EquipmentTemplateID = 5100798;
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -250,7 +250,7 @@ namespace DOL.GS.Quests.Midgard
 				yolafson.Y = 700414;
 				yolafson.Z = 4960;
 				yolafson.Heading = 1206;
-				yolafson.EquipmentTemplateID = "5100798";
+				yolafson.EquipmentTemplateID = 5100798;
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following

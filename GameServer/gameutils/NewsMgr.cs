@@ -1,5 +1,5 @@
 using System;
-
+using System.Linq;
 using DOL.Database2;
 using DOL.Events;
 using DOL.GS.PacketHandler;
@@ -45,14 +45,10 @@ namespace DOL.GS
 			for (int type = 0; type <= 2; type++)
 			{
 				int index = 0;
-				string realm = "";
-				//we can see all captures
-				if (type > 0)
-					realm = " AND (`Realm` = '0' OR `Realm` = '" + client.Player.Realm + "')";
-
-				DBNews[] newsList = (DBNews[])GameServer.Database.SelectObjects(typeof(DBNews), "`Type` = '" + type + "'" + realm + " ORDER BY `CreationDate` DESC LIMIT 5");
-
-				foreach (DBNews news in newsList)
+				foreach (DBNews news in (from s in DatabaseLayer.Instance.OfType<DBNews>()
+                                        where s.Type == type && ((type > 0) ? true  : (s.Realm == 0 || s.Realm == (byte)client.Player.Realm)) 
+                                        orderby s.CreationDate
+                                        select s))
 				{
 					if (index > 4)
 						break;

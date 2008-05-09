@@ -81,7 +81,7 @@ namespace DOL.GS.Keeps
 				guard.Component = Component;
 				guard.PatrolGroup = this;
 				TemplateMgr.RefreshTemplate(guard);
-				Component.Keep.Guards.Add(DOL.Database2.UniqueID.IdGenerator.generateId(), guard);
+				Component.Keep.Guards.Add(DatabaseLayer.Instance.GetNewUniqueID(), guard);
 			}
 
 			foreach (GameKeepGuard guard in PatrolGuards)

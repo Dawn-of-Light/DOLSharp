@@ -18,6 +18,7 @@
  */
 #define NOENCRYPTION
 using System;
+using System.Linq;
 using System.Collections;
 using System.Reflection;
 
@@ -77,7 +78,9 @@ namespace DOL.GS.PacketHandler
 						if (characters[j].AccountSlot == i)
 						{
 							pak.FillString(characters[j].Name, 24);
-							items = (InventoryItem[])GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + GameServer.Database.Escape(characters[j].ObjectId) + "' AND SlotPosition >='10' AND SlotPosition <= '37'");
+                            items = (InventoryItem[])from s in GameServer.Database.OfType<InventoryItem>()
+                                                     where s.OwnerID == characters[j].ObjectId && s.SlotPosition >= 10 && s.SlotPosition <= 29
+                                                     select s;
 							byte ExtensionTorso = 0;
 							byte ExtensionGloves = 0;
 							byte ExtensionBoots = 0;

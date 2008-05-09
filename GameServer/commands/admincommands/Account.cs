@@ -208,7 +208,7 @@ namespace DOL.GS.Commands
 			GameClient client = WorldMgr.GetClientByAccountName(name, true);
 			if (client != null)
 				return client.Account;
-			return (Account)GameServer.Database.SelectObject(typeof(Account), "Name ='" + GameServer.Database.Escape(name) + "'");
+			return (Account)GameServer.Database.SelectObject(typeof(Account), "Name",name);
 		}
 
 		/// <summary>
@@ -221,7 +221,7 @@ namespace DOL.GS.Commands
 			GameClient client = WorldMgr.GetClientByPlayerName(charname, true, false);
 			if (client != null)
 				return client.Player.PlayerCharacter;
-			return (Character)GameServer.Database.SelectObject(typeof(Character), "Name='" + GameServer.Database.Escape(charname) + "'");
+			return (Character)GameServer.Database.SelectObject(typeof(Character), "Name" ,charname);
 		}
 
 		/// <summary>
@@ -263,7 +263,7 @@ namespace DOL.GS.Commands
 			if (client != null)
 				return client.Account.Name;
 
-			Character ch = (Character)GameServer.Database.SelectObject(typeof(Character), "Name='" + GameServer.Database.Escape(charname) + "'");
+			Character ch = (Character)GameServer.Database.SelectObject(typeof(Character), "Name",charname);
 			if (ch != null)
 				return ch.AccountName;
 			else

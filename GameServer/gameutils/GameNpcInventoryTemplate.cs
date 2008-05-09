@@ -267,7 +267,7 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public override bool LoadFromDatabase(UInt64 templateID)
 		{
-			if (templateID == 0)
+			if (templateID== 0)
 			{
 				//if (log.IsWarnEnabled)
 					//log.Warn("Null or empty string template reference");
@@ -342,10 +342,8 @@ namespace DOL.GS
 				{
 					if (templateID == null)
 						throw new ArgumentNullException("templateID");
-
-					DatabaseObject[] npcEquipment = GameServer.Database.SelectObjects(typeof(NPCEquipment),"TemplateID",templateID);
-
 					// delete removed item templates
+                    IEnumerable<DatabaseObject> npcEquipment = GameServer.Database.SelectObjects(typeof(NPCEquipment), "TemplateID", templateID);
 					foreach (NPCEquipment npcItem in npcEquipment)
 					{
 						if (!m_items.Contains(npcItem.Slot))
@@ -396,6 +394,8 @@ namespace DOL.GS
 		}
 
 		#endregion
+       
+
 
 		#region methods not allowed in inventory template
 

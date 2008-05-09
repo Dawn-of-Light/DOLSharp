@@ -71,7 +71,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The database id this character belong to
 		/// </summary>
-		protected string m_guildid;
+		protected UInt64 m_guildid;
 		/// <summary>
 		/// Char spec points checked on load
 		/// </summary>
@@ -8463,13 +8463,13 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets or sets the database guildid of this player
+		/// Gets or sets the database guildID of this player
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public UInt64 GuildID
+		public UInt64 guildID
 		{
-            get { return PlayerCharacter != null ? PlayerCharacter.GuildID : 0; }
-			set { if (PlayerCharacter != null) PlayerCharacter.GuildID = value; }
+            get { return PlayerCharacter != null ? PlayerCharacter.guildID : 0; }
+			set { if (PlayerCharacter != null) PlayerCharacter.guildID = value; }
 		}
 
 		/// <summary>
@@ -10287,7 +10287,7 @@ namespace DOL.GS
 
 			#region guild handling
 			//TODO: overwork guild handling (VaNaTiC)
-			m_guildid = my_character.GuildID;
+			m_guildid = my_character.guildID;
 			if (m_guildid != null)
 				m_guild = GuildMgr.GetGuildByGuildID(m_guildid);
 			else

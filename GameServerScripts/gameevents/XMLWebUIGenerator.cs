@@ -16,12 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+/*
 using System;
 using System.Reflection;
 using System.IO;
 using DOL.Database2;
-using DOL.Database2.Attributes;
-using DOL.Database2.Connection;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -73,11 +72,6 @@ namespace DOL.GS.Scripts
 			private int m_numWorldObj = 0;
 			private static bool m_autoSave = true;
 
-			public override bool AutoSave
-			{
-				get { return m_autoSave; }
-				set { m_autoSave = value; }
-			}
 
 			//[DataElement(AllowDbNull=true)]
 			public string Time
@@ -188,11 +182,6 @@ namespace DOL.GS.Scripts
 
 			private static bool m_autoSave = true;
 
-			public override bool AutoSave
-			{
-				get { return m_autoSave; }
-				set { m_autoSave = value; }
-			}
 
 			//[DataElement(AllowDbNull=true)]
 			public string Name
@@ -384,4 +373,4 @@ namespace DOL.GS.Scripts
 			Generate();
 		}
 	}
-}
+}*/

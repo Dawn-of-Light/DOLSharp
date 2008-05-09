@@ -43,7 +43,7 @@ namespace DOL.GS.Housing
 		{
 			IList list = new ArrayList();
 			list.Add("You target lot number " + DatabaseItem.HouseNumber + ".");
-			if (DatabaseItem.OwnerIDs == null || DatabaseItem.OwnerIDs == "")
+            if (DatabaseItem.OwnerIDs == null || DatabaseItem.OwnerIDs.Count == 0)
 			{
 				list.Add(" It can be bought for " + Money.GetString(HouseTemplateMgr.GetLotPrice(DatabaseItem)) + ".");
 			}
@@ -61,7 +61,7 @@ namespace DOL.GS.Housing
 				player.Out.SendMessage("You already own a house!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			if (DatabaseItem.OwnerIDs == null || DatabaseItem.OwnerIDs == "")
+            if (DatabaseItem.OwnerIDs == null || DatabaseItem.OwnerIDs.Count == 0)
 			{
 				player.Out.SendCustomDialog("Do you want to buy this lot?\r\n It costs " + Money.GetString(HouseTemplateMgr.GetLotPrice(DatabaseItem)) + "!", new CustomDialogResponse(BuyLot));
 			}
@@ -84,7 +84,7 @@ namespace DOL.GS.Housing
 			if (response != 0x01) return;
 			lock (DatabaseItem) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
-				if (DatabaseItem.OwnerIDs != null && DatabaseItem.OwnerIDs != "") return;
+				if (DatabaseItem.OwnerIDs != null && DatabaseItem.OwnerIDs.Count != 0) return;
 				if (HouseMgr.GetHouseNumberByPlayer(player) != 0 && player.Client.Account.PrivLevel == 1)
 				{
 					player.Out.SendMessage("You already own another lot or house (Number " + HouseMgr.GetHouseNumberByPlayer(player) + ").", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);

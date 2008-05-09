@@ -105,7 +105,7 @@ namespace DOL.GS.Spells
             GameNpcInventoryTemplate load = new GameNpcInventoryTemplate();
             if (load.LoadFromDatabase(TemplateId))
             {
-                decoy.EquipmentTemplateID = TemplateId;
+                decoy.EquipmentTemplateID = (DatabaseLayer.Instance.GetDatabaseObjectFromIDnb(typeof(ItemTemplate),TemplateId)as ItemTemplate).ID;
                 decoy.Inventory = load;
                 decoy.UpdateNPCEquipmentAppearance();
             }

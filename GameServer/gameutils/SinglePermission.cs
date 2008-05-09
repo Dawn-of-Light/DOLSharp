@@ -17,6 +17,7 @@
  *
  */
 using System.Collections;
+using System.Linq;
 using DOL.Database2;
 using log4net;
 
@@ -34,8 +35,9 @@ namespace DOL.GS
 
 		public static bool HasPermission(GamePlayer player,string command)
 		{
-			DatabaseObject obj = GameServer.Database.SelectObject(typeof(DBSinglePermission), "Command = '" + GameServer.Database.Escape(command) + "' and PlayerID = '" + GameServer.Database.Escape(player.PlayerCharacter.ObjectId) + "'");
-			if (obj == null)
+			if ((from s in DatabaseLayer.Instance.OfType<DBSinglePermission>()
+                 where s.Command == command && s.PlayerID == player.PlayerCharacter.ID
+                 select s).Count() == 0) // TODO: TUne
 				return false;
 			return true;
 		}
@@ -45,12 +47,14 @@ namespace DOL.GS
 			DBSinglePermission perm = new DBSinglePermission();
 			perm.Command = command;
 			perm.PlayerID = player.PlayerCharacter.ObjectId;
-			GameServer.Database.AddNewObject(perm);
+            perm.Save();
 		}
 
 		public static bool removePermission(GamePlayer player,string command)
 		{
-			DatabaseObject obj = GameServer.Database.SelectObject(typeof(DBSinglePermission), "Command = '" + GameServer.Database.Escape(command) + "' and PlayerID = '" + GameServer.Database.Escape(player.PlayerCharacter.ObjectId) + "'");
+            DatabaseObject obj = (from s in DatabaseLayer.Instance.OfType<DBSinglePermission>()
+                                  where s.Command == command && s.PlayerID == player.PlayerCharacter.ID
+                                  select s).First();
 			if (obj == null)
 			{
 				return false;

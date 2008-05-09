@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
@@ -79,7 +80,9 @@ namespace DOL.GS
 			int salvageLevel = CraftingMgr.GetItemCraftLevel(item) / 100;
 			if(salvageLevel > 9) salvageLevel = 9; // max 9
 			
-			DBSalvage material = (DBSalvage) GameServer.Database.SelectObject(typeof(DBSalvage),"ObjectType ='"+item.Object_Type+"' AND SalvageLevel ='"+salvageLevel+"'");
+			DBSalvage material = (DBSalvage)(from s in DatabaseLayer.Instance.OfType<DBSalvage>()
+                                             where s.ObjectType == item.Object_Type&& s.SalvageLevel == salvageLevel
+                                                 select s).First();
 			if (material == null || material.RawMaterial == null)
 			{
 				player.Out.SendMessage("Salvage material for object type (" + item.Object_Type + ") not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -126,7 +129,7 @@ namespace DOL.GS
 			siegeWeapon.ReleaseControl();
 			siegeWeapon.RemoveFromWorld();
 			bool error = false;
-			DBCraftedItem craftItemData = (DBCraftedItem)GameServer.Database.SelectObject(typeof(DBCraftedItem), "Id_nb ='" + GameServer.Database.Escape(siegeWeapon.ItemId) + "'");
+			DBCraftedItem craftItemData = (DBCraftedItem)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(DBCraftedItem), siegeWeapon.ItemId);
 			if (craftItemData == null)
 				return 0;
 			if (craftItemData.RawMaterials == null)
@@ -135,7 +138,7 @@ namespace DOL.GS
 			ItemTemplate template;
 			foreach (DBCraftedXItem rawmaterial in craftItemData.RawMaterials)
 			{
-				template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), rawmaterial.IngredientId_nb);
+				template = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), rawmaterial.IngredientId_nb);
 				item = new InventoryItem(template);
 				item.Count = rawmaterial.Count;
 				if (!player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))

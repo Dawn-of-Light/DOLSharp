@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 
 using DOL.Database2;
@@ -20,7 +21,11 @@ namespace DOL.GS.Keeps
 		/// <returns>The position object</returns>
 		public static DBKeepPosition GetUsablePosition(GameKeepGuard guard)
 		{
-			return GameServer.Database.SelectObject(typeof(DBKeepPosition), "ClassType != 'DOL.GS.Keeps.Banner' and TemplateID = '" + GameServer.Database.Escape(guard.TemplateID) + "' and ComponentSkin = '" + guard.Component.Skin + "' and Height <= " + guard.Component.Height + " order by Height desc limit 0,1") as DBKeepPosition;
+			return (from s in DatabaseLayer.Instance.OfType<DBKeepPosition>()
+                    where s.ClassType != "DOL.GS.Keeps.Banner" && s.TemplateID == guard.TemplateID &&
+                    s.ComponentSkin == guard.Component.Skin && s.Height <= guard.Component.Height
+                    orderby s.Height
+                        select s).First();
 		}
 
 		/// <summary>
@@ -30,7 +35,11 @@ namespace DOL.GS.Keeps
 		/// <returns>The position object</returns>
 		public static DBKeepPosition GetUsablePosition(GameKeepBanner b)
 		{
-			return GameServer.Database.SelectObject(typeof(DBKeepPosition), "ClassType = 'DOL.GS.Keeps.Banner' and TemplateID = '" + GameServer.Database.Escape(b.TemplateID) + "' and ComponentSkin = '" + b.Component.Skin + "' and Height <= " + b.Component.Height + " order by Height desc limit 0,1") as DBKeepPosition;
+            return (from s in DatabaseLayer.Instance.OfType<DBKeepPosition>()
+                    where s.ClassType == "DOL.GS.Keeps.Banner" && s.TemplateID == b.TemplateID &&
+                    s.ComponentSkin == b.Component.Skin && s.Height <= b.Component.Height
+                    orderby s.Height
+                    select s).First();
 		}
 
 		/// <summary>
@@ -40,7 +49,9 @@ namespace DOL.GS.Keeps
 		/// <returns>The position object</returns>
 		public static DBKeepPosition GetPosition(GameKeepGuard guard)
 		{
-			return GameServer.Database.SelectObject(typeof(DBKeepPosition), "TemplateID = '" + GameServer.Database.Escape(guard.TemplateID) + "' and ComponentSkin = '" + guard.Component.Skin + "' and Height = " + guard.Component.Height) as DBKeepPosition;
+            return (from s in GameServer.Database.OfType<DBKeepPosition>()
+                    where s.TemplateID == guard.TemplateID && s.ComponentSkin == guard.Component.Skin && s.Height == guard.Component.Height
+                    select s).First();
 		}
 
 
@@ -287,7 +298,7 @@ namespace DOL.GS.Keeps
 		{
 			SortedList sorted = new SortedList();
 			pathID.Replace('\'', '/'); // we must replace the ', found no other way yet
-			DBPath dbpath = (DBPath)GameServer.Database.SelectObject(typeof(DBPath), "PathID='" + GameServer.Database.Escape(pathID) + "'");
+			DBPath dbpath = (DBPath)GameServer.Database.SelectObject(typeof(DBPath), "PathID",pathID);
 			DBPathPoint[] pathpoints = null;
 			ePathType pathType = ePathType.Once;
 
@@ -298,7 +309,7 @@ namespace DOL.GS.Keeps
 			}
 			if (pathpoints == null)
 			{
-				pathpoints = (DBPathPoint[])GameServer.Database.SelectObjects(typeof(DBPathPoint), "PathID='" + GameServer.Database.Escape(pathID) + "'");
+				pathpoints = (DBPathPoint[])GameServer.Database.SelectObjects(typeof(DBPathPoint), "PathID",pathID);
 			}
 
 			foreach (DBPathPoint point in pathpoints)
@@ -346,7 +357,7 @@ namespace DOL.GS.Keeps
 				return;
 
 			pathID.Replace('\'', '/'); // we must replace the ', found no other way yet
-			foreach (DBPath pp in GameServer.Database.SelectObjects(typeof(DBPath), "PathID='" + GameServer.Database.Escape(pathID) + "'"))
+			foreach (DBPath pp in GameServer.Database.SelectObjects(typeof(DBPath), "PathID" ,pathID))
 			{
 				GameServer.Database.DeleteObject(pp);
 			}

@@ -444,7 +444,7 @@ namespace DOL.GS.Keeps
 				return;
 			base.LoadFromDatabase(obj);
 
-			Zone curZone = WorldMgr.GetZone((ushort)(door.InternalID / 1000000));
+			Zone curZone = WorldMgr.GetZone((ushort)(door.DoorID / 1000000));
 			if (curZone == null) return;
 			this.CurrentRegion = curZone.ZoneRegion;
 			m_Name = door.Name;
@@ -454,7 +454,7 @@ namespace DOL.GS.Keeps
 			m_Z = door.Z;
 			m_Level = 0;
 			m_Model = 0xFFFF;
-			m_doorID = door.InternalID;
+			m_doorID = door.DoorID;
 			m_state = eDoorState.Closed;
 			this.AddToWorld();
 
@@ -465,7 +465,7 @@ namespace DOL.GS.Keeps
 					AbstractGameKeep keep = (area as KeepArea).Keep;
 					Component = new GameKeepComponent();
 					Component.Keep = keep;
-					Component.Keep.Doors.Add(door.InternalID, this);
+					Component.Keep.Doors.Add(door.DoorID, this);
 					break;
 				}
 			}

@@ -61,10 +61,10 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="guildID">The guild id for a player</param>
 		/// <returns>The dictionary sorted on the player's name</returns>
-		public static SortedList<string, SocialWindowMemeber> GetSocialWindowGuild(UInt64 GuildID)
+		public static SortedList<string, SocialWindowMemeber> GetSocialWindowGuild(UInt64 guildID)
 		{
-			if (m_guildXAllPlayers.ContainsKey(GuildID))
-				return m_guildXAllPlayers[GuildID];
+			if (m_guildXAllPlayers.ContainsKey(guildID))
+				return m_guildXAllPlayers[guildID];
 			return null;
 		}
 
@@ -74,11 +74,11 @@ namespace DOL.GS
 		/// <param name="player">Player to add</param>
 		public static void AddPlayerToSocialWindow(GamePlayer player)
 		{
-			if (m_guildXAllPlayers.ContainsKey(player.GuildID))
+			if (m_guildXAllPlayers.ContainsKey(player.guildID))
 			{
-				if (!m_guildXAllPlayers[player.GuildID].ContainsKey(player.Name))
+				if (!m_guildXAllPlayers[player.guildID].ContainsKey(player.Name))
 				{
-					SortedList<string, SocialWindowMemeber> tempList = m_guildXAllPlayers[player.GuildID];
+					SortedList<string, SocialWindowMemeber> tempList = m_guildXAllPlayers[player.guildID];
 					SocialWindowMemeber member = new SocialWindowMemeber(player.Name, player.Level.ToString(), player.CharacterClass.ID.ToString(), player.GuildRank.RankLevel.ToString(), player.Group != null ? player.Group.MemberCount.ToString() : "1", player.CurrentZone.Description, player.GuildNote);
 					tempList.Add(player.Name, member);
 				}
@@ -92,9 +92,9 @@ namespace DOL.GS
 		/// <returns>True if player was removed, else false.</returns>
 		public static bool RemovePlayerFromSocialWindow(GamePlayer player)
 		{
-			if (m_guildXAllPlayers.ContainsKey(player.GuildID))
+			if (m_guildXAllPlayers.ContainsKey(player.guildID))
 			{
-				return m_guildXAllPlayers[player.GuildID].Remove(player.Name);
+				return m_guildXAllPlayers[player.guildID].Remove(player.Name);
 			}
 			return false;
 		}
@@ -121,7 +121,7 @@ namespace DOL.GS
 				if (!m_guilds.Contains(guild.Name))
 				{
 					m_guilds.Add(guild.Name, guild);
-					m_guildids.Add(guild.GuildID, guild.Name);
+					m_guildids.Add(guild.guildID, guild.Name);
 					guild.ID = ++m_lastID;
 					return true;
 				}
@@ -144,7 +144,7 @@ namespace DOL.GS
 			lock (m_guilds.SyncRoot)
 			{
 				m_guilds.Remove(guild.Name);
-				m_guildids.Remove(guild.GuildID);
+				m_guildids.Remove(guild.guildID);
 			}
 			return true;
 		}
@@ -218,7 +218,7 @@ namespace DOL.GS
 				rank.Emblem = false;
 				rank.GcHear = true;
 				rank.GcSpeak = false;
-				rank.GuildID = newguild.GuildID;
+				rank.guildID = newguild.guildID;
 				rank.Invite = false;
 				rank.OcHear = false;
 				rank.OcSpeak = false;
@@ -310,9 +310,9 @@ namespace DOL.GS
                                            select s))
 				{
                     foreach (Character cha in (from s in DatabaseLayer.Instance.OfType<Character>()
-                                               where s.GuildID == guild.ID
+                                               where s.guildID == guild.ID
                                                select s)) 
-						cha.GuildID = 0;
+						cha.guildID = 0;
 					GameServer.Database.DeleteObject(guild);
 				}
 
@@ -321,7 +321,7 @@ namespace DOL.GS
 					foreach (GamePlayer ply in removeGuild.ListOnlineMembers())
 					{
 						ply.Guild = null;
-						ply.GuildID = 0;
+						ply.guildID = 0;
 						ply.GuildName = "";
 						ply.GuildRank = null;
 					}
@@ -356,17 +356,17 @@ namespace DOL.GS
 		/// Returns a guild according to the matching database ID.
 		/// </summary>
 		/// <returns>Guild</returns>
-		public static Guild GetGuildByGuildID(UInt64 GuildID)
+		public static Guild GetGuildByGuildID(UInt64 guildID)
 		{
-			if(GuildID == 0) return null;
+			if(guildID == 0) return null;
 			
 			lock (m_guildids.SyncRoot)
 			{
-				if(m_guildids[GuildID] == null) return null;
+				if(m_guildids[guildID] == null) return null;
 				
 				lock(m_guilds.SyncRoot)
 				{
-					return (Guild)m_guilds[m_guildids[GuildID]];
+					return (Guild)m_guilds[m_guildids[guildID]];
 				}
 			}
 		}
@@ -380,7 +380,7 @@ namespace DOL.GS
 			Guild g = GetGuildByName(guildName);
 			if (g == null)
 				return 0;
-			return g.GuildID;
+			return g.guildID;
 		}
 
 		/// <summary>
@@ -413,7 +413,7 @@ namespace DOL.GS
 				if (((DBGuild)obj).Ranks.Length == 0)
 					CreateRanks(myguild);
                 Character[] guildCharacters = (Character[])from s in DatabaseLayer.Instance.OfType<Character>()
-                                              where s.GuildID == myguild.GuildID
+                                              where s.guildID == myguild.guildID
                                               select s;
 				SortedList<string, SocialWindowMemeber> tempList = new SortedList<string, SocialWindowMemeber>(guildCharacters.Length);
 				foreach (Character ch in guildCharacters)
@@ -421,7 +421,7 @@ namespace DOL.GS
 					SocialWindowMemeber member = new SocialWindowMemeber(ch.Name, ch.Level.ToString(), ch.Class.ToString(), ch.GuildRank.ToString(), "0", ch.LastPlayed.ToShortDateString(), ch.GuildNote);
 					tempList.Add(ch.Name, member);
 				}
-				m_guildXAllPlayers.Add(myguild.GuildID, tempList);
+				m_guildXAllPlayers.Add(myguild.guildID, tempList);
 			}
 
 			//load alliances

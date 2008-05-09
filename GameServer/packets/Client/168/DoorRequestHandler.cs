@@ -163,7 +163,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						else
 						{
-							DBDoor doorCheck = GameServer.Database.SelectObject(typeof(DBDoor), "InternalID = " + m_doorId) as DOL.Database2.DBDoor;
+                            DBDoor doorCheck = (DBDoor)GameServer.Database.SelectObject(typeof(DBDoor), "InternalID", m_doorId);
 							if (doorCheck == null)
 							{
 								player.Out.SendMessage("The door's ID is: " + m_doorId.ToString(), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -190,8 +190,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 
 					DBDoor door = new DBDoor();
-					door.ObjectId = null;
-					door.InternalID = m_doorId;
+					door.DoorID = m_doorId;
 					door.X = player.X;
 					door.Y = player.Y;
 					door.Z = player.Z;

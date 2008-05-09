@@ -178,7 +178,7 @@ namespace DOL.GS.Quests.Midgard
 				yuliwyf.Y = 28279;
 				yuliwyf.Z = 8819;
 				yuliwyf.Heading = 2013;
-				yuliwyf.EquipmentTemplateID = "5101262";
+				yuliwyf.EquipmentTemplateID = 5101262;
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
@@ -207,7 +207,7 @@ namespace DOL.GS.Quests.Midgard
 				harlfug.Y = 754240;
 				harlfug.Z = 4600;
 				harlfug.Heading = 2707;
-				harlfug.EquipmentTemplateID = "5100798";
+				harlfug.EquipmentTemplateID = 5100798;
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following

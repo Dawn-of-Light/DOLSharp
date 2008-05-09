@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 using DOL.Database2;
@@ -79,7 +80,10 @@ namespace DOL.GS
 					{
 						try
 						{
-							itemTemplates = GameServer.Database.SelectObjects(typeof(ItemTemplate), "Level>=" + (i * LEVEL_RANGE) + " AND Level<=" + ((i + 1) * LEVEL_RANGE) + " AND IsPickable = 1 AND IsDropable = 1 AND CanDropAsloot = 1");
+							itemTemplates = (DatabaseObject[]) ( from s in DatabaseLayer.Instance.OfType<ItemTemplate>()
+                                                                 where s.Level>=i * LEVEL_RANGE&& s.Level<=((i + 1) * LEVEL_RANGE) && 
+                                                                 s.IsPickable == true && s.IsDropable == true && s.CanDropAsLoot == true
+                                                                 select s);
 						}
 						catch (Exception e)
 						{

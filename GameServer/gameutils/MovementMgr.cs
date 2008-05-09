@@ -20,7 +20,7 @@ using System.Collections;
 using System.Reflection;
 using DOL.Database2;
 using log4net;
-
+using System.Linq;
 namespace DOL.GS.Movement
 {
     /// <summary>
@@ -98,9 +98,11 @@ namespace DOL.GS.Movement
         {
             if (path == null)
                 return;
-
+            //TODO: This "escaping" can be removed later -- Masterfreek64
             pathID.Replace('\'', '/'); // we must replace the ', found no other way yet
-            foreach (DBPath pp in GameServer.Database.SelectObjects(typeof(DBPath), pathID))
+            foreach (DBPath pp in (from s in DatabaseLayer.Instance.OfType<DBPath>() 
+                                       where s.PathID == pathID
+                                       select s))
             {
                 GameServer.Database.DeleteObject(pp);
             }

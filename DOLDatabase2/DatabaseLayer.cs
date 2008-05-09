@@ -213,9 +213,13 @@ namespace DOL.Database2
             return list;
         }
         #endregion
+        public bool Contains(UInt64 Key)
+        {
+            return DatabaseObjects.ContainsKey(Key);
+        }
         //A lot of little helpers for common Select Statements !
         #region Select Helpers 
-        
+ 
         public DatabaseObject GetDatabaseObjectFromID(UInt64 ID)
         {
             if (ID == 0)
@@ -249,7 +253,7 @@ namespace DOL.Database2
         /// </summary>
         /// <param name="Object"></param>
         [Obsolete]
-        public void AddNewObject(DatabaseObject Object)
+        public void AddNewObject(DatabaseObject Object) // Automatically happens
         {
         }
         public void DeleteObject(DatabaseObject Object)
@@ -257,8 +261,17 @@ namespace DOL.Database2
             DatabaseObjects.Remove(Object.ID);
             m_provider.DeleteObject(Object.ID);
         }
-
-
+        public void SetProvider(DatabaseProvider provider,string ConnectionString)
+        {
+            if (m_provider != null)
+            {
+                // Unload old one
+                m_provider.CloseConnection();
+            }
+            m_provider = provider;
+            m_provider.ConnectionString = ConnectionString;
+            m_provider.OpenConnection();
+        }
 
 
         #region IEnumerable Members

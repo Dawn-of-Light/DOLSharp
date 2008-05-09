@@ -762,7 +762,7 @@ namespace DOL.GS
         /// </summary>
         /// <param name="templateID">Equipment Template ID.</param>
         /// <returns>True on success, else false.</returns>
-		private bool LoadEquipmentTemplate(String templateID)
+		private bool LoadEquipmentTemplate(string templateID)
 		{
 			if (templateID.Length > 0)
 			{

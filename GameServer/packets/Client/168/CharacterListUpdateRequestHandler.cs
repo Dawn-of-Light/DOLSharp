@@ -50,8 +50,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 				else
 				{
-					String select = String.Format("Name = '{0}'", GameServer.Database.Escape(charname));
-					Character character = (Character)GameServer.Database.SelectObject(typeof(Character), select);
+					Character character = (Character)GameServer.Database.SelectObject(typeof(Character),"Name",charname);
 					if (character != null)
 					{
 						// update old character
@@ -141,7 +140,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						packet.Skip(24); //Location String
 						ch.LastName = "";
-						ch.GuildID = "";
+						ch.guildID = 0;
 						packet.Skip(24); //Skip class name
 						packet.Skip(24); //Skip race name
 						ch.Level = packet.ReadByte(); //not safe!
@@ -300,13 +299,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 									switch (ServerProperties.Properties.SERV_LANGUAGE)
 										{
 											case "EN":
-												ch.GuildID = GuildMgr.GuildNameToGuildID("Clan Cotswold");
+												ch.guildID = GuildMgr.GuildNameToGuildID("Clan Cotswold");
 												break; 
 											case "DE":
-												ch.GuildID = GuildMgr.GuildNameToGuildID("Klan Cotswold");
+												ch.guildID = GuildMgr.GuildNameToGuildID("Klan Cotswold");
 												break; 
 											default:
-												ch.GuildID = GuildMgr.GuildNameToGuildID("Clan Cotswold");
+												ch.guildID = GuildMgr.GuildNameToGuildID("Clan Cotswold");
 												break; 
 										}													
 									break;
@@ -314,13 +313,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 									switch (ServerProperties.Properties.SERV_LANGUAGE)
 										{
 											case "EN":
-												ch.GuildID = GuildMgr.GuildNameToGuildID("Mularn Protectors");
+												ch.guildID = GuildMgr.GuildNameToGuildID("Mularn Protectors");
 												break; 
 											case "DE":
-												ch.GuildID = GuildMgr.GuildNameToGuildID("Beschützer von Mularn");
+												ch.guildID = GuildMgr.GuildNameToGuildID("Beschützer von Mularn");
 												break; 
 											default:
-												ch.GuildID = GuildMgr.GuildNameToGuildID("Mularn Protectors");
+												ch.guildID = GuildMgr.GuildNameToGuildID("Mularn Protectors");
 												break; 
 										}													
 									break;
@@ -328,20 +327,20 @@ namespace DOL.GS.PacketHandler.Client.v168
 									switch (ServerProperties.Properties.SERV_LANGUAGE)
 										{
 											case "EN":
-												ch.GuildID = GuildMgr.GuildNameToGuildID("Tir na Nog Adventurers");
+												ch.guildID = GuildMgr.GuildNameToGuildID("Tir na Nog Adventurers");
 												break; 
 											case "DE":
-												ch.GuildID = GuildMgr.GuildNameToGuildID("Tir na Nog-Abenteurer");
+												ch.guildID = GuildMgr.GuildNameToGuildID("Tir na Nog-Abenteurer");
 												break; 
 											default:
-												ch.GuildID = GuildMgr.GuildNameToGuildID("Tir na Nog Adventurers");
+												ch.guildID = GuildMgr.GuildNameToGuildID("Tir na Nog Adventurers");
 												break; 
 										}
 									break;
 								default: break;
 							}
 
-							if (ch.GuildID != "")
+							if (ch.guildID != 0)
 								ch.GuildRank = 8;
 						}
 
@@ -393,7 +392,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 
 						//GameServer.Database.WriteDatabaseTable(typeof(Character));
-						GameServer.Database.FillObjectRelations(client.Account);
+						//GameServer.Database.FillObjectRelations(client.Account);
 						client.Out.SendCharacterOverview((eRealm)ch.Realm);
 					}
 				}

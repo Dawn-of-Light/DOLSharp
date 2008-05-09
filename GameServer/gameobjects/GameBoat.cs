@@ -60,7 +60,7 @@ namespace DOL.GS
             set { m_DBboat = value; }
         }
 
-        public string BoatID
+        public UInt64 BoatID
         {
             get
             {
@@ -224,7 +224,7 @@ namespace DOL.GS
         /// <returns></returns>
         public override bool Interact(GamePlayer player)
         {
-            if (this.BoatOwnerID != "")            
+            if (this.BoatOwnerID != 0)            
                 return false;
               
  	        return base.Interact(player);

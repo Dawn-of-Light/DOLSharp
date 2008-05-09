@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections;
 using DOL.Database2;
 using DOL.GS.PacketHandler;
@@ -63,14 +64,16 @@ namespace DOL.GS
 		}
 		public void SaveAggroToFaction(string charID)
 		{
-			DBFactionAggroLevel dbfactionAggroLevel = (DBFactionAggroLevel)GameServer.Database.SelectObject(typeof(DBFactionAggroLevel), "CharacterID = '" + GameServer.Database.Escape(charID) + "' AND FactionID =" + this.ID);
+			DBFactionAggroLevel dbfactionAggroLevel = (from s in DatabaseLayer.Instance.OfType<DBFactionAggroLevel>()
+                                                       where s.CharacterID == charID && s.FactionID == this.ID
+                                                       select s).First();
 			if (dbfactionAggroLevel == null)
 			{
 				dbfactionAggroLevel = new DBFactionAggroLevel();
 				dbfactionAggroLevel.AggroLevel = (int)m_playerxFaction[charID];
 				dbfactionAggroLevel.CharacterID = charID;
 				dbfactionAggroLevel.FactionID = this.ID;
-				GameServer.Database.AddNewObject(dbfactionAggroLevel);
+                dbfactionAggroLevel.Save();
 			}
 			else
 			{

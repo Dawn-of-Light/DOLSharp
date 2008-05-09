@@ -16,8 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
 using DOL.Database2;
-using DOL.Database2.Attributes;
 using DOL.GS.PacketHandler;
 //This script demonstrates how to create a data aware custom NPC
 
@@ -32,7 +32,7 @@ namespace DOL.GS.Scripts
 		public class TownCrierMessage : DatabaseObject
 		{
 			private string m_msg;
-			private string m_id;
+			private UInt64 m_id;
 			private static bool autoSave;
 
 			public TownCrierMessage()
@@ -40,19 +40,14 @@ namespace DOL.GS.Scripts
 				m_msg = "Dawn of Light r0x my world!";
 			}
 
-			public override bool AutoSave
-			{
-				get { return autoSave; }
-				set { autoSave = value; }
-			}
 
 			//[PrimaryKey]
-			public string TownCrierID
+			public UInt64 TownCrierID
 			{
 				get { return m_id; }
 				set
 				{
-					Dirty = true;
+					m_Dirty = true;
 					m_id = value;
 				}
 			}
@@ -63,7 +58,7 @@ namespace DOL.GS.Scripts
 				get { return m_msg; }
 				set
 				{
-					Dirty = true;
+					m_Dirty = true;
 					m_msg = value;
 				}
 			}
@@ -88,8 +83,8 @@ namespace DOL.GS.Scripts
 		{
 			if (!m_init && GameServer.Database != null)
 			{
-				GameServer.Database.RegisterDataObject(typeof (TownCrierMessage));
-				GameServer.Database.LoadDatabaseTable(typeof (TownCrierMessage));
+				//GameServer.Database.RegisterDataObject(typeof (TownCrierMessage));
+				//GameServer.Database.LoadDatabaseTable(typeof (TownCrierMessage));
 				m_init = true;
 			}
 		}
@@ -108,12 +103,12 @@ namespace DOL.GS.Scripts
 			return res;
 		}
 
-		public override void LoadFromDatabase(DataObject mob)
+		public override void LoadFromDatabase(DatabaseObject mob)
 		{
 			base.LoadFromDatabase(mob);
 			if (GameServer.Database != null)
 			{
-				TownCrierMessage tcmsg = (TownCrierMessage) GameServer.Database.FindObjectByKey(typeof (TownCrierMessage), this.InternalID);
+				TownCrierMessage tcmsg = (TownCrierMessage) GameServer.Database.GetDatabaseObjectFromID(this.InternalID);
 
 				if (tcmsg != null)
 				{
@@ -130,7 +125,7 @@ namespace DOL.GS.Scripts
 			{
 				TownCrierMessage tcmsg = null;
 
-				tcmsg = (TownCrierMessage) GameServer.Database.FindObjectByKey(typeof (TownCrierMessage), InternalID);
+				tcmsg = (TownCrierMessage) GameServer.Database.GetDatabaseObjectFromID( InternalID);
 
 				if (tcmsg == null)
 				{
@@ -153,7 +148,7 @@ namespace DOL.GS.Scripts
 		{
 			if (InternalID != null && GameServer.Database != null)
 			{
-				TownCrierMessage tcmsg = (TownCrierMessage) GameServer.Database.FindObjectByKey(typeof (TownCrierMessage), InternalID);
+				TownCrierMessage tcmsg = (TownCrierMessage) GameServer.Database.GetDatabaseObjectFromID( InternalID);
 
 				if (tcmsg != null)
 				{

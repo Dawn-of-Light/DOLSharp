@@ -465,8 +465,8 @@ namespace DOL.GS
 		public void LoadFromDatabase(Mob[] mobObjs, ref long mobCount, ref long merchantCount, ref long itemCount, ref long bindCount)
 		{
 			Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
-			WorldObject[] staticObjs = (WorldObject[])GameServer.Database.SelectObjects(typeof(WorldObject), "Region = " + ID);
-			BindPoint[] bindPoints = (BindPoint[])GameServer.Database.SelectObjects(typeof(BindPoint), "Region = " + ID);
+			WorldObject[] staticObjs = (WorldObject[])GameServer.Database.SelectObjects(typeof(WorldObject), "Region",ID);
+			BindPoint[] bindPoints = (BindPoint[])GameServer.Database.SelectObjects(typeof(BindPoint), "Region",ID);
 			int count = mobObjs.Length + staticObjs.Length;
 			if (count > 0) PreAllocateRegionSpace(count + 100);
 			int myItemCount = staticObjs.Length;

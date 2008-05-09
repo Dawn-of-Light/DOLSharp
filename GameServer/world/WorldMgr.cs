@@ -278,10 +278,9 @@ namespace DOL.GS
 
 			// Load available teleport locations.
 
-			DatabaseObject[] objs = GameServer.Database.SelectObjects(typeof(Teleport));
 			m_teleportLocations = new Dictionary<string, Teleport>();
 			int[] numTeleports = new int[3];
-			foreach (Teleport teleport in objs)
+			foreach (Teleport teleport in GameServer.Database.SelectObjects(typeof(Teleport)))
 			{
 				if (m_teleportLocations.ContainsKey(teleport.TeleportID.ToLower()))
 				{
@@ -298,10 +297,9 @@ namespace DOL.GS
 			// sort the regions by mob count
 
 			log.Debug("loading mobs from DB...");
-			objs = GameServer.Database.SelectObjects(typeof(Mob));
 
 			Hashtable mobsByRegionId = new Hashtable(512);
-			foreach (Mob mob in objs)
+			foreach (Mob mob in GameServer.Database.SelectObjects(typeof(Mob)))
 			{
 				ArrayList list = (ArrayList)mobsByRegionId[mob.Region];
 				if (list == null)
@@ -311,7 +309,6 @@ namespace DOL.GS
 				}
 				list.Add(mob);
 			}
-			objs = null;
 
 			ArrayList regions = new ArrayList(512);
 			foreach (DictionaryEntry entry in regionCfg.Children)
@@ -1374,7 +1371,7 @@ namespace DOL.GS
         /// <param name="exactMatch">true if AccountName match exactly</param>
         /// <param name="activeRequired"></param>
         /// <returns>The found GameClient or null</returns>
-        public static GameClient GetClientByPlayerID(string playerID, bool exactMatch, bool activeRequired)
+        public static GameClient GetClientByPlayerID(UInt64 playerID, bool exactMatch, bool activeRequired)
         {
             foreach (GameClient client in WorldMgr.GetAllPlayingClients())
             {

@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -405,7 +406,7 @@ namespace DOL.GS.Commands
                                 return;
                             }
 
-                            UInt64 GuildID = "";
+                            UInt64 guildID = 0;
                             ushort guildRank = 9;
                             string plyName = "";
                             GamePlayer ply = obj as GamePlayer;
@@ -413,17 +414,17 @@ namespace DOL.GS.Commands
                             if (obj is GamePlayer)
                             {
                                 plyName = ply.Name;
-                                guildId = ply.GuildID;
+                                guildID = ply.guildID;
                                 if (ply.GuildRank != null)
                                     guildRank = ply.GuildRank.RankLevel;
                             }
                             else
                             {
                                 plyName = ch.Name;
-                                guildId = ch.GuildID;
+                                guildID = ch.guildID;
                                 guildRank = (byte)ch.GuildRank;
                             }
-                            if (guildId != client.Player.GuildID)
+                            if (guildID != client.Player.guildID)
                             {
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NotInYourGuild"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 return;
@@ -437,7 +438,7 @@ namespace DOL.GS.Commands
                                 client.Player.Guild.RemovePlayer(client.Player.Name, ply);
                             else
                             {
-                                ch.GuildID = "";
+                                ch.guildID = 0;
                                 ch.GuildRank = 9;
                                 GameServer.Database.SaveObject(ch);
                             }
@@ -473,7 +474,9 @@ namespace DOL.GS.Commands
 
                             string playername = String.Join(" ", args, 2, args.Length - 2);
                             // Patch 1.84: look for offline players
-                            Character[] chs = (Character[])GameServer.Database.SelectObjects(typeof(Character), "AccountName='" + GameServer.Database.Escape(playername) + "' AND GuildID='" + client.Player.GuildID + "'");
+                            Character[] chs = (Character[])(from s in GameServer.Database.OfType<Character>()
+                                                            where s.AccountName==playername &&  s.guildID==client.Player.guildID 
+                                                            select s);
                             if (chs != null && chs.GetLength(0) > 0)
                             {
                                 GameClient myclient = WorldMgr.GetClientByAccountName(playername, false);
@@ -486,7 +489,7 @@ namespace DOL.GS.Commands
                                         client.Player.Guild.RemovePlayer(client.Player.Name, myclient.Player);
                                     else
                                     {
-                                        ch.GuildID = "";
+                                        ch.guildID = 0;
                                         ch.GuildRank = 9;
                                         GameServer.Database.SaveObject(ch);
                                     }
@@ -929,7 +932,7 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage("Sorry, your guild name is too long.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-                            guildname = GameServer.Database.Escape(guildname);
+                            guildname = guildname;
 
                             if (!IsValidGuildName(guildname))
                             {
@@ -1040,7 +1043,7 @@ namespace DOL.GS.Commands
                                 if (myclient == null)
                                 {
                                     // Patch 1.84: look for offline players
-                                    obj = (Character)GameServer.Database.SelectObject(typeof(Character), "Name='" + GameServer.Database.Escape(playername) + "'");
+                                    obj = (Character)GameServer.Database.SelectObject(typeof(Character), "Name",playername);
                                 }
                                 else
                                     obj = myclient.Player;
@@ -1051,7 +1054,7 @@ namespace DOL.GS.Commands
                                 return;
                             }
 
-                            UInt64 GuildID = "";
+                            UInt64 guildID = 0 ;
                             ushort guildRank = 9;
                             string plyName = "";
                             GamePlayer ply = obj as GamePlayer;
@@ -1059,17 +1062,17 @@ namespace DOL.GS.Commands
                             if (obj is GamePlayer)
                             {
                                 plyName = ply.Name;
-                                guildId = ply.GuildID;
+                                guildID = ply.guildID;
                                 if (ply.GuildRank != null)
                                     guildRank = ply.GuildRank.RankLevel;
                             }
                             else
                             {
                                 plyName = ch.Name;
-                                guildId = ch.GuildID;
+                                guildID = ch.guildID;
                                 guildRank = ch.GuildRank;
                             }
-                            if (guildId != client.Player.GuildID)
+                            if (guildID != client.Player.guildID)
                             {
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NotInYourGuild"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 return;
@@ -1150,7 +1153,7 @@ namespace DOL.GS.Commands
                                 return;
                             }
 
-                            UInt64 GuildID = "";
+                            UInt64 guildID = 0;
                             ushort guildRank = 1;
                             string plyName = "";
                             GamePlayer ply = obj as GamePlayer;
@@ -1158,17 +1161,17 @@ namespace DOL.GS.Commands
                             if (obj is GamePlayer)
                             {
                                 plyName = ply.Name;
-                                guildId = ply.GuildID;
+                                guildID = ply.guildID;
                                 if (ply.GuildRank != null)
                                     guildRank = ply.GuildRank.RankLevel;
                             }
                             else
                             {
                                 plyName = ch.Name;
-                                guildId = ch.GuildID;
+                                guildID = ch.guildID;
                                 guildRank = ch.GuildRank;
                             }
-                            if (guildId != client.Player.GuildID)
+                            if (guildID != client.Player.guildID)
                             {
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NotInYourGuild"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 return;
@@ -1222,7 +1225,7 @@ namespace DOL.GS.Commands
                             if (args.Length == 6 && args[2] == "window")
                             {
                                 //First get the sorted list 
-                                SortedList<string, GuildMgr.SocialWindowMemeber> guildMembers = GuildMgr.GetSocialWindowGuild(client.Player.GuildID);
+                                SortedList<string, GuildMgr.SocialWindowMemeber> guildMembers = GuildMgr.GetSocialWindowGuild(client.Player.guildID);
                                 if (guildMembers != null)
                                 {
                                     int sorttemp;
@@ -1319,7 +1322,7 @@ namespace DOL.GS.Commands
 												catch
 												{
 													if (log.IsErrorEnabled)
-														log.Error(string.Format("Sorted List duplicate entry - Key: {0} Member: {1}. Replacing - Member: {2}.  Sorted count: {3}.  Guild ID: {4}", key, member.Name, sortedList[key].Name, sortedList.Count, client.Player.GuildID));
+														log.Error(string.Format("Sorted List duplicate entry - Key: {0} Member: {1}. Replacing - Member: {2}.  Sorted count: {3}.  Guild ID: {4}", key, member.Name, sortedList[key].Name, sortedList.Count, client.Player.guildID));
 												}
 											}
 										}
@@ -1504,17 +1507,17 @@ namespace DOL.GS.Commands
                             {
                                 //#warning how can player name  !=  account if args[3] = account ?
                                 string playername = args[3];
-                                string accountId = "";
+                                string accountName = "";
 
                                 GameClient targetClient = WorldMgr.GetClientByPlayerName(args[3], false, true);
                                 if (targetClient != null)
                                 {
                                     OnCommand(client, new string[] { "gc", "remove", args[3] });
-                                    accountId = targetClient.Account.ObjectId;
+                                    accountName = targetClient.Account.Name;
                                 }
                                 else
                                 {
-                                    Character c = (Character)GameServer.Database.SelectObject(typeof(Character),playername);
+                                    Character c = (Character)GameServer.Database.SelectObject(typeof(Character),"Name",playername);
                                     //if (c == null)
                                     //c = (Character)GameServer.Database.SelectObject(typeof(CharacterArchive), "Name = '" + GameServer.Database.Escape(playername) + "'");
 
@@ -1524,15 +1527,15 @@ namespace DOL.GS.Commands
                                         return;
                                     }
 
-                                    accountId = c.Name;
+                                    accountName = c.AccountName;
                                 }
                                 List<Character> chars = new List<Character>();
-                                chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(Character), "AccountID = '" + accountId + "'"));
+                                chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(Character),"AccountName",accountName));
                                 //chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(CharacterArchive), "AccountID = '" + accountId + "'"));
 
                                 foreach (Character ply in chars)
                                 {
-                                    ply.GuildID = "";
+                                    ply.guildID = 0;
                                     ply.GuildRank = 0;
                                     GameServer.Database.SaveObject(ply);
                                 }
@@ -1556,14 +1559,14 @@ namespace DOL.GS.Commands
                                         client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.PlayerNotFound"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                         return;
                                     }
-                                    if (c.GuildID != client.Player.GuildID)
+                                    if (c.guildID != client.Player.guildID)
                                     {
                                         client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NotInYourGuild"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                         return;
                                     }
                                     else
                                     {
-                                        c.GuildID = "";
+                                        c.guildID = 0;
                                         c.GuildRank = 0;
                                         GameServer.Database.SaveObject(c);
                                     }

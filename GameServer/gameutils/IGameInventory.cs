@@ -93,6 +93,9 @@ namespace DOL.GS
 		bool            LoadFromDatabase(UInt64 inventoryID);
 		bool            SaveIntoDatabase(UInt64 inventoryID);
 
+        bool LoadFromDatabase(string inventoryID);
+        bool SaveIntoDatabase(string inventoryID);
+
 		bool			AddItem(eInventorySlot slot, InventoryItem item);
 		bool			AddCountToStack(InventoryItem item, int count);
 		bool			AddTemplate(ItemTemplate template, int count, eInventorySlot minSlot, eInventorySlot maxSlot);

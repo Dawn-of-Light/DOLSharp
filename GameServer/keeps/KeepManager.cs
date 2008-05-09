@@ -57,8 +57,7 @@ namespace DOL.GS.Keeps
 			{
 				m_keeps.Clear();
 
-				DatabaseObject[] keeps = GameServer.Database.SelectObjects(typeof(DBKeep));
-				foreach (DBKeep datakeep in keeps)
+				foreach (DBKeep datakeep in GameServer.Database.SelectObjects(typeof(DBKeep)))
 				{
 					if (WorldMgr.GetRegion((ushort)datakeep.Region) == null)
 						continue;
@@ -171,9 +170,9 @@ namespace DOL.GS.Keeps
 					foreach (GameKeepHookPoint hp in component.HookPoints.Values)
 					{
                         //TODO: tune
-                        DBKeepHookPointItem item = (from s in DatabaseLayer.Instance.OfType<DBKeepHookPoint>()
+                        DBKeepHookPointItem item = (from s in DatabaseLayer.Instance.OfType<DBKeepHookPointItem>()
                                                     where s.KeepID == component.Keep.KeepID && s.ComponentID == component.ID && s.HookPointID == hp.ID
-                                                    select s)[0];
+                                                    select s).First();
 						if (item != null)
 							HookPointItem.Invoke(component.HookPoints[hp.ID] as GameKeepHookPoint, item.ClassType);
 					}
@@ -632,7 +631,7 @@ namespace DOL.GS.Keeps
 
 			if (location != "")
 			{
-				Teleport t = (Teleport)GameServer.Database.SelectObject(typeof(Teleport), "`TeleportID` = '" + location + "'");
+				Teleport t = (Teleport)GameServer.Database.SelectObject(typeof(Teleport), "TeleportID",location);
 				if (t != null)
 					player.MoveTo((ushort)t.RegionID, t.X, t.Y, t.Z, (ushort)t.Heading);
 			}

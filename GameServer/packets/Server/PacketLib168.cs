@@ -19,6 +19,7 @@
 #define  NOENCRYPTION
 
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -243,7 +244,9 @@ namespace DOL.GS.PacketHandler
 							pak.WriteByte((byte)characters[j].Empathy);
 							pak.WriteByte((byte)characters[j].Charisma);
 
-							items = (InventoryItem[])GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + GameServer.Database.Escape(characters[j].ObjectId) + "' AND SlotPosition >='10' AND SlotPosition <= '29'");
+                            items = (InventoryItem[])from s in GameServer.Database.OfType<InventoryItem>()
+                                                     where s.OwnerID == characters[j].ObjectId && s.SlotPosition >= 10 && s.SlotPosition <= 29
+                                                     select s;
 							int found = 0;
 							//16 bytes: armor model
 							for (int k = 0x15; k < 0x1D; k++)

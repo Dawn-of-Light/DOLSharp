@@ -31,11 +31,7 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
-			if (GameServer.Instance.Configuration.DBType == DOL.Database2.Connection.ConnectionType.DATABASE_XML)
-			{
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.ServerProperties.DataBaseXML"));
-				return;
-			}
+            //TODO: Add information about DB here
 			ServerProperties.Properties.Refresh();
 			DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.ServerProperties.PropertiesRefreshed"));
 		}

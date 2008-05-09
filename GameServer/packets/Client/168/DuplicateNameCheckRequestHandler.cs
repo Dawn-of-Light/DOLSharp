@@ -28,8 +28,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			string name=packet.ReadString(30);
-			string select = string.Format("Name = '{0}'",GameServer.Database.Escape(name));
-			Character character = (Character) GameServer.Database.SelectObject(typeof(Character), select);
+			Character character = (Character) GameServer.Database.SelectObject(typeof(Character),"Name",name);
 			bool nameExists = (character != null);
 
 			client.Out.SendDupNameCheckReply(name,nameExists);

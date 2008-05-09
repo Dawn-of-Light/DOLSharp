@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections;
 using System.Reflection;
 using DOL.AI;
@@ -1069,7 +1070,7 @@ namespace DOL.GS.Commands
                                         client.Out.SendMessage("Error loading equipment template \"" + args[2] + "\"", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                         return;
                                     }
-                                    targetMob.EquipmentTemplateID = args[3];
+                                    targetMob.EquipmentTemplateID = DatabaseLayer.Instance.GetDatabaseObjectFromIDnb(typeof(ItemTemplate),args[3]).ID;
                                     targetMob.Inventory = load;
                                     targetMob.SaveIntoDatabase();
                                     targetMob.UpdateNPCEquipmentAppearance();
@@ -1191,7 +1192,7 @@ namespace DOL.GS.Commands
                             case "clear":
                                 {
                                     targetMob.Inventory = null;
-                                    targetMob.EquipmentTemplateID = null;
+                                    targetMob.EquipmentTemplateID = 0;
                                     targetMob.SaveIntoDatabase();
                                     client.Out.SendMessage("Mob equipment removed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 }
@@ -1202,7 +1203,7 @@ namespace DOL.GS.Commands
                                     if (args.Length > 3)
                                     {
                                         bool replace = (args.Length > 4 && args[4].ToLower() == "replace") ? true : false;
-                                        if (!replace && null != GameServer.Database.SelectObject(typeof(NPCEquipment), "TemplateID = '" + GameServer.Database.Escape(args[3]) + "'"))
+                                        if (!replace && null != GameServer.Database.SelectObject(typeof(NPCEquipment), "TemplateID",args[3]))
                                         {
                                             client.Out.SendMessage("Template with name '" + args[3] + "' already exists. Use 'replace' flag if you want to overwrite it.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                             return;
@@ -1212,7 +1213,7 @@ namespace DOL.GS.Commands
                                             client.Out.SendMessage("Error saving template with name " + args[3], eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                             return;
                                         }
-                                        targetMob.EquipmentTemplateID = args[3];
+                                        targetMob.EquipmentTemplateID = DatabaseLayer.Instance.GetDatabaseObjectFromIDnb(typeof(ItemTemplate),args[3]).ID;
                                         targetMob.SaveIntoDatabase();
                                         client.Out.SendMessage("Target mob equipment template is saved as '" + args[3] + "'", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                         return;
@@ -1281,8 +1282,10 @@ namespace DOL.GS.Commands
                                 DisplayMessage(client, "You cannot add the " + lootTemplateID + " to the " + targetMob.Name + " because the item does not exist.");
                                 return;
                             }
-                            DBLootTemplate[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(name) + "' AND ItemTemplateID = '" + GameServer.Database.Escape(lootTemplateID) + "'");
-                            if (template != null)
+                            DBLootTemplate[] template = (DBLootTemplate[])(from s in DatabaseLayer.Instance.OfType<DBLootTemplate>()
+                                                                           where s.TemplateName == name && s.ItemTemplateID == lootTemplateID
+                                                                           select s);
+                            if (template.Length > 0)
                             {
                                 foreach (DatabaseObject loot in template)
                                 {
@@ -1292,8 +1295,7 @@ namespace DOL.GS.Commands
                                 lt.Chance = chance;
                                 lt.TemplateName = name;
                                 lt.ItemTemplateID = lootTemplateID;
-
-                                GameServer.Database.AddNewObject(lt);
+                                lt.Save();
                             }
                             else
                             {
@@ -1329,8 +1331,8 @@ namespace DOL.GS.Commands
                         string name = targetMob.Name;
                         if (lootTemplateID.ToLower().ToString() == "all")
                         {
-                            DatabaseObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(name) + "'");
-                            if (template != null)
+                            DatabaseObject[] template = (DatabaseObject[]) GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName",name);
+                            if (template.Length > 0)
                             {
                                 foreach (DatabaseObject loot in template)
                                 {
@@ -1347,7 +1349,9 @@ namespace DOL.GS.Commands
                         }
                         else
                         {
-                            DatabaseObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + GameServer.Database.Escape(name) + "' AND ItemTemplateID = '" + GameServer.Database.Escape(lootTemplateID) + "'");
+                            DatabaseObject[] template = (DBLootTemplate[])(from s in DatabaseLayer.Instance.OfType<DBLootTemplate>()
+                                                                           where s.TemplateName == name && s.ItemTemplateID == lootTemplateID
+                                                                           select s);
                             if (template != null)
                             {
                                 foreach (DatabaseObject loot in template)
@@ -1382,9 +1386,7 @@ namespace DOL.GS.Commands
                         {
                             ArrayList text = new ArrayList();
                             text.Add(".");
-                            DatabaseObject[] template = GameServer.Database.SelectObjects(typeof(DBLootTemplate),"TemplateName",targetMob.Name);
-
-                            foreach (DBLootTemplate loot in template)
+                            foreach (DBLootTemplate loot in GameServer.Database.SelectObjects(typeof(DBLootTemplate),"TemplateName",targetMob.Name))
                             {
                                 string message = "";
                                 if (loot.ItemTemplate == null)

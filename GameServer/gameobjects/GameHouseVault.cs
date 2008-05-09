@@ -17,6 +17,7 @@
  *
  */
 using System.Collections;
+using System.Linq;
 using DOL.Database2;
 using DOL.GS.Housing;
 using System;
@@ -149,10 +150,10 @@ namespace DOL.GS
 		{
 			get
 			{
-				String sqlWhere = String.Format("OwnerID = '{0}' and SlotPosition >= {1} and SlotPosition <= {2}",
-					GameServer.Database.Escape((HouseMgr.GetOwners(CurrentHouse.DatabaseItem)[0] as Character).ObjectId),
-					FirstSlot, LastSlot);
-				return (InventoryItem[])(GameServer.Database.SelectObjects(typeof(InventoryItem), sqlWhere));
+                return (InventoryItem[])(from s in DatabaseLayer.Instance.OfType<InventoryItem>()
+                                         where  HouseMgr.GetOwners(CurrentHouse.DatabaseItem).Contains(s.OwnerID)
+                                         && s.SlotPosition >= FirstSlot && s.SlotPosition <= LastSlot
+                                         select s);
 			}
 		}
 

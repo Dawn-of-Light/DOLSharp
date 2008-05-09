@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
@@ -65,7 +66,7 @@ namespace DOL.GS
 					DatabaseObject[] m_lootOTDs=null;
 					try
 					{
-						m_lootOTDs = GameServer.Database.SelectObjects(typeof(DBLootOTD));
+						m_lootOTDs = (DatabaseObject[]) GameServer.Database.SelectObjects(typeof(DBLootOTD));
 					}
 					catch(Exception e)
 					{
@@ -74,7 +75,7 @@ namespace DOL.GS
 						return false;
 					}
 
-					if(m_lootOTDs != null)
+					if(m_lootOTDs != null && m_lootOTDs.Length > 0)
 					{
 						foreach(DBLootOTD dbLootOTD in m_lootOTDs)
 						{
@@ -105,7 +106,10 @@ namespace DOL.GS
 				{
 					if ( (lootOTD.MinLevel < player.Level))
 					{
-						DatabaseObject obj = GameServer.Database.SelectObject(typeof(DBOTDXCharacter), "CharacterName" + GameServer.Database.Escape(player.Name) + "' AND LootOTD_ID = '" + GameServer.Database.Escape(lootOTD.ObjectId) + "'");
+						DatabaseObject obj = (from s in DatabaseLayer.Instance.OfType<DBOTDXCharacter>()
+                                              where s.CharacterName == player.Name&& s.LootOTD_ID ==lootOTD.ObjectId
+                                                  select s).First();
+
 						if (obj != null) continue;
 
 						string[] sclass = lootOTD.SerializedClassAllowed.Split(',');

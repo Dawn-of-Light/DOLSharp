@@ -181,7 +181,7 @@ namespace DOL.GS.Housing
                     GameServer.Database.DeleteObject(item);
 
             // Remove all outdoor items
-            objs = GameServer.Database.SelectObjects(typeof(DBHouseOutdoorItem), "HouseNumber = " + house.HouseNumber);
+            objs = (DatabaseObject[])GameServer.Database.SelectObjects(typeof(DBHouseOutdoorItem), "HouseNumber",house.HouseNumber);
             if (objs.Length > 0)
                 foreach (DatabaseObject item in objs)
                     GameServer.Database.DeleteObject(item);
@@ -261,25 +261,25 @@ namespace DOL.GS.Housing
             DatabaseObject[] objs;
 
             // Remove all indoor items
-            objs = GameServer.Database.SelectObjects(typeof(DBHouseIndoorItem), "HouseNumber = " + house.HouseNumber);
+            objs = (DatabaseObject[])GameServer.Database.SelectObjects(typeof(DBHouseIndoorItem), "HouseNumber", house.HouseNumber);
             if (objs.Length > 0)
                 foreach (DatabaseObject item in objs)
                     GameServer.Database.DeleteObject(item);
 
             // Remove all outdoor items
-            objs = GameServer.Database.SelectObjects(typeof(DBHouseOutdoorItem), "HouseNumber = " + house.HouseNumber);
+            objs = (DatabaseObject[])GameServer.Database.SelectObjects(typeof(DBHouseOutdoorItem), "HouseNumber", house.HouseNumber);
             if (objs.Length > 0)
                 foreach (DatabaseObject item in objs)
                     GameServer.Database.DeleteObject(item);
 
             // Remove all permissions
-            objs = GameServer.Database.SelectObjects(typeof(DBHousePermissions), "HouseNumber = " + house.HouseNumber);
+            objs = (DatabaseObject[])GameServer.Database.SelectObjects(typeof(DBHousePermissions), "HouseNumber", house.HouseNumber);
             if (objs.Length > 0)
                 foreach (DatabaseObject item in objs)
                     GameServer.Database.DeleteObject(item);
 
             // Remove all char x permissions
-            objs = GameServer.Database.SelectObjects(typeof(DBHouseCharsXPerms), "HouseNumber = " + house.HouseNumber);
+            objs = (DatabaseObject[])GameServer.Database.SelectObjects(typeof(DBHouseCharsXPerms), "HouseNumber ", house.HouseNumber);
             if (objs.Length > 0)
                 foreach (DatabaseObject item in objs)
                     GameServer.Database.DeleteObject(item);
@@ -299,7 +299,7 @@ namespace DOL.GS.Housing
 		public static bool IsOwner(DBHouse house, GamePlayer player, bool realOwner)
 		{
 			if (house == null || player == null) return false;
-			if (house.OwnerIDs == null || house.OwnerIDs == "") return false;
+            if (house.OwnerIDs == null || house.OwnerIDs.Count == 0) return false;
 
 			if (realOwner)
 				return house.OwnerIDs.Contains(player.PlayerCharacter.ObjectId);
@@ -331,9 +331,10 @@ namespace DOL.GS.Housing
 		public static void DeleteOwner(DBHouse house, GamePlayer player)
 		{
 			if (house == null || player == null) return;
-			if (house.OwnerIDs == null || house.OwnerIDs == "") return;
+			if (house.OwnerIDs == null || house.OwnerIDs.Count == 0) return;
 
-			house.OwnerIDs = house.OwnerIDs.Replace(player.InternalID + ";", "");
+            house.OwnerIDs = null;
+            house.OwnerIDs.Remove(player.InternalID);
 			GameServer.Database.SaveObject(house);
 		}
 
@@ -433,7 +434,7 @@ namespace DOL.GS.Housing
             GamePlayer GuildLeader = player.Guild.GetGuildLeader(player);
             house.DatabaseItem.Name = player.Guild.Name;
             HouseMgr.DeleteOwner(house.DatabaseItem, player);
-            house.DatabaseItem.OwnerIDs = "";
+            house.DatabaseItem.OwnerIDs.Clear();
             HouseMgr.AddOwner(house.DatabaseItem, GuildLeader);
             player.Guild.SetGuildHouse(true);
             player.Guild.SetGuildHouseNumber(house.HouseNumber);
@@ -448,17 +449,17 @@ namespace DOL.GS.Housing
         public static ArrayList GetOwners(DBHouse house)
 		{
 			if (house == null) return null;
-			if (house.OwnerIDs == null || house.OwnerIDs == "") return null;
+			if (house.OwnerIDs == null || house.OwnerIDs.Count == 0) return null;
 
-			ArrayList owners = new ArrayList();
-			string[] ids = house.OwnerIDs.Split(';');
+            ArrayList owners = new ArrayList();
 
-			foreach (string id in ids)
+            foreach (UInt64 id in house.OwnerIDs)
 			{
-				Character character = (Character)GameServer.Database.FindObjectByKey(typeof(Character), id);
+				Character character = (Character)GameServer.Database.GetDatabaseObjectFromID(id);
 				if (character == null) continue;
 				owners.Add(character);
 			}
+            
 			return owners;
 		}
 
@@ -485,7 +486,7 @@ namespace DOL.GS.Housing
 				foreach (DictionaryEntry Entry in (Hashtable)(regs.Value))
 				{
 					House house = (House)Entry.Value;
-					if ((house.OwnerIDs == null && house.OwnerIDs == "") || house.NoPurge) // Replaced OR by AND to fix table problems due to old method bugs
+                    if ((house.OwnerIDs == null && house.OwnerIDs.Count == 0) || house.NoPurge) // Replaced OR by AND to fix table problems due to old method bugs
 						continue;
 					Diff = DateTime.Now - house.LastPaid;
 					if (Diff.Days >= 7)

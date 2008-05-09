@@ -59,17 +59,14 @@ namespace DOL.GS
         {
 			// Load artifacts and books.
 
-            DatabaseObject[] dbo = GameServer.Database.SelectObjects(typeof(Artifact));
 			m_artifacts = new Dictionary<String, Artifact>();
-            foreach (Artifact artifact in dbo)
+            foreach (Artifact artifact in GameServer.Database.SelectObjects(typeof(Artifact)))
                 m_artifacts.Add(artifact.ArtifactID, artifact);
 
 			// Load artifact versions.
-
-            dbo = GameServer.Database.SelectObjects(typeof(ArtifactXItem));
 			m_artifactVersions = new Dictionary<String, List<ArtifactXItem>>();
 			List<ArtifactXItem> versionList;
-            foreach (ArtifactXItem artifactVersion in dbo)
+            foreach (ArtifactXItem artifactVersion in GameServer.Database.SelectObjects(typeof(ArtifactXItem)))
             {
 				if (m_artifactVersions.ContainsKey(artifactVersion.ArtifactID))
 					versionList = m_artifactVersions[artifactVersion.ArtifactID];
@@ -82,10 +79,8 @@ namespace DOL.GS
             }
 
 			// Load artifact bonuses.
-
-			dbo = GameServer.Database.SelectObjects(typeof(ArtifactBonus));
 			m_artifactBonuses = new List<ArtifactBonus>();
-			foreach (ArtifactBonus artifactBonus in dbo)
+			foreach (ArtifactBonus artifactBonus in GameServer.Database.SelectObjects(typeof(ArtifactBonus)))
 				m_artifactBonuses.Add(artifactBonus);
 
 			// Install event handlers.
@@ -114,7 +109,7 @@ namespace DOL.GS
 				{
 					foreach (ArtifactXItem AxI in list)
 					{
-						if (AxI.ItemID == itemID)
+						if (AxI.ItemIDNb == itemID)
 						{
 							artifactID = AxI.ArtifactID;
 							break;
@@ -199,7 +194,7 @@ namespace DOL.GS
 			lock (m_artifactVersions)
 				foreach (List<ArtifactXItem> versions in m_artifactVersions.Values)
 					foreach (ArtifactXItem version in versions)
-						if (version.ItemID == item.Id_nb)
+						if (version.ItemIDNb == item.Id_nb)
 							return true;
 			return false;
 		}
@@ -414,13 +409,12 @@ namespace DOL.GS
                 ItemTemplate itemTemplate;
                 foreach (ArtifactXItem version in allVersions)
                 {
-                    itemTemplate = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate),
-                        version.ItemID);
+                    itemTemplate = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), version.ItemIDNb);
 
                     if (itemTemplate == null)
                     {
                         log.Warn(String.Format("Artifact item template '{0}' is missing",
-                            version.ItemID));
+                            version.ItemIDNb));
                     }
                     else
                     {

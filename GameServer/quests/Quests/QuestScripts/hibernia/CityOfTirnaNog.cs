@@ -178,7 +178,7 @@ namespace DOL.GS.Quests.Hibernia
 				hylvian.Y = 31142;
 				hylvian.Z = 8000;
 				hylvian.Heading = 11;
-				hylvian.EquipmentTemplateID = "7400147";
+				hylvian.EquipmentTemplateID = 7400147;
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
@@ -207,7 +207,7 @@ namespace DOL.GS.Quests.Hibernia
 				freagus.Y = 469180;
 				freagus.Z = 5200;
 				freagus.Heading = 1934;
-				freagus.EquipmentTemplateID = "3800664";
+				freagus.EquipmentTemplateID = 3800664;
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following

@@ -75,8 +75,7 @@ namespace DOL.GS
 			{
 				try
 				{
-					DatabaseObject[] items = GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + GameServer.Database.Escape(inventoryID) + "'");
-					foreach (InventoryItem item in items)
+					foreach (InventoryItem item in GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID",inventoryID))
 					{
 						if (item.CanUseEvery > 0)
 							item.SetCooldown();
@@ -160,7 +159,7 @@ namespace DOL.GS
 							}
 							if (currentItem.OwnerID != m_player.InternalID)
 							{
-								string itemOwner = (currentItem.OwnerID == null ? 0 : currentItem.OwnerID);
+								UInt64 itemOwner = (currentItem.OwnerID == 0 ? 0 : currentItem.OwnerID);
 								if (log.IsErrorEnabled)
 									log.Error("item owner id (" + itemOwner + ") not equals player ID (" + m_player.InternalID + "); item ID=" + currentItem.ObjectId);
 								continue;
@@ -227,7 +226,7 @@ namespace DOL.GS
 			if (item.OwnerID != m_player.InternalID)
 			{
 				if (log.IsErrorEnabled)
-					log.Error(m_player.Name + ": PlayerInventory -> tried to remove item with wrong owner (" + (item.OwnerID ?? "null") + ")\n\n" + Environment.StackTrace);
+					log.Error(m_player.Name + ": PlayerInventory -> tried to remove item with wrong owner (" + item.OwnerID  + ")\n\n" + Environment.StackTrace);
 				return false;
 			}
 
@@ -905,7 +904,7 @@ namespace DOL.GS
 			}
 			else if (toItem == null && fromItem.Count > itemCount)
 			{
-				InventoryItem newItem = (InventoryItem)fromItem.Clone();
+				InventoryItem newItem = new InventoryItem(fromItem);
 				m_items[toSlot] = newItem;
 				newItem.Count = itemCount;
 				newItem.Weight = itemCount * (fromItem.Weight / fromItem.Count);

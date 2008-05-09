@@ -34,7 +34,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			string accountName = packet.ReadString(24);
 
-			GameServer.Database.FillObjectRelations(client.Account);
+			//GameServer.Database.FillObjectRelations(client.Account);
 
 			//reset realm if no characters
 			if((client.Account.Characters == null || client.Account.Characters.Length <= 0) && client.Account.Realm != (int)eRealm.None)

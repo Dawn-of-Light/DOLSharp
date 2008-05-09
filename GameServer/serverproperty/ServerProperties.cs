@@ -552,7 +552,7 @@ namespace DOL.GS.ServerProperties
 		public static object Load(ServerPropertyAttribute attrib)
 		{
 			string key = attrib.Key;
-			ServerProperty property = GameServer.Database.SelectObject(typeof(ServerProperty), "`Key` = '" + GameServer.Database.Escape(key) + "'") as ServerProperty;
+			ServerProperty property = GameServer.Database.SelectObject(typeof(ServerProperty), "Key",key) as ServerProperty;
 			if (property == null)
 			{
 				property = new ServerProperty();

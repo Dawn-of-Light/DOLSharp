@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 using DOL.Database2;
@@ -80,7 +81,7 @@ namespace DOL.GS
 			if (data == null)
 				throw new ArgumentNullException("data");
 
-			m_templateId = data.TemplateId;
+            m_templateId = data.TemplateId;
 			m_name = data.Name;
 			m_classType = data.ClassType;
 			m_guildName = data.GuildName;
@@ -180,7 +181,7 @@ namespace DOL.GS
 		{
 			if (mob == null)
 				throw new ArgumentNullException("data");
-			m_templateId = GameServer.Database.GetObjectCount(typeof(DBNpcTemplate));
+			//m_templateId = GameServer.Database.GetObjectCount(typeof(DBNpcTemplate));
 			m_name = mob.Name;
 			m_classType = mob.GetType().ToString();
 			m_guildName = mob.GuildName;
@@ -468,7 +469,9 @@ namespace DOL.GS
 
 		public virtual void SaveIntoDatabase()
 		{
-			DBNpcTemplate tmp = tmp = (DBNpcTemplate)GameServer.Database.FindObjectByKey(typeof(DBNpcTemplate), TemplateId);
+			DBNpcTemplate tmp = (from s in DatabaseLayer.Instance.OfType<DBNpcTemplate>()
+                                 where s.TemplateId ==  TemplateId
+                                     select s).First();
 			bool add = false;
 			if (tmp == null)
 			{
@@ -476,8 +479,9 @@ namespace DOL.GS
 				add = true;
 			}
 			if (TemplateId == 0)
-				tmp.TemplateId = GameServer.Database.GetObjectCount(typeof(DBNpcTemplate));
-			else tmp.TemplateId = TemplateId;
+				tmp.TemplateId = GameServer.Database.SelectObjects(typeof(DBNpcTemplate)).Count();
+			else 
+                tmp.TemplateId = TemplateId;
 			tmp.Model = Model;
 			tmp.Size = Size;
 			tmp.Name = Name;

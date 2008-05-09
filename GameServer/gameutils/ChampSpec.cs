@@ -42,8 +42,7 @@ namespace DOL.GS
         [ScriptLoadedEvent]
         public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
         {
-            DatabaseObject[] specs = GameServer.Database.SelectObjects(typeof(DBChampSpecs));
-            foreach (DBChampSpecs spec in specs)
+            foreach (DBChampSpecs spec in GameServer.Database.SelectObjects(typeof(DBChampSpecs)))
             {
                 ChampSpec newspec = new ChampSpec(spec.IdLine, spec.SkillIndex, spec.Index, spec.Cost, spec.SpellID);
                 ChampSpecs.Add(newspec);

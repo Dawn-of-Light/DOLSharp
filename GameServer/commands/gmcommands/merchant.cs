@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections;
 using System.Reflection;
 using DOL.GS;
@@ -220,7 +221,9 @@ namespace DOL.GS.Commands
 												return;
 											}
 
-											MerchantItem item = (MerchantItem)GameServer.Database.SelectObject(typeof(MerchantItem), "ItemListID = '" + GameServer.Database.Escape(targetMerchant.TradeItems.ItemsListID) + "' AND PageNumber = '" + page + "' AND SlotPosition = '" + slot + "'");
+                                            MerchantItem item = (MerchantItem)(from s in DatabaseLayer.Instance.OfType<MerchantItem>()
+                                                                               where s.ItemListID == targetMerchant.TradeItems.ItemsListID && s.PageNumber == page && s.SlotPosition == (int)slot
+                                                                               select s).First();
 											if (item == null)
 											{
 												item = new MerchantItem();
@@ -277,7 +280,10 @@ namespace DOL.GS.Commands
 												return;
 											}
 
-											MerchantItem item = (MerchantItem)GameServer.Database.SelectObject(typeof(MerchantItem), "ItemListID = '" + GameServer.Database.Escape(targetMerchant.TradeItems.ItemsListID) + "' AND PageNumber = '" + page + "' AND SlotPosition = '" + slot + "'");
+                                            MerchantItem item = (from s in DatabaseLayer.Instance.OfType<MerchantItem>()
+                                                                 where s.ItemListID == targetMerchant.TradeItems.ItemsListID
+                                                                 && s.PageNumber == page && s.SlotPosition == slot
+                                                                 select s).First(); 
 											if (item == null)
 											{
 												DisplayMessage(client, "Slot " + slot + " in page " + page + " is already empty.");
@@ -312,7 +318,7 @@ namespace DOL.GS.Commands
 											}
 											DisplayMessage(client, "Deleting articles list template ...");
 
-											MerchantItem[] merchantitems = (MerchantItem[])GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemsListID = '" + GameServer.Database.Escape(targetMerchant.TradeItems.ItemsListID) + "'");
+											MerchantItem[] merchantitems = (MerchantItem[])GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemsListID",targetMerchant.TradeItems.ItemsListID);
 											if (merchantitems.Length > 0)
 											{
 												foreach (MerchantItem item in merchantitems)

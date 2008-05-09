@@ -81,7 +81,7 @@ namespace DOL.GS
 					DatabaseObject[] m_lootTemplates = null;
 					try
 					{
-						m_lootTemplates = GameServer.Database.SelectObjects(typeof(DBLootTemplate));
+						m_lootTemplates = (DatabaseObject[])GameServer.Database.SelectObjects(typeof(DBLootTemplate));
 					}
 					catch (Exception e)
 					{
@@ -123,7 +123,7 @@ namespace DOL.GS
 					DatabaseObject[] m_mobLootTemplates = null;
 					try
 					{
-						m_mobLootTemplates = GameServer.Database.SelectObjects(typeof(DBMobXLootTemplate));
+						m_mobLootTemplates =(DatabaseObject[]) GameServer.Database.SelectObjects(typeof(DBMobXLootTemplate));
 					}
 					catch (Exception e)
 					{

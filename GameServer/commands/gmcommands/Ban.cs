@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using DOL.Database2;
@@ -60,7 +61,7 @@ namespace DOL.GS.Commands
 				DatabaseObject[] objs;
 				DBBannedAccount b = new DBBannedAccount();
 				string accip = ((IPEndPoint)player.Client.Socket.RemoteEndPoint).Address.ToString();
-				string accname = GameServer.Database.Escape(player.Client.Account.Name);
+				string accname = player.Client.Account.Name; //TODO: Escape ? 
 				string reason;
 
 				if (args.Length >= 3)
@@ -71,7 +72,9 @@ namespace DOL.GS.Commands
 				{
 					#region Account
 					case "account":
-						objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(accname) + "')");
+						objs = (DatabaseObject[])(from s in DatabaseLayer.Instance.OfType<DBBannedAccount>() 
+                                where (s.Type == "A" || s.Type == "B") && s.Account ==accname
+                                    select s);
 						if (objs.Length > 0)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Ban.AAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -84,7 +87,9 @@ namespace DOL.GS.Commands
 					#endregion Account
 					#region IP
 					case "ip":
-						objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='I' OR Type='B') AND Ip ='" + GameServer.Database.Escape(accip) + "')");
+                        objs = (DatabaseObject[])(from s in DatabaseLayer.Instance.OfType<DBBannedAccount>()
+                               where (s.Type == "B" || s.Type == "I") && s.Ip == accip
+                               select s);
 						if (objs.Length > 0)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Ban.IAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -97,7 +102,9 @@ namespace DOL.GS.Commands
 					#endregion IP
 					#region Both
 					case "both":
-						objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "Type='B' AND Account ='" + GameServer.Database.Escape(accname) + "' AND Ip ='" + GameServer.Database.Escape(accip) + "'");
+                        objs = (DatabaseObject[])(from s in DatabaseLayer.Instance.OfType<DBBannedAccount>()
+                                where (s.Type == "B" || s.Type == "A") && s.Account == accname && s.Ip == accip
+                                select s);
 						if (objs.Length > 0)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Ban.BAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);

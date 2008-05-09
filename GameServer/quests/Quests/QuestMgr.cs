@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
@@ -144,12 +145,14 @@ namespace DOL.GS.Quests
 		{
 			GameLiving living = null;
 
-			if (identifier is string || identifier is int)
+			if (identifier is string || identifier is UInt64)
 			{
-				string tempID = Convert.ToString(identifier);
-
+                Mob mob;
                 // TODO: Dirty Hack this should be done better
-				Mob mob = (Mob)GameServer.Database.SelectObject(typeof(Mob), "MobID='" + GameServer.Database.Escape(tempID) + "' OR Name='" + GameServer.Database.Escape(tempID) + "'");
+                if(identifier is string)
+                    mob = (Mob)DatabaseLayer.Instance.SelectObject(typeof(Mob),"Name",identifier as string);
+                else
+                    mob = (Mob) DatabaseLayer.Instance.GetDatabaseObjectFromID((UInt64)identifier);
 
                 GameNPC[] livings = WorldMgr.GetNPCsByName(mob.Name,(eRealm) mob.Realm);
 
@@ -158,12 +161,12 @@ namespace DOL.GS.Quests
                 else if (livings.Length > 1)
                 {
                     if (log.IsWarnEnabled)
-                        log.Warn("Found more than one living with name :" + tempID + " in " + (lookupDB ? "Database" : "WorldMgr"));
+                        log.Warn("Found more than one living with name :" + identifier + " in " + (lookupDB ? "Database" : "WorldMgr"));
                 }
                 else
                 {
                     if (log.IsWarnEnabled)
-                        log.Warn("Couldn't find GameLiving with id or name:" + tempID + " in " + (lookupDB ? "Database" : "WorldMgr"));
+                        log.Warn("Couldn't find GameLiving with id or name:" + identifier + " in " + (lookupDB ? "Database" : "WorldMgr"));
                 }
 			}
 			else if (identifier is GameLiving)
@@ -208,11 +211,14 @@ namespace DOL.GS.Quests
 		{
 			GameNPC npc = null;
 
-			if (identifier is string || identifier is int)
+			if (identifier is string || identifier is UInt64)
 			{
 				string tempID = Convert.ToString(identifier);
-
-                Mob mob = (Mob) GameServer.Database.SelectObject(typeof(Mob), "MobID='" + GameServer.Database.Escape(tempID) + "' OR Name='" + GameServer.Database.Escape(tempID) + "'");
+                Mob mob;
+                if (identifier is string)
+                    mob = (Mob)DatabaseLayer.Instance.SelectObject(typeof(Mob), "Name", identifier as string);
+                else
+                    mob = (Mob)DatabaseLayer.Instance.GetDatabaseObjectFromID((UInt64)identifier);
 
 				GameNPC[] npcs = WorldMgr.GetNPCsByName(mob.Name,(eRealm) mob.Realm);
 

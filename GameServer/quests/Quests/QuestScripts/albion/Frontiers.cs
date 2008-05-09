@@ -186,7 +186,7 @@ namespace DOL.GS.Quests.Albion
 //				masterVisur.AddNPCEquipment((byte) eEquipmentItems.TORSO, 798, 0, 0, 0);
 //				masterVisur.AddNPCEquipment((byte) eEquipmentItems.RIGHT_HAND, 19, 0, 0, 0);
 
-				masterVisur.EquipmentTemplateID = "3400843";
+				masterVisur.EquipmentTemplateID = 3400843;
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -232,7 +232,7 @@ namespace DOL.GS.Quests.Albion
 
 				alice.Heading = 3766;
 				alice.MaxSpeedBase = 200;
-				alice.EquipmentTemplateID = "200276";
+				alice.EquipmentTemplateID = 200276;
 				alice.Flags = 18;
 
 				StandardMobBrain brain = new StandardMobBrain();

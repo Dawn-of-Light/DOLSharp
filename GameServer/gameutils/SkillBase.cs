@@ -292,7 +292,7 @@ namespace DOL.GS
 			if (log.IsInfoEnabled)
 				log.Info("Loading spells...");
 			Hashtable spells = new Hashtable(5000);
-			DatabaseObject[] spelldb = GameServer.Database.SelectObjects(typeof(DBSpell));
+			DBSpell[] spelldb =(DBSpell []) GameServer.Database.SelectObjects(typeof(DBSpell));
 			for (int i = 0; i < spelldb.Length; i++)
 			{
 				DBSpell spell = (DBSpell)spelldb[i];
@@ -304,7 +304,7 @@ namespace DOL.GS
 
 
 			// load all spell lines
-			DatabaseObject[] dbo = GameServer.Database.SelectObjects(typeof(DBSpellLine));
+			DBSpellLine[] dbo = (DBSpellLine[])GameServer.Database.SelectObjects(typeof(DBSpellLine));
 			for (int i = 0; i < dbo.Length; i++)
 			{
 				string lineID = ((DBSpellLine)dbo[i]).KeyName;
@@ -312,7 +312,7 @@ namespace DOL.GS
 				string spec = ((DBSpellLine)dbo[i]).Spec;
 				bool baseline = ((DBSpellLine)dbo[i]).IsBaseLine;
 				ArrayList spell_list = new ArrayList();
-				DBLineXSpell[] dbo2 = (DBLineXSpell[])GameServer.Database.SelectObjects(typeof(DBLineXSpell), "LineName = '" + GameServer.Database.Escape(lineID) + "'");
+				DBLineXSpell[] dbo2 = (DBLineXSpell[])GameServer.Database.SelectObjects(typeof(DBLineXSpell), "LineName",lineID);
 				foreach (DBLineXSpell lxs in dbo2)
 				{
 					DBSpell spell = (DBSpell)spells[lxs.SpellID];
@@ -340,11 +340,10 @@ namespace DOL.GS
 
 			// load Abilities
 			log.Info("Loading Abilities...");
-			DatabaseObject[] abilities = GameServer.Database.SelectObjects(typeof(DBAbility));
-			if (abilities != null)
-			{
-				foreach (DBAbility dba in abilities)
+            int AbilityCount = 0;
+				foreach (DBAbility dba in GameServer.Database.SelectObjects(typeof(DBAbility)))
 				{
+
 					m_abilitiesByName[dba.KeyName] = dba;
 					if (dba.Implementation != null && dba.Implementation.Length > 0)
 					{
@@ -356,6 +355,7 @@ namespace DOL.GS
 								if (type != new Ability(dba).GetType() && type.IsSubclassOf(new Ability(dba).GetType()))
 								{
 									m_implementationTypeCache[dba.Implementation] = type;
+                                    AbilityCount++;
 								}
 								else
 								{
@@ -366,15 +366,15 @@ namespace DOL.GS
 							{
 								log.Warn("Ability implementation " + dba.Implementation + " for ability " + dba.Name + " not found");
 							}
+
 						}
 					}
 				}
-			}
 			if (log.IsInfoEnabled)
-				log.Info("Total abilities loaded: " + ((abilities != null) ? abilities.Length : 0));
+				log.Info("Total abilities loaded: " + AbilityCount);
 
 			log.Info("Loading class to realm ability associations...");
-			DatabaseObject[] classxra = GameServer.Database.SelectObjects(typeof(ClassXRealmAbility));
+			DatabaseObject[] classxra = (DatabaseObject[]) GameServer.Database.SelectObjects(typeof(ClassXRealmAbility));
 			int count = 0;
 			if (classxra != null)
 			{
@@ -410,7 +410,7 @@ namespace DOL.GS
 			//(procs) load all Procs
 			if (log.IsInfoEnabled)
 				log.Info("Loading procs...");
-			DatabaseObject[] stylespells = GameServer.Database.SelectObjects(typeof(DBStyleXSpell));
+			DBStyleXSpell[] stylespells = (DBStyleXSpell[]) GameServer.Database.SelectObjects(typeof(DBStyleXSpell));
 			if (stylespells != null)
 			{
 				foreach (DBStyleXSpell proc in stylespells)
@@ -443,7 +443,7 @@ namespace DOL.GS
 			// load Specialization & styles
 			if (log.IsInfoEnabled)
 				log.Info("Loading specialization & styles...");
-			DatabaseObject[] specabilities = GameServer.Database.SelectObjects(typeof(DBSpecXAbility));
+			DBSpecXAbility[] specabilities = (DBSpecXAbility [])GameServer.Database.SelectObjects(typeof(DBSpecXAbility));
 			if (specabilities != null)
 			{
 				foreach (DBSpecXAbility sxa in specabilities)
@@ -466,8 +466,7 @@ namespace DOL.GS
 					}
 				}
 			}
-
-			DatabaseObject[] specs = GameServer.Database.SelectObjects(typeof(DBSpecialization));
+            DBSpecialization[] specs = (DBSpecialization []) GameServer.Database.SelectObjects(typeof(DBSpecialization));
 			if (specs != null)
 			{
 				foreach (DBSpecialization spec in specs)

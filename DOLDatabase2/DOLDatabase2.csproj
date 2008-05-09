@@ -67,6 +67,7 @@
     <Compile Include="DatabaseProvider.cs" />
     <Compile Include="IDatabaseObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\NullDatabaseProvider.cs" />
     <Compile Include="Util\Exceptions.cs" />
   </ItemGroup>
   <ItemGroup>

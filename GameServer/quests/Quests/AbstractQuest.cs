@@ -133,10 +133,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public virtual void SaveIntoDatabase()
 		{
-			if(m_dbQuest.IsValid)
 				GameServer.Database.SaveObject(m_dbQuest);
-			else
-				GameServer.Database.AddNewObject(m_dbQuest);
 		}
 		  
 		/// <summary>
@@ -144,8 +141,6 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public virtual void DeleteFromDatabase()
 		{
-			if(!m_dbQuest.IsValid) return;
-
 			DBQuest dbQuest = (DBQuest) GameServer.Database.GetDatabaseObjectFromID( m_dbQuest.ObjectId);
 			if(dbQuest!=null)
 				GameServer.Database.DeleteObject(dbQuest);

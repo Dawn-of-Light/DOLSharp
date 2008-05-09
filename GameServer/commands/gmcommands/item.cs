@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 using DOL.Database2;
 using DOL.GS.PacketHandler;
 using DOL.GS.PacketHandler.Client.v168;
@@ -119,7 +120,7 @@ namespace DOL.GS.Commands
 					#region Create
 					case "create":
 						{
-								ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), args[2]);
+								ItemTemplate template = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), args[2]);
 								if (template == null)
 								{
 									client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Create.NotFound", args[2]), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -242,7 +243,7 @@ namespace DOL.GS.Commands
 					#region Info
 					case "info":
 						{
-							ItemTemplate obj = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), args[2]);
+							ItemTemplate obj = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), args[2]);
 							if (obj == null)
 							{
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Info.ItemTemplateUnknown", args[2]), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -1295,7 +1296,9 @@ namespace DOL.GS.Commands
 					case "findid":
 						{
 							string name = string.Join(" ", args, 2, args.Length - 2);
-							ItemTemplate[] items = (ItemTemplate[])GameServer.Database.SelectObjects(typeof(ItemTemplate), "id_nb like '%" + GameServer.Database.Escape(name) + "%'");
+                            ItemTemplate[] items = (ItemTemplate[])(from s in DatabaseLayer.Instance.OfType<ItemTemplate>()
+                                                                    where s.Id_nb.StartsWith(name)
+                                                                    select s);
 							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Item.FindID.MatchingIDsForX", name, items.Length), new object[] { });
 							foreach (ItemTemplate item in items)
 							{
@@ -1308,7 +1311,9 @@ namespace DOL.GS.Commands
 					case "findname":
                         {
                             string name = string.Join(" ", args, 2, args.Length - 2);
-                            ItemTemplate[] items = (ItemTemplate[])GameServer.Database.SelectObjects(typeof(ItemTemplate), "name like '%" + GameServer.Database.Escape(name) + "%'");
+                            ItemTemplate[] items = (ItemTemplate[])(from s in DatabaseLayer.Instance.OfType<ItemTemplate>()
+                                                                    where s.Name.StartsWith(name)
+                                                                    select s);
 							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Item.FindName.MatchingNamesForX", name, items.Length), new object[] { });
                             foreach (ItemTemplate item in items)
                             {

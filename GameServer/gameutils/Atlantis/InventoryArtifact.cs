@@ -83,7 +83,6 @@ namespace DOL.GS
 		{
 			if (item != null)
 			{
-				this.ObjectId = item.ObjectId;	// This is the key for the 'inventoryitem' table
 				ArtifactID = ArtifactMgr.GetArtifactIDFromItemID(Id_nb);
 				ArtifactLevel = ArtifactMgr.GetCurrentLevel(this);
 				m_levelRequirements = ArtifactMgr.GetLevelRequirements(ArtifactID);
@@ -132,7 +131,7 @@ namespace DOL.GS
 		/// <returns>True, if artifact gained 1 or more abilities, else false.</returns>
 		private bool AddAbilities(GamePlayer player, int artifactLevel)
 		{
-			ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), 
+			ItemTemplate template = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), 
 				Id_nb);
 
 			if (template == null)

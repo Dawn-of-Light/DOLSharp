@@ -55,7 +55,7 @@ namespace DOL.GS.Commands
 				#region Add
 				case "add":
 					{
-						DBDoor door = (DBDoor)GameServer.Database.SelectObject(typeof(DBDoor), "InternalID='" + DoorID.ToString() + "'");
+						DBDoor door = (DBDoor)GameServer.Database.SelectObject(typeof(DBDoor), "DoorID",DoorID);
 						if (door == null)
 						{
 							door = new DBDoor();
@@ -63,7 +63,7 @@ namespace DOL.GS.Commands
 							door.Y = client.Player.Y;
 							door.Z = client.Player.Z;
 							door.Heading = client.Player.Heading;
-							door.InternalID = DoorID;
+							door.DoorID = DoorID;
 							GameServer.Database.AddNewObject(door);
 							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Door.Created", door.ObjectId));
 						}
@@ -77,12 +77,12 @@ namespace DOL.GS.Commands
 				#region Remove
 				case "remove":
 					{
-						DBDoor door = (DBDoor)GameServer.Database.SelectObject(typeof(DBDoor), "InternalID='" + DoorID.ToString() + "'");
+						DBDoor door = (DBDoor)GameServer.Database.SelectObject(typeof(DBDoor), "DoorID",DoorID);
 						if (door != null)
 						{
 							door.AutoSave = false;
 							GameServer.Database.DeleteObject(door);
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Door.Removed", door.InternalID));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Door.Removed", door.DoorID));
 						}
 						else
 						{

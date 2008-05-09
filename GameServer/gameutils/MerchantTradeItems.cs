@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
@@ -142,10 +143,11 @@ namespace DOL.GS
 				HybridDictionary itemsInPage = new HybridDictionary(MAX_ITEM_IN_TRADEWINDOWS);
 				if (m_itemsListID != null && m_itemsListID.Length > 0)
 				{
-					DatabaseObject[] itemList = GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemListID = '" + GameServer.Database.Escape(m_itemsListID) + "' AND PageNumber = '" + page + "'");
-					foreach (MerchantItem merchantitem in itemList)
+					foreach (MerchantItem merchantitem in (from s in DatabaseLayer.Instance.OfType<MerchantItem>()
+                                                           where s.ItemListID == m_itemsListID && s.PageNumber == page
+                                                           select s))
 					{
-						ItemTemplate item = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), merchantitem.ItemTemplateID);
+						ItemTemplate item = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), merchantitem.ItemTemplateID);
 						if (item != null)
 						{
 							ItemTemplate slotItem = (ItemTemplate)itemsInPage[merchantitem.SlotPosition];
@@ -200,10 +202,12 @@ namespace DOL.GS
 
 				if (m_itemsListID != null && m_itemsListID.Length > 0)
 				{
-					MerchantItem itemToFind = (MerchantItem)GameServer.Database.SelectObject(typeof (MerchantItem), "ItemListID = '" + GameServer.Database.Escape(m_itemsListID) + "' AND PageNumber = '" + page + "' AND SlotPosition = '" + (int)slot + "'");
+                    MerchantItem itemToFind = (from s in DatabaseLayer.Instance.OfType<MerchantItem>()
+                                               where s.ItemListID == m_itemsListID && s.PageNumber == page && s.SlotPosition == (int)slot
+                                               select s).First();
 					if (itemToFind != null)
 					{
-						item = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof (ItemTemplate), itemToFind.ItemTemplateID);
+						item = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof (ItemTemplate), itemToFind.ItemTemplateID);
 					}
 				}
 				return item;
@@ -227,10 +231,10 @@ namespace DOL.GS
 				Hashtable allItems = new Hashtable();
 				if (m_itemsListID != null)
 				{
-					DatabaseObject[] itemList = GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemListID = '" + GameServer.Database.Escape(m_itemsListID) + "'");
+					DatabaseObject[] itemList = (DatabaseObject[])GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemListID",m_itemsListID);
 					foreach (MerchantItem merchantitem in itemList)
 					{
-						ItemTemplate item = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), merchantitem.ItemTemplateID);
+						ItemTemplate item = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), merchantitem.ItemTemplateID);
 						if (item != null)
 						{
 							ItemTemplate slotItem = (ItemTemplate)allItems[merchantitem.SlotPosition];

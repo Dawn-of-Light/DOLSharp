@@ -127,10 +127,17 @@ namespace DOL.GS
 		/// </summary>
 		protected string m_dbConnectionString;
 
+        /// <summary>
+        /// Path to the .dll of the database provider
+        /// </summary>
+        private string m_dbProviderAssembly;
+
+        
 		/// <summary>
 		/// Type database type
 		/// </summary>
-		protected Type m_ProviderType;
+        private string m_dbProviderType;
+
 
 		/// <summary>
 		/// True if the server shall autosave the db
@@ -198,28 +205,8 @@ namespace DOL.GS
 			m_gmActionsLoggerName = root["Server"]["GMActionLoggerName"].GetString(m_gmActionsLoggerName);
 			m_invalidNamesFile = root["Server"]["InvalidNamesFile"].GetString(m_invalidNamesFile);
 
-			string db = root["Server"]["DBType"].GetString("XML");
-			switch (db.ToLower())
-			{
-				case "xml":
-					m_dbType = ConnectionType.DATABASE_XML;
-					break;
-				case "mysql":
-					m_dbType = ConnectionType.DATABASE_MYSQL;
-					break;
-				case "mssql":
-					m_dbType = ConnectionType.DATABASE_MSSQL;
-					break;
-				case "odbc":
-					m_dbType = ConnectionType.DATABASE_ODBC;
-					break;
-				case "oledb":
-					m_dbType = ConnectionType.DATABASE_OLEDB;
-					break;
-				default:
-					m_dbType = ConnectionType.DATABASE_XML;
-					break;
-			}
+            m_dbProviderAssembly = root["Server"]["DBProviderAssembly"].GetString("");
+            m_dbProviderType = root["Server"]["DBProviderType"].GetString("");
 			m_dbConnectionString = root["Server"]["DBConnectionString"].GetString(m_dbConnectionString);
 			m_autoSave = root["Server"]["DBAutosave"].GetBoolean(m_autoSave);
 			m_saveInterval = root["Server"]["DBAutosaveInterval"].GetInt(m_saveInterval);
@@ -295,30 +282,8 @@ namespace DOL.GS
 			root["Server"]["GMActionLoggerName"].Set(m_gmActionsLoggerName);
 			root["Server"]["InvalidNamesFile"].Set(m_invalidNamesFile);
 
-			string db = "XML";
-			
-			switch (m_dbType)
-			{
-			case ConnectionType.DATABASE_XML:
-				db = "XML";
-					break;
-			case ConnectionType.DATABASE_MYSQL:
-				db = "MYSQL";
-					break;
-			case ConnectionType.DATABASE_MSSQL:
-				db = "MSSQL";
-					break;
-			case ConnectionType.DATABASE_ODBC:
-				db = "ODBC";
-					break;
-			case ConnectionType.DATABASE_OLEDB:
-				db = "OLEDB";
-					break;
-				default:
-					m_dbType = ConnectionType.DATABASE_XML;
-					break;
-			}
-			root["Server"]["DBType"].Set(db);
+            root["Server"]["DBProviderAssembly"].Set(m_dbProviderAssembly);
+            root["Server"]["DBProviderType"].GetString(m_dbProviderType);
 			root["Server"]["DBConnectionString"].Set(m_dbConnectionString);
 			root["Server"]["DBAutosave"].Set(m_autoSave);
 			root["Server"]["DBAutosaveInterval"].Set(m_saveInterval);
@@ -358,8 +323,8 @@ namespace DOL.GS
 			m_cheatLoggerName = "cheats";
 			m_gmActionsLoggerName = "gmactions";
 			m_invalidNamesFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "invalidnames.txt";
-
-			m_dbType = ConnectionType.DATABASE_XML;
+            m_dbProviderType = "DOL.Database2.Providers.NullProvider";
+            m_dbProviderAssembly = "";
 			m_dbConnectionString = m_rootDirectory+Path.DirectorySeparatorChar+"xml_db";
 			m_autoSave = true;
 			m_saveInterval = 10;
@@ -546,15 +511,7 @@ namespace DOL.GS
 			get { return m_dbConnectionString; }
 			set { m_dbConnectionString = value; }
 		}
-
-		/// <summary>
-		/// Gets or sets the DB type
-		/// </summary>
-		public Type ProviderType
-		{
-			get { return m_ProviderType; }
-            set { m_ProviderType = value; }
-		}
+        
 
 		/// <summary>
 		/// Gets or sets the autosave flag
@@ -608,5 +565,21 @@ namespace DOL.GS
 			get { return m_cpuUse; }
 			set { m_cpuUse = value; }
 		}
+        /// <summary>
+        /// Type name of the Database Provider
+        /// </summary>
+        public string DBProviderType
+        {
+            get { return m_dbProviderType; }
+            set { m_dbProviderType = value; }
+        }
+        /// <summary>
+        /// An extra assembly to be loaded that may contain a DB provider. Can be empty.
+        /// </summary>
+        public string DBProviderAssembly
+        {
+            get { return m_dbProviderAssembly; }
+            set { m_dbProviderAssembly = value; }
+        }
 	}
 }

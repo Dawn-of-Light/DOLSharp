@@ -50,24 +50,13 @@ namespace DOL.GS.Commands
 
 			string message = string.Join(" ", args, 1, args.Length - 1);
 			BugReport report = new BugReport();
-			
-			//Andraste
-			BugReport[] reports=(BugReport[])GameServer.Database.SelectObjects(typeof(BugReport));
-            bool found = false; int i = 0;
-            for(i=0;i<MAX_REPORTS;i++)
-			{
-				found=false;
-				foreach(BugReport rep in reports) if(rep.ID==i) found=true;
-				if(!found) break;
-			}
-			if(found)
+			if(DatabaseLayer.Instance.GetObjectCount(typeof(BugReport)) > MAX_REPORTS)
 			{
 				client.Player.Out.SendMessage("There are too many reports, please contact a GM or wait until they are cleaned.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			
 			//report.ID = GameServer.Database.GetObjectCount(typeof(BugReport)) + 1;
-			report.ID = i;
 			report.Message = message;
 			report.Submitter = client.Player.Name + " [" + client.Account.Name + "]";
 			GameServer.Database.AddNewObject(report);

@@ -360,18 +360,12 @@
     <Compile Include="Crafting\WoodWorking.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="dbconverters\Version004.cs" />
-    <Compile Include="dbconverters\Version003.cs" />
     <Compile Include="dbconverters\DatabaseConverterAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="dbconverters\IDatabaseConverter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="dbconverters\Version002.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="dbconverters\Version005.cs" />
     <Compile Include="DOLTables\Account.cs" />
     <Compile Include="DOLTables\Artifact.cs" />
     <Compile Include="DOLTables\ArtifactBonus.cs" />

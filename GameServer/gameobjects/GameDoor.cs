@@ -55,7 +55,7 @@ namespace DOL.GS
 			base.LoadFromDatabase(obj);
 			DBDoor m_dbdoor = obj as DBDoor;
 			if (m_dbdoor == null) return;
-			Zone curZone = WorldMgr.GetZone((ushort)(m_dbdoor.InternalID / 1000000));
+			Zone curZone = WorldMgr.GetZone((ushort)(m_dbdoor.DoorID / 1000000));
 			if (curZone == null) return;
 			this.CurrentRegion = curZone.ZoneRegion;
 			m_Name = m_dbdoor.Name;
@@ -65,7 +65,7 @@ namespace DOL.GS
 			m_Z = m_dbdoor.Z;
 			m_Level = 0;
 			m_Model = 0xFFFF;
-			m_doorID = m_dbdoor.InternalID;
+			m_doorID = m_dbdoor.DoorID;
 			this.AddToWorld();
 		}
 		/// <summary>
@@ -75,7 +75,7 @@ namespace DOL.GS
 		{
 			DBDoor obj = null;
 			if (InternalID != null)
-				obj = (DBDoor)GameServer.Database.FindObjectByKey(typeof(DBDoor), InternalID);
+				obj = (DBDoor)GameServer.Database.GetDatabaseObjectFromID(InternalID);
 			if (obj == null)
 				obj = new DBDoor();
 			obj.Name = this.Name;
@@ -83,7 +83,7 @@ namespace DOL.GS
 			obj.X = this.X;
 			obj.Y = this.Y;
 			obj.Z = this.Z;
-			obj.InternalID = this.DoorID;
+			obj.DoorID = this.DoorID;
 			if (InternalID == null)
 			{
 				GameServer.Database.AddNewObject(obj);

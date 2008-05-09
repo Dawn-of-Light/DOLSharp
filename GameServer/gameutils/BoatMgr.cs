@@ -218,11 +218,11 @@ namespace DOL.GS
         /// Returns a database ID for a matching boat name.
         /// </summary>
         /// <returns>Boat</returns>
-        public static string BoatNameToBoatID(string boatName)
+        public static UInt64 BoatNameToBoatID(string boatName)
         {
             GameBoat b = GetBoatByName(boatName);
             if (b == null)
-                return "";
+                return 0;
             return b.BoatID;
         }
 
@@ -265,8 +265,7 @@ namespace DOL.GS
             }
 
             //load boats
-            DatabaseObject[] objs = GameServer.Database.SelectObjects(typeof(DBBoat));
-            foreach (DatabaseObject obj in objs)
+            foreach (DatabaseObject obj in GameServer.Database.SelectObjects(typeof(DBBoat)))
             {
                 GameBoat myboat = new GameBoat();
                 myboat.LoadFromDatabase(obj);
@@ -313,7 +312,7 @@ namespace DOL.GS
             return boats;
         }
 
-        public static bool IsBoatOwner(string playerstrID, GameBoat boat)
+        public static bool IsBoatOwner(UInt64 playerstrID, GameBoat boat)
         {
             if (playerstrID == null || boat == null)
                 return false;

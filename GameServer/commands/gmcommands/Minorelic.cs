@@ -279,7 +279,7 @@ namespace DOL.GS.Commands
                         MinotaurRelic relic = client.Player.TargetObject as MinotaurRelic;
                         
                         relic.RemoveFromWorld();
-                        DatabaseObject obj = GameServer.Database.SelectObject(typeof(DBMinotaurRelic), "RelicID = '" + relic.RelicID + "'");
+                        DatabaseObject obj = GameServer.Database.SelectObject(typeof(DBMinotaurRelic), "RelicID",relic.RelicID);
                         if (obj != null) GameServer.Database.DeleteObject(obj);
                     }
                     break;

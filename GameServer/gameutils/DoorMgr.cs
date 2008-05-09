@@ -40,11 +40,11 @@ namespace DOL.GS
 		/// </summary>	
 		public static bool Init()
 		{
-			DatabaseObject[] dbdoors = GameServer.Database.SelectObjects(typeof(DBDoor));
+			DatabaseObject[] dbdoors =(DatabaseObject[]) GameServer.Database.SelectObjects(typeof(DBDoor));
 			foreach (DBDoor door in dbdoors)
 			{
 				IDoor mydoor = null;
-				ushort zone = (ushort)(door.InternalID / 1000000);
+				ushort zone = (ushort)(door.DoorID / 1000000);
 				//check if the door is a keep door
 				foreach (AbstractArea area in WorldMgr.GetZone(zone).GetAreasOfSpot(door.X, door.Y, door.Z))
 				{

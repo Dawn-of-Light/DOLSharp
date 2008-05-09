@@ -48,7 +48,7 @@ namespace DOL.GS.ServerRules
 			}
 
 			//get the proper location
-			ZonePoint zp = (ZonePoint)GameServer.Database.SelectObject(typeof(ZonePoint), "`Region` = '" + mission.TaskRegion.ID + "'");
+			ZonePoint zp = (ZonePoint)GameServer.Database.SelectObject(typeof(ZonePoint), "Region",mission.TaskRegion.ID);
 			if (zp != null)
 			{
 				targetPoint.Region = zp.Region;

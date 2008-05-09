@@ -64,7 +64,7 @@ namespace DOL.GS.Housing
 			this.Model = dbitem.Model;
 			this.Position = dbitem.Position;
 			this.Rotation = dbitem.Rotation;
-			this.BaseItem = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), dbitem.BaseItemID);
+			this.BaseItem = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromID(dbitem.BaseItemID);
 			this.DatabaseItem = dbitem;
 		}
 
@@ -74,7 +74,7 @@ namespace DOL.GS.Housing
 			dbitem.HouseNumber = HouseNumber;
 			dbitem.Model = Model;
 			dbitem.Position = Position;
-			dbitem.BaseItemID = BaseItem.Id_nb;
+			dbitem.BaseItemID = BaseItem.ID;
 			dbitem.Rotation = Rotation;
 			return dbitem;
 		}

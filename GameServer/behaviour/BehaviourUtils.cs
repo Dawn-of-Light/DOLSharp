@@ -104,7 +104,12 @@ namespace DOL.GS.Behaviour
                     result = obj;
                 else
                 {
-                    result = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), Convert.ToString(obj));
+                    if (obj is UInt64)
+                        result = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromID((UInt64)obj);
+                    else if (obj is string)
+                        result = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), (string)obj);
+                    else
+                        return null;
                 }
             }
             else if (destinationType == typeof(CustomDialogResponse))

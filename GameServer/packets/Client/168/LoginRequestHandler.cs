@@ -179,7 +179,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 					else
 					{
-						playerAccount = (Account)GameServer.Database.FindObjectByKey(typeof(Account), userName);
+						playerAccount = (Account)GameServer.Database.SelectObject(typeof(Account),"Name",userName);
 
 						client.PingTime = DateTime.Now.Ticks;
 
@@ -274,14 +274,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 
 			}
-			catch (DatabaseException e)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("LoginRequestHandler", e);
-				client.Out.SendLoginDenied(eLoginError.CannotAccessUserAccount);
-				GameServer.Instance.Disconnect(client);
-			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
 					log.Error("LoginRequestHandler", e);

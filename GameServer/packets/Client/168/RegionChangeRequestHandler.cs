@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections;
 using System.Reflection;
 using DOL.Events;
@@ -41,7 +42,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			ushort JumpSpotID = packet.ReadShort();
-			ZonePoint zonePoint = (ZonePoint)GameServer.Database.SelectObject(typeof(ZonePoint), "`Id` = '" + JumpSpotID + "' AND (`Realm` = '" + (byte)client.Player.Realm + "' OR `Realm` = '0' OR `Realm` = NULL)");
+            ZonePoint zonePoint = (from s in DatabaseLayer.Instance.OfType<ZonePoint>()
+                                   where s.Id == JumpSpotID && (s.Realm == (byte)client.Player.Realm || s.Realm == '0' || s.Realm == null)
+                                   select s).First();
 
 			if (zonePoint == null)
 			{

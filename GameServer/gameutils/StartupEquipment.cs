@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System.Linq;
 using System.Collections;
 using DOL.Database2;
 
@@ -34,7 +35,9 @@ namespace DOL.GS
 		{
 			Hashtable usedSlots = new Hashtable();
 
-			StarterEquipment[] items = (StarterEquipment[])GameServer.Database.SelectObjects(typeof(StarterEquipment), "`Class` = '0' OR `Class` = '" + c.Class + "'");
+			StarterEquipment[] items = (StarterEquipment[])(from s in GameServer.Database.OfType<StarterEquipment>()
+                                                             where s.Class == 0 || s.Class == c.Class
+                                                                select s);
 
 			foreach (StarterEquipment item in items)
 			{

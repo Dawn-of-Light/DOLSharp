@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using DOL.Database2;
 using System.Collections;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace DOL.GS
 	/// <summary>
 	/// Interface for all NPC templates
 	/// </summary>
-	public interface INpcTemplate
+	public interface INpcTemplate 
 	{
 		/// <summary>
 		/// Gets the npc template ID

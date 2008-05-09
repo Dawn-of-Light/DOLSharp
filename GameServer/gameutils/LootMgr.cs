@@ -78,7 +78,7 @@ namespace DOL.GS
 			DatabaseObject[] m_lootGenerators;
 			try
 			{
-				m_lootGenerators = GameServer.Database.SelectObjects(typeof(DBLootGenerator));
+                m_lootGenerators = (DatabaseObject[])GameServer.Database.SelectObjects(typeof(DBLootGenerator));
 			}
 			catch (Exception e)
 			{
