@@ -152,9 +152,9 @@ namespace DOL.GS.Quests
 			int mediumCraftingLevel = player.GetCraftingSkillValue(player.CraftingPrimarySkill)+20;
 			int lowLevel = mediumCraftingLevel-20;
 			int highLevel = mediumCraftingLevel+20;
-            DBCraftedItem[] craftitem = (DBCraftedItem[])(from s in DatabaseLayer.Instance.OfType<DBCraftedItem>()
-                                                          where s.CraftingSkillType == (int)player.CraftingPrimarySkill && s.CraftingLevel > lowLevel && s.CraftingLevel < highLevel
-                                                          select s);
+            DBCraftedItem[] craftitem = (from s in DatabaseLayer.Instance.OfType<DBCraftedItem>()
+                                         where s.CraftingSkillType == (int)player.CraftingPrimarySkill && s.CraftingLevel > lowLevel && s.CraftingLevel < highLevel
+                                         select s).ToArray();
 
 			int craftrnd = Util.Random(craftitem.Length);
 			return craftitem[craftrnd].ItemTemplate;

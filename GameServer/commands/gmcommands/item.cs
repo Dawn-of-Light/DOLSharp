@@ -1296,9 +1296,9 @@ namespace DOL.GS.Commands
 					case "findid":
 						{
 							string name = string.Join(" ", args, 2, args.Length - 2);
-                            ItemTemplate[] items = (ItemTemplate[])(from s in DatabaseLayer.Instance.OfType<ItemTemplate>()
-                                                                    where s.Id_nb.StartsWith(name)
-                                                                    select s);
+                            ItemTemplate[] items = (from s in DatabaseLayer.Instance.OfType<ItemTemplate>()
+                                                    where s.Id_nb.StartsWith(name)
+                                                    select s).ToArray();
 							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Item.FindID.MatchingIDsForX", name, items.Length), new object[] { });
 							foreach (ItemTemplate item in items)
 							{
@@ -1311,9 +1311,9 @@ namespace DOL.GS.Commands
 					case "findname":
                         {
                             string name = string.Join(" ", args, 2, args.Length - 2);
-                            ItemTemplate[] items = (ItemTemplate[])(from s in DatabaseLayer.Instance.OfType<ItemTemplate>()
-                                                                    where s.Name.StartsWith(name)
-                                                                    select s);
+                            ItemTemplate[] items = (from s in DatabaseLayer.Instance.OfType<ItemTemplate>()
+                                                    where s.Name.StartsWith(name)
+                                                    select s).ToArray();
 							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Item.FindName.MatchingNamesForX", name, items.Length), new object[] { });
                             foreach (ItemTemplate item in items)
                             {

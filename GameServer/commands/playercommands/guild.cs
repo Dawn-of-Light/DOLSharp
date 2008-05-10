@@ -474,9 +474,9 @@ namespace DOL.GS.Commands
 
                             string playername = String.Join(" ", args, 2, args.Length - 2);
                             // Patch 1.84: look for offline players
-                            Character[] chs = (Character[])(from s in GameServer.Database.OfType<Character>()
-                                                            where s.AccountName==playername &&  s.guildID==client.Player.guildID 
-                                                            select s);
+                            Character[] chs = (from s in GameServer.Database.OfType<Character>()
+                                               where s.AccountName == playername && s.guildID == client.Player.guildID
+                                               select s).ToArray();
                             if (chs != null && chs.GetLength(0) > 0)
                             {
                                 GameClient myclient = WorldMgr.GetClientByAccountName(playername, false);

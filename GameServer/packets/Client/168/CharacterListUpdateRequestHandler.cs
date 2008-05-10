@@ -385,14 +385,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//write changes
 						GameServer.Database.SaveObject(ch);
 
-						client.Account.Characters = null;
+                        client.Account.Characters = null;
 
 						if (log.IsInfoEnabled)
 							log.Info(String.Format("Character {0} created!", charname));
 
 
 						//GameServer.Database.WriteDatabaseTable(typeof(Character));
-						//GameServer.Database.FillObjectRelations(client.Account);
+                        client.Account.FillObjectRelations();
 						client.Out.SendCharacterOverview((eRealm)ch.Realm);
 					}
 				}

@@ -58,7 +58,7 @@ namespace DOL.GS.Commands
 
 			try
 			{
-				DatabaseObject[] objs;
+				DBBannedAccount[] objs;
 				DBBannedAccount b = new DBBannedAccount();
 				string accip = ((IPEndPoint)player.Client.Socket.RemoteEndPoint).Address.ToString();
 				string accname = player.Client.Account.Name; //TODO: Escape ? 
@@ -72,9 +72,9 @@ namespace DOL.GS.Commands
 				{
 					#region Account
 					case "account":
-						objs = (DatabaseObject[])(from s in DatabaseLayer.Instance.OfType<DBBannedAccount>() 
+						objs = (from s in DatabaseLayer.Instance.OfType<DBBannedAccount>() 
                                 where (s.Type == "A" || s.Type == "B") && s.Account ==accname
-                                    select s);
+                                    select s).ToArray();
 						if (objs.Length > 0)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Ban.AAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -87,9 +87,9 @@ namespace DOL.GS.Commands
 					#endregion Account
 					#region IP
 					case "ip":
-                        objs = (DatabaseObject[])(from s in DatabaseLayer.Instance.OfType<DBBannedAccount>()
+                        objs =(from s in DatabaseLayer.Instance.OfType<DBBannedAccount>()
                                where (s.Type == "B" || s.Type == "I") && s.Ip == accip
-                               select s);
+                               select s).ToArray();
 						if (objs.Length > 0)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Ban.IAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -102,9 +102,9 @@ namespace DOL.GS.Commands
 					#endregion IP
 					#region Both
 					case "both":
-                        objs = (DatabaseObject[])(from s in DatabaseLayer.Instance.OfType<DBBannedAccount>()
+                        objs = (from s in DatabaseLayer.Instance.OfType<DBBannedAccount>()
                                 where (s.Type == "B" || s.Type == "A") && s.Account == accname && s.Ip == accip
-                                select s);
+                                select s).ToArray();
 						if (objs.Length > 0)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Ban.BAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);

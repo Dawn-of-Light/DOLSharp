@@ -60,7 +60,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				   ) && client.ClientState == GameClient.eClientState.CharScreen)
 				{
 					bool charFound=false;
-					for(int i=0;i<client.Account.Characters.Length;i++)
+					for(int i=0;i<client.Account.Characters.Count;i++)
 					{
 						if(client.Account.Characters[i]!=null 
 							&& client.Account.Characters[i].Name==charName)

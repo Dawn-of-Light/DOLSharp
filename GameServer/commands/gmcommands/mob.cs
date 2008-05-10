@@ -1283,9 +1283,9 @@ namespace DOL.GS.Commands
                                 DisplayMessage(client, "You cannot add the " + lootTemplateID + " to the " + targetMob.Name + " because the item does not exist.");
                                 return;
                             }
-                            DBLootTemplate[] template = (DBLootTemplate[])(from s in DatabaseLayer.Instance.OfType<DBLootTemplate>()
-                                                                           where s.TemplateName == name && s.ItemTemplateID == lootTemplateID
-                                                                           select s);
+                            DBLootTemplate[] template = (from s in DatabaseLayer.Instance.OfType<DBLootTemplate>()
+                                                         where s.TemplateName == name && s.ItemTemplateID == lootTemplateID
+                                                         select s).ToArray();
                             if (template.Length > 0)
                             {
                                 foreach (DatabaseObject loot in template)
@@ -1350,9 +1350,9 @@ namespace DOL.GS.Commands
                         }
                         else
                         {
-                            DatabaseObject[] template = (DBLootTemplate[])(from s in DatabaseLayer.Instance.OfType<DBLootTemplate>()
-                                                                           where s.TemplateName == name && s.ItemTemplateID == lootTemplateID
-                                                                           select s);
+                            DatabaseObject[] template = (from s in DatabaseLayer.Instance.OfType<DBLootTemplate>()
+                                                         where s.TemplateName == name && s.ItemTemplateID == lootTemplateID
+                                                         select s).ToArray();
                             if (template != null)
                             {
                                 foreach (DatabaseObject loot in template)

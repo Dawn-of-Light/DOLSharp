@@ -35,11 +35,10 @@ namespace DOL.GS
 		{
 			Hashtable usedSlots = new Hashtable();
 
-			StarterEquipment[] items = (StarterEquipment[])(from s in GameServer.Database.OfType<StarterEquipment>()
-                                                             where s.Class == 0 || s.Class == c.Class
-                                                                select s);
 
-			foreach (StarterEquipment item in items)
+			foreach (StarterEquipment item in (from s in GameServer.Database.OfType<StarterEquipment>()
+                                        where s.Class == 0 || s.Class == c.Class
+                                        select s))
 			{
 				if (item.Template == null)
 				{

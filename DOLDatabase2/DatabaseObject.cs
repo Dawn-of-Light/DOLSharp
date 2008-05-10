@@ -10,6 +10,7 @@ namespace DOL.Database2
         public DatabaseObject()
         {
             m_ID = DatabaseLayer.Instance.GetNewUniqueID();
+            DatabaseLayer.Instance.RegisterDatabaseObject(this);
         }
         private  UInt64 m_ID = 0;
         [NonSerialized]
@@ -55,6 +56,10 @@ namespace DOL.Database2
                 DatabaseLayer.Instance.SaveObject(this);
         }
         public void DeleteDB()
+        {
+            DatabaseLayer.Instance.DeleteObject(this);
+        }
+        public virtual void FillObjectRelations()
         {
         }
     }

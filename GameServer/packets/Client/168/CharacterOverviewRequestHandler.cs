@@ -33,11 +33,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			string accountName = packet.ReadString(24);
-
-			//GameServer.Database.FillObjectRelations(client.Account);
+            client.Account.FillObjectRelations();
 
 			//reset realm if no characters
-			if((client.Account.Characters == null || client.Account.Characters.Length <= 0) && client.Account.Realm != (int)eRealm.None)
+			if((client.Account.Characters == null || client.Account.Characters.Count <= 0) && client.Account.Realm != (int)eRealm.None)
 			{
 				client.Account.Realm = (int)eRealm.None;
 			}

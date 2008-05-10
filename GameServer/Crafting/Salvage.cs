@@ -80,9 +80,9 @@ namespace DOL.GS
 			int salvageLevel = CraftingMgr.GetItemCraftLevel(item) / 100;
 			if(salvageLevel > 9) salvageLevel = 9; // max 9
 			
-			DBSalvage material = (DBSalvage)(from s in DatabaseLayer.Instance.OfType<DBSalvage>()
+			DBSalvage material = (DBSalvage)((from s in DatabaseLayer.Instance.OfType<DBSalvage>()
                                              where s.ObjectType == item.Object_Type&& s.SalvageLevel == salvageLevel
-                                                 select s).First();
+                                                 select s).First());
 			if (material == null || material.RawMaterial == null)
 			{
 				player.Out.SendMessage("Salvage material for object type (" + item.Object_Type + ") not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);

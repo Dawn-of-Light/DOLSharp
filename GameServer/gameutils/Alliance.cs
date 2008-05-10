@@ -69,7 +69,7 @@ namespace DOL.GS
 				m_dballiance.DBguilds = null;
 				//sirru 23.12.06 Add the new object instead of trying to save it
 				GameServer.Database.AddNewObject(m_dballiance);
-				//GameServer.Database.FillObjectRelations(m_dballiance);
+                m_dballiance.FillObjectRelations();
 				//sirru 23.12.06 save changes to db for each guild
 				SaveIntoDatabase();
 				SendMessageToAllianceMembers(myguild.Name + " has joined the alliance of " + m_dballiance.AllianceName, PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
@@ -84,7 +84,7 @@ namespace DOL.GS
 				myguild.theGuildDB.AllianceID = 0;
 				m_dballiance.DBguilds = null;
 				GameServer.Database.SaveObject(m_dballiance);
-				//GameServer.Database.FillObjectRelations(m_dballiance);
+                m_dballiance.FillObjectRelations();
 				//sirru 23.12.06 save changes to db for each guild
 				myguild.SaveIntoDatabase();
 				SendMessageToAllianceMembers(myguild.Name + " has left the alliance of " + m_dballiance.AllianceName, PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);

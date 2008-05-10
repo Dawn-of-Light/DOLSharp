@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.Database2;
 using DOL.Events;
@@ -35,10 +36,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			string charName = packet.ReadString(30);
-			Character[] chars = client.Account.Characters;
+            List<Character> chars = client.Account.Characters;
 			if (chars == null)
 				return 0;
-			for (int i = 0; i < chars.Length; i++)
+			for (int i = 0; i < chars.Count; i++)
 				if (chars[i].Name.ToLower().Equals(charName.ToLower()))
 				{
 					if (client.ActiveCharIndex == i)
@@ -97,10 +98,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 					GameServer.Database.DeleteObject(chars[i]);
 					//GameServer.Database.WriteDatabaseTable(typeof (Character));
-					client.Account.Characters = null;
+                    client.Account.Characters.Remove(chars[i]);
 					client.Player = null;
 
-					if (client.Account.Characters == null || client.Account.Characters.Length == 0)
+					if (client.Account.Characters == null || client.Account.Characters.Count == 0)
 					{
 						if (log.IsInfoEnabled)
 							log.Info(string.Format("Account {0} has no more chars. Realm reset!", client.Account.Name));

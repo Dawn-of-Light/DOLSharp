@@ -21,6 +21,7 @@
 using System;
 using System.Linq;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Reflection;
@@ -274,7 +275,7 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.CharacterOverview));
 			pak.FillString(m_gameClient.Account.Name, 24);
 			InventoryItem[] items;
-			Character[] characters = m_gameClient.Account.Characters;
+            List<Character> characters = m_gameClient.Account.Characters;
 			if (characters == null)
 			{
 				pak.Fill(0x0, 1840);
@@ -284,7 +285,7 @@ namespace DOL.GS.PacketHandler
 				for (int i = firstAccountSlot; i < firstAccountSlot + 10; i++)
 				{
 					bool written = false;
-					for (int j = 0; j < characters.Length && written == false; j++)
+					for (int j = 0; j < characters.Count && written == false; j++)
 						if (characters[j].AccountSlot == i)
 						{
 							pak.FillString(characters[j].Name, 24);

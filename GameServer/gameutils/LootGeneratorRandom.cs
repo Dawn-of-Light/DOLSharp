@@ -75,15 +75,15 @@ namespace DOL.GS
 				lock (m_itemTemplates.SyncRoot)
 				{
 					// ** find our loot template **
-					DatabaseObject[] itemTemplates = null;
+					ItemTemplate[] itemTemplates = null;
 					for (int i = 0; i <= LEVEL_SIZE; i++)
 					{
 						try
 						{
-							itemTemplates = (DatabaseObject[]) ( from s in DatabaseLayer.Instance.OfType<ItemTemplate>()
+							itemTemplates = ( from s in DatabaseLayer.Instance.OfType<ItemTemplate>()
                                                                  where s.Level>=i * LEVEL_RANGE&& s.Level<=((i + 1) * LEVEL_RANGE) && 
                                                                  s.IsPickable == true && s.IsDropable == true && s.CanDropAsLoot == true
-                                                                 select s);
+                                                                 select s).ToArray();
 						}
 						catch (Exception e)
 						{

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.IO;
 using System.Text;
 using System.Reflection;
@@ -161,9 +162,10 @@ namespace DOL.Database2
         public List<T> SelectObjects<T>() where T: DatabaseObject
         {
             List<T> list = new List<T>();
-            foreach (T dbo in DatabaseObjects.Values)
+            foreach (DatabaseObject dbo in DatabaseObjects.Values)
             {
-                list.Add(dbo);
+                if(dbo.GetType() == typeof(T))
+                    list.Add(dbo as T);
             }
             return list;
         }
@@ -184,20 +186,20 @@ namespace DOL.Database2
         public List<T> SelectObjects<T>(PropertyInfo info, object value) where T : DatabaseObject
         {
             List<T> list = new List<T>();
-            foreach (T dbo in DatabaseObjects.Values)
+            foreach (DatabaseObject dbo in DatabaseObjects.Values)
             {
-                if(info.GetValue(dbo,null) == value)
-                    list.Add(dbo);
+                if(dbo.GetType() == typeof(T) &&  info.GetValue(dbo,null) == value)
+                    list.Add(dbo as T);
             }
             return list;
         }
         public List<T> SelectObjects<T>(FieldInfo info, object value) where T : DatabaseObject
         {
             List<T> list = new List<T>();
-            foreach (T dbo in DatabaseObjects.Values)
+            foreach (DatabaseObject dbo in DatabaseObjects.Values)
             {
-                if (info.GetValue(dbo) == value)
-                    list.Add(dbo);
+                if (dbo.GetType() == typeof(T) && info.GetValue(dbo) == value)
+                    list.Add(dbo as T);
             }
             return list;
         }
@@ -215,7 +217,7 @@ namespace DOL.Database2
                 return null;
             //TODO: Tune that with The native field exceptions and map that to the DOL specific exception
             if (!DatabaseObjects.ContainsKey(ID))
-                throw new DatabaseObjectNotFoundException(ID);
+                return null;
             return DatabaseObjects[ID];
         }
         public DatabaseObject GetDatabaseObjectFromIDnb(Type t,string id_nb)
@@ -262,7 +264,101 @@ namespace DOL.Database2
             m_provider.OpenConnection();
         }
 
+        public void RegisterDatabaseObject(DatabaseObject dbo)
+        {
+            if (!DatabaseObjects.ContainsKey(dbo.ID))
+                DatabaseObjects.Add(dbo.ID, dbo);
+        }
+        /*
+        protected readonly Hashtable m_membercache = new Hashtable();
+        protected readonly Hashtable m_relationcache = new Hashtable();
+        protected readonly Hashtable m_constructorcache = new Hashtable();
+        /// <summary>
+        /// From old layer.Automatically fixes all "relation" objects... should not really be used often(performance!) , but a cool design feature
+        /// </summary>
+        /// <param name="dbo"></param>
+           
+        public void FillObjectRelations(DatabaseObject dbo)
+        {
+                Type t = dbo.GetType();
+                MemberInfo[] members = (MemberInfo[])m_membercache[t];
+                if (members == null)
+                {
+                    members = t.GetMembers();
+                    m_membercache[t] = members;
+                }
+               
+                foreach(MemberInfo member in members)
+                {
+                    Type targetType = null;
+                    Relation[] relationAttriutes = (Relation[])m_relationcache[t];
+                    bool array = false;
+                    if (relationAttriutes == null)
+                    {
+                        relationAttriutes = member.GetCustomAttributes(typeof(Relation), true);
+                        m_relationcache[t] = relationAttriutes;
+                    }
+                    if(relationAttriutes.Length == 0)
+                        continue;
+                    if (member is PropertyInfo)
+                    {
+                        targetType = (member as PropertyInfo).PropertyType;
+                    }
+                    else if (member is FieldInfo)
+                    {
+                        targetType = (member as FieldInfo).FieldType;
+                    }
+                    else
+                        throw new Exception("Received member that was neither field nor property");
+                    if(array = targetType.HasElementType)
+                        targetType = targetType.GetElementType();
+                    foreach (Relation rel in relationAttriutes)
+                    {
+                        PropertyInfo prop = t.GetProperty(rel.LocalField);
+                        FieldInfo field = myType.GetField(local);
+                        IEnumerable <targetType>values;
+                        object val = null;
+						if (prop != null)
+							val = prop.GetValue(DataObject, null);
+						if (field != null)
+							val = field.GetValue(DataObject);
+                        if (val != null)
+                        {
+                            values = SelectObjects<targetType>(rel.RemoteField, val);
+                            if (array)
+                            {
+                                if (member is PropertyInfo)
+                                    ((PropertyInfo)member).SetValue(dbo, values.ToArray(), null);
+                                else
+                                {
+                                    FieldInfo currentField = (FieldInfo)member;
+                                    ConstructorInfo constructor = (ConstructorInfo)m_constructorcache[currentField.FieldType];
+                                    if (constructor == null)
+                                    {
+                                        constructor = currentField.FieldType.GetConstructor(new Type[] { typeof(int) });
+                                        m_constructorcache[currentField.FieldType] = constructor;
+                                    }
 
+                                    object[] args = { values.Count() };
+                                    object t = constructor.Invoke(args);
+                                    object[] test = (object[])t;
+                                    int i = 0;
+                                    foreach (object o in values)
+                                    {
+                                        test[i] = o;
+                                        i++;
+                                    }
+                                    currentField.SetValue(DataObject, test);
+
+                                }
+                            }
+
+
+                        }
+                    }
+                }
+            * */
+       
         #region IEnumerable Members
 
         IEnumerator<DatabaseObject> IEnumerable<DatabaseObject>.GetEnumerator()

@@ -150,10 +150,10 @@ namespace DOL.GS
 		{
 			get
 			{
-                return (InventoryItem[])(from s in DatabaseLayer.Instance.OfType<InventoryItem>()
-                                         where  HouseMgr.GetOwners(CurrentHouse.DatabaseItem).Contains(s.OwnerID)
-                                         && s.SlotPosition >= FirstSlot && s.SlotPosition <= LastSlot
-                                         select s);
+                return (from s in DatabaseLayer.Instance.OfType<InventoryItem>()
+                        where HouseMgr.GetOwners(CurrentHouse.DatabaseItem).Contains(s.OwnerID)
+                        && s.SlotPosition >= FirstSlot && s.SlotPosition <= LastSlot
+                        select s).ToArray();
 			}
 		}
 
