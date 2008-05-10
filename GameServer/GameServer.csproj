@@ -106,10 +106,8 @@
       <Name>System.XML</Name>
     </Reference>
     <ProjectReference Include="..\DOLBase\DOLBase.csproj">
-      <Name>DOLBase</Name>
       <Project>{A4A0FB22-124C-45CA-A653-2887DE0CC3E0}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-      <Private>True</Private>
+      <Name>DOLBase</Name>
     </ProjectReference>
     <ProjectReference Include="..\DOLDatabase2\DOLDatabase2.csproj">
       <Project>{9DBDD582-A8C8-4FE9-9BDC-E12CA28BFE71}</Project>

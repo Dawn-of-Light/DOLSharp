@@ -53,7 +53,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					// delete items
 					try
 					{
-						foreach (InventoryItem item in GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID",chars[i].ObjectId))
+						foreach (InventoryItem item in GameServer.Database.SelectObjects<InventoryItem>("OwnerID",chars[i].ObjectId))
 						{
 							GameServer.Database.DeleteObject(item);
 						}
@@ -68,7 +68,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					// delete quests
 					try
 					{
-						foreach (DBQuest quest in GameServer.Database.SelectObjects(typeof(DBQuest), "CharName",chars[i].Name))
+						foreach (DBQuest quest in GameServer.Database.SelectObjects<DBQuest>( "CharName",chars[i].Name))
 						{
 							GameServer.Database.DeleteObject(quest);
 						}
@@ -83,7 +83,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					// delete ML steps
 					try
 					{
-						foreach (DBCharacterXMasterLevel mlstep in GameServer.Database.SelectObjects(typeof(DBCharacterXMasterLevel), "CharName",chars[i].Name))
+						foreach (DBCharacterXMasterLevel mlstep in GameServer.Database.SelectObjects<DBCharacterXMasterLevel>( "CharName",chars[i].Name))
 						{
 							GameServer.Database.DeleteObject(mlstep);
 						}

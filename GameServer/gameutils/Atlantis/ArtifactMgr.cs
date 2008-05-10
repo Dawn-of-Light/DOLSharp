@@ -60,13 +60,13 @@ namespace DOL.GS
 			// Load artifacts and books.
 
 			m_artifacts = new Dictionary<String, Artifact>();
-            foreach (Artifact artifact in GameServer.Database.SelectObjects(typeof(Artifact)))
+            foreach (Artifact artifact in GameServer.Database.SelectObjects<Artifact>())
                 m_artifacts.Add(artifact.ArtifactID, artifact);
 
 			// Load artifact versions.
 			m_artifactVersions = new Dictionary<String, List<ArtifactXItem>>();
 			List<ArtifactXItem> versionList;
-            foreach (ArtifactXItem artifactVersion in GameServer.Database.SelectObjects(typeof(ArtifactXItem)))
+            foreach (ArtifactXItem artifactVersion in GameServer.Database.SelectObjects<ArtifactXItem>())
             {
 				if (m_artifactVersions.ContainsKey(artifactVersion.ArtifactID))
 					versionList = m_artifactVersions[artifactVersion.ArtifactID];
@@ -79,9 +79,7 @@ namespace DOL.GS
             }
 
 			// Load artifact bonuses.
-			m_artifactBonuses = new List<ArtifactBonus>();
-			foreach (ArtifactBonus artifactBonus in GameServer.Database.SelectObjects(typeof(ArtifactBonus)))
-				m_artifactBonuses.Add(artifactBonus);
+            m_artifactBonuses = GameServer.Database.SelectObjects<ArtifactBonus>();
 
 			// Install event handlers.
 

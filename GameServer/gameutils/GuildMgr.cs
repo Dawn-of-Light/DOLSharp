@@ -404,8 +404,8 @@ namespace DOL.GS
 			m_lastID = 0;
 
 			//load guilds
-			DatabaseObject[] objs = (DatabaseObject[] )GameServer.Database.SelectObjects(typeof(DBGuild));
-			foreach (DatabaseObject obj in objs)
+			List<DBGuild> guilds =GameServer.Database.SelectObjects<DBGuild>();
+			foreach (DBGuild obj in guilds)
 			{
 				Guild myguild = new Guild();
 				myguild.LoadFromDatabase(obj);
@@ -425,8 +425,8 @@ namespace DOL.GS
 			}
 
 			//load alliances
-			objs = (DatabaseObject[])GameServer.Database.SelectObjects(typeof(DBAlliance));
-			foreach (DBAlliance dball in objs)
+			List<DBAlliance> alli = GameServer.Database.SelectObjects<DBAlliance>();
+			foreach (DBAlliance dball in alli)
 			{
 				Alliance myalliance = new Alliance();
 				myalliance.LoadFromDatabase(dball);

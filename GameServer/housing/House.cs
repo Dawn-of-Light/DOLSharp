@@ -1208,7 +1208,7 @@ namespace DOL.GS.Housing
 
                 // Need to clear the current house points so we can replace items
                 player.CurrentHouse.HousepointItems.Clear();
-                foreach (DBHousepointItem hpitem in GameServer.Database.SelectObjects(typeof(DBHousepointItem),"HouseID",player.CurrentHouse.HouseNumber))
+                foreach (DBHousepointItem hpitem in GameServer.Database.SelectObjects<DBHousepointItem>("HouseID",player.CurrentHouse.HouseNumber))
                 {
                     FillHookpoint(null, hpitem.Position, hpitem.ItemTemplateID);
                     this.HousepointItems[hpitem.Position] = hpitem;

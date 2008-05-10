@@ -478,9 +478,9 @@ namespace DOL.GS
 				tmp = new DBNpcTemplate();
 				add = true;
 			}
-			if (TemplateId == 0)
-				tmp.TemplateId = GameServer.Database.SelectObjects(typeof(DBNpcTemplate)).Count();
-			else 
+            if (TemplateId == 0)
+                tmp.TemplateId = (int) GameServer.Database.GetObjectCount(typeof(DBNpcTemplate));
+            else
                 tmp.TemplateId = TemplateId;
 			tmp.Model = Model;
 			tmp.Size = Size;

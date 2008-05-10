@@ -280,7 +280,7 @@ namespace DOL.GS
 
 			m_teleportLocations = new Dictionary<string, Teleport>();
 			int[] numTeleports = new int[3];
-			foreach (Teleport teleport in GameServer.Database.SelectObjects(typeof(Teleport)))
+			foreach (Teleport teleport in GameServer.Database.SelectObjects<Teleport>())
 			{
 				if (m_teleportLocations.ContainsKey(teleport.TeleportID.ToLower()))
 				{
@@ -299,7 +299,7 @@ namespace DOL.GS
 			log.Debug("loading mobs from DB...");
 
 			Hashtable mobsByRegionId = new Hashtable(512);
-			foreach (Mob mob in GameServer.Database.SelectObjects(typeof(Mob)))
+			foreach (Mob mob in GameServer.Database.SelectObjects<Mob>())
 			{
 				ArrayList list = (ArrayList)mobsByRegionId[mob.Region];
 				if (list == null)

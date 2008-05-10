@@ -137,8 +137,11 @@ namespace DOL.GS
 
 				return false;
 			}
-
-            return LoadFromDatabase(DatabaseLayer.Instance.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), templateID).ID);// TUNE
+            DatabaseObject obj = DatabaseLayer.Instance.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), templateID);
+            if (obj != null)
+                return LoadFromDatabase(obj.ID);// TUNE
+            else
+                return false;
 		}
         public bool SaveIntoDatabase(string templateID)
 		{

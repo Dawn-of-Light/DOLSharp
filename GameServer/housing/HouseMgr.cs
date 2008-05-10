@@ -20,6 +20,7 @@
 using System;
 using System.Linq;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using DOL.Database2;
@@ -64,7 +65,7 @@ namespace DOL.GS.Housing
 
 			int houses = 0;
 			int lotmarkers = 0;
-			foreach (DBHouse house in GameServer.Database.SelectObjects(typeof(DBHouse)))
+			foreach (DBHouse house in GameServer.Database.SelectObjects<DBHouse>())
 			{
 				if (house.Model != 0)
 				{
@@ -181,9 +182,9 @@ namespace DOL.GS.Housing
                     GameServer.Database.DeleteObject(item);
 
             // Remove all outdoor items
-            objs = (DatabaseObject[])GameServer.Database.SelectObjects(typeof(DBHouseOutdoorItem), "HouseNumber",house.HouseNumber);
-            if (objs.Length > 0)
-                foreach (DatabaseObject item in objs)
+            List<DBHouseOutdoorItem> outdooritems= GameServer.Database.SelectObjects<DBHouseOutdoorItem>("HouseNumber",house.HouseNumber);
+            if (outdooritems.Count > 0)
+                foreach (DatabaseObject item in outdooritems)
                     GameServer.Database.DeleteObject(item);
             #endregion
 
@@ -258,30 +259,29 @@ namespace DOL.GS.Housing
             house.DatabaseItem.GuildHouse = false;
 
             #region Remove indoor/outdoor items & permissions
-            DatabaseObject[] objs;
 
             // Remove all indoor items
-            objs = (DatabaseObject[])GameServer.Database.SelectObjects(typeof(DBHouseIndoorItem), "HouseNumber", house.HouseNumber);
-            if (objs.Length > 0)
-                foreach (DatabaseObject item in objs)
+            List<DBHouseIndoorItem> indoor =GameServer.Database.SelectObjects<DBHouseIndoorItem>("HouseNumber", house.HouseNumber);
+            if (indoor.Count > 0)
+                foreach (DBHouseIndoorItem item in indoor)
                     GameServer.Database.DeleteObject(item);
 
             // Remove all outdoor items
-            objs = (DatabaseObject[])GameServer.Database.SelectObjects(typeof(DBHouseOutdoorItem), "HouseNumber", house.HouseNumber);
-            if (objs.Length > 0)
-                foreach (DatabaseObject item in objs)
+            List<DBHouseOutdoorItem> outdoor= GameServer.Database.SelectObjects<DBHouseOutdoorItem>("HouseNumber", house.HouseNumber);
+            if (outdoor.Count > 0)
+                foreach (DBHouseOutdoorItem item in outdoor)
                     GameServer.Database.DeleteObject(item);
 
             // Remove all permissions
-            objs = (DatabaseObject[])GameServer.Database.SelectObjects(typeof(DBHousePermissions), "HouseNumber", house.HouseNumber);
-            if (objs.Length > 0)
-                foreach (DatabaseObject item in objs)
+            List<DBHousePermissions> perm =GameServer.Database.SelectObjects<DBHousePermissions>("HouseNumber", house.HouseNumber);
+            if (perm.Count > 0)
+                foreach (DBHousePermissions item in perm)
                     GameServer.Database.DeleteObject(item);
 
             // Remove all char x permissions
-            objs = (DatabaseObject[])GameServer.Database.SelectObjects(typeof(DBHouseCharsXPerms), "HouseNumber ", house.HouseNumber);
-            if (objs.Length > 0)
-                foreach (DatabaseObject item in objs)
+            List<DBHouseCharsXPerms> chperms = GameServer.Database.SelectObjects<DBHouseCharsXPerms>("HouseNumber ", house.HouseNumber);
+            if (chperms.Count > 0)
+                foreach (DatabaseObject item in chperms)
                     GameServer.Database.DeleteObject(item);
             #endregion
 

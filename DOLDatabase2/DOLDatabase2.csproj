@@ -61,7 +61,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DatabaseReference.cs" />
     <Compile Include="DatabaseLayer.cs" />
     <Compile Include="DatabaseObject.cs" />
     <Compile Include="DatabaseProvider.cs" />

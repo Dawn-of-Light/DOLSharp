@@ -73,7 +73,7 @@ namespace DOL.GS
 				lock (m_mobTemplates.SyncRoot)
 				{
 					m_mobTemplates.Clear();
-					foreach (DBNpcTemplate dbTemplate in GameServer.Database.SelectObjects(typeof(DBNpcTemplate)))
+					foreach (DBNpcTemplate dbTemplate in GameServer.Database.SelectObjects<DBNpcTemplate>())
 					{
 						AddTemplate(new NpcTemplate(dbTemplate));
 					}

@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
 using DOL.Database2;
@@ -156,8 +157,8 @@ namespace DOL.GS.Effects
 			GamePlayer player = m_owner as GamePlayer;
 			if (player == null || player.PlayerCharacter == null || GameServer.Database == null)
 				return;
-			PlayerXEffect[] effs = (PlayerXEffect[])GameServer.Database.SelectObjects(typeof(PlayerXEffect), "ChardID",player.PlayerCharacter.ObjectId);
-			if (effs == null)
+			List<PlayerXEffect> effs =GameServer.Database.SelectObjects<PlayerXEffect>( "ChardID",player.PlayerCharacter.ObjectId);
+			if (effs.Count == 0)
 				return;
 			ArrayList targets = new ArrayList();
 			targets.Add(player);

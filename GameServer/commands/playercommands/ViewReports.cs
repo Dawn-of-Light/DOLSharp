@@ -19,6 +19,7 @@
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.Language;
 using DOL.Database2;
@@ -117,8 +118,8 @@ namespace DOL.GS.Commands
 				e = new Exception();
 				// Display bug reports to player
 				string Reports = "---------- BUG REPORTS ------------\n";
-				BugReport[] dbo = (BugReport [])GameServer.Database.SelectObjects(typeof(BugReport));
-				if (dbo.Length < 1)
+				List<BugReport> dbo = GameServer.Database.SelectObjects<BugReport>();
+				if (dbo.Count < 1)
 				{
 					Reports += "  - No Reports On File -\n";
 					return;

@@ -348,7 +348,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                             point.Position = (uint)position;
 
                             // If we already have soemthing here, do not place more
-                            foreach (DBHousepointItem hpitem in GameServer.Database.SelectObjects(typeof(DBHousepointItem), "HouseID",house.HouseNumber))
+                            foreach (DBHousepointItem hpitem in GameServer.Database.SelectObjects<DBHousepointItem>("HouseID",house.HouseNumber))
                             {
                                 if (hpitem.Position == point.Position)
                                 {

@@ -19,6 +19,7 @@
 using System;
 using System.Linq;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.AI;
 using DOL.AI.Brain;
@@ -1331,8 +1332,8 @@ namespace DOL.GS.Commands
                         string name = targetMob.Name;
                         if (lootTemplateID.ToLower().ToString() == "all")
                         {
-                            DatabaseObject[] template = (DatabaseObject[]) GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName",name);
-                            if (template.Length > 0)
+                            List<DBLootTemplate> template = GameServer.Database.SelectObjects<DBLootTemplate>( "TemplateName",name);
+                            if (template.Count > 0)
                             {
                                 foreach (DatabaseObject loot in template)
                                 {
@@ -1386,7 +1387,7 @@ namespace DOL.GS.Commands
                         {
                             ArrayList text = new ArrayList();
                             text.Add(".");
-                            foreach (DBLootTemplate loot in GameServer.Database.SelectObjects(typeof(DBLootTemplate),"TemplateName",targetMob.Name))
+                            foreach (DBLootTemplate loot in GameServer.Database.SelectObjects<DBLootTemplate>("TemplateName",targetMob.Name))
                             {
                                 string message = "";
                                 if (loot.ItemTemplate == null)

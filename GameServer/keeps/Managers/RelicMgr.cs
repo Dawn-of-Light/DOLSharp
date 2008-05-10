@@ -74,7 +74,7 @@ namespace DOL.GS
 				{
 					pad.RemoveRelic();
 				}
-				foreach (DBRelic datarelic in GameServer.Database.SelectObjects(typeof(DBRelic)))
+				foreach (DBRelic datarelic in GameServer.Database.SelectObjects<DBRelic>())
 				{
 					if (datarelic.relicType < 0 || datarelic.relicType > 1
 						|| datarelic.OriginalRealm < 1 || datarelic.OriginalRealm > 3)

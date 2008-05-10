@@ -17,6 +17,7 @@
  *
  */
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.Database2;
 using log4net;
@@ -45,7 +46,7 @@ namespace DOL.GS.Movement
             SortedList sorted = new SortedList();
             pathID.Replace('\'', '/'); // we must replace the ', found no other way yet
             DBPath dbpath = (DBPath)GameServer.Database.SelectObject(typeof(DBPath),"PathID",pathID);
-            DBPathPoint[] pathpoints = null;
+            List<DBPathPoint> pathpoints = null;
             ePathType pathType = ePathType.Once;
 
             if (dbpath != null)
@@ -55,7 +56,7 @@ namespace DOL.GS.Movement
             }
             if (pathpoints == null)
             {
-                pathpoints = (DBPathPoint[])GameServer.Database.SelectObjects(typeof(DBPathPoint), "PathID",pathID);
+                pathpoints = GameServer.Database.SelectObjects<DBPathPoint>( "PathID",pathID);
             }
 
             foreach (DBPathPoint point in pathpoints)

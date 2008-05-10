@@ -19,6 +19,7 @@
 using System;
 using System.Linq;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.GS;
 using DOL.Database2;
@@ -318,8 +319,8 @@ namespace DOL.GS.Commands
 											}
 											DisplayMessage(client, "Deleting articles list template ...");
 
-											MerchantItem[] merchantitems = (MerchantItem[])GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemsListID",targetMerchant.TradeItems.ItemsListID);
-											if (merchantitems.Length > 0)
+											List<MerchantItem> merchantitems =GameServer.Database.SelectObjects<MerchantItem>("ItemsListID",targetMerchant.TradeItems.ItemsListID);
+											if (merchantitems.Count > 0)
 											{
 												foreach (MerchantItem item in merchantitems)
 												{

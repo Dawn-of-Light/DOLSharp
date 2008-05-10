@@ -136,10 +136,10 @@ namespace DOL.GS.ServerRules
 				if (WorldMgr.GetAllClients().Count > Properties.MAX_PLAYERS)
 				{
 					// GMs are still allowed to enter server
-                    objs = (DatabaseObject[]) GameServer.Database.SelectObjects(typeof(Account), "Name", username);
-					if (objs.Length > 0)
+                    List<Account> accs =  GameServer.Database.SelectObjects<Account>( "Name", username);
+					if (accs.Count > 0)
 					{
-						Account account = objs[0] as Account;
+                        Account account = accs[0];
 						if (account.PrivLevel > 1) return true;
                         if (account.Status > 0) return true; //VIP
 					}
@@ -153,10 +153,10 @@ namespace DOL.GS.ServerRules
 			if (Properties.STAFF_LOGIN)
 			{
 				// GMs are still allowed to enter server
-				objs = (DatabaseObject []) GameServer.Database.SelectObjects(typeof(Account),"Name",username);
-				if (objs.Length > 0)
+				List<Account> accs=  GameServer.Database.SelectObjects<Account>("Name",username);
+				if (accs.Count > 0)
 				{
-					Account account = objs[0] as Account;
+					Account account = accs[0];
 					if (account.PrivLevel > 1) return true;
 				}
 

@@ -75,7 +75,7 @@ namespace DOL.GS
 			{
 				try
 				{
-					foreach (InventoryItem item in GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID",inventoryID))
+					foreach (InventoryItem item in GameServer.Database.SelectObjects<InventoryItem>( "OwnerID",inventoryID))
 					{
 						if (item.CanUseEvery > 0)
 							item.SetCooldown();

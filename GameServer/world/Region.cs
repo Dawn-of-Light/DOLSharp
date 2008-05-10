@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Reflection;
@@ -465,14 +466,14 @@ namespace DOL.GS
 		public void LoadFromDatabase(Mob[] mobObjs, ref long mobCount, ref long merchantCount, ref long itemCount, ref long bindCount)
 		{
 			Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
-			WorldObject[] staticObjs = (WorldObject[])GameServer.Database.SelectObjects(typeof(WorldObject), "Region",ID);
-			BindPoint[] bindPoints = (BindPoint[])GameServer.Database.SelectObjects(typeof(BindPoint), "Region",ID);
-			int count = mobObjs.Length + staticObjs.Length;
+			List<WorldObject> staticObjs = GameServer.Database.SelectObjects<WorldObject>( "Region",ID);
+			List<BindPoint> bindPoints = GameServer.Database.SelectObjects<BindPoint>( "Region",ID);
+			int count = mobObjs.Length + staticObjs.Count;
 			if (count > 0) PreAllocateRegionSpace(count + 100);
-			int myItemCount = staticObjs.Length;
+			int myItemCount = staticObjs.Count;
 			int myMobCount = 0;
 			int myMerchantCount = 0;
-			int myBindCount = bindPoints.Length;
+			int myBindCount = bindPoints.Count;
 			if (mobObjs.Length > 0)
 			{
 				foreach (Mob mob in mobObjs)
@@ -578,7 +579,7 @@ namespace DOL.GS
 				}
 			}
 
-			if (staticObjs.Length > 0)
+			if (staticObjs.Count > 0)
 			{
 				foreach (WorldObject item in staticObjs)
 				{

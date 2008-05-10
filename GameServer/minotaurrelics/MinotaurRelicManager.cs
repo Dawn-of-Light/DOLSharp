@@ -53,7 +53,7 @@ namespace DOL.GS
 
             try
             {
-                foreach (DBMinotaurRelic dbrelic in GameServer.Database.SelectObjects(typeof(DBMinotaurRelic)))
+                foreach (DBMinotaurRelic dbrelic in GameServer.Database.SelectObjects<DBMinotaurRelic>())
                 {
                     if (WorldMgr.GetRegion((ushort)dbrelic.SpawnRegion) == null)
                     {

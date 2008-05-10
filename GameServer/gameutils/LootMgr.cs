@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
 using DOL.Database2;
@@ -75,10 +76,10 @@ namespace DOL.GS
 			if (log.IsInfoEnabled)
 				log.Info("Loading LootGenerators...");
 
-			DatabaseObject[] m_lootGenerators;
+			List<DBLootGenerator> m_lootGenerators;
 			try
 			{
-                m_lootGenerators = (DatabaseObject[])GameServer.Database.SelectObjects(typeof(DBLootGenerator));
+                m_lootGenerators = GameServer.Database.SelectObjects<DBLootGenerator>();
 			}
 			catch (Exception e)
 			{

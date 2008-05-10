@@ -1529,8 +1529,7 @@ namespace DOL.GS.Commands
 
                                     accountName = c.AccountName;
                                 }
-                                List<Character> chars = new List<Character>();
-                                chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(Character),"AccountName",accountName));
+                                List<Character> chars =GameServer.Database.SelectObjects<Character>("AccountName",accountName);
                                 //chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(CharacterArchive), "AccountID = '" + accountId + "'"));
 
                                 foreach (Character ply in chars)

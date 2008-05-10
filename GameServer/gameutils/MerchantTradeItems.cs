@@ -231,8 +231,7 @@ namespace DOL.GS
 				Hashtable allItems = new Hashtable();
 				if (m_itemsListID != null)
 				{
-					DatabaseObject[] itemList = (DatabaseObject[])GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemListID",m_itemsListID);
-					foreach (MerchantItem merchantitem in itemList)
+					foreach (MerchantItem merchantitem in GameServer.Database.SelectObjects<MerchantItem>( "ItemListID",m_itemsListID))
 					{
 						ItemTemplate item = (ItemTemplate)GameServer.Database.GetDatabaseObjectFromIDnb(typeof(ItemTemplate), merchantitem.ItemTemplateID);
 						if (item != null)

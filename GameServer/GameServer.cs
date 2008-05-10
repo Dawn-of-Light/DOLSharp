@@ -1195,16 +1195,18 @@ namespace DOL
                             log.Error("Could not load database assembly " + Configuration.DBProviderAssembly + "-not a valid assembly. Check compile Target ( same version of NET or older than DOL) ", e);
                     }
                 }
-                foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
-                {
-                    Type temp = asm.GetType(Configuration.DBProviderType, false, true);
-                    if (temp != null)
+                if (Configuration.DBProviderType.Length != 0)
+                    foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
                     {
-                        dbProvider = temp;
-                        break;
+                        Type temp = asm.GetType(Configuration.DBProviderType, false, true);
+                        if (temp != null)
+                        {
+                            dbProvider = temp;
+                            break;
+                        }
                     }
-                }
-                DatabaseLayer.Instance.SetProvider((DatabaseProvider)dbProvider.GetConstructor(Type.EmptyTypes).Invoke(null),Configuration.DBConnectionString);
+                
+                DatabaseLayer.Instance.SetProvider((DatabaseProvider) Activator.CreateInstance(dbProvider),Configuration.DBConnectionString);
                 DatabaseLayer.Instance.RestoreWorldState();
                 m_DBInitialised = true;
                 return true;

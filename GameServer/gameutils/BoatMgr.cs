@@ -164,8 +164,7 @@ namespace DOL.GS
                     return false;
                 }
 
-                DBBoat[] boats = (DBBoat[])GameServer.Database.SelectObjects(typeof(DBBoat), "BoatName" ,boatName);
-                foreach (DBBoat boat in boats)
+                foreach (DBBoat boat in GameServer.Database.SelectObjects<DBBoat>("BoatName", boatName))
                 {
                     GameServer.Database.DeleteObject(boat);
                 }
@@ -265,7 +264,7 @@ namespace DOL.GS
             }
 
             //load boats
-            foreach (DatabaseObject obj in GameServer.Database.SelectObjects(typeof(DBBoat)))
+            foreach (DBBoat obj in GameServer.Database.SelectObjects<DBBoat>())
             {
                 GameBoat myboat = new GameBoat();
                 myboat.LoadFromDatabase(obj);

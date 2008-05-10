@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Text;
@@ -91,12 +92,12 @@ namespace DOL.GS.Quests
 			else // if player has no active task, load dbtask an use tasksdone
 			{
 				// Load Task object of player ...
-				DBTask[] tasks = (DBTask[]) GameServer.Database.SelectObjects(typeof(DBTask),"CharName",taskPlayer.Name);
-				if (tasks.Length==1)
+				List<DBTask> tasks = GameServer.Database.SelectObjects<DBTask>("CharName",taskPlayer.Name);
+				if (tasks.Count==1)
 				{
 					dbTask = tasks[0];
 				}
-				else if (tasks.Length>1)
+				else if (tasks.Count>1)
 				{
 					if (log.IsErrorEnabled)
 						log.Error("More than one DBTask Object found for player "+taskPlayer.Name);

@@ -47,7 +47,6 @@ namespace DOL.Database2
         } 
 	#endregion
         IFormatter m_formatter = new BinaryFormatter();
-        private bool m_connected = false;
         private DatabaseProvider m_provider = null;
         private readonly Dictionary<UInt64,DatabaseObject> DatabaseObjects = new Dictionary<UInt64,DatabaseObject>();
         #region RestoreWorldState
@@ -159,56 +158,46 @@ namespace DOL.Database2
             }
             return null;
         }
-        public IEnumerable<DatabaseObject> SelectObjects(Type type)
+        public List<T> SelectObjects<T>() where T: DatabaseObject
         {
-            LinkedList<DatabaseObject> list = new LinkedList<DatabaseObject>();
-            foreach (DatabaseObject dbo in DatabaseObjects.Values)
+            List<T> list = new List<T>();
+            foreach (T dbo in DatabaseObjects.Values)
             {
-                if(dbo.GetType() == type)
-                {
-                    list.AddLast(dbo);
-                }
+                list.Add(dbo);
             }
             return list;
         }
-        [Obsolete]
-        public IEnumerable<DatabaseObject> SelectObjects(Type type,string MemberName,object value)
+        public List<T> SelectObjects<T>(string MemberName,object value) where T : DatabaseObject
         {
-            FieldInfo field = type.GetField(MemberName);
-            PropertyInfo property = type.GetProperty(MemberName);
+            FieldInfo field = typeof(T).GetField(MemberName);
+            PropertyInfo property = typeof(T).GetProperty(MemberName);
             if (property != null)
             {
-                return SelectObjects(property, value);
+                return SelectObjects<T>(property, value);
             }
             else if (field != null)
             {
-                return SelectObjects(field, value);
+                return SelectObjects<T>(field, value);
             }
-            throw new PropertyFieldNotFoundException(MemberName, type);
+            throw new PropertyFieldNotFoundException(MemberName, typeof(T));
         }
-        public IEnumerable<DatabaseObject> SelectObjects(PropertyInfo info,object value)
+        public List<T> SelectObjects<T>(PropertyInfo info, object value) where T : DatabaseObject
         {
-            LinkedList<DatabaseObject> list = new LinkedList<DatabaseObject>();
-            foreach (DatabaseObject dbo in DatabaseObjects.Values)
+            List<T> list = new List<T>();
+            foreach (T dbo in DatabaseObjects.Values)
             {
-                if (dbo.GetType() == info.DeclaringType)
-                {
-                    if(info.GetValue(dbo,null) == value)
-                        list.AddLast(dbo);
-                }
+                if(info.GetValue(dbo,null) == value)
+                    list.Add(dbo);
             }
             return list;
         }
-        public IEnumerable<DatabaseObject> SelectObjects(FieldInfo info, object value)
+        public List<T> SelectObjects<T>(FieldInfo info, object value) where T : DatabaseObject
         {
-            LinkedList<DatabaseObject> list = new LinkedList<DatabaseObject>();
-            foreach (DatabaseObject dbo in DatabaseObjects.Values)
+            List<T> list = new List<T>();
+            foreach (T dbo in DatabaseObjects.Values)
             {
-                if (dbo.GetType() == info.DeclaringType)
-                {
-                    if (info.GetValue(dbo) == value)
-                        list.AddLast(dbo);
-                }
+                if (info.GetValue(dbo) == value)
+                    list.Add(dbo);
             }
             return list;
         }
@@ -231,7 +220,7 @@ namespace DOL.Database2
         }
         public DatabaseObject GetDatabaseObjectFromIDnb(Type t,string id_nb)
         {
-            return SelectObject(t, "id_nb", id_nb);
+            return SelectObject(t, "Id_nb", id_nb);
         }
         #endregion
         public UInt64 GetNewUniqueID()

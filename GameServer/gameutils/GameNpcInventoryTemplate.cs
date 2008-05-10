@@ -306,7 +306,7 @@ namespace DOL.GS
 			try
 			{
 				m_npcEquipmentCache = new Dictionary<UInt64, List<NPCEquipment>>(1000);
-				foreach (NPCEquipment equip in GameServer.Database.SelectObjects(typeof(NPCEquipment)))
+				foreach (NPCEquipment equip in GameServer.Database.SelectObjects<NPCEquipment>())
 				{
 					List<NPCEquipment> list;
 					if (m_npcEquipmentCache.ContainsKey(equip.TemplateID))
@@ -342,8 +342,8 @@ namespace DOL.GS
 				{
 					if (templateID == null)
 						throw new ArgumentNullException("templateID");
-					// delete removed item templates
-                    IEnumerable<DatabaseObject> npcEquipment = GameServer.Database.SelectObjects(typeof(NPCEquipment), "TemplateID", templateID);
+					// delete removed item templates 
+                    List<NPCEquipment> npcEquipment = GameServer.Database.SelectObjects<NPCEquipment>( "TemplateID", templateID);
 					foreach (NPCEquipment npcItem in npcEquipment)
 					{
 						if (!m_items.Contains(npcItem.Slot))

@@ -292,27 +292,27 @@ namespace DOL.GS
 			if (log.IsInfoEnabled)
 				log.Info("Loading spells...");
 			Hashtable spells = new Hashtable(5000);
-			DBSpell[] spelldb =(DBSpell []) GameServer.Database.SelectObjects(typeof(DBSpell));
-			for (int i = 0; i < spelldb.Length; i++)
+			List<DBSpell> spelldb = GameServer.Database.SelectObjects<DBSpell>();
+			for (int i = 0; i < spelldb.Count; i++)
 			{
 				DBSpell spell = (DBSpell)spelldb[i];
 				spells[spell.SpellID] = spell;
 				m_spells[spell.SpellID] = new Spell(spell, 1);
 			}
 			if (log.IsInfoEnabled)
-				log.Info("Spells loaded: " + spelldb.Length);
+				log.Info("Spells loaded: " + spelldb.Count);
 
 
 			// load all spell lines
-			DBSpellLine[] dbo = (DBSpellLine[])GameServer.Database.SelectObjects(typeof(DBSpellLine));
-			for (int i = 0; i < dbo.Length; i++)
+			List<DBSpellLine> dbo = GameServer.Database.SelectObjects<DBSpellLine>();
+			for (int i = 0; i < dbo.Count; i++)
 			{
 				string lineID = ((DBSpellLine)dbo[i]).KeyName;
 				string lineName = ((DBSpellLine)dbo[i]).Name;
 				string spec = ((DBSpellLine)dbo[i]).Spec;
 				bool baseline = ((DBSpellLine)dbo[i]).IsBaseLine;
 				ArrayList spell_list = new ArrayList();
-				DBLineXSpell[] dbo2 = (DBLineXSpell[])GameServer.Database.SelectObjects(typeof(DBLineXSpell), "LineName",lineID);
+				List<DBLineXSpell> dbo2 = GameServer.Database.SelectObjects<DBLineXSpell>( "LineName",lineID);
 				foreach (DBLineXSpell lxs in dbo2)
 				{
 					DBSpell spell = (DBSpell)spells[lxs.SpellID];
@@ -333,15 +333,15 @@ namespace DOL.GS
 				m_spellLists[lineID] = spell_list;
 				RegisterSpellLine(new SpellLine(lineID, lineName, spec, baseline));
 				if (log.IsDebugEnabled)
-					log.Debug("SpellLine: " + lineID + ", " + dbo2.Length + " spells");
+					log.Debug("SpellLine: " + lineID + ", " + dbo2.Count + " spells");
 			}
 			if (log.IsInfoEnabled)
-				log.Info("Total spell lines loaded: " + dbo.Length);
+				log.Info("Total spell lines loaded: " + dbo.Count);
 
 			// load Abilities
 			log.Info("Loading Abilities...");
             int AbilityCount = 0;
-				foreach (DBAbility dba in GameServer.Database.SelectObjects(typeof(DBAbility)))
+				foreach (DBAbility dba in GameServer.Database.SelectObjects<DBAbility>())
 				{
 
 					m_abilitiesByName[dba.KeyName] = dba;
@@ -374,9 +374,9 @@ namespace DOL.GS
 				log.Info("Total abilities loaded: " + AbilityCount);
 
 			log.Info("Loading class to realm ability associations...");
-			DatabaseObject[] classxra = (DatabaseObject[]) GameServer.Database.SelectObjects(typeof(ClassXRealmAbility));
+			List<ClassXRealmAbility> classxra =  GameServer.Database.SelectObjects<ClassXRealmAbility>();
 			int count = 0;
-			if (classxra != null)
+			if (classxra.Count > 0)
 			{
 				foreach (ClassXRealmAbility cxra in classxra)
 				{
@@ -410,7 +410,7 @@ namespace DOL.GS
 			//(procs) load all Procs
 			if (log.IsInfoEnabled)
 				log.Info("Loading procs...");
-			DBStyleXSpell[] stylespells = (DBStyleXSpell[]) GameServer.Database.SelectObjects(typeof(DBStyleXSpell));
+			List<DBStyleXSpell> stylespells = GameServer.Database.SelectObjects<DBStyleXSpell>();
 			if (stylespells != null)
 			{
 				foreach (DBStyleXSpell proc in stylespells)
@@ -438,12 +438,12 @@ namespace DOL.GS
 				}
 			}
 			if (log.IsInfoEnabled)
-				log.Info("Total procs loaded: " + ((stylespells != null) ? stylespells.Length : 0));
+				log.Info("Total procs loaded: " + ((stylespells != null) ? stylespells.Count : 0));
 
 			// load Specialization & styles
 			if (log.IsInfoEnabled)
 				log.Info("Loading specialization & styles...");
-			DBSpecXAbility[] specabilities = (DBSpecXAbility [])GameServer.Database.SelectObjects(typeof(DBSpecXAbility));
+			List<DBSpecXAbility> specabilities = GameServer.Database.SelectObjects<DBSpecXAbility>();
 			if (specabilities != null)
 			{
 				foreach (DBSpecXAbility sxa in specabilities)
@@ -466,8 +466,8 @@ namespace DOL.GS
 					}
 				}
 			}
-            DBSpecialization[] specs = (DBSpecialization []) GameServer.Database.SelectObjects(typeof(DBSpecialization));
-			if (specs != null)
+            List<DBSpecialization> specs =  GameServer.Database.SelectObjects<DBSpecialization>();
+			if (specs.Count > 0)
 			{
 				foreach (DBSpecialization spec in specs)
 				{
@@ -525,7 +525,7 @@ namespace DOL.GS
 				}
 			}
 			if (log.IsInfoEnabled)
-				log.Info("Total specializations loaded: " + ((specs != null) ? specs.Length : 0));
+				log.Info("Total specializations loaded: " + ((specs != null) ? specs.Count : 0));
 
 			// load skill action handlers
 			//Search for ability handlers in the gameserver first

@@ -40,7 +40,7 @@ namespace DOL.GS
 		/// </summary>	
 		public static bool Init()
 		{
-			DatabaseObject[] dbdoors =(DatabaseObject[]) GameServer.Database.SelectObjects(typeof(DBDoor));
+			List<DBDoor> dbdoors = GameServer.Database.SelectObjects<DBDoor>();
 			foreach (DBDoor door in dbdoors)
 			{
 				IDoor mydoor = null;

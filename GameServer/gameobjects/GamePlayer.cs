@@ -10420,8 +10420,8 @@ namespace DOL.GS
 			#endregion
 
 			//Load the quests for this player
-			DBQuest[] quests = (DBQuest[])GameServer.Database.SelectObjects(typeof(DBQuest), "CharName" ,Name);
-			foreach (DBQuest dbquest in quests)
+
+            foreach (DBQuest dbquest in GameServer.Database.SelectObjects<DBQuest>("CharName", Name))
 			{
 				AbstractQuest quest = AbstractQuest.LoadFromDatabase(this, dbquest);
 				if (quest != null)
@@ -10434,24 +10434,20 @@ namespace DOL.GS
 			}
 
 			// Load Task object of player ...
-			DBTask[] tasks = (DBTask[])GameServer.Database.SelectObjects(typeof(DBTask), "CharName", Name);
-			if (tasks.Length == 1)
+			List<DBTask> tasks = GameServer.Database.SelectObjects<DBTask>("CharName", Name);
+			if (tasks.Count == 1)
 			{
 				m_task = AbstractTask.LoadFromDatabase(this, tasks[0]);
 			}
-			else if (tasks.Length > 1)
+			else if (tasks.Count > 1)
 			{
 				if (log.IsErrorEnabled)
 					log.Error("More than one DBTask Object found for player " + Name);
 			}
 
 			// Load ML steps of player ...
-			DBCharacterXMasterLevel[] mlsteps = (DBCharacterXMasterLevel[])GameServer.Database.SelectObjects(typeof(DBCharacterXMasterLevel), "CharName",Name);
-			if (mlsteps.Length > 0)
-			{
-				foreach (DBCharacterXMasterLevel mlstep in mlsteps)
-					m_mlsteps.Add(mlstep);
-			}
+			foreach (DBCharacterXMasterLevel mlstep in GameServer.Database.SelectObjects<DBCharacterXMasterLevel>("CharName",Name))
+				m_mlsteps.Add(mlstep);
 
 			// Has to be updated on load to ensure time offline isn't
 			// added to character /played.

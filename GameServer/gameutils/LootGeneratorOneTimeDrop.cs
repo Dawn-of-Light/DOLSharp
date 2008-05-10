@@ -19,6 +19,7 @@
 using System;
 using System.Linq;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
 using DOL.Database2;
@@ -63,10 +64,10 @@ namespace DOL.GS
 				m_OTDXMob = new HybridDictionary(500);
 				lock(m_OTDXMob)
 				{
-					DatabaseObject[] m_lootOTDs=null;
+					List<DBLootOTD> m_lootOTDs=null;
 					try
 					{
-						m_lootOTDs = (DatabaseObject[]) GameServer.Database.SelectObjects(typeof(DBLootOTD));
+						m_lootOTDs = GameServer.Database.SelectObjects<DBLootOTD>();
 					}
 					catch(Exception e)
 					{
@@ -75,7 +76,7 @@ namespace DOL.GS
 						return false;
 					}
 
-					if(m_lootOTDs != null && m_lootOTDs.Length > 0)
+					if(m_lootOTDs != null && m_lootOTDs.Count > 0)
 					{
 						foreach(DBLootOTD dbLootOTD in m_lootOTDs)
 						{

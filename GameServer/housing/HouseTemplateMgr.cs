@@ -178,7 +178,7 @@ namespace DOL.GS.Housing
 			foreach (string itemid in itemids)
 			{
 				bool found = false;
-				foreach (DatabaseObject dbitem in GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemListID", merchantid))
+				foreach (DatabaseObject dbitem in GameServer.Database.SelectObjects<MerchantItem>( "ItemListID", merchantid))
 				{
 					if (((MerchantItem) dbitem).ItemTemplateID == itemid)
 					{

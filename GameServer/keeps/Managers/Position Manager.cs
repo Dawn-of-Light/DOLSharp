@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections;
-
+using System.Collections.Generic;
 using DOL.Database2;
 using DOL.GS;
 using DOL.GS.Movement;
@@ -299,7 +299,7 @@ namespace DOL.GS.Keeps
 			SortedList sorted = new SortedList();
 			pathID.Replace('\'', '/'); // we must replace the ', found no other way yet
 			DBPath dbpath = (DBPath)GameServer.Database.SelectObject(typeof(DBPath), "PathID",pathID);
-			DBPathPoint[] pathpoints = null;
+			List<DBPathPoint> pathpoints = null;
 			ePathType pathType = ePathType.Once;
 
 			if (dbpath != null)
@@ -309,7 +309,7 @@ namespace DOL.GS.Keeps
 			}
 			if (pathpoints == null)
 			{
-				pathpoints = (DBPathPoint[])GameServer.Database.SelectObjects(typeof(DBPathPoint), "PathID",pathID);
+				pathpoints = GameServer.Database.SelectObjects<DBPathPoint>("PathID",pathID);
 			}
 
 			foreach (DBPathPoint point in pathpoints)
@@ -357,7 +357,7 @@ namespace DOL.GS.Keeps
 				return;
 
 			pathID.Replace('\'', '/'); // we must replace the ', found no other way yet
-			foreach (DBPath pp in GameServer.Database.SelectObjects(typeof(DBPath), "PathID" ,pathID))
+			foreach (DBPath pp in GameServer.Database.SelectObjects<DBPath>("PathID", pathID) )
 			{
 				GameServer.Database.DeleteObject(pp);
 			}
