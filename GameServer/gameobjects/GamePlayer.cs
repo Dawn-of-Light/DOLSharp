@@ -272,6 +272,16 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Gets or sets the roleplay flag for this player
+		/// (delegate to property in PlayerCharacter)
+		/// </summary>
+		public bool RPFlag
+		{
+			get { return (PlayerCharacter != null ? PlayerCharacter.RPFlag: true); }
+			set { if (PlayerCharacter != null) PlayerCharacter.RPFlag = value; }
+		}
+
+		/// <summary>
 		/// gets or sets the guildnote for this player
 		/// (delegate to property in PlayerCharacter)
 		/// </summary>

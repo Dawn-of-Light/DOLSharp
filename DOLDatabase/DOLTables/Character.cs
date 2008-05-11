@@ -163,6 +163,7 @@ namespace DOL
 
 			private bool m_gainXP;
 			private bool m_gainRP;
+			private bool m_roleplay;
 			private bool m_autoloot;
 			private int m_lastfreeLevel;
 			private DateTime m_lastfreeleveled;
@@ -221,6 +222,7 @@ namespace DOL
 				m_showXFireInfo = false;
 				m_noHelp = false;
 				m_showGuildLogins = false;
+				m_roleplay = false;
 			}
 
 			/// <summary>
@@ -2181,7 +2183,21 @@ namespace DOL
 					Dirty = true;
 					m_mlGranted = value;
 				}
-			}  	
+			}
+
+			/// <summary>
+			/// is the player a roleplayer
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public bool RPFlag
+			{
+				get { return m_roleplay; }
+				set
+				{
+					Dirty = true;
+					m_roleplay = value;
+				}
+			}
 		}
 	}
 }

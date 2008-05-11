@@ -156,6 +156,12 @@ namespace DOL.GS.Commands
 						filters.Add(new NewFrontiersFilter());
 						break;
 					}
+				case "rp":
+					{
+						filters = new ArrayList(1);
+						filters.Add(new RPFilter());
+						break;
+					}
 				default:
 					{
 						filters = new ArrayList();
@@ -456,6 +462,14 @@ namespace DOL.GS.Commands
 			public bool ApplyFilter(GamePlayer player)
 			{
 				return player.CurrentRegionID == 163;
+			}
+		}
+
+		private class RPFilter : IWhoFilter
+		{
+			public bool ApplyFilter(GamePlayer player)
+			{
+				return player.RPFlag;
 			}
 		}
 
