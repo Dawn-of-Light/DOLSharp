@@ -634,7 +634,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 							outpak190.WriteByte(client.Player.ManaPercent);
 							outpak190.WriteByte(client.Player.EndurancePercent);
 							outpak190.FillString(client.Player.CharacterClass.Name, 32);
-							outpak190.WriteByte(0);// roleplay flag, if == 1, show name (RP) with gray color
+							// roleplay flag, if == 1, show name (RP) with gray color
+							if (client.Player.RPFlag)
+								outpak190.WriteByte(1);
+							else outpak190.WriteByte(0);
 							outpak190.WriteByte((con168.Length == 54) ? con168[53] : (byte) 0); // send last byte for 190+ packets
 							outpak190.WritePacketLength();
 						}
