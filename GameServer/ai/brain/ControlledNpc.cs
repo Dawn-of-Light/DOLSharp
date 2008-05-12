@@ -340,7 +340,12 @@ namespace DOL.AI.Brain
 			}
 
 			//Check for buffs, heals, etc
-			CheckSpells(eCheckSpellType.Defensive);
+			if (Owner is GameNPC || 
+			(Owner is GamePlayer && ((WalkState == eWalkState.ComeHere && AggressionState != eAggressionState.Aggressive) || WalkState == eWalkState.Follow)))
+            {
+            CheckSpells(eCheckSpellType.Defensive);
+            //log.Debug ("===== Verif des sorts defensif ");
+            }
 
 			if (AggressionState == eAggressionState.Aggressive)
 			{
