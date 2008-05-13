@@ -5013,7 +5013,7 @@ namespace DOL.GS
 							&& target is GameKeepDoor == false
 							&& target is GameSiegeWeapon == false)
 						{
-                            int perc = Convert.ToInt32(((ad.Damage + ad.CriticalDamage) / 100) * (53 - this.Level));
+                            int perc = Convert.ToInt32(((ad.Damage + ad.CriticalDamage) / 100) * (55 - this.Level));
                             perc = (perc < 1) ? 1 : ((perc > 15) ? 15 : perc);
                             this.Mana += Convert.ToInt32(Math.Ceiling(((Decimal)(perc * this.MaxMana) / 100)));
 						}
