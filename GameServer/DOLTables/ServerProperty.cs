@@ -1,0 +1,103 @@
+/*
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
+using System;
+
+using DOL.Database2;
+
+
+namespace DOL.Database2
+{
+	[Serializable]//TableName = "ServerProperty")]
+	public class ServerProperty: DatabaseObject
+	{
+		private string m_key;
+		private string m_description;
+		private string m_defaultValue;
+		private string m_value;
+
+		private static bool m_autoSave;
+
+        public ServerProperty()
+            : base()
+		{
+			m_key = "";
+			m_description = "";
+
+			m_defaultValue = ""; ;
+			m_value = "";
+			m_autoSave = true;
+		}
+
+		
+		public string Key
+		{
+			get
+			{
+				return m_key;
+			}
+			set
+			{
+				m_key = value;
+				m_Dirty = true;
+			}
+		}
+
+		
+		public string Description
+		{
+			get
+			{
+				return m_description;
+			}
+			set
+			{
+				m_description = value;
+				m_Dirty = true;
+			}
+		}
+
+		
+		public string DefaultValue
+		{
+			get
+			{
+				return m_defaultValue;
+			}
+			set
+			{
+				m_defaultValue = value;
+				m_Dirty = true;
+			}
+		}
+
+		
+		public string Value
+		{
+			get
+			{
+				return m_value;
+			}
+			set
+			{
+				m_value = value;
+				m_Dirty = true;
+			}
+		}
+	}
+}
