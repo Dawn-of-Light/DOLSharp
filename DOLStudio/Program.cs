@@ -17,15 +17,24 @@
  *
  */
 using System;
-namespace DOL.Database2
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+using DOL;
+using DOL.GS;
+namespace DOLStudio
 {
-    public interface IDatabaseObject
+    static class Program
     {
-        bool AutoSave { get; set; }
-        void DeleteDB();
-        UInt64 ObjectId { get; }
-        UInt64 ID { get; }
-        void Save();
-        bool WriteToDatabase { get; set; }
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new ParentForm());
+        }
     }
 }

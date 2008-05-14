@@ -1,4 +1,9 @@
-﻿/*
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  * 
  * This program is free software; you can redistribute it and/or
@@ -16,16 +21,25 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-namespace DOL.Database2
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+namespace DOLStudio
 {
-    public interface IDatabaseObject
+    public partial class TypeBrowserForm : Form
     {
-        bool AutoSave { get; set; }
-        void DeleteDB();
-        UInt64 ObjectId { get; }
-        UInt64 ID { get; }
-        void Save();
-        bool WriteToDatabase { get; set; }
+        public TypeBrowserForm()
+        {
+            if(DOLStudio.ParentForm.Instance.TypeBrowserForm != null)
+                throw new Exception("No multiple TypeBrowserForms");
+            InitializeComponent();
+        }
+
+        private void TypeBrowserForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+            return;
+        }
     }
 }

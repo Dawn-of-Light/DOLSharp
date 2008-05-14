@@ -1,3 +1,21 @@
+/*
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
 using System;
 using System.Linq;
 using System.IO;
@@ -269,95 +287,6 @@ namespace DOL.Database2
             if (!DatabaseObjects.ContainsKey(dbo.ID))
                 DatabaseObjects.Add(dbo.ID, dbo);
         }
-        /*
-        protected readonly Hashtable m_membercache = new Hashtable();
-        protected readonly Hashtable m_relationcache = new Hashtable();
-        protected readonly Hashtable m_constructorcache = new Hashtable();
-        /// <summary>
-        /// From old layer.Automatically fixes all "relation" objects... should not really be used often(performance!) , but a cool design feature
-        /// </summary>
-        /// <param name="dbo"></param>
-           
-        public void FillObjectRelations(DatabaseObject dbo)
-        {
-                Type t = dbo.GetType();
-                MemberInfo[] members = (MemberInfo[])m_membercache[t];
-                if (members == null)
-                {
-                    members = t.GetMembers();
-                    m_membercache[t] = members;
-                }
-               
-                foreach(MemberInfo member in members)
-                {
-                    Type targetType = null;
-                    Relation[] relationAttriutes = (Relation[])m_relationcache[t];
-                    bool array = false;
-                    if (relationAttriutes == null)
-                    {
-                        relationAttriutes = member.GetCustomAttributes(typeof(Relation), true);
-                        m_relationcache[t] = relationAttriutes;
-                    }
-                    if(relationAttriutes.Length == 0)
-                        continue;
-                    if (member is PropertyInfo)
-                    {
-                        targetType = (member as PropertyInfo).PropertyType;
-                    }
-                    else if (member is FieldInfo)
-                    {
-                        targetType = (member as FieldInfo).FieldType;
-                    }
-                    else
-                        throw new Exception("Received member that was neither field nor property");
-                    if(array = targetType.HasElementType)
-                        targetType = targetType.GetElementType();
-                    foreach (Relation rel in relationAttriutes)
-                    {
-                        PropertyInfo prop = t.GetProperty(rel.LocalField);
-                        FieldInfo field = myType.GetField(local);
-                        IEnumerable <targetType>values;
-                        object val = null;
-						if (prop != null)
-							val = prop.GetValue(DataObject, null);
-						if (field != null)
-							val = field.GetValue(DataObject);
-                        if (val != null)
-                        {
-                            values = SelectObjects<targetType>(rel.RemoteField, val);
-                            if (array)
-                            {
-                                if (member is PropertyInfo)
-                                    ((PropertyInfo)member).SetValue(dbo, values.ToArray(), null);
-                                else
-                                {
-                                    FieldInfo currentField = (FieldInfo)member;
-                                    ConstructorInfo constructor = (ConstructorInfo)m_constructorcache[currentField.FieldType];
-                                    if (constructor == null)
-                                    {
-                                        constructor = currentField.FieldType.GetConstructor(new Type[] { typeof(int) });
-                                        m_constructorcache[currentField.FieldType] = constructor;
-                                    }
-
-                                    object[] args = { values.Count() };
-                                    object t = constructor.Invoke(args);
-                                    object[] test = (object[])t;
-                                    int i = 0;
-                                    foreach (object o in values)
-                                    {
-                                        test[i] = o;
-                                        i++;
-                                    }
-                                    currentField.SetValue(DataObject, test);
-
-                                }
-                            }
-
-
-                        }
-                    }
-                }
-            * */
        
         #region IEnumerable Members
 

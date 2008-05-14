@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSSQLCompactDatabaseProvide
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADODatabaseProvider", "OBDCDatabaseProvider\ADODatabaseProvider.csproj", "{31E59003-AD13-4FFB-B81C-B1A26F4DA8F9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOLStudio", "DOLStudio\DOLStudio.csproj", "{6EF690F7-6FBA-4595-8247-EB7970F1922B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +74,10 @@ Global
 		{31E59003-AD13-4FFB-B81C-B1A26F4DA8F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31E59003-AD13-4FFB-B81C-B1A26F4DA8F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31E59003-AD13-4FFB-B81C-B1A26F4DA8F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EF690F7-6FBA-4595-8247-EB7970F1922B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EF690F7-6FBA-4595-8247-EB7970F1922B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EF690F7-6FBA-4595-8247-EB7970F1922B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EF690F7-6FBA-4595-8247-EB7970F1922B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
