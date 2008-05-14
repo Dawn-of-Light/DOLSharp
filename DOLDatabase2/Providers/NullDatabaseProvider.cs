@@ -59,22 +59,7 @@ namespace DOL.Database2.Providers
         {
             return new DatabaseObjectInformation[0];
         }
-        /// <summary>
-        /// Keying is not implemented - ok?
-        /// </summary>
-        /// <param name="Key"></param>
-        /// <returns></returns>
-        public override DatabaseObjectInformation[] GetObjectsByKey(object Key)
-        {
-            throw new NotImplementedException();
-        }
-
         public override void InsertOrUpdateObjectData(ulong ObjectID, Type Type, System.IO.Stream Data)
-        {
-            return;
-        }
-
-        public override void InsertOrUpdateObjectData(ulong ObjectID, Type Type, System.IO.Stream Data, object[] Keys)
         {
             return;
         }

@@ -32,7 +32,6 @@ namespace DOL.Database2
         public UInt64 UniqueID; 
         public string TypeName;
         public Stream Data;
-        public object[] Keys;
     }
     /// <summary>
     /// Provides Database Service
@@ -69,9 +68,7 @@ namespace DOL.Database2
         public abstract DatabaseObjectInformation GetObjectByID(UInt64 ID);
         public abstract DatabaseObjectInformation[] GetObjectsByType(Type Type);
         public abstract DatabaseObjectInformation[] GetObjectsByTypeName(string TypeName);
-        public abstract DatabaseObjectInformation[] GetObjectsByKey(object Key);
         public abstract void InsertOrUpdateObjectData(UInt64 ObjectID, Type Type, Stream Data );
-        public abstract void InsertOrUpdateObjectData(UInt64 ObjectID, Type Type, Stream Data,object[] Keys );
         public abstract UInt64 GetNewUniqueID();
         public abstract void DeleteObject(UInt64 ObjectID);
     }
