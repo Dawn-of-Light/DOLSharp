@@ -591,7 +591,7 @@ namespace DOL.GS.Spells
 
 				if (m_caster.ConcentrationEffects.ConcSpellsCount >= 50)
 				{
-					MessageToCaster("You can only cast up to 20 simultaneous concentration spells!", eChatType.CT_SpellResisted);
+					MessageToCaster("You can only cast up to 50 simultaneous concentration spells!", eChatType.CT_SpellResisted);
 					return false;
 				}
 			}
@@ -812,9 +812,9 @@ namespace DOL.GS.Spells
 				return false;
 			}
 
-			if (m_spell.Concentration > 0 && m_caster.ConcentrationEffects.ConcSpellsCount >= 20)
+			if (m_spell.Concentration > 0 && m_caster.ConcentrationEffects.ConcSpellsCount >= 50)
 			{
-				MessageToCaster("You can only cast up to 20 simultaneous concentration spells!", eChatType.CT_SpellResisted);
+				MessageToCaster("You can only cast up to 50 simultaneous concentration spells!", eChatType.CT_SpellResisted);
 				return false;
 			}
 
