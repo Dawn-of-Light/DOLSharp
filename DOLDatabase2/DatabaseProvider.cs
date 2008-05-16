@@ -66,8 +66,11 @@ namespace DOL.Database2
         // The queue has been chosen here because it might be impossible for the DBMS to determine the information  
         public abstract Queue<DatabaseObjectInformation> GetAllObjects();
         public abstract DatabaseObjectInformation GetObjectByID(UInt64 ID);
-        public abstract DatabaseObjectInformation[] GetObjectsByType(Type Type);
-        public abstract DatabaseObjectInformation[] GetObjectsByTypeName(string TypeName);
+        public Queue<DatabaseObjectInformation> GetObjectsByType(Type Type)
+        {
+            return GetObjectsByTypeName(Type.FullName);
+        }
+        public abstract Queue<DatabaseObjectInformation> GetObjectsByTypeName(string TypeName);
         public abstract void InsertOrUpdateObjectData(UInt64 ObjectID, Type Type, Stream Data );
         public abstract UInt64 GetNewUniqueID();
         public abstract void DeleteObject(UInt64 ObjectID);

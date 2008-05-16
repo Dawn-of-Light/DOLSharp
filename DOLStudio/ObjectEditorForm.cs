@@ -34,11 +34,15 @@ namespace DOLStudio
     {
         ParentForm m_parentform;
         MemberInfo m_currentInfo = null;
-        DatabaseObject m_currentobject;
-        Type CurrentType;
+        DatabaseObject m_currentobject
+        {
+            get { return propertyGrid.SelectedObject as DatabaseObject; }
+            set { propertyGrid.SelectedObject = value; }
+        }
         public ObjectEditorForm()
         {
             InitializeComponent();
+            ResultView.MultiSelect = false;
         }
 
         private void ObjectEditorForm_Load(object sender, EventArgs e)
@@ -48,6 +52,7 @@ namespace DOLStudio
         public void ReloadTypes()
         {
             Cursor = Cursors.WaitCursor;
+            StatusLabel.Text = "Loading types";
             List<Type> Orphans = new List<Type>(); // Parent <-> Type
             Dictionary<string, TreeNode> TypeCache = new Dictionary<string,TreeNode>();
             foreach (Type t in m_parentform.TypeBrowser)
@@ -56,17 +61,7 @@ namespace DOLStudio
                 {
                     TreeNode temp = treeView1.Nodes.Add(t.AssemblyQualifiedName, t.Name);
                     TypeCache.Add(t.AssemblyQualifiedName, temp);
-                    /*
-                    Type type = t;
-                    while (1)
-                    {
-                        foreach (Type orphan in Orphans)
-                        {
-                            if (orphan.BaseType == type)
-                                TypeCache.Add(orphan.AssemblyQualifiedName, TypeCache[orphan.BaseType.AssemblyQualifiedName].Nodes.Add(orphan.AssemblyQualifiedName, orphan.Name));
-                        }
-                    }
-                     */
+                    
                 }
                 else if (TypeCache.ContainsKey(t.BaseType.AssemblyQualifiedName))
                 {
@@ -91,17 +86,20 @@ namespace DOLStudio
             }
             Cursor = Cursors.Default;
             treeView1.Refresh();
+            StatusLabel.Text = "Types loaded !Ready.";
         }
 
         private void ObjectEditorForm_Shown(object sender, EventArgs e)
         {
             m_parentform = (ParentForm)MdiParent;
+
             ReloadTypes();
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
             Fieldchooser.Items.Clear();
+            ResultView.Items.Clear();
             Type t = Type.GetType(treeView1.SelectedNode.Name as string);
             foreach (MemberInfo info in t.GetMembers())
             {
@@ -109,7 +107,6 @@ namespace DOLStudio
                     continue;       
                 Fieldchooser.Items.Add(info);
             }
-            ResultView.Items.Clear();
             foreach(DatabaseObject dbo in (from s in DatabaseLayer.Instance
                                            where t.IsAssignableFrom(s.GetType())
                                         select s))
@@ -128,7 +125,9 @@ namespace DOLStudio
 
         private void IDbutton_Click(object sender, EventArgs e)
         {
+            ResultView.Items.Clear();
             m_currentobject = DatabaseLayer.Instance.GetDatabaseObjectFromID(UInt64.Parse(IDfield.Value.ToString()));
+            ResultView.Items.Add(m_currentobject.ID.ToString(), m_currentobject.ID.ToString(), null);
         }
 
         private void QueryBtn_Click(object sender, EventArgs e)
@@ -147,11 +146,38 @@ namespace DOLStudio
 
         private void createNewItem_Click(object sender, EventArgs e)
         {
+            if(treeView1.SelectedNode == null)
+            {
+                MessageBox.Show("Please select a type below");
+                return;
+            }
             Type t = Type.GetType(treeView1.SelectedNode.Name as string);
             ConstructorInfo construct =  t.GetConstructor(Type.EmptyTypes);
-            ResultView.Clear();
-            ResultView.Items.Add(construct.Invoke(null).ToString());
+            if (construct == null)
+            {
+                MessageBox.Show("No constructors found without parameters");
+                return;
+            }
+            DatabaseObject dbo = (DatabaseObject)construct.Invoke(null);
+            ResultView.Items.Add(dbo.ID.ToString(),dbo.ID.ToString(),0);
+        }
 
+        private void DeleteBtn_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ResultView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ResultView.SelectedItems.Count > 0)
+            {
+                UInt64 ID = UInt64.Parse(ResultView.SelectedItems[0].Tag as string);
+                m_currentobject = DatabaseLayer.Instance.GetDatabaseObjectFromID(ID);
+            }
+            else
+            {
+                m_currentobject = null;
+            }
         }
 
     }

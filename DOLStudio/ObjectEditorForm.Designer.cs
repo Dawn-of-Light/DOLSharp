@@ -48,6 +48,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.createNewItem = new System.Windows.Forms.Button();
+            this.DeleteBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.IDfield)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -145,9 +146,13 @@
             // 
             // ResultView
             // 
+            this.ResultView.GridLines = true;
             resources.ApplyResources(this.ResultView, "ResultView");
+            this.ResultView.MultiSelect = false;
             this.ResultView.Name = "ResultView";
             this.ResultView.UseCompatibleStateImageBehavior = false;
+            this.ResultView.View = System.Windows.Forms.View.List;
+            this.ResultView.SelectedIndexChanged += new System.EventHandler(this.ResultView_SelectedIndexChanged);
             // 
             // label4
             // 
@@ -166,10 +171,18 @@
             this.createNewItem.UseVisualStyleBackColor = true;
             this.createNewItem.Click += new System.EventHandler(this.createNewItem_Click);
             // 
+            // DeleteBtn
+            // 
+            resources.ApplyResources(this.DeleteBtn, "DeleteBtn");
+            this.DeleteBtn.Name = "DeleteBtn";
+            this.DeleteBtn.UseVisualStyleBackColor = true;
+            this.DeleteBtn.Click += new System.EventHandler(this.DeleteBtn_Click);
+            // 
             // ObjectEditorForm
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.DeleteBtn);
             this.Controls.Add(this.createNewItem);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -220,5 +233,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button createNewItem;
+        private System.Windows.Forms.Button DeleteBtn;
     }
 }

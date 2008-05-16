@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Text;
 
@@ -34,6 +35,7 @@ namespace DOL.Database2
         [NonSerialized]
         private bool m_writetodatabase = false;
         protected bool m_Dirty;
+        [Category("Database Object"),Description("Has data been modified")]  
         public bool Dirty
         {
             get { return m_Dirty; }
@@ -41,10 +43,12 @@ namespace DOL.Database2
         /// <summary>
         /// Contains the DatabaseObjects UniqueID
         /// </summary>
+        [Category("Database Object"),Description("Unique Object ID"),Browsable(false)]  
         public UInt64 ObjectId
         {
             get { return m_ID; }
         }
+        [Category("Database Object"), Description("Unique Object ID")]  
         public UInt64 ID
         {
             get { return m_ID; }
@@ -52,6 +56,7 @@ namespace DOL.Database2
         /// <summary>
         /// If this is set  to  false the object will not be saved to the persistant storage.
         /// </summary>
+        [Category("Database Object"), Description("Object is automatically saved"),Browsable(false)] 
         public bool WriteToDatabase
         {
             get { return (m_writetodatabase && m_Dirty); }
@@ -60,6 +65,7 @@ namespace DOL.Database2
         /// <summary>
         /// Mostly for compatibility
         /// </summary>
+        [Category("Database Object"), Description("Object is automatically saved")] 
         public bool AutoSave
         {
             get { return m_writetodatabase; }

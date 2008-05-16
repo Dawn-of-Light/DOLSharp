@@ -25,11 +25,11 @@ namespace DOL.Database2.Providers
 {
     public class NullDatabaseProvider : DatabaseProvider
     {
-        private UInt64 m_currentID = 0;
+        private UInt64 m_currentID = 1;
         public override string ConnectionString
         {
             get{ return "/dev/null virtual implementation ;-)";}
-            set { }
+            set {  }
         }
 
         public override void OpenConnection()
@@ -50,14 +50,9 @@ namespace DOL.Database2.Providers
             return null;
         }
 
-        public override DatabaseObjectInformation[] GetObjectsByType(Type Type)
+        public override Queue<DatabaseObjectInformation> GetObjectsByTypeName(string TypeName)
         {
-            return new DatabaseObjectInformation[0];
-        }
-
-        public override DatabaseObjectInformation[] GetObjectsByTypeName(string TypeName)
-        {
-            return new DatabaseObjectInformation[0];
+            return new Queue<DatabaseObjectInformation>();
         }
         public override void InsertOrUpdateObjectData(ulong ObjectID, Type Type, System.IO.Stream Data)
         {
