@@ -578,8 +578,8 @@ namespace DOL
 			{
 				try
 				{
-					Process pro = Process.GetCurrentProcess();
-					pro.ProcessorAffinity = new IntPtr(GameServer.Instance.Configuration.CPUUse);
+				//	Process pro = Process.GetCurrentProcess();
+				//	pro.ProcessorAffinity = new IntPtr(GameServer.Instance.Configuration.CPUUse);
 					if (debugMemory)
 						log.Debug("Starting Server, Memory is " + GC.GetTotalMemory(false)/1024/1024);
 					m_status = eGameServerStatus.GSS_Closed;
