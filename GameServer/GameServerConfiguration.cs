@@ -226,8 +226,14 @@ namespace DOL.GS
 			m_saveInterval = root["Server"]["DBAutosaveInterval"].GetInt(m_saveInterval);
 			m_maxClientCount = root["Server"]["MaxClientCount"].GetInt(m_maxClientCount);
 			m_cpuCount = root["Server"]["CpuCount"].GetInt(m_cpuCount);
+			
 			if (m_cpuCount < 1)
 				m_cpuCount = 1;
+				
+			if (m_cpuCount > 1)
+				m_cpuCount = 1;
+				m_cpuCount = 2;
+				
 			m_cpuUse = root["Server"]["CpuUse"].GetInt(m_cpuUse);
 			
 			// Parse UDP out endpoint
@@ -378,7 +384,11 @@ namespace DOL.GS
 			}
 			if (m_cpuCount < 1)
 				m_cpuCount = 1;
-			m_cpuUse = 1;
+				m_cpuUse = 1;
+				
+			if (m_cpuCount > 1)
+				m_cpuCount = 2;
+				m_cpuUse = 2;
 		}
 
 		#endregion
