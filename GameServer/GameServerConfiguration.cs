@@ -229,11 +229,6 @@ namespace DOL.GS
 			
 			if (m_cpuCount < 1)
 				m_cpuCount = 1;
-				
-			if (m_cpuCount > 1)
-				m_cpuCount = 1;
-				m_cpuCount = 2;
-				
 			m_cpuUse = root["Server"]["CpuUse"].GetInt(m_cpuUse);
 			
 			// Parse UDP out endpoint
@@ -385,10 +380,6 @@ namespace DOL.GS
 			if (m_cpuCount < 1)
 				m_cpuCount = 1;
 				m_cpuUse = 1;
-				
-			if (m_cpuCount > 1)
-				m_cpuCount = 2;
-				m_cpuUse = 2;
 		}
 
 		#endregion
