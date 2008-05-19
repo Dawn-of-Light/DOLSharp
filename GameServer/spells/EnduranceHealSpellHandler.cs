@@ -30,6 +30,7 @@ namespace DOL.GS.Spells
 	{
 		// constructor
 		public EnduranceHealSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
 		/// <summary>
 		/// Execute heal spell
 		/// </summary>
@@ -99,7 +100,7 @@ namespace DOL.GS.Spells
 				if (Spell.Pulse == 0)
 				{
 					if (target == m_caster) MessageToCaster("Your endurance is full.", eChatType.CT_SpellResisted);
-					else MessageToCaster(target.GetName(0, true) + " ednurance is full.", eChatType.CT_SpellResisted);
+					else MessageToCaster(target.GetName(0, true) + " endurance is full.", eChatType.CT_SpellResisted);
 				}
 				return false;
 			}
