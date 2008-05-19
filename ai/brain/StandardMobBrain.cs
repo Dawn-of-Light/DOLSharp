@@ -333,7 +333,7 @@ namespace DOL.AI.Brain
 						{
 							if (m_aggroTable[p] == null)
 							{
-								m_aggroTable[p] = 1L;	// add the missing group member on aggro table
+								m_aggroTable[p] = 1;	// add the missing group member on aggro table
 							}
 						}
 					}

@@ -794,7 +794,7 @@ Scripts.Player.Guild.InviteDead:			You cannot invite a dead player to your guild
 Scripts.Player.Guild.InviteNoSelected:			You must select a player.	
 Scripts.Player.Guild.InviteNoSelf:			You can't invite your self.	
 Scripts.Player.Guild.InviteNotThis:			You cannot invite this member.	
-Scripts.Player.Guild.InviteRecieved:			{0} has invited you to join thier guild.	
+Scripts.Player.Guild.InviteRecieved:			{0} has invited you to join their guild.	
 Scripts.Player.Guild.InviteSent:			You have invited {0} to join your guild.	
 Scripts.Player.Guild.Keep:				Your Guild has currently Claimed {0}.	
 Scripts.Player.Guild.LevelUp:				[Guild] Your guild has advanced to level {0}!	
