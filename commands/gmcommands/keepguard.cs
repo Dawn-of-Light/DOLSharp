@@ -176,13 +176,15 @@ namespace DOL.GS.Commands
 									AbstractGameKeep keep = (area as KeepArea).Keep;
 									guard.Component = new GameKeepComponent();
 									guard.Component.Keep = keep;
-									guard.Component.Keep.Guards.Add(guard.InternalID, guard);
 									break;
 								}
 							}
 
 							TemplateMgr.RefreshTemplate(guard);
 							guard.AddToWorld();
+
+							if (guard.Component.Keep != null)
+								guard.Component.Keep.Guards.Add(guard.InternalID, guard);
 						}
 
 						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.KeepGuard.Create.GuardAdded"));
