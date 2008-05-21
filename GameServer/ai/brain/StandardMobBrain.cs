@@ -333,7 +333,7 @@ namespace DOL.AI.Brain
 						{
 							if (m_aggroTable[p] == null)
 							{
-								m_aggroTable[p] = 1;	// add the missing group member on aggro table
+								m_aggroTable[p] = 1L;	// add the missing group member on aggro table
 							}
 						}
 					}
@@ -869,7 +869,7 @@ namespace DOL.AI.Brain
 						// Allow defensive spells
 						//if (!Body.AttackState)
 						//{
-						if (CheckDefensiveSpells(spell) && Util.Chance(50))
+						if (Util.Chance(50) && CheckDefensiveSpells(spell))
 						{
 							casted = true;
 							break;
@@ -992,7 +992,7 @@ namespace DOL.AI.Brain
 			}
 			if (Body.TargetObject != null)
 			{
-				if (Body.IsMoving)
+				if (Body.IsMoving && spell.CastTime > 0)
 					Body.StopFollow();
 				Body.TurnTo(Body.TargetObject);
 				Body.CastSpell(spell, m_mobSpellLine);
