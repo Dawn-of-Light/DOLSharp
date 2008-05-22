@@ -63,6 +63,11 @@ namespace DOL.GS.Commands
 				case "create":
 					{
 						GameKeepGuard guard = null;
+						if (args.Length < 3)
+						{
+							DisplaySyntax(client);
+							return;
+						}
 						
 						switch (args[2].ToLower())
 						{
@@ -156,8 +161,18 @@ namespace DOL.GS.Commands
 						if (component != null)
 						{
 							DBKeepPosition pos = PositionMgr.CreatePosition(guard.GetType(), component.Height, client.Player, Guid.NewGuid().ToString(), component);
-							PositionMgr.AddPosition(pos);
-							PositionMgr.FillPositions();
+							//PositionMgr.AddPosition(pos);
+							//PositionMgr.FillPositions();
+							DBKeepPosition[] list = component.Positions[pos.TemplateID] as DBKeepPosition[];
+							if (list == null)
+							{
+								list = new DBKeepPosition[4];
+								component.Positions[pos.TemplateID] = list;
+							}
+								
+							list[pos.Height] = pos;
+							component.LoadPositions();
+							component.FillPositions();
 						}
 						else
 						{
@@ -184,7 +199,7 @@ namespace DOL.GS.Commands
 							guard.AddToWorld();
 
 							if (guard.Component.Keep != null)
-								guard.Component.Keep.Guards.Add(guard.InternalID, guard);
+								guard.Component.Keep.Guards.Add(DOL.Database.UniqueID.IdGenerator.generateId(), guard);
 						}
 
 						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.KeepGuard.Create.GuardAdded"));
