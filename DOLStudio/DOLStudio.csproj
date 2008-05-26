@@ -48,6 +48,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Conversion\ConversionAssistant.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Conversion\ConversionAssistant.Designer.cs">
+      <DependentUpon>ConversionAssistant.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Conversion\LegacyImporter.cs" />
     <Compile Include="TypeBrowser.cs" />
     <Compile Include="ObjectEditorForm.cs">
       <SubType>Form</SubType>
@@ -63,6 +70,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Conversion\ConversionAssistant.resx">
+      <DependentUpon>ConversionAssistant.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ObjectEditorForm.resx">
       <DependentUpon>ObjectEditorForm.cs</DependentUpon>
       <SubType>Designer</SubType>
