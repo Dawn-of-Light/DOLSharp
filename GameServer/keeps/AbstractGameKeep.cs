@@ -938,7 +938,7 @@ namespace DOL.GS.Keeps
 
 			PlayerMgr.BroadcastCapture(this);
 
-			Level = 0;
+            Level = (byte)ServerProperties.Properties.STARTING_KEEP_LEVEL;
 			KeepType = eKeepType.Melee;
 			//if a guild holds the keep, we release it
 			if (Guild != null)
