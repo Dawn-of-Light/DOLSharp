@@ -645,7 +645,7 @@ namespace DOL.GS.Keeps
 			if (ServerProperties.Properties.GUILDS_CLAIM_LIMIT > 1)
 				player.Guild.SendMessageToGuildMembers("Your guild has currently claimed " + player.Guild.ClaimedKeeps.Count + " keeps of a maximum of " + ServerProperties.Properties.GUILDS_CLAIM_LIMIT, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
 
-			ChangeLevel(1);
+			ChangeLevel((byte)ServerProperties.Properties.STARTING_KEEP_LEVEL);
 
 			PlayerMgr.BroadcastClaim(this);
 
@@ -729,7 +729,7 @@ namespace DOL.GS.Keeps
 			this.m_guild = null;
 			StopDeductionTimer();
 			StopChangeLevelTimer();
-			ChangeLevel(0);
+			ChangeLevel((byte)ServerProperties.Properties.STARTING_KEEP_LEVEL);
 
 			foreach (GameKeepGuard guard in Guards.Values)
 			{
