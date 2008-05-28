@@ -545,6 +545,12 @@ namespace DOL.GS.ServerProperties
 		public static readonly int GUILDS_CLAIM_LIMIT;
 
         /// <summary>
+        /// The level keeps return to when claimed.
+        /// </summary>
+        [ServerProperty("starting_keep_level", "The default level of a keep when captured that it reverts to. Set to 0 for typical new frontiers, though Dinberg would suggest a value of 1!", 0)]
+        public static readonly int STARTING_KEEP_LEVEL;
+
+        /// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
 		/// type of the default value
