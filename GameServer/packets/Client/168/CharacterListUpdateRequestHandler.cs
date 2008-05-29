@@ -148,6 +148,36 @@ namespace DOL.GS.PacketHandler.Client.v168
 						ch.Level = 1;
 						ch.Class = packet.ReadByte();
 						ch.Realm = packet.ReadByte();
+						if (client.Version >= GameClient.eClientVersion.Version193)
+						{
+							if (log.IsWarnEnabled)
+								log.Warn("Creation 1.93+ character, class:" + ch.Class + ", realm:" + ch.Realm);
+							if (ch.Class >= CheckCharacter.ADVANCED_CLASS_TO_BASE_CLASS.Length)
+							{
+								log.Error(client.Account.Name + " tried to create a character with wrong class ID: " + ch.Class + ", realm:" + ch.Realm);
+								if (ServerProperties.Properties.BAN_HACKERS)
+								{
+									DBBannedAccount b = new DBBannedAccount();
+									b.Author = "SERVER";
+									b.Ip = client.TcpEndpoint;
+									b.Account = client.Account.Name;
+									b.DateBan = DateTime.Now;
+									b.Type = "B";
+									b.Reason = string.Format("Autoban character create class: id:{0} realm:{1} name:{2} account:{3}", ch.Class, ch.Realm, ch.Name, account.Name);
+									GameServer.Database.AddNewObject(b);
+									GameServer.Database.SaveObject(b);
+									client.Disconnect();
+								}
+								//								client.Out.SendCharacterOverview((eRealm)ch.Realm);
+								return 1;
+							}
+							else
+							{
+								ch.Class = CheckCharacter.ADVANCED_CLASS_TO_BASE_CLASS[ch.Class];
+								if (log.IsWarnEnabled)
+									log.Warn("Change to base class:" + ch.Class + ", realm:" + ch.Realm);
+							}
+						}
 						ch.AccountSlot = i + ch.Realm * 100;
 
 						//The following byte contains
@@ -622,6 +652,73 @@ namespace DOL.GS.PacketHandler.Client.v168
 							(int)eCharacterClass.Seer }, //MidgardMenotaur
 			    new int[] { (int)eCharacterClass.Guardian,
 							(int)eCharacterClass.Naturalist }, //HiberniaMenotaur
+			};
+
+			public static readonly int[] ADVANCED_CLASS_TO_BASE_CLASS = new int[]
+			{
+				0, // "Unknown",
+				(int)eCharacterClass.Fighter, 		// Paladin = 1,
+				(int)eCharacterClass.Fighter, 		// Armsman = 2,
+				(int)eCharacterClass.AlbionRogue, 	// Scout = 3,
+				(int)eCharacterClass.AlbionRogue, 	// Minstrel = 4,
+				(int)eCharacterClass.Elementalist, 	// Theurgist = 5,
+				(int)eCharacterClass.Acolyte, 		// Cleric = 6,
+				(int)eCharacterClass.Elementalist, 	// Wizard = 7,
+				(int)eCharacterClass.Mage, 			// Sorcerer = 8,
+				(int)eCharacterClass.AlbionRogue, 	// Infiltrator = 9,
+				(int)eCharacterClass.Acolyte, 		// Friar = 10,
+				(int)eCharacterClass.Fighter, 		// Mercenary = 11,
+				(int)eCharacterClass.Disciple, 		// Necromancer = 12,
+				(int)eCharacterClass.Mage, 			// Cabalist = 13,
+				(int)eCharacterClass.Fighter, 		// Fighter = 14,
+				(int)eCharacterClass.Elementalist, 	// Elementalist = 15,
+				(int)eCharacterClass.Acolyte, 		// Acolyte = 16,
+				(int)eCharacterClass.AlbionRogue, 	// AlbionRogue = 17,
+				(int)eCharacterClass.Mage, 			// Mage = 18,
+				(int)eCharacterClass.Fighter, 		// Reaver = 19,
+				(int)eCharacterClass.Disciple, 		// Disciple = 20,
+				(int)eCharacterClass.Viking, 		// Thane = 21,
+				(int)eCharacterClass.Viking, 		// Warrior = 22,
+				(int)eCharacterClass.MidgardRogue, 	// Shadowblade = 23,
+				(int)eCharacterClass.Viking, 		// Skald = 24,
+				(int)eCharacterClass.MidgardRogue, 	// Hunter = 25,
+				(int)eCharacterClass.Seer, 			// Healer = 26,
+				(int)eCharacterClass.Mystic, 		// Spiritmaster = 27,
+				(int)eCharacterClass.Seer, 			// Shaman = 28,
+				(int)eCharacterClass.Mystic, 		// Runemaster = 29,
+				(int)eCharacterClass.Mystic, 		// Bonedancer = 30,
+				(int)eCharacterClass.Viking, 		// Berserker = 31,
+				(int)eCharacterClass.Viking, 		// Savage = 32,
+				(int)eCharacterClass.Acolyte, 		// Heretic = 33,
+				(int)eCharacterClass.Viking, 		// Valkyrie = 34,
+				(int)eCharacterClass.Viking, 		// Viking = 35,
+				(int)eCharacterClass.Mystic, 		// Mystic = 36,
+				(int)eCharacterClass.Seer, 			// Seer = 37,
+				(int)eCharacterClass.MidgardRogue, 	// MidgardRogue = 38,
+				(int)eCharacterClass.Magician, 		// Bainshee = 39,
+				(int)eCharacterClass.Magician, 		// Eldritch = 40,
+				(int)eCharacterClass.Magician, 		// Enchanter = 41,
+				(int)eCharacterClass.Magician, 		// Mentalist = 42,
+				(int)eCharacterClass.Guardian, 		// Blademaster = 43,
+				(int)eCharacterClass.Guardian, 		// Hero = 44,
+				(int)eCharacterClass.Guardian, 		// Champion = 45,
+				(int)eCharacterClass.Naturalist, 	// Warden = 46,
+				(int)eCharacterClass.Naturalist, 	// Druid = 47,
+				(int)eCharacterClass.Naturalist, 	// Bard = 48,
+				(int)eCharacterClass.Stalker, 		// Nightshade = 49,
+				(int)eCharacterClass.Stalker, 		// Ranger = 50,
+				(int)eCharacterClass.Magician, 		// Magician = 51,
+				(int)eCharacterClass.Guardian, 		// Guardian = 52,
+				(int)eCharacterClass.Naturalist, 	// Naturalist = 53,
+				(int)eCharacterClass.Stalker, 		// Stalker = 54,
+				(int)eCharacterClass.Forester, 		// Animist = 55,
+				(int)eCharacterClass.Forester, 		// Valewalker = 56,
+				(int)eCharacterClass.Forester, 		// Forester = 57,
+				(int)eCharacterClass.Stalker, 		// Vampiir = 58,
+				(int)eCharacterClass.Mystic, 		// Warlock = 59,
+				(int)eCharacterClass.Fighter, 		// Mauler_Alb = 60,
+				(int)eCharacterClass.Viking, 		// Mauler_Mid = 61,
+				(int)eCharacterClass.Guardian, 		// Mauler_Hib = 62,
 			};
 		}
 
