@@ -291,9 +291,16 @@ namespace DOL.GS.Keeps
 
 		public void LoadPositions()
 		{
+            
 			//bgs before thidranki we wont load positions
-			if (CurrentRegionID != 163 && CurrentRegionID < 238)
-				return;
+			//if (CurrentRegionID != 163 && CurrentRegionID < 238)
+			//	return;
+
+            //Dinberg ^^ Defunct! Above code replaced by below.
+
+            Battleground bg = KeepMgr.GetBattleground(CurrentRegionID);
+
+            //----------------------------------------------------
 
 			this.Positions.Clear();
 
@@ -301,9 +308,12 @@ namespace DOL.GS.Keeps
 			if (Skin != (int)eComponentSkin.Keep && Skin != (int)eComponentSkin.Tower && Skin != (int)eComponentSkin.Gate)
 				query = query + " AND `ComponentRotation` = '" + this.ComponentHeading + "'";
 
+
 			DBKeepPosition[] DBPositions = (DBKeepPosition[])GameServer.Database.SelectObjects(typeof(DBKeepPosition), query);
 			foreach (DBKeepPosition position in DBPositions)
 			{
+                if (bg != null && position.ClassType != "DOL.GS.Keeps.GameKeepDoor")
+                    continue; //other hooks do not load for battlegrounds.
 				DBKeepPosition[] list = this.Positions[position.TemplateID] as DBKeepPosition[];
 				if (list == null)
 				{
