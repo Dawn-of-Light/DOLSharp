@@ -206,7 +206,7 @@ namespace DOL
                             }
                             else
                             {
-                                GameServer.Instance.Close();
+								OnDisconnect();
                                 break;
                             }
                         }
