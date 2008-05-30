@@ -52,6 +52,9 @@ namespace DOL.GS.Keeps
 		{
 			ClothingMgr.LoadTemplates();
 
+            //Dinberg - moved this here, battlegrounds must be loaded before keepcomponents are.
+            LoadBattlegroundCaps();
+
 			lock (m_keeps.SyncRoot)
 			{
 				m_keeps.Clear();
@@ -112,7 +115,7 @@ namespace DOL.GS.Keeps
 			if (ServerProperties.Properties.USE_LIVE_KEEP_BONUSES)
 				KeepBonusMgr.UpdateCounts();
 
-			LoadBattlegroundCaps();
+			
 			return true;
 		}
 
