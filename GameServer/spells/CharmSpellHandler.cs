@@ -111,6 +111,12 @@ namespace DOL.GS.Spells
 				return false;
 			}
 
+			//You should be able to chain pulsing charm on the same mob
+			if(Spell.Pulse!=0 && Caster is GamePlayer && (((GamePlayer)Caster).ControlledNpc!=null && ((GamePlayer)Caster).ControlledNpc.Body==(GameNPC)selectedTarget))
+			{
+				((GamePlayer)Caster).CommandNpcRelease();
+			}
+			
 			if (!base.CheckBeginCast(selectedTarget)) return false;
 
 			if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledNpc != null)
@@ -155,7 +161,7 @@ namespace DOL.GS.Spells
 					return;
 				}
 				IControlledBrain brain = ((GameNPC)target).Brain as IControlledBrain;
-				if (brain != null)
+				if (brain != null && (brain.Owner as GamePlayer)!=Caster)
 				{
 					// TODO: proper message
 					MessageToCaster("That monster is already controlled by someone else!", eChatType.CT_SpellResisted);
