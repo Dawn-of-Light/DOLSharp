@@ -3860,7 +3860,7 @@ namespace DOL.GS
 
 				//If we started casting a spell, stop the timer and wait for
 				//GameNPC.OnAfterSpellSequenceCast to start again
-				if (((StandardMobBrain)owner.Brain).CheckSpells(StandardMobBrain.eCheckSpellType.Offensive))
+				if (owner.Brain is StandardMobBrain && ((StandardMobBrain)owner.Brain).CheckSpells(StandardMobBrain.eCheckSpellType.Offensive))
 				{
 					Stop();
 					return;
