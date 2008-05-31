@@ -171,14 +171,14 @@ namespace DOL.GS.Housing
                 player.LeaveHouse();
 
             #region Remove indoor/outdoor items
-            DatabaseObject[] objs;
+            DBHouseIndoorItem[] objs;
 
             // Remove all indoor items
-            objs = (DatabaseObject[]) from s in DatabaseLayer.Instance.OfType<DBHouseIndoorItem>()
+            objs =  (from s in DatabaseLayer.Instance.OfType<DBHouseIndoorItem>()
                                       where s.HouseNumber == house.HouseNumber
-                                      select s;
+                                      select s).ToArray();
             if (objs.Length > 0)
-                foreach (DatabaseObject item in objs)
+                foreach (DBHouseIndoorItem item in objs)
                     GameServer.Database.DeleteObject(item);
 
             // Remove all outdoor items
