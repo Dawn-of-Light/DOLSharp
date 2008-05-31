@@ -54,7 +54,7 @@ namespace DOL.GS
 			{
 				Faction myfaction = new Faction();
 				myfaction.LoadFromDatabase(dbfaction);
-				m_factions.Add(dbfaction.ID,myfaction);
+				m_factions.Add(dbfaction.Index,myfaction);
 			}
 			foreach(DBLinkedFaction dblinkedfaction in GameServer.Database.SelectObjects<DBLinkedFaction>() )
 			{

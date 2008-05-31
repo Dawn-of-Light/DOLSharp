@@ -51,7 +51,7 @@ namespace DOL.GS
 		public void LoadFromDatabase(DBFaction dbfaction)
 		{
 			m_name = dbfaction.Name;
-			m_id = dbfaction.ID;
+			m_id = dbfaction.Index;
 			m_baseAggroLevel = dbfaction.BaseAggroLevel;
 		}
 		public void SaveAggroToFaction()

@@ -39,7 +39,7 @@ namespace DOL.Database2
             : base()
 		{
 			m_autoSave = false;
-			ID = 0;
+			Index = 0;
 			m_baseAggroLevel = 0;
 			m_name = String.Empty;
 		}
@@ -49,7 +49,7 @@ namespace DOL.Database2
 		/// Index of faction
 		/// </summary>
 		////[PrimaryKey]
-		public int ID
+		public int Index
 		{
 			get
 			{

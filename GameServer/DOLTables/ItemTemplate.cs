@@ -1148,7 +1148,7 @@ namespace DOL.Database2
 		/// </summary>
 		/// <param name="bonusID"></param>
 		/// <returns></returns>
-		public int GetBonusAmount(ArtifactBonus.ID bonusID)
+		public int GetBonusAmount(ArtifactBonus.TypeID bonusID)
 		{
 			switch ((int)bonusID)
 			{
@@ -1182,7 +1182,7 @@ namespace DOL.Database2
 		/// </summary>
 		/// <param name="bonusID"></param>
 		/// <returns></returns>
-		public int GetBonusType(ArtifactBonus.ID bonusID)
+		public int GetBonusType(ArtifactBonus.TypeID bonusID)
 		{
 			switch ((int)bonusID)
 			{
@@ -1224,7 +1224,7 @@ namespace DOL.Database2
 		/// </summary>
 		/// <param name="bonusID"></param>
 		/// <returns></returns>
-		public void SetBonusAmount(ArtifactBonus.ID bonusID, int bonusAmount)
+		public void SetBonusAmount(ArtifactBonus.TypeID bonusID, int bonusAmount)
 		{
 			switch ((int)bonusID)
 			{
@@ -1266,7 +1266,7 @@ namespace DOL.Database2
 		/// </summary>
 		/// <param name="bonusID"></param>
 		/// <returns></returns>
-		public void SetBonusType(ArtifactBonus.ID bonusID, int bonusType)
+		public void SetBonusType(ArtifactBonus.TypeID bonusID, int bonusType)
 		{
 			switch ((int)bonusID)
 			{

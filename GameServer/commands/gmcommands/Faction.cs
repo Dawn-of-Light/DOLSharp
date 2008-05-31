@@ -91,13 +91,13 @@ namespace DOL.GS.Commands
 						DBFaction dbfaction = new DBFaction();
 						dbfaction.BaseAggroLevel = baseAggro;
 						dbfaction.Name = name;
-						dbfaction.ID = (max + 1);
+						dbfaction.Index = (max + 1);
 						//log.Info("add obj to db with id :" + dbfaction.ID);
 						GameServer.Database.AddNewObject(dbfaction);
 						//log.Info("add obj to db");
 						myfaction = new Faction();
 						myfaction.LoadFromDatabase(dbfaction);
-						FactionMgr.Factions.Add(dbfaction.ID, myfaction);
+						FactionMgr.Factions.Add(dbfaction.Index, myfaction);
 						client.Player.TempProperties.setProperty(TEMP_FACTION_LAST, myfaction);
 						client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Faction.Create.NewCreated"), eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 					}

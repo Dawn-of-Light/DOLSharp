@@ -34,7 +34,7 @@ namespace DOL.Database2
 		private int m_bonusID;
 		private int m_level;
 
-		public enum ID
+		public enum TypeID
 		{
 			Min = 0,
 			MinStat = 0,

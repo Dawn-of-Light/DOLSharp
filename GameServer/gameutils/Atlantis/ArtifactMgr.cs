@@ -257,7 +257,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static int[] GetLevelRequirements(String artifactID)
 		{
-			int[] requirements = new int[ArtifactBonus.ID.Max - ArtifactBonus.ID.Min + 1];
+			int[] requirements = new int[ArtifactBonus.TypeID.Max - ArtifactBonus.TypeID.Min + 1];
 
 			lock (m_artifactBonuses)
 				foreach (ArtifactBonus bonus in m_artifactBonuses)

@@ -171,12 +171,14 @@ namespace DOLStudio
         {
             if (ResultView.SelectedItems.Count > 0)
             {
-                UInt64 ID = UInt64.Parse(ResultView.SelectedItems[0].Tag as string);
+                UInt64 ID = UInt64.Parse(ResultView.SelectedItems[0].Name as string);
                 m_currentobject = DatabaseLayer.Instance.GetDatabaseObjectFromID(ID);
+                StatusLabel.Text = m_currentobject.GetType().Name;
             }
             else
             {
                 m_currentobject = null;
+                StatusLabel.Text = "Ready";
             }
         }
 

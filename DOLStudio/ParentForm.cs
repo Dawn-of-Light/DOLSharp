@@ -204,5 +204,16 @@ namespace DOLStudio
         {
             e.Cancel = false;
         }
+
+        private void toolsMenu_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void importToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Conversion.ConversionAssistant assist = new DOLStudio.Conversion.ConversionAssistant();
+            assist.ShowDialog();
+        }
     }
 }

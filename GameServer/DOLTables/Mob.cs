@@ -70,7 +70,7 @@ namespace DOL.Database2
 		private string m_brain;
 		private string m_pathID;
 		private int m_maxdistance;
-        private string m_boat_ownerid;
+        private UInt64 m_boat_ownerid;
 		private int m_roamingRange;
 
 		static bool m_autoSave;
@@ -101,7 +101,7 @@ namespace DOL.Database2
             m_Piety = 30;
             m_Empathy = 30;
             m_Charisma = 30;
-            m_boat_ownerid = "";
+            m_boat_ownerid = 0;
 			m_roamingRange = -1;
 		}
 
@@ -655,7 +655,7 @@ namespace DOL.Database2
         /// The Mob's owner if mob is boat
         /// </summary>
         
-        public string BoatOwnerID
+        public UInt64 BoatOwnerID
         {
             get
             {

@@ -62,7 +62,7 @@ namespace DOL.GS
 			ArtifactLevel = 0;
 			m_levelRequirements = ArtifactMgr.GetLevelRequirements(ArtifactID);
 
-			for (ArtifactBonus.ID bonusID = ArtifactBonus.ID.Min; bonusID <= ArtifactBonus.ID.Max; ++bonusID)
+			for (ArtifactBonus.TypeID bonusID = ArtifactBonus.TypeID.Min; bonusID <= ArtifactBonus.TypeID.Max; ++bonusID)
 			{
 				// Clear all bonuses except the base (L0) bonuses.
 
@@ -142,14 +142,14 @@ namespace DOL.GS
 
 			bool abilityGained = false;
 
-			for (ArtifactBonus.ID bonusID = ArtifactBonus.ID.Min; bonusID <= ArtifactBonus.ID.Max; ++bonusID)
+			for (ArtifactBonus.TypeID bonusID = ArtifactBonus.TypeID.Min; bonusID <= ArtifactBonus.TypeID.Max; ++bonusID)
 			{
 				if (m_levelRequirements[(int)bonusID] == artifactLevel)
 				{
 					SetBonusType(bonusID, template.GetBonusType(bonusID));
 					SetBonusAmount(bonusID, template.GetBonusAmount(bonusID));
 
-					if (bonusID <= ArtifactBonus.ID.MaxStat)
+					if (bonusID <= ArtifactBonus.TypeID.MaxStat)
 						player.Notify(PlayerInventoryEvent.ItemBonusChanged, this,
 							new ItemBonusChangedEventArgs(GetBonusType(bonusID), GetBonusAmount(bonusID)));
 
@@ -193,22 +193,22 @@ namespace DOL.GS
 			delve.Add("");
 			delve.Add("Magical Bonuses:");
 
-			for (ArtifactBonus.ID bonusID = ArtifactBonus.ID.MinStat; bonusID <= ArtifactBonus.ID.MaxStat; ++bonusID)
+			for (ArtifactBonus.TypeID bonusID = ArtifactBonus.TypeID.MinStat; bonusID <= ArtifactBonus.TypeID.MaxStat; ++bonusID)
 				DelveMagicalBonus(delve, GetBonusAmount(bonusID), GetBonusType(bonusID),
 					m_levelRequirements[(int)bonusID]);
 
 			delve.Add("");
 
-			for (ArtifactBonus.ID bonusID = ArtifactBonus.ID.MinStat; bonusID <= ArtifactBonus.ID.MaxStat; ++bonusID)
+			for (ArtifactBonus.TypeID bonusID = ArtifactBonus.TypeID.MinStat; bonusID <= ArtifactBonus.TypeID.MaxStat; ++bonusID)
 				DelveBonus(delve, GetBonusAmount(bonusID), GetBonusType(bonusID),
 					m_levelRequirements[(int)bonusID]);
 
 			// Spells & Procs
 
-			DelveMagicalAbility(delve, ArtifactBonus.ID.Spell, m_levelRequirements[(int)ArtifactBonus.ID.Spell]);
-			DelveMagicalAbility(delve, ArtifactBonus.ID.ProcSpell, m_levelRequirements[(int)ArtifactBonus.ID.ProcSpell]);
-			DelveMagicalAbility(delve, ArtifactBonus.ID.Spell1, m_levelRequirements[(int)ArtifactBonus.ID.Spell1]);
-			DelveMagicalAbility(delve, ArtifactBonus.ID.ProcSpell1, m_levelRequirements[(int)ArtifactBonus.ID.ProcSpell1]);
+			DelveMagicalAbility(delve, ArtifactBonus.TypeID.Spell, m_levelRequirements[(int)ArtifactBonus.TypeID.Spell]);
+			DelveMagicalAbility(delve, ArtifactBonus.TypeID.ProcSpell, m_levelRequirements[(int)ArtifactBonus.TypeID.ProcSpell]);
+			DelveMagicalAbility(delve, ArtifactBonus.TypeID.Spell1, m_levelRequirements[(int)ArtifactBonus.TypeID.Spell1]);
+			DelveMagicalAbility(delve, ArtifactBonus.TypeID.ProcSpell1, m_levelRequirements[(int)ArtifactBonus.TypeID.ProcSpell1]);
 
 			delve.Add("");
 
@@ -301,7 +301,7 @@ namespace DOL.GS
 		/// <param name="delve"></param>
 		/// <param name="bonusID"></param>
 		/// <param name="levelRequirement"></param>
-		public virtual void DelveMagicalAbility(List<String> delve, ArtifactBonus.ID bonusID, 
+		public virtual void DelveMagicalAbility(List<String> delve, ArtifactBonus.TypeID bonusID, 
 			int levelRequirement)
 		{
 			String levelTag = (levelRequirement > 0)
@@ -314,22 +314,22 @@ namespace DOL.GS
 
 			switch (bonusID)
 			{
-				case ArtifactBonus.ID.Spell:
+				case ArtifactBonus.TypeID.Spell:
 					spellID = SpellID;
 					isProc = false;
 					isSecondary = false;
 					break;
-				case ArtifactBonus.ID.Spell1:
+				case ArtifactBonus.TypeID.Spell1:
 					spellID = SpellID1;
 					isProc = false;
 					isSecondary = true;
 					break;
-				case ArtifactBonus.ID.ProcSpell:
+				case ArtifactBonus.TypeID.ProcSpell:
 					spellID = ProcSpellID;
 					isProc = true;
 					isSecondary = false;
 					break;
-				case ArtifactBonus.ID.ProcSpell1:
+				case ArtifactBonus.TypeID.ProcSpell1:
 					spellID = ProcSpellID1;
 					isProc = true;
 					isSecondary = true;
@@ -465,7 +465,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		private int GainsNewAbilityAtLevel()
 		{
-			for (ArtifactBonus.ID bonusID = ArtifactBonus.ID.Min; bonusID <= ArtifactBonus.ID.Max; ++bonusID)
+			for (ArtifactBonus.TypeID bonusID = ArtifactBonus.TypeID.Min; bonusID <= ArtifactBonus.TypeID.Max; ++bonusID)
 				if (m_levelRequirements[(int)bonusID] > ArtifactLevel)
 					return m_levelRequirements[(int)bonusID];
 
