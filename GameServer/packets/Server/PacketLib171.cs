@@ -102,7 +102,7 @@ namespace DOL.GS.PacketHandler
 			pak.WritePascalString(obj.Name);
 			if (obj is IDoor)
 			{
-				pak.WriteByte((byte)(obj as IDoor).Flag);
+				pak.WriteByte(4);
 				pak.WriteInt((uint)(obj as IDoor).DoorID);
 			}
 			else pak.WriteByte(0x00);
@@ -117,12 +117,12 @@ namespace DOL.GS.PacketHandler
 			//Added by Suncheck - Mines are not shown to enemy players
 			if (npc is GameMine)
 			{
-				if (GameServer.ServerRules.IsAllowedToAttack((npc as GameMine).Owner, m_gameClient.Player, true))					
+				if (GameServer.ServerRules.IsAllowedToAttack((npc as GameMine).Owner, m_gameClient.Player, true))
 				{
 					return;
 				}
 			}
-			
+
 			if (npc is GameMovingObject)
 			{
 				SendMovingObjectCreate(npc as GameMovingObject);
