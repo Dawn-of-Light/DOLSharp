@@ -818,7 +818,7 @@ namespace DOL.GS.PacketHandler
 			pak.WritePascalString(obj.Name);
 			if (obj is IDoor)
 			{
-				pak.WriteByte((byte)(obj as IDoor).Flag);
+				pak.WriteByte(4);
 				pak.WriteInt((uint)(obj as IDoor).DoorID);
 			}
 			else pak.WriteByte(0x00);
@@ -865,7 +865,7 @@ namespace DOL.GS.PacketHandler
 
 			if (npc is GameMovingObject)
 			{
-				SendMovingObjectCreate(npc as GameMovingObject); 
+				SendMovingObjectCreate(npc as GameMovingObject);
 				return;
 			}
 
@@ -1971,7 +1971,7 @@ namespace DOL.GS.PacketHandler
 			GamePlayer player = m_gameClient.Player;
 			if (player == null)
 				return;
-			
+
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
 			pak.WriteByte(0x03); //subcode
 			pak.WriteByte(0x0d); //number of entry
@@ -2000,9 +2000,9 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((byte)(HouseMgr.GetHouseNumberByPlayer(player) & 0xFF)); // personal house low byte
 			pak.WritePascalString(player.LastName); // Last name
 			pak.WriteByte((byte)(player.MLLevel+1)); // ML Level (+1)
-			pak.WritePascalString(player.RaceName); // Race name			
+			pak.WritePascalString(player.RaceName); // Race name
 			pak.WriteByte(0x0);
-			
+
 			if (player.GuildRank != null)
 				pak.WritePascalString(player.GuildRank.Title); // Guild title
 			else
@@ -2362,7 +2362,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(0);
 			SendTCP(pak);
 		}
-		
+
         public virtual void SendChampionTrainerWindow(int type)
         {
             GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.TrainerWindow));
@@ -2398,7 +2398,7 @@ namespace DOL.GS.PacketHandler
                     pak.WriteByte(0);
                 }
             }
-            SendTCP(pak);               
+            SendTCP(pak);
         }
 
 		public virtual void SendTrainerWindow()
@@ -2970,7 +2970,7 @@ namespace DOL.GS.PacketHandler
 		public virtual void SendToggleHousePoints(House house)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseTogglePoints));
-			
+
 			pak.WriteShort((ushort)house.HouseNumber);
 			pak.WriteByte(0x04);
 			pak.WriteByte(0x00);
@@ -3310,17 +3310,17 @@ namespace DOL.GS.PacketHandler
 
 			string description = "";
 			double MLXPpercent = 0;
-			
+
 			if (m_gameClient.Player.MLLevel < 10)
 				MLXPpercent = 100.0 * (double)m_gameClient.Player.MLExperience / (double)m_gameClient.Player.GetMLExperienceForLevel((int)(m_gameClient.Player.MLLevel+1));
 			else MLXPpercent = 100.0; // ML10 has no MLXP, so always 100%
-					
+
 			GSTCPPacketOut pak = new GSTCPPacketOut((byte)ePackets.MasterLevelWindow);
 			pak.WriteByte((byte)MLXPpercent); // MLXP (displayed in window)
 			pak.WriteByte((byte)0x64);
 			pak.WriteByte((byte)(m_gameClient.Player.MLLevel+1)); // ML level + 1
 			pak.WriteByte((byte)0x00);
-			pak.WriteByte(ml); // Required ML	
+			pak.WriteByte(ml); // Required ML
 			if (mlrequired<10)
 			{
 				// ML level completition is displayed client side (Step 11)
@@ -3329,16 +3329,16 @@ namespace DOL.GS.PacketHandler
 					if (!m_gameClient.Player.HasFinishedMLStep((int)mlrequired, i))
 						description = i.ToString() + ". " + LanguageMgr.GetTranslation(m_gameClient, String.Format("SendMasterLevelWindow.Uncomplete.ML{0}.Step{1}",mlrequired,i));
 					else
-						description = i.ToString() + ". " + LanguageMgr.GetTranslation(m_gameClient, String.Format("SendMasterLevelWindow.Complete.ML{0}.Step{1}",mlrequired,i));						
+						description = i.ToString() + ". " + LanguageMgr.GetTranslation(m_gameClient, String.Format("SendMasterLevelWindow.Complete.ML{0}.Step{1}",mlrequired,i));
 					pak.WritePascalString(description);
 				}
 			}
 			else pak.WriteByte((byte)0x00);
-				
+
 			pak.WriteByte((byte)0x00);
 			SendTCP(pak);
 		}
-		
+
 		public virtual void SendConsignmentMerchantMoney(ushort mithril, ushort plat, ushort gold, byte silver, byte copper)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut((byte)ePackets.ConsignmentMerchantMoney);

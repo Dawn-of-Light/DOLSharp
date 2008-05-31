@@ -118,7 +118,7 @@ namespace DOL.GS.PacketHandler
 			pak.WritePascalString(obj.Name);
 			if (obj is IDoor)
 			{
-				pak.WriteByte((byte)(obj as IDoor).Flag);
+				pak.WriteByte(4);
 				pak.WriteInt((uint)(obj as IDoor).DoorID);
 			}
 			else pak.WriteByte(0x00);
