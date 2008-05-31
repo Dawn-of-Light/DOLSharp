@@ -86,7 +86,7 @@ namespace DOL.GS.Keeps
 					if (keep == null)
 					{
 						if (Logger.IsWarnEnabled)
-							Logger.WarnFormat("No keep with ID {0} for component ID {1}", component.KeepID, component.ID);
+							Logger.WarnFormat("No keep with ID {0} for component ID {1}", component.KeepID, component.Index);
 						continue;
 					}
 					GameKeepComponent gamecomponent = new GameKeepComponent();

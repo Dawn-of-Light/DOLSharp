@@ -281,7 +281,7 @@ namespace DOL.GS.Keeps
 			//			this.Health = component.Health;
 			this.m_oldHealthPercent = this.HealthPercent;
 			this.CurrentRegion = myregion;
-			this.ID = component.ID;
+			this.ID = component.Index;
 			this.SaveInDB = false;
 			this.IsRaized = false;
 			LoadPositions();
@@ -451,7 +451,7 @@ namespace DOL.GS.Keeps
 			obj.Health = Health;
 			obj.X = this.ComponentX;
 			obj.Y = this.ComponentY;
-			obj.ID = this.ID;
+			obj.Index = this.ID;
 			obj.Skin = this.Skin;
 
 			if (New)

@@ -1,14 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Providers", "Providers", "{29DB415E-1312-42ED-874F-5E7262F1DEBA}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameServer", "GameServer\GameServer.csproj", "{ACB92917-3D42-4F40-97F9-EA904A41DE36}"
 	ProjectSection(ProjectDependencies) = postProject
 		{9DBDD582-A8C8-4FE9-9BDC-E12CA28BFE71} = {9DBDD582-A8C8-4FE9-9BDC-E12CA28BFE71}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOLServer", "DOLServer\DOLServer.csproj", "{6DDF274A-91A3-4EAF-B0E3-30FD559ABD51}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{564E8F20-3834-4F3D-B5F3-2981C1FC8300}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameServerScripts", "GameServerScripts\GameServerScripts.csproj", "{136FE76A-A70A-4E52-BCE5-03B587BCB31B}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -23,8 +23,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOLDatabase2", "DOLDatabase2\DOLDatabase2.csproj", "{9DBDD582-A8C8-4FE9-9BDC-E12CA28BFE71}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOLBase", "DOLBase\DOLBase.csproj", "{A4A0FB22-124C-45CA-A653-2887DE0CC3E0}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Providers", "Providers", "{29DB415E-1312-42ED-874F-5E7262F1DEBA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOLStudio", "DOLStudio\DOLStudio.csproj", "{6EF690F7-6FBA-4595-8247-EB7970F1922B}"
 EndProject
@@ -42,10 +40,6 @@ Global
 		{6DDF274A-91A3-4EAF-B0E3-30FD559ABD51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DDF274A-91A3-4EAF-B0E3-30FD559ABD51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6DDF274A-91A3-4EAF-B0E3-30FD559ABD51}.Release|Any CPU.Build.0 = Release|Any CPU
-		{564E8F20-3834-4F3D-B5F3-2981C1FC8300}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{564E8F20-3834-4F3D-B5F3-2981C1FC8300}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{564E8F20-3834-4F3D-B5F3-2981C1FC8300}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{564E8F20-3834-4F3D-B5F3-2981C1FC8300}.Release|Any CPU.Build.0 = Release|Any CPU
 		{136FE76A-A70A-4E52-BCE5-03B587BCB31B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{136FE76A-A70A-4E52-BCE5-03B587BCB31B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{136FE76A-A70A-4E52-BCE5-03B587BCB31B}.Release|Any CPU.ActiveCfg = Release|Any CPU

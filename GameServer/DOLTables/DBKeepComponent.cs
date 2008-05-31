@@ -177,7 +177,7 @@ namespace DOL.Database2
 		/// Index of component
 		/// </summary>
 		//[DataElement(AllowDbNull=true)]
-		public int ID
+		public int Index
 		{
 			get
 			{

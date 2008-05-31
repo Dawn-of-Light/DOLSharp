@@ -776,8 +776,8 @@ namespace DOLStudio.Conversion
                         keep.AlbionDifficultyLevel = int.Parse(node["AlbionDifficultyLevel"].InnerText);
                         keep.BaseLevel = byte.Parse(node["BaseLevel"].InnerText);
                         keep.ClaimedGuildName = node["ClaimedGuildName"].InnerText;
-                        keep.Heading = ushort.Parse(node["Heading"]);
-                        keep.HiberniaDifficultyLevel = int.Parse(node["HiberniaDifficultyLevel"]);
+                        keep.Heading = ushort.Parse(node["Heading"].InnerText);
+                        keep.HiberniaDifficultyLevel = int.Parse(node["HiberniaDifficultyLevel"].InnerText);
                         keep.KeepID = int.Parse(node["KeepID"].InnerText);
                         keep.KeepType = int.Parse(node["KeepType"].InnerText);
                         keep.Level = byte.Parse(node["Level"].InnerText);
@@ -792,6 +792,7 @@ namespace DOLStudio.Conversion
                         keep.Z = int.Parse(node["Z"].InnerText);
                         keep.FillObjectRelations();
                         keep.Save();
+                        break;
                     #endregion
                     #region KeepComponent
                     case "KeepComponent":
@@ -804,6 +805,7 @@ namespace DOLStudio.Conversion
                         keepcomp.Skin = int.Parse(node["Skin"].InnerText);
                         keepcomp.X = int.Parse(node["X"].InnerText);
                         keepcomp.Y = int.Parse(node["Y"].InnerText);
+                        keepcomp.Index = int.Parse(node["ID"].InnerText); // Was renamed because of conflict
                         keepcomp.FillObjectRelations();
                         keepcomp.Save();
                         KeyMapping.Add(node["KeepComponent_ID"].InnerText, keepcomp.ID);
@@ -1325,7 +1327,7 @@ namespace DOLStudio.Conversion
                         spec.Icon = ushort.Parse(node["Icon"].InnerText);
                         spec.FillObjectRelations();
                         spec.Save();
-                        KeyMapping.Add(ode["Specialization_ID"].InnerText, spec.ID);
+                        KeyMapping.Add(node["Specialization_ID"].InnerText, spec.ID);
                         break;
                     #endregion
                     #region SpecXAbility
@@ -1348,7 +1350,7 @@ namespace DOLStudio.Conversion
                             return true;
                         DBSpell spell = new DBSpell();
                         spell.AllowBolt = ushort.Parse(node["AllowBolt"].InnerText) != 0;
-                        spell.AmnesiaChance = int.Parse(node["AmnesiaChance"].InnerText) != 0;
+                        spell.AmnesiaChance = int.Parse(node["AmnesiaChance"].InnerText) ;
                         spell.CastTime = double.Parse(node["CastTime"].InnerText);
                         spell.ClientEffect = int.Parse(node["ClientEffect"].InnerText);
                         spell.Concentration = int.Parse(node["Concentration"].InnerText);
@@ -1364,7 +1366,7 @@ namespace DOLStudio.Conversion
                         spell.IsFocus = ushort.Parse(node["IsFocus"].InnerText) != 0;
                         spell.IsPrimary = ushort.Parse(node["IsPrimary"].InnerText) != 0;
                         spell.IsSecondary = ushort.Parse(node["IsSecondary"].InnerText) != 0;
-                        spell.LifeDrainReturn = int.Parse(node["LifeDrainReturn"].InnerText) != 0;
+                        spell.LifeDrainReturn = int.Parse(node["LifeDrainReturn"].InnerText) ;
                         spell.Message1 = node["Message1"].InnerText;
                         spell.Message2 = node["Message2"].InnerText;
                         spell.Message3 = node["Message3"].InnerText;
