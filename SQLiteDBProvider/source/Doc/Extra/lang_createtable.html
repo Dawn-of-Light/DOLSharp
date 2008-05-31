@@ -1,0 +1,262 @@
+<html dir="LTR" xmlns="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:tool="http://www.microsoft.com/tooltip" xmlns:ndoc="urn:ndoc-preprocess">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <title>CREATE TABLE</title>
+    <link rel="stylesheet" type="text/css" href="ndoc.css"> </link>
+    <link rel="stylesheet" type="text/css" href="user.css"> </link>
+    <script type="text/javascript" src="ndoc.js"> </script>
+  </head>
+  <body style="display: none;">
+    <input type="hidden" id="userDataCache" class="userDataStyle" />
+    <input type="hidden" id="hiddenScrollOffset" />
+    <img id="dropDownImage" style="display:none; height:0; width:0;" src="drpdown.gif" />
+    <img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="drpdown_orange.gif" />
+    <img id="collapseImage" style="display:none; height:0; width:0;" src="collapse.gif" />
+    <img id="expandImage" style="display:none; height:0; width:0;" src="exp.gif" />
+    <img id="collapseAllImage" style="display:none; height:0; width:0;" src="collall.gif" />
+    <img id="expandAllImage" style="display:none; height:0; width:0;" src="expall.gif" />
+    <img id="copyImage" style="display:none; height:0; width:0;" src="copycode.gif" />
+    <img id="copyHoverImage" style="display:none; height:0; width:0;" src="copycodeHighlight.gif" />
+    <div id="header">
+      <table width="100%" id="topTable">
+        <tr id="headerTableRow1">
+          <td align="left">
+            <span id="runningHeaderText">CREATE TABLE</span>&nbsp;</td>
+        </tr>
+        <tr id="headerTableRow2">
+          <td align="left">
+            <span id="nsrTitle">SQLite Language Reference Documentation</span>
+          </td>
+        </tr>
+        <tr id="headerTableRow3" style="display:none">
+          <td>
+            <a id="seeAlsoSectionLink" href="#seeAlsoToggle" onclick="OpenSection(seeAlsoToggle)">See Also</a>
+            <a id="exampleSectionLink" href="#codeExampleToggle" onclick="OpenSection(codeExampleToggle)">Example</a>
+          </td>
+        </tr>
+     </table>
+      <table width="100%" id="bottomTable" cellspacing="0" cellpadding="0" style="display:none">
+        <tr>
+          <td>
+            <span onclick="ExpandCollapseAll(toggleAllImage)" style="cursor:default;" onkeypress="ExpandCollapseAll_CheckKey(toggleAllImage)" tabindex="0">
+              <img ID="toggleAllImage" class="toggleAll" src="collall.gif" />
+              <label id="collapseAllLabel" for="toggleAllImage" style="display: none;">
+							Collapse All
+						</label>
+              <label id="expandAllLabel" for="toggleAllImage" style="display: none;">
+							Expand All
+						</label>
+            </span>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div id="mainSection">
+    <div id="mainBody">
+      <h1 class="heading">
+        SQL As Understood By SQLite</h1>
+      <h4>
+        CREATE TABLE</h4>
+      <p>
+        <table cellpadding="10">
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">sql-command</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0">CREATE </font></b>[<b><font color="#2c2cf0">TEMP </font></b>
+              <big>|</big><b><font color="#2c2cf0"> TEMPORARY</font></b>]<b><font color="#2c2cf0">
+                TABLE </font></b>[<b><font color="#2c2cf0">IF NOT EXISTS</font></b>]<b><font color="#2c2cf0">
+                </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">database-name</font></i><b><font
+                  color="#2c2cf0"> <big>.</big></font></b>]<b><font color="#2c2cf0"> </font></b>
+              <i><font color="#ff3434">table-name</font></i><b><font color="#2c2cf0"> <big>(</big><br />
+                &nbsp; &nbsp; </font></b><i><font color="#ff3434">column-def</font></i><b><font color="#2c2cf0">
+                </font></b>[<b><font color="#2c2cf0"><big>,</big> </font></b><i><font color="#ff3434">
+                  column-def</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b><big>*</big><b><font
+                    color="#2c2cf0"><br />
+                    &nbsp; &nbsp; </font></b>[<b><font color="#2c2cf0"><big>,</big> </font></b>
+              <i><font color="#ff3434">constraint</font></i><b><font color="#2c2cf0"></font></b>]<b><font
+                color="#2c2cf0"></font></b><big>*</big><b><font color="#2c2cf0"><br />
+                  <big>)</big></font></b></td>
+          </tr>
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">sql-command</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0">CREATE </font></b>[<b><font color="#2c2cf0">TEMP </font></b>
+              <big>|</big><b><font color="#2c2cf0"> TEMPORARY</font></b>]<b><font color="#2c2cf0">
+                TABLE </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">database-name</font></i><b><font
+                  color="#2c2cf0"><big>.</big></font></b>]<b><font color="#2c2cf0"> </font></b>
+              <i><font color="#ff3434">table-name</font></i><b><font color="#2c2cf0"> AS </font>
+              </b><i><font color="#ff3434">select-statement</font></i><b><font color="#2c2cf0"></font></b></td>
+          </tr>
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">column-def</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0"></font></b><i><font color="#ff3434">name</font></i><b><font
+                color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">type</font></i><b><font
+                  color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"></font></b>[<b><font
+                    color="#2c2cf0">CONSTRAINT </font></b><i><font color="#ff3434">name</font></i><b><font
+                      color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">
+                        column-constraint</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b><big>*</big><b><font
+                          color="#2c2cf0"></font></b></td>
+          </tr>
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">type</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0"></font></b><i><font color="#ff3434">typename</font></i><b><font
+                color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"><br />
+                </font></b><i><font color="#ff3434">typename</font></i><b><font color="#2c2cf0"> <big>
+                  (</big> </font></b><i><font color="#ff3434">number</font></i><b><font color="#2c2cf0">
+                    <big>)</big> </font></b><big>|</big><b><font color="#2c2cf0"><br />
+                    </font></b><i><font color="#ff3434">typename</font></i><b><font color="#2c2cf0"> <big>
+                      (</big> </font></b><i><font color="#ff3434">number</font></i><b><font color="#2c2cf0">
+                        <big>,</big> </font></b><i><font color="#ff3434">number</font></i><b><font color="#2c2cf0">
+                          <big>)</big></font></b></td>
+          </tr>
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">column-constraint</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0">NOT NULL </font></b>[<b><font color="#2c2cf0"> </font></b>
+              <i><font color="#ff3434">conflict-clause</font></i><b><font color="#2c2cf0"> </font>
+              </b>]<b><font color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"><br />
+                PRIMARY KEY </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">sort-order</font></i><b><font
+                  color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0">
+                  </font></b><i><font color="#ff3434">conflict-clause</font></i><b><font color="#2c2cf0">
+                  </font></b>]<b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0">AUTOINCREMENT</font></b>]<b><font
+                    color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"><br />
+                      UNIQUE </font></b>[<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">conflict-clause</font></i><b><font
+                        color="#2c2cf0"> </font></b>]<b><font color="#2c2cf0"> </font></b><big>|</big><b><font
+                          color="#2c2cf0"><br />
+                          CHECK <big>(</big> </font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0">
+                            <big>)</big> </font></b><big>|</big><b><font color="#2c2cf0"><br />
+                              DEFAULT </font></b><i><font color="#ff3434">value</font></i><b><font color="#2c2cf0">
+                              </font></b><big>|</big><b><font color="#2c2cf0"><br />
+                                COLLATE </font></b><i><font color="#ff3434">collation-name</font></i><b><font color="#2c2cf0"></font></b></td>
+          </tr>
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">constraint</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0">PRIMARY KEY <big>(</big> </font></b><i><font color="#ff3434">
+                column-list</font></i><b><font color="#2c2cf0"> <big>)</big> </font></b>[<b><font
+                  color="#2c2cf0"> </font></b><i><font color="#ff3434">conflict-clause</font></i><b><font
+                    color="#2c2cf0"> </font></b>]<b><font color="#2c2cf0"> </font></b><big>|</big><b><font
+                      color="#2c2cf0"><br />
+                      UNIQUE <big>(</big> </font></b><i><font color="#ff3434">column-list</font></i><b><font
+                        color="#2c2cf0"> <big>)</big> </font></b>[<b><font color="#2c2cf0"> </font></b>
+              <i><font color="#ff3434">conflict-clause</font></i><b><font color="#2c2cf0"> </font>
+              </b>]<b><font color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"><br />
+                CHECK <big>(</big> </font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0">
+                  <big>)</big></font></b></td>
+          </tr>
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">conflict-clause</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0">ON CONFLICT </font></b><i><font color="#ff3434">conflict-algorithm</font></i><b><font
+                color="#2c2cf0"></font></b></td>
+          </tr>
+        </table>
+      </p>
+      <p>
+        A CREATE TABLE statement is basically the keywords "CREATE TABLE" followed by the
+        name of a new table and a parenthesized list of column definitions and constraints.
+        The table name can be either an identifier or a string. Tables names that begin
+        with "<b>sqlite_</b>" are reserved for use by the engine.</p>
+      <p>
+        Each column definition is the name of the column followed by the datatype for that
+        column, then one or more optional column constraints. The datatype for the column
+        does not restrict what data may be put in that column. See <a href="http://www.sqlite.org/datatype3.html">
+          Datatypes In SQLite Version 3</a> for additional information. The UNIQUE constraint
+        causes an index to be created on the specified columns. This index must contain
+        unique keys. The COLLATE clause specifies what text <a href="http://www.sqlite.org/datatype3.html#collation">
+          collating function</a> to use when comparing text entries for the column. The
+        built-in BINARY collating function is used by default.
+      </p>
+      <p>
+        The DEFAULT constraint specifies a default value to use when doing an INSERT. The
+        value may be NULL, a string constant or a number. Starting with version 3.1.0, the
+        default value may also be one of the special case-independant keywords CURRENT_TIME, CURRENT_DATE or CURRENT_TIMESTAMP. If the value is NULL, a string constant or number,
+        it is literally inserted into the column whenever an INSERT statement that does
+        not specify a value for the column is executed. If the value is CURRENT_TIME, CURRENT_DATE
+        or CURRENT_TIMESTAMP, then the current UTC date and/or time is inserted into the
+        columns. For CURRENT_TIME, the format is HH:MM:SS. For CURRENT_DATE, YYYY-MM-DD.
+        The format for CURRENT_TIMESTAMP is "YYYY-MM-DD HH:MM:SS".
+      </p>
+      <p>
+        Specifying a PRIMARY KEY normally just creates a UNIQUE index on the corresponding
+        columns. However, if primary key is on a single column that has datatype INTEGER,
+        then that column is used internally as the actual key of the B-Tree for the table.
+        This means that the column may only hold unique integer values. (Except for this
+        one case, SQLite ignores the datatype specification of columns and allows any kind
+        of data to be put in a column regardless of its declared datatype.) If a table does
+        not have an INTEGER PRIMARY KEY column, then the B-Tree key will be a automatically
+        generated integer. The B-Tree key for a row can always be accessed using one of
+        the special names "<b>ROWID</b>", "<b>OID</b>", or "<b>_ROWID_</b>". This is true
+        regardless of whether or not there is an INTEGER PRIMARY KEY. An INTEGER PRIMARY
+        KEY column man also include the keyword AUTOINCREMENT. The AUTOINCREMENT keyword
+        modified the way that B-Tree keys are automatically generated. Additional detail
+        on automatic B-Tree key generation is available <a href="http://www.sqlite.org/autoinc.html">
+          separately</a>.</p>
+      <p>
+        If the "TEMP" or "TEMPORARY" keyword occurs in between "CREATE" and "TABLE" then
+        the table that is created is only visible within that same database connection and
+        is automatically deleted when the database connection is closed. Any indices created
+        on a temporary table are also temporary. Temporary tables and indices are stored
+        in a separate file distinct from the main database file.</p>
+      <p>
+        If a &lt;database-name&gt; is specified, then the table is created in the named
+        database. It is an error to specify both a &lt;database-name&gt; and the TEMP keyword,
+        unless the &lt;database-name&gt; is "temp". If no database name is specified, and
+        the TEMP keyword is not present, the table is created in the main database.</p>
+      <p>
+        The optional conflict-clause following each constraint allows the specification
+        of an alternative default constraint conflict resolution algorithm for that constraint. The default is abort ABORT. Different constraints within the same table may have
+        different default conflict resolution algorithms. If an COPY, INSERT, or UPDATE
+        command specifies a different conflict resolution algorithm, then that algorithm
+        is used in place of the default algorithm specified in the CREATE TABLE statement.
+        See the section titled <a href="lang_conflict.html">ON CONFLICT</a> for additional
+        information.</p>
+      <p>
+        CHECK constraints are supported as of version 3.3.0. Prior to version 3.3.0, CHECK
+        constraints were parsed but not enforced.</p>
+      <p>
+        There are no arbitrary limits on the number of columns or on the number of constraints
+        in a table. The total amount of data in a single row is limited to about 1 megabytes
+        in version 2.8. In version 3.0 there is no arbitrary limit on the amount of data
+        in a row.</p>
+      <p>
+        The CREATE TABLE AS form defines the table to be the result set of a query. The
+        names of the table columns are the names of the columns in the result.</p>
+      <p>
+        The exact text of each CREATE TABLE statement is stored in the <b>sqlite_master</b>
+        table. Every time the database is opened, all CREATE TABLE statements are read from
+        the <b>sqlite_master</b> table and used to regenerate
+        SQLite's internal representation
+        of the table layout. If the original command was a CREATE TABLE AS then then an
+        equivalent CREATE TABLE statement is synthesized and store in <b>sqlite_master</b>
+        in place of the original command. The text of CREATE TEMPORARY TABLE statements
+        are stored in the <b>sqlite_temp_master</b> table.
+      </p>
+      <p>
+        If the optional IF NOT EXISTS clause is present and another table with the same
+        name aleady exists, then this command becomes a no-op.</p>
+      <p>
+        Tables are removed using the <a href="lang_droptable.html">DROP TABLE</a> statement.
+      </p>
+      <p>
+      <hr>
+        &nbsp;</p>
+      <div id="footer">
+        <p>
+          &nbsp;</p>
+        <p>
+        </p>
+      </div>
+    </div>
+    </div>
+  </body>
+</html>

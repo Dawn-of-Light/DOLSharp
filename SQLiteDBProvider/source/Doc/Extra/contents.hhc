@@ -1,0 +1,155 @@
+﻿<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</HEAD><BODY>
+<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Introduction">
+		<param name="Local" value="welcome.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Installing Design-Time Support">
+			<param name="Local" value="designer.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Using DbProviderFactories">
+			<param name="Local" value="dbfactorysupport.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Optimizing SQL Queries">
+			<param name="Local" value="optimizing.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Provider Limitations">
+			<param name="Local" value="LImitations.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Version History">
+			<param name="Local" value="version.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="SQLite Language Reference">
+		<param name="Local" value="syntax.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ALTER TABLE">
+			<param name="Local" value="lang_altertable.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ANALYZE">
+			<param name="Local" value="lang_analyze.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ATTACH DATABASE">
+			<param name="Local" value="lang_attach.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="BEGIN TRANSACTION">
+			<param name="Local" value="lang_transaction.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="comment">
+			<param name="Local" value="lang_comment.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="COMMIT TRANSACTION">
+			<param name="Local" value="lang_transaction.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="CREATE INDEX">
+			<param name="Local" value="lang_createindex.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="CREATE TABLE">
+			<param name="Local" value="lang_createtable.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="CREATE TRIGGER">
+			<param name="Local" value="lang_createtrigger.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="CREATE VIEW">
+			<param name="Local" value="lang_createview.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="CREATE VIRTUAL TABLE">
+			<param name="Local" value="lang_createvtab.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="DELETE">
+			<param name="Local" value="lang_delete.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="DETACH DATABASE">
+			<param name="Local" value="lang_detach.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="DROP INDEX">
+			<param name="Local" value="lang_dropindex.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="DROP TABLE">
+			<param name="Local" value="lang_droptable.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="DROP TRIGGER">
+			<param name="Local" value="lang_droptrigger.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="DROP VIEW">
+			<param name="Local" value="lang_dropview.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="END TRANSACTION">
+			<param name="Local" value="lang_transaction.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="EXPLAIN">
+			<param name="Local" value="lang_explain.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="expression">
+			<param name="Local" value="lang_expr.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="INSERT">
+			<param name="Local" value="lang_insert.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ON CONFLICT">
+			<param name="Local" value="lang_conflict.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="PRAGMA">
+			<param name="Local" value="pragma.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="REINDEX">
+			<param name="Local" value="lang_reindex.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="REPLACE">
+			<param name="Local" value="lang_replace.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ROLLBACK TRANSACTION">
+			<param name="Local" value="lang_transaction.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="SELECT">
+			<param name="Local" value="lang_select.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="UPDATE">
+			<param name="Local" value="lang_update.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="VACUUM">
+			<param name="Local" value="lang_vacuum.html">
+			</OBJECT>
+	</UL>

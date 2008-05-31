@@ -1,0 +1,122 @@
+<html dir="LTR" xmlns="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:tool="http://www.microsoft.com/tooltip" xmlns:ndoc="urn:ndoc-preprocess">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <title>Provider Limitations</title>
+    <link rel="stylesheet" type="text/css" href="ndoc.css"> </link>
+    <link rel="stylesheet" type="text/css" href="user.css"> </link>
+    <script type="text/javascript" src="ndoc.js"> </script>
+  </head>
+  <body style="display: none;">
+    <input type="hidden" id="userDataCache" class="userDataStyle" />
+    <input type="hidden" id="hiddenScrollOffset" />
+    <img id="dropDownImage" style="display:none; height:0; width:0;" src="drpdown.gif" />
+    <img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="drpdown_orange.gif" />
+    <img id="collapseImage" style="display:none; height:0; width:0;" src="collapse.gif" />
+    <img id="expandImage" style="display:none; height:0; width:0;" src="exp.gif" />
+    <img id="collapseAllImage" style="display:none; height:0; width:0;" src="collall.gif" />
+    <img id="expandAllImage" style="display:none; height:0; width:0;" src="expall.gif" />
+    <img id="copyImage" style="display:none; height:0; width:0;" src="copycode.gif" />
+    <img id="copyHoverImage" style="display:none; height:0; width:0;" src="copycodeHighlight.gif" />
+    <div id="header">
+      <table width="100%" id="topTable">
+        <tr id="headerTableRow1">
+          <td align="left">
+            <span id="runningHeaderText">Provider Limitations</span>
+          </td>
+        </tr>
+        <tr id="headerTableRow2">
+          <td align="left">
+            <span id="nsrTitle">SQLite.NET Class Library Documentation</span>
+          </td>
+        </tr>
+        <tr id="headerTableRow3" style="display:none">
+          <td>
+            <a id="seeAlsoSectionLink" href="#seeAlsoToggle" onclick="OpenSection(seeAlsoToggle)">See Also</a>
+            <a id="exampleSectionLink" href="#codeExampleToggle" onclick="OpenSection(codeExampleToggle)">Example</a>
+          </td>
+        </tr>
+     </table>
+      <table width="100%" id="bottomTable" cellspacing="0" cellpadding="0" style="display:none">
+        <tr>
+          <td>
+            <span onclick="ExpandCollapseAll(toggleAllImage)" style="cursor:default;" onkeypress="ExpandCollapseAll_CheckKey(toggleAllImage)" tabindex="0">
+              <img ID="toggleAllImage" class="toggleAll" src="collall.gif" />
+              <label id="collapseAllLabel" for="toggleAllImage" style="display: none;">
+							Collapse All
+						</label>
+              <label id="expandAllLabel" for="toggleAllImage" style="display: none;">
+							Expand All
+						</label>
+            </span>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div id="mainSection">
+    <div id="mainBody">
+      <h1 class="heading">Limitations of this ADO.NET SQLite Data Provider</h1>
+      <p>As providers go, this one doesn't have many restrictions. SQLite has no 
+        support for row-level or table-level locks. When a connection locks the database for writing, no other connection or process may read or write to the database until the write operation is complete.  The SQLite.NET provider attempts to retry 
+        internally if a database is locked, up to the CommandTimeout property of the 
+        command in question.</p>
+      <p>SQLite is inherently type-less, and only understands a few basic datatypes 
+        natively. They are (in .NET-speak) Int64, Double, String and Blob. The 
+        SQLite.NET provider will use the database schema information it can glean to 
+        enforce type-ness, but it is an inexact science.</p>
+      <p>
+        Hierarchical DataReaders are not supported. In the 
+        case of transactions, any SQLiteCommand created on a connection will (when 
+        executed) automatically join a transaction in progress, regardless of whether 
+        that transaction was created before or after the command.</p>
+      <p>A SQLiteCommand object <b>can</b> be re-assigned a new SQLiteConnection object 
+        as long as no DataReaders are active on the command.</p>
+      <p>Opening a transaction is considered a write operation, so only use them when 
+        you want to write to the database! If you hold open a transaction, all readers on other
+        connections
+        will be blocked until the transaction is closed!</p>
+      <p></p>
+      <h4 class="subHeading">Thread Safety</h4>
+      <p>Multi-threading in SQLite must be done carefully. Here are the restrictions:</p>
+      <ul>
+        <li>
+          <b>You May</b>
+        Clone() a SQLiteConnection object in one thread and pass the cloned object to 
+        another thread. Once passed, the other thread becomes the new owner of the 
+        cloned connection, and the original thread must not keep a reference to the 
+        clone or call any methods on the clone.
+        <LI>
+          <STRONG>You May</STRONG>
+        create multiple threads, and those threads can create their own 
+        SQLiteConnection and subsequent objects for accessing a database.&nbsp; 
+        Multiple connections on multiple threads to the same database file are 
+        perfectly&nbsp;acceptable&nbsp;and will behave predictably.&nbsp;
+        <li>
+          <b>You May NOT</b>
+        call methods or properties or otherwise reference any SQLite provider classes 
+        that belong to another thread.
+        <li>
+          <b>You May NOT</b> pass a SQLiteCommand, SQLiteDataReader, SQLiteDataAdapter or 
+          any other SQLite provider class except a cloned SQLiteConnection to another 
+          thread.</li>
+      </ul>
+      <p>Understand again that SQLite has no fine-grained locking mechanisms. It is 
+        therefore your own responsibility in a multi-threaded environment to handle 
+        potential timeouts that may occur if a long-running query in one thread 
+        prevents a query in another thread from executing. These timeouts will only 
+        occur if one thread is attempting to read while another thread is attempting to 
+        write. Whichever thread got its lock first will be the one to execute, and the 
+        other thread will block until the CommandTimeout value elapses or the other 
+        thread finishes.</p>
+      <hr/>
+      <div id="footer">
+        <p>
+          <a href="mailto:robert@blackcastlesoft.com?subject=SQLite.NET%20Class%20Library%20Documentation%20Feedback:%20Limitations">
+            Send comments on this topic.</a>
+        </p>
+        <p>
+        </p>
+      </div>
+    </div>
+    </div>
+  </body>
+</html>

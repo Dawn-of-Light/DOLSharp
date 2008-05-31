@@ -1,0 +1,131 @@
+<html dir="LTR" xmlns="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:tool="http://www.microsoft.com/tooltip" xmlns:ndoc="urn:ndoc-preprocess">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <title>CREATE INDEX</title>
+    <link rel="stylesheet" type="text/css" href="ndoc.css"> </link>
+    <link rel="stylesheet" type="text/css" href="user.css"> </link>
+    <script type="text/javascript" src="ndoc.js"> </script>
+  </head>
+  <body style="display: none;">
+    <input type="hidden" id="userDataCache" class="userDataStyle" />
+    <input type="hidden" id="hiddenScrollOffset" />
+    <img id="dropDownImage" style="display:none; height:0; width:0;" src="drpdown.gif" />
+    <img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="drpdown_orange.gif" />
+    <img id="collapseImage" style="display:none; height:0; width:0;" src="collapse.gif" />
+    <img id="expandImage" style="display:none; height:0; width:0;" src="exp.gif" />
+    <img id="collapseAllImage" style="display:none; height:0; width:0;" src="collall.gif" />
+    <img id="expandAllImage" style="display:none; height:0; width:0;" src="expall.gif" />
+    <img id="copyImage" style="display:none; height:0; width:0;" src="copycode.gif" />
+    <img id="copyHoverImage" style="display:none; height:0; width:0;" src="copycodeHighlight.gif" />
+    <div id="header">
+      <table width="100%" id="topTable">
+        <tr id="headerTableRow1">
+          <td align="left">
+            <span id="runningHeaderText">CREATE INDEX</span>&nbsp;</td>
+        </tr>
+        <tr id="headerTableRow2">
+          <td align="left">
+            <span id="nsrTitle">SQLite Language Reference Documentation</span>
+          </td>
+        </tr>
+        <tr id="headerTableRow3" style="display:none">
+          <td>
+            <a id="seeAlsoSectionLink" href="#seeAlsoToggle" onclick="OpenSection(seeAlsoToggle)">See Also</a>
+            <a id="exampleSectionLink" href="#codeExampleToggle" onclick="OpenSection(codeExampleToggle)">Example</a>
+          </td>
+        </tr>
+     </table>
+      <table width="100%" id="bottomTable" cellspacing="0" cellpadding="0" style="display:none">
+        <tr>
+          <td>
+            <span onclick="ExpandCollapseAll(toggleAllImage)" style="cursor:default;" onkeypress="ExpandCollapseAll_CheckKey(toggleAllImage)" tabindex="0">
+              <img ID="toggleAllImage" class="toggleAll" src="collall.gif" />
+              <label id="collapseAllLabel" for="toggleAllImage" style="display: none;">
+							Collapse All
+						</label>
+              <label id="expandAllLabel" for="toggleAllImage" style="display: none;">
+							Expand All
+						</label>
+            </span>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div id="mainSection">
+    <div id="mainBody">
+      <h1 class="heading">
+        SQL As Understood By SQLite</h1>
+      <h4>
+        CREATE INDEX</h4>
+      <p>
+        <table cellpadding="10">
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">sql-statement</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0">CREATE </font></b>[<b><font color="#2c2cf0">UNIQUE</font></b>]<b><font
+                color="#2c2cf0"> INDEX </font></b>[<b><font color="#2c2cf0">IF NOT EXISTS</font></b>]<b><font
+                  color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">database-name</font></i><b><font
+                    color="#2c2cf0"> <big>.</big></font></b>]<b><font color="#2c2cf0"> </font></b>
+              <i><font color="#ff3434">index-name</font></i><b><font color="#2c2cf0">
+                <br />
+                ON </font></b><i><font color="#ff3434">table-name</font></i><b><font color="#2c2cf0">
+                  <big>(</big> </font></b><i><font color="#ff3434">column-name</font></i><b><font color="#2c2cf0">
+                  </font></b>[<b><font color="#2c2cf0"><big>,</big> </font></b><i><font color="#ff3434">
+                    column-name</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b><big>*</big><b><font
+                      color="#2c2cf0"> <big>)</big></font></b></td>
+          </tr>
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">column-name</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0"></font></b><i><font color="#ff3434">name</font></i><b><font
+                color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"> COLLATE </font></b><i><font
+                  color="#ff3434">collation-name</font></i><b><font color="#2c2cf0"></font></b>]<b><font
+                    color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"> ASC </font></b><big>|</big><b><font
+                      color="#2c2cf0"> DESC </font></b>]<b><font color="#2c2cf0"></font></b></td>
+          </tr>
+        </table>
+      </p>
+      <p>
+        The CREATE INDEX command consists of the keywords "CREATE INDEX" followed by the
+        name of the new index, the keyword "ON", the name of a previously created table
+        that is to be indexed, and a parenthesized list of names of columns in the table
+        that are used for the index key. Each column name can be followed by one of the
+        "ASC" or "DESC" keywords to indicate sort order, but the sort order is ignored in
+        the current implementation. Sorting is always done in ascending order.</p>
+      <p>
+        The COLLATE clause following each column name defines a collating sequence used
+        for text entires in that column. The default collating sequence is the collating
+        sequence defined for that column in the CREATE TABLE statement. Or if no collating
+        sequence is otherwise defined, the built-in BINARY collating sequence is used.</p>
+      <p>
+        There are no arbitrary limits on the number of indices that can be attached to a
+        single table, nor on the number of columns in an index.</p>
+      <p>
+        If the UNIQUE keyword appears between CREATE and INDEX then duplicate index entries
+        are not allowed. Any attempt to insert a duplicate entry will result in an error.</p>
+      <p>
+        The exact text of each CREATE INDEX statement is stored in the <b>sqlite_master</b>
+        or <b>sqlite_temp_master</b> table, depending on whether the table being indexed
+        is temporary. Every time the database is opened, all CREATE INDEX statements are
+        read from the <b>sqlite_master</b> table and used to regenerate
+        SQLite's internal
+        representation of the index layout.</p>
+      <p>
+        If the optional IF NOT EXISTS clause is present and another index with the same name aleady exists, then this command becomes a no-op.</p>
+      <p>
+        Indexes are removed with the <a href="lang_dropindex.html">DROP INDEX</a> command.</p>
+      <p>
+      <hr>
+        &nbsp;</p>
+      <div id="footer">
+        <p>
+          &nbsp;</p>
+        <p>
+        </p>
+      </div>
+    </div>
+    </div>
+  </body>
+</html>

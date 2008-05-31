@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable language="en-US" xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable">
+  <Commands package="guidVSPackageBasedProviderPkg">
+    <Buttons>
+      <Button guid="guidVSPackageBasedProviderCmdSet" id="cmdidVacuum" type="Button">
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <Strings>
+          <ButtonText>&amp;Vacuum</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSPackageBasedProviderCmdSet" id="cmdidRekey" type="Button">
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <Strings>
+          <ButtonText>Change &amp;Password ...</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+  </Commands>
+  <CommandPlacements>
+    <CommandPlacement guid="guidVSPackageBasedProviderCmdSet" id="cmdidVacuum" priority="0x0100">
+      <Parent guid="guidVSData" id="IDG_DV_CONNECTION" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSPackageBasedProviderCmdSet" id="cmdidRekey" priority="0x0100">
+      <Parent guid="guidVSData" id="IDG_DV_CONNECTION" />
+    </CommandPlacement>
+  </CommandPlacements>
+  <Symbols>
+    <GuidSymbol name="Group_Undefined" value="{83285929-227c-11d3-b870-00c04f79f802}" />
+    <GuidSymbol name="Pkg_Undefined" value="{8328592a-227c-11d3-b870-00c04f79f802}" />
+    <GuidSymbol name="guidVSPackageBasedProviderPkg" value="{dcbe6c8d-0e57-4099-a183-98ff74c64d9c}" />
+    <GuidSymbol name="guidVSData" value="{4614107f-217d-4bbf-9dfe-b9e165c65572}">
+      <IDSymbol name="IDG_DV_CONNECTION" value="0x4101" />
+    </GuidSymbol>
+    <GuidSymbol name="guidVSPackageBasedProviderCmdSet" value="{814658ee-a28e-4b97-bc33-4b1bc81ebecb}">
+      <IDSymbol name="cmdidRekey" value="0x0107" />
+      <IDSymbol name="cmdidVacuum" value="0x0106" />
+    </GuidSymbol>
+    <GuidSymbol name="guidOfficeIcon" value="{d309f794-903f-11d0-9efc-00a0c911004f}">
+      <IDSymbol name="msotcidNoIcon" value="0x02EA" />
+    </GuidSymbol>
+  </Symbols>
+</CommandTable>

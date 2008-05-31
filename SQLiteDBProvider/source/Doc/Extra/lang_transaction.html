@@ -1,0 +1,177 @@
+<html dir="LTR" xmlns="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:tool="http://www.microsoft.com/tooltip" xmlns:ndoc="urn:ndoc-preprocess">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <title>TRANSACTIONS</title>
+    <link rel="stylesheet" type="text/css" href="ndoc.css"> </link>
+    <link rel="stylesheet" type="text/css" href="user.css"> </link>
+    <script type="text/javascript" src="ndoc.js"> </script>
+  </head>
+  <body style="display: none;">
+    <input type="hidden" id="userDataCache" class="userDataStyle" />
+    <input type="hidden" id="hiddenScrollOffset" />
+    <img id="dropDownImage" style="display:none; height:0; width:0;" src="drpdown.gif" />
+    <img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="drpdown_orange.gif" />
+    <img id="collapseImage" style="display:none; height:0; width:0;" src="collapse.gif" />
+    <img id="expandImage" style="display:none; height:0; width:0;" src="exp.gif" />
+    <img id="collapseAllImage" style="display:none; height:0; width:0;" src="collall.gif" />
+    <img id="expandAllImage" style="display:none; height:0; width:0;" src="expall.gif" />
+    <img id="copyImage" style="display:none; height:0; width:0;" src="copycode.gif" />
+    <img id="copyHoverImage" style="display:none; height:0; width:0;" src="copycodeHighlight.gif" />
+    <div id="header">
+      <table width="100%" id="topTable">
+        <tr id="headerTableRow1">
+          <td align="left">
+            <span id="runningHeaderText">BEGIN TRANSACTION</span>&nbsp;</td>
+        </tr>
+        <tr id="headerTableRow2">
+          <td align="left">
+            <span id="nsrTitle">SQLite Language Reference Documentation</span>
+          </td>
+        </tr>
+        <tr id="headerTableRow3" style="display:none">
+          <td>
+            <a id="seeAlsoSectionLink" href="#seeAlsoToggle" onclick="OpenSection(seeAlsoToggle)">See Also</a>
+            <a id="exampleSectionLink" href="#codeExampleToggle" onclick="OpenSection(codeExampleToggle)">Example</a>
+          </td>
+        </tr>
+     </table>
+      <table width="100%" id="bottomTable" cellspacing="0" cellpadding="0" style="display:none">
+        <tr>
+          <td>
+            <span onclick="ExpandCollapseAll(toggleAllImage)" style="cursor:default;" onkeypress="ExpandCollapseAll_CheckKey(toggleAllImage)" tabindex="0">
+              <img ID="toggleAllImage" class="toggleAll" src="collall.gif" />
+              <label id="collapseAllLabel" for="toggleAllImage" style="display: none;">
+							Collapse All
+						</label>
+              <label id="expandAllLabel" for="toggleAllImage" style="display: none;">
+							Expand All
+						</label>
+            </span>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div id="mainSection">
+    <div id="mainBody">
+      <h1 class="heading">
+        SQL As Understood By SQLite</h1>
+      <h4>
+        BEGIN TRANSACTION</h4>
+      <p>
+        <table cellpadding="10">
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">sql-statement</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0">BEGIN </font></b>[<b><font color="#2c2cf0"> DEFERRED </font>
+              </b><big>|</big><b><font color="#2c2cf0"> IMMEDIATE </font></b><big>|</big><b><font
+                color="#2c2cf0"> EXCLUSIVE </font></b>]<b><font color="#2c2cf0"> </font></b>[<b><font
+                  color="#2c2cf0">TRANSACTION </font></b>[<b><font color="#2c2cf0"></font></b><i><font
+                    color="#ff3434">name</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b>]<b><font
+                      color="#2c2cf0"></font></b></td>
+          </tr>
+        </table>
+        <table cellpadding="10">
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">sql-statement</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0">END </font></b>[<b><font color="#2c2cf0">TRANSACTION </font>
+              </b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">name</font></i><b><font
+                color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b></td>
+          </tr>
+        </table>
+        <table cellpadding="10">
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">sql-statement</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0">COMMIT </font></b>[<b><font color="#2c2cf0">TRANSACTION </font>
+              </b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">name</font></i><b><font
+                color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b></td>
+          </tr>
+        </table>
+        <table cellpadding="10">
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">sql-statement</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0">ROLLBACK </font></b>[<b><font color="#2c2cf0">TRANSACTION
+              </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">name</font></i><b><font
+                color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b></td>
+          </tr>
+        </table>
+      </p>
+      <p>
+        Beginning in version 2.0, SQLite supports transactions with rollback and atomic
+        commit.</p>
+      <p>
+        The optional transaction name is ignored. SQLite currently does not allow nested
+        transactions.</p>
+      <p>
+        No changes can be made to the database except within a transaction. Any command
+        that changes the database (basically, any SQL command
+          other than SELECT) will automatically start a transaction if one is not already in effect. Automatically started transactions
+        are committed at the conclusion of the command.
+      </p>
+      <p>
+        Transactions can be started manually using the BEGIN command. Such transactions
+        usually persist until the next COMMIT or ROLLBACK command. But a transaction will
+        also ROLLBACK if the database is closed or if an error occurs and the ROLLBACK conflict
+        resolution algorithm is specified. See the documentation on the <a href="lang_conflict.html">
+          ON CONFLICT</a> clause for additional information about the ROLLBACK conflict
+        resolution algorithm.
+      </p>
+      <p>
+        In SQLite version 3.0.8 and later, transactions can be deferred, immediate, or exclusive.
+        Deferred means that no locks are acquired on the database until the database is
+        first accessed. Thus with a deferred transaction, the BEGIN statement itself does
+        nothing. Locks are not acquired until the first read or write operation. The first
+        read operation against a database creates a SHARED lock and the first write operation
+        creates a RESERVED lock. Because the acquisition of locks is deferred until they
+        are needed, it is possible that another thread or process could create a separate
+        transaction and write to the database after the BEGIN on the current thread has
+        executed. If the transaction is immediate, then RESERVED locks are acquired on all
+        databases as soon as the BEGIN command is executed, without waiting for the database
+        to be used. After a BEGIN IMMEDIATE, you are guaranteed that no other thread or
+        process will be able to write to the database or do a BEGIN IMMEDIATE or BEGIN EXCLUSIVE.
+        Other processes can continue to read from the database, however. An exclusive transaction
+        causes EXCLUSIVE locks to be acquired on all databases. After a BEGIN EXCLUSIVE,
+        you are guaranteed that no other thread or process will be able to read or write
+        the database until the transaction is complete.
+      </p>
+      <p>
+        A description of the meaning of SHARED, RESERVED, and EXCLUSIVE locks is available
+        <a href="lockingv3.html">separately</a>.
+      </p>
+      <p>
+        The default behavior for SQLite version 3.0.8 is a deferred transaction. For SQLite
+        version 3.0.0 through 3.0.7, deferred is the only kind of transaction available.
+        For SQLite version 2.8 and earlier, all transactions are exclusive.
+      </p>
+      <p>
+        The COMMIT command does not actually perform a commit until all pending SQL commands
+        finish. Thus if two or more SELECT statements are in the middle of processing and
+        a COMMIT is executed, the commit will not actually occur until all SELECT statements
+        finish.
+      </p>
+      <p>
+        An attempt to execute COMMIT might result in an SQLITE_BUSY return code. This indicates
+        that another thread or process had a read lock on the database that prevented the
+        database from being updated. When COMMIT fails in this way, the transaction remains
+        active and the COMMIT can be retried later after the reader has had a chance to
+        clear.
+      </p>
+      <p>
+      <hr>
+        &nbsp;</p>
+      <div id="footer">
+        <p>
+          &nbsp;</p>
+        <p>
+        </p>
+      </div>
+    </div>
+    </div>
+  </body>
+</html>

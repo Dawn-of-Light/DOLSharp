@@ -1,0 +1,108 @@
+<html dir="LTR" xmlns="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:tool="http://www.microsoft.com/tooltip" xmlns:ndoc="urn:ndoc-preprocess">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <title>TYPES</title>
+    <link rel="stylesheet" type="text/css" href="ndoc.css"> </link>
+    <link rel="stylesheet" type="text/css" href="user.css"> </link>
+    <script type="text/javascript" src="ndoc.js"> </script>
+  </head>
+  <body style="display: none;">
+    <input type="hidden" id="userDataCache" class="userDataStyle" />
+    <input type="hidden" id="hiddenScrollOffset" />
+    <img id="dropDownImage" style="display:none; height:0; width:0;" src="drpdown.gif" />
+    <img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="drpdown_orange.gif" />
+    <img id="collapseImage" style="display:none; height:0; width:0;" src="collapse.gif" />
+    <img id="expandImage" style="display:none; height:0; width:0;" src="exp.gif" />
+    <img id="collapseAllImage" style="display:none; height:0; width:0;" src="collall.gif" />
+    <img id="expandAllImage" style="display:none; height:0; width:0;" src="expall.gif" />
+    <img id="copyImage" style="display:none; height:0; width:0;" src="copycode.gif" />
+    <img id="copyHoverImage" style="display:none; height:0; width:0;" src="copycodeHighlight.gif" />
+    <div id="header">
+      <table width="100%" id="topTable">
+        <tr id="headerTableRow1">
+          <td align="left">
+            <span id="runningHeaderText">VACUUM</span>&nbsp;</td>
+        </tr>
+        <tr id="headerTableRow2">
+          <td align="left">
+            <span id="nsrTitle">SQLite Language Reference Documentation</span>
+          </td>
+        </tr>
+        <tr id="headerTableRow3" style="display:none">
+          <td>
+            <a id="seeAlsoSectionLink" href="#seeAlsoToggle" onclick="OpenSection(seeAlsoToggle)">See Also</a>
+            <a id="exampleSectionLink" href="#codeExampleToggle" onclick="OpenSection(codeExampleToggle)">Example</a>
+          </td>
+        </tr>
+     </table>
+      <table width="100%" id="bottomTable" cellspacing="0" cellpadding="0" style="display:none">
+        <tr>
+          <td>
+            <span onclick="ExpandCollapseAll(toggleAllImage)" style="cursor:default;" onkeypress="ExpandCollapseAll_CheckKey(toggleAllImage)" tabindex="0">
+              <img ID="toggleAllImage" class="toggleAll" src="collall.gif" />
+              <label id="collapseAllLabel" for="toggleAllImage" style="display: none;">
+							Collapse All
+						</label>
+              <label id="expandAllLabel" for="toggleAllImage" style="display: none;">
+							Expand All
+						</label>
+            </span>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div id="mainSection">
+    <div id="mainBody">
+      <h1 class="heading">
+        SQL As Understood By SQLite</h1>
+      <h4>
+        VACUUM</h4>
+      <p>
+        <table cellpadding="10">
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">sql-statement</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0">VACUUM </font></b>[<b><font color="#2c2cf0"></font></b><i><font
+                color="#ff3434">index-or-tablename</font></i>]</td>
+          </tr>
+        </table>
+      </p>
+      <p>
+        The VACUUM command is an SQLite extension modeled after a similar command found
+        in PostgreSQL. If VACUUM is invoked with the name of a table or index then it is
+        suppose to clean up the named table or index. In version 1.0 of SQLite, the VACUUM
+        command would invoke <b>gdbm_reorganize()</b> to clean up the backend database file.</p>
+      <p>
+        VACUUM became a no-op when the GDBM backend was removed from SQLITE in version 2.0.0.
+        VACUUM was reimplemented in version 2.8.1. The index or table name argument is now
+        ignored.
+      </p>
+      <p>
+        When an object (table, index, or trigger) is dropped from the database, it leaves
+        behind empty space. This makes the database file larger than it needs to be, but
+        can speed up inserts. In time inserts and deletes can leave the database file structure
+        fragmented, which slows down disk access to the database contents. The VACUUM command
+        cleans the main database by copying its contents to a temporary database file and
+        reloading the original database file from the copy. This eliminates free pages,
+        aligns table data to be contiguous, and otherwise cleans up the database file structure.
+        It is not possible to perform the same process on an attached database file.</p>
+      <p>
+        This command will fail if there is an active transaction. This command has no effect
+        on an in-memory database.</p>
+      <p>
+        As of SQLite version 3.1, an alternative to using the VACUUM command is auto-vacuum
+        mode, enabled using the <a href="pragma.html#pragma_auto_vacuum">auto_vacuum pragma</a>.</p>
+      <p>
+        &nbsp;</p>
+      <hr>
+      <div id="footer">
+        <p>
+          &nbsp;</p>
+        <p>
+        </p>
+      </div>
+    </div>
+    </div>
+  </body>
+</html>

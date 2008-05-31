@@ -1,0 +1,170 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9B4A5CF6-5BE5-4926-ACC7-B729A8C05198}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SQLite.Designer</RootNamespace>
+    <AssemblyName>SQLite.Designer</AssemblyName>
+    <SignAssembly>false</SignAssembly>
+    <RegisterOutputPackage>false</RegisterOutputPackage>
+    <RegisterWithCodebase>false</RegisterWithCodebase>
+    <GeneratePkgDefFile>false</GeneratePkgDefFile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\designer\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>1701;1702;1699</NoWarn>
+    <FileAlignment>512</FileAlignment>
+    <PlatformTarget>x86</PlatformTarget>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <RegisterOutputPackage>false</RegisterOutputPackage>
+    <GeneratePkgDefFile>false</GeneratePkgDefFile>
+    <RegisterWithCodebase>false</RegisterWithCodebase>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\Designer\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>1701;1702;1699</NoWarn>
+    <FileAlignment>512</FileAlignment>
+    <PlatformTarget>x86</PlatformTarget>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <RegisterOutputPackage>false</RegisterOutputPackage>
+    <RegisterWithCodebase>false</RegisterWithCodebase>
+    <GeneratePkgDefFile>false</GeneratePkgDefFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Data.ConnectionUI, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Data, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\VSNET2005\Common7\IDE\Microsoft.VisualStudio.Data.dll</HintPath>
+      <SpecificVersion>True</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ChangePasswordDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChangePasswordDialog.Designer.cs">
+      <DependentUpon>ChangePasswordDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Design\Column.cs" />
+    <Compile Include="Design\PrimaryKey.cs" />
+    <Compile Include="Design\Table.cs" />
+    <Compile Include="Design\Unique.cs" />
+    <Compile Include="Editors\AutoCompleteColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Editors\TableDesignerDoc.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\TableDesignerDoc.Designer.cs">
+      <DependentUpon>TableDesignerDoc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SQLiteAdapterDesigner.cs">
+    </Compile>
+    <Compile Include="SQLiteCommandDesigner.cs">
+    </Compile>
+    <Compile Include="SQLiteCommandHandler.cs" />
+    <Compile Include="SQLiteConnectionProperties.cs" />
+    <Compile Include="SQLiteConnectionStringEditor.cs" />
+    <Compile Include="SQLiteConnectionUIControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SQLiteConnectionUIControl.Designer.cs">
+      <DependentUpon>SQLiteConnectionUIControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SQLiteDataAdapterToolboxItem.cs" />
+    <Compile Include="SQLiteDataConnectionSupport.cs" />
+    <Compile Include="SQLiteDataObjectIdentifierResolver.cs" />
+    <Compile Include="SQLiteDataObjectSupport.cs" />
+    <Compile Include="SQLiteDataSourceInformation.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="SQLiteDataViewSupport.cs" />
+    <Compile Include="SQLitePackage.cs" />
+    <Compile Include="SQLiteProviderObjectFactory.cs" />
+    <Compile Include="VSPackage.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>VSPackage.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <VSCTCompile Include="PkgCmd.vsct">
+      <ResourceName>1000</ResourceName>
+    </VSCTCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SQLiteDataViewSupport.xml" />
+    <EmbeddedResource Include="VSPackage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>VSPackage.Designer.cs</LastGenOutput>
+      <MergeWithCTO>true</MergeWithCTO>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ChangePasswordDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ChangePasswordDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\TableDesignerDoc.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>TableDesignerDoc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SQLiteConnectionUIControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SQLiteConnectionUIControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SQLiteDataObjectSupport.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\VSSDK\Microsoft.VsSDK.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

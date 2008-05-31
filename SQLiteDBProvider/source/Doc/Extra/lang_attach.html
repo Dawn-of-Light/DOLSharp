@@ -1,0 +1,119 @@
+<html dir="LTR" xmlns="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:tool="http://www.microsoft.com/tooltip" xmlns:ndoc="urn:ndoc-preprocess">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <title>ATTACH DATABASE</title>
+    <link rel="stylesheet" type="text/css" href="ndoc.css"> </link>
+    <link rel="stylesheet" type="text/css" href="user.css"> </link>
+    <script type="text/javascript" src="ndoc.js"> </script>
+  </head>
+  <body style="display: none;">
+    <input type="hidden" id="userDataCache" class="userDataStyle" />
+    <input type="hidden" id="hiddenScrollOffset" />
+    <img id="dropDownImage" style="display:none; height:0; width:0;" src="drpdown.gif" />
+    <img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="drpdown_orange.gif" />
+    <img id="collapseImage" style="display:none; height:0; width:0;" src="collapse.gif" />
+    <img id="expandImage" style="display:none; height:0; width:0;" src="exp.gif" />
+    <img id="collapseAllImage" style="display:none; height:0; width:0;" src="collall.gif" />
+    <img id="expandAllImage" style="display:none; height:0; width:0;" src="expall.gif" />
+    <img id="copyImage" style="display:none; height:0; width:0;" src="copycode.gif" />
+    <img id="copyHoverImage" style="display:none; height:0; width:0;" src="copycodeHighlight.gif" />
+    <div id="header">
+      <table width="100%" id="topTable">
+        <tr id="headerTableRow1">
+          <td align="left">
+            <span id="runningHeaderText">ATTACH DATABASE</span>&nbsp;</td>
+        </tr>
+        <tr id="headerTableRow2">
+          <td align="left">
+            <span id="nsrTitle">SQLite Language Reference Documentation</span>
+          </td>
+        </tr>
+        <tr id="headerTableRow3" style="display:none">
+          <td>
+            <a id="seeAlsoSectionLink" href="#seeAlsoToggle" onclick="OpenSection(seeAlsoToggle)">See Also</a>
+            <a id="exampleSectionLink" href="#codeExampleToggle" onclick="OpenSection(codeExampleToggle)">Example</a>
+          </td>
+        </tr>
+     </table>
+      <table width="100%" id="bottomTable" cellspacing="0" cellpadding="0" style="display:none">
+        <tr>
+          <td>
+            <span onclick="ExpandCollapseAll(toggleAllImage)" style="cursor:default;" onkeypress="ExpandCollapseAll_CheckKey(toggleAllImage)" tabindex="0">
+              <img ID="toggleAllImage" class="toggleAll" src="collall.gif" />
+              <label id="collapseAllLabel" for="toggleAllImage" style="display: none;">
+							Collapse All
+						</label>
+              <label id="expandAllLabel" for="toggleAllImage" style="display: none;">
+							Expand All
+						</label>
+            </span>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div id="mainSection">
+    <div id="mainBody">
+      <h1 class="heading">
+        SQL As Understood By SQLite</h1>
+      <h4>
+        ATTACH DATABASE</h4>
+      <p>
+        <table cellpadding="10">
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">sql-statement</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0">ATTACH </font></b>[<b><font color="#2c2cf0">DATABASE</font></b>]<b><font
+                color="#2c2cf0"> </font></b><i><font color="#ff3434">database-filename</font></i><b><font
+                  color="#2c2cf0"> AS </font></b><i><font color="#ff3434">database-name</font></i><b><font
+                    color="#2c2cf0"></font></b></td>
+          </tr>
+        </table>
+      </p>
+      <p>
+        The ATTACH DATABASE statement adds another database file to the current database
+        connection. If the filename contains punctuation characters it must be quoted. The
+        names 'main' and 'temp' refer to the main database and the database used for temporary
+        tables. These cannot be detached. Attached databases are removed using the <a href="lang_detach.html">
+          DETACH DATABASE</a> statement.</p>
+      <p>
+        You can read from and write to an attached database and you can modify the schema
+        of the attached database. This is a new feature of SQLite version 3.0. In SQLite
+        2.8, schema changes to attached databases were not allowed.</p>
+      <p>
+        You cannot create a new table with the same name as a table in an attached database,
+        but you can attach a database which contains tables whose names are duplicates of
+        tables in the main database. It is also permissible to attach the same database
+        file multiple times.</p>
+      <p>
+        Tables in an attached database can be referred to using the syntax <i>database-name.table-name</i>.
+        If an attached table doesn't have a duplicate table name in the main database, it
+        doesn't require a database name prefix. When a database is attached, all of its
+        tables which don't have duplicate names become the default table of that name. Any
+        tables of that name attached afterwards require the table prefix. If the default
+        table of a given name is detached, then the last table of that name attached becomes
+        the new default.</p>
+      <p>
+        Transactions involving multiple attached databases are atomic, assuming that the
+        main database is not ":memory:". If the main database is ":memory:" then transactions
+        continue to be atomic within each individual database file. But if the host computer
+        crashes in the middle of a COMMIT where two or more database files are updated,
+        some of those files might get the changes where others might not. Atomic commit
+        of attached databases is a new feature of SQLite version 3.0. In SQLite version
+        2.8, all commits to attached databases behaved as if the main database were ":memory:".
+      </p>
+      <p>
+        There is a compile-time limit of 10 attached database files.</p>
+      <p>
+      <hr>
+        &nbsp;</p>
+      <div id="footer">
+        <p>
+          &nbsp;</p>
+        <p>
+        </p>
+      </div>
+    </div>
+    </div>
+  </body>
+</html>

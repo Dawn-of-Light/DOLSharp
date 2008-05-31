@@ -1,0 +1,336 @@
+<html dir="LTR" xmlns="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:tool="http://www.microsoft.com/tooltip" xmlns:ndoc="urn:ndoc-preprocess">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <title>DateTime Functions</title>
+    <link rel="stylesheet" type="text/css" href="ndoc.css"> </link>
+    <link rel="stylesheet" type="text/css" href="user.css"> </link>
+    <script type="text/javascript" src="ndoc.js"> </script>
+  </head>
+  <body style="display: none;">
+    <input type="hidden" id="userDataCache" class="userDataStyle" />
+    <input type="hidden" id="hiddenScrollOffset" />
+    <img id="dropDownImage" style="display:none; height:0; width:0;" src="drpdown.gif" />
+    <img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="drpdown_orange.gif" />
+    <img id="collapseImage" style="display:none; height:0; width:0;" src="collapse.gif" />
+    <img id="expandImage" style="display:none; height:0; width:0;" src="exp.gif" />
+    <img id="collapseAllImage" style="display:none; height:0; width:0;" src="collall.gif" />
+    <img id="expandAllImage" style="display:none; height:0; width:0;" src="expall.gif" />
+    <img id="copyImage" style="display:none; height:0; width:0;" src="copycode.gif" />
+    <img id="copyHoverImage" style="display:none; height:0; width:0;" src="copycodeHighlight.gif" />
+    <div id="header">
+      <table width="100%" id="topTable">
+        <tr id="headerTableRow1">
+          <td align="left">
+            <span id="runningHeaderText">Date and Time Functions</span>&nbsp;</td>
+        </tr>
+        <tr id="headerTableRow2">
+          <td align="left">
+            <span id="nsrTitle">SQLite Language Reference Documentation</span>
+          </td>
+        </tr>
+        <tr id="headerTableRow3" style="display:none">
+          <td>
+            <a id="seeAlsoSectionLink" href="#seeAlsoToggle" onclick="OpenSection(seeAlsoToggle)">See Also</a>
+            <a id="exampleSectionLink" href="#codeExampleToggle" onclick="OpenSection(codeExampleToggle)">Example</a>
+          </td>
+        </tr>
+     </table>
+      <table width="100%" id="bottomTable" cellspacing="0" cellpadding="0" style="display:none">
+        <tr>
+          <td>
+            <span onclick="ExpandCollapseAll(toggleAllImage)" style="cursor:default;" onkeypress="ExpandCollapseAll_CheckKey(toggleAllImage)" tabindex="0">
+              <img ID="toggleAllImage" class="toggleAll" src="collall.gif" />
+              <label id="collapseAllLabel" for="toggleAllImage" style="display: none;">
+							Collapse All
+						</label>
+              <label id="expandAllLabel" for="toggleAllImage" style="display: none;">
+							Expand All
+						</label>
+            </span>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div id="mainSection">
+    <div id="mainBody">
+      <h1 class="heading">Date and Time Functions</h1>
+<p>Five date and time functions are available, as follows:
+
+<p><ol>
+<li>date( <i>timestring</i>, <i>modifier</i>, <i>modifier</i>, ...)
+<li>time( <i>timestring</i>, <i>modifier</i>, <i>modifier</i>, ...)
+<li>datetime( <i>timestring</i>, <i>modifier</i>, <i>modifier</i>, ...)
+<li>julianday( <i>timestring</i>, <i>modifier</i>, <i>modifier</i>, ...)
+<li>strftime( <i>format</i>, <i>timestring</i>, <i>modifier</i>, <i>modifier</i>, ...)
+</ol>
+
+<p>All five functions take a time string as an argument.  This
+time string may be followed by zero or more modifiers.  The
+<b>strftime()</b> function also takes a format string as its first
+argument.
+
+<p>The <b>date()</b> function returns the date in this format: YYYY-MM-DD.
+The <b>time()</b> function returns the time as HH:MM:SS.  The <b>datetime()</b>
+function returns &quot;YYYY-MM-DD HH:MM:SS&quot;.  The <b>julianday()</b> function
+returns the number of days since noon in Greenwich on November 24, 4714 B.C.
+The julian day number is the preferred internal representation of
+dates.  The <b>strftime()</b> routine returns the date formatted according
+to the format string specified as the first argument.  The format string
+supports most, but not all, of the more common substitutions found in
+the strftime() function from the standard C library:
+
+<p><pre>
+   %d  day of month
+   %f  ** fractional seconds  SS.SSS
+   %H  hour 00-24
+   %j  day of year 001-366
+   %J  ** Julian day number
+   %m  month 01-12
+   %M  minute 00-59
+   %s  seconds since 1970-01-01
+   %S  seconds 00-59
+   %w  day of week 0-6  sunday==0
+   %W  week of year 00-53
+   %Y  year 0000-9999
+   %%  %
+</pre>
+
+<p>The %f and %J conversions are new.  Notice that all of the other four
+functions could be expressed in terms of <b>strftime()</b>.
+
+<p><pre>
+   date(...)      -&gt;  strftime(&quot;%Y-%m-%d&quot;, ...)
+   time(...)      -&gt;  strftime(&quot;%H:%M:%S&quot;, ...)
+   datetime(...)  -&gt;  strftime(&quot;%Y-%m-%d %H:%M:%S&quot;, ...)
+   julianday(...) -&gt;  strftime(&quot;%J&quot;, ...)
+</pre>
+
+<p>The only reasons for providing functions other than <b>strftime()</b> is for
+convenience and for efficiency.
+
+<p><b>Time Strings</b>
+
+<p>A time string can be in any of the following formats:
+
+<p><ol>
+<li>YYYY-MM-DD
+<li>YYYY-MM-DD HH:MM
+<li>YYYY-MM-DD HH:MM:SS
+<li>YYYY-MM-DD HH:MM:SS.SSS
+<li>YYYY-MM-DDTHH:MM
+<li>YYYY-MM-DDTHH:MM:SS
+<li>YYYY-MM-DDTHH:MM:SS.SSS
+<li>HH:MM
+<li>HH:MM:SS
+<li>HH:MM:SS.SSS
+<li>now
+<li>DDDD.DDDD
+</ol>
+
+<p>In formats 5 through 7, the &quot;T&quot; is a literal character separating the date and the time, as required by the ISO-8601 standard. These formats are supported in SQLite 3.2.0 and later.
+Formats 8 through 10 that specify only a time assume a date of 2000-01-01.
+Format 11, the string 'now', is converted into the current date and time.
+Universal Coordinated Time (UTC) is used.
+Format 12 is the julian day number expressed as a floating point value.
+
+<p><b>Modifiers</b>
+
+<p>The time string can be followed by zero or more modifiers that alter the
+date or alter the interpretation of the date.  The available modifiers
+are as follows.
+
+<p><ol>
+<li>NNN days
+<li>NNN hours
+<li>NNN minutes
+<li>NNN.NNNN seconds
+<li>NNN months  (see <a href="tktview?tn=551">#551</a>
+ and <a href="chngview?cn=1163">[1163]</a>
+)
+<li>NNN years  (see <a href="tktview?tn=551">#551</a>
+ and <a href="chngview?cn=1163">[1163]</a>
+)
+<li>start of month
+<li>start of year
+<li>start of week  (withdrawn -- will not be implemented)
+<li>start of day
+<li>weekday N  (see <a href="tktview?tn=551">#551</a>
+ and <a href="chngview?cn=1163">[1163]</a>
+)
+<li>unixepoch
+<li>localtime
+<li>utc
+</ol>
+
+<p>The first six modifiers (1 through 6) simply add the specified amount
+of time to the date specified by the preceding timestring.
+
+<p>The &quot;start of&quot; modifiers (7 through 10) shift the date backwards to
+the beginning of the current month, year or day.
+
+<p>The &quot;weekday&quot; modifier advances the date forward to the next date where
+the weekday number is N.  Sunday is 0, Monday is 1, and so forth.
+
+<p>The &quot;unixepoch&quot; modifier (12) only works if it immediately follows
+a timestring in the DDDDDDDDDD format.  This modifier causes the DDDDDDDDDD
+to be interpreted not as a julian day number as it normally would be, but
+as the number of seconds since 1970.  This modifier allows unix-based times
+to be converted to julian day numbers easily.
+
+<p>The &quot;localtime&quot; modifier (13) adjusts the previous time string so that it
+displays the correct local time.  &quot;utc&quot; undoes this.
+
+<p><b>Examples</b>
+
+<p>Compute the current date.
+
+<p><pre>
+  SELECT date('now');
+</pre>
+
+<p>Compute the last day of the current month.
+
+<p><pre>
+  SELECT date('now','start of month','+1 month','-1 day');
+</pre>
+
+<p>Compute the date and time given a unix timestamp 1092941466.
+
+<p><pre>
+  SELECT datetime(1092941466, 'unixepoch');
+</pre>
+
+<p>Compute the date and time given a unix timestamp 1092941466, and compensate for your local timezone.
+
+<p><pre>
+  SELECT datetime(1092941466, 'unixepoch', 'localtime');
+</pre>
+
+<p>Compute the current unix timestamp.
+
+<p><pre>
+  SELECT strftime('%s','now');
+</pre>
+
+<p>Compute the number of days since the battle of Hastings.
+
+<p><pre>
+  SELECT julianday('now') - julianday('1066-10-14','gregorian');
+</pre>
+
+<p>Compute the number of seconds between two dates:
+
+<p><pre>
+  SELECT julianday('now')*86400 - julianday('2004-01-01 02:34:56')*86400;
+</pre>
+
+<p>Compute the date of the first Tuesday in October (January + 9) for the current
+year.
+
+<p><pre>
+  SELECT date('now','start of year','+9 months','weekday 2');
+</pre>
+
+<p><b>Caveats And Bugs</b>
+
+<p>The computation of local time depends heavily on the whim of local
+politicians and is thus difficult to get correct for all locales.  In
+this implementation, the standard C library function localtime() is
+used to assist in the calculation of local time.
+Note that localtime() is not
+threadsafe, so use of the &quot;localtime&quot; modifier is not threadsafe.
+Also, the localtime() C function normally only works for years between
+1970 and 2037.  For dates outside this range, SQLite attempts to
+map the year into an equivalent year within this range, do the
+calculation, then map the year back.
+
+<p><i>Please surround uses of localtime() with sqliteOsEnterMutex() and sqliteOsLeaveMutex() so threads
+using SQLite are protected, at least!
+-- e</i>  It is so. --drh
+
+<p><i>[Consider instead, using localtime_r which is reentrant and may be used
+*without* expensive mutex locking. Although non-standard it's available
+on most Unixes --hauk]</i> But it is not available on windows, as far as I
+am aware. --drh On windows localtime() is thread-safe if the MT C runtime is used. The MT runtime uses thread-local storage for the static variables, the kind functions use.--gr <i>[What about using localtime_r, and on systems where it
+is unavailable defining it as sqliteOsEnterMutext() ; locatime() ; sqliteOsLeaveMutex()
+so that non-windows systems get the maximum advantage, with almost zero
+code impact?]</i> The autoconfigury and patch for localtime_r is here: <font color="#a0a0a0">&curren;</font><a href="http://www.sqlite.org/cvstrac/tktview?tn=1906">http://www.sqlite.org/cvstrac/tktview?tn=1906</a> . I'm curious why this obvious fix is not applied. gmtime() also suffers from this same threadsafety problem.
+
+<p>Date computations do not give correct results for dates before Julian
+day number 0 (-4713-11-24 12:00:00).
+
+<p>All internal computations assume the Gregorian calendar system.
+
+<p><hr>
+<i>An anonymous user adds:</i> <br>
+
+For my use I added new functions and functionalities to the date functions that
+come with the sqlite 3.3.0 (can be used in older versions as well with small effort).
+
+<p>In main lines they are as follows:
+
+<p><ol>
+<li>NNN days
+<li>NNN hours
+<li>NNN minutes
+<li>NNN.NNNN seconds
+<li>NNN months  (see <a href="tktview?tn=551">#551</a>
+ and <a href="chngview?cn=1163">[1163]</a>
+)
+<li>NNN years  (see <a href="tktview?tn=551">#551</a>
+ and <a href="chngview?cn=1163">[1163]</a>
+)
+<li>start of month
+<li>start of year
+<li>start of week  (!!! implemented)
+<li>start of day
+<li>weekday N  (see <a href="tktview?tn=551">#551</a>
+ and <a href="chngview?cn=1163">[1163]</a>
+)
+<li>unixepoch
+<li>localtime
+<li>utc
+<li>julian  (not implemented as of 2004-01-05)
+<li>gregorian  (not implemented as of 2004-01-05)
+<li>start of minute
+<li>start of hour
+<li>end of minute
+<li>end of hour
+<li>end of day
+<li>end of week
+<li>end of month
+<li>end of year
+<li>group seconds by
+<li>group minutes by
+<li>group hours by
+<li>group days by
+<li>group weeks by
+<li>group months by
+<li>group years by
+</ol>
+
+<p>The &quot;start of&quot; modifiers (7 through 10 and 17 through 18) shift the date backwards to the beginning of the current minute, hour, week, month, year or day.
+
+<p>The &quot;end of&quot; modifiers (19 through 24) shift the date forwards to
+the end of the current minute, hour, week, month, year or day.
+
+<p>The &quot;group * by&quot; modifiers (25 through 31) round the date to the closest backward multiple supplied, with some limitations, to the current seconds (1 through 30), minutes (1 through 30), hours (1 through 12), days (1 through 15), weeks (1 through 26), months (1 through 6), years (1 through 100), these limitations are due to dont complicate the calculations when a multiple can span beyound the unit modified.
+
+<p>Ex:
+
+<p>SELECT datetime('2006-02-04 20:09:23','group hours by 3'); =&gt; '2006-02-04 18:00:00'
+
+<p>SELECT datetime('2006-02-05 20:09:23','group days by 3'); =&gt; '2006-02-04 00:00:00'
+
+<p>New functions &quot;week_number(date)&quot; returns the week number of the year on the supplied date parameter, &quot;datetime2seconds(datetime)&quot; return the number of seconds from the supplied datetime parameter.
+      <hr>
+      <div id="footer">
+        <p>
+          &nbsp;</p>
+        <p>
+        </p>
+      </div>
+    </div>
+    </div>
+  </body>
+</html>

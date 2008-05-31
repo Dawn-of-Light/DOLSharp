@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Threading;
 using System.Reflection;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -37,17 +38,24 @@ namespace DOLStudio
         TypeBrowserForm m_TypeBrowserForm = null;
         TypeBrowser m_TypeBrowser;
         GameServerConfiguration m_config;
+        Splash m_splash = new Splash();
         public ParentForm()
         {
             if (m_Instance != null)
                 throw new Exception("Multiple ParentForms");
-            m_config = new GameServerConfiguration();
-            LoadSettings();
-            LoadDatabaseProvider();
+            
   
             //TODO: load scripts... , so dynamic types are supported
             m_Instance = this;
             InitializeComponent();
+            Thread th = new Thread(new ThreadStart(DoSplash));
+            th.Start();
+            Thread.Sleep(3000);
+            m_config = new GameServerConfiguration();
+            m_splash.statusLabel.Text = "Loading Database Provider";
+            LoadSettings();
+            LoadDatabaseProvider();
+            th.Abort();
             m_TypeBrowser = new TypeBrowser();
             m_TypeBrowserForm = new TypeBrowserForm();
             m_TypeBrowserForm.MdiParent = this;
@@ -56,7 +64,11 @@ namespace DOLStudio
             temp.MdiParent = this;
             temp.Show();
             m_ObjectEditors.Add(temp);
-
+           
+        }
+        void DoSplash()
+        {
+            m_splash.ShowDialog();
         }
         protected void LoadSettings()
         {
@@ -101,7 +113,9 @@ namespace DOLStudio
                 }
 
             DatabaseLayer.Instance.SetProvider((DatabaseProvider)Activator.CreateInstance(dbProvider), m_config.DBConnectionString);
+            m_splash.statusLabel.Text = "Loading database";
             DatabaseLayer.Instance.RestoreWorldState();
+            m_splash.statusLabel.Text = "Finalizing";
         }
         public static ParentForm Instance
         {

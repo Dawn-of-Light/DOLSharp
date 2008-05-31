@@ -1,0 +1,256 @@
+<html dir="LTR" xmlns="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:tool="http://www.microsoft.com/tooltip" xmlns:ndoc="urn:ndoc-preprocess">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <title>SELECT</title>
+    <link rel="stylesheet" type="text/css" href="ndoc.css"> </link>
+    <link rel="stylesheet" type="text/css" href="user.css"> </link>
+    <script type="text/javascript" src="ndoc.js"> </script>
+  </head>
+  <body style="display: none;">
+    <input type="hidden" id="userDataCache" class="userDataStyle" />
+    <input type="hidden" id="hiddenScrollOffset" />
+    <img id="dropDownImage" style="display:none; height:0; width:0;" src="drpdown.gif" />
+    <img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="drpdown_orange.gif" />
+    <img id="collapseImage" style="display:none; height:0; width:0;" src="collapse.gif" />
+    <img id="expandImage" style="display:none; height:0; width:0;" src="exp.gif" />
+    <img id="collapseAllImage" style="display:none; height:0; width:0;" src="collall.gif" />
+    <img id="expandAllImage" style="display:none; height:0; width:0;" src="expall.gif" />
+    <img id="copyImage" style="display:none; height:0; width:0;" src="copycode.gif" />
+    <img id="copyHoverImage" style="display:none; height:0; width:0;" src="copycodeHighlight.gif" />
+    <div id="header">
+      <table width="100%" id="topTable">
+        <tr id="headerTableRow1">
+          <td align="left">
+            <span id="runningHeaderText">SELECT</span>&nbsp;</td>
+        </tr>
+        <tr id="headerTableRow2">
+          <td align="left">
+            <span id="nsrTitle">SQLite Language Reference Documentation</span>
+          </td>
+        </tr>
+        <tr id="headerTableRow3" style="display:none">
+          <td>
+            <a id="seeAlsoSectionLink" href="#seeAlsoToggle" onclick="OpenSection(seeAlsoToggle)">See Also</a>
+            <a id="exampleSectionLink" href="#codeExampleToggle" onclick="OpenSection(codeExampleToggle)">Example</a>
+          </td>
+        </tr>
+     </table>
+      <table width="100%" id="bottomTable" cellspacing="0" cellpadding="0" style="display:none">
+        <tr>
+          <td>
+            <span onclick="ExpandCollapseAll(toggleAllImage)" style="cursor:default;" onkeypress="ExpandCollapseAll_CheckKey(toggleAllImage)" tabindex="0">
+              <img ID="toggleAllImage" class="toggleAll" src="collall.gif" />
+              <label id="collapseAllLabel" for="toggleAllImage" style="display: none;">
+							Collapse All
+						</label>
+              <label id="expandAllLabel" for="toggleAllImage" style="display: none;">
+							Expand All
+						</label>
+            </span>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div id="mainSection">
+    <div id="mainBody">
+      <h1 class="heading">
+        SQL As Understood By SQLite</h1>
+      <h4>
+        SELECT</h4>
+      <p>
+        <table cellpadding="10">
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">sql-statement</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0">SELECT </font></b>[<b><font color="#2c2cf0">ALL </font></b>
+              <big>|</big><b><font color="#2c2cf0"> DISTINCT</font></b>]<b><font color="#2c2cf0">
+              </font></b><i><font color="#ff3434">result</font></i><b><font color="#2c2cf0"> </font>
+              </b>[<b><font color="#2c2cf0">FROM </font></b><i><font color="#ff3434">table-list</font></i><b><font
+                color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"><br />
+                </font></b>[<b><font color="#2c2cf0">WHERE </font></b><i><font color="#ff3434">expr</font></i><b><font
+                  color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"><br />
+                  </font></b>[<b><font color="#2c2cf0">GROUP BY </font></b><i><font color="#ff3434">
+                    expr-list</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"><br />
+                    </font></b>[<b><font color="#2c2cf0">HAVING </font></b><i><font color="#ff3434">expr</font></i><b><font
+                      color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"><br />
+                      </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">compound-op</font></i><b><font
+                        color="#2c2cf0"> </font></b><i><font color="#ff3434">select</font></i><b><font color="#2c2cf0"></font></b>]<b><font
+                          color="#2c2cf0"></font></b><big>*</big><b><font color="#2c2cf0"><br />
+                          </font></b>[<b><font color="#2c2cf0">ORDER BY </font></b><i><font color="#ff3434">
+                            sort-expr-list</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"><br />
+                            </font></b>[<b><font color="#2c2cf0">LIMIT </font></b><i><font color="#ff3434">integer</font></i><b><font
+                              color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"></font></b>(<b><font color="#2c2cf0">
+                                OFFSET </font></b><big>|</big><b><font color="#2c2cf0"> <big>,</big> </font></b>
+              )<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">integer</font></i><b><font
+                color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b></td>
+          </tr>
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">result</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0"></font></b><i><font color="#ff3434">result-column</font></i><b><font
+                color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"><big>,</big> </font></b>
+              <i><font color="#ff3434">result-column</font></i><b><font color="#2c2cf0"></font></b>]<b><font
+                color="#2c2cf0"></font></b><big>*</big><b><font color="#2c2cf0"></font></b></td>
+          </tr>
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">result-column</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0"><big>*</big> </font></b><big>|</big><b><font color="#2c2cf0">
+              </font></b><i><font color="#ff3434">table-name</font></i><b><font color="#2c2cf0">
+                <big>.</big> <big>*</big> </font></b><big>|</big><b><font color="#2c2cf0"> </font>
+                </b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"> </font></b>
+              [<b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0">AS</font></b>]<b><font
+                color="#2c2cf0"> </font></b><i><font color="#ff3434">string</font></i><b><font color="#2c2cf0">
+                </font></b>]<b><font color="#2c2cf0"></font></b></td>
+          </tr>
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">table-list</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0"></font></b><i><font color="#ff3434">table</font></i><b><font
+                color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">join-op</font></i><b><font
+                  color="#2c2cf0"> </font></b><i><font color="#ff3434">table</font></i><b><font color="#2c2cf0">
+                  </font></b><i><font color="#ff3434">join-args</font></i><b><font color="#2c2cf0"></font></b>]<b><font
+                    color="#2c2cf0"></font></b><big>*</big><b><font color="#2c2cf0"></font></b></td>
+          </tr>
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">table</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0"></font></b><i><font color="#ff3434">table-name</font></i><b><font
+                color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0">AS </font></b><i><font color="#ff3434">
+                  alias</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"> </font>
+                  </b><big>|</big><b><font color="#2c2cf0"><br />
+                    <big>(</big> </font></b><i><font color="#ff3434">select</font></i><b><font color="#2c2cf0">
+                      <big>)</big> </font></b>[<b><font color="#2c2cf0">AS </font></b><i><font color="#ff3434">
+                        alias</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b></td>
+          </tr>
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">join-op</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0"><big>,</big> </font></b><big>|</big><b><font color="#2c2cf0">
+              </font></b>[<b><font color="#2c2cf0">NATURAL</font></b>]<b><font color="#2c2cf0">
+              </font></b>[<b><font color="#2c2cf0">LEFT </font></b><big>|</big><b><font color="#2c2cf0">
+                RIGHT </font></b><big>|</big><b><font color="#2c2cf0"> FULL</font></b>]<b><font color="#2c2cf0">
+                </font></b>[<b><font color="#2c2cf0">OUTER </font></b><big>|</big><b><font color="#2c2cf0">
+                  INNER </font></b><big>|</big><b><font color="#2c2cf0"> CROSS</font></b>]<b><font
+                    color="#2c2cf0"> JOIN</font></b></td>
+          </tr>
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">join-args</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0"></font></b>[<b><font color="#2c2cf0">ON </font></b><i><font
+                color="#ff3434">expr</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0">
+                </font></b>[<b><font color="#2c2cf0">USING <big>(</big> </font></b><i><font color="#ff3434">
+                  id-list</font></i><b><font color="#2c2cf0"> <big>)</big></font></b>]<b><font color="#2c2cf0"></font></b></td>
+          </tr>
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">sort-expr-list</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0"></font></b><i><font color="#ff3434">expr</font></i><b><font
+                color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">sort-order</font></i><b><font
+                  color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"><big>,</big>
+                  </font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"> </font>
+                  </b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">sort-order</font></i><b><font
+                    color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b><big>*</big><b><font
+                      color="#2c2cf0"></font></b></td>
+          </tr>
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">sort-order</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0"></font></b>[<b><font color="#2c2cf0"> COLLATE </font></b>
+              <i><font color="#ff3434">collation-name</font></i><b><font color="#2c2cf0"> </font>
+              </b>]<b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"> ASC </font></b>
+              <big>|</big><b><font color="#2c2cf0"> DESC </font></b>]<b><font color="#2c2cf0"></font></b></td>
+          </tr>
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">compound_op</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0">UNION </font></b><big>|</big><b><font color="#2c2cf0"> UNION
+                ALL </font></b><big>|</big><b><font color="#2c2cf0"> INTERSECT </font></b><big>|</big><b><font
+                  color="#2c2cf0"> EXCEPT</font></b></td>
+          </tr>
+        </table>
+      </p>
+      <p>
+        The SELECT statement is used to query the database. The result of a SELECT is zero
+        or more rows of data where each row has a fixed number of columns. The number of
+        columns in the result is specified by the expression list in between the SELECT
+        and FROM keywords. Any arbitrary expression can be used as a result. If a result
+        expression is <font color="#2c2cf0"><big>*</big></font> then all columns of all
+        tables are substituted for that one expression. If the expression is the name of
+        a table followed by <font color="#2c2cf0"><big>.*</big></font> then the result is
+        all columns in that one table.</p>
+      <p>
+        The DISTINCT keyword causes a subset of result rows to be returned, in which each
+        result row is different. NULL values are not treated as distinct from each other.
+        The default behavior is that all result rows be returned, which can be made explicit
+        with the keyword ALL.</p>
+      <p>
+        The query is executed against one or more tables specified after the FROM keyword.
+        If multiple tables names are separated by commas, then the query is against the
+        cross join of the various tables. The full SQL-92 join syntax can also be used to
+        specify joins. A sub-query in parentheses may be substituted for any table name
+        in the FROM clause. The entire FROM clause may be omitted, in which case the result
+        is a single row consisting of the values of the expression list.
+      </p>
+      <p>
+        The WHERE clause can be used to limit the number of rows over which the query operates.</p>
+      <p>
+        The GROUP BY clauses causes one or more rows of the result to be combined into a
+        single row of output. This is especially useful when the result contains aggregate
+        functions. The expressions in the GROUP BY clause do <em>not</em> have to be expressions
+        that appear in the result. The HAVING clause is similar to WHERE except that HAVING
+        applies after grouping has occurred. The HAVING expression may refer to values,
+        even aggregate functions, that are not in the result.</p>
+      <p>
+        The ORDER BY clause causes the output rows to be sorted. The argument to ORDER BY
+        is a list of expressions that are used as the key for the sort. The expressions
+        do not have to be part of the result for a simple SELECT, but in a compound SELECT
+        each sort expression must exactly match one of the result columns. Each sort expression
+        may be optionally followed by a COLLATE keyword and the name of a collating function
+        used for ordering text and/or keywords ASC or DESC to specify the sort order.</p>
+      <p>
+        The LIMIT clause places an upper bound on the number of rows returned in the result.
+        A negative LIMIT indicates no upper bound. The optional OFFSET following LIMIT specifies
+        how many rows to skip at the beginning of the result set. In a compound query, the
+        LIMIT clause may only appear on the final SELECT statement. The limit is applied
+        to the entire query not to the individual SELECT statement to which it is attached.
+        Note that if the OFFSET keyword is used in the LIMIT clause, then the limit is the
+        first number and the offset is the second number. If a comma is used instead of
+        the OFFSET keyword, then the offset is the first number and the limit is the second
+        number. This seeming contradition is intentional - it maximizes compatibility with
+        legacy SQL database systems.
+      </p>
+      <p>
+        A compound SELECT is formed from two or more simple SELECTs connected by one of
+        the operators UNION, UNION ALL, INTERSECT, or EXCEPT. In a compound SELECT, all
+        the constituent SELECTs must specify the same number of result columns. There may
+        be only a single ORDER BY clause at the end of the compound SELECT. The UNION and
+        UNION ALL operators combine the results of the SELECTs to the right and left into
+        a single big table. The difference is that in UNION all result rows are distinct
+        where in UNION ALL there may be duplicates. The INTERSECT operator takes the intersection
+        of the results of the left and right SELECTs. EXCEPT takes the result of left SELECT
+        after removing the results of the right SELECT. When three or more SELECTs are connected
+        into a compound, they group from left to right.</p>
+      <p>
+        &nbsp;</p>
+      <hr>
+      <div id="footer">
+        <p>
+          &nbsp;</p>
+        <p>
+        </p>
+      </div>
+    </div>
+    </div>
+  </body>
+</html>

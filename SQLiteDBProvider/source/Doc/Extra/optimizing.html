@@ -1,0 +1,146 @@
+<html dir="LTR" xmlns="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:tool="http://www.microsoft.com/tooltip" xmlns:ndoc="urn:ndoc-preprocess">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <title>Optimizing Your Queries</title>
+    <link rel="stylesheet" type="text/css" href="ndoc.css"> </link>
+    <link rel="stylesheet" type="text/css" href="user.css"> </link>
+    <script type="text/javascript" src="ndoc.js"> </script>
+  </head>
+  <body style="display: none;">
+    <input type="hidden" id="userDataCache" class="userDataStyle" />
+    <input type="hidden" id="hiddenScrollOffset" />
+    <img id="dropDownImage" style="display:none; height:0; width:0;" src="drpdown.gif" />
+    <img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="drpdown_orange.gif" />
+    <img id="collapseImage" style="display:none; height:0; width:0;" src="collapse.gif" />
+    <img id="expandImage" style="display:none; height:0; width:0;" src="exp.gif" />
+    <img id="collapseAllImage" style="display:none; height:0; width:0;" src="collall.gif" />
+    <img id="expandAllImage" style="display:none; height:0; width:0;" src="expall.gif" />
+    <img id="copyImage" style="display:none; height:0; width:0;" src="copycode.gif" />
+    <img id="copyHoverImage" style="display:none; height:0; width:0;" src="copycodeHighlight.gif" />
+    <div id="header">
+      <table width="100%" id="topTable">
+        <tr id="headerTableRow1">
+          <td align="left">
+            <span id="runningHeaderText">Optimizing for SQLite</span>
+          </td>
+        </tr>
+        <tr id="headerTableRow2">
+          <td align="left">
+            <span id="nsrTitle">SQLite.NET Class Library Documentation</span>
+          </td>
+        </tr>
+        <tr id="headerTableRow3" style="display:none">
+          <td>
+            <a id="seeAlsoSectionLink" href="#seeAlsoToggle" onclick="OpenSection(seeAlsoToggle)">See Also</a>
+            <a id="exampleSectionLink" href="#codeExampleToggle" onclick="OpenSection(codeExampleToggle)">Example</a>
+          </td>
+        </tr>
+     </table>
+      <table width="100%" id="bottomTable" cellspacing="0" cellpadding="0" style="display:none">
+        <tr>
+          <td>
+            <span onclick="ExpandCollapseAll(toggleAllImage)" style="cursor:default;" onkeypress="ExpandCollapseAll_CheckKey(toggleAllImage)" tabindex="0">
+              <img ID="toggleAllImage" class="toggleAll" src="collall.gif" />
+              <label id="collapseAllLabel" for="toggleAllImage" style="display: none;">
+							Collapse All
+						</label>
+              <label id="expandAllLabel" for="toggleAllImage" style="display: none;">
+							Expand All
+						</label>
+            </span>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div id="mainSection">
+    <div id="mainBody">
+      <h1 class="heading">Tips on Optimizing Your Queries</h1>
+      <p>The next few paragraphs will attempt to give you a few rudimentary rules for 
+        speeding up your queries in general, and especially how SQLite is adversely 
+        affected by the kinds of SQL behaviors you may have taken for granted in other 
+        providers. It is by no means a complete optimization guide. For even more 
+        details on optimizing your queries, visit <a href="http://www.sqlite.org">sqlite.org</a>.</p>
+      <h4 class="subHeading">The Importance of Transactions</h4>
+      <p>If you are inserting data in SQLite without first starting a transaction: <b>DO 
+          NOT PASS GO! Call BeginTransaction() right now, and finish with Commit()!</b> 
+        If you think I'm kidding, think again. SQLite's A.C.I.D. design means that 
+        every single time you insert any data outside a transaction, an implicit 
+        transaction is constructed, the insert made, and the transaction destructed. <b>EVERY 
+          TIME.</b> If you're wondering why in the world your inserts are taking 100x 
+        longer than you think they should, look no further.</p>
+      <h4 class="subHeading">Prepared Statements</h4>
+      <p>Lets have a quick look at the following code and evaluate its performance:</p>
+      <div class="syntax">
+        <pre>
+      using (SQLiteCommand mycommand = new SQLiteCommand(myconnection))
+      {
+        int n;
+        
+        for (n = 0; n < 100000; n ++)
+        {
+          mycommand.CommandText = String.Format("INSERT INTO [MyTable] ([MyId]) VALUES({0})", n + 1);
+          mycommand.ExecuteNonQuery();
+        }
+      }</pre>
+      </div>
+      <p>This code seems pretty tight, but if you think it performs well, you're dead 
+        wrong. Here's what's wrong with it:</p>
+      <ul>
+        <li>
+          I didn't start a transaction first! This insert is dog slow!</li>
+        <li>
+          The CLR is calling "new" implicitly 100,000 times because I am formatting a 
+          string in the loop for every insert</li>
+        <li>
+          Since SQLite precompiles SQL statements, the engine is constructing and 
+          deconstructing 100,000 SQL statements and allocating/deallocating their memory</li>
+        <li>
+          All this construction and destruction is involving about 300,000 more native to 
+          managed interop calls than an optimized insert</li>
+      </ul>
+      <p>So lets rewrite that code slightly:</p>
+      <div class="syntax">
+        <pre>
+      using (SQLiteTransaction mytransaction = myconnection.BeginTransaction())
+      {
+        using (SQLiteCommand mycommand = new SQLiteCommand(myconnection))
+        {
+          SQLiteParameter myparam = new SQLiteParameter();
+          int n;
+        
+          mycommand.CommandText = "INSERT INTO [MyTable] ([MyId]) VALUES(?)";
+          mycommand.Parameters.Add(myparam);
+          
+          for (n = 0; n < 100000; n ++)
+          {
+            myparam.Value = n + 1;
+            mycommand.ExecuteNonQuery();
+          }
+        }
+        mytransaction.Commit();
+      } </pre>
+      </div>
+      <p>Now this is a blazing fast insert for <b><i>any</i></b> database engine, not 
+        just SQLite. The SQL statement is prepared one time -- on the first call to 
+        ExecuteNonQuery(). Once prepared, it never needs re-evaluating. Furthermore, 
+        we're allocating no memory in the loop and doing a very minimal number of 
+        interop transitions. Surround the entire thing with a transaction, and the 
+        performance of this insert is so far and away faster than the original that it 
+        merits a hands-on-the-hips pirate-like laugh.</p>
+      <p>Every database engine worth its salt utilizes prepared statements. If you're 
+        not coding for this, you're not writing optimized SQL, and that's the bottom 
+        line.
+      </p>
+      <hr />
+      <div id="footer">
+        <p>
+          <a href="mailto:robert@blackcastlesoft.com?subject=SQLite.NET%20Class%20Library%20Documentation%20Feedback:%20Optimizing">
+            Send comments on this topic.</a>
+        </p>
+        <p>
+        </p>
+      </div>
+    </div>
+    </div>
+  </body>
+</html>

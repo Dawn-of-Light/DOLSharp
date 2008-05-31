@@ -1,0 +1,120 @@
+<html dir="LTR" xmlns="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:tool="http://www.microsoft.com/tooltip" xmlns:ndoc="urn:ndoc-preprocess">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <title>INSERT</title>
+    <link rel="stylesheet" type="text/css" href="ndoc.css"> </link>
+    <link rel="stylesheet" type="text/css" href="user.css"> </link>
+    <script type="text/javascript" src="ndoc.js"> </script>
+  </head>
+  <body style="display: none;">
+    <input type="hidden" id="userDataCache" class="userDataStyle" />
+    <input type="hidden" id="hiddenScrollOffset" />
+    <img id="dropDownImage" style="display:none; height:0; width:0;" src="drpdown.gif" />
+    <img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="drpdown_orange.gif" />
+    <img id="collapseImage" style="display:none; height:0; width:0;" src="collapse.gif" />
+    <img id="expandImage" style="display:none; height:0; width:0;" src="exp.gif" />
+    <img id="collapseAllImage" style="display:none; height:0; width:0;" src="collall.gif" />
+    <img id="expandAllImage" style="display:none; height:0; width:0;" src="expall.gif" />
+    <img id="copyImage" style="display:none; height:0; width:0;" src="copycode.gif" />
+    <img id="copyHoverImage" style="display:none; height:0; width:0;" src="copycodeHighlight.gif" />
+    <div id="header">
+      <table width="100%" id="topTable">
+        <tr id="headerTableRow1">
+          <td align="left">
+            <span id="runningHeaderText">INSERT</span>&nbsp;</td>
+        </tr>
+        <tr id="headerTableRow2">
+          <td align="left">
+            <span id="nsrTitle">SQLite Language Reference Documentation</span>
+          </td>
+        </tr>
+        <tr id="headerTableRow3" style="display:none">
+          <td>
+            <a id="seeAlsoSectionLink" href="#seeAlsoToggle" onclick="OpenSection(seeAlsoToggle)">See Also</a>
+            <a id="exampleSectionLink" href="#codeExampleToggle" onclick="OpenSection(codeExampleToggle)">Example</a>
+          </td>
+        </tr>
+     </table>
+      <table width="100%" id="bottomTable" cellspacing="0" cellpadding="0" style="display:none">
+        <tr>
+          <td>
+            <span onclick="ExpandCollapseAll(toggleAllImage)" style="cursor:default;" onkeypress="ExpandCollapseAll_CheckKey(toggleAllImage)" tabindex="0">
+              <img ID="toggleAllImage" class="toggleAll" src="collall.gif" />
+              <label id="collapseAllLabel" for="toggleAllImage" style="display: none;">
+							Collapse All
+						</label>
+              <label id="expandAllLabel" for="toggleAllImage" style="display: none;">
+							Expand All
+						</label>
+            </span>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div id="mainSection">
+    <div id="mainBody">
+      <h1 class="heading">
+        SQL As Understood By SQLite</h1>
+      <h4>
+        INSERT</h4>
+      <p>
+        <table cellpadding="10">
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">sql-statement</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0">INSERT </font></b>[<b><font color="#2c2cf0">OR </font></b>
+              <i><font color="#ff3434">conflict-algorithm</font></i><b><font color="#2c2cf0"></font></b>]<b><font
+                color="#2c2cf0"> INTO </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">database-name</font></i><b><font
+                  color="#2c2cf0"> <big>.</big></font></b>]<b><font color="#2c2cf0"> </font></b>
+              <i><font color="#ff3434">table-name</font></i><b><font color="#2c2cf0"> </font></b>
+              [<b><font color="#2c2cf0"><big>(</big></font></b><i><font color="#ff3434">column-list</font></i><b><font
+                color="#2c2cf0"><big>)</big></font></b>]<b><font color="#2c2cf0"> VALUES<big>(</big></font></b><i><font
+                  color="#ff3434">value-list</font></i><b><font color="#2c2cf0"><big>)</big> </font>
+                  </b><big>|</big><b><font color="#2c2cf0"><br />
+                    INSERT </font></b>[<b><font color="#2c2cf0">OR </font></b><i><font color="#ff3434">
+                      conflict-algorithm</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0">
+                        INTO </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">database-name</font></i><b><font
+                          color="#2c2cf0"> <big>.</big></font></b>]<b><font color="#2c2cf0"> </font></b>
+              <i><font color="#ff3434">table-name</font></i><b><font color="#2c2cf0"> </font></b>
+              [<b><font color="#2c2cf0"><big>(</big></font></b><i><font color="#ff3434">column-list</font></i><b><font
+                color="#2c2cf0"><big>)</big></font></b>]<b><font color="#2c2cf0"> </font></b><i><font
+                  color="#ff3434">select-statement</font></i><b><font color="#2c2cf0"></font></b></td>
+          </tr>
+        </table>
+      </p>
+      <p>
+        The INSERT statement comes in two basic forms. The first form (with the "VALUES"
+        keyword) creates a single new row in an existing table. If no column-list is specified
+        then the number of values must be the same as the number of columns in the table.
+        If a column-list is specified, then the number of values must match the number of
+        specified columns. Columns of the table that do not appear in the column list are
+        filled with the default value, or with NULL if not default value is specified.
+      </p>
+      <p>
+        The second form of the INSERT statement takes it data
+        from a SELECT statement. The
+        number of columns in the result of the SELECT must exactly match the number of columns
+        in the table if no column list is specified, or it must match the number of columns
+        name in the column list. A new entry is made in the table for every row of the SELECT
+        result. The SELECT may be simple or compound. If the SELECT statement has an ORDER
+        BY clause, the ORDER BY is ignored.</p>
+      <p>
+        The optional conflict-clause allows the specification of an alternative constraint conflict resolution algorithm to use during this one command. See the section titled
+        <a href="lang_conflict.html">ON CONFLICT</a> for additional information. For compatibility
+        with MySQL, the parser allows the use of the single keyword <a href="lang_replace.html">
+          REPLACE</a> as an alias for "INSERT OR REPLACE".
+      </p>
+      <p>
+      <hr>
+        &nbsp;</p>
+      <div id="footer">
+        <p>
+          &nbsp;</p>
+        <p>
+        </p>
+      </div>
+    </div>
+    </div>
+  </body>
+</html>

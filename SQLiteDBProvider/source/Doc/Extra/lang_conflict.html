@@ -1,0 +1,161 @@
+<html dir="LTR" xmlns="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:tool="http://www.microsoft.com/tooltip" xmlns:ndoc="urn:ndoc-preprocess">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <title>ON CONFLICT</title>
+    <link rel="stylesheet" type="text/css" href="ndoc.css"> </link>
+    <link rel="stylesheet" type="text/css" href="user.css"> </link>
+    <script type="text/javascript" src="ndoc.js"> </script>
+  </head>
+  <body style="display: none;">
+    <input type="hidden" id="userDataCache" class="userDataStyle" />
+    <input type="hidden" id="hiddenScrollOffset" />
+    <img id="dropDownImage" style="display:none; height:0; width:0;" src="drpdown.gif" />
+    <img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="drpdown_orange.gif" />
+    <img id="collapseImage" style="display:none; height:0; width:0;" src="collapse.gif" />
+    <img id="expandImage" style="display:none; height:0; width:0;" src="exp.gif" />
+    <img id="collapseAllImage" style="display:none; height:0; width:0;" src="collall.gif" />
+    <img id="expandAllImage" style="display:none; height:0; width:0;" src="expall.gif" />
+    <img id="copyImage" style="display:none; height:0; width:0;" src="copycode.gif" />
+    <img id="copyHoverImage" style="display:none; height:0; width:0;" src="copycodeHighlight.gif" />
+    <div id="header">
+      <table width="100%" id="topTable">
+        <tr id="headerTableRow1">
+          <td align="left">
+            <span id="runningHeaderText">ON CONFLICT clause</span>&nbsp;</td>
+        </tr>
+        <tr id="headerTableRow2">
+          <td align="left">
+            <span id="nsrTitle">SQLite Language Reference Documentation</span>
+          </td>
+        </tr>
+        <tr id="headerTableRow3" style="display:none">
+          <td>
+            <a id="seeAlsoSectionLink" href="#seeAlsoToggle" onclick="OpenSection(seeAlsoToggle)">See Also</a>
+            <a id="exampleSectionLink" href="#codeExampleToggle" onclick="OpenSection(codeExampleToggle)">Example</a>
+          </td>
+        </tr>
+     </table>
+      <table width="100%" id="bottomTable" cellspacing="0" cellpadding="0" style="display:none">
+        <tr>
+          <td>
+            <span onclick="ExpandCollapseAll(toggleAllImage)" style="cursor:default;" onkeypress="ExpandCollapseAll_CheckKey(toggleAllImage)" tabindex="0">
+              <img ID="toggleAllImage" class="toggleAll" src="collall.gif" />
+              <label id="collapseAllLabel" for="toggleAllImage" style="display: none;">
+							Collapse All
+						</label>
+              <label id="expandAllLabel" for="toggleAllImage" style="display: none;">
+							Expand All
+						</label>
+            </span>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div id="mainSection">
+    <div id="mainBody">
+      <h1 class="heading">
+        SQL As Understood By SQLite</h1>
+      <h4>
+        ON CONFLICT clause</h4>
+      <p>
+        <table cellpadding="10">
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">conflict-clause</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0">ON CONFLICT </font></b><i><font color="#ff3434">conflict-algorithm</font></i><b><font
+                color="#2c2cf0"></font></b></td>
+          </tr>
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">conflict-algorithm</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0">ROLLBACK </font></b><big>|</big><b><font color="#2c2cf0">
+                ABORT </font></b><big>|</big><b><font color="#2c2cf0"> FAIL </font></b><big>|</big><b><font
+                  color="#2c2cf0"> IGNORE </font></b><big>|</big><b><font color="#2c2cf0"> REPLACE</font></b></td>
+          </tr>
+        </table>
+      </p>
+      <p>
+        The ON CONFLICT clause is not a separate SQL command. It is a non-standard clause
+        that can appear in many
+          other SQL commands. It is given its own section in this
+        document because it is not part of standard SQL and therefore might not be familiar.</p>
+      <p>
+        The syntax for the ON CONFLICT clause is as shown above for the CREATE TABLE command.
+        For the INSERT and UPDATE commands, the keywords "ON CONFLICT" are replaced by "OR",
+        to make the syntax seem more natural. For example, instead of "INSERT ON CONFLICT
+        IGNORE" we have "INSERT OR IGNORE". The keywords change but the meaning of the clause
+        is the same either way.</p>
+      <p>
+        The ON CONFLICT clause specifies an algorithm used to resolve constraint conflicts.
+        There are five choices: ROLLBACK, ABORT, FAIL, IGNORE, and REPLACE. The default
+        algorithm is ABORT. This is what they mean:</p>
+      <dl>
+        <dt><b>ROLLBACK</b> </dt>
+        <dd>
+          <p>
+            When a constraint violation occurs, an immediate ROLLBACK occurs, thus ending the
+            current transaction, and the command aborts with a return code of SQLITE_CONSTRAINT.
+            If no transaction is active (other than the implied transaction that is created
+            on every command) then this algorithm works the same as ABORT.</p>
+        </dd>
+        <dt><b>ABORT</b> </dt>
+        <dd>
+          <p>
+            When a constraint violation occurs, the command backs out any prior changes it might
+            have made and aborts with a return code of SQLITE_CONSTRAINT. But no ROLLBACK is
+            executed so changes from prior commands within the same transaction are preserved.
+            This is the default behavior.</p>
+        </dd>
+        <dt><b>FAIL</b> </dt>
+        <dd>
+          <p>
+            When a constraint violation occurs, the command aborts with a return code SQLITE_CONSTRAINT.
+            But any changes to the database that the command made prior to encountering the
+            constraint violation are preserved and are not backed out. For example, if an UPDATE
+            statement encountered a constraint violation on the 100th row that it attempts to
+            update, then the first 99 row changes are preserved but changes to rows 100 and
+            beyond never occur.</p>
+        </dd>
+        <dt><b>IGNORE</b> </dt>
+        <dd>
+          <p>
+            When a constraint violation occurs, the one row that contains the constraint violation
+            is not inserted or changed. But the command continues executing normally. Other
+            rows before and after the row that contained the constraint violation continue to
+            be inserted or updated normally. No error is returned.</p>
+        </dd>
+        <dt><b>REPLACE</b> </dt>
+        <dd>
+          <p>
+            When a UNIQUE constraint violation occurs, the pre-existing rows that are causing
+            the constraint violation are removed prior to inserting or updating the current
+            row. Thus the insert or update always occurs. The command continues executing normally.
+            No error is returned. If a NOT NULL constraint violation occurs, the NULL value
+            is replaced by the default value for that column. If the column has no default value,
+            then the ABORT algorithm is used. If a CHECK constraint violation occurs then the
+            IGNORE algorithm is used.</p>
+          <p>
+            When this conflict resolution strategy deletes rows in order to satisfy a constraint,
+            it does not invoke delete triggers on those rows. This behavior might change in
+            a future release.</p>
+        </dd>
+      </dl>
+      <p>
+        The algorithm specified in the OR clause of a INSERT or UPDATE overrides any algorithm
+        specified in a CREATE TABLE. If no algorithm is specified anywhere, the ABORT algorithm
+        is used.</p>
+      <p>
+      <hr>
+        &nbsp;</p>
+      <div id="footer">
+        <p>
+          &nbsp;</p>
+        <p>
+        </p>
+      </div>
+    </div>
+    </div>
+  </body>
+</html>

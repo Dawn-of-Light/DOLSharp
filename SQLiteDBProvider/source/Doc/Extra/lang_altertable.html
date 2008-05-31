@@ -1,0 +1,139 @@
+<html dir="LTR" xmlns="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:tool="http://www.microsoft.com/tooltip" xmlns:ndoc="urn:ndoc-preprocess">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <title>ALTER TABLE</title>
+    <link rel="stylesheet" type="text/css" href="ndoc.css"> </link>
+    <link rel="stylesheet" type="text/css" href="user.css"> </link>
+    <script type="text/javascript" src="ndoc.js"> </script>
+  </head>
+  <body style="display: none;">
+    <input type="hidden" id="userDataCache" class="userDataStyle" />
+    <input type="hidden" id="hiddenScrollOffset" />
+    <img id="dropDownImage" style="display:none; height:0; width:0;" src="drpdown.gif" />
+    <img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="drpdown_orange.gif" />
+    <img id="collapseImage" style="display:none; height:0; width:0;" src="collapse.gif" />
+    <img id="expandImage" style="display:none; height:0; width:0;" src="exp.gif" />
+    <img id="collapseAllImage" style="display:none; height:0; width:0;" src="collall.gif" />
+    <img id="expandAllImage" style="display:none; height:0; width:0;" src="expall.gif" />
+    <img id="copyImage" style="display:none; height:0; width:0;" src="copycode.gif" />
+    <img id="copyHoverImage" style="display:none; height:0; width:0;" src="copycodeHighlight.gif" />
+    <div id="header">
+      <table width="100%" id="topTable">
+        <tr id="headerTableRow1">
+          <td align="left">
+            <span id="runningHeaderText">ALTER TABLE</span>&nbsp;</td>
+        </tr>
+        <tr id="headerTableRow2">
+          <td align="left">
+            <span id="nsrTitle">SQLite Language Reference Documentation</span>
+          </td>
+        </tr>
+        <tr id="headerTableRow3" style="display:none">
+          <td>
+            <a id="seeAlsoSectionLink" href="#seeAlsoToggle" onclick="OpenSection(seeAlsoToggle)">See Also</a>
+            <a id="exampleSectionLink" href="#codeExampleToggle" onclick="OpenSection(codeExampleToggle)">Example</a>
+          </td>
+        </tr>
+     </table>
+      <table width="100%" id="bottomTable" cellspacing="0" cellpadding="0" style="display:none">
+        <tr>
+          <td>
+            <span onclick="ExpandCollapseAll(toggleAllImage)" style="cursor:default;" onkeypress="ExpandCollapseAll_CheckKey(toggleAllImage)" tabindex="0">
+              <img ID="toggleAllImage" class="toggleAll" src="collall.gif" />
+              <label id="collapseAllLabel" for="toggleAllImage" style="display: none;">
+							Collapse All
+						</label>
+              <label id="expandAllLabel" for="toggleAllImage" style="display: none;">
+							Expand All
+						</label>
+            </span>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div id="mainSection">
+    <div id="mainBody">
+      <h1 class="heading">
+        SQL As Understood By SQLite</h1>
+      <h4>
+        ALTER TABLE</h4>
+      <p>
+        <table cellpadding="10">
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">sql-statement</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0">ALTER TABLE </font></b>[<b><font color="#2c2cf0"></font></b><i><font
+                color="#ff3434">database-name</font></i><b><font color="#2c2cf0"> <big>.</big></font></b>]<b><font
+                  color="#2c2cf0"> </font></b><i><font color="#ff3434">table-name</font></i><b><font
+                    color="#2c2cf0"> </font></b><i><font color="#ff3434">alteration</font></i><b><font
+                      color="#2c2cf0"></font></b></td>
+          </tr>
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">alteration</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0">RENAME TO </font></b><i><font color="#ff3434">new-table-name</font></i><b><font
+                color="#2c2cf0"></font></b></td>
+          </tr>
+          <tr>
+            <td align="right" width="1%" nowrap>
+              <i><font color="#ff3434">alteration</font></i> ::=</td>
+            <td>
+              <b><font color="#2c2cf0">ADD </font></b>[<b><font color="#2c2cf0">COLUMN</font></b>]<b><font
+                color="#2c2cf0"> </font></b><i><font color="#ff3434">column-def</font></i><b><font
+                  color="#2c2cf0"></font></b></td>
+          </tr>
+        </table>
+      </p>
+      <p>
+        SQLite's version of the ALTER TABLE command allows the user to rename or add a new
+        column to an existing table. It is not possible to remove a column from a table.
+      </p>
+      <p>
+        The RENAME TO syntax is used to rename the table identified by <i>[database-name.]table-name</i>
+        to <i>new-table-name</i>. This command cannot be used to move a table between attached
+        databases, only to rename a table within the same database.</p>
+      <p>
+        If the table being renamed has triggers or indices, then these remain attached to
+        the table after it has been renamed. However, if there are any view definitions,
+        or statements executed by triggers that refer to the table being renamed, these
+        are not automatically modified to use the new table name. If this is required, the
+        triggers or view definitions must be dropped and recreated to use the new table
+        name by hand.
+      </p>
+      <p>
+        The ADD [COLUMN] syntax is used to add a new column to an existing table. The new
+        column is always appended to the end of the list of existing columns. <i>Column-def</i>
+        may take any of the forms permissable in a CREATE TABLE statement, with the following
+        restrictions:
+      </p>
+      <ul>
+        <li>The column may not have a PRIMARY KEY or UNIQUE constraint. </li>
+        <li>The column may not have a default value of CURRENT_TIME, CURRENT_DATE or CURRENT_TIMESTAMP.
+        </li>
+        <li>If a NOT NULL constraint is specified, then the column must have a default value
+          other than NULL. </li>
+      </ul>
+      <p>
+        The execution time of the ALTER TABLE command is independent of the amount of data
+        in the table. The ALTER TABLE command runs as quickly on a table with 10 million
+        rows as it does on a table with 1 row.
+      </p>
+      <p>
+        After ADD COLUMN has been run on a database, that database will not be readable
+        by SQLite version 3.1.3 and earlier until the database is <a href="lang_vacuum.html">
+          VACUUM</a>ed.</p>
+      <p>
+        &nbsp;</p>
+      <hr>
+      <div id="footer">
+        <p>
+          &nbsp;</p>
+        <p>
+        </p>
+      </div>
+    </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "sqlite", "sqlite_setup.vdproj", "{B2C2F7A0-FD29-4249-9AB1-4A38BDA1AB94}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "setup", "exe\setup\setup.vcproj", "{BA304689-521B-4E60-A4B7-09558602C1BC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B2C2F7A0-FD29-4249-9AB1-4A38BDA1AB94} = {B2C2F7A0-FD29-4249-9AB1-4A38BDA1AB94}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B2C2F7A0-FD29-4249-9AB1-4A38BDA1AB94}.Debug|Win32.ActiveCfg = Debug
+		{B2C2F7A0-FD29-4249-9AB1-4A38BDA1AB94}.Debug|Win32.Build.0 = Debug
+		{B2C2F7A0-FD29-4249-9AB1-4A38BDA1AB94}.Release|Win32.ActiveCfg = Release
+		{B2C2F7A0-FD29-4249-9AB1-4A38BDA1AB94}.Release|Win32.Build.0 = Release
+		{BA304689-521B-4E60-A4B7-09558602C1BC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BA304689-521B-4E60-A4B7-09558602C1BC}.Debug|Win32.Build.0 = Debug|Win32
+		{BA304689-521B-4E60-A4B7-09558602C1BC}.Release|Win32.ActiveCfg = Release|Win32
+		{BA304689-521B-4E60-A4B7-09558602C1BC}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
