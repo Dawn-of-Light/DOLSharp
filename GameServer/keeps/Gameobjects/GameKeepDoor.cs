@@ -472,6 +472,7 @@ namespace DOL.GS.Keeps
 
 			m_health = MaxHealth;
 			StartHealthRegeneration();
+			DoorMgr.RegisterDoor(this);
 		}
 
 		public void LoadFromPosition(DBKeepPosition pos, GameKeepComponent component)
@@ -491,6 +492,7 @@ namespace DOL.GS.Keeps
 			m_state = eDoorState.Closed;
 			this.AddToWorld();
 			StartHealthRegeneration();
+			DoorMgr.RegisterDoor(this);
 		}
 
 		public void MoveToPosition(DBKeepPosition position)
