@@ -38,7 +38,7 @@ namespace DOL.GS.PropertyCalc
         {
             //hardcap at 25%
             return Math.Min(25, living.ItemBonus[(int)property]
-                - living.BuffBonusCategory3[(int)property]);
+                - living.DebuffCategory[(int)property]);
         }
     }
 
@@ -50,7 +50,7 @@ namespace DOL.GS.PropertyCalc
         {
             //hardcap at 25%
             return Math.Min(25, living.ItemBonus[(int)property]
-                - living.BuffBonusCategory3[(int)property]);
+                - living.DebuffCategory[(int)property]);
         }
     }
 
@@ -62,7 +62,7 @@ namespace DOL.GS.PropertyCalc
         {
             //hardcap at 25%
             int percent = Math.Min(25, living.BuffBonusCategory1[(int)property]
-                - living.BuffBonusCategory3[(int)property]
+                - living.DebuffCategory[(int)property]
                 + living.ItemBonus[(int)property]);
             // Add RA bonus
             percent += living.AbilityBonus[(int)property];
@@ -102,7 +102,7 @@ namespace DOL.GS.PropertyCalc
         {
             //hardcap at 10%
             return Math.Min(10, living.ItemBonus[(int)property]
-                - living.BuffBonusCategory3[(int)property]);
+                - living.DebuffCategory[(int)property]);
         }
     }
 
@@ -114,7 +114,7 @@ namespace DOL.GS.PropertyCalc
         {
             //hardcap at 25%
             return Math.Min(25, living.ItemBonus[(int)property]
-                - living.BuffBonusCategory3[(int)property]);
+                - living.DebuffCategory[(int)property]);
         }
     }
 
@@ -127,7 +127,7 @@ namespace DOL.GS.PropertyCalc
             //hardcap at 10%
             int percent = Math.Min(10, living.BuffBonusCategory1[(int)property]
                 + living.ItemBonus[(int)property]
-                - living.BuffBonusCategory3[(int)property]);
+                - living.DebuffCategory[(int)property]);
 
             // Relic bonus calculated before RA bonuses
             if (living is GamePlayer ||living is NecromancerPet)

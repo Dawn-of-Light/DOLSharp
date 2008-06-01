@@ -49,7 +49,7 @@ namespace DOL.GS.PropertyCalc
 
             // Abilities/racials/debuffs.
 
-            int debuff = living.BuffBonusCategory3[propertyIndex];
+            int debuff = living.DebuffCategory[propertyIndex];
 			int abilityBonus = living.AbilityBonus[propertyIndex];
             int racialBonus = (living is GamePlayer)
                 ? SkillBase.GetRaceResist((eRace)((living as GamePlayer).Race), (eResist)property)
