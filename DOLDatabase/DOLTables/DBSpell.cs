@@ -63,7 +63,6 @@ namespace DOL.Database
 		protected int m_subSpellID = 0;
 		protected bool m_moveCast = false;
 		protected bool m_uninterruptible = false;
-		protected int m_healthPenalty = 0;
 		protected bool m_isfocus = false;
         	protected int m_sharedtimergroup; 
         
@@ -544,17 +543,6 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_uninterruptible = value;
-			}
-		}
-
-		[DataElement(AllowDbNull = true)]
-		public int HealthPenalty
-		{
-			get { return m_healthPenalty; }
-			set
-			{
-				Dirty = true;
-				m_healthPenalty = value;
 			}
 		}
 		

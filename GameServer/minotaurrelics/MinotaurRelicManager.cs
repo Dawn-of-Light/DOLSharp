@@ -249,7 +249,6 @@ namespace DOL.GS
             dbspell.Duration = spell.Duration;
             dbspell.EffectGroup = spell.EffectGroup;
             dbspell.Frequency = spell.Frequency;
-            dbspell.HealthPenalty = spell.HealthPenalty;
             dbspell.Icon = spell.Icon;
             dbspell.InstrumentRequirement = spell.InstrumentRequirement;
             dbspell.IsPrimary = spell.IsPrimary;

@@ -53,9 +53,9 @@ namespace DOL.GS.Spells
 
 			// group heals seem to use full power even if no heals
 			if (!healed && Spell.Target == "Realm")
-				m_caster.Mana -= CalculateNeededPower(target) >> 1; // only 1/2 power if no heal
+				RemoveFromStat(CalculateNeededPower(target) >> 1); // only 1/2 power if no heal
 			else
-				m_caster.Mana -= CalculateNeededPower(target);
+				RemoveFromStat(CalculateNeededPower(target));
 
 			// send animation for non pulsing spells only
 			if (Spell.Pulse == 0)
@@ -74,6 +74,11 @@ namespace DOL.GS.Spells
 			}
 
 			if (!healed && Spell.CastTime == 0) m_startReuseTimer = false;
+		}
+
+		protected virtual void RemoveFromStat(int value)
+		{
+			m_caster.Mana -= value;
 		}
 
 		/// <summary>
@@ -142,7 +147,7 @@ namespace DOL.GS.Spells
 
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
-			if (selectedTarget.EndurancePercent >= 90)
+			if (selectedTarget != null && selectedTarget.EndurancePercent >= 90)
 			{
 				MessageToCaster("You cannot cast an endurance heal the target has above 90% endurance!", eChatType.CT_SpellResisted);
 				return false;
