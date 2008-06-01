@@ -4078,14 +4078,14 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <summary>
 		/// Array for third buff boni
 		/// </summary>
-		protected IPropertyIndexer m_buff3Bonus = new PropertyIndexer();
+		protected IPropertyIndexer m_debuffBonus = new PropertyIndexer();
 		/// <summary>
 		/// Property Buff bonus category
 		/// what it means depends from the PropertyCalculator for a property element
 		/// </summary>
-		public IPropertyIndexer BuffBonusCategory3
+		public IPropertyIndexer DebuffCategory
 		{
-			get { return m_buff3Bonus; }
+			get { return m_debuffBonus; }
 		}
 
 		/// <summary>

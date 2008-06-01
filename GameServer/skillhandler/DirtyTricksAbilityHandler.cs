@@ -210,7 +210,7 @@ namespace DOL.GS.Effects
 			//    log.Debug("Effect Started from DT detrimental effect on " + m_player.Name);
 			StartTimers(); // start the timers before adding to the list!
 			m_player.EffectList.Add(this);
-			m_player.BuffBonusCategory3[(int)eProperty.FumbleChance] += 50;
+			m_player.DebuffCategory[(int)eProperty.FumbleChance] += 50;
 			//  foreach (GamePlayer visiblePlayer in m_player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			//  {
 			//  }
@@ -229,7 +229,7 @@ namespace DOL.GS.Effects
 			//  log.Debug("Effect Canceled from DT Detrimental effect on "+ m_player.Name);
 			StopTimers();
 			m_player.EffectList.Remove(this);
-			m_player.BuffBonusCategory3[(int)eProperty.FumbleChance] -= 50;
+			m_player.DebuffCategory[(int)eProperty.FumbleChance] -= 50;
 			GamePlayer player = m_player as GamePlayer;
 			if (player != null)
 				player.Out.SendMessage("Your attacks return to normal.", eChatType.CT_System, eChatLoc.CL_SystemWindow);

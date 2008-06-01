@@ -42,7 +42,7 @@ namespace DOL.GS.PropertyCalc
 					evadechance += (1000 + player.Quickness + player.Dexterity - 100) * player.GetAbilityLevel(Abilities.Evade) * 5 / 100;
 				evadechance += player.BuffBonusCategory1[(int)property] * 10
 								+ player.BuffBonusCategory2[(int)property] * 10
-								- player.BuffBonusCategory3[(int)property] * 10
+								- player.DebuffCategory[(int)property] * 10
 								+ player.BuffBonusCategory4[(int)property] * 10
 								+ player.AbilityBonus[(int)property] * 10;
 				return evadechance;

@@ -45,7 +45,7 @@ namespace DOL.GS.PropertyCalc
 
             int baseStat = living.GetBaseStat((eStat)property);
             int abilityBonus = living.AbilityBonus[propertyIndex];
-            int debuff = living.BuffBonusCategory3[propertyIndex];
+            int debuff = living.DebuffCategory[propertyIndex];
 			int deathConDebuff = 0;
 
             int itemBonus = CalcValueFromItems(living, property);

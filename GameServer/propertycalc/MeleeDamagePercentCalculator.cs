@@ -35,10 +35,9 @@ namespace DOL.GS.PropertyCalc
 		public override int CalcValue(GameLiving living, eProperty property)
 		{
 			//hardcap at 10%
-			int percent = Math.Min(10, living.BuffBonusCategory1[(int)property]
-				- living.BuffBonusCategory3[(int)property]
-				+ living.ItemBonus[(int)property] 
-				+ living.BuffBonusCategory2[(int)property]);
+			int itemPercent = Math.Min(10, living.ItemBonus[(int)property]);
+			int debuffPercent = Math.Min(10, living.DebuffCategory[(int)property]);
+			int percent = living.BuffBonusCategory1[(int)property] + living.BuffBonusCategory2[(int)property] + itemPercent - debuffPercent;
 
 			// Relic bonus calculated before RA bonuses
 			if (living is GamePlayer || living is NecromancerPet)
