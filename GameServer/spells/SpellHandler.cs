@@ -575,7 +575,7 @@ namespace DOL.GS.Spells
 			}
 
 			//Ryan: don't want mobs to have reductions in mana
-			if (m_caster is GamePlayer && m_caster.Mana < CalculateNeededPower(selectedTarget) && Spell.SpellType != "Archery")
+			if (m_caster is GamePlayer && (m_caster as GamePlayer).CharacterClass.ID != (int)eCharacterClass.Savage && m_caster.Mana < CalculateNeededPower(selectedTarget) && Spell.SpellType != "Archery")
 			{
 				MessageToCaster("You don't have enough power to cast that!", eChatType.CT_SpellResisted);
 				return false;
@@ -603,11 +603,6 @@ namespace DOL.GS.Spells
 			//        (Caster as GamePlayer).ChangeMana((Caster as GamePlayer), GameLiving.eManaChangeType.Spell, -m_spell.Power);
 			//    }
 			//}
-			if (m_spell.HealthPenalty > 0 && m_caster.HealthPercent < 10 + m_spell.HealthPenalty)
-			{
-				MessageToCaster("You don't have enough health to cast this spell!", eChatType.CT_SpellResisted);
-				return false;
-			}
 
 			// Cancel engage if user starts attack
 			if (m_caster.IsEngaging)
@@ -1921,15 +1916,6 @@ namespace DOL.GS.Spells
 		/// <returns>immunity duration in milliseconds</returns>
 		public virtual int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
-			if (m_spell.HealthPenalty > 0)
-			{
-				double max = Caster.MaxHealth;
-				int take = (int)(max * (m_spell.HealthPenalty / 100.0));
-				int remain = Caster.Health - take;
-				if (Caster.Health - take < 1)
-					return 0;
-				Caster.TakeDamage(null, eDamageType.Natural, take, 0);
-			}
 			return 0;
 		}
 

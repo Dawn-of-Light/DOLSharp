@@ -96,6 +96,7 @@ namespace DOL.GS.Spells
             }
 			base.ApplyEffectOnTarget(target, effectiveness);
 		}
+
 		/// <summary>
 		/// start changing effect on target
 		/// </summary>

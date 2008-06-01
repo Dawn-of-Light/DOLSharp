@@ -1995,6 +1995,7 @@
     <Compile Include="spells\EnduranceHealSpellHandler.cs" />
     <Compile Include="spells\FacilisSpellHandler.cs" />
     <Compile Include="spells\Fury.cs" />
+    <Compile Include="spells\Savage\SavageEnduranceHeal.cs" />
     <Compile Include="spells\SpeedOfTheRealmHandler.cs" />
     <Compile Include="spells\SummonTheurgistPet.cs" />
     <Compile Include="spells\Teleport\GatewayPersonalBind.cs" />
@@ -2027,7 +2028,7 @@
     <Compile Include="spells\PowerHealSpellHandler.cs" />
     <Compile Include="spells\PowerTransferSpellHandler.cs" />
     <Compile Include="spells\RampageSpellHandler.cs" />
-    <Compile Include="spells\SavageBuff.cs" />
+    <Compile Include="spells\Savage\SavageBuff.cs" />
     <Compile Include="spells\SilenceSpellHandler.cs" />
     <Compile Include="spells\StyleDamageToPower.cs" />
     <Compile Include="spells\StyleTaunt.cs" />
