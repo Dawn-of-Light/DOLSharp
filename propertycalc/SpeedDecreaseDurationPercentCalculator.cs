@@ -37,7 +37,7 @@ namespace DOL.GS.PropertyCalc
 		{
 			int percent = 100
 				-living.BuffBonusCategory1[(int)property] // buff reduce the duration
-				+living.BuffBonusCategory3[(int)property]
+				+living.DebuffCategory[(int)property]
 				-living.ItemBonus[(int)property]
 				-living.AbilityBonus[(int)property];
 

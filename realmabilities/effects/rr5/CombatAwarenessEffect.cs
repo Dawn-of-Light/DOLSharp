@@ -32,7 +32,7 @@ namespace DOL.GS.Effects
 					p.Out.SendSpellEffectAnimation(player, player, Icon, 0, false, 1);
 				}
 			}
-			target.BuffBonusCategory3[(int)eProperty.MeleeDamage] -= 50;
+			target.DebuffCategory[(int)eProperty.MeleeDamage] -= 50;
 			target.BuffBonusCategory4[(int)eProperty.EvadeChance] += 50;
 			target.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 0.5);
 
@@ -49,7 +49,7 @@ namespace DOL.GS.Effects
 
 		public override void Stop()
 		{
-			owner.BuffBonusCategory3[(int)eProperty.MeleeDamage] += 50;
+			owner.DebuffCategory[(int)eProperty.MeleeDamage] += 50;
 			owner.BuffBonusCategory4[(int)eProperty.EvadeChance] -= 50;
 			owner.BuffBonusMultCategory1.Remove((int)eProperty.MaxSpeed, this);
 

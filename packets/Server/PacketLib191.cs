@@ -64,7 +64,7 @@ namespace DOL.GS.PacketHandler
 				}
 				if (!sameRegion)
 					playerStatus |= 0x20;
-				if (living.BuffBonusCategory3[(int)eProperty.SpellRange] != 0 || living.BuffBonusCategory3[(int)eProperty.ArcheryRange] != 0)
+				if (living.DebuffCategory[(int)eProperty.SpellRange] != 0 || living.DebuffCategory[(int)eProperty.ArcheryRange] != 0)
 					playerStatus |= 0x40;
 
 				pak.WriteByte(playerStatus);

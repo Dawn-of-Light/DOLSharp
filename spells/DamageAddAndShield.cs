@@ -59,7 +59,6 @@ namespace DOL.GS.Spells
 			if (atkArgs == null) return;
 			if (atkArgs.AttackData.AttackResult != GameLiving.eAttackResult.HitUnstyled
 				&& atkArgs.AttackData.AttackResult != GameLiving.eAttackResult.HitStyle) return;
-			if (atkArgs.AttackData.Target == null) return;
 			GameLiving target = atkArgs.AttackData.Target;
 			if (target == null) return;
 			if (target.ObjectState != GameObject.eObjectState.Active) return;
@@ -98,7 +97,7 @@ namespace DOL.GS.Spells
 				if (brain != null)
 				{
 					GamePlayer owner = brain.GetPlayerOwner();
-					if (owner != null && owner.ControlledNpc != null && ad.Attacker == owner.ControlledNpc.Body)
+					if (owner != null)
 					{
 						MessageToLiving(owner, String.Format("Your {0} hit {1} for {2} damage!", ad.Attacker.Name, target.GetName(0, false), ad.Damage), eChatType.CT_Spell);
 					}
