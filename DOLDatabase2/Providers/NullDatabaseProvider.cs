@@ -56,7 +56,7 @@ namespace DOL.Database2.Providers
         {
             return new Queue<DatabaseObjectInformation>();
         }
-        public override void InsertOrUpdateObjectData(ulong ObjectID, Type Type, System.IO.Stream Data)
+        public override void InsertOrUpdateObjectData(ulong ObjectID, Type Type, System.IO.MemoryStream Data)
         {
             return;
         }

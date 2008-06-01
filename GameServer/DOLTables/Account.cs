@@ -29,7 +29,7 @@ namespace DOL
 		/// Account table
 		/// </summary>
 		[Serializable]//TableName="Account")]
-		public class Account : DatabaseObject 
+		public class Account : DatabaseObject
 		{
 			private string m_name;
 			private string m_password;
@@ -55,7 +55,7 @@ namespace DOL
 				m_plvl = 1;
 				m_realm = 0;
 				//m_autoSave = true;
-				m_autoSave = false;
+				m_autoSave = true;
 			}
 
 

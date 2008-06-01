@@ -208,8 +208,9 @@ namespace DOL.Database2
             List<T> list = new List<T>();
             foreach (DatabaseObject dbo in DatabaseObjects.Values)
             {
-                if(dbo.GetType() == typeof(T) &&  info.GetValue(dbo,null) == value)
-                    list.Add(dbo as T);
+                if(dbo.GetType() == typeof(T))
+                    if(info.GetValue(dbo,null) == value)
+                        list.Add(dbo as T);
             }
             return list;
         }

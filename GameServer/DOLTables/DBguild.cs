@@ -18,7 +18,7 @@
  */
 using System;
 using DOL.Database2;
-
+using System.Linq;
 
 
 namespace DOL.Database2
@@ -366,7 +366,9 @@ namespace DOL.Database2
 		public DBRank[] Ranks;
         public override void FillObjectRelations()
         {
-            Ranks = DatabaseLayer.Instance.SelectObjects<DBRank>("guildID", ID).ToArray();
+            Ranks = (from s in DatabaseLayer.Instance.OfType<DBRank>()
+                     where s.guildID == ID
+                     select s).ToArray();
             base.FillObjectRelations();
         }
 	}

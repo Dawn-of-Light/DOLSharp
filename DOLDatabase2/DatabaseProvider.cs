@@ -73,7 +73,7 @@ namespace DOL.Database2
             return GetObjectsByTypeName(Type.FullName);
         }
         public abstract Queue<DatabaseObjectInformation> GetObjectsByTypeName(string TypeName);
-        public abstract void InsertOrUpdateObjectData(UInt64 ObjectID, Type Type, Stream Data );
+        public abstract void InsertOrUpdateObjectData(UInt64 ObjectID, Type Type, MemoryStream Data );
         public abstract UInt64 GetNewUniqueID();
         public abstract void DeleteObject(UInt64 ObjectID);
     }

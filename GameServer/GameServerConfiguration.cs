@@ -205,8 +205,8 @@ namespace DOL.GS
 			m_gmActionsLoggerName = root["Server"]["GMActionLoggerName"].GetString(m_gmActionsLoggerName);
 			m_invalidNamesFile = root["Server"]["InvalidNamesFile"].GetString(m_invalidNamesFile);
 
-            m_dbProviderAssembly = root["Server"]["DBProviderAssembly"].GetString("");
-            m_dbProviderType = root["Server"]["DBProviderType"].GetString("");
+            m_dbProviderAssembly = root["Server"]["DBProviderAssembly"].GetString(m_dbProviderAssembly);
+            m_dbProviderType = root["Server"]["DBProviderType"].GetString(m_dbProviderType);
 			m_dbConnectionString = root["Server"]["DBConnectionString"].GetString(m_dbConnectionString);
 			m_autoSave = root["Server"]["DBAutosave"].GetBoolean(m_autoSave);
 			m_saveInterval = root["Server"]["DBAutosaveInterval"].GetInt(m_saveInterval);
@@ -240,7 +240,7 @@ namespace DOL.GS
 			root["Server"]["ServerName"].Set(m_ServerName);
 			root["Server"]["ServerNameShort"].Set(m_ServerNameShort);
 			// Removed to not confuse users
-//			root["Server"]["RootDirectory"].Set(m_rootDirectory);
+            // root["Server"]["RootDirectory"].Set(m_rootDirectory);
 			root["Server"]["LogConfigFile"].Set(m_logConfigFile);
 			root["Server"]["RegionConfigFile"].Set(m_regionConfigFile);
 			root["Server"]["ZoneConfigFile"].Set(m_zoneConfigFile);
@@ -323,9 +323,9 @@ namespace DOL.GS
 			m_cheatLoggerName = "cheats";
 			m_gmActionsLoggerName = "gmactions";
 			m_invalidNamesFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "invalidnames.txt";
-            m_dbProviderType = "DOL.Database2.Providers.NullProvider";
-            m_dbProviderAssembly = "";
-			m_dbConnectionString = m_rootDirectory+Path.DirectorySeparatorChar+"xml_db";
+            m_dbProviderType = "DOL.Database2.Providers.SQLiteDBProvider";
+            m_dbProviderAssembly = "SQLiteDBProvider.dll";
+			m_dbConnectionString = "Synchronous = Off;Data Source="+m_rootDirectory+Path.DirectorySeparatorChar+"DOL.db";
 			m_autoSave = true;
 			m_saveInterval = 10;
 			m_maxClientCount = 500;

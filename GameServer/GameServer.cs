@@ -1186,7 +1186,7 @@ namespace DOL
                 Type dbProvider = typeof(DOL.Database2.Providers.NullDatabaseProvider);
                 if (Configuration.DBProviderAssembly.Length > 0)
                 {
-                    try { dbAssembly = Assembly.LoadFile(Configuration.DBProviderAssembly); }
+                    try { dbAssembly = Assembly.LoadFile(Configuration.RootDirectory + Path.DirectorySeparatorChar +Configuration.DBProviderAssembly); }
                     catch (FileLoadException e) { log.Error("Could not load database assembly " + Configuration.DBProviderAssembly + " check permissions", e);  }
                     catch (FileNotFoundException e) { log.Error("Could not load database assembly " + Configuration.DBProviderAssembly + " : Check if file exists and spelling", e); }
                     catch (BadImageFormatException e)
@@ -1194,6 +1194,7 @@ namespace DOL
                         if(log.IsErrorEnabled)
                             log.Error("Could not load database assembly " + Configuration.DBProviderAssembly + "-not a valid assembly. Check compile Target ( same version of NET or older than DOL) ", e);
                     }
+                    log.Info("Loaded database Assembly");
                 }
                 if (Configuration.DBProviderType.Length != 0)
                     foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())

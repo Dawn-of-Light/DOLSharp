@@ -678,77 +678,138 @@ namespace DOLStudio.Conversion
                         itemtemplate = new ItemTemplate();
                         KeyMapping.Add(node["ItemTemplate_ID"].InnerText, itemtemplate.ID);
                         itemtemplate.AllowedClasses = node["AllowedClasses"].InnerText;
-                        itemtemplate.Bonus = int.Parse(node["Bonus"].InnerText);
+                        if (node["Bonus"] != null)
+                            itemtemplate.Bonus = int.Parse(node["Bonus"].InnerText);
+                        if (node["Bonus1"] != null)
                         itemtemplate.Bonus1 = int.Parse(node["Bonus1"].InnerText);
-                        itemtemplate.Bonus10 = int.Parse(node["Bonus10"].InnerText);
-                        itemtemplate.Bonus10Type = int.Parse(node["Bonus10Type"].InnerText);
+                        if(node["Bonus10"] != null)
+                            itemtemplate.Bonus10 = int.Parse(node["Bonus10"].InnerText);
+                        if (node["Bonus10Type"] != null)
+                            itemtemplate.Bonus10Type = int.Parse(node["Bonus10Type"].InnerText);
+                        if (node["Bonus1Type"] != null)
                         itemtemplate.Bonus1Type = int.Parse(node["Bonus1Type"].InnerText);
+                        if (node["Bonus2"] != null)
                         itemtemplate.Bonus2 = int.Parse(node["Bonus2"].InnerText);
-                        itemtemplate.Bonus2Type = int.Parse(node["Bonus2Type"].InnerText);
-                        itemtemplate.Bonus3 = int.Parse(node["Bonus3Type"].InnerText);
+                        if (node["Bonus2Type"] != null)
+                            itemtemplate.Bonus2Type = int.Parse(node["Bonus2Type"].InnerText);
+                        if (node["Bonus3"] != null)
+                        itemtemplate.Bonus3 = int.Parse(node["Bonus3"].InnerText);
+                        if (node["Bonus3Type"] != null)
                         itemtemplate.Bonus3Type = int.Parse(node["Bonus3Type"].InnerText);
+                        if (node["Bonus4"] != null)
                         itemtemplate.Bonus4 = int.Parse(node["Bonus4"].InnerText);
+                        if (node["Bonus4Type"] != null)
                         itemtemplate.Bonus4Type = int.Parse(node["Bonus4Type"].InnerText);
+                        if (node["Bonus5"] != null)
                         itemtemplate.Bonus5 = int.Parse(node["Bonus5"].InnerText);
+                        if (node["Bonus5Type"] != null)
                         itemtemplate.Bonus5Type = int.Parse(node["Bonus5Type"].InnerText);
+                        if (node["Bonus6"] != null)
                         itemtemplate.Bonus6 = int.Parse(node["Bonus6"].InnerText);
+                        if (node["Bonus6Type"] != null)
                         itemtemplate.Bonus6Type = int.Parse(node["Bonus6Type"].InnerText);
+                        if (node["Bonus7"] != null)
                         itemtemplate.Bonus7 = int.Parse(node["Bonus7"].InnerText);
+                        if (node["Bonus7Type"] != null)
                         itemtemplate.Bonus7Type = int.Parse(node["Bonus7Type"].InnerText);
+                        if (node["Bonus8"] != null)
                         itemtemplate.Bonus8 = int.Parse(node["Bonus8"].InnerText);
+                        if (node["Bonus8Type"] != null)
                         itemtemplate.Bonus8Type = int.Parse(node["Bonus8Type"].InnerText);
+                        if (node["Bonus9"] != null)
                         itemtemplate.Bonus9 = int.Parse(node["Bonus9"].InnerText);
+                        if (node["Bonus9Type"] != null)
                         itemtemplate.Bonus9Type = int.Parse(node["Bonus9Type"].InnerText);
+                        if (node["CanDropAsLoot"] != null)
                         itemtemplate.CanDropAsLoot = ushort.Parse(node["CanDropAsLoot"].InnerText) != 0;
                         itemtemplate.CanUseEvery = int.Parse(node["CanUseEvery"].InnerText);
+                        if (node["Charges"] != null)
                         itemtemplate.Charges = int.Parse(node["Charges"].InnerText);
+                        if (node["Charges1"] != null)
                         itemtemplate.Charges1 = int.Parse(node["Charges1"].InnerText);
-                        itemtemplate.Color = int.Parse(node["Color"].InnerText);
-                        itemtemplate.Condition = int.Parse(node["Condition"].InnerText);
+                        if (node["Color"] != null)
+                            itemtemplate.Color = int.Parse(node["Color"].InnerText);
+                        if (node["Condition"] != null)
+                            itemtemplate.Condition = int.Parse(node["Condition"].InnerText);
                         //itemtemplate.ConditionPercent = byte.Parse(node["ConditionPercent"].InnerText);
+                        if (node["Copper"] != null)
                         itemtemplate.Copper = byte.Parse(node["Copper"].InnerText);
-                        itemtemplate.DPS_AF = int.Parse(node["DPS_AF"].InnerText);
-                        itemtemplate.Durability = int.Parse(node["Durability"].InnerText);
+                        if (node["DPS_AF"] != null)
+                            itemtemplate.DPS_AF = int.Parse(node["DPS_AF"].InnerText);
+                        if (node["Durability "] != null)
+                            itemtemplate.Durability = int.Parse(node["Durability"].InnerText);
                         //itemtemplate.DurabilityPercent = byte.Parse(node["DurabilityPercent"].InnerText);
-                        itemtemplate.Effect = int.Parse(node["Effect"].InnerText);
-                        itemtemplate.Emblem = int.Parse(node["Emblem"].InnerText);
-                        itemtemplate.Extension = byte.Parse(node["Extension"].InnerText);
+                        if (node["Effect"] != null)
+                            itemtemplate.Effect = int.Parse(node["Effect"].InnerText);
+                        if (node["Emblem"] != null)
+                             itemtemplate.Emblem = int.Parse(node["Emblem"].InnerText);
+                        if (node["Extension"] != null)
+                            itemtemplate.Extension = byte.Parse(node["Extension"].InnerText);
+                        if (node["ExtraBonus"] != null)
                         itemtemplate.ExtraBonus = int.Parse(node["ExtraBonus"].InnerText);
+                        if (node["ExtraBonusType"] != null)
                         itemtemplate.ExtraBonusType = int.Parse(node["ExtraBonusType"].InnerText);
+                        if (node["Gold"] != null)
                         itemtemplate.Gold = short.Parse(node["Gold"].InnerText);
+                        if (node["Hand"] != null)
                         itemtemplate.Hand = int.Parse(node["Hand"].InnerText);
                         itemtemplate.Id_nb = node["Id_nb"].InnerText;
+                        if (node["IsDropable"] != null)
                         itemtemplate.IsDropable = ushort.Parse(node["IsDropable"].InnerText) != 0;
                         //itemtemplate.IsMagical = ushort.Parse(node["IsMagical"].InnerText) != 0;
+                        if (node["IsPickable"] != null)
                         itemtemplate.IsPickable = ushort.Parse(node["IsPickable"].InnerText) != 0;
                         //itemtemplate.IsStackable = ushort.Parse(node["IsStackable"].InnerText) != 0;
-                        itemtemplate.IsTradable = ushort.Parse(node["IsTradable"].InnerText) != 0;
-                        itemtemplate.Item_Type = int.Parse(node["Item_Type"].InnerText);
+                        if (node["IsTradable"] != null)
+                            itemtemplate.IsTradable = ushort.Parse(node["IsTradable"].InnerText) != 0;
+                        if (node["Item_Type"] != null)
+                            itemtemplate.Item_Type = int.Parse(node["Item_Type"].InnerText);
                         itemtemplate.Level = int.Parse(node["Level"].InnerText);
+                        if (node["MaxCharges"] != null)
                         itemtemplate.MaxCharges = int.Parse(node["MaxCharges"].InnerText);
-                        itemtemplate.MaxCharges1 = int.Parse(node["MaCharges1"].InnerText);
+                        if(node["MaxCharges1"]!= null)
+                            itemtemplate.MaxCharges1 = int.Parse(node["MaxCharges1"].InnerText);
+                        if (node["MaxCondition"] != null)
                         itemtemplate.MaxCondition = int.Parse(node["MaxCondition"].InnerText);
+                        if (node["MaxCount"] != null)
                         itemtemplate.MaxCount = int.Parse(node["MaxCount"].InnerText);
+                        if (node["MaxDurability"] != null)
                         itemtemplate.MaxDurability = int.Parse(node["MaxDurability"].InnerText);
+                        if (node["Model"] != null)
                         itemtemplate.Model = int.Parse(node["Model"].InnerText);
                         itemtemplate.Name = node["Name"].InnerText;
                         itemtemplate.Object_Type = int.Parse(node["Object_Type"].InnerText);
+                        if (node["PackSize"] != null)
                         itemtemplate.PackSize = int.Parse(node["PackSize"].InnerText);
-                        itemtemplate.Platinum = short.Parse(node["Platinum"].InnerText);
-                        itemtemplate.PoisonCharges = int.Parse(node["PoisonCharges"].InnerText);
-                        itemtemplate.PoisonMaxCharges = int.Parse(node["PoisonMaxCharges"].InnerText);
-                        itemtemplate.PoisonSpellID = int.Parse(node["PoisonSpellID"].InnerText);
-                        itemtemplate.ProcSpellID = int.Parse(node["ProcSpellID"].InnerText);
-                        itemtemplate.ProcSpellID1 = int.Parse(node["ProcSpellID1"].InnerText);
-                        itemtemplate.Quality = int.Parse(node["Quality"].InnerText);
+                        if (node["Platinum"] != null)
+                            itemtemplate.Platinum = short.Parse(node["Platinum"].InnerText);
+                        if (node["PoisonCharges"] != null)
+                            itemtemplate.PoisonCharges = int.Parse(node["PoisonCharges"].InnerText);
+                        if (node["PoisonMaxCharges"] != null)
+                            itemtemplate.PoisonMaxCharges = int.Parse(node["PoisonMaxCharges"].InnerText);
+                        if (node["PosionSpellID"] != null)
+                            itemtemplate.PoisonSpellID = int.Parse(node["PoisonSpellID"].InnerText);
+                        if (node["ProcSpellID"] != null)
+                            itemtemplate.ProcSpellID = int.Parse(node["ProcSpellID"].InnerText);
+                        if (node["ProcSpellID1"] != null)
+                            itemtemplate.ProcSpellID1 = int.Parse(node["ProcSpellID1"].InnerText);
+                        if (node["Quality"] != null)
+                            itemtemplate.Quality = int.Parse(node["Quality"].InnerText);
+                        if (node["Realm"] != null)
                         itemtemplate.Realm = int.Parse(node["Realm"].InnerText);
-                        itemtemplate.Silver = byte.Parse(node["Silver"].InnerText);
+                        if (node["Silver"] != null)
+                            itemtemplate.Silver = byte.Parse(node["Silver"].InnerText);
+                        if (node["SPD_ABS"] != null)
                         itemtemplate.SPD_ABS = int.Parse(node["SPD_ABS"].InnerText);
+                        if (node["SpellID"] != null)
                         itemtemplate.SpellID = int.Parse(node["SpellID"].InnerText);
-                        itemtemplate.SpellID1 = int.Parse(node["SpellID1"].InnerText);
-                        itemtemplate.Type_Damage = int.Parse(node["Type_Damage"].InnerText);
+                        if (node["SpellID1"] != null)
+                            itemtemplate.SpellID1 = int.Parse(node["SpellID1"].InnerText);
+                        if (node["Type_Damage"] != null)
+                            itemtemplate.Type_Damage = int.Parse(node["Type_Damage"].InnerText);
                         //itemtemplate.Value =  long.Parse(node["Value"].InnerText);
-                        itemtemplate.Weight = int.Parse(node["Weight"].InnerText);
+                        if (node["Weight"] != null)
+                            itemtemplate.Weight = int.Parse(node["Weight"].InnerText);
                         itemtemplate.FillObjectRelations();
                         itemtemplate.Save();
                         break;
@@ -1163,7 +1224,8 @@ namespace DOLStudio.Conversion
                         pathpoint.MaxSpeed = int.Parse(node["MaxSpeed"].InnerText);
                         pathpoint.PathID = node["PathID"].InnerText;
                         pathpoint.Step = int.Parse(node["Step"].InnerText);
-                        pathpoint.WaitTime = int.Parse(node["WaitTime"].InnerText);
+                        if (node["WaitTime"] != null)
+                            pathpoint.WaitTime = int.Parse(node["WaitTime"].InnerText);
                         pathpoint.X = int.Parse(node["X"].InnerText);
                         pathpoint.Y = int.Parse(node["Y"].InnerText);
                         pathpoint.Z = int.Parse(node["Z"].InnerText);
@@ -1349,46 +1411,76 @@ namespace DOLStudio.Conversion
                         if (KeyMapping.ContainsKey(node["Spell_ID"].InnerText))
                             return true;
                         DBSpell spell = new DBSpell();
-                        spell.AllowBolt = ushort.Parse(node["AllowBolt"].InnerText) != 0;
-                        spell.AmnesiaChance = int.Parse(node["AmnesiaChance"].InnerText) ;
-                        spell.CastTime = double.Parse(node["CastTime"].InnerText);
+                        if (node["AllowBolt"] != null)
+                            spell.AllowBolt = ushort.Parse(node["AllowBolt"].InnerText) != 0;
+                        if (node["AmnesiaChance"] != null)
+                            spell.AmnesiaChance = int.Parse(node["AmnesiaChance"].InnerText) ;
+                        if (node["CastTime"] != null)
+                            spell.CastTime = double.Parse(node["CastTime"].InnerText);
                         spell.ClientEffect = int.Parse(node["ClientEffect"].InnerText);
-                        spell.Concentration = int.Parse(node["Concentration"].InnerText);
-                        spell.Damage = double.Parse(node["Damage"].InnerText);
+                        if (node["Concentration"] != null)
+                            spell.Concentration = int.Parse(node["Concentration"].InnerText);
+                        if (node["Damage"] != null)
+                            spell.Damage = double.Parse(node["Damage"].InnerText);
                         spell.DamageType = int.Parse(node["DamageType"].InnerText);
                         spell.Description = node["Description"].InnerText;
                         spell.Duration = int.Parse(node["Duration"].InnerText);
-                        spell.EffectGroup = int.Parse(node["EffectGroup"].InnerText);
-                        spell.Frequency = int.Parse(node["Frequency"].InnerText);
-                        spell.HealthPenalty = int.Parse(node["HealthPenalty"].InnerText);
+                        if (node["EffectGroup"] != null)
+                            spell.EffectGroup = int.Parse(node["EffectGroup"].InnerText);
+                        if (node["Frequency"] != null)
+                            spell.Frequency = int.Parse(node["Frequency"].InnerText);
+                        if (node["HealthPenalty"] != null)
+                            spell.HealthPenalty = int.Parse(node["HealthPenalty"].InnerText);
                         spell.Icon = int.Parse(node["Icon"].InnerText);
                         spell.InstrumentRequirement = int.Parse(node["InstrumentRequirement"].InnerText);
-                        spell.IsFocus = ushort.Parse(node["IsFocus"].InnerText) != 0;
-                        spell.IsPrimary = ushort.Parse(node["IsPrimary"].InnerText) != 0;
-                        spell.IsSecondary = ushort.Parse(node["IsSecondary"].InnerText) != 0;
-                        spell.LifeDrainReturn = int.Parse(node["LifeDrainReturn"].InnerText) ;
+                        if (node["IsFocus"] != null)
+                            spell.IsFocus = ushort.Parse(node["IsFocus"].InnerText) != 0;
+                        if (node["IsPrimary"] != null)
+                            spell.IsPrimary = ushort.Parse(node["IsPrimary"].InnerText) != 0;
+                        if (node["IsSecondary"] != null)
+                            spell.IsSecondary = ushort.Parse(node["IsSecondary"].InnerText) != 0;
+                        if (node["LifeDrainReturn"] != null)
+                            spell.LifeDrainReturn = int.Parse(node["LifeDrainReturn"].InnerText) ;
+                        if (node["Message1"] != null)
                         spell.Message1 = node["Message1"].InnerText;
+                        if (node["Message2"] != null)
                         spell.Message2 = node["Message2"].InnerText;
+                        if (node["Message3"] != null)
                         spell.Message3 = node["Message3"].InnerText;
+                        if (node["Message4"] != null)
                         spell.Message4 = node["Message4"].InnerText;
-                        spell.MoveCast = ushort.Parse(node["MoveCast"].InnerText) != 0;
+                        if (node["MoveCast"] != null)
+                            spell.MoveCast = ushort.Parse(node["MoveCast"].InnerText) != 0;
                         spell.Name = node["Name"].InnerText;
-                        spell.Power = int.Parse(node["Power"].InnerText);
+                        if (node["Power"] != null)
+                            spell.Power = int.Parse(node["Power"].InnerText);
+                        if (node["Pulse"] != null)
                         spell.Pulse = int.Parse(node["Pulse"].InnerText);
-                        spell.PulsePower = int.Parse(node["PulsePower"].InnerText);
-                        spell.Radius = int.Parse(node["Radius"].InnerText);
-                        spell.Range = int.Parse(node["Range"].InnerText);
-                        spell.RecastDelay = int.Parse(node["RecastDelay"].InnerText);
-                        spell.ResurrectHealth = int.Parse(node["ResurrectHealth"].InnerText);
-                        spell.ResurrectMana = int.Parse(node["ResurrectMana"].InnerText);
-                        spell.SharedTimerGroup = int.Parse(node["SharedTimerGroup"].InnerText);
-                        spell.SpellGroup = int.Parse(node["SpellGroup"].InnerText);
+                        if (node["PulsePower"] != null)
+                            spell.PulsePower = int.Parse(node["PulsePower"].InnerText);
+                        if (node["Radius"] != null)
+                            spell.Radius = int.Parse(node["Radius"].InnerText);
+                        if (node["Range"] != null)
+                            spell.Range = int.Parse(node["Range"].InnerText);
+                        if (node["RecastDelay"] != null)
+                            spell.RecastDelay = int.Parse(node["RecastDelay"].InnerText);
+                        if (node["RessurectHealth"] != null)
+                         spell.ResurrectHealth = int.Parse(node["ResurrectHealth"].InnerText);
+                        if (node["RessurectMana"] != null)
+                            spell.ResurrectMana = int.Parse(node["ResurrectMana"].InnerText);
+                        if (node["SharedTimerGroup"] != null)
+                            spell.SharedTimerGroup = int.Parse(node["SharedTimerGroup"].InnerText);
+                        if (node["SpellGroup"] != null)
+                            spell.SpellGroup = int.Parse(node["SpellGroup"].InnerText);
                         spell.SpellID = int.Parse(node["SpellID"].InnerText);
-                        spell.SubSpellID = int.Parse(node["SubSpellID"].InnerText);
+                        if (node["SubSpellID"] != null)
+                            spell.SubSpellID = int.Parse(node["SubSpellID"].InnerText);
                         spell.Target = node["Target"].InnerText;
                         spell.Type = node["Type"].InnerText;
-                        spell.Uninterruptible = ushort.Parse(node["Uniterruptible"].InnerText) != 0;
-                        spell.Value = double.Parse(node["Value"].InnerText);
+                        if (node["Uninterruptible"] != null)
+                         spell.Uninterruptible = ushort.Parse(node["Uninterruptible"].InnerText) != 0;
+                        if (node["Value"] != null)
+                            spell.Value = double.Parse(node["Value"].InnerText);
                         spell.FillObjectRelations();
                         spell.Save();
                         KeyMapping.Add(node["Spell_ID"].InnerText, spell.ID);
@@ -1409,7 +1501,8 @@ namespace DOLStudio.Conversion
                         style.Icon = int.Parse(node["Icon"].InnerText);
                         style.Name = node["Name"].InnerText;
                         style.OpeningRequirementType = int.Parse(node["OpeningRequirementType"].InnerText);
-                        style.OpeningRequirementValue = int.Parse(node["OperningRequirementValue"].InnerText);
+                        if (node["Opening"] != null)
+                        style.OpeningRequirementValue = int.Parse(node["OpeningRequirementValue"].InnerText);
                         style.RandomProc = ushort.Parse(node["RandomProc"].InnerText) != 0;
                         style.SpecKeyName = node["SpecKeyName"].InnerText;
                         style.SpecLevelRequirement = int.Parse(node["SpecLevelRequirement"].InnerText);

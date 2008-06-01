@@ -207,7 +207,8 @@ namespace DOL.GS
 		}
 		public static void CreateRanks(Guild newguild)
 		{
-			DBRank rank;
+            DBRank rank;
+            newguild.theGuildDB.FillObjectRelations();
 			for (int i = 0; i < 10; i++)
 			{
 				rank = new DBRank();
@@ -231,7 +232,6 @@ namespace DOL.GS
 				rank.View = false;
                 rank.View = false;
                 rank.Dues = false;
-
                 if (i < 9)
                 {
                     rank.GcSpeak = true;
@@ -286,8 +286,8 @@ namespace DOL.GS
                 }
                 GameServer.Database.AddNewObject(rank);
 				GameServer.Database.SaveObject(rank);
-				newguild.theGuildDB.Ranks[i] = rank;
 			}
+            newguild.theGuildDB.FillObjectRelations();
 		}
 
 		/// <summary>
@@ -412,9 +412,9 @@ namespace DOL.GS
 				AddGuild(myguild);
 				if (((DBGuild)obj).Ranks.Length == 0)
 					CreateRanks(myguild);
-                Character[] guildCharacters = (Character[])from s in DatabaseLayer.Instance.OfType<Character>()
+                Character[] guildCharacters = (from s in DatabaseLayer.Instance.OfType<Character>()
                                               where s.guildID == myguild.guildID
-                                              select s;
+                                              select s).ToArray();
 				SortedList<string, SocialWindowMemeber> tempList = new SortedList<string, SocialWindowMemeber>(guildCharacters.Length);
 				foreach (Character ch in guildCharacters)
 				{

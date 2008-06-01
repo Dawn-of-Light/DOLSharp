@@ -90,6 +90,9 @@ namespace DOLConfig
 				Config.ServerNameShort = MainForm.shortNameTextBox.Text;
 				Config.ServerName = MainForm.FullNameTextBox.Text;
 				Config.AutoAccountCreation = MainForm.autoAccountCreationCheckBox.Checked;
+                Config.DBConnectionString = MainForm.ConnectionStringtb.Text;
+                Config.DBProviderAssembly = MainForm.ProviderAssemblytb.Text;
+                Config.DBProviderType = MainForm.ProviderTypetb.Text;
 				/*
                  switch (MainForm.databaseTypeComboBox.Text)
 				{

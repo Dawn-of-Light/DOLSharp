@@ -86,7 +86,7 @@ namespace DOLStudio
             {
                 try
                 {
-                    dbAssembly = Assembly.LoadFile(m_config.DBProviderAssembly);
+                    dbAssembly = Assembly.LoadFile(m_config.RootDirectory+Path.DirectorySeparatorChar+ m_config.DBProviderAssembly);
                 }
                 catch (Exception e)
                 {
@@ -131,6 +131,7 @@ namespace DOLStudio
         }
         private void ExitToolsStripMenuItem_Click(object sender, EventArgs e)
         {
+            Close();
             Application.Exit();
         }
 
@@ -217,6 +218,7 @@ namespace DOLStudio
         private void ParentForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = false;
+            DatabaseLayer.Instance.SaveWorldState();
         }
 
         private void toolsMenu_Click(object sender, EventArgs e)

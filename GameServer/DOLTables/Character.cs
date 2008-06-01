@@ -194,7 +194,7 @@ namespace DOL
                 : base()
 			{
 				m_creationDate = DateTime.Now;
-				m_autoSave = false;
+				m_autoSave = true;
 				m_concentration = 100;
 				m_exp = 0;
 				m_bntyPts = 0;

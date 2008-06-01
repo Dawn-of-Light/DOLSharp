@@ -127,7 +127,8 @@ namespace DOLStudio
         {
             ResultView.Items.Clear();
             m_currentobject = DatabaseLayer.Instance.GetDatabaseObjectFromID(UInt64.Parse(IDfield.Value.ToString()));
-            ResultView.Items.Add(m_currentobject.ID.ToString(), m_currentobject.ID.ToString(), null);
+            if(m_currentobject != null)
+                ResultView.Items.Add(m_currentobject.ID.ToString(), m_currentobject.ID.ToString(), null);
         }
 
         private void QueryBtn_Click(object sender, EventArgs e)

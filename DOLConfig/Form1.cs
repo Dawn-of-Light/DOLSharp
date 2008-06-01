@@ -80,22 +80,5 @@ namespace DOLConfig
 			toolStripStatusLabel1.Text = "Set the MySQL password for this server";
 		}
 
-		private void databaseTypeComboBox_SelectionChangeCommitted(object sender, EventArgs e)
-		{
-			if (databaseTypeComboBox.Text == "XML")
-			{
-				mysqlDatabaseTextBox.Enabled = false;
-				mysqlHostTextBox.Enabled = false;
-				mysqlPasswordTextBox.Enabled = false;
-				mysqlUsernameTextBox.Enabled = false;
-			}
-			else
-			{
-				mysqlDatabaseTextBox.Enabled = true;
-				mysqlHostTextBox.Enabled = true;
-				mysqlPasswordTextBox.Enabled = true;
-				mysqlUsernameTextBox.Enabled = true;
-			}
-		}
 	}
 }
