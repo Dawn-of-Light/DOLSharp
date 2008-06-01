@@ -61,7 +61,6 @@ namespace DOL.GS
         protected readonly int m_sharedtimergroup = 0; 
 		protected readonly bool m_moveCast = false;
 		protected readonly bool m_uninterruptible = false;
-		protected readonly int m_healthPenalty = 0;
 		protected readonly bool m_isfocus = false;
         protected readonly bool m_minotaurspell = false;
 		// warlocks
@@ -280,11 +279,6 @@ namespace DOL.GS
 		{
 			get { return m_uninterruptible; }
 		}
-
-		public int HealthPenalty
-		{
-			get { return m_healthPenalty; }
-		}
 		
 		public bool IsFocus
 		{
@@ -346,7 +340,6 @@ namespace DOL.GS
 			m_subSpellID = dbspell.SubSpellID;
 			m_moveCast = dbspell.MoveCast;
 			m_uninterruptible = dbspell.Uninterruptible;
-			m_healthPenalty = dbspell.HealthPenalty;
 			m_isfocus = dbspell.IsFocus;
 			// warlocks
 			m_isprimary = dbspell.IsPrimary;
