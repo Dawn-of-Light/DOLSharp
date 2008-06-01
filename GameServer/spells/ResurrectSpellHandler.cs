@@ -157,8 +157,15 @@ namespace DOL.GS.Spells
 			if (m_caster.CurrentRegionID != living.CurrentRegionID) return;
 
 			living.Health = living.MaxHealth * m_spell.ResurrectHealth / 100;
-			living.Mana = living.MaxMana * m_spell.ResurrectMana / 100;
-			living.Endurance = 0; //no endurance after any rez
+			int tempManaEnd = m_spell.ResurrectMana / 100;
+			living.Mana = living.MaxMana * tempManaEnd;
+
+			//The spec rez spells are the only ones that have endurance
+			if (!SpellLine.IsBaseLine)
+				living.Endurance = living.MaxEndurance * tempManaEnd;
+			else
+				living.Endurance = 0;
+
 			living.MoveTo(m_caster.CurrentRegionID, m_caster.X, m_caster.Y, m_caster.Z, m_caster.Heading);
 
 			GameTimer resurrectExpiredTimer = null;
