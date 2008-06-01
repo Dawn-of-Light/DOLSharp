@@ -36,7 +36,7 @@ namespace DOL.GS.PropertyCalc
 		{
 			// Hardcap 10%
 			int percent = Math.Min(10, living.BuffBonusCategory1[(int)property]
-				-living.BuffBonusCategory3[(int)property]
+				-living.DebuffCategory[(int)property]
 				+living.ItemBonus[(int)property]);
 	
 			// Relic bonus

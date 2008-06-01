@@ -37,17 +37,17 @@ namespace DOL.GS.Spells.Atlantis
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			base.OnEffectStart(effect);
-			effect.Owner.BuffBonusCategory3[(int)eProperty.Dexterity] += (int)m_spell.Value;
-			effect.Owner.BuffBonusCategory3[(int)eProperty.Strength] += (int)m_spell.Value;
-			effect.Owner.BuffBonusCategory3[(int)eProperty.Constitution] += (int)m_spell.Value;
-			effect.Owner.BuffBonusCategory3[(int)eProperty.Acuity] += (int)m_spell.Value;
-			effect.Owner.BuffBonusCategory3[(int)eProperty.Piety] += (int)m_spell.Value;
-			effect.Owner.BuffBonusCategory3[(int)eProperty.Empathy] += (int)m_spell.Value;
-			effect.Owner.BuffBonusCategory3[(int)eProperty.Quickness] += (int)m_spell.Value;
-			effect.Owner.BuffBonusCategory3[(int)eProperty.Intelligence] += (int)m_spell.Value;
-			effect.Owner.BuffBonusCategory3[(int)eProperty.Charisma] += (int)m_spell.Value;
-			effect.Owner.BuffBonusCategory3[(int)eProperty.ArmorAbsorbtion] += (int)m_spell.Value;
-			effect.Owner.BuffBonusCategory3[(int)eProperty.MagicAbsorbtion] += (int)m_spell.Value;
+			effect.Owner.DebuffCategory[(int)eProperty.Dexterity] += (int)m_spell.Value;
+			effect.Owner.DebuffCategory[(int)eProperty.Strength] += (int)m_spell.Value;
+			effect.Owner.DebuffCategory[(int)eProperty.Constitution] += (int)m_spell.Value;
+			effect.Owner.DebuffCategory[(int)eProperty.Acuity] += (int)m_spell.Value;
+			effect.Owner.DebuffCategory[(int)eProperty.Piety] += (int)m_spell.Value;
+			effect.Owner.DebuffCategory[(int)eProperty.Empathy] += (int)m_spell.Value;
+			effect.Owner.DebuffCategory[(int)eProperty.Quickness] += (int)m_spell.Value;
+			effect.Owner.DebuffCategory[(int)eProperty.Intelligence] += (int)m_spell.Value;
+			effect.Owner.DebuffCategory[(int)eProperty.Charisma] += (int)m_spell.Value;
+			effect.Owner.DebuffCategory[(int)eProperty.ArmorAbsorbtion] += (int)m_spell.Value;
+			effect.Owner.DebuffCategory[(int)eProperty.MagicAbsorbtion] += (int)m_spell.Value;
 
 			if (effect.Owner is GamePlayer)
 			{
@@ -60,17 +60,17 @@ namespace DOL.GS.Spells.Atlantis
 		}
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
-			effect.Owner.BuffBonusCategory3[(int)eProperty.Dexterity] -= (int)m_spell.Value;
-			effect.Owner.BuffBonusCategory3[(int)eProperty.Strength] -= (int)m_spell.Value;
-			effect.Owner.BuffBonusCategory3[(int)eProperty.Constitution] -= (int)m_spell.Value;
-			effect.Owner.BuffBonusCategory3[(int)eProperty.Acuity] -= (int)m_spell.Value;
-			effect.Owner.BuffBonusCategory3[(int)eProperty.Piety] -= (int)m_spell.Value;
-			effect.Owner.BuffBonusCategory3[(int)eProperty.Empathy] -= (int)m_spell.Value;
-			effect.Owner.BuffBonusCategory3[(int)eProperty.Quickness] -= (int)m_spell.Value;
-			effect.Owner.BuffBonusCategory3[(int)eProperty.Intelligence] -= (int)m_spell.Value;
-			effect.Owner.BuffBonusCategory3[(int)eProperty.Charisma] -= (int)m_spell.Value;
-			effect.Owner.BuffBonusCategory3[(int)eProperty.ArmorAbsorbtion] -= (int)m_spell.Value;
-			effect.Owner.BuffBonusCategory3[(int)eProperty.MagicAbsorbtion] -= (int)m_spell.Value;
+			effect.Owner.DebuffCategory[(int)eProperty.Dexterity] -= (int)m_spell.Value;
+			effect.Owner.DebuffCategory[(int)eProperty.Strength] -= (int)m_spell.Value;
+			effect.Owner.DebuffCategory[(int)eProperty.Constitution] -= (int)m_spell.Value;
+			effect.Owner.DebuffCategory[(int)eProperty.Acuity] -= (int)m_spell.Value;
+			effect.Owner.DebuffCategory[(int)eProperty.Piety] -= (int)m_spell.Value;
+			effect.Owner.DebuffCategory[(int)eProperty.Empathy] -= (int)m_spell.Value;
+			effect.Owner.DebuffCategory[(int)eProperty.Quickness] -= (int)m_spell.Value;
+			effect.Owner.DebuffCategory[(int)eProperty.Intelligence] -= (int)m_spell.Value;
+			effect.Owner.DebuffCategory[(int)eProperty.Charisma] -= (int)m_spell.Value;
+			effect.Owner.DebuffCategory[(int)eProperty.ArmorAbsorbtion] -= (int)m_spell.Value;
+			effect.Owner.DebuffCategory[(int)eProperty.MagicAbsorbtion] -= (int)m_spell.Value;
 
 			if (effect.Owner is GamePlayer)
 			{

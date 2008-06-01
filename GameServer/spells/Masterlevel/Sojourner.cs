@@ -216,7 +216,7 @@ namespace DOL.GS.Spells
         {
             m_target.IsStunned = false;
             //m_target.IsSilenced = false;
-            m_target.BuffBonusCategory3[(int)eProperty.SpellFumbleChance]-=100;
+            m_target.DebuffCategory[(int)eProperty.SpellFumbleChance]-=100;
             GameEventMgr.RemoveHandler(m_target, GamePlayerEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
             m_npc.StopMoving();
             m_npc.RemoveFromWorld();
@@ -271,7 +271,7 @@ namespace DOL.GS.Spells
 
             player.IsStunned = true;
             //player.IsSilenced = true;
-            player.BuffBonusCategory3[(int)eProperty.SpellFumbleChance]+=100;
+            player.DebuffCategory[(int)eProperty.SpellFumbleChance]+=100;
             player.StopAttack();
             player.StopCurrentSpellcast();
             player.MountSteed(npc, true);

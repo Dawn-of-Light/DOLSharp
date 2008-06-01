@@ -41,7 +41,7 @@ namespace DOL.GS.PropertyCalc
 			{
 				int buff = player.BuffBonusCategory1[(int)property] * 10
 				+ player.BuffBonusCategory2[(int)property] * 10
-				- player.BuffBonusCategory3[(int)property] * 10
+				- player.DebuffCategory[(int)property] * 10
 				+ player.BuffBonusCategory4[(int)property] * 10
 				+ player.AbilityBonus[(int)property] * 10;
 				int parrySpec = 0;
@@ -59,7 +59,7 @@ namespace DOL.GS.PropertyCalc
 				{
 					int buff = pet.BuffBonusCategory1[(int)property] * 10
 					+ pet.BuffBonusCategory2[(int)property] * 10
-					- pet.BuffBonusCategory3[(int)property] * 10
+					- pet.DebuffCategory[(int)property] * 10
 					+ pet.BuffBonusCategory4[(int)property] * 10
 					+ pet.AbilityBonus[(int)property] * 10
 					+ (pet.GetModified(eProperty.Dexterity) * 2 - 100) / 4

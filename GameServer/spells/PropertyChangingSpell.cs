@@ -222,7 +222,7 @@ namespace DOL.GS.Spells
 					bonuscat = target.BuffBonusCategory2;
 					break;
 				case 3:
-					bonuscat = target.BuffBonusCategory3;
+					bonuscat = target.DebuffCategory;
 					break;
 				case 4:
 					bonuscat = target.BuffBonusCategory4;

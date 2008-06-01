@@ -170,7 +170,7 @@ namespace DOL.GS
 
 						int itemBonus = owner.GetModifiedFromItems(property);
 						int buffBonus = GetModifiedFromBuffs(property);
-						int debuff = BuffBonusCategory3[(int)property];
+						int debuff = DebuffCategory[(int)property];
 
 						// Base stats from the pet; add this to item bonus
 						// afterwards, as it is treated the same way for
@@ -211,7 +211,7 @@ namespace DOL.GS
 					{
 						int baseBonus = Constitution;
 						int buffBonus = GetModifiedFromBuffs(eProperty.Constitution);
-						int debuff = BuffBonusCategory3[(int)property];
+						int debuff = DebuffCategory[(int)property];
 
 						// Apply debuffs. 100% Effectiveness for player buffs, but only 50%
 						// effectiveness for base bonuses.
@@ -232,7 +232,7 @@ namespace DOL.GS
 					{
 						int conBonus = (int)(3.1 * Constitution);
 						int hitsBonus = (int)(32.5 * Level + m_summonHitsBonus);
-						int debuff = BuffBonusCategory3[(int)property];
+						int debuff = DebuffCategory[(int)property];
 
 						// Apply debuffs. As only base constitution affects pet
 						// health, effectiveness is a flat 50%.

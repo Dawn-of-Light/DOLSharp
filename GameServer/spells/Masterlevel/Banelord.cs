@@ -422,7 +422,7 @@ namespace DOL.GS.PropertyCalc
             return (int)(
                 +living.BuffBonusCategory1[(int)property]
                 + living.BuffBonusCategory2[(int)property]
-                - living.BuffBonusCategory3[(int)property]
+                - living.DebuffCategory[(int)property]
                 + living.BuffBonusCategory4[(int)property]);
         }
     }
