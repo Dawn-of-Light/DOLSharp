@@ -1318,25 +1318,30 @@ namespace DOL.GS.Spells
 				#region GTAoE
 				// GTAoE
 				case "area":
-					if (NewRadius > 0)
-					{
-						foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, NewRadius))
-						{
-							if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
-							{
-								list.Add(player);
-							}
-						}
-						foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, NewRadius))
-						{
-							if (npc is GameStorm)
-								list.Add(npc);
-							else if (GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
-							{
-								list.Add(npc);
-							}
-						}
-					}
+                    //Dinberg - fix for animists turrets, where before a radius of zero meant that no targets were ever 
+                    //selected!
+                    if		(Spell.SpellType == "Turret")
+                        list.Add(Caster);
+                    else
+                        if (NewRadius > 0)
+                        {
+                            foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, NewRadius))
+                            {
+                                if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
+                                {
+                                    list.Add(player);
+                                }
+                            }
+                            foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, NewRadius))
+                            {
+                                if (npc is GameStorm)
+                                    list.Add(npc);
+                                else if (GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
+                                {
+                                    list.Add(npc);
+                                }
+                            }
+                        }
 					break;
 				#endregion
 				#region Corpse
@@ -2353,7 +2358,7 @@ namespace DOL.GS.Spells
 		/// <param name="max">returns max variance</param>
 		public virtual void CalculateDamageVariance(GameLiving target, out double min, out double max)
 		{
-			if (m_spellLine.KeyName == GlobalSpellsLines.Item_Effects || m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect)
+			if (m_spellLine.KeyName == GlobalSpellsLines.Item_Effects || m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect || m_spellLine.KeyName == GlobalSpellsLines.Reserved_Spells)
 			{
 				min = max = 1.0;
 				return;
