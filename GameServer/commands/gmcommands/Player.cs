@@ -523,7 +523,7 @@ namespace DOL.GS.Commands
                                 return;
                             }
                             long amount = long.Parse(args[2]);
-                            player.GainBountyPoints(amount);
+							player.GainBountyPoints(amount, false);
                             client.Out.SendMessage("You gave " + player.Name + " " + amount + " bountypoints succesfully!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                             player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has given you " + amount + " bountypoints!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                             player.SaveIntoDatabase();
