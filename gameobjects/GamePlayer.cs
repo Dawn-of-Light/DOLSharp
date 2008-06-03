@@ -3276,16 +3276,30 @@ namespace DOL.GS
 				Out.SendMessage(str, type, loc);
 			return true;
 		}
+
+		/// <summary>
+		/// Player gains bounty points
+		/// </summary>
+		/// <param name="amount">The amount of bounty points</param>
+		public override void GainBountyPoints(long amount)
+		{
+			GainBountyPoints(amount, true);
+		}
+
 		/// <summary>
 		/// Called when this living gains bounty points
 		/// </summary>
 		/// <param name="amount">The amount of bounty points gained</param>
-		public override void GainBountyPoints(long amount)
+		/// <param name="multiply">Should this amount be multiplied by the BP Rate</param>
+		public void GainBountyPoints(long amount, bool multiply)
 		{
-			//bp rate modifier
-			double modifier = ServerProperties.Properties.BP_RATE;
-			if (modifier != -1)
-				amount = (long)((double)amount * modifier);
+			if (multiply)
+			{
+				//bp rate modifier
+				double modifier = ServerProperties.Properties.BP_RATE;
+				if (modifier != -1)
+					amount = (long)((double)amount * modifier);
+			}
 
 			base.GainBountyPoints(amount);
 			BountyPoints += amount;
