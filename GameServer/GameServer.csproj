@@ -407,6 +407,7 @@
     <Compile Include="effects\ShadeEffect.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="effects\Spells\FocusShellEffect.cs" />
     <Compile Include="effects\SprintEffect.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1994,6 +1995,7 @@
     <Compile Include="spells\DisarmSpellHandler.cs" />
     <Compile Include="spells\EnduranceHealSpellHandler.cs" />
     <Compile Include="spells\FacilisSpellHandler.cs" />
+    <Compile Include="spells\FocusShellHandler.cs" />
     <Compile Include="spells\Fury.cs" />
     <Compile Include="spells\Savage\SavageEnduranceHeal.cs" />
     <Compile Include="spells\SpeedOfTheRealmHandler.cs" />
@@ -2543,6 +2545,9 @@
     <Content Include="language\IT\Commands\GMCommands.txt" />
     <Content Include="language\IT\Effects.txt" />
     <Content Include="language\IT\Language-IT.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="spells\Cleric\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

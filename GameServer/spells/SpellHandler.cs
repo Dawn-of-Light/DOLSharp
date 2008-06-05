@@ -1895,11 +1895,11 @@ namespace DOL.GS.Spells
 			if (Spell.IsFocus) // Add Event handlers for focus spell
 			{
 				Caster.TempProperties.setProperty(FOCUS_SPELL, effect);
-				GameEventMgr.AddHandler(Caster, GameLivingEvent.AttackFinished, new DOLEventHandler(EventAction));
-				GameEventMgr.AddHandler(Caster, GameLivingEvent.CastSpell, new DOLEventHandler(EventAction));
-				GameEventMgr.AddHandler(Caster, GameLivingEvent.Moving, new DOLEventHandler(EventAction));
-				GameEventMgr.AddHandler(Caster, GameLivingEvent.Dying, new DOLEventHandler(EventAction));
-				GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.Dying, new DOLEventHandler(EventAction));
+				GameEventMgr.AddHandler(Caster, GameLivingEvent.AttackFinished, new DOLEventHandler(FocusSpellAction));
+				GameEventMgr.AddHandler(Caster, GameLivingEvent.CastSpell, new DOLEventHandler(FocusSpellAction));
+				GameEventMgr.AddHandler(Caster, GameLivingEvent.Moving, new DOLEventHandler(FocusSpellAction));
+				GameEventMgr.AddHandler(Caster, GameLivingEvent.Dying, new DOLEventHandler(FocusSpellAction));
+				GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.Dying, new DOLEventHandler(FocusSpellAction));
 			}
 		}
 
@@ -2045,7 +2045,7 @@ namespace DOL.GS.Spells
 		/// <param name="e"></param>
 		/// <param name="sender"></param>
 		/// <param name="args"></param>
-		private void EventAction(DOLEvent e, object sender, EventArgs args)
+		protected void FocusSpellAction(DOLEvent e, object sender, EventArgs args)
 		{
 			GameLiving living = sender as GameLiving;
 			if (living == null) return;
@@ -2061,16 +2061,19 @@ namespace DOL.GS.Spells
 					return;
 			}
 
-			GameEventMgr.RemoveHandler(Caster, GameLivingEvent.AttackFinished, new DOLEventHandler(EventAction));
-			GameEventMgr.RemoveHandler(Caster, GameLivingEvent.CastSpell, new DOLEventHandler(EventAction));
-			GameEventMgr.RemoveHandler(Caster, GameLivingEvent.Moving, new DOLEventHandler(EventAction));
-			GameEventMgr.RemoveHandler(Caster, GameLivingEvent.Dying, new DOLEventHandler(EventAction));
-			GameEventMgr.RemoveHandler(currentEffect.Owner, GameLivingEvent.Dying, new DOLEventHandler(EventAction));
+			GameEventMgr.RemoveHandler(Caster, GameLivingEvent.AttackFinished, new DOLEventHandler(FocusSpellAction));
+			GameEventMgr.RemoveHandler(Caster, GameLivingEvent.CastSpell, new DOLEventHandler(FocusSpellAction));
+			GameEventMgr.RemoveHandler(Caster, GameLivingEvent.Moving, new DOLEventHandler(FocusSpellAction));
+			GameEventMgr.RemoveHandler(Caster, GameLivingEvent.Dying, new DOLEventHandler(FocusSpellAction));
+			GameEventMgr.RemoveHandler(currentEffect.Owner, GameLivingEvent.Dying, new DOLEventHandler(FocusSpellAction));
 			Caster.TempProperties.removeProperty(FOCUS_SPELL);
 
 			if (currentEffect.Spell.Pulse != 0) CancelPulsingSpell(Caster, currentEffect.Spell.SpellType);
 			else currentEffect.Cancel(false);
-			MessageToCaster(String.Format("{0} was cancelled !", currentEffect.Spell.Name), eChatType.CT_SpellExpires);
+
+			MessageToCaster(String.Format("You lose your focus on your {0} spell.", currentEffect.Spell.Name), eChatType.CT_SpellExpires);
+			if (e == GameLivingEvent.Moving)
+				MessageToCaster("You move and interrupt your focus!", eChatType.CT_System);
 		}
 		#endregion
 
