@@ -1,21 +1,21 @@
- /*
- * DAWN OF LIGHT - The first free open source DAoC server emulator
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- */
+/*
+* DAWN OF LIGHT - The first free open source DAoC server emulator
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*
+*/
 #define NOENCRYPTION
 using System;
 using System.Collections;
@@ -51,9 +51,9 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.CharacterPointsUpdate));
 			pak.WriteInt((uint)m_gameClient.Player.RealmPoints);
 			pak.WriteShort(m_gameClient.Player.LevelPermill);
-			pak.WriteShort((ushort) m_gameClient.Player.SkillSpecialtyPoints);
+			pak.WriteShort((ushort)m_gameClient.Player.SkillSpecialtyPoints);
 			pak.WriteInt((uint)m_gameClient.Player.BountyPoints);
-			pak.WriteShort((ushort) m_gameClient.Player.RealmSpecialtyPoints);
+			pak.WriteShort((ushort)m_gameClient.Player.RealmSpecialtyPoints);
 			pak.WriteShort(m_gameClient.Player.ChampionLevelPermill);
 			pak.WriteLongLowEndian((ulong)m_gameClient.Player.Experience);
 			pak.WriteLongLowEndian((ulong)m_gameClient.Player.ExperienceForNextLevel);
@@ -72,7 +72,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(sittingFlag);
 			pak.WriteByte(m_gameClient.Player.EndurancePercent);
 			pak.WriteByte(m_gameClient.Player.ConcentrationPercent);
-//			pak.WriteShort((byte) (m_gameClient.Player.IsAlive ? 0x00 : 0x0f)); // 0x0F if dead ??? where it now ?
+			//			pak.WriteShort((byte) (m_gameClient.Player.IsAlive ? 0x00 : 0x0f)); // 0x0F if dead ??? where it now ?
 			pak.WriteByte(0);// unk
 			pak.WriteShort((ushort)m_gameClient.Player.MaxMana);
 			pak.WriteShort(100); // MaxEndurance // TODO MaxEndurance when GamePlayer will have +Endurance bonuses
@@ -111,9 +111,9 @@ namespace DOL.GS.PacketHandler
 						pak.WriteByte((effect is GameSpellEffect) ? (byte)(fxcount - 1) : (byte)0xff);
 						byte ImmunByte = 0;
 						if (effect is GameSpellAndImmunityEffect)
-  						{
-    						GameSpellAndImmunityEffect immunity = (GameSpellAndImmunityEffect)effect;
-     						if (immunity.ImmunityState) ImmunByte = 1;
+						{
+							GameSpellAndImmunityEffect immunity = (GameSpellAndImmunityEffect)effect;
+							if (immunity.ImmunityState) ImmunByte = 1;
 						}
 						pak.WriteByte(ImmunByte); // new in 1.73; if non zero says "protected by" on right click
 						// bit 0x08 adds "more..." to right click info
@@ -123,13 +123,13 @@ namespace DOL.GS.PacketHandler
 						byte flagNegativeEffect = 0;
 						if (effect is StaticEffect)
 						{
-						 if (((StaticEffect)effect).HasNegativeEffect)
-							flagNegativeEffect = 1;
+							if (((StaticEffect)effect).HasNegativeEffect)
+								flagNegativeEffect = 1;
 						}
 						else if (effect is GameSpellEffect)
 						{
 							if (!((GameSpellEffect)effect).SpellHandler.HasPositiveEffect)
-							flagNegativeEffect = 1;
+								flagNegativeEffect = 1;
 						}
 						pak.WriteByte(flagNegativeEffect);
 						pak.WritePascalString(effect.Name);

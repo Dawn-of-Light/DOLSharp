@@ -2500,6 +2500,9 @@ namespace DOL.GS
 
 				owner.TempProperties.setProperty(LAST_ATTACK_DATA, mainHandAD);
 
+				//Send the proper attacking messages to ourself
+				owner.SendAttackingCombatMessages(mainHandAD);
+
 				//Notify ourself about the attack
 				owner.Notify(GameLivingEvent.AttackFinished, owner, new AttackFinishedEventArgs(mainHandAD));
 
@@ -2536,6 +2539,8 @@ namespace DOL.GS
 										owner.CheckWeaponMagicalEffect(leftHandAD, leftWeapon);
 									}
 								}
+								//Send messages about our left hand attack now
+								owner.SendAttackingCombatMessages(leftHandAD);
 
 								//Notify ourself about the attack
 								owner.Notify(GameLivingEvent.AttackFinished, owner, new AttackFinishedEventArgs(leftHandAD));
@@ -2640,6 +2645,15 @@ namespace DOL.GS
 				Stop();
 				return;
 			}
+		}
+
+		/// <summary>
+		/// Sends the proper combat messages depending on our attack data
+		/// </summary>
+		/// <param name="ad">result of the attack</param>
+		protected virtual void SendAttackingCombatMessages(AttackData ad)
+		{
+			//None for GameLiving - could be a GameNPC DO NOT ADD ANYTHING HERE
 		}
 
 		/// <summary>

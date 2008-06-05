@@ -4989,6 +4989,75 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Send the messages to the GamePlayer
+		/// </summary>
+		/// <param name="ad"></param>
+		protected override void SendAttackingCombatMessages(AttackData ad)
+		{
+			base.SendAttackingCombatMessages(ad);
+			GameObject target = ad.Target;
+			InventoryItem weapon = ad.Weapon;
+
+			switch (ad.AttackResult)
+			{
+				case eAttackResult.TargetNotVisible: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.NotInView", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+				case eAttackResult.OutOfRange: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.TooFarAway", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+				case eAttackResult.TargetDead: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.AlreadyDead", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+				case eAttackResult.Blocked: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Blocked", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+				case eAttackResult.Parried: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Parried", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+				case eAttackResult.Evaded: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Evaded", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+				case eAttackResult.NoTarget: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.NeedTarget"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+				case eAttackResult.NoValidTarget: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.CantBeAttacked"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+				case eAttackResult.Missed: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Miss"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+				case eAttackResult.Fumbled: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Fumble"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+				case eAttackResult.HitStyle:
+				case eAttackResult.HitUnstyled:
+					string modmessage = "";
+					if (ad.Modifier > 0) modmessage = " (+" + ad.Modifier + ")";
+					if (ad.Modifier < 0) modmessage = " (" + ad.Modifier + ")";
+
+					string hitWeapon = "";
+
+					switch (ServerProperties.Properties.SERV_LANGUAGE)
+					{
+						case "EN":
+							if (weapon != null)
+								hitWeapon = GlobalConstants.NameToShortName(weapon.Name);
+							break;
+						case "DE":
+							if (weapon != null)
+								hitWeapon = weapon.Name;
+							break;
+						default:
+							if (weapon != null)
+								hitWeapon = GlobalConstants.NameToShortName(weapon.Name);
+							break;
+					}
+
+					if (hitWeapon.Length > 0)
+						hitWeapon = " " + LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.WithYour") + " " + hitWeapon;
+
+					string attackTypeMsg = LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.YouAttack");
+					if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
+						attackTypeMsg = LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.YouShot");
+
+					// intercept messages
+					if (target != null && target != ad.Target)
+					{
+						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Intercepted", ad.Target.GetName(0, true), target.GetName(0, false)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.InterceptedHit", attackTypeMsg, target.GetName(0, false), hitWeapon, ad.Target.GetName(0, false), ad.Damage, modmessage), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+					}
+					else
+						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.InterceptHit", attackTypeMsg, ad.Target.GetName(0, false), hitWeapon, ad.Damage, modmessage), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+
+					// critical hit
+					if (ad.CriticalDamage > 0)
+						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Critical", ad.Target.GetName(0, false), ad.CriticalDamage), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+					break;
+			}
+		}
+
+		/// <summary>
 		/// Called whenever a single attack strike is made
 		/// </summary>
 		/// <param name="target"></param>
@@ -5008,16 +5077,6 @@ namespace DOL.GS
 
 			switch (ad.AttackResult)
 			{
-				case eAttackResult.TargetNotVisible: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.NotInView", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-				case eAttackResult.OutOfRange: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.TooFarAway", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-				case eAttackResult.TargetDead: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.AlreadyDead", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-				case eAttackResult.Blocked: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Blocked", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-				case eAttackResult.Parried: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Parried", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-				case eAttackResult.Evaded: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Evaded", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-				case eAttackResult.NoTarget: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.NeedTarget"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-				case eAttackResult.NoValidTarget: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.CantBeAttacked"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-				case eAttackResult.Missed: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Miss"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-				case eAttackResult.Fumbled: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Fumble"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
 				case eAttackResult.HitStyle:
 				case eAttackResult.HitUnstyled:
 					{
@@ -5040,48 +5099,6 @@ namespace DOL.GS
 							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.StrafMiss"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 							break;
 						}
-
-						string modmessage = "";
-						if (ad.Modifier > 0) modmessage = " (+" + ad.Modifier + ")";
-						if (ad.Modifier < 0) modmessage = " (" + ad.Modifier + ")";
-
-						string hitWeapon = "";
-
-						switch (ServerProperties.Properties.SERV_LANGUAGE)
-						{
-							case "EN":
-								if (weapon != null)
-									hitWeapon = GlobalConstants.NameToShortName(weapon.Name);
-								break;
-							case "DE":
-								if (weapon != null)
-									hitWeapon = weapon.Name;
-								break;
-							default:
-								if (weapon != null)
-									hitWeapon = GlobalConstants.NameToShortName(weapon.Name);
-								break;
-						}
-
-						if (hitWeapon.Length > 0)
-							hitWeapon = " " + LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.WithYour") + " " + hitWeapon;
-
-						string attackTypeMsg = LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.YouAttack");
-						if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
-							attackTypeMsg = LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.YouShot");
-
-						// intercept messages
-						if (target != null && target != ad.Target)
-						{
-							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Intercepted", ad.Target.GetName(0, true), target.GetName(0, false)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.InterceptedHit", attackTypeMsg, target.GetName(0, false), hitWeapon, ad.Target.GetName(0, false), ad.Damage, modmessage), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-						}
-						else
-							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.InterceptHit", attackTypeMsg, ad.Target.GetName(0, false), hitWeapon, ad.Damage, modmessage), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-
-						// critical hit
-						if (ad.CriticalDamage > 0)
-							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Critical", ad.Target.GetName(0, false), ad.CriticalDamage), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 						break;
 					}
 			}
@@ -5253,6 +5270,7 @@ namespace DOL.GS
 		{
 			if (IsOnHorse && ad.IsHit)
 				IsOnHorse = false;
+			base.OnAttackedByEnemy(ad);
 
 			switch (ad.AttackResult)
 			{
@@ -5437,7 +5455,6 @@ namespace DOL.GS
 				if (removeEffect != null)
 					removeEffect.Cancel(false);
 			}
-			base.OnAttackedByEnemy(ad);
 		}
 
 		/// <summary>

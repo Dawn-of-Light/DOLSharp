@@ -69,9 +69,16 @@ namespace DOL.GS.Quests.Triggers
 
             if (e == GamePlayerEvent.DeclineQuest)
             {
-                GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
-                QuestEventArgs qArgs = (QuestEventArgs)args;
-                result = (qArgs.Player.ObjectID == player.ObjectID && QuestMgr.GetQuestTypeForID(qArgs.QuestID).Equals(I));
+				try
+				{
+					GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
+					QuestEventArgs qArgs = (QuestEventArgs)args;
+					result = (qArgs.Player.ObjectID == player.ObjectID && QuestMgr.GetQuestTypeForID(qArgs.QuestID).Equals(I));
+				}
+				catch
+				{
+					log.Error(string.Format("Error in DeclineQuestTrigger line 75 - args: {0}", args));
+				}
             }
             
             return result;
