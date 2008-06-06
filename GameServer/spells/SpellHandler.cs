@@ -1567,10 +1567,10 @@ namespace DOL.GS.Spells
 						target = Caster;
 						foreach (GamePlayer player in target.GetPlayersInRadius((ushort)Spell.Range))
 						{
-							if (player == (GamePlayer)Caster)
+							if (player == Caster)
 								continue;
 
-							if (!m_caster.IsObjectInFront(player, (double)(Spell.Radius != 0 ? Spell.Radius : 100)))
+							if (!m_caster.IsObjectInFront(player, (double)(Spell.Radius != 0 ? Spell.Radius : 100), false))
 								continue;
 
 							if (!GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
@@ -1581,7 +1581,10 @@ namespace DOL.GS.Spells
 
 						foreach (GameNPC npc in target.GetNPCsInRadius((ushort)Spell.Range))
 						{
-							if (!m_caster.IsObjectInFront(npc, (double)(Spell.Radius != 0 ? Spell.Radius : 100)))
+							if (npc == Caster)
+								continue;
+
+							if (!m_caster.IsObjectInFront(npc, (double)(Spell.Radius != 0 ? Spell.Radius : 100), false))
 								continue;
 
 							if (!GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
@@ -1656,6 +1659,15 @@ namespace DOL.GS.Spells
 					if (dist >= 0)
 					{
 						ApplyEffectOnTarget(t, (effectiveness - CalculateAreaVariance(dist, Spell.Radius)));
+					}
+				}
+				else if (Spell.Target.ToLower() == "cone")
+				{
+					int dist = WorldMgr.GetDistance(Caster, t);
+					if (dist >= 0)
+					{
+						//Cone spells use the range for their variance!
+						ApplyEffectOnTarget(t, (effectiveness - CalculateAreaVariance(dist, Spell.Range)));
 					}
 				}
 				else

@@ -2037,6 +2037,7 @@
     <Compile Include="spells\Bonedancer\SummonMinionHandler.cs" />
     <Compile Include="spells\TurretSpellHandler.cs" />
     <Compile Include="spells\Teleport\UniPortal.cs" />
+    <Compile Include="spells\Valkyrie\FrontalAOEConeHandler.cs" />
     <Compile Include="spells\Valkyrie\ValkyrieProc.cs" />
     <Compile Include="spells\Vampiir\VampArmorDebuff.cs">
       <SubType>Code</SubType>
