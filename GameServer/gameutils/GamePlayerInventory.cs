@@ -393,7 +393,7 @@ namespace DOL.GS
 				}
 
                 // graveen = fix for allowedclasses is empty or null
-                if (Util.IsEmpty(fromItem.AllowedClasses)) fromItem.AllowedClasses = "0";
+                if (fromItem!=null&&Util.IsEmpty(fromItem.AllowedClasses)) fromItem.AllowedClasses = "0";
                 if (toItem!=null&&Util.IsEmpty(toItem.AllowedClasses)) toItem.AllowedClasses = "0";
 
 				//Andraste - Vico / fixing a bugexploit : when player switch from his char slot to an inventory slot, allowedclasses were not checked

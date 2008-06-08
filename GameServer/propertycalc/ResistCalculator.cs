@@ -134,7 +134,7 @@ namespace DOL.GS.PropertyCalc
         /// </summary>
         public static int HardCap
         {
-            get { return 70; }
+            get { return 90; }
         }
 	}
 }

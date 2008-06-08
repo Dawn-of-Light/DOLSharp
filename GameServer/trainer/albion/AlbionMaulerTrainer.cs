@@ -19,6 +19,7 @@
 using System;
 using DOL.GS.PacketHandler;
 using DOL.Language;
+using DOL.Database;
 
 namespace DOL.GS.Trainer
 {
@@ -101,8 +102,25 @@ namespace DOL.GS.Trainer
                     // promote player to other class
                     if (CanPromotePlayer(player))
                     {
+                        // loose all spec lines
+                        player.RemoveAllSkills();
+                        player.RemoveAllStyles();
+
                         // Mauler_Alb = 60
-                        PromotePlayer(player, 60, "Welcome young Mauler. May your time in Albion be rewarding.", null);
+                        PromotePlayer(player, (int)eCharacterClass.Mauler_Alb, "Welcome young Mauler. May your time in Albion be rewarding.", null);
+
+                        // drop any equiped-non usable item, in inventory or on the ground if full
+                        lock (player.Inventory)
+                        {
+                            foreach (InventoryItem item in player.Inventory.EquippedItems)
+                            {
+                                if (!player.HasAbilityToUseItem(item))
+                                    if (player.Inventory.IsSlotsFree(item.Count, eInventorySlot.Consignment_First, eInventorySlot.Consignment_Last) == true)
+                                        player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack), item.Count);
+                                    else
+                                        player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, eInventorySlot.Ground, item.Count);
+                            }
+                        }
                     }
                     break;
             }
