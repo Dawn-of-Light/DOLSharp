@@ -921,7 +921,9 @@
     <Compile Include="packets\Server\PacketLib193.cs" />
     <Compile Include="packets\Server\PacketLibAttribute.cs" />
     <Compile Include="packets\Server\PacketProcessor.cs" />
-    <Compile Include="playerclasses\ClassMauler.cs" />
+    <Compile Include="playerclasses\albion\ClassMaulerAlb.cs" />
+    <Compile Include="playerclasses\hibernia\ClassMaulerHib.cs" />
+    <Compile Include="playerclasses\midgard\ClassMaulerMid.cs" />
     <Compile Include="playertitles\titles\claim\frontier\FrontierChallengerTitle.cs" />
     <Compile Include="playertitles\titles\claim\frontier\FrontierVindicatorTitle.cs" />
     <Compile Include="playertitles\titles\claim\stronghold\StrongholdChiefTitle.cs" />

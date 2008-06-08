@@ -446,7 +446,10 @@ namespace DOL.GS.Spells
 				if (m_caster is GamePlayer)
 				{
 					GamePlayer player = m_caster as GamePlayer;
-					if (!(player.CharacterClass is PlayerClass.ClassVampiir) && !(player.CharacterClass is PlayerClass.ClassMauler))
+					if (!(player.CharacterClass is PlayerClass.ClassVampiir) 
+					    && !(player.CharacterClass is PlayerClass.ClassMaulerAlb)
+					    && !(player.CharacterClass is PlayerClass.ClassMaulerMid)
+					    && !(player.CharacterClass is PlayerClass.ClassMaulerHib))
 					{
 						m_caster.StopAttack();
 						return false;
