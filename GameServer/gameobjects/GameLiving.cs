@@ -1871,7 +1871,11 @@ namespace DOL.GS
 
 			ad.Target.StartInterruptTimer(interruptDuration, ad.AttackType, this);
 
-			if (ad.Target is GamePlayer && (ad.Target as GamePlayer).CharacterClass is PlayerClass.ClassMauler && ad.Damage > 0)
+			if (ad.Target is GamePlayer && 
+			    ((ad.Target as GamePlayer).CharacterClass is PlayerClass.ClassMaulerAlb
+			    || (ad.Target as GamePlayer).CharacterClass is PlayerClass.ClassMaulerMid
+			    || (ad.Target as GamePlayer).CharacterClass is PlayerClass.ClassMaulerHib)
+				&& ad.Damage > 0)
 			{
 				ad.Target.Mana += ad.Damage / 5;
 			}

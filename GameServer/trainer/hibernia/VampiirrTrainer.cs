@@ -110,15 +110,21 @@ namespace DOL.GS.Trainer
 						player.RemoveAllStyles();
 						player.Out.SendUpdatePlayerSkills();
 						player.SkillSpecialtyPoints = 14;//lvl 5 skill points full
+
 						PromotePlayer(player, (int)eCharacterClass.Vampiir, "Very well, " + source.GetName(0, false) + ". I gladly take your training into my hands. Congratulations, from this day forth, you are a Vampiir. Here, take this gift to aid you.", null);
-						lock (player.Inventory)
-						{
-							foreach (InventoryItem item in player.Inventory.EquippedItems)
-							{
-								if (!player.HasAbilityToUseItem(item))
-									player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack), item.Count);
-							}
-						}
+                        
+                        // drop any equiped-non usable item, in inventory or on the ground if full
+                        lock (player.Inventory)
+                        {
+                            foreach (InventoryItem item in player.Inventory.EquippedItems)
+                            {
+                                if (!player.HasAbilityToUseItem(item))
+                                    if (player.Inventory.IsSlotsFree(item.Count, eInventorySlot.Consignment_First, eInventorySlot.Consignment_Last) == true)
+                                        player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack), item.Count);
+                                    else
+                                        player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, eInventorySlot.Ground, item.Count);
+                            }
+                        }
 					}
 					break;
 			}

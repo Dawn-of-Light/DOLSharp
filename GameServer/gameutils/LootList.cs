@@ -96,37 +96,72 @@ namespace DOL.GS
 		/// Returns a list of ItemTemplates chosen from Random and Fixed loot.
 		/// </summary>
 		/// <returns></returns>
-		public ItemTemplate[] GetLoot()
-		{
-			ArrayList loot = new ArrayList(m_fixedItemDrops.Count + m_dropCount);
-			loot.AddRange(m_fixedItemDrops);
+	       public ItemTemplate[] GetLoot()
+          {
+             ArrayList loot = new ArrayList(m_fixedItemDrops.Count + m_dropCount);
+             loot.AddRange(m_fixedItemDrops);
 
-            int dice;
-            ArrayList lootCandidates = new ArrayList();
+                int dice;
+                ArrayList lootCandidates = new ArrayList();
 
-            // Drop count is the maximum number of items to drop, so we'll
-            // do just as many rolls.
+                if ( m_dropCount != 0)
+                {
+                    // Big logic change. The intended flow of the original code was to iterate over the drop list
+                    // DropCount times, each iteration doing the following:
+                    // 1.) clear lootCandidates array
+                    // 2.) for each loot item in m_randomItemDrops roll D100 against frequency
+                    // 3.) each winner gts into lootCandidates array
+                    // 4.) pick one random winner out of lootCandidates, add to the returned loot list
+                    // The bug reported was caused by the loot.Add being outside the main loop. only
+                    // the last winner made it into the loot array that is returned.
+                    // There is a secondary defect that surfaces once the loop issue is fixed. There is
+                    // a high chance of duplicate items dropping. This is counter to live game server
+                    // behavior.
+                    //
+                    // New logic iterates once accross m_randomItemDrops, rolling D100 against frequency.
+                    // Winner items are placed into lootCandidates. Once that loop is complete, we enter
+                    // into a second loop. In each iteration, we select one random winner from lootCandidates,
+                    // add it the to returned loot array, then remove it from lootCandidates. This avoids
+                    // code-induced duplicates. I imagine that ArrayList.RemoveAt() is a little expensive on cpu
+                    // cycles as it has to collapse the array each time an item is removed. A second option is
+                    // to build a matching array of booleans, set all to false, and each time a winner is copied
+                    // to loot, set the value in the matching array at the same index value to true. This introduces
+                    // the need for a nested loop to avoid true values in the matching array, and if not coded properly,
+                    // will hang the server as it loops an infinite number of times. The third option is to ignore
+                    // all of this, say that dupes are o.k., pull loot.Add inside the main loop of the old code
+                    // and move on.
+                                   
+                    // new logic
+                    lootCandidates.Clear();
+                    foreach (LootEntry lootEntry in m_randomItemDrops)
+                    {
+                        dice = Util.Random(1, 100);
+                        if (lootEntry.Chance >= dice)
+                            lootCandidates.Add(lootEntry.ItemTemplate);
+                    }
+                    // At this point, the candidate list is filled with items that passed
+                    // the %chance to drop, so we need to put DropCount of them into the return loot object.
+                    //
+                    // Initial control thought is to use the ArrayList.RemoveAt method and change the loop control
+                    // to include a check on lootCandidates.Count. This assumes that the removeAt function re-builds
+                    // the array and updates ArrayList.Count. If not, we'll be throwing exceptions like mad.
 
-            for (int roll = 0; roll < m_dropCount; ++roll)
-            {
-                dice = Util.Random(1, 100);
-
-                // For each roll make a list of items that have at least this
-                // chance to drop.
-
-                lootCandidates.Clear();
-                foreach (LootEntry lootEntry in m_randomItemDrops)
-                    if (lootEntry.Chance >= dice)
-                        lootCandidates.Add(lootEntry.ItemTemplate);
-
-                // Now pick one of these items at random.
-
-                if (lootCandidates.Count > 0)
-                    loot.Add(lootCandidates[Util.Random(lootCandidates.Count-1)]);
-            }
-
-			return (ItemTemplate[])loot.ToArray(typeof(ItemTemplate));
-		}
+                    // copy random winners to returned loot list
+                    if (lootCandidates.Count > 0)
+                    {
+                        for (int i = 0; (i < m_dropCount && lootCandidates.Count != 0); i++)
+                        {
+                            int tmpidx;
+                            tmpidx = Util.Random(lootCandidates.Count - 1);
+                            loot.Add(lootCandidates[tmpidx]);
+                            lootCandidates.RemoveAt(tmpidx);
+                        }
+                           
+                    }
+                }
+               
+             return (ItemTemplate[])loot.ToArray(typeof(ItemTemplate));
+          }
 	}
 
 	/// <summary>
