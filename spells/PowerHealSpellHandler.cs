@@ -46,8 +46,12 @@ namespace DOL.GS.Spells
 
 			foreach (GameLiving healTarget in targets)
 			{
-				if (healTarget is GamePlayer && ((((GamePlayer)healTarget).CharacterClass.ID == (int)eCharacterClass.Vampiir)
-					|| ((GamePlayer)healTarget).CharacterClass is PlayerClass.ClassMauler))
+				if (healTarget is GamePlayer 
+				    && (
+				    ((GamePlayer)healTarget).CharacterClass is PlayerClass.ClassVampiir
+					|| ((GamePlayer)healTarget).CharacterClass is PlayerClass.ClassMaulerAlb
+					|| ((GamePlayer)healTarget).CharacterClass is PlayerClass.ClassMaulerHib
+					|| ((GamePlayer)healTarget).CharacterClass is PlayerClass.ClassMaulerMid))
 					continue;
 				int heal = Util.Random(minHeal, maxHeal);
 				healed |= HealTarget(healTarget, heal);

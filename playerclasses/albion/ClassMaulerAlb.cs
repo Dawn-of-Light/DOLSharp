@@ -25,11 +25,9 @@ namespace DOL.GS.PlayerClass
 	/// 
 	/// </summary>
 	[PlayerClassAttribute((int)eCharacterClass.Mauler_Alb, "Mauler", "Fighter")]
-	[PlayerClassAttribute((int)eCharacterClass.Mauler_Mid, "Mauler", "Viking")]
-	[PlayerClassAttribute((int)eCharacterClass.Mauler_Hib, "Mauler", "Guardian")]
-	public class ClassMauler : CharacterClassSpec
+	public class ClassMaulerAlb : CharacterClassSpec
 	{
-		public ClassMauler()
+		public ClassMaulerAlb()
 			: base()
 		{
 			m_profession = "Temple of the Iron Fist";
@@ -86,54 +84,19 @@ namespace DOL.GS.PlayerClass
 				player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_MaulerStaff));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_FistWraps));
-                switch (player.Realm)
-                {
-                    case eRealm.Albion:
-                        {
-                            player.RemoveSpecialization(Specs.Slash);
-                            player.RemoveSpecialization(Specs.Thrust);
-                            player.RemoveSpecialization(Specs.Parry);
-                            player.RemoveSpecialization(Specs.Crush);
-                            player.RemoveAllStyles();
-                            player.RemoveAbility(Abilities.AlbArmor);
-							player.RemoveAbility(Abilities.Shield);
-							player.RemoveAbility(Abilities.Weapon_Slashing);
-							player.RemoveAbility(Abilities.Weapon_Thrusting);
-							player.RemoveAbility(Abilities.Weapon_Crushing);
-                            player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Leather));
-                            break;
-                        }
-                    case eRealm.Midgard:
-                        {
-                            player.RemoveSpecialization(Specs.Sword);
-                            player.RemoveSpecialization(Specs.Hammer);
-                            player.RemoveSpecialization(Specs.Axe);
-                            player.RemoveSpecialization(Specs.Parry);
-                            player.RemoveAllStyles();
-                            player.RemoveAbility(Abilities.MidArmor);
-							player.RemoveAbility(Abilities.Weapon_Axes);
-							player.RemoveAbility(Abilities.Weapon_Hammers);
-							player.RemoveAbility(Abilities.Weapon_Swords);
-                            player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Leather));
-                            break;
-                        }
-                    case eRealm.Hibernia:
-                        {
-                            player.RemoveSpecialization(Specs.Blades);
-                            player.RemoveSpecialization(Specs.Piercing);
-                            player.RemoveSpecialization(Specs.Parry);
-                            player.RemoveSpecialization(Specs.Blunt);
-                            player.RemoveAllStyles();
-                            player.RemoveAbility(Abilities.HibArmor);
-							player.RemoveAbility(Abilities.Shield);
-							player.RemoveAbility(Abilities.Weapon_Blades);
-							player.RemoveAbility(Abilities.Weapon_Blunt);
-							player.RemoveAbility(Abilities.Weapon_Piercing);
-                            player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Leather));
-                            break;
-                        }
-                }
 
+				player.RemoveSpecialization(Specs.Slash);
+                player.RemoveSpecialization(Specs.Thrust);
+                player.RemoveSpecialization(Specs.Parry);
+                player.RemoveSpecialization(Specs.Crush);
+                player.RemoveAllStyles();
+                player.RemoveAbility(Abilities.AlbArmor);
+				player.RemoveAbility(Abilities.Shield);
+				player.RemoveAbility(Abilities.Weapon_Slashing);
+				player.RemoveAbility(Abilities.Weapon_Thrusting);
+				player.RemoveAbility(Abilities.Weapon_Crushing);
+                player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Leather));
+    
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
 
 				player.AddSpellLine(SkillBase.GetSpellLine("Aura Manipulation"));
