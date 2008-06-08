@@ -9333,7 +9333,7 @@ namespace DOL.GS
 			string BonusName = "";
 
 			if (BonusType == 1) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus1");//Strength
-			if (BonusType == 2) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus2");//Dextery
+			if (BonusType == 2) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus2");//Dexterity
 			if (BonusType == 3) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus3");//Constitution
 			if (BonusType == 4) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus4");//Quickness
 			if (BonusType == 5) BonusName = LanguageMgr.GetTranslation(Client, "GamePlayer.ItemBonusName.Bonus5");//Intelligence
