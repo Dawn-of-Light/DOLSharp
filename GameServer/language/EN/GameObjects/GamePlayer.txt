@@ -111,7 +111,7 @@ GamePlayer.IsHelmInvisible.Visible:					You will now see your helm.
 GamePlayer.IsOnHorse.DismountSteed:			You dismount your steed.
 GamePlayer.IsOnHorse.MountSteed:			You mount your steed.
 GamePlayer.ItemBonusName.Bonus1:			Strength
-GamePlayer.ItemBonusName.Bonus2:			Dextery
+GamePlayer.ItemBonusName.Bonus2:			Dexterity
 GamePlayer.ItemBonusName.Bonus3:			Constitution
 GamePlayer.ItemBonusName.Bonus4:			Quickness
 GamePlayer.ItemBonusName.Bonus5:			Intelligence
