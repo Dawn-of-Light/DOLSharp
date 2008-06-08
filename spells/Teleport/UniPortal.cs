@@ -21,6 +21,8 @@ using System.Collections.Generic;
 using System.Text;
 using DOL.GS.Effects;
 using DOL.Database;
+using DOL.Language;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
@@ -61,7 +63,13 @@ namespace DOL.GS.Spells
 			GamePlayer player = target as GamePlayer;
 			if (player == null)
 				return;
-
+			
+			if (player.InCombat)
+			{
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GamePlayer.UseSlot.CantUseInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+			
 			SendEffectAnimation(player, 0, false, 1);
 
 			UniPortalEffect effect = new UniPortalEffect(this, 1000);
