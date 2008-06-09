@@ -39,11 +39,11 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(int level) 
 		{
-			if (level>=50) return "Force of Nature";
+			if (level>=50) return "Might of Gaia";
 			if (level>=45) return "Arboreal Champion";
 			if (level>=40) return "Arboreal Mage";
 			if (level>=35) return "Forestmage";
-			if (level>=30) return "Servant of Nature";
+			if (level>=30) return "Servant of Gaia";
 			if (level>=25) return "Arboreal Adept";
 			if (level>=20) return "Plantfriend";
 			if (level>=15) return "Friend of Gaia";

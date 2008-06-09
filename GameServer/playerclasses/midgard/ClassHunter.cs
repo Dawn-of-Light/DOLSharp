@@ -45,7 +45,7 @@ namespace DOL.GS.PlayerClass
 			if (level >= 50) return "Hand of Skadi";
 			if (level >= 45) return "Lord of the Hunt";
 			if (level >= 40) return "Master of Prey";
-			if (level >= 35) return "Master Huntman";
+			if (level >= 35) return "Master Huntsman";
 			if (level >= 30) return "Pathfinder Adept";
 			if (level >= 25) return "Skadi's Pathfinder";
 			if (level >= 20) return "Prey Stalker";

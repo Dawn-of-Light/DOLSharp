@@ -42,7 +42,7 @@ namespace DOL.GS.PlayerClass
 			if (level>=50) return "Seraph";
 			if (level>=45) return "Paragon";
 			if (level>=40) return "Valorant";
-			if (level>=35) return "Emeinence";
+			if (level>=35) return "Eminence";
 			if (level>=30) return "Gladiator";
 			if (level>=25) return "Stalwart";
 			if (level>=20) return "Henchman";

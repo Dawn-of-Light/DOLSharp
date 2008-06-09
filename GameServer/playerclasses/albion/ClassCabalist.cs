@@ -45,7 +45,7 @@ namespace DOL.GS.PlayerClass
 			if (level>=35) return "Animator";
 			if (level>=30) return "Spiritist";
 			if (level>=25) return "Veteran Cabalist";
-			if (level>=20) return "Creater";
+			if (level>=20) return "Creator";
 			if (level>=15) return "Imbuer";
 			if (level>=10) return "Journeyman Cabalist"; 
 			if (level>=5) return "Apprentice Cabalist"; 
