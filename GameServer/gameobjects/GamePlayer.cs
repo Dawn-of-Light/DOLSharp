@@ -10249,7 +10249,11 @@ namespace DOL.GS
 					ushort spellid;
 					int duration;
 					if (values.Length >= 2 && ushort.TryParse(values[0], out spellid) && int.TryParse(values[1], out duration))
+					{
+						if (disabledSpells.Contains(spellid))
+							continue;
 						disabledSpells.Add(spellid, duration);
+					}
 					else if (log.IsErrorEnabled)
 						log.Error(Name + ": error in loading disabled spells => '" + tmpStr + "'");
 				}
