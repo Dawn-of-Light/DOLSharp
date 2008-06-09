@@ -46,7 +46,7 @@ namespace DOL.GS.PlayerClass
 			if (level>=30) return "Vigilante";
 			if (level>=25) return "Gallant";
 			if (level>=20) return "Blade Weaver";
-			if (level>=15) return "Sabruer";
+			if (level>=15) return "Sabreur";
 			if (level>=10) return "Stylist"; 
 			if (level>=5) return "Bladist"; 
 			return "None"; 

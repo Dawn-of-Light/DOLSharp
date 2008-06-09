@@ -44,12 +44,12 @@ namespace DOL.GS.PlayerClass
 		public override string GetTitle(int level)
 		{
 			if (level >= 50) return "Odin's Valkyrie";
-			if (level >= 45) return "TODO";
-			if (level >= 40) return "TODO";
+			if (level >= 45) return "Odin's Shieldmaiden";
+			if (level >= 40) return "Odin's Chosen";
 			if (level >= 35) return "Protector of Valhalla ";
-			if (level >= 30) return "TODO";
+			if (level >= 30) return "Valhalla's Chosen";
 			if (level >= 25) return "Shieldmaiden";
-			if (level >= 20) return "TODO";
+			if (level >= 20) return "Protector of Midgard";
 			if (level >= 15) return "Servant of Midgard ";
 			if (level >= 10) return "Handmaiden ";
 			if (level >= 5) return "Apprentice Handmaiden";

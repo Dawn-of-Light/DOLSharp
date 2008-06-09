@@ -47,7 +47,7 @@ namespace DOL.GS.PlayerClass
 			if (level>=30) return "Performer";
 			if (level>=25) return "Melodist";
 			if (level>=20) return "Choralist";
-			if (level>=15) return "Caroller";
+			if (level>=15) return "Caroler";
 			if (level>=10) return "Vocalist"; 
 			if (level>=5) return "Chanter"; 
 			return "None"; 

@@ -39,15 +39,15 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(int level) 
 		{
-			if (level>=50) return "Prime Prestidigilist";
-			if (level>=45) return "Prestidigilist";
-			if (level>=40) return "Forceweaver";
+			if (level>=50) return "Prime Prestidigitist";
+			if (level>=45) return "Prestidigitist";
+			if (level>=40) return "Force Weaver";
 			if (level>=35) return "Master";
 			if (level>=30) return "Renderer";
 			if (level>=25) return "Adept";
 			if (level>=20) return "Magius";
 			if (level>=15) return "Conjurer";
-			if (level>=10) return "Invoker"; 
+			if (level>=10) return "Evoker"; 
 			if (level>=5) return "Incanter"; 
 			return "None"; 
 		}
