@@ -48,7 +48,7 @@ namespace DOL.GS.PlayerClass
 			if (level>=20) return "Visionary";
 			if (level>=15) return "Thought Walker";
 			if (level>=10) return "Adept"; 
-			if (level>=5) return "Apprentice Mentalist"; 
+			if (level>=5) return "Mentalist Apprentice"; 
 			return "None"; 
 		}
 

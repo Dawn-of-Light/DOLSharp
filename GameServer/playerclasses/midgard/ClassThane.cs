@@ -44,7 +44,7 @@ namespace DOL.GS.PlayerClass
 			if (level>=50) return "Hand of Thor";
 			if (level>=45) return "Lord of Tempests";
 			if (level>=40) return "Lord of Storms";
-			if (level>=35) return "Thor's Thunder";
+			if (level>=35) return "Thors Thunder";
 			if (level>=30) return "Battleclasher";
 			if (level>=25) return "Thor's Hammer";
 			if (level>=20) return "Fervent";

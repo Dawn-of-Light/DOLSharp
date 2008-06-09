@@ -41,7 +41,7 @@ namespace DOL.GS.PlayerClass
 		public override string GetTitle(int level) 
 		{
 			if (level>=50) return "Grove Priest";
-			if (level>=45) return "Grove Protector";
+			if (level>=45) return "Grove Guardian";
 			if (level>=40) return "Master Ovate";
 			if (level>=35) return "Grove Oracle";
 			if (level>=30) return "Grove Protector";

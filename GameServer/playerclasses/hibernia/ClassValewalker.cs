@@ -45,11 +45,11 @@ namespace DOL.GS.PlayerClass
 		{
 			if (level>=50) return "Vale Guardian";
 			if (level>=45) return "Scythemaster";
-			if (level>=40) return "Vale Warior";
-			if (level>=35) return "Ridgewalker";
-			if (level>=30) return "Grovewalker";
+			if (level>=40) return "Vale Warrior";
+			if (level>=35) return "Vale Reaper";
+			if (level>=30) return "Ridgewalker";
 			if (level>=25) return "Forestfriend";
-			if (level>=20) return "Vale Protector";
+			if (level>=20) return "Reaper";
 			if (level>=15) return "Forestwalker";
 			if (level>=10) return "Scythewielder";
 			if (level>=5) return "Grove Apprentice";

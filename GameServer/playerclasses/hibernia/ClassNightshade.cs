@@ -40,7 +40,7 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(int level) 
 		{
-			if (level>=50) return "Shadowmaster";
+			if (level>=50) return "Shademaster";
 			if (level>=45) return "Shadowcaster";
 			if (level>=40) return "Shadow Walker";
 			if (level>=35) return "Shadow";
