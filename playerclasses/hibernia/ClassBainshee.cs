@@ -42,7 +42,7 @@ namespace DOL.GS.PlayerClass
 			if (level>=50) return "Spectral Warrior";
 			if (level>=45) return "Spectral Guardian";
 			if (level>=40) return "Revenant Prowler";
-			if (level>=35) return "TODO";
+			if (level>=35) return "Revenant Stalker";
 			if (level>=30) return "Ethereal Shrieker";
 			if (level>=25) return "Ethereal Wailer";
 			if (level>=20) return "Phantom Reaper";

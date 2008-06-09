@@ -50,7 +50,7 @@ namespace DOL.GS.PlayerClass
 			if (level>=20) return "Song Weaver";
 			if (level>=15) return "Battle Chanter";
 			if (level>=10) return "Chanter";
-			if (level>=5) return "Chanter Initiate";
+			if (level>=5) return "Initiate Chanter";
 			return "None";
 		}
 

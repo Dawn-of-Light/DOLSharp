@@ -39,13 +39,13 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(int level) 
 		{
-			if (level>=50) return "TODO";
-			if (level>=45) return "TODO";
+			if (level>=50) return "Hel's Warlock";
+			if (level>=45) return "Hel's Conjurer";
 			if (level>=40) return "Hel's Chosen";
-			if (level>=35) return "TODO";
+			if (level>=35) return "Servant of Hel";
 			if (level >= 30) return "Warlock Advocate";
-			if (level>=25) return "TODO";
-			if (level>=20) return "TODO";
+			if (level>=25) return "Warlock Protector";
+			if (level>=20) return "Conjurer of Midgard";
 			if (level>=15) return "Initiate of Hel";
 			if (level>=10) return "Conjurer";
 			if (level >= 5) return "Apprentice Conjurer"; 
