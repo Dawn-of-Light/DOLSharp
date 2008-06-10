@@ -72,8 +72,8 @@ namespace DOL.GS.Effects
 			get
 			{
 				IList delveInfoList = new ArrayList(1);
-				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.QuickCastEffect.InfoEffect"));
-				return delveInfoList;
+                delveInfoList.Add("Can't be interrupted on the following spell.");
+                return delveInfoList;
 			}
 		}
 	}

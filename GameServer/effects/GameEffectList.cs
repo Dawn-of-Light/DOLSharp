@@ -156,7 +156,7 @@ namespace DOL.GS.Effects
 			GamePlayer player = m_owner as GamePlayer;
 			if (player == null || player.PlayerCharacter == null || GameServer.Database == null)
 				return;
-			PlayerXEffect[] effs = (PlayerXEffect[])GameServer.Database.SelectObjects(typeof(PlayerXEffect), "ChardID = '" + GameServer.Database.Escape(player.PlayerCharacter.ObjectId) + "'");
+			PlayerXEffect[] effs = (PlayerXEffect[])GameServer.Database.SelectObjects(typeof(PlayerXEffect), "ChardID = '" + GameServer.Database.Escape(player.PlayerCharacter.ObjectId) + "' AND SpellLine !='Reserved Spells'");
 			if (effs == null)
 				return;
 			ArrayList targets = new ArrayList();
@@ -216,6 +216,7 @@ namespace DOL.GS.Effects
 					PlayerXEffect effx = eff.getSavedEffect();
 					if (effx == null)
 						continue;
+					if(effx.SpellLine=="Reserved Spells") continue;
 					effx.ChardID = player.PlayerCharacter.ObjectId;
 					GameServer.Database.AddNewObject(effx);
 				}
