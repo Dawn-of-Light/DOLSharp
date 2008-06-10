@@ -1588,7 +1588,16 @@ namespace DOL.GS
 					ad.AttackResult = eAttackResult.NoValidTarget;
 					return ad;
 				}
-			}				
+			}
+
+            // DamageImmunity Ability
+            if ((GameLiving)target != null && ((GameLiving)target).HasAbility("DamageImmunity"))
+            {
+                //if (ad.Attacker is GamePlayer) ((GamePlayer)ad.Attacker).Out.SendMessage(string.Format("{0} can't be attacked!", ad.Target.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+                ad.AttackResult = eAttackResult.NoValidTarget;
+                return ad;
+            }
+
 			
 			//Calculate our attack result and attack damage
 			ad.AttackResult = ad.Target.CalculateEnemyAttackResult(ad, weapon);
@@ -1643,6 +1652,22 @@ namespace DOL.GS
 					ad.Damage = (int)((double)ad.Damage * ServerProperties.Properties.PVE_DAMAGE);
 				ad.UncappedDamage = ad.Damage;
 
+				//Eden - Conversion Bonus (Crocodile Ring)
+				if(ad.Target is GamePlayer && ad.Target.GetModified(eProperty.Conversion)>0)
+				{
+					int manaconversion=(int)Math.Round(((double)ad.Damage+(double)ad.CriticalDamage)*(double)ad.Target.GetModified(eProperty.Conversion)/100);
+					//int enduconversion=(int)Math.Round((double)manaconversion*(double)ad.Target.MaxEndurance/(double)ad.Target.MaxMana);
+					int enduconversion=(int)Math.Round(((double)ad.Damage+(double)ad.CriticalDamage)*(double)ad.Target.GetModified(eProperty.Conversion)/100);
+					if(ad.Target.Mana+manaconversion>ad.Target.MaxMana) manaconversion=ad.Target.MaxMana-ad.Target.Mana;
+					if(ad.Target.Endurance+enduconversion>ad.Target.MaxEndurance) enduconversion=ad.Target.MaxEndurance-ad.Target.Endurance;
+					if(manaconversion<1) manaconversion=0;
+					if(enduconversion<1) enduconversion=0;
+					if(manaconversion>=1) (ad.Target as GamePlayer).Out.SendMessage("You gain "+manaconversion+" power points", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+					if(enduconversion>=1) (ad.Target as GamePlayer).Out.SendMessage("You gain "+enduconversion+" endurance points", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+					ad.Target.Endurance+=enduconversion; if(ad.Target.Endurance>ad.Target.MaxEndurance) ad.Target.Endurance=ad.Target.MaxEndurance;
+					ad.Target.Mana+=manaconversion; if(ad.Target.Mana>ad.Target.MaxMana) ad.Target.Mana=ad.Target.MaxMana;
+				}
+				
 				// patch to missed when 0 damage
 				if (ad.Damage == 0)
 				{
@@ -1753,24 +1778,13 @@ namespace DOL.GS
 
 						if (preCheck)
 						{
-							SpellLine abilityLine = SkillBase.GetSpellLine(GlobalSpellsLines.Character_Abilities);
-							if (abilityLine != null)
+							Spell spell=SkillBase.GetSpellByID(7083);
+							if(spell!=null)
 							{
-								IList spells = SkillBase.GetSpellList(abilityLine.KeyName);
-								if (spells != null)
+								ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+								if (spellHandler != null)
 								{
-									foreach (Spell spell in spells)
-									{
-										if (spell.ID == 7083)  // Prevent Flight
-										{
-											ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, abilityLine);
-											if (spellHandler != null)
-											{
-												spellHandler.StartSpell(ad.Target);
-											}
-											break;
-										}
-									}
+									spellHandler.StartSpell(ad.Target);
 								}
 							}
 						}
@@ -2941,26 +2955,31 @@ namespace DOL.GS
 			{
 				stealthStyle = true;
 				defenceDisabled = true;
+				//Eden - brittle guard should not intercept PA
+				intercept = null;
+				briddleguard = null;
 			}
 
 			// Necromancer Shade
 			if (shade != null)
 				return eAttackResult.NoValidTarget;
 
-			// Bodyguard
+			// Eden - real Bodyguard
 			if (bodyguard != null
 			   && ad.Attacker.ActiveWeaponSlot != eActiveWeaponSlot.Distance
 			   && WorldMgr.CheckDistance(bodyguard.GuardTarget, bodyguard.GuardSource, BodyguardAbilityHandler.BODYGUARD_DISTANCE)
 			&& !bodyguard.GuardSource.IsCasting
-			&& !bodyguard.GuardSource.IsStunned
-			&& !bodyguard.GuardSource.IsMezzed
+			//&& !bodyguard.GuardSource.IsStunned
+			//&& !bodyguard.GuardSource.IsMezzed
+			&& ((bodyguard.GuardTarget.TempProperties.getLongProperty("PLAYERPOSITION_LASTMOVEMENTTICK", 0L)+3000)<bodyguard.GuardTarget.CurrentRegion.Time)
 			&& !bodyguard.GuardTarget.IsMoving)
 			{
 				bool livingcondition = false;
 				if (ad.Attacker is GameNPC)
 				{
-					if (((GameNPC)ad.Attacker).Brain != null
-						&& ((GameNPC)ad.Attacker).Brain is ControlledNpc)
+					if ( (ad.Attacker as GameNPC).Brain != null
+						&& (ad.Attacker as GameNPC).Owner !=null
+						&& (ad.Attacker as GameNPC).Owner is GamePlayer)
 						livingcondition = true;
 				}
 				else if (ad.Attacker is GamePlayer)
@@ -2971,6 +2990,7 @@ namespace DOL.GS
 					ad.Target = bodyguard.GuardSource;
 					bodyguard.GuardTarget.Out.SendMessage("You were protected by" + bodyguard.GuardSource.Name + " from the attack from " + ad.Attacker.Name + "!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 					bodyguard.GuardSource.Out.SendMessage("You have protected " + bodyguard.GuardTarget.Name + " from the attack from " + ad.Attacker.Name + "!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+					if(ad.Attacker is GamePlayer) (ad.Attacker as GamePlayer).Out.SendMessage("You attempt to attack "+bodyguard.GuardTarget.Name+", "+bodyguard.GuardTarget.Name+" is bodyguarded by " + bodyguard.GuardSource.Name + "!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 					return eAttackResult.Bodyguarded;
 				}
 			}
@@ -2986,8 +3006,8 @@ namespace DOL.GS
 			// Briddle Guard
 			if (briddleguard != null)
 			{
-				if (this is GamePlayer) ((GamePlayer)this).Out.SendMessage("The blow was intercepted by Briddle Guard!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-				if (ad.Attacker is GamePlayer) ((GamePlayer)ad.Attacker).Out.SendMessage("Your strike was intercepted by a Briddle Guard!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+				if (this is GamePlayer) ((GamePlayer)this).Out.SendMessage("The blow was intercepted by Brittle Guard!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+				if (ad.Attacker is GamePlayer) ((GamePlayer)ad.Attacker).Out.SendMessage("Your strike was intercepted by a Brittle Guard!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				briddleguard.Cancel(false);
 				return eAttackResult.Missed;
 			}
@@ -3033,7 +3053,7 @@ namespace DOL.GS
 				else if (this is GameNPC && IsObjectInFront(ad.Attacker, 180))
 					evadeChance = GetModified(eProperty.EvadeChance);
 
-				if (evadeChance > 0)
+				if (evadeChance > 0 && !ad.Target.IsStunned && !ad.Target.IsSitting)
 				{
 					evadeChance *= 0.001;
 					evadeChance += 0.01 * attackerConLevel; // 1% per con level distance multiplied by evade level
@@ -3083,7 +3103,7 @@ namespace DOL.GS
 					else if (this is GameNPC && IsObjectInFront(ad.Attacker, 120))
 						parryChance = GetModified(eProperty.ParryChance);
 
-					if (parryChance > 0 && IsObjectInFront(ad.Attacker, 120))
+					if (parryChance > 0 && IsObjectInFront(ad.Attacker, 120) && !ad.Target.IsStunned && !ad.Target.IsSitting)
 					{
 						parryChance *= 0.001;
 						parryChance += 0.05 * attackerConLevel;
@@ -3132,7 +3152,7 @@ namespace DOL.GS
 					if (res != 0)
 						blockChance = res;
 				}
-				if (blockChance > 0 && IsObjectInFront(ad.Attacker, 120))
+				if (blockChance > 0 && IsObjectInFront(ad.Attacker, 120) && !ad.Target.IsStunned && !ad.Target.IsSitting)
 				{
 					blockChance *= 0.001;
 					// no chance bonus with ranged attacks?
@@ -3174,7 +3194,64 @@ namespace DOL.GS
 					}
 
 					if (Util.ChanceDouble(blockChance))
+					{
+						//Eden : shields can reverse proc
+						if(Inventory!=null && eInventorySlot.LeftHandWeapon!=null && Inventory.GetItem(eInventorySlot.LeftHandWeapon)!=null)
+						{
+							InventoryItem reactiveitem = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
+							if (reactiveitem != null && reactiveitem.ProcSpellID != 0 && Util.Chance(10))
+							{
+								if (reactiveitem.Object_Type == (int)eObjectType.Shield)
+								{
+									SpellLine reactiveEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+									if (reactiveEffectLine != null)
+									{
+										IList spells = SkillBase.GetSpellList(reactiveEffectLine.KeyName);
+										if (spells != null)
+										{
+											foreach (Spell spell in spells) if (spell.ID == reactiveitem.ProcSpellID)
+											{
+												if (spell.Level <= Level)
+												{
+													ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
+													if(spellHandler != null && (spell.SpellType=="Heal" || spell.SpellType=="Bladeturn" || spell.SpellType=="AblativeArmor" || spell.SpellType=="ArmorFactorBuff")) spellHandler.StartSpell(ad.Target);
+													else if(spellHandler != null) spellHandler.StartSpell(ad.Attacker);
+												}
+												break;
+											}
+										}
+									}
+								}
+							}
+							if (reactiveitem != null && reactiveitem.ProcSpellID1 != 0 && Util.Chance(10))
+							{
+								if (reactiveitem.Object_Type == (int)eObjectType.Shield)
+								{
+									SpellLine reactiveEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+									if (reactiveEffectLine != null)
+									{
+										IList spells = SkillBase.GetSpellList(reactiveEffectLine.KeyName);
+										if (spells != null)
+										{
+											foreach (Spell spell in spells) if (spell.ID == reactiveitem.ProcSpellID1)
+											{
+												if (spell.Level <= Level)
+												{
+													ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
+													if(spellHandler != null && (spell.SpellType=="Heal" || spell.SpellType=="Bladeturn" || spell.SpellType=="AblativeArmor" || spell.SpellType=="ArmorFactorBuff")) spellHandler.StartSpell(ad.Target);
+													else if(spellHandler != null) spellHandler.StartSpell(ad.Attacker);
+												}
+												break;
+											}
+										}
+									}
+								}
+							}
+						}
+						
+						
 						return eAttackResult.Blocked;
+					}
 				}
 			}
 
@@ -3195,12 +3272,14 @@ namespace DOL.GS
 					// check player is wearing shield and NO two handed weapon
 					InventoryItem leftHand = guard.GuardSource.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
 					InventoryItem rightHand = guard.GuardSource.AttackWeapon;
-					if ((rightHand == null || rightHand.Hand != 1) && leftHand != null && leftHand.Object_Type == (int)eObjectType.Shield)
+					if (((rightHand == null || rightHand.Hand != 1) && leftHand != null && leftHand.Object_Type == (int)eObjectType.Shield)||guard.GuardSource is GameNPC)
 					{
 						// TODO
 						// insert actual formula for guarding here, this is just a guessed one based on block.
 						int guardLevel = guard.GuardSource.GetAbilityLevel(Abilities.Guard); // multiply by 3 to be a bit qorse than block (block woudl be 5 since you get guard I with shield 5, guard II with shield 10 and guard III with shield 15)
-						double guardchance = guard.GuardSource.GetModified(eProperty.BlockChance) * leftHand.Quality * 0.00001;
+						double guardchance=0;
+                        if(guard.GuardSource is GameNPC) guardchance = guard.GuardSource.GetModified(eProperty.BlockChance) * 0.001;
+						else guardchance = guard.GuardSource.GetModified(eProperty.BlockChance) * leftHand.Quality * 0.00001;
 						guardchance *= guardLevel * 0.25 + 0.05;
 						guardchance += attackerConLevel * 0.05;
 
@@ -3210,10 +3289,10 @@ namespace DOL.GS
 						int shieldSize = 0;
 						if (leftHand != null)
 							shieldSize = leftHand.Type_Damage;
+						if(guard.GuardSource is GameNPC) shieldSize=1;
 						if (m_attackers.Count > shieldSize)
 							guardchance /= (m_attackers.Count - shieldSize + 1);
 						if (ad.AttackType == AttackData.eAttackType.MeleeDualWield) guardchance /= 2;
-
 						if (Util.ChanceDouble(guardchance))
 						{
 							ad.Target = guard.GuardSource;
@@ -4161,6 +4240,21 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			}
 			return 0;
 		}
+		
+		//Eden : secondary resists, such AoM, vampiir magic resistance etc, should not apply in CC duration, disease, debuff etc, using a new function
+		public virtual int GetModifiedBase(eProperty property)
+		{
+			if (m_propertyCalc != null && m_propertyCalc[(int)property] != null)
+			{
+				return m_propertyCalc[(int)property].CalcValueBase(this, property);
+			}
+			else
+			{
+				if (log.IsInfoEnabled)
+					log.Info("No calculator for requested Property found: " + property.ToString());
+			}
+			return 0;
+		}
 
         /// <summary>
         /// Retrieve a property value of this living's buff bonuses only;
@@ -4282,7 +4376,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// converts the damage types to resist fields
 		/// </summary>
 		protected static readonly eProperty[] m_damageTypeToResistBonusConversion = new eProperty[] {
-			0,
+			eProperty.Resist_Natural, //0,
 		  eProperty.Resist_Crush,
 			eProperty.Resist_Slash,
 			eProperty.Resist_Thrust,
@@ -4318,6 +4412,11 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		public virtual int GetResist(eDamageType damageType)
 		{
 			return GetModified(GetResistTypeForDamage(damageType));
+		}
+
+		public virtual int GetResistBase(eDamageType damageType)
+		{
+			return GetModifiedBase(GetResistTypeForDamage(damageType));
 		}
 
 		/// <summary>
@@ -5308,8 +5407,23 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <returns>true if the string should be processed further, false if it should be discarded</returns>
 		public virtual bool WhisperReceive(GameLiving source, string str)
 		{
+            GamePlayer player = null;
+            if (source != null && source is GamePlayer)
+            {
+                player = source as GamePlayer;
+                long whisperdelay = player.TempProperties.getLongProperty("WHISPERDELAY", 0L);
+                if (whisperdelay > 0 && (CurrentRegion.Time - 1500) < whisperdelay && player.Client.Account.PrivLevel==1)
+				{
+					//player.Out.SendMessage("Speak slower!", eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
+					return false;
+				}
+            }
+			
 			if (source == null || str == null) return false;
 			Notify(GameLivingEvent.WhisperReceive, this, new WhisperReceiveEventArgs(source, this, str));
+			
+			if(player!=null) player.TempProperties.setProperty("WHISPERDELAY", CurrentRegion.Time);
+			
 			return true;
 		}
 

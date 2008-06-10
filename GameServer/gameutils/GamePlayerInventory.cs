@@ -397,7 +397,7 @@ namespace DOL.GS
                 if (toItem!=null&&Util.IsEmpty(toItem.AllowedClasses)) toItem.AllowedClasses = "0";
 
 				//Andraste - Vico / fixing a bugexploit : when player switch from his char slot to an inventory slot, allowedclasses were not checked
-				if (valid && fromItem.AllowedClasses !="0")
+				if (valid && fromItem!=null && fromItem.AllowedClasses !="0")
 				{
 					if (!(toSlot >= eInventorySlot.FirstBackpack && toSlot <= eInventorySlot.LastBackpack)) // but we allow the player to switch the item inside his inventory (check only char slots)
 					{

@@ -339,6 +339,7 @@ namespace DOL.GS
 	/// </summary>
 	public enum eResist : byte
 	{
+		Natural = eProperty.Resist_Natural,
 		Crush = eProperty.Resist_Crush,
 		Slash = eProperty.Resist_Slash,
 		Thrust = eProperty.Resist_Thrust,
@@ -625,7 +626,8 @@ namespace DOL.GS
 		Skill_Magnetism = 112,
 		Skill_Aura_Manipulation = 113,
 		Skill_SpectralGuard = 114,
-		Skill_Last = 114,
+		Skill_Archery = 115,
+		Skill_Last = 115,
         #endregion
 
         #region Focus
@@ -782,7 +784,11 @@ namespace DOL.GS
 		ResCapBonus_Last = 229,
         #endregion
 		
-		//Andraste - Vico : new Mythirian bonus (in progress)
+		//Eden - new bonus
+		Resist_Natural = 249,
+		ExtraHP = 250,
+		Conversion = 251,
+		StyleAbsorb = 252,
 		RealmPoints = 253,
 		ArcaneSyphon = 254,
 
@@ -1396,6 +1402,7 @@ namespace DOL.GS
 				case eProperty.Resist_Slash: return "Slash Resist";
 				case eProperty.Resist_Spirit: return "Spirit Resist";
 				case eProperty.Resist_Thrust: return "Thrust Resist";
+				case eProperty.Resist_Natural: return "Essence Resist";
 				default: return "not implemented";
 			}
 		}
@@ -1648,6 +1655,7 @@ namespace DOL.GS
 				case Specs.Fist_Wraps: return 0x93;
 				case Specs.Mauler_Staff: return 0x94;
                 case Specs.SpectralGuard: return 0x95;
+				case Specs.Archery : return 0x9B;
 				default: return 0;
 			}
 		}

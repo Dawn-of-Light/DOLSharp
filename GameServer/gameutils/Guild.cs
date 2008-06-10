@@ -341,6 +341,7 @@ namespace DOL.GS
 		/// <returns>true if added successfully</returns>
 		public bool AddOnlineMember(GamePlayer member)
 		{
+			if(member==null) return false;
 			lock (m_guildMembers)
 			{
 				if (!m_guildMembers.ContainsKey(member.Name))
@@ -415,11 +416,11 @@ namespace DOL.GS
 		/// <returns>true or false</returns>
 		public bool AddPlayer(GamePlayer addeePlayer)
 		{
-			if (log.IsDebugEnabled)
-				log.Debug("Adding player to the guild, guild name=\"" + Name + "\"; player name=" + addeePlayer.Name);
 			if (addeePlayer == null)
 				return false;
-
+			if (log.IsDebugEnabled)
+				log.Debug("Adding player to the guild, guild name=\"" + Name + "\"; player name=" + addeePlayer.Name);
+			
 			// guild name can't be null, it's set to "" if no guild
 			//if (addeePlayer.GuildName != null) // Hey this should have been tested by the guild script!
 			//	return false;
