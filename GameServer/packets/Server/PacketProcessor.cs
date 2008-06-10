@@ -326,6 +326,8 @@ namespace DOL.GS.PacketHandler
 						string desc = String.Format("Sending packets longer than 2048 cause client to crash, check log for stacktrace. Packet code: 0x{0:X2}, account: {1}, packet size: {2}.",
 							buf[2], (m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint, buf.Length);
 						log.Error(Marshal.ToHexDump(desc, buf) + "\n" + Environment.StackTrace);
+						GameServer.Instance.Disconnect(m_client);
+						return;
 					}
 				}
 

@@ -212,6 +212,9 @@ namespace DOL.GS.PacketHandler
 		CT_KilledByAlb = 0x20,
 		CT_KilledByMid = 0x21,
 		CT_KilledByHib = 0x22,
+		CT_LFG = 0x23,
+		CT_Trade = 0x24,
+		
 		CT_SocialInterface = 0x64,
 		CT_ScreenCenter = 0xC8,
 		CT_ScreenCenterSmaller = 0xC9,
@@ -397,6 +400,7 @@ namespace DOL.GS.PacketHandler
 		void SendVersionAndCryptKey();
 		void SendLoginDenied(eLoginError et);
 		void SendLoginGranted();
+		void SendLoginGranted(byte color);
 		void SendSessionID();
 		void SendPingReply(ulong timestamp, ushort sequence);
 		void SendRealm(eRealm realm);

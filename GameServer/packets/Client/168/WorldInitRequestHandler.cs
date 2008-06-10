@@ -59,8 +59,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 			protected override void OnTick()
 			{
 				GamePlayer player = (GamePlayer)m_actionSource;
+				if(player==null) return;
 				//check emblems at world load before any updates
-				lock (player.Inventory)
+				if(player.Inventory!=null) lock (player.Inventory)
 				{
 					Guild playerGuild = player.Guild;
 					foreach(InventoryItem myitem in player.Inventory.AllItems)
@@ -121,8 +122,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 				//Get the objectID for this player
 				//IMPORTANT ... this is needed BEFORE
 				//sending Packet 0x88!!!
+
 				if (!player.AddToWorld())
+				{
 					log.ErrorFormat("Failed to add player to the region! {0}", player.ToString());
+					player.Client.Out.SendPlayerQuit(true);
+					player.Client.Player.SaveIntoDatabase();
+					player.Client.Player.Quit(true);
+					return;
+				}
 				// this is bind stuff
 				// make sure that players doesnt start dead when coming in
 				// thats important since if client moves the player it requests player creation

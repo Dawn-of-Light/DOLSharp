@@ -60,6 +60,7 @@ namespace DOL.GS.PacketHandler
 		{
 			if (text == null)
 				return;
+			if( caption == null) caption = " ";
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.DetailWindow));
 
@@ -67,19 +68,31 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(0); // new in 1.81
 			pak.WritePascalString(caption); //window caption
 
-			IEnumerator iter = text.GetEnumerator();
+			//IEnumerator iter = text.GetEnumerator();
+            IList iter = text;
 			byte line = 1;
 			try
 			{
-				while (iter.MoveNext())
+				if(iter==null)
 				{
 					pak.WriteByte(line++);
-					pak.WritePascalString((string)iter.Current);
+					pak.WritePascalString(" ");
+				}
+				else lock(iter)
+				{
+					foreach(string str in iter)
+					{
+						if(str==null || str.Length<1) continue;
+						pak.WriteByte(line++);
+						pak.WritePascalString(str);
+					}
 				}
 			}
 			catch(Exception e)
 			{
-				log.Error(e);
+				if(m_gameClient!=null && m_gameClient.Account!=null && m_gameClient.Account.Name!=null)
+					log.Error(e+"\n"+Environment.StackTrace+"\nEdenClient="+m_gameClient.Account.Name+"\nCaption="+caption);
+				else log.Error(e+"\n"+Environment.StackTrace+"\nCaption="+caption);
 				return;
 			}
 

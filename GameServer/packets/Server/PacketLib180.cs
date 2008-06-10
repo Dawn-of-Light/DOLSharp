@@ -403,7 +403,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte((byte)firstSkills);
 				SendTCP(pak);
 			}
-			if (!flagSendHybrid)
+			//if (!flagSendHybrid)
 				SendListCastersSpell();
 		}
 	}
