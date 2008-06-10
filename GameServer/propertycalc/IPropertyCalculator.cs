@@ -42,6 +42,7 @@ namespace DOL.GS.PropertyCalc
 		/// <param name="property"></param>
 		/// <returns></returns>
 		int CalcValue(GameLiving living, eProperty property);
+		int CalcValueBase(GameLiving living, eProperty property);
 
         /// <summary>
         /// Calculates the modified value from buff bonuses only.

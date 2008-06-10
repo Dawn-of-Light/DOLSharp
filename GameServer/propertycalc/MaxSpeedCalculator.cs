@@ -148,8 +148,11 @@ namespace DOL.GS.PropertyCalc
 			speed = living.MaxSpeedBase * speed + 0.5; // 0.5 is to fix the rounding error when converting to int so root results in speed 2 (191*0.01=1.91+0.5=2.41)
 
             GameSpellEffect iConvokerEffect = SpellHandler.FindEffectOnTarget(living, "SpeedWrap");
-            if (iConvokerEffect != null && speed > 191 && living.EffectList.GetOfType(typeof(ChargeEffect)) == null)
-                return 191;
+            if (iConvokerEffect != null && living.EffectList.GetOfType(typeof(ChargeEffect)) == null)
+			{
+                if(living.EffectList.GetOfType(typeof(SprintEffect))!=null && speed>248) return 248;
+				else if(speed>191) return 191;
+			}
 
 			if (speed < 0)
 				return 0;
