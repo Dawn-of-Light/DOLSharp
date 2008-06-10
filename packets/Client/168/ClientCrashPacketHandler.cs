@@ -62,6 +62,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 					}
 				}
+					
+				//Eden
+				if(client.Player!=null)
+				{
+					GamePlayer player = client.Player;
+					player.Client.Out.SendPlayerQuit(true);
+					player.Client.Player.SaveIntoDatabase();
+					player.Client.Player.Quit(true);
+				}
+
 				return 1;
 			}
 		}

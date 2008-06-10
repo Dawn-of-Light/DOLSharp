@@ -57,6 +57,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// </summary>
 #endif
 		public const string LASTUPDATETICK = "PLAYERPOSITION_LASTUPDATETICK";
+		public const string LASTMOVEMENTTICK = "PLAYERPOSITION_LASTMOVEMENTTICK";
 		/// <summary>
 		/// Stores the count of times the player is above speedhack tolerance!
 		/// If this value reaches 10 or more, a logfile entry is written.
@@ -127,22 +128,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 			Zone newZone = WorldMgr.GetZone(currentZoneID);
 			if (newZone == null)
 			{
-				if (log.IsErrorEnabled)
-					log.Error(client.Player.Name + "'s position in unknown zone! => " + currentZoneID);
-
-				// move to bind point if not on it
-				if (client.Player.CurrentRegionID != client.Player.PlayerCharacter.BindRegion
-					|| client.Player.X != client.Player.PlayerCharacter.BindXpos
-					|| client.Player.Y != client.Player.PlayerCharacter.BindYpos)
+				if(client.Player==null) return 1;
+				if(!client.Player.TempProperties.getProperty("isbeingbanned",false))
 				{
-					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.UnknownZone"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-					client.Player.MoveTo(
-						(ushort)client.Player.PlayerCharacter.BindRegion,
-						client.Player.PlayerCharacter.BindXpos,
-						client.Player.PlayerCharacter.BindYpos,
-						(ushort)client.Player.PlayerCharacter.BindZpos,
-						(ushort)client.Player.PlayerCharacter.BindHeading
-						);
+					if (log.IsErrorEnabled)
+						log.Error(client.Player.Name + "'s position in unknown zone! => " + currentZoneID);
+					GamePlayer player=client.Player;
+					player.TempProperties.setProperty("isbeingbanned", true);
+					player.MoveToBind();
 				}
 
 				return 1; // TODO: what should we do? player lost in space
@@ -252,6 +245,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 			 */
 			//client.Player.IsPlayerJump = false;
+			if(client.Player.X!=realX || client.Player.Y!=realY)
+			{
+				client.Player.TempProperties.setProperty(LASTMOVEMENTTICK, client.Player.CurrentRegion.Time);
+			}
 			client.Player.X = realX;
 			client.Player.Y = realY;
 			client.Player.Z = realZ;

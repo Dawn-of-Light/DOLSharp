@@ -113,6 +113,10 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendLoginGranted()
 		{
+			SendLoginGranted(GameServer.ServerRules.GetColorHandling(m_gameClient));
+		}
+		public virtual void SendLoginGranted(byte color)
+		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.LoginGranted));
 			/*
 				if(is_si)
@@ -129,7 +133,7 @@ namespace DOL.GS.PacketHandler
 			pak.WritePascalString(m_gameClient.Account.Name);
 			pak.WritePascalString(GameServer.Instance.Configuration.ServerNameShort); //server name
 			pak.WriteByte(0x0C); //Server ID
-			pak.WriteByte(GameServer.ServerRules.GetColorHandling(m_gameClient));
+			pak.WriteByte(color);
 			pak.WriteByte(0x00);
 			SendTCP(pak);
 		}
@@ -2188,10 +2192,26 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak;// = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
 			IList spelllines = m_gameClient.Player.GetSpellLines();
 			byte linenumber = 0;
+			
+			bool flagSendHybrid = true;
+			if(m_gameClient.Player.CharacterClass.ClassType == eClassType.ListCaster)
+				flagSendHybrid = false;
+				
 			lock (spelllines.SyncRoot)
 			{
 				foreach (SpellLine line in spelllines)
 				{
+					string linename=line.Name.ToLower();
+					if(flagSendHybrid&&(!linename.Contains("champion ab")
+							||linename!="convoker"
+							||linename!="banelord"
+							||linename!="stormlord"
+							||linename!="perfecter"
+							||linename!="sojourner"
+							||linename!="spymaster"
+							||linename!="battlemaster"
+							||linename!="warlord")) continue;
+					
 					IList spells = SkillBase.GetSpellList(line.KeyName);
 					int spellcount = 0;
 					for (int i = 0; i < spells.Count; i++)
@@ -2387,7 +2407,12 @@ namespace DOL.GS.PacketHandler
                         pak.WriteByte(1);
                     }
                     else { pak.WriteByte(3); }
-                    pak.WriteShortLowEndian(spell.Icon);
+                    //Eden
+					if(spell.SpellType=="StyleHandler")
+					{
+						pak.WriteShortLowEndian((ushort)(spell.Value+3352));
+					}
+					else pak.WriteShortLowEndian(spell.Icon);
                     pak.WritePascalString(spell.Name);
                     if(m_gameClient.Player.HaveChampionSpell(spec.SpellID))
                     	pak.WriteByte((byte)1);
