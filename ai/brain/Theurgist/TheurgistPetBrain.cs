@@ -23,6 +23,11 @@ using DOL.Events;
 using DOL.GS;
 using log4net;
 using System.Reflection;
+using System.Collections;
+using DOL.GS;
+using DOL.GS.Spells;
+using DOL.GS.PacketHandler;
+using DOL.GS.Effects;
 
 namespace DOL.AI.Brain
 {
@@ -34,142 +39,111 @@ namespace DOL.AI.Brain
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		private GamePlayer m_owner;
+		private GameLiving m_target;
 		private bool m_melee = false;
-
-		/// <summary>
-		/// Create a new TheurgistPetBrain.
-		/// </summary>
-		/// <param name="owner"></param>
+		private Spell spelllos;
+		
 		public TheurgistPetBrain(GamePlayer owner)
 		{
-			m_owner = owner;
+			if(owner!=null)
+			{
+				m_owner = owner;
+				if(owner.TargetObject as GameLiving!=null)
+					m_target=m_owner.TargetObject as GameLiving;
+			}
 			AggroLevel = 100;
 		}
+		
+		public override int ThinkInterval { get { return 1500; } }
 
-		/// <summary>
-		/// Brain main loop.
-		/// </summary>
-		public override void Think()
-		{
-			AttackMostWanted();
-		}
+		public override void Think() { AttackMostWanted(); }
 
-		/// <summary>
-		/// Doesn't do anything for us here
-		/// </summary>
-		/// <param name="state"></param>
-		public void SetAggressionState(eAggressionState state)
-		{
-		}
+		public void SetAggressionState(eAggressionState state) { }
 
-		/// <summary>
-		/// Receives all messages of the body.
-		/// </summary>
-		/// <param name="e"></param>
-		/// <param name="sender"></param>
-		/// <param name="args"></param>
 		public override void Notify(DOLEvent e, object sender, EventArgs args)
 		{
 			if (!IsActive) return;
-
 			if (sender == Body && e == GameLivingEvent.AttackedByEnemy)
 			{
 				m_melee = true;
-				GameLiving target = CalculateNextAttackTarget();
-				if (target != null)
-					Body.StartAttack(target);
+				GameLiving target = m_target; //CalculateNextAttackTarget();
+				if (target != null) Body.StartAttack(target);
 				return;
 			}
-
 			if (e == GameNPCEvent.CastFailed)
 			{
 				switch ((args as CastFailedEventArgs).Reason)
 				{
 					case CastFailedEventArgs.Reasons.TargetTooFarAway:
-						GameLiving target = CalculateNextAttackTarget();
-						if (target != null)
-							Body.StartAttack(target);
+						GameLiving target = m_target; //CalculateNextAttackTarget();
+						if (target != null) Body.StartAttack(target);
 						return;
 				}
 			}
 		}
 
-		/// <summary>
-		/// Select and attacks the next target.
-		/// </summary>
 		protected override void AttackMostWanted()
 		{
-			if (!IsActive)
-				return;
-
-			GameLiving target = CalculateNextAttackTarget();
-			if (target != null)
+			if (!IsActive) return;
+			GameLiving target = m_target; //CalculateNextAttackTarget();
+			if(target != null)
 			{
-				if (!m_melee)
-					if (!CastSpell(target))
+				if(!m_melee)
+				{
+					if(!CastSpell(target))
 						Body.StartAttack(target);
+				}
 			}
 		}
 
-		/// <summary>
-		/// Try to cast a spell on the target.
-		/// </summary>
-		/// <param name="target"></param>
-		/// <returns>True, if cast successful or already casting, false otherwise.</returns>
 		private bool CastSpell(GameLiving target)
 		{
-			if (m_melee)
-				return false;
-
-			if (Body.IsBeingInterrupted)
-			{
-				m_melee = true;
-				return false;
-			}
-
-			if (Body.IsCasting)
-				return true;
-
-			Body.TargetObject = target;
-			Body.TurnTo(target);
-
+			if(target==null) return false;
+			if(!target.IsAlive) return false;
+			if(m_melee) return false;
+			if (Body.IsBeingInterrupted) { m_melee=true; return false; }
+			if (Body.IsCasting) return true;
 			foreach (Spell spell in Body.Spells)
 			{
-				if (spell.Target.ToLower() != "enemy")
-					continue;
-
-				if (LivingHasEffect((GameLiving)Body.TargetObject, spell))
-					continue;
-
-				if (Body.GetSkillDisabledDuration(spell) > 0)
-					continue;
-
+				if (spell.Target.ToLower() != "enemy") continue;
 				spell.Level = Body.Level;
-				Body.CastSpell(spell, m_mobSpellLine);
+				if(spell.SpellType!="Stun"||Util.Chance(70))
+				{
+					if(Body.TargetObject!=target) Body.TargetObject = target;
+					if(spell.CastTime>0) Body.TurnTo(target);
+					
+					//Eden - LoS check for ice pets
+					if(Body.Name.ToLower().IndexOf("ice")>=0)
+					{
+						GamePlayer LOSChecker = null;
+						if (target is GamePlayer) LOSChecker = target as GamePlayer;
+						else if (target is GameNPC)
+						{
+							foreach (GamePlayer ply in this.Body.GetPlayersInRadius(300))
+								if (ply != null) { LOSChecker = ply; break; }
+						}
+						if (LOSChecker == null) return false;
+						spelllos=spell;
+						LOSChecker.Out.SendCheckLOS(LOSChecker, Body, new CheckLOSResponse(PetStartSpellAttackCheckLOS));
+					}
+					else Body.CastSpell(spell, m_mobSpellLine);
+				}
 				return true;
 			}
-
 			return false;
 		}
+		
+		public void PetStartSpellAttackCheckLOS(GamePlayer player, ushort response, ushort targetOID)
+        {
+            if ((response & 0x100) == 0x100)
+                Body.CastSpell(spelllos, m_mobSpellLine);
+			else Body.Follow(m_target, 90, 5000);
+        }
 
 		#region IControlledBrain Members
-
-		public eWalkState WalkState
-		{
-			get { return eWalkState.Stay; }
-		}
-
-		public eAggressionState AggressionState
-		{
-			get	{ return eAggressionState.Aggressive; }
-			set { }
-		}
-
-		public GameLiving Owner
-		{
-			get { return m_owner; }
-		}
-
+		public eWalkState WalkState { get { return eWalkState.Stay; } }
+		public eAggressionState AggressionState { get { return eAggressionState.Aggressive; } set { } }
+		public GameLiving Owner { get { return m_owner; } }
 		public void Attack(GameObject target) { }
 		public void Follow(GameObject target) { }
 		public void FollowOwner() { }
@@ -177,18 +151,8 @@ namespace DOL.AI.Brain
 		public void ComeHere() { }
 		public void Goto(GameObject target) { }
 		public void UpdatePetWindow() { }
-
-		public GamePlayer GetPlayerOwner()
-		{
-			return m_owner;
-		}
-
-		public bool IsMainPet
-		{
-			get { return false; }
-			set { }
-		}
-
+		public GamePlayer GetPlayerOwner() { return m_owner; }
+		public bool IsMainPet { get { return false; } set { } }
 		#endregion
 	}
 }

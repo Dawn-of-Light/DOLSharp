@@ -12,21 +12,14 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public override void Think()
 		{
+			CheckForNuking();
 			base.Think();
-
-			GameKeepGuard guard = Body as GameKeepGuard;
-			/*
-			 * Here what we do is check if the guard can used ranged, 
-			 * and if so, break melee and start using it
-			 */
-			if (Body.AttackState && guard.CanUseRanged)
-			{
-				if (Body.TargetObject != null)
-				{
-					Body.StopAttack();
-					Body.StartAttack(Body.TargetObject);
-				}
-			}
+		}
+		private void CheckForNuking()
+		{
+			if(guard==null) return;
+			if (guard.CanUseRanged)
+				SpellMgr.CheckForNuke(guard);
 		}
 	}
 }

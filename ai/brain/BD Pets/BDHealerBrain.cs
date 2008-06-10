@@ -45,7 +45,11 @@ namespace DOL.AI.Brain
 		/// Constructs new controlled npc brain
 		/// </summary>
 		/// <param name="owner"></param>
-		public BDHealerBrain(GameLiving owner) : base(owner) { }
+		public BDHealerBrain(GameLiving owner) : base(owner)
+		{
+			AggroLevel = 0;
+			AggroRange = 0;
+		}
 
 		#region Control
 
@@ -86,20 +90,6 @@ namespace DOL.AI.Brain
 			{
 				#region Heals
 				case "Heal":
-					//Heal self
-					if (Body.HealthPercent < 75)
-					{
-						Body.TargetObject = Body;
-						break;
-					}
-					//Heal owner
-					owner = (this as IControlledBrain).Owner;
-					if (owner.HealthPercent < 75)
-					{
-						Body.TargetObject = owner;
-						break;
-					}
-
 					player = GetPlayerOwner();
 					if (player != null)
 					{
@@ -110,6 +100,22 @@ namespace DOL.AI.Brain
 							break;
 						}
 					}
+					//Heal owner
+					owner = (this as IControlledBrain).Owner;
+					if (owner.HealthPercent < 75)
+					{
+						Body.TargetObject = owner;
+						break;
+					}
+					//Heal self
+					if (Body.HealthPercent < 75)
+					{
+						Body.TargetObject = Body;
+						break;
+					}
+					
+
+					
 
 					//Heal other minions
 					foreach (IControlledBrain icb in ((GameNPC)owner).ControlledNpcList)
@@ -139,6 +145,18 @@ namespace DOL.AI.Brain
 						//Buff owner
 						if (owner != null)
 						{
+							player = GetPlayerOwner();
+
+							//Buff player
+							if (player != null)
+							{
+								if (!LivingHasEffect(player, spell))
+								{
+									Body.TargetObject = player;
+									break;
+								}
+							}
+							
 							if (!LivingHasEffect(owner, spell))
 							{
 								Body.TargetObject = owner;
@@ -157,17 +175,7 @@ namespace DOL.AI.Brain
 								}
 							}
 
-							player = GetPlayerOwner();
-
-							//Buff player
-							if (player != null)
-							{
-								if (!LivingHasEffect(player, spell))
-								{
-									Body.TargetObject = player;
-									break;
-								}
-							}
+							
 						}
 						break;
 					}
