@@ -86,7 +86,7 @@ namespace DOL.GS.SkillHandler
 			{
 				if (intercept.InterceptTarget != interceptTarget)
 					continue;
-				if (intercept.InterceptSource != player)
+				if (intercept.InterceptSource != player && !(intercept.InterceptSource is GameNPC))
 				{
 					player.Out.SendMessage(string.Format("{0} is already intercepting for {1}.", intercept.InterceptSource.GetName(0, true), intercept.InterceptTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
