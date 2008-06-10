@@ -173,7 +173,7 @@ namespace DOL.GS.Effects
 			{
 				//let's not display this icon on NPC's because i use this for spiritmasters
 				if (m_owner is GameNPC)
-					return 0;
+					return 7249;
 				return 410;
 			}
 		}
