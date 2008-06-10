@@ -154,7 +154,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					door.Z = player.Z;
 					door.CurrentRegion = player.CurrentRegion;
 					door.Open();
-					if (player.Client.Account.PrivLevel > 1)
+					if (player.Client.Account.PrivLevel == 3)
 					{
 						int doorType = m_doorId / 100000000;
 						if (doorType == 7)

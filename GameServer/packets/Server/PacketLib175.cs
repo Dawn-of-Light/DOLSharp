@@ -468,7 +468,7 @@ namespace DOL.GS.PacketHandler
 				SendObjectGuildID(playerToCreate, playerToCreate.Guild); //used for nearest friendly/enemy object buttons and name colors on PvP server
 		}
 
-		public override void SendLoginGranted()
+		public void SendLoginGranted(byte color)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.LoginGranted));
 			pak.WriteByte(0x01); //isSI
@@ -480,10 +480,14 @@ namespace DOL.GS.PacketHandler
 			pak.WritePascalString(m_gameClient.Account.Name);
 			pak.WritePascalString(GameServer.Instance.Configuration.ServerNameShort); //server name
 			pak.WriteByte(0x0C); //Server ID
-			pak.WriteByte(GameServer.ServerRules.GetColorHandling(m_gameClient));
+			pak.WriteByte(color);
 			pak.WriteByte(0x00);
 			pak.WriteByte(0x00); // new in 1.75
 			SendTCP(pak);
+		}
+		public override void SendLoginGranted()
+		{
+			SendLoginGranted(GameServer.ServerRules.GetColorHandling(m_gameClient));
 		}
 	}
 }

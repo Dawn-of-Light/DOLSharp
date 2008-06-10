@@ -47,6 +47,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
+			if(client==null) return 1;
 			uint unk_186 = 0;
 			ushort objectType = packet.ReadShort();
 			if (client.Version >= GameClient.eClientVersion.Version186)
@@ -1724,8 +1725,14 @@ Type    Description           Id
 					list.Add(string.Format(
 						"- {0}: {1}{2}",
 						SkillBase.GetPropertyName((eProperty)bonusCat),
-						bonusValue.ToString("+0;-0;0"), //Andraste
-						((bonusCat == (int)eProperty.PowerPool) || (bonusCat >= (int)eProperty.Resist_First && bonusCat <= (int)eProperty.Resist_Last) || (bonusCat >= (int)eProperty.ResCapBonus_First && bonusCat <= (int)eProperty.ResCapBonus_Last) || bonusCat==(int)eProperty.RealmPoints )
+						bonusValue.ToString("+0;-0;0"), //Eden
+						((bonusCat == (int)eProperty.PowerPool) 
+							|| (bonusCat >= (int)eProperty.Resist_First && bonusCat <= (int)eProperty.Resist_Last) 
+							|| (bonusCat >= (int)eProperty.ResCapBonus_First && bonusCat <= (int)eProperty.ResCapBonus_Last) 
+							|| bonusCat==(int)eProperty.Conversion 
+							|| bonusCat==(int)eProperty.ExtraHP 
+							|| bonusCat==(int)eProperty.RealmPoints 
+							|| bonusCat==(int)eProperty.StyleAbsorb )
 						? ((bonusCat == (int)eProperty.PowerPool) ? LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DetailDisplayHandler.WriteBonusLine.PowerPool") : "%")
 							: LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DetailDisplayHandler.WriteBonusLine.Points")
 					));
