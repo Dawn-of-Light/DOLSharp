@@ -33,12 +33,12 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Holds guarder
 		/// </summary>
-		private GamePlayer m_guardSource;
+		private GameLiving m_guardSource;
 
 		/// <summary>
 		/// Gets guarder
 		/// </summary>
-		public GamePlayer GuardSource
+		public GameLiving GuardSource
 		{
 			get { return m_guardSource; }
 		}
@@ -46,12 +46,12 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Holds guarded player
 		/// </summary>
-		private GamePlayer m_guardTarget;
+		private GameLiving m_guardTarget;
 
 		/// <summary>
 		/// Gets guarded player
 		/// </summary>
-		public GamePlayer GuardTarget
+		public GameLiving GuardTarget
 		{
 			get { return m_guardTarget; }
 		}
@@ -73,35 +73,40 @@ namespace DOL.GS.Effects
 		/// </summary>
 		/// <param name="guardSource">The guarder</param>
 		/// <param name="guardTarget">The player guarded by guarder</param>
-		public void Start(GamePlayer guardSource, GamePlayer guardTarget)
+		public void Start(GameLiving guardSource, GameLiving guardTarget)
 		{
 			if (guardSource == null || guardTarget == null)
 				return;
 
-			m_playerGroup = guardSource.Group;
-
-			if (m_playerGroup != guardTarget.Group)
-				return;
+			if (guardSource is GamePlayer && guardTarget is GamePlayer)
+			{
+				m_playerGroup = ((GamePlayer)guardSource).Group;
+				if (m_playerGroup == null) return;
+				if (m_playerGroup != guardTarget.Group)	return;
+				GameEventMgr.AddHandler(m_playerGroup, GroupEvent.MemberDisbanded, new DOLEventHandler(GroupDisbandCallback));
+			}
 
 			m_guardSource = guardSource;
 			m_guardTarget = guardTarget;
 			m_owner = m_guardSource;
 
-			GameEventMgr.AddHandler(m_playerGroup, GroupEvent.MemberDisbanded, new DOLEventHandler(GroupDisbandCallback));
-
-			m_guardSource.EffectList.Add(this);
-			m_guardTarget.EffectList.Add(this);
-
 			if (!WorldMgr.CheckDistance(guardSource, guardTarget, GuardAbilityHandler.GUARD_DISTANCE))
 			{
-				guardSource.Out.SendMessage(LanguageMgr.GetTranslation(guardSource.Client, "Effects.GuardEffect.YouAreNowGuardingYBut", guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				guardTarget.Out.SendMessage(LanguageMgr.GetTranslation(guardTarget.Client, "Effects.GuardEffect.XIsNowGuardingYouBut", guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				if(guardSource is GamePlayer)
+					((GamePlayer)guardSource).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)guardSource).Client, "Effects.GuardEffect.YouAreNowGuardingYBut", guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				if(guardSource is GamePlayer&&guardTarget is GamePlayer)
+					((GamePlayer)guardTarget).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)guardTarget).Client, "Effects.GuardEffect.XIsNowGuardingYouBut", guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
 			{
-				guardSource.Out.SendMessage(LanguageMgr.GetTranslation(guardSource.Client, "Effects.GuardEffect.YouAreNowGuardingY", guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				guardTarget.Out.SendMessage(LanguageMgr.GetTranslation(guardTarget.Client, "Effects.GuardEffect.XIsNowGuardingYou", guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				if(guardSource is GamePlayer)
+					((GamePlayer)guardSource).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)guardSource).Client, "Effects.GuardEffect.YouAreNowGuardingY", guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				if(guardSource is GamePlayer&&guardTarget is GamePlayer)
+					((GamePlayer)guardTarget).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)guardTarget).Client, "Effects.GuardEffect.XIsNowGuardingYou", guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
+			
+			m_guardSource.EffectList.Add(this);
+			m_guardTarget.EffectList.Add(this);
 		}
 
 		/// <summary>
@@ -125,14 +130,18 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public override void Cancel(bool playerCancel)
 		{
-			GameEventMgr.RemoveHandler(m_playerGroup, GroupEvent.MemberDisbanded, new DOLEventHandler(GroupDisbandCallback));
+			if(m_guardSource is GamePlayer && m_guardTarget is GamePlayer)
+			{
+				GameEventMgr.RemoveHandler(m_playerGroup, GroupEvent.MemberDisbanded, new DOLEventHandler(GroupDisbandCallback));
+				m_playerGroup = null;
+			}
 			m_guardSource.EffectList.Remove(this);
 			m_guardTarget.EffectList.Remove(this);
 
-			m_guardSource.Out.SendMessage(LanguageMgr.GetTranslation(m_guardSource.Client, "Effects.GuardEffect.YourNoLongerGuardingY", m_guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			m_guardTarget.Out.SendMessage(LanguageMgr.GetTranslation(m_guardTarget.Client, "Effects.GuardEffect.XNoLongerGuardingYoy", m_guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-			m_playerGroup = null;
+			if(m_guardSource is GamePlayer)
+				((GamePlayer)m_guardSource).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)m_guardSource).Client, "Effects.GuardEffect.YourNoLongerGuardingY", m_guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			if(m_guardSource is GamePlayer&&m_guardTarget is GamePlayer)
+				((GamePlayer)m_guardTarget).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)m_guardTarget).Client, "Effects.GuardEffect.XNoLongerGuardingYoy", m_guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		/// <summary>
@@ -142,9 +151,13 @@ namespace DOL.GS.Effects
 		{
 			get
 			{
-				if (m_guardSource != null && m_guardTarget != null)
-					return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.GuardEffect.GuardedByName", m_guardTarget.GetName(0, false), m_guardSource.GetName(0, false));
-				return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.GuardEffect.Name");
+				if(Owner is GamePlayer)
+				{
+					if (m_guardSource != null && m_guardTarget != null)
+						return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.GuardEffect.GuardedByName", m_guardTarget.GetName(0, false), m_guardSource.GetName(0, false));
+					return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.GuardEffect.Name");
+				}
+				return "";
 			}
 		}
 
@@ -161,7 +174,12 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public override ushort Icon
 		{
-			get { return 412; }
+			get
+			{
+				if (m_owner is GameNPC)
+					return 1001;
+				return 412;
+			}
 		}
 
 		/// <summary>
