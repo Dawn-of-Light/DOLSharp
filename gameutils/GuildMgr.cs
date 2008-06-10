@@ -197,7 +197,14 @@ namespace DOL.GS
 				CreateRanks(newguild);
 				
 				AddGuild(newguild);				
-				GameServer.Database.AddNewObject(newguild.theGuildDB);
+				try
+				{
+					GameServer.Database.AddNewObject(newguild.theGuildDB);
+				}
+				catch(Exception)
+				{
+					return null;
+				}
 				return newguild;
 			}
 			catch (Exception e)
@@ -269,6 +276,7 @@ namespace DOL.GS
                                                     rank.Alli = true;
                                                     rank.Dues = true;
                                                     rank.Withdraw = true;
+													rank.Buff=true;
                                                 }
 
                                             }

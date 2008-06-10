@@ -1109,8 +1109,28 @@ namespace DOL.GS
 			/******* MODIFIED BY KONIK & WITCHKING FOR NEW ZONE SYSTEM *********/
 			if (CurrentRegion != null)
 			{
-				//return m_oirData.GetInRadius(this, CurrentRegion, Zone.eGameObjectType.PLAYER, X, Y, Z, radiusToCheck, withDistance, useCache);
-				return CurrentRegion.GetPlayersInRadius(X, Y, Z, radiusToCheck, withDistance);
+				//Eden - avoid server freeze
+				if (CurrentRegion.GetZone(X, Y) == null)
+				{
+					if(this is GamePlayer && (this as GamePlayer).Client.Account.PrivLevel<3 && !(this as GamePlayer).TempProperties.getProperty("isbeingbanned",false))
+					{
+						GamePlayer player=this as GamePlayer;
+						player.TempProperties.setProperty("isbeingbanned", true);
+						player.MoveToBind();
+					}
+					if(this is GameNPC)
+					{
+						GameNPC npc=this as GameNPC;
+						npc.StopAttack();
+                        npc.StopCurrentSpellcast();
+                        npc.DeleteFromDatabase();
+                        npc.Delete();
+					}
+				}
+				else
+				{
+					return CurrentRegion.GetPlayersInRadius(X, Y, Z, radiusToCheck, withDistance);
+				}
 			}
 			return new Region.EmptyEnumerator();
 			/***************************************************************/
@@ -1163,10 +1183,29 @@ namespace DOL.GS
 			/******* MODIFIED BY KONIK & WITCHKING FOR NEW ZONE SYSTEM *********/
 			if (CurrentRegion != null)
 			{
-				//IEnumerable result = m_oirData.GetInRadius(this, CurrentRegion, Zone.eGameObjectType.NPC, X, Y, Z, radiusToCheck, withDistance, useCache);
-				IEnumerable result = CurrentRegion.GetNPCsInRadius(X, Y, Z, radiusToCheck, withDistance);
-
-				return result;
+				//Eden - avoid server freeze
+				if (CurrentRegion.GetZone(X, Y) == null)
+				{
+					if(this is GamePlayer && !(this as GamePlayer).TempProperties.getProperty("isbeingbanned",false))
+					{
+						GamePlayer player=this as GamePlayer;
+						player.TempProperties.setProperty("isbeingbanned", true);
+						player.MoveToBind();
+					}
+					if(this is GameNPC)
+					{
+						GameNPC npc=this as GameNPC;
+						npc.StopAttack();
+                        npc.StopCurrentSpellcast();
+                        npc.DeleteFromDatabase();
+                        npc.Delete();
+					}
+				}
+				else
+				{
+					IEnumerable result = CurrentRegion.GetNPCsInRadius(X, Y, Z, radiusToCheck, withDistance);
+					return result;
+				}
 			}
 
 			return new Region.EmptyEnumerator();
@@ -1196,8 +1235,28 @@ namespace DOL.GS
 			/******* MODIFIED BY KONIK & WITCHKING FOR NEW ZONE SYSTEM *********/
 			if (CurrentRegion != null)
 			{
-				//return m_oirData.GetInRadius(this, CurrentRegion, Zone.eGameObjectType.ITEM, X, Y, Z, radiusToCheck, withDistance, true);
-				return CurrentRegion.GetItemsInRadius(X, Y, Z, radiusToCheck, withDistance);
+				//Eden - avoid server freeze
+				if (CurrentRegion.GetZone(X, Y) == null)
+				{
+					if(this is GamePlayer && !(this as GamePlayer).TempProperties.getProperty("isbeingbanned",false))
+					{
+						GamePlayer player=this as GamePlayer;
+						player.TempProperties.setProperty("isbeingbanned", true);
+						player.MoveToBind();
+					}
+					if(this is GameNPC)
+					{
+						GameNPC npc=this as GameNPC;
+						npc.StopAttack();
+                        npc.StopCurrentSpellcast();
+                        npc.DeleteFromDatabase();
+                        npc.Delete();
+					}
+				}
+				else
+				{
+					return CurrentRegion.GetItemsInRadius(X, Y, Z, radiusToCheck, withDistance);
+				}
 			}
 			return new Region.EmptyEnumerator();
 			/***************************************************************/
@@ -1223,7 +1282,28 @@ namespace DOL.GS
 		{
 			if (CurrentRegion != null)
 			{
-				return CurrentRegion.GetDoorsInRadius(X, Y, Z, radiusToCheck, withDistance);
+				//Eden : avoid server freeze
+				if (CurrentRegion.GetZone(X, Y) == null)
+				{
+					if(this is GamePlayer && !(this as GamePlayer).TempProperties.getProperty("isbeingbanned",false))
+					{
+						GamePlayer player=this as GamePlayer;
+						player.TempProperties.setProperty("isbeingbanned", true);
+						player.MoveToBind();
+					}
+					if(this is GameNPC)
+					{
+						GameNPC npc=this as GameNPC;
+						npc.StopAttack();
+                        npc.StopCurrentSpellcast();
+                        npc.DeleteFromDatabase();
+                        npc.Delete();
+					}
+				}
+				else
+				{
+					return CurrentRegion.GetDoorsInRadius(X, Y, Z, radiusToCheck, withDistance);
+				}
 			}
 			return new Region.EmptyEnumerator();
 		}

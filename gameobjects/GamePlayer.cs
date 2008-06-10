@@ -140,6 +140,13 @@ namespace DOL.GS
 			set { m_groundtargetInView = value; }
 		}
 
+		protected bool m_issilenced=false;
+		public bool IsSilenced
+		{
+			get { return m_issilenced; }
+			set { m_issilenced = value; }
+		}
+
 
         /// <summary>
         /// Player is in BG ?
@@ -491,6 +498,7 @@ namespace DOL.GS
 			CurrentSpeed = 0;
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
+				if(player==null) continue;
 				//Maybe there is a better solution?
 				player.Out.SendObjectRemove(this);
 				player.Out.SendPlayerCreate(this);
@@ -519,6 +527,7 @@ namespace DOL.GS
 			//Notify players in close proximity!
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 			{
+				if(player==null) continue;
 				if (GameServer.ServerRules.IsAllowedToUnderstand(this, player))
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GamePlayer.OnLinkdeath.Linkdead", Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
@@ -793,6 +802,7 @@ namespace DOL.GS
 					}
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
+						if(player==null) continue;
 						if ((int)player.Client.Version < (int)GameClient.eClientVersion.Version187)
 							player.Out.SendEmoteAnimation(this, eEmote.Bind);
 						else player.Out.SendEmoteAnimation(this, bindEmote);
@@ -1383,7 +1393,10 @@ namespace DOL.GS
 			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Pray.Begin"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			{
+				if(player==null) continue;
 				player.Out.SendEmoteAnimation(this, eEmote.Pray);
+			}
 		}
 
 		/// <summary>
@@ -1475,6 +1488,7 @@ namespace DOL.GS
 					Out.SendUpdatePlayer();
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
+						if(player==null) continue;
 						if (player != this)
 						{
 							player.Out.SendObjectRemove(this);
@@ -1522,6 +1536,7 @@ namespace DOL.GS
 						Out.SendGroupWindowUpdate();
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
+						if(player==null) continue;
 						if (player != this)
 						{
 							player.Out.SendObjectRemove(this);
@@ -1563,7 +1578,10 @@ namespace DOL.GS
 				//base.Model; // only need if there will be some special code in base-property in future
 				if (ObjectState == eObjectState.Active)
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+					{
+						if(player==null) continue;
 						player.Out.SendModelChange(this, Model);
+					}
 			}
 		}
 
@@ -1871,6 +1889,8 @@ namespace DOL.GS
 			if(ChampionLevel>=1) hp3=Math.Floor(((double)CharacterClass.BaseHP / 27)*ChampionLevel); // CL's - need correct formula
 			double hp4=20 + hp1 / 50 + hp2 + hp3;
 			if(HasAbility(Abilities.MemoriesOfWar)) hp4*=1.1; //10% HP for heavy tanks
+			//ExtraHP : from artifacts, such Spear of Kings charge
+			if(GetModified(eProperty.ExtraHP)>0) hp4+=Math.Round(hp4*(double)GetModified(eProperty.ExtraHP)/100);
 			
 			return Math.Max(1, (int)hp4);
 		}
@@ -2370,7 +2390,13 @@ namespace DOL.GS
 			int specPoints = (specLine.Level * (specLine.Level + 1) - 2) / 2;
 			// Graveen - autotrain 1.87
 			specPoints -= GetAutoTrainPoints(specLine, 0);
-			specLine.Level = 1;
+			
+			//setting directly the autotrain points in the spec
+			if(GetAutoTrainPoints(specLine, 4)==1 && Level>=8)
+			{
+				specLine.Level=(int)Math.Floor((double)Level/4);
+			}
+			else specLine.Level = 1;
 
 			return specPoints;
 		}
@@ -2484,11 +2510,11 @@ namespace DOL.GS
 					&& CharacterClass.ID != 49
 					&& CharacterClass.ID != 23
 					&& CharacterClass.ID != 58
-					&& ability.KeyName == Abilities.Climbing)
-			{
-				return;
-			}
-
+					//Heavy tanks too
+					&& CharacterClass.ID != 2
+					&& CharacterClass.ID != 44
+					&& CharacterClass.ID != 22
+					&& ability.KeyName == Abilities.Climbing) return;
 			if ((eCharacterClass)CharacterClass.ID == eCharacterClass.Infiltrator &&
 				ability.KeyName == Abilities.Snapshot)
 			{
@@ -4098,6 +4124,7 @@ namespace DOL.GS
 			{
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
+					if(player==null) continue;
 					player.Out.SendEmoteAnimation(this, eEmote.LvlUp);
 				}
 			}
@@ -5080,6 +5107,14 @@ namespace DOL.GS
 				case eAttackResult.HitStyle:
 				case eAttackResult.HitUnstyled:
 					{
+						//keep component
+						if(( ad.Target is GameKeepComponent || ad.Target is GameKeepDoor || ad.Target is GameSiegeWeapon ) && ad.Attacker is GamePlayer && ad.Attacker.GetModified(eProperty.KeepDamage)>0)
+						{
+							int keepdamage=(int)Math.Floor((double)ad.Damage * ((double)ad.Attacker.GetModified(eProperty.KeepDamage)/100));
+							int keepstyle=(int)Math.Floor((double)ad.StyleDamage * ((double)ad.Attacker.GetModified(eProperty.KeepDamage)/100));
+							ad.Damage += keepdamage;
+							ad.StyleDamage += keepstyle;
+						}
 						// vampiir
 						if (CharacterClass is PlayerClass.ClassVampiir
 							&& target is GameKeepComponent == false
@@ -5179,6 +5214,7 @@ namespace DOL.GS
 						{
 							foreach (GamePlayer pl in GetPlayersInRadius(false, (ushort)AttackRange))
 							{
+								if(pl==null) continue;
 								if (GameServer.ServerRules.IsAllowedToAttack(this, pl, true))
 								{
 									list.Add(pl);
@@ -5715,7 +5751,6 @@ namespace DOL.GS
 					case eObjectType.RecurvedBow:
 					case eObjectType.Thrown:
 					case eObjectType.Shield:
-					case eObjectType.FistWraps:
 						return GetModified(eProperty.Dexterity);
 
 					// STR+DEX modifier
@@ -5724,7 +5759,6 @@ namespace DOL.GS
 					case eObjectType.Spear:
 					case eObjectType.Flexible:
 					case eObjectType.HandToHand:
-					case eObjectType.MaulerStaff:
 						return (GetModified(eProperty.Strength) + GetModified(eProperty.Dexterity)) >> 1;
 				}
 			}
@@ -6241,6 +6275,7 @@ namespace DOL.GS
 			{
 				foreach (GamePlayer player in GetPlayersInRadius(messageDistance))
 				{
+					if(player==null) continue;
 					players.Add(player);
 				}
 			}
@@ -6302,7 +6337,10 @@ namespace DOL.GS
 				TargetObject = null;
 
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				{
+					if(player==null) continue;
 					player.Out.SendPlayerDied(this, killer);
+				}
 
 				// first penalty is 5% of expforlevel, second penalty comes from release
 				int xpLossPercent;
@@ -6707,13 +6745,13 @@ namespace DOL.GS
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.CantCastMezzed"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 					return;
 				}
-				/*
+				
 				if (IsSilenced)
 				{
 					Out.SendMessage("You are fumbling for your words, and cannot cast!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 					return;
 				}
-				*/
+				
 				double fumbleChance = GetModified(eProperty.SpellFumbleChance);
 				fumbleChance *= 0.01;
 				if (fumbleChance > 0)
@@ -7337,7 +7375,10 @@ namespace DOL.GS
 								}
 								Out.SendTimerWindow("Summoning Mount", 5);
 								foreach (GamePlayer plr in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+								{
+									if(plr==null) continue;
 									plr.Out.SendEmoteAnimation(this, eEmote.Horse_whistle);
+								}
 								// vampiir ~
 								GameSpellEffect effects = SpellHandler.FindEffectOnTarget(this, "VampiirSpeedEnhancement");
 								GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, "SpeedEnhancement");
@@ -7522,6 +7563,11 @@ namespace DOL.GS
 													{
 														Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantUseInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 													}
+													//Eden
+													else if(IsStunned || IsMezzed || !IsAlive)
+													{
+														Out.SendMessage("You can't use "+useItem.GetName(0, false)+" in your state.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+													}
 													else
 													{
 														ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, potionEffectLine);
@@ -7579,15 +7625,15 @@ namespace DOL.GS
 								}
 								else if (Client.Account.PrivLevel == 1 && (changeTime < delay /*Andraste*/ || (CurrentRegion.Time-itemdelay)<itemreuse )) //2 minutes reuse timer
 								{
-									//Andraste
+									//Eden
 									if((CurrentRegion.Time-itemdelay)<itemreuse) Out.SendMessage("You must wait " + (itemreuse - (CurrentRegion.Time-itemdelay)) / 1000 + " more second before discharge "+useItem.Name+"!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									else Out.SendMessage("You must wait " + (delay - changeTime) / 1000 + " more second before discharge another object!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
 								}
 								else
 								{
-									//Andraste
-									TempProperties.setProperty("andrasteuseditem"+useItem.Id_nb, CurrentRegion.Time);
+									//Eden
+									TempProperties.setProperty("ITEMREUSEDELAY"+useItem.Id_nb, CurrentRegion.Time);
 									
 									
 									
@@ -7625,6 +7671,7 @@ namespace DOL.GS
 										else if (type == 2) //use2
 										{
 											Spell spell = SkillBase.GetSpellByID(useItem.SpellID1);
+											if(spell==null) { Out.SendMessage("Charge effect ID " + useItem.SpellID1 + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow); return; }
 											if (spell.Level <= Level)
 											{
 												ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
@@ -7638,6 +7685,8 @@ namespace DOL.GS
 														useItem.Charges1--;
 													TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
 													TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 2));
+													//Eden
+													TempProperties.setProperty("ITEMREUSEDELAY"+useItem.Id_nb, CurrentRegion.Time);
 												}
 												else
 												{
@@ -7665,6 +7714,12 @@ namespace DOL.GS
 		/// <param name="type"></param>
 		protected bool UseMagicalItem(InventoryItem item, int type)
 		{
+			//Eden
+			if (IsMezzed || IsStunned || !IsAlive)
+			{
+				Out.SendMessage("You can't use anything in your state.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+								
 			SpellLine itemSpellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Spells);
 			if (itemSpellLine == null)
 				return false;
@@ -8035,6 +8090,7 @@ namespace DOL.GS
 
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
+				if(player==null) continue;
 				player.Out.SendRiding(this, steed, false);
 			}
 			return true;
@@ -8068,7 +8124,7 @@ namespace DOL.GS
 		{
 			if (Steed == null)
 				return false;
-			if(Steed.Name=="Forceful Zephyr") return false;
+			if(Steed.Name=="Forceful Zephyr"&&!forced) return false;
 			if (OnDismountSteed != null && !OnDismountSteed(this, Steed, forced) && !forced)
 				return false;
 			GameObject steed = Steed;
@@ -8077,6 +8133,7 @@ namespace DOL.GS
 
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
+				if(player==null) continue;
 				player.Out.SendRiding(this, steed, true);
 			}
 			return true;
@@ -8106,6 +8163,7 @@ namespace DOL.GS
 			steed.RiderMount(this, true, slot);
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
+				if(player==null) continue;
 				player.Out.SendRiding(this, steed, false);
 			}
 		}
@@ -8133,6 +8191,7 @@ namespace DOL.GS
 			m_enduRegenerationTimer.Callback = new RegionTimerCallback(EnduranceRegenerationTimerCallback);
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
+				if(player==null) continue;
 				if (player != this)
 					player.Out.SendPlayerCreate(this);
 			}
@@ -8158,8 +8217,18 @@ namespace DOL.GS
 			if (ObjectState == eObjectState.Active)
 			{
 				DismountSteed(true);
-				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				if (CurrentRegion.GetZone(X, Y) == null)
 				{
+					if(this is GamePlayer && this.Client.Account.PrivLevel<3 && !(this as GamePlayer).TempProperties.getProperty("isbeingbanned",false))
+					{
+						GamePlayer player=this as GamePlayer;
+						player.TempProperties.setProperty("isbeingbanned", true);
+						player.MoveToBind();
+					}
+				}
+				else foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				{
+					if(player==null) continue;
 					if (player != this)
 						player.Out.SendObjectRemove(this);
 				}
@@ -8269,6 +8338,7 @@ namespace DOL.GS
 				DismountSteed(true);
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
+					if(player==null) continue;
 					if (player != this)
 					{
 						player.Out.SendObjectRemove(this);
@@ -8322,9 +8392,20 @@ namespace DOL.GS
 				//Create player visible to all others
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
+					if(player==null) continue;
 					if (player != this)
 					{
 						player.Out.SendPlayerCreate(this);
+					}
+				}
+				//Eden - can't see others?
+				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				{
+					if(player==null) continue;
+					if (player != this)
+					{
+						Out.SendPlayerCreate(player);
+						Out.SendLivingEquipmentUpdate(player);
 					}
 				}
 				UpdateEquipmentAppearance();
@@ -8384,6 +8465,7 @@ namespace DOL.GS
 				DismountSteed(true);
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
+					if(player==null) continue;
 					if (player != this)
 					{
 						player.Out.SendObjectRemove(this);
@@ -8437,6 +8519,7 @@ namespace DOL.GS
 				//Create player visible to all others
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
+					if(player==null) continue;
 					if (player != this)
 					{
 						player.Out.SendPlayerCreate(this);
@@ -8447,6 +8530,40 @@ namespace DOL.GS
 				if (this.IsUnderwater)
 					this.IsDiving = true;
 			}
+			return true;
+		}
+		
+		//Eden - Move to bind, and check if the loc is allowed
+		public bool MoveToBind()
+		{
+			Region rgn = WorldMgr.GetRegion((ushort)PlayerCharacter.BindRegion);
+			if (rgn == null || rgn.GetZone(PlayerCharacter.BindXpos, PlayerCharacter.BindYpos) == null)
+			{
+				if (log.IsErrorEnabled)
+					log.Error("Player: "+Name+" unknown bind point : (R/X/Y) "+PlayerCharacter.BindRegion+"/"+PlayerCharacter.BindXpos+"/"+PlayerCharacter.BindYpos);
+				//Kick the player, avoid server freeze
+				player.Client.Out.SendPlayerQuit(true);
+				player.Client.Player.SaveIntoDatabase();
+				player.Client.Player.Quit(true);
+				//now ban him
+				if (ServerProperties.Properties.BAN_HACKERS)
+				{
+					DBBannedAccount b = new DBBannedAccount();
+					b.Author = "SERVER";
+					b.Ip = player.Client.TcpEndpoint;
+					b.Account = player.Client.Account.Name;
+					b.DateBan = DateTime.Now;
+					b.Type = "B";
+					b.Reason = "X/Y/Zone : "+player.X+"/"+player.Y+"/"+player.CurrentRegion.ID;
+					GameServer.Database.AddNewObject(b);
+					GameServer.Database.SaveObject(b);
+					string message = "Unknown bind point, your account is banned, contact a GM.";
+					player.Client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+					player.Client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
+				}
+				return false;
+			}
+			MoveTo((ushort)PlayerCharacter.BindRegion, PlayerCharacter.BindXpos, PlayerCharacter.BindYpos, PlayerCharacter.BindZpos, (ushort)PlayerCharacter.BindHeading);
 			return true;
 		}
 
@@ -8477,6 +8594,7 @@ namespace DOL.GS
 					Out.SendUpdatePlayer();
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
+						if(player==null) continue;
 						if (player != this)
 						{
 							player.Out.SendObjectRemove(this);
@@ -9294,6 +9412,7 @@ namespace DOL.GS
 		{
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
+				if(player==null) continue;
 				if (player != this)
 					player.Out.SendLivingEquipmentUpdate(this);
 			}
@@ -10029,6 +10148,7 @@ namespace DOL.GS
 		{
 			foreach (GamePlayer plr in obj.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
+				if(plr==null) continue;
 				if (plr == player)
 					return true;
 			}
@@ -10453,12 +10573,15 @@ namespace DOL.GS
 
             // check if correct, if not respec. Not applicable to GMs
             SpecPointsOk = true;
-            if (allpoints != mypoints && Client.Account.PrivLevel == 1)
+            if (allpoints != mypoints)
             {
                 log.WarnFormat("Spec points for {0} is incorrect, should be {1} but is {2}", Name, allpoints, mypoints);
-                mypoints = RespecAllLines();
-                SkillSpecialtyPoints = allpoints;
-                SpecPointsOk = false;
+                if(Client.Account.PrivLevel==1)
+				{
+					mypoints = RespecAllLines();
+					SkillSpecialtyPoints = allpoints;
+					SpecPointsOk = false;
+				}
             }
 
 			#endregion
@@ -10770,7 +10893,7 @@ namespace DOL.GS
 			if (IsStealthed == newState)
 				return;
 
-			if (IsOnHorse)
+			if (IsOnHorse || IsSummoningMount)
 				IsOnHorse = false;
 
 			UncoverStealthAction action = (UncoverStealthAction)TempProperties.getObjectProperty(UNCOVER_STEALTH_ACTION_PROP, null);
@@ -10792,6 +10915,7 @@ namespace DOL.GS
 				GameEventMgr.AddHandler(this, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(Unstealth));
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
+					if(player==null) continue;
 					if (player == this) continue;
 					if (!player.CanDetect(this))
 						player.Out.SendObjectDelete(this);
@@ -10826,6 +10950,7 @@ namespace DOL.GS
 				GameEventMgr.RemoveHandler(this, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(Unstealth));
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
+					if(player==null) continue;
 					//TODO: more correct way to do it
 					if (player == this) continue;
 					//if a player could see us stealthed, we just update our model to avoid untargetting.
@@ -12079,6 +12204,8 @@ namespace DOL.GS
 			if (ObjectState == eObjectState.Active)
 			{
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				{
+					if(player==null) continue;
 					if (player != this)
 					{
 						//						player.Out.SendRemoveObject(this);
@@ -12086,6 +12213,7 @@ namespace DOL.GS
 						//						player.Out.SendLivingEquipementUpdate(this);
 						player.Out.SendPlayerTitleUpdate(this);
 					}
+				}
 				Out.SendUpdatePlayer();
 			}
 		}
@@ -12350,6 +12478,7 @@ namespace DOL.GS
 				Out.SendControlledHorse(this, value); // fix very rare bug when this player not in GetPlayersInRadius;
 				foreach (GamePlayer plr in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
+					if(plr==null) continue;
 					if (plr == this)
 						continue;
 					plr.Out.SendControlledHorse(this, value);
@@ -12555,6 +12684,7 @@ namespace DOL.GS
 				{
 					foreach (GamePlayer playerToUpdate in GetPlayersInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
 					{
+						if(playerToUpdate==null) continue;
 						if (playerToUpdate != null && playerToUpdate.Client.IsPlaying)
 							playerToUpdate.Out.SendRvRGuildBanner(this, value);
 					}
@@ -12758,6 +12888,7 @@ namespace DOL.GS
 		/// <param name="experience">Amount of Experience</param> 
 		public virtual void GainChampionExperience(long experience)
 		{
+			if(ChampionExperience>=320000) { ChampionExperience=320000; return; }
 			// Do not gain experience if champion not activated or if champion max level reached
 			if (!Champion || ChampionLevel == CL_MAX_LEVEL)
 				return;
