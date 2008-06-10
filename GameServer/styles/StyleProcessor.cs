@@ -198,6 +198,11 @@ namespace DOL.GS.Styles
 					
 					return;
 				}
+				if (living.IsDisarmed)
+				{
+					if(living is GamePlayer) (living as GamePlayer).Out.SendMessage("You are disarmed and cannot attack!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+					return;
+				}
 				//Can't use styles with range weapon
 				if (living.ActiveWeaponSlot == GameLiving.eActiveWeaponSlot.Distance)
 				{
@@ -410,6 +415,13 @@ namespace DOL.GS.Styles
 					double factor = (attackData.Style.GrowthRate * living.GetModifiedSpecLevel(attackData.Style.Spec) * living.AttackSpeed(weapon) * 0.001) / living.UnstyledDamageCap(weapon);
 					attackData.StyleDamage = (int)Math.Max(1, attackData.UncappedDamage * factor);
 					attackData.StyleDamage = (int)(attackData.StyleDamage * living.GetModified(eProperty.StyleDamage) / 100.0);
+					//Eden - style absorb bonus
+					int absorb=0;
+					if(attackData.Target is GamePlayer && attackData.Target.GetModified(eProperty.StyleAbsorb)>0)
+					{
+						absorb=(int)Math.Floor((double)attackData.StyleDamage * ((double)attackData.Target.GetModified(eProperty.StyleAbsorb)/100));
+						attackData.StyleDamage -= absorb;
+					}
 					//					log.Debug("unstyled cap="+player.UnstyledDamageCap(weapon)+"  factor="+factor+"  weapon spec="+player.WeaponSpecLevel(weapon)+"  attack speed="+player.AttackSpeed(weapon)+"  GR="+attackData.Style.GrowthRate);
 					//Increase regular damage by styledamage ... like on live servers
 					attackData.Damage += attackData.StyleDamage;
@@ -445,6 +457,11 @@ namespace DOL.GS.Styles
 						player.Endurance -= fatCost;
 						string damageAmount = (attackData.StyleDamage > 0) ? " (+" + attackData.StyleDamage + ")" : "";
 						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.ExecuteStyle.PerformPerfectly", attackData.Style.Name, damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+						if(absorb>0)
+						{
+							player.Out.SendMessage("A barrier absorb "+absorb+" damages", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+							if(living is GamePlayer) (living as GamePlayer).Out.SendMessage("A barrier absorb "+absorb+" damages", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+						}
 					}
 
 					if (living is GameNPC)
