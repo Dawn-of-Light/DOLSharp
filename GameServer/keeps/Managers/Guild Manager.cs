@@ -38,8 +38,8 @@ namespace DOL.GS.Keeps
 		public static void SendLevelChangeMessage(AbstractGameKeep keep)
 		{
 			string message = "Your guild's keep " + keep.Name + " is now level " + keep.Level;
-			if (keep.Level != keep.TargetLevel && keep.TargetLevel != 0)
-				message += ", it is on the way to level " + keep.TargetLevel;
+			if (keep.Level != 10)
+				message += ", it is on the way to level 10";
 			SendMessageToGuild(message, keep.Guild);
 		}
 
@@ -48,7 +48,7 @@ namespace DOL.GS.Keeps
 			string message;
 			string changeleveltext = "";
 			int nextlevel = 0;
-			if (keep.TargetLevel > keep.Level)
+			if (10 > keep.Level)
 			{
 				changeleveltext = "upgrade";
 				nextlevel = keep.Level + 1;
@@ -58,7 +58,7 @@ namespace DOL.GS.Keeps
 				changeleveltext = "downgrade";
 				nextlevel = keep.Level - 1;
 			}
-			message = "Your guild is starting to " + changeleveltext + " its area " + keep.Name + " to level " + keep.TargetLevel + ".";
+			message = "Your guild is starting to " + changeleveltext + " its area " + keep.Name + " to level 10.";
 			TimeSpan time = keep.ChangeLevelTimeRemaining;
 			message += " It will take ";
 			if (time.Hours > 0)
