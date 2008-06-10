@@ -17,7 +17,7 @@
  *
  */
  
-// Eden - Darwin 05/30/2008 - Complete /stats
+// Eden - Darwin 06/10/2008 - Complete /stats
 
 using System;
 using System.Reflection;
@@ -44,6 +44,7 @@ namespace DOL.GS.Commands
 		private static bool hasbeenrun = false;
         private static long LastUpdatedTime = 0;
         private static long TimeToChange = 0;
+		private static string staff = "48c93337-e37b-49dc-97a1-c110ece96f8b"; //don't show player stats from staff guild ID
 		
         public void OnCommand(GameClient client, string[] args)
         {
@@ -56,6 +57,10 @@ namespace DOL.GS.Commands
 			{
 				switch(args[1].ToString())
 				{
+					case "top":
+						client.Out.SendCustomTextWindow("Top 20 Players", toplist);
+						client.Out.SendCustomTextWindow("Top 20 Players", toplist); //dono why send 2 times avoid blank window sometimes
+						break;
                     case "rp":
                         client.Player.Out.SendMessage("Top 20 for Realm Points\n"+statsrp, eChatType.CT_System, eChatLoc.CL_SystemWindow);
                         break;
@@ -87,6 +92,7 @@ namespace DOL.GS.Commands
 			else DisplayMessage(client, PlayerStatistic.GetStatsMessage(client.Player));
         }
 		
+		private static ArrayList toplist = new ArrayList();
 		public class StatToCount
         {
             public string name; public uint count;
@@ -104,6 +110,17 @@ namespace DOL.GS.Commands
 		{
 			if(client==null) return;
 			LastUpdatedTime = client.Player.CurrentRegion.Time;
+			
+			#region /stats top
+			Character[] chars = (Character[])GameServer.Database.SelectObjects(typeof(Character), "RealmPoints > 213881 AND GuildID!='"+staff+"' ORDER BY RealmPoints DESC LIMIT 30");
+			if(toplist!=null) toplist.Clear();
+			int count = 1;
+			foreach (Character chr in chars)
+			{
+				toplist.Add("\n"+count.ToString()+" - [ " + chr.Name + " ] with " + chr.RealmPoints.ToString() + " RP - [ "+(((chr.RealmLevel+10)/10)+"L"+((chr.RealmLevel+10)%10))+" ]");
+				count++; if(count>20) break;
+			}
+			#endregion /stats top
 
             List<StatToCount> allstatsrp = new List<StatToCount>();
 			List<StatToCount> allstatslrp = new List<StatToCount>();
@@ -112,8 +129,7 @@ namespace DOL.GS.Commands
 			List<StatToCount> allstatsirs = new List<StatToCount>();
 			List<StatToCount> allstatsheal = new List<StatToCount>();
 			List<StatToCount> allstatsres = new List<StatToCount>();
-			List<StatToCount> allstatsmez = new List<StatToCount>();
-			
+
 			foreach(GameClient clients in WorldMgr.GetAllPlayingClients())
 			{
                 if(clients==null) continue;
@@ -138,9 +154,7 @@ namespace DOL.GS.Commands
 			allstatsirs.Sort(delegate(StatToCount ctc1, StatToCount ctc2) { return ctc1.count.CompareTo(ctc2.count); }); allstatsirs.Reverse();
 			allstatsheal.Sort(delegate(StatToCount ctc1, StatToCount ctc2) { return ctc1.count.CompareTo(ctc2.count); }); allstatsheal.Reverse();
 			allstatsres.Sort(delegate(StatToCount ctc1, StatToCount ctc2) { return ctc1.count.CompareTo(ctc2.count); }); allstatsres.Reverse();
-			
 			statsrp=""; statslrp=""; statskills=""; statsdeath=""; statsirs=""; statsheal=""; statsres="";
-			
 			for(int c=0;c<allstatsrp.Count;c++) 	{ if(c>19||allstatsrp[c].count<1) break; statsrp+=(c+1)+". "		+allstatsrp[c].name		+" with "+allstatsrp[c].count.ToString()+" RP\n"; }
 			for(int c=0;c<allstatslrp.Count;c++) 	{ if(c>19||allstatslrp[c].count<1) break; statslrp+=(c+1)+". "		+allstatslrp[c].name	+" with "+allstatslrp[c].count.ToString()+" RP/hour\n"; }
 			for(int c=0;c<allstatskills.Count;c++) 	{ if(c>19||allstatskills[c].count<1) break; statskills+=(c+1)+". "	+allstatskills[c].name	+" with "+allstatskills[c].count.ToString()+" kills\n"; }

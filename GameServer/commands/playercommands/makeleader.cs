@@ -69,7 +69,7 @@ namespace DOL.GS.Commands
 			else //Setting by name
 			{
 				string targetName = args[1];
-				GameClient targetClient = WorldMgr.GetClientByPlayerNameAndRealm(targetName, 0, false);
+				GameClient targetClient = WorldMgr.GetClientByPlayerName(targetName, false, true);
 				if (targetClient == null)
 					target = null;
 				else target = targetClient.Player;
