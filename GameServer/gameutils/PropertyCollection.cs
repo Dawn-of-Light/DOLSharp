@@ -98,6 +98,19 @@ namespace DOL.GS
 			return (val is string) ? (string) val : def;
 		}
 
+		//Eden
+		public string[] GetAllProperties()
+		{
+			string[] temp=new string[m_props.Count];
+            int i=0;
+            foreach(string key in m_props.Keys)
+            {
+                temp[i]=key;
+                i++;
+            }
+            return temp;
+		}
+
 		/// <summary>
 		/// retrieve object property
 		/// </summary>

@@ -79,6 +79,7 @@ namespace DOLGameServerConsole
 		public void SendVersionAndCryptKey() { }
 		public void SendLoginDenied(eLoginError et) { }
 		public void SendLoginGranted() { }
+		public void SendLoginGranted(byte color) { } // help for rvr AND pvp servers
 		public void SendSessionID() { }
 		public void SendPingReply(ulong timestamp, ushort sequence) { }
 		public void SendRealm(eRealm realm) { }

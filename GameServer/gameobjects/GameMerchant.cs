@@ -237,6 +237,7 @@ namespace DOL.GS
 		/// <returns>true if selling is allowed, false if it should be prevented</returns>
 		public virtual void OnPlayerSell(GamePlayer player, InventoryItem item)
 		{
+			if(item==null || player==null) return;
 			if (!item.IsDropable)
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerSell.CantBeSold"), eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);

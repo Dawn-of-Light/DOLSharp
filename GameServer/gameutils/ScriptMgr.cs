@@ -278,7 +278,9 @@ namespace DOL.GS
 					{
 						if (pars[0][0] == '&')
 							pars[0] = '/' + pars[0].Remove(0, 1);
-						client.Out.SendMessage("You do not have enough priveleges to use " + pars[0], eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						//client.Out.SendMessage("You do not have enough priveleges to use " + pars[0], eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						//why should a player know the existing commands..
+						client.Out.SendMessage("No such command ("+pars[0]+")",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 						return true;
 					}
 					//else execute the command

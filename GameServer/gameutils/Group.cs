@@ -293,6 +293,7 @@ namespace DOL.GS
 		{
 			foreach (GamePlayer player in GetPlayersInTheGroup())
 			{
+				if(player==null) continue;
 				player.Out.SendMessage(msg, type, loc);
 			}
 		}
