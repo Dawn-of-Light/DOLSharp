@@ -77,7 +77,7 @@ namespace DOL.GS.Keeps
 		/// <returns></returns>
 		public override int CalculateTimeToUpgrade()
 		{
-			if (TargetLevel > Level)
+			if (10 > Level)
 				return UpgradeTime[this.Level + 1];
 			else return UpgradeTime[this.Level - 1];
 		}

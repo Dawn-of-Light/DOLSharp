@@ -138,7 +138,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort((ushort)keep.KeepID);
 			pak.WriteByte(flag);//0-Info,1-KeepTargetLevel,2-KeepLordType,4-Release
 			pak.WriteByte((byte)keep.KeepType);//Keep Lord Type: 1-Melee,2-Magic,4-Stealth
-			pak.WriteByte((byte)keep.TargetLevel);//target level not suported for moment
+			pak.WriteByte(0x0A);//target level not suported for moment
 			pak.WriteByte((byte)keep.Level);
 			SendTCP(pak);
 		}
@@ -152,7 +152,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(component.HealthPercent);
 
 			pak.WriteByte(component.Keep.EffectiveLevel(component.Keep.Level));
-			pak.WriteByte(component.Keep.EffectiveLevel(component.Keep.TargetLevel));
+			pak.WriteByte(component.Keep.EffectiveLevel(0x0A));
 			//guild
 			pak.WriteByte((byte)component.Keep.KeepType);
 

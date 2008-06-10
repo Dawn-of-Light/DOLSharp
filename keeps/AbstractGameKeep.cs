@@ -779,7 +779,7 @@ namespace DOL.GS.Keeps
 			return;
 			if (this.Level == targetLevel)
 				return;
-			this.TargetLevel = targetLevel;
+			//this.TargetLevel = targetLevel;
 			StartChangeLevelTimer();
 			if (this.Guild != null)
 				KeepGuildMgr.SendChangeLevelTimeMessage(this);
