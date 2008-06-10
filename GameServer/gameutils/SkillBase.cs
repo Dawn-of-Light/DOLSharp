@@ -732,6 +732,7 @@ namespace DOL.GS
 		private static void InitPropertyTypes()
 		{
 			// resists
+			m_propertyTypes[(int)eProperty.Resist_Natural] = ePropertyType.Resist;
 			m_propertyTypes[(int)eProperty.Resist_Body] = ePropertyType.Resist;
 			m_propertyTypes[(int)eProperty.Resist_Cold] = ePropertyType.Resist;
 			m_propertyTypes[(int)eProperty.Resist_Crush] = ePropertyType.Resist;
@@ -889,6 +890,7 @@ namespace DOL.GS
 			m_propertyTypes[(int)eProperty.Skill_Cross_Bows] = ePropertyType.Skill;
 			m_propertyTypes[(int)eProperty.Skill_ShortBow] = ePropertyType.Skill;
 			m_propertyTypes[(int)eProperty.Skill_Envenom] = ePropertyType.Skill;
+			m_propertyTypes[(int)eProperty.Skill_Archery] = ePropertyType.Skill | ePropertyType.SkillMagical;
 		}
 
 		#endregion
@@ -921,6 +923,7 @@ namespace DOL.GS
 			// resists (does not say "resist" on live server)
 			m_propertyNames[eProperty.Resist_Body] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
 				"SkillBase.RegisterPropertyNames.Body");
+			m_propertyNames[eProperty.Resist_Natural] = "Essence";
 			m_propertyNames[eProperty.Resist_Cold] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
 				"SkillBase.RegisterPropertyNames.Cold");
 			m_propertyNames[eProperty.Resist_Crush] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
@@ -938,7 +941,7 @@ namespace DOL.GS
 			m_propertyNames[eProperty.Resist_Thrust] = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
 				"SkillBase.RegisterPropertyNames.Thrust");
 
-			// Andraste - Vico : Mythirian bonus
+			// Eden - Mythirian bonus
 			m_propertyNames[eProperty.BodyResCapBonus] = "Body cap";
             m_propertyNames[eProperty.ColdResCapBonus] = "Cold cap";
 			m_propertyNames[eProperty.CrushResCapBonus] = "Crush cap";
@@ -948,6 +951,10 @@ namespace DOL.GS
 			m_propertyNames[eProperty.SlashResCapBonus] = "Slash cap";
 			m_propertyNames[eProperty.SpiritResCapBonus] = "Spirit cap";
 			m_propertyNames[eProperty.ThrustResCapBonus] = "Thrust cap";
+			//Eden - special actifacts bonus
+			m_propertyNames[eProperty.Conversion] = "Conversion";
+			m_propertyNames[eProperty.ExtraHP] = "Extra Health Points";
+			m_propertyNames[eProperty.StyleAbsorb] = "Style Absorb";
 			m_propertyNames[eProperty.ArcaneSyphon] = "Arcane Syphon";
 			m_propertyNames[eProperty.RealmPoints] = "Realm Points";
 
@@ -1530,23 +1537,35 @@ namespace DOL.GS
         {
 			m_spellLists[spellLineID]=null;
 		}
+		
+		public class CLSort
+        {
+            public Spell spell; public int id;
+            public CLSort(Spell spell, int id) { this.spell = spell; this.id = id; }
+        }
         public static void AddSpellToList(string spellLineID, int SpellID)
         {
             ArrayList spell_list = new ArrayList();
-            int insertpos = 0;
+			List<CLSort> spelllist = new List<CLSort>();
             IList list = (IList)m_spellLists[spellLineID];
             Spell spl = GetSpellByID(SpellID);
+			
             if (list != null)
-            {
                 foreach (Spell spell in list)
-                {
-                    spell.Level = insertpos+1;
-                    spell_list.Insert(insertpos, spell);
-					insertpos++;
-                }
-            }
-			spl.Level=insertpos+1;
-            spell_list.Insert(insertpos, spl);
+                    spelllist.Add(new CLSort(spell, spell.ID));
+
+			if(spl!=null)
+				spelllist.Add(new CLSort(spl, SpellID));
+			else log.Error("Missing CL Spell: "+SpellID);
+			
+			spelllist.Sort(delegate(CLSort ctc1, CLSort ctc2) { return ctc1.id.CompareTo(ctc2.id); });
+			for(int s=0;s<spelllist.Count;s++)
+			{
+				Spell spel=spelllist[s].spell;
+				spel.Level=s+1;
+				spell_list.Insert(s,spel);
+			}
+			
             m_spellLists[spellLineID] = spell_list;
         }
 		/// <summary>
@@ -1859,7 +1878,7 @@ namespace DOL.GS
 				m_objectTypeToSpec[(int)eObjectType.TwoHandedWeapon] = Specs.Two_Handed;
 				m_objectTypeToSpec[(int)eObjectType.PolearmWeapon] = Specs.Polearms;
 				m_objectTypeToSpec[(int)eObjectType.Flexible] = Specs.Flexible;
-				m_objectTypeToSpec[(int)eObjectType.Longbow] = Specs.Longbow;
+				m_objectTypeToSpec[(int)eObjectType.Longbow] = Specs.Archery;
 				m_objectTypeToSpec[(int)eObjectType.Crossbow] = Specs.Crossbow;
 				//TODO: case 5: abilityCheck = Abilities.Weapon_Thrown; break;
 
@@ -1870,7 +1889,7 @@ namespace DOL.GS
 				m_objectTypeToSpec[(int)eObjectType.Axe] = Specs.Axe;
 				m_objectTypeToSpec[(int)eObjectType.HandToHand] = Specs.HandToHand;
 				m_objectTypeToSpec[(int)eObjectType.Spear] = Specs.Spear;
-				m_objectTypeToSpec[(int)eObjectType.CompositeBow] = Specs.CompositeBow;
+				m_objectTypeToSpec[(int)eObjectType.CompositeBow] = Specs.Archery;
 				m_objectTypeToSpec[(int)eObjectType.Thrown] = Specs.Thrown_Weapons;
 
 				//hib
@@ -1880,7 +1899,7 @@ namespace DOL.GS
 				m_objectTypeToSpec[(int)eObjectType.LargeWeapons] = Specs.Large_Weapons;
 				m_objectTypeToSpec[(int)eObjectType.CelticSpear] = Specs.Celtic_Spear;
 				m_objectTypeToSpec[(int)eObjectType.Scythe] = Specs.Scythe;
-				m_objectTypeToSpec[(int)eObjectType.RecurvedBow] = Specs.RecurveBow;
+				m_objectTypeToSpec[(int)eObjectType.RecurvedBow] = Specs.Archery;
 
 				m_objectTypeToSpec[(int)eObjectType.Shield] = Specs.Shields;
 				m_objectTypeToSpec[(int)eObjectType.Poison] = Specs.Envenom;
@@ -2014,6 +2033,8 @@ namespace DOL.GS
 				m_specToSkill[Specs.Aura_Manipulation] = eProperty.Skill_Aura_Manipulation;
 				m_specToSkill[Specs.Magnetism] = eProperty.Skill_Magnetism;
 				m_specToSkill[Specs.Power_Strikes] = eProperty.Skill_Power_Strikes;
+				
+				m_specToSkill[Specs.Archery] = eProperty.Skill_Archery;
 
 				#endregion
 			}

@@ -348,7 +348,15 @@ namespace DOL.GS
 		/// <summary>
 		/// Crowd Control Immunity - NPC Only ability
 		/// </summary>
-		public const string CCImmunity = "CCImmunity"; 
+		public const string CCImmunity = "CCImmunity";
+
+		public const string DamageImmunity = "DamageImmunity";
+
+		public const string RootImmunity = "RootImmunity";
+
+		public const string MezzImmunity = "MezzImmunity";
+		
+		public const string StunImmunity = "StunImmunity";
 
 	}
 
@@ -729,5 +737,23 @@ namespace DOL.GS
 		/// Mauler Fist Wraps Spec
 		/// </summary>
 		public const string Fist_Wraps = "Fist Wraps";
+		
+		public const string Archery = "Archery";
+
+        ///<summary>
+        /// The new Beastcraft line for Hunters
+        ///</summary>
+        public const string Beastcraft_NEW = "Beastcraft";
+		
+		public const string Banelord = "Banelord";
+		public const string Battlemaster = "Battlemaster";
+		public const string Warlord = "Warlord";
+		public const string Spymaster = "Spymaster";
+		public const string Convoker = "Convoker";
+		public const string Perfecter = "Perfecter";
+		public const string Stormlord = "Stormlord";
+		public const string Sojourner = "Sojourner";
+		
+		
 	}		
 }
