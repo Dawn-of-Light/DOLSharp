@@ -211,8 +211,8 @@ namespace DOL.GS.Keeps
 					{
 						if (guard.MaxSpeedBase == 0 || (guard is GuardArcher && !guard.BeenAttackedRecently))
 							guard.SwitchToRanged(guard.TargetObject);
-						else if (guard is GuardCaster)
-							(guard as GuardCaster).StartSpellAttack(guard.TargetObject);
+						/*else if (guard is GuardCaster)
+							(guard as GuardCaster).StartSpellAttack(guard.TargetObject);*/
 					}
 				}
 				return;

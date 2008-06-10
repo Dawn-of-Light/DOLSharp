@@ -8542,24 +8542,24 @@ namespace DOL.GS
 				if (log.IsErrorEnabled)
 					log.Error("Player: "+Name+" unknown bind point : (R/X/Y) "+PlayerCharacter.BindRegion+"/"+PlayerCharacter.BindXpos+"/"+PlayerCharacter.BindYpos);
 				//Kick the player, avoid server freeze
-				player.Client.Out.SendPlayerQuit(true);
-				player.Client.Player.SaveIntoDatabase();
-				player.Client.Player.Quit(true);
+				Client.Out.SendPlayerQuit(true);
+				SaveIntoDatabase();
+				Quit(true);
 				//now ban him
 				if (ServerProperties.Properties.BAN_HACKERS)
 				{
 					DBBannedAccount b = new DBBannedAccount();
 					b.Author = "SERVER";
-					b.Ip = player.Client.TcpEndpoint;
-					b.Account = player.Client.Account.Name;
+					b.Ip = Client.TcpEndpoint;
+					b.Account = Client.Account.Name;
 					b.DateBan = DateTime.Now;
 					b.Type = "B";
-					b.Reason = "X/Y/Zone : "+player.X+"/"+player.Y+"/"+player.CurrentRegion.ID;
+					b.Reason = "X/Y/Zone : "+X+"/"+Y+"/"+CurrentRegion.ID;
 					GameServer.Database.AddNewObject(b);
 					GameServer.Database.SaveObject(b);
 					string message = "Unknown bind point, your account is banned, contact a GM.";
-					player.Client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-					player.Client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
+					Client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+					Client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
 				}
 				return false;
 			}

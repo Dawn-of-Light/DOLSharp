@@ -2978,8 +2978,8 @@ namespace DOL.GS
 				if (ad.Attacker is GameNPC)
 				{
 					if ( (ad.Attacker as GameNPC).Brain != null
-						&& (ad.Attacker as GameNPC).Owner !=null
-						&& (ad.Attacker as GameNPC).Owner is GamePlayer)
+						&& ((ad.Attacker as GameNPC).Brain as IControlledBrain) != null
+						&& ((ad.Attacker as GameNPC).Brain as IControlledBrain).Owner is GamePlayer)
 						livingcondition = true;
 				}
 				else if (ad.Attacker is GamePlayer)
