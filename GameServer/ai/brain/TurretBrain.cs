@@ -90,7 +90,7 @@ namespace DOL.AI.Brain
             {
                 if (Spell.Range == 0 && Spell.Radius > 0)
                 {
-                    Body.CastSpell(Spell, SkillBase.GetSpellLine("Reserved Spells"));
+                    Body.CastSpell(Spell, SkillBase.GetSpellLine("Mob Spells"));
                     return;
                 }
                 else

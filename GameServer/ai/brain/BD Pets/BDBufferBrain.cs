@@ -87,6 +87,18 @@ namespace DOL.AI.Brain
 								//Buff owner
 								if (owner != null)
 								{
+									player = GetPlayerOwner();
+
+									//Buff player
+									if (player != null)
+									{
+										if (!LivingHasEffect(player, spell))
+										{
+											Body.TargetObject = player;
+											break;
+										}
+									}
+									
 									if (!LivingHasEffect(owner, spell))
 									{
 										Body.TargetObject = owner;
@@ -105,17 +117,6 @@ namespace DOL.AI.Brain
 										}
 									}
 
-									player = GetPlayerOwner();
-
-									//Buff player
-									if (player != null)
-									{
-										if (!LivingHasEffect(player, spell))
-										{
-											Body.TargetObject = player;
-											break;
-										}
-									}
 								}
 							}
 						}

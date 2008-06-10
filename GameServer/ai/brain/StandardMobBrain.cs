@@ -122,7 +122,7 @@ namespace DOL.AI.Brain
 			}
 
 			//If this NPC can randomly walk around, we allow it to walk around
-			if (!Body.AttackState && CanRandomWalk)
+			if (!Body.AttackState && CanRandomWalk && Util.Chance(10))
 			{
 				IPoint3D target = CalcRandomWalkTarget();
 				if (target != null)
@@ -137,8 +137,11 @@ namespace DOL.AI.Brain
 			}
 
 			//If we are not attacking, and not casting, and not moving, and we aren't facing our spawn heading, we turn to the spawn heading
-			if (!Body.AttackState && !Body.IsCasting && !Body.IsMoving && Body.Heading != Body.SpawnHeading)
-				Body.TurnTo(Body.SpawnHeading);
+			if (!Body.InCombat && !Body.AttackState && !Body.IsCasting && !Body.IsMoving && WorldMgr.GetDistance(Body.SpawnX,Body.SpawnY,Body.SpawnZ, Body.X,Body.Y,Body.Z) > 500 )
+			{
+				Body.WalkToSpawn(); //!!! only for reset combat
+				Body.WalkTo(Body.SpawnX,Body.SpawnY,Body.SpawnZ, Body.MaxSpeed*2);
+			}
 		}
 
 		/// <summary>
@@ -869,7 +872,7 @@ namespace DOL.AI.Brain
 						// Allow defensive spells
 						//if (!Body.AttackState)
 						//{
-						if (Util.Chance(50) && CheckDefensiveSpells(spell))
+						if (CheckDefensiveSpells(spell) && Util.Chance(50))
 						{
 							casted = true;
 							break;
@@ -905,8 +908,10 @@ namespace DOL.AI.Brain
 		/// </summary>
 		protected virtual bool CheckDefensiveSpells(Spell spell)
 		{
+			if(spell==null) return false;
+			if (Body.GetSkillDisabledDuration(spell) > 0) return false;
 			GameObject lastTarget = Body.TargetObject;
-			Body.TargetObject = null;
+			bool found=false;
 			switch (spell.SpellType)
 			{
 				#region Buffs
@@ -941,6 +946,7 @@ namespace DOL.AI.Brain
 						if (!LivingHasEffect(Body, spell) && !Body.AttackState && Util.Chance(40))
 						{
 							Body.TargetObject = Body;
+							found=true;
 							break;
 						}
 						break;
@@ -952,9 +958,11 @@ namespace DOL.AI.Brain
 					if (!Body.IsDiseased)
 						break;
 					Body.TargetObject = Body;
+					found=true;
 					break;
 				case "Summon":
 					Body.TargetObject = Body;
+					found=true;
 					break;
 				case "SummonMinion":
 					//If the list is null, lets make sure it gets initialized!
@@ -975,6 +983,7 @@ namespace DOL.AI.Brain
 							break;
 					}
 					Body.TargetObject = Body;
+					found=true;
 					break;
 				#endregion
 
@@ -984,22 +993,23 @@ namespace DOL.AI.Brain
 					if (Body.HealthPercent < 30)
 					{
 						Body.TargetObject = Body;
+						found=true;
 						break;
 					}
 
 					break;
 				#endregion
 			}
-			if (Body.TargetObject != null)
+			if (Body.TargetObject != null && found)
 			{
 				if (Body.IsMoving && spell.CastTime > 0)
 					Body.StopFollow();
-				Body.TurnTo(Body.TargetObject);
+				if(Body.TargetObject!=Body && spell.CastTime>0) Body.TurnTo(Body.TargetObject);
 				Body.CastSpell(spell, m_mobSpellLine);
-				Body.TargetObject = lastTarget;
+				if(Body.TargetObject!=lastTarget) Body.TargetObject = lastTarget;
 				return true;
 			}
-			Body.TargetObject = lastTarget;
+			if(Body.TargetObject!=lastTarget) Body.TargetObject = lastTarget;
 			return false;
 		}
 
@@ -1008,17 +1018,20 @@ namespace DOL.AI.Brain
 		/// </summary>
 		protected virtual bool CheckOffensiveSpells(Spell spell)
 		{
+			if(spell==null) return false;
+			if (Body.GetSkillDisabledDuration(spell) > 0) return false;
 			if (spell.Target.ToLower() != "enemy" && spell.Target.ToLower() != "area" && spell.Target.ToLower() != "cone")
 				return false;
 			if (Body.TargetObject != null)
 			{
 				if (LivingHasEffect((GameLiving)Body.TargetObject, spell))  // Target already has that effect
 					return false;
+				if(!WorldMgr.CheckDistance(Body, Body.TargetObject, spell.Range)) return false;
 				if (Body.GetSkillDisabledDuration(spell) > 0)   // Spell on cooldown
 					return false;
-				if (Body.IsMoving)
+				if (Body.IsMoving && spell.CastTime > 0)
 					Body.StopFollow();
-				Body.TurnTo(Body.TargetObject);
+				if(Body.TargetObject!=Body && spell.CastTime>0) Body.TurnTo(Body.TargetObject);
 				Body.CastSpell(spell, m_mobSpellLine);
 				return true;
 			}
@@ -1030,50 +1043,51 @@ namespace DOL.AI.Brain
 		/// </summary>
 		protected virtual bool CheckInstantSpells(Spell spell)
 		{
+			if(spell==null) return false;
+			if (Body.GetSkillDisabledDuration(spell) > 0) return false;
 			GameObject lastTarget = Body.TargetObject;
-			Body.TargetObject = null;
+            bool found = false;
 			switch (spell.SpellType)
 			{
 				#region Enemy Spells
 				case "DirectDamage":
 				case "Lifedrain":
+				case "DexterityDebuff":
 				case "DamageOverTime":
 				case "Disease":
 				case "Stun":
 				case "Mez":
 				case "Taunt":
-					Body.TargetObject = lastTarget;
+					if(Body.TargetObject==null) return false;
+					if(LivingHasEffect((GameLiving)Body.TargetObject, spell) || !WorldMgr.CheckDistance(Body, Body.TargetObject, spell.Range)) return false;
+                    found = true;
 					break;
 				#endregion
 
 				#region Combat Spells
-				case "ComabtHeal":
+				case "CombatHeal":
 				case "DamageAdd":
 				case "ArmorFactorBuff":
+				case "DexterityQuicknessBuff":
 				case "EnduranceRegenBuff":
 				case "CombatSpeedBuff":
 				case "AblativeArmor":
 				case "Bladeturn":
+					if (LivingHasEffect(Body, spell)) return false;
 					Body.TargetObject = Body;
-					//We don't want some with these spells spam casting...
-					if (LivingHasEffect(Body, spell))
-						return false;
+					found = true;
 					break;
 				#endregion
 			}
 			//This will take care of any thing with "debuff" in its name
-			if (Body.TargetObject == null && spell.SpellType.ToLower().Contains("debuff"))
-				Body.TargetObject = lastTarget;
-
-			if (Body.TargetObject != null)
+			if (Body.TargetObject != null && found)
 			{
-				if (LivingHasEffect((GameLiving)Body.TargetObject, spell))
-					return false;
+				if (LivingHasEffect((GameLiving)Body.TargetObject, spell)) return false;
 				Body.CastSpell(spell, m_mobSpellLine);
-				Body.TargetObject = lastTarget;
+				if(Body.TargetObject!=lastTarget) Body.TargetObject = lastTarget;
 				return true;
 			}
-			Body.TargetObject = lastTarget;
+			if(Body.TargetObject!=lastTarget) Body.TargetObject = lastTarget;
 			return false;
 		}
 
@@ -1118,27 +1132,8 @@ namespace DOL.AI.Brain
 			{
 				if (!DOL.GS.ServerProperties.Properties.ALLOW_ROAM)
 					return false;
-				if (Body.RoamingRange == 0)
+				if (Body.RoamingRange <= 0)
 					return false;
-				if (Body.RoamingRange < 0)
-				{
-					if (Body.MaxSpeedBase == 0)
-						return false;
-					if (Body.InCombat || Body.IsMoving || Body.IsCasting)
-						return false;
-					if (Body.Realm != 0)
-						return false;
-					if (Body.Name.ToLower() == "horse")
-						return false;
-					if (!char.IsLower(Body.Name[0]) && (DOL.GS.ServerProperties.Properties.SERV_LANGUAGE != "DE"))
-						return false;
-					if (Body.CurrentRegion.IsDungeon)
-						return false;
-					//if (Body.Name.StartsWith("ambient"))
-					//return false;
-					if (Util.Chance(70))
-						return false;
-				}
 				return true;
 			}
 		}
