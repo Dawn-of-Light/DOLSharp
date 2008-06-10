@@ -87,8 +87,11 @@ namespace DOL.GS.SkillHandler
 					guard.Cancel(false);
 					return;
 				}
-				player.Out.SendMessage(string.Format("{0} is already guarding {1}!", guard.GuardSource.GetName(0, true), guard.GuardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+				if(!(guard.GuardSource is GameNPC))
+				{
+					player.Out.SendMessage(string.Format("{0} is already guarding {1}!", guard.GuardSource.GetName(0, true), guard.GuardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return;
+				}
 			}
 
 
