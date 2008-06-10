@@ -565,7 +565,6 @@ namespace DOL.GS
 					bool dontShowNameChanged = (oldflags & (byte)eFlags.DONTSHOWNAME) != (value & (byte)eFlags.DONTSHOWNAME);
 					bool peaceChanged = (oldflags & (byte)eFlags.PEACE) != (value & (byte)eFlags.PEACE);
 					bool flyingChanged = (oldflags & (byte)eFlags.FLYING) != (value & (byte)eFlags.FLYING);
-
 					if (ghostChanged || stealthChanged || cantTargetChanged || dontShowNameChanged || peaceChanged || flyingChanged)
 					{
 						foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
@@ -758,7 +757,8 @@ namespace DOL.GS
 		{
 			get
 			{
-				return (Flags & (uint)eFlags.TRANSPARENT) != 0;//TODO
+				//return (Flags & (uint)eFlags.TRANSPARENT) != 0;//TODO
+				return false; // can't charm transparent mobs? that's not the right way
 			}
 		}
 
@@ -966,9 +966,9 @@ namespace DOL.GS
 			if (this.IsStunned || this.IsMezzed) return;
 			Notify(GameNPCEvent.TurnTo, this, new TurnToEventArgs(tx, ty));
 			if (sendUpdate)
-				Heading = GetHeadingToSpot(tx, ty);
+				if(Heading != GetHeadingToSpot(tx, ty)) Heading=GetHeadingToSpot(tx, ty);
 			else
-				base.Heading = GetHeadingToSpot(tx, ty);
+				if(base.Heading != GetHeadingToSpot(tx, ty)) base.Heading=GetHeadingToSpot(tx, ty);
 		}
 		/// <summary>
 		/// Turns the npc towards a specific heading
@@ -988,9 +988,9 @@ namespace DOL.GS
 			if (this.IsStunned || this.IsMezzed) return;
 			Notify(GameNPCEvent.TurnToHeading, this, new TurnToHeadingEventArgs(newHeading));
 			if (sendUpdate)
-				Heading = newHeading;
+				if(Heading != newHeading) Heading=newHeading;
 			else
-				base.Heading = newHeading;
+				if(base.Heading != newHeading) base.Heading=newHeading;
 		}
 		/// <summary>
 		/// Turns the NPC towards a specific gameObject
@@ -3195,21 +3195,26 @@ namespace DOL.GS
 		/// </summary>
 		public override void Die(GameObject killer)
 		{
-			if (IsWorthReward)
-				DropLoot(killer);
+			if(killer!=null)
+			{
+				if (IsWorthReward)
+					DropLoot(killer);
 
-			Message.SystemToArea(this, GetName(0, true) + " dies!", eChatType.CT_PlayerDied, killer);
-			if (killer is GamePlayer)
-				((GamePlayer)killer).Out.SendMessage(GetName(0, true) + " dies!", eChatType.CT_PlayerDied, eChatLoc.CL_SystemWindow);
+				Message.SystemToArea(this, GetName(0, true) + " dies!", eChatType.CT_PlayerDied, killer);
+				if (killer is GamePlayer)
+					((GamePlayer)killer).Out.SendMessage(GetName(0, true) + " dies!", eChatType.CT_PlayerDied, eChatLoc.CL_SystemWindow);
+			}
 			StopFollow();
 
 			if (Group != null)
 				Group.RemoveMember(this);
 
-			base.Die(killer);
-
-			// deal out exp and realm points based on server rules
-			GameServer.ServerRules.OnNPCKilled(this, killer);
+			if(killer!=null)
+			{
+				base.Die(killer);
+				// deal out exp and realm points based on server rules
+				GameServer.ServerRules.OnNPCKilled(this, killer);
+			}
 
 			Delete();
 
@@ -3512,6 +3517,7 @@ namespace DOL.GS
 			X = m_spawnX;
 			Y = m_spawnY;
 			Z = m_spawnZ;
+			Heading = m_spawnHeading;
 			AddToWorld();
 			m_spawnX = origSpawnX;
 			m_spawnY = origSpawnY;
@@ -3593,6 +3599,7 @@ namespace DOL.GS
 
 				foreach (ItemTemplate lootTemplate in lootTemplates)
 				{
+					if(lootTemplate==null) continue;
 					GameStaticItem loot;
 					if (GameMoney.IsItemMoney(lootTemplate.Name))
 					{
