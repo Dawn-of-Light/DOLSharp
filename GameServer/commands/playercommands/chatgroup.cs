@@ -153,6 +153,9 @@ namespace DOL.GS.Commands
 								text.Append(player.GuildName);
 								text.Append(">");
 							}
+							text.Append(" (");
+							text.Append(player.CharacterClass.Name);
+							text.Append(")");
 							client.Out.SendMessage(text.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							//TODO: make function formatstring
 						}

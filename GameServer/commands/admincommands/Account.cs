@@ -19,6 +19,7 @@
 using DOL.GS.PacketHandler;
 using DOL.Database;
 using DOL.Language;
+using System;
 
 namespace DOL.GS.Commands
 {
@@ -29,7 +30,9 @@ namespace DOL.GS.Commands
 		"AdminCommands.Account.Usage.ChangePassword",
 		"AdminCommands.Account.Usage.Delete",
 		"AdminCommands.Account.Usage.DeleteChar",
-		"AdminCommands.Account.Usage.MoveChar")]
+		"AdminCommands.Account.Usage.MoveChar",
+		"/account status <AccountName> <Level>",
+		"/account unban <AccountName>")]
 	public class AccountCommand : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
@@ -90,6 +93,71 @@ namespace DOL.GS.Commands
 						return;
 					}
 				#endregion Delete
+				#region Status
+				case "status":
+					{
+						if (args.Length < 4)
+						{
+							DisplaySyntax(client);
+							return;
+						}
+
+						string accountname = args[2];
+						Account acc = GetAccount(accountname);
+
+						if (acc == null)
+						{
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountNotFound", accountname));
+							return;
+						}
+
+                        int status = -1;
+						try { status=Convert.ToInt32(args[3]); } catch(Exception) { DisplaySyntax(client); return; }
+						if(status >= 0 && status < 256 )
+						{
+							acc.Status=status;
+							GameServer.Database.SaveObject(acc);
+							DisplayMessage(client, "Account "+acc.Name+" Status is now set to : "+acc.Status);
+						}
+						else DisplaySyntax(client);
+						return;
+					}
+				#endregion Status
+				#region Unban
+				case "unban":
+					{
+						if (args.Length < 3)
+						{
+							DisplaySyntax(client);
+							return;
+						}
+
+						string accountname = args[2];
+						Account acc = GetAccount(accountname);
+
+						if (acc == null)
+						{
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountNotFound", accountname));
+							return;
+						}
+
+                        DataObject[] banacc=GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(accountname) + "')");
+						if (banacc == null)
+						{
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountNotFound", accountname));
+							return;
+						}
+						
+						try
+                        {
+                            foreach(DBBannedAccount banned in banacc)
+                                GameServer.Database.DeleteObject(banned);
+                        }
+                        catch(Exception) { DisplaySyntax(client); return; }
+						DisplayMessage(client, "Account "+accountname+" unbanned!");
+						return;
+					}
+				#endregion Unban
 				#region DeleteCharacter
 				case "deletecharacter":
 					{
