@@ -97,7 +97,8 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				return base.Level;
+				if(IsPortalKeepGuard) return 255;
+				else return base.Level;
 			}
 			set
 			{
@@ -297,7 +298,7 @@ namespace DOL.GS.Keeps
 			this.TempProperties.setProperty(Last_LOS_Target_Property, attackTarget);
 			this.TempProperties.setProperty(Last_LOS_Tick_Property, CurrentRegion.Time);
 			TargetObject = attackTarget;
-			LOSChecker.Out.SendCheckLOS(this, attackTarget, GuardStartAttackCheckLOS);
+			LOSChecker.Out.SendCheckLOS(this, attackTarget, new CheckLOSResponse(this.GuardStartAttackCheckLOS));
 
 		}
 
@@ -343,6 +344,13 @@ namespace DOL.GS.Keeps
 			if ((response & 0x100) == 0x100)
 			{
 				SpellMgr.CastHealSpell(this, TargetObject as GameLiving);
+			}
+		}
+		public void GuardStartSpellNukeCheckLOS(GamePlayer player, ushort response, ushort targetOID)
+		{
+			if ((response & 0x100) == 0x100)
+			{
+				SpellMgr.CastNukeSpell(this, TargetObject as GameLiving);
 			}
 		}
 
@@ -486,6 +494,13 @@ namespace DOL.GS.Keeps
 		{
 			if (!base.AddToWorld())
 				return false;
+				
+			if(IsPortalKeepGuard&&(Brain as KeepGuardBrain!=null))
+			{
+				(this.Brain as KeepGuardBrain).AggroRange=2000;
+				(this.Brain as KeepGuardBrain).AggroLevel=99;
+			}
+			
 			GameEventMgr.AddHandler(this, GameNPCEvent.AttackFinished, new DOLEventHandler(AttackFinished));
 
 			if (PatrolGroup != null)
@@ -544,7 +559,7 @@ namespace DOL.GS.Keeps
 			if (this.Component != null)
 			{
 				string text = "";
-				if (this.Component.Keep.Level > 1 && GameServer.ServerRules.IsSameRealm(player, this, true))
+				if (this.Component.Keep.Level > 1 && this.Component.Keep.Level < 250 && GameServer.ServerRules.IsSameRealm(player, this, true))
 					text = GetPronoun(0, true) + " has upgraded equipment (" + this.Component.Keep.Level + ").";
 				if (ServerProperties.Properties.USE_KEEP_BALANCING && this.Component.Keep.Region == 163)
 					text += GetPronoun(0, true) + " has keep balancing level (" + (Component.Keep.BaseLevel - 50).ToString() + ")";

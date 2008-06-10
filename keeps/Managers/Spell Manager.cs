@@ -13,6 +13,27 @@ namespace DOL.GS.Keeps
 	/// </summary>
 	public class SpellMgr
 	{
+		public static void CheckForNuke(GameKeepGuard guard)
+		{
+			if(guard==null) return;
+			GameLiving target = guard.TargetObject as GameLiving;
+			if(target==null) return;
+			if(!target.IsAlive) return;
+			if(target is GamePlayer && !KeepMgr.IsEnemy(guard, target as GamePlayer, true)) return;
+			if(WorldMgr.GetDistance(guard,target)>WorldMgr.VISIBILITY_DISTANCE) { guard.TargetObject=null; return; }
+			GamePlayer LOSChecker = null;
+			if (target is GamePlayer) LOSChecker = target as GamePlayer;
+			else
+			{
+				foreach (GamePlayer player in guard.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				{
+					LOSChecker = player;
+					break;
+				}
+			}
+			if (LOSChecker == null)	return;
+			LOSChecker.Out.SendCheckLOS(guard, target, new CheckLOSResponse(guard.GuardStartSpellNukeCheckLOS));
+		}
 		/// <summary>
 		/// Method to check the area for heals
 		/// </summary>
@@ -22,6 +43,7 @@ namespace DOL.GS.Keeps
 			GameLiving target = null;
 			foreach (GamePlayer player in guard.GetPlayersInRadius(2000))
 			{
+				if(!player.IsAlive) continue;
 				if (GameServer.ServerRules.IsSameRealm(player, guard, true))
 				{
 					if (player.HealthPercent < 60)
@@ -64,6 +86,7 @@ namespace DOL.GS.Keeps
 				}
 				if (LOSChecker == null)
 					return;
+				if(!target.IsAlive) return;
 				guard.TargetObject = target;
 				LOSChecker.Out.SendCheckLOS(guard, target, new CheckLOSResponse(guard.GuardStartSpellHealCheckLOS));
 			}
