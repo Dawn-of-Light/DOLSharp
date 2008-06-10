@@ -471,6 +471,10 @@ namespace DOL.GS.Keeps
 		{
 			return IsEnemy(checker.Component.Keep, target);
 		}
+		public static bool IsEnemy(GameKeepGuard checker, GamePlayer target, bool checkGroup)
+		{
+			return IsEnemy(checker.Component.Keep, target, checkGroup);
+		}
 
 		/// <summary>
 		/// Checks if a keep door is an enemy of the player

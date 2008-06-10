@@ -309,7 +309,7 @@ namespace DOL.GS.Keeps
 				//calculate distance
 				//normal door
 				if (DoorIndex == 1)
-					distance = 300;
+					distance = 150;
 				//side or internal door
 				else
 					distance = 100;
