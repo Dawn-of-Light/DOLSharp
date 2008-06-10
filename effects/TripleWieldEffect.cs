@@ -23,7 +23,7 @@ namespace DOL.GS.Effects
 			GamePlayer player = target as GamePlayer;
             foreach(GamePlayer p in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
             {
-			    p.Out.SendSpellEffectAnimation(player, player, Icon, 0, false, 1);
+			    p.Out.SendSpellEffectAnimation(player, player, 7102, 0, false, 1);
 			    p.Out.SendSpellCastAnimation(player, Icon, 0);
             }
 			GameEventMgr.AddHandler(player, GameLivingEvent.AttackFinished, new DOLEventHandler(EventHandler));			
@@ -103,7 +103,7 @@ namespace DOL.GS.Effects
 
 		public override string Name { get { return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.TripleWieldEffect.Name"); } }
 
-		public override ushort Icon { get { return 7102; } }
+		public override ushort Icon { get { return 475; } }
 
 		public override IList DelveInfo
 		{

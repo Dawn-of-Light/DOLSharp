@@ -411,7 +411,7 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public ushort Icon
 		{
-			get { return m_handler.Spell.ClientEffect; }
+			get { try { return m_handler.Spell.ClientEffect; } catch(Exception) { return 0; } }
 		}
 
 		/// <summary>
