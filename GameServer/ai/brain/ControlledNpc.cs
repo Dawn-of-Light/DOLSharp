@@ -44,6 +44,7 @@ namespace DOL.AI.Brain
 		public static readonly short MIN_OWNER_FOLLOW_DIST = 128;
 		//4000 - rough guess, needs to be confirmed
 		public static readonly short MAX_OWNER_FOLLOW_DIST = 4000;
+		public static readonly short MAX_NECRO_FOLLOW_DIST = 1000;
 		public static readonly short MIN_ENEMY_FOLLOW_DIST = 90;
 		public static readonly short MAX_ENEMY_FOLLOW_DIST = 512;
 
@@ -333,19 +334,19 @@ namespace DOL.AI.Brain
 			}
 
 			//See if the pet is too far away, if so release it!
-			if (!WorldMgr.CheckDistance(Body, Owner, MAX_OWNER_FOLLOW_DIST))
+			if (Owner is GamePlayer && IsMainPet)
 			{
-				if (Owner is GamePlayer && IsMainPet)
-					((GamePlayer)Owner).CommandNpcRelease();
+				if(!WorldMgr.CheckDistance(Body, Owner, MAX_OWNER_FOLLOW_DIST)
+					|| ((Owner as GamePlayer).CharacterClass.ID == (int)eCharacterClass.Necromancer && !WorldMgr.CheckDistance(Body, Owner, MAX_NECRO_FOLLOW_DIST)))
+						(Owner as GamePlayer).CommandNpcRelease();
 			}
-
+			
 			//Check for buffs, heals, etc
-			if (Owner is GameNPC || 
-			(Owner is GamePlayer && ((WalkState == eWalkState.ComeHere && AggressionState != eAggressionState.Aggressive) || WalkState == eWalkState.Follow)))
-            {
-            CheckSpells(eCheckSpellType.Defensive);
-            //log.Debug ("===== Verif des sorts defensif ");
-            }
+			if (Owner is GameNPC ||
+				(Owner is GamePlayer && ((WalkState == eWalkState.ComeHere && AggressionState != eAggressionState.Aggressive) || WalkState == eWalkState.Follow)))
+			{
+				CheckSpells(eCheckSpellType.Defensive);
+			}
 
 			if (AggressionState == eAggressionState.Aggressive)
 			{
@@ -353,6 +354,7 @@ namespace DOL.AI.Brain
 				CheckNPCAggro();
 				AttackMostWanted();
 			}
+			if(Body.IsAttacking && (Body.TargetObject as GamePlayer)!=null && (Body.TargetObject as GamePlayer).IsStealthed) { Body.StopAttack(); FollowOwner(); }
 		}
 
 		/// <summary>
@@ -370,10 +372,14 @@ namespace DOL.AI.Brain
 						case GS.Abilities.Intercept:
 							{
 								GamePlayer player = Owner as GamePlayer;
-								if (player.EffectList.GetOfType(typeof(InterceptEffect)) == null)
-								{
-									new InterceptEffect().Start(Body, player);
-								}
+								//the pet should intercept even if a player is till intercepting for the owner
+								new InterceptEffect().Start(Body, player);
+								break;
+							}
+						case GS.Abilities.Guard:
+							{
+								GamePlayer player = Owner as GamePlayer;
+								new GuardEffect().Start(Body, player);
 								break;
 							}
 						case Abilities.ChargeAbility:
@@ -398,8 +404,10 @@ namespace DOL.AI.Brain
 		/// </summary>
 		protected override bool CheckDefensiveSpells(Spell spell)
 		{
+			if(spell==null) return false;
+			if (Body.GetSkillDisabledDuration(spell) > 0) return false;
 			GameObject lastTarget = Body.TargetObject;
-			Body.TargetObject = null;
+			bool found=false;
 			GamePlayer player = null;
 			GameLiving owner = null;
 			switch (spell.SpellType)
@@ -435,30 +443,33 @@ namespace DOL.AI.Brain
 						if (!LivingHasEffect(Body, spell))
 						{
 							Body.TargetObject = Body;
+							found=true;
 							break;
 						}
 
-						if (spell.Target == "Realm")
+						if (!found && spell.Target == "Realm")
 						{
 							owner = (this as IControlledBrain).Owner;
 							player = null;
 							//Buff owner
-							if (!LivingHasEffect(owner, spell))
+							if (!LivingHasEffect(owner, spell) && WorldMgr.CheckDistance(Body, owner, spell.Range))
 							{
 								Body.TargetObject = owner;
+								found=true;
 								break;
 							}
 
-							if (owner is GameNPC)
+							if (!found && owner is GameNPC)
 							{
 								//Buff other minions
 								foreach (IControlledBrain icb in ((GameNPC)owner).ControlledNpcList)
 								{
 									if (icb == null)
 										continue;
-									if (!LivingHasEffect(icb.Body, spell))
+									if (!LivingHasEffect(icb.Body, spell) && WorldMgr.CheckDistance(Body, icb.Body, spell.Range))
 									{
 										Body.TargetObject = icb.Body;
+										found=true;
 										break;
 									}
 								}
@@ -466,28 +477,14 @@ namespace DOL.AI.Brain
 							player = GetPlayerOwner();
 
 							//Buff player
-							if (player != null)
+							if (!found && player != null)
 							{
-								if (!LivingHasEffect(player, spell))
+								if (!LivingHasEffect(player, spell) && WorldMgr.CheckDistance(Body, player, spell.Range))
 								{
 									Body.TargetObject = player;
+									found=true;
 									break;
 								}
-
-								////Buff group
-								//if (player.PlayerGroup != null)
-								//{
-								//    foreach (GamePlayer gplayer in player.PlayerGroup.GetPlayersInTheGroup())
-								//    {
-								//        if (!HasEffect(gplayer, spell))
-								//        {
-								//            this.TargetObject = gplayer;
-								//            this.CastSpell(spell, spellline);
-								//            this.TargetObject = lastTarget;
-								//            return;
-								//        }
-								//    }
-								//}
 							}
 						}
 						break;
@@ -499,9 +496,11 @@ namespace DOL.AI.Brain
 					if (!Body.IsDiseased)
 						break;
 					Body.TargetObject = Body;
+					found=true;
 					break;
 				case "Summon":
 					Body.TargetObject = Body;
+					found=true;
 					break;
 				#endregion
 
@@ -511,26 +510,29 @@ namespace DOL.AI.Brain
 					if (Body.HealthPercent < 75)
 					{
 						Body.TargetObject = Body;
+						found=true;
 						break;
 					}
 
 					//Heal owner
 					owner = (this as IControlledBrain).Owner;
-					if (owner.HealthPercent < 75)
+					if (owner.HealthPercent < 75 && WorldMgr.CheckDistance(Body, owner, spell.Range))
 					{
 						Body.TargetObject = owner;
+						found=true;
 						break;
 					}
 
 					player = GetPlayerOwner();
 
-					if (player.Group != null && player.CharacterClass.ID == (int)eCharacterClass.Enchanter)
+					if (player.Group != null && ( player.CharacterClass.ID == (int)eCharacterClass.Enchanter ||  Body.Name.ToLower()=="empyrean elder" ))
 					{
 						foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 						{
-							if (p.HealthPercent < 75)
+							if (p.HealthPercent < 75 && WorldMgr.CheckDistance(Body, p, spell.Range))
 							{
 								Body.TargetObject = p;
+								found=true;
 								break;
 							}
 						}
@@ -538,16 +540,16 @@ namespace DOL.AI.Brain
 					break;
 				#endregion
 			}
-			if (Body.TargetObject != null)
+			if (Body.TargetObject != null && found)
 			{
 				if (Body.IsMoving)
 					Body.StopFollow();
-				Body.TurnTo(Body.TargetObject);
+				if(Body.TargetObject!=Body && spell.CastTime>0) Body.TurnTo(Body.TargetObject);
 				Body.CastSpell(spell, m_mobSpellLine);
-				Body.TargetObject = lastTarget;
+				if(Body.TargetObject!=lastTarget) Body.TargetObject = lastTarget;
 				return true;
 			}
-			Body.TargetObject = lastTarget;
+			if(Body.TargetObject!=lastTarget) Body.TargetObject = lastTarget;
 			return false;
 		}
 
@@ -597,6 +599,7 @@ namespace DOL.AI.Brain
 		{
 			if (living == Owner)
 				return;
+			if(living.IsStealthed) return;
 			base.AddToAggroList(living, aggroamount);
 		}
 
@@ -610,7 +613,7 @@ namespace DOL.AI.Brain
 				return null;
 			if (m_orderAttackTarget != null)
 			{
-				if (m_orderAttackTarget.IsAlive && m_orderAttackTarget.ObjectState == GameObject.eObjectState.Active)
+				if (m_orderAttackTarget.IsAlive && m_orderAttackTarget.ObjectState == GameObject.eObjectState.Active &&!m_orderAttackTarget.IsStealthed)
 					return m_orderAttackTarget;
 				m_orderAttackTarget = null;
 			}
@@ -627,6 +630,10 @@ namespace DOL.AI.Brain
 					// cause if so there is no need to look
 					// through all effects for a root
 					if (living.IsMezzed)
+					{
+						removable.Add(living);
+					}
+					else if(living.IsStealthed)
 					{
 						removable.Add(living);
 					}
@@ -657,13 +664,14 @@ namespace DOL.AI.Brain
 		{
 			if (!IsActive) return;
 			GameLiving target = CalculateNextAttackTarget();
-
+			
 			if (target != null)
 			{
 				//if (!Body.AttackState || target != Body.TargetObject)
 				if (!Body.IsAttacking || target != Body.TargetObject)
 				{
-					Body.StartAttack(target);
+					if (!CheckSpells(eCheckSpellType.Offensive))
+						Body.StartAttack(target);
 				}
 			}
 			else
