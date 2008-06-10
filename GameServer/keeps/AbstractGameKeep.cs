@@ -248,22 +248,7 @@ namespace DOL.GS.Keeps
 				return m_difficultyLevel[(int)Realm - 1];
 			}
 		}
-		private byte m_targetLevel;
 
-		/// <summary>
-		/// The target level for upgrading or downgrading
-		/// </summary>
-		public byte TargetLevel
-		{
-			get
-			{
-				return m_targetLevel;
-			}
-			set
-			{
-				m_targetLevel = value;
-			}
-		}
 
 		#region DBKeep Properties
 		/// <summary>
@@ -517,8 +502,10 @@ namespace DOL.GS.Keeps
 					StartDeductionTimer();
 				}
 			}
-			if (m_targetLevel< Level)
-				m_targetLevel = Level;
+			if(Level<10&&m_guild!=null)
+				StartChangeLevel(10);
+			else if(Level>1&&m_guild==null)
+				StartChangeLevel(1);
 		}
 
 		/// <summary>
@@ -888,18 +875,17 @@ namespace DOL.GS.Keeps
 						return 5 * 60 * 1000;
 				}
 			}
-			if (TargetLevel > Level)
+			if (Level<10&&m_guild!=null)
 				ChangeLevel((byte)(this.Level + 1));
-			else
+			else if(Level>1&&m_guild==null)
 				ChangeLevel((byte)(this.Level - 1));
 
-			if (this.Level != this.TargetLevel)
+			if (this.Level != 10 && this.Level != 1)
 			{
 				return CalculateTimeToUpgrade();
 			}
 			else
 			{
-				this.TargetLevel = 0;
 				this.SaveIntoDatabase();
 				return 0;
 			}

@@ -156,20 +156,20 @@ namespace DOL.GS.Keeps
 					case eRealm.Albion:
 						{
 							guard.Model = AlbionHastener;
-							guard.Size = 35;
+							guard.Size = 45;
 							break;
 						}
 					case eRealm.Midgard:
 						{
 							guard.Model = MidgardHastener;
-							guard.Size = 30;
+							guard.Size = 50;
 							guard.Flags ^= (uint)GameNPC.eFlags.TRANSPARENT;
 							break;
 						}
 					case eRealm.Hibernia:
 						{
 							guard.Model = HiberniaHastener;
-							guard.Size = 50;
+							guard.Size = 45;
 							break;
 						}
 				}
@@ -827,7 +827,8 @@ namespace DOL.GS.Keeps
 	guard is GuardStaticArcher ||
 	guard is GuardStaticCaster)
 				guard.MaxSpeedBase = 0;
-			else guard.MaxSpeedBase = 350;
+			else if(guard.Level<250) guard.MaxSpeedBase = 350;
+			else guard.MaxSpeedBase=575;
 		}
 
 		/// <summary>
