@@ -223,7 +223,7 @@ namespace DOL.GS
 			double heading = Math.Atan2(-dx, dy) * HEADING_CONST;
 			if (heading < 0)
 				heading += 0x1000;
-			return (ushort) heading;
+			return (ushort)heading;
 		}
 
 		/// <summary>
@@ -530,7 +530,7 @@ namespace DOL.GS
 		public virtual IList GetExamineMessages(GamePlayer player)
 		{
 			IList list = new ArrayList(4);
-			list.Add(LanguageMgr.GetTranslation(player.Client ,"GameObject.GetExamineMessages.YouTarget", GetName(0, false)));
+			list.Add(LanguageMgr.GetTranslation(player.Client, "GameObject.GetExamineMessages.YouTarget", GetName(0, false)));
 			return list;
 		}
 
@@ -608,10 +608,10 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void DeleteFromDatabase()
 		{
-            GameBoat boat = BoatMgr.GetBoatByOwner(InternalID);
-            if (boat != null)
-                boat.DeleteFromDatabase();
-        }
+			GameBoat boat = BoatMgr.GetBoatByOwner(InternalID);
+			if (boat != null)
+				boat.DeleteFromDatabase();
+		}
 
 		#endregion
 
@@ -1112,19 +1112,19 @@ namespace DOL.GS
 				//Eden - avoid server freeze
 				if (CurrentRegion.GetZone(X, Y) == null)
 				{
-					if(this is GamePlayer && (this as GamePlayer).Client.Account.PrivLevel<3 && !(this as GamePlayer).TempProperties.getProperty("isbeingbanned",false))
+					if (this is GamePlayer && (this as GamePlayer).Client.Account.PrivLevel < 3 && !(this as GamePlayer).TempProperties.getProperty("isbeingbanned", false))
 					{
-						GamePlayer player=this as GamePlayer;
+						GamePlayer player = this as GamePlayer;
 						player.TempProperties.setProperty("isbeingbanned", true);
 						player.MoveToBind();
 					}
-					if(this is GameNPC)
+					if (this is GameNPC)
 					{
-						GameNPC npc=this as GameNPC;
+						GameNPC npc = this as GameNPC;
 						npc.StopAttack();
-                        npc.StopCurrentSpellcast();
-                        npc.DeleteFromDatabase();
-                        npc.Delete();
+						npc.StopCurrentSpellcast();
+						npc.DeleteFromDatabase();
+						npc.Delete();
 					}
 				}
 				else
@@ -1186,19 +1186,19 @@ namespace DOL.GS
 				//Eden - avoid server freeze
 				if (CurrentRegion.GetZone(X, Y) == null)
 				{
-					if(this is GamePlayer && !(this as GamePlayer).TempProperties.getProperty("isbeingbanned",false))
+					if (this is GamePlayer && !(this as GamePlayer).TempProperties.getProperty("isbeingbanned", false))
 					{
-						GamePlayer player=this as GamePlayer;
+						GamePlayer player = this as GamePlayer;
 						player.TempProperties.setProperty("isbeingbanned", true);
 						player.MoveToBind();
 					}
-					if(this is GameNPC)
+					if (this is GameNPC)
 					{
-						GameNPC npc=this as GameNPC;
+						GameNPC npc = this as GameNPC;
 						npc.StopAttack();
-                        npc.StopCurrentSpellcast();
-                        npc.DeleteFromDatabase();
-                        npc.Delete();
+						npc.StopCurrentSpellcast();
+						npc.DeleteFromDatabase();
+						npc.Delete();
 					}
 				}
 				else
@@ -1238,19 +1238,19 @@ namespace DOL.GS
 				//Eden - avoid server freeze
 				if (CurrentRegion.GetZone(X, Y) == null)
 				{
-					if(this is GamePlayer && !(this as GamePlayer).TempProperties.getProperty("isbeingbanned",false))
+					if (this is GamePlayer && !(this as GamePlayer).TempProperties.getProperty("isbeingbanned", false))
 					{
-						GamePlayer player=this as GamePlayer;
+						GamePlayer player = this as GamePlayer;
 						player.TempProperties.setProperty("isbeingbanned", true);
 						player.MoveToBind();
 					}
-					if(this is GameNPC)
+					if (this is GameNPC)
 					{
-						GameNPC npc=this as GameNPC;
+						GameNPC npc = this as GameNPC;
 						npc.StopAttack();
-                        npc.StopCurrentSpellcast();
-                        npc.DeleteFromDatabase();
-                        npc.Delete();
+						npc.StopCurrentSpellcast();
+						npc.DeleteFromDatabase();
+						npc.Delete();
 					}
 				}
 				else
@@ -1285,19 +1285,19 @@ namespace DOL.GS
 				//Eden : avoid server freeze
 				if (CurrentRegion.GetZone(X, Y) == null)
 				{
-					if(this is GamePlayer && !(this as GamePlayer).TempProperties.getProperty("isbeingbanned",false))
+					if (this is GamePlayer && !(this as GamePlayer).TempProperties.getProperty("isbeingbanned", false))
 					{
-						GamePlayer player=this as GamePlayer;
+						GamePlayer player = this as GamePlayer;
 						player.TempProperties.setProperty("isbeingbanned", true);
 						player.MoveToBind();
 					}
-					if(this is GameNPC)
+					if (this is GameNPC)
 					{
-						GameNPC npc=this as GameNPC;
+						GameNPC npc = this as GameNPC;
 						npc.StopAttack();
-                        npc.StopCurrentSpellcast();
-                        npc.DeleteFromDatabase();
-                        npc.Delete();
+						npc.StopCurrentSpellcast();
+						npc.DeleteFromDatabase();
+						npc.Delete();
 					}
 				}
 				else
@@ -1394,22 +1394,22 @@ namespace DOL.GS
 			m_saveInDB = false;
 			m_Name = "";
 			m_ObjectState = eObjectState.Inactive;
-            m_boat_ownerid = "";
+			m_boat_ownerid = "";
 		}
-        public static bool PlayerHasItem(GamePlayer player, string str)
-        {
-            InventoryItem item = player.Inventory.GetFirstItemByID(str, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv);
-            if (item != null)
-                return true;
-            return false;
-        }
-        private static string m_boat_ownerid;
-        public static string ObjectHasOwner()
-        {
-            if (m_boat_ownerid == "")
-                return "";
-            else
-                return m_boat_ownerid;
-        }
-    }
+		public static bool PlayerHasItem(GamePlayer player, string str)
+		{
+			InventoryItem item = player.Inventory.GetFirstItemByID(str, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv);
+			if (item != null)
+				return true;
+			return false;
+		}
+		private static string m_boat_ownerid;
+		public static string ObjectHasOwner()
+		{
+			if (m_boat_ownerid == "")
+				return "";
+			else
+				return m_boat_ownerid;
+		}
+	}
 }
