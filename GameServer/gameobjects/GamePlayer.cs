@@ -140,7 +140,7 @@ namespace DOL.GS
 			set { m_groundtargetInView = value; }
 		}
 
-		protected bool m_issilenced=false;
+		protected bool m_issilenced = false;
 		public bool IsSilenced
 		{
 			get { return m_issilenced; }
@@ -148,15 +148,15 @@ namespace DOL.GS
 		}
 
 
-        /// <summary>
-        /// Player is in BG ?
-        /// </summary>
-        protected bool m_isInBG;
-        public bool isInBG
-        {
-            get { return m_isInBG; }
-            set { m_isInBG = value; }
-        }
+		/// <summary>
+		/// Player is in BG ?
+		/// </summary>
+		protected bool m_isInBG;
+		public bool isInBG
+		{
+			get { return m_isInBG; }
+			set { m_isInBG = value; }
+		}
 
 
 		/// <summary>
@@ -284,7 +284,7 @@ namespace DOL.GS
 		/// </summary>
 		public bool RPFlag
 		{
-			get { return (PlayerCharacter != null ? PlayerCharacter.RPFlag: true); }
+			get { return (PlayerCharacter != null ? PlayerCharacter.RPFlag : true); }
 			set { if (PlayerCharacter != null) PlayerCharacter.RPFlag = value; }
 		}
 
@@ -498,7 +498,7 @@ namespace DOL.GS
 			CurrentSpeed = 0;
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				if(player==null) continue;
+				if (player == null) continue;
 				//Maybe there is a better solution?
 				player.Out.SendObjectRemove(this);
 				player.Out.SendPlayerCreate(this);
@@ -527,7 +527,7 @@ namespace DOL.GS
 			//Notify players in close proximity!
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 			{
-				if(player==null) continue;
+				if (player == null) continue;
 				if (GameServer.ServerRules.IsAllowedToUnderstand(this, player))
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GamePlayer.OnLinkdeath.Linkdead", Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
@@ -802,7 +802,7 @@ namespace DOL.GS
 					}
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
-						if(player==null) continue;
+						if (player == null) continue;
 						if ((int)player.Client.Version < (int)GameClient.eClientVersion.Version187)
 							player.Out.SendEmoteAnimation(this, eEmote.Bind);
 						else player.Out.SendEmoteAnimation(this, bindEmote);
@@ -1394,7 +1394,7 @@ namespace DOL.GS
 
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				if(player==null) continue;
+				if (player == null) continue;
 				player.Out.SendEmoteAnimation(this, eEmote.Pray);
 			}
 		}
@@ -1488,7 +1488,7 @@ namespace DOL.GS
 					Out.SendUpdatePlayer();
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
-						if(player==null) continue;
+						if (player == null) continue;
 						if (player != this)
 						{
 							player.Out.SendObjectRemove(this);
@@ -1536,7 +1536,7 @@ namespace DOL.GS
 						Out.SendGroupWindowUpdate();
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
-						if(player==null) continue;
+						if (player == null) continue;
 						if (player != this)
 						{
 							player.Out.SendObjectRemove(this);
@@ -1579,7 +1579,7 @@ namespace DOL.GS
 				if (ObjectState == eObjectState.Active)
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
-						if(player==null) continue;
+						if (player == null) continue;
 						player.Out.SendModelChange(this, Model);
 					}
 			}
@@ -1627,35 +1627,35 @@ namespace DOL.GS
 			set { if (PlayerCharacter != null) PlayerCharacter.ConLostAtDeath = value; }
 		}
 
-        /// <summary>
-        /// Change a stat value
-        /// (delegate to PlayerCharacter)
-        /// </summary>
-        /// <param name="stat">The stat to change</param>
-        /// <param name="val">The new value</param>
-        public override void ChangeBaseStat(eStat stat, short val)
-        {
-            int oldstat = GetBaseStat(stat);
-            base.ChangeBaseStat(stat, val);
-            int newstat = GetBaseStat(stat);
-            Character character = PlayerCharacter; // to call it only once, if in future there will be some special code to get the character
-            // Graveen: always positive and not null. This allows /player stats to substract values safely
-            if (newstat < 1) newstat = 1;
-            if (character != null && oldstat != newstat)
-            {
-                switch (stat)
-                {
-                    case eStat.STR: character.Strength = newstat; break;
-                    case eStat.DEX: character.Dexterity = newstat; break;
-                    case eStat.CON: character.Constitution = newstat; break;
-                    case eStat.QUI: character.Quickness = newstat; break;
-                    case eStat.INT: character.Intelligence = newstat; break;
-                    case eStat.PIE: character.Piety = newstat; break;
-                    case eStat.EMP: character.Empathy = newstat; break;
-                    case eStat.CHR: character.Charisma = newstat; break;
-                }
-            }
-        }
+		/// <summary>
+		/// Change a stat value
+		/// (delegate to PlayerCharacter)
+		/// </summary>
+		/// <param name="stat">The stat to change</param>
+		/// <param name="val">The new value</param>
+		public override void ChangeBaseStat(eStat stat, short val)
+		{
+			int oldstat = GetBaseStat(stat);
+			base.ChangeBaseStat(stat, val);
+			int newstat = GetBaseStat(stat);
+			Character character = PlayerCharacter; // to call it only once, if in future there will be some special code to get the character
+			// Graveen: always positive and not null. This allows /player stats to substract values safely
+			if (newstat < 1) newstat = 1;
+			if (character != null && oldstat != newstat)
+			{
+				switch (stat)
+				{
+					case eStat.STR: character.Strength = newstat; break;
+					case eStat.DEX: character.Dexterity = newstat; break;
+					case eStat.CON: character.Constitution = newstat; break;
+					case eStat.QUI: character.Quickness = newstat; break;
+					case eStat.INT: character.Intelligence = newstat; break;
+					case eStat.PIE: character.Piety = newstat; break;
+					case eStat.EMP: character.Empathy = newstat; break;
+					case eStat.CHR: character.Charisma = newstat; break;
+				}
+			}
+		}
 
 		/// <summary>
 		/// Gets player's constitution
@@ -1883,15 +1883,15 @@ namespace DOL.GS
 				constitution *= 2;
 			int hp1 = CharacterClass.BaseHP * level;
 			int hp2 = hp1 * constitution / 10000;
-			
+
 			//Andraste - Vico : Champion Level HP gain
 			double hp3 = 0;
-			if(ChampionLevel>=1) hp3=Math.Floor(((double)CharacterClass.BaseHP / 27)*ChampionLevel); // CL's - need correct formula
-			double hp4=20 + hp1 / 50 + hp2 + hp3;
-			if(HasAbility(Abilities.MemoriesOfWar)) hp4*=1.1; //10% HP for heavy tanks
+			if (ChampionLevel >= 1) hp3 = Math.Floor(((double)CharacterClass.BaseHP / 27) * ChampionLevel); // CL's - need correct formula
+			double hp4 = 20 + hp1 / 50 + hp2 + hp3;
+			if (HasAbility(Abilities.MemoriesOfWar)) hp4 *= 1.1; //10% HP for heavy tanks
 			//ExtraHP : from artifacts, such Spear of Kings charge
-			if(GetModified(eProperty.ExtraHP)>0) hp4+=Math.Round(hp4*(double)GetModified(eProperty.ExtraHP)/100);
-			
+			if (GetModified(eProperty.ExtraHP) > 0) hp4 += Math.Round(hp4 * (double)GetModified(eProperty.ExtraHP) / 100);
+
 			return Math.Max(1, (int)hp4);
 		}
 
@@ -2108,7 +2108,7 @@ namespace DOL.GS
 				m_class.SwitchToFemaleName();
 			PlayerCharacter.Class = m_class.ID;
 
-            if (Group != null)
+			if (Group != null)
 			{
 				Group.UpdateMember(this, false, true);
 			}
@@ -2332,7 +2332,7 @@ namespace DOL.GS
 
 			RespecAmountDOL--; // Decriment players respecs available.
 
-            return specPoints;
+			return specPoints;
 		}
 
 		public int RespecSingle(Specialization specLine)
@@ -2390,11 +2390,11 @@ namespace DOL.GS
 			int specPoints = (specLine.Level * (specLine.Level + 1) - 2) / 2;
 			// Graveen - autotrain 1.87
 			specPoints -= GetAutoTrainPoints(specLine, 0);
-			
+
 			//setting directly the autotrain points in the spec
-			if(GetAutoTrainPoints(specLine, 4)==1 && Level>=8)
+			if (GetAutoTrainPoints(specLine, 4) == 1 && Level >= 8)
 			{
-				specLine.Level=(int)Math.Floor((double)Level/4);
+				specLine.Level = (int)Math.Floor((double)Level / 4);
 			}
 			else specLine.Level = 1;
 
@@ -2487,11 +2487,11 @@ namespace DOL.GS
 		/// <param name="ability"></param>
 		/// <param name="sendUpdates"></param>
 		#region Abilities
-		public void AddAbility(Ability ability) 	 
-	    { 	 
-	        AddAbility(ability, true); 	 
-	    } 	 
-	
+		public void AddAbility(Ability ability)
+		{
+			AddAbility(ability, true);
+		}
+
 		public override void AddAbility(Ability ability, bool sendUpdates)
 		{
 			if (ability == null)
@@ -2510,7 +2510,7 @@ namespace DOL.GS
 					&& CharacterClass.ID != 49
 					&& CharacterClass.ID != 23
 					&& CharacterClass.ID != 58
-					//Heavy tanks too
+				//Heavy tanks too
 					&& CharacterClass.ID != 2
 					&& CharacterClass.ID != 44
 					&& CharacterClass.ID != 22
@@ -3972,31 +3972,31 @@ namespace DOL.GS
 					}
 			}
 
-            // Graveen: give a DOL respec on the GIVE_DOL_RESPEC_ON_LEVELS levels
-            Byte level_respec;
-            foreach (string str in ServerProperties.Properties.GIVE_DOL_RESPEC_AT_LEVEL.Split(';'))
-            {
-                try
-                {
-                    level_respec = Convert.ToByte(str);
-                }
-                catch (Exception)
-                {
-                    level_respec = 0;
-                }
+			// Graveen: give a DOL respec on the GIVE_DOL_RESPEC_ON_LEVELS levels
+			Byte level_respec;
+			foreach (string str in ServerProperties.Properties.GIVE_DOL_RESPEC_AT_LEVEL.Split(';'))
+			{
+				try
+				{
+					level_respec = Convert.ToByte(str);
+				}
+				catch (Exception)
+				{
+					level_respec = 0;
+				}
 
-                if (Level == level_respec)
-                {
-                    RespecAmountDOL++;
-                    Out.SendMessage("As you reached level " + Level + ", you are awarded a DOL (full) respec!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                }
-            }
-        
-            //level 20 changes realm title and gives 1 realm skill point
-            if (Level == 20)
-                  GainRealmPoints(0);
+				if (Level == level_respec)
+				{
+					RespecAmountDOL++;
+					Out.SendMessage("As you reached level " + Level + ", you are awarded a DOL (full) respec!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				}
+			}
 
-            // Adjust stats
+			//level 20 changes realm title and gives 1 realm skill point
+			if (Level == 20)
+				GainRealmPoints(0);
+
+			// Adjust stats
 			bool statsChanged = false;
 			for (int i = Level; i > previouslevel; i--)
 			{
@@ -4063,11 +4063,11 @@ namespace DOL.GS
 			{
 				oldpow = CalculateMaxMana(previouslevel, GetBaseStat(CharacterClass.ManaStat));
 			}
-			else if (CharacterClass.ManaStat == eStat.UNDEFINED && ChampionLevel>=1)
+			else if (CharacterClass.ManaStat == eStat.UNDEFINED && ChampionLevel >= 1)
 			{
 				oldpow = CalculateMaxMana(previouslevel, GetBaseStat(eStat.EMP)); //We shouldn't use Emp stat, but.. it's not really important
 			}
-			
+
 
 			// hp upgrade
 			int newhp = CalculateMaxHealth(Level, GetBaseStat(eStat.CON));
@@ -4086,7 +4086,7 @@ namespace DOL.GS
 				}
 			}
 			//Andraste
-			else if (CharacterClass.ManaStat == eStat.UNDEFINED && ChampionLevel>=1)
+			else if (CharacterClass.ManaStat == eStat.UNDEFINED && ChampionLevel >= 1)
 			{
 				int newpow = CalculateMaxMana(Level, GetBaseStat(eStat.EMP));
 				if (newpow > 0 && oldpow < newpow)
@@ -4124,7 +4124,7 @@ namespace DOL.GS
 			{
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
-					if(player==null) continue;
+					if (player == null) continue;
 					player.Out.SendEmoteAnimation(this, eEmote.LvlUp);
 				}
 			}
@@ -4198,24 +4198,24 @@ namespace DOL.GS
 										Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, LanguageMgr.GetTranslation(Client, "PlayerClass.OnLevelUp.Autotrain", spec.Name, max_autotrain));
 								return 0;
 							}
-                        case 2: // return next free points due to AT change on levelup
+						case 2: // return next free points due to AT change on levelup
 							{
 								if (spec.Level < max_autotrain)
 									return (spec.Level + 1);
 								else
 									return 0;
 							}
-                        case 3: // return sum of all free AT points 
-                            {
-                                if (spec.Level < max_autotrain) 
-                                    return (((max_autotrain * ( max_autotrain + 1) - 2) / 2) - ((spec.Level  * ( spec.Level  + 1) - 2) / 2));
-                                else
-                                    return ((max_autotrain * ( max_autotrain + 1) - 2) / 2);
-                            }
-                        case 4: // spec is autotrainable
-                            {
-                                return 1;
-                            }
+						case 3: // return sum of all free AT points 
+							{
+								if (spec.Level < max_autotrain)
+									return (((max_autotrain * (max_autotrain + 1) - 2) / 2) - ((spec.Level * (spec.Level + 1) - 2) / 2));
+								else
+									return ((max_autotrain * (max_autotrain + 1) - 2) / 2);
+							}
+						case 4: // spec is autotrainable
+							{
+								return 1;
+							}
 					}
 			}
 			return 0;
@@ -5108,10 +5108,10 @@ namespace DOL.GS
 				case eAttackResult.HitUnstyled:
 					{
 						//keep component
-						if(( ad.Target is GameKeepComponent || ad.Target is GameKeepDoor || ad.Target is GameSiegeWeapon ) && ad.Attacker is GamePlayer && ad.Attacker.GetModified(eProperty.KeepDamage)>0)
+						if ((ad.Target is GameKeepComponent || ad.Target is GameKeepDoor || ad.Target is GameSiegeWeapon) && ad.Attacker is GamePlayer && ad.Attacker.GetModified(eProperty.KeepDamage) > 0)
 						{
-							int keepdamage=(int)Math.Floor((double)ad.Damage * ((double)ad.Attacker.GetModified(eProperty.KeepDamage)/100));
-							int keepstyle=(int)Math.Floor((double)ad.StyleDamage * ((double)ad.Attacker.GetModified(eProperty.KeepDamage)/100));
+							int keepdamage = (int)Math.Floor((double)ad.Damage * ((double)ad.Attacker.GetModified(eProperty.KeepDamage) / 100));
+							int keepstyle = (int)Math.Floor((double)ad.StyleDamage * ((double)ad.Attacker.GetModified(eProperty.KeepDamage) / 100));
 							ad.Damage += keepdamage;
 							ad.StyleDamage += keepstyle;
 						}
@@ -5121,9 +5121,9 @@ namespace DOL.GS
 							&& target is GameKeepDoor == false
 							&& target is GameSiegeWeapon == false)
 						{
-                            int perc = Convert.ToInt32(((double)(ad.Damage + ad.CriticalDamage) / 100) * (55 - this.Level));
-                            perc = (perc < 1) ? 1 : ((perc > 15) ? 15 : perc);
-                            this.Mana += Convert.ToInt32(Math.Ceiling(((Decimal)(perc * this.MaxMana) / 100)));
+							int perc = Convert.ToInt32(((double)(ad.Damage + ad.CriticalDamage) / 100) * (55 - this.Level));
+							perc = (perc < 1) ? 1 : ((perc > 15) ? 15 : perc);
+							this.Mana += Convert.ToInt32(Math.Ceiling(((Decimal)(perc * this.MaxMana) / 100)));
 						}
 
 						//only miss when strafing when attacking a player
@@ -5214,7 +5214,7 @@ namespace DOL.GS
 						{
 							foreach (GamePlayer pl in GetPlayersInRadius(false, (ushort)AttackRange))
 							{
-								if(pl==null) continue;
+								if (pl == null) continue;
 								if (GameServer.ServerRules.IsAllowedToAttack(this, pl, true))
 								{
 									list.Add(pl);
@@ -6275,7 +6275,7 @@ namespace DOL.GS
 			{
 				foreach (GamePlayer player in GetPlayersInRadius(messageDistance))
 				{
-					if(player==null) continue;
+					if (player == null) continue;
 					players.Add(player);
 				}
 			}
@@ -6338,7 +6338,7 @@ namespace DOL.GS
 
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
-					if(player==null) continue;
+					if (player == null) continue;
 					player.Out.SendPlayerDied(this, killer);
 				}
 
@@ -6716,7 +6716,7 @@ namespace DOL.GS
 			{
 				Style style = SkillBase.GetStyleByID((int)spell.Value, CharacterClass.ID);
 				//Andraste - Vico : try to use classID=0 (easy way to implement CL Styles)
-				if(style==null) style = SkillBase.GetStyleByID((int)spell.Value, 0);
+				if (style == null) style = SkillBase.GetStyleByID((int)spell.Value, 0);
 				if (style != null)
 				{
 					StyleProcessor.TryToUseStyle(this, style);
@@ -6745,13 +6745,13 @@ namespace DOL.GS
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.CantCastMezzed"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 					return;
 				}
-				
+
 				if (IsSilenced)
 				{
 					Out.SendMessage("You are fumbling for your words, and cannot cast!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 					return;
 				}
-				
+
 				double fumbleChance = GetModified(eProperty.SpellFumbleChance);
 				fumbleChance *= 0.01;
 				if (fumbleChance > 0)
@@ -7376,7 +7376,7 @@ namespace DOL.GS
 								Out.SendTimerWindow("Summoning Mount", 5);
 								foreach (GamePlayer plr in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 								{
-									if(plr==null) continue;
+									if (plr == null) continue;
 									plr.Out.SendEmoteAnimation(this, eEmote.Horse_whistle);
 								}
 								// vampiir ~
@@ -7564,9 +7564,9 @@ namespace DOL.GS
 														Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantUseInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 													}
 													//Eden
-													else if(IsStunned || IsMezzed || !IsAlive)
+													else if (IsStunned || IsMezzed || !IsAlive)
 													{
-														Out.SendMessage("You can't use "+useItem.GetName(0, false)+" in your state.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+														Out.SendMessage("You can't use " + useItem.GetName(0, false) + " in your state.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 													}
 													else
 													{
@@ -7614,29 +7614,29 @@ namespace DOL.GS
 								long changeTime = CurrentRegion.Time - lastChargedItemUseTick;
 								long delay = TempProperties.getLongProperty(ITEM_USE_DELAY, 0L);
 								//Andraste - Vico : CanUseEvery field from ItemTemplate/IventoryItem ?
-								long itemdelay = TempProperties.getLongProperty("andrasteuseditem"+useItem.Id_nb, 0L);
-								long itemreuse = (long)useItem.CanUseEvery*1000;
-								if(itemdelay==0) itemdelay=CurrentRegion.Time-itemreuse;
-								
-								
+								long itemdelay = TempProperties.getLongProperty("andrasteuseditem" + useItem.Id_nb, 0L);
+								long itemreuse = (long)useItem.CanUseEvery * 1000;
+								if (itemdelay == 0) itemdelay = CurrentRegion.Time - itemreuse;
+
+
 								if (IsMezzed || IsStunned || IsSitting || !IsAlive)
 								{
 									Out.SendMessage("In your state you can't discharge any object.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								}
-								else if (Client.Account.PrivLevel == 1 && (changeTime < delay /*Andraste*/ || (CurrentRegion.Time-itemdelay)<itemreuse )) //2 minutes reuse timer
+								else if (Client.Account.PrivLevel == 1 && (changeTime < delay /*Andraste*/ || (CurrentRegion.Time - itemdelay) < itemreuse)) //2 minutes reuse timer
 								{
 									//Eden
-									if((CurrentRegion.Time-itemdelay)<itemreuse) Out.SendMessage("You must wait " + (itemreuse - (CurrentRegion.Time-itemdelay)) / 1000 + " more second before discharge "+useItem.Name+"!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									if ((CurrentRegion.Time - itemdelay) < itemreuse) Out.SendMessage("You must wait " + (itemreuse - (CurrentRegion.Time - itemdelay)) / 1000 + " more second before discharge " + useItem.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									else Out.SendMessage("You must wait " + (delay - changeTime) / 1000 + " more second before discharge another object!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
 								}
 								else
 								{
 									//Eden
-									TempProperties.setProperty("ITEMREUSEDELAY"+useItem.Id_nb, CurrentRegion.Time);
-									
-									
-									
+									TempProperties.setProperty("ITEMREUSEDELAY" + useItem.Id_nb, CurrentRegion.Time);
+
+
+
 									SpellLine chargeEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
 
 									if (chargeEffectLine != null)
@@ -7671,7 +7671,7 @@ namespace DOL.GS
 										else if (type == 2) //use2
 										{
 											Spell spell = SkillBase.GetSpellByID(useItem.SpellID1);
-											if(spell==null) { Out.SendMessage("Charge effect ID " + useItem.SpellID1 + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow); return; }
+											if (spell == null) { Out.SendMessage("Charge effect ID " + useItem.SpellID1 + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow); return; }
 											if (spell.Level <= Level)
 											{
 												ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
@@ -7686,7 +7686,7 @@ namespace DOL.GS
 													TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
 													TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 2));
 													//Eden
-													TempProperties.setProperty("ITEMREUSEDELAY"+useItem.Id_nb, CurrentRegion.Time);
+													TempProperties.setProperty("ITEMREUSEDELAY" + useItem.Id_nb, CurrentRegion.Time);
 												}
 												else
 												{
@@ -7719,7 +7719,7 @@ namespace DOL.GS
 			{
 				Out.SendMessage("You can't use anything in your state.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
-								
+
 			SpellLine itemSpellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Spells);
 			if (itemSpellLine == null)
 				return false;
@@ -8090,7 +8090,7 @@ namespace DOL.GS
 
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				if(player==null) continue;
+				if (player == null) continue;
 				player.Out.SendRiding(this, steed, false);
 			}
 			return true;
@@ -8124,7 +8124,7 @@ namespace DOL.GS
 		{
 			if (Steed == null)
 				return false;
-			if(Steed.Name=="Forceful Zephyr"&&!forced) return false;
+			if (Steed.Name == "Forceful Zephyr" && !forced) return false;
 			if (OnDismountSteed != null && !OnDismountSteed(this, Steed, forced) && !forced)
 				return false;
 			GameObject steed = Steed;
@@ -8133,7 +8133,7 @@ namespace DOL.GS
 
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				if(player==null) continue;
+				if (player == null) continue;
 				player.Out.SendRiding(this, steed, true);
 			}
 			return true;
@@ -8163,7 +8163,7 @@ namespace DOL.GS
 			steed.RiderMount(this, true, slot);
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				if(player==null) continue;
+				if (player == null) continue;
 				player.Out.SendRiding(this, steed, false);
 			}
 		}
@@ -8191,7 +8191,7 @@ namespace DOL.GS
 			m_enduRegenerationTimer.Callback = new RegionTimerCallback(EnduranceRegenerationTimerCallback);
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				if(player==null) continue;
+				if (player == null) continue;
 				if (player != this)
 					player.Out.SendPlayerCreate(this);
 			}
@@ -8219,19 +8219,19 @@ namespace DOL.GS
 				DismountSteed(true);
 				if (CurrentRegion.GetZone(X, Y) == null)
 				{
-					if(this is GamePlayer && this.Client.Account.PrivLevel<3 && !(this as GamePlayer).TempProperties.getProperty("isbeingbanned",false))
+					if (this is GamePlayer && this.Client.Account.PrivLevel < 3 && !(this as GamePlayer).TempProperties.getProperty("isbeingbanned", false))
 					{
-						GamePlayer player=this as GamePlayer;
+						GamePlayer player = this as GamePlayer;
 						player.TempProperties.setProperty("isbeingbanned", true);
 						player.MoveToBind();
 					}
 				}
 				else foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-				{
-					if(player==null) continue;
-					if (player != this)
-						player.Out.SendObjectRemove(this);
-				}
+					{
+						if (player == null) continue;
+						if (player != this)
+							player.Out.SendObjectRemove(this);
+					}
 			}
 			if (!base.RemoveFromWorld()) return false;
 			if (m_pvpInvulnerabilityTimer != null)
@@ -8338,7 +8338,7 @@ namespace DOL.GS
 				DismountSteed(true);
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
-					if(player==null) continue;
+					if (player == null) continue;
 					if (player != this)
 					{
 						player.Out.SendObjectRemove(this);
@@ -8392,7 +8392,7 @@ namespace DOL.GS
 				//Create player visible to all others
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
-					if(player==null) continue;
+					if (player == null) continue;
 					if (player != this)
 					{
 						player.Out.SendPlayerCreate(this);
@@ -8401,7 +8401,7 @@ namespace DOL.GS
 				//Eden - can't see others?
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
-					if(player==null) continue;
+					if (player == null) continue;
 					if (player != this)
 					{
 						Out.SendPlayerCreate(player);
@@ -8465,7 +8465,7 @@ namespace DOL.GS
 				DismountSteed(true);
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
-					if(player==null) continue;
+					if (player == null) continue;
 					if (player != this)
 					{
 						player.Out.SendObjectRemove(this);
@@ -8519,7 +8519,7 @@ namespace DOL.GS
 				//Create player visible to all others
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
-					if(player==null) continue;
+					if (player == null) continue;
 					if (player != this)
 					{
 						player.Out.SendPlayerCreate(this);
@@ -8532,7 +8532,7 @@ namespace DOL.GS
 			}
 			return true;
 		}
-		
+
 		//Eden - Move to bind, and check if the loc is allowed
 		public bool MoveToBind()
 		{
@@ -8540,7 +8540,7 @@ namespace DOL.GS
 			if (rgn == null || rgn.GetZone(PlayerCharacter.BindXpos, PlayerCharacter.BindYpos) == null)
 			{
 				if (log.IsErrorEnabled)
-					log.Error("Player: "+Name+" unknown bind point : (R/X/Y) "+PlayerCharacter.BindRegion+"/"+PlayerCharacter.BindXpos+"/"+PlayerCharacter.BindYpos);
+					log.Error("Player: " + Name + " unknown bind point : (R/X/Y) " + PlayerCharacter.BindRegion + "/" + PlayerCharacter.BindXpos + "/" + PlayerCharacter.BindYpos);
 				//Kick the player, avoid server freeze
 				Client.Out.SendPlayerQuit(true);
 				SaveIntoDatabase();
@@ -8554,7 +8554,7 @@ namespace DOL.GS
 					b.Account = Client.Account.Name;
 					b.DateBan = DateTime.Now;
 					b.Type = "B";
-					b.Reason = "X/Y/Zone : "+X+"/"+Y+"/"+CurrentRegion.ID;
+					b.Reason = "X/Y/Zone : " + X + "/" + Y + "/" + CurrentRegion.ID;
 					GameServer.Database.AddNewObject(b);
 					GameServer.Database.SaveObject(b);
 					string message = "Unknown bind point, your account is banned, contact a GM.";
@@ -8594,7 +8594,7 @@ namespace DOL.GS
 					Out.SendUpdatePlayer();
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
-						if(player==null) continue;
+						if (player == null) continue;
 						if (player != this)
 						{
 							player.Out.SendObjectRemove(this);
@@ -9412,7 +9412,7 @@ namespace DOL.GS
 		{
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				if(player==null) continue;
+				if (player == null) continue;
 				if (player != this)
 					player.Out.SendLivingEquipmentUpdate(this);
 			}
@@ -10148,7 +10148,7 @@ namespace DOL.GS
 		{
 			foreach (GamePlayer plr in obj.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				if(plr==null) continue;
+				if (plr == null) continue;
 				if (plr == player)
 					return true;
 			}
@@ -10188,7 +10188,7 @@ namespace DOL.GS
 			string styleList = "";
 			lock (m_skillList)
 			{
-				foreach(Skill skill in m_skillList)
+				foreach (Skill skill in m_skillList)
 				{
 					Ability ability = skill as Ability;
 					if (ability != null)
@@ -10560,8 +10560,8 @@ namespace DOL.GS
 				if (i > 5) allpoints += CharacterClass.SpecPointsMultiplier * i / 10; //normal levels
 				if (i > 40) allpoints += CharacterClass.SpecPointsMultiplier * (i - 1) / 20; //half levels
 			}
-            if (IsLevelSecondStage == true && Level != 50)
-                allpoints += CharacterClass.SpecPointsMultiplier * Level  / 20; // add current half level
+			if (IsLevelSecondStage == true && Level != 50)
+				allpoints += CharacterClass.SpecPointsMultiplier * Level / 20; // add current half level
 
 			// calc spec points player have (autotrain is not anymore processed here - 1.87 livelike)
 			int mypoints = SkillSpecialtyPoints;
@@ -10571,18 +10571,18 @@ namespace DOL.GS
 				mypoints -= GetAutoTrainPoints(spec, 0);
 			}
 
-            // check if correct, if not respec. Not applicable to GMs
-            SpecPointsOk = true;
-            if (allpoints != mypoints)
-            {
-                log.WarnFormat("Spec points for {0} is incorrect, should be {1} but is {2}", Name, allpoints, mypoints);
-                if(Client.Account.PrivLevel==1)
+			// check if correct, if not respec. Not applicable to GMs
+			SpecPointsOk = true;
+			if (allpoints != mypoints)
+			{
+				log.WarnFormat("Spec points for {0} is incorrect, should be {1} but is {2}", Name, allpoints, mypoints);
+				if (Client.Account.PrivLevel == 1)
 				{
 					mypoints = RespecAllLines();
 					SkillSpecialtyPoints = allpoints;
 					SpecPointsOk = false;
 				}
-            }
+			}
 
 			#endregion
 
@@ -10915,7 +10915,7 @@ namespace DOL.GS
 				GameEventMgr.AddHandler(this, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(Unstealth));
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
-					if(player==null) continue;
+					if (player == null) continue;
 					if (player == this) continue;
 					if (!player.CanDetect(this))
 						player.Out.SendObjectDelete(this);
@@ -10939,18 +10939,20 @@ namespace DOL.GS
 					cam.Stop();
 				}
 				//Andraste
-				try {
-					GameSpellEffect effect=SpellHandler.FindEffectOnTarget(this,"BlanketOfCamouflage");
-					if (effect!=null) effect.Cancel(false);
-				} catch (Exception) {}
+				try
+				{
+					GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, "BlanketOfCamouflage");
+					if (effect != null) effect.Cancel(false);
+				}
+				catch (Exception) { }
 
 				Out.SendPlayerModelTypeChange(this, 2);
-				if(m_stealthEffect!=null) m_stealthEffect.Stop();
+				if (m_stealthEffect != null) m_stealthEffect.Stop();
 				m_stealthEffect = null;
 				GameEventMgr.RemoveHandler(this, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(Unstealth));
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
-					if(player==null) continue;
+					if (player == null) continue;
 					//TODO: more correct way to do it
 					if (player == this) continue;
 					//if a player could see us stealthed, we just update our model to avoid untargetting.
@@ -11142,7 +11144,7 @@ namespace DOL.GS
 			}
 
 			range += BuffBonusCategory1[(int)eProperty.Skill_Stealth];
-			
+
 			//Andraste
 			GameSpellEffect iVampiirEffect = SpellHandler.FindEffectOnTarget((GameLiving)enemy, "VampiirStealthDetection");
 			if (iVampiirEffect != null)
@@ -12205,7 +12207,7 @@ namespace DOL.GS
 			{
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
-					if(player==null) continue;
+					if (player == null) continue;
 					if (player != this)
 					{
 						//						player.Out.SendRemoveObject(this);
@@ -12478,7 +12480,7 @@ namespace DOL.GS
 				Out.SendControlledHorse(this, value); // fix very rare bug when this player not in GetPlayersInRadius;
 				foreach (GamePlayer plr in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
-					if(plr==null) continue;
+					if (plr == null) continue;
 					if (plr == this)
 						continue;
 					plr.Out.SendControlledHorse(this, value);
@@ -12684,7 +12686,7 @@ namespace DOL.GS
 				{
 					foreach (GamePlayer playerToUpdate in GetPlayersInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
 					{
-						if(playerToUpdate==null) continue;
+						if (playerToUpdate == null) continue;
 						if (playerToUpdate != null && playerToUpdate.Client.IsPlaying)
 							playerToUpdate.Out.SendRvRGuildBanner(this, value);
 					}
@@ -12842,7 +12844,7 @@ namespace DOL.GS
 				//No progess after maximum level 
 				if (ChampionLevel > CL_MAX_LEVEL) // needed to get exp after 10 
 					return 0;
-				if((ChampionExperienceForNextLevel - ChampionExperienceForCurrentLevel)>0)
+				if ((ChampionExperienceForNextLevel - ChampionExperienceForCurrentLevel) > 0)
 					return (ushort)(1000 * (ChampionExperience - ChampionExperienceForCurrentLevel) / (ChampionExperienceForNextLevel - ChampionExperienceForCurrentLevel));
 				else return 0;
 
@@ -12888,7 +12890,7 @@ namespace DOL.GS
 		/// <param name="experience">Amount of Experience</param> 
 		public virtual void GainChampionExperience(long experience)
 		{
-			if(ChampionExperience>=320000) { ChampionExperience=320000; return; }
+			if (ChampionExperience >= 320000) { ChampionExperience = 320000; return; }
 			// Do not gain experience if champion not activated or if champion max level reached
 			if (!Champion || ChampionLevel == CL_MAX_LEVEL)
 				return;
@@ -12931,27 +12933,27 @@ namespace DOL.GS
 
 
 			//Code for w/e happens when your CL goes up... 
-			if (ChampionLevel == 3) 
-			{ 
-				switch (Realm) 
-				{ 
-				   case eRealm.Albion: 
-					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Slashing)); 
-					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Thrusting)); 
-					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Crushing)); 
-					  break;
-                  case eRealm.Midgard: 
-					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Axes)); 
-					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Hammers)); 
-					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Swords)); 
-					  break;
-                  case eRealm.Hibernia: 
-					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Blades)); 
-					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Blunt)); 
-					  AddAbility(SkillBase.GetAbility(Abilities.Weapon_Piercing)); 
-					  break; 
-				} 
-				AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small)); 
+			if (ChampionLevel == 3)
+			{
+				switch (Realm)
+				{
+					case eRealm.Albion:
+						AddAbility(SkillBase.GetAbility(Abilities.Weapon_Slashing));
+						AddAbility(SkillBase.GetAbility(Abilities.Weapon_Thrusting));
+						AddAbility(SkillBase.GetAbility(Abilities.Weapon_Crushing));
+						break;
+					case eRealm.Midgard:
+						AddAbility(SkillBase.GetAbility(Abilities.Weapon_Axes));
+						AddAbility(SkillBase.GetAbility(Abilities.Weapon_Hammers));
+						AddAbility(SkillBase.GetAbility(Abilities.Weapon_Swords));
+						break;
+					case eRealm.Hibernia:
+						AddAbility(SkillBase.GetAbility(Abilities.Weapon_Blades));
+						AddAbility(SkillBase.GetAbility(Abilities.Weapon_Blunt));
+						AddAbility(SkillBase.GetAbility(Abilities.Weapon_Piercing));
+						break;
+				}
+				AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
 			}
 
 			Notify(GamePlayerEvent.ChampionLevelUp, this);
@@ -12964,10 +12966,10 @@ namespace DOL.GS
 		/// Load champion spells of this player 
 		/// </summary>  
 		protected virtual void LoadChampionSpells()
- 		{
- 			string championSpells = ChampionSpells;
- 			Hashtable championSpellsh = new Hashtable();
- 			SkillBase.CleanSpellList("Champion Abilities" + Name);
+		{
+			string championSpells = ChampionSpells;
+			Hashtable championSpellsh = new Hashtable();
+			SkillBase.CleanSpellList("Champion Abilities" + Name);
 			SpellLine line = new SpellLine("Champion Abilities" + Name, "Champion Abilities", "Champion Abilities", true);
 			line.Level = 50;
 			SkillBase.RegisterSpellLine(line);
@@ -13176,18 +13178,18 @@ namespace DOL.GS
 		}
 		#endregion
 
-        #region Minotaur Relics
-        protected MinotaurRelic m_minoRelic = null;
+		#region Minotaur Relics
+		protected MinotaurRelic m_minoRelic = null;
 
-        /// <summary>
-        /// sets or sets the Minotaur Relic of this Player
-        /// </summary>
-        public MinotaurRelic MinotaurRelic
-        {
-            get { return m_minoRelic; }
-            set { m_minoRelic = value; }
-        }
-        #endregion
+		/// <summary>
+		/// sets or sets the Minotaur Relic of this Player
+		/// </summary>
+		public MinotaurRelic MinotaurRelic
+		{
+			get { return m_minoRelic; }
+			set { m_minoRelic = value; }
+		}
+		#endregion
 
 
 		/// <summary>
