@@ -22,7 +22,7 @@ namespace DOL.GS.PropertyCalc
 			{
 				GamePlayer player = living as GamePlayer;
 				int hpBase = player.CalculateMaxHealth(player.Level, player.GetModified(eProperty.Constitution));
-				int buffBonus = living.BuffBonusCategory1[(int)property];
+				int buffBonus = living.BaseBuffBonusCategory[(int)property];
 				if (buffBonus < 0) buffBonus = (int)((1 + (buffBonus / -100.0)) * hpBase)-hpBase;
 				int itemBonus = living.ItemBonus[(int)property];
 				int cap = Math.Max(player.Level * 4, 20) + // at least 20
@@ -54,12 +54,12 @@ namespace DOL.GS.PropertyCalc
 
 				if (living.Level<10)
 				{
-					hp = living.Level * 20 + 20 + living.BuffBonusCategory1[(int)property];	// default
+					hp = living.Level * 20 + 20 + living.BaseBuffBonusCategory[(int)property];	// default
 				}
 				else
 				{
 					// approx to original formula, thx to mathematica :)
-					hp = (int)(50 + 11*living.Level + 0.548331 * living.Level * living.Level) + living.BuffBonusCategory1[(int)property];
+					hp = (int)(50 + 11*living.Level + 0.548331 * living.Level * living.Level) + living.BaseBuffBonusCategory[(int)property];
 					if (living.Level < 25)
 						hp += 20;
 				}
@@ -86,12 +86,12 @@ namespace DOL.GS.PropertyCalc
             {
                 if (living.Level < 10)
                 {
-                    return living.Level * 20 + 20 + living.BuffBonusCategory1[(int)property];	// default
+                    return living.Level * 20 + 20 + living.BaseBuffBonusCategory[(int)property];	// default
                 }
                 else
                 {
                     // approx to original formula, thx to mathematica :)
-                    int hp = (int)(50 + 11 * living.Level + 0.548331 * living.Level * living.Level) + living.BuffBonusCategory1[(int)property];
+                    int hp = (int)(50 + 11 * living.Level + 0.548331 * living.Level * living.Level) + living.BaseBuffBonusCategory[(int)property];
                     if (living.Level < 25)
                     {
                         hp += 20;

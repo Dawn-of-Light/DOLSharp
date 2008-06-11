@@ -2633,7 +2633,7 @@ namespace DOL.GS.Spells
 
 			#region Secondary Resists
 			//Using the resist BuffBonusCategory2 - its unused in ResistCalculator
-			int secondaryResistModifier = target.BuffBonusCategory2[(int)property];
+			int secondaryResistModifier = target.SpecBuffBonusCategory[(int)property];
 
 			/*Variance by Memories of War				
 			 * - Memories of War: Upon reaching level 41, the Hero, Warrior and Armsman 

@@ -35,7 +35,9 @@ namespace DOL.GS.PlayerClass
 			m_primaryStat = eStat.CON;
 			m_secondaryStat = eStat.STR;
 			m_tertiaryStat = eStat.DEX;
-			m_manaStat = eStat.STR;
+			//Vampiirs do not have a mana stat
+			//Special handling is need in the power pool calculator
+			//m_manaStat = eStat.STR;
 			m_wsbase = 440;
             m_baseHP = 878;
 		}

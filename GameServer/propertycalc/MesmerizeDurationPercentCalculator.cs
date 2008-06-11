@@ -36,7 +36,7 @@ namespace DOL.GS.PropertyCalc
 		public override int CalcValue(GameLiving living, eProperty property) 
 		{
 			int percent = 100
-				-living.BuffBonusCategory1[(int)property] // buff reduce the duration
+				-living.BaseBuffBonusCategory[(int)property] // buff reduce the duration
 				+living.DebuffCategory[(int)property]
 				-living.ItemBonus[(int)property]
 				- living.AbilityBonus[(int)property];

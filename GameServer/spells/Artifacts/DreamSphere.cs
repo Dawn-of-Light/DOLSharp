@@ -67,12 +67,12 @@ namespace DOL.GS.Spells
         public override void OnEffectStart(GameSpellEffect effect)
         {  
         	// Same Effect for everyone except caster that get a ToHit bonus
-            Caster.BuffBonusCategory1[(int)eProperty.ToHitBonus] += (int)m_spell.Value;
+            Caster.BaseBuffBonusCategory[(int)eProperty.ToHitBonus] += (int)m_spell.Value;
             base.OnEffectStart(effect);
         }
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
-            Caster.BuffBonusCategory1[(int)eProperty.ToHitBonus] -= (int)m_spell.Value;
+            Caster.BaseBuffBonusCategory[(int)eProperty.ToHitBonus] -= (int)m_spell.Value;
             return base.OnEffectExpires(effect, noMessages);
         }
         public DreamGroupMorph(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }

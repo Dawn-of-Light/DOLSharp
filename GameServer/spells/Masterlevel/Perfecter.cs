@@ -352,9 +352,9 @@ namespace DOL.GS.Spells
         public override void OnEffectStart(GameSpellEffect effect)
         {
         	base.OnEffectStart(effect);
-            effect.Owner.BuffBonusCategory1[(int)eProperty.MesmerizeDuration] += (int)m_spell.Value;
-            effect.Owner.BuffBonusCategory1[(int)eProperty.StunDuration] += (int)m_spell.Value;
-            effect.Owner.BuffBonusCategory1[(int)eProperty.SpeedDecreaseDuration] += (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.MesmerizeDuration] += (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.StunDuration] += (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.SpeedDecreaseDuration] += (int)m_spell.Value;
              
             if (effect.Owner is GamePlayer)
             {
@@ -366,9 +366,9 @@ namespace DOL.GS.Spells
 
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
-            effect.Owner.BuffBonusCategory1[(int)eProperty.MesmerizeDuration] -= (int)m_spell.Value;
-            effect.Owner.BuffBonusCategory1[(int)eProperty.StunDuration] -= (int)m_spell.Value;
-            effect.Owner.BuffBonusCategory1[(int)eProperty.SpeedDecreaseDuration] -= (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.MesmerizeDuration] -= (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.StunDuration] -= (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.SpeedDecreaseDuration] -= (int)m_spell.Value;
             
             if (effect.Owner is GamePlayer)
             {

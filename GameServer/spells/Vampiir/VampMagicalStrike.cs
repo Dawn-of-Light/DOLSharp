@@ -17,32 +17,28 @@
  *
  */
 using System;
+using System.Collections;
 using DOL.AI.Brain;
+using DOL.GS.PacketHandler;
+using DOL.GS.Keeps;
 
-namespace DOL.GS.PropertyCalc
+namespace DOL.GS.Spells
 {
 	/// <summary>
-	/// The Character Stat calculator
-	/// 
-	/// BuffBonusCategory1 is used for all single stat buffs
-	/// BuffBonusCategory2 is used for all dual stat buffs
-	/// BuffBonusCategory3 is used for all debuffs (positive values expected here)
-	/// BuffBonusCategory4 is used for all other uncapped modifications
-	///                    category 4 kicks in at last
-	/// BuffBonusMultCategory1 used after all buffs/debuffs
+	/// Vamps magical strike 
 	/// </summary>
-	[PropertyCalculator(eProperty.WaterSpeed)]
-	public class WaterSpeedCalculator : PropertyCalculator
+	[SpellHandlerAttribute("MagicalStrike")]
+	public class VampMagicalStrike : DirectDamageSpellHandler
 	{
-		public WaterSpeedCalculator() { }
+		public VampMagicalStrike(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-		public override int CalcValue(GameLiving living, eProperty property)
+		public override int CalculateSpellResistChance(GameLiving target)
 		{
-			return (int)(
-				+living.BaseBuffBonusCategory[(int)property]
-				+ living.SpecBuffBonusCategory[(int)property]
-				- living.DebuffCategory[(int)property]
-				+ living.BuffBonusCategory4[(int)property]);
+			//This needs to be corrected as vampiir claws don't seem to act the same as normal damage spells
+			//Same level or lower resists 0%
+			//Every level above vamp level increases percent by .5%
+			return target.Level <= Caster.Level ? 0 : (target.Level - Caster.Level) / 2;
+			//return base.CalculateSpellResistChance(target);
 		}
 	}
 }

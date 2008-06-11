@@ -42,7 +42,7 @@ namespace DOL.GS.PropertyCalc
 				int af;
 
 				// 1.5*1.25 spec line buff cap
-				af = Math.Min((int)(living.Level * 1.875), living.BuffBonusCategory2[(int)property]);
+				af = Math.Min((int)(living.Level * 1.875), living.SpecBuffBonusCategory[(int)property]);
 				// debuff
 				af -= living.DebuffCategory[(int)property];
 				// ToA af bonus
@@ -68,7 +68,7 @@ namespace DOL.GS.PropertyCalc
 			else
 			{
 				return (int)((1 + (living.Level / 170.0)) * (living.Level << 1) * 4.67)
-				+ living.BuffBonusCategory2[(int)property]
+				+ living.SpecBuffBonusCategory[(int)property]
 				- living.DebuffCategory[(int)property]
 				+ living.BuffBonusCategory4[(int)property];
 			}

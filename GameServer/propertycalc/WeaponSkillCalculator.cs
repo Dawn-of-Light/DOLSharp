@@ -7,8 +7,8 @@ namespace DOL.GS.PropertyCalc
 		public override int CalcValue(GameLiving living, eProperty property)
 		{
 			double percent = 100
-			+ living.BuffBonusCategory1[(int)property] // enchance the weaponskill
-			- living.BuffBonusCategory2[(int)property] // enchance the weaponskill
+			+ living.BaseBuffBonusCategory[(int)property] // enchance the weaponskill
+			- living.SpecBuffBonusCategory[(int)property] // enchance the weaponskill
 				//hotfix for poisons where both debuff components have same value
 			- (int)(living.DebuffCategory[(int)property] / 5.4) // reduce
 		   + living.ItemBonus[(int)property];

@@ -39,8 +39,8 @@ namespace DOL.GS.PropertyCalc
 			GamePlayer player = living as GamePlayer;
 			if (player != null)
 			{
-				int buff = player.BuffBonusCategory1[(int)property] * 10
-				+ player.BuffBonusCategory2[(int)property] * 10
+				int buff = player.BaseBuffBonusCategory[(int)property] * 10
+				+ player.SpecBuffBonusCategory[(int)property] * 10
 				- player.DebuffCategory[(int)property] * 10
 				+ player.BuffBonusCategory4[(int)property] * 10
 				+ player.AbilityBonus[(int)property] * 10;
@@ -57,8 +57,8 @@ namespace DOL.GS.PropertyCalc
 				IControlledBrain brain = pet.Brain as IControlledBrain;
 				if (brain != null)
 				{
-					int buff = pet.BuffBonusCategory1[(int)property] * 10
-					+ pet.BuffBonusCategory2[(int)property] * 10
+					int buff = pet.BaseBuffBonusCategory[(int)property] * 10
+					+ pet.SpecBuffBonusCategory[(int)property] * 10
 					- pet.DebuffCategory[(int)property] * 10
 					+ pet.BuffBonusCategory4[(int)property] * 10
 					+ pet.AbilityBonus[(int)property] * 10
