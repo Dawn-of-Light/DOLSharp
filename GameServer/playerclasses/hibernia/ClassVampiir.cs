@@ -85,15 +85,12 @@ namespace DOL.GS.PlayerClass
 				player.AddAbility(SkillBase.GetAbility(Abilities.VampiirDexterity));
 				player.AddAbility(SkillBase.GetAbility(Abilities.VampiirQuickness));
 				player.AddAbility(SkillBase.GetAbility(Abilities.VampiirStrength));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
 			}
 			if (player.Level >= 10)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 1));
 				player.AddAbility(SkillBase.GetAbility(Abilities.VampiirBolt, 1));
-			}
-			if (player.Level >= 15)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
 			}
 			if (player.Level >= 20)
 			{

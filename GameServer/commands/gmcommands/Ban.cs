@@ -113,7 +113,6 @@ namespace DOL.GS.Commands
 						{
 							DisplaySyntax(client);
 							return;
-							break;
 						}
 					#endregion Default
 				}

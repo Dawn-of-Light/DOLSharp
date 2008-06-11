@@ -94,7 +94,7 @@ namespace DOL.GS
 		public override bool WhisperReceive(GameLiving source, string str)
 		{
 			GamePlayer player = source as GamePlayer;
-			if (player == null)
+			if (player == null || player != (Brain as IControlledBrain).Owner)
 				return false;
 
 			string[] strargs = str.ToLower().Split(' ');

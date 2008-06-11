@@ -2486,12 +2486,8 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="ability"></param>
 		/// <param name="sendUpdates"></param>
-		#region Abilities
-		public void AddAbility(Ability ability)
-		{
-			AddAbility(ability, true);
-		}
-
+		#region Abilities 
+	
 		public override void AddAbility(Ability ability, bool sendUpdates)
 		{
 			if (ability == null)
