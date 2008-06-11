@@ -70,34 +70,52 @@ namespace DOL.GS.Spells
 			{
 				GameLiving target = m_boltTarget;
 				GameLiving caster = (GameLiving)m_actionSource;
-				if (target == null) return;
-				if (target.CurrentRegionID != caster.CurrentRegionID) return;
-				if (target.ObjectState != GameObject.eObjectState.Active) return;
-				if (!target.IsAlive) return;
-
-				if (target == null) return;
-				if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
+				if (target == null || target.CurrentRegionID != caster.CurrentRegionID || target.ObjectState != GameObject.eObjectState.Active || !target.IsAlive)
+					return;
 
 				int power = 0;
 
 				if (target is GameNPC || target.Mana > 0)
 				{
-					if (target is GameNPC) power = (int)Math.Round(((double)(target.Level) * (double)(m_handler.Spell.Value) * 2) / 100);
-					else power = (int)Math.Round((double)(target.MaxMana) * (((double)m_handler.Spell.Value) / 250));
-					if (target.Mana < power) power = target.Mana;
+					if (target is GameNPC)
+						power = (int)Math.Round(((double)(target.Level) * (double)(m_handler.Spell.Value) * 2) / 100);
+					else 
+						power = (int)Math.Round((double)(target.MaxMana) * (((double)m_handler.Spell.Value) / 250));
+
+					if (target.Mana < power)
+						power = target.Mana;
+
 					caster.Mana += power;
+
 					if (target is GamePlayer)
 					{
 						target.Mana -= power;
 						((GamePlayer)target).Out.SendMessage(caster.Name + " takes " + power + " power!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
 					}
-					if (target.Mana < 0) target.Mana = 0;
+
 					if (caster is GamePlayer)
 					{
 						((GamePlayer)caster).Out.SendMessage("You receive " + power + " power from " + target.Name + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 					}
 				}
-				else ((GamePlayer)caster).Out.SendMessage("You did not receive any power from " + target.Name + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				else
+					((GamePlayer)caster).Out.SendMessage("You did not receive any power from " + target.Name + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+
+				//Place the caster in combat
+				if (target is GamePlayer)
+					caster.LastAttackTickPvP = caster.CurrentRegion.Time;
+				else
+					caster.LastAttackTickPvE = caster.CurrentRegion.Time;
+				
+				//create the attack data for the bolt
+				AttackData ad = new AttackData();
+				ad.Attacker = caster;
+				ad.Target = target;
+				ad.DamageType = eDamageType.Heat;
+				ad.AttackType = AttackData.eAttackType.Spell;
+				ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
+				target.OnAttackedByEnemy(ad);
+				
 				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, caster);
 			}
 		}
