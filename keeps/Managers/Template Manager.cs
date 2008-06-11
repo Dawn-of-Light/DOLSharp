@@ -840,8 +840,8 @@ namespace DOL.GS.Keeps
 			for (int i = (int)eProperty.Resist_First; i <= (int)eProperty.Resist_Last; i++)
 			{
 				if (guard is GuardLord)
-					guard.BuffBonusCategory1[i] = 35;
-				else guard.BuffBonusCategory1[i] = 26;
+					guard.BaseBuffBonusCategory[i] = 35;
+				else guard.BaseBuffBonusCategory[i] = 26;
 			}
 		}
 	}

@@ -58,7 +58,7 @@ namespace DOL.GS.PropertyCalc
 
 				if (itemBonus > itemCap)
 					itemBonus = itemCap;
-				int buffs = player.BuffBonusCategory1[(int)property]; // one buff category just in case..
+				int buffs = player.BaseBuffBonusCategory[(int)property]; // one buff category just in case..
 
 //				DOLConsole.WriteLine("item bonus="+itemBonus+"; buffs="+buffs+"; realm="+player.RealmLevel/10);
 				return itemBonus + buffs + player.RealmLevel/10;

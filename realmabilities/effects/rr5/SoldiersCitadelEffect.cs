@@ -43,8 +43,8 @@ namespace DOL.GS.Effects
                 {
                     p.Out.SendSpellEffectAnimation(EffectOwner, EffectOwner, 7093, 0, false, 1);
                 }
-                EffectOwner.BuffBonusCategory1[(int)eProperty.ParryChance] += 50;
-                EffectOwner.BuffBonusCategory1[(int)eProperty.BlockChance] += 50;
+                EffectOwner.BaseBuffBonusCategory[(int)eProperty.ParryChance] += 50;
+                EffectOwner.BaseBuffBonusCategory[(int)eProperty.BlockChance] += 50;
                 GameEventMgr.AddHandler(EffectOwner, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
             }
         }
@@ -52,8 +52,8 @@ namespace DOL.GS.Effects
         {
             if (EffectOwner != null && EffectOwner.IsAlive)
             {
-                EffectOwner.BuffBonusCategory1[(int)eProperty.ParryChance] -= 50;
-                EffectOwner.BuffBonusCategory1[(int)eProperty.BlockChance] -= 50;
+                EffectOwner.BaseBuffBonusCategory[(int)eProperty.ParryChance] -= 50;
+                EffectOwner.BaseBuffBonusCategory[(int)eProperty.BlockChance] -= 50;
                 new SoldiersCitadelSecondaryEffect().Start(EffectOwner);
             }
             if (EffectOwner != null)
@@ -101,8 +101,8 @@ namespace DOL.GS.Effects
             if (target is GamePlayer)
             {
                 EffectOwner = target as GamePlayer;
-                EffectOwner.BuffBonusCategory1[(int)eProperty.ParryChance] -= 10;
-                EffectOwner.BuffBonusCategory1[(int)eProperty.BlockChance] -= 10;
+                EffectOwner.BaseBuffBonusCategory[(int)eProperty.ParryChance] -= 10;
+                EffectOwner.BaseBuffBonusCategory[(int)eProperty.BlockChance] -= 10;
                 GameEventMgr.AddHandler(EffectOwner, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
             }
         }
@@ -110,8 +110,8 @@ namespace DOL.GS.Effects
         {
             if (EffectOwner != null && EffectOwner.IsAlive)
             {
-                EffectOwner.BuffBonusCategory1[(int)eProperty.ParryChance] += 10;
-                EffectOwner.BuffBonusCategory1[(int)eProperty.BlockChance] += 10;
+                EffectOwner.BaseBuffBonusCategory[(int)eProperty.ParryChance] += 10;
+                EffectOwner.BaseBuffBonusCategory[(int)eProperty.BlockChance] += 10;
             }
             if (EffectOwner != null)
                 GameEventMgr.RemoveHandler(EffectOwner, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));

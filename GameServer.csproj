@@ -960,6 +960,7 @@
     <Compile Include="propertycalc\CriticalSpellHitChanceCalculator.cs" />
     <Compile Include="propertycalc\CriticalArcheryHitChanceCalculator.cs" />
     <Compile Include="propertycalc\CriticalMeleeHitChanceCalculator.cs" />
+    <Compile Include="propertycalc\ExtraHPPercentCalculator.cs" />
     <Compile Include="propertycalc\ResistPiercePropertyCalculator.cs" />
     <Compile Include="propertycalc\SpellLevelCalculator.cs" />
     <Compile Include="propertycalc\WaterSpeedCalculator.cs" />
@@ -2050,6 +2051,8 @@
     <Compile Include="spells\Vampiir\VampiirResistBuff.cs" />
     <Compile Include="spells\Vampiir\VampiirSkillBonusDeBuff.cs" />
     <Compile Include="spells\Vampiir\VampiirStealthDetection.cs" />
+    <Compile Include="spells\Vampiir\VampMagicalStrike.cs" />
+    <Compile Include="spells\Vampiir\VampMaintainedSpeedDecrease.cs" />
     <Compile Include="spells\Warlock\ChamberSpellHandler.cs" />
     <Compile Include="spells\Warlock\PowerlessSpellHandler.cs" />
     <Compile Include="spells\Warlock\PrimerSpellHandler.cs" />

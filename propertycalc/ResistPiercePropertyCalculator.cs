@@ -36,7 +36,7 @@ namespace DOL.GS.PropertyCalc
 		{
 			// cap at living.level/5
 			return Math.Min(Math.Max(1,living.Level/5),
-				living.BuffBonusCategory1[(int)property]
+				living.BaseBuffBonusCategory[(int)property]
 				- living.DebuffCategory[(int)property]
 				+ living.ItemBonus[(int)property]); 
 			/*

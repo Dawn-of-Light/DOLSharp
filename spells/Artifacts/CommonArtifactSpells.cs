@@ -197,8 +197,8 @@ namespace DOL.GS.Spells
         public override void OnEffectStart(GameSpellEffect effect)
         {
         	base.OnEffectStart(effect);         
-            Caster.BuffBonusCategory1[(int)eProperty.Strength] += (int)m_spell.Value;
-            Caster.BuffBonusCategory1[(int)eProperty.Constitution] += (int)m_spell.Value;
+            Caster.BaseBuffBonusCategory[(int)eProperty.Strength] += (int)m_spell.Value;
+            Caster.BaseBuffBonusCategory[(int)eProperty.Constitution] += (int)m_spell.Value;
  
             if(Caster is GamePlayer)
             {
@@ -211,8 +211,8 @@ namespace DOL.GS.Spells
 
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {           
-            Caster.BuffBonusCategory1[(int)eProperty.Strength] -= (int)m_spell.Value;
-            Caster.BuffBonusCategory1[(int)eProperty.Constitution] -= (int)m_spell.Value;          
+            Caster.BaseBuffBonusCategory[(int)eProperty.Strength] -= (int)m_spell.Value;
+            Caster.BaseBuffBonusCategory[(int)eProperty.Constitution] -= (int)m_spell.Value;          
  
             if(Caster is GamePlayer)
             {

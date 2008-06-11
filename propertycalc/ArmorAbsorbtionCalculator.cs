@@ -34,7 +34,7 @@ namespace DOL.GS.PropertyCalc
 	{
 		public override int CalcValue(GameLiving living, eProperty property)
 		{
-			int abs = living.BuffBonusCategory1[(int)property]
+			int abs = living.BaseBuffBonusCategory[(int)property]
 				- living.DebuffCategory[(int)property]
 				+ living.ItemBonus[(int)property]
 				+ living.AbilityBonus[(int)property];

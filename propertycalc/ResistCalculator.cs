@@ -103,7 +103,7 @@ namespace DOL.GS.PropertyCalc
         /// <returns></returns>
         public override int CalcValueFromBuffs(GameLiving living, eProperty property)
         {
-            int buffBonus = living.BuffBonusCategory1[(int)property]
+            int buffBonus = living.BaseBuffBonusCategory[(int)property]
 				+ living.BuffBonusCategory4[(int)property];
             return Math.Min(buffBonus, BuffBonusCap);
         }
@@ -179,7 +179,7 @@ namespace DOL.GS.PropertyCalc
         }
         public override int CalcValueFromBuffs(GameLiving living, eProperty property)
         {
-            int buffBonus = living.BuffBonusCategory1[(int)property] + living.BuffBonusCategory4[(int)property];
+            int buffBonus = living.BaseBuffBonusCategory[(int)property] + living.BuffBonusCategory4[(int)property];
             return Math.Min(buffBonus, BuffBonusCap);
         }
         public override int CalcValueFromItems(GameLiving living, eProperty property)
