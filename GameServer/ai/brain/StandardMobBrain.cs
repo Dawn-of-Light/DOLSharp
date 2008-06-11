@@ -113,8 +113,8 @@ namespace DOL.AI.Brain
 
 			//Mob will now always walk on their path
 			if (Body.MaxSpeedBase > 0 && Body.CurrentSpellHandler == null && !Body.IsMoving
-			    && !Body.AttackState && !Body.InCombat && !Body.IsMovingOnPath
-			    && Body.PathID != null && Body.PathID != "" && Body.PathID != "NULL")
+				&& !Body.AttackState && !Body.InCombat && !Body.IsMovingOnPath
+				&& Body.PathID != null && Body.PathID != "" && Body.PathID != "NULL")
 			{
 				PathPoint path = MovementMgr.LoadPath(Body.PathID);
 				Body.CurrentWayPoint = path;
@@ -137,10 +137,9 @@ namespace DOL.AI.Brain
 			}
 
 			//If we are not attacking, and not casting, and not moving, and we aren't facing our spawn heading, we turn to the spawn heading
-			if (!Body.InCombat && !Body.AttackState && !Body.IsCasting && !Body.IsMoving && WorldMgr.GetDistance(Body.SpawnX,Body.SpawnY,Body.SpawnZ, Body.X,Body.Y,Body.Z) > 500 )
+			if (!Body.InCombat && !Body.AttackState && !Body.IsCasting && !Body.IsMoving && WorldMgr.GetDistance(Body.SpawnX, Body.SpawnY, Body.SpawnZ, Body.X, Body.Y, Body.Z) > 500)
 			{
-				Body.WalkToSpawn(); //!!! only for reset combat
-				Body.WalkTo(Body.SpawnX,Body.SpawnY,Body.SpawnZ, Body.MaxSpeed*2);
+				Body.WalkToSpawn(); // Mobs do not walk back at 2x their speed..
 			}
 		}
 
@@ -296,8 +295,8 @@ namespace DOL.AI.Brain
 			// TODO: This should actually be the other way round, but access
 			// to m_aggroTable is restricted and needs to be threadsafe.
 
-            // do not modify aggro list if dead
-            if (!brain.Body.IsAlive) return;
+			// do not modify aggro list if dead
+			if (!brain.Body.IsAlive) return;
 
 			lock (m_aggroTable.SyncRoot)
 			{
@@ -316,9 +315,9 @@ namespace DOL.AI.Brain
 		public virtual void AddToAggroList(GameLiving living, int aggroamount)
 		{
 			if (m_body.IsConfused) return;
-            
-            // tolakram - duration spell effects will attempt to add to aggro after npc is dead
-            if (!m_body.IsAlive) return;
+
+			// tolakram - duration spell effects will attempt to add to aggro after npc is dead
+			if (!m_body.IsAlive) return;
 
 			if (living == null) return;
 			//			log.Debug(Body.Name + ": AddToAggroList="+(living==null?"(null)":living.Name)+", "+aggroamount);
@@ -369,7 +368,7 @@ namespace DOL.AI.Brain
 					if (protectAmount > 0)
 					{
 						aggroamount -= protectAmount;
-                        protect.ProtectSource.Out.SendMessage(LanguageMgr.GetTranslation(protect.ProtectSource.Client, "AI.Brain.StandardMobBrain.YouProtDist", player.GetName(0, false), Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						protect.ProtectSource.Out.SendMessage(LanguageMgr.GetTranslation(protect.ProtectSource.Client, "AI.Brain.StandardMobBrain.YouProtDist", player.GetName(0, false), Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						//player.Out.SendMessage("You are protected by " + protect.ProtectSource.GetName(0, false) + " from " + Body.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 						lock (m_aggroTable.SyncRoot)
@@ -515,9 +514,9 @@ namespace DOL.AI.Brain
 					//DOLConsole.WriteLine(this.Name+": check aggro "+living.Name+" "+amount);
 
 					if (living.IsAlive
-					    && amount > maxAggro
-					    && living.CurrentRegion == Body.CurrentRegion
-					    && living.ObjectState == GameObject.eObjectState.Active)
+						&& amount > maxAggro
+						&& living.CurrentRegion == Body.CurrentRegion
+						&& living.ObjectState == GameObject.eObjectState.Active)
 					{
 						int distance = WorldMgr.GetDistance(Body, living);
 						if (distance < MAX_AGGRO_DISTANCE)
@@ -606,7 +605,7 @@ namespace DOL.AI.Brain
 					if (eArgs != null && eArgs.HealSource is GameLiving)
 					{
 						//Higher Aggro amount and NO peace flag npcs!
-                        if (eArgs.HealSource is GamePlayer || (eArgs.HealSource is GameNPC && (((GameNPC)eArgs.HealSource).Flags & (uint)GameNPC.eFlags.PEACE) == 0))
+						if (eArgs.HealSource is GamePlayer || (eArgs.HealSource is GameNPC && (((GameNPC)eArgs.HealSource).Flags & (uint)GameNPC.eFlags.PEACE) == 0))
 							AddToAggroList((GameLiving)eArgs.HealSource, (eArgs.HealAmount * 2));
 					}
 					return;
@@ -664,9 +663,9 @@ namespace DOL.AI.Brain
 		protected virtual void OnAttackedByEnemy(AttackData ad)
 		{
 			if (!Body.AttackState
-			    && Body.IsAlive
-			    && Body.ObjectState == GameObject.eObjectState.Active
-			    && ad.IsHit)
+				&& Body.IsAlive
+				&& Body.ObjectState == GameObject.eObjectState.Active
+				&& ad.IsHit)
 			{
 				Body.StartAttack(ad.Attacker);
 				BringFriends(ad);
@@ -872,7 +871,7 @@ namespace DOL.AI.Brain
 						// Allow defensive spells
 						//if (!Body.AttackState)
 						//{
-						if (CheckDefensiveSpells(spell) && Util.Chance(50))
+						if (Body.GetSkillDisabledDuration(spell) == 0 && CheckDefensiveSpells(spell))
 						{
 							casted = true;
 							break;
@@ -884,16 +883,19 @@ namespace DOL.AI.Brain
 				{
 					foreach (Spell spell in Body.Spells)
 					{
-						if (spell.CastTime > 0 && Body.CurrentRegion.Time - Body.LastAttackedByEnemyTick > 10 * 1000)
+						if (Body.GetSkillDisabledDuration(spell) == 0)
 						{
-							if (CheckOffensiveSpells(spell))
+							if (spell.CastTime > 0 && Body.CurrentRegion.Time - Body.LastAttackedByEnemyTick > 10 * 1000)
 							{
-								casted = true;
-								break;
+								if (Util.Chance(50) && CheckOffensiveSpells(spell))
+								{
+									casted = true;
+									break;
+								}
 							}
+							else
+								CheckInstantSpells(spell);
 						}
-						else
-							CheckInstantSpells(spell);
 					}
 				}
 				if (this is IControlledBrain && !Body.AttackState)
@@ -908,10 +910,10 @@ namespace DOL.AI.Brain
 		/// </summary>
 		protected virtual bool CheckDefensiveSpells(Spell spell)
 		{
-			if(spell==null) return false;
+			if (spell == null) return false;
 			if (Body.GetSkillDisabledDuration(spell) > 0) return false;
 			GameObject lastTarget = Body.TargetObject;
-			bool found=false;
+			Body.TargetObject = null;
 			switch (spell.SpellType)
 			{
 				#region Buffs
@@ -946,7 +948,6 @@ namespace DOL.AI.Brain
 						if (!LivingHasEffect(Body, spell) && !Body.AttackState && Util.Chance(40))
 						{
 							Body.TargetObject = Body;
-							found=true;
 							break;
 						}
 						break;
@@ -958,11 +959,9 @@ namespace DOL.AI.Brain
 					if (!Body.IsDiseased)
 						break;
 					Body.TargetObject = Body;
-					found=true;
 					break;
 				case "Summon":
 					Body.TargetObject = Body;
-					found=true;
 					break;
 				case "SummonMinion":
 					//If the list is null, lets make sure it gets initialized!
@@ -983,7 +982,6 @@ namespace DOL.AI.Brain
 							break;
 					}
 					Body.TargetObject = Body;
-					found=true;
 					break;
 				#endregion
 
@@ -993,23 +991,29 @@ namespace DOL.AI.Brain
 					if (Body.HealthPercent < 30)
 					{
 						Body.TargetObject = Body;
-						found=true;
 						break;
 					}
 
 					break;
 				#endregion
 			}
-			if (Body.TargetObject != null && found)
+
+			if (Body.TargetObject != null)
 			{
 				if (Body.IsMoving && spell.CastTime > 0)
 					Body.StopFollow();
-				if(Body.TargetObject!=Body && spell.CastTime>0) Body.TurnTo(Body.TargetObject);
+
+				if (Body.TargetObject != Body && spell.CastTime > 0)
+					Body.TurnTo(Body.TargetObject);
+
 				Body.CastSpell(spell, m_mobSpellLine);
-				if(Body.TargetObject!=lastTarget) Body.TargetObject = lastTarget;
+
+				Body.TargetObject = lastTarget;
 				return true;
 			}
-			if(Body.TargetObject!=lastTarget) Body.TargetObject = lastTarget;
+
+			Body.TargetObject = lastTarget;
+
 			return false;
 		}
 
@@ -1018,20 +1022,17 @@ namespace DOL.AI.Brain
 		/// </summary>
 		protected virtual bool CheckOffensiveSpells(Spell spell)
 		{
-			if(spell==null) return false;
-			if (Body.GetSkillDisabledDuration(spell) > 0) return false;
 			if (spell.Target.ToLower() != "enemy" && spell.Target.ToLower() != "area" && spell.Target.ToLower() != "cone")
 				return false;
-			if (Body.TargetObject != null)
+
+			if (Body.TargetObject != null && !LivingHasEffect((GameLiving)Body.TargetObject, spell))
 			{
-				if (LivingHasEffect((GameLiving)Body.TargetObject, spell))  // Target already has that effect
-					return false;
-				if(!WorldMgr.CheckDistance(Body, Body.TargetObject, spell.Range)) return false;
-				if (Body.GetSkillDisabledDuration(spell) > 0)   // Spell on cooldown
-					return false;
 				if (Body.IsMoving && spell.CastTime > 0)
 					Body.StopFollow();
-				if(Body.TargetObject!=Body && spell.CastTime>0) Body.TurnTo(Body.TargetObject);
+
+				if (Body.TargetObject != Body && spell.CastTime > 0)
+					Body.TurnTo(Body.TargetObject);
+
 				Body.CastSpell(spell, m_mobSpellLine);
 				return true;
 			}
@@ -1043,10 +1044,9 @@ namespace DOL.AI.Brain
 		/// </summary>
 		protected virtual bool CheckInstantSpells(Spell spell)
 		{
-			if(spell==null) return false;
-			if (Body.GetSkillDisabledDuration(spell) > 0) return false;
 			GameObject lastTarget = Body.TargetObject;
-            bool found = false;
+			Body.TargetObject = null;
+
 			switch (spell.SpellType)
 			{
 				#region Enemy Spells
@@ -1058,9 +1058,8 @@ namespace DOL.AI.Brain
 				case "Stun":
 				case "Mez":
 				case "Taunt":
-					if(Body.TargetObject==null) return false;
-					if(LivingHasEffect((GameLiving)Body.TargetObject, spell) || !WorldMgr.CheckDistance(Body, Body.TargetObject, spell.Range)) return false;
-                    found = true;
+					if (!LivingHasEffect(lastTarget as GameLiving, spell))
+						Body.TargetObject = lastTarget;
 					break;
 				#endregion
 
@@ -1073,21 +1072,21 @@ namespace DOL.AI.Brain
 				case "CombatSpeedBuff":
 				case "AblativeArmor":
 				case "Bladeturn":
-					if (LivingHasEffect(Body, spell)) return false;
-					Body.TargetObject = Body;
-					found = true;
+					if (!LivingHasEffect(Body, spell))
+						Body.TargetObject = Body;
 					break;
 				#endregion
 			}
-			//This will take care of any thing with "debuff" in its name
-			if (Body.TargetObject != null && found)
+
+			if (Body.TargetObject != null)
 			{
-				if (LivingHasEffect((GameLiving)Body.TargetObject, spell)) return false;
 				Body.CastSpell(spell, m_mobSpellLine);
-				if(Body.TargetObject!=lastTarget) Body.TargetObject = lastTarget;
+				Body.TargetObject = lastTarget;
+
 				return true;
 			}
-			if(Body.TargetObject!=lastTarget) Body.TargetObject = lastTarget;
+
+			Body.TargetObject = lastTarget;
 			return false;
 		}
 
@@ -1153,7 +1152,7 @@ namespace DOL.AI.Brain
 			double targetX = Body.SpawnX + Util.Random(-roamingRadius, roamingRadius);
 			double targetY = Body.SpawnY + Util.Random(-roamingRadius, roamingRadius);
 			//double targetZ = (Body.IsUnderwater) ? Body.SpawnZ : 0;
-            /*(Body.Flags & (uint)GameNPC.eFlags.FLYING) == (uint)GameNPC.eFlags.FLYING ||  + Util.Random(-100, 100)*/
+			/*(Body.Flags & (uint)GameNPC.eFlags.FLYING) == (uint)GameNPC.eFlags.FLYING ||  + Util.Random(-100, 100)*/
 
 			return new Point3D((int)targetX, (int)targetY, Body.SpawnZ);
 		}

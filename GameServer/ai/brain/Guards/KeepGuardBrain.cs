@@ -27,7 +27,7 @@ namespace DOL.AI.Brain
 			AggroLevel = 90;
 			AggroRange = 1500;
 		}
-		
+
 		/// <summary>
 		/// Actions to be taken on each Think pulse
 		/// </summary>
@@ -66,13 +66,13 @@ namespace DOL.AI.Brain
 					guard.WalkToSpawn();
 			}
 			//Eden - Portal Keeps Guards max distance
-			if (guard.Level>200 && WorldMgr.GetDistance(guard.SpawnX,guard.SpawnY,guard.SpawnZ, guard.X,guard.Y,guard.Z) > 2000)
+			if (guard.Level > 200 && WorldMgr.GetDistance(guard.SpawnX, guard.SpawnY, guard.SpawnZ, guard.X, guard.Y, guard.Z) > 2000)
 			{
 				ClearAggroList();
 				guard.WalkToSpawn();
 			}
 			// other guards max distance
-			else if (!guard.InCombat && WorldMgr.GetDistance(guard.SpawnX,guard.SpawnY,guard.SpawnZ, guard.X,guard.Y,guard.Z) > 6000)
+			else if (!guard.InCombat && WorldMgr.GetDistance(guard.SpawnX, guard.SpawnY, guard.SpawnZ, guard.X, guard.Y, guard.Z) > 6000)
 			{
 				ClearAggroList();
 				guard.WalkToSpawn();
@@ -123,14 +123,13 @@ namespace DOL.AI.Brain
 				return;
 			foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)AggroRange))
 			{
-				if(npc==null || npc.Brain==null) continue;
-				if (npc.Brain is IControlledBrain == false)
+				if (npc is GameKeepGuard || !(npc.Brain is IControlledBrain))
 					continue;
-				if (npc is GameKeepGuard) continue;
 
-				if((npc.Brain as ControlledNpc)==null) continue;
-				GamePlayer player=(npc.Brain as ControlledNpc).GetPlayerOwner();
-				if(player==null) continue;
+				GamePlayer player = (npc.Brain as ControlledNpc).GetPlayerOwner();
+				
+				if (player == null)
+					continue;
 
 				if (GameServer.ServerRules.IsAllowedToAttack(Body, npc, false)
 					&& KeepMgr.IsEnemy(Body as GameKeepGuard, player, true))
