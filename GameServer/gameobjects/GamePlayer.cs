@@ -1902,7 +1902,18 @@ namespace DOL.GS
 		public virtual int CalculateMaxMana(int level, int manastat)
 		{
 			int maxpower = 0;
-			if (CharacterClass.ManaStat != eStat.UNDEFINED)
+
+			//Special handling for Vampiirs:
+			/* There is no stat that affects the Vampiir's power pool or the damage done by its power based spells.
+			 * The Vampiir is not a focus based class like, say, an Enchanter.
+			 * The Vampiir is a lot more cut and dried than the typical casting class. 
+			 * EDIT, 12/13/04 - I was told today that this answer is not entirely accurate.
+			 * While there is no stat that affects the damage dealt (in the way that intelligence or piety affects how much damage a more traditional caster can do),
+			 * the Vampiir's power pool capacity is intended to be increased as the Vampiir's strength increases.
+			 * 
+			 * This means that strength ONLY affects a Vampiir's mana pool
+			 */
+			if (CharacterClass.ManaStat != eStat.UNDEFINED || CharacterClass.ID == (int)eCharacterClass.Vampiir)
 			{
 				maxpower = (level * 5) + (manastat - 50);
 			}
@@ -5598,11 +5609,11 @@ namespace DOL.GS
 					case ArmorLevel.Plate: abs = 34; break;
 				}
 
-				eaf += BuffBonusCategory1[(int)eProperty.ArmorFactor]; // base buff before cap
+				eaf += BaseBuffBonusCategory[(int)eProperty.ArmorFactor]; // base buff before cap
 				int eafcap = (int)(10 * Level * (1 + abs * 0.01));
 				if (eaf > eafcap)
 					eaf = eafcap;
-				eaf += (int)Math.Min(Level * 1.875, BuffBonusCategory2[(int)eProperty.ArmorFactor])
+				eaf += (int)Math.Min(Level * 1.875, SpecBuffBonusCategory[(int)eProperty.ArmorFactor])
 					   - DebuffCategory[(int)eProperty.ArmorFactor]
 					   + BuffBonusCategory4[(int)eProperty.ArmorFactor]
 					   + Math.Min(Level, ItemBonus[(int)eProperty.ArmorFactor]);
@@ -5772,7 +5783,7 @@ namespace DOL.GS
 			if (slot == eArmorSlot.UNKNOWN) return 0;
 			InventoryItem item = Inventory.GetItem((eInventorySlot)slot);
 			if (item == null) return 0;
-			double eaf = item.DPS_AF + BuffBonusCategory1[(int)eProperty.ArmorFactor]; // base AF buff
+			double eaf = item.DPS_AF + BaseBuffBonusCategory[(int)eProperty.ArmorFactor]; // base AF buff
 
 			int itemAFcap = Level;
 			if (RealmLevel > 39)
@@ -6472,7 +6483,7 @@ namespace DOL.GS
 				case eResist.Heat:
 				case eResist.Matter:
 				case eResist.Spirit:
-					res += BuffBonusCategory1[(int)eProperty.MagicAbsorbtion];
+					res += BaseBuffBonusCategory[(int)eProperty.MagicAbsorbtion];
 					break;
 				default:
 					break;
@@ -11139,7 +11150,7 @@ namespace DOL.GS
 				range += mos.GetAmountForLevel(mos.Level);
 			}
 
-			range += BuffBonusCategory1[(int)eProperty.Skill_Stealth];
+			range += BaseBuffBonusCategory[(int)eProperty.Skill_Stealth];
 
 			//Andraste
 			GameSpellEffect iVampiirEffect = SpellHandler.FindEffectOnTarget((GameLiving)enemy, "VampiirStealthDetection");

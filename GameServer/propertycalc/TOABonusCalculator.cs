@@ -61,7 +61,7 @@ namespace DOL.GS.PropertyCalc
         public override int CalcValue(GameLiving living, eProperty property)
         {
             //hardcap at 25%
-            int percent = Math.Min(25, living.BuffBonusCategory1[(int)property]
+            int percent = Math.Min(25, living.BaseBuffBonusCategory[(int)property]
                 - living.DebuffCategory[(int)property]
                 + living.ItemBonus[(int)property]);
             // Add RA bonus
@@ -125,7 +125,7 @@ namespace DOL.GS.PropertyCalc
         public override int CalcValue(GameLiving living, eProperty property)
         {
             //hardcap at 10%
-            int percent = Math.Min(10, living.BuffBonusCategory1[(int)property]
+            int percent = Math.Min(10, living.BaseBuffBonusCategory[(int)property]
                 + living.ItemBonus[(int)property]
                 - living.DebuffCategory[(int)property]);
 

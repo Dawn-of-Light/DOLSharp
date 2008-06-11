@@ -294,17 +294,17 @@ namespace DOL.GS.Effects
 		{
 			base.Start(target);
 			int effValue = (int)(Effectiveness * 6);
-			m_owner.BuffBonusCategory1[(int)eProperty.MesmerizeDuration] += effValue;
-			m_owner.BuffBonusCategory1[(int)eProperty.SpeedDecreaseDuration] += effValue;
-			m_owner.BuffBonusCategory1[(int)eProperty.StunDuration] += effValue;			
+			m_owner.BaseBuffBonusCategory[(int)eProperty.MesmerizeDuration] += effValue;
+			m_owner.BaseBuffBonusCategory[(int)eProperty.SpeedDecreaseDuration] += effValue;
+			m_owner.BaseBuffBonusCategory[(int)eProperty.StunDuration] += effValue;			
 		}
 
 		public override void Stop()
 		{
 			int effValue = (int)(Effectiveness * 6);
-			m_owner.BuffBonusCategory1[(int)eProperty.MesmerizeDuration] -= effValue;
-			m_owner.BuffBonusCategory1[(int)eProperty.SpeedDecreaseDuration] -= effValue;
-			m_owner.BuffBonusCategory1[(int)eProperty.StunDuration] -= effValue;			
+			m_owner.BaseBuffBonusCategory[(int)eProperty.MesmerizeDuration] -= effValue;
+			m_owner.BaseBuffBonusCategory[(int)eProperty.SpeedDecreaseDuration] -= effValue;
+			m_owner.BaseBuffBonusCategory[(int)eProperty.StunDuration] -= effValue;			
 			base.Stop();
 		}
 		#endregion

@@ -37,7 +37,7 @@ namespace DOL.GS.PropertyCalc
 			//hardcap at 10%
 			int itemPercent = Math.Min(10, living.ItemBonus[(int)property]);
 			int debuffPercent = Math.Min(10, living.DebuffCategory[(int)property]);
-			int percent = living.BuffBonusCategory1[(int)property] + living.BuffBonusCategory2[(int)property] + itemPercent - debuffPercent;
+			int percent = living.BaseBuffBonusCategory[(int)property] + living.SpecBuffBonusCategory[(int)property] + itemPercent - debuffPercent;
 
 			// Relic bonus calculated before RA bonuses
 			if (living is GamePlayer || living is NecromancerPet)

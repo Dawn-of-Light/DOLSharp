@@ -38,16 +38,16 @@ namespace DOL.GS.Spells.Atlantis
         public override void OnEffectStart(GameSpellEffect effect)
         {
         	base.OnEffectStart(effect);
-            effect.Owner.BuffBonusCategory1[(int)eProperty.Dexterity] += (int)m_spell.Value;
-            effect.Owner.BuffBonusCategory1[(int)eProperty.Strength] += (int)m_spell.Value;
-            effect.Owner.BuffBonusCategory1[(int)eProperty.Constitution] += (int)m_spell.Value;
-            effect.Owner.BuffBonusCategory1[(int)eProperty.Acuity] += (int)m_spell.Value;
-            effect.Owner.BuffBonusCategory1[(int)eProperty.Piety] += (int)m_spell.Value;
-            effect.Owner.BuffBonusCategory1[(int)eProperty.Empathy] += (int)m_spell.Value;
-            effect.Owner.BuffBonusCategory1[(int)eProperty.Quickness] += (int)m_spell.Value;
-            effect.Owner.BuffBonusCategory1[(int)eProperty.Intelligence] += (int)m_spell.Value;
-            effect.Owner.BuffBonusCategory1[(int)eProperty.Charisma] += (int)m_spell.Value;
-            effect.Owner.BuffBonusCategory1[(int)eProperty.ArmorAbsorbtion] += (int)m_spell.Value;                       
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.Dexterity] += (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.Strength] += (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.Constitution] += (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.Acuity] += (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.Piety] += (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.Empathy] += (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.Quickness] += (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.Intelligence] += (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.Charisma] += (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.ArmorAbsorbtion] += (int)m_spell.Value;                       
             
             if (effect.Owner is GamePlayer)
             {
@@ -61,16 +61,16 @@ namespace DOL.GS.Spells.Atlantis
 
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
-            effect.Owner.BuffBonusCategory1[(int)eProperty.Dexterity] -= (int)m_spell.Value;
-            effect.Owner.BuffBonusCategory1[(int)eProperty.Strength] -= (int)m_spell.Value;
-            effect.Owner.BuffBonusCategory1[(int)eProperty.Constitution] -= (int)m_spell.Value;
-            effect.Owner.BuffBonusCategory1[(int)eProperty.Acuity] -= (int)m_spell.Value;
-            effect.Owner.BuffBonusCategory1[(int)eProperty.Piety] -= (int)m_spell.Value;
-            effect.Owner.BuffBonusCategory1[(int)eProperty.Empathy] -= (int)m_spell.Value;
-            effect.Owner.BuffBonusCategory1[(int)eProperty.Quickness] -= (int)m_spell.Value;
-            effect.Owner.BuffBonusCategory1[(int)eProperty.Intelligence] -= (int)m_spell.Value;
-            effect.Owner.BuffBonusCategory1[(int)eProperty.Charisma] -= (int)m_spell.Value;
-            effect.Owner.BuffBonusCategory1[(int)eProperty.ArmorAbsorbtion] -= (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.Dexterity] -= (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.Strength] -= (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.Constitution] -= (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.Acuity] -= (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.Piety] -= (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.Empathy] -= (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.Quickness] -= (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.Intelligence] -= (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.Charisma] -= (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.ArmorAbsorbtion] -= (int)m_spell.Value;
              
             if (effect.Owner is GamePlayer)
             {

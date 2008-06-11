@@ -216,10 +216,10 @@ namespace DOL.GS.Spells
 			switch (categoryid)
 			{
 				case 1:
-					bonuscat = target.BuffBonusCategory1;
+					bonuscat = target.BaseBuffBonusCategory;
 					break;
 				case 2:
-					bonuscat = target.BuffBonusCategory2;
+					bonuscat = target.SpecBuffBonusCategory;
 					break;
 				case 3:
 					bonuscat = target.DebuffCategory;

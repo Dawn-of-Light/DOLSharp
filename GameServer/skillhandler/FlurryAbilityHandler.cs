@@ -120,7 +120,7 @@ namespace DOL.GS.SkillHandler
 			int primaryResistModifier = target.GetResist(eDamageType.Slash);
 
 			//Using the resist BuffBonusCategory2 - its unused in ResistCalculator
-			int secondaryResistModifier = target.BuffBonusCategory2[(int)eProperty.Resist_Slash];
+			int secondaryResistModifier = target.SpecBuffBonusCategory[(int)eProperty.Resist_Slash];
 
 			int resistModifier = 0;
 			//primary resists

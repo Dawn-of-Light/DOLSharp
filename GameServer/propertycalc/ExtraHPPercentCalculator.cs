@@ -16,7 +16,7 @@ namespace DOL.GS.PropertyCalc
 	{
 		public override int CalcValue(GameLiving living, eProperty property)
 		{
-			return living.ItemBonus[(int)property]+living.BuffBonusCategory1[(int)property];
+			return living.ItemBonus[(int)property]+living.BaseBuffBonusCategory[(int)property];
 		}
 	}
 }
