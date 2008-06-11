@@ -29,9 +29,9 @@ namespace DOL.GS.RealmAbilities
 	{
 		public MarkOfPreyAbility(DBAbility dba, int level) : base(dba, level) { }
 
-        int RANGE = 2000;
+        int RANGE = 1000;
         public const int DURATION = 30 * 1000;
-        public const int VALUE = 10;
+        public const double VALUE = 5.1;
 
 		public override void Execute(GameLiving living)
 		{
@@ -67,11 +67,17 @@ namespace DOL.GS.RealmAbilities
 
         public override void AddEffectsInfo(System.Collections.IList list)
         {
-            list.Add("Grants all members of the Vampiir's group a 30 second damage add that stacks with all other forms of damage add. All damage done via the damage add will be returned to the Vampiir as power.");
+            list.Add("Function: damage add");
             list.Add("");
-            list.Add("Target: Group");
-            list.Add("Duration: 30s");
+            list.Add("Target's melee attacks do additional damage.");
+			list.Add("");
+			list.Add("Damage: 5.1");
+			list.Add("Target: Group");
+			list.Add("Range: 1000");
+            list.Add("Duration: 30 sec");
             list.Add("Casting time: Instant");
+			list.Add("");
+			list.Add("Can use every: 10:00 min");
         }
     }
 }
