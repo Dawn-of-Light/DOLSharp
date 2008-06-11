@@ -39,10 +39,27 @@ namespace DOL.GS.PropertyCalc
 			if (living is GamePlayer) 
 			{
 				GamePlayer player = living as GamePlayer;
-				if (player.CharacterClass.ManaStat == eStat.UNDEFINED) {
-					return 0;
+				eStat manaStat = player.CharacterClass.ManaStat;
+
+				if (player.CharacterClass.ManaStat == eStat.UNDEFINED)
+				{
+					//Special handling for Vampiirs:
+					/* There is no stat that affects the Vampiir's power pool or the damage done by its power based spells.
+					 * The Vampiir is not a focus based class like, say, an Enchanter.
+					 * The Vampiir is a lot more cut and dried than the typical casting class. 
+					 * EDIT, 12/13/04 - I was told today that this answer is not entirely accurate.
+					 * While there is no stat that affects the damage dealt (in the way that intelligence or piety affects how much damage a more traditional caster can do),
+					 * the Vampiir's power pool capacity is intended to be increased as the Vampiir's strength increases.
+					 * 
+					 * This means that strength ONLY affects a Vampiir's mana pool
+					 */
+					if (player.CharacterClass.ID == (int)eCharacterClass.Vampiir)
+						manaStat = eStat.STR;
+					else
+						return 0;
 				}
-				int manaBase = player.CalculateMaxMana(player.Level, player.GetModified((eProperty)player.CharacterClass.ManaStat));
+
+				int manaBase = player.CalculateMaxMana(player.Level, player.GetModified((eProperty)manaStat));
 				int itemBonus = living.ItemBonus[(int)property];
 				int poolBonus = living.ItemBonus[(int)eProperty.PowerPool];
 				int abilityBonus = living.AbilityBonus[(int)property]; 

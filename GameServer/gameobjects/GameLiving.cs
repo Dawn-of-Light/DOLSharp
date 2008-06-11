@@ -1633,7 +1633,7 @@ namespace DOL.GS
 				int resist = (int)(damage * ad.Target.GetDamageResist(GetResistTypeForDamage(ad.DamageType)) * -0.01);
 
 				eProperty property = ad.Target.GetResistTypeForDamage(ad.DamageType);
-				int secondaryResistModifier = ad.Target.BuffBonusCategory2[(int)property];
+				int secondaryResistModifier = ad.Target.SpecBuffBonusCategory[(int)property];
 				int resistModifier = 0;
 				resistModifier += (int)((ad.Damage + (double)resistModifier) * (double)secondaryResistModifier * -0.01);
 
@@ -4154,7 +4154,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// Property Buff bonus category
 		/// what it means depends from the PropertyCalculator for a property element
 		/// </summary>
-		public IPropertyIndexer BuffBonusCategory1
+		public IPropertyIndexer BaseBuffBonusCategory
 		{
 			get { return m_buff1Bonus; }
 		}
@@ -4167,7 +4167,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// Property Buff bonus category
 		/// what it means depends from the PropertyCalculator for a property element
 		/// </summary>
-		public IPropertyIndexer BuffBonusCategory2
+		public IPropertyIndexer SpecBuffBonusCategory
 		{
 			get { return m_buff2Bonus; }
 		}

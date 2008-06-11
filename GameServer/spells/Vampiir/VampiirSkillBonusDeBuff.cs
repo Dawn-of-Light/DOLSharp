@@ -29,7 +29,7 @@ namespace DOL.GS.Spells
                 {
                     if (player.GetModifiedSpecLevel(SkillBase.GetPropertyName((eProperty)(i))) != 0)
                     {
-                        player.BuffBonusCategory1[i] = -player.GetModifiedSpecLevel(SkillBase.GetPropertyName((eProperty)(i)));
+                        player.BaseBuffBonusCategory[i] = -player.GetModifiedSpecLevel(SkillBase.GetPropertyName((eProperty)(i)));
                     }
                     //					DOLConsole.WriteWarning("Spec " + SkillBase.GetPropertyName((eProperty)(i)) + " " + player.GetModifiedSpecLevel(SkillBase.GetPropertyName((eProperty)(i))));
                 }
@@ -51,7 +51,7 @@ namespace DOL.GS.Spells
 				GamePlayer player = effect.Owner as GamePlayer;
 				for (int i=(int)eProperty.Skill_First; i<=(int)eProperty.Skill_Last; i++) 
 				{
-					player.BuffBonusCategory1[i] = 0;
+					player.BaseBuffBonusCategory[i] = 0;
 				}
 				player.PropertiesChanged();
                 player.Out.SendCharStatsUpdate();

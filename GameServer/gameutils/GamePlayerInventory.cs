@@ -1057,32 +1057,6 @@ namespace DOL.GS
 						canApply = true;
 					break;
 				case 538: //Dye pot
-					//				        if((objectToDye.Object_Type==1) // generic (weapon)
-					//						||(objectToDye.Object_Type==2) // crushing (weapon)
-					//						||(objectToDye.Object_Type==3) // slashing (weapon)
-					//						||(objectToDye.Object_Type==4) // thrusting (weapon)
-					//						||(objectToDye.Object_Type==5) // fired (weapon)
-					//						||(objectToDye.Object_Type==6) // twohanded (weapon)
-					//						||(objectToDye.Object_Type==7) // polearm (weapon)
-					//						||(objectToDye.Object_Type==8) // staff (weapon)
-					//						||(objectToDye.Object_Type==9) // longbow (weapon)
-					//						||(objectToDye.Object_Type==10) // crossbow (weapon)
-					//						||(objectToDye.Object_Type==11) // sword (weapon)
-					//						||(objectToDye.Object_Type==12) // hammer (weapon)
-					//						||(objectToDye.Object_Type==13) // axe (weapon)
-					//						||(objectToDye.Object_Type==14) // spear (weapon)
-					//						||(objectToDye.Object_Type==15) // composite bow (weapon)
-					//						||(objectToDye.Object_Type==16) // thrown (weapon)
-					//						||(objectToDye.Object_Type==17) // left axe (weapon)
-					//						||(objectToDye.Object_Type==18) // recurve bow (weapon)
-					//						||(objectToDye.Object_Type==19) // blades (weapon)
-					//						||(objectToDye.Object_Type==20) // blunt (weapon)
-					//						||(objectToDye.Object_Type==21) // piercing (weapon)
-					//						||(objectToDye.Object_Type==22) // large (weapon)
-					//						||(objectToDye.Object_Type==23) // celtic spear (weapon)
-					//						||(objectToDye.Object_Type==24) // flexible (weapon)
-					//						||(objectToDye.Object_Type==25) // hand to hand (weapon)
-					//						||(objectToDye.Object_Type==26)) // scythe (weapon)
 					if (objectToDye.Object_Type >= 1 && objectToDye.Object_Type <= 26)
 						canApply = true;
 					break;

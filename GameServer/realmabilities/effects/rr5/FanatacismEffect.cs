@@ -44,7 +44,7 @@ namespace DOL.GS.Effects
                     p.Out.SendSpellEffectAnimation(EffectOwner, p, 7088, 0, false, 1);
                 }
                 GameEventMgr.AddHandler(EffectOwner, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
-            	EffectOwner.BuffBonusCategory1[(int)eProperty.MagicAbsorbtion] += RealmAbilities.FanatacismAbility.VALUE;
+            	EffectOwner.BaseBuffBonusCategory[(int)eProperty.MagicAbsorbtion] += RealmAbilities.FanatacismAbility.VALUE;
             }
         }
 
@@ -52,7 +52,7 @@ namespace DOL.GS.Effects
         {
             if (EffectOwner != null)
             {
-            	EffectOwner.BuffBonusCategory1[(int)eProperty.MagicAbsorbtion] -= RealmAbilities.FanatacismAbility.VALUE;
+            	EffectOwner.BaseBuffBonusCategory[(int)eProperty.MagicAbsorbtion] -= RealmAbilities.FanatacismAbility.VALUE;
                 GameEventMgr.RemoveHandler(EffectOwner, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
             }
             
