@@ -42,18 +42,18 @@ namespace DOL.AI.Brain
 		private GameLiving m_target;
 		private bool m_melee = false;
 		private Spell spelllos;
-		
+
 		public TheurgistPetBrain(GamePlayer owner)
 		{
-			if(owner!=null)
+			if (owner != null)
 			{
 				m_owner = owner;
-				if(owner.TargetObject as GameLiving!=null)
-					m_target=m_owner.TargetObject as GameLiving;
+				if (owner.TargetObject as GameLiving != null)
+					m_target = m_owner.TargetObject as GameLiving;
 			}
 			AggroLevel = 100;
 		}
-		
+
 		public override int ThinkInterval { get { return 1500; } }
 
 		public override void Think() { AttackMostWanted(); }
@@ -86,11 +86,11 @@ namespace DOL.AI.Brain
 		{
 			if (!IsActive) return;
 			GameLiving target = m_target; //CalculateNextAttackTarget();
-			if(target != null)
+			if (target != null)
 			{
-				if(!m_melee)
+				if (!m_melee)
 				{
-					if(!CastSpell(target))
+					if (!CastSpell(target))
 						Body.StartAttack(target);
 				}
 			}
@@ -98,22 +98,29 @@ namespace DOL.AI.Brain
 
 		private bool CastSpell(GameLiving target)
 		{
-			if(target==null) return false;
-			if(!target.IsAlive) return false;
-			if(m_melee) return false;
-			if (Body.IsBeingInterrupted) { m_melee=true; return false; }
-			if (Body.IsCasting) return true;
+			if (target == null || !target.IsAlive || m_melee)
+				return false;
+
+			if (Body.IsBeingInterrupted)
+			{
+				m_melee = true;
+				return false;
+			}
+
+			if (Body.IsCasting)
+				return true;
+
 			foreach (Spell spell in Body.Spells)
 			{
 				if (spell.Target.ToLower() != "enemy") continue;
 				spell.Level = Body.Level;
-				if(spell.SpellType!="Stun"||Util.Chance(70))
+				if (spell.SpellType != "Stun" || Util.Chance(70))
 				{
-					if(Body.TargetObject!=target) Body.TargetObject = target;
-					if(spell.CastTime>0) Body.TurnTo(target);
-					
+					if (Body.TargetObject != target) Body.TargetObject = target;
+					if (spell.CastTime > 0) Body.TurnTo(target);
+
 					//Eden - LoS check for ice pets
-					if(Body.Name.ToLower().IndexOf("ice")>=0)
+					if (Body.Name.ToLower().IndexOf("ice") >= 0)
 					{
 						GamePlayer LOSChecker = null;
 						if (target is GamePlayer) LOSChecker = target as GamePlayer;
@@ -123,7 +130,7 @@ namespace DOL.AI.Brain
 								if (ply != null) { LOSChecker = ply; break; }
 						}
 						if (LOSChecker == null) return false;
-						spelllos=spell;
+						spelllos = spell;
 						LOSChecker.Out.SendCheckLOS(LOSChecker, Body, new CheckLOSResponse(PetStartSpellAttackCheckLOS));
 					}
 					else Body.CastSpell(spell, m_mobSpellLine);
@@ -132,13 +139,13 @@ namespace DOL.AI.Brain
 			}
 			return false;
 		}
-		
+
 		public void PetStartSpellAttackCheckLOS(GamePlayer player, ushort response, ushort targetOID)
-        {
-            if ((response & 0x100) == 0x100)
-                Body.CastSpell(spelllos, m_mobSpellLine);
+		{
+			if ((response & 0x100) == 0x100)
+				Body.CastSpell(spelllos, m_mobSpellLine);
 			else Body.Follow(m_target, 90, 5000);
-        }
+		}
 
 		#region IControlledBrain Members
 		public eWalkState WalkState { get { return eWalkState.Stay; } }
