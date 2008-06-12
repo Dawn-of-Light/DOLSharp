@@ -169,8 +169,12 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("Mesmerize")]
 	public class MesmerizeSpellHandler : AbstractCCSpellHandler
 	{
-		protected override void OnSpellResisted(GameLiving target) { target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster); return; }
-		
+		public override void OnEffectPulse(GameSpellEffect effect)
+		{
+			SendEffectAnimation(effect.Owner, 0, false, 1);
+			base.OnEffectPulse(effect);
+		}
+
 		public override void OnEffectStart(GameSpellEffect effect)
 		{			
 			effect.Owner.IsMezzed = true;
@@ -211,6 +215,12 @@ namespace DOL.GS.Spells
                     (target as GamePlayer).Out.SendMessage("Your item effect intercepts the mesmerization spell and fades!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
                 return;
             }
+			GameSpellEffect mezz = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+			if (mezz != null)
+			{
+				SendEffectAnimation(target, 0, false, 0);
+				return;
+			}
             base.ApplyEffectOnTarget(target, effectiveness);
         }
 		/// <summary>
