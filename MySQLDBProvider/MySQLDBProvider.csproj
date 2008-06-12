@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8CCC6E0F-3E18-425B-A4AD-C2E9DE1E1E2B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MySQLDBProvider</RootNamespace>
+    <AssemblyName>MySQLDBProvider</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.83.1.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sharedModules\ICSharpCode.SharpZLib\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="mysqlclient\CharSetMap.cs" />
+    <Compile Include="mysqlclient\command.cs" />
+    <Compile Include="mysqlclient\CommandBuilder.cs" />
+    <Compile Include="mysqlclient\CommandResult.cs" />
+    <Compile Include="mysqlclient\Common\DBConnectionString.cs" />
+    <Compile Include="mysqlclient\Common\NamedPipeStream.cs" />
+    <Compile Include="mysqlclient\Common\NativeMethods.cs" />
+    <Compile Include="mysqlclient\Common\Platform.cs" />
+    <Compile Include="mysqlclient\Common\Resources.cs" />
+    <Compile Include="mysqlclient\Common\SocketStream.cs" />
+    <Compile Include="mysqlclient\Common\StreamCreator.cs" />
+    <Compile Include="mysqlclient\Common\Utility.cs" />
+    <Compile Include="mysqlclient\Common\Version.cs" />
+    <Compile Include="mysqlclient\CompressedStream.cs" />
+    <Compile Include="mysqlclient\Connection.cs" />
+    <Compile Include="mysqlclient\ConnectionString.cs" />
+    <Compile Include="mysqlclient\Crypt.cs" />
+    <Compile Include="mysqlclient\dataadapter.cs" />
+    <Compile Include="mysqlclient\datareader.cs" />
+    <Compile Include="mysqlclient\Driver.cs" />
+    <Compile Include="mysqlclient\Exception.cs" />
+    <Compile Include="mysqlclient\Field.cs" />
+    <Compile Include="mysqlclient\Logger.cs" />
+    <Compile Include="mysqlclient\MysqlDefs.cs" />
+    <Compile Include="mysqlclient\MySqlError.cs" />
+    <Compile Include="mysqlclient\MySqlHelper.cs" />
+    <Compile Include="mysqlclient\MySqlPool.cs" />
+    <Compile Include="mysqlclient\MySqlPoolManager.cs" />
+    <Compile Include="mysqlclient\nativedriver.cs" />
+    <Compile Include="mysqlclient\PacketReader.cs" />
+    <Compile Include="mysqlclient\PacketWriter.cs" />
+    <Compile Include="mysqlclient\parameter.cs" />
+    <Compile Include="mysqlclient\parameter_collection.cs" />
+    <Compile Include="mysqlclient\PreparedStatement.cs" />
+    <Compile Include="mysqlclient\SharedMemoryStream.cs" />
+    <Compile Include="mysqlclient\StoredProcedure.cs" />
+    <Compile Include="mysqlclient\transaction.cs" />
+    <Compile Include="mysqlclient\Types\MySqlBinary.cs" />
+    <Compile Include="mysqlclient\Types\MySqlBit.cs" />
+    <Compile Include="mysqlclient\Types\MySqlByte.cs" />
+    <Compile Include="mysqlclient\Types\MySqlConversionException.cs" />
+    <Compile Include="mysqlclient\Types\MySqlDateTime.cs" />
+    <Compile Include="mysqlclient\Types\MySqlDecimal.cs" />
+    <Compile Include="mysqlclient\Types\MySqlDouble.cs" />
+    <Compile Include="mysqlclient\Types\MySqlInt16.cs" />
+    <Compile Include="mysqlclient\Types\MySqlInt32.cs" />
+    <Compile Include="mysqlclient\Types\MySqlInt64.cs" />
+    <Compile Include="mysqlclient\Types\MySqlSingle.cs" />
+    <Compile Include="mysqlclient\Types\MySqlString.cs" />
+    <Compile Include="mysqlclient\Types\MySqlTime.cs" />
+    <Compile Include="mysqlclient\Types\MySqlUByte.cs" />
+    <Compile Include="mysqlclient\Types\MySqlUInt16.cs" />
+    <Compile Include="mysqlclient\Types\MySqlUInt32.cs" />
+    <Compile Include="mysqlclient\Types\MySqlUInt64.cs" />
+    <Compile Include="mysqlclient\Types\MySqlValue.cs" />
+    <Compile Include="MySQLDB.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DOLDatabase2\DOLDatabase2.csproj">
+      <Project>{9DBDD582-A8C8-4FE9-9BDC-E12CA28BFE71}</Project>
+      <Name>DOLDatabase2</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="mysqlclient\Strings.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

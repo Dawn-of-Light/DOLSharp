@@ -1,0 +1,715 @@
+x-xx-05 - Version 1.0.7
+
+    Bugs fixed or addressed
+    -------------------------
+    Bug #13658 connection.state does not update on Ping() [ fixed ]
+	Bug #13590 ExecuteScalar returns only Int64 regardless of actual SQL type [added test case]
+	Bug #13662 Prepare() truncates accented character input [already fixed, added test]
+	Bug #11947 MySQLCommandBuilder mishandling CONCAT() aliased column [updated test case]
+	Bug #13541 Prepare breaks if a parameter is used more than once [fixed]
+	Bug #13632 the MySQLCommandBuilder.deriveparameters has not been updated for MySQL 5
+	Bug #13753 Exception calling stored procedure with special characters in parameters
+	Bug #11386 Numeric parameters with Precision and Scale not taken into account by Connector [added test case]
+	Bug #6902  Errors in parsing stored procedure parameters [fixed before, refixed]
+	Bug #13927 Multiple Records to same Table in Transaction Problem [fixed]
+	Bug #14631 "#42000Query was empty" [fixed]
+	Bug #13806 Does not support Code Page 932	
+
+	Other changes
+	-------------------------    
+	Failure to provide parameters for out and inout values is now detected
+	Changed pooling code to remove issue of skipping Ping() on bogus connnections
+    
+9-27-05 - Version 1.0.6
+ 
+    Bugs fixed or addressed
+    -------------------------
+    Bug #13036  Returns error when field names contain any of the following chars %<>()/ etc [fixed]
+    Bug #12835	1.0.5 won't install on system with 1.0.4 installed [fixed]
+    Bug #12978 	Fatal Error C# Compilation [fixed]
+    Bug #13276 	Exception on serialize after inserting null value [fixed]
+    Bug #13345 	Connecting from mono 1.1.8 to MySQL 5.0 using MySQL Connector/Net 1.0.5
+    
+    Other changes
+    -------------------------
+    Changed SocketStream and StreamCreator to be compatible with Mono
+    Added options to not reset and reconfigure connections pulled from the pool
+    Connections pulled from the pool that are not reset are also not pinged
+
+8-24-05 - Version 1.0.5
+
+	Bugs fixed or addressed
+	-------------------------
+	Bug #8667  	OUT parameters are not being valued [fixed]
+	Bug #8574  	MySQLCommandBuilder unable to support inline functions [fixed]
+	Bug #8509  	MySqlDataAdapter.FillSchema does not interpret unsigned integer	[fixed]
+	Bug #8630  	Executing a query with the SchemaOnly option reads the entire resultset	[fixed]
+	Bug #7398  	MySqlParameterCollection doesn't allow parameters without filled in names [fixed]
+	Bug #7623  	Adding MySqlParameter causes error if MySqlDbType is Decimal [fixed]
+	Bug #8929  	Timestamp values with a date > 10/29/9997 cause problems [fixed]
+	Bug #9237  	MySqlDataReader.AffectedRecords not set to -1 [fixed]
+	Bug #9262  	Floating point numbers boundary conditions (MinValue/MaxValue)
+				(added code but really this isn't a bug)
+	Bug #7951   Error reading a timestamp column 				
+	Bug #10644  Cannot call a stored function directly from Connector/Net 	
+	Bug #9722   Connector does not recognize parameters separated by a linefeed 
+	Bug #10281  Clone issue with MySqlConnection 
+	Bug #11450  Connector/Net, current database and stored procedures
+	Bug #11490  certain incorrect queries trigger connection must be valid and open message
+	Bug #8228  	turkish character set causing the error [fixed]
+	Bug #8387  	Connecting with NAMES and character_set_results can be up to 18 times slower.
+				Improved this by only issuing a SET NAMES if character_set_client or 
+				character_set_connection is different than what we are wanting.
+	Bug #8382  	Commandbuilder does not handle queries to other databases than the default one-
+				fixed this one with the help of a patch from Henrik Johnson.
+	Bug #10637 	Fail connect to specified MySql Hosts							
+				The problem was that we were  using BeginConnect/EndConnect to implement connect
+				timeout. Each one of these uses a worker thread from the .NET thread pool.  This
+				thread pool only has a default of 25 threads so on a very heavily loaded system,
+				it's possible it could run out.  Connect has now been recoded to not use a 
+				worker thread.
+	Bug #11542  Call to Stored Procedure throws exception when SP has no arguments [fixed]
+	Bug #11550  Adding decimal parameters problem						[fixed]
+	Bug #10152	syntax error using decimal parameter in where clause	[fixed]
+	Bug #10486	MySqlDataAdapter.Update error for decimal column		[fixed]
+				All three of these bugs were related to the same problem					
+	Bug #11873 	Invalid timestamp in query produces incorrect reader exception [added test case, already fixed]
+	Bug #10454	incorrect return type documented for parameter collection Add methods [fixed]	
+    Bug #12163  Insert using prepared statement causes double insert	
+    Bug #12245  using Prepare() on an insert command causes null parameters to convert to "0"	
+	Bug #12646  Parameters are defaulted to Decimal [added a new test case]
+	Bug #12628 	off by one on random selection of multiple hosts/ip addresses [fixed]
+	Bug #12551 	Error at the ConnectionString - Property [fixed]
+	Bug #8724 	NullReferenceException in Designer [fixed]
+	Bug #12771 	Connector/Net can't connect to MySQL 4.1.14-nt [fixed]
+
+	Other changes
+	-------------
+	Fixed problem parsing stored procedure parameter defs such as OUT val INT  UNSIGNED
+	Now supports the new decimal type introduced in 5.0.3
+	Fixed bug where adding parameter objects that had been independently constructed did not work right.
+	Changed internal class MySqlSingle to MySqlFloat
+    Implemented new BIT data type						
+    Implemented Convert Zero DateTime connection option.							
+							
+1-20-05 - Version 1.0.4  
+
+	Bug #7243 calling prepare causing exception [fixed]
+	Fixed another small problem with prepared statements
+	Bug #7258  	MySqlCommand.Connection returns an IDbConnection [fixed]
+	Bug #7345  	MySqlAdapter.Fill method throws Error message : Non-negative number required [fixed]
+	Bug #7478   Clone method bug in MySqlCommand [fixed]
+	Bug #7612  	MySqlDataReader.GetString(index) returns non-Null value when field is Null [fixed]
+	Bug #7755	MySqlReader.GetInt32 throws exception if column is unsigned [fixed]
+	Bug #7704	GetBytes is working no more [fixed]
+	Bug #7724	Quote character \222 not quoted in EscapeString [fixed]
+	Fixed problem that causes named pipes to not work with some blob functionality
+	Fixed problem with shared memory connections
+	Bug #7436  	Problem with Multiple resultsets... [fixed]
+	Added or filled out several more topics in the API reference documentation
+	
+12-10-04 - Version 1.0.3-gamma
+
+	- Made MySQL the default named pipe name
+	- Now SHOW COLLATION is used upon connection to retrieve the full list of charset ids
+	- Fixed Invalid character set index: 200 (Bug #6547)
+	- Installer now includes options to install into GAC and create Start Menu items
+	- Bug #6863 - Int64 Support in MySqlCommand Parameters [fixed]
+	- Connections now do not have to give a database on the connection string
+	- Bug #6770 - MySqlDataReader.GetChar(int i) throws IndexOutOfRange Exception [fixed]
+	- Fixed problem where multiple resultsets having different numbers of columns would cause a problem
+	- Bug #6983 Exception stack trace lost when re-throwing exceptions [fixed]
+	- Fixed major problem with detecting null values when using prepared statements
+	- Bug #6902 Errors in parsing stored procedure parameters [fixed]
+	- Bug #6668 Integer "out" parameter from stored procedure returned as string [fixed]
+	- Bug #7032 MySqlDateTime in Datatables sorting by Text, not Date. [fixed]
+	- Bug #7133 Invalid query string when using inout parameters [fixed]
+	- Bug #6831 Test suite fails with MySQL 4.0 because of case sensitivity of table names [fixed]
+	- Bug #7132	Inserting DateTime causes System.InvalidCastException to be thrown	[fixed]
+	- Bug #6879	InvalidCast when using DATE_ADD-function [fixed]
+	- Bug #6634	An Open Connection has been Closed by the Host System [fixed]
+	- Added ServerThread property to MySqlConnection to expose server thread id
+	- Added Ping method to MySqlConnection
+	- Changed the name of the test suite to MySql.Data.Tests.dll
+	
+11-15-04 - Version 1.0.2-gamma
+
+	- Fixed problem with MySqlBinary where string values could not be used to update extended text columns
+	- Fixed Installation directory ignored using custom installation (Bug #6329)
+	- Fixed problem where setting command text leaves the command in a prepared state
+	- Fixed double type handling in MySqlParameter(string parameterName, object value) (Bug #6428)
+	- Fixed Zero date "0000-00-00" is returned wrong when filling Dataset (Bug #6429)
+	- Fixed problem where calling stored procedures might cause an "Illegal mix of collations" problem.
+	- Added charset connection string option
+	- Fixed #HY000Illegal mix of collations (latin1_swedish_ci,IMPLICIT) and (utf8_general_ (Bug #6322)
+	- Added the TableEditor CS and VB sample
+	- Fixed Charset-map for UCS-2 (Bug #6541)
+	- Updated the installer to include the new samples
+	- Fixed Long inserts take very long time (Bug #5453)
+	- Fixed Objects not being disposed	(Bug #6649)
+	- Provider is now using character set specified by server as default 
+	
+10-27-04 - Version 1.0.1-beta 2
+
+    - Fixed BUG #5602 Possible bug in MySqlParameter(string, object) constructor
+    - Fixed BUG #5458 Calling GetChars on a longtext column throws an exception
+    - Fixed BUG #5474 cannot run a stored procedure populating mysqlcommand.parameters
+    - Fixed BUG #5469 Setting DbType throws NullReferenceException
+    - Fixed problem where connector was not issuing a CMD_QUIT before closing the socket
+	- Fixed BUG #5392 MySqlCommand sees "?" as parameters in string literals
+    - Fixed problem with ConnectionInternal where a key might be added more than once
+    - CP1252 is now used for Latin1 only when the server is 4.1.2 and later
+    - Fixed BUG #5388 DataReader reports all rows as NULL if one row is NULL
+	- Virtualized driver subsystem so future releases could easily support client or embedded server support
+	- Field buffers being reused to decrease memory allocations and increase speed
+	- Fixed problem where using old syntax while using the interfaces caused problems
+	- Using PacketWriter instead of Packet for writing to streams
+	- Refactored compression code into CompressedStream to clean up NativeDriver
+	- Added test case for resetting the command text on a prepared command
+	- Fixed problem where MySqlParameterCollection.Add() would throw unclear exception when given a null value (Bug #5621)
+	- Fixed construtor initialize problems in MySqlCommand() (Bug #5613)
+	- Fixed Parsing the ';' char (Bug #5876)
+	- Fixed missing Reference in DbType setter (Bug #5897)
+	- Fixed System.OverflowException when using YEAR datatype (Bug #6036)
+	- Added Aggregate function test (wasn't really a bug)	
+	- Fixed serializing of floating point parameters (double, numeric, single, decimal) (Bug #5900)
+	- IsNullable error (Bug #5796)
+	- Fixed problem where connection lifetime on the connect string was not being respected
+	- Fixed problem where Min Pool Size was not being respected
+	- Fixed MySqlDataReader and 'show tables from ...' behaviour (Bug #5256)
+	- Implemented SequentialAccess
+	- Fixed MySqlDateTime sets IsZero property on all subseq.records after first zero found (Bug #6006)
+	- Fixed Can't display Chinese correctly (Bug #5288)
+	- Fixed Russian character support as well
+	- Fixed Method TokenizeSql() uses only a limited set of valid characters for parameters (Bug #6217)
+	- Fixed NET Connector source missing resx files (Bug #6216)
+	- Fixed DBNull Values causing problems with retrieving/updating queries. (Bug #5798)
+	- Fixed Yet Another "object reference not set to an instance of an object" (Bug #5496)
+	- Fixed problem in PacketReader where it could try to allocate the wrong buffer size in EnsureCapacity
+	- Fixed GetBoolean returns wrong values (Bug #6227)
+	- Fixed IndexOutOfBounds when reading BLOB with DataReader with GetString(index) (Bug #6230)
+	
+	
+09-01-04 - Version 1.0.0-beta [released]
+	- Fixed BUG# 3889 Thai encoding not correctly supported
+	- Updated many of the test cases
+	- Fixed problem with using compression
+	- Bumped version number to 1.0.0 for beta 1 release
+	- Added COPYING.rtf file for use in installer
+	- Removed all of the XML comment warnings (I'll clean them up better later)
+	- Removed some last references to ByteFX
+  
+08-30-04 - Version 0.9.0
+
+	- Added test fixture for prepared statements
+	- All type classes now implement a SerializeBinary method for sending their data to a PacketWriter
+	- Added PacketWriter class that will enable future low-memory large object handling
+	- Fixed many small bugs in running prepared statements and stored procedures
+	- Changed command so that an exception will not be throw in executing a stored procedure with parameters in old syntax mode
+	- SingleRow behavior now working right even with limit
+	- GetBytes now only works on binary columns
+	- Logger now truncates long sql commands so blob columns don't blow out our log
+	- host and database now have a default value of "" unless otherwise set
+	- FIXED BUG# 5214 Connection Timeout seems to be ignored
+	- Added test case for bug# 5051: GetSchema not working correctly
+	- Fixed problem where GetSchema would return false for IsUnique when the column is key
+	- MySqlDataReader GetXXX methods now using the field level MySqlValue object and not performing conversions
+	- FIXED BUG# 5097: DataReader returning NULL for time column
+	- Added test case for LOAD DATA LOCAL INFILE
+	- Added replacetext custom nant task
+	- Added CommandBuilderTest fixture
+	- Added Last One Wins feature to CommandBuilder
+	- Fixed persist security info case problem
+	- Fixed GetBool so that 1, true, "true", and "yes" all count as trueWL# 2024 Make parameter mark configurable 
+	- Added the "old syntax" connection string parameter to allow use of @ parameter marker
+	- Fixed Bug#4658	 MySqlCommandBuilder
+	- Fixed Bug#4864	 ByteFX.MySqlClient caches passwords if 'Persist Security Info' is false
+	- Updated license banner in all source files to include FLOSS exception
+	- Added new .Types namespace and implementations for most current MySql types
+	- Added MySqlField41 as a subclass of MySqlField
+	- Changed many classes to now use the new .Types types
+	- Changed type enum int to Int32, short to Int16, and bigint to Int64
+	- Added dummy types UInt16, UInt32, and UInt64 to allow an unsigned parameter to be made
+	- Connections are now reset when they are pulled from the connection pool
+	- Refactored auth code in driver so it can be used for both auth and reset
+	- Added UserReset test in PoolingTests.cs
+	- Connections are now reset using COM_CHANGE_USER when pulled from the pool
+	- Implemented SingleResultSet behavior
+	- Implemented support of unicode 
+	- Added char set mappings for utf-8 and ucs-2
+	- fixed Bug #4520  	time fields overflow using bytefx .net mysql driver
+	- Modified time test in data type test fixture to check for time spans where hours > 24
+	- Fixed Bug #4505 Wrong string with backslash escaping in ByteFx.Data.MySqlClient.MySqlParameter
+	- Added code to Parameter test case TestQuoting to test for backslashes
+	- Fixed Bug #4486 mysqlcommandbuilder fails with multi-word column names
+	- Fixed bug in TokenizeSql where underscore would terminate character capture in parameter name
+	- Added test case for spaces in column names
+	- Fixed bug# 4324 - MySqlDataReader.GetBytes don't works correctly
+	- Added GetBytes() test case to DataReader test fixture
+	- Now reading all server variables in InternalConnection.Configure into Hashtable
+	- Now  using string[] for index map in CharSetMap
+	- Added CRInSQL test case for carriage returns in SQL
+	- setting maxPacketSize to default value in Driver.ctor
+	- Fixed bug #4442 - Setting MySqlDbType on a parameter doesn't set generic type
+	- Removed obsolete column types Long and LongLong
+	- Fixed bug# 4071 - Overflow exception thrown when using "use pipe" on connection string
+	- Changed "use pipe" keyword to "pipe name" or just "pipe"
+	- Allow reading multiple resultsets from a single query
+	- Added flags attribute to ServerStatusFlags enum
+	- Changed name of ServerStatus enum to ServerStatusFlags
+	- Fixed BUG #4386 - Inserted data row doesn't update properly
+	- Fixed bug #4074 - Error processing show create table
+	- Change Packet.ReadLenInteger to ReadPackedLong and added packet.ReadPackedInteger that alwasy reads integers packed with 2,3,4
+	- Added syntax.cs test fixture to test various SQL syntax bugs
+	- Fixed bug# 4149 Improper handling of time values.  Now time value of 00:00:00 is not treated as null.
+	- Moved all test suite files into TestSuite folder
+	- Fixed bug where null column would move the result packet pointer backward
+	- Added new nant build script
+	- Fixed BUG #3917 - clear tablename so it will be regen'ed properly during the next GenerateSchema.
+	- Fixed bug #3915 - GetValues was always returning zero and was also always trying to copy all fields rather than respecting the size of the array passed in.
+	- Implemented shared memory access protocol
+	- Implemented prepared statements for MySQL 4.1
+	- Implemented stored procedures for MySQL 5.0
+	- Renamed MySqlInternalConnection to InternalConnection
+	- SQL is now parsed as chars, fixes problems with other languages
+	- Added logging and allow batch connection string options
+	- Fixed bug #3888 - RowUpdating event not set when setting the DataAdapter property
+	- Fixed bug in char set mapping
+	- Implemented 4.1 authentication
+	- Improved open/auth code in driver
+	- Improved how connection bits are set during connection
+	- Database name is now passed to server during initial handshake
+	- Changed namespace for client to MySql.Data.MySqlClient
+	- Changed assembly name of client to MySql.Data.dll
+	- Changed license text in all source files to GPL
+
+==================================================================
+Transition to BitKeeper complete
+==================================================================
+6/18/2004
+* Added the MySqlClient.build Nant file
+* Removed the mono batch files
+* Moved some of the unused files into notused folder so nant build file can use wildcards
+
+6/17/2004 (this note covers several weeks of work)
+* Implemented shared memory accesss
+* Major revamp in code structure
+* Prepared statements now working for MySql 4.1.1 and later
+
+5/21/2004
+* Finished implementing auth for 4.0, 4.1.0, and 4.1.1
+* Changed namespace from MySQL.Data.MySQLClient back to MySql.Data.MySqlClient
+* Fixed bug in CharSetMapping where it was trying to use text names as ints 
+
+5/17/2004 (and changes up to this date)
+* Changed namespace to MySQL.Data.MySQLClient
+* Integrated auth changes from UC2004
+
+
+======================================================================
+ACQUIRED BY MYSQL
+======================================================================
+3/17/2004
+Fixed bug where calling any of the GetXXX methods on a datareader before or after reading data would not throw
+the appropriate exception (thanks Luca Morelli <morelli.luca@iol.it>)
+Added TimeSpan code in parameter.cs to properly serialize a timespan object to mysql time format (thanks Gianluca Colombo <g.colombo@alfi.it>)
+
+3/16/2004
+Added TimeStamp to parameter serialization code.  Prevented DataAdatper updates from working right (thanks MIchael King)
+
+3/14/2004
+Fixed a misspelling in MySqlHelper.cs (thanks Patrick Kristiansen)
+
+=============0.76 released===============================
+
+3/12/2004
+MySql - Driver now using charset number given in handshake to create encoding
+
+3/11/2004
+MySql - Changed command editor to point to MySqlClient.Design
+
+3/4/2004
+Common - Fixed bug in Version.isAtLeast
+Common - Changed DBConnectionString to support changes done to MySqlConnectionString
+Common - Removed SqlCommandEditor and DataAdapterPreviewDialog
+
+3/3/2004
+MySql - Using new long return values in many places
+MySql - Integrated new CompressedStream class
+
+3/2/2004
+MySql - Changed ConnectionString and added attributes to allow it to be used in MySqlClient.Design
+MySql - Changed packet.cs to support newer lengths in ReadLenInteger
+MySql - changed other classes to use new properties and fields of MySqlConnectionString
+MySql - ConnectionInternal is now using PING to see if the server is alive
+
+3/1/2004
+MySql - Moved toolbox bitmaps into resource/
+MySql - Changed field.cs to allow values to come directly from row buffer
+
+2/25/2004
+MySql - Changed to use the new driver.Send syntax
+MySql - Using a new packet queueing system
+MySql - started work handling the "broken" compression packet handling
+
+2/20/2004
+Common - Fixed bug in StreamCreator where failure to connect to a host would continue
+to loop infinitly (thanks Kevin Casella)
+
+2/8/2004
+MySql - Improved connectstring handling
+MySql - Moved designers into Pro product
+
+2/4/2004
+MySql - Removed some old commented out code from command.cs
+MySql - Fixed a problem with compression
+
+2/2/2004
+MySql - Fixed connection object where an exception throw prior to the connection opening would not leave
+        the connection in the connecting state (thanks Chris Cline )
+
+1/31/2004
+MySql - Added GUID support
+MySql - Fixed sequence out of order bug (thanks Mark Reay)
+
+=========================== 0.75 released =============================
+
+1/26/2004
+MySql - Enum values now supported as parameter values (thanks Philipp Sumi)
+1/22/2004
+MySql - Year datatype now supported
+
+1/21/2004
+MySql - fixed compression
+
+1/20/2004
+MySql - Fixed bug where a parameter with a TimeSpan as the value would not serialize properly
+MySql,Common - Fixed bug where default ctor would not set default connection string values
+MySql - Added some XML comments to some members
+MySql - Work to fix/improve compression handling
+
+1/13/2004
+MySql,Common - Improved ConnectionString handling so that it better matches the standard set by SqlClient.
+MySql - A MySqlException is now thrown if a username is not included in the connection string
+MySql- Localhost is now used as the default if not specified on the connection string
+MySql - An exception is now thrown if an attempt is made to set the connection string while the connection is open
+MySql - Small changes to ConnectionString docs
+MySql,common - Removed MultiHostStream and MySqlStream.  Replaced it with Common/StreamCreator
+MySql - Added support for Use Pipe connection string value
+MySql - Added Platform class for easier access to platform utility functions
+MySql - Fixed small pooling bug where new connection was not getting created after IsAlive fails
+Common - Added Platform.cs and StreamCreator.cs
+
+12/30/2003
+MySql - Fixed Field.cs to properly handle 4.1 style timestamps
+MySql - Changed Common.Version to Common.DBVersion to avoid name conflict
+
+
+12/29/2003
+MySql - Fixed field.cs so that text columns return the right field type (thanks beni27@gmx.net)
+
+12/22/2003
+MySql - Added MySqlError class to provide some reference for error codes (thanks Geert Veenstra)
+
+------------0.74 released ------------------------
+
+12/6/2003
+MySql - Added Unix socket support (thanks Mohammad DAMT [md@mt.web.id])
+
+12/4/2003
+MySql - only calling Thread.Sleep when no data is available
+MySql - improved escaping of quote characters in parameter data
+MySql - removed misleading comments from parameter.cs
+
+12/1/2003
+Mysql -fixed pooling bug
+MySql - same pooling bug fixed again!!  ;-)
+
+11/30/2003
+MySql - Fixed ConnectionSTring editor dialog (thanks marco p (pomarc))
+Common - UserId now supported in connection strings (thanks Jeff Neeley)
+MySql - Attempting to create a parameter that is not input throws an exception (thanks Ryan Gregg)
+
+11/29/2003 
+MySql - Added much documentation
+
+11/26/2003
+MySql - checked in new MultiHostStream capability.  Big thanks to Dan Guisinger for this.  he originally submitted the code and idea of supporting multiple machines on the connect string.
+
+11/25/2003
+MySql - Added alot of documentation.  Still alot to do.
+
+11/24/2003
+MySql - Fixed speed issue with 0.73
+
+11/14/2003
+MySql - changed to Thread.Sleep(0) in MySqlDataStream to help optimize the case where it doesn't need to wait (thanks Todd German)
+11/1/2003
+MySql - Prepopulating the idlepools to MinPoolSize
+
+10/31/2003
+MySql - Fixed MySqlPool deadlock condition as well as stupid bug where CreateNewPooledConnection
+        was not ever adding new connections to the pool.
+	Also fixed MySqlStream.ReadBytes and ReadByte to not use TicksPerSecond which does not appear
+	to always be right.
+	(thanks Matthew J. Peddlesden)
+MySql - Fix for precision and scale (thanks Matthew J. Peddlesden)
+
+10/28/2003
+MySql - Added Thread.Sleep(1) to stream reading methods to be more cpu friendly (thanks Sean McGinnis)
+
+10/24/2003
+MySql - Fixed problem where ExecuteReader would sometime return null (thanks Lloyd Dupont )
+
+10/17/2003
+MySql - Fixed major bug with null field handling (thanks Naucki)
+
+10/15/2003
+MySql - enclosed queries for max_allowed_packet and characterset inside try catch (and set defaults)
+MySql - fixed problem where socket was not getting closed properly (thanks Steve!)
+
+10/14/2003
+MySql - Fixed problem where ExecuteNonQuery was not always returning the right value
+
+10/13/2003
+MySql - Fixed InternalConnection to not use @@session.max_allowed_packet but use @@max_allowed_packet.  (Thanks Miguel)
+
+10/12/2003
+MySql - Added many new XML doc lines
+
+10/10/2003
+MySql - Fixed sql parsing to not send empty queries (thanks Rory)
+MySql - Fixed problem where the reader was not unpeeking the packet on close
+MySql - Fixed problem where user variables were not being handled (thanks Sami Vaaraniemi)
+MySql - Fixed loop checking in the MySqlPool (thanks Steve M. Brown)
+
+10/7/2003
+MySql - Fixed ParameterCollection.Add method to match SqlClient (thanks Joshua Mouch)
+Common & MySql - Fixed ConnectionSTring parsing to handle no and yes for boolean and not lowercase values (thanks Naucki)
+
+10/3/2003
+MySql - Added InternalConnection class, changes to pooling
+Common - Implemented Persist Security Info
+
+9/26/2003
+Common - Added security.cs and version.cs to project
+
+9/25/2003
+MySql - Fixed DateTime handling in Parameter.cs (thanks Burkhard Perkens-Golomb)
+MySql - Fixed parameter serialization where some types would throw a cast exception
+MySql - Fixed DataReader to convert all returned values to prevent casting errors (thanks Keith Murray)
+MySql - Added code to Command.ExecuteReader to return null if the initial SQL command throws an exception (thanks Burkhard Perkens-Golomb)
+
+9/24/2003
+MySql - Fixed ExecuteScalar bug introduced with restructure
+
+9/23/2003
+MySql - Restructure to allow for LOCAL DATA INFILE and better sequencing of packets
+MySql - Fixed several bugs related to restructure.
+
+9/10/2003
+MySql - Early work done to support more secure passwords in Mysql 4.1.  Old passwords in 4.1 not supported yet
+
+8/22/2003
+MySql- Parameters appearing after system parameters are now handled correctly (Adam M. (adammil))
+MySql - strings can now be assigned directly to blob fields (Adam M.)
+
+8/20/2003
+MySql - Fixed float parameters (thanks Pent)
+
+8/7/2003
+MySql - Improved Parameter ctor and ParameterCollection.Add methods to better match SqlClient (thx Joshua Mouch )
+MySql - Corrected Connection.CreateCommand to return a MySqlCommand type
+MySql - Fixed connection string designer dialog box problem (thanks Abraham Guyt)
+
+7/24/2003
+MySql - Fixed problem with sending commands not always reading the response packet (thanks Joshua Mouch )
+MySql - Fixed parameter serialization where some blobs types were not being handled (thanks Sean McGinnis )
+
+7/22/2003
+MySql - Removed spurious MessageBox.show from DataReader code (thanks Joshua Mouch )
+
+7/17/2003
+MySql - Fixed a nasty bug in the split sql code (thanks everyone! :-) )
+
+*************Released 0.71***********************
+7/15/2003
+MySql - Fixed bug in MySqlStream where too much data could attempt to be read (thanks Peter Belbin)
+
+7/11/2003
+MySql - Implemented HasRows (thanks Nash Pherson)
+MySql - Fixed bug where tables with more than 252 columns cause an exception ( thanks Joshua Kessler )
+MySql - Fixed bug where SQL statements ending in ; would cause a problem ( thanks Shane Krueger )
+MySql - Fixed bug in driver where error messsages were getting truncated by 1 character (thanks Shane Krueger)
+
+7/6/2003
+========MySql===============
+* Made MySqlException serializable (thanks Mathias Hasselmann)
+
+========PgSql===============
+* Made PgSqlException serializable (thanks Mathias Hasselmann)
+
+***********Released 0.70*********************
+
+6/25/2003
+========MySql===============
+* Updated some of the character code pages to be more accurate
+* Fixed problem where readers could be opened on connections that had readers open
+* Release of 0.70
+
+6/20/2003
+========MySql===============
+* Moved test to separate assembly MySqlClientTests
+
+6/19/2003
+========MySql===============
+* Fixed stupid problem in driver with sequence out of order (Thanks Peter Belbin)
+
+6/18/2003
+========MySql===============
+* Added some pipe tests
+* Increased default max pool size to 50
+* Compiles with Mono 0-24
+
+6/17/2003
+========MySql===============
+* Fixed connection and data reader dispose problems
+* Added String datatype handling to parameter serialization
+
+6/13/2003
+========MySql===============
+* Fixed sequence problem in driver that occured after thrown exception
+  (thanks Burkhard Perkens-Golomb)
+
+6/10/2003
+========MySql===============
+* Added support for CommandBehavior.SingleRow to DataReader
+* Fixed command sql processing so quotes are better handled (thanks Theo Spears)
+
+6/9/2003
+========MySQL===============
+* Fixed parsing of double, single, and decimal values to account for non-English separators.
+  You still have to use the right syntax if you using hard coded sql, but if you use parameters
+  the code will convert floating point types to use '.' appropriately internal both into the server
+  and out.
+  [ Thanks anonymous ]
+* Added MySqlStream class to simplify timeOuts and driver coding.
+* Fixed DataReader so that it is closed properly when the associated connection is closed.  
+  [thanks smishra]
+* Made client more SqlClient compliant so that DataReaders have to be closed before the connection
+  can be used to run another command
+* Improved DBNull.Value handling in the fields
+* Added several unit tests
+* Fixed MySqlException so that the base class is actually called  :-o
+* Improved driver coding
+
+=============PgSql=================
+* Too many changes to document. Still basic structuring of driver.  Driver not really usable yet.
+
+
+
+5/28/2003
+* Fixed bug where NextResult was returning false on the last resultset
+* Added more tests for MySQL
+* Improved casting problems by equating unsigned 32bit values to Int64 and usigned 16bit values to Int32, etc
+
+5/6/2003
+* Added new ctor for MySqlParameter for (name, type, size, srccol)
+* Fixed bug in MySqlDataReader where it didn't check for null fieldlist before returning field count
+
+4/23/2003
+* Started adding MySqlClient unit tests (added MySqlClient/Tests folder and some test cases)
+* Fixed some things in Connection String handling
+
+4/7/2003
+* Moved INIT_DB to MySqlPool.  I may move it again, this is in preparation of the conference.
+
+4/6/2003
+* Fixed bug inside CommandBuilder that prevented inserts from happening properly
+* Reworked some of the internals so that all three execute methods of Command worked properly
+* FIxed many small bugs found during benchmarking
+
+4/5/2003
+* The first cut of CoonectionPooling is working. "min pool size" and "max pool size" are respected.
+
+4/3/2003
+* Work to enable multiple resultsets to be returned
+* Character sets are handled much more intelligently now.  The driver queries MySQL at startup for the default character set.
+  That character set is then used for conversions if that code page can be loaded.  If not, then the default code
+  page for the current OS is used.  
+
+3/31/2003
+* Added code to save the inferred type in the name,value ctor of Parameter
+* Also, inferred type if value of null parameter is changed using Value property
+* Converted all files to use proper Camel case.  MySQL is now MySql in all files.  PgSQL is now PgSql
+* Added attribute to PgSql code to prevent designer from trying to show
+
+3/17/2003
+* Added MySQLDbType property to Parameter object and added proper conversion code to convert from DbType to MySQLDbType)
+* Removed unused ObjectToString method from MySQLParameter.cs
+* Fixed Add(..) method in ParameterCollection so that it doesn't use Add(name, value) instead.
+* Fixed IndexOf and Contains in ParameterCollection to be aware that parameter names are now stored without @ 
+* Fixed Command.ConvertSQLToBytes so it only allows characters that can be in MySQL variable names
+* Fixed DataReader and Field so that blob fields read their data from Field.cs and GetBytes works right
+* Added simple query builder editor to CommandText property of MySQLCommand
+* Fixed CommandBuilder and Parameter serialization to account for Parameters not storing @ in their names
+* Removed MySQLFieldType enum from Field.cs.  Now using MySQLDbType enum
+
+3/15/2003
+* Added Designer attribute to several classes to prevent designer view when using VS.Net
+
+3/13/2003
+* Fixed Initial catalog typo in ConnectionString designer
+* Removed 3 parameter ctor for MySQLParameter that conflicted with (name, type, value)
+* changed MySQLParameter so paramName is now stored without leading @ (this fixed null inserts when using designer)
+* Changed TypeConverter for MySQLParameter to use the ctor with all properties
+
+0.68
+========================================================================
+Note that this build has not been checked out with Mono.  
+
+3/10/2003
+* Fixed sequence issue in driver
+
+3/9/2003
+* Added DbParametersEditor to make parameter editing more like SqlClient
+* Fixed Command class so that parameters can be edited using the designer
+
+3/7/2003
+* Update connection string designer to support Use Compression flag
+
+2/15/2003
+* Fixed string encoding so that European characters like  will work correctly
+
+2/9/2003
+* Creating base classes to aid in building new data providers
+* Added support for UID key in connection string
+
+2/10/2003
+* Field, parameter, command now using DBNull.Value instead of null
+* CommandBuilder using DBNull.Value
+* CommandBuilder now builds insert command correctly when an auto_insert field is not present
+* Field now uses typeof keyword to return System.Types (performance)
+
+0.65
+====================
+* MySQLCommandBuilder now implemented
+* Transaction support now implemented (not all table types support this)
+* GetSchemaTable fixed to not use xsd (for Mono)
+* Driver is now Mono-compatible!!
+* TIME data type now supported
+* More work to improve Timestamp data type handling
+* Changed signatures of all classes to match corresponding SqlClient classes
+
+0.60
+======================
+* Protocol compression  using SharpZipLib (www.icsharpcode.net)
+* Named pipes on Windows now working properly
+* Work done to improve Timestamp data type handling
+* Implemented IEnumerable on DataReader so DataGrid would work
+ 
+0.50
+======================
+* Speed increased dramatically by removing bugging network sync code
+* Driver no longer buffers rows of data (more ADO.Net compliant)
+* Conversion bugs related to TIMESTAMP and DATETIME fields fixed

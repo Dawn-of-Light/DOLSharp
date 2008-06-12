@@ -1,25 +1,19 @@
 ﻿using System;
-using System.Data.SqlServerCe;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data;
 using System.IO;
-using DOL.Database2;
-namespace DOL.Database2.Providers.SQLExpress
+using MySql.Data.MySqlClient;
+namespace DOL.Database2.Providers
 {
-    class SQLServerCompactDBProvider : DatabaseProvider
+    public class MySQLProvider : DatabaseProvider
     {
-        SqlCeConnection m_connection  = new SqlCeConnection();
-        SqlCeCommandBuilder m_commandbuilder = new SqlCeCommandBuilder();
-        private UInt64 m_currentID = 1;
+        MySqlConnection m_connection = new MySqlConnection();
+        UInt64 m_currentID;
         private int m_currentTypeID = 1;
-        Dictionary<int,string> m_types = new Dictionary<int,string>();
+        Dictionary<int, string> m_types = new Dictionary<int, string>();
         Dictionary<string, int> m_typeids = new Dictionary<string, int>();
-        
-        public SQLServerCompactDBProvider()
-        {
-            throw new NotImplementedException("THE SQLCOMPACT Database is not ready. Use SQLite or MySQL...");
-        }
         public override string ConnectionString
         {
             get
@@ -35,26 +29,26 @@ namespace DOL.Database2.Providers.SQLExpress
         public override void OpenConnection()
         {
             m_connection.Open();
-            SqlCeCommand Command = new SqlCeCommand("CREATE TABLE IF NOT EXISTS objects"+
-              "(ObjectID INTEGER(4) PRIMARY KEY,TypeID INTEGER,Data BLOB)",m_connection);
+            MySqlCommand Command = new MySqlCommand("CREATE TABLE IF NOT EXISTS objects" +
+              "(ObjectID INTEGER(4) PRIMARY KEY,TypeID INTEGER,Data BLOB)", m_connection);
             Command.ExecuteNonQuery();
-            SqlCeCommand Command2 = new SqlCeCommand("CREATE TABLE IF NOT EXISTS types" +
+            MySqlCommand Command2 = new MySqlCommand("CREATE TABLE IF NOT EXISTS types" +
               "(TypeID INTEGER PRIMARY KEY,Name Text UNIQUE)", m_connection);
             Command2.ExecuteNonQuery();
             m_Connected = true;
-            SqlCeCommand Command3 = new SqlCeCommand("SELECT count(*) FROM objects", m_connection);
+            MySqlCommand Command3 = new MySqlCommand("SELECT count(*) FROM objects", m_connection);
             object m_rawCount = Command3.ExecuteScalar();
-           m_currentID = (Convert.ToUInt64(m_rawCount) + 1);
+            m_currentID = (Convert.ToUInt64(m_rawCount) + 1);
             UpdateTypes();
         }
 
         public override void CloseConnection()
         {
-            if(m_Connected)
+            if (m_Connected)
             {
                 m_connection.Close();
                 m_Connected = false;
-           }
+            }
         }
 
         public override Queue<DatabaseObjectInformation> GetAllObjects()
@@ -63,12 +57,12 @@ namespace DOL.Database2.Providers.SQLExpress
                 return null;
             Queue<DatabaseObjectInformation> dbos = new Queue<DatabaseObjectInformation>();
             DatabaseObjectInformation dbo;
-            SqlCeCommand Command = new SqlCeCommand("SELECT ObjectID,TypeID,Data from objects",m_connection);
-            SqlCeDataReader rdr = Command.ExecuteReader();
-            if(!rdr.HasRows)
+            MySqlCommand Command = new MySqlCommand("SELECT ObjectID,TypeID,Data from objects", m_connection);
+            MySqlDataReader rdr = Command.ExecuteReader();
+            if (!rdr.HasRows)
                 return dbos;
             rdr.Read();
-            do 
+            do
             {
                 int length = (int)rdr.GetBytes(2, 0, null, 0, 0);
                 byte[] buf = new byte[length];
@@ -87,9 +81,9 @@ namespace DOL.Database2.Providers.SQLExpress
             if (!m_Connected)
                 return null;
             DatabaseObjectInformation dbo;
-            SqlCeCommand Command = new SqlCeCommand("SELECT ObjectID,TypeID,Data from objects WHERE ObjectID = @ObjectID",m_connection);
-            Command.Parameters.Add(new SqlCeParameter("ObjectID", ID));
-            SqlCeDataReader rdr = Command.ExecuteReader();
+            MySqlCommand Command = new MySqlCommand("SELECT ObjectID,TypeID,Data from objects WHERE ObjectID = @ObjectID", m_connection);
+            Command.Parameters.Add(new MySqlParameter("ObjectID", ID));
+            MySqlDataReader rdr = Command.ExecuteReader();
             if (!rdr.HasRows)
                 return null;
             rdr.Read();
@@ -112,9 +106,9 @@ namespace DOL.Database2.Providers.SQLExpress
             int Typeid = (from s in m_types
                           where s.Value == TypeName
                           select s.Key).First();
-            SqlCeCommand Command = new SqlCeCommand("SELECT ObjectID,TypeID,Data from objects WHERE TypeID = @TypeID",m_connection);
-            Command.Parameters.Add(new SqlCeParameter("TypeID", Typeid));
-            SqlCeDataReader rdr = Command.ExecuteReader();
+            MySqlCommand Command = new MySqlCommand("SELECT ObjectID,TypeID,Data from objects WHERE TypeID = @TypeID", m_connection);
+            Command.Parameters.Add(new MySqlParameter("TypeID", Typeid));
+            MySqlDataReader rdr = Command.ExecuteReader();
             if (!rdr.HasRows)
                 return dbos;
             rdr.Read();
@@ -132,15 +126,15 @@ namespace DOL.Database2.Providers.SQLExpress
             return dbos;
         }
 
-        public override void InsertOrUpdateObjectData(ulong ObjectID, Type Type, System.IO.MemoryStream  Data)
+        public override void InsertOrUpdateObjectData(ulong ObjectID, Type Type, System.IO.MemoryStream Data)
         {
             if (!m_Connected)
                 return;
             int TypeID;
-            if(!m_typeids.ContainsKey(Type.FullName))
+            if (!m_typeids.ContainsKey(Type.FullName))
             {
-                SqlCeCommand Command2 = new SqlCeCommand("INSERT OR REPLACE INTO types(TypeID,Name) VALUES (" 
-                    +m_currentTypeID.ToString()+"," +"\""+Type.FullName+"\")",m_connection); //TODO: Maybe parameterize
+                MySqlCommand Command2 = new MySqlCommand("INSERT OR REPLACE INTO types(TypeID,Name) VALUES ("
+                    + m_currentTypeID.ToString() + "," + "\"" + Type.FullName + "\")", m_connection); //TODO: Maybe parameterize
                 Command2.ExecuteNonQuery();
                 m_types.Add(m_currentTypeID, Type.FullName);
                 m_typeids.Add(Type.FullName, m_currentTypeID);
@@ -151,11 +145,11 @@ namespace DOL.Database2.Providers.SQLExpress
             {
                 TypeID = m_typeids[Type.FullName];
             }
-            SqlCeCommand Command = new SqlCeCommand("INSERT OR REPLACE INTO objects(ObjectID,TypeID,Data) VALUES("+
-            "@ObjectID,@TypeID,@Data) ",m_connection);
-            Command.Parameters.Add(new SqlCeParameter("ObjectID",ObjectID));
-            Command.Parameters.Add(new SqlCeParameter("TypeID",TypeID));
-            Command.Parameters.Add(new SqlCeParameter("Data",Data.GetBuffer()));
+            MySqlCommand Command = new MySqlCommand("INSERT OR REPLACE INTO objects(ObjectID,TypeID,Data) VALUES(" +
+            "@ObjectID,@TypeID,@Data) ", m_connection);
+            Command.Parameters.Add(new MySqlParameter("ObjectID", ObjectID));
+            Command.Parameters.Add(new MySqlParameter("TypeID", TypeID));
+            Command.Parameters.Add(new MySqlParameter("Data", Data.GetBuffer()));
             Command.ExecuteNonQuery();
         }
 
@@ -168,8 +162,8 @@ namespace DOL.Database2.Providers.SQLExpress
         {
             if (!m_Connected)
                 return;
-            SqlCeCommand Command = new SqlCeCommand("DELETE * FROM objects WHERE ObjectID=@ID", m_connection);
-            Command.Parameters.Add(new SqlCeParameter("ID", ObjectID));
+            MySqlCommand Command = new MySqlCommand("DELETE * FROM objects WHERE ObjectID=@ID", m_connection);
+            Command.Parameters.Add(new MySqlParameter("ID", ObjectID));
             Command.ExecuteNonQuery();
         }
         private bool UpdateTypes()
@@ -178,15 +172,15 @@ namespace DOL.Database2.Providers.SQLExpress
                 return false;
             m_types.Clear();
             m_typeids.Clear();
-            SqlCeCommand Command = new SqlCeCommand("SELECT TypeID,Name from types", m_connection);
-            SqlCeDataReader rdr = Command.ExecuteReader();
+            MySqlCommand Command = new MySqlCommand("SELECT TypeID,Name from types", m_connection);
+            MySqlDataReader rdr = Command.ExecuteReader();
             if (!rdr.HasRows)
                 return true;
             rdr.Read();
-            do 
+            do
             {
                 m_types.Add(rdr.GetInt32(0), rdr.GetString(1));
-                m_typeids.Add( rdr.GetString(1),rdr.GetInt32(0));
+                m_typeids.Add(rdr.GetString(1), rdr.GetInt32(0));
             } while (rdr.Read());
             m_currentTypeID = m_types.Count + 1;
             return true;
