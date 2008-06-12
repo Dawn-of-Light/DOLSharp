@@ -182,6 +182,7 @@
     <Compile Include="commands\GMCommands\mob.cs" />
     <Compile Include="commands\GMCommands\morph.cs" />
     <Compile Include="commands\GMCommands\mountgm.cs" />
+    <Compile Include="commands\GMCommands\mute.cs" />
     <Compile Include="commands\GMCommands\npc.cs" />
     <Compile Include="commands\GMCommands\object.cs" />
     <Compile Include="commands\GMCommands\path.cs" />
