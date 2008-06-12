@@ -72,8 +72,7 @@ namespace DOL.GS.Spells
 				MessageToCaster("Your general already has as many followers as he can command!", eChatType.CT_SpellResisted);
 				return false;
 			}
-			//return base.CheckBeginCast(selectedTarget);
-			return true;
+			return base.CheckBeginCast(selectedTarget);
 		}
 
 		/// <summary>
