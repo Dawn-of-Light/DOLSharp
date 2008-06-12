@@ -34,7 +34,7 @@ namespace DOL.GS
 
 		public static bool HasPermission(GamePlayer player,string command)
 		{
-			DataObject obj = GameServer.Database.SelectObject(typeof(DBSinglePermission), "Command = '" + GameServer.Database.Escape(command) + "' and PlayerID = '" + GameServer.Database.Escape(player.PlayerCharacter.ObjectId) + "'");
+			DataObject obj = GameServer.Database.SelectObject(typeof(DBSinglePermission), "Command = '" + GameServer.Database.Escape(command) + "' and (PlayerID = '" + GameServer.Database.Escape(player.PlayerCharacter.ObjectId) + "' OR PlayerID = '" + GameServer.Database.Escape(player.PlayerCharacter.AccountName) + "')");
 			if (obj == null)
 				return false;
 			return true;
@@ -45,6 +45,14 @@ namespace DOL.GS
 			DBSinglePermission perm = new DBSinglePermission();
 			perm.Command = command;
 			perm.PlayerID = player.PlayerCharacter.ObjectId;
+			GameServer.Database.AddNewObject(perm);
+		}
+
+		public static void setPermissionAccount(GamePlayer player, string command)
+		{
+			DBSinglePermission perm = new DBSinglePermission();
+			perm.Command = command;
+			perm.PlayerID = player.PlayerCharacter.AccountName;
 			GameServer.Database.AddNewObject(perm);
 		}
 
