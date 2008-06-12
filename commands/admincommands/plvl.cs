@@ -61,6 +61,25 @@ namespace DOL.GS.Commands
 						break;
 					}
 				#endregion Single
+				#region Single Account
+				case "singleaccount":
+					{
+						GamePlayer target = client.Player.TargetObject as GamePlayer;
+						if (target == null)
+						{
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.plvl.NoSelectPlayer"));
+							return;
+						}
+						if (args.Length != 3)
+						{
+							DisplaySyntax(client);
+							return;
+						}
+						SinglePermission.setPermissionAccount(target, args[2]);
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.plvl.AddedSinglePermission", target.Name, args[2]));
+						break;
+					}
+				#endregion
 				#region Remove
 				case "remove":
 					{
