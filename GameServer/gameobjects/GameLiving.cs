@@ -1148,16 +1148,16 @@ namespace DOL.GS
 			get { return Health > 0; }
 		}
         
-        protected bool m_muzzled = false;
+        protected bool m_isMuted = false;
         /// <summary>
-        /// returns if this living is muzzled
+        /// returns if this living is muted
         /// </summary>
-        public virtual bool IsMuzzled
+        public virtual bool IsMuted
         {
-            get { return m_muzzled; }
+            get { return m_isMuted; }
             set
             {
-                m_muzzled = value;
+                m_isMuted = value;
             }
         }
 

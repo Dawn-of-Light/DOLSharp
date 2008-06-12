@@ -43,9 +43,9 @@ namespace DOL.GS.Commands
 				DisplayMessage(client, "Slow down! Think before you say each word!");
 				return;
 			}
-            if (client.Player.IsMuzzled)
+            if (client.Player.IsMuted)
             {
-                client.Player.Out.SendMessage("You are muzzled. You cannot yell.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+                client.Player.Out.SendMessage("You have been muted. You cannot yell.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
                 return;
             }
 
