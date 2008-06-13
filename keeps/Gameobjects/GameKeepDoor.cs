@@ -302,7 +302,7 @@ namespace DOL.GS.Keeps
 			}
 
 
-			if (GameServer.ServerRules.IsSameRealm(player, this, true) || player.Client.Account.PrivLevel != 1)
+			if (!KeepMgr.IsEnemy(this, player) || player.Client.Account.PrivLevel != 1)
 			{
 				int keepx = 0, keepy = 0, keepz = Z, distance = 0;
 
