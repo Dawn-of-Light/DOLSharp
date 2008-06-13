@@ -53,7 +53,7 @@ namespace DOL.GS.Spells
 
 			bool spellOK = true;
 			//cone spells
-			if (Spell.Target == "cone" ||
+			if (Spell.Target.ToLower() == "cone" ||
 				//pbaoe
 				(Spell.Target == "Enemy" && Spell.Radius > 0 && Spell.Range == 0))
 				spellOK = false;
@@ -140,7 +140,7 @@ namespace DOL.GS.Spells
 		 */
 		protected override void OnSpellResisted(GameLiving target)
 		{
-			if (target is GamePlayer && Caster.TempProperties.getProperty("player_in_keep_property", false))
+			if (target is GamePlayer /*&& Caster.TempProperties.getProperty("player_in_keep_property", false)*/)
 			{
 				GamePlayer player = target as GamePlayer;
 				player.Out.SendCheckLOS(Caster, player, new CheckLOSResponse(ResistSpellCheckLOS));

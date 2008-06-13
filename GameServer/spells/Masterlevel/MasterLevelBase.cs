@@ -1267,7 +1267,6 @@ namespace DOL.GS
             this.MaxSpeedBase = 0;
             this.Flags |= (uint)GameNPC.eFlags.DONTSHOWNAME;
             this.Health = this.MaxHealth;
-            //this.Flags |= (uint) GameNPC.eFlags.PEACE;		
         }
 
         private GamePlayer m_owner;
@@ -1278,7 +1277,7 @@ namespace DOL.GS
         }
         public override int MaxHealth
         {
-            get { return 1000; }
+            get { int hp=500; if(Name.ToLower().IndexOf("speed")>=0) hp=100; return hp; }
         }
 
         public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
@@ -1312,7 +1311,7 @@ namespace DOL.GS
             this.Realm = 0;
             this.Level = 1;
             this.Health = this.MaxHealth;
-            this.CurrentSpeed = 0;
+			this.MaxSpeedBase = 0;
         }
 
         private GamePlayer m_owner;
@@ -1350,8 +1349,7 @@ namespace DOL.GS
             this.Model = 3457;
             this.Name = "Storm";
             this.Flags |= (uint)GameNPC.eFlags.DONTSHOWNAME;
-            //this.Flags |= (uint)GameNPC.eFlags.PEACE;
-            //this.Flags |= (uint) GameNPC.eFlags.CANTTARGET;
+			this.Flags |= (uint)GameNPC.eFlags.CANTTARGET;
             this.Movable = true;
         }
 

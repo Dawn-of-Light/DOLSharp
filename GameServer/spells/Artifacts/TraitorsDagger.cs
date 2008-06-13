@@ -17,18 +17,15 @@
  *
  */
 using System;
+using DOL.GS.Effects;
 using DOL.Database;
 using DOL.Events;
-using DOL.GS;
-using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
+using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
-    /// <summary>
-    /// Traitor's dagger defensive proc effect
-    /// </summary>
-    [SpellHandlerAttribute("TraitorsDaggerProc")]
+	[SpellHandlerAttribute("TraitorsDaggerProc")]
     public class TraitorsDaggerProc : DefensiveProcSpellHandler
     {    	
    		public override void OnEffectStart(GameSpellEffect effect)
@@ -51,11 +48,8 @@ namespace DOL.GS.Spells
   		}        
         public TraitorsDaggerProc(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
-    
-    /// <summary>
-    /// Traitor's dagger offensive proc effect
-    /// </summary>    
-    [SpellHandlerAttribute("TraitorsDaggerSummon")]
+
+	[SpellHandlerAttribute("TraitorsDaggerSummon")]
     public class TraitorsDaggerSummon : SummonSpellHandler
     {    
 		private DBSpell dbs;
@@ -65,11 +59,42 @@ namespace DOL.GS.Spells
 		
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-			base.ApplyEffectOnTarget(target,effectiveness);
-			
+			GamePlayer player = Caster as GamePlayer;
+			if (player == null)	return;
+			INpcTemplate template = NpcTemplateMgr.GetTemplate(Spell.AmnesiaChance);
+			if (template == null)
+			{
+				String errorMessage = String.Format("NPC template {0} is missing, spell ID = {1}", Spell.AmnesiaChance, Spell.ID);
+				if (log.IsWarnEnabled) log.Warn(errorMessage);
+				if (player.Client.Account.PrivLevel > 1) MessageToCaster(errorMessage, eChatType.CT_Skill);
+				return;
+			}
+			int x, y, z;
+			Caster.GetSpotFromHeading(64, out x, out y);
+			z = Caster.Z;
+			ControlledNpc controlledBrain = new ControlledNpc(Caster);
+			summoned = new TraitorDaggerPet(template);
+			summoned.SetOwnBrain(new ProcPetBrain(player));
+			summoned.HealthMultiplicator = true;
+			summoned.X = x;
+			summoned.Y = y;
+			summoned.Z = z;
+			summoned.GuildName=Caster.Name; // Andraste
+			summoned.CurrentRegion = Caster.CurrentRegion;
+			summoned.Heading = Caster.Heading;
+			summoned.Realm = Caster.Realm;
+			summoned.CurrentSpeed = 0;
+			if (Spell.ResurrectHealth < 0) summoned.Level = (byte)(Caster.Level * Spell.ResurrectHealth * -0.01);
+			else summoned.Level = (byte)Spell.ResurrectHealth;
+			if (summoned.Level > Spell.ResurrectMana) summoned.Level = (byte)Spell.ResurrectMana;
+			GameSpellEffect effect = CreateSpellEffect(target, effectiveness);
+			summoned.AddToWorld();
+			(summoned.Brain as IAggressiveBrain).AddToAggroList(target, 1);
+			effect.Start(summoned);
 			if(summoned!=null)
 				GameEventMgr.AddHandler(summoned, GameLivingEvent.AttackFinished, new DOLEventHandler(EventHandler));
 		}
+		
 		protected void EventHandler(DOLEvent e, object sender, EventArgs arguments)
 		{
 			AttackFinishedEventArgs args = arguments as AttackFinishedEventArgs;
@@ -105,5 +130,18 @@ namespace DOL.GS.Spells
 			sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);		
 			trap = ScriptMgr.CreateSpellHandler(m_caster, s, sl);	
         }
-    }            
+    }
+}
+
+namespace DOL.GS
+{
+	public class TraitorDaggerPet : GameNPC
+	{
+		public override int MaxHealth
+        {
+            get { return Level*25; }
+        }
+		public override void OnAttackedByEnemy(AttackData ad) { }
+		public TraitorDaggerPet(INpcTemplate npcTemplate) : base(npcTemplate) { }
+	}
 }

@@ -35,7 +35,7 @@ namespace DOL.GS.Spells
             if(effect.Owner is GamePlayer)
             {
 	            GamePlayer player = effect.Owner as GamePlayer;
-	            player.Model = (ushort)Spell.LifeDrainReturn; // 102 official model
+	            if(player.CharacterClass.ID!=(byte)eCharacterClass.Necromancer) player.Model = (ushort)Spell.LifeDrainReturn; // 102 official model
 	   			player.Out.SendUpdatePlayer();
    			}
    		}
@@ -45,7 +45,7 @@ namespace DOL.GS.Spells
   			if(effect.Owner is GamePlayer)
             {
 	            GamePlayer player = effect.Owner as GamePlayer; 				
-  				player.Model = (ushort)player.Client.Account.Characters[player.Client.ActiveCharIndex].CreationModel;
+  				if(player.CharacterClass.ID!=(byte)eCharacterClass.Necromancer) player.Model = (ushort)player.Client.Account.Characters[player.Client.ActiveCharIndex].CreationModel;
     			player.Out.SendUpdatePlayer();
     		}	
     		return base.OnEffectExpires(effect,noMessages);

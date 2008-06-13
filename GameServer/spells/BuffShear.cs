@@ -61,19 +61,6 @@ namespace DOL.GS.Spells
 	{
 		public override string ShearSpellType { get	{ return "DexterityBuff"; } }
 		public override string DelveSpellType { get { return "Dexterity"; } }
-
-        public override void OnDirectEffect(GameLiving target, double effectiveness)
-        {
-            base.OnDirectEffect(target, effectiveness);
-            GameSpellEffect effect;
-            effect = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
-            if (effect != null)
-            {
-                effect.Cancel(false);
-                return;
-            }
-        }
-
 		// constructor
 		public DexterityShear(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
@@ -86,19 +73,6 @@ namespace DOL.GS.Spells
 	{
 		public override string ShearSpellType { get	{ return "ConstitutionBuff"; } }
 		public override string DelveSpellType { get { return "Constitution"; } }
-
-        public override void OnDirectEffect(GameLiving target, double effectiveness)
-        {
-            base.OnDirectEffect(target, effectiveness);
-            GameSpellEffect effect;
-            effect = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
-            if (effect != null)
-            {
-                effect.Cancel(false);
-                return;
-            }
-        }
-
 		// constructor
 		public ConstitutionShear(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
@@ -111,19 +85,6 @@ namespace DOL.GS.Spells
 	{
 		public override string ShearSpellType { get	{ return "AcuityBuff"; } }
 		public override string DelveSpellType { get { return "Acuity"; } }
-
-        public override void OnDirectEffect(GameLiving target, double effectiveness)
-        {
-            base.OnDirectEffect(target, effectiveness);
-            GameSpellEffect effect;
-            effect = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
-            if (effect != null)
-            {
-                effect.Cancel(false);
-                return;
-            }
-        }
-
 		// constructor
 		public AcuityShear(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
@@ -136,19 +97,6 @@ namespace DOL.GS.Spells
 	{
 		public override string ShearSpellType { get	{ return "StrengthConstitutionBuff"; } }
 		public override string DelveSpellType { get { return "Str/Con"; } }
-
-        public override void OnDirectEffect(GameLiving target, double effectiveness)
-        {
-            base.OnDirectEffect(target, effectiveness);
-            GameSpellEffect effect;
-            effect = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
-            if (effect != null)
-            {
-                effect.Cancel(false);
-                return;
-            }
-        }
-
 		// constructor
 		public StrengthConstitutionShear(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
@@ -161,19 +109,6 @@ namespace DOL.GS.Spells
 	{
 		public override string ShearSpellType { get	{ return "DexterityQuicknessBuff"; } }
 		public override string DelveSpellType { get { return "Dex/Qui"; } }
-
-        public override void OnDirectEffect(GameLiving target, double effectiveness)
-        {
-            base.OnDirectEffect(target, effectiveness);
-            GameSpellEffect effect;
-            effect = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
-            if (effect != null)
-            {
-                effect.Cancel(false);
-                return;
-            }
-        }
-
 		// constructor
 		public DexterityQuicknessShear(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
@@ -214,6 +149,12 @@ namespace DOL.GS.Spells
 			if (!target.IsAlive || target.ObjectState!=GameLiving.eObjectState.Active) return;
 
 			target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+			GameSpellEffect mez = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+            if (mez != null)
+            {
+                mez.Cancel(false);
+                return;
+            }
 			if (target is GameNPC)
 			{
 				GameNPC npc = (GameNPC)target;
@@ -375,8 +316,10 @@ namespace DOL.GS.Spells
 			*/
 		}
 
-		private static Type[] buffs = new Type[] { typeof(AcuityBuff), typeof(StrengthBuff), typeof(DexterityBuff), typeof(ConstitutionBuff), typeof(StrengthConBuff), typeof(DexterityQuiBuff) };
-
+		private static Type[] buffs = new Type[] { typeof(AcuityBuff), typeof(StrengthBuff), typeof(DexterityBuff), typeof(ConstitutionBuff), typeof(StrengthConBuff), typeof(DexterityQuiBuff),
+			typeof(ArmorFactorBuff),typeof(ArmorAbsorbtionBuff),typeof(HealthRegenSpellHandler),typeof(CombatSpeedBuff),typeof(PowerRegenSpellHandler),typeof(UninterruptableSpellHandler),typeof(WeaponSkillBuff),typeof(DPSBuff),typeof(EvadeChanceBuff),typeof(ParryChanceBuff),
+			typeof(ColdResistBuff),typeof(EnergyResistBuff),typeof(CrushResistBuff),typeof(ThrustResistBuff),typeof(SlashResistBuff),typeof(MatterResistBuff),typeof(BodyResistBuff),typeof(HeatResistBuff),typeof(SpiritResistBuff),typeof(BodySpiritEnergyBuff),typeof(HeatColdMatterBuff),typeof(CrushSlashThrustBuff),
+			typeof(EnduranceRegenSpellHandler),typeof(DamageAddSpellHandler),typeof(DamageShieldSpellHandler) };
 		// constructor
 		public RandomBuffShear(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}

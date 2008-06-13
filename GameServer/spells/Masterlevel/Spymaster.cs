@@ -217,7 +217,7 @@ namespace DOL.GS.Spells
             dbs.Damage = spell.Damage;
             dbs.DamageType = (int)spell.DamageType;
             dbs.Target = "Enemy";
-            dbs.Radius = 0;
+            dbs.Radius = 350;
             dbs.Type = "PoisonspikeDot";
             dbs.Value = spell.Value;
             dbs.Duration = spell.ResurrectHealth;
@@ -240,7 +240,7 @@ namespace DOL.GS.Spells
     {
         // constructor
         public Spymaster6DotHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-
+		public override int CalculateSpellResistChance(GameLiving target) { return 0; }
         protected override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
         {
             return new GameSpellEffect(this, m_spell.Duration, m_spellLine.IsBaseLine ? 5000 : 4000, effectiveness);
@@ -250,57 +250,49 @@ namespace DOL.GS.Spells
     #endregion
 
     #region Spymaster-7
-    [SpellHandlerAttribute("Loockout")]
+	[SpellHandlerAttribute("Loockout")]
     public class LoockoutSpellHandler : SpellHandler
     {
         private GameSpellEffect m_effect;
-        public override bool IsOverwritable(GameSpellEffect compare)
-        {
-            return true;
-        }
-        public override void OnEffectStart(GameSpellEffect effect)
-        {
-            base.OnEffectStart(effect);
-            m_effect = effect;
-            //effect.Owner.BuffBonusCategory1[(int)eProperty.Skill_Stealth] += 100;
-            GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.Moving, new DOLEventHandler(PlayerMoves));
-            GameEventMgr.AddHandler(Caster, GameLivingEvent.Moving, new DOLEventHandler(PlayerMoves));
-        }
+		private GameLiving m_target;
+
         public override bool CheckBeginCast(GameLiving selectedTarget)
         {
-            if (!(selectedTarget is GamePlayer))
-                return false;
-            if (!selectedTarget.IsSitting)
-            {
-                MessageToCaster("Target must be sitting!", eChatType.CT_System);
-                return false;
-            }
+            if (!(selectedTarget is GamePlayer)) return false;
+            if (!selectedTarget.IsSitting) { MessageToCaster("Target must be sitting!", eChatType.CT_System); return false; }
             return base.CheckBeginCast(selectedTarget);
         }
-        /// <summary>
-        /// When an applied effect expires.
-        /// Duration spells only.
-        /// </summary>
-        /// <param name="effect">The expired effect</param>
-        /// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-        /// <returns>immunity duration in milliseconds</returns>
-        public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
+      
+		public override void OnEffectStart(GameSpellEffect effect)
         {
-            //effect.Owner.BuffBonusCategory1[(int)eProperty.Skill_Stealth] -= 100;
-            GameEventMgr.RemoveHandler(Caster, GameLivingEvent.Moving, new DOLEventHandler(PlayerMoves));
-            GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.Moving, new DOLEventHandler(PlayerMoves));
+			m_target=effect.Owner as GamePlayer;
+			if (m_target == null) return;
+            if (!m_target.IsAlive || m_target.ObjectState != GameLiving.eObjectState.Active || !m_target.IsSitting) return;
+            Caster.BaseBuffBonusCategory[(int)eProperty.Skill_Stealth] += 100;
+            GameEventMgr.AddHandler(m_target, GamePlayerEvent.Moving, new DOLEventHandler(PlayerAction));
+			GameEventMgr.AddHandler(Caster, GamePlayerEvent.Moving, new DOLEventHandler(PlayerAction));
+			new LoockoutOwner().Start(Caster);
+			base.OnEffectStart(effect);
+        }
+		
+		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
+        {
+            Caster.BaseBuffBonusCategory[(int)eProperty.Skill_Stealth] -= 100;
+            GameEventMgr.RemoveHandler(Caster, GamePlayerEvent.Moving, new DOLEventHandler(PlayerAction));
+            GameEventMgr.RemoveHandler(m_target, GamePlayerEvent.Moving, new DOLEventHandler(PlayerAction));
             return base.OnEffectExpires(effect, noMessages);
         }
-        public void PlayerMoves(DOLEvent e, object sender, EventArgs args)
+	  
+        private void PlayerAction(DOLEvent e, object sender, EventArgs args)
         {
-            GameLiving player = sender as GameLiving;
+			GamePlayer player = (GamePlayer)sender;
             if (player == null) return;
-            if (e == GamePlayerEvent.Moving)
-            {
-                MessageToCaster("You are moving. Your concentration fades", eChatType.CT_SpellExpires);
-                OnEffectExpires(m_effect, true);
-                return;
-            }
+            MessageToLiving((GameLiving)player, "You are moving. Your concentration fades!", eChatType.CT_SpellResisted);
+			GameSpellEffect effect=SpellHandler.FindEffectOnTarget(m_target,"Loockout");
+				if (effect!=null) effect.Cancel(false);
+			IGameEffect effect2=SpellHandler.FindStaticEffectOnTarget(Caster,typeof(LoockoutOwner));
+				if (effect2!=null) effect2.Cancel(false);
+            OnEffectExpires(m_effect, true);
         }
         public LoockoutSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
@@ -344,6 +336,7 @@ namespace DOL.GS.Spells
             mine.X = caster.X;
             mine.Y = caster.Y;
             mine.Z = caster.Z;
+			mine.MaxSpeedBase = 0;
             mine.CurrentRegionID = caster.CurrentRegionID;
             mine.Heading = caster.Heading;
             mine.Owner = (GamePlayer)caster;
@@ -404,15 +397,6 @@ namespace DOL.GS.Spells
         public GroupstealthHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
         private GameSpellEffect m_effect;
-        public override bool IsOverwritable(GameSpellEffect compare)
-        {
-            return true;
-        }
-
-        public override bool HasPositiveEffect
-        {
-            get { return true; }
-        }
 
         public override bool CheckBeginCast(GameLiving selectedTarget)
         {
@@ -491,4 +475,25 @@ namespace DOL.GS.Spells
         }
     }
     #endregion
+}
+//to show an Icon & informations to the caster
+namespace DOL.GS.Effects
+{
+	public class LoockoutOwner : StaticEffect, IGameEffect
+	{
+		public LoockoutOwner() : base() { }
+		public void Start(GamePlayer player) { base.Start(player); }
+		public override void Stop()	{ base.Stop(); }
+		public override ushort Icon { get { return 2616; } }
+		public override string Name { get { return "Loockout"; } }
+		public override IList DelveInfo
+		{
+			get
+			{
+				IList delveInfoList = new ArrayList(1);
+                delveInfoList.Add("Your stealth range is increased.");
+                return delveInfoList;
+			}
+		}
+	}
 }

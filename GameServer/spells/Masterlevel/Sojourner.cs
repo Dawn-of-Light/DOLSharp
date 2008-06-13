@@ -132,12 +132,22 @@ namespace DOL.GS.Spells
                 if (!player.InCombat)
                 {
                     SendEffectAnimation(player, 0, false, 1);
-                    player.MoveTo((ushort)player.PlayerCharacter.BindRegion, player.PlayerCharacter.BindXpos, player.PlayerCharacter.BindYpos, player.PlayerCharacter.BindZpos, (ushort)player.PlayerCharacter.BindHeading);
+					player.MoveToBind();
                 }
             }
         }
     }
     #endregion
+	
+	#region Sojourner-7
+	[SpellHandlerAttribute("EssenceResist")]
+	public class EssenceResistHandler : AbstractResistBuff
+	{
+		public override int BonusCategory1 { get { return 1; } }
+		public override eProperty Property1 { get { return eProperty.Resist_Natural; } }
+		public EssenceResistHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+	}
+	#endregion Sojourner-7
 
     #region Sojourner-8
     [SpellHandlerAttribute("Zephyr")]
@@ -146,6 +156,7 @@ namespace DOL.GS.Spells
         protected RegionTimer m_expireTimer;
         protected GameNPC m_npc;
         protected GamePlayer m_target;
+		protected IPoint3D m_loc;
 
         public override void OnDirectEffect(GameLiving target, double effectiveness)
         {
@@ -193,6 +204,7 @@ namespace DOL.GS.Spells
             npc.CurrentRegion = Caster.CurrentRegion;
             npc.Flags |= (uint)GameNPC.eFlags.PEACE;
             npc.Flags |= (uint)GameNPC.eFlags.DONTSHOWNAME;
+			npc.Flags |= (uint)GameNPC.eFlags.CANTTARGET;
             BlankBrain brain = new BlankBrain();
             npc.SetOwnBrain(brain);
             npc.AddToWorld();
@@ -215,7 +227,7 @@ namespace DOL.GS.Spells
         protected virtual int ExpiredCallback(RegionTimer callingTimer)
         {
             m_target.IsStunned = false;
-            //m_target.IsSilenced = false;
+			m_target.DismountSteed(true);
             m_target.DebuffCategory[(int)eProperty.SpellFumbleChance]-=100;
             GameEventMgr.RemoveHandler(m_target, GamePlayerEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
             m_npc.StopMoving();
@@ -283,13 +295,14 @@ namespace DOL.GS.Spells
             if (Caster is GamePlayer)
             {
                 //Calculate random target
-                IPoint3D loc = GetTargetLoc();
-                //Set a gt to the Caster for the Loscheck
-                Caster.SetGroundTarget(loc.X, loc.Y, loc.Z);
-                //Check los and start the moving or stay on the spot (works on live the same)
-                if (Caster.GroundTargetInView)
-                    m_npc.WalkTo(loc.X, loc.Y, loc.Z, 100);
+                m_loc = GetTargetLoc();
+				(Caster as GamePlayer).Out.SendCheckLOS((Caster as GamePlayer), m_npc, new CheckLOSResponse(ZephyrCheckLOS));
             }
+        }
+		public void ZephyrCheckLOS(GamePlayer player, ushort response, ushort targetOID)
+        {
+            if ((response & 0x100) == 0x100)
+				m_npc.WalkTo(m_loc.X, m_loc.Y, m_loc.Z, 100);
         }
 
         public virtual IPoint3D GetTargetLoc()
