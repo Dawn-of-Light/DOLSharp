@@ -414,4 +414,11 @@ namespace DOL.GS.Spells
 		public override eProperty Property1 { get { return eProperty.StyleAbsorb; } }
 		public StyleAbsorbBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
+	
+	[SpellHandlerAttribute("ExtraHP")]
+	public class ExtraHP : SingleStatBuff
+	{
+		public override eProperty Property1 { get { return eProperty.ExtraHP; } }
+		public ExtraHP(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+	}
 }
