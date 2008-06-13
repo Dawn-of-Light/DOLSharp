@@ -1948,6 +1948,10 @@
     <Compile Include="spells\AmnesiaSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="spells\Archery\Archery.cs" />
+    <Compile Include="spells\Archery\Arrow.cs" />
+    <Compile Include="spells\Archery\ArrowDamageTypes.cs" />
+    <Compile Include="spells\Archery\SiegeShot.cs" />
     <Compile Include="spells\Artifacts\AlvarusLeggings.cs" />
     <Compile Include="spells\Artifacts\bracerofzo.cs" />
     <Compile Include="spells\Artifacts\CeremonialBracer.cs" />
