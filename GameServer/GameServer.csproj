@@ -955,6 +955,7 @@
     <Compile Include="playertitles\titles\level\MasterlevelTitle.cs" />
     <Compile Include="playertitles\titles\privlevel\AdministratorTitle.cs" />
     <Compile Include="playertitles\titles\privlevel\GamemasterTitle.cs" />
+    <Compile Include="playertitles\titles\rank\RealmRanks.cs" />
     <Compile Include="playertitles\titles\solokills\DuelMasterTitle.cs" />
     <Compile Include="playertitles\titles\solokills\LoneEnforcerTitle.cs" />
     <Compile Include="playertitles\titles\time\account\ElderTitle.cs" />
