@@ -123,4 +123,30 @@ namespace DOL.GS.Spells
             return 0;
         }
     }
+	
+	[SpellHandlerAttribute("TurretsRelease")]
+	public class TurretsReleaseSpellHandler:SpellHandler
+	{
+		public TurretsReleaseSpellHandler(GameLiving caster,Spell spell,SpellLine line):base(caster,spell,line) { }
+
+		public override void FinishSpellCast(GameLiving target)
+		{
+			m_caster.Mana-=CalculateNeededPower(target);
+			base.FinishSpellCast(target);
+		}
+		
+		public override void ApplyEffectOnTarget(GameLiving target,double effectiveness)
+		{
+			GameSpellEffect effect=null;
+			foreach(GameNPC npc in Caster.CurrentRegion.GetNPCsInRadius(Caster.X,Caster.Y,Caster.Z,(ushort)m_spell.Radius,false))
+				if ((npc.Brain is TurretBrain)&&(npc.Brain as IControlledBrain).Owner==Caster)
+					npc.Die(Caster);
+			if(Caster.ControlledNpc!=null)
+			{
+				Caster.ControlledNpc.Body.Die(Caster);
+				Caster.SetControlledNpc(null);
+			}
+			Caster.PetCounter=0;
+		}
+	}
 }
