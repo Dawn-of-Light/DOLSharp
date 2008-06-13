@@ -407,4 +407,11 @@ namespace DOL.GS.Spells
 		// constructor
 		public MagicResistsBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
+	
+	[SpellHandlerAttribute("StyleAbsorbBuff")]
+	public class StyleAbsorbBuff : SingleStatBuff
+	{
+		public override eProperty Property1 { get { return eProperty.StyleAbsorb; } }
+		public StyleAbsorbBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+	}
 }
