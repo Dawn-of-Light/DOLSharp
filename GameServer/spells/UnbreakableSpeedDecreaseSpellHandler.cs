@@ -32,7 +32,7 @@ namespace DOL.GS.Spells
 	{
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-			if (target.HasAbility(Abilities.CCImmunity))
+			if (target.HasAbility(Abilities.CCImmunity)||target.HasAbility(Abilities.RootImmunity))
 			{
 				MessageToCaster(target.Name + " is immune to this effect!", eChatType.CT_SpellResisted);
 				return;

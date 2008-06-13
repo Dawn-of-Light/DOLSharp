@@ -57,6 +57,7 @@ namespace DOL.GS.Spells
 				Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
 			}			
 			effect.Owner.IsDisarmed = true;
+			effect.Owner.StopAttack();
 			MessageToLiving(effect.Owner, Spell.Message1, eChatType.CT_Spell);
 			Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, false)), eChatType.CT_Spell, effect.Owner);
 			effect.Owner.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
@@ -98,7 +99,7 @@ namespace DOL.GS.Spells
 				list.Add(" "); //empty line
 				list.Add(Spell.Description);
 				list.Add(" "); //empty line
-				if(Spell.Value != 0) list.Add(string.Format("Value: {0}%", (int)Spell.Value));
+				if(Spell.Duration != 0) list.Add(string.Format("Duration: {0}sec", (int)Spell.Duration/1000));
 				list.Add("Target: " + Spell.Target);
 				if(Spell.Range != 0) list.Add("Range: " + Spell.Range);
 				if(Spell.Power != 0) list.Add("Power cost: " + Spell.Power.ToString("0;0'%'"));

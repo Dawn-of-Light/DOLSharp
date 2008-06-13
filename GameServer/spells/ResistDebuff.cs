@@ -304,4 +304,15 @@ namespace DOL.GS.Spells
 		// constructor
 		public CrushSlashThrustDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
+	
+	[SpellHandlerAttribute("EssenceSear")]
+	public class EssenceResistDebuff : AbstractResistDebuff
+	{
+		public override eProperty Property1 { get { return eProperty.Resist_Natural; } }	
+		public override string DebuffTypeName { get { return "Essence"; } }
+
+		// constructor
+		public EssenceResistDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+	}
+
 }
