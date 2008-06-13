@@ -504,7 +504,7 @@ namespace DOL.GS.Keeps
 			}
 			if(Level<10&&m_guild!=null)
 				StartChangeLevel(10);
-			else if(Level>1&&m_guild==null)
+			else if(Level<=10&&Level>1&&m_guild==null)
 				StartChangeLevel(1);
 		}
 
