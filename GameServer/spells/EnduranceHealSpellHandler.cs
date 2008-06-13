@@ -114,7 +114,7 @@ namespace DOL.GS.Spells
 			{
 				MessageToCaster("You restore " + heal + " endurance points.", eChatType.CT_Spell);
 				if (heal < amount)
-					MessageToCaster("Your ednurance is full.", eChatType.CT_Spell);
+					MessageToCaster("Your endurance is full.", eChatType.CT_Spell);
 			}
 			else
 			{

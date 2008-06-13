@@ -97,7 +97,7 @@ namespace DOL.GS.Spells
 			if (!(target is GamePlayer) && !(target is Keeps.GameKeepGuard))
 				return (int)duration;
 			duration *= (0.5 + 0.5*effectiveness);
-			duration -= duration * target.GetResist(Spell.DamageType) * 0.01;
+			duration -= duration * target.GetResistBase(Spell.DamageType) * 0.01;
 
 			if (duration < 1)
 				duration = 1;

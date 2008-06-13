@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
+using DOL.Database;
 
 namespace DOL.GS.Spells
 {
@@ -155,6 +156,81 @@ namespace DOL.GS.Spells
         public Grapple(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
     #endregion
+	
+	#region Battlemaster-6
+	//Eden-Darwin
+	[SpellHandlerAttribute("ThrowWeapon")]
+	public class ThrowWeaponSpellHandler : DoomHammerSpellHandler
+	{
+		public override bool CheckBeginCast(GameLiving selectedTarget)
+		{
+			GamePlayer player=Caster as GamePlayer;
+			if(player==null) return false;
+			InventoryItem weapon=null;
+			if(player.ActiveWeaponSlot.ToString()=="TwoHanded") weapon=player.Inventory.GetItem((eInventorySlot)12);
+			if(player.ActiveWeaponSlot.ToString()=="Standard") weapon=player.Inventory.GetItem((eInventorySlot)10);
+			if(weapon==null) { MessageToCaster("Equip a weapon before using this spell!",eChatType.CT_SpellResisted); return false; }
+			return base.CheckBeginCast(selectedTarget);
+		}
+		
+		public override int CalculateSpellResistChance(GameLiving target) { return 0; }
+		
+		public override AttackData CalculateDamageToTarget(GameLiving target, double effectiveness)
+		{		
+			GamePlayer player=Caster as GamePlayer;
+			if(player==null) return null;
+			InventoryItem weapon=null;
+			if(player.ActiveWeaponSlot.ToString()=="TwoHanded") weapon=player.Inventory.GetItem((eInventorySlot)12);
+			if(player.ActiveWeaponSlot.ToString()=="Standard") weapon=player.Inventory.GetItem((eInventorySlot)10);
+			if(weapon==null) return null;
+			AttackData ad = new AttackData();
+			ad.Attacker = player;
+			ad.Target = target;
+			ad.Damage = 0;
+			ad.CriticalDamage = 0;
+			ad.WeaponSpeed = player.AttackSpeed(weapon) / 100;
+			ad.DamageType = player.AttackDamageType(weapon);
+			ad.Weapon = weapon;
+			ad.IsOffHand = weapon.Hand == 2;
+			switch (weapon.Item_Type)
+			{
+				default:
+				case Slot.RIGHTHAND:
+				case Slot.LEFTHAND: ad.AttackType = AttackData.eAttackType.MeleeOneHand; break;
+				case Slot.TWOHAND: ad.AttackType = AttackData.eAttackType.MeleeTwoHand; break;
+			}
+			double damage = player.AttackDamage(weapon) * effectiveness;
+			InventoryItem armor = null;
+			if (ad.Target.Inventory != null) armor = ad.Target.Inventory.GetItem((eInventorySlot)ad.ArmorHitLocation);
+			int lowerboundary = (player.WeaponSpecLevel(weapon) - 1) * 50 / (ad.Target.EffectiveLevel + 1) + 75;
+			lowerboundary = Math.Max(lowerboundary, 75);
+			lowerboundary = Math.Min(lowerboundary, 125);
+			damage *= (player.GetWeaponSkill(weapon) + 90.68) / (ad.Target.GetArmorAF(ad.ArmorHitLocation) + 20 * 4.67);
+			if (ad.Attacker.EffectList.GetOfType(typeof(BadgeOfValorEffect)) != null) damage *= 1.0 + Math.Min(0.85, ad.Target.GetArmorAbsorb(ad.ArmorHitLocation));
+			else damage *= 1.0 - Math.Min(0.85, ad.Target.GetArmorAbsorb(ad.ArmorHitLocation));
+			damage *= (lowerboundary + Util.Random(50)) * 0.01;
+			ad.Modifier = (int)(damage * (ad.Target.GetResist(ad.DamageType) + SkillBase.GetArmorResist(armor, ad.DamageType)) * -0.01);
+			damage += ad.Modifier;
+			int resist = (int)(damage * ad.Target.GetDamageResist(target.GetResistTypeForDamage(ad.DamageType)) * -0.01);
+			eProperty property = ad.Target.GetResistTypeForDamage(ad.DamageType);
+            int secondaryResistModifier = ad.Target.SpecBuffBonusCategory[(int)property];
+			int resistModifier = 0;
+			resistModifier += (int)((ad.Damage + (double)resistModifier) * (double)secondaryResistModifier * -0.01);
+			damage += resist;
+			damage += resistModifier;
+			ad.Modifier += resist;
+			ad.Damage = (int)damage;
+			ad.UncappedDamage = ad.Damage;
+			ad.Damage = Math.Min(ad.Damage, (int)(player.UnstyledDamageCap(weapon) * effectiveness));
+			ad.Damage = (int)((double)ad.Damage * ServerProperties.Properties.PVP_DAMAGE);
+			if (ad.Damage == 0) ad.AttackResult = DOL.GS.GameLiving.eAttackResult.Missed;	
+			ad.CriticalDamage = player.CalculateCriticalDamage(ad, weapon);
+			return ad;			
+		}
+		
+		public ThrowWeaponSpellHandler(GameLiving caster,Spell spell,SpellLine line) : base(caster,spell,line) {}
+	}
+	#endregion
 
     #region Battlemaster-8
     [SpellHandlerAttribute("BodyguardHandler")]

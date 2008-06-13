@@ -148,8 +148,10 @@ namespace DOL.GS.Spells
             resistvalue = (100 - CalculateToHitChance(target) + resist);
             if (resistvalue > 100)
                 resistvalue = 100;
-            //always 1% resistchance!
-            if (resistvalue < 1)
+			//use ResurrectHealth=1 if the CC should not be resisted
+            if(Spell.ResurrectHealth==1) resistvalue=0;
+			//always 1% resistchance!
+            else if (resistvalue < 1)
                 resistvalue = 1;
             return resistvalue;
         }
@@ -184,6 +186,13 @@ namespace DOL.GS.Spells
 			GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
 			base.OnEffectStart(effect);
 		}
+		//If mez resisted, just rupt, dont demez
+		protected override void OnSpellResisted(GameLiving target)
+		{
+			SendEffectAnimation(target, 0, false, 0);
+			MessageToCaster(target.GetName(0, true) + " resists the effect!", eChatType.CT_SpellResisted);
+			target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+		}
 
 		/// <summary>
 		/// When an applied effect expires.
@@ -202,9 +211,26 @@ namespace DOL.GS.Spells
 		
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
+			if (target.HasAbility(Abilities.MezzImmunity))
+			{
+				MessageToCaster(target.Name + " is immune to this effect!", eChatType.CT_SpellResisted);
+				SendEffectAnimation(target, 0, false, 0);
+				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+				return;
+			}
 			if (FindStaticEffectOnTarget(target, typeof(MezzRootImmunityEffect)) != null)
 			{
 				MessageToCaster("Your target is immune!", eChatType.CT_System);
+				SendEffectAnimation(target, 0, false, 0);
+				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+				return;
+			}
+            //Do nothing when already mez, but inform caster
+			GameSpellEffect mezz = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+  			if(mezz != null)
+			{
+				MessageToCaster("Your target is already mezzed!", eChatType.CT_SpellResisted);
+				SendEffectAnimation(target, 0, false, 0);
 				return;
 			}
             GameSpellEffect mezblock = SpellHandler.FindEffectOnTarget(target, "CeremonialBracerMezz");
@@ -213,14 +239,13 @@ namespace DOL.GS.Spells
                 mezblock.Cancel(false);
                 if (target is GamePlayer)
                     (target as GamePlayer).Out.SendMessage("Your item effect intercepts the mesmerization spell and fades!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+				//inform caster
+				MessageToCaster("Ceremonial Bracer intercept your mez!", eChatType.CT_SpellResisted);
+				SendEffectAnimation(target, 0, false, 0);
+				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
                 return;
             }
-			GameSpellEffect mezz = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
-			if (mezz != null)
-			{
-				SendEffectAnimation(target, 0, false, 0);
-				return;
-			}
+
             base.ApplyEffectOnTarget(target, effectiveness);
         }
 		/// <summary>
@@ -295,6 +320,17 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("Stun")]
 	public class StunSpellHandler : AbstractCCSpellHandler
 	{
+		protected override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
+		{
+			//use ResurrectMana=1 is the Stun should not have immunity
+			if(Spell.ResurrectMana==1)
+			{
+				int freq = Spell != null ? Spell.Frequency : 0;
+				return new GameSpellEffect(this, CalculateEffectDuration(target, effectiveness), freq, effectiveness);
+			}
+			else return new GameSpellAndImmunityEffect(this, CalculateEffectDuration(target, effectiveness), 0, effectiveness);
+		}
+
 		public override void OnEffectStart(GameSpellEffect effect)
 		{			
 			effect.Owner.IsStunned=true;
@@ -320,15 +356,26 @@ namespace DOL.GS.Spells
 
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
-            GameSpellEffect stunblock = SpellHandler.FindEffectOnTarget(target, "CeremonialBracerStun");
-            if (stunblock != null)
-            {
-                stunblock.Cancel(false);
-                if (target is GamePlayer)
-                    (target as GamePlayer).Out.SendMessage("Your item effect intercepts the stun spell and fades!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-                return;
-            }
-            base.ApplyEffectOnTarget(target, effectiveness);
+			if (target.HasAbility(Abilities.StunImmunity))
+			{
+				MessageToCaster(target.Name + " is immune to this effect!", eChatType.CT_SpellResisted);
+				base.OnSpellResisted(target);
+				return;
+			}
+			//Ceremonial bracer dont intercept physical stun
+			if(Spell.SpellType.ToLower() != "stylestun" )
+			{
+				GameSpellEffect stunblock = SpellHandler.FindEffectOnTarget(target, "CeremonialBracerStun");
+				if (stunblock != null)
+				{
+					stunblock.Cancel(false);
+					if (target is GamePlayer)
+						(target as GamePlayer).Out.SendMessage("Your item effect intercepts the stun spell and fades!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+					base.OnSpellResisted(target);
+					return;
+				}
+			}
+			base.ApplyEffectOnTarget(target, effectiveness);
         }
         
 		/// <summary>

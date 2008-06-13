@@ -26,19 +26,43 @@ namespace DOL.GS.Spells
 	/// Reduce range needed to cast the sepll
 	/// </summary>
 	[SpellHandler("Silence")]
-	public class SilenceSpellHandler : SingleStatDebuff
+	public class SilenceSpellHandler : SpellHandler
 	{
-		public override eProperty Property1 { get { return eProperty.SpellFumbleChance; } }
-		
 		/// <summary>
 		/// Apply effect on target or do spell action if non duration spell
 		/// </summary>
 		/// <param name="target">target that gets the effect</param>
 		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+        {
+            GameSpellEffect effect;
+            effect = SpellHandler.FindEffectOnTarget(target, "Silence");
+			if(effect!=null)
+            {
+				MessageToCaster("Your target already have an effect of that type!", eChatType.CT_SpellResisted);
+				return;
+            }
+            base.ApplyEffectOnTarget(target, effectiveness);
+        }
+		
+		public override void OnEffectStart(GameSpellEffect effect)
 		{
-			base.ApplyEffectOnTarget(target, effectiveness);
-			target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+			base.OnEffectStart(effect);
+			if(effect.Owner is GamePlayer)
+			{
+				(effect.Owner as GamePlayer).IsSilenced=true;
+				effect.Owner.StopCurrentSpellcast();
+				effect.Owner.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+			}
+		}
+		
+		public override int OnEffectExpires(GameSpellEffect effect,bool noMessages)
+		{
+			if(effect.Owner is GamePlayer)
+			{
+				(effect.Owner as GamePlayer).IsSilenced=false;
+			}	
+			return base.OnEffectExpires(effect,noMessages);
 		}
 
 		// constructor

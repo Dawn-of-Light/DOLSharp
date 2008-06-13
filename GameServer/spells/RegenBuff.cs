@@ -46,11 +46,10 @@ namespace DOL.GS.Spells
 	{
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-			if (target.HasAbility(Abilities.VampiirStrength))
-			{
-				MessageToCaster("Vampiirs can't be affected by any power regeneration spell!", eChatType.CT_Spell);
-				return;
-			}
+            if (target is GamePlayer && (((GamePlayer)target).CharacterClass.ID == (int)eCharacterClass.Vampiir
+                || ((GamePlayer)target).CharacterClass.ID == (int)eCharacterClass.Mauler_Alb
+                || ((GamePlayer)target).CharacterClass.ID == (int)eCharacterClass.Mauler_Mid
+                || ((GamePlayer)target).CharacterClass.ID == (int)eCharacterClass.Mauler_Hib)) { MessageToCaster("This spell has no effect on this class!", eChatType.CT_Spell); return; }
 			base.ApplyEffectOnTarget(target, effectiveness);
 		}
 		public override int BonusCategory1 { get { return 1; } }
