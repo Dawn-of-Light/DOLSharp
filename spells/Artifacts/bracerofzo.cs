@@ -30,30 +30,30 @@ namespace DOL.GS.Spells
     [SpellHandlerAttribute("ZoSummon")]
     public class BracerOfZo : SpellHandler
     {
-        private static GameNPC[] deamons = new GameNPC[4];
-        private static ControlledNpc[] brains = new ControlledNpc[4]; 
+        protected ZoarkatPet[] deamons = new ZoarkatPet[3];
         
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			base.OnEffectStart(effect);
+			if(Caster.TargetObject as GameLiving==null) return;
+			GamePlayer player = Caster as GamePlayer;
+			if (player == null)	return;
  
             INpcTemplate template = NpcTemplateMgr.GetTemplate(Spell.LifeDrainReturn);
             if (template == null)
-            {
-                if (log.IsWarnEnabled)
-                    log.WarnFormat("NPC template {0} not found! Spell: {1}", Spell.LifeDrainReturn, Spell.ToString());
-                MessageToCaster("NPC template " + Spell.LifeDrainReturn + " not found!", eChatType.CT_System);
-                return;
-            }
+			{
+				String errorMessage = String.Format("NPC template {0} is missing, spell ID = {1}", Spell.LifeDrainReturn, Spell.ID);
+				if (log.IsWarnEnabled) log.Warn(errorMessage);
+				if (player.Client.Account.PrivLevel > 1) MessageToCaster(errorMessage, eChatType.CT_Skill);
+				return;
+			}
             int x, y;
             int i = 0;
             Caster.GetSpotFromHeading(64, out x, out y);
-            for(i=0;i<4;i++)
+            for(i=0;i<3;i++)
             {               
-                brains[i] = new ControlledNpc(Caster);
-                brains[i].WalkState = eWalkState.Stay;
-                deamons[i] = new GameNPC(template);
-                deamons[i].SetOwnBrain(brains[i]);
+                deamons[i] = new ZoarkatPet(template);
+                deamons[i].SetOwnBrain(new ProcPetBrain(player));
                 deamons[i].X = x + Util.Random(20,40) - Util.Random(20,40);
                 deamons[i].Y = y + Util.Random(20,40) - Util.Random(20,40);
                 deamons[i].Z = Caster.Z;
@@ -61,16 +61,16 @@ namespace DOL.GS.Spells
                 deamons[i].Heading = (ushort)((Caster.Heading + 2048) % 4096);
                 deamons[i].Realm = Caster.Realm;
                 deamons[i].CurrentSpeed = 0;
-                deamons[i].Level = 40;
+                deamons[i].Level = 36;
                 deamons[i].AddToWorld();
-                deamons[i].TargetObject = Caster.TargetObject;
-                brains[i].Attack(Caster.TargetObject);
+				(deamons[i].Brain as IAggressiveBrain).AddToAggroList(Caster.TargetObject as GameLiving, 1);
+				(deamons[i].Brain as ProcPetBrain).Think();
             }			
 		}
-         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
+        public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
         	int i = 0;
-            for(i=0;i<4;i++)
+            for(i=0;i<3;i++)
             {
             	if(deamons[i]!=null)
             	{
@@ -80,10 +80,7 @@ namespace DOL.GS.Spells
             }
             return base.OnEffectExpires(effect,noMessages);
         }
-        public override int CalculateSpellResistChance(GameLiving target)
-        {
-            return 0;
-        }
+        public override int CalculateSpellResistChance(GameLiving target) { return 0; }
         public BracerOfZo(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
     
@@ -93,11 +90,6 @@ namespace DOL.GS.Spells
 		public override eProperty Property1 { get { return eProperty.FumbleChance; } }
 		public override eProperty Property2 { get { return eProperty.SpellFumbleChance; } }
 
- 		/// <summary>
-		/// Apply effect on target or do spell action if non duration spell
-		/// </summary>
-		/// <param name="target">target that gets the effect</param>
-		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
 			base.ApplyEffectOnTarget(target, effectiveness);
@@ -107,3 +99,17 @@ namespace DOL.GS.Spells
         public ZoDebuffSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
 }
+
+namespace DOL.GS
+{
+	public class ZoarkatPet : GameNPC
+	{
+		public override int MaxHealth
+        {
+            get { return Level*10; }
+        }
+		public override void OnAttackedByEnemy(AttackData ad) { }
+		public ZoarkatPet(INpcTemplate npcTemplate) : base(npcTemplate) { }
+	}
+}
+

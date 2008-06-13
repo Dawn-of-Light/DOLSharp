@@ -131,6 +131,7 @@
     <Compile Include="ai\brain\IControlledBrain.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ai\brain\ProcPetBrain.cs" />
     <Compile Include="ai\brain\RetrieverMobBrain.cs" />
     <Compile Include="ai\brain\RoundsBrain.cs">
       <SubType>Code</SubType>
@@ -2001,6 +2002,7 @@
     <Compile Include="spells\CureAllSpellHandler.cs" />
     <Compile Include="spells\DamageToPowerSpellHandler.cs" />
     <Compile Include="spells\DisarmSpellHandler.cs" />
+    <Compile Include="spells\DoomHammer.cs" />
     <Compile Include="spells\EnduranceHealSpellHandler.cs" />
     <Compile Include="spells\FacilisSpellHandler.cs" />
     <Compile Include="spells\FocusShellHandler.cs" />

@@ -14,6 +14,12 @@ namespace DOL.GS.Spells
     public class CastingSpeedDebuff : MasterlevelDebuffHandling
     {
         public override eProperty Property1 { get { return eProperty.CastingSpeed; } }
+		
+		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+		{
+			base.ApplyEffectOnTarget(target, effectiveness);
+			target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+		}
 
         // constructor
         public CastingSpeedDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
@@ -222,7 +228,7 @@ namespace DOL.GS.Spells
 
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
-            if (target.HasAbility(Abilities.CCImmunity))
+            if (target.HasAbility(Abilities.CCImmunity)||target.HasAbility(Abilities.StunImmunity))
             {
                 MessageToCaster(target.Name + " is immune to this effect!", eChatType.CT_SpellResisted);
                 return;
@@ -390,11 +396,6 @@ namespace DOL.GS.Spells
     public class BanespikeHandler : MasterlevelBuffHandling
     {
         public override eProperty Property1 { get { return eProperty.MeleeDamage; } }
-
-        public override bool IsOverwritable(GameSpellEffect compare)
-        {
-            return true;
-        }
 
         public BanespikeHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
