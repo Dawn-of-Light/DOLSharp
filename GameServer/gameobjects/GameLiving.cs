@@ -5407,6 +5407,8 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <returns>true if the string should be processed further, false if it should be discarded</returns>
 		public virtual bool WhisperReceive(GameLiving source, string str)
 		{
+			if (source == null || str == null) return false;
+
             GamePlayer player = null;
             if (source != null && source is GamePlayer)
             {
@@ -5417,12 +5419,10 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 					//player.Out.SendMessage("Speak slower!", eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
 					return false;
 				}
+				player.TempProperties.setProperty("WHISPERDELAY", CurrentRegion.Time);
             }
 			
-			if (source == null || str == null) return false;
 			Notify(GameLivingEvent.WhisperReceive, this, new WhisperReceiveEventArgs(source, this, str));
-			
-			if(player!=null) player.TempProperties.setProperty("WHISPERDELAY", CurrentRegion.Time);
 			
 			return true;
 		}

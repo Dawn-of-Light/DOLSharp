@@ -39,7 +39,7 @@ namespace DOL.GS.Commands
 		public void OnCommand(GameClient client, string[] args)
 		{
 			#region Jump to GT
-			if (args.Length == 3 && args[1] == "to" && (args[2] == "GT" || args[2] == "gt"))
+			if (args.Length == 3 && args[1].ToLower() == "to" && args[2].ToLower() == "gt")
 			{
 				client.Player.MoveTo(client.Player.CurrentRegionID, client.Player.GroundTarget.X, client.Player.GroundTarget.Y, client.Player.GroundTarget.Z, client.Player.Heading);
 				return;
@@ -57,7 +57,7 @@ namespace DOL.GS.Commands
 				}
 				if (CheckExpansion(client, clientc, clientc.Player.CurrentRegionID))
 				{
-					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Jump.JumpToX", clientc.Player.CurrentRegion), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Jump.JumpToX", clientc.Player.CurrentRegion.Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					if (clientc.Player.CurrentHouse != null)
 						clientc.Player.CurrentHouse.Enter(client.Player);
 					else
@@ -94,7 +94,7 @@ namespace DOL.GS.Commands
 						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Jump.CannotJumpToInsideHouse"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;
 					}
-					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Jump.JumpToX", clientc.Player.CurrentRegion), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Jump.JumpToX", clientc.Player.CurrentRegion.Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					if (clientc.Player.CurrentHouse != null)
 						clientc.Player.CurrentHouse.Enter(client.Player);
 					else
