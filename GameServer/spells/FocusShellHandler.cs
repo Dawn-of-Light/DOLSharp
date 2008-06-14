@@ -170,6 +170,7 @@ namespace DOL.GS.Spells
 				if (handler.Caster.Mana >= handler.Spell.PulsePower && WorldMgr.CheckDistance(handler.Caster, handler.FSTarget, handler.Spell.Range))
 				{
 					handler.Caster.Mana -= handler.Spell.PulsePower;
+					handler.Caster.LastAttackTickPvP = handler.Caster.CurrentRegion.Time;
 				}
 				//Target went out of range, stop the spell
 				else
