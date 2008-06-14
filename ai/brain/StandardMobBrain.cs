@@ -860,7 +860,7 @@ namespace DOL.AI.Brain
 			//doing worthless checks just to find out the body is casting
 			//Prevent mob from casting if an interrupt action is running (saves CPU time and makes
 			//the mob look less daft)
-			if (this.Body != null && this.Body.Spells != null && this.Body.Spells.Count > 0 && !Body.IsCasting && !Body.IsBeingInterrupted)
+			if (this.Body != null && this.Body.Spells != null && this.Body.Spells.Count > 0 && !Body.IsCasting)
 			{
 				bool casted = false;
 				if (type == eCheckSpellType.Defensive)
@@ -871,7 +871,7 @@ namespace DOL.AI.Brain
 						// Allow defensive spells
 						//if (!Body.AttackState)
 						//{
-						if (Body.GetSkillDisabledDuration(spell) == 0 && CheckDefensiveSpells(spell))
+						if (!Body.IsBeingInterrupted && Body.GetSkillDisabledDuration(spell) == 0 && CheckDefensiveSpells(spell))
 						{
 							casted = true;
 							break;
@@ -885,9 +885,9 @@ namespace DOL.AI.Brain
 					{
 						if (Body.GetSkillDisabledDuration(spell) == 0)
 						{
-							if (spell.CastTime > 0 && Body.CurrentRegion.Time - Body.LastAttackedByEnemyTick > 10 * 1000)
+							if (spell.CastTime > 0)
 							{
-								if (Util.Chance(50) && CheckOffensiveSpells(spell))
+								if (!Body.IsBeingInterrupted && Body.CurrentRegion.Time - Body.LastAttackedByEnemyTick > 10 * 1000 && Util.Chance(50) && CheckOffensiveSpells(spell))
 								{
 									casted = true;
 									break;
