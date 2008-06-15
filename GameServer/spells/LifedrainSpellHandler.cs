@@ -35,15 +35,17 @@ namespace DOL.GS.Spells
         /// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
         public override void OnDirectEffect(GameLiving target, double effectiveness)
         {
-            if (target == null) return;
-            if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
+            if (target == null || !target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
 
-            // calc damage and healing
-            AttackData ad = CalculateDamageToTarget(target, effectiveness);
-            SendDamageMessages(ad);
-            DamageTarget(ad, true);
-            StealLife(ad);
-            target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
+			if (target is GamePlayer || target is GameNPC)
+			{
+				// calc damage and healing
+				AttackData ad = CalculateDamageToTarget(target, effectiveness);
+				SendDamageMessages(ad);
+				DamageTarget(ad, true);
+				StealLife(ad);
+				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
+			}
         }
 
         /// <summary>
