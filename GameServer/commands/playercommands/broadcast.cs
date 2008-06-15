@@ -80,7 +80,7 @@ namespace DOL.GS.Commands
         {
             foreach (GamePlayer p in GetTargets(player))
             {
-                if (GameServer.ServerRules.IsAllowedToUnderstand(p, player))
+                if (GameServer.ServerRules.IsAllowedToUnderstand(p, player) || ((eBroadcastType)ServerProperties.Properties.BROADCAST_TYPE == eBroadcastType.Server))
                 {
                     p.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Players.Broadcast.Message", player.Name, message), eChatType.CT_Broadcast, eChatLoc.CL_ChatWindow);
                 }
