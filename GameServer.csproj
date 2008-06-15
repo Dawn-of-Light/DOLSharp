@@ -967,6 +967,7 @@
     <Compile Include="propertycalc\ExtraHPPercentCalculator.cs" />
     <Compile Include="propertycalc\ResistPiercePropertyCalculator.cs" />
     <Compile Include="propertycalc\SpellLevelCalculator.cs" />
+    <Compile Include="propertycalc\StyleAbsorbPercentCalculator.cs" />
     <Compile Include="propertycalc\WaterSpeedCalculator.cs" />
     <Compile Include="propertycalc\WeaponSkillCalculator.cs" />
     <Compile Include="quests\Atlantis\ArtifactEncounter.cs" />
