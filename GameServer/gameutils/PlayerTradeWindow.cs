@@ -431,8 +431,8 @@ namespace DOL.GS
 						if (partnerEnoughMoney)
 							partner.AddMoney(m_partnerWindow.TradeMoney);
 
-						m_owner.Out.SendMessage("You don't have enought money.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
-						partner.Out.SendMessage(m_owner.Name + " doesn't have enought money.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+						m_owner.Out.SendMessage("You don't have enough money.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+						partner.Out.SendMessage(m_owner.Name + " doesn't have enough money.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 					}
 					if (!partnerEnoughMoney)
 					{
@@ -441,8 +441,8 @@ namespace DOL.GS
 						if (enoughMoney)
 							m_owner.AddMoney(TradeMoney);
 
-						partner.Out.SendMessage("You don't have enought money.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
-						m_owner.Out.SendMessage(partner.Name + " doesn't have enought money.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+						partner.Out.SendMessage("You don't have enough money.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+						m_owner.Out.SendMessage(partner.Name + " doesn't have enough money.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 					}
 
 					//Update our tradewindow and return
@@ -485,13 +485,13 @@ namespace DOL.GS
 					{
 						if (!enoughSpace)
 						{
-							m_owner.Out.SendMessage("You don't have enought space in your inventory.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
-							partner.Out.SendMessage(m_owner.Name + " doesn't have enought space in his inventory.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+							m_owner.Out.SendMessage("You don't have enough space in your inventory.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+							partner.Out.SendMessage(m_owner.Name + " doesn't have enough space in his inventory.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 						}
 						if (!partnerEnoughSpace)
 						{
-							partner.Out.SendMessage("You don't have enought space in your inventory.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
-							m_owner.Out.SendMessage(partner.Name + " doesn't have enought space in his inventory.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+							partner.Out.SendMessage("You don't have enough space in your inventory.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+							m_owner.Out.SendMessage(partner.Name + " doesn't have enough space in his inventory.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 						}
 
 						//Update our tradewindow and return
