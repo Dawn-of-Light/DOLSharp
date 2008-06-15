@@ -32,14 +32,15 @@ namespace DOL.GS.RealmAbilities
 			if (player == null)
 				return;
 
-			if (player.Group == null)
-				return;
-
-			foreach (GamePlayer member in player.Group.GetPlayersInTheGroup())
+			Spell subspell = SkillBase.GetSpellByID(7063);
+			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(player, subspell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+			if(player.Group==null)
 			{
-				Spell subspell = SkillBase.GetSpellByID(7063);
-				ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(player, subspell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
-                    spellhandler.StartSpell(member);
+				spellhandler.StartSpell(player);
+			}
+			else foreach (GamePlayer member in player.Group.GetPlayersInTheGroup())
+			{
+				if(member!=null) spellhandler.StartSpell(member);
 			}
 			DisableSkill(living);
 		}

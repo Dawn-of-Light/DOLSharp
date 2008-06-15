@@ -101,7 +101,7 @@ namespace DOL.GS.Spells
 			Caster.GetSpotFromHeading(64, out x, out y);
 			z = Caster.Z;
 
-			GameNPC summoned = new GameNPC(template);
+			GameNPC summoned = new TheurgistPet(template);
 			summoned.SetOwnBrain(new TheurgistPetBrain(player));
 			summoned.HealthMultiplicator = true;
 			summoned.X = x;
@@ -125,7 +125,9 @@ namespace DOL.GS.Spells
 			GameSpellEffect effect = CreateSpellEffect(target, effectiveness);
 
 			summoned.AddToWorld();
+			
 			(summoned.Brain as IAggressiveBrain).AddToAggroList(target, 1);
+			(summoned.Brain as TheurgistPetBrain).Think();
 
 			player.PetCounter++;
 			effect.Start(summoned);
@@ -159,5 +161,18 @@ namespace DOL.GS.Spells
 			effect.Owner.Delete();
 			return 0;
 		}
+	}
+}
+
+namespace DOL.GS
+{
+	public class TheurgistPet : GameNPC
+	{
+		public override int MaxHealth
+        {
+            get { return Level*20; }
+        }
+		public override void OnAttackedByEnemy(AttackData ad) { }
+		public TheurgistPet(INpcTemplate npcTemplate) : base(npcTemplate) { }
 	}
 }

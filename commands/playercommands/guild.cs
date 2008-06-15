@@ -1928,8 +1928,11 @@ namespace DOL.GS.Commands
                             }
 							if (client.Player.Guild.ClaimedKeeps.Count == 1)
 							{
-								foreach (AbstractGameKeep keep in client.Player.Guild.ClaimedKeeps)
-									keep.Release();
+								lock(client.Player.Guild.ClaimedKeeps)
+								{
+									foreach (AbstractGameKeep keep in client.Player.Guild.ClaimedKeeps)
+										keep.Release();
+								}
 							}
 							else
 							{

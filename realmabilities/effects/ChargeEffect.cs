@@ -48,15 +48,18 @@ namespace DOL.GS.Effects
 			//sets player into combat mode
 			living.LastAttackTickPvP = m_startTick;
 			ArrayList speedSpells = new ArrayList();
-			foreach (IGameEffect effect in living.EffectList)
+			lock(living.EffectList)
 			{
-				if (effect is GameSpellEffect == false) continue;
-				if ((effect as GameSpellEffect).Spell.SpellType == "SpeedEnhancement")
-					speedSpells.Add(effect);
+				foreach (IGameEffect effect in living.EffectList)
+				{
+					if (effect is GameSpellEffect == false) continue;
+					if ((effect as GameSpellEffect).Spell.SpellType == "SpeedEnhancement")
+						speedSpells.Add(effect);
+				}
 			}
 			foreach (GameSpellEffect spell in speedSpells)
 				spell.Cancel(false);
-			m_living.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, PropertyCalc.MaxSpeedCalculator.SPEED3);
+			m_living.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, PropertyCalc.MaxSpeedCalculator.SPEED4);
 			m_living.TempProperties.setProperty("Charging", true);
 			if (m_living is GamePlayer)
 				((GamePlayer)m_living).Out.SendUpdateMaxSpeed();
@@ -138,7 +141,14 @@ namespace DOL.GS.Effects
 
 
 		// Icon to show on players, can be id
-		public override ushort Icon { get { return 457; } }
+		public override ushort Icon
+		{
+			get
+			{
+				if (m_living is GameNPC) return 411;
+				else return 3034;
+			}
+		}
 
 		// Delve Info
 		public override IList DelveInfo

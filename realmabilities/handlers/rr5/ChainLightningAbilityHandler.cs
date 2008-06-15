@@ -50,7 +50,7 @@ namespace DOL.GS.RealmAbilities
             GamePlayer target = living.TargetObject as GamePlayer;
             if (player.TargetObject == null || target == null)
             {
-                player.Out.SendMessage("You have no target!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage("You must target a player to launch this spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
                 return;
             }
             if (!GameServer.ServerRules.IsAllowedToAttack(living, target, true))
