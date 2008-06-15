@@ -36,6 +36,16 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("Powerless")]
 	public class PowerlessSpellHandler : PrimerSpellHandler
 	{
+		public override bool CheckBeginCast(GameLiving selectedTarget)
+		{
+			if (!base.CheckBeginCast(selectedTarget)) return false;
+            GameSpellEffect RangeSpell = SpellHandler.FindEffectOnTarget(Caster, "Range");
+  			if(RangeSpell != null) { MessageToCaster("You already preparing a Range spell", eChatType.CT_System); return false; }
+            GameSpellEffect UninterruptableSpell = SpellHandler.FindEffectOnTarget(Caster, "Uninterruptable");
+  			if(UninterruptableSpell != null) { MessageToCaster("You already preparing a Uninterruptable spell", eChatType.CT_System); return false; }
+            return true;
+		}
+		
 		// constructor
 		public PowerlessSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}

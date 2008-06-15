@@ -93,7 +93,7 @@ namespace DOL.AI.Brain
 				try
 				{
 					if (GameServer.ServerRules.IsAllowedToAttack(Body, player, false)
-						&& KeepMgr.IsEnemy(Body as GameKeepGuard, player, true)) // using group check, feat PvP rules
+						&& KeepMgr.IsEnemy(Body as GameKeepGuard, player)) // using group check, feat PvP rules
 					{
 						if (Body is GuardStealther == false && player.IsStealthed)
 							continue;
@@ -123,7 +123,7 @@ namespace DOL.AI.Brain
 				return;
 			foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)AggroRange))
 			{
-				if (npc is GameKeepGuard || !(npc.Brain is IControlledBrain))
+				if (npc == null || npc.Brain == null || npc is GameKeepGuard || !(npc.Brain as ControlledNpc == null) || !(npc.Brain is IControlledBrain))
 					continue;
 
 				GamePlayer player = (npc.Brain as ControlledNpc).GetPlayerOwner();

@@ -74,7 +74,7 @@ namespace DOL.GS.RealmAbilities
 			player.ControlledNpc.Body.Die(player);
 
 			int pool = (int)m_healthpool;
-			while (pool > 0 && targets.Count < 0)
+			while (pool > 0 && targets.Count > 0)
 			{
 				//get most injured player
 				GamePlayer mostInjuredPlayer = null;

@@ -162,7 +162,7 @@ namespace DOL.GS.Effects
 
 		public override string Name { get { return "Fury of Nature"; } }
 
-		public override ushort Icon { get { return 5103; } }
+		public override ushort Icon { get { return 991; } }
 
 		public override void Stop()
 		{

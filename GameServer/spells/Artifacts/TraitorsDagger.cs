@@ -61,10 +61,10 @@ namespace DOL.GS.Spells
 		{
 			GamePlayer player = Caster as GamePlayer;
 			if (player == null)	return;
-			INpcTemplate template = NpcTemplateMgr.GetTemplate(Spell.AmnesiaChance);
+			INpcTemplate template = NpcTemplateMgr.GetTemplate(Spell.LifeDrainReturn);
 			if (template == null)
 			{
-				String errorMessage = String.Format("NPC template {0} is missing, spell ID = {1}", Spell.AmnesiaChance, Spell.ID);
+				String errorMessage = String.Format("NPC template {0} is missing, spell ID = {1}", Spell.LifeDrainReturn, Spell.ID);
 				if (log.IsWarnEnabled) log.Warn(errorMessage);
 				if (player.Client.Account.PrivLevel > 1) MessageToCaster(errorMessage, eChatType.CT_Skill);
 				return;
@@ -84,9 +84,9 @@ namespace DOL.GS.Spells
 			summoned.Heading = Caster.Heading;
 			summoned.Realm = Caster.Realm;
 			summoned.CurrentSpeed = 0;
-			if (Spell.ResurrectHealth < 0) summoned.Level = (byte)(Caster.Level * Spell.ResurrectHealth * -0.01);
-			else summoned.Level = (byte)Spell.ResurrectHealth;
-			if (summoned.Level > Spell.ResurrectMana) summoned.Level = (byte)Spell.ResurrectMana;
+			if (Spell.Damage < 0) summoned.Level = (byte)(Caster.Level * Spell.Damage * -0.01);
+			else summoned.Level = (byte)Spell.Damage;
+			if (summoned.Level > Spell.Value) summoned.Level = (byte)Spell.Value;
 			GameSpellEffect effect = CreateSpellEffect(target, effectiveness);
 			summoned.AddToWorld();
 			(summoned.Brain as IAggressiveBrain).AddToAggroList(target, 1);

@@ -20,7 +20,7 @@ namespace DOL.GS.RealmAbilities
 		{
 			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
 
-			SendCasterSpellEffectAndCastMessage(living, 7041, true);
+			SendCasterSpellEffectAndCastMessage(living, 1145, true);
 
 			bool deactivate = false;
 			foreach (GamePlayer player in living.GetPlayersInRadius(false, 350))
@@ -71,7 +71,7 @@ namespace DOL.GS.RealmAbilities
 
 			foreach (GamePlayer p in target.GetPlayersInRadius(false, WorldMgr.VISIBILITY_DISTANCE))
 			{
-				p.Out.SendSpellEffectAnimation(caster, target, 7041, 0, false, 1);
+				p.Out.SendSpellEffectAnimation(caster, target, 1145, 0, false, 1);
 				p.Out.SendCombatAnimation(caster, target, 0, 0, 0, 0, 0x14, target.HealthPercent);
 			}
 
