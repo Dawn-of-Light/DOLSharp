@@ -89,6 +89,7 @@ namespace DOL.GS.Spells
 			ad.Modifier = (int)damageResisted;
 			ad.DamageType = Spell.DamageType;
 			ad.AttackType = AttackData.eAttackType.Spell;
+			ad.SpellHandler = this;
 			ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
 
 			if (ad.Attacker is GameNPC)
@@ -177,6 +178,7 @@ namespace DOL.GS.Spells
 			ad.Damage = (int)(damage + damageResisted);
 			ad.Modifier = (int)damageResisted;
 			ad.DamageType = Spell.DamageType;
+			ad.SpellHandler = this;
 			ad.AttackType = AttackData.eAttackType.Spell;
 			ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
 

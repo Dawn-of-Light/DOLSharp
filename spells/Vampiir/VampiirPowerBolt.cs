@@ -114,6 +114,7 @@ namespace DOL.GS.Spells
 				ad.DamageType = eDamageType.Heat;
 				ad.AttackType = AttackData.eAttackType.Spell;
 				ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
+				ad.SpellHandler = m_handler;
 				target.OnAttackedByEnemy(ad);
 				
 				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, caster);

@@ -205,6 +205,7 @@ namespace DOL.GS.Spells
                 ad.Target = target;
                 ad.AttackType = AttackData.eAttackType.Spell;
                 ad.AttackResult = GameLiving.eAttackResult.Missed;
+				ad.SpellHandler = this;
                 target.OnAttackedByEnemy(ad);
                 target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
             }

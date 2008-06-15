@@ -80,6 +80,7 @@ namespace DOL.GS.Spells
 			ad.Damage = bleedValue + ad.Modifier;
 			ad.DamageType = Spell.DamageType;
 			ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
+			ad.SpellHandler = this;
 
 			SendDamageMessages(ad);
 
