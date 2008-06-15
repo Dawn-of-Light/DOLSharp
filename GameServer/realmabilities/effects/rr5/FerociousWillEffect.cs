@@ -11,7 +11,6 @@ namespace DOL.GS.Effects
 	public class FerociousWillEffect : TimedEffect
 	{
 
-		private RegionTimer ticktimer;
 		private int m_currentBonus = 25;
 
 		public FerociousWillEffect()

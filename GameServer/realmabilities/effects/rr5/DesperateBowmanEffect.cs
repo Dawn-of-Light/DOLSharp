@@ -21,7 +21,9 @@ namespace DOL.GS.Effects
 		{
 			base.Start(target);
 			target.IsDisarmed = true;
+			if(target is GamePlayer) (target as GamePlayer).IsSilenced = true;
 			target.StopAttack();
+			target.StopCurrentSpellcast();
 		}
 
 		public override string Name { get { return "Desperate Bowman"; } }
@@ -31,6 +33,7 @@ namespace DOL.GS.Effects
 		public override void Stop()
 		{
 			m_owner.IsDisarmed = false;
+            if (m_owner is GamePlayer) (m_owner as GamePlayer).IsSilenced = false;
 			base.Stop();
 		}
 

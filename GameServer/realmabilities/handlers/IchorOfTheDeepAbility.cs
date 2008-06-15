@@ -100,6 +100,13 @@ namespace DOL.GS.RealmAbilities
 			}
 
 			GameLiving living = caster.TargetObject as GameLiving;
+			
+			if(living==null)
+			{
+				timer.Stop();
+				timer = null;
+				return 0;
+			}
 
 			if (living.EffectList.GetOfType(typeof(ChargeEffect)) == null && living.EffectList.GetOfType(typeof(SpeedOfSoundEffect)) != null)
 			{
@@ -109,12 +116,12 @@ namespace DOL.GS.RealmAbilities
 				SendUpdates(living);
 			}
 
-			foreach (GamePlayer player in caster.TargetObject.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			foreach (GamePlayer player in living.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 				player.Out.SendSpellEffectAnimation(caster, (caster.TargetObject as GameLiving), 7029, 0, false, 1);
 			}
 
-			foreach (GameNPC mob in caster.TargetObject.GetNPCsInRadius(500))
+			foreach (GameNPC mob in living.GetNPCsInRadius(500))
 			{
 				if (!GameServer.ServerRules.IsAllowedToAttack(caster, mob, true))
 					continue;
@@ -131,18 +138,19 @@ namespace DOL.GS.RealmAbilities
 
 				caster.Out.SendMessage("You hit the " + mob.Name + " for " + dmgValue + " damage.", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 
-				foreach (GamePlayer player2 in caster.TargetObject.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				foreach (GamePlayer player2 in living.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
 					player2.Out.SendSpellEffectAnimation(caster, mob, 7029, 0, false, 1);
 				}
 			}
 
-			foreach (GamePlayer aeplayer in caster.TargetObject.GetPlayersInRadius(500))
+			foreach (GamePlayer aeplayer in living.GetPlayersInRadius(500))
 			{
 				if (!GameServer.ServerRules.IsAllowedToAttack(caster, aeplayer, true))
 					continue;
 
 				aeplayer.TakeDamage(caster, eDamageType.Spirit, dmgValue, 0);
+				aeplayer.StartInterruptTimer(3000, AttackData.eAttackType.Spell, caster);
 
 				if (aeplayer.EffectList.GetOfType(typeof(ChargeEffect)) == null && aeplayer.EffectList.GetOfType(typeof(SpeedOfSoundEffect)) == null)
 				{
@@ -154,7 +162,7 @@ namespace DOL.GS.RealmAbilities
 
 				caster.Out.SendMessage("You hit " + aeplayer.Name + " for " + dmgValue + " damage.", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 
-				foreach (GamePlayer player3 in caster.TargetObject.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				foreach (GamePlayer player3 in living.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
 					player3.Out.SendSpellEffectAnimation(caster, aeplayer, 7029, 0, false, 1);
 				}

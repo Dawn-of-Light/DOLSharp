@@ -64,7 +64,7 @@ namespace DOL.GS.Effects
         }
 
         public override string Name { get { return "Valhalla's Blessing"; } }
-        public override ushort Icon { get { return 7087; } }
+        public override ushort Icon { get { return 3086; } }
 
         // Delve Info
         public override IList DelveInfo

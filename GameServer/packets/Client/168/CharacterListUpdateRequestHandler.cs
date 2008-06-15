@@ -50,6 +50,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 				else
 				{
+					//Eden - anti hack uppercase
+					charname=Char.ToUpper(charname[0])+charname.Substring(1,charname.Length-1).ToLower();
+					
 					String select = String.Format("Name = '{0}'", GameServer.Database.Escape(charname));
 					Character character = (Character)GameServer.Database.SelectObject(typeof(Character), select);
 					if (character != null)

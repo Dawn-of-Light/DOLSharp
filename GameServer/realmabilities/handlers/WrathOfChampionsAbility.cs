@@ -21,22 +21,6 @@ namespace DOL.GS.RealmAbilities
 			if (player == null)
 				return;
 
-			if (player.TargetObject == null)
-			{
-				player.Out.SendMessage("You need a target for this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
-			if (!(player.TargetObject is GameLiving) || !GameServer.ServerRules.IsAllowedToAttack(player, (GameLiving)player.TargetObject, true))
-			{
-				player.Out.SendMessage("You cannot attack " + player.TargetObject.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
-			if (WorldMgr.GetDistance(player, player.TargetObject) > 200)
-			{
-				player.Out.SendMessage("You target is too far away to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
-
 			Int32 dmgValue = 0;
 			switch (Level)
 			{
@@ -61,7 +45,8 @@ namespace DOL.GS.RealmAbilities
 				player.Out.SendMessage("You hit the " + mob.Name + " for " + dmgValue + " damage.", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				foreach (GamePlayer player2 in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
-					player2.Out.SendSpellEffectAnimation(player, mob, 7024, 0, false, 1);
+					player2.Out.SendSpellCastAnimation(player, 4468, 0);
+					player2.Out.SendSpellEffectAnimation(player, mob, 4468, 0, false, 1);
 				}
 			}
 
@@ -81,8 +66,8 @@ namespace DOL.GS.RealmAbilities
 
 				foreach (GamePlayer n_player in t_player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
-					n_player.Out.SendSpellCastAnimation(player, 7024, 0);
-					n_player.Out.SendSpellEffectAnimation(player, t_player, 7024, 0, false, 1);
+					n_player.Out.SendSpellCastAnimation(player, 4468, 0);
+					n_player.Out.SendSpellEffectAnimation(player, t_player, 4468, 0, false, 1);
 				}
 			}
 			DisableSkill(living);
