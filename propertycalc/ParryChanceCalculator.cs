@@ -49,6 +49,10 @@ namespace DOL.GS.PropertyCalc
 				{					
 					parrySpec = (player.Dexterity * 2 - 100) / 4 + (player.GetModifiedSpecLevel(Specs.Parry) - 1) * (10 / 2) + 50;
 				}
+                if (parrySpec > 500)
+                {
+                    parrySpec = 500;
+                }
 				return parrySpec + buff;
 			}
 			NecromancerPet pet = living as NecromancerPet;
