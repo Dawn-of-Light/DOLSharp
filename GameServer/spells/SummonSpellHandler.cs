@@ -69,7 +69,7 @@ namespace DOL.GS.Spells
 				return false;
 			}
 			#warning Summon shouldn't be used, it needs to be just a base class and all others inherit
-			if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledNpc != null/* && (Caster as GamePlayer).CharacterClass.ID != (int)eCharacterClass.Bonedancer*/)
+			if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledNpc != null && !(this is SummonMinionHandler))
 			{
 				MessageToCaster("You already have a charmed creature, release it first!", eChatType.CT_SpellResisted);
 				return false;

@@ -274,7 +274,7 @@ namespace DOL.GS.Spells
 
 			bool remove = false;
 
-			if (attackArgs.AttackData.SpellHandler == null)
+			if (attackArgs.AttackData.AttackType != AttackData.eAttackType.Spell)
 			{
 				switch (attackArgs.AttackData.AttackResult)
 				{
