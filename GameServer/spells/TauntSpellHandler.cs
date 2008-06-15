@@ -56,6 +56,7 @@ namespace DOL.GS.Spells
 			ad.Target = target;
 			ad.AttackType = AttackData.eAttackType.Spell;
 			ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
+			ad.SpellHandler = this;
 			target.OnAttackedByEnemy(ad);
 
 			// Interrupt only if target is actually casting
