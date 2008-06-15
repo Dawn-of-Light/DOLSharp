@@ -2559,8 +2559,11 @@ namespace DOL.GS
 			    && PathID != null && PathID != "" && PathID != "NULL")
 			{
 				PathPoint path = MovementMgr.LoadPath(PathID);
-				CurrentWayPoint = path;
-				MoveOnPath(path.MaxSpeed);
+				if(path != null)
+				{
+					CurrentWayPoint = path;
+					MoveOnPath(path.MaxSpeed);
+				}
 			}
 
 			if (m_houseNumber > 0)

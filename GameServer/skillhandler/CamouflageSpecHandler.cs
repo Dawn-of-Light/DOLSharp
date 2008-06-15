@@ -73,6 +73,7 @@ namespace DOL.GS.SkillHandler
 				player.Out.SendMessage("You must wait " + ((DISABLE_DURATION - changeTime) / 1000) + " more second to attempt to use camouflage!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
+			player.DisableSkill(ab, DISABLE_DURATION);
 			new CamouflageEffect().Start(player);
 		}
 

@@ -372,6 +372,7 @@ namespace DOL.GS.Spells
 				chance += mod * 10;
 				chance = Math.Max(1, chance);
 				chance = Math.Min(99, chance);
+				if(attacker is GamePlayer) chance=99;
 				if (Util.Chance((int)chance))
 				{
 					Caster.TempProperties.setProperty(INTERRUPT_TIMEOUT_PROPERTY, Caster.CurrentRegion.Time + SPELL_INTERRUPT_DURATION);
@@ -411,18 +412,27 @@ namespace DOL.GS.Spells
 			}
 
 			// Apply Mentalist RA5L
-			SelectiveBlindnessEffect SelectiveBlindness = (SelectiveBlindnessEffect)Caster.EffectList.GetOfType(typeof(SelectiveBlindnessEffect));
-			if (SelectiveBlindness != null)
+			if (Spell.Range>0)
 			{
-				GameLiving EffectOwner = SelectiveBlindness.EffectSource;
-				if(EffectOwner==selectedTarget)
+				SelectiveBlindnessEffect SelectiveBlindness = (SelectiveBlindnessEffect)Caster.EffectList.GetOfType(typeof(SelectiveBlindnessEffect));
+				if (SelectiveBlindness != null)
 				{
-					if (m_caster is GamePlayer)
-						((GamePlayer)m_caster).Out.SendMessage(string.Format("{0} is invisible to you!", selectedTarget.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+					GameLiving EffectOwner = SelectiveBlindness.EffectSource;
+					if(EffectOwner==selectedTarget)
+					{
+						if (m_caster is GamePlayer)
+							((GamePlayer)m_caster).Out.SendMessage(string.Format("{0} is invisible to you!", selectedTarget.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 					
-					return false;
+						return false;
+					}
 				}
-			}				
+			}
+
+            if (selectedTarget!=null && selectedTarget.HasAbility("DamageImmunity") && Spell.SpellType == "DirectDamage" && Spell.Radius == 0)
+            {
+                MessageToCaster(selectedTarget.Name + " is immune to this effect!", eChatType.CT_SpellResisted);
+                return false;
+            }
 			
 			if (m_spell.InstrumentRequirement != 0)
 			{
@@ -533,6 +543,7 @@ namespace DOL.GS.Spells
 						//enemys have to be in front and in view for targeted spells
 						if (!(m_caster.IsObjectInFront(selectedTarget, 180) && m_caster.TargetInView))
 						{
+							if(m_spell.SpellType=="Charm" && m_spell.CastTime==0 && m_spell.Pulse!=0) break;
 							MessageToCaster("Your target is not in view!", eChatType.CT_System);
 							Caster.Notify(GameLivingEvent.CastFailed,
 								new CastFailedEventArgs(this, CastFailedEventArgs.Reasons.TargetNotInView));
@@ -1031,6 +1042,7 @@ namespace DOL.GS.Spells
 			}
 			double percent = 1.0;
 			int dex = m_caster.GetModified(eProperty.Dexterity);		
+			if(SpellLine.KeyName.Length>=18 && SpellLine.KeyName.Substring(0,18)=="Champion Abilities" ) dex=100; //Vico: No casting time diminution for CL Spells
 			
 			if (m_caster.EffectList.GetOfType(typeof(QuickCastEffect)) != null)
 			{
@@ -1753,7 +1765,7 @@ namespace DOL.GS.Spells
 				}
 			}
 
-			if (target is Keeps.GameKeepDoor || target is Keeps.GameKeepComponent)
+			if ((target is Keeps.GameKeepDoor || target is Keeps.GameKeepComponent) && Spell.SpellType!="SiegeArrow")
 			{
 				MessageToCaster("Your spell has no effect on the keep component!", eChatType.CT_SpellResisted);
 				return;
@@ -1993,6 +2005,7 @@ namespace DOL.GS.Spells
 			ad.Attacker = Caster;
 			ad.Target = target;
 			ad.AttackType = AttackData.eAttackType.Spell;
+			ad.SpellHandler = this;
 			ad.AttackResult = GameLiving.eAttackResult.Missed;
 			ad.IsSpellResisted = true;
 			target.OnAttackedByEnemy(ad);
@@ -2000,11 +2013,14 @@ namespace DOL.GS.Spells
 			// Spells that would have caused damage or are not instant will still
 			// interrupt a casting player.
 
-			if (target is GamePlayer)
+			/*if (target is GamePlayer)
 			{
 				if (target.IsCasting && (Spell.Damage > 0 || Spell.CastTime > 0))
 					target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
-			}
+			}*/
+			if(!(Spell.SpellType.ToLower().IndexOf("debuff")>=0 && Spell.CastTime==0))
+				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
+
 
 			if (target.Realm == 0 || Caster.Realm == 0)
 			{
@@ -2507,6 +2523,11 @@ namespace DOL.GS.Spells
 			if (spellLevel > 50)
 				spellLevel = 50;
 
+			//Andraste
+			if (m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect
+				|| (m_spellLine.KeyName.Length>=18 && SpellLine.KeyName.Substring(0,18)=="Champion Abilities" ))
+					spellLevel=50;
+
 			int speclevel = 1;
 			int manastat = 0;
 			int bonustohit = m_caster.GetModified(eProperty.ToHitBonus);
@@ -2681,6 +2702,22 @@ namespace DOL.GS.Spells
 				int critmax = (ad.Target is GamePlayer) ? finalDamage / 2 : finalDamage;
 				cdamage = Util.Random(finalDamage / 10, critmax); //think min crit is 10% of damage
 			}
+			//Andraste
+			if(ad.Target is GamePlayer && ad.Target.GetModified(eProperty.Conversion)>0)
+			{
+				int manaconversion=(int)Math.Round(((double)ad.Damage+(double)ad.CriticalDamage)*(double)ad.Target.GetModified(eProperty.Conversion)/200);
+				//int enduconversion=(int)Math.Round((double)manaconversion*(double)ad.Target.MaxEndurance/(double)ad.Target.MaxMana);
+				int enduconversion=(int)Math.Round(((double)ad.Damage+(double)ad.CriticalDamage)*(double)ad.Target.GetModified(eProperty.Conversion)/200);
+				if(ad.Target.Mana+manaconversion>ad.Target.MaxMana) manaconversion=ad.Target.MaxMana-ad.Target.Mana;
+				if(ad.Target.Endurance+enduconversion>ad.Target.MaxEndurance) enduconversion=ad.Target.MaxEndurance-ad.Target.Endurance;
+				if(manaconversion<1) manaconversion=0;
+				if(enduconversion<1) enduconversion=0;
+				if(manaconversion>=1) (ad.Target as GamePlayer).Out.SendMessage("You gain "+manaconversion+" power points", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				if(enduconversion>=1) (ad.Target as GamePlayer).Out.SendMessage("You gain "+enduconversion+" endurance points", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				ad.Target.Endurance+=enduconversion; if(ad.Target.Endurance>ad.Target.MaxEndurance) ad.Target.Endurance=ad.Target.MaxEndurance;
+				ad.Target.Mana+=manaconversion; if(ad.Target.Mana>ad.Target.MaxMana) ad.Target.Mana=ad.Target.MaxMana;
+			}
+			
 			ad.Damage = finalDamage;
 			ad.CriticalDamage = cdamage;
 			ad.DamageType = Spell.DamageType;

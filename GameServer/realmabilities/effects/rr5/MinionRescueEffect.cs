@@ -37,9 +37,9 @@ namespace DOL.GS.Effects
         private const int spiritCount = 8; 			// Max number of spirits to summon
         private const byte spiritLevel = 50;			// Level of the spirit
         private const int spiritModel = 908; 		// Model to use for spirit
-        private const int spiritSpeed = 220; 		// Max speed of the spirit
+        private const int spiritSpeed = 350; 		// Max speed of the spirit
         private const string spiritName = "Spirit";	// Name of spirit
-        private const int spellDuration = 3;		// Duration of stun in seconds
+        private const int spellDuration = 4;		// Duration of stun in seconds
 
         // Objects
         private GameNPC[] spirits;				// Array containing spirits
@@ -68,8 +68,10 @@ namespace DOL.GS.Effects
             tSpell.Duration = spellDuration;
             tSpell.Uninterruptible = true;
             tSpell.Type = "Stun";
+			tSpell.ResurrectMana=1;
+			tSpell.ResurrectHealth=1;
             tSpell.Damage = 0;
-            tSpell.DamageType = (int)eDamageType.Spirit;
+            tSpell.DamageType = 0;
             tSpell.Value = 0;
             tSpell.Icon = 7049;
             tSpell.ClientEffect = 7049;
@@ -175,7 +177,7 @@ namespace DOL.GS.Effects
         }
 
         public override string Name { get { return "Minion Rescue"; } }
-        public override ushort Icon { get { return 7049; } }
+        public override ushort Icon { get { return 3048; } }
 
         public override System.Collections.IList DelveInfo
         {

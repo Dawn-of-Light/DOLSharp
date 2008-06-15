@@ -24,7 +24,7 @@ namespace DOL.GS.Effects
             owner = target;
             foreach (GamePlayer p in target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
             {
-                p.Out.SendSpellEffectAnimation(target, target, Icon, 0, false, 1);
+                p.Out.SendSpellEffectAnimation(target, target, 7042, 0, false, 1);
             }
             owner.IsStunned = true;
             owner.StopAttack();
@@ -102,7 +102,7 @@ namespace DOL.GS.Effects
             {
                 foreach (GamePlayer p in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
                 {
-                    p.Out.SendSpellEffectAnimation(player, player, Icon, 0, false, 1);
+                    p.Out.SendSpellEffectAnimation(player, player, 7042, 0, false, 1);
                 }
             }
 
@@ -129,7 +129,7 @@ namespace DOL.GS.Effects
 
         public override string Name { get { return "Retribution Of The Faithful"; } }
 
-        public override ushort Icon { get { return 7042; } }
+        public override ushort Icon { get { return 3041; } }
 
         public override void Stop()
         {

@@ -65,7 +65,7 @@ namespace DOL.GS.Effects
         }
 
         public override string Name { get { return "Blissful Ignorance"; } }
-        public override ushort Icon { get { return 7069; } }
+        public override ushort Icon { get { return 3068; } }
 
         // Delve Info
         public override IList DelveInfo

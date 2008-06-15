@@ -2988,7 +2988,7 @@ namespace DOL.GS
 				if (livingcondition)
 				{
 					ad.Target = bodyguard.GuardSource;
-					bodyguard.GuardTarget.Out.SendMessage("You were protected by" + bodyguard.GuardSource.Name + " from the attack from " + ad.Attacker.Name + "!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+					bodyguard.GuardTarget.Out.SendMessage("You were protected by " + bodyguard.GuardSource.Name + " from the attack from " + ad.Attacker.Name + "!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 					bodyguard.GuardSource.Out.SendMessage("You have protected " + bodyguard.GuardTarget.Name + " from the attack from " + ad.Attacker.Name + "!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 					if(ad.Attacker is GamePlayer) (ad.Attacker as GamePlayer).Out.SendMessage("You attempt to attack "+bodyguard.GuardTarget.Name+", "+bodyguard.GuardTarget.Name+" is bodyguarded by " + bodyguard.GuardSource.Name + "!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 					return eAttackResult.Bodyguarded;

@@ -111,7 +111,7 @@ namespace DOL.GS.Effects
         }
 
         public override string Name { get { return "Boiling Cauldron"; } }
-        public override ushort Icon { get { return 7086; } }
+        public override ushort Icon { get { return 3085; } }
 
         // Delve Info
         public override IList DelveInfo

@@ -47,7 +47,7 @@ namespace DOL.GS.Effects
         }
 
         public override string Name { get { return "Gift Of Perizor"; } }
-        public override ushort Icon { get { return 7036; } }
+        public override ushort Icon { get { return 3090; } }
 
         // Delve Info
         public override IList DelveInfo
