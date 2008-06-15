@@ -79,7 +79,7 @@ namespace DOL.GS.Effects
 			ad.Damage = (int)(damage + damageResisted);
 			ad.Modifier = (int)damageResisted;
 			ad.DamageType = eDamageType.Body;
-			ad.AttackType = AttackData.eAttackType.Spell;
+			ad.AttackType = AttackData.eAttackType.MeleeOneHand;
 			ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
             ad.WeaponSpeed = atkArgs.AttackData.WeaponSpeed; 
 
