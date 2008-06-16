@@ -1904,7 +1904,7 @@ namespace DOL.GS
 				DBAbility dba = m_abilitiesByName[keyname];
 
 				Type type = null;
-				if (m_implementationTypeCache.ContainsKey(dba.Implementation))
+				if (dba.Implementation != null && m_implementationTypeCache.ContainsKey(dba.Implementation))
 					type = m_implementationTypeCache[dba.Implementation];
 				else
 					return new Ability(dba, level);
