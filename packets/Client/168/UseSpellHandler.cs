@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using log4net;
 
@@ -134,7 +135,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					if (m_spellLineIndex < spelllines.Count)
 					{
 						castLine = (SpellLine)spelllines[m_spellLineIndex];
-						IList spells = SkillBase.GetSpellList(castLine.KeyName);
+						List<Spell> spells = SkillBase.GetSpellList(castLine.KeyName);
 						foreach (Spell spell in spells)
 						{
 							if (spell.Level == m_spellLevel)

@@ -2211,8 +2211,8 @@ namespace DOL.GS.PacketHandler
 							||linename!="spymaster"
 							||linename!="battlemaster"
 							||linename!="warlord")) continue;
-					
-					IList spells = SkillBase.GetSpellList(line.KeyName);
+
+					List<Spell> spells = SkillBase.GetSpellList(line.KeyName);
 					int spellcount = 0;
 					for (int i = 0; i < spells.Count; i++)
 					{
@@ -2446,11 +2446,10 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 
 			// realm abilities
-			IList raList = SkillBase.GetClassRealmAbilities(m_gameClient.Player.CharacterClass.ID);
+			List<RealmAbility> raList = SkillBase.GetClassRealmAbilities(m_gameClient.Player.CharacterClass.ID);
 			if (raList != null && raList.Count > 0)
 			{
-
-				ArrayList offeredRA = new ArrayList();
+				List<RealmAbility> offeredRA = new List<RealmAbility>();
 				foreach (RealmAbility ra in raList)
 				{
 					RealmAbility playerRA = (RealmAbility)m_gameClient.Player.GetAbility(ra.KeyName);
@@ -2552,7 +2551,7 @@ namespace DOL.GS.PacketHandler
 						bool found = false;
 						foreach (SpellLine line in lines)
 						{
-							IList spells = SkillBase.GetSpellList(line.KeyName);
+							List<Spell> spells = SkillBase.GetSpellList(line.KeyName);
 							spellIndex = 0;
 							foreach (Spell spell in spells)
 							{

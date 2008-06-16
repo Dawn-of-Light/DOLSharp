@@ -2863,26 +2863,23 @@ namespace DOL.GS
 					foreach (Specialization spec in m_specList)
 					{
 						// check styles
-						IList styles = SkillBase.GetStyleList(spec.KeyName, CharacterClass.ID);
-						if (styles != null)
+						List<Style> styles = SkillBase.GetStyleList(spec.KeyName, CharacterClass.ID);
+						foreach (Style style in styles)
 						{
-							foreach (Style style in styles)
+							if (style == null)
+								continue;
+							if (style.SpecLevelRequirement <= spec.Level)
 							{
-								if (style == null)
-									continue;
-								if (style.SpecLevelRequirement <= spec.Level)
+								if (!m_styles.Contains(style))
 								{
-									if (!m_styles.Contains(style))
-									{
-										newStyles.Add(style);
-										m_styles.Add(style);
-									}
+									newStyles.Add(style);
+									m_styles.Add(style);
 								}
 							}
 						}
 
 						// check abilities
-						IList abilities = SkillBase.GetSpecAbilityList(spec.KeyName);
+						List<Ability> abilities = SkillBase.GetSpecAbilityList(spec.KeyName);
 						foreach (Ability ability in abilities)
 						{
 							if (ability.SpecLevelRequirement <= spec.Level)
@@ -5332,6 +5329,9 @@ namespace DOL.GS
 					{
 						if (ad.Damage == -1)
 							break;
+
+						#region Messages
+
 						string hitLocName = null;
 						switch (ad.ArmorHitLocation)
 						{
@@ -5358,6 +5358,10 @@ namespace DOL.GS
 
 						if (ad.CriticalDamage > 0)
 							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.HitsYouCritical", ad.Attacker.GetName(0, true), ad.CriticalDamage), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+
+						#endregion
+
+						#region Condition
 
 						// decrease condition of hitted armor piece
 						if (ad.ArmorHitLocation != eArmorSlot.UNKNOWN)
@@ -5406,6 +5410,10 @@ namespace DOL.GS
 							}
 						}
 
+						#endregion
+
+						#region Reactive Effects
+
 						//reactive effect
 						if (ad.ArmorHitLocation != eArmorSlot.UNKNOWN)
 						{
@@ -5413,75 +5421,61 @@ namespace DOL.GS
 
 							if (reactiveitem != null && reactiveitem.ProcSpellID != 0 && Util.Chance(10))
 							{
-								// reactive effect on shield only proc again player
-								if (reactiveitem.Object_Type != (int)eObjectType.Shield || (reactiveitem.Object_Type == (int)eObjectType.Shield && ad.Attacker is GamePlayer))
+								SpellLine reactiveEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+								if (reactiveEffectLine != null)
 								{
-
-									SpellLine reactiveEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-									if (reactiveEffectLine != null)
+									List<Spell> spells = SkillBase.GetSpellList(reactiveEffectLine.KeyName);
+									foreach (Spell spell in spells)
 									{
-										IList spells = SkillBase.GetSpellList(reactiveEffectLine.KeyName);
-										if (spells != null)
+										if (spell.ID == reactiveitem.ProcSpellID)
 										{
-											foreach (Spell spell in spells)
+											if (spell.Level <= Level)
 											{
-												if (spell.ID == reactiveitem.ProcSpellID)
-												{
-													if (spell.Level <= Level)
-													{
-														ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
-														if (spellHandler != null)
-															spellHandler.StartSpell(ad.Attacker);
-														else
-															Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Spell.Proc.NotImplemented", reactiveitem.ProcSpellID), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-													}
-													else
-														Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Spell.NotEnoughPowerful"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-													break;
-												}
+												ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
+												if (spellHandler != null)
+													spellHandler.StartSpell(ad.Attacker);
+												else
+													Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Spell.Proc.NotImplemented", reactiveitem.ProcSpellID), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 											}
+											else
+												Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Spell.NotEnoughPowerful"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+											break;
 										}
 									}
 								}
 							}
 							if (reactiveitem != null && reactiveitem.ProcSpellID1 != 0 && Util.Chance(10))
 							{
-								// reactive effect on shield only proc again player
-								if (reactiveitem.Object_Type != (int)eObjectType.Shield || (reactiveitem.Object_Type == (int)eObjectType.Shield && ad.Attacker is GamePlayer))
+								SpellLine reactiveEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+								if (reactiveEffectLine != null)
 								{
-
-									SpellLine reactiveEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-									if (reactiveEffectLine != null)
+									List<Spell> spells = SkillBase.GetSpellList(reactiveEffectLine.KeyName);
+									foreach (Spell spell in spells)
 									{
-										IList spells = SkillBase.GetSpellList(reactiveEffectLine.KeyName);
-										if (spells != null)
+										if (spell.ID == reactiveitem.ProcSpellID1)
 										{
-											foreach (Spell spell in spells)
+											if (spell.Level <= Level)
 											{
-												if (spell.ID == reactiveitem.ProcSpellID1)
+												ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
+												if (spellHandler != null)
 												{
-													if (spell.Level <= Level)
-													{
-														ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
-														if (spellHandler != null)
-														{
-															spellHandler.StartSpell(ad.Attacker);
-														}
-														else
-														{
-															Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Spell.Proc.NotImplemented", reactiveitem.ProcSpellID), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-														}
-													}
-													else
-														Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Spell.NotEnoughPowerful"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-													break;
+													spellHandler.StartSpell(ad.Attacker);
+												}
+												else
+												{
+													Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Spell.Proc.NotImplemented", reactiveitem.ProcSpellID), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 												}
 											}
+											else
+												Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Spell.NotEnoughPowerful"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+											break;
 										}
 									}
 								}
 							}
 						}
+
+						#endregion
 						break;
 					}
 			}
@@ -7557,53 +7551,50 @@ namespace DOL.GS
 
 								if (potionEffectLine != null)
 								{
-									IList spells = SkillBase.GetSpellList(potionEffectLine.KeyName);
-									if (spells != null)
+									List<Spell> spells = SkillBase.GetSpellList(potionEffectLine.KeyName);
+									foreach (Spell spell in spells)
 									{
-										foreach (Spell spell in spells)
+										if (spell.ID == useItem.SpellID)
 										{
-											if (spell.ID == useItem.SpellID)
+											if (spell.Level <= Level)
 											{
-												if (spell.Level <= Level)
+												if (spell.CastTime > 0 && AttackState)
 												{
-													if (spell.CastTime > 0 && AttackState)
+													Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantUseInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+												}
+												//Eden
+												else if (IsStunned || IsMezzed || !IsAlive)
+												{
+													Out.SendMessage("You can't use " + useItem.GetName(0, false) + " in your state.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+												}
+												else
+												{
+													ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, potionEffectLine);
+													if (spellHandler != null)
 													{
-														Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantUseInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-													}
-													//Eden
-													else if (IsStunned || IsMezzed || !IsAlive)
-													{
-														Out.SendMessage("You can't use " + useItem.GetName(0, false) + " in your state.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+														Stealth(false);
+														if (useItem.Item_Type == 40)
+															Emote(eEmote.Drink);
+														spellHandler.StartSpell(TargetObject as GameLiving);
+														if (useItem.Count > 1)
+															Inventory.RemoveCountFromStack(useItem, 1);
+														else
+														{
+															useItem.Charges--;
+															if (useItem.Charges < 1) Inventory.RemoveCountFromStack(useItem, 1);
+														}
+														Out.SendMessage(useItem.GetName(0, false) + " has been used.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+														TempProperties.setProperty(LAST_POTION_ITEM_USE_TICK, CurrentRegion.Time);
 													}
 													else
 													{
-														ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, potionEffectLine);
-														if (spellHandler != null)
-														{
-															Stealth(false);
-															if (useItem.Item_Type == 40)
-																Emote(eEmote.Drink);
-															spellHandler.StartSpell(TargetObject as GameLiving);
-															if (useItem.Count > 1)
-																Inventory.RemoveCountFromStack(useItem, 1);
-															else
-															{
-																useItem.Charges--;
-																if (useItem.Charges < 1) Inventory.RemoveCountFromStack(useItem, 1);
-															}
-															Out.SendMessage(useItem.GetName(0, false) + " has been used.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-															TempProperties.setProperty(LAST_POTION_ITEM_USE_TICK, CurrentRegion.Time);
-														}
-														else
-														{
-															Out.SendMessage("Potion effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-														}
+														Out.SendMessage("Potion effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 													}
 												}
-												else
-													Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.NotEnouthPower"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-												break;
 											}
+											else
+												Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.NotEnouthPower"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+											break;
 										}
 									}
 								}
@@ -7800,16 +7791,13 @@ namespace DOL.GS
 				SpellLine poisonLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mundane_Poisons);
 				if (poisonLine != null)
 				{
-					IList spells = SkillBase.GetSpellList(poisonLine.KeyName);
-					if (spells != null)
+					List<Spell> spells = SkillBase.GetSpellList(poisonLine.KeyName);
+					foreach (Spell spl in spells)
 					{
-						foreach (Spell spl in spells)
+						if (spl.ID == toItem.PoisonSpellID)
 						{
-							if (spl.ID == toItem.PoisonSpellID)
-							{
-								canApply = true;
-								break;
-							}
+							canApply = true;
+							break;
 						}
 					}
 				}
