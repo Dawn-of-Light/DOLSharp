@@ -21,6 +21,7 @@
 using System;
 using System.Reflection;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
@@ -393,7 +394,7 @@ namespace DOL.GS.Commands
 						}
 
 						SpellLine line = SkillBase.GetSpellLine(args[2]);
-						IList spells = SkillBase.GetSpellList(line.KeyName);
+						List<Spell> spells = SkillBase.GetSpellList(line.KeyName);
 						if (spells.Count <= 0)
 						{
 							client.Out.SendMessage("No spells found in line " + args[2] + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -404,7 +405,7 @@ namespace DOL.GS.Commands
 						{
 							foreach (Spell spl in spells)
 							{
-								if (spl.ID == Convert.ToInt16(args[3]))
+								if (spl.ID == Convert.ToInt32(args[3]))
 								{
 									npc.CastSpell(spl, line);
 									return;

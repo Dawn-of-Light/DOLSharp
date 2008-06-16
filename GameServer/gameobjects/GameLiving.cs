@@ -2736,9 +2736,7 @@ namespace DOL.GS
 			if (spellLine == null)
 				return;
 
-			IList spells = SkillBase.GetSpellList(spellLine.KeyName);
-			if (spells == null)
-				return;
+			List<Spell> spells = SkillBase.GetSpellList(spellLine.KeyName);
 
 			foreach (Spell spell in spells)
 			{
@@ -3206,16 +3204,16 @@ namespace DOL.GS
 									SpellLine reactiveEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
 									if (reactiveEffectLine != null)
 									{
-										IList spells = SkillBase.GetSpellList(reactiveEffectLine.KeyName);
-										if (spells != null)
+										List<Spell> spells = SkillBase.GetSpellList(reactiveEffectLine.KeyName);
+										foreach (Spell spell in spells)
 										{
-											foreach (Spell spell in spells) if (spell.ID == reactiveitem.ProcSpellID)
+											if (spell.ID == reactiveitem.ProcSpellID)
 											{
 												if (spell.Level <= Level)
 												{
 													ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
-													if(spellHandler != null && (spell.SpellType=="Heal" || spell.SpellType=="Bladeturn" || spell.SpellType=="AblativeArmor" || spell.SpellType=="ArmorFactorBuff")) spellHandler.StartSpell(ad.Target);
-													else if(spellHandler != null) spellHandler.StartSpell(ad.Attacker);
+													if (spellHandler != null && (spell.SpellType == "Heal" || spell.SpellType == "Bladeturn" || spell.SpellType == "AblativeArmor" || spell.SpellType == "ArmorFactorBuff")) spellHandler.StartSpell(ad.Target);
+													else if (spellHandler != null) spellHandler.StartSpell(ad.Attacker);
 												}
 												break;
 											}
@@ -3230,7 +3228,7 @@ namespace DOL.GS
 									SpellLine reactiveEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
 									if (reactiveEffectLine != null)
 									{
-										IList spells = SkillBase.GetSpellList(reactiveEffectLine.KeyName);
+										List<Spell> spells = SkillBase.GetSpellList(reactiveEffectLine.KeyName);
 										if (spells != null)
 										{
 											foreach (Spell spell in spells) if (spell.ID == reactiveitem.ProcSpellID1)

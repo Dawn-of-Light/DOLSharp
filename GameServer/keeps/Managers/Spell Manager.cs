@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-
+using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS;
 using DOL.GS.PacketHandler;
@@ -159,7 +159,7 @@ namespace DOL.GS.Keeps
 			SpellLine castLine = null;
 
 			castLine = SkillBase.GetSpellLine(spellLineName);
-			IList spells = SkillBase.GetSpellList(castLine.KeyName);
+			List<Spell> spells = SkillBase.GetSpellList(castLine.KeyName);
 
 			foreach (Spell spell in spells)
 			{

@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
 using DOL.Language;
@@ -610,8 +611,7 @@ namespace DOL.GS.Styles
 			SpellLine styleLine = SkillBase.GetSpellLine(GlobalSpellsLines.Combat_Styles_Effect);
 			if (styleLine == null) return null;
 
-			IList spells = SkillBase.GetSpellList(styleLine.KeyName);
-			if (spells == null) return null;
+			List<Spell> spells = SkillBase.GetSpellList(styleLine.KeyName);
 
 			Spell styleSpell = null;
 			foreach (Spell spell in spells)

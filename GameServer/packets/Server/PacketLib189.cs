@@ -298,18 +298,15 @@ namespace DOL.GS.PacketHandler
 					SpellLine chargeEffectsLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
 					if (chargeEffectsLine != null)
 					{
-						IList spells = SkillBase.GetSpellList(chargeEffectsLine.KeyName);
-						if (spells != null)
+						List<Spell> spells = SkillBase.GetSpellList(chargeEffectsLine.KeyName);
+						foreach (Spell spl in spells)
 						{
-							foreach (Spell spl in spells)
+							if (spl.ID == item.SpellID)
 							{
-								if (spl.ID == item.SpellID)
-								{
-									flag |= 0x08;
-									icon1 = spl.Icon;
-									spell_name1 = spl.Name; // or best spl.Name ?
-									break;
-								}
+								flag |= 0x08;
+								icon1 = spl.Icon;
+								spell_name1 = spl.Name; // or best spl.Name ?
+								break;
 							}
 						}
 					}
@@ -319,18 +316,15 @@ namespace DOL.GS.PacketHandler
 					SpellLine chargeEffectsLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
 					if (chargeEffectsLine != null)
 					{
-						IList spells = SkillBase.GetSpellList(chargeEffectsLine.KeyName);
-						if (spells != null)
+						List<Spell> spells = SkillBase.GetSpellList(chargeEffectsLine.KeyName);
+						foreach (Spell spl in spells)
 						{
-							foreach (Spell spl in spells)
+							if (spl.ID == item.SpellID1)
 							{
-								if (spl.ID == item.SpellID1)
-								{
-									flag |= 0x10;
-									icon2 = spl.Icon;
-									spell_name2 = spl.Name; // or best spl.Name ?
-									break;
-								}
+								flag |= 0x10;
+								icon2 = spl.Icon;
+								spell_name2 = spl.Name; // or best spl.Name ?
+								break;
 							}
 						}
 					}

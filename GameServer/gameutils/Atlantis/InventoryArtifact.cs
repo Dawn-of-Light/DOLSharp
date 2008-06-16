@@ -347,11 +347,10 @@ namespace DOL.GS
 			SpellLine spellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
 			if (spellLine != null)
 			{
-				IList spells = SkillBase.GetSpellList(spellLine.KeyName);
-				if (spells != null)
-					foreach (Spell spell in spells)
-						if (spell.ID == spellID)
-							spell.Delve(delve);
+				List<Spell> spells = SkillBase.GetSpellList(spellLine.KeyName);
+				foreach (Spell spell in spells)
+					if (spell.ID == spellID)
+						spell.Delve(delve);
 			}
 
 			if (isProc)

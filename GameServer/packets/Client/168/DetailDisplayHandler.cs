@@ -854,9 +854,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 							{
 								int clientclassID = client.Player.CharacterClass.ID;
 								int sub = 50;
-								IList ra_list = SkillBase.GetClassRealmAbilities(clientclassID);
+								List<RealmAbility> ra_list = SkillBase.GetClassRealmAbilities(clientclassID);
 								Ability ra5abil = SkillBase.getClassRealmAbility(clientclassID);
-								RealmAbility ab = (RealmAbility)ra_list[objectID - sub];
+								RealmAbility ab = ra_list[objectID - sub];
 								if (ra5abil != null) //check if player have rr
 								{
 									if(client.Player.RealmPoints < 513500) //player have not rr5 abilty
@@ -864,13 +864,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 								}
 								for (int i = 0; i <= (objectID - sub); i++) //get all ra's at full level
 								{
-									RealmAbility raabil = (RealmAbility)ra_list[i];
+									RealmAbility raabil = ra_list[i];
 									RealmAbility playerra = (RealmAbility)client.Player.GetAbility(raabil.KeyName);
 									if (playerra != null)
 										if (playerra.Level >= playerra.MaxLevel)
 											sub--;
 								}
-								ab = (RealmAbility)ra_list[objectID - sub];
+								ab = ra_list[objectID - sub];
 								if (ab != null)
 								{
 									caption = ab.Name;
@@ -883,7 +883,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							break;
 						}
 
-						IList styles = SkillBase.GetStyleList(spec.KeyName, client.Player.CharacterClass.ID);
+						List<Style> styles = SkillBase.GetStyleList(spec.KeyName, client.Player.CharacterClass.ID);
 						IList playerSpells = client.Player.GetSpellLines();
 						SpellLine selectedSpellLine = null;
 
@@ -899,7 +899,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							}
 						}
 
-						IList spells = new ArrayList();
+						List<Spell> spells = new List<Spell>();
 						if (selectedSpellLine != null)
 							spells = SkillBase.GetSpellList(selectedSpellLine.KeyName);
 
@@ -1442,30 +1442,27 @@ Type    Description           Id
 					SpellLine line = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
 					if (line != null)
 					{
-						IList spells = SkillBase.GetSpellList(line.KeyName);
-						if (spells != null)
+						List<Spell> spells = SkillBase.GetSpellList(line.KeyName);
+						foreach (Spell spl in spells)
 						{
-							foreach (Spell spl in spells)
+							if (spl.ID == item.ProcSpellID)
 							{
-								if (spl.ID == item.ProcSpellID)
+								output.Add(" ");
+								output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired"));
+								output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
+								output.Add(" ");
+								ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, line);
+								if (spellHandler != null)
 								{
+									output.AddRange(spellHandler.DelveInfo);
 									output.Add(" ");
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired"));
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
-									output.Add(" ");
-									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, line);
-									if (spellHandler != null)
-									{
-										output.AddRange(spellHandler.DelveInfo);
-										output.Add(" ");
-									}
-									else
-									{
-										output.Add("-" + spl.Name + "(Not implemented yet)");
-									}
-									output.Add(spellNote);
-									break;
 								}
+								else
+								{
+									output.Add("-" + spl.Name + "(Not implemented yet)");
+								}
+								output.Add(spellNote);
+								break;
 							}
 						}
 					}
@@ -1489,30 +1486,27 @@ Type    Description           Id
 					SpellLine line = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
 					if (line != null)
 					{
-						IList spells = SkillBase.GetSpellList(line.KeyName);
-						if (spells != null)
+						List<Spell> spells = SkillBase.GetSpellList(line.KeyName);
+						foreach (Spell spl in spells)
 						{
-							foreach (Spell spl in spells)
+							if (spl.ID == item.ProcSpellID1)
 							{
-								if (spl.ID == item.ProcSpellID1)
+								output.Add(" ");
+								output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired"));
+								output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
+								output.Add(" ");
+								ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, line);
+								if (spellHandler != null)
 								{
+									output.AddRange(spellHandler.DelveInfo);
 									output.Add(" ");
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired"));
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
-									output.Add(" ");
-									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, line);
-									if (spellHandler != null)
-									{
-										output.AddRange(spellHandler.DelveInfo);
-										output.Add(" ");
-									}
-									else
-									{
-										output.Add("-" + spl.Name + "(Not implemented yet)");
-									}
-									output.Add(spellNote);
-									break;
 								}
+								else
+								{
+									output.Add("-" + spl.Name + "(Not implemented yet)");
+								}
+								output.Add(spellNote);
+								break;
 							}
 						}
 					}
@@ -1524,38 +1518,35 @@ Type    Description           Id
 					SpellLine chargeEffectsLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
 					if (chargeEffectsLine != null)
 					{
-						IList spells = SkillBase.GetSpellList(chargeEffectsLine.KeyName);
-						if (spells != null)
+						List<Spell> spells = SkillBase.GetSpellList(chargeEffectsLine.KeyName);
+						foreach (Spell spl in spells)
 						{
-							foreach (Spell spl in spells)
+							if (spl.ID == item.SpellID)
 							{
-								if (spl.ID == item.SpellID)
+								output.Add(" ");
+								output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired2", spl.Level));
+								//output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
+								output.Add(" ");
+								output.Add(" ");
+								if (item.MaxCharges > 0)
 								{
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic"));
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Charges", item.Charges));
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", item.MaxCharges));
 									output.Add(" ");
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired2", spl.Level));
-									//output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
-									output.Add(" ");
-									output.Add(" ");
-									if (item.MaxCharges > 0)
-									{
-										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic"));
-										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Charges", item.Charges));
-										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", item.MaxCharges));
-										output.Add(" ");
-									}
-									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, chargeEffectsLine);
-									if (spellHandler != null)
-									{
-										output.AddRange(spellHandler.DelveInfo);
-										output.Add("- This spell is cast when the item is used.");
-										output.Add(" ");
-									}
-									else
-									{
-										output.Add("-" + spl.Name + "(Not implemented yet)");
-									}
-									break;
 								}
+								ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, chargeEffectsLine);
+								if (spellHandler != null)
+								{
+									output.AddRange(spellHandler.DelveInfo);
+									output.Add("- This spell is cast when the item is used.");
+									output.Add(" ");
+								}
+								else
+								{
+									output.Add("-" + spl.Name + "(Not implemented yet)");
+								}
+								break;
 							}
 						}
 					}
@@ -1567,37 +1558,34 @@ Type    Description           Id
 					SpellLine chargeEffectsLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
 					if (chargeEffectsLine != null)
 					{
-						IList spells = SkillBase.GetSpellList(chargeEffectsLine.KeyName);
-						if (spells != null)
+						List<Spell> spells = SkillBase.GetSpellList(chargeEffectsLine.KeyName);
+						foreach (Spell spl in spells)
 						{
-							foreach (Spell spl in spells)
+							if (spl.ID == item.SpellID1)
 							{
-								if (spl.ID == item.SpellID1)
+								output.Add(" ");
+								output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired"));
+								output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
+								output.Add(" ");
+								if (item.MaxCharges1 > 0)
 								{
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic"));
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Charges", item.Charges1));
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", item.MaxCharges1));
 									output.Add(" ");
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired"));
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
-									output.Add(" ");
-									if (item.MaxCharges1 > 0)
-									{
-										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic"));
-										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Charges", item.Charges1));
-										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", item.MaxCharges1));
-										output.Add(" ");
-									}
-									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, chargeEffectsLine);
-									if (spellHandler != null)
-									{
-										output.AddRange(spellHandler.DelveInfo);
-										output.Add("- This spell is cast when the item is used.");
-										output.Add(" ");
-									}
-									else
-									{
-										output.Add("-" + spl.Name + "(Not implemented yet)");
-									}
-									break;
 								}
+								ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, chargeEffectsLine);
+								if (spellHandler != null)
+								{
+									output.AddRange(spellHandler.DelveInfo);
+									output.Add("- This spell is cast when the item is used.");
+									output.Add(" ");
+								}
+								else
+								{
+									output.Add("-" + spl.Name + "(Not implemented yet)");
+								}
+								break;
 							}
 						}
 					}
@@ -1611,67 +1599,21 @@ Type    Description           Id
 						SpellLine poisonLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mundane_Poisons);
 						if (poisonLine != null)
 						{
-							IList spells = SkillBase.GetSpellList(poisonLine.KeyName);
-							if (spells != null)
-							{
-								foreach (Spell spl in spells)
-								{
-									if (spl.ID == item.PoisonSpellID)
-									{
-										output.Add(" ");
-										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired"));
-										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
-										output.Add(" ");
-										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic"));
-										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Charges", item.PoisonCharges));
-										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", item.PoisonMaxCharges));
-										output.Add(" ");
-
-										ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, poisonLine);
-										if (spellHandler != null)
-										{
-											output.AddRange(spellHandler.DelveInfo);
-											output.Add(" ");
-										}
-										else
-										{
-											output.Add("-" + spl.Name + "(Not implemented yet)");
-										}
-										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.StrikeEnemy"));
-										return;
-									}
-								}
-							}
-						}
-					}
-
-					SpellLine chargeEffectsLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-					if (chargeEffectsLine != null)
-					{
-						IList spells = SkillBase.GetSpellList(chargeEffectsLine.KeyName);
-						if (spells != null)
-						{
+							List<Spell> spells = SkillBase.GetSpellList(poisonLine.KeyName);
 							foreach (Spell spl in spells)
 							{
-								if (spl.ID == item.SpellID)
+								if (spl.ID == item.PoisonSpellID)
 								{
 									output.Add(" ");
 									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired"));
 									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
 									output.Add(" ");
-									if (item.MaxCharges > 0)
-									{
-										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic"));
-										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Charges", item.Charges));
-										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", item.MaxCharges));
-									}
-									else
-									{
-										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MagicAbility"));
-									}
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic"));
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Charges", item.PoisonCharges));
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", item.PoisonMaxCharges));
 									output.Add(" ");
 
-									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, chargeEffectsLine);
+									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, poisonLine);
 									if (spellHandler != null)
 									{
 										output.AddRange(spellHandler.DelveInfo);
@@ -1681,19 +1623,59 @@ Type    Description           Id
 									{
 										output.Add("-" + spl.Name + "(Not implemented yet)");
 									}
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.UsedItem"));
-									output.Add(" ");
-									if (spl.RecastDelay > 0)
-										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.UseItem1", Util.FormatTime(spl.RecastDelay / 1000)));
-									else
-										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.UseItem2"));
-									long lastChargedItemUseTick = client.Player.TempProperties.getLongProperty(GamePlayer.LAST_CHARGED_ITEM_USE_TICK, 0L);
-									long changeTime = client.Player.CurrentRegion.Time - lastChargedItemUseTick;
-									long recastDelay = (spl.RecastDelay > 0) ? spl.RecastDelay : 60000 * 3;
-									if (changeTime < recastDelay) //3 minutes reuse timer
-										output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.UseItem3", Util.FormatTime((recastDelay - changeTime) / 1000)));
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.StrikeEnemy"));
 									return;
 								}
+							}
+						}
+					}
+
+					SpellLine chargeEffectsLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+					if (chargeEffectsLine != null)
+					{
+						List<Spell> spells = SkillBase.GetSpellList(chargeEffectsLine.KeyName);
+						foreach (Spell spl in spells)
+						{
+							if (spl.ID == item.SpellID)
+							{
+								output.Add(" ");
+								output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired"));
+								output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
+								output.Add(" ");
+								if (item.MaxCharges > 0)
+								{
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic"));
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Charges", item.Charges));
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", item.MaxCharges));
+								}
+								else
+								{
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MagicAbility"));
+								}
+								output.Add(" ");
+
+								ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, chargeEffectsLine);
+								if (spellHandler != null)
+								{
+									output.AddRange(spellHandler.DelveInfo);
+									output.Add(" ");
+								}
+								else
+								{
+									output.Add("-" + spl.Name + "(Not implemented yet)");
+								}
+								output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.UsedItem"));
+								output.Add(" ");
+								if (spl.RecastDelay > 0)
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.UseItem1", Util.FormatTime(spl.RecastDelay / 1000)));
+								else
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.UseItem2"));
+								long lastChargedItemUseTick = client.Player.TempProperties.getLongProperty(GamePlayer.LAST_CHARGED_ITEM_USE_TICK, 0L);
+								long changeTime = client.Player.CurrentRegion.Time - lastChargedItemUseTick;
+								long recastDelay = (spl.RecastDelay > 0) ? spl.RecastDelay : 60000 * 3;
+								if (changeTime < recastDelay) //3 minutes reuse timer
+									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.UseItem3", Util.FormatTime((recastDelay - changeTime) / 1000)));
+								return;
 							}
 						}
 					}
@@ -1810,33 +1792,31 @@ Type    Description           Id
 				SpellLine poisonLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mundane_Poisons);
 				if (poisonLine != null)
 				{
-					IList spells = SkillBase.GetSpellList(poisonLine.KeyName);
-					if (spells != null)
-					{
-						foreach (Spell spl in spells)
-						{
-							if (spl.ID == item.PoisonSpellID)
-							{
-								list.Add(" ");
-								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePoisonInfo.LevelRequired"));
-								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePoisonInfo.Level", spl.Level));
-								list.Add(" ");
-								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePoisonInfo.ProcAbility"));
-								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePoisonInfo.Charges", item.PoisonCharges));
-								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePoisonInfo.MaxCharges", item.PoisonMaxCharges));
-								list.Add(" ");
+					List<Spell> spells = SkillBase.GetSpellList(poisonLine.KeyName);
 
-								ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, poisonLine);
-								if (spellHandler != null)
-								{
-									list.AddRange(spellHandler.DelveInfo);
-								}
-								else
-								{
-									list.Add("-" + spl.Name + " (Not implemented yet)");
-								}
-								break;
+					foreach (Spell spl in spells)
+					{
+						if (spl.ID == item.PoisonSpellID)
+						{
+							list.Add(" ");
+							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePoisonInfo.LevelRequired"));
+							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePoisonInfo.Level", spl.Level));
+							list.Add(" ");
+							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePoisonInfo.ProcAbility"));
+							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePoisonInfo.Charges", item.PoisonCharges));
+							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePoisonInfo.MaxCharges", item.PoisonMaxCharges));
+							list.Add(" ");
+
+							ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, poisonLine);
+							if (spellHandler != null)
+							{
+								list.AddRange(spellHandler.DelveInfo);
 							}
+							else
+							{
+								list.Add("-" + spl.Name + " (Not implemented yet)");
+							}
+							break;
 						}
 					}
 				}
@@ -1850,42 +1830,40 @@ Type    Description           Id
 				SpellLine potionLine = SkillBase.GetSpellLine(GlobalSpellsLines.Potions_Effects);
 				if (potionLine != null)
 				{
-					IList spells = SkillBase.GetSpellList(potionLine.KeyName);
-					if (spells != null)
+					List<Spell> spells = SkillBase.GetSpellList(potionLine.KeyName);
+
+					foreach (Spell spl in spells)
 					{
-						foreach (Spell spl in spells)
+						if (spl.ID == item.SpellID)
 						{
-							if (spl.ID == item.SpellID)
+							list.Add(" ");
+							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.LevelRequired"));
+							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Level", spl.Level));
+							list.Add(" ");
+							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.ChargedMagic"));
+							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Charges", item.Charges));
+							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.MaxCharges", item.MaxCharges));
+							list.Add(" ");
+
+							ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, potionLine);
+							if (spellHandler != null)
+								list.AddRange(spellHandler.DelveInfo);
+							list.Add(" ");
+							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.UseItem2"));
+							long lastPotionItemUseTick = client.Player.TempProperties.getLongProperty(GamePlayer.LAST_POTION_ITEM_USE_TICK, 0L);
+							long changeTime = client.Player.CurrentRegion.Time - lastPotionItemUseTick;
+							if (changeTime < 60000) //1 minutes reuse timer
+								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.UseItem3", Util.FormatTime((60000 - changeTime) / 1000)));
+							if (spl.CastTime > 0)
 							{
 								list.Add(" ");
-								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.LevelRequired"));
-								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Level", spl.Level));
-								list.Add(" ");
-								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.ChargedMagic"));
-								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Charges", item.Charges));
-								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.MaxCharges", item.MaxCharges));
-								list.Add(" ");
-
-								ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, potionLine);
-								if (spellHandler != null)
-									list.AddRange(spellHandler.DelveInfo);
-								list.Add(" ");
-								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.UseItem2"));
-								long lastPotionItemUseTick = client.Player.TempProperties.getLongProperty(GamePlayer.LAST_POTION_ITEM_USE_TICK, 0L);
-								long changeTime = client.Player.CurrentRegion.Time - lastPotionItemUseTick;
-								if (changeTime < 60000) //1 minutes reuse timer
-									list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.UseItem3", Util.FormatTime((60000 - changeTime) / 1000)));
-								if (spl.CastTime > 0)
-								{
-									list.Add(" ");
-									list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.NoUseInCombat"));
-								}
-								else
-								{
-									list.Add("-" + spl.Name + " (Not implemented yet)");
-								}
-								break;
+								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.NoUseInCombat"));
 							}
+							else
+							{
+								list.Add("-" + spl.Name + " (Not implemented yet)");
+							}
+							break;
 						}
 					}
 				}
