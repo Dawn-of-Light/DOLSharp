@@ -175,7 +175,7 @@ namespace DOL.GS
 		protected virtual void OnTeleportSpell(GamePlayer player, Teleport destination)
 		{
 			SpellLine spellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
-			IList spellList = SkillBase.GetSpellList(GlobalSpellsLines.Mob_Spells);
+			List<Spell> spellList = SkillBase.GetSpellList(GlobalSpellsLines.Mob_Spells);
 			Spell spell = SkillBase.GetSpellByID(5999);	// UniPortal spell.
 
 			if (spell != null)

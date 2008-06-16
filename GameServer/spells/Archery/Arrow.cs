@@ -24,6 +24,7 @@ using DOL.GS.Effects;
 using DOL.GS.Keeps;
 using DOL.GS.SkillHandler;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace DOL.GS.Spells
 {
@@ -306,8 +307,7 @@ namespace DOL.GS.Spells
             {
                 if (spellLine == null) return;
 
-                IList spells = SkillBase.GetSpellList(spellLine.KeyName);
-                if (spells == null) return;
+				List<Spell> spells = SkillBase.GetSpellList(spellLine.KeyName);
                 foreach (Spell spell in spells)
                 {
                     if (spell.ID == spellID)
