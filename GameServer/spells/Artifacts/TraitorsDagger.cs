@@ -79,7 +79,8 @@ namespace DOL.GS.Spells
 			summoned.X = x;
 			summoned.Y = y;
 			summoned.Z = z;
-			summoned.GuildName=Caster.Name; // Andraste
+            // Summoned mob should not have a guild, is not done this way on live.
+			//summoned.GuildName=Caster.Name; // Andraste
 			summoned.CurrentRegion = Caster.CurrentRegion;
 			summoned.Heading = Caster.Heading;
 			summoned.Realm = Caster.Realm;
@@ -90,7 +91,8 @@ namespace DOL.GS.Spells
 			GameSpellEffect effect = CreateSpellEffect(target, effectiveness);
 			summoned.AddToWorld();
 			(summoned.Brain as IAggressiveBrain).AddToAggroList(target, 1);
-			effect.Start(summoned);
+            (summoned.Brain as ProcPetBrain).Think();
+			//effect.Start(summoned);
 			if(summoned!=null)
 				GameEventMgr.AddHandler(summoned, GameLivingEvent.AttackFinished, new DOLEventHandler(EventHandler));
 		}
