@@ -543,7 +543,7 @@ namespace DOL.GS
 			if (buffLine == null)
 				return;
 
-			IList buffList = SkillBase.GetSpellList(PetInstaSpellLine);
+			List<Spell> buffList = SkillBase.GetSpellList(PetInstaSpellLine);
 			if (buffList.Count == 0)
 				return;
 
@@ -594,7 +594,7 @@ namespace DOL.GS
 			if (chantsLine == null)
 				return;
 
-			IList chantsList = SkillBase.GetSpellList("Chants");
+			List<Spell> chantsList = SkillBase.GetSpellList("Chants");
 			if (chantsList.Count == 0)
 				return;
 
