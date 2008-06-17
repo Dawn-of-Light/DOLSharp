@@ -21,6 +21,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using log4net;
 using DOL.GS.Keeps;
+using DOL.GS.Spells;
 
 namespace DOL.GS.SkillHandler
 {
@@ -100,6 +101,20 @@ namespace DOL.GS.SkillHandler
 			{
 				player.Out.SendMessage("Your target is too far away to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
+			}
+			if (player.TargetObject is GamePlayer && SpellHandler.FindEffectOnTarget((GamePlayer)player.TargetObject, "Phaseshift") != null)
+			{
+				player.Out.SendMessage(player.TargetObject.Name + " is Phaseshifted and can't be attacked!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+				return;
+			}
+			if(player.TargetObject is GamePlayer)
+			{
+                SputinsLegacyEffect SputinLegacy = (SputinsLegacyEffect)(player.TargetObject as GamePlayer).EffectList.GetOfType(typeof(SputinsLegacyEffect));
+				if(SputinLegacy != null)
+				{
+                    player.Out.SendMessage(player.TargetObject.Name + " is under Sputin Legacy effect and can't be attacked!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+					return;
+				}
 			}
 			#endregion
 
