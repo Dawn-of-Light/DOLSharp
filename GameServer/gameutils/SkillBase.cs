@@ -1940,7 +1940,7 @@ namespace DOL.GS
 		public static void CleanSpellList(string spellLineID)
 		{
 			if (m_spellLists.ContainsKey(spellLineID))
-				m_spellLists[spellLineID] = null;
+				m_spellLists.Remove(spellLineID);
 		}
 
 		public static void AddSpellToList(string spellLineID, int SpellID)
@@ -1961,6 +1961,9 @@ namespace DOL.GS
 				log.Error("Missing CL Spell: " + SpellID);
 
 			list.Sort(delegate(Spell sp1, Spell sp2) { return sp1.ID.CompareTo(sp2.ID); });
+			
+			for (int i = 0; i < list.Count; i++)
+			list[i].Level = i + 1;
 		}
 
 		/// <summary>

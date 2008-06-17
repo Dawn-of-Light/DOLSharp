@@ -38,7 +38,7 @@ namespace DOL.GS.RealmAbilities
 
 		public override void AddEffectsInfo(System.Collections.IList list)
 		{
-			list.Add("Healer can insta-cast a resurrect buff on themselves. Buff lasts 30 seconds. If the healer dies while buff is up, they have the option to /resurrect themselves anytime within 10 minutes after death with 10% H/E/P. The healer must wait 10 seconds before /resurrecting themselves.");
+			list.Add("The Healer won't die for 30sec.");
 			list.Add("");
 			list.Add("Target: Self");
 			list.Add("Duration: 30 sec");

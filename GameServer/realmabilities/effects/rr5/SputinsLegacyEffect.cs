@@ -5,61 +5,72 @@ using System;
 
 namespace DOL.GS.Effects
 {
-    /// <summary>
-    /// Helper for charge realm ability
-    /// </summary>
     public class SputinsLegacyEffect : TimedEffect
     {
-		public const string SPUTINSLEGACYHASRES = "sputinslegacyhasres";
+		private GamePlayer m_player = null;
 
-        /// <summary>
-        /// Creates a new effect
-        /// </summary>
-        public SputinsLegacyEffect() : base(30000) { }
+        public SputinsLegacyEffect() : base(20000) { }
 
-        /// <summary>
-        /// Start the effect on player
-        /// </summary>
-        /// <param name="target">The effect target</param>
         public override void Start(GameLiving target)
         {
             base.Start(target);
-            GameEventMgr.AddHandler(target, GameLivingEvent.Dying, new DOLEventHandler(OnDeath));
-			Owner.TempProperties.setProperty(SPUTINSLEGACYHASRES, true);
+			m_player = target as GamePlayer;
+			GameEventMgr.AddHandler(m_player, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
+            GameEventMgr.AddHandler(m_player, GameLivingEvent.Dying, new DOLEventHandler(OnRemove));
+			GameEventMgr.AddHandler(m_player, GamePlayerEvent.Quit, new DOLEventHandler(OnRemove));
+			GameEventMgr.AddHandler(m_player, GamePlayerEvent.Linkdeath, new DOLEventHandler(OnRemove));
+			GameEventMgr.AddHandler(m_player, GamePlayerEvent.RegionChanged, new DOLEventHandler(OnRemove));
         }
 
-        private void OnDeath(DOLEvent e, object sender, EventArgs args)
+        private void OnAttacked(DOLEvent e, object sender, EventArgs args)
         {
-            ((GamePlayer)Owner).Out.SendMessage("Sputins Legacy grants you a self resurrection!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+            AttackedByEnemyEventArgs attackArgs = args as AttackedByEnemyEventArgs;
+			if (attackArgs == null) return;			
+			AttackData ad = null;
+            ad = attackArgs.AttackData;
+
+            int damageAbsorbed = (int)(ad.Damage + ad.CriticalDamage);
+			
+			if(m_player.Health<(damageAbsorbed+(int)Math.Round((double)m_player.MaxHealth/20))) m_player.Health+=damageAbsorbed;
+
+        }
+
+        private void OnRemove(DOLEvent e, object sender, EventArgs args)
+        {
+            //((GamePlayer)Owner).Out.SendMessage("Sputins Legacy grants you a damage immunity!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+			
+			Stop();
         }
 
         public override void Stop()
         {
-            GameEventMgr.RemoveHandler(Owner, GameLivingEvent.Dying, new DOLEventHandler(OnDeath));
-			Owner.TempProperties.removeProperty(SPUTINSLEGACYHASRES);
+			if(m_player.EffectList.GetOfType(typeof(SputinsLegacyEffect)) != null) m_player.EffectList.Remove(this);
+			GameEventMgr.RemoveHandler(m_player, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
+            GameEventMgr.RemoveHandler(m_player, GameLivingEvent.Dying, new DOLEventHandler(OnRemove));
+			GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.Quit, new DOLEventHandler(OnRemove));
+			GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.Linkdeath, new DOLEventHandler(OnRemove));
+			GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.RegionChanged, new DOLEventHandler(OnRemove));
             base.Stop();
         }
+		
+		
+		
+		
+		
+		
+		
+		
 
-        /// <summary>
-        /// Name of the effect
-        /// </summary>
-        public override string Name { get { return "Sputin's Legacy"; } }
+        public override string Name { get { return "Sputins Legacy"; } }
 
-        /// <summary>
-        /// Icon to show on players, can be id
-        /// </summary>
         public override ushort Icon { get { return 3069; } }
 
-        /// <summary>
-        /// Delve Info
-        /// </summary>
         public override IList DelveInfo
         {
             get
             {
-                IList list = new ArrayList();
-                list.Add("Healer can insta-cast a resurrect buff on themselves. Buff lasts 30 seconds. If the healer dies while buff is up, they have the option to /resurrect themselves anytime within 10 minutes after death with 10% H/E/P. The healer must wait 10 seconds before /resurrecting themselves.");
-                list.Add(base.DelveInfo);
+                ArrayList list = new ArrayList();
+                list.Add("The Healer won't die for 30sec.");
                 return list;
             }
         }
