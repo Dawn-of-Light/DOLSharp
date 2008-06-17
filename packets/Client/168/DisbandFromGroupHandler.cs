@@ -53,7 +53,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				GamePlayer player = (GamePlayer)m_actionSource;
 
-				if(player.Group == null)
+				if(player.Group == null || player.Group.Leader != player)
 					return;
 
 				GameLiving disbandMember = player;
