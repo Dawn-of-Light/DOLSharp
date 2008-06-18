@@ -1,14 +1,33 @@
+/*
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
+
 using DOL.GS;
 
 namespace DOL.AI.Brain
 {
 	public class ProcPetBrain : StandardMobBrain, IControlledBrain
 	{
-		private GamePlayer m_owner;
+		private GameLiving m_owner;
 		private GameLiving m_target;
 
-		public ProcPetBrain(GamePlayer owner) { m_owner = owner; m_target=m_owner.TargetObject as GameLiving; AggroLevel = 100; }
-		
+		public ProcPetBrain(GameLiving owner) { m_owner = owner; m_target = m_owner.TargetObject as GameLiving; AggroLevel = 100; }
+
 		public override int ThinkInterval { get { return 1500; } }
 
 		public override void Think() { AttackMostWanted(); }
@@ -18,13 +37,13 @@ namespace DOL.AI.Brain
 		protected override void AttackMostWanted()
 		{
 			if (!IsActive) return;
-			if(m_target==null) return;
+			if (m_target == null) return;
 			GameLiving target = m_target;
-			if(target != null && target.IsAlive) Body.StartAttack(target);
+			if (target != null && target.IsAlive) Body.StartAttack(target);
 			else
 			{
-				Body.LastAttackTickPvP=0;
-				Body.LastAttackTickPvE=0;
+				Body.LastAttackTickPvP = 0;
+				Body.LastAttackTickPvE = 0;
 			}
 		}
 
@@ -39,7 +58,7 @@ namespace DOL.AI.Brain
 		public void ComeHere() { }
 		public void Goto(GameObject target) { }
 		public void UpdatePetWindow() { }
-		public GamePlayer GetPlayerOwner() { return m_owner; }
+		public GamePlayer GetPlayerOwner() { return m_owner as GamePlayer; }
 		public bool IsMainPet { get { return false; } set { } }
 		#endregion
 	}

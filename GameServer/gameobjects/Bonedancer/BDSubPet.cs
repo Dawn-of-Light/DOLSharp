@@ -58,55 +58,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="npcTemplate"></param>
 		/// <param name="owner"></param>
-		public BDSubPet(INpcTemplate npcTemplate, GameNPC owner, SubPetType type)
-			: base(npcTemplate)
-		{
-			ControlledNpc controlledBrain = null;
-
-			switch (type)
-			{
-				//Melee
-				case SubPetType.Melee:
-					controlledBrain = new BDMeleeBrain(owner);
-					break;
-				//Healer
-				case SubPetType.Healer:
-					controlledBrain = new BDHealerBrain(owner);
-					break;
-				//Mage
-				case SubPetType.Caster:
-					controlledBrain = new BDCasterBrain(owner);
-					break;
-				//Debuffer
-				case SubPetType.Debuffer:
-					controlledBrain = new BDDebufferBrain(owner);
-					break;
-				//Buffer
-				case SubPetType.Buffer:
-					controlledBrain = new BDBufferBrain(owner);
-					break;
-				//Range
-				case SubPetType.Archer:
-					controlledBrain = new BDArcherBrain(owner);
-					ItemTemplate temp = GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BD_Archer_Distance_bow") as ItemTemplate;
-					if (temp == null)
-						log.Error("Unable to find Bonedancer Archer's Bow");
-					else
-					{
-						Inventory.RemoveItem(Inventory.GetItem(eInventorySlot.DistanceWeapon));
-						Inventory.AddItem(eInventorySlot.DistanceWeapon, new InventoryItem(temp));
-						AddStatsToWeapon();
-					}
-					break;
-				//Other 
-				default:
-					controlledBrain = new ControlledNpc(owner);
-					break;
-			}
-
-			// Create a brain for the pet.
-			SetOwnBrain(controlledBrain);
-		}
+		public BDSubPet(INpcTemplate npcTemplate) : base(npcTemplate) { }
 
 		public override int MaxSpeed
 		{

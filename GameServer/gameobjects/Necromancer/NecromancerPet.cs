@@ -37,21 +37,12 @@ namespace DOL.GS
 	/// The necromancer pets.
 	/// </summary>
 	/// <author>Aredhel</author>
-	public class NecromancerPet : GameNPC
+	public class NecromancerPet : GamePet
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
-		/// Disable default constructor.
-		/// </summary>
-		private NecromancerPet()
-		{
-		}
-
-        INpcTemplate m_petTemplate;
 
 		/// <summary>
 		/// Proc IDs for various pet weapons.
@@ -74,11 +65,9 @@ namespace DOL.GS
 		/// <param name="owner">Player who summoned this pet.</param>
 		/// <param name="summonConBonus">Item constitution bonuses of the player.</param>
 		/// <param name="summonHitsBonus">Hits bonuses of the player.</param>
-		public NecromancerPet(INpcTemplate npcTemplate, GamePlayer owner, int summonConBonus, 
+		public NecromancerPet(INpcTemplate npcTemplate, int summonConBonus, 
 			int summonHitsBonus) : base(npcTemplate)
 		{
-            m_petTemplate = npcTemplate;
-
             // Transfer bonuses.
             
 			m_summonConBonus = summonConBonus;
@@ -116,16 +105,12 @@ namespace DOL.GS
 					LoadEquipmentTemplate("barehand_weapon");
 					break;
             }
-
-            // Create a brain for the pet.
-
-			SetOwnBrain(new NecromancerPetBrain(owner));
 		}
 
 		/// <summary>
 		/// Address the master.
 		/// </summary>
-		public void HailMaster()
+		public override void HailMaster()
 		{
 			GamePlayer owner = ((Brain as IControlledBrain).Owner) as GamePlayer;
 			if (owner != null)
@@ -359,54 +344,6 @@ namespace DOL.GS
 		#region Melee
 
 		/// <summary>
-		/// The type of damage the currently active weapon does.
-		/// </summary>
-		/// <param name="weapon"></param>
-		/// <returns></returns>
-		public override eDamageType AttackDamageType(InventoryItem weapon)
-		{
-			if (weapon != null)
-			{
-				switch ((eWeaponDamageType)weapon.Type_Damage)
-				{
-					case eWeaponDamageType.Crush: return eDamageType.Crush;
-					case eWeaponDamageType.Slash: return eDamageType.Slash;
-				}
-			}
-
-			return eDamageType.Crush;
-		}
-
-		/// <summary>
-		/// Get melee speed in milliseconds.
-		/// </summary>
-		/// <param name="weapons"></param>
-		/// <returns></returns>
-		public override int AttackSpeed(params InventoryItem[] weapons)
-		{
-			double weaponSpeed = 0.0;
-
-			if (weapons != null)
-			{
-				foreach (InventoryItem item in weapons)
-					if (item != null)
-						weaponSpeed += item.SPD_ABS;
-					else
-					{
-						weaponSpeed += 34;
-					}
-				weaponSpeed = (weapons.Length > 0) ? weaponSpeed / weapons.Length : 34.0;
-			}
-			else
-			{
-				weaponSpeed = 34.0;
-			}
-
-			double speed = 100 * weaponSpeed * (1.0 - (GetModified(eProperty.Quickness) - 60) / 500.0);
-			return (int)(speed * GetModified(eProperty.MeleeSpeed) * 0.01);
-		}
-
-		/// <summary>
 		/// Whether or not pet can use left hand weapon.
 		/// </summary>
 		public override bool CanUseLefthandedWeapon
@@ -441,54 +378,6 @@ namespace DOL.GS
 				default:
 					return 0;
 			}
-		}
-
-		/// <summary>
-		/// Pick a random style for now.
-		/// </summary>
-		/// <returns></returns>
-		protected override Style GetStyleToUse()
-		{
-			if (m_petTemplate != null)
-			{
-				int styleCount = m_petTemplate.Styles.Count;
-				if (styleCount > 0 && Util.Chance(20 + styleCount))
-				{
-					Style style = (Style)(m_petTemplate.Styles[Util.Random(styleCount - 1)]);
-					if (style.Level >= Level/4 && style.Level <= Level)
-						return style;
-				}
-			}
-
-			return base.GetStyleToUse();
-		}
-
-		/// <summary>
-		/// Get weapon skill for the pet (for formula see Spydor's Web,
-		/// http://daoc.nisrv.com/modules.php?name=Weapon_Skill_Calc).
-		/// </summary>
-		/// <param name="weapon"></param>
-		/// <returns></returns>
-		public override double GetWeaponSkill(InventoryItem weapon)
-		{
-			if (weapon == null)
-				return base.GetWeaponSkill(weapon);
-
-			// Let's say the pet is paladin-like.
-
-			double factor = 1.9;
-			double baseWS = 380;
-			return ((GetWeaponStat(weapon) - 50) * factor + baseWS) * (1 + WeaponSpecLevel(weapon) / 100);
-		}
-
-		/// <summary>
-		/// Weapon specialisation is up to level, if a weapon is equipped.
-		/// </summary>
-		/// <param name="weapon"></param>
-		/// <returns></returns>
-		public override int WeaponSpecLevel(InventoryItem weapon)
-		{
-			return (weapon != null) ? Level : base.WeaponSpecLevel(weapon);
 		}
 
 		/// <summary>
@@ -607,56 +496,6 @@ namespace DOL.GS
 
 			if (tauntSpell != null && GetSkillDisabledDuration(tauntSpell) == 0)
 				CastSpell(tauntSpell, chantsLine);
-		}
-
-		/// <summary>
-		/// Called when spell has finished casting.
-		/// </summary>
-		/// <param name="handler"></param>
-		public override void OnAfterSpellCastSequence(ISpellHandler handler)
-		{
-			base.OnAfterSpellCastSequence(handler);
-			Brain.Notify(GameNPCEvent.CastFinished, this, new CastSpellEventArgs(handler));
-		}
-
-		/// <summary>
-		/// Returns the chance for a critical hit with a spell.
-		/// </summary>
-		public override int SpellCriticalChance
-		{
-			get { return ((Brain as IControlledBrain).Owner).GetModified(eProperty.CriticalSpellHitChance); }
-			set { }
-		}
-
-		#endregion
-
-		#region Shared Melee & Spells
-
-		/// <summary>
-		/// Multiplier for melee and magic.
-		/// </summary>
-		public override double Effectiveness
-		{
-			get { return (Brain as NecromancerPetBrain).Owner.Effectiveness; }
-		}
-
-        /// <summary>
-        /// Specialisation level including item bonuses and RR.
-        /// </summary>
-        /// <param name="keyName">The specialisation line.</param>
-        /// <returns>The specialisation level.</returns>
-        public override int GetModifiedSpecLevel(string keyName)
-        {
-            switch (keyName)
-            {
-                case Specs.Slash:
-                case Specs.Crush:
-                case Specs.Two_Handed: 
-				case Specs.Shields:
-				case Specs.Critical_Strike:
-					return Level;
-                default: return (Brain as NecromancerPetBrain).Owner.GetModifiedSpecLevel(keyName);
-            }
 		}
 
 		#endregion

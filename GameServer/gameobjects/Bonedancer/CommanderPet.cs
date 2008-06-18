@@ -45,7 +45,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="npcTemplate"></param>
 		/// <param name="owner"></param>
-		public CommanderPet(INpcTemplate npcTemplate, GamePlayer owner)
+		public CommanderPet(INpcTemplate npcTemplate)
 			: base(npcTemplate)
 		{
 			switch (Name.ToLower())
@@ -67,14 +67,12 @@ namespace DOL.GS
 					InitControlledNpc(3);
 					break;
 			}
-
-			SetOwnBrain(new CommanderBrain(owner));
 		}
 
 		/// <summary>
 		/// Address the master.
 		/// </summary>
-		public void HailMaster()
+		public override void HailMaster()
 		{
 			GamePlayer owner = ((Brain as IControlledBrain).Owner) as GamePlayer;
 			if (owner != null)

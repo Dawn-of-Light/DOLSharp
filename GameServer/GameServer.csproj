@@ -105,6 +105,7 @@
     <Compile Include="ai\APlayerVicinityBrain.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ai\brain\Animist\TurretFNFBrain.cs" />
     <Compile Include="ai\brain\BD Pets\BDArcherBrain.cs" />
     <Compile Include="ai\brain\BD Pets\BDBufferBrain.cs" />
     <Compile Include="ai\brain\BD Pets\BDCasterBrain.cs" />
@@ -141,7 +142,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ai\brain\Theurgist\TheurgistPetBrain.cs" />
-    <Compile Include="ai\brain\TurretBrain.cs" />
+    <Compile Include="ai\brain\Animist\TurretBrain.cs" />
     <Compile Include="ai\brain\Necromancer\NecromancerPetBrain.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -263,7 +264,6 @@
     <Compile Include="commands\PlayerCommands\Repair.cs" />
     <Compile Include="commands\PlayerCommands\report.cs" />
     <Compile Include="commands\PlayerCommands\respec.cs" />
-    <Compile Include="commands\PlayerCommands\resurrect.cs" />
     <Compile Include="commands\PlayerCommands\roll.cs" />
     <Compile Include="commands\PlayerCommands\rp.cs" />
     <Compile Include="commands\PlayerCommands\safety.cs" />
@@ -659,7 +659,9 @@
     <Compile Include="gameobjects\CustomNPC\Teleporters\MidgardTeleporter.cs" />
     <Compile Include="gameobjects\CustomNPC\Teleporters\ThroneRoomTeleporter.cs" />
     <Compile Include="gameobjects\CustomNPC\VaultKeeper.cs" />
+    <Compile Include="gameobjects\GamePet.cs" />
     <Compile Include="gameobjects\GameTeleporter.cs" />
+    <Compile Include="gameobjects\Theurgist\TheurgistPet.cs" />
     <Compile Include="gameutils\Atlantis\InventoryArtifact.cs" />
     <Compile Include="gameobjects\Atlantis\Researcher.cs" />
     <Compile Include="gameobjects\Atlantis\Scholar.cs" />
@@ -1952,6 +1954,10 @@
     <Compile Include="spells\AmnesiaSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="spells\Animist\SummonAnimistFnF.cs" />
+    <Compile Include="spells\Animist\SummonAnimistMainPet.cs" />
+    <Compile Include="spells\Animist\SummonAnimistPet.cs" />
+    <Compile Include="spells\Animist\TurretSpellHandler.cs" />
     <Compile Include="spells\Archery\Archery.cs" />
     <Compile Include="spells\Archery\Arrow.cs" />
     <Compile Include="spells\Archery\ArrowDamageTypes.cs" />
@@ -1987,6 +1993,7 @@
     <Compile Include="spells\BuffShear.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="spells\Cabalist\SummonSimulacrum.cs" />
     <Compile Include="spells\CCSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -2006,13 +2013,16 @@
     <Compile Include="spells\DamageToPowerSpellHandler.cs" />
     <Compile Include="spells\DisarmSpellHandler.cs" />
     <Compile Include="spells\DoomHammer.cs" />
+    <Compile Include="spells\Druid\SummonDruidPet.cs" />
+    <Compile Include="spells\Enchanter\SummonUnderhill.cs" />
     <Compile Include="spells\EnduranceHealSpellHandler.cs" />
     <Compile Include="spells\FacilisSpellHandler.cs" />
     <Compile Include="spells\FocusShellHandler.cs" />
     <Compile Include="spells\Fury.cs" />
+    <Compile Include="spells\Hunter\SummonHunterPet.cs" />
     <Compile Include="spells\Savage\SavageEnduranceHeal.cs" />
     <Compile Include="spells\SpeedOfTheRealmHandler.cs" />
-    <Compile Include="spells\SummonTheurgistPet.cs" />
+    <Compile Include="spells\Spirit Master\SummonSpiritFighter.cs" />
     <Compile Include="spells\Teleport\GatewayPersonalBind.cs" />
     <Compile Include="spells\HealthToFatigue.cs" />
     <Compile Include="spells\Heretic\HereticDamageLostOnPulse.cs" />
@@ -2048,7 +2058,7 @@
     <Compile Include="spells\StyleDamageToPower.cs" />
     <Compile Include="spells\StyleTaunt.cs" />
     <Compile Include="spells\Bonedancer\SummonMinionHandler.cs" />
-    <Compile Include="spells\TurretSpellHandler.cs" />
+    <Compile Include="spells\Theurgist\SummonTheurgistPet.cs" />
     <Compile Include="spells\Teleport\UniPortal.cs" />
     <Compile Include="spells\Valkyrie\FrontalAOEConeHandler.cs" />
     <Compile Include="spells\Valkyrie\ValkyrieProc.cs" />
