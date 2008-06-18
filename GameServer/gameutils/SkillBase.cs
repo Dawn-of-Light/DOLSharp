@@ -2117,8 +2117,8 @@ namespace DOL.GS
 			eProperty res;
 			if (!m_specToSkill.TryGetValue(specKey, out res))
 			{
-				if (log.IsWarnEnabled)
-					log.Warn("No skill property found for spec " + specKey);
+				//if (log.IsWarnEnabled)
+					//log.Warn("No skill property found for spec " + specKey);
 				return eProperty.Undefined;
 			}
 			return res;
@@ -2134,8 +2134,8 @@ namespace DOL.GS
 			eProperty res;
 			if (!m_specToFocus.TryGetValue(specKey, out res))
 			{
-				if (log.IsWarnEnabled)
-					log.Warn("No skill property found for spec " + specKey);
+				//if (log.IsWarnEnabled)
+					//log.Warn("No skill property found for spec " + specKey);
 				return eProperty.Undefined;
 			}
 			return res;

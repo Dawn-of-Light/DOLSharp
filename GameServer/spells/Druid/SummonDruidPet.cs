@@ -33,10 +33,10 @@ namespace DOL.GS.Spells
 	/// Spell handler to summon a bonedancer pet.
 	/// </summary>
 	/// <author>IST</author>
-	[SpellHandler("SummonCommander")]
-	public class SummonCommanderPet : SummonSpellHandler
+	[SpellHandler("SummonDruidPet")]
+	public class SummonDruidPet : SummonSpellHandler
 	{
-		public SummonCommanderPet(GameLiving caster, Spell spell, SpellLine line)
+		public SummonDruidPet(GameLiving caster, Spell spell, SpellLine line)
 			: base(caster, spell, line) { }
 
 		public override bool CheckBeginCast(GameLiving selectedTarget)
@@ -47,53 +47,6 @@ namespace DOL.GS.Spells
 				return false;
 			}
 			return base.CheckBeginCast(selectedTarget);
-		}
-
-		protected override void OnNpcReleaseCommand(DOLEvent e, object sender, EventArgs arguments)
-		{
-			if (!(sender is CommanderPet))
-				return;
-
-			CommanderPet pet = sender as CommanderPet;
-
-			if (pet.ControlledNpcList != null)
-			{
-				foreach (BDPetBrain cnpc in pet.ControlledNpcList)
-				{
-					if (cnpc != null)
-						GameEventMgr.Notify(GameLivingEvent.PetReleased, cnpc.Body);
-				}
-			}
-			base.OnNpcReleaseCommand(e, sender, arguments);
-		}
-
-		protected override IControlledBrain GetPetBrain(GameLiving owner)
-		{
-			return new CommanderBrain(owner);
-		}
-
-		protected override GamePet GetGamePet(INpcTemplate template)
-		{
-			return new CommanderPet(template);
-		}
-
-		/// <summary>
-		/// Delve info string.
-		/// </summary>
-		public override IList DelveInfo
-		{
-			get
-			{
-				ArrayList delve = new ArrayList();
-				delve.Add("Function: summon");
-				delve.Add("");
-				delve.Add("Summons a pet to serve the caster.");
-				delve.Add("");
-				delve.Add(String.Format("Target: {0}", Spell.Target));
-				delve.Add(String.Format("Power cost: {0}%", Math.Abs(Spell.Power)));
-				delve.Add(String.Format("Casting time: {0}", (Spell.CastTime / 1000).ToString("0.0## sec")));
-				return delve;
-			}
 		}
 	}
 }

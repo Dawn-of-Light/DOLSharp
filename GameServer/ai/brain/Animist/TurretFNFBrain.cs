@@ -16,47 +16,19 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+
 using System;
-using System.Reflection;
 using System.Collections.Generic;
-using System.Text;
 using DOL.GS;
 using DOL.GS.Spells;
-using DOL.AI.Brain;
-using DOL.Events;
-using log4net;
 using DOL.GS.PacketHandler;
-using DOL.Database;
-using System.Collections;
 using DOL.GS.Effects;
-using DOL.GS.Styles;
+using DOL.Events;
 
-namespace DOL.GS
+namespace DOL.AI.Brain
 {
-	public class BDPet : GamePet
+	public class TurretFNFBrain : TurretBrain
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
-		/// Proc IDs for various pet weapons.
-		/// </summary>
-		private enum Procs
-		{
-			Cold = 32050,
-			Disease = 32014,
-			Heat = 32053,
-			Poison = 32013,
-			Stun = 2165
-		};
-
-		/// <summary>
-		/// Create a commander.
-		/// </summary>
-		/// <param name="npcTemplate"></param>
-		/// <param name="owner"></param>
-		public BDPet(INpcTemplate npcTemplate) : base(npcTemplate) { }
+		public TurretFNFBrain(GameLiving owner) : base(owner) { }
 	}
 }

@@ -93,44 +93,6 @@ namespace DOL.GS.Spells
 			return base.CalculateCastingTime();
 		}
 
-        /// <summary>
-        /// Called after normal spell cast is completed and effect has to be started.
-        /// </summary>
-        public override void FinishSpellCast(GameLiving target)
-        {
-            foreach (GamePlayer player in m_caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
-            {
-                if (player != m_caster)
-                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, 
-                        "GameObject.Casting.CastsASpell", m_caster.GetName(0, true)), 
-                        eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-            }
-
-			// Now deduct mana for the spell.
-
-			int powerCost = CalculateNeededPower(Caster);
-			if (powerCost > 0)
-				Caster.ChangeMana(Caster, DOL.GS.GameLiving.eManaChangeType.Spell, -powerCost);
-
-            // Create the pet.
-
-            StartSpell(target);
-
-            GamePlayer playerCaster = Caster as GamePlayer;
-			if (playerCaster != null)
-            {
-				IControlledBrain brain = playerCaster.ControlledNpc;
-				if (brain != null)
-				{
-					MessageToCaster(String.Format("The {0} is now under your control.", brain.Body.Name),
-						eChatType.CT_Spell);
-					(brain.Body as NecromancerPet).HailMaster();
-				}
-            }
-
-            GameEventMgr.Notify(GameLivingEvent.CastFinished, m_caster, new CastSpellEventArgs(this));
-        }
-
 		/// <summary>
 		/// Create the pet and transfer stats.
 		/// </summary>
@@ -138,51 +100,10 @@ namespace DOL.GS.Spells
 		/// <param name="effectiveness">Factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-			GamePlayer player = Caster as GamePlayer;
-			if (player == null) return;
+			base.ApplyEffectOnTarget(target, effectiveness);
 
-			INpcTemplate template = NpcTemplateMgr.GetTemplate(Spell.LifeDrainReturn);
-			if (template == null)
-			{
-				if (log.IsWarnEnabled)
-					log.WarnFormat("NPC template {0} not found! Spell: {1}", Spell.LifeDrainReturn, Spell.ToString());
-				MessageToCaster("NPC template " + Spell.LifeDrainReturn + " not found!", eChatType.CT_System);
-				return;
-			}
-
-			GameSpellEffect effect = CreateSpellEffect(target, effectiveness);
-
-			Caster.GetSpotFromHeading(64, out x, out y);
-			z = Caster.Z;
-
-			summoned = new NecromancerPet(template, player, m_summonConBonus, m_summonHitsBonus);
-			summoned.X = x;
-			summoned.Y = y;
-			summoned.Z = z;
-			summoned.CurrentRegion = target.CurrentRegion;
-			summoned.Heading = (ushort)((target.Heading + 2048) % 4096);
-			summoned.Realm = target.Realm;
-			summoned.CurrentSpeed = 0;
-
-			// Pet level will be 88% of the level of the caster +1, except for
-			// the minor zombie servant, which will cap out at level 2 (patch 1.87).
-
-			if (Spell.Damage < 0)
-			{
-				double petLevel = target.Level * Spell.Damage * -0.01 + 1;
-				summoned.Level = (byte)((summoned.Name == "minor zombie servant")
-					? Math.Min(2, petLevel) : petLevel);
-			}
-			else 
-				summoned.Level = (byte)Spell.Damage;
-
-			summoned.AddToWorld();
-
-			GameEventMgr.AddHandler(summoned, GameLivingEvent.PetReleased, new DOLEventHandler(OnNpcReleaseCommand));
-
-			player.SetControlledNpc((IControlledBrain)summoned.Brain);
-			effect.Start(summoned);
-			player.Shade(true);
+			if (Caster is GamePlayer)
+				(Caster as GamePlayer).Shade(true);
 
 			// Cancel RR5 Call of Darkness if on caster.
 
@@ -208,6 +129,34 @@ namespace DOL.GS.Spells
 				delve.Add(String.Format("Casting time: {0}", (Spell.CastTime / 1000).ToString("0.0## sec")));
 				return delve;
 			}
+		}
+
+		protected override IControlledBrain GetPetBrain(GameLiving owner)
+		{
+			return new NecromancerPetBrain(owner);
+		}
+
+		protected override GamePet GetGamePet(INpcTemplate template)
+		{
+			return new NecromancerPet(template, m_summonConBonus, m_summonHitsBonus);
+		}
+
+		protected override byte GetPetLevel()
+		{
+			// Pet level will be 88% of the level of the caster +1, except for
+			// the minor zombie servant, which will cap out at level 2 (patch 1.87).
+			byte level;
+
+			if (Spell.Damage < 0)
+			{
+				double petLevel = Caster.Level * Spell.Damage * -0.01 + 1;
+				level = (byte)((pet.Name == "minor zombie servant")
+					? Math.Min(2, petLevel) : petLevel);
+			}
+			else
+				level = (byte)Spell.Damage;
+
+			return level;
 		}
 	}
 }

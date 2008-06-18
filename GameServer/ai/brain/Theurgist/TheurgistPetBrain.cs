@@ -37,12 +37,12 @@ namespace DOL.AI.Brain
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		private GamePlayer m_owner;
+		private GameLiving m_owner;
 		private GameLiving m_target;
 		private bool m_melee = false;
 		private Spell spelllos;
 
-		public TheurgistPetBrain(GamePlayer owner)
+		public TheurgistPetBrain(GameLiving owner)
 		{
 			if (owner != null)
 			{
@@ -51,6 +51,7 @@ namespace DOL.AI.Brain
 					m_target = m_owner.TargetObject as GameLiving;
 			}
 			AggroLevel = 100;
+			IsMainPet = false;
 		}
 
 		public override int ThinkInterval { get { return 1500; } }
@@ -157,7 +158,7 @@ namespace DOL.AI.Brain
 		public void ComeHere() { }
 		public void Goto(GameObject target) { }
 		public void UpdatePetWindow() { }
-		public GamePlayer GetPlayerOwner() { return m_owner; }
+		public GamePlayer GetPlayerOwner() { return m_owner as GamePlayer; }
 		public bool IsMainPet { get { return false; } set { } }
 		#endregion
 	}

@@ -2731,7 +2731,7 @@ namespace DOL.GS
 		public virtual ABrain SetOwnBrain(ABrain brain)
 		{
 			if (brain == null)
-				throw new ArgumentNullException("brain");
+				return null;
 			if (brain.IsActive)
 				throw new ArgumentException("The new brain is already active.", "brain");
 
