@@ -20,6 +20,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using DOL.Database;
 using DOL.AI.Brain;
 using DOL.Events;
 using DOL.GS;
@@ -82,67 +83,25 @@ namespace DOL.GS.Spells
 		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-			if (Caster == null)
-				return;
-
-			GameNPC pet = Caster.ControlledNpc.Body;
+			GameNPC temppet = Caster.ControlledNpc.Body;
 			//Lets let NPC's able to cast minions.  Here we make sure that the Caster is a GameNPC
 			//and that m_controlledNpc is initialized (since we aren't thread safe).
-			if (pet == null)
+			if (temppet == null)
 			{
 				if (Caster is GameNPC)
 				{
-					pet = (GameNPC)Caster;
+					temppet = (GameNPC)Caster;
 					//We'll give default NPCs 2 minions!
-					if (pet.ControlledNpcList == null)
-						pet.InitControlledNpc(2);
+					if (temppet.ControlledNpcList == null)
+						temppet.InitControlledNpc(2);
 				}
 				else
 					return;
 			}
 
-			INpcTemplate template = NpcTemplateMgr.GetTemplate(Spell.LifeDrainReturn);
-			if (template == null)
-			{
-				if (log.IsWarnEnabled)
-					log.WarnFormat("NPC template {0} not found! Spell: {1}", Spell.LifeDrainReturn, Spell.ToString());
-				MessageToCaster("NPC template " + Spell.LifeDrainReturn + " not found!", eChatType.CT_System);
-				return;
-			}
+			base.ApplyEffectOnTarget(target, effectiveness);
 
-			int x, y;
-			GameSpellEffect effect = CreateSpellEffect(target, effectiveness);
-			target.GetSpotFromHeading(64, out x, out y);
-
-			BDSubPet summoned = new BDSubPet(template, pet, (BDSubPet.SubPetType)(byte)Spell.DamageType);
-			summoned.X = x;
-			summoned.Y = y;
-			summoned.Z = target.Z;
-			summoned.CurrentRegion = target.CurrentRegion;
-			summoned.Heading = (ushort)((target.Heading + 2048) % 4096);
-			summoned.Realm = target.Realm;
-			summoned.CurrentSpeed = 0;
-
-			if (Spell.Damage < 0)
-				summoned.Level = (byte)(target.Level * Spell.Damage * -0.01);
-			else
-				summoned.Level = (byte)Spell.Damage;
-			if (summoned.Level > Spell.Value)
-				summoned.Level = (byte)Spell.Value;
-
-			//edit for BD
-			//Patch 1.87: subpets have been increased by one level to make them blue
-			//to a level 50
-			if (summoned.Level == 37 && pet.Level >= 41)
-				summoned.Level = 41;
-
-			summoned.AddToWorld();
-			summoned.UpdateNPCEquipmentAppearance();
-
-			GameEventMgr.AddHandler(summoned, GameLivingEvent.PetReleased, new DOLEventHandler(OnNpcReleaseCommand));
-			//Add the minion to the list - use 0 because it doesn't matter where it gets added
-			if (pet.AddControlledNpc(summoned.Brain as IControlledBrain))
-				effect.Start(summoned);
+			pet.UpdateNPCEquipmentAppearance();
 		}
 
 		/// <summary>
@@ -173,6 +132,78 @@ namespace DOL.GS.Spells
 				commander.RemoveControlledNpc(pet.Brain as IControlledBrain);
 			}
 			return base.OnEffectExpires(effect, noMessages);
+		}
+
+		protected override IControlledBrain GetPetBrain(GameLiving owner)
+		{
+			IControlledBrain controlledBrain = null;
+			BDSubPet.SubPetType type = (BDSubPet.SubPetType)(byte)this.Spell.DamageType;
+			owner = owner.ControlledNpc.Body;
+
+			switch (type)
+			{
+				//Melee
+				case BDSubPet.SubPetType.Melee:
+					controlledBrain = new BDMeleeBrain(owner);
+					break;
+				//Healer
+				case BDSubPet.SubPetType.Healer:
+					controlledBrain = new BDHealerBrain(owner);
+					break;
+				//Mage
+				case BDSubPet.SubPetType.Caster:
+					controlledBrain = new BDCasterBrain(owner);
+					break;
+				//Debuffer
+				case BDSubPet.SubPetType.Debuffer:
+					controlledBrain = new BDDebufferBrain(owner);
+					break;
+				//Buffer
+				case BDSubPet.SubPetType.Buffer:
+					controlledBrain = new BDBufferBrain(owner);
+					break;
+				//Range
+				case BDSubPet.SubPetType.Archer:
+					controlledBrain = new BDArcherBrain(owner);
+					ItemTemplate temp = GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BD_Archer_Distance_bow") as ItemTemplate;
+					if (temp == null)
+						log.Error("Unable to find Bonedancer Archer's Bow");
+					else
+					{
+						pet.Inventory.RemoveItem(pet.Inventory.GetItem(eInventorySlot.DistanceWeapon));
+						pet.Inventory.AddItem(eInventorySlot.DistanceWeapon, new InventoryItem(temp));
+					}
+					break;
+				//Other 
+				default:
+					controlledBrain = new ControlledNpc(owner);
+					break;
+			}
+
+			return controlledBrain;
+		}
+
+		protected override GamePet GetGamePet(INpcTemplate template)
+		{
+			return new BDSubPet(template);
+		}
+
+		protected override void SetBrainToOwner(IControlledBrain brain)
+		{
+			Caster.ControlledNpc.Body.AddControlledNpc(brain);
+		}
+
+		protected override byte GetPetLevel()
+		{
+			byte level = base.GetPetLevel();
+
+			//edit for BD
+			//Patch 1.87: subpets have been increased by one level to make them blue
+			//to a level 50
+			if (level == 37 && (pet.Brain as IControlledBrain).Owner.Level >= 41)
+				level = 41;
+
+			return level;
 		}
 
 		/// <summary>
