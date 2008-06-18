@@ -26,90 +26,74 @@ using DOL.AI.Brain;
 namespace DOL.GS.Spells
 {
 	[SpellHandlerAttribute("TraitorsDaggerProc")]
-    public class TraitorsDaggerProc : DefensiveProcSpellHandler
-    {    	
-   		public override void OnEffectStart(GameSpellEffect effect)
+	public class TraitorsDaggerProc : DefensiveProcSpellHandler
+	{
+		public override void OnEffectStart(GameSpellEffect effect)
 		{
-            base.OnEffectStart(effect);
-            if(effect.Owner is GamePlayer)
-            {	
-            	GamePlayer player = effect.Owner as GamePlayer;
-   				player.Shade(true);
-   			}
-   		}   		
-  		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
+			base.OnEffectStart(effect);
+			if (effect.Owner is GamePlayer)
+			{
+				GamePlayer player = effect.Owner as GamePlayer;
+				player.Shade(true);
+			}
+		}
+		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
-            if(effect.Owner is GamePlayer)
-            {	
-            	GamePlayer player = effect.Owner as GamePlayer;
-  				player.Shade(false);
-  			}
-  			return base.OnEffectExpires(effect,noMessages);
-  		}        
-        public TraitorsDaggerProc(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-    }
+			if (effect.Owner is GamePlayer)
+			{
+				GamePlayer player = effect.Owner as GamePlayer;
+				player.Shade(false);
+			}
+			return base.OnEffectExpires(effect, noMessages);
+		}
+		public TraitorsDaggerProc(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+	}
 
 	[SpellHandlerAttribute("TraitorsDaggerSummon")]
-    public class TraitorsDaggerSummon : SummonSpellHandler
-    {    
+	public class TraitorsDaggerSummon : SummonSpellHandler
+	{
 		private DBSpell dbs;
-		private Spell   s;
+		private Spell s;
 		private SpellLine sl;
 		private ISpellHandler trap;
-		
+
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-			GamePlayer player = Caster as GamePlayer;
-			if (player == null)	return;
-			INpcTemplate template = NpcTemplateMgr.GetTemplate(Spell.LifeDrainReturn);
-			if (template == null)
-			{
-				String errorMessage = String.Format("NPC template {0} is missing, spell ID = {1}", Spell.LifeDrainReturn, Spell.ID);
-				if (log.IsWarnEnabled) log.Warn(errorMessage);
-				if (player.Client.Account.PrivLevel > 1) MessageToCaster(errorMessage, eChatType.CT_Skill);
-				return;
-			}
-			int x, y, z;
-			Caster.GetSpotFromHeading(64, out x, out y);
-			z = Caster.Z;
-			ControlledNpc controlledBrain = new ControlledNpc(Caster);
-			summoned = new TraitorDaggerPet(template);
-			summoned.SetOwnBrain(new ProcPetBrain(player));
-			summoned.HealthMultiplicator = true;
-			summoned.X = x;
-			summoned.Y = y;
-			summoned.Z = z;
-            // Summoned mob should not have a guild, is not done this way on live.
-			//summoned.GuildName=Caster.Name; // Andraste
-			summoned.CurrentRegion = Caster.CurrentRegion;
-			summoned.Heading = Caster.Heading;
-			summoned.Realm = Caster.Realm;
-			summoned.CurrentSpeed = 0;
-			if (Spell.Damage < 0) summoned.Level = (byte)(Caster.Level * Spell.Damage * -0.01);
-			else summoned.Level = (byte)Spell.Damage;
-			if (summoned.Level > Spell.Value) summoned.Level = (byte)Spell.Value;
-			GameSpellEffect effect = CreateSpellEffect(target, effectiveness);
-			summoned.AddToWorld();
-			(summoned.Brain as IAggressiveBrain).AddToAggroList(target, 1);
-            (summoned.Brain as ProcPetBrain).Think();
-			//effect.Start(summoned);
-			if(summoned!=null)
-				GameEventMgr.AddHandler(summoned, GameLivingEvent.AttackFinished, new DOLEventHandler(EventHandler));
+			base.ApplyEffectOnTarget(target, effectiveness);
+
+			(pet.Brain as IAggressiveBrain).AddToAggroList(target, 1);
+			(pet.Brain as ProcPetBrain).Think();
 		}
-		
+
+		protected override GamePet GetGamePet(INpcTemplate template)
+		{
+			return new TraitorDaggerPet(template);
+		}
+
+		protected override IControlledBrain GetPetBrain(GameLiving owner)
+		{
+			return new ProcPetBrain(owner);
+		}
+
+		protected override void AddHandlers()
+		{
+			GameEventMgr.AddHandler(pet, GameLivingEvent.AttackFinished, new DOLEventHandler(EventHandler));
+		}
+
 		protected void EventHandler(DOLEvent e, object sender, EventArgs arguments)
 		{
 			AttackFinishedEventArgs args = arguments as AttackFinishedEventArgs;
 			if (args == null || args.AttackData == null)
 				return;
-			
+
 			// Spirit procs lifetap when hitting ennemy
-			if(trap!=null)
+			if (trap != null)
 				trap.StartSpell(args.AttackData.Target);
-		}	
-		
-        public TraitorsDaggerSummon(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) 
-        {
+		}
+
+		public TraitorsDaggerSummon(GameLiving caster, Spell spell, SpellLine line)
+			: base(caster, spell, line)
+		{
 			dbs = new DBSpell();
 			dbs.Name = "Increased Essence Consumption";
 			dbs.Icon = 661;
@@ -128,21 +112,21 @@ namespace DOL.GS.Spells
 			dbs.Power = 0;
 			dbs.CastTime = 0;
 			dbs.Range = 350;
-			s = new Spell(dbs,1);
-			sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);		
-			trap = ScriptMgr.CreateSpellHandler(m_caster, s, sl);	
-        }
-    }
+			s = new Spell(dbs, 1);
+			sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
+			trap = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
+		}
+	}
 }
 
 namespace DOL.GS
 {
-	public class TraitorDaggerPet : GameNPC
+	public class TraitorDaggerPet : GamePet
 	{
 		public override int MaxHealth
-        {
-            get { return Level*25; }
-        }
+		{
+			get { return Level * 25; }
+		}
 		public override void OnAttackedByEnemy(AttackData ad) { }
 		public TraitorDaggerPet(INpcTemplate npcTemplate) : base(npcTemplate) { }
 	}

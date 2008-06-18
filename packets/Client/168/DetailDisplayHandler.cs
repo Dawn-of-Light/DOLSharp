@@ -47,7 +47,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			if(client==null) return 1;
+			if (client == null) return 1;
 			uint unk_186 = 0;
 			ushort objectType = packet.ReadShort();
 			if (client.Version >= GameClient.eClientVersion.Version186)
@@ -57,7 +57,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ArrayList objectInfo = new ArrayList();
 			//log.Debug("DetailDisplayHandler: type=" + objectType + " id=" + objectID);
 
-				switch (objectType)
+			switch (objectType)
 			{
 				#region Inventory Item
 				case 1: //Display Infos on inventory item
@@ -73,9 +73,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 						else
 						{
 							List<InventoryItem> list = client.Player.TempProperties.getObjectProperty("TempSearchKey", null) as List<InventoryItem>;
-							item = list[objectID];
-							if (item == null)
+							if (objectID >= list.Count || objectID < 0)
 								return 1;
+							item = list[objectID];
 						}
 
 						caption = item.Name;
@@ -170,7 +170,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						}
 
-                        //***********************************
+						//***********************************
 						//shows info for Shields			*
 						//***********************************
 						if (item.Object_Type == (int)eObjectType.Shield)
@@ -237,7 +237,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						if (!item.IsDropable || !item.IsPickable)
 							objectInfo.Add(" ");//empty line
-						
+
 						if (!item.IsPickable)
 							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CannotTraded"));
 						if (!item.IsDropable)
@@ -304,9 +304,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 							}
 							if (client.Account.PrivLevel > 1)
 							{
-                                objectInfo.Add(" ");
-                                objectInfo.Add("--- Spell technical informations ---");
-                                objectInfo.Add(" ");
+								objectInfo.Add(" ");
+								objectInfo.Add("--- Spell technical informations ---");
+								objectInfo.Add(" ");
 								objectInfo.Add("Line              :  " + spellHandler.SpellLine.Name);
 								objectInfo.Add("HasPositiveEffect :  " + spellHandler.HasPositiveEffect);
 							}
@@ -416,7 +416,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						}
 
-                        //***********************************
+						//***********************************
 						//shows info for Shields			*
 						//***********************************
 						if (item.Object_Type == (int)eObjectType.Shield)
@@ -582,7 +582,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								case (int)Style.eOpeningPosition.Side:
 									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Side");
 									break;
-							
+
 							}
 						}
 						objectInfo.Add(temp);
@@ -599,13 +599,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 						temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.FatigueCost");
 						if (style.EnduranceCost < 5)
 							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryLow");
-						else if	(style.EnduranceCost < 10)
+						else if (style.EnduranceCost < 10)
 							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Low");
 						else if (style.EnduranceCost < 15)
 							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Medium");
 						else if (style.EnduranceCost < 20)
 							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.High");
-						else temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryHigh");												
+						else temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryHigh");
 						objectInfo.Add(temp);
 
 						temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Damage");
@@ -652,7 +652,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						else if (style.BonusToDefense < 15) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.MediumBonus");
 						else if (style.BonusToDefense < 20) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.HighBonus");
 						else temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryHighBonus");
-						
+
 						objectInfo.Add(temp);
 
 						if (style.Procs.Count > 0)
@@ -817,26 +817,26 @@ namespace DOL.GS.PacketHandler.Client.v168
 				#endregion
 				#region Ability
 				case 8://abilities
-				{
-					int id = objectID - 100;
-					IList skillList = client.Player.GetNonTrainableSkillList();
-					Ability abil = (Ability)skillList[id];
-					if (abil != null)
 					{
-						IList allabilitys = client.Player.GetAllAbilities();
-						foreach (Ability checkab in allabilitys)
+						int id = objectID - 100;
+						IList skillList = client.Player.GetNonTrainableSkillList();
+						Ability abil = (Ability)skillList[id];
+						if (abil != null)
 						{
-							if (checkab.Name == abil.Name)
+							IList allabilitys = client.Player.GetAllAbilities();
+							foreach (Ability checkab in allabilitys)
 							{
-								if (checkab.DelveInfo.Count > 0)
-									objectInfo.AddRange(checkab.DelveInfo);
-								else
-									objectInfo.Add("There is no special information.");
+								if (checkab.Name == abil.Name)
+								{
+									if (checkab.DelveInfo.Count > 0)
+										objectInfo.AddRange(checkab.DelveInfo);
+									else
+										objectInfo.Add("There is no special information.");
+								}
 							}
 						}
+						break;
 					}
-					break;
-				}
 				#endregion
 				#region Trainer
 				case 9: //trainer window "info" button
@@ -859,7 +859,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								RealmAbility ab = ra_list[objectID - sub];
 								if (ra5abil != null) //check if player have rr
 								{
-									if(client.Player.RealmPoints < 513500) //player have not rr5 abilty
+									if (client.Player.RealmPoints < 513500) //player have not rr5 abilty
 										sub--;
 								}
 								for (int i = 0; i <= (objectID - sub); i++) //get all ra's at full level
@@ -1032,32 +1032,32 @@ namespace DOL.GS.PacketHandler.Client.v168
 						return 1;
 					}
 				#endregion
-                #region BattleGroup
-                case 103: // Item info to battle group
-                    {
-                        InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
-                        if (item == null) return 1;
+				#region BattleGroup
+				case 103: // Item info to battle group
+					{
+						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
+						if (item == null) return 1;
 
-                        BattleGroup mybattlegroup = (BattleGroup)client.Player.TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
-                        if (mybattlegroup == null)
-                        {
-                            client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.MustBeInBattleGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return 1;
-                        }
-                        if (mybattlegroup.Listen == true && (((bool)mybattlegroup.Members[client.Player]) == false))
-                        {
-                            client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.OnlyModerator"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return 1;
-                        }
-                        string str = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.ChatItem", client.Player.Name, GetShortItemInfo(item, client));
-                        foreach (GamePlayer ply in mybattlegroup.Members.Keys)
-                        {
-                            ply.Out.SendMessage(str, eChatType.CT_Friend, eChatLoc.CL_ChatWindow);
-                        }
-                        return 1;
-                    }
-                #endregion
-                default:
+						BattleGroup mybattlegroup = (BattleGroup)client.Player.TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
+						if (mybattlegroup == null)
+						{
+							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.MustBeInBattleGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 1;
+						}
+						if (mybattlegroup.Listen == true && (((bool)mybattlegroup.Members[client.Player]) == false))
+						{
+							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.OnlyModerator"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 1;
+						}
+						string str = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.ChatItem", client.Player.Name, GetShortItemInfo(item, client));
+						foreach (GamePlayer ply in mybattlegroup.Members.Keys)
+						{
+							ply.Out.SendMessage(str, eChatType.CT_Friend, eChatLoc.CL_ChatWindow);
+						}
+						return 1;
+					}
+				#endregion
+				default:
 					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoInformation"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 1;
 			}
@@ -1082,16 +1082,16 @@ Type    Description           Id
 
 		public void WriteTechnicalInfo(ArrayList output, ItemTemplate item)
 		{
-            output.Add(" ");
-            output.Add("--- Item technical informations ---");
-            output.Add(" ");
+			output.Add(" ");
+			output.Add("--- Item technical informations ---");
+			output.Add(" ");
 			output.Add("Item Template: " + item.Id_nb);
-   			output.Add("         Name: " + item.Name);
+			output.Add("         Name: " + item.Name);
 			output.Add("        Level: " + item.Level);
-            output.Add("       Object: " + GlobalConstants.ObjectTypeToName(item.Object_Type) + " (" + item.Object_Type + ")");
-            output.Add("         Type: " + GlobalConstants.SlotToName(item.Item_Type) + " (" + item.Item_Type + ")");
-            output.Add("    Extension: " + item.Extension);
-            output.Add("        Model: " + item.Model);
+			output.Add("       Object: " + GlobalConstants.ObjectTypeToName(item.Object_Type) + " (" + item.Object_Type + ")");
+			output.Add("         Type: " + GlobalConstants.SlotToName(item.Item_Type) + " (" + item.Item_Type + ")");
+			output.Add("    Extension: " + item.Extension);
+			output.Add("        Model: " + item.Model);
 			output.Add("        Color: " + item.Color);
 			output.Add("       Emblem: " + item.Emblem);
 			output.Add("       Effect: " + item.Effect);
@@ -1128,7 +1128,7 @@ Type    Description           Id
 			{
 				output.Add("Damage/Second: " + (item.DPS_AF / 10.0f));
 				output.Add("        Speed: " + (item.SPD_ABS / 10.0f));
-                output.Add("  Shield type: " + GlobalConstants.ShieldTypeToName(item.Type_Damage) + " (" + item.Type_Damage + ")");
+				output.Add("  Shield type: " + GlobalConstants.ShieldTypeToName(item.Type_Damage) + " (" + item.Type_Damage + ")");
 				output.Add("        Bonus: " + item.Bonus);
 			}
 			else if (item.Object_Type == (int)eObjectType.Arrow || item.Object_Type == (int)eObjectType.Bolt)
@@ -1708,13 +1708,13 @@ Type    Description           Id
 						"- {0}: {1}{2}",
 						SkillBase.GetPropertyName((eProperty)bonusCat),
 						bonusValue.ToString("+0;-0;0"), //Eden
-						((bonusCat == (int)eProperty.PowerPool) 
-							|| (bonusCat >= (int)eProperty.Resist_First && bonusCat <= (int)eProperty.Resist_Last) 
-							|| (bonusCat >= (int)eProperty.ResCapBonus_First && bonusCat <= (int)eProperty.ResCapBonus_Last) 
-							|| bonusCat==(int)eProperty.Conversion 
-							|| bonusCat==(int)eProperty.ExtraHP 
-							|| bonusCat==(int)eProperty.RealmPoints 
-							|| bonusCat==(int)eProperty.StyleAbsorb )
+						((bonusCat == (int)eProperty.PowerPool)
+							|| (bonusCat >= (int)eProperty.Resist_First && bonusCat <= (int)eProperty.Resist_Last)
+							|| (bonusCat >= (int)eProperty.ResCapBonus_First && bonusCat <= (int)eProperty.ResCapBonus_Last)
+							|| bonusCat == (int)eProperty.Conversion
+							|| bonusCat == (int)eProperty.ExtraHP
+							|| bonusCat == (int)eProperty.RealmPoints
+							|| bonusCat == (int)eProperty.StyleAbsorb)
 						? ((bonusCat == (int)eProperty.PowerPool) ? LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DetailDisplayHandler.WriteBonusLine.PowerPool") : "%")
 							: LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DetailDisplayHandler.WriteBonusLine.Points")
 					));

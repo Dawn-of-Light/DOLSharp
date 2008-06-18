@@ -77,7 +77,7 @@ namespace DOL.GS.Quests.Triggers
 				}
 				catch
 				{
-					log.Error(string.Format("Error in DeclineQuestTrigger line 75 - args: {0}", args));
+					log.Error(string.Format("Error in DeclineQuestTrigger line 75 - args: {0} quest: {1} source: {2} player: {3}", args, (args as QuestEventArgs).QuestID, (args as QuestEventArgs).Source, (args as QuestEventArgs).Player));
 				}
             }
             

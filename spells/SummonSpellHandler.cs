@@ -24,6 +24,7 @@ using DOL.Events;
 using DOL.GS;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Spells
 {
@@ -38,11 +39,9 @@ namespace DOL.GS.Spells
 	/// higher than zero is considered as level value.
 	/// Resulting value is limited by the Byte field type.
 	/// </summary>
-	[SpellHandler("Summon")]
-	public class SummonSpellHandler : SpellHandler
+	public abstract class SummonSpellHandler : SpellHandler
 	{
-		protected int x, y, z;
-		public GameNPC summoned = null;
+		protected GamePet pet = null;
 
 		public SummonSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
@@ -51,49 +50,66 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public override void FinishSpellCast(GameLiving target)
 		{
+			foreach (GamePlayer player in m_caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+			{
+				if (player != m_caster)
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameObject.Casting.CastsASpell", m_caster.GetName(0, true)), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+			}
+
 			m_caster.Mana -= CalculateNeededPower(target);
+
 			base.FinishSpellCast(target);
+
+			MessageToCaster(String.Format("The {0} is now under your control.", pet.Name), eChatType.CT_Spell);
+			pet.HailMaster();
 		}
 
-		/// <summary>
-		/// All checks before any casting begins
-		/// </summary>
-		/// <param name="selectedTarget"></param>
-		/// <returns></returns>
-		public override bool CheckBeginCast(GameLiving selectedTarget)
+		#region ApplyEffectOnTarget Gets
+
+		protected virtual void GetPetLocation(out int x, out int y, out int z, out ushort heading, out Region region)
 		{
-			//Theurgist Petcap
-			if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ID == (int)eCharacterClass.Theurgist && ((GamePlayer)Caster).PetCounter >= 16)
-			{
-				MessageToCaster("You have to many controlled Creatures!", eChatType.CT_SpellResisted);
-				return false;
-			}
-			#warning Summon shouldn't be used, it needs to be just a base class and all others inherit
-			if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledNpc != null && !(this is SummonMinionHandler))
-			{
-				MessageToCaster("You already have a charmed creature, release it first!", eChatType.CT_SpellResisted);
-				return false;
-			}
-
-			if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ID == (int)eCharacterClass.Animist && Caster.GroundTarget == null)
-			{
-				MessageToCaster("You have to set a Areatarget for this Spell.", eChatType.CT_SpellResisted);
-				return false;
-			}
-
-			if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ID == (int)eCharacterClass.Animist && !Caster.GroundTargetInView)
-			{
-				MessageToCaster("Your Areatarget is not in view.", eChatType.CT_SpellResisted);
-				return false;
-			}
-
-			if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ID == (int)eCharacterClass.Animist && !WorldMgr.CheckDistance(Caster, Caster.GroundTarget, CalculateSpellRange()))
-			{
-				MessageToCaster("You have to select a closer Areatarget.", eChatType.CT_SpellResisted);
-				return false;
-			}
-			return base.CheckBeginCast(selectedTarget);
+			Caster.GetSpotFromHeading(64, out x, out y);
+			z = Caster.Z;
+			heading = (ushort)((Caster.Heading + 2048) % 4096);
+			region = Caster.CurrentRegion;
 		}
+
+		protected virtual GamePet GetGamePet(INpcTemplate template)
+		{
+			return new GamePet(template);
+		}
+
+		protected virtual IControlledBrain GetPetBrain(GameLiving owner)
+		{
+			return new ControlledNpc(owner);
+		}
+
+		protected virtual void SetBrainToOwner(IControlledBrain brain)
+		{
+			Caster.SetControlledNpc(brain);
+		}
+
+		protected virtual byte GetPetLevel()
+		{
+			byte level;
+
+			if (Spell.Damage < 0)
+				level = (byte)(Caster.Level * Spell.Damage * -0.01);
+			else
+				level = (byte)Spell.Damage;
+
+			if (level > Spell.Value)
+				level = (byte)Spell.Value;
+
+			return level;
+		}
+
+		protected virtual void AddHandlers()
+		{
+			GameEventMgr.AddHandler(pet, GameLivingEvent.PetReleased, new DOLEventHandler(OnNpcReleaseCommand));
+		}
+
+		#endregion
 
 		/// <summary>
 		/// Apply effect on target or do spell action if non duration spell
@@ -102,7 +118,6 @@ namespace DOL.GS.Spells
 		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-			GamePlayer player = Caster as GamePlayer;
 			INpcTemplate template = NpcTemplateMgr.GetTemplate(Spell.LifeDrainReturn);
 			if (template == null)
 			{
@@ -114,76 +129,43 @@ namespace DOL.GS.Spells
 
 			GameSpellEffect effect = CreateSpellEffect(target, effectiveness);
 
-			if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ID == (int)eCharacterClass.Animist)
-			{
-				x = Caster.GroundTarget.X;
-				y = Caster.GroundTarget.Y;
-				z = Caster.GroundTarget.Z;
-			}
-			else
-			{
-				Caster.GetSpotFromHeading(64, out x, out y);
-				z = Caster.Z;
-			}
-			if (Spell.Duration < ushort.MaxValue)
-			{
-				ControlledNpc controlledBrain = new ControlledNpc(Caster);
+			IControlledBrain brain = GetPetBrain(Caster);
+			pet = GetGamePet(template);
+			//brain.WalkState = eWalkState.Stay;
+			pet.SetOwnBrain(brain as AI.ABrain);
 
-				summoned = new GameNPC(template);
-				controlledBrain.WalkState = eWalkState.Stay;
-				controlledBrain.IsMainPet = false;
-				summoned.SetOwnBrain(controlledBrain);
-				summoned.HealthMultiplicator = true;
-				summoned.X = x;
-				summoned.Y = y;
-				summoned.Z = z;
-				summoned.CurrentRegion = Caster.CurrentRegion;
-				summoned.Heading = Caster.Heading;
-				summoned.Realm = Caster.Realm;
-				summoned.CurrentSpeed = 0;
-				if (Spell.Damage < 0) summoned.Level = (byte)(Caster.Level * Spell.Damage * -0.01);
-				else summoned.Level = (byte)Spell.Damage;
-				if (summoned.Level > Spell.Value) summoned.Level = (byte)Spell.Value;
-				summoned.AddToWorld();
-				effect.Start(summoned);
-				//Check for buffs
-				controlledBrain.CheckSpells(StandardMobBrain.eCheckSpellType.Defensive);
-				controlledBrain.Attack(target);
-				//Initialize the Theurgist Petcap
-				if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ID == (int)eCharacterClass.Theurgist)
-					((GamePlayer)Caster).PetCounter++;
-			}
-			else
-			{
-				ControlledNpc controlledBrain = new ControlledNpc(Caster);
+			int x, y, z;
+			ushort heading;
+			Region region;
 
-				summoned = new GameNPC(template);
-				summoned.SetOwnBrain(controlledBrain);
-				summoned.X = x;
-				summoned.Y = y;
-				summoned.Z = z;
-				summoned.CurrentRegion = target.CurrentRegion;
-				summoned.Heading = (ushort)((target.Heading + 2048) % 4096);
-				summoned.Realm = target.Realm;
-				summoned.CurrentSpeed = 0;
-				if (Spell.Damage < 0) summoned.Level = (byte)(target.Level * Spell.Damage * -0.01);
-				else summoned.Level = (byte)Spell.Damage;
-				if (summoned.Level > Spell.Value) summoned.Level = (byte)Spell.Value;
+			GetPetLocation(out x, out y, out z, out heading, out region);
 
-				summoned.AddToWorld();
-				if (Caster is GamePlayer)
-					GameEventMgr.AddHandler(summoned, GameLivingEvent.PetReleased, new DOLEventHandler(OnNpcReleaseCommand));
+			pet.X = x;
+			pet.Y = y;
+			pet.Z = z;
+			pet.Heading = heading;
+			pet.CurrentRegion = region;
 
-				if (Caster is GamePlayer)
-					player.SetControlledNpc(controlledBrain);
-				effect.Start(summoned);
-			}
-			// Andraste - When summoned, switch to a weapon slot
-			if(summoned!=null)
-			{
-				if(summoned.Inventory!=null && summoned.Inventory.GetItem(eInventorySlot.RightHandWeapon)!= null)
-					summoned.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
-			}
+			pet.CurrentSpeed = 0;
+			pet.Realm = Caster.Realm;
+			pet.Level = GetPetLevel();
+
+			pet.AddToWorld();
+				
+			//Check for buffs
+			if (brain is ControlledNpc)
+				(brain as ControlledNpc).CheckSpells(StandardMobBrain.eCheckSpellType.Defensive);
+
+			AddHandlers();
+
+			SetBrainToOwner(brain);
+
+			effect.Start(pet);
+		}
+
+		public override int CalculateSpellResistChance(GameLiving target)
+		{
+			return 0;
 		}
 
 		/// <summary>
@@ -195,16 +177,8 @@ namespace DOL.GS.Spells
 		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
-			//Remove Theurgist Pets
-			if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ID == (int)eCharacterClass.Theurgist)
-				((GamePlayer)Caster).PetCounter--;
 			effect.Owner.Health = 0; // to send proper remove packet
 			effect.Owner.Delete();
-			return 0;
-		}
-
-		public override int CalculateSpellResistChance(GameLiving target)
-		{
 			return 0;
 		}
 
