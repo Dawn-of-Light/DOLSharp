@@ -199,7 +199,7 @@ namespace DOL.GS.ServerRules
 				IControlledBrain controlled = ((GameNPC)attacker).Brain as IControlledBrain;
 				if (controlled != null)
 				{
-					attacker = controlled.Owner;
+					attacker = controlled.GetPlayerOwner();
 					quiet = true; // silence all attacks by controlled npc
 				}
 			}
@@ -207,7 +207,7 @@ namespace DOL.GS.ServerRules
 			{
 				IControlledBrain controlled = ((GameNPC)defender).Brain as IControlledBrain;
 				if (controlled != null)
-					defender = controlled.Owner;
+					defender = controlled.GetPlayerOwner();
 			}
 
 			// can't attack self
@@ -402,7 +402,7 @@ namespace DOL.GS.ServerRules
 				IControlledBrain controlled = ((GameNPC)source).Brain as IControlledBrain;
 				if (controlled != null)
 				{
-					source = controlled.Owner;
+					source = controlled.GetPlayerOwner();
 					quiet = true; // silence all attacks by controlled npc
 				}
 			}
@@ -410,7 +410,7 @@ namespace DOL.GS.ServerRules
 			{
 				IControlledBrain controlled = ((GameNPC)target).Brain as IControlledBrain;
 				if (controlled != null)
-					target = controlled.Owner;
+					target = controlled.GetPlayerOwner();
 			}
 
 			// clients with priv level > 1 are considered friendly by anyone
