@@ -695,6 +695,9 @@ namespace DOL.GS.ServerRules
 				int npcRPValue = killedNPC.RealmPointsValue;
 				int npcBPValue = killedNPC.BountyPointsValue;
 
+				//Need to do this before hand so we only do it once - just in case if the player levels!
+				double highestConValue = highestPlayer.GetConLevel(killedNPC);
+
 				//Now deal the XP to all livings
 				foreach (DictionaryEntry de in killedNPC.XPGainers)
 				{
@@ -760,12 +763,10 @@ namespace DOL.GS.ServerRules
 					 * If "challenge code" has been activated, then the experience is divided roughly like so in a group of two (adjust the colors up if the group is bigger): If the monster was blue to the highest level player, each lower level group member will ROUGHLY receive experience as if they soloed a blue monster. Ditto for green. As everyone knows, a monster that cons gray to the highest level player will result in no exp for anyone. If the monster was high blue, challenge code may not kick in. It could also kick in if the monster is low yellow to the high level player, depending on the group strength of the pair. 
 					 */
 					//xp challenge
-					if (highestPlayer != null && highestPlayer.GetConLevel(living) < 0)
-					{
-						double conLevel = highestPlayer.GetConLevel(killedNPC);
+					if (highestPlayer != null &&  highestConValue < 0)
 						//challenge success, the xp needs to be reduced to the proper con
-						expCap = (long)(GameServer.ServerRules.GetExperienceForLiving(GameObject.GetLevelFromCon(living.Level, conLevel)));
-					}
+						expCap = (long)(GameServer.ServerRules.GetExperienceForLiving(GameObject.GetLevelFromCon(living.Level, highestConValue)));
+
 					#endregion
 
 					if (xpReward > expCap)
