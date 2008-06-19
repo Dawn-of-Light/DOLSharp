@@ -264,6 +264,7 @@ namespace DOL.GS.Commands
                         mob.GuildName = "";
                         mob.Size = 50;
                         mob.AddToWorld();
+						mob.SaveIntoDatabase();
                         client.Out.SendMessage("Mob created: OID=" + mob.ObjectID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     }
                     break;
