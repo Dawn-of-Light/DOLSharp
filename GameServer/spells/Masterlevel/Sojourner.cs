@@ -40,11 +40,11 @@ namespace DOL.GS.Spells
             if (target == null || !target.IsAlive)
                 return;
 
-            foreach (GameMine item in target.GetNPCsInRadius((ushort)m_spell.Radius))
+            foreach (GameNPC item in target.GetNPCsInRadius((ushort)m_spell.Radius))
             {
-                if (item != null)
+                if (item != null && item is GameMine)
                 {
-                    item.Delete();
+                    (item as GameMine).Delete();
                 }
             }
         }
@@ -232,6 +232,8 @@ namespace DOL.GS.Spells
             GameEventMgr.RemoveHandler(m_target, GamePlayerEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
             m_npc.StopMoving();
             m_npc.RemoveFromWorld();
+			//sometimes player can't move after zephyr :
+			m_target.Out.SendUpdateMaxSpeed();
             return 0;
         }
 

@@ -1000,8 +1000,11 @@ namespace DOL.GS.Spells
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
             GameSpellEffect neweffect = CreateSpellEffect(target, effectiveness);
-            font.AddToWorld();
-            neweffect.Start(font);
+            if(font != null)
+			{
+				font.AddToWorld();
+				neweffect.Start(font);
+			}
         }
 
         public override void OnEffectPulse(GameSpellEffect effect)
