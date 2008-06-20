@@ -43,6 +43,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
+			if (client == null || client.Player == null) return 1;
 			new PlayerInitRequestAction(client.Player).Start(1);
 			return 1;
 		}
