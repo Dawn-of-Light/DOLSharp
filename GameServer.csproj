@@ -278,6 +278,7 @@
     <Compile Include="commands\PlayerCommands\sprint.cs" />
     <Compile Include="commands\PlayerCommands\stand.cs" />
     <Compile Include="commands\PlayerCommands\stats.cs" />
+    <Compile Include="commands\PlayerCommands\statsanon.cs" />
     <Compile Include="commands\PlayerCommands\stuck.cs" />
     <Compile Include="commands\PlayerCommands\target.cs" />
     <Compile Include="commands\PlayerCommands\task.cs" />

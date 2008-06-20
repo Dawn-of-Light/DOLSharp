@@ -67,19 +67,14 @@ namespace DOL.GS.Quests.Triggers
         {
             bool result = false;
 
-            if (e == GamePlayerEvent.DeclineQuest)
-            {
-				try
-				{
-					GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
-					QuestEventArgs qArgs = (QuestEventArgs)args;
-					result = (qArgs.Player.ObjectID == player.ObjectID && QuestMgr.GetQuestTypeForID(qArgs.QuestID).Equals(I));
-				}
-				catch
-				{
-					log.Error(string.Format("Error in DeclineQuestTrigger line 75 - args: {0} quest: {1} source: {2} player: {3}", args, (args as QuestEventArgs).QuestID, (args as QuestEventArgs).Source, (args as QuestEventArgs).Player));
-				}
-            }
+			if (e == GamePlayerEvent.DeclineQuest)
+			{
+				GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
+				QuestEventArgs qArgs = (QuestEventArgs)args;
+				Type type = QuestMgr.GetQuestTypeForID(qArgs.QuestID);
+				if (type != null)
+					result = qArgs.Player.ObjectID == player.ObjectID && type.Equals(I);
+			}
             
             return result;
         }
