@@ -551,6 +551,12 @@ namespace DOL.GS.ServerProperties
         public static readonly int STARTING_KEEP_LEVEL;
 
         /// <summary>
+        /// Record news in database
+        /// </summary>
+        [ServerProperty("record_news", "Record News in database?", true)]
+        public static readonly bool RECORD_NEWS;
+
+        /// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
 		/// type of the default value

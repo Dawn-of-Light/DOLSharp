@@ -123,7 +123,7 @@ namespace DOL.AI.Brain
 				return;
 			foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)AggroRange))
 			{
-				if (npc == null || npc.Brain == null || npc is GameKeepGuard || !(npc.Brain as ControlledNpc == null) || !(npc.Brain is IControlledBrain))
+				if (npc == null || npc.Brain == null || npc is GameKeepGuard || (npc.Brain as ControlledNpc == null) || !(npc.Brain is IControlledBrain))
 					continue;
 
 				GamePlayer player = (npc.Brain as ControlledNpc).GetPlayerOwner();

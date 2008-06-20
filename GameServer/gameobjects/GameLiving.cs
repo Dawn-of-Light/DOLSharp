@@ -3032,7 +3032,9 @@ namespace DOL.GS
 				double evadeChance = 0;
 				GamePlayer player = this as GamePlayer;
 				GameSpellEffect evade = SpellHandler.FindEffectOnTarget(this, "EvadeBuff");
+				if(evade == null) evade = SpellHandler.FindEffectOnTarget(this, "SavageEvadeBuff");
 				GameSpellEffect parry = SpellHandler.FindEffectOnTarget(this, "ParryBuff");
+				if(parry == null) parry = SpellHandler.FindEffectOnTarget(this, "SavageParryBuff");
 				if (this is GamePlayer && player != null)
 				{
 					if (player.HasAbility(Abilities.Advanced_Evade) || player.EffectList.GetOfType(typeof(CombatAwarenessEffect)) != null || player.EffectList.GetOfType(typeof(RuneOfUtterAgilityEffect)) != null)
