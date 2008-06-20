@@ -69,20 +69,15 @@ namespace DOL.GS.Quests.Triggers
         public override bool Check(DOLEvent e, object sender, EventArgs args)
         {
             bool result = false;
-            
-            if (e == GamePlayerEvent.AcceptQuest)
-            {
-				try
-				{
-					GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
-					QuestEventArgs qArgs = (QuestEventArgs)args;
-					result = (qArgs.Player.ObjectID == player.ObjectID && QuestMgr.GetQuestTypeForID(qArgs.QuestID).Equals(I));
-				}
-				catch
-				{
-					log.Error(string.Format("Error in AcceptQuestTrigger line 78 - args: {0} quest: {1} source: {2} player: {3}", args, (args as QuestEventArgs).QuestID, (args as QuestEventArgs).Source, (args as QuestEventArgs).Player));
-				}
-            }
+
+			if (e == GamePlayerEvent.AcceptQuest)
+			{
+				GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
+				QuestEventArgs qArgs = (QuestEventArgs)args;
+				Type type = QuestMgr.GetQuestTypeForID(qArgs.QuestID);
+				if (type != null)
+					result = (qArgs.Player.ObjectID == player.ObjectID && type.Equals(I));
+			}
             
             return result;
         }

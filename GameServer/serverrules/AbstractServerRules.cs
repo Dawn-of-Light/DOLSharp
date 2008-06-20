@@ -696,7 +696,9 @@ namespace DOL.GS.ServerRules
 				int npcBPValue = killedNPC.BountyPointsValue;
 
 				//Need to do this before hand so we only do it once - just in case if the player levels!
-				double highestConValue = highestPlayer.GetConLevel(killedNPC);
+				double highestConValue = 0;
+				if (highestPlayer != null)
+					highestConValue = highestPlayer.GetConLevel(killedNPC);
 
 				//Now deal the XP to all livings
 				foreach (DictionaryEntry de in killedNPC.XPGainers)
