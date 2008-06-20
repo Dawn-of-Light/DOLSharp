@@ -231,7 +231,7 @@ namespace DOL.GS.Spells
 		/// called whenever the player clicks on a spell icon
 		/// or a GameLiving wants to cast a spell
 		/// </summary>
-		public virtual void CastSpell()
+		public virtual bool CastSpell()
 		{
 			m_caster.Notify(GameLivingEvent.CastSpell, m_caster, new CastSpellEventArgs(this));
 			// nightshade is unstealthed even if no target, target is same realm, target is too far
@@ -318,10 +318,12 @@ namespace DOL.GS.Spells
 					FinishSpellCast(target);
 				}
 			}
+			else return false;
 			if (!IsCasting)
 			{
 				OnAfterSpellCastSequence();
 			}
+			return true;
 		}
 
 		/// <summary>
@@ -518,7 +520,7 @@ namespace DOL.GS.Spells
 
 				if (!WorldMgr.CheckDistance(m_caster, selectedTarget, CalculateSpellRange()))
 				{
-					MessageToCaster("That target is too far away!",
+					if(Caster is GamePlayer) MessageToCaster("That target is too far away!",
 						eChatType.CT_SpellResisted);
 					Caster.Notify(GameLivingEvent.CastFailed,
 						new CastFailedEventArgs(this, CastFailedEventArgs.Reasons.TargetTooFarAway));
@@ -589,7 +591,7 @@ namespace DOL.GS.Spells
 			}
 
 			//Ryan: don't want mobs to have reductions in mana
-			if (m_caster is GamePlayer && (m_caster as GamePlayer).CharacterClass.ID != (int)eCharacterClass.Savage && m_caster.Mana < CalculateNeededPower(selectedTarget) && Spell.SpellType != "Archery")
+			if (Spell.Power>0 && m_caster is GamePlayer && (m_caster as GamePlayer).CharacterClass.ID != (int)eCharacterClass.Savage && m_caster.Mana < CalculateNeededPower(selectedTarget) && Spell.SpellType != "Archery")
 			{
 				MessageToCaster("You don't have enough power to cast that!", eChatType.CT_SpellResisted);
 				return false;
@@ -754,7 +756,7 @@ namespace DOL.GS.Spells
 
 				if (!WorldMgr.CheckDistance(m_caster, target, CalculateSpellRange()))
 				{
-					MessageToCaster("That target is too far away!", eChatType.CT_SpellResisted);
+					if(Caster is GamePlayer) MessageToCaster("That target is too far away!", eChatType.CT_SpellResisted);
 					return false;
 				}
 
@@ -809,7 +811,7 @@ namespace DOL.GS.Spells
 				MessageToCaster("You have exhausted all of your power and cannot cast spells!", eChatType.CT_SpellResisted);
 				return false;
 			}
-			if (m_caster.Mana < CalculateNeededPower(target) && Spell.SpellType != "Archery")
+			if (Spell.Power > 0 && m_caster.Mana < CalculateNeededPower(target) && Spell.SpellType != "Archery")
 			{
 				MessageToCaster("You don't have enough power to cast that!", eChatType.CT_SpellResisted);
 				return false;
@@ -1218,7 +1220,7 @@ namespace DOL.GS.Spells
 			{
 				Spell spell = SkillBase.GetSpellByID(m_spell.SubSpellID);
 				//we need subspell ID to be 0, we don't want spells linking off the subspell
-				if (spell != null && spell.SubSpellID == 0)
+				if (target != null && spell != null && spell.SubSpellID == 0)
 				{
 					ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(m_caster, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
 					spellhandler.StartSpell(target);
@@ -1344,7 +1346,18 @@ namespace DOL.GS.Spells
                             {
                                 if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
                                 {
-                                    list.Add(player);
+                                    // Apply Mentalist RA5L
+									SelectiveBlindnessEffect SelectiveBlindness = (SelectiveBlindnessEffect)Caster.EffectList.GetOfType(typeof(SelectiveBlindnessEffect));
+									if (SelectiveBlindness != null)
+									{
+										GameLiving EffectOwner = SelectiveBlindness.EffectSource;
+										if(EffectOwner==player)
+										{
+											if (Caster is GamePlayer) ((GamePlayer)Caster).Out.SendMessage(string.Format("{0} is invisible to you!", player.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+										}
+										else list.Add(player);
+									}
+									else list.Add(player);
                                 }
                             }
                             foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, NewRadius))
@@ -1353,7 +1366,7 @@ namespace DOL.GS.Spells
                                     list.Add(npc);
                                 else if (GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
                                 {
-                                    list.Add(npc);
+                                    if(!npc.HasAbility("DamageImmunity")) list.Add(npc);
                                 }
                             }
                         }
@@ -1433,21 +1446,47 @@ namespace DOL.GS.Spells
 						{
 							if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
 							{
-								list.Add(player);
+								SelectiveBlindnessEffect SelectiveBlindness = (SelectiveBlindnessEffect)Caster.EffectList.GetOfType(typeof(SelectiveBlindnessEffect));
+								if (SelectiveBlindness != null)
+								{
+									GameLiving EffectOwner = SelectiveBlindness.EffectSource;
+									if(EffectOwner==player)
+									{
+										if (Caster is GamePlayer) ((GamePlayer)Caster).Out.SendMessage(string.Format("{0} is invisible to you!", player.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+									}
+									else list.Add(player);
+								}
+								else list.Add(player);
 							}
 						}
 						foreach (GameNPC npc in target.GetNPCsInRadius(NewRadius))
 						{
 							if (GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
 							{
-								list.Add(npc);
+								if(!npc.HasAbility("DamageImmunity")) list.Add(npc);
 							}
 						}
 					}
 					else
 					{
 						if (target != null && GameServer.ServerRules.IsAllowedToAttack(Caster, target, true))
-							list.Add(target);
+						{
+							// Apply Mentalist RA5L
+							if(Spell.Range>0)
+							{
+							SelectiveBlindnessEffect SelectiveBlindness = (SelectiveBlindnessEffect)Caster.EffectList.GetOfType(typeof(SelectiveBlindnessEffect));
+								if (SelectiveBlindness != null)
+								{
+									GameLiving EffectOwner = SelectiveBlindness.EffectSource;
+									if(EffectOwner==target)
+									{
+										if (Caster is GamePlayer) ((GamePlayer)Caster).Out.SendMessage(string.Format("{0} is invisible to you!", target.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+									}
+									else if(!target.HasAbility("DamageImmunity")) list.Add(target);
+								}
+								else if(!target.HasAbility("DamageImmunity")) list.Add(target);
+							} else if(!target.HasAbility("DamageImmunity")) list.Add(target);
+						}
 					}
 					break;
 				#endregion
@@ -1605,7 +1644,7 @@ namespace DOL.GS.Spells
 							if (!GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
 								continue;
 
-							list.Add(npc);
+							if(!npc.HasAbility("DamageImmunity")) list.Add(npc);
 
 						}
 						break;

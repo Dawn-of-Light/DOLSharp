@@ -46,7 +46,7 @@ namespace DOL.GS.Spells
 		/// Note bonus constitution and bonus hits from items, then 
 		/// summon the pet.
 		/// </summary>
-		public override void CastSpell()
+		public override bool CastSpell()
 		{
 			// First check current item bonuses for constitution and hits
             // (including cap increases) of the caster, bonuses from
@@ -61,7 +61,7 @@ namespace DOL.GS.Spells
 
             // Now summon the pet.
 
-			base.CastSpell();
+			return base.CastSpell();
 		}
 
         /// <summary>

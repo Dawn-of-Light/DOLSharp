@@ -555,17 +555,21 @@ namespace DOL.GS.Spells
             GamePlayer player = Caster as GamePlayer;
 
             m_living = player.ControlledNpc.Body;
-            m_living.Level += 20;
+            //m_living.Level += 20;
+			m_living.BaseBuffBonusCategory[(int)eProperty.MeleeDamage] += 75;
+            m_living.BaseBuffBonusCategory[(int)eProperty.ArmorAbsorbtion] += 75;
             m_living.Size += 40;
             base.OnEffectStart(effect);
         }
 
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
-        	m_living.Level -= 20;
+        	//m_living.Level -= 20;
+			m_living.BaseBuffBonusCategory[(int)eProperty.MeleeDamage] -= 75;
+            m_living.BaseBuffBonusCategory[(int)eProperty.ArmorAbsorbtion] -= 75;
             m_living.Size -= 40;
             return base.OnEffectExpires(effect, noMessages);
-        }
+         }
 
         public Convoker9Handler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }

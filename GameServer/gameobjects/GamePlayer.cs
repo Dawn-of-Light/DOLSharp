@@ -6728,7 +6728,7 @@ namespace DOL.GS
 			}
 		}
 
-		public override void CastSpell(Spell spell, SpellLine line)
+		public override bool CastSpell(Spell spell, SpellLine line)
 		{
 			if (spell.SpellType == "StyleHandler")
 			{
@@ -6748,7 +6748,7 @@ namespace DOL.GS
 				if (handler != null)
 				{
 					handler.Execute(ab, this);
-					return;
+					return true;
 				}
 			}
 			else
@@ -6756,18 +6756,18 @@ namespace DOL.GS
 				if (IsStunned)
 				{
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.CantCastStunned"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-					return;
+					return false;
 				}
 				if (IsMezzed)
 				{
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.CantCastMezzed"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-					return;
+					return false;
 				}
 
 				if (IsSilenced)
 				{
 					Out.SendMessage("You are fumbling for your words, and cannot cast!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-					return;
+					return false;
 				}
 
 				double fumbleChance = GetModified(eProperty.SpellFumbleChance);
@@ -6777,7 +6777,7 @@ namespace DOL.GS
 					if (Util.ChanceDouble(fumbleChance))
 					{
 						Out.SendMessage("You are fumbling for your words, and cannot cast!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-						return;
+						return false;
 					}
 				}
 
@@ -6791,7 +6791,7 @@ namespace DOL.GS
 							if (m_runningSpellHandler.Spell.InstrumentRequirement != 0)
 							{
 								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyPlaySong"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-								return;
+								return false;
 							}
 							if (SpellQueue)
 							{
@@ -6800,7 +6800,7 @@ namespace DOL.GS
 								m_nextSpellLine = line;
 							}
 							else Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyCastNoQueue"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-							return;
+							return false;
 						}
 						else if (m_runningSpellHandler is PrimerSpellHandler)
 						{
@@ -6837,7 +6837,7 @@ namespace DOL.GS
 									}
 									Out.SendMessage("You prepare a secondary spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 								}
-								return;
+								return true;
 							}
 						}
 						else if (m_runningSpellHandler is ChamberSpellHandler)
@@ -6846,14 +6846,14 @@ namespace DOL.GS
 							if (IsMoving || IsStrafing)
 							{
 								m_runningSpellHandler = null;
-								return;
+								return false;
 							}
 							if (spell.IsPrimary)
 							{
 								if (spell.SpellType == "Bolt" && !chamber.Spell.AllowBolt)
 								{
 									Out.SendMessage("This spell cannot be stored in this chamber.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-									return;
+									return false;
 								}
 								if (chamber.PrimarySpell == null)
 								{
@@ -6902,7 +6902,7 @@ namespace DOL.GS
 						else if (!(m_runningSpellHandler is ChamberSpellHandler) && spell.SpellType == "Chamber")
 						{
 							Out.SendMessage("You may not ready this spell as a followup!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-							return;
+							return false;
 						}
 					}
 				}
@@ -6994,14 +6994,16 @@ namespace DOL.GS
 							}
 						}
 						else
-							spellhandler.CastSpell();
+							return spellhandler.CastSpell();
 					}
 				}
 				else
 				{
 					Out.SendMessage(spell.Name + " not implemented yet (" + spell.SpellType + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return false;
 				}
 			}
+            return true;
 		}
 
 		public void CastSpell(SpellCastingAbilityHandler ab)
