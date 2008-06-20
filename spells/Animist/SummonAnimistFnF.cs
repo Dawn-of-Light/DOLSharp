@@ -62,6 +62,9 @@ namespace DOL.GS.Spells
 		{
 			base.ApplyEffectOnTarget(target, effectiveness);
 
+			if (Spell.SubSpellID > 0 && SkillBase.GetSpellByID(Spell.SubSpellID) != null)
+				pet.Spells.Add(SkillBase.GetSpellByID(Spell.SubSpellID));
+
 			pet.HealthMultiplicator = true;
 			(pet.Brain as TurretBrain).IsMainPet = false;
 
