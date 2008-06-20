@@ -700,6 +700,23 @@ namespace DOL.GS
 			set { m_lastNPCUpdate = value; }
 		}
 
+		private bool m_statsAnon = false;
+
+		/// <summary>
+		/// Gets or sets the stats anon flag for the command /statsanon
+		/// (delegate to property in PlayerCharacter)
+		/// </summary>
+		public bool StatsAnonFlag
+		{
+			get
+			{
+				return m_statsAnon;
+			}
+			set {
+				m_statsAnon = value;
+			}
+		}
+
 		#endregion
 
 		#region release/bind/pray
