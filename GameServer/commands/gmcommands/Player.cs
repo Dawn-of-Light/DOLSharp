@@ -926,7 +926,7 @@ namespace DOL.GS.Commands
                                     {
                                         foreach (GameClient c in WorldMgr.GetAllPlayingClients())
                                         {
-                                            c.Player.SaveIntoDatabase();
+                                            if(c!= null && c.Player!=null) c.Player.SaveIntoDatabase();
                                         }
                                         client.Out.SendMessage("Saved all characters!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                                     }

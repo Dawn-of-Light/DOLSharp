@@ -30,12 +30,15 @@ namespace DOL.GS
 				}
 			}
 
-			DBNews news = new DBNews();
-			news.Type = (byte)type;
-			news.Realm = (byte)realm;
-			news.Text = message;
-			GameServer.Database.AddNewObject(news);
-			GameEventMgr.Notify(DatabaseEvent.NewsCreated, new NewsEventArgs(news));
+			if (ServerProperties.Properties.RECORD_NEWS)
+			{
+				DBNews news = new DBNews();
+				news.Type = (byte)type;
+				news.Realm = (byte)realm;
+				news.Text = message;
+				GameServer.Database.AddNewObject(news);
+				GameEventMgr.Notify(DatabaseEvent.NewsCreated, new NewsEventArgs(news));
+			}
 		}
 
 		public static void DisplayNews(GameClient client)

@@ -53,7 +53,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				GamePlayer player = (GamePlayer)m_actionSource;
 
-				if(player.Group == null || player.Group.Leader != player)
+				if(player.Group == null)
 					return;
 
 				GameLiving disbandMember = player;
@@ -63,6 +63,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 					(player.TargetObject as GameLiving).Group != null &&
 					(player.TargetObject as GameLiving).Group == player.Group)
 					disbandMember = player.TargetObject as GameLiving;
+				
+				if (disbandMember != player && player != player.Group.Leader)
+					return;
+				
 				player.Group.RemoveMember(disbandMember);
 			}
 		}
