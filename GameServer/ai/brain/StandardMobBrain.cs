@@ -1006,7 +1006,12 @@ namespace DOL.AI.Brain
 				if (Body.TargetObject != Body && spell.CastTime > 0)
 					Body.TurnTo(Body.TargetObject);
 
-				Body.CastSpell(spell, m_mobSpellLine);
+				if(!Body.CastSpell(spell, m_mobSpellLine))
+				{
+					Body.TargetObject = lastTarget;
+					return false;
+				}
+
 
 				Body.TargetObject = lastTarget;
 				return true;
@@ -1033,7 +1038,10 @@ namespace DOL.AI.Brain
 				if (Body.TargetObject != Body && spell.CastTime > 0)
 					Body.TurnTo(Body.TargetObject);
 
-				Body.CastSpell(spell, m_mobSpellLine);
+				if(!Body.CastSpell(spell, m_mobSpellLine))
+				{
+					return false;
+				}
 				return true;
 			}
 			return false;
@@ -1080,7 +1088,11 @@ namespace DOL.AI.Brain
 
 			if (Body.TargetObject != null)
 			{
-				Body.CastSpell(spell, m_mobSpellLine);
+				if(!Body.CastSpell(spell, m_mobSpellLine))
+				{
+					Body.TargetObject = lastTarget;
+					return false;
+				}
 				Body.TargetObject = lastTarget;
 
 				return true;

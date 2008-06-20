@@ -37,32 +37,34 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Cast the spell.
 		/// </summary>
-		public override void CastSpell()
+		public override bool CastSpell()
 		{
 			GameLiving target = Caster.TargetObject as GameLiving;
 
-			if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, target, Spell, SpellLine)
-				&& CheckBeginCast(target))
-			{
-				if (Spell.CastTime > 0)
-				{
-					m_interrupted = false;
-					SendSpellMessages();
-					m_castTimer = new DelayedCastTimer(Caster, this, target);
-					m_castTimer.Start(1 + CalculateCastingTime());
-					SendCastAnimation();
+            if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, target, Spell, SpellLine)
+                && CheckBeginCast(target))
+            {
+                if (Spell.CastTime > 0)
+                {
+                    m_interrupted = false;
+                    SendSpellMessages();
+                    m_castTimer = new DelayedCastTimer(Caster, this, target);
+                    m_castTimer.Start(1 + CalculateCastingTime());
+                    SendCastAnimation();
 
-					if (m_caster.IsMoving || m_caster.IsStrafing)
-						CasterMoves();
-				}
-				else
-				{
-					FinishSpellCast(target);
-				}
-			}
+                    if (m_caster.IsMoving || m_caster.IsStrafing)
+                        CasterMoves();
+                }
+                else
+                {
+                    FinishSpellCast(target);
+                }
+            }
+            else return false;
 
             if (!IsCasting)
                 OnAfterSpellCastSequence();
+            return true;
 		}
 
 		/// <summary>

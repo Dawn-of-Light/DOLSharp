@@ -74,6 +74,10 @@ namespace DOL.GS.Spells
 		{
 			return new ProcPetBrain(owner);
 		}
+		
+		protected override void SetBrainToOwner(IControlledBrain brain)
+		{
+		}
 
 		protected override void AddHandlers()
 		{

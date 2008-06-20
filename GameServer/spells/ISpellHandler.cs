@@ -32,7 +32,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Called when a spell is casted
 		/// </summary>
-		void CastSpell();
+		bool CastSpell();
 
 		/// <summary>
 		/// Starts the spell, without displaying cast message etc.

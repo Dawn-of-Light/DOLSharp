@@ -107,7 +107,7 @@ namespace DOL.GS.Spells
             base.InterruptCasting();
             Caster.CurrentSpellHandler = null;
         }
-		public override void CastSpell()
+		public override bool CastSpell()
 		{
             GamePlayer player = (GamePlayer)m_caster;
             long ChamberUseTick = player.TempProperties.getLongProperty(CHAMBER_USE_TICK, 0L);
@@ -115,7 +115,7 @@ namespace DOL.GS.Spells
             if (changeTime < 3000)
             {
                 MessageToCaster("You must wait " + ((3000 - changeTime) / 1000).ToString() + " more second to attempt to use a chamber!", eChatType.CT_System);
-                return;
+                return false;
             }
             player.TempProperties.setProperty(CHAMBER_USE_TICK, player.CurrentRegion.Time);
 
@@ -123,7 +123,7 @@ namespace DOL.GS.Spells
 			if(duration > 0)
 			{
 				MessageToCaster("You must wait "+(duration/10+1)+" seconds to use this spell!", eChatType.CT_System);
-				return;
+				return false;
 			}
 
             GameSpellEffect effect = SpellHandler.FindEffectOnTarget(m_caster, "Chamber", m_spell.Name);
@@ -137,18 +137,18 @@ namespace DOL.GS.Spells
                 if (player.IsMoving || player.IsStrafing)
                 {
                     MessageToCaster("You must be standing still to cast this spell!", eChatType.CT_System);
-                    return;
+                    return false;
                 }
 				if(m_caster.TargetObject==null)
 				{
 					MessageToCaster("You must have a target!", eChatType.CT_SpellResisted);
-					return;
+					return false;
 				}
 
 				if (WorldMgr.GetDistance(m_caster, m_caster.TargetObject) > ((SpellHandler)spellhandler).CalculateSpellRange()) 
 				{
 					MessageToCaster("That target is too far away!", eChatType.CT_SpellResisted);
-					return;
+					return false;
 				}
 
 				spellhandler.CastSpell();
@@ -174,6 +174,7 @@ namespace DOL.GS.Spells
 				if(this.Caster is GamePlayer)
 					((GamePlayer)this.Caster).Out.SendMessage("Select the first spell for your " + this.Spell.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
+            return true;
 		}
 
 		/// <summary>
