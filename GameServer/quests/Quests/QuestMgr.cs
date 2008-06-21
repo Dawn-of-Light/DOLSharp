@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -30,13 +30,13 @@ using DOL.GS.Behaviour;
 using DOL.GS.Quests.Atlantis;
 
 namespace DOL.GS.Quests
-{				
+{
 	/// <summary>
 	/// Declares the quest managed, all questDescriptor instances
 	/// must be registered here to be usable
 	/// </summary>
     public sealed class QuestMgr
-    {  
+    {
 		#region Declaration
 
 		/// <summary>
@@ -69,8 +69,8 @@ namespace DOL.GS.Quests
 
         public static bool Init()
         {
-            //We will search our assemblies for Quests by reflection so 
-            //it is not neccessary anymore to register new quests with the 
+            //We will search our assemblies for Quests by reflection so
+            //it is not neccessary anymore to register new quests with the
             //server, it is done automatically!
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -80,7 +80,7 @@ namespace DOL.GS.Quests
                     // Pick up a class
                     if (type.IsClass != true)
                         continue;
-                    
+
                     if (type.IsSubclassOf(typeof(AbstractQuest)))
                     {
                         if (log.IsInfoEnabled)
@@ -100,19 +100,19 @@ namespace DOL.GS.Quests
             }
             return true;
         }
-        
+
 
 		#region Function
-		
+
 		/// <summary>
 		/// Creates a new QuestBuilder with the given QuestType
 		/// </summary>
 		/// <param name="questType">Type of Quest this Builder is used for</param>
 		/// <returns>QuestBuilder</returns>
-        public static QuestBuilder getBuilder(Type questType) 
+        public static QuestBuilder getBuilder(Type questType)
 		{
             return new QuestBuilder(questType);
-        }		
+        }
 
 		/// <summary>
 		/// Searches for a GameLiving with the given id or name in WorldMgr
@@ -240,9 +240,9 @@ namespace DOL.GS.Quests
 			if (npc == null)
 				npc = defaultNPC;
 
-			return npc;			
+			return npc;
 		}
-		
+
 
         /// <summary>
         /// Registers the QuestType. This needs to be done to be able to retireve and store his typeid.
@@ -250,7 +250,7 @@ namespace DOL.GS.Quests
         /// <param name="type"></param>
         public static void RegisterQuestType(Type type)
         {
-            uint typeId =(uint) type.GetHashCode();
+            ushort typeId =(ushort) type.GetHashCode();
             if (m_questTypeMap.Contains(typeId))
             {
                 if (log.IsErrorEnabled)
@@ -258,10 +258,10 @@ namespace DOL.GS.Quests
                 return;
             }
             m_questTypeMap.Add(typeId, type);
-        }        
+        }
 
         /// <summary>
-        /// Returns a short id for the quest type. 
+        /// Returns a short id for the quest type.
         /// Used for the messages send to client to identify the questtype
         /// </summary>
         /// <param name="questType"></param>
@@ -272,15 +272,15 @@ namespace DOL.GS.Quests
         }
 
         /// <summary>
-        /// Returns a questtype for the quest id. 
-        /// Used for the messages send to client to identify the questtype 
+        /// Returns a questtype for the quest id.
+        /// Used for the messages send to client to identify the questtype
         /// </summary>
         /// <param name="typeId"></param>
         /// <returns></returns>
         public static Type GetQuestTypeForID(ushort typeId)
         {
             return (Type)m_questTypeMap[typeId];
-        }					
+        }
 
 		/// <summary>
 		/// Check if the npc can give the quest to the player
@@ -290,11 +290,11 @@ namespace DOL.GS.Quests
 		/// <param name="target">The player who search a quest</param>
 		/// <returns>the number of time the quest can be done again</returns>
 		public static int CanGiveQuest(Type questType, GamePlayer target, GameNPC source)
-		{						
-			if(source != null) 
+		{
+			if(source != null)
 			{
-                return source.CanGiveQuest(questType, target);				
-			} else {			
+                return source.CanGiveQuest(questType, target);
+			} else {
 			    return 0;
             }
 		}
@@ -306,7 +306,7 @@ namespace DOL.GS.Quests
 		/// <param name="target">The player to check</param>
 		/// <returns>true if yes</returns>
 		public static bool CanGiveOneNewQuest(GameNPC source, GamePlayer target)
-		{			
+		{
             if (source != null)
             {
                 return source.CanGiveOneQuest(target);
@@ -316,7 +316,7 @@ namespace DOL.GS.Quests
                 return false;
             }
 		}
-		
+
 		/// <summary>
         /// Send the quest dialogue for a classic quest to the player
 		/// </summary>
@@ -336,7 +336,7 @@ namespace DOL.GS.Quests
             else
             {
                 return false;
-            }					
+            }
 		}
 
         /// <summary>
@@ -357,7 +357,7 @@ namespace DOL.GS.Quests
             else
             {
                 return false;
-            }            
+            }
         }
 
 		/// <summary>
@@ -399,11 +399,11 @@ namespace DOL.GS.Quests
 			if (player.IsDoingQuest(questType) != null)
 				return false;
 
-            return source.GiveQuest(questType, player, 1);			
+            return source.GiveQuest(questType, player, 1);
 		}
 
 		#endregion
-		
+
     }
-    
+
 }
