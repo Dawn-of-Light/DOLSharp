@@ -34,7 +34,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			byte data1 = (byte)packet.ReadByte();	// unknown
+			byte response = (byte)packet.ReadByte();
+			if (response != 1) // confirm
+				return 1;
 			byte countChosen = (byte)packet.ReadByte();
 
 			int[] itemsChosen = new int[8];
@@ -90,7 +92,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				GamePlayer player = (GamePlayer)m_actionSource;
 
-				player.Notify(GamePlayerEvent.QuestRewardChosen, player, 
+				player.Notify(GamePlayerEvent.QuestRewardChosen, player,
 					new QuestRewardChosenEventArgs(m_questGiverID, m_questID, m_countChosen,
 						m_itemsChosen));
 				return;
@@ -98,4 +100,3 @@ namespace DOL.GS.PacketHandler.Client.v168
 		}
 	}
 }
-
