@@ -28,6 +28,7 @@ using DOL.GS.RealmAbilities;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
 using DOL.GS.SkillHandler;
+using DOL.GS.Quests;
 
 using log4net;
 using System.Collections.Generic;
@@ -83,9 +84,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 						// Aredhel: Start of a more sophisticated item delve system.
 						// The idea is to have every item inherit from an item base class,
 						// this base class will provide a method
-						// 
+						//
 						// public virtual void Delve(List<String>)
-						// 
+						//
 						// which can be overridden in derived classes to provide additional
 						// information. Same goes for spells, just add the spell delve
 						// in the Delve() hierarchy. This will on one hand make this class
@@ -355,17 +356,47 @@ namespace DOL.GS.PacketHandler.Client.v168
 				#endregion
 				#region Merchant
 				case 4: //Display Infos on Merchant objects
+				case 19: //Display Info quest reward
 					{
-						GameMerchant merchant = null;
-						if (client.Player.TargetObject != null && client.Player.TargetObject is GameMerchant)
-							merchant = (GameMerchant)client.Player.TargetObject;
-						if (merchant == null)
-							return 1;
+						ItemTemplate item = null;
 
-						int pagenumber = objectID / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
-						int slotnumber = objectID % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
+						if (objectType == 4)
+						{
+							GameMerchant merchant = null;
+							if (client.Player.TargetObject != null && client.Player.TargetObject is GameMerchant)
+								merchant = (GameMerchant)client.Player.TargetObject;
+							if (merchant == null)
+								return 1;
 
-						ItemTemplate item = merchant.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
+							int pagenumber = objectID / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
+							int slotnumber = objectID % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
+
+							item = merchant.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
+						}
+						else if (objectType == 19)
+						{
+							ushort questID = (ushort)((unk_186 << 12) | (objectID >> 4));
+							int index = objectID & 0x0F;
+							if (questID == 0)
+								return 1; // questID == 0, wrong ID ?
+							AbstractQuest q = client.Player.IsDoingQuest(QuestMgr.GetQuestTypeForID(questID));
+							if (q == null)
+								return 1;// player not doing this quest
+							if (!(q is RewardQuest))
+								return 1; // this is not new quest
+							List<ItemTemplate> rewards = null;
+							if (index < 8)
+								rewards = (q as RewardQuest).Rewards.BasicItems;
+							else
+							{
+								rewards = (q as RewardQuest).Rewards.OptionalItems;
+								index -= 8;
+							}
+							if (rewards != null && index >= 0 && index < rewards.Count)
+							{
+								item = rewards[index];
+							}
+						}
 						if (item == null)
 							return 1;
 
