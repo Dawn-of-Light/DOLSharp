@@ -318,7 +318,6 @@ namespace DOL.GS.Spells
 					FinishSpellCast(target);
 				}
 			}
-			else return false;
 			if (!IsCasting)
 			{
 				OnAfterSpellCastSequence();
