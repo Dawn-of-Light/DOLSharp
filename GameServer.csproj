@@ -924,6 +924,7 @@
     <Compile Include="packets\Server\PacketLib191.cs" />
     <Compile Include="packets\Server\PacketLib192.cs" />
     <Compile Include="packets\Server\PacketLib193.cs" />
+    <Compile Include="packets\Server\PacketLib194.cs" />
     <Compile Include="packets\Server\PacketLibAttribute.cs" />
     <Compile Include="packets\Server\PacketProcessor.cs" />
     <Compile Include="playerclasses\albion\ClassMaulerAlb.cs" />

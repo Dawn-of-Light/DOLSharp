@@ -79,8 +79,11 @@ namespace DOL.GS.PacketHandler
 				pak.WriteStringBytes(quest.Conclusion);
 			}
 			pak.WriteShort(QuestMgr.GetIDForQuestType(quest.GetType()));
-			pak.WriteByte(0x01); // #goals?
-			pak.WritePascalString(String.Format("{0}\r", quest.Goals[0].Description));
+			pak.WriteByte((byte)quest.Goals.Count); // #goals count
+			foreach (RewardQuest.QuestGoal goal in quest.Goals)
+			{
+				pak.WritePascalString(String.Format("{0}\r", goal.Description));
+			}
 			pak.WriteByte((byte)quest.Level);
 			pak.WriteByte((byte)quest.Rewards.Money);
 			pak.WriteByte((byte)quest.Rewards.ExperiencePercent(player));
@@ -153,12 +156,12 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte((byte)(template.DPS_AF));
 			else
 				pak.WriteByte((byte)(template.Hand << 6));
-			pak.WriteByte((byte)((template.Type_Damage > 3 
+			pak.WriteByte((byte)((template.Type_Damage > 3
 				? 0
 				: template.Type_Damage << 6) | template.Object_Type));
 			pak.WriteShort((ushort)template.Weight);
-			pak.WriteByte(template.ConditionPercent); 
-			pak.WriteByte(template.DurabilityPercent); 
+			pak.WriteByte(template.ConditionPercent);
+			pak.WriteByte(template.DurabilityPercent);
 			pak.WriteByte((byte)template.Quality);
 			pak.WriteByte((byte)template.Bonus);
 			pak.WriteShort((ushort)template.Model);

@@ -1882,7 +1882,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		/// <param name="keyname"></param>
 		/// <returns></returns>
@@ -1961,7 +1961,7 @@ namespace DOL.GS
 				log.Error("Missing CL Spell: " + SpellID);
 
 			list.Sort(delegate(Spell sp1, Spell sp2) { return sp1.ID.CompareTo(sp2.ID); });
-			
+
 			for (int i = 0; i < list.Count; i++)
 			list[i].Level = i + 1;
 		}
@@ -1973,10 +1973,13 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static Specialization GetSpecialization(string keyname)
 		{
-			Specialization spec = m_specsByName[keyname] as Specialization;
-			if (spec != null)
+			if (m_specsByName.ContainsKey(keyname))
 			{
-				return (Specialization)spec.Clone();
+				Specialization spec = m_specsByName[keyname] as Specialization;
+				if (spec != null)
+				{
+					return (Specialization)spec.Clone();
+				}
 			}
 			if (log.IsWarnEnabled)
 				log.Warn("Specialization " + keyname + " unknown");
