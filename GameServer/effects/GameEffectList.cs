@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -109,8 +109,8 @@ namespace DOL.GS.Effects
 
 			if (m_effects == null)
 				return false;
-			
-			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock ('this') 
+
+			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock ('this')
 			{
 				int index = m_effects.IndexOf(effect);
 				if (index < 0)
@@ -156,13 +156,14 @@ namespace DOL.GS.Effects
 			GamePlayer player = m_owner as GamePlayer;
 			if (player == null || player.PlayerCharacter == null || GameServer.Database == null)
 				return;
-			PlayerXEffect[] effs = (PlayerXEffect[])GameServer.Database.SelectObjects(typeof(PlayerXEffect), "ChardID = '" + GameServer.Database.Escape(player.PlayerCharacter.ObjectId) + "' AND SpellLine !='Reserved Spells'");
+			PlayerXEffect[] effs = (PlayerXEffect[])GameServer.Database.SelectObjects(typeof(PlayerXEffect), "ChardID = '" + GameServer.Database.Escape(player.PlayerCharacter.ObjectId) + "'");
 			if (effs == null)
 				return;
 			ArrayList targets = new ArrayList();
 			targets.Add(player);
 			foreach (PlayerXEffect eff in effs)
 			{
+				if (eff.SpellLine == GlobalSpellsLines.Reserved_Spells) continue;
 				bool good = true;
 				Spell spell = SkillBase.GetSpellByID(eff.Var1);
 				if (spell == null)
@@ -216,7 +217,7 @@ namespace DOL.GS.Effects
 					PlayerXEffect effx = eff.getSavedEffect();
 					if (effx == null)
 						continue;
-					if(effx.SpellLine=="Reserved Spells") continue;
+					if (effx.SpellLine == GlobalSpellsLines.Reserved_Spells) continue;
 					effx.ChardID = player.PlayerCharacter.ObjectId;
 					GameServer.Database.AddNewObject(effx);
 				}
@@ -301,7 +302,7 @@ namespace DOL.GS.Effects
 
 			if (m_effects == null) return list;
 
-			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock ('this') 
+			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock ('this')
 			{
 				foreach (IGameEffect effect in m_effects)
 					if (effect.GetType().Equals(effectType)) list.Add(effect);
@@ -319,7 +320,7 @@ namespace DOL.GS.Effects
 			int count = 0;
 
 			if (m_effects == null) return count;
-			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock ('this') 
+			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock ('this')
 			{
 				foreach (IGameEffect effect in m_effects)
 					if (effect.GetType().Equals(effectType)) count++;
