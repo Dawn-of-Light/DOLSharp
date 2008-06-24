@@ -49,6 +49,14 @@ namespace DOL.GS
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		/// <summary>
+		/// Constant for determining if already at a point
+		/// </summary>
+		/// <remarks>
+		/// This helps to reduce the turning of an npc while fighting or returning to a spawn
+		/// </remarks>
+		const int CONST_WALKTOTOLERANCE = 5;
+
 		#region Formations/Spacing
 
 		//Space/Offsets used in formations
@@ -1175,8 +1183,13 @@ namespace DOL.GS
 		public virtual void WalkTo(int tx, int ty, int tz, int speed)
 		{
 			// Walking to the spot we're already at will only get us into trouble.
-			if (tx == X && ty == Y && tz == Z)
+			if (tx <= X + CONST_WALKTOTOLERANCE && tx >= X - CONST_WALKTOTOLERANCE
+				&& ty <= Y + CONST_WALKTOTOLERANCE && ty >= Y - CONST_WALKTOTOLERANCE
+				&& tz <= Z + CONST_WALKTOTOLERANCE && tz >= Z - CONST_WALKTOTOLERANCE)
+			{
+				TurnTo(tx, ty);
 				return;
+			}
 
 			if (IsTurningDisabled)
 				return; // can't walk when turning is disabled
@@ -3883,6 +3896,67 @@ namespace DOL.GS
 				}
 				Interval = 500;
 			}
+		}
+
+		private const string LOSTEMPCHECKER = "LOSTEMPCHECKER";
+		private const string LOSCURRENTSPELL = "LOSCURRENTSPELL";
+		private const string LOSCURRENTLINE = "LOSCURRENTLINE";
+
+		/// <summary>
+		/// Does a check for a gameplayer to start gamenpcs have LOS checks
+		/// </summary>
+		/// <param name="spell"></param>
+		/// <param name="line"></param>
+		public override bool CastSpell(Spell spell, SpellLine line)
+		{
+			// Let's do a few checks to make sure it doesn't just wait on the LOS check
+			int tempProp = TempProperties.getIntProperty(LOSTEMPCHECKER, 0);
+
+			if (tempProp <= 0)
+			{
+				GamePlayer LOSChecker = TargetObject as GamePlayer;
+				if (LOSChecker == null)
+				{
+					foreach (GamePlayer ply in GetPlayersInRadius(300))
+					{
+						if (ply != null)
+						{
+							LOSChecker = ply;
+							break;
+						}
+					}
+				}
+
+				if (LOSChecker == null)
+				{
+					TempProperties.setProperty(LOSTEMPCHECKER, 0);
+					return base.CastSpell(spell, line);
+				}
+				else
+				{
+					TempProperties.setProperty(LOSTEMPCHECKER, 10);
+					TempProperties.setProperty(LOSCURRENTSPELL, spell);
+					TempProperties.setProperty(LOSCURRENTLINE, line);
+					LOSChecker.Out.SendCheckLOS(LOSChecker, this, new CheckLOSResponse(PetStartSpellAttackCheckLOS));
+				}
+			}
+			else
+				TempProperties.setProperty(LOSTEMPCHECKER, tempProp - 1);
+			return true;
+			
+		}
+
+		public void PetStartSpellAttackCheckLOS(GamePlayer player, ushort response, ushort targetOID)
+		{
+			SpellLine line = (SpellLine)TempProperties.getObjectProperty(LOSCURRENTLINE, null);
+			Spell spell = (Spell)TempProperties.getObjectProperty(LOSCURRENTSPELL, null);
+
+			if ((response & 0x100) == 0x100 && line != null && spell != null)
+				base.CastSpell(spell, line);
+
+			TempProperties.setProperty(LOSTEMPCHECKER, null);
+			TempProperties.setProperty(LOSCURRENTLINE, null);
+			TempProperties.setProperty(LOSTEMPCHECKER, 0);
 		}
 
 		#endregion
