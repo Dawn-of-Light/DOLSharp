@@ -2438,11 +2438,10 @@ namespace DOL.GS.Spells
 
 			int speclevel = 1;
 
-			if (m_caster is GameNPC && ((GameNPC)m_caster).Brain is IControlledBrain)
+			if (m_caster is GamePet)
 			{
-				#warning This needs to be changed when GamePet is made
 				IControlledBrain brain = (m_caster as GameNPC).Brain as IControlledBrain;
-				speclevel = brain.GetPlayerOwner().GetModifiedSpecLevel(m_spellLine.Spec);
+				speclevel = brain.GetPlayerOwner().Level;
 			}
 			else if (m_caster is GamePlayer)
 			{

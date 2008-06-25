@@ -36,7 +36,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			bool invalidChar = false;
 			//DOLConsole.WriteLine("Character creation!\n");
 			packet.Skip(24); //Skip the account name, we don't need it
 			int charsCount = client.Version < GameClient.eClientVersion.Version173 ? 8 : 10;
