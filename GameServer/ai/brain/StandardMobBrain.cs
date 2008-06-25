@@ -642,6 +642,13 @@ namespace DOL.AI.Brain
 					OnFollowLostTarget(eArgs.LostTarget);
 					return;
 				}
+				else if (e == GameLivingEvent.CastFailed)
+				{
+					CastFailedEventArgs realArgs = args as CastFailedEventArgs;
+					if (realArgs == null || realArgs.Reason == CastFailedEventArgs.Reasons.AllReadyCasting || realArgs.Reason == CastFailedEventArgs.Reasons.CrowdControlled)
+						return;
+					Body.StartAttack(Body.TargetObject);
+				}
 			}
 		}
 
@@ -1006,12 +1013,7 @@ namespace DOL.AI.Brain
 				if (Body.TargetObject != Body && spell.CastTime > 0)
 					Body.TurnTo(Body.TargetObject);
 
-				if(!Body.CastSpell(spell, m_mobSpellLine))
-				{
-					Body.TargetObject = lastTarget;
-					return false;
-				}
-
+				Body.CastSpell(spell, m_mobSpellLine);
 
 				Body.TargetObject = lastTarget;
 				return true;
@@ -1038,10 +1040,7 @@ namespace DOL.AI.Brain
 				if (Body.TargetObject != Body && spell.CastTime > 0)
 					Body.TurnTo(Body.TargetObject);
 
-				if(!Body.CastSpell(spell, m_mobSpellLine))
-				{
-					return false;
-				}
+				Body.CastSpell(spell, m_mobSpellLine);
 				return true;
 			}
 			return false;
@@ -1088,11 +1087,7 @@ namespace DOL.AI.Brain
 
 			if (Body.TargetObject != null)
 			{
-				if(!Body.CastSpell(spell, m_mobSpellLine))
-				{
-					Body.TargetObject = lastTarget;
-					return false;
-				}
+				Body.CastSpell(spell, m_mobSpellLine);
 				Body.TargetObject = lastTarget;
 
 				return true;

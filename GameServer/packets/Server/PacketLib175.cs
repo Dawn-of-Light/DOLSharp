@@ -468,7 +468,7 @@ namespace DOL.GS.PacketHandler
 				SendObjectGuildID(playerToCreate, playerToCreate.Guild); //used for nearest friendly/enemy object buttons and name colors on PvP server
 		}
 
-		public void SendLoginGranted(byte color)
+		public override void SendLoginGranted(byte color)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.LoginGranted));
 			pak.WriteByte(0x01); //isSI

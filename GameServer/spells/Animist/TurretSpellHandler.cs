@@ -43,7 +43,6 @@ namespace DOL.GS.Spells
 
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-			GameSpellEffect effect = null;
 			foreach (GameNPC npc in Caster.CurrentRegion.GetNPCsInRadius(Caster.X, Caster.Y, Caster.Z, (ushort)m_spell.Radius, false))
 				if ((npc.Brain is TurretBrain) && (npc.Brain as IControlledBrain).Owner == Caster)
 					npc.Die(Caster);
