@@ -551,27 +551,6 @@ namespace DOL.AI.Brain
 		}
 
 		/// <summary>
-		/// Receives all messages of the body
-		/// </summary>
-		/// <param name="e">The event received</param>
-		/// <param name="sender">The event sender</param>
-		/// <param name="args">The event arguments</param>
-		public override void Notify(DOLEvent e, object sender, EventArgs args)
-		{
-			base.Notify(e, sender, args);
-
-			if (!IsActive) return;
-
-			if (sender == Body)
-			{
-				if (e == GameNPCEvent.FollowLostTarget)
-				{
-					return;
-				}
-			}
-		}
-
-		/// <summary>
 		/// Lost follow target event
 		/// </summary>
 		/// <param name="target"></param>

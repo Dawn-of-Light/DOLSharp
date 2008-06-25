@@ -3901,13 +3901,14 @@ namespace DOL.GS
 		private const string LOSTEMPCHECKER = "LOSTEMPCHECKER";
 		private const string LOSCURRENTSPELL = "LOSCURRENTSPELL";
 		private const string LOSCURRENTLINE = "LOSCURRENTLINE";
+		private const string LOSSPELLTARGET = "LOSSPELLTARGET";
 
 		/// <summary>
 		/// Does a check for a gameplayer to start gamenpcs have LOS checks
 		/// </summary>
 		/// <param name="spell"></param>
 		/// <param name="line"></param>
-		public override bool CastSpell(Spell spell, SpellLine line)
+		public override void CastSpell(Spell spell, SpellLine line)
 		{
 			// Let's do a few checks to make sure it doesn't just wait on the LOS check
 			int tempProp = TempProperties.getIntProperty(LOSTEMPCHECKER, 0);
@@ -3930,19 +3931,20 @@ namespace DOL.GS
 				if (LOSChecker == null)
 				{
 					TempProperties.setProperty(LOSTEMPCHECKER, 0);
-					return base.CastSpell(spell, line);
+					base.CastSpell(spell, line);
 				}
 				else
 				{
 					TempProperties.setProperty(LOSTEMPCHECKER, 10);
 					TempProperties.setProperty(LOSCURRENTSPELL, spell);
 					TempProperties.setProperty(LOSCURRENTLINE, line);
+					TempProperties.setProperty(LOSSPELLTARGET, TargetObject);
 					LOSChecker.Out.SendCheckLOS(LOSChecker, this, new CheckLOSResponse(PetStartSpellAttackCheckLOS));
 				}
 			}
 			else
 				TempProperties.setProperty(LOSTEMPCHECKER, tempProp - 1);
-			return true;
+			return;
 			
 		}
 
@@ -3952,8 +3954,17 @@ namespace DOL.GS
 			Spell spell = (Spell)TempProperties.getObjectProperty(LOSCURRENTSPELL, null);
 
 			if ((response & 0x100) == 0x100 && line != null && spell != null)
+			{
+				GameObject target = (GameObject)TempProperties.getObjectProperty(LOSSPELLTARGET, null);
+				GameObject lasttarget = TargetObject;
+				TargetObject = target;
 				base.CastSpell(spell, line);
+				TargetObject = lasttarget;
+			}
+			else
+				Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.TargetNotInView));
 
+			TempProperties.setProperty(LOSSPELLTARGET, null);
 			TempProperties.setProperty(LOSTEMPCHECKER, null);
 			TempProperties.setProperty(LOSCURRENTLINE, null);
 			TempProperties.setProperty(LOSTEMPCHECKER, 0);

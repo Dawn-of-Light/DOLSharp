@@ -5882,23 +5882,32 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// </summary>
 		/// <param name="spell">spell to cast</param>
 		/// <param name="line">Spell line of the spell (for bonus calculations)</param>
-		public virtual bool CastSpell(Spell spell, SpellLine line)
+		public virtual void CastSpell(Spell spell, SpellLine line)
 		{
-			if (this.IsStunned || this.IsMezzed) return false;
-			if (m_runningSpellHandler != null && spell.CastTime > 0) return false;
+			if ((this.IsStunned || this.IsMezzed))
+			{
+				Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.CrowdControlled));
+				return;
+			}
+
+			if((m_runningSpellHandler != null && spell.CastTime > 0))
+			{
+				Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.AllReadyCasting));
+				return;
+			}
 
 			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(this, spell, line);
 			if (spellhandler != null)
 			{
 				m_runningSpellHandler = spellhandler;
 				spellhandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
-				return spellhandler.CastSpell();
+				spellhandler.CastSpell();
 			}
 			else
 			{
 				if (log.IsWarnEnabled)
 					log.Warn(Name + " wants to cast but spell " + spell.Name + " not implemented yet");
-				return false;
+				return;
 			}
 		}
 		#endregion
