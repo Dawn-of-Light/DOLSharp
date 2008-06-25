@@ -29,8 +29,6 @@ namespace DOL.AI.Brain
 {
 	public class TurretBrain : ControlledNpc
 	{
-		private GameLiving m_target;
-
 		public TurretBrain(GameLiving owner) : base(owner) { }
 
 		public override int ThinkInterval
@@ -73,10 +71,9 @@ namespace DOL.AI.Brain
 
 			if (Body.TargetObject != null)
 			{
-				if (!Body.CastSpell(spell, m_mobSpellLine))
-					return false;
 				if (Body.TargetObject != Body && spell.CastTime > 0)
 					Body.TurnTo(Body.TargetObject);
+				Body.CastSpell(spell, m_mobSpellLine);
 				return true;
 			}
 
@@ -120,10 +117,9 @@ namespace DOL.AI.Brain
 
 			if (Body.TargetObject != null)
 			{
-				if (!Body.CastSpell(spell, m_mobSpellLine))
-					return false;
 				if (Body.TargetObject != Body && spell.CastTime > 0)
 					Body.TurnTo(Body.TargetObject);
+				Body.CastSpell(spell, m_mobSpellLine);
 				return true;
 			}
 
