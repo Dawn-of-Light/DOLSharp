@@ -76,6 +76,11 @@ namespace DOL.GS.Spells
                 MessageToCaster("You are already a shade!", eChatType.CT_System);
                 return false;
             }
+			if (Caster is GamePlayer && Caster.ControlledNpc != null)
+			{
+				MessageToCaster("You already have a charmed creature, release it first!", eChatType.CT_SpellResisted);
+				return false;
+			}
             return base.CheckBeginCast(selectedTarget);
         }
 
