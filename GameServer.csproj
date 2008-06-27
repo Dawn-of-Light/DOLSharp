@@ -779,6 +779,7 @@
     <Compile Include="gameutils\MailMgr.cs" />
     <Compile Include="gameutils\NewsMgr.cs" />
     <Compile Include="gameutils\PlayerStatistics.cs" />
+    <Compile Include="gameutils\RegionTimersResync.cs" />
     <Compile Include="gameutils\StartupEquipment.cs" />
     <Compile Include="gameutils\StatPrint.cs" />
     <Compile Include="gameutils\StatSave.cs" />
@@ -2575,6 +2576,7 @@
     <Content Include="language\IT\Language-IT.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="packets\PacketBuilder\" />
     <Folder Include="spells\Cleric\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

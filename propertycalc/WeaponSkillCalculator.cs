@@ -8,7 +8,7 @@ namespace DOL.GS.PropertyCalc
 		{
 			double percent = 100
 			+ living.BaseBuffBonusCategory[(int)property] // enchance the weaponskill
-			- living.SpecBuffBonusCategory[(int)property] // enchance the weaponskill
+			+ living.SpecBuffBonusCategory[(int)property] // enchance the weaponskill
 				//hotfix for poisons where both debuff components have same value
 			- (int)(living.DebuffCategory[(int)property] / 5.4) // reduce
 		   + living.ItemBonus[(int)property];
