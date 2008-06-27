@@ -2576,7 +2576,6 @@
     <Content Include="language\IT\Language-IT.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="packets\PacketBuilder\" />
     <Folder Include="spells\Cleric\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
