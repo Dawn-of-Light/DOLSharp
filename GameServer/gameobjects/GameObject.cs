@@ -1118,14 +1118,6 @@ namespace DOL.GS
 						player.TempProperties.setProperty("isbeingbanned", true);
 						player.MoveToBind();
 					}
-					if (this is GameNPC)
-					{
-						GameNPC npc = this as GameNPC;
-						npc.StopAttack();
-						npc.StopCurrentSpellcast();
-						npc.DeleteFromDatabase();
-						npc.Delete();
-					}
 				}
 				else
 				{
@@ -1192,14 +1184,6 @@ namespace DOL.GS
 						player.TempProperties.setProperty("isbeingbanned", true);
 						player.MoveToBind();
 					}
-					if (this is GameNPC)
-					{
-						GameNPC npc = this as GameNPC;
-						npc.StopAttack();
-						npc.StopCurrentSpellcast();
-						npc.DeleteFromDatabase();
-						npc.Delete();
-					}
 				}
 				else
 				{
@@ -1244,14 +1228,6 @@ namespace DOL.GS
 						player.TempProperties.setProperty("isbeingbanned", true);
 						player.MoveToBind();
 					}
-					if (this is GameNPC)
-					{
-						GameNPC npc = this as GameNPC;
-						npc.StopAttack();
-						npc.StopCurrentSpellcast();
-						npc.DeleteFromDatabase();
-						npc.Delete();
-					}
 				}
 				else
 				{
@@ -1290,14 +1266,6 @@ namespace DOL.GS
 						GamePlayer player = this as GamePlayer;
 						player.TempProperties.setProperty("isbeingbanned", true);
 						player.MoveToBind();
-					}
-					if (this is GameNPC)
-					{
-						GameNPC npc = this as GameNPC;
-						npc.StopAttack();
-						npc.StopCurrentSpellcast();
-						npc.DeleteFromDatabase();
-						npc.Delete();
 					}
 				}
 				else
