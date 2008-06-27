@@ -811,6 +811,15 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Returns all the regions of the world
+		/// </summary>
+		/// <returns></returns>
+		public static ICollection GetAllRegions()
+		{
+			return m_regions.Values;
+		}
+
+		/// <summary>
 		/// Registers a Zone into a Region
 		/// </summary>
 		/// <param name="zoneID">ID of the Zone</param>
