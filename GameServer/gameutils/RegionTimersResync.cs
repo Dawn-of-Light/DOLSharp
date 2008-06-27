@@ -19,7 +19,7 @@
  */
 
 //Thanks to Eden (Vico) for creating this - Edited by IST
-
+/* Graveen - temp desactivation due to bugs
 using System;
 using DOL.GS;
 using DOL.Events;
@@ -132,4 +132,4 @@ namespace DOL.GS.GameEvents
 			}
 		}
 	}
-}
+}*/
