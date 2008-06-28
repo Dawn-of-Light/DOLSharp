@@ -37,8 +37,6 @@ namespace DOL.AI.Brain
 				guard = Body as GameKeepGuard;
 			if (guard == null)
 				Stop();
-			CheckPlayerAggro();
-			CheckNPCAggro();
 
 			if ((guard is GuardArcher || guard is GuardLord))
 			{
@@ -46,15 +44,6 @@ namespace DOL.AI.Brain
 				{
 					guard.SwitchToRanged(guard.TargetObject);
 				}
-			}
-
-			//switch attack target?
-			GameLiving currentTarget = guard.TargetObject as GameLiving;
-			GameLiving nextTarget = CalculateNextAttackTarget();
-			if (nextTarget != null && nextTarget != currentTarget)
-			{
-				guard.StopAttack();
-				guard.StartAttack(nextTarget);
 			}
 
 			//if we are not doing an action, let us see if we should move somewhere
@@ -77,6 +66,7 @@ namespace DOL.AI.Brain
 				ClearAggroList();
 				guard.WalkToSpawn();
 			}
+			base.Think();
 		}
 
 		/// <summary>
@@ -144,26 +134,6 @@ namespace DOL.AI.Brain
 					AddToAggroList(npc, (npc.Level + 1) << 1);
 					return;
 				}
-			}
-		}
-
-		protected override void AttackMostWanted()
-		{
-			if (!IsActive)
-				return;
-
-			GameLiving target = CalculateNextAttackTarget();
-			if (target != null)
-			{
-				if (!Body.AttackState || target != Body.TargetObject)
-				{
-					Body.StartAttack(target);
-				}
-			}
-			else
-			{
-				if (Body.CurrentSpellHandler == null && !Body.IsMoving && !Body.AttackState && !Body.InCombat)
-					Body.WalkToSpawn();
 			}
 		}
 

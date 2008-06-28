@@ -40,6 +40,7 @@ namespace DOL.GS.Spells
 		public override bool CastSpell()
 		{
 			GameLiving target = Caster.TargetObject as GameLiving;
+			bool casted = true;
 
             if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, target, Spell, SpellLine)
                 && CheckBeginCast(target))
@@ -60,11 +61,13 @@ namespace DOL.GS.Spells
                     FinishSpellCast(target);
                 }
             }
-            else return false;
+            else 
+				casted = false;
 
             if (!IsCasting)
                 OnAfterSpellCastSequence();
-            return true;
+
+            return casted;
 		}
 
 		/// <summary>
