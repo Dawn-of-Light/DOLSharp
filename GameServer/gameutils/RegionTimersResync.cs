@@ -47,12 +47,14 @@ namespace DOL.GS.GameEvents
 		[ScriptLoadedEvent]
 		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
 		{
-			Init();
+			if (ServerProperties.Properties.USE_SYNC_UTILITY)
+				Init();
 		}
 		[ScriptUnloadedEvent]
 		public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args) 
-		{ 
-			Stop();
+		{
+			if (ServerProperties.Properties.USE_SYNC_UTILITY)
+				Stop();
 		}
 
 		public static void Init()
@@ -105,6 +107,8 @@ namespace DOL.GS.GameEvents
 					}
 
 					mgr.Start();
+
+					//RegionTimerUnfrozen(mgr, syncTime);
 				}
 
 				if (old_time.ContainsKey(mgr))
@@ -112,5 +116,8 @@ namespace DOL.GS.GameEvents
 				mgr.CurrentTime = syncTime;
 			}
 		}
+
+		public delegate void RegionTimerHandler(GameTimer.TimeManager RestartedTimer, long SyncTime);
+		public static event RegionTimerHandler RegionTimerUnfrozen;
 	}
 }

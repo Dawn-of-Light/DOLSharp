@@ -1161,7 +1161,8 @@ namespace DOL.GS.PacketHandler
 			pak.Fill(0x00, 6); //data2&data3
 			pak.WriteByte(0x01);
 			pak.WriteByte(0x00);
-			pak.WriteString(inviteMessage, inviteMessage.Length);
+			if (inviteMessage.Length > 0)
+				pak.WriteString(inviteMessage, inviteMessage.Length);
 			pak.WriteByte(0x00);
 			SendTCP(pak);
 		}
@@ -1175,7 +1176,8 @@ namespace DOL.GS.PacketHandler
 			pak.Fill(0x00, 6); //data2&data3
 			pak.WriteByte(0x01);
 			pak.WriteByte(0x00);
-			pak.WriteString(inviteMessage, inviteMessage.Length);
+			if (inviteMessage.Length > 0)
+				pak.WriteString(inviteMessage, inviteMessage.Length);
 			pak.WriteByte(0x00);
 			SendTCP(pak);
 		}
@@ -1189,7 +1191,8 @@ namespace DOL.GS.PacketHandler
 			pak.Fill(0x00, 6); //data2&data3
 			pak.WriteByte(0x01);
 			pak.WriteByte(0x00);
-			pak.WriteString(inviteMessage, inviteMessage.Length);
+			if (inviteMessage.Length > 0)
+				pak.WriteString(inviteMessage, inviteMessage.Length);
 			pak.WriteByte(0x00);
 			SendTCP(pak);
 		}
@@ -1220,7 +1223,8 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort(0x00);
 			pak.WriteByte(0x01); // yes/no response
 			pak.WriteByte(0x01); // autowrap message
-			pak.WriteString(inviteMessage, inviteMessage.Length);
+			if (inviteMessage.Length > 0)
+				pak.WriteString(inviteMessage, inviteMessage.Length);
 			pak.WriteByte(0x00);
 			SendTCP(pak);
 		}
@@ -1238,7 +1242,8 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort(0x00);
 			pak.WriteByte(0x01); // yes/no response
 			pak.WriteByte(0x01); // autowrap message
-			pak.WriteString(abortMessage, abortMessage.Length);
+			if (abortMessage.Length > 0)
+				pak.WriteString(abortMessage, abortMessage.Length);
 			pak.WriteByte(0x00);
 			SendTCP(pak);
 		}
@@ -1254,7 +1259,8 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort((ushort)data4); //data4
 			pak.WriteByte((byte)type);
 			pak.WriteByte((byte)(autoWarpText == true ? 0x01 : 0x00));
-			pak.WriteString(message, message.Length);
+			if (message.Length > 0)
+				pak.WriteString(message, message.Length);
 			pak.WriteByte(0x00);
 			SendTCP(pak);
 		}
@@ -1279,7 +1285,8 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort(0x00);
 			pak.WriteByte((byte)(callback == null ? 0x00 : 0x01)); //ok or yes/no response
 			pak.WriteByte(0x01); // autowrap text
-			pak.WriteString(msg, msg.Length);
+			if (msg.Length > 0)
+				pak.WriteString(msg, msg.Length);
 			pak.WriteByte(0x00);
 			SendTCP(pak);
 		}
@@ -2927,7 +2934,8 @@ namespace DOL.GS.PacketHandler
 			pak.Fill(0x00, 8); // empty
 			pak.WriteByte(0x02); // type
 			pak.WriteByte(0x01); // wrap
-			pak.WriteString(title); // title ??
+			if (title.Length > 0)
+				pak.WriteString(title); // title ??
 			pak.WriteByte(0x00);
 			SendTCP(pak);
 		}

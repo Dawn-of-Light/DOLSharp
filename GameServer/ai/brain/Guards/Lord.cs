@@ -8,36 +8,29 @@ namespace DOL.AI.Brain
 	/// </summary>
 	public class LordBrain : KeepGuardBrain
 	{
-		/// <summary>
-		/// The Brain Think Method
-		/// </summary>
-		public override void Think()
+		public LordBrain() : base()
 		{
-			base.Think();
-			CheckHealing();
 		}
 
-		/// <summary>
-		/// Check if the lord can heal himself
-		/// </summary>
-		private void CheckHealing()
+		public override void Think()
 		{
-			//if we are already casting a spell return
-			if (Body.CurrentSpellHandler != null)
-				return;
-
-			//if the lord is in combat, there is only a chance to heal
-			if (Body.InCombat)
+			if (Body != null && Body.Spells.Count == 0)
 			{
-				if (Body.HealthPercent < 25 && Util.Chance(10))
-					SpellMgr.LordCastHealSpell(guard);
+				switch (Body.Realm)
+				{
+					case eRealm.None:
+					case eRealm.Albion:
+						Body.Spells.Add(SpellMgr.AlbLordHealSpell);
+						break;
+					case eRealm.Midgard:
+						Body.Spells.Add(SpellMgr.MidLordHealSpell);
+						break;
+					case eRealm.Hibernia:
+						Body.Spells.Add(SpellMgr.HibLordHealSpell);
+						break;
+				}
 			}
-			//if the lord is not in combat, the lord can heal himself fully
-			else
-			{
-				if (Body.HealthPercent != 100)
-					SpellMgr.LordCastHealSpell(guard);
-			}
+			base.Think();
 		}
 	}
 }
