@@ -1732,6 +1732,9 @@ namespace DOL.GS.Spells
 					}
 				}
 			}
+
+			if (Spell.Target.ToLower() == "ground")
+				ApplyEffectOnTarget(null, 1);
 		}
 
 		/// <summary>

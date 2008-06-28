@@ -174,6 +174,8 @@ namespace DOL.GS.PacketHandler
 					ArrayList icons = new ArrayList();
 					foreach (IGameEffect effect in pet.EffectList)
 					{
+						if (icons.Count >= 8)
+							break;
 						if (effect.Icon == 0)
 							continue;
 						icons.Add(effect.Icon);
@@ -182,8 +184,6 @@ namespace DOL.GS.PacketHandler
 					// 0x08 - null terminated - (byte) list of shorts - spell icons on pet
 					foreach (ushort icon in icons)
 					{
-						if (icons.IndexOf(icon) >= 8)
-							break;
 						pak.WriteShort(icon);
 					}
 				}

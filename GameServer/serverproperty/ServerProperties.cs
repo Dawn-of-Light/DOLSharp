@@ -556,6 +556,12 @@ namespace DOL.GS.ServerProperties
         [ServerProperty("record_news", "Record News in database?", true)]
         public static readonly bool RECORD_NEWS;
 
+		/// <summary>
+		/// Whether to use the sync timer utility or not
+		/// </summary>
+		[ServerProperty("use_sync_timer", "Shall we use the sync timers utility?", true)]
+		public static readonly bool USE_SYNC_UTILITY;
+
         /// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
