@@ -590,7 +590,7 @@ namespace DOL.GS.Spells
 			}
 
 			//Ryan: don't want mobs to have reductions in mana
-			if (Spell.Power>0 && m_caster is GamePlayer && (m_caster as GamePlayer).CharacterClass.ID != (int)eCharacterClass.Savage && m_caster.Mana < CalculateNeededPower(selectedTarget) && Spell.SpellType != "Archery")
+			if (Spell.Power != 0 && m_caster is GamePlayer && (m_caster as GamePlayer).CharacterClass.ID != (int)eCharacterClass.Savage && m_caster.Mana < CalculateNeededPower(selectedTarget) && Spell.SpellType != "Archery")
 			{
 				MessageToCaster("You don't have enough power to cast that!", eChatType.CT_SpellResisted);
 				return false;

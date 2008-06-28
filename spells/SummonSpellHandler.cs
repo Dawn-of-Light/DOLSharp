@@ -64,6 +64,12 @@ namespace DOL.GS.Spells
 			pet.HailMaster();
 		}
 
+		public override bool CheckBeginCast(GameLiving selectedTarget)
+		{
+
+			return base.CheckBeginCast(selectedTarget);
+		}
+
 		#region ApplyEffectOnTarget Gets
 
 		protected virtual void GetPetLocation(out int x, out int y, out int z, out ushort heading, out Region region)
