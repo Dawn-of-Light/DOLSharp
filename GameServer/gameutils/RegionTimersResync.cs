@@ -19,7 +19,6 @@
  */
 
 //Thanks to Eden (Vico) for creating this - Edited by IST
-/* Graveen - temp desactivation due to bugs
 using System;
 using DOL.GS;
 using DOL.Events;
@@ -29,17 +28,18 @@ using DOL.GS.PacketHandler;
 using log4net;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace DOL.GS.GameEvents
 {
 	public static class RegionTimersResynch
 	{
-		const int UPDATE_INTERVAL = 3 * 60 * 1000; //3min
-		const int TOLERANCE = 5000; //5sec
+		const int UPDATE_INTERVAL = 1 * 10 * 1000; //3min
 
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		static Timer m_timer;
+		static Stopwatch watch;
 		static Dictionary<GameTimer.TimeManager, long> old_time = new Dictionary<GameTimer.TimeManager, long>();
 
 		#region Initialization/Teardown
@@ -57,6 +57,8 @@ namespace DOL.GS.GameEvents
 
 		public static void Init()
 		{
+			watch = new Stopwatch();
+			watch.Start();
 			foreach (GameTimer.TimeManager mgr in WorldMgr.GetRegionTimeManagers())
 				old_time.Add(mgr, 0);
 
@@ -74,62 +76,41 @@ namespace DOL.GS.GameEvents
 		private static void Resynch(object nullValue)
 		{
 			log.Info("----- Region Timer Resynch -----");
-			long lowestTime = 0;
-			long highestTime = 0;
-			int highestTick = 0;
 
-			//Read
-			foreach (GameTimer.TimeManager mgr in WorldMgr.GetRegionTimeManagers())
-			{
-				long curTime = mgr.CurrentTime;
-				if (curTime > highestTime)
-				{
-					highestTime = curTime;
-					highestTick = mgr.CurrentTick;
-				}
-				else if (curTime < lowestTime)
-				{
-					lowestTime = curTime;
-				}
-			}
-
-			//If the difference is less than the tolerance, no need to check
-			if (highestTime - lowestTime < TOLERANCE)
-				return;
+			long syncTime = watch.ElapsedMilliseconds;
 
 			//Check alive
 			foreach (GameTimer.TimeManager mgr in WorldMgr.GetRegionTimeManagers())
 			{
 				if (old_time.ContainsKey(mgr) && old_time[mgr] == mgr.CurrentTime)
 				{
-					log.Error(string.Format("----- Found Frozen Region Timer -----\nName: {0} - Current Time: {1} - Highest Time: {2}", mgr.Name, mgr.CurrentTime, highestTime));
-
+					log.Error(string.Format("----- Found Frozen Region Timer -----\nName: {0} - Current Time: {1}", mgr.Name, mgr.CurrentTime));
 					mgr.Stop();
-					foreach (Region reg in WorldMgr.GetAllRegions())
-						if (reg.TimeManager == mgr)
-							foreach (GameClient clients in WorldMgr.GetAllClients())
-								if (clients.Player == null)
-								{
-									log.Error(string.Format("----- Disconnected Client: {0}", clients.Account.Name));
-									clients.Out.SendPlayerQuit(true);
-									clients.Disconnect();
-									GameServer.Instance.Disconnect(clients);
-									WorldMgr.RemoveClient(clients);
-								}
+
+					foreach (GameClient clients in WorldMgr.GetAllClients())
+					{
+						if (clients.Player == null || clients.ClientState == GameClient.eClientState.Linkdead)
+						{
+							log.Error(string.Format("----- Disconnected Client: {0}", clients.Account.Name));
+							if (clients.Player != null)
+							{
+								clients.Player.SaveIntoDatabase();
+								clients.Player.Quit(true);
+							}
+							clients.Out.SendPlayerQuit(true);
+							clients.Disconnect();
+							GameServer.Instance.Disconnect(clients);
+							WorldMgr.RemoveClient(clients);
+						}
+					}
 
 					mgr.Start();
 				}
-			}
-
-			//Write
-			foreach (GameTimer.TimeManager mgr in WorldMgr.GetRegionTimeManagers())
-			{
-				mgr.CurrentTime = highestTime;
-				mgr.CurrentTick = highestTick;
 
 				if (old_time.ContainsKey(mgr))
-					old_time[mgr] = highestTime;
+					old_time[mgr] = syncTime;
+				mgr.CurrentTime = syncTime;
 			}
 		}
 	}
-}*/
+}
