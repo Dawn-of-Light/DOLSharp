@@ -92,8 +92,14 @@ namespace DOL.AI.Brain
 			{
 				try
 				{
-					if (GameServer.ServerRules.IsAllowedToAttack(Body, player, false)
-						&& KeepMgr.IsEnemy(Body as GameKeepGuard, player)) // using group check, feat PvP rules
+					bool allowedToAttack =
+						GameServer
+						.ServerRules
+						.IsAllowedToAttack
+						(Body, 
+						player, false);
+					bool isEnemy = KeepMgr.IsEnemy(Body as GameKeepGuard, player);
+					if (allowedToAttack && isEnemy) // using group check, feat PvP rules
 					{
 						if (Body is GuardStealther == false && player.IsStealthed)
 							continue;
@@ -106,7 +112,7 @@ namespace DOL.AI.Brain
 				{
 					if (log.IsErrorEnabled)
 					{
-						log.Error(string.Format("Keep guard error again.  \nRules: {0} Body: {3} - {5} Player: {4} - {6}\nReport: {1} \nStack: {2}", GameServer.ServerRules == null ? "Yes" : "No", e.Message, e.StackTrace, Body == null ? "Yes" : "No", player == null ? "Yes" : "No", Body.GetType(), player.GetType()));
+						log.Error(string.Format("Keep guard error again.  \nRules: {0} {7} Body: {3} - {5} Player: {4} - {6}\nStack: {2}", GameServer.ServerRules == null ? "Yes" : "No", e.Message, e.StackTrace, Body == null ? "Yes" : "No", player == null ? "Yes" : "No", Body.GetType(), player.GetType(), GameServer.ServerRules.GetType()), e);
 					}
 				}
 			}

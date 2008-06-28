@@ -130,7 +130,7 @@ namespace DOL.GS.Quests
 
             if (MaxNumberOfExecutions < 0 || executions < this.MaxNumberOfExecutions)
             {
-                if (CheckTriggers(e, sender, args) && CheckRequirements(e, sender, args))
+                if (CheckTriggers(e, sender, args) && CheckRequirements(e, sender, args) && Actions != null)
                 {
                     foreach (IBehaviourAction action in Actions)
                     {
