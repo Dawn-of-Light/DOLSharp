@@ -1110,21 +1110,24 @@ namespace DOL.AI.Brain
 			if (target == null)
 				return true;
 
-			//Check through each effect in the target's effect list
-			foreach (IGameEffect effect in target.EffectList)
+			lock (target.EffectList)
 			{
-				//If the effect we are checking is not a gamespelleffect keep going
-				if (effect is GameSpellEffect == false)
-					continue;
+				//Check through each effect in the target's effect list
+				foreach (IGameEffect effect in target.EffectList)
+				{
+					//If the effect we are checking is not a gamespelleffect keep going
+					if (effect is GameSpellEffect == false)
+						continue;
 
-				GameSpellEffect speffect = effect as GameSpellEffect;
-				//if the effect's spell's spelltype is not the same as the checking spell's spelltype keep going
-				if (speffect.Spell.SpellType != spell.SpellType)
-					continue;
+					GameSpellEffect speffect = effect as GameSpellEffect;
+					//if the effect's spell's spelltype is not the same as the checking spell's spelltype keep going
+					if (speffect.Spell.SpellType != spell.SpellType)
+						continue;
 
-				//if the effect's spell's effectgroup is the same as the checking spell's spellgroup return the answer true
-				if (speffect.Spell.EffectGroup == spell.EffectGroup)
-					return true;
+					//if the effect's spell's effectgroup is the same as the checking spell's spellgroup return the answer true
+					if (speffect.Spell.EffectGroup == spell.EffectGroup)
+						return true;
+				}
 			}
 			//the answer is no, the effect has not been found
 			return false;

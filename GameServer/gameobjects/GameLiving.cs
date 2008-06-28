@@ -5892,6 +5892,58 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		}
 
 		/// <summary>
+		/// Check if spell effect is on the target
+		/// </summary>
+		/// <param name="target"></param>
+		/// <param name="spell"></param>
+		/// <returns></returns>
+		public static bool HasEffect(GameLiving target, Spell spell)
+		{
+			lock (target.EffectList)
+			{
+				//Check through each effect in the target's effect list
+				foreach (IGameEffect effect in target.EffectList)
+				{
+					//If the effect we are checking is not a gamespelleffect keep going
+					if (effect is GameSpellEffect)
+					{
+
+						GameSpellEffect speffect = effect as GameSpellEffect;
+						//if the effect's spell's spelltype is not the same as the checking spell's spelltype keep going
+						if (speffect.Spell.SpellType != spell.SpellType)
+							continue;
+
+						//if the effect's spell's effectgroup is the same as the checking spell's spellgroup return the answer true
+						if (speffect.Spell.EffectGroup == spell.EffectGroup)
+							return true;
+					}
+				}
+			}
+			//the answer is no, the effect has not been found
+			return false;
+		}
+
+		/// <summary>
+		/// Checks if the target has a type of effect
+		/// </summary>
+		/// <param name="target"></param>
+		/// <param name="spell"></param>
+		/// <returns></returns>
+		public static bool HasEffect(GameLiving target, Type searchEffectType)
+		{
+			lock (target.EffectList)
+			{
+				//Check through each effect in the target's effect list
+				foreach (IGameEffect effect in target.EffectList)
+					//If the effect we are checking is not a gamespelleffect keep going
+					if (effect.GetType() == searchEffectType)
+							return true;
+			}
+			//the answer is no, the effect has not been found
+			return false;
+		}
+
+		/// <summary>
 		/// Holds the currently running spell handler
 		/// </summary>
 		protected ISpellHandler m_runningSpellHandler;

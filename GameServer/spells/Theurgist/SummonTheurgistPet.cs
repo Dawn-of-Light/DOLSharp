@@ -89,6 +89,10 @@ namespace DOL.GS.Spells
 			return base.OnEffectExpires(effect, noMessages);
 		}
 
+		protected override void AddHandlers()
+		{
+		}
+
 		protected override GamePet GetGamePet(INpcTemplate template)
 		{
 			return new TheurgistPet(template);

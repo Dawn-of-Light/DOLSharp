@@ -3829,24 +3829,6 @@ namespace DOL.GS
 			}
 		}
 
-		//Checks if the target already has the effect
-		private bool HasEffect(GameLiving target, Spell spell)
-		{
-			foreach (IGameEffect effect in target.EffectList)
-			{
-				if (effect is GameSpellEffect)
-				{
-					GameSpellEffect speffect = effect as GameSpellEffect;
-					if (speffect.Spell.SpellType == spell.SpellType
-						&& speffect.Spell.EffectGroup == spell.EffectGroup)
-					{
-						return true;
-					}
-				}
-			}
-			return false;
-		}
-
 		/// <summary>
 		/// The spell action of this living
 		/// </summary>
