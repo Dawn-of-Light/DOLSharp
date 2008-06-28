@@ -1147,19 +1147,19 @@ namespace DOL.GS
 		{
 			get { return Health > 0; }
 		}
-        
-        protected bool m_isMuted = false;
-        /// <summary>
-        /// returns if this living is muted
-        /// </summary>
-        public virtual bool IsMuted
-        {
-            get { return m_isMuted; }
-            set
-            {
-                m_isMuted = value;
-            }
-        }
+
+		protected bool m_isMuted = false;
+		/// <summary>
+		/// returns if this living is muted
+		/// </summary>
+		public virtual bool IsMuted
+		{
+			get { return m_isMuted; }
+			set
+			{
+				m_isMuted = value;
+			}
+		}
 
 		/// <summary>
 		/// Check this flag to see wether this living is involved in combat
@@ -1580,25 +1580,25 @@ namespace DOL.GS
 			if (SelectiveBlindness != null)
 			{
 				GameLiving EffectOwner = SelectiveBlindness.EffectSource;
-				if(EffectOwner==ad.Target)
+				if (EffectOwner == ad.Target)
 				{
 					if (this is GamePlayer)
 						((GamePlayer)this).Out.SendMessage(string.Format("{0} is invisible to you!", ad.Target.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
-					
+
 					ad.AttackResult = eAttackResult.NoValidTarget;
 					return ad;
 				}
 			}
 
-            // DamageImmunity Ability
-            if ((GameLiving)target != null && ((GameLiving)target).HasAbility("DamageImmunity"))
-            {
-                //if (ad.Attacker is GamePlayer) ((GamePlayer)ad.Attacker).Out.SendMessage(string.Format("{0} can't be attacked!", ad.Target.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
-                ad.AttackResult = eAttackResult.NoValidTarget;
-                return ad;
-            }
+			// DamageImmunity Ability
+			if ((GameLiving)target != null && ((GameLiving)target).HasAbility("DamageImmunity"))
+			{
+				//if (ad.Attacker is GamePlayer) ((GamePlayer)ad.Attacker).Out.SendMessage(string.Format("{0} can't be attacked!", ad.Target.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+				ad.AttackResult = eAttackResult.NoValidTarget;
+				return ad;
+			}
 
-			
+
 			//Calculate our attack result and attack damage
 			ad.AttackResult = ad.Target.CalculateEnemyAttackResult(ad, weapon);
 
@@ -1653,21 +1653,21 @@ namespace DOL.GS
 				ad.UncappedDamage = ad.Damage;
 
 				//Eden - Conversion Bonus (Crocodile Ring)
-				if(ad.Target is GamePlayer && ad.Target.GetModified(eProperty.Conversion)>0)
+				if (ad.Target is GamePlayer && ad.Target.GetModified(eProperty.Conversion) > 0)
 				{
-					int manaconversion=(int)Math.Round(((double)ad.Damage+(double)ad.CriticalDamage)*(double)ad.Target.GetModified(eProperty.Conversion)/100);
+					int manaconversion = (int)Math.Round(((double)ad.Damage + (double)ad.CriticalDamage) * (double)ad.Target.GetModified(eProperty.Conversion) / 100);
 					//int enduconversion=(int)Math.Round((double)manaconversion*(double)ad.Target.MaxEndurance/(double)ad.Target.MaxMana);
-					int enduconversion=(int)Math.Round(((double)ad.Damage+(double)ad.CriticalDamage)*(double)ad.Target.GetModified(eProperty.Conversion)/100);
-					if(ad.Target.Mana+manaconversion>ad.Target.MaxMana) manaconversion=ad.Target.MaxMana-ad.Target.Mana;
-					if(ad.Target.Endurance+enduconversion>ad.Target.MaxEndurance) enduconversion=ad.Target.MaxEndurance-ad.Target.Endurance;
-					if(manaconversion<1) manaconversion=0;
-					if(enduconversion<1) enduconversion=0;
-					if(manaconversion>=1) (ad.Target as GamePlayer).Out.SendMessage("You gain "+manaconversion+" power points", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-					if(enduconversion>=1) (ad.Target as GamePlayer).Out.SendMessage("You gain "+enduconversion+" endurance points", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-					ad.Target.Endurance+=enduconversion; if(ad.Target.Endurance>ad.Target.MaxEndurance) ad.Target.Endurance=ad.Target.MaxEndurance;
-					ad.Target.Mana+=manaconversion; if(ad.Target.Mana>ad.Target.MaxMana) ad.Target.Mana=ad.Target.MaxMana;
+					int enduconversion = (int)Math.Round(((double)ad.Damage + (double)ad.CriticalDamage) * (double)ad.Target.GetModified(eProperty.Conversion) / 100);
+					if (ad.Target.Mana + manaconversion > ad.Target.MaxMana) manaconversion = ad.Target.MaxMana - ad.Target.Mana;
+					if (ad.Target.Endurance + enduconversion > ad.Target.MaxEndurance) enduconversion = ad.Target.MaxEndurance - ad.Target.Endurance;
+					if (manaconversion < 1) manaconversion = 0;
+					if (enduconversion < 1) enduconversion = 0;
+					if (manaconversion >= 1) (ad.Target as GamePlayer).Out.SendMessage("You gain " + manaconversion + " power points", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+					if (enduconversion >= 1) (ad.Target as GamePlayer).Out.SendMessage("You gain " + enduconversion + " endurance points", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+					ad.Target.Endurance += enduconversion; if (ad.Target.Endurance > ad.Target.MaxEndurance) ad.Target.Endurance = ad.Target.MaxEndurance;
+					ad.Target.Mana += manaconversion; if (ad.Target.Mana > ad.Target.MaxMana) ad.Target.Mana = ad.Target.MaxMana;
 				}
-				
+
 				// patch to missed when 0 damage
 				if (ad.Damage == 0)
 				{
@@ -1778,8 +1778,8 @@ namespace DOL.GS
 
 						if (preCheck)
 						{
-							Spell spell=SkillBase.GetSpellByID(7083);
-							if(spell!=null)
+							Spell spell = SkillBase.GetSpellByID(7083);
+							if (spell != null)
 							{
 								ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
 								if (spellHandler != null)
@@ -1885,10 +1885,10 @@ namespace DOL.GS
 
 			ad.Target.StartInterruptTimer(interruptDuration, ad.AttackType, this);
 
-			if (ad.Target is GamePlayer && 
-			    ((ad.Target as GamePlayer).CharacterClass is PlayerClass.ClassMaulerAlb
-			    || (ad.Target as GamePlayer).CharacterClass is PlayerClass.ClassMaulerMid
-			    || (ad.Target as GamePlayer).CharacterClass is PlayerClass.ClassMaulerHib)
+			if (ad.Target is GamePlayer &&
+				((ad.Target as GamePlayer).CharacterClass is PlayerClass.ClassMaulerAlb
+				|| (ad.Target as GamePlayer).CharacterClass is PlayerClass.ClassMaulerMid
+				|| (ad.Target as GamePlayer).CharacterClass is PlayerClass.ClassMaulerHib)
 				&& ad.Damage > 0)
 			{
 				ad.Target.Mana += ad.Damage / 5;
@@ -1908,7 +1908,7 @@ namespace DOL.GS
 			//Well, we should make it interrupt on every melee swing anyways. That is how it works on live.
 			// Can't be interrupted if living is not casting
 			//if (!IsCasting)
-				//return;
+			//return;
 
 			IsBeingInterrupted = true;
 			new InterruptAction(this, attacker, duration, attackType).Start(1);
@@ -2768,11 +2768,11 @@ namespace DOL.GS
 		/// <param name="attackTarget">The object to attack</param>
 		public virtual void StartAttack(GameObject attackTarget)
 		{
-			if (!IsAlive || ObjectState != eObjectState.Active) return;			
+			if (!IsAlive || ObjectState != eObjectState.Active) return;
 			if (IsMezzed || IsStunned) return;
 			//			if (AttackState)
 			//				StopAttack(); // interrupts range attack animation
-		
+
 			m_attackState = true;
 
 			// cancel engage effect if exist
@@ -2904,7 +2904,7 @@ namespace DOL.GS
 			GameSpellEffect briddleguard = null;
 
 			AttackData lastAD = (AttackData)TempProperties.getObjectProperty(LAST_ATTACK_DATA, null);
-			bool defenceDisabled = ad.Target.IsMezzed | ad.Target.IsStunned | ad.Target.IsSitting;
+			bool defenseDisabled = ad.Target.IsMezzed | ad.Target.IsStunned | ad.Target.IsSitting;
 
 			// If berserk is on, no defensive skills may be used: evade, parry, ...
 			// unfortunately this as to be check for every action itself to kepp oder of actions the same.
@@ -2916,18 +2916,70 @@ namespace DOL.GS
 			{
 				foreach (IGameEffect effect in EffectList)
 				{
-					if (guard == null && effect is GuardEffect && ((GuardEffect)effect).GuardTarget == this) guard = (GuardEffect)effect;
-					if (dashing == null && effect is DashingDefenseEffect && ((DashingDefenseEffect)effect).GuardTarget == this) dashing = (DashingDefenseEffect)effect; //Dashing
-					if (bladeturn == null && effect is GameSpellEffect && ((GameSpellEffect)effect).Spell.SpellType == "Bladeturn") bladeturn = (GameSpellEffect)effect;
-					if (effect is BerserkEffect) defenceDisabled = true;
-					if (engage == null && effect is EngageEffect) engage = (EngageEffect)effect;
-					if (intercept != null) continue; // already found
-					if (shade == null && effect is NecromancerShadeEffect) shade = (NecromancerShadeEffect)effect;
+					if (effect is GuardEffect)
+					{
+						if (guard == null && ((GuardEffect)effect).GuardTarget == this)
+							guard = (GuardEffect)effect;
+						continue;
+					}
+
+					if (effect is DashingDefenseEffect)
+					{
+						if (dashing == null && ((DashingDefenseEffect)effect).GuardTarget == this)
+							dashing = (DashingDefenseEffect)effect; //Dashing
+						continue;
+					}
+
+					if (effect is BerserkEffect)
+					{
+						defenseDisabled = true;
+						continue;
+					}
+
+					if (effect is EngageEffect)
+					{
+						if (engage == null)
+							engage = (EngageEffect)effect;
+						continue;
+					}
+
+					if (effect is NecromancerShadeEffect)
+					{
+						if (shade == null)
+							shade = (NecromancerShadeEffect)effect;
+						break;
+					}
+
 					// ML effects
-					if (bodyguard == null && effect is BodyguardEffect && ((BodyguardEffect)effect).GuardTarget == this) bodyguard = (BodyguardEffect)effect;
-					if (phaseshift == null && effect is GameSpellEffect && ((GameSpellEffect)effect).Spell.SpellType == "Phaseshift") phaseshift = (GameSpellEffect)effect;
-					if (grapple == null && effect is GameSpellEffect && ((GameSpellEffect)effect).Spell.SpellType == "Grapple") grapple = (GameSpellEffect)effect;
-					if (briddleguard == null && effect is GameSpellEffect && ((GameSpellEffect)effect).Spell.SpellType == "BriddleGuard") briddleguard = (GameSpellEffect)effect;
+					if (effect is BodyguardEffect)
+					{
+						if (bodyguard == null && ((BodyguardEffect)effect).GuardTarget == this)
+							bodyguard = (BodyguardEffect)effect;
+						continue;
+					}
+
+					if (effect is GameSpellEffect)
+					{
+						switch ((effect as GameSpellEffect).Spell.SpellType)
+						{
+							case "Phaseshift":
+								if (phaseshift == null)
+									phaseshift = (GameSpellEffect)effect;
+								continue;
+							case "Grapple":
+								if (grapple == null)
+									grapple = (GameSpellEffect)effect;
+								continue;
+							case "BriddleGuard":
+								if (briddleguard == null)
+									briddleguard = (GameSpellEffect)effect;
+								continue;
+							case "Bladeturn":
+								if (bladeturn == null)
+									bladeturn = (GameSpellEffect)effect;
+								continue;
+						}
+					}				
 
 					// We check if interceptor can intercept
 
@@ -2935,60 +2987,42 @@ namespace DOL.GS
 					// you cannot intercept while you are sitting
 					// if you are stuned or mesmeried you cannot intercept...
 					InterceptEffect inter = effect as InterceptEffect;
-					if (inter == null) continue;
-					if (inter.InterceptTarget != this) continue;
-					if (inter.InterceptSource.IsStunned) continue;
-					if (inter.InterceptSource.IsMezzed) continue;
-					if (inter.InterceptSource.IsSitting) continue;
-					if (inter.InterceptSource.ObjectState != eObjectState.Active) continue;
-					if (inter.InterceptSource.IsAlive == false) continue;
-					if (!WorldMgr.CheckDistance(this, inter.InterceptSource, InterceptAbilityHandler.INTERCEPT_DISTANCE)) continue;
-					if (!Util.Chance(inter.InterceptChance)) continue; // TODO: proper chance formula?
-					intercept = inter;
+					if (intercept == null && inter != null && inter.InterceptTarget == this && !inter.InterceptSource.IsStunned && !inter.InterceptSource.IsMezzed
+						&& !inter.InterceptSource.IsSitting && inter.InterceptSource.ObjectState == eObjectState.Active && inter.InterceptSource.IsAlive
+						&& WorldMgr.CheckDistance(this, inter.InterceptSource, InterceptAbilityHandler.INTERCEPT_DISTANCE) && Util.Chance(inter.InterceptChance))
+					{
+						intercept = inter;
+						continue;
+					}
 				}
-			}
-
-			bool stealthStyle = false;
-			if (ad.Style != null && ad.Style.StealthRequirement && ad.Attacker is GamePlayer && StyleProcessor.CanUseStyle((GamePlayer)ad.Attacker, ad.Style, weapon))
-			{
-				stealthStyle = true;
-				defenceDisabled = true;
-				//Eden - brittle guard should not intercept PA
-				intercept = null;
-				briddleguard = null;
 			}
 
 			// Necromancer Shade
 			if (shade != null)
 				return eAttackResult.NoValidTarget;
 
-			// Eden - real Bodyguard
-			if (bodyguard != null
-			   && ad.Attacker.ActiveWeaponSlot != eActiveWeaponSlot.Distance
-			   && WorldMgr.CheckDistance(bodyguard.GuardTarget, bodyguard.GuardSource, BodyguardAbilityHandler.BODYGUARD_DISTANCE)
-			&& !bodyguard.GuardSource.IsCasting
-			//&& !bodyguard.GuardSource.IsStunned
-			//&& !bodyguard.GuardSource.IsMezzed
-			&& ((bodyguard.GuardTarget.TempProperties.getLongProperty("PLAYERPOSITION_LASTMOVEMENTTICK", 0L)+3000)<bodyguard.GuardTarget.CurrentRegion.Time)
-			&& !bodyguard.GuardTarget.IsMoving)
+			bool stealthStyle = false;
+			if (ad.Style != null && ad.Style.StealthRequirement && ad.Attacker is GamePlayer && StyleProcessor.CanUseStyle((GamePlayer)ad.Attacker, ad.Style, weapon))
 			{
-				bool livingcondition = false;
-				if (ad.Attacker is GameNPC)
-				{
-					if ( (ad.Attacker as GameNPC).Brain != null
-						&& ((ad.Attacker as GameNPC).Brain as IControlledBrain) != null
-						&& ((ad.Attacker as GameNPC).Brain as IControlledBrain).Owner is GamePlayer)
-						livingcondition = true;
-				}
-				else if (ad.Attacker is GamePlayer)
-					livingcondition = true;
+				stealthStyle = true;
+				defenseDisabled = true;
+				//Eden - brittle guard should not intercept PA
+				intercept = null;
+				briddleguard = null;
+			}
 
-				if (livingcondition)
+			// Eden - real Bodyguard
+			if (bodyguard != null && ad.Attacker.ActiveWeaponSlot != eActiveWeaponSlot.Distance 
+				&& WorldMgr.CheckDistance(bodyguard.GuardTarget, bodyguard.GuardSource, BodyguardAbilityHandler.BODYGUARD_DISTANCE) && !bodyguard.GuardSource.IsCasting
+			&& ((bodyguard.GuardTarget.TempProperties.getLongProperty("PLAYERPOSITION_LASTMOVEMENTTICK", 0L) + 3000) < bodyguard.GuardTarget.CurrentRegion.Time) && !bodyguard.GuardTarget.IsMoving)
+			{
+				if (ad.Attacker is GamePlayer || ad.Attacker is GamePet)
 				{
 					ad.Target = bodyguard.GuardSource;
-					bodyguard.GuardTarget.Out.SendMessage("You were protected by " + bodyguard.GuardSource.Name + " from the attack from " + ad.Attacker.Name + "!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
-					bodyguard.GuardSource.Out.SendMessage("You have protected " + bodyguard.GuardTarget.Name + " from the attack from " + ad.Attacker.Name + "!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
-					if(ad.Attacker is GamePlayer) (ad.Attacker as GamePlayer).Out.SendMessage("You attempt to attack "+bodyguard.GuardTarget.Name+", "+bodyguard.GuardTarget.Name+" is bodyguarded by " + bodyguard.GuardSource.Name + "!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+					bodyguard.GuardTarget.Out.SendMessage(string.Format("You were protected by {0} from the attack from {1}!", bodyguard.GuardSource.Name, ad.Attacker.Name), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+					bodyguard.GuardSource.Out.SendMessage(string.Format("You have protected {0} from the attack from {1}!", bodyguard.GuardTarget.Name, ad.Attacker.Name), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+					if (ad.Attacker is GamePlayer)
+						(ad.Attacker as GamePlayer).Out.SendMessage(string.Format("You attempt to attack {0}, {1} is bodyguarded by {2}!", bodyguard.GuardTarget.Name, bodyguard.GuardTarget.Name, bodyguard.GuardSource.Name), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 					return eAttackResult.Bodyguarded;
 				}
 			}
@@ -3004,8 +3038,10 @@ namespace DOL.GS
 			// Briddle Guard
 			if (briddleguard != null)
 			{
-				if (this is GamePlayer) ((GamePlayer)this).Out.SendMessage("The blow was intercepted by Brittle Guard!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-				if (ad.Attacker is GamePlayer) ((GamePlayer)ad.Attacker).Out.SendMessage("Your strike was intercepted by a Brittle Guard!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+				if (this is GamePlayer)
+					((GamePlayer)this).Out.SendMessage("The blow was intercepted by Brittle Guard!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+				if (ad.Attacker is GamePlayer)
+					((GamePlayer)ad.Attacker).Out.SendMessage("Your strike was intercepted by a Brittle Guard!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				briddleguard.Cancel(false);
 				return eAttackResult.Missed;
 			}
@@ -3025,29 +3061,30 @@ namespace DOL.GS
 			//			double levelModifier = -((ad.Attacker.Level - Level) / (Level / 10.0 + 1));
 
 
-			if (!defenceDisabled)
+			if (!defenseDisabled)
 			{
 				// Evade
 				// 1. A: It isn't possible to give a simple answer. The formula includes such elements as your level, your target's level, your level of evade, your QUI, your DEX, your buffs to QUI and DEX, the number of people attacking you, your target's weapon level, your target's spec in the weapon he is wielding, the kind of attack (DW, range, etc), attack radius, angle of attack, the style you used most recently, target's offensive RA, debuffs, and a few others. (The type of weapon - large, 1H, etc - doesn't matter.) ...."
 				double evadeChance = 0;
 				GamePlayer player = this as GamePlayer;
+
 				GameSpellEffect evade = SpellHandler.FindEffectOnTarget(this, "EvadeBuff");
-				if(evade == null) evade = SpellHandler.FindEffectOnTarget(this, "SavageEvadeBuff");
+				if (evade == null)
+					evade = SpellHandler.FindEffectOnTarget(this, "SavageEvadeBuff");
+
 				GameSpellEffect parry = SpellHandler.FindEffectOnTarget(this, "ParryBuff");
-				if(parry == null) parry = SpellHandler.FindEffectOnTarget(this, "SavageParryBuff");
-				if (this is GamePlayer && player != null)
+				if (parry == null) 
+					parry = SpellHandler.FindEffectOnTarget(this, "SavageParryBuff");
+
+				if (player != null)
 				{
 					if (player.HasAbility(Abilities.Advanced_Evade) || player.EffectList.GetOfType(typeof(CombatAwarenessEffect)) != null || player.EffectList.GetOfType(typeof(RuneOfUtterAgilityEffect)) != null)
 						evadeChance = GetModified(eProperty.EvadeChance);
-
-					else if (IsObjectInFront(ad.Attacker, 180))
+					else if (IsObjectInFront(ad.Attacker, 180) && (evade != null || player.HasAbility(Abilities.Evade)))
 					{
-						if (evade != null || player.HasAbility(Abilities.Evade))
-						{
-							int res = GetModified(eProperty.EvadeChance);
-							if (res > 0)
-								evadeChance = res;
-						}
+						int res = GetModified(eProperty.EvadeChance);
+						if (res > 0)
+							evadeChance = res;
 					}
 				}
 				else if (this is GameNPC && IsObjectInFront(ad.Attacker, 180))
@@ -3057,17 +3094,24 @@ namespace DOL.GS
 				{
 					evadeChance *= 0.001;
 					evadeChance += 0.01 * attackerConLevel; // 1% per con level distance multiplied by evade level
+
 					if (lastAD != null && lastAD.Style != null)
 					{
 						evadeChance += lastAD.Style.BonusToDefense * 0.01;
 					}
-					if (m_attackers.Count > 1) evadeChance -= (m_attackers.Count - 1) * 0.03;
-					if (evadeChance < 0.01) evadeChance = 0.01;
+
+					if (m_attackers.Count > 1)
+						evadeChance -= (m_attackers.Count - 1) * 0.03;
+
+					if (evadeChance < 0.01)
+						evadeChance = 0.01;
 					else if (evadeChance > 0.5 && ad.Attacker is GamePlayer && ad.Target is GamePlayer)
 						evadeChance = 0.5; //50% evade cap RvR only; http://www.camelotherald.com/more/664.shtml
-					else if (evadeChance > 1.0) evadeChance = 1.0;
+					else if (evadeChance > 1.0)
+						evadeChance = 1.0;
 
-					if (ad.AttackType == AttackData.eAttackType.Ranged) evadeChance /= 5.0;
+					if (ad.AttackType == AttackData.eAttackType.Ranged)
+						evadeChance /= 5.0;
 
 					if (Util.ChanceDouble(evadeChance))
 						return eAttackResult.Evaded;
@@ -3090,7 +3134,7 @@ namespace DOL.GS
 				if (ad.IsMeleeAttack)
 				{
 					double parryChance = 0;
-					if (this is GamePlayer && player != null)
+					if (player != null)
 					{
 						if (IsObjectInFront(ad.Attacker, 120))
 						{
@@ -3195,61 +3239,64 @@ namespace DOL.GS
 
 					if (Util.ChanceDouble(blockChance))
 					{
-						//Eden : shields can reverse proc
-						if(Inventory!=null && eInventorySlot.LeftHandWeapon!=null && Inventory.GetItem(eInventorySlot.LeftHandWeapon)!=null)
+						if (Inventory != null && Inventory.GetItem(eInventorySlot.LeftHandWeapon) != null)
 						{
 							InventoryItem reactiveitem = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
-							if (reactiveitem != null && reactiveitem.ProcSpellID != 0 && Util.Chance(10))
+							
+							if (reactiveitem != null && reactiveitem.Object_Type == (int)eObjectType.Shield)
 							{
-								if (reactiveitem.Object_Type == (int)eObjectType.Shield)
+								//Start some sweet boolean logic
+								//See if we use the proc upfront
+								bool useProc1 = reactiveitem.ProcSpellID != 0 && Util.Chance(10);
+								bool useProc2 = reactiveitem.ProcSpellID1 != 0 && Util.Chance(10);
+
+								//If we are procing at all lets search
+								if (useProc1 || useProc2)
 								{
 									SpellLine reactiveEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
 									if (reactiveEffectLine != null)
 									{
+										//Ok while we loop we will track if we've found the spells
+										//If we aren't using the proc set it to true!
+										bool found1 = !useProc1;
+										bool found2 = !useProc2;
 										List<Spell> spells = SkillBase.GetSpellList(reactiveEffectLine.KeyName);
+										//Start the one and only loop
 										foreach (Spell spell in spells)
 										{
-											if (spell.ID == reactiveitem.ProcSpellID)
+											//Check for proc one
+											if (useProc1 && spell.ID == reactiveitem.ProcSpellID)
 											{
 												if (spell.Level <= Level)
 												{
 													ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
-													if (spellHandler != null && (spell.SpellType == "Heal" || spell.SpellType == "Bladeturn" || spell.SpellType == "AblativeArmor" || spell.SpellType == "ArmorFactorBuff")) spellHandler.StartSpell(ad.Target);
-													else if (spellHandler != null) spellHandler.StartSpell(ad.Attacker);
+													if (spellHandler != null)
+														spellHandler.StartSpell(spell.Target == "Enemy" ? ad.Attacker : ad.Target);
 												}
-												break;
+												found1 = true;
 											}
-										}
-									}
-								}
-							}
-							if (reactiveitem != null && reactiveitem.ProcSpellID1 != 0 && Util.Chance(10))
-							{
-								if (reactiveitem.Object_Type == (int)eObjectType.Shield)
-								{
-									SpellLine reactiveEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-									if (reactiveEffectLine != null)
-									{
-										List<Spell> spells = SkillBase.GetSpellList(reactiveEffectLine.KeyName);
-										if (spells != null)
-										{
-											foreach (Spell spell in spells) if (spell.ID == reactiveitem.ProcSpellID1)
+
+											//Check for proc two
+											if (useProc2 && spell.ID == reactiveitem.ProcSpellID1)
 											{
 												if (spell.Level <= Level)
 												{
 													ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
-													if(spellHandler != null && (spell.SpellType=="Heal" || spell.SpellType=="Bladeturn" || spell.SpellType=="AblativeArmor" || spell.SpellType=="ArmorFactorBuff")) spellHandler.StartSpell(ad.Target);
-													else if(spellHandler != null) spellHandler.StartSpell(ad.Attacker);
+													if (spellHandler != null)
+														spellHandler.StartSpell(spell.Target == "Enemy" ? ad.Attacker : ad.Target);
 												}
-												break;
+												found2 = true;
 											}
+
+											//Break if we've found both
+											if (found1 && found2)
+												break;
 										}
 									}
 								}
 							}
 						}
-						
-						
+
 						return eAttackResult.Blocked;
 					}
 				}
@@ -3272,13 +3319,13 @@ namespace DOL.GS
 					// check player is wearing shield and NO two handed weapon
 					InventoryItem leftHand = guard.GuardSource.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
 					InventoryItem rightHand = guard.GuardSource.AttackWeapon;
-					if (((rightHand == null || rightHand.Hand != 1) && leftHand != null && leftHand.Object_Type == (int)eObjectType.Shield)||guard.GuardSource is GameNPC)
+					if (((rightHand == null || rightHand.Hand != 1) && leftHand != null && leftHand.Object_Type == (int)eObjectType.Shield) || guard.GuardSource is GameNPC)
 					{
 						// TODO
 						// insert actual formula for guarding here, this is just a guessed one based on block.
 						int guardLevel = guard.GuardSource.GetAbilityLevel(Abilities.Guard); // multiply by 3 to be a bit qorse than block (block woudl be 5 since you get guard I with shield 5, guard II with shield 10 and guard III with shield 15)
-						double guardchance=0;
-                        if(guard.GuardSource is GameNPC) guardchance = guard.GuardSource.GetModified(eProperty.BlockChance) * 0.001;
+						double guardchance = 0;
+						if (guard.GuardSource is GameNPC) guardchance = guard.GuardSource.GetModified(eProperty.BlockChance) * 0.001;
 						else guardchance = guard.GuardSource.GetModified(eProperty.BlockChance) * leftHand.Quality * 0.00001;
 						guardchance *= guardLevel * 0.25 + 0.05;
 						guardchance += attackerConLevel * 0.05;
@@ -3289,7 +3336,7 @@ namespace DOL.GS
 						int shieldSize = 0;
 						if (leftHand != null)
 							shieldSize = leftHand.Type_Damage;
-						if(guard.GuardSource is GameNPC) shieldSize=1;
+						if (guard.GuardSource is GameNPC) shieldSize = 1;
 						if (m_attackers.Count > shieldSize)
 							guardchance /= (m_attackers.Count - shieldSize + 1);
 						if (ad.AttackType == AttackData.eAttackType.MeleeDualWield) guardchance /= 2;
@@ -3304,12 +3351,12 @@ namespace DOL.GS
 
 			//Dashing Defense
 			if (dashing != null &&
-			    dashing.GuardSource.ObjectState == eObjectState.Active &&
-			    dashing.GuardSource.IsStunned == false &&
-			    dashing.GuardSource.IsMezzed == false &&
-			    dashing.GuardSource.ActiveWeaponSlot != eActiveWeaponSlot.Distance &&
-			    dashing.GuardSource.IsAlive &&
-			    !stealthStyle)
+				dashing.GuardSource.ObjectState == eObjectState.Active &&
+				dashing.GuardSource.IsStunned == false &&
+				dashing.GuardSource.IsMezzed == false &&
+				dashing.GuardSource.ActiveWeaponSlot != eActiveWeaponSlot.Distance &&
+				dashing.GuardSource.IsAlive &&
+				!stealthStyle)
 			{
 				// check distance
 				if (WorldMgr.CheckDistance(dashing.GuardSource, dashing.GuardTarget, DashingDefenseEffect.GUARD_DISTANCE))
@@ -3508,7 +3555,7 @@ namespace DOL.GS
 					penetrate = true;
 
 
-				if (ad.IsMeleeAttack && !Util.ChanceDouble((double)bladeturn.SpellHandler.Caster.Level /(double)ad.Attacker.Level))
+				if (ad.IsMeleeAttack && !Util.ChanceDouble((double)bladeturn.SpellHandler.Caster.Level / (double)ad.Attacker.Level))
 					penetrate = true;
 
 				if (penetrate)
@@ -4240,7 +4287,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			}
 			return 0;
 		}
-		
+
 		//Eden : secondary resists, such AoM, vampiir magic resistance etc, should not apply in CC duration, disease, debuff etc, using a new function
 		public virtual int GetModifiedBase(eProperty property)
 		{
@@ -4256,53 +4303,53 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			return 0;
 		}
 
-        /// <summary>
-        /// Retrieve a property value of this living's buff bonuses only;
-        /// caps and cap increases apply.
-        /// </summary>
-        /// <param name="property"></param>
-        /// <returns></returns>
-        public virtual int GetModifiedFromBuffs(eProperty property)
-        {
-            if (m_propertyCalc != null && m_propertyCalc[(int)property] != null)
-            {
-                return m_propertyCalc[(int)property].CalcValueFromBuffs(this, property);
-            }
-            else
-            {
-                if (log.IsInfoEnabled)
-                    log.Info("No buff bonus calculator for requested Property found: " + property.ToString());
-                /*
-                 * if (log.IsDebugEnabled)
-                    log.Debug(Environment.StackTrace);
-                 */
-            }
-            return 0;
-        }
+		/// <summary>
+		/// Retrieve a property value of this living's buff bonuses only;
+		/// caps and cap increases apply.
+		/// </summary>
+		/// <param name="property"></param>
+		/// <returns></returns>
+		public virtual int GetModifiedFromBuffs(eProperty property)
+		{
+			if (m_propertyCalc != null && m_propertyCalc[(int)property] != null)
+			{
+				return m_propertyCalc[(int)property].CalcValueFromBuffs(this, property);
+			}
+			else
+			{
+				if (log.IsInfoEnabled)
+					log.Info("No buff bonus calculator for requested Property found: " + property.ToString());
+				/*
+				 * if (log.IsDebugEnabled)
+					log.Debug(Environment.StackTrace);
+				 */
+			}
+			return 0;
+		}
 
-        /// <summary>
-        /// Retrieve a property value of this living's item bonuses only;
-        /// caps and cap increases apply.
-        /// </summary>
-        /// <param name="property"></param>
-        /// <returns></returns>
-        public virtual int GetModifiedFromItems(eProperty property)
-        {
-            if (m_propertyCalc != null && m_propertyCalc[(int)property] != null)
-            {
-                return m_propertyCalc[(int)property].CalcValueFromItems(this, property);
-            }
-            else
-            {
-                if (log.IsInfoEnabled)
-                    log.Info("No item bonus calculator for requested Property found: " + property.ToString());
-                /*
-                 * if (log.IsDebugEnabled)
-                    log.Debug(Environment.StackTrace);
-                 */
-            }
-            return 0;
-        }
+		/// <summary>
+		/// Retrieve a property value of this living's item bonuses only;
+		/// caps and cap increases apply.
+		/// </summary>
+		/// <param name="property"></param>
+		/// <returns></returns>
+		public virtual int GetModifiedFromItems(eProperty property)
+		{
+			if (m_propertyCalc != null && m_propertyCalc[(int)property] != null)
+			{
+				return m_propertyCalc[(int)property].CalcValueFromItems(this, property);
+			}
+			else
+			{
+				if (log.IsInfoEnabled)
+					log.Info("No item bonus calculator for requested Property found: " + property.ToString());
+				/*
+				 * if (log.IsDebugEnabled)
+					log.Debug(Environment.StackTrace);
+				 */
+			}
+			return 0;
+		}
 
 		// /// <summary>
 		// /// Old temp properties
@@ -4665,7 +4712,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			{
 				double MinMana = MaxMana * 0.15;
 				if (Mana < MinMana) return 0;
-                else if (!InCombat) ChangeMana(this, eManaChangeType.Regenerate, -1 * GetModified(eProperty.PowerRegenerationRate));
+				else if (!InCombat) ChangeMana(this, eManaChangeType.Regenerate, -1 * GetModified(eProperty.PowerRegenerationRate));
 
 				if (!InCombat)
 				{
@@ -5345,21 +5392,21 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			{
 				if (npc != this)
 					npc.SayReceive(this, str);
-			}			
+			}
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.SAY_DISTANCE))
 			{
 				if (player != this)
 					player.SayReceive(this, str);
 			}
-			if (TargetObject != null &&TargetObject is GameNPC)
+			if (TargetObject != null && TargetObject is GameNPC)
 			{
-				GameNPC targetNPC = (GameNPC) TargetObject;
-				char[] separators = new char[] {' ', ',', '.', '?', '!'};
+				GameNPC targetNPC = (GameNPC)TargetObject;
+				char[] separators = new char[] { ' ', ',', '.', '?', '!' };
 				foreach (string sstr in str.Split(separators))
-		        {
-					if(sstr != "")
-		        		targetNPC.WhisperReceive(this, sstr);
-		        }
+				{
+					if (sstr != "")
+						targetNPC.WhisperReceive(this, sstr);
+				}
 			}
 			return true;
 		}
@@ -5409,21 +5456,21 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		{
 			if (source == null || str == null) return false;
 
-            GamePlayer player = null;
-            if (source != null && source is GamePlayer)
-            {
-                player = source as GamePlayer;
-                long whisperdelay = player.TempProperties.getLongProperty("WHISPERDELAY", 0L);
-                if (whisperdelay > 0 && (CurrentRegion.Time - 1500) < whisperdelay && player.Client.Account.PrivLevel==1)
+			GamePlayer player = null;
+			if (source != null && source is GamePlayer)
+			{
+				player = source as GamePlayer;
+				long whisperdelay = player.TempProperties.getLongProperty("WHISPERDELAY", 0L);
+				if (whisperdelay > 0 && (CurrentRegion.Time - 1500) < whisperdelay && player.Client.Account.PrivLevel == 1)
 				{
 					//player.Out.SendMessage("Speak slower!", eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 				player.TempProperties.setProperty("WHISPERDELAY", CurrentRegion.Time);
-            }
-			
+			}
+
 			Notify(GameLivingEvent.WhisperReceive, this, new WhisperReceiveEventArgs(source, this, str));
-			
+
 			return true;
 		}
 
@@ -5568,10 +5615,10 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <param name="ability"></param>
 		#region Abilities
 		protected readonly ArrayList m_skillList = new ArrayList();
-		public virtual void AddAbility(Ability ability) 	 
-	    { 	 
-	        AddAbility(ability, true); 	 
-	    }
+		public virtual void AddAbility(Ability ability)
+		{
+			AddAbility(ability, true);
+		}
 		public virtual void AddAbility(Ability ability, bool sendUpdates)
 		{
 			bool newAbility = false;
@@ -5593,7 +5640,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 						oldability.Level = ability.Level;
 						oldability.Name = ability.Name;
 					}
-					if (newAbility&&(this is GamePlayer))
+					if (newAbility && (this is GamePlayer))
 					{
 						(this as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((this as GamePlayer).Client, "GamePlayer.AddAbility.YouLearn", ability.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
@@ -5615,7 +5662,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 					m_skillList.Remove(ability);
 				}
 			}
-			if(this is GamePlayer) (this as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((this as GamePlayer).Client, "GamePlayer.RemoveAbility.YouLose", ability.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			if (this is GamePlayer) (this as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((this as GamePlayer).Client, "GamePlayer.RemoveAbility.YouLose", ability.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return true;
 		}
 		#endregion Abilities
@@ -5628,13 +5675,13 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		public virtual bool HasAbilityToUseItem(ItemTemplate item)
 		{
 			//Andraste: Merchants show in gray items that the player class can't wear, i done it here
-			if(item==null) return false;
-			if(this is GamePlayer)
+			if (item == null) return false;
+			if (this is GamePlayer)
 			{
-				if(Util.IsEmpty(item.AllowedClasses)) item.AllowedClasses = "0";
-				if(item.AllowedClasses !="0")
+				if (Util.IsEmpty(item.AllowedClasses)) item.AllowedClasses = "0";
+				if (item.AllowedClasses != "0")
 				{
-					bool valid=false;
+					bool valid = false;
 					string[] allowedclasses = item.AllowedClasses.Split(';');
 					foreach (string allowed in allowedclasses)
 						if ((this as GamePlayer).CharacterClass.ID.ToString() == allowed || (this as GamePlayer).Client.Account.PrivLevel > 1) { valid = true; break; }
@@ -5890,7 +5937,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 				return;
 			}
 
-			if((m_runningSpellHandler != null && spell.CastTime > 0))
+			if ((m_runningSpellHandler != null && spell.CastTime > 0))
 			{
 				Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.AllReadyCasting));
 				return;

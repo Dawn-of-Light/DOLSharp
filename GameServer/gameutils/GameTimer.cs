@@ -327,7 +327,7 @@ namespace DOL.GS
 			internal int CurrentTick
 			{
 				get { return m_tick; }
-				set { m_time = value; }
+				set { m_tick = value; }
 			}
 
 			/// <summary>
