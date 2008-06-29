@@ -1069,7 +1069,7 @@ namespace DOL.GS
 			lock (m_Areas.SyncRoot)
 			{
 				int zoneIndex = Zones.IndexOf(zone);
-				IList areas = new ArrayList(1);
+				IList areas = new ArrayList();
 
 				if (zoneIndex >= 0)
 				{
@@ -1096,7 +1096,7 @@ namespace DOL.GS
 			lock (m_Areas.SyncRoot)
 			{
 				int zoneIndex = Zones.IndexOf(zone);
-				IList areas = new ArrayList(1);
+				IList areas = new ArrayList();
 
 				if (zoneIndex >= 0)
 				{

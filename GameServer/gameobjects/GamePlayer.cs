@@ -7414,6 +7414,7 @@ namespace DOL.GS
 						break;
 					case Slot.RIGHTHAND:
 					case Slot.LEFTHAND:
+                        if (type != 0) break;
 						if (ActiveWeaponSlot == eActiveWeaponSlot.Standard)
 							break;
 						SwitchWeapon(eActiveWeaponSlot.Standard);
@@ -7421,6 +7422,7 @@ namespace DOL.GS
 						return;
 
 					case Slot.TWOHAND:
+						if (type != 0) break;
 						if (ActiveWeaponSlot == eActiveWeaponSlot.TwoHanded)
 							break;
 						SwitchWeapon(eActiveWeaponSlot.TwoHanded);
@@ -13254,7 +13256,7 @@ namespace DOL.GS
 			m_class = new DefaultCharacterClass();
 			m_groupIndex = -1;
 			LoadFromDatabase(theChar);
-			m_currentAreas = new ArrayList(1);
+			m_currentAreas = new ArrayList();
 		}
 	}
 }

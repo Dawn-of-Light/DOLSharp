@@ -322,7 +322,7 @@ namespace DOL.GS.Spells
 	{
 		protected override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
 		{
-			//use ResurrectMana=1 is the Stun should not have immunity
+			//use ResurrectMana=1 if the Stun should not have immunity
 			if(Spell.ResurrectMana==1)
 			{
 				int freq = Spell != null ? Spell.Frequency : 0;
@@ -351,7 +351,13 @@ namespace DOL.GS.Spells
 		{
 			effect.Owner.IsStunned=false;
 			effect.Owner.DisableTurning(false);
-			return base.OnEffectExpires(effect,noMessages);
+			//use ResurrectHealth>0 to calculate stun immunity timer (such pet stun spells), actually (1.90) pet stun immunity is 5x the stun duration
+			if(Spell.ResurrectHealth>0)
+			{
+				base.OnEffectExpires(effect, noMessages);
+				return Spell.Duration * Spell.ResurrectHealth;
+			}
+			return base.OnEffectExpires(effect, noMessages);
 		}
 
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
