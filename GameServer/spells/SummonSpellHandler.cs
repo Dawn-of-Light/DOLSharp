@@ -60,6 +60,9 @@ namespace DOL.GS.Spells
 
 			base.FinishSpellCast(target);
 
+			if (pet == null)
+				return;
+
 			MessageToCaster(String.Format("The {0} is now under your control.", pet.Name), eChatType.CT_Spell);
 			pet.HailMaster();
 		}

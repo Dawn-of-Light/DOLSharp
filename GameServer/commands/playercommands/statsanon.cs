@@ -27,7 +27,7 @@ using DOL.GS.PacketHandler;
 namespace DOL.GS.Commands
 {
 	[CmdAttribute(
-	"&stats",
+	"&statsanon",
 	ePrivLevel.Player,
 	"Hides your statistics",
 	"/statsanon")]

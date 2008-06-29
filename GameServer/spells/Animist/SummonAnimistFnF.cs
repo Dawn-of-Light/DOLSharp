@@ -39,6 +39,10 @@ namespace DOL.GS.Spells
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
 			int nCount = 0;
+			
+			Region rgn = WorldMgr.GetRegion(Caster.CurrentRegion.ID);
+			if (rgn == null || rgn.GetZone(Caster.GroundTarget.X, Caster.GroundTarget.Y)==null) return false;
+			
 			foreach (GameNPC npc in Caster.CurrentRegion.GetNPCsInRadius(Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, (ushort)Properties.TURRET_AREA_CAP_RADIUS, false))
 				if (npc.Brain is TurretBrain)
 					nCount++;
