@@ -810,7 +810,7 @@ namespace DOL.GS.Spells
 				MessageToCaster("You have exhausted all of your power and cannot cast spells!", eChatType.CT_SpellResisted);
 				return false;
 			}
-			if (Spell.Power > 0 && m_caster.Mana < CalculateNeededPower(target) && Spell.SpellType != "Archery")
+			if (Spell.Power != 0 && m_caster.Mana < CalculateNeededPower(target) && Spell.SpellType != "Archery")
 			{
 				MessageToCaster("You don't have enough power to cast that!", eChatType.CT_SpellResisted);
 				return false;
@@ -1249,7 +1249,8 @@ namespace DOL.GS.Spells
 				{
 					foreach (Spell sp in SkillBase.GetSpellList(m_spellLine.KeyName))
 					{
-						if (sp.SpellType == m_spell.SpellType && sp.RecastDelay == m_spell.RecastDelay && sp.Group == m_spell.Group)
+						if ((sp.SpellType == m_spell.SpellType && sp.RecastDelay == m_spell.RecastDelay && sp.Group == m_spell.Group)
+							|| (sp.SharedTimerGroup != 0 && sp.SharedTimerGroup == m_spell.SharedTimerGroup))
 						{
 							m_caster.DisableSkill(sp, sp.RecastDelay);
 						}

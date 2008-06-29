@@ -3147,7 +3147,7 @@ namespace DOL.GS
 					else if (this is GameNPC && IsObjectInFront(ad.Attacker, 120))
 						parryChance = GetModified(eProperty.ParryChance);
 
-					if (parryChance > 0 && IsObjectInFront(ad.Attacker, 120) && !ad.Target.IsStunned && !ad.Target.IsSitting)
+					if (parryChance > 0 && !ad.Target.IsStunned && !ad.Target.IsSitting)
 					{
 						parryChance *= 0.001;
 						parryChance += 0.05 * attackerConLevel;

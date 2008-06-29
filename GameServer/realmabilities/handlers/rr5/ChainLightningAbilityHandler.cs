@@ -78,6 +78,7 @@ namespace DOL.GS.RealmAbilities
                     if (p != m_oldtarget && p != living && GameServer.ServerRules.IsAllowedToAttack(living, p, true))
                     {
                         DamageTarget(p, living, x);
+						p.StartInterruptTimer(3000, AttackData.eAttackType.Spell, living);
                         m_newtarget = p;
                         break;
                     }

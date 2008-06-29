@@ -170,6 +170,7 @@ namespace DOL.GS.Spells
 						log.Error("Unable to find Bonedancer Archer's Bow");
 					else
 					{
+						if (pet == null) break;
 						if (pet.Inventory == null)
 							pet.Inventory = new GameNPCInventory(new GameNpcInventoryTemplate());
 						pet.Inventory.RemoveItem(pet.Inventory.GetItem(eInventorySlot.DistanceWeapon));

@@ -102,7 +102,7 @@ namespace DOL.GS.Spells
 
 namespace DOL.GS
 {
-	public class ZoarkatPet : GameNPC
+	public class ZoarkatPet : GamePet
 	{
 		public override int MaxHealth
         {
