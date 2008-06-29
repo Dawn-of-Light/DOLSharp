@@ -84,9 +84,9 @@ namespace DOL.AI.Brain
 
 		protected override void AttackMostWanted()
 		{
-			if (!IsActive) return;
-			GameLiving target = m_target; //CalculateNextAttackTarget();
-			if (target != null)
+			if (!IsActive || m_target == null) return;
+			GameLiving target = m_target;
+			if (target != null && target.IsAlive)
 			{
 				if (!m_melee)
 				{
@@ -94,6 +94,7 @@ namespace DOL.AI.Brain
 						Body.StartAttack(target);
 				}
 			}
+			else m_target = null;
 		}
 
 		private bool CastSpell(GameLiving target)

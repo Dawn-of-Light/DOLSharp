@@ -34,10 +34,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
+			if (client.Player == null) return 1;
+
 			int flagSpeedData = packet.ReadShort();
 			int index = packet.ReadByte();
 			int type = packet.ReadByte();
-
+			
 			new UseSkillAction(client.Player, flagSpeedData, index, type).Start(1);
 
 			return 1;

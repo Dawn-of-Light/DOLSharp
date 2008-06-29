@@ -10,7 +10,7 @@ namespace DOL.GS
 
 		public override int MaxHealth
 		{
-			get { return Level * 20; }
+			get { return Level * 15; }
 		}
 		public override void OnAttackedByEnemy(AttackData ad) { }
 	}
