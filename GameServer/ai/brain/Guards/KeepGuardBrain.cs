@@ -80,30 +80,15 @@ namespace DOL.AI.Brain
 				return;
 			foreach (GamePlayer player in Body.GetPlayersInRadius((ushort)AggroRange))
 			{
-				try
+				if (GameServer.ServerRules.IsAllowedToAttack(Body, player, false)) // using group check, feat PvP rules
 				{
-					bool allowedToAttack =
-						GameServer
-						.ServerRules
-						.IsAllowedToAttack
-						(Body, 
-						player, false);
-					bool isEnemy = KeepMgr.IsEnemy(Body as GameKeepGuard, player);
-					if (allowedToAttack && isEnemy) // using group check, feat PvP rules
-					{
-						if (Body is GuardStealther == false && player.IsStealthed)
-							continue;
-						Body.StartAttack(player);
-						AddToAggroList(player, player.EffectiveLevel << 1);
-						return;
-					}
-				}
-				catch (Exception e)
-				{
-					if (log.IsErrorEnabled)
-					{
-						log.Error(string.Format("Keep guard error again.  \nRules: {0} {7} Body: {3} - {5} Player: {4} - {6}\nStack: {2}", GameServer.ServerRules == null ? "Yes" : "No", e.Message, e.StackTrace, Body == null ? "Yes" : "No", player == null ? "Yes" : "No", Body.GetType(), player.GetType(), GameServer.ServerRules.GetType()), e);
-					}
+					if ((Body as GameKeepGuard).Component != null && !KeepMgr.IsEnemy(Body as GameKeepGuard, player, true))
+						continue;
+					if (Body is GuardStealther == false && player.IsStealthed)
+						continue;
+					Body.StartAttack(player);
+					AddToAggroList(player, player.EffectiveLevel << 1);
+					return;
 				}
 			}
 		}
@@ -127,9 +112,10 @@ namespace DOL.AI.Brain
 				if (player == null)
 					continue;
 
-				if (GameServer.ServerRules.IsAllowedToAttack(Body, npc, false)
-					&& KeepMgr.IsEnemy(Body as GameKeepGuard, player, true))
+				if (GameServer.ServerRules.IsAllowedToAttack(Body, npc, false))
 				{
+					if ((Body as GameKeepGuard).Component != null && !KeepMgr.IsEnemy(Body as GameKeepGuard, player, true))
+						continue;
 					Body.StartAttack(npc);
 					AddToAggroList(npc, (npc.Level + 1) << 1);
 					return;

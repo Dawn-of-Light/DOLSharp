@@ -25,13 +25,14 @@ Crafting.GainCraftingSkillPoints.RaiseTailoring:	You must see your trainer to ra
 Crafting.GainCraftingSkillPoints.RaiseWeaponcraft:	You must see your trainer to raise your Weaponcraft further!
 Crafting.Name.Alchemy:					Alchemy
 Crafting.Name.Armorcraft:				Armorcraft
+Crafting.Name.BasicCrafting:			Basic Crafting
 Crafting.Name.Clothworking:				Clothworking
-Crafting.Name.Evocation:				Evocation
+Crafting.Name.Evocation:				Spellcrafting
 Crafting.Name.Fletching:				Fletching
 Crafting.Name.Gemcutting:				Gemcutting
-Crafting.Name.Herbcrafting:				Herbcrafting
+Crafting.Name.Herbcrafting:				Herbcraft
 Crafting.Name.Jewelcraft:				Jewelcraft
-Crafting.Name.Leathercrafting:				Leathercrafting
+Crafting.Name.Leathercrafting:			Leathercrafting
 Crafting.Name.Metalworking:				Metalworking
 Crafting.Name.Siegecraft:				Siegecraft
 Crafting.Name.Tailoring:				Tailoring
