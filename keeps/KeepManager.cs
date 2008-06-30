@@ -375,6 +375,56 @@ namespace DOL.GS.Keeps
 		}
 
 		/// <summary>
+		/// Get the tower count of each realm
+		/// </summary>
+		/// <returns></returns>
+		public static Dictionary<eRealm, int> GetTowerCountAllRealm()
+		{
+			Dictionary<eRealm, int> realmXTower = new Dictionary<eRealm,int>(3);
+			realmXTower.Add(eRealm.Albion, 0);
+			realmXTower.Add(eRealm.Hibernia, 0);
+			realmXTower.Add(eRealm.Midgard, 0);
+
+			lock (m_keeps.SyncRoot)
+			{
+				foreach (AbstractGameKeep keep in m_keeps.Values)
+				{
+					if (keep.Region == 163 && keep is GameKeepTower)
+					{
+						realmXTower[keep.Realm] += 1;
+					}
+				}
+			}
+
+			return realmXTower;
+		}
+
+		/// <summary>
+		/// Get the tower count of each realm
+		/// </summary>
+		/// <returns></returns>
+		public static Dictionary<eRealm, int> GetTowerCountFromZones(List<int> zones)
+		{
+			Dictionary<eRealm, int> realmXTower = new Dictionary<eRealm, int>(3);
+			realmXTower.Add(eRealm.Albion, 0);
+			realmXTower.Add(eRealm.Hibernia, 0);
+			realmXTower.Add(eRealm.Midgard, 0);
+
+			lock (m_keeps.SyncRoot)
+			{
+				foreach (AbstractGameKeep keep in m_keeps.Values)
+				{
+					if (keep.Region == 163 && keep is GameKeepTower && zones.Contains(keep.CurrentZone.ID))
+					{
+						realmXTower[keep.Realm] += 1;
+					}
+				}
+			}
+
+			return realmXTower;
+		}
+
+		/// <summary>
 		/// get keep count by realm
 		/// </summary>
 		/// <param name="realm"></param>
