@@ -44,12 +44,12 @@ namespace DOL.GS.Spells
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
 			foreach (GameNPC npc in Caster.CurrentRegion.GetNPCsInRadius(Caster.X, Caster.Y, Caster.Z, (ushort)m_spell.Radius, false))
-				if ((npc.Brain is TurretBrain) && (npc.Brain as IControlledBrain).Owner == Caster)
+				if ((npc.Brain is TurretFNFBrain) && (npc.Brain as IControlledBrain).Owner == Caster)
 					npc.Die(Caster);
+
 			if (Caster.ControlledNpc != null)
 			{
-				Caster.ControlledNpc.Body.Die(Caster);
-				Caster.SetControlledNpc(null);
+				GameEventMgr.Notify(GameLivingEvent.PetReleased, Caster.ControlledNpc, null);
 			}
 			Caster.PetCounter = 0;
 		}
