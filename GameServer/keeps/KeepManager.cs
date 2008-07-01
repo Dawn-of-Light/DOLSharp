@@ -405,10 +405,11 @@ namespace DOL.GS.Keeps
 		/// <returns></returns>
 		public static Dictionary<eRealm, int> GetTowerCountFromZones(List<int> zones)
 		{
-			Dictionary<eRealm, int> realmXTower = new Dictionary<eRealm, int>(3);
+			Dictionary<eRealm, int> realmXTower = new Dictionary<eRealm, int>(4);
 			realmXTower.Add(eRealm.Albion, 0);
 			realmXTower.Add(eRealm.Hibernia, 0);
 			realmXTower.Add(eRealm.Midgard, 0);
+			realmXTower.Add(eRealm.None, 0);
 
 			lock (m_keeps.SyncRoot)
 			{
