@@ -860,13 +860,8 @@ namespace DOL.AI.Brain
 		/// </summary>
 		/// <param name="type">Which type should we go through and check for?</param>
 		/// <returns></returns>
-		public bool CheckSpells(eCheckSpellType type)
+		public virtual bool CheckSpells(eCheckSpellType type)
 		{
-			//Make sure owns a body, has spells, and isn't casting
-			//By checking IsCasting here - we should be able to save a lot of processor time
-			//doing worthless checks just to find out the body is casting
-			//Prevent mob from casting if an interrupt action is running (saves CPU time and makes
-			//the mob look less daft)
 			if (this.Body != null && this.Body.Spells != null && this.Body.Spells.Count > 0 && !Body.IsCasting)
 			{
 				bool casted = false;
@@ -874,16 +869,11 @@ namespace DOL.AI.Brain
 				{
 					foreach (Spell spell in Body.Spells)
 					{
-						// Why wouldn't a healer type mob try to save his ass even when in melee?
-						// Allow defensive spells
-						//if (!Body.AttackState)
-						//{
 						if (!Body.IsBeingInterrupted && Body.GetSkillDisabledDuration(spell) == 0 && CheckDefensiveSpells(spell))
 						{
 							casted = true;
 							break;
 						}
-						//}
 					}
 				}
 				else
@@ -1032,7 +1022,7 @@ namespace DOL.AI.Brain
 			if (spell.Target.ToLower() != "enemy" && spell.Target.ToLower() != "area" && spell.Target.ToLower() != "cone")
 				return false;
 
-			if (Body.TargetObject != null && !LivingHasEffect((GameLiving)Body.TargetObject, spell))
+			if (Body.TargetObject != null)
 			{
 				if (Body.IsMoving && spell.CastTime > 0)
 					Body.StopFollow();

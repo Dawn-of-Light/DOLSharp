@@ -88,64 +88,54 @@ namespace DOL.AI.Brain
 			GameLiving target = m_target;
 			if (target != null && target.IsAlive)
 			{
-				if (!m_melee)
-				{
-					if (!CastSpell(target))
-						Body.StartAttack(target);
-				}
+				if (!CheckSpells(eCheckSpellType.Offensive))
+					Body.StartAttack(target);
 			}
 			else m_target = null;
 		}
-
-		private bool CastSpell(GameLiving target)
+		
+		public override bool CheckSpells(eCheckSpellType type)
 		{
-			if (target == null || !target.IsAlive || m_melee)
+			if (Body == null || Body.Spells == null || Body.Spells.Count < 1 || m_melee)
 				return false;
-
-			if (Body.IsBeingInterrupted)
-			{
-				m_melee = true;
-				return false;
-			}
-
+				
 			if (Body.IsCasting)
 				return true;
-
-			foreach (Spell spell in Body.Spells)
+				
+			bool casted = false;
+			if (type == eCheckSpellType.Defensive)
 			{
-				if (spell.Target.ToLower() != "enemy") continue;
-				spell.Level = Body.Level;
-				if (spell.SpellType != "Stun" || Util.Chance(70))
+				foreach (Spell spell in Body.Spells)
 				{
-					if (Body.TargetObject != target) Body.TargetObject = target;
-					if (spell.CastTime > 0) Body.TurnTo(target);
-
-					//Eden - LoS check for ice pets
-					if (Body.Name.ToLower().IndexOf("ice") >= 0)
+					if (!Body.IsBeingInterrupted && Body.GetSkillDisabledDuration(spell) == 0 && CheckDefensiveSpells(spell))
 					{
-						GamePlayer LOSChecker = null;
-						if (target is GamePlayer) LOSChecker = target as GamePlayer;
-						else if (target is GameNPC)
-						{
-							foreach (GamePlayer ply in this.Body.GetPlayersInRadius(300))
-								if (ply != null) { LOSChecker = ply; break; }
-						}
-						if (LOSChecker == null) return false;
-						spelllos = spell;
-						LOSChecker.Out.SendCheckLOS(LOSChecker, Body, new CheckLOSResponse(PetStartSpellAttackCheckLOS));
+						casted = true;
+						break;
 					}
-					else Body.CastSpell(spell, m_mobSpellLine);
 				}
-				return true;
 			}
-			return false;
-		}
-
-		public void PetStartSpellAttackCheckLOS(GamePlayer player, ushort response, ushort targetOID)
-		{
-			if ((response & 0x100) == 0x100)
-				Body.CastSpell(spelllos, m_mobSpellLine);
-			else Body.Follow(m_target, 90, 5000);
+			else
+			{
+				foreach (Spell spell in Body.Spells)
+				{
+					if (Body.GetSkillDisabledDuration(spell) == 0)
+					{
+						if (spell.CastTime > 0)
+						{
+							if (!Body.IsBeingInterrupted && CheckOffensiveSpells(spell))
+							{
+								casted = true;
+								break;
+							}
+						}
+						else
+							CheckInstantSpells(spell);
+					}
+				}
+			}
+			if (this is IControlledBrain && !Body.AttackState)
+				((IControlledBrain)this).Follow(((IControlledBrain)this).Owner);
+			return casted;
 		}
 
 		#region IControlledBrain Members
