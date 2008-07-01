@@ -400,6 +400,50 @@ namespace DOL.AI.Brain
 				}
 			}
 		}
+		
+		public override bool CheckSpells(eCheckSpellType type)
+		{
+			if (Body == null || Body.Spells == null || Body.Spells.Count < 1)
+				return false;
+				
+			if (Body.IsCasting)
+				return true;
+				
+			bool casted = false;
+			if (type == eCheckSpellType.Defensive)
+			{
+				foreach (Spell spell in Body.Spells)
+				{
+					if (!Body.IsBeingInterrupted && Body.GetSkillDisabledDuration(spell) == 0 && CheckDefensiveSpells(spell))
+					{
+						casted = true;
+						break;
+					}
+				}
+			}
+			else
+			{
+				foreach (Spell spell in Body.Spells)
+				{
+					if (Body.GetSkillDisabledDuration(spell) == 0)
+					{
+						if (spell.CastTime > 0)
+						{
+							if (!Body.IsBeingInterrupted && CheckOffensiveSpells(spell))
+							{
+								casted = true;
+								break;
+							}
+						}
+						else
+							CheckInstantSpells(spell);
+					}
+				}
+			}
+			if (this is IControlledBrain && !Body.AttackState)
+				((IControlledBrain)this).Follow(((IControlledBrain)this).Owner);
+			return casted;
+		}
 
 		/// <summary>
 		/// Checks the Positive Spells.  Handles buffs, heals, etc.
