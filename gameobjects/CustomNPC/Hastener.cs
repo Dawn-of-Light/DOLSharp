@@ -65,7 +65,7 @@ namespace DOL.GS
 
 		public override bool WhisperReceive(GameLiving source, string str)
 		{
-			if (source != null && source is GamePlayer)
+			if (source != null && source is GamePlayer && ((source as GamePlayer).Realm == this.Realm || !CurrentRegion.IsRvR))
 			{
 				GamePlayer player = source as GamePlayer;
 				switch (str.ToLower())
