@@ -119,7 +119,7 @@ namespace DOL.GS.Trainer
                             foreach (InventoryItem item in player.Inventory.EquippedItems)
                             {
                                 if (!player.HasAbilityToUseItem(item))
-                                    if (player.Inventory.IsSlotsFree(item.Count, eInventorySlot.Consignment_First, eInventorySlot.Consignment_Last) == true)
+                                    if (player.Inventory.IsSlotsFree(item.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == true)
                                         player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack), item.Count);
                                     else
                                         player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, eInventorySlot.Ground, item.Count);
