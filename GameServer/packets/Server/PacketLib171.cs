@@ -162,6 +162,14 @@ namespace DOL.GS.PacketHandler
 
 			string add = "";
 			byte flags2 = 0x00;
+			IControlledBrain brain = npc.Brain as IControlledBrain;
+			if (m_gameClient.Version >= GameClient.eClientVersion.Version187)
+			{
+				if (brain != null)
+				{
+					flags2 |= 0x80; // have Owner
+				}
+			}
 			if ((npc.Flags & (uint)GameNPC.eFlags.CANTTARGET) != 0)
 				if (m_gameClient.Account.PrivLevel > 1) add += "-DOR"; // indicates DOR flag for GMs
 				else flags2 |= 0x01;
@@ -192,7 +200,6 @@ namespace DOL.GS.PacketHandler
 
 			//if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
 			{
-				IControlledBrain brain = npc.Brain as IControlledBrain;
 				if (brain != null)
 				{
 					GamePlayer playerowner = brain.GetPlayerOwner();
@@ -325,6 +332,16 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(flag); //flag
 			pak.WriteShort(0); //unknown
 			pak.WriteShort(time); //time
+			SendTCP(pak);
+		}
+
+		public override void SendRegionColorSheme(byte color)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
+			pak.WriteShort(0); // not used
+			pak.WriteByte(0x05); // subcode
+			pak.WriteByte(color);
+			pak.WriteInt(0); // not used
 			SendTCP(pak);
 		}
 	}

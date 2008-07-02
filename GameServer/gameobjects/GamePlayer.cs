@@ -11802,6 +11802,12 @@ namespace DOL.GS
 				if (m_controlledNpc == null)
 					InitControlledNpc(1);
 				Out.SendPetWindow(controlledNpc.Body, ePetWindowAction.Open, controlledNpc.AggressionState, controlledNpc.WalkState);
+				if (controlledNpc.Body != null)
+				{
+					Out.SendNPCCreate(controlledNpc.Body); // after open pet window again send creation NPC packet
+					if (controlledNpc.Body.Inventory != null)
+						Out.SendLivingEquipmentUpdate(controlledNpc.Body);
+				}
 			}
 			m_controlledNpc[0] = controlledNpc;
 		}
