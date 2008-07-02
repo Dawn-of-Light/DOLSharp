@@ -2199,11 +2199,11 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak;// = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
 			IList spelllines = m_gameClient.Player.GetSpellLines();
 			byte linenumber = 0;
-			
+
 			bool flagSendHybrid = true;
 			if(m_gameClient.Player.CharacterClass.ClassType == eClassType.ListCaster)
 				flagSendHybrid = false;
-				
+
 			lock (spelllines.SyncRoot)
 			{
 				foreach (SpellLine line in spelllines)
@@ -3253,6 +3253,14 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendPlayerFreeLevelUpdate()
 		{ }
+
+		public virtual void SendRegionColorSheme(byte color)
+		{ }
+
+		public virtual void SendRegionColorSheme()
+		{
+			SendRegionColorSheme(GameServer.ServerRules.GetColorHandling(m_gameClient));
+		}
 
 		public virtual void SendXFireInfo(byte flag)
 		{ }
