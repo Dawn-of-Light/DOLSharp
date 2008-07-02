@@ -126,7 +126,7 @@ namespace DOL.AI.Brain
 			{
 				IPoint3D target = CalcRandomWalkTarget();
 				if (target != null)
-					Body.WalkTo(target, 50);
+					Body.WalkTo(target, 50, true);
 			}
 			//If the npc can move, and the npc is not casting, not moving, and not attacking or in combat
 			else if (Body.MaxSpeedBase > 0 && Body.CurrentSpellHandler == null && !Body.IsMoving && !Body.AttackState && !Body.InCombat)

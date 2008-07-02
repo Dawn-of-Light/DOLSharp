@@ -67,12 +67,6 @@ namespace DOL.GS.Spells
 			pet.HailMaster();
 		}
 
-		public override bool CheckBeginCast(GameLiving selectedTarget)
-		{
-
-			return base.CheckBeginCast(selectedTarget);
-		}
-
 		#region ApplyEffectOnTarget Gets
 
 		protected virtual void GetPetLocation(out int x, out int y, out int z, out ushort heading, out Region region)
@@ -186,9 +180,18 @@ namespace DOL.GS.Spells
 		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
+			RemoveHandlers();
 			effect.Owner.Health = 0; // to send proper remove packet
 			effect.Owner.Delete();
 			return 0;
+		}
+
+		/// <summary>
+		/// Remove anything added in handlers
+		/// </summary>
+		protected virtual void RemoveHandlers()
+		{
+			GameEventMgr.RemoveHandler(pet, GameLivingEvent.PetReleased, new DOLEventHandler(OnNpcReleaseCommand));
 		}
 
 		/// <summary>
