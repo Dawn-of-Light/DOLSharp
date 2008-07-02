@@ -214,7 +214,7 @@ namespace DOL.GS.PacketHandler
 		CT_KilledByHib = 0x22,
 		CT_LFG = 0x23,
 		CT_Trade = 0x24,
-		
+
 		CT_SocialInterface = 0x64,
 		CT_ScreenCenter = 0xC8,
 		CT_ScreenCenterSmaller = 0xC9,
@@ -269,7 +269,7 @@ namespace DOL.GS.PacketHandler
 		SpellGoBoom = 0x2d,
 		Knock = 0x2e,
 		Smile = 0x2f,
-		Angry = 0x30, 
+		Angry = 0x30,
 		Rider_LookFar = 0x31,
 		Rider_Stench = 0x32,
 		Rider_Halt = 0x33,
@@ -292,10 +292,10 @@ namespace DOL.GS.PacketHandler
 		Kowtow = 0x44,
 		PlayerPrepare = 0x45,
 		PlayerPickup = 0x46,
-		PlayerListen = 0x47, 
+		PlayerListen = 0x47,
 		BindAlb = 0x49,
 		BindMid = 0x4a,
-		BindHib = 0x4b,	
+		BindHib = 0x4b,
 		Worship = 68,
 	};
 
@@ -539,13 +539,15 @@ namespace DOL.GS.PacketHandler
 
 		void SendStarterHelp();
         void SendPlayerFreeLevelUpdate();
-		
+
 		void SendMovingObjectCreate(GameMovingObject obj);
 		void SendSetControlledHorse(GamePlayer player);
 		void SendControlledHorse(GamePlayer player, bool flag);
 		void CheckLengthHybridSkillsPacket(ref GSTCPPacketOut pak, ref int maxSkills, ref int first);
 		void SendListCastersSpell();
 		void SendCrash(string str);
+		void SendRegionColorSheme();
+		void SendRegionColorSheme(byte color);
 		void SendXFireInfo(byte flag);
         void SendMinotaurRelicWindow(GamePlayer player, int spell, bool flag);
         void SendMinotaurRelicBarUpdate(GamePlayer player, int xp);

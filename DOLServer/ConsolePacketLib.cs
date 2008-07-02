@@ -217,6 +217,8 @@ namespace DOLGameServerConsole
 		public void SendCrash(string str) { }
 		public void SendRvRGuildBanner(GamePlayer player, bool show) { }
 		public void SendPlayerFreeLevelUpdate() { }
+		public void SendRegionColorSheme() { }
+		public void SendRegionColorSheme(byte color) { }
 		public void SendStarterHelp() { }
 		public void SendXFireInfo(byte flag) { }
 		public void SendMarketExplorerWindow() { }

@@ -250,7 +250,8 @@ namespace DOL.GS.Quests
         /// <param name="type"></param>
         public static void RegisterQuestType(Type type)
         {
-            ushort typeId =(ushort) type.GetHashCode();
+//            ushort typeId =(ushort) type.GetHashCode();
+			ushort typeId = (ushort)(m_questTypeMap.Count + 1);
             if (m_questTypeMap.Contains(typeId))
             {
                 if (log.IsErrorEnabled)
@@ -266,10 +267,20 @@ namespace DOL.GS.Quests
         /// </summary>
         /// <param name="questType"></param>
         /// <returns></returns>
-        public static ushort GetIDForQuestType(Type questType)
-        {
-            return (ushort)questType.GetHashCode();
-        }
+//        public static ushort GetIDForQuestType(Type questType)
+//        {
+//            return (ushort)questType.GetHashCode();
+//        }
+		public static ushort GetIDForQuestType(Type questType)
+		{
+			IDictionaryEnumerator questEnumerator = m_questTypeMap.GetEnumerator();
+			while (questEnumerator.MoveNext())
+			{
+				if (questEnumerator.Value == questType)
+					return (ushort)questEnumerator.Key;
+			}
+			return 0;
+		}
 
         /// <summary>
         /// Returns a questtype for the quest id.
