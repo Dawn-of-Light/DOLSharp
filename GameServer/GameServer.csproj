@@ -105,6 +105,7 @@
     <Compile Include="ai\APlayerVicinityBrain.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ai\brain\Animist\BomberBrain.cs" />
     <Compile Include="ai\brain\Animist\TurretFNFBrain.cs" />
     <Compile Include="ai\brain\BD Pets\BDArcherBrain.cs" />
     <Compile Include="ai\brain\BD Pets\BDBufferBrain.cs" />
@@ -1991,7 +1992,7 @@
     <Compile Include="spells\BoltSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="spells\BomberSpellHandler.cs" />
+    <Compile Include="spells\Animist\BomberSpellHandler.cs" />
     <Compile Include="spells\Bonedancer\SummonCommanderPet.cs" />
     <Compile Include="spells\BuffShear.cs">
       <SubType>Code</SubType>
