@@ -1170,6 +1170,11 @@ namespace DOL.GS
 			}
 		}
 
+		public virtual void WalkTo(int tx, int ty, int tz, int speed)
+		{
+			WalkTo(tx, ty, tz, speed, false);
+		}
+
 		/// <summary>
 		/// This function is used to make the npc move towards
 		/// a certain target spot within this region. The target
@@ -1180,12 +1185,13 @@ namespace DOL.GS
 		/// <param name="ty">target y</param>
 		/// <param name="tz">target z (or 0 to put the mob on the ground)</param>
 		/// <param name="speed">walk speed</param>
-		public virtual void WalkTo(int tx, int ty, int tz, int speed)
+		public virtual void WalkTo(int tx, int ty, int tz, int speed, bool ignoreTolerance)
 		{
 			// Walking to the spot we're already at will only get us into trouble.
 			if (tx <= X + CONST_WALKTOTOLERANCE && tx >= X - CONST_WALKTOTOLERANCE
 				&& ty <= Y + CONST_WALKTOTOLERANCE && ty >= Y - CONST_WALKTOTOLERANCE
-				&& tz <= Z + CONST_WALKTOTOLERANCE && tz >= Z - CONST_WALKTOTOLERANCE)
+				&& tz <= Z + CONST_WALKTOTOLERANCE && tz >= Z - CONST_WALKTOTOLERANCE
+				&& !ignoreTolerance)
 			{
 				TurnTo(tx, ty);
 				return;
@@ -1272,6 +1278,16 @@ namespace DOL.GS
 		public virtual void WalkTo(IPoint3D p, int speed)
 		{
 			WalkTo(p.X, p.Y, p.Z, speed);
+		}
+
+		/// <summary>
+		/// Walk to a certain point with given speed
+		/// </summary>
+		/// <param name="p"></param>
+		/// <param name="speed"></param>
+		public virtual void WalkTo(IPoint3D p, int speed, bool ignoreTolerance)
+		{
+			WalkTo(p.X, p.Y, p.Z, speed, ignoreTolerance);
 		}
 
 		/// <summary>
