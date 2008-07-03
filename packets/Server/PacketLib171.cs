@@ -199,13 +199,13 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 
 			//if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
-			{
-				if (brain != null)
-				{
-					GamePlayer playerowner = brain.GetPlayerOwner();
-					SendObjectGuildID(npc, playerowner.Guild); //used for nearest friendly/enemy object buttons and name colors on PvP server
-				}
-			}
+//			{
+//				if (brain != null)
+//				{
+//					GamePlayer playerowner = brain.GetPlayerOwner();
+//					SendObjectGuildID(npc, playerowner.Guild); //used for nearest friendly/enemy object buttons and name colors on PvP server
+//				}
+//			}
 		}
 
 		public override void SendFindGroupWindowUpdate(GamePlayer[] list)
