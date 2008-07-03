@@ -158,6 +158,16 @@ namespace DOL.GS
 			set { m_isInBG = value; }
 		}
 
+		/// <summary>
+		/// Current warmap page
+		/// </summary>
+		private byte m_warmapPage = 1;
+		public byte WarMapPage
+		{
+			get { return m_warmapPage; }
+			set { m_warmapPage = value; }
+		}
+
 
 		/// <summary>
 		/// Returns the Object update array that was used the last time
