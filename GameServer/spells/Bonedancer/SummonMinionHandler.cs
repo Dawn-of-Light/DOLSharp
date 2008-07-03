@@ -101,18 +101,21 @@ namespace DOL.GS.Spells
 
 			base.ApplyEffectOnTarget(target, effectiveness);
 
-			ItemTemplate temp = GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BD_Archer_Distance_bow") as ItemTemplate;
-			if (temp == null)
-				log.Error("Unable to find Bonedancer Archer's Bow");
-			else
+			if (pet.Brain is BDArcherBrain)
 			{
-				if (pet.Inventory == null)
-					pet.Inventory = new GameNPCInventory(new GameNpcInventoryTemplate());
+				ItemTemplate temp = GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BD_Archer_Distance_bow") as ItemTemplate;
+				if (temp == null)
+					log.Error("Unable to find Bonedancer Archer's Bow");
 				else
-					pet.Inventory.RemoveItem(pet.Inventory.GetItem(eInventorySlot.DistanceWeapon));
-				pet.Inventory.AddItem(eInventorySlot.DistanceWeapon, new InventoryItem(temp));
+				{
+					if (pet.Inventory == null)
+						pet.Inventory = new GameNPCInventory(new GameNpcInventoryTemplate());
+					else
+						pet.Inventory.RemoveItem(pet.Inventory.GetItem(eInventorySlot.DistanceWeapon));
+					pet.Inventory.AddItem(eInventorySlot.DistanceWeapon, new InventoryItem(temp));
+				}
+				pet.UpdateNPCEquipmentAppearance();
 			}
-			pet.UpdateNPCEquipmentAppearance();
 		}
 
 		/// <summary>
