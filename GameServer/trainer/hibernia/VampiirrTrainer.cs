@@ -97,6 +97,7 @@ namespace DOL.GS.Trainer
 		{
 			if (!base.WhisperReceive(source, text)) return false;
 			GamePlayer player = source as GamePlayer;
+			if (player == null) return false;
 
 			switch (text)
 			{
@@ -112,6 +113,9 @@ namespace DOL.GS.Trainer
 						player.SkillSpecialtyPoints = 14;//lvl 5 skill points full
 
 						PromotePlayer(player, (int)eCharacterClass.Vampiir, "Very well, " + source.GetName(0, false) + ". I gladly take your training into my hands. Congratulations, from this day forth, you are a Vampiir. Here, take this gift to aid you.", null);
+						foreach (GamePlayer plr in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE)) // inform nearest clients about this player now is vampire (can fly)
+							if (plr != null)
+								plr.Out.SendVampireEffect(player, true);
                         
                         // drop any equiped-non usable item, in inventory or on the ground if full
                         lock (player.Inventory)

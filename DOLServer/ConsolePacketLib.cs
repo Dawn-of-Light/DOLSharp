@@ -198,6 +198,7 @@ namespace DOLGameServerConsole
 		public void SendGarden(House house) { }
 		public void SendRemoveGarden(House house) { }
 		public void SendEnterHouse(House house) { }
+		public void SendExitHouse(House house) { }
 		public void SendFurniture(House house) { }
 		public void SendFurniture(House house, int i) { }
 		public void SendToggleHousePoints(House house) { }
@@ -220,6 +221,7 @@ namespace DOLGameServerConsole
 		public void SendRegionColorSheme() { }
 		public void SendRegionColorSheme(byte color) { }
 		public void SendStarterHelp() { }
+		public void SendVampireEffect(GameLiving living, bool show) { }
 		public void SendXFireInfo(byte flag) { }
 		public void SendMarketExplorerWindow() { }
 		public void SendMarketExplorerWindow(List<InventoryItem> items, byte page, byte maxpage) { }
@@ -234,5 +236,13 @@ namespace DOLGameServerConsole
 		/// The bow shoot animation
 		/// </summary>
 		public int BowShoot { get { return 0; } }
+		/// <summary>
+		/// one dual weapon hit animation
+		/// </summary>
+		public int OneDualWeaponHit { get { return 0; } }
+		/// <summary>
+		/// both dual weapons hit animation
+		/// </summary>
+		public int BothDualWeaponHit { get { return 0; } }
 	}
 }
