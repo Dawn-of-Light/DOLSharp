@@ -520,6 +520,8 @@ namespace DOL.GS.Keeps
 		/// <returns>true if the player is an enemy of the guard</returns>
 		public static bool IsEnemy(GameKeepGuard checker, GamePlayer target)
 		{
+			if (checker.Component == null || checker.Component.Keep == null)
+				return GameServer.ServerRules.IsAllowedToAttack(checker, target, true);
 			return IsEnemy(checker.Component.Keep, target);
 		}
 		public static bool IsEnemy(GameKeepGuard checker, GamePlayer target, bool checkGroup)
