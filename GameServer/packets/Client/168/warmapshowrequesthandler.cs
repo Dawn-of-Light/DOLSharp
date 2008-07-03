@@ -32,6 +32,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 			int RealmMap = packet.ReadByte();
 			int keepId = packet.ReadByte();
 
+			if (client == null || client.Player == null)
+				return 1;
+
 			//hack fix new keep ids
 			if ((int)client.Version >= (int)GameClient.eClientVersion.Version190)
 			{
@@ -46,11 +49,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 				//warmap open
 				//warmap update
 				case 0:
+				{
+					client.Player.WarMapPage = (byte)RealmMap;
+					break;
+				}
 				case 1:
-					{
-						client.Out.SendWarmapUpdate(KeepMgr.getKeepsByRealmMap(RealmMap));
-						break;
-					}
+				{
+					client.Out.SendWarmapUpdate(KeepMgr.getKeepsByRealmMap(client.Player.WarMapPage));
+//					WarMapMgr.SendFightInfo(client);
+					break;
+				}
 				//teleport
 				case 2:
 					{

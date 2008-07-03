@@ -37,8 +37,9 @@ namespace DOL.GS.PacketHandler
 			bool offer)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.Dialog));
+			ushort QuestID = QuestMgr.GetIDForQuestType(quest.GetType());
 			pak.WriteShort((offer) ? (byte)0x22 : (byte)0x21); // Dialog
-			pak.WriteShort(QuestMgr.GetIDForQuestType(quest.GetType()));
+			pak.WriteShort(QuestID);
 			pak.WriteShort((ushort)questNPC.ObjectID);
 			pak.WriteByte(0x00); // unknown
 			pak.WriteByte(0x00); // unknown
@@ -58,7 +59,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteShort((ushort)quest.Conclusion.Length);
 				pak.WriteStringBytes(quest.Conclusion);
 			}
-			pak.WriteShort(QuestMgr.GetIDForQuestType(quest.GetType()));
+			pak.WriteShort(QuestID);
 			pak.WriteByte((byte)quest.Goals.Count); // #goals count
 			foreach (RewardQuest.QuestGoal goal in quest.Goals)
 			{
