@@ -427,12 +427,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteInt((uint)house.Y);
 			pak.WriteShort((ushort)house.Heading); //useless/ignored by client.
 			pak.WriteByte(0x00);
-			int flagGuildEmblem = (house.Emblem & 0x010000) >> 14;//new Guild Emblem
-			if (house.IndoorGuildBanner)
-				flagGuildEmblem |= 1;
-			if (house.IndoorGuildShield)
-				flagGuildEmblem |= 2;
-			pak.WriteByte((byte)flagGuildEmblem); //emblem style
+			pak.WriteByte((byte)(house.GetGuildEmblemFlags() | (house.Emblem & 0x010000) >> 14));//new Guild Emblem
 			pak.WriteShort((ushort)house.Emblem);	//emblem
 			pak.WriteByte(0x00);
 			pak.WriteByte(0x00);

@@ -573,5 +573,20 @@ namespace DOL.GS.PacketHandler
 			}
 			SendTCP(pak);
 		}
+
+		public override void SendVampireEffect(GameLiving living, bool show)
+		{
+			if (m_gameClient.Player == null || living == null)
+				return;
+
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
+
+			pak.WriteShort((ushort)living.ObjectID);
+			pak.WriteByte(0x4); // Vampire (can fly)
+			pak.WriteByte((byte)(show ? 0 : 1)); // 0-enable, 1-disable
+			pak.WriteInt(0);
+
+			SendTCP(pak);
+		}
 	}
 }

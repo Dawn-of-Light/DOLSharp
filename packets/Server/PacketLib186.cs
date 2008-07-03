@@ -50,6 +50,22 @@ namespace DOL.GS.PacketHandler
 		}
 
 		/// <summary>
+		/// one dual weapon hit animation
+		/// </summary>
+		public override int OneDualWeaponHit
+		{
+			get { return 0x3E81; }
+		}
+
+		/// <summary>
+		/// both dual weapons hit animation
+		/// </summary>
+		public override int BothDualWeaponHit
+		{
+			get { return 0x3E82; }
+		}
+
+		/// <summary>
 		/// The bow shoot animation
 		/// </summary>
 		public override int BowShoot
@@ -73,45 +89,49 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShortLowEndian((ushort)style);
 			pak.WriteByte(stance);
 			pak.WriteByte(result);
+			if (defender is GameLiving)
+			{
+				targetHealthPercent = (defender as GameLiving).HealthPercent;
+			}
 			pak.WriteByte(targetHealthPercent);
 			pak.WriteByte(0);//unk
 			SendTCP(pak);
 		}
 
-        public override void SendMinotaurRelicWindow(GamePlayer player, int effect, bool flag)
-        {
-            GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
+		public override void SendMinotaurRelicWindow(GamePlayer player, int effect, bool flag)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
 
-            pak.WriteShort((ushort)player.ObjectID);
-            pak.WriteByte((byte)13);
-            if (flag)
-            {
-                pak.WriteByte(0);
-                pak.WriteInt((uint)effect);
-            }
-            else
-            {
-                pak.WriteByte(1);
-                pak.WriteInt((uint)effect);
-            }
+			pak.WriteShort((ushort)player.ObjectID);
+			pak.WriteByte((byte)13);
+			if (flag)
+			{
+				pak.WriteByte(0);
+				pak.WriteInt((uint)effect);
+			}
+			else
+			{
+				pak.WriteByte(1);
+				pak.WriteInt((uint)effect);
+			}
 
-            SendTCP(pak);
-        }
+			SendTCP(pak);
+		}
 
-        public override void SendMinotaurRelicBarUpdate(GamePlayer player, int xp)
-        {
-            GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
+		public override void SendMinotaurRelicBarUpdate(GamePlayer player, int xp)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
 
-            pak.WriteShort((ushort)player.ObjectID);
-            pak.WriteByte((byte)14);
-            pak.WriteByte(0);
-            //4k maximum
-            if (xp > 4000) xp = 4000;
-            if (xp < 0) xp = 0;
+			pak.WriteShort((ushort)player.ObjectID);
+			pak.WriteByte((byte)14);
+			pak.WriteByte(0);
+			//4k maximum
+			if (xp > 4000) xp = 4000;
+			if (xp < 0) xp = 0;
 
-            pak.WriteInt((uint)xp);
+			pak.WriteInt((uint)xp);
 
-            SendTCP(pak);
-        }
+			SendTCP(pak);
+		}
 	}
 }

@@ -155,10 +155,13 @@ namespace DOL.GS.PacketHandler
 					int value2; // some object types use this field to display count
 					switch (item.Object_Type)
 					{
+						case (int)eObjectType.GenericItem:
+							value1 = item.Count & 0xFF;
+							value2 = (item.Count >> 8) & 0xFF;
+							break;
 						case (int)eObjectType.Arrow:
 						case (int)eObjectType.Bolt:
 						case (int)eObjectType.Poison:
-						case (int)eObjectType.GenericItem:
 							value1 = item.Count;
 							value2 = item.SPD_ABS;
 							break;
@@ -215,14 +218,15 @@ namespace DOL.GS.PacketHandler
 					pak.WriteByte((byte)item.Bonus); // % bonus
 					pak.WriteShort((ushort)item.Model);
 					pak.WriteByte((byte)item.Extension);
+					int effect = item.Effect;
 					if (item.Emblem != 0)
 					{
 						pak.WriteShort((ushort)item.Emblem);
-						item.Effect |= (item.Emblem & 0x010000) >> 8; // = 1 for newGuildEmblem
+						effect |= (item.Emblem & 0x010000) >> 8; // = 1 for newGuildEmblem
 					}
 					else
 						pak.WriteShort((ushort)item.Color);
-					pak.WriteShort((ushort)item.Effect);
+					pak.WriteShort((ushort)effect);
 					string name = item.Name;
 					if (item.Count > 1)
 						name = item.Count + " " + name;
@@ -311,46 +315,87 @@ namespace DOL.GS.PacketHandler
 
 		 */
 
-		public override  void SendFurniture(House house)
+		public override void SendHouse(House house)
 		{
-
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HousingItem));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseCreate));
 			pak.WriteShort((ushort)house.HouseNumber);
-			pak.WriteByte(Convert.ToByte(house.IndoorItems.Count));
-			pak.WriteByte(0x80); //0x00 = update, 0x80 = complete package
-			foreach(DictionaryEntry entry in new SortedList(house.IndoorItems))
-			{
-				IndoorItem item = (IndoorItem)entry.Value;
-				pak.WriteByte((byte)((int)entry.Key));
-				pak.WriteByte(0x01); // type item ?
-				pak.WriteShort((ushort)item.Model);
-				pak.WriteByte((byte)item.Color);
-				pak.WriteShort((ushort)item.X);
-				pak.WriteShort((ushort)item.Y);
-				pak.WriteShort((ushort)item.Rotation);
-				pak.WriteByte((byte)item.Position);
-				pak.WriteByte((byte)(item.Placemode-2));
-			}
+			pak.WriteShort((ushort)house.Z);
+			pak.WriteInt((uint)house.X);
+			pak.WriteInt((uint)house.Y);
+			pak.WriteShort((ushort)house.Heading);
+			pak.WriteShort((ushort)house.PorchRoofColor);
+			pak.WriteShort((ushort)(house.GetPorchAndGuildEmblemFlags() | (house.Emblem & 0x010000) >> 13));//new Guild Emblem
+			pak.WriteShort((ushort)house.Emblem);
+			pak.WriteByte((byte)house.Model);
+			pak.WriteByte((byte)house.RoofMaterial);
+			pak.WriteByte((byte)house.WallMaterial);
+			pak.WriteByte((byte)house.DoorMaterial);
+			pak.WriteByte((byte)house.TrussMaterial);
+			pak.WriteByte((byte)house.PorchMaterial);
+			pak.WriteByte((byte)house.WindowMaterial);
+			pak.WriteByte(0x03);
+			pak.WritePascalString(house.Name);
+
 			SendTCP(pak);
 		}
 
-		public override void SendFurniture(House house, int i)
+		public override void SendEnterHouse(House house)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HousingItem));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseEnter));
+
 			pak.WriteShort((ushort)house.HouseNumber);
-			pak.WriteByte(0x01); //cnt
-			pak.WriteByte(0x00); //upd
-			IndoorItem item = (IndoorItem)house.IndoorItems[i];
-			pak.WriteByte((byte)i);
-			pak.WriteByte(0x01); // type item ?
+			pak.WriteShort((ushort)25000);         //constant!
+			pak.WriteInt((uint)house.X);
+			pak.WriteInt((uint)house.Y);
+			pak.WriteShort((ushort)house.Heading); //useless/ignored by client.
+			pak.WriteByte(0x00);
+			pak.WriteByte((byte)(house.GetGuildEmblemFlags() | (house.Emblem & 0x010000) >> 14));//new Guild Emblem
+			pak.WriteShort((ushort)house.Emblem);	//emblem
+			pak.WriteByte(0x00);
+			pak.WriteByte(0x00);
+			pak.WriteByte((byte)house.Model);
+			pak.WriteByte(0x00);
+			pak.WriteByte(0x00);
+			pak.WriteByte(0x00);
+			pak.WriteByte((byte)house.Rug1Color);
+			pak.WriteByte((byte)house.Rug2Color);
+			pak.WriteByte((byte)house.Rug3Color);
+			pak.WriteByte((byte)house.Rug4Color);
+			pak.WriteByte(0x00);
+
+			SendTCP(pak);
+		}
+
+		protected override void WriteHouseFurniture(GSTCPPacketOut pak, IndoorItem item, int index)
+		{
+			pak.WriteByte((byte)index);
+			byte type = 0;
+			if (item.Color > 0)
+			{
+				if (item.Color <= 0xFF)
+					type |= 1; // colored
+				else if (item.Color <= 0xFFFF)
+					type |= 2; // old emblem
+				else
+					type |= 6; // new emblem
+			}
+			if (item.Size != 0)
+				type |= 8; // have size
+			pak.WriteByte(type);
 			pak.WriteShort((ushort)item.Model);
-			pak.WriteByte((byte)item.Color);
+			if ((type & 1) == 1)
+				pak.WriteByte((byte)item.Color);
+			else if ((type & 6) == 2)
+				pak.WriteShort((ushort)item.Color);
+			else if ((type & 6) == 6)
+				pak.WriteShort((ushort)(item.Color & 0xFFFF));
 			pak.WriteShort((ushort)item.X);
 			pak.WriteShort((ushort)item.Y);
 			pak.WriteShort((ushort)item.Rotation);
+			if ((type & 8) == 8)
+				pak.WriteByte((byte)item.Size);
 			pak.WriteByte((byte)item.Position);
-			pak.WriteByte((byte)(item.Placemode-2));
-			SendTCP(pak);
+			pak.WriteByte((byte)(item.Placemode - 2));
 		}
 
 		public override void SendRvRGuildBanner(GamePlayer player, bool show)
@@ -364,7 +409,8 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort((ushort)player.ObjectID);
 			pak.WriteByte(0xC); // show Banner
 			pak.WriteByte((byte)((show) ? 0 : 1)); // 0-enable, 1-disable
-			pak.WriteInt((ushort)player.Guild.theGuildDB.Emblem);
+			int newEmblemBitMask = ((player.Guild.theGuildDB.Emblem & 0x010000) << 8) | (player.Guild.theGuildDB.Emblem & 0xFFFF);
+			pak.WriteInt((uint)newEmblemBitMask);
 			SendTCP(pak);
 		}
 
