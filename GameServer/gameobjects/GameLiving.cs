@@ -2470,7 +2470,7 @@ namespace DOL.GS
 					mainHandAD = owner.MakeAttack(m_target, mainWeapon, style, m_effectiveness, m_interruptDuration, true);
 					if (style == null)
 					{
-						mainHandAD.AnimationId = 0x1F6; // both weapons swing animation
+						mainHandAD.AnimationId = -2; // virtual code for both weapons swing animation
 					}
 				}
 				else
@@ -2480,7 +2480,7 @@ namespace DOL.GS
 					{
 						mainWeapon = leftWeapon;
 						mainHandAD = owner.MakeAttack(m_target, mainWeapon, style, m_effectiveness, m_interruptDuration, true);
-						mainHandAD.AnimationId = 0x1F5;
+						mainHandAD.AnimationId = -1; // virtual code for left weapons swing animation
 					}
 					else
 					{
@@ -3747,7 +3747,20 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 				foreach (GamePlayer player in ad.Target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
 					if (player == null) continue;
-					player.Out.SendCombatAnimation(this, ad.Target, (ushort)attackersWeapon, (ushort)defendersWeapon, ad.AnimationId, 0, resultByte, ad.Target.HealthPercent);
+					int animationId;
+					switch (ad.AnimationId)
+					{
+						case -1:
+							animationId = player.Out.OneDualWeaponHit;
+							break;
+						case -2:
+							animationId = player.Out.BothDualWeaponHit;
+							break;
+						default:
+							animationId = ad.AnimationId;
+							break;
+					}
+					player.Out.SendCombatAnimation(this, ad.Target, (ushort)attackersWeapon, (ushort)defendersWeapon, animationId, 0, resultByte, ad.Target.HealthPercent);
 				}
 			}
 		}

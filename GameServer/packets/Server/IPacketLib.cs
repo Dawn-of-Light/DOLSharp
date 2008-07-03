@@ -35,6 +35,7 @@ namespace DOL.GS.PacketHandler
 		HousingPersmissions = 0x05,
 		HouseEnter = 0x08,
 		HousingItem = 0x09,
+		HouseExit = 0x0A,
 		HouseTogglePoints = 0x0F,
 		MovingObjectCreate = 0x12,
 		EquipmentUpdate = 0x15,
@@ -527,6 +528,7 @@ namespace DOL.GS.PacketHandler
 		void SendGarden(House house, int i);
 		void SendRemoveGarden(House house);
 		void SendEnterHouse(House house);
+		void SendExitHouse(House house);
 		void SendFurniture(House house);
 		void SendFurniture(House house, int i);
 		void SendHousePermissions(House house);
@@ -548,6 +550,7 @@ namespace DOL.GS.PacketHandler
 		void SendCrash(string str);
 		void SendRegionColorSheme();
 		void SendRegionColorSheme(byte color);
+		void SendVampireEffect(GameLiving living, bool show);
 		void SendXFireInfo(byte flag);
         void SendMinotaurRelicWindow(GamePlayer player, int spell, bool flag);
         void SendMinotaurRelicBarUpdate(GamePlayer player, int xp);
@@ -559,5 +562,13 @@ namespace DOL.GS.PacketHandler
 		/// The bow shoot animation
 		/// </summary>
 		int BowShoot { get;}
+		/// <summary>
+		/// one dual weapon hit animation
+		/// </summary>
+		int OneDualWeaponHit{ get;}
+		/// <summary>
+		/// both dual weapons hit animation
+		/// </summary>
+		int BothDualWeaponHit{ get;}
 	}
 }

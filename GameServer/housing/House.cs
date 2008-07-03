@@ -795,33 +795,8 @@ namespace DOL.GS.Housing
 			ushort heading = (ushort)((Heading < 180 ? Heading + 180 : Heading - 180) / 0.08789);
 			player.MoveTo(RegionID, x, y, Z, heading);
 			if (!silent)
-			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "House.Exit.LeftHouse", HouseNumber), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				GSTCPPacketOut pak = new GSTCPPacketOut(player.Client.Out.GetPacketCode(ePackets.HouseEnter));
-
-				pak.WriteShort((ushort)this.HouseNumber);
-				pak.WriteShort((ushort)25000);         //constant!
-				pak.WriteInt((uint)this.X);
-				pak.WriteInt((uint)this.Y);
-				pak.WriteShort(0x00); //useless/ignored by client.
-				pak.WriteByte(0x00);
-				pak.WriteByte(0x00); //emblem style
-				pak.WriteShort(0x00);	//emblem
-				pak.WriteByte(0x00);
-				pak.WriteByte(0x00);
-				pak.WriteByte(0x00);
-				pak.WriteByte(0x00);
-				pak.WriteByte(0x00);
-				pak.WriteByte(0x00);
-				pak.WriteByte(0x00);
-				pak.WriteByte(0x00);
-				pak.WriteByte(0x00);
-				pak.WriteByte(0x00);
-				pak.WriteByte(0x00);
-
-				player.Client.Out.SendTCP(pak);
-			}
-
+			player.Out.SendExitHouse(this);
 		}
 
 
