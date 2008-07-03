@@ -1049,6 +1049,10 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte((byte)(result | 0x80));
 			else
 				pak.WriteByte(result);
+			if (defender is GameLiving)
+			{
+				targetHealthPercent = (defender as GameLiving).HealthPercent;
+			}
 			pak.WriteByte(targetHealthPercent);
 			SendTCP(pak);
 		}
@@ -2814,20 +2818,11 @@ namespace DOL.GS.PacketHandler
 			{
 				lock (pet.EffectList)
 				{
-					ArrayList icons = new ArrayList();
+					int count = 0;
 					foreach (IGameEffect effect in pet.EffectList)
 					{
-						if (effect.Icon == 0)
-							continue;
-						icons.Add(effect.Icon);
-					}
-					pak.WriteByte((byte)icons.Count); // effect count
-					// 0x08 - null terminated - (byte) list of shorts - spell icons on pet
-					foreach (ushort icon in icons)
-					{
-						if (icons.IndexOf(icon) >= 8)
-							break;
-						pak.WriteShort(icon);
+						pak.WriteShort(effect.Icon); // 0x08 - null terminated - (byte) list of shorts - spell icons on pet
+						if (++count > 8) break;
 					}
 				}
 			}
@@ -2959,6 +2954,16 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendGarden(House house, int i)
 		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseChangeGarden));
+			pak.WriteShort((ushort) house.HouseNumber);
+			pak.WriteByte(0x01);
+			pak.WriteByte(0x00); // update
+			OutdoorItem item = (OutdoorItem)house.OutdoorItems[i];
+			pak.WriteByte((byte)i);
+			pak.WriteShort((ushort)item.Model);
+			pak.WriteByte((byte)item.Position);
+			pak.WriteByte((byte)item.Rotation);
+			SendTCP(pak);
 		}
 
 		public virtual void SendRemoveGarden(House house)
@@ -2999,6 +3004,15 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
+		public virtual void SendExitHouse(House house)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseExit));
+
+			pak.WriteShort((ushort)house.HouseNumber);
+			pak.WriteShort((ushort)0);//unknown
+			SendTCP(pak);
+		}
+
 		public virtual void SendToggleHousePoints(House house)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseTogglePoints));
@@ -3012,25 +3026,14 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendFurniture(House house)
 		{
-
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HousingItem));
 			pak.WriteShort((ushort)house.HouseNumber);
-			pak.WriteByte(Convert.ToByte(house.IndoorItems.Count));
+			pak.WriteByte((byte)house.IndoorItems.Count);
 			pak.WriteByte(0x80); //0x00 = update, 0x80 = complete package
 			foreach (DictionaryEntry entry in new SortedList(house.IndoorItems))
 			{
 				IndoorItem item = (IndoorItem)entry.Value;
-				pak.WriteByte((byte)((int)entry.Key));
-				pak.WriteShort((ushort)item.Model);
-				pak.WriteShort((ushort)item.Color);
-				pak.WriteByte(0x00);
-				pak.WriteByte(0x00);
-				pak.WriteShort((ushort)item.X);
-				pak.WriteShort((ushort)item.Y);
-				pak.WriteShort((ushort)item.Rotation);
-				pak.WriteByte((byte)item.Size);
-				pak.WriteByte((byte)item.Position);
-				pak.WriteByte((byte)(item.Placemode - 2));
+				WriteHouseFurniture(pak, item, (int)entry.Key);
 			}
 			SendTCP(pak);
 		}
@@ -3042,7 +3045,13 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(0x01); //cnt
 			pak.WriteByte(0x00); //upd
 			IndoorItem item = (IndoorItem)house.IndoorItems[i];
-			pak.WriteByte((byte)i);
+			WriteHouseFurniture(pak, item, i);
+			SendTCP(pak);
+		}
+
+		protected virtual void WriteHouseFurniture(GSTCPPacketOut pak, IndoorItem item, int index)
+		{
+			pak.WriteByte((byte)index);
 			pak.WriteShort((ushort)item.Model);
 			pak.WriteShort((ushort)item.Color);
 			pak.WriteByte(0x00);
@@ -3050,10 +3059,12 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort((ushort)item.X);
 			pak.WriteShort((ushort)item.Y);
 			pak.WriteShort((ushort)item.Rotation);
-			pak.WriteByte((byte)item.Size);
+			int size = item.Size;
+			if (size == 0)
+				size = 100;
+			pak.WriteByte((byte)size);
 			pak.WriteByte((byte)item.Position);
 			pak.WriteByte((byte)(item.Placemode - 2));
-			SendTCP(pak);
 		}
 
 		public virtual void SendRentReminder(House house)
@@ -3220,7 +3231,20 @@ namespace DOL.GS.PacketHandler
 		{ }
 
 		public virtual void SendLivingDataUpdate(GameLiving living, bool updateStrings)
-		{ }
+		{
+			if (living is GamePlayer)
+			{
+				SendObjectRemove(living);
+				SendPlayerCreate(living as GamePlayer);
+				SendLivingEquipmentUpdate(living as GamePlayer);
+			}
+			else if (living is GameNPC)
+			{
+				SendNPCCreate(living as GameNPC);
+				if ((living as GameNPC).Inventory != null)
+					SendLivingEquipmentUpdate(living as GameNPC);
+			}
+		}
 
 		public virtual void SendSoundEffect(ushort soundId, ushort zoneId, ushort x, ushort y, ushort z, ushort radius)
 		{
@@ -3261,6 +3285,9 @@ namespace DOL.GS.PacketHandler
 		{
 			SendRegionColorSheme(GameServer.ServerRules.GetColorHandling(m_gameClient));
 		}
+
+		public virtual void SendVampireEffect(GameLiving living, bool show)
+		{ }
 
 		public virtual void SendXFireInfo(byte flag)
 		{ }
@@ -3410,6 +3437,22 @@ namespace DOL.GS.PacketHandler
 		public virtual int BowShoot
 		{
 			get { return 0x1F7; }
+		}
+
+		/// <summary>
+		/// one dual weapon hit animation
+		/// </summary>
+		public virtual int OneDualWeaponHit
+		{
+			get { return 0x1F5; }
+		}
+
+		/// <summary>
+		/// both dual weapons hit animation
+		/// </summary>
+		public virtual int BothDualWeaponHit
+		{
+			get { return 0x1F6; }
 		}
 	}
 }
