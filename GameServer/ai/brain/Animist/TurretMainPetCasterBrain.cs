@@ -27,9 +27,9 @@ using DOL.Events;
 
 namespace DOL.AI.Brain
 {
-	public class TurretFNFBrain : TurretBrain
+	public class TurretMainPetCasterBrain : TurretBrain
 	{
-		public TurretFNFBrain(GameLiving owner) : base(owner) { }
+		public TurretMainPetCasterBrain(GameLiving owner) : base(owner) { }
 
 		//ALL attacking is handled in the think.. they don't do anything but cast spells
 		protected override void AttackMostWanted()

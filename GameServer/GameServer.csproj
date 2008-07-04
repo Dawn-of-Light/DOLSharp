@@ -107,6 +107,7 @@
     </Compile>
     <Compile Include="ai\brain\Animist\BomberBrain.cs" />
     <Compile Include="ai\brain\Animist\TurretFNFBrain.cs" />
+    <Compile Include="ai\brain\Animist\TurretMainPetCasterBrain.cs" />
     <Compile Include="ai\brain\BD Pets\BDArcherBrain.cs" />
     <Compile Include="ai\brain\BD Pets\BDBufferBrain.cs" />
     <Compile Include="ai\brain\BD Pets\BDCasterBrain.cs" />
@@ -1958,6 +1959,7 @@
     <Compile Include="spells\AmnesiaSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="spells\Animist\PetPBAoE.cs" />
     <Compile Include="spells\Animist\SummonAnimistFnF.cs" />
     <Compile Include="spells\Animist\SummonAnimistMainPet.cs" />
     <Compile Include="spells\Animist\SummonAnimistPet.cs" />

@@ -48,5 +48,12 @@ namespace DOL.GS.Spells
 			}
 			return base.CheckBeginCast(selectedTarget);
 		}
+
+		protected override IControlledBrain GetPetBrain(GameLiving owner)
+		{
+			if (Spell.DamageType == 0)
+				return new TurretMainPetCasterBrain(owner);
+			return base.GetPetBrain(owner);
+		}
 	}
 }
