@@ -163,13 +163,13 @@ namespace DOL.GS.PacketHandler
 			string add = "";
 			byte flags2 = 0x00;
 			IControlledBrain brain = npc.Brain as IControlledBrain;
-			if (m_gameClient.Version >= GameClient.eClientVersion.Version187)
-			{
-				if (brain != null)
-				{
-					flags2 |= 0x80; // have Owner
-				}
-			}
+//			if (m_gameClient.Version >= GameClient.eClientVersion.Version187)
+//			{
+//				if (brain != null)
+//				{
+//					flags2 |= 0x80; // have Owner
+//				}
+//			}
 			if ((npc.Flags & (uint)GameNPC.eFlags.CANTTARGET) != 0)
 				if (m_gameClient.Account.PrivLevel > 1) add += "-DOR"; // indicates DOR flag for GMs
 				else flags2 |= 0x01;
