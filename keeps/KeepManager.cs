@@ -526,6 +526,8 @@ namespace DOL.GS.Keeps
 		}
 		public static bool IsEnemy(GameKeepGuard checker, GamePlayer target, bool checkGroup)
 		{
+			if (checker.Component == null || checker.Component.Keep == null)
+				return GameServer.ServerRules.IsAllowedToAttack(checker, target, true);
 			return IsEnemy(checker.Component.Keep, target, checkGroup);
 		}
 
