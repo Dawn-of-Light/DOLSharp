@@ -16,42 +16,34 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
 using System;
-using System.Collections;
-using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Events;
-using DOL.GS;
-using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using DOL.GS.SkillHandler;
-using log4net;
 
 namespace DOL.GS.Spells
 {
-	[SpellHandlerAttribute("TurretsRelease")]
-	public class TurretsReleaseSpellHandler : SpellHandler
+	/// <summary>
+	/// Summary description for TauntSpellHandler.
+	/// </summary>
+	[SpellHandler("TurretPBAoE")]
+	public class PetPBAoE : DirectDamageSpellHandler
 	{
-		public TurretsReleaseSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+		public PetPBAoE(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) { }
 
-		public override void FinishSpellCast(GameLiving target)
+		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
-			m_caster.Mana -= CalculateNeededPower(target);
-			base.FinishSpellCast(target);
+			if (Caster.ControlledNpc == null)
+			{
+				MessageToCaster("You must have a controlled pet before casting this spell!", eChatType.CT_SpellResisted);
+				return false;
+			}
+			return base.CheckBeginCast(selectedTarget);
 		}
 
-		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+		public override void StartSpell(GameLiving target)
 		{
-			foreach (GameNPC npc in Caster.CurrentRegion.GetNPCsInRadius(Caster.X, Caster.Y, Caster.Z, (ushort)m_spell.Value, false))
-				if ((npc.Brain is TurretFNFBrain) && (npc.Brain as IControlledBrain).Owner == Caster)
-					npc.Die(Caster);
-
-			if (Caster.ControlledNpc != null)
-			{
-				Caster.ControlledNpc.Body.Die(null);
-			}
-			Caster.PetCounter = 0;
+			base.StartSpell(Caster.ControlledNpc.Body);
 		}
 	}
 }

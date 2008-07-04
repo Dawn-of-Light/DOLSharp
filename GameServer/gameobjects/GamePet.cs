@@ -313,6 +313,12 @@ namespace DOL.GS
 
 		#endregion
 
+		public override void Die(GameObject killer)
+		{
+			GameEventMgr.Notify(GameLivingEvent.PetReleased, this);
+			base.Die(killer);
+		}
+
 		public virtual void HailMaster()
 		{
 		}

@@ -3259,10 +3259,8 @@ namespace DOL.GS
 			// remove temp properties
 			TempProperties.RemoveAll();
 
-			if (this as GamePet == null)
+			if (!(this is GamePet))
 				StartRespawn();
-			else if ((this as GamePet).Brain != null && ((this as GamePet).Brain) as ControlledNpc != null)
-				((this as GamePet).Brain as ControlledNpc).Owner.SetControlledNpc(null);
 		}
 
 		/// <summary>

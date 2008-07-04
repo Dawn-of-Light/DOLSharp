@@ -749,7 +749,8 @@ namespace DOL.GS.Spells
 
 				if (target == null || target.ObjectState != GameLiving.eObjectState.Active)
 				{
-					MessageToCaster("You must select a target for this spell!", eChatType.CT_SpellResisted);
+					if (Caster is GamePlayer)
+						MessageToCaster("You must select a target for this spell!", eChatType.CT_SpellResisted);
 					return false;
 				}
 
@@ -1327,6 +1328,12 @@ namespace DOL.GS.Spells
 					if (TargetMod.Duration < 65535)
 						TargetMod.Cancel(false);
 				}
+			}
+
+			if (NewTarget == "pet" && Spell.Damage > 0 && Spell.Radius > 0)
+			{
+				NewTarget = "enemy";
+				target = Caster.ControlledNpc.Body;
 			}
 
 			#region Process the targets

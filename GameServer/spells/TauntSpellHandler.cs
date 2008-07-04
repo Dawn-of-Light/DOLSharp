@@ -50,14 +50,12 @@ namespace DOL.GS.Spells
 
 			SendEffectAnimation(target, 0, false, 1);
 
-			// Notify target about the attack (break speed buff, restart stealth taimer)
-			AttackData ad = new AttackData();
-			ad.Attacker = Caster;
-			ad.Target = target;
-			ad.AttackType = AttackData.eAttackType.Spell;
-			ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
-			ad.SpellHandler = this;
-			target.OnAttackedByEnemy(ad);
+
+			// calc damage
+			AttackData ad = CalculateDamageToTarget(target, effectiveness);
+			DamageTarget(ad, true);
+			SendDamageMessages(ad);
+		
 
 			// Interrupt only if target is actually casting
 			if (target.IsCasting)
