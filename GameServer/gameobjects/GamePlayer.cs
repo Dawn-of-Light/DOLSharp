@@ -11033,6 +11033,11 @@ namespace DOL.GS
 				{
 					// Friendly mobs do not uncover stealthed players
 					if (!GameServer.ServerRules.IsAllowedToAttack(npc, player, true)) continue;
+								
+					// Npc with player owner don't uncover
+					if (npc.Brain != null
+						&& (npc.Brain as IControlledBrain) != null
+						&& (npc.Brain as IControlledBrain).GetPlayerOwner() != null) continue;
 
 					double npcLevel = Math.Max(npc.Level, 1.0);
 					double stealthLevel = player.GetModifiedSpecLevel(Specs.Stealth);
@@ -11831,7 +11836,7 @@ namespace DOL.GS
 			if (npc == null || npc.Body.IsConfused || !GameServer.ServerRules.IsAllowedToAttack(this, TargetObject as GameLiving, false))
 				return;
 
-			if (WorldMgr.GetDistance(TargetObject, this) > 1500)
+			if (WorldMgr.GetDistance(TargetObject, this) > 2000)
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.TooFarAwayForPet"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;

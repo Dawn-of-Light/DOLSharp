@@ -126,6 +126,13 @@ namespace DOL.GS.RealmAbilities
 				if (!GameServer.ServerRules.IsAllowedToAttack(caster, mob, true))
 					continue;
 
+				if (mob.HasAbility(Abilities.CCImmunity) || mob.HasAbility(Abilities.RootImmunity) || mob.HasAbility(Abilities.DamageImmunity))
+					continue;
+					
+				GameSpellEffect mez = SpellHandler.FindEffectOnTarget(mob, "Mesmerize");
+				if (mez != null)
+					mez.Cancel(false);
+				
 				mob.TakeDamage(caster, eDamageType.Spirit, dmgValue, 0);
 
 				if (mob.EffectList.GetOfType(typeof(ChargeEffect)) == null && mob.EffectList.GetOfType(typeof(SpeedOfSoundEffect)) == null)
@@ -149,6 +156,9 @@ namespace DOL.GS.RealmAbilities
 				if (!GameServer.ServerRules.IsAllowedToAttack(caster, aeplayer, true))
 					continue;
 
+				GameSpellEffect mez = SpellHandler.FindEffectOnTarget(aeplayer, "Mesmerize");
+				if (mez != null)
+					mez.Cancel(false);
 				aeplayer.TakeDamage(caster, eDamageType.Spirit, dmgValue, 0);
 				aeplayer.StartInterruptTimer(3000, AttackData.eAttackType.Spell, caster);
 

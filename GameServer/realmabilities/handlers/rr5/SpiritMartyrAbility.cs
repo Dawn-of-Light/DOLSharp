@@ -31,7 +31,7 @@ namespace DOL.GS.RealmAbilities
 		public SpiritMartyrAbility(DBAbility dba, int level) : base(dba, level) { }
 
         const int m_healRange = 2000;
-        double m_healthpool = 1200;
+        double m_healthpool = 3200;
 
 		public override void Execute(GameLiving living)
 		{
