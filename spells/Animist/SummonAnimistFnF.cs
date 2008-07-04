@@ -69,8 +69,6 @@ namespace DOL.GS.Spells
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
 			base.ApplyEffectOnTarget(target, effectiveness);
-
-            pet.Spells.Clear();
             
             if (Spell.SubSpellID > 0 && SkillBase.GetSpellByID(Spell.SubSpellID) != null)
 				pet.Spells.Add(SkillBase.GetSpellByID(Spell.SubSpellID));
