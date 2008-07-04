@@ -69,7 +69,8 @@ namespace DOL.GS.Spells
             {
                 // show resisted effect if not healed
 				foreach (GameLiving healTarget in targets)
-					SendEffectAnimation(healTarget, 0, false, healed ? (byte)1 : (byte)0);
+					if(healTarget.IsAlive)
+						SendEffectAnimation(healTarget, 0, false, healed ? (byte)1 : (byte)0);
             }
 
             if (!healed && Spell.CastTime == 0) m_startReuseTimer = false;

@@ -3910,7 +3910,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// </summary>
 		public virtual void Die(GameObject killer)
 		{
-			if (this is GameNPC == false && this is GamePlayer == false)
+			if (this as GameNPC == null && this is GamePlayer == false)
 			{
 				// deal out exp and realm points based on server rules
 				GameServer.ServerRules.OnLivingKilled(this, killer);
@@ -3930,7 +3930,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 				{
 					//Fix for players receiving multiple kills
 					//First, let's check to see if we're a pet
-					if (obj is GameNPC && (obj as GameNPC).Brain is IControlledBrain)
+					if (obj as GameNPC != null && (obj as GameNPC).Brain is IControlledBrain)
 					{
 						//Ok, we're a pet - if our Player owner isn't in the attacker list, let's make them a 'virtual' attacker
 						GamePlayer player = ((obj as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
