@@ -311,7 +311,7 @@ namespace DOL.GS
 			// if target is closer than 32 units it is considered always in view
 			// tested and works this way for noraml evade, parry, block (in 1.69)
 			if (rangeCheck)
-				return WorldMgr.CheckDistance(this, target, 30);
+				return WorldMgr.CheckDistance(this, target, 32);
 			else return false;
 		}
 

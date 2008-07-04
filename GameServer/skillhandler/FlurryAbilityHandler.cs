@@ -149,6 +149,10 @@ namespace DOL.GS.SkillHandler
 
 			//flurry is slash damage
 			target.TakeDamage(player, eDamageType.Slash, damage, 0);
+			
+			GameSpellEffect mez = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+            if (mez != null)
+                mez.Cancel(false);
 
 			//sending spell effect
 			foreach (GamePlayer effPlayer in target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
