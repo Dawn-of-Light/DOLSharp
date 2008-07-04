@@ -126,11 +126,23 @@ namespace DOL.AI.Brain
 			return false;
 		}
 
-		#region Think
+		#region AI
 		public override void Think()
 		{
 			CheckSpells(eCheckSpellType.Offensive);
 			CheckSpells(eCheckSpellType.Defensive);
+		}
+
+		public override void FollowOwner()
+		{
+		}
+
+		public override void Follow(GameObject target)
+		{
+		}
+
+		protected override void OnFollowLostTarget(GameObject target)
+		{
 		}
 		#endregion
 	}
