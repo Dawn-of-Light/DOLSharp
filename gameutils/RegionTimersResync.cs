@@ -86,12 +86,11 @@ namespace DOL.GS.GameEvents
 			//Check alive
 			foreach (GameTimer.TimeManager mgr in WorldMgr.GetRegionTimeManagers())
 			{
-				if (old_time.ContainsKey(mgr) && old_time[mgr] == mgr.CurrentTime)
+				if (old_time.ContainsKey(mgr) && old_time[mgr] == mgr.CurrentTime && mgr.Running)
 				{
 					log.Error(string.Format("----- Found Frozen Region Timer -----\nName: {0} - Current Time: {1}", mgr.Name, mgr.CurrentTime));
 
-					if(mgr.Running)
-						mgr.Stop();
+					mgr.Stop();
 
 					foreach (GameClient clients in WorldMgr.GetAllClients())
 					{
