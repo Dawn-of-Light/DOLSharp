@@ -50,15 +50,13 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.DetailWindow));
 
 			pak.WriteByte(0); // new in 1.75
+			if (caption == null)
+				caption = "";
+			if (caption.Length > byte.MaxValue)
+				caption = caption.Substring(0, byte.MaxValue);
 			pak.WritePascalString(caption); //window caption
 
-			IEnumerator iter = text.GetEnumerator();
-			byte line = 1;
-			while (iter.MoveNext())
-			{
-				pak.WriteByte(line++);
-				pak.WritePascalString((string) iter.Current);
-			}
+			WriteCustomTextWindowData(pak, text);
 
 			//Trailing Zero!
 			pak.WriteByte(0);
