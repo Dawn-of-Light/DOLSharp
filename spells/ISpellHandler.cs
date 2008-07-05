@@ -33,6 +33,10 @@ namespace DOL.GS.Spells
 		/// Called when a spell is casted
 		/// </summary>
 		bool CastSpell();
+		/// <summary>
+		/// Called when a spell is casted on a specific target
+		/// </summary>
+		bool CastSpell(GameLiving targetObject);
 
 		/// <summary>
 		/// Starts the spell, without displaying cast message etc.
