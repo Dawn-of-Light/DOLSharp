@@ -29,12 +29,14 @@ using log4net;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Diagnostics;
+using DOL.AI.Brain;
+using DOL.GS.Movement;
 
 namespace DOL.GS.GameEvents
 {
 	public static class RegionTimersResynch
 	{
-		const int UPDATE_INTERVAL = 1 * 10 * 1000; //3min
+		const int UPDATE_INTERVAL = 10 * 1000; //10sec
 
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -84,11 +86,12 @@ namespace DOL.GS.GameEvents
 			//Check alive
 			foreach (GameTimer.TimeManager mgr in WorldMgr.GetRegionTimeManagers())
 			{
-				if (old_time.ContainsKey(mgr) && old_time[mgr] == mgr.CurrentTime && mgr.Running)
+				if (old_time.ContainsKey(mgr) && old_time[mgr] == mgr.CurrentTime)
 				{
 					log.Error(string.Format("----- Found Frozen Region Timer -----\nName: {0} - Current Time: {1}", mgr.Name, mgr.CurrentTime));
 
-					mgr.Stop();
+					if(mgr.Running)
+						mgr.Stop();
 
 					foreach (GameClient clients in WorldMgr.GetAllClients())
 					{
@@ -108,6 +111,45 @@ namespace DOL.GS.GameEvents
 					}
 
 					mgr.Start();
+					
+                    foreach (Region reg in WorldMgr.GetAllRegions())
+					{
+						if (reg.TimeManager == mgr)
+						{							
+							foreach (GameObject obj in reg.Objects)
+							{
+								//Restart Player regen & remove PvP immunity
+								if (obj is GamePlayer)
+								{
+									GamePlayer plr = obj as GamePlayer;
+									if (plr.IsAlive)
+									{
+										plr.StopHealthRegeneration();
+										plr.StopPowerRegeneration();
+										plr.StopEnduranceRegeneration();
+										plr.StartHealthRegeneration();
+										plr.StartPowerRegeneration();
+										plr.StartEnduranceRegeneration();
+										plr.SetPvPInvulnerability(1000, null);
+									}
+								}
+								//Restart Brains & Paths
+								if (obj is GameNPC && (obj as GameNPC).Brain != null && !((obj as GameNPC).Brain is BlankBrain))
+                                {
+									GameNPC npc = obj as GameNPC;
+									npc.Brain.Stop();
+									if (npc.MaxSpeedBase > 0 && npc.PathID != null && npc.PathID != "" && npc.PathID != "NULL")
+									{
+										npc.StopMoveOnPath();
+										PathPoint path = MovementMgr.LoadPath(npc.PathID);
+										npc.CurrentWayPoint = path;
+										npc.MoveOnPath(path.MaxSpeed);
+									}
+									npc.Brain.Start();
+								}
+							}
+						}					
+					}
 
 					//RegionTimerUnfrozen(mgr, syncTime);
 				}
