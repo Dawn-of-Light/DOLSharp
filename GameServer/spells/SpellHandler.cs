@@ -233,6 +233,10 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public virtual bool CastSpell()
 		{
+			return CastSpell(Caster.TargetObject as GameLiving);
+		}
+		public virtual bool CastSpell(GameLiving targetObject)
+		{
 			m_caster.Notify(GameLivingEvent.CastSpell, m_caster, new CastSpellEventArgs(this));
 			// nightshade is unstealthed even if no target, target is same realm, target is too far
 			if (Caster is GamePlayer && Spell.SpellType != "Archery")
@@ -247,7 +251,7 @@ namespace DOL.GS.Spells
 			}
 
 			m_interrupted = false;
-			GameLiving target = Caster.TargetObject as GameLiving;
+			GameLiving target = targetObject;
 
 			if (Spell.Target.ToLower() == "pet")
 			{
