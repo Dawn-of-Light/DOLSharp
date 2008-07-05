@@ -114,7 +114,7 @@ namespace DOL.GS
 
 		/// <summary>
 		/// Array that stores ML step completition
-		/// </summary>		
+		/// </summary>
 		private ArrayList m_mlsteps = new ArrayList();
 
 		/// <summary>
@@ -1933,11 +1933,11 @@ namespace DOL.GS
 			//Special handling for Vampiirs:
 			/* There is no stat that affects the Vampiir's power pool or the damage done by its power based spells.
 			 * The Vampiir is not a focus based class like, say, an Enchanter.
-			 * The Vampiir is a lot more cut and dried than the typical casting class. 
+			 * The Vampiir is a lot more cut and dried than the typical casting class.
 			 * EDIT, 12/13/04 - I was told today that this answer is not entirely accurate.
 			 * While there is no stat that affects the damage dealt (in the way that intelligence or piety affects how much damage a more traditional caster can do),
 			 * the Vampiir's power pool capacity is intended to be increased as the Vampiir's strength increases.
-			 * 
+			 *
 			 * This means that strength ONLY affects a Vampiir's mana pool
 			 */
 			if (CharacterClass.ManaStat != eStat.UNDEFINED || CharacterClass.ID == (int)eCharacterClass.Vampiir)
@@ -2524,8 +2524,8 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="ability"></param>
 		/// <param name="sendUpdates"></param>
-		#region Abilities 
-	
+		#region Abilities
+
 		public override void AddAbility(Ability ability, bool sendUpdates)
 		{
 			if (ability == null)
@@ -4067,7 +4067,7 @@ namespace DOL.GS
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.AttainedRank", currenttitle), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 
-			// spec points 
+			// spec points
 			int specpoints = 0;
 			for (int i = Level; i > previouslevel; i--)
 			{
@@ -4235,7 +4235,7 @@ namespace DOL.GS
 								else
 									return 0;
 							}
-						case 3: // return sum of all free AT points 
+						case 3: // return sum of all free AT points
 							{
 								if (spec.Level < max_autotrain)
 									return (((max_autotrain * (max_autotrain + 1) - 2) / 2) - ((spec.Level * (spec.Level + 1) - 2) / 2));
@@ -5647,7 +5647,7 @@ namespace DOL.GS
 		/// Calc Armor hit location when player is hit by enemy
 		/// </summary>
 		/// <returns>slotnumber where enemy hits</returns>
-		/// attackdata(ad) changed 
+		/// attackdata(ad) changed
 		public virtual eArmorSlot CalculateArmorHitLocation(AttackData ad)
 		{
 			if (ad.Style != null)
@@ -6382,7 +6382,7 @@ namespace DOL.GS
 
 				if (realmDeath)
 				{
-					// 
+					//
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Die.DeadRVR"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
 					xpLossPercent = 0;
 				}
@@ -10656,7 +10656,7 @@ namespace DOL.GS
 				t = PlayerTitleMgr.ClearTitle;
 			m_currentTitle = t;
 
-			//let's only check if we can use /level once shall we, 
+			//let's only check if we can use /level once shall we,
 			//this is nice because i want to check the property often for the new catacombs classes
 
 			//find all characters in the database
@@ -11033,7 +11033,7 @@ namespace DOL.GS
 				{
 					// Friendly mobs do not uncover stealthed players
 					if (!GameServer.ServerRules.IsAllowedToAttack(npc, player, true)) continue;
-								
+
 					// Npc with player owner don't uncover
 					if (npc.Brain != null
 						&& (npc.Brain as IControlledBrain) != null
@@ -11107,7 +11107,7 @@ namespace DOL.GS
 		}
 		/// <summary>
 		/// This handler is called by the unstealth check of mobs
-		/// </summary>   
+		/// </summary>
 		public void UncoverLOSHandler(GamePlayer player, ushort response, ushort targetOID)
 		{
 			GameObject target = CurrentRegion.GetObject(targetOID);
@@ -11817,12 +11817,12 @@ namespace DOL.GS
 				if (m_controlledNpc == null)
 					InitControlledNpc(1);
 				Out.SendPetWindow(controlledNpc.Body, ePetWindowAction.Open, controlledNpc.AggressionState, controlledNpc.WalkState);
-//				if (controlledNpc.Body != null)
-//				{
-//					Out.SendNPCCreate(controlledNpc.Body); // after open pet window again send creation NPC packet
-//					if (controlledNpc.Body.Inventory != null)
-//						Out.SendLivingEquipmentUpdate(controlledNpc.Body);
-//				}
+				if (controlledNpc.Body != null)
+				{
+					Out.SendNPCCreate(controlledNpc.Body); // after open pet window again send creation NPC packet
+					if (controlledNpc.Body.Inventory != null)
+						Out.SendLivingEquipmentUpdate(controlledNpc.Body);
+				}
 			}
 			m_controlledNpc[0] = controlledNpc;
 		}
@@ -12746,7 +12746,7 @@ namespace DOL.GS
 				{
 					switch (Race)
 					{
-						case 9: Model = 1883; break; //Celt   
+						case 9: Model = 1883; break; //Celt
 						case 11: Model = 1885; break; //Elf
 						case 12: Model = 1884; break; //Lurikeen
 
@@ -12784,26 +12784,26 @@ namespace DOL.GS
 		#endregion
 
 		#region Champion Levels
-		/// <summary> 
-		/// The maximum champion level a player can reach 
-		/// </summary> 
+		/// <summary>
+		/// The maximum champion level a player can reach
+		/// </summary>
 		public const int CL_MAX_LEVEL = 10;
-		/// <summary> 
-		/// A table that holds the required XP/Level 
-		/// </summary> 
-		public static readonly long[] CLXPLevel = 
-        { 
-            0, //xp tp level 0 
-            32000, //xp to level 1 
-         	64000, // xp to level 2 
-         	96000, // xp to level 3 
-         	128000, // xp to level 4 
-         	160000, // xp to level 5 
-         	192000, // xp to level 6 
-         	224000, // xp to level 7 
-         	256000, // xp to level 8 
-         	288000, // xp to level 9 
-         	320000, // xp to level 10 
+		/// <summary>
+		/// A table that holds the required XP/Level
+		/// </summary>
+		public static readonly long[] CLXPLevel =
+        {
+            0, //xp tp level 0
+            32000, //xp to level 1
+         	64000, // xp to level 2
+         	96000, // xp to level 3
+         	128000, // xp to level 4
+         	160000, // xp to level 5
+         	192000, // xp to level 6
+         	224000, // xp to level 7
+         	256000, // xp to level 8
+         	288000, // xp to level 9
+         	320000, // xp to level 10
         };
 		/// <summary>
 		/// Get the CL title string of the player
@@ -12820,7 +12820,7 @@ namespace DOL.GS
 		}
 		/// <summary>
 		/// Is Champion level activated
-		/// </summary>	        
+		/// </summary>
 		public virtual bool Champion
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.Champion : false; }
@@ -12828,7 +12828,7 @@ namespace DOL.GS
 		}
 		/// <summary>
 		/// Champion level
-		/// </summary>			
+		/// </summary>
 		public virtual int ChampionLevel
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.ChampionLevel : 0; }
@@ -12844,7 +12844,7 @@ namespace DOL.GS
 		}
 		/// <summary>
 		/// Champion Experience
-		/// </summary>		
+		/// </summary>
 		public virtual long ChampionExperience
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.ChampionExperience : 0; }
@@ -12852,7 +12852,7 @@ namespace DOL.GS
 		}
 		/// <summary>
 		/// Champion Available speciality points
-		/// </summary>		
+		/// </summary>
 		public virtual int ChampionSpecialtyPoints
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.ChampionSpecialtyPoints : 0; }
@@ -12860,16 +12860,16 @@ namespace DOL.GS
 		}
 		/// <summary>
 		/// Serialised Champion spells
-		/// </summary>		
+		/// </summary>
 		public virtual string ChampionSpells
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.ChampionSpells : null; }
 			set { if (PlayerCharacter != null) PlayerCharacter.ChampionSpells = value; }
 		}
-		/// <summary> 
-		/// Returns how far into the champion level we have progressed 
-		/// A value between 0 and 1000 (1 bubble = 100) 
-		/// </summary> 
+		/// <summary>
+		/// Returns how far into the champion level we have progressed
+		/// A value between 0 and 1000 (1 bubble = 100)
+		/// </summary>
 		public virtual ushort ChampionLevelPermill
 		{
 			get
@@ -12877,8 +12877,8 @@ namespace DOL.GS
 				//No progress if we haven't even reached current level!
 				if (ChampionExperience <= ChampionExperienceForCurrentLevel)
 					return 0;
-				//No progess after maximum level 
-				if (ChampionLevel > CL_MAX_LEVEL) // needed to get exp after 10 
+				//No progess after maximum level
+				if (ChampionLevel > CL_MAX_LEVEL) // needed to get exp after 10
 					return 0;
 				if ((ChampionExperienceForNextLevel - ChampionExperienceForCurrentLevel) > 0)
 					return (ushort)(1000 * (ChampionExperience - ChampionExperienceForCurrentLevel) / (ChampionExperienceForNextLevel - ChampionExperienceForCurrentLevel));
@@ -12886,16 +12886,16 @@ namespace DOL.GS
 
 			}
 		}
-		/// <summary> 
-		/// Returns the xp that are needed for the next level 
-		/// </summary> 
+		/// <summary>
+		/// Returns the xp that are needed for the next level
+		/// </summary>
 		public virtual long ChampionExperienceForNextLevel
 		{
 			get { return GetChampionExperienceForLevel(ChampionLevel + 1); }
 		}
-		/// <summary> 
-		/// Returns the xp that were needed for the current level 
-		/// </summary> 
+		/// <summary>
+		/// Returns the xp that were needed for the current level
+		/// </summary>
 		public virtual long ChampionExperienceForCurrentLevel
 		{
 			get { return GetChampionExperienceForLevel(ChampionLevel); }
@@ -12910,20 +12910,20 @@ namespace DOL.GS
 			set { if (PlayerCharacter != null) PlayerCharacter.RespecAmountChampionSkill = value; }
 		}
 		/// <summary>
-		/// Returns the xp that are needed for the specified level 
-		/// </summary>         
+		/// Returns the xp that are needed for the specified level
+		/// </summary>
 		public virtual long GetChampionExperienceForLevel(int level)
 		{
 			if (level > CL_MAX_LEVEL)
-				return CLXPLevel[GamePlayer.CL_MAX_LEVEL]; // exp for level 51, needed to get exp after 50 
+				return CLXPLevel[GamePlayer.CL_MAX_LEVEL]; // exp for level 51, needed to get exp after 50
 			if (level <= 0)
 				return CLXPLevel[0];
 			return CLXPLevel[level];
 		}
-		/// <summary> 
-		/// The process that gains exp 
-		/// </summary> 
-		/// <param name="experience">Amount of Experience</param> 
+		/// <summary>
+		/// The process that gains exp
+		/// </summary>
+		/// <param name="experience">Amount of Experience</param>
 		public virtual void GainChampionExperience(long experience)
 		{
 			if (ChampionExperience >= 320000) { ChampionExperience = 320000; return; }
@@ -12943,7 +12943,7 @@ namespace DOL.GS
 			System.Globalization.NumberFormatInfo format = System.Globalization.NumberFormatInfo.InvariantInfo;
 			string totalexp = experience.ToString("N0", format);
 
-			// Wtf this screws up level 0 
+			// Wtf this screws up level 0
 			if (ChampionExperience + experience < ChampionExperienceForCurrentLevel)
 				experience = ChampionExperienceForCurrentLevel - ChampionExperience;
 
@@ -12955,20 +12955,20 @@ namespace DOL.GS
 				Out.SendMessage("You get " + totalXP + " champion experience points.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 
-			ChampionExperience += experience; // force usage of this method, Experience property cannot be set 
+			ChampionExperience += experience; // force usage of this method, Experience property cannot be set
 
 			Out.SendUpdatePoints();
 		}
-		/// <summary> 
-		/// Holds what happens when your champion level goes up; 
-		/// </summary> 
+		/// <summary>
+		/// Holds what happens when your champion level goes up;
+		/// </summary>
 		public virtual void ChampionLevelUp()
 		{
 			ChampionLevel++;
 			ChampionSpecialtyPoints++;
 
 
-			//Code for w/e happens when your CL goes up... 
+			//Code for w/e happens when your CL goes up...
 			if (ChampionLevel == 3)
 			{
 				switch (Realm)
@@ -12998,9 +12998,9 @@ namespace DOL.GS
 			Out.SendUpdatePoints();
 			UpdatePlayerStatus();
 		}
-		/// <summary> 
-		/// Load champion spells of this player 
-		/// </summary>  
+		/// <summary>
+		/// Load champion spells of this player
+		/// </summary>
 		protected virtual void LoadChampionSpells()
 		{
 			string championSpells = ChampionSpells;
@@ -13028,9 +13028,9 @@ namespace DOL.GS
 			}
 			championSpellsh = null;
 		}
-		/// <summary> 
-		/// Checks if player has this champion spell 
-		/// </summary>         
+		/// <summary>
+		/// Checks if player has this champion spell
+		/// </summary>
 		public virtual bool HaveChampionSpell(int spellid)
 		{
 			string championSpells = ChampionSpells;
@@ -13045,9 +13045,9 @@ namespace DOL.GS
 			}
 			return false;
 		}
-		/// <summary> 
+		/// <summary>
 		/// Returns if spell is available (for trainer window)
-		/// </summary> 
+		/// </summary>
 		public virtual bool IsCSAvailable(int idline, int skillindex, int index)
 		{
 			// TODO : this has to be reviewed. Original code has some problem with cross lines etc.
@@ -13072,27 +13072,27 @@ namespace DOL.GS
 		#endregion
 
 		#region Master levels
-		/// <summary> 
-		/// The maximum ML level a player can reach 
+		/// <summary>
+		/// The maximum ML level a player can reach
 		/// </summary>
 		public const int ML_MAX_LEVEL = 10;
 
-		/// <summary> 
+		/// <summary>
 		/// Amount of MLXP required for ML validation. MLXP reset at every ML.
-		/// </summary>	
-		public static readonly long[] MLXPLevel = 
-        { 
-            0, //xp tp level 0 
-            32000, //xp to level 1 
-         	32000, // xp to level 2 
-         	32000, // xp to level 3 
-         	32000, // xp to level 4 
-         	32000, // xp to level 5 
-         	32000, // xp to level 6 
-         	32000, // xp to level 7 
-         	32000, // xp to level 8 
-         	32000, // xp to level 9 
-         	32000, // xp to level 10 
+		/// </summary>
+		public static readonly long[] MLXPLevel =
+        {
+            0, //xp tp level 0
+            32000, //xp to level 1
+         	32000, // xp to level 2
+         	32000, // xp to level 3
+         	32000, // xp to level 4
+         	32000, // xp to level 5
+         	32000, // xp to level 6
+         	32000, // xp to level 7
+         	32000, // xp to level 8
+         	32000, // xp to level 9
+         	32000, // xp to level 10
         };
 		/// <summary>
 		/// Get the ML title string of the player
@@ -13107,33 +13107,33 @@ namespace DOL.GS
 					return "None";
 			}
 		}
-		/// <summary> 
-		/// Holds the ml line 
-		/// </summary> 
+		/// <summary>
+		/// Holds the ml line
+		/// </summary>
 		public virtual byte ML
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.ML : (byte)0; }
 			set { if (PlayerCharacter != null) PlayerCharacter.ML = value; }
 		}
-		/// <summary> 
-		/// Gets and sets the ML Level of this character 
-		/// </summary> 
+		/// <summary>
+		/// Gets and sets the ML Level of this character
+		/// </summary>
 		public virtual int MLLevel
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.MLLevel : 0; }
 			set { if (PlayerCharacter != null) PlayerCharacter.MLLevel = value; }
 		}
-		/// <summary> 
-		/// Gets and sets ML Experience 
-		/// </summary> 
+		/// <summary>
+		/// Gets and sets ML Experience
+		/// </summary>
 		public virtual long MLExperience
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.MLExperience : 0; }
 			set { if (PlayerCharacter != null) PlayerCharacter.MLExperience = value; }
 		}
-		/// <summary> 
+		/// <summary>
 		/// Gets and sets the ML validated flag. This allow to get new ML to arbiter
-		/// </summary> 
+		/// </summary>
 		public virtual bool MLGranted
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.MLGranted : false; }
@@ -13141,7 +13141,7 @@ namespace DOL.GS
 		}
 		/// <summary>
 		/// Check ML step completition
-		/// </summary>   
+		/// </summary>
 		public bool HasFinishedMLStep(int mllevel, int step)
 		{
 			// No steps registered so false
@@ -13162,7 +13162,7 @@ namespace DOL.GS
 		}
 		/// <summary>
 		/// Set ML step completition
-		/// </summary>   
+		/// </summary>
 		public void SetFinishedMLStep(int mllevel, int step)
 		{
 			// Check current registered steps in case of previous GM rollback command
@@ -13202,12 +13202,12 @@ namespace DOL.GS
 			Out.SendMasterLevelWindow((byte)mllevel);
 		}
 		/// <summary>
-		/// Returns the xp that are needed for the specified level 
-		/// </summary>         
+		/// Returns the xp that are needed for the specified level
+		/// </summary>
 		public virtual long GetMLExperienceForLevel(int level)
 		{
 			if (level >= ML_MAX_LEVEL)
-				return MLXPLevel[GamePlayer.ML_MAX_LEVEL - 1]; // exp for level 9, needed to get exp after 9 
+				return MLXPLevel[GamePlayer.ML_MAX_LEVEL - 1]; // exp for level 9, needed to get exp after 9
 			if (level <= 0)
 				return MLXPLevel[0];
 			return MLXPLevel[level];
