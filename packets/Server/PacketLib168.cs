@@ -43,6 +43,7 @@ namespace DOL.GS.PacketHandler
 	[PacketLib(168, GameClient.eClientVersion.Version168)]
 	public class PacketLib168 : AbstractPacketLib, IPacketLib
 	{
+		protected const int maxPacketLength = 2048;
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
@@ -1393,7 +1394,7 @@ namespace DOL.GS.PacketHandler
 			if (name.Length > ushort.MaxValue)
 			{
 				if (log.IsWarnEnabled) log.Warn("Task packet name is too long for 1.71 clients (" + name.Length + ") '" + name + "'");
-				name = name.Substring(0, byte.MaxValue);
+				name = name.Substring(0, ushort.MaxValue);
 			}
 			if (name.Length > 2048 - 10)
 			{
@@ -2328,19 +2329,54 @@ namespace DOL.GS.PacketHandler
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.DetailWindow));
 
+			if (caption == null)
+				caption = "";
+			if (caption.Length > byte.MaxValue)
+				caption = caption.Substring(0, byte.MaxValue);
 			pak.WritePascalString(caption); //window caption
 
-			IEnumerator iter = text.GetEnumerator();
-			byte line = 1;
-			while (iter.MoveNext())
-			{
-				pak.WriteByte(line++);
-				pak.WritePascalString((string)iter.Current);
-			}
+			WriteCustomTextWindowData(pak, text);
 
 			//Trailing Zero!
 			pak.WriteByte(0);
 			SendTCP(pak);
+		}
+
+		protected void WriteCustomTextWindowData(GSTCPPacketOut pak, IList text)
+		{
+			IEnumerator iter = text.GetEnumerator();
+			byte line = 0;
+			bool needBreak = false;
+			while (iter.MoveNext())
+			{
+				string str = (string)iter.Current;
+				if (str == null) continue;
+				if (pak.Position + 4 > maxPacketLength) // line + pascalstringline(1) + trailingZero
+					return;
+				pak.WriteByte(++line);
+				while (str.Length > byte.MaxValue)
+				{
+					string s = str.Substring(0, byte.MaxValue);
+					if (pak.Position + s.Length + 2 > maxPacketLength)
+					{
+						needBreak = true;
+						break;
+					}
+					pak.WritePascalString(s);
+					str = str.Substring(byte.MaxValue, str.Length - byte.MaxValue);
+					if (line >= 200 || pak.Position + Math.Min(byte.MaxValue, str.Length) + 2 >= maxPacketLength)// line + pascalstringline(1) + trailingZero
+						return;
+					pak.WriteByte(++line);
+				}
+				if (pak.Position + str.Length + 2 > maxPacketLength) // str.Length + trailing zero
+				{
+					str = str.Substring(0, (int)Math.Max(Math.Min(1, str.Length), maxPacketLength - pak.Position - 2));
+					needBreak = true;
+				}
+				pak.WritePascalString(str);
+				if (needBreak || line >= 200) // Check max packet length or max stings in window (0 - 199)
+					break;
+			}
 		}
 
 		public virtual void SendPlayerTitles()
@@ -2381,7 +2417,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort((ushort)seconds);
 			pak.WriteByte((byte)title.Length);
 			pak.WriteByte(1);
-			pak.WriteString(title);
+			pak.WriteString((title.Length > byte.MaxValue ? title.Substring(0, byte.MaxValue) : title));
 			SendTCP(pak);
 		}
 

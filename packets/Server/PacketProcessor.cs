@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -56,7 +56,7 @@ namespace DOL.GS.PacketHandler
 		/// Stores all packet handlers found when searching the gameserver assembly
 		/// </summary>
 		protected static readonly IPacketHandler[] m_packetHandlers = new IPacketHandler[256];
-		
+
 		/// <summary>
 		/// currently active packet handler
 		/// </summary>
@@ -66,7 +66,7 @@ namespace DOL.GS.PacketHandler
 		/// thread id of running packet handler
 		/// </summary>
 		protected int m_handlerThreadID = 0;
-		
+
 		/// <summary>
 		/// Constructs a new PacketProcessor
 		/// </summary>
@@ -95,7 +95,7 @@ namespace DOL.GS.PacketHandler
 		/// Holds the last sent/received packets.
 		/// </summary>
 		protected readonly Queue m_lastPackets = new Queue(MAX_LAST_PACKETS);
-		
+
 //		/// <summary>
 //		/// Holds the packets that were received last
 //		/// </summary>
@@ -145,7 +145,7 @@ namespace DOL.GS.PacketHandler
 //				m_receivedPackets.Enqueue(pak);
 //			}
 		}
-		
+
 		/// <summary>
 		/// Makes a copy of last sent/received packets.
 		/// </summary>
@@ -257,7 +257,7 @@ namespace DOL.GS.PacketHandler
 			}
 			return count;
 		}
-		
+
 		/// <summary>
 		/// Called on client disconnect.
 		/// </summary>
@@ -269,24 +269,24 @@ namespace DOL.GS.PacketHandler
 			m_client.Server.ReleasePacketBuffer(tcp);
 			m_client.Server.ReleasePacketBuffer(udp);
 		}
-		
+
 		#region TCP
-		
+
 		/// <summary>
 		/// Holds the TCP send buffer
 		/// </summary>
 		protected byte[] m_tcpSendBuffer;
-		
+
 		/// <summary>
 		/// The client TCP packet send queue
 		/// </summary>
 		protected readonly Queue m_tcpQueue = new Queue(256);
-		
+
 		/// <summary>
 		/// Indicates whether data is currently being sent to the client
 		/// </summary>
 		protected bool m_sendingTcp;
-		
+
 		/// <summary>
 		/// Sends a packet via TCP
 		/// </summary>
@@ -310,7 +310,7 @@ namespace DOL.GS.PacketHandler
 		{
 			if (m_tcpSendBuffer == null)
 				return;
-			
+
 			//Check if client is connected
 			if (m_client.Socket.Connected)
 			{
@@ -321,6 +321,8 @@ namespace DOL.GS.PacketHandler
 
 				if (buf.Length > 2048)
 				{
+					if (ServerProperties.Properties.IGNORE_TOO_LONG_OUTCOMING_PACKET)
+						return;
 					if (log.IsErrorEnabled)
 					{
 						string desc = String.Format("Sending packets longer than 2048 cause client to crash, check log for stacktrace. Packet code: 0x{0:X2}, account: {1}, packet size: {2}.",
@@ -349,13 +351,13 @@ namespace DOL.GS.PacketHandler
 							m_sendingTcp = true;
 						}
 					}
-					
+
 					Buffer.BlockCopy(buf, 0, m_tcpSendBuffer, 0, buf.Length);
-					
+
 					int start = Environment.TickCount;
-					
+
 					m_client.Socket.BeginSend(m_tcpSendBuffer, 0, buf.Length, SocketFlags.None, m_asyncTcpCallback, m_client);
-					
+
 					int took = Environment.TickCount - start;
 					if (took > 100 && log.IsWarnEnabled)
 						log.WarnFormat("SendTCP.BeginSend took {0}ms! (TCP to client: {1})", took, m_client);
@@ -388,7 +390,7 @@ namespace DOL.GS.PacketHandler
 					log.Error("AsyncSendCallback: ar == null");
 				return;
 			}
-			
+
 			GameClient client = (GameClient) ar.AsyncState;
 
 			try
@@ -397,10 +399,10 @@ namespace DOL.GS.PacketHandler
 				Queue q = pakProc.m_tcpQueue;
 
 				int sent = client.Socket.EndSend(ar);
-				
+
 				int count = 0;
 				byte[] data = pakProc.m_tcpSendBuffer;
-				
+
 				if (data == null)
 					return;
 
@@ -418,11 +420,11 @@ namespace DOL.GS.PacketHandler
 						return;
 					}
 				}
-				
+
 				int start = Environment.TickCount;
-					
+
 				client.Socket.BeginSend(data, 0, count, SocketFlags.None, m_asyncTcpCallback, client);
-					
+
 				int took = Environment.TickCount - start;
 				if (took > 100 && log.IsWarnEnabled)
 					log.WarnFormat("AsyncTcpSendCallback.BeginSend took {0}ms! (TCP to client: {1})", took, client.ToString());
@@ -472,7 +474,7 @@ namespace DOL.GS.PacketHandler
 				i += pak.Length;
 				q.Dequeue();
 			} while (q.Count > 0);
-			
+
 			return i;
 		}
 
@@ -484,7 +486,7 @@ namespace DOL.GS.PacketHandler
 		{
 			SendTCP((byte[]) packet.GetBuffer().Clone());
 		}
-		
+
 		#endregion
 
 		#region UDP
@@ -493,7 +495,7 @@ namespace DOL.GS.PacketHandler
 		/// Holds the UDP send buffer
 		/// </summary>
 		protected byte[] m_udpSendBuffer;
-		
+
 		/// <summary>
 		/// The client UDP packet send queue
 		/// </summary>
@@ -508,12 +510,12 @@ namespace DOL.GS.PacketHandler
 		/// Holds the async udp send callback delegate
 		/// </summary>
 		private readonly AsyncCallback m_asyncUdpCallback;
-		
+
 		/// <summary>
 		/// Indicates whether UDP data is currently being sent
 		/// </summary>
 		private bool m_sendingUdp;
-		
+
 		/// <summary>
 		/// Send the packet via UDP
 		/// </summary>
@@ -584,7 +586,7 @@ namespace DOL.GS.PacketHandler
 					m_sendingUdp = true;
 				}
 			}
-			
+
 			Buffer.BlockCopy(buf, 0, m_udpSendBuffer, 0, buf.Length);
 
 			try
@@ -615,10 +617,10 @@ namespace DOL.GS.PacketHandler
 			{
 				Socket s = (Socket) ar.AsyncState;
 				int sent = s.EndSendTo(ar);
-				
+
 				int count = 0;
 				byte[] data = m_udpSendBuffer;
-				
+
 				if (data == null)
 					return;
 
@@ -636,15 +638,15 @@ namespace DOL.GS.PacketHandler
 						return;
 					}
 				}
-				
+
 				int start = Environment.TickCount;
-				
+
 				GameServer.Instance.SendUDP(data, count, m_client.UDPEndPoint, m_asyncUdpCallback);
-				
+
 				int took = Environment.TickCount - start;
 				if (took > 100 && log.IsWarnEnabled)
 					log.WarnFormat("AsyncUdpSendCallback.BeginSend took {0}ms! (TCP to client: {1})", took, m_client.ToString());
-				
+
 			}
 			catch (Exception e)
 			{
@@ -668,7 +670,7 @@ namespace DOL.GS.PacketHandler
 		{
 			SendUDP((byte[]) packet.GetBuffer().Clone(), false);
 		}
-		
+
 		#endregion
 
 		/// <summary>
@@ -725,7 +727,7 @@ namespace DOL.GS.PacketHandler
 						if (log.IsWarnEnabled)
 							log.WarnFormat("Bad TCP packet checksum (packet:0x{0:X4} calculated:0x{1:X4}) -> disconnecting\nclient: {2}\ncurOffset={3}; packetLength={4}",
 							               pakCheck, calcCheck, m_client.ToString(), curOffset, packetLength);
-						
+
 						if (log.IsInfoEnabled)
 						{
 							log.Info("Last client sent/received packets (from older to newer):");
@@ -810,7 +812,7 @@ namespace DOL.GS.PacketHandler
 
 			return (ushort)(val2 - ((val1 + val2) << 8));
 		}
-		
+
 		public void HandlePacketTimeout(object sender, ElapsedEventArgs e)
 		{
 			string source = ((m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint);
@@ -824,7 +826,7 @@ namespace DOL.GS.PacketHandler
 		/// This list is updated in the HandlePacket method
 		/// </summary>
 		public static Hashtable m_activePacketThreads = Hashtable.Synchronized(new Hashtable());
-#endif		
+#endif
 		/// <summary>
 		/// Retrieves a textual description of all active packet handler thread stacks
 		/// </summary>
@@ -850,7 +852,7 @@ namespace DOL.GS.PacketHandler
 						StackTrace trace = new StackTrace(thread, true);
 						//Resume the thread
 						thread.Resume();
-						
+
 						builder.Append("Stack for thread from account: ");
 						if(client!=null && client.Account!=null)
 						{
@@ -885,8 +887,8 @@ namespace DOL.GS.PacketHandler
 #endif
 		}
 
-		
-		
+
+
 		public void HandlePacket(GSPacketIn packet)
 		{
 			if (packet == null || m_client == null)
