@@ -6681,10 +6681,6 @@ namespace DOL.GS
 		/// </summary>
 		protected SpellLine m_nextSpellLine;
 		/// <summary>
-		/// The next spell target
-		/// </summary>
-		protected GameLiving m_nextSpellTarget;
-		/// <summary>
 		/// A lock for the spellqueue
 		/// </summary>
 		protected object m_spellQueueAccessMonitor = new object();
@@ -6698,7 +6694,6 @@ namespace DOL.GS
 			{
 				m_nextSpell = null;
 				m_nextSpellLine = null;
-				m_nextSpellTarget = null;
 			}
 		}
 
@@ -6712,7 +6707,6 @@ namespace DOL.GS
 			{
 				Spell nextSpell = m_nextSpell;
 				SpellLine nextSpellLine = m_nextSpellLine;
-				GameLiving nextSpellTarget = m_nextSpellTarget;
 				// warlock
 				if (nextSpell != null)
 				{
@@ -6732,7 +6726,6 @@ namespace DOL.GS
 				m_runningSpellHandler = null;
 				m_nextSpell = null;			// avoid restarting nextspell by reentrance from spellhandler
 				m_nextSpellLine = null;
-				m_nextSpellTarget = null;
 
 				if (nextSpell != null)
 					m_runningSpellHandler = ScriptMgr.CreateSpellHandler(this, nextSpell, nextSpellLine);
@@ -6740,10 +6733,7 @@ namespace DOL.GS
 			if (m_runningSpellHandler != null)
 			{
 				m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
-				if(m_nextSpellTarget!=null)
-					m_runningSpellHandler.CastSpell(m_nextSpellTarget);
-				else
-					m_runningSpellHandler.CastSpell();
+				m_runningSpellHandler.CastSpell();
 			}
 		}
 
@@ -6817,7 +6807,6 @@ namespace DOL.GS
 								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyCastFollow"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 								m_nextSpell = spell;
 								m_nextSpellLine = line;
-								m_nextSpellTarget = TargetObject as GameLiving;
 							}
 							else Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyCastNoQueue"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 							return;
