@@ -10881,6 +10881,12 @@ namespace DOL.GS
 		}
 
 		#endregion
+		bool m_isWireframe = false;
+		public bool IsWireframe
+		{
+			get { return m_isWireframe; }
+			set { m_isWireframe = value; }
+		}
 
 		#region Stealth
 
@@ -13273,6 +13279,7 @@ namespace DOL.GS
 			m_enteredGame = false;
 			m_customDialogCallback = null;
 			m_sitting = false;
+			m_isWireframe = false;
 			m_saveInDB = true; // always save char data in db
 			m_class = new DefaultCharacterClass();
 			m_groupIndex = -1;
