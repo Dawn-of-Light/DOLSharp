@@ -314,7 +314,7 @@ namespace DOL.GS.PacketHandler
 			if (playerToCreate.IsAlive == false) flags |= 0x01;
 			if (playerToCreate.IsUnderwater) flags |= 0x02; //swimming
 			if (playerToCreate.IsStealthed) flags |= 0x10;
-			// 0x20 = wireframe
+			if (playerToCreate.IsWireframe) flags |= 0x20;
 			pak.WriteByte((byte)flags);
 			pak.WriteByte(0x00); // new in 1.74
 			if (playerToCreate.CharacterClass.ID == (int)eCharacterClass.Vampiir) flags |= 0x40; //Vamp fly
@@ -322,7 +322,7 @@ namespace DOL.GS.PacketHandler
 			pak.WritePascalString(GameServer.ServerRules.GetPlayerGuildName(m_gameClient.Player, playerToCreate));
 			pak.WritePascalString(GameServer.ServerRules.GetPlayerLastName(m_gameClient.Player, playerToCreate));
             //RR 12 / 13
-            pak.WritePascalString(GameServer.ServerRules.GetPlayerPrefixName(m_gameClient.Player, playerToCreate)); 
+            pak.WritePascalString(GameServer.ServerRules.GetPlayerPrefixName(m_gameClient.Player, playerToCreate));
             pak.WritePascalString(playerToCreate.CurrentTitle.GetValue(playerToCreate)); // new in 1.74, NewTitle
 			SendTCP(pak);
 
