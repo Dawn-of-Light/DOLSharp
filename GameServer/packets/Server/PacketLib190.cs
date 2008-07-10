@@ -37,7 +37,7 @@ namespace DOL.GS.PacketHandler
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
-		/// Constructs a new PacketLib for Version 1.88 clients
+		/// Constructs a new PacketLib for Version 1.90 clients
 		/// </summary>
 		/// <param name="client">the gameclient this lib is associated with</param>
 		public PacketLib190(GameClient client)

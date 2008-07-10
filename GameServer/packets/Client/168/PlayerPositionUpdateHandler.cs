@@ -68,7 +68,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		//static int lastZ=int.MinValue;
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			//Tiv: in very rare cases client send 0xA9 packet before sending S<=C 0xE8 player wolrd initialize 
+			//Tiv: in very rare cases client send 0xA9 packet before sending S<=C 0xE8 player wolrd initialize
 			if ((client.Player.ObjectState != GameObject.eObjectState.Active) ||
 				(client.ClientState != GameClient.eClientState.Playing))
 				return 1;
@@ -98,7 +98,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			if ((data & 0x200) != 0)
 				speed = -speed;
-			client.Player.CurrentSpeed = speed;
+			if (client.Player.IsMezzed || client.Player.IsStunned)
+			{
+				speed = 0;
+			}
+			else
+				client.Player.CurrentSpeed = speed;
 
 			//Don't use the "sit" flag (data&0x1000) because it is
 			//useful only for displaying sit status to other clients,
@@ -538,7 +543,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				client.Player.Heading = client.Player.Steed.Heading;
 
-				con168[2] |= 24; //Set ride flag 00011000
+				con168[2] = 0x18; // Set ride flag 00011000
+				con168[3] = 0; // player speed = 0 while ride
 				con168[12] = (byte)(client.Player.Steed.ObjectID >> 8); //heading = steed ID
 				con168[13] = (byte)(client.Player.Steed.ObjectID & 0xFF);
 				con168[14] = (byte)0;
@@ -559,7 +565,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 			else
 				client.Player.IsDiving = false;
 
-			con168[16] &= 0xFD; //11 11 11 01
+			con168[16] &= 0xFC; //11 11 11 00 cleared Wireframe & Stealth bits
+			if (client.Player.IsWireframe)
+			{
+				con168[16] |= 0x01;
+			}
 			//stealth is set here
 			if (client.Player.IsStealthed)
 			{

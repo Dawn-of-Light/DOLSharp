@@ -92,7 +92,8 @@ namespace DOL.GS.PacketHandler
 				flags |= 0x02; //swimming
 			if (playerToCreate.IsStealthed)
 				flags |= 0x10;
-			// 0x20 = wireframe
+			if (playerToCreate.IsWireframe)
+				flags |= 0x20;
 			pak.WriteByte((byte)flags);
 
 			pak.WritePascalString(GameServer.ServerRules.GetPlayerName(m_gameClient.Player, playerToCreate));

@@ -50,13 +50,29 @@ namespace DOL.GS.PacketHandler
 		{
 		}
 
+		public override void SendHexEffect(GamePlayer player, byte effect1, byte effect2, byte effect3, byte effect4, byte effect5)
+		{
+			if (player == null)
+				return;
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
+			pak.WriteShort((ushort)player.ObjectID);
+			pak.WriteByte(0x3); // show Hex
+			pak.WriteByte(effect1);
+			pak.WriteByte(effect2);
+			pak.WriteByte(effect3);
+			pak.WriteByte(effect4);
+			pak.WriteByte(effect5);
+
+			SendTCP(pak);
+		}
 
 		public override void SendWarlockChamberEffect(GamePlayer player)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
-
-			pak.WriteShort((ushort)player.ObjectID);
-			pak.WriteByte((byte)3);
+			byte effect1 = 0;
+			byte effect2 = 0;
+			byte effect3 = 0;
+			byte effect4 = 0;
+			byte effect5 = 0;
 
 			SortedList sortList = new SortedList();
 			sortList.Add(1, null);
@@ -82,49 +98,43 @@ namespace DOL.GS.PacketHandler
 				{
 					if (effect == null)
 					{
-						pak.WriteByte((byte)0);
+						effect1 = 0;
 					}
 					else
 					{
 						ChamberSpellHandler chamber = (ChamberSpellHandler)effect.SpellHandler;
 						if (chamber.PrimarySpell != null && chamber.SecondarySpell == null)
 						{
-							pak.WriteByte((byte)3);
+							effect1 = 3;
 						}
 						else if (chamber.PrimarySpell != null && chamber.SecondarySpell != null)
 						{
 							if (chamber.SecondarySpell.SpellType == "Lifedrain")
-								pak.WriteByte(0x11);
+								effect1 = 0x11;
 							else if (chamber.SecondarySpell.SpellType.IndexOf("SpeedDecrease") != -1)
-								pak.WriteByte(0x33);
+								effect1 = 0x33;
 							else if (chamber.SecondarySpell.SpellType == "PowerRegenBuff")
-								pak.WriteByte(0x77);
+								effect1 = 0x77;
 							else if (chamber.SecondarySpell.SpellType == "DirectDamage")
-								pak.WriteByte(0x66);
+								effect1 = 0x66;
 							else if (chamber.SecondarySpell.SpellType == "SpreadHeal")
-								pak.WriteByte(0x55);
+								effect1 = 0x55;
 							else if (chamber.SecondarySpell.SpellType == "Nearsight")
-								pak.WriteByte(0x44);
+								effect1 = 0x44;
 							else if (chamber.SecondarySpell.SpellType == "DamageOverTime")
-								pak.WriteByte(0x22);
+								effect1 = 0x22;
 						}
 					}
 				}
 			}
-			//pak.WriteByte(0x11); 
-			//pak.WriteByte(0x22); 
-			//pak.WriteByte(0x33); 
-			//pak.WriteByte(0x44); 
-			//pak.WriteByte(0x55); 
-			pak.WriteInt(0);
 
 			foreach (GamePlayer plr in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				if (player != plr)
-					plr.Client.PacketProcessor.SendTCP(pak);
+				if (plr != null && player != plr)
+					plr.Out.SendHexEffect(player, effect1, effect2, effect3, effect4, effect5);
 			}
 
-			SendTCP(pak);
+			SendHexEffect(player, effect1, effect2, effect3, effect4, effect5);
 		}
 
 		public override void SendUpdateIcons(IList changedEffects, ref int lastUpdateEffectsCount)
@@ -490,22 +500,6 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort(0);//unk
 			pak.WriteByte(0x52);//model
 			pak.WriteByte(0);//unk
-
-			SendTCP(pak);
-		}
-
-		public override void SendHexEffect(GamePlayer player, byte effect1, byte effect2, byte effect3, byte effect4, byte effect5)
-		{
-			if (player == null)
-				return;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
-			pak.WriteShort((ushort)player.ObjectID);
-			pak.WriteByte(0x3); // show Hex
-			pak.WriteByte(effect1);
-			pak.WriteByte(effect2);
-			pak.WriteByte(effect3);
-			pak.WriteByte(effect4);
-			pak.WriteByte(effect5);
 
 			SendTCP(pak);
 		}
