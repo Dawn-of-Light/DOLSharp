@@ -34,9 +34,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			if(client.Player.ObjectState!=GameObject.eObjectState.Active) return 1;
+			if (client == null || client.Player == null)
+				return 0;
+			if (client.Player.ObjectState != GameObject.eObjectState.Active) return 0;
 
-			packet.Skip(2); // session ID
+			ushort sessionId = packet.ReadShort(); // session ID
+			if (client.SessionID != sessionId)
+			{
+//				GameServer.BanAccount(client, 120, "Hack sessionId", string.Format("Wrong sessionId:0x{0} in 0xBA packet (SessionID:{1})", sessionId, client.SessionID));
+				return 0; // client hack
+			}
 			ushort head = packet.ReadShort();
 			client.Player.Heading = (ushort)(head & 0xFFF);
 			packet.Skip(1); // unknown
@@ -45,9 +52,24 @@ namespace DOL.GS.PacketHandler.Client.v168
 			client.Player.GroundTargetInView = ((flags & 0x08) != 0);
 			client.Player.TargetInView = ((flags & 0x10) != 0);
 
-
 			byte[] con = packet.ToArray();
-			con[5] &= 0xC1; //11 00 00 01 = 0x80(Torch) + 0x40(Unknown) + 0x1(Unknown), all other in view check's not need send anyone
+			if (!client.Player.IsAlive)
+			{
+				con[9] = 5; // set dead state
+			}
+			else if (client.Player.Steed != null && client.Player.Steed.ObjectState == GameObject.eObjectState.Active)
+			{
+				client.Player.Heading = client.Player.Steed.Heading;
+				con[9] = 6; // Set ride state
+				con[7] = (byte)(client.Player.Steed.RiderSlot(client.Player)); // there rider slot this player
+				con[2] = (byte)(client.Player.Steed.ObjectID >> 8); //heading = steed ID
+				con[3] = (byte)(client.Player.Steed.ObjectID & 0xFF);
+			}
+			con[5] &= 0xC0; //11 00 00 00 = 0x80(Torch) + 0x40(Unknown), all other in view check's not need send anyone
+			if (client.Player.IsWireframe)
+			{
+				con[5] |= 0x01;
+			}
 			//stealth is set here
 			if (client.Player.IsStealthed)
 			{

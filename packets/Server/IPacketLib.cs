@@ -377,13 +377,13 @@ namespace DOL.GS.PacketHandler
 		CustomDialog = 0x06,
 		GuildLeave = 0x08,
 		HousePayRent = 0x14,
-		KeepClaim = 0x26,
-		QuestSuscribe = 0x64,
+		MasterLevelWindow = 0x19,
+		KeepClaim = 0x1A,
 		BuyRespec = 0x20,
 		WarmapWindowHibernia = 0x30,
 		WarmapWindowAlbion = 0x31,
 		WarmapWindowMidgard = 0x32,
-		MasterLevelWindow = 0x19,
+		QuestSuscribe = 0x64,
 	}
 
 
