@@ -191,12 +191,12 @@ namespace DOLGameServerConsole
 		public void SendSiegeWeaponCloseInterface() { }
 		public void SendSiegeWeaponInterface(GameSiegeWeapon siegeWeapon, int time) { }
 		public void SendHouse(House house) { }
-		public void SendRemoveHouse(House house) { }
+		public void SendHouseOccuped(House house, bool flagHouseOccuped) { }
 		public void SendHousePermissions(House house) { }
+		public void SendRemoveHouse(House house) { }
 		public void SendGarden(House house, int i) { }
 		public void SendHousePayRentDialog(string title) { }
 		public void SendGarden(House house) { }
-		public void SendRemoveGarden(House house) { }
 		public void SendEnterHouse(House house) { }
 		public void SendExitHouse(House house) { }
 		public void SendFurniture(House house) { }
