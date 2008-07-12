@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -230,16 +230,18 @@ namespace DOL.GS.Housing
             house.SaveIntoDatabase();
             house.SendUpdate();
         }
-		
+
 		public static void RemoveHouse(House house)
 		{
 			Logger.Debug("House " + house.UniqueID + " removed");
 			Hashtable hash = (Hashtable)m_houselists[house.RegionID];
 			if (hash == null) return;
+			house.OutdoorItems.Clear();
 			foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot((ushort)house.RegionID, house.X, house.Y, house.Z, WorldMgr.OBJ_UPDATE_DISTANCE))
 			{
 				player.Out.SendRemoveHouse(house);
-				player.Out.SendRemoveGarden(house);
+				player.Out.SendGarden(house);
+//				player.Out.SendRemoveGarden(house);
 
 			}
 			foreach (GamePlayer player in house.GetAllPlayersInHouse())
@@ -247,7 +249,7 @@ namespace DOL.GS.Housing
 
 			house.OwnerIDs = null;
 			house.KeptMoney = 0;
-			house.Name = ""; // not null ! 
+			house.Name = ""; // not null !
 			house.Emblem = 0;
 			house.Model = 0;
             house.DatabaseItem.CreationTime = DateTime.MinValue;
@@ -441,7 +443,7 @@ namespace DOL.GS.Housing
             house.SaveIntoDatabase();
             house.SendUpdate();
         }
-        
+
         public static ArrayList GetOwners(DBHouse house)
 		{
 			if (house == null) return null;

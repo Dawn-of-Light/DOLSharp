@@ -289,16 +289,16 @@ namespace DOL.GS.Housing
 			foreach (DBHouseCharsXPerms permissions in CharsPermissions)
                 if (permissions.Name == player.Name)
                     return permissions.PermLevel;
-			
+
 			//if the player is not in the permissions check for its guild
             if (player.Guild != null)
             {
                 foreach (DBHouseCharsXPerms permissions in CharsPermissions)
                     if (permissions.Name == player.GuildName)
                         return permissions.PermLevel;
-            
+
             }
-			
+
             //at the end check if there are permissions for everybody
             foreach (DBHouseCharsXPerms permissions in CharsPermissions)
                 if (permissions.Name == "All")
@@ -627,7 +627,7 @@ namespace DOL.GS.Housing
 			GameServer.Database.AddNewObject(perm);
 			return true;
 		}
-		
+
 		public bool AddGuildToPerm(Guild g, ePermsTypes type, int lvl)
         {
             if (IsInPerm(g.Name, type, lvl))
@@ -691,19 +691,19 @@ namespace DOL.GS.Housing
             CharsPermissions.Add(perm);
             GameServer.Database.AddNewObject(perm);
             return true;
-        }		
-		
+        }
+
 		/// <summary>
 		/// Used to get into a house
 		/// </summary>
 		/// <param name="player">the player who wants to get in</param>
 		public void Enter(GamePlayer player)
 		{
-
 			GameClient client = player.Client;
+			client.Out.SendMessage(string.Format("Entering house {0}.", this.HouseNumber), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			client.Out.SendEnterHouse(this);
 			client.Out.SendFurniture(this);
-			client.Out.SendRemoveGarden(this);
+			client.Out.SendHouseOccuped(this, true);
 			client.Player.InHouse = true;
 			client.Player.CurrentHouse = this;
 
@@ -796,6 +796,7 @@ namespace DOL.GS.Housing
 			player.MoveTo(RegionID, x, y, Z, heading);
 			if (!silent)
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "House.Exit.LeftHouse", HouseNumber), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendHouseOccuped(this, false); // TODO send occuped flag depended on house occuping at moment
 			player.Out.SendExitHouse(this);
 		}
 
@@ -1229,7 +1230,7 @@ namespace DOL.GS.Housing
 				// ALB Cottage (model 1)
 				new int[19][]
 					{
-	/* Position 0 */	new int[4] {-196, -858, -305, -105}, 
+	/* Position 0 */	new int[4] {-196, -858, -305, -105},
 						null,
 						null,
 						null,
@@ -1252,7 +1253,7 @@ namespace DOL.GS.Housing
 				// ALB (model 2)
 				new int[19][]
 					{
-	/* Position 0 */	new int[4] {7, -855, -429, 3837}, 
+	/* Position 0 */	new int[4] {7, -855, -429, 3837},
 						null,
 						null,
 						null,
@@ -1269,13 +1270,13 @@ namespace DOL.GS.Housing
 						null,
 	/* Position 15 */	new int[4] {327, -106, -430, -166},
 						new int[4] {469, -108, -431, 3826},
-						null, 
+						null,
 	                	null
 					},
 				// ALB Villa(model 3)
 				new int[19][]
 					{
-	/* Position 0 */	new int[4] {68, -850, -542, 3886}, 
+	/* Position 0 */	new int[4] {68, -850, -542, 3886},
 						null,
 						null,
 						null,
@@ -1298,7 +1299,7 @@ namespace DOL.GS.Housing
 				// ALB Mansion(model 4)
 				new int[19][]
 					{
-	/* Position 0 */	new int[4] {-2058, -868, -1065, 2924}, 
+	/* Position 0 */	new int[4] {-2058, -868, -1065, 2924},
 						null,
 						null,
 						null,
@@ -1321,12 +1322,12 @@ namespace DOL.GS.Housing
 				// MID Cottage (model 5)
 				new int[19][]
 					{
-	/* Position 0 */	new int[4] {-302, -514, -279, -175}, 
+	/* Position 0 */	new int[4] {-302, -514, -279, -175},
 						null,
 						null,
 						null,
 						null,
-	/* Position 5 */	new int[4] {-119, 226, 101, 2887}, 
+	/* Position 5 */	new int[4] {-119, 226, 101, 2887},
 						null,
 						null,
 						null,
@@ -1336,21 +1337,21 @@ namespace DOL.GS.Housing
 						null,
 						null,
 						null,
-	/* Position 15 */	new int[4] {-101, -426, -319, 797}, 
+	/* Position 15 */	new int[4] {-101, -426, -319, 797},
 						null,
 						null,
 	                	null
-					},	
+					},
 				// MID (model 6)
 				new int[19][]
 					{
-	/* Position 0 */	new int[4] {-528, -819, -680, -112}, 
+	/* Position 0 */	new int[4] {-528, -819, -680, -112},
 						null,
 						null,
 						null,
 						null,
-	/* Position 5 */	new int[4] {286, 692, -297, 1378}, 
-						new int[4] {-532, 298, -34, 2264}, 
+	/* Position 5 */	new int[4] {286, 692, -297, 1378},
+						new int[4] {-532, 298, -34, 2264},
 						null,
 						null,
 	/* Position 9 */	new int[4] {-545, -361, -295, 3391},
@@ -1359,22 +1360,22 @@ namespace DOL.GS.Housing
 						new int[4] {-458, -460, -299, 3297},
 						null,
 						null,
-	/* Position 15 */	new int[4] {-469, 653, -720, 1846}, 
+	/* Position 15 */	new int[4] {-469, 653, -720, 1846},
 						new int[4] {-668, 650, -720, 2287},
 						null,
 	                	null
-					},	
+					},
 				// MID (model 7)
 				new int[19][]
 					{
-	/* Position 0 */	new int[4] {-929, 403, -681, 3009}, 
+	/* Position 0 */	new int[4] {-929, 403, -681, 3009},
 						null,
 						null,
 						null,
 						null,
-	/* Position 5 */	new int[4] {-442, 363, -288, 2815}, 
-						new int[4] {-79, -613, -30, -141}, 
-						new int[4] {-421, 450, 204, 2333}, 
+	/* Position 5 */	new int[4] {-442, 363, -288, 2815},
+						new int[4] {-79, -613, -30, -141},
+						new int[4] {-421, 450, 204, 2333},
 						null,
 	/* Position 9 */	new int[4] {301, -464, -290, 380},
 	/* Position 10 */	new int[4] {-411, 476, -34, 2216},
@@ -1382,22 +1383,22 @@ namespace DOL.GS.Housing
 						new int[4] {-268, -412, -708, 2884},
 						new int[4] {403, -230, -294, 590},
 						null,
-	/* Position 15 */	new int[4] {521, 415, -720, 903}, 
+	/* Position 15 */	new int[4] {521, 415, -720, 903},
 						new int[4] {438, 538, -720, 1283},
 						new int[4] {519, 297, -720, 714},
 	                	null
-					},	
+					},
 				// MID (model 8)
 				new int[19][]
 					{
-	/* Position 0 */	null, 
+	/* Position 0 */	null,
 						null,
 						null,
 						null,
 						null,
-	/* Position 5 */	new int[4] {-589, -241, 461, 3526}, 
-						new int[4] {416, 401, -47, 1116}, 
-						new int[4] {-578, 430, 224, 2798}, 
+	/* Position 5 */	new int[4] {-589, -241, 461, 3526},
+						new int[4] {416, 401, -47, 1116},
+						new int[4] {-578, 430, 224, 2798},
 						null,
 	/* Position 9 */	new int[4] {358, -495, -318, 308},
 	/* Position 10 */	new int[4] {380, -318, -48, 469},
@@ -1405,22 +1406,22 @@ namespace DOL.GS.Housing
 						new int[4] {162, -158, 459, 583},
 						new int[4] {526, 45, -731, 1508},
 						new int[4] {-590, 109, -319, 2851},
-	/* Position 15 */	new int[4] {478, -912, -1076, 18}, 
+	/* Position 15 */	new int[4] {478, -912, -1076, 18},
 						new int[4] {569, -823, -1077, 357},
 						new int[4] {140, -1035, -1077, -27},
 	                	new int[4] {359, -959, -1077, -42}
-					},	
+					},
 				// MID (model 9)
 				new int[19][]
 					{
-	/* Position 0 */	new int[4] {-537, -515, -272, 3278},  
+	/* Position 0 */	new int[4] {-537, -515, -272, 3278},
 						null,
 						null,
 						null,
 						null,
-	/* Position 5 */	new int[4] {691, 252, 155, 936}, 
-						null, 
-						null, 
+	/* Position 5 */	new int[4] {691, 252, 155, 936},
+						null,
+						null,
 						null,
 	/* Position 9 */	new int[4] {145, 450, 156, 2777},
 	/* Position 10 */	new int[4] {-226, 2, -278, 2303},
@@ -1428,22 +1429,22 @@ namespace DOL.GS.Housing
 						null,
 						null,
 						null,
-	/* Position 15 */	new int[4] {86, -356, -277, 201}, 
+	/* Position 15 */	new int[4] {86, -356, -277, 201},
 						null,
 						null,
 	                	null,
-					},	
+					},
 				// MID (model 10)
 				new int[19][]
 					{
-	/* Position 0 */	new int[4] {-535, -451, -370, 3294},  
+	/* Position 0 */	new int[4] {-535, -451, -370, 3294},
 						null,
 						null,
 						null,
 						null,
-	/* Position 5 */	new int[4] {618, 65, 62, 384}, 
-						new int[4] {551, 520, 242, 1208}, 
-						null, 
+	/* Position 5 */	new int[4] {618, 65, 62, 384},
+						new int[4] {551, 520, 242, 1208},
+						null,
 						null,
 	/* Position 9 */	new int[4] {146, 510, 62, 2921},
 	/* Position 10 */	new int[4] {-223, 64, -372, 2380},
@@ -1451,22 +1452,22 @@ namespace DOL.GS.Housing
 						new int[4] {136, 361, 64, 2848},
 						null,
 						null,
-	/* Position 15 */	new int[4] {157, -635, -370, 3407}, 
-						new int[4] {399, -434, -370, 1336}, 
+	/* Position 15 */	new int[4] {157, -635, -370, 3407},
+						new int[4] {399, -434, -370, 1336},
 						null,
 	                	null,
-					},	
+					},
 				// MID (model 11)
 				new int[19][]
 					{
-	/* Position 0 */	new int[4] {-529, -511, -531, 3361},  
+	/* Position 0 */	new int[4] {-529, -511, -531, 3361},
 						null,
 						null,
 						null,
 						null,
-	/* Position 5 */	new int[4] {661, -36, -98, 673}, 
-						new int[4] {143, 354, 127, 2945}, 
-						new int[4] {651, 375, 291, 900}, 
+	/* Position 5 */	new int[4] {661, -36, -98, 673},
+						new int[4] {143, 354, 127, 2945},
+						new int[4] {651, 375, 291, 900},
 						null,
 	/* Position 9 */	new int[4] {647, 726, -97, 1571},
 	/* Position 10 */	new int[4] {-218, 16, -532, 2289},
@@ -1474,22 +1475,22 @@ namespace DOL.GS.Housing
 						new int[4] {219, 712, 290, 2815},
 						new int[4] {578, 759, -95, 1712},
 						null,
-	/* Position 15 */	new int[4] {164, -682, -531, 3430}, 
-						new int[4] {412, -474, -531, 1208}, 
+	/* Position 15 */	new int[4] {164, -682, -531, 3430},
+						new int[4] {412, -474, -531, 1208},
 						new int[4] {396, -695, -531, 282},
 	                	null,
 					},
 				// MID (model 12)
 				new int[19][]
 					{
-	/* Position 0 */	new int[4] {-909, -1301, -593, 2897},  
+	/* Position 0 */	new int[4] {-909, -1301, -593, 2897},
 						null,
 						null,
 						null,
 						null,
-	/* Position 5 */	new int[4] {129, -17, 549, 1058}, 
-						new int[4] {-249, -111, 45, 2659}, 
-						new int[4] {-233, 41, -137, 2394}, 
+	/* Position 5 */	new int[4] {129, -17, 549, 1058},
+						new int[4] {-249, -111, 45, 2659},
+						new int[4] {-233, 41, -137, 2394},
 						null,
 	/* Position 9 */	new int[4] {-70, -521, 549, 3910},
 	/* Position 10 */	new int[4] {239, -495, 44, 636},
@@ -1497,8 +1498,8 @@ namespace DOL.GS.Housing
 						new int[4] {-242, -615, -404, 3594},
 						new int[4] {428, -422, -852, 644},
 						new int[4] {288, 201, -404, 795},
-	/* Position 15 */	new int[4] {352, 591, -642, 3862}, 
-						new int[4] {696, 591, -644, -130}, 
+	/* Position 15 */	new int[4] {352, 591, -642, 3862},
+						new int[4] {696, 591, -644, -130},
 						new int[4] {347, 942, -643, 1865},
 	                	new int[4] {678, 938, -644, 1952},
 					},
