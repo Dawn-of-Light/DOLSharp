@@ -3002,13 +3002,12 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-		public virtual void SendRemoveGarden(House house)
+		public virtual void SendHouseOccuped(House house, bool flagHouseOccuped)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseChangeGarden));
-
 			pak.WriteShort((ushort)house.HouseNumber);
 			pak.WriteByte(0x00);
-			pak.WriteByte(0x01); //dont know why 0x01 here?!
+			pak.WriteByte((byte)(flagHouseOccuped ? 1 : 0));
 
 			SendTCP(pak);
 		}
