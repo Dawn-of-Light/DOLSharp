@@ -523,10 +523,10 @@ namespace DOL.GS.PacketHandler
 		void SendWarmapBonuses();
 		//housing
 		void SendHouse(House house);
+		void SendHouseOccuped(House house, bool flagHouseOccuped);
 		void SendRemoveHouse(House house);
 		void SendGarden(House house);
 		void SendGarden(House house, int i);
-		void SendRemoveGarden(House house);
 		void SendEnterHouse(House house);
 		void SendExitHouse(House house);
 		void SendFurniture(House house);
