@@ -16,24 +16,48 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
-using System;
-using System.Collections;
-using System.Reflection;
 using DOL.AI.Brain;
-using DOL.Events;
-using DOL.GS;
-using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using DOL.GS.SkillHandler;
-using log4net;
 
 namespace DOL.GS.Spells
 {
-	[SpellHandlerAttribute("TurretsRelease")]
+	[SpellHandler("TurretsRelease")]
 	public class TurretsReleaseSpellHandler : SpellHandler
 	{
-		public TurretsReleaseSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+		public TurretsReleaseSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line)
+		{
+		}
+
+		public override bool CheckBeginCast(GameLiving selectedTarget)
+		{
+			if(!(Caster is GamePlayer))
+			{
+				return false;
+			}
+
+			if(selectedTarget == null)
+			{
+				MessageToCaster("You must cast this spell on a creature you are controlling", eChatType.CT_SpellResisted);
+				return false;
+			}
+			GameNPC target = selectedTarget as GameNPC;
+			if(target == null || !(target.Brain is TurretBrain) || !Caster.GetItsControlledNpc(target))
+			{
+				MessageToCaster("You must cast this spell on a creature you are controlling", eChatType.CT_SpellResisted);
+				return false;
+			}
+			if((target.Brain is TurretBrain) && !Caster.GetItsControlledNpc(target))
+			{
+				MessageToCaster("You must cast this spell on a creature you are controlling", eChatType.CT_SpellResisted);
+				return false;
+			}
+			if(WorldMgr.GetDistance(target, Caster) > Spell.Range)
+			{
+				MessageToCaster("Tour target is too far away", eChatType.CT_SpellResisted);
+				return false;
+			}
+			return base.CheckBeginCast(selectedTarget);
+		}
 
 		public override void FinishSpellCast(GameLiving target)
 		{
@@ -43,15 +67,22 @@ namespace DOL.GS.Spells
 
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-			foreach (GameNPC npc in Caster.CurrentRegion.GetNPCsInRadius(Caster.X, Caster.Y, Caster.Z, (ushort)m_spell.Value, false))
-				if ((npc.Brain is TurretFNFBrain) && (npc.Brain as IControlledBrain).Owner == Caster)
-					npc.Die(Caster);
-
-			if (Caster.ControlledNpc != null)
+			foreach(GameNPC npc in target.CurrentRegion.GetNPCsInRadius(target.X, target.Y, target.Z, (ushort) Spell.Radius, false))
 			{
-				Caster.ControlledNpc.Body.Die(null);
+				if(npc == null || !npc.IsAlive)
+				{
+					continue;
+				}
+				if(!(npc is TurretPet))
+				{
+					continue;
+				}
+				if(Caster.GetItsControlledNpc(npc))
+				{
+					//PetCounter is decremented when pet die.
+					npc.Die(Caster);
+				}
 			}
-			Caster.PetCounter = 0;
 		}
 	}
 }

@@ -30,125 +30,201 @@ using DOL.GS;
 
 namespace DOL.AI.Brain
 {
-  public class TurretBrain : ControlledNpc
-  {
-    private readonly List<GameLiving> listDefensiveTarget;
-    public List<GameLiving> ListDefensiveTarget
-    {
-      get { return listDefensiveTarget; }
-    }
+	public class TurretBrain : ControlledNpc
+	{
+		private readonly List<GameLiving> listDefensiveTarget;
 
-    public TurretBrain(GameLiving owner) : base(owner)
-    {
-      listDefensiveTarget = new List<GameLiving>(8);
-    }
+		public TurretBrain(GameLiving owner) : base(owner)
+		{
+			listDefensiveTarget = new List<GameLiving>(8);
+		}
 
-    public override int ThinkInterval
-    {
-      get { return 1000; }
-    }
+		public List<GameLiving> ListDefensiveTarget
+		{
+			get { return listDefensiveTarget; }
+		}
 
-    public override bool CheckSpells(eCheckSpellType type)
-    {
-      if(Body == null || ((TurretPet) Body).TurretSpell == null)
-      {
-        return false;
-      }
-      if(type == eCheckSpellType.Defensive)
-      {
-        return CheckDefensiveSpells(((TurretPet) Body).TurretSpell);
-      }
-      // Offensive
-      return CheckOffensiveSpells(((TurretPet) Body).TurretSpell);
-    }
+		public override int ThinkInterval
+		{
+			get { return 1000; }
+		}
 
-    protected override bool CheckDefensiveSpells(Spell spell)
-    {
-      switch (spell.SpellType)
-      {
-        case "HeatColdMatterBuff":
-        case "BodySpiritEnergyBuff":
-        case "ArmorAbsorbtionBuff":
-        case "AblativeArmor":
-          return true;
-      }
-      return false;
-    }
+		public override bool CheckSpells(eCheckSpellType type)
+		{
+			if(Body == null || ((TurretPet) Body).TurretSpell == null)
+			{
+				return false;
+			}
 
-    protected override bool CheckOffensiveSpells(Spell spell)
-    {
-      switch(spell.SpellType)
-      {
-        case "DirectDamage":
-        case "DamageSpeedDecrease":
-        case "SpeedDecrease":
-        case "Taunt":
-        case "MeleeDamageDebuff":
-          return true;
-      }
-      return false;
-    }
+			if(Body.IsCasting)
+			{
+				return true;
+			}
 
-    public bool TrustCast(Spell spell)
-    {
-      if (Body.GetSkillDisabledDuration(((TurretPet)Body).TurretSpell) != 0 && Body.IsCasting)
-      {
-        return false;
-      }
-      if (spell.Radius > 0)
-      {
-        Body.CastSpell(spell, m_mobSpellLine);
-        return true;
-      }
+			if(type == eCheckSpellType.Defensive)
+			{
+				return CheckDefensiveSpells(((TurretPet) Body).TurretSpell);
+			}
+			// Offensive
+			return CheckOffensiveSpells(((TurretPet) Body).TurretSpell);
+		}
 
-      if(Body.TargetObject != null)
-      {
-        if(Body.TargetObject != Body && spell.CastTime > 0)
-        {
-          Body.TurnTo(Body.TargetObject);
-        }
-        Body.CastSpell(spell, m_mobSpellLine);
-        return true;
-      }
-      return false;
-    }
+		protected override bool CheckDefensiveSpells(Spell spell)
+		{
+			switch(spell.SpellType)
+			{
+				case "HeatColdMatterBuff":
+				case "BodySpiritEnergyBuff":
+				case "ArmorAbsorbtionBuff":
+				case "AblativeArmor":
+					// don't need target for radius spell
+					if(((TurretPet) Body).TurretSpell.Radius == 0)
+					{
+						Body.TargetObject = GetDefensiveTarget(((TurretPet) Body).TurretSpell);
+					}
+					TrustCast(((TurretPet) Body).TurretSpell);
+					return true;
+			}
+			return false;
+		}
 
-    public override bool Stop()
-    {
-      ClearAggroList();
-      ListDefensiveTarget.Clear();
-      return base.Stop();
-    }
+		protected override bool CheckOffensiveSpells(Spell spell)
+		{
+			switch(spell.SpellType)
+			{
+				case "DirectDamage":
+				case "DamageSpeedDecrease":
+				case "SpeedDecrease":
+				case "Taunt":
+				case "MeleeDamageDebuff":
+					AttackMostWanted();
+					return true;
+			}
+			return false;
+		}
 
-    #region AI
-    protected override void OnAttackedByEnemy(AttackData ad)
-    {
-    }
-    
-    public override void FollowOwner()
-    {
-    }
+		public bool TrustCast(Spell spell)
+		{
+			if(Body.GetSkillDisabledDuration(((TurretPet) Body).TurretSpell) != 0)
+			{
+				return false;
+			}
 
-    public override void Follow(GameObject target)
-    {
-    }
+			if(spell.Radius > 0)
+			{
+				Body.CastSpell(spell, m_mobSpellLine);
+				return true;
+			}
 
-    protected override void OnFollowLostTarget(GameObject target)
-    {
-    }
+			if(Body.TargetObject != null)
+			{
+				if(Body.TargetObject != Body && spell.CastTime > 0)
+				{
+					Body.TurnTo(Body.TargetObject);
+				}
+				Body.CastSpell(spell, m_mobSpellLine);
+				return true;
+			}
 
-    public override void Goto(GameObject target)
-    {
-    }
+			if(Body.SpellTimer != null && Body.SpellTimer.IsAlive)
+			{
+				Body.SpellTimer.Stop();
+			}
+			return false;
+		}
 
-    public override void ComeHere()
-    {
-    }
+		/// <summary>
+		/// [Ganrod] Nidel: Find and get random target in radius for Defensive spell, like 1.90 EU off servers.
+		/// </summary>
+		/// <param name="spell"></param>
+		/// <returns></returns>
+		public GameLiving GetDefensiveTarget(Spell spell)
+		{
+			if(Body.TargetObject == null || !((GameLiving) Body.TargetObject).IsAlive || LivingHasEffect(Body.TargetObject as GameLiving, spell))
+			{
+				Body.TargetObject = null;
 
-    public override void Stay()
-    {
-    }
+				foreach(GamePlayer player in Body.GetPlayersInRadius((ushort) spell.Range))
+				{
+					//Buff owner at first time if in radius
+					if(player == GetPlayerOwner() && !LivingHasEffect(player, spell))
+					{
+						return player;
+					}
+					if(ListDefensiveTarget.Contains(player) || LivingHasEffect(player, spell))
+					{
+						if(LivingHasEffect(player, spell))
+						{
+							ListDefensiveTarget.Remove(player);
+						}
+						continue;
+					}
+					if(GameServer.ServerRules.IsSameRealm(Body, player, false))
+					{
+						ListDefensiveTarget.Add(player);
+					}
+				}
+				foreach(GameNPC npc in Body.GetNPCsInRadius((ushort) spell.Range))
+				{
+					if(npc == Body && !LivingHasEffect(Body, spell))
+					{
+						return Body;
+					}
+					if(ListDefensiveTarget.Contains(npc) || LivingHasEffect(npc, spell))
+					{
+						if(LivingHasEffect(npc, spell))
+						{
+							ListDefensiveTarget.Remove(npc);
+						}
+						continue;
+					}
+					if(GameServer.ServerRules.IsSameRealm(Body, npc, false))
+					{
+						ListDefensiveTarget.Add(npc);
+					}
+				}
+			}
+			// Get one random target.
+			return ListDefensiveTarget.Count > 0 ? ListDefensiveTarget[Util.Random(ListDefensiveTarget.Count - 1)] : null;
+		}
 
-    #endregion
-  }
+		public override bool Stop()
+		{
+			ClearAggroList();
+			ListDefensiveTarget.Clear();
+			return base.Stop();
+		}
+
+		#region AI
+
+		protected override void OnAttackedByEnemy(AttackData ad)
+		{
+		}
+
+		public override void FollowOwner()
+		{
+		}
+
+		public override void Follow(GameObject target)
+		{
+		}
+
+		protected override void OnFollowLostTarget(GameObject target)
+		{
+		}
+
+		public override void Goto(GameObject target)
+		{
+		}
+
+		public override void ComeHere()
+		{
+		}
+
+		public override void Stay()
+		{
+		}
+
+		#endregion
+	}
 }

@@ -50,10 +50,12 @@ namespace DOL.GS.Spells
 
 			SendEffectAnimation(target, 0, false, 1);
 
+
 			// calc damage
 			AttackData ad = CalculateDamageToTarget(target, effectiveness);
 			DamageTarget(ad, true);
-            if (ad.Damage != 0) SendDamageMessages(ad);
+			if (ad.Damage != 0) SendDamageMessages(ad);
+		
 
 			// Interrupt only if target is actually casting
 			if (target.IsCasting)

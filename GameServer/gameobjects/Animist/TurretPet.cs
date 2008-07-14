@@ -20,6 +20,7 @@
  * [Ganrod] Nidel 2008-07-08
  * - Class for turret, like 1.90 EU official servers: Turret isn't interrupted
  */
+
 namespace DOL.GS
 {
   public class TurretPet : GamePet
@@ -29,19 +30,18 @@ namespace DOL.GS
     {
     }
 
-    private Spell turretSpell;
+  	private Spell turretSpell;
 
-    /// <summary>
+  	/// <summary>
     /// Get first spell only
     /// </summary>
     public Spell TurretSpell
   	{
   		get { return turretSpell; }
   		set { turretSpell = value; }
-    }
+  	}
 
-
-    /// <summary>
+  	/// <summary>
     /// [Ganrod] Nidel: Don't interrupt turret cast.
     /// </summary>
     /// <param name="duration"></param>

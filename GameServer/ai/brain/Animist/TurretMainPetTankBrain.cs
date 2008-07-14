@@ -21,6 +21,7 @@
  * - AI for turret tank, like 1.90 EU officiel servers
  * - Turret tank, cast spell and after cast, launch one body attack, again and again...
  */
+using DOL.Events;
 using DOL.GS;
 
 
@@ -31,14 +32,48 @@ namespace DOL.AI.Brain
     public TurretMainPetTankBrain(GameLiving owner) : base(owner) { }
 
 
-    protected override void AttackMostWanted()
+	public override void Notify(DOLEvent e, object sender, System.EventArgs args)
+	{
+	  TurretPet pet = sender as TurretPet;
+	  base.Notify(e, sender, args);
+	  if (pet != null && e == GameLivingEvent.CastFinished && (pet.Brain is TurretMainPetTankBrain) && pet == Body && AggressionState != eAggressionState.Passive)
+	  {
+		if (Body.TargetObject != null)
+		  {
+			if (Body.IsCasting)
+			{
+				Body.StopCurrentSpellcast();
+			}
+		  	Body.StartAttack(Body.TargetObject);
+		  }
+		}
+	  if (pet != null && e == GameLivingEvent.AttackFinished && (pet.Brain is TurretMainPetTankBrain) && pet.Brain == this && AggressionState != eAggressionState.Passive)
+		{
+		  Body.StopAttack();
+		  AttackMostWanted();
+		}
+	}
+
+  	protected override void AttackMostWanted()
     {
+	  // Force to wait body attack before casting.
+	  if(Body.AttackState)
+		return;
       base.AttackMostWanted();
       if(Body.TargetObject != null)
       {
         Body.StartAttack(Body.TargetObject);
       }
     }
+
+
+	protected override void OnAttackedByEnemy(AttackData ad)
+	{
+	  if (AggressionState != eAggressionState.Passive)
+	  {
+		AttackMostWanted();
+	  }
+	}
 
   }
 }
