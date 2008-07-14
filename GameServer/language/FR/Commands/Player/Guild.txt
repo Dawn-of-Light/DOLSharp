@@ -1,114 +1,114 @@
 
 # /Guilds
-Scripts.Player.Guild.AccountRemoved:			{0} a ete retire par {1} de la guilde.	
-Scripts.Player.Guild.ActiveBuff:			Votre guilde possede dejà un sort d'amelioration. Vous devez attendre que le sort expire pour le relancer.	
-Scripts.Player.Guild.AllianceAlreadyOther:		Cette guilde possede dejà une alliance.	
-Scripts.Player.Guild.AllianceAnsCancel:			L'offre d'alliance a ete annulee.	
-Scripts.Player.Guild.AllianceDeclined:			Vous declinez la proposition d'alliance.
-Scripts.Player.Guild.AllianceDeclinedOther:		L'offre d'alliance a ete annulee	
+Scripts.Player.Guild.AccountRemoved:			{0} a été retiré par {1} de la guilde.	
+Scripts.Player.Guild.ActiveBuff:			Votre guilde possède déjà un sort d'amélioration. Vous devez attendre que le sort expire pour le relancer.	
+Scripts.Player.Guild.AllianceAlreadyOther:		Cette guilde possède déjà une alliance.	
+Scripts.Player.Guild.AllianceAnsCancel:			L'offre d'alliance a été annulée.	
+Scripts.Player.Guild.AllianceDeclined:			Vous déclinez la proposition d'alliance.
+Scripts.Player.Guild.AllianceDeclinedOther:		L'offre d'alliance a été annulée	
 Scripts.Player.Guild.AllianceDisabled:			Les Alliances ne sont pas actives sur ce serveur.	
 Scripts.Player.Guild.AllianceIndexNotVal:		La valeur de l'alliance n'est pas un nombre valide.	
 Scripts.Player.Guild.AllianceInfo:			Information d'alliance sur {0}:
-Scripts.Player.Guild.AllianceInvite:			Vous avez invite une guilde à rejoindre votre alliance.
-Scripts.Player.Guild.AllianceInvited:			Vous avez ete invite(e) à rejoindre l'alliance de {0}.	
+Scripts.Player.Guild.AllianceInvite:			Vous avez invité une guilde à rejoindre votre alliance.
+Scripts.Player.Guild.AllianceInvited:			Vous avez été invité(e) à rejoindre l'alliance de {0}.	
 Scripts.Player.Guild.AllianceLeader:			Chef d'alliance {0}	
-Scripts.Player.Guild.AllianceMax:			Vous etes incapable d'inviter cette guilde dans votre alliance, car votre alliance contient dejà le nombre maximum de guildes.	
+Scripts.Player.Guild.AllianceMax:			Vous êtes incapable d'inviter cette guilde dans votre alliance, car votre alliance contient déjà le nombre maximum de guildes.	
 Scripts.Player.Guild.AllianceMember:			{0} - {1}	
 Scripts.Player.Guild.AllianceMembers:			Membres de l'alliance :	
-Scripts.Player.Guild.AllianceMemNotSel:			Vous devez choisir un joueur parmi la meme alliance.	
+Scripts.Player.Guild.AllianceMemNotSel:			Vous devez choisir un joueur parmi la même alliance.	
 Scripts.Player.Guild.AllianceNoGMSelected:		Vous devez choisir un Maître de guilde que vous voulez inviter.	
 Scripts.Player.Guild.AllianceNoLeader:			Pas de chef d'alliance
-Scripts.Player.Guild.AllianceNotLeader:			Vous devez etre la guilde du chef de l'alliance pour pouvoir enlever une guilde de l'alliance.	
-Scripts.Player.Guild.AllianceNotMember:			Vous devez etre dans une alliance pour le faire.	
+Scripts.Player.Guild.AllianceNotLeader:			Vous devez être la guilde du chef de l'alliance pour pouvoir enlever une guilde de l'alliance.	
+Scripts.Player.Guild.AllianceNotMember:			Vous devez être dans une alliance pour le faire.	
 Scripts.Player.Guild.AlreadyInGuild:			{0} est un membre de votre guilde.	
-Scripts.Player.Guild.AlreadyInGuild:			Il est dejà membre d'une guilde.	
+Scripts.Player.Guild.AlreadyInGuild:			Il est déjà membre d'une guilde.	
 Scripts.Player.Guild.AMotdSet:				Vous avez mis le message d'alliance à jour.	
-Scripts.Player.Guild.BannerAlready:			Votre guilde possede dejà une banniere.	
-Scripts.Player.Guild.BannerBought:			Vous avez achete une banniere de guilde pour {0} points de merite.	
-Scripts.Player.Guild.BannerGroupSummoned:		Quelqu'un dans votre groupe a dejà invoque la banniere de guilde
-Scripts.Player.Guild.BannerGuildSummoned:		Quelqu'un dans votre guilde a dejà invoque la banniere de guilde.
-Scripts.Player.Guild.BannerNoGroup:			Vous avez besoin d'un groupe pour invoquer une banniere.	
-Scripts.Player.Guild.BannerNone:			Votre guilde ne possede pas de banniere de guilde.	
-Scripts.Player.Guild.BannerNotAfford:			Vous avez besoin de 50,000 points de merite pour acheter une banniere de guilde!
-Scripts.Player.Guild.BannerSummoned:			Vous avez invoque votre banniere de guilde.	
-Scripts.Player.Guild.BannerUnsummoned:			Vous avez retire votre banniere de guilde.	
-Scripts.Player.Guild.BuffActivated:			[Guild Buff] {0} a utilise  1000 Points de Merite de Guilde et a active une Amelioration de Guilde!	
+Scripts.Player.Guild.BannerAlready:			Votre guilde possède déjà une bannière.	
+Scripts.Player.Guild.BannerBought:			Vous avez acheté une bannière de guilde pour {0} points de mérite.	
+Scripts.Player.Guild.BannerGroupSummoned:		Quelqu'un dans votre groupe a déjà invoqué la bannière de guilde
+Scripts.Player.Guild.BannerGuildSummoned:		Quelqu'un dans votre guilde a déjà invoqué la bannière de guilde.
+Scripts.Player.Guild.BannerNoGroup:			Vous avez besoin d'un groupe pour invoquer une bannière.	
+Scripts.Player.Guild.BannerNone:			Votre guilde ne possède pas de bannière de guilde.	
+Scripts.Player.Guild.BannerNotAfford:			Vous avez besoin de 50,000 points de mérite pour acheter une bannière de guilde!
+Scripts.Player.Guild.BannerSummoned:			Vous avez invoqué votre bannière de guilde.	
+Scripts.Player.Guild.BannerUnsummoned:			Vous avez retiré votre bannière de guilde.	
+Scripts.Player.Guild.BuffActivated:			[Guild Buff] {0} a utilisé  1000 Points de Mérite de Guilde et a activé une Amélioration de Guilde!	
 Scripts.Player.Guild.BuffBountyPoints:			Votre guilde gagnera maintenant 5 % aux primes de royaume de plus pendant 24 heures !	
 Scripts.Player.Guild.BuffBPActivated:			[Guild Buff] Votre guilde recevra un bonus aux primes de royaume pendant 24 heures !	
-Scripts.Player.Guild.BuffMPActivated:			[Guild Buff] Votre guilde recevra un bonus aux points de merite de guilde pendant 24 heures !	
+Scripts.Player.Guild.BuffMPActivated:			[Guild Buff] Votre guilde recevra un bonus aux points de mérite de guilde pendant 24 heures !	
 Scripts.Player.Guild.BuffRealmPoints:			Votre guilde gagnera maintenant 5 % aux points de royaume de plus pendant 24 heures !	
-Scripts.Player.Guild.ClaimNotNear:			Vous devez etre pres du Lord pour revendiquer ce fort.	
+Scripts.Player.Guild.ClaimNotNear:			Vous devez être près du Lord pour revendiquer ce fort.	
 Scripts.Player.Guild.ConfirmLeave:			Voulez-vous vraiment partir {0}?
-Scripts.Player.Guild.DemotedHigherThanPlayer:		Vous pouvez seulement retrograder les grades au-dessous du votre.	
-Scripts.Player.Guild.DemotedOther:			{0} a retrograde au rang {1}.	
-Scripts.Player.Guild.DemotedSelf:			Vous avez ete retrograde(e) au rang {0}.	
-Scripts.Player.Guild.DepositAmount:			Vous deposez {0} dans la caisse de guilde.	
-Scripts.Player.Guild.DepositFull:			La caisse de guilde semble etre pleine.	
-Scripts.Player.Guild.DepositInvalid:			Ce n'est pas un depôt valide.	
+Scripts.Player.Guild.DemotedHigherThanPlayer:		Vous pouvez seulement rétrograder les grades au-dessous du votre.	
+Scripts.Player.Guild.DemotedOther:			{0} a rétrogradé au rang {1}.	
+Scripts.Player.Guild.DemotedSelf:			Vous avez été rétrogradé(e) au rang {0}.	
+Scripts.Player.Guild.DepositAmount:			Vous déposez {0} dans la caisse de guilde.	
+Scripts.Player.Guild.DepositFull:			La caisse de guilde semble être pleine.	
+Scripts.Player.Guild.DepositInvalid:			Ce n'est pas un dépôt valide.	
 Scripts.Player.Guild.DepositTooMuch:		Vous n'avez pas assez d'argent pour le faire!
 Scripts.Player.Guild.DuesOff:				La cotisation de guilde n'est actuellement pas fonctionnelle.	
 Scripts.Player.Guild.DuesOn:				La cotisation de guilde est de  {0} pourcent.	
-Scripts.Player.Guild.EmailSet:				L'e-mail de guilde est maintenant fixe : {0}.	
-Scripts.Player.Guild.EmblemAlready:			Votre guilde a dejà un embleme mais vous pouvez le changer pour 100 pieces d'or. Vous devez choisir l'EmblemNPC de nouveau pour effectuer cette procedure.
-Scripts.Player.Guild.EmblemNeedGold:			Vous devez avoir 200 pieces d'or pour changer de nouveau votre embleme de guilde.	
-Scripts.Player.Guild.EmblemNeedNPC:			Vous devez selectionner l'EmblemNPC.	
-Scripts.Player.Guild.EmblemNPCNotSelected:		Vous devez selectionner l'EmblemNPC.	
-Scripts.Player.Guild.EmblemRedo:			Vous voulez refaire votre embleme pour 100 pieces d'or ?	
-Scripts.Player.Guild.FormNoGroup:			Vous devez etre dans un groupe pour former une guilde.	
-Scripts.Player.Guild.FormNoMembers:			Vous avez besoin de {0} membres dans votre groupe pour creer une guilde.	
-Scripts.Player.Guild.GuildCreated:			La guilde {0} vient d'etre creee avec {1} comme chef.	
-Scripts.Player.Guild.GuildExists:			Cette guilde ne peut etre creee car elle existe dejà.	
-Scripts.Player.Guild.GuildForceLeave:			{0} est retire(e) de la guilde par {1}.	
+Scripts.Player.Guild.EmailSet:				L'e-mail de guilde est maintenant fixé : {0}.	
+Scripts.Player.Guild.EmblemAlready:			Votre guilde a déjà un emblème mais vous pouvez le changer pour 100 pièces d'or. Vous devez choisir l'EmblemNPC de nouveau pour effectuer cette procédure.
+Scripts.Player.Guild.EmblemNeedGold:			Vous devez avoir 200 piéces d'or pour changer de nouveau votre emblème de guilde.	
+Scripts.Player.Guild.EmblemNeedNPC:			Vous devez sélectionner l'EmblemNPC.	
+Scripts.Player.Guild.EmblemNPCNotSelected:		Vous devez sélectionner l'EmblemNPC.	
+Scripts.Player.Guild.EmblemRedo:			Vous voulez refaire votre emblème pour 100 pièces d'or ?	
+Scripts.Player.Guild.FormNoGroup:			Vous devez être dans un groupe pour former une guilde.	
+Scripts.Player.Guild.FormNoMembers:			Vous avez besoin de {0} membres dans votre groupe pour créer une guilde.	
+Scripts.Player.Guild.GuildCreated:			La guilde {0} vient d'être créée avec {1} comme chef.	
+Scripts.Player.Guild.GuildExists:			Cette guilde ne peut être créée car elle existe déjà.	
+Scripts.Player.Guild.GuildForceLeave:			{0} est retiré(e) de la guilde par {1}.	
 Scripts.Player.Guild.GuildLeave:			Vous venez de quitter la guilde.	
 Scripts.Player.Guild.GuildLevelReq:			Votre guilde n'est pas assez haut niveau pour cette commande.	
 Scripts.Player.Guild.GuildNotExist:			Cette guilde n'existe pas.	
 Scripts.Player.Guild.Help.GuildACancel:			'/gc acancel' Annule une invitation au sein d'une alliance.	
 Scripts.Player.Guild.Help.GuildAccept:			'/gc aaccept' Accepte une invitation au sein d'une alliance.
 Scripts.Player.Guild.Help.GuildAccept:			'/gc accept ' Accepte une invitation au sein d'une guilde.	
-Scripts.Player.Guild.Help.GuildADecline:		'/gc adecline' Decline une invitation au sein d'une alliance.	
+Scripts.Player.Guild.Help.GuildADecline:		'/gc adecline' Décline une invitation au sein d'une alliance.	
 Scripts.Player.Guild.Help.GuildAInvite:			'/gc ainvite' Invite une autre guilde à rejoindre l'alliance.	
 Scripts.Player.Guild.Help.GuildAlli:			'/gc alliance' Affiche l'alliance dont la guilde fait partie.
 Scripts.Player.Guild.Help.GuildAMotd:			'/gc amotd <text>' Affiche le message du jour de l'alliance.
-Scripts.Player.Guild.Help.GuildARemove:			'/gc aremove' Expulse la guilde selectionnee de l'alliance.
-Scripts.Player.Guild.Help.GuildARemoveAlli:		'/gc aremove alliance [#]' Expulse la guilde specifiee de l'alliance (enumeree par un nombre).
+Scripts.Player.Guild.Help.GuildARemove:			'/gc aremove' Expulse la guilde sélectionnée de l'alliance.
+Scripts.Player.Guild.Help.GuildARemoveAlli:		'/gc aremove alliance [#]' Expulse la guilde spécifiée de l'alliance (énumérée par un nombre).
 Scripts.Player.Guild.Help.GuildAutoRemove:		'/gc autoremove <Nom du joueur>' Expulse un personnage de la guilde.
 Scripts.Player.Guild.Help.GuildAutoRemoveAcc:		'/gc autoremove account <Nom du joueur>' Expulse de la guilde tous les personnages d'un compte.
-Scripts.Player.Guild.Help.GuildBannerSummon:		'/gc summon' Invoque la banniere de guilde.	
-Scripts.Player.Guild.Help.GuildBuff:			'/gc buff <realmpoints/bountypoints>' Achete un bonus de merite de guilde.
-Scripts.Player.Guild.Help.GuildBuyBanner:		'/gc buybanner' - Achete une banniere de guilde.	
+Scripts.Player.Guild.Help.GuildBannerSummon:		'/gc summon' Invoque la bannière de guilde.	
+Scripts.Player.Guild.Help.GuildBuff:			'/gc buff <realmpoints/bountypoints>' Achète un bonus de mérite de guilde.
+Scripts.Player.Guild.Help.GuildBuyBanner:		'/gc buybanner' - Achéte une bannière de guilde.	
 Scripts.Player.Guild.Help.GuildCancel:			'/gc cancel <option> [value]' Annule une invitation à rejoindre la guilde.
-Scripts.Player.Guild.Help.GuildClaim:			'/gc claim' Reclame une tour ou un fort pour la guilde.
-Scripts.Player.Guild.Help.GuildDecline:			'/gc decline' Decline une invitation à rejoindre la guilde.
-Scripts.Player.Guild.Help.GuildDemote:			'/gc demote <rank#> [name]' Retrograde le joueur indique au rang desire.
-Scripts.Player.Guild.Help.GuildDeposit:			'/gc deposit <amount>' Depose une somme dans la caisse de guilde.	
-Scripts.Player.Guild.Help.GuildDues:			'/gc dues <amount>' Active ou desactive le systeme de taxation de la guilde (2% de l'argent gagne sur des monstres).
+Scripts.Player.Guild.Help.GuildClaim:			'/gc claim' Réclame une tour ou un fort pour la guilde.
+Scripts.Player.Guild.Help.GuildDecline:			'/gc decline' Décline une invitation à rejoindre la guilde.
+Scripts.Player.Guild.Help.GuildDemote:			'/gc demote <rank#> [name]' Rétrograde le joueur indiqué au rang désiré.
+Scripts.Player.Guild.Help.GuildDeposit:			'/gc deposit <amount>' Dépose une somme dans la caisse de guilde.	
+Scripts.Player.Guild.Help.GuildDues:			'/gc dues <amount>' Active ou désactive le système de taxation de la guilde (2% de l'argent gagné sur des monstres).
 Scripts.Player.Guild.Help.GuildEdit:			'/gc edit' Listes les parties modifiables de la structure de guilde.
 Scripts.Player.Guild.Help.GuildEditACHear:		'/gc edit <ranknum> achear <y/n>' Permet à un rang de pouvoir lire le canal d'alliance.
 Scripts.Player.Guild.Help.GuildEditACSpeak:		'/gc edit <ranknum> acspeak <y/n>' Permet à un rang de pouvoir parler sur le canal alliance.
-Scripts.Player.Guild.Help.GuildEditAlli:		'/gc edit <ranknum> alli <y/n>'  Permet au chef de guilde d'accorder à un rang la possibilite d'integrer ou quitter une alliance.
-Scripts.Player.Guild.Help.GuildEditClaim:		'/gc edit <ranknum> claim <y/n>'  Permet au chef de guilde d'accorder à un rang la possibilite de capturer un fort ou une tour pour la guilde.	
+Scripts.Player.Guild.Help.GuildEditAlli:		'/gc edit <ranknum> alli <y/n>'  Permet au chef de guilde d'accorder à un rang la possibilité d'intégrer ou quitter une alliance.
+Scripts.Player.Guild.Help.GuildEditClaim:		'/gc edit <ranknum> claim <y/n>'  Permet au chef de guilde d'accorder à un rang la possibilité de capturer un fort ou une tour pour la guilde.	
 Scripts.Player.Guild.Help.GuildEditDues:		'/gc edit <ranknum> dues <y/n>'  Permet de changer la valeur de la taxation de guilde.
-Scripts.Player.Guild.Help.GuildEditEmblem:		'/gc edit <ranknum> emblem <y/n>' Permet à un rang de pouvoir porter l'embleme de la guilde.
+Scripts.Player.Guild.Help.GuildEditEmblem:		'/gc edit <ranknum> emblem <y/n>' Permet à un rang de pouvoir porter l'emblème de la guilde.
 Scripts.Player.Guild.Help.GuildEditGCHear:		'/gc edit <ranknum> gchear <y/n>' Permet à un rang de pouvoir lire le canal de guilde.	
 Scripts.Player.Guild.Help.GuildEditGCSpeak:		'/gc edit <ranknum> gcspeak <y/n>' Permet à un rang de pouvoir parler sur le canal guilde.
-Scripts.Player.Guild.Help.GuildEditInvite:		'/gc edit <ranknum> invite <y/n>' Permet au chef de guilde d'accorder à un rang la possibilite d'inviter de nouveaux membres.
+Scripts.Player.Guild.Help.GuildEditInvite:		'/gc edit <ranknum> invite <y/n>' Permet au chef de guilde d'accorder à un rang la possibilité d'inviter de nouveaux membres.
 Scripts.Player.Guild.Help.GuildEditOCHear:		'/gc edit <ranknum> ochear <y/n>' Permet à un rang de pouvoir lire le canal Officier.	
 Scripts.Player.Guild.Help.GuildEditOCSpeak:		'/gc edit <ranknum> ocspeak <y/n>' Permet à un rang de pouvoir parler sur le canal Officier.
-Scripts.Player.Guild.Help.GuildEditPromote:		'/gc edit <ranknum> promote <y/n>' Permet de promouvoir ou retrograder le joueur selectionne.	
+Scripts.Player.Guild.Help.GuildEditPromote:		'/gc edit <ranknum> promote <y/n>' Permet de promouvoir ou rétrograder le joueur sélectionné.	
 Scripts.Player.Guild.Help.GuildEditRankLevel:		'/gc edit <ranknum> ranklevel <level>' 
-Scripts.Player.Guild.Help.GuildEditRelease:		'/gc edit <ranknum> release <y/n>'  Libere le contrôle de la tour/fort de guilde.	
-Scripts.Player.Guild.Help.GuildEditRemove:		'/gc edit <ranknum> remove <y/n>' Permet de pouvoir retirer le joueur selectionne de la guilde.
-Scripts.Player.Guild.Help.GuildEditTitle:		'/gc edit <ranknum> title <text>' Cree un titre au rang choisi <#> pour la guilde.	
-Scripts.Player.Guild.Help.GuildEditUpgrade:		'/gc edit <ranknum> upgrade <y/n>'  Permet au chef de guilde d'accorder à un rang la possibilite d'integrer ou quitter une alliance.
+Scripts.Player.Guild.Help.GuildEditRelease:		'/gc edit <ranknum> release <y/n>'  Libére le contrôle de la tour/fort de guilde.	
+Scripts.Player.Guild.Help.GuildEditRemove:		'/gc edit <ranknum> remove <y/n>' Permet de pouvoir retirer le joueur sélectionné de la guilde.
+Scripts.Player.Guild.Help.GuildEditTitle:		'/gc edit <ranknum> title <text>' Crée un titre au rang choisi <#> pour la guilde.	
+Scripts.Player.Guild.Help.GuildEditUpgrade:		'/gc edit <ranknum> upgrade <y/n>'  Permet au chef de guilde d'accorder à un rang la possibilité d'intégrer ou quitter une alliance.
 Scripts.Player.Guild.Help.GuildEditView:		'/gc edit <ranknum> view <y/n>'  Permet au rang choisi de pouvoir voir les membres de l'alliance.
 Scripts.Player.Guild.Help.GuildEditWithdraw:		'/gc edit <ranknum> withdraw <y/n>'  Permet de donner l'autorisation de retirer les fonds de votre caisse de guilde.
 Scripts.Player.Guild.Help.GuildEmail:			'/gc email <contact@guildpage.com>' Affiche l'adresse internet des contacts au sein de la guilde.
-Scripts.Player.Guild.Help.GuildEmblem:			'/gc emblem' Presentation de l'embleme.	
-Scripts.Player.Guild.Help.GuildForm:			'/gc form <Nom de guilde>' Creation d'une guilde (8 joueurs requis dans le groupe).	
+Scripts.Player.Guild.Help.GuildEmblem:			'/gc emblem' Présentation de l'emblème.	
+Scripts.Player.Guild.Help.GuildForm:			'/gc form <Nom de guilde>' Création d'une guilde (8 joueurs requis dans le groupe).	
 Scripts.Player.Guild.Help.GuildGMAddPlayer:		'/gc addplayer <player> to <guild>' Ajoute un joueur à la guilde.	
 Scripts.Player.Guild.Help.GuildGMCommands:		Game Master commandes :	
-Scripts.Player.Guild.Help.GuildGMCreate:		'/gc create <Name>' Cree une guilde et designe le joueur selectionne comme chef.
-Scripts.Player.Guild.Help.GuildGMPurge:			'/gc purge <Name>' Purge completement une guilde.	
+Scripts.Player.Guild.Help.GuildGMCreate:		'/gc create <Name>' Crée une guilde et désigne le joueur sélectionné comme chef.
+Scripts.Player.Guild.Help.GuildGMPurge:			'/gc purge <Name>' Purge complétement une guilde.	
 Scripts.Player.Guild.Help.GuildGMRemovePlayer:		'/gc removeplayer <player> from <guild>' Retire un joueur de la guilde.	
 Scripts.Player.Guild.Help.GuildGMRename:		'/gc rename <OldName> to <NewName' Renomme une guilde <ancien nom> <nouveau nom>.	
 Scripts.Player.Guild.Help.GuildInfo:			'/gc info' Liste des informations de cette guilde.	
@@ -116,72 +116,72 @@ Scripts.Player.Guild.Help.GuildInvite:			'/gc invite [joueur]' Invite un joueur 
 Scripts.Player.Guild.Help.GuildLeader:			'/gc leader [joueur]' Choisi le nouveau chef de guilde.	
 Scripts.Player.Guild.Help.GuildList:			'/gc list' Informe le joueur de toutes les guildes sur le royaume.	
 Scripts.Player.Guild.Help.GuildMotd:			'/gc motd <text>' Modifie le message du jour de la guilde.	
-Scripts.Player.Guild.Help.GuildNoteSelf:		'/gc noteself <note>' Cree une note à votre propos.
-Scripts.Player.Guild.Help.GuildOMotd:			'/gc omotd <text>' Definit le message du jour des officiers de votre guilde.
-Scripts.Player.Guild.Help.GuildPromote:			'/gc promote <rank#> [name]' Promeut le personnage indique au rang desire.	
+Scripts.Player.Guild.Help.GuildNoteSelf:		'/gc noteself <note>' Crée une note à votre propos.
+Scripts.Player.Guild.Help.GuildOMotd:			'/gc omotd <text>' Définit le message du jour des officiers de votre guilde.
+Scripts.Player.Guild.Help.GuildPromote:			'/gc promote <rank#> [name]' Promeut le personnage indiqué au rang désiré.	
 Scripts.Player.Guild.Help.GuildQuit:			'/gc quit' Pour quitter une guilde.	
 Scripts.Player.Guild.Help.GuildRanks:			'/gc ranks' Affiche les rangs de la guilde. Les chefs de guilde peuvent aussi utiliser cette commande pour modifier les rangs.
-Scripts.Player.Guild.Help.GuildRemAccount:		'/gc removeaccount <accountname>' Retire d'une guilde tous les personnages du compte sur lequel se trouve le personnage selectionne.	
+Scripts.Player.Guild.Help.GuildRemAccount:		'/gc removeaccount <accountname>' Retire d'une guilde tous les personnages du compte sur lequel se trouve le personnage sélectionné.	
 Scripts.Player.Guild.Help.GuildRemove:			'/gc remove <Nom du joueur>' Retire le joueur de la guilde.	
 Scripts.Player.Guild.Help.GuildUsage:			Usage :	
 Scripts.Player.Guild.Help.GuildWebpage:			'/gc webpage <la.pagedeguilde.fr>' Option non obligatoire qui permet d'indiquer le site de guilde aux membres et sur le herald officiel.	
-Scripts.Player.Guild.Help.GuildWho:			'/gc who' Montre les joueurs de la guilde connectes.	
+Scripts.Player.Guild.Help.GuildWho:			'/gc who' Montre les joueurs de la guilde connectés.	
 Scripts.Player.Guild.Help.GuildWithdraw:		'/gc withdraw <amount>' Retire les fonds de votre caisse de guilde.
-Scripts.Player.Guild.InCombat:				Vous ne pouvez pas invoquer la banniere de guilde en combat !	
+Scripts.Player.Guild.InCombat:				Vous ne pouvez pas invoquer la bannière de guilde en combat !	
 Scripts.Player.Guild.InfoAMotd:				Message de l'alliance: {0}	
 Scripts.Player.Guild.InfoCEmail:			Contact Email: {0}	
-Scripts.Player.Guild.InfoGDuesBank:			Taxe: {0} Banque de guilde: {1} pieces de cuivre.	
+Scripts.Player.Guild.InfoGDuesBank:			Taxe: {0} Banque de guilde: {1} pièces de cuivre.	
 Scripts.Player.Guild.InfoGuild:				Informations de guilde {0}:	
 Scripts.Player.Guild.InfoGuildLevel:			Niveau de la guilde : {0}	
 Scripts.Player.Guild.InfoMotd:				Message :  {0}	
 Scripts.Player.Guild.InfoOMotd:				Message des officiers : {0}	
-Scripts.Player.Guild.InfoRPBPMP:			Points de Royaume: {0} Primes de Royaume: {1} Points de Merite: {2}	
+Scripts.Player.Guild.InfoRPBPMP:			Points de Royaume: {0} Primes de Royaume: {1} Points de Mérite: {2}	
 Scripts.Player.Guild.InfoWebpage:			Webpage : {0}	
 Scripts.Player.Guild.InvalidLetters:			Les lettres mises sont invalides.	
 Scripts.Player.Guild.InvalidRank:			Ce n'est pas un rang valide.	
 Scripts.Player.Guild.InviteDead:			Vous ne pouvez pas inviter un joueur mort à rejoindre la guilde.	
-Scripts.Player.Guild.InviteNoSelected:			Vous devez selectionner un joueur.	
+Scripts.Player.Guild.InviteNoSelected:			Vous devez sélectionner un joueur.	
 Scripts.Player.Guild.InviteNoSelf:			Vous ne pouvez pas vous inviter.	
-Scripts.Player.Guild.InviteNotThis:			Ce membre ne peut etre invite.
+Scripts.Player.Guild.InviteNotThis:			Ce membre ne peut être invité.
 Scripts.Player.Guild.InviteRecieved:			{0} vous invite à rejoindre la guilde.	
 Scripts.Player.Guild.InviteSent:			Vous lancez l'invitation pour {0} rejoindre la guilde.	
-Scripts.Player.Guild.Keep:				Votre guilde possede dejà un fort {0}.	
+Scripts.Player.Guild.Keep:				Votre guilde possède déjà un fort {0}.	
 Scripts.Player.Guild.LevelUp:				[Guild] Votre guilde a atteint le niveau {0}!	
-Scripts.Player.Guild.LoginsOff:				Vous avez desactive la fonction qui vous permet de voir les membres de la guilde se connecter, tappez /gc logins pour activer la fonction.	
-Scripts.Player.Guild.LoginsOn:				Vous avez active la fonction qui vous permet de voir les membres de la guilde se connecter, tapper /gc logins pour desactiver la fonction.
-Scripts.Player.Guild.MadeLeader:			Vous etes desormais le chef de {0}.	
+Scripts.Player.Guild.LoginsOff:				Vous avez désactivé la fonction qui vous permet de voir les membres de la guilde se connecter, tappez /gc logins pour activer la fonction.	
+Scripts.Player.Guild.LoginsOn:				Vous avez activé la fonction qui vous permet de voir les membres de la guilde se connecter, tapper /gc logins pour désactiver la fonction.
+Scripts.Player.Guild.MadeLeader:			Vous êtes désormais le chef de {0}.	
 Scripts.Player.Guild.MadeLeaderOther:			{0} a promu {1} comme nouveau chef de guilde.	
-Scripts.Player.Guild.MemberLogin:			{0} est maintenant connecte(e).	
-Scripts.Player.Guild.MemberLogoff:			{0} est maintenant deconnecte(e).	
-Scripts.Player.Guild.MemberRemoved:			{0} a retire {1} de la guilde.	
-Scripts.Player.Guild.MeritPointReq:			Votre guilde ne possede pas les points de merite necessaires à cette action.	
+Scripts.Player.Guild.MemberLogin:			{0} est maintenant connecté(e).	
+Scripts.Player.Guild.MemberLogoff:			{0} est maintenant déconnecté(e).	
+Scripts.Player.Guild.MemberRemoved:			{0} a retiré {1} de la guilde.	
+Scripts.Player.Guild.MeritPointReq:			Votre guilde ne possède pas les points de mérite nécessaires à cette action.	
 Scripts.Player.Guild.MotdSet:				Vous changez le message de jour de guilde.	
 Scripts.Player.Guild.NoKeep:				Vous n'avez pas actuellement de fort pour utiliser cette commande.
-Scripts.Player.Guild.NoPlayerSelected:			Selectionnez un joueur.	
-Scripts.Player.Guild.NoPlayersInAcc:			Il n'y a pas de joueur du compte demande dans votre guilde.	
-Scripts.Player.Guild.NoPrivilages:			Votre rang de guilde ne possede pas assez de privileges pour utiliser cette commande.	
+Scripts.Player.Guild.NoPlayerSelected:			Sélectionnez un joueur.	
+Scripts.Player.Guild.NoPlayersInAcc:			Il n'y a pas de joueur du compte demandé dans votre guilde.	
+Scripts.Player.Guild.NoPrivilages:			Votre rang de guilde ne possède pas assez de priviléges pour utiliser cette commande.	
 Scripts.Player.Guild.NoteSet:				La note de guilde est : {0}	
 Scripts.Player.Guild.NotInYourGuild:			Ce joueur n'est pas dans la guilde.	
-Scripts.Player.Guild.NotMember:				Vous devez etre dans une guilde pour utiliser cette commande.	
-Scripts.Player.Guild.OMotdSet:				le message des officiers est maintenant actualise.	
+Scripts.Player.Guild.NotMember:				Vous devez être dans une guilde pour utiliser cette commande.	
+Scripts.Player.Guild.OMotdSet:				le message des officiers est maintenant actualisé.	
 Scripts.Player.Guild.PlayerNotFound:			Ce joueur n'est pas en ligne ou se trouve sur un autre royaume.	
 Scripts.Player.Guild.PromotedOther:			{0} est promu(e) au rang {1}.	
-Scripts.Player.Guild.PromotedSelf:			Vous etes promu(e) au rang {0}.	
-Scripts.Player.Guild.PromoteHigherThanPlayer:		Vous pouvez seulement promouvoir un joueur à un rang inferieur au votre.	
-Scripts.Player.Guild.Purged:				{0} est purge.	
-Scripts.Player.Guild.RankACHearSet:			Vous avez {0} l'acces à ACHear au rang {1}.	
+Scripts.Player.Guild.PromotedSelf:			Vous êtes promu(e) au rang {0}.	
+Scripts.Player.Guild.PromoteHigherThanPlayer:		Vous pouvez seulement promouvoir un joueur à un rang inférieur au votre.	
+Scripts.Player.Guild.Purged:				{0} est purgé.	
+Scripts.Player.Guild.RankACHearSet:			Vous avez {0} l'accés à ACHear au rang {1}.	
 Scripts.Player.Guild.RankACSpeakSet:			Vous avez {0} l'ACSpeak au rang {1}.	
 Scripts.Player.Guild.RankAlliSet:			Vous avez {0} l'Alliance au rang {1}.	
 Scripts.Player.Guild.RankClaimSet:			Vous avez {0} les captures de fort au rang {1}.	
 Scripts.Player.Guild.RankDuesSet:			Vous avez {0} la taxe de guilde au rang {1}.	
-Scripts.Player.Guild.RankEmblemSet:			Vous avez {0} l'embleme au rang {1}.	
+Scripts.Player.Guild.RankEmblemSet:			Vous avez {0} l'emblème au rang {1}.	
 Scripts.Player.Guild.RankGCHearSet:			Vous avez {0} le GCHear au rang {1}.	
 Scripts.Player.Guild.RankGCSpeakSet:			Vous avez {0} the GCSpeak au rang {1}.	
 Scripts.Player.Guild.RankInviteSet:			Vous avez {0} les invitations au rang {1}.	
 Scripts.Player.Guild.RankLevelSet:			Vous avez choisi le niveau de guilde au rang to {0}.	
 Scripts.Player.Guild.RankOCHearSet:			Vous avez {0} le OCHear au rang {1}.	
 Scripts.Player.Guild.RankOCSpeakSet:			Vous avez {0} le OCSpeak au rang {1}.	
-Scripts.Player.Guild.RankPromoteSet:			Vous avez {0} les promotions/retrogradations au rang {1}.	
+Scripts.Player.Guild.RankPromoteSet:			Vous avez {0} les promotions/rétrogradations au rang {1}.	
 Scripts.Player.Guild.RankReleaseSet:			Vous avez {0} l'abandon du contrôle des forts au rang {1}.	
 Scripts.Player.Guild.RankRemoveSet:			Vous avez {0} le Remove au rang {1}.	
 Scripts.Player.Guild.RankTitleSet:			Vous avez pour changer les titres de rang de guilde au rang {0}.	
@@ -189,12 +189,12 @@ Scripts.Player.Guild.RankUpgradeSet:			Vous avez {0} les mise à jour des forts a
 Scripts.Player.Guild.RankViewSet:			Vous avez {0} l'apperçu de la guilde au rang {1}.	
 Scripts.Player.Guild.RankWithdrawSet:			Vous avez {0} la caisse de guilde au rang {1}.
 Scripts.Player.Guild.ThirdArgNotNum:			Cet argument n'est pas un nombre valide.	
-Scripts.Player.Guild.UnableToCreate:			La guilde {0} vient d'etre creee.	
-Scripts.Player.Guild.UnableToCreateLead:		La guilde {0} vient d'etre creee, {1} est le chef de guilde.	
+Scripts.Player.Guild.UnableToCreate:			La guilde {0} vient d'être créée.	
+Scripts.Player.Guild.UnableToCreateLead:		La guilde {0} vient d'être créée, {1} est le chef de guilde.	
 Scripts.Player.Guild.UnknownCommand:			Commande Inconnue. Tappez /gc help pour les informations.	
-Scripts.Player.Guild.UpgradeNoLevel:			Vous devez specifier un niveau pour les ameliorations des tours/forts.	
-Scripts.Player.Guild.UpgradeScndArg:			Le deuxieme argument doit etre un nombre.	
-Scripts.Player.Guild.WebpageSet:			Vous avez defini la page internet de la guilde comme {0}.	
+Scripts.Player.Guild.UpgradeNoLevel:			Vous devez spécifier un niveau pour les améliorations des tours/forts.	
+Scripts.Player.Guild.UpgradeScndArg:			Le deuxième argument doit être un nombre.	
+Scripts.Player.Guild.WebpageSet:			Vous avez défini la page internet de la guilde comme {0}.	
 Scripts.Player.Guild.Withdrawamount:			Votre taxe de {0} va dans la caisse de guilde.	
 Scripts.Player.Guild.WithdrawInvalid:			Ce n'est pas un montant valide.	
 Scripts.Player.Guild.WithdrawTooMuch:			Vous ne pouvez plus ajouter d'argent dans la caisse de guilde.

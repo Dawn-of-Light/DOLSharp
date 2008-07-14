@@ -1,18 +1,18 @@
 # /SkillBase
-SkillBase.RegisterPropertyNames.Acuity:               Acuite
-SkillBase.RegisterPropertyNames.AcuityBonusCap:         Bonus au cap d'attribut : Acuite
-SkillBase.RegisterPropertyNames.AllArcherySkills:      Toutes les competences d'Archererie
-SkillBase.RegisterPropertyNames.AllDualWieldingSkills:   Toutes competences deux armes
-SkillBase.RegisterPropertyNames.AllMagicSkills:         Toutes les competences Magique
-SkillBase.RegisterPropertyNames.AllMeleeWeaponSkills:   Toutes les competences d'armes de melee
-SkillBase.RegisterPropertyNames.AllSkills:            Toutes les competences
+SkillBase.RegisterPropertyNames.Acuity:               Acuité
+SkillBase.RegisterPropertyNames.AcuityBonusCap:         Bonus au cap d'attribut : Acuité
+SkillBase.RegisterPropertyNames.AllArcherySkills:      Toutes les compétences d'Archererie
+SkillBase.RegisterPropertyNames.AllDualWieldingSkills:   Toutes compétences deux armes
+SkillBase.RegisterPropertyNames.AllMagicSkills:         Toutes les compétences Magique
+SkillBase.RegisterPropertyNames.AllMeleeWeaponSkills:   Toutes les compétences d'armes de mêlée
+SkillBase.RegisterPropertyNames.AllSkills:            Toutes les compétences
 SkillBase.RegisterPropertyNames.ALLSpellLines:         Toutes les lignes de sorts
-SkillBase.RegisterPropertyNames.Arboreal:             Voie Arboreale
-SkillBase.RegisterPropertyNames.ArborealFocus:         Focus : Voie Arboreale
-SkillBase.RegisterPropertyNames.ArcheryRange:         Portee d'archerie
+SkillBase.RegisterPropertyNames.Arboreal:             Voie Arboréale
+SkillBase.RegisterPropertyNames.ArborealFocus:         Focus : Voie Arboréale
+SkillBase.RegisterPropertyNames.ArcheryRange:         Portée d'archerie
 SkillBase.RegisterPropertyNames.ArcherySpeed:         Vitesse de tir
-SkillBase.RegisterPropertyNames.ArrowRecovery:         Recuperation de fleches
-SkillBase.RegisterPropertyNames.Augmentation:         Amelioration
+SkillBase.RegisterPropertyNames.ArrowRecovery:         Récupération de flèches
+SkillBase.RegisterPropertyNames.Augmentation:         Amélioration
 SkillBase.RegisterPropertyNames.AuraManipulation:      Manipulation d'Aura
 SkillBase.RegisterPropertyNames.Axe:               Hache
 SkillBase.RegisterPropertyNames.Battlesongs:         Chants de guerre
@@ -22,10 +22,10 @@ SkillBase.RegisterPropertyNames.BladeturnReinforcement:   Renforcement de la bul
 SkillBase.RegisterPropertyNames.BlockChance:         -Taux de blocage: {0}% (PvE Uniquement)
 SkillBase.RegisterPropertyNames.Blunt:               Masse
 SkillBase.RegisterPropertyNames.Body:               Corps
-SkillBase.RegisterPropertyNames.BodyMagic:            Aliteration
-SkillBase.RegisterPropertyNames.BodyMagicFocus:         Focus : Aliteration
-SkillBase.RegisterPropertyNames.BoneArmy:            Armee Squelettique
-SkillBase.RegisterPropertyNames.BoneArmyFocus:        Focus : Armee Squelettique
+SkillBase.RegisterPropertyNames.BodyMagic:            Alitération
+SkillBase.RegisterPropertyNames.BodyMagicFocus:         Focus : Alitération
+SkillBase.RegisterPropertyNames.BoneArmy:            Armée Squelettique
+SkillBase.RegisterPropertyNames.BoneArmyFocus:        Focus : Armée Squelettique
 SkillBase.RegisterPropertyNames.BonusToArmorAbsorption:   Bonus d'absorbtion (Abs)
 SkillBase.RegisterPropertyNames.BonusToArmorFactor:      Bonus au facteur d'armure (AF)
 SkillBase.RegisterPropertyNames.CastingSpeed:         Bonus à la vitesse d'incantation
@@ -45,24 +45,24 @@ SkillBase.RegisterPropertyNames.ConstitutionBonusCap:   Bonus au cap d'attribut 
 SkillBase.RegisterPropertyNames.Creeping:            Voie Sylvestre
 SkillBase.RegisterPropertyNames.CreepingPathFocus:      Focus : Voie Sylvestre
 SkillBase.RegisterPropertyNames.CriticalArcheryHit:      Bonus aux chances de critique Archerie
-SkillBase.RegisterPropertyNames.CriticalMeleeHit:      Bonus aux chance de critique en melee
+SkillBase.RegisterPropertyNames.CriticalMeleeHit:      Bonus aux chance de critique en mélée
 SkillBase.RegisterPropertyNames.CriticalStrike:         Attaques Surnoises
-SkillBase.RegisterPropertyNames.Crossbows:            Arbaletes
+SkillBase.RegisterPropertyNames.Crossbows:            Arbalètes
 SkillBase.RegisterPropertyNames.Crush:               Contendant
 SkillBase.RegisterPropertyNames.Crushing:            Contondant
-SkillBase.RegisterPropertyNames.Cursing:            Sortileges
-SkillBase.RegisterPropertyNames.CursingFocus:         Focus : Sortileges
-SkillBase.RegisterPropertyNames.Darkness:            Tenebres
-SkillBase.RegisterPropertyNames.DarknessFocus:         Focus : Tenebres
+SkillBase.RegisterPropertyNames.Cursing:            Sortilèges
+SkillBase.RegisterPropertyNames.CursingFocus:         Focus : Sortilèges
+SkillBase.RegisterPropertyNames.Darkness:            Ténèbres
+SkillBase.RegisterPropertyNames.DarknessFocus:         Focus : Ténèbres
 SkillBase.RegisterPropertyNames.DeathServant:         Servitor Mortis
 SkillBase.RegisterPropertyNames.DeathservantFocus:      Focus : Servitor Mortis
 SkillBase.RegisterPropertyNames.Deathsight:            Visio Mortis
 SkillBase.RegisterPropertyNames.DeathsightFocus:     Focus : Visio Mortis
-SkillBase.RegisterPropertyNames.DebuffEffectivness:      Reduction d'efficacite
-SkillBase.RegisterPropertyNames.DefensiveBonus:         - Bonus de defense: {0}% (PvE Uniquement)
-SkillBase.RegisterPropertyNames.Dementia:            Demence
-SkillBase.RegisterPropertyNames.Dexterity:            Dexterite
-SkillBase.RegisterPropertyNames.DexterityBonusCap:      Bonus au cap d'attribut : Dexterite
+SkillBase.RegisterPropertyNames.DebuffEffectivness:      Réduction d'éfficacité
+SkillBase.RegisterPropertyNames.DefensiveBonus:         - Bonus de défense: {0}% (PvE Uniquement)
+SkillBase.RegisterPropertyNames.Dementia:            Démence
+SkillBase.RegisterPropertyNames.Dexterity:            Dexterité
+SkillBase.RegisterPropertyNames.DexterityBonusCap:      Bonus au cap d'attribut : Dexterité
 SkillBase.RegisterPropertyNames.DualWield:            Deux Armes
 SkillBase.RegisterPropertyNames.EarthMagic:            Voie de la Terre
 SkillBase.RegisterPropertyNames.EarthMagicFocus:      Focus : Voie de la Terre
@@ -71,14 +71,14 @@ SkillBase.RegisterPropertyNames.Empathy:            Empathie
 SkillBase.RegisterPropertyNames.EmpathyBonusCap:      Bonus au cap d'attribut : Empathie
 SkillBase.RegisterPropertyNames.Enchantment:         Enchantements
 SkillBase.RegisterPropertyNames.EnchantmentFocus:      Focus : Enchantements
-SkillBase.RegisterPropertyNames.EnduranceRegeneration:   Regeneration d'endurance
+SkillBase.RegisterPropertyNames.EnduranceRegeneration:   Régénération d'endurance
 SkillBase.RegisterPropertyNames.Energy:               Energie
-SkillBase.RegisterPropertyNames.Enhancement:         Benedictions
+SkillBase.RegisterPropertyNames.Enhancement:         Bénédictions
 SkillBase.RegisterPropertyNames.Envenom:            Empoisonner
-SkillBase.RegisterPropertyNames.EtherealShriek:         Cri Ethere
-SkillBase.RegisterPropertyNames.EtherealShriekFocus:   Focus : Cri Ethere
+SkillBase.RegisterPropertyNames.EtherealShriek:         Cri Ethéré
+SkillBase.RegisterPropertyNames.EtherealShriekFocus:   Focus : Cri Ethéré
 SkillBase.RegisterPropertyNames.EvadeChance:         - Esquive: {0}% (PvEUniquement)
-SkillBase.RegisterPropertyNames.ExperienceLoss:         Reduction de perte d'experience
+SkillBase.RegisterPropertyNames.ExperienceLoss:         Réduction de perte d'expérience
 SkillBase.RegisterPropertyNames.Fatigue:            Endurance
 SkillBase.RegisterPropertyNames.FireMagic:            Voie du Feu
 SkillBase.RegisterPropertyNames.FireMagicFocus:         Focus : Voie du Feu
@@ -87,70 +87,70 @@ SkillBase.RegisterPropertyNames.FlexibleWeapon:         Flexibles
 SkillBase.RegisterPropertyNames.FumbleChance:         Chances de rater lamentablement
 SkillBase.RegisterPropertyNames.Hammer:              Marteau
 SkillBase.RegisterPropertyNames.HandToHand:            Contact
-SkillBase.RegisterPropertyNames.HealingEffectiveness:   Bonus a l'efficacite des soins
-SkillBase.RegisterPropertyNames.HealthRegeneration:      Regeneration des points de vie
+SkillBase.RegisterPropertyNames.HealingEffectiveness:   Bonus a l'efficacité des soins
+SkillBase.RegisterPropertyNames.HealthRegeneration:      Régéneration des points de vie
 SkillBase.RegisterPropertyNames.Heat:              Chaleur
-SkillBase.RegisterPropertyNames.Hexing:               Malefices
-SkillBase.RegisterPropertyNames.HexingFocus:         Focus : Malefices
+SkillBase.RegisterPropertyNames.Hexing:               Maléfices
+SkillBase.RegisterPropertyNames.HexingFocus:         Focus : Maléfices
 SkillBase.RegisterPropertyNames.HitPointsBonusCap:      Bonus au cap des points de vie
 SkillBase.RegisterPropertyNames.Hits:               Points de vie
 SkillBase.RegisterPropertyNames.Instruments:         Instruments
 SkillBase.RegisterPropertyNames.Intelligence:         Intelligence
 SkillBase.RegisterPropertyNames.IntelligenceBonusCap:   Bonus au cap d'attribut : Intelligence
 SkillBase.RegisterPropertyNames.LargeWeapon:         Grandes Armes
-SkillBase.RegisterPropertyNames.LeftAxe:           Hache Senestre
+SkillBase.RegisterPropertyNames.LeftAxe:           Hache Sénèstre
 SkillBase.RegisterPropertyNames.LightMagic:            Voie du Soleil
 SkillBase.RegisterPropertyNames.LightMagicFocus:      Focus : Voie du Soleil
 SkillBase.RegisterPropertyNames.Longbows:            Arc Long
-SkillBase.RegisterPropertyNames.MagicDamageBonus:      Bonus au degats magiques
-SkillBase.RegisterPropertyNames.Magnetism:            Force Tellurique
+SkillBase.RegisterPropertyNames.MagicDamageBonus:      Bonus au dégats magiques
+SkillBase.RegisterPropertyNames.Magnetism:            Force Téllurique
 SkillBase.RegisterPropertyNames.ManaMagic:            Voie de la Lune
 SkillBase.RegisterPropertyNames.ManaMagicFocus:        Focus : Voie de la Lune
-SkillBase.RegisterPropertyNames.Matter:               Matiere
+SkillBase.RegisterPropertyNames.Matter:               Matière
 SkillBase.RegisterPropertyNames.MatterMagic:         Manipulation
 SkillBase.RegisterPropertyNames.MatterMagicFocus:      Focus : Manipulation
 SkillBase.RegisterPropertyNames.MaulerStaff:         Bâton de Kan-Laresh
 SkillBase.RegisterPropertyNames.MaximumSpeed:         Vitesse maximum
-SkillBase.RegisterPropertyNames.MeleeDamage:         Bonus aux degats de melee
-SkillBase.RegisterPropertyNames.MeleeSpeed:            Bonus à la vitesse de melee
+SkillBase.RegisterPropertyNames.MeleeDamage:         Bonus aux dégats de mélée
+SkillBase.RegisterPropertyNames.MeleeSpeed:            Bonus à la vitesse de mélée
 SkillBase.RegisterPropertyNames.Mending:            Reconstitution
 SkillBase.RegisterPropertyNames.Mentalism:            Empathie
 SkillBase.RegisterPropertyNames.MentalismFocus:         Focus : Empathie
-SkillBase.RegisterPropertyNames.MesmerizeDuration:      Duree d'Hypnotisme
+SkillBase.RegisterPropertyNames.MesmerizeDuration:      Durée d'Hypnotisme
 SkillBase.RegisterPropertyNames.MindMagic:            Âme
 SkillBase.RegisterPropertyNames.MindMagicFocus:         Focus : Âme
 SkillBase.RegisterPropertyNames.Music:               Musique
 SkillBase.RegisterPropertyNames.Nature:               Croissance
-SkillBase.RegisterPropertyNames.NegativeReduction:      - Reduction de la duree des effets negatifs: {0}% (PvE Uniquement)
+SkillBase.RegisterPropertyNames.NegativeReduction:      - Réduction de la durée des effets négatifs: {0}% (PvE Uniquement)
 SkillBase.RegisterPropertyNames.NightshadeMagic:      Magie de l'Ombre
 SkillBase.RegisterPropertyNames.Nurture:            Symbiose
-SkillBase.RegisterPropertyNames.OdinsWill:            Volonte d'Odin
+SkillBase.RegisterPropertyNames.OdinsWill:            Volonté d'Odin
 SkillBase.RegisterPropertyNames.Pacification:         Apaisement
 SkillBase.RegisterPropertyNames.Painworking:         Dolor Inflictus
 SkillBase.RegisterPropertyNames.PainworkingFocus:      Focus : Dolor Inflictus
 SkillBase.RegisterPropertyNames.Parry:               Parade
 SkillBase.RegisterPropertyNames.ParryChance:         - Parade: {0}% (PvE Uniquement)
-SkillBase.RegisterPropertyNames.Pathfinding:         Art des Forets
-SkillBase.RegisterPropertyNames.PhantasmalWail:         Lamentation Sepulcrale
-SkillBase.RegisterPropertyNames.PhantasmalWailFocus:   Focus : Lamentation Sepulcrale
+SkillBase.RegisterPropertyNames.Pathfinding:         Art des Forêts
+SkillBase.RegisterPropertyNames.PhantasmalWail:         Lamentation Sépulcrale
+SkillBase.RegisterPropertyNames.PhantasmalWailFocus:   Focus : Lamentation Sépulcrale
 SkillBase.RegisterPropertyNames.PieceAblative:         - Ablatif: {0}% (PvE Uniquement)
 SkillBase.RegisterPropertyNames.Piercing:            Perforant
-SkillBase.RegisterPropertyNames.Piety:               Piete
-SkillBase.RegisterPropertyNames.PietyBonusCap:         Bonus au cap d'attribut : Piete
+SkillBase.RegisterPropertyNames.Piety:               Piété
+SkillBase.RegisterPropertyNames.PietyBonusCap:         Bonus au cap d'attribut : Piété
 SkillBase.RegisterPropertyNames.Polearms:            Armes d'Hast
 SkillBase.RegisterPropertyNames.Power:               Mana
 SkillBase.RegisterPropertyNames.PowerBonusCap:         Bonus au cap des points de mana
-SkillBase.RegisterPropertyNames.PowerPool:            Reserve de mana
-SkillBase.RegisterPropertyNames.PowerRegeneration:      Regeneration des points de  mana
+SkillBase.RegisterPropertyNames.PowerPool:            Résèrve de mana
+SkillBase.RegisterPropertyNames.PowerRegeneration:      Régénération des points de  mana
 SkillBase.RegisterPropertyNames.PowerStrikes:         Coups Puissants
-SkillBase.RegisterPropertyNames.Quickness:            Vivacite
-SkillBase.RegisterPropertyNames.QuicknessBonusCap:      Bonus au cap d'attribut : Vivacite
-SkillBase.RegisterPropertyNames.RangedDamage:         Tout degats à distance
-SkillBase.RegisterPropertyNames.ReactionaryStyleDamage:   - Bonus aux styles reactionnels: {0}% (PvE Uniquement)
-SkillBase.RegisterPropertyNames.RecurvedBow:         Arc Recourbe
-SkillBase.RegisterPropertyNames.Regrowth:           Regeneration
-SkillBase.RegisterPropertyNames.Rejuvenation:         Guerison
-SkillBase.RegisterPropertyNames.ResistPierce:         Ignore les defenses magiques
+SkillBase.RegisterPropertyNames.Quickness:            Vivacité
+SkillBase.RegisterPropertyNames.QuicknessBonusCap:      Bonus au cap d'attribut : Vivacité
+SkillBase.RegisterPropertyNames.RangedDamage:         Tout dégats à distance
+SkillBase.RegisterPropertyNames.ReactionaryStyleDamage:   - Bonus aux styles réactionnels: {0}% (PvE Uniquement)
+SkillBase.RegisterPropertyNames.RecurvedBow:         Arc Recourbé
+SkillBase.RegisterPropertyNames.Regrowth:           Régénération
+SkillBase.RegisterPropertyNames.Rejuvenation:         Guérison
+SkillBase.RegisterPropertyNames.ResistPierce:         Ignore les défenses magiques
 SkillBase.RegisterPropertyNames.Runecarving:         Runes d'Odin
 SkillBase.RegisterPropertyNames.RunecarvingFocus:      Focus : Runes d'Odin
 SkillBase.RegisterPropertyNames.Savagery:           Sauvagerie
@@ -160,33 +160,33 @@ SkillBase.RegisterPropertyNames.Shields:            Bouclier
 SkillBase.RegisterPropertyNames.ShortBow:            Arc Court
 SkillBase.RegisterPropertyNames.Slash:               Tranchant
 SkillBase.RegisterPropertyNames.Slashing:            Tranchant
-SkillBase.RegisterPropertyNames.Smiting:            Colere Divine
+SkillBase.RegisterPropertyNames.Smiting:            Colère Divine
 SkillBase.RegisterPropertyNames.Soulrending:         Tourment d'Âme
 SkillBase.RegisterPropertyNames.Spear:               Lance
 SkillBase.RegisterPropertyNames.SpectralForce:         Force Spectrale
 SkillBase.RegisterPropertyNames.SpectralForceFocus:      Focus : Force Spectrale
-SkillBase.RegisterPropertyNames.SpectralGuard:         Defense Spectrale
-SkillBase.RegisterPropertyNames.SpeedDecreaseDuration:   Duree de ralentissement de deplacement
-SkillBase.RegisterPropertyNames.SpellDuration:         Duree des sorts
-SkillBase.RegisterPropertyNames.SpellPowerCost:         - Reduction des coûts en mana des sorts : {0}% (PvE Uniquement)
-SkillBase.RegisterPropertyNames.SpellRange:            Portee de sort
+SkillBase.RegisterPropertyNames.SpectralGuard:         Défense Spectrale
+SkillBase.RegisterPropertyNames.SpeedDecreaseDuration:   Durée de ralentissement de déplacement
+SkillBase.RegisterPropertyNames.SpellDuration:         Durée des sorts
+SkillBase.RegisterPropertyNames.SpellPowerCost:         - Réduction des coûts en mana des sorts : {0}% (PvE Uniquement)
+SkillBase.RegisterPropertyNames.SpellRange:            Portée de sort
 SkillBase.RegisterPropertyNames.Spirit:               Esprit
 SkillBase.RegisterPropertyNames.SpiritMagic:         Voie du Simulacre
 SkillBase.RegisterPropertyNames.SpiritMagicFocus:      Focus : Voie du Simulacre
 SkillBase.RegisterPropertyNames.Staff:               Bâton
 SkillBase.RegisterPropertyNames.StatBuffSpells:         Tous les sorts d'augmentation
-SkillBase.RegisterPropertyNames.Stealth:            Furtivite
+SkillBase.RegisterPropertyNames.Stealth:            Furtivité
 SkillBase.RegisterPropertyNames.Stormcalling:         Ire de Thor
 SkillBase.RegisterPropertyNames.Strength:            Force
 SkillBase.RegisterPropertyNames.StrengthBonusCap:      Bonus au cap d'attribut : Force
-SkillBase.RegisterPropertyNames.StunDuration:         Duree des Stun
-SkillBase.RegisterPropertyNames.StyleCostReduction:      - Reduction des coûts d'endurence des styles de combat: {0} pts (PvE Uniquement)
-SkillBase.RegisterPropertyNames.StyleDamage:         Bonus aux degats des styles de combat
+SkillBase.RegisterPropertyNames.StunDuration:         Durée des Stun
+SkillBase.RegisterPropertyNames.StyleCostReduction:      - Réduction des coûts d'endurence des styles de combat: {0} pts (PvE Uniquement)
+SkillBase.RegisterPropertyNames.StyleDamage:         Bonus aux dégats des styles de combat
 SkillBase.RegisterPropertyNames.Summoning:            Servants de Hel
 SkillBase.RegisterPropertyNames.SummoningFocus:         Focus : Servants de Hel
 SkillBase.RegisterPropertyNames.Suppression:         Affaiblissement
 SkillBase.RegisterPropertyNames.SuppressionFocus:      Focus : Affaiblissement
-SkillBase.RegisterPropertyNames.Sword:               Epee
+SkillBase.RegisterPropertyNames.Sword:               Epée
 SkillBase.RegisterPropertyNames.ThrownWeapons:         Armes de Jet
 SkillBase.RegisterPropertyNames.Thrust:               Estoc
 SkillBase.RegisterPropertyNames.Thrusting:            Estoc

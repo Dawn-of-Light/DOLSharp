@@ -6,5 +6,5 @@ Behaviour.GiveItemAction.YouReceiveItem:	Vous recevez {0}.
 Behaviour.MessageAction.ReadMessage:		Vous lisez: "{0}"
 Behaviour.TakeItemAction.YouGiveItemToNPC:	Vous donnez {0} a {1}.
 Behaviour.TakeItemAction.YouGiveItem:		Vous donnez {0}.
-Behaviour.TeleportAction.TeleportedToLoc:	{0} est teleporte vers {1}.
+Behaviour.TeleportAction.TeleportedToLoc:	{0} est teleporté vers {1}.
 

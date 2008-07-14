@@ -492,7 +492,23 @@ namespace DOL.GS.Spells
 			}
 
 			String targetType = m_spell.Target.ToLower();
-			if (targetType == "area")
+      //[Ganrod] Nidel: Can cast pet spell on all Pet/Turret/Minion (our pet)
+      if(targetType.Equals("pet"))
+      {
+        if (selectedTarget == null && Caster.ControlledNpc != null)
+        {
+          selectedTarget = Caster.ControlledNpc.Body;
+        }
+        if (!Caster.GetItsControlledNpc(selectedTarget as GameNPC))
+        {
+          if(Caster is GamePlayer)
+          {
+            MessageToCaster("You must select your pet for [" + m_spell.Name + "] spell.", eChatType.CT_Spell);
+          }
+          return false;
+        }
+      }
+		  if (targetType == "area")
 			{
 				if (!WorldMgr.CheckDistance(m_caster, m_caster.GroundTarget, CalculateSpellRange()))
 				{
@@ -505,8 +521,8 @@ namespace DOL.GS.Spells
 				//					return false;
 				//				}
 			}
-			else if (targetType != "self" && targetType != "group" && targetType != "pet"
-				&& targetType != "controlled" && targetType != "cone" && m_spell.Range > 0)
+      else if (targetType != "self" && targetType != "group" && targetType != "pet" 
+        && targetType != "controlled" && targetType != "cone" && m_spell.Range > 0)
 			{
 				// All spells that need a target.
 
@@ -739,15 +755,15 @@ namespace DOL.GS.Spells
 			else if (m_spell.Target.ToLower() != "self" && m_spell.Target.ToLower() != "group" && m_spell.Target.ToLower() != "cone" && m_spell.Range > 0)
 			{
 				//all spells that need a target
-
-				if (m_spell.Target.ToLower() == "pet" && m_caster is GamePlayer &&
+        //[Ganrod] Nidel: Comment for Can cast pet spell on all Pet/Turret/Minion (our pet)
+				/*if (m_spell.Target.ToLower() == "pet" && m_caster is GamePlayer &&
 				    ((GamePlayer)m_caster).ControlledNpc != null)
 				{
 					if (((GamePlayer)m_caster).ControlledNpc.Body != null)
 						target = ((GamePlayer)Caster).ControlledNpc.Body;
-				}
+				}*/
 
-				if (target == null || target.ObjectState != GameLiving.eObjectState.Active)
+				if (m_spell.Target.ToLower() != "pet" && target == null || target.ObjectState != GameLiving.eObjectState.Active)
 				{
 					if (Caster is GamePlayer)
 						MessageToCaster("You must select a target for this spell!", eChatType.CT_SpellResisted);
@@ -792,17 +808,24 @@ namespace DOL.GS.Spells
 						break;
 
 					case "Pet":
-						if (Caster is GamePlayer)
-						{
-							GamePlayer casterPlayer = (GamePlayer)Caster;
-							if (casterPlayer.ControlledNpc == null)
-							{
-								// TODO: correct message?
-								MessageToCaster("Not controlling anything.", eChatType.CT_SpellResisted);
-								return false;
-							}
-						}
-						break;
+            //[Ganrod] Nidel: Can cast pet spell on all Pet/Turret/Minion (our pet)
+            if (Caster is GamePlayer)
+            {
+              GamePlayer casterPlayer = (GamePlayer) Caster;
+              if(!casterPlayer.GetItsControlledNpc(casterPlayer.TargetObject as GameNPC))
+              {
+                MessageToCaster("You don't have your pet in target.", eChatType.CT_SpellResisted);
+                return false;
+              }
+            }
+            else
+            {
+              if (!Caster.GetItsControlledNpc((GameNPC)Caster.TargetObject))
+              {
+                return false;
+              } 
+            }
+				    break;
 				}
 			}
 
@@ -1216,7 +1239,7 @@ namespace DOL.GS.Spells
 
 
 			//Subspells
-			if (m_spell.SubSpellID > 0 && Spell.SpellType != "Archery" && Spell.SpellType != "Bomber" && Spell.SpellType != "Turret" && Spell.SpellType != "Grapple")
+      if (m_spell.SubSpellID > 0 && Spell.SpellType != "Archery" && Spell.SpellType != "Bomber" && Spell.SpellType != "SummonAnimistFnF" && Spell.SpellType != "SummonAnimistPet" && Spell.SpellType != "Grapple")
 			{
 				Spell spell = SkillBase.GetSpellByID(m_spell.SubSpellID);
 				//we need subspell ID to be 0, we don't want spells linking off the subspell
@@ -1330,11 +1353,19 @@ namespace DOL.GS.Spells
 				}
 			}
 
-			if (NewTarget == "pet" && Spell.Damage > 0 && Spell.Radius > 0)
-			{
-				NewTarget = "enemy";
-				target = Caster.ControlledNpc.Body;
-			}
+      if (NewTarget == "pet" && Spell.Damage > 0 && Spell.Radius > 0)
+      {
+        NewTarget = "enemy";
+        //[Ganrod] Nidel: can cast TurretPBAoE on selected Pet/Turret
+        if (Spell.SpellType.ToLower().Equals("TurretPBAoE".ToLower()))
+        {
+          target = Caster.TargetObject as GameLiving;
+        }
+        else
+        {
+          target = Caster.ControlledNpc.Body;
+        }
+      }
 
 			#region Process the targets
 			switch (NewTarget)
@@ -1344,8 +1375,8 @@ namespace DOL.GS.Spells
 				case "area":
                     //Dinberg - fix for animists turrets, where before a radius of zero meant that no targets were ever 
                     //selected!
-                    if		(Spell.SpellType == "Turret")
-                        list.Add(Caster);
+          if (Spell.SpellType == "SummonAnimistPet" || Spell.SpellType == "SummonAnimistFnF")
+            list.Add(Caster);
                     else
                         if (NewRadius > 0)
                         {
@@ -1386,62 +1417,66 @@ namespace DOL.GS.Spells
 					break;
 				#endregion
 				#region Pet
-				case "pet":
+        case "pet":
+			    {
+			      //Start-- [Ganrod] Nidel: Can heal our Minion/Turret pet without ControlledNpc
+			      // awesome, Pbaoe with target pet spell ?^_^
+            if (NewRadius > 0 && Spell.Range == 0)
+			      {
+			        foreach(GameNPC pet in Caster.GetNPCsInRadius(NewRadius))
+			        {
+			          if(Caster.GetItsControlledNpc(pet))
+			          {
+			            list.Add(pet);
+			          }
+			        }
+			        return list;
+			      }
+            if (target == null)
+            {
+              break;
+            }
 
-					ControlledNpc brain = Caster.ControlledNpc as ControlledNpc;
-					GameNPC petBody = brain == null ? null : brain.Body;
+			      GameNPC petBody = target as GameNPC;
+			      // check target
+			      if(petBody != null && WorldMgr.CheckDistance(Caster, petBody, Spell.Range))
+			      {
+              if (Caster.GetItsControlledNpc(petBody))
+              {
+                list.Add(petBody);
+              }
+			      }
+			      //check controllednpc if target isn't pet (our pet)
+			      if(list.Count < 1 && Caster.ControlledNpc != null)
+			      {
+			        petBody = Caster.ControlledNpc.Body;
+			        if(petBody != null && WorldMgr.CheckDistance(Caster, petBody, Spell.Range))
+			        {
+			          list.Add(petBody);
+			        }
+			      }
 
-					//Make sure we actually have a pet
-					if (petBody != null)
-					{
-						//Single target pet buff has radius 0
-						if (Spell.Radius == 0)
-						{
-							//If we have our p
-							if (petBody != castTarget)
-							{
-								//Make sure we have some subpets
-								if (petBody.ControlledNpcList != null)
-								{
-									//Go through each subpet and see if we have it targeted
-									foreach (IControlledBrain icb in petBody.ControlledNpcList)
-									{
-										if (icb != null && icb.Body == castTarget)
-										{
-											list.Add(icb.Body);
-											break;
-										}
-									}
-								}
-							}
-							
-							//If we didn't find any of our subpets as our target then we add our main pet
-							if (list.Count == 0)
-								list.Add(petBody);
-						}
-						//Our buff affects every pet in the area (our pets)
-						else
-						{
-							//Obviously, add our main pet
-							if (WorldMgr.CheckDistance(m_caster, petBody, Spell.Radius))
-								list.Add(petBody);
-
-							//Make sure we have some subpets
-							if (petBody.ControlledNpcList != null)
-							{
-								//Go through each subpet and make sure they're in our radius, then add if so
-								foreach (IControlledBrain icb in petBody.ControlledNpcList)
-								{
-									if (icb != null && WorldMgr.CheckDistance(m_caster, icb.Body, Spell.Radius))
-									{
-										list.Add(icb.Body);
-									}
-								}
-							}
-						}
-					}
-
-					break;
+			      //Single spell buff/heal...
+			      if(Spell.Radius == 0)
+			      {
+			        return list;
+			      }
+			      //Our buff affects every pet in the area of targetted pet (our pets)
+			      if(Spell.Radius > 0 && petBody != null)
+			      {
+              foreach (GameNPC pet in petBody.GetNPCsInRadius(NewRadius))
+			        {
+			          //ignore target or our main pet already added
+                if (pet == petBody || !Caster.GetItsControlledNpc(pet))
+                {
+                  continue;
+                }
+                list.Add(pet);
+			        }
+			      }
+			    }
+          //Start-- [Ganrod] Nidel: Can heal our Minion/Turret pet without ControlledNpc
+          break;
 				#endregion
 				#region Enemy
 				case "enemy":

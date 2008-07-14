@@ -1,7 +1,7 @@
 # /ArtifactQuest
-ArtifactQuest.GiveItem.BackpackFull:			Votre sac est plein, {0} est pose sur le sol.
+ArtifactQuest.GiveItem.BackpackFull:			Votre sac est plein, {0} est posé sur le sol.
 
 # /ArtifactTurnInQuest
 ArtifactTurnInQuest.Init.ArtifactScholarMale:		Artifact Scholar
 ArtifactTurnInQuest.Init.ArtifactScholarFemale:		Artifact Scholar
-ArtifactTurnInQuest.FinishQuest.Completed:		Vous avez termine la quete: {0}!
+ArtifactTurnInQuest.FinishQuest.Completed:		Vous avez terminé la quête: {0}!

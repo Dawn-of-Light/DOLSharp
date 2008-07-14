@@ -16,44 +16,49 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS.Effects;
+/*
+ * [Ganrod] Nidel 2008-07-08
+ * - Useless using removed
+ * - Get Main Pet tank or Main Pet caster by spell damage type
+ */
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
-using DOL.Events;
-using DOL.GS.PropertyCalc;
-using System.Collections;
-using DOL.Language;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Spell handler to summon a bonedancer pet.
-	/// </summary>
-	/// <author>IST</author>
-	[SpellHandlerAttribute("SummonAnimistPet")]
-	public class SummonAnimistMainPet : SummonAnimistPet
-	{
-		public SummonAnimistMainPet(GameLiving caster, Spell spell, SpellLine line)
-			: base(caster, spell, line) { }
+  /// <summary>
+  /// Spell handler to summon a bonedancer pet.
+  /// </summary>
+  /// <author>IST</author>
+  [SpellHandler("SummonAnimistPet")]
+  public class SummonAnimistMainPet : SummonAnimistPet
+  {
+    public SummonAnimistMainPet(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line)
+    {
+    }
 
-		public override bool CheckBeginCast(GameLiving selectedTarget)
-		{
-			if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledNpc != null)
-			{
-				MessageToCaster("You already have a charmed creature, release it first!", eChatType.CT_SpellResisted);
-				return false;
-			}
-			return base.CheckBeginCast(selectedTarget);
-		}
+    public override bool CheckBeginCast(GameLiving selectedTarget)
+    {
+      if(Caster is GamePlayer && Caster.ControlledNpc != null)
+      {
+        MessageToCaster("You already have a charmed creature, release it first!", eChatType.CT_SpellResisted);
+        return false;
+      }
+      return base.CheckBeginCast(selectedTarget);
+    }
 
-		protected override IControlledBrain GetPetBrain(GameLiving owner)
-		{
-			if (Spell.DamageType == 0)
-				return new TurretMainPetCasterBrain(owner);
-			return base.GetPetBrain(owner);
-		}
-	}
+    protected override IControlledBrain GetPetBrain(GameLiving owner)
+    {
+      if(Spell.DamageType == 0)
+      {
+        return new TurretMainPetCasterBrain(owner);
+      }
+      //[Ganrod] Nidel: Spell.DamageType : 1 for tank pet
+      if(Spell.DamageType == (eDamageType) 1)
+      {
+        return new TurretMainPetTankBrain(owner);
+      }
+      return base.GetPetBrain(owner);
+    }
+  }
 }

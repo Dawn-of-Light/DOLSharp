@@ -780,7 +780,7 @@ namespace DOL.GS
 		/// <returns>type of class for searched npc guild or null</returns>
 		public static Type FindNPCGuildScriptClass(string guild, eRealm realm)
 		{
-			if (guild == null || guild.Length == 0) return null;
+			if (string.IsNullOrEmpty(guild)) return null;
 
 			Type type = null;
 			if (m_script_guilds[(int)realm] == null)
