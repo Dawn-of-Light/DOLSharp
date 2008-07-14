@@ -152,6 +152,7 @@ namespace DOL.AI.Brain
 				return;
 			foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)AggroRange))
 			{
+			  if (!GameServer.ServerRules.IsAllowedToAttack(Body, npc, true)) continue;
 				if (m_aggroTable.ContainsKey(npc))
 					continue; // add only new NPCs
 				if (!npc.IsAlive || npc.ObjectState != GameObject.eObjectState.Active)
@@ -176,6 +177,8 @@ namespace DOL.AI.Brain
 				return;
 			foreach (GamePlayer player in Body.GetPlayersInRadius((ushort)AggroRange))
 			{
+
+			  if (!GameServer.ServerRules.IsAllowedToAttack(Body, player, true)) continue;
 				// Don't aggro on immune players.
 
 				if (player.EffectList.GetOfType(typeof(ShadeEffect)) != null)

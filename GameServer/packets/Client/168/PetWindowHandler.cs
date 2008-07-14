@@ -45,7 +45,7 @@ namespace DOL.GS.PacketHandler.Client.v168
       if (client.Player.TargetObject != null && command.Equals(2) && client.Player.ControlledNpc == null && client.Player.CharacterClass.ID == (int)eCharacterClass.Animist)
       {
         TurretPet turret = client.Player.TargetObject as TurretPet;
-        if (turret != null && turret.Brain is TurretFNFBrain)
+		if (turret != null && turret.Brain is TurretFNFBrain && client.Player.GetItsControlledNpc(turret))
         {
           //release
           new HandlePetCommandAction(client.Player, 0, 0, 2).Start(1);
