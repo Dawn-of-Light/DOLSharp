@@ -20,87 +20,82 @@
  * [Ganrod] Nidel 2008-07-08
  * - AI for turret caster, like 1.90 EU official servers
  */
+using System;
+using DOL.Events;
 using DOL.GS;
 
 namespace DOL.AI.Brain
 {
-  public class TurretMainPetCasterBrain : TurretBrain
-  {
-    public TurretMainPetCasterBrain(GameLiving owner) : base(owner)
-    {
-    }
+	public class TurretMainPetCasterBrain : TurretBrain
+	{
+		public TurretMainPetCasterBrain(GameLiving owner) : base(owner)
+		{
+		}
 
-    public override void Think()
-    {
-      if(AggressionState == eAggressionState.Aggressive)
-      {
-        CheckPlayerAggro();
-        CheckNPCAggro();
-        AttackMostWanted();
-        return;
-      }
+		public override void Notify(DOLEvent e, object sender, EventArgs args)
+		{
+			base.Notify(e, sender, args);
+			TurretPet pet = sender as TurretPet;
+			if(pet != null && e == GameLivingEvent.CastFinished && !(pet.Brain is TurretMainPetTankBrain) && pet == Body && AggressionState != eAggressionState.Passive)
+			{
+				AttackMostWanted();
+			}
+		}
 
-      if(AggressionState != eAggressionState.Passive)
-      {
-        AttackMostWanted();
-      }
-    }
 
-    public override void Attack(GameObject target)
-    {
-      GameLiving defender = target as GameLiving;
-      if(defender == null)
-      {
-        return;
-      }
+		public override void Attack(GameObject target)
+		{
+			GameLiving defender = target as GameLiving;
+			if(defender == null)
+			{
+				return;
+			}
 
-      if(!GameServer.ServerRules.IsAllowedToAttack(Body, defender, true))
-      {
-        return;
-      }
+			if(!GameServer.ServerRules.IsAllowedToAttack(Body, defender, true))
+			{
+				return;
+			}
 
-      if(Body.IsCasting)
-      {
-        Body.StopCurrentSpellcast();
-      }
-      if(AggressionState == eAggressionState.Passive)
-      {
-        AggressionState = eAggressionState.Defensive;
-        UpdatePetWindow();
-      }
-      m_orderAttackTarget = defender;
+			if(AggressionState == eAggressionState.Passive)
+			{
+				AggressionState = eAggressionState.Defensive;
+				UpdatePetWindow();
+			}
+			m_orderAttackTarget = defender;
+			AttackMostWanted();
+			return;
+		}
 
-      AttackMostWanted();
-      return;
-    }
+		protected override void AttackMostWanted()
+		{
+			if(!IsActive || Body.IsCasting)
+			{
+				return;
+			}
+			GameLiving target = CalculateNextAttackTarget();
+			if(target == null || !target.IsAlive)
+			{
+				if(Body.IsAttacking)
+				{
+					Body.StopAttack();
+				}
+				if(Body.SpellTimer != null && Body.SpellTimer.IsAlive)
+				{
+					Body.SpellTimer.Stop();
+				}
+				return;
+			}
 
-    protected override void AttackMostWanted()
-    {
-      if(!IsActive)
-      {
-        return;
-      }
+			Body.TargetObject = target;
+			TrustCast(((TurretPet) Body).TurretSpell);
+		}
 
-      GameLiving target = CalculateNextAttackTarget();
-      if(target == null || !target.IsAlive)
-      {
-        return;
-      }
-
-      Body.TargetObject = target;
-      TrustCast(((TurretPet) Body).TurretSpell);
-    }
-
-    protected override void OnFollowLostTarget(GameObject target)
-    {
-    }
-
-    protected override void OnAttackedByEnemy(AttackData ad)
-    {
-      if(AggressionState != eAggressionState.Passive)
-      {
-        AttackMostWanted();
-      }
-    }
-  }
+		protected override void OnAttackedByEnemy(AttackData ad)
+		{
+			if(AggressionState != eAggressionState.Passive)
+			{
+				AttackMostWanted();
+			}
+		}
+	}
 }

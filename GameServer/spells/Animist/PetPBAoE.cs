@@ -26,44 +26,67 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-  /// <summary>
-  /// Summary description for TauntSpellHandler.
-  /// </summary>
-  [SpellHandler("TurretPBAoE")]
-  public class PetPBAoE : DirectDamageSpellHandler
-  {
-    public PetPBAoE(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine)
-    {
-    }
+	/// <summary>
+	/// Summary description for TauntSpellHandler.
+	/// </summary>
+	[SpellHandler("TurretPBAoE")]
+	public class PetPBAoE : DirectDamageSpellHandler
+	{
+		public PetPBAoE(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine)
+		{
+		}
 
-    public override bool CheckBeginCast(GameLiving selectedTarget)
-    {
-      if(!(Caster is GamePlayer))
-      {
-        return false;
-      }
-      if((Caster.ControlledNpc == null && Caster.PetCounter < 1) || Caster.ControlledNpc != null && !(Caster.ControlledNpc.Body.Brain is TurretBrain))
-      {
-        MessageToCaster("You must have a controlled Pet or Turret before casting this spell !", eChatType.CT_SpellResisted);
-        return false;
-      }
-      GameNPC target = selectedTarget as GameNPC;
-      //[Ganrod]Nidel: Launch spell on Controlled Pet if target is null, like 1.90 EU off servers.
-      if(target == null && Caster.ControlledNpc != null)
-      {
-        return base.CheckBeginCast(Caster.ControlledNpc.Body);
-      }
-      if(target == null || target.Brain == null || !(target.Brain is TurretBrain) || (target.Brain as TurretBrain).GetPlayerOwner() != Caster)
-      {
-        MessageToCaster("You must select your controlled Pet or Turret before casting this spell !", eChatType.CT_SpellResisted);
-        return false;
-      }
-      return base.CheckBeginCast(selectedTarget);
-    }
+		public override bool CheckBeginCast(GameLiving selectedTarget)
+		{
+			if(!(Caster is GamePlayer))
+			{
+				return false;
+			}
+			//[Ganrod]Nidel: Launch spell on Controlled Pet if target is null, like 1.90 EU off servers.
+			if(selectedTarget == null && Caster.ControlledNpc != null)
+			{
+				Caster.TargetObject = Caster.ControlledNpc.Body;
+				return base.CheckBeginCast(Caster.ControlledNpc.Body);
+			}
+			GameNPC target = selectedTarget as GameNPC;
+			if(target == null || !(target.Brain is TurretBrain) || !Caster.GetItsControlledNpc(target))
+			{
+				MessageToCaster("You must select your controlled Pet or Turret before casting this spell !", eChatType.CT_SpellResisted);
+				return false;
+			}
+			if((target.Brain is TurretBrain) && !Caster.GetItsControlledNpc(target))
+			{
+				MessageToCaster("You must select your controlled Pet or Turret before casting this spell !", eChatType.CT_SpellResisted);
+				return false;
+			}
+			return base.CheckBeginCast(target);
+		}
 
-    public override void StartSpell(GameLiving target)
-    {
-      base.StartSpell(Caster.TargetObject as GameLiving);
-    }
-  }
+		public override void FinishSpellCast(GameLiving target)
+		{
+			//Make pet Caster spell
+			m_caster = Caster.TargetObject as GameLiving;
+			base.FinishSpellCast(target);
+		}
+
+		public override void StartSpell(GameLiving target)
+		{
+			base.StartSpell(Caster.TargetObject as GameLiving);
+		}
+
+		public override void DamageTarget(AttackData ad, bool showEffectAnimation)
+		{
+			base.DamageTarget(ad, showEffectAnimation);
+			if(ad.Damage > 0 && ad.Target is GameNPC)
+			{
+				//pet will take aggro
+				ad.Attacker = Caster;
+				IAggressiveBrain aggroBrain = ((GameNPC) ad.Target).Brain as IAggressiveBrain;
+				if(aggroBrain != null)
+				{
+					aggroBrain.AddToAggroList(ad.Attacker, ad.Attacker.Level*10);
+				}
+			}
+		}
+	}
 }

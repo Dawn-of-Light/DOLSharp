@@ -20,117 +20,121 @@
  * [Ganrod] Nidel 2008-07-08
  * - Turret find target if needed and Cast spell
  */
+using System.Collections.Generic;
 using DOL.GS;
+using DOL.GS.Effects;
+using DOL.GS.Spells;
+
 
 namespace DOL.AI.Brain
 {
-  public class TurretFNFBrain : TurretBrain
-  {
-    public TurretFNFBrain(GameLiving owner) : base(owner)
-    {
-    }
+	public class TurretFNFBrain : TurretBrain
+	{
+		public TurretFNFBrain(GameLiving owner) : base(owner)
+		{
+		}
 
-    /// <summary>
-    /// [Ganrod] Nidel:
-    /// Cast only Offensive or Defensive spell.
-    /// <para>If Offensive spell is true, Defensive spell isn't casted.</para>
-    /// </summary>
-    public override void Think()
-    {
-      if(CheckSpells(eCheckSpellType.Offensive))
-      {
-        AttackMostWanted();
-        return;
-      }
-      if(CheckSpells(eCheckSpellType.Defensive))
-      {
-        // don't need target for radius spell
-        if(((TurretPet) Body).TurretSpell.Radius == 0)
-        {
-          Body.TargetObject = GetDefensiveTarget(((TurretPet) Body).TurretSpell);
-        }
-        TrustCast(((TurretPet) Body).TurretSpell);
-        return;
-      }
-    }
+		/// <summary>
+		/// [Ganrod] Nidel:
+		/// Cast only Offensive or Defensive spell.
+		/// <para>If Offensive spell is true, Defensive spell isn't casted.</para>
+		/// </summary>
+		public override void Think()
+		{
+			GamePlayer playerowner = GetPlayerOwner();
+			if(!playerowner.CurrentUpdateArray[Body.ObjectID - 1])
+			{
+				playerowner.Out.SendObjectUpdate(Body);
+				playerowner.CurrentUpdateArray[Body.ObjectID - 1] = true;
+			}
 
-    /// <summary>
-    /// [Ganrod] Nidel: Find and get random target in radius for Defensive spell, like 1.90 EU off servers.
-    /// </summary>
-    /// <param name="spell"></param>
-    /// <returns></returns>
-    public GameLiving GetDefensiveTarget(Spell spell)
-    {
-      if(Body.TargetObject == null || !((GameLiving) Body.TargetObject).IsAlive || LivingHasEffect(Body.TargetObject as GameLiving, spell))
-      {
-        Body.TargetObject = null;
+			if(CheckSpells(eCheckSpellType.Offensive))
+			{
+				return;
+			}
+			if(CheckSpells(eCheckSpellType.Defensive))
+			{
+				// don't need target for radius spell
+				if(((TurretPet) Body).TurretSpell.Radius == 0)
+				{
+					Body.TargetObject = GetDefensiveTarget(((TurretPet) Body).TurretSpell);
+				}
+				TrustCast(((TurretPet) Body).TurretSpell);
+				return;
+			}
+			if(Body.IsAttacking)
+			{
+				Body.StopAttack();
+			}
 
-        foreach(GamePlayer player in Body.GetPlayersInRadius((ushort) spell.Range))
-        {
-          //Buff owner at first time if in radius
-          if(player == GetPlayerOwner() && !LivingHasEffect(player, spell))
-          {
-            return player;
-          }
-          if(ListDefensiveTarget.Contains(player) || LivingHasEffect(player, spell))
-          {
-            if(LivingHasEffect(player, spell))
-            {
-              ListDefensiveTarget.Remove(player);
-            }
-            continue;
-          }
-          if(GameServer.ServerRules.IsSameRealm(Body, player, false))
-          {
-            ListDefensiveTarget.Add(player);
-          }
-        }
-        foreach(GameNPC npc in Body.GetNPCsInRadius((ushort) spell.Range))
-        {
-          if(npc == Body && !LivingHasEffect(Body, spell))
-          {
-            return Body;
-          }
-          if(ListDefensiveTarget.Contains(npc) || LivingHasEffect(npc, spell))
-          {
-            if(LivingHasEffect(npc, spell))
-            {
-              ListDefensiveTarget.Remove(npc);
-            }
-            continue;
-          }
-          if(GameServer.ServerRules.IsSameRealm(Body, npc, false))
-          {
-            ListDefensiveTarget.Add(npc);
-          }
-        }
-      }
-      // Get one random target.
-      return ListDefensiveTarget.Count > 0 ? ListDefensiveTarget[Util.Random(ListDefensiveTarget.Count - 1)] : null;
-    }
+			if(Body.SpellTimer != null && Body.SpellTimer.IsAlive)
+			{
+				Body.SpellTimer.Stop();
+			}
+		}
 
-    protected override void AttackMostWanted()
-    {
-      if(!IsActive)
-      {
-        return;
-      }
+		protected override void AttackMostWanted()
+		{
+			if(!IsActive)
+			{
+				return;
+			}
+			if(((TurretPet) Body).TurretSpell.Radius == 0)
+			{
+				CheckPlayerAggro();
+				CheckNPCAggro();
+				GameLiving target = CalculateNextAttackTarget();
+				if(target != null)
+				{
+					Body.TargetObject = target;
+					TrustCast(((TurretPet) Body).TurretSpell);
+				}
+			}
+			TrustCast(((TurretPet) Body).TurretSpell);
+		}
 
-      if(((TurretPet) Body).TurretSpell.Radius == 0)
-      {
-        CheckPlayerAggro();
-        CheckNPCAggro();
-        GameLiving target = CalculateNextAttackTarget();
-        if(target != null)
-        {
-          Body.TargetObject = target;
-          TrustCast(((TurretPet) Body).TurretSpell);
-        }
-      }
-      TrustCast(((TurretPet) Body).TurretSpell);
-    }
 
-    /// <summary>
+	/// <summary>
+	/// Get a random target from aggro table
+	/// </summary>
+	/// <returns></returns>
+		protected override GameLiving CalculateNextAttackTarget()
+	{
+		List<GameLiving> livingList = new List<GameLiving>(3);
+		lock(m_aggroTable.SyncRoot)
+		{
+			foreach(GameLiving living in m_aggroTable.Keys)
+			{
+				if(living.EffectList.GetOfType(typeof(NecromancerShadeEffect)) != null)
+					continue;
+
+				if(!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
+					continue;
+
+				if(WorldMgr.GetDistance(Body, living) > ((TurretPet) Body).TurretSpell.Range)
+					continue;
+
+				if(GetPlayerOwner().IsObjectGreyCon(living))
+					continue;
+
+				if(living.IsMezzed || living.IsStealthed)
+					continue;
+
+				GameSpellEffect root = SpellHandler.FindEffectOnTarget(living, "SpeedDecrease");
+				if(root != null && root.Spell.Value == 99) continue;
+
+				livingList.Add(living);
+			}
+		}
+		m_aggroTable.Clear();
+		if(livingList.Count > 0)
+		{
+			return livingList[Util.Random(livingList.Count - 1)];
+		}
+		return null;
+	}
+
+		/// <summary>
     /// Updates the pet window
     /// </summary>
     public override void UpdatePetWindow()
