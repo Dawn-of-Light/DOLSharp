@@ -16,13 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
+/*
+ * [Ganrod] Nidel 2008-07-08
+ * - Corrections for Bomber actions.
+ */
 using System;
 using DOL.AI.Brain;
 using DOL.Events;
-using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.GS.Effects;
 
 namespace DOL.GS.Spells
 {
@@ -53,17 +54,17 @@ namespace DOL.GS.Spells
 		{
 			base.ApplyEffectOnTarget(target, effectiveness);
 			pet.TempProperties.setProperty(BOMBERTARGET, Caster.TargetObject);
-			pet.Follow(target, 10, Spell.Range * 5); // with Toa bonus, if the bomber was fired > Spell.Range base, it didnt move..
+			pet.Follow(target, 5, Spell.Range * 5); // with Toa bonus, if the bomber was fired > Spell.Range base, it didnt move..
 		}
 
 		protected override void AddHandlers()
 		{
-			GameEventMgr.AddHandler(pet, GameNPCEvent.ArriveAtTarget, new DOLEventHandler(BomberArriveAtTarget));
+			GameEventMgr.AddHandler(pet, GameNPCEvent.ArriveAtTarget, BomberArriveAtTarget);
 		}
 
 		protected override void RemoveHandlers()
 		{
-			GameEventMgr.RemoveHandler(pet, GameNPCEvent.ArriveAtTarget, new DOLEventHandler(BomberArriveAtTarget));
+			GameEventMgr.RemoveHandler(pet, GameNPCEvent.ArriveAtTarget, BomberArriveAtTarget);
 		}
 
 		protected override byte GetPetLevel()
@@ -87,38 +88,38 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Called when the Bomber reaches his target
 		/// </summary>
-		private void BomberArriveAtTarget(DOLEvent e, object sender, EventArgs args)
-		{
-			GameNPC bomber = sender as GameNPC;
+    private void BomberArriveAtTarget(DOLEvent e, object sender, EventArgs args)
+    {
+      GameNPC bomber = sender as GameNPC;
 
-			if (bomber != pet)
-				return;
+      //[Ganrod] Nidel: Prevent NPE
+      if (bomber == null || pet == null || bomber != pet)
+        return;
 
-			GameLiving living = pet.TempProperties.getObjectProperty(BOMBERTARGET, null) as GameLiving;
+      //[Ganrod] Nidel: Abort and delete bomber if Spell or Target is NULL
+      Spell subspell = SkillBase.GetSpellByID(m_spell.SubSpellID);
+      GameLiving living = pet.TempProperties.getObjectProperty(BOMBERTARGET, null) as GameLiving;
 
-			bomber.Health = 0;
-			bomber.Delete();
+      if (subspell == null || living == null)
+      {
+        if (log.IsErrorEnabled && subspell == null)
+          log.Error("Bomber SubspellID for Bomber SpellID: " + m_spell.ID + " is not implemented yet");
+        bomber.Health = 0;
+        bomber.Delete();
+        return;
+      }
 
-			if (living != null)
-			{
-				Spell subspell = SkillBase.GetSpellByID(m_spell.SubSpellID);
-				if (subspell != null)
-				{
-					//Andraste
-					subspell.Level = m_spell.Level;
-					if (WorldMgr.CheckDistance(living, bomber, 500))
-					{
-						ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(Caster, subspell, SkillBase.GetSpellLine(this.SpellLine.KeyName));
-						spellhandler.StartSpell(living);
-					}
-				}
-				else
-				{
-					if (log.IsErrorEnabled)
-						log.Error("Bomber Subspell: " + subspell.ID + " is not implemented yet");
-					return;
-				}
-			}
-		}
+      //Andraste
+      subspell.Level = m_spell.Level;
+      if (WorldMgr.CheckDistance(living, bomber, 350))
+      {
+        ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(Caster, subspell, SkillBase.GetSpellLine(SpellLine.KeyName));
+        spellhandler.StartSpell(living);
+      }
+
+      //[Ganrod] Nidel: Delete Bomber after all actions.
+      bomber.Health = 0;
+      bomber.Delete();
+    }
 	}
 }

@@ -2,34 +2,34 @@
 # TITLES
 
 # /Claim
-Titles.Claim.Frontier.FrontierChallenger: Defenseur des Frontieres
-Titles.Claim.Frontier.FrontierVindicator: Gardien des Frontieres
-Titles.Claim.Stronghold.StrongholdChief: Meneur de Siege
-Titles.Claim.Stronghold.StrongholdSoldier: Assiegeant de Forts
+Titles.Claim.Frontier.FrontierChallenger: Défenseur des Frontières
+Titles.Claim.Frontier.FrontierVindicator: Gardien des Frontières
+Titles.Claim.Stronghold.StrongholdChief: Meneur de Siège
+Titles.Claim.Stronghold.StrongholdSoldier: Assiégeant de Forts
 
 # /Deathblows
 Titles.Deathblows.BattleEnforcer: Combattant redoutable
 Titles.Deathblows.BattleMaster: Maître des batailles
 
 # /Kills
-Titles.Kills.Albion.BaneOfAlbion: Fleau d’Albion
-Titles.Kills.Albion.ScourgeOfAlbion: Calamite d'Albion
+Titles.Kills.Albion.BaneOfAlbion: Fléau d’Albion
+Titles.Kills.Albion.ScourgeOfAlbion: Calamité d'Albion
 Titles.Kills.All.MasterAssassine: Maître Assassin
 Titles.Kills.All.MasterEnforcer: Maître Commandant
 Titles.Kills.All.MasterSoldier: Maître Assaillant
-Titles.Kills.Demon.DemonBane: Menace des Demons
-Titles.Kills.Demon.DemonScourge: Tueur de Demons
-Titles.Kills.Demon.DemonSlayer: Chasseur de Demons
-Titles.Kills.Demon.DreadVanquisher: Terreur des Demons
+Titles.Kills.Demon.DemonBane: Menace des Démons
+Titles.Kills.Demon.DemonScourge: Tueur de Démons
+Titles.Kills.Demon.DemonSlayer: Chasseur de Démons
+Titles.Kills.Demon.DreadVanquisher: Terreur des Démons
 Titles.Kills.Dragon.DragonFoe: Chasseur de Dragons
 Titles.Kills.Dragon.DragonScourge: Menace des Dragons
 Titles.Kills.Dragon.DragonSlayer: Tueur de Dragons
-Titles.Kills.Epic.EpicChallenger: Chasseur de Legendes
-Titles.Kills.Epic.EpicVictor: Donjons epiques
-Titles.Kills.Hibernia.BaneOfHibernia: Fleau d'Hibernia
-Titles.Kills.Hibernia.ScourgeOfHibernia: Calamite d'Hibernia
-Titles.Kills.Midgard.BaneOfMidgard: Fleau de Midgard
-Titles.Kills.Midgard.ScourgeOfMidgard: Calamite de Midgard
+Titles.Kills.Epic.EpicChallenger: Chasseur de Légendes
+Titles.Kills.Epic.EpicVictor: Donjons épiques
+Titles.Kills.Hibernia.BaneOfHibernia: Fléau d'Hibernia
+Titles.Kills.Hibernia.ScourgeOfHibernia: Calamité d'Hibernia
+Titles.Kills.Midgard.BaneOfMidgard: Fléau de Midgard
+Titles.Kills.Midgard.ScourgeOfMidgard: Calamité de Midgard
 
 # /Level
 Titles.Level.Level20Info: Level 20+
@@ -45,7 +45,7 @@ Titles.Solokills.LoneEnforcer: Aventurier Solitaire
 
 # /Time
 Titles.Time.Account.ElderTitle: Elder
-Titles.Time.Character.Veteran: Veteran
+Titles.Time.Character.Veteran: Vétèran
 
 # /CL
 Titles.CL.Level1: Emissaire du Roy
@@ -53,11 +53,11 @@ Titles.CL.Level2: Main du Roy
 Titles.CL.Level3: Protecteur du Roy
 Titles.CL.Level4: Flambeau du Roy
 Titles.CL.Level5: Pourfendeur du Mal
-Titles.CL.Level6: Allie des Minotaures
-Titles.CL.Level7: Champion Legendaire
-Titles.CL.Level8: Champion Venere
-Titles.CL.Level9: Champion eternel
-Titles.CL.Level10: Heros Supreme
+Titles.CL.Level6: Allié des Minotaures
+Titles.CL.Level7: Champion Légendaire
+Titles.CL.Level8: Champion Vénéré
+Titles.CL.Level9: Champion Éternel
+Titles.CL.Level10: Héros Suprême
 
 # /ML
 Titles.ML.Line1: Oppresseur
@@ -67,4 +67,4 @@ Titles.ML.Line4: Visionnaire
 Titles.ML.Line5: Nomade
 Titles.ML.Line6: Agent de l'ombre
 Titles.ML.Line7: Seigneur des orages
-Titles.ML.Line8: Stratege
+Titles.ML.Line8: Stratège

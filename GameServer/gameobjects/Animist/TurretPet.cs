@@ -1,4 +1,4 @@
-/*
+﻿/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  *
  * This program is free software; you can redistribute it and/or
@@ -16,38 +16,40 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
-using DOL.GS;
-
-namespace DOL.AI.Brain
+/*
+ * [Ganrod] Nidel 2008-07-08
+ * - Class for turret, like 1.90 EU official servers: Turret isn't interrupted
+ */
+namespace DOL.GS
 {
-	public class BomberBrain : ControlledNpc
-	{
-		public BomberBrain(GameLiving owner) : base(owner) { }
+  public class TurretPet : GamePet
+  {
+    public TurretPet(INpcTemplate template)
+      : base(template)
+    {
+    }
 
-		public override int ThinkInterval
-		{
-			get { return 10000; }
-		}
+    private Spell turretSpell;
 
-		protected override bool CheckDefensiveSpells(Spell spell)
-		{
-			return true;
-		}
-
-		protected override bool CheckOffensiveSpells(Spell spell)
-		{
-			return true;
-		}
-
-		#region Think
-		public override void Think()
-		{
-		}
     /// <summary>
-    /// Updates the pet window
+    /// Get first spell only
     /// </summary>
-    public override void UpdatePetWindow() { }
-		#endregion
-	}
+    public Spell TurretSpell
+  	{
+  		get { return turretSpell; }
+  		set { turretSpell = value; }
+    }
+
+
+    /// <summary>
+    /// [Ganrod] Nidel: Don't interrupt turret cast.
+    /// </summary>
+    /// <param name="duration"></param>
+    /// <param name="attackType"></param>
+    /// <param name="attacker"></param>
+    public override void StartInterruptTimer(int duration, AttackData.eAttackType attackType, GameLiving attacker)
+    {
+      return;
+    }
+  }
 }

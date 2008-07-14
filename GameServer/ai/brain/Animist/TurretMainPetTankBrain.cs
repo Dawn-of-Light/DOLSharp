@@ -1,4 +1,4 @@
-/*
+﻿/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  *
  * This program is free software; you can redistribute it and/or
@@ -16,38 +16,29 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
+/*
+ * [Ganrod] Nidel 2008-07-08
+ * - AI for turret tank, like 1.90 EU officiel servers
+ * - Turret tank, cast spell and after cast, launch one body attack, again and again...
+ */
 using DOL.GS;
+
 
 namespace DOL.AI.Brain
 {
-	public class BomberBrain : ControlledNpc
-	{
-		public BomberBrain(GameLiving owner) : base(owner) { }
+  public class TurretMainPetTankBrain : TurretMainPetCasterBrain
+  {
+    public TurretMainPetTankBrain(GameLiving owner) : base(owner) { }
 
-		public override int ThinkInterval
-		{
-			get { return 10000; }
-		}
 
-		protected override bool CheckDefensiveSpells(Spell spell)
-		{
-			return true;
-		}
+    protected override void AttackMostWanted()
+    {
+      base.AttackMostWanted();
+      if(Body.TargetObject != null)
+      {
+        Body.StartAttack(Body.TargetObject);
+      }
+    }
 
-		protected override bool CheckOffensiveSpells(Spell spell)
-		{
-			return true;
-		}
-
-		#region Think
-		public override void Think()
-		{
-		}
-    /// <summary>
-    /// Updates the pet window
-    /// </summary>
-    public override void UpdatePetWindow() { }
-		#endregion
-	}
+  }
 }

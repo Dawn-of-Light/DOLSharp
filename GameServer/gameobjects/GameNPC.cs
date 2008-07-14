@@ -2604,7 +2604,11 @@ namespace DOL.GS
 				else
 					log.Info("Confirmed number: " + CurrentHouse.HouseNumber.ToString());
 			}
-
+      // [Ganrod] Nidel: Hack pour mettre full life au respawn.
+      if (!InCombat && IsAlive && base.Health < MaxHealth)
+      {
+        base.Health = MaxHealth;
+      }
 			return true;
 		}
 

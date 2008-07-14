@@ -344,7 +344,8 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="callingTimer">the calling timer</param>
 		/// <returns>the new intervall</returns>
-		protected int QuitTimerCallback(RegionTimer callingTimer)
+		//[Ganrod] Nidel: passe de la méthode en virtual pour permettre l'override.
+		protected virtual int QuitTimerCallback(RegionTimer callingTimer)
 		{
 			if (!IsAlive || ObjectState != eObjectState.Active)
 			{
@@ -11863,9 +11864,18 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CommandNpcRelease()
 		{
+      //[Ganrod] Nidel: Animist can removed his TurretFnF.
+      TurretPet turretFnF = TargetObject as TurretPet;
+      if (turretFnF != null && turretFnF.Brain is TurretFNFBrain && GetItsControlledNpc(turretFnF))
+      {
+        Notify(GameLivingEvent.PetReleased, turretFnF);
+        return;
+      }
+
 			IControlledBrain npc = ControlledNpc;
 			if (npc == null)
 				return;
+
 			BDPet subpet = TargetObject as BDPet;
 			if (subpet != null && subpet.Brain is BDPetBrain && ControlledNpc is CommanderBrain && (ControlledNpc as CommanderBrain).FindPet(subpet.Brain as IControlledBrain))
 			{

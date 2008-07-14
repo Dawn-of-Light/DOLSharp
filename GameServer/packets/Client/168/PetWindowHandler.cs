@@ -16,9 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Reflection;
-using DOL.GS;
+using DOL.AI.Brain;
 using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
@@ -35,16 +34,32 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			if (client.Player == null) return 0;
 
-			byte aggroState = (byte)packet.ReadByte(); 	// 1-Aggressive, 2-Deffensive, 3-Passive
+		  byte aggroState = (byte)packet.ReadByte(); 	// 1-Aggressive, 2-Deffensive, 3-Passive
 			byte walkState = (byte)packet.ReadByte(); 	// 1-Follow, 2-Stay, 3-GoTarg, 4-Here
 			byte command = (byte)packet.ReadByte();		// 1-Attack, 2-Release
 
-//			packet.LogDump();
-//			log.Debug(string.Format("PetWindowHandler: aggro={0} walk={1} command={2}", aggroState, walkState, command));
+			//packet.LogDump();
+			//log.Debug(string.Format("PetWindowHandler: aggro={0} walk={1} command={2}", aggroState, walkState, command));
 
-			new HandlePetCommandAction(client.Player, aggroState, walkState, command).Start(1);
+      //[Ganrod] Nidel: Animist can removed his TurretFnF without MainPet.
+      if (client.Player.TargetObject != null && command.Equals(2) && client.Player.ControlledNpc == null && client.Player.CharacterClass.ID == (int)eCharacterClass.Animist)
+      {
+        TurretPet turret = client.Player.TargetObject as TurretPet;
+        if (turret != null && turret.Brain is TurretFNFBrain)
+        {
+          //release
+          new HandlePetCommandAction(client.Player, 0, 0, 2).Start(1);
+          return 1;
+        }
+      }
+      //[Ganrod] Nidel: Call only if player has controllednpc
+      if (client.Player.ControlledNpc != null)
+      {
+        new HandlePetCommandAction(client.Player, aggroState, walkState, command).Start(1);
+        return 1;
+      }
 
-			return 1;
+		  return 0;
 		}
 
 		/// <summary>
