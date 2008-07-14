@@ -6118,6 +6118,24 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			}
 		}
 
+    /// <summary>
+    ///[Ganrod] Nidel: Get if this living is owner of npc.
+    /// </summary>
+    /// <returns></returns>
+    public virtual bool GetItsControlledNpc(GameNPC npc)
+    {
+      if (npc == null)
+      {
+        return false;
+      }
+      IControlledBrain brain = npc.Brain as IControlledBrain;
+      if (brain == null)
+      {
+        return false;
+      }
+      return brain.GetPlayerOwner() == this;
+    }
+
 		/// <summary>
 		/// Sets the controlled object for this player
 		/// </summary>

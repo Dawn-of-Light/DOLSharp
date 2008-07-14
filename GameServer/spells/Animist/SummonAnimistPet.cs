@@ -16,72 +16,84 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS.PacketHandler;
+/*
+ * [Ganrod] Nidel 2008-07-08
+ * - Useless using removed
+ * - Get Spell
+ * - Add GetGamePet override for use TurretPet class
+ */
 using DOL.AI.Brain;
-using DOL.GS.Effects;
-using log4net;
-using System.Reflection;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Summon an animist pet.
-	/// </summary>
-	public abstract class SummonAnimistPet : SummonSpellHandler
-	{
-		public SummonAnimistPet(GameLiving caster, Spell spell, SpellLine line)
-			: base(caster, spell, line) { }
+  /// <summary>
+  /// Summon an animist pet.
+  /// </summary>
+  public abstract class SummonAnimistPet : SummonSpellHandler
+  {
+    public SummonAnimistPet(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line)
+    {
+    }
 
-		/// <summary>
-		/// Check whether it's possible to summon a pet.
-		/// </summary>
-		/// <param name="selectedTarget"></param>
-		/// <returns></returns>
-		public override bool CheckBeginCast(GameLiving selectedTarget)
-		{
-			if (Caster.GroundTarget == null)
-			{
-				MessageToCaster("You have to set a Areatarget for this Spell.", eChatType.CT_SpellResisted);
-				return false;
-			}
+    /// <summary>
+    /// Check whether it's possible to summon a pet.
+    /// </summary>
+    /// <param name="selectedTarget"></param>
+    /// <returns></returns>
+    public override bool CheckBeginCast(GameLiving selectedTarget)
+    {
+      if(Caster.GroundTarget == null)
+      {
+        MessageToCaster("You have to set a Areatarget for this Spell.", eChatType.CT_SpellResisted);
+        return false;
+      }
 
-			if (!Caster.GroundTargetInView)
-			{
-				MessageToCaster("Your Areatarget is not in view.", eChatType.CT_SpellResisted);
-				return false;
-			}
+      if(!Caster.GroundTargetInView)
+      {
+        MessageToCaster("Your Areatarget is not in view.", eChatType.CT_SpellResisted);
+        return false;
+      }
 
-			if (!WorldMgr.CheckDistance(Caster, Caster.GroundTarget, CalculateSpellRange()))
-			{
-				MessageToCaster("You have to select a closer Areatarget.", eChatType.CT_SpellResisted);
-				return false;
-			}
+      if(!WorldMgr.CheckDistance(Caster, Caster.GroundTarget, CalculateSpellRange()))
+      {
+        MessageToCaster("You have to select a closer Areatarget.", eChatType.CT_SpellResisted);
+        return false;
+      }
 
-			return base.CheckBeginCast(selectedTarget);
-		}
+      return base.CheckBeginCast(selectedTarget);
+    }
 
-		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
-		{
-			base.ApplyEffectOnTarget(target, effectiveness);
+    public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+    {
+      base.ApplyEffectOnTarget(target, effectiveness);
 
-			pet.Name = Spell.Name;
-		}
+      pet.Name = Spell.Name;
+      //[Ganrod] Nidel: Set only one spell.
+      if(pet.Spells != null && pet.Spells.Count > 0)
+      {
+        (pet as TurretPet).TurretSpell = pet.Spells[0] as Spell;
+      }
+    }
 
-		protected override IControlledBrain GetPetBrain(GameLiving owner)
-		{
-			return new TurretBrain(owner);
-		}
+    //[Ganrod] Nidel: use TurretPet
+    protected override GamePet GetGamePet(INpcTemplate template)
+    {
+      return new TurretPet(template);
+    }
 
-		protected override void GetPetLocation(out int x, out int y, out int z, out ushort heading, out Region region)
-		{
-			x = Caster.GroundTarget.X;
-			y = Caster.GroundTarget.Y;
-			z = Caster.GroundTarget.Z;
-			heading = Caster.Heading;
-			region = Caster.CurrentRegion;
-		}
-	}
+    protected override IControlledBrain GetPetBrain(GameLiving owner)
+    {
+      return new TurretBrain(owner);
+    }
+
+    protected override void GetPetLocation(out int x, out int y, out int z, out ushort heading, out Region region)
+    {
+      x = Caster.GroundTarget.X;
+      y = Caster.GroundTarget.Y;
+      z = Caster.GroundTarget.Z;
+      heading = Caster.Heading;
+      region = Caster.CurrentRegion;
+    }
+  }
 }

@@ -13,7 +13,7 @@ GameObject.GetPronoun.Pronoun3:				Son
 GameObject.GetPronoun.Pronoun4:				son
 GameObject.GetPronoun.Pronoun5:				Cela
 GameObject.GetPronoun.Pronoun6:				cela
-GameObject.Interact.TooFarAway:					Vous etes trop loin pour interagir avec {0}.
+GameObject.Interact.TooFarAway:					Vous êtes trop loin pour interagir avec {0}.
 
 
 # GAMEOBJECTS/ATLANTIS

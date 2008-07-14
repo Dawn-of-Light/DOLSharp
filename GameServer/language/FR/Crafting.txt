@@ -39,34 +39,34 @@ Crafting.Name.Weaponcraft:				Weaponcraft
 Crafting.Name.Woodworking:				Woodworking
 
 # /AbstractCraftingSkill
-AbstractCraftingSkill.BuildCraftedItem.BackpackFull:   Votre sac est plein. {0} est depose sur le sol.
-AbstractCraftingSkill.BuildCraftedItem.Masterpiece:   Bravo, Vous avez cree un chez-d'oeuvre !
-AbstractCraftingSkill.BuildCraftedItem.Successfully:   Vous avez correctement fabrique {0}! ({1})
+AbstractCraftingSkill.BuildCraftedItem.BackpackFull:   Votre sac est plein. {0} est déposé sur le sol.
+AbstractCraftingSkill.BuildCraftedItem.Masterpiece:   Bravo, Vous avez créé un chez-d'oeuvre !
+AbstractCraftingSkill.BuildCraftedItem.Successfully:   Vous avez correctement fabriqué {0}! ({1})
 AbstractCraftingSkill.CheckRawMaterial.NoIngredients:   Vous n'avez pas les ingredients pour faire le {0}.
 AbstractCraftingSkill.CheckRawMaterial.RawMaterial:	Cannot find an item by the ID of {0} please report this!
 AbstractCraftingSkill.CheckRawMaterial.YouAreMissing:   Il vous manque :
 
-AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoClothworkingSkill:      Vous n'avez pas le niveau minimum dans la competence en Armurie ({0}) Pour confectionner le {1}!
-AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoLeathercraftingSkill:   Vous n'avez pas le niveau minimum dans la competence  en Couture ({0}) Pour confectionner le {1}!
-AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoMetalworkingSkill:      Vous n'avez pas le niveau minimum dans la competence  en Ingenierie ({0}) Pour confectionner le {1}!
-AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoWoodworkingSkill:      Vous n'avez pas le niveau minimum dans la competence  en Forge ({0}) Pour confectionner le {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoClothworkingSkill:      Vous n'avez pas le niveau minimum dans la compétence en Armurie ({0}) Pour confectionner le {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoLeathercraftingSkill:   Vous n'avez pas le niveau minimum dans la compétence  en Couture ({0}) Pour confectionner le {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoMetalworkingSkill:      Vous n'avez pas le niveau minimum dans la compétence  en Ingénierie ({0}) Pour confectionner le {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoWoodworkingSkill:      Vous n'avez pas le niveau minimum dans la compétence  en Forge ({0}) Pour confectionner le {1}!
 AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.Rawmaterial:			Cannot find an item by the ID of {0} please report this!
 
 AbstractCraftingSkill.CraftItem.BeginWork:      Vous commencez a travailler sur le {0} ({1}%).
-AbstractCraftingSkill.CraftItem.ChanceToGainPoint:   Chance de gagner des points sur votre competence primaire {0}%.
+AbstractCraftingSkill.CraftItem.ChanceToGainPoint:   Chance de gagner des points sur votre compétence primaire {0}%.
 AbstractCraftingSkill.CraftItem.CurrentlyMaking:   En train de faire: {0}
 AbstractCraftingSkill.CraftItem.MoveAndInterrupt:   vous bougez et interrompez votre travail.
 AbstractCraftingSkill.CraftItem.StopWork:      Vous arretez votre travail.
 AbstractCraftingSkill.LooseRawMaterial.Count:      Vous perdez ({0}) {1}.
-AbstractCraftingSkill.LooseRawMaterial.Materials:   Vous n'arrivez pas à faire le {0}, et perdez des materiaux !
-AbstractCraftingSkill.MakeItem.LoseNoMaterials:      Vous n'arrivez pas à faire le {0} mais ne perdez pas de materiaux !
-AbstractCraftingSkill.MakeItem.NotAllMaterials:      Vous n'avez pas tout les composants necessaires à la confection de cet objet.
+AbstractCraftingSkill.LooseRawMaterial.Materials:   Vous n'arrivez pas à faire le {0}, et perdez des matériaux !
+AbstractCraftingSkill.MakeItem.LoseNoMaterials:      Vous n'arrivez pas à faire le {0} mais ne perdez pas de matériaux !
+AbstractCraftingSkill.MakeItem.NotAllMaterials:      Vous n'avez pas tout les composants nécessaires à la confection de cet objet.
 
 # /AdvancedCraftingSkill
 AdvancedCraftingSkill.CombineItems.OnlyCombine:		You can only combine your items into one item!
 AdvancedCraftingSkill.IsAllowedToCombine.CraftedItems:	Only crafted items can be enchanted!
 AdvancedCraftingSkill.IsAllowedToCombine.Imbue:		You need something to imbue {0} with!
-AdvancedCraftingSkill.IsAllowedToCombine.NoEnchanted:	Cet objet ne peut etre enchante!
+AdvancedCraftingSkill.IsAllowedToCombine.NoEnchanted:	Cet objet ne peut etre enchanté!
 
 # /Alchemy
 Alchemy.IsAllowedToCombine.AlchemyTinctures:		You can only combine alchemy tinctures!
@@ -78,18 +78,18 @@ Repair.BeginWork.BeginRepair:				Vous commencez a reparer {0}.
 Repair.BeginWork.BeginRepairing1:			Vous commencez a reparer {0} ({1}%).
 Repair.BeginWork.BeginRepairing2:			{0} commence a reparer {1}.
 Repair.BeginWork.Repairing:				Reparation: {0}
-Repair.BeginWork.StopRepair1:				Vous bougez et interrompe la reparation de: {0}.
+Repair.BeginWork.StopRepair1:				Vous bougez et interrompé la reparation de: {0}.
 Repair.BeginWork.StopRepair2:				{0} bouge et arrete la reparationde: {1}.
 Repair.IsAllowedToBeginWork.BackpackItems:		You can only repair items in your backpack!
 Repair.IsAllowedToBeginWork.CantRepair:			Vous ne pouvez pas reparer {0}!
 Repair.IsAllowedToBeginWork.EndCurrentAction:		Vous devez finir votre action avant de lancer une reparation!
-Repair.IsAllowedToBeginWork.FullyRepaired:		{0} est entierement repare!
+Repair.IsAllowedToBeginWork.FullyRepaired:		{0} est entierement reparé!
 Repair.IsAllowedToBeginWork.NotEnoughSkill:		Vous ne possedez pas les competences pour reparer {0}!
 Repair.IsAllowedToBeginWork.WeaponCrafter:		Vous devez etre un crafteur d'Armes pour reparer les armes de sieges.
 Repair.Proceed.FailImprove1:				You fail to improve the {0}'s condition.
 Repair.Proceed.FailImprove2:				{0} fail to improve the {1}'s condition.
-Repair.Proceed.FullyRepaired1:				Vous avez entierement repare {0}!
-Repair.Proceed.FullyRepaired2:				{0} a entierement repare {1}!
+Repair.Proceed.FullyRepaired1:				Vous avez entierement reparé {0}!
+Repair.Proceed.FullyRepaired2:				{0} a entierement reparé {1}!
 Repair.ProceedSiegeWeapon.FailRepair:			Vous echouez dans la reparation de {0}!
 
 # /Salvage

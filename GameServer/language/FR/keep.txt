@@ -1,7 +1,7 @@
 
 # KEEPS
 # Managers/Player Manager
-PlayerManager.BroadcastCapture.Captured:		Les Forces de {0} ont captire: {1}!
+PlayerManager.BroadcastCapture.Captured:		Les Forces de {0} ont captiré: {1}!
 PlayerManager.BroadcastClaim.Claimed:			{0} ont prit possession de {1}!
-PlayerManager.BroadcastRaize.Razed:			{0} a ete raze par les Forces de {1}!
+PlayerManager.BroadcastRaize.Razed:			{0} a été razé par les Forces de {1}!
 PlayerManager.BroadcastRelease.LostControl:		{0} ont perdu le controle de {1}!

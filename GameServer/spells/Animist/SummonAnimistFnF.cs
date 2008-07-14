@@ -17,14 +17,11 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
+using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
 using DOL.GS.Effects;
-using log4net;
 using DOL.GS.ServerProperties;
-using System.Reflection;
 
 namespace DOL.GS.Spells
 {
@@ -41,19 +38,24 @@ namespace DOL.GS.Spells
 			int nCount = 0;
 			
 			Region rgn = WorldMgr.GetRegion(Caster.CurrentRegion.ID);
-			if (rgn == null || rgn.GetZone(Caster.GroundTarget.X, Caster.GroundTarget.Y)==null) return false;
+
+			if (rgn == null || rgn.GetZone(Caster.GroundTarget.X, Caster.GroundTarget.Y) == null)
+      {
+        MessageToCaster("You can't summon Turret without ground-target !", eChatType.CT_SpellResisted);
+        return false;
+      }
 			
 			foreach (GameNPC npc in Caster.CurrentRegion.GetNPCsInRadius(Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, (ushort)Properties.TURRET_AREA_CAP_RADIUS, false))
 				if (npc.Brain is TurretFNFBrain)
 					nCount++;
 
-			if (nCount >= ServerProperties.Properties.TURRET_AREA_CAP_COUNT)
+			if (nCount >= Properties.TURRET_AREA_CAP_COUNT)
 			{
 				MessageToCaster("You can't summon anymore Turrets in this Area!", eChatType.CT_SpellResisted);
 				return false;
 			}
 
-			if (Caster.PetCounter >= ServerProperties.Properties.TURRET_PLAYER_CAP_COUNT)
+			if (Caster.PetCounter >= Properties.TURRET_PLAYER_CAP_COUNT)
 			{
 				MessageToCaster("You cannot control anymore Turrets!", eChatType.CT_SpellResisted);
 				return false;
@@ -62,29 +64,55 @@ namespace DOL.GS.Spells
 			return base.CheckBeginCast(selectedTarget);
 		}
 
-		protected override void AddHandlers()
+    public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+    {
+      base.ApplyEffectOnTarget(target, effectiveness);
+
+      if (Spell.SubSpellID > 0 && SkillBase.GetSpellByID(Spell.SubSpellID) != null)
+      {
+        pet.Spells.Add(SkillBase.GetSpellByID(Spell.SubSpellID));
+      }
+
+      pet.HealthMultiplicator = true;
+      (pet.Brain as TurretBrain).IsMainPet = false;
+
+      (pet.Brain as IAggressiveBrain).AddToAggroList(target, 1);
+      (pet.Brain as TurretBrain).Think();
+      //[Ganrod] Nidel: Set only one spell.
+      (pet as TurretPet).TurretSpell = pet.Spells[0] as Spell;
+      Caster.PetCounter++;
+    }
+
+	  protected override void SetBrainToOwner(IControlledBrain brain)
 		{
 		}
 
-		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
-		{
-			base.ApplyEffectOnTarget(target, effectiveness);
-            
-            if (Spell.SubSpellID > 0 && SkillBase.GetSpellByID(Spell.SubSpellID) != null)
-				pet.Spells.Add(SkillBase.GetSpellByID(Spell.SubSpellID));
+    /// <summary>
+    /// [Ganrod] Nidel: Can remove TurretFNF
+    /// </summary>
+    /// <param name="e"></param>
+    /// <param name="sender"></param>
+    /// <param name="arguments"></param>
+    protected override void OnNpcReleaseCommand(DOLEvent e, object sender, EventArgs arguments)
+    {
+      pet = sender as GamePet;
+      if (pet == null)
+        return;
 
-			pet.HealthMultiplicator = true;
-			(pet.Brain as TurretBrain).IsMainPet = false;
+      if((pet.Brain as TurretFNFBrain) == null)
+        return;
 
-			(pet.Brain as IAggressiveBrain).AddToAggroList(target, 1);
-			(pet.Brain as TurretBrain).Think();
+      if(Caster.ControlledNpc == null)
+      {
+        ((GamePlayer)Caster).Out.SendPetWindow(null, ePetWindowAction.Close, 0, 0);
+      }
 
-			Caster.PetCounter++;
-		}
+      GameEventMgr.RemoveHandler(pet, GameLivingEvent.PetReleased, OnNpcReleaseCommand);
 
-		protected override void SetBrainToOwner(IControlledBrain brain)
-		{
-		}
+      GameSpellEffect effect = FindEffectOnTarget(pet, this);
+      if (effect != null)
+        effect.Cancel(false);
+    }
 
 		protected override byte GetPetLevel()
 		{

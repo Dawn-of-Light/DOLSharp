@@ -8,11 +8,11 @@ System.LanguagesName.Italian:				Italian
 # SYSTEM
 System.NoSense:									Cela n'aurait aucun sens !
 System.MustSelectTarget:						Vous devez selectionner une cible !
-System.ReleaseTimer:							Delai de resurrection
+System.ReleaseTimer:							Délai de résurrection
 
 
 # PropertyCalculator
-PropertyCalc.MaxSpeed.YouAreEncumbered:			Vous etes surcharge et ne pouvez plus bouger.
+PropertyCalc.MaxSpeed.YouAreEncumbered:			Vous êtes surchargé et ne pouvez plus bouger.
 
 
 # GameGraveStone
