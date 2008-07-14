@@ -619,7 +619,7 @@ namespace DOL.GS.ServerProperties
 				if (attribs.Length == 0)
 					continue;
 				ServerPropertyAttribute attrib = (ServerPropertyAttribute)attribs[0];
-				f.SetValue(null, Properties.Load(attrib));
+        f.SetValue(null, Load(attrib));
 			}
 		}
 

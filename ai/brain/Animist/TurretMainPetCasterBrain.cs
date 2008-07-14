@@ -16,28 +16,91 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
-using System;
-using System.Collections.Generic;
+/*
+ * [Ganrod] Nidel 2008-07-08
+ * - AI for turret caster, like 1.90 EU official servers
+ */
 using DOL.GS;
-using DOL.GS.Spells;
-using DOL.GS.PacketHandler;
-using DOL.GS.Effects;
-using DOL.Events;
 
 namespace DOL.AI.Brain
 {
-	public class TurretMainPetCasterBrain : TurretBrain
-	{
-		public TurretMainPetCasterBrain(GameLiving owner) : base(owner) { }
+  public class TurretMainPetCasterBrain : TurretBrain
+  {
+    public TurretMainPetCasterBrain(GameLiving owner) : base(owner)
+    {
+    }
 
-		//ALL attacking is handled in the think.. they don't do anything but cast spells
-		protected override void AttackMostWanted()
-		{
-		}
+    public override void Think()
+    {
+      if(AggressionState == eAggressionState.Aggressive)
+      {
+        CheckPlayerAggro();
+        CheckNPCAggro();
+        AttackMostWanted();
+        return;
+      }
 
-		protected override void OnAttackedByEnemy(AttackData ad)
-		{
-		}
-	}
+      if(AggressionState != eAggressionState.Passive)
+      {
+        AttackMostWanted();
+      }
+    }
+
+    public override void Attack(GameObject target)
+    {
+      GameLiving defender = target as GameLiving;
+      if(defender == null)
+      {
+        return;
+      }
+
+      if(!GameServer.ServerRules.IsAllowedToAttack(Body, defender, true))
+      {
+        return;
+      }
+
+      if(Body.IsCasting)
+      {
+        Body.StopCurrentSpellcast();
+      }
+      if(AggressionState == eAggressionState.Passive)
+      {
+        AggressionState = eAggressionState.Defensive;
+        UpdatePetWindow();
+      }
+      m_orderAttackTarget = defender;
+
+      AttackMostWanted();
+      return;
+    }
+
+    protected override void AttackMostWanted()
+    {
+      if(!IsActive)
+      {
+        return;
+      }
+
+      GameLiving target = CalculateNextAttackTarget();
+      if(target == null || !target.IsAlive)
+      {
+        return;
+      }
+
+      Body.TargetObject = target;
+      TrustCast(((TurretPet) Body).TurretSpell);
+    }
+
+    protected override void OnFollowLostTarget(GameObject target)
+    {
+    }
+
+    protected override void OnAttackedByEnemy(AttackData ad)
+    {
+      if(AggressionState != eAggressionState.Passive)
+      {
+        AttackMostWanted();
+      }
+    }
+  }
 }

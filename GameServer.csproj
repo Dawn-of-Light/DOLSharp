@@ -108,6 +108,7 @@
     <Compile Include="ai\brain\Animist\BomberBrain.cs" />
     <Compile Include="ai\brain\Animist\TurretFNFBrain.cs" />
     <Compile Include="ai\brain\Animist\TurretMainPetCasterBrain.cs" />
+    <Compile Include="ai\brain\Animist\TurretMainPetTankBrain.cs" />
     <Compile Include="ai\brain\BD Pets\BDArcherBrain.cs" />
     <Compile Include="ai\brain\BD Pets\BDBufferBrain.cs" />
     <Compile Include="ai\brain\BD Pets\BDCasterBrain.cs" />
@@ -631,6 +632,7 @@
     <Compile Include="GameClient.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="gameobjects\Animist\TurretPet.cs" />
     <Compile Include="gameobjects\Atlantis\Arbiter.cs" />
     <Compile Include="gameobjects\Atlantis\ArtifactScholar.cs" />
     <Compile Include="gameobjects\Atlantis\HeadScholar.cs" />
@@ -2444,12 +2446,12 @@
     <Compile Include="world\Zone.cs">
       <SubType>Code</SubType>
     </Compile>
-    <EmbeddedResource Include="config\logconfig.xml">
+    <EmbeddedResource Include="housing\config\logconfig.xml">
     </EmbeddedResource>
-    <EmbeddedResource Include="config\regions.xml">
+    <EmbeddedResource Include="housing\config\regions.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="config\zones.xml">
+    <EmbeddedResource Include="housing\config\zones.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <None Include="language\DE\AI.txt" />
