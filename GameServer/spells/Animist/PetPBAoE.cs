@@ -27,7 +27,7 @@ using DOL.GS.PacketHandler;
 namespace DOL.GS.Spells
 {
 	/// <summary>
-	/// Summary description for TauntSpellHandler.
+    /// Summary description for TurretPBAoESpellHandler.
 	/// </summary>
 	[SpellHandler("TurretPBAoE")]
 	public class PetPBAoE : DirectDamageSpellHandler
@@ -42,24 +42,24 @@ namespace DOL.GS.Spells
 			{
 				return false;
 			}
-			//[Ganrod]Nidel: Launch spell on Controlled Pet if target is null, like 1.90 EU off servers.
-			if(selectedTarget == null && Caster.ControlledNpc != null)
-			{
-				Caster.TargetObject = Caster.ControlledNpc.Body;
-				return base.CheckBeginCast(Caster.ControlledNpc.Body);
-			}
-			GameNPC target = selectedTarget as GameNPC;
-			if(target == null || !(target.Brain is TurretBrain) || !Caster.GetItsControlledNpc(target))
-			{
-				MessageToCaster("You must select your controlled Pet or Turret before casting this spell !", eChatType.CT_SpellResisted);
-				return false;
-			}
-			if((target.Brain is TurretBrain) && !Caster.GetItsControlledNpc(target))
-			{
-				MessageToCaster("You must select your controlled Pet or Turret before casting this spell !", eChatType.CT_SpellResisted);
-				return false;
-			}
-			return base.CheckBeginCast(target);
+            GameNPC target = selectedTarget as GameNPC;
+            //[Ganrod]Nidel: Launch spell on Controlled Pet if target is null
+            // or if taget isn't our controlled npc, like 1.90 EU off servers.
+            if (target == null || !Caster.GetItsControlledNpc(target))
+            {
+                if (Caster.ControlledNpc != null && Caster.ControlledNpc.Body != null)
+                {
+                    if (!Caster.GetItsControlledNpc(target))
+                    {
+                        Caster.TargetObject = Caster.ControlledNpc.Body;
+                        return base.CheckBeginCast(Caster.ControlledNpc.Body);
+                    }
+                }
+                MessageToCaster("You must select your controlled Pet or Turret before casting this spell !",
+                                eChatType.CT_SpellResisted);
+                return false;
+            }
+		    return base.CheckBeginCast(target);
 		}
 
 		public override void FinishSpellCast(GameLiving target)
