@@ -113,7 +113,7 @@ namespace DOL.GS.Spells
       subspell.Level = m_spell.Level;
       if (WorldMgr.CheckDistance(living, bomber, 350))
       {
-        ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(Caster, subspell, SkillBase.GetSpellLine(SpellLine.KeyName));
+        ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(bomber, subspell, SkillBase.GetSpellLine(SpellLine.KeyName));
         spellhandler.StartSpell(living);
       }
 

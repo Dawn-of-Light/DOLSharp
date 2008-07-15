@@ -90,7 +90,10 @@ namespace DOL.AI.Brain
 					TrustCast(((TurretPet) Body).TurretSpell);
 				}
 			}
-			TrustCast(((TurretPet) Body).TurretSpell);
+			else
+			{
+				TrustCast(((TurretPet) Body).TurretSpell);
+			}
 		}
 
 
@@ -101,6 +104,7 @@ namespace DOL.AI.Brain
 		protected override GameLiving CalculateNextAttackTarget()
 	{
 		List<GameLiving> livingList = new List<GameLiving>(3);
+	    base.CalculateNextAttackTarget();
 		lock(m_aggroTable.SyncRoot)
 		{
 			foreach(GameLiving living in m_aggroTable.Keys)
@@ -111,6 +115,9 @@ namespace DOL.AI.Brain
 				if(!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
 					continue;
 
+                if (WorldMgr.GetDistance(Body, living) > MAX_AGGRO_DISTANCE)
+                    continue;
+
 				if(WorldMgr.GetDistance(Body, living) > ((TurretPet) Body).TurretSpell.Range)
 					continue;
 
@@ -118,7 +125,8 @@ namespace DOL.AI.Brain
 					continue;
 
 				GameSpellEffect root = SpellHandler.FindEffectOnTarget(living, "SpeedDecrease");
-				if(root != null && root.Spell.Value == 99) continue;
+				if(root != null && root.Spell.Value == 99)
+                    continue;
 
 				livingList.Add(living);
 			}
