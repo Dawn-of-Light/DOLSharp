@@ -625,6 +625,13 @@ namespace DOL.AI.Brain
 			base.AddToAggroList(living, aggroamount);
 		}
 
+		public override int CalculateAggroLevelToTarget(GameLiving target)
+		{
+		  // only attack if target is green+ to OWNER; always attack higher levels regardless of CON
+		  if (GameServer.ServerRules.IsSameRealm(Body, target, true) || Owner.IsObjectGreyCon(target)) return 0;
+		  return AggroLevel > 100 ? 100 : AggroLevel;
+		}
+
 		/// <summary>
 		/// Returns the best target to attack
 		/// </summary>
