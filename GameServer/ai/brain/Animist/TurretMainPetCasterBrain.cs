@@ -28,9 +28,7 @@ namespace DOL.AI.Brain
 {
 	public class TurretMainPetCasterBrain : TurretBrain
 	{
-		public TurretMainPetCasterBrain(GameLiving owner) : base(owner)
-		{
-		}
+		public TurretMainPetCasterBrain(GameLiving owner) : base(owner){}
 
 		public override void Notify(DOLEvent e, object sender, EventArgs args)
 		{
@@ -94,6 +92,7 @@ namespace DOL.AI.Brain
 		{
 			if(AggressionState != eAggressionState.Passive)
 			{
+				AddToAggroList(ad.Attacker, (ad.Attacker.Level + 1) << 1);
 				AttackMostWanted();
 			}
 		}

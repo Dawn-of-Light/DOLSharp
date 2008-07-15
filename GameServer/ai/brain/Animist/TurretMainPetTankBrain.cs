@@ -65,15 +65,5 @@ namespace DOL.AI.Brain
         Body.StartAttack(Body.TargetObject);
       }
     }
-
-
-	protected override void OnAttackedByEnemy(AttackData ad)
-	{
-	  if (AggressionState != eAggressionState.Passive)
-	  {
-		AttackMostWanted();
-	  }
-	}
-
   }
 }
