@@ -163,12 +163,12 @@ namespace DOL.GS.Keeps
 				}
 				else if (this.Component.Keep is GameKeep)
 				{
-					if (this.Component.Skin == 10)
+					if (this.Component.Skin == 10 || this.Component.Skin == 30) //old and new inner keep
 					{
 						if (this.DoorIndex == 1)
 							return true;
 					}
-					if (this.Component.Skin == 0)
+					if (this.Component.Skin == 0 || this.Component.Skin == 24)//old and new main gate
 					{
 						if (this.DoorIndex == 1 ||
 							this.DoorIndex == 2)

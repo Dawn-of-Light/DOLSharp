@@ -9,7 +9,7 @@ namespace DOL.GS.RealmAbilities
 {
     public class AdrenalineRushAbility : TimedRealmAbility
     {
-        int m_duration = 20;
+        int m_duration = 20000;
         int m_value = 100;
 
         public AdrenalineRushAbility(DBAbility dba, int level) : base(dba, level) { }
@@ -25,7 +25,7 @@ namespace DOL.GS.RealmAbilities
             SendCasterSpellEffectAndCastMessage(living, 7002, true);
             if (player != null)
             {
-                new AdrenalineRushEffect(m_duration, m_value).Start(player);
+                new AdrenalineRushEffect(m_duration, m_value).Start(living);
             }
             DisableSkill(living);
         }
