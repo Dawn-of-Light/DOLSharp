@@ -2529,8 +2529,8 @@ namespace DOL.GS.Spells
 				GamePlayer owner = ((IControlledBrain)((GameNPC)m_caster).Brain).GetPlayerOwner();
 				if (owner != null)
 				{
-					min += GetLevelModFactor() * (owner.Level - owner.Level);
-					max += GetLevelModFactor() * (owner.Level - owner.Level);
+					min += GetLevelModFactor() * (owner.Level - target.Level);
+					max += GetLevelModFactor() * (owner.Level - target.Level);
 				}
 			}
 			if (max < 0.25)
