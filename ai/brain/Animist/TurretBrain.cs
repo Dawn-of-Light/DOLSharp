@@ -197,10 +197,6 @@ namespace DOL.AI.Brain
 
 		#region AI
 
-		protected override void OnAttackedByEnemy(AttackData ad)
-		{
-		}
-
 		public override void FollowOwner()
 		{
 		}
