@@ -114,9 +114,6 @@ namespace DOL.AI.Brain
 				if(WorldMgr.GetDistance(Body, living) > ((TurretPet) Body).TurretSpell.Range)
 					continue;
 
-				if(GetPlayerOwner().IsObjectGreyCon(living))
-					continue;
-
 				if(living.IsMezzed || living.IsStealthed)
 					continue;
 
@@ -126,13 +123,19 @@ namespace DOL.AI.Brain
 				livingList.Add(living);
 			}
 		}
-		m_aggroTable.Clear();
-		if(livingList.Count > 0)
+		if (livingList.Count > 0)
 		{
 			return livingList[Util.Random(livingList.Count - 1)];
 		}
+		m_aggroTable.Clear();
 		return null;
 	}
+
+		protected override void OnAttackedByEnemy(AttackData ad)
+		{
+		  AddToAggroList(ad.Attacker, (ad.Attacker.Level + 1) << 1);
+		  AttackMostWanted();
+		}
 
 		/// <summary>
     /// Updates the pet window
