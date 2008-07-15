@@ -405,7 +405,7 @@ namespace DOL.GS.Spells
 				return false;
 			}
 
-			GameSpellEffect Phaseshift = SpellHandler.FindEffectOnTarget(Caster, "Phaseshift");
+			GameSpellEffect Phaseshift = FindEffectOnTarget(Caster, "Phaseshift");
 			if (Phaseshift != null && (Spell.InstrumentRequirement == 0 || Spell.SpellType == "Mesmerize"))
 			{
 				MessageToCaster("You're phaseshifted and can't cast a spell", eChatType.CT_System);
@@ -493,22 +493,24 @@ namespace DOL.GS.Spells
 
 			String targetType = m_spell.Target.ToLower();
       //[Ganrod] Nidel: Can cast pet spell on all Pet/Turret/Minion (our pet)
-      if(targetType.Equals("pet"))
-      {
-        if (selectedTarget == null && Caster.ControlledNpc != null)
-        {
-          selectedTarget = Caster.ControlledNpc.Body;
-        }
-        if (!Caster.GetItsControlledNpc(selectedTarget as GameNPC))
-        {
-          if(Caster is GamePlayer)
-          {
-            MessageToCaster("You must select your pet for [" + m_spell.Name + "] spell.", eChatType.CT_Spell);
-          }
-          return false;
-        }
-      }
-		  if (targetType == "area")
+            if (targetType.Equals("pet"))
+            {
+                Caster.Say("Begin Pet Type");
+                if (selectedTarget == null || !Caster.GetItsControlledNpc(selectedTarget as GameNPC))
+                {
+                    if (Caster.ControlledNpc != null && Caster.ControlledNpc.Body != null)
+                    {
+                        selectedTarget = Caster.ControlledNpc.Body;
+                    }
+                    else
+                    {
+                        MessageToCaster("You must select your pet for [" + m_spell.Name + "] spell.",
+                                        eChatType.CT_SpellResisted);
+                        return false;
+                    }
+                }
+            }
+		    if (targetType == "area")
 			{
 				if (!WorldMgr.CheckDistance(m_caster, m_caster.GroundTarget, CalculateSpellRange()))
 				{
@@ -754,79 +756,85 @@ namespace DOL.GS.Spells
 			}
 			else if (m_spell.Target.ToLower() != "self" && m_spell.Target.ToLower() != "group" && m_spell.Target.ToLower() != "cone" && m_spell.Range > 0)
 			{
-				//all spells that need a target
-        //[Ganrod] Nidel: Comment for Can cast pet spell on all Pet/Turret/Minion (our pet)
-				/*if (m_spell.Target.ToLower() == "pet" && m_caster is GamePlayer &&
-				    ((GamePlayer)m_caster).ControlledNpc != null)
-				{
-					if (((GamePlayer)m_caster).ControlledNpc.Body != null)
-						target = ((GamePlayer)Caster).ControlledNpc.Body;
-				}*/
+                if (m_spell.Target.ToLower() != "pet")
+                {
+                    //all other spells that need a target
+                    if (target == null || target.ObjectState != GameObject.eObjectState.Active)
+                    {
+                        if (Caster is GamePlayer)
+                            MessageToCaster("You must select a target for this spell!", eChatType.CT_SpellResisted);
+                        return false;
+                    }
 
-				if (m_spell.Target.ToLower() != "pet" && target == null || target.ObjectState != GameLiving.eObjectState.Active)
-				{
-					if (Caster is GamePlayer)
-						MessageToCaster("You must select a target for this spell!", eChatType.CT_SpellResisted);
-					return false;
-				}
+                    if (!WorldMgr.CheckDistance(m_caster, target, CalculateSpellRange()))
+                    {
+                        if (Caster is GamePlayer)
+                            MessageToCaster("That target is too far away!", eChatType.CT_SpellResisted);
+                        return false;
+                    }
+                }
 
-				if (!WorldMgr.CheckDistance(m_caster, target, CalculateSpellRange()))
-				{
-					if(Caster is GamePlayer) MessageToCaster("That target is too far away!", eChatType.CT_SpellResisted);
-					return false;
-				}
+                switch (m_spell.Target)
+                {
+                    case "Enemy":
+                        //enemys have to be in front and in view for targeted spells
+                        if (!(m_caster.IsObjectInFront(target, 180) && m_caster.TargetInView))
+                        {
+                            MessageToCaster("Your target is not in view.  The spell fails.", eChatType.CT_SpellResisted);
+                            return false;
+                        }
 
-				switch (m_spell.Target)
-				{
-					case "Enemy":
-						//enemys have to be in front and in view for targeted spells
-						if (!(m_caster.IsObjectInFront(target, 180) && m_caster.TargetInView))
-						{
-							MessageToCaster("Your target is not in view.  The spell fails.", eChatType.CT_SpellResisted);
-							return false;
-						}
+                        if (!GameServer.ServerRules.IsAllowedToAttack(Caster, target, false))
+                        {
+                            return false;
+                        }
+                        break;
 
-						if (!GameServer.ServerRules.IsAllowedToAttack(Caster, target, false))
-						{
-							return false;
-						}
-						break;
+                    case "Corpse":
+                        if (target.IsAlive || !GameServer.ServerRules.IsSameRealm(Caster, target, true))
+                        {
+                            MessageToCaster("This spell only works on dead members of your realm!",
+                                            eChatType.CT_SpellResisted);
+                            return false;
+                        }
+                        break;
 
-					case "Corpse":
-						if (target.IsAlive || !GameServer.ServerRules.IsSameRealm(Caster, target, true))
-						{
-							MessageToCaster("This spell only works on dead members of your realm!", eChatType.CT_SpellResisted);
-							return false;
-						}
-						break;
+                    case "Realm":
+                        if (!GameServer.ServerRules.IsSameRealm(Caster, target, false))
+                        {
+                            return false;
+                        }
+                        break;
 
-					case "Realm":
-						if (!GameServer.ServerRules.IsSameRealm(Caster, target, false))
-						{
-							return false;
-						}
-						break;
-
-					case "Pet":
-            //[Ganrod] Nidel: Can cast pet spell on all Pet/Turret/Minion (our pet)
-            if (Caster is GamePlayer)
-            {
-              GamePlayer casterPlayer = (GamePlayer) Caster;
-              if(!casterPlayer.GetItsControlledNpc(casterPlayer.TargetObject as GameNPC))
-              {
-                MessageToCaster("You don't have your pet in target.", eChatType.CT_SpellResisted);
-                return false;
-              }
-            }
-            else
-            {
-              if (!Caster.GetItsControlledNpc((GameNPC)Caster.TargetObject))
-              {
-                return false;
-              } 
-            }
-				    break;
-				}
+                    case "Pet":
+                        /*
+                         * [Ganrod] Nidel: Can cast pet spell on all Pet/Turret/Minion (our pet)
+                         * -If caster target's isn't own pet.
+                         *  -check if caster have controlled pet, select this automatically
+                         *  -check if target isn't null
+                         * -check if target isn't too far away
+                         * If all checks isn't true, return false.
+                         */
+                        if (target == null || !Caster.GetItsControlledNpc(target as GameNPC))
+                        {
+                            if (Caster.ControlledNpc != null && Caster.ControlledNpc.Body != null)
+                            {
+                                target = Caster.ControlledNpc.Body;
+                            }
+                            else
+                            {
+                                MessageToCaster("You don't have your pet in target.", eChatType.CT_SpellResisted);
+                                return false;
+                            }
+                        }
+                        //Now check distance for own pet
+                        if (!WorldMgr.CheckDistance(m_caster, target, CalculateSpellRange()))
+                        {
+                            MessageToCaster("That target is too far away!", eChatType.CT_SpellResisted);
+                            return false;
+                        }
+                        break;
+                }
 			}
 
 			if (m_caster.Mana <= 0 && Spell.Power != 0 && Spell.SpellType != "Archery")
