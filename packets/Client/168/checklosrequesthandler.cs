@@ -31,9 +31,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ushort response = packet.ReadShort();
 			ushort unknow = packet.ReadShort();
 
-			if (client.Account.PrivLevel > 1)
-				client.Out.SendMessage(string.Format("CheckLOSResponse: oid1:0x{0:X4} oid2:0x{1:X4} response:0x{2:X4} unk:0x{3:X4}",
-				checker_oid, target_oid, response, unknow), eChatType.CT_System,eChatLoc.CL_SystemWindow);
+			//if (client.Account.PrivLevel > 1)
+			//	client.Out.SendMessage(string.Format("CheckLOSResponse: oid1:0x{0:X4} oid2:0x{1:X4} response:0x{2:X4} unk:0x{3:X4}",
+			//	checker_oid, target_oid, response, unknow), eChatType.CT_System,eChatLoc.CL_SystemWindow);
 
 			HandleCheckAction action = new HandleCheckAction(
 				client.Player,
