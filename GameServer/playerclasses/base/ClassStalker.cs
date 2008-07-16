@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.GS;
+using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
@@ -31,6 +32,11 @@ namespace DOL.GS.PlayerClass
 			m_specializationMultiplier = 10;
 			m_wsbase = 360;
 			m_baseHP = 720;
+		}
+
+		public override string GetTitle(int level)
+		{
+			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
 		}
 
 		public override eClassType ClassType
