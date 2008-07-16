@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
@@ -29,7 +30,7 @@ namespace DOL.GS.PlayerClass
 	{
 		public ClassPaladin() : base()
 		{
-			m_profession = "Church of Albion";
+			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.ChurchofAlbion");
 			m_specializationMultiplier = 20;
 			m_primaryStat = eStat.CON;
 			m_secondaryStat = eStat.PIE;
@@ -41,17 +42,17 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(int level)
 		{
-			if (level>=50) return "Templar";
-			if (level>=45) return "Champion";
-			if (level>=40) return "Justicator";
-			if (level>=35) return "Crusader";
-			if (level>=30) return "Benefactor";
-			if (level>=25) return "Guardian";
-			if (level>=20) return "Defender";
-			if (level>=15) return "Protector";
-			if (level>=10) return "Tyro";
-			if (level>=5) return "Neophyte";
-			return "None";
+			if (level >= 50) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Paladin.GetTitle.50");
+			if (level >= 45) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Paladin.GetTitle.45");
+			if (level >= 40) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Paladin.GetTitle.40");
+			if (level >= 35) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Paladin.GetTitle.35");
+			if (level >= 30) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Paladin.GetTitle.30");
+			if (level >= 25) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Paladin.GetTitle.25");
+			if (level >= 20) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Paladin.GetTitle.20");
+			if (level >= 15) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Paladin.GetTitle.15");
+			if (level >= 10) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Paladin.GetTitle.10");
+			if (level >= 5) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Paladin.GetTitle.5");
+			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
 		}
 
 		public override eClassType ClassType

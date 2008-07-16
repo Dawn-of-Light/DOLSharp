@@ -17,8 +17,9 @@
  *
  */
 using System;
-using DOL.GS;
 using System.Collections;
+using DOL.GS;
+using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
@@ -31,7 +32,7 @@ namespace DOL.GS.PlayerClass
 
 		public ClassInfiltrator() : base()
 		{
-			m_profession = "Guild of Shadows";
+			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.GuildofShadows");
 			m_specializationMultiplier = 25;
 			m_primaryStat = eStat.DEX;
 			m_secondaryStat = eStat.QUI;
@@ -39,18 +40,19 @@ namespace DOL.GS.PlayerClass
 			m_baseHP = 720;
 		}
 
-		public override string GetTitle(int level) {
-			if (level>=50) return "Master Infiltrator";
-			if (level>=45) return "Infiltrator";
-			if (level>=40) return "Black Hand";
-			if (level>=35) return "Master Spy";
-			if (level>=30) return "Assassin";
-			if (level>=25) return "Red Hand";
-			if (level>=20) return "Spy";
-			if (level>=15) return "Blue Hand";
-			if (level>=10) return "Lurker";
-			if (level>=5) return "White Hand";
-			return "None";
+		public override string GetTitle(int level)
+		{
+			if (level >= 50) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Infiltrator.GetTitle.50");
+			if (level >= 45) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Infiltrator.GetTitle.45");
+			if (level >= 40) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Infiltrator.GetTitle.40");
+			if (level >= 35) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Infiltrator.GetTitle.35");
+			if (level >= 30) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Infiltrator.GetTitle.30");
+			if (level >= 25) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Infiltrator.GetTitle.25");
+			if (level >= 20) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Infiltrator.GetTitle.20");
+			if (level >= 15) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Infiltrator.GetTitle.15");
+			if (level >= 10) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Infiltrator.GetTitle.10");
+			if (level >= 5) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Infiltrator.GetTitle.5");
+			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
 		}
 
 		public override bool CanUseLefthandedWeapon(GamePlayer player)

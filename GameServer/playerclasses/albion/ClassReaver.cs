@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.GS;
+using DOL.Language;
 using System.Collections;
 
 namespace DOL.GS.PlayerClass
@@ -30,7 +31,7 @@ namespace DOL.GS.PlayerClass
 	{
 		public ClassReaver() : base()
 		{
-			m_profession = "Temple of Arawn";
+			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.TempleofArawn");
 			m_specializationMultiplier = 20;
 			m_primaryStat = eStat.STR;
 			m_secondaryStat = eStat.DEX;
@@ -42,17 +43,17 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(int level)
 		{
-			if (level>=50) return "Dark Knight";
-			if (level>=45) return "Hero of Arawn";
-			if (level>=40) return "Guardian of Arawn";
-			if (level>=35) return "Underworld Knight";
-			if (level>=30) return "Defender of Arawn";
-			if (level>=25) return "Gray Knight";
-			if (level>=20) return "Soul Protector";
-			if (level>=15) return "Protector of Arawn";
-			if (level>=10) return "Strongarm of Arawn";
-			if (level>=5) return "Dark Squire";
-			return "None";
+			if (level >= 50) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Reaver.GetTitle.50");
+			if (level >= 45) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Reaver.GetTitle.45");
+			if (level >= 40) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Reaver.GetTitle.40");
+			if (level >= 35) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Reaver.GetTitle.35");
+			if (level >= 30) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Reaver.GetTitle.30");
+			if (level >= 25) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Reaver.GetTitle.25");
+			if (level >= 20) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Reaver.GetTitle.20");
+			if (level >= 15) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Reaver.GetTitle.15");
+			if (level >= 10) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Reaver.GetTitle.10");
+			if (level >= 5) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Reaver.GetTitle.5");
+			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
 		}
 
 		public override eClassType ClassType
