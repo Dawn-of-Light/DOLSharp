@@ -3819,9 +3819,6 @@ namespace DOL.GS
 				expTotal += expCampBonus;
 			}
 
-			// Get Champion Experience too
-			GainChampionExperience(expTotal);
-
 			//catacombs characters get 50% boost if they are elligable for slash level
 			switch ((eCharacterClass)CharacterClass.ID)
 			{
@@ -3845,6 +3842,9 @@ namespace DOL.GS
 			}
 
 			base.GainExperience(expTotal, expCampBonus, expGroupBonus, expOutpostBonus, sendMessage, allowMultiply);
+
+			// Get Champion Experience too
+			GainChampionExperience(expTotal);
 
 			if (IsLevelSecondStage)
 			{
