@@ -17,6 +17,7 @@
  *
  */
 using System;
+using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
@@ -28,7 +29,7 @@ namespace DOL.GS.PlayerClass
 	{
 		public ClassHeretic() : base()
 		{
-			m_profession = "Temple of Arawn";
+			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.TempleofArawn");
 			m_specializationMultiplier = 20;
 			m_primaryStat = eStat.PIE;
 			m_secondaryStat = eStat.DEX;
@@ -40,17 +41,17 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(int level)
 		{
-			if (level>=50) return "Arawn's Own Reanimator";
-			if (level>=45) return "Priest of Arawn";
-			if (level>=40) return "Apostle of Arawn";
-			if (level>=35) return "Servant of Arawn";
-			if (level>=30) return "Advocate of Arawn";
-			if (level>=25) return "Devotee of Arawn";
-			if (level>=20) return "Proselyte";
-			if (level>=15) return "Initiate";
-			if (level>=10) return "Apprentice";
-			if (level>=5) return "Aspirant";
-			return "None";
+			if (level >= 50) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Heretic.GetTitle.50");
+			if (level >= 45) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Heretic.GetTitle.45");
+			if (level >= 40) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Heretic.GetTitle.40");
+			if (level >= 35) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Heretic.GetTitle.35");
+			if (level >= 30) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Heretic.GetTitle.30");
+			if (level >= 25) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Heretic.GetTitle.25");
+			if (level >= 20) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Heretic.GetTitle.20");
+			if (level >= 15) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Heretic.GetTitle.15");
+			if (level >= 10) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Heretic.GetTitle.10");
+			if (level >= 5) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Heretic.GetTitle.5");
+			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
 		}
 
 		/// <summary>
