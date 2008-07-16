@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.GS;
+using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
@@ -29,7 +30,7 @@ namespace DOL.GS.PlayerClass
 	{
 		public ClassWizard() : base() 
 		{
-			m_profession = "Academy";
+			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.Academy");
 			m_specializationMultiplier = 10;
 			m_primaryStat = eStat.INT;
 			m_secondaryStat = eStat.DEX;
@@ -40,17 +41,17 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(int level) 
 		{
-			if (level>=50) return "Magus Prime";
-			if (level>=45) return "Master Spellbinder";
-			if (level>=40) return "Master Elementalist";
-			if (level>=35) return "Thaumaturge";
-			if (level>=30) return "Invoker";
-			if (level>=25) return "Magus";
-			if (level>=20) return "Spellbinder";
-			if (level>=15) return "Elementalist";
-			if (level>=10) return "Wizard Adept"; 
-			if (level>=5) return "Apprentice Wizard"; 
-			return "None"; 
+			if (level >= 50) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Wizard.GetTitle.50");
+			if (level >= 45) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Wizard.GetTitle.45");
+			if (level >= 40) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Wizard.GetTitle.40");
+			if (level >= 35) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Wizard.GetTitle.35");
+			if (level >= 30) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Wizard.GetTitle.30");
+			if (level >= 25) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Wizard.GetTitle.25");
+			if (level >= 20) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Wizard.GetTitle.20");
+			if (level >= 15) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Wizard.GetTitle.15");
+			if (level >= 10) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Wizard.GetTitle.10");
+			if (level >= 5) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Wizard.GetTitle.5");
+			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
 		}
 
 		/// <summary>

@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
@@ -29,7 +30,7 @@ namespace DOL.GS.PlayerClass
 	{
 		public ClassMercenary() : base()
 		{
-			m_profession = "Guild of Shadows";
+			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.GuildofShadows");
 			m_specializationMultiplier = 20;
 			m_primaryStat = eStat.STR;
 			m_secondaryStat = eStat.DEX;
@@ -39,17 +40,17 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(int level)
 		{
-			if (level>=50) return "Mercenary Master";
-			if (level>=45) return "Master Warrior";
-			if (level>=40) return "Warrior";
-			if (level>=35) return "Veteran";
-			if (level>=30) return "Blackguard";
-			if (level>=25) return "Soldier of Fortune";
-			if (level>=20) return "Swashbuckler";
-			if (level>=15) return "Escaladar";
-			if (level>=10) return "Pugilist";
-			if (level>=5) return "Strong-Arm";
-			return "None";
+			if (level >= 50) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Mercenary.GetTitle.50");
+			if (level >= 45) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Mercenary.GetTitle.45");
+			if (level >= 40) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Mercenary.GetTitle.40");
+			if (level >= 35) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Mercenary.GetTitle.35");
+			if (level >= 30) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Mercenary.GetTitle.30");
+			if (level >= 25) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Mercenary.GetTitle.25");
+			if (level >= 20) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Mercenary.GetTitle.20");
+			if (level >= 15) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Mercenary.GetTitle.15");
+			if (level >= 10) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Mercenary.GetTitle.10");
+			if (level >= 5) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Mercenary.GetTitle.5");
+			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
 		}
 
 		public override bool CanUseLefthandedWeapon(GamePlayer player)

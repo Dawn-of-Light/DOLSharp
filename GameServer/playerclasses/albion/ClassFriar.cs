@@ -17,6 +17,7 @@
  *
  */
 using System;
+using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
@@ -28,7 +29,7 @@ namespace DOL.GS.PlayerClass
 	{
 		public ClassFriar() : base()
 		{
-			m_profession = "Defenders of Albion";
+			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.DefendersofAlbion");
 			m_specializationMultiplier = 18;
 			m_primaryStat = eStat.PIE;
 			m_secondaryStat = eStat.CON;
@@ -40,17 +41,17 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(int level)
 		{
-			if (level>=50) return "Chaplain Primus";
-			if (level>=45) return "Master Inquisitor";
-			if (level>=40) return "Greater Chaplain";
-			if (level>=35) return "Inquisitor";
-			if (level>=30) return "Chaplain";
-			if (level>=25) return "Ecstatic";
-			if (level>=20) return "Zealot";
-			if (level>=15) return "Fanatic";
-			if (level>=10) return "Lesser Chaplain";
-			if (level>=5) return "Friar Acolyte";
-			return "None";
+			if (level >= 50) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Friar.GetTitle.50");
+			if (level >= 45) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Friar.GetTitle.45");
+			if (level >= 40) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Friar.GetTitle.40");
+			if (level >= 35) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Friar.GetTitle.35");
+			if (level >= 30) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Friar.GetTitle.30");
+			if (level >= 25) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Friar.GetTitle.25");
+			if (level >= 20) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Friar.GetTitle.20");
+			if (level >= 15) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Friar.GetTitle.15");
+			if (level >= 10) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Friar.GetTitle.10");
+			if (level >= 5) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Friar.GetTitle.5");
+			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
 		}
 
 		/// <summary>

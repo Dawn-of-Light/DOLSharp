@@ -304,3 +304,4 @@ GamePlayer.UseSlot.OutOfCharges:			{0} hat keine Ladungen mehr.
 GamePlayer.UseSlot.StopCallingMount:			Ihr ruft nicht mehr nach Eurem Pferd.		
 GamePlayer.UseSlot.WhistleMount:			Ihr pfeift nach Eurem Pferd.		
 GamePlayer.Whisper.SelectTarget:			Wählt jemanden aus, dem Ihr etwas zuflüstern wollt!
+PlayerClass.OnLevelUp.Autotrain:			Ihr trainiert "{0}" automatisch auf Stufe {1}.
