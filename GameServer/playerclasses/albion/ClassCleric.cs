@@ -17,6 +17,7 @@
  *
  */
 using System;
+using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
@@ -28,7 +29,7 @@ namespace DOL.GS.PlayerClass
 	{
 		public ClassCleric() : base() 
 		{
-			m_profession = "Church of Albion";
+			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.ChurchofAlbion");
 			m_specializationMultiplier = 10;
 			m_primaryStat = eStat.PIE;
 			m_secondaryStat = eStat.CON;
@@ -39,17 +40,17 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(int level) 
 		{
-			if (level>=50) return "Pontifex";
-			if (level>=45) return "Cardinal";
-			if (level>=40) return "Bishop";
-			if (level>=35) return "Abbot";
-			if (level>=30) return "Ecclesiastic";
-			if (level>=25) return "Deacon";
-			if (level>=20) return "Prelate";
-			if (level>=15) return "Curate";
-			if (level>=10) return "Novice"; 
-			if (level>=5) return "Initiate"; 
-			return "None"; 
+			if (level >= 50) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Cleric.GetTitle.50");
+			if (level >= 45) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Cleric.GetTitle.45");
+			if (level >= 40) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Cleric.GetTitle.40");
+			if (level >= 35) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Cleric.GetTitle.35");
+			if (level >= 30) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Cleric.GetTitle.30");
+			if (level >= 25) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Cleric.GetTitle.25");
+			if (level >= 20) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Cleric.GetTitle.20");
+			if (level >= 15) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Cleric.GetTitle.15");
+			if (level >= 10) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Cleric.GetTitle.10");
+			if (level >= 5) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Cleric.GetTitle.5");
+			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
 		}
 
 		/// <summary>

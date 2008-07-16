@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.GS;
+using DOL.Language;
 using System.Collections;
 
 namespace DOL.GS.PlayerClass
@@ -31,7 +32,7 @@ namespace DOL.GS.PlayerClass
 		
 		public ClassMinstrel() : base()
 		{
-			m_profession = "Academy";
+			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.Academy");
 			m_specializationMultiplier = 15;
 			m_primaryStat = eStat.CHR;
 			m_secondaryStat = eStat.DEX;
@@ -41,18 +42,19 @@ namespace DOL.GS.PlayerClass
 			m_baseHP = 720;
 		}
 
-		public override string GetTitle(int level) {
-			if (level>=50) return "Virtuoso";
-			if (level>=45) return "Master Soloist";
-			if (level>=40) return "Soloist";
-			if (level>=35) return "Elegist";
-			if (level>=30) return "Rhapsodist";
-			if (level>=25) return "Troubadour";
-			if (level>=20) return "Lyricist";
-			if (level>=15) return "Versesmith";
-			if (level>=10) return "Sonneteer"; 
-			if (level>=5) return "Balladeer"; 
-			return "None"; 
+		public override string GetTitle(int level)
+		{
+			if (level >= 50) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Minstrel.GetTitle.50");
+			if (level >= 45) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Minstrel.GetTitle.45");
+			if (level >= 40) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Minstrel.GetTitle.40");
+			if (level >= 35) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Minstrel.GetTitle.35");
+			if (level >= 30) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Minstrel.GetTitle.30");
+			if (level >= 25) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Minstrel.GetTitle.25");
+			if (level >= 20) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Minstrel.GetTitle.20");
+			if (level >= 15) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Minstrel.GetTitle.15");
+			if (level >= 10) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Minstrel.GetTitle.10");
+			if (level >= 5) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Minstrel.GetTitle.5");
+			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
 		}
 
 		public override eClassType ClassType

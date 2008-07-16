@@ -1,1 +1,22 @@
-﻿PlayerClass.OnLevelUp.Autotrain:			Ihr trainiert "{0}" automatisch auf Stufe {1}.
+﻿PlayerClass.Profession.Academy:			Akademie
+PlayerClass.Profession.ChurchofAlbion:		Kirche Albions
+PlayerClass.Profession.DefendersofAlbion:	Verteidiger von Albion
+PlayerClass.Profession.GuildofShadows:		Schattenbruderschaft
+PlayerClass.Profession.HouseofBodgar:		Haus Bodgar
+PlayerClass.Profession.HouseofBragi:		Haus Bragi
+PlayerClass.Profession.HouseofEir:		Haus Eir
+PlayerClass.Profession.HouseofHel:		Haus Hel
+PlayerClass.Profession.HouseofKelgor:		Haus Kelgor
+PlayerClass.Profession.HouseofModi:		Haus Modi
+PlayerClass.Profession.HouseofOdin:		Haus Odin
+PlayerClass.Profession.HouseofSkadi:		Haus Skadi
+PlayerClass.Profession.HouseofThor:		Haus Thor
+PlayerClass.Profession.HouseofTyr:		Haus Tyr
+PlayerClass.Profession.HouseofYmir:		Haus Ymir
+PlayerClass.Profession.Loki:			Loki
+PlayerClass.Profession.PathofAffinity:		Pfad der Affinität
+PlayerClass.Profession.PathofEssence:		Pfad der Essenz
+PlayerClass.Profession.PathofFocus:		Pfad der Konzentration
+PlayerClass.Profession.PathofHarmony:		Pfad der Harmonie
+PlayerClass.Profession.TempleofArawn:		Kirche Arawns
+PlayerClass.Profession.TempleofIronFist:	Tempel der Eisenfaust

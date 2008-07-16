@@ -1,0 +1,179 @@
+#All
+PlayerClass.GetTitle.none:		Keiner
+
+PlayerClass.Mauler.GetTitle.50:		Meistermalmer
+PlayerClass.Mauler.GetTitle.45:		Fetzer
+PlayerClass.Mauler.GetTitle.40:		Eisenfaust
+PlayerClass.Mauler.GetTitle.35:		Zänker
+PlayerClass.Mauler.GetTitle.30:		Zehn Hände
+PlayerClass.Mauler.GetTitle.25:		Aggressor
+PlayerClass.Mauler.GetTitle.20:		Boxer
+PlayerClass.Mauler.GetTitle.15:		Fünf Pranken
+PlayerClass.Mauler.GetTitle.10:		Steinhand
+PlayerClass.Mauler.GetTitle.5:		Malmereingeweihter
+
+#Albion
+PlayerClass.Armsman.GetTitle.50:	General
+PlayerClass.Armsman.GetTitle.45:	Oberst
+PlayerClass.Armsman.GetTitle.40:	Zenturio
+PlayerClass.Armsman.GetTitle.35:	Leutnant
+PlayerClass.Armsman.GetTitle.30:	Feldwebel
+PlayerClass.Armsman.GetTitle.25:	Legionär
+PlayerClass.Armsman.GetTitle.20:	Soldat
+PlayerClass.Armsman.GetTitle.15:	Infanterist
+PlayerClass.Armsman.GetTitle.10:	Fußsoldat
+PlayerClass.Armsman.GetTitle.5:		Einberufener
+
+PlayerClass.Cabalist.GetTitle.50:	Primus der Kabbalisten
+PlayerClass.Cabalist.GetTitle.45:	Meisterpräger
+PlayerClass.Cabalist.GetTitle.40:	Meister-Spiritist
+PlayerClass.Cabalist.GetTitle.35:	Animator
+PlayerClass.Cabalist.GetTitle.30:	Spiritist
+PlayerClass.Cabalist.GetTitle.25:	Erfahrener Kabbalist
+PlayerClass.Cabalist.GetTitle.20:	Erschaffer
+#PlayerClass.Cabalist.GetTitle.15:	Imbuer
+#PlayerClass.Cabalist.GetTitle.10:	Journeyman Cleric
+#PlayerClass.Cabalist.GetTitle.5:	Apprentice Cleric
+
+PlayerClass.Cleric.GetTitle.50:		Pontifex
+PlayerClass.Cleric.GetTitle.45:		Kardinal
+PlayerClass.Cleric.GetTitle.40:		Bischof
+PlayerClass.Cleric.GetTitle.35:		Abt
+PlayerClass.Cleric.GetTitle.30:		Geistlicher
+PlayerClass.Cleric.GetTitle.25:		Diakon
+PlayerClass.Cleric.GetTitle.20:		Prälat
+PlayerClass.Cleric.GetTitle.15:		Pastor
+#PlayerClass.Cleric.GetTitle.10:	Novice
+PlayerClass.Cleric.GetTitle.5:		Initiat
+
+PlayerClass.Friar.GetTitle.50:		Primus
+PlayerClass.Friar.GetTitle.45:		Großinquisitor
+PlayerClass.Friar.GetTitle.40:		Großkaplan
+PlayerClass.Friar.GetTitle.35:		Inquisitor
+PlayerClass.Friar.GetTitle.30:		Kaplan
+PlayerClass.Friar.GetTitle.25:		Eiferer
+PlayerClass.Friar.GetTitle.20:		Zelot
+#PlayerClass.Friar.GetTitle.15:		Fanatic
+PlayerClass.Friar.GetTitle.10:		Unterkaplan
+#PlayerClass.Friar.GetTitle.5:		Friar Acolyte
+
+PlayerClass.Heretic.GetTitle.50:	Arawns Selbst
+PlayerClass.Heretic.GetTitle.45:	Priester Arawns
+PlayerClass.Heretic.GetTitle.40:	Apostel Arawns
+PlayerClass.Heretic.GetTitle.35:	Diener Arawns
+PlayerClass.Heretic.GetTitle.30:	Verfechter Arawns
+PlayerClass.Heretic.GetTitle.25:	Verehrer Arawns
+PlayerClass.Heretic.GetTitle.20:	Bekehrter
+PlayerClass.Heretic.GetTitle.15:	Eingeweihter
+PlayerClass.Heretic.GetTitle.10:	Lehrling
+PlayerClass.Heretic.GetTitle.5:		Anwärter
+
+PlayerClass.Infiltrator.GetTitle.50:	Großinfiltrator
+PlayerClass.Infiltrator.GetTitle.45:	Infiltrator
+PlayerClass.Infiltrator.GetTitle.40:	Schwarzhand
+PlayerClass.Infiltrator.GetTitle.35:	Meisterspion
+PlayerClass.Infiltrator.GetTitle.30:	Meuchler
+PlayerClass.Infiltrator.GetTitle.25:	Rothand
+PlayerClass.Infiltrator.GetTitle.20:	Spion
+PlayerClass.Infiltrator.GetTitle.15:	Blauhand
+#PlayerClass.Infiltrator.GetTitle.10:	Lurker
+#PlayerClass.Infiltrator.GetTitle.5:	White Hand
+
+PlayerClass.Mercenary.GetTitle.50:	Söldnerführer	
+PlayerClass.Mercenary.GetTitle.45:	Meisterkrieger
+PlayerClass.Mercenary.GetTitle.40:	Krieger
+PlayerClass.Mercenary.GetTitle.35:	Veteran
+PlayerClass.Mercenary.GetTitle.30:	Düsterwache
+PlayerClass.Mercenary.GetTitle.25:	Glücksritter
+PlayerClass.Mercenary.GetTitle.20:	Fechter
+#PlayerClass.Mercenary.GetTitle.15:	Escaladar
+PlayerClass.Mercenary.GetTitle.10:	Pugilist
+PlayerClass.Mercenary.GetTitle.5:	Kraftprotz
+
+PlayerClass.Minstrel.GetTitle.50:	Virtuose
+PlayerClass.Minstrel.GetTitle.45:	Meister-Solist
+PlayerClass.Minstrel.GetTitle.40:	Solist
+PlayerClass.Minstrel.GetTitle.35:	Elegist
+PlayerClass.Minstrel.GetTitle.30:	Rhapsodist
+PlayerClass.Minstrel.GetTitle.25:	Troubadour
+PlayerClass.Minstrel.GetTitle.20:	Lyriker
+#PlayerClass.Minstrel.GetTitle.15:	Versesmith
+PlayerClass.Minstrel.GetTitle.10:	Dichter
+#PlayerClass.Minstrel.GetTitle.5:	Balladeer
+
+PlayerClass.Necromancer.GetTitle.50:	Meister-Reanimator
+PlayerClass.Necromancer.GetTitle.45:	Todesbringer
+PlayerClass.Necromancer.GetTitle.40:	Reanimator
+PlayerClass.Necromancer.GetTitle.35:	Todessucher
+PlayerClass.Necromancer.GetTitle.30:	Priester Arawns
+PlayerClass.Necromancer.GetTitle.25:	Todeswächter
+PlayerClass.Necromancer.GetTitle.20:	Adept Arawns
+#PlayerClass.Necromancer.GetTitle.15:	Summoner
+#PlayerClass.Necromancer.GetTitle.10:	Servant of Arawn
+PlayerClass.Necromancer.GetTitle.5:	Nekromantenschüler
+
+PlayerClass.Paladin.GetTitle.50:	Templer
+PlayerClass.Paladin.GetTitle.45:	Champion
+PlayerClass.Paladin.GetTitle.40:	Justikator
+PlayerClass.Paladin.GetTitle.35:	Kreuzritter
+PlayerClass.Paladin.GetTitle.30:	Wohltäter
+PlayerClass.Paladin.GetTitle.25:	Wächter
+PlayerClass.Paladin.GetTitle.20:	Verteidiger
+#PlayerClass.Paladin.GetTitle.15:	Protector
+#PlayerClass.Paladin.GetTitle.10:	Tyro
+PlayerClass.Paladin.GetTitle.5:		Neuling
+
+PlayerClass.Reaver.GetTitle.50:		Dunkler Ritter
+PlayerClass.Reaver.GetTitle.45:		Arawns Held
+PlayerClass.Reaver.GetTitle.40:		Wächter Arawns
+PlayerClass.Reaver.GetTitle.35:		Unterweltritter
+PlayerClass.Reaver.GetTitle.30:		Verteidiger Arawns
+PlayerClass.Reaver.GetTitle.25:		Grauer Ritter
+PlayerClass.Reaver.GetTitle.20:		Seelenschützer
+#PlayerClass.Reaver.GetTitle.15:	Protector of Arawn
+PlayerClass.Reaver.GetTitle.10:		Verfechter Arawns
+PlayerClass.Reaver.GetTitle.5:		Dunkler Knappe
+
+PlayerClass.Scout.GetTitle.50:		Meisterspäher
+PlayerClass.Scout.GetTitle.45:		Ranger
+PlayerClass.Scout.GetTitle.40:		Behüter
+PlayerClass.Scout.GetTitle.35:		Adlerauge
+PlayerClass.Scout.GetTitle.30:		Späher
+PlayerClass.Scout.GetTitle.25:		Kundschafter
+PlayerClass.Scout.GetTitle.20:		Beobachter
+PlayerClass.Scout.GetTitle.15:		Spurenleser
+PlayerClass.Scout.GetTitle.10:		Bogner
+#PlayerClass.Scout.GetTitle.5:		Apprentice Scout
+
+PlayerClass.Sorcerer.GetTitle.50:	Erzmagier
+PlayerClass.Sorcerer.GetTitle.45:	Magier
+PlayerClass.Sorcerer.GetTitle.40:	Enigma
+PlayerClass.Sorcerer.GetTitle.35:	Geistestöter
+PlayerClass.Sorcerer.GetTitle.30:	Verfluchter
+PlayerClass.Sorcerer.GetTitle.25:	Erzverwirrer
+PlayerClass.Sorcerer.GetTitle.20:	Besänftiger
+PlayerClass.Sorcerer.GetTitle.15:	Verwirrer
+PlayerClass.Sorcerer.GetTitle.10:	Magiergeselle
+PlayerClass.Sorcerer.GetTitle.5:	Hexerlehrling
+
+PlayerClass.Theurgist.GetTitle.50:	Meistertheurg
+PlayerClass.Theurgist.GetTitle.45:	Meisterbeschwörer
+PlayerClass.Theurgist.GetTitle.40:	Gefechtsingenieur
+PlayerClass.Theurgist.GetTitle.35:	Primus der Ingenieure
+PlayerClass.Theurgist.GetTitle.30:	Primus der Beschwörer
+PlayerClass.Theurgist.GetTitle.25:	Ingenieur
+PlayerClass.Theurgist.GetTitle.20:	Pionier
+PlayerClass.Theurgist.GetTitle.15:	Beschwörer
+PlayerClass.Theurgist.GetTitle.10:	Theurgengeselle
+PlayerClass.Theurgist.GetTitle.5:	Theurgrekrut
+
+PlayerClass.Wizard.GetTitle.50:		Magier-Primus
+PlayerClass.Wizard.GetTitle.45:		Meister-Spukweber
+PlayerClass.Wizard.GetTitle.40:		Meister-Elementarist
+PlayerClass.Wizard.GetTitle.35:		Thaumaturg
+PlayerClass.Wizard.GetTitle.30:		Geisteranrufer
+PlayerClass.Wizard.GetTitle.25:		Magier
+PlayerClass.Wizard.GetTitle.20:		Spukweber
+PlayerClass.Wizard.GetTitle.15:		Elementarist
+PlayerClass.Wizard.GetTitle.10:		Zaubergeselle
+PlayerClass.Wizard.GetTitle.5:		Zauberlehrling

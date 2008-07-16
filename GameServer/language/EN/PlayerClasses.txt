@@ -1,0 +1,22 @@
+PlayerClass.Profession.Academy:			Academy
+PlayerClass.Profession.ChurchofAlbion:		Church of Albion
+PlayerClass.Profession.DefendersofAlbion:	Defenders of Albion
+PlayerClass.Profession.GuildofShadows:		Guild of Shadows
+PlayerClass.Profession.HouseofBodgar:		House of Bodgar
+PlayerClass.Profession.HouseofBragi:		House of Bragi
+PlayerClass.Profession.HouseofEir:		House of Eir
+PlayerClass.Profession.HouseofHel:		House of Hel
+PlayerClass.Profession.HouseofKelgor:		House of Kelgor
+PlayerClass.Profession.HouseofModi:		House of Modi
+PlayerClass.Profession.HouseofOdin:		House of Odin
+PlayerClass.Profession.HouseofSkadi:		House of Skadi
+PlayerClass.Profession.HouseofThor:		House of Thor
+PlayerClass.Profession.HouseofTyr:		House of Tyr
+PlayerClass.Profession.HouseofYmir:		House of Ymir
+PlayerClass.Profession.Loki:			Loki
+PlayerClass.Profession.PathofAffinity:		Path of Affinity
+PlayerClass.Profession.PathofEssence:		Path of Essence
+PlayerClass.Profession.PathofFocus:		Path of Focus
+PlayerClass.Profession.PathofHarmony:		Path of Harmony
+PlayerClass.Profession.TempleofArawn:		Temple of Arawn
+PlayerClass.Profession.TempleofIronFist:	Temple of the Iron Fist
