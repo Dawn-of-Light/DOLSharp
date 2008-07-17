@@ -103,7 +103,7 @@ namespace DOL.AI.Brain
 	/// <returns></returns>
 		protected override GameLiving CalculateNextAttackTarget()
 	{
-		List<GameLiving> livingList = new List<GameLiving>(3);
+		List<GameLiving> livingList = new List<GameLiving>();
 	    base.CalculateNextAttackTarget();
 		lock(m_aggroTable.SyncRoot)
 		{
