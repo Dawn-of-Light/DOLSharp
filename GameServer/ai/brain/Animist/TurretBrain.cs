@@ -36,7 +36,7 @@ namespace DOL.AI.Brain
 
 		public TurretBrain(GameLiving owner) : base(owner)
 		{
-			listDefensiveTarget = new List<GameLiving>(8);
+			listDefensiveTarget = new List<GameLiving>();
 		}
 
 		public List<GameLiving> ListDefensiveTarget
