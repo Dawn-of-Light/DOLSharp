@@ -1018,9 +1018,6 @@ namespace DOL.GS.Spells
 			{
 				GameLiving target = m_target;
 
-				// graveen, quickfix, todo: check if i need to launch any following method, but tomorrow :)
-				if (m_target==null) return;
-
 				try
 				{
 					if (m_handler.CheckEndCast(target))
