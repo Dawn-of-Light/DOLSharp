@@ -66,9 +66,9 @@ namespace DOL.GS.Spells
 		{
 			//Make pet Caster spell
 			m_caster = Caster.TargetObject as GameLiving;
-			
-			if (m_caster==null) return;
-			
+
+			if (m_caster == null) return;
+
 			base.FinishSpellCast(target);
 		}
 

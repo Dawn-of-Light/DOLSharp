@@ -495,7 +495,6 @@ namespace DOL.GS.Spells
       //[Ganrod] Nidel: Can cast pet spell on all Pet/Turret/Minion (our pet)
             if (targetType.Equals("pet"))
             {
-                Caster.Say("Begin Pet Type");
                 if (selectedTarget == null || !Caster.GetItsControlledNpc(selectedTarget as GameNPC))
                 {
                     if (Caster.ControlledNpc != null && Caster.ControlledNpc.Body != null)
