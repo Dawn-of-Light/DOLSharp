@@ -16,15 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-/*
- * [Ganrod] Nidel 2008-07-08
- * - Turret find target if needed and Cast spell
- */
 using System.Collections.Generic;
 using DOL.GS;
-using DOL.GS.Effects;
-using DOL.GS.Spells;
-
 
 namespace DOL.AI.Brain
 {
@@ -47,102 +40,46 @@ namespace DOL.AI.Brain
 				playerowner.Out.SendObjectUpdate(Body);
 				playerowner.CurrentUpdateArray[Body.ObjectID - 1] = true;
 			}
-
-			if(CheckSpells(eCheckSpellType.Offensive))
-			{
-				return;
-			}
-			if(CheckSpells(eCheckSpellType.Defensive))
-			{
-				// don't need target for radius spell
-				if(((TurretPet) Body).TurretSpell.Radius == 0)
-				{
-					Body.TargetObject = GetDefensiveTarget(((TurretPet) Body).TurretSpell);
-				}
-				TrustCast(((TurretPet) Body).TurretSpell);
-				return;
-			}
-			if(Body.IsAttacking)
-			{
-				Body.StopAttack();
-			}
-
-			if(Body.SpellTimer != null && Body.SpellTimer.IsAlive)
-			{
-				Body.SpellTimer.Stop();
-			}
+		  CheckSpells(eCheckSpellType.Offensive);
+		  CheckSpells(eCheckSpellType.Defensive);
 		}
 
-		protected override void AttackMostWanted()
-		{
-			if(!IsActive)
-			{
-				return;
-			}
-			if(((TurretPet) Body).TurretSpell.Radius == 0)
-			{
-				CheckPlayerAggro();
-				CheckNPCAggro();
-				GameLiving target = CalculateNextAttackTarget();
-				if(target != null)
-				{
-					Body.TargetObject = target;
-					TrustCast(((TurretPet) Body).TurretSpell);
-				}
-			}
-			else
-			{
-				TrustCast(((TurretPet) Body).TurretSpell);
-			}
-		}
-
-
-	/// <summary>
-	/// Get a random target from aggro table
-	/// </summary>
-	/// <returns></returns>
+		/// <summary>
+		/// Get a random target from aggro table
+		/// </summary>
+		/// <returns></returns>
 		protected override GameLiving CalculateNextAttackTarget()
-	{
-		List<GameLiving> livingList = new List<GameLiving>();
-	    base.CalculateNextAttackTarget();
-		lock(m_aggroTable.SyncRoot)
 		{
-			foreach(GameLiving living in m_aggroTable.Keys)
+			List<GameLiving> livingList = new List<GameLiving>();
+			base.CalculateNextAttackTarget();
+			lock(m_aggroTable.SyncRoot)
 			{
-				if(living.EffectList.GetOfType(typeof(NecromancerShadeEffect)) != null)
-					continue;
+				foreach(GameLiving living in m_aggroTable.Keys)
+				{
+					if(!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
+						continue;
 
-				if(!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
-					continue;
+					if(WorldMgr.GetDistance(Body, living) > MAX_AGGRO_DISTANCE)
+						continue;
 
-                if (WorldMgr.GetDistance(Body, living) > MAX_AGGRO_DISTANCE)
-                    continue;
+					if(WorldMgr.GetDistance(Body, living) > ((TurretPet) Body).TurretSpell.Range)
+						continue;
 
-				if(WorldMgr.GetDistance(Body, living) > ((TurretPet) Body).TurretSpell.Range)
-					continue;
-
-				if(living.IsMezzed || living.IsStealthed)
-					continue;
-
-				GameSpellEffect root = SpellHandler.FindEffectOnTarget(living, "SpeedDecrease");
-				if(root != null && root.Spell.Value == 99)
-                    continue;
-
-				livingList.Add(living);
+					livingList.Add(living);
+				}
 			}
+			if(livingList.Count > 0)
+			{
+				return livingList[Util.Random(livingList.Count - 1)];
+			}
+			m_aggroTable.Clear();
+			return null;
 		}
-		if (livingList.Count > 0)
-		{
-			return livingList[Util.Random(livingList.Count - 1)];
-		}
-		m_aggroTable.Clear();
-		return null;
-	}
 
 		protected override void OnAttackedByEnemy(AttackData ad)
 		{
-		  AddToAggroList(ad.Attacker, (ad.Attacker.Level + 1) << 1);
-		  AttackMostWanted();
+			AddToAggroList(ad.Attacker, (ad.Attacker.Level + 1) << 1);
+			CheckSpells(eCheckSpellType.Offensive);
 		}
 
 		/// <summary>

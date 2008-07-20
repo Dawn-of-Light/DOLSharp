@@ -27,7 +27,7 @@ namespace DOL.AI.Brain
 
 		public override int ThinkInterval
 		{
-			get { return 10000; }
+			get { return 1000; }
 		}
 
 		protected override bool CheckDefensiveSpells(Spell spell)
