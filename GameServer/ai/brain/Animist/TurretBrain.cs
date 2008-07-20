@@ -16,15 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-/*
- * [Ganrod] Nidel 2008-07-08
- * - useless using removed
- * - list renamed to listTarget
- * - List listTarget initialized when brain created
- * - Clear listTarget when target is selected
- * - Add GetTarget, TrustCast methods
- * - Turret doesn't need target for a PBAoE spell
- */
 using System.Collections.Generic;
 using DOL.GS;
 
@@ -60,13 +51,16 @@ namespace DOL.AI.Brain
 			{
 				return true;
 			}
+			Spell spell = ((TurretPet) Body).TurretSpell;
 
-			if(type == eCheckSpellType.Defensive)
+			switch (type)
 			{
-				return CheckDefensiveSpells(((TurretPet) Body).TurretSpell);
+				case eCheckSpellType.Defensive:
+					return CheckDefensiveSpells(spell);
+				case eCheckSpellType.Offensive:
+					return CheckOffensiveSpells(spell);
 			}
-			// Offensive
-			return CheckOffensiveSpells(((TurretPet) Body).TurretSpell);
+			return false;
 		}
 
 		protected override bool CheckDefensiveSpells(Spell spell)
@@ -77,12 +71,7 @@ namespace DOL.AI.Brain
 				case "BodySpiritEnergyBuff":
 				case "ArmorAbsorbtionBuff":
 				case "AblativeArmor":
-					// don't need target for radius spell
-					if(((TurretPet) Body).TurretSpell.Radius == 0)
-					{
-						Body.TargetObject = GetDefensiveTarget(((TurretPet) Body).TurretSpell);
-					}
-					TrustCast(((TurretPet) Body).TurretSpell);
+					TrustCast(spell, true);
 					return true;
 			}
 			return false;
@@ -97,92 +86,117 @@ namespace DOL.AI.Brain
 				case "SpeedDecrease":
 				case "Taunt":
 				case "MeleeDamageDebuff":
-					AttackMostWanted();
+					TrustCast(spell, false);
 					return true;
 			}
 			return false;
 		}
 
-		public bool TrustCast(Spell spell)
+		public bool TrustCast(Spell spell, bool defensive)
 		{
-			if(Body.GetSkillDisabledDuration(((TurretPet) Body).TurretSpell) != 0)
+			if(Body.GetSkillDisabledDuration(spell) != 0)
 			{
 				return false;
 			}
 
-			if(spell.Radius > 0)
+			if(spell.Radius == 0 && spell.Range > 0)
 			{
-				Body.CastSpell(spell, m_mobSpellLine);
-				return true;
-			}
-
-			if(Body.TargetObject != null)
-			{
-				if(Body.TargetObject != Body && spell.CastTime > 0)
+				GameLiving target;
+				if(defensive)
 				{
-					Body.TurnTo(Body.TargetObject);
+				  target = GetDefensiveTarget(spell);
 				}
-				Body.CastSpell(spell, m_mobSpellLine);
-				return true;
+				else
+				{
+					CheckPlayerAggro();
+					CheckNPCAggro();
+					target = CalculateNextAttackTarget();
+				}
+				if(target != null && WorldMgr.GetDistance(Body, target) <= spell.Range)
+				{
+					Body.TargetObject = target;
+					if(spell.CastTime > 0)
+					{
+					  Body.TurnTo(Body.TargetObject);
+					}
+					Body.CastSpell(spell, m_mobSpellLine);
+				}
+				else
+				{
+					if(Body.IsAttacking)
+					{
+						Body.StopAttack();
+					}
+					if(Body.SpellTimer != null && Body.SpellTimer.IsAlive)
+					{
+						Body.SpellTimer.Stop();
+					}
+					return false;
+				}
 			}
-
-			if(Body.SpellTimer != null && Body.SpellTimer.IsAlive)
+			else //Radius spell don't need target
 			{
-				Body.SpellTimer.Stop();
+				Body.CastSpell(spell, m_mobSpellLine);
 			}
-			return false;
+			return true;
 		}
 
 		/// <summary>
 		/// [Ganrod] Nidel: Find and get random target in radius for Defensive spell, like 1.90 EU off servers.
+		/// <para>Get target only if:</para>
+		/// <para>- same realm (based on ServerRules)</para>
+		/// <para>- don't have effect</para>
+		/// <para>- is alive</para>
 		/// </summary>
 		/// <param name="spell"></param>
 		/// <returns></returns>
 		public GameLiving GetDefensiveTarget(Spell spell)
 		{
-			if(Body.TargetObject == null || !((GameLiving) Body.TargetObject).IsAlive || LivingHasEffect(Body.TargetObject as GameLiving, spell))
+			foreach(GamePlayer player in Body.GetPlayersInRadius((ushort) spell.Range))
 			{
-				Body.TargetObject = null;
+				if(!GameServer.ServerRules.IsSameRealm(Body, player, false))
+					continue;
 
-				foreach(GamePlayer player in Body.GetPlayersInRadius((ushort) spell.Range))
+				if(!player.IsAlive)
+					continue;
+
+				if(LivingHasEffect(player, spell))
 				{
-					//Buff owner at first time if in radius
-					if(player == GetPlayerOwner() && !LivingHasEffect(player, spell))
+					if(ListDefensiveTarget.Contains(player))
 					{
-						return player;
+						ListDefensiveTarget.Remove(player);
 					}
-					if(ListDefensiveTarget.Contains(player) || LivingHasEffect(player, spell))
-					{
-						if(LivingHasEffect(player, spell))
-						{
-							ListDefensiveTarget.Remove(player);
-						}
-						continue;
-					}
-					if(GameServer.ServerRules.IsSameRealm(Body, player, false))
-					{
-						ListDefensiveTarget.Add(player);
-					}
+					continue;
 				}
-				foreach(GameNPC npc in Body.GetNPCsInRadius((ushort) spell.Range))
+
+				if(player == GetPlayerOwner())
+					return player;
+
+				ListDefensiveTarget.Add(player);
+			}
+			foreach(GameNPC npc in Body.GetNPCsInRadius((ushort) spell.Range))
+			{
+				if(!GameServer.ServerRules.IsSameRealm(Body, npc, false))
+					continue;
+
+				if(!npc.IsAlive)
+					continue;
+
+				if(LivingHasEffect(npc, spell))
 				{
-					if(npc == Body && !LivingHasEffect(Body, spell))
+					if(ListDefensiveTarget.Contains(npc))
 					{
-						return Body;
+						ListDefensiveTarget.Remove(npc);
 					}
-					if(ListDefensiveTarget.Contains(npc) || LivingHasEffect(npc, spell))
-					{
-						if(LivingHasEffect(npc, spell))
-						{
-							ListDefensiveTarget.Remove(npc);
-						}
-						continue;
-					}
-					if(GameServer.ServerRules.IsSameRealm(Body, npc, false))
-					{
-						ListDefensiveTarget.Add(npc);
-					}
+					continue;
 				}
+
+				if(npc == Body)
+				{
+					return Body;
+				}
+
+				ListDefensiveTarget.Add(npc);
 			}
 			// Get one random target.
 			return ListDefensiveTarget.Count > 0 ? ListDefensiveTarget[Util.Random(ListDefensiveTarget.Count - 1)] : null;
