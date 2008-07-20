@@ -16,10 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-/*
- * [Ganrod] Nidel 2008-07-08
- * - AI for turret caster, like 1.90 EU official servers
- */
 using System;
 using DOL.Events;
 using DOL.GS;
@@ -33,13 +29,15 @@ namespace DOL.AI.Brain
 		public override void Notify(DOLEvent e, object sender, EventArgs args)
 		{
 			base.Notify(e, sender, args);
-			TurretPet pet = sender as TurretPet;
-			if(pet != null && e == GameLivingEvent.CastFinished && !(pet.Brain is TurretMainPetTankBrain) && pet == Body && AggressionState != eAggressionState.Passive)
+			if(e == GameLivingEvent.CastFinished && AggressionState != eAggressionState.Passive)
 			{
-				AttackMostWanted();
+				TurretPet pet = sender as TurretPet;
+				if (pet == null || pet != Body || (pet.Brain is TurretMainPetTankBrain))
+					return;
+
+				CheckSpells(eCheckSpellType.Offensive);
 			}
 		}
-
 
 		public override void Attack(GameObject target)
 		{
@@ -60,32 +58,24 @@ namespace DOL.AI.Brain
 				UpdatePetWindow();
 			}
 			m_orderAttackTarget = defender;
-			AttackMostWanted();
+			CheckSpells(eCheckSpellType.Offensive);
 			return;
 		}
 
-		protected override void AttackMostWanted()
+		protected override void CheckNPCAggro()
 		{
-			if(!IsActive || Body.IsCasting)
-			{
-				return;
-			}
-			GameLiving target = CalculateNextAttackTarget();
-			if(target == null || !target.IsAlive)
-			{
-				if(Body.IsAttacking)
-				{
-					Body.StopAttack();
-				}
-				if(Body.SpellTimer != null && Body.SpellTimer.IsAlive)
-				{
-					Body.SpellTimer.Stop();
-				}
-				return;
-			}
+		  if(AggressionState == eAggressionState.Aggressive)
+		  {
+		  	base.CheckNPCAggro();
+		  }
+		}
 
-			Body.TargetObject = target;
-			TrustCast(((TurretPet) Body).TurretSpell);
+		protected override void CheckPlayerAggro()
+		{
+		  if (AggressionState == eAggressionState.Aggressive)
+		  {
+			base.CheckPlayerAggro();
+		  }
 		}
 
 		protected override void OnAttackedByEnemy(AttackData ad)
@@ -93,7 +83,7 @@ namespace DOL.AI.Brain
 			if(AggressionState != eAggressionState.Passive)
 			{
 				AddToAggroList(ad.Attacker, (ad.Attacker.Level + 1) << 1);
-				AttackMostWanted();
+				CheckSpells(eCheckSpellType.Offensive);
 			}
 		}
 	}
