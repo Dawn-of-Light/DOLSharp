@@ -85,16 +85,12 @@ namespace DOL.AI.Brain
 			//Check for just positive spells
 			CheckSpells(eCheckSpellType.Defensive);
 
-			//If the npc is returning home, we don't need to think.
-			if (Body.IsReturningHome)
-				return;
-
 			//If the npc is not in combat, we remove the last attack data temporary property
 			if (!Body.InCombat)
 				Body.TempProperties.removeProperty(GameLiving.LAST_ATTACK_DATA);
 
 			// check for returning to home if to far away
-			if (Body.MaxDistance != 0)
+			if (Body.MaxDistance != 0 && !Body.IsReturningHome)
 			{
 				int distance = WorldMgr.GetDistance(Body.SpawnX, Body.SpawnY, Body.SpawnZ, Body.X, Body.Y, Body.Z);
 				int maxdistance = Body.MaxDistance > 0 ? Body.MaxDistance : -Body.MaxDistance * AggroRange / 100;
@@ -108,8 +104,21 @@ namespace DOL.AI.Brain
 				CheckPlayerAggro();
 				CheckNPCAggro();
 			}
+			// Only start an attack if there actually is something to attack
 			if (IsAggroing)
-				AttackMostWanted(); // Only start an attack if there actually is something to attack
+			{
+				//[ganrod] Nidel: Cancel WalkToSpawn and restart attack action
+				if(Body.IsReturningHome)
+				{
+				  Body.StopMoving();
+				}
+				AttackMostWanted();
+				return;
+			}
+
+			//If the npc is returning home, we don't need to think.
+			if (Body.IsReturningHome)
+			  return;
 
 			//Mob will now always walk on their path
 			if (Body.MaxSpeedBase > 0 && Body.CurrentSpellHandler == null && !Body.IsMoving

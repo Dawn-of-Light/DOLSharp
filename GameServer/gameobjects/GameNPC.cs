@@ -1117,57 +1117,90 @@ namespace DOL.GS
 		/// </summary>
 		protected class ArriveAtTargetAction : RegionAction
 		{
-			/// <summary>
-			/// Constructs a new ArriveAtTargetAction
-			/// </summary>
-			/// <param name="actionSource">The action source</param>
-			public ArriveAtTargetAction(GameNPC actionSource)
-				: base(actionSource)
+		  /// <summary>
+		  /// Constructs a new ArriveAtTargetAction
+		  /// </summary>
+		  /// <param name="actionSource">The action source</param>
+		  public ArriveAtTargetAction(GameNPC actionSource)
+			: base(actionSource)
+		  {
+		  }
+
+
+		  /// <summary>
+		  /// This function is called when the Mob arrives at its target spot
+		  /// It fires the ArriveAtTarget event
+		  /// </summary>
+		  protected override void OnTick()
+		  {
+			GameNPC npc = (GameNPC)m_actionSource;
+			//[Ganrod] Nidel: check if ArriveAtTarget distances with tolerance
+			int tx, ty, tz;
+			if (npc.IsReturningHome)
 			{
+			  tx = npc.SpawnX;
+			  ty = npc.SpawnY;
+			  tz = npc.SpawnZ;
+			}
+			else
+			{
+			  tx = npc.TargetX;
+			  ty = npc.TargetY;
+			  tz = npc.TargetZ;
 			}
 
-			/// <summary>
-			/// This function is called when the Mob arrives at its target spot
-			/// It fires the ArriveAtTarget event
-			/// </summary>
-			protected override void OnTick()
+			if (Util.IsNearDistance(npc.X, npc.Y, npc.Z, tx, ty, tz, CONST_WALKTOTOLERANCE))
 			{
-				GameNPC npc = (GameNPC)m_actionSource;
-				npc.m_arriveAtTargetAction = null;
-				npc.StopMoving();
-				npc.Notify(GameNPCEvent.ArriveAtTarget, npc);
-				if (npc.IsReturningHome
-					&& npc.X == npc.SpawnX
-					&& npc.Y == npc.SpawnY
-					&& npc.Z == npc.SpawnZ)
-					npc.IsReturningHome = false;
+			  npc.Notify(GameNPCEvent.ArriveAtTarget, npc);
+			  npc.StopMoving();
+			  npc.RecalculatePostionAddition();
 			}
+			else
+			{
+			  npc.WalkTo(tx, ty, tz, npc.CurrentSpeed, false);
+			}
+		  }
 		}
+		
 
 		/// <summary>
 		/// Delayed action that fires an event when an NPC is 200ms away from its target
 		/// </summary>
 		protected class CloseToTargetAction : RegionAction
 		{
-			/// <summary>
-			/// Constructs a new CloseToTargetAction
-			/// </summary>
-			/// <param name="actionSource">The action source</param>
-			public CloseToTargetAction(GameNPC actionSource)
-				: base(actionSource)
-			{
-			}
+		  /// <summary>
+		  /// Constructs a new CloseToTargetAction
+		  /// </summary>
+		  /// <param name="actionSource">The action source</param>
+		  public CloseToTargetAction(GameNPC actionSource)
+			: base(actionSource)
+		  {
+		  }
 
-			/// <summary>
-			/// This function is called when the npc is close to its target
-			/// It will fire the CloseToTarget event
-			/// </summary>
-			protected override void OnTick()
-			{
-				GameNPC npc = (GameNPC)m_actionSource;
-				npc.m_closeToTargetAction = null;
-				npc.Notify(GameNPCEvent.CloseToTarget, npc);
-			}
+		  /// <summary>
+		  /// This function is called when the npc is close to its target
+		  /// It will fire the CloseToTarget event
+		  /// </summary>
+		  protected override void OnTick()
+		  {
+		  	GameNPC npc = (GameNPC) m_actionSource;
+		  	npc.m_closeToTargetAction = null;
+		  	npc.Notify(GameNPCEvent.CloseToTarget, npc);
+		  }
+		}
+
+		public virtual void CancelWalkToTimer()
+		{
+		  if (m_arriveAtTargetAction != null)
+		  {
+			m_arriveAtTargetAction.Stop();
+			m_arriveAtTargetAction = null;
+		  }
+		  if (m_closeToTargetAction != null)
+		  {
+			m_closeToTargetAction.Stop();
+			m_closeToTargetAction = null;
+		  }
 		}
 
 		public virtual void WalkTo(int tx, int ty, int tz, int speed)
@@ -1188,31 +1221,19 @@ namespace DOL.GS
 		public virtual void WalkTo(int tx, int ty, int tz, int speed, bool ignoreTolerance)
 		{
 			// Walking to the spot we're already at will only get us into trouble.
-			if (tx <= X + CONST_WALKTOTOLERANCE && tx >= X - CONST_WALKTOTOLERANCE
-				&& ty <= Y + CONST_WALKTOTOLERANCE && ty >= Y - CONST_WALKTOTOLERANCE
-				&& tz <= Z + CONST_WALKTOTOLERANCE && tz >= Z - CONST_WALKTOTOLERANCE
-				&& !ignoreTolerance)
-			{
-				TurnTo(tx, ty);
-				return;
-			}
+		  if (Util.IsNearDistance(tx, ty, tz, X, Y, Z, CONST_WALKTOTOLERANCE) && !ignoreTolerance)
+		  {
+		  	TurnTo(tx, ty);
+		  	return;
+		  }
 
 			if (IsTurningDisabled)
 				return; // can't walk when turning is disabled
 
 			// tolakram - changed, we don't want to stop, this creates the herky jerky motion
 			// instead we clear everything and set the new target
-			if (m_arriveAtTargetAction != null)
-			{
-				m_arriveAtTargetAction.Stop();
-				m_arriveAtTargetAction = null;
-			}
-			if (m_closeToTargetAction != null)
-			{
-				m_closeToTargetAction.Stop();
-				m_closeToTargetAction = null;
-			}
-			m_isReturningHome = false;
+			CancelWalkToTimer();
+			//m_isReturningHome = false;
 
 
 			//Slow mobs down when they are hurt!
@@ -1243,7 +1264,7 @@ namespace DOL.GS
 			int timeToTarget = 0;
 			if (speed > 0)
 			{
-				timeToTarget = (int)(dist * 1000 / speed);
+				timeToTarget = 300+(int) (dist*1000/speed);
 			}
 
 			m_arriveAtTargetAction = new ArriveAtTargetAction(this);
@@ -1295,7 +1316,16 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void WalkToSpawn()
 		{
-			WalkToSpawn((int)(MaxSpeed / 2.5));
+			WalkToSpawn((int) (MaxSpeed/2.5));
+		}
+
+		/// <summary>
+		/// Walk to the spawn point
+		/// </summary>
+		public virtual void CancelWalkToSpawn()
+		{
+			CancelWalkToTimer();
+			m_isReturningHome = false;
 		}
 
 		/// <summary>
@@ -1306,6 +1336,13 @@ namespace DOL.GS
 			StopAttack();
 			StopFollow();
 			//WalkTo(SpawnX+Random(750)-350, SpawnY+Random(750)-350, SpawnZ, MaxSpeed/3);
+
+			StandardMobBrain brain = Brain as StandardMobBrain;
+			//[Ganrod] Nidel: Force to clear Aggro
+			if(brain != null && brain.IsAggroing)
+			{
+				brain.ClearAggroList();
+			}
 			m_isReturningHome = true;
 			WalkTo(SpawnX, SpawnY, SpawnZ, speed);
 		}
@@ -1320,16 +1357,7 @@ namespace DOL.GS
 		{
 			Notify(GameNPCEvent.Walk, this, new WalkEventArgs(speed));
 
-			if (m_arriveAtTargetAction != null)
-			{
-				m_arriveAtTargetAction.Stop();
-				m_arriveAtTargetAction = null;
-			}
-			if (m_closeToTargetAction != null)
-			{
-				m_closeToTargetAction.Stop();
-				m_closeToTargetAction = null;
-			}
+			CancelWalkToTimer();
 
 			m_X = X;
 			m_Y = Y;
@@ -1359,18 +1387,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void StopMoving()
 		{
-			if (m_arriveAtTargetAction != null)
-			{
-				m_arriveAtTargetAction.Stop();
-				m_arriveAtTargetAction = null;
-			}
-			if (m_closeToTargetAction != null)
-			{
-				m_closeToTargetAction.Stop();
-				m_closeToTargetAction = null;
-			}
-
-			m_isReturningHome = false;
+		  CancelWalkToSpawn();
 
 			// This broadcasts an update so check to see if we are moving before calling - tolakram
 			if (IsMoving)
@@ -4197,5 +4214,6 @@ namespace DOL.GS
 
 			m_boatowner_id = "";
 		}
+
 	}
 }

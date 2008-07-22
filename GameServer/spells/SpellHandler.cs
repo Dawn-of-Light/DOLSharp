@@ -255,6 +255,14 @@ namespace DOL.GS.Spells
 
 				if (Caster is GameNPC && (Caster as GameNPC).Brain is IControlledBrain)
 					target = Caster;
+
+				if (Caster is GamePlayer && Caster.ControlledNpc != null && Caster.ControlledNpc.Body != null)
+				{
+					if(target == null || !Caster.GetItsControlledNpc(target as GameNPC))
+					{
+						target = Caster.ControlledNpc.Body;
+					}
+				}
 			}
 			else if (Spell.Target.ToLower() == "controlled")
 			{
@@ -503,8 +511,8 @@ namespace DOL.GS.Spells
                     }
                     else
                     {
-                        MessageToCaster("You must select your pet for [" + m_spell.Name + "] spell.",
-                                        eChatType.CT_SpellResisted);
+					  MessageToCaster("You must cast this spell on a creature you are controlling.",
+                                        eChatType.CT_System);
                         return false;
                     }
                 }
@@ -822,7 +830,7 @@ namespace DOL.GS.Spells
                             }
                             else
                             {
-                                MessageToCaster("You don't have your pet in target.", eChatType.CT_SpellResisted);
+							  MessageToCaster("You must cast this spell on a creature you are controlling.", eChatType.CT_System);
                                 return false;
                             }
                         }
@@ -1364,13 +1372,9 @@ namespace DOL.GS.Spells
       {
         NewTarget = "enemy";
         //[Ganrod] Nidel: can cast TurretPBAoE on selected Pet/Turret
-        if (Spell.SpellType.ToLower().Equals("TurretPBAoE".ToLower()))
+		if (Spell.SpellType.ToLower() != "TurretPBAoE".ToLower())
         {
-          target = Caster.TargetObject as GameLiving;
-        }
-        else
-        {
-          target = Caster.ControlledNpc.Body;
+		  target = Caster.ControlledNpc.Body;
         }
       }
 
@@ -1426,7 +1430,7 @@ namespace DOL.GS.Spells
 				#region Pet
         case "pet":
 			    {
-			      //Start-- [Ganrod] Nidel: Can heal our Minion/Turret pet without ControlledNpc
+				  //Start-- [Ganrod] Nidel: Can cast Pet spell on our Minion/Turret pet without ControlledNpc
 			      // awesome, Pbaoe with target pet spell ?^_^
             if (NewRadius > 0 && Spell.Range == 0)
 			      {
@@ -1482,15 +1486,16 @@ namespace DOL.GS.Spells
 			        }
 			      }
 			    }
-          //Start-- [Ganrod] Nidel: Can heal our Minion/Turret pet without ControlledNpc
+          //End-- [Ganrod] Nidel: Can cast Pet spell on our Minion/Turret pet without ControlledNpc
           break;
 				#endregion
 				#region Enemy
 				case "enemy":
 					if (NewRadius > 0)
 					{
-						if (target == null || Spell.Range == 0)
+					  if (Spell.SpellType.ToLower() != "TurretPBAoE".ToLower() && (target == null || Spell.Range == 0))
 							target = Caster;
+					  if (target == null) return null;
 						foreach (GamePlayer player in target.GetPlayersInRadius(NewRadius))
 						{
 							if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
@@ -1711,8 +1716,9 @@ namespace DOL.GS.Spells
 		public virtual void StartSpell(GameLiving target)
 		{
 			GamePlayer player = Caster as GamePlayer;
-			if (target == null || (Spell.Radius > 0 && Spell.Range == 0))
+			if (Spell.SpellType.ToLower() != "TurretPBAoE".ToLower() &&  (target == null || (Spell.Radius > 0 && Spell.Range == 0)))
 				target = Caster;
+			if (target == null) return;
 			IList targets = SelectTargets(target);
 
 			double effectiveness = 1.0;
