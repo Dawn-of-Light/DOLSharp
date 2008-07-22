@@ -20,6 +20,7 @@ using System;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
+using DOL.GS.Utils;
 
 namespace DOL.GS
 {
@@ -185,6 +186,34 @@ namespace DOL.GS
 				str.Append(seconds)
 					.Append(" sec");
 			return str.ToString();
+		}
+
+		/// <summary>
+		/// [Ganrod] Nidel: Check if between two values are near with tolerance.
+		/// </summary>
+		/// <param name="valueToHave"></param>
+		/// <param name="compareToCompare"></param>
+		/// <param name="tolerance"></param>
+		/// <returns></returns>
+		public static bool IsNearValue(int valueToHave, int compareToCompare, ushort tolerance)
+		{
+		  return FastMath.Abs(valueToHave - compareToCompare) <= FastMath.Abs(tolerance);
+		}
+
+		/// <summary>
+		/// [Ganrod] Nidel: Check if between two distances are near with tolerance.
+		/// </summary>
+		/// <param name="xH">X coord value to have</param>
+		/// <param name="yH">Y coord value to have</param>
+		/// <param name="zH">Z coord value to have</param>
+		/// <param name="xC">X coord value to compare</param>
+		/// <param name="yC">Y coord value to compare</param>
+		/// <param name="zC">Z coord value to compare</param>
+		/// <param name="tolerance">Tolerance distance between two coords</param>
+		/// <returns></returns>
+		public static bool IsNearDistance(int xH, int yH, int zH, int xC, int yC, int zC, ushort tolerance)
+		{
+			return IsNearValue(xH, xC, tolerance) && IsNearValue(yH, yC, tolerance) && IsNearValue(zH, zC, tolerance);
 		}
 	}
 }
