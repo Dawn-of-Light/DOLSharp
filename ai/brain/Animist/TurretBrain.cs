@@ -114,12 +114,15 @@ namespace DOL.AI.Brain
 				}
 				if(target != null && WorldMgr.GetDistance(Body, target) <= spell.Range)
 				{
-					Body.TargetObject = target;
-					if(spell.CastTime > 0)
-					{
-					  Body.TurnTo(Body.TargetObject);
-					}
-					Body.CastSpell(spell, m_mobSpellLine);
+				  if (!Body.IsAttacking || target != Body.TargetObject)
+				  {
+				  	Body.TargetObject = target;
+				  	if(spell.CastTime > 0)
+				  	{
+				  		Body.TurnTo(Body.TargetObject);
+				  	}
+				  	Body.CastSpell(spell, m_mobSpellLine);
+				  }
 				}
 				else
 				{

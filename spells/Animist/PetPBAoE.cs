@@ -16,11 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-/*
- * [Ganrod] Nidel 2008-07-08
- * - Useless using removed
- * - BugFix: TurretPBAoE can cast on own pet and turret only.
- */
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
 
@@ -42,54 +37,60 @@ namespace DOL.GS.Spells
 			{
 				return false;
 			}
-            GameNPC target = selectedTarget as GameNPC;
-            //[Ganrod]Nidel: Launch spell on Controlled Pet if target is null
-            // or if taget isn't our controlled npc, like 1.90 EU off servers.
-            if (target == null || !Caster.GetItsControlledNpc(target))
-            {
-                if (Caster.ControlledNpc != null && Caster.ControlledNpc.Body != null)
-                {
-                    if (!Caster.GetItsControlledNpc(target))
-                    {
-                        Caster.TargetObject = Caster.ControlledNpc.Body;
-                        return base.CheckBeginCast(Caster.ControlledNpc.Body);
-                    }
-                }
-                MessageToCaster("You must select your controlled Pet or Turret before casting this spell !",
-                                eChatType.CT_SpellResisted);
-                return false;
-            }
-		    return base.CheckBeginCast(target);
-		}
+			/*
+			 * [Ganrod]Nidel: Like 1.90 EU off servers
+			 * -Need Main Turret under our controle before casting.
+			 * -Select automatically Main controlled Turret if player don't have target or Turret target.
+			 * -Cast only on our turrets.
+			 */
+			if(Caster.ControlledNpc == null || Caster.ControlledNpc.Body == null)
+			{
+				MessageToCaster("You must cast this spell on a creature you are controlling.", eChatType.CT_System);
+				return false;
+			}
+			TurretPet target = selectedTarget as TurretPet;
 
-		public override void FinishSpellCast(GameLiving target)
-		{
-			//Make pet Caster spell
-			m_caster = Caster.TargetObject as GameLiving;
-
-			if (m_caster == null) return;
-
-			base.FinishSpellCast(target);
-		}
-
-		public override void StartSpell(GameLiving target)
-		{
-			base.StartSpell(Caster.TargetObject as GameLiving);
+			if(target == null || !Caster.GetItsControlledNpc(target))
+			{
+			  target = Caster.ControlledNpc.Body as TurretPet;
+			}
+			return base.CheckBeginCast(target);
 		}
 
 		public override void DamageTarget(AttackData ad, bool showEffectAnimation)
 		{
-			base.DamageTarget(ad, showEffectAnimation);
 			if(ad.Damage > 0 && ad.Target is GameNPC)
 			{
-				//pet will take aggro
-				ad.Attacker = Caster;
+				if(!(Caster is GamePlayer)) return;
 				IAggressiveBrain aggroBrain = ((GameNPC) ad.Target).Brain as IAggressiveBrain;
 				if(aggroBrain != null)
 				{
-					aggroBrain.AddToAggroList(ad.Attacker, ad.Attacker.Level*10);
+					TurretPet turret = null;
+					if(Caster.TargetObject == null || !Caster.GetItsControlledNpc(Caster.TargetObject as TurretPet))
+					{
+						if(Caster.ControlledNpc != null && Caster.ControlledNpc.Body != null)
+						{
+							turret = Caster.ControlledNpc.Body as TurretPet;
+						}
+					}
+					else if(Caster.GetItsControlledNpc(Caster.TargetObject as TurretPet))
+					{
+						turret = Caster.TargetObject as TurretPet;
+					}
+
+					if(turret != null)
+					{
+						//pet will take aggro
+						AttackData turretAd = ad;
+						turretAd.Attacker = turret;
+						ad.Target.OnAttackedByEnemy(turretAd);
+
+						aggroBrain.AddToAggroList(turret, (ad.Damage + ad.CriticalDamage)*3);					
+					}
+					aggroBrain.AddToAggroList(Caster, ad.Damage);		
 				}
 			}
+			base.DamageTarget(ad, showEffectAnimation);
 		}
 	}
 }
