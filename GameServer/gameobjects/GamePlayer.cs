@@ -611,7 +611,7 @@ namespace DOL.GS
 			}
 
 			// Remove champion dedicated spell line
-			SkillBase.UnRegisterSpellLine("Champion Abilities" + Name);
+			SkillBase.UnRegisterSpellLine(GlobalSpellsLines.Champion_Spells + Name);
 
 			// cancel all effects until saving of running effects is done
 			try
@@ -13021,8 +13021,8 @@ namespace DOL.GS
 		{
 			string championSpells = ChampionSpells;
 			Hashtable championSpellsh = new Hashtable();
-			SkillBase.CleanSpellList("Champion Abilities" + Name);
-			SpellLine line = new SpellLine("Champion Abilities" + Name, "Champion Abilities", "Champion Abilities", true);
+			SkillBase.CleanSpellList(GlobalSpellsLines.Champion_Spells + Name);
+			SpellLine line = new SpellLine(GlobalSpellsLines.Champion_Spells + Name, GlobalSpellsLines.Champion_Spells, GlobalSpellsLines.Champion_Spells, true);
 			line.Level = 50;
 			SkillBase.RegisterSpellLine(line);
 			if (championSpells != null && championSpells.Length > 0)
@@ -13038,7 +13038,7 @@ namespace DOL.GS
 			{
 				foreach (DictionaryEntry de in championSpellsh)
 				{
-					SkillBase.AddSpellToList("Champion Abilities" + Name, (int)de.Value);
+					SkillBase.AddSpellToList(GlobalSpellsLines.Champion_Spells + Name, (int)de.Value);
 				}
 				AddSpellLine(line);
 			}

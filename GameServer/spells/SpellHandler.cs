@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -283,7 +283,7 @@ namespace DOL.GS.Spells
 				else
 					MessageToCaster("You stop playing your song.", eChatType.CT_Spell);
 			}
-			else if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, target, Spell, m_spellLine) 
+			else if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, target, Spell, m_spellLine)
 				&& CheckBeginCast(target))
 			{
 				if (m_caster is GamePlayer && (m_caster as GamePlayer).IsOnHorse && !HasPositiveEffect)
@@ -321,7 +321,7 @@ namespace DOL.GS.Spells
                     bool sendcast = true;
 		        	if (m_caster.ControlledNpc!=null && m_caster.ControlledNpc.Body!=null && m_caster.ControlledNpc.Body is NecromancerPet)
 		        		sendcast = false;
-                    
+
                     if(sendcast) SendCastAnimation(0);
 					FinishSpellCast(target);
 				}
@@ -431,7 +431,7 @@ namespace DOL.GS.Spells
 					{
 						if (m_caster is GamePlayer)
 							((GamePlayer)m_caster).Out.SendMessage(string.Format("{0} is invisible to you!", selectedTarget.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
-					
+
 						return false;
 					}
 				}
@@ -442,12 +442,12 @@ namespace DOL.GS.Spells
                 MessageToCaster(selectedTarget.Name + " is immune to this effect!", eChatType.CT_SpellResisted);
                 return false;
             }
-			
+
 			if (m_spell.InstrumentRequirement != 0)
 			{
 				if (!CheckInstrument())
 				{
-					MessageToCaster("You are not wielding the right type of instrument!", 
+					MessageToCaster("You are not wielding the right type of instrument!",
 						eChatType.CT_SpellResisted);
 					return false;
 				}
@@ -458,14 +458,14 @@ namespace DOL.GS.Spells
 				//don't allow standing up (like stun or mez)
 				MessageToCaster("You can't cast while sitting!", eChatType.CT_SpellResisted);
 				return false;
-			}      
+			}
 
 			if (m_caster.AttackState && m_spell.CastTime != 0)
 			{
 				if (m_caster is GamePlayer)
 				{
 					GamePlayer player = m_caster as GamePlayer;
-					if (!(player.CharacterClass is PlayerClass.ClassVampiir) 
+					if (!(player.CharacterClass is PlayerClass.ClassVampiir)
 					    && !(player.CharacterClass is PlayerClass.ClassMaulerAlb)
 					    && !(player.CharacterClass is PlayerClass.ClassMaulerMid)
 					    && !(player.CharacterClass is PlayerClass.ClassMaulerHib))
@@ -530,7 +530,7 @@ namespace DOL.GS.Spells
 				//					return false;
 				//				}
 			}
-      else if (targetType != "self" && targetType != "group" && targetType != "pet" 
+      else if (targetType != "self" && targetType != "group" && targetType != "pet"
         && targetType != "controlled" && targetType != "cone" && m_spell.Range > 0)
 			{
 				// All spells that need a target.
@@ -1059,7 +1059,8 @@ namespace DOL.GS.Spells
 		public virtual int CalculateCastingTime()
 		{
 			int ticks = m_spell.CastTime;
-			if (Spell.InstrumentRequirement != 0 || SpellLine.KeyName == "Item Spells")
+			if (Spell.InstrumentRequirement != 0 || SpellLine.KeyName == GlobalSpellsLines.Item_Spells
+				|| m_spellLine.KeyName.StartsWith(GlobalSpellsLines.Champion_Spells))
 			{
 				return ticks;
 			}
@@ -1081,9 +1082,8 @@ namespace DOL.GS.Spells
 				}
 			}
 			double percent = 1.0;
-			int dex = m_caster.GetModified(eProperty.Dexterity);		
-			if(SpellLine.KeyName.Length>=18 && SpellLine.KeyName.Substring(0,18)=="Champion Abilities" ) dex=100; //Vico: No casting time diminution for CL Spells
-			
+			int dex = m_caster.GetModified(eProperty.Dexterity);
+
 			if (m_caster.EffectList.GetOfType(typeof(QuickCastEffect)) != null)
 			{
 				return 2000; //always 2 sec
@@ -1237,7 +1237,7 @@ namespace DOL.GS.Spells
 
 			StartSpell(target); // and action
 
-			//Dinberg: This is where I moved the warlock part (previously found in gameplayer) to prevent 
+			//Dinberg: This is where I moved the warlock part (previously found in gameplayer) to prevent
 			//cancelling before the spell was fired.
 			if (m_spell.SpellType != "Powerless" && m_spell.SpellType != "Range" && m_spell.SpellType != "Uninterruptable")
 			{
@@ -1265,7 +1265,7 @@ namespace DOL.GS.Spells
 				}
 			}
 
-			//the quick cast is unallowed whenever you miss the spell	
+			//the quick cast is unallowed whenever you miss the spell
 			//set the time when casting to can not quickcast during a minimum time
 			if (m_caster is GamePlayer)
 			{
@@ -1384,7 +1384,7 @@ namespace DOL.GS.Spells
 				#region GTAoE
 				// GTAoE
 				case "area":
-                    //Dinberg - fix for animists turrets, where before a radius of zero meant that no targets were ever 
+                    //Dinberg - fix for animists turrets, where before a radius of zero meant that no targets were ever
                     //selected!
           if (Spell.SpellType == "SummonAnimistPet" || Spell.SpellType == "SummonAnimistFnF")
             list.Add(Caster);
@@ -1632,7 +1632,7 @@ namespace DOL.GS.Spells
 									}
 								}
 							}
-							
+
 						}
 						//We need to add the entire group
 						else
@@ -1664,7 +1664,7 @@ namespace DOL.GS.Spells
 									}
 								}
 							}
-						}						
+						}
 
 						break;
 					}
@@ -1748,7 +1748,7 @@ namespace DOL.GS.Spells
 				// Aggressive NPCs will aggro on every target they hit
 				// with an AoE spell, whether it landed or was resisted.
 
-				if (Spell.Radius > 0 && Spell.Target.ToLower() == "enemy" 
+				if (Spell.Radius > 0 && Spell.Target.ToLower() == "enemy"
 					&& Caster is GameNPC && (Caster as GameNPC).Brain is IAggressiveBrain)
 						((Caster as GameNPC).Brain as IAggressiveBrain).AddToAggroList(t, 1);
 
@@ -2144,7 +2144,7 @@ namespace DOL.GS.Spells
 		{
 			if (Caster is GamePlayer)
 				(Caster as GamePlayer).Out.SendMessage(message, type, eChatLoc.CL_SystemWindow);
-			else if (Caster is GameNPC && (Caster as GameNPC).Brain is IControlledBrain 
+			else if (Caster is GameNPC && (Caster as GameNPC).Brain is IControlledBrain
 				&& (type == eChatType.CT_YouHit || type == eChatType.CT_SpellResisted))
 			{
 				GamePlayer owner = ((Caster as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
@@ -2621,8 +2621,8 @@ namespace DOL.GS.Spells
 
 			//Andraste
 			if (m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect
-				|| (m_spellLine.KeyName.Length>=18 && SpellLine.KeyName.Substring(0,18)=="Champion Abilities" ))
-					spellLevel=50;
+				|| m_spellLine.KeyName.StartsWith(GlobalSpellsLines.Champion_Spells))
+					spellLevel = 50; // why not have spell in db at 50 level ?
 
 			int speclevel = 1;
 			int manastat = 0;
@@ -2733,11 +2733,11 @@ namespace DOL.GS.Spells
 			#region Primary Resists
 			int primaryResistModifier = ad.Target.GetResist(Spell.DamageType);
 
-			/* Resist Pierce	
+			/* Resist Pierce
 			 * Resipierce is a special bonus which has been introduced with ToA.
 			 * At the calculation of SpellDamage, it reduces the resistance that the victim recives
 			 * through ITEMBONUSES for the specified percentage.
-			 * http://de.daocpedia.eu/index.php/Resistenz_durchdringen (translated) 
+			 * http://de.daocpedia.eu/index.php/Resistenz_durchdringen (translated)
 			 */
 			int resiPierce = Caster.GetModified(eProperty.ResistPierce);
 			GamePlayer ply = Caster as GamePlayer;
@@ -2752,13 +2752,13 @@ namespace DOL.GS.Spells
 			//Using the resist BuffBonusCategory2 - its unused in ResistCalculator
 			int secondaryResistModifier = target.SpecBuffBonusCategory[(int)property];
 
-			/*Variance by Memories of War				
-			 * - Memories of War: Upon reaching level 41, the Hero, Warrior and Armsman 
-			 * will begin to gain more magic resistance (spell damage reduction only) 
-			 * as they progress towards level 50. At each level beyond 41 they gain 
+			/*Variance by Memories of War
+			 * - Memories of War: Upon reaching level 41, the Hero, Warrior and Armsman
+			 * will begin to gain more magic resistance (spell damage reduction only)
+			 * as they progress towards level 50. At each level beyond 41 they gain
 			 * 2%-3% extra resistance per level. At level 50, they will have the full 15% benefit.
 			 * from http://www.camelotherald.com/article.php?id=208
-			 * 
+			 *
 			 * - assume that "spell damage reduction only" indicates resistcategory 2
 			 */
 
@@ -2813,7 +2813,7 @@ namespace DOL.GS.Spells
 				ad.Target.Endurance+=enduconversion; if(ad.Target.Endurance>ad.Target.MaxEndurance) ad.Target.Endurance=ad.Target.MaxEndurance;
 				ad.Target.Mana+=manaconversion; if(ad.Target.Mana>ad.Target.MaxMana) ad.Target.Mana=ad.Target.MaxMana;
 			}
-			
+
 			ad.Damage = finalDamage;
 			ad.CriticalDamage = cdamage;
 			ad.DamageType = Spell.DamageType;

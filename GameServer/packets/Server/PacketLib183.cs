@@ -112,22 +112,5 @@ namespace DOL.GS.PacketHandler
 			pak.WriteStringBytes(""); //Write Quest Description without trailing 0
 			SendTCP(pak);
 		}
-
-		public override void SendUpdatePlayerSkills()
-		{
-			if (m_gameClient.Player == null)
-				return;
-			base.SendUpdatePlayerSkills();
-			if(m_gameClient.Player.CharacterClass.ClassType != eClassType.ListCaster)
-			{
-//				SendListCastersSpell();
-				GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
-				pak.WriteByte(0x02); //subcode
-				pak.WriteByte(0x00);
-				pak.WriteByte(99); //subtype (new subtype 99 in 1.80e)
-				pak.WriteByte(0x00);
-				SendTCP(pak);
-			}
-		}
 	}
 }

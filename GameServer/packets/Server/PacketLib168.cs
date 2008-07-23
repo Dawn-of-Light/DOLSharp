@@ -845,12 +845,25 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-		public virtual void SendModelChange(GameObject obj, ushort newModel)
+		public void SendModelChange(GameObject obj, ushort newModel)
+		{
+			if (obj is GameNPC)
+				SendModelAndSizeChange(obj, newModel, (obj as GameNPC).Size);
+			else
+				SendModelAndSizeChange(obj, newModel, 0);
+		}
+
+		public void SendModelAndSizeChange(GameObject obj, ushort newModel, byte newSize)
+		{
+			SendModelAndSizeChange((ushort)obj.ObjectID, newModel, newSize);
+		}
+
+		public virtual void SendModelAndSizeChange(ushort objectId, ushort newModel, byte newSize)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ModelChange));
-			pak.WriteShort((ushort)obj.ObjectID);
+			pak.WriteShort(objectId);
 			pak.WriteShort(newModel);
-			pak.WriteInt(0x00);
+			pak.WriteIntLowEndian(newSize);
 			SendTCP(pak);
 		}
 
@@ -2195,8 +2208,8 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte((byte)firstSkills);
 				SendTCP(pak);
 			}
-			if (!flagSendHybrid)
-				SendListCastersSpell();
+			//if (!flagSendHybrid)
+			SendListCastersSpell();
 		}
 
 		public virtual void SendListCastersSpell()
@@ -2214,7 +2227,7 @@ namespace DOL.GS.PacketHandler
 				foreach (SpellLine line in spelllines)
 				{
 					string linename=line.Name.ToLower();
-					if(flagSendHybrid&&(!linename.Contains("champion ab")
+					if (flagSendHybrid && (!linename.StartsWith(GlobalSpellsLines.Champion_Spells)
 							||linename!="convoker"
 							||linename!="banelord"
 							||linename!="stormlord"

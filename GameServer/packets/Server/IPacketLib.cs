@@ -427,6 +427,8 @@ namespace DOL.GS.PacketHandler
 		void SendObjectCreate(GameObject obj);
 		void SendDebugMode(bool on);
 		void SendModelChange(GameObject obj, ushort newModel);
+		void SendModelAndSizeChange(GameObject obj, ushort newModel, byte newSize);
+		void SendModelAndSizeChange(ushort objectId, ushort newModel, byte newSize);
 		void SendEmoteAnimation(GameObject obj, eEmote emote);
 		void SendNPCCreate(GameNPC npc);
 		void SendLivingEquipmentUpdate(GameLiving living);

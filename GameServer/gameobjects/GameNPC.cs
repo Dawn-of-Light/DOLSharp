@@ -130,12 +130,8 @@ namespace DOL.GS
 				if (ObjectState == eObjectState.Active)
 				{
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-					{
-						player.Out.SendNPCCreate(this);
-						if (m_inventory != null)
-							player.Out.SendLivingEquipmentUpdate(this);
-					}
-					BroadcastUpdate();
+						player.Out.SendModelAndSizeChange(this, Model, value);
+//					BroadcastUpdate();
 				}
 			}
 		}
@@ -1161,7 +1157,7 @@ namespace DOL.GS
 			}
 		  }
 		}
-		
+
 
 		/// <summary>
 		/// Delayed action that fires an event when an NPC is 200ms away from its target
@@ -2036,7 +2032,7 @@ namespace DOL.GS
 			IList m_levels = new ArrayList();
 			IList m_equipLoc = new ArrayList();
 			Hashtable m_equipModel = new Hashtable();
-			
+
 			this.Name = template.Name;
 			this.GuildName = template.GuildName;
 
@@ -3009,7 +3005,7 @@ namespace DOL.GS
 			}
 			return true;
 		}
-		
+
 		/// <summary>
 		/// ToDo
 		/// </summary>
@@ -3021,10 +3017,10 @@ namespace DOL.GS
 			if (!base.WhisperReceive(source, text))
 				return false;
 			if (source is GamePlayer == false)
-				return true;			
-			
+				return true;
+
 			GamePlayer player = (GamePlayer) source;
-			
+
 			//TODO: Guards in rvr areas doesn't need check
 			if (text == "task")
 		    {
@@ -3965,7 +3961,7 @@ namespace DOL.GS
 			else
 				TempProperties.setProperty(LOSTEMPCHECKER, tempProp - 1);
 			return;
-			
+
 		}
 
 		public void PetStartSpellAttackCheckLOS(GamePlayer player, ushort response, ushort targetOID)
@@ -4042,7 +4038,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Removes the brain from 
+		/// Removes the brain from
 		/// </summary>
 		/// <param name="controlledNpc">The brain to find and remove</param>
 		/// <returns>Whether the pet was removed</returns>
