@@ -77,7 +77,6 @@ namespace DOL.AI.Brain
 	  if (AggressionState != eAggressionState.Passive)
 	  {
 		AddToAggroList(ad.Attacker, (ad.Attacker.Level + 1) << 1);
-	  	AttackMostWanted();
 	  }
 	}
   }

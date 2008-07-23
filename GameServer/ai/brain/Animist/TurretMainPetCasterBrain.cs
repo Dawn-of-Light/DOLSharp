@@ -16,28 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.Events;
 using DOL.GS;
 
 namespace DOL.AI.Brain
 {
 	public class TurretMainPetCasterBrain : TurretBrain
 	{
-		public TurretMainPetCasterBrain(GameLiving owner) : base(owner){}
-
-		public override void Notify(DOLEvent e, object sender, EventArgs args)
-		{
-			base.Notify(e, sender, args);
-			if(e == GameLivingEvent.CastFinished && AggressionState != eAggressionState.Passive)
-			{
-				TurretPet pet = sender as TurretPet;
-				if (pet == null || pet != Body || (pet.Brain is TurretMainPetTankBrain))
-					return;
-
-				CheckSpells(eCheckSpellType.Offensive);
-			}
-		}
+	  public TurretMainPetCasterBrain(GameLiving owner) : base(owner) { }
 
 		public override void Attack(GameObject target)
 		{
@@ -58,7 +43,8 @@ namespace DOL.AI.Brain
 				UpdatePetWindow();
 			}
 			m_orderAttackTarget = defender;
-			CheckSpells(eCheckSpellType.Offensive);
+			AttackMostWanted();
+			Body.StartAttack(m_orderAttackTarget);
 			return;
 		}
 
@@ -83,7 +69,6 @@ namespace DOL.AI.Brain
 			if(AggressionState != eAggressionState.Passive)
 			{
 				AddToAggroList(ad.Attacker, (ad.Attacker.Level + 1) << 1);
-				CheckSpells(eCheckSpellType.Offensive);
 			}
 		}
 	}

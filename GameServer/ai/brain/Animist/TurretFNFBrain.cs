@@ -27,22 +27,6 @@ namespace DOL.AI.Brain
 		{
 		}
 
-		/// <summary>
-		/// [Ganrod] Nidel:
-		/// Cast only Offensive or Defensive spell.
-		/// <para>If Offensive spell is true, Defensive spell isn't casted.</para>
-		/// </summary>
-		public override void Think()
-		{
-			GamePlayer playerowner = GetPlayerOwner();
-			if(!playerowner.CurrentUpdateArray[Body.ObjectID - 1])
-			{
-				playerowner.Out.SendObjectUpdate(Body);
-				playerowner.CurrentUpdateArray[Body.ObjectID - 1] = true;
-			}
-		  CheckSpells(eCheckSpellType.Offensive);
-		  CheckSpells(eCheckSpellType.Defensive);
-		}
 
 		/// <summary>
 		/// Get a random target from aggro table
@@ -79,7 +63,6 @@ namespace DOL.AI.Brain
 		protected override void OnAttackedByEnemy(AttackData ad)
 		{
 			AddToAggroList(ad.Attacker, (ad.Attacker.Level + 1) << 1);
-			CheckSpells(eCheckSpellType.Offensive);
 		}
 
 		/// <summary>
