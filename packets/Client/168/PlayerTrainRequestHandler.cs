@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -42,10 +42,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 			int unk = packet.ReadByte();
 			int row = packet.ReadByte();
 			int skillindex = packet.ReadByte();
-			
+
 			// idline not null so this is a Champion level training window
             if (idline > 0)
-            { 	
+            {
                 ChampSpec spec = ChampSpecMgr.GetAbilityFromIndex(idline, row, skillindex);
                 if (spec != null)
                 {
@@ -65,13 +65,13 @@ namespace DOL.GS.PacketHandler.Client.v168
                         return 1;
                     }
                     client.Player.ChampionSpecialtyPoints -= spec.Cost;
-                    SpellLine sl = SkillBase.GetSpellLine("Champion Abilities" + client.Player.Name);
+                    SpellLine sl = SkillBase.GetSpellLine(GlobalSpellsLines.Champion_Spells + client.Player.Name);
                     if (sl.Spec.StartsWith("?"))
                     {
-                        SpellLine line = new SpellLine("Champion Abilities" + client.Player.Name, "Champion Abilities", "Champion Abilities", true);
+                        SpellLine line = new SpellLine(GlobalSpellsLines.Champion_Spells + client.Player.Name, GlobalSpellsLines.Champion_Spells, GlobalSpellsLines.Champion_Spells, true);
                         SkillBase.RegisterSpellLine(line);
                     }
-                    SkillBase.AddSpellToList("Champion Abilities" + client.Player.Name, spec.SpellID);
+                    SkillBase.AddSpellToList(GlobalSpellsLines.Champion_Spells + client.Player.Name, spec.SpellID);
                     client.Player.ChampionSpells += spec.SpellID.ToString() + "|1;";
 
                     client.Player.AddSpellLine(sl);
@@ -87,7 +87,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                 else { client.Out.SendMessage("Didn't find spec!", eChatType.CT_System, eChatLoc.CL_SystemWindow); }
                 return 1;
             }
-            
+
 			IList speclist = client.Player.GetSpecList();
 			if (skillindex < speclist.Count)
 			{

@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -105,8 +105,8 @@ namespace DOL.GS
 				case "respecialize":
 					if (player.Champion && player.ChampionLevel >= 5)
 					{
-						player.RemoveSpellLine("Champion Abilities" + player.Name);
-						SkillBase.UnRegisterSpellLine("Champion Abilities" + player.Name);
+						player.RemoveSpellLine(GlobalSpellsLines.Champion_Spells + player.Name);
+						SkillBase.UnRegisterSpellLine(GlobalSpellsLines.Champion_Spells + player.Name);
 						player.ChampionSpells = "";
 						player.ChampionSpecialtyPoints = player.ChampionLevel;
 						player.UpdateSpellLineLevels(false);
@@ -123,7 +123,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// For Recieving CL Respec Stone. 
+		/// For Recieving CL Respec Stone.
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="item"></param>
@@ -160,11 +160,11 @@ namespace DOL.GS
 			{
 				if (!base.Interact(player))
 					return false;
-			
+
 				TurnTo(player, 5000);
 				if(!AmIInside())
 					player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client, "ThroneTeleporterNPC.Interact.AskForAudience"),
-													 this.Name, 
+													 this.Name,
 													 LanguageMgr.GetTranslation(player.Client, "GlobalWords.Yes"),
 													 LanguageMgr.GetTranslation(player.Client, "GlobalWords.No")), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				else
@@ -175,19 +175,19 @@ namespace DOL.GS
 			{
 				if (!base.WhisperReceive(source, str))
 					return false;
-            
+
 				GamePlayer player = source as GamePlayer;
 				if (player == null) return false;
- 
+
 				if(str.ToLower() == GetOutsideZone(player.Realm).ToLower())
-            	
+
 				if(str.ToLower() == LanguageMgr.GetTranslation(player.Client, "GlobalWords.Yes"))
 
 				return true;
 			}
 			protected virtual bool TeleportPlayer(ushort pRegion)
 			{
-				player.MoveTo(location.Region, location.X, location.Y, location.Z, location.Heading);       	
+				player.MoveTo(location.Region, location.X, location.Y, location.Z, location.Heading);
 			}
 			protected virtual bool AmIInside()
 			{
