@@ -40,6 +40,28 @@ namespace DOL.AI.Brain
 			get { return 1000; }
 		}
 
+
+		/// <summary>
+		/// [Ganrod] Nidel:
+		/// Cast only Offensive or Defensive spell.
+		/// <para>If Offensive spell is true, Defensive spell isn't casted.</para>
+		/// </summary>
+		public override void Think()
+		{
+		  GamePlayer playerowner = GetPlayerOwner();
+		  if (!playerowner.CurrentUpdateArray[Body.ObjectID - 1])
+		  {
+			playerowner.Out.SendObjectUpdate(Body);
+			playerowner.CurrentUpdateArray[Body.ObjectID - 1] = true;
+		  }
+
+		  if(!CheckSpells(eCheckSpellType.Defensive))
+		  {
+		  	AttackMostWanted();
+		  }
+		}
+
+
 		public override bool CheckSpells(eCheckSpellType type)
 		{
 			if(Body == null || ((TurretPet) Body).TurretSpell == null)
@@ -71,7 +93,7 @@ namespace DOL.AI.Brain
 				case "BodySpiritEnergyBuff":
 				case "ArmorAbsorbtionBuff":
 				case "AblativeArmor":
-					TrustCast(spell, true);
+				  TrustCast(spell, eCheckSpellType.Defensive);
 					return true;
 			}
 			return false;
@@ -86,14 +108,21 @@ namespace DOL.AI.Brain
 				case "SpeedDecrease":
 				case "Taunt":
 				case "MeleeDamageDebuff":
-					TrustCast(spell, false);
+					TrustCast(spell, eCheckSpellType.Offensive);
 					return true;
 			}
 			return false;
 		}
 
-		public bool TrustCast(Spell spell, bool defensive)
+		protected override void AttackMostWanted()
 		{
+			CheckSpells(eCheckSpellType.Offensive);
+		}
+
+		public bool TrustCast(Spell spell, eCheckSpellType type)
+		{
+			if(AggressionState == eAggressionState.Passive)
+				return false;
 			if(Body.GetSkillDisabledDuration(spell) != 0)
 			{
 				return false;
@@ -102,9 +131,9 @@ namespace DOL.AI.Brain
 			if(spell.Radius == 0 && spell.Range > 0)
 			{
 				GameLiving target;
-				if(defensive)
+				if(type == eCheckSpellType.Defensive)
 				{
-				  target = GetDefensiveTarget(spell);
+					target = GetDefensiveTarget(spell);
 				}
 				else
 				{
@@ -114,15 +143,15 @@ namespace DOL.AI.Brain
 				}
 				if(target != null && WorldMgr.GetDistance(Body, target) <= spell.Range)
 				{
-				  if (!Body.IsAttacking || target != Body.TargetObject)
-				  {
-				  	Body.TargetObject = target;
-				  	if(spell.CastTime > 0)
-				  	{
-				  		Body.TurnTo(Body.TargetObject);
-				  	}
-				  	Body.CastSpell(spell, m_mobSpellLine);
-				  }
+					if(!Body.IsAttacking || target != Body.TargetObject)
+					{
+						Body.TargetObject = target;
+						if(spell.CastTime > 0)
+						{
+							Body.TurnTo(Body.TargetObject);
+						}
+						Body.CastSpell(spell, m_mobSpellLine);
+					}
 				}
 				else
 				{
