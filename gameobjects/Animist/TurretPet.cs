@@ -21,6 +21,8 @@
  * - Class for turret, like 1.90 EU official servers: Turret isn't interrupted
  */
 
+using DOL.AI.Brain;
+
 namespace DOL.GS
 {
   public class TurretPet : GamePet
@@ -40,6 +42,40 @@ namespace DOL.GS
   		get { return turretSpell; }
   		set { turretSpell = value; }
   	}
+
+	public override void StartAttack(GameObject attackTarget)
+	{
+	  if (attackTarget == null)
+		return;
+
+	  if (Brain is IControlledBrain)
+	  {
+		if ((Brain as IControlledBrain).AggressionState == eAggressionState.Passive)
+		  return;
+		GamePlayer playerowner;
+		if ((playerowner = ((IControlledBrain)Brain).GetPlayerOwner()) != null)
+		  playerowner.Stealth(false);
+	  }
+
+	  TargetObject = attackTarget;
+	  if (TargetObject.Realm == 0 || Realm == 0)
+		m_lastAttackTickPvE = m_CurrentRegion.Time;
+	  else
+		m_lastAttackTickPvP = m_CurrentRegion.Time;
+
+	  if (m_attackers.Count == 0)
+	  {
+		if (SpellTimer == null)
+		  SpellTimer = new SpellAction(this);
+		if (!SpellTimer.IsAlive)
+		  SpellTimer.Start(1);
+	  }
+	
+	  if(Brain is TurretMainPetTankBrain)
+	  {
+		base.StartAttack(TargetObject);
+	  }
+	}
 
   	/// <summary>
     /// [Ganrod] Nidel: Don't interrupt turret cast.
