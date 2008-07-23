@@ -102,6 +102,8 @@ namespace DOLGameServerConsole
 		public void SendPlayerQuit(bool totalOut) { }
 		public void SendDebugMode(bool on) { }
 		public void SendModelChange(GameObject obj, ushort newModel) { }
+		public void SendModelAndSizeChange(GameObject obj, ushort newModel, byte newSize) { }
+		public void SendModelAndSizeChange(ushort objectId, ushort newModel, byte newSize) { }
 		public void SendEmoteAnimation(GameObject obj, eEmote emote) { }
 		public void SendNPCCreate(GameNPC npc) { }
 		public void SendLivingEquipmentUpdate(GameLiving living) { }

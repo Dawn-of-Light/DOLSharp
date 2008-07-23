@@ -783,7 +783,7 @@ namespace DOL.GS
 		ThrustResCapBonus = 229,
 		ResCapBonus_Last = 229,
         #endregion
-		
+
 		//Eden - new bonus
 		Resist_Natural = 249,
 		ExtraHP = 250,
@@ -966,6 +966,7 @@ namespace DOL.GS
 		public const string Mob_Spells = "Mob Spells";
 		public const string Character_Abilities = "Character Abilities"; // dirty tricks, flurry ect...
 		public const string Item_Spells = "Item Spells";	// Combine scroll etc.
+		public const string Champion_Spells = "Champion Abilities";
 	}
 
 	public class GlobalConstants
@@ -1350,7 +1351,7 @@ namespace DOL.GS
 				case "rri": return 0x24;
 				case "rir": return 0x24;
 				case "rr": return 0x24;
-				
+
 				//Mythirians
 				case "myth": return 0x25;
 				case "mythirian": return 0x25;
@@ -1445,7 +1446,7 @@ namespace DOL.GS
 				default: return "";
 			}
 		}
-				
+
 		public static eRealm GetBonusRealm(eProperty bonus)
 		{
 			if (SkillBase.CheckPropertyType(bonus, ePropertyType.Albion))
