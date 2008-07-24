@@ -2446,12 +2446,12 @@
     <Compile Include="world\Zone.cs">
       <SubType>Code</SubType>
     </Compile>
-    <EmbeddedResource Include="housing\config\logconfig.xml">
+    <EmbeddedResource Include="config\logconfig.xml">
     </EmbeddedResource>
-    <EmbeddedResource Include="housing\config\regions.xml">
+    <EmbeddedResource Include="config\regions.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="housing\config\zones.xml">
+    <EmbeddedResource Include="config\zones.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <None Include="language\DE\AI.txt" />
