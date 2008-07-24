@@ -1564,6 +1564,11 @@ namespace DOL.Database
 			return connection.Escape(toEscape);
 		}
 
+		public bool IsSQLConnection
+		{
+			get { return connection.IsSQLConnection; }
+		}
+
 		protected readonly Hashtable m_bindingInfos = new Hashtable();
 
 		private class BindingInfo
