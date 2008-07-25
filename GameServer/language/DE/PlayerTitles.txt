@@ -31,9 +31,9 @@ PlayerClass.Cabalist.GetTitle.35:	Animator
 PlayerClass.Cabalist.GetTitle.30:	Spiritist
 PlayerClass.Cabalist.GetTitle.25:	Erfahrener Kabbalist
 PlayerClass.Cabalist.GetTitle.20:	Erschaffer
-#PlayerClass.Cabalist.GetTitle.15:	Imbuer
-#PlayerClass.Cabalist.GetTitle.10:	Journeyman Cleric
-#PlayerClass.Cabalist.GetTitle.5:	Apprentice Cleric
+PlayerClass.Cabalist.GetTitle.15:	Präger
+PlayerClass.Cabalist.GetTitle.10:	Kabbalisten-Geselle
+PlayerClass.Cabalist.GetTitle.5:	Kabbalisten-Schüler
 
 PlayerClass.Cleric.GetTitle.50:		Pontifex
 PlayerClass.Cleric.GetTitle.45:		Kardinal
@@ -43,7 +43,7 @@ PlayerClass.Cleric.GetTitle.30:		Geistlicher
 PlayerClass.Cleric.GetTitle.25:		Diakon
 PlayerClass.Cleric.GetTitle.20:		Prälat
 PlayerClass.Cleric.GetTitle.15:		Pastor
-#PlayerClass.Cleric.GetTitle.10:	Novice
+PlayerClass.Cleric.GetTitle.10:		Novize
 PlayerClass.Cleric.GetTitle.5:		Initiat
 
 PlayerClass.Friar.GetTitle.50:		Primus
@@ -53,9 +53,9 @@ PlayerClass.Friar.GetTitle.35:		Inquisitor
 PlayerClass.Friar.GetTitle.30:		Kaplan
 PlayerClass.Friar.GetTitle.25:		Eiferer
 PlayerClass.Friar.GetTitle.20:		Zelot
-#PlayerClass.Friar.GetTitle.15:		Fanatic
+PlayerClass.Friar.GetTitle.15:		Fanatiker
 PlayerClass.Friar.GetTitle.10:		Unterkaplan
-#PlayerClass.Friar.GetTitle.5:		Friar Acolyte
+PlayerClass.Friar.GetTitle.5:		Akolyt
 
 PlayerClass.Heretic.GetTitle.50:	Arawns Selbst
 PlayerClass.Heretic.GetTitle.45:	Priester Arawns
@@ -76,8 +76,8 @@ PlayerClass.Infiltrator.GetTitle.30:	Meuchler
 PlayerClass.Infiltrator.GetTitle.25:	Rothand
 PlayerClass.Infiltrator.GetTitle.20:	Spion
 PlayerClass.Infiltrator.GetTitle.15:	Blauhand
-#PlayerClass.Infiltrator.GetTitle.10:	Lurker
-#PlayerClass.Infiltrator.GetTitle.5:	White Hand
+PlayerClass.Infiltrator.GetTitle.10:	Schleicher
+PlayerClass.Infiltrator.GetTitle.5:	Weishand
 
 PlayerClass.Mercenary.GetTitle.50:	Söldnerführer	
 PlayerClass.Mercenary.GetTitle.45:	Meisterkrieger
@@ -177,3 +177,324 @@ PlayerClass.Wizard.GetTitle.20:		Spukweber
 PlayerClass.Wizard.GetTitle.15:		Elementarist
 PlayerClass.Wizard.GetTitle.10:		Zaubergeselle
 PlayerClass.Wizard.GetTitle.5:		Zauberlehrling
+
+#Midgard
+PlayerClass.Berserker.GetTitle.50:	Modis Hand
+PlayerClass.Berserker.GetTitle.45:	Kampfrausch-Berserker
+PlayerClass.Berserker.GetTitle.40:	Kampfrausch-Schläger
+PlayerClass.Berserker.GetTitle.35:	Kampfrausch-Plünderer
+PlayerClass.Berserker.GetTitle.30:	Bärenkämpfer
+PlayerClass.Berserker.GetTitle.25:	Bärenschläger
+PlayerClass.Berserker.GetTitle.20:	Bärenplünderer
+#PlayerClass.Berserker.GetTitle.15:	Ursine Fervent
+PlayerClass.Berserker.GetTitle.10:	Bärensucher
+#PlayerClass.Berserker.GetTitle.5:	Ursine Initiate
+
+PlayerClass.Bonedancer.GetTitle.50:	Stammeshäuptling
+PlayerClass.Bonedancer.GetTitle.45:	verfechter Bodgars
+PlayerClass.Bonedancer.GetTitle.40:	Knochenmagier
+PlayerClass.Bonedancer.GetTitle.35:	Stammesältester
+PlayerClass.Bonedancer.GetTitle.30:	Diener von Bodgar
+PlayerClass.Bonedancer.GetTitle.25:	Knochensucher
+PlayerClass.Bonedancer.GetTitle.20:	Bodgars Gehilfe
+#PlayerClass.Bonedancer.GetTitle.15:	Tribal Mystic
+#PlayerClass.Bonedancer.GetTitle.10:	Bonegatherer
+PlayerClass.Bonedancer.GetTitle.5:	Bogdars Eingeweihter
+
+PlayerClass.Healer.GetTitle.50:		Eirs Hand
+PlayerClass.Healer.GetTitle.45:		Eirs Orakel
+PlayerClass.Healer.GetTitle.40:		Augur der Heilung
+PlayerClass.Healer.GetTitle.35:		Wahrsager
+PlayerClass.Healer.GetTitle.30:		Dawns Hand
+PlayerClass.Healer.GetTitle.25:		Eirs Seher
+PlayerClass.Healer.GetTitle.20:		Weiser Seher
+#PlayerClass.Healer.GetTitle.15:	Journeyman Healer
+#PlayerClass.Healer.GetTitle.10:	Practitioner
+#PlayerClass.Healer.GetTitle.5:		Healing Eleve
+
+PlayerClass.Hunter.GetTitle.50:		Skadis Hand
+PlayerClass.Hunter.GetTitle.45:		Fürst der Jagd
+PlayerClass.Hunter.GetTitle.40:		Herr der Beute
+PlayerClass.Hunter.GetTitle.35:		Meisterjäger
+PlayerClass.Hunter.GetTitle.30:		Pirschmeister
+PlayerClass.Hunter.GetTitle.25:		Skadis Pürscher
+PlayerClass.Hunter.GetTitle.20:		Beutesucher
+#PlayerClass.Hunter.GetTitle.15:	Journeyman
+#PlayerClass.Hunter.GetTitle.10:	Shadowed Seeker
+#PlayerClass.Hunter.GetTitle.5:		Initiate Huntsman
+
+PlayerClass.Runemaster.GetTitle.50:	Odins Hand
+PlayerClass.Runemaster.GetTitle.45:	Weiser Runenmeister
+PlayerClass.Runemaster.GetTitle.40:	Runenmeister
+PlayerClass.Runemaster.GetTitle.35:	Runenmagier
+PlayerClass.Runemaster.GetTitle.30:	Steinrunenschnitzer
+PlayerClass.Runemaster.GetTitle.25:	Odins Runenschnitzer
+PlayerClass.Runemaster.GetTitle.20:	Steinleser
+PlayerClass.Runemaster.GetTitle.15:	Runenschnitzer	
+PlayerClass.Runemaster.GetTitle.10:	Runenleser
+PlayerClass.Runemaster.GetTitle.5:	Runeneleve
+
+PlayerClass.Savage.GetTitle.50:		Kelgors Faust
+PlayerClass.Savage.GetTitle.45:		Stammeslegende
+PlayerClass.Savage.GetTitle.40:		Beschützer Kelgors
+PlayerClass.Savage.GetTitle.35:		Stammeskrieger
+#PlayerClass.Savage.GetTitle.30:	Tribal Wilding
+PlayerClass.Savage.GetTitle.25:		Verteidiger Kelgors
+PlayerClass.Savage.GetTitle.20:		Stammesverteidiger
+#PlayerClass.Savage.GetTitle.15:	Servant of Kelgor
+PlayerClass.Savage.GetTitle.10:		Kelgors Gehilfe
+PlayerClass.Savage.GetTitle.5:		Kelgors Schüler
+
+PlayerClass.Shadowblade.GetTitle.50:	Lokis Hand
+PlayerClass.Shadowblade.GetTitle.45:	Fürst der Missetaten
+PlayerClass.Shadowblade.GetTitle.40:	Meister des Schattens
+PlayerClass.Shadowblade.GetTitle.35:	Meister der Täuschung
+PlayerClass.Shadowblade.GetTitle.30:	Erfahrener Schleicher
+PlayerClass.Shadowblade.GetTitle.25:	Lokis Klinge der Nacht
+PlayerClass.Shadowblade.GetTitle.20:	Schatten-Schleicher
+PlayerClass.Shadowblade.GetTitle.15:	Täuscher
+#PlayerClass.Shadowblade.GetTitle.10:	Dark Seeker
+#PlayerClass.Shadowblade.GetTitle.5:	Initiate Stalker
+
+PlayerClass.Schamane.GetTitle.50:	Ymirs Hand
+PlayerClass.Schamane.GetTitle.45:	Ymirs Orakel
+PlayerClass.Schamane.GetTitle.40:	Schamanenvisionär
+PlayerClass.Schamane.GetTitle.35:	Ymirs Aug und Ohr
+PlayerClass.Schamane.GetTitle.30:	Weissager
+PlayerClass.Schamane.GetTitle.25:	Ymirs Prophet
+PlayerClass.Schamane.GetTitle.20:	Medizinmann
+#PlayerClass.Schamane.GetTitle.15:	Journeyman
+#PlayerClass.Schamane.GetTitle.10:	Practitioner
+PlayerClass.Schamane.GetTitle.5:	Schamaneneleve
+
+PlayerClass.Skald.GetTitle.50:		Bragis Hand
+PlayerClass.Skald.GetTitle.45:		Eldafürst
+PlayerClass.Skald.GetTitle.40:		Fürst der Sagen
+PlayerClass.Skald.GetTitle.35:		Geschichten-Erzähler
+PlayerClass.Skald.GetTitle.30:		Hymnenweber
+PlayerClass.Skald.GetTitle.25:		Sagenweber
+PlayerClass.Skald.GetTitle.20:		Liedweber
+PlayerClass.Skald.GetTitle.15:		Schlachtensänger
+PlayerClass.Skald.GetTitle.10:		Strophenflechter
+#PlayerClass.Skald.GetTitle.5:		Initiate Chanter
+
+PlayerClass.Spiritmaster.GetTitle.50:	Hels Hand
+PlayerClass.Spiritmaster.GetTitle.45:	Geisterweiser
+PlayerClass.Spiritmaster.GetTitle.40:	Erfahrener Spiritist
+PlayerClass.Spiritmaster.GetTitle.35:	Geisttreiber
+PlayerClass.Spiritmaster.GetTitle.30:	Großbeschwörer
+PlayerClass.Spiritmaster.GetTitle.25:	Hels Spiritist
+PlayerClass.Spiritmaster.GetTitle.20:	Beschwörer
+#PlayerClass.Spiritmaster.GetTitle.15:	Journeyman
+#PlayerClass.Spiritmaster.GetTitle.10:	Practitioner
+#PlayerClass.Spiritmaster.GetTitle.5:	Spiritist Eleve
+
+PlayerClass.Thane.GetTitle.50:		Thors Hand
+PlayerClass.Thane.GetTitle.45:		Fürst der Unwetter
+PlayerClass.Thane.GetTitle.40:		Fürst der Stürme
+PlayerClass.Thane.GetTitle.35:		Thors Donner
+PlayerClass.Thane.GetTitle.30:		Schlachtenhammer
+PlayerClass.Thane.GetTitle.25:		Thors Hammer
+PlayerClass.Thane.GetTitle.20:		Schauerprinz
+PlayerClass.Thane.GetTitle.15:		Sturmrufer
+PlayerClass.Thane.GetTitle.10:		Sturmhammer
+PlayerClass.Thane.GetTitle.5:		Sturmeingeweihter
+
+PlayerClass.Valkyrie.GetTitle.50:	Odins Walküre
+PlayerClass.Valkyrie.GetTitle.45:	Odins Schildmaid
+PlayerClass.Valkyrie.GetTitle.40:	Odins Auserwählte
+PlayerClass.Valkyrie.GetTitle.35:	Walhallas Beschützerin
+PlayerClass.Valkyrie.GetTitle.30:	Walhallas Auserwählte
+PlayerClass.Valkyrie.GetTitle.25:	Schildmaid
+PlayerClass.Valkyrie.GetTitle.20:	Midgards Beschützerin
+PlayerClass.Valkyrie.GetTitle.15:	Midgards Dienerin
+PlayerClass.Valkyrie.GetTitle.10:	Zofe
+PlayerClass.Valkyrie.GetTitle.5:	Zofen-Lehrling
+
+PlayerClass.Warlock.GetTitle.50:	Hels Hexenmeister
+PlayerClass.Warlock.GetTitle.45:	Hels Zauberkünstler
+PlayerClass.Warlock.GetTitle.40:	Hels Auserwählter
+PlayerClass.Warlock.GetTitle.35:	Diener von Hel
+PlayerClass.Warlock.GetTitle.30:	Hexenmeister-Verfechter
+PlayerClass.Warlock.GetTitle.25:	Hexenbeschützer
+PlayerClass.Warlock.GetTitle.20:	Hexerlehrling
+#PlayerClass.Warlock.GetTitle.15:	Initiate of Hel
+PlayerClass.Warlock.GetTitle.10:	Hexenstudent
+PlayerClass.Warlock.GetTitle.5:		Hexenschüler
+
+PlayerClass.Warrior.GetTitle.50:	Tyrs Hand
+PlayerClass.Warrior.GetTitle.45:	Kriegerfürst
+PlayerClass.Warrior.GetTitle.40:	Kriegerheld
+PlayerClass.Warrior.GetTitle.35:	Streiter
+PlayerClass.Warrior.GetTitle.30:	Elitekämpfer
+PlayerClass.Warrior.GetTitle.25:	Tyrs Myrmidon
+PlayerClass.Warrior.GetTitle.20:	Veteran
+PlayerClass.Warrior.GetTitle.15:	Fußsoldat
+PlayerClass.Warrior.GetTitle.10:	Infanterist
+PlayerClass.Warrior.GetTitle.5:		Angehender Kämpfer
+
+#Hibernia
+PlayerClass.Animist.GetTitle.50:	Gaias Macht
+PlayerClass.Animist.GetTitle.45:	Waldchampion
+PlayerClass.Animist.GetTitle.40:	Baummagier
+PlayerClass.Animist.GetTitle.35:	Waldmagier
+PlayerClass.Animist.GetTitle.30:	Diener Gaias
+PlayerClass.Animist.GetTitle.25:	Geweihter der Wälder
+PlayerClass.Animist.GetTitle.20:	Pflanzenfreund
+#PlayerClass.Animist.GetTitle.15:	Friend of Gaia
+#PlayerClass.Animist.GetTitle.10:	Arboreal Apprentice
+#PlayerClass.Animist.GetTitle.5:	Grove Initiate
+
+PlayerClass.Bainshee.GetTitle.50:	Schemen-Kriegerin
+#PlayerClass.Bainshee.GetTitle.45:	Spectral Guardian
+PlayerClass.Bainshee.GetTitle.40:	Geister-Verfolgerin
+PlayerClass.Bainshee.GetTitle.35:	Geister-Pirscherin
+PlayerClass.Bainshee.GetTitle.30:	Äther-Kreischerin
+#PlayerClass.Bainshee.GetTitle.25:	Ethereal Wailer
+PlayerClass.Bainshee.GetTitle.20:	Phantom-Senserin
+#PlayerClass.Bainshee.GetTitle.15:	Phantom Adept
+#PlayerClass.Bainshee.GetTitle.10:	Wraith Apprentice
+#PlayerClass.Bainshee.GetTitle.5:	Wraith Initiate
+
+PlayerClass.Bard.GetTitle.50:		Meister-Liedflechter
+PlayerClass.Bard.GetTitle.45:		Zaubersänger
+PlayerClass.Bard.GetTitle.40:		Liedflechter
+PlayerClass.Bard.GetTitle.35:		Barde
+PlayerClass.Bard.GetTitle.30:		Schausteller
+PlayerClass.Bard.GetTitle.25:		Melodist
+PlayerClass.Bard.GetTitle.20:		Choralist
+#PlayerClass.Bard.GetTitle.15:		Caroler
+#PlayerClass.Bard.GetTitle.10:		Vocalist
+#PlayerClass.Bard.GetTitle.5:		Chanter
+
+PlayerClass.Blademaster.GetTitle.50:	Klingensänger
+PlayerClass.Blademaster.GetTitle.45:	Armigerant
+#PlayerClass.Blademaster.GetTitle.40:	Duelist
+PlayerClass.Blademaster.GetTitle.35:	Klingentänzer
+#PlayerClass.Blademaster.GetTitle.30:	Vigilante
+#PlayerClass.Blademaster.GetTitle.25:	Gallant
+PlayerClass.Blademaster.GetTitle.20:	Klingenweber
+#PlayerClass.Blademaster.GetTitle.15:	Sabreur
+#PlayerClass.Blademaster.GetTitle.10:	Stylist
+#PlayerClass.Blademaster.GetTitle.5:	Bladist
+
+PlayerClass.Champion.GetTitle.50:	Archon
+PlayerClass.Champion.GetTitle.45:	Held
+PlayerClass.Champion.GetTitle.40:	Konsul
+PlayerClass.Champion.GetTitle.35:	Feldherr
+#PlayerClass.Champion.GetTitle.30:	Defender
+#PlayerClass.Champion.GetTitle.25:	Brigadier
+PlayerClass.Champion.GetTitle.20:	Sturmkämpfer
+#PlayerClass.Champion.GetTitle.15:	Propugner
+#PlayerClass.Champion.GetTitle.10:	Charger
+#PlayerClass.Champion.GetTitle.5:	Page
+
+PlayerClass.Druid.GetTitle.50:		Hainpriester
+PlayerClass.Druid.GetTitle.45:		Hainwächter
+PlayerClass.Druid.GetTitle.40:		Meister-Ovat
+PlayerClass.Druid.GetTitle.35:		Hainorakel
+#PlayerClass.Druid.GetTitle.30:		Grove Protector
+PlayerClass.Druid.GetTitle.25:		Hainheiler
+PlayerClass.Druid.GetTitle.20:		Ovat
+#PlayerClass.Druid.GetTitle.15:		Apprentice Druid
+#PlayerClass.Druid.GetTitle.10:		Student
+#PlayerClass.Druid.GetTitle.5:		Novice
+
+PlayerClass.Eldritch.GetTitle.50:	Erz-Prestidigitist
+PlayerClass.Eldritch.GetTitle.45:	Prestidigitist
+PlayerClass.Eldritch.GetTitle.40:	Machtweber
+PlayerClass.Eldritch.GetTitle.35:	Meister
+PlayerClass.Eldritch.GetTitle.30:	Zerstörer
+#PlayerClass.Eldritch.GetTitle.25:	Adept
+PlayerClass.Eldritch.GetTitle.20:	Magius
+#PlayerClass.Eldritch.GetTitle.15:	Conjurer
+#PlayerClass.Eldritch.GetTitle.10:	Evoker
+PlayerClass.Eldritch.GetTitle.5:	Beschwörer
+
+PlayerClass.Enchanter.GetTitle.50:	Ätheriker
+PlayerClass.Enchanter.GetTitle.45:	Beherrscher
+PlayerClass.Enchanter.GetTitle.40:	Bezauberer
+PlayerClass.Enchanter.GetTitle.35:	Phantom
+#PlayerClass.Enchanter.GetTitle.30:	Mesmerizer
+PlayerClass.Enchanter.GetTitle.25:	Verführer
+PlayerClass.Enchanter.GetTitle.20:	Tranceleger
+PlayerClass.Enchanter.GetTitle.15:	Glamourist
+#PlayerClass.Enchanter.GetTitle.10:	Illusionist
+#PlayerClass.Enchanter.GetTitle.5:	Charmer
+
+PlayerClass.Hero.GetTitle.50:		Seraph
+PlayerClass.Hero.GetTitle.45:		Paragon
+PlayerClass.Hero.GetTitle.40:		Valorant
+PlayerClass.Hero.GetTitle.35:		Eminenz
+#PlayerClass.Hero.GetTitle.30:		Gladiator
+PlayerClass.Hero.GetTitle.25:		Schutzengel
+PlayerClass.Hero.GetTitle.20:		Schläger
+PlayerClass.Hero.GetTitle.15:		Vertrauter
+#PlayerClass.Hero.GetTitle.10:		Servitor
+#PlayerClass.Hero.GetTitle.5:		Attendant
+
+PlayerClass.Mentalist.GetTitle.50:	Astralist
+PlayerClass.Mentalist.GetTitle.45:	Gedankenweber
+#PlayerClass.Mentalist.GetTitle.40:	Mystagogue
+PlayerClass.Mentalist.GetTitle.35:	Gedankenräuber
+PlayerClass.Mentalist.GetTitle.30:	Gedankenspäher
+PlayerClass.Mentalist.GetTitle.25:	Beschwörer
+PlayerClass.Mentalist.GetTitle.20:	Visionär
+#PlayerClass.Mentalist.GetTitle.15:	Thought Walker
+#PlayerClass.Mentalist.GetTitle.10:	Adept
+#PlayerClass.Mentalist.GetTitle.5:	Mentalist Apprentice
+
+PlayerClass.Nightshade.GetTitle.50:	Schattenmeister
+PlayerClass.Nightshade.GetTitle.45:	Schattenmagier
+PlayerClass.Nightshade.GetTitle.40:	Schattenläufer
+PlayerClass.Nightshade.GetTitle.35:	Schatten
+#PlayerClass.Nightshade.GetTitle.30:	Nightguard
+PlayerClass.Nightshade.GetTitle.25:	Finsterwache
+PlayerClass.Nightshade.GetTitle.20:	Düsterklinge
+#PlayerClass.Nightshade.GetTitle.15:	Darkshade
+#PlayerClass.Nightshade.GetTitle.10:	Nightwalker
+#PlayerClass.Nightshade.GetTitle.5:	Trickster
+
+PlayerClass.Ranger.GetTitle.50:		Meisterwaldläufer
+PlayerClass.Ranger.GetTitle.45:		Meisterschütze
+PlayerClass.Ranger.GetTitle.40:		Meisterbogner
+PlayerClass.Ranger.GetTitle.35:		Präzisionsschütze
+PlayerClass.Ranger.GetTitle.30:		Schütze
+PlayerClass.Ranger.GetTitle.25:		Verfolger
+PlayerClass.Ranger.GetTitle.20:		Spurenleser
+PlayerClass.Ranger.GetTitle.15:		Bogenschütze
+#PlayerClass.Ranger.GetTitle.10:	Lurker
+#PlayerClass.Ranger.GetTitle.5:		Wilder
+
+PlayerClass.Valewalker.GetTitle.50:	Talwächter
+PlayerClass.Valewalker.GetTitle.45:	Sensenmeister
+#PlayerClass.Valewalker.GetTitle.40:	Vale Warrior
+PlayerClass.Valewalker.GetTitle.35:	Talmäher
+PlayerClass.Valewalker.GetTitle.30:	Gratgänger
+#PlayerClass.Valewalker.GetTitle.25:	Forestfriend
+PlayerClass.Valewalker.GetTitle.20:	Mäher
+#PlayerClass.Valewalker.GetTitle.15:	Forestwalker
+#PlayerClass.Valewalker.GetTitle.10:	Scythewielder
+#PlayerClass.Valewalker.GetTitle.5:	Grove Apprentice
+
+PlayerClass.Vampiir.GetTitle.50:	Vampyr-Krieger
+PlayerClass.Vampiir.GetTitle.45:	Vampyr-Wächter
+PlayerClass.Vampiir.GetTitle.40:	Vampyr-Jäger
+PlayerClass.Vampiir.GetTitle.35:	Vampyr-Pirscher
+PlayerClass.Vampiir.GetTitle.30:	Vampyr-Verfolger
+PlayerClass.Vampiir.GetTitle.25:	Vampyr-Sucher
+PlayerClass.Vampiir.GetTitle.20:	Vampyr-Beschützer
+PlayerClass.Vampiir.GetTitle.15:	Vampyr-Eingeweihter
+#PlayerClass.Vampiir.GetTitle.10:	Vampiir Apprentice
+#PlayerClass.Vampiir.GetTitle.5:	Vampiir Initiate
+#Hüter
+PlayerClass.Warden.GetTitle.50:		Forstmeister
+PlayerClass.Warden.GetTitle.45:		Meisterjäger
+PlayerClass.Warden.GetTitle.40:		Meisterförster
+PlayerClass.Warden.GetTitle.35:		Forstwächter
+PlayerClass.Warden.GetTitle.30:		Bewahrer
+#PlayerClass.Warden.GetTitle.25:	Protector
+PlayerClass.Warden.GetTitle.20:		Jäger
+#PlayerClass.Warden.GetTitle.15:	Guardian
+#PlayerClass.Warden.GetTitle.10:	Woodsman
+#PlayerClass.Warden.GetTitle.5:		Watcher

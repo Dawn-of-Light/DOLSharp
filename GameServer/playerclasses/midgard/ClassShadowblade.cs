@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.GS;
+using DOL.Language;
 using System.Collections;
 
 namespace DOL.GS.PlayerClass
@@ -31,7 +32,7 @@ namespace DOL.GS.PlayerClass
 
 		public ClassShadowblade() : base()
 		{
-			m_profession = "Loki";
+			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.Loki");
 			m_specializationMultiplier = 22;
 			m_primaryStat = eStat.DEX;
 			m_secondaryStat = eStat.QUI;
@@ -39,18 +40,19 @@ namespace DOL.GS.PlayerClass
 			m_baseHP = 760;
 		}
 
-		public override string GetTitle(int level) {
-			if (level>=50) return "Hand of Loki";
-			if (level>=45) return "Lord of Mischief";
-			if (level>=40) return "Master of Shadows";
-			if (level>=35) return "Master of Deception";
-			if (level>=30) return "Lurker Adept";
-			if (level>=25) return "Loki's Nightblade";
-			if (level>=20) return "Shadow Lurker";
-			if (level>=15) return "Deceiver";
-			if (level>=10) return "Dark Seeker";
-			if (level>=5) return "Initiate Stalker";
-			return "None";
+		public override string GetTitle(int level)
+		{
+			if (level >= 50) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Shadowblade.GetTitle.50");
+			if (level >= 45) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Shadowblade.GetTitle.45");
+			if (level >= 40) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Shadowblade.GetTitle.40");
+			if (level >= 35) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Shadowblade.GetTitle.35");
+			if (level >= 30) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Shadowblade.GetTitle.30");
+			if (level >= 25) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Shadowblade.GetTitle.25");
+			if (level >= 20) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Shadowblade.GetTitle.20");
+			if (level >= 15) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Shadowblade.GetTitle.15");
+			if (level >= 10) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Shadowblade.GetTitle.10");
+			if (level >= 5) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Shadowblade.GetTitle.5");
+			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
 		}
 
 		/// <summary>
