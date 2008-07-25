@@ -18,18 +18,19 @@
  */
 using System;
 using DOL.GS;
+using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute(46, "Warden", "Naturalist")]
+	[PlayerClassAttribute((int)eCharacterClass.Warden, "Warden", "Naturalist")]
 	public class ClassWarden : ClassNaturalist
 	{
 		public ClassWarden() : base() 
 		{
-			m_profession = "Path of Focus";
+			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.PathofFocus");
 			m_specializationMultiplier = 18;
 			m_primaryStat = eStat.EMP;
 			m_secondaryStat = eStat.STR;
@@ -40,17 +41,17 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(int level) 
 		{
-			if (level>=50) return "Master Forester";
-			if (level>=45) return "Master Hunter";
-			if (level>=40) return "Master Woodsman";
-			if (level>=35) return "Forester";
-			if (level>=30) return "Preserver";
-			if (level>=25) return "Protector";
-			if (level>=20) return "Hunter";
-			if (level>=15) return "Guardian";
-			if (level>=10) return "Woodsman"; 
-			if (level>=5) return "Watcher"; 
-			return "None"; 
+			if (level >= 50) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Warden.GetTitle.50");
+			if (level >= 45) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Warden.GetTitle.45");
+			if (level >= 40) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Warden.GetTitle.40");
+			if (level >= 35) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Warden.GetTitle.35");
+			if (level >= 30) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Warden.GetTitle.30");
+			if (level >= 25) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Warden.GetTitle.25");
+			if (level >= 20) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Warden.GetTitle.20");
+			if (level >= 15) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Warden.GetTitle.15");
+			if (level >= 10) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Warden.GetTitle.10");
+			if (level >= 5) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Warden.GetTitle.5");
+			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
 		}
 
 		/// <summary>

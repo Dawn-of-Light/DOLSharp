@@ -17,6 +17,7 @@
  *
  */
 using System;
+using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
@@ -28,7 +29,7 @@ namespace DOL.GS.PlayerClass
 	{
 		public ClassBerserker() : base() 
 		{
-			m_profession = "House of Modi";
+			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.HouseofModi");
 			m_specializationMultiplier = 20;
 			m_primaryStat = eStat.STR;
 			m_secondaryStat = eStat.DEX;
@@ -38,17 +39,17 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(int level) 
 		{
-			if (level>=50) return "Hand of Modi";
-			if (level>=45) return "Frenzien Reaver";
-			if (level>=40) return "Frenzied Mauler";
-			if (level>=35) return "Frenzied Pillager";
-			if (level>=30) return "Ursine Reaver";
-			if (level>=25) return "Ursine Mauler";
-			if (level>=20) return "Ursine Pillager";
-			if (level>=15) return "Ursine Fervent";
-			if (level>=10) return "Ursine Seeker"; 
-			if (level>=5) return "Ursine Initiate"; 
-			return "None"; 
+			if (level >= 50) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Berserker.GetTitle.50");
+			if (level >= 45) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Berserker.GetTitle.45");
+			if (level >= 40) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Berserker.GetTitle.40");
+			if (level >= 35) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Berserker.GetTitle.35");
+			if (level >= 30) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Berserker.GetTitle.30");
+			if (level >= 25) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Berserker.GetTitle.25");
+			if (level >= 20) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Berserker.GetTitle.20");
+			if (level >= 15) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Berserker.GetTitle.15");
+			if (level >= 10) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Berserker.GetTitle.10");
+			if (level >= 5) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Berserker.GetTitle.5");
+			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
 		}
 
 		public override bool CanUseLefthandedWeapon(GamePlayer player)
