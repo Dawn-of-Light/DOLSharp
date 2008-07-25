@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.GS;
+using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
@@ -29,7 +30,7 @@ namespace DOL.GS.PlayerClass
 	{
 		public ClassMentalist() : base() 
 		{
-			m_profession = "Path of Harmony";
+			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.PathofHarmony");
 			m_specializationMultiplier = 10;
 			m_primaryStat = eStat.INT;
 			m_secondaryStat = eStat.DEX;
@@ -39,17 +40,17 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(int level) 
 		{
-			if (level>=50) return "Astralist";
-			if (level>=45) return "Mind Weaver";
-			if (level>=40) return "Mystagogue";
-			if (level>=35) return "Possessor";
-			if (level>=30) return "Diviner";
-			if (level>=25) return "Summoner";
-			if (level>=20) return "Visionary";
-			if (level>=15) return "Thought Walker";
-			if (level>=10) return "Adept"; 
-			if (level>=5) return "Mentalist Apprentice"; 
-			return "None"; 
+			if (level >= 50) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Mentalist.GetTitle.50");
+			if (level >= 45) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Mentalist.GetTitle.45");
+			if (level >= 40) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Mentalist.GetTitle.40");
+			if (level >= 35) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Mentalist.GetTitle.35");
+			if (level >= 30) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Mentalist.GetTitle.30");
+			if (level >= 25) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Mentalist.GetTitle.25");
+			if (level >= 20) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Mentalist.GetTitle.20");
+			if (level >= 15) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Mentalist.GetTitle.15");
+			if (level >= 10) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Mentalist.GetTitle.10");
+			if (level >= 5) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Mentalist.GetTitle.5");
+			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
 		}
 
 		/// <summary>

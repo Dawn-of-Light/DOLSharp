@@ -19,19 +19,19 @@ USA.
 */
 using System;
 using DOL.GS;
+using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
 	/// <summary>
 	///
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Valewalker, "Valewalker", 
-"Forester")]
+	[PlayerClassAttribute((int)eCharacterClass.Valewalker, "Valewalker", "Forester")]
 	public class ClassValewalker : ClassForester
 	{
 		public ClassValewalker() : base()
 		{
-			m_profession = "Path of Affinity";
+			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.PathofAffinity");
 			m_specializationMultiplier = 15;
 			m_primaryStat = eStat.STR;
 			m_secondaryStat = eStat.INT;
@@ -43,17 +43,17 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(int level)
 		{
-			if (level>=50) return "Vale Guardian";
-			if (level>=45) return "Scythemaster";
-			if (level>=40) return "Vale Warrior";
-			if (level>=35) return "Vale Reaper";
-			if (level>=30) return "Ridgewalker";
-			if (level>=25) return "Forestfriend";
-			if (level>=20) return "Reaper";
-			if (level>=15) return "Forestwalker";
-			if (level>=10) return "Scythewielder";
-			if (level>=5) return "Grove Apprentice";
-			return "None";
+			if (level >= 50) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Valewalker.GetTitle.50");
+			if (level >= 45) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Valewalker.GetTitle.45");
+			if (level >= 40) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Valewalker.GetTitle.40");
+			if (level >= 35) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Valewalker.GetTitle.35");
+			if (level >= 30) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Valewalker.GetTitle.30");
+			if (level >= 25) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Valewalker.GetTitle.25");
+			if (level >= 20) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Valewalker.GetTitle.20");
+			if (level >= 15) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Valewalker.GetTitle.15");
+			if (level >= 10) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Valewalker.GetTitle.10");
+			if (level >= 5) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Valewalker.GetTitle.5");
+			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
 		}
 
 		/// <summary>

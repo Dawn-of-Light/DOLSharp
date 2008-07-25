@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.GS;
+using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
@@ -29,7 +30,7 @@ namespace DOL.GS.PlayerClass
 	{
 		public ClassSpiritmaster() : base()
 		{
-			m_profession = "House of Hel";
+			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.HouseofHel");
 			m_specializationMultiplier = 10;
 			m_primaryStat = eStat.PIE;
 			m_secondaryStat = eStat.DEX;
@@ -39,17 +40,17 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(int level) 
 		{
-			if (level>=50) return "Hand of Hel";
-			if (level>=45) return "Spirit Sage";
-			if (level>=40) return "Spirit Adept";
-			if (level>=35) return "Spiritmancer";
-			if (level>=30) return "Elder Summoner";
-			if (level>=25) return "Hel's Spiritist";
-			if (level>=20) return "Summoner";
-			if (level>=15) return "Journeyman";
-			if (level>=10) return "Practitioner"; 
-			if (level>=5) return "Spiritist Eleve"; 
-			return "None"; 
+			if (level >= 50) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Spiritmaster.GetTitle.50");
+			if (level >= 45) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Spiritmaster.GetTitle.45");
+			if (level >= 40) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Spiritmaster.GetTitle.40");
+			if (level >= 35) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Spiritmaster.GetTitle.35");
+			if (level >= 30) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Spiritmaster.GetTitle.30");
+			if (level >= 25) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Spiritmaster.GetTitle.25");
+			if (level >= 20) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Spiritmaster.GetTitle.20");
+			if (level >= 15) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Spiritmaster.GetTitle.15");
+			if (level >= 10) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Spiritmaster.GetTitle.10");
+			if (level >= 5) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Spiritmaster.GetTitle.5");
+			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
 		}
 
 		public override void OnLevelUp(GamePlayer player) 

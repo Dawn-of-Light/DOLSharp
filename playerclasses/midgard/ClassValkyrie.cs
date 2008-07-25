@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.GS;
+using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
@@ -31,7 +32,7 @@ namespace DOL.GS.PlayerClass
 		public ClassValkyrie()
 			: base()
 		{
-			m_profession = "House of Odin";
+			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.HouseofOdin");
 			m_specializationMultiplier = 20;
 			m_primaryStat = eStat.CON;
 			m_secondaryStat = eStat.STR;
@@ -43,17 +44,17 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(int level)
 		{
-			if (level >= 50) return "Odin's Valkyrie";
-			if (level >= 45) return "Odin's Shieldmaiden";
-			if (level >= 40) return "Odin's Chosen";
-			if (level >= 35) return "Protector of Valhalla ";
-			if (level >= 30) return "Valhalla's Chosen";
-			if (level >= 25) return "Shieldmaiden";
-			if (level >= 20) return "Protector of Midgard";
-			if (level >= 15) return "Servant of Midgard ";
-			if (level >= 10) return "Handmaiden ";
-			if (level >= 5) return "Apprentice Handmaiden";
-			return "None";
+			if (level >= 50) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Valkyrie.GetTitle.50");
+			if (level >= 45) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Valkyrie.GetTitle.45");
+			if (level >= 40) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Valkyrie.GetTitle.40");
+			if (level >= 35) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Valkyrie.GetTitle.35");
+			if (level >= 30) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Valkyrie.GetTitle.30");
+			if (level >= 25) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Valkyrie.GetTitle.25");
+			if (level >= 20) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Valkyrie.GetTitle.20");
+			if (level >= 15) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Valkyrie.GetTitle.15");
+			if (level >= 10) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Valkyrie.GetTitle.10");
+			if (level >= 5) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Valkyrie.GetTitle.5");
+			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
 		}
 
 		public override eClassType ClassType
