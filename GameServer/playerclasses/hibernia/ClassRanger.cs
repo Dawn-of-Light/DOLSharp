@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.GS;
+using DOL.Language;
 using System.Collections;
 
 namespace DOL.GS.PlayerClass
@@ -31,7 +32,7 @@ namespace DOL.GS.PlayerClass
 		public ClassRanger()
 			: base()
 		{
-			m_profession = "Path of Focus";
+			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.PathofFocus");
 			m_specializationMultiplier = 20;
 			m_primaryStat = eStat.DEX;
 			m_secondaryStat = eStat.QUI;
@@ -41,17 +42,17 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(int level)
 		{
-			if (level >= 50) return "Master Ranger";
-			if (level >= 45) return "Master Marksman";
-			if (level >= 40) return "Master Archer";
-			if (level >= 35) return "Artificer";
-			if (level >= 30) return "Marksman";
-			if (level >= 25) return "Prowler";
-			if (level >= 20) return "Tracker";
-			if (level >= 15) return "Archer";
-			if (level >= 10) return "Lurker";
-			if (level >= 5) return "Wilder";
-			return "None";
+			if (level >= 50) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Ranger.GetTitle.50");
+			if (level >= 45) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Ranger.GetTitle.45");
+			if (level >= 40) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Ranger.GetTitle.40");
+			if (level >= 35) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Ranger.GetTitle.35");
+			if (level >= 30) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Ranger.GetTitle.30");
+			if (level >= 25) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Ranger.GetTitle.25");
+			if (level >= 20) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Ranger.GetTitle.20");
+			if (level >= 15) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Ranger.GetTitle.15");
+			if (level >= 10) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Ranger.GetTitle.10");
+			if (level >= 5) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Ranger.GetTitle.5");
+			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
 		}
 
 		public override bool CanUseLefthandedWeapon(GamePlayer player)
