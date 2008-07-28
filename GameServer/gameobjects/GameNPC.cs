@@ -1460,116 +1460,113 @@ namespace DOL.GS
 			}
 		}
 
-		/// <summary>
-		/// Keep following a specific object at a max distance
-		/// </summary>
-		protected virtual int FollowTimerCallback(RegionTimer callingTimer)
-		{
-			if (IsCasting)
-				return FOLLOWCHECKTICKS;
-			bool wasInRange = m_followTimer.Properties.getProperty(FOLLOW_TARGET_IN_RANGE, false);
-			m_followTimer.Properties.removeProperty(FOLLOW_TARGET_IN_RANGE);
+          /// <summary>
+          /// Keep following a specific object at a max distance
+          /// </summary>
+          protected virtual int FollowTimerCallback(RegionTimer callingTimer)
+          {
+             if (IsCasting)
+                return FOLLOWCHECKTICKS;
+             bool wasInRange = m_followTimer.Properties.getProperty(FOLLOW_TARGET_IN_RANGE, false);
+             m_followTimer.Properties.removeProperty(FOLLOW_TARGET_IN_RANGE);
 
-			GameObject followTarget = (GameObject)m_followTarget.Target;
-			GameLiving followLiving = followTarget as GameLiving;
+             GameObject followTarget = (GameObject)m_followTarget.Target;
+             GameLiving followLiving = followTarget as GameLiving;
 
-			//Stop following if target living is dead
-			if (followLiving != null && !followLiving.IsAlive)
-			{
-				StopFollow();
-				Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
-				return 0;
-			}
+             //Stop following if target living is dead
+             if (followLiving != null && !followLiving.IsAlive)
+             {
+                StopFollow();
+                Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
+                return 0;
+             }
 
-			//Stop following if we have no target
-			if (followTarget == null || followTarget.ObjectState != eObjectState.Active || CurrentRegionID != followTarget.CurrentRegionID)
-			{
-				StopFollow();
-				Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
-				return 0;
-			}
+             //Stop following if we have no target
+             if (followTarget == null || followTarget.ObjectState != eObjectState.Active || CurrentRegionID != followTarget.CurrentRegionID)
+             {
+                StopFollow();
+                Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
+                return 0;
+             }
 
-			//Calculate the difference between our position and the players position
-			float diffx = (long)followTarget.X - X;
-			float diffy = (long)followTarget.Y - Y;
-			float diffz = (long)followTarget.Z - Z;
+             //Calculate the difference between our position and the players position
+             float diffx = (long)followTarget.X - X;
+             float diffy = (long)followTarget.Y - Y;
+             float diffz = (long)followTarget.Z - Z;
 
-			//SH: Removed Z checks when one of the two Z values is zero(on ground)
-			float distance = 0;
-			if (followTarget.Z == 0 || Z == 0)
-				distance = (float)Math.Sqrt(diffx * diffx + diffy * diffy);
-			else
-				distance = (float)Math.Sqrt(diffx * diffx + diffy * diffy + diffz * diffz);
+             //SH: Removed Z checks when one of the two Z values is zero(on ground)
+             //Tolakram: a Z of 0 does not indicate on the ground.  Z varies based on terrain  Removed 0 Z check
+             float distance = (float)Math.Sqrt(diffx * diffx + diffy * diffy + diffz * diffz);
 
-			//if distance is greater then the max follow distance, stop following and return home
-			if (distance > m_followMaxDist)
-			{
-				StopFollow();
-				Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
-				this.WalkToSpawn();
-				return 0;
-			}
-			int newX, newY, newZ;
+             //if distance is greater then the max follow distance, stop following and return home
+             if ((int)distance > m_followMaxDist)
+             {
+                StopFollow();
+                Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
+                this.WalkToSpawn();
+                return 0;
+             }
+             int newX, newY, newZ;
 
-			//Check for any formations
-			if (this.Brain is StandardMobBrain)
-			{
-				StandardMobBrain brain = this.Brain as StandardMobBrain;
-				//if the npc hasn't hit or been hit in a while, stop following and return home
-				if (!(Brain is IControlledBrain))
-				{
-					if (AttackState && brain != null && followLiving != null)
-					{
-						long seconds = 20 + ((brain.GetAggroAmountForLiving(followLiving) / (MaxHealth + 1)) * 100);
-						long lastattacked = LastAttackTick;
-						long lasthit = LastAttackedByEnemyTick;
-						if (CurrentRegion.Time - lastattacked > seconds * 1000 && CurrentRegion.Time - lasthit > seconds * 1000)
-						{
-							StopFollow();
-							Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
-							brain.ClearAggroList();
-							this.WalkToSpawn();
-							return 0;
-						}
-					}
-				}
-				//If we're part of a formation, we can get out early.
-				newX = followTarget.X;
-				newY = followTarget.Y;
-				newZ = followTarget.Z;
-				if (brain.CheckFormation(ref newX, ref newY, ref newZ))
-				{
-					WalkTo(newX, newY, (ushort)newZ, MaxSpeed);
-					return FOLLOWCHECKTICKS;
-				}
-			}
+             //Check for any formations
+             if (this.Brain is StandardMobBrain)
+             {
+                StandardMobBrain brain = this.Brain as StandardMobBrain;
+                //if the npc hasn't hit or been hit in a while, stop following and return home
+                if (!(Brain is IControlledBrain))
+                {
+                   if (AttackState && brain != null && followLiving != null)
+                   {
+                      long seconds = 20 + ((brain.GetAggroAmountForLiving(followLiving) / (MaxHealth + 1)) * 100);
+                      long lastattacked = LastAttackTick;
+                      long lasthit = LastAttackedByEnemyTick;
+                      if (CurrentRegion.Time - lastattacked > seconds * 1000 && CurrentRegion.Time - lasthit > seconds * 1000)
+                      {
+                         StopFollow();
+                         Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
+                         brain.ClearAggroList();
+                         this.WalkToSpawn();
+                         return 0;
+                      }
+                   }
+                }
+                //If we're part of a formation, we can get out early.
+                newX = followTarget.X;
+                newY = followTarget.Y;
+                newZ = followTarget.Z;
+                if (brain.CheckFormation(ref newX, ref newY, ref newZ))
+                {
+                   WalkTo(newX, newY, (ushort)newZ, MaxSpeed);
+                   return FOLLOWCHECKTICKS;
+                }
+             }
 
-			//Are we in range yet?
-			if (distance <= m_followMinDist)
-			{
-				StopMoving();
-				TurnTo(followTarget);
-				if (!wasInRange)
-				{
-					m_followTimer.Properties.setProperty(FOLLOW_TARGET_IN_RANGE, true);
-					FollowTargetInRange();
-				}
-				return FOLLOWCHECKTICKS;
-			}
+             //Are we in range yet?  Tolakram - Distances under 100 do not calculate correctly leading to the mob always being told to walkto
+             if ((int)distance <= (m_followMinDist < 100 ? 100 : m_followMinDist))
+             {
+                StopMoving();
+                TurnTo(followTarget);
+                if (!wasInRange)
+                {
+                   m_followTimer.Properties.setProperty(FOLLOW_TARGET_IN_RANGE, true);
+                   FollowTargetInRange();
+                }
+                return FOLLOWCHECKTICKS;
+             }
 
-			// follow on distance
-			diffx = (diffx / distance) * m_followMinDist;
-			diffy = (diffy / distance) * m_followMinDist;
-			diffz = (diffz / distance) * m_followMinDist;
+             // follow on distance
+             diffx = (diffx / distance) * m_followMinDist;
+             diffy = (diffy / distance) * m_followMinDist;
+             diffz = (diffz / distance) * m_followMinDist;
 
-			//Subtract the offset from the target's position to get
-			//our target position
-			newX = (int)(followTarget.X - diffx);
-			newY = (int)(followTarget.Y - diffy);
-			newZ = (int)(followTarget.Z - diffz);
-			WalkTo(newX, newY, (ushort)newZ, MaxSpeed);
-			return FOLLOWCHECKTICKS;
-		}
+             //Subtract the offset from the target's position to get
+             //our target position
+             newX = (int)(followTarget.X - diffx);
+             newY = (int)(followTarget.Y - diffy);
+             newZ = (int)(followTarget.Z - diffz);
+             WalkTo(newX, newY, (ushort)newZ, MaxSpeed);
+             return FOLLOWCHECKTICKS;
+          }
 
 		/// <summary>
 		/// Disables the turning for this living
