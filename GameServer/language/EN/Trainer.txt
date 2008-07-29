@@ -1,0 +1,9 @@
+#FriarTrainer
+FriarTrainer.Interact.Text1:		{0} says, "Do you desire to [join the Defenders of Albion] and defend our realm as a Friar?"
+FriarTrainer.Interact.Text2:		{0} says, "insert english text"
+FriarTrainer.Interact.Text3:		{0} says, "insert english text"
+FriarTrainer.Interact.Text4:		{0} says, "insert english text"
+FriarTrainer.ReceiveItem.Text1:		{0} says, "insert english text"
+FriarTrainer.WhisperReceive.Text1:	We welcome you into our society as an equal! We are at your disposal. We will now issue your Robes of the Novice. Wear them always and let it serve to remind you of your faith. When you have reached the title of Lesser Chaplain, return them to me. We shall then see if you require another.
+FriarTrainer.WhisperReceiveCase.Text1:	join the defenders of albion
+

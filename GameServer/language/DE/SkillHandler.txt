@@ -1,12 +1,12 @@
 # /SkillBase
 SkillBase.RegisterPropertyNames.Acuity:			Sinnesschärfe
 SkillBase.RegisterPropertyNames.AcuityBonusCap:		Bonus auf Sinnesschärfebonuslimit
-SkillBase.RegisterPropertyNames.AllArcherySkills:	Alle Bogenfähigkeiten
-SkillBase.RegisterPropertyNames.AllDualWieldingSkills:	Alle Doppelwaffentalente
-SkillBase.RegisterPropertyNames.AllMagicSkills:		Alle Magietalente
-SkillBase.RegisterPropertyNames.AllMeleeWeaponSkills:	Alle Nahkampffähigkeiten
-SkillBase.RegisterPropertyNames.AllSkills:		Alle Fähigkeiten
-SkillBase.RegisterPropertyNames.ALLSpellLines:		Alle Zauberlinien
+SkillBase.RegisterPropertyNames.AllArcherySkills:	ALLE Bogenfähigkeiten
+SkillBase.RegisterPropertyNames.AllDualWieldingSkills:	ALLE Doppelwaffentalente
+SkillBase.RegisterPropertyNames.AllMagicSkills:		ALLE Magietalente
+SkillBase.RegisterPropertyNames.AllMeleeWeaponSkills:	ALLE Nahkampftalente
+SkillBase.RegisterPropertyNames.AllSkills:		ALLE Fähigkeiten
+SkillBase.RegisterPropertyNames.ALLSpellLines:		ALLE Zauberlinien
 SkillBase.RegisterPropertyNames.Arboreal:		Arboreal
 SkillBase.RegisterPropertyNames.ArborealFocus:		Arboreal
 SkillBase.RegisterPropertyNames.ArcheryRange:		Bogenschussreichweite
