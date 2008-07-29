@@ -1,5 +1,5 @@
-GamePlayer.AddAbility.YouLearn:				Ihr erlernt die "{0}"-Fähigkeit!	
-GamePlayer.AddSpecialisation.YouLearn:			Ihr erlernt die "{0}"-Fähigkeit!		
+GamePlayer.AddAbility.YouLearn:				Ihr erlernt {0}.
+GamePlayer.AddSpecialisation.YouLearn:			Ihr erlernt die Fähigkeit "{0}"!
 GamePlayer.AddSpellLine.YouLearn:			Ihr erlernt die Zauber der "{0}"-Liste!		
 GamePlayer.ApplyPoison.CantApplyRecentCombat:		Ihr habt gerade gekämpft und könnt deshalb im Moment kein Gift auftragen!			
 GamePlayer.ApplyPoison.CantPoisonWeapon:		Diese Waffe könnt Ihr nicht vergiften!			
