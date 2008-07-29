@@ -283,35 +283,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							return 1;
 
 						caption = spell.Name;
-						ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spell, spellLine);
-						if (spellHandler == null)
-						{
-							objectInfo.Add(" ");
-							objectInfo.Add("Spell type (" + spell.SpellType + ") is not implemented.");
-						}
-						else
-						{
-							objectInfo.AddRange(spellHandler.DelveInfo);
-							//Subspells
-							if (spell.SubSpellID > 0)
-							{
-								Spell s = SkillBase.GetSpellByID(spell.SubSpellID);
-								if (spell != null)
-								{
-									objectInfo.Add(" ");
-									ISpellHandler sh = ScriptMgr.CreateSpellHandler(client.Player, s, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
-									objectInfo.AddRange(sh.DelveInfo);
-								}
-							}
-							if (client.Account.PrivLevel > 1)
-							{
-								objectInfo.Add(" ");
-								objectInfo.Add("--- Spell technical informations ---");
-								objectInfo.Add(" ");
-								objectInfo.Add("Line              :  " + spellHandler.SpellLine.Name);
-								objectInfo.Add("HasPositiveEffect :  " + spellHandler.HasPositiveEffect);
-							}
-						}
+						WriteSpellInfo(objectInfo, spell, spellLine, client);
 						break;
 					}
 				case 3: //spell
@@ -337,16 +309,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								{
 									Spell spell = (Spell)spells[index];
 									caption = spell.Name;
-									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spell, spellline);
-									if (spellHandler == null)
-									{
-										objectInfo.Add(" ");
-										objectInfo.Add("Spell type (" + spell.SpellType + ") is not implemented.");
-									}
-									else
-									{
-										objectInfo.AddRange(spellHandler.DelveInfo);
-									}
+									WriteSpellInfo(objectInfo, spell, spellline, client);
 									break;
 								}
 							}
@@ -1088,6 +1051,39 @@ namespace DOL.GS.PacketHandler.Client.v168
 						return 1;
 					}
 				#endregion
+				#region ChampionAbilities delve from trainer window
+				case 151:
+				case 152:
+				case 153:
+				case 154:
+				case 155:
+				case 156:
+				case 157:
+				case 158:
+				case 159:
+				case 160:
+				case 161:
+				case 162:
+				case 163:
+				case 164:
+				case 165:
+				case 166:
+					{
+						ChampSpec spec = ChampSpecMgr.GetAbilityFromIndex(objectType - 150, objectID / 256 + 1, objectID % 256 + 1);
+						if (spec != null)
+						{
+							Spell spell = SkillBase.GetSpellByID(spec.SpellID);
+							if (spell != null)
+							{
+								SpellLine spellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Champion_Spells + client.Player.Name);
+								caption = spell.Name;
+								WriteSpellInfo(objectInfo, spell, spellLine, client);
+							}
+						}
+						break;
+					}
+				// TODO: find last CL line index
+				#endregion
 				default:
 					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoInformation"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 1;
@@ -1109,6 +1105,41 @@ Type    Description           Id
 8       Ability               100+position in players abilities list (?)
 9       Trainers skill        position in trainers window list
 			*/
+		}
+
+		public void WriteSpellInfo(ArrayList output, Spell spell, SpellLine spellLine, GameClient client)
+		{
+			ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spell, spellLine);
+			if(spellHandler == null)
+			{
+				output.Add(" ");
+				output.Add("Spell type (" + spell.SpellType + ") is not implemented.");
+			}
+			else
+			{
+				output.AddRange(spellHandler.DelveInfo);
+				//Subspells
+				if (spell.SubSpellID > 0)
+				{
+					Spell s = SkillBase.GetSpellByID(spell.SubSpellID);
+					if (spell != null)
+					{
+						output.Add(" ");
+						ISpellHandler sh = ScriptMgr.CreateSpellHandler(client.Player, s, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+						output.AddRange(sh.DelveInfo);
+					}
+				}
+			}
+			if (client.Account.PrivLevel > 1 )
+			{
+				output.Add("----------Technical informations----------");
+				output.Add("Line: " + spellHandler == null ? spellLine.KeyName : spellHandler.SpellLine.Name);
+				output.Add("SpellID: " + spell.ID);
+				output.Add("ClientEffect: " + spell.ClientEffect);
+				output.Add("Icon: " + spell.ClientEffect);
+				if (spellHandler != null)
+					output.Add("HasPositiveEffect: " + spellHandler.HasPositiveEffect);
+			}
 		}
 
 		public void WriteTechnicalInfo(ArrayList output, ItemTemplate item)
