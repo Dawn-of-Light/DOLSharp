@@ -17,6 +17,7 @@
  *
  */
 
+using DOL.Events;
 using DOL.GS;
 
 namespace DOL.AI.Brain
@@ -27,7 +28,7 @@ namespace DOL.AI.Brain
 
 		public override int ThinkInterval
 		{
-			get { return 1000; }
+			get { return 700; }
 		}
 
 		protected override bool CheckDefensiveSpells(Spell spell)
@@ -43,8 +44,15 @@ namespace DOL.AI.Brain
 		#region Think
 		public override void Think()
 		{
+			GameLiving living = Body.TempProperties.getObjectProperty("bombertarget", null) as GameLiving;
+			if(living == null) return;
+			if(WorldMgr.CheckDistance(living, Body, 150))
+			{
+				Body.Notify(GameNPCEvent.ArriveAtTarget, Body);
+			}
 		}
-    /// <summary>
+
+		/// <summary>
     /// Updates the pet window
     /// </summary>
     public override void UpdatePetWindow() { }
