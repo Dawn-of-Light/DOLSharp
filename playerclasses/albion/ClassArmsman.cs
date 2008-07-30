@@ -114,12 +114,15 @@ namespace DOL.GS.PlayerClass
 			}
 			if (player.Level >= 35)
 			{                              
-                player.AddAbility(SkillBase.GetAbility(Abilities.MemoriesOfWar));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Stoicism));
 			}
 			if (player.Level >= 40)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Rampage));
+			}
+			if (player.Level >= 41)
+			{
+                player.AddAbility(SkillBase.GetAbility(Abilities.MemoriesOfWar));
                 player.AddAbility(SkillBase.GetAbility(Abilities.ScarsOfBattle));
 			}
 			if (player.Level >= 50)
