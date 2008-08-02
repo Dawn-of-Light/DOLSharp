@@ -21,6 +21,7 @@ using System;
 using System.Reflection;
 using DOL.Database;
 using DOL.Events;
+using DOL.Language;
 using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -52,21 +53,21 @@ namespace DOL.GS
 			{
 				GamePlayer player = (GamePlayer)source;
 
-				if (item.Name.ToLower().StartsWith("ticket to ") && item.Item_Type == 40)
+                if (item.Name.ToLower().StartsWith(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameStableMaster.ReceiveItem.TicketTo")) && item.Item_Type == 40)
 				{
 					foreach (GameNPC npc in GetNPCsInRadius(1500))
 					{
 						if (npc is GameHorseBoat)
 						{
-							player.Out.SendMessage("Please wait until the boat has departed before ordering a new one", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-							return false;
+                            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameBoatStableMaster.ReceiveItem.Departed", this.Name), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+                            return false;
 						}
 					}
 
-					String destination = item.Name.Substring(item.Name.IndexOf(" to ") + 4);
+                    String destination = item.Name.Substring(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameStableMaster.ReceiveItem.TicketTo").Length);
 					PathPoint path = MovementMgr.LoadPath(item.Id_nb);
 					//PathPoint path = MovementMgr.Instance.LoadPath(this.Name + "=>" + destination);
-					if (path != null)
+                    if ((path != null) && ((Math.Abs(path.X - this.X)) < 500) && ((Math.Abs(path.Y - this.Y)) < 500))
 					{
 						player.Inventory.RemoveCountFromStack(item, 1);
 
@@ -84,12 +85,12 @@ namespace DOL.GS
 						//new MountHorseAction(player, boat).Start(400);
 						new HorseRideAction(boat).Start(30 * 1000);
 
-						player.Out.SendMessage("I have summoned a boat to travel to " + destination + " you have 30 seconds to board before it departs.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-						return true;
+                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameBoatStableMaster.ReceiveItem.SummonedBoat", this.Name, destination), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        return true;
 					}
 					else
 					{
-						player.Out.SendMessage("I don't know the way to " + destination + " yet.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameBoatStableMaster.ReceiveItem.UnknownWay", this.Name, destination), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 				}
 			}
