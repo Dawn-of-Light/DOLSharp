@@ -101,7 +101,7 @@ namespace DOL.GS.Keeps
 			//decide which healing spell
 			Spell spell = GetLordHealSpell((eRealm)lord.Realm);
 			//cast the healing spell
-			if (spell != null)
+			if (spell != null && !lord.IsStunned && !lord.IsMezzed)
 			{
 				lord.StopAttack();
 				lord.TargetObject = lord;
@@ -119,7 +119,7 @@ namespace DOL.GS.Keeps
 			//decide which healing spell
 			Spell spell = GetGuardHealSmallSpell((eRealm)guard.Realm);
 			//cast the healing spell
-			if (spell != null)
+			if (spell != null && !guard.IsStunned && !guard.IsMezzed  )
 			{
 				guard.StopAttack();
 				guard.TargetObject = target;
