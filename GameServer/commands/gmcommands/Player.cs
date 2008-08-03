@@ -37,7 +37,7 @@ namespace DOL.GS.Commands
      "&player",
      ePrivLevel.GM,
      "Various Admin/GM commands to edit characters.",
-     //"/player name <newName>",
+     "/player name <newName>",
      "/player lastname <change|reset> <newLastName>",
      "/player level <newLevel>",
      "/player realm <newRealm>",
@@ -95,7 +95,7 @@ namespace DOL.GS.Commands
                     }
                 #endregion
                 #region name
-				/*// Cause loss of data in the database
+
 				case "name":
                     {
                         GamePlayer player = client.Player.TargetObject as GamePlayer;
@@ -114,7 +114,7 @@ namespace DOL.GS.Commands
                         client.Out.SendMessage("You successfully changed this players name to " + player.Name + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                         player.SaveIntoDatabase();
                         break;
-                    }*/
+                    }
 				#endregion
 				#region lastname
 				case "lastname":
