@@ -241,7 +241,7 @@ namespace DOL.GS.Keeps
 					spell.AutoSave = false;
 					spell.CastTime = 2;
 					spell.ClientEffect = 1340;
-					spell.Value = 350;
+					spell.Value = 225; //350;
 					spell.Name = "Guard Heal";
 					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
 					spell.SpellID = 90001;
@@ -267,7 +267,7 @@ namespace DOL.GS.Keeps
 					spell.AutoSave = false;
 					spell.CastTime = 2;
 					spell.ClientEffect = 3011;
-					spell.Value = 350;
+					spell.Value = 225;//350;
 					spell.Name = "Guard Heal";
 					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
 					spell.SpellID = 90002;
@@ -293,7 +293,7 @@ namespace DOL.GS.Keeps
 					spell.AutoSave = false;
 					spell.CastTime = 2;
 					spell.ClientEffect = 3030;
-					spell.Value = 350;
+					spell.Value = 225;//350;
 					spell.Name = "Guard Heal";
 					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
 					spell.SpellID = 90003;
