@@ -732,10 +732,7 @@ namespace DOL.GS
 			else m_turningDisabledCount--;
 
 			if (m_turningDisabledCount < 0)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("m_turningDisabledCount is less than zero.\n" + Environment.StackTrace);
-			}
+				m_turningDisabledCount=0;
 		}
 
 		/// <summary>
@@ -1497,6 +1494,10 @@ namespace DOL.GS
 		/// <returns>the object where we collect and modifiy all parameters about the attack</returns>
 		protected virtual AttackData MakeAttack(GameObject target, InventoryItem weapon, Style style, double effectiveness, int interruptDuration, bool dualWield)
 		{
+			return MakeAttack(target, weapon, style, effectiveness, interruptDuration, dualWield, false);
+		}
+		protected virtual AttackData MakeAttack(GameObject target, InventoryItem weapon, Style style, double effectiveness, int interruptDuration, bool dualWield, bool ignoreLOS)
+		{
 			AttackData ad = new AttackData();
 			ad.Attacker = this;
 			ad.Target = target as GameLiving;
@@ -1538,7 +1539,7 @@ namespace DOL.GS
 			}
 
 			//Check if the target is in front of attacker
-			if (ad.AttackType != AttackData.eAttackType.Ranged && this is GamePlayer &&
+			if (!ignoreLOS && ad.AttackType != AttackData.eAttackType.Ranged && this is GamePlayer &&
 		  !(ad.Target is GameKeepComponent) && !(IsObjectInFront(ad.Target, 120, true) && TargetInView))
 			{
 				ad.AttackResult = eAttackResult.TargetNotVisible;
@@ -2510,7 +2511,9 @@ namespace DOL.GS
 							RealmAbilities.L3RAPropertyEnhancer ra = living.GetAbility(typeof(RealmAbilities.ReflexAttackAbility)) as RealmAbilities.L3RAPropertyEnhancer;
 							if (ra != null && Util.Chance(ra.Amount))
 							{
-								new WeaponOnTargetAction(living, owner, living.AttackWeapon, (living.Inventory == null) ? null : living.Inventory.GetItem(eInventorySlot.LeftHandWeapon), living.CalculateLeftHandSwingCount(), 1, living.AttackSpeed(living.AttackWeapon), null).Start(1);
+                                AttackData ReflexAttackAD = living.MakeAttack(owner, living.AttackWeapon, null, 1, m_interruptDuration, false, true);
+								living.DealDamage(ReflexAttackAD);
+								living.SendAttackingCombatMessages(ReflexAttackAD);
 							}
 						}
 					}

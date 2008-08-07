@@ -46,6 +46,7 @@ namespace DOL.GS.RealmAbilities
 			{
 				foreach (GamePlayer t_player in living.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
+					if(!t_player.IsAlive) continue;
 					t_player.Out.SendSpellEffectAnimation(living, g_player, 7036, 0, false, 1);
 				}
 				if (g_player == living) continue;
@@ -109,6 +110,7 @@ namespace DOL.GS.RealmAbilities
 			}
 			foreach (GamePlayer t_player in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
+				if(!t_player.IsAlive) continue;
 				t_player.Out.SendSpellEffectAnimation(m_owner, player, 8051, 0, false, 1);
 			}
 			player.Out.SendMessage("You are healed by the pool of healing for " + healamount + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);

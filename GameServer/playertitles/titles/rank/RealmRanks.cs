@@ -114,7 +114,7 @@ namespace DOL.GS.Scripts
 	public class HiberniaRR10 : SimplePlayerTitle
 	{
 		public override string GetDescription(GamePlayer player) { return "Realm Rank"; }
-		public override string GetValue(GamePlayer player) { return "Emerald Rider"; }
+		public override string GetValue(GamePlayer player) { return "Emerald Ridere"; }
 		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Hibernia&&player.RealmLevel>=90&&player.RealmLevel<100); }
 	}
 	public class HiberniaRR11M : SimplePlayerTitle

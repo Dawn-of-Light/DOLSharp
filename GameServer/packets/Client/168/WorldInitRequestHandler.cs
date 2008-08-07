@@ -129,6 +129,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					player.Client.Out.SendPlayerQuit(true);
 					player.Client.Player.SaveIntoDatabase();
 					player.Client.Player.Quit(true);
+					player.Client.Disconnect();
 					return;
 				}
 				// this is bind stuff
