@@ -535,7 +535,11 @@ namespace DOL.GS.Styles
 		{
 			// Apply Valkyrie RA5L effect
 			ValhallasBlessingEffect ValhallasBlessing = (ValhallasBlessingEffect)living.EffectList.GetOfType(typeof(ValhallasBlessingEffect));
-			if (ValhallasBlessing != null && Util.Chance(10)) return 0;		
+			if (ValhallasBlessing != null && Util.Chance(10)) return 0;
+
+            //Camelot Herald 1.90 : Battlemaster styles will now cost a flat amount of Endurance, regardless of weapon speed
+            if (style.Spec == Specs.Battlemaster)
+                return Math.Max(1, (int)Math.Ceiling((30 * style.EnduranceCost / 40) * living.GetModified(eProperty.FatigueConsumption) * 0.01));
             
             int fatCost = weaponSpd * style.EnduranceCost / 40;
 			if (weaponSpd < 40)
