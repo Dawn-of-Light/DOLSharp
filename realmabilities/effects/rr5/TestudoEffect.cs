@@ -71,11 +71,13 @@ namespace DOL.GS.Effects
 				return;
 
 			int absorb = (int)(ad.Damage * 0.9);
+			int critic = (int)(ad.CriticalDamage * 0.9);
 			ad.Damage -= absorb;
+			ad.CriticalDamage -= critic;
 			if (living is GamePlayer)
-				((GamePlayer)living).Out.SendMessage("Your Testudo Stance reduces the damage by " + absorb + " points", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				((GamePlayer)living).Out.SendMessage("Your Testudo Stance reduces the damage by " + (absorb+critic) + " points", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 			if (ad.Attacker is GamePlayer)
-				((GamePlayer)ad.Attacker).Out.SendMessage(living.Name + "'s Testudo Stance reducec your damage by " + absorb + " points", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				((GamePlayer)ad.Attacker).Out.SendMessage(living.Name + "'s Testudo Stance reducec your damage by " + (absorb+critic) + " points", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 
 		}
 

@@ -19,12 +19,12 @@ namespace DOL.GS.RealmAbilities
 			if (level < 1) return 0;
 			switch (level)
 			{
-				case 1: return 75;
-				case 2: return 175;
-				case 3: return 300;
-				case 4: return 450;
-				case 5: return 625;
-				default: return 75;
+				case 1: return 50;
+				case 2: return 100;
+				case 3: return 200;
+				case 4: return 325;
+				case 5: return 475;
+				default: return 50;
 			}
 		}
 
@@ -32,11 +32,11 @@ namespace DOL.GS.RealmAbilities
 		{
 			switch (level)
 			{
-				case 1: return 0.05;
-				case 2: return 0.10;
-				case 3: return 0.15;
-				case 4: return 0.20;
-				case 5: return 0.25;
+				case 1: return 0.10;
+				case 2: return 0.20;
+				case 3: return 0.30;
+				case 4: return 0.40;
+				case 5: return 0.50;
 				default: return 0;
 			}
 		}

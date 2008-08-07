@@ -55,7 +55,7 @@ namespace DOL.GS.Effects
 		{
 			get
 			{
-				IList list = new ArrayList();
+				ArrayList list = new ArrayList();
 				list.Add("Grants unbreakable extreme speed for 15 seconds.");
 				list.Add(base.DelveInfo);
 				return list;
