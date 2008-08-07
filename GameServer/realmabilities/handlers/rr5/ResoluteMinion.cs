@@ -14,7 +14,7 @@ namespace DOL.GS.RealmAbilities
 {
 	public class ResoluteMinionAbility : RR5RealmAbility
     {
-		public const int DURATION = 30000;
+		public const int DURATION = 60000;
 		public ResoluteMinionAbility(DBAbility dba, int level) : base(dba, level) { }
         public override void Execute(GameLiving living)
 		{

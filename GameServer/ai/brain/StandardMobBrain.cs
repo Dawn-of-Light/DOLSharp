@@ -131,7 +131,7 @@ namespace DOL.AI.Brain
 			}
 
 			//If this NPC can randomly walk around, we allow it to walk around
-			if (!Body.AttackState && CanRandomWalk && Util.Chance(10))
+			if (!Body.AttackState && CanRandomWalk && Util.Chance(20))
 			{
 				IPoint3D target = CalcRandomWalkTarget();
 				if (target != null)
@@ -520,6 +520,9 @@ namespace DOL.AI.Brain
 
 					// Don't bother about necro shade, can't attack it anyway.
 					if (living.EffectList.GetOfType(typeof(NecromancerShadeEffect)) != null)
+						continue;
+						
+					if (living.IsStealthed)
 						continue;
 
 					long amount = (long)aggros.Value;

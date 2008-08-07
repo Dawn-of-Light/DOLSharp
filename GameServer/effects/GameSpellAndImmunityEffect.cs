@@ -143,6 +143,7 @@ namespace DOL.GS.Effects
 		public bool ImmunityState
 		{
 			get { return m_expired; }
+			set { m_expired = value; }
 		}
 	}
 }

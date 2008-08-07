@@ -50,16 +50,15 @@ namespace DOL.GS.Spells
 
 			SendEffectAnimation(target, 0, false, 1);
 
-
 			// calc damage
 			AttackData ad = CalculateDamageToTarget(target, effectiveness);
-			DamageTarget(ad, true);
-			if (ad.Damage != 0) SendDamageMessages(ad);
+			//DamageTarget(ad, true);
+			SendDamageMessages(ad);
 		
-
 			// Interrupt only if target is actually casting
-			if (target.IsCasting)
+			if (target.IsCasting && Spell.Target.ToLower()!="cone")
 				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
+				
 			if (target is GameNPC)
 			{
 				GameNPC npc = (GameNPC)target;
@@ -78,7 +77,7 @@ namespace DOL.GS.Spells
 			base.OnSpellResisted(target);
 
 			// Interrupt only if target is actually casting
-			if (Spell.Damage == 0 && Spell.CastTime == 0 && IsCasting)
+			if (target.IsCasting && Spell.Target.ToLower()!="cone")
 				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
 		}
 

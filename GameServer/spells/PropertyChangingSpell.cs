@@ -59,7 +59,7 @@ namespace DOL.GS.Spells
 				//    && this is EvadeChanceBuff == false
 				//    && this is ParryChanceBuff == false)
 				//{
-				if (this is StrengthBuff || this is DexterityBuff || this is ConstitutionBuff || this is QuicknessBuff || this is StrengthConBuff || this is DexterityQuiBuff)
+				if (this is StrengthBuff || this is DexterityBuff || this is ConstitutionBuff || this is QuicknessBuff || this is StrengthConBuff || this is DexterityQuiBuff || this is AcuityBuff)
 				{
 					GamePlayer caster = m_caster as GamePlayer;
 					if (caster != null)

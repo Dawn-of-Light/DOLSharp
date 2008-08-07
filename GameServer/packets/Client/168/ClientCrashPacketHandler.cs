@@ -67,9 +67,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 				if(client.Player!=null)
 				{
 					GamePlayer player = client.Player;
-					player.Client.Out.SendPlayerQuit(true);
-					player.Client.Player.SaveIntoDatabase();
-					player.Client.Player.Quit(true);
+					client.Out.SendPlayerQuit(true);
+					client.Player.SaveIntoDatabase();
+					client.Player.Quit(true);
+					client.Disconnect();
 				}
 
 				return 1;
