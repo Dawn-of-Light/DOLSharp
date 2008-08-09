@@ -50,8 +50,8 @@ namespace DOL.GS.Spells
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			base.OnEffectExpires(effect, noMessages);
-			BlissfulIgnoranceEffect BlissfulIgnorance = (BlissfulIgnoranceEffect)m_caster.EffectList.GetOfType(typeof(BlissfulIgnoranceEffect));
-			if (BlissfulIgnorance == null)
+			
+			if (m_spell.Power != 0)
 			{
 				int cost = 0;
 				if (m_spell.Power < 0)

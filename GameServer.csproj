@@ -1214,7 +1214,6 @@
     <Compile Include="realmabilities\effects\rr5\BadgeOfValorEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\BladeBarrierEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\BlindingDustEffect.cs" />
-    <Compile Include="realmabilities\effects\rr5\BlissfulIgnoranceEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\BoilingCauldronEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\CallOfDarknessEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\CombatAwarenessEffect.cs" />
@@ -2580,7 +2579,6 @@
     <Content Include="language\IT\Language-IT.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="config" />
     <Folder Include="spells\Cleric\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
