@@ -1,5 +1,24 @@
+/*
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Keeps
 {
@@ -610,20 +629,20 @@ namespace DOL.GS.Keeps
 		{
 			if (guard is FrontierHastener)
 			{
-				guard.Name = "Hastener";
+                guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Hastener");
 				return;
 			}
 			if (guard is GuardLord)
 			{
 				if (guard.Component == null)
 				{
-					guard.Name = "Commander of " + guard.CurrentZone.Description;
-					return;
+                    guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Commander", guard.CurrentZone.Description);
+                    return;
 				}
 				else if (guard.IsTowerGuard)
 				{
-					guard.Name = "Tower Captain";
-					return;
+                    guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.TowerCaptain");
+                    return;
 				}
 			}
 			switch ((eRealm)guard.Realm)
@@ -635,46 +654,46 @@ namespace DOL.GS.Keeps
 						if (guard is GuardArcher)
 						{
 							if (guard.IsPortalKeepGuard)
-								guard.Name = "Bowman Commander";
-							else guard.Name = "Scout";
+                                guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.BowmanCommander");
+                            else guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Scout");
 						}
 						else if (guard is GuardCaster)
 						{
 							if (guard.IsPortalKeepGuard)
-								guard.Name = "Master Wizard";
-							else guard.Name = "Wizard";
+                                guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.MasterWizard");
+                            else guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Wizard");
 						}
 						else if (guard is GuardFighter)
 						{
 							if (guard.IsPortalKeepGuard)
 							{
-								guard.Name = "Knight Commander";
-							}
+                                guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.KnightCommander");
+                            }
 							else
 							{
 								if (guard.IsMale)
-									guard.Name = "Armsman";
-								else guard.Name = "Armswoman";
+                                    guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Armsman");
+                                else guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Armswoman");
 							}
 						}
 						else if (guard is GuardHealer)
 						{
-							guard.Name = "Cleric";
-						}
+                            guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Cleric");
+                        }
 						else if (guard is GuardLord)
 						{
 							if (guard.IsMale)
-								guard.Name = guard.Component.Keep.Name + " Lord";
-							else guard.Name = guard.Component.Keep.Name + " Lady";
+                                guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Lord", guard.Component.Keep.Name);
+                            else guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Lady", guard.Component.Keep.Name);
 						}
 						else if (guard is GuardStealther)
 						{
-							guard.Name = "Infiltrator";
-						}
+                            guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Infiltrator");
+                        }
 						else if (guard is MissionMaster)
 						{
-							guard.Name = "Captain Commander";
-						}
+                            guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.CaptainCommander");
+                        }
 						break;
 					}
 				#endregion
@@ -684,37 +703,37 @@ namespace DOL.GS.Keeps
 						if (guard is GuardArcher)
 						{
 							if (guard.IsPortalKeepGuard)
-								guard.Name = "Nordic Hunter";
-							else guard.Name = "Hunter";
+                                guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.NordicHunter");
+                            else guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Hunter");
 						}
 						else if (guard is GuardCaster)
 						{
 							if (guard.IsPortalKeepGuard)
-								guard.Name = "Master of Runes";
-							else guard.Name = "Runemaster";
+                                guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.MasterRunes");
+                            else guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Runemaster");
 						}
 						else if (guard is GuardFighter)
 						{
 							if (guard.IsPortalKeepGuard)
-								guard.Name = "Nordic Jarl";
-							else guard.Name = "Huscarl";
+                                guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.NordicJarl");
+                            else guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Huscarl");
 						}
 						else if (guard is GuardHealer)
 						{
-							guard.Name = "Healer";
-						}
+                            guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Healer");
+                        }
 						else if (guard is GuardLord)
 						{
-							guard.Name = guard.Component.Keep.Name + " Jarl";
-						}
+                            guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Jarl", guard.Component.Keep.Name);
+                        }
 						else if (guard is GuardStealther)
 						{
-							guard.Name = "Shadowblade";
-						}
+                            guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Shadowblade");
+                        }
 						else if (guard is MissionMaster)
 						{
-							guard.Name = "Hersir Commander";
-						}
+                            guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.HersirCommander");
+                        }
 						break;
 					}
 				#endregion
@@ -724,44 +743,44 @@ namespace DOL.GS.Keeps
 						if (guard is GuardArcher)
 						{
 							if (guard.IsPortalKeepGuard)
-								guard.Name = "Master Ranger";
-							else guard.Name = "Ranger";
+                                guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.MasterRanger");
+                            else guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Ranger");
 						}
 						else if (guard is GuardCaster)
 						{
 							if (guard.IsPortalKeepGuard)
-								guard.Name = "Master Eldritch";
-							else guard.Name = "Eldritch";
+                                guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.MasterEldritch");
+                            else guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Eldritch");
 						}
 						else if (guard is GuardFighter)
 						{
 							if (guard.IsPortalKeepGuard)
-								guard.Name = "Champion";
-							else guard.Name = "Guardian";
+                                guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Champion");
+                            else guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Guardian");
 						}
 						else if (guard is GuardHealer)
 						{
-							guard.Name = "Druid";
-						}
+                            guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Druid");
+                        }
 						else if (guard is GuardLord)
 						{
-							guard.Name = guard.Component.Keep.Name + " Chieftain";
-						}
+                            guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Chieftain", guard.Component.Keep.Name);
+                        }
 						else if (guard is GuardStealther)
 						{
-							guard.Name = "Nightshade";
-						}
+                            guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Nightshade");
+                        }
 						else if (guard is MissionMaster)
 						{
-							guard.Name = "Champion Commander";
-						}
+                            guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.ChampionCommander");
+                        }
 						break;
 					}
 				#endregion
 			}
 			if ((eRealm)guard.Realm == eRealm.None)
-				guard.Name = "Renegade " + guard.Name;
-		}
+                guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Renegade", guard.Name);
+        }
 
 		/// <summary>
 		/// Sets a guards Block, Parry and Evade change
