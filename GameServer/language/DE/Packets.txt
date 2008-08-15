@@ -10,7 +10,7 @@ DetailDisplayHandler.HandlePacket.CannotSold:		Kann nicht an Händler verkauft w
 DetailDisplayHandler.HandlePacket.CannotTraded:		Kann nicht gehandelt werden.
 DetailDisplayHandler.HandlePacket.ChampionLevel:	- Benötigt: Championstufe {0}
 DetailDisplayHandler.HandlePacket.ChatItem:		[Chat] {0}/Item: "{1}"
-DetailDisplayHandler.HandlePacket.CrafterName:		Crafter : {0}
+DetailDisplayHandler.HandlePacket.CrafterName:		Handwerker: {0}
 DetailDisplayHandler.HandlePacket.Damage:		Schaden: 
 DetailDisplayHandler.HandlePacket.Defense:		Defensiv: 
 DetailDisplayHandler.HandlePacket.DontBelongGuild:	Ihr gehört keiner Gilde an.

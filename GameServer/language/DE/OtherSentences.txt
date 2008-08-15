@@ -1,5 +1,5 @@
 # LANGUAGEMGR
-System.LanguagesName.Czech:					Tschechisch
+System.LanguagesName.Czech:				Tschechisch
 System.LanguagesName.English:				Englisch
 System.LanguagesName.French:				Französisch
 System.LanguagesName.German:				Deutsch
@@ -7,7 +7,7 @@ System.LanguagesName.Italian:				Italienisch
 System.LanguagesName.Spanish:				Spanisch
 
 # System
-System.NoSense:							Das würde keinen Sinn machen!
+System.NoSense:						Das würde keinen Sinn machen!
 System.MustSelectTarget:				Ihr müsst ein Ziel auswählen!
 System.ReleaseTimer:					Automatischer Release
 

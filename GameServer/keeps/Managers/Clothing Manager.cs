@@ -318,7 +318,7 @@ namespace DOL.GS.Keeps
                 Midgard_Stealther.AddNPCEquipment(eInventorySlot.RightHandWeapon, 315);
                 Midgard_Stealther = Midgard_Stealther.CloseTemplate();
                 Midgard_Stealther.GetItem(eInventorySlot.LeftHandWeapon).Hand = (int)eHandFlag.Left;
-                Albion_Stealther.GetItem(eInventorySlot.LeftHandWeapon).SlotPosition = Slot.LEFTHAND;
+                Midgard_Stealther.GetItem(eInventorySlot.LeftHandWeapon).SlotPosition = Slot.LEFTHAND;
             }
 			#endregion
 			#region PK
@@ -433,7 +433,7 @@ namespace DOL.GS.Keeps
                 Hibernia_Stealther.AddNPCEquipment(eInventorySlot.RightHandWeapon, 940);
                 Hibernia_Stealther = Hibernia_Stealther.CloseTemplate();
                 Hibernia_Stealther.GetItem(eInventorySlot.LeftHandWeapon).Hand = (int)eHandFlag.Left;
-                Albion_Stealther.GetItem(eInventorySlot.LeftHandWeapon).SlotPosition = Slot.LEFTHAND;
+                Hibernia_Stealther.GetItem(eInventorySlot.LeftHandWeapon).SlotPosition = Slot.LEFTHAND;
             }
 			#endregion
 			#region PK
