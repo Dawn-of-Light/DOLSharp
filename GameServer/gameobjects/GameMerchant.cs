@@ -352,6 +352,7 @@ namespace DOL.GS
 			merchant.Speed = MaxSpeedBase;
 			merchant.Region = CurrentRegionID;
 			merchant.Realm = (byte)Realm;
+            merchant.RoamingRange = RoamingRange;
 			merchant.Model = Model;
 			merchant.Size = Size;
 			merchant.Level = Level;
