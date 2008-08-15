@@ -1,4 +1,4 @@
-﻿House.DBHousePermissions.AccessLevel:			Access level {0}		
+﻿House.DBHousePermissions.AccessLevel:			Zugangsstufe: {0}		
 House.Edit.NotEnoughMoney:				Ihr habt nicht genug Geld, um dies machen zu können!	
 House.Edit.PayForChanges:				Ihr zahlt {0} für diese Änderungen.	
 House.Enter.EnteredHouse:				Ihr habt das Haus Nummer {0} betreten.	

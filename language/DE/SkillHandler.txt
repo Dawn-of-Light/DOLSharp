@@ -27,7 +27,7 @@ SkillBase.RegisterPropertyNames.BodyMagicFocus:		Körpermagie
 SkillBase.RegisterPropertyNames.BoneArmy:		Knochenarmee
 SkillBase.RegisterPropertyNames.BoneArmyFocus:		Knochenarmee
 SkillBase.RegisterPropertyNames.BonusToArmorAbsorption:	Absorbtionsbonus
-SkillBase.RegisterPropertyNames.BonusToArmorFactor:	AF-Bonus
+SkillBase.RegisterPropertyNames.BonusToArmorFactor:	Rüstungsfaktor-Bonus
 SkillBase.RegisterPropertyNames.CastingSpeed:		Zaubergeschwindigkeitsbonus
 SkillBase.RegisterPropertyNames.CaveMagic:		Höhlenmagie
 SkillBase.RegisterPropertyNames.CelticDual:		Keltendoppel
@@ -44,12 +44,12 @@ SkillBase.RegisterPropertyNames.Constitution:		Konstitution
 SkillBase.RegisterPropertyNames.ConstitutionBonusCap:	Bonus auf Konstitutionsbonuslimit
 SkillBase.RegisterPropertyNames.Creeping:		Creeping
 SkillBase.RegisterPropertyNames.CreepingPathFocus:	Creeping
-SkillBase.RegisterPropertyNames.CriticalArcheryHit:	Bonus to critical archery hit chance
-SkillBase.RegisterPropertyNames.CriticalMeleeHit:	Bonus to critical melee hit chance
+SkillBase.RegisterPropertyNames.CriticalArcheryHit:	Chancenbonus auf kritischen Ferntreffer
+SkillBase.RegisterPropertyNames.CriticalMeleeHit:	Chancenbonus auf kritischen Nahkampftreffer
 SkillBase.RegisterPropertyNames.CriticalStrike:		Kritischer Treffer
 SkillBase.RegisterPropertyNames.Crossbows:		Armbrust
 SkillBase.RegisterPropertyNames.Crush:			Schlag
-SkillBase.RegisterPropertyNames.Crushing:		Crushing
+SkillBase.RegisterPropertyNames.Crushing:		Schlagen
 SkillBase.RegisterPropertyNames.Cursing:		Verfluchen
 SkillBase.RegisterPropertyNames.CursingFocus:		Verfluchen
 SkillBase.RegisterPropertyNames.Darkness:		Dunkelheit
@@ -84,7 +84,7 @@ SkillBase.RegisterPropertyNames.FireMagic:		Feuermagie
 SkillBase.RegisterPropertyNames.FireMagicFocus:		Feuermagie
 SkillBase.RegisterPropertyNames.FistWraps:		Faustbandagen
 SkillBase.RegisterPropertyNames.FlexibleWeapon:		Flexible Waffen
-SkillBase.RegisterPropertyNames.FumbleChance:		Fumble Chance
+SkillBase.RegisterPropertyNames.FumbleChance:		Verstolperungs-Chance
 SkillBase.RegisterPropertyNames.Hammer:			Hammer
 SkillBase.RegisterPropertyNames.HandToHand:		Faustkampfwaffen
 SkillBase.RegisterPropertyNames.HealingEffectiveness:	Heilungseffektivitäts Bonus
@@ -110,7 +110,7 @@ SkillBase.RegisterPropertyNames.Matter:			Materie
 SkillBase.RegisterPropertyNames.MatterMagic:		Materiemagie
 SkillBase.RegisterPropertyNames.MatterMagicFocus:	Materiemagie
 SkillBase.RegisterPropertyNames.MaulerStaff:		Malmerstäbe
-SkillBase.RegisterPropertyNames.MaximumSpeed:		Maximum Speed
+SkillBase.RegisterPropertyNames.MaximumSpeed:		Maximalgeschwindigkeit
 SkillBase.RegisterPropertyNames.MeleeDamage:		Nahkampfschadenbonus
 SkillBase.RegisterPropertyNames.MeleeSpeed:		Nahkampfgeschwindigkeitsbonus
 SkillBase.RegisterPropertyNames.Mending:		Ausbesserung
