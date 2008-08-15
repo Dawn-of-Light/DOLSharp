@@ -1,6 +1,6 @@
 # /Arbiter
 Albion.Arbiter.Interact.BeginTrials:			Willkommen in Atlantis, {0}. Sobald Ihr bereit seid, könnt Ihr mit den Prüfungen beginnen. Kommt dann zu mir.
-Albion.Arbiter.Interact.Welcome:				Ah, {0}, willkommen bei dem, was von Atlantis noch übrig ist. Was für ein großer Fund dies ist! Wir wissen nicht, warum wir Botschaften von Atlantis erhielten, doch als wir sie bekamen, setzten wir uns sofort in Bewegung. Wir haben von Atlantis seit vielen Jahren nichts gehört. Mehr Jahre, als unser Land eine Geschichte hat. Doch wir gingen los, und wisst Ihr warum? Die [Versprechen] von Atlantis!
+Albion.Arbiter.Interact.Welcome:			Ah, {0}, willkommen bei dem, was von Atlantis noch übrig ist. Was für ein großer Fund dies ist! Wir wissen nicht, warum wir Botschaften von Atlantis erhielten, doch als wir sie bekamen, setzten wir uns sofort in Bewegung. Wir haben von Atlantis seit vielen Jahren nichts gehört. Mehr Jahre, als unser Land eine Geschichte hat. Doch wir gingen los, und wisst Ihr warum? Die [Versprechen] von Atlantis!
 Albion.Arbiter.WhisperReceive.Case1:			versprechen
 Albion.Arbiter.WhisperReceive.Case2:			tafel
 Albion.Arbiter.WhisperReceive.Case3:			platz
@@ -20,7 +20,7 @@ Albion.Arbiter.WhisperReceive.Text7:			Ich werde aber mein Bestes tun. Ihr werde
 Albion.Arbiter.WhisperReceive.Text8:			Ja, viele dieser Ebenen wurden für die Prüfungen geschaffen. Ihr werdet mit den Fähigkeiten der alten Atlanter belohnt werden, falls Ihr diese Prüfungen abschließen könnt.
 Albion.Arbiter.WhisperReceive.Text9:			
 Hibernia.Arbiter.Interact.BeginTrials:			Willkommen in Atlantis, {0}. Sobald Ihr bereit seid, könnt Ihr mit den Prüfungen beginnen. Kommt dann zu mir.
-Hibernia.Arbiter.Interact.Welcome:				Atlantis! Könnt Ihr es glauben, {0}? Eine Zivilisation, so munkelt man, so wunderbar wie das weltliche [Paradies] der Elfen, zu der Zeit, als nur die Elfen das Land bewohnten. Diese Zivilisation heißt es, sei sogar älter als die der Elfen! Ich glaube nicht, dass Sterbliche das Land bewohnten, als die Elfen noch herrschten. Es ist ein Wunder, dass sie nie die Atlanter erwähnten oder von Ihnen sprachen!
+Hibernia.Arbiter.Interact.Welcome:			Atlantis! Könnt Ihr es glauben, {0}? Eine Zivilisation, so munkelt man, so wunderbar wie das weltliche [Paradies] der Elfen, zu der Zeit, als nur die Elfen das Land bewohnten. Diese Zivilisation heißt es, sei sogar älter als die der Elfen! Ich glaube nicht, dass Sterbliche das Land bewohnten, als die Elfen noch herrschten. Es ist ein Wunder, dass sie nie die Atlanter erwähnten oder von Ihnen sprachen!
 Hibernia.Arbiter.WhisperReceive.Case1:			paradies
 Hibernia.Arbiter.WhisperReceive.Case2:			test
 Hibernia.Arbiter.WhisperReceive.Case3:			tafel

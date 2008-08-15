@@ -1,6 +1,6 @@
 ﻿# /AbstractServerRules/PlayerStatistics
 # /Kills
-PlayerStatistic.Kill.Title:				Kill Report
+PlayerStatistic.Kill.Title:				Kill-Report
 PlayerStatistic.Kill.AlbionPlayer:			Albion-Spieler getötet
 PlayerStatistic.Kill.HiberniaPlayer:			Hibernia-Spieler getötet
 PlayerStatistic.Kill.MidgardPlayer:			Midgard-Spieler getötet
@@ -61,8 +61,8 @@ Titles.Kills.Midgard.BaneOfMidgard:			Aufstrebender Fluch Midgards
 Titles.Kills.Midgard.ScourgeOfMidgard:			Fluch Midgards
 
 # /Level
-Titles.Level.Level20Info:				Level 20+
-Titles.Level.Level20:					Level {0}
+Titles.Level.Level20Info:				Stufe 20+
+Titles.Level.Level20:					Stufe {0}
 
 # /PrivLevel
 Titles.PrivLevel.Administrator:				Administrator
