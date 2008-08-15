@@ -521,7 +521,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 								case Style.eAttackResult.Style:
 									Style reqStyle = SkillBase.GetStyleByID(style.OpeningRequirementValue, client.Player.CharacterClass.ID);
-									temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.OpeningStyle");
+									temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.OpeningStyle") + " ";
 									if (reqStyle == null) temp += "(style not found " + style.OpeningRequirementValue + ")";
 									else temp += reqStyle.Name;
 									break;
