@@ -34,7 +34,8 @@ SetGuardName.Shadowblade:	Schattenklinge
 #Hibernia
 SetGuardName.Champion:		Champion
 SetGuardName.ChampionCommander:	Champion-Kommandant
-SetGuardName.Chieftain:		Hauptmann {0}
+SetGuardName.Chieftain:		Klanfürst {0}
+SetGuardName.Chieftess:		Klanfürstin {0}
 SetGuardName.Druid:		Druide
 SetGuardName.Eldritch:		Eldritch
 SetGuardName.Guardian:		Wächter

@@ -13,8 +13,8 @@ SetGuardName.CaptainCommander:	Captain Commander
 SetGuardName.Cleric:		Cleric
 SetGuardName.Infiltrator:	Infiltrator
 SetGuardName.KnightCommander:	Knight Commander
-SetGuardName.Lady:		{0} Lady
-SetGuardName.Lord:		{0} Lord
+SetGuardName.Lady:		Lady {0}
+SetGuardName.Lord:		Lord {0}
 SetGuardName.MasterWizard:	Master Wizard
 SetGuardName.Scout:		Scout
 SetGuardName.Wizard:		Wizard
@@ -24,7 +24,7 @@ SetGuardName.Healer:		Healer
 SetGuardName.HersirCommander:	Hersir Commander
 SetGuardName.Hunter:		Hunter
 SetGuardName.Huscarl:		Huscarl
-SetGuardName.Jarl:		{0} Jarl
+SetGuardName.Jarl:		Jarl {0}
 SetGuardName.MasterRunes:	Master of Runes
 SetGuardName.NordicHunter:	Nordic Hunter
 SetGuardName.NordicJarl:	Nordic Jarl
@@ -34,7 +34,8 @@ SetGuardName.Shadowblade:	Shadowblade
 #Hibernia
 SetGuardName.Champion:		Champion
 SetGuardName.ChampionCommander:	Champion Commander
-SetGuardName.Chieftain:		{0} Chieftain
+SetGuardName.Chieftain:		Chieftain {0}
+SetGuardName.Chieftess:		Chieftess {0}
 SetGuardName.Druid:		Druid
 SetGuardName.Eldritch:		Eldritch
 SetGuardName.Guardian:		Guardian
