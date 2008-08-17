@@ -83,47 +83,47 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-		public override void SendObjectCreate(GameObject obj)
-		{
-			if (obj == null)
-				return;
+	    public override void SendObjectCreate(GameObject obj)
+          {
+             if (obj == null)
+                return;
 
-			if (obj.CurrentHouse != m_gameClient.Player.CurrentHouse)
-				return;
+             if (obj.CurrentHouse != m_gameClient.Player.CurrentHouse)
+                return;
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ObjectCreate));
-			pak.WriteShort((ushort)obj.ObjectID);
-			if (obj is GameStaticItem)
-				pak.WriteShort((ushort)(obj as GameStaticItem).Emblem);
-			else pak.WriteShort(0);
-			pak.WriteShort(obj.Heading);
-			pak.WriteShort((ushort)obj.Z);
-			pak.WriteInt((uint)obj.X);
-			pak.WriteInt((uint)obj.Y);
-			if (obj is GameNPC && obj.IsUnderwater)
-				pak.WriteShort((ushort)(obj.Model | 0x8000));
-			else pak.WriteShort(obj.Model);
-			int flag = ((byte)obj.Realm & 3) << 4;
-			if (obj is Keeps.GameKeepBanner)
-				flag |= 0x08;
-			if (obj is GameStaticItemTimed && m_gameClient.Player != null && ((GameStaticItemTimed)obj).IsOwner(m_gameClient.Player))
-				flag |= 0x04;
-			pak.WriteShort((ushort)flag);
-			if (obj is GameStaticItem)
-			{
-				int newEmblemBitMask = ((obj as GameStaticItem).Emblem & 0x010000) << 9;
-				pak.WriteInt((uint)newEmblemBitMask);//TODO other bits
-			}
-			else pak.WriteInt(0);
-			pak.WritePascalString(obj.Name);
-			if (obj is IDoor)
-			{
-				pak.WriteByte(4);
-				pak.WriteInt((uint)(obj as IDoor).DoorID);
-			}
-			else pak.WriteByte(0x00);
-			SendTCP(pak);
-		}
+             GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ObjectCreate));
+             pak.WriteShort((ushort)obj.ObjectID);
+             if (obj is GameStaticItem)
+                pak.WriteShort((ushort)(obj as GameStaticItem).Emblem);
+             else pak.WriteShort(0);
+             pak.WriteShort(obj.Heading);
+             pak.WriteShort((ushort)obj.Z);
+             pak.WriteInt((uint)obj.X);
+             pak.WriteInt((uint)obj.Y);
+             if (obj is GameNPC && obj.IsUnderwater)
+                pak.WriteShort((ushort)(obj.Model | 0x8000));
+             else pak.WriteShort(obj.Model);
+             int flag = ((byte)obj.Realm & 3) << 4;
+             if (obj is Keeps.GameKeepBanner)
+                flag |= 0x08;
+             if (obj is GameStaticItemTimed && m_gameClient.Player != null && ((GameStaticItemTimed)obj).IsOwner(m_gameClient.Player))
+                flag |= 0x04;
+             pak.WriteShort((ushort)flag);
+             if (obj is GameStaticItem)
+             {
+                int newEmblemBitMask = ((obj as GameStaticItem).Emblem & 0x010000) << 9;
+                pak.WriteInt((uint)newEmblemBitMask);//TODO other bits
+             }
+             else pak.WriteInt(0);           
+             pak.WritePascalString(obj.Name.Length > 48 ? obj.Name.Substring(0,48) : obj.Name);
+             if (obj is IDoor)
+             {
+                pak.WriteByte(4);
+                pak.WriteInt((uint)(obj as IDoor).DoorID);
+             }
+             else pak.WriteByte(0x00);
+             SendTCP(pak);
+          }
 
 		protected override void SendInventorySlotsUpdateBase(ICollection slots, byte preAction)
 		{
