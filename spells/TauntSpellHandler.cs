@@ -47,7 +47,12 @@ namespace DOL.GS.Spells
 		{
 			if (target == null) return;
 			if (!target.IsAlive || target.ObjectState!=GameLiving.eObjectState.Active) return;
-
+			
+			// no animation on stealthed players
+			if (target is GamePlayer)
+				if ( target.IsStealthed ) 
+					return;
+			
 			SendEffectAnimation(target, 0, false, 1);
 
 			// calc damage
