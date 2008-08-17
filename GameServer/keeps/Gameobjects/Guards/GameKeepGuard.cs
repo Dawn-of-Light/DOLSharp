@@ -18,11 +18,11 @@
  */
 using System;
 using System.Collections;
-
 using DOL.AI.Brain;
 using DOL.Database;
-using DOL.GS.PacketHandler;
 using DOL.Events;
+using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Keeps
 {
@@ -444,9 +444,8 @@ namespace DOL.GS.Keeps
 			if (guard.Component.Keep.Guild == null) return;
 
 			int inArea = guard.GetEnemyCountInArea();
-
-			string message = guard.Name + " has been killed in " + guard.Component.Keep.Name + " with " + inArea + " enemy player(s) in the area!";
-			KeepGuildMgr.SendMessageToGuild(message, guard.Component.Keep.Guild);
+            string message = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GuardSpam.Killed", guard.Name, guard.Component.Keep.Name, inArea);
+            KeepGuildMgr.SendMessageToGuild(message, guard.Component.Keep.Guild);
 		}
 
 		/// <summary>
@@ -554,16 +553,16 @@ namespace DOL.GS.Keeps
 			//You examine the Armswoman. She is friendly and is a realm guard.
 			//She has upgraded equipment (5).
 			IList list = new ArrayList(4);
-			list.Add("You target [" + GetName(0, false) + "]");
-			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and is a realm guard.");
-			if (this.Component != null)
-			{
+            list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetExamineMessages.YouTarget", GetName(0, false)));
+            list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetExamineMessages.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
+            if (this.Component != null)
+            {
 				string text = "";
 				if (this.Component.Keep.Level > 1 && this.Component.Keep.Level < 250 && GameServer.ServerRules.IsSameRealm(player, this, true))
-					text = GetPronoun(0, true) + " has upgraded equipment (" + this.Component.Keep.Level + ").";
-				if (ServerProperties.Properties.USE_KEEP_BALANCING && this.Component.Keep.Region == 163)
-					text += GetPronoun(0, true) + " has keep balancing level (" + (Component.Keep.BaseLevel - 50).ToString() + ")";
-				if (text != "")
+                    text = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetExamineMessages.Upgraded", GetPronoun(0, true), this.Component.Keep.Level);
+                if (ServerProperties.Properties.USE_KEEP_BALANCING && this.Component.Keep.Region == 163)
+                    text += LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetExamineMessages.Balancing", GetPronoun(0, true), (Component.Keep.BaseLevel - 50).ToString());
+                if (text != "")
 					list.Add(text);
 			}
 			return list;
@@ -584,8 +583,8 @@ namespace DOL.GS.Keeps
 					{
 						// Subjective
 						if (IsMale)
-							s = "He";
-						else s = "She";
+                            s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.He");
+                        else s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.She");
 						if (!firstLetterUppercase)
 							s = s.ToLower();
 						break;
@@ -594,8 +593,8 @@ namespace DOL.GS.Keeps
 					{
 						// Possessive
 						if (IsMale)
-							s = "His";
-						else s = "Hers";
+                            s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.His");
+                        else s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.Hers");
 						if (!firstLetterUppercase)
 							s = s.ToLower();
 						break;
@@ -604,8 +603,8 @@ namespace DOL.GS.Keeps
 					{
 						// Objective
 						if (IsMale)
-							s = "Him";
-						else s = "Her";
+                            s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.Him");
+                        else s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.Her");
 						if (!firstLetterUppercase)
 							s = s.ToLower();
 						break;

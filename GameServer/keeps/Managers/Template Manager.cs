@@ -621,6 +621,39 @@ namespace DOL.GS.Keeps
 			}
 		}
 
+        /// <summary>
+        /// Gets shord name of keeps
+        /// </summary>
+        /// <param name="KeepName">Complete name of the Keep</param>
+        private static string GetKeepShortName(string KeepName)
+        {
+            string ShortName;
+            if (KeepName.StartsWith("Caer"))//Albion
+            {
+                ShortName = KeepName.Substring(5);
+            }
+            else if (KeepName.StartsWith("Dun"))//Hibernia
+            {
+                if (KeepName == "Dun nGed")
+                {
+                    ShortName = "Ged";
+                }
+                else if (KeepName == "Dun da Behn")
+                {
+                    ShortName = "Behn";
+                }
+                else
+                {
+                    ShortName = KeepName.Substring(4);
+                }
+            }
+            else//Midgard
+            {
+                ShortName = KeepName.Substring(0, KeepName.IndexOf(" ", 0));
+            }
+            return ShortName;
+        }
+
 		/// <summary>
 		/// Sets a guards name
 		/// </summary>
@@ -683,8 +716,8 @@ namespace DOL.GS.Keeps
 						else if (guard is GuardLord)
 						{
 							if (guard.IsMale)
-                                guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Lord", guard.Component.Keep.Name);
-                            else guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Lady", guard.Component.Keep.Name);
+                                guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Lord", GetKeepShortName(guard.Component.Keep.Name));
+                            else guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Lady", GetKeepShortName(guard.Component.Keep.Name));
 						}
 						else if (guard is GuardStealther)
 						{
@@ -724,7 +757,7 @@ namespace DOL.GS.Keeps
                         }
 						else if (guard is GuardLord)
 						{
-                            guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Jarl", guard.Component.Keep.Name);
+                            guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Jarl", GetKeepShortName(guard.Component.Keep.Name));
                         }
 						else if (guard is GuardStealther)
 						{
@@ -764,7 +797,9 @@ namespace DOL.GS.Keeps
                         }
 						else if (guard is GuardLord)
 						{
-                            guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Chieftain", guard.Component.Keep.Name);
+                            if (guard.IsMale)
+                               guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Chieftain", GetKeepShortName(guard.Component.Keep.Name));
+                            else guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Chieftess", GetKeepShortName(guard.Component.Keep.Name));
                         }
 						else if (guard is GuardStealther)
 						{
