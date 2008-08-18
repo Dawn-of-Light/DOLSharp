@@ -649,7 +649,10 @@ namespace DOL.GS.Keeps
             }
             else//Midgard
             {
-                ShortName = KeepName.Substring(0, KeepName.IndexOf(" ", 0));
+            	if (KeepName.Contains(" "))
+                	ShortName = KeepName.Substring(0, KeepName.IndexOf(" ", 0));
+                else
+                	ShortName = KeepName;	
             }
             return ShortName;
         }
