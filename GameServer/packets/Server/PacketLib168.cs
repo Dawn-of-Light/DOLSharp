@@ -2885,6 +2885,14 @@ namespace DOL.GS.PacketHandler
 		{
 		}
 
+		public virtual void SendKeepRealmUpdate(AbstractGameKeep keep)
+		{
+		}
+
+		public virtual void SendKeepRemove(AbstractGameKeep keep)
+		{
+		}
+
 		public virtual void SendKeepComponentInfo(GameKeepComponent keepComponent)
 		{
 		}

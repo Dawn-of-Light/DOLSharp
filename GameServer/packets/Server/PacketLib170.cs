@@ -66,6 +66,24 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
+		public override void SendKeepRealmUpdate(AbstractGameKeep keep)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.KeepRealmUpdate));
+
+			pak.WriteShort((ushort)keep.KeepID);
+			pak.WriteByte((byte)keep.Realm);
+			pak.WriteByte((byte)keep.Level);
+			SendTCP(pak);
+		}
+
+		public override void SendKeepRemove(AbstractGameKeep keep)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.KeepRemove));
+
+			pak.WriteShort((ushort)keep.KeepID);
+			SendTCP(pak);
+		}
+
 		public override void SendKeepComponentInfo(GameKeepComponent keepComponent)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.KeepComponentInfo));
@@ -452,7 +470,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte((byte)(obj[1] << 4 | obj[2])); // position
 				byte realm = obj[3];
 
-				pak.WriteByte((byte)((realm == 3) ? 0x04 : (realm == 2) ? 0x02 : 0x01));//	color   ( Groups:  0x01 - Alb  , 0x02 - Mid , 0x04 - Hib	
+				pak.WriteByte((byte)((realm == 3) ? 0x04 : (realm == 2) ? 0x02 : 0x01));//	color   ( Groups:  0x01 - Alb  , 0x02 - Mid , 0x04 - Hib
 				switch ((eRealm)obj[3])
 				{
 					//	type    ( Groups:	Alb:	type	   0x03,0x02,0x01	& 0x03

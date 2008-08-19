@@ -174,6 +174,8 @@ namespace DOLGameServerConsole
 		public void SendChangeGroundTarget(Point3D newTarget) { }
 		public void SendPetWindow(GameLiving pet, ePetWindowAction windowAction, eAggressionState aggroState, eWalkState walkState) { }
 		public void SendKeepInfo(AbstractGameKeep keep) { }
+		public void SendKeepRealmUpdate(AbstractGameKeep keep) { }
+		public void SendKeepRemove(AbstractGameKeep keep) { }
 		public void SendKeepComponentInfo(GameKeepComponent keepComponent) { }
 		public void SendKeepComponentDetailUpdate(GameKeepComponent keepComponent) { }
 		public void SendKeepComponentUpdate(AbstractGameKeep keep, bool levelup) { }
