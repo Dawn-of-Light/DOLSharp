@@ -194,11 +194,11 @@ namespace DOL
 			/// </summary>
 			public override void OnConnect()
 			{
-                if (ServerProperties.Properties.ALLOW_DUAL_LOGINS == false)
+                if (!ServerProperties.Properties.ALLOW_DUAL_LOGINS && Account.PrivLevel == 1 && TCPEndpointAddress != "not connected")
                 {
-                    foreach (GameClient curPlayer in WorldMgr.GetAllPlayingClients())
+                	foreach (GameClient curPlayer in WorldMgr.GetAllPlayingClients())
                     {
-                        if (curPlayer.LocalIP == LocalIP)
+                        if (curPlayer.TCPEndpointAddress == TCPEndpointAddress)
                         {
                             if (curPlayer.Account.PrivLevel > 1)
                             {
@@ -576,7 +576,8 @@ namespace DOL
 				Version192 = 192,
 				Version193 = 193,
 				Version194 = 194,
-				_LastVersion = 194,
+				Version195 = 195,
+				_LastVersion = 195,
 			}
 			protected eClientVersion m_clientVersion;
 			/// <summary>
