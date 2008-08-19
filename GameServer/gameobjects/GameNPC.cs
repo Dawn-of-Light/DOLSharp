@@ -3581,8 +3581,10 @@ namespace DOL.GS
 			int period = m_healthRegenerationPeriod;
 			if (!InCombat)
 			{
+                int oldPercent = HealthPercent;
 				period = base.HealthRegenerationTimerCallback(selfRegenerationTimer);
-				BroadcastUpdate();
+				if (oldPercent != HealthPercent)
+					BroadcastUpdate();
 			}
 			return (Health < MaxHealth) ? period : 0;
 		}

@@ -68,6 +68,8 @@ namespace DOL.GS.PacketHandler
 		WarmapBonuses = 0x66,
 		KeepComponentUpdate = 0x67,
 		KeepInfo = 0x69,
+		KeepRealmUpdate = 0x6A,
+		KeepRemove = 0x6B,
 		KeepComponentInfo = 0x6C,
 		KeepComponentDetailUpdate = 0x6D,
 		GroupMemberUpdate = 0x70,
@@ -511,7 +513,9 @@ namespace DOL.GS.PacketHandler
 		void SendLivingDataUpdate(GameLiving living, bool updateStrings);
 		void SendSoundEffect(ushort soundId, ushort zoneId, ushort x, ushort y, ushort z, ushort radius);
 		//keep
-		void SendKeepInfo(AbstractGameKeep keep );
+		void SendKeepInfo(AbstractGameKeep keep);
+		void SendKeepRealmUpdate(AbstractGameKeep keep);
+		void SendKeepRemove(AbstractGameKeep keep);
 		void SendKeepComponentInfo(GameKeepComponent keepComponent);
 		void SendKeepComponentDetailUpdate(GameKeepComponent keepComponent);
 		void SendKeepClaim(AbstractGameKeep keep, byte flag);

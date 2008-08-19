@@ -10886,7 +10886,17 @@ namespace DOL.GS
 		public bool IsWireframe
 		{
 			get { return m_isWireframe; }
-			set { m_isWireframe = value; }
+			set
+			{
+				bool needUpdate = m_isWireframe != value;
+				m_isWireframe = value;
+				if (needUpdate && ObjectState == eObjectState.Active)
+					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+					{
+						if (player == null) continue;
+						player.Out.SendPlayerModelTypeChange(this, (byte)(value ? 1 : 0));
+					}
+			}
 		}
 
 		#region Stealth
