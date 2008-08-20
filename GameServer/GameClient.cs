@@ -194,24 +194,6 @@ namespace DOL
 			/// </summary>
 			public override void OnConnect()
 			{
-                if (!ServerProperties.Properties.ALLOW_DUAL_LOGINS && Account.PrivLevel == 1 && TCPEndpointAddress != "not connected")
-                {
-                	foreach (GameClient curPlayer in WorldMgr.GetAllPlayingClients())
-                    {
-                        if (curPlayer.TCPEndpointAddress == TCPEndpointAddress)
-                        {
-                            if (curPlayer.Account.PrivLevel > 1)
-                            {
-                                break;
-                            }
-                            else
-                            {
-								OnDisconnect();
-                                break;
-                            }
-                        }
-                    }
-                }
 				GameEventMgr.Notify(GameClientEvent.Connected, this);
 			}
 
