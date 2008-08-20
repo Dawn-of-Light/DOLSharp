@@ -221,6 +221,8 @@ namespace DOL.GS.PacketHandler
 		CT_SocialInterface = 0x64,
 		CT_ScreenCenter = 0xC8,
 		CT_ScreenCenterSmaller = 0xC9,
+		CT_ScreenCenter_And_CT_System = 0xCA,
+		CT_ScreenCenterSmaller_And_CT_System = 0xCB,
 	};
 
 	public enum eEmote : byte
