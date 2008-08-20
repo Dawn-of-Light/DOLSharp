@@ -56,6 +56,7 @@ namespace DOL.GS.ServerRules
 		{
 			if (!client.Socket.Connected)
 				return false;
+
 			string accip = ((IPEndPoint)client.Socket.RemoteEndPoint).Address.ToString();
 
 			// Ban account
@@ -126,38 +127,52 @@ namespace DOL.GS.ServerRules
 			}
 			*/
 
+			Account account = (Account)GameServer.Database.SelectObject(typeof(Account), "Name ='" + GameServer.Database.Escape(username) + "'");
+
 			if (Properties.MAX_PLAYERS > 0)
 			{
-				if (WorldMgr.GetAllClients().Count > Properties.MAX_PLAYERS)
+				if (WorldMgr.GetAllClients().Count >= Properties.MAX_PLAYERS)
 				{
 					// GMs are still allowed to enter server
-					objs = GameServer.Database.SelectObjects(typeof(Account), string.Format("Name = '{0}'", GameServer.Database.Escape(username)));
-					if (objs.Length > 0)
+					if (account == null || (account.PrivLevel == 1 && account.Status <= 0))
 					{
-						Account account = objs[0] as Account;
-						if (account.PrivLevel > 1) return true;
-                        if (account.Status > 0) return true; //VIP
+						// Normal Players will not be allowed over the max
+						client.Out.SendLoginDenied(eLoginError.TooManyPlayersLoggedIn);
+						return false;
 					}
 
-					// Normal Players will not be allowed over the max
-					client.Out.SendLoginDenied(eLoginError.TooManyPlayersLoggedIn);
-					return false;
 				}
 			}
 
 			if (Properties.STAFF_LOGIN)
 			{
-				// GMs are still allowed to enter server
-				objs = GameServer.Database.SelectObjects(typeof(Account), string.Format("Name = '{0}'", GameServer.Database.Escape(username)));
-				if (objs.Length > 0)
+				if (account == null || account.PrivLevel == 1)
 				{
-					Account account = objs[0] as Account;
-					if (account.PrivLevel > 1) return true;
+					// GMs are still allowed to enter server
+					// Normal Players will not be allowed to log in
+					client.Out.SendLoginDenied(eLoginError.GameCurrentlyClosed);
+					return false;
 				}
+			}
 
-				// Normal Players will not be allowed to log in
-				client.Out.SendLoginDenied(eLoginError.GameCurrentlyClosed);
-				return false;
+			if (!ServerProperties.Properties.ALLOW_DUAL_LOGINS)
+			{
+			 	if ((account == null || account.PrivLevel == 1) && client.TCPEndpointAddress != "not connected")
+				{
+					foreach (GameClient cln in WorldMgr.GetAllClients())
+					{
+						if (cln == null || client == cln) continue;
+						if (cln.TCPEndpointAddress == client.TCPEndpointAddress)
+						{
+							if (cln.Account != null && cln.Account.PrivLevel > 1)
+							{
+								break;
+							}
+							client.Out.SendLoginDenied(eLoginError.AccountAlreadyLoggedIntoOtherServer);
+							return false;
+						}
+					}
+				}
 			}
 
 			return true;
@@ -257,15 +272,15 @@ namespace DOL.GS.ServerRules
 			//I don't want mobs attacking guards
 			if (defender is GameKeepGuard && attacker is GameNPC && attacker.Realm == 0)
 				return false;
-			
+
 			//Checking for shadowed necromancer, can't be attacked.
 			if(defender.ControlledNpc != null)
 				if(defender.ControlledNpc.Body != null)
 					if(defender.ControlledNpc.Body is NecromancerPet)
 					{
 						if (quiet == false) MessageToLiving(attacker, "You can't attack a shadowed necromancer!");
-						return false;		
-					}			
+						return false;
+					}
 
 			return true;
 		}
@@ -284,7 +299,7 @@ namespace DOL.GS.ServerRules
 			if (target is GameKeepComponent || target is GameKeepDoor)
 			{
 				switch (spell.Target.ToLower())
-				{ 
+				{
 					case "self":
 					case "group":
 					case "pet":
@@ -761,8 +776,8 @@ namespace DOL.GS.ServerRules
 					 * All group experience is divided evenly amongst group members, if they are in the same level range. What's a level range? One color range. If everyone in the group cons yellow to each other (or high blue, or low orange), experience will be shared out exactly evenly, with no leftover points. How can you determine a color range? Simple - Level divided by ten plus one. So, to a level 40 player (40/10 + 1), 36-40 is yellow, 31-35 is blue, 26-30 is green, and 25-less is gray.
 					 * But for everyone in the group to get the maximum amount of experience possible, the encounter must be a challenge to the group.
 					 * If the group has two people, the monster must at least be (con) yellow to the highest level member. If the group has four people, the monster must at least be orange. If the group has eight, the monster must at least be red.
-					 * 
-					 * If "challenge code" has been activated, then the experience is divided roughly like so in a group of two (adjust the colors up if the group is bigger): If the monster was blue to the highest level player, each lower level group member will ROUGHLY receive experience as if they soloed a blue monster. Ditto for green. As everyone knows, a monster that cons gray to the highest level player will result in no exp for anyone. If the monster was high blue, challenge code may not kick in. It could also kick in if the monster is low yellow to the high level player, depending on the group strength of the pair. 
+					 *
+					 * If "challenge code" has been activated, then the experience is divided roughly like so in a group of two (adjust the colors up if the group is bigger): If the monster was blue to the highest level player, each lower level group member will ROUGHLY receive experience as if they soloed a blue monster. Ditto for green. As everyone knows, a monster that cons gray to the highest level player will result in no exp for anyone. If the monster was high blue, challenge code may not kick in. It could also kick in if the monster is low yellow to the high level player, depending on the group strength of the pair.
 					 */
 					//xp challenge
 					if (highestPlayer != null &&  highestConValue < 0)
@@ -796,9 +811,9 @@ namespace DOL.GS.ServerRules
 					#region Outpost Bonus
 					//outpost XP
 					//1.54 http://www.camelotherald.com/more/567.shtml
-					//- Players now receive an exp bonus when fighting within 16,000 
+					//- Players now receive an exp bonus when fighting within 16,000
 					//units of a keep controlled by your realm or your guild.
-					//You get 20% bonus if your guild owns the keep or a 10% bonus 
+					//You get 20% bonus if your guild owns the keep or a 10% bonus
 					//if your realm owns the keep.
 
 					if (player != null)
@@ -903,7 +918,7 @@ namespace DOL.GS.ServerRules
 					/*
 					 * http://www.camelotherald.com/more/2289.shtml
 					 * Dead players will now continue to retain and receive their realm point credit
-					 * on targets until they release. This will work for solo players as well as 
+					 * on targets until they release. This will work for solo players as well as
 					 * grouped players in terms of continuing to contribute their share to the kill
 					 * if a target is being attacked by another non grouped player as well.
 					 */
@@ -1064,7 +1079,7 @@ namespace DOL.GS.ServerRules
 					/*
 					 * http://www.camelotherald.com/more/2289.shtml
 					 * Dead players will now continue to retain and receive their realm point credit
-					 * on targets until they release. This will work for solo players as well as 
+					 * on targets until they release. This will work for solo players as well as
 					 * grouped players in terms of continuing to contribute their share to the kill
 					 * if a target is being attacked by another non grouped player as well.
 					 */
@@ -1145,9 +1160,9 @@ namespace DOL.GS.ServerRules
 
 					//outpost XP
 					//1.54 http://www.camelotherald.com/more/567.shtml
-					//- Players now receive an exp bonus when fighting within 16,000 
+					//- Players now receive an exp bonus when fighting within 16,000
 					//units of a keep controlled by your realm or your guild.
-					//You get 20% bonus if your guild owns the keep or a 10% bonus 
+					//You get 20% bonus if your guild owns the keep or a 10% bonus
 					//if your realm owns the keep.
 
 					long outpostXP = 0;
@@ -1183,7 +1198,7 @@ namespace DOL.GS.ServerRules
                         //long money = (long)(Money.GetMoney(0, 0, 17, 85, 0) * damagePercent * killedPlayer.Level / 50);
                         ((GamePlayer)living).AddMoney(money, "You recieve {0}");
                     }
-					
+
 					if (killedPlayer.ReleaseType != GamePlayer.eReleaseType.Duel && expGainPlayer != null)
 					{
 						switch ((eRealm)killedPlayer.Realm)
@@ -1263,7 +1278,7 @@ namespace DOL.GS.ServerRules
             if (IsSameRealm(source, target, true))
                 return target.PrefixName;
             return string.Empty;
-        } 
+        }
 
 		/// <summary>
 		/// Gets the player last name based on server type

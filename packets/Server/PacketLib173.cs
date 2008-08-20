@@ -363,7 +363,7 @@ namespace DOL.GS.PacketHandler
 							pak.WriteByte((byte)characters[j].Level);
 							pak.WriteByte((byte)characters[j].Class);
 							pak.WriteByte((byte)characters[j].Realm);
-							pak.WriteByte((byte)((((characters[j].Race & 0xF0) << 2) + (characters[j].Race & 0x0F)) | (characters[j].Gender << 4)));
+							pak.WriteByte((byte)((((characters[j].Race & 0x10) << 2) + (characters[j].Race & 0x0F)) | (characters[j].Gender << 4))); // race max value can be 0x1F
 							pak.WriteShortLowEndian((ushort)characters[j].CurrentModel);
 							pak.WriteByte((byte)characters[j].Region);
 							if (reg == null || (int)m_gameClient.ClientType > reg.Expansion)
