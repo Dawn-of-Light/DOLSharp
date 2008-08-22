@@ -22,24 +22,25 @@ using System.Reflection;
 using DOL.GS;
 using DOL.Database;
 using DOL.GS.PacketHandler;
-
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&merchant", //command to handle
-		 ePrivLevel.GM, //minimum privelege level
-		 "Various merchant creation commands!", //command description
-		//Usage
-		 "'/merchant create' to create an empty merchant",
-		 "'/merchant info' to show info about merchant",
-		 "'/merchant save' to save this merchant as new object in the DB",
-		 "'/merchant remove' to remove this merchant from the DB",
-		 "'/merchant sell <itemsListID>' to assign this merchant with an articles list template",
-		 "'/merchant sellremove' to remove the articles list template from merchant",
-		 "'/merchant articles add <itemTemplateID> <pageNumber> [slot]' to add an item to the merchant articles list template",
-		 "'/merchant articles remove <pageNumber> <slot>' to remove item from the specified slot in this merchant inventory articles list template",
-		 "'/merchant articles delete' to delete the inventory articles list template of the merchant",
-		 "'/merchant type <classtype>")]
+	[CmdAttribute("&merchant",
+		 ePrivLevel.GM,
+		 "GMCommands.Merchant.Description",
+		 //Usage
+		 "GMCommands.Merchant.Usage.Create",
+		 "GMCommands.Merchant.Usage.CreateType",
+		 "GMCommands.Merchant.Usage.Info",
+		 "GMCommands.Merchant.Usage.Save",
+		 "GMCommands.Merchant.Usage.Remove",
+		 "GMCommands.Merchant.Usage.Sell",
+		 "GMCommands.Merchant.Usage.SellRemove",
+		 "GMCommands.Merchant.Usage.Articles.Add",
+		 "GMCommands.Merchant.Usage.Articles.Remove",
+		 "GMCommands.Merchant.Usage.Articles.Delete",
+		 "GMCommands.Merchant.Usage.Type")]
 	public class MerchantCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
@@ -58,14 +59,15 @@ namespace DOL.GS.Commands
 			if (client.Player.TargetObject != null && client.Player.TargetObject is GameMerchant)
 				targetMerchant = (GameMerchant)client.Player.TargetObject;
 
-			if (args[1] != "create" && targetMerchant == null)
+			if (args[1].ToLower() != "create" && targetMerchant == null)
 			{
-				DisplayMessage(client, "Type /merchant for command overview");
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.CommandOverview"));
 				return;
 			}
 
 			switch (args[1].ToLower())
 			{
+				#region Create
 				case "create":
 					{
 						string theType = "DOL.GS.GameMerchant";
@@ -92,7 +94,7 @@ namespace DOL.GS.Commands
 						}
 						if (merchant == null)
 						{
-							DisplayMessage(client, "There was an error creating an instance of " + theType + "!");
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.ErrorCreateInstance", theType));
 							return;
 						}
 						//Fill the object variables
@@ -103,88 +105,112 @@ namespace DOL.GS.Commands
 						merchant.Heading = client.Player.Heading;
 						merchant.Level = 1;
 						merchant.Realm = client.Player.Realm;
-						merchant.Name = "New merchant";
+						merchant.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GMCommands.Merchant.NewName");
 						merchant.Model = 9;
 						//Fill the living variables
 						merchant.CurrentSpeed = 0;
 						merchant.MaxSpeedBase = 200;
-						merchant.GuildName = "";
+						merchant.GuildName = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GMCommands.Merchant.NewGuildName");
 						merchant.Size = 50;
 						merchant.AddToWorld();
 						merchant.SaveIntoDatabase();
-						DisplayMessage(client, "Merchant created: OID=" + merchant.ObjectID);
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.Create.Created", merchant.ObjectID));
+						break;
 					}
-					break;
-
+				#endregion Create
+				#region Info
 				case "info":
 					{
 						if (args.Length == 2)
 						{
 							if (targetMerchant.TradeItems == null)
-								DisplayMessage(client, "Merchant articles list is empty!");
+								DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.Info.ArtListIsEmpty"));
 							else
 							{
-								DisplayMessage(client, "Merchant articles list: \"" + targetMerchant.TradeItems.ItemsListID + "\"");
+								DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.Info.ArtList", targetMerchant.TradeItems.ItemsListID));
 							}
 						}
+						break;
 					}
-					break;
-
+				#endregion Info
+				#region Save
 				case "save":
 					{
 						targetMerchant.SaveIntoDatabase();
-						DisplayMessage(client, "Target Merchant saved in DB!");
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.Save.SavedInDB"));
+						break;
 					}
-					break;
-
+				#endregion Save
+				#region Remove
 				case "remove":
 					{
 						targetMerchant.DeleteFromDatabase();
 						targetMerchant.Delete();
-						DisplayMessage(client, "Target Merchant removed from DB!");
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.Remove.RemovedFromDB"));
+						break;
 					}
-					break;
-
+				#endregion Remove
+				#region Sell
 				case "sell":
 					{
-						if (args.Length == 3)
+						switch (args[2].ToLower())
 						{
-							try
-							{
-								string templateID = args[2];
-								targetMerchant.TradeItems = new MerchantTradeItems(templateID);
-								targetMerchant.SaveIntoDatabase();
-								DisplayMessage(client, "Merchant articles list loaded!");
-							}
-							catch (Exception)
-							{
-								DisplayMessage(client, "Type /merchant for command overview");
-								return;
-							}
+							#region Add
+							case "add":
+								{
+									if (args.Length == 4)
+									{
+										try
+										{
+											string templateID = args[3];
+											targetMerchant.TradeItems = new MerchantTradeItems(templateID);
+											targetMerchant.SaveIntoDatabase();
+											DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.Sell.Add.Loaded"));
+										}
+										catch (Exception)
+										{
+											DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.CommandOverview"));
+											return;
+										}
+									}
+									break;
+								}
+							#endregion Add
+							#region Remove
+							case "remove":
+								{
+									if (args.Length == 3)
+									{
+										targetMerchant.TradeItems = null;
+										targetMerchant.SaveIntoDatabase();
+										DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.Sell.Remove.Removed"));
+									}
+									break;
+								}
+							#endregion Remove
+							#region Default
+							default:
+								{
+									DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.CommandOverview"));
+									return;
+								}
+							#endregion Default
 						}
+						break;
 					}
-					break;
-
-				case "sellremove":
-					{
-						if (args.Length == 2)
-						{
-							targetMerchant.TradeItems = null;
-							targetMerchant.SaveIntoDatabase();
-							DisplayMessage(client, "Merchant articles list removed!");
-						}
-					}
-					break;
-
+				#endregion Sell
+				#region Articles
 				case "articles":
 					{
 						if (args.Length < 3)
 						{
-							DisplayMessage(client, "Usage: /merchant articles add <ItemTemplate> <page> [slot]");
-							break;
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.CommandOverview"));
+							return;
 						}
-						switch (args[2])
+
+						switch (args[2].ToLower())
 						{
+							#region Add
 							case "add":
 								{
 									if (args.Length <= 6)
@@ -197,14 +223,14 @@ namespace DOL.GS.Commands
 
 											if (targetMerchant.TradeItems == null)
 											{
-												DisplayMessage(client, "Merchant articles list no found!");
+												DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.Articles.ListNoFound"));
 												return;
 											}
 
 											ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), templateID);
 											if (template == null)
 											{
-												DisplayMessage(client, "ItemTemplate with id " + templateID + " could not be found!");
+												DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.Articles.Add.ItemTemplateNoFound", templateID));
 												return;
 											}
 
@@ -216,7 +242,7 @@ namespace DOL.GS.Commands
 											slot = targetMerchant.TradeItems.GetValidSlot(page, slot);
 											if (slot == eMerchantWindowSlot.Invalid)
 											{
-												DisplayMessage(client, "Page number (" + page + ") must be from 0 to " + (MerchantTradeItems.MAX_PAGES_IN_TRADEWINDOWS - 1) + " and slot (" + slot + ") must be from 0 to " + (MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS - 1) + ".");
+												DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.Articles.Add.PageAndSlotInvalid", page, (MerchantTradeItems.MAX_PAGES_IN_TRADEWINDOWS - 1), slot, (MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS - 1)));
 												return;
 											}
 
@@ -236,20 +262,22 @@ namespace DOL.GS.Commands
 												item.ItemTemplateID = templateID;
 												GameServer.Database.SaveObject(item);
 											}
-											DisplayMessage(client, "Item added to the merchant articles list!");
+											DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.Articles.Add.ItemAdded"));
 										}
 										catch (Exception)
 										{
-											DisplayMessage(client, "Type /merchant for command overview");
+											DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.CommandOverview"));
 											return;
 										}
 									}
 									else
 									{
-										DisplayMessage(client, "Usage: /merchant articles add <ItemTemplate> <page> [slot]");
+										DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.CommandOverview"));
 									}
 									break;
 								}
+							#endregion Add
+							#region Remove
 							case "remove":
 								{
 									if (args.Length == 5)
@@ -261,44 +289,46 @@ namespace DOL.GS.Commands
 
 											if (page < 0 || page >= MerchantTradeItems.MAX_PAGES_IN_TRADEWINDOWS)
 											{
-												DisplayMessage(client, "Page number (" + page + ") must be between [0;" + (MerchantTradeItems.MAX_PAGES_IN_TRADEWINDOWS - 1) + "]!");
+												DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.Articles.Remove.PageInvalid", page, (MerchantTradeItems.MAX_PAGES_IN_TRADEWINDOWS - 1)));
 												return;
 											}
 
 											if (slot < 0 || slot >= MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS)
 											{
-												DisplayMessage(client, "Slot (" + slot + ") must be between [0;" + (MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS - 1) + "]!");
+												DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.Articles.Remove.SlotInvalid", slot, (MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS - 1)));
 												return;
 											}
 
 											if (targetMerchant.TradeItems == null)
 											{
-												DisplayMessage(client, "Merchant articles list no found!");
+												DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.Articles.ListNoFound"));
 												return;
 											}
 
 											MerchantItem item = (MerchantItem)GameServer.Database.SelectObject(typeof(MerchantItem), "ItemListID = '" + GameServer.Database.Escape(targetMerchant.TradeItems.ItemsListID) + "' AND PageNumber = '" + page + "' AND SlotPosition = '" + slot + "'");
 											if (item == null)
 											{
-												DisplayMessage(client, "Slot " + slot + " in page " + page + " is already empty.");
+												DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.Articles.Remove.SlotInPageIsAEmpty", slot, page));
 												return;
 											}
 											GameServer.Database.DeleteObject(item);
-											DisplayMessage(client, "Merchant articles list slot " + slot + " in page " + page + " cleaned!");
+											DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.Articles.Remove.SlotInPageCleaned", slot, page));
 
 										}
 										catch (Exception)
 										{
-											DisplayMessage(client, "Type /merchant for command overview");
+											DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.CommandOverview"));
 											return;
 										}
 									}
 									else
 									{
-										DisplayMessage(client, "Usage: /merchant articles remove <page> <slot>");
+										DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.CommandOverview"));
 									}
 									break;
 								}
+							#endregion Remove
+							#region Delete
 							case "delete":
 								{
 									if (args.Length == 3)
@@ -307,10 +337,10 @@ namespace DOL.GS.Commands
 										{
 											if (targetMerchant.TradeItems == null)
 											{
-												DisplayMessage(client, "Merchant articles list no found!");
+												DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.Articles.ListNoFound"));
 												return;
 											}
-											DisplayMessage(client, "Deleting articles list template ...");
+											DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.Articles.Delete.DeletingListTemp"));
 
 											MerchantItem[] merchantitems = (MerchantItem[])GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemsListID = '" + GameServer.Database.Escape(targetMerchant.TradeItems.ItemsListID) + "'");
 											if (merchantitems.Length > 0)
@@ -320,22 +350,29 @@ namespace DOL.GS.Commands
 													GameServer.Database.DeleteObject(item);
 												}
 											}
-											DisplayMessage(client, "Merchant articles list deleted.");
+											DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.Articles.Delete.ListDeleted"));
 										}
 										catch (Exception)
 										{
-											DisplayMessage(client, "Type /merchant for command overview");
+											DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.CommandOverview"));
 											return;
 										}
 									}
 									break;
 								}
+							#endregion Delete
+							#region Default
 							default:
-								DisplayMessage(client, "Type /merchant for command overview");
-								break;
+								{
+									DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.CommandOverview"));
+									return;
+								}
+							#endregion Default
 						}
 						break;
 					}
+				#endregion Articles
+				#region Type
 				case "type":
 					{
 						string theType = param;
@@ -362,7 +399,7 @@ namespace DOL.GS.Commands
 						}
 						if (merchant == null)
 						{
-							DisplayMessage(client, "There was an error creating an instance of " + theType + "!");
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.ErrorCreateInstance", theType));
 							return;
 						}
 						//Fill the object variables
@@ -387,9 +424,10 @@ namespace DOL.GS.Commands
 						merchant.SaveIntoDatabase();
 						targetMerchant.Delete();
 						targetMerchant.DeleteFromDatabase();
-						DisplayMessage(client, "Merchant type changed to " + param);
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.Type.Changed", param));
 						break;
 					}
+				#endregion Type
 			}
 		}
 	}

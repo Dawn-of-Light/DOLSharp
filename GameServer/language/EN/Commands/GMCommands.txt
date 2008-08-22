@@ -302,3 +302,85 @@ GMCommands.Kick.RemovedFromServer:			You have been removed from the server!
 GMCommands.Kick.RemovedFromServerByGM:		You have been removed from the server by GM {0}!
 
 
+# /merchant Command
+GMCommands.Merchant.Description:			Various merchant creation commands!
+GMCommands.Merchant.Usage.Create:			'/merchant create' to create an empty merchant;
+GMCommands.Merchant.Usage.CreateType:		'/merchant create <type>' to create an empty merchant with class typed;
+GMCommands.Merchant.Usage.Info:				'/merchant info' to show info about merchant;
+GMCommands.Merchant.Usage.Save:				'/merchant save' to save this merchant as new object in the DB;
+GMCommands.Merchant.Usage.Remove:			'/merchant remove' to remove this merchant from the DB;
+GMCommands.Merchant.Usage.Sell:				'/merchant sell <itemsListID>' to assign this merchant with an articles list template;
+GMCommands.Merchant.Usage.SellRemove:		'/merchant sellremove' to remove the articles list template from merchant;
+GMCommands.Merchant.Usage.Articles.Add:		'/merchant articles add <itemTemplateID> <pageNumber> [slot]' to add an item to the merchant articles list template;
+GMCommands.Merchant.Usage.Articles.Remove:	'/merchant articles remove <pageNumber> <slot>' to remove item from the specified slot in this merchant inventory articles list template;
+GMCommands.Merchant.Usage.Articles.Delete:	'/merchant articles delete' to delete the inventory articles list template of the merchant;
+GMCommands.Merchant.Usage.Type:				'/merchant type <classtype>';
+GMCommands.Merchant.CommandOverview:		Type /merchant for command overview
+GMCommands.Merchant.ErrorCreateInstance:	There was an error creating an instance of {0}!
+GMCommands.Merchant.Create.NewName:			New merchant
+GMCommands.Merchant.Create.NewGuildName:	General Merchant
+GMCommands.Merchant.Create.Created:			Merchant created: OID={0}
+GMCommands.Merchant.Info.ArtListIsEmpty:	Merchant articles list is empty!
+GMCommands.Merchant.Info.ArtList:			Merchant articles list: "{0}"
+GMCommands.Merchant.Save.SavedInDB:			Target Merchant saved in DB!
+GMCommands.Merchant.Remove.RemovedFromDB:	Target Merchant removed from DB!
+GMCommands.Merchant.Sell.Add.Loaded:		Merchant articles list loaded!
+GMCommands.Merchant.Sell.Remove.Removed:	Merchant articles list removed!
+GMCommands.Merchant.Articles.ListNoFound:				Merchant articles list no found!
+GMCommands.Merchant.Articles.Add.ItemTemplateNoFound:	ItemTemplate with id {0} could not be found!
+GMCommands.Merchant.Articles.Add.PageAndSlotInvalid:	Page number ({0}) must be from 0 to {1} and slot ({2}) must be from 0 to {3}.
+GMCommands.Merchant.Articles.Add.ItemAdded:				Item added to the merchant articles list!
+GMCommands.Merchant.Articles.Remove.PageInvalid:		Page number ({0}) must be between [0-{1}]!
+GMCommands.Merchant.Articles.Remove.SlotInvalid:		Slot ({0}) must be between [0-{1}]!
+GMCommands.Merchant.Articles.Remove.SlotInPageIsAEmpty:	Slot {0} in page {1} is already empty.
+GMCommands.Merchant.Articles.Remove.SlotInPageCleaned:	Merchant articles list slot {0} in page {1} cleaned!
+GMCommands.Merchant.Articles.Delete.DeletingListTemp:	Deleting articles list template ...
+GMCommands.Merchant.Articles.Delete.ListDeleted:		Merchant articles list deleted.
+GMCommands.Merchant.Type.Changed:			Merchant type changed to {0}.
+
+
+# /minorelic Command
+GMCommands.MinoRelic.Description:			Various Commands for Minotaur Relics
+GMCommands.MinoRelic.Usage.Create:			'/minorelic create <Name> <Model> <Group/Self/Realm> <SpellID> <Effect / 159 = red, 160 = white, 161 = gold>' creates a new Relic with the given arguments;
+GMCommands.MinoRelic.Usage.MoveHere:		'/minorelic movehere' moves the relic to player x, y, z and saves the coordinates as Spawn;
+GMCommands.MinoRelic.Usage.Name:			'/minorelic name <Name>' changes the name;
+GMCommands.MinoRelic.Usage.Spell:			'/minorelic spell <SpellID>' assign SpellID to the Relic;
+GMCommands.MinoRelic.Usage.Model:			'/minorelic model <Model>' changes the Model;
+GMCommands.MinoRelic.Usage.Effect:			'/minorelic effect <Effect / 159 = red, 160 = white, 161 = gold>' changes the effect the player gets when he picks up the relic;
+GMCommands.MinoRelic.Usage.Info:			'/minorelic info' browses relic Informations;
+GMCommands.MinoRelic.Usage.DeSpawn:			'/minorelic despawn' despawns the Relic;
+GMCommands.MinoRelic.Usage.Remove:			'/minorelic remove' removes the relic from the World and Database;
+GMCommands.MinoRelic.Usage.XP:				'/minorelic xp <amount>' give amount xp to the Relic;
+GMCommands.MinoRelic.Usage.ShowAll:			'/minorelic showall' shows all Relics;
+GMCommands.MinoRelic.Usage.Spawn:			'/minorelic spawn <ID>' spawns the Relic with the ID;
+GMCommands.MinoRelic.Info.RelicInfo:		Relic Informations
+GMCommands.MinoRelic.Info.Name:				- Name: {0}
+GMCommands.MinoRelic.Info.ID:				- ID: {0}
+GMCommands.MinoRelic.Info.CurrentXP:		- Current Relic XP: {0}
+GMCommands.MinoRelic.Info.Level:			- Level: {0}
+GMCommands.MinoRelic.Info.Effect:			- Effect: {0}
+GMCommands.MinoRelic.Info.PositionInfo:		Position Informations
+GMCommands.MinoRelic.Info.SpawnX:			- Spawn X: {0}
+GMCommands.MinoRelic.Info.SpawnY:			- Spawn Y: {0}
+GMCommands.MinoRelic.Info.SpawnZ:			- Spawn Z: {0}
+GMCommands.MinoRelic.Info.SpawnHeading:		- Spawn Heading: {0}
+GMCommands.MinoRelic.Info.SpawnRegion:		- Spawn Region: {0}
+GMCommands.MinoRelic.Info.SpellInfo:		Spell Informations	
+GMCommands.MinoRelic.Info.SpellID:			- Spell ID: {0}
+GMCommands.MinoRelic.Info.SpellTarget:		- Spell Target: {0}
+GMCommands.MinoRelic.Info.SpellName:		- Spell Name: {0}
+GMCommands.MinoRelic.Info.SpellType:		- Spell Type: {0}
+GMCommands.MinoRelic.Info.SpellDuration:	- Spell Duration: {0} seconds
+GMCommands.MinoRelic.ShowAll.Infos:			Relic Infos
+GMCommands.MinoRelic.ShowAll.Count:			Relic Count: {0}
+GMCommands.MinoRelic.Spawn.AlreadySpawned:	Relic already spawned
+
+# /mob Command
+
+
+
+
+
+
+
+
