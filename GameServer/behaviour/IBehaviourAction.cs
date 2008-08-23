@@ -254,8 +254,12 @@ namespace DOL.GS.Behaviour
         /// <summary>
         /// WHIS : Q:GameLiving(NPC) whispers message P:string to player
         /// </summary>
-        Whisper
-        //XFER : changes to talk index p##. MUST be placed in entry 19 !            
+        Whisper,
+        //XFER : changes to talk index p##. MUST be placed in entry 19 ! 
+		/// <summary>
+		/// WHIS: P:ushort(SoundID), Q:eSoundType(SoundType)
+		/// </summary>
+		PlaySound
     }    
 
     /// <summary>
