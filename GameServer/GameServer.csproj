@@ -153,6 +153,7 @@
     <Compile Include="behaviour\AbstractTrigger.cs" />
     <Compile Include="behaviour\AbstractRequirement.cs" />
     <Compile Include="behaviour\Actions\AnimationAction.cs" />
+    <Compile Include="behaviour\Actions\PlaySoundAction.cs" />
     <Compile Include="behaviour\Actions\TrainerWindowAction.cs" />
     <Compile Include="behaviour\BaseBehaviour.cs" />
     <Compile Include="behaviour\BehaviourBuilder.cs" />
