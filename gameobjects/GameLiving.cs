@@ -2456,6 +2456,29 @@ namespace DOL.GS
 				InventoryItem mainWeapon = m_attackWeapon;
 				InventoryItem leftWeapon = m_leftWeapon;
 
+            // CMH
+            // 1.89
+            //- Pets will no longer continue to attack a character after the character has stealthed.
+            // 1.88
+            //- Monsters, pets and Non-Player Characters (NPCs) will now halt their pursuit when the character being chased stealths.
+            if (owner is GameNPC
+               && m_target is GamePlayer
+               && ((GamePlayer)m_target).IsStealthed)
+            {
+               // note due to the 2 lines above all npcs stop attacking
+               GameNPC npc = (GameNPC)owner;
+               npc.StopAttack();
+               npc.TargetObject = null;
+               Stop(); // stop the full tick timer? looks like other code is doing this
+
+               // target death caused this below, so I'm replicating it
+               if (npc.ActiveWeaponSlot != eActiveWeaponSlot.Distance &&
+                  npc.Inventory != null &&
+                  npc.Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
+                  npc.SwitchWeapon(eActiveWeaponSlot.Distance);
+               return;
+            }
+
 				if (!owner.CanUseLefthandedWeapon
 					|| (mainWeapon != null && mainWeapon.Item_Type != Slot.RIGHTHAND && mainWeapon.Item_Type != Slot.LEFTHAND)
 					|| leftWeapon == null
@@ -2518,8 +2541,24 @@ namespace DOL.GS
 						}
 					}
 				}
+            //CMH
+            // 1.89:
+            // - Characters who are attacked by stealthed archers will now target the attacking archer if the attacked player does not already have a target.
+            if (mainHandAD.Attacker.IsStealthed
+               && mainHandAD.AttackType == AttackData.eAttackType.Ranged
+               && (mainHandAD.AttackResult == eAttackResult.HitUnstyled || mainHandAD.AttackResult == eAttackResult.HitStyle))
+            {
+               if (mainHandAD.Target.TargetObject == null) {
+                  if (mainHandAD.Target is GamePlayer) {
+                     GameClient targetClient = WorldMgr.GetClientByPlayerID(mainHandAD.Target.InternalID,false,false);
+                     if (targetClient != null) {
+                        targetClient.Out.SendChangeTarget(mainHandAD.Attacker);
+                     }
+                  }
+               }
+            }
 
-				owner.TempProperties.setProperty(LAST_ATTACK_DATA, mainHandAD);
+			owner.TempProperties.setProperty(LAST_ATTACK_DATA, mainHandAD);
 
 				//Send the proper attacking messages to ourself
 				owner.SendAttackingCombatMessages(mainHandAD);
