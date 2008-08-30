@@ -23,6 +23,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.GS.ServerProperties;
 
 using log4net;
 
@@ -255,6 +256,13 @@ namespace DOL.GS.Keeps
 		/// <param name="criticalAmount">the amount of critical damage</param>
 		public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
+			// graveen: ml2 bm to add or put this is a better section (AttackData?)
+			if (source is GamePlayer)
+			{
+				damageAmount = (damageAmount-(damageAmount*5*this.Component.Keep.Level/100))*ServerProperties.Properties.SET_STRUCTURES_TOUGHNESS/100;
+				criticalAmount = 0;
+			}
+			
 			this.Component.Keep.LastAttackedByEnemyTick = this.CurrentRegion.Time;
 			//only on hp change
 			if (m_oldHealthPercent != HealthPercent)
