@@ -568,7 +568,20 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("ignore_too_long_outcoming_packet", "Shall we ignore too long outcoming packet ?", false)]
 		public static readonly bool IGNORE_TOO_LONG_OUTCOMING_PACKET;
 
-        /// <summary>
+		
+		/// <summary>
+		/// Epic encounters strength: 100 is 100% base strength
+		/// </summary>
+		[ServerProperty("set_difficulty_on_epic_encounters", "Tune epic encounters (for now, drakes). 100 = 100% of the difficulty", 100)]
+		public static readonly int SET_DIFFICULTY_ON_EPIC_ENCOUNTERS;
+
+		/// <summary>
+		/// Define toughness for doors (keepwalls are 2x doors): 100 is 100% player's damages infliged.
+		/// </summary>
+		[ServerProperty("set_structures_toughness", "This value is % of total damages infliged to level 1 door. Walls are 2 times more solid than doors (100=full damages)", 100)]
+		public static readonly int SET_STRUCTURES_TOUGHNESS;
+		
+		/// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
 		/// type of the default value
