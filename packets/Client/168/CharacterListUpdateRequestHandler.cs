@@ -50,22 +50,25 @@ namespace DOL.GS.PacketHandler.Client.v168
 				else
 				{
 					//Eden - anti hack uppercase
-					charname=Char.ToUpper(charname[0])+charname.Substring(1,charname.Length-1).ToLower();
-                    for (int y = 0; y < charname.Length; y++)
-                        if (!((charname[y] >= 'a' && charname[y] <= 'z') || (charname[y] >= 'A' && charname[y] <= 'Z')))
-						{
-							DBBannedAccount b = new DBBannedAccount();
-							b.Author = "BOT";
-							b.Ip = client.TcpEndpoint;
-							b.Account = client.Account.Name;
-							b.DateBan = DateTime.Now;
-							b.Type = "B";
-							b.Reason = "HACK : Charname";
-							GameServer.Database.AddNewObject(b);
-							GameServer.Database.SaveObject(b);
-							client.Disconnect();
-							return 1;
-						}
+					if( client.Account.PrivLevel == 1)
+					{
+						charname=Char.ToUpper(charname[0])+charname.Substring(1,charname.Length-1).ToLower();
+	                    for (int y = 0; y < charname.Length; y++)
+	                        if (!((charname[y] >= 'a' && charname[y] <= 'z') || (charname[y] >= 'A' && charname[y] <= 'Z')))
+							{
+								DBBannedAccount b = new DBBannedAccount();
+								b.Author = "SERVER";
+								b.Ip = client.TcpEndpoint;
+								b.Account = client.Account.Name;
+								b.DateBan = DateTime.Now;
+								b.Type = "B";
+								b.Reason = String.Format("Autoban CharName '{0}'", GameServer.Database.Escape(charname));
+								GameServer.Database.AddNewObject(b);
+								GameServer.Database.SaveObject(b);
+								client.Disconnect();
+								return 1;
+							}
+					}
 					
 					String select = String.Format("Name = '{0}'", GameServer.Database.Escape(charname));
 					Character character = (Character)GameServer.Database.SelectObject(typeof(Character), select);
