@@ -22,6 +22,7 @@ using System.Collections;
 using System.Text;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.ServerProperties;
 
 namespace DOL.GS.Keeps
 {
@@ -465,6 +466,12 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
+			// graveen: ml2 bm to add or put this is a better section (AttackData?)
+			if (source is GamePlayer)
+			{		
+				damageAmount = ((damageAmount-(damageAmount*5*this.Keep.Level)/100)*ServerProperties.Properties.SET_STRUCTURES_TOUGHNESS/100)/2;
+				criticalAmount = 0;
+			}
 			this.Keep.LastAttackedByEnemyTick = this.CurrentRegion.Time;
 			base.TakeDamage(source, damageType, damageAmount, criticalAmount);
 			//only on hp change

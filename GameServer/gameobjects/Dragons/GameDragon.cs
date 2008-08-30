@@ -24,6 +24,8 @@ using DOL.Database;
 using log4net;
 using System.Reflection;
 using DOL.Events;
+using DOL.GS.ServerProperties;
+
 
 namespace DOL.GS
 {
@@ -42,6 +44,18 @@ namespace DOL.GS
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		
+		/// <summary>
+		/// Set the dragon strength in percent of its max abilities
+		/// </summary>
+		private int m_DragonStrength;
+		public virtual int DragonStrength
+		{
+			get { return m_DragonStrength;}
+			set { m_DragonStrength = value;}
+			
+		}
+		
 		/// <summary>
 		/// Announcements for Breath, Glare and death.
 		/// </summary>
@@ -67,6 +81,7 @@ namespace DOL.GS
 				"A glowing light begins to form on the mound that served as {0}'s lair." };
 
 			TetherRange = 2500;	// TODO: Can be removed once there is an NPCTemplate.
+			m_DragonStrength = ServerProperties.Properties.SET_DIFFICULTY_ON_EPIC_ENCOUNTERS;
 		}
 
 		/// <summary>
@@ -106,7 +121,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override double GetArmorAF(eArmorSlot slot)
 		{
-			return 1000;
+			return 1000*m_DragonStrength/100;
 		}
 
 		/// <summary>
@@ -118,7 +133,7 @@ namespace DOL.GS
 		{
 			// 85% ABS is cap.
 
-			return 0.85;
+			return 0.85*m_DragonStrength/100;
 		}
 
 		/// <summary>
@@ -134,8 +149,8 @@ namespace DOL.GS
 			{
 				case eDamageType.Slash : 
 				case eDamageType.Crush :
-				case eDamageType.Thrust: return 65;
-				default: return 99;
+				case eDamageType.Thrust: return 65*m_DragonStrength/100;
+				default: return 99*m_DragonStrength/100;
 			}
 		}
 
@@ -146,7 +161,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				return 30000;
+				return 30000*m_DragonStrength/100;
 			}
 		}
 
@@ -157,7 +172,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override double AttackDamage(InventoryItem weapon)
 		{
-			return base.AttackDamage(weapon) * 1.0;
+			return base.AttackDamage(weapon) * 1.0 *m_DragonStrength/100;
 		}
 
 		/// <summary>
@@ -180,7 +195,7 @@ namespace DOL.GS
 				int highmod = Level + 50;
 				int lowmod = Level / 3;
 				int result = Util.Random(lowmod, highmod);
-				return result * 60 * 1000;
+				return result * 60 * 1000 *m_DragonStrength/100;
 			}
 		}
 
@@ -770,7 +785,7 @@ namespace DOL.GS
 					spell.Uninterruptible = true;
 					spell.ClientEffect = 4123;
 					spell.Icon = 4123;
-					spell.Duration = 30;
+					spell.Duration = 30*m_DragonStrength/100;
 					spell.Description = "Stun";
 					spell.Name = "Paralyzing Horror";
 					spell.Range = 700;
