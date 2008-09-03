@@ -1,6 +1,5 @@
-
-
 GameNPC.DropLoot.AdditionalMoney:			You find an additional {0} thanks to your realm owning outposts!
+GameNPC.DropLoot.Drops:				{0} drops {1}.
 GameNPC.GetAggroLevelString.Aggressive1:	aggressive
 GameNPC.GetAggroLevelString.Aggressive2:	Aggressive
 GameNPC.GetAggroLevelString.Friendly1:		friendly
@@ -16,4 +15,3 @@ GameNPC.Interact.DirtyLook:					{0} gives you a dirty look.
 GameNPC.Interact.IsFull:					This {0} is full.
 GameNPC.SayTo.Says:							{0} says, "{1}"
 GameNPC.SayTo.SpeaksTo:						{0} speaks to {1}
-

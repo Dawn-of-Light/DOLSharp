@@ -205,6 +205,21 @@ SkillBase.RegisterPropertyNames.Witchcraft:		Hexerei
 SkillBase.RegisterPropertyNames.WitchcraftFocus:	Hexerei
 
 # /Handlers
+# /AdrenalineRushAbility
+AdrenalineRushAbility.AddEffectsInfo.Info1:		Stufe 1: Dauer: 20 Sekunden
+AdrenalineRushAbility.AddEffectsInfo.Info2:		Stufe 2: Dauer: 20 Sekunden
+AdrenalineRushAbility.AddEffectsInfo.Info3:		Stufe 3: Dauer: 20 Sekunden
+AdrenalineRushAbility.AddEffectsInfo.Info4:		Ziel: Selbst
+AdrenalineRushAbility.AddEffectsInfo.Info5:		Zauberzeit: Sofort
+
+# /ConcentrationAbility
+ConcentrationAbility.AddEffectsInfo.Info1:
+ConcentrationAbility.AddEffectsInfo.Info2:
+ConcentrationAbility.AddEffectsInfo.Info3:
+ConcentrationAbility.AddEffectsInfo.Info4:
+ConcentrationAbility.AddEffectsInfo.Info5:
+ConcentrationAbility.AddEffectsInfo.Info6:
+
 # /DashingDefenseAbility
 DashingDefenseAbility.AddEffectsInfo.Info1:		Nur ein Spieler pro Gruppe kann für die ganze Gruppe parieren und abblocken.
 DashingDefenseAbility.AddEffectsInfo.Info2:		Ziel: Selbst
@@ -243,3 +258,8 @@ RealmAbility.SendCasterSpellEffectAndCastMessage.Caster:{0} zaubert!
 RealmAbility.SendCasterSpellEffectAndCastMessage.You:	Ihr bereitet den Zauber "{0}" vor...
 RealmAbility.SendCastMessage.PlayerCasts:		{0} zaubert!
 RealmAbility.SendCastMessage.YouCast:			Ihr bereitet den Zauber "{0}" vor...
+
+# /SecondWindAbility
+SecondWindAbility.AddEffectsInfo.Info1:			Wert: 100%
+SecondWindAbility.AddEffectsInfo.Info4:			Ziel: Selbst
+SecondWindAbility.AddEffectsInfo.Info5:			Zauberzeit: Sofort
