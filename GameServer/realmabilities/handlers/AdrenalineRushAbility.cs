@@ -1,9 +1,10 @@
 using System.Reflection;
 using System.Collections;
-using DOL.GS;
-using DOL.GS.PacketHandler;
-using DOL.GS.Effects;
 using DOL.Database;
+using DOL.GS;
+using DOL.GS.Effects;
+using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.RealmAbilities
 {
@@ -39,5 +40,16 @@ namespace DOL.GS.RealmAbilities
             }
             return 600;
         }
+
+        public override void AddEffectsInfo(System.Collections.IList list)
+        {
+            list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "AdrenalineRushAbility.AddEffectsInfo.Info1"));
+            list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "AdrenalineRushAbility.AddEffectsInfo.Info2"));
+            list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "AdrenalineRushAbility.AddEffectsInfo.Info3"));
+            list.Add("");
+            list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "AdrenalineRushAbility.AddEffectsInfo.Info4"));
+            list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "AdrenalineRushAbility.AddEffectsInfo.Info5"));
+        }
+
     }
 }

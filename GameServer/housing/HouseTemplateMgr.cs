@@ -95,22 +95,22 @@ namespace DOL.GS.Housing
 		static void CheckItemTemplates()
 		{
 			//lot marker
-			CheckItemTemplate("Albion cottage deed", "alb_cottage_deed", 499, 0, 10000000, 0, 0, 0, 0, 1);
-			CheckItemTemplate("Albion house deed", "alb_house_deed", 499, 0, 100000000, 0, 0, 0, 0, 1);
-			CheckItemTemplate("Albion villa deed", "alb_villa_deed", 499, 0, 400000000, 0, 0, 0, 0, 1);
-			CheckItemTemplate("Albion mansion deed", "alb_mansion_deed", 499, 0, 1000000000, 0, 0, 0, 0, 1);
-			CheckItemTemplate("Midgard cottage deed", "mid_cottage_deed", 499, 0, 10000000, 0, 0, 0, 0, 2);
-			CheckItemTemplate("Midgard house deed", "mid_house_deed", 499, 0, 100000000, 0, 0, 0, 0, 2);
-			CheckItemTemplate("Midgard villa deed", "mid_villa_deed", 499, 0, 400000000, 0, 0, 0, 0, 2);
-			CheckItemTemplate("Midgard mansion deed", "mid_mansion_deed", 499, 0, 1000000000, 0, 0, 0, 0, 2);
-			CheckItemTemplate("Hibernia cottage deed", "hib_cottage_deed", 499, 0, 10000000, 0, 0, 0, 0, 3);
-			CheckItemTemplate("Hibernia house deed", "hib_house_deed", 499, 0, 100000000, 0, 0, 0, 0, 3);
-			CheckItemTemplate("Hibernia villa deed", "hib_villa_deed", 499, 0, 400000000, 0, 0, 0, 0, 3);
-			CheckItemTemplate("Hibernia mansion deed", "hib_mansion_deed", 499, 0, 1000000000, 0, 0, 0, 0, 3);
-			CheckItemTemplate("Porch deed", "porch_deed", 499, 0, 5000000, 0, 0, 0, 0, 0);
-			CheckItemTemplate("Porch remove deed", "porch_remove_deed", 499, 0, 100, 0, 0, 0, 0, 0);
-            CheckItemTemplate("deed of guild transfer", "deed_of_guild_transfer", 499, 0, 50000000, 0, 0, 0, 0, 0);
-            CheckItemTemplate("House removal deed", "house_removal_deed", 499, 0, 50000000, 0, 0, 0, 0, 0);
+			CheckItemTemplate("Albion cottage deed", "alb_cottage_deed", 498, 0, 10000000, 0, 0, 0, 0, 1);
+            CheckItemTemplate("Albion house deed", "alb_house_deed", 498, 0, 100000000, 0, 0, 0, 0, 1);
+            CheckItemTemplate("Albion villa deed", "alb_villa_deed", 498, 0, 400000000, 0, 0, 0, 0, 1);
+            CheckItemTemplate("Albion mansion deed", "alb_mansion_deed", 498, 0, 1000000000, 0, 0, 0, 0, 1);
+            CheckItemTemplate("Midgard cottage deed", "mid_cottage_deed", 498, 0, 10000000, 0, 0, 0, 0, 2);
+            CheckItemTemplate("Midgard house deed", "mid_house_deed", 498, 0, 100000000, 0, 0, 0, 0, 2);
+            CheckItemTemplate("Midgard villa deed", "mid_villa_deed", 498, 0, 400000000, 0, 0, 0, 0, 2);
+            CheckItemTemplate("Midgard mansion deed", "mid_mansion_deed", 498, 0, 1000000000, 0, 0, 0, 0, 2);
+            CheckItemTemplate("Hibernia cottage deed", "hib_cottage_deed", 498, 0, 10000000, 0, 0, 0, 0, 3);
+            CheckItemTemplate("Hibernia house deed", "hib_house_deed", 498, 0, 100000000, 0, 0, 0, 0, 3);
+            CheckItemTemplate("Hibernia villa deed", "hib_villa_deed", 498, 0, 400000000, 0, 0, 0, 0, 3);
+            CheckItemTemplate("Hibernia mansion deed", "hib_mansion_deed", 498, 0, 1000000000, 0, 0, 0, 0, 3);
+            CheckItemTemplate("Porch deed", "porch_deed", 498, 0, 5000000, 0, 0, 0, 0, 0);
+            CheckItemTemplate("Porch remove deed", "porch_remove_deed", 498, 0, 100, 0, 0, 0, 0, 0);
+            CheckItemTemplate("deed of guild transfer", "deed_of_guild_transfer", 498, 0, 50000000, 0, 0, 0, 0, 0);
+            CheckItemTemplate("House removal deed", "house_removal_deed", 498, 0, 50000000, 0, 0, 0, 0, 0);
 
 			//indoor npc
 			CheckItemTemplate("Hastener", "hastener", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 500, 0, 0);
@@ -128,7 +128,7 @@ namespace DOL.GS.Housing
 			CheckItemTemplate("Poison and Dye Supplies", "poison_dye_supplies", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 510, 0, 0);
 			CheckItemTemplate("Potion, Tincture, and Enchantment Supplies", "potion_tincture_enchantment_supplies", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 511, 0, 0);
 			CheckItemTemplate("Poison and Potion Supplies", "poison_potion_supplies", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 512, 0, 0);
-			CheckItemTemplate("Dye, Tincture, and Enchantment Supplies", "dye_tincture_enchantment supplies", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 513, 0, 0);
+			CheckItemTemplate("Dye, Tincture, and Enchantment Supplies", "dye_tincture_enchantment_supplies", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 513, 0, 0);
 			CheckItemTemplate("Taxidermy Supplies", "taxidermy_supplies", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 514, 0, 0);
 			CheckItemTemplate("Siegecraft Supplies", "siegecraft_supplies", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 515, 0, 0);
 			CheckItemTemplate("Hibernia Vault Keeper", "hib_vault_keeper", 593, (int)eObjectType.HouseNPC, 1000000, 0, 0, 516, 0, 0);
