@@ -1,0 +1,19 @@
+# /AdrenalineRushAbility
+AdrenalineRushAbility.AddEffectsInfo.Info1:		
+AdrenalineRushAbility.AddEffectsInfo.Info2:		
+AdrenalineRushAbility.AddEffectsInfo.Info3:		
+AdrenalineRushAbility.AddEffectsInfo.Info4:		
+AdrenalineRushAbility.AddEffectsInfo.Info5:		
+
+# /ConcentrationAbility
+ConcentrationAbility.AddEffectsInfo.Info1:	Level 1: Value: 25%
+ConcentrationAbility.AddEffectsInfo.Info2:	Level 2: Value: 60%
+ConcentrationAbility.AddEffectsInfo.Info3:	Level 3: Value: 100%
+ConcentrationAbility.AddEffectsInfo.Info4:	Target: Self
+ConcentrationAbility.AddEffectsInfo.Info5:	Casting time: instant
+
+# /SecondWindAbility
+SecondWindAbility.AddEffectsInfo.Info1:			
+SecondWindAbility.AddEffectsInfo.Info4:			
+SecondWindAbility.AddEffectsInfo.Info5:			
+

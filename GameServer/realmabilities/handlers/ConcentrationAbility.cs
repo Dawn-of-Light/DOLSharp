@@ -1,8 +1,9 @@
 using System;
 using DOL.Database;
-using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
+using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
+using DOL.Language;
 
 namespace DOL.GS.RealmAbilities
 {
@@ -44,12 +45,12 @@ namespace DOL.GS.RealmAbilities
 
 		public override void AddEffectsInfo(System.Collections.IList list)
 		{
-			list.Add("Level 1: Value: 25%");
-			list.Add("Level 2: Value: 60%");
-			list.Add("Level 3: Value: 100%");
-			list.Add("");
-			list.Add("Target: Self");
-			list.Add("Casting time: instant");
+            list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "ConcentrationAbility.AddEffectsInfo.Info1"));
+            list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "ConcentrationAbility.AddEffectsInfo.Info2"));
+            list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "ConcentrationAbility.AddEffectsInfo.Info3"));
+            list.Add("");
+            list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "ConcentrationAbility.AddEffectsInfo.Info4"));
+            list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "ConcentrationAbility.AddEffectsInfo.Info5"));
 		}
 	}
 }

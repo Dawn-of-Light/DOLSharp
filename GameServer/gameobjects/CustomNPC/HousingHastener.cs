@@ -46,6 +46,8 @@ namespace DOL.GS
 
 		}
 
+        public const int SPEEDOFTHEREALMID = 2430;
+
 		#region Examine/Interact Message
 
 		/// <summary>

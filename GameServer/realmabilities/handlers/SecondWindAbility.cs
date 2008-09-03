@@ -1,5 +1,6 @@
 using System;
 using DOL.Database;
+using DOL.Language;
 
 namespace DOL.GS.RealmAbilities
 {
@@ -35,5 +36,13 @@ namespace DOL.GS.RealmAbilities
 			}
 			return 900;
 		}
+
+        public override void AddEffectsInfo(System.Collections.IList list)
+        {
+            list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SecondWindAbility.AddEffectsInfo.Info1"));
+            list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SecondWindAbility.AddEffectsInfo.Info4"));
+            list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SecondWindAbility.AddEffectsInfo.Info5"));
+        }
+
 	}
 }
