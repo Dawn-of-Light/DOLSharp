@@ -10,3 +10,6 @@ GameKeepGuard.GetPronoun.Him:			Him
 GameKeepGuard.GetPronoun.His:			His
 GameKeepGuard.GetPronoun.She:			She
 GameKeepGuard.GuardSpam.Killed:			{0} has been killed in {1} with {2} enemy player(s) in the area!
+
+#GuardCaster
+GuardCaster.SkinsHardens:			The {0}'s skins hardens substantially.
