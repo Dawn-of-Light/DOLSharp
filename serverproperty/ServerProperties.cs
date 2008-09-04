@@ -287,7 +287,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Disable Bug Reports
 		/// </summary>
-		[ServerProperty("disable_bug_reports", "Set to false to disable bug reporting, and true to enable bug reporting", false)]
+		[ServerProperty("disable_bug_reports", "Set to true to disable bug reporting, and false to enable bug reporting", true)]
 		public static readonly bool DISABLE_BUG_REPORTS;
 
 		/// <summary>
@@ -484,7 +484,7 @@ namespace DOL.GS.ServerProperties
         /// <summary>
         /// This will Allow/Disallow dual loggins
         /// </summary>
-        [ServerProperty("allow_dual_logins", "Diasable to disallow players to connect with more than 1 account at a time.", true)]
+        [ServerProperty("allow_dual_logins", "Disable to disallow players to connect with more than 1 account at a time.", true)]
         public static bool ALLOW_DUAL_LOGINS;
 
 		/// <summary>
@@ -572,7 +572,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Epic encounters strength: 100 is 100% base strength
 		/// </summary>
-		[ServerProperty("set_difficulty_on_epic_encounters", "Tune epic encounters (for now, drakes). 100 = 100% of the difficulty", 100)]
+		[ServerProperty("set_difficulty_on_epic_encounters", "Tune encounters taggued <Epic Encounter>. 0 means auto adaptative, others values are % of the initial difficulty (100%=initial difficulty)", 100)]
 		public static readonly int SET_DIFFICULTY_ON_EPIC_ENCOUNTERS;
 
 		/// <summary>
@@ -580,6 +580,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("set_structures_toughness", "This value is % of total damages infliged to level 1 door. Walls are 2 times more solid than doors (100=full damages)", 100)]
 		public static readonly int SET_STRUCTURES_TOUGHNESS;
+	
+		/// <summary>
+		/// Allow or disallow /irc in RvR zones, while allowed in pve zone
+		/// </summary>
+		[ServerProperty("allow_irc_in_rvr", "Allow players to send/receive irc when in RvR zone", true)]
+		public static readonly bool ALLOW_IRC_IN_RVR;	
 		
 		/// <summary>
 		/// This method loads the property from the database and returns
