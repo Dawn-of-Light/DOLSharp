@@ -66,6 +66,10 @@ namespace DOL.GS
 				return false;
 			}
 
+            // Luhz Crafting Update: 
+            // Crafting no longer requires hand-held tools!
+            return true;
+            /*
 			if (player.Inventory.GetFirstItemByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.SmithsHammer"), eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null)
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -91,6 +95,7 @@ namespace DOL.GS
 			}
 
 			return true;
+            */
 		}
 
 		/// <summary>
@@ -120,6 +125,9 @@ namespace DOL.GS
 		{
 			base.GainCraftingSkillPoints(player, item);
 
+            // Luhz Crafting Update:
+            // "Secondary" tradeskills are no longer limited by "Primary" tradeskills - Patch 1.87
+            /*
 			if(player.CraftingPrimarySkill == eCraftingSkill.ArmorCrafting)
 			{
 				if(player.GetCraftingSkillValue(eCraftingSkill.ArmorCrafting)%100 == 99)
@@ -163,6 +171,7 @@ namespace DOL.GS
 					return;
 				}
 			}
+            */
 
 			if(Util.Chance( CalculateChanceToGainPoint(player, item)))
 			{

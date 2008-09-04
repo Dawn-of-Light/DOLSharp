@@ -49,13 +49,16 @@ namespace DOL.GS
 		/// <returns>true if the player hold all needed tools</returns>
 		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
+            // Luhz Crafting Update: 
+            // Crafting no longer requires hand-held tools!
+            /*
 			if (player.Inventory.GetFirstItemByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.PlaningTool"), eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null)
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindPlaningTool"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
-
+            */
 			return true;
 		}
 
@@ -66,14 +69,16 @@ namespace DOL.GS
 		/// <param name="item"></param>
 		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
-			if (player.GetCraftingSkillValue(eCraftingSkill.WoodWorking) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
-			{
+            // Luhz Crafting Update:
+            // "Secondary" tradeskills are no longer limited by "Primary" tradeskills - Patch 1.87
+			// if (player.GetCraftingSkillValue(eCraftingSkill.WoodWorking) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
+			// {
 				if(Util.Chance( CalculateChanceToGainPoint(player, item)))
 				{
 					player.GainCraftingSkill(eCraftingSkill.WoodWorking, 1);
 					player.Out.SendUpdateCraftingSkills();
 				}
-			}
+			//}
 		}
 	}
 }

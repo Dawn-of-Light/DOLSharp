@@ -49,7 +49,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					int slotPosition = packet.ReadByte();
 					InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slotPosition);
-					if(item!=null && item.IsDropable)
+					if(item!=null && item.IsDropable && item.IsTradable )
 					{
 						tradeSlots.Add(item);
 					}

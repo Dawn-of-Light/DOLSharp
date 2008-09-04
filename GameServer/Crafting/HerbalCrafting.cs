@@ -49,8 +49,8 @@ namespace DOL.GS
 		/// <returns>true if the player hold all needed tools</returns>
 		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
-			// todo check tools
-
+            // Luhz Crafting Update: 
+            // Crafting no longer requires hand-held tools!
 			return true;
 		}
 
@@ -61,14 +61,16 @@ namespace DOL.GS
 		/// <param name="item"></param>
 		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
-			if (player.GetCraftingSkillValue(eCraftingSkill.HerbalCrafting) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
-			{
+            // Luhz Crafting Update:
+            // "Secondary" tradeskills are no longer limited by "Primary" tradeskills - Patch 1.87
+			//if (player.GetCraftingSkillValue(eCraftingSkill.HerbalCrafting) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
+			//{
 				if(Util.Chance( CalculateChanceToGainPoint(player, item)))
 				{
 					player.GainCraftingSkill(eCraftingSkill.HerbalCrafting, 1);
 					player.Out.SendUpdateCraftingSkills();
 				}
-			}
+			//}
 		}
 	}
 }
