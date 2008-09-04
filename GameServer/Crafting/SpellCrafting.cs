@@ -29,7 +29,7 @@ namespace DOL.GS
 	/// </summary>
 	public class SpellCrafting : AdvancedCraftingSkill
 	{
-		private static readonly int[,] itemMaxBonusLevel =  // taken from mythic Spellcraft calculator
+        private static readonly int[,] itemMaxBonusLevel =  // taken from mythic Spellcraft calculator
 		{
 			{0,1,1,1,1,1,1},
 			{1,1,1,1,1,2,2},
@@ -84,6 +84,11 @@ namespace DOL.GS
 			{10,15,18,21,24,28,32},
 		};
 
+        // Luhz Crafting Update:
+        // The formula for OC overcharge success has changed - Patch 1.87
+        private static readonly int[] OCStartPercentages = { 0, 10, 20, 30, 50, 70 };
+        private static readonly int[] ItemQualOCModifiers = { 0, 0, 6, 8, 10, 18, 26 };
+
 		/// <summary>
 		/// Constructor
 		/// </summary>
@@ -104,6 +109,10 @@ namespace DOL.GS
 		/// <returns>true if the player hold all needed tools</returns>
 		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
+            // Luhz Crafting Update: 
+            // Crafting no longer requires hand-held tools!
+            return base.CheckTool(player, craftItemData);
+            /*
 			if (!base.CheckTool(player, craftItemData)) return false;
 
 			if (player.Inventory.GetFirstItemByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.SpellcraftKit"), eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null)
@@ -114,6 +123,7 @@ namespace DOL.GS
 			}
 
 			return true;
+            */
 		}
 
 		/// <summary>
@@ -125,6 +135,9 @@ namespace DOL.GS
 		{
 			base.GainCraftingSkillPoints(player, item);
 
+            // Luhz Crafting Update:
+            // "Secondary" tradeskills are no longer limited by "Primary" tradeskills - Patch 1.87
+            /*
 			if (player.CraftingPrimarySkill == eCraftingSkill.SpellCrafting)
 			{
 				if (player.GetCraftingSkillValue(eCraftingSkill.SpellCrafting) % 100 == 99)
@@ -156,6 +169,7 @@ namespace DOL.GS
 					return;
 				}
 			}
+            */
 
 			if (Util.Chance(CalculateChanceToGainPoint(player, item)))
 			{
@@ -414,7 +428,15 @@ namespace DOL.GS
 				lock (player.TradeWindow.Sync)
 				{
 					player.Inventory.BeginChanges();
-					if (tradePartner != null && item.OwnerID == tradePartner.InternalID)
+                    // Luhz Crafting Update:
+                    // The base item is no longer lost when spellcrafting explodes - only gems are destroyed.
+                    foreach (InventoryItem gem in (ArrayList)player.TradeWindow.TradeItems.Clone())
+                    {
+                        if (gem.Object_Type == (int)eObjectType.SpellcraftGem)
+                            player.Inventory.RemoveCountFromStack(gem, 1);
+                    }
+                    /*
+                    if (tradePartner != null && item.OwnerID == tradePartner.InternalID)
 					{
 						tradePartner.Inventory.RemoveCountFromStack(item, 1);
 					}
@@ -424,13 +446,20 @@ namespace DOL.GS
 					}
 
 					foreach (InventoryItem gem in (ArrayList)player.TradeWindow.TradeItems.Clone())
-					{
+					{                        
 						player.Inventory.RemoveCountFromStack(gem, 1);
 					}
-					player.Inventory.CommitChanges();
+                    */
+                    player.Inventory.CommitChanges();
 				}
 
 				player.Emote(eEmote.SpellGoBoom);
+                // Luhz Crafting Update:
+                // Without stopping regen, player goes into undead state (Health > 0 => IsAlive == True)
+                player.StopHealthRegeneration();
+                player.StopPowerRegeneration();
+                player.StopEnduranceRegeneration();
+                // -------------------------------------------------------------------------------------
 				player.Die(player); // On official you take damages
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ApplySpellcraftGems.Failed"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
@@ -509,8 +538,10 @@ namespace DOL.GS
 				spellcraftInfos.Add(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ShowSpellCraftingInfos.Penality", GetOverchargePenality(totalItemCharges, totalGemmesCharges)));
 				spellcraftInfos.Add("\t");
 				spellcraftInfos.Add(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ShowSpellCraftingInfos.Success", CalculateChanceToOverchargeItem(player, item, maxBonusLevel, bonusLevel)));
-				spellcraftInfos.Add("\t");
-				spellcraftInfos.Add(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ShowSpellCraftingInfos.Losing", (100 - CalculateChanceToPreserveItem(player, item, maxBonusLevel, bonusLevel))));
+                // Luhz Crafting Update:
+                // It's no longer possible to lose the base item when overcharging.
+				// spellcraftInfos.Add("\t");
+				// spellcraftInfos.Add(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ShowSpellCraftingInfos.Losing", (100 - CalculateChanceToPreserveItem(player, item, maxBonusLevel, bonusLevel))));
 			}
 
 			GamePlayer partner = player.TradeWindow.Partner;
@@ -531,7 +562,7 @@ namespace DOL.GS
 		#region Calcul functions
 
 		/// <summary>
-        ///  Get the sucess chance to overcharge the item
+        /// Get the sucess chance to overcharge the item
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="item"></param>
@@ -540,6 +571,33 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected int CalculateChanceToOverchargeItem(GamePlayer player, InventoryItem item, int maxBonusLevel, int bonusLevel)
 		{
+            // Luhz Crafting Update:
+            // Overcharge success rate is now dependent only on item quality, points overcharged, and spellcrafter skill.
+            // This formula is taken from Kort's Spellcrafting Calculator, which appears to be correct (for 1.87). Much Thanks!
+            if(bonusLevel - maxBonusLevel > 5) return 0;
+            if(bonusLevel - maxBonusLevel < 0) return 100;
+
+            try {
+            int success = 34 + ItemQualOCModifiers[item.Quality - 94];
+            success -= OCStartPercentages[bonusLevel-maxBonusLevel];
+            int skillbonus = (player.GetCraftingSkillValue(eCraftingSkill.SpellCrafting) / 10);
+            if (skillbonus > 100) 
+                skillbonus = 100;
+            success += skillbonus;
+            int fudgefactor = (int)(100.0 * ((skillbonus / 100.0 - 1.0) * (OCStartPercentages[bonusLevel-maxBonusLevel] / 200.0)));
+            success += fudgefactor;
+            if (success > 100)
+                success = 100;
+            return success;
+            }
+            catch(Exception)
+            {
+                // Array access exception: someone is trying to imbue 100 < item.Quality < 94
+                // Probably a GM or someone testing; I suppose we should just let them.
+                return 100;
+            }
+
+            /*
 			int baseChance = GetOverchargePenality(maxBonusLevel, bonusLevel);
 
 			int gemmeModifier = 0;
@@ -591,6 +649,7 @@ namespace DOL.GS
 			else if (finalChances < 0) finalChances = 0;
 
 			return finalChances;
+            */
 		}
 
 		/// <summary>
@@ -600,10 +659,13 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected int GetItemMaxImbuePoints(InventoryItem item)
 		{
-			if (item.Quality < 94) return 0;
+			// if (item.Quality < 94) return 0;
 			if (item.Level > 51) return 32;
 			if (item.Level < 1) return 0;
-			return itemMaxBonusLevel[item.Level - 1, item.Quality - 94];
+			// return itemMaxBonusLevel[item.Level - 1, item.Quality - 94];
+            // Luhz Crafting Update:
+            // All items have MP level imbue points
+            return itemMaxBonusLevel[item.Level - 1, 100 - 94];
 		}
 
 		/// <summary>

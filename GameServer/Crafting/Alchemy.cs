@@ -51,7 +51,11 @@ namespace DOL.GS
 		/// <returns>true if the player hold all needed tools</returns>
 		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
-			if(! base.CheckTool(player, craftItemData)) return false;
+            // Luhz Crafting Update: 
+            // Crafting no longer requires hand-held tools!
+            return base.CheckTool(player, craftItemData);
+            /*
+            if(! base.CheckTool(player, craftItemData)) return false;
 
 			byte flags = 0;
 			foreach (InventoryItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
@@ -88,6 +92,7 @@ namespace DOL.GS
 			}
 
 			return true;
+            */
 		}
 
 		/// <summary>
@@ -99,6 +104,9 @@ namespace DOL.GS
 		{
 			base.GainCraftingSkillPoints(player, item);
 
+            // Luhz Crafting Update:
+            // "Secondary" tradeskills are no longer limited by "Primary" tradeskills - Patch 1.87
+            /*
 			if(player.CraftingPrimarySkill == eCraftingSkill.Alchemy)
 			{
 				if(player.GetCraftingSkillValue(eCraftingSkill.Alchemy)%100 == 99)
@@ -130,6 +138,7 @@ namespace DOL.GS
 					return;
 				}
 			}
+            */
 
 			if(Util.Chance( CalculateChanceToGainPoint(player, item)))
 			{

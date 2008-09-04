@@ -7076,7 +7076,7 @@ namespace DOL.GS
 		/// </summary>
 		public const string LAST_CHARGED_ITEM_USE_TICK = "LastChargedItemUsedTick";
 		public const string ITEM_USE_DELAY = "ItemUseDelay";
-		public const string LAST_POTION_ITEM_USE_TICK = "LastPotionItemUsedTick";
+		public const string NEXT_POTION_AVAIL_TIME = "LastPotionItemUsedTick";
 
 		/// <summary>
 		/// Called when this player receives a trade item
@@ -7534,8 +7534,8 @@ namespace DOL.GS
 						}
 						else
 						{
-							if (UseMagicalItem(useItem, type))
-								useItem.CanUseAgainIn = useItem.CanUseEvery;
+                            if (UseMagicalItem(useItem, type))
+                                useItem.CanUseAgainIn = useItem.CanUseEvery;
 						}
 						return;
 					}
@@ -7567,11 +7567,12 @@ namespace DOL.GS
 						else if (useItem.Object_Type == (int)eObjectType.Magical &&
 							(useItem.Item_Type == (int)eInventorySlot.FirstBackpack || useItem.Item_Type == 41))
 						{
-							long lastPotionItemUseTick = TempProperties.getLongProperty(LAST_POTION_ITEM_USE_TICK, 0L);
-							long changeTime = CurrentRegion.Time - lastPotionItemUseTick;
-							if (Client.Account.PrivLevel == 1 && changeTime < 60000) //1 minutes reuse timer
+							long nextPotionAvailTime = TempProperties.getLongProperty(NEXT_POTION_AVAIL_TIME, 0L);
+                            // Satyr Update: Individual Reuse-Timers for Pots need a Time looking forward
+                            // into Future, set with value of "itemtemplate.CanUseEvery" and no longer back into past
+                            if (Client.Account.PrivLevel == 1 && nextPotionAvailTime > CurrentRegion.Time)
 							{
-								Out.SendMessage("You must wait " + (60000 - changeTime) / 1000 + " more second before use potion!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                Out.SendMessage("You must wait " + (nextPotionAvailTime - CurrentRegion.Time) / 1000 + " more second before use potion!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
 							else
@@ -7615,7 +7616,9 @@ namespace DOL.GS
 															if (useItem.Charges < 1) Inventory.RemoveCountFromStack(useItem, 1);
 														}
 														Out.SendMessage(useItem.GetName(0, false) + " has been used.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-														TempProperties.setProperty(LAST_POTION_ITEM_USE_TICK, CurrentRegion.Time);
+                                                        // Satyr Update: Individual Reuse-Timers for Pots need a Time looking forward
+                                                        // into Future, set with value of "itemtemplate.CanUseEvery" and no longer back into past
+                                                        TempProperties.setProperty(NEXT_POTION_AVAIL_TIME, useItem.CanUseEvery * 1000 + CurrentRegion.Time);
 													}
 													else
 													{
@@ -11478,7 +11481,7 @@ namespace DOL.GS
 			lock (craftingSkills.SyncRoot)
 			{
 				AbstractCraftingSkill craftingSkill = CraftingMgr.getSkillbyEnum(skill);
-				if (craftingSkill != null)
+				if (craftingSkill != null && count > 0)
 				{
 					craftingSkills[(int)skill] = count + Convert.ToInt32(craftingSkills[(int)skill]);
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainCraftingSkill.GainSkill", craftingSkill.Name, craftingSkills[(int)skill]), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -11773,7 +11776,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Opens the trade between two players
+		/// Opens the trade window for myself (combine, repair)
 		/// </summary>
 		/// <param name="item">The item to spell craft</param>
 		/// <returns>true if trade has started</returns>

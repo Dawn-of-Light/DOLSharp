@@ -1911,11 +1911,12 @@ Type    Description           Id
 							if (spellHandler != null)
 								list.AddRange(spellHandler.DelveInfo);
 							list.Add(" ");
-							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.UseItem2"));
-							long lastPotionItemUseTick = client.Player.TempProperties.getLongProperty(GamePlayer.LAST_POTION_ITEM_USE_TICK, 0L);
-							long changeTime = client.Player.CurrentRegion.Time - lastPotionItemUseTick;
-							if (changeTime < 60000) //1 minutes reuse timer
-								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.UseItem3", Util.FormatTime((60000 - changeTime) / 1000)));
+							//list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.UseItem2"));
+							long nextPotionAvailTime = client.Player.TempProperties.getLongProperty(GamePlayer.NEXT_POTION_AVAIL_TIME, 0L);
+                            // Satyr Update: Individual Reuse-Timers for Pots need a Time looking forward
+                            // into Future, set with value of "itemtemplate.CanUseEvery" and no longer back into past
+                            if (nextPotionAvailTime > client.Player.CurrentRegion.Time)
+                                list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.UseItem3", Util.FormatTime((nextPotionAvailTime - client.Player.CurrentRegion.Time) / 1000)));
 							if (spl.CastTime > 0)
 							{
 								list.Add(" ");
