@@ -365,42 +365,44 @@ namespace DOL.GS
 			{
 				if (Util.Chance(gainPointChance))
 				{
+                    // Luhz Crafting Update:
+                    // There are no "primary" crafting skills to limit skill gain anymore - patch 1.87
 					switch (rawmaterial.ItemTemplate.Model)
 					{
 						case 522:	//"cloth square"
 						case 537:	//"heavy thread"
 							{
-								if (player.GetCraftingSkillValue(eCraftingSkill.ClothWorking) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
-								{
+								// if (player.GetCraftingSkillValue(eCraftingSkill.ClothWorking) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
+								// {
 									player.GainCraftingSkill(eCraftingSkill.ClothWorking, 1);
-								}
+								// }
 								break;
 							}
 
 						case 521:	//"leather square"
 							{
-								if (player.GetCraftingSkillValue(eCraftingSkill.LeatherCrafting) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
-								{
+                                // if (player.GetCraftingSkillValue(eCraftingSkill.LeatherCrafting) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
+								// {
 									player.GainCraftingSkill(eCraftingSkill.LeatherCrafting, 1);
-								}
+                                    // }
 								break;
 							}
 
 						case 519:	//"metal bars"
 							{
-								if (player.GetCraftingSkillValue(eCraftingSkill.MetalWorking) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill == primary skill
-								{
+                                // if (player.GetCraftingSkillValue(eCraftingSkill.MetalWorking) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill == primary skill
+								// {
 									player.GainCraftingSkill(eCraftingSkill.MetalWorking, 1);
-								}
+                                    // }
 								break;
 							}
 
 						case 520:	//"wooden boards"
 							{
-								if (player.GetCraftingSkillValue(eCraftingSkill.WoodWorking) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill == primary skill
-								{
+                                // if (player.GetCraftingSkillValue(eCraftingSkill.WoodWorking) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill == primary skill
+								// {
 									player.GainCraftingSkill(eCraftingSkill.WoodWorking, 1);
-								}
+                                    // }
 								break;
 							}
 					}

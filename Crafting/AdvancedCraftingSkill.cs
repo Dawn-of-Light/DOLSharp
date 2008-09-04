@@ -69,10 +69,12 @@ namespace DOL.GS
 				{
 					case 117 :	//"gem"
 					{
-						if (player.GetCraftingSkillValue(eCraftingSkill.GemCutting) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
-						{
-							if(Util.Chance(gainPointChance)) player.GainCraftingSkill(eCraftingSkill.GemCutting, 1);
-						}
+                        // Luhz Crafting Update:
+                        // "Secondary" tradeskills are no longer limited by "Primary" tradeskills - Patch 1.87
+						//if (player.GetCraftingSkillValue(eCraftingSkill.GemCutting) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
+						//{
+							if (Util.Chance(gainPointChance)) player.GainCraftingSkill(eCraftingSkill.GemCutting, 1);
+						//}
 						break;
 					}
 				}
