@@ -49,7 +49,11 @@ namespace DOL.GS
 				return false;
 
 			TurnTo(player, 5000);
-			
+
+            // Luhz Crafting Update:
+            // Players can join any, and all, crafting professions.
+            SayTo(player, eChatLoc.CL_PopupWindow, InitialEntersentence);
+            /*			
 			if(player.CraftingPrimarySkill == eCraftingSkill.NoCrafting)
 			{
 				SayTo(player, eChatLoc.CL_PopupWindow, InitialEntersentence);
@@ -62,7 +66,7 @@ namespace DOL.GS
 				return true;
 			}
 
-			if (player.GetCraftingSkillValue(TheCraftingSkill)%100 == 99)
+            if (player.GetCraftingSkillValue(TheCraftingSkill)%100 == 99)
 			{
 				player.GainCraftingSkill(TheCraftingSkill, 1);
 				SayTo(player, eChatLoc.CL_PopupWindow, LanguageMgr.GetTranslation(player.Client, "CraftNPC.Interact.Promoted", player.CraftTitle));
@@ -70,9 +74,10 @@ namespace DOL.GS
 			}
 			else
 			{
-				SayTo(player, eChatLoc.CL_SystemWindow, LanguageMgr.GetTranslation(player.Client, "CraftNPC.Interact.Examine", Name));
-			}
-		
+                SayTo(player, eChatLoc.CL_SystemWindow, LanguageMgr.GetTranslation(player.Client, "CraftNPC.Interact.Examine", Name));
+            }
+            */
+            		
 			return true;
 		}
 
@@ -85,7 +90,11 @@ namespace DOL.GS
 
 			GamePlayer player = (GamePlayer) source;
 
-			if (text == GUILD_ORDER && player.CraftingPrimarySkill == 0)
+            // Luhz Crafting Update:
+            // Players may now join any, and all, crafting professions.
+			// if (text == GUILD_ORDER && player.CraftingPrimarySkill == 0)
+            // && player.GetCraftingSkillValue(TheCraftingSkill) < 1
+            if(text == GUILD_ORDER)
 			{
 				player.Out.SendCustomDialog(LanguageMgr.GetTranslation(player.Client, "CraftNPC.WhisperReceive.WishToJoin", GUILD_ORDER), new CustomDialogResponse(CraftNpcDialogResponse));
 			}

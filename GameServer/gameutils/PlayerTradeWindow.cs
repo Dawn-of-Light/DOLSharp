@@ -282,7 +282,33 @@ namespace DOL.GS
 					return;
 				}
 
-				AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(m_owner.CraftingPrimarySkill);
+                // --------------------------------------------------------------
+                // Luhz Crafting Update:
+                // Players may now have any, and all, "primary" crafting skills.
+                AbstractCraftingSkill skill = null;
+                lock (m_owner.TradeWindow.Sync)
+                {
+                    foreach (InventoryItem i in (ArrayList)m_owner.TradeWindow.TradeItems.Clone())
+                    {
+                        if (i.Object_Type == (int)eObjectType.AlchemyTincture)
+                        {
+                            if (m_owner.GetCraftingSkillValue(eCraftingSkill.Alchemy) > 0)
+                            {
+                                skill = CraftingMgr.getSkillbyEnum(eCraftingSkill.Alchemy);
+                                break;
+                            }
+                        }
+                        else if (i.Object_Type == (int)eObjectType.SpellcraftGem)
+                        {
+                            if (m_owner.GetCraftingSkillValue(eCraftingSkill.SpellCrafting) > 0)
+                            {
+                                skill = CraftingMgr.getSkillbyEnum(eCraftingSkill.SpellCrafting);
+                                break;
+                            }
+                        }
+                    }
+                }
+                // --------------------------------------------------------------
 				if(skill != null && skill is AdvancedCraftingSkill)
 				{
 					if(((AdvancedCraftingSkill)skill).IsAllowedToCombine(m_owner, itemToCombine))
@@ -452,8 +478,35 @@ namespace DOL.GS
 
 				if(m_combine == true)
 				{
-					GamePlayer crafter = (m_recipiant == true ? m_owner : partner);
-					AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(crafter.CraftingPrimarySkill);
+					GamePlayer crafter = (m_recipiant == true ? m_owner : partner);					
+                    // --------------------------------------------------------------
+                    // Luhz Crafting Update:
+                    // Players may now have any, and all, "primary" crafting skills.
+                    // AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(crafter.CraftingPrimarySkill);
+                    AbstractCraftingSkill skill = null;
+                    lock (crafter.TradeWindow.Sync)
+                    {
+                        foreach (InventoryItem i in (ArrayList)crafter.TradeWindow.TradeItems.Clone())
+                        {
+                            if (i.Object_Type == (int)eObjectType.AlchemyTincture)
+                            {
+                                if (m_owner.GetCraftingSkillValue(eCraftingSkill.Alchemy) > 0)
+                                {
+                                    skill = CraftingMgr.getSkillbyEnum(eCraftingSkill.Alchemy);
+                                    break;
+                                }
+                            }
+                            else if (i.Object_Type == (int)eObjectType.SpellcraftGem)
+                            {
+                                if (crafter.GetCraftingSkillValue(eCraftingSkill.SpellCrafting) > 0)
+                                {
+                                    skill = CraftingMgr.getSkillbyEnum(eCraftingSkill.SpellCrafting);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    // --------------------------------------------------------------
 					if(skill != null && skill is AdvancedCraftingSkill)
 					{
 						((AdvancedCraftingSkill)skill).CombineItems(crafter);

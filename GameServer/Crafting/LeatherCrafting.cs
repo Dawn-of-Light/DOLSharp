@@ -66,6 +66,9 @@ namespace DOL.GS
 				}
 			}
 
+            // Luhz Crafting Update: 
+            // Crafting no longer requires hand-held tools!
+            /*
 			if(flags < 0x03)
 			{
 				if((flags & 0x01) == 0)
@@ -82,7 +85,7 @@ namespace DOL.GS
 					return false;
 				}
 			}
-
+            */
 			return true;
 		}
 
@@ -93,14 +96,16 @@ namespace DOL.GS
 		/// <param name="item"></param>
 		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
-			if (player.GetCraftingSkillValue(eCraftingSkill.LeatherCrafting) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
-			{
+            // Luhz Crafting Update:
+            // "Secondary" tradeskills are no longer limited by "Primary" tradeskills - Patch 1.87
+			//if (player.GetCraftingSkillValue(eCraftingSkill.LeatherCrafting) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
+			//{
 				if(Util.Chance( CalculateChanceToGainPoint(player, item)))
 				{
 					player.GainCraftingSkill(eCraftingSkill.LeatherCrafting, 1);
 					player.Out.SendUpdateCraftingSkills();
 				}
-			}
+			//}
 		}
 	}
 }
