@@ -32,14 +32,15 @@
 
 using System;
 using System.Reflection;
+using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
-using DOL.GS.PacketHandler;
-using log4net;
-using DOL.GS.Quests;
 using DOL.GS.Behaviour;
 using DOL.GS.Behaviour.Attributes;
-using DOL.AI.Brain;
+using DOL.GS.PacketHandler;
+using DOL.GS.Quests;
+using DOL.Language;
+using log4net;
 
 namespace DOL.GS.Quests.Albion
 {
@@ -1587,7 +1588,7 @@ namespace DOL.GS.Quests.Albion
 
                     //k109:  Until I can get the quest dialog from live, I reward based on class, feel free to edit.
                     player.Out.SendMessage(" You have completed the Childs Play quest.", eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
-                    if (player.CharacterClass.BaseName == "Fighter")
+                    if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Fighter"))
                     {
                         GiveItem(Charles, quest.m_questPlayer, daringstuddedboots_alb);
                         GiveItem(Charles, quest.m_questPlayer, daringstuddedcap_alb);
@@ -1597,7 +1598,7 @@ namespace DOL.GS.Quests.Albion
                         GiveItem(Charles, quest.m_questPlayer, daringstuddedsleeves_alb);
                         quest.FinishQuest();
                     }
-                    if (player.CharacterClass.BaseName == "Mage")
+                    if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Mage"))
                     {
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedboots_alb);
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedcap_alb);
@@ -1607,7 +1608,7 @@ namespace DOL.GS.Quests.Albion
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedvest_alb);
                         quest.FinishQuest();
                     }
-                    if (player.CharacterClass.BaseName == "Disciple")
+                    if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Disciple"))
                     {
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedboots_alb);
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedcap_alb);
@@ -1617,7 +1618,7 @@ namespace DOL.GS.Quests.Albion
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedvest_alb);
                         quest.FinishQuest();
                     }
-                    if (player.CharacterClass.BaseName == "Elementalist")
+                    if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Elementalist"))
                     {
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedboots_alb);
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedcap_alb);
@@ -1627,7 +1628,7 @@ namespace DOL.GS.Quests.Albion
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedvest_alb);
                         quest.FinishQuest();
                     }
-                    if (player.CharacterClass.BaseName == "Rogue")
+                    if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Rogue"))
                     {
                         GiveItem(Charles, quest.m_questPlayer, daringleatherboots_alb);
                         GiveItem(Charles, quest.m_questPlayer, daringleathercap_alb);
@@ -1637,7 +1638,7 @@ namespace DOL.GS.Quests.Albion
                         GiveItem(Charles, quest.m_questPlayer, daringleathersleeves_alb);
                         quest.FinishQuest();
                     }
-                    if (player.CharacterClass.BaseName == "Acolyte")
+                    if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Acolyte"))
                     {
                         GiveItem(Charles, quest.m_questPlayer, daringleatherboots_alb);
                         GiveItem(Charles, quest.m_questPlayer, daringleathercap_alb);
