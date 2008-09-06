@@ -3718,9 +3718,9 @@ namespace DOL.GS
 					}
 					if (!playerAttacker) return; // no loot if mob kills another mob
 
-					message = String.Format("{0} drops {1}.",
-						GetName(0, true),
-						char.IsLower(loot.Name[0]) ? loot.GetName(1, false) : loot.Name);
+                    GamePlayer kPlayer = killer as GamePlayer;
+                    message = String.Format(LanguageMgr.GetTranslation(kPlayer.Client, "GameNPC.DropLoot.Drops",
+                        GetName(0, true), char.IsLower(loot.Name[0]) ? loot.GetName(1, false) : loot.Name));
 
 					dropMessages.Add(message);
 					loot.AddToWorld();

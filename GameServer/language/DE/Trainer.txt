@@ -1,8 +1,44 @@
-#FriarTrainer
-FriarTrainer.Interact.Text1:		{0} sagt: "Willkommen, {1}. Möchtet Ihr den [Verteidigern Albions] beitreten und ein Ordensbruder werden? Ihr solltet jedoch keine unüberlegte Entscheidung treffen. Lasst mich Euch zuerst ein wenig über das Leben erzählen, dass ein Ordensbruder führt. Als ein Mitglied der Verteidiger Albions und der Brüder und Schwestern innerhalb der Kirche haben Ordensbrüder Zugang zu Verbesserungen und Heilzaubern, die auch die Kleriker nutzen. Ordensbrüder sind bekannt als kämpfende Kleriker. Ihre Heilfähigkeiten machen sie nützlich für Gruppen, aber ihre Kampffertigkeiten machen sie zu wunderbaren Gefährten sowohl bei der Monsterjagd als auch im Krieg der Reiche. Da Ordensbrüder in vielerlei Hinsicht offensiv ausgerichtet sind, tragen sie nur leichte Lederrüstung. Sie können jedoch lernen, feindlichen Hieben auszuweichen und haben fortgeschrittene Verbesserungszauber für sich selbst entdeckt, die ihre Überlebenschancen in schwierigen Situationen steigern."
-FriarTrainer.Interact.Text2:		{0} sagt: "Ich soll Euch also ausbilden, was?"
-FriarTrainer.Interact.Text3:		{0} sagt: "Gebt mir Eure Robe des Neulings zurück. Wir werden Euch eine andere besorgen, die für Eure Position angemessener ist."
-FriarTrainer.Interact.Text4:		{0} sagt: "Ah, Willkommen! Ich habe etwas, was Euch vielleicht helfen könnte. Bitte nehmt dieses Zeichen der Würde für Eure stetigen Dienste an für die Verteidiger Albions. Nun geht, mögen Ehre und Ruhm Euch finden."
-FriarTrainer.ReceiveItem.Text1:		{0} sagt: "Hier nehmt Eure neuen Roben, {1}. Tragt sie stets. Sie sollen Euch an Euren Glauben erinnern. Sobald Ihr den Titel Fanatiker tragt, kehrt zu mir zurück."
-FriarTrainer.WhisperReceive.Text1:	Wir heißen Euch in unserer Gemeinschaft willkommen. Hier sind wir alle gleich. Wir stehen zu Eurer Verfügung. Hier, nehmt Eure Robe des Neulings. Tragt sie immer und werdet durch sie an Euren Glauben erinnert. Sobald Ihr Unterkaplan seid, bringt sie zu den Verteidigern von Albion nach Camelot. Dann wollen wir sehen, ob Ihr noch so einen Gegenstand benötigt.
-FriarTrainer.WhisperReceiveCase.Text1:	verteidigern albions
+## Albion
+# /FriarTrainer
+FriarTrainer.Interact.Text1:				{0} sagt: "Willkommen, {1}. Möchtet Ihr den [Verteidigern Albions] beitreten und ein Ordensbruder werden? Ihr solltet jedoch keine unüberlegte Entscheidung treffen. Lasst mich Euch zuerst ein wenig über das Leben erzählen, dass ein Ordensbruder führt. Als ein Mitglied der Verteidiger Albions und der Brüder und Schwestern innerhalb der Kirche haben Ordensbrüder Zugang zu Verbesserungen und Heilzaubern, die auch die Kleriker nutzen. Ordensbrüder sind bekannt als kämpfende Kleriker. Ihre Heilfähigkeiten machen sie nützlich für Gruppen, aber ihre Kampffertigkeiten machen sie zu wunderbaren Gefährten sowohl bei der Monsterjagd als auch im Krieg der Reiche. Da Ordensbrüder in vielerlei Hinsicht offensiv ausgerichtet sind, tragen sie nur leichte Lederrüstung. Sie können jedoch lernen, feindlichen Hieben auszuweichen und haben fortgeschrittene Verbesserungszauber für sich selbst entdeckt, die ihre Überlebenschancen in schwierigen Situationen steigern."
+FriarTrainer.Interact.Text2:				{0} sagt: "Ich soll Euch also ausbilden, was?"
+FriarTrainer.Interact.Text3:				{0} sagt: "Gebt mir Eure Robe des Neulings zurück. Wir werden Euch eine andere besorgen, die für Eure Position angemessener ist."
+FriarTrainer.Interact.Text4:				{0} sagt: "Ah, Willkommen! Ich habe etwas, was Euch vielleicht helfen könnte. Bitte nehmt dieses Zeichen der Würde für Eure stetigen Dienste an für die Verteidiger Albions. Nun geht, mögen Ehre und Ruhm Euch finden."
+FriarTrainer.ReceiveItem.Text1:				{0} sagt: "Hier nehmt Eure neuen Roben, {1}. Tragt sie stets. Sie sollen Euch an Euren Glauben erinnern. Sobald Ihr den Titel Fanatiker tragt, kehrt zu mir zurück."
+FriarTrainer.WhisperReceive.Text1:			Wir heißen Euch in unserer Gemeinschaft willkommen. Hier sind wir alle gleich. Wir stehen zu Eurer Verfügung. Hier, nehmt Eure Robe des Neulings. Tragt sie immer und werdet durch sie an Euren Glauben erinnert. Sobald Ihr Unterkaplan seid, bringt sie zu den Verteidigern von Albion nach Camelot. Dann wollen wir sehen, ob Ihr noch so einen Gegenstand benötigt.
+FriarTrainer.WhisperReceiveCase.Text1:			verteidigern albions
+
+## Hibernia
+# /EnchanterTrainer
+EnchanterTrainer.Interact.Text1:			{0} sagt: "Wollt Ihr als Beschwörer trainieren und dem Pfad der Essenz folgen? Das Leben als [Beschwörer] ist so lohnend wie gefährlich, aber es ist an Euch."
+EnchanterTrainer.Interact.Text2:			{0} sagt: "Ihr lernt rasch, {1}. Ihr solltet es jedoch nicht überhasten. Es gibt noch soviel zu lernen."
+EnchanterTrainer.Interact.Text3:
+EnchanterTrainer.Interact.Text4:
+EnchanterTrainer.WhisperReceive.Text1:			Willkommen, {0}. Von diesem Tage an gehört Ihr zu den Reihen der Beschwörer. Hier, {0}. Nehmt dies als Geschenk. Es soll Euch auf dem Weg beistehen.
+EnchanterTrainer.WhisperReceiveCase.Text1:		beschwörer
+
+# /HeroTrainer
+HeroTrainer.Interact.Text1:				{0} sagt: "Fianna sind die grundlegende Kämpferklasse vom Reich Hibernia. Sie können sich auf alle Hibernia-Waffen spezialisieren. Sie können auch jede Hibernia-Rüstung tragen. Fianna können ihr innerstes Biest rufen und sich selbst in einen riesigen Hirsch verwandeln, was für eine kleine Verbesserung ihrer Gesundheit sorgt. Der Fian besitzt verlorene Energie, mit der er sich im Nahkampf konzentriert, aber er hat auch etwas Übung in Schutz- und Umgehungszaubern. Fianna werden auf Grund ihrer Waffen- und Tötungsfähigkeiten gesucht. Wollt Ihr das Leben eines [Fian] führen und den Pfad der Konzentration gehen?"
+HeroTrainer.Interact.Text2:				{0} sagt: "{1}, Ihr seid zäher geworden, aber für meinen Geschmack seid Ihr noch immer zu verweichlicht."
+HeroTrainer.Interact.Text3:
+HeroTrainer.Interact.Text4:
+HeroTrainer.WhisperReceive.Text1:			Dann seid uns willkommen, {0}. Geht hinaus und ehrt uns durch Eure Taten. Hier ist ein Geschenkt für Euch. Versucht, es nicht fallen zu lassen, {1}.
+HeroTrainer.WhisperReceiveCase.Text1:			fian
+
+# /AnimistTrainer
+AnimistTrainer.Interact.Text1:				{0} sagt: "Animisten können pflanzliches Leben animieren und weitere natürliche Phänomene erzeugen, um sie für Zaubersprüche zu benutzen, die ihren Gegnern schaden. Sie können zum Besispiel eine Kreatur erschaffen, die sich schnell auf ihr Ziel zubewegt, um dann zu explodieren. Oder einen Turm, der ein Gebiet bewacht und auf jeden feindlichen Eindringling verschiedene Zauber der Zerstörung spricht. Animisten können, entsprechend ihrer Erfahrungsstufe, verschiedene Türme gleichzeitig haben. Während andere den Pfad der Natur gehen und die Notwendigkeit empfinden, die Natur zu schützen, versuchen die Animisten, Natur zu werden. Wünscht Ihr, als Animist ausgebildet zu werden, um den [Pfad der Affinität] zu gehen?"
+AnimistTrainer.Interact.Text2:
+AnimistTrainer.Interact.Text3:
+AnimistTrainer.Interact.Text4:
+AnimistTrainer.WhisperReceive.Text1:			Ihr gehört jetzt zu den Animisten, {0}. Willkommen auf dem Pfad der Affinität.
+AnimistTrainer.WhisperReceiveCase.Text1:		pfad der affinität
+
+## Midgard
+# /BonedancerTrainer
+BonedancerTrainer.Interact.Text1:			{0} sagt: "Willkommen junger Mystiker. Wollt Ihr etwas über den Gott Bogdar und die Knochentänzer zu erfahren? Er existierte schon vor den Göttern der Nordmänner. Bogdar ist der Totengott der Valkyn. Er beurteilt jeden tote Seele und entscheidet über ihr nächstes Leben. Bogdar gibt den Knochentänzern die Kraft, die Skelette toter Körper zu beleben und daraus Kreaturen herbeizurufen, die sie kontrollieren. In höheren Erfahrungsstufen können sie mehr als ein Skelett rufen, aber nur den Kommandanten befehligen. Alle Helfer werden dann von diesem kontrolliert. Stirbt er, werden alle Helfer zerstört; daher muss er dafür sorgen, dass der Kommandant am Leben bleibt. Später können Knochentänzer drei verschiedene Helfer rufen. Bis sie an Wissen und Macht gewonnen haben, können sie nur einen untoten Kommandanten beschwören, später aber verschiedene Helfer, je nach dem Pfad, den sie studieren. Wollt Ihr [dem Hause Bogdar beitreten] und den Pfad der Knochentänzer beschreiten?"
+BonedancerTrainer.Interact.Text2:		
+BonedancerTrainer.Interact.Text3:		
+BonedancerTrainer.Interact.Text4:		
+BonedancerTrainer.ReceiveItem.Text1:		
+BonedancerTrainer.WhisperReceive.Text1:			Bogdar heißt Euch mit einem Geschenk willkommen, {0}.
+BonedancerTrainer.WhisperReceiveCase.Text1:		dem hause bogdar beitreten

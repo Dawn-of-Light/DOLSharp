@@ -24,20 +24,20 @@ GameTrainer.Train.SeekElsewhere:			{0} dit, "Vous devez allez ailleurs pour votr
 
 
 # /EnchanterTrainer
-EnchanterTrainer.Interact.PathOfEssence:		{0} dit, "Voulez-vous vous devenir un Enchanteur et suivre la voix des magiciens?  La vie d'un [Enchanteur] en vaut la peine mais elle est dangereuse, mais cela est votre demande."
-EnchanterTrainer.Interact.SmallTalk:			{0} dit, "Vous êtes un bon élève, {1}. Mais ne soyez pas trop rapide dans votre approche du combat. Il y a toujours plus à apprendre."
-EnchanterTrainer.WhisperReceive.CaseEnchanter:		Enchanteur
-EnchanterTrainer.WhisperReceive.Welcome:		Bienvenue, {0}. À partir de ce jour, vous serez connu(e) comme un Enchanteur. Ici {0}. Prenez ce cadeau pour vous aider dans votre aventure.
+EnchanterTrainer.Interact.Text1:			{0} dit, "Voulez-vous vous devenir un Enchanteur et suivre la voix des magiciens?  La vie d'un [Enchanteur] en vaut la peine mais elle est dangereuse, mais cela est votre demande."
+EnchanterTrainer.Interact.Text2:			{0} dit, "Vous êtes un bon élève, {1}. Mais ne soyez pas trop rapide dans votre approche du combat. Il y a toujours plus à apprendre."
+EnchanterTrainer.WhisperReceiveCase.Text1:		Enchanteur
+EnchanterTrainer.WhisperReceive.Text1:			Bienvenue, {0}. À partir de ce jour, vous serez connu(e) comme un Enchanteur. Ici {0}. Prenez ce cadeau pour vous aider dans votre aventure.
 
 
 # /HeroTrainer
-HeroTrainer.Interact.PathOfFocus:			{0} dit, "You wish for the life of a [hero]? You wish to walk the Path of Focus?"
-HeroTrainer.Interact.SmallTalk:				{0} dit, "Training makes for a strong, healthy Hero! Keep up the good work, {1}!"
-HeroTrainer.WhisperReceive.CaseHero:			hero
-HeroTrainer.WhisperReceive.Welcome:			Let me welcome you then, {0}. Go, honor us with your deeds. Here is a gift for you. Try not to drop it, eh {1}.
+HeroTrainer.Interact.Text1:				{0} dit, "You wish for the life of a [hero]? You wish to walk the Path of Focus?"
+HeroTrainer.Interact.Text2:				{0} dit, "Training makes for a strong, healthy Hero! Keep up the good work, {1}!"
+HeroTrainer.WhisperReceiveCase.Text1:			hero
+HeroTrainer.WhisperReceive.Text1:			Let me welcome you then, {0}. Go, honor us with your deeds. Here is a gift for you. Try not to drop it, eh {1}.
 
 # /AnimistTrainer
-AnimistTrainer.Interact.PathOfAffinity:			{0} dit, "c'est [Path of Affinity] la voix que vous souhaitez suivre?"
-AnimistTrainer.Interact.SmallTalk:			
-AnimistTrainer.WhisperReceive.CasePath:			Path of Affinity
-AnimistTrainer.WhisperReceive.Welcome:			Vous etes maintenant un Animiste, {0}. bienvenue dans la voix de Affinity.
+AnimistTrainer.Interact.Text1:				{0} dit, "c'est [Path of Affinity] la voix que vous souhaitez suivre?"
+AnimistTrainer.Interact.Text2:			
+AnimistTrainer.WhisperReceiveCase.Text1:		Path of Affinity
+AnimistTrainer.WhisperReceive.Text1:			Vous etes maintenant un Animiste, {0}. bienvenue dans la voix de Affinity.

@@ -31,14 +31,15 @@
 
 using System;
 using System.Reflection;
+using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
-using DOL.GS.PacketHandler;
-using log4net;
-using DOL.GS.Quests;
 using DOL.GS.Behaviour;
 using DOL.GS.Behaviour.Attributes;
-using DOL.AI.Brain;
+using DOL.GS.PacketHandler;
+using DOL.GS.Quests;
+using DOL.Language;
+using log4net;
 
 namespace DOL.GS.Quests.Midgard
 {
@@ -1592,7 +1593,7 @@ namespace DOL.GS.Quests.Midgard
 
                     //k109:  Until I can get the quest dialog from live, I reward based on class, feel free to edit.
                     player.Out.SendMessage(" You have completed the Childs Play quest.", eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
-                    if (player.CharacterClass.BaseName == "Viking")
+                    if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Viking"))
                     {
                         GiveItem(Charles, quest.m_questPlayer, daringstuddedboots);
                         GiveItem(Charles, quest.m_questPlayer, daringstuddedcap);
@@ -1600,9 +1601,8 @@ namespace DOL.GS.Quests.Midgard
                         GiveItem(Charles, quest.m_questPlayer, daringstuddedjerkin);
                         GiveItem(Charles, quest.m_questPlayer, daringstuddedleggings);
                         GiveItem(Charles, quest.m_questPlayer, daringstuddedsleeves);
-                        quest.FinishQuest();
                     }
-                    if (player.CharacterClass.BaseName == "Mystic")
+                    if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Mystic"))
                     {
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedboots);
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedcap);
@@ -1610,9 +1610,8 @@ namespace DOL.GS.Quests.Midgard
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedpants);
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedsleeves);
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedvest);
-                        quest.FinishQuest();
                     }
-                    if (player.CharacterClass.BaseName == "Rogue")
+                    if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Rogue"))
                     {
                         GiveItem(Charles, quest.m_questPlayer, daringleatherboots);
                         GiveItem(Charles, quest.m_questPlayer, daringleathercap);
@@ -1620,9 +1619,8 @@ namespace DOL.GS.Quests.Midgard
                         GiveItem(Charles, quest.m_questPlayer, daringleatherjerkin);
                         GiveItem(Charles, quest.m_questPlayer, daringleatherleggings);
                         GiveItem(Charles, quest.m_questPlayer, daringleathersleeves);
-                        quest.FinishQuest();
                     }
-                    if (player.CharacterClass.BaseName == "Seer")
+                    if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Seer"))
                     {
                         GiveItem(Charles, quest.m_questPlayer, daringleatherboots);
                         GiveItem(Charles, quest.m_questPlayer, daringleathercap);
@@ -1630,8 +1628,8 @@ namespace DOL.GS.Quests.Midgard
                         GiveItem(Charles, quest.m_questPlayer, daringleatherjerkin);
                         GiveItem(Charles, quest.m_questPlayer, daringleatherleggings);
                         GiveItem(Charles, quest.m_questPlayer, daringleathersleeves);
-                        quest.FinishQuest();
                     }
+                    quest.FinishQuest();
                 }
             }
             else if (e == GameLivingEvent.WhisperReceive)
@@ -1758,8 +1756,6 @@ namespace DOL.GS.Quests.Midgard
                     case 1:
                         return "[Step #1] Charles has dared you to touch the statue in the center of Nergal's section of the Demons' Breach dungeon. Travel a short distance northeast of Mularn's bindstone to find the dungeon entrance.";
                     case 2:
-                        return "[Step #2] Return to Charles in Mularn and let him know you've completed his dare.";
-                    case 3:
                         return "[Step #2] Return to Charles in Mularn and let him know you've completed his dare.";
                 }
                 return base.Description;

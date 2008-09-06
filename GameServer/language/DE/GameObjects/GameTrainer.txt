@@ -1,34 +1,16 @@
 ﻿# /GameTrainer
-GameTrainer.AddGift.NotEnoughSpace:			Es ist nicht genug Platz in Eurem Gepäck für das Geschenk. Bitte nehmt erst etwas heraus.
+GameTrainer.AddGift.NotEnoughSpace:		Es ist nicht genug Platz in Eurem Gepäck für das Geschenk. Bitte nehmt erst etwas heraus.
 GameTrainer.GetExamineMessages.RightClick:		
-GameTrainer.GetExamineMessages.YouExamine:		Es interessiert Euch {0}. {0} steht Euch {2} und bildet als {3} den Nachwuchs aus.
-GameTrainer.GetExamineMessages.YouTarget:		Es wird {0} als Ziel erfasst.
-GameTrainer.Interact.CaseRespecialize:			spezialisieren
-GameTrainer.Interact.RegainPoints:			Ihr bekommt {0} Spezialisierungspunkte zurück!
-GameTrainer.Interact.Respecialize:			{0} sagt: "{1}, falls Ihr es wünscht, kann ich Eure bisherige Ausbildung rückgängig machen und Euch ermöglichen, erneut zu trainieren. Dadurch könnt Ihr Euch neu [spezialisieren]. Sagt es mir, wenn Ihr Interesse habt."
-GameTrainer.PromotePlayer.Accepted:			{0} hat Euch als Mitglied akzeptiert!
-GameTrainer.PromotePlayer.Says:				{0} sagt: "{1}"
-GameTrainer.PromotePlayer.Upgraded:			Ihr wurdet befördert und gehört nun der {0}-Klasse an!
-GameTrainer.ReceiveItem.RespecFull:			Ein schöner {0}! Ich gewähre Euch eine volle Fähigkeitenrespezialisierung. Gebt "/respec all" ein.
-GameTrainer.ReceiveItem.RespecRealm:			Danke, ich gewähre Euch eine Reichsfähigkeitenrespezialisierung. Gebt "/respec realm" ein.
-GameTrainer.ReceiveItem.RespecSingle:			Danke, ich gewähre Euch eine einzelne Fähigkeitsrespezialisierung. Gebt "/respec <Zauberlinie>"
-GameTrainer.Train.WouldYouLikeTo:			Sucht Ihre eine Ausbildung?
-GameTrainer.Train.SeekElsewhere:			Es tut mir leid, aber Ihr müsst Euch einen anderen Ausbilder suchen.
-
-# /EnchanterTrainer
-EnchanterTrainer.Interact.PathOfEssence:		{0} sagt: "Wollt Ihr als Beschwörer trainieren und dem Pfad der Essenz folgen? Das Leben als [Beschwörer] ist so lohnend wie gefährlich, aber es ist an Euch."
-EnchanterTrainer.Interact.SmallTalk:			{0} sagt: "Ihr lernt rasch, {1}. Ihr solltet es jedoch nicht überhasten. Es gibt noch soviel zu lernen."
-EnchanterTrainer.WhisperReceive.CaseEnchanter:		Beschwörer
-EnchanterTrainer.WhisperReceive.Welcome:		Willkommen, {0}. Von diesem Tage an gehört Ihr zu den Reihen der Beschwörer. Hier, {0}. Nehmt dies als Geschenk. Es soll Euch auf dem Weg beistehen.
-
-# /HeroTrainer
-HeroTrainer.Interact.PathOfFocus:			{0} sagt: "Fianna sind die grundlegende Kämpferklasse vom Reich Hibernia. Sie können sich auf alle Hibernia-Waffen spezialisieren. Sie können auch jede Hibernia-Rüstung tragen. Fianna können ihr innerstes Biest rufen und sich selbst in einen riesigen Hirsch verwandeln, was für eine kleine Verbesserung ihrer Gesundheit sorgt. Der Fian besitzt verlorene Energie, mit der er sich im Nahkampf konzentriert, aber er hat auch etwas Übung in Schutz- und Umgehungszaubern. Fianna werden auf Grund ihrer Waffen- und Tötungsfähigkeiten gesucht. Wollt Ihr das Leben eines [Fian] führen und den Pfad der Konzentration gehen?"
-HeroTrainer.Interact.SmallTalk:				{0} sagt: "{1}, Ihr seid zäher geworden, aber für meinen Geschmack seid Ihr noch immer zu verweichlicht."
-HeroTrainer.WhisperReceive.CaseHero:			Fian
-HeroTrainer.WhisperReceive.Honor:			Dann seid uns willkommen, {0}. Geht hinaus und ehrt uns durch Eure Taten. Hier ist ein Geschenkt für Euch. Versucht, es nicht fallen zu lassen, {1}.
-
-# /AnimistTrainer
-AnimistTrainer.Interact.PathOfAffinity:			{0} sagt: "Animisten können pflanzliches Leben animieren und weitere natürliche Phänomene erzeugen, um sie für Zaubersprüche zu benutzen, die ihren Gegnern schaden. Sie können zum Besispiel eine Kreatur erschaffen, die sich schnell auf ihr Ziel zubewegt, um dann zu explodieren. Oder einen Turm, der ein Gebiet bewacht und auf jeden feindlichen Eindringling verschiedene Zauber der Zerstörung spricht. Animisten können, entsprechend ihrer Erfahrungsstufe, verschiedene Türme gleichzeitig haben. Während andere den Pfad der Natur gehen und die Notwendigkeit empfinden, die Natur zu schützen, versuchen die Animisten, Natur zu werden. Wünscht Ihr, als [Animist] ausgebildet zu werden, um den Pfad der Affinität zu gehen?"
-AnimistTrainer.Interact.SmallTalk:			
-AnimistTrainer.WhisperReceive.CasePath:			Animist
-AnimistTrainer.WhisperReceive.Welcome:			Ihr gehört jetzt zu den Animisten, {0}. Willkommen auf dem Pfad der Affinität.
+GameTrainer.GetExamineMessages.YouExamine:	Es interessiert Euch {0}. {0} steht Euch {2} und bildet als {3} den Nachwuchs aus.
+GameTrainer.GetExamineMessages.YouTarget:	Es wird {0} als Ziel erfasst.
+GameTrainer.Interact.CaseRespecialize:		spezialisieren
+GameTrainer.Interact.RegainPoints:		Ihr bekommt {0} Spezialisierungspunkte zurück!
+GameTrainer.Interact.Respecialize:		{0} sagt: "{1}, falls Ihr es wünscht, kann ich Eure bisherige Ausbildung rückgängig machen und Euch ermöglichen, erneut zu trainieren. Dadurch könnt Ihr Euch neu [spezialisieren]. Sagt es mir, wenn Ihr Interesse habt."
+GameTrainer.PromotePlayer.Accepted:		{0} hat Euch als Mitglied akzeptiert!
+GameTrainer.PromotePlayer.Says:			{0} sagt: "{1}"
+GameTrainer.PromotePlayer.Upgraded:		Ihr wurdet befördert und gehört nun der {0}-Klasse an!
+GameTrainer.ReceiveItem.RespecFull:		Ein schöner {0}! Ich gewähre Euch eine volle Fähigkeitenrespezialisierung. Gebt "/respec all" ein.
+GameTrainer.ReceiveItem.RespecRealm:		Danke, ich gewähre Euch eine Reichsfähigkeitenrespezialisierung. Gebt "/respec realm" ein.
+GameTrainer.ReceiveItem.RespecSingle:		Danke, ich gewähre Euch eine einzelne Fähigkeitsrespezialisierung. Gebt "/respec <Zauberlinie>"
+GameTrainer.Train.WouldYouLikeTo:		Sucht Ihre eine Ausbildung?
+GameTrainer.Train.SeekElsewhere:		Es tut mir leid, aber Ihr müsst Euch einen anderen Ausbilder suchen.
