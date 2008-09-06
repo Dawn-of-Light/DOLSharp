@@ -1,9 +1,44 @@
-#FriarTrainer
-FriarTrainer.Interact.Text1:		{0} says, "Do you desire to [join the Defenders of Albion] and defend our realm as a Friar?"
-FriarTrainer.Interact.Text2:		{0} says, "insert english text"
-FriarTrainer.Interact.Text3:		{0} says, "insert english text"
-FriarTrainer.Interact.Text4:		{0} says, "insert english text"
-FriarTrainer.ReceiveItem.Text1:		{0} says, "insert english text"
-FriarTrainer.WhisperReceive.Text1:	We welcome you into our society as an equal! We are at your disposal. We will now issue your Robes of the Novice. Wear them always and let it serve to remind you of your faith. When you have reached the title of Lesser Chaplain, return them to me. We shall then see if you require another.
-FriarTrainer.WhisperReceiveCase.Text1:	join the defenders of albion
+## Albion
+# /FriarTrainer
+FriarTrainer.Interact.Text1:				{0} says, "Do you desire to [join the Defenders of Albion] and defend our realm as a Friar?"
+FriarTrainer.Interact.Text2:				{0} says, "insert english text"
+FriarTrainer.Interact.Text3:				{0} says, "insert english text"
+FriarTrainer.Interact.Text4:				{0} says, "insert english text"
+FriarTrainer.ReceiveItem.Text1:				{0} says, "insert english text"
+FriarTrainer.WhisperReceive.Text1:			We welcome you into our society as an equal! We are at your disposal. We will now issue your Robes of the Novice. Wear them always and let it serve to remind you of your faith. When you have reached the title of Lesser Chaplain, return them to me. We shall then see if you require another.
+FriarTrainer.WhisperReceiveCase.Text1:			join the defenders of albion
 
+## Hibernia
+# /EnchanterTrainer
+EnchanterTrainer.Interact.Text1:			{0} says, "Do you choose to train as an Enchanter and follow the Path of Essence? Life as an [Enchanter] is as rewarding as it is dangerous, but it is yours for the asking."
+EnchanterTrainer.Interact.Text2:			{0} says, "You are a quick study, {1}. But do not be too hasty. There is always more to learn."
+EnchanterTrainer.Interact.Text3:
+EnchanterTrainer.Interact.Text4:
+EnchanterTrainer.WhisperReceive.Text1:			Welcome, {0}. From this day forth you shall be known as an Enchanter. Here, {0}. Take this gift to aid you on your path.
+EnchanterTrainer.WhisperReceiveCase.Text1:		enchanter
+
+# /HeroTrainer
+HeroTrainer.Interact.Text1:				{0} says, "You wish for the life of a [hero]? You wish to walk the Path of Focus?"
+HeroTrainer.Interact.Text2:				{0} says, "Training makes for a strong, healthy Hero! Keep up the good work, {1}!"
+HeroTrainer.Interact.Text3:
+HeroTrainer.Interact.Text4:
+HeroTrainer.WhisperReceive.Text1:			Let me welcome you then, {0}. Go, honor us with your deeds. Here is a gift for you. Try not to drop it, eh {1}.
+HeroTrainer.WhisperReceiveCase.Text1:			hero
+
+# /AnimistTrainer
+AnimistTrainer.Interact.Text1:				{0} says, "Is the [Path of Affinity] the path you desire to walk?"
+AnimistTrainer.Interact.Text2:
+AnimistTrainer.Interact.Text3:
+AnimistTrainer.Interact.Text4:
+AnimistTrainer.WhisperReceive.Text1:			You are now an Animist, {0}. Welcome to the Path of Affinity.
+AnimistTrainer.WhisperReceiveCase.Text1:		path of affinity
+
+## Midgard
+# /BonedancerTrainer
+BonedancerTrainer.Interact.Text1:			{0} says, "Do you desire to [join the House of Bodgar] and defend our realm as a Bonedancer?"
+BonedancerTrainer.Interact.Text2:			{0} says, "insert english text"
+BonedancerTrainer.Interact.Text3:		
+BonedancerTrainer.Interact.Text4:		
+BonedancerTrainer.ReceiveItem.Text1:		
+BonedancerTrainer.WhisperReceive.Text1:			Welcome young warrior! May your time in Midgard army be rewarding!
+BonedancerTrainer.WhisperReceiveCase.Text1:		join the house of bodgar
