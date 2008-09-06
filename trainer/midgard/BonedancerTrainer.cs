@@ -17,6 +17,7 @@
  *
  */
 using System;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
@@ -32,6 +33,8 @@ namespace DOL.GS.Trainer
 		{
 			get { return eCharacterClass.Bonedancer; }
 		}
+
+        public const string WEAPON_ID1 = "bonedancer_item";
 
 		public BonedancerTrainer() : base()
 		{
@@ -51,14 +54,15 @@ namespace DOL.GS.Trainer
 			{
 				// popup the training window
 				player.Out.SendTrainerWindow();
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "BonedancerTrainer.Interact.Text2", this.Name), eChatType.CT_System, eChatLoc.CL_ChatWindow);
 			} 
 			else
 			{
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player)) 
 				{
-					player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the House of Bodgar] and defend our realm as a Bonedancer?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
-					if (!player.IsLevelRespecUsed)
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "BonedancerTrainer.Interact.Text1", this.Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                    if (!player.IsLevelRespecUsed)
 					{
 						OfferRespecialize(player);
 					}
@@ -78,8 +82,8 @@ namespace DOL.GS.Trainer
 		/// <returns></returns>
 		public static bool CanPromotePlayer(GamePlayer player) 
 		{
-			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Mystic && (player.Race == (int) eRace.Kobold || player.Race == (int) eRace.Troll
-				|| player.Race == (int) eRace.Valkyn));
+			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Mystic && (player.Race == (int) eRace.Kobold
+                || player.Race == (int) eRace.Troll	|| player.Race == (int) eRace.Valkyn));
 		}
 
 		/// <summary>
@@ -91,15 +95,17 @@ namespace DOL.GS.Trainer
 		public override bool WhisperReceive(GameLiving source, string text)
 		{				
 			if (!base.WhisperReceive(source, text)) return false;			
-			GamePlayer player = source as GamePlayer;			
+			GamePlayer player = source as GamePlayer;
+            String lowerCase = text.ToLower();
 	
-			switch (text) {
-			case "join the House of Bodgar":
-				// promote player to other class
-				if (CanPromotePlayer(player)) {
-					PromotePlayer(player, (int)eCharacterClass.Bonedancer, "Welcome young warrior! May your time in Midgard army be rewarding!", null);	// TODO: gifts
+            if (lowerCase == LanguageMgr.GetTranslation(player.Client, "BonedancerTrainer.WhisperReceiveCase.Text1"))
+            {
+                // promote player to other class
+				if (CanPromotePlayer(player))
+                {
+                    PromotePlayer(player, (int)eCharacterClass.Bonedancer, LanguageMgr.GetTranslation(player.Client, "BonedancerTrainer.WhisperReceive.Text1", player.GetName(0, false)), null);
+                    player.ReceiveItem(this, WEAPON_ID1);
 				}
-				break;
 			}
 			return true;		
 		}

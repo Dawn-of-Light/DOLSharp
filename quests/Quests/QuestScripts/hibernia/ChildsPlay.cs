@@ -32,14 +32,15 @@
 
 using System;
 using System.Reflection;
+using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
-using DOL.GS.PacketHandler;
-using log4net;
-using DOL.GS.Quests;
 using DOL.GS.Behaviour;
 using DOL.GS.Behaviour.Attributes;
-using DOL.AI.Brain;
+using DOL.GS.PacketHandler;
+using DOL.GS.Quests;
+using DOL.Language;
+using log4net;
 
 namespace DOL.GS.Quests.Hibernia
 {
@@ -1587,7 +1588,7 @@ namespace DOL.GS.Quests.Hibernia
 
                     //k109:  Until I can get the quest dialog from live, I reward based on class, feel free to edit.
                     player.Out.SendMessage(" You have completed the Childs Play quest.", eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
-                    if (player.CharacterClass.BaseName == "Guardian")
+                    if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Guardian"))
                     {
                         GiveItem(Charles, quest.m_questPlayer, daringstuddedboots_hib);
                         GiveItem(Charles, quest.m_questPlayer, daringstuddedcap_hib);
@@ -1597,7 +1598,7 @@ namespace DOL.GS.Quests.Hibernia
                         GiveItem(Charles, quest.m_questPlayer, daringstuddedsleeves_hib);
                         quest.FinishQuest();
                     }
-                    if (player.CharacterClass.BaseName == "Magician")
+                    if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Magician"))
                     {
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedboots_hib);
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedcap_hib);
@@ -1607,7 +1608,7 @@ namespace DOL.GS.Quests.Hibernia
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedvest_hib);
                         quest.FinishQuest();
                     }
-                    if (player.CharacterClass.BaseName == "Forester")
+                    if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Forester"))
                     {
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedboots_hib);
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedcap_hib);
@@ -1617,7 +1618,7 @@ namespace DOL.GS.Quests.Hibernia
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedvest_hib);
                         quest.FinishQuest();
                     }
-                    if (player.CharacterClass.BaseName == "Stalker")
+                    if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Stalker"))
                     {
                         GiveItem(Charles, quest.m_questPlayer, daringleatherboots_hib);
                         GiveItem(Charles, quest.m_questPlayer, daringleathercap_hib);
@@ -1627,7 +1628,7 @@ namespace DOL.GS.Quests.Hibernia
                         GiveItem(Charles, quest.m_questPlayer, daringleathersleeves_hib);
                         quest.FinishQuest();
                     }
-                    if (player.CharacterClass.BaseName == "Naturalist")
+                    if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Naturalist"))
                     {
                         GiveItem(Charles, quest.m_questPlayer, daringleatherboots_hib);
                         GiveItem(Charles, quest.m_questPlayer, daringleathercap_hib);

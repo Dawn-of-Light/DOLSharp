@@ -53,14 +53,14 @@ namespace DOL.GS.Trainer
 			{
 				// popup the training window
 				player.Out.SendTrainerWindow();
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "HeroTrainer.Interact.SmallTalk", this.Name, player.Name), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "HeroTrainer.Interact.Text2", this.Name, player.GetName(0, false)), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			} 
 			else 
 			{
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "HeroTrainer.Interact.PathOfFocus", this.Name), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "HeroTrainer.Interact.Text1", this.Name), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					if (!player.IsLevelRespecUsed)
 					{
 						OfferRespecialize(player);
@@ -94,14 +94,15 @@ namespace DOL.GS.Trainer
 		public override bool WhisperReceive(GameLiving source, string text)
 		{				
 			if (!base.WhisperReceive(source, text)) return false;			
-			GamePlayer player = source as GamePlayer;			
-	
-				if (text == LanguageMgr.GetTranslation(player.Client, "HeroTrainer.WhisperReceive.CaseHero"))
+			GamePlayer player = source as GamePlayer;
+            String lowerCase = text.ToLower();
+
+            if (lowerCase == LanguageMgr.GetTranslation(player.Client, "HeroTrainer.WhisperReceiveCase.Text1"))
 				{
 				// promote player to other class
 					if (CanPromotePlayer(player))
 					{
-						PromotePlayer(player, (int)eCharacterClass.Hero, LanguageMgr.GetTranslation(player.Client, "HeroTrainer.WhisperReceive.Welcome", source.GetName(0, false), source.GetName(0, false)), null);
+                        PromotePlayer(player, (int)eCharacterClass.Hero, LanguageMgr.GetTranslation(player.Client, "HeroTrainer.WhisperReceive.Text1", player.GetName(0, false), player.CharacterClass.Name), null);
 						player.ReceiveItem(this, ARMOR_ID1);
 					}
 				}

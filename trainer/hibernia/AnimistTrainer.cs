@@ -53,7 +53,7 @@ namespace DOL.GS.Trainer
 			{
 				// popup the training window
 				player.Out.SendTrainerWindow();
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AnimistTrainer.Interact.SmallTalk", this.Name, player.Name), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AnimistTrainer.Interact.Text2", this.Name, player.GetName(0, false)), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 
 			} 
 			else 
@@ -61,7 +61,7 @@ namespace DOL.GS.Trainer
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AnimistTrainer.Interact.PathOfAffinity", this.Name), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AnimistTrainer.Interact.Text1", this.Name), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					if (!player.IsLevelRespecUsed)
 					{
 						OfferRespecialize(player);
@@ -95,14 +95,15 @@ namespace DOL.GS.Trainer
 		public override bool WhisperReceive(GameLiving source, string text)
 		{				
 			if (!base.WhisperReceive(source, text)) return false;			
-			GamePlayer player = source as GamePlayer;			
-	
-			if (text == LanguageMgr.GetTranslation(player.Client, "AnimistTrainer.WhisperReceive.CasePath"))
+			GamePlayer player = source as GamePlayer;
+            String lowerCase = text.ToLower();
+
+            if (lowerCase == LanguageMgr.GetTranslation(player.Client, "AnimistTrainer.WhisperReceiveCase.Text1"))
 			{
 				// promote player to other class
 				if (CanPromotePlayer(player))
 				{
-					PromotePlayer(player, (int)eCharacterClass.Animist, LanguageMgr.GetTranslation(player.Client, "AnimistTrainer.WhisperReceive.Welcome", source.GetName(0, false)), null);
+                    PromotePlayer(player, (int)eCharacterClass.Animist, LanguageMgr.GetTranslation(player.Client, "AnimistTrainer.WhisperReceive.Text1", player.GetName(0, false)), null);
 					player.ReceiveItem(this, WEAPON_ID1);
 				}
 			}
