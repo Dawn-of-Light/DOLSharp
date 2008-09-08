@@ -71,7 +71,12 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public override void Think()
 		{
-			// If the NPC is tethered and has been pulled too far it will
+            //Satyr: This Check needs to be done BEFORE all other potential actions are checked.
+            //If the npc is returning home, we don't need to think.
+            if (Body.IsReturningHome)
+                return;
+            
+            // If the NPC is tethered and has been pulled too far it will
 			// de-aggro and return to its spawn point.
 			if (Body.IsOutOfTetherRange)
 			{
@@ -87,7 +92,10 @@ namespace DOL.AI.Brain
 
 			//If the npc is not in combat, we remove the last attack data temporary property
 			if (!Body.InCombat)
-				Body.TempProperties.removeProperty(GameLiving.LAST_ATTACK_DATA);
+                //Satyr: The wrong key for the Properties to be removed caused the
+                //Heal-Agro Bug for all mobs BUT the one targeted last by Player...
+                //Body.TempProperties.removeProperty(GameLiving.LAST_ATTACK_DATA);
+                Body.TempProperties.removeProperty(Body.Attackers);
 
 			// check for returning to home if to far away
 			if (Body.MaxDistance != 0 && !Body.IsReturningHome)
@@ -115,10 +123,6 @@ namespace DOL.AI.Brain
 				AttackMostWanted();
 				return;
 			}
-
-			//If the npc is returning home, we don't need to think.
-			if (Body.IsReturningHome)
-			  return;
 
 			//Mob will now always walk on their path
 			if (Body.MaxSpeedBase > 0 && Body.CurrentSpellHandler == null && !Body.IsMoving
