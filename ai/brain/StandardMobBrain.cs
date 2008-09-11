@@ -71,17 +71,22 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public override void Think()
 		{
-            //Satyr: This Check needs to be done BEFORE all other potential actions are checked.
-            //If the npc is returning home, we don't need to think.
-            if (Body.IsReturningHome)
-                return;
-            
+            //Satyr:
+            //This is a general information. When i review this Think-Procedure and the interaction between it and some
+            //code of GameNPC.cs i have the feeling this is a mixture of much ideas of diffeent people, much unfinished
+            //features like random-walk which does not actually fit to the rest of this Brain-logic.
+            //In other words:
+            //If somebody feeling like redoing this stuff completly i would appreciate it. It might be worth redoing
+            //instead of trying desperately to make something work that is simply chaoticly moded by too much
+            //diffeent inputs.
+            //For NOW i made the aggro working the following way (close to live but not yet 100% equal):
+            //Mobs will not aggro on their way back home (in fact they should even under some special circumstances)
+            //They will completly forget all Aggro when respawned and returned Home.
+
             // If the NPC is tethered and has been pulled too far it will
 			// de-aggro and return to its spawn point.
 			if (Body.IsOutOfTetherRange)
 			{
-				Body.StopFollow();
-				ClearAggroList();
 				Body.WalkToSpawn();
 				return;
 			}
@@ -90,21 +95,60 @@ namespace DOL.AI.Brain
 			//Check for just positive spells
 			CheckSpells(eCheckSpellType.Defensive);
 
-			//If the npc is not in combat, we remove the last attack data temporary property
-			if (!Body.InCombat)
-                //Satyr: The wrong key for the Properties to be removed caused the
-                //Heal-Agro Bug for all mobs BUT the one targeted last by Player...
-                //Body.TempProperties.removeProperty(GameLiving.LAST_ATTACK_DATA);
-                Body.TempProperties.removeProperty(Body.Attackers);
-
 			// check for returning to home if to far away
 			if (Body.MaxDistance != 0 && !Body.IsReturningHome)
 			{
 				int distance = WorldMgr.GetDistance(Body.SpawnX, Body.SpawnY, Body.SpawnZ, Body.X, Body.Y, Body.Z);
 				int maxdistance = Body.MaxDistance > 0 ? Body.MaxDistance : -Body.MaxDistance * AggroRange / 100;
-				if (maxdistance > 0 && distance > maxdistance)
-					Body.WalkToSpawn(Body.MaxSpeed * 2);
+                if (maxdistance > 0 && distance > maxdistance)
+                {
+                    Body.WalkToSpawn(Body.MaxSpeed * 2);
+                    return;
+                }
 			}
+
+            //If this NPC can randomly walk around, we allow it to walk around
+            if (!Body.AttackState && CanRandomWalk && Util.Chance(20))
+            {
+                IPoint3D target = CalcRandomWalkTarget();
+                if (target != null)
+                    Body.WalkTo(target, 50, true);
+            }
+            //If the npc can move, and the npc is not casting, not moving, and not attacking or in combat
+            else if (Body.MaxSpeedBase > 0 && Body.CurrentSpellHandler == null && !Body.IsMoving && !Body.AttackState && !Body.InCombat)
+            {
+                //If the npc is not at it's spawn position, we tell it to walk to it's spawn position
+                //Satyr: If we use a tolerance to stop their Way back home we also need the same
+                //Tolerance to check if we need to go home AGAIN, otherwise we might be told to go home
+                //for a few units only and this may end before the next Arrive-At-Target Event is fired and in this case
+                //We would never lose the state "IsReturningHome", which is then followed by other erros related to agro again to players
+                if (!Util.IsNearDistance(Body.X, Body.Y, Body.Z, Body.SpawnX, Body.SpawnY, Body.SpawnZ, GameNPC.CONST_WALKTOTOLERANCE))
+                    Body.WalkToSpawn();
+                else if (Body.Heading != Body.SpawnHeading)
+                        Body.Heading = Body.SpawnHeading;
+            }
+
+            //Mob will now always walk on their path
+            if (Body.MaxSpeedBase > 0 && Body.CurrentSpellHandler == null && !Body.IsMoving
+                && !Body.AttackState && !Body.InCombat && !Body.IsMovingOnPath
+                && Body.PathID != null && Body.PathID != "" && Body.PathID != "NULL")
+            {
+                PathPoint path = MovementMgr.LoadPath(Body.PathID);
+                Body.CurrentWayPoint = path;
+                Body.MoveOnPath(path.MaxSpeed);
+            }
+
+            //If we are not attacking, and not casting, and not moving, and we aren't facing our spawn heading, we turn to the spawn heading
+            if (!Body.InCombat && !Body.AttackState && !Body.IsCasting && !Body.IsMoving && WorldMgr.GetDistance(Body.SpawnX, Body.SpawnY, Body.SpawnZ, Body.X, Body.Y, Body.Z) > 500)
+            {
+                Body.WalkToSpawn(); // Mobs do not walk back at 2x their speed..
+            }
+
+            //Satyr: This Check needs to be done BEFORE all agro-actions and AFTER
+            //all Returning-Home Issues.
+            if (Body.IsReturningHome)
+                return;
+
 
 			//If we have an aggrolevel above 0, we check for players and npcs in the area to attack
 			if (!Body.AttackState && AggroLevel > 0)
@@ -122,37 +166,6 @@ namespace DOL.AI.Brain
 				}
 				AttackMostWanted();
 				return;
-			}
-
-			//Mob will now always walk on their path
-			if (Body.MaxSpeedBase > 0 && Body.CurrentSpellHandler == null && !Body.IsMoving
-				&& !Body.AttackState && !Body.InCombat && !Body.IsMovingOnPath
-				&& Body.PathID != null && Body.PathID != "" && Body.PathID != "NULL")
-			{
-				PathPoint path = MovementMgr.LoadPath(Body.PathID);
-				Body.CurrentWayPoint = path;
-				Body.MoveOnPath(path.MaxSpeed);
-			}
-
-			//If this NPC can randomly walk around, we allow it to walk around
-			if (!Body.AttackState && CanRandomWalk && Util.Chance(20))
-			{
-				IPoint3D target = CalcRandomWalkTarget();
-				if (target != null)
-					Body.WalkTo(target, 50, true);
-			}
-			//If the npc can move, and the npc is not casting, not moving, and not attacking or in combat
-			else if (Body.MaxSpeedBase > 0 && Body.CurrentSpellHandler == null && !Body.IsMoving && !Body.AttackState && !Body.InCombat)
-			{
-				//If the npc is not at it's spawn position, we tell it to walk to it's spawn position
-				if (Body.X != Body.SpawnX || Body.Y != Body.SpawnY || Body.Z != Body.SpawnZ)
-					Body.WalkToSpawn();
-			}
-
-			//If we are not attacking, and not casting, and not moving, and we aren't facing our spawn heading, we turn to the spawn heading
-			if (!Body.InCombat && !Body.AttackState && !Body.IsCasting && !Body.IsMoving && WorldMgr.GetDistance(Body.SpawnX, Body.SpawnY, Body.SpawnZ, Body.X, Body.Y, Body.Z) > 500)
-			{
-				Body.WalkToSpawn(); // Mobs do not walk back at 2x their speed..
 			}
 		}
 
@@ -473,6 +486,7 @@ namespace DOL.AI.Brain
 			lock (m_aggroTable.SyncRoot)
 			{
 				m_aggroTable.Clear();
+                Body.TempProperties.removeProperty(Body.Attackers);
 			}
 		}
 

@@ -55,7 +55,7 @@ namespace DOL.GS
 		/// <remarks>
 		/// This helps to reduce the turning of an npc while fighting or returning to a spawn
 		/// </remarks>
-		const int CONST_WALKTOTOLERANCE = 5;
+		public const int CONST_WALKTOTOLERANCE = 5;
 
 		#region Formations/Spacing
 
@@ -1331,10 +1331,12 @@ namespace DOL.GS
 		{
 			StopAttack();
 			StopFollow();
-			//WalkTo(SpawnX+Random(750)-350, SpawnY+Random(750)-350, SpawnZ, MaxSpeed/3);
 
 			StandardMobBrain brain = Brain as StandardMobBrain;
 			//[Ganrod] Nidel: Force to clear Aggro
+            //Satyr: Actually this is not the right place to forget aggro but
+            //for now we may stay at this until the whole logic is redesigned.
+            //Correct would be: Forget Aggro as soon as arrived at spot
 			if(brain != null && brain.IsAggroing)
 			{
 				brain.ClearAggroList();
@@ -1522,9 +1524,9 @@ namespace DOL.GS
                       long lasthit = LastAttackedByEnemyTick;
                       if (CurrentRegion.Time - lastattacked > seconds * 1000 && CurrentRegion.Time - lasthit > seconds * 1000)
                       {
-                         StopFollow();
+                         //StopFollow();
                          Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
-                         brain.ClearAggroList();
+                         //brain.ClearAggroList();
                          this.WalkToSpawn();
                          return 0;
                       }
