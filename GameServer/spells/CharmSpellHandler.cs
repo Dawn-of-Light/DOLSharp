@@ -186,9 +186,19 @@ namespace DOL.GS.Spells
 				 * charm spell will modify your base chance of charming and retaining control.
 				 * The higher your spec level, the greater your chance of controlling.
 				 */
-				int diffLevel = ((GamePlayer)Caster).GetModifiedSpecLevel(m_spellLine.Spec) - target.Level;
-				int resistChance = 30 - diffLevel * 5; // completly guessed ...
-				if (resistChance < 5) resistChance = 5;
+				int diffLevel = (int)(Caster.Level/1.5 + Caster.GetModifiedSpecLevel(m_spellLine.Spec)/3) - target.Level;
+				int resistChance;
+				if (diffLevel >= 0)
+				{
+					resistChance = 25 - diffLevel *3;
+					resistChance = Math.Max(resistChance,5);
+				}
+				else
+				{
+					resistChance = 25 + diffLevel * 4;
+					resistChance = Math.Min(resistChance,95);
+				}
+				
 				if (Util.Chance(resistChance))
 				{
 					MessageToCaster(target.GetName(0, true) + " resists the charm!", eChatType.CT_SpellResisted);
