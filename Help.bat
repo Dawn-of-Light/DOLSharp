@@ -1,2 +1,0 @@
-dnpb /usage
-pause

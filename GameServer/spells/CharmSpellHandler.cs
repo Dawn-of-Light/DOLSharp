@@ -164,17 +164,17 @@ namespace DOL.GS.Spells
 				if (brain != null && (brain.Owner as GamePlayer)!=Caster)
 				{
 					// TODO: proper message
-					MessageToCaster("That monster is already controlled by someone else!", eChatType.CT_SpellResisted);
+					MessageToCaster("Your target is not valid.", eChatType.CT_SpellResisted);
 					return;
 				}
 			}
 
-			if (target.Level > Spell.Value || target.Level > Caster.Level * Spell.Damage / 100)
+			/*if (target.Level > Spell.Value || target.Level > Caster.Level * Spell.Damage / 100)
 			{
 				MessageToCaster(target.GetName(0, true) + " is too strong for you to charm!", eChatType.CT_SpellResisted);
 				return;
-			}
-
+			}*/
+			
 			if (Caster is GamePlayer)
 			{
 				/*
@@ -195,7 +195,7 @@ namespace DOL.GS.Spells
 				}
 				else
 				{
-					resistChance = 25 + diffLevel * 4;
+					resistChance = 25 + diffLevel * diffLevel * 3;
 					resistChance = Math.Min(resistChance,95);
 				}
 				
