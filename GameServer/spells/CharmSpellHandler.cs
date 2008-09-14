@@ -169,11 +169,11 @@ namespace DOL.GS.Spells
 				}
 			}
 
-			/*if (target.Level > Spell.Value || target.Level > Caster.Level * Spell.Damage / 100)
+			if (target.Level > Spell.Value || target.Level > Caster.Level * Spell.Damage / 100)
 			{
 				MessageToCaster(target.GetName(0, true) + " is too strong for you to charm!", eChatType.CT_SpellResisted);
 				return;
-			}*/
+			}
 			
 			if (Caster is GamePlayer)
 			{
