@@ -68,7 +68,7 @@ namespace DOL.GS.PlayerClass
 		public override IList AutoTrainableSkills()
 		{
 			ArrayList skills = new ArrayList();
-			skills.Add(Specs.RecurveBow);
+			skills.Add(Specs.Archery);
 			return skills;
 		}
 
@@ -80,15 +80,12 @@ namespace DOL.GS.PlayerClass
 		{
 			base.OnLevelUp(player);
 
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.RecurveBow));
-
 			if (player.Level >= 5)
 			{
+                player.AddSpecialization(SkillBase.GetSpecialization(Specs.Archery));
+                player.AddSpellLine(SkillBase.GetSpellLine("Archery"));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_RecurvedBows));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
-
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Pathfinding));
-				player.AddSpellLine(SkillBase.GetSpellLine("Pathfinding"));
 			}
 			if (player.Level >= 10)
 			{
@@ -123,76 +120,6 @@ namespace DOL.GS.PlayerClass
 
 			switch (skill.KeyName)
 			{
-				case Specs.RecurveBow:
-					if (skill.Level < 3)
-					{
-						// do nothing 
-					}
-					else if (skill.Level < 6)
-					{
-						player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 1));
-					}
-					else if (skill.Level < 9)
-					{
-						player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 2));
-					}
-					else if (skill.Level < 12)
-					{
-						player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 3));
-					}
-					else if (skill.Level < 15)
-					{
-						player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 4));
-					}
-					else if (skill.Level < 18)
-					{
-						player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 5));
-					}
-					else if (skill.Level < 21)
-					{
-						player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 6));
-					}
-					else if (skill.Level < 24)
-					{
-						player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 7));
-					}
-					else if (skill.Level < 27)
-					{
-						player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 8));
-					}
-					else if (skill.Level >= 27)
-					{
-						player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 9));
-					}
-
-					if (skill.Level >= 45)
-					{
-						player.AddAbility(SkillBase.GetAbility(Abilities.RapidFire, 2));
-					}
-					else if (skill.Level >= 35)
-					{
-						player.AddAbility(SkillBase.GetAbility(Abilities.RapidFire, 1));
-					}
-
-					if (skill.Level >= 45)
-					{
-						player.AddAbility(SkillBase.GetAbility(Abilities.SureShot));
-					}
-
-					if (skill.Level >= 50)
-					{
-						player.AddAbility(SkillBase.GetAbility(Abilities.PenetratingArrow, 3));
-					}
-					else if (skill.Level >= 40)
-					{
-						player.AddAbility(SkillBase.GetAbility(Abilities.PenetratingArrow, 2));
-					}
-					else if (skill.Level >= 30)
-					{
-						player.AddAbility(SkillBase.GetAbility(Abilities.PenetratingArrow, 1));
-					}
-					break;
-
 				case Specs.Stealth:
 					if (skill.Level >= 10)
 					{
