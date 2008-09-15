@@ -56,7 +56,7 @@ namespace DOL.GS.Spells
 			if (ad == null) return;
 			if (!m_caster.IsAlive) return;
 
-			int heal = (ad.Damage + ad.CriticalDamage);
+			int heal = (ad.Damage + ad.CriticalDamage)* Spell.LifeDrainReturn / 100; // % factor on all drains
 			if (m_caster.IsDiseased)
 			{
 				MessageToCaster("You are diseased!", eChatType.CT_SpellResisted);
@@ -79,7 +79,7 @@ namespace DOL.GS.Spells
 			if (ad == null) return;
 			if (!m_caster.IsAlive) return;
 
-			int renew = (ad.Damage + ad.CriticalDamage) * 4 / 10; //40% endo return
+			int renew = ((ad.Damage + ad.CriticalDamage) * Spell.ResurrectHealth / 100) * Spell.LifeDrainReturn / 100; // %endo returned
 			if (renew > 0)
 			{
 				MessageToCaster("You steal " + renew + " endurance.", eChatType.CT_Spell);
@@ -97,7 +97,7 @@ namespace DOL.GS.Spells
 			if (ad == null) return;
 			if (!m_caster.IsAlive) return;
 
-			int replenish = (ad.Damage + ad.CriticalDamage) * 6 / 10; //60% power return
+			int replenish = ((ad.Damage + ad.CriticalDamage) * Spell.ResurrectMana  / 100) * Spell.LifeDrainReturn / 100; // %mana returned
 			if (replenish > 0)
 			{
 				MessageToCaster("You steal " + replenish + " power.", eChatType.CT_Spell);
