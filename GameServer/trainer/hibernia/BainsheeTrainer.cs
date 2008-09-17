@@ -33,7 +33,7 @@ namespace DOL.GS.Trainer
 			get { return eCharacterClass.Bainshee; }
 		}
 
-		public const string WEAPON_ID1 = "Bainshee_item";
+		public const string WEAPON_ID1 = "bainshee_item";
 
 		public BainsheeTrainer()
 			: base()
@@ -54,15 +54,15 @@ namespace DOL.GS.Trainer
 			{
 				// popup the training window
 				player.Out.SendTrainerWindow();
-				player.Out.SendMessage(this.Name + " says, \"Our way is a hard one, " + player.Name + ". I can only train you in skills. You must gain knowledge and wisdom on your own.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
-			}
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "BainsheeTrainer.Interact.Text2", this.Name, player.Name), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+            }
 			else
 			{
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
 				{
-					player.Out.SendMessage(this.Name + " says, \"Do you wish to train as a [Bainshee] and walk the Path of Affinity?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-					if (!player.IsLevelRespecUsed)
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "BainsheeTrainer.Interact.Text1", this.Name, player.Name), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+                    if (!player.IsLevelRespecUsed)
 					{
 						OfferRespecialize(player);
 					}
@@ -96,11 +96,11 @@ namespace DOL.GS.Trainer
 		{
 			if (!base.WhisperReceive(source, text)) return false;
 			GamePlayer player = source as GamePlayer;
+            String lowerCase = text.ToLower();
 
-			switch (text)
-			{
-				case "Bainshee":
-					// promote player to other class
+            if (lowerCase == LanguageMgr.GetTranslation(player.Client, "BainsheeTrainer.WhisperReceiveCase.Text1"))
+            {
+            // promote player to other class
 					if (CanPromotePlayer(player))
 					{
 						player.RemoveAllSpellLines();
@@ -109,9 +109,9 @@ namespace DOL.GS.Trainer
 						player.RemoveAllStyles();
 						player.Out.SendUpdatePlayerSkills();
 						player.SkillSpecialtyPoints = 14;//lvl 5 skill points full
-						PromotePlayer(player, (int)eCharacterClass.Bainshee, "Well met then, " + source.GetName(0, false) + ". It is a hard road, but I see hardness is no stranger to you. Welcome, Bainshee, welcome. Here, take this. It will aid you in your first encounters as a Bainshee.", null);
-					}
-					break;
+                        PromotePlayer(player, (int)eCharacterClass.Bainshee, LanguageMgr.GetTranslation(player.Client, "BainsheeTrainer.WhisperReceive.Text1", player.GetName(0, false)), null);
+                        player.ReceiveItem(this, WEAPON_ID1);
+					}				
 			}
 			return true;
 		}
