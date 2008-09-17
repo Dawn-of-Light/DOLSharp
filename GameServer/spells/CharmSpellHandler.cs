@@ -165,7 +165,7 @@ namespace DOL.GS.Spells
 				if (brain != null && (brain.Owner as GamePlayer)!=Caster)
 				{
 					// TODO: proper message
-					MessageToCaster("That monster is already controlled by someone else!", eChatType.CT_SpellResisted);
+                    MessageToCaster("Your target is not valid.", eChatType.CT_SpellResisted);
 					return;
 				}
 			}
@@ -191,13 +191,13 @@ namespace DOL.GS.Spells
 				int resistChance;
 				if (diffLevel >= 0)
 				{
-					resistChance = 25 - diffLevel *3;
-					resistChance = Math.Max(resistChance,5);
+                    resistChance = 25 - diffLevel * 3;
+                    resistChance = Math.Max(resistChance, 5);
 				}
 				else
 				{
-					resistChance = 25 + diffLevel * 4;
-					resistChance = Math.Min(resistChance,95);
+                    resistChance = 25 + diffLevel * diffLevel * 3;
+                    resistChance = Math.Min(resistChance, 95);
 				}
 				
 				if (Util.Chance(resistChance))
