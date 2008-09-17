@@ -5,10 +5,13 @@ using System.Text;
 using System.Threading;
 using System.Reflection;
 
+using log4net;
 using DOL.GS;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.GS.Effects;
+using DOL.GS.Spells;
 
 namespace DOL.GS
 {
@@ -33,13 +36,16 @@ namespace DOL.GS
         protected int m_spawnz;
         protected int m_spawnheading;
         protected int m_spawnregion;
-        protected int m_relicSpell;
+        protected int m_relicSpellID;
+        protected Spell m_relicSpell;
         protected string m_relicTarget;
         protected double m_xp;
         protected GamePlayer m_owner;
         protected int m_effect;
         protected int m_relicID;
-        public ArrayList Playerlist = new ArrayList();
+        protected ISpellHandler m_spellHandler;
+        protected GameSpellEffect m_gameSpellEffect;
+        public IList<GamePlayer> Playerlist = new List<GamePlayer>();
 
         /// <summary>
         /// gets or sets the current Owner of this Relic
@@ -68,10 +74,19 @@ namespace DOL.GS
         /// <summary>
         /// Get the RelicType 
         /// </summary>
-        public int RelicSpell
+        public Spell RelicSpell
         {
             get { return m_relicSpell; }
             set { m_relicSpell = value; }
+        }
+
+        /// <summary>
+        /// Get the RelicType 
+        /// </summary>
+        public int RelicSpellID
+        {
+            get { return m_relicSpellID; }
+            set { m_relicSpellID = value; }
         }
 
         /// <summary>
@@ -144,7 +159,8 @@ namespace DOL.GS
             SpawnY = m_dbRelic.SpawnY;
             SpawnZ = m_dbRelic.SpawnZ;
 
-            RelicSpell = m_dbRelic.relicSpell;
+            RelicSpellID = m_dbRelic.relicSpell;
+            RelicSpell = SkillBase.GetSpellByID(m_dbRelic.relicSpell);
             RelicTarget = m_dbRelic.relicTarget;
 
             Name = m_dbRelic.Name;
@@ -172,7 +188,7 @@ namespace DOL.GS
 
             m_dbRelic.Name = Name;
             m_dbRelic.Model = Model;
-            m_dbRelic.relicSpell = RelicSpell;
+            m_dbRelic.relicSpell = RelicSpellID;
 
             if (InternalID == null)
             {
@@ -188,25 +204,21 @@ namespace DOL.GS
         public override bool Interact(GamePlayer player)
         {
             if (!base.Interact(player)) return false;
-
             if (!player.IsAlive)
             {
                 player.Out.SendMessage("You cannot pickup " + GetName(0, false) + ". You are dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return false;
             }
-
             if (this.Owner != null)
             {
                 player.Out.SendMessage("This Relic is owned by someone else!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return false;
             }
-
             if (player.MinotaurRelic != null)
             {
                 player.Out.SendMessage("You already have a Relic!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return false;
             }
-
             if (player.Group != null)
             {
                 foreach (GamePlayer pl in player.Group.GetPlayersInTheGroup())
@@ -218,7 +230,8 @@ namespace DOL.GS
                     }
                 }
             }
-
+            if (player.IsStealthed)
+                player.Stealth(false);
             PlayerTakesRelic(player);
             return true;
         }
@@ -232,26 +245,100 @@ namespace DOL.GS
         protected virtual void PlayerTakesRelic(GamePlayer player)
         {
             if (player == null) return;
-
             RemoveFromWorld();
             SetHandlers(player, true);
-            MinotaurRelicManager.StartPlayerRelicEffect(player, this);
             player.MinotaurRelic = this;
             Owner = player;
 
             player.Out.SendMinotaurRelicWindow(player, Effect, true);
             player.Out.SendMinotaurRelicBarUpdate(player, (int)XP);
 
-            timer = new Timer(new TimerCallback(XPTimerCallBack), null, 1000, 0);
+            
+            m_spellHandler = ScriptMgr.CreateSpellHandler(m_owner, RelicSpell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+            if (m_spellHandler != null)
+                m_gameSpellEffect = new GameSpellEffect(m_spellHandler, RelicSpell.Duration, 0);
 
-            if (player.MinotaurRelic != null)
+            timer = new Timer(new TimerCallback(XPTimerCallBack), null, 3000, 0);
+
+            ApplyRelicEffect();
+        }
+
+        protected void ApplyRelicEffect()
+        {
+            if (RelicSpell == null || m_spellHandler==null || m_gameSpellEffect==null) return;
+
+            IList<GamePlayer> newPlayerlist = new List<GamePlayer>();
+
+            if (m_owner != null)
             {
-                foreach (GamePlayer pl in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                switch (RelicTarget.ToLower())
                 {
-                    if (!Playerlist.Contains(pl) && pl != player)
-                        Playerlist.Add(pl);
-                    pl.Out.SendMinotaurRelicWindow(player, player.MinotaurRelic.Effect, true);
+                    case "self":
+                        newPlayerlist.Add(m_owner);
+                        break;
+                    case "group":
+                        if (m_owner.Group == null)
+                        {
+                            newPlayerlist.Add(m_owner);
+                            break;
+                        }
+                        else
+                        {
+                            foreach (GamePlayer plr in m_owner.Group.GetPlayersInTheGroup())
+                                if (plr != null && !newPlayerlist.Contains(plr) && WorldMgr.GetDistance(plr, m_owner)<WorldMgr.VISIBILITY_DISTANCE)
+                                    newPlayerlist.Add(plr);
+                        }
+                        break;
+                    case "realm":
+                        foreach (GamePlayer plr in m_owner.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                            if (plr != null && !newPlayerlist.Contains(plr))
+                                newPlayerlist.Add(plr);
+                        break;
                 }
+            }
+            lock (Playerlist)
+            {
+                foreach (GamePlayer plr in Playerlist)
+                {
+                    if(plr == null) continue;
+                    if (!newPlayerlist.Contains(plr))
+                    {
+                        GameSpellEffect check = SpellHandler.FindEffectOnTarget(plr, m_gameSpellEffect.Spell.SpellType);
+                        if (check != null)
+                            check.Cancel(false);
+                    }
+                }
+                foreach (GamePlayer plr in newPlayerlist)
+                {
+                    if (plr == null) continue;
+                    GameSpellEffect check = SpellHandler.FindEffectOnTarget(plr, m_gameSpellEffect.Spell.SpellType);
+                    if (check == null)
+                    {
+                        ISpellHandler handler = ScriptMgr.CreateSpellHandler(plr, RelicSpell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+                        GameSpellEffect plreffect = null;
+                        if (handler != null)
+                            plreffect = new GameSpellEffect(handler, RelicSpell.Duration, 0);
+                        if (plreffect != null)
+                            plreffect.Start(plr);
+                    }
+                }
+                Playerlist = newPlayerlist;
+            }
+        }
+        protected void StopRelicEffect()
+        {
+            if (RelicSpell == null || m_spellHandler == null || m_gameSpellEffect == null) return;
+
+            lock (Playerlist)
+            {
+                foreach (GamePlayer plr in Playerlist)
+                {
+                    if (plr == null) continue;
+                    GameSpellEffect check = SpellHandler.FindEffectOnTarget(plr, m_gameSpellEffect.Spell.SpellType);
+                    if (check != null)
+                        check.Cancel(false);
+                }
+                Playerlist.Clear();
             }
         }
 
@@ -262,6 +349,7 @@ namespace DOL.GS
         /// <param name="stop">True when we should stop the XP timer</param>
         public virtual void PlayerLoosesRelic(GamePlayer player, bool stop)
         {
+            StopRelicEffect();
             player.Out.SendMinotaurRelicWindow(player, 0, false);
             Update(player);
             SetHandlers(player, false);
@@ -272,13 +360,11 @@ namespace DOL.GS
                 timer.Dispose();
                 timer = null;
             }
-
-            foreach (GamePlayer pl in Playerlist)
+            foreach (GamePlayer pl in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
             {
                 pl.Out.SendMinotaurRelicWindow(player, 0, false);
             }
-            Playerlist.Clear();
-            
+
             AddToWorld();
         }
 
@@ -289,6 +375,8 @@ namespace DOL.GS
         /// <returns></returns>
         protected void XPTimerCallBack(object state)
         {
+            ApplyRelicEffect();
+            
             if (XP - MinotaurRelicManager.XP_LOSS_PER_TICK < 0)
                 XP = 0;
             else
@@ -299,15 +387,13 @@ namespace DOL.GS
                 Update(Owner);
                 Owner.Out.SendMinotaurRelicBarUpdate(Owner, (int)XP);
             }
-
             if (XP == 0)
             {
                 RelicDispose();
                 return;
             }
-
             if (timer != null)
-                timer.Change(1000, Timeout.Infinite);
+                timer.Change(3000, Timeout.Infinite);
         }
 
         /// <summary>
@@ -349,15 +435,12 @@ namespace DOL.GS
             }
 
             if (ObjectState == eObjectState.Active) return 0;
-
             X = SpawnX;
             Y = SpawnY;
             Z = SpawnZ;
             Heading = (ushort)SpawnHeading;
             CurrentRegionID = (ushort)SpawnRegion;
-
             XP = MinotaurRelicManager.MAX_RELIC_EXP;
-
             AddToWorld();
             return 0;
         }
@@ -369,17 +452,13 @@ namespace DOL.GS
                 respawntimer.Stop();
                 respawntimer = null;
             }
-
             if (ObjectState == eObjectState.Active) return;
-
             X = SpawnX;
             Y = SpawnY;
             Z = SpawnZ;
             Heading = (ushort)SpawnHeading;
             CurrentRegionID = (ushort)SpawnRegion;
-
             XP = MinotaurRelicManager.MAX_RELIC_EXP;
-
             AddToWorld();
         }
 
@@ -390,38 +469,15 @@ namespace DOL.GS
         protected virtual void Update(GameLiving living)
         {
             if (living == null) return;
-
             CurrentRegionID = living.CurrentRegionID;
             X = living.X;
             Y = living.Y;
             Z = living.Z;
             Heading = living.Heading;
-            CheckPlayersinRange();
-        }
-
-        public virtual void CheckPlayersinRange()
-        {
-            ArrayList list = new ArrayList();
-
-            foreach (GamePlayer player in Playerlist)
+            foreach (GameClient clt in WorldMgr.GetClientsOfRegion(CurrentRegionID))
             {
-                if (player != null)
-                {
-                    if (player.CurrentRegionID != this.CurrentRegionID || !WorldMgr.CheckDistance(this, player, WorldMgr.VISIBILITY_DISTANCE))
-                        list.Add(player);
-                }
-            }
-
-            if (list.Count > 0)
-            {
-                foreach (GamePlayer player in list)
-                {
-                    if (player != null && Playerlist.Contains(player) && Owner != null && player != Owner)
-                    {
-                        player.Out.SendMinotaurRelicWindow(Owner, 0, false);
-                        Playerlist.Remove(player);
-                    }
-                }
+                if (clt == null || clt.Player == null) continue;
+                clt.Player.Out.SendMinotaurRelicMapUpdate((byte)RelicID, CurrentRegionID, X, Y, Z);
             }
         }
         #endregion
@@ -441,6 +497,9 @@ namespace DOL.GS
                 GameEventMgr.AddHandler(player, GamePlayerEvent.Linkdeath, new DOLEventHandler(PlayerAbsence));
                 GameEventMgr.AddHandler(player, GamePlayerEvent.GainedRealmPoints, new DOLEventHandler(RealmPointGain));
                 GameEventMgr.AddHandler(player, GamePlayerEvent.RegionChanged, new DOLEventHandler(PlayerAbsence));
+                GameEventMgr.AddHandler(player, GamePlayerEvent.RegionChanging, new DOLEventHandler(PlayerAbsence));
+                GameEventMgr.AddHandler(player, GamePlayerEvent.StealthStateChanged, new DOLEventHandler(PlayerAbsence));
+                GameEventMgr.AddHandler(player, GamePlayerEvent.AcceptGroup, new DOLEventHandler(PlayerAbsence));
             }
             else
             {
@@ -449,6 +508,9 @@ namespace DOL.GS
                 GameEventMgr.RemoveHandler(player, GamePlayerEvent.Linkdeath, new DOLEventHandler(PlayerAbsence));
                 GameEventMgr.RemoveHandler(player, GamePlayerEvent.GainedRealmPoints, new DOLEventHandler(RealmPointGain));
                 GameEventMgr.RemoveHandler(player, GamePlayerEvent.RegionChanged, new DOLEventHandler(PlayerAbsence));
+                GameEventMgr.RemoveHandler(player, GamePlayerEvent.RegionChanging, new DOLEventHandler(PlayerAbsence));
+                GameEventMgr.RemoveHandler(player, GamePlayerEvent.StealthStateChanged, new DOLEventHandler(PlayerAbsence));
+                GameEventMgr.RemoveHandler(player, GamePlayerEvent.AcceptGroup, new DOLEventHandler(PlayerAbsence));
             }
         }
 
@@ -465,11 +527,27 @@ namespace DOL.GS
                     player.MinotaurRelic.XP += (int)arg.RealmPoints / 6;
             }
         }
-
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         protected void PlayerAbsence(DOLEvent e, object sender, EventArgs args)
         {
-            if (sender is GamePlayer)
-                PlayerLoosesRelic((sender as GamePlayer), false);
+            if (!(sender is GamePlayer)) return;
+            GamePlayer player = sender as GamePlayer;
+
+            if (e == GamePlayerEvent.AcceptGroup)
+            {
+                if (player.Group == null) return;
+                foreach (GamePlayer pl in player.Group.GetPlayersInTheGroup())
+                {
+                    if (pl.MinotaurRelic != null)
+                    {
+                        player.Out.SendMessage("Someone in your group already have a Relic!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        PlayerLoosesRelic(player, false);
+                        return;
+                    }
+                }
+                if (RelicTarget.ToLower() != "self") return;
+            }
+            PlayerLoosesRelic(player, false);
         }
         #endregion
 

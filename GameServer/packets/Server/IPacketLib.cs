@@ -55,11 +55,13 @@ namespace DOL.GS.PacketHandler
 		LoginDenied = 0x2C,
 		GameOpenReply = 0x2D,
 		UDPInitReply = 0x2F,
+		MinotaurRelicMapUpdate = 0x46,
 		WarMapClaimedKeeps = 0x49,
 		WarMapDetailUpdate = 0x4A,
 		PlayerCreate172 = 0x4B,
 		VisualEffect = 0x4C,
 		ControlledHorse = 0x4E,
+		MinotaurRelicRealm = 0x59,
 		XFire = 0x5C,
 		KeepComponentInteractResponse = 0x61,
 		KeepClaim = 0x62,
@@ -560,6 +562,7 @@ namespace DOL.GS.PacketHandler
 		void SendRegionColorSheme(byte color);
 		void SendVampireEffect(GameLiving living, bool show);
 		void SendXFireInfo(byte flag);
+        void SendMinotaurRelicMapUpdate(byte id, ushort region, int x, int y, int z);
         void SendMinotaurRelicWindow(GamePlayer player, int spell, bool flag);
         void SendMinotaurRelicBarUpdate(GamePlayer player, int xp);
 		/// <summary>

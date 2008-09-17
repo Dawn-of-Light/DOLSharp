@@ -230,6 +230,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 										return;
 									}
 									groupLeader.Group.AddMember(player);
+									GameEventMgr.Notify(GamePlayerEvent.AcceptGroup, player);
 									return;
 								}
 								else
@@ -238,6 +239,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									GroupMgr.AddGroup(group, group);
 									group.AddMember(groupLeader);
 									group.AddMember(player);
+									GameEventMgr.Notify(GamePlayerEvent.AcceptGroup, player);
 									return;
 								}
 							}
