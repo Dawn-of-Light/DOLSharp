@@ -588,6 +588,12 @@ namespace DOL.GS.ServerProperties
 		public static readonly bool ALLOW_IRC_IN_RVR;	
 		
 		/// <summary>
+		/// Ignore too long outcoming packet or not
+		/// </summary>
+		[ServerProperty("enable_minotaur_relics", "Shall we enable Minotaur Relics ?", false)]
+		public static readonly bool ENABLE_MINOTAUR_RELICS;
+		
+		/// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
 		/// type of the default value
