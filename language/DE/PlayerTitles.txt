@@ -396,7 +396,7 @@ PlayerClass.Druid.GetTitle.35:		Hainorakel
 #PlayerClass.Druid.GetTitle.30:		Grove Protector
 PlayerClass.Druid.GetTitle.25:		Hainheiler
 PlayerClass.Druid.GetTitle.20:		Ovat
-#PlayerClass.Druid.GetTitle.15:		Apprentice Druid
+PlayerClass.Druid.GetTitle.15:		Druidenlehrling
 #PlayerClass.Druid.GetTitle.10:		Student
 #PlayerClass.Druid.GetTitle.5:		Novice
 
