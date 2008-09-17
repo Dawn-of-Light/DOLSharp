@@ -2197,7 +2197,53 @@ namespace DOL
 					Dirty = true;
 					m_roleplay = value;
 				}
-			}
-		}
+            }
+
+            #region Relations
+
+            /// <summary>
+            /// Remove DBCharacterXMasterLevel
+            /// </summary>
+            [Relation(LocalField = "Name", RemoteField = "CharName", AutoLoad = true, AutoDelete = true)]
+            public DBCharacterXMasterLevel[] CharXML;
+
+            /// <summary>
+            /// Remove InventoryItem
+            /// </summary>
+            [Relation(LocalField = "ObjectId", RemoteField = "OwnerID", AutoLoad = true, AutoDelete = true)]
+            public InventoryItem[] Items;
+
+            /// <summary>
+            /// Remove DBOTDXCharacter
+            /// </summary>
+            [Relation(LocalField = "Name", RemoteField = "CharacterName", AutoLoad = true, AutoDelete = true)]
+            public DBOTDXCharacter[] otdXchar;
+
+            /// <summary>
+            /// Remove DBBoat
+            /// </summary>
+            [Relation(LocalField = "ObjectId", RemoteField = "BoatOwner", AutoLoad = true, AutoDelete = true)]
+            public DBBoat[] boats;
+
+            /// <summary>
+            /// Remove PlayerXEffect
+            /// </summary>
+            [Relation(LocalField = "ObjectId", RemoteField = "ChardID", AutoLoad = true, AutoDelete = true)]
+            public PlayerXEffect[] plrXeffects;
+
+            /// <summary>
+            /// Remove DBQuest
+            /// </summary>
+            [Relation(LocalField = "Name", RemoteField = "CharName", AutoLoad = true, AutoDelete = true)]
+            public DBQuest[] quests;
+
+            /// <summary>
+            /// Remove DBSinglePermission
+            /// </summary>
+            [Relation(LocalField = "ObjectId", RemoteField = "PlayerID", AutoLoad = true, AutoDelete = true)]
+            public DBSinglePermission[] singlePermissions;
+
+            #endregion Relations
+        }
 	}
 }
