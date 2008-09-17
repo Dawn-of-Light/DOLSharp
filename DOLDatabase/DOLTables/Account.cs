@@ -218,6 +218,12 @@ namespace DOL
 			/// </summary>
 			[Relation(LocalField = "Name", RemoteField = "AccountName", AutoLoad = true, AutoDelete=true)]
 			public Character[] Characters;
+
+            /// <summary>
+            /// Remove ban
+            /// </summary>
+            [Relation(LocalField = "Name", RemoteField = "Account", AutoLoad = true, AutoDelete = true)]
+            public DBBannedAccount[] BannedAccount;
 		}
 	}
 }
