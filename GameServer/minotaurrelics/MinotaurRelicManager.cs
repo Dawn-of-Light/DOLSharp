@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 
 using DOL.Events;
 using DOL.Database;
@@ -19,7 +20,7 @@ namespace DOL.GS
         /// <summary>
         /// table of all relics, InternalID as key
         /// </summary>
-        public static readonly Hashtable m_minotaurrelics = new Hashtable();
+        public static readonly Dictionary<string, MinotaurRelic> m_minotaurrelics = new Dictionary<string, MinotaurRelic>();
 
         /// <summary>
         /// Holds the maximum XP of Minotaur Relics
@@ -36,14 +37,26 @@ namespace DOL.GS
         /// <summary>
         /// Holds the Value which is removed from the XP per tick
         /// </summary>
-        public const double XP_LOSS_PER_TICK = 2.5;
+        public const double XP_LOSS_PER_TICK = 10;
+		
+		[ScriptLoadedEvent]
+        public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
+        {
+            if (ServerProperties.Properties.ENABLE_MINOTAUR_RELICS)
+            {
+                if (log.IsDebugEnabled)
+                    log.Debug("Minotaur Relics manager initialized");
+
+                Init();
+            }
+		}
 
         /// <summary>
         /// Inits the Minotaurrelics
         /// </summary>
         public static bool Init()
         {
-            foreach (MinotaurRelic relic in m_minotaurrelics)
+            foreach (MinotaurRelic relic in m_minotaurrelics.Values)
             {
                 relic.SaveIntoDatabase();
                 relic.RemoveFromWorld();
@@ -68,6 +81,7 @@ namespace DOL.GS
 
                     relic.AddToWorld();
                 }
+                InitMapUpdate();
                 log.Info("Minotaur Relics properly loaded");
                 return true;
             }
@@ -78,6 +92,42 @@ namespace DOL.GS
             }
         }
 
+        static Timer m_mapUpdateTimer;
+        public static void InitMapUpdate()
+        {
+            m_mapUpdateTimer = new Timer(new TimerCallback(MapUpdate), null, 0, 30 * 1000); //30sec
+        }
+        public static void StopMapUpdate()
+        {
+            if (m_mapUpdateTimer != null)
+                m_mapUpdateTimer.Dispose();
+        }
+        private static void MapUpdate(object nullValue)
+        {
+            Dictionary<ushort, IList<MinotaurRelic>> relics = new Dictionary<ushort, IList<MinotaurRelic>>();
+            foreach (MinotaurRelic relic in MinotaurRelicManager.GetAllRelics())
+            {
+                if (!relics.ContainsKey(relic.CurrentRegionID))
+                {
+                    relics.Add(relic.CurrentRegionID, new List<MinotaurRelic>());
+                }
+                relics[relic.CurrentRegionID].Add(relic);
+            }
+            foreach (GameClient clt in WorldMgr.GetAllPlayingClients())
+            {
+                if (clt == null || clt.Player == null)
+                    continue;
+
+                if(relics.ContainsKey(clt.Player.CurrentRegionID))
+                {
+                    foreach(MinotaurRelic relic in relics[clt.Player.CurrentRegionID])
+                    {
+                        clt.Player.Out.SendMinotaurRelicMapUpdate((byte)relic.RelicID, relic.CurrentRegionID, relic.X, relic.Y, relic.Z);
+                    }
+                }
+            }
+        } 
+
         #region Helpers
         /// <summary>
         /// Adds a Relic to the Hashtable
@@ -87,7 +137,7 @@ namespace DOL.GS
         {
             if (m_minotaurrelics.ContainsValue(relic)) return false;
 
-            lock (m_minotaurrelics.SyncRoot)
+            lock (m_minotaurrelics)
             {
                 m_minotaurrelics.Add(relic.InternalID, relic);
             }
@@ -100,18 +150,37 @@ namespace DOL.GS
             return m_minotaurrelics.Count;
         }
 
+        public static IList<MinotaurRelic> GetAllRelics()
+        {
+            IList<MinotaurRelic> relics = new List<MinotaurRelic>();
+
+            lock (m_minotaurrelics)
+            {
+                foreach (string id in m_minotaurrelics.Keys)
+                    relics.Add(m_minotaurrelics[id]);
+            }
+
+            return relics;
+        }
+
         /// <summary>
         /// Returns the Relic with the given ID
         /// </summary>
         /// <param name="ID">The Internal ID of the Relic</param>
         public static MinotaurRelic GetRelic(string ID)
         {
-            return m_minotaurrelics[ID] as MinotaurRelic;
+            lock (m_minotaurrelics)
+            {
+                if (!m_minotaurrelics.ContainsKey(ID))
+                    return null;
+
+                return m_minotaurrelics[ID] as MinotaurRelic;
+            }
         }
 
         public static MinotaurRelic GetRelic(int ID)
         {
-            lock (m_minotaurrelics.SyncRoot)
+            lock (m_minotaurrelics)
             {
                 foreach (MinotaurRelic relic in m_minotaurrelics.Values)
                 {
@@ -120,164 +189,6 @@ namespace DOL.GS
                 }
             }
             return null;
-        }
-        #endregion
-
-        /// <summary>
-        /// Starts the Relic effect on the Player
-        /// </summary>
-        /// <param name="player">The Effect Owner</param>
-        /// <param name="relic">The Relic which gives the effect</param>
-        public static void StartPlayerRelicEffect(GamePlayer player, MinotaurRelic relic)
-        {
-            if (player == null || relic == null) return;
-
-            ArrayList targetlist = GetTargets(player, relic.RelicTarget);
-
-            if (targetlist.Count <= 0) return;
-
-            foreach (GamePlayer target in targetlist)
-            {
-                if (target == null) continue;
-                
-                GameSpellEffect effect = GetRelicEffect(player, relic.RelicSpell, true);
-                if (effect != null)
-                {
-                    GameSpellEffect check = SpellHandler.FindEffectOnTarget(target, effect.Spell.SpellType);
-                    if (check == null)// && check.MinotaurEffect)
-                        effect.Start(target);
-
-                    if (effect.Spell.SubSpellID != 0)
-                    {
-                        GameSpellEffect subspell = GetRelicEffect(player, effect.Spell.SubSpellID, false);
-                        if (subspell != null)
-                        {
-                            check = SpellHandler.FindEffectOnTarget(target, subspell.Spell.SpellType);
-                            if (check == null)
-                                subspell.Start(target);
-                        }
-                    }
-                }
-            }
-
-            targetlist.Clear();
-        }
-
-        /// <summary>
-        /// Returns the Targets of the Relic Spell
-        /// </summary>
-        /// <param name="player"></param>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        public static ArrayList GetTargets(GamePlayer player, string target)
-        {
-            ArrayList targetlist = new ArrayList();
-
-            switch (target)
-            {
-                case "group":
-                    {
-                        if (player.Group != null)
-                        {
-                            foreach (GamePlayer pl in player.Group.GetPlayersInTheGroup())
-                            {
-                                targetlist.Add(pl);
-                            }
-                        }
-                        else
-                            targetlist.Add(player);
-                    }
-                    break;
-                case "self":
-                    {
-                        targetlist.Add(player);
-                    }
-                    break;
-                case "realm":
-                    {
-                        foreach (GamePlayer pl in player.GetPlayersInRadius(5000))
-                        {
-                            if (player != null)
-                                targetlist.Add(pl);
-                        }
-                    }
-                    break;
-            }
-
-            return targetlist;
-        }
-
-        /// <summary>
-        /// Returns the Relic Effect of the Relic
-        /// </summary>
-        /// <param name="player"></param>
-        /// <param name="spellid"></param>
-        /// <returns></returns>
-        public static GameSpellEffect GetRelicEffect(GamePlayer player, int spellid, bool minoreli)
-        {
-            Spell spell = DBSpellToSpell(SkillBase.GetSpellByID(spellid));
-
-            if (spell == null) return null;
-
-            ISpellHandler handler = ScriptMgr.CreateSpellHandler(player, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
-
-            int duration = spell.Duration / 1000;
-            return new GameSpellEffect(handler, duration, 0, minoreli);
-        }
-
-        #region Spellstuff
-        /// <summary>
-        /// Converts a Spell to a new Spell and sets a new Target
-        /// </summary>
-        /// <param name="spell"></param>
-        /// <param name="relic"></param>
-        /// <returns></returns>
-        public static Spell DBSpellToSpell(Spell spell)
-        {
-            if (spell == null) return null;
-
-            DBSpell dbspell = new DBSpell();
-
-            dbspell.AllowBolt = spell.AllowBolt;
-            dbspell.AmnesiaChance = spell.AmnesiaChance;
-            dbspell.CastTime = spell.CastTime;
-            dbspell.ClientEffect = spell.ClientEffect;
-            dbspell.Concentration = spell.Concentration;
-            dbspell.Damage = spell.Damage;
-            dbspell.DamageType = (int)spell.DamageType;
-            dbspell.Description = spell.Description;
-            dbspell.Duration = spell.Duration;
-            dbspell.EffectGroup = spell.EffectGroup;
-            dbspell.Frequency = spell.Frequency;
-            dbspell.Icon = spell.Icon;
-            dbspell.InstrumentRequirement = spell.InstrumentRequirement;
-            dbspell.IsPrimary = spell.IsPrimary;
-            dbspell.IsSecondary = spell.IsSecondary;
-            dbspell.LifeDrainReturn = spell.LifeDrainReturn;
-            dbspell.Message1 = spell.Message1;
-            dbspell.Message2 = spell.Message2;
-            dbspell.Message3 = spell.Message3;
-            dbspell.Message4 = spell.Message4;
-            dbspell.MoveCast = spell.MoveCast;
-            dbspell.Name = spell.Name;
-            dbspell.Power = spell.Power;
-            dbspell.Pulse = spell.Pulse;
-            dbspell.PulsePower = spell.PulsePower;
-            dbspell.Radius = spell.Radius;
-            dbspell.Range = spell.Range;
-            dbspell.RecastDelay = spell.RecastDelay;
-            dbspell.ResurrectHealth = spell.ResurrectHealth;
-            dbspell.ResurrectMana = spell.ResurrectMana;
-            dbspell.SharedTimerGroup = spell.SharedTimerGroup;
-            dbspell.SpellGroup = spell.Group;
-            dbspell.SpellID = spell.ID;
-            dbspell.SubSpellID = spell.SubSpellID;
-            dbspell.Target = spell.Target;
-            dbspell.Type = spell.SpellType;
-            dbspell.Uninterruptible = spell.Uninterruptible;
-            dbspell.Value = spell.Value;
-
-            return new Spell(dbspell, 1, true);
         }
         #endregion
     }

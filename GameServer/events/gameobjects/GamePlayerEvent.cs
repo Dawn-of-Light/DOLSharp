@@ -138,6 +138,14 @@ namespace DOL.Events
 		/// The QuestRewardChosen event is fired whenever the player finishes a RewardQuest.
 		/// </summary>
 		public static readonly GamePlayerEvent QuestRewardChosen = new GamePlayerEvent("GamePlayer.QuestRewardChosen");
+        /// <summary>
+        /// The ModelChanged event is fired whenever the player model changes.
+        /// </summary>
+        public static readonly GamePlayerEvent ModelChanged = new GamePlayerEvent("GamePlayer.ModelChanged");
+        /// <summary>
+        /// The AcceptGroup event is fired whenever the player accept a Group invitation.
+        /// </summary>
+        public static readonly GamePlayerEvent AcceptGroup = new GamePlayerEvent("GamePlayer.AcceptGroup");
 
 		#region Statistics
 
