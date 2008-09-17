@@ -27,7 +27,7 @@ using DOL.GS.PacketHandler;
 namespace DOL.GS.Spells
 {
   /// <summary>
-  /// Spell handler to summon a bonedancer pet.
+  /// Spell handler to summon a animist pet.
   /// </summary>
   /// <author>IST</author>
   [SpellHandler("SummonAnimistPet")]

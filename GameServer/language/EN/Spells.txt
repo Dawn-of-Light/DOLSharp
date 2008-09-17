@@ -1,0 +1,36 @@
+# DelveInfo
+DelveInfo.CastingTime:					Casting time: {0}
+DelveInfo.ConcentrationCost:				Concentration cost: {0}
+DelveInfo.Damage:					Damage: {0}
+DelveInfo.Duration:					Duration: 
+DelveInfo.Focus:					This is a focus spell. Cancels if you do any action.
+DelveInfo.Frequency:					Frequency: {0}
+DelveInfo.HealthReturned:				Health returned: {0}% of damage dealt
+DelveInfo.InstrumentRequire:				Instrument require: {0}
+DelveInfo.PowerCost:					Power cost: {0}
+DelveInfo.Radius:					Radius: {0}
+DelveInfo.Range:					Range: {0}
+DelveInfo.RecastTime:					Recast time: 
+DelveInfo.Target:					Target: {0}
+DelveInfo.Value:					Value: {0}
+
+# DamageSpeedDecrease
+DamageSpeedDecrease.DelveInfo.Decrease:			Speed decrease: {0}%
+DamageSpeedDecrease.DelveInfo.Function:			Function: damage/speed decrease
+
+# ResistDebuff
+ResistDebuff.DelveInfo.Decrease:			Resist decrease {0}: {1}
+ResistDebuff.DelveInfo.Function:			Function: resistance decrease
+
+#CharmSpellHandler
+CharmSpellHandler.DelveInfo.Function:			Function: {0}
+
+# DirectDamageDebuffSpellHandler
+DirectDamageDebuffSpellHandler.DelveInfo.Decrease:	Resist decrease ({0}): {1}%
+DirectDamageDebuffSpellHandler.DelveInfo.Function:	Function: dmg w/resist decrease
+
+# NearsightSpellHandler
+NearsightSpellHandler.DelveInfo.Function:		Function: {0}
+
+# ProcSpellHandler
+ProcSpellHandler.DelveInfo.Function:			Function: {0}
