@@ -33,6 +33,14 @@ AnimistTrainer.Interact.Text4:
 AnimistTrainer.WhisperReceive.Text1:			Ihr gehört jetzt zu den Animisten, {0}. Willkommen auf dem Pfad der Affinität.
 AnimistTrainer.WhisperReceiveCase.Text1:		pfad der affinität
 
+# /BainsheeTrainer
+BainsheeTrainer.Interact.Text1:				{0} sagt: "Hallo, {1}. Gerüchte über den Pfad der Affinität verbreiten sich im Reich. Wollt Ihr etwas darüber erfahren? Die Banshee ist eine weibliche, stofftragende Kreatur, deren Magie in Form von Geräuschen wirkt. Sie hat drei verschiedene Arten Geräusche, die ihre Umgebung unterschiedlich beeinflussen. Das beinhaltet ein Jammern, das Monster in Reichswesen verwandelt, die für eine kurze Zeit Gegner angreifen werden; einen Entfernungsschrei, der die Sichtbarkeit von Feinden verringert; eine Pufferatmung, die eine bestimmte Menge Magieschaden für Gruppenmitglieder absorbiert und einen Schrei, der nahe Monster dazu bringt, zu versuchen zu fliehen, bis die Banshee aufhört zu atmen. Ein Leben als [Banshee] ist so lohnenswert wie gefährlich, aber Ihr könnt es haben, wenn Ihr danach fragt."
+BainsheeTrainer.Interact.Text2:				
+BainsheeTrainer.Interact.Text3:
+BainsheeTrainer.Interact.Text4:
+BainsheeTrainer.WhisperReceive.Text1:			Ihr seid nun eine Banshee auf dem Weg der Affinität. Bitte nehmt diesen Stab der Erkenntnis als ein Zeichen dafür, dass Ihr den Pfad der Affinität beschreitet.
+BainsheeTrainer.WhisperReceiveCase.Text1:		banshee
+
 ## Midgard
 # /BonedancerTrainer
 BonedancerTrainer.Interact.Text1:			{0} sagt: "Willkommen junger Mystiker. Wollt Ihr etwas über den Gott Bogdar und die Knochentänzer zu erfahren? Er existierte schon vor den Göttern der Nordmänner. Bogdar ist der Totengott der Valkyn. Er beurteilt jeden tote Seele und entscheidet über ihr nächstes Leben. Bogdar gibt den Knochentänzern die Kraft, die Skelette toter Körper zu beleben und daraus Kreaturen herbeizurufen, die sie kontrollieren. In höheren Erfahrungsstufen können sie mehr als ein Skelett rufen, aber nur den Kommandanten befehligen. Alle Helfer werden dann von diesem kontrolliert. Stirbt er, werden alle Helfer zerstört; daher muss er dafür sorgen, dass der Kommandant am Leben bleibt. Später können Knochentänzer drei verschiedene Helfer rufen. Bis sie an Wissen und Macht gewonnen haben, können sie nur einen untoten Kommandanten beschwören, später aber verschiedene Helfer, je nach dem Pfad, den sie studieren. Wollt Ihr [dem Hause Bogdar beitreten] und den Pfad der Knochentänzer beschreiten?"
