@@ -27,12 +27,14 @@ namespace DOL.GS.Commands
 		"&account",
 		ePrivLevel.Admin,
 		"AdminCommands.Account.Description",
+        "AdminCommands.Account.Usage.Create",
 		"AdminCommands.Account.Usage.ChangePassword",
 		"AdminCommands.Account.Usage.Delete",
 		"AdminCommands.Account.Usage.DeleteChar",
 		"AdminCommands.Account.Usage.MoveChar",
-		"/account status <AccountName> <Level>",
-		"/account unban <AccountName>")]
+        "AdminCommands.Account.Usage.Status",
+        "AdminCommands.Account.Usage.UnBan",
+        "AdminCommands.Account.Usage.AccountName")]
 	public class AccountCommand : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
@@ -43,9 +45,57 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-			switch (args[1])
+			switch (args[1].ToLower())
 			{
-				#region ChangePassword
+				#region Create
+                case "create":
+                    {
+                        if (args.Length < 4)
+                        {
+                            DisplaySyntax(client);
+                            return;
+                        }
+
+                        string AccountName = args[2].ToLower();
+                        string Password = args[3];
+
+                        foreach (char c in AccountName.ToCharArray())
+                        {
+                            if ((c < '0' || c > '9') && (c < 'a' || c > 'z'))
+                            {
+                                DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.InvalidAccountName"));
+                                return;
+                            }
+                        }
+
+                        if (AccountName.Length < 4 || Password.Length < 4)
+                        {
+                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.InvalidAccountNameOrPassword"));
+                            return;
+                        }
+
+                        Account account = GetAccount(AccountName);
+                        if (account != null)
+                        {
+                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountNameAlreadyRegistered"));
+                            return;
+                        }
+                        
+                        account = new Account();
+                        account.Name = AccountName;
+                        account.Password = PacketHandler.Client.v168.LoginRequestHandler.CryptPassword(Password);
+                        account.PrivLevel = (uint)ePrivLevel.Player;
+                        account.Realm = (int)eRealm.None;
+                        account.CreationDate = DateTime.Now;
+                        account.Language = ServerProperties.Properties.SERV_LANGUAGE;
+                        GameServer.Database.AddNewObject(account);
+
+                        DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountCreated"));
+                        return;
+                    }
+                    break;
+                #endregion Create
+                #region ChangePassword
 				case "changepassword":
 					{
 						if (args.Length < 4)
@@ -78,21 +128,126 @@ namespace DOL.GS.Commands
 							return;
 						}
 
-						string accountname = args[2];
-						Account acc = GetAccount(accountname);
+						string AccountName = args[2];
+                        Account acc = GetAccount(AccountName);
 
 						if (acc == null)
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountNotFound", accountname));
+                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountNotFound", AccountName));
 							return;
 						}
 
 						KickAccount(acc);
 						GameServer.Database.DeleteObject(acc);
-						DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountDeleted", acc.Name));
+                        DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountDeleted", acc.Name));
 						return;
 					}
 				#endregion Delete
+                #region DeleteCharacter
+                case "deletecharacter":
+                    {
+                        if (args.Length < 3)
+                        {
+                            DisplaySyntax(client);
+                            return;
+                        }
+
+                        string charname = args[2];
+                        Character cha = GetCharacter(charname);
+
+                        if (cha == null)
+                        {
+                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharacterNotFound", charname));
+                            return;
+                        }
+
+                        KickCharacter(cha);
+                        GameServer.Database.DeleteObject(cha);
+                        DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharacterDeleted", cha.Name));
+                        return;
+                    }
+                #endregion DeleteCharacter
+                #region MoveCharacter
+                case "movecharacter":
+                    {
+                        if (args.Length < 4)
+                        {
+                            DisplaySyntax(client);
+                            return;
+                        }
+
+                        string charname = args[2];
+                        string accountname = args[3];
+
+                        Character cha = GetCharacter(charname);
+                        if (cha == null)
+                        {
+                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharacterNotFound", charname));
+                            return;
+                        }
+
+                        Account acc = GetAccount(accountname);
+                        if (acc == null)
+                        {
+                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountNotFound", accountname));
+                            return;
+                        }
+
+                        int firstAccountSlot = 0;
+                        switch ((eRealm)cha.Realm)
+                        {
+                            case eRealm.Albion:
+                                firstAccountSlot = 1 * 8;
+                                break;
+                            case eRealm.Midgard:
+                                firstAccountSlot = 2 * 8;
+                                break;
+                            case eRealm.Hibernia:
+                                firstAccountSlot = 3 * 8;
+                                break;
+                            default:
+                                DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharNotFromValidRealm"));
+                                return;
+                        }
+
+                        int freeslot = 0;
+                        for (freeslot = firstAccountSlot; freeslot < firstAccountSlot + 8; freeslot++)
+                        {
+                            bool found = false;
+                            foreach (Character ch in acc.Characters)
+                            {
+                                if (ch.Realm == cha.Realm && ch.AccountSlot == freeslot)
+                                {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found)
+                                break;
+
+                        }
+
+                        if (freeslot == 0)
+                        {
+                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountHasNoFreeSlots", accountname));
+                            return;
+                        }
+
+                        GameClient playingclient = WorldMgr.GetClientByPlayerName(cha.Name, true, false);
+                        if (playingclient != null)
+                        {
+                            playingclient.Out.SendPlayerQuit(true);
+                            playingclient.Disconnect();
+                        }
+
+                        cha.AccountName = acc.Name;
+                        cha.AccountSlot = freeslot;
+
+                        GameServer.Database.SaveObject(cha);
+                        DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharacterMovedToAccount", cha.Name, acc.Name));
+                        return;
+                    }
+                #endregion MoveCharacter
 				#region Status
 				case "status":
 					{
@@ -158,114 +313,33 @@ namespace DOL.GS.Commands
 						return;
 					}
 				#endregion Unban
-				#region DeleteCharacter
-				case "deletecharacter":
-					{
-						if (args.Length < 3)
-						{
-							DisplaySyntax(client);
-							return;
-						}
+                #region AccountName
+                case "accountname":
+                    {
+                        if (args.Length < 3)
+                        {
+                            DisplaySyntax(client);
+                            return;
+                        }
 
-						string charname = args[2];
-						Character cha = GetCharacter(charname);
+                        string CharName = args[2];
+                        Character Char = GetCharacter(CharName);
+                        
+                        if (Char == null)
+                        {
+                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharacterNotFound", CharName));
+                            return;
+                        }
 
-						if (cha == null)
-						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharacterNotFound", charname));
-							return;
-						}
-
-						KickCharacter(cha);
-						GameServer.Database.DeleteObject(cha);
-						DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharacterDeleted", cha.Name));
-						return;
-					}
-				#endregion DeleteCharacter
-				#region MoveCharacter
-				case "movecharacter":
-					{
-						if (args.Length < 4)
-						{
-							DisplaySyntax(client);
-							return;
-						}
-
-						string charname = args[2];
-						string accountname = args[3];
-
-						Character cha = GetCharacter(charname);
-						if (cha == null)
-						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharacterNotFound", charname));
-							return;
-						}
-
-						Account acc = GetAccount(accountname);
-						if (acc == null)
-						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountNotFound", accountname));
-							return;
-						}
-
-						int firstAccountSlot = 0;
-						switch ((eRealm)cha.Realm)
-						{
-							case eRealm.Albion:
-								firstAccountSlot = 1 * 8;
-								break;
-							case eRealm.Midgard:
-								firstAccountSlot = 2 * 8;
-								break;
-							case eRealm.Hibernia:
-								firstAccountSlot = 3 * 8;
-								break;
-							default:
-								DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharNotFromValidRealm"));
-								return;
-						}
-
-						int freeslot = 0;
-						for (freeslot = firstAccountSlot; freeslot < firstAccountSlot + 8; freeslot++)
-						{
-							bool found = false;
-							foreach (Character ch in acc.Characters)
-							{
-								if (ch.Realm == cha.Realm && ch.AccountSlot == freeslot)
-								{
-									found = true;
-									break;
-								}
-							}
-							if (!found)
-								break;
-
-						}
-
-						if (freeslot == 0)
-						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountHasNoFreeSlots", accountname));
-							return;
-						}
-
-						GameClient playingclient = WorldMgr.GetClientByPlayerName(cha.Name, true, false);
-						if (playingclient != null)
-						{
-							playingclient.Out.SendPlayerQuit(true);
-							playingclient.Disconnect();
-						}
-
-						cha.AccountName = acc.Name;
-						cha.AccountSlot = freeslot;
-
-						GameServer.Database.SaveObject(cha);
-						DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharacterMovedToAccount", cha.Name, acc.Name));
-						return;
-					}
-				#endregion MoveCharacter
-			}
+                        string AccName = GetAccountName(Char.Name);
+                        DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccNameForChar", Char.Name, AccName));
+                        
+                        return;
+                    }
+                #endregion AccountName
+            }
 		}
-
+        
 		/// <summary>
 		/// Loads an account
 		/// </summary>

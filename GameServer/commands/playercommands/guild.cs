@@ -941,32 +941,52 @@ namespace DOL.GS.Commands
                             {
                                 if (!GuildMgr.DoesGuildExist(guildname))
                                 {
-                                    Group group = client.Player.Group;
-
-                                    if (group == null)
+                                    if (Properties.GUILD_NUM > 1)
                                     {
-                                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.FormNoGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                        return;
-                                    }
+                                        Group group = client.Player.Group;
 
-                                    lock (group)
-                                    {
-                                        if (group.MemberCount < Properties.GUILD_NUM)
+                                        if (group == null)
                                         {
-                                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.FormNoMembers" + Properties.GUILD_NUM), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.FormNoGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                             return;
                                         }
 
-                                        // a member of group have a guild already, so quit!
-                                        foreach (GamePlayer ply in group.GetPlayersInTheGroup())
+                                        lock (group)
                                         {
-                                            if (ply.Guild != null)
+                                            if (group.MemberCount < Properties.GUILD_NUM)
                                             {
-                                                client.Player.Group.SendMessageToGroupMembers(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.AlreadyInGuildName", ply.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.FormNoMembers" + Properties.GUILD_NUM), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                                 return;
                                             }
-                                        }
 
+                                            // a member of group have a guild already, so quit!
+                                            foreach (GamePlayer ply in group.GetPlayersInTheGroup())
+                                            {
+                                                if (ply.Guild != null)
+                                                {
+                                                    client.Player.Group.SendMessageToGroupMembers(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.AlreadyInGuildName", ply.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                                    return;
+                                                }
+                                            }
+
+                                            Guild newGuild = GuildMgr.CreateGuild(client.Player, guildname);
+                                            if (newGuild == null)
+                                            {
+                                                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.UnableToCreateLead", guildname, client.Player.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                            }
+                                            else
+                                            {
+                                                foreach (GamePlayer ply in group.GetPlayersInTheGroup())
+                                                {
+                                                    newGuild.AddPlayer(ply);
+                                                }
+                                                client.Player.GuildRank = client.Player.Guild.GetRankByID(0); //creator is leader
+                                                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.GuildCreated", guildname, client.Player.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
                                         Guild newGuild = GuildMgr.CreateGuild(client.Player, guildname);
                                         if (newGuild == null)
                                         {
@@ -974,10 +994,6 @@ namespace DOL.GS.Commands
                                         }
                                         else
                                         {
-                                            foreach (GamePlayer ply in group.GetPlayersInTheGroup())
-                                            {
-                                                newGuild.AddPlayer(ply);
-                                            }
                                             client.Player.GuildRank = client.Player.Guild.GetRankByID(0); //creator is leader
                                             client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.GuildCreated", guildname, client.Player.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                                         }
@@ -1177,7 +1193,7 @@ namespace DOL.GS.Commands
                             try
                             {
                                 ushort newrank = Convert.ToUInt16(args[2]);
-                                if (newrank > guildRank || newrank > 10)
+                                if (newrank < guildRank || newrank > 10)
                                 {
                                     client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.DemotedHigherThanPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                     return;
@@ -1389,7 +1405,11 @@ namespace DOL.GS.Commands
                                         break;
                                     ind++;
                                     string zoneName = (ply.CurrentZone == null ? "(null)" : ply.CurrentZone.Description);
-                                    string mesg = ind + ") " + ply.Name + " <" + ply.GuildRank.Title + "> the Level " + ply.Level + " " + ply.CharacterClass.Name + " in " + zoneName;
+                                    string mesg;
+                                    if (ply.GuildRank.Title != null)
+                                        mesg = ind.ToString() + ") " + ply.Name + " <" + ply.GuildRank.Title + "> the Level " + ply.Level.ToString() + " " + ply.CharacterClass.Name + " in " + zoneName;
+                                    else
+                                        mesg = ind.ToString() + ") " + ply.Name + " <" + ply.GuildRank.RankLevel.ToString() + "> the Level " + ply.Level.ToString() + " " + ply.CharacterClass.Name + " in " + zoneName;
                                     if (ServerProperties.Properties.ALLOW_CHANGE_LANGUAGE)
                                         mesg += " <" + ply.Client.Account.Language + ">";
                                     if (ind >= startInd)
@@ -1928,8 +1948,8 @@ namespace DOL.GS.Commands
                             }
 							if (client.Player.Guild.ClaimedKeeps.Count == 1)
 							{
-								while (client.Player.Guild.ClaimedKeeps.Count > 0)
-                                    client.Player.Guild.ClaimedKeeps[0].Release();
+                                foreach (AbstractGameKeep keep in client.Player.Guild.ClaimedKeeps)
+                                    keep.Release();
 							}
 							else
 							{
@@ -1949,6 +1969,8 @@ namespace DOL.GS.Commands
                     // --------------------------------------------------------------------------------
                     case "upgrade":
                         {
+                            client.Out.SendMessage("Keep upgrading is currently disabled!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return;
                             if (client.Player.Guild == null)
                             {
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -1969,8 +1991,6 @@ namespace DOL.GS.Commands
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.KeepNoLevel"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 return;
                             }
-							client.Out.SendMessage("Keep upgrading is currently disabled!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return;
                             byte targetlevel = 0;
                             try
                             {
