@@ -71,7 +71,7 @@ namespace DOL.GS.Commands
 				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.DebugJump.UnknownRegion", RegionID.ToString()));
 				return false;
 			}
-			else if (reg.Expansion >= (int)client.ClientType)
+			else if (reg.Expansion > (int)client.ClientType)
 			{
 				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.DebugJump.RegionNotSuppByClient", reg.Description));
 				return false;
