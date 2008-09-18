@@ -55,6 +55,7 @@ namespace DOL.GS.PacketHandler
 		LoginDenied = 0x2C,
 		GameOpenReply = 0x2D,
 		UDPInitReply = 0x2F,
+		MinotaurRelicMapRemove = 0x45,
 		MinotaurRelicMapUpdate = 0x46,
 		WarMapClaimedKeeps = 0x49,
 		WarMapDetailUpdate = 0x4A,
@@ -562,6 +563,7 @@ namespace DOL.GS.PacketHandler
 		void SendRegionColorSheme(byte color);
 		void SendVampireEffect(GameLiving living, bool show);
 		void SendXFireInfo(byte flag);
+        void SendMinotaurRelicMapRemove(byte id);
         void SendMinotaurRelicMapUpdate(byte id, ushort region, int x, int y, int z);
         void SendMinotaurRelicWindow(GamePlayer player, int spell, bool flag);
         void SendMinotaurRelicBarUpdate(GamePlayer player, int xp);
