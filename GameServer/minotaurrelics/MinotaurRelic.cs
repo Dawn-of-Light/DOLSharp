@@ -250,10 +250,11 @@ namespace DOL.GS
             player.MinotaurRelic = this;
             Owner = player;
 
-            player.Out.SendMinotaurRelicWindow(player, Effect, true);
+            foreach (GamePlayer pl in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                pl.Out.SendMinotaurRelicWindow(player, Effect, true);
+
             player.Out.SendMinotaurRelicBarUpdate(player, (int)XP);
 
-            
             m_spellHandler = ScriptMgr.CreateSpellHandler(m_owner, RelicSpell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
             if (m_spellHandler != null)
                 m_gameSpellEffect = new GameSpellEffect(m_spellHandler, RelicSpell.Duration, 0);
@@ -291,8 +292,10 @@ namespace DOL.GS
                         break;
                     case "realm":
                         foreach (GamePlayer plr in m_owner.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-                            if (plr != null && !newPlayerlist.Contains(plr))
+                        {
+                            if (plr != null && GameServer.ServerRules.IsSameRealm(m_owner, plr, true) && !newPlayerlist.Contains(plr))
                                 newPlayerlist.Add(plr);
+                        }
                         break;
                 }
             }
@@ -303,23 +306,45 @@ namespace DOL.GS
                     if(plr == null) continue;
                     if (!newPlayerlist.Contains(plr))
                     {
-                        GameSpellEffect check = SpellHandler.FindEffectOnTarget(plr, m_gameSpellEffect.Spell.SpellType);
-                        if (check != null)
-                            check.Cancel(false);
+                        try
+						{
+                            lock (plr.EffectList)
+                            {
+                                GameSpellEffect check = SpellHandler.FindEffectOnTarget(plr, m_gameSpellEffect.Spell.SpellType);
+                                if (check != null)
+                                    check.Cancel(false);
+                            }
+						}
+						catch(Exception e)
+						{
+							if (log.IsErrorEnabled)
+								log.Error("Minotaur Relics : Effect Cancel : " + e);
+						}
                     }
                 }
                 foreach (GamePlayer plr in newPlayerlist)
                 {
                     if (plr == null) continue;
-                    GameSpellEffect check = SpellHandler.FindEffectOnTarget(plr, m_gameSpellEffect.Spell.SpellType);
-                    if (check == null)
+                    try
                     {
-                        ISpellHandler handler = ScriptMgr.CreateSpellHandler(plr, RelicSpell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
-                        GameSpellEffect plreffect = null;
-                        if (handler != null)
-                            plreffect = new GameSpellEffect(handler, RelicSpell.Duration, 0);
-                        if (plreffect != null)
-                            plreffect.Start(plr);
+                        lock (plr.EffectList)
+                        {
+                            GameSpellEffect check = SpellHandler.FindEffectOnTarget(plr, m_gameSpellEffect.Spell.SpellType);
+                            if (check == null)
+                            {
+                                ISpellHandler handler = ScriptMgr.CreateSpellHandler(plr, RelicSpell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+                                GameSpellEffect plreffect = null;
+                                if (handler != null)
+                                    plreffect = new GameSpellEffect(handler, RelicSpell.Duration, 0);
+                                if (plreffect != null)
+                                    plreffect.Start(plr);
+                            }
+                        }
+                    }
+                    catch(Exception e)
+                    {
+                        if (log.IsErrorEnabled)
+                            log.Error("Minotaur Relics : Effect Start : " + e);
                     }
                 }
                 Playerlist = newPlayerlist;
@@ -334,9 +359,20 @@ namespace DOL.GS
                 foreach (GamePlayer plr in Playerlist)
                 {
                     if (plr == null) continue;
-                    GameSpellEffect check = SpellHandler.FindEffectOnTarget(plr, m_gameSpellEffect.Spell.SpellType);
-                    if (check != null)
-                        check.Cancel(false);
+                    try
+                    {
+                        lock (plr.EffectList)
+                        {
+                            GameSpellEffect check = SpellHandler.FindEffectOnTarget(plr, m_gameSpellEffect.Spell.SpellType);
+                            if (check != null)
+                                check.Cancel(false);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        if (log.IsErrorEnabled)
+                            log.Error("Minotaur Relics : Stop Relic Effect : " + e);
+                    }
                 }
                 Playerlist.Clear();
             }
@@ -361,9 +397,7 @@ namespace DOL.GS
                 timer = null;
             }
             foreach (GamePlayer pl in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-            {
                 pl.Out.SendMinotaurRelicWindow(player, 0, false);
-            }
 
             AddToWorld();
         }
@@ -477,7 +511,10 @@ namespace DOL.GS
             foreach (GameClient clt in WorldMgr.GetClientsOfRegion(CurrentRegionID))
             {
                 if (clt == null || clt.Player == null) continue;
-                clt.Player.Out.SendMinotaurRelicMapUpdate((byte)RelicID, CurrentRegionID, X, Y, Z);
+                if (XP > 0)
+                    clt.Player.Out.SendMinotaurRelicMapUpdate((byte)RelicID, CurrentRegionID, X, Y, Z);
+                else
+                    clt.Player.Out.SendMinotaurRelicMapRemove((byte)RelicID);
             }
         }
         #endregion
