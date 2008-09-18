@@ -98,17 +98,19 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
+		public override void SendMinotaurRelicMapRemove(byte id)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.MinotaurRelicMapRemove));
+            pak.WriteIntLowEndian((uint)id);
+			SendTCP(pak);
+		}
+		
 		public override void SendMinotaurRelicMapUpdate(byte id, ushort region, int x, int y, int z)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.MinotaurRelicMapUpdate));
 
-			pak.WriteByte(id);
-			pak.WriteByte(0x00);
-            pak.WriteByte(0x00);
-            pak.WriteShort(region);
-            pak.WriteByte(0x00);
-            pak.WriteByte(0x00);
-            pak.WriteByte(0x00);
+			pak.WriteIntLowEndian((uint)id);
+            pak.WriteIntLowEndian((uint)region);
             pak.WriteIntLowEndian((uint)x);
             pak.WriteIntLowEndian((uint)y);
             pak.WriteIntLowEndian((uint)z);

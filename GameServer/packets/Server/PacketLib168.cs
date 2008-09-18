@@ -589,6 +589,9 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendPlayerCreate(GamePlayer playerToCreate)
 		{
+			if (playerToCreate == null)
+				return;
+			
 			Region playerRegion = playerToCreate.CurrentRegion;
 			if (playerRegion == null)
 			{
@@ -1863,7 +1866,7 @@ namespace DOL.GS.PacketHandler
 								pak.WriteByte((byte)(item.Hand << 6));
 							pak.WriteByte((byte)((item.Type_Damage << 6) | item.Object_Type));
 							//1 if item cannot be used by your class (greyed out)
-							if (m_gameClient.Player.HasAbilityToUseItem(item))
+							if (m_gameClient.Player != null && m_gameClient.Player.HasAbilityToUseItem(item))
 								pak.WriteByte(0x00);
 							else
 								pak.WriteByte(0x01);
@@ -3288,6 +3291,9 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendLivingDataUpdate(GameLiving living, bool updateStrings)
 		{
+			if (living == null)
+				return;
+				
 			if (living is GamePlayer)
 			{
 				SendObjectRemove(living);
@@ -3472,6 +3478,9 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort(plat);
 			SendTCP(pak);
 		}
+
+        public virtual void SendMinotaurRelicMapRemove(byte id)
+        { }
 
         public virtual void SendMinotaurRelicMapUpdate(byte id, ushort region, int x, int y, int z)
         { }
