@@ -1,20 +1,15 @@
-
-
 # General Sentences
 GMCommands.Error:							Error: {0}
-
 
 # /addbind Command
 GMCommands.AddBind.Description:				Adds a bindpoint to the game.
 GMCommands.AddBind.Usage:					/addbind [radius=750]
 GMCommands.AddBind.BindPointAdded:			Bindpoint added: X={0}, Y={1}, Z={2}, Radius={3}, Region={4}
 
-
 # /addhookpoint Command
 GMCommands.HookPoint.Description:			Add hookpoint on a keep component.
 GMCommands.HookPoint.Usage:					'/addhookpoint <skin> <id>' to add a hookpoint (select the GameKeepComponent)
 GMCommands.HookPoint.NoGKCTarget:			You are not targeting a GameKeepComponent!
-
 
 # /annunce Command
 GMCommands.Announce.Description:			Send message to all players online
@@ -24,12 +19,10 @@ GMCommands.Announce.WindowAnnounce:			Announce from {0}
 GMCommands.Announce.SendAnnounce:			[Announce]: {0}
 GMCommands.Announce.ConfirmAnnounce:		Announce from {0}: {1}
 
-
 # /area Command
 GMCommands.Area.Description:				Various commands to help you with areas
 GMCommands.Area.Usage.Create:				/area create <name> <type(circle|square)> <radius> <broadcast(y|n)> <soundid>
 GMCommands.Area.AreaCreated:				Area created - Description: {0}, X={1}, Y={2}, Z={3}, Radius={4}, Broadcast={5}, Sound={6}.
-
 
 # /ban Command
 GMCommands.Ban.Description:					Usage of /ban command: 
@@ -44,7 +37,6 @@ GMCommands.Ban.IBanned:						IP {0} has been banned.
 GMCommands.Ban.BAlreadyBanned:				These account and IP have already been banned.
 GMCommands.Ban.BBanned:						Account {0} and IP {1} have been banned.
 
-
 # /cast Command
 GMCommands.Cast.Description:				Cast a spell/effect
 GMCommands.Cast.Usage:						'/cast <id> <effect|cast|spell>' Cast the Spell/VisualEffect associated with <SpellID>
@@ -56,7 +48,6 @@ GMCommands.Cast.Spell.CastOnLiving:			You cast {0} on {1}.
 GMCommands.Cast.Spell.CastOnSelf:			You cast {0} on self.
 GMCommands.Cast.Spell.GMCastOnYou:			{0} {1} cast {2} on you.
 GMCommands.Cast.Spell.Inexistent:			Spell inexistent. Id={0}
-
 
 # /crafting Command
 GMCommands.Crafting.Description:			Change the crafting level of your target
@@ -72,13 +63,11 @@ GMCommands.Crafting.NotHaveSkillAddIt:		{0} does not have the crafting skill {1}
 GMCommands.Crafting.SkillChanged:			Crafting skill {1} correctly changed.
 GMCommands.Crafting.NowHasSkillPoints:		{0} now has {} in {}.
 
-
 # /debug Command
 GMCommands.Debug.Description:				Activate or deactivate debug command
 GMCommands.Debug.Usage:						/debug <on/off>
 GMCommands.Debug.ModeON:					Debug mode ON
 GMCommands.Debug.ModeOFF:					Debug mode OFF
-
 
 # ]jump Command
 GMCommands.DebugJump.Description:			Teleports yourself to the specified location
@@ -87,7 +76,6 @@ GMCommands.DebugJump.InvalidZoneID:			Invalid zone Id: {0}
 GMCommands.DebugJump.UnknownZoneID:			Unknown zone Id: {0}
 GMCommands.DebugJump.UnknownRegion:			Unknown region ({0}).
 GMCommands.DebugJump.RegionNotSuppByClient:	Region ({0}) is not supported by your client.
-
 
 # /door Command
 GMCommands.Door.Description:				Manage the doors
@@ -98,7 +86,6 @@ GMCommands.Door.Created:					Door created with Id={0}
 GMCommands.Door.DoorExist:					Door exist. Impossible create it. Id={0}
 GMCommands.Door.Removed:					Door removed with Id={0}
 GMCommands.Door.InexistentDoor:				Inexistent door. Impossible remove it. Id={0}
-
 
 # /faction Command
 GMCommands.Faction.Description:				Create a faction and assign friend and enemy faction
@@ -116,27 +103,22 @@ GMCommands.Faction.Create.NewCreated:		New faction created
 GMCommands.Faction.Assign.MustSelectMob:	You must select a mob first.
 GMCommands.Faction.Assign.MobHasJoinedFact:	The mob {0} has joined the faction of {1}.
 
-
 # /gmrelic Command
 GMCommands.GMRelic.Description:				Create a new Relic
 GMCommands.GMRelic.Usage:					/gmrelic <magic|strength> <realm>
 
-
 # /gmrelicpad Command
 GMCommands.GMRelicPad.Description:			Create a new RelicPad
 GMCommands.GMRelicPad.Usage:				/gmrelic <magic|strength> <name> <realm>
-
 
 # /harm Command
 GMCommands.Harm.Description:				Harms your target (health)
 GMCommands.Harm.Usage:						/harm <amount>
 GMCommands.Harm.InvalidTarget:				You have not selected a valid target
 
-
 # /heal Command
 GMCommands.Heal.Description:				Heals your target (health, endu, mana)
 GMCommands.Heal.Usage:						/heal
-
 
 # /item Command
 GMCommands.Item.Description:				Various Item commands!
@@ -203,7 +185,6 @@ GMCommands.Item.SaveTemplate.ItemSaved:		The ItemTemplate {0} was successfully s
 GMCommands.Item.FindID.MatchingIDsForX:		Matching ID's for {0} count {1}.
 GMCommands.Item.FindName.MatchingNamesForX:	Matching Names for {0} count {1}.
 
-
 # /jump Command
 GMCommands.Jump.Description:				Teleports a player or yourself to the specified location xp
 GMCommands.Jump.Information:				Playername can be [me]:
@@ -223,7 +204,6 @@ GMCommands.Jump.PlayerIsNotInGame:			{0} is not in the game.
 GMCommands.Jump.CheckExpansion.CannotJump:	{0} cannot jump to Destination region ({1}) because it is not supported by his/her client type.
 GMCommands.Jump.CheckExpansion.ClientNoSup:	{0} tried to jump you to Destination region ({1}) but it is not supported by your client type.
 		
-
 # /keep Command
 GMCommands.Keep.Description:				Various keep creation commands!
 GMCommands.Keep.Usage.FastCreate:			'/keep fastcreate <type> <id> <name>' To create a keep with base template
@@ -261,7 +241,6 @@ GMCommands.Keep.Radius.YouChangeKeepRadius:	You change the radius of the current
 GMCommands.Keep.Save.KeepSavedInDatabase:	Keep saved in database.
 GMCommands.Keep.AddTeleport.StoneAdded:		Teleport Stone added!
 
-
 # /keepcomponent Command
 GMCommands.KeepComponents.Description:		Various keep component creation commands!
 GMCommands.KeepComponents.Usage.Create.TID:	'/keepcomponent create <type> <keepid>' To create a keep component.
@@ -271,7 +250,6 @@ GMCommands.KeepComponents.Usage.Delete:		'/keepcomponent delete' to delete the c
 GMCommands.KeepComponents.Create.KCCreated:	You have created a keep component.
 GMCommands.KeepComponents.Skin.YChangeSkin:	You change the skin of current keep component.
 GMCommands.KeepComponents.Delete.YDeleteKC:	You delete the current component.
-
 
 # /keepguard Command
 GMCommands.KeepGuard.Description:			Various keep guard commands!
@@ -295,14 +273,12 @@ GMCommands.KeepGuard.Path.PPAdded:			PathPoint added. Current PathLength = {0}.
 GMCommands.KeepGuard.Path.TargPatrolGuard:	Target a patrol guard first!
 GMCommands.KeepGuard.Path.Saved:			Path saved
 
-
 # /kick Command
 GMCommands.Kick.Description:				Kicks the player offline of whom you select.
 GMCommands.Kick.Usage:						'/kick <PlayerName>' To kick the player.
 GMCommands.Kick.NoPlayerOnLine:				No one with that name is online to Kick!
 GMCommands.Kick.RemovedFromServer:			You have been removed from the server!
 GMCommands.Kick.RemovedFromServerByGM:		You have been removed from the server by GM {0}!
-
 
 # /merchant Command
 GMCommands.Merchant.Description:			Various merchant creation commands!
@@ -324,6 +300,8 @@ GMCommands.Merchant.Create.NewGuildName:	General Merchant
 GMCommands.Merchant.Create.Created:			Merchant created: OID={0}
 GMCommands.Merchant.Info.ArtListIsEmpty:	Merchant articles list is empty!
 GMCommands.Merchant.Info.ArtList:			Merchant articles list: "{0}"
+GMCommands.Merchant.NewName:			New Merchant
+GMCommands.Merchant.NewGuildName:		Merchant
 GMCommands.Merchant.Save.SavedInDB:			Target Merchant saved in DB!
 GMCommands.Merchant.Remove.RemovedFromDB:	Target Merchant removed from DB!
 GMCommands.Merchant.Sell.Add.Loaded:		Merchant articles list loaded!
@@ -339,7 +317,6 @@ GMCommands.Merchant.Articles.Remove.SlotInPageCleaned:	Merchant articles list sl
 GMCommands.Merchant.Articles.Delete.DeletingListTemp:	Deleting articles list template ...
 GMCommands.Merchant.Articles.Delete.ListDeleted:		Merchant articles list deleted.
 GMCommands.Merchant.Type.Changed:			Merchant type changed to {0}.
-
 
 # /minorelic Command
 GMCommands.MinoRelic.Description:			Various Commands for Minotaur Relics
