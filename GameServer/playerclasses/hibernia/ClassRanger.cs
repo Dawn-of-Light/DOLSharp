@@ -37,7 +37,7 @@ namespace DOL.GS.PlayerClass
 			m_primaryStat = eStat.DEX;
 			m_secondaryStat = eStat.QUI;
 			m_tertiaryStat = eStat.STR;
-			m_manaStat = eStat.INT; //TODO: not sure
+			m_manaStat = eStat.DEX;
 		}
 
 		public override string GetTitle(int level)
