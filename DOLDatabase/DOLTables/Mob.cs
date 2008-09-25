@@ -73,6 +73,8 @@ namespace DOL.Database
         private string m_boat_ownerid;
 		private int m_roamingRange;
 
+        private bool m_isCloakHoodUp;
+
 		static bool m_autoSave;
 
 		/// <summary>
@@ -700,6 +702,20 @@ namespace DOL.Database
 				m_roamingRange = value;
 			}
 		}
+
+        /// <summary>
+        /// Is cloak hood up
+        /// </summary>
+        [DataElement(AllowDbNull = true)]
+        public bool IsCloakHoodUp
+        {
+            get { return m_isCloakHoodUp; }
+            set
+            {
+                m_isCloakHoodUp = value;
+                Dirty = true;
+            }
+        }
     }
 }
 
