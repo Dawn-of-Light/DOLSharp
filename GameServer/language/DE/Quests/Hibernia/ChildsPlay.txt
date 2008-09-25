@@ -1,0 +1,24 @@
+Hib.ChildsPlay.CheckPlayerAbortQuest.Text1:	Gut, macht also weiter und vollendet Eure Arbeit!
+Hib.ChildsPlay.CheckPlayerAbortQuest.Text2:	Auftrag {0} abgebrochen. Ihr könnt jeder Zeit wieder beginnen.
+
+Hib.ChildsPlay.CheckPlayerAcceptQuest.Text1:	Ach, komm schon. Du bist nicht besser als dieser Lilienliebhaber... Lilienbauch... Lilien... ach, vergiss es... dieser dumme Raymond! Nun, was machen wir jetzt, um Spaß zu haben?
+Hib.ChildsPlay.CheckPlayerAcceptQuest.Text2:	Großartig! Wir werden, öhm, einfach hier warten, während du dich darum kümmerst. Siehst du, Raymond, nicht jeder ist so ein Riesenfeigling wie du. Feigling!
+
+Hib.ChildsPlay.Description.Text1:		Charles hat Euch aufgefordert, die Statue im Zentrum von Nergals Bereich im Dämonenbruch zu berühren. Geht vom Bindstein in Mag Mell aus ein kurzes Stück nordöstlich, um den Eingang des Dungeons in einem kleinen Tal zu finden.
+Hib.ChildsPlay.Description.Text2:		Kehrt zurück zu Charles nach Mag Mell und lasst ihn wissen, dass Ihr seine Mutprobe bestanden habt.
+
+Hib.ChildsPlay.FinishQuest.Text1:		{0} gehören Euch als Belohnung!
+
+Hib.ChildsPlay.PlayerEnterStatueArea.Text1:	Ihr habt die Statue erreicht, von der Euch Charles erzählt hat. Kehrt zu ihm zurück und erzählt ihm von Eurem Mut.
+
+Hib.ChildsPlay.TalkToCharles.Text1:		Hallo, {0}. Bist du es je müde geworden, dasselbe Spiel immer wieder zu spielen? Genauso ist es hier. Die Erwachsenen sagen, alles was wir tun können, ist hier sitzen und 'Wahrheit oder Wagemut' spielen. Sicher war es am Anfang lustig, doch den meisten von uns wurde langweilig und Raymond ist zu feige, sich auf irgendeine der [Mutproben] einzulassen, die ich mir für ihn ausdenke.
+Hib.ChildsPlay.TalkToCharles.Text2:		Du bist in einem Stück zurück! Ich meine, ähm, Willkommen zurück! Hat dir die Statue gefallen? Hat sie dir Angst eingejagt? Heißt das, du bleibst und spielst das Spiel erneut mit uns? Dann nimm dies hier, ich brauche es nicht mehr.
+Hib.ChildsPlay.TalkToCharles.Text3:		
+Hib.ChildsPlay.TalkToCharles.Text4:		Wir hatten viel mehr Spaß, als wir noch mit den Mädchen 'Flaschendrehen' im Untergeschoss der Taverne spielen konnten, aber Tiffs Eltern haben uns dort erwischt und seitdem werden wir wie Kleinkinder behandelt. Ich wette, dieses [Spiel] würde weitaus besser sein, wenn du dich uns anschließen könntest. Ich würde sogar Raymond rauswerfen und mir die allerbeste Mutprobe aller Zeiten ausdenken, nur für dich.
+Hib.ChildsPlay.TalkToCharles.Text5:		Hmm, gib mir eine Minute. Ich weiß es! Die Wachen reden immer über eine große Statue im Dämonenbruch jenseits der Stadtgrenzen. Geh dort hinein, berühre sie und komm wieder heraus, ohne von einem Monster gefressen zu werden! Was sagst du?
+Hib.ChildsPlay.TalkToCharles.Text6:		Wollt Ihr mit Charles 'Wahrheit oder Wagemut' spielen? [Erfahrungsstufe 1]
+Hib.ChildsPlay.TalkToCharles.Text7:		Wollt Ihr wirklich diese Aufgabe abbrechen, wobei Euch alle damit verbundenen Gegenstände verloren gehen?
+
+Hib.ChildsPlay.TalkToCharles.CaseText1:		mutproben
+Hib.ChildsPlay.TalkToCharles.CaseText2:		spiel
+Hib.ChildsPlay.TalkToCharles.CaseText3:		abort
