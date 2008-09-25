@@ -1934,6 +1934,7 @@ namespace DOL.GS
 			m_houseNumber = npc.HouseNumber;
 			m_maxdistance = npc.MaxDistance;
 			m_roamingRange = npc.RoamingRange;
+            m_isCloakHoodUp = npc.IsCloakHoodUp;
 		}
 
 		/// <summary>
@@ -2010,6 +2011,7 @@ namespace DOL.GS
 				mob.NPCTemplateID = NPCTemplate.TemplateId;
 			mob.PathID = PathID;
 			mob.MaxDistance = m_maxdistance;
+            mob.IsCloakHoodUp = m_isCloakHoodUp;
 
 			if (InternalID == null)
 			{

@@ -78,7 +78,8 @@ namespace DOL.GS.Commands
         "'/mob npctemplate <NPCTemplateID>' creates a mob with npc template, or modifies target",
         "'/mob path <PathID>' associate the mob to the specified path",
         "'/mob <stat> <amount>' Set the mobs stats (str, con, etc)",
-        "'/mob tether <tether range>' set mob tether range (>0=check, 0=no check, <0=no check)"
+        "'/mob tether <tether range>' set mob tether range (>0=check, 0=no check, <0=no check)",
+        "'/mob cloak' hide or show the cloak"
         )]
     public class MobCommandHandler : AbstractCommandHandler, ICommandHandler
     {
@@ -1254,6 +1255,14 @@ namespace DOL.GS.Commands
                         client.Out.SendMessage("Mob FLYING flag is set to " + ((targetMob.Flags & (uint)GameNPC.eFlags.FLYING) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     }
                     break;
+                case "cloak":
+                    {
+                        targetMob.IsCloakHoodUp ^= true;
+                        targetMob.UpdateNPCEquipmentAppearance();
+                        targetMob.SaveIntoDatabase();
+                        client.Out.SendMessage("Mob IsCloakHoodUp flag is set to " + targetMob.IsCloakHoodUp, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    }
+                    break;
                 case "noname":
                     {
                         targetMob.Flags ^= (uint)GameNPC.eFlags.DONTSHOWNAME;
@@ -1430,6 +1439,7 @@ namespace DOL.GS.Commands
                         mob.Flags = targetMob.Flags;
                         mob.MeleeDamageType = targetMob.MeleeDamageType;
                         mob.RespawnInterval = targetMob.RespawnInterval;
+						mob.RoamingRange = targetMob.RoamingRange;
 						
 						// also copies the stats
 
