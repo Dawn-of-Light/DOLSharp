@@ -1583,16 +1583,16 @@ namespace DOL.GS.Quests.Midgard
             {
                 if (quest == null)
                 {
-
-                    Charles.SayTo(player, "Hello there, " + player.CharacterClass.BaseName + ". Have you ever gotten tired of playing the same game over and over? That's what it's like here. All the adults say we can do is sit here and play 'Truth or Dare.' Sure, it was fun at first, but most of us have gotten bored and Raymond's too chicken to do any of the [dares] I think of for him.");
+                    Charles.SayTo(player, LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.Text1", player.CharacterClass.BaseName));
                     return;
                 }
                 if (quest.Step == 2)
                 {
-                    Charles.SayTo(player, "You made it back alive! I mean, uh, welcome back! How was the statue? Did you get scared? Does this mean you're going to stay and play the game with us again? If you are, you can have these. I don't need them anymore.");
+                    Charles.SayTo(player, LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.Text2"));
 
                     //k109:  Until I can get the quest dialog from live, I reward based on class, feel free to edit.
-                    player.Out.SendMessage(" You have completed the Childs Play quest.", eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.Text3", questTitle), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
+
                     if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Viking"))
                     {
                         GiveItem(Charles, quest.m_questPlayer, daringstuddedboots);
@@ -1638,25 +1638,21 @@ namespace DOL.GS.Quests.Midgard
                 if (quest == null)
                 {
                     //k109:  This is the "old" way of doing quests, by clicking on keywords, but have to use this until I can get the new quest dialog window.
-                    switch (wArgs.Text)
-                    {
-                        case "dares":
-                            Charles.SayTo(player, "It was a lot more fun when we could play 'Spin the Elixir' in the tavern basement with the girls, but Tiff's parents caught us there and we've been treated like babies ever since. I bet this game would be a whole lot better if you could [join] us. I'd even kick Raymond out and think up the bestest dare ever, just for you.");
-                            break;
+                    String lowerCase = wArgs.Text.ToLower();
 
-                        case "join":
-                            Charles.SayTo(player, "Hmm. Give me a minute. I know just the thing. The guards keep talking about a big, scary statue in the demon dungeon beyond the limits of town. I dare you to go in and touch it, and come back out without getting eaten by a monster! What do you say?");
-                            player.Out.SendQuestSubscribeCommand(Charles, QuestMgr.GetIDForQuestType(typeof(childsplay)), "Will you join Charles's game of 'Truth or Dare'? \n[Level 1]");
-                            break;
-                    }
-                }
-                else
-                {
-                    switch (wArgs.Text)
+                    if (lowerCase == LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.CaseText1"))
                     {
-                        case "abort":
-                            player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
-                            break;
+                        Charles.SayTo(player, LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.Text4"));
+                    }
+
+                    else if (lowerCase == LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.CaseText2"))
+                    {
+                        Charles.SayTo(player, LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.Text5"));
+                        player.Out.SendQuestSubscribeCommand(Charles, QuestMgr.GetIDForQuestType(typeof(childsplay)), LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.Text6"));
+                    }
+                    else if (lowerCase == LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.CaseText3"))
+                    {
+                        player.Out.SendCustomDialog(LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.Text7"), new CustomDialogResponse(CheckPlayerAbortQuest));
                     }
                 }
             }
@@ -1685,11 +1681,11 @@ namespace DOL.GS.Quests.Midgard
 
             if (response == 0x00)
             {
-                SendSystemMessage(player, "Good, no go out there and finish your work!");
+                SendSystemMessage(player, LanguageMgr.GetTranslation(player.Client, "ChildsPlay.CheckPlayerAbortQuest.Text1"));
             }
             else
             {
-                SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+                SendSystemMessage(player, LanguageMgr.GetTranslation(player.Client, "ChildsPlay.CheckPlayerAbortQuest.Text2", questTitle));
                 quest.AbortQuest();
             }
         }
@@ -1716,7 +1712,7 @@ namespace DOL.GS.Quests.Midgard
 
             if (quest != null && quest.Step == 1)
             {
-                player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "You've reached the statue Charles told you about. Return to him and let him know you've completed his dare.");
+                player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, LanguageMgr.GetTranslation(player.Client, "ChildsPlay.PlayerEnterStatueArea.Text1"));
                 quest.Step = 2;
             }
         }
@@ -1730,14 +1726,13 @@ namespace DOL.GS.Quests.Midgard
 
             if (response == 0x00)
             {
-                SendReply(player, "Oh well, if you change your mind, please come back!");
+                SendReply(player, LanguageMgr.GetTranslation(player.Client, "ChildsPlay.CheckPlayerAcceptQuest.Text1"));
             }
             else
             {
                 if (!Charles.GiveQuest(typeof(childsplay), player, 1))
                     return;
-
-                SendReply(player, "Great, we'll, uh, wait right here while you go do it. See, Raymond, not everyone's a big chicken like you. Chicken!");
+                SendReply(player, LanguageMgr.GetTranslation(player.Client, "ChildsPlay.CheckPlayerAcceptQuest.Text2"));
             }
         }
 
@@ -1750,14 +1745,16 @@ namespace DOL.GS.Quests.Midgard
         {
             get
             {
-                switch (Step)
+                //k109: Update each time a kill is made.
+                if (Step == 1)
                 {
-                    //k109: Update each time a kill is made.
-                    case 1:
-                        return "[Step #1] Charles has dared you to touch the statue in the center of Nergal's section of the Demons' Breach dungeon. Travel a short distance northeast of Mularn's bindstone to find the dungeon entrance.";
-                    case 2:
-                        return "[Step #2] Return to Charles in Mularn and let him know you've completed his dare.";
+                    return LanguageMgr.GetTranslation(m_questPlayer.Client, "Mid.ChildsPlay.Description.Text1");
                 }
+                else if (Step == 2)
+                {
+                    return LanguageMgr.GetTranslation(m_questPlayer.Client, "Mid.ChildsPlay.Description.Text2");
+                }
+
                 return base.Description;
             }
         }
@@ -1773,7 +1770,7 @@ namespace DOL.GS.Quests.Midgard
 
             //k109: xp and money Rewards...
             m_questPlayer.GainExperience(2, true);
-            m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 0, 67), "You are awarded {0} copper!");
+            m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 0, 67), LanguageMgr.GetTranslation(m_questPlayer.Client, "ChildsPlay.FinishQuest.Text1"));
         }
     }
 }

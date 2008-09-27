@@ -1577,15 +1577,15 @@ namespace DOL.GS.Quests.Hibernia
             {
                 if (quest == null)
                 {
-                    Charles.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ChildsPlay.TalkToCharles.Text1", player.CharacterClass.BaseName));
+                    Charles.SayTo(player, LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.Text1", player.CharacterClass.BaseName));
                     return;
                 }
                 if (quest.Step == 2)
                 {
-                    Charles.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ChildsPlay.TalkToCharles.Text2"));
+                    Charles.SayTo(player, LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.Text2"));
 
                     //k109:  Until I can get the quest dialog from live, I reward based on class, feel free to edit.
-                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Hib.ChildsPlay.TalkToCharles.Text3", questTitle), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.Text3", questTitle), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
                     if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Guardian"))
                     {
                         GiveItem(Charles, quest.m_questPlayer, daringstuddedboots_hib);
@@ -1646,22 +1646,22 @@ namespace DOL.GS.Quests.Hibernia
                     //k109:  This is the "old" way of doing quests, by clicking on keywords, but have to use this until I can get the new quest dialog window.
                     String lowerCase = wArgs.Text.ToLower();
 
-                    if (lowerCase == LanguageMgr.GetTranslation(player.Client, "Hib.ChildsPlay.TalkToCharles.CaseText1"))
+                    if (lowerCase == LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.CaseText1"))
                     {
-                        Charles.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ChildsPlay.TalkToCharles.Text4"));
+                        Charles.SayTo(player, LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.Text4"));
                     }
 
-                    else if (lowerCase == LanguageMgr.GetTranslation(player.Client, "Hib.ChildsPlay.TalkToCharles.CaseText2"))
+                    else if (lowerCase == LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.CaseText2"))
                     {
-                        Charles.SayTo(player, LanguageMgr.GetTranslation(player.Client, "Hib.ChildsPlay.TalkToCharles.Text5"));
-                        player.Out.SendQuestSubscribeCommand(Charles, QuestMgr.GetIDForQuestType(typeof(childsplay)), LanguageMgr.GetTranslation(player.Client, "Hib.ChildsPlay.TalkToCharles.Text6"));
+                        Charles.SayTo(player, LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.Text5"));
+                        player.Out.SendQuestSubscribeCommand(Charles, QuestMgr.GetIDForQuestType(typeof(childsplay)), LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.Text6"));
                     }
-                    else if (lowerCase == LanguageMgr.GetTranslation(player.Client, "Hib.ChildsPlay.TalkToCharles.CaseText3"))
+                    else if (lowerCase == LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.CaseText3"))
                     {
-                        player.Out.SendCustomDialog(LanguageMgr.GetTranslation(player.Client, "Hib.ChildsPlay.TalkToCharles.Text7"), new CustomDialogResponse(CheckPlayerAbortQuest));
+                        player.Out.SendCustomDialog(LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.Text7"), new CustomDialogResponse(CheckPlayerAbortQuest));
                     }
-                  }
-              }
+                }
+            }
         }
         /// <summary>
         /// This method checks if a player qualifies for this quest
@@ -1687,11 +1687,11 @@ namespace DOL.GS.Quests.Hibernia
 
             if (response == 0x00)
             {
-                SendSystemMessage(player, LanguageMgr.GetTranslation(player.Client, "Hib.ChildsPlay.CheckPlayerAbortQuest.Text1"));
+                SendSystemMessage(player, LanguageMgr.GetTranslation(player.Client, "ChildsPlay.CheckPlayerAbortQuest.Text1"));
             }
             else
             {
-                SendSystemMessage(player, LanguageMgr.GetTranslation(player.Client, "Hib.ChildsPlay.CheckPlayerAbortQuest.Text2", questTitle));
+                SendSystemMessage(player, LanguageMgr.GetTranslation(player.Client, "ChildsPlay.CheckPlayerAbortQuest.Text2", questTitle));
                 quest.AbortQuest();
             }
         }
@@ -1718,7 +1718,7 @@ namespace DOL.GS.Quests.Hibernia
 
             if (quest != null && quest.Step == 1)
             {
-                player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, LanguageMgr.GetTranslation(player.Client, "Hib.ChildsPlay.PlayerEnterStatueArea.Text1"));
+                player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, LanguageMgr.GetTranslation(player.Client, "ChildsPlay.PlayerEnterStatueArea.Text1"));
                 quest.Step = 2;
             }
         }
@@ -1732,13 +1732,13 @@ namespace DOL.GS.Quests.Hibernia
 
             if (response == 0x00)
             {
-                SendReply(player, LanguageMgr.GetTranslation(player.Client, "Hib.ChildsPlay.CheckPlayerAcceptQuest.Text1"));
+                SendReply(player, LanguageMgr.GetTranslation(player.Client, "ChildsPlay.CheckPlayerAcceptQuest.Text1"));
             }
             else
             {
                 if (!Charles.GiveQuest(typeof(childsplay), player, 1))
                     return;
-                SendReply(player, LanguageMgr.GetTranslation(player.Client, "Hib.ChildsPlay.CheckPlayerAcceptQuest.Text2"));
+                SendReply(player, LanguageMgr.GetTranslation(player.Client, "ChildsPlay.CheckPlayerAcceptQuest.Text2"));
             }
         }
 
@@ -1751,6 +1751,7 @@ namespace DOL.GS.Quests.Hibernia
         {
             get
             {
+                //k109: Update each time a kill is made.
                 if (Step == 1)
                 {
                     return LanguageMgr.GetTranslation(m_questPlayer.Client, "Hib.ChildsPlay.Description.Text1");
@@ -1774,7 +1775,7 @@ namespace DOL.GS.Quests.Hibernia
 
             //k109: xp and money Rewards...
             m_questPlayer.GainExperience(2, true);
-            m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 0, 67), LanguageMgr.GetTranslation(m_questPlayer.Client, "Hib.ChildsPlay.FinishQuest.Text1"));
+            m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 0, 67), LanguageMgr.GetTranslation(m_questPlayer.Client, "ChildsPlay.FinishQuest.Text1"));
         }
     }
 }
