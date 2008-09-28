@@ -2200,7 +2200,9 @@ namespace DOL
             }
 
             #region Relations
-
+            
+            /*	Graveen: disabled due tout huge slowdown on server start
+             
             /// <summary>
             /// Remove DBCharacterXMasterLevel
             /// </summary>
@@ -2242,8 +2244,9 @@ namespace DOL
             /// </summary>
             [Relation(LocalField = "ObjectId", RemoteField = "PlayerID", AutoLoad = true, AutoDelete = true)]
             public DBSinglePermission[] singlePermissions;
-
+*/
             #endregion Relations
+
         }
 	}
 }
