@@ -1216,12 +1216,17 @@ namespace DOL.GS
 		/// <param name="speed">walk speed</param>
 		public virtual void WalkTo(int tx, int ty, int tz, int speed, bool ignoreTolerance)
 		{
+			int maxSpeed = MaxSpeed;
+			
 			// Walking to the spot we're already at will only get us into trouble.
-		  if (Util.IsNearDistance(tx, ty, tz, X, Y, Z, CONST_WALKTOTOLERANCE) && !ignoreTolerance)
-		  {
-		  	TurnTo(tx, ty);
-		  	return;
-		  }
+            if (Util.IsNearDistance(tx, ty, tz, X, Y, Z, CONST_WALKTOTOLERANCE) && !ignoreTolerance)
+		    {
+				TurnTo(tx, ty);
+		  	    return;
+		    }
+			
+			if (speed <= 0 || maxSpeed <= 0)
+				return;
 
 			if (IsTurningDisabled)
 				return; // can't walk when turning is disabled
@@ -1231,9 +1236,8 @@ namespace DOL.GS
 			CancelWalkToTimer();
 			//m_isReturningHome = false;
 
-
 			//Slow mobs down when they are hurt!
-			int maxSpeed = MaxSpeed;
+			
 			if (speed > maxSpeed)
 				speed = maxSpeed;
 
@@ -1257,31 +1261,13 @@ namespace DOL.GS
 			//duff answer : already test in get distance so do not need it!
 			double dist = WorldMgr.GetDistance(m_X, m_Y, m_Z, m_targetX, m_targetY, m_targetZ);
 
-			int timeToTarget = 0;
-			if (speed > 0)
-			{
-				timeToTarget = 300+(int) (dist*1000/speed);
-			}
+			int timeToTarget = timeToTarget = 300+(int) (dist*1000/speed);
 
 			m_arriveAtTargetAction = new ArriveAtTargetAction(this);
-			if (timeToTarget > 1)
-			{
-				m_arriveAtTargetAction.Start(timeToTarget);
-			}
-			else
-			{
-				m_arriveAtTargetAction.Start(1);
-			}
+			m_arriveAtTargetAction.Start((timeToTarget > 1) ? timeToTarget:1);
 
 			m_closeToTargetAction = new CloseToTargetAction(this);
-			if (timeToTarget > 200)
-			{
-				m_closeToTargetAction.Start(timeToTarget - 200); //200ms before target is close
-			}
-			else
-			{
-				m_closeToTargetAction.Start(1);
-			}
+			m_closeToTargetAction.Start((timeToTarget > 200) ? (timeToTarget - 200):1); //200ms before target is close
 
 			MovementStartTick = Environment.TickCount;
 			BroadcastUpdate();
@@ -2611,7 +2597,7 @@ namespace DOL.GS
 
 			if (m_houseNumber > 0)
 			{
-				log.Info("NPC '" + Name + "' added to house N°" + m_houseNumber);
+				log.Info("NPC '" + Name + "' added to house Nï¿½" + m_houseNumber);
 				CurrentHouse = HouseMgr.GetHouse(m_houseNumber);
 				if (CurrentHouse == null)
 					log.Warn("House " + CurrentHouse + " for NPC " + Name + " doesn't exist !!!");
