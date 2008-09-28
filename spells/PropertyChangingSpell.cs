@@ -325,7 +325,7 @@ namespace DOL.GS.Spells
 
 		}
 
-		public override PlayerXEffect getSavedEffect(GameSpellEffect e)
+		public override PlayerXEffect GetSavedEffect(GameSpellEffect e)
 		{
 			PlayerXEffect eff = new PlayerXEffect();
 			eff.Var1 = Spell.ID;

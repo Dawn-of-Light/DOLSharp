@@ -1089,8 +1089,8 @@ namespace DOL.GS.Commands
                             int Charges = Convert.ToInt32(args[2]);
                             int MaxCharges = Convert.ToInt32(args[3]);
                             int SpellID1 = Convert.ToInt32(args[4]);
-                            item.Charges = Charges;
-                            item.MaxCharges = MaxCharges;
+                            item.Charges1 = Charges;
+                            item.MaxCharges1 = MaxCharges;
                             item.SpellID1 = SpellID1;
                             client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
                             break;

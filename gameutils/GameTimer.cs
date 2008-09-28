@@ -562,7 +562,7 @@ namespace DOL.GS
 				{
 					m_running = false;
 
-					if (!m_timeThread.Join(10000))
+					if (!m_timeThread.Join(7000))
 					{
 						if (log.IsErrorEnabled)
 						{
@@ -778,7 +778,10 @@ namespace DOL.GS
 						// fire timers
 						lock (m_buckets)
 						{
-							m_time++;
+							if(DOL.GS.GameEvents.RegionTimersResynch.watch!=null)
+								m_time = DOL.GS.GameEvents.RegionTimersResynch.watch.ElapsedMilliseconds;
+							else m_time++;
+							
 							int newTick = m_tick = (m_tick + 1) & TICK_MASK;
 							if ((newTick & BUCKET_MASK) == 0)
 							{
@@ -921,7 +924,7 @@ namespace DOL.GS
 							}
 							else if ((current.m_tick & TIMER_RESCHEDULED) == 0)
 							{
-								log.ErrorFormat("timer tick != current tick (0x{0:X4}), fired anyway: {1}", curTick, current);
+								//log.ErrorFormat("timer tick != current tick (0x{0:X4}), fired anyway: {1}", curTick, current);
 								try
 								{
 									current.OnTick();
