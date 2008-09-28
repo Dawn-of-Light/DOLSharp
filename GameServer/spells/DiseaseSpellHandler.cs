@@ -152,7 +152,7 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		public override PlayerXEffect getSavedEffect(GameSpellEffect e)
+		public override PlayerXEffect GetSavedEffect(GameSpellEffect e)
 		{
 			if ( //VaNaTiC-> this cannot work, cause PulsingSpellEffect is derived from object and only implements IConcEffect
 			     //e is PulsingSpellEffect ||

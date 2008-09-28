@@ -233,6 +233,11 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public virtual bool CastSpell()
 		{
+			return CastSpell(Caster.TargetObject as GameLiving);
+		}
+
+		public virtual bool CastSpell(GameLiving targetObject)
+		{
 			m_caster.Notify(GameLivingEvent.CastSpell, m_caster, new CastSpellEventArgs(this));
 			// nightshade is unstealthed even if no target, target is same realm, target is too far
 			if (Caster is GamePlayer && Spell.SpellType != "Archery")
@@ -326,10 +331,13 @@ namespace DOL.GS.Spells
 					FinishSpellCast(target);
 				}
 			}
-			if (!IsCasting)
+			else
 			{
-				OnAfterSpellCastSequence();
+				if (!IsCasting)	OnAfterSpellCastSequence();
+				return false;
 			}
+			
+			if (!IsCasting)	OnAfterSpellCastSequence();
 			return true;
 		}
 
@@ -1083,7 +1091,8 @@ namespace DOL.GS.Spells
 			}
 			double percent = 1.0;
 			int dex = m_caster.GetModified(eProperty.Dexterity);
-
+			if(SpellLine.KeyName.Contains("Champion Abilities")) dex=100; //Vico: No casting time diminution for CL Spells
+			
 			if (m_caster.EffectList.GetOfType(typeof(QuickCastEffect)) != null)
 			{
 				return 2000; //always 2 sec
@@ -1288,9 +1297,9 @@ namespace DOL.GS.Spells
 				{
 					foreach (Spell sp in SkillBase.GetSpellList(m_spellLine.KeyName))
 					{
-						if ((sp.SpellType == m_spell.SpellType && sp.RecastDelay == m_spell.RecastDelay && sp.Group == m_spell.Group)
-							|| (sp.SharedTimerGroup != 0 && sp.SharedTimerGroup == m_spell.SharedTimerGroup))
-						{
+						if (//(sp.SpellType == m_spell.SpellType && sp.RecastDelay == m_spell.RecastDelay /*&& sp.Group == m_spell.Group*/)
+							sp == m_spell || (sp.SharedTimerGroup != 0 && sp.SharedTimerGroup == m_spell.SharedTimerGroup))
+					{
 							m_caster.DisableSkill(sp, sp.RecastDelay);
 						}
 					}
@@ -1893,7 +1902,7 @@ namespace DOL.GS.Spells
 								if (gsp is GameSpellAndImmunityEffect)
 								{
 									GameSpellAndImmunityEffect immunity = (GameSpellAndImmunityEffect)gsp;
-									if (immunity.ImmunityState && immunity.Owner is GamePlayer)
+									if (immunity.ImmunityState && (immunity.Owner is GamePlayer || immunity.Owner is GamePet))
 									{
 										SendEffectAnimation(target, 0, false, 0); //resisted effect
 										MessageToCaster(immunity.Owner.GetName(0, true) + " can't have that effect again yet!", noOverwrite);
@@ -2883,7 +2892,7 @@ namespace DOL.GS.Spells
 		#endregion
 
 		#region saved effects
-		public virtual PlayerXEffect getSavedEffect(GameSpellEffect effect)
+		public virtual PlayerXEffect GetSavedEffect(GameSpellEffect effect)
 		{
 			return null;
 		}

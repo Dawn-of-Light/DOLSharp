@@ -32,6 +32,12 @@ namespace DOL.GS.Spells
 		{
 			return 0;
 		}
+		
+		public override void OnDirectEffect(GameLiving target, double effectiveness)
+        {
+            base.OnDirectEffect(target, effectiveness);
+			SendEffectAnimation(target, 0, false, 1);
+        }
 
 		// constructor
 		public StylePowerDrain(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}

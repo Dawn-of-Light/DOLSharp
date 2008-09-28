@@ -33,7 +33,8 @@ namespace DOL.GS.Spells
 		/// Called when a spell is casted
 		/// </summary>
 		bool CastSpell();
-
+		bool CastSpell(GameLiving target);
+		
 		/// <summary>
 		/// Starts the spell, without displaying cast message etc.
 		/// Should be used for StyleEffects, ...
@@ -158,7 +159,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		event CastingCompleteCallback CastingCompleteEvent;
 
-		PlayerXEffect getSavedEffect(GameSpellEffect e);
+		PlayerXEffect GetSavedEffect(GameSpellEffect e);
 		void OnEffectRestored(GameSpellEffect effect, int[] RestoreVars);
 		int OnRestoredEffectExpires(GameSpellEffect effect, int[] RestoreVars, bool noMessages);
 		bool CheckBeginCast(GameLiving selectedTarget);
