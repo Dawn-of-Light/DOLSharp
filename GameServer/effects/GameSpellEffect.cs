@@ -537,7 +537,7 @@ namespace DOL.GS.Effects
 			}
 			if (m_handler != null)
 			{
-				PlayerXEffect eff = m_handler.getSavedEffect(this);
+				PlayerXEffect eff = m_handler.GetSavedEffect(this);
 				return eff;
 			}
 			return null;
