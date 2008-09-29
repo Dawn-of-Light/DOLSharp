@@ -36,8 +36,23 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
+			bool invalidChar = false;
+			bool needReloadCharactersScreen = false;
 			//DOLConsole.WriteLine("Character creation!\n");
-			packet.Skip(24); //Skip the account name, we don't need it
+			string accountName = packet.ReadString(24);
+			if (!accountName.StartsWith(client.Account.Name))// TODO more correctly check, client send accountName as account-S, -N, -H (if it not fit in 20, then only account)
+			{
+                DBBannedAccount b = new DBBannedAccount();
+                b.Author = "SERVER";
+                b.Ip = client.TcpEndpoint;
+                b.Account = client.Account.Name;
+                b.DateBan = DateTime.Now;
+                b.Type = "B";
+                b.Reason = String.Format("Autoban wrong Account '{0}'", GameServer.Database.Escape(accountName));
+                GameServer.Database.AddNewObject(b);
+                GameServer.Database.SaveObject(b);
+                client.Disconnect(); return 0;
+			}
 			int charsCount = client.Version < GameClient.eClientVersion.Version173 ? 8 : 10;
 			for (int i = 0; i < charsCount; i++)
 			{
@@ -49,85 +64,279 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 				else
 				{
-					//Eden - anti hack uppercase
-					if( client.Account.PrivLevel == 1)
+					charname=Char.ToUpper(charname[0])+charname.Substring(1,charname.Length-1).ToLower();
+					if(charname.Length<3)
 					{
-						charname=Char.ToUpper(charname[0])+charname.Substring(1,charname.Length-1).ToLower();
-	                    for (int y = 0; y < charname.Length; y++)
-	                        if (!((charname[y] >= 'a' && charname[y] <= 'z') || (charname[y] >= 'A' && charname[y] <= 'Z')))
-							{
-								DBBannedAccount b = new DBBannedAccount();
-								b.Author = "SERVER";
-								b.Ip = client.TcpEndpoint;
-								b.Account = client.Account.Name;
-								b.DateBan = DateTime.Now;
-								b.Type = "B";
-								b.Reason = String.Format("Autoban CharName '{0}'", GameServer.Database.Escape(charname));
-								GameServer.Database.AddNewObject(b);
-								GameServer.Database.SaveObject(b);
-								client.Disconnect();
-								return 1;
-							}
+						DBBannedAccount b = new DBBannedAccount();
+						b.Author = "SERVER";
+						b.Ip = client.TcpEndpoint;
+						b.Account = client.Account.Name;
+						b.DateBan = DateTime.Now;
+						b.Type = "B";
+						b.Reason = String.Format("Autoban CharName '{0}'", GameServer.Database.Escape(charname));
+						GameServer.Database.AddNewObject(b);
+						GameServer.Database.SaveObject(b);
+						client.Disconnect();
+						return 1;
+
 					}
+                    for (int y = 0; y < charname.Length; y++)
+                        if (!((charname[y] >= 'a' && charname[y] <= 'z') || (charname[y] >= 'A' && charname[y] <= 'Z')))
+						{
+                            DBBannedAccount b = new DBBannedAccount();
+							b.Author = "SERVER";
+							b.Ip = client.TcpEndpoint;
+							b.Account = client.Account.Name;
+							b.DateBan = DateTime.Now;
+							b.Type = "B";
+							b.Reason = String.Format("Autoban CharName '{0}'", GameServer.Database.Escape(charname));
+							GameServer.Database.AddNewObject(b);
+							GameServer.Database.SaveObject(b);
+							client.Disconnect();
+							return 1;
+						}
 					
 					String select = String.Format("Name = '{0}'", GameServer.Database.Escape(charname));
 					Character character = (Character)GameServer.Database.SelectObject(typeof(Character), select);
 					if (character != null)
 					{
-						// update old character
-
-						switch (packet.ReadByte())
+						if (character.AccountName != client.Account.Name)
 						{
-							case 0x02: //player config
-								{
-									character.EyeSize = (byte)packet.ReadByte();
-									character.LipSize = (byte)packet.ReadByte();
-									character.EyeColor = (byte)packet.ReadByte();
-									character.HairColor = (byte)packet.ReadByte();
-									character.FaceType = (byte)packet.ReadByte();
-									character.HairStyle = (byte)packet.ReadByte();
-									packet.Skip(3);
-									character.MoodType = (byte)packet.ReadByte();
-									packet.Skip(89); // Skip location string, race string, classe string, level ,class ,realm and startRaceGender
-									character.CreationModel = packet.ReadShortLowEndian(); //read new model
-									character.CurrentModel = character.CreationModel;
-									packet.Skip(58); // skip all other things
-
-									character.CustomisationStep = 2; // disable config button
-
-									GameServer.Database.SaveObject(character);
-
-									if (log.IsInfoEnabled)
-										log.Info(String.Format("Character {0} face proprieties configured by account {1}!\n", charname, client.Account.Name));
-								}
-								break;
-							case 0x03:  //auto config
-								{
-									character.EyeSize = (byte)packet.ReadByte();
-									character.LipSize = (byte)packet.ReadByte();
-									character.EyeColor = (byte)packet.ReadByte();
-									character.HairColor = (byte)packet.ReadByte();
-									character.FaceType = (byte)packet.ReadByte();
-									character.HairStyle = (byte)packet.ReadByte();
-									packet.Skip(3);
-									character.MoodType = (byte)packet.ReadByte();
-									packet.Skip(149); // skip all other things
-
-									character.CustomisationStep = 3; // enable config button to player
-
-									GameServer.Database.SaveObject(character);
-
-									if (log.IsInfoEnabled)
-										log.Info(String.Format("Character {0} face proprieties auto updated!\n", charname));
-								}
-								break;
-							default:  //do nothing
-								{
-									packet.Skip(159);
-								}
-								break;
+                            DBBannedAccount b = new DBBannedAccount();
+                            b.Author = "SERVER";
+                            b.Ip = client.TcpEndpoint;
+                            b.Account = client.Account.Name;
+                            b.DateBan = DateTime.Now;
+                            b.Type = "B";
+                            b.Reason = String.Format("Autoban CharName '{0}' on wrong Account '{1}'", GameServer.Database.Escape(charname), GameServer.Database.Escape(client.Account.Name));
+                            GameServer.Database.AddNewObject(b);
+                            GameServer.Database.SaveObject(b);
+                            client.Disconnect(); return 1;
 						}
+						// update old character
+                        byte customization = (byte)packet.ReadByte();
+                        int newModel = character.CurrentModel;
 
+                        if (customization == 1 || customization == 2 || customization == 3)
+                        {
+                            bool flagChangedStats = false;
+                            character.EyeSize = (byte)packet.ReadByte();
+                            character.LipSize = (byte)packet.ReadByte();
+                            character.EyeColor = (byte)packet.ReadByte();
+                            character.HairColor = (byte)packet.ReadByte();
+                            character.FaceType = (byte)packet.ReadByte();
+                            character.HairStyle = (byte)packet.ReadByte();
+                            packet.Skip(3);
+                            character.MoodType = (byte)packet.ReadByte();
+                            packet.Skip(89); // Skip location string, race string, classe string, level ,class ,realm and startRaceGender
+                            newModel = packet.ReadShortLowEndian(); //read new model
+                            if (customization != 3 && client.Version >= GameClient.eClientVersion.Version189)
+                            {
+                                packet.Skip(6); // Region ID + character Internal ID
+                                int[] stats = new int[8];
+                                stats[0] = (byte)packet.ReadByte(); // Strength
+                                stats[2] = (byte)packet.ReadByte(); // Dexterity
+                                stats[1] = (byte)packet.ReadByte(); // Constitution
+                                stats[3] = (byte)packet.ReadByte(); // Quickness
+                                stats[4] = (byte)packet.ReadByte(); // Intelligence
+                                stats[5] = (byte)packet.ReadByte(); // Piety
+                                stats[6] = (byte)packet.ReadByte(); // Empathy
+                                stats[7] = (byte)packet.ReadByte(); // Charisma
+                                packet.Skip(43);// armor models/armor color/weapon models/active weapon slots/siZone
+                                //stats[1] = (byte)packet.ReadByte(); // Constitution
+                                byte newConstitution = (byte)packet.ReadByte();
+                                if (newConstitution > 0)
+                                    stats[1] = newConstitution;
+                                flagChangedStats |= stats[0] != character.Strength;
+                                flagChangedStats |= stats[1] != character.Constitution;
+                                flagChangedStats |= stats[2] != character.Dexterity;
+                                flagChangedStats |= stats[3] != character.Quickness;
+                                flagChangedStats |= stats[4] != character.Intelligence;
+                                flagChangedStats |= stats[5] != character.Piety;
+                                flagChangedStats |= stats[6] != character.Empathy;
+                                flagChangedStats |= stats[7] != character.Charisma;
+                                if (flagChangedStats)
+                                {
+                                    IClassSpec cl = ScriptMgr.FindClassSpec(character.Class);
+
+                                    if (cl != null)
+                                    {
+                                        int points = 0;
+                                        int[] leveledStats = new int[8];
+                                        int[] raceStats = new int[8];
+                                        bool valid = true;
+                                        for (int j = 0; j < 8; j++)
+                                        {
+                                            eStat stat = (eStat)CheckCharacter.eStatIndex[j];
+                                            raceStats[j] = CheckCharacter.STARTING_STATS[character.Race][j];
+                                            for (int level = character.Level; level > 5; level--)
+                                            {
+                                                if (cl.PrimaryStat != eStat.UNDEFINED && cl.PrimaryStat == stat)
+                                                {
+                                                    leveledStats[j]++;
+                                                }
+                                                if (cl.SecondaryStat != eStat.UNDEFINED && cl.SecondaryStat == stat)
+                                                {
+                                                    if ((level - 6) % 2 == 0)
+                                                        leveledStats[j]++;
+                                                }
+                                                if (cl.TertiaryStat != eStat.UNDEFINED && cl.TertiaryStat == stat)
+                                                {
+                                                    if ((level - 6) % 3 == 0)
+                                                        leveledStats[j]++;
+                                                }
+                                            }
+                                            int result = stats[j] - leveledStats[j] - raceStats[j];
+                                            bool validBeginStat = result >= 0;
+                                            int point = result;
+                                            string pref = "";
+                                            if (cl.PrimaryStat != eStat.UNDEFINED && cl.PrimaryStat == stat)
+                                                pref = "1)";
+                                            if (cl.SecondaryStat != eStat.UNDEFINED && cl.SecondaryStat == stat)
+                                                pref = "2)";
+                                            if (cl.TertiaryStat != eStat.UNDEFINED && cl.TertiaryStat == stat)
+                                                pref = "3)";
+                                            point += Math.Max(0, result - 10); //two points used
+                                            point += Math.Max(0, result - 15); //three points used
+                                            log.Info(string.Format("{0,-2} {1,-3}:{2, 3} {3,3} {4,3} {5,3} {6,2} {7} {8}",
+                                                pref, (stat == eStat.STR) ? "STR" : stat.ToString(), stats[j], leveledStats[j], stats[j] - leveledStats[j], raceStats[j], result, point, (validBeginStat) ? "" : "Not Valid"));
+                                            points += point;
+                                            if (!validBeginStat)
+                                            {
+                                                valid = false;
+                                                if (client.Account.PrivLevel == 1)
+                                                {
+                                                    DBBannedAccount b = new DBBannedAccount();
+                                                    b.Author = "SERVER";
+                                                    b.Ip = client.TcpEndpoint;
+                                                    b.Account = client.Account.Name;
+                                                    b.DateBan = DateTime.Now;
+                                                    b.Type = "B";
+                                                    b.Reason = String.Format("Autoban Hack char update : Wrong {0} point:{1}", (stat == eStat.STR) ? "STR" : stat.ToString(), result);
+                                                    GameServer.Database.AddNewObject(b);
+                                                    GameServer.Database.SaveObject(b);
+                                                    client.Disconnect();
+                                                    return 1;
+                                                }
+                                            }
+                                        }
+                                        if (points != 30)
+                                        {
+                                            log.Warn("v189+ stat respec points used:" + points);
+                                            valid = false;
+                                            if (client.Account.PrivLevel == 1)
+                                            {
+                                                DBBannedAccount b = new DBBannedAccount();
+                                                b.Author = "SERVER";
+                                                b.Ip = client.TcpEndpoint;
+                                                b.Account = client.Account.Name;
+                                                b.DateBan = DateTime.Now;
+                                                b.Type = "B";
+                                                b.Reason = String.Format("Autoban Hack char update : Wrong total points used:{0}", points);
+                                                GameServer.Database.AddNewObject(b);
+                                                GameServer.Database.SaveObject(b);
+                                                client.Disconnect();
+                                                return 1;
+                                            }
+                                        }
+                                        if (valid/* && client.Account.PrivLevel > 1*/)
+                                        {
+                                            character.Strength = (byte)stats[0];
+                                            character.Constitution = (byte)stats[1];
+                                            character.Dexterity = (byte)stats[2];
+                                            character.Quickness = (byte)stats[3];
+                                            character.Intelligence = (byte)stats[4];
+                                            character.Piety = (byte)stats[5];
+                                            character.Empathy = (byte)stats[6];
+                                            character.Charisma = (byte)stats[7];
+                                            //if (client.Player != null && character.Name == client.Player.Name && client.ActiveCharIndex != -1 && client.Account.Characters[client.ActiveCharIndex].Name == character.Name)
+                                            Character[] chars = client.Account.Characters;
+                                            for (int z = 0; z < chars.Length; z++)
+                                            {
+                                                if (chars[z].Name != character.Name) continue;
+                                                //log.Error(string.Format("found activePlayer:[{0}] {1} {2}", client.ActiveCharIndex, client.Player.Name, character.Name));
+                                                if (log.IsInfoEnabled)
+                                                    log.Info(String.Format("Character {0} updated in cache!\n", charname));
+                                                //client.Account.Characters = null;
+                                                if (client.Player != null)
+                                                {
+                                                    client.Player.PlayerCharacter.Strength = (byte)stats[0];
+                                                    client.Player.PlayerCharacter.Constitution = (byte)stats[1];
+                                                    client.Player.PlayerCharacter.Dexterity = (byte)stats[2];
+                                                    client.Player.PlayerCharacter.Quickness = (byte)stats[3];
+                                                    client.Player.PlayerCharacter.Intelligence = (byte)stats[4];
+                                                    client.Player.PlayerCharacter.Piety = (byte)stats[5];
+                                                    client.Player.PlayerCharacter.Empathy = (byte)stats[6];
+                                                    client.Player.PlayerCharacter.Charisma = (byte)stats[7];
+                                                }
+                                                client.Account.Characters[z].Strength = (byte)stats[0];
+                                                client.Account.Characters[z].Constitution = (byte)stats[1];
+                                                client.Account.Characters[z].Dexterity = (byte)stats[2];
+                                                client.Account.Characters[z].Quickness = (byte)stats[3];
+                                                client.Account.Characters[z].Intelligence = (byte)stats[4];
+                                                client.Account.Characters[z].Piety = (byte)stats[5];
+                                                client.Account.Characters[z].Empathy = (byte)stats[6];
+                                                client.Account.Characters[z].Charisma = (byte)stats[7];
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (log.IsErrorEnabled)
+                                            log.Error("No CharacterClass with ID " + character.Class + " found");
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                packet.Skip(58); // skip all other things
+                            }
+                            if (customization == 2) // change player customization
+                            {
+                                if (client.Account.PrivLevel == 1 && ((newModel >> 11) & 3) == 0) // Player size must be > 0 (from 1 to 3)
+                                {
+                                    DBBannedAccount b = new DBBannedAccount();
+                                    b.Author = "SERVER";
+                                    b.Ip = client.TcpEndpoint;
+                                    b.Account = client.Account.Name;
+                                    b.DateBan = DateTime.Now;
+                                    b.Type = "B";
+                                    b.Reason = String.Format("Autoban Hack char update : zero character size in model:{0}", newModel);
+                                    GameServer.Database.AddNewObject(b);
+                                    GameServer.Database.SaveObject(b);
+                                    client.Disconnect();
+                                    return 1;
+                                }
+                                if ((ushort)newModel != character.CreationModel)
+                                {
+                                    //									character.CreationModel = newModel;
+                                    character.CurrentModel = newModel;
+                                }
+                                character.CustomisationStep = 2; // disable config button
+
+                                GameServer.Database.SaveObject(character);
+
+                                if (log.IsInfoEnabled)
+                                    log.Info(String.Format("Character {0} face proprieties configured by account {1}!\n", charname, client.Account.Name));
+                            }
+                             //it's possible ?
+                            else if (customization == 3) //auto config
+                            {
+                                character.CustomisationStep = 3; // enable config button to player
+
+                                GameServer.Database.SaveObject(character);
+
+                                if (log.IsInfoEnabled)
+                                    log.Info(String.Format("Character {0} face proprieties auto updated!\n", charname));
+                            }							
+                            else if (customization == 1 && flagChangedStats) //changed stat only for 1.89+
+                            {
+                                GameServer.Database.SaveObject(character);
+
+                                if (log.IsInfoEnabled)
+                                    log.Info(String.Format("Character {0} stat updated!\n", charname));
+                            }
+                        }
 					}
 					else
 					{
@@ -542,10 +751,22 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return result;
 			}
 
+            public static readonly byte[] eStatIndex = new byte[8]
+			{
+				(byte)eProperty.Strength,
+				(byte)eProperty.Constitution,
+				(byte)eProperty.Dexterity,
+				(byte)eProperty.Quickness,
+				(byte)eProperty.Intelligence,
+				(byte)eProperty.Piety,
+				(byte)eProperty.Empathy,
+				(byte)eProperty.Charisma
+			};
+
 			/// <summary>
 			/// All possible player races
 			/// </summary>
-			protected static readonly int[][] STARTING_STATS = new int[][]
+			public static readonly int[][] STARTING_STATS = new int[][]
 			{
 				null, // "Unknown",
 				//           STR CON DEX QUI INT PIE EMP CHA
