@@ -252,7 +252,8 @@ namespace DOL.GS.PacketHandler
 								pak.WriteByte(0x00);
 							else
 								pak.WriteByte(0x01); //0x01=char in SI zone, classic client can't "play"
-							pak.WriteByte(0x00); // unk2
+							//pak.WriteByte(0x00); // unk2
+                            pak.WriteByte((byte)characters[j].Constitution);
 							written = true;
 						}
 					if (written == false)
