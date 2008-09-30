@@ -11,6 +11,7 @@ SkillBase.RegisterPropertyNames.AllSkills:				All Skills
 SkillBase.RegisterPropertyNames.ALLSpellLines:			ALL spell lines
 SkillBase.RegisterPropertyNames.Arboreal:				Arboreal
 SkillBase.RegisterPropertyNames.ArborealFocus:			Arboreal Focus
+SkillBase.RegisterPropertyNames.Archery:				Archery
 SkillBase.RegisterPropertyNames.ArcheryRange:			Archery Range
 SkillBase.RegisterPropertyNames.ArcherySpeed:			Archery Speed
 SkillBase.RegisterPropertyNames.ArrowRecovery:			Arrow Recovery
