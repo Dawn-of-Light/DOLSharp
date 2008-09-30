@@ -698,7 +698,7 @@ namespace DOL.GS
 			m_propertyTypes[(int)eProperty.Skill_Cross_Bows] = ePropertyType.Skill;
 			m_propertyTypes[(int)eProperty.Skill_ShortBow] = ePropertyType.Skill;
 			m_propertyTypes[(int)eProperty.Skill_Envenom] = ePropertyType.Skill;
-			m_propertyTypes[(int)eProperty.Skill_Archery] = ePropertyType.Skill | ePropertyType.SkillMagical;
+			m_propertyTypes[(int)eProperty.Skill_Archery] = ePropertyType.Skill | ePropertyType.SkillArchery;
 
 			#endregion
 		}
@@ -1049,6 +1049,8 @@ namespace DOL.GS
 				"SkillBase.RegisterPropertyNames.Pathfinding"));
 			m_propertyNames.Add(eProperty.Skill_Summoning, LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
 				"SkillBase.RegisterPropertyNames.Summoning"));
+            m_propertyNames.Add(eProperty.Skill_Archery, LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+                "SkillBase.RegisterPropertyNames.Archery"));
 
 			// Mauler
 			m_propertyNames.Add(eProperty.Skill_FistWraps, LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
