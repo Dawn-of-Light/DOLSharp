@@ -4,17 +4,17 @@ GameMerchant.GetExamineMessages.Nothing:		Nichts
 GameMerchant.GetExamineMessages.RightClick:		(Ein Rechtsklick öffnet das Handeslsfenster.)
 GameMerchant.GetExamineMessages.YouExamine:		Es interessiert Euch {0}. {0} steht Euch {2} und treibt Handel.
 GameMerchant.OnPlayerAppraise.Offers:			{0} bietet Euch {1}, {2} ist nicht mehr wert.
-GameMerchant.OnPlayerBuy.Bought:			Ihr habt gerade {0} gekauft für {1}.
-GameMerchant.OnPlayerBuy.Bought2:			Ihr habt gerade {0} gekauft für {1} {2}.
-GameMerchant.OnPlayerBuy.BoughtBP:			Ihr habt gerade {0} gekauft für {1} Kopfgeldpunkte.
-GameMerchant.OnPlayerBuy.BoughtPieces:			Ihr habt gerade {0} {1} gekauft für {2}.
-GameMerchant.OnPlayerBuy.BoughtPieces2:			Ihr habt gerade {0} {1} gekauft für {2} {3}.
-GameMerchant.OnPlayerBuy.BoughtPiecesBP:		Ihr habt gerade {0} {1} gekauft für {0} Kopfgeldpunkte.
+GameMerchant.OnPlayerBuy.Bought:			Ihr habt gerade {0} für {1} gekauft.
+GameMerchant.OnPlayerBuy.Bought2:			Ihr habt gerade {0} für {1} {2} gekauft.
+GameMerchant.OnPlayerBuy.BoughtBP:			Ihr habt gerade {0} für {1} Kopfgeldpunkte gekauft.
+GameMerchant.OnPlayerBuy.BoughtPieces:			Ihr habt gerade {0} {1} für {2} gekauft.
+GameMerchant.OnPlayerBuy.BoughtPieces2:			Ihr habt gerade {0} {1} für {2} {3} gekauft.
+GameMerchant.OnPlayerBuy.BoughtPiecesBP:		Ihr habt gerade {0} {1} für {0} Kopfgeldpunkte gekauft.
 GameMerchant.OnPlayerBuy.NotInventorySpace:		Ihr habt nicht genug Platz in Eurem Inventar für diesen Einkauf.
 GameMerchant.OnPlayerBuy.YouNeed:			Ihr braucht {0} um dies zu kaufen.
 GameMerchant.OnPlayerBuy.YouNeed2:			Ihr braucht {0} {1} um dies zu kaufen.
 GameMerchant.OnPlayerBuy.YouNeedBP:			Ihr braucht {0} Kopfgeldpunkte um dies zu kaufen.
 GameMerchant.OnPlayerSell.CantBeSold:			Dieser Gegenstand kann nicht verkauft werden.
-GameMerchant.OnPlayerSell.GivesYou:			{0} gibt Euch {1} für {2}.
+GameMerchant.OnPlayerSell.GivesYou:			{0} gibt Euch {1}, {2} wurde verkauft.
 GameMerchant.OnPlayerSell.IsntInterested:		{0} interessiert sich nicht für {1}.
 GameMerchant.OnPlayerSell.TooFarAway:			{0} ist zu weit entfernt!
