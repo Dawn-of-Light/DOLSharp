@@ -18,6 +18,7 @@
  */
 using System;
 using System.Text;
+using DOL.Language;
 
 namespace DOL.GS
 {
@@ -59,7 +60,7 @@ namespace DOL.GS
 		public static string GetString(long money) 
 		{
 			if (money == 0)
-				return "0 copper pieces";
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text1");
 
 			int copper = Money.GetCopper(money);
 			int silver = Money.GetSilver(money);
@@ -71,34 +72,45 @@ namespace DOL.GS
 			if (mithril != 0)
 			{
 				res.Append(mithril);
-				res.Append(" mithril, ");
-			}
+                res.Append(" ");
+                res.Append(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text2"));
+                res.Append(" ");
+            }
 			if (platin != 0)
 			{
 				res.Append(platin);
-				res.Append(" platinum, ");
-			}
+                res.Append(" ");
+                res.Append(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text3"));
+                res.Append(" ");
+            }
 			if (gold != 0)
 			{
 				res.Append(gold);
-				res.Append(" gold, ");
-			}
+                res.Append(" ");
+                res.Append(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text4"));
+                res.Append(" ");
+            }
 			if (silver != 0)
 			{
 				res.Append(silver);
-				res.Append(" silver, ");
-			}
+                res.Append(" ");
+                res.Append(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text5"));
+                res.Append(" ");
+            }
 			if (copper != 0)
 			{
 				res.Append(copper);
-				res.Append(" copper, ");
-			}
+                res.Append(" ");
+                res.Append(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text6"));
+                res.Append(" ");
+            }
 
 			// remove last comma
 			if(res.Length > 1)
 				res.Length -= 2;
 
-			res.Append(" pieces");
+            res.Append(" ");
+            res.Append(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text7"));
 
 			return res.ToString();
 		}	
