@@ -9,6 +9,7 @@ SkillBase.RegisterPropertyNames.AllSkills:		ALLE Fähigkeiten
 SkillBase.RegisterPropertyNames.ALLSpellLines:		ALLE Zauberlinien
 SkillBase.RegisterPropertyNames.Arboreal:		Arboreal
 SkillBase.RegisterPropertyNames.ArborealFocus:		Arboreal
+SkillBase.RegisterPropertyNames.Archery:		Archery
 SkillBase.RegisterPropertyNames.ArcheryRange:		Bogenschussreichweite
 SkillBase.RegisterPropertyNames.ArcherySpeed:		Bogengeschwindigkeits Bonus
 SkillBase.RegisterPropertyNames.ArrowRecovery:		Pfeilwiederherstellung

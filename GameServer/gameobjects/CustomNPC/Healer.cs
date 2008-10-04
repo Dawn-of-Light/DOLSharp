@@ -14,19 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- */
-//							Written by Doulbousiouf (27/11/2004)								//
-//																					//
-//																					//
-//																					//
-
+*/
+/*				
+            Written by Doulbousiouf (27/11/2004)
+*/
 
 using System;
 using System.Collections;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
+using DOL.Language;
 
 namespace DOL.GS
 {
@@ -56,10 +54,10 @@ namespace DOL.GS
 		/// <param name="player">GamePlayer that is examining this object</param>
 		/// <returns>list with string messages</returns>
 		public override IList GetExamineMessages(GamePlayer player)
-		{
+        {
 			IList list = new ArrayList();
-			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and is a healer.");
-			return list;
+            list.Add(LanguageMgr.GetTranslation(player.Client, "Healer.GetExamineMessages.Text1", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
+            return list;
 		}
 
 		public override bool Interact(GamePlayer player)
@@ -73,50 +71,54 @@ namespace DOL.GS
 			if (effect != null)
 			{
 				effect.Cancel(false);
-				player.Out.SendMessage(GetName(0, false) + " cures your resurrection sickness.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			}
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Healer.Interact.Text1", GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            }
 
 			if (player.TotalConstitutionLostAtDeath > 0)
 			{
 				int oneConCost = GamePlayer.prcRestore[player.Level < GamePlayer.prcRestore.Length ? player.Level : GamePlayer.prcRestore.Length - 1];
 				player.TempProperties.setProperty(COST_BY_PTS, (long)oneConCost);
-				player.Out.SendCustomDialog("It will cost " + Money.GetString(player.TotalConstitutionLostAtDeath * (long)oneConCost) + " to have your constitution restored. Do you accept?", new CustomDialogResponse(HealerDialogResponse));
-			}
+                player.Out.SendCustomDialog(LanguageMgr.GetTranslation(player.Client, "Healer.Interact.Text2", Money.GetString(player.TotalConstitutionLostAtDeath * (long)oneConCost)), new CustomDialogResponse(HealerDialogResponse));
+            }
 			else
 			{
-				player.Out.SendMessage("Your constitution is already fully restored!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			}
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Healer.Interact.Text3"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            }
 			return true;
 		}
 
 		protected void HealerDialogResponse(GamePlayer player, byte response)
-		{
-			if (!WorldMgr.CheckDistance(this, player, WorldMgr.INTERACT_DISTANCE))
-			{
-				player.Out.SendMessage("You are too far away to speak with " + GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
+        {
+            if (!WorldMgr.CheckDistance(this, player, WorldMgr.INTERACT_DISTANCE))
+            {
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Healer.HealerDialogResponse.Text1", GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
 
-			if (response != 0x01) return; //declined
+            if (response != 0x01) //declined
+            {
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Healer.HealerDialogResponse.Text2"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
 
-			long cost = player.TempProperties.getLongProperty(COST_BY_PTS, 0);
-			player.TempProperties.removeProperty(COST_BY_PTS);
-			int restorePoints = (int)Math.Min(player.TotalConstitutionLostAtDeath, player.GetCurrentMoney() / cost);
-			if (restorePoints < 1)
-				restorePoints = 1; // at least one
-			long totalCost = restorePoints * cost;
-			if (player.RemoveMoney(totalCost))
-			{
-				player.Out.SendMessage("You give " + this.Name + " a donation of " + Money.GetString(totalCost), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				player.TotalConstitutionLostAtDeath -= restorePoints;
-				player.Out.SendCharStatsUpdate();
-			}
-			else
-			{
-				player.Out.SendMessage("Need " + Money.GetString(totalCost) + " to restore " + restorePoints + " constitution points.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			}
-			return;
-		}
+            long cost = player.TempProperties.getLongProperty(COST_BY_PTS, 0);
+            player.TempProperties.removeProperty(COST_BY_PTS);
+            int restorePoints = (int)Math.Min(player.TotalConstitutionLostAtDeath, player.GetCurrentMoney() / cost);
+            if (restorePoints < 1)
+                restorePoints = 1; // at least one
+            long totalCost = restorePoints * cost;
+            if (player.RemoveMoney(totalCost))
+            {
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Healer.HealerDialogResponse.Text3", this.Name, Money.GetString(totalCost)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.TotalConstitutionLostAtDeath -= restorePoints;
+                player.Out.SendCharStatsUpdate();
+            }
+            else
+            {
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Healer.HealerDialogResponse.Text4", Money.GetString(totalCost), restorePoints), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            }
+            return;
+        }
 		#endregion Examine/Interact Message
 	}
 }
