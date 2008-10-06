@@ -114,12 +114,12 @@ namespace DOL.GS.Quests.Hibernia
             npcs = WorldMgr.GetNPCsByName("Charles", (eRealm)3);
             if (npcs.Length == 0)
             {
-                if (log.IsWarnEnabled)
-                    log.Warn("Could not find " + Charles.Name + ", creating ...");
                 Charles = new DOL.GS.GameNPC();
                 Charles.Model = 381;
                 Charles.Name = "Charles";
-				Charles.Realm = eRealm.Hibernia;
+                if (log.IsWarnEnabled)
+                    log.Warn("Could not find " + Charles.Name + ", creating ...");
+                Charles.Realm = eRealm.Hibernia;
                 Charles.CurrentRegionID = 200;
                 Charles.Size = 37;
                 Charles.Level = 1;
