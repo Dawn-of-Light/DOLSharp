@@ -884,7 +884,7 @@ Titles.Kills.Demon.DemonBane:				Demon Bane
 Titles.Kills.Demon.DemonScourge:			Demon Scourge
 Titles.Kills.Demon.DemonSlayer:				Demon Slayer
 Titles.Kills.Demon.DreadVanquisher:			Dread Vanquisher
-Titles.Kills.Dragon.DragonFoe:				Dragen Foe
+Titles.Kills.Dragon.DragonFoe:				Dragon Foe
 Titles.Kills.Dragon.DragonScourge:			Dragon Scourge
 Titles.Kills.Dragon.DragonSlayer:			Dragon Slayer
 Titles.Kills.Epic.EpicChallenger:			Epic Challenger
