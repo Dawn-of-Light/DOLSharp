@@ -1848,7 +1848,47 @@ namespace DOL.GS
 		{
 			if (Client.ClientState != GameClient.eClientState.Playing)
 				return m_enduRegenerationPeriod;
-			return base.EnduranceRegenerationTimerCallback(selfRegenerationTimer);
+
+            bool sprinting = IsSprinting;
+
+            if (Endurance < MaxEndurance || sprinting)
+            {
+                int regen = GetModified(eProperty.EnduranceRegenerationRate);
+
+                int longwind = 5;
+                if (sprinting && IsMoving)
+                {
+                    //TODO : cache LongWind level when char is loaded and on train ability
+					LongWindAbility ra = GetAbility(typeof(LongWindAbility)) as LongWindAbility;
+                    if (ra != null)
+                        longwind = 5 - ra.GetAmountForLevel(ra.Level);
+
+                    regen -= longwind;
+                    if (Endurance + regen > MaxEndurance - longwind)
+                    {
+                        regen -= (Endurance + regen) - (MaxEndurance - longwind);
+                    }
+                }
+
+                if (regen != 0)
+                {
+                    ChangeEndurance(this, eEnduranceChangeType.Regenerate, regen);
+                }
+            }
+            if (!sprinting)
+            {
+                if (Endurance >= MaxEndurance) return 0;
+            }
+            else
+            {
+                long lastmove = TempProperties.getLongProperty(PlayerPositionUpdateHandler.LASTMOVEMENTTICK, 0L);
+                if ((lastmove > 0 && lastmove + 5000 < CurrentRegion.Time) //cancel sprint after 5sec without moving?
+                    || Endurance - 5 <= 0)
+                    Sprint(false);
+            }
+
+            return 500 + Util.Random(1000);
+            //return base.EnduranceRegenerationTimerCallback(selfRegenerationTimer);
 		}
 
 		/// <summary>
