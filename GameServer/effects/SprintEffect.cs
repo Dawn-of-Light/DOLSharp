@@ -32,12 +32,12 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// The timer that reduce the endurance every interval
 		/// </summary>
-		RegionTimer m_tickTimer;
+		//RegionTimer m_tickTimer;
 
 		/// <summary>
 		/// The amount of timer ticks player was not moving
 		/// </summary>
-		int m_idleTicks = 0;
+		//int m_idleTicks = 0;
 
 		/// <summary>
 		/// Start the sprinting on player
@@ -45,20 +45,21 @@ namespace DOL.GS.Effects
 		public override void Start(GameLiving target)
 		{
 			base.Start(target);
-			if (m_tickTimer != null)
+			/*if (m_tickTimer != null)
 			{
 				m_tickTimer.Stop();
 				m_tickTimer = null;
 			}
 			m_tickTimer = new RegionTimer(target);
 			m_tickTimer.Callback = new RegionTimerCallback(PulseCallback);
-			m_tickTimer.Start(1);
+			m_tickTimer.Start(1);*/
+            target.StartEnduranceRegeneration();
 		}
 
 		/// <summary>
 		/// Stop the effect on target
 		/// </summary>
-		public override void Stop()
+		/*public override void Stop()
 		{
 			base.Stop();
 			if (m_tickTimer != null)
@@ -66,14 +67,14 @@ namespace DOL.GS.Effects
 				m_tickTimer.Stop();
 				m_tickTimer = null;
 			}
-		}
+		}*/
 
 		/// <summary>
 		/// Sprint "pulse"
 		/// </summary>
 		/// <param name="callingTimer"></param>
 		/// <returns></returns>
-		public int PulseCallback(RegionTimer callingTimer)
+		/*public int PulseCallback(RegionTimer callingTimer)
 		{
 			int nextInterval;
 
@@ -101,7 +102,7 @@ namespace DOL.GS.Effects
 				}
 			}
 			return nextInterval;
-		}
+		}*/
 
 		/// <summary>
 		/// Called when effect must be canceled
