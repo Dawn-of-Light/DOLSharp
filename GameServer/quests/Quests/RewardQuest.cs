@@ -20,8 +20,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using DOL.Database;
-using DOL.GS.PacketHandler;
 using DOL.Events;
+using DOL.Language;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Quests
 {
@@ -189,7 +190,7 @@ namespace DOL.GS.Quests
                 //k109: Handle the player not choosing a reward.
                 if (Rewards.ChoiceOf > 0 && rewardArgs.CountChosen <= 0)
                 {
-                    QuestPlayer.Out.SendMessage("You must choose a reward!", eChatType.CT_System, eChatLoc.CL_ChatWindow);
+                    QuestPlayer.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RewardQuest.Notify"), eChatType.CT_System, eChatLoc.CL_ChatWindow);
                     return;
                 }
 
@@ -203,9 +204,8 @@ namespace DOL.GS.Quests
 		/// <param name="player"></param>
 		public override void OnQuestAssigned(GamePlayer player)
 		{
-			player.Out.SendMessage(String.Format("You have acquired the {0} quest.",
-				Name), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
-			player.Out.SendSoundEffect(7, 0, 0, 0, 0, 0);
+            player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RewardQuest.OnQuestAssigned", Name)), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
+            player.Out.SendSoundEffect(7, 0, 0, 0, 0, 0);
 		}
 
 		/// <summary>
@@ -268,7 +268,7 @@ namespace DOL.GS.Quests
 			/// </summary>
 			public String Description
 			{
-				get { return String.Format("Quest Goal : {0} ({1}/{2})", m_description, Current, Target); }
+                get { return String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RewardQuest.Description", m_description, Current, Target)); }
 			}
 
 			/// <summary>
