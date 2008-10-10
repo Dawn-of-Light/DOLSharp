@@ -21,6 +21,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Quests.Albion
@@ -33,7 +34,7 @@ namespace DOL.GS.Quests.Albion
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		protected const string questTitle = "No Hope For The Hopeful";
-		protected const int minimumLevel = 1;
+        protected const int minimumLevel = 1;
 		protected const int maximumLevel = 50;
 
 		private static GameNPC sirDorian = null;
@@ -64,8 +65,8 @@ namespace DOL.GS.Quests.Albion
 		{
 			ItemTemplate intelligentBracer = CreateBracer();
 			intelligentBracer.Id_nb = "recruits_intelligent_bracer";
-			intelligentBracer.Name = "Recruit's Intelligent Bracer";
-			intelligentBracer.Bonus1 = 4;
+            intelligentBracer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text1");
+            intelligentBracer.Bonus1 = 4;
 			intelligentBracer.Bonus1Type = (int)eProperty.Acuity;
 			intelligentBracer.Bonus2 = 3;
 			intelligentBracer.Bonus2Type = (int)eProperty.Constitution;
@@ -74,8 +75,8 @@ namespace DOL.GS.Quests.Albion
 
 			ItemTemplate mightyBracer = CreateBracer();
 			mightyBracer.Id_nb = "recruits_mighty_bracer";
-			mightyBracer.Name = "Recruit's Mighty Bracer";
-			mightyBracer.Bonus1 = 4;
+            mightyBracer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text2");
+            mightyBracer.Bonus1 = 4;
 			mightyBracer.Bonus1Type = (int)eProperty.Strength;
 			mightyBracer.Bonus2 = 4;
 			mightyBracer.Bonus2Type = (int)eProperty.Constitution;
@@ -84,8 +85,8 @@ namespace DOL.GS.Quests.Albion
 
 			ItemTemplate slyBracer = CreateBracer();
 			slyBracer.Id_nb = "recruits_sly_bracer";
-			slyBracer.Name = "Recruit's Sly Bracer";
-			slyBracer.Bonus1 = 4;
+            slyBracer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text3");
+            slyBracer.Bonus1 = 4;
 			slyBracer.Bonus1Type = (int)eProperty.Dexterity;
 			slyBracer.Bonus2 = 4;
 			slyBracer.Bonus2Type = (int)eProperty.Quickness;
@@ -94,8 +95,8 @@ namespace DOL.GS.Quests.Albion
 
 			ItemTemplate piousBracer = CreateBracer();
 			piousBracer.Id_nb = "recruits_pious_bracer";
-			piousBracer.Name = "Recruit's Pious Bracer";
-			piousBracer.Bonus1 = 4;
+            piousBracer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text4");
+            piousBracer.Bonus1 = 4;
 			piousBracer.Bonus1Type = (int)eProperty.Acuity;
 			piousBracer.Bonus2 = 3;
 			piousBracer.Bonus2Type = (int)eProperty.Dexterity;
@@ -108,7 +109,7 @@ namespace DOL.GS.Quests.Albion
 			banditCloak.MaxCondition = 50000;
 			banditCloak.Model = 669;
 			banditCloak.Extension = 1;
-			banditCloak.Name = "Bandit Cloak";
+            banditCloak.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text5");
 
 			Level = 1;
 			QuestGiver = sirDorian;
@@ -120,8 +121,8 @@ namespace DOL.GS.Quests.Albion
 			Rewards.AddOptionalItem(piousBracer);
 			Rewards.ChoiceOf = 1;
 
-			banditHopefulGoal = AddGoal("Defeat two bandit hopefuls", QuestGoal.GoalType.KillTask, 2,
-				banditCloak);
+            banditHopefulGoal = AddGoal(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text6"), QuestGoal.GoalType.KillTask, 2, banditCloak);
+
 		}
 
 		/// <summary>
@@ -281,12 +282,12 @@ namespace DOL.GS.Quests.Albion
 
 			if (response == 0x00)
 			{
-				SendSystemMessage(player, "Good, now go out there and finish your work!");
-			}
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.NoHopeForTheHopeful.CheckPlayerAbortQuest.Text1"));
+            }
 			else
 			{
-				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
-				quest.AbortQuest();
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.NoHopeForTheHopeful.CheckPlayerAbortQuest.Text2", questTitle));
+                quest.AbortQuest();
 			}
 		}
 
@@ -353,21 +354,7 @@ namespace DOL.GS.Quests.Albion
 		{
 			get
 			{
-				String desc = "So you're one of the new arrivals, eh? Welcome to our village! "
-					+ "Its always a pleasure to meet newcomers.\n\nYou may've heard a bit of a "
-					+ "rumor about a lack of local guards here. Unfortunately, it's true, "
-					+ "I'm afraid. King Constantine has spread out our defenses quite thin, leaving "
-					+ "folks around these parts pretty nervous about their safety. Not that he can be "
-					+ "blamed, we just have too many foes to worry about in these trying times.\n\n"
-					+ "If you're truly willing to help like you say, then I could use your assistance. "
-					+ "One never-ending problem we endure is the trouble stirred up by local brigands "
-					+ "that seem to cover the countryside like a plague. The more we arrest, the "
-					+ "more we find days later. They're like insects... where you see one, there are "
-					+ "hundreds more you don't see.\n\nWould you be willing to help us out? Our people "
-					+ "should feel free to go about their days without the constant worry of being set "
-					+ "upon by thugs. Kill two bandit hopefuls and bring me two Bandit Cloaks as proof "
-					+ "of this deed.";
-
+                String desc = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.NoHopeForTheHopeful.Story");
 				return desc;
 			}
 		}
@@ -379,8 +366,8 @@ namespace DOL.GS.Quests.Albion
 		{
 			get
 			{
-				return "Find and defeat two bandit hopefuls, then return to Sir Dorian for your reward.";
-			}
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.NoHopeForTheHopeful.Summary");
+            }
 		}
 
 		/// <summary>
@@ -390,11 +377,9 @@ namespace DOL.GS.Quests.Albion
 		{
 			get 
 			{
-				String text = String.Format("Excellent, {0}!  You've done very well. ", 
-					QuestPlayer.Name);
-				text += "Perhaps word will spread among the bandits that the citizens of Cotswold will no ";
-				text += "longer tolerate their fear-mongering.";
-				return text;
+                String text = String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.NoHopeForTheHopeful.Conclusion.Text1", QuestPlayer.Name));
+                text += LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.NoHopeForTheHopeful.Conclusion.Text2");
+                return text;
 			}
 		}
 
@@ -418,8 +403,8 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 1 && e == GameLivingEvent.EnemyKilled)
 			{
 				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;
-				if (gArgs.Target.Name.IndexOf("bandit hopeful") >= 0)
-				{
+                if (gArgs.Target.Name.IndexOf(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Notify")) >= 0)
+                    {
 					if (!banditHopefulGoal.IsAchieved)
 					{
 						banditHopefulGoal.Advance();
