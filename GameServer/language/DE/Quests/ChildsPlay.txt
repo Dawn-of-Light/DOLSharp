@@ -1,5 +1,6 @@
-ChildsPlay.CheckPlayerAbortQuest.Text1:		Gut, macht also weiter und vollendet Eure Arbeit!
-ChildsPlay.CheckPlayerAbortQuest.Text2:		Auftrag {0} abgebrochen. Ihr könnt jeder Zeit wieder beginnen.
+# Kinderspiele
+ChildsPlay.CheckPlayerAbortQuest.Text1:		Gut, macht also weiter und beendet Eure Aufgabe!
+ChildsPlay.CheckPlayerAbortQuest.Text2:		Quest "{0}" abgebrochen. Ihr könnt jeder Zeit wieder beginnen.
 ChildsPlay.CheckPlayerAcceptQuest.Text1:	Ach, komm schon. Du bist nicht besser als dieser Lilienliebhaber... Lilienbauch... Lilien... ach, vergiss es... dieser dumme Raymond! Nun, was machen wir jetzt, um Spaß zu haben?
 ChildsPlay.CheckPlayerAcceptQuest.Text2:	Großartig! Wir werden, öhm, einfach hier warten, während du dich darum kümmerst. Siehst du, Raymond, nicht jeder ist so ein Riesenfeigling wie du. Feigling!
 ChildsPlay.FinishQuest.Text1:			{0} gehören Euch als Belohnung!

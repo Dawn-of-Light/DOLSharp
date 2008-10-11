@@ -28,6 +28,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Quests.Albion
@@ -77,13 +78,13 @@ namespace DOL.GS.Quests.Albion
             insigniarings.MaxCondition = 50000;
             insigniarings.Model = 103;
             insigniarings.Extension = 1;
-            insigniarings.Name = "Bandit Insignia Rings";
+            insigniarings.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.DredgeUpAPledge.Init.Text1");
 
             Level = 1;
             QuestGiver = sirDorian;
             Rewards.Experience = 30;
             Rewards.MoneyPercent = 100;
-            banditPledgesKilled = AddGoal("Defeat 2 bandit pledges", QuestGoal.GoalType.KillTask, 2,insigniarings);
+            banditPledgesKilled = AddGoal(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.DredgeUpAPledge.Init.Text2"), QuestGoal.GoalType.KillTask, 2, insigniarings);
 
         }
 
@@ -254,11 +255,11 @@ namespace DOL.GS.Quests.Albion
 
             if (response == 0x00)
             {
-                SendSystemMessage(player, "Good, now go out there and finish your work!");
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.DredgeUpAPledge.CheckPlayerAbortQuest.Text1"));
             }
             else
             {
-                SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.DredgeUpAPledge.CheckPlayerAbortQuest.Text2", questTitle));
                 quest.AbortQuest();
             }
         }
@@ -327,9 +328,7 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                String desc = "These are difficult times, indeed.  Those of us old enough to remember what things were like when Arthur was alive - well, it's difficult to think of what has been lost since then.  Those were the golden years.\n"
-                    + "\nOh, King Constantine does his best, don't get me wrong!  We're lucky to have a king with his integrity guiding our realm.  But, it's just not the same.  You can't help but feel for him; he must know that everyone compares him to Arthur.  It must be maddening, considering Constantine has much more on his plate and no Merlin at his side.  And yet, they say Morgana is still out there, plotting from the shadows.  It's no wonder the local villages are in the state they are in.\n"
-                    + "\nSpeaking of the state of our humble village, recent efforts at sending a message to the bandits didn't make much of an impact.  They continue to be a thorn in our side.  I'm providing a bounty to anyone who teaches those rabble-rousers a lesson, granted they bring me proof of the deed.  Interested?";
+                String desc = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.DredgeUpAPledge.Story");
                 return desc;
             }
         }
@@ -341,7 +340,7 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                return "Several groups of bandits have set up camps near Cotswold.  Find and defeat two bandit pledges.  Collect two of their insignia rings, then return to Sir Dorian for your reward.";
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.DredgeUpAPledge.Summary");
             }
         }
 
@@ -352,9 +351,8 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                String text = String.Format("Good job, {0}!",
-                    QuestPlayer.Name);
-                text += "Perhaps those thugs will think twice about to whom they will be pledging their allegiance.  Here's a little something for your trouble.";
+                String text = String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.DredgeUpAPledge.Conclusion.Text1", QuestPlayer.Name));
+                text += LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.DredgeUpAPledge.Conclusion.Text2");
                 return text;
             }
         }
@@ -390,7 +388,7 @@ namespace DOL.GS.Quests.Albion
             if (Step == 1 && e == GameLivingEvent.EnemyKilled)
             {
                 EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;
-                if (gArgs.Target.Name.IndexOf("bandit pledge") >= 0)
+                if (gArgs.Target.Name.IndexOf(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.DredgeUpAPledge.Notify")) >= 0)
                 {
                     if (!banditPledgesKilled.IsAchieved)
                     {
