@@ -1,5 +1,6 @@
-﻿Hib.ImportantDelivery.CheckPlayerAbortQuest.Abort:	Auftrag {0} abgebrochen. Ihr könnt jeder Zeit wieder beginnen.
-Hib.ImportantDelivery.CheckPlayerAbortQuest.NoAbort:	Gut, macht also weiter und vollendet Eure Arbeit!
+﻿# Wichtige Lieferung
+Hib.ImportantDelivery.CheckPlayerAbortQuest.Abort:	Quest "{0}" abgebrochen. Ihr könnt jeder Zeit wieder beginnen.
+Hib.ImportantDelivery.CheckPlayerAbortQuest.NoAbort:	Gut, macht also weiter und beendet Eure Aufgabe!
 Hib.ImportantDelivery.CheckPlayerAcceptQuest.Accept:	Ich gratuliere Euch! Ihr seid nun einen Schritt weiter, um die Welt von Hibernia zu verstehen. In dieser Phase der Ausbildung werde ich Euch in verschiedene Teile des Reiches schicken, um einige bestellte Sachen bei bestimmten Leuten abzuliefern. Ihr solltet von Zeit zu Zeit Eure NOTIZEN aufschlagen, um zu sehen, welcher Schritt als nächstes getan werden muss, um Eure Aufgabe zuerledigen. Ihr könnt auf diese über die BEFEHLE-Taste in Eurem [Charakterbogen] zugreifen.
 Hib.ImportantDelivery.CheckPlayerAcceptQuest.NoAccept:	Auch gut. Kommt bitte zurück, falls Ihr Eure Meinung ändern solltet.
 Hib.ImportantDelivery.DefineItems.CrateOfVegetables:	Kiste mit Gemüse
