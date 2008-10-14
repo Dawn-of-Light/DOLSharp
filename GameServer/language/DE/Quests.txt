@@ -9,5 +9,6 @@ ArtifactTurnInQuest.FinishQuest.Completed:		Ihr habt die Quest "{0}" abgeschloss
 
 # /Quests
 # /AbstractQuest
+AbstractQuest.AbortQuest:				Die ausgewählte Quest wurde entfernt!
 AbstractQuest.FinishQuest.Completed:			Ihr habt die Quest "{0}" abgeschlossen!
 AbstractQuest.OnQuestAssigned.GetQuest:			Euch wurde die Quest "{0}" anvertraut.

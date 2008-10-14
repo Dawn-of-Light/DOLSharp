@@ -28,6 +28,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Quests.Albion
@@ -83,7 +84,7 @@ namespace DOL.GS.Quests.Albion
             if (RecruitsCloak == null)
             {
                 RecruitsCloak = new ItemTemplate();
-                RecruitsCloak.Name = "Recruit's Cloak";
+                RecruitsCloak.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.ANewHeroesWelcome.Init.Text1");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + RecruitsCloak.Name + ", creating it ...");
 
@@ -122,8 +123,8 @@ namespace DOL.GS.Quests.Albion
                 LetterToPompin.MaxCondition = 50000;
                 LetterToPompin.Model = 499;
                 LetterToPompin.Extension = 1;
-                LetterToPompin.Name = "Letter To Pompin";
-				LetterToPompin.Id_nb = "letter_to_pompin";
+                LetterToPompin.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.ANewHeroesWelcome.Init.Text2");
+                LetterToPompin.Id_nb = "letter_to_pompin";
 
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(LetterToPompin);
@@ -136,7 +137,7 @@ namespace DOL.GS.Quests.Albion
             Rewards.AddBasicItem(RecruitsCloak);
             Rewards.ChoiceOf = 1;
 
-            pompinsletter = AddGoal("Take the message to Pompin the Crier", QuestGoal.GoalType.ScoutMission, 1, LetterToPompin);
+            pompinsletter = AddGoal(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.ANewHeroesWelcome.Init.Text3"), QuestGoal.GoalType.ScoutMission, 1, LetterToPompin);
         }
 
         [ScriptLoadedEvent]
@@ -150,18 +151,18 @@ namespace DOL.GS.Quests.Albion
 
             #region defineNPCS
 
-            GameNPC[] npcs = WorldMgr.GetNPCsByName("Master Claistan", eRealm.Albion);
+            GameNPC[] npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.ANewHeroesWelcome.ScriptLoaded.Text1"), eRealm.Albion);
 
             /* Whops, if the npcs array length is 0 then no npc exists in
-                * this users Mob Database, so we simply create one ;-)
-                * else we take the existing one. And if more than one exist, we take
-                * the first ...
-                */
+             * this users Mob Database, so we simply create one ;-)
+             * else we take the existing one. And if more than one exist, we take
+             * the first ...
+             */
             if (npcs.Length == 0)
             {
                 MasterClaistan = new GameNPC();
                 MasterClaistan.Model = 33;
-                MasterClaistan.Name = "Master Claistan";
+                MasterClaistan.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.ANewHeroesWelcome.ScriptLoaded.Text1");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + MasterClaistan.Name + ", creating him ...");
                 //MasterClaistan.GuildName = "Part of " + questTitle + " Quest";
@@ -197,12 +198,12 @@ namespace DOL.GS.Quests.Albion
                 MasterClaistan = npcs[0];
 
             //Pompin The Crier
-            npcs = WorldMgr.GetNPCsByName("Pompin the Crier", eRealm.Albion);
+            npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.ANewHeroesWelcome.ScriptLoaded.Text2"), eRealm.Albion);
             if (npcs.Length == 0)
             {
                 PompinTheCrier = new GameNPC();
                 PompinTheCrier.Model = 10;
-                PompinTheCrier.Name = "Pompin the Crier";
+                PompinTheCrier.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.ANewHeroesWelcome.ScriptLoaded.Text2");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + PompinTheCrier.Name + ", creating him ...");
                 //MasterClaistan.GuildName = "Part of " + questTitle + " Quest";
@@ -310,7 +311,7 @@ namespace DOL.GS.Quests.Albion
             {
                 if (quest == null)
                 {
-                    PompinTheCrier.SayTo(player, "Hello there, welcome to Cotswold.");
+                    PompinTheCrier.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.ANewHeroesWelcome.TalkToPompinTheCrier"));
                 }
                 else
                 {
@@ -375,11 +376,11 @@ namespace DOL.GS.Quests.Albion
 
             if (response == 0x00)
             {
-                SendSystemMessage(player, "Good, now go out there and finish your work!");
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.ANewHeroesWelcome.CheckPlayerAbortQuest.Text1"));
             }
             else
             {
-                SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.ANewHeroesWelcome.CheckPlayerAbortQuest.Text2", questTitle));
                 quest.AbortQuest();
             }
         }
@@ -446,9 +447,7 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                String desc = "Welcome to Cotswold! I see you're one of the latest arrivals to the outskirts of Camelot. If you're here to help with realm defense, you're most welcome. I'm pleased to do my part in readying you for that experience.\n"
-                    + "\nKing Constantine's hands are full dealing with the troubles that plague Albion. These are dark times, but we're a stalwart people and are fortunate to have a king that takes the well-being of his people seriously. Still, we're beset by many dangers. There's the threat of invasion by Midgard and Hibernia, precious relics to guard, lands to protect, and forces of evil that dwell below, awaiting the opportunity to strike.\n"
-                    + "\nThe realm war is taking a toll on our women and men fighting in the frontlines. The Guild leaders informed us that they're recruiting as may Healers as possible for the Frontiers. I need you to deliver Pompin the Crier a message regarding this news. He'll see to it that this message makes it into the right hands. He may also have a task for you.";
+                String desc = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.ANewHeroesWelcome.Story");
                 return desc;
             }
         }
@@ -460,7 +459,7 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                return "Deliver the message from Master Claistan to Pompin the Crier.  He's most knowledgable about current events.  He can fill you in on the latest local news and perhaps give you a task.";
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.ANewHeroesWelcome.Summary");
             }
         }
 
@@ -471,8 +470,8 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                String text = String.Format("Thank you, {0}.",QuestPlayer.CharacterClass.Name);
-                text += "I'll send a herald to the healers in Black Mountains South.  This war is depleting our resources and we have much to do on all fronts.  I certainly have more than my share of work.  Let me know if you would like to help out.";
+                String text = String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.ANewHeroesWelcome.Conclusion.Text1", QuestPlayer.CharacterClass.Name));
+                text += LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.ANewHeroesWelcome.Conclusion.Text2");
                 return text;
             }
         }
