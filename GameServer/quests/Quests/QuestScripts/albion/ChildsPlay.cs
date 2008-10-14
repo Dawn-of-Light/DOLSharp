@@ -1723,6 +1723,7 @@ namespace DOL.GS.Quests.Albion
             else if (e == GamePlayerEvent.DeclineQuest)
                 CheckPlayerAcceptQuest(qargs.Player, 0x00);
         }
+
         protected static void PlayerEnterStatueArea(DOLEvent e, object sender, EventArgs args)
         {
             AreaEventArgs aargs = args as AreaEventArgs;
@@ -1735,6 +1736,7 @@ namespace DOL.GS.Quests.Albion
                 quest.Step = 2;
             }
         }
+
         private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
         {
             if (Charles.CanGiveQuest(typeof(childsplay), player) <= 0)
@@ -1777,6 +1779,7 @@ namespace DOL.GS.Quests.Albion
                 return base.Description;
             }
         }
+
         public override void AbortQuest()
         {
             base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
