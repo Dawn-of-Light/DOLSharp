@@ -35,7 +35,7 @@ namespace DOL.GS.Quests.Albion
 
 		protected const string questTitle = "No Hope For The Hopeful";
         protected const int minimumLevel = 1;
-		protected const int maximumLevel = 50;
+		protected const int maximumLevel = 5;
 
 		private static GameNPC sirDorian = null;
 		private QuestGoal banditHopefulGoal;
@@ -413,5 +413,15 @@ namespace DOL.GS.Quests.Albion
 				}
 			}
 		}
+
+        public override void AbortQuest()
+        {
+            base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+        }
+
+        public override void FinishQuest()
+        {
+            base.FinishQuest();
+        }
 	}
 }
