@@ -21,6 +21,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Quests.Albion
@@ -34,7 +35,7 @@ namespace DOL.GS.Quests.Albion
 
 		protected const string questTitle = "After The Accident";
 		protected const int minimumLevel = 1;
-		protected const int maximumLevel = 50;
+		protected const int maximumLevel = 5;
 
 		private static GameNPC SirPrescott = null;
 		private QuestGoal punySkeletonGoal;
@@ -73,8 +74,8 @@ namespace DOL.GS.Quests.Albion
 			if (RecruitsNecklaceofMight == null)
 			{
 				RecruitsNecklaceofMight = new ItemTemplate();
-				RecruitsNecklaceofMight.Name = "Recruit's Necklace of Might";
-				if (log.IsWarnEnabled)
+                RecruitsNecklaceofMight.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.AfterTheAccident.Init.Text1");
+                if (log.IsWarnEnabled)
 					log.Warn("Could not find " + RecruitsNecklaceofMight.Name + ", creating it ...");
 
 				RecruitsNecklaceofMight.Level = 3;
@@ -114,8 +115,8 @@ namespace DOL.GS.Quests.Albion
 			if (RecruitsNecklaceofInsight == null)
 			{
 				RecruitsNecklaceofInsight = new ItemTemplate();
-				RecruitsNecklaceofInsight.Name = "Recruit's Necklace of Insight";
-				if (log.IsWarnEnabled)
+                RecruitsNecklaceofInsight.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.AfterTheAccident.Init.Text2");
+                if (log.IsWarnEnabled)
 					log.Warn("Could not find " + RecruitsNecklaceofInsight.Name + ", creating it ...");
 
 				RecruitsNecklaceofInsight.Level = 3;
@@ -155,8 +156,8 @@ namespace DOL.GS.Quests.Albion
 			if (RecruitsNecklaceofFaith == null)
 			{
 				RecruitsNecklaceofFaith = new ItemTemplate();
-				RecruitsNecklaceofFaith.Name = "Recruit's Necklace of Faith";
-				if (log.IsWarnEnabled)
+                RecruitsNecklaceofFaith.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.AfterTheAccident.Init.Text3");
+                if (log.IsWarnEnabled)
 					log.Warn("Could not find " + RecruitsNecklaceofFaith.Name + ", creating it ...");
 
 				RecruitsNecklaceofFaith.Level = 3;
@@ -198,8 +199,8 @@ namespace DOL.GS.Quests.Albion
 			punySkeletonSkull.MaxCondition = 50000;
 			punySkeletonSkull.Model = 540;
 			punySkeletonSkull.Extension = 1;
-			punySkeletonSkull.Name = "Puny Skeleton Skull";
-			
+            punySkeletonSkull.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.AfterTheAccident.Init.Text4");
+
 			#endregion
 
 			QuestGiver = SirPrescott;
@@ -210,9 +211,8 @@ namespace DOL.GS.Quests.Albion
 			Rewards.AddOptionalItem(RecruitsNecklaceofFaith);
 			Rewards.ChoiceOf = 1;
 
-			punySkeletonGoal = AddGoal("Puny skeleton skulls", QuestGoal.GoalType.KillTask, 2, 
-				punySkeletonSkull);
-		}
+            punySkeletonGoal = AddGoal(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.AfterTheAccident.Init.Text5"), QuestGoal.GoalType.KillTask, 2, punySkeletonSkull);
+        }
 
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
@@ -381,16 +381,16 @@ namespace DOL.GS.Quests.Albion
 			if (quest == null)
 				return;
 
-			if (response == 0x00)
-			{
-				SendSystemMessage(player, "Good, now go out there and finish your work!");
-			}
-			else
-			{
-				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
-				quest.AbortQuest();
-			}
-		}
+            if (response == 0x00)
+            {
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.AfterTheAccident.CheckPlayerAbortQuest.Text1"));
+            }
+            else
+            {
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.AfterTheAccident.CheckPlayerAbortQuest.Text2", questTitle));
+                quest.AbortQuest();
+            }
+        }
 
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
@@ -455,12 +455,7 @@ namespace DOL.GS.Quests.Albion
 		{
 			get
 			{
-				String desc = "During my patrols of Cotswold, I've seen many things that gravely concern me, "
-					+ "my friend. The dead, are restless, and walk aboveground when they should be resting peacefully below. "
-					+ "While this isn't quite a new phenomenon, there are more and more sightings of skeletons, zombies, and the like since that accursed accident."
-					+ "\nYou've likely heard by now about the tear in the fabric of reality that happened accidentally when the finger-wagglers at the Academy moved the portal leading to the Shrouded Isles from Avalon Marsh to here in Cotswold. They opened a door into hell, and I don't think anyone knows just yet what that means. They think they capped it, but I'm not so sure."
-					+ "\nWhile I can't be certain about what foul magic brings these 'things' forth from their final resting places, I do know these abominations can't be allowed to roam the countryside. I'm authorized to pay a bounty to anyone who puts them down and returns to me with proof of the deed.";
-
+                String desc = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.AfterTheAccident.Story");
 				return desc;
 			}
 		}
@@ -472,8 +467,8 @@ namespace DOL.GS.Quests.Albion
 		{
 			get
 			{
-				return "Kill two puny skeletons. Return to Sir Prescott with two Puny Skeleton Skulls as proof that you completed this task.";
-			}
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.AfterTheAccident.Summary");
+            }
 		}
 
 		/// <summary>
@@ -483,9 +478,8 @@ namespace DOL.GS.Quests.Albion
 		{
 			get
 			{
-				String text = String.Format("You have done well.  Here is your reward, and my thanks for serving Camelot!",
-					QuestPlayer.Name);
-				return text;
+                String text = String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.AfterTheAccident.Conclusion.Text1", QuestPlayer.Name));
+                return text;
 			}
 		}
 
@@ -520,8 +514,8 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 1 && e == GameLivingEvent.EnemyKilled)
 			{
 				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;
-				if (gArgs.Target.Name.IndexOf("puny skeleton") >= 0)
-				{
+                if (gArgs.Target.Name.IndexOf(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.AfterTheAccident.Notify.Text1")) >= 0)
+                    {
 					if (!punySkeletonGoal.IsAchieved)
 					{
 						punySkeletonGoal.Advance();
@@ -530,5 +524,15 @@ namespace DOL.GS.Quests.Albion
 				}
 			}
 		}
+
+        public override void AbortQuest()
+        {
+            base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+        }
+
+        public override void FinishQuest()
+        {
+            base.FinishQuest();
+        }
 	}
 }

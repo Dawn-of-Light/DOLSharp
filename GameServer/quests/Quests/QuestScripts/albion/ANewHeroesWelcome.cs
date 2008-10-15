@@ -431,7 +431,6 @@ namespace DOL.GS.Quests.Albion
             {
                 switch (Step)
                 {
-
                     case 1:
                         return Summary;
                     default:
@@ -485,6 +484,16 @@ namespace DOL.GS.Quests.Albion
             {
                 return 1;
             }
+        }
+
+        public override void AbortQuest()
+        {
+            base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+        }
+
+        public override void FinishQuest()
+        {
+            base.FinishQuest();
         }
     }
 }
