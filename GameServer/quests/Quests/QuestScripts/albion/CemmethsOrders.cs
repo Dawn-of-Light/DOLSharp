@@ -28,6 +28,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Quests.Albion
@@ -83,7 +84,7 @@ namespace DOL.GS.Quests.Albion
             if (RecruitsQuiltedVest == null)
             {
                 RecruitsQuiltedVest = new ItemTemplate();
-                RecruitsQuiltedVest.Name = "Recruit's Quilted Vest";
+                RecruitsQuiltedVest.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.CemmethsOrders.Init.Text1");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + RecruitsQuiltedVest.Name + ", creating it ...");
 
@@ -129,7 +130,7 @@ namespace DOL.GS.Quests.Albion
             if (RecruitsLeatherJerkin == null)
             {
                 RecruitsLeatherJerkin = new ItemTemplate();
-                RecruitsLeatherJerkin.Name = "Recruit's Leather Jerkin";
+                RecruitsLeatherJerkin.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.CemmethsOrders.Init.Text2");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + RecruitsLeatherJerkin.Name + ", creating it ...");
 
@@ -175,7 +176,7 @@ namespace DOL.GS.Quests.Albion
             if (RecruitsStuddedVest == null)
             {
                 RecruitsStuddedVest = new ItemTemplate();
-                RecruitsStuddedVest.Name = "Recruit's Studded Vest";
+                RecruitsStuddedVest.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.CemmethsOrders.Init.Text3");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + RecruitsStuddedVest.Name + ", creating it ...");
 
@@ -226,7 +227,7 @@ namespace DOL.GS.Quests.Albion
             skeletonskull.MaxCondition = 50000;
             skeletonskull.Model = 540;
             skeletonskull.Extension = 1;
-            skeletonskull.Name = "Skeleton Skull";
+            skeletonskull.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.CemmethsOrders.Init.Text4");
 
             ItemTemplate zombieskin = new ItemTemplate();
             zombieskin.Weight = 0;
@@ -234,7 +235,7 @@ namespace DOL.GS.Quests.Albion
             zombieskin.MaxCondition = 50000;
             zombieskin.Model = 540;
             zombieskin.Extension = 1;
-            zombieskin.Name = "Decayed Zombie Skin";
+            zombieskin.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.CemmethsOrders.Init.Text5");
 
             QuestGiver = CemmethBudgwold;
             Rewards.Experience = 625;
@@ -244,9 +245,8 @@ namespace DOL.GS.Quests.Albion
             Rewards.AddOptionalItem(RecruitsStuddedVest);
             Rewards.ChoiceOf = 1;
 
-            SkeletonsKilled = AddGoal("Kill 1 Skeleton", QuestGoal.GoalType.KillTask, 1, skeletonskull);
-            DecayingGhoulsKilled = AddGoal("Kill 1 Decayed Zombie", QuestGoal.GoalType.KillTask, 1, zombieskin);
-
+            SkeletonsKilled = AddGoal(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.CemmethsOrders.Init.Text6"), QuestGoal.GoalType.KillTask, 1, skeletonskull);
+            DecayingGhoulsKilled = AddGoal(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.CemmethsOrders.Init.Text7"), QuestGoal.GoalType.KillTask, 1, zombieskin);
         }
 
         [ScriptLoadedEvent]
@@ -415,11 +415,11 @@ namespace DOL.GS.Quests.Albion
 
             if (response == 0x00)
             {
-                SendSystemMessage(player, "Good, now go out there and finish your work!");
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.CemmethsOrders.CheckPlayerAbortQuest.Text1"));
             }
             else
             {
-                SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.CemmethsOrders.CheckPlayerAbortQuest.Text2", questTitle));
                 quest.AbortQuest();
             }
         }
@@ -450,7 +450,6 @@ namespace DOL.GS.Quests.Albion
 
                 if (!CemmethBudgwold.GiveQuest(typeof(CemmethsOrders), player, 1))
                     return;
-
             }
         }
 
@@ -488,14 +487,7 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                String desc = "Brother Lawrence recently called a meeting with the local militia leaders to discuss his concerns about the rise in the number of undead in our region,"
-                    + "and how it may relate to the recent incident leading to the forming of the entrances into Demons' Breach. I must say, his concerns trouble me."
-                    + "I don't pretend to know much about the how or why of it, but I do know that if these creatures pose a threat to our citizens, they must be put down.\n\n"
-                    + "According to our reports, skeletons and decayed zombies are apparently two of the more dangerous things to worry about near Prydwen Ossuary."
-                    + "Their numbers and aggressive posture seem to be increasing. I fear that if they go unchallenged, we may find ourselves in quite a predicament."
-                    + "We mustn't have the undead legions gallivanting about Camelot Hills, after all!\n\n"
-                    + "What say you?  Will you help to make our countryside safer by sending those vermin back to their resting places?"
-                    + "Bring me proof of your deed should you embark upon this task.\n\n";
+                String desc = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.CemmethsOrders.Story");
                 return desc;
             }
         }
@@ -507,7 +499,7 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                return "Travel to Prydwen Ossuary. There are a variety of undead in the surrounding area. Kill a skeleton for a skull and a decayed zombie for some flesh. Return to Cemmeth Budgwold when you're done.";
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.CemmethsOrders.Summary");
             }
         }
 
@@ -518,8 +510,7 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                String text = String.Format("");
-                text += "Well done, " + QuestPlayer.CharacterClass.Name + ", well done!  We've certainly got our work cut out for us, what with all the unliving vermin stomping about.  You've set a fine example for the other would-be heroes and adventurers, my friend.  Please accept this small token of appreciation.";
+                String text = String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.CemmethsOrders.Conclusion.Text1", QuestPlayer.CharacterClass.Name));
                 return text;
             }
         }
@@ -555,16 +546,16 @@ namespace DOL.GS.Quests.Albion
             if (Step == 1 && e == GameLivingEvent.EnemyKilled)
             {
                 EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;
-                if (gArgs.Target.Name.IndexOf("skeleton") >= 0)
-                {
+                if (gArgs.Target.Name.IndexOf(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.CemmethsOrders.Notify.Text1")) >= 0)
+                    {
                     if (!SkeletonsKilled.IsAchieved)
                     {
                         SkeletonsKilled.Advance();
                         return;
                     }
                 }
-                if (gArgs.Target.Name.IndexOf("decayed zombie") >= 0)
-                {
+                if (gArgs.Target.Name.IndexOf(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.CemmethsOrders.Notify.Text2")) >= 0)
+                    {
                     if (!DecayingGhoulsKilled.IsAchieved)
                     {
                         DecayingGhoulsKilled.Advance();
@@ -577,7 +568,6 @@ namespace DOL.GS.Quests.Albion
         public override void AbortQuest()
         {
             base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
-
         }
 
         public override void FinishQuest()
