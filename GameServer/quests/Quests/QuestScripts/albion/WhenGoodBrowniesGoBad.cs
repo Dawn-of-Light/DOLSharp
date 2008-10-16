@@ -28,6 +28,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Quests.Albion
@@ -81,7 +82,7 @@ namespace DOL.GS.Quests.Albion
             if (lightredclothdye == null)
             {
                 lightredclothdye = new ItemTemplate();
-                lightredclothdye.Name = "Light Red Cloth Dye";
+                lightredclothdye.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.WhenGoodBrowniesGoBad.Init.Text1");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + lightredclothdye.Name + ", creating it ...");
 
@@ -114,7 +115,7 @@ namespace DOL.GS.Quests.Albion
             if (lightredleatherdye == null)
             {
                 lightredleatherdye = new ItemTemplate();
-                lightredleatherdye.Name = "Light Red Leather Dye";
+                lightredleatherdye.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.WhenGoodBrowniesGoBad.Init.Text2");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + lightredleatherdye.Name + ", creating it ...");
 
@@ -147,7 +148,7 @@ namespace DOL.GS.Quests.Albion
             if (lightredenamel == null)
             {
                 lightredenamel = new ItemTemplate();
-                lightredenamel.Name = "Light Red Enamel";
+                lightredenamel.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.WhenGoodBrowniesGoBad.Init.Text3");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + lightredenamel.Name + ", creating it ...");
 
@@ -184,7 +185,7 @@ namespace DOL.GS.Quests.Albion
             brownieBlood.MaxCondition = 50000;
             brownieBlood.Model = 99;
             brownieBlood.Extension = 1;
-            brownieBlood.Name = "Brownie Blood";
+            brownieBlood.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.WhenGoodBrowniesGoBad.Init.Text4");
 
             Level = 1;
             QuestGiver = MasterKless;
@@ -194,8 +195,7 @@ namespace DOL.GS.Quests.Albion
             Rewards.AddOptionalItem(lightredleatherdye);
             Rewards.AddOptionalItem(lightredenamel);
             Rewards.ChoiceOf = 1;
-            browniesKilled = AddGoal("Kill 3 brownies", QuestGoal.GoalType.KillTask, 3, brownieBlood);
-
+            browniesKilled = AddGoal(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.WhenGoodBrowniesGoBad.Init.Text5"), QuestGoal.GoalType.KillTask, 3, brownieBlood);
         }
 
         [ScriptLoadedEvent]
@@ -209,13 +209,13 @@ namespace DOL.GS.Quests.Albion
 
             #region defineNPCS
 
-            GameNPC[] npcs = WorldMgr.GetNPCsByName("Master Kless", eRealm.Albion);
+            GameNPC[] npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.WhenGoodBrowniesGoBad.ScriptLoaded.Text1"), eRealm.Albion);
 
             if (npcs.Length == 0)
             {
                 MasterKless = new GameNPC();
                 MasterKless.Model = 64;
-                MasterKless.Name = "Master Kless";
+                MasterKless.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.WhenGoodBrowniesGoBad.ScriptLoaded.Text1");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + MasterKless.Name + ", creating him ...");
                 //k109: My preference, no guildname for quest NPCs.  Uncomment if you like that...
@@ -354,11 +354,11 @@ namespace DOL.GS.Quests.Albion
 
             if (response == 0x00)
             {
-                SendSystemMessage(player, "Good, now go out there and finish your work!");
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.WhenGoodBrowniesGoBad.CheckPlayerAbortQuest.Text1"));
             }
             else
             {
-                SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.WhenGoodBrowniesGoBad.CheckPlayerAbortQuest.Text2", questTitle));
                 quest.AbortQuest();
             }
         }
@@ -422,14 +422,7 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                String desc = "I'm troubled by recent changes in the few fae creatures that are left in this densely-settled region."
-                    + "While I'm sure they've no love for our kind, after being forced to go into hiding - or else run the risk of"
-                    + "attracting the attention of the Church - they've seldom been a menace.  Meddlesome, yes, but seldom have they been malevolent.\n\n"
-                    + "Recently, however, some villagers have spoken of having encounters with members of the wee folk that seem out of the ordinary;"
-                    + "almost sinister, even. Children being abducted, farmers being attacked without provocation, foodstuffs being poisoned,"
-                    + "livestock being slaughtered in their pens at night; it's almost as if they are under some kind of enchantment, or something."
-                    + "This is not like them. I might not be a follower of the old ways, but I'm no religious zealot, either. If King Arthur found"
-                    + "it in his heart to respect the old ways, then so shall I.\n\n  I must study this further, and I could use your help, if you'd be kind enough to assist me.";
+                String desc = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.WhenGoodBrowniesGoBad.Story");
                 return desc;
             }
         }
@@ -441,7 +434,7 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                return "Master Kless needs brownie blood to use in a spell that will help determine if they are bespelled.  Kill three brownies, and return to him with their blood.";
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.WhenGoodBrowniesGoBad.Summary");
             }
         }
 
@@ -452,8 +445,7 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                String text = String.Format("");
-                text += "Ah, you've returned with the blood! While I hate to see harm done to any creature not inherently evil, it's becoming necessary to take drastic measures to get to the root of this problem. Hopefully, I shall. Please accept this reward for your aid.";
+                String text = String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.WhenGoodBrowniesGoBad.Conclusion.Text1"));
                 return text;
             }
         }
@@ -484,12 +476,10 @@ namespace DOL.GS.Quests.Albion
                 return;
             if (player.IsDoingQuest(typeof(WhenGoodBrowniesGoBad)) == null)
                 return;
-
-
             if (Step == 1 && e == GameLivingEvent.EnemyKilled)
             {
                 EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;
-                if (gArgs.Target.Name.IndexOf("brownie") >= 0)
+                if (gArgs.Target.Name.IndexOf(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.WhenGoodBrowniesGoBad.Notify.Text1")) >= 0)
                 {
                     if (!browniesKilled.IsAchieved)
                     {
@@ -503,7 +493,11 @@ namespace DOL.GS.Quests.Albion
         public override void AbortQuest()
         {
             base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+        }
 
+        public override void FinishQuest()
+        {
+            base.FinishQuest();
         }
     }
 }
