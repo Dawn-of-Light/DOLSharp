@@ -28,6 +28,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Quests.Albion
@@ -83,7 +84,7 @@ namespace DOL.GS.Quests.Albion
             if (RecruitsQuiltedPants == null)
             {
                 RecruitsQuiltedPants = new ItemTemplate();
-                RecruitsQuiltedPants.Name = "Recruit's Quilted Pants";
+                RecruitsQuiltedPants.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.WhenBloodSpeaks.Init.Text1");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + RecruitsQuiltedPants.Name + ", creating it ...");
 
@@ -134,7 +135,7 @@ namespace DOL.GS.Quests.Albion
             if (RecruitsLeatherLeggings == null)
             {
                 RecruitsLeatherLeggings = new ItemTemplate();
-                RecruitsLeatherLeggings.Name = "Recruit's Leather Leggings";
+                RecruitsLeatherLeggings.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.WhenBloodSpeaks.Init.Text2");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + RecruitsLeatherLeggings.Name + ", creating it ...");
 
@@ -186,7 +187,7 @@ namespace DOL.GS.Quests.Albion
             if (RecruitsStuddedLegs == null)
             {
                 RecruitsStuddedLegs = new ItemTemplate();
-                RecruitsStuddedLegs.Name = "Recruit's Studded Legs";
+                RecruitsStuddedLegs.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.WhenBloodSpeaks.Init.Text3");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + RecruitsStuddedLegs.Name + ", creating it ...");
 
@@ -196,7 +197,7 @@ namespace DOL.GS.Quests.Albion
                 RecruitsStuddedLegs.Color = 11;
 
                 RecruitsStuddedLegs.Object_Type = (int)eObjectType.Studded;
-                RecruitsStuddedLegs.Item_Type = (int)eEquipmentItems.TORSO;
+                RecruitsStuddedLegs.Item_Type = (int)eEquipmentItems.LEGS;
                 RecruitsStuddedLegs.Id_nb = "k109_recruits_studded_legs";
                 RecruitsStuddedLegs.Gold = 0;
                 RecruitsStuddedLegs.Silver = 0;
@@ -242,7 +243,7 @@ namespace DOL.GS.Quests.Albion
             spriggarnBlood.MaxCondition = 50000;
             spriggarnBlood.Model = 99;
             spriggarnBlood.Extension = 1;
-            spriggarnBlood.Name = "Spriggarn Blood";
+            spriggarnBlood.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.WhenBloodSpeaks.Init.Text4");
 
             Level = 1;
             QuestGiver = MasterKless;
@@ -252,8 +253,7 @@ namespace DOL.GS.Quests.Albion
             Rewards.AddOptionalItem(RecruitsLeatherLeggings);
             Rewards.AddOptionalItem(RecruitsStuddedLegs);
             Rewards.ChoiceOf = 1;
-            spriggarnsKilled = AddGoal("Kill 2 spriggarns", QuestGoal.GoalType.KillTask, 2, spriggarnBlood);
-
+            spriggarnsKilled = AddGoal(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.WhenBloodSpeaks.Init.Text5"), QuestGoal.GoalType.KillTask, 2, spriggarnBlood);
         }
 
         [ScriptLoadedEvent]
@@ -267,13 +267,13 @@ namespace DOL.GS.Quests.Albion
 
             #region defineNPCS
 
-            GameNPC[] npcs = WorldMgr.GetNPCsByName("Master Kless", eRealm.Albion);
+            GameNPC[] npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.WhenBloodSpeaks.ScriptLoaded.Text1"), eRealm.Albion);
 
             if (npcs.Length == 0)
             {
                 MasterKless = new GameNPC();
                 MasterKless.Model = 64;
-                MasterKless.Name = "Master Kless";
+                MasterKless.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.WhenBloodSpeaks.ScriptLoaded.Text1");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + MasterKless.Name + ", creating him ...");
                 //k109: My preference, no guildname for quest NPCs.  Uncomment if you like that...
@@ -417,11 +417,11 @@ namespace DOL.GS.Quests.Albion
 
             if (response == 0x00)
             {
-                SendSystemMessage(player, "Good, now go out there and finish your work!");
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.WhenBloodSpeaks.CheckPlayerAbortQuest.Text1"));
             }
             else
             {
-                SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.WhenBloodSpeaks.CheckPlayerAbortQuest.Text2", questTitle));
                 quest.AbortQuest();
             }
         }
@@ -490,14 +490,7 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                String desc = "My research into the cause of some of the change in behavior of some of the fae creatures in our area is going fairly well."
-                    + "Still, I've not come to any conclusive results.  All the while, their malevolent antics have increased in frequency."
-                    + "I fear that if a cause or solution is not found soon, the Church will begin to take matters into its hands,"
-                    + "and that will not bode well for any creature of the Old Ways.\n\n  I would attempt consulting with members"
-                    + "of the druidic faith in nearby Salisbury Plains, but they're not the most social lot, and many of them are not fond of"
-                    + "those of us that making our homes near the city.  I've had a series of unfortunate encounters with them, myself, in the past.\n\n"
-                    + "So, I guess I will keep plugging away at it in hopes of discovering something of note.  If I could go to the druids with concrete"
-                    + "evidence, they may listen to what I have to say.  To that end I could use your assistance, would you be inclined to help?";
+                String desc = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.WhenBloodSpeaks.Story");
                 return desc;
             }
         }
@@ -509,7 +502,7 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                return "Master Kless needs spriggarn blood to use in a spell that will help determine if they are under a malevolent influence.  Kill two of them, and return to him with their blood.";
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.WhenBloodSpeaks.Summary");
             }
         }
 
@@ -520,9 +513,7 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                String text = String.Format("");
-                text += "Ah, you got the spriggarn blood, excellent! Hopefully it's only a matter of time now before I'm able to put the pieces of all this together.";
-                text += String.Format("Thank you for your help, {0}!",QuestPlayer.Name);
+                String text = String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.WhenBloodSpeaks.Conclusion.Text1", QuestPlayer.Name));
                 return text;
             }
         }
@@ -558,8 +549,8 @@ namespace DOL.GS.Quests.Albion
             if (Step == 1 && e == GameLivingEvent.EnemyKilled)
             {
                 EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;
-                if (gArgs.Target.Name.IndexOf("spriggarn") >= 0)
-                {
+                if (gArgs.Target.Name.IndexOf(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.WhenBloodSpeaks.Notify.Text1")) >= 0)
+                    {
                     if (!spriggarnsKilled.IsAchieved)
                     {
                         spriggarnsKilled.Advance();
@@ -572,7 +563,11 @@ namespace DOL.GS.Quests.Albion
         public override void AbortQuest()
         {
             base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+        }
 
+        public override void FinishQuest()
+        {
+            base.FinishQuest();
         }
     }
 }
