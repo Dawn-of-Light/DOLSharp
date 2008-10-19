@@ -28,6 +28,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Quests.Albion
@@ -41,7 +42,7 @@ namespace DOL.GS.Quests.Albion
 
         protected const string questTitle = "Tomb With A View";
         protected const int minimumLevel = 2;
-        protected const int maximumLevel = 5;
+        protected const int maximumLevel = 5;//3
 
         private static GameNPC LadyGrynoch = null;
         private QuestGoal FoundTomb;
@@ -86,7 +87,7 @@ namespace DOL.GS.Quests.Albion
             if (RecruitsQuiltedBoots == null)
             {
                 RecruitsQuiltedBoots = new ItemTemplate();
-                RecruitsQuiltedBoots.Name = "Recruit's Quilted Boots";
+                RecruitsQuiltedBoots.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.TombWithAView.Init.Text1");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + RecruitsQuiltedBoots.Name + ", creating it ...");
 
@@ -134,7 +135,7 @@ namespace DOL.GS.Quests.Albion
             if (RecruitsLeatherBoots == null)
             {
                 RecruitsLeatherBoots = new ItemTemplate();
-                RecruitsLeatherBoots.Name = "Recruit's Leather Boots";
+                RecruitsLeatherBoots.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.TombWithAView.Init.Text2");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + RecruitsLeatherBoots.Name + ", creating it ...");
 
@@ -184,7 +185,7 @@ namespace DOL.GS.Quests.Albion
             if (RecruitsStuddedBoots == null)
             {
                 RecruitsStuddedBoots = new ItemTemplate();
-                RecruitsStuddedBoots.Name = "Recruit's Studded Boots";
+                RecruitsStuddedBoots.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.TombWithAView.Init.Text3");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + RecruitsStuddedBoots.Name + ", creating it ...");
 
@@ -241,8 +242,7 @@ namespace DOL.GS.Quests.Albion
             Rewards.AddOptionalItem(RecruitsStuddedBoots);
             Rewards.ChoiceOf = 1;
 
-            FoundTomb = AddGoal("Find the entrance to the Burial Tomb", QuestGoal.GoalType.ScoutMission, 1,null);
-
+            FoundTomb = AddGoal(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.TombWithAView.Init.Text4"), QuestGoal.GoalType.ScoutMission, 1, null);
         }
 
         [ScriptLoadedEvent]
@@ -406,11 +406,11 @@ namespace DOL.GS.Quests.Albion
 
             if (response == 0x00)
             {
-                SendSystemMessage(player, "Good, now go out there and finish your work!");
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.TombWithAView.CheckPlayerAbortQuest.Text1"));
             }
             else
             {
-                SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.TombWithAView.CheckPlayerAbortQuest.Text2", questTitle));
                 quest.AbortQuest();
             }
         }
@@ -474,9 +474,7 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                String desc = "What an exhausting day! The Academy sent me to Cotswold to be an advisor on matters of magic and such, and I'm happy to be of service, but there are days when my research takes a lot out of me. It seems like I've been a bit busier lately. Cotswold has become a hub of many goings-on lately, some of which are mundane and some are of a more diabolical nature.\n\n"
-                    + "Take, for example, the nearby Burial Tomb, to our south-southeast. The Romans that occupied this region of Britain had a penchant for crypts, tombs, mausoleums and the like. Over the course of hundreds of years, the nearby tombs became home to hundreds of fearsome creatures, many of whom took up residence below, away from daylight and men above. Some of these previously normal creatures are twisted versions of themselves. By what foul sorcery, can only be guessed.\n\n"
-                    + "Taskmaster Traint is seeking out volunteers to eradicate the creatures that moved into the tomb. You'll want to make yourself familiar with where to find it.\n\n";
+                String desc = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.TombWithAView.Story");
                 return desc;
             }
         }
@@ -488,7 +486,7 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                return "Find the entrance to the Burial Tomb. Return to Lady Grynoch once you've visited the Tomb.";
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.TombWithAView.Summary");
             }
         }
 
@@ -499,8 +497,7 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                String text = String.Format("");
-                text += "Ah, found your way to the Burial Tomb, did you?  'Tis a fearsome place, to be sure!  Now that you know where to find the tomb, you'll know where to go, if and when Taskmaster Traint tasks you with helping clear it out.";
+                String text = String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.TombWithAView.Conclusion.Text1"));
                 return text;
             }
         }
@@ -538,7 +535,11 @@ namespace DOL.GS.Quests.Albion
         public override void AbortQuest()
         {
             base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+        }
 
+        public override void FinishQuest()
+        {
+            base.FinishQuest();
         }
     }
 }

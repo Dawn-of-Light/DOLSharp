@@ -130,6 +130,7 @@ namespace DOL.GS.Quests.Albion
                     GameServer.Database.AddNewObject(LetterToPompin);
             }
             #endregion
+
             Level = 1;
             QuestGiver = MasterClaistan;
             Rewards.Experience = 22;
