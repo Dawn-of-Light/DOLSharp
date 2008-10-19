@@ -62,8 +62,10 @@ namespace DOL.GS.Quests.Albion
 		}
 
 		private void Init()
-		{
-			ItemTemplate intelligentBracer = CreateBracer();
+        {
+            #region defineItems
+
+            ItemTemplate intelligentBracer = CreateBracer();
 			intelligentBracer.Id_nb = "recruits_intelligent_bracer";
             intelligentBracer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text1");
             intelligentBracer.Bonus1 = 4;
@@ -103,7 +105,9 @@ namespace DOL.GS.Quests.Albion
 			piousBracer.Bonus3 = 2;
 			piousBracer.Bonus3Type = (int)eProperty.Resist_Slash;
 
-			ItemTemplate banditCloak = new ItemTemplate();
+            #endregion
+
+            ItemTemplate banditCloak = new ItemTemplate();
 			banditCloak.Weight = 0;
 			banditCloak.Condition = 50000;
 			banditCloak.MaxCondition = 50000;

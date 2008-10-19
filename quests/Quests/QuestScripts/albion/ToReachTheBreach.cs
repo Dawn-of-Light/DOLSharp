@@ -30,6 +30,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Quests.Albion
@@ -86,7 +87,7 @@ namespace DOL.GS.Quests.Albion
           if(RecruitsIntelligentBelt == null)
           {
               RecruitsIntelligentBelt = new ItemTemplate();
-              RecruitsIntelligentBelt.Name = "Recruit's Intelligent Belt";
+              RecruitsIntelligentBelt.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.ToReachTheBreach.Init.Text1");
               RecruitsIntelligentBelt.Id_nb = "RecruitsIntelligentBelt";
               RecruitsIntelligentBelt.Level = 4;
               RecruitsIntelligentBelt.Weight = 3;
@@ -116,7 +117,7 @@ namespace DOL.GS.Quests.Albion
           if(RecruitsMightyBelt == null)
           {
               RecruitsMightyBelt = new ItemTemplate();
-              RecruitsMightyBelt.Name = "Recruit's Mighty Belt";
+              RecruitsMightyBelt.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.ToReachTheBreach.Init.Text2");
               RecruitsMightyBelt.Id_nb = "RecruitsMightyBelt";
               RecruitsMightyBelt.Level = 4;
               RecruitsMightyBelt.Weight = 3;
@@ -146,7 +147,7 @@ namespace DOL.GS.Quests.Albion
           if(RecruitsPiousBelt == null)
           {
               RecruitsPiousBelt = new ItemTemplate();
-              RecruitsPiousBelt.Name = "Recruit's Pious Belt";
+              RecruitsPiousBelt.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.ToReachTheBreach.Init.Text3");
               RecruitsPiousBelt.Id_nb = "RecruitsPiousBelt";
               RecruitsPiousBelt.Level = 4;
               RecruitsPiousBelt.Weight = 3;
@@ -183,8 +184,7 @@ namespace DOL.GS.Quests.Albion
             Rewards.AddOptionalItem(RecruitsPiousBelt);
             Rewards.ChoiceOf = 1;
 
-            FoundBreach = AddGoal("Find the entrance to the Demon's Breach", QuestGoal.GoalType.ScoutMission, 1, null);
-
+            FoundBreach = AddGoal(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.ToReachTheBreach.Init.Text4"), QuestGoal.GoalType.ScoutMission, 1, null);
         }
 
         [ScriptLoadedEvent]
@@ -348,11 +348,11 @@ namespace DOL.GS.Quests.Albion
 
             if (response == 0x00)
             {
-                SendSystemMessage(player, "Good, now go out there and finish your work!");
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.ToReachTheBreach.CheckPlayerAbortQuest.Text1"));
             }
             else
             {
-                SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.ToReachTheBreach.CheckPlayerAbortQuest.Text2", questTitle));
                 quest.AbortQuest();
             }
         }
@@ -416,9 +416,7 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                String desc = "Long have we known that demonic creatures lurk below.  Darkness Falls is but one example.  Recently, more evil managed to bubble to the surface.  When the Headmasters of the Academy moved the Shrouded Isles portal from it's former home to Cotswold, they inadvertently created a tear in the fabric of reality.  This tear allowed evil to claws it's way to the surface!\n\n"
-                    + "Luckily, this was noticed immediately by a Sorceress involved in the project, and the hole was capped, disallowing entry by the demons into our world.  Until a permanent solution is found, there is worry that they will amass their numbers in an effort to break free.  Some of our townsfolk have taken it upon themselves to venture inside to reduce the number of demons.  Alarmingly, there are reports of encountering our enemies from Hibernia and Midgard within, as well.\n\n"
-                    + "You must familiarize yourself with the entrance to Demon's Breach, so that you will know where to go to keep the forces of evil, Hibernia and Midgard at bay.\n\n";
+                String desc = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.ToReachTheBreach.Story");
                 return desc;
             }
         }
@@ -430,7 +428,7 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                return "Find the entrance to the Demon's Breach. Return to Lady Grynoch once you've visited the Breach.";
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.ToReachTheBreach.Summary");
             }
         }
 
@@ -441,8 +439,7 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                String text = String.Format("You found your way to Demon's Breach, eh?  Mark it's location well, {0}",QuestPlayer.CharacterClass.Name);
-                text += ", for your assistance may be needed there one day.  We can't afford to allow hordes of demons, Hibernians or Midgardians to break free into our lands.";
+                String text = String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.ToReachTheBreach.Conclusion.Text1", QuestPlayer.CharacterClass.Name));
                 return text;
             }
         }
@@ -479,7 +476,11 @@ namespace DOL.GS.Quests.Albion
         public override void AbortQuest()
         {
             base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+        }
 
+        public override void FinishQuest()
+        {
+            base.FinishQuest();
         }
     }
 }

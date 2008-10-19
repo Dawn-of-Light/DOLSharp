@@ -28,6 +28,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Quests.Albion
@@ -83,25 +84,27 @@ namespace DOL.GS.Quests.Albion
             if (RecruitsShortSword == null)
             {
                 RecruitsShortSword = new ItemTemplate();
-                RecruitsShortSword.Name = "Recruit's Short Sword";
+                RecruitsShortSword.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.RecruitingNothingButTrouble.Init.Text1");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + RecruitsShortSword.Name + ", creating it ...");
 
                 RecruitsShortSword.Level = 5;
                 RecruitsShortSword.Weight = 18;
                 RecruitsShortSword.Model = 3;
+                RecruitsShortSword.Hand = 2;
 
-                RecruitsShortSword.Object_Type = (int)eObjectType.Sword;
+                RecruitsShortSword.Object_Type = (int)eObjectType.SlashingWeapon;
                 RecruitsShortSword.Item_Type = (int)eEquipmentItems.RIGHT_HAND;
                 RecruitsShortSword.Id_nb = "k109_recruits_short_sword";
                 RecruitsShortSword.Gold = 0;
                 RecruitsShortSword.Silver = 0;
                 RecruitsShortSword.Copper = 0;
                 RecruitsShortSword.IsPickable = true;
-                RecruitsShortSword.IsDropable = false; // can't be sold to merchand
+                RecruitsShortSword.IsDropable = false;// can't be sold to merchand
 
                 RecruitsShortSword.DPS_AF = 24;
                 RecruitsShortSword.SPD_ABS = 30;
+                RecruitsShortSword.Bonus = 5;
                 RecruitsShortSword.Bonus1 = 3;
                 RecruitsShortSword.Bonus1Type = (int)eProperty.Strength;
                 RecruitsShortSword.Bonus2 = 1;
@@ -118,7 +121,7 @@ namespace DOL.GS.Quests.Albion
                 RecruitsShortSword.MaxCondition = 50000;
                 RecruitsShortSword.Durability = 50000;
                 RecruitsShortSword.MaxDurability = 50000;
-
+                RecruitsShortSword.Type_Damage = 2;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
@@ -130,25 +133,27 @@ namespace DOL.GS.Quests.Albion
             if (RecruitsDirk == null)
             {
                 RecruitsDirk = new ItemTemplate();
-                RecruitsDirk.Name = "Recruit's Dirk";
+                RecruitsDirk.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.RecruitingNothingButTrouble.Init.Text2");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + RecruitsDirk.Name + ", creating it ...");
 
                 RecruitsDirk.Level = 5;
                 RecruitsDirk.Weight = 8;
                 RecruitsDirk.Model = 21;
+                RecruitsDirk.Hand = 2;
 
                 RecruitsDirk.Object_Type = (int)eObjectType.ThrustWeapon;
-                RecruitsDirk.Item_Type = (int)eEquipmentItems.LEFT_HAND;
+                RecruitsDirk.Item_Type = (int)eEquipmentItems.RIGHT_HAND;
                 RecruitsDirk.Id_nb = "k109_recruits_dirk";
                 RecruitsDirk.Gold = 0;
                 RecruitsDirk.Silver = 0;
                 RecruitsDirk.Copper = 0;
                 RecruitsDirk.IsPickable = true;
-                RecruitsDirk.IsDropable = false; // can't be sold to merchand
+                RecruitsDirk.IsDropable = false;// can't be sold to merchand
 
                 RecruitsDirk.DPS_AF = 24;
                 RecruitsDirk.SPD_ABS = 26;
+                RecruitsDirk.Bonus = 5;
                 RecruitsDirk.Bonus1 = 3;
                 RecruitsDirk.Bonus1Type = (int)eProperty.Dexterity;
                 RecruitsDirk.Bonus2 = 1;
@@ -165,7 +170,7 @@ namespace DOL.GS.Quests.Albion
                 RecruitsDirk.MaxCondition = 50000;
                 RecruitsDirk.Durability = 50000;
                 RecruitsDirk.MaxDurability = 50000;
-
+                RecruitsDirk.Type_Damage = 3;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
@@ -177,13 +182,14 @@ namespace DOL.GS.Quests.Albion
             if (RecruitsMace == null)
             {
                 RecruitsMace = new ItemTemplate();
-                RecruitsMace.Name = "Recruit's Mace";
+                RecruitsMace.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.RecruitingNothingButTrouble.Init.Text3");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + RecruitsMace.Name + ", creating it ...");
 
                 RecruitsMace.Level = 5;
                 RecruitsMace.Weight = 24;
                 RecruitsMace.Model = 13;
+                RecruitsMace.Hand = 2;
 
                 RecruitsMace.Object_Type = (int)eObjectType.CrushingWeapon;
                 RecruitsMace.Item_Type = (int)eEquipmentItems.RIGHT_HAND;
@@ -192,10 +198,11 @@ namespace DOL.GS.Quests.Albion
                 RecruitsMace.Silver = 0;
                 RecruitsMace.Copper = 0;
                 RecruitsMace.IsPickable = true;
-                RecruitsMace.IsDropable = false; // can't be sold to merchand
+                RecruitsMace.IsDropable = false;// can't be sold to merchand
 
                 RecruitsMace.DPS_AF = 24;
                 RecruitsMace.SPD_ABS = 30;
+                RecruitsMace.Bonus = 5;
                 RecruitsMace.Bonus1 = 3;
                 RecruitsMace.Bonus1Type = (int)eProperty.Acuity;
                 RecruitsMace.Bonus2 = 1;
@@ -205,14 +212,14 @@ namespace DOL.GS.Quests.Albion
                 RecruitsMace.Bonus4 = 1;
                 RecruitsMace.Bonus4Type = (int)eProperty.Resist_Thrust;
                 RecruitsMace.Bonus5 = 1;
-                RecruitsMace.Bonus5Type = (int)eProperty.Quickness;
+                RecruitsMace.Bonus5Type = (int)eProperty.Dexterity;
 
                 RecruitsMace.Quality = 100;
                 RecruitsMace.Condition = 50000;
                 RecruitsMace.MaxCondition = 50000;
                 RecruitsMace.Durability = 50000;
                 RecruitsMace.MaxDurability = 50000;
-
+                RecruitsMace.Type_Damage = 1;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
@@ -224,25 +231,27 @@ namespace DOL.GS.Quests.Albion
             if (RecruitsStaff == null)
             {
                 RecruitsStaff = new ItemTemplate();
-                RecruitsStaff.Name = "Recruit's Staff";
+                RecruitsStaff.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.RecruitingNothingButTrouble.Init.Text4");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + RecruitsStaff.Name + ", creating it ...");
 
                 RecruitsStaff.Level = 5;
                 RecruitsStaff.Weight = 24;
                 RecruitsStaff.Model = 19;
+                RecruitsStaff.Hand = 1;
 
-                RecruitsStaff.Object_Type = (int)eObjectType.TwoHandedWeapon;
-                RecruitsStaff.Item_Type = (int)eEquipmentItems.RIGHT_HAND;
+                RecruitsStaff.Object_Type = (int)eObjectType.Staff;
+                RecruitsStaff.Item_Type = (int)eEquipmentItems.TWO_HANDED;
                 RecruitsStaff.Id_nb = "k109_recruits_staff";
                 RecruitsStaff.Gold = 0;
                 RecruitsStaff.Silver = 0;
                 RecruitsStaff.Copper = 0;
                 RecruitsStaff.IsPickable = true;
-                RecruitsStaff.IsDropable = false; // can't be sold to merchand
+                RecruitsStaff.IsDropable = false;// can't be sold to merchand
 
                 RecruitsStaff.DPS_AF = 24;
                 RecruitsStaff.SPD_ABS = 37;
+                RecruitsStaff.Bonus = 5;
                 RecruitsStaff.Bonus1 = 3;
                 RecruitsStaff.Bonus1Type = (int)eProperty.Acuity;
                 RecruitsStaff.Bonus2 = 1;
@@ -252,16 +261,16 @@ namespace DOL.GS.Quests.Albion
                 RecruitsStaff.Bonus4 = 1;
                 RecruitsStaff.Bonus4Type = (int)eProperty.Resist_Thrust;
                 RecruitsStaff.Bonus5 = 1;
-                RecruitsStaff.Bonus5Type = (int)eProperty.Quickness;
+                RecruitsStaff.Bonus5Type = (int)eProperty.Dexterity;
                 RecruitsStaff.Bonus6 = 10;
-                RecruitsStaff.Bonus6Type = (int)eProperty.SpellLevel;  //Focus Spell Line?
+                RecruitsStaff.Bonus6Type = (int)eProperty.AllFocusLevels;  //Focus Spell Line?
 
                 RecruitsStaff.Quality = 100;
                 RecruitsStaff.Condition = 50000;
                 RecruitsStaff.MaxCondition = 50000;
                 RecruitsStaff.Durability = 50000;
                 RecruitsStaff.MaxDurability = 50000;
-
+                RecruitsStaff.Type_Damage = 1;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
@@ -277,7 +286,7 @@ namespace DOL.GS.Quests.Albion
             rhedasword.MaxCondition = 50000;
             rhedasword.Model = 3;
             rhedasword.Extension = 1;
-            rhedasword.Name = "Rheda's Sword";
+            rhedasword.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.RecruitingNothingButTrouble.Init.Text5");
 
             Level = 2;
             QuestGiver = Rheda;
@@ -289,7 +298,7 @@ namespace DOL.GS.Quests.Albion
             Rewards.AddOptionalItem(RecruitsStaff);
             Rewards.ChoiceOf = 1;
 
-            BanditRecruitsKilled = AddGoal("Kill one bandit recruit", QuestGoal.GoalType.KillTask, 1, rhedasword);
+            BanditRecruitsKilled = AddGoal(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.RecruitingNothingButTrouble.Init.Text6"), QuestGoal.GoalType.KillTask, 1, rhedasword);
         }
 
         [ScriptLoadedEvent]
@@ -450,11 +459,11 @@ namespace DOL.GS.Quests.Albion
 
             if (response == 0x00)
             {
-                SendSystemMessage(player, "Good, now go out there and finish your work!");
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.RecruitingNothingButTrouble.CheckPlayerAbortQuest.Text1"));
             }
             else
             {
-                SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.RecruitingNothingButTrouble.CheckPlayerAbortQuest.Text2", questTitle));
                 quest.AbortQuest();
             }
         }
@@ -482,10 +491,8 @@ namespace DOL.GS.Quests.Albion
             else
             {
                 // Player accepted, let's try to give him the quest.
-
                 if (!Rheda.GiveQuest(typeof(RecruitingNothingButTrouble), player, 1))
                     return;
-
             }
         }
 
@@ -523,9 +530,7 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                String desc = "I remember what it was like to be a reckless youth. I think we all had our moments when we were younger. I try to tolerate the antics of out local mischievous youth the best I can. Adults that encourage that kind of behavior, however, really upsets me. Youth are impressionable by nature, and adults that take advantage of that need to be taught a lesson.\n\n"
-                    + "Take the bandits in the forest, for example. Most of them are a bunch of young thugs with nothing better to do, without an apprenticeship to keep them out of trouble. A few of them, though, are young adults who recruit the teens of our town, for the sole purpose of causing trouble. Just last week, some of them vandalized the rear of Elvar's smithy with brownie's blood. And, one of them stole one of my best swords!\n\n"
-                    + "Something needs to be done about them. I know Sir Dorian is coordinating efforts to flush them out of the forest; perhaps you can do something to help?\n\n";
+                String desc = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.RecruitingNothingButTrouble.Story");
                 return desc;
             }
         }
@@ -537,7 +542,7 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                return "One of the bandit recruits still has Rheda's sword. Defeat bandit recruits until you find her sword. Return to Rheda in Cotswold once you find it.";
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.RecruitingNothingButTrouble.Summary");
             }
         }
 
@@ -548,8 +553,7 @@ namespace DOL.GS.Quests.Albion
         {
             get
             {
-                String text = String.Format("");
-                text += "Well I'll be!  You actually managed to get my sword back!  I must admit I thought I would never see it again.  Please accept this modest reward as payment for your services.";
+                String text = String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.RecruitingNothingButTrouble.Conclusion.Text1"));
                 return text;
             }
         }
@@ -585,8 +589,8 @@ namespace DOL.GS.Quests.Albion
             if (Step == 1 && e == GameLivingEvent.EnemyKilled)
             {
                 EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;
-                if (gArgs.Target.Name.IndexOf("bandit recruit") >= 0)
-                {
+                if (gArgs.Target.Name.IndexOf(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.RecruitingNothingButTrouble.Notify.Text1")) >= 0)
+                    {
                     if (!BanditRecruitsKilled.IsAchieved)
                     {
                         BanditRecruitsKilled.Advance();
@@ -599,7 +603,11 @@ namespace DOL.GS.Quests.Albion
         public override void AbortQuest()
         {
             base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+        }
 
+        public override void FinishQuest()
+        {
+            base.FinishQuest();
         }
     }
 }
