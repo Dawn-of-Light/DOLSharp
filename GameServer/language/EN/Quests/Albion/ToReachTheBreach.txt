@@ -1,0 +1,9 @@
+Alb.ToReachTheBreach.CheckPlayerAbortQuest.Text1:	Good, now go out there and finish your work!
+Alb.ToReachTheBreach.CheckPlayerAbortQuest.Text2:	Aborting Quest {0}. You can start over again if you want.
+Alb.ToReachTheBreach.Conclusion.Text1:			You found your way to Demon's Breach, eh?  Mark it's location well, {0}, for your assistance may be needed there one day.  We can't afford to allow hordes of demons, Hibernians or Midgardians to break free into our lands.
+Alb.ToReachTheBreach.Init.Text1:			Recruit's Intelligent Belt
+Alb.ToReachTheBreach.Init.Text2:			Recruit's Mighty Belt
+Alb.ToReachTheBreach.Init.Text3:			Recruit's Pious Belt
+Alb.ToReachTheBreach.Init.Text4:			Find the entrance to the Demon's Breach
+Alb.ToReachTheBreach.Story:				Long have we known that demonic creatures lurk below.  Darkness Falls is but one example.  Recently, more evil managed to bubble to the surface.  When the Headmasters of the Academy moved the Shrouded Isles portal from it's former home to Cotswold, they inadvertently created a tear in the fabric of reality.  This tear allowed evil to claws it's way to the surface!\n\nLuckily, this was noticed immediately by a Sorceress involved in the project, and the hole was capped, disallowing entry by the demons into our world.  Until a permanent solution is found, there is worry that they will amass their numbers in an effort to break free.  Some of our townsfolk have taken it upon themselves to venture inside to reduce the number of demons.  Alarmingly, there are reports of encountering our enemies from Hibernia and Midgard within, as well.\n\nYou must familiarize yourself with the entrance to Demon's Breach, so that you will know where to go to keep the forces of evil, Hibernia and Midgard at bay.\n\n
+Alb.ToReachTheBreach.Summary:				Find the entrance to the Demon's Breach. Return to Lady Grynoch once you've visited the Breach.
