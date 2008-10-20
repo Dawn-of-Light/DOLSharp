@@ -28,6 +28,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Quests.Hibernia
@@ -83,11 +84,11 @@ namespace DOL.GS.Quests.Hibernia
             if (RecruitsCloak == null)
             {
                 RecruitsCloak = new ItemTemplate();
-                RecruitsCloak.Name = "Recruit's Cloak";
+                RecruitsCloak.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Hib.SearchForKnowledge.Init.Text1");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + RecruitsCloak.Name + ", creating it ...");
 
-                RecruitsCloak.Level = 5;
+                RecruitsCloak.Level = 3;
                 RecruitsCloak.Weight = 3;
                 RecruitsCloak.Model = 443;
                 RecruitsCloak.Color = 30;
@@ -101,8 +102,18 @@ namespace DOL.GS.Quests.Hibernia
                 RecruitsCloak.IsPickable = true;
                 RecruitsCloak.IsDropable = false; // can't be sold to merchand
 
-                RecruitsCloak.Bonus1 = 6;
-                RecruitsCloak.Bonus1Type = (int)eProperty.MaxHealth;
+                RecruitsCloak.Bonus = 1;
+                RecruitsCloak.Bonus1 = 1;
+                RecruitsCloak.Bonus1Type = (int)eProperty.Constitution;
+                RecruitsCloak.Bonus2 = 1;
+                RecruitsCloak.Bonus2Type = (int)eProperty.Resist_Slash;
+                RecruitsCloak.Bonus3 = 1;
+                RecruitsCloak.Bonus3Type = (int)eProperty.Strength;
+                RecruitsCloak.Bonus4 = 1;
+                RecruitsCloak.Bonus4Type = (int)eProperty.Dexterity;
+                RecruitsCloak.Bonus5 = 1;
+                RecruitsCloak.Bonus5Type = (int)eProperty.Acuity;
+
 
                 RecruitsCloak.Quality = 100;
                 RecruitsCloak.Condition = 50000;
@@ -122,8 +133,8 @@ namespace DOL.GS.Quests.Hibernia
                 LetterToEpona.MaxCondition = 50000;
                 LetterToEpona.Model = 499;
                 LetterToEpona.Extension = 1;
-                LetterToEpona.Name = "Letter To Epona";
-				LetterToEpona.Id_nb = "letter_to_epona";
+                LetterToEpona.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Hib.SearchForKnowledge.Init.Text2");
+                LetterToEpona.Id_nb = "letter_to_epona";
 
                 if (SAVE_INTO_DATABASE)
                     GameServer.Database.AddNewObject(LetterToEpona);
@@ -136,7 +147,7 @@ namespace DOL.GS.Quests.Hibernia
             Rewards.AddBasicItem(RecruitsCloak);
             Rewards.ChoiceOf = 1;
 
-            eponasletter = AddGoal("Take the message to Epona", QuestGoal.GoalType.ScoutMission, 1, LetterToEpona);
+            eponasletter = AddGoal(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.SearchForKnowledge.Init.Text3"), QuestGoal.GoalType.ScoutMission, 1, LetterToEpona);
         }
 
         [ScriptLoadedEvent]
@@ -302,7 +313,7 @@ namespace DOL.GS.Quests.Hibernia
             {
                 if (quest == null)
                 {
-                    Epona.SayTo(player, "You look a bit frazzled, adventurer.  Shall I make you whole again?");
+                    Epona.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.SearchForKnowledge.TalkToEpona"));
                 }
                 else
                 {
@@ -367,11 +378,11 @@ namespace DOL.GS.Quests.Hibernia
 
             if (response == 0x00)
             {
-                SendSystemMessage(player, "Good, now go out there and finish your work!");
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.SearchForKnowledge.CheckPlayerAbortQuest.Text1"));
             }
             else
             {
-                SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.SearchForKnowledge.CheckPlayerAbortQuest.Text2", questTitle));
                 quest.AbortQuest();
             }
         }
@@ -438,14 +449,7 @@ namespace DOL.GS.Quests.Hibernia
         {
             get
             {
-                String desc = "Blessings upon you and welcome to Mag Mell.  Times are changing and so is the majetic Hibernia that we once knew."
-                    + "The intensity of the realm war against Albion and Midgard has brought much concern to our leaders."
-                    + "King Lug has returned from the Veil and taken his throne in Tir Na Nog once again."
-                    + "Even Fagan has been uneasy about the safety of his people here in Mag Mell.\n\n"
-                    + "The realm war has taken most of the garrison that guarded our small town.  When the sentinels had patrolled with regular numbers they had their hands full with Siabra and other creatures."
-                    + "Now they can barely handle patrolling the town perimeter with their skeletal force.  I have a message for our local healer, Epona."
-                    + "The realm war is taking a toll on our brave men and women fighting in the frontlines and the Path of Elders informed us that they are recruiting as many Healers as they can find for the frontiers."
-                    + "I need you to deliver Epona a message informing her of this news.  She may have a few tasks for you.";
+                String desc = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.SearchForKnowledge.Story");
                 return desc;
             }
         }
@@ -457,7 +461,7 @@ namespace DOL.GS.Quests.Hibernia
         {
             get
             {
-                return "Listen to what Blercyn has to say about the current state of Mag Mell and Hibernia.  When your trainer has finished seek out Epona and deliver the letter.";
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.SearchForKnowledge.Summary");
             }
         }
 
@@ -468,8 +472,7 @@ namespace DOL.GS.Quests.Hibernia
         {
             get
             {
-                String text = String.Format("Thank you, {0}.",QuestPlayer.CharacterClass.Name);
-                text += "I'll send a summons to my apprentices in Lough Gur.  The war is depleting our resources and we've much to do on all fronts.  I certainly have more than my share of work.  Let me know if you would like to help out.";
+                String text = String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.SearchForKnowledge.Conclusion.Text1", QuestPlayer.CharacterClass.Name));
                 return text;
             }
         }
@@ -483,6 +486,16 @@ namespace DOL.GS.Quests.Hibernia
             {
                 return 1;
             }
+        }
+
+        public override void AbortQuest()
+        {
+            base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+        }
+
+        public override void FinishQuest()
+        {
+            base.FinishQuest();
         }
     }
 }
