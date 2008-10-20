@@ -29,6 +29,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Quests.Hibernia
@@ -84,16 +85,17 @@ namespace DOL.GS.Quests.Hibernia
             if (RecruitsShortSword == null)
             {
                 RecruitsShortSword = new ItemTemplate();
-                RecruitsShortSword.Name = "Recruit's Short Sword";
+                RecruitsShortSword.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Hib.MagicalBacklash.Init.Text1");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + RecruitsShortSword.Name + ", creating it ...");
 
                 RecruitsShortSword.Level = 5;
                 RecruitsShortSword.Weight = 18;
                 RecruitsShortSword.Model = 3;
+                RecruitsShortSword.Hand = 2;
 
                 RecruitsShortSword.Object_Type = (int)eObjectType.Blades;
-                RecruitsShortSword.Item_Type = (int)eEquipmentItems.LEFT_HAND;
+                RecruitsShortSword.Item_Type = (int)eEquipmentItems.RIGHT_HAND;
                 RecruitsShortSword.Id_nb = "recruits_short_sword_hib";
                 RecruitsShortSword.Gold = 0;
                 RecruitsShortSword.Silver = 0;
@@ -103,6 +105,7 @@ namespace DOL.GS.Quests.Hibernia
 
                 RecruitsShortSword.DPS_AF = 24;
                 RecruitsShortSword.SPD_ABS = 30;
+                RecruitsShortSword.Bonus = 1;
                 RecruitsShortSword.Bonus1 = 3;
                 RecruitsShortSword.Bonus1Type = (int)eProperty.Strength;
                 RecruitsShortSword.Bonus2 = 1;
@@ -119,7 +122,7 @@ namespace DOL.GS.Quests.Hibernia
                 RecruitsShortSword.MaxCondition = 50000;
                 RecruitsShortSword.Durability = 50000;
                 RecruitsShortSword.MaxDurability = 50000;
-
+                RecruitsShortSword.Type_Damage = 2;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
@@ -131,16 +134,17 @@ namespace DOL.GS.Quests.Hibernia
             if (RecruitsDirk == null)
             {
                 RecruitsDirk = new ItemTemplate();
-                RecruitsDirk.Name = "Recruit's Dirk";
+                RecruitsDirk.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Hib.MagicalBacklash.Init.Text2");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + RecruitsDirk.Name + ", creating it ...");
 
                 RecruitsDirk.Level = 5;
                 RecruitsDirk.Weight = 8;
                 RecruitsDirk.Model = 21;
+                RecruitsDirk.Hand = 2;
 
                 RecruitsDirk.Object_Type = (int)eObjectType.ThrustWeapon;
-                RecruitsDirk.Item_Type = (int)eEquipmentItems.LEFT_HAND;
+                RecruitsDirk.Item_Type = (int)eEquipmentItems.RIGHT_HAND;
                 RecruitsDirk.Id_nb = "recruits_dirk";
                 RecruitsDirk.Gold = 0;
                 RecruitsDirk.Silver = 0;
@@ -150,6 +154,7 @@ namespace DOL.GS.Quests.Hibernia
 
                 RecruitsDirk.DPS_AF = 24;
                 RecruitsDirk.SPD_ABS = 26;
+                RecruitsDirk.Bonus = 1;
                 RecruitsDirk.Bonus1 = 3;
                 RecruitsDirk.Bonus1Type = (int)eProperty.Dexterity;
                 RecruitsDirk.Bonus2 = 1;
@@ -159,14 +164,14 @@ namespace DOL.GS.Quests.Hibernia
                 RecruitsDirk.Bonus4 = 1;
                 RecruitsDirk.Bonus4Type = (int)eProperty.Resist_Thrust;
                 RecruitsDirk.Bonus5 = 1;
-                RecruitsDirk.Bonus5Type = (int)eProperty.Quickness;
+                RecruitsDirk.Bonus5Type = (int)eProperty.Strength;
 
                 RecruitsDirk.Quality = 100;
                 RecruitsDirk.Condition = 50000;
                 RecruitsDirk.MaxCondition = 50000;
                 RecruitsDirk.Durability = 50000;
                 RecruitsDirk.MaxDurability = 50000;
-
+                RecruitsDirk.Type_Damage = 3;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
@@ -178,13 +183,14 @@ namespace DOL.GS.Quests.Hibernia
             if (RecruitsClub == null)
             {
                 RecruitsClub = new ItemTemplate();
-                RecruitsClub.Name = "Recruit's Club";
+                RecruitsClub.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Hib.MagicalBacklash.Init.Text3");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + RecruitsClub.Name + ", creating it ...");
 
                 RecruitsClub.Level = 5;
                 RecruitsClub.Weight = 24;
-                RecruitsClub.Model = 11;
+                RecruitsClub.Model = 14;//11
+                RecruitsClub.Hand = 2;
 
                 RecruitsClub.Object_Type = (int)eObjectType.Blunt;
                 RecruitsClub.Item_Type = (int)eEquipmentItems.RIGHT_HAND;
@@ -197,6 +203,7 @@ namespace DOL.GS.Quests.Hibernia
 
                 RecruitsClub.DPS_AF = 24;
                 RecruitsClub.SPD_ABS = 30;
+                RecruitsClub.Bonus = 1;
                 RecruitsClub.Bonus1 = 3;
                 RecruitsClub.Bonus1Type = (int)eProperty.Acuity;
                 RecruitsClub.Bonus2 = 1;
@@ -206,14 +213,14 @@ namespace DOL.GS.Quests.Hibernia
                 RecruitsClub.Bonus4 = 1;
                 RecruitsClub.Bonus4Type = (int)eProperty.Resist_Thrust;
                 RecruitsClub.Bonus5 = 1;
-                RecruitsClub.Bonus5Type = (int)eProperty.Quickness;
+                RecruitsClub.Bonus5Type = (int)eProperty.Constitution;
 
                 RecruitsClub.Quality = 100;
                 RecruitsClub.Condition = 50000;
                 RecruitsClub.MaxCondition = 50000;
                 RecruitsClub.Durability = 50000;
                 RecruitsClub.MaxDurability = 50000;
-
+                RecruitsClub.Type_Damage = 1;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
@@ -225,16 +232,17 @@ namespace DOL.GS.Quests.Hibernia
             if (RecruitsStaff == null)
             {
                 RecruitsStaff = new ItemTemplate();
-                RecruitsStaff.Name = "Recruit's Staff";
+                RecruitsStaff.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Hib.MagicalBacklash.Init.Text4");
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + RecruitsStaff.Name + ", creating it ...");
 
                 RecruitsStaff.Level = 5;
                 RecruitsStaff.Weight = 24;
                 RecruitsStaff.Model = 19;
+                RecruitsStaff.Hand = 1;
 
-                RecruitsStaff.Object_Type = (int)eObjectType.TwoHandedWeapon;
-                RecruitsStaff.Item_Type = (int)eEquipmentItems.RIGHT_HAND;
+                RecruitsStaff.Object_Type = (int)eObjectType.Staff;
+                RecruitsStaff.Item_Type = (int)eEquipmentItems.TWO_HANDED;
                 RecruitsStaff.Id_nb = "recruits_staff";
                 RecruitsStaff.Gold = 0;
                 RecruitsStaff.Silver = 0;
@@ -244,25 +252,24 @@ namespace DOL.GS.Quests.Hibernia
 
                 RecruitsStaff.DPS_AF = 24;
                 RecruitsStaff.SPD_ABS = 37;
+                RecruitsStaff.Bonus = 1;
                 RecruitsStaff.Bonus1 = 3;
                 RecruitsStaff.Bonus1Type = (int)eProperty.Acuity;
                 RecruitsStaff.Bonus2 = 1;
-                RecruitsStaff.Bonus2Type = (int)eProperty.Constitution;
+                RecruitsStaff.Bonus2Type = (int)eProperty.Dexterity;
                 RecruitsStaff.Bonus3 = 1;
                 RecruitsStaff.Bonus3Type = (int)eProperty.Resist_Crush;
                 RecruitsStaff.Bonus4 = 1;
                 RecruitsStaff.Bonus4Type = (int)eProperty.Resist_Thrust;
                 RecruitsStaff.Bonus5 = 1;
-                RecruitsStaff.Bonus5Type = (int)eProperty.Quickness;
-                RecruitsStaff.Bonus6 = 10;
-                RecruitsStaff.Bonus6Type = (int)eProperty.SpellLevel;  //Focus Spell Line?
+                RecruitsStaff.Bonus5Type = (int)eProperty.AllMagicSkills;
 
                 RecruitsStaff.Quality = 100;
                 RecruitsStaff.Condition = 50000;
                 RecruitsStaff.MaxCondition = 50000;
                 RecruitsStaff.Durability = 50000;
                 RecruitsStaff.MaxDurability = 50000;
-
+                RecruitsStaff.Type_Damage = 1;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
@@ -278,7 +285,7 @@ namespace DOL.GS.Quests.Hibernia
             nipperwing.MaxCondition = 50000;
             nipperwing.Model = 551;
             nipperwing.Extension = 1;
-            nipperwing.Name = "Orchard Nipper Wing";
+            nipperwing.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Hib.MagicalBacklash.Init.Text5");
 
             Level = 2;
             QuestGiver = Josson;
@@ -290,8 +297,7 @@ namespace DOL.GS.Quests.Hibernia
             Rewards.AddOptionalItem(RecruitsStaff);
             Rewards.ChoiceOf = 1;
 
-            OrchardNipperKilled = AddGoal("Kill orchard nippers for wings.", QuestGoal.GoalType.KillTask, 1, nipperwing);
-
+            OrchardNipperKilled = AddGoal(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.MagicalBacklash.Init.Text6"), QuestGoal.GoalType.KillTask, 1, nipperwing);
         }
 
         [ScriptLoadedEvent]
@@ -458,11 +464,11 @@ namespace DOL.GS.Quests.Hibernia
 
             if (response == 0x00)
             {
-                SendSystemMessage(player, "Good, now go out there and finish your work!");
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.MagicalBacklash.CheckPlayerAbortQuest.Text1"));
             }
             else
             {
-                SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.MagicalBacklash.CheckPlayerAbortQuest.Text2", questTitle));
                 quest.AbortQuest();
             }
         }
@@ -531,9 +537,7 @@ namespace DOL.GS.Quests.Hibernia
         {
             get
             {
-                String desc = "Have you come in for safety? Living in a land full of magic makes you more aware of your surroundings, but that same magic has caused us problems. Mag Mell isn't the peaceful village it once was. We're plagued with one problem after the next, some of which were cause by carelessness.\n\n"
-                    + "Once, while toying with unrefined magic, those careless Shar tore a hole in the Veil leading into Hibernia. The overload of magical energy turned many of our creatures mad. Little was left untainted by this magical backlash. Even the magic of the burrows and mounds shifted.\n\n"
-                    + "They say the Cursed Burrow dwellers are venturing beyond their domain. Taskmaster Sevinia, our local dungeon scholar, asked me to slay some of the orchard nippers near the lair. I'm sorry to say I'll not go near it. The Cursed Burrow terrifies me, but I can't back out of a community duty, and I can't have her, Fagan, or anyone else thinking I'm gutless or that I'm shirking responsibility.\n\n";
+                String desc = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.MagicalBacklash.Story");
                 return desc;
             }
         }
@@ -545,7 +549,7 @@ namespace DOL.GS.Quests.Hibernia
         {
             get
             {
-                return "Find the Cursed Burrow and slay orchard nippers near the entrance until you receive a set of wings. Return to Josson one you collect a set of Orchard Nipper wings to show proof that you completed the task.";
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.MagicalBacklash.Summary");
             }
         }
 
@@ -556,8 +560,7 @@ namespace DOL.GS.Quests.Hibernia
         {
             get
             {
-                String text = String.Format("");
-                text += "Thank you.  I couldn't bear the thought of going near that place.  Your much braver then I'll ever be.  You should go speak with some of the other locals.  I'm sure they could use your help.";
+                String text = String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.MagicalBacklash.Conclusion.Text1"));
                 return text;
             }
         }
@@ -593,8 +596,8 @@ namespace DOL.GS.Quests.Hibernia
             if (Step == 1 && e == GameLivingEvent.EnemyKilled)
             {
                 EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;
-                if (gArgs.Target.Name.IndexOf("orchard nipper") >= 0)
-                {
+                if (gArgs.Target.Name.IndexOf(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.MagicalBacklash.Notify.Text1")) >= 0)
+                    {
                     if (!OrchardNipperKilled.IsAchieved)
                     {
                         OrchardNipperKilled.Advance();
