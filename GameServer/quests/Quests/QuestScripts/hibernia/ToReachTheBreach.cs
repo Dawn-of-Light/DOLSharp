@@ -30,6 +30,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Quests.Hibernia
@@ -86,22 +87,26 @@ namespace DOL.GS.Quests.Hibernia
 			if (RecruitsIntelligentBelt == null)
 			{
 				RecruitsIntelligentBelt = new ItemTemplate();
-				RecruitsIntelligentBelt.Name = "Recruit's Intelligent Belt";
-				RecruitsIntelligentBelt.Id_nb = "RecruitsIntelligentBelt";
+                RecruitsIntelligentBelt.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Hib.ToReachTheBreach.Init.Text1");
+                RecruitsIntelligentBelt.Id_nb = "RecruitsIntelligentBelt";
 				RecruitsIntelligentBelt.Level = 4;
 				RecruitsIntelligentBelt.Weight = 3;
 				RecruitsIntelligentBelt.Model = 597;
 				RecruitsIntelligentBelt.Color = 0;
-				RecruitsIntelligentBelt.Object_Type = (int)eObjectType.GenericArmor;
+                RecruitsIntelligentBelt.Object_Type = (int)eObjectType.Magical;
 				RecruitsIntelligentBelt.Item_Type = (int)eEquipmentItems.WAIST;
+
 				RecruitsIntelligentBelt.Gold = 0;
 				RecruitsIntelligentBelt.Silver = 0;
 				RecruitsIntelligentBelt.Copper = 10;
+
 				RecruitsIntelligentBelt.Quality = 100;
 				RecruitsIntelligentBelt.Condition = 50000;
 				RecruitsIntelligentBelt.MaxCondition = 50000;
 				RecruitsIntelligentBelt.Durability = 50000;
 				RecruitsIntelligentBelt.MaxDurability = 50000;
+
+                RecruitsIntelligentBelt.Bonus = 1;
 				RecruitsIntelligentBelt.Bonus1 = 3;
 				RecruitsIntelligentBelt.Bonus1Type = (int)eProperty.Acuity;
 				RecruitsIntelligentBelt.Bonus2 = 3;
@@ -116,26 +121,30 @@ namespace DOL.GS.Quests.Hibernia
 			if (RecruitsMightyBelt == null)
 			{
 				RecruitsMightyBelt = new ItemTemplate();
-				RecruitsMightyBelt.Name = "Recruit's Mighty Belt";
-				RecruitsMightyBelt.Id_nb = "RecruitsMightyBelt";
+                RecruitsMightyBelt.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Hib.ToReachTheBreach.Init.Text2");
+                RecruitsMightyBelt.Id_nb = "RecruitsMightyBelt";
 				RecruitsMightyBelt.Level = 4;
 				RecruitsMightyBelt.Weight = 3;
 				RecruitsMightyBelt.Model = 597;
 				RecruitsMightyBelt.Color = 0;
-				RecruitsMightyBelt.Object_Type = (int)eObjectType.GenericArmor;
+                RecruitsMightyBelt.Object_Type = (int)eObjectType.Magical;
 				RecruitsMightyBelt.Item_Type = (int)eEquipmentItems.WAIST;
+
 				RecruitsMightyBelt.Gold = 0;
 				RecruitsMightyBelt.Silver = 0;
 				RecruitsMightyBelt.Copper = 10;
+
 				RecruitsMightyBelt.Quality = 100;
 				RecruitsMightyBelt.Condition = 50000;
 				RecruitsMightyBelt.MaxCondition = 50000;
 				RecruitsMightyBelt.Durability = 50000;
 				RecruitsMightyBelt.MaxDurability = 50000;
-				RecruitsMightyBelt.Bonus1 = 3;
+
+                RecruitsMightyBelt.Bonus = 1;
+                RecruitsMightyBelt.Bonus1 = 3;
 				RecruitsMightyBelt.Bonus1Type = (int)eProperty.Strength;
 				RecruitsMightyBelt.Bonus2 = 3;
-				RecruitsMightyBelt.Bonus2Type = (int)eProperty.Dexterity;
+                RecruitsMightyBelt.Bonus2Type = (int)eProperty.Constitution;
 				RecruitsMightyBelt.Bonus3 = 1;
 				RecruitsMightyBelt.Bonus3Type = (int)eProperty.Quickness;
 				RecruitsMightyBelt.Bonus4 = 8;
@@ -146,26 +155,30 @@ namespace DOL.GS.Quests.Hibernia
 			if (RecruitsPiousBelt == null)
 			{
 				RecruitsPiousBelt = new ItemTemplate();
-				RecruitsPiousBelt.Name = "Recruit's Pious Belt";
-				RecruitsPiousBelt.Id_nb = "RecruitsPiousBelt";
+                RecruitsPiousBelt.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Hib.ToReachTheBreach.Init.Text3");
+                RecruitsPiousBelt.Id_nb = "RecruitsPiousBelt";
 				RecruitsPiousBelt.Level = 4;
 				RecruitsPiousBelt.Weight = 3;
 				RecruitsPiousBelt.Model = 597;
 				RecruitsPiousBelt.Color = 0;
-				RecruitsPiousBelt.Object_Type = (int)eObjectType.GenericArmor;
+                RecruitsPiousBelt.Object_Type = (int)eObjectType.Magical;
 				RecruitsPiousBelt.Item_Type = (int)eEquipmentItems.WAIST;
+
 				RecruitsPiousBelt.Gold = 0;
 				RecruitsPiousBelt.Silver = 0;
 				RecruitsPiousBelt.Copper = 10;
+
 				RecruitsPiousBelt.Quality = 100;
 				RecruitsPiousBelt.Condition = 50000;
 				RecruitsPiousBelt.MaxCondition = 50000;
 				RecruitsPiousBelt.Durability = 50000;
 				RecruitsPiousBelt.MaxDurability = 50000;
+
+                RecruitsPiousBelt.Bonus = 1;
 				RecruitsPiousBelt.Bonus1 = 3;
 				RecruitsPiousBelt.Bonus1Type = (int)eProperty.Acuity;
 				RecruitsPiousBelt.Bonus2 = 1;
-				RecruitsPiousBelt.Bonus2Type = (int)eProperty.AllMagicSkills;
+                RecruitsPiousBelt.Bonus2Type = (int)eProperty.Strength;
 				RecruitsPiousBelt.Bonus3 = 3;
 				RecruitsPiousBelt.Bonus3Type = (int)eProperty.Dexterity;
 				RecruitsPiousBelt.Bonus4 = 8;
@@ -183,7 +196,7 @@ namespace DOL.GS.Quests.Hibernia
 			Rewards.AddOptionalItem(RecruitsPiousBelt);
 			Rewards.ChoiceOf = 1;
 
-			FoundBreach = AddGoal("Find the entrance to the Demon's Breach", QuestGoal.GoalType.ScoutMission, 1, null);
+            FoundBreach = AddGoal(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.ToReachTheBreach.Init.Text4"), QuestGoal.GoalType.ScoutMission, 1, null);
 
 		}
 
@@ -351,16 +364,16 @@ namespace DOL.GS.Quests.Hibernia
 			if (quest == null)
 				return;
 
-			if (response == 0x00)
-			{
-				SendSystemMessage(player, "Good, now go out there and finish your work!");
-			}
-			else
-			{
-				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
-				quest.AbortQuest();
-			}
-		}
+            if (response == 0x00)
+            {
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.ToReachTheBreach.CheckPlayerAbortQuest.Text1"));
+            }
+            else
+            {
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.ToReachTheBreach.CheckPlayerAbortQuest.Text2", questTitle));
+                quest.AbortQuest();
+            }
+        }
 
 		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
@@ -421,11 +434,7 @@ namespace DOL.GS.Quests.Hibernia
 		{
 			get
 			{
-				String desc = "Taskmaster Sevinia is working diligently against the evil trickling into our land from the dungeons."
-					+ "Recently, more evil has surfaced in the form of Demon's Breach.  The Siabran archmages of the Unseelie court meddled with the energies near Mag Mell."
-					+ "Believing the area was a nexus for only two planes, they unleashed a storm of arcane energy, altering the disposition of the wildlife, animating the dead, and creating a tear into a demonic plane."
-					+ "To worsen matters Midgard and Albion gained access to this plane.  The foes unleashed on Hibernia by the Siabran carelessness will do more damage then the Unseelie.\n\n"
-					+ "Fortunately, our Path elders noticed this immediately, and they capped the hole, barring entry into our world.  We need a more permanent solution.  There's worry our enemies will break the ward sealing the lair.";
+                String desc = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.ToReachTheBreach.Story");
 				return desc;
 			}
 		}
@@ -437,8 +446,8 @@ namespace DOL.GS.Quests.Hibernia
 		{
 			get
 			{
-				return "Find the entrance to the Demon's Breach. Return to Richael once you've visited the Breach.";
-			}
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.ToReachTheBreach.Summary");
+            }
 		}
 
 		/// <summary>
@@ -448,8 +457,7 @@ namespace DOL.GS.Quests.Hibernia
 		{
 			get
 			{
-				String text = String.Format("You found your way to Demon's Breach, eh?  Mark it's location well, {0}", QuestPlayer.CharacterClass.Name);
-				text += ", for your assistance may be needed there one day.  We can't afford to allow hordes of demons, Albionians or Midgardians to break free into our lands.";
+                String text = String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.ToReachTheBreach.Conclusion.Text1", QuestPlayer.CharacterClass.Name));
 				return text;
 			}
 		}
@@ -486,7 +494,11 @@ namespace DOL.GS.Quests.Hibernia
 		public override void AbortQuest()
 		{
 			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
-
 		}
+
+        public override void FinishQuest()
+        {
+            base.FinishQuest();
+        }
 	}
 }
