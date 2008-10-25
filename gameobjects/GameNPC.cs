@@ -3686,12 +3686,12 @@ namespace DOL.GS
 						}
 					}
 
-					bool playerAttacker = false;
+					GamePlayer playerAttacker = null;
 					foreach (GameObject gainer in m_xpGainers.Keys)
 					{
 						if (gainer is GamePlayer)
 						{
-							playerAttacker = true;
+							playerAttacker = gainer as GamePlayer;
 							if (loot.Realm == 0)
 								loot.Realm = ((GamePlayer)gainer).Realm;
 						}
@@ -3701,15 +3701,14 @@ namespace DOL.GS
 							IControlledBrain brain = ((GameNPC)gainer).Brain as IControlledBrain;
 							if (brain != null)
 							{
-								playerAttacker = true;
+								playerAttacker = brain.GetPlayerOwner();
 								loot.AddOwner(brain.GetPlayerOwner());
 							}
 						}
 					}
-					if (!playerAttacker) return; // no loot if mob kills another mob
+					if (playerAttacker == null) return; // no loot if mob kills another mob
 
-                    GamePlayer kPlayer = killer as GamePlayer;
-                    message = String.Format(LanguageMgr.GetTranslation(kPlayer.Client, "GameNPC.DropLoot.Drops",
+                    message = String.Format(LanguageMgr.GetTranslation(playerAttacker.Client, "GameNPC.DropLoot.Drops",
                         GetName(0, true), char.IsLower(loot.Name[0]) ? loot.GetName(1, false) : loot.Name));
 
 					dropMessages.Add(message);
