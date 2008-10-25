@@ -113,7 +113,7 @@ namespace DOL.GS.Keeps
 
 		#region Hastener Models
 		public static ushort AlbionHastener = 244;
-		public static ushort MidgardHastener = 16;
+		public static ushort MidgardHastener = 22;
 		public static ushort HiberniaHastener = 1910;
 		#endregion
 

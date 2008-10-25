@@ -70,6 +70,7 @@ namespace DOL.GS.Keeps
 		public static GameNpcInventoryTemplate Midgard_Caster = new GameNpcInventoryTemplate();
 		public static GameNpcInventoryTemplate Midgard_Fighter = new GameNpcInventoryTemplate();
 		public static GameNpcInventoryTemplate Midgard_Healer = new GameNpcInventoryTemplate();
+        public static GameNpcInventoryTemplate Midgard_Hastener = new GameNpcInventoryTemplate();
 		public static GameNpcInventoryTemplate Midgard_Stealther = new GameNpcInventoryTemplate();
 		public static GameNpcInventoryTemplate Midgard_Lord = new GameNpcInventoryTemplate();
 		public static GameNpcInventoryTemplate Midgard_FighterPK = new GameNpcInventoryTemplate();
@@ -304,6 +305,19 @@ namespace DOL.GS.Keeps
                 Midgard_Healer.GetItem(eInventorySlot.LeftHandWeapon).Object_Type = (int)eObjectType.Shield;
             }
 			#endregion
+            #region Hastener
+            if (!Midgard_Hastener.LoadFromDatabase("midgard_hastener"))
+            {
+                Midgard_Hastener.AddNPCEquipment(eInventorySlot.Cloak, 443, 43);
+                Midgard_Hastener.AddNPCEquipment(eInventorySlot.TorsoArmor, 230);
+                Midgard_Hastener.AddNPCEquipment(eInventorySlot.HandsArmor, 233);
+                Midgard_Hastener.AddNPCEquipment(eInventorySlot.FeetArmor, 234);
+                Midgard_Hastener.AddNPCEquipment(eInventorySlot.LeftHandWeapon, 228);
+                Midgard_Hastener = Midgard_Hastener.CloseTemplate();
+                Midgard_Hastener.GetItem(eInventorySlot.LeftHandWeapon).Hand = (int)eHandFlag.Left;
+                Midgard_Hastener.GetItem(eInventorySlot.LeftHandWeapon).SlotPosition = Slot.LEFTHAND;
+            }
+            #endregion
 			#region Stealther
             if (!Midgard_Stealther.LoadFromDatabase("midgard_stealther"))
             {
@@ -450,8 +464,20 @@ namespace DOL.GS.Keeps
 		/// <param name="guard">The guard object</param>
 		public static void EquipGuard(GameKeepGuard guard)
 		{
-			if (guard is FrontierHastener)
-				return;
+            if (guard is FrontierHastener)
+            {
+                switch (guard.Realm)
+                {
+                    case eRealm.None:
+                    case eRealm.Albion:
+                    case eRealm.Hibernia:
+                    case eRealm.Midgard:
+                        {
+                            guard.Inventory = ClothingMgr.Midgard_Hastener.CloneTemplate();
+                            break;
+                        }
+                }
+            }
 
 			switch (guard.Realm)
 			{
