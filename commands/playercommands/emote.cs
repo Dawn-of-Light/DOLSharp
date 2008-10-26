@@ -63,6 +63,7 @@ namespace DOL.GS.Commands
 				}
 				else
 				{
+                    if (!player.IsIgnoring(client.Player as GameLiving))
 					player.Out.SendMessage(diffRealm, eChatType.CT_Emote, eChatLoc.CL_ChatWindow);
 				}
 			}
