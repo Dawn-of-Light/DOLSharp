@@ -325,7 +325,8 @@ namespace DOL.GS.Commands
 			}
 
 			foreach (GamePlayer player in sourcePlayer.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-				player.Out.SendEmoteAnimation(sourcePlayer, emoteID);
+                if (!player.IsIgnoring(sourcePlayer))
+                 player.Out.SendEmoteAnimation(sourcePlayer, emoteID);
 
 			SendEmoteMessages(sourcePlayer, targetObject as GamePlayer, messageToSource, messageToTarget, messageToOthers);
 
@@ -338,11 +339,14 @@ namespace DOL.GS.Commands
 		{
 			SendEmoteMessage(sourcePlayer, messageToSource);
 
-			if (targetPlayer != null)
-				SendEmoteMessage(targetPlayer, messageToTarget);
+            if (targetPlayer != null)
+            {
+                if (!targetPlayer.IsIgnoring(sourcePlayer))
+                SendEmoteMessage(targetPlayer, messageToTarget);
+            }
 
 			foreach (GamePlayer player in sourcePlayer.GetPlayersInRadius(EMOTE_RANGE_TO_OTHERS))
-				if (player != sourcePlayer && player != targetPlayer) // client and target gets unique messages
+                if (player != sourcePlayer && player != targetPlayer && !targetPlayer.IsIgnoring(sourcePlayer)) // client and target gets unique messages
 					SendEmoteMessage(player, messageToOthers);
 
 			return;
