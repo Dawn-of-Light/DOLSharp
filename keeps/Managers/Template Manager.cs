@@ -130,6 +130,7 @@ namespace DOL.GS.Keeps
 		public static ushort IcconuFemale = 724;
 		public static ushort HalfOgreMale = 1008;
 		public static ushort HalfOgreFemale = 1020;
+        public static ushort MinotaurMaleAlb = 1395;
 		#endregion
 		#region MidgardClassModels
 		public static ushort TrollMale = 137;
@@ -144,6 +145,7 @@ namespace DOL.GS.Keeps
 		public static ushort ValkynFemale = 781;
 		public static ushort FrostalfMale = 1051;
 		public static ushort FrostalfFemale = 1063;
+        public static ushort MinotaurMaleMid = 1407;
 		#endregion
 		#region HiberniaClassModels
 		public static ushort FirbolgMale = 286;
@@ -158,6 +160,7 @@ namespace DOL.GS.Keeps
 		public static ushort SharFemale = 1087;
 		public static ushort SylvianMale = 700;
 		public static ushort SylvianFemale = 708;
+        public static ushort MinotaurMaleHib = 1419;
 		#endregion
 
 		/// <summary>
@@ -251,7 +254,7 @@ namespace DOL.GS.Keeps
 						{
 							if (guard.IsMale)
 							{
-								switch (Util.Random(0, 5))
+								switch (Util.Random(0, 6))
 								{
 									case 0: guard.Model = HighlanderMale; break;//Highlander Male
 									case 1: guard.Model = BritonMale; break;//Briton Male
@@ -259,6 +262,7 @@ namespace DOL.GS.Keeps
 									case 3: guard.Model = AvalonianMale; break;//Avalonian Male
 									case 4: guard.Model = HalfOgreMale; break;//Half Ogre Male
 									case 5: guard.Model = IcconuMale; break;//Icconu Male
+                                    case 6: guard.Model = MinotaurMaleAlb; break;//Minotuar
 								}
 							}
 							else
@@ -299,11 +303,12 @@ namespace DOL.GS.Keeps
 						{
 							if (guard.IsMale)
 							{
-								switch (Util.Random(0, 2))
+								switch (Util.Random(0, 3))
 								{
 									case 0: guard.Model = HighlanderMale; break;//Highlander Male
 									case 1: guard.Model = BritonMale; break;//Briton Male
 									case 2: guard.Model = AvalonianMale; break;//Avalonian Male
+                                    case 3: guard.Model = MinotaurMaleAlb; break;//Minotaur
 								}
 							}
 							else
@@ -395,13 +400,14 @@ namespace DOL.GS.Keeps
 						{
 							if (guard.IsMale)
 							{
-								switch (Util.Random(0, 4))
+								switch (Util.Random(0, 5))
 								{
 									case 0: guard.Model = TrollMale; break;//Troll Male
 									case 1: guard.Model = NorseMale; break;//Norse Male
 									case 2: guard.Model = DwarfMale; break;//Dwarf Male
 									case 3: guard.Model = KoboldMale; break;//Kobold Male
 									case 4: guard.Model = ValkynMale; break;//Valkyn Male
+                                    case 5: guard.Model = MinotaurMaleMid; break;//Minotaur
 								}
 							}
 							else
@@ -441,12 +447,13 @@ namespace DOL.GS.Keeps
 						{
 							if (guard.IsMale)
 							{
-								switch (Util.Random(0, 3))
+								switch (Util.Random(0, 4))
 								{
 									case 0: guard.Model = DwarfMale; break;//Dwarf Male
 									case 1: guard.Model = NorseMale; break;//Norse Male
 									case 2: guard.Model = TrollMale; break;//Troll Male
 									case 3: guard.Model = KoboldMale; break;//Kobold Male
+                                    case 4: guard.Model = MinotaurMaleMid; break;//Minotaur
 								}
 							}
 							else
@@ -533,12 +540,13 @@ namespace DOL.GS.Keeps
 						{
 							if (guard.IsMale)
 							{
-								switch (Util.Random(0, 3))
+								switch (Util.Random(0, 4))
 								{
 									case 0: guard.Model = FirbolgMale; break;//Firbolg Male
 									case 1: guard.Model = LurikeenMale; break;//Lurikeen Male
 									case 2: guard.Model = CeltMale; break;//Celt Male
 									case 3: guard.Model = SharMale; break;//Shar Male
+                                    case 4: guard.Model = MinotaurMaleHib; break;//Minotaur
 								}
 							}
 							else
@@ -577,12 +585,13 @@ namespace DOL.GS.Keeps
 						{
 							if (guard.IsMale)
 							{
-								switch (Util.Random(0, 3))
+								switch (Util.Random(0, 4))
 								{
 									case 0: guard.Model = CeltMale; break;//Celt Male
 									case 1: guard.Model = FirbolgMale; break;//Firbolg Male
 									case 2: guard.Model = LurikeenMale; break;//Lurikeen Male
 									case 3: guard.Model = ElfMale; break;//Elf Male
+                                    case 4: guard.Model = MinotaurMaleHib; break;//Minotaur
 								}
 							}
 							else
