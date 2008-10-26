@@ -131,6 +131,7 @@ namespace DOL
 			private string m_disabledAbilities = "";
 
 			private string m_friendList = ""; //comma seperated string of friends
+            private string m_ignoreList = ""; //comma seperated string of ignored Players
 			private string m_playerTitleType = "";
 
 			private bool m_flagClassName = true;
@@ -1262,6 +1263,20 @@ namespace DOL
 					m_friendList = value;
 				}
 			}
+
+            /// <summary>
+            /// The Ignore list
+            /// </summary>
+            [DataElement(AllowDbNull = true)]
+            public string SerializedIgnoreList
+            {
+                get { return m_ignoreList; }
+                set
+                {
+                    Dirty = true;
+                    m_ignoreList = value;
+                }
+            }
 
 			/// <summary>
 			/// Is cloak hood up

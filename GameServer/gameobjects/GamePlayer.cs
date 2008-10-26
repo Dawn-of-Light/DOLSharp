@@ -7952,6 +7952,20 @@ namespace DOL.GS
 
 		#region Send/Say/Yell/Whisper
 
+        public bool IsIgnoring(GameLiving source)
+        {
+            if (source is GamePlayer)
+            {
+                GamePlayer sender = source as GamePlayer;
+                foreach (string Name in this.IgnoreList)
+                {
+                    if (sender.Name == Name && sender.Client.Account.PrivLevel < 2)
+                        return true;
+                }
+            }
+            return false;
+        }
+
 		/// <summary>
 		/// Delegate to be called when this player receives a text
 		/// by someone sending something
@@ -7980,6 +7994,9 @@ namespace DOL.GS
 		{
 			if (OnSendReceive != null && !OnSendReceive(source, this, str))
 				return false;
+
+            if (IsIgnoring(source as GameLiving))
+                return true;
 
 			eChatType type = eChatType.CT_Send;
 			if (source.Client.Account.PrivLevel > 1)
@@ -8061,6 +8078,8 @@ namespace DOL.GS
 		{
 			if (!base.SayReceive(source, str))
 				return false;
+            if (IsIgnoring(source))
+                return true;
 			if (GameServer.ServerRules.IsAllowedToUnderstand(source, this))
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SayReceive.Says", source.GetName(0, false), str), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			else
@@ -8093,6 +8112,8 @@ namespace DOL.GS
 		{
 			if (!base.YellReceive(source, str))
 				return false;
+            if (IsIgnoring(source))
+                return true;
 			if (GameServer.ServerRules.IsAllowedToUnderstand(source, this))
 				Out.SendMessage(source.GetName(0, false) + " yells, \"" + str + "\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			else
@@ -8126,6 +8147,8 @@ namespace DOL.GS
 		{
 			if (!base.WhisperReceive(source, str))
 				return false;
+            if (IsIgnoring(source))
+                return true;
 			if (GameServer.ServerRules.IsAllowedToUnderstand(source, this))
 				Out.SendMessage(source.GetName(0, false) + " whispers to you, \"" + str + "\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			else
@@ -8815,6 +8838,29 @@ namespace DOL.GS
 			}
 		}
 
+        /// <summary>
+        /// Gets or sets the IgnoreList of a Player
+        /// (delegate to PlayerCharacter)
+        /// </summary>
+        public ArrayList IgnoreList
+        {
+            get
+            {
+                if (PlayerCharacter != null && PlayerCharacter.SerializedIgnoreList != null)
+                    return new ArrayList(PlayerCharacter.SerializedIgnoreList.Split(','));
+                return new ArrayList(0);
+            }
+            set
+            {
+                if (PlayerCharacter == null) return;
+                if (value == null)
+                    PlayerCharacter.SerializedIgnoreList = "";
+                else
+                    PlayerCharacter.SerializedIgnoreList = String.Join(",", (string[])value.ToArray(typeof(string)));
+                GameServer.Database.SaveObject(PlayerCharacter);
+            }
+        }
+
 		/// <summary>
 		/// Modifies the friend list of this player
 		/// </summary>
@@ -8840,6 +8886,33 @@ namespace DOL.GS
 				}
 			}
 		}
+
+
+        /// <summary>
+        /// Modifies the friend list of this player
+        /// </summary>
+        /// <param name="friendName">the friend name</param>
+        /// <param name="remove">true to remove this friend, false to add it</param>
+        public void ModifyIgnoreList(string Name, bool remove)
+        {
+            ArrayList currentIgnores = IgnoreList;
+            if (remove && currentIgnores != null)
+            {
+                if (currentIgnores.Contains(Name))
+                {
+                    currentIgnores.Remove(Name);
+                    IgnoreList = currentIgnores;
+                }
+            }
+            else
+            {
+                if (!currentIgnores.Contains(Name))
+                {
+                    currentIgnores.Add(Name);
+                    IgnoreList = currentIgnores;
+                }
+            }
+        }
 
 		#endregion
 
