@@ -331,9 +331,11 @@ namespace DOL.GS.Housing
 		{
 			if (house == null || player == null) return;
 			if (house.OwnerIDs == null || house.OwnerIDs == "") return;
-
-			house.OwnerIDs = house.OwnerIDs.Replace(player.InternalID + ";", "");
-			GameServer.Database.SaveObject(house);
+            if (house.OwnerIDs.Contains(player.InternalID))
+            {
+                house.OwnerIDs = house.OwnerIDs.Replace(player.InternalID + ";", "");
+                GameServer.Database.SaveObject(house);
+            }
 		}
 
 		public static int GetHouseNumberByPlayer(GamePlayer p)

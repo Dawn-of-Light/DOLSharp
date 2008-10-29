@@ -13,15 +13,15 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * made by Blues - based on /friend command
- * 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. 
  */
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
+    /// <summary>
+    /// Command handler for the /ignore command
+    /// </summary>
     [CmdAttribute(
         "&ignore",
         ePrivLevel.Player,
@@ -29,6 +29,11 @@ namespace DOL.GS.Commands
         "/ignore <playerName>")]
     public class IgnoreCommandHandler : AbstractCommandHandler, ICommandHandler
     {
+        /// <summary>
+        /// Method to handle the command and any arguments
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="args"></param>
         public void OnCommand(GameClient client, string[] args)
         {
             if (args.Length < 2)
