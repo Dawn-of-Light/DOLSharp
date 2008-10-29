@@ -183,21 +183,25 @@ namespace DOL.GS.PacketHandler.Client.v168
                 #region checks
                 if (client.Player.Guild == null)
                 {
+                    client.Out.SendInventorySlotsUpdate(new int[] { slot });
                     client.Player.Out.SendMessage("You must be a member of a guild to do that", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     return 1;
                 }
                 if (HouseMgr.GetRealHouseByPlayer(client.Player) != house)
                 {
+                    client.Out.SendInventorySlotsUpdate(new int[] { slot });
                     client.Player.Out.SendMessage("You do not own this house.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     return 1;
                 }
                 if (client.Player.Guild.GuildOwnsHouse())
                 {
+                    client.Out.SendInventorySlotsUpdate(new int[] { slot });
                     client.Player.Out.SendMessage("Your Guild already owns a house.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     return 1;
                 }
                 if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
                 {
+                    client.Out.SendInventorySlotsUpdate(new int[] { slot });
                     client.Player.Out.SendMessage("You are not the leader of a guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     return 1;
                 }
@@ -244,11 +248,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (orgitem.Object_Type == 49) // Garden items 
 				method = 1;
 			else if (orgitem.Id_nb == "porch_deed" || orgitem.Id_nb == "porch_remove_deed")
-				method = 4;
-			else if (orgitem.Object_Type == 50) // Indoor wall items
-				method = 2;
-			else if (orgitem.Object_Type == 51) // Indoor floor items
-				method = 3;
+				method = 4;			
 			else if (orgitem.Object_Type >= 59 && orgitem.Object_Type <= 64) // Outdoor Roof/Wall/Door/Porch/Wood/Shutter/awning Material item type
 			{
 				client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HouseUseMaterials"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
