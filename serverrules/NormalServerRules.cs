@@ -327,6 +327,13 @@ namespace DOL.GS.ServerRules
 				case eObjectType.Poison          : return living.GetModifiedSpecLevel(Specs.Envenom) > 0;
 				case eObjectType.Instrument      : return living.HasAbility(Abilities.Weapon_Instruments);
 				//TODO: different shield sizes
+                //housing
+                case eObjectType.GardenObject: return true;
+                case eObjectType.HouseWallObject: return true;
+                case eObjectType.HouseFloorObject: return true;
+                case eObjectType.HouseNPC: return true;
+                case eObjectType.HouseVault: return true;
+                case eObjectType.HouseBindstone: return true;
 			}
 
 			//player.Out.SendMessage("ability: \""+abilityCheck+"\"; type: "+item.Object_Type, eChatType.CT_System, eChatLoc.CL_SystemWindow);

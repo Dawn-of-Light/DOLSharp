@@ -346,7 +346,7 @@ namespace DOL.GS.Commands
             }
 
 			foreach (GamePlayer player in sourcePlayer.GetPlayersInRadius(EMOTE_RANGE_TO_OTHERS))
-                if (player != sourcePlayer && player != targetPlayer && !targetPlayer.IsIgnoring(sourcePlayer)) // client and target gets unique messages
+                if (player != sourcePlayer && player != targetPlayer && !player.IsIgnoring(sourcePlayer)) // client and target gets unique messages
 					SendEmoteMessage(player, messageToOthers);
 
 			return;

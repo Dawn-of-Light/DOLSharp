@@ -302,9 +302,13 @@ namespace DOL.GS.Housing
 
 			if (realOwner)
 				return house.OwnerIDs.Contains(player.PlayerCharacter.ObjectId);
+            else if (player.Guild != null && house.GuildHouse)
+            {
+                if (player.Guild.Name == house.GuildName && player.Guild.GotAccess(player, eGuildRank.Leader))
+                    return true;
+            }
 			else
 			{
-
 				foreach (Character c in player.Client.Account.Characters)
 				{
 					if (house.OwnerIDs.Contains(c.ObjectId))
