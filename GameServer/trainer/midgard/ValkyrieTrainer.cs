@@ -33,7 +33,9 @@ namespace DOL.GS.Trainer
 			get { return eCharacterClass.Valkyrie; }
 		}
 
-        public const string WEAPON_ID = "valkyrie_item";
+        public const string WEAPON_ID1 = "valkyrie_item_sword";
+        public const string WEAPON_ID2 = "valkyrie_item_spear";
+
 
 		/// <summary>
 		/// Interact with trainer
@@ -49,14 +51,15 @@ namespace DOL.GS.Trainer
 			{
 				// popup the training window
 				player.Out.SendTrainerWindow();
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "ValkyrieTrainer.Interact.Text2", this.Name), eChatType.CT_System, eChatLoc.CL_ChatWindow);
 			}
 			else
 			{
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
 				{
-					player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the House of Odin] and defend our realm as a Valkyrie?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-					if (!player.IsLevelRespecUsed)
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "ValkyrieTrainer.Interact.Text1", this.Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                    if (!player.IsLevelRespecUsed)
 					{
 						OfferRespecialize(player);
 					}
@@ -91,17 +94,30 @@ namespace DOL.GS.Trainer
 			if (!base.WhisperReceive(source, text)) return false;
 			GamePlayer player = source as GamePlayer;
 
-			switch (text)
-			{
-				case "join the House of Odin":
-					// promote player to other class
-					if (CanPromotePlayer(player))
-					{
-						PromotePlayer(player, (int)eCharacterClass.Valkyrie, "Welcome young Valkyrie! May your time in Midgard army be rewarding!", null);
-                        player.ReceiveItem(this, WEAPON_ID);
-					}
-					break;
-			}
+            String lowerCase = text.ToLower();
+
+            if (lowerCase == LanguageMgr.GetTranslation(player.Client, "ValkyrieTrainer.WhisperReceiveCase.Text1"))
+            {
+                // promote player to other class
+                if (CanPromotePlayer(player))
+                {
+                    PromotePlayer(player, (int)eCharacterClass.Valkyrie, LanguageMgr.GetTranslation(player.Client, "ValkyrieTrainer.WhisperReceive.Text1"), null);
+                }
+            }
+            else if ((player.Inventory.GetFirstItemByID(WEAPON_ID1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null) &&
+                (player.Inventory.GetFirstItemByID(WEAPON_ID2, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null))
+            {
+                if (lowerCase == LanguageMgr.GetTranslation(player.Client, "ValkyrieTrainer.WhisperReceiveCase.Text2"))
+                {
+                    player.ReceiveItem(this, WEAPON_ID1);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "ValkyrieTrainer.WhisperReceive.Text2"), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                }
+                else if (lowerCase == LanguageMgr.GetTranslation(player.Client, "ValkyrieTrainer.WhisperReceiveCase.Text3"))
+                {
+                    player.ReceiveItem(this, WEAPON_ID2);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "ValkyrieTrainer.WhisperReceive.Text2"), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                }
+            }
 			return true;
 		}
 

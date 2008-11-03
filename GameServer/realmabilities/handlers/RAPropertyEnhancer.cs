@@ -3,6 +3,7 @@ using System.Collections;
 using System.Reflection;
 using DOL.Database;
 using DOL.GS.PropertyCalc;
+using DOL.Language;
 
 namespace DOL.GS.RealmAbilities
 {
@@ -35,8 +36,8 @@ namespace DOL.GS.RealmAbilities
 				list.Add("");
 				for (int i = 1; i <= MaxLevel; i++)
 				{
-					list.Add("Level " + i + ": Amount: " + GetAmountForLevel(i) + ValueUnit);
-				}
+                    list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RAPropertyEnhancer.DelveInfo.Info1", i, GetAmountForLevel(i), ValueUnit));
+                }
 				return list;
 			}
 		}
