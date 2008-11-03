@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Reflection;
 using DOL.Database;
+using DOL.Language;
+
 
 namespace DOL.GS.RealmAbilities
 {
@@ -32,8 +34,8 @@ namespace DOL.GS.RealmAbilities
 				list.Add("");
 				for (int i = 1; i <= MaxLevel; i++)
 				{
-					list.Add("Level " + i + ": Amount: " + GetAmountForLevel(i));
-				}
+                    list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RAStatEnhancer.DelveInfo.Info1", i, GetAmountForLevel(i)));
+                }
 				return list;
 			}
 		}

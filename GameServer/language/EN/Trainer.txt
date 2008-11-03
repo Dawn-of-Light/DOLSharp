@@ -50,3 +50,39 @@ BonedancerTrainer.Interact.Text4:
 BonedancerTrainer.ReceiveItem.Text1:		
 BonedancerTrainer.WhisperReceive.Text1:			Welcome young warrior! May your time in Midgard army be rewarding!
 BonedancerTrainer.WhisperReceiveCase.Text1:		join the house of bodgar
+
+# /Valkyrie
+ValkyrieTrainer.Interact.Text1:				{0} says, "Do you desire to [join the House of Odin] and defend our realm as a Valkyrie?"
+ValkyrieTrainer.Interact.Text2:				
+ValkyrieTrainer.Interact.Text3:				
+ValkyrieTrainer.Interact.Text4:				
+ValkyrieTrainer.ReceiveItem.Text1:			
+ValkyrieTrainer.WhisperReceive.Text1:			Welcome young Valkyrie! May your time in Midgard army be rewarding! Would you prefer to fight with a [sword] or with a [spear]?
+ValkyrieTrainer.WhisperReceive.Text2:			You get a gift by Odin.
+ValkyrieTrainer.WhisperReceiveCase.Text1:		join the House of Odin
+ValkyrieTrainer.WhisperReceiveCase.Text2:		sword
+ValkyrieTrainer.WhisperReceiveCase.Text3:		speer
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

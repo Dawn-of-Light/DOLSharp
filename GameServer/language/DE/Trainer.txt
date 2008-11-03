@@ -50,3 +50,16 @@ BonedancerTrainer.Interact.Text4:
 BonedancerTrainer.ReceiveItem.Text1:		
 BonedancerTrainer.WhisperReceive.Text1:			Bogdar heißt Euch mit einem Geschenk willkommen, {0}.
 BonedancerTrainer.WhisperReceiveCase.Text1:		dem hause bogdar beitreten
+
+# /Valkyrie
+ValkyrieTrainer.Interact.Text1:				{0} sagt: "Der Orden der Walküren wurde von zwei betörend schönen und verwaisten Zwillingsschwestern namens Sigrun und Brynhild gegründet, die seit ihrer Geburt behaupteten, die geehrten Toten aus Walhalla sprechen zu hören. Die Stimmen warnten die Schwestern schon in jungen Jahren, dass eine große Krise auf die Einwohner Midgards zukommen werde, und befahlen ihnen, den Orden der Walküren zu gründen, um das Reich zu verteidigen. Walküren werden ausgebildet, im Kampf Nahkampfwaffen und Magie einzusetzen, um ihre Feinde zu schädigen. Sie können Schwerter, Schilde und Speere benutzen und sie können im Kampf spezielle Manöver einsetzen, die nur Walküren beherrschen. Ihre Magie, Odins Wille genannt, beeinträchtigt hauptsächlich Feinde in einem kegelförmigen Wirkungskreis vor der Walküre. Walküren haben außerdem die Macht, die Gefallenen aus Walhalla zu rufen. Wollt Ihr dem [Hause Odin beitreten] und eine Walküre werden?"
+ValkyrieTrainer.Interact.Text2:				
+ValkyrieTrainer.Interact.Text3:				
+ValkyrieTrainer.Interact.Text4:				
+ValkyrieTrainer.ReceiveItem.Text1:			
+ValkyrieTrainer.WhisperReceive.Text1:			Ihr seid nun eine Walküre des Hauses Odin. Macht Odins Namen Ehre. Odin wünscht Euch ein Geschenk zu verleihen. Ihr könnt wählen, ob Ihr Furcht in die Herzen der Feinde Midgards sähen wollt, indem Ihr ein [Schwert] oder einen [Speer] gegen sie richtet.
+ValkyrieTrainer.WhisperReceive.Text2:			Ihr bekommt ein Geschenk von Odin.
+ValkyrieTrainer.WhisperReceiveCase.Text1:		hause odin beitreten
+ValkyrieTrainer.WhisperReceiveCase.Text2:		schwert
+ValkyrieTrainer.WhisperReceiveCase.Text3:		speer
+
