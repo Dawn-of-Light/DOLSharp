@@ -12,6 +12,12 @@ ConcentrationAbility.AddEffectsInfo.Info3:	Level 3: Value: 100%
 ConcentrationAbility.AddEffectsInfo.Info4:	Target: Self
 ConcentrationAbility.AddEffectsInfo.Info5:	Casting time: instant
 
+# /RAPropertyEnhancer
+RAPropertyEnhancer.DelveInfo.Info1:		Level {0}: Amount: {1}{2}
+
+# /RAStatEnhancer
+RAStatEnhancer.DelveInfo.Info1:			Level {0}: Amount: {1}
+
 # /SecondWindAbility
 SecondWindAbility.AddEffectsInfo.Info1:			
 SecondWindAbility.AddEffectsInfo.Info4:			
