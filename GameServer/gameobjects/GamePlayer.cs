@@ -1861,7 +1861,7 @@ namespace DOL.GS
                     //TODO : cache LongWind level when char is loaded and on train ability
 					LongWindAbility ra = GetAbility(typeof(LongWindAbility)) as LongWindAbility;
                     if (ra != null)
-                        longwind = 5 - ra.GetAmountForLevel(ra.Level);
+                        longwind = 5 - (ra.GetAmountForLevel(ra.Level)*5/100);
 
                     regen -= longwind;
                     if (Endurance + regen > MaxEndurance - longwind)
@@ -1973,16 +1973,25 @@ namespace DOL.GS
 			int maxpower = 0;
 
 			//Special handling for Vampiirs:
-			/* There is no stat that affects the Vampiir's power pool or the damage done by its power based spells.
-			 * The Vampiir is not a focus based class like, say, an Enchanter.
-			 * The Vampiir is a lot more cut and dried than the typical casting class.
-			 * EDIT, 12/13/04 - I was told today that this answer is not entirely accurate.
-			 * While there is no stat that affects the damage dealt (in the way that intelligence or piety affects how much damage a more traditional caster can do),
-			 * the Vampiir's power pool capacity is intended to be increased as the Vampiir's strength increases.
-			 *
-			 * This means that strength ONLY affects a Vampiir's mana pool
-			 */
-			if (CharacterClass.ManaStat != eStat.UNDEFINED || CharacterClass.ID == (int)eCharacterClass.Vampiir)
+            /* There is no stat that affects the Vampiir's power pool or the damage done by its power based spells.
+             * The Vampiir is not a focus based class like, say, an Enchanter.
+             * The Vampiir is a lot more cut and dried than the typical casting class.
+             * EDIT, 12/13/04 - I was told today that this answer is not entirely accurate.
+             * While there is no stat that affects the damage dealt (in the way that intelligence or piety affects how much damage a more traditional caster can do),
+             * the Vampiir's power pool capacity is intended to be increased as the Vampiir's strength increases.
+             *
+             * This means that strength ONLY affects a Vampiir's mana pool
+             * 
+             * http://www.camelotherald.com/more/1913.shtml
+             * Strength affects the amount of damage done by spells in all of the Vampiir's spell lines. 
+             * The amount of said affecting was recently increased slightly (fixing a bug), and that minor increase will go live in 1.74 next week.
+             * 
+             * Strength ALSO affects the size of the power pool for a Vampiir… sort of. 
+             * Your INNATE strength (the number of attribute points your character has for strength) has no effect at all. 
+             * Extra points added through ITEMS, however, does increase the size of your power pool. 
+
+             */
+            if (CharacterClass.ManaStat != eStat.UNDEFINED || CharacterClass.ID == (int)eCharacterClass.Vampiir)
 			{
 				maxpower = (level * 5) + (manastat - 50);
 			}
