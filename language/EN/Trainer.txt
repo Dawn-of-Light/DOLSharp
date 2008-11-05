@@ -61,28 +61,13 @@ ValkyrieTrainer.WhisperReceive.Text1:			Welcome young Valkyrie! May your time in
 ValkyrieTrainer.WhisperReceive.Text2:			You get a gift by Odin.
 ValkyrieTrainer.WhisperReceiveCase.Text1:		join the House of Odin
 ValkyrieTrainer.WhisperReceiveCase.Text2:		sword
-ValkyrieTrainer.WhisperReceiveCase.Text3:		speer
+ValkyrieTrainer.WhisperReceiveCase.Text3:		spear
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# /Spiritmaster
+SpiritmasterTrainer.Interact.Text1:			{0} says, "Do you desire to [join the House of Hel] and defend our realm as a Spiritmaster?"	
+SpiritmasterTrainer.Interact.Text2:				
+SpiritmasterTrainer.Interact.Text3:				
+SpiritmasterTrainer.Interact.Text4:				
+SpiritmasterTrainer.ReceiveItem.Text1:			
+SpiritmasterTrainer.WhisperReceive.Text1:		Welcome young Spiritmaster! May your time in Midgard army be rewarding!	
+SpiritmasterTrainer.WhisperReceiveCase.Text1:		join the house of hel

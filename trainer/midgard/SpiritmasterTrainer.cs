@@ -49,14 +49,15 @@ namespace DOL.GS.Trainer
 			{
 				// popup the training window
 				player.Out.SendTrainerWindow();
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "SpiritmasterTrainer.Interact.Text2", this.Name), eChatType.CT_System, eChatLoc.CL_ChatWindow);
 			}
 			else
 			{
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
 				{
-					player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the House of Hel] and defend our realm as a Spiritmaster?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
-					if (!player.IsLevelRespecUsed)
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "SpiritmasterTrainer.Interact.Text1", this.Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                    if (!player.IsLevelRespecUsed)
 					{
 						OfferRespecialize(player);
 					}
@@ -89,17 +90,20 @@ namespace DOL.GS.Trainer
 		public override bool WhisperReceive(GameLiving source, string text)
 		{				
 			if (!base.WhisperReceive(source, text)) return false;			
-			GamePlayer player = source as GamePlayer;			
-	
-			switch (text) {
-			case "join the House of Hel":
-				// promote player to other class
-				if (CanPromotePlayer(player)) {
-					PromotePlayer(player, (int)eCharacterClass.Spiritmaster, "Welcome young Spiritmaster! May your time in Midgard army be rewarding!", null);
+			GamePlayer player = source as GamePlayer;
+
+            String lowerCase = text.ToLower();
+
+            if (lowerCase == LanguageMgr.GetTranslation(player.Client, "SpiritmasterTrainer.WhisperReceiveCase.Text1"))
+            {
+                // promote player to other class
+                if (CanPromotePlayer(player))
+                {
+                    PromotePlayer(player, (int)eCharacterClass.Spiritmaster, LanguageMgr.GetTranslation(player.Client, "SpiritmasterTrainer.WhisperReceive.Text1"), null);
                     player.ReceiveItem(this, WEAPON_ID);
-				}
-				break;
-			}
+                }
+            }
+
 			return true;		
 		}
 	}
