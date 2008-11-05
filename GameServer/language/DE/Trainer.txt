@@ -63,3 +63,11 @@ ValkyrieTrainer.WhisperReceiveCase.Text1:		hause odin beitreten
 ValkyrieTrainer.WhisperReceiveCase.Text2:		schwert
 ValkyrieTrainer.WhisperReceiveCase.Text3:		speer
 
+# /Spiritmaster
+SpiritmasterTrainer.Interact.Text1:			{0} sagt: "Willkommen! Seid Ihr hergekommen auf der Suche nach Wissen um die Königin der nordischen Unterwelt, Hel, und ihren Anhängern, den Geisterbeschwörern? Ihre göttliche Gunst gibt dem Geisterbeschwörer die Fähigkeit, die Geister gefallener Soldaten Midgards aus der Unterwelt an die Oberfläche zu rufen, um im Kampf gegen Albion und Hibernia zu helfen. Auch sind sie in der Lage, ihre Feinde zu schwächen und große Gruppen von ihnen mit ihren hypnotisierenden Flächenzaubern zu kontrollieren. Auch können sie lernen, ihre eigenen Geisterkämpfer zu stärken. Wollt Ihr Eurem Schicksal folgen und [dem Hause Hel beitreten]?"
+SpiritmasterTrainer.Interact.Text2:				
+SpiritmasterTrainer.Interact.Text3:				
+SpiritmasterTrainer.Interact.Text4:				
+SpiritmasterTrainer.ReceiveItem.Text1:			
+SpiritmasterTrainer.WhisperReceive.Text1:		Wir heißen Euch in den Reihen der Geisterbeschwörer willkommen.
+SpiritmasterTrainer.WhisperReceiveCase.Text1:		dem hause hel beitreten
