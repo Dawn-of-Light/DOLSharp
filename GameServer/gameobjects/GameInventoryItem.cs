@@ -18,6 +18,7 @@
  */
 using System;
 using System.Reflection;
+using DOL.GS.PacketHandler;
 using DOL.Database;
 using log4net;
 
@@ -96,6 +97,50 @@ namespace DOL.GS
 
 			return CreateFromTemplate(template);
 		}
+
+        #region PickUpTimer
+        private RegionTimer m_pickup;
+        /// <summary>
+        /// Starts a new pickuptimer with the given time (in seconds)
+        /// </summary>
+        /// <param name="time"></param>
+        public void StartPickupTimer(int time)
+        {
+            if (m_pickup != null)
+            {
+                m_pickup.Stop();
+                m_pickup = null;
+            }
+            m_pickup = new RegionTimer(this, new RegionTimerCallback(CallBack), time * 1000);
+        }
+        private int CallBack(RegionTimer timer)
+        {
+            m_pickup.Stop();
+            m_pickup = null;
+            return 0;
+        }
+        public void StopPickupTimer()
+        {
+            foreach (GamePlayer player in Owners)
+            {
+                if (player.ObjectState == eObjectState.Active)
+                {
+                    player.Out.SendMessage("You may now pick up " + Name + "!", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+                }
+            }
+            m_pickup.Stop();
+            m_pickup = null;
+        }
+        public int GetPickupTime
+        {
+            get
+            {
+                if (m_pickup == null)
+                    return 0;
+                return m_pickup.TimeUntilElapsed;
+            }
+        }
+        #endregion
 
 		/// <summary>
 		/// Creates a new GameInventoryItem based on an ItemTemplate. Will disappear 

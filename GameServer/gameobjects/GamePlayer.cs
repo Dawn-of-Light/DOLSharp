@@ -10162,6 +10162,11 @@ namespace DOL.GS
 						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.CantGetThat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return false;
 					}
+                    if (floorItem.GetPickupTime > 0)
+                    {
+                        Out.SendMessage("You must wait another " + floorItem.GetPickupTime / 1000 + " seconds to pick up " + floorItem.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        return false;
+                    }
 					Group group = Group;
 					BattleGroup mybattlegroup = (BattleGroup)TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
 					if (mybattlegroup != null
