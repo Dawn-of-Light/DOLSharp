@@ -65,6 +65,12 @@ namespace DOL.GS.Housing
 			get { return m_size; }
 			set { m_size = value;}
 		}
+        int m_emblem;
+        public int Emblem
+        {
+            get { return m_emblem; }
+            set { m_emblem = value; }
+        }
 		int m_position;
 		public int Position
 		{
@@ -97,6 +103,7 @@ namespace DOL.GS.Housing
 			this.Y = (short)dbitem.Y;
 			this.Rotation = dbitem.Rotation;
 			this.Size = dbitem.Size;
+            this.Emblem = dbitem.Emblem;
 			this.Position = dbitem.Position;
 			this.Placemode = dbitem.Placemode;
 			this.BaseItem = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), dbitem.BaseItemID);

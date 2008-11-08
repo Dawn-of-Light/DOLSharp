@@ -42,6 +42,7 @@ namespace DOL
 			private string m_baseitemid;
 			//"can-be-null" data (well, i dont know if size can be 0)
 			private int m_color;
+            private int m_emblem;
 			private int m_rotation;
 			private int m_size;
 
@@ -156,6 +157,19 @@ namespace DOL
 					m_color = value;
 				}
 			}
+            [DataElement(AllowDbNull = true)]
+            public int Emblem
+            {
+                get
+                {
+                    return m_emblem;
+                }
+                set
+                {
+                    Dirty = true;
+                    m_emblem = value;
+                }
+            }
 			[DataElement(AllowDbNull=true)]
 			public int Rotation
 			{
