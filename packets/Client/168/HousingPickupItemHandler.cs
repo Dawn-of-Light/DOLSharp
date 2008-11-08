@@ -106,6 +106,37 @@ namespace DOL.GS.PacketHandler.Client.v168
 						else
                             client.Player.Out.SendMessage("The " + item.Name + " is cleared from the wall surface.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
+                    else if (iitem.DatabaseItem.BaseItemID.Contains("GuildBanner"))
+                    {
+                        InventoryItem inv = new InventoryItem();
+                        inv.CanDropAsLoot = false;
+                        inv.Id_nb = iitem.DatabaseItem.BaseItemID;
+                        inv.IsDropable = true;
+                        inv.IsPickable = true;
+                        inv.IsTradable = true;
+                        inv.Item_Type = 41;
+                        inv.Level = 1;
+                        inv.MaxCharges = 1;
+                        inv.MaxCount = 1;
+                        inv.Model = iitem.DatabaseItem.Model;
+                        inv.Emblem = iitem.DatabaseItem.Emblem;
+                        string[] idnb = iitem.DatabaseItem.BaseItemID.Split('_');
+                        inv.Name = idnb[1] + "'s Banner";
+                        inv.Object_Type = (int)eObjectType.HouseWallObject;
+                        inv.Realm = 0;
+                        inv.Quality = 100;
+                        if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, inv))
+                        {
+                            if (method == 2)
+                                client.Player.Out.SendMessage("The " + inv.Name + " is cleared from the wall surface.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            else client.Player.Out.SendMessage("The " + inv.Name + " is cleared from the floor.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        }
+                        else
+                        {
+                            client.Player.Out.SendMessage("You need place in your inventory !", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                    }
 					else
 						if (method == 2)
 							client.Player.Out.SendMessage("The decoration item is cleared from the wall surface.", eChatType.CT_System, eChatLoc.CL_SystemWindow);

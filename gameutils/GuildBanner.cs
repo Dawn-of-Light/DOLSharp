@@ -156,14 +156,13 @@ namespace DOL.GS
                     foreach (GamePlayer player in m_killer.Group.GetPlayersInTheGroup())
                     {
                         gameItem.AddOwner(player);
-                        player.Out.SendMessage("You may now pick up " + m_player.GuildName + "'s banner!", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
                     }
                 }
                 else
                 {
                     gameItem.AddOwner(m_killer);
-                    m_killer.Out.SendMessage("You may now pick up " + m_player.GuildName + "'s banner!", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
                 }
+                gameItem.StartPickupTimer(10);
                 m_player.Guild.GuildBanner = false;
                 m_player.Guild.SendMessageToGuildMembers(m_player.Name + " has lost the guild banner!", eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                 gameItem.Emblem = m_item.Emblem;
@@ -184,14 +183,14 @@ namespace DOL.GS
                 {
                     m_guildBanner = new ItemTemplate();
                     m_guildBanner.CanDropAsLoot = false;
-                    m_guildBanner.Id_nb = "GuildBanner";
+                    m_guildBanner.Id_nb = "GuildBanner_" + m_player.Guild.Name;
                     m_guildBanner.IsDropable = true;
                     m_guildBanner.IsPickable = true;
                     m_guildBanner.IsTradable = false;
                     m_guildBanner.Item_Type = 41;
                     m_guildBanner.Level = 1;
                     m_guildBanner.MaxCharges = 1;
-                    m_guildBanner.MaxCount = 2;
+                    m_guildBanner.MaxCount = 1;
                     m_guildBanner.Emblem = m_player.Guild.theGuildDB.Emblem;
                     /*
                        3223 Guild Banner Albion 
@@ -211,7 +210,7 @@ namespace DOL.GS
                             break;
                     }
                     m_guildBanner.Name = m_player.Guild.Name+"'s Banner";
-                    m_guildBanner.Object_Type = (int)eObjectType.Magical;
+                    m_guildBanner.Object_Type = (int)eObjectType.HouseWallObject;
                     m_guildBanner.Realm = 0;
                     m_guildBanner.Quality = 100;
                 }

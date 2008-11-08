@@ -206,6 +206,18 @@ namespace DOL.GS
 		public override bool AddItem(eInventorySlot slot, InventoryItem item)
 		{
 			if (!base.AddItem(slot, item)) return false;
+            switch (item.Model)
+            {
+                case 3223:
+                    item.Model = 3359;
+                    break;
+                case 3224:
+                    item.Model = 3361;
+                    break;
+                case 3225:
+                    item.Model = 3360;
+                    break;
+            }
 			item.OwnerID = m_player.InternalID;
 			GameServer.Database.AddNewObject(item);
             
