@@ -370,6 +370,8 @@ namespace DOL.GS.PacketHandler
 		{
 			pak.WriteByte((byte)index);
 			byte type = 0;
+            if (item.Emblem > 0)
+                item.Color = item.Emblem;
 			if (item.Color > 0)
 			{
 				if (item.Color <= 0xFF)
