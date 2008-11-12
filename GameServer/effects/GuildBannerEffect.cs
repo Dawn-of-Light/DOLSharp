@@ -62,6 +62,10 @@ namespace DOL.GS.Effects
 				case eCharacterClass.Bonedancer:
 				case eCharacterClass.Runemaster:
 				case eCharacterClass.Warlock:
+                case eCharacterClass.Animist:
+                case eCharacterClass.Eldritch:
+                case eCharacterClass.Enchanter:
+                case eCharacterClass.Mentalist:
 					return new BannerOfWardingEffect(effectiveness);
 				case eCharacterClass.Armsman:
 				case eCharacterClass.Mercenary:
@@ -70,6 +74,9 @@ namespace DOL.GS.Effects
 				case eCharacterClass.Warrior:
 				case eCharacterClass.Berserker:
 				case eCharacterClass.Savage:
+                case eCharacterClass.Hero:
+                case eCharacterClass.Champion:
+                case eCharacterClass.Vampiir:
 					return new BannerOfShieldingEffect(effectiveness);					
 				case eCharacterClass.Necromancer:
 				case eCharacterClass.Friar:

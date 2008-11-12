@@ -364,6 +364,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//its a housing item, so lets take it!
 						client.Player.Inventory.RemoveItem(orgitem);
 						//set right base item, so we can recreate it on take.
+                        if (orgitem.Id_nb.Contains("GuildBanner"))
+                        {
+                            iitem.BaseItem = (ItemTemplate)orgitem;
+                            iitem.Size = 50; // Banners have to be reduced in size
+                        }
+                        else
 						iitem.BaseItem = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), orgitem.Id_nb);
 					}
 
