@@ -103,9 +103,12 @@ namespace DOL.GS
                     if (!(GameServer.ServerRules.IsAllowedToAttack(m_player, playa, false)))
                     {
                         GuildBannerEffect effect = GuildBannerEffect.CreateEffectOfClass(m_player, playa);
-                        if (playa.EffectList.GetOfType(typeof(GuildBannerEffect)) == null)
+                        if (effect != null)
                         {
-                            effect.Start(playa);
+                            if (playa.EffectList.GetOfType(typeof(GuildBannerEffect)) == null)
+                            {
+                                effect.Start(playa);
+                            }
                         }
                     }
                 }
