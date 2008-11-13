@@ -300,21 +300,28 @@ namespace DOL.GS.Housing
 			if (house == null || player == null) return false;
 			if (house.OwnerIDs == null || house.OwnerIDs == "") return false;
 
-			if (realOwner)
-				return house.OwnerIDs.Contains(player.PlayerCharacter.ObjectId);
+            if (realOwner)
+            {
+                foreach (Character c in player.Client.Account.Characters)
+                {
+                    if (house.OwnerIDs.Contains(c.ObjectId))
+                        return true;
+                }
+                return false;
+            }
             else if (player.Guild != null && house.GuildHouse)
             {
                 if (player.Guild.Name == house.GuildName && player.Guild.GotAccess(player, eGuildRank.Leader))
                     return true;
             }
-			else
-			{
-				foreach (Character c in player.Client.Account.Characters)
-				{
-					if (house.OwnerIDs.Contains(c.ObjectId))
-						return true;
-				}
-			}
+            else
+            {
+                foreach (Character c in player.Client.Account.Characters)
+                {
+                    if (house.OwnerIDs.Contains(c.ObjectId))
+                        return true;
+                }
+            }
 			return false;
 		}
 
@@ -391,7 +398,7 @@ namespace DOL.GS.Housing
 				foreach (DictionaryEntry Entry in (Hashtable)(regs.Value))
 				{
 					House house = (House)Entry.Value;
-					if (house.OwnerIDs == null)
+                    if (house.OwnerIDs == null || house.DatabaseItem.GuildHouse)
 						continue;
 					if (house.IsRealOwner(p))
 						return house;
@@ -399,6 +406,27 @@ namespace DOL.GS.Housing
 			}
 			return null; // no house
 		}
+
+        /// <summary>
+        /// Gets the guild house object by real owner
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        public static House GetGuildHouseByPlayer(GamePlayer p)
+        {
+            foreach (DictionaryEntry regs in m_houselists)
+            {
+                foreach (DictionaryEntry Entry in (Hashtable)(regs.Value))
+                {
+                    House house = (House)Entry.Value;
+                    if (house.OwnerIDs == null || !house.DatabaseItem.GuildHouse)
+                        continue;
+                    if (house.HasOwnerPermissions(p))
+                        return house;
+                }
+            }
+            return null; // no house
+        }
 
         public static bool IsGuildHouse(House house)
         {
