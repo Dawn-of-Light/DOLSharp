@@ -14,16 +14,16 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
-			House house = HouseMgr.GetHouseByPlayer(client.Player);
+            House house = client.Player.CurrentHouse;
 			if (house == null)
 			{
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Boot.NoHouseError"));
+                DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Boot.InHouseError"));
 				return;
 			}
 
-			if (!client.Player.InHouse || client.Player.CurrentHouse != house)
+			if (!house.HasOwnerPermissions(client.Player))
 			{
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Boot.InHouseError"));
+				DisplayMessage(client, "You do not have permissions to do that.");
 				return;
 			}
 

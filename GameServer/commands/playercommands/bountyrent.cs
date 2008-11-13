@@ -36,15 +36,15 @@ namespace DOL.GS.Commands
 				DisplaySyntax(client);
 				return;
 			}
-			House house = HouseMgr.GetHouseByPlayer(client.Player);
+            House house = client.Player.CurrentHouse;
 			if (house == null)
 			{
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.NoHouseError"), new object[] { });
+                DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.InHouseError"), new object[] { });
 				return;
 			}
-			if (!client.Player.InHouse || client.Player.CurrentHouse != house)
+            if (!house.CanPayRent(client.Player))
 			{
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.InHouseError"), new object[] { });
+                DisplayMessage(client, "You do not have permission to pay rent for this house.");
 				return;
 			}
 			switch (args[1].ToLower())

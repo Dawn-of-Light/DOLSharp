@@ -183,13 +183,24 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 				}
 
-				House house = HouseMgr.GetHouseByPlayer(player);
+				House house = HouseMgr.GetRealHouseByPlayer(player);
 				if (house != null)
 				{
 					TimeSpan due = (house.LastPaid.AddDays(7).AddHours(1) - DateTime.Now);
 					if (due.Days < 7 && house.KeptMoney < HouseMgr.GetRentByModel(house.Model))
 						player.Out.SendRentReminder(house);
 				}
+
+                if (player.Guild != null)
+                {
+                    House ghouse = HouseMgr.GetGuildHouseByPlayer(player);
+                    if (ghouse != null)
+                    {
+                        TimeSpan due = (ghouse.LastPaid.AddDays(7).AddHours(1) - DateTime.Now);
+                        if (due.Days < 7 && ghouse.KeptMoney < HouseMgr.GetRentByModel(ghouse.Model))
+                            player.Out.SendRentReminder(ghouse);
+                    }
+                }
 
 				if (player.Level > 1 && Properties.MOTD != "")
 				{
