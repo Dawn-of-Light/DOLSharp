@@ -207,6 +207,32 @@ namespace DOL.GS
 				eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 		}
 
+        /// <summary>
+        /// Check Ability to use Item
+        /// </summary>
+        /// <param name="player"></param>
+        protected virtual void CheckAbilityToUseItem(GamePlayer player)
+        {
+            // drop any equiped-non usable item, in inventory or on the ground if full
+            lock (player.Inventory)
+            {
+                foreach (InventoryItem item in player.Inventory.EquippedItems)
+                {
+                    if (!player.HasAbilityToUseItem(item))
+                        if (player.Inventory.IsSlotsFree(item.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == true)
+                        {
+                            player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack), item.Count);
+                            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.CheckAbilityToUseItem.Text1", item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        }
+                        else
+                        {
+                            player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, eInventorySlot.Ground, item.Count);
+                            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.CheckAbilityToUseItem.Text1", item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        }
+                }
+            }
+        }
+
 		/// <summary>
 		/// For Recieving Respec Stones. 
 		/// </summary>
