@@ -17,9 +17,9 @@
  *
  */
 using System;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.Language;
-using DOL.Database;
 
 namespace DOL.GS.Trainer
 {
@@ -38,6 +38,9 @@ namespace DOL.GS.Trainer
         {
         }
 
+        public const string WEAPON_ID1 = "maulerhib_item_staff";
+        public const string WEAPON_ID2 = "maulerhib_item_fist";
+
         /// <summary>
         /// Interact with trainer
         /// </summary>
@@ -52,13 +55,15 @@ namespace DOL.GS.Trainer
             {
                 // popup the training window
                 player.Out.SendTrainerWindow();
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "MaulerHibTrainer.Interact.Text2", this.Name), eChatType.CT_System, eChatLoc.CL_ChatWindow);
             }
             else
             {
                 // perhaps player can be promoted
                 if (CanPromotePlayer(player))
                 {
-                    player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the Temple of the Iron Fist] and fight for the glorious realm of Hibernia?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "MaulerHibTrainer.Interact.Text1", this.Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+
 					if (!player.IsLevelRespecUsed)
 					{
 						OfferRespecialize(player);
@@ -94,34 +99,38 @@ namespace DOL.GS.Trainer
             if (!base.WhisperReceive(source, text)) return false;
             GamePlayer player = source as GamePlayer;
 
-            switch (text)
+            String lowerCase = text.ToLower();
+
+            if (lowerCase == LanguageMgr.GetTranslation(player.Client, "MaulerHibTrainer.WhisperReceiveCase.Text1"))
             {
-                case "join the Temple of the Iron Fist":
-                    // promote player to other class
-                    if (CanPromotePlayer(player))
-                    {
-                        // loose all spec lines
-                        player.RemoveAllSkills();
-                        player.RemoveAllStyles();
+                // promote player to other class
+                if (CanPromotePlayer(player))
+                {
+                    // loose all spec lines
+                    player.RemoveAllSkills();
+                    player.RemoveAllStyles();
 
-                        // Mauler_Hib = 62
-                        PromotePlayer(player, (int)eCharacterClass.Mauler_Hib , "Welcome young Mauler. May your time in Hibernia be rewarding.", null);
+                    // Mauler_Hib = 62
+                    PromotePlayer(player, (int)eCharacterClass.Mauler_Hib, LanguageMgr.GetTranslation(player.Client, "MaulerHibTrainer.WhisperReceive.Text1"), null);
 
-                        // drop any equiped-non usable item, in inventory or on the ground if full
-                        lock (player.Inventory)
-                        {
-                            foreach (InventoryItem item in player.Inventory.EquippedItems)
-                            {
-                                if (!player.HasAbilityToUseItem(item))
-                                    if (player.Inventory.IsSlotsFree(item.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == true)
-                                        player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack), item.Count);
-                                    else
-                                        player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, eInventorySlot.Ground, item.Count);
-                            }
-                        }
-                    }
-                    break;
+                    CheckAbilityToUseItem(player);
+                }
             }
+            else if ((player.Inventory.GetFirstItemByID(WEAPON_ID1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null) &&
+                (player.Inventory.GetFirstItemByID(WEAPON_ID2, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null))
+            {
+                if (lowerCase == LanguageMgr.GetTranslation(player.Client, "MaulerHibTrainer.WhisperReceiveCase.Text2"))
+                {
+                    player.ReceiveItem(this, WEAPON_ID1);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "MaulerHibTrainer.WhisperReceive.Text2"), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                }
+                else if (lowerCase == LanguageMgr.GetTranslation(player.Client, "MaulerHibTrainer.WhisperReceiveCase.Text3"))
+                {
+                    player.ReceiveItem(this, WEAPON_ID2);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "MaulerHibTrainer.WhisperReceive.Text2"), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                }
+            }
+
             return true;
         }
 
