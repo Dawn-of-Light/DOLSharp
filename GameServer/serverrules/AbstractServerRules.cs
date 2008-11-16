@@ -996,7 +996,10 @@ namespace DOL.GS.ServerRules
 		/// <param name="killer">killer</param>
 		public virtual void OnPlayerKilled(GamePlayer killedPlayer, GameObject killer)
 		{
-			killedPlayer.LastDeathRealmPoints = 0;
+            if (ServerProperties.Properties.ENABLE_WARMAPMGR && killer is GamePlayer && killer.CurrentRegion.ID == 163)
+                WarMapMgr.AddFight((byte)killer.CurrentZone.ID, killer.X, killer.Y, (byte)killer.Realm, (byte)killedPlayer.Realm);
+
+            killedPlayer.LastDeathRealmPoints = 0;
 			// "player has been killed recently"
 			long noExpSeconds = ServerProperties.Properties.RP_WORTH_SECONDS;
 			if (killedPlayer.PlayerCharacter.DeathTime + noExpSeconds > killedPlayer.PlayedTime)
