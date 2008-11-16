@@ -56,7 +56,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				case 1:
 				{
 					client.Out.SendWarmapUpdate(KeepMgr.getKeepsByRealmMap(client.Player.WarMapPage));
-//					WarMapMgr.SendFightInfo(client);
+					WarMapMgr.SendFightInfo(client);
 					break;
 				}
 				//teleport

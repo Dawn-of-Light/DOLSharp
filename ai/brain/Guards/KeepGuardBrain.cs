@@ -78,11 +78,16 @@ namespace DOL.AI.Brain
 				return;
 			if (Body.AttackState || Body.CurrentSpellHandler != null)
 				return;
-			foreach (GamePlayer player in Body.GetPlayersInRadius((ushort)AggroRange))
+			foreach (GamePlayer player in Body.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				if (GameServer.ServerRules.IsAllowedToAttack(Body, player, false)) // using group check, feat PvP rules
+                if (player == null) continue;
+                if (GameServer.ServerRules.IsAllowedToAttack(Body, player, false)) // using group check, feat PvP rules
 				{
-					if ((Body as GameKeepGuard).Component != null && !KeepMgr.IsEnemy(Body as GameKeepGuard, player, true))
+                    WarMapMgr.AddGroup((byte)player.CurrentZone.ID, player.X, player.Y, player.Name, (byte)player.Realm);
+
+                    if (WorldMgr.GetDistance(player, Body) > AggroRange)
+                        continue;
+                    if ((Body as GameKeepGuard).Component != null && !KeepMgr.IsEnemy(Body as GameKeepGuard, player, true))
 						continue;
 					if (Body is GuardStealther == false && player.IsStealthed)
 						continue;
