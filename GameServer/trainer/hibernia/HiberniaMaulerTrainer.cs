@@ -127,6 +127,7 @@ namespace DOL.GS.Trainer
                 else if (lowerCase == LanguageMgr.GetTranslation(player.Client, "MaulerHibTrainer.WhisperReceiveCase.Text3"))
                 {
                     player.ReceiveItem(this, WEAPON_ID2);
+                    player.ReceiveItem(this, WEAPON_ID2);
                     player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "MaulerHibTrainer.WhisperReceive.Text2"), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
                 }
             }
