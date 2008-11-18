@@ -371,7 +371,6 @@ namespace DOL.GS.Housing
 			Porch = add_porch;
 			this.SendUpdate();
 			this.SaveIntoDatabase();
-
 			return true;
 		}
 
@@ -699,6 +698,12 @@ namespace DOL.GS.Housing
 		/// <param name="player">the player who wants to get in</param>
 		public void Enter(GamePlayer player)
 		{
+            ArrayList list = this.GetAllPlayersInHouse();
+            if (list.Count == 0)
+            {
+                foreach (GamePlayer pl in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                    pl.Out.SendHouseLight(this, true);
+            }
 			GameClient client = player.Client;
 			client.Out.SendMessage(string.Format("Entering house {0}.", this.HouseNumber), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			client.Out.SendEnterHouse(this);
@@ -798,6 +803,12 @@ namespace DOL.GS.Housing
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "House.Exit.LeftHouse", HouseNumber), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			player.Out.SendHouseOccuped(this, false); // TODO send occuped flag depended on house occuping at moment
 			player.Out.SendExitHouse(this);
+            ArrayList list = this.GetAllPlayersInHouse();
+            if (list.Count == 0)
+            {
+                foreach (GamePlayer pl in player.GetPlayersInRadius(HouseMgr.HOUSE_DISTANCE))
+                    pl.Out.SendHouseLight(this, false);
+            }
 		}
 
 
@@ -844,12 +855,7 @@ namespace DOL.GS.Housing
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.MaxLockbox", Money.GetString(HouseMgr.GetRentByModel(Model) * 4)));
 			TimeSpan due = (LastPaid.AddDays(7).AddHours(1) - DateTime.Now);
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.RentDueIn", due.Days, due.Hours));
-			text.Add(" ");
-			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Owners"));
-			foreach (Character character in HouseMgr.GetOwners(this.m_databaseItem))
-			{
-				text.Add("-" + character.Name);
-			}
+			
 			player.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.HouseOwner", this.Name), text);
 
 		}
@@ -1159,32 +1165,52 @@ namespace DOL.GS.Housing
 			return sItem;
 		}
 
+        /// <summary>
+        /// Is the player allowed to remove items from hookpoints?
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        public bool CanEmptyHook(GamePlayer player)
+        {
+            if (IsOwner(player) || player.Client.Account.PrivLevel > 1)
+                return true;
+
+            return false;
+        }
+
 		public void EmptyHookpoint(GamePlayer player, GameObject obj)
 		{
-			//get the item template
-			ItemTemplate template = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "Name = '" + GameServer.Database.Escape(obj.Name) + "'");
-			if (template == null)
-				return;
+            if (!CanEmptyHook(player))
+            {
+                player.Out.SendMessage("Only the Owner of a House can remove or place Items on Hookpoints!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+            int posi = GetHookpointPosition(obj.X, obj.Y, obj.Z);
+            if (posi == 16) //the standard return value if none is found
+                return;
 
-			//get the housepoint item
-			String sqlWhere = String.Format("ItemTemplateID = '{0}'",
-				GameServer.Database.Escape(template.Id_nb));
-			DBHousepointItem item = (DBHousepointItem)GameServer.Database.SelectObject(typeof(DBHousepointItem), sqlWhere);
-			if (item == null)
-				return;
+            //get the housepoint item
+            String sqlWhere = String.Format("Position = '{0}' AND HouseID = '{1}'",
+                posi, obj.CurrentHouse.HouseNumber);
+            DBHousepointItem item = (DBHousepointItem)GameServer.Database.SelectObject(typeof(DBHousepointItem), sqlWhere);
+            if (item == null)
+                return;
 
 			obj.Delete();
 			GameServer.Database.DeleteObject(item);
 
 			// Need to clear the current house points so we can replace items
 			player.CurrentHouse.HousepointItems.Clear();
+            /* what is this used for? it causes errors and there is no reason for it
 			foreach (DBHousepointItem hpitem in GameServer.Database.SelectObjects(typeof(DBHousepointItem), "HouseID = '" + player.CurrentHouse.HouseNumber + "'"))
 			{
 				FillHookpoint(null, hpitem.Position, hpitem.ItemTemplateID);
 				this.HousepointItems[hpitem.Position] = hpitem;
-			}
-			player.CurrentHouse.SendUpdate();
+			} */
 
+			player.CurrentHouse.SendUpdate();
+            ItemTemplate template = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "Name = '" + GameServer.Database.Escape(obj.Name) + "'");
+			if (template != null)
 			player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, new InventoryItem(template));
 		}
 
@@ -1517,6 +1543,20 @@ namespace DOL.GS.Housing
 				return null;
 			}
 		}
+
+        public int GetHookpointPosition(int objX, int objY, int objZ)
+        {
+            int position = 16; //start with a position it can never be that can be checked for
+            for (int i = 0; i < 15; i++)
+            {
+                if (RELATIVE_HOOKPOINTS_COORDS[Model][i] != null)
+                {
+                    if (RELATIVE_HOOKPOINTS_COORDS[Model][i][0] + X == objX && RELATIVE_HOOKPOINTS_COORDS[Model][i][1] + Y == objY)
+                        position = i;
+                }
+            }
+            return position;
+        }
 
 		public ushort GetHookpointHeading(uint n)
 		{
