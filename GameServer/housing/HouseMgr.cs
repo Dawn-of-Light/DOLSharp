@@ -34,7 +34,7 @@ namespace DOL.GS.Housing
 		public static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		public const int MAXHOUSES = 2000;
-		public const int HOUSE_DISTANCE = 5120; //guessed, but i'm sure its > vis dist.
+        public const int HOUSE_DISTANCE = 10120; //guessed, but i'm sure its > vis dist.
 
 		private static Timer CheckRentTimer = null;
 		private static Hashtable m_houselists;
@@ -244,6 +244,16 @@ namespace DOL.GS.Housing
 //				player.Out.SendRemoveGarden(house);
 
 			}
+            if (house.DatabaseItem.GuildHouse)
+            {
+                Guild guild = GuildMgr.GetGuildByName(house.DatabaseItem.GuildName);
+                if (guild != null)
+                {
+                    guild.theGuildDB.HaveGuildHouse = false;
+                    guild.theGuildDB.GuildHouseNumber = 0;
+                    GameServer.Database.SaveObject(guild.theGuildDB);
+                }
+            }
 			foreach (GamePlayer player in house.GetAllPlayersInHouse())
 				player.LeaveHouse();
 
@@ -252,6 +262,8 @@ namespace DOL.GS.Housing
 			house.Name = ""; // not null !
 			house.Emblem = 0;
 			house.Model = 0;
+            house.Porch = false;
+            house.DatabaseItem.GuildName = null;
             house.DatabaseItem.CreationTime = DateTime.MinValue;
             house.DatabaseItem.LastPaid = DateTime.MinValue;
             house.DatabaseItem.GuildHouse = false;
@@ -267,6 +279,12 @@ namespace DOL.GS.Housing
 
             // Remove all outdoor items
             objs = GameServer.Database.SelectObjects(typeof(DBHouseOutdoorItem), "HouseNumber = " + house.HouseNumber);
+            if (objs.Length > 0)
+                foreach (DataObject item in objs)
+                    GameServer.Database.DeleteObject(item);
+            
+            // Remove all housepoint items
+            objs = GameServer.Database.SelectObjects(typeof(DBHousepointItem), "HouseID = " + house.HouseNumber);
             if (objs.Length > 0)
                 foreach (DataObject item in objs)
                     GameServer.Database.DeleteObject(item);
@@ -447,7 +465,7 @@ namespace DOL.GS.Housing
             Hashtable hash = (Hashtable)m_houselists[house.RegionID];
             if (hash == null)
                 return;
-
+            house.DatabaseItem.Name = owningGuild;
             house.DatabaseItem.GuildHouse = guildowns;
             house.DatabaseItem.GuildName = owningGuild;
         }
@@ -463,11 +481,7 @@ namespace DOL.GS.Housing
         {
             if (response != 0x01) return;
             House house = GetHouse((GetHouseNumberByPlayer(player)));
-            GamePlayer GuildLeader = player.Guild.GetGuildLeader(player);
-            house.DatabaseItem.Name = player.Guild.Name;
-            HouseMgr.DeleteOwner(house.DatabaseItem, player);
-            house.DatabaseItem.OwnerIDs = "";
-            HouseMgr.AddOwner(house.DatabaseItem, GuildLeader);
+            house.DatabaseItem.OwnerIDs = player.Guild.GuildID;
             player.Guild.SetGuildHouse(true);
             player.Guild.SetGuildHouseNumber(house.HouseNumber);
             player.Guild.SendMessageToGuildMembers(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Housing.GuildNowOwns", player.Guild.Name, player.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
@@ -478,22 +492,13 @@ namespace DOL.GS.Housing
             house.SendUpdate();
         }
 
-        public static ArrayList GetOwners(DBHouse house)
-		{
-			if (house == null) return null;
-			if (house.OwnerIDs == null || house.OwnerIDs == "") return null;
+        public static string GetOwner(DBHouse house)
+        {
+            if (house == null) return null;
+            if (house.OwnerIDs == null || house.OwnerIDs == "") return null;
 
-			ArrayList owners = new ArrayList();
-			string[] ids = house.OwnerIDs.Split(';');
-
-			foreach (string id in ids)
-			{
-				Character character = (Character)GameServer.Database.FindObjectByKey(typeof(Character), id);
-				if (character == null) continue;
-				owners.Add(character);
-			}
-			return owners;
-		}
+            return house.OwnerIDs;
+        }
 
 		public static long GetRentByModel(int Model)
 		{
