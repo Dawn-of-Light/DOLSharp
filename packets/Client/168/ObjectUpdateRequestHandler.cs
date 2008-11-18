@@ -62,6 +62,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 							{
 								client.Out.SendHouse(house);
 								client.Out.SendGarden(house);
+                                ArrayList list = house.GetAllPlayersInHouse();
+                                if (list.Count > 0)
+                                    client.Out.SendHouseLight(house, true);
 								client.Player.HousingUpdateArray[house.UniqueID] = true;
 							}
 						}

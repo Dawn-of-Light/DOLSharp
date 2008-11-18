@@ -441,14 +441,7 @@ namespace DOL.GS.Commands
                                 ch.GuildRank = 9;
                                 GameServer.Database.SaveObject(ch);
                             }
-                            House house = HouseMgr.GetHouse(client.Player.Guild.GetGuildHouseNumber());
-                            if (obj is GamePlayer)
-                                HouseMgr.DeleteOwner(house.DatabaseItem, obj as GamePlayer);
-                            else if (house.DatabaseItem.OwnerIDs.Contains(ch.ObjectId))
-                            {
-                                house.DatabaseItem.OwnerIDs = house.DatabaseItem.OwnerIDs.Replace(ch.ObjectId + ";", "");
-                                GameServer.Database.SaveObject(house.DatabaseItem);
-                            }
+                            
                             client.Player.Guild.UpdateGuildWindow();
                         }
                         break;
