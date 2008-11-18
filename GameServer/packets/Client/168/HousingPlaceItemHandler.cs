@@ -161,7 +161,8 @@ namespace DOL.GS.PacketHandler.Client.v168
                     client.Player.Out.SendMessage("You may not remove Houses that you don't own", eChatType.CT_System, eChatLoc.CL_SystemWindow);                   
                     return 1;
                 }
-                client.Player.TempProperties.setProperty(DEED_WEAK, new WeakRef(orgitem));                
+                client.Player.TempProperties.setProperty(DEED_WEAK, new WeakRef(orgitem));
+                client.Player.TempProperties.setProperty(TARGET_HOUSE, house);
                 client.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HouseRemoveOffer"), new CustomDialogResponse(HouseRemovalDialogue));
                 return 0;
             }
@@ -565,7 +566,13 @@ namespace DOL.GS.PacketHandler.Client.v168
             WeakReference itemWeak = (WeakReference)player.TempProperties.getObjectProperty(DEED_WEAK, new WeakRef(null));
             player.TempProperties.removeProperty(DEED_WEAK);
             InventoryItem item = (InventoryItem)itemWeak.Target;
-
+            House house = (House)player.TempProperties.getObjectProperty(TARGET_HOUSE, null);
+            player.TempProperties.removeProperty(TARGET_HOUSE);
+            if (house == null)
+            {
+                player.Out.SendMessage("No House selected!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
             if (item == null || item.SlotPosition == (int)eInventorySlot.Ground
                 || item.OwnerID == null || item.OwnerID != player.InternalID)
             {
@@ -574,7 +581,6 @@ namespace DOL.GS.PacketHandler.Client.v168
             }
 
             player.Inventory.RemoveItem(item);
-            House house = HouseMgr.GetHouse((HouseMgr.GetHouseNumberByPlayer(player)));            
             HouseMgr.RemoveHouse(house);
             player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Housing.HouseRemoved"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
         }

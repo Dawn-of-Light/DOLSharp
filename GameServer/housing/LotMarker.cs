@@ -56,7 +56,7 @@ namespace DOL.GS.Housing
 			{
 				return false;
 			}
-			if (HouseMgr.GetHouseNumberByPlayer(player) != 0)
+            if (HouseMgr.GetRealHouseByPlayer(player) != null)
 			{
 				player.Out.SendMessage("You already own a house!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;

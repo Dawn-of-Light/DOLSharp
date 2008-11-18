@@ -150,7 +150,7 @@ namespace DOL.GS
 			get
 			{
 				String sqlWhere = String.Format("OwnerID = '{0}' and SlotPosition >= {1} and SlotPosition <= {2}",
-					GameServer.Database.Escape((HouseMgr.GetOwners(CurrentHouse.DatabaseItem)[0] as Character).ObjectId),
+                    HouseMgr.GetOwner(CurrentHouse.DatabaseItem),
 					FirstSlot, LastSlot);
 				return (InventoryItem[])(GameServer.Database.SelectObjects(typeof(InventoryItem), sqlWhere));
 			}
@@ -260,7 +260,7 @@ namespace DOL.GS
 				playerInventory.AddItem(fromSlot, toItem);
 			}
 
-			fromItem.OwnerID = (HouseMgr.GetOwners(CurrentHouse.DatabaseItem)[0] as Character).ObjectId;
+            fromItem.OwnerID = HouseMgr.GetOwner(CurrentHouse.DatabaseItem);
 			fromItem.SlotPosition = (int)(toSlot) -
 				(int)(eInventorySlot.HousingInventory_First) +
 				FirstSlot;
