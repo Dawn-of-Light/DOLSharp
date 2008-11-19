@@ -49,7 +49,7 @@ namespace DOL.GS
         {
             LootList lootList = new LootList();
             
-            if (mob.CurrentRegion.Description == "Atlantis" && mob.Level >= 45 && Util.Chance(40))
+            if (mob.CurrentRegion.Description == "Atlantis" && mob.Level >= 45 && Util.Chance(30))
             {
                 List<Artifact> artifacts = new List<Artifact>();
                 switch (mob.CurrentZone.Description)
