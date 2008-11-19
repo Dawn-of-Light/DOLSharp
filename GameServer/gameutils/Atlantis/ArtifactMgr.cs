@@ -342,7 +342,7 @@ namespace DOL.GS
 				xpRate = artifact.XPRate;
 			}
 
-			long artifactXPNew = (long)(artifactXPOld + (xpAmount * xpRate)/100);
+			long artifactXPNew = (long)(artifactXPOld + (xpAmount * xpRate)/300);
 			item.Experience = artifactXPNew;
 
 			player.Out.SendMessage(String.Format("Your {0} has gained experience.", item.Name),
