@@ -601,7 +601,7 @@
 	</Region136>
 	<Region137>
 		<description>Temple of Twilight</description>
-		<isDivingEnabled>False</isDivingEnabled>
+		<isDivingEnabled>True</isDivingEnabled>
 		<waterLevel>0</waterLevel>
 		<id>137</id>
 		<port>10400</port>
