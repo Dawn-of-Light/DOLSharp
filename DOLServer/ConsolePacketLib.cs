@@ -203,7 +203,6 @@ namespace DOLGameServerConsole
 		public void SendGarden(House house) { }
 		public void SendEnterHouse(House house) { }
 		public void SendExitHouse(House house) { }
-        public void SendHouseLight(House house, bool onoff) { }
 		public void SendFurniture(House house) { }
 		public void SendFurniture(House house, int i) { }
 		public void SendToggleHousePoints(House house) { }
