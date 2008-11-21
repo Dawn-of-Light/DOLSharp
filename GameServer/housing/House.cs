@@ -702,13 +702,12 @@ namespace DOL.GS.Housing
             if (list.Count == 0)
             {
                 foreach (GamePlayer pl in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-                    pl.Out.SendHouseLight(this, true);
+                    pl.Out.SendHouseOccuped(this, true);
             }
 			GameClient client = player.Client;
 			client.Out.SendMessage(string.Format("Entering house {0}.", this.HouseNumber), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			client.Out.SendEnterHouse(this);
 			client.Out.SendFurniture(this);
-			client.Out.SendHouseOccuped(this, true);
 			client.Player.InHouse = true;
 			client.Player.CurrentHouse = this;
 
@@ -801,13 +800,12 @@ namespace DOL.GS.Housing
 			player.MoveTo(RegionID, x, y, Z, heading);
 			if (!silent)
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "House.Exit.LeftHouse", HouseNumber), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			player.Out.SendHouseOccuped(this, false); // TODO send occuped flag depended on house occuping at moment
 			player.Out.SendExitHouse(this);
             ArrayList list = this.GetAllPlayersInHouse();
             if (list.Count == 0)
             {
                 foreach (GamePlayer pl in player.GetPlayersInRadius(HouseMgr.HOUSE_DISTANCE))
-                    pl.Out.SendHouseLight(this, false);
+                    pl.Out.SendHouseOccuped(this, false);
             }
 		}
 
