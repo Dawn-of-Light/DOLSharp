@@ -534,7 +534,6 @@ namespace DOL.GS.PacketHandler
 		void SendWarmapBonuses();
 		//housing
 		void SendHouse(House house);
-        void SendHouseLight(House house, bool onoff);
 		void SendHouseOccuped(House house, bool flagHouseOccuped);
 		void SendRemoveHouse(House house);
 		void SendGarden(House house);
