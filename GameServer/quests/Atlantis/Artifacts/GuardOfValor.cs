@@ -75,7 +75,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 				return false;
 
 			// TODO: Check if this is the correct level for the quest.
-			return (player.Level >= 40);
+			return (player.Level >= 45);
 		}
 
 		/// <summary>
