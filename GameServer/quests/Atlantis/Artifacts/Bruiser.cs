@@ -64,6 +64,20 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 			ArtifactQuest.Init(m_artifactID, typeof(Bruiser));
 		}
 
+        /// <summary>
+        /// Check if player is eligible for this quest.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        public override bool CheckQuestQualification(GamePlayer player)
+        {
+            if (!base.CheckQuestQualification(player))
+                return false;
+
+            // TODO: Check if this is the correct level for the quest.
+            return (player.Level >= 45);
+        }
+
 		/// <summary>
 		/// Handle an item given to the scholar.
 		/// </summary>
