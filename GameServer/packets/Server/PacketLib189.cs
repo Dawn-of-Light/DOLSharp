@@ -419,19 +419,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((byte)item.Rotation);
 			SendTCP(pak);
 		}
-
-        public override void SendHouseLight(House house, bool onoff)
-        {
-            GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseChangeGarden));
-            pak.WriteShort((ushort)house.HouseNumber);
-            pak.WriteShort(0);
-            pak.WriteByte(0);
-            if (onoff)
-                pak.WriteByte(0x01);
-            else
-                pak.WriteByte(0x00);
-            SendTCP(pak);
-        }
+              
 
 		public override void SendHouseOccuped(House house, bool flagHouseOccuped)
 		{
