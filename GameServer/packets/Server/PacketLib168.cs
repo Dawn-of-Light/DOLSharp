@@ -3073,8 +3073,6 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-        public virtual void SendHouseLight(House house, bool onoff)
-        { }
 
 		public virtual void SendToggleHousePoints(House house)
 		{
