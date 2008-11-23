@@ -816,6 +816,35 @@ namespace DOL.GS
 					}
 				}
 			}
+            //if we are not bound yet lets check if we are in a house where we can bind
+            if (!bound && InHouse && CurrentHouse != null) // lets do a double check, more safe
+            {
+                House house = CurrentHouse;
+                DataObject[] obj = GameServer.Database.SelectObjects(typeof(DBHousepointItem), "HouseID = '" + house.HouseNumber.ToString() + "'");
+                bool canbindhere = false;
+                foreach (DBHousepointItem hpi in obj)
+                {
+                    if (hpi.ItemTemplateID.Contains("_bindstone"))
+                    {
+                        canbindhere = true;
+                        break;
+                    }
+                }
+                if (canbindhere)
+                {
+                    bound = true;
+                    double angle = house.Heading * ((Math.PI * 2) / 360); // angle*2pi/360;
+                    int outsideX = (int)(house.X + (0 * Math.Cos(angle) + 500 * Math.Sin(angle)));
+                    int outsideY = (int)(house.Y - (500 * Math.Cos(angle) - 0 * Math.Sin(angle)));
+                    ushort outsideHeading = (ushort)((house.Heading < 180 ? house.Heading + 180 : house.Heading - 180) / 0.08789);
+                    character.BindRegion = CurrentRegionID;
+                    character.BindHeading = outsideHeading;
+                    character.BindXpos = outsideX;
+                    character.BindYpos = outsideY;
+                    character.BindZpos = house.Z;
+                    GameServer.Database.SaveObject(character);
+                }
+            }
 			if (bound)
 			{
 				if (!IsMoving)
