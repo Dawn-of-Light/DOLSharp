@@ -215,6 +215,7 @@ GamePlayer.Release.NoLongerReleaseAuto:			Ihr werdet nicht länger automatisch wi
 GamePlayer.Release.NotDead:				Ihr seid nicht tot!	
 GamePlayer.Release.NoValidBindpoint:			Es gibt keinen Ort, an dem Ihr Euch gebunden habt und seit stattdessen hier wiederauferstanden!		
 GamePlayer.Release.ReleaseToPortalKeep:			You will now release to the nearest border or portal keep in {0} more seconds!
+GamePlayer.Release.ReleaseToHouse:				You will now release to your house in {0} more seconds!
 GamePlayer.Release.ReturnToPray:			Betet an Eurem Grabstein, um einen Teil Eurer verlorenen Erfahrungspunkte zurück zu erhalten.		
 GamePlayer.Release.SurroundingChange:			Auf einen Schlag verändert sich Eure Umgebung!		
 GamePlayer.Release.WillReleaseAuto:			Ihr werdet automatisch in {0} Sekunden wiederauferstehen!		
