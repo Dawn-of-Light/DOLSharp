@@ -52,6 +52,14 @@ namespace DOL.GS.Commands
 				return;
 			}
 
+            // prevent to send an anon GM a message to find him - but send the message to the GM - thx to Sumy
+            if (targetClient.Player != null && targetClient.Player.IsAnonymous && targetClient.Account.PrivLevel > (uint)ePrivLevel.Player)
+            {
+                client.Out.SendMessage(targetName + " is not in the game, or in another realm.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                targetClient.Player.Out.SendMessage(string.Format("You're anon but {0} tried to send: {1}", client.Player.Name, message), eChatType.CT_Send, eChatLoc.CL_ChatWindow);
+                return;
+            }
+
 			switch (result)
 			{
 				case 2: // name not unique

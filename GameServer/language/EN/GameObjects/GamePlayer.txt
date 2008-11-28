@@ -223,6 +223,7 @@ GamePlayer.Release.WillReleaseAutoCity:			You will now release automatically to 
 GamePlayer.Release.WillReleaseIn:				You will autorelease in {0} seconds.		
 GamePlayer.Release.YouRelease:					You release your corpse unto death.	
 GamePlayer.Release.ReleaseToPortalKeep: 		You will now release to the nearest border or portal keep in {0} more seconds!
+GamePlayer.Release.ReleaseToHouse:				You will now release to your house in {0} more seconds!
 GamePlayer.RemoveAbility.YouLose:				You lose the {0} ability!		
 GamePlayer.RemoveSpecialization.YouLose:		You lose the {0} skill!			
 GamePlayer.RemoveSpellLine.YouLose:				You lose the {0} spell line!		
