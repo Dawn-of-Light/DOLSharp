@@ -837,11 +837,11 @@ namespace DOL.GS
                     int outsideX = (int)(house.X + (0 * Math.Cos(angle) + 500 * Math.Sin(angle)));
                     int outsideY = (int)(house.Y - (500 * Math.Cos(angle) - 0 * Math.Sin(angle)));
                     ushort outsideHeading = (ushort)((house.Heading < 180 ? house.Heading + 180 : house.Heading - 180) / 0.08789);
-                    character.BindRegion = CurrentRegionID;
-                    character.BindHeading = outsideHeading;
-                    character.BindXpos = outsideX;
-                    character.BindYpos = outsideY;
-                    character.BindZpos = house.Z;
+                    character.BindHouseRegion = CurrentRegionID;
+                    character.BindHouseHeading = outsideHeading;
+                    character.BindHouseXpos = outsideX;
+                    character.BindHouseYpos = outsideY;
+                    character.BindHouseZpos = house.Z;
                     GameServer.Database.SaveObject(character);
                 }
             }
@@ -938,6 +938,10 @@ namespace DOL.GS
 			/// Release in a battleground or the frontiers
 			/// </summary>
 			RvR,
+            /// <summary>
+            /// Release to players house
+            /// </summary>
+            House,
 		}
 
 		/// <summary>
@@ -1015,6 +1019,11 @@ namespace DOL.GS
 								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.ReleaseToPortalKeep", diff / 1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
+                        case eReleaseType.House:
+                            {
+                                Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.ReleaseToHouse", diff / 1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                return;
+                            }
 					}
 				}
 			}
@@ -1036,6 +1045,16 @@ namespace DOL.GS
 						relHeading = 2048;
 						break;
 					}
+                case eReleaseType.House:
+                    {
+                        relRegion = (ushort)character.BindHouseRegion;
+                        relX = character.BindHouseXpos;
+                        relY = character.BindHouseYpos;
+                        relZ = character.BindHouseZpos;
+                        relHeading = (ushort)character.BindHouseHeading;
+                        break;
+                    }
+                    
 				case eReleaseType.City:
 					{
 						if (Realm == eRealm.Hibernia)
@@ -1198,7 +1217,7 @@ namespace DOL.GS
 								{
 									break;
 								}*/
-							default:
+                            default:
 								{
 									relRegion = (ushort)character.BindRegion;
 									relX = character.BindXpos;
