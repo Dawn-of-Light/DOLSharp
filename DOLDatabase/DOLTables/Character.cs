@@ -107,6 +107,13 @@ namespace DOL
 			private int m_bindzpos;
 			private int m_bindregion;
 			private int m_bindheading;
+            //bind house
+            private int m_bindhousexpos;
+            private int m_bindhouseypos;
+            private int m_bindhousezpos;
+            private int m_bindhouseregion;
+            private int m_bindhouseheading;
+
 			private byte m_deathCount;
 			private int m_conLostAtDeath;
 
@@ -1006,6 +1013,91 @@ namespace DOL
 					m_bindheading = value;
 				}
 			}
+
+            /// <summary>
+            /// The house bind X position of character
+            /// </summary>
+            [DataElement(AllowDbNull = true)]
+            public int BindHouseXpos
+            {
+                get
+                {
+                    return m_bindhousexpos;
+                }
+                set
+                {
+                    Dirty = true;
+                    m_bindhousexpos = value;
+                }
+            }
+
+            /// <summary>
+            /// The bind house Y position of character
+            /// </summary>
+            [DataElement(AllowDbNull = true)]
+            public int BindHouseYpos
+            {
+                get
+                {
+                    return m_bindhouseypos;
+                }
+                set
+                {
+                    Dirty = true;
+                    m_bindhouseypos = value;
+                }
+            }
+
+            /// <summary>
+            /// The bind house Z position of character
+            /// </summary>
+            [DataElement(AllowDbNull = true)]
+            public int BindHouseZpos
+            {
+                get
+                {
+                    return m_bindhousezpos;
+                }
+                set
+                {
+                    Dirty = true;
+                    m_bindhousezpos = value;
+                }
+            }
+
+            /// <summary>
+            /// The bind house region position of character
+            /// </summary>
+            [DataElement(AllowDbNull = true)]
+            public int BindHouseRegion
+            {
+                get
+                {
+                    return m_bindhouseregion;
+                }
+                set
+                {
+                    Dirty = true;
+                    m_bindhouseregion = value;
+                }
+            }
+
+            /// <summary>
+            /// The bind house heading position of character
+            /// </summary>
+            [DataElement(AllowDbNull = true)]
+            public int BindHouseHeading
+            {
+                get
+                {
+                    return m_bindhouseheading;
+                }
+                set
+                {
+                    Dirty = true;
+                    m_bindhouseheading = value;
+                }
+            }
 
 			/// <summary>
 			/// The number of chacter is dead at this level

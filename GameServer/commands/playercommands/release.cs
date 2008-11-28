@@ -34,16 +34,17 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-			if (args.Length > 1)
+            if (args.Length > 1 && args[1].ToLower() == "city")
 			{
-				if ((GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP
-					|| GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE)
-					&& args[1].ToLower() == "city")
-				{
 					client.Player.Release(GamePlayer.eReleaseType.City, false);
 					return;
-				}
 			}
+
+            if (args.Length > 1 && args[1].ToLower() == "house")
+            {
+                client.Player.Release(GamePlayer.eReleaseType.House, false);
+                return;
+            }
 			client.Player.Release(GamePlayer.eReleaseType.Normal, false);
 		}
 	}
