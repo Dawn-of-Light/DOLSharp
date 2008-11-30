@@ -80,6 +80,6 @@ ValkyrieTrainer.Interact.Text4:
 ValkyrieTrainer.ReceiveItem.Text1:			
 ValkyrieTrainer.WhisperReceive.Text1:			Welcome young Valkyrie! May your time in Midgard army be rewarding! Would you prefer to fight with a [sword] or with a [spear]?
 ValkyrieTrainer.WhisperReceive.Text2:			You get a gift by Odin.
-ValkyrieTrainer.WhisperReceiveCase.Text1:		join the House of Odin
+ValkyrieTrainer.WhisperReceiveCase.Text1:		join the house of odin
 ValkyrieTrainer.WhisperReceiveCase.Text2:		sword
 ValkyrieTrainer.WhisperReceiveCase.Text3:		spear
