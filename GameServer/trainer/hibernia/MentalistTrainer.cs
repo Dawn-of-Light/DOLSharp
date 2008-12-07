@@ -53,14 +53,14 @@ namespace DOL.GS.Trainer
 			{
 				// popup the training window
 				player.Out.SendTrainerWindow();
-				player.Out.SendMessage(this.Name + " says, \"Our way is a hard one, " + player.Name + ". I can only train you in skills. You must gain knowledge and wisdom on your own.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "MentalistTrainer.Interact.Text2", this.Name, player.GetName(0, false)), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			} 
 			else 
 			{
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player)) 
 				{
-					player.Out.SendMessage(this.Name + " says, \"Do you wish to train as a [Mentalist] and walk the Path of Harmony?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "MentalistTrainer.Interact.Text1", this.Name, player.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					if (!player.IsLevelRespecUsed)
 					{
 						OfferRespecialize(player);
@@ -94,17 +94,18 @@ namespace DOL.GS.Trainer
 		public override bool WhisperReceive(GameLiving source, string text)
 		{				
 			if (!base.WhisperReceive(source, text)) return false;			
-			GamePlayer player = source as GamePlayer;			
-	
-			switch (text) {
-			case "Mentalist":
-				// promote player to other class
-				if (CanPromotePlayer(player)) {
-					PromotePlayer(player, (int)eCharacterClass.Mentalist, "Well met then, " + source.GetName(0, false) + ". It is a hard road, but I see hardness is no stranger to you. Welcome, Mentalist, welcome. Here, take this. It will aid you in your first encounters as a Mentalist.", null);
-					player.ReceiveItem(this,WEAPON_ID1);
-				}
-				break;
-			}
+			GamePlayer player = source as GamePlayer;
+            String lowerCase = text.ToLower();
+
+            if (lowerCase == LanguageMgr.GetTranslation(player.Client, "MentalistTrainer.WhisperReceiveCase.Text1"))
+            {
+                // promote player to other class
+                if (CanPromotePlayer(player))
+                {
+                    PromotePlayer(player, (int)eCharacterClass.Mentalist, LanguageMgr.GetTranslation(player.Client, "MentalistTrainer.WhisperReceive.Text1", player.GetName(0, false)), null);
+                    player.ReceiveItem(this, WEAPON_ID1);
+                }
+            }
 			return true;		
 		}
 	}
