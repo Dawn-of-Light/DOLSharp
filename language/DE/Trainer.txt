@@ -38,7 +38,7 @@ HeroTrainer.Interact.Text1:				{0} sagt: "Fianna sind die grundlegende Kämpferkl
 HeroTrainer.Interact.Text2:				{0} sagt: "{1}, Ihr seid zäher geworden, aber für meinen Geschmack seid Ihr noch immer zu verweichlicht."
 HeroTrainer.Interact.Text3:
 HeroTrainer.Interact.Text4:
-HeroTrainer.WhisperReceive.Text1:			Dann seid uns willkommen, {0}. Geht hinaus und ehrt uns durch Eure Taten. Hier ist ein Geschenkt für Euch. Versucht, es nicht fallen zu lassen, {1}.
+HeroTrainer.WhisperReceive.Text1:			Dann seid uns willkommen, {0}. Geht hinaus und ehrt uns durch Eure Taten. Hier ist ein Geschenkt für Euch. Versucht, es nicht fallen zu lassen, Fian.
 HeroTrainer.WhisperReceiveCase.Text1:			fian
 
 # /MaulerHibTrainer
@@ -52,6 +52,14 @@ MaulerHibTrainer.WhisperReceive.Text2:			Ihr bekommt ein Geschenk von Laresh.
 MaulerHibTrainer.WhisperReceiveCase.Text1:		tempel der eisenfaust beitreten
 MaulerHibTrainer.WhisperReceiveCase.Text2:		stab
 MaulerHibTrainer.WhisperReceiveCase.Text3:		faustbandage
+
+# /MentalistTrainer
+MentalistTrainer.Interact.Text1:			{0} sagt: "Hallo {1}. Wollt Ihr vom Pfad der Harmonie und von der großen Macht der Mentalisten lernen? Sie sind reine Zauberer mit der Fähigkeit, Ihre Reichskameraden zu heilen und die Gedanken Ihrer Feinde zu kontrollieren. Wie andere Zauberer in Hibernia, erforschen und studieren die Mentalisten die Magie der Natur durch die Sonne, den Mond und den Mentalismus. Ihr Mentalismus verschafft Ihnen eine Menge kontrollierender Elementarzauber, die sich in brenzligen Situationen im Grenzgebiet als nützlich erwiesen haben. Ihre geringen Heilfähigkeiten machen sie zu geeigneten Hintergrundheilern, vor allem in brenzligen Situationen. Zu den Kampffähigkeiten der Mentalisten, die sie durch ihre beschworenen Kreaturen erhalten, beherrschen sie auch die Schadens-Zauber. Wollt Ihr als [Mentalist] trainieren und den Pfad der Harmonie gehen?"
+MentalistTrainer.Interact.Text2:			{0} sagt: "Unser Weg ist hart und unnachgiebig, {1}. Ich kann nur Eure Fertigkeiten schulen. Wissen und Weisheit müsst Ihr selbst erringen."
+MentalistTrainer.Interact.Text3:
+MentalistTrainer.Interact.Text4:
+MentalistTrainer.WhisperReceive.Text1:			Dann freut es mich, Euch bei uns willkommen zu heißen, {0}. Ihr habt einen harten Weg gewählt, doch wie ich erkenne, ist die Härte Euch nicht fremd. Willkommen in unseren Reihen, willkommen! Nehmt das. Es soll Euch auf dem Lebensweg als Mentalist dienlich sein.
+MentalistTrainer.WhisperReceiveCase.Text1:		mentalist
 
 ## Midgard
 # /BonedancerTrainer

@@ -38,7 +38,7 @@ HeroTrainer.Interact.Text1:				{0} says, "You wish for the life of a [hero]? You
 HeroTrainer.Interact.Text2:				{0} says, "Training makes for a strong, healthy Hero! Keep up the good work, {1}!"
 HeroTrainer.Interact.Text3:
 HeroTrainer.Interact.Text4:
-HeroTrainer.WhisperReceive.Text1:			Let me welcome you then, {0}. Go, honor us with your deeds. Here is a gift for you. Try not to drop it, eh {1}.
+HeroTrainer.WhisperReceive.Text1:			Let me welcome you then, {0}. Go, honor us with your deeds. Here is a gift for you. Try not to drop it, eh Hero.
 HeroTrainer.WhisperReceiveCase.Text1:			hero
 
 # /MaulerHibTrainer
@@ -52,6 +52,14 @@ MaulerHibTrainer.WhisperReceive.Text2:			You get a gift by Laresh.
 MaulerHibTrainer.WhisperReceiveCase.Text1:		join the temple of the iron fist
 MaulerHibTrainer.WhisperReceiveCase.Text2:		staff
 MaulerHibTrainer.WhisperReceiveCase.Text3:		fist
+
+# /MentalistTrainer
+MentalistTrainer.Interact.Text1:			{0} says, "Do you wish to train as a [Mentalist] and walk the Path of Harmony?"
+MentalistTrainer.Interact.Text2:			{0} says, "Our way is a hard one, {1}. I can only train you in skills. You must gain knowledge and wisdom on your own."
+MentalistTrainer.Interact.Text3:
+MentalistTrainer.Interact.Text4:
+MentalistTrainer.WhisperReceive.Text1:			Well met then, {0}. It is a hard road, but I see hardness is no stranger to you. Welcome, Mentalist, welcome. Here, take this. It will aid you in your first encounters as a Mentalist.
+MentalistTrainer.WhisperReceiveCase.Text1:		mentalist
 
 ## Midgard
 # /BonedancerTrainer
