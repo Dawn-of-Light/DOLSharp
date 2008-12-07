@@ -102,7 +102,7 @@ namespace DOL.GS.Trainer
 				// promote player to other class
 					if (CanPromotePlayer(player))
 					{
-                        PromotePlayer(player, (int)eCharacterClass.Hero, LanguageMgr.GetTranslation(player.Client, "HeroTrainer.WhisperReceive.Text1", player.GetName(0, false), player.CharacterClass.Name), null);
+                        PromotePlayer(player, (int)eCharacterClass.Hero, LanguageMgr.GetTranslation(player.Client, "HeroTrainer.WhisperReceive.Text1", player.GetName(0, false)), null);
 						player.ReceiveItem(this, ARMOR_ID1);
 					}
 				}
