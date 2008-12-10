@@ -40,6 +40,7 @@ namespace DOL.AI.Brain
 		private GameLiving m_owner;
 		private GameLiving m_target;
 		private bool m_melee = false;
+        private bool m_active = true;
 		private Spell spelllos;
 
 		public TheurgistPetBrain(GameLiving owner)
@@ -47,8 +48,9 @@ namespace DOL.AI.Brain
 			if (owner != null)
 			{
 				m_owner = owner;
-				if (owner.TargetObject as GameLiving != null)
-					m_target = m_owner.TargetObject as GameLiving;
+                //m_target = (GameLiving)Body.TempProperties.getObjectProperty("target", null);
+				/*if (owner.TargetObject as GameLiving != null)
+					m_target = m_owner.TargetObject as GameLiving;*/
 			}
 			AggroLevel = 100;
 			IsMainPet = false;
@@ -62,19 +64,23 @@ namespace DOL.AI.Brain
 
 		public override void Notify(DOLEvent e, object sender, EventArgs args)
 		{
-			if (!IsActive) return;
-			if (sender == Body && e == GameLivingEvent.AttackedByEnemy)
+            //log.Error("notify ! " + (e!=null?e.ToString():"") + "\n\n" + (args != null?args.ToString():""));
+            if (!IsActive || m_melee || !m_active) return;
+
+			//if (e == GameLivingEvent.AttackedByEnemy || e == GameLivingEvent.)
+            if(args as AttackFinishedEventArgs != null)
 			{
-				m_melee = true;
+                m_melee = true;
+                //log.Error("melee=true");
 				GameLiving target = m_target; //CalculateNextAttackTarget();
 				if (target != null) Body.StartAttack(target);
 				return;
 			}
-			if (e == GameNPCEvent.CastFailed)
+            if (e == GameLivingEvent.CastFailed)
 			{
-				switch ((args as CastFailedEventArgs).Reason)
+				//switch ((args as CastFailedEventArgs).Reason)
 				{
-					case CastFailedEventArgs.Reasons.TargetTooFarAway:
+					//case CastFailedEventArgs.Reasons.TargetTooFarAway:
 						GameLiving target = m_target; //CalculateNextAttackTarget();
 						if (target != null) Body.StartAttack(target);
 						return;
@@ -84,14 +90,22 @@ namespace DOL.AI.Brain
 
 		protected override void AttackMostWanted()
 		{
-			if (!IsActive || m_target == null) return;
+			if (!IsActive/* || m_target == null*/ || !m_active) return;
+            if (m_target == null) m_target = (GameLiving)Body.TempProperties.getObjectProperty("target", null);
+            if (m_target == null) return;
 			GameLiving target = m_target;
-			if (target != null && target.IsAlive)
-			{
-				if (!CheckSpells(eCheckSpellType.Offensive))
-					Body.StartAttack(target);
-			}
-			else m_target = null;
+            if (target != null && target.IsAlive)
+            {
+                if (!CheckSpells(eCheckSpellType.Offensive))
+                    Body.StartAttack(target);
+            }
+            else
+            {
+                m_target = null;
+                m_active = false;
+                Body.StopMoving();
+                Body.MaxSpeedBase = 0;
+            }
 		}
 		
 		public override bool CheckSpells(eCheckSpellType type)

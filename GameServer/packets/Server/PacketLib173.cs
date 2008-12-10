@@ -50,29 +50,13 @@ namespace DOL.GS.PacketHandler
 		{
 		}
 
-		public override void SendHexEffect(GamePlayer player, byte effect1, byte effect2, byte effect3, byte effect4, byte effect5)
-		{
-			if (player == null)
-				return;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
-			pak.WriteShort((ushort)player.ObjectID);
-			pak.WriteByte(0x3); // show Hex
-			pak.WriteByte(effect1);
-			pak.WriteByte(effect2);
-			pak.WriteByte(effect3);
-			pak.WriteByte(effect4);
-			pak.WriteByte(effect5);
-
-			SendTCP(pak);
-		}
 
 		public override void SendWarlockChamberEffect(GamePlayer player)
 		{
-			byte effect1 = 0;
-			byte effect2 = 0;
-			byte effect3 = 0;
-			byte effect4 = 0;
-			byte effect5 = 0;
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
+
+			pak.WriteShort((ushort)player.ObjectID);
+			pak.WriteByte((byte)3);
 
 			SortedList sortList = new SortedList();
 			sortList.Add(1, null);
@@ -98,43 +82,49 @@ namespace DOL.GS.PacketHandler
 				{
 					if (effect == null)
 					{
-						effect1 = 0;
+						pak.WriteByte((byte)0);
 					}
 					else
 					{
 						ChamberSpellHandler chamber = (ChamberSpellHandler)effect.SpellHandler;
 						if (chamber.PrimarySpell != null && chamber.SecondarySpell == null)
 						{
-							effect1 = 3;
+							pak.WriteByte((byte)3);
 						}
 						else if (chamber.PrimarySpell != null && chamber.SecondarySpell != null)
 						{
-							if (chamber.SecondarySpell.SpellType == "Lifedrain")
-								effect1 = 0x11;
-							else if (chamber.SecondarySpell.SpellType.IndexOf("SpeedDecrease") != -1)
-								effect1 = 0x33;
-							else if (chamber.SecondarySpell.SpellType == "PowerRegenBuff")
-								effect1 = 0x77;
-							else if (chamber.SecondarySpell.SpellType == "DirectDamage")
-								effect1 = 0x66;
-							else if (chamber.SecondarySpell.SpellType == "SpreadHeal")
-								effect1 = 0x55;
+							if (chamber.SecondarySpell.SpellType == "WarlockLifedrain")
+								pak.WriteByte(0x11);
+							else if (chamber.SecondarySpell.SpellType.IndexOf("WarlockRoot") != -1)
+								pak.WriteByte(0x33);
+							else if (chamber.SecondarySpell.SpellType == "WarlockPowerRegenBuff")
+								pak.WriteByte(0x77);
+							else if (chamber.SecondarySpell.SpellType == "WarlockDirectDamage")
+								pak.WriteByte(0x66);
+							else if (chamber.SecondarySpell.SpellType == "WarlockSpreadHeal")
+								pak.WriteByte(0x55);
 							else if (chamber.SecondarySpell.SpellType == "Nearsight")
-								effect1 = 0x44;
-							else if (chamber.SecondarySpell.SpellType == "DamageOverTime")
-								effect1 = 0x22;
+								pak.WriteByte(0x44);
+							else if (chamber.SecondarySpell.SpellType == "WarlockDamageOverTime")
+								pak.WriteByte(0x22);
 						}
 					}
 				}
 			}
+			//pak.WriteByte(0x11); 
+			//pak.WriteByte(0x22); 
+			//pak.WriteByte(0x33); 
+			//pak.WriteByte(0x44); 
+			//pak.WriteByte(0x55); 
+			pak.WriteInt(0);
 
 			foreach (GamePlayer plr in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				if (plr != null && player != plr)
-					plr.Out.SendHexEffect(player, effect1, effect2, effect3, effect4, effect5);
+				if (player != plr)
+					plr.Client.PacketProcessor.SendTCP(pak);
 			}
 
-			SendHexEffect(player, effect1, effect2, effect3, effect4, effect5);
+			SendTCP(pak);
 		}
 
 		public override void SendUpdateIcons(IList changedEffects, ref int lastUpdateEffectsCount)
@@ -501,6 +491,22 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort(0);//unk
 			pak.WriteByte(0x52);//model
 			pak.WriteByte(0);//unk
+
+			SendTCP(pak);
+		}
+
+		public override void SendHexEffect(GamePlayer player, byte effect1, byte effect2, byte effect3, byte effect4, byte effect5)
+		{
+			if (player == null)
+				return;
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
+			pak.WriteShort((ushort)player.ObjectID);
+			pak.WriteByte(0x3); // show Hex
+			pak.WriteByte(effect1);
+			pak.WriteByte(effect2);
+			pak.WriteByte(effect3);
+			pak.WriteByte(effect4);
+			pak.WriteByte(effect5);
 
 			SendTCP(pak);
 		}

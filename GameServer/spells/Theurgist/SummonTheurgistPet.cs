@@ -33,11 +33,6 @@ namespace DOL.GS.Spells
 	[SpellHandler("SummonTheurgistPet")]
 	public class SummonTheurgistPet : SummonSpellHandler
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		public SummonTheurgistPet(GameLiving caster, Spell spell, SpellLine line) 
 			: base(caster, spell, line) { }
 
@@ -68,8 +63,9 @@ namespace DOL.GS.Spells
 			base.ApplyEffectOnTarget(target, effectiveness);
 
 			pet.HealthMultiplicator = true;
-			
-			(pet.Brain as IAggressiveBrain).AddToAggroList(target, 1);
+
+            pet.TempProperties.setProperty("target", target);
+            (pet.Brain as IAggressiveBrain).AddToAggroList(target, 1);
 			(pet.Brain as TheurgistPetBrain).Think();
 
 			Caster.PetCounter++;

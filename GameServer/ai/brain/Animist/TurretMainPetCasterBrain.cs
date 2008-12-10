@@ -17,6 +17,7 @@
  *
  */
 using DOL.GS;
+using System.Collections.Generic;
 
 namespace DOL.AI.Brain
 {
@@ -47,6 +48,112 @@ namespace DOL.AI.Brain
 			Body.StartAttack(m_orderAttackTarget);
 			return;
 		}
+
+        protected override GameLiving CalculateNextAttackTarget()
+        {
+            GameLiving normal = base.CalculateNextAttackTarget();
+
+            if (AggressionState != eAggressionState.Aggressive || normal != null)
+                return normal;
+
+            List<GameLiving> livingList = new List<GameLiving>();
+            
+            lock (m_aggroTable.SyncRoot)
+            {
+                foreach (GameLiving living in m_aggroTable.Keys)
+                {
+                    if (!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
+                        continue;
+
+                    if (WorldMgr.GetDistance(Body, living) > MAX_AGGRO_DISTANCE)
+                        continue;
+
+                    if (WorldMgr.GetDistance(Body, living) > ((TurretPet)Body).TurretSpell.Range)
+                        continue;
+
+                    if (living.IsMezzed || living.IsStealthed)
+                        continue;
+
+                    livingList.Add(living);
+                }
+            }
+            if (livingList.Count < 1)
+            {
+                foreach (GamePlayer living in Body.GetPlayersInRadius((ushort)((TurretPet)Body).TurretSpell.Range))
+                {
+                    if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
+                        continue;
+
+                    if (!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
+                        continue;
+
+                    if (LivingHasEffect(living, ((TurretPet)Body).TurretSpell))
+                        continue;
+
+                    if (living.IsMezzed || living.IsStealthed)
+                        continue;
+
+                    livingList.Add(living as GameLiving);
+                }
+                foreach (GameNPC living in Body.GetNPCsInRadius((ushort)((TurretPet)Body).TurretSpell.Range))
+                {
+                    if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
+                        continue;
+
+                    if (!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
+                        continue;
+
+                    if (LivingHasEffect(living, ((TurretPet)Body).TurretSpell))
+                        continue;
+
+                    if (living.IsMezzed || living.IsStealthed)
+                        continue;
+
+                    livingList.Add(living as GameLiving);
+                }
+            }
+            if (livingList.Count < 1)
+            {
+                foreach (GamePlayer living in Body.GetPlayersInRadius((ushort)((TurretPet)Body).TurretSpell.Range))
+                {
+                    if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
+                        continue;
+
+                    if (!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
+                        continue;
+
+                    /*if (LivingHasEffect(living, ((TurretPet)Body).TurretSpell))
+                        continue;*/
+
+                    if (living.IsMezzed || living.IsStealthed)
+                        continue;
+
+                    livingList.Add(living as GameLiving);
+                }
+                foreach (GameNPC living in Body.GetNPCsInRadius((ushort)((TurretPet)Body).TurretSpell.Range))
+                {
+                    if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
+                        continue;
+
+                    if (!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
+                        continue;
+
+                    /*if (LivingHasEffect(living, ((TurretPet)Body).TurretSpell))
+                        continue;*/
+
+                    if (living.IsMezzed || living.IsStealthed)
+                        continue;
+
+                    livingList.Add(living as GameLiving);
+                }
+            }
+            if (livingList.Count > 0)
+            {
+                return livingList[Util.Random(livingList.Count - 1)];
+            }
+            m_aggroTable.Clear();
+            return null;
+        }
 
 		protected override void CheckNPCAggro()
 		{

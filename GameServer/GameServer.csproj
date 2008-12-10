@@ -1965,6 +1965,8 @@
     <Compile Include="spells\AblativeArmorSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="spells\AfHitsBuff.cs" />
+    <Compile Include="spells\AllStatsBuff.cs" />
     <Compile Include="spells\AmnesiaSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1978,11 +1980,15 @@
     <Compile Include="spells\Archery\ArrowDamageTypes.cs" />
     <Compile Include="spells\Archery\SiegeShot.cs" />
     <Compile Include="spells\Artifacts\AlvarusLeggings.cs" />
+    <Compile Include="spells\Artifacts\AtlantisTablet.cs" />
     <Compile Include="spells\Artifacts\bracerofzo.cs" />
     <Compile Include="spells\Artifacts\CeremonialBracer.cs" />
     <Compile Include="spells\Artifacts\CommonArtifactSpells.cs" />
     <Compile Include="spells\Artifacts\DreamSphere.cs" />
+    <Compile Include="spells\Artifacts\Ereine.cs" />
     <Compile Include="spells\Artifacts\MaddeningScalars.cs" />
+    <Compile Include="spells\Artifacts\RealmLore.cs" />
+    <Compile Include="spells\Artifacts\SoM.cs" />
     <Compile Include="spells\Atlantis\Artifacts\Arrogance.cs" />
     <Compile Include="spells\Artifacts\ScarabVest.cs" />
     <Compile Include="spells\Artifacts\BandofStars.cs" />
@@ -2015,6 +2021,7 @@
     <Compile Include="spells\CharmSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="spells\Cloudsong.cs" />
     <Compile Include="spells\CombatHealSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>

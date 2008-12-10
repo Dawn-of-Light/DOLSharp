@@ -255,8 +255,25 @@ namespace DOL.GS
 		}
 
 
+        /// <summary>
+        /// Looks for a LootGeneratorTemplate; if found, refreshes loot list for given mob
+        /// </summary>
+        /// <param name="mob"></param>
+        public static void RefreshTemplateGenerator( GameNPC mob )
+        {
+            foreach ( ILootGenerator gen in m_globalGenerators )
+            {
+                if ( gen is LootGeneratorTemplate )
+                {
+                    ( (LootGeneratorTemplate)gen ).RefreshLootTemplate( mob.Name );
+                    return;
+                }
+            }
+        }
+
+
 		/// <summary>
-		/// Returns the lot for the given Mob
+		/// Returns the loot for the given Mob
 		/// </summary>		
 		/// <param name="mob"></param>
 		/// <param name="killer"></param>
