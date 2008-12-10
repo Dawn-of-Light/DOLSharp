@@ -1,0 +1,1 @@
+using System;using DOL.GS.Spells;namespace DOL.GS.Spells{    [SpellHandlerAttribute("CloudsongAura")]    public class CloudsongAuraSpellHandler : SpellHandler    {        public CloudsongAuraSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }    }}

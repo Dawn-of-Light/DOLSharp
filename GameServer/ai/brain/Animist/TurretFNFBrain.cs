@@ -18,6 +18,7 @@
  */
 using System.Collections.Generic;
 using DOL.GS;
+using DOL.GS.Spells;
 
 namespace DOL.AI.Brain
 {
@@ -49,10 +50,107 @@ namespace DOL.AI.Brain
 					if(WorldMgr.GetDistance(Body, living) > ((TurretPet) Body).TurretSpell.Range)
 						continue;
 
+                    if (living.IsMezzed || living.IsStealthed)
+                        continue;
+
+                    if (((TurretPet)Body).TurretSpell.SpellType != "SpeedDecrease" && SpellHandler.FindEffectOnTarget(living, "SpeedDecrease") != null)
+                        continue;
+
+                    if (((TurretPet)Body).TurretSpell.SpellType == "SpeedDecrease" && living.HasAbility(Abilities.RootImmunity))
+                        continue;
+
 					livingList.Add(living);
 				}
 			}
-			if(livingList.Count > 0)
+            if (livingList.Count < 1)
+            {
+                foreach (GamePlayer living in Body.GetPlayersInRadius((ushort)((TurretPet)Body).TurretSpell.Range))
+                {
+                    if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
+                        continue;
+
+                    if (!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
+                        continue;
+
+                    if (LivingHasEffect(living, ((TurretPet)Body).TurretSpell))
+                        continue;
+
+                    if (living.IsMezzed || living.IsStealthed)
+                        continue;
+
+                    if (((TurretPet)Body).TurretSpell.SpellType != "SpeedDecrease" && SpellHandler.FindEffectOnTarget(living, "SpeedDecrease") != null)
+                        continue;
+
+                    livingList.Add(living as GameLiving);
+                }
+                foreach (GameNPC living in Body.GetNPCsInRadius((ushort)((TurretPet)Body).TurretSpell.Range))
+                {
+                    if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
+                        continue;
+
+                    if (!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
+                        continue;
+
+                    if (LivingHasEffect(living, ((TurretPet)Body).TurretSpell))
+                        continue;
+
+                    if (living.IsMezzed || living.IsStealthed)
+                        continue;
+
+                    if (((TurretPet)Body).TurretSpell.SpellType != "SpeedDecrease" && SpellHandler.FindEffectOnTarget(living, "SpeedDecrease") != null)
+                        continue;
+
+                    if (((TurretPet)Body).TurretSpell.SpellType == "SpeedDecrease" && (living.HasAbility(Abilities.RootImmunity) || living.HasAbility(Abilities.DamageImmunity)))
+                        continue;
+
+                    livingList.Add(living as GameLiving);
+                }
+            }
+            if (livingList.Count < 1)
+            {
+                foreach (GamePlayer living in Body.GetPlayersInRadius((ushort)((TurretPet)Body).TurretSpell.Range))
+                {
+                    if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
+                        continue;
+
+                    if (!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
+                        continue;
+
+                    /*if (LivingHasEffect(living, ((TurretPet)Body).TurretSpell))
+                        continue;*/
+
+                    if (living.IsMezzed || living.IsStealthed)
+                        continue;
+
+                    if (((TurretPet)Body).TurretSpell.SpellType != "SpeedDecrease" && SpellHandler.FindEffectOnTarget(living, "SpeedDecrease") != null)
+                        continue;
+
+                    livingList.Add(living as GameLiving);
+                }
+                foreach (GameNPC living in Body.GetNPCsInRadius((ushort)((TurretPet)Body).TurretSpell.Range))
+                {
+                    if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
+                        continue;
+
+                    if (!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
+                        continue;
+
+                    /*if (LivingHasEffect(living, ((TurretPet)Body).TurretSpell))
+                        continue;*/
+
+                    if (living.IsMezzed || living.IsStealthed)
+                        continue;
+
+                    if (((TurretPet)Body).TurretSpell.SpellType != "SpeedDecrease" && SpellHandler.FindEffectOnTarget(living, "SpeedDecrease") != null)
+                        continue;
+
+                    if (((TurretPet)Body).TurretSpell.SpellType == "SpeedDecrease" && (living.HasAbility(Abilities.RootImmunity) || living.HasAbility(Abilities.DamageImmunity)))
+                        continue;
+
+                    livingList.Add(living as GameLiving);
+                }
+            }
+            if (livingList.Count > 0)
 			{
 				return livingList[Util.Random(livingList.Count - 1)];
 			}

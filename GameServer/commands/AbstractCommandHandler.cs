@@ -63,5 +63,54 @@ namespace DOL.GS.Commands
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, sentence), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return;
 		}
+
+
+        public virtual void DisplaySyntax( GameClient client, string subcommand )
+        {
+            if ( client == null || !client.IsPlaying )
+                return;
+
+            CmdAttribute[] attrib = (CmdAttribute[])this.GetType().GetCustomAttributes( typeof( CmdAttribute ), false );
+
+            if ( attrib.Length == 0 )
+                return;
+
+            foreach ( string sentence in attrib[0].Usage )
+            {
+                string[] words = sentence.Split( new char[] { ' ' }, 2 );
+
+                if ( words.Length >= 2 && words[1].Equals( subcommand ) )
+                {
+                    client.Out.SendMessage( LanguageMgr.GetTranslation( client, sentence ), eChatType.CT_System, eChatLoc.CL_SystemWindow );
+                }
+            }
+
+            return;
+        }
+
+
+        public virtual void DisplaySyntax( GameClient client, string subcommand1, string subcommand2 )
+        {
+            if ( client == null || !client.IsPlaying )
+                return;
+
+            CmdAttribute[] attrib = (CmdAttribute[])this.GetType().GetCustomAttributes( typeof( CmdAttribute ), false );
+
+            if ( attrib.Length == 0 )
+                return;
+
+            foreach ( string sentence in attrib[0].Usage )
+            {
+                string[] words = sentence.Split( new char[] { ' ' }, 3 );
+
+                if ( words.Length >= 3 && words[1].Equals( subcommand1 ) && words[2].Equals( subcommand2 ) )
+                {
+                    client.Out.SendMessage( LanguageMgr.GetTranslation( client, sentence ), eChatType.CT_System, eChatLoc.CL_SystemWindow );
+                }
+            }
+
+            return;
+
+        }
 	}
 }

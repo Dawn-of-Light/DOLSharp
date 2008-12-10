@@ -30,7 +30,9 @@ namespace DOL.GS.Spells
     [SpellHandlerAttribute("ZoSummon")]
     public class BracerOfZo : SpellHandler
     {
-        protected ZoarkatPet[] deamons = new ZoarkatPet[3];
+        public override bool IsUnPurgeAble { get { return true; } }
+		
+		protected ZoarkatPet[] deamons = new ZoarkatPet[3];
         
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
@@ -62,6 +64,7 @@ namespace DOL.GS.Spells
                 deamons[i].Realm = Caster.Realm;
                 deamons[i].CurrentSpeed = 0;
                 deamons[i].Level = 36;
+                deamons[i].Flags |= (uint)GameNPC.eFlags.FLYING;
                 deamons[i].AddToWorld();
 				(deamons[i].Brain as IAggressiveBrain).AddToAggroList(Caster.TargetObject as GameLiving, 1);
 				(deamons[i].Brain as ProcPetBrain).Think();
