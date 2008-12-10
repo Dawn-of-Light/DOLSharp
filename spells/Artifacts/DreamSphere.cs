@@ -36,23 +36,29 @@ namespace DOL.GS.Spells
         {
          	m_effect = effect;    
         	base.OnEffectStart(effect);
-            GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.TakeDamage, new DOLEventHandler(LivingTakeDamage));       	       
+            GamePlayer player = effect.Owner as GamePlayer;
+            if(player == null) return;
+            GameEventMgr.AddHandler(player, GamePlayerEvent.TakeDamage, new DOLEventHandler(LivingTakeDamage));
+			GameEventMgr.AddHandler(player, GamePlayerEvent.AttackedByEnemy, new DOLEventHandler(LivingTakeDamage));
         }
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
-            GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.TakeDamage, new DOLEventHandler(LivingTakeDamage));            	                         
+            GamePlayer player = effect.Owner as GamePlayer;
+            if(player == null) return base.OnEffectExpires(effect, noMessages);
+            GameEventMgr.RemoveHandler(player, GamePlayerEvent.TakeDamage, new DOLEventHandler(LivingTakeDamage));
+			GameEventMgr.RemoveHandler(player, GamePlayerEvent.AttackedByEnemy, new DOLEventHandler(LivingTakeDamage));
             return base.OnEffectExpires(effect, noMessages);
         }
         // Event : player takes damage, effect cancels
-        public void LivingTakeDamage(DOLEvent e, object sender, EventArgs args)
+        private void LivingTakeDamage(DOLEvent e, object sender, EventArgs args)
         {
-            GamePlayer player = sender as GamePlayer;
-            if (player == null) return;
-            if (e == GamePlayerEvent.TakeDamage)
-            {
+            //GamePlayer player = sender as GamePlayer;
+            //if (player == null) return;
+            //if (e == GameLivingEvent.TakeDamage || e == GameLivingEvent.AttackedByEnemy)
+            //{
             	OnEffectExpires(m_effect, true);
-            	return;
-            }
+            	//return;
+            //}
         }     
         public DreamMorph(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
@@ -64,17 +70,17 @@ namespace DOL.GS.Spells
     [SpellHandlerAttribute("DreamGroupMorph")]
     public class DreamGroupMorph : DreamMorph
     {
-        public override void OnEffectStart(GameSpellEffect effect)
+        /*public override void OnEffectStart(GameSpellEffect effect)
         {  
         	// Same Effect for everyone except caster that get a ToHit bonus
-            Caster.BaseBuffBonusCategory[(int)eProperty.ToHitBonus] += (int)m_spell.Value;
+            //Caster.BaseBuffBonusCategory[(int)eProperty.ToHitBonus] += (int)m_spell.Value;
             base.OnEffectStart(effect);
         }
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
-            Caster.BaseBuffBonusCategory[(int)eProperty.ToHitBonus] -= (int)m_spell.Value;
+            //Caster.BaseBuffBonusCategory[(int)eProperty.ToHitBonus] -= (int)m_spell.Value;
             return base.OnEffectExpires(effect, noMessages);
-        }
+        }*/
         public DreamGroupMorph(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
 }

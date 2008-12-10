@@ -26,7 +26,7 @@ using DOL.AI.Brain;
 namespace DOL.GS.Spells
 {
 	[SpellHandlerAttribute("TraitorsDaggerProc")]
-	public class TraitorsDaggerProc : DefensiveProcSpellHandler
+	public class TraitorsDaggerProc : OffensiveProcSpellHandler
 	{
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
@@ -35,6 +35,7 @@ namespace DOL.GS.Spells
 			{
 				GamePlayer player = effect.Owner as GamePlayer;
 				player.Shade(true);
+                player.Out.SendUpdatePlayer();
 			}
 		}
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
@@ -43,9 +44,11 @@ namespace DOL.GS.Spells
 			{
 				GamePlayer player = effect.Owner as GamePlayer;
 				player.Shade(false);
+                player.Out.SendUpdatePlayer();
 			}
 			return base.OnEffectExpires(effect, noMessages);
 		}
+   
 		public TraitorsDaggerProc(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}
 
@@ -91,8 +94,9 @@ namespace DOL.GS.Spells
 				return;
 
 			// Spirit procs lifetap when hitting ennemy
-			if (trap != null)
-				trap.StartSpell(args.AttackData.Target);
+			if (trap != null && Util.Chance(50))
+                trap.CastSpell(args.AttackData.Target);
+				//trap.StartSpell(args.AttackData.Target);
 		}
 
 		public TraitorsDaggerSummon(GameLiving caster, Spell spell, SpellLine line)
@@ -129,7 +133,7 @@ namespace DOL.GS
 	{
 		public override int MaxHealth
 		{
-			get { return Level * 25; }
+			get { return Level * 15; }
 		}
 		public override void OnAttackedByEnemy(AttackData ad) { }
 		public TraitorDaggerPet(INpcTemplate npcTemplate) : base(npcTemplate) { }

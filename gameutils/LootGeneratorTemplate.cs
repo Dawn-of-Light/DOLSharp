@@ -47,19 +47,19 @@ namespace DOL.GS
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
-		/// Map holding a list of dbLootTemplates for each templateName
+		/// Map holding a list of ItemTemplateIDs for each TemplateName
 		/// 1:n mapping between loottemplateName and dbloottemplate entries
 		/// </summary>
-		protected static HybridDictionary m_templateNameXLootTemplate = null;
+		protected static HybridDictionary m_LootTemplates = null;
 
 		/// <summary>
-		/// Map holding the corresponding lootTemplateName for each Mob
+		/// Map holding the corresponding LootTemplateName for each MobName
 		/// 1:n Mapping between Mob and LootTemplate
 		/// </summary>
 		protected static HybridDictionary m_mobXLootTemplates = null;
 
 		/// <summary>
-		/// Constrcut a new templategenerate and load it's values from database.
+		/// Construct a new templategenerate and load its values from database.
 		/// </summary>
 		public LootGeneratorTemplate()
 		{
@@ -72,16 +72,16 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected static bool PreloadLootTemplates()
 		{
-			if (m_templateNameXLootTemplate == null)
+			if (m_LootTemplates == null)
 			{
-				m_templateNameXLootTemplate = new HybridDictionary(500);
-				lock (m_templateNameXLootTemplate)
+				m_LootTemplates = new HybridDictionary(500);
+				lock (m_LootTemplates)
 				{
-					// ** find our loot template **
-					DataObject[] m_lootTemplates = null;
+					DataObject[] dbLootTemplates = null;
+
 					try
 					{
-						m_lootTemplates = GameServer.Database.SelectAllObjects(typeof(DBLootTemplate));
+                        dbLootTemplates = GameServer.Database.SelectAllObjects( typeof( DBLootTemplate ) );
 					}
 					catch (Exception e)
 					{
@@ -90,40 +90,45 @@ namespace DOL.GS
 						return false;
 					}
 
-					if (m_lootTemplates != null) // did we find a loot template
+                    if ( dbLootTemplates != null )
 					{
+                        IList loot;
 
-						foreach (DBLootTemplate dbTemplate in m_lootTemplates)
+                        foreach ( DBLootTemplate dbTemplate in dbLootTemplates )
 						{
-							IList loot = (IList)m_templateNameXLootTemplate[dbTemplate.TemplateName.ToLower()];
+							loot = (IList)m_LootTemplates[dbTemplate.TemplateName.ToLower()];
+
 							if (loot == null)
 							{
 								loot = new ArrayList();
-								m_templateNameXLootTemplate[dbTemplate.TemplateName.ToLower()] = loot;
+								m_LootTemplates[dbTemplate.TemplateName.ToLower()] = loot;
 							}
 
-							if (dbTemplate.ItemTemplate == null)
-							{
-								if (log.IsErrorEnabled)
-									log.Error("ItemTemplate: " + dbTemplate.ItemTemplateID + " is not found, it is referenced from loottemplate_id: " + dbTemplate.ObjectId);
-								continue;
-							}
-
-							loot.Add(dbTemplate);
+                            if ( dbTemplate.ItemTemplate == null )
+                            {
+                                if ( log.IsErrorEnabled )
+                                    log.Error( "ItemTemplate: " + dbTemplate.ItemTemplateID + " is not found, it is referenced from loottemplate_id: " + dbTemplate.ObjectId );
+                            }
+                            else
+                            {
+                                loot.Add( dbTemplate );
+                            }
 						}
 					}
 				}
 			}
+
 			if (m_mobXLootTemplates == null)
 			{
 				m_mobXLootTemplates = new HybridDictionary(1000);
+
 				lock (m_mobXLootTemplates)
 				{
-					// ** find our mobs related with loot templates **
-					DataObject[] m_mobLootTemplates = null;
+					DataObject[] dbMobLootTemplates = null;
+
 					try
 					{
-						m_mobLootTemplates = GameServer.Database.SelectAllObjects(typeof(DBMobXLootTemplate));
+                        dbMobLootTemplates = GameServer.Database.SelectAllObjects( typeof( DBMobXLootTemplate ) );
 					}
 					catch (Exception e)
 					{
@@ -132,18 +137,25 @@ namespace DOL.GS
 						return false;
 					}
 
-					if (m_mobLootTemplates != null) // did we find a loot template
+                    if ( dbMobLootTemplates != null )
 					{
-						foreach (DBMobXLootTemplate dbMobXTemplate in m_mobLootTemplates)
+                        ArrayList newMobXLootTemplates;
+
+                        foreach ( DBMobXLootTemplate dbMobXTemplate in dbMobLootTemplates )
 						{
 							if (m_mobXLootTemplates[dbMobXTemplate.MobName.ToLower()] == null)
 							{
-								ArrayList newMobXLootTemplates = new ArrayList();
+                                newMobXLootTemplates = new ArrayList();
 								newMobXLootTemplates.Add(dbMobXTemplate);
 								m_mobXLootTemplates[dbMobXTemplate.MobName.ToLower()] = newMobXLootTemplates;
 							}
 							else
 							{
+                                // ~~~ Kakuri Nov 29, 2008 ~~~
+                                // This whole 'else' clause looks not only broken (doesn't do anything), but pointless -
+                                // since each MobName has only ONE corresponding LootTemplateName, this 'else' clause
+                                // will never even be executed
+                                // ~~~ /Kakuri ~~~
 								ArrayList mobxLootTemplates = (ArrayList)m_mobXLootTemplates[dbMobXTemplate.MobName.ToLower()];
 								mobxLootTemplates.Add(dbMobXTemplate);
 
@@ -157,8 +169,31 @@ namespace DOL.GS
 					}
 				}
 			}
+
 			return true;
 		}
+
+        /// <summary>
+        /// Reloads the specified loot template from the DB
+        /// </summary>
+        /// <param name="templateName"></param>
+        public void RefreshLootTemplate( string templateName )
+        {
+            ArrayList loot = new ArrayList();
+            DataObject[] dbLootTemplates = GameServer.Database.SelectObjects( typeof( DBLootTemplate ), "TemplateName = '" + templateName + "'" );
+
+            if ( dbLootTemplates != null )
+            {
+                m_LootTemplates.Remove( templateName.ToLower() );
+
+                foreach ( DBLootTemplate lt in dbLootTemplates )
+                {
+                    loot.Add( lt );
+                }
+
+                m_LootTemplates[templateName.ToLower()] = loot;
+            }
+        }
 
 		public override LootList GenerateLoot(GameNPC mob, GameObject killer)
 		{
@@ -171,7 +206,7 @@ namespace DOL.GS
 			if (mobXLootTemplates == null)
 			{
 				// allow lazy relation between lootTemplate and mob if templateName == mob name.                
-				lootTemplates = (IList)m_templateNameXLootTemplate[mob.Name.ToLower()];
+				lootTemplates = (IList)m_LootTemplates[mob.Name.ToLower()];
 			}
 			else
 			{
@@ -209,7 +244,7 @@ namespace DOL.GS
 		{
 			if (mobXLootTemplate == null) return;
 
-			IList templateList = (IList)m_templateNameXLootTemplate[mobXLootTemplate.LootTemplateName.ToLower()];
+			IList templateList = (IList)m_LootTemplates[mobXLootTemplate.LootTemplateName.ToLower()];
 			if (templateList != null)
 			{
 				GamePlayer player = null;
