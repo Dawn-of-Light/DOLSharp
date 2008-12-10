@@ -10836,7 +10836,7 @@ namespace DOL.GS
 			SpecPointsOk = true;
 			if (allpoints != mypoints)
 			{
-				log.WarnFormat("Spec points for {0} is incorrect, should be {1} but is {2}", Name, allpoints, mypoints);
+				log.WarnFormat("Spec points total for player {0} incorrect: {1} instead of {2}.", Name, mypoints, allpoints);
 				if (Client.Account.PrivLevel == 1)
 				{
 					mypoints = RespecAllLines();
@@ -12339,8 +12339,167 @@ namespace DOL.GS
 			if (state)
 			{
 				// Turn into a shade.
+				if (CharacterClass.ID  == (int)eCharacterClass.Necromancer) Model = 822;
+				else
+				{
+				#region Albion Shade Models
+                if ((RaceName == "Inconnu") && (PlayerCharacter.Gender == 0))
+                {
+                    Model = 1351;
+                }
+                else if ((RaceName == "Briton") && (PlayerCharacter.Gender == 0))
+                {
+                    Model = 1353;
+                }
+                else if ((RaceName == "Highlander") && (PlayerCharacter.Gender == 0))
+                {
+                    Model = 1355;
+                }
+                else if ((RaceName == "Saracen") && (PlayerCharacter.Gender == 0))
+                {
+                    Model = 1357;
+                }
+                else if ((RaceName == "Avalonian") && (PlayerCharacter.Gender == 0))
+                {
+                    Model = 1359;
+                }
+                else if ((RaceName == "Half Ogre") && (PlayerCharacter.Gender == 0))
+                {
+                    Model = 1361;
+                }
+                else if ((RaceName == "Inconnu") && (PlayerCharacter.Gender == 1))
+                {
+                    Model = 1352;
+                }
+                else if ((RaceName == "Briton") && (PlayerCharacter.Gender == 1))
+                {
+                    Model = 1354;
+                }
+                else if ((RaceName == "Highlander") && (PlayerCharacter.Gender == 1))
+                {
+                    Model = 1356;
+                }
+                else if ((RaceName == "Saracen") && (PlayerCharacter.Gender == 1))
+                {
+                    Model = 1358;
+                }
+                else if ((RaceName == "Avalonian") && (PlayerCharacter.Gender == 1))
+                {
+                    Model = 1360;
+                }
+                else if ((RaceName == "Half Ogre") && (PlayerCharacter.Gender == 1))
+                {
+                    Model = 1362;
+                }
 
-				Model = 822;
+                #endregion
+
+                #region Midgard Shade Models
+
+                if ((RaceName == "Troll") && (PlayerCharacter.Gender == 0))
+                {
+                    Model = 1363;
+                }
+                else if ((RaceName == "Norse") && (PlayerCharacter.Gender == 0))
+                {
+                    Model = 1365;
+                }
+                else if ((RaceName == "Kobold") && (PlayerCharacter.Gender == 0))
+                {
+                    Model = 1367;
+                }
+                else if ((RaceName == "Dwarf") && (PlayerCharacter.Gender == 0))
+                {
+                    Model = 1369;
+                }
+                else if ((RaceName == "Frostalf") && (PlayerCharacter.Gender == 0))
+                {
+                    Model = 1373;
+                }
+                else if ((RaceName == "Valkyn") && (PlayerCharacter.Gender == 0))
+                {
+                    Model = 1371;
+                }
+                else if ((RaceName == "Troll") && (PlayerCharacter.Gender == 1))
+                {
+                    Model = 1364;
+                }
+                else if ((RaceName == "Norse") && (PlayerCharacter.Gender == 1))
+                {
+                    Model = 1366;
+                }
+                else if ((RaceName == "Kobold") && (PlayerCharacter.Gender == 1))
+                {
+                    Model = 1368;
+                }
+                else if ((RaceName == "Dwarf") && (PlayerCharacter.Gender == 1))
+                {
+                    Model = 1370;
+                }
+                else if ((RaceName == "Frostalf") && (PlayerCharacter.Gender == 1))
+                {
+                    Model = 1374;
+                }
+                else if ((RaceName == "Valkyn") && (PlayerCharacter.Gender == 1))
+                {
+                    Model = 1372;
+                }
+
+                #endregion
+
+                #region Hibernia Shade Models
+
+                if ((RaceName == "Celt") && (PlayerCharacter.Gender == 0))
+                {
+                    Model = 1377;
+                }
+                else if ((RaceName == "Lurikeen") && (PlayerCharacter.Gender == 0))
+                {
+                    Model = 1379;
+                }
+                else if ((RaceName == "Elf") && (PlayerCharacter.Gender == 0))
+                {
+                    Model = 1381;
+                }
+                else if ((RaceName == "Firbolg") && (PlayerCharacter.Gender == 0))
+                {
+                    Model = 1375;
+                }
+                else if ((RaceName == "Sylvan") && (PlayerCharacter.Gender == 0))
+                {
+                    Model = 1383;
+                }
+                else if ((RaceName == "Shar") && (PlayerCharacter.Gender == 0))
+                {
+                    Model = 1385;
+                }
+                else if ((RaceName == "Celt") && (PlayerCharacter.Gender == 1))
+                {
+                    Model = 1378;
+                }
+                else if ((RaceName == "Lurikeen") && (PlayerCharacter.Gender == 1))
+                {
+                    Model = 1380;
+                }
+                else if ((RaceName == "Elf") && (PlayerCharacter.Gender == 1))
+                {
+                    Model = 1382;
+                }
+                else if ((RaceName == "Firbolg") && (PlayerCharacter.Gender == 1))
+                {
+                    Model = 1376;
+                }
+                else if ((RaceName == "Sylvan") && (PlayerCharacter.Gender == 1))
+                {
+                    Model = 1384;
+                }
+                else if ((RaceName == "Shar") && (PlayerCharacter.Gender == 1))
+                {
+                    Model = 1386;
+                }
+
+                #endregion
+				}
 				m_ShadeEffect = CreateShadeEffect();
 				m_ShadeEffect.Start(this);
 			}

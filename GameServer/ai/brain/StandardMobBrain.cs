@@ -720,13 +720,13 @@ namespace DOL.AI.Brain
 		/// Mobs within this range will be called upon to add on a group
 		/// of players inside of a dungeon.
 		/// </summary>
-		protected static ushort m_BAFReinforcementsRange = 2000;
+		protected static ushort m_BAFReinforcementsRange = 1000; //2000
 
 		/// <summary>
 		/// Players within this range around the puller will be subject
 		/// to attacks from adds.
 		/// </summary>
-		protected static ushort m_BAFTargetPlayerRange = 3000;
+		protected static ushort m_BAFTargetPlayerRange = 1500; //3000
 
 		/// <summary>
 		/// BAF range for adds close to the pulled mob.
