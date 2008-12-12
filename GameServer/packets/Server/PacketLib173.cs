@@ -50,82 +50,81 @@ namespace DOL.GS.PacketHandler
 		{
 		}
 
+        public override void SendWarlockChamberEffect(GamePlayer player)
+        {
+            GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
 
-		public override void SendWarlockChamberEffect(GamePlayer player)
-		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
+            pak.WriteShort((ushort)player.ObjectID);
+            pak.WriteByte((byte)3);
 
-			pak.WriteShort((ushort)player.ObjectID);
-			pak.WriteByte((byte)3);
+            SortedList sortList = new SortedList();
+            sortList.Add(1, null);
+            sortList.Add(2, null);
+            sortList.Add(3, null);
+            sortList.Add(4, null);
+            sortList.Add(5, null);
+            lock (player.EffectList)
+            {
+                foreach (IGameEffect fx in player.EffectList)
+                {
+                    if (fx is GameSpellEffect)
+                    {
+                        GameSpellEffect effect = (GameSpellEffect)fx;
+                        if (effect.SpellHandler.Spell != null && (effect.SpellHandler.Spell.SpellType == "Chamber"))
+                        {
+                            ChamberSpellHandler chamber = (ChamberSpellHandler)effect.SpellHandler;
+                            sortList[chamber.EffectSlot] = effect;
+                        }
+                    }
+                }
+                foreach (GameSpellEffect effect in sortList.Values)
+                {
+                    if (effect == null)
+                    {
+                        pak.WriteByte((byte)0);
+                    }
+                    else
+                    {
+                        ChamberSpellHandler chamber = (ChamberSpellHandler)effect.SpellHandler;
+                        if (chamber.PrimarySpell != null && chamber.SecondarySpell == null)
+                        {
+                            pak.WriteByte((byte)3);
+                        }
+                        else if (chamber.PrimarySpell != null && chamber.SecondarySpell != null)
+                        {
+                            if (chamber.SecondarySpell.SpellType == "Lifedrain")
+                                pak.WriteByte(0x11);
+                            else if (chamber.SecondarySpell.SpellType.IndexOf("SpeedDecrease") != -1)
+                                pak.WriteByte(0x33);
+                            else if (chamber.SecondarySpell.SpellType == "PowerRegenBuff")
+                                pak.WriteByte(0x77);
+                            else if (chamber.SecondarySpell.SpellType == "DirectDamage")
+                                pak.WriteByte(0x66);
+                            else if (chamber.SecondarySpell.SpellType == "SpreadHeal")
+                                pak.WriteByte(0x55);
+                            else if (chamber.SecondarySpell.SpellType == "Nearsight")
+                                pak.WriteByte(0x44);
+                            else if (chamber.SecondarySpell.SpellType == "DamageOverTime")
+                                pak.WriteByte(0x22);
+                        }
+                    }
+                }
+            }
+            //pak.WriteByte(0x11);
+            //pak.WriteByte(0x22);
+            //pak.WriteByte(0x33);
+            //pak.WriteByte(0x44);
+            //pak.WriteByte(0x55);
+            pak.WriteInt(0);
 
-			SortedList sortList = new SortedList();
-			sortList.Add(1, null);
-			sortList.Add(2, null);
-			sortList.Add(3, null);
-			sortList.Add(4, null);
-			sortList.Add(5, null);
-			lock (player.EffectList)
-			{
-				foreach (IGameEffect fx in player.EffectList)
-				{
-					if (fx is GameSpellEffect)
-					{
-						GameSpellEffect effect = (GameSpellEffect)fx;
-						if (effect.SpellHandler.Spell != null && (effect.SpellHandler.Spell.SpellType == "Chamber"))
-						{
-							ChamberSpellHandler chamber = (ChamberSpellHandler)effect.SpellHandler;
-							sortList[chamber.EffectSlot] = effect;
-						}
-					}
-				}
-				foreach (GameSpellEffect effect in sortList.Values)
-				{
-					if (effect == null)
-					{
-						pak.WriteByte((byte)0);
-					}
-					else
-					{
-						ChamberSpellHandler chamber = (ChamberSpellHandler)effect.SpellHandler;
-						if (chamber.PrimarySpell != null && chamber.SecondarySpell == null)
-						{
-							pak.WriteByte((byte)3);
-						}
-						else if (chamber.PrimarySpell != null && chamber.SecondarySpell != null)
-						{
-							if (chamber.SecondarySpell.SpellType == "WarlockLifedrain")
-								pak.WriteByte(0x11);
-							else if (chamber.SecondarySpell.SpellType.IndexOf("WarlockRoot") != -1)
-								pak.WriteByte(0x33);
-							else if (chamber.SecondarySpell.SpellType == "WarlockPowerRegenBuff")
-								pak.WriteByte(0x77);
-							else if (chamber.SecondarySpell.SpellType == "WarlockDirectDamage")
-								pak.WriteByte(0x66);
-							else if (chamber.SecondarySpell.SpellType == "WarlockSpreadHeal")
-								pak.WriteByte(0x55);
-							else if (chamber.SecondarySpell.SpellType == "Nearsight")
-								pak.WriteByte(0x44);
-							else if (chamber.SecondarySpell.SpellType == "WarlockDamageOverTime")
-								pak.WriteByte(0x22);
-						}
-					}
-				}
-			}
-			//pak.WriteByte(0x11); 
-			//pak.WriteByte(0x22); 
-			//pak.WriteByte(0x33); 
-			//pak.WriteByte(0x44); 
-			//pak.WriteByte(0x55); 
-			pak.WriteInt(0);
+            foreach (GamePlayer plr in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+            {
+                if (player != plr)
+                    plr.Client.PacketProcessor.SendTCP(pak);
+            }
 
-			foreach (GamePlayer plr in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-			{
-				if (player != plr)
-					plr.Client.PacketProcessor.SendTCP(pak);
-			}
-
-			SendTCP(pak);
-		}
+            SendTCP(pak);
+        }
 
 		public override void SendUpdateIcons(IList changedEffects, ref int lastUpdateEffectsCount)
 		{
