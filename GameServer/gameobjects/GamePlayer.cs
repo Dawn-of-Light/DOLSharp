@@ -140,14 +140,6 @@ namespace DOL.GS
 			set { m_groundtargetInView = value; }
 		}
 
-		protected bool m_issilenced = false;
-		public bool IsSilenced
-		{
-			get { return m_issilenced; }
-			set { m_issilenced = value; }
-		}
-
-
 		/// <summary>
 		/// Player is in BG ?
 		/// </summary>

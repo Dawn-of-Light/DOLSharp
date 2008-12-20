@@ -20,8 +20,8 @@ namespace DOL.GS.Effects
 		public override void Start(GameLiving target)
 		{
 			base.Start(target);
-			target.IsDisarmed = true;
-			if(target is GamePlayer) (target as GamePlayer).IsSilenced = true;
+            target.DisarmedTime = target.CurrentRegion.Time + m_duration;
+            target.SilencedTime = target.CurrentRegion.Time + m_duration;
 			target.StopAttack();
 			target.StopCurrentSpellcast();
 		}
@@ -29,13 +29,6 @@ namespace DOL.GS.Effects
 		public override string Name { get { return "Desperate Bowman"; } }
 
 		public override ushort Icon { get { return 3060; } }
-
-		public override void Stop()
-		{
-			m_owner.IsDisarmed = false;
-            if (m_owner is GamePlayer) (m_owner as GamePlayer).IsSilenced = false;
-			base.Stop();
-		}
 
 		public override IList DelveInfo
 		{

@@ -101,7 +101,7 @@ namespace DOL.GS.Spells
                 }
                 effect.Owner.StopAttack();
                 effect.Owner.StopCurrentSpellcast();
-                effect.Owner.IsDisarmed = true;
+                effect.Owner.DisarmedTime = effect.Owner.CurrentRegion.Time + Spell.Duration;
             }
             base.OnEffectStart(effect);
         }
@@ -149,7 +149,7 @@ namespace DOL.GS.Spells
                 player.Client.Out.SendUpdateMaxSpeed();
             }
 
-            effect.Owner.IsDisarmed = false;
+            //effect.Owner.IsDisarmed = false;
             return 0;
         }
 

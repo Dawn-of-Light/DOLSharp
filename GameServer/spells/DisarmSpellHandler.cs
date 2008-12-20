@@ -55,8 +55,8 @@ namespace DOL.GS.Spells
 			{
 				effect.Owner.LastAttackedByEnemyTickPvP = effect.Owner.CurrentRegion.Time;
 				Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
-			}			
-			effect.Owner.IsDisarmed = true;
+			}
+            effect.Owner.DisarmedTime = effect.Owner.CurrentRegion.Time + CalculateEffectDuration(effect.Owner, Caster.Effectiveness);
 			effect.Owner.StopAttack();
 			MessageToLiving(effect.Owner, Spell.Message1, eChatType.CT_Spell);
 			Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, false)), eChatType.CT_Spell, effect.Owner);
@@ -78,7 +78,7 @@ namespace DOL.GS.Spells
 		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
-			effect.Owner.IsDisarmed = false;
+			//effect.Owner.IsDisarmed = false;
 			if (!noMessages) {
 				MessageToLiving(effect.Owner, Spell.Message3, eChatType.CT_SpellExpires);
 				Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message4, effect.Owner.GetName(0, false)), eChatType.CT_SpellExpires, effect.Owner);
