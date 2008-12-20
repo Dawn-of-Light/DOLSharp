@@ -25,7 +25,8 @@ namespace DOL.GS.Effects
 		{
 			base.Start(target);
 			owner = target;
-			target.IsDisarmed = true;
+			//target.IsDisarmed = true;
+            target.DisarmedTime = target.CurrentRegion.Time + m_duration;
 			target.StopAttack();
 
 		}
@@ -36,7 +37,7 @@ namespace DOL.GS.Effects
 
 		public override void Stop()
 		{
-			owner.IsDisarmed = false;
+			//owner.IsDisarmed = false;
 			base.Stop();
 		}
 
