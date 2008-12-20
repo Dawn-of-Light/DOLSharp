@@ -1,0 +1,14 @@
+Enchanter.EnchanterDialogResponse.Text1:	Falscher Gegenstand.
+Enchanter.EnchanterDialogResponse.Text2:	Ich bekomme aber {0}, für die Verzauberung.
+Enchanter.EnchanterDialogResponse.Text3:	bright
+Enchanter.EnchanterDialogResponse.Text4:	{0} erhält von Euch {1}.
+Enchanter.EnchanterDialogResponse.Text5:	Hier bitte, es ist nun "{0}"!
+Enchanter.GetExamineMessages.Text1:		Es wird {0} als Ziel erfasst.
+Enchanter.GetExamineMessages.Text2:		Es interessiert Euch {0}. {0} steht Euch {2} und hat sich der Bannzauberei verschrieben.
+Enchanter.Interact.Text1:			Quarz
+Enchanter.Interact.Text2:			Stahl
+Enchanter.Interact.Text3:			Ich kann Waffen oder Rüstungen verzaubern, die aus {0} oder besseren Material bestehen. Gebt mir einfach ein Ausrüstungsteil aus Eurem Gepäck, welches Ihr verzaubern lassen wollt und ich will es mit meiner Magie bearbeiten, für ein kleines Entgeld.
+Enchanter.ReceiveItem.Text1:			Es wird Euch {0} kosten, um dies zu verzaubern. Seid Ihr damit einverstanden?
+Enchanter.ReceiveItem.Text2:			Dieser Gegenstand ist bereits verzaubert!
+Enchanter.ReceiveItem.Text3:			Dieser Gegenstand kann nicht verzaubert werden!
+Enchanter.ReceiveItem.Text4:			Ich kann nur von Handwerkern hergestellte Gegenstände aus bestimmten Material verzaubern!

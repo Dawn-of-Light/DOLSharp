@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS
 {
@@ -32,21 +33,20 @@ namespace DOL.GS
 	public class Enchanter : GameNPC
 	{
 		private const string ENCHANT_ITEM_WEAK = "enchanting item";
-		private const string TOWARDSTR = " towards you.";
+//		private const string TOWARDSTR = " towards you.";
 		private int[] BONUS_TABLE = new int[] {5, 5, 10, 15, 20, 25, 30, 30};
 
+        /// <summary>
+        /// Adds messages to ArrayList which are sent when object is targeted
+        /// </summary>
+        /// <param name="player">GamePlayer that is examining this object</param>
+        /// <returns>list with string messages</returns>
 		public override IList GetExamineMessages(GamePlayer player)
 		{
-			IList list = new ArrayList(2);
-			string AggroString = GetAggroLevelString(player, false);
-
-			if (AggroString.EndsWith(TOWARDSTR))
-			{
-				AggroString = AggroString.Remove(AggroString.Length - TOWARDSTR.Length, TOWARDSTR.Length);
-			}
-
-			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + AggroString + " and is an enchanter.");
-			return list;
+            IList list = new ArrayList();
+            list.Add(LanguageMgr.GetTranslation(player.Client, "Enchanter.GetExamineMessages.Text1", GetName(0, false)));
+            list.Add(LanguageMgr.GetTranslation(player.Client, "Enchanter.GetExamineMessages.Text2", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
+            return list;
 		}
 
 		public override bool Interact(GamePlayer player)
@@ -56,12 +56,12 @@ namespace DOL.GS
 				TurnTo(player, 25000);
 				string Material;
 				if (player.Realm == eRealm.Hibernia)
-					Material = "quartz";
+                    Material = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Enchanter.Interact.Text1");
 				else
-					Material = "steel";
+                    Material = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Enchanter.Interact.Text2");
 
-				SayTo(player, eChatLoc.CL_ChatWindow, "I can enchant weapons or armor that are of " + Material + " or better material. Just hand me the weapon you would like enchanted and I will work my magic upon it, for a fee.");
-				return true;
+                SayTo(player, eChatLoc.CL_ChatWindow, LanguageMgr.GetTranslation(player.Client, "Enchanter.Interact.Text3", Material));
+                return true;
 			}
 			return false;
 		}
@@ -79,16 +79,16 @@ namespace DOL.GS
 					if (item.Bonus == 0)
 					{
 						t.TempProperties.setProperty(ENCHANT_ITEM_WEAK, new WeakRef(item));
-						t.Client.Out.SendCustomDialog("It will cost " + Money.GetString(CalculEnchantPrice(item)) + "\x000ato enchant that. Do you accept?", new CustomDialogResponse(EnchanterDialogResponse));
-					}
+                        t.Client.Out.SendCustomDialog(LanguageMgr.GetTranslation(t.Client, "Enchanter.ReceiveItem.Text1", Money.GetString(CalculEnchantPrice(item))), new CustomDialogResponse(EnchanterDialogResponse));
+                    }
 					else
-						SayTo(t, eChatLoc.CL_SystemWindow, "This item is already enchanted!");
-				}
+                        SayTo(t, eChatLoc.CL_SystemWindow, LanguageMgr.GetTranslation(t.Client, "Enchanter.ReceiveItem.Text2"));
+                }
 				else
-					SayTo(t, eChatLoc.CL_SystemWindow, "This item can't be enchanted!");
-			}
+                    SayTo(t, eChatLoc.CL_SystemWindow, LanguageMgr.GetTranslation(t.Client, "Enchanter.ReceiveItem.Text3"));
+            }
 			else
-				SayTo(t, eChatLoc.CL_SystemWindow, "I can't enchant that material.");
+                SayTo(t, eChatLoc.CL_SystemWindow, LanguageMgr.GetTranslation(t.Client, "Enchanter.ReceiveItem.Text4"));
 
 			return false;
 		}
@@ -110,28 +110,28 @@ namespace DOL.GS
 			if (item == null || item.SlotPosition == (int) eInventorySlot.Ground
 				|| item.OwnerID == null || item.OwnerID != player.InternalID)
 			{
-				player.Out.SendMessage("Invalid item.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Enchanter.EnchanterDialogResponse.Text1"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 
 			long Fee = CalculEnchantPrice(item);
 
 			if (player.GetCurrentMoney() < Fee)
 			{
-				SayTo(player, eChatLoc.CL_SystemWindow, "I need " + Money.GetString(Fee) + " to enchant that.");
-				return;
+                SayTo(player, eChatLoc.CL_SystemWindow, LanguageMgr.GetTranslation(player.Client, "Enchanter.EnchanterDialogResponse.Text2", Money.GetString(Fee)));
+                return;
 			}
 			if (item.Level < 50)
 				item.Bonus = BONUS_TABLE[(item.Level/5) - 2];
 			else
 				item.Bonus = 35;
 
-			item.Name = "bright " + item.Name;
-			player.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
-			player.Out.SendMessage("You give " + GetName(0, false) + " " + Money.GetString(Fee) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			player.RemoveMoney(Fee, null);
-			SayTo(player, eChatLoc.CL_SystemWindow, "There, it is now " + item.GetName(1, false) + "!");
-			return;
+            item.Name = LanguageMgr.GetTranslation(player.Client, "Enchanter.EnchanterDialogResponse.Text3") + " " + item.Name;
+            player.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
+            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Enchanter.EnchanterDialogResponse.Text4", GetName(0, false), Money.GetString(Fee)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            player.RemoveMoney(Fee, null);
+            SayTo(player, eChatLoc.CL_SystemWindow, LanguageMgr.GetTranslation(player.Client, "Enchanter.EnchanterDialogResponse.Text5", item.GetName(1, false)));
+            return;
 		}
 
 		public long CalculEnchantPrice(InventoryItem item)
