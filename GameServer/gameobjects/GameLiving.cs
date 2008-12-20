@@ -656,17 +656,31 @@ namespace DOL.GS
 		}
 
 		protected bool m_disarmed = false;
+        protected long m_disarmedtime = 0;
 		/// <summary>
 		/// Is the living disarmed
 		/// </summary>
 		public bool IsDisarmed
 		{
-			get { return m_disarmed; }
-			set
-			{
-				m_disarmed = value;
-			}
+			get { return (m_disarmedtime > 0 && m_disarmedtime > CurrentRegion.Time); }
 		}
+        public long DisarmedTime
+        {
+            get { return m_disarmedtime; }
+            set { m_disarmedtime = value; }
+        }
+
+        protected bool m_issilenced = false;
+        protected long m_silencedtime = 0;
+        public bool IsSilenced
+        {
+            get { return (m_silencedtime > 0 && m_silencedtime > CurrentRegion.Time); }
+        }
+        public long SilencedTime
+        {
+            get { return m_silencedtime; }
+            set { m_silencedtime = value; }
+        }
 
 		/// <summary>
 		/// Gets the current strafing mode
@@ -933,8 +947,46 @@ namespace DOL.GS
 		/// <returns>Style to use or null if none</returns>
 		protected virtual Style GetStyleToUse()
 		{
-			return null;
+            InventoryItem weapon;
+            if (NextCombatStyle == null) return null;
+            if (NextCombatStyle.WeaponTypeRequirement == (int)eObjectType.Shield)
+                weapon = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
+            else weapon = AttackWeapon;
+
+            if (StyleProcessor.CanUseStyle(this, NextCombatStyle, weapon))
+                return NextCombatStyle;
+
+            if (NextCombatBackupStyle == null) return NextCombatStyle;
+
+            return NextCombatBackupStyle;
 		}
+
+        /// <summary>
+        /// Holds the Style that this player wants to use next
+        /// </summary>
+        protected Style m_nextCombatStyle;
+        /// <summary>
+        /// Holds the backup style for the style that the player wants to use next
+        /// </summary>
+        protected Style m_nextCombatBackupStyle;
+        
+        /// <summary>
+        /// Gets or Sets the next combat style to use
+        /// </summary>
+        public Style NextCombatStyle
+        {
+            get { return m_nextCombatStyle; }
+            set { m_nextCombatStyle = value; }
+        }
+        /// <summary>
+        /// Gets or Sets the next combat backup style to use
+        /// </summary>
+        public Style NextCombatBackupStyle
+        {
+            get { return m_nextCombatBackupStyle; }
+            set { m_nextCombatBackupStyle = value; }
+        }
+
 		/// <summary>
 		/// Gets the current attackspeed of this living in milliseconds
 		/// </summary>
@@ -1906,19 +1958,24 @@ namespace DOL.GS
 		/// <param name="attacker">The source of interrupts</param>
 		public virtual void StartInterruptTimer(int duration, AttackData.eAttackType attackType, GameLiving attacker)
 		{
-			//Well, we should make it interrupt on every melee swing anyways. That is how it works on live.
-			// Can't be interrupted if living is not casting
-			//if (!IsCasting)
-			//return;
+            if (!IsAlive || ObjectState != eObjectState.Active)
+            {
+                InterruptTime = 0;
+                return;
+            }
+            if (InterruptTime < CurrentRegion.Time + duration)
+                InterruptTime = CurrentRegion.Time + duration;
 
-			IsBeingInterrupted = true;
-			new InterruptAction(this, attacker, duration, attackType).Start(1);
+            if (CurrentSpellHandler != null)
+                CurrentSpellHandler.CasterIsAttacked(attacker);
+            if (AttackState && ActiveWeaponSlot == eActiveWeaponSlot.Distance)
+                OnInterruptTick(attacker, attackType);
 		}
 
 		/// <summary>
 		/// Interrupts the target for the specified duration
 		/// </summary>
-		protected class InterruptAction : RegionAction
+		/*protected class InterruptAction : RegionAction
 		{
 			/// <summary>
 			/// Holds the interrupt source
@@ -1975,20 +2032,25 @@ namespace DOL.GS
 				if (Interval == 0)
 					target.IsBeingInterrupted = false;
 			}
-		}
+		}*/
 
 		/// <summary>
 		/// Keeps track of an interrupt action running on this living.
 		/// </summary>
 		protected bool m_isBeingInterrupted = false;
+        protected long m_interruptTime = 0;
 
+        public long InterruptTime
+        {
+            get { return m_interruptTime; }
+            set { m_interruptTime = value; }
+        }
 		/// <summary>
 		/// Yields true if interrupt action is running on this living.
 		/// </summary>
 		public bool IsBeingInterrupted
 		{
-			get { return m_isBeingInterrupted; }
-			protected set { m_isBeingInterrupted = value; }
+            get { return (m_interruptTime > CurrentRegion.Time); }
 		}
 
 		/// <summary>
@@ -2286,8 +2348,16 @@ namespace DOL.GS
 					ticksToTarget = 1;
 				}
 
-				new WeaponOnTargetAction(owner, attackTarget, attackWeapon, leftWeapon, leftHandSwingCount, effectiveness, interruptDuration, combatStyle).Start(ticksToTarget);  // really start the attack
-
+                //Genesis : check attack range here, effect: npc's and players will start attack faster instead of waiting another round if the previous failed
+                if (attackTarget != null
+                    && owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance
+                    && !WorldMgr.CheckDistance(owner, attackTarget, owner.AttackRange))
+                {
+                    Interval = 100;
+                    return;
+                }
+                
+                new WeaponOnTargetAction(owner, attackTarget, attackWeapon, leftWeapon, leftHandSwingCount, effectiveness, interruptDuration, combatStyle).Start(ticksToTarget);  // really start the attack
 
 				//Are we inactive?
 				if (owner.ObjectState != eObjectState.Active)
