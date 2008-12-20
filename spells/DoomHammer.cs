@@ -31,7 +31,7 @@ namespace DOL.GS.Spells
 			GamePlayer player=target as GamePlayer;
 			base.ApplyEffectOnTarget(Caster,effectiveness);
 			Caster.StopAttack();
-			Caster.IsDisarmed=true;
+            Caster.DisarmedTime = Caster.CurrentRegion.Time + Spell.Duration;
 			foreach (GamePlayer visPlayer in Caster.GetPlayersInRadius((ushort)WorldMgr.VISIBILITY_DISTANCE))
 				visPlayer.Out.SendCombatAnimation(Caster, target, 0x0000, 0x0000, (ushort)408, 0, 0x00, target.HealthPercent);
 			if(Spell.ResurrectMana>0) foreach (GamePlayer visPlayer in target.GetPlayersInRadius((ushort)WorldMgr.VISIBILITY_DISTANCE))
@@ -41,7 +41,7 @@ namespace DOL.GS.Spells
 		}
 		public override int OnEffectExpires(GameSpellEffect effect,bool noMessages)
 		{
-			Caster.IsDisarmed=false;
+			//Caster.IsDisarmed=false;
 			return base.OnEffectExpires(effect,noMessages);
 		}
 		public DoomHammerSpellHandler(GameLiving caster,Spell spell,SpellLine line) : base(caster,spell,line) {}
