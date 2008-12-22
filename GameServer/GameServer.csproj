@@ -901,6 +901,7 @@
     <Compile Include="packets\Client\168\WorldInitRequestHandler.cs" />
     <Compile Include="packets\Client\168\QuestRemoveRequestHandler.cs" />
     <Compile Include="packets\Server\AbstractPacketLib.cs" />
+    <Compile Include="packets\Server\PacketLib196.cs" />
     <Compile Include="packets\Server\PacketLib188.cs" />
     <Compile Include="packets\Server\CryptLib168.cs" />
     <Compile Include="packets\Server\GSTCPPacketOut.cs" />
