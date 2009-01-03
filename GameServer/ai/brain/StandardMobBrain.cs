@@ -1164,7 +1164,7 @@ namespace DOL.AI.Brain
 			{
 				if (!DOL.GS.ServerProperties.Properties.ALLOW_ROAM)
 					return false;
-				if (Body.RoamingRange <= 0)
+				if (Body.RoamingRange == 0)
 					return false;
 				return true;
 			}
