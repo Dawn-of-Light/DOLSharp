@@ -491,9 +491,11 @@ namespace DOL.GS.Keeps
 		/// <returns></returns>
 		public override bool AddToWorld()
 		{
+			base.RoamingRange = 0;
+			
 			if (!base.AddToWorld())
 				return false;
-				
+			
 			if(IsPortalKeepGuard&&(Brain as KeepGuardBrain!=null))
 			{
 				(this.Brain as KeepGuardBrain).AggroRange=2000;
