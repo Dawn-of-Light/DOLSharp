@@ -50,6 +50,7 @@ DetailDisplayHandler.HandlePacket.TargetMisses:		Ziel trifft nicht
 DetailDisplayHandler.HandlePacket.TargetParrys:		Ziel pariert
 DetailDisplayHandler.HandlePacket.TargetStyle:		Ziel Style
 DetailDisplayHandler.HandlePacket.ToHit:		Trefferchance: 
+DetailDisplayHandler.HandlePacket.UniqueObject:		Einzigartiger Gegenstand
 DetailDisplayHandler.HandlePacket.VeryHigh:		Sehr Hoch
 DetailDisplayHandler.HandlePacket.VeryHighBonus:	Sehr hoher Bonus	
 DetailDisplayHandler.HandlePacket.VeryHighPenalty:	Sehr hoher Abzug

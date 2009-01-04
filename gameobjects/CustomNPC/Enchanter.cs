@@ -33,7 +33,6 @@ namespace DOL.GS
 	public class Enchanter : GameNPC
 	{
 		private const string ENCHANT_ITEM_WEAK = "enchanting item";
-//		private const string TOWARDSTR = " towards you.";
 		private int[] BONUS_TABLE = new int[] {5, 5, 10, 15, 20, 25, 30, 30};
 
         /// <summary>

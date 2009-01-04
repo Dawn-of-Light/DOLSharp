@@ -116,8 +116,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						else if (item.Id_nb == "UniqueObject") // tolakram - force display of unique object
 						{
-							objectInfo.Add("Unique Object");
-							objectInfo.Add(" ");//empty line
+                            objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.UniqueObject"));
+                            objectInfo.Add(" ");//empty line
 						}
 
 						//**********************************
