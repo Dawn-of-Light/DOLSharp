@@ -156,7 +156,7 @@ namespace DOL.GS.Commands
 					emoteMessages = EMOTE_MESSAGES_DANCE;
 					break;
 				case "&dismiss":
-					emoteID = eEmote.Mercy;
+					emoteID = eEmote.Dismiss;
 					emoteMessages = EMOTE_MESSAGES_DISMISS;
 					break;
 				case "&flex":
