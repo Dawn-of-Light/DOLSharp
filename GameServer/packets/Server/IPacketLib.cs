@@ -270,7 +270,7 @@ namespace DOL.GS.PacketHandler
 		Yes = 0x26,
 		Beg = 0x27,
 		Induct = 0x28,
-		Mercy = 0x29,
+		Dismiss = 0x29,
 		LvlUp = 0x2a,
 		Pray = 0x2b,
 		Bind = 0x2c,
