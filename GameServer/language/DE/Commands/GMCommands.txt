@@ -315,7 +315,7 @@ GMCommands.Merchant.Usage.CreateType:			'/merchant create <type>' to create an e
 GMCommands.Merchant.Usage.Info:				'/merchant info' to show info about merchant;	
 GMCommands.Merchant.Usage.Remove:			'/merchant remove' to remove this merchant from the DB;		
 GMCommands.Merchant.Usage.Save:				'/merchant save' to save this merchant as new object in the DB;	
-GMCommands.Merchant.Usage.Sell:				'/merchant sell <itemsListID>' to assign this merchant with an articles list template;	
+GMCommands.Merchant.Usage.Sell:				'/merchant sell add <itemsListTemplateID>' to assign this merchant with an articles list template;	
 GMCommands.Merchant.Usage.SellRemove:			'/merchant sellremove' to remove the articles list template from merchant;		
 GMCommands.Merchant.Usage.Type:				'/merchant type <classtype>';	
 

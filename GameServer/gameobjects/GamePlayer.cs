@@ -10666,7 +10666,23 @@ namespace DOL.GS
 
 			#endregion
 
+            /* -- Kakuri Jan 8 2009 --
+             * Calling OnLevelUp() when loading a character is a very poor way of loading skills and abilities.
+             * OnLevelUp() should *ONLY* be called when a character actually levels up.
+             * Skills and abilities should perhaps have their own handler, instead of being embedded in each
+             * class's OnLevelUp().
+             * I'm not up for fixing it at the moment, but there is a significant bug which I'm not exactly "fixing"
+             * but rather countering below. On PvE servers from lvls 21-50 OnLevelUp() grants the character an
+             * extra Realm Specialization Point (see DOL.GS.CharacterClassSpec.OnLevelUp() in PlayerClass.cs).
+             * Since OnLevelUp() is called every time the character is loaded from the database, each
+             * time a player logs in to the game they get an extra RSP.
+             */
 			CharacterClass.OnLevelUp(this); // load all skills from DB first to keep the order
+            if ( this.Level > 20 && GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE )
+            {
+                this.RealmSpecialtyPoints--;
+            }
+
 			CharacterClass.OnRealmLevelUp(this);
 			RefreshSpecDependantSkills(false);
 			UpdateSpellLineLevels(false);
