@@ -1355,12 +1355,15 @@ namespace DOL.GS.Commands
                     case "findid":
                         {
                             string name = string.Join(" ", args, 2, args.Length - 2);
-                            ItemTemplate[] items = (ItemTemplate[])GameServer.Database.SelectObjects(typeof(ItemTemplate), "id_nb like '%" + GameServer.Database.Escape(name) + "%'");
-                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Item.FindID.MatchingIDsForX", name, items.Length), new object[] { });
-                            foreach (ItemTemplate item in items)
-                            {
-                                DisplayMessage(client, item.Id_nb + " (" + item.Name + ")", new object[] { });
-                            }
+							if(name != "")
+							{
+								ItemTemplate[] items = (ItemTemplate[])GameServer.Database.SelectObjects(typeof(ItemTemplate), "id_nb like '%" + GameServer.Database.Escape(name) + "%'");
+								DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Item.FindID.MatchingIDsForX", name, items.Length), new object[] { });
+								foreach (ItemTemplate item in items)
+								{
+									DisplayMessage(client, item.Id_nb + " (" + item.Name + ")", new object[] { });
+								}
+							}
                             break;
                         }
                     #endregion FindID
@@ -1368,12 +1371,15 @@ namespace DOL.GS.Commands
                     case "findname":
                         {
                             string name = string.Join(" ", args, 2, args.Length - 2);
-                            ItemTemplate[] items = (ItemTemplate[])GameServer.Database.SelectObjects(typeof(ItemTemplate), "name like '%" + GameServer.Database.Escape(name) + "%'");
-                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Item.FindName.MatchingNamesForX", name, items.Length), new object[] { });
-                            foreach (ItemTemplate item in items)
-                            {
-                                DisplayMessage(client, item.Name + "  (" + item.Id_nb + ")", new object[] { });
-                            }
+							if(name != "")
+							{
+								ItemTemplate[] items = (ItemTemplate[])GameServer.Database.SelectObjects(typeof(ItemTemplate), "name like '%" + GameServer.Database.Escape(name) + "%'");
+								DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Item.FindName.MatchingNamesForX", name, items.Length), new object[] { });
+								foreach (ItemTemplate item in items)
+								{
+									DisplayMessage(client, item.Name + "  (" + item.Id_nb + ")", new object[] { });
+								}
+							}
                             break;
                         }
                     #endregion FindName
