@@ -457,7 +457,13 @@ namespace DOL.GS.ServerProperties
         /// </summary>
         [ServerProperty("battlegroup_max_member", "Max number of members allowed in a battlegroup.", 64)]
         public static readonly int BATTLEGROUP_MAX_MEMBER;
-
+        
+        /// <summary>
+        /// This if the server battleground zones are open to players
+        /// </summary>
+        [ServerProperty("bg_zones_open", "Can the players teleport to battleground", true)]
+        public static readonly bool BG_ZONES_OPENED;
+        
         /// <summary>
         /// This enables or disables new guild dues. Live standard is 2% dues
         /// </summary>
