@@ -98,7 +98,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					if (player.Client.Account.PrivLevel > (uint)ePrivLevel.Player))
+					if (player.Client.Account.PrivLevel > (uint)ePrivLevel.Player)
 						player.Out.SendMessage("No portal keep found.",
 							eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
 					return true;
