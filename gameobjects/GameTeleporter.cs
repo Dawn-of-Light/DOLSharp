@@ -77,7 +77,9 @@ namespace DOL.GS
 
 			// Battlegrounds is special, as the teleport location depends on
 			// the level of the player, so let's deal with that first.
-
+			if (!ServerProperties.Properties.BG_ZONES_OPENED && player.Client.Account.PrivLevel == (uint)ePrivLevel.Player)
+				player.Out.SendMessage("The King forbids me to teleport you in this place. Sorry!",eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+			else
 			if (text.ToLower() == "battlegrounds")
 			{
 				AbstractGameKeep portalKeep = KeepMgr.GetBGPK(player);
