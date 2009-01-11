@@ -74,11 +74,11 @@ namespace DOL.GS
 			GamePlayer player = source as GamePlayer;
 			if (player == null)
 				return false;
-
-			// Battlegrounds is special, as the teleport location depends on
+			
+			// Battlegrounds are specials, as the teleport location depends on
 			// the level of the player, so let's deal with that first.
 			if (!ServerProperties.Properties.BG_ZONES_OPENED && player.Client.Account.PrivLevel == (uint)ePrivLevel.Player)
-				player.Out.SendMessage("The King forbids me to teleport you in this place. Sorry!",eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+				SayTo(player,"Upon orders of the King, your destination is unvailable for now.");
 			else
 			if (text.ToLower() == "battlegrounds")
 			{
@@ -98,7 +98,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					if (player.Client.Account.PrivLevel > 1)
+					if (player.Client.Account.PrivLevel > (uint)ePrivLevel.Player))
 						player.Out.SendMessage("No portal keep found.",
 							eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
 					return true;
