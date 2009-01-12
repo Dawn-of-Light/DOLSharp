@@ -120,7 +120,7 @@ namespace DOL.GS
 		/// <returns>true if added</returns>
 		public bool AddNPCEquipment(eInventorySlot slot, int model, int color, int effect)
 		{
-			return AddNPCEquipment(slot, model, color, 0, 0);
+			return AddNPCEquipment(slot, model, color, effect, 0);
 		}
 
 		/// <summary>
