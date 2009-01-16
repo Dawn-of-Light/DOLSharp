@@ -49,19 +49,19 @@ namespace DOL.AI.Brain
 			//if we are not doing an action, let us see if we should move somewhere
 			if (guard.CurrentSpellHandler == null && !guard.IsMoving && !guard.AttackState && !guard.InCombat)
 			{
-				if (guard.X != guard.SpawnX ||
-					guard.Y != guard.SpawnY ||
-					guard.Z != guard.SpawnZ)
+				if (guard.X != guard.SpawnPoint.X ||
+					guard.Y != guard.SpawnPoint.Y ||
+					guard.Z != guard.SpawnPoint.Z)
 					guard.WalkToSpawn();
 			}
 			//Eden - Portal Keeps Guards max distance
-			if (guard.Level > 200 && WorldMgr.GetDistance(guard.SpawnX, guard.SpawnY, guard.SpawnZ, guard.X, guard.Y, guard.Z) > 2000)
+            if ( guard.Level > 200 && !guard.IsWithinRadius( guard.SpawnPoint, 2000 ) )
 			{
 				ClearAggroList();
 				guard.WalkToSpawn();
 			}
 			// other guards max distance
-			else if (!guard.InCombat && WorldMgr.GetDistance(guard.SpawnX, guard.SpawnY, guard.SpawnZ, guard.X, guard.Y, guard.Z) > 6000)
+            else if ( !guard.InCombat && !guard.IsWithinRadius( guard.SpawnPoint, 6000 ) )
 			{
 				ClearAggroList();
 				guard.WalkToSpawn();
@@ -85,7 +85,7 @@ namespace DOL.AI.Brain
 				{
                     WarMapMgr.AddGroup((byte)player.CurrentZone.ID, player.X, player.Y, player.Name, (byte)player.Realm);
 
-                    if (WorldMgr.GetDistance(player, Body) > AggroRange)
+                    if ( !Body.IsWithinRadius( player, AggroRange ) )
                         continue;
                     if ((Body as GameKeepGuard).Component != null && !KeepMgr.IsEnemy(Body as GameKeepGuard, player, true))
 						continue;

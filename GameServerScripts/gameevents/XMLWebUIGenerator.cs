@@ -322,7 +322,6 @@ namespace DOL.GS.Scripts
 					pi.Y = plr.Y;
 				}
 
-				db.WriteDatabaseTables();
 				con = null;
 				db = null;
 

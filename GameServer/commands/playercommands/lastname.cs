@@ -56,7 +56,7 @@ namespace DOL.GS.Commands
 			}
 
 			/* Chek if you are near enough to NPC*/
-			if (WorldMgr.GetDistance(client.Player, client.Player.TargetObject) > WorldMgr.INTERACT_DISTANCE)
+			if ( !client.Player.IsWithinRadius( client.Player.TargetObject, WorldMgr.INTERACT_DISTANCE ) )
 			{
 				client.Out.SendMessage("You are too far away to interact with " + client.Player.TargetObject.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -137,7 +137,7 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-			if (WorldMgr.GetDistance(player, player.TargetObject) > WorldMgr.INTERACT_DISTANCE)
+			if ( !player.IsWithinRadius( player.TargetObject, WorldMgr.INTERACT_DISTANCE ) )
 			{
 				player.Out.SendMessage("You are too far away to interact with " + player.TargetObject.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;

@@ -147,10 +147,9 @@ namespace DOL.GS
                 m_player.Inventory.RemoveItem(m_item);
                 gameItem = new GameInventoryItem(m_item);
 
-                int x, y;
-                m_player.GetSpotFromHeading(30, out x, out y);
-                gameItem.X = x;
-                gameItem.Y = y;
+                Point2D point = m_player.GetPointFromHeading( m_player.Heading, 30 );
+                gameItem.X = point.X;
+                gameItem.Y = point.Y;
                 gameItem.Z = m_player.Z;
                 gameItem.Heading = m_player.Heading;
                 gameItem.CurrentRegionID = m_player.CurrentRegionID;

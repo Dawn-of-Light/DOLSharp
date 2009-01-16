@@ -157,7 +157,7 @@ namespace DOL.GS.Effects
                 return 0;
             }
 
-            int dist = WorldMgr.GetDistance(spirit, targetPlayer);
+            int dist = spirit.GetDistance( targetPlayer );
             if (dist < 100)
             {
                 ApplySpiritEffect(spirit, targetPlayer);

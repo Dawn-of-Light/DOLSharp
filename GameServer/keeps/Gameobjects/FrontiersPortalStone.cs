@@ -119,7 +119,9 @@ namespace DOL.GS.Keeps
 			ushort originalHeading = m_Heading;
 			m_Heading = (ushort)Util.Random((m_Heading - 500), (m_Heading + 500));
 			int distance = Util.Random(50, 150);
-			GetSpotFromHeading(distance, out x, out y);
+            Point2D portloc = this.GetPointFromHeading( this.Heading, distance );
+            x = portloc.X;
+            y = portloc.Y;
 			m_Heading = originalHeading;
 		}
 

@@ -81,7 +81,7 @@ namespace DOL.GS.Spells
 			String targetType = m_spell.Target.ToLower();
 			if (targetType == "area")
 			{
-				if (!WorldMgr.CheckDistance(m_caster, m_caster.GroundTarget, CalculateSpellRange()))
+				if (!m_caster.IsWithinRadius(m_caster.GroundTarget, CalculateSpellRange()))
 				{
 					MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
 					return false;

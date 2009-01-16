@@ -77,13 +77,13 @@ namespace DOL.GS
 		/// <param name="p1"></param>
 		/// <param name="p2"></param>
 		/// <returns></returns>
-		public static int GetDistance(IGameLocation p1, IGameLocation p2)
+		public int GetDistance( IGameLocation location )
 		{
-			if (p1.RegionID == p2.RegionID) 
+			if (this.RegionID == location.RegionID)
 			{
-				return GetDistance(p1.X, p1.Y, p1.Z, p2.X, p2.Y, p2.Z);
-			} 
-			else 
+				return base.GetDistance( location );
+			}
+			else
 			{
 				return -1;
 			}
@@ -111,33 +111,15 @@ namespace DOL.GS
 		{
 			Zone z = WorldMgr.GetZone(zoneId);
 			return globalY - z.YOffset;
-		}		
-
-		/// <summary>
-		/// calculates distance between 2 locations
-		/// </summary>
-		/// <param name="r1"></param>
-		/// <param name="x1"></param>
-		/// <param name="y1"></param>
-		/// <param name="z1"></param>
-		/// <param name="r2"></param>
-		/// <param name="x2"></param>
-		/// <param name="y2"></param>
-		/// <param name="z2"></param>
-		/// <returns></returns>
-		public static int GetDistance(int r1, int x1, int y1, int z1, int r2, int x2, int y2, int z2)
-		{			
-			if (r1 == r2) 
-			{
-				long xdiff = (long)x1-x2;
-				long ydiff = (long)y1-y2;
-				long zdiff = (long)z1-z2;
-				return (int)Math.Sqrt(xdiff*xdiff + ydiff*ydiff + zdiff*zdiff);
-			} 
-			else 
-			{
-				return -1;
-			}
 		}
+
+        [Obsolete( "Use instance method GetDistance( IGameLocation location )" )]
+        public static int GetDistance( int r1, int x1, int y1, int z1, int r2, int x2, int y2, int z2 )
+        {
+            GameLocation loc1 = new GameLocation( "loc1", (ushort)r1, x1, y1, z1 );
+            GameLocation loc2 = new GameLocation( "loc2", (ushort)r2, x2, y2, z2 );
+
+            return loc1.GetDistance( loc2 );
+        }
 	}
 }

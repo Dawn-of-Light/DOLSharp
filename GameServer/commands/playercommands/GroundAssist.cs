@@ -53,7 +53,7 @@ namespace DOL.GS.Commands
 			if (!GameServer.ServerRules.IsSameRealm(client.Player, target as GameLiving, false))
 				return;
 
-			if (!WorldMgr.CheckDistance(client.Player, target, 2048))
+			if (!client.Player.IsWithinRadius( target, 2048 ))
 			{
 				client.Out.SendMessage("You don't see " + args[1] + " around here!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;

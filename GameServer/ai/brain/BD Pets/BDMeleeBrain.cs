@@ -62,7 +62,7 @@ namespace DOL.AI.Brain
 					switch (ab.KeyName)
 					{
 						case Abilities.ChargeAbility:
-							if (WorldMgr.GetDistance(Body.TargetObject, Body) >= 500)
+							if (!Body.IsWithinRadius(Body.TargetObject, 500 ))
 							{
 								ChargeAbility charge = Body.GetAbility(typeof(ChargeAbility)) as ChargeAbility;
 								if (charge != null && Body.GetSkillDisabledDuration(charge) <= 0)

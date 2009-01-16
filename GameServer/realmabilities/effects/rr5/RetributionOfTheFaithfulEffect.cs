@@ -119,7 +119,7 @@ namespace DOL.GS.Effects
 			//FIXME: [WARN] this has been commented out, it should be handled somewhere
 			if (args.AttackData.Attacker.EffectList.GetOfType(typeof(ChargeEffect)) != null || args.AttackData.Attacker.TempProperties.getProperty("Charging", false))
 				return;
-            if (WorldMgr.GetDistance(owner,args.AttackData.Attacker) > 300) return;
+            if ( !owner.IsWithinRadius( args.AttackData.Attacker, 300 ) ) return;
             if (Util.Chance(50))
             {
                 RetributionOfTheFaithfulStunEffect effect = new RetributionOfTheFaithfulStunEffect();
