@@ -56,7 +56,7 @@ namespace DOL.GS.RealmAbilities
 				if (GameServer.ServerRules.IsAllowedToAttack(player, t_player, true) == false)
 					continue;
 
-				if (WorldMgr.GetDistance(player, t_player) > 200)
+				if (!player.IsWithinRadius( t_player, 200 ))
 					continue;
 				t_player.TakeDamage(player, eDamageType.Spirit, dmgValue, 0);
 

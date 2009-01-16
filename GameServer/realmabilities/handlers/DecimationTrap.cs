@@ -44,7 +44,7 @@ namespace DOL.GS.RealmAbilities
 
 			if (living.GroundTarget == null)
 				return;
-			if (WorldMgr.GetDistance(living, living.GroundTarget.X, living.GroundTarget.Y, living.GroundTarget.Z) > 1500)
+			if (!living.IsWithinRadius( living.GroundTarget, 1500 ))
 				return;
 			GamePlayer player = living as GamePlayer;
 			if (player == null)
@@ -146,7 +146,7 @@ namespace DOL.GS.RealmAbilities
 				ticktimer.Stop();
 				removeHandlers();
 			}
-			int dist = WorldMgr.GetDistance(target, traparea.X, traparea.Y, traparea.Z);
+			int dist = target.GetDistance( new Point3D( traparea.X, traparea.Y, traparea.Z ) );
 			double mod = 1;
 			if (dist > 0)
 				mod = 1 - ((double)dist / 350);

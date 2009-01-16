@@ -55,7 +55,7 @@ namespace DOL.GS.Commands
 				{
 					if (player != client.Player)
 					{
-						ushort headingtemp = player.GetHeadingToTarget(client.Player);
+						ushort headingtemp = player.GetHeading(client.Player);
 						ushort headingtotarget = (ushort)(headingtemp - player.Heading);
 						string direction = "";
 						if (headingtotarget < 0)

@@ -690,7 +690,7 @@ namespace DOL.GS.ServerRules
 					GamePlayer player = de.Key as GamePlayer;
 
 					//Check stipulations
-					if (player == null || player.ObjectState != GameObject.eObjectState.Active || !WorldMgr.CheckDistance(player, killedNPC, WorldMgr.MAX_EXPFORKILL_DISTANCE))
+					if (player == null || player.ObjectState != GameObject.eObjectState.Active || !player.IsWithinRadius(killedNPC, WorldMgr.MAX_EXPFORKILL_DISTANCE))
 						continue;
 
 					if (player.Group != null)
@@ -721,7 +721,7 @@ namespace DOL.GS.ServerRules
 					GameLiving living = de.Key as GameLiving;
 					GamePlayer player = living as GamePlayer;
 					//Check stipulations
-					if (living == null || living.ObjectState != GameObject.eObjectState.Active || !WorldMgr.CheckDistance(living, killedNPC, WorldMgr.MAX_EXPFORKILL_DISTANCE))
+					if (living == null || living.ObjectState != GameObject.eObjectState.Active || !living.IsWithinRadius(killedNPC, WorldMgr.MAX_EXPFORKILL_DISTANCE))
 						continue;
 
 					//Changed: people were getting penalized for their pets doing damage
@@ -923,7 +923,7 @@ namespace DOL.GS.ServerRules
 					 * if a target is being attacked by another non grouped player as well.
 					 */
 					//if (!living.Alive) continue;
-					if (!WorldMgr.CheckDistance(living, killedLiving, WorldMgr.MAX_EXPFORKILL_DISTANCE))
+					if (!living.IsWithinRadius(killedLiving, WorldMgr.MAX_EXPFORKILL_DISTANCE))
 					{
 						continue;
 					}
@@ -949,7 +949,7 @@ namespace DOL.GS.ServerRules
 								int count = 0;
 								foreach (GamePlayer player in killerPlayer.Group.GetPlayersInTheGroup())
 								{
-									if (!WorldMgr.CheckDistance(player, killedLiving, WorldMgr.MAX_EXPFORKILL_DISTANCE)) continue;
+									if (!player.IsWithinRadius(killedLiving, WorldMgr.MAX_EXPFORKILL_DISTANCE)) continue;
 									count++;
 								}
 								realmPoints = (int)(realmPoints * (1.0 + count * 0.125));
@@ -1087,7 +1087,7 @@ namespace DOL.GS.ServerRules
 					 * if a target is being attacked by another non grouped player as well.
 					 */
 					//if (!living.Alive) continue;
-					if (!WorldMgr.CheckDistance(living, killedPlayer, WorldMgr.MAX_EXPFORKILL_DISTANCE)) continue;
+					if (!living.IsWithinRadius(killedPlayer, WorldMgr.MAX_EXPFORKILL_DISTANCE)) continue;
 
 
 					double damagePercent = (float)de.Value / totalDamage;
@@ -1115,7 +1115,7 @@ namespace DOL.GS.ServerRules
 									int count = 0;
 									foreach (GamePlayer player in killerPlayer.Group.GetPlayersInTheGroup())
 									{
-										if (!WorldMgr.CheckDistance(player, killedPlayer, WorldMgr.MAX_EXPFORKILL_DISTANCE)) continue;
+										if (!player.IsWithinRadius(killedPlayer, WorldMgr.MAX_EXPFORKILL_DISTANCE)) continue;
 										count++;
 									}
 									realmPoints = (int)(realmPoints * (1.0 + count * 0.125));

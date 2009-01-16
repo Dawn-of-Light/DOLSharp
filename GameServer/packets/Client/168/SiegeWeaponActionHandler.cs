@@ -47,7 +47,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				client.Out.SendMessage("You can't control a siege weapon now!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;
 			}
-			if (!WorldMgr.CheckDistance(client.Player, client.Player.SiegeWeapon, GameSiegeWeapon.SIEGE_WEAPON_CONTROLE_DISTANCE))
+            if( !client.Player.IsWithinRadius( client.Player.SiegeWeapon, GameSiegeWeapon.SIEGE_WEAPON_CONTROLE_DISTANCE ) )
 			{
 				client.Out.SendMessage(client.Player.SiegeWeapon.GetName(0, true) + " is too far away for you to control!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 1;

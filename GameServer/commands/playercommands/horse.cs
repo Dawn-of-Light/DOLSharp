@@ -27,9 +27,7 @@ namespace DOL.GS.Commands
 
 			if (target != null)
 			{
-				int distanceToTarget = WorldMgr.GetDistance((GameObject)client.Player, target);
-
-				if (distanceToTarget > EMOTE_RANGE_TO_TARGET || distanceToTarget < 0)
+				if ( client.Player.IsWithinRadius( target, EMOTE_RANGE_TO_TARGET ) == false )
 					target = null;
 			}
 

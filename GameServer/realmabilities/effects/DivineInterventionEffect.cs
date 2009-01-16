@@ -80,7 +80,7 @@ namespace DOL.GS.RealmAbilities
 			TakeDamageEventArgs targs = args as TakeDamageEventArgs;
 			GamePlayer player = sender as GamePlayer;
 
-			if (!WorldMgr.CheckDistance(player, m_owner, 2300))
+			if (!player.IsWithinRadius(m_owner, 2300))
 				return;
 
 			if (targs.DamageType == eDamageType.Falling) return;

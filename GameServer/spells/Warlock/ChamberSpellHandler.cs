@@ -145,7 +145,7 @@ namespace DOL.GS.Spells
 					return false;
 				}
 
-				if (WorldMgr.GetDistance(m_caster, m_caster.TargetObject) > ((SpellHandler)spellhandler).CalculateSpellRange()) 
+                if ( !m_caster.IsWithinRadius( m_caster.TargetObject, ( (SpellHandler)spellhandler ).CalculateSpellRange() ) )
 				{
 					MessageToCaster("That target is too far away!", eChatType.CT_SpellResisted);
 					return false;

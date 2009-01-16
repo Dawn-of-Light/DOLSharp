@@ -150,7 +150,7 @@ namespace DOL.GS.Spells
 							IControlledBrain npc = m_caster.ControlledNpc;
 							if (npc != null)
 							{
-								if (WorldMgr.CheckDistance(m_caster, npc.Body, spellRange))
+								if (m_caster.IsWithinRadius(npc.Body, spellRange))
 									list.Add(npc.Body);
 							}
 						}
@@ -159,13 +159,13 @@ namespace DOL.GS.Spells
 							foreach (GameLiving living in group.GetMembersInTheGroup())
 							{
 								// only players in range
-								if (WorldMgr.CheckDistance(m_caster, living, spellRange))
+								if (m_caster.IsWithinRadius(living, spellRange))
 									list.Add(living);
 
 								IControlledBrain npc = living.ControlledNpc;
 								if (npc != null)
 								{
-									if (WorldMgr.CheckDistance(living, npc.Body, spellRange))
+									if (living.IsWithinRadius(npc.Body, spellRange))
 										list.Add(npc.Body);
 								}
 							}
@@ -348,7 +348,7 @@ namespace DOL.GS.Spells
 							IControlledBrain npc = m_caster.ControlledNpc;
 							if (npc != null)
 							{
-								if (WorldMgr.CheckDistance(m_caster, npc.Body, spellRange))
+								if (m_caster.IsWithinRadius(npc.Body, spellRange))
 									list.Add(npc.Body);
 							}
 						}
@@ -357,13 +357,13 @@ namespace DOL.GS.Spells
 							foreach (GameLiving living in group.GetMembersInTheGroup())
 							{
 								// only players in range
-								if (WorldMgr.CheckDistance(m_caster, living, spellRange))
+								if (m_caster.IsWithinRadius(living, spellRange))
 									list.Add(living);
 
 								IControlledBrain npc = living.ControlledNpc;
 								if (npc != null)
 								{
-									if (WorldMgr.CheckDistance(m_caster, npc.Body, spellRange))
+									if (m_caster.IsWithinRadius(npc.Body, spellRange))
 										list.Add(npc.Body);
 								}
 							}
@@ -536,7 +536,7 @@ namespace DOL.GS.Spells
 							IControlledBrain npc = m_caster.ControlledNpc;
 							if (npc != null)
 							{
-								if (WorldMgr.CheckDistance(m_caster, npc.Body, spellRange))
+								if (m_caster.IsWithinRadius(npc.Body, spellRange))
 									list.Add(npc.Body);
 							}
 						}
@@ -545,13 +545,13 @@ namespace DOL.GS.Spells
 							foreach (GameLiving living in group.GetMembersInTheGroup())
 							{
 								// only players in range
-								if (WorldMgr.CheckDistance(m_caster, living, spellRange))
+								if (m_caster.IsWithinRadius(living, spellRange))
 									list.Add(living);
 
 								IControlledBrain npc = living.ControlledNpc;
 								if (npc != null)
 								{
-									if (WorldMgr.CheckDistance(living, npc.Body, spellRange))
+									if (living.IsWithinRadius(npc.Body, spellRange))
 										list.Add(npc.Body);
 								}
 							}
@@ -725,7 +725,7 @@ namespace DOL.GS.Spells
 							IControlledBrain npc = m_caster.ControlledNpc;
 							if (npc != null)
 							{
-								if (WorldMgr.CheckDistance(m_caster, npc.Body, spellRange))
+								if (m_caster.IsWithinRadius(npc.Body, spellRange))
 									list.Add(npc.Body);
 							}
 						}
@@ -734,13 +734,13 @@ namespace DOL.GS.Spells
 							foreach (GameLiving living in group.GetMembersInTheGroup())
 							{
 								// only players in range
-								if (WorldMgr.CheckDistance(m_caster, living, spellRange))
+								if (m_caster.IsWithinRadius(living, spellRange))
 									list.Add(living);
 
 								IControlledBrain npc = living.ControlledNpc;
 								if (npc != null)
 								{
-									if (WorldMgr.CheckDistance(living, npc.Body, spellRange))
+									if (living.IsWithinRadius(npc.Body, spellRange))
 										list.Add(npc.Body);
 								}
 							}
@@ -935,7 +935,7 @@ namespace DOL.GS.Spells
 							IControlledBrain npc = m_caster.ControlledNpc;
 							if (npc != null)
 							{
-								if (WorldMgr.CheckDistance(m_caster, npc.Body, spellRange))
+								if (m_caster.IsWithinRadius(npc.Body, spellRange))
 									list.Add(npc.Body);
 							}
 						}
@@ -944,13 +944,13 @@ namespace DOL.GS.Spells
 							foreach (GameLiving living in group.GetMembersInTheGroup())
 							{
 								// only players in range
-								if (WorldMgr.CheckDistance(m_caster, living, spellRange))
+								if (m_caster.IsWithinRadius(living, spellRange))
 									list.Add(living);
 
 								IControlledBrain npc = living.ControlledNpc;
 								if (npc != null)
 								{
-									if (WorldMgr.CheckDistance(living, npc.Body, spellRange))
+									if (living.IsWithinRadius(npc.Body, spellRange))
 										list.Add(npc.Body);
 								}
 							}

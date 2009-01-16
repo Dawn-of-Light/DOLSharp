@@ -20,7 +20,7 @@ namespace DOL.GS.Keeps
 			if(target==null) return;
 			if(!target.IsAlive) return;
 			if(target is GamePlayer && !KeepMgr.IsEnemy(guard, target as GamePlayer, true)) return;
-			if(WorldMgr.GetDistance(guard,target)>WorldMgr.VISIBILITY_DISTANCE) { guard.TargetObject=null; return; }
+            if ( !guard.IsWithinRadius( target, WorldMgr.VISIBILITY_DISTANCE ) ) { guard.TargetObject = null; return; }
 			GamePlayer LOSChecker = null;
 			if (target is GamePlayer) LOSChecker = target as GamePlayer;
 			else

@@ -275,8 +275,8 @@ namespace DOL.GS.Keeps
 			this.Name = keep.Name;
 			this.Model = INVISIBLE_MODEL;
 			this.Skin = component.Skin;
-			m_oldMaxHealth = MaxHealth;
-			this.Health = MaxHealth;
+            m_oldMaxHealth = MaxHealth;
+            this.Health = MaxHealth;
 			//			this.Health = component.Health;
 			this.m_oldHealthPercent = this.HealthPercent;
 			this.CurrentRegion = myregion;
@@ -286,7 +286,7 @@ namespace DOL.GS.Keeps
 			LoadPositions();
 			this.AddToWorld();
 			FillPositions();
-			this.RepairedHealth = this.MaxHealth;
+            this.RepairedHealth = this.MaxHealth;
 			StartHealthRegeneration();
 		}
 
@@ -496,7 +496,7 @@ namespace DOL.GS.Keeps
 					foreach (GameKeepGuard guard in this.Keep.Guards.Values)
 					{
 						guard.MoveTo(guard.CurrentRegionID, guard.X, guard.Y, this.Keep.Z, guard.Heading);
-						guard.SpawnZ = this.Keep.Z;
+						guard.SpawnPoint.Z = this.Keep.Z;
 					}
 				}
 			}

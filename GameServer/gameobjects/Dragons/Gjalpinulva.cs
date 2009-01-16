@@ -105,7 +105,7 @@ namespace DOL.GS
 				case 2: return new Point3D(706924, 1023596, 0);
 				case 3: return new Point3D(711441, 1023175, 0);
 				case 4: return new Point3D(710708, 1018894, 0);
-				default: return new Point3D(SpawnX, SpawnY, SpawnZ);
+				default: return SpawnPoint;
 			}
 		}
 

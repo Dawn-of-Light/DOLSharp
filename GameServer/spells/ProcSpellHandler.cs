@@ -320,7 +320,7 @@ namespace DOL.GS.Spells
 							{
 								foreach (GameLiving groupPlayer in player.Group.GetMembersInTheGroup())
 								{
-									if (WorldMgr.CheckDistance(player, groupPlayer, m_procSpell.Range))
+									if (player.IsWithinRadius(groupPlayer, m_procSpell.Range))
 									{
 										handler.StartSpell(groupPlayer);
 									}
