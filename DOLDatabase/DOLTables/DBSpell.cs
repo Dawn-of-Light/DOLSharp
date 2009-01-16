@@ -64,7 +64,8 @@ namespace DOL.Database
 		protected bool m_moveCast = false;
 		protected bool m_uninterruptible = false;
 		protected bool m_isfocus = false;
-        	protected int m_sharedtimergroup; 
+        protected int m_sharedtimergroup;
+        protected string m_packageID="";
         
 		// warlock
 		protected bool m_isprimary;
@@ -569,7 +570,7 @@ namespace DOL.Database
                 m_sharedtimergroup = value;
             }
         }
-
+        
 		#region warlock
 		[DataElement(AllowDbNull = true)]
 		public bool IsPrimary
@@ -611,5 +612,16 @@ namespace DOL.Database
 			}
 		}
 		#endregion
+	
+		[DataElement(AllowDbNull = true)]
+		public string PackageID
+		{
+			get { return m_packageID; }
+			set
+			{
+				m_packageID = value;
+				Dirty = true;
+			}
+		}
 	}
 }
