@@ -671,7 +671,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				if (client.Player.TradeWindow.Partner != null)
 				{
-					if (!WorldMgr.CheckDistance(client.Player, client.Player.TradeWindow.Partner, WorldMgr.GIVE_ITEM_DISTANCE))
+					if (!client.Player.IsWithinRadius(client.Player.TradeWindow.Partner, WorldMgr.GIVE_ITEM_DISTANCE))
 						client.Player.TradeWindow.CloseTrade();
 				}
 			}

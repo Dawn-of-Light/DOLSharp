@@ -353,7 +353,7 @@ namespace DOL.AI.Brain
             // Check if pet is past hard tether range, if so, despawn it
             // right away.
 
-            if (!WorldMgr.CheckDistance(Body, Owner, m_hardTether))
+            if (!Body.IsWithinRadius(Owner, m_hardTether))
             {
 				if (m_tetherTimer != null)
 					m_tetherTimer.Stop();
@@ -363,7 +363,7 @@ namespace DOL.AI.Brain
 
             // Check if pet is out of soft tether range.
 
-            if (!WorldMgr.CheckDistance(Body, Owner, m_softTether))
+            if (!Body.IsWithinRadius(Owner, m_softTether))
             {
                 if (m_tetherTimer == null)
                 {

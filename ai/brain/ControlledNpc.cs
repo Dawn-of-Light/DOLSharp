@@ -337,7 +337,7 @@ namespace DOL.AI.Brain
 			//See if the pet is too far away, if so release it!
 			if (Owner is GamePlayer && IsMainPet)
 			{
-				if (!WorldMgr.CheckDistance(Body, Owner, MAX_OWNER_FOLLOW_DIST))
+				if (!Body.IsWithinRadius(Owner, MAX_OWNER_FOLLOW_DIST))
 					(Owner as GamePlayer).CommandNpcRelease();
 			}
 
@@ -388,7 +388,7 @@ namespace DOL.AI.Brain
 							}
 						case Abilities.ChargeAbility:
 							{
-								if (WorldMgr.GetDistance(Body.TargetObject, Body) >= 500)
+                                if ( !Body.IsWithinRadius( Body.TargetObject, 500 ) )
 								{
 									ChargeAbility charge = Body.GetAbility(typeof(ChargeAbility)) as ChargeAbility;
 									if (charge != null && Body.GetSkillDisabledDuration(charge) <= 0)

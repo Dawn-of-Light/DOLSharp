@@ -203,7 +203,7 @@ namespace DOL.GS.Quests
 			{
 				if (m_owner is Group)
 				{
-					if (!WorldMgr.CheckDistance(player, (m_owner as Group).Leader, WorldMgr.MAX_EXPFORKILL_DISTANCE))
+					if (!player.IsWithinRadius((m_owner as Group).Leader, WorldMgr.MAX_EXPFORKILL_DISTANCE))
 						continue;
 				}
 				if (RewardXP > 0)

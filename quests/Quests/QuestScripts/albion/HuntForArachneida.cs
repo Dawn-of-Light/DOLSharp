@@ -696,9 +696,9 @@ namespace DOL.GS.Quests.Albion
 				InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
 				if (item != null && item.Id_nb == bloatedFang.Id_nb)
 				{
-					if (WorldMgr.GetDistance(player, arachneida) < 500 && !arachneida.IsAlive)
+                    if ( player.IsWithinRadius( arachneida, 500 ) && !arachneida.IsAlive )
 					{
-						SendSystemMessage(player, "You use the bloated spider fang to retrieve arachneida's chitin!");
+						SendSystemMessage(player, "You use the bloated spider fang to retrieve Arachneida's chitin!");
 						GiveItem(player, spiderChitin);
 
 						quest.Step = 4;

@@ -72,7 +72,7 @@ namespace DOL.GS.Keeps
 					keep.Load(datakeep);
 					m_keeps.Add(datakeep.KeepID, keep);
 				}
-				foreach (AbstractGameKeep keep in m_keeps.Values)
+                foreach ( AbstractGameKeep keep in m_keeps.Values )
 				{
 					GameKeepTower tower = keep as GameKeepTower;
 					if (tower == null) continue;
@@ -82,7 +82,7 @@ namespace DOL.GS.Keeps
 						mykeep.AddTower(tower);
 					tower.Keep = mykeep;
 				}
-				//get with one command is more quick even if we look for keep in hashtable
+                //get with one command is more quick even if we look for keep in hashtable
 				DBKeepComponent[] keepcomponents = (DBKeepComponent[])GameServer.Database.SelectAllObjects(typeof(DBKeepComponent));
 				foreach (DBKeepComponent component in keepcomponents)
 				{
@@ -97,7 +97,7 @@ namespace DOL.GS.Keeps
 					gamecomponent.LoadFromDatabase(component, keep);
 					keep.KeepComponents.Add(gamecomponent);
 				}
-				if (m_keeps.Count != 0)
+                if ( m_keeps.Count != 0 )
 				{
 					foreach (AbstractGameKeep keep in m_keeps.Values)
 					{
@@ -105,8 +105,8 @@ namespace DOL.GS.Keeps
 							keep.KeepComponents.Sort();
 					}
 				}
-				LoadHookPoints();
-				Logger.Info("Loaded " + m_keeps.Count + " keeps successfully");
+                LoadHookPoints();
+                Logger.Info( "Loaded " + m_keeps.Count + " keeps successfully" );
 			}
 
 			if (ServerProperties.Properties.USE_KEEP_BALANCING)
@@ -115,7 +115,6 @@ namespace DOL.GS.Keeps
 			if (ServerProperties.Properties.USE_LIVE_KEEP_BONUSES)
 				KeepBonusMgr.UpdateCounts();
 
-			
 			return true;
 		}
 

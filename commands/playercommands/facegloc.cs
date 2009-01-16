@@ -42,6 +42,7 @@ namespace DOL.GS.Commands
 				client.Out.SendMessage("Please enter X and Y coordinates.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
+
 			int x, y;
 			try
 			{
@@ -53,7 +54,8 @@ namespace DOL.GS.Commands
 				client.Out.SendMessage("Please enter X and Y coordinates.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			ushort direction = client.Player.GetHeadingToSpot(x, y);
+
+            ushort direction = client.Player.GetHeading( new Point2D( x, y ) );
 			client.Player.Heading = direction;
 			client.Out.SendPlayerJump(true);
 		}

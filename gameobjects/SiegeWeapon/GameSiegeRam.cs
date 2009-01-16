@@ -89,7 +89,7 @@ namespace DOL.GS
 				return;
 			}
 			//todo good  distance check
-			if (!WorldMgr.CheckDistance(this, target, AttackRange))
+			if (!this.IsWithinRadius(target, AttackRange))
 			{
 				Owner.Out.SendMessage("You are too far away to attack " + target.Name, eChatType.CT_System,
 									  eChatLoc.CL_SystemWindow);

@@ -1128,107 +1128,117 @@ namespace DOL.GS
 			return;
 		}
 
-		//Various functions to get a list of players/mobs/items
-		#region getdistance
-		/// <summary>
-		/// Get's the distance of two GameObjects
-		/// </summary>
-		/// <param name="obj1">Object1</param>
-		/// <param name="obj2">Object2</param>
-		/// <returns>The distance in units or -1 if they are not the same Region</returns>
-		public static int GetDistance(GameObject obj1, GameObject obj2)
-		{
-			if (obj1 == null || obj2 == null || obj1.CurrentRegion != obj2.CurrentRegion)
-				return -1;
-			return GetDistance(obj1.X, obj1.Y, obj1.Z, obj2.X, obj2.Y, obj2.Z);
-		}
+        //Various functions to get a list of players/mobs/items
+        #region getdistance
+        /// <summary>
+        /// Get's the distance of two GameObjects
+        /// </summary>
+        /// <param name="obj1">Object1</param>
+        /// <param name="obj2">Object2</param>
+        /// <returns>The distance in units or -1 if they are not the same Region</returns>
+        [Obsolete( "Use Point3D.GetDistance" )]
+        public static int GetDistance( GameObject obj1, GameObject obj2 )
+        {
+            if ( obj1 == null || obj2 == null || obj1.CurrentRegion != obj2.CurrentRegion )
+                return -1;
+            return GetDistance( obj1.X, obj1.Y, obj1.Z, obj2.X, obj2.Y, obj2.Z );
+        }
 
-		/// <summary>
-		/// Get's the distance of two GameObjects
-		/// </summary>
-		/// <param name="obj1">Object1</param>
-		/// <param name="obj2">Object2</param>
-		/// <param name="zfactor">Factor for Z distance use lower 0..1 to lower Z influence</param>
-		/// <returns>The distance in units or -1 if they are not the same Region</returns>
-		public static int GetDistance(GameObject obj1, GameObject obj2, double zfactor)
-		{
-			if (obj1 == null || obj2 == null || obj1.CurrentRegion != obj2.CurrentRegion)
-				return -1;
-			return GetDistance(obj1.X, obj1.Y, obj1.Z, obj2.X, obj2.Y, obj2.Z, zfactor);
-		}
+        /// <summary>
+        /// Get's the distance of two GameObjects
+        /// </summary>
+        /// <param name="obj1">Object1</param>
+        /// <param name="obj2">Object2</param>
+        /// <param name="zfactor">Factor for Z distance use lower 0..1 to lower Z influence</param>
+        /// <returns>The distance in units or -1 if they are not the same Region</returns>
+        [Obsolete( "Use Point3D.GetDistance" )]
+        public static int GetDistance( GameObject obj1, GameObject obj2, double zfactor )
+        {
+            if ( obj1 == null || obj2 == null || obj1.CurrentRegion != obj2.CurrentRegion )
+                return -1;
+            return GetDistance( obj1.X, obj1.Y, obj1.Z, obj2.X, obj2.Y, obj2.Z, zfactor );
+        }
 
-		/// <summary>
-		/// Gets the distance of two arbitary points in space
-		/// </summary>
-		/// <param name="x1">X of Point1</param>
-		/// <param name="y1">Y of Point1</param>
-		/// <param name="z1">Z of Point1</param>
-		/// <param name="x2">X of Point2</param>
-		/// <param name="y2">Y of Point2</param>
-		/// <param name="z2">Z of Point2</param>
-		/// <returns>The distance</returns>
-		public static int GetDistance(int x1, int y1, int z1, int x2, int y2, int z2)
-		{
-			long xdiff = (long)x1 - x2;
-			long ydiff = (long)y1 - y2;
-			//SH: Removed Z checks when one of the two Z values is zero(on ground)
-			if (z1 == 0 || z2 == 0)
-				return (int)Math.Sqrt(xdiff * xdiff + ydiff * ydiff);
+        /// <summary>
+        /// Gets the distance of two arbitary points in space
+        /// </summary>
+        /// <param name="x1">X of Point1</param>
+        /// <param name="y1">Y of Point1</param>
+        /// <param name="z1">Z of Point1</param>
+        /// <param name="x2">X of Point2</param>
+        /// <param name="y2">Y of Point2</param>
+        /// <param name="z2">Z of Point2</param>
+        /// <returns>The distance</returns>
+        [Obsolete( "Use Point3D.GetDistance" )]
+        public static int GetDistance( int x1, int y1, int z1, int x2, int y2, int z2 )
+        {
+            long xdiff = (long)x1 - x2;
+            long ydiff = (long)y1 - y2;
+            //SH: Removed Z checks when one of the two Z values is zero(on ground)
+            if ( z1 == 0 || z2 == 0 )
+                return (int)Math.Sqrt( xdiff * xdiff + ydiff * ydiff );
 
-			long zdiff = (long)z1 - z2;
-			return (int)Math.Sqrt(xdiff * xdiff + ydiff * ydiff + zdiff * zdiff);
-		}
+            long zdiff = (long)z1 - z2;
+            return (int)Math.Sqrt( xdiff * xdiff + ydiff * ydiff + zdiff * zdiff );
+        }
 
-		/// <summary>
-		/// Gets the distance of two arbitary points in space
-		/// </summary>
-		/// <param name="x1">X of Point1</param>
-		/// <param name="y1">Y of Point1</param>
-		/// <param name="z1">Z of Point1</param>
-		/// <param name="x2">X of Point2</param>
-		/// <param name="y2">Y of Point2</param>
-		/// <param name="z2">Z of Point2</param>
-		/// <param name="zfactor">Factor for Z distance use lower 0..1 to lower Z influence</param>
-		/// <returns>The distance</returns>
-		public static int GetDistance(int x1, int y1, int z1, int x2, int y2, int z2, double zfactor)
-		{
-			long xdiff = (long)x1 - x2;
-			long ydiff = (long)y1 - y2;
-			//SH: Removed Z checks when one of the two Z values is zero(on ground)
-			if (z1 == 0 || z2 == 0)
-				return (int)Math.Sqrt(xdiff * xdiff + ydiff * ydiff);
+        /// <summary>
+        /// Gets the distance of two arbitary points in space
+        /// </summary>
+        /// <param name="x1">X of Point1</param>
+        /// <param name="y1">Y of Point1</param>
+        /// <param name="z1">Z of Point1</param>
+        /// <param name="x2">X of Point2</param>
+        /// <param name="y2">Y of Point2</param>
+        /// <param name="z2">Z of Point2</param>
+        /// <param name="zfactor">Factor for Z distance use lower 0..1 to lower Z influence</param>
+        /// <returns>The distance</returns>
+        [Obsolete( "Use Point3D.GetDistance" )]
+        public static int GetDistance( int x1, int y1, int z1, int x2, int y2, int z2, double zfactor )
+        {
+            long xdiff = (long)x1 - x2;
+            long ydiff = (long)y1 - y2;
+            //SH: Removed Z checks when one of the two Z values is zero(on ground)
+            if ( z1 == 0 || z2 == 0 )
+                return (int)Math.Sqrt( xdiff * xdiff + ydiff * ydiff );
 
-			long zdiff = (long)((z1 - z2) * zfactor);
-			return (int)Math.Sqrt(xdiff * xdiff + ydiff * ydiff + zdiff * zdiff);
-		}
+            long zdiff = (long)( ( z1 - z2 ) * zfactor );
+            return (int)Math.Sqrt( xdiff * xdiff + ydiff * ydiff + zdiff * zdiff );
+        }
 
-		/// <summary>
-		/// Gets the distance of an Object to an arbitary point
-		/// </summary>
-		/// <param name="obj">GameObject used as Point1</param>
-		/// <param name="x">X of Point2</param>
-		/// <param name="y">Y of Point2</param>
-		/// <param name="z">Z of Point2</param>
-		/// <returns>The distance</returns>
-		public static int GetDistance(GameObject obj, int x, int y, int z)
-		{
-			return GetDistance(obj.X, obj.Y, obj.Z, x, y, z);
-		}
-		#endregion
-		#region check distance
+        /// <summary>
+        /// Gets the distance of an Object to an arbitary point
+        /// </summary>
+        /// <param name="obj">GameObject used as Point1</param>
+        /// <param name="x">X of Point2</param>
+        /// <param name="y">Y of Point2</param>
+        /// <param name="z">Z of Point2</param>
+        /// <returns>The distance</returns>
+        [Obsolete( "Use Point3D.GetDistance" )]
+        public static int GetDistance( GameObject obj, int x, int y, int z )
+        {
+            return GetDistance( obj.X, obj.Y, obj.Z, x, y, z );
+        }
+        #endregion get distance
+
+        #region check distance
+        [Obsolete( "Use Point3D.IsWithinRadius" )]
 		public static bool CheckDistance(int x1, int y1, int z1, int x2, int y2, int z2, int radius)
 		{
 			return CheckSquareDistance(x1, y1, z1, x2, y2, z2, radius * radius);
 		}
-		public static bool CheckDistance(IPoint3D obj, IPoint3D obj2, int radius)
+        [Obsolete( "Use Point3D.IsWithinRadius" )]
+        public static bool CheckDistance( IPoint3D obj, IPoint3D obj2, int radius )
 		{
 			return CheckDistance(obj.X, obj.Y, obj.Z, obj2.X, obj2.Y, obj2.Z, radius);
 		}
-		public static bool CheckDistance(GameObject obj, int x2, int y2, int z2, int radius)
+        [Obsolete( "Use Point3D.IsWithinRadius" )]
+        public static bool CheckDistance( GameObject obj, int x2, int y2, int z2, int radius )
 		{
 			return CheckDistance(obj.X, obj.Y, obj.Z, x2, y2, z2, radius);
 		}
-		public static bool CheckDistance(GameObject obj, GameObject obj2, int radius)
+        [Obsolete( "Use Point3D.IsWithinRadius" )]
+        public static bool CheckDistance( GameObject obj, GameObject obj2, int radius )
 		{
 			if (obj == null || obj2 == null)
 				return false;
@@ -1238,7 +1248,8 @@ namespace DOL.GS
 		}
 		#endregion
 		#region check square distance
-		public static bool CheckSquareDistance(int x1, int y1, int z1, int x2, int y2, int z2, int squareRadius)
+        [Obsolete( "Use Point3D.IsWithinRadius" )]
+        private static bool CheckSquareDistance( int x1, int y1, int z1, int x2, int y2, int z2, int squareRadius )
 		{
 			long xdiff = (long)x1 - x2;
 			long ydiff = (long)y1 - y2;
@@ -1248,15 +1259,18 @@ namespace DOL.GS
 			long zdiff = (long)z1 - z2;
 			return (xdiff * xdiff + ydiff * ydiff + zdiff * zdiff <= squareRadius);
 		}
-		public static bool CheckSquareDistance(IPoint3D obj, IPoint3D obj2, int squareRadius)
+        [Obsolete( "Use Point3D.IsWithinRadius" )]
+        private static bool CheckSquareDistance( IPoint3D obj, IPoint3D obj2, int squareRadius )
 		{
 			return CheckSquareDistance(obj.X, obj.Y, obj.Z, obj2.X, obj2.Y, obj2.Z, squareRadius);
 		}
-		public static bool CheckSquareDistance(GameObject obj, int x2, int y2, int z2, int squareRadius)
+        [Obsolete( "Use Point3D.IsWithinRadius" )]
+        private static bool CheckSquareDistance( GameObject obj, int x2, int y2, int z2, int squareRadius )
 		{
 			return CheckSquareDistance(obj.X, obj.Y, obj.Z, x2, y2, z2, squareRadius);
 		}
-		public static bool CheckSquareDistance(GameObject obj, GameObject obj2, int squareRadius)
+        [Obsolete( "Use Point3D.IsWithinRadius" )]
+        private static bool CheckSquareDistance( GameObject obj, GameObject obj2, int squareRadius )
 		{
 			if (obj.CurrentRegion != obj2.CurrentRegion)
 				return false;

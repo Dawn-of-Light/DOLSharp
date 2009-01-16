@@ -250,9 +250,8 @@ namespace DOL.GS.Quests.Albion
 			else
 				alice = npcs[0];
 
-			int tmpX, tmpY;
-			alice.GetSpotFromHeading(30, out tmpX, out tmpY);
-			locationAlice = new GameLocation(alice.CurrentZone.Description, alice.CurrentRegionID, (int) tmpX, (int) tmpY, alice.Z);
+            Point2D point = alice.GetPointFromHeading( alice.Heading, 30 );
+			locationAlice = new GameLocation(alice.CurrentZone.Description, alice.CurrentRegionID, point.X, point.Y, alice.Z);
 
 			dragonflyTicket = CreateTicketTo("ticket to Castle Sauvage", "");
 			horseTicket = CreateTicketTo("ticket to Camelot Hills", "");
@@ -392,8 +391,8 @@ namespace DOL.GS.Quests.Albion
 			else
 				uliam = npcs[0] as GameStableMaster;
 
-			uliam.GetSpotFromHeading(30, out tmpX, out tmpY);
-			locationUliam = new GameLocation(uliam.CurrentZone.Description, uliam.CurrentRegionID, (int) tmpX, (int) tmpY, uliam.Z);
+            Point2D uliamloc = uliam.GetPointFromHeading( uliam.Heading, 30 );
+			locationUliam = new GameLocation(uliam.CurrentZone.Description, uliam.CurrentRegionID, uliam.X, uliam.Y, uliam.Z);
 
 			/*
             foreach (GameNPC npc in WorldMgr.GetNPCsCloseToObject(uliam, 400))                

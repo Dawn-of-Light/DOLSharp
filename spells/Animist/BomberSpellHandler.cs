@@ -112,7 +112,7 @@ namespace DOL.GS.Spells
 
             //Andraste
             subspell.Level = m_spell.Level;
-            if (WorldMgr.CheckDistance(living, bomber, 350))
+            if (living.IsWithinRadius(bomber, 350))
             {
                 ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(bomber, subspell, SkillBase.GetSpellLine(SpellLine.KeyName));
                 spellhandler.StartSpell(living);
