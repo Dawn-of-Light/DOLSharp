@@ -74,6 +74,7 @@ namespace DOL.Database
 		private int m_roamingRange;
 
         private bool m_isCloakHoodUp;
+        private string m_packageID;
 
 		static bool m_autoSave;
 
@@ -104,6 +105,7 @@ namespace DOL.Database
             m_Charisma = 30;
             m_boat_ownerid = "";
 			m_roamingRange = -1;
+			m_packageID="";
 		}
 
 		/// <summary>
@@ -713,6 +715,17 @@ namespace DOL.Database
             set
             {
                 m_isCloakHoodUp = value;
+                Dirty = true;
+            }
+        }
+        
+       [DataElement(AllowDbNull = true)]
+        public string PackageID
+        {
+            get { return m_packageID; }
+            set
+            {
+                m_packageID = value;
                 Dirty = true;
             }
         }
