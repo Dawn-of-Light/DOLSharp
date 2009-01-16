@@ -59,7 +59,7 @@ namespace DOL.GS.RealmAbilities
                 return;
             }
 
-            if (WorldMgr.GetDistance(living, target) > 1500 * living.GetModified(eProperty.SpellRange) * 0.01)
+            if (!living.IsWithinRadius( target, (int)(1500 * living.GetModified(eProperty.SpellRange) * 0.01)))
             {
                 Message.ChatToOthers(living, "You are too far away from your target to use this ability!", eChatType.CT_SpellResisted);
                 return;

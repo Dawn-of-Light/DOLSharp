@@ -420,7 +420,7 @@ namespace DOL.GS.Quests.Hibernia
 				InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
 				if (item != null && item.Id_nb == emptyMagicBox.Id_nb)
 				{
-					if (WorldMgr.GetDistance(player, quest.sluagh) < 500)
+                    if ( player.IsWithinRadius( quest.sluagh, 500 ) )
 					{
 						foreach (GamePlayer visPlayer in quest.sluagh.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						{

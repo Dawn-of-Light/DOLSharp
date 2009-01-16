@@ -35,8 +35,7 @@ namespace DOL.GS.Commands
 				{
 					targetPlayer = targetClient.Player;
 
-					int dist = WorldMgr.GetDistance(client.Player, targetPlayer);
-					if (dist > WorldMgr.YELL_DISTANCE || dist < 0 || targetPlayer.IsStealthed || !GameServer.ServerRules.IsSameRealm(client.Player, targetPlayer, true))
+					if (!client.Player.IsWithinRadius( targetPlayer, WorldMgr.YELL_DISTANCE ) || targetPlayer.IsStealthed || !GameServer.ServerRules.IsSameRealm(client.Player, targetPlayer, true))
 					{
 						client.Out.SendMessage("You don't see " + args[1] + " around here!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;

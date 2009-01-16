@@ -46,7 +46,7 @@ namespace DOL.AI.Brain
 		{
 			GameLiving living = Body.TempProperties.getObjectProperty("bombertarget", null) as GameLiving;
 			if(living == null) return;
-			if(WorldMgr.CheckDistance(living, Body, 150))
+			if(Body.IsWithinRadius( living, 150 ))
 			{
 				Body.Notify(GameNPCEvent.ArriveAtTarget, Body);
 			}

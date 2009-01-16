@@ -102,7 +102,7 @@ namespace DOL.GS
 			player.TempProperties.removeProperty(ENCHANT_ITEM_WEAK);
 
 
-			if (response != 0x01 || !WorldMgr.CheckDistance(this, player,WorldMgr.INTERACT_DISTANCE))
+			if (response != 0x01 || !this.IsWithinRadius(player, WorldMgr.INTERACT_DISTANCE))
 				return;
 
 			InventoryItem item = (InventoryItem) itemWeak.Target;

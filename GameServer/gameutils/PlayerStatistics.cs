@@ -329,7 +329,7 @@ namespace DOL.GS.GameEvents
 				GamePlayer key = de.Key as GamePlayer;
 				if (killer == key)
 				{
-					if (!WorldMgr.CheckDistance(killer, killedPlayer, WorldMgr.MAX_EXPFORKILL_DISTANCE))
+					if (!killer.IsWithinRadius(killedPlayer, WorldMgr.MAX_EXPFORKILL_DISTANCE))
 						return 0;
 
 					double damagePercent = (float)de.Value / totaldmg;
@@ -346,7 +346,7 @@ namespace DOL.GS.GameEvents
 						int count = 0;
 						foreach (GamePlayer player in killer.Group.GetPlayersInTheGroup())
 						{
-							if (!WorldMgr.CheckDistance(player, killedPlayer, WorldMgr.MAX_EXPFORKILL_DISTANCE)) continue;
+							if (!player.IsWithinRadius(killedPlayer, WorldMgr.MAX_EXPFORKILL_DISTANCE)) continue;
 							count++;
 						}
 						realmPoints = (uint)(realmPoints * (1.0 + count * 0.125));

@@ -36,7 +36,7 @@ namespace DOL.GS.RealmAbilities
                 player.Out.SendMessage("You cannot see " + player.TargetObject.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
-            if (WorldMgr.GetDistance(player, player.TargetObject) > 1500)
+            if (!player.IsWithinRadius( player.TargetObject, 1500 ))
             {
                 player.Out.SendMessage("You target is too far away to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;

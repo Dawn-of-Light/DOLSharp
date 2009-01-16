@@ -35,7 +35,7 @@ namespace DOL.GS.Commands
 
 			House house = HouseMgr.GetHouse(housenumber);
 
-			ushort direction = client.Player.GetHeadingToSpot(house.X, house.Y);
+			ushort direction = client.Player.GetHeading(house);
 			client.Player.Heading = direction;
 			client.Out.SendPlayerJump(true);
 			DisplayMessage(client, "You face house " + housenumber);

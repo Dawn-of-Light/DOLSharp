@@ -33,5 +33,9 @@ namespace DOL.GS
 		/// Y
 		/// </summary>
 		int Y { get; }
+
+        ushort GetHeading( IPoint2D point );
+        Point2D GetPointFromHeading( ushort heading, int distance );
+        int GetDistance( IPoint2D point );
 	}
 }

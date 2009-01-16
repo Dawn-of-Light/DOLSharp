@@ -136,7 +136,7 @@ namespace DOL.GS
 			{
 				foreach (GameRelicPad pad in m_relicPads)
 				{
-					if (WorldMgr.CheckDistance(pad, relic, 200))
+					if (relic.IsWithinRadius(pad, 200))
 						//if (pad.X == relic.X && pad.Y == relic.Y && pad.Z == relic.Z && pad.CurrentRegionID == relic.CurrentRegionID)
 						return pad;
 				}
