@@ -3763,6 +3763,7 @@ namespace DOL.GS
 				{
 					Die(source);
 				}
+				
 				lock (m_xpGainers.SyncRoot)
 				{
 					m_xpGainers.Clear();
@@ -3899,11 +3900,13 @@ namespace DOL.GS
 			{
 				if (m_xpGainers[xpGainer] == null)
 				{
-					m_xpGainers[xpGainer] = (float)0;
+					m_xpGainers.Add(xpGainer,(float)0);
 				}
-				m_xpGainers[xpGainer] = (float)m_xpGainers[xpGainer] + damageAmount;
+				else
+					m_xpGainers[xpGainer] = (float)m_xpGainers[xpGainer] + damageAmount;
 			}
 		}
+		
 		/// <summary>
 		/// Changes the health
 		/// </summary>
