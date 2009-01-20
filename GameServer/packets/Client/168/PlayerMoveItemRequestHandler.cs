@@ -80,7 +80,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				//Is the item we want to move in our backpack?
 				if (fromSlot >= (ushort)eInventorySlot.FirstBackpack && fromSlot <= (ushort)eInventorySlot.LastBackpack)
 				{
-					if (!obj.IsWithinRadius(client.Player, WorldMgr.GIVE_ITEM_DISTANCE))
+					if (!WorldMgr.CheckDistance(obj, client.Player, WorldMgr.GIVE_ITEM_DISTANCE))
 					{
 						if (obj is GamePlayer)
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerMoveItemRequestHandler.TooFarAway", client.Player.GetName((GamePlayer)obj)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -151,7 +151,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					if(client.Version >= GameClient.eClientVersion.Version178) // add it back for proper slot update...
 						fromSlot += eInventorySlot.Mithril178 - eInventorySlot.Mithril;
 
-					if(!obj.IsWithinRadius(client.Player, WorldMgr.GIVE_ITEM_DISTANCE))
+					if(!WorldMgr.CheckDistance(obj, client.Player, WorldMgr.GIVE_ITEM_DISTANCE))
 					{
                         if (obj is GamePlayer)
                             client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerMoveItemRequestHandler.TooFarAway", client.Player.GetName((GamePlayer)obj)), eChatType.CT_System, eChatLoc.CL_SystemWindow);

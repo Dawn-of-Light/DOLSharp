@@ -109,11 +109,6 @@ namespace DOL.GS.Spells
 						aggroBrain.AddToAggroList(Caster, 1);
 				}
 			}
-			
-			// Pet Stun doesn't have imunity
-            if (effect.Name == "Pet Stun")
-                return 0;
-
 			return 60000;
 		}
 

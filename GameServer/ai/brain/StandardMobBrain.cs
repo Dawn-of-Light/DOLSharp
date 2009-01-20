@@ -98,7 +98,7 @@ namespace DOL.AI.Brain
 			// check for returning to home if to far away
 			if (Body.MaxDistance != 0 && !Body.IsReturningHome)
 			{
-                int distance = Body.GetDistance( Body.SpawnPoint );
+				int distance = WorldMgr.GetDistance(Body.SpawnX, Body.SpawnY, Body.SpawnZ, Body.X, Body.Y, Body.Z);
 				int maxdistance = Body.MaxDistance > 0 ? Body.MaxDistance : -Body.MaxDistance * AggroRange / 100;
                 if (maxdistance > 0 && distance > maxdistance)
                 {
@@ -122,7 +122,7 @@ namespace DOL.AI.Brain
                 //Tolerance to check if we need to go home AGAIN, otherwise we might be told to go home
                 //for a few units only and this may end before the next Arrive-At-Target Event is fired and in this case
                 //We would never lose the state "IsReturningHome", which is then followed by other erros related to agro again to players
-                if ( !Util.IsNearDistance( Body.X, Body.Y, Body.Z, Body.SpawnPoint.X, Body.SpawnPoint.Y, Body.SpawnPoint.Z, GameNPC.CONST_WALKTOTOLERANCE ) )
+                if (!Util.IsNearDistance(Body.X, Body.Y, Body.Z, Body.SpawnX, Body.SpawnY, Body.SpawnZ, GameNPC.CONST_WALKTOTOLERANCE))
                     Body.WalkToSpawn();
                 else if (Body.Heading != Body.SpawnHeading)
                         Body.Heading = Body.SpawnHeading;
@@ -139,7 +139,7 @@ namespace DOL.AI.Brain
             }
 
             //If we are not attacking, and not casting, and not moving, and we aren't facing our spawn heading, we turn to the spawn heading
-            if( !Body.InCombat && !Body.AttackState && !Body.IsCasting && !Body.IsMoving && Body.IsWithinRadius( Body.SpawnPoint, 500 ) == false )
+            if (!Body.InCombat && !Body.AttackState && !Body.IsCasting && !Body.IsMoving && WorldMgr.GetDistance(Body.SpawnX, Body.SpawnY, Body.SpawnZ, Body.X, Body.Y, Body.Z) > 500)
             {
                 Body.WalkToSpawn(); // Mobs do not walk back at 2x their speed..
             }
@@ -385,7 +385,7 @@ namespace DOL.AI.Brain
 					if (!protect.ProtectSource.IsAlive) continue;
 					if (!protect.ProtectSource.InCombat) continue;
 
-					if (!living.IsWithinRadius(protect.ProtectSource, ProtectAbilityHandler.PROTECT_DISTANCE))
+					if (!WorldMgr.CheckDistance(living, protect.ProtectSource, ProtectAbilityHandler.PROTECT_DISTANCE))
 						continue;
 					// P I: prevents 10% of aggro amount
 					// P II: prevents 20% of aggro amount
@@ -551,7 +551,7 @@ namespace DOL.AI.Brain
 						&& living.CurrentRegion == Body.CurrentRegion
 						&& living.ObjectState == GameObject.eObjectState.Active)
 					{
-                        int distance = Body.GetDistance( living );
+						int distance = WorldMgr.GetDistance(Body, living);
 						if (distance < MAX_AGGRO_DISTANCE)
 						{
 							double aggro = amount * Math.Min(500.0 / distance, 1);
@@ -870,7 +870,7 @@ namespace DOL.AI.Brain
 			ArrayList attackersInRange = new ArrayList();
 
 			foreach (GamePlayer player in attackerGroup.GetPlayersInTheGroup())
-				if (attacker.IsWithinRadius(player, BAFTargetPlayerRange))
+				if (WorldMgr.CheckDistance(attacker, player, BAFTargetPlayerRange))
 					attackersInRange.Add(player);
 
 			// Pick a random player from the list.
@@ -1182,12 +1182,12 @@ namespace DOL.AI.Brain
 			roamingRadius = Util.Random(0, Math.Max(100, roamingRadius));
 
 			double angle = Util.Random(0, 360) / (2 * Math.PI);
-			double targetX = Body.SpawnPoint.X + Util.Random(-roamingRadius, roamingRadius);
-            double targetY = Body.SpawnPoint.Y + Util.Random( -roamingRadius, roamingRadius );
+			double targetX = Body.SpawnX + Util.Random(-roamingRadius, roamingRadius);
+			double targetY = Body.SpawnY + Util.Random(-roamingRadius, roamingRadius);
 			//double targetZ = (Body.IsUnderwater) ? Body.SpawnZ : 0;
 			/*(Body.Flags & (uint)GameNPC.eFlags.FLYING) == (uint)GameNPC.eFlags.FLYING ||  + Util.Random(-100, 100)*/
 
-            return new Point3D( (int)targetX, (int)targetY, Body.SpawnPoint.Z );
+			return new Point3D((int)targetX, (int)targetY, Body.SpawnZ);
 		}
 
 		#endregion

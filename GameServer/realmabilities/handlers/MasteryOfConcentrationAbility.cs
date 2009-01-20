@@ -69,7 +69,7 @@ namespace DOL.GS.RealmAbilities
 			foreach (GamePlayer t_player in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 
-                if ( player.IsWithinRadius( t_player, WorldMgr.INFO_DISTANCE ) )
+				if (WorldMgr.GetDistance(t_player, player) <= WorldMgr.INFO_DISTANCE)
 				{
 					if (t_player == player)
 					{

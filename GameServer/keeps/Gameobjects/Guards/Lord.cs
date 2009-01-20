@@ -88,7 +88,7 @@ namespace DOL.GS.Keeps
 			if (this.Component != null && this.Component.Keep != null && this.Component.Keep is GameKeep)
 				distance = 750;
 			else distance = 350;
-            if ( !this.IsWithinRadius( source, distance ) )
+			if (WorldMgr.GetDistance(source, this) > distance)
 			{
 				if (source is GamePlayer)
 					(source as GamePlayer).Out.SendMessage(this.Name + " is immune to damage from this range", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);

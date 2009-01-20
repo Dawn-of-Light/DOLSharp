@@ -73,7 +73,7 @@ namespace DOL.GS.Spells
 				{
 					if (!living.IsAlive) continue;
 					//heal only if target is in range
-					if (target.IsWithinRadius(living, m_spell.Range))
+					if (WorldMgr.CheckDistance(target, living, m_spell.Range))
 					{
 						double livingHealthPercent = living.Health / (double)living.MaxHealth;
 						if (livingHealthPercent < 1)

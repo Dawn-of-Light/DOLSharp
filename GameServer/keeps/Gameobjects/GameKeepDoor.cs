@@ -312,7 +312,7 @@ namespace DOL.GS.Keeps
 
 			if (!KeepMgr.IsEnemy(this, player) || player.Client.Account.PrivLevel != 1)
 			{
-				int keepz = Z, distance = 0;
+				int keepx = 0, keepy = 0, keepz = Z, distance = 0;
 
 				//calculate distance
 				//normal door
@@ -345,11 +345,11 @@ namespace DOL.GS.Keeps
 						{
 							if ((GameKeepComponent.eComponentSkin)c.Skin == GameKeepComponent.eComponentSkin.Keep)
 							{
-								keepdistance = GetDistance(c);
+								keepdistance = WorldMgr.GetDistance(this, c);
 							}
 							if ((GameKeepComponent.eComponentSkin)c.Skin == GameKeepComponent.eComponentSkin.Gate)
 							{
-								gatedistance = GetDistance(c);
+								gatedistance = WorldMgr.GetDistance(this, c);
 							}
 							//when these are filled we can stop the search
 							if (keepdistance != int.MaxValue && gatedistance != int.MaxValue)
@@ -360,15 +360,14 @@ namespace DOL.GS.Keeps
 					}
 				}
 
-                Point2D keepPoint;
 				//calculate x y
 				if (IsObjectInFront(player, 180, false))
-					keepPoint = GetPointFromHeading( this.Heading, -distance );
+					GetSpotFromHeading(-distance, out keepx, out keepy);
 				else
-					keepPoint = GetPointFromHeading( this.Heading, distance );
+					GetSpotFromHeading(distance, out keepx, out keepy);
 
 				//move player
-				player.MoveTo(CurrentRegionID, keepPoint.X, keepPoint.Y, keepz, player.Heading);
+				player.MoveTo(CurrentRegionID, keepx, keepy, keepz, player.Heading);
 			}
 			return base.Interact(player);
 		}
@@ -458,9 +457,9 @@ namespace DOL.GS.Keeps
 			this.CurrentRegion = curZone.ZoneRegion;
 			m_Name = door.Name;
 			m_Heading = (ushort)door.Heading;
-			m_x = door.X;
-			m_y = door.Y;
-			m_z = door.Z;
+			m_X = door.X;
+			m_Y = door.Y;
+			m_Z = door.Z;
 			m_Level = 0;
 			m_Model = 0xFFFF;
 			m_doorID = door.InternalID;

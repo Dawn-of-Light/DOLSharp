@@ -243,8 +243,9 @@ namespace DOL.GS.Quests.Midgard
 			else
 				idora = npcs[0];
 
-            Point2D point = idora.GetPointFromHeading( idora.Heading, 30 );
-			locationIdora = new GameLocation(idora.CurrentZone.Description, idora.CurrentRegionID, point.X, point.Y, idora.Z);
+			int tmpX, tmpY;
+			idora.GetSpotFromHeading(30, out tmpX, out tmpY);
+			locationIdora = new GameLocation(idora.CurrentZone.Description, idora.CurrentRegionID, (int) tmpX, (int) tmpY, idora.Z);
 
 			ticketToSvasudFaste = CreateTicketTo("ticket to Svasud Faste", "hs_mularn_svasudfaste");
 			ticketToMularn = CreateTicketTo("ticket to Mularn", "hs_svasudfaste_mularn");
@@ -387,8 +388,8 @@ namespace DOL.GS.Quests.Midgard
 			else
 				vorgar = npcs[0] as GameStableMaster;
 
-            Point2D vorgarloc = vorgar.GetPointFromHeading( vorgar.Heading, 30 );
-			locationVorgar = new GameLocation(vorgar.CurrentZone.Description, vorgar.CurrentRegionID, vorgarloc.X, vorgarloc.Y, vorgar.Z);
+			vorgar.GetSpotFromHeading(30, out tmpX, out tmpY);
+			locationVorgar = new GameLocation(vorgar.CurrentZone.Description, vorgar.CurrentRegionID, (int) tmpX, (int) tmpY, vorgar.Z);
 
 			#endregion
 

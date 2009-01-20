@@ -30,7 +30,9 @@ namespace DOL.GS.RealmAbilities
 					SendCasterSpellEffectAndCastMessage(living, 7066, true);
 					foreach (GamePlayer member in player.Group.GetPlayersInTheGroup())
 					{
-						if (!CheckPreconditions(member, DEAD) && living.IsWithinRadius( member, 2000 ))
+						if (!CheckPreconditions(member, DEAD) && member.CurrentRegionID == living.CurrentRegionID
+							&& member.CurrentRegionID == living.CurrentRegionID
+							&& WorldMgr.GetDistance(living, member) <= 2000)
 						{
 							if (restoreMana(member, player))
 								deactivate = true;

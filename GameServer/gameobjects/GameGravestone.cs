@@ -45,9 +45,9 @@ namespace DOL.GS
 			m_saveInDB = false;
 			m_Name = LanguageMgr.GetTranslation(player.Client, "GameGravestone.GameGravestone.Grave", player.Name);
 			m_Heading = player.Heading;
-			m_x = player.X;
-			m_y = player.Y;
-			m_z = player.Z;
+			m_X=player.X;
+			m_Y=player.Y;
+			m_Z=player.Z;
 			CurrentRegionID = player.CurrentRegionID;
 			m_Level = 0;
 

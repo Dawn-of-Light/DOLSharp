@@ -78,7 +78,7 @@ namespace DOL.GS
 						boat.Y = path.Y;
 						boat.Z = path.Z;
 						boat.CurrentRegion = CurrentRegion;
-                        boat.Heading = path.GetHeading( path.Next );
+						boat.Heading = Point2D.GetHeadingToLocation(path, path.Next);
 						boat.AddToWorld();
 						boat.CurrentWayPoint = path;
 						GameEventMgr.AddHandler(boat, GameNPCEvent.PathMoveEnds, new DOLEventHandler(OnHorseAtPathEnd));

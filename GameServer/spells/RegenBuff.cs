@@ -210,7 +210,7 @@ namespace DOL.GS.Spells
 						if (caster == effectOwner) continue;
 //						DOLConsole.WriteLine(Caster.Name+" to "+effectOwner.Name+" range="+range);
 
-						if (!caster.IsWithinRadius(effectOwner, CONC_MAX_RANGE))
+						if (!WorldMgr.CheckDistance(caster, effectOwner,CONC_MAX_RANGE))
 						{
 							if (de.Value != null)
 							{

@@ -48,9 +48,9 @@ namespace DOL.GS.Keeps
 		{
 			LoadKeepItemPosition(pos, guard);
 
-            guard.SpawnPoint.X = guard.X;
-            guard.SpawnPoint.Y = guard.Y;
-            guard.SpawnPoint.Z = guard.Z;
+			guard.SpawnX = guard.X;
+			guard.SpawnY = guard.Y;
+			guard.SpawnZ = guard.Z;
 			guard.SpawnHeading = guard.Heading;
 		}
 

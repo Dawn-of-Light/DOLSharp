@@ -25,7 +25,7 @@ namespace DOL.GS.Keeps
 	/// <summary>
 	/// A keepComponent
 	/// </summary>
-	public class GameKeepHookPoint : Point3D
+	public class GameKeepHookPoint : IPoint3D
 	{
 		public GameKeepHookPoint(int id, GameKeepComponent component)
 		{
@@ -87,6 +87,27 @@ namespace DOL.GS.Keeps
 		public bool IsFree
 		{
 			get { return (m_object == null); }
+		}
+
+		private int m_z;
+		public int Z
+		{
+			get { return m_z; }
+			set { m_z = value; }
+		}
+
+		private int m_x;
+		public int X
+		{
+			get { return m_x; }
+			set { m_x = value; }
+		}
+
+		private int m_y;
+		public int Y
+		{
+			get { return m_y; }
+			set { m_y = value; }
 		}
 
 		private ushort m_heading;

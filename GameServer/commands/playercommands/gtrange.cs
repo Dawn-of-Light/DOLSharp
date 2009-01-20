@@ -31,7 +31,7 @@ namespace DOL.GS.Commands
 		{
 			if (client.Player.GroundTarget != null)
 			{
-                int range = client.Player.GetDistance( client.Player.GroundTarget );
+				int range = WorldMgr.GetDistance(client.Player.X, client.Player.Y, client.Player.Z, client.Player.GroundTarget.X, client.Player.GroundTarget.Y, client.Player.GroundTarget.Z);
 				client.Out.SendMessage("Range to target: " + range + " units.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else

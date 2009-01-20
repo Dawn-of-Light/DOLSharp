@@ -54,7 +54,7 @@ namespace DOL.AI.Brain
 					continue; //do not attack players on steed
 				if (!GameServer.ServerRules.IsAllowedToAttack(Body, player, true))
 					continue;
-				if (!Body.IsWithinRadius(player, AggroRange))
+				if (!WorldMgr.CheckDistance(player, Body, AggroRange))
 					continue;
 
 				AddToAggroList(player, player.EffectiveLevel << 1);
@@ -76,7 +76,7 @@ namespace DOL.AI.Brain
 					continue; // let's not try to attack flying mobs
 				if (!GameServer.ServerRules.IsAllowedToAttack(Body, npc, true))
 					continue;
-				if (!npc.IsWithinRadius(Body, AggroRange))
+				if (!WorldMgr.CheckDistance(npc, Body, AggroRange))
 					continue;
 
 				AddToAggroList(npc, npc.Level << 1);
