@@ -74,7 +74,7 @@ namespace DOL.GS.Effects
 				
 				foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 				{
-					if (p.Health < p.MaxHealth && player.IsWithinRadius(p, 750) && p.IsAlive)
+					if (p.Health < p.MaxHealth && WorldMgr.CheckDistance(player, p, 750) && p.IsAlive)
 					{
 						if (player.IsStealthed)
 							player.Stealth(false);

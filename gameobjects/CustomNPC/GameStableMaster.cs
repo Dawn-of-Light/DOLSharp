@@ -137,7 +137,7 @@ namespace DOL.GS
 						horse.Y = path.Y;
 						horse.Z = path.Z;
 						horse.CurrentRegion = CurrentRegion;
-                        horse.Heading = path.GetHeading( path.Next );
+						horse.Heading = Point2D.GetHeadingToLocation(path, path.Next);
 						horse.AddToWorld();
 						horse.CurrentWayPoint = path;
 						GameEventMgr.AddHandler(horse, GameNPCEvent.PathMoveEnds, new DOLEventHandler(OnHorseAtPathEnd));

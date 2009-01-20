@@ -43,7 +43,7 @@ namespace DOL.GS.Commands
 					return;
 				}
 				GameNPC npc = npcs[0];
-				ushort heading = targetnpc.GetHeading(npc);
+				ushort heading = targetnpc.GetHeadingToTarget(npc);
 				string directionstring = GetDirectionFromHeading(heading);
 				targetnpc.SayTo(client.Player, eChatLoc.CL_SystemWindow, npc.Name + " is in the " + directionstring);
 				targetnpc.TurnTo(npc, 10000);

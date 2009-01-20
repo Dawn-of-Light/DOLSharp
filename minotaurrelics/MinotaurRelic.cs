@@ -286,7 +286,7 @@ namespace DOL.GS
                         else
                         {
                             foreach (GamePlayer plr in m_owner.Group.GetPlayersInTheGroup())
-                                if (plr != null && !newPlayerlist.Contains(plr) && m_owner.IsWithinRadius( plr, WorldMgr.VISIBILITY_DISTANCE ))
+                                if (plr != null && !newPlayerlist.Contains(plr) && WorldMgr.GetDistance(plr, m_owner)<WorldMgr.VISIBILITY_DISTANCE)
                                     newPlayerlist.Add(plr);
                         }
                         break;

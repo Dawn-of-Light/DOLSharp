@@ -85,7 +85,7 @@ namespace DOL.GS.Effects
 				{
 					if (!p.IsAlive) continue;
 					if (p == player) continue;
-					if (p.IsWithinRadius(player, 2000))
+					if (WorldMgr.CheckDistance(p, player, 2000))
 					{
 						double playerHealthPercent = p.Health / (double)p.MaxHealth;
 						if (playerHealthPercent < 1)

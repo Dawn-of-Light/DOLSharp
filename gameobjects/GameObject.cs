@@ -36,7 +36,7 @@ namespace DOL.GS
 	/// This class holds all information that
 	/// EVERY object in the game world needs!
 	/// </summary>
-	public abstract class GameObject : Point3D
+	public abstract class GameObject : IPoint3D
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -94,7 +94,6 @@ namespace DOL.GS
 
 		#region Position
 
-        /*
 		/// <summary>
 		/// The Object's X inside the current Region
 		/// </summary>
@@ -108,7 +107,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The Object's Z inside the current Region
 		/// </summary>
-		protected int m_Z;*/
+		protected int m_Z;
 
 		/// <summary>
 		/// The Object's current Region
@@ -119,6 +118,33 @@ namespace DOL.GS
 		/// The direction the Object is facing
 		/// </summary>
 		protected ushort m_Heading;
+
+		/// <summary>
+		/// Gets or Sets the Object's X Coordinate inside the current Region
+		/// </summary>
+		public virtual int X
+		{
+			get { return m_X; }
+			set { m_X = value; }
+		}
+
+		/// <summary>
+		/// Gets or Sets the Object's Y Coordinate inside the current Region
+		/// </summary>
+		public virtual int Y
+		{
+			get { return m_Y; }
+			set { m_Y = value; }
+		}
+
+		/// <summary>
+		/// Gets or Sets the Object's Z Coordinate inside the current Region
+		/// </summary>
+		public virtual int Z
+		{
+			get { return m_Z; }
+			set { m_Z = value; }
+		}
 
 		/// <summary>
 		/// Holds the realm of this object
@@ -179,53 +205,46 @@ namespace DOL.GS
 			set { m_Heading = (ushort)(value & 0xFFF); }
 		}
 
-        /// <summary>
-        /// Calculates the heading this object needs to have to face the target spot
-        /// </summary>
-        /// <param name="tx">target x</param>
-        /// <param name="ty">target y</param>
-        /// <returns>the heading towards the target spot</returns>
-        [Obsolete( "Use GetHeading" )]
-        public ushort GetHeadingToSpot( int tx, int ty )
-        {
-            return GetHeading( new Point2D( tx, ty ) );
-        }
+		/// <summary>
+		/// This constant is used to calculate the heading quickly
+		/// </summary>
+		public const double HEADING_CONST = 651.89864690440329530934789477382;
 
-        /// <summary>
-        /// Calculates the heading this object needs to have, to face the target
-        /// </summary>
-        /// <param name="target">IPoint3D target</param>
-        /// <returns>the heading towards the target</returns>
-        [Obsolete( "Use GetHeading" )]
-        public ushort GetHeadingToTarget( IPoint3D target )
-        {
-            return GetHeading( target );
-        }
+		/// <summary>
+		/// Calculates the heading this object needs to have to face the target spot
+		/// </summary>
+		/// <param name="tx">target x</param>
+		/// <param name="ty">target y</param>
+		/// <returns>the heading towards the target spot</returns>
+		public ushort GetHeadingToSpot(int tx, int ty)
+		{
+			float dx = (long)tx - X;
+			float dy = (long)ty - Y;
+			double heading = Math.Atan2(-dx, dy) * HEADING_CONST;
+			if (heading < 0)
+				heading += 0x1000;
+			return (ushort)heading;
+		}
 
-        /// <summary>
-        /// Returns the angle towards a target, clockwise
-        /// </summary>
-        /// <param name="target">the target</param>
-        /// <returns>the angle towards the target</returns>
-        [Obsolete( "Use GetAngleToPoint" )]
-        public float GetAngleToTarget( GameObject target )
-        {
-            return GetAngleToPoint( target );
-        }
+		/// <summary>
+		/// Calculates the heading this object needs to have, to face the target
+		/// </summary>
+		/// <param name="target">IPoint3D target</param>
+		/// <returns>the heading towards the target</returns>
+		public ushort GetHeadingToTarget(IPoint3D target)
+		{
+			return GetHeadingToSpot(target.X, target.Y);
+		}
 
-        [Obsolete( "Use GetAngleToPoint" )]
-        public float GetAngleToSpot( int x, int y )
-        {
-            return GetAngleToPoint( new Point2D( x, y ) );
-        }
-
-        [Obsolete( "Use GetPointFromHeading" )]
-        public void GetSpotFromHeading( int distance, out int tx, out int ty )
-        {
-            Point2D point = GetPointFromHeading( this.Heading, distance );
-            tx = point.X;
-            ty = point.Y;
-        }
+		/// <summary>
+		/// Returns the angle towards a target, clockwise
+		/// </summary>
+		/// <param name="target">the target</param>
+		/// <returns>the angle towards the target</returns>
+		public float GetAngleToTarget(GameObject target)
+		{
+			return GetAngleToSpot(target.X, target.Y);
+		}
 
 		/// <summary>
 		/// Returns the angle towards a target spot in degrees, clockwise
@@ -233,103 +252,33 @@ namespace DOL.GS
 		/// <param name="tx">target x</param>
 		/// <param name="ty">target y</param>
 		/// <returns>the angle towards the spot</returns>
-		public float GetAngleToPoint( IPoint2D point )
+		public float GetAngleToSpot(int tx, int ty)
 		{
-			float headingDifference = ( GetHeading( point ) & 0xFFF ) - ( this.Heading & 0xFFF );
-
+			float headingDifference = (GetHeadingToSpot(tx, ty) & 0xFFF) - (Heading & 0xFFF);
 			if (headingDifference < 0)
 				headingDifference += 4096.0f;
-
 			return (headingDifference * 360.0f / 4096.0f);
 		}
 
-        /// <summary>
-        /// Get distance to a GameObject
-        /// </summary>
-        /// <param name="obj">Target object</param>
-        /// <returns>The distance, or -1 if the target object is null or in a different region</returns>
-        /*public int GetDistance( GameObject obj )
-        {
-            if ( obj == null || this.CurrentRegionID != obj.CurrentRegionID )
-                return -1;
-            else
-                return GetDistance( (IPoint3D)obj );
-        }*/
-
-        /// <summary>
-        /// Get distance to a GameObject (with z-axis adjustment)
-        /// </summary>
-        /// <param name="obj">Target object</param>
-        /// <param name="zfactor">Z-axis factor - use values between 0 and 1 to decrease influence of Z-axis</param>
-        /// <returns>Adjusted distance, or -1 if the target object is null or in a different region</returns>
-        /*public int GetDistance( GameObject obj, double zfactor )
-        {
-            if ( obj == null || this.CurrentRegionID != obj.CurrentRegionID )
-                return -1;
-            else
-                return base.GetDistance( (IPoint3D)obj, zfactor );
-        }*/
-
-        /// <summary>
-        /// Get distance to a point
-        /// </summary>
-        /// <remarks>
-        /// If either Z-value is zero, the z-axis is ignored
-        /// </remarks>
-        /// <param name="point">Target point</param>
-        /// <returns>Distance</returns>
-        public override int GetDistance( IPoint3D point )
-        {
-			GameObject obj = point as GameObject;
-
-			if ( obj == null || this.CurrentRegionID == obj.CurrentRegionID )
-			{
-				return base.GetDistance( point );
-			}
+		/// <summary>
+		/// Calculates a spot into the heading direction
+		/// </summary>
+		/// <param name="distance">the distance to the spot</param>
+		/// <param name="tx">contains the result X coordinate</param>
+		/// <param name="ty">contains the result Y coordinate</param>
+		public void GetSpotFromHeading(int distance, out int tx, out int ty)
+		{
+			double angle = Heading / HEADING_CONST;
+			double targetX = X - Math.Sin(angle) * distance;
+			double targetY = Y + Math.Cos(angle) * distance;
+			if (targetX > 0)
+				tx = (int)targetX;
 			else
-			{
-				return -1;
-			}
-        }
-
-        /// <summary>
-        /// Get distance to a point (with z-axis adjustment)
-        /// </summary>
-        /// <remarks>
-        /// If either Z-value is zero, the z-axis is ignored
-        /// </remarks>
-        /// <param name="point">Target point</param>
-        /// <param name="zfactor">Z-axis factor - use values between 0 and 1 to decrease the influence of Z-axis</param>
-        /// <returns>Adjusted distance</returns>
-        public override int GetDistance( IPoint3D point, double zfactor )
-        {
-			GameObject obj = point as GameObject;
-
-			if ( obj == null || this.CurrentRegionID == obj.CurrentRegionID )
-			{
-				return base.GetDistance( point, zfactor );
-			}
+				tx = 0;
+			if (targetY > 0)
+				ty = (int)targetY;
 			else
-			{
-				return -1;
-			}
-        }
-
-        /// <summary>
-        /// Checks if an object is within a given radius
-        /// </summary>
-        /// <param name="obj">Target object</param>
-        /// <param name="radius">Radius</param>
-        /// <returns>False if the object is null, in a different region, or outside the radius; otherwise true</returns>
-        public bool IsWithinRadius( GameObject obj, int radius )
-        {
-            if ( obj == null )
-                return false;
-
-            if ( this.CurrentRegionID != obj.CurrentRegionID )
-                return false;
-
-			return base.IsWithinRadius( obj, radius );
+				ty = 0;
 		}
 
 		/// <summary>
@@ -356,15 +305,14 @@ namespace DOL.GS
 		{
 			if (target == null)
 				return false;
-			float angle = this.GetAngleToPoint(target);
+			float angle = GetAngleToTarget(target);
 			if (angle >= 360 - viewangle / 2 || angle < viewangle / 2)
 				return true;
 			// if target is closer than 32 units it is considered always in view
-			// tested and works this way for normal evade, parry, block (in 1.69)
+			// tested and works this way for noraml evade, parry, block (in 1.69)
 			if (rangeCheck)
-                return this.IsWithinRadius( target, 32 );
-			else
-                return false;
+				return WorldMgr.CheckDistance(this, target, 32);
+			else return false;
 		}
 
 		/// <summary>
@@ -683,9 +631,9 @@ namespace DOL.GS
 			if (m_ObjectState == eObjectState.Active)
 				return false;
 			CurrentRegionID = regionID;
-			m_x = x;
-			m_y = y;
-			m_z = z;
+			m_X = x;
+			m_Y = y;
+			m_Z = z;
 			m_Heading = heading;
 			return AddToWorld();
 		}
@@ -753,9 +701,9 @@ namespace DOL.GS
 
 			if (!RemoveFromWorld())
 				return false;
-			m_x = x;
-			m_y = y;
-			m_z = z;
+			m_X = x;
+			m_Y = y;
+			m_Z = z;
 			m_Heading = heading;
 			CurrentRegionID = regionID;
 			return AddToWorld();
@@ -795,7 +743,7 @@ namespace DOL.GS
 		/// <returns>false if interaction is prevented</returns>
 		public virtual bool Interact(GamePlayer player)
 		{
-			if (player.Client.Account.PrivLevel == 1 && !this.IsWithinRadius(player, WorldMgr.INTERACT_DISTANCE))
+			if (player.Client.Account.PrivLevel == 1 && !WorldMgr.CheckDistance(this, player, WorldMgr.INTERACT_DISTANCE))
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation("GameObject.Interact.TooFarAway", GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				Notify(GameObjectEvent.InteractFailed, this, new InteractEventArgs(player));

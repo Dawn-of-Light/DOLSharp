@@ -89,7 +89,7 @@ namespace DOL.GS.Spells
 		
 		public override void OnEffectPulse(GameSpellEffect effect)
 		{
-            if ( !m_caster.IsAlive || !effect.Owner.IsAlive || m_caster.Mana < Spell.PulsePower || !m_caster.IsWithinRadius( effect.Owner, (int)( Spell.Range * m_caster.GetModified( eProperty.SpellRange ) * 0.01 ) ) || m_caster.IsMezzed || m_caster.IsStunned || ( m_caster.TargetObject is GameLiving ? effect.Owner != m_caster.TargetObject as GameLiving : true ) )
+			if (!m_caster.IsAlive || !effect.Owner.IsAlive || m_caster.Mana < Spell.PulsePower || WorldMgr.GetDistance(m_caster, effect.Owner) > Spell.Range || m_caster.IsMezzed || m_caster.IsStunned || (m_caster.TargetObject is GameLiving ? effect.Owner != m_caster.TargetObject as GameLiving : true))
 			{
 				effect.Cancel(false);
 				return;

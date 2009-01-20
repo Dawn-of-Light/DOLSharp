@@ -121,99 +121,6 @@ namespace DOL.GS.Spells
 			}
 
 			SendUpdates(effect.Owner);
-			
-			#region pets enhancement
- 			if (effect.Owner is GameNPC)
-            {
-                if ((effect.Owner as GameNPC).Brain is ControlledNpc)
-                {
-                    //Increase Pet's ArmorAbsorb/MagicAbsorb with Buffs
-                    if (this is StrengthBuff)
-                    {
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.MeleeDamage] += (int)(((Spell.Value / 100) * Spell.Level) / 2);
-                    }
-                    else if (this is ConstitutionBuff)
-                    {
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.ArmorAbsorbtion] += (int)(((Spell.Value / 100) * Spell.Level) / 2);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Body] += (int)(((Spell.Value / 100) * Spell.Level) / 2);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Energy] += (int)(((Spell.Value / 100) * Spell.Level) / 2);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Cold] += (int)(((Spell.Value / 100) * Spell.Level) / 2);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Heat] += (int)(((Spell.Value / 100) * Spell.Level) / 2);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Matter] += (int)(((Spell.Value / 100) * Spell.Level) / 2);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Spirit] += (int)(((Spell.Value / 100) * Spell.Level) / 2);
-                    }
-                    else if (this is ArmorFactorBuff)
-                    {
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.ArmorAbsorbtion] += (int)(((Spell.Value / 100) * Spell.Level) / 2);
-                    }
-                    else if (this is DexterityBuff)
-                    {
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.ArmorAbsorbtion] += (int)(((Spell.Value / 100) * Spell.Level) / 2);
-                    }
-                    else if (this is QuicknessBuff)
-                    {
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.MeleeSpeed] += (int)(((Spell.Value / 100) * Spell.Level) / 6);
-                    }
-                    else if (this is StrengthConBuff)
-                    {
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.MeleeDamage] += (int)(((Spell.Value / 100) * Spell.Level) / 4);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Body] += (int)(((Spell.Value / 100) * Spell.Level) / 4);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Energy] += (int)(((Spell.Value / 100) * Spell.Level) / 4);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Cold] += (int)(((Spell.Value / 100) * Spell.Level) / 4);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Heat] += (int)(((Spell.Value / 100) * Spell.Level) / 4);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Matter] += (int)(((Spell.Value / 100) * Spell.Level) / 4);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Spirit] += (int)(((Spell.Value / 100) * Spell.Level) / 4);
-                    }
-                    else if (this is DexterityQuiBuff)
-                    {
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.ArmorAbsorbtion] += (int)(((Spell.Value / 100) * Spell.Level) / 4);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.MeleeSpeed] += (int)(((Spell.Value / 100) * Spell.Level) / 6);
-                    }
-                    //Decrease Pet's ArmorAbsorb/MagicAbsorb with DeBuffs
-                    else if (this is StrengthDebuff)
-                    {
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.MeleeDamage] -= (int)(((Spell.Value / 100) * Spell.Level) / 2);
-                    }
-                    else if (this is ConstitutionDebuff)
-                    {
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.ArmorAbsorbtion] -= (int)(((Spell.Value / 100) * Spell.Level) / 2);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Body] -= (int)(((Spell.Value / 100) * Spell.Level) / 2);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Energy] -= (int)(((Spell.Value / 100) * Spell.Level) / 2);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Cold] -= (int)(((Spell.Value / 100) * Spell.Level) / 2);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Heat] -= (int)(((Spell.Value / 100) * Spell.Level) / 2);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Matter] -= (int)(((Spell.Value / 100) * Spell.Level) / 2);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Spirit] -= (int)(((Spell.Value / 100) * Spell.Level) / 2);
-                    }
-                    else if (this is ArmorFactorDebuff)
-                    {
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.ArmorAbsorbtion] -= (int)(((Spell.Value / 100) * Spell.Level) / 2);
-                    }
-                    else if (this is DexterityDebuff)
-                    {
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.ArmorAbsorbtion] -= (int)(((Spell.Value / 100) * Spell.Level) / 2);
-                    }
-                    else if (this is QuicknessDebuff)
-                    {
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.MeleeSpeed] -= (int)(((Spell.Value / 100) * Spell.Level) / 6);
-                    }
-                    else if (this is StrengthConDebuff)
-                    {
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.MeleeDamage] -= (int)(((Spell.Value / 100) * Spell.Level) / 4);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Body] -= (int)(((Spell.Value / 100) * Spell.Level) / 4);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Energy] -= (int)(((Spell.Value / 100) * Spell.Level) / 4);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Cold] -= (int)(((Spell.Value / 100) * Spell.Level) / 4);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Heat] -= (int)(((Spell.Value / 100) * Spell.Level) / 4);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Matter] -= (int)(((Spell.Value / 100) * Spell.Level) / 4);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Spirit] -= (int)(((Spell.Value / 100) * Spell.Level) / 4);
-                    }
-                    else if (this is DexterityQuiDebuff)
-                    {
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.ArmorAbsorbtion] -= (int)(((Spell.Value / 100) * Spell.Level) / 4);
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.MeleeSpeed] -= (int)(((Spell.Value / 100) * Spell.Level) / 6);
-                    }
-                }
-            }
-			#endregion
 
 			eChatType toLiving = eChatType.CT_SpellPulse;
 			eChatType toOther = eChatType.CT_SpellPulse;
@@ -461,8 +368,8 @@ namespace DOL.GS.Spells
 				m_owner == null ||
 				m_effect == null)
 				return;
-  			
-			if ( !m_caster.IsWithinRadius( m_owner, ServerProperties.Properties.BUFF_RANGE ) )
+
+			if (WorldMgr.GetDistance(m_caster, m_owner) > ServerProperties.Properties.BUFF_RANGE)
 				m_effect.Cancel(false);
 			else
 				Start(BUFFCHECKINTERVAL);

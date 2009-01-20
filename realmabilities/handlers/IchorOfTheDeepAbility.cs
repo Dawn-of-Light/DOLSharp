@@ -42,7 +42,7 @@ namespace DOL.GS.RealmAbilities
 				return;
 			}
 
-			if (!caster.IsWithinRadius( caster.TargetObject, 1875 ))
+			if (WorldMgr.GetDistance(caster, caster.TargetObject) > 1875)
 			{
 				caster.Out.SendMessage(caster.TargetObject.Name + " is too far away.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 				caster.DisableSkill(this, 3 * 1000);
@@ -92,7 +92,7 @@ namespace DOL.GS.RealmAbilities
 				return 0;
 			}
 
-            if ( !caster.IsWithinRadius( caster.TargetObject, 1875 ) )
+			if (WorldMgr.GetDistance(caster, caster.TargetObject) > 1875)
 			{
 				caster.Out.SendMessage(caster.TargetObject.Name + " is too far away.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 				caster.DisableSkill(this, 3 * 1000);

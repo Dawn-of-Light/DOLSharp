@@ -830,7 +830,7 @@ namespace DOL.GS.Commands
             if ( targetMob.RespawnInterval <= 0 )
                 info.Add( " + Respawn: NPC will not respawn" );
             else
-                info.Add( " + Respawn: " + respawn.Minutes + " minutes " + respawn.Seconds + " seconds (Position: X=" + targetMob.SpawnPoint.X + " Y=" + targetMob.SpawnPoint.Y + " Z=" + targetMob.SpawnPoint.Z + ")" );
+                info.Add( " + Respawn: " + respawn.Minutes + " minutes " + respawn.Seconds + " seconds (Position: X=" + targetMob.SpawnX + " Y=" + targetMob.SpawnY + " Z=" + targetMob.SpawnZ + ")" );
 
             info.Add( " " );
             info.Add( " + Mob Stats:" );

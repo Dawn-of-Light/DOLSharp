@@ -444,7 +444,7 @@ namespace DOL.GS.Quests.Hibernia
 				InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
 				if (item != null && item.Id_nb == necklaceOfDoppelganger.Id_nb)
 				{
-					if (player.IsWithinRadius( legadaEnd, 2500 ))
+					if (WorldMgr.GetDistance(player, legadaEnd.X, legadaEnd.Y, legadaEnd.Z) < 2500)
 					{
 						foreach (GamePlayer visPlayer in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						{

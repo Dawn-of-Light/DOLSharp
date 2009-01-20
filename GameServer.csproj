@@ -220,7 +220,6 @@
     <Compile Include="commands\PlayerCommands\chatgroup.cs" />
     <Compile Include="commands\PlayerCommands\cloak.cs" />
     <Compile Include="commands\PlayerCommands\cmdhelp.cs" />
-    <Compile Include="commands\playercommands\realm.cs" />
     <Compile Include="commands\PlayerCommands\roleplay.cs" />
     <Compile Include="commands\PlayerCommands\deal.cs" />
     <Compile Include="commands\PlayerCommands\disband.cs" />

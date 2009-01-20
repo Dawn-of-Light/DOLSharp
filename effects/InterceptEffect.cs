@@ -92,7 +92,7 @@ namespace DOL.GS.Effects
 			m_owner = m_interceptSource;
 			m_interceptTarget = intercepted;
 
-			if (!interceptor.IsWithinRadius(intercepted, InterceptAbilityHandler.INTERCEPT_DISTANCE))
+			if (!WorldMgr.CheckDistance(interceptor, intercepted, InterceptAbilityHandler.INTERCEPT_DISTANCE))
 			{
 				if (interceptor is GamePlayer)
 					((GamePlayer)interceptor).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)interceptor).Client, "Effects.InterceptEffect.YouAttemtInterceptYBut", intercepted.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
