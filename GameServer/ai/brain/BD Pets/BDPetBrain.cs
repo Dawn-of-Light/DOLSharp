@@ -84,7 +84,7 @@ namespace DOL.AI.Brain
 			if (!Body.AttackState && Body.Attackers.Count == 0)
 			{
 				GameNPC commander = (GameNPC)Owner;
-				double heading = ((double)commander.Heading) * Point2D.HEADING_TO_RADIAN;
+				double heading = ((double)commander.Heading) / GameLiving.HEADING_CONST;
 				//Get which place we should put minion
 				int i = 0;
 				//How much do we want to slide back and left/right
@@ -176,7 +176,7 @@ namespace DOL.AI.Brain
 			}
 
 			//See if the pet is too far away, if so release it!
-			if (!Body.IsWithinRadius(Owner, MAX_OWNER_FOLLOW_DIST))
+			if (!WorldMgr.CheckDistance(Body, Owner, MAX_OWNER_FOLLOW_DIST))
 			{
 				if (Body.IsCasting)
 					Body.StopCurrentSpellcast();

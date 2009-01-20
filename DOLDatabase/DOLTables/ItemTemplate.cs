@@ -100,9 +100,8 @@ namespace DOL.Database
 		protected int m_poisonMaxCharges;
 		protected int m_poisonCharges;
 		protected int m_realm;
-		private int m_canUseEvery;
 		private string m_allowedClasses = "";
-		private string m_packageID="";
+		private int m_canUseEvery;
 		static bool m_autoSave;
 
 		public ItemTemplate()
@@ -175,7 +174,6 @@ namespace DOL.Database
 			m_realm = 0;
 			m_autoSave = false;
             m_allowedClasses = "0";
-            m_packageID ="";
 		}
 
 		[PrimaryKey]
@@ -1073,7 +1071,7 @@ namespace DOL.Database
 		/// <summary>
 		/// the serialized allowed classes of item
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public string AllowedClasses
 		{
 			get { return m_allowedClasses; }
@@ -1084,24 +1082,13 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int CanUseEvery
 		{
 			get { return m_canUseEvery; }
 			set
 			{
 				m_canUseEvery = value;
-				Dirty = true;
-			}
-		}
-	
-		[DataElement(AllowDbNull = true)]
-		public string PackageID
-		{
-			get { return m_packageID; }
-			set
-			{
-				m_packageID = value;
 				Dirty = true;
 			}
 		}

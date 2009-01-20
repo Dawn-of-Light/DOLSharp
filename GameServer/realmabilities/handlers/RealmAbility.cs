@@ -148,7 +148,7 @@ namespace DOL.GS.RealmAbilities
 			{
 				player.Out.SendSpellEffectAnimation(caster, caster, spellEffect, 0, false, success ? (byte)1 : (byte)0);
 
-                if ( caster.IsWithinRadius( player, WorldMgr.INFO_DISTANCE ) )
+				if (Point3D.GetDistance(caster, player) <= WorldMgr.INFO_DISTANCE)
 				{
 					if (player == caster)
 					{
@@ -170,7 +170,7 @@ namespace DOL.GS.RealmAbilities
 		{
 			foreach (GamePlayer player in caster.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-                if ( caster.IsWithinRadius( player, WorldMgr.INFO_DISTANCE ) )
+				if (Point3D.GetDistance(caster, player) <= WorldMgr.INFO_DISTANCE)
 				{
 					if (player == caster)
 					{

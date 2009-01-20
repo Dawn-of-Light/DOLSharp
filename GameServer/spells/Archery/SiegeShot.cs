@@ -17,7 +17,7 @@ namespace DOL.GS.Spells
             if (Caster != null && Caster is GamePlayer && Caster.AttackWeapon != null && (Caster.AttackWeapon.Object_Type == 15 || Caster.AttackWeapon.Object_Type == 18 || Caster.AttackWeapon.Object_Type == 9)) 
 			{
                 if (!(selectedTarget is GameKeepComponent || selectedTarget is Keeps.GameKeepDoor)) { MessageToCaster("You must have a Keep Component targeted for this spell!", eChatType.CT_Spell); return false; }
-				if (!Caster.IsWithinRadius( selectedTarget, Spell.Range )) { MessageToCaster("That target is too far away!", eChatType.CT_Spell); return false; }
+				if (!WorldMgr.CheckDistance(Caster, selectedTarget, Spell.Range)) { MessageToCaster("That target is too far away!", eChatType.CT_Spell); return false; }
 				return true;
             } 
 			return false;

@@ -97,7 +97,7 @@ namespace DOL.GS.SkillHandler
 				player.Out.SendMessage("You cannot see " + player.TargetObject.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (!player.IsWithinRadius(player.TargetObject, 135)) //Didn't use AttackRange cause of the fact that player could use a Bow
+			if (!WorldMgr.CheckDistance(player, player.TargetObject, 135)) //Didn't use AttackRange cause of the fact that player could use a Bow
 			{
 				player.Out.SendMessage("Your target is too far away to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -126,10 +126,10 @@ namespace DOL.GS.SkillHandler
 			//damage = base HP / 100 * DWspec / 2.7 that would be the original calculation
 			if (target is GamePlayer)
 			{
-				damage = (int)(target.MaxHealth / 100 * specc / 4.5);   //works fine      
+				damage = (int)(target.MaxHealth / 100 * specc / 3.5);   //works fine      
 			}
 			else
-			{ damage = (int)(target.MaxHealth / 100 * specc / 4.6); } //works fine
+			{ damage = (int)(target.MaxHealth / 100 * specc / 3.6); } //works fine
 
 			#region Resists
 			int primaryResistModifier = target.GetResist(eDamageType.Slash);
@@ -160,7 +160,7 @@ namespace DOL.GS.SkillHandler
 
 			player.Out.SendMessage("You hit " + target.GetName(0, false) + " for " + damage + " damage!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 			if (target is GamePlayer)
-				(target as GamePlayer).Out.SendMessage(player.Name + " flurry hits you for " + damage + " damage!", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+				(target as GamePlayer).Out.SendMessage(player.Name + " flurry hits you for " + damage + " damage!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 
 			player.LastAttackTickPvP = player.CurrentRegion.Time;
 			target.LastAttackedByEnemyTickPvP = target.CurrentRegion.Time;

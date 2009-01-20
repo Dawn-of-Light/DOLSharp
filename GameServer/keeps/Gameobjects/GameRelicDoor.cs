@@ -150,15 +150,16 @@ namespace DOL.GS.Keeps
 
 			if (GameServer.ServerRules.IsSameRealm(player, this, true) || player.Client.Account.PrivLevel != 1)
 			{
-                Point2D point;
+				int x = 0;
+				int y = 0;
 				//calculate x y
-                if ( IsObjectInFront( player, 180, false ) )
-                    point = this.GetPointFromHeading( this.Heading, -500 );
-                else
-                    point = this.GetPointFromHeading( this.Heading, 500 );
+				if (IsObjectInFront(player, 180, false))
+					GetSpotFromHeading(-500, out x, out y);
+				else
+					GetSpotFromHeading(500, out x, out y);
 
 				//move player
-				player.MoveTo(CurrentRegionID, point.X, point.Y, player.Z, player.Heading);
+				player.MoveTo(CurrentRegionID, x, y, player.Z, player.Heading);
 			}
 			return base.Interact(player);
 		}
@@ -242,9 +243,9 @@ namespace DOL.GS.Keeps
 			this.CurrentRegion = curZone.ZoneRegion;
 			m_Name = door.Name;
 			m_Heading = (ushort)door.Heading;
-			m_x = door.X;
-			m_y = door.Y;
-			m_z = door.Z;
+			m_X = door.X;
+			m_Y = door.Y;
+			m_Z = door.Z;
 			m_Level = 0;
 			m_Model = 0xFFFF;
 			m_doorID = door.InternalID;

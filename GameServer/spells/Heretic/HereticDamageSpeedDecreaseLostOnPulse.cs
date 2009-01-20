@@ -116,7 +116,7 @@ namespace DOL.GS.Spells
                 RemoveEffect();
             }
 
-            if ( !m_caster.IsWithinRadius( effect.Owner, Spell.Range ) )
+            if (WorldMgr.GetDistance(m_caster, effect.Owner) > Spell.Range)
             {
                 RemoveEffect();
             }

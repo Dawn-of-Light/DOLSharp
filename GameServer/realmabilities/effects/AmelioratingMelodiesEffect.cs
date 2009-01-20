@@ -86,7 +86,7 @@ namespace DOL.GS.RealmAbilities
 				if (player.Group == null) return 3000;
 				foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 				{
-					if ((p != player) && (p.Health < p.MaxHealth) && player.IsWithinRadius(p, m_range) && (p.IsAlive))
+					if ((p != player) && (p.Health < p.MaxHealth) && (WorldMgr.CheckDistance(player, p, m_range)) && (p.IsAlive))
 					{
 						if (player.IsStealthed)
 						{

@@ -71,9 +71,7 @@ namespace DOL.GS.Spells
 
 		protected virtual void GetPetLocation(out int x, out int y, out int z, out ushort heading, out Region region)
 		{
-			Point2D point = Caster.GetPointFromHeading( Caster.Heading, 64 );
-            x = point.X;
-            y = point.Y;
+			Caster.GetSpotFromHeading(64, out x, out y);
 			z = Caster.Z;
 			heading = (ushort)((Caster.Heading + 2048) % 4096);
 			region = Caster.CurrentRegion;

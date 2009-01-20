@@ -91,8 +91,10 @@ namespace DOL.GS.Commands
 
 			if (client.Player.TargetObject != null)
 			{
+				int distanceToTarget = WorldMgr.GetDistance(client.Player, client.Player.TargetObject);
+
 				// target not in range
-                if( client.Player.IsWithinRadius( client.Player.TargetObject, EMOTE_RANGE_TO_TARGET ) == false )
+				if (distanceToTarget > EMOTE_RANGE_TO_TARGET || distanceToTarget < 0)
 				{
 					DisplayMessage(client, "You don't see your target around here.");
 					return;

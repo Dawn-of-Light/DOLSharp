@@ -66,7 +66,7 @@ namespace DOL.GS.RealmAbilities
                     player.DisableSkill(this, 3 * 1000);
                     return;
                 }
-                if ( !player.IsWithinRadius( player.TargetObject, SpellRange ) )
+                if (WorldMgr.GetDistance(player, player.TargetObject) > SpellRange)
                 {
                     player.Out.SendMessage(player.TargetObject + " is too far away!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
                     player.DisableSkill(this, 3 * 1000);
@@ -105,7 +105,7 @@ namespace DOL.GS.RealmAbilities
                 player.DisableSkill(this, 3 * 1000);
                 return 0;
             }
-            if ( !player.IsWithinRadius( targetPlayer, SpellRange ) )
+            if (WorldMgr.GetDistance(player, targetPlayer) > SpellRange)
             {
                 player.Out.SendMessage(targetPlayer + " is too far away.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
                 player.DisableSkill(this, 3 * 1000);

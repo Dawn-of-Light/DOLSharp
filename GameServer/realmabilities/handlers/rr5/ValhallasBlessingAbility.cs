@@ -52,7 +52,7 @@ namespace DOL.GS.RealmAbilities
                 {
                     foreach (GamePlayer grpplayer in player.Group.GetPlayersInTheGroup())
                     {
-                        if (player.IsWithinRadius( grpplayer, SpellRadius ) && grpplayer.IsAlive)
+                        if (WorldMgr.CheckDistance(grpplayer, player, SpellRadius) && grpplayer.IsAlive)
                             targets.Add(grpplayer);
                     }
                 }

@@ -49,15 +49,15 @@ namespace DOL.GS.Spells
 				if (player.Client.Account.PrivLevel > 1) MessageToCaster(errorMessage, eChatType.CT_Skill);
 				return;
 			}
-
-            Point2D spawnPoint = Caster.GetPointFromHeading( Caster.Heading, 64 );
+            int x, y;
             int i = 0;
+            Caster.GetSpotFromHeading(64, out x, out y);
             for(i=0;i<3;i++)
             {               
                 deamons[i] = new ZoarkatPet(template);
                 deamons[i].SetOwnBrain(new ProcPetBrain(player));
-                deamons[i].X = spawnPoint.X + Util.Random(20,40) - Util.Random(20,40);
-                deamons[i].Y = spawnPoint.Y + Util.Random(20,40) - Util.Random(20,40);
+                deamons[i].X = x + Util.Random(20,40) - Util.Random(20,40);
+                deamons[i].Y = y + Util.Random(20,40) - Util.Random(20,40);
                 deamons[i].Z = Caster.Z;
                 deamons[i].CurrentRegion = Caster.CurrentRegion;
                 deamons[i].Heading = (ushort)((Caster.Heading + 2048) % 4096);
@@ -70,7 +70,6 @@ namespace DOL.GS.Spells
 				(deamons[i].Brain as ProcPetBrain).Think();
             }			
 		}
-
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
         	int i = 0;

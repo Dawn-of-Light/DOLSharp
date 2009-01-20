@@ -197,7 +197,7 @@ namespace DOL.GS.SkillHandler
 
 			//Test if the stealthing player is in range of this 
 			//player's "impossible to hide" circle
-			return obj.IsWithinRadius(player,(int)radius);
+			return WorldMgr.CheckDistance(obj, player,(int)radius);
 		}
 	}
 }

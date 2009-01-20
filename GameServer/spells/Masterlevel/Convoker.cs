@@ -476,18 +476,18 @@ namespace DOL.GS.Spells
                 return;
             }
 
-            Point2D summonloc;
+            int x, y;
             beffect = CreateSpellEffect(target, effectiveness);
             {
-                summonloc = target.GetPointFromHeading( target.Heading, 64 );
+                target.GetSpotFromHeading(64, out x, out y);
 
                 BriddleBrain controlledBrain = new BriddleBrain(player);
                 controlledBrain.IsMainPet = false;
                 summoned = new GameNPC(template);
                 summoned.SetOwnBrain(controlledBrain);
                 summoned.HealthMultiplicator = true;
-                summoned.X = summonloc.X;
-                summoned.Y = summonloc.Y;
+                summoned.X = x;
+                summoned.Y = y;
                 summoned.Z = target.Z;
                 summoned.CurrentRegion = target.CurrentRegion;
                 summoned.Heading = (ushort)((target.Heading + 2048) % 4096);
@@ -857,7 +857,7 @@ namespace DOL.AI.Brain
             IList enemies = new ArrayList();
             if (Target == null)
                 enemies = FindTarget();
-            else if (!Body.IsWithinRadius(Target, Body.AttackRange))
+            else if (!WorldMgr.CheckDistance(Body, Target, Body.AttackRange))
                 enemies = FindTarget();
             else if (!Target.IsAlive)
                 enemies = FindTarget();
@@ -881,7 +881,7 @@ namespace DOL.AI.Brain
                 {
                     Target = null;
                 }
-                else if (Body.IsWithinRadius(Target, Body.AttackRange))
+                else if (WorldMgr.CheckDistance(Body, Target, Body.AttackRange))
                 {
                     Body.TargetObject = Target;
                     Goto(Target);
@@ -921,7 +921,7 @@ public class MLBrain : GuardBrain
                 continue; // let's not try to attack flying mobs
             if (!GameServer.ServerRules.IsAllowedToAttack(Body, npc, true))
                 continue;
-            if (!npc.IsWithinRadius(Body, AggroRange))
+            if (!WorldMgr.CheckDistance(npc, Body, AggroRange))
                 continue;
 
             if (!(npc.Brain is IControlledBrain || npc is GameGuard))
