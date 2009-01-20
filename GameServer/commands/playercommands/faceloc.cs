@@ -62,8 +62,9 @@ namespace DOL.GS.Commands
 			catch {}
 			int Xoffset = client.Player.CurrentZone.XOffset;
 			int Yoffset = client.Player.CurrentZone.YOffset;
-            Point2D gloc = new Point2D( Xoffset + x, Yoffset + y );
-			ushort direction = client.Player.GetHeading(gloc);
+			int glocX = Xoffset + x;
+			int glocY = Yoffset + y;
+			ushort direction = client.Player.GetHeadingToSpot(glocX, glocY);
 			client.Player.Heading = direction;
 			client.Out.SendPlayerJump(true);
 		}

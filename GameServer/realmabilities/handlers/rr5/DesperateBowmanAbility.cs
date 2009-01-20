@@ -30,7 +30,7 @@ namespace DOL.GS.RealmAbilities
 			if (!GameServer.ServerRules.IsAllowedToAttack(living, target, false))
 				return;
 
-			if (!living.IsWithinRadius(target, 1000))
+			if (!WorldMgr.CheckDistance(living, target, 1000))
 				return;
 
 			if (living.ActiveWeaponSlot != GameLiving.eActiveWeaponSlot.Distance)

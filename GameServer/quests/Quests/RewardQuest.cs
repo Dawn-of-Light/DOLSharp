@@ -180,6 +180,7 @@ namespace DOL.GS.Quests
 					return;
 
 				// Check if this particular quest has been finished.
+
 				if (QuestMgr.GetIDForQuestType(this.GetType()) != rewardArgs.QuestID)
 					return;
 

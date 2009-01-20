@@ -237,7 +237,7 @@ namespace DOL.GS
 			SetGroundTarget(Owner.TargetObject.X, Owner.TargetObject.Y, Owner.TargetObject.Z);
 			TargetObject = Owner.TargetObject;
 			SiegeWeaponTimer.CurrentAction = SiegeTimer.eAction.Aiming;
-            Heading = GetHeading( GroundTarget );
+			Heading = GetHeadingToTarget(GroundTarget);
 			PreAction();
 			if (Owner != null)
 			{
@@ -262,7 +262,7 @@ namespace DOL.GS
 			if (!CanUse()) return;
 			if (!m_enableToMove) return;
 			if (Owner == null || Owner.GroundTarget == null) return;
-            if ( !this.IsWithinRadius( Owner.GroundTarget, 1000 ) )
+			if (WorldMgr.GetDistance(this, Owner.GroundTarget.X, Owner.GroundTarget.Y, Owner.GroundTarget.Z) > 1000)
 			{
 				Owner.Out.SendMessage("Ground target is too far away to move to!", eChatType.CT_System,
 									  eChatLoc.CL_SystemWindow);
@@ -410,7 +410,7 @@ namespace DOL.GS
 		private int GetActionDelay(SiegeTimer.eAction action)
 		{
 			if (action == SiegeTimer.eAction.Fire && TargetObject != null)
-                return (int)( ActionDelay[(int)action] * 0.001 * this.GetDistance( TargetObject ) );
+				return (int)(ActionDelay[(int)action] * 0.001 * WorldMgr.GetDistance(this, TargetObject));
 			
 			int delay = ActionDelay[(int)action];
 			//TODO: better to use a property here - discuss to implement one? dunnow if siegespeed is used at another place.
@@ -438,7 +438,7 @@ namespace DOL.GS
 				this.Owner.Out.SendMessage("The siegeweapon needs to be repaired!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			if (!this.IsWithinRadius(this.Owner, SIEGE_WEAPON_CONTROLE_DISTANCE))
+			if (!WorldMgr.CheckDistance(this, this.Owner, SIEGE_WEAPON_CONTROLE_DISTANCE))
 			{
 				Owner.Out.SendMessage("You are too far from your siege equipment to control it any longer!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;

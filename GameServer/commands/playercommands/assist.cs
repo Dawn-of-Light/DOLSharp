@@ -35,7 +35,7 @@ namespace DOL.GS.Commands
 					assistPlayer = assistClient.Player;
 					if (!GameServer.ServerRules.IsSameRealm(client.Player, assistPlayer, false))
 						return;
-					if (!client.Player.IsWithinRadius( assistClient.Player, 2048 ))
+					if (!WorldMgr.CheckDistance(client.Player, assistClient.Player, 2048))
 					{
 						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.DontSee", args[1]), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;

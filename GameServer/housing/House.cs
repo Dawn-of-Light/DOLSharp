@@ -39,7 +39,7 @@ namespace DOL.GS.Housing
 		Race = 0x07
 	}
 
-	public class House : Point3D
+	public class House : IPoint3D
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -56,19 +56,19 @@ namespace DOL.GS.Housing
 			set { m_databaseItem.HouseNumber = value; }
 		}
 
-		public override int X
+		public int X
 		{
 			get { return m_databaseItem.X; }
 			set { m_databaseItem.X = value; }
 		}
 
-        public override int Y
+		public int Y
 		{
 			get { return m_databaseItem.Y; }
 			set { m_databaseItem.Y = value; }
 		}
 
-        public override int Z
+		public int Z
 		{
 			get { return m_databaseItem.Z; }
 			set { m_databaseItem.Z = value; }

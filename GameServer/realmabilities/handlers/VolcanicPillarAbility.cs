@@ -29,7 +29,7 @@ namespace DOL.GS.RealmAbilities
 				return;
 			}
 
-			if ( !caster.IsWithinRadius( caster.TargetObject, (int)( 1500 * caster.GetModified(eProperty.SpellRange) * 0.01 ) ) )
+			if (WorldMgr.GetDistance(caster, caster.TargetObject) > 1500) // seems that no +range has effect?!
 			{
 				caster.Out.SendMessage(caster.TargetObject + " is too far away.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 				return;
@@ -72,7 +72,7 @@ namespace DOL.GS.RealmAbilities
 				return 0;
 			}
 
-            if ( !caster.IsWithinRadius( caster.TargetObject, (int)( 1500 * caster.GetModified( eProperty.SpellRange ) * 0.01 ) ) )
+			if (WorldMgr.GetDistance(caster, caster.TargetObject) > 1500) // seems that no +range has effect?!
 			{
 				caster.Out.SendMessage(caster.TargetObject + " is too far away.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 				return 0;

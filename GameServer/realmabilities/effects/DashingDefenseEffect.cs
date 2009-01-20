@@ -105,7 +105,7 @@ namespace DOL.GS.Effects
             m_guardSource.EffectList.Add(this);
             m_guardTarget.EffectList.Add(this);
 
-            if (!guardSource.IsWithinRadius(guardTarget, DashingDefenseEffect.GUARD_DISTANCE))
+            if (!WorldMgr.CheckDistance(guardSource, guardTarget, DashingDefenseEffect.GUARD_DISTANCE))
             {
                 guardSource.Out.SendMessage(string.Format("You are now guarding {0}, but you must stand closer.", guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 guardTarget.Out.SendMessage(string.Format("{0} is now guarding you, but you must stand closer.", guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);

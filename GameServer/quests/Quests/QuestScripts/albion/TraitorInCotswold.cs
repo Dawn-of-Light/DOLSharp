@@ -447,7 +447,7 @@ namespace DOL.GS.Quests.Albion
 				InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
 				if (item != null && item.Id_nb == necklaceOfDoppelganger.Id_nb)
 				{
-					if (player.IsWithinRadius( felinEnd, 2500 ))
+					if (WorldMgr.GetDistance(player, felinEnd.X, felinEnd.Y, felinEnd.Z) < 2500)
 					{
 						foreach (GamePlayer visPlayer in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						{

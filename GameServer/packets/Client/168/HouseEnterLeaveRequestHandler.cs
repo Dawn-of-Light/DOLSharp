@@ -87,7 +87,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					case 0: player.LeaveHouse(); break;
 
 					case 1:
-						if (!player.IsWithinRadius(m_house, WorldMgr.VISIBILITY_DISTANCE) || (player.CurrentRegionID != m_house.RegionID))	
+						if (!(WorldMgr.CheckDistance(player, m_house, WorldMgr.VISIBILITY_DISTANCE)) || (player.CurrentRegionID != m_house.RegionID))	
 						{
 							player.Out.SendMessage(string.Format("You are too far away to enter house {0}.", m_house.HouseNumber), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return; 

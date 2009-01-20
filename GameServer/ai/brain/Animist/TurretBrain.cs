@@ -141,7 +141,7 @@ namespace DOL.AI.Brain
 					CheckNPCAggro();
 					target = CalculateNextAttackTarget();
 				}
-                if ( target != null && Body.IsWithinRadius( target, spell.Range ) )
+				if(target != null && WorldMgr.GetDistance(Body, target) <= spell.Range)
 				{
 					if(!Body.IsAttacking || target != Body.TargetObject)
 					{

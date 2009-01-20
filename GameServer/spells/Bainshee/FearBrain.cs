@@ -26,15 +26,16 @@ namespace DOL.AI.Brain
 		protected virtual void CalculateFleeTarget(GameLiving target)
 		{
 			Point3D stalker = new Point3D(target.X, target.Y, target.Z);
-			ushort NotTarget = Body.GetHeading( stalker );
+			ushort NotTarget = Body.GetHeadingToTarget(stalker);
 
 			ushort TargetAngle = (ushort)((NotTarget + 2048) % 4096);
 			Body.Heading = TargetAngle;
 
-            Point2D fleePoint = Body.GetPointFromHeading( Body.Heading, 300 );
+			int FleeX, FleeY;
+			Body.GetSpotFromHeading(300, out FleeX, out FleeY);
 			Body.StopFollow();
 			Body.StopAttack();
-			Body.WalkTo( fleePoint.X, fleePoint.Y, Body.Z, Body.MaxSpeed );
+			Body.WalkTo(FleeX, FleeY, Body.Z, Body.MaxSpeed);
 		}
 	}
 } 

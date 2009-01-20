@@ -128,7 +128,7 @@ namespace DOL.GS.Commands
 				return false;
 			}
 
-			if (!player.IsWithinRadius(obj, WorldMgr.INTERACT_DISTANCE))
+			if (!WorldMgr.CheckDistance(player, obj, WorldMgr.INTERACT_DISTANCE))
 			{
 				DisplayMessage(player, "You are too far away to repair this component.");
 				return false;

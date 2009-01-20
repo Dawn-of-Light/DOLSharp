@@ -44,10 +44,10 @@ namespace DOL.AI.Brain
 					if(!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
 						continue;
 
-					if(!Body.IsWithinRadius( living, MAX_AGGRO_DISTANCE ))
+					if(WorldMgr.GetDistance(Body, living) > MAX_AGGRO_DISTANCE)
 						continue;
 
-					if(!Body.IsWithinRadius( living, ((TurretPet)Body).TurretSpell.Range ))
+					if(WorldMgr.GetDistance(Body, living) > ((TurretPet) Body).TurretSpell.Range)
 						continue;
 
                     if (living.IsMezzed || living.IsStealthed)

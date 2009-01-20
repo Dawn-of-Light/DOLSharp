@@ -158,34 +158,34 @@ namespace DOL.GS.GameEvents
 			//We set the position, model and size of our trainees
 			m_guardTrainee[0].X = m_guardMaster.X - 70;
 			m_guardTrainee[0].Y = m_guardMaster.Y - 66;
-			m_guardTrainee[0].Heading = m_guardTrainee[0].GetHeading( m_guardMaster );
+			m_guardTrainee[0].Heading = m_guardTrainee[0].GetHeadingToSpot(m_guardMaster.X, m_guardMaster.Y);
 			m_guardTrainee[0].Model = (ushort) m_rnd.Next(32, 55);
 			m_guardTrainee[0].Size = (byte) (45 + m_rnd.Next(10));
 
 			m_guardTrainee[1].X = m_guardMaster.X + 76;
 			m_guardTrainee[1].Y = m_guardMaster.Y - 29;
-			m_guardTrainee[1].Heading = m_guardTrainee[1].GetHeading( m_guardMaster );
+			m_guardTrainee[1].Heading = m_guardTrainee[1].GetHeadingToSpot(m_guardMaster.X, m_guardMaster.Y);
 			;
 			m_guardTrainee[1].Model = (ushort) m_rnd.Next(32, 55);
 			m_guardTrainee[1].Size = (byte) (45 + m_rnd.Next(10));
 
 			m_guardTrainee[2].X = m_guardMaster.X - 110;
 			m_guardTrainee[2].Y = m_guardMaster.Y + 22;
-			m_guardTrainee[2].Heading = m_guardTrainee[2].GetHeading( m_guardMaster );
+			m_guardTrainee[2].Heading = m_guardTrainee[2].GetHeadingToSpot(m_guardMaster.X, m_guardMaster.Y);
 			;
 			m_guardTrainee[2].Model = (ushort) m_rnd.Next(32, 55);
 			m_guardTrainee[2].Size = (byte) (45 + m_rnd.Next(10));
 
 			m_guardTrainee[3].X = m_guardMaster.X - 34;
 			m_guardTrainee[3].Y = m_guardMaster.Y + 88;
-			m_guardTrainee[3].Heading = m_guardTrainee[3].GetHeading( m_guardMaster );
+			m_guardTrainee[3].Heading = m_guardTrainee[3].GetHeadingToSpot(m_guardMaster.X, m_guardMaster.Y);
 			;
 			m_guardTrainee[3].Model = (ushort) m_rnd.Next(32, 55);
 			m_guardTrainee[3].Size = (byte) (45 + m_rnd.Next(10));
 
 			m_guardTrainee[4].X = m_guardMaster.X + 52;
 			m_guardTrainee[4].Y = m_guardMaster.Y + 64;
-			m_guardTrainee[4].Heading = m_guardTrainee[4].GetHeading( m_guardMaster );
+			m_guardTrainee[4].Heading = m_guardTrainee[4].GetHeadingToSpot(m_guardMaster.X, m_guardMaster.Y);
 			;
 			m_guardTrainee[4].Model = (ushort) m_rnd.Next(32, 55);
 			m_guardTrainee[4].Size = (byte) (45 + m_rnd.Next(10));

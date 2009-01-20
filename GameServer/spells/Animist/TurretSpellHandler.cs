@@ -51,9 +51,9 @@ namespace DOL.GS.Spells
 				MessageToCaster("You must cast this spell on a creature you are controlling", eChatType.CT_SpellResisted);
 				return false;
 			}
-            if ( !Caster.IsWithinRadius( target, Spell.Range ) )
+			if(WorldMgr.GetDistance(target, Caster) > Spell.Range)
 			{
-				MessageToCaster("Your target is too far away", eChatType.CT_SpellResisted);
+				MessageToCaster("Tour target is too far away", eChatType.CT_SpellResisted);
 				return false;
 			}
 			return base.CheckBeginCast(selectedTarget);
