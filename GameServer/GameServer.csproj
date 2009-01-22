@@ -176,7 +176,7 @@
     <Compile Include="commands\GMCommands\debug.cs" />
     <Compile Include="commands\GMCommands\debugjump.cs" />
     <Compile Include="commands\GMCommands\door.cs" />
-	<Compile Include="commands\GMCommands\doorMgr.cs" />
+    <Compile Include="commands\GMCommands\doorMgr.cs" />
     <Compile Include="commands\GMCommands\Faction.cs" />
     <Compile Include="commands\GMCommands\gmrelic.cs" />
     <Compile Include="commands\GMCommands\gmrelicpad.cs" />
@@ -221,6 +221,7 @@
     <Compile Include="commands\PlayerCommands\chatgroup.cs" />
     <Compile Include="commands\PlayerCommands\cloak.cs" />
     <Compile Include="commands\PlayerCommands\cmdhelp.cs" />
+    <Compile Include="commands\playercommands\realm.cs" />
     <Compile Include="commands\PlayerCommands\roleplay.cs" />
     <Compile Include="commands\PlayerCommands\deal.cs" />
     <Compile Include="commands\PlayerCommands\disband.cs" />
@@ -2505,6 +2506,7 @@
     <None Include="language\DE\Styles.txt" />
     <None Include="language\DE\Trainer.txt" />
     <None Include="language\DE\World.txt" />
+    <None Include="language\FR\Commands\GMcommand.txt" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="language\CZ\Language-CZ.txt" />

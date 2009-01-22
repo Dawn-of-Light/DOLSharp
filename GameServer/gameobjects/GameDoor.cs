@@ -345,7 +345,7 @@ namespace DOL.GS
 		public override void TakeDamage ( GameObject source, eDamageType damageType, int damageAmount, int criticalAmount )
 		{
 			
-			if( !OpenDead && this.Realm != (eRealm)6 )
+			if( !OpenDead && this.Realm != eRealm.Door )
 			{
 				base.TakeDamage(source, damageType, damageAmount, criticalAmount);
 
@@ -355,17 +355,17 @@ namespace DOL.GS
 			GamePlayer attackerPlayer = source as GamePlayer;
 			if( attackerPlayer != null)
 			{
-				if( !OpenDead && this.Realm != (eRealm)6 )
+				if( !OpenDead && this.Realm != eRealm.Door )
 				{
-					attackerPlayer.Out.SendMessage("La porte s'ouvre !!!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					attackerPlayer.Out.SendMessage("The door is now open", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
-				if( !OpenDead && this.Realm != (eRealm)6 )
+				if( !OpenDead && this.Realm != eRealm.Door )
 				{
 					Health -= damageAmount + criticalAmount;
 			
 					if( !IsAlive )
 					{
-						attackerPlayer.Out.SendMessage("La porte s'ouvre !!!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						attackerPlayer.Out.SendMessage("The door is now open", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						Die(source);
 						OpenDead = true;
 						RegenDoorHealth();
@@ -378,7 +378,7 @@ namespace DOL.GS
 						{
 							foreach( GameLiving living in attackerGroup.GetMembersInTheGroup( ) )
 							{
-						 		((GamePlayer)living).Out.SendMessage("La porte s'ouvre !!!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						 		((GamePlayer)living).Out.SendMessage("The door is now open", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 							}
 						}

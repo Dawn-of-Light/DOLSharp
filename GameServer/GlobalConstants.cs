@@ -66,10 +66,9 @@ namespace DOL.GS
 		_Last = 3,
 		
 		/// <summary>
-		/// LastRealmNumber to allow dynamic allocation of realm specific arrays.
+		/// DoorRealmNumber to allow dynamic allocation of realm specific arrays.
 		/// </summary>
-		Door = 6
-
+		Door = 4	
 	};
 	/// <summary>
 	/// The priveledge level of the client

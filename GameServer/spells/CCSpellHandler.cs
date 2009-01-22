@@ -109,6 +109,11 @@ namespace DOL.GS.Spells
 						aggroBrain.AddToAggroList(Caster, 1);
 				}
 			}
+			
+			// Theurgist Pet Stun doesn't povide imunity
+			if (effect.Name == "Pet Stun")
+				return 0;
+				
 			return 60000;
 		}
 
