@@ -152,13 +152,20 @@ Scripts.Players.Range.NeedTarget:			Distance de la cible : Vous n'avez pas une c
 Scripts.Players.Range.NotVisible:			 (Cible hors champ de vision)
 Scripts.Players.Range.Result:				Distance de la cible : {0} unités. {1}
 
+# /Realm
+Scripts.Players.Realm.AlbKeeps:            	Forts d'Albion
+Scripts.Players.Realm.DarknessFalls:      	Les Abysses
+Scripts.Players.Realm.HibKeeps:            	Forts d'Hibernia
+Scripts.Players.Realm.MidKeeps:            	Forts de Midgard
+Scripts.Players.Realm.Title:            	Statut de royaume
+Scripts.Players.Realm.UseRelicCommand:      Utilisez '/relic' pour afficher le statut des Reliques
 
 # VIEWREPORTS
-Scripts.Player.VeiwReport.Usage: Usage:
-Scripts.Player.ViewReport.Help.Close: '/viewreport close <report #>' Ferme le report de bug d'id #.
-Scripts.Player.ViewReport.Help.Delete: '/viewreport delete <report #' Efface les reports d'id #.
-Scripts.Player.ViewReport.InvalidReport: Ce n'est pas un report de bug valide.
-Scripts.Player.ViewReport.UnknownCommand: Ce n'est pas une commande valide.
-Scripts.Player.ViewReport.ReportDeleted: Report {0} est maintenant effacé.
-Scripts.Player.ViewReport.NoPriv: Vous n'avez pas les privilèges pour éditer les reports.
+Scripts.Player.ViewReport.Usage: 			Usage:
+Scripts.Player.ViewReport.Help.Close: 		'/viewreport close <report #>' Ferme le report de bug d'id #.
+Scripts.Player.ViewReport.Help.Delete: 		'/viewreport delete <report #' Efface les reports d'id #.
+Scripts.Player.ViewReport.InvalidReport: 	Ce n'est pas un report de bug valide.
+Scripts.Player.ViewReport.UnknownCommand: 	Ce n'est pas une commande valide.
+Scripts.Player.ViewReport.ReportDeleted: 	Report {0} est maintenant effacé.
+Scripts.Player.ViewReport.NoPriv: 			Vous n'avez pas les privilèges pour éditer les reports.
 

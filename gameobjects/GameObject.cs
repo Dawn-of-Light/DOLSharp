@@ -461,7 +461,7 @@ namespace DOL.GS
         {
             get
             {
-                if (this.Realm == (byte)0)
+                if (this.Realm == eRealm.None)
                     return true;
 
                 return false;

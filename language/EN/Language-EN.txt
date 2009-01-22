@@ -475,6 +475,14 @@ Scripts.Players.Battlegroup.Public:			The battlegroup is now public.
 Scripts.Players.Battlegroup.Usage:			Usage: /bg <text>
 Scripts.Players.Battlegroup.UsageInvite:		Usage: /bg invite <playername>
 
+# /Realm
+Scripts.Players.Realm.AlbKeeps:            Albion Outposts
+Scripts.Players.Realm.DarknessFalls:      Darkness Falls
+Scripts.Players.Realm.HibKeeps:            Hibernia Outposts
+Scripts.Players.Realm.MidKeeps:            Midgard Outposts
+Scripts.Players.Realm.Title:            Realm status
+Scripts.Players.Realm.UseRelicCommand:      Use '/relic' for Relic info
+
 # Boats
 Scripts.Player.Boat.AlreadyOnBoat:			That player is already on the boat!
 Scripts.Player.Boat.BoardingDenied:			Your request to board {0} was denied.

@@ -135,3 +135,11 @@ HousingPlaceItemHandler.PutMoney:			Dejas el dinero en tu casa.
 # /Language
 Scripts.Players.Language.Set:				Cambias el idioma de las notificaciones a {0}.
 Scripts.Players.Language.Current:			Tu idioma es actualmente: {0}.
+
+# /Realm
+Scripts.Players.Realm.AlbKeeps:            Puestos avanzados de Albión
+Scripts.Players.Realm.DarknessFalls:      Abismos de la Oscuridad
+Scripts.Players.Realm.HibKeeps:            Puestos avanzados de Hibernia
+Scripts.Players.Realm.MidKeeps:            Puestos avanzados de Midgard
+Scripts.Players.Realm.Title:            Estatuto del reino
+Scripts.Players.Realm.UseRelicCommand:      Teclea '/relic': informaciones de Reliquias

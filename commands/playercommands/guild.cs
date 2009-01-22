@@ -1945,11 +1945,10 @@ namespace DOL.GS.Commands
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 return;
                             }
-							if (client.Player.Guild.ClaimedKeeps.Count == 1)
-							{
-                                foreach (AbstractGameKeep keep in client.Player.Guild.ClaimedKeeps)
-                                    keep.Release();
-							}
+   							if (client.Player.Guild.ClaimedKeeps.Count == 1)
+                     		{
+                                client.Player.Guild.ClaimedKeeps[0].Release();
+                    		}
 							else
 							{
 								foreach (AbstractArea area in client.Player.CurrentAreas)
