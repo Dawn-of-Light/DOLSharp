@@ -69,7 +69,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			
 			if( target != null && WorldMgr.GetDistance(client.Player, target) >= 150)
 			{
-				client.Player.Out.SendMessage("Vous etes trop loin pour ouvrir cette porte!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				client.Player.Out.SendMessage("You are too far to open this door", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				return 0;
 			}
 		
@@ -120,10 +120,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (DOOR == null)
 			{
 								
-				if(doorType != 9 && client.Account.PrivLevel > 10)
+				if(doorType != 9 && client.Account.PrivLevel > 1)
 				{
 
-					client.Player.Out.SendCustomDialog("Cette porte n'existe pas dans la base !!!\n SVP placez vous au plus pret d'elle et selectionnez Accepter svp", new CustomDialogResponse(AddingDoor));
+					client.Player.Out.SendCustomDialog("This door is not in the database. Place yourself nearest to this door and clic Accept", new CustomDialogResponse(AddingDoor));
 				/*	DBDoor door = new DBDoor( );
 					door.ObjectId = null;
 					door.InternalID = DoorID;
@@ -139,7 +139,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					door.Z = client.Player.Z;
 					door.Heading = client.Player.Heading;
 					GameServer.Database.AddNewObject(door);
-					client.Player.Out.SendMessage("Added door " + DoorID + " to the database!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					client.Player.Out.SendMessage("Added door " + DoorID + " to the database", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			*/	}
 				new ChangeDoorAction(client.Player, DoorID, doorState).Start(1);
 				return 1;
