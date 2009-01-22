@@ -812,6 +812,14 @@ Scripts.Players.Range.Result:				Distanza dal bersaglio: {0} unita'. {1}
 Scripts.Players.Range.InvalidObject:				Questo comando funziona solo sugli oggetti.
 Scripts.Players.Range.NotVisible:			 (Bersaglio non visibile)
 
+# /Realm
+Scripts.Players.Realm.AlbKeeps:            Avamposti di Albion
+Scripts.Players.Realm.DarknessFalls:      La Calata delle Tenebre
+Scripts.Players.Realm.HibKeeps:            Avamposti di Hibernia
+Scripts.Players.Realm.MidKeeps:            Avamposti di Midgard
+Scripts.Players.Realm.Title:            Stato del Reame
+Scripts.Players.Realm.UseRelicCommand:      Usa '/relic' per avere informazioni sulla Reliquie
+
 # QUESTS
 # /ImportantDelivery
 Hib.ImportantDelivery.CheckPlayerAbortQuest.Abort:	Annullamento della Quest {0}. Puoi ricominciarla se lo desideri.

@@ -92,6 +92,14 @@ Scripts.Players.Battlegroup.Public:			Dies ist nun eine öffentliche Kampfgruppe
 Scripts.Players.Battlegroup.Usage:			Verwendet: /bc <text>
 Scripts.Players.Battlegroup.UsageInvite:		Verwendet: /bg invite <playername>
 
+# /Realm
+Scripts.Players.Realm.AlbKeeps:            	Albion Festungen
+Scripts.Players.Realm.DarknessFalls:      	Darkness Falls
+Scripts.Players.Realm.HibKeeps:           	Hibernia Festungen
+Scripts.Players.Realm.MidKeeps:           	Midgard Festungen
+Scripts.Players.Realm.Title:            	Reichsstatus
+Scripts.Players.Realm.UseRelicCommand:      Gebt '/relic' für den Reliktstatus ein.
+
 # Boats
 Scripts.Player.Boat.AlreadyOnBoat:			Dieser Spieler ist bereits in einem Boot!
 Scripts.Player.Boat.BoardingDenied:			Eure Bitte an Bord des {0} kommen zu dürfen wurde abgelehnt.

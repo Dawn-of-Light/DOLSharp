@@ -328,11 +328,20 @@ namespace DOL.AI.Brain
 		public override void Think()
 		{
 			GamePlayer playerowner = GetPlayerOwner();
+			
 			if (!playerowner.CurrentUpdateArray[Body.ObjectID - 1])
 			{
 				playerowner.Out.SendObjectUpdate(Body);
 				playerowner.CurrentUpdateArray[Body.ObjectID - 1] = true;
 			}
+			
+			//If the target is dead, the pet doesn't need to think anymore
+            if ((Body.TargetObject is GamePlayer && (!(Body.TargetObject as GamePlayer).IsAlive)) ||
+                (Body.TargetObject is GameNPC && (!(Body.TargetObject as GameNPC).IsAlive)))
+            {
+                Body.TargetObject = null;
+                Stop();
+            }
 
 			//See if the pet is too far away, if so release it!
 			if (Owner is GamePlayer && IsMainPet)
