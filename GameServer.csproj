@@ -176,6 +176,7 @@
     <Compile Include="commands\GMCommands\debug.cs" />
     <Compile Include="commands\GMCommands\debugjump.cs" />
     <Compile Include="commands\GMCommands\door.cs" />
+	<Compile Include="commands\GMCommands\doorMgr.cs" />
     <Compile Include="commands\GMCommands\Faction.cs" />
     <Compile Include="commands\GMCommands\gmrelic.cs" />
     <Compile Include="commands\GMCommands\gmrelicpad.cs" />

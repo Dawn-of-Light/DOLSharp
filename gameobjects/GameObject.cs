@@ -399,12 +399,19 @@ namespace DOL.GS
 		/// The name of the Object
 		/// </summary>
 		protected string m_Name;
+		
+		/// <summary>
+		/// The name of the Object
+		/// </summary>
+		protected string m_Guild;
+
 
 		/// <summary>
 		/// The model of the Object
 		/// </summary>
 		protected ushort m_Model;
-
+		
+		
 		/// <summary>
 		/// Gets or Sets the current level of the Object
 		/// </summary>
@@ -431,6 +438,15 @@ namespace DOL.GS
 			get { return m_Name; }
 			set { m_Name = value; }
 		}
+		
+		/// <summary>
+		/// Gets or Sets the current Guild of the Object
+		/// </summary>
+		public virtual string Guild
+		{
+			get { return m_Guild; }
+			set { m_Guild = value; }
+		}
 
 		/// <summary>
 		/// Gets or Sets the current Model of the Object
@@ -440,6 +456,78 @@ namespace DOL.GS
 			get { return m_Model; }
 			set { m_Model = value; }
 		}
+
+        public bool IsAttackableDoor
+        {
+            get
+            {
+                if (this.Realm == (byte)0)
+                    return true;
+
+                return false;
+            }
+        }
+
+        protected int m_health;
+        public virtual int Health
+        {
+            get { return m_health; }
+            set
+            {
+
+                int maxhealth = MaxHealth;
+                if (value >= maxhealth)
+                {
+                    m_health = maxhealth;
+                }
+                else if (value > 0)
+                {
+                    m_health = value;
+                }
+                else
+                {
+                    m_health = 0;
+                }
+
+                /*    if (IsAlive && m_health < maxhealth)
+                    {
+                        StartHealthRegeneration();
+                    }*/
+            }
+        }
+
+        /// <summary>
+        /// Gets/sets the maximum amount of health
+        /// </summary>
+        protected int m_maxHealth;
+        public virtual int MaxHealth
+        {
+            get { return m_maxHealth; }
+            set
+            {
+                m_maxHealth = value;
+                //Health = Health; //cut extra hit points if there are any or start regeneration
+            }
+        }
+
+        /// <summary>
+        /// Gets the Health in percent 0..100
+        /// </summary>
+        public virtual byte HealthPercent
+        {
+            get
+            {
+                return (byte)(MaxHealth <= 0 ? 0 : Health * 100 / MaxHealth);
+            }
+        }
+
+        /// <summary>
+        /// Health as it should display in the group window.
+        /// </summary>
+        public virtual byte HealthPercentGroupWindow
+        {
+            get { return HealthPercent; }
+        }
 
 		private const string m_vowels = "aeuio";
 

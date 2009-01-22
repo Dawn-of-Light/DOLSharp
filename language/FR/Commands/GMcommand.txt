@@ -100,6 +100,20 @@ GMCommands.Door.DoorExist:					Door exist. Impossible create it. Id={0}
 GMCommands.Door.Removed:					Door removed with Id={0}
 GMCommands.Door.InexistentDoor:				Inexistent door. Impossible remove it. Id={0}
 
+# /DoorMGR Command
+GMCommands.dmgr.Description:				Modfication des portes
+GMCommands.dmgr.Name:					'/dmgr Name <texte>'change le nom de la porte.
+GMCommands.dmgr.Level:					'/dmgr Level <valeur>'change le level de la porte. 
+GMCommands.dmgr.Realm:					'/dmgr realm <valeur>'change le realm de la porte. ! Attention si realm 0 la porte ne s'ouvre pas tant qu'elle est pas tuée
+GMCommands.dmgr.Guild:					'/dmgr guild <texte>'change la guilde de la porte.
+GMCommands.dmgr.Info:					'/dmgr info' donne les info de la porte.
+GMCommands.dmgr.Heal:					'/dmgr heal' redonne le maximum de vie a la porte.
+GMCommands.dmgr.Kill:					'/dmgr heal' "tue la porte".
+GMCommands.dmgr.Locked:					'/dmgr locked 'verouille completement la porte.
+GMCommands.dmgr.Unlocked:				'/dmgr unlocked 'deverouille la porte.
+GMCommands.dmgr.Update:					'/dmgr update 'maj de la porte avec X Y Z de l'admin.
+GMCommands.dmgr.Delete:					'/dmgr delete 'supprime la porte ciblée.
+GMCommands.dmgr.xxx:					'/dmgr  <>'change l de la porte.
 
 # /faction Command
 GMCommands.Faction.Description:				Create a faction and assign friend and enemy faction
