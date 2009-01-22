@@ -18,14 +18,34 @@
  */
 using System;
 using DOL.Database;
+using DOL.GS.PacketHandler;
+using DOL.Language;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
+using DOL.GS.Utils;
+using DOL.GS.Quests;
+using System.Threading;
+using DOL.AI.Brain;
+using DOL.Events;
+using DOL.GS.Effects;
+using DOL.GS.Keeps;
+using DOL.GS.PropertyCalc;
+using DOL.GS.SkillHandler;
+using DOL.GS.Spells;
+using DOL.GS.Styles;
+using DOL.GS.PacketHandler.Client.v168;
 
 namespace DOL.GS
 {
 	/// <summary>
 	/// GameDoor is class for regular door
 	/// </summary>
-	public class GameDoor : GameObject, IDoor
+	public class GameDoor : GameLiving, IDoor
 	{
+		private bool OpenDead = false;
+		private static Timer m_timer;
+		protected volatile uint m_lastUpdateTickCount = uint.MinValue;
 		private readonly object m_LockObject = new object();
 		/// <summary>
 		/// The time interval after which door will be closed, in milliseconds
@@ -43,9 +63,9 @@ namespace DOL.GS
 			: base()
 		{
 			m_state = eDoorState.Closed;
-			this.Realm = 0;
+			//this.Realm = 0;
 		}
-
+		
 		/// <summary>
 		/// Loads this door from a door table slot
 		/// </summary>
@@ -66,6 +86,13 @@ namespace DOL.GS
 			m_Level = 0;
 			m_Model = 0xFFFF;
 			m_doorID = m_dbdoor.InternalID;
+            m_Guild = m_dbdoor.Guild;
+            m_Realm = (eRealm)m_dbdoor.Realm;
+            m_Level = m_dbdoor.Level;
+            m_health = m_dbdoor.MaxHealth;
+            m_maxHealth = m_dbdoor.MaxHealth;
+			m_locked = m_dbdoor.Locked;
+			//m_model = m_dbdoor.Model;
 			this.AddToWorld();
 		}
 		/// <summary>
@@ -79,11 +106,18 @@ namespace DOL.GS
 			if (obj == null)
 				obj = new DBDoor();
 			obj.Name = this.Name;
-			obj.Heading = this.Heading;
-			obj.X = this.X;
-			obj.Y = this.Y;
-			obj.Z = this.Z;
+		//	obj.Heading = this.Heading;
+		//	obj.X = this.X;
+		//	obj.Y = this.Y;
+		//	obj.Z = this.Z;
 			obj.InternalID = this.DoorID;
+			obj.Type = DoorID / 100000000;
+            obj.Guild = this.Guild;
+            obj.Realm = (byte)this.Realm;
+            obj.Level = this.Level;
+            obj.MaxHealth = this.MaxHealth;
+			obj.Health = this.MaxHealth;
+			obj.Locked = this.Locked;
 			if (InternalID == null)
 			{
 				GameServer.Database.AddNewObject(obj);
@@ -94,6 +128,16 @@ namespace DOL.GS
 		}
 
 		#region Properties
+
+		private int m_locked;
+		/// <summary>
+		/// door open = 0 / lock = 1 
+		/// </summary>
+		public int Locked
+		{
+			get { return m_locked; }
+			set { m_locked = value; }
+		}
 
 		/// <summary>
 		/// this hold the door index which is unique
@@ -109,6 +153,16 @@ namespace DOL.GS
 			set { m_doorID = value; }
 		}
 
+		private int m_type;
+
+		/// <summary>
+		/// Door Type
+		/// </summary>
+		public int Type
+		{
+			get { return m_type; }
+			set { m_type = value; }
+		}
 		/// <summary>
 		/// this is flag for packet (0 for regular door and 4 for keep door)
 		/// </summary>
@@ -151,22 +205,38 @@ namespace DOL.GS
 		/// </summary>
 		public void Open()
 		{
-			this.State = eDoorState.Open;
-			lock (m_LockObject)
+			if (Locked == 0)
+				this.State = eDoorState.Open;
+			
+			if (HealthPercent > 40 || !OpenDead)
 			{
-				if (m_closeDoorAction == null)
+				lock (m_LockObject)
 				{
-					m_closeDoorAction = new CloseDoorAction(this);
+					if (m_closeDoorAction == null)
+					{
+						m_closeDoorAction = new CloseDoorAction(this);
+					}
+					m_closeDoorAction.Start(CLOSE_DOOR_TIME);
 				}
-				m_closeDoorAction.Start(CLOSE_DOOR_TIME);
 			}
 		}
+
+		public byte Status
+		{
+			get
+			{
+			//	if( this.HealthPercent == 0 ) return 0x01;//broken
+				return 0x00;
+			}
+		}
+
 		/// <summary>
 		/// Call this function to close the door
 		/// </summary>
 		public void Close()
 		{
-			this.State = eDoorState.Closed;
+			if (!OpenDead)
+				this.State = eDoorState.Closed;
 			m_closeDoorAction = null;
 		}
 
@@ -183,8 +253,139 @@ namespace DOL.GS
 			else if (!open && m_state != eDoorState.Closed)
 				this.Close();
 
-		} 
+		}
+		
+		public virtual int Health
+		{
+			get { return m_health; }
+			set
+			{
 
+				int maxhealth = MaxHealth;
+				if( value >= maxhealth )
+				{
+					m_health = maxhealth;
+
+					lock( m_xpGainers.SyncRoot )
+					{
+						m_xpGainers.Clear( );
+					}
+				}
+				else if( value > 0 )
+				{
+					m_health = value;
+				}
+				else
+				{
+					m_health = 0;
+				}
+
+				if( IsAlive && m_health < maxhealth )
+				{
+					StartHealthRegeneration( );
+				}
+			}
+		}
+		
+		public virtual void BroadcastUpdate ()
+		{
+			if( ObjectState != eObjectState.Active ) return;
+			foreach( GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE) )
+			{
+				if( player == null ) continue;
+				player.Out.SendObjectUpdate(this);
+				player.CurrentUpdateArray[ObjectID - 1] = true;
+			}
+			m_lastUpdateTickCount = (uint)Environment.TickCount;
+		}
+		
+		
+		private static long m_healthregentimer = 0;
+		
+		public void RegenDoorHealth ()
+		{
+			Health = 0;
+			if (Locked == 0)
+				Open();
+			
+			m_healthregentimer = 9999;
+			m_timer = new Timer(new TimerCallback(StartHealthRegen), null, 0, 1000);
+
+		}
+		
+		public void StartHealthRegen(object param)
+		{
+			if (HealthPercent >= 40)
+			{
+				m_timer.Dispose( );
+				OpenDead = false;
+				Close( );
+				return;
+			}
+				
+			if (Health == MaxHealth)
+			{
+				m_timer.Dispose( );
+				OpenDead = false;
+				Close();
+				return;
+			}
+
+			if( m_healthregentimer <= 0 )
+			{
+				m_timer.Dispose();
+				OpenDead = false;
+				Close( );
+				return;
+			}
+			this.Health += this.Level*2;
+			m_healthregentimer -= 10;
+		}
+
+		public override void TakeDamage ( GameObject source, eDamageType damageType, int damageAmount, int criticalAmount )
+		{
+			
+			if( !OpenDead && this.Realm != (eRealm)6 )
+			{
+				base.TakeDamage(source, damageType, damageAmount, criticalAmount);
+
+				double damageDealt = damageAmount + criticalAmount;
+			}
+				
+			GamePlayer attackerPlayer = source as GamePlayer;
+			if( attackerPlayer != null)
+			{
+				if( !OpenDead && this.Realm != (eRealm)6 )
+				{
+					attackerPlayer.Out.SendMessage("La porte s'ouvre !!!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+				if( !OpenDead && this.Realm != (eRealm)6 )
+				{
+					Health -= damageAmount + criticalAmount;
+			
+					if( !IsAlive )
+					{
+						attackerPlayer.Out.SendMessage("La porte s'ouvre !!!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						Die(source);
+						OpenDead = true;
+						RegenDoorHealth();
+						if( Locked == 0 )
+							Open( );
+				
+				
+						Group attackerGroup = attackerPlayer.Group;
+						if( attackerGroup != null )
+						{
+							foreach( GameLiving living in attackerGroup.GetMembersInTheGroup( ) )
+							{
+						 		((GamePlayer)living).Out.SendMessage("La porte s'ouvre !!!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+							}
+						}
+					}
+				}
+			}
+		}
 		/// <summary>
 		/// The action that closes the door after specified duration
 		/// </summary>
