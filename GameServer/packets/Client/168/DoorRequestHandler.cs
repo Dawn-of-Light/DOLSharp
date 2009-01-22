@@ -119,15 +119,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 			
 			if (DOOR == null)
 			{
-				if(doorType == 7 || doorType == 9)
+								
+				if(doorType != 9 && client.Account.PrivLevel > 10)
 				{
-					new ChangeDoorAction(client.Player, DoorID, doorState).Start(1);
-					return 1;
-				}
-				
-				if( doorType != 7 && doorType != 9 && client.Account.PrivLevel > 1)
-				{
-					DBDoor door = new DBDoor( );
+
+					client.Player.Out.SendCustomDialog("Cette porte n'existe pas dans la base !!!\n SVP placez vous au plus pret d'elle et selectionnez Accepter svp", new CustomDialogResponse(AddingDoor));
+				/*	DBDoor door = new DBDoor( );
 					door.ObjectId = null;
 					door.InternalID = DoorID;
 					door.Name = "door";
@@ -143,14 +140,45 @@ namespace DOL.GS.PacketHandler.Client.v168
 					door.Heading = client.Player.Heading;
 					GameServer.Database.AddNewObject(door);
 					client.Player.Out.SendMessage("Added door " + DoorID + " to the database!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-				}
+			*/	}
 				new ChangeDoorAction(client.Player, DoorID, doorState).Start(1);
 				return 1;
 			}
 			return 0;
 		}
-		
-	
+
+		public void AddingDoor ( GamePlayer player, byte response )
+		{
+			if( response != 0x01 )
+				return;
+
+			int doorType = DoorIDhandler / 100000000;
+			if( doorType == 7 )
+			{
+				PositionMgr.CreateDoor(DoorIDhandler, player);
+			}
+			else
+			{
+				DBDoor door = new DBDoor( );
+				door.ObjectId = null;
+				door.InternalID = DoorIDhandler;
+				door.Name = "door";
+				door.Type = DoorIDhandler / 100000000;
+				door.Level = 20;
+				door.Realm = 6;
+				door.MaxHealth = 2545;
+				door.Health = 2545;
+				door.Locked = 0;
+				door.X = player.X;
+				door.Y = player.Y;
+				door.Z = player.Z;
+				door.Heading = player.Heading;
+				GameServer.Database.AddNewObject(door);
+
+				player.Out.SendMessage("Added door " + DoorIDhandler + " to the database!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				DoorMgr.Init( );
+			}
+		}
 		  
 
 		/// <summary>
