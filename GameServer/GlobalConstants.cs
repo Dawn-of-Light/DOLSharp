@@ -63,7 +63,12 @@ namespace DOL.GS
 		/// <summary>
 		/// LastRealmNumber to allow dynamic allocation of realm specific arrays.
 		/// </summary>
-		_Last = 3
+		_Last = 3,
+		
+		/// <summary>
+		/// LastRealmNumber to allow dynamic allocation of realm specific arrays.
+		/// </summary>
+		Door = 6
 
 	};
 	/// <summary>

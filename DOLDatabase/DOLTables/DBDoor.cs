@@ -34,8 +34,17 @@ namespace DOL.Database
 		private int m_zpos;
 		private int m_heading;
 		private string m_name;
+		private int m_type;
 		private int m_internalID;
-
+		private byte m_level;
+		private byte m_realm;
+		private string m_guild;
+		private uint m_flags;
+       // private int m_constitution;
+		private int m_locked;
+		private int m_health;
+		private int m_maxHealth;
+		
 		/// <summary>
 		/// Create a door row
 		/// </summary>
@@ -83,6 +92,20 @@ namespace DOL.Database
 			}
 		}
 
+		[DataElement(AllowDbNull = true)]
+		public int Type
+		{
+			get
+			{
+				return m_type;
+			}
+			set
+			{
+				Dirty = true;
+				m_type = value;
+			}
+		}
+		
 		/// <summary>
 		/// Z position of door
 		/// </summary>
@@ -167,5 +190,115 @@ namespace DOL.Database
 				m_internalID = value;
 			}
 		}
+		
+		[DataElement(AllowDbNull = true)]
+		public string Guild
+		{
+			get
+			{
+				return m_guild;
+			}
+			set
+			{
+				Dirty = true;
+				m_guild = value;
+			}
+		}
+
+		/* 	[DataElement(AllowDbNull = false)]
+			public int Constitution
+			{
+				get
+				{
+					return m_constitution;
+				}
+				set
+				{
+					Dirty = true;
+					m_constitution = value;
+				}
+			}
+			*/
+		[DataElement(AllowDbNull = false)]
+		public byte Level
+		{
+			get
+			{
+				return m_level;
+			}
+			set
+			{
+				Dirty = true;
+				m_level = value;
+			}
+		}
+		
+		[DataElement(AllowDbNull = false)]
+		public byte Realm
+		{
+			get
+			{
+				return m_realm;
+			}
+			set
+			{
+				Dirty = true;
+				m_realm = value;
+			}
+		}
+		
+		[DataElement(AllowDbNull = true)]
+		public uint Flags
+		{
+			get
+			{
+				return m_flags;
+			}
+			set
+			{
+				Dirty = true;
+				m_flags = value;
+			}
+		}
+		
+		[DataElement(AllowDbNull = false)]
+        public int Locked
+        {
+            get
+            {
+                return m_locked;
+            }
+            set
+            {
+                Dirty = true;
+                m_locked = value;
+            }
+        }
+		[DataElement(AllowDbNull = false)]
+        public int Health
+        {
+            get
+            {
+                return m_health;
+            }
+            set
+            {
+                Dirty = true;
+                m_health = value;
+            }
+        }
+		[DataElement(AllowDbNull = false)]
+        public int MaxHealth
+        {
+            get
+            {
+                return m_maxHealth;
+            }
+            set
+            {
+                Dirty = true;
+                m_maxHealth = value;
+            }
+        }
 	}
 }
