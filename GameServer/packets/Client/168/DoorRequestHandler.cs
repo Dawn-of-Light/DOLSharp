@@ -27,14 +27,19 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandler(PacketHandlerType.TCP, 0x31 ^ 168, "Handles open/close door requests!")]
 	public class DoorRequestHandler : IPacketHandler
 	{
+
+		public static int DoorIDhandler;
+		/// <summary>
+		/// door index which is unique
+		/// </summary>
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int DoorID = (int)packet.ReadInt();
+			DoorIDhandler = DoorID;
 			byte doorState = (byte)packet.ReadByte();
-
+			int doorType = DoorID / 100000000;
 			if (client.Account.PrivLevel > 1)
 			{
-				int doorType = DoorID / 100000000;
 				if (doorType == 7)
 				{
 					int ownerKeepId = (DoorID / 100000) % 1000;
@@ -56,14 +61,97 @@ namespace DOL.GS.PacketHandler.Client.v168
 					int fixturePiece = fixture;
 					fixture /= 100;
 					fixturePiece = fixturePiece - fixture * 100;
-					client.Out.SendDebugMessage("Fixture DoorID:{0} state:{1} (zone:{2} fixture:{3} fixturePiece:{4})", DoorID, doorState, zoneDoor, fixture, fixturePiece);
+					client.Out.SendDebugMessage("DoorID:{0} state:{1} zone:{2} fixture:{3} fixturePiece:{4} Type:{5})", DoorID, doorState, zoneDoor, fixture, fixturePiece, doorType);
 				}
 			}
 
-			new ChangeDoorAction(client.Player, DoorID, doorState).Start(1);
+			GameDoor target = client.Player.TargetObject as GameDoor;
+			
+			if( target != null && WorldMgr.GetDistance(client.Player, target) >= 150)
+			{
+				client.Player.Out.SendMessage("Vous etes trop loin pour ouvrir cette porte!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				return 0;
+			}
+		
+			DBDoor DOOR = (DBDoor)GameServer.Database.SelectObject(typeof(DBDoor), "InternalID = '" + DoorID + "'");
 
-			return 1;
+			if (DOOR != null)
+			{
+				if( doorType == 7 || doorType == 9 )
+				{
+					new ChangeDoorAction(client.Player, DoorID, doorState).Start(1);
+					return 1;
+				}
+				
+				if (client.Account.PrivLevel == 1 )
+				{
+					if (DOOR.Locked == 0)
+					{
+						if (DOOR.Health == 0)
+						{
+							new ChangeDoorAction(client.Player, DoorID, doorState).Start(1);
+							return 1;					
+						}
+						if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
+						{
+							if( DOOR.Realm != 0)
+							{
+								new ChangeDoorAction(client.Player, DoorID, doorState).Start(1);
+								return 1;
+							}
+						}
+						if( GameServer.Instance.Configuration.ServerType == eGameServerType.GST_Normal )
+						{
+							if( (eRealm)client.Player.Realm == (eRealm)DOOR.Realm || DOOR.Realm == 6 )
+							{
+								new ChangeDoorAction(client.Player, DoorID, doorState).Start(1);
+								return 1;
+							}
+						}
+					}
+				}
+				if( client.Account.PrivLevel > 1 )
+				{
+					new ChangeDoorAction(client.Player, DoorID, doorState).Start(1);
+					return 1;
+				}
+			}
+			
+			if (DOOR == null)
+			{
+				if(doorType == 7 || doorType == 9)
+				{
+					new ChangeDoorAction(client.Player, DoorID, doorState).Start(1);
+					return 1;
+				}
+				
+				if( doorType != 7 && doorType != 9 && client.Account.PrivLevel > 1)
+				{
+					DBDoor door = new DBDoor( );
+					door.ObjectId = null;
+					door.InternalID = DoorID;
+					door.Name = "door";
+					door.Type = DoorID / 100000000;
+					door.Level = 20;
+					door.Realm = 6;
+					door.MaxHealth = 2545;
+					door.Health = 2545;
+					door.Locked = 0;
+					door.X = client.Player.X;
+					door.Y = client.Player.Y;
+					door.Z = client.Player.Z;
+					door.Heading = client.Player.Heading;
+					GameServer.Database.AddNewObject(door);
+					client.Player.Out.SendMessage("Added door " + DoorID + " to the database!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				}
+				new ChangeDoorAction(client.Player, DoorID, doorState).Start(1);
+				return 1;
+			}
+			return 0;
 		}
+		
+	
+		  
 
 		/// <summary>
 		/// Handles the door state change actions
@@ -147,14 +235,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 					 */
 
 					//else basic quick hack
-					GameDoor door = new GameDoor();
+					/*GameDoor door = new GameDoor();
 					door.DoorID = m_doorId;
 					door.X = player.X;
 					door.Y = player.Y;
 					door.Z = player.Z;
 					door.CurrentRegion = player.CurrentRegion;
 					door.Open();
-					if (player.Client.Account.PrivLevel == 3)
+					if (player.Client.Account.PrivLevel == 30)
 					{
 						int doorType = m_doorId / 100000000;
 						if (doorType == 7)
@@ -172,7 +260,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								player.Out.SendCustomDialog("Add this door to the database?", new CustomDialogResponse(AddingDoor));
 							}
 						}
-					}
+					}*/
 				}
 			}
 
