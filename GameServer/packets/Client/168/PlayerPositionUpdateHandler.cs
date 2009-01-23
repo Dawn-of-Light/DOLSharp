@@ -98,12 +98,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			if ((data & 0x200) != 0)
 				speed = -speed;
-			if (client.Player.IsMezzed || client.Player.IsStunned)
-			{
-				speed = 0;
-			}
-			else
-				client.Player.CurrentSpeed = speed;
+			
+			// Graveen: the following cause not in view message
+			//if (client.Player.IsMezzed || client.Player.IsStunned)
+			//{
+			//	speed = 0;
+			//}
+			//else
+			//	client.Player.CurrentSpeed = speed;
 
 			//Don't use the "sit" flag (data&0x1000) because it is
 			//useful only for displaying sit status to other clients,
