@@ -153,12 +153,21 @@ Scripts.Players.Range.NotVisible:			 (Cible hors champ de vision)
 Scripts.Players.Range.Result:				Distance de la cible : {0} unités. {1}
 
 # /Realm
-Scripts.Players.Realm.AlbKeeps:            	Forts d'Albion
+Scripts.Players.Realm.AlbKeeps:            	Forts Albionnais
 Scripts.Players.Realm.DarknessFalls:      	Les Abysses
-Scripts.Players.Realm.HibKeeps:            	Forts d'Hibernia
-Scripts.Players.Realm.MidKeeps:            	Forts de Midgard
+Scripts.Players.Realm.HibKeeps:            	Forts Hiberniens
+Scripts.Players.Realm.MidKeeps:            	Forts Midgardiens
 Scripts.Players.Realm.Title:            	Statut de royaume
 Scripts.Players.Realm.UseRelicCommand:      Utilisez '/relic' pour afficher le statut des Reliques
+
+# /Relic
+Scripts.Players.Relic.AlbRelics:         	Reliques Albionnaises
+Scripts.Players.Relic.HibRelics:         	Reliques Hiberniennes
+Scripts.Players.Relic.MidRelics:         	Reliques Midgardiennes
+Scripts.Players.Relic.Power:            	Mana
+Scripts.Players.Relic.Strength:            Force
+Scripts.Players.Relic.Title:            	Statut des Reliques
+Scripts.Players.Relic.UseRealmCommand:      Utilisez '/realm' pour afficher les informations de Royaume
 
 # VIEWREPORTS
 Scripts.Player.ViewReport.Usage: 			Usage:

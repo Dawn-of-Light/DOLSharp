@@ -143,3 +143,12 @@ Scripts.Players.Realm.HibKeeps:            Puestos avanzados de Hibernia
 Scripts.Players.Realm.MidKeeps:            Puestos avanzados de Midgard
 Scripts.Players.Realm.Title:            Estatuto del reino
 Scripts.Players.Realm.UseRelicCommand:      Teclea '/relic': informaciones de Reliquias
+
+# /Relic
+Scripts.Players.Relic.AlbRelics:         Albión Reliquias
+Scripts.Players.Relic.HibRelics:         Hibernia Reliquias
+Scripts.Players.Relic.MidRelics:         Midgard Reliquias
+Scripts.Players.Relic.Power:            Maná
+Scripts.Players.Relic.Strength:            Fuerza
+Scripts.Players.Relic.Title:            Estatuto del Reliquias
+Scripts.Players.Relic.UseRealmCommand:      Teclea '/realm': informaciones de Reino

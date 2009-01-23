@@ -81,18 +81,33 @@ namespace DOL.GS.Commands
             string[] tmpHibKeeps = new string[hibKeeps.Length];
             hibKeeps.CopyTo(tmpHibKeeps, 0);
 
+            string keepRealm;
             foreach (AbstractGameKeep keep in KeepMgr.GetNFKeeps())
             {
+            	switch (keep.Realm)
+            	{
+            		case eRealm.Albion:
+            			keepRealm = "Albion";
+            			break;
+            		case eRealm.Midgard:
+            			keepRealm = "Midgard";
+            			break;
+            		case eRealm.Hibernia:
+            			keepRealm = "Hibernia";
+            			break;
+            		default:
+            			keepRealm = "Unknow";
+            			break;
+            	}
+            	
                 #region Reformat Albion Keeps '[KeepName]: [OwnerRealm] ([Guild])'
                 for (int i = 0; i < tmpAlbKeeps.Length; i++)
                 {
                     if (keep.Name == tmpAlbKeeps[i])
                     {
-                        tmpAlbKeeps[i] += ": ";
-                        if (keep.Realm != eRealm.None)
-                            tmpAlbKeeps[i] += keep.Realm;
+                    	tmpAlbKeeps[i]= string.Format ("{0}: {1}", tmpAlbKeeps[i],keepRealm);
                         if (keep.Guild != null)
-                            tmpAlbKeeps[i] += " (" + keep.Guild.Name + ")";
+                        	tmpAlbKeeps[i]= string.Format ("{0} ({1})",tmpAlbKeeps[i], keep.Guild.Name);
                     }
                 }
                 #endregion
@@ -102,13 +117,10 @@ namespace DOL.GS.Commands
                 {
                     if (keep.Name == tmpMidKeeps[i])
                     {
-                        tmpMidKeeps[i] += ": ";
-                        if (keep.Realm != eRealm.None)
-                            tmpMidKeeps[i] += keep.Realm;
+                    	tmpMidKeeps[i]= string.Format ("{0}: {1}", tmpMidKeeps[i],keepRealm);
                         if (keep.Guild != null)
-                            tmpMidKeeps[i] += " (" + keep.Guild.Name + ")";
+                        	tmpMidKeeps[i]= string.Format ("{0} ({1})",tmpMidKeeps[i], keep.Guild.Name);
                     }
-                   
                 }
                 #endregion
 
@@ -117,11 +129,9 @@ namespace DOL.GS.Commands
                 {
                     if (keep.Name == tmpHibKeeps[i])
                     {
-                        tmpHibKeeps[i] += ": ";
-                        if (keep.Realm != eRealm.None)
-                            tmpHibKeeps[i] += keep.Realm;
+                    	tmpHibKeeps[i]= string.Format ("{0}: {1}", tmpHibKeeps[i],keepRealm);
                         if (keep.Guild != null)
-                            tmpHibKeeps[i] += " (" + keep.Guild.Name + ")";
+                        	tmpHibKeeps[i]= string.Format ("{0} ({1})",tmpHibKeeps[i], keep.Guild.Name);
                     }
                 }
                 #endregion

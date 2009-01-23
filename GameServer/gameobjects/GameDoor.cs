@@ -287,6 +287,24 @@ namespace DOL.GS
 			}
 		}
 		
+		/// <summary>
+		/// Get the solidity of the door
+		/// </summary>
+		public override int MaxHealth
+		{
+			get {	return 5 * GetModified(eProperty.MaxHealth);}
+		}
+		
+		/// <summary>
+		/// No regeneration over time of the door
+		/// </summary>
+		/// <param name="killer"></param>
+		public override void Die(GameObject killer)
+		{
+			base.Die(killer);
+			StartHealthRegeneration ();
+		}
+		
 		public virtual void BroadcastUpdate ()
 		{
 			if( ObjectState != eObjectState.Active ) return;

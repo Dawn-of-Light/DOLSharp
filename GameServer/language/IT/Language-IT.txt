@@ -820,6 +820,15 @@ Scripts.Players.Realm.MidKeeps:            Avamposti di Midgard
 Scripts.Players.Realm.Title:            Stato del Reame
 Scripts.Players.Realm.UseRelicCommand:      Usa '/relic' per avere informazioni sulla Reliquie
 
+# /Relic
+Scripts.Players.Relic.AlbRelics:         Reliquie di Albion
+Scripts.Players.Relic.HibRelics:         Reliquie di Hibernia
+Scripts.Players.Relic.MidRelics:         Reliquie di Midgard
+Scripts.Players.Relic.Power:            Potere
+Scripts.Players.Relic.Strength:            Forza
+Scripts.Players.Relic.Title:            Stato della Reliquia
+Scripts.Players.Relic.UseRealmCommand:      Usa '/realm' per Avere Informazioni sul Reame
+
 # QUESTS
 # /ImportantDelivery
 Hib.ImportantDelivery.CheckPlayerAbortQuest.Abort:	Annullamento della Quest {0}. Puoi ricominciarla se lo desideri.
