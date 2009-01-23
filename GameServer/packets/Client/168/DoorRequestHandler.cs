@@ -67,7 +67,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			GameDoor target = client.Player.TargetObject as GameDoor;
 			
-			if( target != null && WorldMgr.GetDistance(client.Player, target) >= 150)
+			if( target != null && WorldMgr.GetDistance(client.Player, target) >= 250)
 			{
 				client.Player.Out.SendMessage("You are too far to open this door", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				return 0;
@@ -121,26 +121,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 								
 				if(doorType != 9 && client.Account.PrivLevel > 1)
-				{
-
 					client.Player.Out.SendCustomDialog("This door is not in the database. Place yourself nearest to this door and clic Accept", new CustomDialogResponse(AddingDoor));
-				/*	DBDoor door = new DBDoor( );
-					door.ObjectId = null;
-					door.InternalID = DoorID;
-					door.Name = "door";
-					door.Type = DoorID / 100000000;
-					door.Level = 20;
-					door.Realm = 6;
-					door.MaxHealth = 2545;
-					door.Health = 2545;
-					door.Locked = 0;
-					door.X = client.Player.X;
-					door.Y = client.Player.Y;
-					door.Z = client.Player.Z;
-					door.Heading = client.Player.Heading;
-					GameServer.Database.AddNewObject(door);
-					client.Player.Out.SendMessage("Added door " + DoorID + " to the database", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-			*/	}
+
 				new ChangeDoorAction(client.Player, DoorID, doorState).Start(1);
 				return 1;
 			}
@@ -263,62 +245,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 					 */
 
 					//else basic quick hack
-					/*GameDoor door = new GameDoor();
+					GameDoor door = new GameDoor();
 					door.DoorID = m_doorId;
 					door.X = player.X;
 					door.Y = player.Y;
 					door.Z = player.Z;
+					door.Realm = (eRealm)6;
 					door.CurrentRegion = player.CurrentRegion;
 					door.Open();
-					if (player.Client.Account.PrivLevel == 30)
-					{
-						int doorType = m_doorId / 100000000;
-						if (doorType == 7)
-						{
-							player.Out.SendCustomDialog("Add this door to the database?", new CustomDialogResponse(AddingDoor));
-						}
-						else
-						{
-							DBDoor doorCheck = GameServer.Database.SelectObject(typeof(DBDoor), "InternalID = " + m_doorId) as DOL.Database.DBDoor;
-							if (doorCheck == null)
-							{
-								player.Out.SendMessage("The door's ID is: " + m_doorId.ToString(), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-								player.Out.SendMessage("Stand as close to the door as possible and face outwards (best done from inside and behind it", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-
-								player.Out.SendCustomDialog("Add this door to the database?", new CustomDialogResponse(AddingDoor));
-							}
-						}
-					}*/
 				}
-			}
-
-			protected void AddingDoor(GamePlayer player, byte response)
-			{
-				if (response != 0x01)
-					return;
-
-				int doorType = m_doorId / 100000000;
-				if (doorType == 7)
-				{
-					PositionMgr.CreateDoor(m_doorId, player);
-				}
-				else
-				{
-
-					DBDoor door = new DBDoor();
-					door.ObjectId = null;
-					door.InternalID = m_doorId;
-					door.X = player.X;
-					door.Y = player.Y;
-					door.Z = player.Z;
-					door.Name = "door";
-					door.Heading = player.Heading;
-					GameServer.Database.AddNewObject(door);
-
-					player.Out.SendMessage("Added door " + m_doorId + " to the database!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-					DoorMgr.Init();
-				}
-			}
+			}			
 		}
 	}
 }
