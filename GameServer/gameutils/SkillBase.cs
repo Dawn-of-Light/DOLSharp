@@ -1324,7 +1324,14 @@ namespace DOL.GS
 			foreach (DBSpell spell in spelldb)
 			{
 				spells.Add(spell.SpellID, spell);
-				m_spells.Add(spell.SpellID, new Spell(spell, 1));
+                try
+                {
+                    m_spells.Add(spell.SpellID, new Spell(spell, 1));
+                }
+                catch (Exception e)
+                {
+                    log.Error(e.Message + " et spellid = " + spell.SpellID + " spell.TS= " + spell.ToString());
+                }
 			}
 			if (log.IsInfoEnabled)
 				log.Info("Spells loaded: " + spelldb.Length);

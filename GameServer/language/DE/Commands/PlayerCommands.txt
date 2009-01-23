@@ -100,6 +100,15 @@ Scripts.Players.Realm.MidKeeps:           	Midgard Festungen
 Scripts.Players.Realm.Title:            	Reichsstatus
 Scripts.Players.Realm.UseRelicCommand:      Gebt '/relic' für den Reliktstatus ein.
 
+# /Relic
+Scripts.Players.Relic.AlbRelics:         Albion Relikte
+Scripts.Players.Relic.HibRelics:         Hibernia Relikte
+Scripts.Players.Relic.MidRelics:         Midgard Relikte
+Scripts.Players.Relic.Power:            Magie
+Scripts.Players.Relic.Strength:            Stärke
+Scripts.Players.Relic.Title:            Reliktstatus
+Scripts.Players.Relic.UseRealmCommand:      Gebt '/realm' für den Reichsstatus ein.
+
 # Boats
 Scripts.Player.Boat.AlreadyOnBoat:			Dieser Spieler ist bereits in einem Boot!
 Scripts.Player.Boat.BoardingDenied:			Eure Bitte an Bord des {0} kommen zu dürfen wurde abgelehnt.

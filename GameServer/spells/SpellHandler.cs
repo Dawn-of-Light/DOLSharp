@@ -1290,20 +1290,18 @@ namespace DOL.GS.Spells
 
 			if (m_ability != null)
 				m_caster.DisableSkill(m_ability.Ability, (m_spell.RecastDelay == 0 ? 3 : m_spell.RecastDelay));
+			
 			// disable spells with recasttimer (Disables group of same type with same delay)
 			if (m_spell.RecastDelay > 0 && m_startReuseTimer)
 			{
 				if (m_caster is GamePlayer)
-				{
-					foreach (Spell sp in SkillBase.GetSpellList(m_spellLine.KeyName))
-					{
-						if (//(sp.SpellType == m_spell.SpellType && sp.RecastDelay == m_spell.RecastDelay /*&& sp.Group == m_spell.Group*/)
-							sp == m_spell || (sp.SharedTimerGroup != 0 && sp.SharedTimerGroup == m_spell.SharedTimerGroup))
-					{
-							m_caster.DisableSkill(sp, sp.RecastDelay);
-						}
-					}
-				}
+		        {
+	                   GamePlayer gp_caster = m_caster as GamePlayer;
+	                   foreach (SpellLine spellline in gp_caster.GetSpellLines())
+		                   foreach (Spell sp in SkillBase.GetSpellList(spellline.KeyName))
+		                      if (sp == m_spell || (sp.SharedTimerGroup != 0 && (sp.SharedTimerGroup == m_spell.SharedTimerGroup)))
+		                      	m_caster.DisableSkill(sp, sp.RecastDelay);
+		        }
 				else if (m_caster is GameNPC)
 					m_caster.DisableSkill(m_spell, m_spell.RecastDelay);
 			}
