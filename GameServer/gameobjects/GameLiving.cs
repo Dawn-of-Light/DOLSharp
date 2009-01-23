@@ -4083,9 +4083,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			EffectList.CancelAll();
 
 			// Stop the regeneration timers
-			if(!(this is GameDoor))
-				StopHealthRegeneration();
-			
+			StopHealthRegeneration();	
 			StopPowerRegeneration();
 			StopEnduranceRegeneration();
 
@@ -4972,12 +4970,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// </summary>
 		public virtual int MaxHealth
 		{
-			get {
-					if (this is GameDoor)
-						return 5 * GetModified(eProperty.MaxHealth);
-						
-					return GetModified(eProperty.MaxHealth);
-				}
+			get {	return GetModified(eProperty.MaxHealth); }
 			//			set
 			//			{
 			//				m_maxHealth = value;

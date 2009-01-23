@@ -483,6 +483,15 @@ Scripts.Players.Realm.MidKeeps:            Midgard Outposts
 Scripts.Players.Realm.Title:            Realm status
 Scripts.Players.Realm.UseRelicCommand:      Use '/relic' for Relic info
 
+# /Relic
+Scripts.Players.Relic.AlbRelics:         Albion Relics
+Scripts.Players.Relic.HibRelics:         Hibernia Relics
+Scripts.Players.Relic.MidRelics:         Midgard Relics
+Scripts.Players.Relic.Power:            Power
+Scripts.Players.Relic.Strength:            Strength
+Scripts.Players.Relic.Title:            Relic status
+Scripts.Players.Relic.UseRealmCommand:      Use '/realm' for Realm Info.
+
 # Boats
 Scripts.Player.Boat.AlreadyOnBoat:			That player is already on the boat!
 Scripts.Player.Boat.BoardingDenied:			Your request to board {0} was denied.
