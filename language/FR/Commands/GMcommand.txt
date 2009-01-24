@@ -87,31 +87,20 @@ GMCommands.DebugJump.UnknownZoneID:			Zone Id: {0} Inconnue.
 GMCommands.DebugJump.UnknownRegion:			Region({0}) Inconnue.
 GMCommands.DebugJump.RegionNotSuppByClient:	La region ({0}) n'est pas supportée par votre client.
 
-
-# /door Command
-GMCommands.Door.Description:				Manage the doors
-GMCommands.Door.Usage.Add:					'/door add <DoorID>' Id must be same that door select packet and you must hit command when you are on door
-GMCommands.Door.Usage.Remove:				'/door remove <DoorID>' Id must be same that door select packet
-GMCommands.Door.InvalidDoorID:				Door id must be a ushort whitch are equal to real door id
-GMCommands.Door.Created:					Door created with Id={0}
-GMCommands.Door.DoorExist:					Door exist. Impossible create it. Id={0}
-GMCommands.Door.Removed:					Door removed with Id={0}
-GMCommands.Door.InexistentDoor:				Inexistent door. Impossible remove it. Id={0}
-
-# /DoorMGR Command
-GMCommands.dmgr.Description:				Modfication des portes
-GMCommands.dmgr.Name:					'/dmgr Name <texte>'change le nom de la porte.
-GMCommands.dmgr.Level:					'/dmgr Level <valeur>'change le level de la porte. 
-GMCommands.dmgr.Realm:					'/dmgr realm <valeur>'change le realm de la porte. ! Attention si realm 0 la porte ne s'ouvre pas tant qu'elle est pas tuée
-GMCommands.dmgr.Guild:					'/dmgr guild <texte>'change la guilde de la porte.
-GMCommands.dmgr.Info:					'/dmgr info' donne les info de la porte.
-GMCommands.dmgr.Heal:					'/dmgr heal' redonne le maximum de vie a la porte.
-GMCommands.dmgr.Kill:					'/dmgr heal' "tue la porte".
-GMCommands.dmgr.Locked:					'/dmgr locked 'verouille completement la porte.
-GMCommands.dmgr.Unlocked:				'/dmgr unlocked 'deverouille la porte.
-GMCommands.dmgr.Update:					'/dmgr update 'maj de la porte avec X Y Z de l'admin.
-GMCommands.dmgr.Delete:					'/dmgr delete 'supprime la porte ciblée.
-GMCommands.dmgr.Add:					'/dmgr  add' ajoute une porte
+# /Door Command
+GMCommands.door.Description:				Modfication des portes
+GMCommands.door.Name:					'/dmgr Name <texte>'change le nom de la porte.
+GMCommands.door.Level:					'/dmgr Level <valeur>'change le level de la porte. 
+GMCommands.door.Realm:					'/dmgr realm <valeur>'change le realm de la porte. ! Attention si realm 0 la porte ne s'ouvre pas tant qu'elle est pas tuée
+GMCommands.door.Guild:					'/dmgr guild <texte>'change la guilde de la porte.
+GMCommands.door.Info:					'/dmgr info' donne les info de la porte.
+GMCommands.door.Heal:					'/dmgr heal' redonne le maximum de vie a la porte.
+GMCommands.door.Kill:					'/dmgr heal' "tue la porte".
+GMCommands.door.Locked:					'/dmgr locked 'verouille completement la porte.
+GMCommands.door.Unlocked:				'/dmgr unlocked 'deverouille la porte.
+GMCommands.door.Update:					'/dmgr update 'maj de la porte avec X Y Z de l'admin.
+GMCommands.door.Delete:					'/dmgr delete 'supprime la porte ciblée.
+GMCommands.door.Add:					'/dmgr  add' ajoute une porte
 
 # /faction Command
 GMCommands.Faction.Description:				Create a faction and assign friend and enemy faction
