@@ -2505,6 +2505,7 @@
     <None Include="language\DE\Styles.txt" />
     <None Include="language\DE\Trainer.txt" />
     <None Include="language\DE\World.txt" />
+    <None Include="language\FR\Commands\GMcommand.txt" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="language\CZ\Language-CZ.txt" />
@@ -2547,7 +2548,6 @@
     <Content Include="language\FR\Quest\Atlantis.txt" />
     <Content Include="language\FR\Quest\Behaviour.txt" />
     <Content Include="language\FR\Commands\AdminCommands.txt" />
-    <Content Include="language\FR\Commands\GMCommands.txt" />
     <Content Include="language\FR\Commands\Player\Battlegroup.txt" />
     <Content Include="language\FR\Commands\Player\Chatgroup.txt" />
     <Content Include="language\FR\Commands\Player\Guild.txt" />
