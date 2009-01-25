@@ -3764,55 +3764,55 @@ namespace DOL.GS
 			{
 				0, // xp to level 1
 				50, // xp to level 2
-				200, // xp to level 3
+				250, // xp to level 3
 				850, // xp to level 4
 				2300, // xp to level 5
 				6350, // xp to level 6
-				16000, // xp to level 7
-				38000, // xp to level 8
-				89000, // xp to level 9
-				204000, // xp to level 10
-				460000, // xp to level 11
-				834806, // xp to level 12
-				1383554, // xp to level 13
-				2186968, // xp to level 14
-				3363235, // xp to level 15
-				5085391, // xp to level 16
-				7606775, // xp to level 17
-				11298297, // xp to level 18
-				16703001, // xp to level 19
-				24615952, // xp to level 20
-				36201189, // xp to level 21
-				53162970, // xp to level 22
-				75544173, // xp to level 23
-				105076348, // xp to level 24
-				144044287, // xp to level 25
-				195462790, // xp to level 26
-				263309912, // xp to level 27
-				352834727, // xp to level 28
-				470963427, // xp to level 29
-				626835182, // xp to level 30
-				832509196, // xp to level 31
-				1103897684, // xp to level 32
-				1461996941, // xp to level 33
-				1934511744, // xp to level 34
-				2557998764, // xp to level 35
-				3352670771, // xp to level 36
-				4365528423, // xp to level 37
-				5656476907, // xp to level 38
-				7301869018, // xp to level 39
-				9399021018, // xp to level 40
-				12925996216, // xp to level 41
-				18857637817, // xp to level 42
-				28833430136, // xp to level 43
-				40292606362, // xp to level 44
-				53919940262, // xp to level 45
-				70125662695, // xp to level 46
-				89397623115, // xp to level 47
-				112315975568, // xp to level 48
-				139570643368, // xp to level 49
-				171982088233, // xp to level 50
-				210526009074, // xp to level 51
+				15950, // xp to level 7
+				37950, // xp to level 8
+				88950, // xp to level 9
+				203950, // xp to level 10
+				459950, // xp to level 11
+				839950, // xp to level 12
+				1399950, // xp to level 13
+				2199950, // xp to level 14
+				3399950, // xp to level 15
+				5199950, // xp to level 16
+				7899950, // xp to level 17
+				11799950, // xp to level 18
+				17499950, // xp to level 19
+				25899950, // xp to level 20
+				38199950, // xp to level 21
+				54699950, // xp to level 22
+				76999950, // xp to level 23
+				106999950, // xp to level 24
+				146999950, // xp to level 25
+				199999950, // xp to level 26
+				269999950, // xp to level 27
+				359999950, // xp to level 28
+				479999950, // xp to level 29
+				639999950, // xp to level 30
+				849999950, // xp to level 31
+				1119999950, // xp to level 32
+				1469999950, // xp to level 33
+				1929999950, // xp to level 34
+				2529999950, // xp to level 35
+				3319999950, // xp to level 36
+				4299999950, // xp to level 37
+				5499999950, // xp to level 38
+				6899999950, // xp to level 39
+				8599999950, // xp to level 40
+				12899999950, // xp to level 41
+				20699999950, // xp to level 42
+				29999999950, // xp to level 43
+				40799999950, // xp to level 44
+				53999999950, // xp to level 45
+				69599999950, // xp to level 46
+				88499999950, // xp to level 47
+				110999999950, // xp to level 48
+				137999999950, // xp to level 49
+				169999999950, // xp to level 50
+				999999999950, // xp to level 51
 			};
 
 		/// <summary>
