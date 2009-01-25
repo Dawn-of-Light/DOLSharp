@@ -89,18 +89,18 @@ GMCommands.DebugJump.RegionNotSuppByClient:	La region ({0}) n'est pas supportée 
 
 # /Door Command
 GMCommands.door.Description:				Modfication des portes
-GMCommands.door.Name:					'/dmgr Name <texte>'change le nom de la porte.
-GMCommands.door.Level:					'/dmgr Level <valeur>'change le level de la porte. 
-GMCommands.door.Realm:					'/dmgr realm <valeur>'change le realm de la porte. ! Attention si realm 0 la porte ne s'ouvre pas tant qu'elle est pas tuée
-GMCommands.door.Guild:					'/dmgr guild <texte>'change la guilde de la porte.
-GMCommands.door.Info:					'/dmgr info' donne les info de la porte.
-GMCommands.door.Heal:					'/dmgr heal' redonne le maximum de vie a la porte.
-GMCommands.door.Kill:					'/dmgr heal' "tue la porte".
-GMCommands.door.Locked:					'/dmgr locked 'verouille completement la porte.
-GMCommands.door.Unlocked:				'/dmgr unlocked 'deverouille la porte.
-GMCommands.door.Update:					'/dmgr update 'maj de la porte avec X Y Z de l'admin.
-GMCommands.door.Delete:					'/dmgr delete 'supprime la porte ciblée.
-GMCommands.door.Add:					'/dmgr  add' ajoute une porte
+GMCommands.door.Name:					'/door name <texte>'change le nom de la porte.
+GMCommands.door.Level:					'/door level <valeur>'change le level de la porte. 
+GMCommands.door.Realm:					'/door realm <valeur>'change le realm de la porte. ! Attention si realm 0 la porte ne s'ouvre pas tant qu'elle est pas tuée
+GMCommands.door.Guild:					'/door guild <texte>'change la guilde de la porte.
+GMCommands.door.Info:					'/door info' donne les info de la porte.
+GMCommands.door.Heal:					'/door heal' redonne le maximum de vie a la porte.
+GMCommands.door.Kill:					'/door kill' "tue la porte".
+GMCommands.door.Locked:					'/door locked 'verouille completement la porte.
+GMCommands.door.Unlocked:				'/door unlocked 'deverouille la porte.
+GMCommands.door.Update:					'/door update 'maj de la porte avec X Y Z de l'admin.
+GMCommands.door.Delete:					'/door delete 'supprime la porte ciblée.
+GMCommands.door.Add:					'/door add' ajoute une porte
 
 # /faction Command
 GMCommands.Faction.Description:				Create a faction and assign friend and enemy faction
@@ -133,7 +133,6 @@ GMCommands.GMRelicPad.Usage:				/gmrelic <magic|strength> <name> <realm>
 GMCommands.Harm.Description:				Blesse votre cible (health)
 GMCommands.Harm.Usage:						/harm <amount>
 GMCommands.Harm.InvalidTarget:				Vous n'avez pas de cible valide.
-
 
 # /heal Command
 GMCommands.Heal.Description:				Soigne votre cible (health, endu, mana)
