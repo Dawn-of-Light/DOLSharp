@@ -151,7 +151,6 @@
     <Compile Include="DOLTables\ClassXRealmAbility.cs" />
     <Compile Include="DOLTables\Battleground.cs" />
     <Compile Include="DOLTables\DBMinotaurRelic.cs" />
-    <Compile Include="DOLTables\RegionDB.cs" />
     <Compile Include="DOLTables\StarterEquipment.cs" />
     <Compile Include="DOLTables\DBBoat.cs" />
     <Compile Include="DOLTables\DBChampSpec.cs" />
@@ -295,7 +294,6 @@
     <Compile Include="DOLTables\WorldObject.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\ZoneDB.cs" />
     <Compile Include="DOLTables\ZonePoint.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -31,7 +31,6 @@ namespace DOL.Database
 	public class Mob : DataObject
 	{
 		private string m_type;
-		private string m_internalID;
 		private string m_name;
 		private string m_guild;
 		private int m_x;
@@ -40,7 +39,6 @@ namespace DOL.Database
 		private int m_speed;
 		private ushort m_heading;
 		private ushort m_region;
-		private ushort m_zone;
 		private ushort m_model;
 		private byte m_size;
 		private byte m_level;
@@ -140,22 +138,6 @@ namespace DOL.Database
 			}
 		}
 
-		/// <summary>
-		/// Internal index of Mob
-		/// </summary>
-		[DataElement(AllowDbNull = true)]
-		public string InternalID
-		{
-			get
-			{
-				return m_internalID;
-			}
-			set
-			{
-				Dirty = true;
-				m_internalID = value;
-			}
-		}
 		/// <summary>
 		/// The Mob's Name
 		/// </summary>
@@ -291,23 +273,7 @@ namespace DOL.Database
 				m_region = value;
 			}
 		}
-		
-		/// <summary>
-		/// The Mob's Zone ID
-		/// </summary>
-		[DataElement(AllowDbNull = false)]
-		public ushort Zone
-		{
-			get
-			{
-				return m_zone;
-			}
-			set
-			{
-				Dirty = true;
-				m_zone = value;
-			}
-		}
+
 		/// <summary>
 		/// The Mob's Model
 		/// </summary>
