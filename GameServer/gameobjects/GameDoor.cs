@@ -92,7 +92,7 @@ namespace DOL.GS
             m_health = m_dbdoor.MaxHealth;
             m_maxHealth = m_dbdoor.MaxHealth;
 			m_locked = m_dbdoor.Locked;
-			SaveIntoDatabase();
+			//m_model = m_dbdoor.Model;
 			this.AddToWorld();
 		}
 		/// <summary>
@@ -118,8 +118,6 @@ namespace DOL.GS
             obj.MaxHealth = this.MaxHealth;
 			obj.Health = this.MaxHealth;
 			obj.Locked = this.Locked;
-			obj.Region = this.CurrentRegion.ID;
-			obj.Zone = this.CurrentZone.ID;
 			if (InternalID == null)
 			{
 				GameServer.Database.AddNewObject(obj);

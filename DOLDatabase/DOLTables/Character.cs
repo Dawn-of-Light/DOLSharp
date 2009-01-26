@@ -52,7 +52,6 @@ namespace DOL
 			private int m_realm;				//01 byte
 			private int m_creationModel;		//02 byte
 			private int m_region;				//01 byte
-			private int m_zone;
 			private int m_maxEndurance;
 			private int m_health;
 			private int m_mana;
@@ -842,23 +841,6 @@ namespace DOL
 				{
 					Dirty = true;
 					m_region = value;
-				}
-			}
-
-			/// <summary>
-			/// The zone of character
-			/// </summary>
-			[DataElement(AllowDbNull = false)]
-			public int Zone
-			{
-				get
-				{
-					return m_zone;
-				}
-				set
-				{
-					Dirty = true;
-					m_zone = value;
 				}
 			}
 

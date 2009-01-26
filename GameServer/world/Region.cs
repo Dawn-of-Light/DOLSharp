@@ -376,29 +376,6 @@ namespace DOL.GS
 			get { return m_regionData.HousingEnabled; }
 		}
 
-
-		public void SaveIntoDatabase ()
-		{
-			RegionDB reg = null;
-			reg = (RegionDB)GameServer.Database.FindObjectByKey(typeof(RegionDB), ID);
-			if( reg == null )
-			{
-				reg = new RegionDB( );
-				reg.Name = Name;
-				reg.RegionID = ID;
-				reg.Description = Description;
-				reg.WaterLevel = WaterLevel;
-				reg.Port = ServerPort;
-				reg.RegionIP = ServerIP;
-				reg.Expansion = Expansion;
-				reg.IsHousingEnabled = HousingEnabled;
-				reg.IsDivingEnabled = DivingEnabled;
-				reg.Instance = IsInstance;
-
-
-				GameServer.Database.AddNewObject(reg);
-			}
-		}
 		/// <summary>
 		/// Gets last relocation time
 		/// </summary>
@@ -487,8 +464,6 @@ namespace DOL.GS
 		/// <param name="bindCount"></param>
 		public void LoadFromDatabase(Mob[] mobObjs, ref long mobCount, ref long merchantCount, ref long itemCount, ref long bindCount)
 		{
-			SaveIntoDatabase ();
-			
 			Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
 			WorldObject[] staticObjs = (WorldObject[])GameServer.Database.SelectObjects(typeof(WorldObject), "Region = " + ID);
 			BindPoint[] bindPoints = (BindPoint[])GameServer.Database.SelectObjects(typeof(BindPoint), "Region = " + ID);
