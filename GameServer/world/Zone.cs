@@ -28,6 +28,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
+using DOL.Database;
 
 using DOL.GS.PacketHandler;
 using DOL.GS.Utils;
@@ -214,6 +215,7 @@ namespace DOL.GS
 
 			m_subZoneElements = new SubNodeElement[SUBZONE_NBR][];
 			m_initialized = false;
+			SaveIntoDatabase ();
 		}
 
 		private void InitializeZone()
@@ -447,7 +449,26 @@ namespace DOL.GS
 		}
 
 		#endregion
+		
+		public void SaveIntoDatabase ()
+		{
+			ZoneDB zone = null;
+			zone = (ZoneDB)GameServer.Database.FindObjectByKey(typeof(ZoneDB), ID);
+			if( zone == null )
+			{
+				zone = new ZoneDB( );
+				zone.ZoneID = ID;
+				zone.Description = this.Description;
+				zone.RegionID = ZoneRegion.ID;
+				zone.OffsetX = XOffset;
+				zone.OffsetY = YOffset;
+				zone.Height = Height;
+				zone.Width = Width;
 
+
+				GameServer.Database.AddNewObject(zone);
+			}
+		}
 		#region New subzone Management function
 
 		private short GetSubZoneOffset(int lineSubZoneIndex, int columnSubZoneIndex)
