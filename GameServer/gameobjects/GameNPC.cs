@@ -1951,7 +1951,7 @@ namespace DOL.GS
 					mob = new Mob();
 				else
 					return;
-
+			mob.InternalID = mob.ObjectId;
 			mob.Name = Name;
 			mob.Guild = GuildName;
 			mob.X = X;
@@ -1960,6 +1960,7 @@ namespace DOL.GS
 			mob.Heading = Heading;
 			mob.Speed = MaxSpeedBase;
 			mob.Region = CurrentRegionID;
+			mob.Zone = CurrentZone.ID;
 			mob.Realm = (byte)Realm;
 			mob.Model = Model;
 			mob.Size = Size;
@@ -2604,11 +2605,13 @@ namespace DOL.GS
 				else
 					log.Info("Confirmed number: " + CurrentHouse.HouseNumber.ToString());
 			}
-      // [Ganrod] Nidel: Hack pour mettre full life au respawn.
-      if (!InCombat && IsAlive && base.Health < MaxHealth)
-      {
-        base.Health = MaxHealth;
-      }
+			// [Ganrod] Nidel: Hack pour mettre full life au respawn.
+			if (!InCombat && IsAlive && base.Health < MaxHealth)
+			{
+				base.Health = MaxHealth;
+			}
+			
+			SaveIntoDatabase();
 			return true;
 		}
 

@@ -29,15 +29,19 @@ namespace DOL.Database
 	[DataTable(TableName="WorldObject")]
 	public class WorldObject : DataObject
 	{
-		private string		m_type;
-		private string		m_name;
-		private int				m_x;
-		private int				m_y;
-		private int				m_z;
-		private ushort		m_heading;
-		private ushort		m_model;
-		private ushort		m_region;
+		private string m_internalID;
+		private string	m_type;
+		private string	m_name;
+		private int		m_x;
+		private int		m_y;
+		private int		m_z;
+		private ushort	m_heading;
+		private ushort	m_model;
+		private ushort	m_region;
+		private ushort	m_zone;
 		private int		m_emblem;
+		private string	m_guild;
+
 
 		static bool			m_autoSave;
 
@@ -45,6 +49,8 @@ namespace DOL.Database
 		{
 			m_autoSave=false;
 			m_type = "DOL.GS.GameItem";
+			m_guild = "";
+			m_internalID = "";
 		}
 
 		override public bool AutoSave
@@ -56,6 +62,35 @@ namespace DOL.Database
 			set
 			{
 				m_autoSave = value;
+			}
+		}
+		/// <summary>
+		/// Internal index of Object
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public string InternalID
+		{
+			get
+			{
+				return m_internalID;
+			}
+			set
+			{
+				Dirty = true;
+				m_internalID = value;
+			}
+		}
+		[DataElement(AllowDbNull = false)]
+		public string Guild
+		{
+			get
+			{
+				return m_guild;
+			}
+			set
+			{
+				Dirty = true;
+				m_guild = value;
 			}
 		}
 
@@ -154,6 +189,19 @@ namespace DOL.Database
 			{   
 				Dirty = true;
 				m_region = value;
+			}
+		}
+		[DataElement(AllowDbNull = false, Index = true)]
+		public ushort Zone
+		{
+			get
+			{
+				return m_zone;
+			}
+			set
+			{
+				Dirty = true;
+				m_zone = value;
 			}
 		}
 		
