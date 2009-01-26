@@ -92,23 +92,6 @@ namespace DOL.GS
 				}
 			}
 		}
-		
-		/// <summary>
-		/// Gets or sets the Guild of this item
-		/// </summary>
-		public override string Guild
-		{
-			get { return base.Guild; }
-			set
-			{
-				base.Guild = value;
-				if (ObjectState == eObjectState.Active)
-				{
-					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-						player.Out.SendObjectCreate(this);
-				}
-			}
-		}
 
 		/// <summary>
 		/// Returns name with article for nouns
@@ -160,7 +143,6 @@ namespace DOL.GS
 			X = item.X;
 			Y = item.Y;
 			Z = item.Z;
-			Guild = item.Guild;
 		}
 
 		/// <summary>
@@ -225,16 +207,13 @@ namespace DOL.GS
 			if(obj == null)
 			  obj = new WorldObject();
 			obj.Name = Name;
-			obj.InternalID = obj.ObjectId;
 			obj.Model = Model;
 			obj.Emblem = Emblem;
 			obj.Heading = Heading;
 			obj.Region = CurrentRegionID;
-			obj.Zone = this.CurrentZone.ID;
 			obj.X = X;
 			obj.Y = Y;
 			obj.Z = Z;
-			obj.Guild = Guild;
 			obj.ClassType = this.GetType().ToString();
 
 			if(InternalID == null)
@@ -269,8 +248,6 @@ namespace DOL.GS
 			if(!base.AddToWorld()) return false;
 			foreach(GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				player.Out.SendObjectCreate(this);
-				
-			SaveIntoDatabase();
 			return true;
 		}
 

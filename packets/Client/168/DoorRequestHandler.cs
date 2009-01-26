@@ -155,7 +155,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 				door.Y = player.Y;
 				door.Z = player.Z;
 				door.Heading = player.Heading;
-				door.Zone = player.CurrentZone.ID;
 				GameServer.Database.AddNewObject(door);
 
 				player.Out.SendMessage("Added door " + DoorIDhandler + " to the database!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
