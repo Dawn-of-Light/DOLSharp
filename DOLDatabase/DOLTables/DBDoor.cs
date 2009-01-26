@@ -34,6 +34,8 @@ namespace DOL.Database
 		private int m_zpos;
 		private int m_heading;
 		private string m_name;
+		private int m_region;
+		private int m_zone;
 		private int m_type;
 		private int m_internalID;
 		private byte m_level;
@@ -91,7 +93,39 @@ namespace DOL.Database
 				m_name = value;
 			}
 		}
+		/// <summary>
+		/// The region of character
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int Region
+		{
+			get
+			{
+				return m_region;
+			}
+			set
+			{
+				Dirty = true;
+				m_region = value;
+			}
+		}
 
+		/// <summary>
+		/// The zone of character
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int Zone
+		{
+			get
+			{
+				return m_zone;
+			}
+			set
+			{
+				Dirty = true;
+				m_zone = value;
+			}
+		}
 		[DataElement(AllowDbNull = true)]
 		public int Type
 		{

@@ -190,6 +190,28 @@ namespace DOL.GS
 			{
 				if (m_CurrentRegion != null)
 				{
+					if (this is GameNPC)
+					{
+						Mob mob = null;
+						mob = (Mob)GameServer.Database.FindObjectByKey(typeof(Mob), "InternalID = '" + this.InternalID + "'");
+						if (mob!= null && mob.Zone != 0)
+							return WorldMgr.GetZone((ushort)mob.Zone);
+					}
+					if( this is GameDoor )
+					{
+						DBDoor door = null;
+						door = (DBDoor)GameServer.Database.FindObjectByKey(typeof(DBDoor), "InternalID = '" + this.InternalID + "'");
+						if( door != null && door.Zone != 0 )
+							return WorldMgr.GetZone((ushort)door.Zone);
+					}
+					if( this is GameStaticItem )
+					{
+						WorldObject obj = null;
+						obj = (WorldObject)GameServer.Database.FindObjectByKey(typeof(WorldObject), "InternalID = '" + this.InternalID + "'");
+						if( obj != null && obj.Zone != 0 )
+							return WorldMgr.GetZone((ushort)obj.Zone);
+					}
+					
 					return m_CurrentRegion.GetZone(X, Y);
 				}
 				return null;
