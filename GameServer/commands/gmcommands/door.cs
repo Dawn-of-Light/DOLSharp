@@ -19,7 +19,7 @@
  
  /*
   * New system by Niko jan 2009
-  * /
+  */
 
 using System;
 using DOL.Database;
