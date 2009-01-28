@@ -106,9 +106,8 @@ DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic:	Charged Magic Ability:
 DetailDisplayHandler.WriteMagicalBonuses.Charges:	- {0} Charges
 DetailDisplayHandler.WriteMagicalBonuses.FocusBonus:	Bonus au focus:
 DetailDisplayHandler.WriteMagicalBonuses.Level:		- {0} Niveau
-DetailDisplayHandler.WriteMagicalBonuses.LevelRequired:	Niveau requis
-DetailDisplayHandler.WriteMagicalBonuses.LevelRequired2:	Level Requirement: {0} Level
-DetailDisplayHandler.WriteMagicalBonuses.MagicAbility:	Bonus Magiques:
+DetailDisplayHandler.WriteMagicalBonuses.LevelRequired2:	Niveau requis: {0} Niveau
+DetailDisplayHandler.WriteMagicalBonuses.MagicAbility:	Capacité magique:
 DetailDisplayHandler.WriteMagicalBonuses.MagicBonus:	Bonus Magiques:
 DetailDisplayHandler.WriteMagicalBonuses.MaxCharges:	- {0} Max
 DetailDisplayHandler.WriteMagicalBonuses.StrikeArmor:	- Le sort a une chance d'être lancé quand un ennemi touche cette armure.
@@ -119,17 +118,21 @@ DetailDisplayHandler.WriteMagicalBonuses.UseItem2:	Peut être utilisé toutes les:
 DetailDisplayHandler.WriteMagicalBonuses.UseItem3:	Peut être réutilisé dans: {0}.
 DetailDisplayHandler.WritePoisonInfo.Charges:		- {0} Charges
 DetailDisplayHandler.WritePoisonInfo.Level:		- {0} Niveau
-DetailDisplayHandler.WritePoisonInfo.LevelRequired:	Niveau requis:
+DetailDisplayHandler.WritePoisonInfo.LevelRequired:	Niveau requis :
 DetailDisplayHandler.WritePoisonInfo.MaxCharges:	- {0} Max
 DetailDisplayHandler.WritePoisonInfo.ProcAbility:	Effet offensif:
-DetailDisplayHandler.WritePotionInfo.ChargedMagic:	Effet magique:
+DetailDisplayHandler.WritePotionInfo.ChargedMagic:	Object magique à charges:
 DetailDisplayHandler.WritePotionInfo.Charges:		- {0} Charges
 DetailDisplayHandler.WritePotionInfo.Level:		- {0} Niveau
-DetailDisplayHandler.WritePotionInfo.LevelRequired:	Niveau requis:
+DetailDisplayHandler.WritePotionInfo.LevelRequired:	Condition de Niveau
 DetailDisplayHandler.WritePotionInfo.MaxCharges:	- {0} Max
 DetailDisplayHandler.WritePotionInfo.NoUseInCombat:	Ne peut être utilisé en combat.
 DetailDisplayHandler.WritePotionInfo.UseItem2:		Pout être utilisé toutes les: 1:00 min
-DetailDisplayHandler.WritePotionInfo.UseItem3:		Peut être réutilisé dans: {0}.
+DetailDisplayHandler.WritePotionInfo.UseItem3:		Peut être réutilisée dans: {0}.
+DetailDisplayHandler.WritePotionInfo.Type:		Fonction : {0}
+DetailDisplayHandler.WritePotionInfo.Value:		Valeur : {0}
+DetailDisplayHandler.WritePotionInfo.Target:		Cible : {0}
+DetailDisplayHandler.WritePotionInfo.Range:		Portée : {0}
 DetailDisplayHandler.WriteUsableClasses.UsableBy:	Utilisable par: 
 
 # /DoorRequestHandler.cs
