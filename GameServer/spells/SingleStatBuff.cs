@@ -421,4 +421,25 @@ namespace DOL.GS.Spells
 		public override eProperty Property1 { get { return eProperty.ExtraHP; } }
 		public ExtraHP(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
+	
+    /// <summary>
+    /// Paladin Armor factor buff
+    /// </summary>
+    [SpellHandlerAttribute("PaladinArmorFactorBuff")]
+    public class PaladinArmorFactorBuff : SingleStatBuff
+    {
+        public override int BonusCategory1
+        {
+            get
+            {
+                if (Spell.Target == "Self") return 4; // no caps for self buffs
+                if (m_spellLine.IsBaseLine) return 1; // baseline cap
+                return 4; // no caps for spec line buffs
+            }
+        }
+        public override eProperty Property1 { get { return eProperty.ArmorFactor; } }
+
+        // constructor
+        public PaladinArmorFactorBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+    }
 }
