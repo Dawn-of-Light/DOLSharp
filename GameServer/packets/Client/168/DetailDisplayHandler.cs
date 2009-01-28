@@ -1885,52 +1885,95 @@ Type    Description           Id
 			}
 		}
 
-		protected void WritePotionInfo(ArrayList list, ItemTemplate item, GameClient client)
-		{
-			if (item.SpellID != 0)
-			{
-				SpellLine potionLine = SkillBase.GetSpellLine(GlobalSpellsLines.Potions_Effects);
-				if (potionLine != null)
-				{
-					List<Spell> spells = SkillBase.GetSpellList(potionLine.KeyName);
+       /// <summary>
+        /// Nidel: Write potions infos. Spell's infos include
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="item"></param>
+        /// <param name="client"></param>
+	    private static void WritePotionInfo(IList list, ItemTemplate item, GameClient client)
+	    {
+	        if(item.SpellID != 0)
+	        {
+	            SpellLine potionLine = SkillBase.GetSpellLine(GlobalSpellsLines.Potions_Effects);
+	            if(potionLine != null)
+	            {
+	                List<Spell> spells = SkillBase.GetSpellList(potionLine.KeyName);
 
-					foreach (Spell spl in spells)
-					{
-						if (spl.ID == item.SpellID)
-						{
-							list.Add(" ");
-							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.LevelRequired"));
-							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Level", spl.Level));
-							list.Add(" ");
-							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.ChargedMagic"));
-							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Charges", item.Charges));
-							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.MaxCharges", item.MaxCharges));
-							list.Add(" ");
+	                foreach(Spell spl in spells)
+	                {
+	                    if(spl.ID == item.SpellID)
+	                    {
+	                        list.Add(" ");
+	                        list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.LevelRequired"));
+	                        list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Level", spl.Level));
+	                        list.Add(" ");
+	                        list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.ChargedMagic"));
+	                        list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Charges", item.Charges));
+	                        list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.MaxCharges", item.MaxCharges));
+	                        list.Add(" ");
+	                        WritePotionSpellsInfos(list, client, spl, potionLine);
+	                        list.Add(" ");
+                            list.Add(" ");
+	                        long nextPotionAvailTime = client.Player.TempProperties.getLongProperty("LastPotionItemUsedTick_Type" + spl.SharedTimerGroup, 0L);
+	                        // Satyr Update: Individual Reuse-Timers for Pots need a Time looking forward
+	                        // into Future, set with value of "itemtemplate.CanUseEvery" and no longer back into past
+	                        if(nextPotionAvailTime > client.Player.CurrentRegion.Time)
+	                        {
+	                            list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.UseItem3", Util.FormatTime((nextPotionAvailTime - client.Player.CurrentRegion.Time)/1000)));
+	                        }
+	                        if(spl.CastTime > 0)
+	                        {
+	                            list.Add(" ");
+	                            list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.NoUseInCombat"));
+	                        }
+	                        break;
+	                    }
+	                }
+	            }
+	        }
+	    }
 
-							ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, potionLine);
-							if (spellHandler != null)
-								list.AddRange(spellHandler.DelveInfo);
-							list.Add(" ");
-							//list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.UseItem2"));
-							long nextPotionAvailTime = client.Player.TempProperties.getLongProperty(GamePlayer.NEXT_POTION_AVAIL_TIME, 0L);
-                            // Satyr Update: Individual Reuse-Timers for Pots need a Time looking forward
-                            // into Future, set with value of "itemtemplate.CanUseEvery" and no longer back into past
-                            if (nextPotionAvailTime > client.Player.CurrentRegion.Time)
-                                list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.UseItem3", Util.FormatTime((nextPotionAvailTime - client.Player.CurrentRegion.Time) / 1000)));
-							if (spl.CastTime > 0)
-							{
-								list.Add(" ");
-								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.NoUseInCombat"));
-							}
-							else
-							{
-								list.Add("-" + spl.Name + " (Not implemented yet)");
-							}
-							break;
-						}
-					}
-				}
-			}
-		}
+        /// <summary>
+        /// Nidel: Write spell's infos of potions and subspell's infos with recursive method.
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="client"></param>
+        /// <param name="spl"></param>
+        /// <param name="line"></param>
+        private static void WritePotionSpellsInfos(IList list, GameClient client, Spell spl, NamedSkill line)
+        {
+            if(spl != null)
+            {
+                list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MagicAbility"));
+                list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Type", spl.SpellType));
+                list.Add(" ");
+                list.Add(spl.Description);
+                list.Add(" ");
+                if(spl.Value != 0)
+                {
+                    list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Value", spl.Value));
+                }
+                list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Target", spl.Target));
+                if(spl.Range > 0)
+                {
+                    list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Range", spl.Range));
+                }
+                list.Add(" ");
+                list.Add(" ");
+                if(spl.SubSpellID > 0)
+                {
+                    List<Spell> spells = SkillBase.GetSpellList(line.KeyName);
+                    foreach(Spell subSpell in spells)
+                    {
+                        if(subSpell.ID == spl.SubSpellID)
+                        {
+                            WritePotionSpellsInfos(list, client, subSpell, line);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
 	}
 }

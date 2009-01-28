@@ -308,4 +308,7 @@ GamePlayer.UseSlot.NotEnouthPower:			Vous n'êtes pas assez puissant(e) pour util
 GamePlayer.UseSlot.OutOfCharges:           	 {0} n'a plus de charge.
 GamePlayer.UseSlot.StopCallingMount:		Vous arrêtez d'appeler votre monture.
 GamePlayer.UseSlot.WhistleMount:			Vous sifflez votre monture.
+GamePlayer.UseSlot.MustWaitBeforeUse:		Vous devez attendre {0} secondes de plus avant d'utiliser cet objet.
+GamePlayer.UseSlot.CantUseState:			Vous ne pouvez pas utiliser {0} dans votre état actuel.
+GamePlayer.UseSlot.Used:			        Vous utilisez {0}.
 GamePlayer.Whisper.SelectTarget:			Sélectionnez une cible à qui chuchoter.

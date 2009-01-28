@@ -1716,6 +1716,32 @@ namespace DOL.GS.Spells
 			return list;
 		}
 
+        /// <summary>
+        /// Cast all subspell recursively
+        /// </summary>
+        /// <param name="target"></param>
+        public void CastSubSpells(GameLiving target, SpellLine line)
+        {
+            if (Spell.SubSpellID > 0)
+            {
+                List<Spell> spells = SkillBase.GetSpellList(SpellLine.KeyName);
+                foreach (Spell subSpell in spells)
+                {
+                    if (subSpell.ID == Spell.SubSpellID)
+                    {
+                        SpellHandler subSpellHandler = ScriptMgr.CreateSpellHandler(Caster, subSpell, line) as SpellHandler;
+                        if(subSpellHandler != null)
+                        {
+                            subSpellHandler.StartSpell(target);
+                            subSpellHandler.CastSubSpells(target, line);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+
 		/// <summary>
 		/// called when spell effect has to be started and applied to targets
 		/// </summary>
