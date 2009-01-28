@@ -48,52 +48,70 @@ namespace DOL.GS.Spells
 		{
 			// vampiir, they cannot be buffed except with resists/armor factor/ haste / power regen 
 			GamePlayer vampiir = target as GamePlayer;
-			if (vampiir != null && HasPositiveEffect && vampiir.CharacterClass.ID == (int)eCharacterClass.Vampiir && m_caster != vampiir)
+			if (vampiir!=null)
 			{
-				//restrictions
-				//if (this is PropertyChangingSpell
-				//    && this is ArmorFactorBuff == false
-				//    && this is CombatSpeedBuff == false
-				//    && this is AbstractResistBuff == false
-				//    && this is EnduranceRegenSpellHandler == false
-				//    && this is EvadeChanceBuff == false
-				//    && this is ParryChanceBuff == false)
-				//{
-				if (this is StrengthBuff || this is DexterityBuff || this is ConstitutionBuff || this is QuicknessBuff || this is StrengthConBuff || this is DexterityQuiBuff || this is AcuityBuff)
+				if (HasPositiveEffect && vampiir.CharacterClass.ID == (int)eCharacterClass.Vampiir && m_caster != vampiir)
 				{
-					GamePlayer caster = m_caster as GamePlayer;
-					if (caster != null)
+					//restrictions
+					//if (this is PropertyChangingSpell
+					//    && this is ArmorFactorBuff == false
+					//    && this is CombatSpeedBuff == false
+					//    && this is AbstractResistBuff == false
+					//    && this is EnduranceRegenSpellHandler == false
+					//    && this is EvadeChanceBuff == false
+					//    && this is ParryChanceBuff == false)
+					//{
+					if (this is StrengthBuff || this is DexterityBuff || this is ConstitutionBuff || this is QuicknessBuff || this is StrengthConBuff || this is DexterityQuiBuff || this is AcuityBuff)
 					{
-						caster.Out.SendMessage("Your buff has no effect on the Vampiir!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						GamePlayer caster = m_caster as GamePlayer;
+						if (caster != null)
+						{
+							caster.Out.SendMessage("Your buff has no effect on the Vampiir!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						vampiir.Out.SendMessage("This buff has no effect on you!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return;
 					}
-					vampiir.Out.SendMessage("This buff has no effect on you!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
 				}
+				
+	            if (this is ArmorFactorBuff)
+	            {
+	                if (SpellHandler.FindEffectOnTarget(target, "ArmorFactorBuff") != null && m_spellLine.IsBaseLine != true)
+	                {
+	                    MessageToLiving(target, "You already have this effect!", eChatType.CT_SpellResisted);
+	                    return;
+	                }
+	            }
+	
+		   		if (this is HeatColdMatterBuff)
+		        {
+	                if (this.Spell.Frequency <= 0)
+	                {
+	                    GameSpellEffect Slash = FindEffectOnTarget(vampiir, "MatterResistBuff");
+	                    GameSpellEffect Crush = FindEffectOnTarget(vampiir, "ColdResistBuff");
+	                    GameSpellEffect Thrust = FindEffectOnTarget(vampiir, "HeatResistBuff");
+	                    if (Slash != null || Crush != null || Thrust != null)
+	                    {
+	                        MessageToCaster(target.Name + " already has this effect", eChatType.CT_SpellResisted);
+	                        return;
+	                    }
+	                }
+	            }
+	
+	            if (this is BodySpiritEnergyBuff)
+	            {
+	                if (this.Spell.Frequency <= 0)
+	                {
+	                    GameSpellEffect Body = FindEffectOnTarget(vampiir, "BodyResistBuff");
+	                    GameSpellEffect Spirit = FindEffectOnTarget(vampiir, "SpiritResistBuff");
+	                    GameSpellEffect Energy = FindEffectOnTarget(vampiir, "EnergyResistBuff");
+	                    if (Body != null || Spirit != null || Energy != null)
+	                    {
+	                        MessageToCaster(target.Name + " already has this effect", eChatType.CT_SpellResisted);
+	                        return;
+	                    }
+	                }
+	            }
 			}
-
-            if (vampiir != null && this is HeatColdMatterBuff)
-            {
-                GameSpellEffect Slash = FindEffectOnTarget(vampiir, "MatterResistBuff");
-                GameSpellEffect Crush = FindEffectOnTarget(vampiir, "ColdResistBuff");
-                GameSpellEffect Thrust = FindEffectOnTarget(vampiir, "HeatResistBuff");
-                if (Slash != null || Crush != null || Thrust != null)
-                {
-                    MessageToCaster(target.Name + " already has this effect", eChatType.CT_SpellResisted);
-                    return;
-                }
-            }
-
-            if (vampiir != null && this is BodySpiritEnergyBuff)
-            {
-                GameSpellEffect Body = FindEffectOnTarget(vampiir, "BodyResistBuff");
-                GameSpellEffect Spirit = FindEffectOnTarget(vampiir, "SpiritResistBuff");
-                GameSpellEffect Energy = FindEffectOnTarget(vampiir, "EnergyResistBuff");
-                if (Body != null || Spirit != null || Energy != null)
-                {
-                    MessageToCaster(target.Name + " already has this effect", eChatType.CT_SpellResisted);
-                    return;
-                }
-            }
 			
 			base.ApplyEffectOnTarget(target, effectiveness);
 		}

@@ -306,6 +306,9 @@ GamePlayer.UseSlot.NoAutoReleaseShotReload:		You will no longer automatically re
 GamePlayer.UseSlot.NotEnouthPower:				You are not powerful enough to use this item's spell.		
 GamePlayer.UseSlot.OutOfCharges:				The {0} is out of charges.
 GamePlayer.UseSlot.StopCallingMount:			You stop calling your mount.		
-GamePlayer.UseSlot.WhistleMount:				You whistle for your mount.		
+GamePlayer.UseSlot.WhistleMount:				You whistle for your mount.
+GamePlayer.UseSlot.MustWaitBeforeUse:			You must wait {0} more second before use potion!
+GamePlayer.UseSlot.CantUseState:			    You can't use {0} in your state.	
+GamePlayer.UseSlot.Used:			            {0} has been used.
 GamePlayer.Whisper.SelectTarget:				Select a target to whisper to!
 

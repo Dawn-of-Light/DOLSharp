@@ -7683,17 +7683,18 @@ namespace DOL.GS
 								ApplyPoison(useItem, leftHand);
 							}
 						}
-						else if (useItem.Object_Type == (int)eObjectType.Magical &&
-							(useItem.Item_Type == (int)eInventorySlot.FirstBackpack || useItem.Item_Type == 41))
+						else if (useItem.SpellID > 0 && useItem.Charges > 0 && useItem.Object_Type == (int)eObjectType.Magical && (useItem.Item_Type == (int)eInventorySlot.FirstBackpack || useItem.Item_Type == 41))
 						{
-							long nextPotionAvailTime = TempProperties.getLongProperty(NEXT_POTION_AVAIL_TIME, 0L);
+                            Spell spellItem = SkillBase.GetSpellByID(useItem.SpellID);
+							long nextPotionAvailTime = TempProperties.getLongProperty(NEXT_POTION_AVAIL_TIME+"_Type"+spellItem.SharedTimerGroup, 0L);
                             // Satyr Update: Individual Reuse-Timers for Pots need a Time looking forward
                             // into Future, set with value of "itemtemplate.CanUseEvery" and no longer back into past
+                            // Nidel Update: Individual rimer are now based on SharedTimerGroup of spell's potion for 
+                            // can use some different potion type (heal/buff/...) like off.
                             if (Client.Account.PrivLevel == 1 && nextPotionAvailTime > CurrentRegion.Time)
 							{
-                                Out.SendMessage("You must wait " + (nextPotionAvailTime - CurrentRegion.Time) / 1000 + " more second before use potion!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
+                                Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.MustWaitBeforeUse", (nextPotionAvailTime - CurrentRegion.Time) / 1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            }
 							else
 							{
 								SpellLine potionEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Potions_Effects);
@@ -7705,50 +7706,64 @@ namespace DOL.GS
 									List<Spell> spells = SkillBase.GetSpellList(potionEffectLine.KeyName);
 									foreach (Spell spell in spells)
 									{
-										if (spell.ID == useItem.SpellID)
-										{
-											if (spell.Level <= Level)
-											{
-												if (spell.CastTime > 0 && AttackState)
-												{
-													Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantUseInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-												}
-												//Eden
-												else if ((IsStunned && !(Steed != null && Steed.Name == "Forceful Zephyr")) || IsMezzed || !IsAlive)
-												{
-													Out.SendMessage("You can't use " + useItem.GetName(0, false) + " in your state.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-												}
-												else
-												{
-													ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, potionEffectLine);
-													if (spellHandler != null)
-													{
-														Stealth(false);
-														if (useItem.Item_Type == 40)
-															Emote(eEmote.Drink);
-														spellHandler.StartSpell(TargetObject as GameLiving);
-														if (useItem.Count > 1)
-															Inventory.RemoveCountFromStack(useItem, 1);
-														else
-														{
-															useItem.Charges--;
-															if (useItem.Charges < 1) Inventory.RemoveCountFromStack(useItem, 1);
-														}
-														Out.SendMessage(useItem.GetName(0, false) + " has been used.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                                        // Satyr Update: Individual Reuse-Timers for Pots need a Time looking forward
-                                                        // into Future, set with value of "itemtemplate.CanUseEvery" and no longer back into past
-                                                        TempProperties.setProperty(NEXT_POTION_AVAIL_TIME, useItem.CanUseEvery * 1000 + CurrentRegion.Time);
-													}
-													else
-													{
-														Out.SendMessage("Potion effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-													}
-												}
-											}
-											else
-												Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.NotEnouthPower"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-											break;
-										}
+                                        if (spell.ID == useItem.SpellID)
+                                        {
+                                            if(spell.Level <= Level)
+                                            {
+                                                if(spell.CastTime > 0 && AttackState)
+                                                {
+                                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantUseInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                                }
+                                                    //Eden
+                                                else if((IsStunned && !(Steed != null && Steed.Name == "Forceful Zephyr")) || IsMezzed || !IsAlive)
+                                                {
+                                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantUseState", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                                }
+                                                else
+                                                {
+                                                    SpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, potionEffectLine) as SpellHandler;
+                                                    if(spellHandler != null)
+                                                    {
+                                                        Stealth(false);
+                                                        if(useItem.Item_Type == (int) eInventorySlot.FirstBackpack)
+                                                        {
+                                                            Emote(eEmote.Drink);
+                                                        }
+                                                        GameLiving target = TargetObject as GameLiving;
+                                                        //Spell
+                                                        spellHandler.StartSpell(target);
+                                                        //SubSpells
+                                                        spellHandler.CastSubSpells(target, spellHandler.SpellLine);
+
+
+                                                        if(useItem.Count > 1)
+                                                        {
+                                                            Inventory.RemoveCountFromStack(useItem, 1);
+                                                        }
+                                                        else
+                                                        {
+                                                            useItem.Charges--;
+                                                            if(useItem.Charges < 1)
+                                                            {
+                                                                Inventory.RemoveCountFromStack(useItem, 1);
+                                                            }
+                                                        }
+                                                        Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.Used", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+                                                        TempProperties.setProperty(NEXT_POTION_AVAIL_TIME + "_Type" + spellItem.SharedTimerGroup, useItem.CanUseEvery*1000 + CurrentRegion.Time);
+                                                    }
+                                                    else
+                                                    {
+                                                        Out.SendMessage("Potion effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.NotEnouthPower"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                            }
+                                            break;
+                                        }
 									}
 								}
 							}
