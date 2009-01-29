@@ -43,7 +43,6 @@ namespace DOL.GS.GameEvents
 
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		static int count;
 		static Timer m_timer;
 		public static Stopwatch watch;
 		static Dictionary<GameTimer.TimeManager, long> old_time = new Dictionary<GameTimer.TimeManager, long>();
@@ -217,6 +216,6 @@ namespace DOL.GS.GameEvents
 		}
 
 		public delegate void RegionTimerHandler(GameTimer.TimeManager RestartedTimer, long SyncTime);
-		public static event RegionTimerHandler RegionTimerUnfrozen;
+		//public static event RegionTimerHandler RegionTimerUnfrozen;
 	}
 }

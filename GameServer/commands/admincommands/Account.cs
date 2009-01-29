@@ -91,7 +91,6 @@ namespace DOL.GS.Commands
                         GameServer.Database.AddNewObject(account);
 
                         DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountCreated"));
-                        return;
                     }
                     break;
                 #endregion Create

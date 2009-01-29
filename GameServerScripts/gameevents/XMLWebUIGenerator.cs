@@ -322,7 +322,8 @@ namespace DOL.GS.Scripts
 					pi.Y = plr.Y;
 				}
 
-				db.WriteDatabaseTables();
+				// 2008-01-29 Kakuri - Obsolete
+				//db.WriteDatabaseTables();
 				con = null;
 				db = null;
 

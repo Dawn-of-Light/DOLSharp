@@ -58,7 +58,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							GameServer.Database.DeleteObject(item);
 						}
-						GameServer.Database.WriteDatabaseTable(typeof (InventoryItem));
+						// 2008-01-29 Kakuri - Obsolete
+						//GameServer.Database.WriteDatabaseTable( typeof( InventoryItem ) );
 					}
 					catch (Exception e)
 					{
@@ -74,7 +75,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							GameServer.Database.DeleteObject(quest);
 						}
-						GameServer.Database.WriteDatabaseTable(typeof (DBQuest));
+						// 2008-01-29 Kakuri - Obsolete
+						//GameServer.Database.WriteDatabaseTable( typeof( DBQuest ) );
 					}
 					catch (Exception e)
 					{
@@ -90,7 +92,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							GameServer.Database.DeleteObject(mlstep);
 						}
-						GameServer.Database.WriteDatabaseTable(typeof (DBCharacterXMasterLevel));
+						// 2008-01-29 Kakuri - Obsolete
+						//GameServer.Database.WriteDatabaseTable( typeof( DBCharacterXMasterLevel ) );
 					}
 					catch (Exception e)
 					{
@@ -99,7 +102,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}					
 
 					GameServer.Database.DeleteObject(chars[i]);
-					GameServer.Database.WriteDatabaseTable(typeof (Character));
+					// 2008-01-29 Kakuri - Obsolete
+					//GameServer.Database.WriteDatabaseTable( typeof( Character ) );
 					client.Account.Characters = null;
 					GameServer.Database.FillObjectRelations(client.Account);
 					client.Player = null;
@@ -112,7 +116,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//the realm again!
 						client.Account.Realm = 0;
 						GameServer.Database.SaveObject(client.Account);
-						GameServer.Database.WriteDatabaseTable(typeof (Account));
+						// 2008-01-29 Kakuri - Obsolete
+						//GameServer.Database.WriteDatabaseTable( typeof( Account ) );
 					}
 					break;
 				}

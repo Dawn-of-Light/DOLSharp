@@ -10355,7 +10355,7 @@ namespace DOL.GS
 					else
 					{
 						//Add money only to picking player
-						if (this != null && Guild != null && Guild.IsGuildDuesOn() && moneyObject!=null && moneyObject.TotalCopper!=null && Client!=null && Client.Player!=null && Client.Player.Guild!=null && Client.Player.Guild.GetGuildDuesPercent()!=null)
+						if (this != null && Guild != null && Guild.IsGuildDuesOn() && moneyObject!=null && moneyObject.TotalCopper > 0 && Client!=null && Client.Player!=null && Client.Player.Guild!=null && Client.Player.Guild.GetGuildDuesPercent() > 0 )
 						{
 							double moneyToGuild = moneyObject.TotalCopper * Client.Player.Guild.GetGuildDuesPercent() / 100;
 							long MoneyToPlayer = moneyObject.TotalCopper - (long)moneyToGuild;
