@@ -1,5 +1,3 @@
-
-
 # (All)
 Crafting.CheckTool.AlchemyKit:				alchemy kit
 Crafting.CheckTool.FindAlchemyKit:			You must find a alchemy kit!
@@ -38,6 +36,20 @@ Crafting.Name.Siegecraft:				Siegecraft
 Crafting.Name.Tailoring:				Tailoring
 Crafting.Name.Weaponcraft:				Weaponcraft
 Crafting.Name.Woodworking:				Woodworking
+
+# /CraftLevelToCraftTitle
+CraftLevelToCraftTitle.Helper:				Helper
+CraftLevelToCraftTitle.JuniorApprentice:		Junior Apprentice
+CraftLevelToCraftTitle.Apprentice:			Apprentice
+CraftLevelToCraftTitle.Neophyte:			Neophyte
+CraftLevelToCraftTitle.Assistant:			Assistant
+CraftLevelToCraftTitle.Junior:				Junior
+CraftLevelToCraftTitle.Journeyman:			Journeyman
+CraftLevelToCraftTitle.Senior:				Senior
+CraftLevelToCraftTitle.Master:				Master
+CraftLevelToCraftTitle.Grandmaster:			Grandmaster
+CraftLevelToCraftTitle.Legendary:			Legendary
+CraftLevelToCraftTitle.LegendaryGrandmaster:		Legendary Grandmaster
 
 # /AbstractCraftingSkill
 AbstractCraftingSkill.BuildCraftedItem.BackpackFull:	Your backpack is full. {0} is created on the ground.
