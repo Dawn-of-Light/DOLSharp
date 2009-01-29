@@ -83,3 +83,5 @@ PlayerClass.Name.Warden:			Warden
 PlayerClass.Name.Warlock:			Warlock
 PlayerClass.Name.Warrior:			Warrior
 PlayerClass.Name.Wizard:			Wizard
+
+PlayerClass.OnLevelUp.Autotrain:		You can now train {0} to level {1} for free.
