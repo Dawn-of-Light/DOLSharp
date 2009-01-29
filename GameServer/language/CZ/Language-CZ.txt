@@ -302,7 +302,7 @@ GamePlayer.SwitchWeapon.SpellCancelled:		Tvoje kouzlo je zruseno!
 GamePlayer.UpdateSpellLine.GainPower:		Ziskal jsi nove kouzlo v {0} magii!
 GamePlayer.UseSlot.AutoReleaseShot:			Automaticky vystrelis.
 GamePlayer.UseSlot.AutoReleaseShotReload:	Automaticky vystrelis a znovu nabijes.
-GamePlayer.UseSlot.Can'tUseFromBackpack:	Nemuzes tento predmet pouzit z tveho batohu. Napred si to nasad!
+GamePlayer.UseSlot.CantUseFromBackpack:	Nemuzes tento predmet pouzit z tveho batohu. Napred si to nasad!
 GamePlayer.UseSlot.CantCallMountSeated:		Nemuzes privolat tveho kone kdyz na nem sedis.
 GamePlayer.UseSlot.CantFire:				Nemuzes strilet nebo pouzit tento predmet!
 GamePlayer.UseSlot.CantMountCombat:			Jsi v boji a nemuzes zavolat sveho kone.

@@ -1,5 +1,3 @@
-
-
 GamePlayer.AddAbility.YouLearn:				You learn the {0} ability!	
 GamePlayer.AddSpecialisation.YouLearn:		You learn the {0} skill!		
 GamePlayer.AddSpellLine.YouLearn:			You learn the {0} spell list!		
@@ -298,7 +296,7 @@ GamePlayer.UseSlot.CantMountSteath:				You can't mount while you're in stealth.
 GamePlayer.UseSlot.CantMountWhileDead:			You can't mount while you're dead.		
 GamePlayer.UseSlot.CantSeeTarget:				You can't see your target!		
 GamePlayer.UseSlot.CantSummonRvR:				You cannot summon that mount in RvR zones.		
-GamePlayer.UseSlot.Can'tUseFromBackpack:		You can't use this item from your backpack. Equip it before!			
+GamePlayer.UseSlot.CantUseFromBackpack:		You can't use this item from your backpack. Equip it before!			
 GamePlayer.UseSlot.CantUseInCombat:				You can't use this item in combat!		
 GamePlayer.UseSlot.IllegalSourceObject:			Illegal source object. Readied {0}.
 GamePlayer.UseSlot.MustDismountBefore:			You must to dismount before.		

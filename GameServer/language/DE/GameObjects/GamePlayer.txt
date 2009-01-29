@@ -295,14 +295,16 @@ GamePlayer.UseSlot.CantMountSteath:			Ihr könnt nicht aufsitzen, während Ihr get
 GamePlayer.UseSlot.CantMountWhileDead:			Ihr könnt nicht aufsteigen, weil Ihr tot seid.		
 GamePlayer.UseSlot.CantSeeTarget:			Ihr könnt Euer Ziel nicht sehen!		
 GamePlayer.UseSlot.CantSummonRvR:			Ihr könnt das Pferd nicht in RvR-Zonen rufen.		
-GamePlayer.UseSlot.Can'tUseFromBackpack:		Ihr müsst diesen Gegenstand erst anlegen, bevor Ihr ihn verwenden könnt!			
+GamePlayer.UseSlot.CantUseFromBackpack:			Ihr müsst diesen Gegenstand erst anlegen, bevor Ihr ihn verwenden könnt!			
 GamePlayer.UseSlot.CantUseInCombat:			Ihr könnt diesen Gegenstand nicht im Kampf benutzen!		
+GamePlayer.UseSlot.CantUseState:			In Eurem Zustand könnt Ihr "{0}" nicht anwenden.
 GamePlayer.UseSlot.IllegalSourceObject:			In dieser Position tragt Ihr nichts.
 GamePlayer.UseSlot.MustDismountBefore:			Ihr müsst vorher absteigen.		
+GamePlayer.UseSlot.MustWaitBeforeUse:			Ihr müsst noch {0} Sekunden warten, bevor Ihr diesen Zaubertrank anwenden könnt.
 GamePlayer.UseSlot.NoAutoReleaseShotReload:		Eurer Schuss wird nun nicht länger automatisch nachgeladen und freigegeben.			
 GamePlayer.UseSlot.NotEnouthPower:			Ihr seit nicht mächtig genug, um den Zauber dieses Gegenstandes anwenden zu können.		
 GamePlayer.UseSlot.OutOfCharges:			{0} hat keine Ladungen mehr.
 GamePlayer.UseSlot.StopCallingMount:			Ihr ruft nicht mehr nach Eurem Pferd.		
-GamePlayer.UseSlot.WhistleMount:			Ihr pfeift nach Eurem Pferd.		
+GamePlayer.UseSlot.Used:			        {0} wird bereits verwendet.
+GamePlayer.UseSlot.WhistleMount:			Ihr pfeift nach Eurem Pferd.
 GamePlayer.Whisper.SelectTarget:			Wählt jemanden aus, dem Ihr etwas zuflüstern wollt!
-PlayerClass.OnLevelUp.Autotrain:			Ihr trainiert "{0}" automatisch auf Stufe {1}.

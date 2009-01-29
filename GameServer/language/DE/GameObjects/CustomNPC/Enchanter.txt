@@ -1,8 +1,8 @@
 Enchanter.EnchanterDialogResponse.Text1:	Falscher Gegenstand.
 Enchanter.EnchanterDialogResponse.Text2:	Ich bekomme aber {0}, für die Verzauberung.
-Enchanter.EnchanterDialogResponse.Text3:	bright
+Enchanter.EnchanterDialogResponse.Text3:	
 Enchanter.EnchanterDialogResponse.Text4:	{0} erhält von Euch {1}.
-Enchanter.EnchanterDialogResponse.Text5:	Hier bitte, es ist nun "{0}"!
+Enchanter.EnchanterDialogResponse.Text5:	Hier bitte, Euer Gegenstand wurde verzaubert!
 Enchanter.GetExamineMessages.Text1:		Es wird {0} als Ziel erfasst.
 Enchanter.GetExamineMessages.Text2:		Es interessiert Euch {0}. {0} steht Euch {2} und hat sich der Bannzauberei verschrieben.
 Enchanter.Interact.Text1:			Quarz

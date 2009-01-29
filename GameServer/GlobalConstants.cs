@@ -1435,18 +1435,18 @@ namespace DOL.GS
 		{
 			switch ((int)craftLevel / 100)
 			{
-				case 0: return "Helper";
-				case 1: return "Junior Apprentice";
-				case 2: return "Apprentice";
-				case 3: return "Neophyte";
-				case 4: return "Assistant";
-				case 5: return "Junior";
-				case 6: return "Journeyman";
-				case 7: return "Senior";
-				case 8: return "Master";
-				case 9: return "Grandmaster";
-				case 10: return "Legendary";
-				case 11: return "Legendary Grandmaster";
+                case 0: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Helper");
+                case 1: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.JuniorApprentice");
+                case 2: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Apprentice");
+                case 3: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Neophyte");
+                case 4: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Assistant");
+                case 5: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Junior");
+                case 6: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Journeyman");
+                case 7: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Senior");
+                case 8: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Master");
+                case 9: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Grandmaster");
+                case 10: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Legendary");
+                case 11: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.LegendaryGrandmaster");
 				default: return "";
 			}
 		}
@@ -1682,7 +1682,7 @@ namespace DOL.GS
 					spell.ClientEffect = 2435;
 					spell.Icon = 2435;
 					spell.SpellID = 2435;
-					spell.Name = Language.LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GamePlayer.Spell.ResurrectionIllness");
+					spell.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GamePlayer.Spell.ResurrectionIllness");
 					spell.Range = 0;
 					spell.Target = "Self";
 					spell.Type = PvERessurectionIllnessSpellType;
