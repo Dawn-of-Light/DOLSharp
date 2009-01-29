@@ -299,7 +299,7 @@ GamePlayer.UseSlot.CantMountSteath:			Vous ne pouvez pas monter sur un cheval si
 GamePlayer.UseSlot.CantMountWhileDead:		Vous ne pouvez pas monter sur votre cheval, vous êtes mort(e) !
 GamePlayer.UseSlot.CantSeeTarget:			Vous ne voyez pas votre cible !
 GamePlayer.UseSlot.CantSummonRvR:			Vous ne pouvez pas utiliser cette monture dans une zone RvR.
-GamePlayer.UseSlot.Can'tUseFromBackpack:	Vous ne pouvez pas utiliser cet objet directement dans votre sac à dos. Equipez-le avant !
+GamePlayer.UseSlot.CantUseFromBackpack:	Vous ne pouvez pas utiliser cet objet directement dans votre sac à dos. Equipez-le avant !
 GamePlayer.UseSlot.CantUseInCombat:			Vous ne pouvez pas utiliser cet objet en combat !
 GamePlayer.UseSlot.IllegalSourceObject:		Objet source incorrect. Readied {0}.
 GamePlayer.UseSlot.MustDismountBefore:		Vous devez d'abord descendre de votre cheval.

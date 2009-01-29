@@ -380,7 +380,7 @@ GamePlayer.UseSlot.CantMountSteath:			Non puoi montare sulla cavalcatura mentre 
 GamePlayer.UseSlot.CantMountWhileDead:		Non puoi montare sulla cavalcatura quando sei morto.
 GamePlayer.UseSlot.CantSeeTarget:			Non riesci a vedere il bersaglio!
 GamePlayer.UseSlot.CantSummonRvR:			Non puoi richiamare questa cavalcatura nelle zone RvR.
-GamePlayer.UseSlot.Can'tUseFromBackpack:	Non puoi usare questo oggetto direttamente dal tuo zaino. Devi prima indossarlo!
+GamePlayer.UseSlot.CantUseFromBackpack:	Non puoi usare questo oggetto direttamente dal tuo zaino. Devi prima indossarlo!
 GamePlayer.UseSlot.CantUseInCombat:			Non puoi usare questo oggetto in combattimento!
 GamePlayer.UseSlot.IllegalSourceObject:		Oggetto non valido. Preparato {0}.
 GamePlayer.UseSlot.MustDismountBefore:		Devi prima smontare dalla cavalcatura.

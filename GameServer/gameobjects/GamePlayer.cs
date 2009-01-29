@@ -7772,7 +7772,7 @@ namespace DOL.GS
 						{
 							if (!(new ArrayList(Inventory.EquippedItems).Contains(useItem)))
 							{
-								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.Can'tUseFromBackpack"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantUseFromBackpack"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 							else
 							{
