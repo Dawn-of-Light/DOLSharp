@@ -39,7 +39,7 @@ namespace DOL.GS.Commands
         "'/mob fastcreate <ModelID> <level> [save(default = 0; use 1 to save)] <name>' to create mob with specified info",
         "'/mob nfastcreate <ModelID> <level> <number> [radius(10)] [name]' to create multiple mobs within radius",
         "'/mob nrandcreate <number> [radius(50)]' to create multiple random mobs within radius",
-        "'/mob model <ModelID>' to set the mob's model",
+        "'/mob model <ModelID> [OID]' to set the mob's model, optionally using OID if mob isn't targeted",
         "'/mob size <size>' to set the mob's size (1..255)",
         "'/mob name <name>' to set the mob's name",
         "'/mob guild <guild name>' to set the mob's guild name (blank to remove)",
@@ -108,6 +108,7 @@ namespace DOL.GS.Commands
                 && args[1] != "nrandcreate"
                 && args[1] != "nfastcreate"
                 && args[1] != "npctemplate"
+                && args[1] != "model"
                 && targetMob == null )
             {
                 if ( client.Player.TargetObject != null )
@@ -462,6 +463,47 @@ namespace DOL.GS.Commands
 
         private void model( GameClient client, GameNPC targetMob, string[] args )
         {
+            if ( targetMob == null )
+            {
+                if ( args.Length < 4 )
+                {
+                    DisplaySyntax( client, args[1] );
+                    return;
+                }
+                else
+                {
+                    ushort mobOID;
+
+                    if ( ushort.TryParse( args[3], out mobOID ) )
+                    {
+                        GameObject obj = client.Player.CurrentRegion.GetObject( mobOID );
+
+                        if ( obj == null )
+                        {
+                            client.Out.SendMessage( "No object with OID: " + args[1] + " in current Region.", eChatType.CT_System, eChatLoc.CL_SystemWindow );
+                            return;
+                        }
+                        else
+                        {
+                            if ( obj is GameNPC )
+                            {
+                                targetMob = (GameNPC)obj;
+                            }
+                            else
+                            {
+                                client.Out.SendMessage( "Object " + mobOID + " is a " + obj.GetType().ToString() + ", not a GameNPC.", eChatType.CT_System, eChatLoc.CL_SystemWindow );
+                                return;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        DisplaySyntax( client, args[1] );
+                        return;
+                    }
+                }
+            }
+
             ushort model;
 
             try
@@ -849,6 +891,7 @@ namespace DOL.GS.Commands
             info.Add( " + Guild: " + targetMob.GuildName );
             info.Add( " + Model: " + targetMob.Model + " sized to " + targetMob.Size );
             info.Add( string.Format( " + Flags: {0} (0x{1})", ( (GameNPC.eFlags)targetMob.Flags ).ToString( "G" ), targetMob.Flags.ToString( "X" ) ) );
+            info.Add( " + OID: " + targetMob.ObjectID );
             info.Add( " + Active weapon slot: " + targetMob.ActiveWeaponSlot );
             info.Add( " + Visible weapon slot: " + targetMob.VisibleActiveWeaponSlots );
             info.Add( " + Speed(current/max): " + targetMob.CurrentSpeed + "/" + targetMob.MaxSpeedBase );
