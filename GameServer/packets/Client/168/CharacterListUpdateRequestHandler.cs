@@ -36,8 +36,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			bool invalidChar = false;
-			bool needReloadCharactersScreen = false;
 			//DOLConsole.WriteLine("Character creation!\n");
 			string accountName = packet.ReadString(24);
 			if (!accountName.StartsWith(client.Account.Name))// TODO more correctly check, client send accountName as account-S, -N, -H (if it not fit in 20, then only account)
@@ -651,7 +649,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 							log.Info(String.Format("Character {0} created!", charname));
 
 
-						GameServer.Database.WriteDatabaseTable(typeof(Character));
+						// 2008-01-29 Kakuri - Obsolete
+						//GameServer.Database.WriteDatabaseTable( typeof( Character ) );
 						GameServer.Database.FillObjectRelations(client.Account);
 						client.Out.SendCharacterOverview((eRealm)ch.Realm);
 					}

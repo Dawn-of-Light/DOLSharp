@@ -56,7 +56,6 @@ namespace DOL.GS.Quests.Midgard
         protected const int minimumLevel = 1;
         protected const int maximumLevel = 4;
 
-        private static GameNPC Statuedemonsbreach = null;
         private static GameNPC Charles = null;
         private static ItemTemplate daringpaddedboots = null;
         private static ItemTemplate daringpaddedcap = null;
