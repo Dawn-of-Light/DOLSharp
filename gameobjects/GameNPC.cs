@@ -3680,9 +3680,14 @@ namespace DOL.GS
 						loot.Z = Z;
 						loot.Heading = Heading;
 						loot.CurrentRegion = CurrentRegion;
-						if (((GameInventoryItem)loot).Item.Id_nb == "aurulite")
+
+						// This may seem like an odd place for this code, but loot-generating code further up the line
+						// is dealing strictly with ItemTemplate objects, while you need the InventoryItem in order
+						// to be able to set the Count property.
+						// Converts single drops of loot with PackSize > 1 (and MaxCount >= PackSize) to stacks of Count = PackSize
+						if ( ( (GameInventoryItem)loot ).Item.PackSize > 1 && ( (GameInventoryItem)loot ).Item.MaxCount >= ( (GameInventoryItem)loot ).Item.PackSize )
 						{
-							((GameInventoryItem)loot).Item.Count = ((GameInventoryItem)loot).Item.PackSize;
+							( (GameInventoryItem)loot ).Item.Count = ( (GameInventoryItem)loot ).Item.PackSize;
 						}
 					}
 

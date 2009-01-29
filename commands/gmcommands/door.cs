@@ -25,7 +25,6 @@ using System;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.Language;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
