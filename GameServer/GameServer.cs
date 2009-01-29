@@ -1047,10 +1047,11 @@ namespace DOL
 
 
 				//Save the database
-				if (m_database != null)
+				// 2008-01-29 Kakuri - Obsolete
+				/*if ( m_database != null )
 				{
 					m_database.WriteDatabaseTables();
-				}
+				}*/
 
 				m_serverRules = null;
 
@@ -1214,7 +1215,8 @@ namespace DOL
 						return false;
 					}
 
-					try
+					// 2008-01-29 Kakuri - Obsolete
+					/*try
 					{
 						m_database.LoadDatabaseTables();
 					}
@@ -1223,7 +1225,7 @@ namespace DOL
 						if (log.IsErrorEnabled)
 							log.Error("Error loading Database", e);
 						return false;
-					}
+					}*/
 				}
 				if (log.IsInfoEnabled)
 					log.Info("Database Initialization: true");
@@ -1233,10 +1235,13 @@ namespace DOL
 			/// <summary>
 			/// Writes the database to disk
 			/// </summary>
+			// 2008-01-29 Kakuri - Obsolete
+			[Obsolete( "This doesn't do anything with MySQL Database" )]
 			public void SaveDatabase()
 			{
-				if (m_database != null)
-					m_database.WriteDatabaseTables();
+				// 2008-01-29 Kakuri - Obsolete
+				//if ( m_database != null )
+				//	m_database.WriteDatabaseTables();
 			}
 
 			/// <summary>
@@ -1270,7 +1275,8 @@ namespace DOL
 
 						FactionMgr.SaveAllAggroToFaction();
 
-						m_database.WriteDatabaseTables();
+						// 2008-01-29 Kakuri - Obsolete
+						//m_database.WriteDatabaseTables();
 						Thread.CurrentThread.Priority = oldprio;
 					}
 					if (log.IsInfoEnabled)

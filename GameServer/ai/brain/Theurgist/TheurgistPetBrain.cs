@@ -41,7 +41,6 @@ namespace DOL.AI.Brain
 		private GameLiving m_target;
 		private bool m_melee = false;
         private bool m_active = true;
-		private Spell spelllos;
 
 		public TheurgistPetBrain(GameLiving owner)
 		{

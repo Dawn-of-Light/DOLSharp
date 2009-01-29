@@ -52,7 +52,6 @@ namespace DOL.GS.Commands
 	public class NewDoorCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		private int DoorID;
-		private int DoorIDint;
 		private int doorType;
 		
 		public void OnCommand(GameClient client, string[] args)

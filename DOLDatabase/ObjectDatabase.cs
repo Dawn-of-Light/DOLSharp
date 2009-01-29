@@ -271,7 +271,8 @@ namespace DOL.Database
 				}
 
 				dataObject.Dirty = false;
-				PutObjectInCache(tableName, dataObject);
+				// 2008-01-29 Kakuri - Obsolete
+				//PutObjectInCache(tableName, dataObject);
 				dataObject.IsValid = true;
 
 			}
@@ -371,11 +372,13 @@ namespace DOL.Database
 					dataObject.ObjectId = IdGenerator.generateId();
 				dataObject.ObjectId = row[tableName + "_ID"].ToString();
 
-				if (dataObject.AutoSave == true)
-					WriteDatabaseTable(dataObject.GetType());
+				// 2008-01-29 Kakuri - Obsolete
+				//if ( dataObject.AutoSave == true )
+				//	WriteDatabaseTable(dataObject.GetType());
 
 				dataObject.Dirty = false;
-				PutObjectInCache(tableName, dataObject);
+				// 2008-01-29 Kakuri - Obsolete
+				//PutObjectInCache( tableName, dataObject );
 				dataObject.IsValid = true;
 				return;
 			}
@@ -524,8 +527,9 @@ namespace DOL.Database
 					FillRowWithObject(dataObject, row);
 				}
 
-				if (dataObject.AutoSave == true)
-					WriteDatabaseTable(dataObject.GetType());
+				// 2008-01-29 Kakuri - Obsolete
+				//if ( dataObject.AutoSave == true )
+				//	WriteDatabaseTable(dataObject.GetType());
 
 				dataObject.Dirty = false;
 				dataObject.IsValid = true;
@@ -600,12 +604,14 @@ namespace DOL.Database
 						}
 						row.Delete();
 					}
-					if (dataObject.AutoSave == true)
-						WriteDatabaseTable(dataObject.GetType());
+					// 2008-01-29 Kakuri - Obsolete
+					//if ( dataObject.AutoSave == true )
+					//	WriteDatabaseTable(dataObject.GetType());
 				}
 
 				dataObject.IsValid = false;
-				DeleteObjectInCache(dataObject.TableName, dataObject);
+				// 2008-01-29 Kakuri - Obsolete
+				//DeleteObjectInCache( dataObject.TableName, dataObject );
 				DeleteObjectInPreCache(dataObject.TableName, dataObject);
 				DeleteObjectRelations(dataObject);
 			}
@@ -744,10 +750,11 @@ namespace DOL.Database
 				}
 			}
 			sb.Append(" FROM `" + tableName + "`");
-			if (whereClause != null && whereClause.Trim().Length > 0)
+			// 2008-01-29 Kakuri - Obsolete
+			/*if ( whereClause != null && whereClause.Trim().Length > 0 )
 			{
 				sb.Append(" WHERE " + ReplaceSpecialCharsInWhereClause(whereClause));
-			}
+			}*/
 			string sql = sb.ToString();
 
 			if (log.IsDebugEnabled)
@@ -761,7 +768,8 @@ namespace DOL.Database
 					{
 						reader.GetValues(data);
 						string id = (string)data [0];
-						DataObject cache = GetObjectInCache(tableName, id);
+						// 2008-01-29 Kakuri - Obsolete
+						DataObject cache = null;// GetObjectInCache( tableName, id );
 
 						if (cache != null)
 						{
@@ -836,7 +844,8 @@ namespace DOL.Database
 							{
 								FillLazyObjectRelations(obj, true);
 							}
-							PutObjectInCache(tableName, obj);
+							// 2008-01-29 Kakuri - Obsolete
+							//PutObjectInCache( tableName, obj );
 							obj.IsValid = true;
 						}
 					}
@@ -1076,14 +1085,15 @@ namespace DOL.Database
 			string tableName = DataObject.TableName;
 			Type myType = DataObject.GetType();
 			string id = row[tableName + "_ID"].ToString();
-			DataObject cacheObj = GetObjectInCache(tableName, id);
+			// 2008-01-29 Kakuri - Obsolete
+			/*DataObject cacheObj = GetObjectInCache( tableName, id );
 
 			if (cacheObj != null)
 			{
 				DataObject = cacheObj;
 				if (reload == false)
 					return;
-			}
+			}*/
 
 			MemberInfo[] myMembers = myType.GetMembers();
 			DataObject.ObjectId = id;
@@ -1129,10 +1139,11 @@ namespace DOL.Database
 				FillLazyObjectRelations(DataObject, true);
 			}
 
-			if (reload == false)
+			// 2008-01-29 Kakuri - Obsolete
+			/*if ( reload == false )
 			{
 				PutObjectInCache(tableName, DataObject);
-			}
+			}*/
 
 			DataObject.IsValid = true;
 		}
