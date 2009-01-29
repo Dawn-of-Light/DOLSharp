@@ -50,11 +50,6 @@ namespace DOL.GS.Quests
 		private static readonly IDictionary m_questDescriptors = new HybridDictionary(1);
 
 		/// <summary>
-		/// This is the last used global quest descriptor
-		/// </summary>
-		private static ushort LAST_USED_QUEST_DESCRIPTOR = ushort.MinValue;
-
-		/// <summary>
 		/// Holds all the npc quests descriptors used in the world (npc => list of descriptors)
 		/// </summary>
 		private static readonly IDictionary  m_questDescriptorsByNPC = new HybridDictionary();

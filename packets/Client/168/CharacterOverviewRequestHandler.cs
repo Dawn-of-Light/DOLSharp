@@ -85,7 +85,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						// save the choice
 						client.Account.Realm = (int)chosenRealm;
 						GameServer.Database.SaveObject(client.Account);
-						GameServer.Database.WriteDatabaseTable(typeof (Account));
+						// 2008-01-29 Kakuri - Obsolete
+						//GameServer.Database.WriteDatabaseTable( typeof( Account ) );
 					}
 				}
 				else
