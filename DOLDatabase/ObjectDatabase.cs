@@ -750,11 +750,11 @@ namespace DOL.Database
 				}
 			}
 			sb.Append(" FROM `" + tableName + "`");
-			// 2008-01-29 Kakuri - Obsolete
-			/*if ( whereClause != null && whereClause.Trim().Length > 0 )
+
+			if ( whereClause != null && whereClause.Trim().Length > 0 )
 			{
-				sb.Append(" WHERE " + ReplaceSpecialCharsInWhereClause(whereClause));
-			}*/
+				sb.Append(" WHERE " + whereClause);
+			}
 			string sql = sb.ToString();
 
 			if (log.IsDebugEnabled)
