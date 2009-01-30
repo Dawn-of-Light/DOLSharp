@@ -29,6 +29,11 @@ CharmSpellHandler.DelveInfo.Function:			Wirkung: {0}
 DirectDamageDebuffSpellHandler.DelveInfo.Decrease:	Resist decrease ({0}): {1}%
 DirectDamageDebuffSpellHandler.DelveInfo.Function:	Wirkung: dmg w/resist decrease
 
+# DoTSpellHandler
+DoTSpellHandler.SendDamageMessages.YouHitFor:		Ihr trefft und {0} erleidet {1} Punkte zusätzlichen Schaden!
+DoTSpellHandler.SendDamageMessages.YourCriticallyHits:	{0} trifft kritisch und {1} erleidet {2} Punkte zusätzlichen Schaden!
+DoTSpellHandler.SendDamageMessages.YourHitsFor:		{0} trifft und {1} erleidet {2} Punkte zusätzlichen Schaden!
+
 # NearsightSpellHandler
 NearsightSpellHandler.DelveInfo.Function:		Wirkung: {0}
 
