@@ -21,6 +21,7 @@ using System.Collections;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
+using DOL.Language;
 
 namespace DOL.GS.Spells
 {
@@ -133,33 +134,33 @@ namespace DOL.GS.Spells
 		/// <param name="ad"></param>
 		public override void SendDamageMessages(AttackData ad)
 		{
-			if (Spell.Name.StartsWith("Proc"))
-			{
-				MessageToCaster(String.Format("You hit {0} for {1} damage!",
-					ad.Target.GetName(0, false), ad.Damage), eChatType.CT_YouHit);
-			}
-			else
-			{
-				MessageToCaster(String.Format("Your {0} hits {1} for {2} damage!",
-					Spell.Name, ad.Target.GetName(0, false), ad.Damage), eChatType.CT_YouHit);
-			}
-			if (ad.CriticalDamage > 0)
-				MessageToCaster(String.Format("Your {0} critically hits {1} for an additional {2} damage!",
-					Spell.Name, ad.Target.GetName(0, false), ad.CriticalDamage), eChatType.CT_YouHit);
+            if (Spell.Name.StartsWith("Proc"))
+            {
+                MessageToCaster(String.Format(LanguageMgr.GetTranslation(((GamePlayer)m_caster).Client, "DoTSpellHandler.SendDamageMessages.YouHitFor",
+                    ad.Target.GetName(0, false), ad.Damage)), eChatType.CT_YouHit);
+            }
+            else
+            {
+                MessageToCaster(String.Format(LanguageMgr.GetTranslation(((GamePlayer)m_caster).Client, "DoTSpellHandler.SendDamageMessages.YourHitsFor",
+                    Spell.Name, ad.Target.GetName(0, false), ad.Damage)), eChatType.CT_YouHit);
+            }
+            if (ad.CriticalDamage > 0)
+                MessageToCaster(String.Format(LanguageMgr.GetTranslation(((GamePlayer)m_caster).Client, "DoTSpellHandler.SendDamageMessages.YourCriticallyHits",
+                    Spell.Name, ad.Target.GetName(0, false), ad.CriticalDamage)), eChatType.CT_YouHit);
 
-			//			if (ad.Damage > 0)
-			//			{
-			//				string modmessage = "";
-			//				if (ad.Modifier > 0) modmessage = " (+"+ad.Modifier+")";
-			//				if (ad.Modifier < 0) modmessage = " ("+ad.Modifier+")";
-			//				MessageToCaster("You hit "+ad.Target.GetName(0, false)+" for " + ad.Damage + " damage!", eChatType.CT_Spell);
-			//			}
-			//			else
-			//			{
-			//				MessageToCaster("You hit "+ad.Target.GetName(0, false)+" for " + ad.Damage + " damage!", eChatType.CT_Spell);
-			//				MessageToCaster(ad.Target.GetName(0, true) + " resists the effect!", eChatType.CT_SpellResisted);
-			//				MessageToLiving(ad.Target, "You resist the effect!", eChatType.CT_SpellResisted);
-			//			}
+                //			if (ad.Damage > 0)
+                //			{
+                //				string modmessage = "";
+                //				if (ad.Modifier > 0) modmessage = " (+"+ad.Modifier+")";
+                //				if (ad.Modifier < 0) modmessage = " ("+ad.Modifier+")";
+                //				MessageToCaster("You hit "+ad.Target.GetName(0, false)+" for " + ad.Damage + " damage!", eChatType.CT_Spell);
+                //			}
+                //			else
+                //			{
+                //				MessageToCaster("You hit "+ad.Target.GetName(0, false)+" for " + ad.Damage + " damage!", eChatType.CT_Spell);
+                //				MessageToCaster(ad.Target.GetName(0, true) + " resists the effect!", eChatType.CT_SpellResisted);
+                //				MessageToLiving(ad.Target, "You resist the effect!", eChatType.CT_SpellResisted);
+                //			}
 		}
 
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
