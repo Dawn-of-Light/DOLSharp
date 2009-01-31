@@ -255,7 +255,7 @@ namespace DOL.GS
 
 		}
 		
-		public virtual int Health
+		public override int Health
 		{
 			get { return m_health; }
 			set
