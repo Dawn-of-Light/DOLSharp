@@ -457,7 +457,7 @@ namespace DOL.GS
 			set { m_Model = value; }
 		}
 
-        public bool IsAttackableDoor
+        public virtual bool IsAttackableDoor
         {
             get
             {

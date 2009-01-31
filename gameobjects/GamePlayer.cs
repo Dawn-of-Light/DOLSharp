@@ -4374,33 +4374,10 @@ namespace DOL.GS
 		public const int CRITICAL_SHOT_ENDURANCE = 10;
 
 		/// <summary>
-		/// Holds the Style that this player wants to use next
-		/// </summary>
-		protected Style m_nextCombatStyle;
-		/// <summary>
-		/// Holds the backup style for the style that the player wants to use next
-		/// </summary>
-		protected Style m_nextCombatBackupStyle;
-		/// <summary>
 		/// Holds the cancel style flag
 		/// </summary>
 		protected bool m_cancelStyle;
-		/// <summary>
-		/// Gets or Sets the next combat style to use
-		/// </summary>
-		public Style NextCombatStyle
-		{
-			get { return m_nextCombatStyle; }
-			set { m_nextCombatStyle = value; }
-		}
-		/// <summary>
-		/// Gets or Sets the next combat backup style to use
-		/// </summary>
-		public Style NextCombatBackupStyle
-		{
-			get { return m_nextCombatBackupStyle; }
-			set { m_nextCombatBackupStyle = value; }
-		}
+
 		/// <summary>
 		/// Gets or Sets the cancel style flag
 		/// (delegate to PlayerCharacter)
@@ -8790,7 +8767,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the player's guild
 		/// </summary>
-		public Guild Guild
+		public new Guild Guild
 		{
 			get { return m_guild; }
 			set
