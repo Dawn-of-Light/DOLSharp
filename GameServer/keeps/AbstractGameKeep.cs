@@ -777,12 +777,14 @@ namespace DOL.GS.Keeps
 		{
 			//don't allow upgrading for now
 			return;
+			/* un-comment this to work on allowing upgrading
 			if (this.Level == targetLevel)
 				return;
 			//this.TargetLevel = targetLevel;
 			StartChangeLevelTimer();
 			if (this.Guild != null)
 				KeepGuildMgr.SendChangeLevelTimeMessage(this);
+			 */
 		}
 
 		/// <summary>
