@@ -962,11 +962,11 @@ namespace DOL.GS
 		}
 
         /// <summary>
-        /// Holds the Style that this player wants to use next
+        /// Holds the Style that this living should use next
         /// </summary>
         protected Style m_nextCombatStyle;
         /// <summary>
-        /// Holds the backup style for the style that the player wants to use next
+        /// Holds the backup style for the style that the living should use next
         /// </summary>
         protected Style m_nextCombatBackupStyle;
         
@@ -4899,10 +4899,6 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		}
 		#endregion
 		#region Mana/Health/Endurance/Concentration/Delete
-		/// <summary>
-		/// Health of the object
-		/// </summary>
-		protected int m_health;
 		// /// <summary>
 		// /// Maxiumum value that can be in m_health
 		// /// </summary>
@@ -4927,7 +4923,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <summary>
 		/// Gets/sets the object health
 		/// </summary>
-		public virtual int Health
+		public override int Health
 		{
 			get { return m_health; }
 			set
@@ -4968,7 +4964,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		/// <summary>
 		/// Gets/sets the maximum amount of health
 		/// </summary>
-		public virtual int MaxHealth
+		public override int MaxHealth
 		{
 			get {	return GetModified(eProperty.MaxHealth); }
 			//			set
@@ -4976,25 +4972,6 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			//				m_maxHealth = value;
 			//				Health = Health; //cut extra hit points if there are any or start regeneration
 			//			}
-		}
-
-		/// <summary>
-		/// Gets the Health in percent 0..100
-		/// </summary>
-		public virtual byte HealthPercent
-		{
-			get
-			{
-				return (byte)(MaxHealth <= 0 ? 0 : Health * 100 / MaxHealth);
-			}
-		}
-
-		/// <summary>
-		/// Health as it should display in the group window.
-		/// </summary>
-		public virtual byte HealthPercentGroupWindow
-		{
-			get { return HealthPercent; }
 		}
 
 		/// <summary>

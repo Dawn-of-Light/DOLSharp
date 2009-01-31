@@ -148,12 +148,12 @@ namespace DOL.GS.Keeps
 				{
 					Health = MaxHealth;
 				}
-				m_oldMaxHealth = MaxHealth;
 
+				m_oldMaxHealth = MaxHealth;
 			}
 		}
 
-		public bool IsAttackableDoor
+		public override bool IsAttackableDoor
 		{
 			get
 			{

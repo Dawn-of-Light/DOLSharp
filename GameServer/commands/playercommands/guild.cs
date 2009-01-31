@@ -1969,6 +1969,7 @@ namespace DOL.GS.Commands
                         {
                             client.Out.SendMessage("Keep upgrading is currently disabled!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                             return;
+							/* un-comment this to work on allowing keep upgrading
                             if (client.Player.Guild == null)
                             {
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -2016,6 +2017,7 @@ namespace DOL.GS.Commands
 							}
                             client.Player.Guild.UpdateGuildWindow();
                             return;
+							*/
                         }
                     #endregion
                     #region Type

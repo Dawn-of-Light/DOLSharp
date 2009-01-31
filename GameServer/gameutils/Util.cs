@@ -131,6 +131,11 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the stacktrace of a thread
 		/// </summary>
+		/// <remarks>
+		/// The use of the deprecated Suspend and Resume methods is necessary to get the StackTrace.
+		/// Suspend/Resume are not being used for thread synchronization (very bad).
+		/// It may be possible to get the StackTrace some other way, but this works for now.
+		/// </remarks>
 		/// <param name="thread">Thread</param>
 		/// <returns>The thread's stacktrace</returns>
 		public static StackTrace GetThreadStack(Thread thread)
