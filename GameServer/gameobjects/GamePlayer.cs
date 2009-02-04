@@ -7663,10 +7663,11 @@ namespace DOL.GS
 						else if (useItem.SpellID > 0 && useItem.Charges > 0 && useItem.Object_Type == (int)eObjectType.Magical && (useItem.Item_Type == (int)eInventorySlot.FirstBackpack || useItem.Item_Type == 41))
 						{
                             Spell spellItem = SkillBase.GetSpellByID(useItem.SpellID);
-							long nextPotionAvailTime = TempProperties.getLongProperty(NEXT_POTION_AVAIL_TIME+"_Type"+spellItem.SharedTimerGroup, 0L);
+                            
+                            long nextPotionAvailTime = TempProperties.getLongProperty(NEXT_POTION_AVAIL_TIME+"_Type"+ (spellItem==null?0:spellItem.SharedTimerGroup), 0L);
                             // Satyr Update: Individual Reuse-Timers for Pots need a Time looking forward
                             // into Future, set with value of "itemtemplate.CanUseEvery" and no longer back into past
-                            // Nidel Update: Individual rimer are now based on SharedTimerGroup of spell's potion for 
+                            // Nidel Update: Individual timer are now based on SharedTimerGroup of spell's potion for 
                             // can use some different potion type (heal/buff/...) like off.
                             if (Client.Account.PrivLevel == 1 && nextPotionAvailTime > CurrentRegion.Time)
 							{
@@ -7691,7 +7692,7 @@ namespace DOL.GS
                                                 {
                                                     Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantUseInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                                 }
-                                                    //Eden
+                                                //Eden
                                                 else if((IsStunned && !(Steed != null && Steed.Name == "Forceful Zephyr")) || IsMezzed || !IsAlive)
                                                 {
                                                     Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantUseState", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -7712,7 +7713,6 @@ namespace DOL.GS
                                                         //SubSpells
                                                         spellHandler.CastSubSpells(target, spellHandler.SpellLine);
 
-
                                                         if(useItem.Count > 1)
                                                         {
                                                             Inventory.RemoveCountFromStack(useItem, 1);
@@ -7727,7 +7727,7 @@ namespace DOL.GS
                                                         }
                                                         Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.Used", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-                                                        TempProperties.setProperty(NEXT_POTION_AVAIL_TIME + "_Type" + spellItem.SharedTimerGroup, useItem.CanUseEvery*1000 + CurrentRegion.Time);
+                                                        TempProperties.setProperty(NEXT_POTION_AVAIL_TIME + "_Type" + (spellItem == null ? 0 : spellItem.SharedTimerGroup), useItem.CanUseEvery * 1000 + CurrentRegion.Time);
                                                     }
                                                     else
                                                     {
