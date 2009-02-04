@@ -71,16 +71,15 @@ namespace DOL.GS.Spells
 						vampiir.Out.SendMessage("This buff has no effect on you!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;
 					}
-				}
-				
-	            if (this is ArmorFactorBuff)
-	            {
-	                if (SpellHandler.FindEffectOnTarget(target, "ArmorFactorBuff") != null && m_spellLine.IsBaseLine != true)
-	                {
-	                    MessageToLiving(target, "You already have this effect!", eChatType.CT_SpellResisted);
-	                    return;
-	                }
-	            }
+					if (this is ArmorFactorBuff)
+	            	{
+		                if (SpellHandler.FindEffectOnTarget(target, "ArmorFactorBuff") != null && m_spellLine.IsBaseLine != true)
+		                {
+		                    MessageToLiving(target, "You already have this effect!", eChatType.CT_SpellResisted);
+		                    return;
+		                }
+	            	}
+				}			
 	
 		   		if (this is HeatColdMatterBuff)
 		        {
