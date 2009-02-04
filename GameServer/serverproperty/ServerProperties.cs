@@ -606,6 +606,12 @@ namespace DOL.GS.ServerProperties
         public static readonly bool ENABLE_WARMAPMGR;
 
         /// <summary>
+        /// Use new Keeps
+        /// </summary>
+        [ServerProperty("use_new_keeps", "Use the new Keeps(v 1.90)", false)]
+        public static readonly bool USE_NEW_KEEPS;
+
+        /// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
 		/// type of the default value

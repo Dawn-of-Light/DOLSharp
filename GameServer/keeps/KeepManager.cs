@@ -39,6 +39,22 @@ namespace DOL.GS.Keeps
 		private static readonly Hashtable m_keeps = new Hashtable();
 		private static readonly List<Battleground> m_battlegrounds = new List<Battleground>();
 
+        private static int[] oldKeeps = { 1, 2, 3, 5, 50, 51, 52, 53, 54, 55, 56, 75, 76, 77,
+                                            78, 79, 80, 81, 100, 101, 102, 103, 104, 105, 106,
+                                            125, 126, 127, 128, 129, 130, 131, 132, 134, 306,
+                                            307, 308, 309, 310, 311, 312, 331, 332, 333, 334,
+                                            335, 336, 337, 356, 357, 358, 359, 360, 361, 362,
+                                            381, 382, 383, 384, 385, 386, 387, 388, 390, 562,
+                                            563, 564, 565, 566, 567, 568, 587, 588, 589, 590,
+                                            591, 592, 593, 612, 613, 614, 615, 616, 617, 618,
+                                            637, 638, 639, 640, 641, 642, 643, 644, 646, 818,
+                                            819, 820, 821, 822, 823, 824, 843, 844, 845, 846,
+                                            847, 848, 849, 868, 869, 870, 871, 872, 873, 874,
+                                            893, 894, 895, 896, 897, 898, 899, 900, 902, 1074,
+                                            1075, 1076, 1077, 1078, 1079, 1080, 1099, 1100, 1101,
+                                            1102, 1103, 1104, 1105, 1124, 1125, 1126, 1127, 1128,
+                                            1129, 1130, 1156, 1158, 1412, 1414, 1668, 1670 };
+
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
@@ -64,6 +80,13 @@ namespace DOL.GS.Keeps
 				{
 					if (WorldMgr.GetRegion((ushort)datakeep.Region) == null)
 						continue;
+                    if (datakeep.KeepID > 5) //KeepIDs below 5 belong to Cathal Valley and are always loaded
+                    {
+                        if (ServerProperties.Properties.USE_NEW_KEEPS && Array.BinarySearch(oldKeeps, datakeep.KeepID) >= 0)
+                            continue;
+                        else if (!ServerProperties.Properties.USE_NEW_KEEPS && Array.BinarySearch(oldKeeps, datakeep.KeepID) < 0)
+                            continue;
+                    }
 					AbstractGameKeep keep;
 					if ((datakeep.KeepID >> 8) != 0)
 						keep = new GameKeepTower();
