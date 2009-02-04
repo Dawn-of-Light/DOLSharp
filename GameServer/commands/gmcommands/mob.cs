@@ -87,7 +87,8 @@ namespace DOL.GS.Commands
         "'/mob <stat> <amount>' Set the mob's stats (str, con, dex, qui, int, emp, pie, cha)",
         "'/mob tether <tether range>' set mob tether range (>0: check, <=0: no check)",
         "'/mob hood' toggle cloak hood visibility",
-        "'/mob cloak' toggle cloak visibility"
+        "'/mob cloak' toggle cloak visibility",
+        "'/mob bodytype <ID>' changing the mob's bodytype"
     )]
     public class MobCommandHandler : AbstractCommandHandler, ICommandHandler
     {
@@ -181,6 +182,7 @@ namespace DOL.GS.Commands
                 case "tether": tether( client, targetMob, args ); break;
                 case "hood": hood( client, targetMob, args ); break;
                 case "cloak": cloak( client, targetMob, args ); break;
+                case "bodytype": bodytype(client, targetMob, args); break;
 
                 default:
                     DisplaySyntax( client );
@@ -1783,6 +1785,21 @@ namespace DOL.GS.Commands
             client.Out.SendMessage( "Mob IsCloakInvisible flag is set to " + targetMob.IsCloakHoodUp, eChatType.CT_System, eChatLoc.CL_SystemWindow );
         }
 
+        private void bodytype ( GameClient client, GameNPC targetMob, string[] args )
+        {
+	        int type;
+	        try
+	        {
+	            type = Convert.ToInt32(args[2]);
+	            targetMob.BodyType = type;
+	            targetMob.SaveIntoDatabase();
+	            client.Out.SendMessage("Mob BodyType changed to " + targetMob.BodyType, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+	        }
+	        catch (Exception)
+	        {
+ 				DisplaySyntax( client, args[1] );
+	        }
+        }
 
         private string CheckName( string name, GameClient client )
         {

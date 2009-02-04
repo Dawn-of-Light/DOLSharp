@@ -70,7 +70,8 @@ namespace DOL.Database
 			return ar;
 		}
 
-		/// <summary>
+		// graveen: removed obsolete methods
+/*		/// <summary>
 		/// Loads the tables from all datasets
 		/// </summary>
 		[Obsolete("This doesn't do anything with MySQL Database")]
@@ -161,7 +162,7 @@ namespace DOL.Database
 		{
 			string tableName = DataObject.GetTableName(objectType);
 			connection.LoadDataSet(tableName, GetDataSet(tableName));
-		}
+		}*/
 
 		public int GetObjectCount(Type objectType)
 		{

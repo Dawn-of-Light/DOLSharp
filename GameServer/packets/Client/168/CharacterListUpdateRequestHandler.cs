@@ -23,6 +23,7 @@ using DOL.Events;
 using DOL.Database;
 using DOL.GS.ServerProperties;
 using log4net;
+using System.Text.RegularExpressions;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
@@ -62,38 +63,24 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 				else
 				{
-					charname=Char.ToUpper(charname[0])+charname.Substring(1,charname.Length-1).ToLower();
-					if(charname.Length<3)
-					{
-						DBBannedAccount b = new DBBannedAccount();
-						b.Author = "SERVER";
-						b.Ip = client.TcpEndpoint;
-						b.Account = client.Account.Name;
-						b.DateBan = DateTime.Now;
-						b.Type = "B";
-						b.Reason = String.Format("Autoban CharName '{0}'", GameServer.Database.Escape(charname));
-						GameServer.Database.AddNewObject(b);
-						GameServer.Database.SaveObject(b);
-						client.Disconnect();
-						return 1;
-
-					}
-                    for (int y = 0; y < charname.Length; y++)
-                        if (!((charname[y] >= 'a' && charname[y] <= 'z') || (charname[y] >= 'A' && charname[y] <= 'Z')))
+					// Graveen: changed the following to allow GMs to have special chars in their names (_,-, etc..)
+					Regex nameCheck = new Regex ("^[A-Z][a-zA-Z]");
+					if(charname.Length<3 || !nameCheck.IsMatch(charname))
+					   	if (client.Account.PrivLevel==1)
 						{
-                            DBBannedAccount b = new DBBannedAccount();
+							DBBannedAccount b = new DBBannedAccount();
 							b.Author = "SERVER";
 							b.Ip = client.TcpEndpoint;
 							b.Account = client.Account.Name;
 							b.DateBan = DateTime.Now;
 							b.Type = "B";
-							b.Reason = String.Format("Autoban CharName '{0}'", GameServer.Database.Escape(charname));
+							b.Reason = String.Format("Autoban bad CharName '{0}'", GameServer.Database.Escape(charname));
 							GameServer.Database.AddNewObject(b);
 							GameServer.Database.SaveObject(b);
 							client.Disconnect();
 							return 1;
 						}
-					
+     					
 					String select = String.Format("Name = '{0}'", GameServer.Database.Escape(charname));
 					Character character = (Character)GameServer.Database.SelectObject(typeof(Character), select);
 					if (character != null)
@@ -307,7 +294,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                                 }
                                 if ((ushort)newModel != character.CreationModel)
                                 {
-                                    //									character.CreationModel = newModel;
+                                    //character.CreationModel = newModel;
                                     character.CurrentModel = newModel;
                                 }
                                 character.CustomisationStep = 2; // disable config button
