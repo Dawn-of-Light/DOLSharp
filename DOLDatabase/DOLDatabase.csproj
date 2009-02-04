@@ -82,9 +82,6 @@
       <Name>log4net</Name>
       <HintPath>..\sharedModules\log4net\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="MySql.Data">
-      <HintPath>MySQL ADO.NET\MySql.Data.dll</HintPath>
-    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -300,12 +297,192 @@
     <Compile Include="DOLTables\ZonePoint.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MySQL\mysqlclient\CharSetMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\command.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\CommandBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\CommandResult.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\common\DBConnectionString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\common\NamedPipeStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\common\NativeMethods.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\common\Platform.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\common\Resources.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\common\SocketStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\common\StreamCreator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\common\Utility.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\common\Version.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\CompressedStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Connection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\ConnectionString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Crypt.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\dataadapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\datareader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Driver.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Exception.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Field.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Logger.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\MysqlDefs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\MySqlError.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\MySqlHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\MySqlPool.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\MySqlPoolManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\nativedriver.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\PacketReader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\PacketWriter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\parameter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\parameter_collection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\PreparedStatement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\SharedMemoryStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\StoredProcedure.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\transaction.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlBinary.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlBit.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlByte.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlConversionException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlDateTime.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlDecimal.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlDouble.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlInt16.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlInt32.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlInt64.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlSingle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlTime.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlUByte.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlUInt16.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlUInt32.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlUInt64.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL\mysqlclient\Types\MySqlValue.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ObjectDatabase.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UniqueID\IdGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Content Include="MySQL\mysqlclient\docs\MySqlCommand.xml" />
+    <Content Include="MySQL\mysqlclient\docs\MySqlCommandBuilder.xml" />
+    <Content Include="MySQL\mysqlclient\docs\MySqlConnection.xml" />
+    <Content Include="MySQL\mysqlclient\docs\MySqlDataAdapter.xml" />
+    <Content Include="MySQL\mysqlclient\docs\MySqlDataReader.xml" />
+    <Content Include="MySQL\mysqlclient\docs\MySqlException.xml" />
+    <Content Include="MySQL\mysqlclient\docs\MySqlHelper.xml" />
+    <Content Include="MySQL\mysqlclient\docs\MySqlParameter.xml" />
+    <Content Include="MySQL\mysqlclient\docs\MySqlParameterCollection.xml" />
+    <Content Include="MySQL\mysqlclient\docs\MySqlTransaction.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MySQL\mysqlclient\Strings.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
