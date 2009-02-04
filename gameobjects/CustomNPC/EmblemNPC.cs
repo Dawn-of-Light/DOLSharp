@@ -22,7 +22,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
-	[NPCGuildScript("Guild Emblemer")]
+	[NPCGuildScript("Guild Emblemeer")]
 	public class EmblemNPC : GameNPC
 	{
 		public const long EMBLEM_COST = 50000;
