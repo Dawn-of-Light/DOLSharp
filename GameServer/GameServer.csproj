@@ -1986,6 +1986,8 @@
     <Compile Include="spells\Artifacts\AtlantisTablet.cs" />
     <Compile Include="spells\Artifacts\bracerofzo.cs" />
     <Compile Include="spells\Artifacts\CeremonialBracer.cs" />
+    <Compile Include="spells\Artifacts\Cloudsong.cs">
+    </Compile>
     <Compile Include="spells\Artifacts\CommonArtifactSpells.cs" />
     <Compile Include="spells\Artifacts\DreamSphere.cs" />
     <Compile Include="spells\Artifacts\Ereine.cs" />
@@ -2024,7 +2026,6 @@
     <Compile Include="spells\CharmSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="spells\Cloudsong.cs" />
     <Compile Include="spells\CombatHealSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>

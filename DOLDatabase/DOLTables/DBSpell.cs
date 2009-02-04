@@ -64,7 +64,7 @@ namespace DOL.Database
 		protected bool m_moveCast = false;
 		protected bool m_uninterruptible = false;
 		protected bool m_isfocus = false;
-        	protected int m_sharedtimergroup; 
+        protected int m_sharedtimergroup = 0; 
         
 		// warlock
 		protected bool m_isprimary;
