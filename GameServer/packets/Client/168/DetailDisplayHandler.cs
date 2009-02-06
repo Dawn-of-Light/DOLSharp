@@ -338,7 +338,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						else if (objectType == 19)
 						{
-							ushort questID = (ushort)((unk_186 << 12) | (objectID >> 4));
+							ushort questID = (ushort)((unk_186 << 12) | (ushort)(objectID >> 4));
 							int index = objectID & 0x0F;
 							if (questID == 0)
 								return 1; // questID == 0, wrong ID ?
