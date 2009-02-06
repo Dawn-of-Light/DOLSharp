@@ -141,8 +141,17 @@ namespace DOL.GS
 		public static StackTrace GetThreadStack(Thread thread)
 		{
 			thread.Suspend();
-			StackTrace trace = new StackTrace(thread, true);
-			thread.Resume();
+			StackTrace trace;
+
+			try
+			{
+				trace = new StackTrace( thread, true );
+			}
+			finally
+			{
+				thread.Resume();
+			}
+
 			return trace;
 		}
 
