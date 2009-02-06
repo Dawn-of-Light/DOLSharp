@@ -209,14 +209,6 @@ namespace DOL.GS
 		{
 			get { return eSkillPage.Spells; }
 		}
-
-		public override bool Equals(object obj)
-		{
-			if (obj is SpellLine == false)
-				return false;
-			SpellLine line = obj as SpellLine;
-			return this.KeyName == line.KeyName;
-		}
 	}
 
 

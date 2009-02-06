@@ -846,12 +846,20 @@ namespace DOL.GS.PacketHandler
 					{
 						Thread thread = (Thread) entry.Key;
 						GameClient client = (GameClient) entry.Value;
-						//Suspend the thread
+
+						// The use of the deprecated Suspend and Resume methods is necessary to get the StackTrace.
+						// Suspend/Resume are not being used for thread synchronization (very bad).
+						// It may be possible to get the StackTrace some other way, but this works for now.
 						thread.Suspend();
-						//Get the trace
-						StackTrace trace = new StackTrace(thread, true);
-						//Resume the thread
-						thread.Resume();
+						StackTrace trace;
+						try
+						{
+							trace = new StackTrace( thread, true );
+						}
+						finally
+						{
+							thread.Resume();
+						}
 
 						builder.Append("Stack for thread from account: ");
 						if(client!=null && client.Account!=null)
