@@ -1982,25 +1982,26 @@
     <Compile Include="spells\Archery\Arrow.cs" />
     <Compile Include="spells\Archery\ArrowDamageTypes.cs" />
     <Compile Include="spells\Archery\SiegeShot.cs" />
+    <Compile Include="spells\Artifacts\AllStatsDebuff.cs" />
     <Compile Include="spells\Artifacts\AlvarusLeggings.cs" />
+    <Compile Include="spells\Artifacts\Arrogance.cs" />
     <Compile Include="spells\Artifacts\AtlantisTablet.cs" />
     <Compile Include="spells\Artifacts\bracerofzo.cs" />
     <Compile Include="spells\Artifacts\CeremonialBracer.cs" />
     <Compile Include="spells\Artifacts\Cloudsong.cs">
     </Compile>
+    <Compile Include="spells\Artifacts\CombineScrolls.cs" />
     <Compile Include="spells\Artifacts\CommonArtifactSpells.cs" />
     <Compile Include="spells\Artifacts\DreamSphere.cs" />
     <Compile Include="spells\Artifacts\Ereine.cs" />
     <Compile Include="spells\Artifacts\MaddeningScalars.cs" />
     <Compile Include="spells\Artifacts\RealmLore.cs" />
     <Compile Include="spells\Artifacts\SoM.cs" />
-    <Compile Include="spells\Atlantis\Artifacts\Arrogance.cs" />
     <Compile Include="spells\Artifacts\ScarabVest.cs" />
     <Compile Include="spells\Artifacts\BandofStars.cs" />
     <Compile Include="spells\Artifacts\snakecharmer.cs" />
     <Compile Include="spells\Artifacts\TartarosGift.cs" />
     <Compile Include="spells\Artifacts\TraitorsDagger.cs" />
-    <Compile Include="spells\Atlantis\Artifacts\AllStatsDebuff.cs" />
     <Compile Include="spells\Bainshee\BainsheePulseDmgSpellHandler.cs" />
     <Compile Include="spells\Bainshee\BeFriendSpellHandler.cs" />
     <Compile Include="spells\Bainshee\FearBrain.cs" />
@@ -2029,7 +2030,6 @@
     <Compile Include="spells\CombatHealSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="spells\Atlantis\CombineScrolls.cs" />
     <Compile Include="spells\ConcentrationList.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -2593,9 +2593,6 @@
     <Content Include="language\IT\Commands\GMCommands.txt" />
     <Content Include="language\IT\Effects.txt" />
     <Content Include="language\IT\Language-IT.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="spells\Cleric\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

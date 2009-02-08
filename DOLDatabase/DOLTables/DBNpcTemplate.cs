@@ -44,7 +44,7 @@ namespace DOL.Database
 		private string m_level = "0";
 		private short m_maxSpeed = 50;
 		private string m_equipmentTemplateID = "";
-		private bool m_ghost;
+		private byte m_flags;
 		private byte m_meleeDamageType = 1;
 		private byte m_parryChance;
 		private byte m_evadeChance;
@@ -213,16 +213,16 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		/// Ghost
+		/// Flags
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
-		public bool Ghost
+        public byte Flags
 		{
-			get { return m_ghost; }
+			get { return m_flags; }
 			set
 			{
 				Dirty = true;
-				m_ghost = value;
+				m_flags = value;
 			}
 		}
 

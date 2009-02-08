@@ -92,8 +92,8 @@ namespace DOLConfig
 				{
 					case "MySQL": Config.DBType = DOL.Database.Connection.ConnectionType.DATABASE_MYSQL; break;
 				}
-				if (Config.DBType == DOL.Database.Connection.ConnectionType.DATABASE_MYSQL)
-					Config.DBConnectionString = "Server=" + MainForm.mysqlHostTextBox.Text + ";Database=" + MainForm.mysqlDatabaseTextBox.Text + ";User ID=" + MainForm.mysqlUsernameTextBox.Text + ";Password=" + MainForm.mysqlPasswordTextBox.Text;
+                if (Config.DBType == DOL.Database.Connection.ConnectionType.DATABASE_MYSQL)
+                    Config.DBConnectionString = "Server=" + MainForm.mysqlHostTextBox.Text + ";Database=" + MainForm.mysqlDatabaseTextBox.Text + ";User ID=" + MainForm.mysqlUsernameTextBox.Text + ";Password=" + MainForm.mysqlPasswordTextBox.Text + ";Treat Tiny As Boolean=False";
 				Config.SaveToXMLFile(ConfigFile);
 				MessageBox.Show("Settings saved successfully");
 			}
