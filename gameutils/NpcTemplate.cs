@@ -48,7 +48,7 @@ namespace DOL.GS
 		protected byte m_evadeChance;
 		protected byte m_blockChance;
 		protected byte m_leftHandSwingChance;
-		protected uint m_flags;
+		protected byte m_flags;
 		protected string m_inventory;
 		protected eDamageType m_meleeDamageType;
 		protected int m_strength;
@@ -158,10 +158,8 @@ namespace DOL.GS
 				}
 			}
 
-			if (data.Ghost)
-			{
-				m_flags = (uint)GameNPC.eFlags.TRANSPARENT;
-			}
+			#warning Graveen: once NpcTemplate 'll be finalized, must be changed to Flags - db converter to do
+			m_flags = data.Flags;
 
 			m_meleeDamageType = (eDamageType)data.MeleeDamageType;
 			if (data.MeleeDamageType == 0)
@@ -283,7 +281,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the template npc flags
 		/// </summary>
-		public uint Flags
+		public byte Flags
 		{
 			get { return m_flags; }
 			set { m_flags = value; }

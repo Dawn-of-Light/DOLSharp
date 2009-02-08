@@ -33,33 +33,28 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("ReanimateCorpse")]
 	public class MonsterRez : ResurrectSpellHandler
 	{
-		protected override void ResurrectLiving(GameLiving living)
-		{
-			base.ResurrectLiving(living);
-
-			SpellLine line = SkillBase.GetSpellLine("Summon Monster");
-			Spell castSpell = SkillBase.GetSpellByID(14076);
-
-			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(m_caster, castSpell, line);
-			spellhandler.StartSpell(living);
-		}
+		// Constructor
+		public MonsterRez(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line)
+        {
+        }
 
 		protected override void ResurrectResponceHandler(GamePlayer player, byte response)
 		{
 			base.ResurrectResponceHandler(player, response);
 			if (response == 1)
-			{
-				Spell castSpell = SkillBase.GetSpellByID(14078);
-
-				ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(m_caster, castSpell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
-				spellhandler.StartSpell(player);
-			}
+				ResurrectLiving (player);
 		}
+		
+		protected override void ResurrectLiving(GameLiving living)
+		{
+			base.ResurrectLiving(living);
 
+			SpellLine line = SkillBase.GetSpellLine("Summon Monster");
+			Spell castSpell = SkillBase.GetSpellByID(14078);
 
-		// Constructor
-		public MonsterRez(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-
+			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(m_caster, castSpell, line);
+			spellhandler.StartSpell(living);
+		}
 	}
 
 	/// <summary>
@@ -68,23 +63,9 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("SummonMonster")]
 	public class SummonMonster : SpellHandler
 	{
-
-		private int m_hitpoints = 3000;
-		private int m_value = 90;
-		private const ushort m_monstermodel = 921;
 		private ushort m_model = 0;
-		private Spell m_monsterspell1 = null;
-		private Spell m_monsterspell2 = null;
 		private SpellLine m_monsterspellline = null;
 		private GamePlayer m_owner = null;
-
-		public static ushort MonsterModel
-		{
-			get
-			{
-				return m_monstermodel;
-			}
-		}
 
 		public SpellLine MonsterSpellLine
 		{
@@ -101,18 +82,7 @@ namespace DOL.GS.Spells
 		{
 			get
 			{
-				if (m_monsterspell1 == null)
-				{
-					foreach (Spell spell in SkillBase.GetSpellList(MonsterSpellLine.KeyName))
-					{
-						if (spell.ID == 14077)
-						{
-							m_monsterspell1 = spell;
-							break;
-						}
-					}
-				}
-				return m_monsterspell1;
+                return (SkillBase.GetSpellByID (14077));
 			}
 		}
 
@@ -120,18 +90,7 @@ namespace DOL.GS.Spells
 		{
 			get
 			{
-				if (m_monsterspell2 == null)
-				{
-					foreach (Spell spell in SkillBase.GetSpellList(MonsterSpellLine.KeyName))
-					{
-						if (spell.ID == 14079)
-						{
-							m_monsterspell2 = spell;
-							break;
-						}
-					}
-				}
-				return m_monsterspell2;
+                return (SkillBase.GetSpellByID (14079));
 			}
 		}
 
@@ -148,11 +107,10 @@ namespace DOL.GS.Spells
 			GamePlayer player = effect.Owner as GamePlayer;
 			m_owner = player;
 			m_model = player.Model;
-			player.Model = m_monstermodel;
+			player.Model = (ushort)Spell.Value;
 
-			player.BuffBonusCategory4[(int)eProperty.MaxHealth] += (int)m_hitpoints;
-			player.BuffBonusCategory4[(int)eProperty.MagicAbsorbtion] += (int)m_value;
-			player.BuffBonusCategory4[(int)eProperty.ArmorAbsorbtion] += (int)m_value;
+            player.BuffBonusCategory4[(int)eProperty.MagicAbsorbtion] += (int)Spell.LifeDrainReturn;
+            player.BuffBonusCategory4[(int)eProperty.ArmorAbsorbtion] += (int)Spell.LifeDrainReturn;
 			player.Out.SendCharStatsUpdate();
 			player.Health = player.MaxHealth;
 			GameEventMgr.AddHandler(player, GameLivingEvent.Dying, new DOLEventHandler(EventRaised));
@@ -185,9 +143,8 @@ namespace DOL.GS.Spells
 
 			player.Model = m_model;
 
-			player.BuffBonusCategory4[(int)eProperty.MaxHealth] -= (int)m_hitpoints;
-			player.BuffBonusCategory4[(int)eProperty.MagicAbsorbtion] -= (int)m_value;
-			player.BuffBonusCategory4[(int)eProperty.ArmorAbsorbtion] -= (int)m_value;
+            player.BuffBonusCategory4[(int)eProperty.MagicAbsorbtion] -= (int)Spell.LifeDrainReturn ;
+            player.BuffBonusCategory4[(int)eProperty.ArmorAbsorbtion] -= (int)Spell.LifeDrainReturn ;
 			player.Out.SendCharStatsUpdate();
 
 			int leftHealth = Convert.ToInt32(player.MaxHealth * 0.10);
@@ -227,8 +184,8 @@ namespace DOL.GS.Spells
 			ArrayList list = new ArrayList(8);
 			GameLiving target = castTarget as GameLiving;
 
-			if (target == null || Spell.Range == 0)
-				target = Caster;
+			//if (target == null || Spell.Range == 0)
+			//	target = Caster;
 
 			foreach (GamePlayer player in target.GetPlayersInRadius(false, (ushort)Spell.Radius))
 			{

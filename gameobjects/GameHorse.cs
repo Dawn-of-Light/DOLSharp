@@ -36,7 +36,13 @@ namespace DOL.GS
 			BlankBrain brain = new BlankBrain();
 			SetOwnBrain(brain);
 		}
-
+		
+		public GameHorse(INpcTemplate templateid) : base(templateid)
+		{
+			BlankBrain brain = new BlankBrain();
+			SetOwnBrain(brain);
+		}
+		
 		public override int MAX_PASSENGERS
 		{
 			get

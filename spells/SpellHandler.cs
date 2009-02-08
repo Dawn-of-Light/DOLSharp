@@ -64,6 +64,10 @@ namespace DOL.GS.Spells
 		/// </summary>
 		protected GameLiving m_caster;
 		/// <summary>
+        /// Has the Casting Start Time
+        /// </summary>
+        protected long m_castStartTime;
+		/// <summary>
 		/// Has the spell been interrupted
 		/// </summary>
 		protected bool m_interrupted = false;
@@ -382,6 +386,8 @@ namespace DOL.GS.Spells
 				return false;
 			if (Caster.EffectList.GetOfType(typeof(FacilitatePainworkingEffect)) != null)
 				return false;
+			if (CheckMiddleCast())
+                return false;
 			if (IsCasting)
 			{
 				double mod = Caster.GetConLevel(attacker);
@@ -508,6 +514,8 @@ namespace DOL.GS.Spells
 			}
 
 			String targetType = m_spell.Target.ToLower();
+			m_castStartTime = (int)Caster.CurrentRegion.Time;
+			
       //[Ganrod] Nidel: Can cast pet spell on all Pet/Turret/Minion (our pet)
             if (targetType.Equals("pet"))
             {
@@ -716,7 +724,29 @@ namespace DOL.GS.Spells
 			MessageToLiving(player, "Your pet can't see the target!", eChatType.CT_SpellResisted);
 			InterruptCasting(); // break;
 		}
-
+		
+        /// <summary>
+        /// Additional Check for the new interrupt System.
+        /// Spells can not be canceled after 66% of their spells cast time.
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool CheckMiddleCast()
+        {
+            if (Caster.IsCasting)
+            {
+                long c_time = (long)(Spell.CastTime* 0.66);
+                if ((m_castStartTime + c_time) <= Caster.CurrentRegion.Time)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+		
 		/// <summary>
 		/// Checks after casting before spell is executed
 		/// </summary>
