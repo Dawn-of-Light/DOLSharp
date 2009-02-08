@@ -64,9 +64,13 @@ namespace DOL.Database.Connection
 		/// </param>
 		public DataConnection(ConnectionType connType, string connString)
 		{
+            // Options of MySQL connection string
+            if (!connString.Contains("Treat Tiny As Boolean"))
+                connString += ";Treat Tiny As Boolean=False";
+
 			this.connType = connType;
 			this.connString = connString;
-
+            
 			//if Directory has no trailing \ than append it ;-)
 			if (connType == ConnectionType.DATABASE_XML)
 			{

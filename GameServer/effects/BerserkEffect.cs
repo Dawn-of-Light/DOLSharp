@@ -46,8 +46,17 @@ namespace DOL.GS.Effects
 		{
 			base.Start(living);
 			m_startModel = living.Model;
-			living.Model = 582;
-			living.Emote(eEmote.MidgardFrenzy);
+
+            if (living is GamePlayer)
+            {
+				
+				if ((living as GamePlayer).Race == (int)eRace.Dwarf)
+					living.Model = 2032;
+				else
+					living.Model = 582;
+
+				living.Emote(eEmote.MidgardFrenzy);
+            }
 
 			if (living is GamePlayer)
 				(living as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((living as GamePlayer).Client, "Effects.BerserkEffect.GoBerserkerFrenzy"), eChatType.CT_System, eChatLoc.CL_SystemWindow);

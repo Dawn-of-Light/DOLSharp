@@ -23,215 +23,241 @@ using DOL.Events;
 using DOL.Language;
 using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
+using System.Collections;
 using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Stable master that sells and takes horse route tickes
-	/// </summary>
-	[NPCGuildScript("Stable Master", eRealm.None)]
-	public class GameStableMaster : GameMerchant
-	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+    /// <summary>
+    /// Stable master that sells and takes horse route tickes
+    /// </summary>
+    [NPCGuildScript("Stable Master", eRealm.None)]
+    public class GameStableMaster : GameMerchant
+    {
+        /// <summary>
+        /// Defines a logger for this class.
+        /// </summary>
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		/// <summary>
-		/// Constructs a new stable master
-		/// </summary>
-		public GameStableMaster()
-		{
-		}
+        /// <summary>
+        /// Constructs a new stable master
+        /// </summary>
+        public GameStableMaster()
+        {
+        }
 
-		/// <summary>
-		/// Called when the living is about to get an item from someone
-		/// else
-		/// </summary>
-		/// <param name="source">Source from where to get the item</param>
-		/// <param name="item">Item to get</param>
-		/// <returns>true if the item was successfully received</returns>
-		public override bool ReceiveItem(GameLiving source, InventoryItem item)
-		{
-			if (source == null || item == null) return false;
+        /// <summary>
+        /// Called when the living is about to get an item from someone
+        /// else
+        /// </summary>
+        /// <param name="source">Source from where to get the item</param>
+        /// <param name="item">Item to get</param>
+        /// <returns>true if the item was successfully received</returns>
+        public override bool ReceiveItem(GameLiving source, InventoryItem item)
+        {
+            if (source == null || item == null) return false;
 
-			if (source is GamePlayer)
-			{
-				GamePlayer player = (GamePlayer)source;
+            if (source is GamePlayer)
+            {
+                GamePlayer player = (GamePlayer)source;
 
-				if (item.Name.ToLower().StartsWith(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameStableMaster.ReceiveItem.TicketTo")) && item.Item_Type == 40)
-					{
-					String destination = item.Name.Substring(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameStableMaster.ReceiveItem.TicketTo").Length);
-					PathPoint path = MovementMgr.LoadPath(item.Id_nb);
+                if (item.Item_Type == 40 && isItemInMerchantList(item))
+                {
+                    PathPoint path = MovementMgr.LoadPath(item.Id_nb);
 
-					if ((path != null) && ((Math.Abs(path.X - this.X)) < 500) && ((Math.Abs(path.Y - this.Y)) < 500))
-					{
-						player.Inventory.RemoveCountFromStack(item, 1);
+                    if ((path != null) && ((Math.Abs(path.X - this.X)) < 500) && ((Math.Abs(path.Y - this.Y)) < 500))
+                    {
+                        player.Inventory.RemoveCountFromStack(item, 1);
 
-						GameHorse horse = new GameHorse();
-						eRace user_race = (eRace)player.Race;
-						foreach (GameNPC npc in GetNPCsInRadius(400))
-						{ // Allow for SI mounts -Echostorm
+                        GameHorse mount;
+                        
+                        // item.Color of ticket is used for npctemplate. defaults to standard horse if item.color is 0
+                        if (item.Color > 0)
+                        {
+                           	mount = new GameHorse(NpcTemplateMgr.GetTemplate(item.Color));
+                        }
+                        else
+                        {
+                        	#warning Graveen: Deprecated - please use npctemplate for voucher mounts
+                        	mount = new GameHorse();
+       						foreach (GameNPC npc in GetNPCsInRadius(400))
 							if (npc.Name == LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameStableMaster.ReceiveItem.HorseName")
 								|| npc.Name == "Dragon Fly" || npc.Name == "Ampheretere" || npc.Name == "Gryphon")
 							{
-								horse.Model = npc.Model;
-								horse.Size = npc.Size;
-								horse.Name = npc.Name;
-								horse.Level = npc.Level;
+								mount.Model = npc.Model;
+								mount.Size = npc.Size;
+								mount.Name = npc.Name;
+								mount.Level = npc.Level;
                                 if (npc.Name == "Gryphon" || npc.Name == "Dragon Fly" || npc.Name == "Ampheretere")
-                                 horse.Flags = (uint)eFlags.FLYING;
+                                 mount.Flags = (uint)eFlags.FLYING;
 								break;
 							}
 						}
-						switch (user_race)
-						{
-							case eRace.Briton: horse.Size = 50; //Briton
-								break;
-							case eRace.Avalonian: horse.Size = 55; //Avalonian
-								break;
-							case eRace.Highlander: horse.Size = 55; //Highlander
-								break;
-							case eRace.Saracen: horse.Size = 50; //Saracen
-								break;
-							case eRace.Norseman: horse.Size = 55; //Norseman
-								break;
-							case eRace.Troll: horse.Size = 67; //Troll
-								break;
-							case eRace.Dwarf: horse.Size = 42; //Dwarf
-								break;
-							case eRace.Kobold: horse.Size = 38; //Kobold
-								break;
-							case eRace.Celt: horse.Size = 50; //Celt
-								break;
-							case eRace.Firbolg: horse.Size = 50; //Firbolg
-								break;
-							case eRace.Elf: horse.Size = 55; //Elf
-								break;
-							case eRace.Lurikeen: horse.Size = 31; //Lurikeen
-								break;
-							case eRace.Inconnu: horse.Size = 45; //Inconnu
-								break;
-							case eRace.Valkyn: horse.Size = 52; //Valkyn
-								break;
-							case eRace.Sylvan: horse.Size = 55; //Sylvan
-								break;
-							case eRace.HalfOgre: horse.Size = 65; //HalfOgre
-								break;
-							case eRace.Frostalf: horse.Size = 48; //Frostalf
-								break;
-							case eRace.Shar: horse.Size = 48; //Shar
-								break;
-							case eRace.AlbionMinotaur: horse.Size = 65; //AlbionMinotaur
-								break;
-							case eRace.MidgardMinotaur: horse.Size = 65; //MidgardMinotaur
-								break;
-							case eRace.HiberniaMinotaur: horse.Size = 65; //HiberniaMinotaur
-								break;
+  
+                        switch ((eRace)player.Race)
+                        {
+                            case eRace.Briton: mount.Size = 50; //Briton
+                                break;
+                            case eRace.Avalonian: mount.Size = 55; //Avalonian
+                                break;
+                            case eRace.Highlander: mount.Size = 55; //Highlander
+                                break;
+                            case eRace.Saracen: mount.Size = 50; //Saracen
+                                break;
+                            case eRace.Norseman: mount.Size = 55; //Norseman
+                                break;
+                            case eRace.Troll: mount.Size = 67; //Troll
+                                break;
+                            case eRace.Dwarf: mount.Size = 42; //Dwarf
+                                break;
+                            case eRace.Kobold: mount.Size = 38; //Kobold
+                                break;
+                            case eRace.Celt: mount.Size = 50; //Celt
+                                break;
+                            case eRace.Firbolg: mount.Size = 50; //Firbolg
+                                break;
+                            case eRace.Elf: mount.Size = 55; //Elf
+                                break;
+                            case eRace.Lurikeen: mount.Size = 31; //Lurikeen
+                                break;
+                            case eRace.Inconnu: mount.Size = 45; //Inconnu
+                                break;
+                            case eRace.Valkyn: mount.Size = 52; //Valkyn
+                                break;
+                            case eRace.Sylvan: mount.Size = 55; //Sylvan
+                                break;
+                            case eRace.HalfOgre: mount.Size = 65; //HalfOgre
+                                break;
+                            case eRace.Frostalf: mount.Size = 48; //Frostalf
+                                break;
+                            case eRace.Shar: mount.Size = 48; //Shar
+                                break;
+                            case eRace.AlbionMinotaur: mount.Size = 65; //AlbionMinotaur
+                                break;
+                            case eRace.MidgardMinotaur: mount.Size = 65; //MidgardMinotaur
+                                break;
+                            case eRace.HiberniaMinotaur: mount.Size = 65; //HiberniaMinotaur
+                                break;
 
-						}
+                        }
 
-						horse.Realm = source.Realm;
-						horse.X = path.X;
-						horse.Y = path.Y;
-						horse.Z = path.Z;
-						horse.CurrentRegion = CurrentRegion;
-						horse.Heading = Point2D.GetHeadingToLocation(path, path.Next);
-						horse.AddToWorld();
-						horse.CurrentWayPoint = path;
-						GameEventMgr.AddHandler(horse, GameNPCEvent.PathMoveEnds, new DOLEventHandler(OnHorseAtPathEnd));
-						new MountHorseAction(player, horse).Start(400);
-						new HorseRideAction(horse).Start(4000);
-						return true;
-					}
-					else
-					{
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameStableMaster.ReceiveItem.UnknownWay", destination), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					}
-				}
-			}
+                        mount.Realm = source.Realm;
+                        mount.X = path.X;
+                        mount.Y = path.Y;
+                        mount.Z = path.Z;
+                        mount.CurrentRegion = CurrentRegion;
+                        mount.Heading = Point2D.GetHeadingToLocation(path, path.Next);
+                        mount.AddToWorld();
+                        mount.CurrentWayPoint = path;
+                        GameEventMgr.AddHandler(mount, GameNPCEvent.PathMoveEnds, new DOLEventHandler(OnHorseAtPathEnd));
+                        new MountHorseAction(player, mount).Start(400);
+                        new HorseRideAction(mount).Start(4000);
+                        return true;
+                    }
+                }
+                else
+                {
+                    player.Out.SendMessage("Sorry, that ticket isn't for around here.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                }
+            }
+            return false;
+        }
 
-			return base.ReceiveItem(source, item);
-		}
-		private void SendReply(GamePlayer target, string msg)
-		{
-			target.Out.SendMessage(
-				msg,
-				eChatType.CT_System, eChatLoc.CL_PopupWindow);
-		}
+        private bool isItemInMerchantList(InventoryItem item)
+        {
+            foreach (DictionaryEntry de in m_tradeItems.GetAllItems())
+            {
+                ItemTemplate compareItem = de.Value as ItemTemplate;
+                if (compareItem != null)
+                {
+                    if (compareItem.Id_nb == item.Id_nb)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }    
 
-		/// <summary>
-		/// Handles 'horse route end' events
-		/// </summary>
-		/// <param name="e"></param>
-		/// <param name="o"></param>
-		/// <param name="args"></param>
-		public void OnHorseAtPathEnd(DOLEvent e, object o, EventArgs args)
-		{
-			if (!(o is GameNPC)) return;
-			GameNPC npc = (GameNPC)o;
 
-			GameEventMgr.RemoveHandler(npc, GameNPCEvent.PathMoveEnds, new DOLEventHandler(OnHorseAtPathEnd));
-			npc.StopMoving();
-			npc.RemoveFromWorld();
-		}
+        private void SendReply(GamePlayer target, string msg)
+        {
+            target.Out.SendMessage(
+                msg,
+                eChatType.CT_System, eChatLoc.CL_PopupWindow);
+        }
 
-		/// <summary>
-		/// Handles delayed player mount on horse
-		/// </summary>
-		protected class MountHorseAction : RegionAction
-		{
-			/// <summary>
-			/// The target horse
-			/// </summary>
-			protected readonly GameNPC m_horse;
+        /// <summary>
+        /// Handles 'horse route end' events
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="o"></param>
+        /// <param name="args"></param>
+        public void OnHorseAtPathEnd(DOLEvent e, object o, EventArgs args)
+        {
+            if (!(o is GameNPC)) return;
+            GameNPC npc = (GameNPC)o;
 
-			/// <summary>
-			/// Constructs a new MountHorseAction
-			/// </summary>
-			/// <param name="actionSource">The action source</param>
-			/// <param name="horse">The target horse</param>
-			public MountHorseAction(GamePlayer actionSource, GameNPC horse)
-				: base(actionSource)
-			{
-				if (horse == null)
-					throw new ArgumentNullException("horse");
-				m_horse = horse;
-			}
+            GameEventMgr.RemoveHandler(npc, GameNPCEvent.PathMoveEnds, new DOLEventHandler(OnHorseAtPathEnd));
+            npc.StopMoving();
+            npc.RemoveFromWorld();
+        }
 
-			/// <summary>
-			/// Called on every timer tick
-			/// </summary>
-			protected override void OnTick()
-			{
-				GamePlayer player = (GamePlayer)m_actionSource;
-				player.MountSteed(m_horse, true);
-			}
-		}
+        /// <summary>
+        /// Handles delayed player mount on horse
+        /// </summary>
+        protected class MountHorseAction : RegionAction
+        {
+            /// <summary>
+            /// The target horse
+            /// </summary>
+            protected readonly GameNPC m_horse;
 
-		/// <summary>
-		/// Handles delayed horse ride actions
-		/// </summary>
-		protected class HorseRideAction : RegionAction
-		{
-			/// <summary>
-			/// Constructs a new HorseStartAction
-			/// </summary>
-			/// <param name="actionSource"></param>
-			public HorseRideAction(GameNPC actionSource)
-				: base(actionSource)
-			{
-			}
+            /// <summary>
+            /// Constructs a new MountHorseAction
+            /// </summary>
+            /// <param name="actionSource">The action source</param>
+            /// <param name="horse">The target horse</param>
+            public MountHorseAction(GamePlayer actionSource, GameNPC horse)
+                : base(actionSource)
+            {
+                if (horse == null)
+                    throw new ArgumentNullException("horse");
+                m_horse = horse;
+            }
 
-			/// <summary>
-			/// Called on every timer tick
-			/// </summary>
-			protected override void OnTick()
-			{
-				GameNPC horse = (GameNPC)m_actionSource;
-				horse.MoveOnPath(horse.MaxSpeed);
-			}
-		}
-	}
+            /// <summary>
+            /// Called on every timer tick
+            /// </summary>
+            protected override void OnTick()
+            {
+                GamePlayer player = (GamePlayer)m_actionSource;
+                player.MountSteed(m_horse, true);
+            }
+        }
+
+        /// <summary>
+        /// Handles delayed horse ride actions
+        /// </summary>
+        protected class HorseRideAction : RegionAction
+        {
+            /// <summary>
+            /// Constructs a new HorseStartAction
+            /// </summary>
+            /// <param name="actionSource"></param>
+            public HorseRideAction(GameNPC actionSource)
+                : base(actionSource)
+            {
+            }
+
+            /// <summary>
+            /// Called on every timer tick
+            /// </summary>
+            protected override void OnTick()
+            {
+                GameNPC horse = (GameNPC)m_actionSource;
+                horse.MoveOnPath(horse.MaxSpeed);
+            }
+        }
+    }
 }

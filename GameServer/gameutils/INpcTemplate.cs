@@ -63,7 +63,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the template npc flags
 		/// </summary>
-		uint Flags { get; }
+		byte Flags { get; }
 
 		/// <summary>
 		/// Gets the template npc inventory
