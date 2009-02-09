@@ -22,6 +22,7 @@ using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Language;
+using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
@@ -134,18 +135,28 @@ namespace DOL.GS.Spells
 		/// <param name="ad"></param>
 		public override void SendDamageMessages(AttackData ad)
 		{
+			// Graveen: only GamePlaer should receive messages :p
+			GamePlayer PlayerReceivingMessages = null;
+			if (m_caster is GamePlayer)
+				PlayerReceivingMessages = m_caster as GamePlayer;
+            if ( m_caster is GamePet)
+                if ((m_caster as GamePet).Brain is IControlledBrain)
+                    PlayerReceivingMessages = ((m_caster as GamePet).Brain as IControlledBrain).GetPlayerOwner();
+            if (PlayerReceivingMessages == null) 
+                return;
+				
             if (Spell.Name.StartsWith("Proc"))
             {
-                MessageToCaster(String.Format(LanguageMgr.GetTranslation(((GamePlayer)m_caster).Client, "DoTSpellHandler.SendDamageMessages.YouHitFor",
+                MessageToCaster(String.Format(LanguageMgr.GetTranslation(PlayerReceivingMessages.Client, "DoTSpellHandler.SendDamageMessages.YouHitFor",
                     ad.Target.GetName(0, false), ad.Damage)), eChatType.CT_YouHit);
             }
             else
             {
-                MessageToCaster(String.Format(LanguageMgr.GetTranslation(((GamePlayer)m_caster).Client, "DoTSpellHandler.SendDamageMessages.YourHitsFor",
+                MessageToCaster(String.Format(LanguageMgr.GetTranslation(PlayerReceivingMessages.Client, "DoTSpellHandler.SendDamageMessages.YourHitsFor",
                     Spell.Name, ad.Target.GetName(0, false), ad.Damage)), eChatType.CT_YouHit);
             }
             if (ad.CriticalDamage > 0)
-                MessageToCaster(String.Format(LanguageMgr.GetTranslation(((GamePlayer)m_caster).Client, "DoTSpellHandler.SendDamageMessages.YourCriticallyHits",
+                MessageToCaster(String.Format(LanguageMgr.GetTranslation(PlayerReceivingMessages.Client, "DoTSpellHandler.SendDamageMessages.YourCriticallyHits",
                     Spell.Name, ad.Target.GetName(0, false), ad.CriticalDamage)), eChatType.CT_YouHit);
 
                 //			if (ad.Damage > 0)
