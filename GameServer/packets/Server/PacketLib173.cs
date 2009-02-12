@@ -204,7 +204,8 @@ namespace DOL.GS.PacketHandler
 				GSTCPPacketOut pak = new GSTCPPacketOut(0xB1);
 				//				pak.WriteByte((byte)((region.Expansion + 1) << 4)); // Must be expansion
 				pak.WriteByte(0); // but this packet sended when client in old region. but this field must show expanstion for jump destanation region
-				pak.WriteByte((byte)region.ID);
+				//Dinberg - trying to get instances to work.
+                pak.WriteByte((byte)region.Skin); // This was pak.WriteByte((byte)region.ID);
 				pak.Fill(0, 20);
 				pak.FillString(region.ServerPort.ToString(), 5);
 				pak.FillString(region.ServerPort.ToString(), 5);
@@ -594,7 +595,9 @@ namespace DOL.GS.PacketHandler
 				return;
 			SendRegions();
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.RegionChanged));
-			pak.WriteShort(m_gameClient.Player.CurrentRegionID);
+
+            //Dinberg - Changing to allow instances...
+            pak.WriteShort(m_gameClient.Player.CurrentRegion.Skin);
 			pak.WriteShort(0x00); // Zone ID?
 			pak.WriteShort(0x00); // ?
 			pak.WriteShort(0x01); // cause region change ?

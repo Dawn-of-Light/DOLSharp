@@ -156,6 +156,12 @@ namespace DOL.GS
 		/// </summary>
 		private readonly ushort m_ID;
 
+        /// <summary>
+        /// The id of the fake zone we send to the client.
+        /// This is used for instances, which also need to create fake zones aswell as regions!
+        /// </summary>
+        private ushort m_zoneSkinID;
+
 		/// <summary>
 		/// The description of the Zone eg. "Camelot Hills"
 		/// </summary>
@@ -200,7 +206,8 @@ namespace DOL.GS
 		/// <param name="yoff">the Y offset of this zone inside the region</param>
 		/// <param name="width">the Width of this zone</param>
 		/// <param name="height">the Height of this zone</param>
-		public Zone(Region region, ushort id, string desc, int xoff, int yoff, int width, int height)
+        /// <param name="zoneskinID">For clientside positioning in instances: The 'fake' zoneid we send to clients.</param>
+		public Zone(Region region, ushort id, string desc, int xoff, int yoff, int width, int height, ushort zoneskinID)
 		{
 			m_Region = region;
 			m_ID = id;
@@ -209,9 +216,9 @@ namespace DOL.GS
 			m_YOffset = yoff;
 			m_Width = width;
 			m_Height = height;
+            m_zoneSkinID = zoneskinID;
 
 			// initialise subzone objects and counters
-
 			m_subZoneElements = new SubNodeElement[SUBZONE_NBR][];
 			m_initialized = false;
 		}
@@ -397,6 +404,13 @@ namespace DOL.GS
 		{
 			get { return m_ID; }
 		}
+
+        //Dinberg: added for instances.
+        /// <summary>
+        /// The ID we send to the client, for client-side positioning of gameobjects and npcs.
+        /// </summary>
+        public ushort ZoneSkinID
+        { get { return m_zoneSkinID; } }
 
 		/// <summary>
 		/// Return the description of this zone

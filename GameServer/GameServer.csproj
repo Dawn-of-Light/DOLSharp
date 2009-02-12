@@ -180,6 +180,7 @@
     <Compile Include="commands\GMCommands\gmrelicpad.cs" />
     <Compile Include="commands\GMCommands\harm.cs" />
     <Compile Include="commands\GMCommands\heal.cs" />
+    <Compile Include="commands\GMCommands\Instance.cs" />
     <Compile Include="commands\GMCommands\item.cs" />
     <Compile Include="commands\GMCommands\jump.cs" />
     <Compile Include="commands\GMCommands\keep.cs" />
@@ -1319,6 +1320,7 @@
     <Compile Include="relics\RelicPad.cs" />
     <Compile Include="relics\RelicPillar.cs" />
     <Compile Include="serverrules\DemonsBreachJumpPoint.cs" />
+    <Compile Include="serverrules\InstanceDoorJumpPoint.cs" />
     <Compile Include="serverrules\TaskDungeonJumpPoint.cs" />
     <Compile Include="skillhandler\BodyguardAbilityHandler.cs" />
     <Compile Include="skillhandler\BolsteringRoarAbilityHandler.cs" />
@@ -2437,6 +2439,8 @@
     <Compile Include="world\IGameLocation.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="world\Instance\BaseInstance.cs" />
+    <Compile Include="world\Instance\Instance.cs" />
     <Compile Include="world\IPoint2D.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -2464,6 +2468,7 @@
     <Compile Include="world\Zone.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="world\ZoneData.cs" />
     <EmbeddedResource Include="config\logconfig.xml" />
     <EmbeddedResource Include="config\regions.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
