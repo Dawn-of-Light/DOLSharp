@@ -64,8 +64,10 @@ namespace DOL.GS.PacketHandler
 					pak.WriteByte(player.Level);
 					pak.WritePascalString(player.Name);
 					pak.WriteString(player.CharacterClass.Name, 4);
+                    //Dinberg:Instances - We use ZoneSkinID to bluff our way to victory and
+                    //trick the client for positioning objects (as IDs are hard coded).
 					if(player.CurrentZone != null)
-						pak.WriteShort(player.CurrentZone.ID);
+						pak.WriteShort(player.CurrentZone.ZoneSkinID);
 					else
 						pak.WriteShort(0); // ?
 					pak.WriteByte(0); // duration

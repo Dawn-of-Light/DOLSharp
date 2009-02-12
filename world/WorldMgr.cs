@@ -269,6 +269,7 @@ namespace DOL.GS
 		/// <param name="regionsData">The loaded regions data</param>
 		public static bool EarlyInit(out RegionData[] regionsData)
 		{
+            
 			log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - w1");
 
 			lock (m_regions.SyncRoot)
@@ -287,9 +288,22 @@ namespace DOL.GS
 			{
 				log.Debug(string.Format("{0} blocks read from {1}", regionCfg.Children.Count, GameServer.Instance.Configuration.RegionConfigFile));
 				log.Debug(string.Format("{0} blocks read from {1}", zoneCfg.Children.Count, GameServer.Instance.Configuration.ZoneConfigFile));
-			}
+            }
 
-			// Load available teleport locations.
+            #region Instances
+
+            //Dinberg: We now need to save regionData, indexed by regionID, for instances.
+            //The information generated here is oddly ordered by number of mbos in the region,
+            //so I'm contriving to generate this list myself.
+            m_regionData = new Hashtable();
+
+            //We also will need to store zones, because we need at least one zone per region - hence
+            //we will create zones inside our instances or the player gets banned by anti-telehack scripts.
+            m_zonesData = new Dictionary<ushort, List<ZoneData>>();
+
+            #endregion
+
+            // Load available teleport locations.
 
 			DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(Teleport));
 			m_teleportLocations = new Dictionary<eRealm, Dictionary<string, Teleport>>();
@@ -352,6 +366,14 @@ namespace DOL.GS
 					data.Mobs = (Mob[])mobs.ToArray(typeof(Mob));
 
 				regions.Add(data);
+
+                //Dinberg - save the data by ID.
+                if (m_regionData.ContainsKey(data.Id))
+                {
+                    log.Error("Duplicate key in region table - " + data.Id + ", EarlyInit in WorldMgr failed.");
+                }
+                else
+                m_regionData.Add(data.Id, data);
 			}
 
 			regions.Sort();
@@ -383,20 +405,27 @@ namespace DOL.GS
 				//string name = (string) entry.Key;
 				ConfigElement config = (ConfigElement)entry.Value;
 
-				RegisterZone(
-					(ushort)config[ENTRY_ZONE_ZONEID].GetInt(),
-					(ushort)config[ENTRY_ZONE_REGIONID].GetInt(),
-					config[ENTRY_ZONE_DESC].GetString(),
-					(byte)config[ENTRY_ZONE_OFFX].GetInt(),
-					(byte)config[ENTRY_ZONE_OFFY].GetInt(),
-					(byte)config[ENTRY_ZONE_WIDTH].GetInt(),
-					(byte)config[ENTRY_ZONE_HEIGHT].GetInt());
+                ZoneData zoneData = new ZoneData();
+                zoneData.Height = (byte)config[ENTRY_ZONE_HEIGHT].GetInt();
+                zoneData.Width = (byte)config[ENTRY_ZONE_WIDTH].GetInt();
+                zoneData.OffY = (byte)config[ENTRY_ZONE_OFFY].GetInt();
+                zoneData.OffX = (byte)config[ENTRY_ZONE_OFFX].GetInt();
+                zoneData.Description = config[ENTRY_ZONE_DESC].GetString();
+                zoneData.RegionID = (ushort)config[ENTRY_ZONE_REGIONID].GetInt();
+                zoneData.ZoneID = (ushort)config[ENTRY_ZONE_ZONEID].GetInt();
+
+                RegisterZone(zoneData, zoneData.ZoneID, zoneData.RegionID, zoneData.Description);
+
+                //Save the zonedata.
+                if (!m_zonesData.ContainsKey(zoneData.RegionID))
+                    m_zonesData.Add(zoneData.RegionID, new List<ZoneData>());
+
+                m_zonesData[zoneData.RegionID].Add(zoneData);
 			}
 
 			log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - w4");
 
 			regionsData = (RegionData[])regions.ToArray(typeof(RegionData));
-
 			return true;
 		}
 
@@ -796,7 +825,8 @@ namespace DOL.GS
 				while (iter.MoveNext())
 				{
 					Region reg = (Region)iter.Value;
-					regs[i].id = reg.ID;
+                    //Dinberg - we want to use the skinID, not the ID, for regions like this.
+                    regs[i].id = reg.ID; // reg.Skin;// reg.ID; //Dinberg - changed it back.
 					regs[i].ip = ip;
 					regs[i].toPort = port;
 					regs[i].name = reg.Name;
@@ -822,41 +852,41 @@ namespace DOL.GS
 		/// <summary>
 		/// Registers a Zone into a Region
 		/// </summary>
-		/// <param name="zoneID">ID of the Zone</param>
-		/// <param name="regionID">ID of the Region the Zone belongs to</param>
-		/// <param name="desc">Description of Zone</param>
-		/// <param name="offx">X offset within Region</param>
-		/// <param name="offy">Y offset within Region</param>
-		/// <param name="width">Width of Zone</param>
-		/// <param name="height">Height of Zone</param>
-		public static void RegisterZone(ushort zoneID, ushort regionID, string desc, byte offx, byte offy, byte width, byte height)
-		{
-			Region reg = GetRegion(regionID);
-			if (reg == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Region " + regionID + " for Zone " + desc);
-				return;
-			}
-			Zone zone = new Zone(
-				reg,
-				zoneID,
-				desc,
-				offx * 8192,
-				offy * 8192,
-				width * 8192,
-				height * 8192);
+        public static void RegisterZone(ZoneData data, ushort zoneID, ushort regionID, string zoneName)
+        {
+            Region reg = GetRegion(regionID);
+            if (reg == null)
+            {
+                if (log.IsWarnEnabled)
+                    log.Warn("Could not find Region " + regionID + " for Zone " + data.Description);
+                return;
+            }
+            
+            Zone zone = new Zone(
+                reg, zoneID, zoneName, data.OffX * 8192, data.OffY * 8192, data.Width * 8192, data.Height * 8192, data.ZoneID);
 
-			lock (reg.Zones.SyncRoot)
-			{
-				reg.Zones.Add(zone);
-			}
-			lock (m_zones.SyncRoot)
-			{
-				m_zones.Add(zoneID, zone);
-			}
+            //Dinberg:Instances
+            //ZoneID will always be constant as last parameter, because ZoneSkinID will effectively be a bluff, to remember
+            //the original region that spawned this one!
 
-		}
+            /*reg,
+                    zoneID,
+                    desc,
+                    offx * 8192,
+                    offy * 8192,
+                    width * 8192,
+                    height * 8192);*/
+
+            lock (reg.Zones.SyncRoot)
+            {
+                reg.Zones.Add(zone);
+            }
+            lock (m_zones.SyncRoot)
+            {
+                m_zones.Add(zoneID, zone);
+            }
+            log.Info("Added a zone, " + data.Description + ", to region " + reg.Name);
+        }
 
 		/// <summary>
 		/// Starts all RegionMgrs inside the Regions
@@ -955,6 +985,27 @@ namespace DOL.GS
 			}
 			return (GameObject[])returnObjs.ToArray(objectType);
 		}
+
+        //Added by Dinberg, i want to know if we should so freely enumerate reg.Objects?
+        /// <summary>
+        /// Returns the npcs in a given region
+        /// </summary>
+        /// <returns></returns>
+        public static GameNPC[] GetNPCsFromRegion(ushort regionID)
+        {
+            Region reg = (Region)m_regions[regionID];
+            if (reg == null)
+                return new GameNPC[0];
+            GameObject[] objs = reg.Objects;
+            ArrayList returnObjs = new ArrayList();
+            for (int i = 0; i < objs.Length; i++)
+            {
+                GameNPC obj = (GameNPC)objs[i];
+                if (obj != null)
+                    returnObjs.Add(obj);
+            }
+            return (GameNPC[])returnObjs.ToArray(typeof(GameNPC[]));
+        }
 
 		/// <summary>
 		/// Searches for all objects with the given name and realm in ALL regions!
@@ -1854,6 +1905,186 @@ namespace DOL.GS
 				}
 			}
 			return savedCount;
-		}
-	}
+        }
+
+        #region Instances
+
+        //Dinberg: We must now store the region data here. This is incase admins wish to create instances
+        //that require information from regions Data, like instance of underwater ToA areas as a prime
+        //example!
+        /// <summary>
+        /// Stores the region Data parsed from the regions xml file.
+        /// </summary>
+        private static Hashtable m_regionData;
+
+        /// <summary>
+        /// Stores the zone data parsed from the zones file by RegionID.
+        /// </summary>
+        private static Dictionary<ushort, List<ZoneData>> m_zonesData;
+
+        /// <summary>
+        /// Creates a new instance, with the given 'skin' (the regionID to display client side).
+        /// </summary>
+        /// <param name="skinID"></param>
+        /// <returns></returns>
+        public static BaseInstance CreateInstance(ushort skinID, Type instanceType)
+        {
+            //TODO: Typeof field so TaskDungeonInstance, QuestInstance etc can be created.
+            if ((instanceType.IsSubclassOf(typeof(BaseInstance)) || instanceType == typeof(BaseInstance)) == false)
+            {
+                log.Error("Invalid type given for instance creation: " + instanceType + ". Returning null instance now.");
+                return null;
+            }
+
+            Instance instance = null;
+
+            //To create the instance, we need to select the region relevant to the SkinID.
+            RegionData data = (RegionData)m_regionData[skinID];
+
+            if (data == null)
+            {
+                log.Warn("Data for region " + skinID + " not found on instance create!");
+                return null;
+            }
+
+            //Having selected the ID, we must select a time manager.
+            //For now, for simplicity so we can get the system running we will just take the first TimeManager
+            //in our list. This is because I don't want to risk causing an error by sharing an important resource
+            //like the TimeManager until I get some good testing and ensure work thus far is clean.
+
+            //Later, we will share the resources over the different threads.
+
+            GameTimer.TimeManager time = m_regionTimeManagers[0];
+
+            if (time == null)
+            {
+                log.Warn("TimeManager not found on instance create!");
+                return null;
+            }
+
+            //I've placed constructor info outside of the lock, to prevent a time delay on parallel threads.
+            ConstructorInfo info = instanceType.GetConstructor(new Type[] { typeof(ushort), typeof(GameTimer.TimeManager), typeof(RegionData)});
+
+            if (info == null)
+            {
+                log.Error("Classtype " + instanceType + " did not have a cosntructor that matched the requirement!");
+                return null;
+            }
+
+            ushort ID = 0;
+            //Get the unique ID for this instance.
+
+            //We need to keep the lock over this whole area until we have successfully inserted the instance, 
+            //incase a parallel thread also receives a request to create an instance. We cant have the two colliding!
+            //If they did, one instance generation would fail.
+
+            //I'm welcome to suggestions on how to improve this
+            //              -Dinberg.
+            lock (m_regions.SyncRoot)
+            {
+                while (ID < ushort.MaxValue)
+                {
+                    //Look for a space in the regions table...
+                    if (!m_regions.ContainsKey(ID))
+                        break;
+                    //If no space here, no worries - move quickly to the next ID and continue.
+                    ID++;
+                }
+
+
+                //In the unlikely event of 65535 regions, I'd still like to be warned!
+                if (ID == ushort.MaxValue)
+                {
+                    log.Warn("ID was ushort.MaxValue - Region Table is full upon instance creation! Aborting now.");
+                    return null;
+                }
+
+                //Having selected the data we need, create the Instance.
+                try
+                {
+                    instance = (Instance)info.Invoke(new object[] { ID, time, data });//new Instance(ID, time, data); 
+                    m_regions.Add(ID, instance);
+                }
+                catch (Exception e)
+                {
+                    log.Error("Error on instance creation - " + e.Message + e.StackTrace);
+                    return null;
+                }
+            }
+
+            //But its not over there. We need to put a zone into the instance.
+            List<ZoneData> list = m_zonesData[data.Id];
+
+            if (list == null)
+            {
+                log.Warn("No zones found for given skinID on instance creation, " + skinID);
+                return null;
+            }
+
+            ushort zoneID = 0;
+
+            foreach (ZoneData dat in list)
+            {
+                //we need to get an id for each one.
+                lock (m_zones.SyncRoot)
+                {
+                    while (m_zones.ContainsKey(zoneID))
+                        zoneID++;
+
+                    if (zoneID == ushort.MaxValue)
+                        log.Error("Zone limit reached in instance creation!");
+
+                    //create a zone of this ID.
+                    RegisterZone(dat, zoneID, ID, dat.Description + " (Instance)");
+                }
+            }
+
+            //Now we are back to the instance.
+            //Lets start the instance!
+            instance.StartRegionMgr();
+
+            //And start a timer to remove it if not in use after 10 minutes.
+            instance.BeginAutoClosureCountdown(10);
+
+            return instance;
+        }
+
+        /// <summary>
+        /// Removes the given instance from the server.
+        /// </summary>
+        /// <param name="instance"></param>
+        public static void RemoveInstance(BaseInstance instance)
+        {
+            //Delete objects
+            foreach (GameObject obj in instance.Objects)
+            {
+                if (obj == null) //Odd error, dont ask!
+                    continue;
+                else
+                {
+                    obj.RemoveFromWorld();
+                    obj.Delete();
+                }
+            }
+
+            //Remove the region
+            lock (m_regions.SyncRoot)
+                m_regions.Remove(instance.ID);
+
+            //Remove zones
+            lock (m_zones.SyncRoot)
+            {
+                foreach (Zone zn in instance.Zones)
+                {
+                    m_zones.Remove(zn.ID);
+                }
+            }
+
+            //Destroy the region once and for all.
+            instance = null;
+        }
+
+
+        #endregion
+    }
 }

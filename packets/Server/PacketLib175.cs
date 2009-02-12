@@ -430,7 +430,8 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort((ushort)playerToCreate.ObjectID);
 			pak.WriteShort(playerToCreate.Model);
 			pak.WriteShort((ushort)playerToCreate.Z);
-			pak.WriteShort(playerZone.ID);
+            //Dinberg:Instances - as with all objects, we need to use a zoneSkinID for clientside positioning.
+			pak.WriteShort(playerZone.ZoneSkinID);
 			pak.WriteShort((ushort)playerRegion.GetXOffInZone(playerToCreate.X, playerToCreate.Y));
 			pak.WriteShort((ushort)playerRegion.GetYOffInZone(playerToCreate.X, playerToCreate.Y));
 			pak.WriteShort(playerToCreate.Heading);

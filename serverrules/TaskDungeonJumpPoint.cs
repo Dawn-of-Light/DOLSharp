@@ -36,34 +36,41 @@ namespace DOL.GS.ServerRules
 		/// <param name="targetPoint">The jump destination</param>
 		/// <param name="player">The jumping player</param>
 		/// <returns>True if allowed</returns>
-		public bool IsAllowedToJump(ZonePoint targetPoint, GamePlayer player)
-		{
-			TaskDungeonMission mission = player.Mission as TaskDungeonMission;
+        public bool IsAllowedToJump(ZonePoint targetPoint, GamePlayer player)
+        {
+            //Handles zoning INTO an instance.
+            GameLocation loc = null;
 
-			//make sure we have a mission
-			if (mission == null)
-			{
-				player.Out.SendMessage("You need to have a proper mission before entering this area!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
+            //First, we try the groups mission.
+            if (player.Group != null)
+            {
+                Group grp = player.Group;
+                if (grp.Mission != null && grp.Mission is TaskDungeonMission)
+                {
+                    //Attempt to get the instance entrance location...
+                    TaskDungeonMission task = (TaskDungeonMission)grp.Mission;
+                    loc = task.TaskRegion.InstanceEntranceLocation;
+                }
+            }
+            else if (player.Mission != null && player.Mission is TaskDungeonMission)
+            {
+                //Then, try personal missions...
+                TaskDungeonMission task = (TaskDungeonMission)player.Mission;
+                loc = task.TaskRegion.InstanceEntranceLocation;
+            }
 
-			//get the proper location
-			ZonePoint zp = (ZonePoint)GameServer.Database.SelectObject(typeof(ZonePoint), "`Region` = '" + mission.TaskRegion.ID + "'");
-			if (zp != null)
-			{
-				targetPoint.Region = zp.Region;
-				targetPoint.X = zp.X;
-				targetPoint.Y = zp.Y;
-				targetPoint.Z = zp.Z;
-				targetPoint.Heading = zp.Heading;
-			}
-			else
-			{
-				player.Out.SendMessage("Jump Point for the task dungeon instance region " + mission.TaskRegion.ID + " cannot be found!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
+            if (loc != null)
+            {
+                targetPoint.X = loc.X;
+                targetPoint.Y = loc.Y;
+                targetPoint.Z = loc.Z;
+                targetPoint.Region = loc.RegionID;
+                targetPoint.Heading = loc.RegionID;
+                return true;
+            }
 
-			return true;
-		}
+            player.Out.SendMessage("You need to have a proper mission before entering this area!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            return false;
+        }
 	}
 }

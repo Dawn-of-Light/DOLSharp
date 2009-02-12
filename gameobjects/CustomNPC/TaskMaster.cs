@@ -43,36 +43,59 @@ namespace DOL.GS
 			if (player.Mission != null)
 				return false;
 
-			switch (str.ToLower())
-			{
-				case "assignment":
-					{
-						SayTo(player, "Based on your prowess and preference in engaging the enemy, I have assignments located in the [labyrinthine dungeons] for close quarter melee and tasks awaiting in [long corridors] for those who prefer ranged attacks. Select which you would prefer and I shall assign a task for you to complete or if you wish I can go into more detail about the Taskmaster [program]");
-						break;
-					}
-				case "program":
-					{
-						SayTo(player, "Unlike the tasks which you can receive from guards by using /whisper task when speaking to one, the taskmaster program is available to adventurers across a wide range of experience. You'll find taskmasters in many of our towns, ready to offer you the chance to aid the realm by confronting some of the monsters which inhabit a nearby dungeon. With the recent emergance of the new threat from beneath the Earth, as well as the ongoing war with the enemy realms, we need all the help that we can get.");
-						break;
-					}
-				case "long corridors":
-				case "labyrinthine dungeons":
-					{
-                        log.Info("INFO: TaskMaster Labyrinthine Dungeons activated");                
-						TaskDungeonMission mission = new TaskDungeonMission(player);
-						player.Mission = mission;
-						/*
-						 * Very well Gwirenn, it's good to see adventurers willing to help out the realm in such times.  Dralkden the Thirster has taken over the caves to the south and needs to be disposed of.  Good luck!
-						 * Very well Gwirenn, it's good to see adventurers willing to help out the realm in such times. Clear the caves to the south of creatures. Good luck!
-						 */
-						string msg = "Very well " + player.Name + ", it's good to see adventurers willing to help out the realm in such times.";
-						if (mission.TDMissionType == TaskDungeonMission.eTDMissionType.Clear)
-							msg += " Clear " + mission.TaskRegion.Description + " of creatures. Good luck!";
-						else msg += " " + mission.BossName + " has taken over " + mission.TaskRegion.Description + " and needs to be disposed of. Good luck!";
-						SayTo(player, msg);
-						break;
-					}
-			}
+            switch (str.ToLower())
+            {
+                case "assignment":
+                    {
+                        SayTo(player, "Based on your prowess and preference in engaging the enemy, I have assignments located in the [labyrinthine dungeons] for close quarter melee and tasks awaiting in [long corridors] for those who prefer ranged attacks. Select which you would prefer and I shall assign a task for you to complete or if you wish I can go into more detail about the Taskmaster [program]");
+                        break;
+                    }
+                case "program":
+                    {
+                        SayTo(player, "Unlike the tasks which you can receive from guards by using /whisper task when speaking to one, the taskmaster program is available to adventurers across a wide range of experience. You'll find taskmasters in many of our towns, ready to offer you the chance to aid the realm by confronting some of the monsters which inhabit a nearby dungeon. With the recent emergance of the new threat from beneath the Earth, as well as the ongoing war with the enemy realms, we need all the help that we can get.");
+                        break;
+                    }
+                case "long corridors":
+                case "labyrinthine dungeons":
+                    {
+                        if (player.Mission != null)
+                            break;
+                        //Can't if we already have one!
+
+                        //Can't if group has one!
+                        if (player.Group != null && player.Group.Mission != null)
+                            break;
+
+                        log.Info("INFO: TaskMaster Dungeons activated");
+                        TaskDungeonMission mission;
+                        if (player.Group != null)
+                            mission = new TaskDungeonMission(player.Group);
+                        else
+                        {
+                            mission = new TaskDungeonMission(player);
+                            player.Mission = mission;
+                        }
+                        /*
+                         * Very well Gwirenn, it's good to see adventurers willing to help out the realm in such times.  Dralkden the Thirster has taken over the caves to the south and needs to be disposed of.  Good luck!
+                         * Very well Gwirenn, it's good to see adventurers willing to help out the realm in such times. Clear the caves to the south of creatures. Good luck!
+                         */
+                        string msg = "Very well " + player.Name + ", it's good to see adventurers willing to help out the realm in such times.";
+                        switch (mission.TDMissionType)
+                        {
+                            case TaskDungeonMission.eTDMissionType.Clear:
+                                msg += " Clear " + mission.TaskRegion.Description + " of creatures. Good luck!";
+                                break;
+                            case TaskDungeonMission.eTDMissionType.Boss:
+                                msg += " " + mission.BossName + " has taken over " + mission.TaskRegion.Description + " and needs to be disposed of. Good luck!";
+                                break;
+                            case TaskDungeonMission.eTDMissionType.Specific:
+                                msg += " Please remove " + mission.Total + " " + mission.TargetName + " from " + mission.TaskRegion.Description + "! The entrance is nearby.";
+                                break;
+                        }
+                        SayTo(player, msg);
+                        break;
+                    }
+            }
 			return true;
 		}
 	}

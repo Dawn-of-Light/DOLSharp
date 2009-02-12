@@ -296,7 +296,8 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort((ushort)playerToCreate.ObjectID);
 			pak.WriteShort(playerToCreate.Model);
 			pak.WriteShort((ushort)playerToCreate.Z);
-			pak.WriteShort(playerZone.ID);
+            //Dinberg:Instances - zoneSkinID for object positioning clientside (as zones are hardcoded).
+			pak.WriteShort(playerZone.ZoneSkinID);
 			pak.WriteShort((ushort)playerRegion.GetXOffInZone(playerToCreate.X, playerToCreate.Y));
 			pak.WriteShort((ushort)playerRegion.GetYOffInZone(playerToCreate.X, playerToCreate.Y));
 			pak.WriteShort(playerToCreate.Heading);
@@ -370,7 +371,8 @@ namespace DOL.GS.PacketHandler
 				pak.WriteShort(0);
 				pak.WriteShort(0);
 			}
-			pak.WriteShort(m_gameClient.Player.CurrentRegionID);
+            //Dinberg - Changing to allow instances...
+            pak.WriteShort(m_gameClient.Player.CurrentRegion.Skin);
 			pak.WritePascalString(GameServer.Instance.Configuration.ServerNameShort); // new in 1.74, same as in SendLoginGranted
 			pak.WriteByte(0x00); //TODO: unknown, new in 1.74
 			SendTCP(pak);
@@ -391,7 +393,8 @@ namespace DOL.GS.PacketHandler
 				if (zone == null)
 					return;
 				pak.WriteByte((byte)(0x40 | living.GroupIndex));
-				pak.WriteShort(zone.ID);
+                //Dinberg - ZoneSkinID for group members aswell.
+				pak.WriteShort(zone.ZoneSkinID);
 				pak.WriteShort((ushort)(living.X - zone.XOffset));
 				pak.WriteShort((ushort)(living.Y - zone.YOffset));
 			}
@@ -403,8 +406,11 @@ namespace DOL.GS.PacketHandler
 				return;
 			SendRegions();
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.RegionChanged));
-			pak.WriteShort(m_gameClient.Player.CurrentRegionID);
-			pak.WriteShort(m_gameClient.Player.CurrentZone.ID); // Zone ID?
+            //Dinberg - Changing to allow instances...
+            pak.WriteShort(m_gameClient.Player.CurrentRegion.Skin);
+            //Dinberg:Instances - also need to continue the bluff here, with zoneSkinID, for 
+            //clientside positions of objects.
+			pak.WriteShort(m_gameClient.Player.CurrentZone.ZoneSkinID); // Zone ID?
 			pak.WriteShort(0x00); // ?
 			pak.WriteShort(0x01); // cause region change ?
 			pak.WriteByte(0x0C); //Server ID

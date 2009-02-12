@@ -588,6 +588,7 @@ namespace DOL.GS
             if (InHouse)
                 LeaveHouse();
 
+            //Dinberg: this will eventually need to be changed so that it moves them to the location they TP'ed in.
 			if (CurrentRegion.IsInstance)
 				MoveTo((ushort)PlayerCharacter.BindRegion, PlayerCharacter.BindXpos, PlayerCharacter.BindYpos, PlayerCharacter.BindZpos, (ushort)PlayerCharacter.BindHeading);
 
@@ -646,6 +647,7 @@ namespace DOL.GS
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Quit.CantQuitCrafting"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
+
 				if (CurrentRegion.IsInstance)
 				{
 					Out.SendMessage("You cannot quit in an instance!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -8394,6 +8396,10 @@ namespace DOL.GS
 				SpecPointsOk = true;
 			}
 
+            //Dinberg, instance change.
+            if (CurrentRegion is Instance)
+                ((Instance)CurrentRegion).OnPlayerEnterInstance(this);
+
 			return true;
 		}
 
@@ -8432,6 +8438,11 @@ namespace DOL.GS
 			Diving(waterBreath.Normal);
 			if (IsOnHorse)
 				IsOnHorse = false;
+
+            //Dinberg, instance change.
+            if (CurrentRegion is Instance)
+                ((Instance)CurrentRegion).OnPlayerLeaveInstance(this);
+
 			return true;
 		}
 
@@ -8500,7 +8511,7 @@ namespace DOL.GS
 			//If the region doesn't exist, return false or if they aren't allowed to zone here
 			if (rgn == null || !GameServer.ServerRules.IsAllowedToZone(this, rgn))
 				return false;
-			//If the x,y inside this region don't point to a zone
+			//If the x,y inside this region doesn't point to a zone
 			//return false
 			if (rgn.GetZone(x, y) == null)
 				return false;
@@ -8615,6 +8626,9 @@ namespace DOL.GS
 			return true;
 		}
 
+        /*
+        // Dinberg - marked this void for deletion.
+        // I don't see why we have a separate void for MoveToInstance, which is basically a CTRL C of whats above!
 		public bool MoveToInstance(Region rgn, int x, int y, int z, ushort heading)
 		{
 			if (IsOnHorse)
@@ -8722,6 +8736,7 @@ namespace DOL.GS
 			}
 			return true;
 		}
+        */
 
 		//Eden - Move to bind, and check if the loc is allowed
 		public bool MoveToBind()

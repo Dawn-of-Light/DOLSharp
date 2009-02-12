@@ -40,8 +40,8 @@ namespace DOL.GS.Quests
 			get { return m_missionType; }
 		}
 
-		private Region m_taskRegion;
-		public Region TaskRegion
+		private TaskDungeonInstance m_taskRegion;
+        public TaskDungeonInstance TaskRegion
 		{
 			get { return m_taskRegion; }
 		}
@@ -76,89 +76,89 @@ namespace DOL.GS.Quests
             log.Info("INFO: Successfully entered TaskDungeonMission!");
 			GamePlayer player = owner as GamePlayer;
 
-			if (owner is Group)
-				player = (owner as Group).Leader;
+            if (owner is Group)
+            {
+                player = (owner as Group).Leader;
+                //Assign the mission to the group.
+                (owner as Group).Mission = this;
+            }
 
 			if (player == null)
 				return;
 
 			//check level range and get region id from it
 			ushort rid = GetRegionFromLevel(player.Level, player.Realm);
-			Region r = WorldMgr.GetRegion(rid);
-			//build region instance
-			m_taskRegion = new Region(r.TimeManager, r.RegionData);
-			long mobCount = 0, merchantCount = 0, itemCount = 0, bindCount = 0;
-			m_taskRegion.InstanceLevel = GetLevelFromPlayer(player);
-			m_taskRegion.LoadFromDatabase(r.RegionData.Mobs, ref mobCount, ref merchantCount, ref itemCount, ref bindCount);
-			m_taskRegion.Zones.AddRange(r.Zones);
 
-			foreach (Mob mob in r.RegionData.Mobs)
-			{
-				if (mob.Name.ToLower() != mob.Name)
-				{
-					m_bossName = mob.Name;
-					break;
-				}
-			}
+            TaskDungeonInstance instance = (TaskDungeonInstance)WorldMgr.CreateInstance(rid, typeof(TaskDungeonInstance));
+            m_taskRegion = instance;
+            instance.Mission = this;
 
-			foreach (Mob mob in r.RegionData.Mobs)
-			{
-				if (Util.Chance(20))
-				{
-					m_targetName = mob.Name;
-					break;
-				}
-			}
+			//Dinberg: I've removed instance level, and have commented this out so it compiles.
+            //I dont have time to implement the rest right now, 
+            //m_taskRegion.InstanceLevel = GetLevelFromPlayer(player);
+
+            //Infact, this clearly isnt in use. I'll fix it to use the new instance system, and then itll work.
+            //Do that later this week ^^.
+
+            
+            //Lets load the region from the InstanceXElementDB!
+
+
+            //First we get the instance keyname.
+            string keyname = "TaskDungeon" + rid + ".1"; //TODO; variations, eg .2, .3 etc.
+            instance.LoadFromDatabase(keyname);
+
+            //Now, search for the boss and possible targets in the instance!
+            foreach (GameNPC npc in instance.Objects)
+            {
+                if (npc == null)
+                    continue;
+
+                if (npc.Name.ToLower() != npc.Name)
+                {
+                    if (m_bossName == "")
+                        m_bossName = npc.Name; //Some instances have multiple bosses, eg Gregorian - why break?
+                    else if (Util.Chance(50))
+                        m_bossName = npc.Name;
+                } //else what if we aren't looking at a boss, but a normal mob?
+                else
+                    if (Util.Chance(20) || m_targetName == "")
+                        m_targetName = npc.Name;
+            }
 
 			int specificCount = 0;
-			foreach (Mob mob in r.RegionData.Mobs)
-			{
-				if (mob.Name == m_targetName)
-					specificCount++;
-			}
+            
+            //Draw the mission type before we do anymore counting...
+            if (Util.Chance(40) && m_bossName != "")
+                m_missionType = eTDMissionType.Boss;
+            else if (Util.Chance(20) && m_targetName != "")
+                m_missionType = eTDMissionType.Specific;
+            else
+                m_missionType = eTDMissionType.Clear;
+                
+            //Now, count if we need to.
+            if (m_missionType != eTDMissionType.Boss)
+            {
+                foreach (GameNPC entry in instance.Objects)
+                {
+                    if (entry == null)
+                        continue;
 
-			if (Util.Chance(50) && m_bossName != "")
-				m_missionType = eTDMissionType.Boss;
-			else if (Util.Chance(20) && m_targetName != "")
-			{
-				m_missionType = eTDMissionType.Specific;
-				m_total = specificCount;
-			}
-			else
-			{
-				m_missionType = eTDMissionType.Clear;
-				m_total = mobCount;
-			}
+                    //Now, if we want all mobs, get all mobs...
+                    if (m_missionType == eTDMissionType.Clear)
+                        specificCount++;
+                    else if (entry.Name == m_targetName) 
+                        //only count target mobs for specific dungeons.
+                        specificCount++;
+                }
+            }
+
+            //append the count to the total!
+            m_total = specificCount;
 		}
 
-		private static byte GetLevelFromPlayer(GamePlayer player)
-		{
-			if (player.Group == null)
-			{
-				/*
-				 * solo
-				 * player | dungeon
-				 * 1 | 1
-				 * 2 | 1
-				 * 3 | 3
-				 * 4 | 3?
-				 * 5 | 5?
-				 * 6 | 5?
-				 * 7 | 7?
-				 * 8 | 7?
-				 * 9 | 9?
-				 * 10 | 10?
-				 */
-
-				//to make this easier, we will use the players level
-				return player.Level;
-			}
-			else
-			{
-				//to make this easier, we will use the players level  + group count
-				return (byte)(player.Level + player.Group.MemberCount);
-			}
-		}
+        //Dinberg: removed this void. Handled in TaskDungeonInstance
+		//private static byte GetLevelFromPlayer(GamePlayer player)
 
 		//Burial Tomb
 		private static ushort[] burial_tomb = new ushort[] { 293/*, 294, 295, 400, 401, 402, 403, 404*/ };
@@ -169,6 +169,8 @@ namespace DOL.GS.Quests
 
 		private static ushort GetRegionFromLevel(byte level, eRealm realm)
 		{
+            return 286;
+            /*
 			//TODO: fill this properly for all levels
 			//if (level <= 10)
 			{
@@ -182,7 +184,7 @@ namespace DOL.GS.Quests
 						return GetRandomRegion(damp_cavern);
 				}
 			}
-			return 0;
+			return 0;*/
 		}
 
 		private static ushort GetRandomRegion(ushort[] regions)
@@ -215,9 +217,10 @@ namespace DOL.GS.Quests
 								FinishMission();
 							else
 							{
+                                /* - Dinberg, disabled this. Messages extremely annoying.
 								if (m_owner is GamePlayer)
 								{
-									(m_owner as GamePlayer).Out.SendMessage((m_total - m_current) + " " + m_targetName + " Left", eChatType.CT_ScreenCenter, eChatLoc.CL_ChatWindow);
+									(m_owner as GamePlayer).Out.SendMessage((m_total - m_current) + " " + m_targetName + " Left", eChatType.CT_ScreenCenter_And_CT_System, eChatLoc.CL_ChatWindow);
 								}
 								else if (m_owner is Group)
 								{
@@ -226,6 +229,7 @@ namespace DOL.GS.Quests
 										player.Out.SendMessage((m_total - m_current) + " " + m_targetName + " Left", eChatType.CT_ScreenCenter, eChatLoc.CL_ChatWindow);
 									}
 								}
+                                 */
 							}
 						}
 						break;
@@ -238,9 +242,10 @@ namespace DOL.GS.Quests
 							FinishMission();
 						else
 						{
+                            /*
 							if (m_owner is GamePlayer)
 							{
-								(m_owner as GamePlayer).Out.SendMessage((m_total - m_current) + " Creatures Left", eChatType.CT_ScreenCenter, eChatLoc.CL_ChatWindow);
+								(m_owner as GamePlayer).Out.SendMessage((m_total - m_current) + " Creatures Left", eChatType.CT_ScreenCenter_And_CT_System, eChatLoc.CL_ChatWindow);
 							}
 							else if (m_owner is Group)
 							{
@@ -249,6 +254,7 @@ namespace DOL.GS.Quests
 									player.Out.SendMessage((m_total - m_current) + " Creatures Left", eChatType.CT_ScreenCenter, eChatLoc.CL_ChatWindow);
 								}
 							}
+                             */
 						}
 						break;
 					}
@@ -272,12 +278,16 @@ namespace DOL.GS.Quests
 					case eTDMissionType.Specific: return "You have been asked to kill " + m_total + " " + m_targetName + " in the nearby caves.";
 					case eTDMissionType.Clear:
 						{
-							if (m_owner is GamePlayer && (m_owner as GamePlayer).CurrentRegion != m_taskRegion)
-							{
-								return "You have been asked to clear the nearby caves.";
-							}
-							else return "You have been asked to clear the nearby caves. " + (m_total - m_current) + " creatures left!";
-						}
+                            if (m_owner is GamePlayer && (m_owner as GamePlayer).CurrentRegion != m_taskRegion)
+                            {
+                                return "You have been asked to clear the nearby caves.";
+                            }
+                            else
+                            {
+                                bool test = m_total - m_current == 1;
+                                return "You have been asked to clear the nearby caves. " + (m_total - m_current) + " creature" + (test == true ? "" : "s") + " left!";
+                            }
+                        }
 					default: return "No description for mission type " + m_missionType.ToString();
 				}
 			}
@@ -346,4 +356,81 @@ namespace DOL.GS.Quests
 			base.FinishMission();
 		}
 	}
+
+    //This part is done by Dinberg, but the original source im not sure of. I'm trying to tweak it the the instance
+    //system I've developed, and this script was partly finished so I adopted it ^^. 
+    public class TaskDungeonInstance : Instance
+    {
+        public TaskDungeonInstance(ushort ID, GameTimer.TimeManager time, RegionData dat)
+            : base(ID, time, dat)
+        {
+        }
+
+        private TaskDungeonMission m_mission;
+        /// <summary>
+        /// Gets/Sets the Mission of this instance.
+        /// </summary>
+        public TaskDungeonMission Mission
+        {
+            get { return m_mission; }
+            set { m_mission = value; }
+        }
+
+        private int m_level;
+
+        //Change instance level...
+        //I've checked, this should be called correctly: player will be added/removed in time.
+        public override void OnPlayerEnterInstance(GamePlayer player)
+        {
+            base.OnPlayerEnterInstance(player);
+            UpdateInstanceLevel();
+
+            //The player will not yet be in the instance, so wont receive the relevant text.
+            player.Out.SendMessage("You have entered " + Description + ".", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+            player.Out.SendMessage("This instance is currently level " + m_level + ".", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+        }
+
+        public override void OnPlayerLeaveInstance(GamePlayer player)
+        {
+            base.OnPlayerLeaveInstance(player);
+            UpdateInstanceLevel();
+            //Expire task from player...
+            if (player.Mission == m_mission) player.Mission.ExpireMission();
+        }
+
+
+        //This void is outside of Instance,
+        //because i want people to think carefully about how they change levels in their instance.
+        public void UpdateInstanceLevel()
+        {
+            m_level = (byte)(GetInstanceLevel());
+            //Set all mobs to that level...
+            foreach (GameObject obj in Objects)
+            {
+                if (obj == null)
+                    continue;
+
+                GameNPC npc = obj as GameNPC;
+                if (npc == null)
+                    continue;
+
+                npc.Level = (byte)m_level;
+            }
+            //Update to the players..
+            foreach (GameClient client in WorldMgr.GetClientsOfRegion(ID))
+                if (client != null)
+                    client.Out.SendMessage("This instance is now level " + m_level, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+        }
+
+        /// <summary>
+        /// Expire the missions - the instance has exploded.
+        /// </summary>
+        public override void OnCollapse()
+        {
+            //We expire the mission as players can no longer reach or access the region once collapsed.
+            if (Mission != null)
+            Mission.ExpireMission();
+            base.OnCollapse();
+        }
+    }
 }

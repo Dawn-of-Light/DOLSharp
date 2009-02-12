@@ -622,7 +622,9 @@ namespace DOL.GS.PacketHandler
 			//pak.WriteInt(playerToCreate.Y);
 			pak.WriteShort((ushort)playerRegion.GetXOffInZone(playerToCreate.X, playerToCreate.Y));
 			pak.WriteShort((ushort)playerRegion.GetYOffInZone(playerToCreate.X, playerToCreate.Y));
-			pak.WriteByte((byte)playerZone.ID);
+
+            //Dinberg:Instances - changing to ZoneSkinID for instance zones.
+			pak.WriteByte((byte)playerZone.ZoneSkinID);
 			pak.WriteByte(0);
 			pak.WriteShort((ushort)playerToCreate.Z);
 			pak.WriteShort(playerToCreate.Heading);
@@ -719,7 +721,8 @@ namespace DOL.GS.PacketHandler
 							XOffsetInTargetZone = (ushort)(npc.TargetX - tz.XOffset);
 							YOffsetInTargetZone = (ushort)(npc.TargetY - tz.YOffset);
 							ZOffsetInTargetZone = (ushort)(npc.TargetZ);
-							targetZone = tz.ID;
+                            //Dinberg:Instances - zoneSkinID for object positioning clientside.
+							targetZone = tz.ZoneSkinID;
 						}
 					}
 
@@ -761,9 +764,11 @@ namespace DOL.GS.PacketHandler
 			if (obj is GameLiving)
 				pak.WriteByte((obj as GameLiving).HealthPercent);
 			else pak.WriteByte(0);
-			flags |= (byte)(((z.ID & 0x100) >> 6) | ((targetZone & 0x100) >> 5));
+            //Dinberg:Instances - zoneskinID for positioning of objects clientside.
+			flags |= (byte)(((z.ZoneSkinID & 0x100) >> 6) | ((targetZone & 0x100) >> 5));
 			pak.WriteByte(flags);
-			pak.WriteByte((byte)z.ID);
+			pak.WriteByte((byte)z.ZoneSkinID);
+            //Dinberg:Instances - targetZone already accomodates for this feat.
 			pak.WriteByte((byte)targetZone);
 			SendUDP(pak);
 
@@ -1003,7 +1008,9 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null)
 				return;
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.RegionChanged));
-			pak.WriteShort(m_gameClient.Player.CurrentRegionID);
+
+            //Dinberg - Changing to allow instances...
+			pak.WriteShort(m_gameClient.Player.CurrentRegion.Skin);
 			pak.WriteShort(0x00);
 			SendTCP(pak);
 		}
@@ -1161,8 +1168,9 @@ namespace DOL.GS.PacketHandler
 					pak.WriteByte(player.Level);
 					pak.WritePascalString(player.Name);
 					pak.WriteString(player.CharacterClass.Name, 4);
+                    //Dinberg:Instances - have to write zoneskinID, it uses this to display the text 'x is in y'.
 					if (player.CurrentZone != null)
-						pak.WriteByte((byte)player.CurrentZone.ID);
+						pak.WriteByte((byte)player.CurrentZone.ZoneSkinID);
 					else
 						pak.WriteByte(255);
 				}

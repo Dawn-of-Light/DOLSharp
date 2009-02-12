@@ -72,6 +72,8 @@ namespace DOL.GS.ServerRules
 			int midcount = KeepMgr.GetTowerCountByRealm(eRealm.Midgard);
 			int hibcount = KeepMgr.GetTowerCountByRealm(eRealm.Hibernia);
 
+            //Dinberg - need to review this, it appears that it actually gives an unfair advantage in ties.
+
 			if (albcount>midcount)
 			{
 				if (albcount > hibcount)
