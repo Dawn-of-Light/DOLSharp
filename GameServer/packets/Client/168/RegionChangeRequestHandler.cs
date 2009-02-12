@@ -95,7 +95,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				if (check == null)
 				{
-					Type t = ScriptMgr.GetType(zonePoint.ClassType);
+                    
+                    //Dinberg - Instances need to use a special handler. This is because some instances will result
+                    //in duplicated zonepoints, such as if Tir Na Nog were to be instanced for a quest.
+                    string type = (client.Player.CurrentRegion.IsInstance) ? "DOL.GS.ServerRules.InstanceDoorJumpPoint" : zonePoint.ClassType;
+					Type t = ScriptMgr.GetType(type);
 
 					if (t == null)
 					{
@@ -186,16 +190,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 						return;
 					}
 				}
-				Region r = WorldMgr.GetRegion(m_zonePoint.Region);
-				if (r != null && r.IsInstance && player.Mission is Quests.TaskDungeonMission)
-					player.MoveToInstance((player.Mission as Quests.TaskDungeonMission).TaskRegion, m_zonePoint.X, m_zonePoint.Y, m_zonePoint.Z, m_zonePoint.Heading);
-				else
-				{
-					//this will work for release and zoning out, the behaviour here is to expire the mission
-					if (player.CurrentRegion.IsInstance && player.Mission != null)
-						player.Mission.ExpireMission();
+				//Region r = WorldMgr.GetRegion(m_zonePoint.Region);
+
+                //Dinberg - marked this for deletion.
+                //Seeking to remove MoveToInstance, because its effectively just MoveTo at the moment.
+
+				//if (r != null && r.IsInstance && player.Mission is Quests.TaskDungeonMission)
+				//	player.MoveToInstance((player.Mission as Quests.TaskDungeonMission).TaskRegion, m_zonePoint.X, m_zonePoint.Y, m_zonePoint.Z, m_zonePoint.Heading);
+				//else
+				//{
+                    //Mission expiring is handled within the instance zoning handler now.
 					player.MoveTo(m_zonePoint.Region, m_zonePoint.X, m_zonePoint.Y, m_zonePoint.Z, m_zonePoint.Heading);
-				}
+				//}
 			}
 		}
 	}

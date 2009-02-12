@@ -132,6 +132,23 @@ namespace DOL.GS.PacketHandler.Client.v168
 				currentZoneID = packet.ReadShort();
 			}
 
+
+            //Dinberg - Instance considerations.
+            //Now this gets complicated, so listen up! We have told the client a lie when it comes to the zoneID.
+            //As a result, every movement update, they are sending a lie back to us. Two liars could get confusing!
+
+            //BUT, the lie we sent has a truth to it - the geometry and layout of the zone. As a result, the zones
+            //x and y offsets will still actually be relevant to our current zone. And for the clones to have been
+            //created, there must have been a real zone to begin with, of id == instanceZone.SkinID.
+
+            //So, although our client is lying to us, and thinks its in another zone, that zone happens to coincide
+            //exactly with the zone we are instancing - and so all the positions still ring true.
+
+            //Philosophically speaking, its like looking in a mirror and saying 'Am I a reflected, or reflector?'
+            //What it boils down to has no bearing whatsoever on the result of anything, so long as someone sitting
+            //outside of the unvierse knows not to listen to whether you say which you are, and knows the truth to the
+            //answer. Then, he need only know what you are doing ;)
+
 			Zone newZone = WorldMgr.GetZone(currentZoneID);
 			if (newZone == null)
 			{
@@ -185,8 +202,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.Entered", newZone.Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				client.Out.SendMessage(newZone.Description, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
-				if (newZone.ZoneRegion.InstanceLevel > 0)
-					client.Out.SendMessage("Current area is adjusted for a level " + newZone.ZoneRegion.InstanceLevel + " encounter.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				client.Player.LastPositionUpdateZone = newZone;
 			}
 

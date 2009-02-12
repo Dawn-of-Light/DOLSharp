@@ -67,7 +67,8 @@ namespace DOL.GS.PacketHandler
 			if (zone == null) return;
 			pak.WriteShort((ushort)(zone.XOffset / 0x2000));
 			pak.WriteShort((ushort)(zone.YOffset / 0x2000));
-			pak.WriteShort(m_gameClient.Player.CurrentRegionID);
+            //Dinberg - Changing to allow instances...
+            pak.WriteShort(m_gameClient.Player.CurrentRegion.Skin);
 			pak.WriteShort(0x00); //TODO: unknown, new in 1.71
 			SendTCP(pak);
 		}
@@ -230,8 +231,10 @@ namespace DOL.GS.PacketHandler
 					pak.WriteByte(player.Level);
 					pak.WritePascalString(player.Name);
 					pak.WriteString(player.CharacterClass.Name, 4);
+                    //Dinberg:Instances - you know the score by now ;)
+                    //ZoneSkinID for clientside positioning of objects.
 					if (player.CurrentZone != null)
-						pak.WriteByte((byte)player.CurrentZone.ID);
+						pak.WriteByte((byte)player.CurrentZone.ZoneSkinID);
 					else
 						pak.WriteByte(255);
 					pak.WriteByte(0); // duration
