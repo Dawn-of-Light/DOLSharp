@@ -42,7 +42,7 @@ namespace DOL.GS.World
 			data.Description = "reg test1";
 			data.Mobs = new Mob[0];
 			m_reg = WorldMgr.RegisterRegion(new GameTimer.TimeManager("RegTest1"), data);
-			WorldMgr.RegisterZone(5555, 5555, "test zone1", 0, 0, 16, 16);
+			//WorldMgr.RegisterZone(5555, 5555, "test zone1", 0, 0, 16, 16);
 			m_reg.StartRegionMgr();
 		}
 

@@ -58,7 +58,7 @@ namespace DOL.GS.Behaviour.Requirements
         /// <param name="v"></param>
         public RegionRequirement(GameNPC defaultNPC, int n, int v)
             : this(defaultNPC, (object)n, (object)v, eComparator.None)
-		{   			
+		{
 		}
 
 		/// <summary>
@@ -72,8 +72,12 @@ namespace DOL.GS.Behaviour.Requirements
 		{
 			bool result = true;
             GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
-
-            result = (player.CurrentRegionID == V && player.CurrentZone.ID == N);
+    
+            //Dinberg on Instances:
+            //I've changed this to skin. This is so that instances can cause zone 
+            //requirements on quests to be triggered too! It's unlikely they will
+            //ever get the right ID otherwise.
+            result = (player.CurrentRegion.Skin == V && player.CurrentZone.ZoneSkinID == N);
 
 			return result;
 		}

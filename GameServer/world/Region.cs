@@ -153,13 +153,6 @@ namespace DOL.GS
 			get { return m_regionData; }
 		}
 
-		private byte m_instanceLevel = 0;
-		public byte InstanceLevel
-		{
-			get { return m_instanceLevel; }
-			set { m_instanceLevel = value; }
-		}
-
 		/// <summary>
 		/// Constructs a new empty Region
 		/// </summary>
@@ -242,18 +235,11 @@ namespace DOL.GS
 		/// <summary>
 		/// Is the Region instanced
 		/// </summary>
-		public bool IsInstance
+		public virtual bool IsInstance
 		{
 			get
 			{
-				if (ServerProperties.Properties.DISABLE_INSTANCES)
-					return false;
-
-				foreach (Region r in WorldMgr.Regions.Values)
-				{
-					if (r.ID != ID && r.Description == Description && r.Expansion == (int)GameClient.eClientType.Catacombs)
-						return true;
-				}
+                //Dinberg: Region will always return false now, because only class type 'Instance' will return true.
 				return false;
 			}
 		}
@@ -291,26 +277,30 @@ namespace DOL.GS
 		/// <summary>
 		/// The Region Name eg. Region000
 		/// </summary>
-		public string Name
+		public virtual string Name
 		{
 			get { return m_regionData.Name; }
 		}
+        //Dinberg: Changed this to virtual, so that Instances can take a unique Name, for things like quest instances.
 
 		/// <summary>
 		/// The Region Description eg. Cursed Forest
 		/// </summary>
-		public string Description
+		public virtual string Description
 		{
 			get { return m_regionData.Description; }
 		}
+        //Dinberg: Virtual, so that we can change this if need be, for quests eg 'Hermit Dinbargs Cave'
+        //or for the hell of it, eg Jordheim (Instance).
 
 		/// <summary>
 		/// The ID of the Region eg. 21
 		/// </summary>
-		public ushort ID
+		public virtual ushort ID
 		{
 			get { return m_regionData.Id; }
 		}
+        //Dinberg: Changed this to virtual, so that Instances can take a unique ID.
 
 		/// <summary>
 		/// The Region Server IP ... for future use
@@ -408,6 +398,13 @@ namespace DOL.GS
 		{
 			get { return m_isDisabled; }
 		}
+
+        //Dinberg: Added this for instances.
+        /// <summary>
+        /// Added to allow instances; the 'appearance' of the region, the map the GameClient uses.
+        /// </summary>
+        public virtual ushort Skin
+        { get { return ID; } }
 
 		#endregion
 
@@ -548,13 +545,7 @@ namespace DOL.GS
 						try
 						{
 							myMob.LoadFromDatabase(mob);
-							//instance information
-							if (m_instanceLevel != 0)
-							{
-								myMob.CurrentRegion = this;
-								myMob.Level = m_instanceLevel;
-								myMob.RespawnInterval = -1;
-							}
+
 							if (myMob is GameMerchant)
 							{
 								myMerchantCount++;
