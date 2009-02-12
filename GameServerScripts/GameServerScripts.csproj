@@ -109,9 +109,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdvancedInstances\Chest.cs" />
-    <Compile Include="AdvancedInstances\StormInstance.cs" />
-    <Compile Include="AdvancedInstances\StormInstanceMgr.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
