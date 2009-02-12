@@ -4,7 +4,6 @@ using System.Text;
 using System.Reflection;
 using DOL.GS;
 using log4net;
-using DOL.GS.Instances;
 namespace DOL.GS
 {
     public class RegionTestNpc : GameNPC
@@ -63,17 +62,6 @@ namespace DOL.GS
                             Say("Source could not be moved to the target location; MoveTo returned false.");
                         
                     }
-                    break;
-                case "storm":
-                    StormInstance instance = (StormInstance)WorldMgr.CreateInstance(415, typeof(StormInstance));
-
-                    instance.LoadFromDatabase("stormTest");
-                    m_instance = instance;
-
-                    if (m_instance == null)
-                        Say("Failed.");
-                    else
-                        Say("Success!");
                     break;
             }
             return true;
