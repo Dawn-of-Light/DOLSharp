@@ -482,7 +482,7 @@ namespace DOL.GS.Spells
 				m_effect == null)
 				return;
 
-			if (WorldMgr.GetDistance(m_caster, m_owner) > ServerProperties.Properties.BUFF_RANGE)
+            if ( !m_caster.IsWithinRadius( m_owner, ServerProperties.Properties.BUFF_RANGE ) )
 				m_effect.Cancel(false);
 			else
 				Start(BUFFCHECKINTERVAL);

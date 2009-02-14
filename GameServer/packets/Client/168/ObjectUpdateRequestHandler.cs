@@ -56,7 +56,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					foreach (House house in HouseMgr.GetHouses(client.Player.CurrentRegionID).Values)
 					{
-						if (WorldMgr.GetDistance(client.Player, house.X, house.Y, house.Z) <= HouseMgr.HOUSE_DISTANCE)
+						if (client.Player.IsWithinRadius( house, HouseMgr.HOUSE_DISTANCE ))
 						{
 							if (!client.Player.HousingUpdateArray[house.UniqueID])
 							{

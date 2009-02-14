@@ -114,7 +114,7 @@ namespace DOL.AI.Brain
 					// classes on him, if not, well, dragon will try to get its Glare off...
 
 					GameObject source = (args as TakeDamageEventArgs).DamageSource;
-					if (WorldMgr.CheckDistance(dragon, source, dragon.AttackRange))
+					if (dragon.IsWithinRadius(source, dragon.AttackRange))
 						dragon.CheckMeleeDebuff(source as GamePlayer);
 					else dragon.CheckGlare(source as GamePlayer);
 				}
@@ -125,7 +125,7 @@ namespace DOL.AI.Brain
 					// classes on him, if not, there's still Glare...
 
 					GameObject source = (args as EnemyHealedEventArgs).HealSource;
-					if (WorldMgr.CheckDistance(dragon, source, dragon.AttackRange))
+					if (dragon.IsWithinRadius(source, dragon.AttackRange))
 						dragon.CheckRangedDebuff(source as GamePlayer);
 					else dragon.CheckGlare(source as GamePlayer);
 				}
@@ -150,7 +150,7 @@ namespace DOL.AI.Brain
         {
             GameDragon dragon = Body as GameDragon;
             if (dragon == null) return false;
-            return !WorldMgr.CheckDistance(dragon, dragon.SpawnX, dragon.SpawnY, dragon.SpawnZ, dragon.TetherRange);
+            return !dragon.IsWithinRadius( dragon.SpawnPoint, dragon.TetherRange );
         }
 
         #endregion
@@ -239,7 +239,7 @@ namespace DOL.AI.Brain
 				foreach (DictionaryEntry dictEntry in m_aggroTable)
 				{
 					GamePlayer player = dictEntry.Key as GamePlayer;
-					if (player != null && !WorldMgr.CheckDistance(dragon, player, dragon.AttackRange))
+					if (player != null && !dragon.IsWithinRadius(player, dragon.AttackRange))
 						return dragon.CheckGlare(player);
 				}
             }

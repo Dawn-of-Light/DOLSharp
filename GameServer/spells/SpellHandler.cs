@@ -159,7 +159,7 @@ namespace DOL.GS.Spells
 				return;
 			}
 
-			if (Caster.Mana > Spell.PulsePower)
+			if (Caster.Mana >= Spell.PulsePower)
 			{
 				Caster.Mana -= Spell.PulsePower;
 				if (Spell.InstrumentRequirement != 0 || !HasPositiveEffect)
@@ -535,7 +535,7 @@ namespace DOL.GS.Spells
             }
 		    if (targetType == "area")
 			{
-				if (!WorldMgr.CheckDistance(m_caster, m_caster.GroundTarget, CalculateSpellRange()))
+				if (!m_caster.IsWithinRadius(m_caster.GroundTarget, CalculateSpellRange()))
 				{
 					MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
 					return false;
@@ -558,7 +558,7 @@ namespace DOL.GS.Spells
 					return false;
 				}
 
-				if (!WorldMgr.CheckDistance(m_caster, selectedTarget, CalculateSpellRange()))
+				if (!m_caster.IsWithinRadius(selectedTarget, CalculateSpellRange()))
 				{
 					if(Caster is GamePlayer) MessageToCaster("That target is too far away!",
 						eChatType.CT_SpellResisted);
@@ -788,7 +788,7 @@ namespace DOL.GS.Spells
 
 			if (m_spell.Target.ToLower() == "area")
 			{
-				if (!WorldMgr.CheckDistance(m_caster, m_caster.GroundTarget, CalculateSpellRange()))
+				if (!m_caster.IsWithinRadius(m_caster.GroundTarget, CalculateSpellRange()))
 				{
 					MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
 					return false;
@@ -811,7 +811,7 @@ namespace DOL.GS.Spells
                         return false;
                     }
 
-                    if (!WorldMgr.CheckDistance(m_caster, target, CalculateSpellRange()))
+                    if (!m_caster.IsWithinRadius(target, CalculateSpellRange()))
                     {
                         if (Caster is GamePlayer)
                             MessageToCaster("That target is too far away!", eChatType.CT_SpellResisted);
@@ -873,7 +873,7 @@ namespace DOL.GS.Spells
                             }
                         }
                         //Now check distance for own pet
-                        if (!WorldMgr.CheckDistance(m_caster, target, CalculateSpellRange()))
+                        if (!m_caster.IsWithinRadius(target, CalculateSpellRange()))
                         {
                             MessageToCaster("That target is too far away!", eChatType.CT_SpellResisted);
                             return false;
@@ -1487,7 +1487,7 @@ namespace DOL.GS.Spells
 
 			      GameNPC petBody = target as GameNPC;
 			      // check target
-			      if(petBody != null && WorldMgr.CheckDistance(Caster, petBody, Spell.Range))
+			      if(petBody != null && Caster.IsWithinRadius(petBody, Spell.Range))
 			      {
               if (Caster.GetItsControlledNpc(petBody))
               {
@@ -1498,7 +1498,7 @@ namespace DOL.GS.Spells
 			      if(list.Count < 1 && Caster.ControlledNpc != null)
 			      {
 			        petBody = Caster.ControlledNpc.Body;
-			        if(petBody != null && WorldMgr.CheckDistance(Caster, petBody, Spell.Range))
+			        if(petBody != null && Caster.IsWithinRadius(petBody, Spell.Range))
 			        {
 			          list.Add(petBody);
 			        }
@@ -1656,7 +1656,7 @@ namespace DOL.GS.Spells
 							{
 								//Add our first pet
 								GameNPC petBody2 = npc.Body;
-								if (WorldMgr.CheckDistance(m_caster, petBody2, spellRange))
+								if (m_caster.IsWithinRadius(petBody2, spellRange))
 									list.Add(petBody2);
 
 								//Now lets add any subpets!
@@ -1664,7 +1664,7 @@ namespace DOL.GS.Spells
 								{
 									foreach (IControlledBrain icb in petBody2.ControlledNpcList)
 									{
-										if (icb != null && WorldMgr.CheckDistance(m_caster, icb.Body, spellRange))
+										if (icb != null && m_caster.IsWithinRadius(icb.Body, spellRange))
 											list.Add(icb.Body);
 									}
 								}
@@ -1677,7 +1677,7 @@ namespace DOL.GS.Spells
 							foreach (GameLiving living in group.GetMembersInTheGroup())
 							{
 								// only players in range
-								if (WorldMgr.CheckDistance(m_caster, living, spellRange))
+								if (m_caster.IsWithinRadius(living, spellRange))
 								{
 									list.Add(living);
 
@@ -1686,7 +1686,7 @@ namespace DOL.GS.Spells
 									{
 										//Add our first pet
 										GameNPC petBody2 = npc.Body;
-										if (WorldMgr.CheckDistance(m_caster, petBody2, spellRange))
+										if (m_caster.IsWithinRadius(petBody2, spellRange))
 											list.Add(petBody2);
 
 										//Now lets add any subpets!
@@ -1694,7 +1694,7 @@ namespace DOL.GS.Spells
 										{
 											foreach (IControlledBrain icb in petBody2.ControlledNpcList)
 											{
-												if (icb != null && WorldMgr.CheckDistance(m_caster, icb.Body, spellRange))
+												if (icb != null && m_caster.IsWithinRadius(icb.Body, spellRange))
 													list.Add(icb.Body);
 											}
 										}
@@ -1827,7 +1827,7 @@ namespace DOL.GS.Spells
 				}
 				else if (Spell.Target.ToLower() == "area")
 				{
-					int dist = WorldMgr.GetDistance(t, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z);
+					int dist = t.GetDistance( Caster.GroundTarget );
 					if (dist >= 0)
 					{
 						ApplyEffectOnTarget(t, (effectiveness - CalculateAreaVariance(dist, Spell.Radius)));
@@ -1835,7 +1835,7 @@ namespace DOL.GS.Spells
 				}
 				else if (Spell.Target.ToLower() == "cone")
 				{
-					int dist = WorldMgr.GetDistance(Caster, t);
+					int dist = t.GetDistance(Caster);
 					if (dist >= 0)
 					{
 						//Cone spells use the range for their variance!
@@ -1844,7 +1844,7 @@ namespace DOL.GS.Spells
 				}
 				else
 				{
-					int dist = WorldMgr.GetDistance(target, t);
+					int dist = t.GetDistance(target);
 					if (dist >= 0)
 					{
 						ApplyEffectOnTarget(t, (effectiveness - CalculateAreaVariance(dist, Spell.Radius)));

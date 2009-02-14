@@ -1033,7 +1033,7 @@ namespace DOL.GS.Keeps
 
 			foreach (GamePlayer player in component.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				int d = WorldMgr.GetDistance(player.X, player.Y, 0, hookpoint.X, hookpoint.Y, 0, 0);
+                int d = hookpoint.GetDistance( player as IPoint2D );
 				if (d > distance)
 					continue;
 

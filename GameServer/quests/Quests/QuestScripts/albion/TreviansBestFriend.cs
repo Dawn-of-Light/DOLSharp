@@ -1078,7 +1078,7 @@ namespace DOL.GS.Quests.Albion
 				}
 				else
 				{
-					if (quest.Step >= 6 && quest.lilybet != null && WorldMgr.GetDistance(quest.lilybet, trevian.X, trevian.Y, trevian.Z) < 2000)
+                    if ( quest.Step >= 6 && quest.lilybet != null && trevian.IsWithinRadius( quest.lilybet, 2000 ) )
 					{
 						trevian.SayTo(player, "Thank you so very much! I thought I would never see Lilybet again. She has been such a faithful companion to me considering I am an amateur Sorcerer; I could not bear the thought of [losing her]. Lilybet, go back to the Wharf for some much needed rest.");
 						quest.Step = 7;

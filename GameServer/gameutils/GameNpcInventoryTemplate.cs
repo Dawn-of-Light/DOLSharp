@@ -95,7 +95,7 @@ namespace DOL.GS
 		/// <returns>true if added</returns>
 		public bool AddNPCEquipment(eInventorySlot slot, int model)
 		{
-			return AddNPCEquipment(slot, model, 0, 0);
+			return AddNPCEquipment(slot, model, 0, 0, 0);
 		}
 
 		/// <summary>
@@ -107,7 +107,7 @@ namespace DOL.GS
 		/// <returns>true if added</returns>
 		public bool AddNPCEquipment(eInventorySlot slot, int model, int color)
 		{
-			return AddNPCEquipment(slot, model, color, 0);
+			return AddNPCEquipment(slot, model, color, 0, 0);
 		}
 
 		/// <summary>

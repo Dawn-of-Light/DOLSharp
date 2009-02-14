@@ -27,7 +27,8 @@ namespace DOL.GS.RealmAbilities
 				player.Out.SendMessage("You must be standing still to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (player.GroundTarget == null || WorldMgr.GetDistance(player, player.GroundTarget.X, player.GroundTarget.Y, player.GroundTarget.Z) >1500)
+
+            if ( player.GroundTarget == null || !player.IsWithinRadius( player.GroundTarget, 1500 ) )
             {
 				player.Out.SendMessage("You groundtarget is too far away to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;

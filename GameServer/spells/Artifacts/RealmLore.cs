@@ -23,7 +23,7 @@ namespace DOL.GS.Spells
 			if(selectedTarget==null) return false;
 			if (selectedTarget is GameNPC) { MessageToCaster("This spell works only on players.", eChatType.CT_SpellResisted); return false; }
 			if(selectedTarget as GamePlayer==null) return false;
-			if(WorldMgr.GetDistance(m_caster, selectedTarget) > Spell.Range) { MessageToCaster("Your target is too far away.", eChatType.CT_SpellResisted); return false; }
+			if(!m_caster.IsWithinRadius(selectedTarget, Spell.Range)) { MessageToCaster("Your target is too far away.", eChatType.CT_SpellResisted); return false; }
             return true;
         }
 		public override void OnDirectEffect(GameLiving target, double effectiveness)

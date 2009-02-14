@@ -828,6 +828,23 @@ namespace DOL
 			}
 
 			/// <summary>
+			/// The model used for the character's display (usually the same as CreationModel)
+			/// </summary>
+			[DataElement( AllowDbNull = false )]
+			public int CurrentModel
+			{
+				get
+				{
+					return m_currentModel;
+				}
+				set
+				{
+					Dirty = true;
+					m_currentModel = value;
+				}
+			}
+
+			/// <summary>
 			/// The region of character
 			/// </summary>
 			[DataElement(AllowDbNull = false)]
@@ -845,7 +862,7 @@ namespace DOL
 			}
 
 			/// <summary>
-			/// the weapon active to show
+			/// The character's active weapon - 0 for right-hand, 1 for two-hand
 			/// </summary>
 			[DataElement(AllowDbNull = false)]
 			public byte ActiveWeaponSlot
@@ -858,23 +875,6 @@ namespace DOL
 				{
 					m_activeWeaponSlot = value;
 					Dirty = true;
-				}
-			}
-
-			/// <summary>
-			/// The model used actually in character (main time same than CreationModel)
-			/// </summary>
-			[DataElement(AllowDbNull = false)]
-			public int CurrentModel
-			{
-				get
-				{
-					return m_currentModel;
-				}
-				set
-				{
-					Dirty = true;
-					m_currentModel = value;
 				}
 			}
 

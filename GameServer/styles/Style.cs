@@ -146,6 +146,11 @@ namespace DOL.GS.Styles
 			m_Procs = new List<DBStyleXSpell>();
 		}
 
+        public int ClassID
+        {
+            get { return baseStyle.ClassId; }
+        }
+
 		/// <summary>
 		/// (readonly)(procs) The list of procs available for this style
 		/// </summary>
