@@ -1484,7 +1484,7 @@ namespace DOL.GS
 				get
 				{
 					GamePlayer obj = (GamePlayer)m_currentObj;
-					return new PlayerDistEntry(obj, WorldMgr.GetDistance(obj.X, obj.Y, obj.Z, m_X, m_Y, m_Z));
+                    return new PlayerDistEntry( obj, obj.GetDistance( new Point3D( m_X, m_Y, m_Z ) ) );
 				}
 			}
 		}
@@ -1504,7 +1504,7 @@ namespace DOL.GS
 				get
 				{
 					GameNPC obj = (GameNPC)m_currentObj;
-					return new NPCDistEntry(obj, WorldMgr.GetDistance(obj.X, obj.Y, obj.Z, m_X, m_Y, m_Z));
+                    return new NPCDistEntry( obj, obj.GetDistance( new Point3D( m_X, m_Y, m_Z ) ) );
 				}
 			}
 		}
@@ -1524,7 +1524,7 @@ namespace DOL.GS
 				get
 				{
 					GameStaticItem obj = (GameStaticItem)m_currentObj;
-					return new ItemDistEntry(obj, WorldMgr.GetDistance(obj.X, obj.Y, obj.Z, m_X, m_Y, m_Z));
+                    return new ItemDistEntry( obj, obj.GetDistance( new Point3D( m_X, m_Y, m_Z ) ) );
 				}
 			}
 		}
@@ -1544,7 +1544,7 @@ namespace DOL.GS
 				get
 				{
 					IDoor obj = (IDoor)m_currentObj;
-					return new DoorDistEntry(obj, WorldMgr.GetDistance(obj.X, obj.Y, obj.Z, m_X, m_Y, m_Z));
+                    return new DoorDistEntry( obj, obj.GetDistance( new Point3D( m_X, m_Y, m_Z ) ) );
 				}
 			}
 		}

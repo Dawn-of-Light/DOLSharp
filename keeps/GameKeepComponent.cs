@@ -496,7 +496,7 @@ namespace DOL.GS.Keeps
 					foreach (GameKeepGuard guard in this.Keep.Guards.Values)
 					{
 						guard.MoveTo(guard.CurrentRegionID, guard.X, guard.Y, this.Keep.Z, guard.Heading);
-						guard.SpawnZ = this.Keep.Z;
+						guard.SpawnPoint.Z = this.Keep.Z;
 					}
 				}
 			}

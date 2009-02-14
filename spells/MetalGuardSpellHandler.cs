@@ -52,7 +52,7 @@ namespace DOL.GS.Spells
                                     list.Add(groupPlayer);
                                     IControlledBrain npc = groupPlayer.ControlledNpc;
                                     if (npc != null)
-                                        if (WorldMgr.CheckDistance(casterPlayer, npc.Body, spellRange))
+                                        if (casterPlayer.IsWithinRadius( npc.Body, spellRange ))
                                             list.Add(npc.Body);
                                 }
                             }

@@ -167,7 +167,7 @@ namespace DOL.GS.Spells
 			protected override void OnTick()
 			{
 				//If the target is still in range
-				if (handler.Caster.Mana >= handler.Spell.PulsePower && WorldMgr.CheckDistance(handler.Caster, handler.FSTarget, handler.Spell.Range))
+				if (handler.Caster.Mana >= handler.Spell.PulsePower && handler.Caster.IsWithinRadius(handler.FSTarget, handler.Spell.Range))
 				{
 					handler.Caster.Mana -= handler.Spell.PulsePower;
 					handler.Caster.LastAttackTickPvP = handler.Caster.CurrentRegion.Time;

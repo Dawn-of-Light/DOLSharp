@@ -55,7 +55,7 @@ namespace DOL.GS.Spells
         return false;
       }
 
-      if(!WorldMgr.CheckDistance(Caster, Caster.GroundTarget, CalculateSpellRange()))
+      if(!Caster.IsWithinRadius( Caster.GroundTarget, CalculateSpellRange() ))
       {
         MessageToCaster("You have to select a closer Areatarget.", eChatType.CT_SpellResisted);
         return false;

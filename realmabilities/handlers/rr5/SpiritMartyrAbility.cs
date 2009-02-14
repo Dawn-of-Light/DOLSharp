@@ -53,7 +53,7 @@ namespace DOL.GS.RealmAbilities
             {
                 foreach (GamePlayer tplayer in player.Group.GetPlayersInTheGroup())
                 {
-                    if (tplayer.IsAlive && WorldMgr.CheckDistance(player, tplayer, m_healRange)
+                    if (tplayer.IsAlive && player.IsWithinRadius(tplayer, m_healRange )
                         && tplayer.Health < tplayer.MaxHealth)
                         targets.Add(player);
                 }

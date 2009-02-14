@@ -146,7 +146,7 @@ namespace DOL.GS
                         mount.Y = path.Y;
                         mount.Z = path.Z;
                         mount.CurrentRegion = CurrentRegion;
-                        mount.Heading = Point2D.GetHeadingToLocation(path, path.Next);
+						mount.Heading = path.GetHeading( path.Next );
                         mount.AddToWorld();
                         mount.CurrentWayPoint = path;
                         GameEventMgr.AddHandler(mount, GameNPCEvent.PathMoveEnds, new DOLEventHandler(OnHorseAtPathEnd));

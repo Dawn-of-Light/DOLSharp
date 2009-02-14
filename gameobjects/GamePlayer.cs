@@ -1437,7 +1437,7 @@ namespace DOL.GS
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Pray.SelectGrave"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (!WorldMgr.CheckDistance(this, gravestone, 2000))
+			if (!this.IsWithinRadius(gravestone, 2000))
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Pray.MustGetCloser"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -1637,6 +1637,12 @@ namespace DOL.GS
 		/// active in the world, the modelchange will be visible
 		/// (delegate to PlayerCharacter)
 		/// </summary>
+		/// <remarks>
+		/// The model of a GamePlayer is a 16-bit unsigned integer.
+		/// The leftmost 3 bits are related to hair color.
+		/// The next 2 bits are for the size: 01 = short, 10 = average, 11 = tall (00 appears to be average as well)
+		/// The remaining 11 bits are for the model (see monsters.csv in gamedata.mpk)
+		/// </remarks>
 		public override ushort Model
 		{
 			get { return PlayerCharacter != null ? (ushort)PlayerCharacter.CurrentModel : base.Model; }
@@ -4837,7 +4843,7 @@ namespace DOL.GS
 				string targetMsg = "";
 				if (attackTarget != null)
 				{
-					if (WorldMgr.CheckDistance(this, attackTarget, AttackRange))
+					if (this.IsWithinRadius(attackTarget, AttackRange))
 						targetMsg = LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.TargetInRange");
 					else
 						targetMsg = LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.TargetOutOfRange");
@@ -5056,7 +5062,7 @@ namespace DOL.GS
 				{
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "System.MustSelectTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
-				else if (!WorldMgr.CheckDistance(this, target, AttackRange))
+				else if (!this.IsWithinRadius(target, AttackRange))
 				{
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.TooFarAway", target.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
@@ -6533,7 +6539,7 @@ namespace DOL.GS
 				{
 					if (player == this) continue;
 					if (enemy.Attackers.Contains(player)) continue;
-					if (WorldMgr.CheckDistance(this, player, WorldMgr.MAX_EXPFORKILL_DISTANCE))
+					if (this.IsWithinRadius(player, WorldMgr.MAX_EXPFORKILL_DISTANCE))
 					{
 						Notify(GameLivingEvent.EnemyKilled, player, new EnemyKilledEventArgs(enemy));
 					}
@@ -8579,8 +8585,8 @@ namespace DOL.GS
 				CurrentUpdateArray.SetAll(false);
 				foreach (GameNPC npc in GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
-					if (WorldMgr.GetDistance(npc.X, npc.Y, npc.Z, m_originalX, m_originalY, m_originalZ) <= WorldMgr.VISIBILITY_DISTANCE)
-						continue;
+                    if ( npc.IsWithinRadius( new Point3D( m_originalX, m_originalY, m_originalZ ), WorldMgr.VISIBILITY_DISTANCE ) )
+                        continue;
 
 					Out.SendNPCCreate(npc);
 					if (npc.Inventory != null)
@@ -8616,11 +8622,10 @@ namespace DOL.GS
 
 				if (ControlledNpc != null &&
 					ControlledNpc.WalkState != eWalkState.Stay
-					&& WorldMgr.CheckDistance(this, ControlledNpc.Body, 1000))
+					&& this.IsWithinRadius( ControlledNpc.Body, 1000 ) )
 				{
-					int tx, ty;
-					GetSpotFromHeading(64, out tx, out ty);
-					ControlledNpc.Body.MoveTo(CurrentRegionID, tx, ty, Z, (ushort)((this.Heading + 2048) % 4096), true);
+                    Point2D point = this.GetPointFromHeading( this.Heading, 64 );
+					ControlledNpc.Body.MoveTo(CurrentRegionID, point.X, point.Y, Z, (ushort)((this.Heading + 2048) % 4096), true);
 				}
 			}
 			return true;
@@ -8707,9 +8712,10 @@ namespace DOL.GS
 				Out.SendPlayerJump(false);
 				LastNPCUpdate = Environment.TickCount;
 				CurrentUpdateArray.SetAll(false);
+                Point3D originalPoint = new Point3D( m_originalX, m_originalY, m_originalZ );
 				foreach (GameNPC npc in GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
-					if (WorldMgr.GetDistance(npc.X, npc.Y, npc.Z, m_originalX, m_originalY, m_originalZ) <= WorldMgr.VISIBILITY_DISTANCE)
+					if (npc.IsWithinRadius( originalPoint, WorldMgr.VISIBILITY_DISTANCE) )
 						continue;
 
 					Out.SendNPCCreate(npc);
@@ -9135,7 +9141,7 @@ namespace DOL.GS
 					if (ad != null && ad.IsMeleeAttack && (ad.AttackResult == eAttackResult.TargetNotVisible || ad.AttackResult == eAttackResult.OutOfRange))
 					{
 						//Does the target can be attacked ?
-						if (ad.Target != null && IsObjectInFront(ad.Target, 120) && WorldMgr.CheckDistance(this, ad.Target, AttackRange) && m_attackAction != null)
+						if (ad.Target != null && IsObjectInFront(ad.Target, 120) && this.IsWithinRadius(ad.Target, AttackRange) && m_attackAction != null)
 						{
 							m_attackAction.Start(1);
 						}
@@ -9483,7 +9489,7 @@ namespace DOL.GS
 					if (ad != null && ad.IsMeleeAttack && (ad.AttackResult == eAttackResult.TargetNotVisible || ad.AttackResult == eAttackResult.OutOfRange))
 					{
 						//Does the target can be attacked ?
-						if (ad.Target != null && IsObjectInFront(ad.Target, 120) && WorldMgr.CheckDistance(this, ad.Target, AttackRange) && m_attackAction != null)
+						if (ad.Target != null && IsObjectInFront(ad.Target, 120) && this.IsWithinRadius(ad.Target, AttackRange) && m_attackAction != null)
 						{
 							m_attackAction.Start(1);
 						}
@@ -10154,10 +10160,9 @@ namespace DOL.GS
 		{
 			GameInventoryItem gameItem = new GameInventoryItem(item); // fixed
 
-			int x, y;
-			GetSpotFromHeading(30, out x, out y);
-			gameItem.X = x;
-			gameItem.Y = y;
+            Point2D itemloc = this.GetPointFromHeading( this.Heading, 30 );
+			gameItem.X = itemloc.X;
+			gameItem.Y = itemloc.Y;
 			gameItem.Z = Z;
 			gameItem.Heading = Heading;
 			gameItem.CurrentRegionID = CurrentRegionID;
@@ -10189,7 +10194,7 @@ namespace DOL.GS
 				return false;
 			}
 
-			if ((floorObject is GameBoat == false) && !checkRange && !WorldMgr.CheckDistance(floorObject, this, WorldMgr.PICKUP_DISTANCE))
+			if ((floorObject is GameBoat == false) && !checkRange && !floorObject.IsWithinRadius(this, WorldMgr.PICKUP_DISTANCE))
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.ObjectTooFarAway", floorObject.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
@@ -10248,7 +10253,7 @@ namespace DOL.GS
 						{
 							if (ply.IsAlive
 								&& ply.CanSeeObject(ply, floorObject)
-								&& (WorldMgr.GetDistance(this, ply) < WorldMgr.MAX_EXPFORKILL_DISTANCE)
+                                && this.IsWithinRadius( ply, WorldMgr.MAX_EXPFORKILL_DISTANCE )
 								&& (ply.ObjectState == eObjectState.Active)
 								&& (ply.AutoSplitLoot)
 								&& (ply.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != eInventorySlot.Invalid))
@@ -10363,7 +10368,7 @@ namespace DOL.GS
 			}
 			else if (floorObject is GameBoat)
 			{
-				if (!WorldMgr.CheckDistance(this, floorObject, 1000))
+				if (!this.IsWithinRadius(floorObject, 1000))
 				{
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.TooFarFromBoat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
@@ -10752,19 +10757,19 @@ namespace DOL.GS
 			#endregion
 
 			#region setting world-init-position (delegate to PlayerCharacter dont make sense)
-			m_X = my_character.Xpos;
-			m_Y = my_character.Ypos;
-			m_Z = my_character.Zpos;
+			m_x = my_character.Xpos;
+			m_y = my_character.Ypos;
+			m_z = my_character.Zpos;
 			m_Heading = (ushort)my_character.Direction;
 			//important, use CurrentRegion property
 			//instead because it sets the Region too
 			CurrentRegionID = (ushort)my_character.Region;
-			if (CurrentRegion == null || CurrentRegion.GetZone(m_X, m_Y) == null)
+			if (CurrentRegion == null || CurrentRegion.GetZone(m_x, m_y) == null)
 			{
-				log.WarnFormat("Invalid region/zone on char load ({0}): x={1} y={2} z={3} reg={4}; moving to bind point.", my_character.Name, m_X, m_Y, m_Z, my_character.Region);
-				m_X = my_character.BindXpos;
-				m_Y = my_character.BindYpos;
-				m_Z = my_character.BindZpos;
+				log.WarnFormat("Invalid region/zone on char load ({0}): x={1} y={2} z={3} reg={4}; moving to bind point.", my_character.Name, X, Y, Z, my_character.Region);
+				m_x = my_character.BindXpos;
+				m_y = my_character.BindYpos;
+				m_z = my_character.BindZpos;
 				m_Heading = (ushort)my_character.BindHeading;
 				CurrentRegionID = (ushort)my_character.BindRegion;
 			}
@@ -10773,7 +10778,7 @@ namespace DOL.GS
 			{
 				//FIXME: Whats this if the normal pos not used and the bind-pos is used???
 				//m_lastUniqueLocations[i] = new GameLocation(null, (ushort)m_character.Region, m_character.Xpos, m_character.Ypos, m_character.Zpos);
-				m_lastUniqueLocations[i] = new GameLocation(null, CurrentRegionID, m_X, m_Y, m_Z);
+				m_lastUniqueLocations[i] = new GameLocation(null, CurrentRegionID, m_x, m_y, m_z);
 			}
 			#endregion
 
@@ -11375,8 +11380,10 @@ namespace DOL.GS
 
 					if (detectRadius < 126) detectRadius = 126;
 
-					double distanceToPlayer = WorldMgr.GetDistance(npc, player);
-					if (distanceToPlayer > detectRadius) continue;
+                    double distanceToPlayer = npc.GetDistance( player );
+
+                    if ( distanceToPlayer > detectRadius )
+                        continue;
 
 					double fieldOfView = 90.0;  //90 degrees  = standard FOV
 					double fieldOfListen = 120.0; //120 degrees = standard field of listening
@@ -11384,7 +11391,8 @@ namespace DOL.GS
 					{
 						fieldOfListen += (npc.Level - player.Level) * 3;
 					}
-					double angle = npc.GetAngleToTarget(player);
+
+                    double angle = npc.GetAngle( player );
 
 					//player in front
 					fieldOfView /= 2.0;
@@ -11536,7 +11544,7 @@ namespace DOL.GS
 
 			// Fin
 			// vampiir stealth range, uncomment when add eproperty stealthrange i suppose
-			return WorldMgr.CheckDistance(this, enemy, range);
+            return this.IsWithinRadius( enemy, range );
 		}
 
 		#endregion
@@ -12160,7 +12168,7 @@ namespace DOL.GS
 			if (npc == null || npc.Body.IsConfused || !GameServer.ServerRules.IsAllowedToAttack(this, TargetObject as GameLiving, false))
 				return;
 
-			if (WorldMgr.GetDistance(TargetObject, this) > 2000)
+			if (!this.IsWithinRadius( TargetObject, 2000 ))
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.TooFarAwayForPet"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
