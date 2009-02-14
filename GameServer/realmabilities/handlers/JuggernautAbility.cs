@@ -51,7 +51,7 @@ namespace DOL.GS.RealmAbilities
 				player.Out.SendMessage("You must have a pet controlled to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (!WorldMgr.CheckDistance(player.ControlledNpc.Body, player, m_range))
+			if (!player.IsWithinRadius( player.ControlledNpc.Body, m_range ))
 			{
 				player.Out.SendMessage("Your pet is too far away!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;

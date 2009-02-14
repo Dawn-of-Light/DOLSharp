@@ -97,7 +97,7 @@ namespace DOL.GS.SkillHandler
 				player.Out.SendMessage("You cannot see " + player.TargetObject.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (!WorldMgr.CheckDistance(player, player.TargetObject, 135)) //Didn't use AttackRange cause of the fact that player could use a Bow
+			if (!player.IsWithinRadius(player.TargetObject, 135)) //Didn't use AttackRange cause of the fact that player could use a Bow
 			{
 				player.Out.SendMessage("Your target is too far away to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;

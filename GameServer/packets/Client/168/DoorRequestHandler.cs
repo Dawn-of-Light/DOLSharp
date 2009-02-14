@@ -67,7 +67,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			GameDoor target = client.Player.TargetObject as GameDoor;
 			
-			if( target != null && WorldMgr.GetDistance(client.Player, target) > 500)
+			if( target != null && !client.Player.IsWithinRadius( target, 500 ) )
 			{
 				client.Player.Out.SendMessage("You are too far to open this door", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				return 0;
@@ -215,7 +215,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						else
 						{
-							if (WorldMgr.CheckDistance(player, mydoor, WorldMgr.PICKUP_DISTANCE))
+							if (player.IsWithinRadius(mydoor, WorldMgr.PICKUP_DISTANCE))
 							{
 								if (m_doorState == 0x01)
 									mydoor.Open();

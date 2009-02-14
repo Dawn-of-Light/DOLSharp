@@ -95,7 +95,7 @@ namespace DOL.GS.GameEvents
 			//DOLTopia (our selfproclaimed town to show off)
 			//If the player is > 10.000 coordinates away or in another region
 			//we send a dialog to the player and register a dialog-callback
-			if (player.CurrentRegionID != 1 || !WorldMgr.CheckDistance(player, 531405, 479515, 0,10000))
+			if (player.CurrentRegionID != 1 || !player.IsWithinRadius( new Point2D( 531405, 479515 ), 10000 ))
 				player.Out.SendCustomDialog("Do you want to be teleported to DOLTopia?", new CustomDialogResponse(TeleportToDOLTopia));
 		}
 

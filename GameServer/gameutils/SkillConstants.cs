@@ -358,6 +358,74 @@ namespace DOL.GS
 		
 		public const string StunImmunity = "StunImmunity";
 
+		public static eObjectType AbilityToWeapon( string abilityKeyName )
+		{
+			eObjectType type = eObjectType.GenericItem;
+
+			switch ( abilityKeyName )
+			{
+				case Abilities.Shield:
+					type = eObjectType.Shield; break;
+				case Abilities.Weapon_Axes:
+					type = eObjectType.Axe; break;
+				case Abilities.Weapon_Blades:
+					type = eObjectType.Blades; break;
+				case Abilities.Weapon_Blunt:
+					type = eObjectType.Blunt; break;
+				case Abilities.Weapon_CelticSpear:
+					type = eObjectType.CelticSpear; break;
+				case Abilities.Weapon_CompositeBows:
+					type = eObjectType.CompositeBow; break;
+				case Abilities.Weapon_Crossbow:
+					type = eObjectType.Crossbow; break;
+				case Abilities.Weapon_Crushing:
+					type = eObjectType.CrushingWeapon; break;
+				case Abilities.Weapon_FistWraps:
+					type = eObjectType.FistWraps; break;
+				case Abilities.Weapon_Flexible:
+					type = eObjectType.Flexible; break;
+				case Abilities.Weapon_Hammers:
+					type = eObjectType.Hammer; break;
+				case Abilities.Weapon_HandToHand:
+					type = eObjectType.HandToHand; break;
+				case Abilities.Weapon_Instruments:
+					type = eObjectType.Instrument; break;
+				case Abilities.Weapon_LargeWeapons:
+					type = eObjectType.LargeWeapons; break;
+				case Abilities.Weapon_LeftAxes:
+					type = eObjectType.LeftAxe; break;
+				case Abilities.Weapon_Longbows:
+					type = eObjectType.Longbow; break;
+				case Abilities.Weapon_MaulerStaff:
+					type = eObjectType.MaulerStaff; break;
+				case Abilities.Weapon_Piercing:
+					type = eObjectType.Piercing; break;
+				case Abilities.Weapon_Polearms:
+					type = eObjectType.PolearmWeapon; break;
+				case Abilities.Weapon_RecurvedBows:
+					type = eObjectType.RecurvedBow; break;
+				case Abilities.Weapon_Scythe:
+					type = eObjectType.Scythe; break;
+				case Abilities.Weapon_Shortbows:
+					type = eObjectType.Fired; break;
+				case Abilities.Weapon_Slashing:
+					type = eObjectType.SlashingWeapon; break;
+				case Abilities.Weapon_Spears:
+					type = eObjectType.Spear; break;
+				case Abilities.Weapon_Staves:
+					type = eObjectType.Staff; break;
+				case Abilities.Weapon_Swords:
+					type = eObjectType.Sword; break;
+				case Abilities.Weapon_Thrown:
+					type = eObjectType.Thrown; break;
+				case Abilities.Weapon_Thrusting:
+					type = eObjectType.ThrustWeapon; break;
+				case Abilities.Weapon_TwoHanded:
+					type = eObjectType.TwoHandedWeapon; break;
+			}
+
+			return type;
+		}
 	}
 
 	/// <summary>
@@ -753,7 +821,5 @@ namespace DOL.GS
 		public const string Perfecter = "Perfecter";
 		public const string Stormlord = "Stormlord";
 		public const string Sojourner = "Sojourner";
-		
-		
-	}		
+	}
 }

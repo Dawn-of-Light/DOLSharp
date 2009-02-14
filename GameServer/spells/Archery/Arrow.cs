@@ -80,7 +80,7 @@ namespace DOL.GS.Spells
 
 		private void DealDamage(GameLiving target)
 		{
-			int ticksToTarget = WorldMgr.GetDistance(m_caster, target) * 100 / 85; // 85 units per 1/10s
+            int ticksToTarget = m_caster.GetDistance( target ) * 100 / 85; // 85 units per 1/10s
 			int delay = 1 + ticksToTarget / 100;
 			foreach (GamePlayer player in target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{

@@ -43,6 +43,7 @@ namespace DOL.GS
 		protected string m_model;
 		protected string m_size;
 		protected string m_level;
+		protected string m_equipmentTemplateID;
 		protected short m_maxSpeed;
 		protected byte m_parryChance;
 		protected byte m_evadeChance;
@@ -61,7 +62,6 @@ namespace DOL.GS
 		protected int m_charisma;
 		protected IList m_styles;
 		protected IList m_spells;
-		protected IList b_spells;
 		protected IList m_spelllines;
 		protected IList m_abilities;
 		protected byte m_aggroLevel;
@@ -90,6 +90,7 @@ namespace DOL.GS
 			m_level = data.Level;
 			if (m_level == null)
 				m_level = "0";
+			m_equipmentTemplateID = data.EquipmentTemplateID;
 			m_maxSpeed = data.MaxSpeed;
 			m_parryChance = data.ParryChance;
 			m_evadeChance = data.EvadeChance;
@@ -184,6 +185,7 @@ namespace DOL.GS
 			m_model = mob.Model.ToString();
 			m_size = mob.Size.ToString();
 			m_level = mob.Level.ToString();
+			m_equipmentTemplateID = mob.EquipmentTemplateID;
 			m_maxSpeed = (short)mob.MaxSpeed;
 			m_parryChance = mob.ParryChance;
 			m_evadeChance = mob.EvadeChance;
@@ -192,11 +194,13 @@ namespace DOL.GS
 			//Now for mob stats			
 			m_strength = mob.Strength;
 			m_constitution = mob.Constitution;
+			m_dexterity = mob.Dexterity;
 			m_quickness = mob.Quickness;
 			m_intelligence = mob.Intelligence;
 			m_piety = mob.Piety;
 			m_charisma = mob.Charisma;
 			m_empathy = mob.Empathy;
+			m_flags = (byte)mob.Flags;
 			m_meleeDamageType = (eDamageType)mob.MeleeDamageType;
 			AI.Brain.StandardMobBrain brain = mob.Brain as AI.Brain.StandardMobBrain;
 			if (brain != null)
@@ -270,6 +274,13 @@ namespace DOL.GS
 			get { return m_level; }
 			set { m_level = value; }
 		}
+
+		public string EquipmentTemplateID
+		{
+			get { return m_equipmentTemplateID; }
+			set { m_equipmentTemplateID = value; }
+		}
+
 		/// <summary>
 		/// Gets the template npc max speed
 		/// </summary>
@@ -465,7 +476,7 @@ namespace DOL.GS
 
 		public virtual void SaveIntoDatabase()
 		{
-			DBNpcTemplate tmp = tmp = (DBNpcTemplate)GameServer.Database.FindObjectByKey(typeof(DBNpcTemplate), TemplateId);
+			DBNpcTemplate tmp = (DBNpcTemplate)GameServer.Database.FindObjectByKey(typeof(DBNpcTemplate), TemplateId);
 			bool add = false;
 			if (tmp == null)
 			{

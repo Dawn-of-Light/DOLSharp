@@ -89,7 +89,7 @@ namespace DOL.GS
 
 		protected void HealerDialogResponse(GamePlayer player, byte response)
         {
-            if (!WorldMgr.CheckDistance(this, player, WorldMgr.INTERACT_DISTANCE))
+            if (!this.IsWithinRadius(player, WorldMgr.INTERACT_DISTANCE))
             {
                 player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Healer.HealerDialogResponse.Text1", GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;

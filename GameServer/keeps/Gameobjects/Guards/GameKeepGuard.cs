@@ -200,14 +200,15 @@ namespace DOL.GS.Keeps
 					{
 						foreach (GameLiving living in guard.Attackers)
 						{
-							if (WorldMgr.GetDistance(guard, living) <= guard.AttackRange)
+                            if ( guard.IsWithinRadius( living, guard.AttackRange ) )
 							{
 								guard.StartAttack(living);
 								return;
 							}
 						}
 					}
-					if (WorldMgr.GetDistance(guard, guard.TargetObject) <= guard.AttackRangeDistance)
+
+                    if ( guard.IsWithinRadius( guard.TargetObject, guard.AttackRangeDistance ) )
 					{
 						if (guard.MaxSpeedBase == 0 || (guard is GuardArcher && !guard.BeenAttackedRecently))
 							guard.SwitchToRanged(guard.TargetObject);
@@ -225,7 +226,7 @@ namespace DOL.GS.Keeps
 					guard.StopAttack();
 					return;
 				}
-				if (WorldMgr.GetDistance(guard, guard.TargetObject) > guard.AttackRange)
+                if ( !guard.IsWithinRadius( guard.TargetObject, guard.AttackRange ) )
 				{
 					guard.StopAttack();
 					return;
@@ -403,12 +404,12 @@ namespace DOL.GS.Keeps
 	ActiveWeaponSlot == eActiveWeaponSlot.TwoHanded)
 				{
 					//if we are targeting something, and the distance to the target object is greater than the attack range
-					if (TargetObject != null && WorldMgr.GetDistance(TargetObject, this) > AttackRange)
+                    if( TargetObject != null && !this.IsWithinRadius( TargetObject, AttackRange ) )
 					{
 						//stop the attack
 						StopAttack();
 						//if the distance to the attacker is less than the attack range
-						if (WorldMgr.GetDistance(this, ad.Attacker) <= AttackRange)
+						if ( this.IsWithinRadius( ad.Attacker, AttackRange ) )
 						{
 							//attack it
 							StartAttack(ad.Attacker);

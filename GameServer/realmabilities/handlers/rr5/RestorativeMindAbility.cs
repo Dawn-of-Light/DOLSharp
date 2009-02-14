@@ -33,8 +33,7 @@ namespace DOL.GS.RealmAbilities
 					{
 						RestorativeMindEffect aog = (RestorativeMindEffect)member.EffectList.GetOfType(typeof(RestorativeMindEffect));
 						if (!CheckPreconditions(member, DEAD) && aog == null
-							&& member.CurrentRegionID == living.CurrentRegionID
-							&& WorldMgr.GetDistance(living, member) <= 2000)
+							&& living.IsWithinRadius( member, 2000 ))
 						{
 							RestorativeMindEffect effect = new RestorativeMindEffect();
 							effect.Start(member);

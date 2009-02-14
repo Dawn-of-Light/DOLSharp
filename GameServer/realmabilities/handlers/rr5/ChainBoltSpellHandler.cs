@@ -56,7 +56,7 @@ namespace DOL.GS.Spells
                 m_currentSource = target;
             }
 
-            int ticksToTarget = WorldMgr.GetDistance(m_currentSource, target) * 100 / 85; // 85 units per 1/10s
+            int ticksToTarget = m_currentSource.GetDistance(target) * 100 / 85; // 85 units per 1/10s
             int delay = 1 + ticksToTarget / 100;
             foreach (GamePlayer player in target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
             {

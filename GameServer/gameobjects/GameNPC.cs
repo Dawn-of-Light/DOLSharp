@@ -527,18 +527,10 @@ namespace DOL.GS
 		/// Holds various flags of this npc
 		/// </summary>
 		protected uint m_flags;
-		/// <summary>
-		/// Spawn X coordinate
-		/// </summary>
-		protected int m_spawnX;
-		/// <summary>
-		/// Spawn Y coordinate
-		/// </summary>
-		protected int m_spawnY;
-		/// <summary>
-		/// Spawn Z coordinate
-		/// </summary>
-		protected int m_spawnZ;
+        /// <summary>
+        /// Spawn point
+        /// </summary>
+        protected Point3D m_spawnPoint;
 		/// <summary>
 		/// Spawn Heading
 		/// </summary>
@@ -592,30 +584,43 @@ namespace DOL.GS
 		{
 			get { return (uint)Environment.TickCount - m_lastVisibleToPlayerTick < 60000; }
 		}
-		/// <summary>
-		/// Gets or sets the spawnposition of this npc
-		/// </summary>
-		public virtual int SpawnX
-		{
-			get { return m_spawnX; }
-			set { m_spawnX = value; }
-		}
-		/// <summary>
-		/// Gets or sets the spawnposition of this npc
-		/// </summary>
-		public virtual int SpawnY
-		{
-			get { return m_spawnY; }
-			set { m_spawnY = value; }
-		}
-		/// <summary>
-		/// Gets or sets the spawnposition of this npc
-		/// </summary>
-		public virtual int SpawnZ
-		{
-			get { return m_spawnZ; }
-			set { m_spawnZ = value; }
-		}
+
+        /// <summary>
+        /// Gets or sets the spawnposition of this npc
+        /// </summary>
+        public virtual Point3D SpawnPoint
+        {
+            get { return m_spawnPoint; }
+            set { m_spawnPoint = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the spawnposition of this npc
+        /// </summary>
+        [Obsolete( "Use GameNPC.SpawnPoint" )]
+        public virtual int SpawnX
+        {
+            get { return m_spawnPoint.X; }
+            set { m_spawnPoint.X = value; }
+        }
+        /// <summary>
+        /// Gets or sets the spawnposition of this npc
+        /// </summary>
+        [Obsolete( "Use GameNPC.SpawnPoint" )]
+        public virtual int SpawnY
+        {
+            get { return m_spawnPoint.Y; }
+            set { m_spawnPoint.Y = value; }
+        }
+        /// <summary>
+        /// Gets or sets the spawnposition of this npc
+        /// </summary>
+        [Obsolete( "Use GameNPC.SpawnPoint" )]
+        public virtual int SpawnZ
+        {
+            get { return m_spawnPoint.Z; }
+            set { m_spawnPoint.Z = value; }
+        }
 
 		/// <summary>
 		/// Gets or sets the spawnheading of this npc
@@ -634,9 +639,9 @@ namespace DOL.GS
 			set
 			{
 				//Update the position before changing speed!
-				m_X = X;
-				m_Y = Y;
-				m_Z = Z;
+				m_x = X;
+				m_y = Y;
+				m_z = Z;
 
 				if (base.CurrentSpeed != value)
 				{
@@ -688,7 +693,7 @@ namespace DOL.GS
 				if (TargetX != 0 || TargetY != 0 || TargetZ != 0)
 				{
 					long diffnow = (long)FastMath.Abs((Environment.TickCount - MovementStartTick) * m_xAddition);
-					long diffshould = FastMath.Abs((long)m_targetX - m_X);
+					long diffshould = FastMath.Abs((long)m_targetX - m_x);
 					if (diffshould == 0) return m_targetX;
 
 					if (diffshould - diffnow < 0)
@@ -715,7 +720,7 @@ namespace DOL.GS
 				if (TargetX != 0 || TargetY != 0 || TargetZ != 0)
 				{
 					long diffnow = (long)FastMath.Abs((Environment.TickCount - MovementStartTick) * m_yAddition);
-					long diffshould = FastMath.Abs((long)TargetY - m_Y);
+					long diffshould = FastMath.Abs((long)TargetY - m_y);
 					if (diffshould == 0) return TargetY;
 
 					if (diffshould - diffnow < 0)
@@ -742,7 +747,7 @@ namespace DOL.GS
 				if (TargetX != 0 || TargetY != 0 || TargetZ != 0)
 				{
 					long diffnow = (long)FastMath.Abs((Environment.TickCount - MovementStartTick) * m_zAddition);
-					long diffshould = FastMath.Abs((long)TargetZ - m_Z);
+					long diffshould = FastMath.Abs((long)TargetZ - m_z);
 					if (diffshould == 0) return TargetZ;
 
 					if (diffshould - diffnow < 0)
@@ -811,9 +816,17 @@ namespace DOL.GS
 		{
 			get
 			{
-				return (TetherRange > 0)
-					? !WorldMgr.CheckDistance(this, SpawnX, SpawnY, SpawnZ, TetherRange)
-					: false;
+                if ( TetherRange > 0 )
+                {
+                    if( this.IsWithinRadius( this.SpawnPoint, TetherRange ) )
+                        return false;
+                    else
+                        return true;
+                }
+                else
+                {
+                    return false;
+                }
 			}
 		}
 
@@ -887,16 +900,17 @@ namespace DOL.GS
 
 			if (TargetX != 0 || TargetY != 0 || TargetZ != 0)
 			{
-				float dist = WorldMgr.GetDistance(m_X, m_Y, m_Z, m_targetX, m_targetY, m_targetZ);
+                float dist = this.GetDistance( new Point3D( m_targetX, m_targetY, m_targetZ ) );
+
 				if (dist <= 0)
 				{
 					m_xAddition = m_yAddition = m_zAddition = 0f;
 					return;
 				}
 				float speed = CurrentSpeed;
-				float diffx = (long)TargetX - m_X;
-				float diffy = (long)TargetY - m_Y;
-				float diffz = (long)TargetZ - m_Z;
+				float diffx = (long)TargetX - m_x;
+				float diffy = (long)TargetY - m_y;
+				float diffz = (long)TargetZ - m_z;
 				m_xAddition = (diffx * speed / dist) * 0.001f;
 				m_yAddition = (diffy * speed / dist) * 0.001f;
 				m_zAddition = (diffz * speed / dist) * 0.001f;
@@ -969,10 +983,10 @@ namespace DOL.GS
 		{
 			if (this.IsStunned || this.IsMezzed) return;
 			Notify(GameNPCEvent.TurnTo, this, new TurnToEventArgs(tx, ty));
-			if (sendUpdate)
-				if(Heading != GetHeadingToSpot(tx, ty)) Heading=GetHeadingToSpot(tx, ty);
-			else
-				if(base.Heading != GetHeadingToSpot(tx, ty)) base.Heading=GetHeadingToSpot(tx, ty);
+            if ( sendUpdate )
+                Heading = this.GetHeading( new Point2D( tx, ty ) );
+            else
+                base.Heading = this.GetHeading( new Point2D( tx, ty ) );
 		}
 		/// <summary>
 		/// Turns the npc towards a specific heading
@@ -1134,9 +1148,9 @@ namespace DOL.GS
 			int tx, ty, tz;
 			if (npc.IsReturningHome)
 			{
-			  tx = npc.SpawnX;
-			  ty = npc.SpawnY;
-			  tz = npc.SpawnZ;
+			  tx = npc.SpawnPoint.X;
+              ty = npc.SpawnPoint.Y;
+              tz = npc.SpawnPoint.Z;
 			}
 			else
 			{
@@ -1243,10 +1257,10 @@ namespace DOL.GS
 
 			Notify(GameNPCEvent.WalkTo, this, new WalkToEventArgs(tx, ty, tz, speed));
 			//Set our current position
-			m_X = X;
-			m_Y = Y;
-			m_Z = Z;
-			m_Heading = GetHeadingToSpot(tx, ty);
+			m_x = X;
+			m_y = Y;
+			m_z = Z;
+            m_Heading = GetHeading( new Point2D( tx, ty ) );
 			m_currentSpeed = speed;
 			m_targetX = tx;
 			m_targetY = ty;
@@ -1259,7 +1273,7 @@ namespace DOL.GS
 			//distance bug, makeing the mobs move totally weird!
 			//So we have to test if our targetZ == 0
 			//duff answer : already test in get distance so do not need it!
-			double dist = WorldMgr.GetDistance(m_X, m_Y, m_Z, m_targetX, m_targetY, m_targetZ);
+            double dist = this.GetDistance( new Point3D( m_targetX, m_targetY, m_targetZ ) );
 
 			int timeToTarget = timeToTarget = 300+(int) (dist*1000/speed);
 
@@ -1328,7 +1342,7 @@ namespace DOL.GS
 				brain.ClearAggroList();
 			}
 			m_isReturningHome = true;
-			WalkTo(SpawnX, SpawnY, SpawnZ, speed);
+            WalkTo( SpawnPoint.X, SpawnPoint.Y, SpawnPoint.Z, speed );
 		}
 
 		/// <summary>
@@ -1343,10 +1357,9 @@ namespace DOL.GS
 
 			CancelWalkToTimer();
 
-			m_X = X;
-			m_Y = Y;
-			m_Z = Z;
-
+			m_x = X;
+			m_y = Y;
+			m_z = Z;
 			m_targetX = 0;
 			m_targetY = 0;
 			m_targetZ = 0;
@@ -1621,7 +1634,7 @@ namespace DOL.GS
 
 			//if (Point3D.GetDistance(npc.CurrentWayPoint, npc)<100)
 			//not sure because here use point3D get distance but why??
-			if (WorldMgr.CheckDistance(CurrentWayPoint, this, 100))
+            if( this.IsWithinRadius( CurrentWayPoint, 100 ) )
 			{
 				if (CurrentWayPoint.Type == ePathType.Path_Reverse && CurrentWayPoint.FiredFlag)
 					CurrentWayPoint = CurrentWayPoint.Prev;
@@ -1826,9 +1839,9 @@ namespace DOL.GS
 				LoadTemplate(npcTemplate);
 			Name = npc.Name;
 			GuildName = npc.Guild;
-			m_X = npc.X;
-			m_Y = npc.Y;
-			m_Z = npc.Z;
+			m_x = npc.X;
+			m_y = npc.Y;
+			m_z = npc.Z;
 			m_Heading = (ushort)(npc.Heading & 0xFFF);
 			m_maxSpeedBase = npc.Speed;
 			m_currentSpeed = 0;
@@ -2565,9 +2578,9 @@ namespace DOL.GS
 					player.Out.SendLivingEquipmentUpdate(this);
 			}
 			BroadcastUpdate();
-			m_spawnX = X;
-			m_spawnY = Y;
-			m_spawnZ = Z;
+			m_spawnPoint.X = X;
+            m_spawnPoint.Y = Y;
+            m_spawnPoint.Z = Z;
 			m_spawnHeading = Heading;
 			lock (BrainSync)
 			{
@@ -2665,9 +2678,9 @@ namespace DOL.GS
 					player.Out.SendObjectRemove(this);
 			}
 			base.RemoveFromWorld();
-			m_X = x;
-			m_Y = y;
-			m_Z = z;
+			m_x = x;
+			m_y = y;
+			m_z = z;
 			m_Heading = heading;
 			CurrentRegionID = regionID;
 			return AddToWorld();
@@ -3417,8 +3430,8 @@ namespace DOL.GS
 			{
 				if (attackType == AttackData.eAttackType.Ranged || attackType == AttackData.eAttackType.Spell)
 				{
-					if (WorldMgr.GetDistance(this, attacker) > 150)
-						return false;
+                    if( this.IsWithinRadius( attacker, 150 ) == false )
+					    return false;
 				}
 			}
 
@@ -3447,7 +3460,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				if (m_respawnInterval > 0)
+				if ( m_respawnInterval > 0 || m_respawnInterval < 0 )
 					return m_respawnInterval;
 
 				//Standard 5-8 mins
@@ -3547,17 +3560,17 @@ namespace DOL.GS
 			Health = MaxHealth;
 			Mana = MaxMana;
 			Endurance = MaxEndurance;
-			int origSpawnX = m_spawnX;
-			int origSpawnY = m_spawnY;
+            int origSpawnX = m_spawnPoint.X;
+            int origSpawnY = m_spawnPoint.Y;
 			//X=(m_spawnX+Random(750)-350); //new SpawnX = oldSpawn +- 350 coords
 			//Y=(m_spawnY+Random(750)-350);	//new SpawnX = oldSpawn +- 350 coords
-			X = m_spawnX;
-			Y = m_spawnY;
-			Z = m_spawnZ;
+			X = m_spawnPoint.X;
+            Y = m_spawnPoint.Y;
+            Z = m_spawnPoint.Z;
 			Heading = m_spawnHeading;
 			AddToWorld();
-			m_spawnX = origSpawnX;
-			m_spawnY = origSpawnY;
+            m_spawnPoint.X = origSpawnX;
+            m_spawnPoint.Y = origSpawnY;
 			return 0;
 		}
 
@@ -3724,7 +3737,7 @@ namespace DOL.GS
 						if (gainer is GamePlayer)
 						{
 							GamePlayer player = gainer as GamePlayer;
-							if (player.Autoloot && WorldMgr.CheckDistance(loot, player, 700))
+							if (player.Autoloot && loot.IsWithinRadius(player, 700))
 							{
 								if (player.Group == null || (player.Group != null && player == player.Group.Leader))
 									aplayer.Add(player);
@@ -3778,7 +3791,7 @@ namespace DOL.GS
 				// collect "helping" group players in range
 				foreach (GameLiving living in attackerGroup.GetMembersInTheGroup())
 				{
-					if (WorldMgr.CheckDistance(living, this, WorldMgr.MAX_EXPFORKILL_DISTANCE) && living.IsAlive && living.ObjectState == eObjectState.Active)
+					if (this.IsWithinRadius(living, WorldMgr.MAX_EXPFORKILL_DISTANCE) && living.IsAlive && living.ObjectState == eObjectState.Active)
 						xpGainers.Add(living);
 				}
 				// add players in range for exp to exp gainers
@@ -3900,7 +3913,7 @@ namespace DOL.GS
 				else
 				{
 					//If we aren't a distance NPC, lets make sure we are in range to attack the target!
-					if (owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance && WorldMgr.GetDistance(owner, owner.TargetObject) > 90)
+					if (owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance && !owner.IsWithinRadius( owner.TargetObject, 90 ) )
 						((GameNPC)owner).Follow(owner.TargetObject, 90, 5000);
 				}
 				Interval = 500;
@@ -4149,6 +4162,9 @@ namespace DOL.GS
 			m_maxdistance = 0;
 			m_roamingRange = -1; // default to normal roaming mob
 			m_boatowner_id = "";
+
+            if ( m_spawnPoint == null )
+                m_spawnPoint = new Point3D();
 
 			// Mob stats should be a minimum of 30 each and strength should
 			// be on par with that of a templated player.
