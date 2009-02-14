@@ -138,7 +138,6 @@ namespace DOL.GS.Keeps
 			if (ServerProperties.Properties.USE_LIVE_KEEP_BONUSES)
 				KeepBonusMgr.UpdateCounts();
 
-			
 			return true;
 		}
 

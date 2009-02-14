@@ -20,7 +20,9 @@ namespace DOL.GS.RealmAbilities
 		public override void Execute(GameLiving living)
 		{
 			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
+
 			GamePlayer player = living as GamePlayer;
+
 			if (player.TargetObject == null || !(player.TargetObject is GamePlayer) || player.TargetObject.Realm != player.Realm || (player.TargetObject.Realm == player.Realm && (player.TargetObject as GameLiving).IsAlive))
 			{
 				player.Out.SendMessage("You have to target a dead member of your realm!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
@@ -34,17 +36,21 @@ namespace DOL.GS.RealmAbilities
 				case 2: m_resurrectValue = 50; break;
 				case 3: m_resurrectValue = 100; break;
 			}
+
 			GameLiving resurrectionCaster = targetPlayer.TempProperties.getObjectProperty(RESURRECT_CASTER_PROPERTY, null) as GameLiving;
+
 			if (resurrectionCaster != null)
 			{
 				player.Out.SendMessage("Your target is already considering a resurrection!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (WorldMgr.GetDistance(player, targetPlayer) > 1500 * player.GetModified(eProperty.SpellRange) * 0.01)
+
+            if( !player.IsWithinRadius( targetPlayer, (int)( 1500 * player.GetModified(eProperty.SpellRange) * 0.01 ) ) )
 			{
 				player.Out.SendMessage("You are too far away from your target to use this ability!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				return;
 			}
+
 			if (targetPlayer != null)
 			{
 				SendCasterSpellEffectAndCastMessage(living, 7019, true);
@@ -52,6 +58,7 @@ namespace DOL.GS.RealmAbilities
 				ResurrectLiving(targetPlayer, player);
 			}
 		}
+
 		public void ResurrectLiving(GamePlayer resurrectedPlayer, GameLiving rezzer)
 		{
 			if (rezzer.ObjectState != GameObject.eObjectState.Active)

@@ -736,8 +736,7 @@ namespace DOL.GS
 			// Face the target, then push it 600 units up and 400-600 units backwards.
 
 			TurnTo(target);
-			Point3D targetPosition = TargetPosition(target.X, target.Y, target.Z, 600, Heading, 
-				Util.Random(400, 600));
+			Point3D targetPosition = TargetPosition( target, 600, Heading, Util.Random(400, 600) );
 			target.MoveTo(target.CurrentRegionID,
 				targetPosition.X,
 				targetPosition.Y,
@@ -755,13 +754,13 @@ namespace DOL.GS
 		/// <param name="heading">The direction the object is displaced in.</param>
 		/// <param name="displacement">The amount the object is displaced by.</param>
 		/// <returns></returns>
-		private Point3D TargetPosition(int x, int y, int z, int height, int heading, int displacement)
+		private Point3D TargetPosition( IPoint3D target, int height, int heading, int displacement)
 		{
-			float h = (float) (heading / HEADING_CONST);  // Angle in radians, const is equivalent to 4096 / (2*PI)
-			x -= (int) (Math.Sin(h) * displacement);
-			y += (int) (Math.Cos(h) * displacement);
-			z += height;
-			return new Point3D(x, y, z);
+            Point3D targetPoint;
+
+            targetPoint = new Point3D( target.GetPointFromHeading( (ushort)heading, displacement ), target.Z + height );
+
+			return targetPoint;
 		}
 
 		#endregion

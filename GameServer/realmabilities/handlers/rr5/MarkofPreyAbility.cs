@@ -45,7 +45,7 @@ namespace DOL.GS.RealmAbilities
 				targets.Add(player);
 			else
 				foreach (GamePlayer grpMate in player.Group.GetPlayersInTheGroup())
-					if (WorldMgr.CheckDistance(grpMate, player, RANGE) && grpMate.IsAlive)
+					if (player.IsWithinRadius( grpMate, RANGE ) && grpMate.IsAlive)
 						targets.Add(grpMate);
 
 			foreach (GamePlayer target in targets)

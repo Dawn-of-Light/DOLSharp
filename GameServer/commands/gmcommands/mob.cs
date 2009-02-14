@@ -70,7 +70,7 @@ namespace DOL.GS.Commands
         "'/mob equipinfo' show mob's inventory info",
         "'/mob equiptemplate load <EquipmentTemplateID>' to load the inventory template from the database, it is open for modification after",
         "'/mob equiptemplate create' to create an empty inventory template",
-        "'/mob equiptemplate add <slot> <model> [color] [effect]' to add an item to the inventory template",
+        "'/mob equiptemplate add <slot> <model> [color] [effect] [extension]' to add an item to the inventory template",
         "'/mob equiptemplate remove <slot>' to remove item from the specified slot in the inventory template",
         "'/mob equiptemplate clear' to remove the inventory template from mob",
         "'/mob equiptemplate save <EquipmentTemplateID> [replace]' to save the inventory template with a new name",
@@ -82,6 +82,8 @@ namespace DOL.GS.Commands
         "'/mob refreshloot' to refresh the mob's loot generator",
         "'/mob copy' copies a mob exactly and places it at your location",
         "'/mob npctemplate <NPCTemplateID>' creates a mob with npc template, or modifies target",
+		"'/mob npctemplate create <NPCTemplateID>' creates a new template from selected mob",
+		"'/mob class <ClassName>' replaces mob with a clone of the specified class",
         "'/mob path <PathID>' associate the mob to the specified path",
         "'/mob house <HouseNumber>' set NPC's house number",
         "'/mob <stat> <amount>' Set the mob's stats (str, con, dex, qui, int, emp, pie, cha)",
@@ -169,6 +171,7 @@ namespace DOL.GS.Commands
                 case "refreshloot": refreshloot( client, targetMob, args ); break;
                 case "copy": copy( client, targetMob, args ); break;
                 case "npctemplate": npctemplate( client, targetMob, args ); break;
+				case "class": setClass( client, targetMob, args ); break;
                 case "path": path( client, targetMob, args ); break;
                 case "house": house( client, targetMob, args ); break;
                 case "str":
@@ -871,10 +874,22 @@ namespace DOL.GS.Commands
 
             TimeSpan respawn = TimeSpan.FromMilliseconds( targetMob.RespawnInterval );
 
-            if ( targetMob.RespawnInterval <= 0 )
-                info.Add( " + Respawn: NPC will not respawn" );
-            else
-                info.Add( " + Respawn: " + respawn.Minutes + " minutes " + respawn.Seconds + " seconds (Position: X=" + targetMob.SpawnX + " Y=" + targetMob.SpawnY + " Z=" + targetMob.SpawnZ + ")" );
+			if ( targetMob.RespawnInterval <= 0 )
+				info.Add( " + Respawn: NPC will not respawn" );
+			else
+			{
+				string days = "";
+				string hours = "";
+
+				if ( respawn.Days > 0 )
+					days = respawn.Days + " days ";
+
+				if ( respawn.Hours > 0 )
+					hours = respawn.Hours + " hours ";
+
+				info.Add( " + Respawn: " + days + hours + respawn.Minutes + " minutes " + respawn.Seconds + " seconds" );
+				info.Add( " + SpawnPoint: X=" + targetMob.SpawnPoint.X + " Y=" + targetMob.SpawnPoint.Y + " Z=" + targetMob.SpawnPoint.Z );
+			}
 
             info.Add( " " );
             info.Add( " + Mob Stats:" );
@@ -886,6 +901,10 @@ namespace DOL.GS.Commands
             info.Add( " + Empathy: " + targetMob.Empathy );
             info.Add( " + Piety: " + targetMob.Piety );
             info.Add( " + Charisma: " + targetMob.Charisma );
+			info.Add( " + Block %: " + targetMob.BlockChance );
+			info.Add( " + Parry %: " + targetMob.ParryChance );
+			info.Add( " + Evade %: " + targetMob.EvadeChance );
+			info.Add( " + Left Swing %: " + targetMob.LeftHandSwingChance );
             info.Add( " " );
 
             info.Add( " + Damage type: " + targetMob.MeleeDamageType );
@@ -1130,7 +1149,7 @@ namespace DOL.GS.Commands
                 }
                 catch
                 {
-                    DisplaySyntax( client, args[1] );
+                    DisplaySyntax( client, args[1], args[2] );
                     return;
                 }
             }
@@ -1198,13 +1217,16 @@ namespace DOL.GS.Commands
                             int model = Convert.ToInt32( args[4] );
                             int color = 0;
                             int effect = 0;
+							int extension = 0;
 
                             if ( args.Length >= 6 )
                                 color = Convert.ToInt32( args[5] );
                             if ( args.Length >= 7 )
                                 effect = Convert.ToInt32( args[6] );
+							if ( args.Length >= 8 )
+								extension = Convert.ToInt32( args[7] );
 
-                            if ( !template.AddNPCEquipment( (eInventorySlot)slot, model, color, effect ) )
+                            if ( !template.AddNPCEquipment( (eInventorySlot)slot, model, color, effect, extension ) )
                             {
                                 client.Out.SendMessage( "Couldn't add new item to slot " + slot + ". Template could be closed.", eChatType.CT_System, eChatLoc.CL_SystemWindow );
                                 return;
@@ -1538,6 +1560,97 @@ namespace DOL.GS.Commands
             LootMgr.RefreshTemplateGenerator( targetMob );
         }
 
+		void setClass( GameClient client, GameNPC targetMob, string[] args )
+		{
+			if ( args.Length < 3 )
+			{
+				DisplaySyntax( client, args[1] );
+				return;
+			}
+
+			GameNPC mob = null;
+
+			foreach ( Assembly assembly in AppDomain.CurrentDomain.GetAssemblies() )
+			{
+				mob = assembly.CreateInstance( args[2], true ) as GameNPC;
+
+				if ( mob != null )
+					break;
+			}
+
+			if ( mob == null )
+			{
+				client.Out.SendMessage( "There was an error creating an instance of " + args[2] + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow );
+				return;
+			}
+
+			targetMob.StopAttack();
+			targetMob.StopCurrentSpellcast();
+
+			mob.X = targetMob.X;
+			mob.Y = targetMob.Y;
+			mob.Z = targetMob.Z;
+			mob.CurrentRegion = targetMob.CurrentRegion;
+			mob.Heading = targetMob.Heading;
+			mob.Level = targetMob.Level;
+			mob.Realm = targetMob.Realm;
+			mob.Name = targetMob.Name;
+			mob.GuildName = targetMob.GuildName;
+			mob.Model = targetMob.Model;
+			mob.Size = targetMob.Size;
+			mob.Flags = targetMob.Flags;
+			mob.MeleeDamageType = targetMob.MeleeDamageType;
+			mob.RespawnInterval = targetMob.RespawnInterval;
+			mob.RoamingRange = targetMob.RoamingRange;
+			mob.Strength = targetMob.Strength;
+			mob.Constitution = targetMob.Constitution;
+			mob.Dexterity = targetMob.Dexterity;
+			mob.Quickness = targetMob.Quickness;
+			mob.Intelligence = targetMob.Intelligence;
+			mob.Empathy = targetMob.Empathy;
+			mob.Piety = targetMob.Piety;
+			mob.Charisma = targetMob.Charisma;
+			mob.CurrentSpeed = 0;
+			mob.MaxSpeedBase = targetMob.MaxSpeedBase;
+			mob.Inventory = targetMob.Inventory;
+			mob.EquipmentTemplateID = targetMob.EquipmentTemplateID;
+
+			if ( mob.Inventory != null )
+				mob.SwitchWeapon( targetMob.ActiveWeaponSlot );
+
+			ABrain brain = null;
+			foreach ( Assembly assembly in AppDomain.CurrentDomain.GetAssemblies() )
+			{
+				brain = (ABrain)assembly.CreateInstance( targetMob.Brain.GetType().FullName, true );
+				if ( brain != null )
+					break;
+			}
+
+			if ( brain == null )
+			{
+				client.Out.SendMessage( "Cannot create brain, standard brain being applied", eChatType.CT_System, eChatLoc.CL_SystemWindow );
+				mob.SetOwnBrain( new StandardMobBrain() );
+			}
+			else
+			{
+				StandardMobBrain sbrain = (StandardMobBrain)brain;
+				StandardMobBrain tsbrain = (StandardMobBrain)targetMob.Brain;
+				sbrain.AggroLevel = tsbrain.AggroLevel;
+				sbrain.AggroRange = tsbrain.AggroRange;
+				mob.SetOwnBrain( sbrain );
+			}
+
+			mob.AddToWorld();
+			mob.LoadedFromScript = false;
+			mob.SaveIntoDatabase();
+
+			// delete old mob
+			targetMob.DeleteFromDatabase();
+			targetMob.Delete();
+
+			client.Out.SendMessage( "Mob class changed: OID=" + mob.ObjectID, eChatType.CT_System, eChatLoc.CL_SystemWindow );
+		}
+
         private void copy( GameClient client, GameNPC targetMob, string[] args )
         {
             //Create a new mob
@@ -1587,8 +1700,11 @@ namespace DOL.GS.Commands
             mob.MaxSpeedBase = targetMob.MaxSpeedBase;
             mob.GuildName = targetMob.GuildName;
             mob.Size = targetMob.Size;
-            mob.Inventory = targetMob.Inventory;
-            mob.NPCTemplate = targetMob.NPCTemplate;
+			mob.NPCTemplate = targetMob.NPCTemplate;
+			mob.Inventory = targetMob.Inventory;
+			mob.EquipmentTemplateID = targetMob.EquipmentTemplateID;
+			if( mob.Inventory != null )
+				mob.SwitchWeapon( targetMob.ActiveWeaponSlot );
 
             ABrain brain = null;
             foreach ( Assembly assembly in AppDomain.CurrentDomain.GetAssemblies() )
@@ -1624,6 +1740,12 @@ namespace DOL.GS.Commands
                 DisplaySyntax( client, args[1] );
                 return;
             }
+
+			if ( args[2].ToLower().Equals( "create" ) )
+			{
+				npctCreate( client, targetMob, args );
+				return;
+			}
 
             int id = 0;
 
@@ -1664,6 +1786,39 @@ namespace DOL.GS.Commands
                 DisplayMessage( client, "Updated npc based on template " + id, new object[] { } );
             }
         }
+
+		void npctCreate( GameClient client, GameNPC targetMob, string[] args )
+		{
+			if ( args.Length < 4 )
+			{
+				DisplaySyntax( client, args[1], args[2] );
+				return;
+			}
+
+			if ( targetMob == null )
+			{
+				DisplayMessage( client, "You must have a mob selected to create the template from." );
+				return;
+			}
+
+			int id;
+			if ( Int32.TryParse( args[3], out id ) == false )
+			{
+				DisplaySyntax( client, args[1], args[2] );
+				return;
+			}
+
+			NpcTemplate template = NpcTemplateMgr.GetTemplate( id );
+
+			if ( template != null )
+			{
+				DisplayMessage( client, "A template with the ID " + id + " already exists." );
+				return;
+			}
+
+			template = new NpcTemplate( targetMob );
+			template.SaveIntoDatabase();
+		}
 
         private void path( GameClient client, GameNPC targetMob, string[] args )
         {

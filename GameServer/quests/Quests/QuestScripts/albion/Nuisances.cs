@@ -440,7 +440,7 @@ namespace DOL.GS.Quests.Albion
 				InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
 				if (item != null && item.Id_nb == emptyMagicBox.Id_nb)
 				{
-					if (WorldMgr.GetDistance(player, quest.ireFairy) < 500)
+                    if ( player.IsWithinRadius( quest.ireFairy, 500 ) )
 					{
 						foreach (GamePlayer visPlayer in quest.ireFairy.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						{

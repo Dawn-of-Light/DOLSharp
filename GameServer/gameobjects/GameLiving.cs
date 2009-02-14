@@ -1605,7 +1605,7 @@ namespace DOL.GS
 				return ad;
 			}
 			//We have no attacking distance!
-			if (!WorldMgr.CheckDistance(this, ad.Target, ad.Target.ActiveWeaponSlot == eActiveWeaponSlot.Standard ? Math.Max(AttackRange, ad.Target.AttackRange) : AttackRange))
+			if (!this.IsWithinRadius(ad.Target, ad.Target.ActiveWeaponSlot == eActiveWeaponSlot.Standard ? Math.Max(AttackRange, ad.Target.AttackRange) : AttackRange))
 			{
 				ad.AttackResult = eAttackResult.OutOfRange;
 				return ad;
@@ -1824,7 +1824,7 @@ namespace DOL.GS
 						bool preCheck = false;
 						if (ad.Target is GamePlayer) //only start if we are behind the player
 						{
-							float angle = ad.Target.GetAngleToTarget(ad.Attacker);
+                            float angle = ad.Target.GetAngle( ad.Attacker );
 							if (angle >= 150 && angle < 210) preCheck = true;
 						}
 						else preCheck = true;
@@ -2296,7 +2296,7 @@ namespace DOL.GS
 						}
 					}
 
-					ticksToTarget = 1 + WorldMgr.GetDistance(owner, attackTarget) * 100 / 150; // 150 units per 1/10s
+                    ticksToTarget = 1 + owner.GetDistance( attackTarget ) * 100 / 150; // 150 units per 1/10s
 				}
 				else
 				{
@@ -2351,7 +2351,7 @@ namespace DOL.GS
                 //Genesis : check attack range here, effect: npc's and players will start attack faster instead of waiting another round if the previous failed
                 if (attackTarget != null
                     && owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance
-                    && !WorldMgr.CheckDistance(owner, attackTarget, owner.AttackRange))
+                    && !owner.IsWithinRadius( attackTarget, owner.AttackRange ))
                 {
                     Interval = 100;
                     return;
@@ -2367,8 +2367,7 @@ namespace DOL.GS
 				}
 
 				//switch to melee if range to target is less than 200
-				if (owner is GameNPC && owner.ActiveWeaponSlot == eActiveWeaponSlot.Distance && owner.TargetObject != null &&
-					WorldMgr.GetDistance(owner, owner.TargetObject) <= 200)
+				if (owner is GameNPC && owner.ActiveWeaponSlot == eActiveWeaponSlot.Distance && owner.TargetObject != null && owner.IsWithinRadius( owner.TargetObject, 200 ) )
 				{
 					owner.SwitchWeapon(eActiveWeaponSlot.Standard);
 				}
@@ -3101,7 +3100,7 @@ namespace DOL.GS
 					InterceptEffect inter = effect as InterceptEffect;
 					if (intercept == null && inter != null && inter.InterceptTarget == this && !inter.InterceptSource.IsStunned && !inter.InterceptSource.IsMezzed
 						&& !inter.InterceptSource.IsSitting && inter.InterceptSource.ObjectState == eObjectState.Active && inter.InterceptSource.IsAlive
-						&& WorldMgr.CheckDistance(this, inter.InterceptSource, InterceptAbilityHandler.INTERCEPT_DISTANCE) && Util.Chance(inter.InterceptChance))
+						&& this.IsWithinRadius(inter.InterceptSource, InterceptAbilityHandler.INTERCEPT_DISTANCE) && Util.Chance(inter.InterceptChance))
 					{
 						intercept = inter;
 						continue;
@@ -3125,7 +3124,7 @@ namespace DOL.GS
 
 			// Eden - real Bodyguard
 			if (bodyguard != null && ad.Attacker.ActiveWeaponSlot != eActiveWeaponSlot.Distance 
-				&& WorldMgr.CheckDistance(bodyguard.GuardTarget, bodyguard.GuardSource, BodyguardAbilityHandler.BODYGUARD_DISTANCE) && !bodyguard.GuardSource.IsCasting
+				&& bodyguard.GuardSource.IsWithinRadius(bodyguard.GuardTarget, BodyguardAbilityHandler.BODYGUARD_DISTANCE) && !bodyguard.GuardSource.IsCasting
 			&& ((bodyguard.GuardTarget.TempProperties.getLongProperty("PLAYERPOSITION_LASTMOVEMENTTICK", 0L) + 3000) < bodyguard.GuardTarget.CurrentRegion.Time) && !bodyguard.GuardTarget.IsMoving)
 			{
 				if (ad.Attacker is GamePlayer || ad.Attacker is GamePet)
@@ -3426,7 +3425,7 @@ namespace DOL.GS
 				!stealthStyle)
 			{
 				// check distance
-				if (WorldMgr.CheckDistance(guard.GuardSource, guard.GuardTarget, GuardAbilityHandler.GUARD_DISTANCE))
+				if (guard.GuardSource.IsWithinRadius(guard.GuardTarget, GuardAbilityHandler.GUARD_DISTANCE))
 				{
 					// check player is wearing shield and NO two handed weapon
 					InventoryItem leftHand = guard.GuardSource.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
@@ -3471,7 +3470,7 @@ namespace DOL.GS
 				!stealthStyle)
 			{
 				// check distance
-				if (WorldMgr.CheckDistance(dashing.GuardSource, dashing.GuardTarget, DashingDefenseEffect.GUARD_DISTANCE))
+				if (dashing.GuardSource.IsWithinRadius(dashing.GuardTarget, DashingDefenseEffect.GUARD_DISTANCE))
 				{
 					// check player is wearing shield and NO two handed weapon
 					InventoryItem leftHand = dashing.GuardSource.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
@@ -3545,7 +3544,7 @@ namespace DOL.GS
 			if (this is GameNPC && ad.Attacker is GamePlayer &&
 				((GamePlayer)ad.Attacker).Group != null &&
 				(int)(0.90 * ((GamePlayer)ad.Attacker).Group.Leader.Level) >= ad.Attacker.Level &&
-				WorldMgr.CheckDistance(ad.Attacker, ((GamePlayer)ad.Attacker).Group.Leader, 3000))
+				ad.Attacker.IsWithinRadius(((GamePlayer)ad.Attacker).Group.Leader, 3000))
 				missrate -= (int)(5 * ((GamePlayer)ad.Attacker).Group.Leader.GetConLevel(this));
 			else if (this is GameNPC || ad.Attacker is GameNPC) // if target is not player use level mod
 			{
@@ -3738,7 +3737,7 @@ namespace DOL.GS
 					// collect "helping" group players in range
 					foreach (GameLiving living in attackerGroup.GetMembersInTheGroup())
 					{
-						if (WorldMgr.CheckDistance(living, this, WorldMgr.MAX_EXPFORKILL_DISTANCE) && living.IsAlive && living.ObjectState == eObjectState.Active)
+						if (this.IsWithinRadius(living, WorldMgr.MAX_EXPFORKILL_DISTANCE) && living.IsAlive && living.ObjectState == eObjectState.Active)
 							xpGainers.Add(living);
 					}
 
@@ -3782,11 +3781,10 @@ namespace DOL.GS
 
 			if (ad.IsHit)
 			{
-				if (this is GameNPC && ActiveWeaponSlot == eActiveWeaponSlot.Distance &&
-WorldMgr.GetDistance(this, ad.Attacker) < 150)
-					((GameNPC)this).SwitchToMelee(ad.Attacker);
+                if ( this is GameNPC && ActiveWeaponSlot == eActiveWeaponSlot.Distance && this.IsWithinRadius( ad.Attacker, 150 ) )
+                    ( (GameNPC)this ).SwitchToMelee( ad.Attacker );
 
-				AddAttacker(ad.Attacker);
+                AddAttacker( ad.Attacker );
 				if (ad.Attacker.Realm == 0 || this.Realm == 0)
 				{
 					LastAttackedByEnemyTickPvE = CurrentRegion.Time;
@@ -3899,13 +3897,19 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		{
 			lock (m_xpGainers.SyncRoot)
 			{
-				if (m_xpGainers[xpGainer] == null)
+				if( m_xpGainers.Contains( xpGainer ) == false )
+				{
+					m_xpGainers.Add( xpGainer, 0.0f );
+				}
+				/*if (m_xpGainers[xpGainer] == null)
 				{
 					m_xpGainers[xpGainer] = (float)0;
-				}
+				}*/
+				
 				m_xpGainers[xpGainer] = (float)m_xpGainers[xpGainer] + damageAmount;
 			}
 		}
+
 		/// <summary>
 		/// Changes the health
 		/// </summary>
@@ -5346,7 +5350,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 			}
 			else
 			{
-				float h = (float)(Heading / HEADING_CONST);
+				float h = (float)(Heading * HEADING_TO_RADIAN);
 				m_xAddition = (float)(-Math.Sin(h) * speed * 0.001);
 				m_yAddition = (float)(Math.Cos(h) * speed * 0.001);
 				m_zAddition = 0f;
@@ -5585,7 +5589,7 @@ WorldMgr.GetDistance(this, ad.Attacker) < 150)
 		public virtual bool Whisper(GameLiving target, string str)
 		{
 			if (target == null || str == null) return false;
-			if (!WorldMgr.CheckDistance(this, target, WorldMgr.WHISPER_DISTANCE))
+			if (!this.IsWithinRadius(target, WorldMgr.WHISPER_DISTANCE))
 				return false;
 			Notify(GameLivingEvent.Whisper, this, new WhisperEventArgs(target, str));
 			return target.WhisperReceive(this, str);

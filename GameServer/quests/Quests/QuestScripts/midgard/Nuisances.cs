@@ -418,7 +418,7 @@ namespace DOL.GS.Quests.Midgard
 				InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
 				if (item != null && item.Id_nb == emptyMagicBox.Id_nb)
 				{
-					if (WorldMgr.GetDistance(player, quest.askefruer) < 500)
+                    if ( player.IsWithinRadius( quest.askefruer, 500 ) )
 					{
 						foreach (GamePlayer visPlayer in quest.askefruer.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						{
