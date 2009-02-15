@@ -272,6 +272,20 @@ namespace DOL.GS.GameEvents
 			{
 				killerStats.KillsThatHaveEarnedRPs++;
 				killerStats.RealmPointsEarnedFromKills += RPsEarnedFromKill(killer, dyingPlayer);
+
+                if (killer.Group != null)
+                {
+                    foreach (GamePlayer member in killer.Group.GetMembersInTheGroup())
+                    {
+                        if (member != killer)
+                        {
+                            PlayerStatistic memberStats = PlayerStatistic.GetStatistic(member);
+                            memberStats.KillsThatHaveEarnedRPs++;
+                            memberStats.RealmPointsEarnedFromKills += RPsEarnedFromKill(member, dyingPlayer);
+                            PlayerStatistic.SetStatistic(member, memberStats);
+                        }
+                    }
+                }
 			}
 
 			dyingPlayerStats.Deaths++;
