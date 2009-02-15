@@ -78,7 +78,7 @@ namespace DOL.GS
 			// Battlegrounds are specials, as the teleport location depends on
 			// the level of the player, so let's deal with that first.
 			if (!ServerProperties.Properties.BG_ZONES_OPENED && player.Client.Account.PrivLevel == (uint)ePrivLevel.Player)
-				SayTo(player,"Upon orders of the King, your destination is unvailable for now.");
+				SayTo(player,"Upon orders of the King, your destination is unavailable for now.");
 			else
 			if (text.ToLower() == "battlegrounds")
 			{
