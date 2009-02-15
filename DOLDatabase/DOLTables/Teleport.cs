@@ -29,6 +29,7 @@ namespace DOL.Database
 	public class Teleport : DataObject
 	{
 		private bool m_autoSave;
+        private String m_type;
 		private String m_teleportID;
 		private int m_realm;
 		private int m_regionID;
@@ -43,6 +44,7 @@ namespace DOL.Database
 		public Teleport()
 		{
 			m_autoSave = false;
+            m_type = "";
 			m_teleportID = "UNDEFINED";
 			m_realm = 0;
 			m_regionID = 0;
@@ -62,14 +64,24 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		/// ID for this teleport location.
+		/// Teleporter type.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public String TeleportID
+		public String Type
 		{
-			get { return m_teleportID; }
-			set	{ m_teleportID = value;	}
+			get { return m_type; }
+			set	{ m_type = value;	}
 		}
+
+        /// <summary>
+        /// ID for this teleport location.
+        /// </summary>
+        [DataElement(AllowDbNull = false)]
+        public String TeleportID
+        {
+            get { return m_teleportID; }
+            set { m_teleportID = value; }
+        }
 
 		/// <summary>
 		/// Realm for this teleport location.

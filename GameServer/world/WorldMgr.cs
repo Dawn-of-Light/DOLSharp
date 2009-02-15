@@ -125,11 +125,11 @@ namespace DOL.GS
 		/// </param>
 		/// <param name="teleportID">Second key to search for</param>
 		/// <returns></returns>
-		public static Teleport GetTeleportLocation(eRealm realm, string teleportID)
+		public static Teleport GetTeleportLocation(eRealm realm, String teleportKey)
 		{
 			return (m_teleportLocations.ContainsKey(realm)) ?
-				(m_teleportLocations[realm].ContainsKey(teleportID) ?
-					m_teleportLocations[realm][teleportID] :
+                (m_teleportLocations[realm].ContainsKey(teleportKey) ?
+                    m_teleportLocations[realm][teleportKey] :
 					null) :
 				null;
 		}
@@ -318,7 +318,8 @@ namespace DOL.GS
 					teleportList = new Dictionary<string, Teleport>();
 					m_teleportLocations.Add((eRealm)teleport.Realm, teleportList);
 				}
-				teleportList.Add(teleport.TeleportID, teleport);
+                String teleportKey = String.Format("{0}:{1}", teleport.Type, teleport.TeleportID);
+				teleportList.Add(teleportKey, teleport);
 				if (teleport.Realm >= 1 && teleport.Realm <= 3)
 					numTeleports[teleport.Realm - 1]++;
 			}
