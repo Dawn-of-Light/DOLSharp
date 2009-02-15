@@ -123,10 +123,10 @@ namespace DOL.GS
 		/// table is not the realm of the destination, but the realm of the NPCs that are allowed to 
 		/// teleport a player to that location.
 		/// </param>
-		/// <param name="teleportID">Second key to search for</param>
+        /// <param name="teleportKey">Composite key into teleport dictionary.</param>
 		/// <returns></returns>
 		public static Teleport GetTeleportLocation(eRealm realm, String teleportKey)
-		{
+		{        
 			return (m_teleportLocations.ContainsKey(realm)) ?
                 (m_teleportLocations[realm].ContainsKey(teleportKey) ?
                     m_teleportLocations[realm][teleportKey] :

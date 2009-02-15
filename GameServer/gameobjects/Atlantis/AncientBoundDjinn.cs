@@ -57,10 +57,18 @@ namespace DOL.GS
 
             CurrentRegion = djinnStone.CurrentRegion;
             Heading = (ushort)((djinnStone.Heading + 2048) % 4096);
-            Realm = 0;
+            Realm = eRealm.None;
             X = djinnStone.X;
             Y = djinnStone.Y;
             Z = djinnStone.Z + ZOffset;
+        }
+
+        /// <summary>
+        /// Teleporter type, needed to pick the right TeleportID.
+        /// </summary>
+        public override String Type
+        {
+            get { return "Djinn"; }
         }
 
         /// <summary>
@@ -189,7 +197,7 @@ namespace DOL.GS
                     }
                 case "dungeons of atlantis":
                     {
-                        String reply = String.Format("I can provide access to [Sobekite Eternal], the {0} {1} {2}",
+                        String reply = String.Format("I can provide access to [Sobekite Eternal], the {0} {1}",
                             "Temple of [Twilight], the [Great Pyramid], the [Halls of Ma'ati], [Deep] within",
                             "Volcanus, or even the [City] of Aerus.");
                         SayTo(player, reply);
