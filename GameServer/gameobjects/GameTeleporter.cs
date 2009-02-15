@@ -46,6 +46,15 @@ namespace DOL.GS
 		public GameTeleporter()
 			: base() { }
 
+        /// <summary>
+        /// The type of teleporter; this is used in order to be able to handle
+        /// identical TeleportIDs differently, depending on the actual teleporter.
+        /// </summary>
+        public virtual String Type
+        {
+            get { return ""; }
+        }
+
 		/// <summary>
 		/// Turn the teleporter to face the player.
 		/// </summary>
@@ -130,7 +139,7 @@ namespace DOL.GS
 			}
 
 			// Find the teleport location in the database.
-			Teleport port = WorldMgr.GetTeleportLocation(Realm, text);
+			Teleport port = WorldMgr.GetTeleportLocation(Realm, String.Format("{0}:{1}", Type, text));
 			if (port != null)
 			{
 				if (port.RegionID == 0 &&
