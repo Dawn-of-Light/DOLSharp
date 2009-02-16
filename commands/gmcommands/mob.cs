@@ -80,7 +80,7 @@ namespace DOL.GS.Commands
         "'/mob viewloot [random]' to view the selected mob's loot table random or complete",
         "'/mob removeloot <ItemTemplateID>' to remove loot from the mob's unique drop table",
         "'/mob refreshloot' to refresh the mob's loot generator",
-        "'/mob copy' copies a mob exactly and places it at your location",
+        "'/mob copy [name]' copies a mob exactly and places it at your location",
         "'/mob npctemplate <NPCTemplateID>' creates a mob with npc template, or modifies target",
 		"'/mob npctemplate create <NPCTemplateID>' creates a new template from selected mob",
 		"'/mob class <ClassName>' replaces mob with a clone of the specified class",
@@ -112,6 +112,7 @@ namespace DOL.GS.Commands
                 && args[1] != "nfastcreate"
                 && args[1] != "npctemplate"
                 && args[1] != "model"
+				&& args[1] != "copy"
                 && targetMob == null )
             {
                 if ( client.Player.TargetObject != null )
@@ -1653,21 +1654,63 @@ namespace DOL.GS.Commands
 
         private void copy( GameClient client, GameNPC targetMob, string[] args )
         {
-            //Create a new mob
             GameNPC mob = null;
 
-            foreach ( Assembly assembly in AppDomain.CurrentDomain.GetAssemblies() )
-            {
-                mob = (GameNPC)assembly.CreateInstance( targetMob.GetType().FullName, true );
-                if ( mob != null )
-                    break;
-            }
+			if ( args.Length > 2 )
+			{
+				string mobName = string.Join( " ", args, 2, args.Length - 2 );
 
-            if ( mob == null )
-            {
-                client.Out.SendMessage( "There was an error creating an instance of " + targetMob.GetType().FullName + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow );
-                return;
-            }
+				Mob dbMob = GameServer.Database.SelectObject( typeof( Mob ), "Name = '" + mobName + "'" ) as Mob;
+
+				if ( dbMob != null )
+				{
+					if ( dbMob.ClassType == typeof( GameNPC ).FullName )
+					{
+						mob = new GameNPC();
+						targetMob = new GameNPC();
+					}
+					else
+					{
+						foreach ( Assembly assembly in AppDomain.CurrentDomain.GetAssemblies() )
+						{
+							targetMob = (GameNPC)assembly.CreateInstance( dbMob.ClassType, true );
+							mob = (GameNPC)assembly.CreateInstance( dbMob.ClassType, true );
+
+							if ( mob != null )
+								break;
+						}
+					}
+
+					targetMob.LoadFromDatabase( dbMob );
+				}
+
+				if ( mob == null )
+				{
+					client.Out.SendMessage( "Unable to find mob named:  " + mobName, eChatType.CT_System, eChatLoc.CL_SystemWindow );
+					return;
+				}
+			}
+			else
+			{
+				if ( targetMob == null )
+				{
+					client.Out.SendMessage( "You must have a mob targeted to copy.", eChatType.CT_System, eChatLoc.CL_SystemWindow );
+					return;
+				}
+
+				foreach ( Assembly assembly in AppDomain.CurrentDomain.GetAssemblies() )
+				{
+					mob = (GameNPC)assembly.CreateInstance( targetMob.GetType().FullName, true );
+					if ( mob != null )
+						break;
+				}
+
+				if ( mob == null )
+				{
+					client.Out.SendMessage( "There was an error creating an instance of " + targetMob.GetType().FullName + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow );
+					return;
+				}
+			}
 
             //Fill the object variables
             mob.X = client.Player.X;
@@ -1713,6 +1756,7 @@ namespace DOL.GS.Commands
                 if ( brain != null )
                     break;
             }
+
             if ( brain == null )
             {
                 client.Out.SendMessage( "Cannot create brain, standard brain being applied", eChatType.CT_System, eChatLoc.CL_SystemWindow );

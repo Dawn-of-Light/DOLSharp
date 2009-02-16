@@ -483,20 +483,35 @@ namespace DOL.GS.Styles
 					if (attackData.Style.Procs.Count > 0)
 					{
 						ISpellHandler effect;
+
+						// If ClassID = 0, use the proc for any class, unless there is also a proc with a ClassID
+						// that matches the player's CharacterClass.ID, or for mobs, the style's ClassID - then use
+						// the class-specific proc instead of the ClassID=0 proc
 						if (!attackData.Style.RandomProc)
 						{
+							DBStyleXSpell procToExecute = null;
+
 							foreach (DBStyleXSpell proc in attackData.Style.Procs)
-							{ 
-								// RR4: we added all the procs to the style, now it's time to check for class ID
-								if (proc.ClassID != 0 && player != null && proc.ClassID != player.CharacterClass.ID) continue; 
-								//Add the procs to the styleEffects
-								if (Util.Chance(proc.Chance))
-								{
-									effect = CreateMagicEffect(living, attackData.Target, proc.SpellID);
-									//effect could be null if the SpellID is bigger than ushort
-									if (effect != null)
-										attackData.StyleEffects.Add(effect);
-								}
+							{
+								// if a proc was previously selected, don't replace it with a ClassID=0 proc
+								if ( procToExecute == null && proc.ClassID == 0 )
+									procToExecute = proc;
+
+								// if there are multiple procs for a given ClassID, only the last one will be used
+								// Should multiple procs be applied? Is Spell.SubSpellID the proper way to handle multiple effects?
+								if ( player != null && proc.ClassID == player.CharacterClass.ID )
+									procToExecute = proc;
+								else if ( proc.ClassID == attackData.Style.ClassID )
+									procToExecute = proc;
+							}
+
+							//Add the procs to the styleEffects
+							if ( procToExecute != null && Util.Chance( procToExecute.Chance ) )
+							{
+								effect = CreateMagicEffect( living, attackData.Target, procToExecute.SpellID );
+								//effect could be null if the SpellID is bigger than ushort
+								if ( effect != null )
+									attackData.StyleEffects.Add( effect );
 							}
 						}
 						else
