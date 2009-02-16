@@ -21,6 +21,7 @@ using log4net;
 using System.Reflection;
 using DOL.Events;
 using DOL.Database;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
@@ -85,7 +86,7 @@ namespace DOL.GS
                     m_summonTimer = new DjinnTimer(this);
 
                 m_summoned = true;
-                m_summonTimer.Start(7, 1000, true, SummonEvent.SummonCompleted);
+                m_summonTimer.Start(1, 100, true, SummonEvent.SummonStarted);
             }
         }
 
@@ -100,12 +101,6 @@ namespace DOL.GS
             {
                 lock (m_syncObject)
                     return m_summoned;
-            }
-
-            private set
-            {
-                lock (m_syncObject)
-                    m_summoned = value;
             }
         }
 
@@ -208,6 +203,20 @@ namespace DOL.GS
         }
 
         /// <summary>
+        /// "Say" content sent to the system window.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public override bool Say(String message)
+        {
+            foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.SAY_DISTANCE))
+                player.Out.SendMessage(String.Format("The {0} says, \"{1}\"", this.Name, message), 
+                    eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+            return true;
+        }
+
+        /// <summary>
         /// Processes events coming from the timer.
         /// </summary>
         /// <param name="e"></param>
@@ -216,33 +225,51 @@ namespace DOL.GS
             base.Notify(e);
 
             if (e == SummonEvent.SummonStarted)
-                return;  // No action yet.
+            {
+                lock (m_syncObject)
+                {
+                    this.AddToWorld();
+                    m_summonTimer.Start(7, 1000, true, SummonEvent.SummonCompleted);
+                }
+            }
             else if (e == SummonEvent.SummonCompleted)
             {
                 // Show ourselves.
 
-                this.Model = VisibleModelId;
+                lock (m_syncObject)
+                {
+                    this.Model = VisibleModelId;
 
-                foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-                    player.Out.SendModelChange(this, this.Model);
+                    foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                        player.Out.SendModelChange(this, this.Model);
 
-                Say("Greetings, great one.");
-                m_summonTimer.Start(150, 1000, false, SummonEvent.BanishStarted);   // 2.5mins to hiding again.
+                    Say("Greetings, great one.");
+                    m_summonTimer.Start(150, 1000, false, SummonEvent.BanishStarted);   // 2.5mins to hiding again.
+                }
             }
             else if (e == SummonEvent.BanishStarted)
             {
                 // Go into hiding and show the smoke again.
 
-                Say("My time here is done.");
-                this.Model = InvisibleModelId;
+                lock (m_syncObject)
+                {
+                    Say("My time here is done.");
+                    this.Model = InvisibleModelId;
 
-                foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-                    player.Out.SendModelChange(this, this.Model);
+                    foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                        player.Out.SendModelChange(this, this.Model);
 
-                m_summonTimer.Start(5, 1000, true, SummonEvent.BanishCompleted);
+                    m_summonTimer.Start(5, 1000, true, SummonEvent.BanishCompleted);
+                }
             }
             else if (e == SummonEvent.BanishCompleted)
-                IsSummoned = false;
+            {
+                lock (m_syncObject)
+                {
+                    this.RemoveFromWorld();
+                    m_summoned = false;
+                }
+            }
         }
 
         /// <summary>
