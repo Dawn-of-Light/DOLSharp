@@ -50,7 +50,6 @@ namespace DOL.GS
                 try
                 {
                     m_djinn = new AncientBoundDjinn(this);
-                    m_djinn.AddToWorld();
                 }
                 catch (Exception e)
                 {
