@@ -92,6 +92,10 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendWarlockChamberEffect(GamePlayer player)
 		{ }
+		private byte WarlockChamberEffectId(GameSpellEffect effect)
+		{
+        	return 0; // ??
+		}
 
 		public virtual void SendLoginDenied(eLoginError et)
 		{
@@ -592,7 +596,7 @@ namespace DOL.GS.PacketHandler
 		{
 			if (playerToCreate == null)
 				return;
-			
+
 			Region playerRegion = playerToCreate.CurrentRegion;
 			if (playerRegion == null)
 			{
@@ -820,10 +824,16 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort((ushort)obj.Z);
 			pak.WriteInt((uint)obj.X);
 			pak.WriteInt((uint)obj.Y);
-			if (obj is GameNPC && obj.IsUnderwater)
-				pak.WriteShort((ushort)(obj.Model | 0x8000));
-			else pak.WriteShort(obj.Model);
 			int flag = ((byte)obj.Realm & 3) << 4;
+			ushort model = obj.Model;
+			if (obj.IsUnderwater)
+			{
+				if (obj is GameNPC)
+					model |= 0x8000;
+				else
+					flag |= 0x01; // Underwater
+			}
+			pak.WriteShort(model);
 			if (obj is GameKeepBanner)
 				flag |= 0x08;
 			if (obj is GameStaticItemTimed && m_gameClient.Player != null && (obj as GameStaticItemTimed).IsOwner(m_gameClient.Player))
@@ -3303,7 +3313,7 @@ namespace DOL.GS.PacketHandler
 		{
 			if (living == null)
 				return;
-				
+
 			if (living is GamePlayer)
 			{
 				SendObjectRemove(living);
@@ -3494,7 +3504,7 @@ namespace DOL.GS.PacketHandler
 
         public virtual void SendMinotaurRelicMapUpdate(byte id, ushort region, int x, int y, int z)
         { }
-		
+
 		public virtual void SendMinotaurRelicWindow(GamePlayer player, int spell, bool flag)
         { }
 
