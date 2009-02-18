@@ -90,10 +90,16 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort((ushort)obj.Z);
 			pak.WriteInt((uint)obj.X);
 			pak.WriteInt((uint)obj.Y);
-			if (obj is GameNPC && obj.IsUnderwater)
-				pak.WriteShort((ushort)(obj.Model | 0x8000));
-			else pak.WriteShort(obj.Model);
 			int flag = ((byte)obj.Realm & 3) << 4;
+			ushort model = obj.Model;
+			if (obj.IsUnderwater)
+			{
+				if (obj is GameNPC)
+					model |= 0x8000;
+				else
+					flag |= 0x01; // Underwater
+			}
+			pak.WriteShort(model);
 			if (obj is GameKeepBanner)
 				flag |= 0x08;
 			if (obj is GameStaticItemTimed && m_gameClient.Player != null && ((GameStaticItemTimed)obj).IsOwner(m_gameClient.Player))
