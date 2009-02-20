@@ -61,12 +61,12 @@ namespace DOL.GS.Quests.Albion
 		private static ItemTemplate FriarEpicVest = null; //Subterranean Hauberk 
 		private static ItemTemplate FriarEpicLegs = null; //Subterranean Legs
 		private static ItemTemplate FriarEpicArms = null; //Subterranean Sleeves
-		private static ItemTemplate MaulerEpicBoots = null;
-		private static ItemTemplate MaulerEpicHelm = null;
-		private static ItemTemplate MaulerEpicGloves = null;
-		private static ItemTemplate MaulerEpicVest = null;
-		private static ItemTemplate MaulerEpicLegs = null;
-		private static ItemTemplate MaulerEpicArms = null;
+		private static ItemTemplate MaulerAlbEpicBoots = null;
+		private static ItemTemplate MaulerAlbEpicHelm = null;
+		private static ItemTemplate MaulerAlbEpicGloves = null;
+		private static ItemTemplate MaulerAlbEpicVest = null;
+		private static ItemTemplate MaulerAlbEpicLegs = null;
+		private static ItemTemplate MaulerAlbEpicArms = null;
 
 		// Constructors
 		public Defenders_50() : base()
@@ -1199,12 +1199,12 @@ namespace DOL.GS.Quests.Albion
 
 			}
 
-			MaulerEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicBoots");
-			MaulerEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicHelm");
-			MaulerEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicGloves");
-			MaulerEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicVest");
-			MaulerEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicLegs");
-			MaulerEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicArms");
+			MaulerAlbEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerAlbEpicBoots");
+			MaulerAlbEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerAlbEpicHelm");
+			MaulerAlbEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerAlbEpicGloves");
+			MaulerAlbEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerAlbEpicVest");
+			MaulerAlbEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerAlbEpicLegs");
+			MaulerAlbEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerAlbEpicArms");
 			//Item Descriptions End
 
 			#endregion
@@ -1430,9 +1430,11 @@ namespace DOL.GS.Quests.Albion
             {
                 // Graveen: if not existing maulerepic in DB
                 // player is not allowed to finish this quest until we fix this problem
-                if (MaulerEpicArms == null || MaulerEpicBoots == null || MaulerEpicGloves == null ||
-                    MaulerEpicHelm == null || MaulerEpicLegs == null || MaulerEpicVest == null)
-                {
+//                if (MaulerAlbEpicArms == null || MaulerAlbEpicBoots == null || MaulerAlbEpicGloves == null ||
+//                    MaulerAlbEpicHelm == null || MaulerAlbEpicLegs == null || MaulerAlbEpicVest == null)
+                if (MaulerAlbEpicArms == null || MaulerAlbEpicBoots == null || MaulerAlbEpicGloves == null ||
+                    MaulerAlbEpicHelm == null || MaulerAlbEpicLegs == null || MaulerAlbEpicVest == null)
+                    {
                     Lidmann.SayTo(player, "Dark forces are still voiding this quest, your armor is not ready.");
                     return;
                 }
@@ -1497,12 +1499,12 @@ namespace DOL.GS.Quests.Albion
 			}
 			else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Mauler_Alb)
 			{
-				GiveItem(m_questPlayer, MaulerEpicArms);
-				GiveItem(m_questPlayer, MaulerEpicBoots);
-				GiveItem(m_questPlayer, MaulerEpicGloves);
-				GiveItem(m_questPlayer, MaulerEpicHelm);
-				GiveItem(m_questPlayer, MaulerEpicLegs);
-				GiveItem(m_questPlayer, MaulerEpicVest);
+				GiveItem(m_questPlayer, MaulerAlbEpicArms);
+				GiveItem(m_questPlayer, MaulerAlbEpicBoots);
+				GiveItem(m_questPlayer, MaulerAlbEpicGloves);
+				GiveItem(m_questPlayer, MaulerAlbEpicHelm);
+				GiveItem(m_questPlayer, MaulerAlbEpicLegs);
+				GiveItem(m_questPlayer, MaulerAlbEpicVest);
 			}
 
 			m_questPlayer.GainExperience(1937768448, true);

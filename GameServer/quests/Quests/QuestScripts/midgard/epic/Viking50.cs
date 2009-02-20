@@ -95,12 +95,12 @@ namespace DOL.GS.Quests.Midgard
 		private static ItemTemplate ValkyrieEpicVest = null;
 		private static ItemTemplate ValkyrieEpicLegs = null;
 		private static ItemTemplate ValkyrieEpicArms = null;
-        private static ItemTemplate NewMaulerEpicBoots = null;
-        private static ItemTemplate NewMaulerEpicHelm = null;
-        private static ItemTemplate NewMaulerEpicGloves = null;
-        private static ItemTemplate NewMaulerEpicVest = null;
-        private static ItemTemplate NewMaulerEpicLegs = null;
-        private static ItemTemplate NewMaulerEpicArms = null; 
+        private static ItemTemplate MaulerMidEpicBoots = null;
+        private static ItemTemplate MaulerMidEpicHelm = null;
+        private static ItemTemplate MaulerMidEpicGloves = null;
+        private static ItemTemplate MaulerMidEpicVest = null;
+        private static ItemTemplate MaulerMidEpicLegs = null;
+        private static ItemTemplate MaulerMidEpicArms = null; 
 
 
 		// Constructors
@@ -1849,12 +1849,12 @@ namespace DOL.GS.Quests.Midgard
 
             // Graveen: we assume items are existing in the DB
             // TODO: insert here creation of items if they do not exists
-            NewMaulerEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicBoots");
-            NewMaulerEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicHelm");
-            NewMaulerEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicGloves");
-            NewMaulerEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicVest");
-            NewMaulerEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicLegs");
-            NewMaulerEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerEpicArms");
+            MaulerMidEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MaulerMidEpicBoots");
+            MaulerMidEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MaulerMidEpicHelm");
+            MaulerMidEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MaulerMidEpicGloves");
+            MaulerMidEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MaulerMidEpicVest");
+            MaulerMidEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MaulerMidEpicLegs");
+            MaulerMidEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MaulerMidEpicArms");
 
 //Item Descriptions End
 
@@ -1972,8 +1972,10 @@ namespace DOL.GS.Quests.Midgard
                             {
                                 // Graveen: if not existing maulerepic in DB
                                 // player is not allowed to finish this quest until we fix this problem
-                                if (NewMaulerEpicArms == null || NewMaulerEpicBoots == null || NewMaulerEpicGloves == null ||
-                                    NewMaulerEpicHelm == null || NewMaulerEpicLegs == null || NewMaulerEpicVest == null)
+//                                if (MaulerMidEpicArms == null || MaulerMidEpicBoots == null || MaulerMidEpicGloves == null ||
+//                                    MaulerMidEpicHelm == null || MaulerMidEpicLegs == null || MaulerMidEpicVest == null)
+                                if (MaulerMidEpicArms == null || MaulerMidEpicBoots == null || MaulerMidEpicGloves == null ||
+                                    MaulerMidEpicHelm == null || MaulerMidEpicLegs == null || MaulerMidEpicVest == null)
                                 {
                                     Elizabeth.SayTo(player, "Dark forces are still voiding this quest, your armor is not ready.");
                                     return;
@@ -2238,12 +2240,12 @@ namespace DOL.GS.Quests.Midgard
 					}
                 case eCharacterClass.Mauler_Mid:
                     {
-                        GiveItem(m_questPlayer, NewMaulerEpicArms);
-                        GiveItem(m_questPlayer, NewMaulerEpicBoots);
-                        GiveItem(m_questPlayer, NewMaulerEpicGloves);
-                        GiveItem(m_questPlayer, NewMaulerEpicHelm);
-                        GiveItem(m_questPlayer, NewMaulerEpicLegs);
-                        GiveItem(m_questPlayer, NewMaulerEpicVest);
+                        GiveItem(m_questPlayer, MaulerMidEpicArms);
+                        GiveItem(m_questPlayer, MaulerMidEpicBoots);
+                        GiveItem(m_questPlayer, MaulerMidEpicGloves);
+                        GiveItem(m_questPlayer, MaulerMidEpicHelm);
+                        GiveItem(m_questPlayer, MaulerMidEpicLegs);
+                        GiveItem(m_questPlayer, MaulerMidEpicVest);
                         break;
                     }
 			}
