@@ -157,7 +157,7 @@ namespace DOL.GS
                 }
                 else
                 {
-                    player.Out.SendMessage("Sorry, that ticket isn't for around here.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameStableMaster.ReceiveItem.UnknownWay"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 }
             }
             return false;

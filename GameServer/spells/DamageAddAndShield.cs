@@ -18,14 +18,13 @@
  */
 using System;
 using System.Reflection;
-
 using DOL.Database;
 using DOL.AI.Brain;
 using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
-
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Spells
@@ -100,19 +99,19 @@ namespace DOL.GS.Spells
 					GamePlayer owner = brain.GetPlayerOwner();
 					if (owner != null)
 					{
-						MessageToLiving(owner, String.Format("Your {0} hit {1} for {2} damage!", ad.Attacker.Name, target.GetName(0, false), ad.Damage), eChatType.CT_Spell);
-					}
+                        MessageToLiving(owner, String.Format(LanguageMgr.GetTranslation(((GamePlayer)m_caster).Client, "DamageAddAndShield.EventHandlerDA.YourHitFor", ad.Attacker.Name, target.GetName(0, false), ad.Damage)), eChatType.CT_Spell);
+                    }
 				}
 			}
 			else
 			{
 				if (Spell.Pulse != 0)
-					MessageToLiving(attacker, String.Format("You hit {0} for {1} extra damage!", target.GetName(0, false), ad.Damage), eChatType.CT_Spell);
+                    MessageToLiving(attacker, String.Format(LanguageMgr.GetTranslation(((GamePlayer)m_caster).Client, "DamageAddAndShield.EventHandlerDA.YouHitExtra", target.GetName(0, false), ad.Damage)), eChatType.CT_Spell);
 				else
-					MessageToLiving(attacker, String.Format("You hit {0} for {1} damage!", target.GetName(0, false), ad.Damage), eChatType.CT_Spell);
-			}
-			MessageToLiving(target, String.Format("{0} does {1} extra damage to you!", attacker.GetName(0, false), ad.Damage), eChatType.CT_Spell);
-			target.OnAttackedByEnemy(ad);
+                    MessageToLiving(attacker, String.Format(LanguageMgr.GetTranslation(((GamePlayer)m_caster).Client, "DamageAddAndShield.EventHandlerDA.YouHitFor", target.GetName(0, false), ad.Damage)), eChatType.CT_Spell);
+            }
+            MessageToLiving(target, String.Format(LanguageMgr.GetTranslation(((GamePlayer)m_caster).Client, "DamageAddAndShield.EventHandlerDA.DamageToYou", attacker.GetName(0, false), ad.Damage)), eChatType.CT_Spell);
+            target.OnAttackedByEnemy(ad);
 			attacker.DealDamage(ad);
 			foreach (GamePlayer player in ad.Attacker.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
@@ -190,17 +189,17 @@ namespace DOL.GS.Spells
 					GamePlayer owner = brain.GetPlayerOwner();
 					if (owner != null && owner.ControlledNpc != null && ad.Attacker == owner.ControlledNpc.Body)
 					{
-						MessageToLiving(owner, String.Format("Your {0} hit {1} for {2} damage!", ad.Attacker.Name, target.GetName(0, false), ad.Damage), eChatType.CT_Spell);
-					}
+                        MessageToLiving(owner, String.Format(LanguageMgr.GetTranslation(((GamePlayer)m_caster).Client, "DamageAddAndShield.EventHandlerDS.YourHitFor", ad.Attacker.Name, target.GetName(0, false), ad.Damage)), eChatType.CT_Spell);
+                    }
 				}
 			}
 			else
 			{
-				MessageToLiving(attacker, String.Format("You hit {0} for {1} damage!", target.GetName(0, false), ad.Damage), eChatType.CT_Spell);
-			}
+                MessageToLiving(attacker, String.Format(LanguageMgr.GetTranslation(((GamePlayer)m_caster).Client, "DamageAddAndShield.EventHandlerDS.YouHitFor", target.GetName(0, false), ad.Damage)), eChatType.CT_Spell);
+            }
 
-			MessageToLiving(target, String.Format("{0} does {1} extra damage to you!", attacker.GetName(0, false), ad.Damage), eChatType.CT_Spell);
-			target.OnAttackedByEnemy(ad);
+            MessageToLiving(target, String.Format(LanguageMgr.GetTranslation(((GamePlayer)m_caster).Client, "DamageAddAndShield.EventHandlerDS.DamageToYou", attacker.GetName(0, false), ad.Damage)), eChatType.CT_Spell);
+            target.OnAttackedByEnemy(ad);
 			attacker.DealDamage(ad);
 			foreach (GamePlayer player in attacker.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{

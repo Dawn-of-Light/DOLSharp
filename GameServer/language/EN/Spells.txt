@@ -25,6 +25,15 @@ ResistDebuff.DelveInfo.Function:			Function: resistance decrease
 #CharmSpellHandler
 CharmSpellHandler.DelveInfo.Function:			Function: {0}
 
+# DamageAddAndShield
+DamageAddAndShield.EventHandlerDA.DamageToYou:		{0} does {1} extra damage to you!
+DamageAddAndShield.EventHandlerDA.YouHitExtra:		You hit {0} for {1} extra damage!
+DamageAddAndShield.EventHandlerDA.YouHitFor:		You hit {0} for {1} damage!
+DamageAddAndShield.EventHandlerDA.YourHitFor:		Your {0} hit {1} for {2} damage!
+DamageAddAndShield.EventHandlerDS.DamageToYou:		{0} does {1} extra damage to you!
+DamageAddAndShield.EventHandlerDS.YouHitFor:		You hit {0} for {1} damage!
+DamageAddAndShield.EventHandlerDS.YourHitFor:		Your {0} hit {1} for {2} damage!
+
 # DirectDamageDebuffSpellHandler
 DirectDamageDebuffSpellHandler.DelveInfo.Decrease:	Resist decrease ({0}): {1}%
 DirectDamageDebuffSpellHandler.DelveInfo.Function:	Function: dmg w/resist decrease
