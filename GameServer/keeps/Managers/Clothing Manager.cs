@@ -595,11 +595,12 @@ namespace DOL.GS.Keeps
 				item.Extension = (int)eExtension.Five;
 
 			// set the active slot
-			// casters and midgard archers use two handed weapons as default
+			// casters use two handed weapons as default
+            // archers use distance weapons as default
 			if (guard is GuardCaster)
 				guard.SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded);
-			else if (guard is GuardArcher && guard.Realm == eRealm.Midgard)
-				guard.SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded);
+			else if (guard is GuardArcher)
+				guard.SwitchWeapon(GameLiving.eActiveWeaponSlot.Distance);
 			else if ((guard is GuardFighter || guard is GuardLord) && Util.Chance(50))
 				guard.SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded);
 			else guard.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);

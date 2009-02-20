@@ -25,12 +25,21 @@ ResistDebuff.DelveInfo.Function:			Wirkung: resistance decrease
 #CharmSpellHandler
 CharmSpellHandler.DelveInfo.Function:			Wirkung: {0}
 
+# DamageAddAndShield
+DamageAddAndShield.EventHandlerDA.DamageToYou:		{0} fügt Euch {1} Punkte zusätzlichen Schaden zu!
+DamageAddAndShield.EventHandlerDA.YouHitExtra:		Ihr treff und {0} erleidet {1} Punkte zusätzlichen Schaden!
+DamageAddAndShield.EventHandlerDA.YouHitFor:		Ihr trefft und {0} erleidet {1} Punkte Schaden!
+DamageAddAndShield.EventHandlerDA.YourHitFor:		{0} trifft und {1} erleidet {2} Punkte Schaden!
+DamageAddAndShield.EventHandlerDS.DamageToYou:		{0} fügt Euch {1} Punkte zusätzlichen Schaden zu!
+DamageAddAndShield.EventHandlerDS.YouHitFor:		Ihr trefft und {0} erleidet {1} Punkte Schaden!
+DamageAddAndShield.EventHandlerDS.YourHitFor:		{0} trifft und {1} erleidet {2} Punkte Schaden!
+
 # DirectDamageDebuffSpellHandler
 DirectDamageDebuffSpellHandler.DelveInfo.Decrease:	Resist decrease ({0}): {1}%
 DirectDamageDebuffSpellHandler.DelveInfo.Function:	Wirkung: dmg w/resist decrease
 
 # DoTSpellHandler
-DoTSpellHandler.SendDamageMessages.YouHitFor:		Ihr trefft und {0} erleidet {1} Punkte zusätzlichen Schaden!
+DoTSpellHandler.SendDamageMessages.YouHitFor:		Ihr trefft und {0} erleidet {1} Punkte Schaden!
 DoTSpellHandler.SendDamageMessages.YourCriticallyHits:	{0} trifft kritisch und {1} erleidet {2} Punkte zusätzlichen Schaden!
 DoTSpellHandler.SendDamageMessages.YourHitsFor:		{0} trifft und {1} erleidet {2} Punkte zusätzlichen Schaden!
 
