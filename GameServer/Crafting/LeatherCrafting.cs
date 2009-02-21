@@ -49,43 +49,6 @@ namespace DOL.GS
 		/// <returns>true if the player hold all needed tools</returns>
 		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
-			byte flags = 0;
-			foreach (InventoryItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
-			{
-				if(item == null || item.Object_Type != 0) continue;
-
-				if (item.Name == LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.SmithsHammer"))
-				{
-					if((flags & 0x01) == 0) flags |= 0x01;
-					if(flags >= 0x03) break;
-				}
-				else if (item.Name == LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.SewingKit"))
-				{
-					if((flags & 0x02) == 0) flags |= 0x02;
-					if(flags >= 0x03) break;
-				}
-			}
-
-            // Luhz Crafting Update: 
-            // Crafting no longer requires hand-held tools!
-            /*
-			if(flags < 0x03)
-			{
-				if((flags & 0x01) == 0)
-				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindSmithTool"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return false;
-				}
-
-				if((flags & 0x02) == 0)
-				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindSewingKit"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return false;
-				}
-			}
-            */
 			return true;
 		}
 
@@ -96,16 +59,11 @@ namespace DOL.GS
 		/// <param name="item"></param>
 		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
-            // Luhz Crafting Update:
-            // "Secondary" tradeskills are no longer limited by "Primary" tradeskills - Patch 1.87
-			//if (player.GetCraftingSkillValue(eCraftingSkill.LeatherCrafting) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
-			//{
-				if(Util.Chance( CalculateChanceToGainPoint(player, item)))
-				{
-					player.GainCraftingSkill(eCraftingSkill.LeatherCrafting, 1);
-					player.Out.SendUpdateCraftingSkills();
-				}
-			//}
+			if (Util.Chance(CalculateChanceToGainPoint(player, item)))
+			{
+				player.GainCraftingSkill(eCraftingSkill.LeatherCrafting, 1);
+				player.Out.SendUpdateCraftingSkills();
+			}
 		}
 	}
 }
