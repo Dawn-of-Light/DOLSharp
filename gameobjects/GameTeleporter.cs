@@ -50,9 +50,17 @@ namespace DOL.GS
         /// The type of teleporter; this is used in order to be able to handle
         /// identical TeleportIDs differently, depending on the actual teleporter.
         /// </summary>
-        public virtual String Type
+        protected virtual String Type
         {
             get { return ""; }
+        }
+
+        /// <summary>
+        /// The destination realm. 
+        /// </summary>
+        protected virtual eRealm DestinationRealm
+        {
+            get { return Realm; }
         }
 
 		/// <summary>
@@ -128,7 +136,7 @@ namespace DOL.GS
 					IGameLocation location = house.OutdoorJumpPoint;
 					Teleport teleport = new Teleport();
 					teleport.TeleportID = "personal";
-					teleport.Realm = (int)Realm;
+					teleport.Realm = (int)DestinationRealm;
 					teleport.RegionID = location.RegionID;
 					teleport.X = location.X;
 					teleport.Y = location.Y;
@@ -141,7 +149,7 @@ namespace DOL.GS
 
 			// Find the teleport location in the database.
 
-			Teleport port = WorldMgr.GetTeleportLocation(Realm, String.Format("{0}:{1}", Type, text));
+			Teleport port = WorldMgr.GetTeleportLocation(DestinationRealm, String.Format("{0}:{1}", Type, text));
 			if (port != null)
 			{
 				if (port.RegionID == 0 &&
