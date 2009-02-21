@@ -22,6 +22,7 @@ using System.Reflection;
 using DOL.Events;
 using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.GS.Housing;
 
 namespace DOL.GS
 {
@@ -37,8 +38,7 @@ namespace DOL.GS
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private const int NpcTemplateId = 3000;
-        private const int InvisibleModelId = 0x29a;
-        private const int VisibleModelId = 0x4aa;
+        private const int InvisibleModel = 0x29a;
         private const int SummonSpellEffect = 0x1818;
         private const int ZOffset = 63;
         private DjinnTimer m_summonTimer;
@@ -57,7 +57,7 @@ namespace DOL.GS
             LoadTemplate(npcTemplate);
 
             CurrentRegion = djinnStone.CurrentRegion;
-            Heading = (ushort)((djinnStone.Heading + 2048) % 4096);
+            Heading = djinnStone.Heading;
             Realm = eRealm.None;
             X = djinnStone.X;
             Y = djinnStone.Y;
@@ -67,9 +67,73 @@ namespace DOL.GS
         /// <summary>
         /// Teleporter type, needed to pick the right TeleportID.
         /// </summary>
-        public override String Type
+        protected override String Type
         {
             get { return "Djinn"; }
+        }
+
+        /// <summary>
+        /// The destination realm.
+        /// </summary>
+        protected override eRealm DestinationRealm
+        {
+            get
+            {
+                switch (CurrentRegion.ID)
+                {
+                    case 73:
+                        return eRealm.Albion;
+                    case 30:
+                        return eRealm.Midgard;
+                    case 130:
+                        return eRealm.Hibernia;
+                    default:
+                        return eRealm.None;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Pick a model for this zone.
+        /// </summary>
+        protected ushort VisibleModel
+        {
+            get
+            {
+                switch (CurrentZone.ID)
+                {
+                    // Oceanus Hesperos.
+
+                    case 73:            // Albion.
+                    case 30:            // Midgard.
+                    case 130:           // Hibernia.
+                        return 0x4aa;
+
+                    // Stygian Delta.
+
+                    case 81:
+                    case 38:
+                    case 138:
+                        return 0x4ac;
+
+                    // Oceanus Notos.
+
+                    case 76:
+                    case 33:
+                    case 133:
+                        return 0x4ae;
+
+                    // Oceanus Anatole:
+
+                    case 77:
+                    case 34:
+                    case 134:
+                        return 0x4aa;
+
+                    default:
+                        return 0x4aa;
+                }
+            }
         }
 
         /// <summary>
@@ -114,6 +178,9 @@ namespace DOL.GS
             if (!base.Interact(player))
                 return false;
 
+            lock (m_syncObject)
+                m_summonTimer.Restart();
+
             String intro = String.Format("According to the rules set down by the Atlantean [masters], {0} {1} {2} {3}",
                 "you are authorized for expeditious transport to your homeland or any of the Havens. Please state",
                 "your destination: [Castle Sauvage], [Oceanus], [Stygia], [Volcanus], [Aerus], the [dungeons of Atlantis],",
@@ -129,14 +196,17 @@ namespace DOL.GS
 		/// <param name="source"></param>
 		/// <param name="text"></param>
 		/// <returns></returns>
-        public override bool WhisperReceive(GameLiving source, string text)
+        public override bool WhisperReceive(GameLiving source, String text)
         {
-            if (!base.WhisperReceive(source, text))
+            if (!(source is GamePlayer))
                 return false;
 
+            lock (m_syncObject)
+                m_summonTimer.Restart();
+
             GamePlayer player = source as GamePlayer;
-            if (player == null)
-                return false;
+
+            // Manage the chit-chat.
 
             switch (text.ToLower())
             {
@@ -148,7 +218,7 @@ namespace DOL.GS
                     return true;    // No reply on live.
             }
 
-            return true;
+            return base.WhisperReceive(source, text);
         }
 
         /// <summary>
@@ -198,8 +268,90 @@ namespace DOL.GS
                         SayTo(player, reply);
                         return;
                     }
+                case "twilight":
+                    {
+                        String reply = String.Format("Do you seek an audience with one of the great ladies {0} {1}",
+                            "of that dark temple? I'm sure that [Moirai], [Kepa], [Casta], [Laodameia], [Antioos],",
+                            "[Sinovia], or even [Medusa] would love to have you over for dinner.");
+                        SayTo(player, reply);
+                        return;
+                    }
+                case "halls of ma'ati":
+                    {
+                        String reply = String.Format("Which interests you, the [entrance], the [Anubite] side, {0} {1}",
+                            "or the [An-Uat] side? Or are you already ready to face your final fate in the",
+                            "[Chamber of Ammut]?");
+                        SayTo(player, reply);
+                        return;
+                    }
+                case "deep":
+                    {
+                        String reply = String.Format("Do you wish to meet with the Mediators of the [southwest] {0} {1}",
+                            "or [northeast] hall, face [Katorii's] gaze, or are you foolish enough to battle the",
+                            "likes of [Typhon himself]?");
+                        SayTo(player, reply);
+                        return;
+                    }
+                case "city":
+                    {
+                        String reply = String.Format("I can send you to the entrance near the [portal], the great {0} {1} {2}",
+                            "Unifier, [Lethos], the [ancient kings] remembered now only for their reputations, the",
+                            "famous teacher, [Nelos], the most well known and honored avriel, [Katri], or even",
+                            "the [Phoenix] itself.");
+                        SayTo(player, reply);
+                        return;
+                    }
+
             }
             base.OnSubSelectionPicked(player, subSelection);
+        }
+
+        protected override void OnDestinationPicked(GamePlayer player, Teleport destination)
+        {
+            if (player == null)
+                return;
+
+            String teleportInfo = "The magic of the {0} delivers you to the Haven of {1}.";
+
+            switch (destination.TeleportID.ToLower())
+            {
+                case "hesperos":
+                    {
+                        player.Out.SendMessage(String.Format(teleportInfo, Name, "Oceanus"),
+                            eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        base.OnTeleport(player, destination);
+                        return;
+                    }
+                case "delta":
+                    {
+                        player.Out.SendMessage(String.Format(teleportInfo, Name, "Stygia"),
+                            eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        base.OnTeleport(player, destination);
+                        return;
+                    }
+                case "green glades":
+                    {
+                        player.Out.SendMessage(String.Format(teleportInfo, Name, "Aerus"),
+                            eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        base.OnTeleport(player, destination);
+                        return;
+                    }
+            }
+
+            base.OnDestinationPicked(player, destination);
+        }
+
+        /// <summary>
+        /// Teleport the player to the designated coordinates. 
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="destination"></param>
+        protected override void OnTeleport(GamePlayer player, Teleport destination)
+        {
+            player.Out.SendMessage("There is an odd distortion in the air around you...",
+                eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+            base.OnTeleport(player, destination);
         }
 
         /// <summary>
@@ -238,7 +390,7 @@ namespace DOL.GS
 
                 lock (m_syncObject)
                 {
-                    this.Model = VisibleModelId;
+                    this.Model = VisibleModel;
 
                     foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
                         player.Out.SendModelChange(this, this.Model);
@@ -254,7 +406,7 @@ namespace DOL.GS
                 lock (m_syncObject)
                 {
                     Say("My time here is done.");
-                    this.Model = InvisibleModelId;
+                    this.Model = InvisibleModel;
 
                     foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
                         player.Out.SendModelChange(this, this.Model);
