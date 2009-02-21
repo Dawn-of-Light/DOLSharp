@@ -43,11 +43,6 @@ namespace DOL.GS
 
         }
 
-        /// <summary>
-        /// Defines a logger for this class.
-        /// </summary>
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
         #region Entrance
 
         protected GameLocation m_entranceLocation = null;

@@ -135,7 +135,7 @@ namespace DOL.GS.Spells
 		/// <param name="ad"></param>
 		public override void SendDamageMessages(AttackData ad)
 		{
-			// Graveen: only GamePlaer should receive messages :p
+			// Graveen: only GamePlayer should receive messages :p
 			GamePlayer PlayerReceivingMessages = null;
 			if (m_caster is GamePlayer)
 				PlayerReceivingMessages = m_caster as GamePlayer;
