@@ -335,6 +335,17 @@ namespace DOL.AI.Brain
 			}
 		}
 
+		// LOS Check before aggroing:: walls, pits, trees...
+		private bool m_AggroLOS;
+		private void CheckAggroLOS(GamePlayer player, ushort response, ushort targetOID)
+		{
+			if ((response & 0x100) == 0x100)
+				m_AggroLOS=true;
+			else
+				m_AggroLOS=false;
+			//log.Debug (" LOS: " + m_AggroLOS + " for " + player.Name);
+		}
+		
 		/// <summary>
 		/// Add living to the aggrolist
 		/// aggroamount can be negative to lower amount of aggro		
@@ -349,13 +360,29 @@ namespace DOL.AI.Brain
 			if (!m_body.IsAlive) return;
 
 			if (living == null) return;
-			//			log.Debug(Body.Name + ": AddToAggroList="+(living==null?"(null)":living.Name)+", "+aggroamount);
-
+			
+			// Check LOS (walls, pits, etc...) before  attacking, player + pet
+			GamePlayer thisLiving = null;
+			if (living is GamePlayer)
+				thisLiving = (GamePlayer)living;
+			
+			if (living is GamePet)
+			{
+				IControlledBrain brain = ((GamePet)living).Brain as IControlledBrain;
+				thisLiving = brain.GetPlayerOwner();
+			}
+			
+			if (thisLiving != null)
+			{
+				thisLiving.Out.SendCheckLOS (Body, living, new CheckLOSResponse(CheckAggroLOS));
+				if (!m_AggroLOS) return;
+			}
+	
 			// only protect if gameplayer and aggroamout > 0
 			if (living is GamePlayer && aggroamount > 0)
 			{
 				GamePlayer player = (GamePlayer)living;
-
+	
 				if (player.Group != null)
 				{ // player is in group, add whole group to aggro list
 					lock (m_aggroTable.SyncRoot)
