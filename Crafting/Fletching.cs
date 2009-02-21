@@ -69,20 +69,7 @@ namespace DOL.GS
 				}
 			}
 
-            // Luhz Crafting Update: 
-            // Crafting no longer requires hand-held tools!
-            /*
-			if (player.Inventory.GetFirstItemByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.PlaningTool"), eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null)
-			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindPlaningTool"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
-            */
-
-			// Luhz Crafting Update: 
-			// Crafting no longer requires hand-held tools!
-			//bool needSmithHammer = false;
+            
 			foreach (DBCraftedXItem rawmaterial in craftItemData.RawMaterials)
 			{
 				if (rawmaterial.ItemTemplate == null)
@@ -90,25 +77,7 @@ namespace DOL.GS
 					log.Error("rawmaterial " + rawmaterial.IngredientId_nb + " for recipe " + craftItemData.CraftedItemID + " cannot find the itemtemplate to match");
 					continue;
 				}
-				// Luhz Crafting Update: 
-				// Crafting no longer requires hand-held tools!
-				/*if ( rawmaterial.ItemTemplate.Model == 519 ) // metal bar
-				{
-					needSmithHammer = true;
-					break;
-				}*/
 			}
-
-            // Luhz Crafting Update: 
-            // Crafting no longer requires hand-held tools!
-            /*
-			if (needSmithHammer && player.Inventory.GetFirstItemByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.SmithsHammer"), eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null)
-			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindSmithTool"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
-            */
 			return true;
 		}
 
@@ -147,54 +116,6 @@ namespace DOL.GS
 		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
 			base.GainCraftingSkillPoints(player, item);
-
-            // Luhz Crafting Update:
-            // "Secondary" tradeskills are no longer limited by "Primary" tradeskills - Patch 1.87
-            /*
-			if(player.CraftingPrimarySkill == eCraftingSkill.Fletching)
-			{
-				if(player.GetCraftingSkillValue(eCraftingSkill.Fletching)%100 == 99)
-				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.GainCraftingSkillPoints.RaiseFletching"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-					return;
-				}
-			}
-			else
-			{
-				int maxAchivableLevel;
-				switch (player.CraftingPrimarySkill)
-				{
-					case eCraftingSkill.WeaponCrafting:
-					{
-						maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.WeaponCrafting) * 0.40);
-						break;
-					}
-
-					case eCraftingSkill.Tailoring:
-					{
-						maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.Tailoring) * 0.75);
-						break;
-					}
-
-					case eCraftingSkill.ArmorCrafting:
-					{
-						maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.ArmorCrafting) * 0.40);
-						break;
-					}
-
-					default:
-					{
-						maxAchivableLevel = 0;
-						break;
-					}
-				}
-
-				if(player.GetCraftingSkillValue(eCraftingSkill.Fletching) >= maxAchivableLevel)
-				{
-					return;
-				}
-			}
-            */
 
 			if(Util.Chance( CalculateChanceToGainPoint(player, item)))
 			{

@@ -46,59 +46,7 @@ namespace DOL.GS
 		/// <returns>true if the player hold all needed tools</returns>
 		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
-            // Luhz Crafting Update: 
-            // Crafting no longer requires hand-held tools!
             return true;
-
-            /*
-			byte flags = 0;
-			foreach (InventoryItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
-			{
-				if (item == null || item.Object_Type != 0) continue;
-
-				if (item.Name == LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.PlaningTool"))
-				{
-					if ((flags & 0x01) == 0) flags |= 0x01;
-					if (flags >= 0x07) break;
-				}
-				else if (item.Name == LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.SmithsHammer"))
-				{
-					if ((flags & 0x02) == 0) flags |= 0x02;
-					if (flags >= 0x07) break;
-				}
-				else if (item.Name == LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.SewingKit"))
-				{
-					if ((flags & 0x04) == 0) flags |= 0x04;
-					if (flags >= 0x07) break;
-				}
-			}
-
-			if (flags < 0x07)
-			{
-				if ((flags & 0x01) == 0)
-				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindPlaningTool"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return false;
-				}
-
-				if ((flags & 0x02) == 0)
-				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindSmithTool"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return false;
-				}
-
-				if ((flags & 0x04) == 0)
-				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindSewingKit"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return false;
-				}
-			}
-
-			return true;
-            */
 		}
 
 		/// <summary>

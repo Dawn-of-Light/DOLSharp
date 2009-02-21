@@ -66,16 +66,7 @@ namespace DOL.GS
 				return false;
 			}
 
-            // Luhz Crafting Update: 
-            // Crafting no longer requires hand-held tools!
-            /*
-			if (player.Inventory.GetFirstItemByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.SmithsHammer"), eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null)
-			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindSmithTool"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
-            */
+           
 
 			return true;
 		}
@@ -119,54 +110,7 @@ namespace DOL.GS
 		{
 			base.GainCraftingSkillPoints(player, item);
 
-            // Luhz Crafting Update:
-            // "Secondary" tradeskills are no longer limited by "Primary" tradeskills - Patch 1.87
-            /*
-            if(player.CraftingPrimarySkill == eCraftingSkill.WeaponCrafting)
-			{
-				if(player.GetCraftingSkillValue(eCraftingSkill.WeaponCrafting)%100 == 99)
-				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.GainCraftingSkillPoints.RaiseWeaponcraft"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-					return;
-				}
-			}
-
-			else
-			{
-				int maxAchivableLevel;
-				switch (player.CraftingPrimarySkill)
-				{
-					case eCraftingSkill.ArmorCrafting:
-					{
-						maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.ArmorCrafting) * 0.75);
-						break;
-					}
-
-					case eCraftingSkill.Tailoring:
-					{
-						maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.Tailoring) * 0.40);
-						break;
-					}
-
-					case eCraftingSkill.Fletching:
-					{
-						maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.Fletching) * 0.75);
-						break;
-					}
-
-					default:
-					{
-						maxAchivableLevel = 0;
-						break;
-					}
-				}
-
-				if(player.GetCraftingSkillValue(eCraftingSkill.WeaponCrafting) >= maxAchivableLevel)
-				{
-					return;
-				}
-			}
-            */
+            
 			if(Util.Chance( CalculateChanceToGainPoint(player, item)))
 			{
 				player.GainCraftingSkill(eCraftingSkill.WeaponCrafting, 1);

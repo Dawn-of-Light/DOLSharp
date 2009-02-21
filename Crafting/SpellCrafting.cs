@@ -112,18 +112,6 @@ namespace DOL.GS
             // Luhz Crafting Update: 
             // Crafting no longer requires hand-held tools!
             return base.CheckTool(player, craftItemData);
-            /*
-			if (!base.CheckTool(player, craftItemData)) return false;
-
-			if (player.Inventory.GetFirstItemByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.SpellcraftKit"), eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null)
-			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindSpellcraftKit"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
-
-			return true;
-            */
 		}
 
 		/// <summary>
@@ -134,43 +122,6 @@ namespace DOL.GS
 		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
 			base.GainCraftingSkillPoints(player, item);
-
-            // Luhz Crafting Update:
-            // "Secondary" tradeskills are no longer limited by "Primary" tradeskills - Patch 1.87
-            /*
-			if (player.CraftingPrimarySkill == eCraftingSkill.SpellCrafting)
-			{
-				if (player.GetCraftingSkillValue(eCraftingSkill.SpellCrafting) % 100 == 99)
-				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.GainCraftingSkillPoints.RaiseSpellcraft"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-					return;
-				}
-			}
-			else
-			{
-				int maxAchivableLevel;
-				switch (player.CraftingPrimarySkill)
-				{
-					case eCraftingSkill.Alchemy:
-						{
-							maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.Alchemy) * 0.45);
-							break;
-						}
-
-					default:
-						{
-							maxAchivableLevel = 0;
-							break;
-						}
-				}
-
-				if (player.GetCraftingSkillValue(eCraftingSkill.SpellCrafting) >= maxAchivableLevel)
-				{
-					return;
-				}
-			}
-            */
-
 			if (Util.Chance(CalculateChanceToGainPoint(player, item)))
 			{
 				player.GainCraftingSkill(eCraftingSkill.SpellCrafting, 1);
@@ -435,21 +386,6 @@ namespace DOL.GS
                         if (gem.Object_Type == (int)eObjectType.SpellcraftGem)
                             player.Inventory.RemoveCountFromStack(gem, 1);
                     }
-                    /*
-                    if (tradePartner != null && item.OwnerID == tradePartner.InternalID)
-					{
-						tradePartner.Inventory.RemoveCountFromStack(item, 1);
-					}
-					else
-					{
-						player.Inventory.RemoveCountFromStack(item, 1);
-					}
-
-					foreach (InventoryItem gem in (ArrayList)player.TradeWindow.TradeItems.Clone())
-					{                        
-						player.Inventory.RemoveCountFromStack(gem, 1);
-					}
-                    */
                     player.Inventory.CommitChanges();
 				}
 
@@ -538,10 +474,6 @@ namespace DOL.GS
 				spellcraftInfos.Add(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ShowSpellCraftingInfos.Penality", GetOverchargePenality(totalItemCharges, totalGemmesCharges)));
 				spellcraftInfos.Add("\t");
 				spellcraftInfos.Add(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ShowSpellCraftingInfos.Success", CalculateChanceToOverchargeItem(player, item, maxBonusLevel, bonusLevel)));
-                // Luhz Crafting Update:
-                // It's no longer possible to lose the base item when overcharging.
-				// spellcraftInfos.Add("\t");
-				// spellcraftInfos.Add(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ShowSpellCraftingInfos.Losing", (100 - CalculateChanceToPreserveItem(player, item, maxBonusLevel, bonusLevel))));
 			}
 
 			GamePlayer partner = player.TradeWindow.Partner;
@@ -597,59 +529,7 @@ namespace DOL.GS
                 return 100;
             }
 
-            /*
-			int baseChance = GetOverchargePenality(maxBonusLevel, bonusLevel);
-
-			int gemmeModifier = 0;
-			lock (player.TradeWindow.Sync)
-			{
-				foreach (InventoryItem gemme in player.TradeWindow.TradeItems)
-				{
-					if (gemme.Quality == 96) gemmeModifier += 1;
-					else if (gemme.Quality == 97) gemmeModifier += 3;
-					else if (gemme.Quality == 98) gemmeModifier += 5;
-					else if (gemme.Quality == 99) gemmeModifier += 8;
-					else if (gemme.Quality == 100) gemmeModifier += 11;
-				}
-			}
-
-			int itemQualityModifier = 0;
-			if (item.Quality == 96) itemQualityModifier += 6;
-			else if (item.Quality == 97) itemQualityModifier += 8;
-			else if (item.Quality == 98) itemQualityModifier += 10;
-			else if (item.Quality == 99) itemQualityModifier += 18;
-			else if (item.Quality == 100) itemQualityModifier += 26;
-
-			int intSkill = player.GetCraftingSkillValue(eCraftingSkill.SpellCrafting);
-			int intSkillMod;
-			if (intSkill < 50) { intSkillMod = -50; }
-			else if (intSkill < 100) { intSkillMod = -45; }
-			else if (intSkill < 150) { intSkillMod = -40; }
-			else if (intSkill < 200) { intSkillMod = -35; }
-			else if (intSkill < 250) { intSkillMod = -30; }
-			else if (intSkill < 300) { intSkillMod = -25; }
-			else if (intSkill < 350) { intSkillMod = -20; }
-			else if (intSkill < 400) { intSkillMod = -15; }
-			else if (intSkill < 450) { intSkillMod = -10; }
-			else if (intSkill < 500) { intSkillMod = -5; }
-			else if (intSkill < 550) { intSkillMod = 0; }
-			else if (intSkill < 600) { intSkillMod = 5; }
-			else if (intSkill < 650) { intSkillMod = 10; }
-			else if (intSkill < 700) { intSkillMod = 15; }
-			else if (intSkill < 750) { intSkillMod = 20; }
-			else if (intSkill < 800) { intSkillMod = 25; }
-			else if (intSkill < 850) { intSkillMod = 30; }
-			else if (intSkill < 900) { intSkillMod = 35; }
-			else if (intSkill < 950) { intSkillMod = 40; }
-			else if (intSkill < 1000) { intSkillMod = 45; }
-			else { intSkillMod = 50; }
-
-			int finalChances = intSkillMod + itemQualityModifier + gemmeModifier + baseChance;
-			if (finalChances > 100) finalChances = 100;
-			else if (finalChances < 0) finalChances = 0;
-
-			return finalChances;
-            */
+            
 		}
 
 		/// <summary>
@@ -659,10 +539,8 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected int GetItemMaxImbuePoints(InventoryItem item)
 		{
-			// if (item.Quality < 94) return 0;
 			if (item.Level > 51) return 32;
 			if (item.Level < 1) return 0;
-			// return itemMaxBonusLevel[item.Level - 1, item.Quality - 94];
             // Luhz Crafting Update:
             // All items have MP level imbue points
             return itemMaxBonusLevel[item.Level - 1, 100 - 94];
