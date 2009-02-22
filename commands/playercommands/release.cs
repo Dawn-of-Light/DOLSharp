@@ -20,7 +20,7 @@
 namespace DOL.GS.Commands
 {
 	[CmdAttribute(
-		"&release",
+		"&release", new string[] { "&rel" },
 		ePrivLevel.Player,
 		"When you are dead you can '/release'. This will bring you back to your bindpoint!",
 		"/release")]
