@@ -462,7 +462,7 @@ namespace DOL.GS.ServerProperties
         /// This if the server battleground zones are open to players
         /// </summary>
         [ServerProperty("bg_zones_open", "Can the players teleport to battleground", true)]
-        public static readonly bool BG_ZONES_OPENED;
+        public static bool BG_ZONES_OPENED;
         
         /// <summary>
         /// This enables or disables new guild dues. Live standard is 2% dues
@@ -500,7 +500,7 @@ namespace DOL.GS.ServerProperties
 		/// 3 = only admins can enter Atlantis.
 		/// </summary>
 		[ServerProperty("atlantis_teleport_plvl", "Set the minimum privilege level required to enter Atlantis zones.", 2)]
-		public static readonly int ATLANTIS_TELEPORT_PLVL;
+		public static int ATLANTIS_TELEPORT_PLVL;
 
 		/// <summary>
 		/// Sets the disabled commands for the server split by ;
@@ -536,7 +536,7 @@ namespace DOL.GS.ServerProperties
 		/// How many players are required on the relic pad to trigger the pillar?
 		/// </summary>
 		[ServerProperty("relic_players_required_on_pad", "How many players are required on the relic pad to trigger the pillar?", 16)]
-		public static readonly int RELIC_PLAYERS_REQUIRED_ON_PAD;
+		public static int RELIC_PLAYERS_REQUIRED_ON_PAD;
 
         /// <summary>
         /// What levels did we allow a DOL respec ? serialized
@@ -579,19 +579,19 @@ namespace DOL.GS.ServerProperties
 		/// Epic encounters strength: 100 is 100% base strength
 		/// </summary>
 		[ServerProperty("set_difficulty_on_epic_encounters", "Tune encounters taggued <Epic Encounter>. 0 means auto adaptative, others values are % of the initial difficulty (100%=initial difficulty)", 100)]
-		public static readonly int SET_DIFFICULTY_ON_EPIC_ENCOUNTERS;
+		public static int SET_DIFFICULTY_ON_EPIC_ENCOUNTERS;
 
 		/// <summary>
 		/// Define toughness for doors (keepwalls are 2x doors): 100 is 100% player's damages infliged.
 		/// </summary>
 		[ServerProperty("set_structures_toughness", "This value is % of total damages infliged to level 1 door. Walls are 2 times more solid than doors (100=full damages)", 100)]
-		public static readonly int SET_STRUCTURES_TOUGHNESS;
+		public static int SET_STRUCTURES_TOUGHNESS;
 	
 		/// <summary>
 		/// Allow or disallow /irc in RvR zones, while allowed in pve zone
 		/// </summary>
 		[ServerProperty("allow_irc_in_rvr", "Allow players to send/receive irc when in RvR zone", true)]
-		public static readonly bool ALLOW_IRC_IN_RVR;
+		public static bool ALLOW_IRC_IN_RVR;
 
         /// <summary>
         /// Ignore too long outcoming packet or not
@@ -611,6 +611,12 @@ namespace DOL.GS.ServerProperties
         [ServerProperty("use_new_keeps", "Use the new Keeps(v 1.90)", false)]
         public static readonly bool USE_NEW_KEEPS;
 
+        /// <summary>
+        /// Perform checklos on client with each mob
+        /// </summary>
+        [ServerProperty("always_check_los", "Perform a LoS check before aggroing. This can involve a huge lag, handle with care!", false)]
+        public static bool ALWAYS_CHECK_LOS;
+        
         /// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
