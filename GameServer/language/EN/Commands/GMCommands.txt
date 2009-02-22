@@ -38,16 +38,17 @@ GMCommands.Ban.BAlreadyBanned:				These account and IP have already been banned.
 GMCommands.Ban.BBanned:						Account {0} and IP {1} have been banned.
 
 # /cast Command
-GMCommands.Cast.Description:				Cast a spell/effect
-GMCommands.Cast.Usage:						'/cast <id> <effect|cast|spell>' Cast the Spell/VisualEffect associated with <SpellID>
-GMCommands.Cast.InvalidId:					Invalid ID.
-GMCommands.Cast.IdNegative:					ID can't be negative.
-GMCommands.Cast.EffectExecuted:				Effect animation executed. Id={0}
-GMCommands.Cast.CastExecuted:				Cast animation executed. Id={0}
-GMCommands.Cast.Spell.CastOnLiving:			You cast {0} on {1}.
-GMCommands.Cast.Spell.CastOnSelf:			You cast {0} on self.
-GMCommands.Cast.Spell.GMCastOnYou:			{0} {1} cast {2} on you.
-GMCommands.Cast.Spell.Inexistent:			Spell inexistent. Id={0}
+GMCommands.Cast.Description:            Cast a spell/effect/sound
+GMCommands.Cast.Usage:                  '/cast <effect|cast|spell|sound> <id>' Cast the Spell/VisualEffect/Sound associated with <id>
+GMCommands.Cast.InvalidId:               Invalid ID.
+GMCommands.Cast.IdNegative:               ID can't be negative.
+GMCommands.Cast.EffectExecuted:            Effect animation executed. Id={0}
+GMCommands.Cast.CastExecuted:            Cast animation executed. Id={0}
+GMCommands.Cast.SoundPlayed:            Sound played. Id={0}
+GMCommands.Cast.Spell.CastOnLiving:         You cast {0} on {1}.
+GMCommands.Cast.Spell.CastOnSelf:         You cast {0} on self.
+GMCommands.Cast.Spell.GMCastOnYou:         {0} {1} cast {2} on you.
+GMCommands.Cast.Spell.Inexistent:         Spell inexistent. Id={0}
 
 # /crafting Command
 GMCommands.Crafting.Description:			Change the crafting level of your target

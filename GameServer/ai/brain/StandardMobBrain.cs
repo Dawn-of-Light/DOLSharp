@@ -362,20 +362,23 @@ namespace DOL.AI.Brain
 			if (living == null) return;
 			
 			// Check LOS (walls, pits, etc...) before  attacking, player + pet
-			GamePlayer thisLiving = null;
-			if (living is GamePlayer)
-				thisLiving = (GamePlayer)living;
-			
-			if (living is GamePet)
+			if (DOL.GS.ServerProperties.Properties.ALWAYS_CHECK_LOS)
 			{
-				IControlledBrain brain = ((GamePet)living).Brain as IControlledBrain;
-				thisLiving = brain.GetPlayerOwner();
-			}
-			
-			if (thisLiving != null)
-			{
-				thisLiving.Out.SendCheckLOS (Body, living, new CheckLOSResponse(CheckAggroLOS));
-				if (!m_AggroLOS) return;
+				GamePlayer thisLiving = null;
+				if (living is GamePlayer)
+					thisLiving = (GamePlayer)living;
+				
+				if (living is GamePet)
+				{
+					IControlledBrain brain = ((GamePet)living).Brain as IControlledBrain;
+					thisLiving = brain.GetPlayerOwner();
+				}
+				
+				if (thisLiving != null)
+				{
+					thisLiving.Out.SendCheckLOS (Body, living, new CheckLOSResponse(CheckAggroLOS));
+					if (!m_AggroLOS) return;
+				}
 			}
 	
 			// only protect if gameplayer and aggroamout > 0
