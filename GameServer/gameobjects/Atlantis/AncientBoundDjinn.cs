@@ -41,14 +41,29 @@ namespace DOL.GS
         private const int InvisibleModel = 0x29a;
         private const int SummonSpellEffect = 0x1818;
         private const int ZOffset = 63;
-        private DjinnTimer m_summonTimer;
+        private GameTimer m_timer;
         private object m_syncObject = new object();
+
+        /// <summary>
+        /// Default constructor serves creation from 'mob', djinns created
+        /// in this way are permanent, i.e. they must not vanish.
+        /// In addition, they do random emotes every 60 seconds.
+        /// </summary>
+        public AncientBoundDjinn()
+        {
+            IsPermanent = true;
+
+            m_timer = new EmoteTimer(this);
+            m_timer.Start(100);
+        }
 
         /// <summary>
         /// Creates a new (invisible) djinn.
         /// </summary>
         public AncientBoundDjinn(DjinnStone djinnStone) : base()
         {
+            IsPermanent = false;
+
             NpcTemplate npcTemplate = NpcTemplateMgr.GetTemplate(NpcTemplateId);
 
             if (npcTemplate == null)
@@ -62,6 +77,7 @@ namespace DOL.GS
             X = djinnStone.X;
             Y = djinnStone.Y;
             Z = djinnStone.Z + ZOffset;
+            Model = InvisibleModel;
         }
 
         /// <summary>
@@ -136,6 +152,18 @@ namespace DOL.GS
             }
         }
 
+        private bool m_permanent = false;
+
+        /// <summary>
+        /// Whether or not this djinn stays up at all times; permanent
+        /// djinns can't be summoned.
+        /// </summary>
+        public bool IsPermanent
+        {
+            get { return m_permanent; }
+            protected set { m_permanent = value; }
+        }
+
         /// <summary>
         /// Starts the summon.
         /// </summary>
@@ -143,14 +171,14 @@ namespace DOL.GS
         {
             lock (m_syncObject)
             {
-                if (CurrentRegion == null || m_summoned)
+                if (CurrentRegion == null || IsPermanent || IsSummoned)
                     return;
 
-                if (m_summonTimer == null)
-                    m_summonTimer = new DjinnTimer(this);
+                if (m_timer == null)
+                    m_timer = new SummonTimer(this);
 
                 m_summoned = true;
-                m_summonTimer.Start(1, 100, true, SummonEvent.SummonStarted);
+                (m_timer as SummonTimer).Start(1, 100, true, SummonEvent.SummonStarted);
             }
         }
 
@@ -179,7 +207,8 @@ namespace DOL.GS
                 return false;
 
             lock (m_syncObject)
-                m_summonTimer.Restart();
+                if (!IsPermanent)
+                    (m_timer as SummonTimer).Restart();
 
             String intro = String.Format("According to the rules set down by the Atlantean [masters], {0} {1} {2} {3}",
                 "you are authorized for expeditious transport to your homeland or any of the Havens. Please state",
@@ -191,18 +220,19 @@ namespace DOL.GS
         }
 
         /// <summary>
-		/// Talk to the djinn.
-		/// </summary>
-		/// <param name="source"></param>
-		/// <param name="text"></param>
-		/// <returns></returns>
+            /// Talk to the djinn.
+            /// </summary>
+            /// <param name="source"></param>
+            /// <param name="text"></param>
+            /// <returns></returns>
         public override bool WhisperReceive(GameLiving source, String text)
         {
             if (!(source is GamePlayer))
                 return false;
 
             lock (m_syncObject)
-                m_summonTimer.Restart();
+                if (!IsPermanent)
+                    (m_timer as SummonTimer).Restart();
 
             GamePlayer player = source as GamePlayer;
 
@@ -306,6 +336,11 @@ namespace DOL.GS
             base.OnSubSelectionPicked(player, subSelection);
         }
 
+        /// <summary>
+        /// Player has picked a teleport destination.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="destination"></param>
         protected override void OnDestinationPicked(GamePlayer player, Teleport destination)
         {
             if (player == null)
@@ -369,6 +404,26 @@ namespace DOL.GS
         }
 
         /// <summary>
+        /// Do a random emote.
+        /// </summary>
+        private void DoRandomEmote()
+        {
+            String[] emotes = 
+            { 
+                "The {0} seems to be making an extremely concerted effort not to start laughing hysterically.",
+                "The {0} chuckles a bit to itself and mutters, 'Masters... hah...'",
+                "The {0} giggles quietly and whispers to itself, 'That's right, go on, just a little further...'",
+                "The {0} sounds as if it's quietly practicing to itself, 'What do you mean they didn't seem to be carrying any valuables?'",
+                "The {0} mutters quietly, 'Now where did I put that scepter... oh well, I've dozens more now.'",
+                "The {0} chuckles to itself and whispers, 'Oh I'll serve alright... serve just what you deserve.'"
+            };
+
+            foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.SAY_DISTANCE))
+                player.Out.SendMessage(String.Format(emotes[Util.Random(emotes.GetUpperBound(0))], this.Name),
+                    eChatType.CT_System, eChatLoc.CL_SystemWindow);
+        }
+
+        /// <summary>
         /// Processes events coming from the timer.
         /// </summary>
         /// <param name="e"></param>
@@ -376,12 +431,18 @@ namespace DOL.GS
         {
             base.Notify(e);
 
+            if (e is DjinnEmoteEvent)
+            {
+                DoRandomEmote();
+                return;
+            }
+
             if (e == SummonEvent.SummonStarted)
             {
                 lock (m_syncObject)
                 {
                     this.AddToWorld();
-                    m_summonTimer.Start(7, 1000, true, SummonEvent.SummonCompleted);
+                    (m_timer as SummonTimer).Start(7, 1000, true, SummonEvent.SummonCompleted);
                 }
             }
             else if (e == SummonEvent.SummonCompleted)
@@ -396,10 +457,10 @@ namespace DOL.GS
                         player.Out.SendModelChange(this, this.Model);
 
                     Say("Greetings, great one.");
-                    m_summonTimer.Start(150, 1000, false, SummonEvent.BanishStarted);   // 2.5mins to hiding again.
+                    (m_timer as SummonTimer).Start(150, 1000, false, SummonEvent.VanishStarted);   // 2.5mins to hiding again.
                 }
             }
-            else if (e == SummonEvent.BanishStarted)
+            else if (e == SummonEvent.VanishStarted)
             {
                 // Go into hiding and show the smoke again.
 
@@ -411,10 +472,10 @@ namespace DOL.GS
                     foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
                         player.Out.SendModelChange(this, this.Model);
 
-                    m_summonTimer.Start(5, 1000, true, SummonEvent.BanishCompleted);
+                    (m_timer as SummonTimer).Start(5, 1000, true, SummonEvent.VanishCompleted);
                 }
             }
-            else if (e == SummonEvent.BanishCompleted)
+            else if (e == SummonEvent.VanishCompleted)
             {
                 lock (m_syncObject)
                 {
@@ -424,10 +485,12 @@ namespace DOL.GS
             }
         }
 
+        #region SummonTimer
+
         /// <summary>
-        /// Provides a timer for a djinn teleporter.
+        /// Provides a timer for a djinn summoning.
         /// </summary>
-        private class DjinnTimer : GameTimer
+        private class SummonTimer : GameTimer
         {
             private GameObject m_owner;
             private int m_maxTicks = 0;
@@ -439,7 +502,7 @@ namespace DOL.GS
             /// Constructs a new SummonTimer.
             /// </summary>
             /// <param name="timerOwner">The owner of this timer (the djinn).</param>
-            public DjinnTimer(GameObject owner)
+            public SummonTimer(GameObject owner)
                 : base(owner.CurrentRegion.TimeManager)
             {
                 m_owner = owner;
@@ -514,5 +577,70 @@ namespace DOL.GS
                 }
             }
         }
+
+        #endregion
+
+        #region SummonEvent
+
+        /// <summary>
+        /// Event for summoning/banishing djinns.
+        /// </summary>
+        /// <author>Aredhel</author>
+        private class SummonEvent : GameLivingEvent
+        {
+            protected SummonEvent(String name) : base(name) { }
+
+            public static readonly SummonEvent SummonStarted = new SummonEvent("Summon.Started");
+            public static readonly SummonEvent SummonCompleted = new SummonEvent("Summon.Completed");
+            public static readonly SummonEvent VanishStarted = new SummonEvent("Vanish.Started");
+            public static readonly SummonEvent VanishCompleted = new SummonEvent("Vanish.Completed");
+        }
+
+        #endregion
+
+        #region EmoteTimer
+
+        /// <summary>
+        /// Provides a timer for djinn emotes (permanent djinns only).
+        /// </summary>
+        private class EmoteTimer : GameTimer
+        {
+            private GameObject m_owner;
+            
+            /// <summary>
+            /// Constructs a new SummonTimer.
+            /// </summary>
+            /// <param name="timerOwner">The owner of this timer (the djinn).</param>
+            public EmoteTimer(GameObject owner)
+                : base(owner.CurrentRegion.TimeManager)
+            {
+                m_owner = owner;
+                Interval = 60 * 1000;   // 60-second tick.
+            }
+
+            /// <summary>
+            /// Called on every timer tick.
+            /// </summary>
+            protected override void OnTick()
+            {
+                m_owner.Notify(new DjinnEmoteEvent());
+            }
+        }
+
+        #endregion
+
+        #region DjinnEmoteEvent
+
+        /// <summary>
+        /// Event for djinn emotes.
+        /// </summary>
+        /// <author>Aredhel</author>
+        private class DjinnEmoteEvent : GameLivingEvent
+        {
+            public DjinnEmoteEvent() 
+                : base("DjinnEmoteEvent") { }
+        }
+
+        #endregion
     }
 }
