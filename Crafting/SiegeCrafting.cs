@@ -56,60 +56,6 @@ namespace DOL.GS
 		/// <param name="item"></param>
 		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
-            // Luhz Crafting Update:
-            // "Secondary" tradeskills are no longer limited by "Primary" tradeskills - Patch 1.87
-            /*
-			int maxAchivableLevel;
-			switch (player.CraftingPrimarySkill)
-			{
-				case eCraftingSkill.WeaponCrafting:
-					{
-						maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.WeaponCrafting) * 0.75);
-						break;
-					}
-
-				case eCraftingSkill.ArmorCrafting:
-					{
-						maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.ArmorCrafting) * 0.40);
-						break;
-					}
-
-				case eCraftingSkill.Tailoring:
-					{
-						maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.Tailoring) * 0.40);
-						break;
-					}
-
-				case eCraftingSkill.Fletching:
-					{
-						maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.Fletching) * 0.75);
-						break;
-					}
-
-				case eCraftingSkill.Alchemy:
-					{
-						maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.Alchemy) * 0.02);
-						break;
-					}
-
-				case eCraftingSkill.SpellCrafting:
-					{
-						maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.SpellCrafting) * 0.02);
-						break;
-					}
-
-				default:
-					{
-						maxAchivableLevel = 0;
-						break;
-					}
-			}
-
-			if (player.GetCraftingSkillValue(eCraftingSkill.SiegeCrafting) >= maxAchivableLevel)
-			{
-				return;
-			}
-            */
 			if (Util.Chance(CalculateChanceToGainPoint(player, item)))
 			{
 				player.GainCraftingSkill(eCraftingSkill.SiegeCrafting, 1);
