@@ -69,6 +69,8 @@ namespace DOL.GS
 		/// </summary>
 		protected const string ITEM_CRAFTER = "ITEM_CRAFTER";
 
+		protected const int subSkillCap = 1300;
+
 		/// <summary>
 		/// The enum index of this crafting skill
 		/// </summary>
@@ -83,10 +85,6 @@ namespace DOL.GS
 				m_eskill = value;
 			}
 		}
-
-		/// <summary>
-		/// The icon of this crafting skill
-		/// </summary>
 		public byte Icon
 		{
 			get
@@ -98,10 +96,6 @@ namespace DOL.GS
 				m_icon = value;
 			}
 		}
-
-		/// <summary>
-		/// The name of this crafting skill
-		/// </summary>
 		public string Name
 		{
 			get
@@ -233,7 +227,8 @@ namespace DOL.GS
 		{
 			int minimumLevel = CalculateSecondCraftingSkillMinimumLevel(craftItemData);
 
-			if (minimumLevel <= 0) return true; // no requirement needed
+			if (minimumLevel <= 0)
+				return true; // no requirement needed
 
 			foreach (DBCraftedXItem rawmaterial in craftItemData.RawMaterials)
 			{
@@ -329,7 +324,8 @@ namespace DOL.GS
 					}
 					if (result == false)
 					{
-						if (missingMaterials == null) missingMaterials = new ArrayList(5);
+						if (missingMaterials == null)
+							missingMaterials = new ArrayList(5);
 						missingMaterials.Add(rawmaterial);
 					}
 				}
@@ -359,53 +355,46 @@ namespace DOL.GS
 		/// <param name="item"></param>
 		public virtual void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
-			int gainPointChance = CalculateChanceToGainPoint(player, item);
-
 			foreach (DBCraftedXItem rawmaterial in item.RawMaterials)
 			{
-				if (Util.Chance(gainPointChance))
+				switch (rawmaterial.ItemTemplate.Model)
 				{
-                    // Luhz Crafting Update:
-                    // There are no "primary" crafting skills to limit skill gain anymore - patch 1.87
-					switch (rawmaterial.ItemTemplate.Model)
-					{
-						case 522:	//"cloth square"
-						case 537:	//"heavy thread"
+					case 522:	//"cloth square"
+					case 537:	//"heavy thread"
+						{
+							if (player.GetCraftingSkillValue(eCraftingSkill.ClothWorking) < subSkillCap)
 							{
-								// if (player.GetCraftingSkillValue(eCraftingSkill.ClothWorking) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
-								// {
-									player.GainCraftingSkill(eCraftingSkill.ClothWorking, 1);
-								// }
-								break;
+								player.GainCraftingSkill(eCraftingSkill.ClothWorking, 1);
 							}
+							break;
+						}
 
-						case 521:	//"leather square"
+					case 521:	//"leather square"
+						{
+							if (player.GetCraftingSkillValue(eCraftingSkill.LeatherCrafting) < subSkillCap)
 							{
-                                // if (player.GetCraftingSkillValue(eCraftingSkill.LeatherCrafting) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
-								// {
-									player.GainCraftingSkill(eCraftingSkill.LeatherCrafting, 1);
-                                    // }
-								break;
+								player.GainCraftingSkill(eCraftingSkill.LeatherCrafting, 1);
 							}
+							break;
+						}
 
-						case 519:	//"metal bars"
+					case 519:	//"metal bars"
+						{
+							if (player.GetCraftingSkillValue(eCraftingSkill.MetalWorking) < subSkillCap)
 							{
-                                // if (player.GetCraftingSkillValue(eCraftingSkill.MetalWorking) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill == primary skill
-								// {
-									player.GainCraftingSkill(eCraftingSkill.MetalWorking, 1);
-                                    // }
-								break;
+								player.GainCraftingSkill(eCraftingSkill.MetalWorking, 1);
 							}
+							break;
+						}
 
-						case 520:	//"wooden boards"
+					case 520:	//"wooden boards"
+						{
+							if (player.GetCraftingSkillValue(eCraftingSkill.WoodWorking) < subSkillCap)
 							{
-                                // if (player.GetCraftingSkillValue(eCraftingSkill.WoodWorking) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill == primary skill
-								// {
-									player.GainCraftingSkill(eCraftingSkill.WoodWorking, 1);
-                                    // }
-								break;
+								player.GainCraftingSkill(eCraftingSkill.WoodWorking, 1);
 							}
-					}
+							break;
+						}
 				}
 			}
 			player.Out.SendUpdateCraftingSkills();
@@ -496,9 +485,12 @@ namespace DOL.GS
 				int count = craftItemData.ItemTemplate.PackSize < 1 ? 1 : craftItemData.ItemTemplate.PackSize;
 				foreach (InventoryItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 				{
-					if (item == null) continue;
-					if (item.Id_nb != craftItemData.ItemTemplate.Id_nb) continue;
-					if (item.Count >= item.MaxCount) continue;
+					if (item == null)
+						continue;
+					if (item.Id_nb != craftItemData.ItemTemplate.Id_nb)
+						continue;
+					if (item.Count >= item.MaxCount)
+						continue;
 
 					int countFree = item.MaxCount - item.Count;
 					if (count > countFree)
@@ -594,10 +586,12 @@ namespace DOL.GS
 					if (itemMaterial != null && itemMaterial.Count > 0 && Util.Chance(60)) // 60% chance to loseeach material
 					{
 						count = (int)(itemMaterial.Count * Util.Random(0, 60) / 100); // calculate how much material are lost
-						if (count <= 0) count = 1;
+						if (count <= 0)
+							count = 1;
 					}
 
-					if (count <= 0) continue; // don't remove this material
+					if (count <= 0)
+						continue; // don't remove this material
 
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.LooseRawMaterial.Count", count, itemMaterial.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
@@ -662,20 +656,30 @@ namespace DOL.GS
 		public virtual int CalculateChanceToMakeItem(GamePlayer player, DBCraftedItem item)
 		{
 			int con = GetItemCon(player.GetCraftingSkillValue(m_eskill), item.CraftingLevel);
-			if (con < -3) con = -3;
-			if (con > 3) con = 3;
+			if (con < -3)
+				con = -3;
+			if (con > 3)
+				con = 3;
 
 			switch (con)
 			{
 				// Chance to MAKE ! (100 - chance to fail)
-				case -3: return 100;
-				case -2: return 100;
-				case -1: return 100;
-				case 0: return 100 - 8;
-				case 1: return 100 - 16;
-				case 2: return 100 - 32;
-				case 3: return 0;
-				default: return 0;
+				case -3:
+					return 100;
+				case -2:
+					return 100;
+				case -1:
+					return 100;
+				case 0:
+					return 100 - 8;
+				case 1:
+					return 100 - 16;
+				case 2:
+					return 100 - 32;
+				case 3:
+					return 0;
+				default:
+					return 0;
 			}
 		}
 
@@ -685,28 +689,45 @@ namespace DOL.GS
 		public virtual int CalculateChanceToGainPoint(GamePlayer player, DBCraftedItem item)
 		{
 			int con = GetItemCon(player.GetCraftingSkillValue(m_eskill), item.CraftingLevel);
-			if (con < -3) con = -3;
-			if (con > 3) con = 3;
+			if (con < -3)
+				con = -3;
+			if (con > 3)
+				con = 3;
 			int chance = 0;
 
 			switch (con)
 			{
-				case -3: return 0;
-				case -2: chance = 15; break;
-				case -1: chance = 30; break;
-				case 0: chance = 45; break;
-				case 1: chance = 55; break;
-				case 2: chance = 45; break;
-				case 3: return 0;
-				default: return 0;
+				case -3:
+					return 0;
+				case -2:
+					chance = 15;
+					break;
+				case -1:
+					chance = 30;
+					break;
+				case 0:
+					chance = 45;
+					break;
+				case 1:
+					chance = 55;
+					break;
+				case 2:
+					chance = 45;
+					break;
+				case 3:
+					return 0;
+				default:
+					return 0;
 			}
 
 			// In capital cities bonuses to crafting apply (patch 1.86)
 			if (player.CurrentRegion.IsCapitalCity)
 			{
 				chance += Properties.CAPITAL_CITY_CRAFTING_SKILL_GAIN_BONUS;
-				if (chance < 0) chance = 0;
-				if (chance > 100) chance = 100;
+				if (chance < 0)
+					chance = 0;
+				if (chance > 100)
+					chance = 100;
 			}
 
 			return chance;
@@ -745,18 +766,33 @@ namespace DOL.GS
 			double mod = 1.0;
 			switch (con)
 			{
-				case -3: mod = 0.4; break;
-				case -2: mod = 0.6; break;
-				case -1: mod = 0.8; break;
-				case 0: mod = 1.0; break;
-				case 1: mod = 1.0; break;
-				case 2: mod = 1.0; break;
-				case 3: mod = 1.0; break;
+				case -3:
+					mod = 0.4;
+					break;
+				case -2:
+					mod = 0.6;
+					break;
+				case -1:
+					mod = 0.8;
+					break;
+				case 0:
+					mod = 1.0;
+					break;
+				case 1:
+					mod = 1.0;
+					break;
+				case 2:
+					mod = 1.0;
+					break;
+				case 3:
+					mod = 1.0;
+					break;
 			}
 
 			craftingTime = (int)(craftingTime * mod);
 
-			if (craftingTime < 1) craftingTime = 1;
+			if (craftingTime < 1)
+				craftingTime = 1;
 			return craftingTime;
 		}
 
@@ -790,7 +826,8 @@ namespace DOL.GS
 			int delta = GetItemCon(player.GetCraftingSkillValue(m_eskill), item.CraftingLevel);
 			if (delta < -2)
 			{
-				if (Util.Chance(2)) return 100; // grey items get 2% chance to be master piece
+				if (Util.Chance(2))
+					return 100; // grey items get 2% chance to be master piece
 				return 96 + Util.Random(3); // handle grey items like legendary
 			}
 
@@ -819,7 +856,8 @@ namespace DOL.GS
 			int rand = Util.Random(sum);
 			for (int i = 3; i >= 0; i--)
 			{
-				if (rand < chancePart[i]) return 96 + i;
+				if (rand < chancePart[i])
+					return 96 + i;
 				rand -= chancePart[i];
 			}
 
@@ -838,13 +876,20 @@ namespace DOL.GS
 		public int GetItemCon(int crafterSkill, int itemCraftingLevel)
 		{
 			int diff = itemCraftingLevel - crafterSkill;
-			if (diff <= -50) return -3; // grey
-			else if (diff <= -31) return -2; // green
-			else if (diff <= -11) return -1; // blue
-			else if (diff <= 0) return 0; // yellow
-			else if (diff <= 19) return 1; // orange
-			else if (diff <= 49) return 2; // red
-			else return 3; // impossible
+			if (diff <= -50)
+				return -3; // grey
+			else if (diff <= -31)
+				return -2; // green
+			else if (diff <= -11)
+				return -1; // blue
+			else if (diff <= 0)
+				return 0; // yellow
+			else if (diff <= 19)
+				return 1; // orange
+			else if (diff <= 49)
+				return 2; // red
+			else
+				return 3; // impossible
 		}
 		#endregion
 	}

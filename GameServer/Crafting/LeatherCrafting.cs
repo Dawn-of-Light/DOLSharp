@@ -61,7 +61,10 @@ namespace DOL.GS
 		{
 			if (Util.Chance(CalculateChanceToGainPoint(player, item)))
 			{
-				player.GainCraftingSkill(eCraftingSkill.LeatherCrafting, 1);
+                if (player.GetCraftingSkillValue(eCraftingSkill.LeatherCrafting) < subSkillCap)
+                {
+                    player.GainCraftingSkill(eCraftingSkill.LeatherCrafting, 1);
+                }
 				player.Out.SendUpdateCraftingSkills();
 			}
 		}
