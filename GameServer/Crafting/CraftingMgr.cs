@@ -33,7 +33,6 @@ namespace DOL.GS
 		ArmorCrafting = 2,
 		SiegeCrafting = 3,
 		Alchemy = 4,
-		Jewellery = 5,
 		MetalWorking = 6,
 		LeatherCrafting = 7,
 		ClothWorking = 8,
@@ -43,8 +42,8 @@ namespace DOL.GS
 		Fletching = 12,
 		SpellCrafting = 13,
 		WoodWorking = 14,
-
-		_Last = 14,
+		BasicCrafting = 15,
+		_Last = 15,
 	}
 
 	/// <summary>
@@ -82,7 +81,6 @@ namespace DOL.GS
 			// skill
 			m_craftingskills[(int)eCraftingSkill.ArmorCrafting - 1] = new ArmorCrafting();
 			m_craftingskills[(int)eCraftingSkill.Fletching - 1] = new Fletching();
-			m_craftingskills[(int)eCraftingSkill.Jewellery - 1] = new Jewellery();
 			m_craftingskills[(int)eCraftingSkill.SiegeCrafting - 1] = new SiegeCrafting();
 			m_craftingskills[(int)eCraftingSkill.Tailoring - 1] = new Tailoring();
 			m_craftingskills[(int)eCraftingSkill.WeaponCrafting - 1] = new WeaponCrafting();
@@ -93,6 +91,7 @@ namespace DOL.GS
 			m_craftingskills[(int)eCraftingSkill.LeatherCrafting - 1] = new LeatherCrafting();
 			m_craftingskills[(int)eCraftingSkill.MetalWorking - 1] = new MetalWorking();
 			m_craftingskills[(int)eCraftingSkill.WoodWorking - 1] = new WoodWorking();
+			m_craftingskills[(int)eCraftingSkill.BasicCrafting - 1] = new BasicCrafting();
 
 			//Advanced skill
 			m_craftingskills[(int)eCraftingSkill.Alchemy - 1] = new Alchemy();

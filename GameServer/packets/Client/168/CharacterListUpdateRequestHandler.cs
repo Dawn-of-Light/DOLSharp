@@ -621,6 +621,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						
 						ch.RespecAmountRealmSkill += 2;
 
+						setBasicCraftingForNewCharacter(ch);
+
 						//Save the character in the database
 						GameServer.Database.AddNewObject(ch);
 						//Fire the character creation event
@@ -644,6 +646,28 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 			}
 			return 1;
+		}
+
+		private void setBasicCraftingForNewCharacter(Character ch)
+		{
+			string serializedAllCraftingSkills = "";
+			foreach (int craftingSkillId in Enum.GetValues(typeof(eCraftingSkill)))
+			{
+				if (craftingSkillId > 0)
+				{
+					serializedAllCraftingSkills += (int)craftingSkillId + "|1;";
+					if (craftingSkillId == (int)eCraftingSkill._Last)
+					{
+						break;
+					}
+				}
+			}
+			if (serializedAllCraftingSkills.Length > 0)
+			{
+				serializedAllCraftingSkills = serializedAllCraftingSkills.Remove(serializedAllCraftingSkills.Length - 1);
+			}
+			ch.SerializedCraftingSkills = serializedAllCraftingSkills;
+			ch.CraftingPrimarySkill = (int)eCraftingSkill.BasicCrafting;
 		}
 
 		#region CheckCharacter
