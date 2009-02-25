@@ -63,7 +63,10 @@ namespace DOL.GS
 
 			if (Util.Chance(CalculateChanceToGainPoint(player, item)))
 			{
-				player.GainCraftingSkill(eCraftingSkill.WoodWorking, 1);
+                if (player.GetCraftingSkillValue(eCraftingSkill.WoodWorking) < subSkillCap)
+                {
+                    player.GainCraftingSkill(eCraftingSkill.WoodWorking, 1);
+                }
 				player.Out.SendUpdateCraftingSkills();
 			}
 

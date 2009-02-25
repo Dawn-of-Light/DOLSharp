@@ -26,97 +26,86 @@ using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// The tailoring crafting skill
-	/// </summary>
-	public class Tailoring : AbstractCraftingSkill
-	{
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		public Tailoring()
-		{
-			Icon = 0x0B;
-			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.Name.Tailoring");
-			eSkill = eCraftingSkill.Tailoring;
-		}
+    /// <summary>
+    /// The tailoring crafting skill
+    /// </summary>
+    public class Tailoring : AbstractCraftingSkill
+    {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Tailoring()
+        {
+            Icon = 0x0B;
+            Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.Name.Tailoring");
+            eSkill = eCraftingSkill.Tailoring;
+        }
 
-		/// <summary>
-		/// Check if  the player own all needed tools
-		/// </summary>
-		/// <param name="player">the crafting player</param>
-		/// <param name="craftItemData">the object in construction</param>
-		/// <returns>true if the player hold all needed tools</returns>
-		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
-		{
-			bool needSmithHammerAndForge = false;
-			foreach (DBCraftedXItem rawmaterial in craftItemData.RawMaterials)
-			{
-				if(rawmaterial.ItemTemplate.Model == 519) // metal bar
-				{
-					needSmithHammerAndForge = true;
-					break;
-				}
-			}
+        /// <summary>
+        /// Check if  the player own all needed tools
+        /// </summary>
+        /// <param name="player">the crafting player</param>
+        /// <param name="craftItemData">the object in construction</param>
+        /// <returns>true if the player hold all needed tools</returns>
+        public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
+        {
+            bool needForge = false;
+            foreach (DBCraftedXItem rawmaterial in craftItemData.RawMaterials)
+            {
+                if (rawmaterial.ItemTemplate.Model == 519) // metal bar
+                {
+                    needForge = true;
+                    break;
+                }
+            }
 
-			if(needSmithHammerAndForge)
-			{
-				bool result = false;
-				foreach (GameStaticItem item in player.GetItemsInRadius(CRAFT_DISTANCE))
-				{
+            if (needForge)
+            {
+                foreach (GameStaticItem item in player.GetItemsInRadius(CRAFT_DISTANCE))
+                {
                     if (item.Name == "forge" || item.Model == 478) // Forge
                     {
-						result = true;
-						break;
-					}
-				}
+                        return true;
+                    }
+                }
 
-				if(result == false)
-				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindForge"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return false;
-				}
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindForge"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return false;
+            }
+            return true;
 
-                
-			}
+        }
 
-            
+        /// <summary>
+        /// Calculate the minumum needed secondary crafting skill level to make the item
+        /// </summary>
+        public override int CalculateSecondCraftingSkillMinimumLevel(DBCraftedItem item)
+        {
+            switch (item.ItemTemplate.Object_Type)
+            {
+                case (int)eObjectType.Cloth:
+                case (int)eObjectType.Leather:
+                case (int)eObjectType.Studded:
+                    return item.CraftingLevel - 30;
+            }
 
-			return true;
-		}
+            return base.CalculateSecondCraftingSkillMinimumLevel(item);
+        }
 
-		/// <summary>
-		/// Calculate the minumum needed secondary crafting skill level to make the item
-		/// </summary>
-		public override int CalculateSecondCraftingSkillMinimumLevel(DBCraftedItem item)
-		{
-			switch(item.ItemTemplate.Object_Type)
-			{
-				case (int)eObjectType.Cloth:
-				case (int)eObjectType.Leather:
-				case (int)eObjectType.Studded:
-					return item.CraftingLevel - 30;
-			}
-
-			return base.CalculateSecondCraftingSkillMinimumLevel(item);
-		}
-
-		/// <summary>
-		/// Select craft to gain point and increase it
-		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="item"></param>
-		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
-		{
-			base.GainCraftingSkillPoints(player, item);
-
-
-			if(Util.Chance( CalculateChanceToGainPoint(player, item)))
-			{
-				player.GainCraftingSkill(eCraftingSkill.Tailoring, 1);
-				player.Out.SendUpdateCraftingSkills();
-			}
-		}
-	}
+        /// <summary>
+        /// Select craft to gain point and increase it
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="item"></param>
+        public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
+        {
+            if (Util.Chance(CalculateChanceToGainPoint(player, item)))
+            {
+                player.GainCraftingSkill(eCraftingSkill.Tailoring, 1);
+                base.GainCraftingSkillPoints(player, item);
+                player.Out.SendUpdateCraftingSkills();
+            }
+        }
+    }
 }

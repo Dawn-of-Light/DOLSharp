@@ -77,7 +77,10 @@ namespace DOL.GS
 		{
 			if (Util.Chance(CalculateChanceToGainPoint(player, item)))
 			{
-				player.GainCraftingSkill(eCraftingSkill.MetalWorking, 1);
+                if (player.GetCraftingSkillValue(eCraftingSkill.MetalWorking) < subSkillCap)
+                {
+                    player.GainCraftingSkill(eCraftingSkill.MetalWorking, 1);
+                }
 				player.Out.SendUpdateCraftingSkills();
 			}
 		}

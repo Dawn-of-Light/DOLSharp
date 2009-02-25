@@ -87,12 +87,10 @@ namespace DOL.GS
 		/// <param name="item"></param>
 		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
-			base.GainCraftingSkillPoints(player, item);
-
-
 			if(Util.Chance( CalculateChanceToGainPoint(player, item)))
 			{
 				player.GainCraftingSkill(eCraftingSkill.ArmorCrafting, 1);
+                base.GainCraftingSkillPoints(player, item);
 				player.Out.SendUpdateCraftingSkills();
 			}
 		}

@@ -61,25 +61,7 @@ namespace DOL.GS
 		/// <param name="item"></param>
 		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
-			int gainPointChance = CalculateChanceToGainPoint(player, item);
-
-			foreach (DBCraftedXItem rawmaterial in item.RawMaterials)
-			{
-				switch(rawmaterial.ItemTemplate.Model)
-				{
-					case 117 :	//"gem"
-					{
-                        // Luhz Crafting Update:
-                        // "Secondary" tradeskills are no longer limited by "Primary" tradeskills - Patch 1.87
-						//if (player.GetCraftingSkillValue(eCraftingSkill.GemCutting) < player.GetCraftingSkillValue(player.CraftingPrimarySkill)) // max secondary skill cap == primary skill
-						//{
-							if (Util.Chance(gainPointChance)) player.GainCraftingSkill(eCraftingSkill.GemCutting, 1);
-						//}
-						break;
-					}
-				}
-			}
-			player.Out.SendUpdateCraftingSkills();
+            ;
 		}
 
 		#endregion

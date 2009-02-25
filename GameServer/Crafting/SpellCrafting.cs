@@ -121,10 +121,17 @@ namespace DOL.GS
 		/// <param name="item"></param>
 		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
-			base.GainCraftingSkillPoints(player, item);
 			if (Util.Chance(CalculateChanceToGainPoint(player, item)))
 			{
 				player.GainCraftingSkill(eCraftingSkill.SpellCrafting, 1);
+                // one of the raw materials gains the point for main skill, thats why we item.RawMaterials.Length - 1
+                for (int ii = 0; ii < item.RawMaterials.Length-1; ii++)
+                {
+                    if (player.GetCraftingSkillValue(eCraftingSkill.GemCutting) < subSkillCap)
+                    {
+                        player.GainCraftingSkill(eCraftingSkill.GemCutting, 1);
+                    }
+                }
 				player.Out.SendUpdateCraftingSkills();
 			}
 		}
