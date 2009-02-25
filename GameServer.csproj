@@ -1,7 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{ACB92917-3D42-4F40-97F9-EA904A41DE36}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -311,9 +311,11 @@
     <Compile Include="Crafting\ArmorCrafting.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="gameobjects\craft master\BasicCraftingMaster.cs" />
     <Compile Include="Crafting\ClothWorking.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Crafting\BasicCrafting.cs" />
     <Compile Include="Crafting\CraftingMgr.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -324,9 +326,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Crafting\HerbalCrafting.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Crafting\Jewellery.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Crafting\LeatherCrafting.cs">
