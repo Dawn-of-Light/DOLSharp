@@ -51,48 +51,7 @@ namespace DOL.GS
 		/// <returns>true if the player hold all needed tools</returns>
 		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
-            // Luhz Crafting Update: 
-            // Crafting no longer requires hand-held tools!
             return base.CheckTool(player, craftItemData);
-            /*
-            if(! base.CheckTool(player, craftItemData)) return false;
-
-			byte flags = 0;
-			foreach (InventoryItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
-			{
-				if(item == null || item.Object_Type != 0) continue;
-
-				if (item.Name == LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.AlchemyKit"))
-				{
-					if((flags & 0x01) == 0) flags |= 0x01;
-					if(flags >= 0x03) break;
-				}
-				else if (item.Name == LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.MortarAndPestle"))
-				{
-					if((flags & 0x02) == 0) flags |= 0x02;
-					if(flags >= 0x03) break;
-				}
-			}
-
-			if(flags < 0x03)
-			{
-				if((flags & 0x01) == 0)
-				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindAlchemyKit"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return false;
-				}
-
-				if((flags & 0x02) == 0)
-				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindMortarPestle"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return false;
-				}
-			}
-
-			return true;
-            */
 		}
 
 		/// <summary>
@@ -102,47 +61,17 @@ namespace DOL.GS
 		/// <param name="item"></param>
 		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
-			base.GainCraftingSkillPoints(player, item);
-
-            // Luhz Crafting Update:
-            // "Secondary" tradeskills are no longer limited by "Primary" tradeskills - Patch 1.87
-            /*
-			if(player.CraftingPrimarySkill == eCraftingSkill.Alchemy)
-			{
-				if(player.GetCraftingSkillValue(eCraftingSkill.Alchemy)%100 == 99)
-				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.GainCraftingSkillPoints.RaiseAlchemy"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-					return;
-				}
-			}
-			else
-			{
-				int maxAchivableLevel;
-				switch (player.CraftingPrimarySkill)
-				{
-					case eCraftingSkill.SpellCrafting:
-					{
-						maxAchivableLevel = (int)(player.GetCraftingSkillValue(eCraftingSkill.SpellCrafting) * 0.45);
-						break;
-					}
-
-					default:
-					{
-						maxAchivableLevel = 0;
-						break;
-					}
-				}
-
-				if(player.GetCraftingSkillValue(eCraftingSkill.Alchemy) >= maxAchivableLevel)
-				{
-					return;
-				}
-			}
-            */
-
 			if(Util.Chance( CalculateChanceToGainPoint(player, item)))
 			{
 				player.GainCraftingSkill(eCraftingSkill.Alchemy, 1);
+                // one of the raw materials gains the point for main skill, thats why we item.RawMaterials.Length - 1
+                for (int ii = 0; ii < item.RawMaterials.Length - 1; ii++)
+                {
+                    if (player.GetCraftingSkillValue(eCraftingSkill.HerbalCrafting) < subSkillCap)
+                    {
+                        player.GainCraftingSkill(eCraftingSkill.HerbalCrafting, 1);
+                    }
+                }
 				player.Out.SendUpdateCraftingSkills();
 			}
 		}
