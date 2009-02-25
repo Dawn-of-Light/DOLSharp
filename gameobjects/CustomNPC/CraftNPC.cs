@@ -50,33 +50,12 @@ namespace DOL.GS
 
 			TurnTo(player, 5000);
 
-            // Luhz Crafting Update:
-            // Players can join any, and all, crafting professions.
-            SayTo(player, eChatLoc.CL_PopupWindow, InitialEntersentence);
-            /*			
-			if(player.CraftingPrimarySkill == eCraftingSkill.NoCrafting)
+			// Dunnerholl : Basic Crafting Master does not give the option to rejoin this craft
+			if (InitialEntersentence != null)
 			{
 				SayTo(player, eChatLoc.CL_PopupWindow, InitialEntersentence);
-				return true;
 			}
-			
-			if (player.CraftingPrimarySkill != TheCraftingSkill)
-			{
-				SayTo(player, eChatLoc.CL_ChatWindow, LanguageMgr.GetTranslation(player.Client, "CraftNPC.Interact.NotMaster"));
-				return true;
-			}
-
-            if (player.GetCraftingSkillValue(TheCraftingSkill)%100 == 99)
-			{
-				player.GainCraftingSkill(TheCraftingSkill, 1);
-				SayTo(player, eChatLoc.CL_PopupWindow, LanguageMgr.GetTranslation(player.Client, "CraftNPC.Interact.Promoted", player.CraftTitle));
-				player.Out.SendUpdateCraftingSkills();
-			}
-			else
-			{
-                SayTo(player, eChatLoc.CL_SystemWindow, LanguageMgr.GetTranslation(player.Client, "CraftNPC.Interact.Examine", Name));
-            }
-            */
+            
             		
 			return true;
 		}
@@ -90,10 +69,6 @@ namespace DOL.GS
 
 			GamePlayer player = (GamePlayer) source;
 
-            // Luhz Crafting Update:
-            // Players may now join any, and all, crafting professions.
-			// if (text == GUILD_ORDER && player.CraftingPrimarySkill == 0)
-            // && player.GetCraftingSkillValue(TheCraftingSkill) < 1
             if(text == GUILD_ORDER)
 			{
 				player.Out.SendCustomDialog(LanguageMgr.GetTranslation(player.Client, "CraftNPC.WhisperReceive.WishToJoin", GUILD_ORDER), new CustomDialogResponse(CraftNpcDialogResponse));
@@ -107,14 +82,16 @@ namespace DOL.GS
 				return; //declined
 
 			player.CraftingPrimarySkill = TheCraftingSkill;
-		
-			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "CraftNPC.CraftNpcDialogResponse.Accepted", GUILD_CRAFTERS), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "CraftNPC.CraftNpcDialogResponse.Accepted", GUILD_CRAFTERS), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				
 			foreach (eCraftingSkill skill in TrainedSkills)
 			{
 				player.AddCraftingSkill(skill, 1);
 			}
+			player.Out.SendUpdatePlayer();
 			player.Out.SendUpdateCraftingSkills();
+			
 		}
 	}
 }
