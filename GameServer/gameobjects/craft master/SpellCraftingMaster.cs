@@ -31,7 +31,6 @@ namespace DOL.GS
 			eCraftingSkill.Alchemy,
 			eCraftingSkill.GemCutting,
 			eCraftingSkill.HerbalCrafting,
-			eCraftingSkill.Jewellery,
 			eCraftingSkill.SiegeCrafting,
 		};
 

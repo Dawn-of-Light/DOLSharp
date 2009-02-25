@@ -26,42 +26,29 @@ using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Jewellery is the crafting skill to make jewel,stone,sigil and rune 
-	/// </summary>
-	public class Jewellery : AbstractCraftingSkill
+	public class BasicCrafting : AbstractCraftingSkill
 	{
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public Jewellery()
+		public BasicCrafting()
 		{
-			Icon = 0x05;
-			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.Name.Jewelcraft");
-			eSkill = eCraftingSkill.Jewellery;
+			Icon = 0x0F;
+			Name = "Basic Crafting";
+			eSkill = eCraftingSkill.BasicCrafting;
 		}
 
-		/// <summary>
-		/// Check if  the player own all needed tools
-		/// </summary>
-		/// <param name="player">the crafting player</param>
-		/// <param name="craftItemData">the object in construction</param>
-		/// <returns>true if the player hold all needed tools</returns>
 		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
+			// TODO : implement tool checks based on recipes
 			return true;
 		}
 
-		/// <summary>
-		/// Select craft to gain point and increase it
-		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="item"></param>
 		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
 			if (Util.Chance(CalculateChanceToGainPoint(player, item)))
 			{
-				player.GainCraftingSkill(eCraftingSkill.Jewellery, 1);
+				player.GainCraftingSkill(eCraftingSkill.BasicCrafting, 1);
 				player.Out.SendUpdateCraftingSkills();
 			}
 		}

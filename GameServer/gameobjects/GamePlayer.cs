@@ -11930,7 +11930,6 @@ namespace DOL.GS
 								case "ArmorCrafting": i = 2; break;
 								case "SiegeCrafting": i = 3; break;
 								case "Alchemy": i = 4; break;
-								case "Jewellery": i = 5; break;
 								case "MetalWorking": i = 6; break;
 								case "LeatherCrafting": i = 7; break;
 								case "ClothWorking": i = 8; break;
@@ -11944,14 +11943,28 @@ namespace DOL.GS
 							}
 							if (!craftingSkills.ContainsKey(i))
 							{
-								craftingSkills.Add(i, Convert.ToInt32(values[1]));
+								if (isCraftingSkillInEnum(Convert.ToInt32(values[0])))
+								{
+									craftingSkills.Add(i, Convert.ToInt32(values[1]));
+								}
+								else
+								{
+									log.Error("Tried to load invalid CraftingSkill :" + values[0]);
+								}
 							}
 
 						}
 						//Load by number
 						else if (!craftingSkills.ContainsKey(Convert.ToInt32(values[0])))
 						{
-							craftingSkills.Add(Convert.ToInt32(values[0]), Convert.ToInt32(values[1]));
+							if(isCraftingSkillInEnum(Convert.ToInt32(values[0])))
+							{
+								craftingSkills.Add(Convert.ToInt32(values[0]), Convert.ToInt32(values[1]));
+							}
+							else
+							{
+								log.Error("Tried to load invalid CraftingSkill :"+values[0]);
+							}
 						}
 					}
 				}
@@ -11961,6 +11974,11 @@ namespace DOL.GS
 				if (log.IsErrorEnabled)
 					log.Error(Name + ": error in loading playerCraftingSkills => " + PlayerCharacter.SerializedCraftingSkills, e);
 			}
+		}
+
+		private bool isCraftingSkillInEnum(int craftingSkillToCheck)
+		{
+			return Enum.IsDefined(typeof(eCraftingSkill), craftingSkillToCheck);
 		}
 
 		/// <summary>
