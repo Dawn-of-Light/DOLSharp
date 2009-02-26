@@ -26,20 +26,22 @@ using log4net;
 
 namespace DOL.GS
 {
-    /// <summary>
-    /// The tailoring crafting skill
-    /// </summary>
     public class Tailoring : AbstractCraftingSkill
     {
-        /// <summary>
-        /// Constructor
-        /// </summary>
         public Tailoring()
         {
             Icon = 0x0B;
             Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.Name.Tailoring");
             eSkill = eCraftingSkill.Tailoring;
         }
+
+		public override string CRAFTER_TITLE_PREFIX
+		{
+			get
+			{
+				return "Tailor's";
+			}
+		}
 
         /// <summary>
         /// Check if  the player own all needed tools

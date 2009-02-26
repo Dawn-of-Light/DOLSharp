@@ -45,12 +45,18 @@ namespace DOL.GS
 
 		public override string GUILD_ORDER
 		{
-			get { return "WeaponCrafting"; }
+			get
+			{
+				return "Weaponcrafters";
+			}
 		}
 
-		public override string GUILD_CRAFTERS
+		public override string ACCEPTED_BY_ORDER_NAME
 		{
-			get { return "Weaponsmiths"; }
+			get
+			{
+				return "Weaponsmiths";
+			}
 		}
 
 		public override eCraftingSkill TheCraftingSkill
@@ -60,7 +66,10 @@ namespace DOL.GS
 
 		public override string InitialEntersentence
 		{
-			get { return "Would you like to join the Order of [" + GUILD_ORDER + "]? As a crafter of weapons you can expect to forge swords axes hammers and spears. While you will excel in weaponscrafting and have good skills in Armor crafting, you can expect great Difficulty in Tayloring and Fletching. A well trained Weapons crafter also has a Great bit of skill to perform Siege Crafting should it be needed"; }
+			get
+			{
+				return "Would you like to join the Order of [Weaponcrafters]? As a crafter of weapons, you can expect to forge swords, axes, hammers and spears. While you will excel in weapon crafting and have good skills in armor crafting, you can expect great difficulty in tailoring and fletching. A well-trained weapon crafter also has a great bit of skill to perform siege crafting should it be of need.";
+			}
 		}
 	}
 }

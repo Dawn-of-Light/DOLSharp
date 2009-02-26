@@ -1,7 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{ACB92917-3D42-4F40-97F9-EA904A41DE36}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -649,6 +649,7 @@
     <Compile Include="gameobjects\Bonedancer\CommanderPet.cs" />
     <Compile Include="gameobjects\craft master\AlchemyMaster.cs" />
     <Compile Include="gameobjects\craft master\ArmorCraftingMaster.cs" />
+    <Compile Include="gameobjects\craft master\SiegecraftingMaster.cs" />
     <Compile Include="gameobjects\craft master\FletchingMaster.cs" />
     <Compile Include="gameobjects\craft master\SpellCraftingMaster.cs" />
     <Compile Include="gameobjects\craft master\TailoringMaster.cs" />
