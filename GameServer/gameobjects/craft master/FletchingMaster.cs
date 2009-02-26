@@ -45,12 +45,18 @@ namespace DOL.GS
 
 		public override string GUILD_ORDER
 		{
-			get { return "Fletching"; }
+			get
+			{
+				return "Fletchers";
+			}
 		}
 
-		public override string GUILD_CRAFTERS
+		public override string ACCEPTED_BY_ORDER_NAME
 		{
-			get { return "Fletchers"; }
+			get
+			{
+				return "Fletchers";
+			}
 		}
 
 		public override eCraftingSkill TheCraftingSkill
@@ -60,7 +66,10 @@ namespace DOL.GS
 
 		public override string InitialEntersentence
 		{
-			get { return "Would you like to join the Order of [" + GUILD_ORDER + "]? As a Fletcher you can expect to create bows arrows and staves. While you will excel in Fletching and have good skills in Weaponscrafting, you can expect great Difficulty in Armorcrafting and Tayloring. A well trained Armor crafter also has a great bit of skill to perform Siege Crafting should it be needed"; }
+			get 
+			{ 
+				return "Would you like to join the Order of [Fletchers]? As a Fletcher, you can expect to create bows, arrows and staves. While you will excel in fletching and have good skills in weapon crafting, you can expect great difficulty in armor crafting and tailoring. A well-trained Fletcher also has a great bit of skill to perform siege crafting should it be of need."; 
+			}
 		}
 	}
 }

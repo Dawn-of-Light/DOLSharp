@@ -26,29 +26,23 @@ using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Alchemy is the advanced crafting skill to add proc and reactive effect on item
-	/// </summary>
 	public class Alchemy : AdvancedCraftingSkill
 	{
-		/// <summary>
-		/// Constructor
-		/// </summary>
 		public Alchemy()
 		{
 			Icon = 0x04;
 			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.Name.Alchemy");
 			eSkill = eCraftingSkill.Alchemy;
 		}
+		public override string CRAFTER_TITLE_PREFIX
+		{
+			get
+			{
+				return "Alchemist's";
+			}
+		}
 
 		#region Classic craft functions
-
-		/// <summary>
-		/// Check if  the player own all needed tools
-		/// </summary>
-		/// <param name="player">the crafting player</param>
-		/// <param name="craftItemData">the object in construction</param>
-		/// <returns>true if the player hold all needed tools</returns>
 		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
             return base.CheckTool(player, craftItemData);

@@ -38,6 +38,14 @@ namespace DOL.GS
 			eSkill = eCraftingSkill.BasicCrafting;
 		}
 
+		public override string CRAFTER_TITLE_PREFIX
+		{
+			get
+			{
+				return "Crafter's";
+			}
+		}
+
 		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
 			// TODO : implement tool checks based on recipes
