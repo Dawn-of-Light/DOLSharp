@@ -37,6 +37,13 @@ namespace DOL.GS
 			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.Name.Siegecraft");
 			eSkill = eCraftingSkill.SiegeCrafting;
 		}
+		public override string CRAFTER_TITLE_PREFIX
+		{
+			get
+			{
+				return "Siegecrafter";
+			}
+		}
 
 		/// <summary>
 		/// Check if  the player own all needed tools

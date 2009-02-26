@@ -26,19 +26,21 @@ using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// ArmorCrafting is the crafting skill to make armor
-	/// </summary>
 	public class ArmorCrafting : AbstractCraftingSkill
 	{
-		/// <summary>
-		/// Constructor
-		/// </summary>
 		public ArmorCrafting()
 		{
 			Icon = 0x02;
 			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.Name.Armorcraft");
 			eSkill = eCraftingSkill.ArmorCrafting;
+		}
+
+		public override string CRAFTER_TITLE_PREFIX
+		{
+			get
+			{
+				return "Armorer's";
+			}
 		}
 
 		/// <summary>
@@ -49,7 +51,6 @@ namespace DOL.GS
 		/// <returns>true if the player hold all needed tools</returns>
 		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
-			bool result = false;
 			foreach (GameStaticItem item in player.GetItemsInRadius(CRAFT_DISTANCE))
 			{
                 if (item.Name == "forge" || item.Model == 478) // Forge
