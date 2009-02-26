@@ -26,67 +26,41 @@ using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Fletching is the crafting skill to make fletch for archer
-	/// </summary>
 	public class Fletching : AbstractCraftingSkill
 	{
-		/// <summary>
-		/// Constructor
-		/// </summary>
+		public override string CRAFTER_TITLE_PREFIX
+		{
+			get
+			{
+				return "Fletcher's";
+			}
+		}
 		public Fletching()
 		{
 			Icon = 0x0C;
 			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.Name.Fletching");
 			eSkill = eCraftingSkill.Fletching;
 		}
-
-		/// <summary>
-		/// Check if  the player own all needed tools
-		/// </summary>
-		/// <param name="player">the crafting player</param>
-		/// <param name="craftItemData">the object in construction</param>
-		/// <returns>true if the player hold all needed tools</returns>
 		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
-			bool result = false;
-			if(craftItemData.ItemTemplate.Object_Type != (int)eObjectType.Arrow && craftItemData.ItemTemplate.Object_Type != (int)eObjectType.Bolt)
+			if (craftItemData.ItemTemplate.Object_Type != (int)eObjectType.Arrow && craftItemData.ItemTemplate.Object_Type != (int)eObjectType.Bolt)
 			{
 				foreach (GameStaticItem item in player.GetItemsInRadius(CRAFT_DISTANCE))
 				{
-					if(item.Model == 481) // Lathe
+					if (item.Model == 481) // Lathe
 					{
-						result = true;
-						break;
+						return true;
 					}
 				}
-
-				if(result == false)
-				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindLathe"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return false;
-				}
-			}
-
-            
-			foreach (DBCraftedXItem rawmaterial in craftItemData.RawMaterials)
-			{
-				if (rawmaterial.ItemTemplate == null)
-				{
-					log.Error("rawmaterial " + rawmaterial.IngredientId_nb + " for recipe " + craftItemData.CraftedItemID + " cannot find the itemtemplate to match");
-					continue;
-				}
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindLathe"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
 			}
 			return true;
 		}
-
-		/// <summary>
-		/// Calculate the minumum needed secondary crafting skill level to make the item
-		/// </summary>
 		public override int CalculateSecondCraftingSkillMinimumLevel(DBCraftedItem item)
 		{
-			switch(item.ItemTemplate.Object_Type)
+			switch (item.ItemTemplate.Object_Type)
 			{
 				case (int)eObjectType.Fired:  //tested
 				case (int)eObjectType.Longbow: //tested
@@ -94,15 +68,15 @@ namespace DOL.GS
 				case (int)eObjectType.Instrument: //tested
 				case (int)eObjectType.RecurvedBow:
 				case (int)eObjectType.CompositeBow:
-							return item.CraftingLevel - 20;
+					return item.CraftingLevel - 20;
 
 				case (int)eObjectType.Arrow: //tested
 				case (int)eObjectType.Bolt: //tested
 				case (int)eObjectType.Thrown:
-							return item.CraftingLevel - 15;
+					return item.CraftingLevel - 15;
 
 				case (int)eObjectType.Staff: //tested
-							return item.CraftingLevel - 35;
+					return item.CraftingLevel - 35;
 			}
 
 			return base.CalculateSecondCraftingSkillMinimumLevel(item);
@@ -115,10 +89,10 @@ namespace DOL.GS
 		/// <param name="item"></param>
 		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
-			if(Util.Chance( CalculateChanceToGainPoint(player, item)))
+			if (Util.Chance(CalculateChanceToGainPoint(player, item)))
 			{
 				player.GainCraftingSkill(eCraftingSkill.Fletching, 1);
-                base.GainCraftingSkillPoints(player, item);
+				base.GainCraftingSkillPoints(player, item);
 				player.Out.SendUpdateCraftingSkills();
 			}
 		}

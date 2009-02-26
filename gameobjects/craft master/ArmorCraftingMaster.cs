@@ -44,12 +44,18 @@ namespace DOL.GS
 
 		public override string GUILD_ORDER
 		{
-			get { return "ArmorCrafting"; }
+			get
+			{
+				return "Armorcrafters";
+			}
 		}
 
-		public override string GUILD_CRAFTERS
+		public override string ACCEPTED_BY_ORDER_NAME
 		{
-			get { return "Armorsmiths"; }
+			get
+			{
+				return "Armorsmiths";
+			}
 		}
 
 		public override eCraftingSkill TheCraftingSkill
@@ -59,7 +65,10 @@ namespace DOL.GS
 
 		public override string InitialEntersentence
 		{
-			get { return "Would you like to join the Order of [" + GUILD_ORDER + "]? As a crafter of armor, you can expect to create armor of various types, from studded leather to chain mail armor. While you will excel in armor crafting and have good skills in tailoring and weapon craft, you can expect great difficulty in fletching. A well-trained armor crafter also has small bit of skill to perform siege crafting should it be of need."; }
+			get
+			{
+				return "Would you like to join the Order of [Armorcrafters]? As a crafter of armor, you can expect to create armor of various types, from studded leather to chain mail armor. While you will excel in armor crafting and have good skills in tailoring and weapon craft, you can expect great difficulty in fletching. A well-trained armor crafter also has a small bit of skill to perform siege crafting should it be of need.";
+			}
 		}
 	}
 }

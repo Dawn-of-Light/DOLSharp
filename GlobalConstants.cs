@@ -1433,7 +1433,7 @@ namespace DOL.GS
 
 		public static string CraftLevelToCraftTitle(int craftLevel)
 		{
-			switch ((int)craftLevel / 100)
+			switch ((int)(craftLevel / 100))
 			{
                 case 0: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Helper");
                 case 1: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.JuniorApprentice");
@@ -1447,8 +1447,12 @@ namespace DOL.GS
                 case 9: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Grandmaster");
                 case 10: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Legendary");
                 case 11: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.LegendaryGrandmaster");
-				default: return "";
 			}
+			if (craftLevel > 1100)
+			{
+				return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.LegendaryGrandmaster");
+			}
+			return "";
 		}
 
 		public static eRealm GetBonusRealm(eProperty bonus)

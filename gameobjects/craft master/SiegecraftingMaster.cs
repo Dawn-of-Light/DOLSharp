@@ -18,15 +18,13 @@
  */
 namespace DOL.GS
 {
-	[NPCGuildScript("Alchemists Master")]
-	public class AlchemistsMaster : CraftNPC
+	[NPCGuildScript("Siegecrafting Master")]
+	public class SiegecraftingMaster : CraftNPC
 	{
 		private static readonly eCraftingSkill[] m_trainedSkills = 
 		{
-			eCraftingSkill.SpellCrafting,
-			eCraftingSkill.Alchemy,
-			eCraftingSkill.GemCutting,
-			eCraftingSkill.HerbalCrafting,
+			eCraftingSkill.MetalWorking,
+			eCraftingSkill.WoodWorking,
 			eCraftingSkill.SiegeCrafting,
 		};
 
@@ -39,7 +37,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				return "Alchemists";
+				return "Siegecrafters";
 			}
 		}
 
@@ -47,18 +45,26 @@ namespace DOL.GS
 		{
 			get
 			{
-				return "Alchemists";
+				return "Siegecrafters";
 			}
 		}
+
+		/// <summary>
+		/// The eCraftingSkill
+		/// </summary>
 		public override eCraftingSkill TheCraftingSkill
 		{
-			get { return eCraftingSkill.Alchemy; }
+			get { return eCraftingSkill.SiegeCrafting; }
 		}
+
+		/// <summary>
+		/// The text for join order
+		/// </summary>
 		public override string InitialEntersentence
 		{
 			get
 			{
-				return "Would you like to join the Order of [Alchemists]? As a Alchemist, you have the ability to make dyes, poisons, and various magical potions.  You also have the ability to make magical tinctures that can add both offensive and defensive magical effects to crafted items.  You have some skill in Spellcraft, as well as being able to Jewelcraft with great skill.";
+				return "Would you like to join the Order of [Siegecrafters]? As an siegecrafter, you can expect to construct elaborate instruments of war to aid in the defense of our realm!";
 			}
 		}
 	}

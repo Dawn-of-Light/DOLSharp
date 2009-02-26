@@ -26,21 +26,22 @@ using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Crafting skill to make weapon
-	/// </summary>
 	public class WeaponCrafting : AbstractCraftingSkill
 	{
-		/// <summary>
-		/// Constructor
-		/// </summary>
 		public WeaponCrafting()
 		{
 			Icon = 0x01;
 			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.Name.Weaponcraft");
 			eSkill = eCraftingSkill.WeaponCrafting;
 		}
-		
+		public override string CRAFTER_TITLE_PREFIX
+		{
+			get
+			{
+				return "Weaponsmith's";
+			}
+		}
+
 		/// <summary>
 		/// Check if  the player own all needed tools
 		/// </summary>
@@ -49,26 +50,16 @@ namespace DOL.GS
 		/// <returns>true if the player hold all needed tools</returns>
 		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
-			bool result = false;
 			foreach (GameStaticItem item in player.GetItemsInRadius(CRAFT_DISTANCE))
 			{
-                if (item.Name == "forge" || item.Model == 478) // Forge
-                {
-					result = true;
-					break;
+				if (item.Name == "forge" || item.Model == 478) // Forge
+				{
+					return true;
 				}
 			}
-
-			if(result == false)
-			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindForge"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
-
-           
-
-			return true;
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindForge"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			return false;
 		}
 
 		/// <summary>
@@ -76,7 +67,7 @@ namespace DOL.GS
 		/// </summary>
 		public override int CalculateSecondCraftingSkillMinimumLevel(DBCraftedItem item)
 		{
-			switch(item.ItemTemplate.Object_Type)
+			switch (item.ItemTemplate.Object_Type)
 			{
 				case (int)eObjectType.CrushingWeapon:
 				case (int)eObjectType.SlashingWeapon:
@@ -108,11 +99,11 @@ namespace DOL.GS
 		/// <param name="item"></param>
 		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
-			if(Util.Chance( CalculateChanceToGainPoint(player, item)))
+			if (Util.Chance(CalculateChanceToGainPoint(player, item)))
 			{
 				player.GainCraftingSkill(eCraftingSkill.WeaponCrafting, 1);
-                base.GainCraftingSkillPoints(player, item);
-                player.Out.SendUpdateCraftingSkills();
+				base.GainCraftingSkillPoints(player, item);
+				player.Out.SendUpdateCraftingSkills();
 			}
 		}
 	}

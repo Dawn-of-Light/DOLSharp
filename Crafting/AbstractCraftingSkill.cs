@@ -71,6 +71,14 @@ namespace DOL.GS
 
 		protected const int subSkillCap = 1300;
 
+		public virtual string CRAFTER_TITLE_PREFIX
+		{
+			get
+			{
+				return "";
+			}
+		}
+
 		/// <summary>
 		/// The enum index of this crafting skill
 		/// </summary>

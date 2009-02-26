@@ -29,6 +29,15 @@ namespace DOL.GS
 	/// </summary>
 	public class SpellCrafting : AdvancedCraftingSkill
 	{
+
+		public override string CRAFTER_TITLE_PREFIX
+		{
+			get
+			{
+				return "Spellcrafter's";
+			}
+		}
+
         private static readonly int[,] itemMaxBonusLevel =  // taken from mythic Spellcraft calculator
 		{
 			{0,1,1,1,1,1,1},

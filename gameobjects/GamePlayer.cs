@@ -11868,7 +11868,7 @@ namespace DOL.GS
 					return "";
 				}
 
-				return GlobalConstants.CraftLevelToCraftTitle((int)craftingSkills[(int)CraftingPrimarySkill]);
+				return ((AbstractCraftingSkill)CraftingMgr.getSkillbyEnum(CraftingPrimarySkill)).CRAFTER_TITLE_PREFIX+" "+GlobalConstants.CraftLevelToCraftTitle((int)craftingSkills[(int)CraftingPrimarySkill]);
 			}
 		}
 

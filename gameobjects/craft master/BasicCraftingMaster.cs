@@ -54,7 +54,7 @@ namespace DOL.GS
 			get { return "Basic Crafting"; }
 		}
 
-		public override string GUILD_CRAFTERS
+		public override string ACCEPTED_BY_ORDER_NAME
 		{
 			get { return "Basic Crafters"; }
 		}

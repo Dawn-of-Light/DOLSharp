@@ -45,12 +45,18 @@ namespace DOL.GS
 
 		public override string GUILD_ORDER
 		{
-			get { return "Tailoring"; }
+			get
+			{
+				return "Tailors";
+			}
 		}
 
-		public override string GUILD_CRAFTERS
+		public override string ACCEPTED_BY_ORDER_NAME
 		{
-			get { return "Tailors"; }
+			get
+			{
+				return "Tailors";
+			}
 		}
 
 		public override eCraftingSkill TheCraftingSkill
@@ -60,7 +66,10 @@ namespace DOL.GS
 
 		public override string InitialEntersentence
 		{
-			get { return "Would you like to join the Order of [" + GUILD_ORDER + "]? As a Taylor you can expect to sew cloth and leather armor. While you will excel in Tayloring and have good skills in Fletching, you can expect great Difficulty in Weapons crafting and Armor Crafting. A well trained Taylor also has a small bit of skill to perform Siege Crafting should it be needed "; }
+			get
+			{
+				return "Would you like to join the Order of [Tailors]? As a Tailor, you can expect to sew cloth and leather armor. While you will excel in tailoring and have good skills in fletching, you can expect great difficulty in weapon crafting and armor crafting. A well-trained Tailor also has a small bit of skill to perform siege crafting should it be of need.";
+			}
 		}
 	}
 }

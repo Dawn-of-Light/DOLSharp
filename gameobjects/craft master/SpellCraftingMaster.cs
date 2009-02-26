@@ -41,12 +41,18 @@ namespace DOL.GS
 
 		public override string GUILD_ORDER
 		{
-			get { return "Spell Crafting"; }
+			get
+			{
+				return "Spellcrafters";
+			}
 		}
 
-		public override string GUILD_CRAFTERS
+		public override string ACCEPTED_BY_ORDER_NAME
 		{
-			get { return "Spell Crafter"; }
+			get
+			{
+				return "Spellcrafters";
+			}
 		}
 
 		public override eCraftingSkill TheCraftingSkill
@@ -55,8 +61,11 @@ namespace DOL.GS
 		}
 
 		public override string InitialEntersentence
-		{ //TODO :good sentence
-			get { return "Would you like to join the Order of [" + GUILD_ORDER + "]? As a Spell Crafter, you have the ability to make gemmes that can add magical effects to crafted items. You have some skill in Alchemy, as well as being able to Jewelcraft with great skill"; }
+		{
+			get
+			{
+				return "Would you like to join the Order of [Spellcrafters]? As a Spellcrafter, you have the ability to create gems that can be imbued onto crafted items to give them new amazing magical properties.  You also have some skill in Alchemy, as well as being able to Jewelcraft with great skill.";
+;			}
 		}
 	}
 }
