@@ -250,7 +250,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					door.X = player.X;
 					door.Y = player.Y;
 					door.Z = player.Z;
-					door.Realm = (eRealm)6;
+					door.Realm = eRealm.Door;
 					door.CurrentRegion = player.CurrentRegion;
 					door.Open();
 				}
