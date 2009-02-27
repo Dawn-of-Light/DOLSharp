@@ -71,7 +71,7 @@ namespace DOL.GS
 
             if(text == GUILD_ORDER)
 			{
-				player.Out.SendCustomDialog(LanguageMgr.GetTranslation(player.Client, "CraftNPC.WhisperReceive.WishToJoin", GUILD_ORDER), new CustomDialogResponse(CraftNpcDialogResponse));
+				player.Out.SendCustomDialog(LanguageMgr.GetTranslation(player.Client, "CraftNPC.WhisperReceive.WishToJoin", ACCEPTED_BY_ORDER_NAME), new CustomDialogResponse(CraftNpcDialogResponse));
 			}
 			return true;
 		}
