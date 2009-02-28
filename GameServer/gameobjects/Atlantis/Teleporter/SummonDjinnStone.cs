@@ -26,14 +26,12 @@ namespace DOL.GS
     /// Djinn stone (summons ancient bound djinn).
     /// </summary>
     /// <author>Aredhel</author>
-    public class DjinnStone : GameStaticItem
+    public class SummonDjinnStone : DjinnStone
     {
         /// <summary>
         /// Defines a logger for this class.
         /// </summary>
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-        private AncientBoundDjinn m_djinn;
 
         /// <summary>
         /// Creates and summons the djinn if it isn't already up.
@@ -45,11 +43,11 @@ namespace DOL.GS
             if (!base.Interact(player))
                 return false;
 
-            if (m_djinn == null)
+            if (Djinn == null)
             {
                 try
                 {
-                    m_djinn = new AncientBoundDjinn(this);
+                    Djinn = new SummonedDjinn(this);
                 }
                 catch (Exception e)
                 {
@@ -58,8 +56,8 @@ namespace DOL.GS
                 }
             }
 
-            if (!m_djinn.IsSummoned)
-                m_djinn.Summon();
+            if (!Djinn.IsSummoned)
+                Djinn.Summon();
 
             return true;
         }
