@@ -200,6 +200,7 @@
     <Compile Include="commands\GMCommands\siegeweapon.cs" />
     <Compile Include="commands\GMCommands\speed.cs" />
     <Compile Include="commands\GMCommands\Team.cs" />
+    <Compile Include="commands\GMCommands\Teleport.cs" />
     <Compile Include="commands\GMCommands\titlegm.cs" />
     <Compile Include="commands\GMCommands\walk.cs" />
     <Compile Include="commands\GMCommands\weather.cs" />

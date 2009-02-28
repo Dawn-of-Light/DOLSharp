@@ -149,6 +149,9 @@ namespace DOL.GS
 
 			// Find the teleport location in the database.
 
+            log.Warn(String.Format("Lookup teleport for destination realm {0}, destination = {1}",
+                DestinationRealm, String.Format("{0}:{1}", Type, text)));
+
 			Teleport port = WorldMgr.GetTeleportLocation(DestinationRealm, String.Format("{0}:{1}", Type, text));
 			if (port != null)
 			{
