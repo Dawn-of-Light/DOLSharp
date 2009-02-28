@@ -35,6 +35,7 @@ namespace DOL.GS
 
         public PermanentDjinn(DjinnStone djinnStone) : base(djinnStone)
         {
+            this.Model = VisibleModel;
             this.AddToWorld();
 
             m_timer = new EmoteTimer(this);
