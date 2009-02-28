@@ -108,6 +108,7 @@ namespace DOL.GS
 		/// 'TeleportID' fields are permitted so long as the 'Realm' field is different for each.
 		/// </summary>
 		private static Dictionary<eRealm, Dictionary<string, Teleport>> m_teleportLocations;
+        private static object m_syncTeleport = new object();
 
 		/// <summary>
 		/// Returns the teleport given an ID and a realm
@@ -126,13 +127,48 @@ namespace DOL.GS
         /// <param name="teleportKey">Composite key into teleport dictionary.</param>
 		/// <returns></returns>
 		public static Teleport GetTeleportLocation(eRealm realm, String teleportKey)
-		{        
-			return (m_teleportLocations.ContainsKey(realm)) ?
-                (m_teleportLocations[realm].ContainsKey(teleportKey) ?
-                    m_teleportLocations[realm][teleportKey] :
-					null) :
-				null;
+		{
+            lock (m_syncTeleport)
+            {
+                return (m_teleportLocations.ContainsKey(realm)) ?
+                    (m_teleportLocations[realm].ContainsKey(teleportKey) ?
+                        m_teleportLocations[realm][teleportKey] :
+                        null) :
+                    null;
+            }
 		}
+
+        /// <summary>
+        /// Add a new teleport destination (used by /teleport add).
+        /// </summary>
+        /// <param name="teleport"></param>
+        /// <returns></returns>
+        public static bool AddTeleportLocation(Teleport teleport)
+        {
+            eRealm realm = (eRealm)teleport.Realm;
+            String teleportKey = String.Format("{0}:{1}", teleport.Type, teleport.TeleportID);
+
+            lock (m_syncTeleport)
+            {
+                Dictionary<String, Teleport> teleports = null;
+                if (m_teleportLocations.ContainsKey(realm))
+                {
+                    if (m_teleportLocations[realm].ContainsKey(teleportKey))
+                        return false;   // Double entry.
+
+                    teleports = m_teleportLocations[realm];
+                }
+
+                if (teleports == null)
+                {
+                    teleports = new Dictionary<String, Teleport>();
+                    m_teleportLocations.Add(realm, teleports);
+                }
+
+                teleports.Add(teleportKey, teleport);
+                return true;
+            }
+        }
 
 		/// <summary>
 		/// This hashtable holds all regions in the world
