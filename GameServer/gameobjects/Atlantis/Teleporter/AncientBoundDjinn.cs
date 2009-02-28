@@ -55,6 +55,7 @@ namespace DOL.GS
             CurrentRegion = djinnStone.CurrentRegion;
             Heading = djinnStone.Heading;
             Realm = eRealm.None;
+            Flags ^= (uint)GameNPC.eFlags.FLYING;
             X = djinnStone.X;
             Y = djinnStone.Y;
             Z = djinnStone.Z + ZOffset;
@@ -75,17 +76,16 @@ namespace DOL.GS
         {
             get
             {
-                switch (CurrentRegion.ID)
-                {
-                    case 73:
-                        return eRealm.Albion;
-                    case 30:
-                        return eRealm.Midgard;
-                    case 130:
-                        return eRealm.Hibernia;
-                    default:
-                        return eRealm.None;
-                }
+                if (CurrentRegion.ID >= 73 && CurrentRegion.ID <= 90)
+                    return eRealm.Albion;
+
+                if (CurrentRegion.ID >= 130 && CurrentRegion.ID <= 147)
+                    return eRealm.Midgard;
+
+                if (CurrentRegion.ID >= 30 && CurrentRegion.ID <= 47)
+                    return eRealm.Hibernia;
+
+                return eRealm.None;
             }
         }
 
@@ -125,6 +125,12 @@ namespace DOL.GS
                     case 34:
                     case 134:
                         return 0x4aa;
+                    
+                        // Temple of Twilight:
+                    case 80:
+                    case 37:
+                    case 137:
+                        return 0x4ad;
 
                     default:
                         return 0x4aa;
