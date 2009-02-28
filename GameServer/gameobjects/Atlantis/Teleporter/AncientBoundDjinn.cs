@@ -58,7 +58,24 @@ namespace DOL.GS
             Flags ^= (uint)GameNPC.eFlags.FLYING;
             X = djinnStone.X;
             Y = djinnStone.Y;
-            Z = djinnStone.Z + ZOffset;
+            Z = djinnStone.Z + HoverHeight;
+            base.Size = Size;
+        }
+
+        /// <summary>
+        /// Gets the actual size.
+        /// </summary>
+        virtual protected new byte Size
+        {
+            get { return base.Size; }
+        }
+
+        /// <summary>
+        /// Gets the height at which the djinn is hovering.
+        /// </summary>
+        virtual protected int HoverHeight
+        {
+            get { return 63; }
         }
 
         /// <summary>
