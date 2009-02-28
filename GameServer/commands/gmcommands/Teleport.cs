@@ -36,10 +36,15 @@ namespace DOL.GS.Commands
 	[CmdAttribute(
 		"&teleport",
 		ePrivLevel.GM,
-        "Manage the teleport destinations",
-        "'/teleport add' add a teleport destination")]
+        "Manage teleport destinations",
+        "'/teleport add <ID> <type>' add a teleport destination")]
     public class TeleportCommandHandler : AbstractCommandHandler, ICommandHandler
     {
+        /// <summary>
+        /// Handle command.
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="args"></param>
         public void OnCommand(GameClient client, string[] args)
         {
             if (args.Length < 2)
@@ -60,21 +65,11 @@ namespace DOL.GS.Commands
 
                         if (args[2] == "")
                         {
-                            client.Out.SendMessage("You must specify a destination ID.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            client.Out.SendMessage("You must specify a teleport ID.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                             return;
                         }
 
-                        String result;
-
-                        if (AddTeleport(args[2], client.Player.Realm, client.Player.CurrentRegion.ID,
-                            client.Player.X, client.Player.Y, client.Player.Z, client.Player.Heading,
-                            args[3]))
-                            result = String.Format("Teleport [{0}] added to the database.", args[2]);
-                        else
-                            result = String.Format("Failed to add [{0}] to the database!", args[2]);
-
-                        client.Out.SendMessage(result, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
+                        AddTeleport(client, args[2], args[3]);
                     }
                     break;
                 default:
@@ -83,21 +78,43 @@ namespace DOL.GS.Commands
             }    
         }
 
-        private bool AddTeleport(String teleportID, eRealm realm, ushort regionID, int x, int y, int z,
-            ushort heading, String type)
+        /// <summary>
+        /// Add a new teleport destination in memory and save to database, if
+        /// successful.
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="teleportID"></param>
+        /// <param name="type"></param>
+        private void AddTeleport(GameClient client, String teleportID, String type)
         {
+            GamePlayer player = client.Player;
+            eRealm realm = player.Realm;
+
+            if (WorldMgr.GetTeleportLocation(realm, String.Format("{0}:{1}", type, teleportID)) != null)
+            {
+                client.Out.SendMessage(String.Format("Teleport ID [{0}] already exists!", teleportID), 
+                    eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+
             Teleport teleport = new Teleport();
             teleport.TeleportID = teleportID;
             teleport.Realm = (int)realm;
-            teleport.RegionID = regionID;
-            teleport.X = x;
-            teleport.Y = y;
-            teleport.Z = z;
-            teleport.Heading = heading;
+            teleport.RegionID = player.CurrentRegion.ID;
+            teleport.X = player.X;
+            teleport.Y = player.Y;
+            teleport.Z = player.Z;
+            teleport.Heading = player.Heading;
             teleport.Type = type;
 
+            if (!WorldMgr.AddTeleportLocation(teleport))
+            {
+                client.Out.SendMessage(String.Format("Failed to add teleport ID [{0}] in memory!", teleportID), 
+                    eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+
             GameServer.Database.AddNewObject(teleport);
-            return true;
         }
     }
 }

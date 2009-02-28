@@ -80,6 +80,30 @@ namespace DOL.GS
         }
 
         /// <summary>
+        /// Permanent djinns in dungeons appear to be slightly
+        /// bigger.
+        /// </summary>
+        protected override byte Size
+        {
+            get
+            {
+                return 25;
+            }
+        }
+
+        /// <summary>
+        /// Since they are bigger, they need to hover at
+        /// greater height.
+        /// </summary>
+        protected override int HoverHeight
+        {
+            get
+            {
+                return 73;
+            }
+        }
+
+        /// <summary>
         /// Provides a timer for djinn emotes.
         /// </summary>
         private class EmoteTimer : GameTimer
