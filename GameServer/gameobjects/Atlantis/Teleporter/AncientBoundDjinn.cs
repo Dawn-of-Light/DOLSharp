@@ -143,7 +143,7 @@ namespace DOL.GS
                     case 134:
                         return 0x4aa;
                     
-                        // Temple of Twilight:
+                    // Temple of Twilight:
                     case 80:
                     case 37:
                     case 137:
