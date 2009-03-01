@@ -115,6 +115,8 @@ namespace DOL.GS.Commands
             }
 
             GameServer.Database.AddNewObject(teleport);
+            client.Out.SendMessage(String.Format("Teleport ID [{0}] successfully added.", teleportID),
+                eChatType.CT_System, eChatLoc.CL_SystemWindow);
         }
     }
 }
