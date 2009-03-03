@@ -78,6 +78,10 @@ namespace DOL.AI.Brain
                     if (living.IsMezzed || living.IsStealthed)
                         continue;
 
+                    //lifeflight add, shouldn't be able to attack player with timer on
+                    if (living.IsPvPInvulnerability)
+                        continue;
+
                     if (((TurretPet)Body).TurretSpell.SpellType != "SpeedDecrease" && SpellHandler.FindEffectOnTarget(living, "SpeedDecrease") != null)
                         continue;
 
@@ -111,6 +115,10 @@ namespace DOL.AI.Brain
                 foreach (GamePlayer living in Body.GetPlayersInRadius((ushort)((TurretPet)Body).TurretSpell.Range))
                 {
                     if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
+                        continue;
+
+                    //lifeflight add, shouldn't be able to attack player with timer on
+                    if (living.IsPvPInvulnerability)
                         continue;
 
                     if (!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
