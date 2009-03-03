@@ -1228,6 +1228,7 @@
     <Compile Include="realmabilities\effects\DivineInterventionEffect.cs" />
     <Compile Include="realmabilities\effects\JuggernautEffect.cs" />
     <Compile Include="realmabilities\effects\MasteryOfConcentrationEffect.cs" />
+    <Compile Include="realmabilities\effects\RezDmgImmunity.cs" />
     <Compile Include="realmabilities\effects\rr5\AllureofDeadEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\ArmsLengthEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\BadgeOfValorEffect.cs" />
@@ -1992,7 +1993,7 @@
     <Compile Include="spells\Archery\Arrow.cs" />
     <Compile Include="spells\Archery\ArrowDamageTypes.cs" />
     <Compile Include="spells\Archery\SiegeShot.cs" />
-    <Compile Include="spells\Artifacts\AllStatsDebuff.cs" />
+    <Compile Include="spells\Artifacts\AllStatsPercentDebuff.cs" />
     <Compile Include="spells\Artifacts\AlvarusLeggings.cs" />
     <Compile Include="spells\Artifacts\Arrogance.cs" />
     <Compile Include="spells\Artifacts\AtlantisTablet.cs" />
@@ -2004,12 +2005,15 @@
     <Compile Include="spells\Artifacts\CommonArtifactSpells.cs" />
     <Compile Include="spells\Artifacts\DreamSphere.cs" />
     <Compile Include="spells\Artifacts\Ereine.cs" />
+    <Compile Include="spells\Artifacts\HpPwrEndRegen.cs" />
     <Compile Include="spells\Artifacts\MaddeningScalars.cs" />
     <Compile Include="spells\Artifacts\RealmLore.cs" />
     <Compile Include="spells\Artifacts\SoM.cs" />
     <Compile Include="spells\Artifacts\ScarabVest.cs" />
     <Compile Include="spells\Artifacts\BandofStars.cs" />
     <Compile Include="spells\Artifacts\snakecharmer.cs" />
+    <Compile Include="spells\Artifacts\StyleDmgAbs.cs">
+    </Compile>
     <Compile Include="spells\Artifacts\TartarosGift.cs" />
     <Compile Include="spells\Artifacts\TraitorsDagger.cs" />
     <Compile Include="spells\Bainshee\BainsheePulseDmgSpellHandler.cs" />
