@@ -29,7 +29,7 @@ namespace DOL.GS
         /// <summary>
         /// Holds the minimum respawntime
         /// </summary>
-        public const int MIN_RESPAWN_TIMER = 300000;
+        public const int MIN_RESPAWN_TIMER =300000;
         /// <summary>
         /// Holds the maximum respawntime
         /// </summary>
@@ -95,7 +95,7 @@ namespace DOL.GS
         static Timer m_mapUpdateTimer;
         public static void InitMapUpdate()
         {
-            m_mapUpdateTimer = new Timer(new TimerCallback(MapUpdate), null, 0, 30 * 1000); //30sec
+            m_mapUpdateTimer = new Timer(new TimerCallback(MapUpdate), null, 0, 30 * 1000); //30sec Lifeflight change this to 15 seconds
         }
         public static void StopMapUpdate()
         {
@@ -140,6 +140,23 @@ namespace DOL.GS
             lock (m_minotaurrelics)
             {
                 m_minotaurrelics.Add(relic.InternalID, relic);
+            }
+
+            return true;
+        }
+
+        //Lifeflight: Add
+        /// <summary>
+        /// Removes a Relic from the Hashtable
+        /// </summary>
+        /// <param name="relic">The Relic you want to remove</param>
+        public static bool RemoveRelic(MinotaurRelic relic)
+        {
+            if (!m_minotaurrelics.ContainsValue(relic)) return false;
+
+            lock (m_minotaurrelics)
+            {
+                m_minotaurrelics.Remove(relic.InternalID);
             }
 
             return true;
