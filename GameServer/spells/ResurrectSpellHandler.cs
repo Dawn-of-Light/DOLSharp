@@ -187,6 +187,10 @@ namespace DOL.GS.Spells
 				player.UpdatePlayerStatus();
 				player.Out.SendMessage("You have been resurrected by " + m_caster.GetName(0, false) + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				player.Notify(GamePlayerEvent.Revive, player, new RevivedEventArgs(Caster, Spell));
+                
+                //Lifeflight add this should make it so players who have been ressurected don't take damage for 5 seconds
+                RezDmgImmunityEffect rezImmune = new RezDmgImmunityEffect();
+                rezImmune.Start(player);
 
 				IList attackers;
 				lock (player.Attackers.SyncRoot) { attackers = (IList)(player.Attackers as ArrayList).Clone(); }
@@ -240,6 +244,14 @@ namespace DOL.GS.Spells
 		{
 			if (!base.CheckBeginCast(target))
 				return false;
+
+            //Lifeflight, the base call to Checkbegincast uses its own power check, which is bad for rez spells
+            //so I added another check here.
+            if (m_caster.Mana < CalculateNeededPower(target))
+            {
+                MessageToCaster("You don't have enough power to cast that!", eChatType.CT_SpellResisted);
+				return false;
+            }
 
 			GameLiving resurrectionCaster = target.TempProperties.getObjectProperty(RESURRECT_CASTER_PROPERTY, null) as GameLiving;
 			if (resurrectionCaster != null)

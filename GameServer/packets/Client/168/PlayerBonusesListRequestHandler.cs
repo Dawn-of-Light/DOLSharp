@@ -56,8 +56,54 @@ namespace DOL.GS.PacketHandler.Client.v168
 			return str + iBonus + (((iBonusType < 20) && (iBonusType > 10)) ? "%" : "");
 			*/
 			//This displays the bonuses just like the Live servers. there is a check against the pts/% differences
-			string str = ((iBonusType == 150) | (iBonusType == 151) | (iBonusType == 186)) ? "pts of " : "% to ";  //150(Health Regen) 151(PowerRegen) and 186(Style reductions) need the prefix of "pts of " to be correct
-			return "+" + iBonus + str + SkillBase.GetPropertyName(((eProperty)iBonusType));
+            string str = ((iBonusType == 150) | (iBonusType == 210) | (iBonusType == 10) | (iBonusType == 151) | (iBonusType == 186)) ? "pts of " : "% to ";  //150(Health Regen) 151(PowerRegen) and 186(Style reductions) need the prefix of "pts of " to be correct
+			
+            //we need to only display the effective bonus, cut off caps
+
+            //Lifeflight add
+
+            //iBonusTypes that cap at 10
+            //SpellRange, ArcheryRange, MeleeSpeed, MeleeDamage, RangedDamage, ArcherySpeed, 
+            //CastingSpeed, ResistPierce, SpellDamage, StyleDamage
+            if (iBonusType == (int)eProperty.SpellRange || iBonusType == (int)eProperty.ArcheryRange || iBonusType == (int)eProperty.MeleeSpeed
+                 || iBonusType == (int)eProperty.MeleeDamage || iBonusType == (int)eProperty.RangedDamage || iBonusType == (int)eProperty.ArcherySpeed
+                 || iBonusType == (int)eProperty.CastingSpeed || iBonusType == (int)eProperty.ResistPierce || iBonusType == (int)eProperty.SpellDamage || iBonusType == (int)eProperty.StyleDamage)
+            {
+                if (iBonus > 10)
+                    iBonus = 10;
+            }
+
+            //cap at 25 with no chance of going over
+            //DebuffEffectivness, BuffEffectiveness, HealingEffectiveness
+            //SpellDuration
+            if (iBonusType == (int)eProperty.DebuffEffectivness || iBonusType == (int)eProperty.BuffEffectiveness || iBonusType == (int)eProperty.HealingEffectiveness || iBonusType == (int)eProperty.SpellDuration)
+            {
+                if (iBonus > 25)
+                    iBonus = 25;
+            }
+            //hitscap, caps at 200
+            if (iBonusType == (int)eProperty.MaxHealthCapBonus)
+            {
+                if (iBonus > 200)
+                    iBonus = 200;
+            }
+            //cap at 25, but can get overcaps
+            //PowerPool
+            //This will need to be done in the method that calls this method.
+            //if (iBonusType == (int)eProperty.PowerPool)
+            //{
+            //    if (iBonus > 25)
+            //        iBonus = 50;
+            //}
+            //caps at 50
+            //PowerPoolCapBonus
+            if (iBonusType == (int)eProperty.PowerPoolCapBonus)
+            {
+                if (iBonus > 50)
+                    iBonus = 50;
+            }
+            
+            return "+" + iBonus + str + SkillBase.GetPropertyName(((eProperty)iBonusType));
 		}
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
@@ -120,12 +166,61 @@ namespace DOL.GS.PacketHandler.Client.v168
 			
 			GamePlayer player = client.Player;
 			int[] bonusToBeDisplayed;//This is an Array of the bonuses that show up in the Bonuns Snapshot on Live, the only ones that really need to be there.
-			bonusToBeDisplayed = new int[28] { 150, 151, 153, 154, 155, 173, 174, 179, 180, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200 };
+			bonusToBeDisplayed = new int[30] { 10, 150, 151, 153, 154, 155, 173, 174, 179, 180, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 210 };
 			for (int i = 0; i < (int)eProperty.MaxProperty; i++)
 			{
 				if ((client.Player.ItemBonus[i] > 0) && ((Array.BinarySearch(bonusToBeDisplayed, i)) >= 0)) //Tiny edit here to add the binary serach to weed out the non essential bonuses
 				{
-					if (client.Player.ItemBonus[i] != 0) info.Add(ItemBonusDescription(client.Player.ItemBonus[i], i));
+                    if (client.Player.ItemBonus[i] != 0)
+                    {
+                        //LIFEFLIGHT Add, to correct power pool from showing too much
+                        //This is where we need to correct the display, make it cut off at the cap if
+                        //Same with hits and hits cap
+                        if (i == (int)eProperty.PowerPool)
+                        {
+                            int powercap = client.Player.ItemBonus[(int)eProperty.PowerPoolCapBonus];
+                            if (powercap > 50)
+                            {
+                                powercap = 50;
+                            }
+                            int powerpool = client.Player.ItemBonus[(int)eProperty.PowerPool];
+                            if (powerpool > powercap + 25)
+                            {
+                                int tempbonus = powercap + 25;
+                                info.Add(ItemBonusDescription(tempbonus, i));
+                            }
+                            else
+                            {
+                                int tempbonus = powerpool;
+                                info.Add(ItemBonusDescription(tempbonus, i));
+                            }
+                            
+                            
+                        }
+                        else if (i == (int)eProperty.MaxHealth)
+                        {
+                            int hitscap = client.Player.ItemBonus[(int)eProperty.MaxHealthCapBonus];
+                            if (hitscap > 200)
+                            {
+                                hitscap = 200;
+                            }
+                            int hits = client.Player.ItemBonus[(int)eProperty.MaxHealth];
+                            if (hits > hitscap + 200)
+                            {
+                                int tempbonus = hitscap + 200;
+                                info.Add(ItemBonusDescription(tempbonus, i));
+                            }
+                            else
+                            {
+                                int tempbonus = hits;
+                                info.Add(ItemBonusDescription(tempbonus, i));
+                            }
+                        }
+                        else
+                        {
+                            info.Add(ItemBonusDescription(client.Player.ItemBonus[i], i));
+                        }
+                    }
 				}
 			}
 			info.Add(" ");

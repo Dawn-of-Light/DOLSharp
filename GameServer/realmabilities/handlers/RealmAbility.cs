@@ -39,8 +39,13 @@ namespace DOL.GS.RealmAbilities
 		public override string Name
 		{
 			get
-			{
-				return (Level <= 1) ? base.Name : m_name + " " + getRomanLevel();
+            {
+                //Lifeflight: Right after a RA is trained the m_name already contains the roman numerals
+                //So check to see if it ends with the correct RomanLevel, and if so just return m_name
+                if (m_name.EndsWith(getRomanLevel()))
+                    return m_name;
+				else
+                    return (Level <= 1) ? base.Name : m_name + " " + getRomanLevel();
 			}
 		}
 
@@ -148,7 +153,7 @@ namespace DOL.GS.RealmAbilities
 			{
 				player.Out.SendSpellEffectAnimation(caster, caster, spellEffect, 0, false, success ? (byte)1 : (byte)0);
 
-                if ( caster.IsWithinRadius( player, WorldMgr.INFO_DISTANCE ) )
+				if ( caster.IsWithinRadius( player, WorldMgr.INFO_DISTANCE ) )
 				{
 					if (player == caster)
 					{

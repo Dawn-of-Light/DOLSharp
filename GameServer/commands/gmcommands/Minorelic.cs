@@ -288,17 +288,85 @@ namespace DOL.GS.Commands
 				#region Remove
 				case "remove":
                     {
-                        if (!(client.Player.TargetObject is MinotaurRelic))
+                        //Lifeflight: Added the option to remove a minorelic by supplying an ID.
+                        if (args.Length == 3)
                         {
-                            DisplaySyntax(client);
-                            return;
-                        }
+                            int minorelicID = 0;
+                            try
+                            {
+                                minorelicID = Convert.ToInt32(args[2]);
+                            }
+                            catch (Exception)
+                            {
 
-                        MinotaurRelic relic = client.Player.TargetObject as MinotaurRelic;
+                            }
+
+                            if (minorelicID == 0)
+                            {
+                                DisplaySyntax(client);
+                                return;
+                            }
+                            else
+                            {
+
+                                foreach (MinotaurRelic relic in MinotaurRelicManager.m_minotaurrelics.Values)
+                                {
+                                    if (relic != null)
+                                    {
+                                        if (relic.RelicID == minorelicID)
+                                        {
+                                            //there is a match!
+                                            //remove it from the world
+                                            relic.RemoveFromWorld();
+                                            client.Player.Out.SendMessage("Relic " + relic.RelicID + " has been removed from the world", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                            
+                                            //remove it from the hashtable
+                                            MinotaurRelicManager.RemoveRelic(relic);
+                                            client.Player.Out.SendMessage("Relic " + relic.RelicID + " has been removed from the Minorelic Hash Table", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                            
+                                            DataObject obj = GameServer.Database.SelectObject(typeof(DBMinotaurRelic), "RelicID = '" + relic.RelicID + "'");
+                                            if (obj != null)
+                                            {
+                                                GameServer.Database.DeleteObject(obj);
+                                                client.Player.Out.SendMessage("Relic " + relic.RelicID + " has been removed from the database!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                            
+                                            }
+                                            
+                                            break;
+                                        }
+                                    }
+                                }
                         
-                        relic.RemoveFromWorld();
-                        DataObject obj = GameServer.Database.SelectObject(typeof(DBMinotaurRelic), "RelicID = '" + relic.RelicID + "'");
-                        if (obj != null) GameServer.Database.DeleteObject(obj);
+
+                            }
+
+                        }
+                        else
+                        {
+                            if (!(client.Player.TargetObject is MinotaurRelic))
+                            {
+                                DisplaySyntax(client);
+                                return;
+                            }
+
+                            MinotaurRelic relic = client.Player.TargetObject as MinotaurRelic;
+
+                            relic.RemoveFromWorld();
+                            client.Player.Out.SendMessage("Relic " + relic.RelicID + " has been removed from the world", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                            
+                            //remove it from the hashtable
+                            MinotaurRelicManager.RemoveRelic(relic);
+                            client.Player.Out.SendMessage("Relic " + relic.RelicID + " has been removed from the Minorelic Hash Table", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                            
+
+                            DataObject obj = GameServer.Database.SelectObject(typeof(DBMinotaurRelic), "RelicID = '" + relic.RelicID + "'");
+                            if (obj != null)
+                            {
+                                GameServer.Database.DeleteObject(obj);
+                                client.Player.Out.SendMessage("Relic " + relic.RelicID + " has been removed from the database!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                            
+                            }
+                        }
 						break;
 					}
 				#endregion Remove
