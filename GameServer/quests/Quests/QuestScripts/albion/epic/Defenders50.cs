@@ -1199,12 +1199,12 @@ namespace DOL.GS.Quests.Albion
 
 			}
 
-			MaulerAlbEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerAlbEpicBoots");
-			MaulerAlbEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerAlbEpicHelm");
-			MaulerAlbEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerAlbEpicGloves");
-			MaulerAlbEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerAlbEpicVest");
-			MaulerAlbEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerAlbEpicLegs");
-			MaulerAlbEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "NewMaulerAlbEpicArms");
+			MaulerAlbEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MaulerAlbEpicBoots");
+			MaulerAlbEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MaulerAlbEpicHelm");
+			MaulerAlbEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MaulerAlbEpicGloves");
+			MaulerAlbEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MaulerAlbEpicVest");
+			MaulerAlbEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MaulerAlbEpicLegs");
+			MaulerAlbEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MaulerAlbEpicArms");
 			//Item Descriptions End
 
 			#endregion
