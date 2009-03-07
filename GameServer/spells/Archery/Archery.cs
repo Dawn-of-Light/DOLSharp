@@ -193,6 +193,29 @@ namespace DOL.GS.Spells
 
         public override int CalculateEnduranceCost() { return (int)(Caster.MaxEndurance * (Spell.Power * .01)); }
 		
+        public override bool CasterIsAttacked(GameLiving attacker)
+        {
+            if (Spell.Uninterruptible)
+                return false;
+            if (IsCasting)
+            {
+                double mod = Caster.GetConLevel(attacker);
+                double chance = 65;
+                chance += mod * 10;
+                chance = Math.Max(1, chance);
+                chance = Math.Min(99, chance);
+                if (attacker is GamePlayer) chance = 100;
+                if (Util.Chance((int)chance))
+                {
+                    Caster.TempProperties.setProperty(INTERRUPT_TIMEOUT_PROPERTY, Caster.CurrentRegion.Time + SPELL_INTERRUPT_DURATION);
+                    MessageToLiving(Caster, attacker.GetName(0, true) + " attacks you and your shot is interrupted!", eChatType.CT_SpellResisted);
+                    InterruptCasting();
+                    return true;
+                }
+            }
+            return true;
+        }
+        
 		public override IList DelveInfo
 		{
 			get
