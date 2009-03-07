@@ -68,7 +68,13 @@ namespace DOL.GS.Spells
 			{
 				MessageToCaster("You can't cast while sitting!", eChatType.CT_SpellResisted);
 				return false;
-			}    
+			}
+			// Graveen: Pbaoe shots have a minimal distance of fire
+			if (m_spell.Duration ==0 && m_spell.Radius > 0 && m_caster.IsWithinRadius(selectedTarget, m_spell.Radius))
+            {
+                MessageToCaster(selectedTarget.Name + " is too close to be hit with this shot!", eChatType.CT_SpellResisted);
+                return false;
+            } 
 			if (m_spell.RecastDelay > 0)
 			{
 				int left = m_caster.GetSkillDisabledDuration(m_spell);
