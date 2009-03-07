@@ -2050,6 +2050,7 @@
     <Compile Include="spells\ConfusionSpellHandler.cs" />
     <Compile Include="spells\ConvertPet.cs" />
     <Compile Include="spells\CureAllSpellHandler.cs" />
+    <Compile Include="spells\DamageReductionPowerReturn.cs" />
     <Compile Include="spells\DamageToPowerSpellHandler.cs" />
     <Compile Include="spells\DisarmSpellHandler.cs" />
     <Compile Include="spells\DoomHammer.cs" />
