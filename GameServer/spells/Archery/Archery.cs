@@ -70,7 +70,7 @@ namespace DOL.GS.Spells
 				return false;
 			}
 			// Graveen: all shots except pbaoe have a minimal distance to use
-			if (m_spell.LifeDrainReturn != 3 && m_caster.IsWithinRadius(selectedTarget, m_spell.Radius))
+			if (m_spell.LifeDrainReturn != 3 && m_caster.IsWithinRadius(selectedTarget, (int)m_spell.Value))
             {
                 MessageToCaster(selectedTarget.Name + " is too close to be hit with this shot!", eChatType.CT_SpellResisted);
                 return false;
