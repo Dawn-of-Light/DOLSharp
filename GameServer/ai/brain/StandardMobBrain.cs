@@ -207,7 +207,7 @@ namespace DOL.AI.Brain
 			  if (!GameServer.ServerRules.IsAllowedToAttack(Body, player, true)) continue;
 				// Don't aggro on immune players.
 
-				if (player.EffectList.GetOfType(typeof(ShadeEffect)) != null)
+				if (player.EffectList.GetOfType(typeof(NecromancerShadeEffect)) != null)
 					continue;
 
 				int aggrolevel = 0;
