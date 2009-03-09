@@ -3278,10 +3278,10 @@ namespace DOL.GS
                     "Flammen Vakten",
                     "Elding Vakten",
                     "Stormur Vakten",
-                    "Isen Herra",
-                    "Flammen Herra",
-                    "Elding Herra",
-                    "Stormur Herra",
+                    "Isen Fru",
+                    "Flammen Fru",
+                    "Elding Fru",
+                    "Stormur Fru",
                     "Einherjar",
                     "Fru",
                     "Baronsfru",
@@ -3305,7 +3305,7 @@ namespace DOL.GS
                     "Emerald Ridere",
                     "Barun",
                     "Ard Tiarna",
-                    "Ciann"
+                    "Ciann Cath"
                 }
                 ,
                 // Female
@@ -3318,11 +3318,11 @@ namespace DOL.GS
                     "Silver Hand",
                     "Thunderer",
                     "Gilded Spear",
-                    "Tiarna",
+                    "Bantiarna",
                     "Emerald Ridere",
                     "Banbharun",
                     "Ard Bantiarna",
-                    "Cath"
+                    "Ciann Cath"
                 }
             }
         };
@@ -12432,14 +12432,6 @@ namespace DOL.GS
                 {
                     Model = 1362;
                 }
-                else if ((RaceName == "Korazh") && (PlayerCharacter.Gender == 1))
-                {
-                    Model = 1576;
-                }
-                else if ((RaceName == "Korazh") && (PlayerCharacter.Gender == 0))
-                {
-                    Model = 1576;
-                }
 
                 #endregion
 
@@ -12493,14 +12485,6 @@ namespace DOL.GS
                 {
                     Model = 1372;
                 }
-                else if ((RaceName == "Deifang") && (PlayerCharacter.Gender == 1))
-                {
-                    Model = 1579;
-                }
-                else if ((RaceName == "Deifang") && (PlayerCharacter.Gender == 0))
-                {
-                    Model = 1579;
-                }
 
                 #endregion
 
@@ -12553,14 +12537,6 @@ namespace DOL.GS
                 else if ((RaceName == "Shar") && (PlayerCharacter.Gender == 1))
                 {
                     Model = 1386;
-                }
-                else if ((RaceName == "Graoch") && (PlayerCharacter.Gender == 1))
-                {
-                    Model = 1582;
-                }
-                else if ((RaceName == "Graoch") && (PlayerCharacter.Gender == 0))
-                {
-                    Model = 1582;
                 }
 
                 #endregion
