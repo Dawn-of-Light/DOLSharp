@@ -6,6 +6,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Events;
 using DOL.Database;
+using DOL.GS.Spells;
 
 namespace DOL.GS.RealmAbilities
 {
@@ -55,6 +56,15 @@ namespace DOL.GS.RealmAbilities
 			{
 				if (GameServer.ServerRules.IsAllowedToAttack(player, t_player, true) == false)
 					continue;
+					
+                //Check to see if the player is phaseshifted
+                GameSpellEffect phaseshift;
+                phaseshift = SpellHandler.FindEffectOnTarget(t_player, "Phaseshift");
+                if (phaseshift != null)
+                {
+                    player.Out.SendMessage(t_player.Name + " is Phaseshifted and can't be effected by this Spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                    continue;
+                }
 
 				if (!player.IsWithinRadius( t_player, 200 ))
 					continue;

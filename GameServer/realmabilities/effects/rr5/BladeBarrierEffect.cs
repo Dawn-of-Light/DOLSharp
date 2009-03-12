@@ -26,7 +26,8 @@ namespace DOL.GS.Effects
 			{
 				p.Out.SendSpellEffectAnimation(target, target, 7055, 0, false, 1);
 			}
-			m_owner.BuffBonusCategory4[(int)eProperty.ParryChance] += 90;
+            //Commented out for removal: Parry Chance for BladeBarrier is hardcoded in GameLiving.cs in the CalculateEnemyAttackResult method
+			//m_owner.BuffBonusCategory4[(int)eProperty.ParryChance] += 90;
 			GameEventMgr.AddHandler(target, GameLivingEvent.AttackFinished, new DOLEventHandler(attackEventHandler));
 
 		}
@@ -58,7 +59,8 @@ namespace DOL.GS.Effects
 
 		public override void Stop()
 		{
-			m_owner.BuffBonusCategory4[(int)eProperty.ParryChance] -= 90;
+            //Commented out for removal
+			//m_owner.BuffBonusCategory4[(int)eProperty.ParryChance] -= 90;
 			base.Stop();
 		}
 
