@@ -151,7 +151,7 @@ namespace DOL.GS
 		{
 			player.CraftTimer.Stop();
 			player.Out.SendCloseTimerWindow();
-			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CraftItem.StopWork"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CraftItem.StopWork",item.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		protected bool CanPlayerStartToCraftItem(DBCraftedItem item, GamePlayer player)
@@ -352,7 +352,7 @@ namespace DOL.GS
 				if (missingMaterials != null)
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckRawMaterial.NoIngredients", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckRawMaterial.YouAreMissing"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckRawMaterial.YouAreMissing"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					foreach (DBCraftedXItem rawmaterial in missingMaterials)
 					{
 						player.Out.SendMessage("(" + rawmaterial.Count + ") " + rawmaterial.ItemTemplate.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
