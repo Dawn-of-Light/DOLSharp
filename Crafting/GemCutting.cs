@@ -26,14 +26,8 @@ using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// The cloth crafting skill
-	/// </summary>
 	public class GemCutting : AbstractCraftingSkill
 	{
-		/// <summary>
-		/// Constructor
-		/// </summary>
 		public GemCutting()
 		{
 			Icon = 0x09;
@@ -41,24 +35,6 @@ namespace DOL.GS
 			eSkill = eCraftingSkill.GemCutting;
 		}
 
-		/// <summary>
-		/// Check if  the player own all needed tools
-		/// </summary>
-		/// <param name="player">the crafting player</param>
-		/// <param name="craftItemData">the object in construction</param>
-		/// <returns>true if the player hold all needed tools</returns>
-		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
-		{
-			// Luhz Crafting Update: 
-			// Crafting no longer requires hand-held tools!
-			return true;
-		}
-
-		/// <summary>
-		/// Select craft to gain point and increase it
-		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="item"></param>
 		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
 			if (Util.Chance(CalculateChanceToGainPoint(player, item)))

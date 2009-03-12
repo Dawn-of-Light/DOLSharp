@@ -41,7 +41,7 @@ namespace DOL.GS
 			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.Name.Fletching");
 			eSkill = eCraftingSkill.Fletching;
 		}
-		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
+		protected override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
 			if (craftItemData.ItemTemplate.Object_Type != (int)eObjectType.Arrow && craftItemData.ItemTemplate.Object_Type != (int)eObjectType.Bolt)
 			{
