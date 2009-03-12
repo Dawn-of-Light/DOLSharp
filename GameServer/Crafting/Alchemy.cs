@@ -43,7 +43,7 @@ namespace DOL.GS
 		}
 
 		#region Classic craft functions
-		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
+		protected override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
             return base.CheckTool(player, craftItemData);
 		}
