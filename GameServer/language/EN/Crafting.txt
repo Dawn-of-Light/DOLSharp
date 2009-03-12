@@ -69,7 +69,7 @@ AbstractCraftingSkill.CraftItem.BeginWork:		You begin work on the {0} ({1}%).
 AbstractCraftingSkill.CraftItem.ChanceToGainPoint:	Chance to gain point in your primary crafting skill is {0}%.
 AbstractCraftingSkill.CraftItem.CurrentlyMaking:	Currently Making: {0}
 AbstractCraftingSkill.CraftItem.MoveAndInterrupt:	You move and interrupt your crafting.
-AbstractCraftingSkill.CraftItem.StopWork:		You stop your current work.
+AbstractCraftingSkill.CraftItem.StopWork:		You are no longer making {0}.
 AbstractCraftingSkill.LooseRawMaterial.Count:		You lose ({0}) {1}.
 AbstractCraftingSkill.LooseRawMaterial.Materials:	You fail to make the {0}, and lose some materials!
 AbstractCraftingSkill.MakeItem.LoseNoMaterials:		You fail to make the {0} but lose no materials!
