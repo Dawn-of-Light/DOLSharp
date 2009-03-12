@@ -286,7 +286,7 @@ namespace DOL.Mail
 
 					string[] targets = to.Split(';');
 					foreach (string str in targets)
-						mail.To.Add(str);
+						if (!String.IsNullOrEmpty(str.Trim())) mail.To.Add(str);
 					mail.Subject = "[ Logs ] " + DateTime.Now.ToString();
 					mail.From = new MailAddress(m_emailAddress, GameServer.Instance.Configuration.ServerName);
 					mail.IsBodyHtml = true;

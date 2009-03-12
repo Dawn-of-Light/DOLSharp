@@ -3244,27 +3244,40 @@ namespace DOL.GS
 				//Also, before this comparison happens, the game looks to see if your opponent is in your forward arc – to determine that arc, make a 120 degree angle, and put yourself at the point.
 				if (ad.IsMeleeAttack)
 				{
+                    BladeBarrierEffect BladeBarrier = null;
+
 					double parryChance = 0;
+
 					if (player != null)
 					{
-						if (IsObjectInFront(ad.Attacker, 120))
+                        //BladeBarrier overwrites all parrying, 90% chance to parry any attack, does not consider other bonuses to parry
+                        BladeBarrier = (BladeBarrierEffect)player.EffectList.GetOfType(typeof(BladeBarrierEffect));
+                        //They still need an active weapon to parry with BladeBarrier
+                        if (BladeBarrier != null && (AttackWeapon != null))
+                        {
+                            parryChance = 0.90;
+                        }
+						else if (IsObjectInFront(ad.Attacker, 120))
 						{
 							if ((player.HasSpecialization(Specs.Parry) || parry != null) && (AttackWeapon != null))
 								parryChance = GetModified(eProperty.ParryChance);
 						}
-						else if (player.EffectList.GetOfType(typeof(BladeBarrierEffect)) != null)
-							parryChance = GetModified(eProperty.ParryChance);
 					}
 					else if (this is GameNPC && IsObjectInFront(ad.Attacker, 120))
 						parryChance = GetModified(eProperty.ParryChance);
 
-					if (parryChance > 0 && !ad.Target.IsStunned && !ad.Target.IsSitting)
+                    //If BladeBarrier is up, do not adjust the parry chance.
+                    if (BladeBarrier != null && !ad.Target.IsStunned && !ad.Target.IsSitting)
+                    {
+                        if (Util.ChanceDouble(parryChance))
+                            return eAttackResult.Parried;
+                    }
+					else if (parryChance > 0 && !ad.Target.IsStunned && !ad.Target.IsSitting)
 					{
 						parryChance *= 0.001;
 						parryChance += 0.05 * attackerConLevel;
 						if (parryChance < 0.01) parryChance = 0.01;
 						if (parryChance > 0.99) parryChance = 0.99;
-
 						if (m_attackers.Count > 1) parryChance /= m_attackers.Count / 2;
 						if (Util.ChanceDouble(parryChance))
 							return eAttackResult.Parried;
