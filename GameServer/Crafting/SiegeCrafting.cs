@@ -22,14 +22,8 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// SiegeCrafting is the crafting skill to make siege weapon like catapult, balista,...
-	/// </summary>
 	public class SiegeCrafting : AbstractCraftingSkill
 	{
-		/// <summary>
-		/// Constructor
-		/// </summary>
 		public SiegeCrafting()
 			: base()
 		{
@@ -45,22 +39,6 @@ namespace DOL.GS
 			}
 		}
 
-		/// <summary>
-		/// Check if  the player own all needed tools
-		/// </summary>
-		/// <param name="player">the crafting player</param>
-		/// <param name="craftItemData">the object in construction</param>
-		/// <returns>true if the player hold all needed tools</returns>
-		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
-		{
-            return true;
-		}
-
-		/// <summary>
-		/// Select craft to gain point and increase it
-		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="item"></param>
 		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
 			if (Util.Chance(CalculateChanceToGainPoint(player, item)))

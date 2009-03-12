@@ -46,7 +46,7 @@ namespace DOL.GS
 			}
 		}
 
-		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
+		protected override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
 			// TODO : implement tool checks based on recipes
 			return true;

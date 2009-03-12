@@ -24,9 +24,6 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// spell crafdting skill
-	/// </summary>
 	public class SpellCrafting : AdvancedCraftingSkill
 	{
 
@@ -98,9 +95,6 @@ namespace DOL.GS
         private static readonly int[] OCStartPercentages = { 0, 10, 20, 30, 50, 70 };
         private static readonly int[] ItemQualOCModifiers = { 0, 0, 6, 8, 10, 18, 26 };
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
 		public SpellCrafting()
 		{
 			Icon = 0x0D;
@@ -116,10 +110,8 @@ namespace DOL.GS
 		/// <param name="player">the crafting player</param>
 		/// <param name="craftItemData">the object in construction</param>
 		/// <returns>true if the player hold all needed tools</returns>
-		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
+		protected override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
-            // Luhz Crafting Update: 
-            // Crafting no longer requires hand-held tools!
             return base.CheckTool(player, craftItemData);
 		}
 

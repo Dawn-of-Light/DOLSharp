@@ -26,14 +26,8 @@ using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// The metalworking crafting skill
-	/// </summary>
 	public class MetalWorking : AbstractCraftingSkill
 	{
-		/// <summary>
-		/// Constructor
-		/// </summary>
 		public MetalWorking()
 		{
 			Icon = 0x06;
@@ -47,7 +41,7 @@ namespace DOL.GS
 		/// <param name="player">the crafting player</param>
 		/// <param name="craftItemData">the object in construction</param>
 		/// <returns>true if the player hold all needed tools</returns>
-		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
+		protected override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
 		{
 			bool result = false;
 			foreach (GameStaticItem item in player.GetItemsInRadius(CRAFT_DISTANCE))
@@ -67,12 +61,6 @@ namespace DOL.GS
 			}
 			return true;
 		}
-
-		/// <summary>
-		/// Select craft to gain point and increase it
-		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="item"></param>
 		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
 			if (Util.Chance(CalculateChanceToGainPoint(player, item)))
