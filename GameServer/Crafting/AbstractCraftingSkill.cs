@@ -130,8 +130,8 @@ namespace DOL.GS
 			}
 
 			int craftingTime = GetCraftingTime(player, item);
-			
-			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CraftItem.BeginWork", item.ItemTemplate.Name, CalculateChanceToMakeItem(player, item).ToString()), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CraftItem.BeginWork", item.ItemTemplate.Name, CalculateChanceToMakeItem(player, item).ToString()), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 			player.Out.SendTimerWindow(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CraftItem.CurrentlyMaking", item.ItemTemplate.Name), craftingTime);
 			
 			StartCraftingTimerAndSetCallBackMethod(item, player, craftingTime);
@@ -571,11 +571,11 @@ namespace DOL.GS
 				}
 				player.Inventory.CommitChanges();
 
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.BuildCraftedItem.Successfully", craftItemData.ItemTemplate.Name, newItem.Quality), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.BuildCraftedItem.Successfully", craftItemData.ItemTemplate.Name, newItem.Quality), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 
 				if (newItem.Quality == 100)
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.BuildCraftedItem.Masterpiece"), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.BuildCraftedItem.Masterpiece"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					player.Out.SendPlaySound(eSoundType.Craft, 0x04);
 				}
 				else
