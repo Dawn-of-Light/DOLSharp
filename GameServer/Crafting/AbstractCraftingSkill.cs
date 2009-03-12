@@ -33,16 +33,14 @@ namespace DOL.GS
 	/// </summary>
 	public abstract class AbstractCraftingSkill
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
+
 		protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		#region Declaration
 		/// <summary>
-		/// How close a player can be to make a item with a forge , lathe ect ...
+		/// the maximum possible range within a player has to be to a forge , lathe ect to craft an item
 		/// </summary>
-		public const int CRAFT_DISTANCE = 256;
+		public const int CRAFT_DISTANCE = 512;
 
 		/// <summary>
 		/// The icone number used by this craft.
@@ -78,10 +76,6 @@ namespace DOL.GS
 				return "";
 			}
 		}
-
-		/// <summary>
-		/// The enum index of this crafting skill
-		/// </summary>
 		public eCraftingSkill eSkill
 		{
 			get
@@ -120,64 +114,80 @@ namespace DOL.GS
 		#region First call function and callback
 
 		/// <summary>
-		/// Called when player craft an item
+		/// Called when player tries to begin crafting an item
 		/// </summary>
-		/// <param name="item"></param>
-		/// <param name="player"></param>
-		/// <returns></returns>
-		public int CraftItem(DBCraftedItem item, GamePlayer player)
+		public void CraftItem(DBCraftedItem item, GamePlayer player)
 		{
-			if (!GameServer.ServerRules.IsAllowedToCraft(player, item.ItemTemplate))
+			if (!CanPlayerStartToCraftItem(item, player))
 			{
-				return 0;
-			}
-
-			if (!CheckTool(player, item))
-			{
-				return 0;
-			}
-
-			if (!CheckSecondCraftingSkillRequirement(player, item))
-			{
-				return 0;
-			}
-
-			if (!CheckRawMaterial(player, item))
-			{
-				return 0;
+				return;
 			}
 
 			if (player.IsCrafting)
 			{
-				player.CraftTimer.Stop();
-				player.Out.SendCloseTimerWindow();
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CraftItem.StopWork"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
-			}
-
-			if (player.IsMoving || player.IsStrafing)
-			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CraftItem.MoveAndInterrupt"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
+				StopToCraftCurrentItem(item, player);
+				return;
 			}
 
 			int craftingTime = GetCraftingTime(player, item);
+			
 			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CraftItem.BeginWork", item.ItemTemplate.Name, CalculateChanceToMakeItem(player, item).ToString()), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CraftItem.ChanceToGainPoint", CalculateChanceToGainPoint(player, item)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			player.Out.SendTimerWindow(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CraftItem.CurrentlyMaking", item.ItemTemplate.Name), craftingTime);
+			
+			StartCraftingTimerAndSetCallBackMethod(item, player, craftingTime);
+		}
+
+
+		protected void StartCraftingTimerAndSetCallBackMethod(DBCraftedItem item, GamePlayer player, int craftingTime)
+		{
 			player.CraftTimer = new RegionTimer(player);
 			player.CraftTimer.Callback = new RegionTimerCallback(MakeItem);
 			player.CraftTimer.Properties.setProperty(PLAYER_CRAFTER, player);
 			player.CraftTimer.Properties.setProperty(ITEM_CRAFTER, item);
 			player.CraftTimer.Start(craftingTime * 1000);
-			return 1;
+		}
+
+		protected void StopToCraftCurrentItem(DBCraftedItem item, GamePlayer player)
+		{
+			player.CraftTimer.Stop();
+			player.Out.SendCloseTimerWindow();
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CraftItem.StopWork"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+		}
+
+		protected bool CanPlayerStartToCraftItem(DBCraftedItem item, GamePlayer player)
+		{
+			if (!GameServer.ServerRules.IsAllowedToCraft(player, item.ItemTemplate))
+			{
+				return false;
+			}
+
+			if (!CheckTool(player, item))
+			{
+				return false;
+			}
+
+			if (!CheckSecondCraftingSkillRequirement(player, item))
+			{
+				return false;
+			}
+
+			if (!CheckRawMaterial(player, item))
+			{
+				return false;
+			}
+
+			if (player.IsMoving || player.IsStrafing)
+			{
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CraftItem.MoveAndInterrupt"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
+
+			return true;
 		}
 
 		/// <summary>
 		/// Make the item when craft time is finished 
 		/// </summary>
-		/// <param name="timer"></param>
-		/// <returns></returns>
 		protected virtual int MakeItem(RegionTimer timer)
 		{
 			GamePlayer player = (GamePlayer)timer.Properties.getObjectProperty(PLAYER_CRAFTER, null);
@@ -209,7 +219,6 @@ namespace DOL.GS
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.MakeItem.LoseNoMaterials", item.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				player.Out.SendPlaySound(eSoundType.Craft, 0x02);
 			}
-
 			return 0;
 		}
 
@@ -218,15 +227,17 @@ namespace DOL.GS
 		#region Requirement check
 
 		/// <summary>
-		/// Check if the player own all needed tools
+		/// Check if the player owns all needed tools and is in range of lathe etc
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="craftItemData"></param>
-		/// <returns></returns>
-		public abstract bool CheckTool(GamePlayer player, DBCraftedItem craftItemData);
+		protected virtual bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
+		{
+			return true;
+		}
 
 		/// <summary>
-		/// Check if the player have enough secondary crafting skill to build the item
+		/// Check if the player has enough secondary crafting skill to build the item
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="craftItemData"></param>
@@ -574,86 +585,6 @@ namespace DOL.GS
 			}
 		}
 
-		/// <summary>
-		/// loose raw material when failed in craft
-		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="craftItemData"></param>
-		/// <returns></returns>
-		public bool LooseRawMaterial(GamePlayer player, DBCraftedItem craftItemData)
-		{
-			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.LooseRawMaterial.Materials", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-			Hashtable dataSlots = new Hashtable(5);
-
-			lock (player.Inventory)
-			{
-				foreach (DBCraftedXItem itemMaterial in craftItemData.RawMaterials)
-				{
-					int count = 0;
-					if (itemMaterial != null && itemMaterial.Count > 0 && Util.Chance(60)) // 60% chance to loseeach material
-					{
-						count = (int)(itemMaterial.Count * Util.Random(0, 60) / 100); // calculate how much material are lost
-						if (count <= 0)
-							count = 1;
-					}
-
-					if (count <= 0)
-						continue; // don't remove this material
-
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.LooseRawMaterial.Count", count, itemMaterial.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-					bool result = false;
-					foreach (InventoryItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
-					{
-						if (item != null && item.Name == itemMaterial.ItemTemplate.Name)
-						{
-							if (item.Count >= count)
-							{
-								if (item.Count == count)
-								{
-									dataSlots.Add(item.SlotPosition, null);
-								}
-								else
-								{
-									dataSlots.Add(item.SlotPosition, count);
-								}
-								result = true;
-								break;
-							}
-							else
-							{
-								dataSlots.Add(item.SlotPosition, null);
-								count -= item.Count;
-							}
-						}
-					}
-					if (result == false)
-					{
-						return false;
-					}
-				}
-
-				player.Inventory.BeginChanges();
-				foreach (DictionaryEntry de in dataSlots)
-				{
-					InventoryItem item = player.Inventory.GetItem((eInventorySlot)de.Key);
-					if (item != null)
-					{
-						if (de.Value == null)
-						{
-							player.Inventory.RemoveItem(item);
-						}
-						else
-						{
-							player.Inventory.RemoveCountFromStack(item, (int)de.Value);
-						}
-					}
-				}
-				player.Inventory.CommitChanges();
-			}
-			return true;
-		}
 		#endregion
 
 		#region Calcul functions
@@ -815,7 +746,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Calculate crafted item quality
 		/// </summary>
-		public int GetQuality(GamePlayer player, DBCraftedItem item)
+		private int GetQuality(GamePlayer player, DBCraftedItem item)
 		{
 			// 2% chance to get masterpiece, 1:6 chance to get 94-99%, if legendary or if grey con
 			// otherwise moving the most load towards 94%, the higher the item con to the crafter skill

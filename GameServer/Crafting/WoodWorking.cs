@@ -26,14 +26,8 @@ using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// The wood crafting skill
-	/// </summary>
 	public class WoodWorking : AbstractCraftingSkill
 	{
-		/// <summary>
-		/// Constructor
-		/// </summary>
 		public WoodWorking()
 		{
 			Icon = 0x0E;
@@ -41,23 +35,6 @@ namespace DOL.GS
 			eSkill = eCraftingSkill.WoodWorking;
 		}
 
-		/// <summary>
-		/// Check if  the player own all needed tools
-		/// </summary>
-		/// <param name="player">the crafting player</param>
-		/// <param name="craftItemData">the object in construction</param>
-		/// <returns>true if the player hold all needed tools</returns>
-		public override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
-		{
-
-			return true;
-		}
-
-		/// <summary>
-		/// Select craft to gain point and increase it
-		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="item"></param>
 		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
 
