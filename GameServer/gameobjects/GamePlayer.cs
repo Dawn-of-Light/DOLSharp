@@ -44,6 +44,7 @@ using log4net;
 
 namespace DOL.GS
 {
+	
 	/// <summary>
 	/// This class represents a player inside the game
 	/// </summary>
@@ -11797,8 +11798,12 @@ namespace DOL.GS
 				{
 					craftingSkills[(int)skill] = count + Convert.ToInt32(craftingSkills[(int)skill]);
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainCraftingSkill.GainSkill", craftingSkill.Name, craftingSkills[(int)skill]), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-					int amount = GetCraftingSkillValue(skill);
-					if (GameServer.ServerRules.CanGenerateNews(this) && amount >= 1000 && amount - count < 1000)
+					int currentSkillLevel = GetCraftingSkillValue(skill);
+					if (HasPlayerReachedNewCraftingTitle(currentSkillLevel))
+					{
+						GameEventMgr.Notify(GamePlayerEvent.ReachedAHundredthCraftingSkill, this,new ReachedAHundredthCraftingSkillEventArgs(skill,currentSkillLevel) );
+					}
+					if (GameServer.ServerRules.CanGenerateNews(this) && currentSkillLevel >= 1000 && currentSkillLevel - count < 1000)
 					{
 						string message = string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.GainCraftingSkill.ReachedSkill", Name, craftingSkill.Name));
 						NewsMgr.CreateNews(message, Realm, eNewsType.PvE, true);
@@ -11807,6 +11812,31 @@ namespace DOL.GS
 				return true;
 			}
 		}
+		public bool IsEligibleToGiveMeritPoints
+		{
+			get
+			{
+				if (this.Guild == null)
+					return false;
+				if (this.Client.Account.PrivLevel > 1)
+					return false;
+				
+				return true;
+			}
+		}
+		protected bool HasPlayerReachedNewCraftingTitle(int skillLevel)
+		{
+			// no titles after 1000 any more, checked in 1.97
+			if (skillLevel <= 1000)
+			{
+				if (skillLevel % 100 == 0)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
 
 		/// <summary>
 		/// Add a new crafting skill to the player
