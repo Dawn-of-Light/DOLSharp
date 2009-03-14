@@ -66,6 +66,7 @@ namespace DOL.Regiment
 		[ScriptLoadedEvent]
 		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
 		{
+			GameEventMgr.AddHandler(GamePlayerEvent.ReachedAHundredthCraftingSkill, new DOLEventHandler(OnReachedAHundredthCraftingSkill));
 			// Realm Points Check
 			GameEventMgr.AddHandler(GamePlayerEvent.GainedRealmPoints, new DOLEventHandler(RealmPointsGain));
 			// Bounty Points Check
@@ -82,6 +83,7 @@ namespace DOL.Regiment
 		[ScriptUnloadedEvent]
 		public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
+			GameEventMgr.RemoveHandler(GamePlayerEvent.ReachedAHundredthCraftingSkill, new DOLEventHandler(OnReachedAHundredthCraftingSkill));
 			// Realm Points Check
 			GameEventMgr.RemoveHandler(GamePlayerEvent.GainedRealmPoints, new DOLEventHandler(RealmPointsGain));
 			// Bounty Points Check
@@ -229,12 +231,46 @@ namespace DOL.Regiment
                 #endregion
 			};
 
+		public static void OnReachedAHundredthCraftingSkill(DOLEvent e, object sender, EventArgs args)
+		{
+			ReachedAHundredthCraftingSkillEventArgs cea = args as ReachedAHundredthCraftingSkillEventArgs;
+			GamePlayer player = sender as GamePlayer;
+			if (player == null)
+				return;
+			if (!player.IsEligibleToGiveMeritPoints)
+			{
+				return;
+			}
+			// skill  700 - 100 merit points
+			// skill  800 - 200 merit points
+			// skill  900 - 300 merit points
+			// skill 1000 - 400 merit points
+			if (cea.Points <= 1000 && cea.Points >= 700)
+			{
+				int meritpoints = cea.Points - 600;
+				player.Guild.GainMeritPoints(meritpoints);
+				GameServer.Database.SaveObject(player.Guild.theGuildDB);
+				player.Out.SendMessage("You have earned "+meritpoints+" merit points for your guild!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			}
+
+
+		}
+
+		
+
+
 		#region RealmRankUp
 		public static void RealmRankUp(DOLEvent e, object sender, EventArgs args)
 		{
 			GamePlayer player = sender as GamePlayer;
 
-			if (player == null || player.Guild == null || player.Client.Account.PrivLevel > 1) return;
+			if (player == null) 
+				return;
+
+			if (!player.IsEligibleToGiveMeritPoints)
+			{
+				return;
+			}
 
 			GainedRealmPointsEventArgs rpsArgs = args as GainedRealmPointsEventArgs;
 
@@ -412,4 +448,5 @@ namespace DOL.Regiment
 
 		#endregion
 	}
+	
 }

@@ -312,6 +312,7 @@
     <Compile Include="Crafting\ArmorCrafting.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="events\gameobjects\ReachedAHundredthCraftingSkillEventArgs.cs" />
     <Compile Include="gameobjects\Atlantis\Teleporter\PermanentDjinn.cs" />
     <Compile Include="gameobjects\Atlantis\Teleporter\SpawnDjinnStone.cs" />
     <Compile Include="gameobjects\Atlantis\Teleporter\SummonDjinnStone.cs" />
