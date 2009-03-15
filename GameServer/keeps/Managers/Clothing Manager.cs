@@ -98,7 +98,7 @@ namespace DOL.GS.Keeps
             #region Archer
             if (!Albion_Archer.LoadFromDatabase("albion_archer"))
             {
-                Albion_Archer.AddNPCEquipment(eInventorySlot.Cloak, 676);
+                Albion_Archer.AddNPCEquipment(eInventorySlot.Cloak, 3800); //676
                 Albion_Archer.AddNPCEquipment(eInventorySlot.TorsoArmor, 728);
                 Albion_Archer.AddNPCEquipment(eInventorySlot.LegsArmor, 663);
                 Albion_Archer.AddNPCEquipment(eInventorySlot.ArmsArmor, 664);
@@ -118,7 +118,7 @@ namespace DOL.GS.Keeps
             #region Caster
             if (!Albion_Caster.LoadFromDatabase("albion_caster"))
             {
-                Albion_Caster.AddNPCEquipment(eInventorySlot.Cloak, 676);
+                Albion_Caster.AddNPCEquipment(eInventorySlot.Cloak, 3800); //676
                 Albion_Caster.AddNPCEquipment(eInventorySlot.TorsoArmor, 58);
                 //Albion_Caster.AddNPCEquipment(eInventorySlot.LegsArmor, 140);
                 //Albion_Caster.AddNPCEquipment(eInventorySlot.ArmsArmor, 141);
@@ -134,7 +134,7 @@ namespace DOL.GS.Keeps
             #region Fighter
             if (!Albion_Fighter.LoadFromDatabase("albion_fighter"))
             {
-                Albion_Fighter.AddNPCEquipment(eInventorySlot.Cloak, 676);
+                Albion_Fighter.AddNPCEquipment(eInventorySlot.Cloak, 3800); //676
                 Albion_Fighter.AddNPCEquipment(eInventorySlot.TorsoArmor, 662);
                 Albion_Fighter.AddNPCEquipment(eInventorySlot.LegsArmor, 663);
                 Albion_Fighter.AddNPCEquipment(eInventorySlot.ArmsArmor, 664);
@@ -154,7 +154,7 @@ namespace DOL.GS.Keeps
             #region Lord
             if (!Albion_Lord.LoadFromDatabase("albion_lord"))
             {
-                Albion_Lord.AddNPCEquipment(eInventorySlot.Cloak, 676);
+                Albion_Lord.AddNPCEquipment(eInventorySlot.Cloak, 3800); //676
                 Albion_Lord.AddNPCEquipment(eInventorySlot.TorsoArmor, 662);
                 Albion_Lord.AddNPCEquipment(eInventorySlot.LegsArmor, 663);
                 Albion_Lord.AddNPCEquipment(eInventorySlot.ArmsArmor, 664);
@@ -176,7 +176,7 @@ namespace DOL.GS.Keeps
             #region Healer
             if (!Albion_Healer.LoadFromDatabase("albion_healer"))
             {
-                Albion_Healer.AddNPCEquipment(eInventorySlot.Cloak, 676);
+                Albion_Healer.AddNPCEquipment(eInventorySlot.Cloak, 3800); //676
                 Albion_Healer.AddNPCEquipment(eInventorySlot.TorsoArmor, 713);
                 Albion_Healer.AddNPCEquipment(eInventorySlot.LegsArmor, 663);
                 Albion_Healer.AddNPCEquipment(eInventorySlot.ArmsArmor, 664);
@@ -192,7 +192,7 @@ namespace DOL.GS.Keeps
             #region Stealther
             if (!Albion_Stealther.LoadFromDatabase("albion_stealther"))
             {
-                Albion_Stealther.AddNPCEquipment(eInventorySlot.Cloak, 676);
+                Albion_Stealther.AddNPCEquipment(eInventorySlot.Cloak, 3800); //676
                 Albion_Stealther.AddNPCEquipment(eInventorySlot.TorsoArmor, 792);
                 Albion_Stealther.AddNPCEquipment(eInventorySlot.LegsArmor, 663);
                 Albion_Stealther.AddNPCEquipment(eInventorySlot.ArmsArmor, 664);
@@ -218,7 +218,7 @@ namespace DOL.GS.Keeps
             #region Archer
             if (!Midgard_Archer.LoadFromDatabase("midgard_archer"))
             {
-                Midgard_Archer.AddNPCEquipment(eInventorySlot.Cloak, 677);
+                Midgard_Archer.AddNPCEquipment(eInventorySlot.Cloak, 3801); //677
                 Midgard_Archer.AddNPCEquipment(eInventorySlot.TorsoArmor, 668);
                 Midgard_Archer.AddNPCEquipment(eInventorySlot.LegsArmor, 2943);
                 Midgard_Archer.AddNPCEquipment(eInventorySlot.ArmsArmor, 2944);
@@ -239,7 +239,7 @@ namespace DOL.GS.Keeps
             #region Caster
             if (!Midgard_Caster.LoadFromDatabase("midgard_caster"))
             {
-                Midgard_Caster.AddNPCEquipment(eInventorySlot.Cloak, 677);
+                Midgard_Caster.AddNPCEquipment(eInventorySlot.Cloak, 3801); //677
                 Midgard_Caster.AddNPCEquipment(eInventorySlot.TorsoArmor, 98);
                 //Midgard_Caster.AddNPCEquipment(eInventorySlot.LegsArmor, 246);
                 //Midgard_Caster.AddNPCEquipment(eInventorySlot.ArmsArmor, 247);
@@ -255,7 +255,7 @@ namespace DOL.GS.Keeps
             #region Fighter
             if (!Midgard_Fighter.LoadFromDatabase("midgard_fighter"))
             {
-                Midgard_Fighter.AddNPCEquipment(eInventorySlot.Cloak, 677);
+                Midgard_Fighter.AddNPCEquipment(eInventorySlot.Cloak, 3801); //677
                 Midgard_Fighter.AddNPCEquipment(eInventorySlot.TorsoArmor, 668);
                 Midgard_Fighter.AddNPCEquipment(eInventorySlot.LegsArmor, 2943);
                 Midgard_Fighter.AddNPCEquipment(eInventorySlot.ArmsArmor, 2944);
@@ -273,7 +273,7 @@ namespace DOL.GS.Keeps
             #region Lord
             if (!Midgard_Lord.LoadFromDatabase("midgard_lord"))
             {
-                Midgard_Lord.AddNPCEquipment(eInventorySlot.Cloak, 677);
+                Midgard_Lord.AddNPCEquipment(eInventorySlot.Cloak, 3801); //677
                 Midgard_Lord.AddNPCEquipment(eInventorySlot.TorsoArmor, 668);
                 Midgard_Lord.AddNPCEquipment(eInventorySlot.LegsArmor, 2943);
                 Midgard_Lord.AddNPCEquipment(eInventorySlot.ArmsArmor, 2944);
@@ -295,7 +295,7 @@ namespace DOL.GS.Keeps
             #region Healer
             if (!Midgard_Healer.LoadFromDatabase("midgard_healer"))
             {
-                Midgard_Healer.AddNPCEquipment(eInventorySlot.Cloak, 677);
+                Midgard_Healer.AddNPCEquipment(eInventorySlot.Cloak, 3801); //677
                 Midgard_Healer.AddNPCEquipment(eInventorySlot.TorsoArmor, 668);
                 Midgard_Healer.AddNPCEquipment(eInventorySlot.LegsArmor, 2943);
                 Midgard_Healer.AddNPCEquipment(eInventorySlot.ArmsArmor, 2944);
@@ -325,7 +325,7 @@ namespace DOL.GS.Keeps
             #region Stealther
             if (!Midgard_Stealther.LoadFromDatabase("midgard_stealther"))
             {
-                Midgard_Stealther.AddNPCEquipment(eInventorySlot.Cloak, 677);
+                Midgard_Stealther.AddNPCEquipment(eInventorySlot.Cloak, 3801); //677
                 Midgard_Stealther.AddNPCEquipment(eInventorySlot.TorsoArmor, 668);
                 Midgard_Stealther.AddNPCEquipment(eInventorySlot.LegsArmor, 2943);
                 Midgard_Stealther.AddNPCEquipment(eInventorySlot.ArmsArmor, 2944);
@@ -350,7 +350,7 @@ namespace DOL.GS.Keeps
             #region Archer
             if (!Hibernia_Archer.LoadFromDatabase("hibernia_archer"))
             {
-                Hibernia_Archer.AddNPCEquipment(eInventorySlot.Cloak, 678);
+                Hibernia_Archer.AddNPCEquipment(eInventorySlot.Cloak, 3802); //678
                 Hibernia_Archer.AddNPCEquipment(eInventorySlot.TorsoArmor, 667);
                 Hibernia_Archer.AddNPCEquipment(eInventorySlot.LegsArmor, 989);
                 Hibernia_Archer.AddNPCEquipment(eInventorySlot.ArmsArmor, 990);
@@ -370,7 +370,7 @@ namespace DOL.GS.Keeps
             #region Caster
             if (!Hibernia_Caster.LoadFromDatabase("hibernia_caster"))
             {
-                Hibernia_Caster.AddNPCEquipment(eInventorySlot.Cloak, 678);
+                Hibernia_Caster.AddNPCEquipment(eInventorySlot.Cloak, 3802); //678
                 Hibernia_Caster.AddNPCEquipment(eInventorySlot.TorsoArmor, 97);
                 //Hibernia_Caster.AddNPCEquipment(eInventorySlot.LegsArmor, 339);
                 //Hibernia_Caster.AddNPCEquipment(eInventorySlot.ArmsArmor, 340);
@@ -386,7 +386,7 @@ namespace DOL.GS.Keeps
             #region Fighter
             if (!Hibernia_Fighter.LoadFromDatabase("hibernia_fighter"))
             {
-                Hibernia_Fighter.AddNPCEquipment(eInventorySlot.Cloak, 678);
+                Hibernia_Fighter.AddNPCEquipment(eInventorySlot.Cloak, 3802); //678
                 Hibernia_Fighter.AddNPCEquipment(eInventorySlot.TorsoArmor, 667);
                 Hibernia_Fighter.AddNPCEquipment(eInventorySlot.LegsArmor, 989);
                 Hibernia_Fighter.AddNPCEquipment(eInventorySlot.ArmsArmor, 990);
@@ -404,7 +404,7 @@ namespace DOL.GS.Keeps
             #region Lord
             if (!Hibernia_Lord.LoadFromDatabase("hibernia_lord"))
             {
-                Hibernia_Lord.AddNPCEquipment(eInventorySlot.Cloak, 678);
+                Hibernia_Lord.AddNPCEquipment(eInventorySlot.Cloak, 3802); //678
                 Hibernia_Lord.AddNPCEquipment(eInventorySlot.TorsoArmor, 667);
                 Hibernia_Lord.AddNPCEquipment(eInventorySlot.LegsArmor, 989);
                 Hibernia_Lord.AddNPCEquipment(eInventorySlot.ArmsArmor, 990);
@@ -426,7 +426,7 @@ namespace DOL.GS.Keeps
             #region Healer
             if (!Hibernia_Healer.LoadFromDatabase("hibernia_healer"))
             {
-                Hibernia_Healer.AddNPCEquipment(eInventorySlot.Cloak, 678);
+                Hibernia_Healer.AddNPCEquipment(eInventorySlot.Cloak, 3802); //678
                 Hibernia_Healer.AddNPCEquipment(eInventorySlot.TorsoArmor, 667);
                 Hibernia_Healer.AddNPCEquipment(eInventorySlot.LegsArmor, 989);
                 Hibernia_Healer.AddNPCEquipment(eInventorySlot.ArmsArmor, 990);
@@ -442,7 +442,7 @@ namespace DOL.GS.Keeps
             #region Stealther
             if (!Hibernia_Stealther.LoadFromDatabase("hibernia_stealther"))
             {
-                Hibernia_Stealther.AddNPCEquipment(eInventorySlot.Cloak, 678);
+                Hibernia_Stealther.AddNPCEquipment(eInventorySlot.Cloak, 3802); //678
                 Hibernia_Stealther.AddNPCEquipment(eInventorySlot.TorsoArmor, 667);
                 Hibernia_Stealther.AddNPCEquipment(eInventorySlot.LegsArmor, 989);
                 Hibernia_Stealther.AddNPCEquipment(eInventorySlot.ArmsArmor, 990);
