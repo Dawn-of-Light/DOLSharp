@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DOL.GS.Relic
+namespace DOL.GS.Relics
 {
 	/// <summary>
 	/// Class representing a relic gate.
