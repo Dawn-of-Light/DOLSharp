@@ -63,9 +63,42 @@ namespace DOL.GS.RealmAbilities
 				case 2: dmgValue = 400; duration = 20000; break;
 				case 3: dmgValue = 600; duration = 30000; break;
 				default: return;
-			}
+            }
 
-			foreach (GamePlayer i_player in caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+            #region resist and det
+            GameLiving m_target = caster.TargetObject as GameLiving;
+
+            int primaryResistModifier = m_target.GetResist(eDamageType.Spirit);
+            int secondaryResistModifier = m_target.SpecBuffBonusCategory[(int)eProperty.Resist_Spirit];
+            int rootdet = ((m_target.GetModified(eProperty.SpeedDecreaseDuration) - 100) * -1);
+
+            int ResistModifier = 0;
+            ResistModifier += (int)((dmgValue * (double)primaryResistModifier) * -0.01);
+            ResistModifier += (int)((dmgValue + (double)ResistModifier) * (double)secondaryResistModifier * -0.01);
+
+
+            if (m_target is GamePlayer)
+               {
+                   dmgValue += ResistModifier;
+               }
+            if (m_target is GameNPC)
+               {
+                   dmgValue += ResistModifier;
+               }
+ 
+            int rootmodifier = 0;
+            rootmodifier += (int)((duration * (double)primaryResistModifier) * -0.01);
+            rootmodifier += (int)((duration + (double)primaryResistModifier) * (double)secondaryResistModifier * -0.01);
+            rootmodifier += (int)((duration + (double)rootmodifier) * (double)rootdet * -0.01);
+ 
+            duration += rootmodifier;
+
+            if (duration < 1)
+                duration = 1;
+            #endregion
+
+
+            foreach (GamePlayer i_player in caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 			{
 				if (i_player == caster) i_player.Out.SendMessage("You cast " + this.Name + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 				else i_player.Out.SendMessage(caster.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
