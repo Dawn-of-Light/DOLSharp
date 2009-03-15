@@ -11801,7 +11801,7 @@ namespace DOL.GS
 					int currentSkillLevel = GetCraftingSkillValue(skill);
 					if (HasPlayerReachedNewCraftingTitle(currentSkillLevel))
 					{
-						GameEventMgr.Notify(GamePlayerEvent.ReachedAHundredthCraftingSkill, this,new ReachedAHundredthCraftingSkillEventArgs(skill,currentSkillLevel) );
+						GameEventMgr.Notify(GamePlayerEvent.NextCraftingTierReached, this,new NextCraftingTierReachedEventArgs(skill,currentSkillLevel) );
 					}
 					if (GameServer.ServerRules.CanGenerateNews(this) && currentSkillLevel >= 1000 && currentSkillLevel - count < 1000)
 					{
