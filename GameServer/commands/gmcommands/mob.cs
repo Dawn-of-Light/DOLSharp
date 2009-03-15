@@ -311,10 +311,10 @@ namespace DOL.GS.Commands
             mob.Model = model;
 
             //Fill the living variables
-            if ( mob.Brain is IAggressiveBrain )
+            if ( mob.Brain is IOldAggressiveBrain )
             {
-                ( (IAggressiveBrain)mob.Brain ).AggroLevel = 100;
-                ( (IAggressiveBrain)mob.Brain ).AggroRange = 500;
+                ( (IOldAggressiveBrain)mob.Brain ).AggroLevel = 100;
+                ( (IOldAggressiveBrain)mob.Brain ).AggroRange = 500;
             }
 
             mob.CurrentSpeed = 0;
@@ -391,10 +391,10 @@ namespace DOL.GS.Commands
                 mob.Model = model;
 
                 //Fill the living variables
-                if ( mob.Brain is IAggressiveBrain )
+                if ( mob.Brain is IOldAggressiveBrain )
                 {
-                    ( (IAggressiveBrain)mob.Brain ).AggroLevel = 100;
-                    ( (IAggressiveBrain)mob.Brain ).AggroRange = 500;
+                    ( (IOldAggressiveBrain)mob.Brain ).AggroLevel = 100;
+                    ( (IOldAggressiveBrain)mob.Brain ).AggroRange = 500;
                 }
 
                 mob.CurrentSpeed = 0;
@@ -451,10 +451,10 @@ namespace DOL.GS.Commands
                 mob.Model = (byte)Util.Random( 568, 699 );
 
                 //Fill the living variables
-                if ( mob.Brain is IAggressiveBrain )
+                if ( mob.Brain is IOldAggressiveBrain )
                 {
-                    ( (IAggressiveBrain)mob.Brain ).AggroLevel = 100;
-                    ( (IAggressiveBrain)mob.Brain ).AggroRange = 500;
+                    ( (IOldAggressiveBrain)mob.Brain ).AggroLevel = 100;
+                    ( (IOldAggressiveBrain)mob.Brain ).AggroRange = 500;
                 }
 
                 mob.CurrentSpeed = 0;
@@ -616,9 +616,9 @@ namespace DOL.GS.Commands
                 return;
             }
 
-            if ( targetMob.Brain is IAggressiveBrain )
+            if ( targetMob.Brain is IOldAggressiveBrain )
             {
-                ( (IAggressiveBrain)targetMob.Brain ).AggroLevel = aggroLevel;
+                ( (IOldAggressiveBrain)targetMob.Brain ).AggroLevel = aggroLevel;
                 targetMob.SaveIntoDatabase();
                 DisplayMessage( client, "Mob aggro changed to " + aggroLevel );
             }
@@ -630,7 +630,7 @@ namespace DOL.GS.Commands
         {
             try
             {
-                IAggressiveBrain aggroBrain = targetMob.Brain as IAggressiveBrain;
+                IOldAggressiveBrain aggroBrain = targetMob.Brain as IOldAggressiveBrain;
 
                 if ( aggroBrain != null )
                 {
@@ -852,7 +852,7 @@ namespace DOL.GS.Commands
             info.Add( " + Level: " + targetMob.Level );
             info.Add( " + Brain: " + ( targetMob.Brain == null ? "(null)" : targetMob.Brain.GetType().ToString() ) );
 
-            IAggressiveBrain aggroBrain = targetMob.Brain as IAggressiveBrain;
+            IOldAggressiveBrain aggroBrain = targetMob.Brain as IOldAggressiveBrain;
 
             if ( aggroBrain != null )
             {

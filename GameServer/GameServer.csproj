@@ -125,6 +125,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ai\brain\DragonBrain.cs" />
+    <Compile Include="ai\brain\Npcs\GameNpcBrain.cs" />
     <Compile Include="ai\brain\GuardBrain.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -132,7 +133,7 @@
     <Compile Include="ai\brain\Guards\KeepGuardBrain.cs" />
     <Compile Include="ai\brain\Guards\Healer.cs" />
     <Compile Include="ai\brain\Guards\Lord.cs" />
-    <Compile Include="ai\brain\IAggressiveBrain.cs">
+    <Compile Include="ai\brain\IOldAggressiveBrain.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ai\brain\IControlledBrain.cs">
@@ -805,6 +806,7 @@
     <Compile Include="gameutils\WarMapMgr.cs" />
     <Compile Include="gameutils\XFireSupport.cs" />
     <Compile Include="housing\IHouseHookpointItem.cs" />
+    <Compile Include="ai\brain\Npcs\IAggressiveBrain.cs" />
     <Compile Include="keeps\Gameobjects\FrontiersPortalStone.cs" />
     <Compile Include="keeps\Gameobjects\GameRelicDoor.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Archer.cs" />

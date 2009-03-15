@@ -37,7 +37,7 @@ namespace DOL.AI.Brain
 	/// <summary>
 	/// Standard brain for standard mobs
 	/// </summary>
-	public class StandardMobBrain : APlayerVicinityBrain, IAggressiveBrain
+	public class StandardMobBrain : APlayerVicinityBrain, IOldAggressiveBrain
 	{
 		/// <summary>
 		/// Defines a logger for this class.

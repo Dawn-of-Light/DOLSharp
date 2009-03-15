@@ -565,7 +565,7 @@ namespace DOL.GS.Quests.Midgard
 					quest.queenVuunaAttackStarted = true;
 
 					SendSystemMessage(player, "There they are. You take care of the queen I'll deal with the fairy sorcesses littleone.");
-					IAggressiveBrain aggroBrain = queenTatiana.Brain as IAggressiveBrain;
+					IOldAggressiveBrain aggroBrain = queenTatiana.Brain as IOldAggressiveBrain;
 					if (aggroBrain != null)
 						aggroBrain.AddToAggroList(player, 70);
 
@@ -573,12 +573,12 @@ namespace DOL.GS.Quests.Midgard
 					{
 						if (quest.recruits[i] != null)
 						{
-							aggroBrain = quest.recruits[i].Brain as IAggressiveBrain;
+							aggroBrain = quest.recruits[i].Brain as IOldAggressiveBrain;
 							if (aggroBrain != null)
 								aggroBrain.AddToAggroList(askefruerSorceress[i], 50);
 						}
 
-						aggroBrain = askefruerSorceress[i].Brain as IAggressiveBrain;
+						aggroBrain = askefruerSorceress[i].Brain as IOldAggressiveBrain;
 						if (aggroBrain != null)
 							aggroBrain.AddToAggroList(quest.recruits[i], 50);
 					}

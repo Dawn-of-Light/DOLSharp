@@ -677,7 +677,7 @@ namespace DOL.GS.Quests.Midgard
 
 					SendSystemMessage(player, "There they are. You take care of the princess I'll deal with the askefruer sorcesses littleone.");
 
-					IAggressiveBrain aggroBrain = m_princessAyir.Brain as IAggressiveBrain;
+					IOldAggressiveBrain aggroBrain = m_princessAyir.Brain as IOldAggressiveBrain;
 					if (aggroBrain != null)
 						aggroBrain.AddToAggroList(player, 50 + Util.Random(20));
 
@@ -685,10 +685,10 @@ namespace DOL.GS.Quests.Midgard
 					{
 						foreach (GameNPC fairy in askefruerSorceress)
 						{
-							aggroBrain = quest.briediClone.Brain as IAggressiveBrain;
+							aggroBrain = quest.briediClone.Brain as IOldAggressiveBrain;
 							if (aggroBrain != null)
 								aggroBrain.AddToAggroList(fairy, Util.Random(50));
-							aggroBrain = fairy.Brain as IAggressiveBrain;
+							aggroBrain = fairy.Brain as IOldAggressiveBrain;
 							if (aggroBrain != null)
 								aggroBrain.AddToAggroList(quest.briediClone, Util.Random(50));
 						}

@@ -671,7 +671,7 @@ namespace DOL.GS.Quests.Albion
 					}
 					SendSystemMessage(player, "There they are. You take care of the princess I'll deal with the fairy sorcesses littleone.");
 
-					IAggressiveBrain aggroBrain = princessObera.Brain as IAggressiveBrain;
+					IOldAggressiveBrain aggroBrain = princessObera.Brain as IOldAggressiveBrain;
 					if (aggroBrain != null)
 						aggroBrain.AddToAggroList(player, 50 + Util.Random(20));
 
@@ -679,10 +679,10 @@ namespace DOL.GS.Quests.Albion
 					{
 						foreach (GameNPC fairy in fairySorceress)
 						{
-							aggroBrain = quest.dunwynClone.Brain as IAggressiveBrain;
+							aggroBrain = quest.dunwynClone.Brain as IOldAggressiveBrain;
 							if (aggroBrain != null)
 								aggroBrain.AddToAggroList(fairy, Util.Random(50));
-							aggroBrain = fairy.Brain as IAggressiveBrain;
+							aggroBrain = fairy.Brain as IOldAggressiveBrain;
 							if (aggroBrain != null)
 								aggroBrain.AddToAggroList(quest.dunwynClone, Util.Random(50));
 						}
