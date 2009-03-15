@@ -66,7 +66,7 @@ namespace DOL.Regiment
 		[ScriptLoadedEvent]
 		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
 		{
-			GameEventMgr.AddHandler(GamePlayerEvent.ReachedAHundredthCraftingSkill, new DOLEventHandler(OnReachedAHundredthCraftingSkill));
+			GameEventMgr.AddHandler(GamePlayerEvent.NextCraftingTierReached, new DOLEventHandler(OnNextCraftingTierReached));
 			// Realm Points Check
 			GameEventMgr.AddHandler(GamePlayerEvent.GainedRealmPoints, new DOLEventHandler(RealmPointsGain));
 			// Bounty Points Check
@@ -83,7 +83,7 @@ namespace DOL.Regiment
 		[ScriptUnloadedEvent]
 		public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
-			GameEventMgr.RemoveHandler(GamePlayerEvent.ReachedAHundredthCraftingSkill, new DOLEventHandler(OnReachedAHundredthCraftingSkill));
+			GameEventMgr.RemoveHandler(GamePlayerEvent.NextCraftingTierReached, new DOLEventHandler(OnNextCraftingTierReached));
 			// Realm Points Check
 			GameEventMgr.RemoveHandler(GamePlayerEvent.GainedRealmPoints, new DOLEventHandler(RealmPointsGain));
 			// Bounty Points Check
@@ -231,9 +231,9 @@ namespace DOL.Regiment
                 #endregion
 			};
 
-		public static void OnReachedAHundredthCraftingSkill(DOLEvent e, object sender, EventArgs args)
+		public static void OnNextCraftingTierReached(DOLEvent e, object sender, EventArgs args)
 		{
-			ReachedAHundredthCraftingSkillEventArgs cea = args as ReachedAHundredthCraftingSkillEventArgs;
+			NextCraftingTierReachedEventArgs cea = args as NextCraftingTierReachedEventArgs;
 			GamePlayer player = sender as GamePlayer;
 			if (player == null)
 				return;
