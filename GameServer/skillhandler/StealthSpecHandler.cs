@@ -154,9 +154,9 @@ namespace DOL.GS.SkillHandler
 					if (attacker is GameNPC)
 					{
 						GameNPC npc = (GameNPC)attacker;
-						if (npc.Brain is IAggressiveBrain)
+						if (npc.Brain is IOldAggressiveBrain)
 						{
-							((IAggressiveBrain)npc.Brain).RemoveFromAggroList(player);
+							((IOldAggressiveBrain)npc.Brain).RemoveFromAggroList(player);
 						}
 						attacker.StopAttack();
 					}

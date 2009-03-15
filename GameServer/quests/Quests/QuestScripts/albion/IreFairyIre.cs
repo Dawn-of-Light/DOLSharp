@@ -559,7 +559,7 @@ namespace DOL.GS.Quests.Albion
 					quest.fairyDragonflyHandlerAttackStarted = true;
 
 					SendSystemMessage(player, "Fairy Dragonfly Handler says, \"No! I have been betrayed by loathsome insects! How can this be?\"");
-					IAggressiveBrain aggroBrain = fairyDragonflyHandler.Brain as IAggressiveBrain;
+					IOldAggressiveBrain aggroBrain = fairyDragonflyHandler.Brain as IOldAggressiveBrain;
 					if (aggroBrain != null)
 						aggroBrain.AddToAggroList(player, 70);
 
