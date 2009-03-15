@@ -147,7 +147,7 @@ namespace DOL.Events
         /// </summary>
         public static readonly GamePlayerEvent AcceptGroup = new GamePlayerEvent("GamePlayer.AcceptGroup");
 
-		public static readonly GamePlayerEvent ReachedAHundredthCraftingSkill = new GamePlayerEvent("GamePlayer.ReachedNewCraftTitle");
+		public static readonly GamePlayerEvent NextCraftingTierReached = new GamePlayerEvent("GamePlayer.ReachedNewCraftTitle");
 
 		#region Statistics
 

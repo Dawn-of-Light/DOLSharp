@@ -20,7 +20,7 @@ using DOL.GS;
 
 namespace DOL.Events
 {
-	public class ReachedAHundredthCraftingSkillEventArgs : System.EventArgs
+	public class NextCraftingTierReachedEventArgs : System.EventArgs
 	{
 		private eCraftingSkill m_skill;
 		private int m_points;
@@ -38,7 +38,7 @@ namespace DOL.Events
 				return m_points;
 			}
 		}
-		public ReachedAHundredthCraftingSkillEventArgs(eCraftingSkill skill, int points)
+		public NextCraftingTierReachedEventArgs(eCraftingSkill skill, int points)
 			: base()
 		{
 			m_skill = skill;
