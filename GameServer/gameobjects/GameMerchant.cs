@@ -357,7 +357,7 @@ namespace DOL.GS
 			merchant.Size = Size;
 			merchant.Level = Level;
 			merchant.Flags = Flags;
-			IAggressiveBrain aggroBrain = Brain as IAggressiveBrain;
+			IOldAggressiveBrain aggroBrain = Brain as IOldAggressiveBrain;
 			if (aggroBrain != null)
 			{
 				merchant.AggroLevel = aggroBrain.AggroLevel;

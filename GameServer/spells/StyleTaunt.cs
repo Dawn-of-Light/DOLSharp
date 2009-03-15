@@ -53,7 +53,7 @@ namespace DOL.GS.Spells
                 AttackData ad = Caster.TempProperties.getObjectProperty(GameLiving.LAST_ATTACK_DATA, null) as AttackData;
                 if (ad != null)
                 {
-                    IAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IAggressiveBrain;
+                    IOldAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IOldAggressiveBrain;
 					if (aggroBrain != null)
 					{
 						int aggro = Convert.ToInt32(ad.Damage * this.Spell.Value * target.AttackSpeed(ad.Weapon) / 4000);

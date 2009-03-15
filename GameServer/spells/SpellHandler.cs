@@ -1812,8 +1812,8 @@ namespace DOL.GS.Spells
 				// with an AoE spell, whether it landed or was resisted.
 
 				if (Spell.Radius > 0 && Spell.Target.ToLower() == "enemy"
-					&& Caster is GameNPC && (Caster as GameNPC).Brain is IAggressiveBrain)
-						((Caster as GameNPC).Brain as IAggressiveBrain).AddToAggroList(t, 1);
+					&& Caster is GameNPC && (Caster as GameNPC).Brain is IOldAggressiveBrain)
+						((Caster as GameNPC).Brain as IOldAggressiveBrain).AddToAggroList(t, 1);
 
 				if (Util.Chance(CalculateSpellResistChance(t)))
 				{
@@ -2937,7 +2937,7 @@ namespace DOL.GS.Spells
 			ad.Attacker.DealDamage(ad);
 			if (ad.Damage == 0 && ad.Target is GameNPC)
 			{
-				IAggressiveBrain aggroBrain = ((GameNPC)ad.Target).Brain as IAggressiveBrain;
+				IOldAggressiveBrain aggroBrain = ((GameNPC)ad.Target).Brain as IOldAggressiveBrain;
 				if (aggroBrain != null)
 					aggroBrain.AddToAggroList(Caster, 1);
 			}

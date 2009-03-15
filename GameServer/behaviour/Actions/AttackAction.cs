@@ -52,9 +52,9 @@ namespace DOL.GS.Behaviour.Actions
             int aggroAmount = P.HasValue ? P.Value : player.Level << 1;
             GameNPC attacker = Q;
 
-            if (attacker.Brain is IAggressiveBrain)
+            if (attacker.Brain is IOldAggressiveBrain)
             {
-                IAggressiveBrain brain = (IAggressiveBrain)attacker.Brain;
+                IOldAggressiveBrain brain = (IOldAggressiveBrain)attacker.Brain;
                 brain.AddToAggroList(player, aggroAmount);                
             }
             else

@@ -65,7 +65,7 @@ namespace DOL.GS.Spells
 			pet.HealthMultiplicator = true;
 
             pet.TempProperties.setProperty("target", target);
-            (pet.Brain as IAggressiveBrain).AddToAggroList(target, 1);
+            (pet.Brain as IOldAggressiveBrain).AddToAggroList(target, 1);
 			(pet.Brain as TheurgistPetBrain).Think();
 
 			Caster.PetCounter++;

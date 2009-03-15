@@ -103,7 +103,7 @@ namespace DOL.GS.Spells
 			}
 			if(target is GameNPC) 
 			{
-				IAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IAggressiveBrain;
+				IOldAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IOldAggressiveBrain;
 				if (aggroBrain != null)
 					aggroBrain.AddToAggroList(Caster, (int)Spell.Value);
 			}
@@ -176,7 +176,7 @@ namespace DOL.GS.Spells
 			}
 			if(target is GameNPC) 
 			{
-				IAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IAggressiveBrain;
+				IOldAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IOldAggressiveBrain;
 				if (aggroBrain != null)
 					aggroBrain.AddToAggroList(Caster, (int)Spell.Value);
 			}

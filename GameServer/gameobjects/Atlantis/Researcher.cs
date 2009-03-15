@@ -65,7 +65,7 @@ namespace DOL.GS
 		/// <returns>Aggro state as a string.</returns>
         public override string GetAggroLevelString(GamePlayer player, bool firstLetterUppercase)
         {
-            IAggressiveBrain aggroBrain = Brain as IAggressiveBrain;
+            IOldAggressiveBrain aggroBrain = Brain as IOldAggressiveBrain;
             String aggroLevelString;
 
             if (GameServer.ServerRules.IsSameRealm(this, player, true))

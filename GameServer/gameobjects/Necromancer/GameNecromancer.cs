@@ -179,7 +179,7 @@ namespace DOL.GS
 								GameNPC npc = (GameNPC)obj;
 								if (npc.TargetObject == this && npc.AttackState)
 								{
-									IAggressiveBrain brain = npc.Brain as IAggressiveBrain;
+									IOldAggressiveBrain brain = npc.Brain as IOldAggressiveBrain;
 									if (brain != null)
 									{
 										(npc).AddAttacker(pet);

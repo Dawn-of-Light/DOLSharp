@@ -564,7 +564,7 @@ namespace DOL.GS.Quests.Albion
 					quest.queenTatianaAttackStarted = true;
 
 					SendSystemMessage(player, "There they are. You take care of the queen I'll deal with the fairy sorcesses littleone.");
-					IAggressiveBrain aggroBrain = queenTatiana.Brain as IAggressiveBrain;
+					IOldAggressiveBrain aggroBrain = queenTatiana.Brain as IOldAggressiveBrain;
 					if (aggroBrain != null)
 						aggroBrain.AddToAggroList(player, 70);
 
@@ -572,12 +572,12 @@ namespace DOL.GS.Quests.Albion
 					{
 						if (quest.recruits[i] != null)
 						{
-							aggroBrain = quest.recruits[i].Brain as IAggressiveBrain;
+							aggroBrain = quest.recruits[i].Brain as IOldAggressiveBrain;
 							if (aggroBrain != null)
 								aggroBrain.AddToAggroList(fairySorceress[i], 50);
 						}
 
-						aggroBrain = fairySorceress[i].Brain as IAggressiveBrain;
+						aggroBrain = fairySorceress[i].Brain as IOldAggressiveBrain;
 						if (aggroBrain != null)
 							aggroBrain.AddToAggroList(quest.recruits[i], 50);
 					}

@@ -1447,17 +1447,17 @@ namespace DOL.GS.Quests.Albion
 		private static void AttackPlayer(GamePlayer player)
 		{
 			banditAbductorLeader.StartAttack(player);
-			IAggressiveBrain aggroBrain = banditAbductorLeader.Brain as IAggressiveBrain;
+			IOldAggressiveBrain aggroBrain = banditAbductorLeader.Brain as IOldAggressiveBrain;
 			if (aggroBrain != null)
 				aggroBrain.AddToAggroList(player, 10);
 
 			banditAbductor1.StartAttack(player);
-			aggroBrain = banditAbductor1.Brain as IAggressiveBrain;
+			aggroBrain = banditAbductor1.Brain as IOldAggressiveBrain;
 			if (aggroBrain != null)
 				aggroBrain.AddToAggroList(player, 10);
 
 			banditAbductor2.StartAttack(player);
-			aggroBrain = banditAbductor2.Brain as IAggressiveBrain;
+			aggroBrain = banditAbductor2.Brain as IOldAggressiveBrain;
 			if (aggroBrain != null)
 				aggroBrain.AddToAggroList(player, 10);
 		}
