@@ -64,7 +64,7 @@ namespace DOL.GS.Spells
 		{
 			base.ApplyEffectOnTarget(target, effectiveness);
 
-			(pet.Brain as IAggressiveBrain).AddToAggroList(target, 1);
+			(pet.Brain as IOldAggressiveBrain).AddToAggroList(target, 1);
 			(pet.Brain as ProcPetBrain).Think();
 		}
 

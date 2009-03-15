@@ -3,7 +3,7 @@ using DOL.GS;
 
 namespace DOL.AI.Brain
 {
-	public interface IAggressiveBrain
+	public interface IOldAggressiveBrain
 	{
 		/// <summary>
 		/// Aggressive Level in % 0..100, 0 means not Aggressive

@@ -76,7 +76,7 @@ namespace DOL.GS.Spells
       pet.HealthMultiplicator = true;
       (pet.Brain as TurretBrain).IsMainPet = false;
 
-      (pet.Brain as IAggressiveBrain).AddToAggroList(target, 1);
+      (pet.Brain as IOldAggressiveBrain).AddToAggroList(target, 1);
       (pet.Brain as TurretBrain).Think();
       //[Ganrod] Nidel: Set only one spell.
       (pet as TurretPet).TurretSpell = pet.Spells[0] as Spell;

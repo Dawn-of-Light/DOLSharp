@@ -285,7 +285,7 @@ namespace DOL.GS.Spells
                 GameNPC npc = effect.Owner as GameNPC;
                 if (npc != null)
                 {
-                    IAggressiveBrain aggroBrain = npc.Brain as IAggressiveBrain;
+                    IOldAggressiveBrain aggroBrain = npc.Brain as IOldAggressiveBrain;
                     if (aggroBrain != null)
                         aggroBrain.AddToAggroList(Caster, 1);
                 }

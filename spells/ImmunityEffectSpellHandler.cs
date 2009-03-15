@@ -74,7 +74,7 @@ namespace DOL.GS.Spells
 				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
 			}
 			if(target is GameNPC) {
-				IAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IAggressiveBrain;
+				IOldAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IOldAggressiveBrain;
 				if (aggroBrain != null)
 					aggroBrain.AddToAggroList(Caster, 1);
 			}

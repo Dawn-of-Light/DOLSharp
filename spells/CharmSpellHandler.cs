@@ -328,7 +328,7 @@ namespace DOL.GS.Spells
 						npc.RemoveBrain(m_controlledBrain);
 						m_isBrainSet = false;
 
-						IAggressiveBrain aggroBrain = npc.Brain as IAggressiveBrain;
+						IOldAggressiveBrain aggroBrain = npc.Brain as IOldAggressiveBrain;
 						if (aggroBrain != null)
 						{
 							aggroBrain.ClearAggroList();
@@ -347,7 +347,7 @@ namespace DOL.GS.Spells
 					{
 						GameNPC npcAttacker = obj as GameNPC;
 						if (npcAttacker == null) continue;
-						IAggressiveBrain attackerBrain = npcAttacker.Brain as IAggressiveBrain;
+						IOldAggressiveBrain attackerBrain = npcAttacker.Brain as IOldAggressiveBrain;
 						if (attackerBrain != null)
 							attackerBrain.RemoveFromAggroList(npc);
 					}

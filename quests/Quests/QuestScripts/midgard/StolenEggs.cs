@@ -525,7 +525,7 @@ namespace DOL.GS.Quests.Midgard
 					quest.askefruerGriffinHandlerAttackStarted = true;
 
 					SendSystemMessage(player, askefruerTrainer.GetName(0, true) + " says, \"You shall not take what is rightfully ours land-bound abomination!\"");
-					IAggressiveBrain aggroBrain = m_askefruerTrainer.Brain as IAggressiveBrain;
+					IOldAggressiveBrain aggroBrain = m_askefruerTrainer.Brain as IOldAggressiveBrain;
 					if (aggroBrain != null)
 						aggroBrain.AddToAggroList(player, 70);
 

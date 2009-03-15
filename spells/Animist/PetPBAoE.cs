@@ -62,7 +62,7 @@ namespace DOL.GS.Spells
 			if(ad.Damage > 0 && ad.Target is GameNPC)
 			{
 				if(!(Caster is GamePlayer)) return;
-				IAggressiveBrain aggroBrain = ((GameNPC) ad.Target).Brain as IAggressiveBrain;
+				IOldAggressiveBrain aggroBrain = ((GameNPC) ad.Target).Brain as IOldAggressiveBrain;
 				if(aggroBrain != null)
 				{
 					TurretPet turret = null;

@@ -1603,6 +1603,17 @@ namespace DOL.GS
 
 		protected bool m_isReturningHome = false;
 
+        /// <summary>
+        /// Whether this body can actually do anything.
+        /// </summary>
+        public bool IsIncapacitated
+        {
+            get
+            {
+                return (!IsAlive || IsSilenced || IsStunned);
+            }
+        }
+
 		/// <summary>
 		/// Gets if npc moving on path
 		/// </summary>
@@ -1898,7 +1909,7 @@ namespace DOL.GS
 					SetOwnBrain(brain);
 			}
 
-			IAggressiveBrain aggroBrain = Brain as IAggressiveBrain;
+			IOldAggressiveBrain aggroBrain = Brain as IOldAggressiveBrain;
 			if (aggroBrain != null)
 			{
 				if (npc.AggroRange == 0)
@@ -1996,7 +2007,7 @@ namespace DOL.GS
 			mob.RoamingRange = RoamingRange;
 			if (Brain.GetType().FullName != typeof(StandardMobBrain).FullName)
 				mob.Brain = Brain.GetType().FullName;
-			IAggressiveBrain aggroBrain = Brain as IAggressiveBrain;
+			IOldAggressiveBrain aggroBrain = Brain as IOldAggressiveBrain;
 			if (aggroBrain != null)
 			{
 				mob.AggroLevel = aggroBrain.AggroLevel;
@@ -2879,7 +2890,7 @@ namespace DOL.GS
 			}
 			else
 			{
-				IAggressiveBrain aggroBrain = Brain as IAggressiveBrain;
+				IOldAggressiveBrain aggroBrain = Brain as IOldAggressiveBrain;
 				if (GameServer.ServerRules.IsSameRealm(this, player, true))
 				{
 					if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Friendly2");
@@ -4071,7 +4082,7 @@ namespace DOL.GS
 			get
 			{
 				ABrain brain = Brain;
-				return (brain == null) ? false : (brain is IAggressiveBrain);
+				return (brain == null) ? false : (brain is IOldAggressiveBrain);
 			}
 		}
 

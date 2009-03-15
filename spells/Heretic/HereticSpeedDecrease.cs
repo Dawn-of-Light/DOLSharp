@@ -67,7 +67,7 @@ namespace DOL.GS.Spells
 			if(target is GameNPC) 
 			{
 				GameNPC npc = (GameNPC)target;
-				IAggressiveBrain aggroBrain = npc.Brain as IAggressiveBrain;
+				IOldAggressiveBrain aggroBrain = npc.Brain as IOldAggressiveBrain;
 				if (aggroBrain != null)
 					aggroBrain.AddToAggroList(Caster, 1);
 			}

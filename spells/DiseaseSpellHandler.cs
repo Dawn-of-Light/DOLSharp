@@ -79,7 +79,7 @@ namespace DOL.GS.Spells
 			effect.Owner.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
 			if (effect.Owner is GameNPC)
 			{
-				IAggressiveBrain aggroBrain = ((GameNPC)effect.Owner).Brain as IAggressiveBrain;
+				IOldAggressiveBrain aggroBrain = ((GameNPC)effect.Owner).Brain as IOldAggressiveBrain;
 				if (aggroBrain != null)
 					aggroBrain.AddToAggroList(Caster, 1);
 			}
