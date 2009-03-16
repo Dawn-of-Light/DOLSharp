@@ -160,7 +160,7 @@ namespace DOL.GS.Spells
 				}
 				return ad;
             }
-			if (Spell.DamageType == eDamageType.Thrust)
+			if (Spell.DamageType == eDamageType.Slash)
 			{
                 GameSpellEffect ef = FindEffectOnTarget(Caster, "ArrowDamageTypes");
                 if ( ef != null)
