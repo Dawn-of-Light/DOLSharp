@@ -56,15 +56,20 @@ namespace DOL.GS.Spells
 		{
 			AttackFinishedEventArgs atkArgs = arguments as AttackFinishedEventArgs;
 			if (atkArgs == null) return;
+
 			if (atkArgs.AttackData.AttackResult != GameLiving.eAttackResult.HitUnstyled
 				&& atkArgs.AttackData.AttackResult != GameLiving.eAttackResult.HitStyle) return;
+
 			GameLiving target = atkArgs.AttackData.Target;
 			if (target == null) return;
+
 			if (target.ObjectState != GameObject.eObjectState.Active) return;
 			if (target.IsAlive == false) return;
 			if (target is GameKeepComponent || target is GameKeepDoor) return;
+
 			GameLiving attacker = sender as GameLiving;
 			if (attacker == null) return;
+
 			if (attacker.ObjectState != GameObject.eObjectState.Active) return;
 			if (attacker.IsAlive == false) return;
 
@@ -91,7 +96,7 @@ namespace DOL.GS.Spells
 			ad.SpellHandler = this;
 			ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
 
-			if (ad.Attacker is GameNPC)
+			if ( ad.Attacker is GameNPC )
 			{
 				IControlledBrain brain = ((GameNPC)ad.Attacker).Brain as IControlledBrain;
 				if (brain != null)
@@ -99,20 +104,35 @@ namespace DOL.GS.Spells
 					GamePlayer owner = brain.GetPlayerOwner();
 					if (owner != null)
 					{
-                        MessageToLiving(owner, String.Format(LanguageMgr.GetTranslation(owner.Client, "DamageAddAndShield.EventHandlerDA.YourHitFor", ad.Attacker.Name, target.GetName(0, false), ad.Damage)), eChatType.CT_Spell);
+                        MessageToLiving(owner, String.Format(LanguageMgr.GetTranslation( owner.Client, "DamageAddAndShield.EventHandlerDA.YourHitFor" ), ad.Attacker.Name, target.GetName(0, false), ad.Damage ), eChatType.CT_Spell);
                     }
 				}
 			}
 			else
 			{
-				if (Spell.Pulse != 0)
-                    MessageToLiving(attacker, String.Format(LanguageMgr.GetTranslation(((GamePlayer)m_caster).Client, "DamageAddAndShield.EventHandlerDA.YouHitExtra", target.GetName(0, false), ad.Damage)), eChatType.CT_Spell);
-				else
-                    MessageToLiving(attacker, String.Format(LanguageMgr.GetTranslation(((GamePlayer)m_caster).Client, "DamageAddAndShield.EventHandlerDA.YouHitFor", target.GetName(0, false), ad.Damage)), eChatType.CT_Spell);
+				GameClient attackerClient = null;
+				if ( attacker is GamePlayer ) attackerClient = ( (GamePlayer)attacker ).Client;
+
+				if ( attackerClient != null )
+				{
+					if ( Spell.Pulse != 0 )
+						MessageToLiving( attacker, String.Format( LanguageMgr.GetTranslation( attackerClient, "DamageAddAndShield.EventHandlerDA.YouHitExtra" ), target.GetName( 0, false ), ad.Damage ), eChatType.CT_Spell );
+					else
+						MessageToLiving( attacker, String.Format( LanguageMgr.GetTranslation( attackerClient, "DamageAddAndShield.EventHandlerDA.YouHitFor" ), target.GetName( 0, false ), ad.Damage ), eChatType.CT_Spell );
+				}
             }
-            MessageToLiving(target, String.Format(LanguageMgr.GetTranslation(((GamePlayer)m_caster).Client, "DamageAddAndShield.EventHandlerDA.DamageToYou", attacker.GetName(0, false), ad.Damage)), eChatType.CT_Spell);
+
+			GameClient targetClient = null;
+			if ( target is GamePlayer ) targetClient = ( (GamePlayer)target ).Client;
+
+			if ( targetClient != null )
+			{
+				MessageToLiving( target, String.Format( LanguageMgr.GetTranslation( targetClient, "DamageAddAndShield.EventHandlerDA.DamageToYou" ), attacker.GetName( 0, false ), ad.Damage ), eChatType.CT_Spell );
+			}
+
             target.OnAttackedByEnemy(ad);
 			attacker.DealDamage(ad);
+
 			foreach (GamePlayer player in ad.Attacker.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 				if (player == null) continue;
@@ -182,8 +202,11 @@ namespace DOL.GS.Spells
 			ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
 
 			GamePlayer owner = null;
-			
-			if (ad.Attacker is GameNPC)
+
+			GameClient attackerClient = null;
+			if ( attacker is GamePlayer ) attackerClient = ( (GamePlayer)attacker ).Client;
+
+			if ( ad.Attacker is GameNPC )
 			{
 				IControlledBrain brain = ((GameNPC)ad.Attacker).Brain as IControlledBrain;
 				if (brain != null)
@@ -191,17 +214,21 @@ namespace DOL.GS.Spells
 					owner = brain.GetPlayerOwner();
 					if (owner != null && owner.ControlledNpc != null && ad.Attacker == owner.ControlledNpc.Body)
 					{
-                        MessageToLiving(owner, String.Format(LanguageMgr.GetTranslation(owner.Client, "DamageAddAndShield.EventHandlerDS.YourHitFor", ad.Attacker.Name, target.GetName(0, false), ad.Damage)), eChatType.CT_Spell);
+                        MessageToLiving(owner, String.Format(LanguageMgr.GetTranslation( owner.Client, "DamageAddAndShield.EventHandlerDS.YourHitFor" ), ad.Attacker.Name, target.GetName(0, false), ad.Damage ), eChatType.CT_Spell);
                     }
 				}
 			}
-			else
+			else if( attackerClient != null )
 			{
-				owner = (GamePlayer)m_caster;
-                MessageToLiving(attacker, String.Format(LanguageMgr.GetTranslation(owner.Client, "DamageAddAndShield.EventHandlerDS.YouHitFor", target.GetName(0, false), ad.Damage)), eChatType.CT_Spell);
+                MessageToLiving(attacker, String.Format(LanguageMgr.GetTranslation( attackerClient, "DamageAddAndShield.EventHandlerDS.YouHitFor" ), target.GetName(0, false), ad.Damage ), eChatType.CT_Spell);
             }
 
-            MessageToLiving(target, String.Format(LanguageMgr.GetTranslation(owner.Client, "DamageAddAndShield.EventHandlerDS.DamageToYou", attacker.GetName(0, false), ad.Damage)), eChatType.CT_Spell);
+			GameClient targetClient = null;
+			if ( target is GamePlayer ) targetClient = ( (GamePlayer)target ).Client;
+
+			if ( targetClient != null )
+				MessageToLiving(target, String.Format(LanguageMgr.GetTranslation( targetClient, "DamageAddAndShield.EventHandlerDS.DamageToYou" ), attacker.GetName(0, false), ad.Damage ), eChatType.CT_Spell);
+
             target.OnAttackedByEnemy(ad);
 			attacker.DealDamage(ad);
 			foreach (GamePlayer player in attacker.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
