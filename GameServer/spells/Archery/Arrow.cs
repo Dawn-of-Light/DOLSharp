@@ -272,8 +272,8 @@ namespace DOL.GS.Spells
 						if(spellhandler!=null) spellhandler.StartSpell(target);
 					}
 				}
-                if (m_handler.Caster.AttackWeapon != null && (m_handler.Caster.AttackWeapon.Object_Type == 15 || m_handler.Caster.AttackWeapon.Object_Type == 18 || m_handler.Caster.AttackWeapon.Object_Type == 9))
-				{
+              	if (m_handler.Caster.AttackWeapon != null && GlobalConstants.IsBowWeapon((eObjectType)m_handler.Caster.AttackWeapon.Object_Type))
+                {
                     if (ad.AttackResult == GameLiving.eAttackResult.HitUnstyled || ad.AttackResult == GameLiving.eAttackResult.HitStyle)
                         CheckWeaponMagicalEffect(ad, m_handler.Caster.AttackWeapon);
 				}

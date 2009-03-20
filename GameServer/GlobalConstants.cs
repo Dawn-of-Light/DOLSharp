@@ -975,6 +975,10 @@ namespace DOL.GS
 
 	public class GlobalConstants
 	{
+		public static bool IsBowWeapon(eObjectType objectType)
+		{
+			return (objectType == eObjectType.CompositeBow || objectType == eObjectType.Longbow || objectType == eObjectType.RecurvedBow);
+		}
 		/// <summary>
 		/// ITEMTYPE != OBJECTYPE
 		/// ITEMTYPE = SLOT
@@ -1055,7 +1059,7 @@ namespace DOL.GS
 			{
 				case 1: return "small";
 				case 2: return "medium";
-				case 3: return "larget";
+				case 3: return "large";
 			}
 			return "none";
 		}

@@ -69,12 +69,6 @@ namespace DOL.GS.Spells
 				MessageToCaster("You can't cast while sitting!", eChatType.CT_SpellResisted);
 				return false;
 			}
-			// Graveen: all shots except pbaoe have a minimal distance to use
-			if (m_spell.LifeDrainReturn != 3 && m_caster.IsWithinRadius(selectedTarget, (int)m_spell.Value))
-            {
-                MessageToCaster(selectedTarget.Name + " is too close to be hit with this shot!", eChatType.CT_SpellResisted);
-                return false;
-            } 
 			if (m_spell.RecastDelay > 0)
 			{
 				int left = m_caster.GetSkillDisabledDuration(m_spell);
@@ -94,7 +88,7 @@ namespace DOL.GS.Spells
 				}
 			}
 			
-			if (Caster.AttackWeapon!=null&&(Caster.AttackWeapon.Object_Type == 15 || Caster.AttackWeapon.Object_Type == 18 || Caster.AttackWeapon.Object_Type == 9))
+			if (Caster != null && Caster is GamePlayer && Caster.AttackWeapon != null && GlobalConstants.IsBowWeapon((eObjectType)Caster.AttackWeapon.Object_Type))
             {
                 if (Spell.LifeDrainReturn == 1 && (!(Caster.IsStealthed)))
                 {
