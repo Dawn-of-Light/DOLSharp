@@ -204,9 +204,7 @@ namespace DOL.GS
 			m_quickness = mob.Quickness;
 			m_strength = mob.Strength;
 			m_size = mob.Size.ToString();
-			// this is bad - IDs are all over the place; there's no guarantee that existing templates have IDs in the range 0 - (Count -1)
-			// if a proper templateID is not externally set before saving, it will overwrite any existing template with this ID
-			m_templateId = GameServer.Database.GetObjectCount( typeof( DBNpcTemplate ) );
+			m_templateId = GetNextFreeTemplateId();
 			m_tetherRange = mob.TetherRange;
 
 			if ( mob.Abilities != null && mob.Abilities.Count > 0 )
@@ -248,6 +246,14 @@ namespace DOL.GS
 				m_aggroLevel = (byte)brain.AggroLevel;
 				m_aggroRange = brain.AggroRange;
 			}
+		}
+
+		protected int GetNextFreeTemplateId()
+		{
+			// this is bad - IDs are all over the place; there's no guarantee that existing templates have IDs in the range 0 - (Count -1)
+			// if a proper templateID is not externally set before saving, it will overwrite any existing template with this ID
+			// TODO : change when pk is made to be int
+			return GameServer.Database.GetObjectCount(typeof(DBNpcTemplate));
 		}
 
 
@@ -523,10 +529,8 @@ namespace DOL.GS
 				add = true;
 			}
 
-			// this is bad - IDs are all over the place; there's no guarantee that existing templates have IDs in the range 0 - (Count -1)
-			// if a proper templateID is not externally set before saving, it will overwrite any existing template with this ID
-			if ( TemplateId == 0 )
-				tmp.TemplateId = GameServer.Database.GetObjectCount(typeof(DBNpcTemplate));
+			if (TemplateId == 0)
+				tmp.TemplateId = GetNextFreeTemplateId();
 			else
 				tmp.TemplateId = TemplateId;
 
