@@ -174,44 +174,82 @@ namespace DOL.GS
 			m_tetherRange = data.TetherRange;
 		}
 
-		public NpcTemplate(GameNPC mob)
+
+		public NpcTemplate( GameNPC mob )
 		{
 			if (mob == null)
 				throw new ArgumentNullException("data");
-			m_templateId = GameServer.Database.GetObjectCount(typeof(DBNpcTemplate));
-			m_name = mob.Name;
-			m_classType = mob.GetType().ToString();
-			m_guildName = mob.GuildName;
-			m_model = mob.Model.ToString();
-			m_size = mob.Size.ToString();
-			m_level = mob.Level.ToString();
-			m_equipmentTemplateID = mob.EquipmentTemplateID;
-			m_maxSpeed = (short)mob.MaxSpeed;
-			m_parryChance = mob.ParryChance;
-			m_evadeChance = mob.EvadeChance;
+
 			m_blockChance = mob.BlockChance;
-			m_leftHandSwingChance = mob.LeftHandSwingChance;
-			//Now for mob stats			
-			m_strength = mob.Strength;
+			m_bodyType = mob.BodyType;
+			m_charisma = mob.Charisma;
+			m_classType = mob.GetType().ToString();
 			m_constitution = mob.Constitution;
 			m_dexterity = mob.Dexterity;
-			m_quickness = mob.Quickness;
-			m_intelligence = mob.Intelligence;
-			m_piety = mob.Piety;
-			m_charisma = mob.Charisma;
 			m_empathy = mob.Empathy;
+			m_equipmentTemplateID = mob.EquipmentTemplateID;
+			m_evadeChance = mob.EvadeChance;
 			m_flags = (byte)mob.Flags;
+			m_guildName = mob.GuildName;
+			m_intelligence = mob.Intelligence;
+			m_maxdistance = mob.MaxDistance;
+			m_maxSpeed = (short)mob.MaxSpeedBase;
 			m_meleeDamageType = (eDamageType)mob.MeleeDamageType;
+			m_model = mob.Model.ToString();
+			m_leftHandSwingChance = mob.LeftHandSwingChance;
+			m_level = mob.Level.ToString();
+			m_name = mob.Name;
+			m_parryChance = mob.ParryChance;
+			m_piety = mob.Piety;
+			m_quickness = mob.Quickness;
+			m_strength = mob.Strength;
+			m_size = mob.Size.ToString();
+			// this is bad - IDs are all over the place; there's no guarantee that existing templates have IDs in the range 0 - (Count -1)
+			// if a proper templateID is not externally set before saving, it will overwrite any existing template with this ID
+			m_templateId = GameServer.Database.GetObjectCount( typeof( DBNpcTemplate ) );
+			m_tetherRange = mob.TetherRange;
+
+			if ( mob.Abilities != null && mob.Abilities.Count > 0 )
+			{
+				if ( m_abilities == null )
+					m_abilities = new ArrayList( mob.Abilities.Count );
+
+				foreach ( Ability mobAbility in mob.Abilities )
+				{
+					m_abilities.Add( mobAbility );
+				}
+			}
+
+			if ( mob.Spells != null && mob.Spells.Count > 0 )
+			{
+				if ( m_spells == null )
+					m_spells = new ArrayList( mob.Spells.Count );
+
+				foreach ( Spell mobSpell in mob.Spells )
+				{
+					m_spells.Add( mobSpell );
+				}
+			}
+
+			if ( mob.Styles != null && mob.Styles.Count > 0 )
+			{
+				if ( m_styles == null )
+					m_styles = new ArrayList( mob.Styles.Count );
+
+				foreach ( Style mobStyle in mob.Styles )
+				{
+					m_styles.Add( mobStyle );
+				}
+			}
+
 			AI.Brain.StandardMobBrain brain = mob.Brain as AI.Brain.StandardMobBrain;
 			if (brain != null)
 			{
 				m_aggroLevel = (byte)brain.AggroLevel;
 				m_aggroRange = brain.AggroRange;
 			}
-			m_bodyType = mob.BodyType;
-			m_maxdistance = mob.MaxDistance;
-			m_tetherRange = mob.TetherRange;
 		}
+
 
 		public NpcTemplate()
 			: base()
@@ -478,37 +516,100 @@ namespace DOL.GS
 		{
 			DBNpcTemplate tmp = (DBNpcTemplate)GameServer.Database.FindObjectByKey(typeof(DBNpcTemplate), TemplateId);
 			bool add = false;
+
 			if (tmp == null)
 			{
 				tmp = new DBNpcTemplate();
 				add = true;
 			}
-			if (TemplateId == 0)
+
+			// this is bad - IDs are all over the place; there's no guarantee that existing templates have IDs in the range 0 - (Count -1)
+			// if a proper templateID is not externally set before saving, it will overwrite any existing template with this ID
+			if ( TemplateId == 0 )
 				tmp.TemplateId = GameServer.Database.GetObjectCount(typeof(DBNpcTemplate));
-			else tmp.TemplateId = TemplateId;
-			tmp.Model = Model;
-			tmp.Size = Size;
-			tmp.Name = Name;
-			tmp.MaxSpeed = MaxSpeed;
-			tmp.GuildName = GuildName;
-			tmp.ParryChance = ParryChance;
-			tmp.EvadeChance = EvadeChance;
+			else
+				tmp.TemplateId = TemplateId;
+
+			tmp.AggroLevel = AggroLevel;
+			tmp.AggroRange = AggroRange;
 			tmp.BlockChance = BlockChance;
-			tmp.LeftHandSwingChance = LeftHandSwingChance;
-			tmp.Strength = Strength;
+			tmp.BodyType = BodyType;
+			tmp.Charisma = Charisma;
+			tmp.ClassType = ClassType;
 			tmp.Constitution = Constitution;
 			tmp.Dexterity = Dexterity;
-			tmp.Quickness = Quickness;
-			tmp.Piety = Piety;
 			tmp.Empathy = Empathy;
+			tmp.EquipmentTemplateID = EquipmentTemplateID;
+			tmp.EvadeChance = EvadeChance;
+			tmp.Flags = Flags;
+			tmp.GuildName = GuildName;
 			tmp.Intelligence = Intelligence;
-			tmp.Charisma = Charisma;
-			tmp.AggroRange = AggroRange;
-			tmp.AggroLevel = AggroLevel;
+			tmp.LeftHandSwingChance = LeftHandSwingChance;
+			tmp.Level = Level;
 			tmp.MaxDistance = MaxDistance;
+			tmp.MaxSpeed = MaxSpeed;
+			tmp.MeleeDamageType = (byte)MeleeDamageType;
+			tmp.Model = Model;
+			tmp.Name = Name;
+			tmp.ParryChance = ParryChance;
+			tmp.Piety = Piety;
+			tmp.Quickness = Quickness;
+			tmp.Size = Size;
+			tmp.Strength = Strength;
+			tmp.TetherRange = TetherRange;
+
+			if( m_abilities != null && m_abilities.Count > 0 )
+			{
+				string serializedAbilities = "";
+
+				foreach ( Ability npcAbility in m_abilities )
+				{
+					if ( npcAbility != null )
+						if ( serializedAbilities.Length > 0 )
+							serializedAbilities += ";";
+
+					serializedAbilities += npcAbility.Name + "|" + npcAbility.Level;
+				}
+
+				tmp.Abilities = serializedAbilities;
+			}
+
+			if ( m_spells != null && m_spells.Count > 0 )
+			{
+				string serializedSpells = "";
+
+				foreach ( Spell npcSpell in m_spells )
+				{
+					if ( npcSpell != null )
+						if ( serializedSpells.Length > 0 )
+							serializedSpells += ";";
+
+					serializedSpells += npcSpell.ID;
+				}
+
+				tmp.Spells = serializedSpells;
+			}
+
+			if ( m_styles != null && m_styles.Count > 0 )
+			{
+				string serializedStyles = "";
+
+				foreach ( Style npcStyle in m_styles )
+				{
+					if ( npcStyle != null )
+						if ( serializedStyles.Length > 0 )
+							serializedStyles += ";";
+
+					serializedStyles += npcStyle.ID + "|" + npcStyle.ClassID;
+				}
+
+				tmp.Styles = serializedStyles;
+			}
+
 			if (add)
 				GameServer.Database.AddNewObject(tmp);
-			else GameServer.Database.SaveObject(tmp);
+			else
+				GameServer.Database.SaveObject(tmp);
 		}
 	}
 }
