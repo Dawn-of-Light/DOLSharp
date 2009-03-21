@@ -30,6 +30,7 @@ namespace DOL.GS
 			: base()
 		{
 		}
+
 		public override bool Interact(GamePlayer player)
 		{
 			if (!base.Interact(player))
@@ -44,18 +45,25 @@ namespace DOL.GS
 			if (player.Champion)
 			{
 				bool cllevel = false;
+
 				while (player.ChampionLevel < player.ChampionMaxLevel && player.ChampionExperience >= player.ChampionExperienceForNextLevel)
 				{
 					player.ChampionLevelUp();
 					cllevel = true;
 				}
-				if (cllevel) //TODO: Out.Message (MLXP)
-					player.Out.SendMessage("You reached champion level " + player.ChampionLevel + "! (ToDo: better text)", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-				//player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "KingNPC.WhisperReceive.NewLevelMessage"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+
+				if ( cllevel )
+				{
+					// TODO: Out.Message (MLXP)
+					// TODO: check CL message text against live
+					player.Out.SendMessage( "You reached champion level " + player.ChampionLevel + "!", eChatType.CT_System, eChatLoc.CL_PopupWindow );
+					//player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "KingNPC.WhisperReceive.NewLevelMessage"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				}
 			}
 
 			return true;
 		}
+
 		public override bool WhisperReceive(GameLiving source, string str)
 		{
 			if (!base.WhisperReceive(source, str))
@@ -80,6 +88,7 @@ namespace DOL.GS
 			return true;
 		}
 	}
+
 	// This class has to be completed and may be inherited for scripting purpose
 	public class CLWeaponNPC : GameNPC
 	{
