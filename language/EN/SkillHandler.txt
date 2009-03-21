@@ -22,7 +22,9 @@ SkillBase.RegisterPropertyNames.Battlesongs:			Battlesongs
 SkillBase.RegisterPropertyNames.BeastCraft:				Beastcraft
 SkillBase.RegisterPropertyNames.Blades:					Blades
 SkillBase.RegisterPropertyNames.BladeturnReinforcement:	- Bladeturn reinforcement: {0}% (PvE Only)
-SkillBase.RegisterPropertyNames.BlockChance:			- Block: {0}% (PvE Only)
+#BlockChance has been commented out as a PvE-only bonus - line 1791 in GameServer\packets\Client\168\DetailDisplayHandler.cs
+#SkillBase.RegisterPropertyNames.BlockChance:			- Block: {0}% (PvE Only)
+SkillBase.RegisterPropertyNames.BlockChance:			Block chance
 SkillBase.RegisterPropertyNames.Blunt:					Blunt
 SkillBase.RegisterPropertyNames.Body:					Body
 SkillBase.RegisterPropertyNames.BodyMagic:				Body Magic
@@ -80,7 +82,9 @@ SkillBase.RegisterPropertyNames.Enhancement:			Enhancement
 SkillBase.RegisterPropertyNames.Envenom:				Envenom
 SkillBase.RegisterPropertyNames.EtherealShriek:			Ethereal Shriek
 SkillBase.RegisterPropertyNames.EtherealShriekFocus:	Ethereal Shriek Focus
-SkillBase.RegisterPropertyNames.EvadeChance:			- Evade: {0}% (PvE Only)
+#EvadeChance has been commented out as a PvE-only bonus - line 1793 in GameServer\packets\Client\168\DetailDisplayHandler.cs
+#SkillBase.RegisterPropertyNames.EvadeChance:			- Evade: {0}% (PvE Only)
+SkillBase.RegisterPropertyNames.EvadeChance:			Evade chance
 SkillBase.RegisterPropertyNames.ExperienceLoss:			Death Experience Loss Reduction
 SkillBase.RegisterPropertyNames.Fatigue:				Fatigue
 SkillBase.RegisterPropertyNames.FireMagic:				Fire Magic
@@ -132,7 +136,9 @@ SkillBase.RegisterPropertyNames.Pacification:			Pacification
 SkillBase.RegisterPropertyNames.Painworking:			Painworking
 SkillBase.RegisterPropertyNames.PainworkingFocus:		Painworking Focus
 SkillBase.RegisterPropertyNames.Parry:					Parry
-SkillBase.RegisterPropertyNames.ParryChance:			- Parry: {0}% (PvE Only)
+#ParryChance has been commented out as a PvE-only bonus - line 1792 in GameServer\packets\Client\168\DetailDisplayHandler.cs
+#SkillBase.RegisterPropertyNames.ParryChance:			- Parry: {0}% (PvE Only)
+SkillBase.RegisterPropertyNames.ParryChance:			Parry chance
 SkillBase.RegisterPropertyNames.Pathfinding:			Pathfinding
 SkillBase.RegisterPropertyNames.PhantasmalWail:			Phantasmal Wail
 SkillBase.RegisterPropertyNames.PhantasmalWailFocus:	Phantasmal Wail Focus

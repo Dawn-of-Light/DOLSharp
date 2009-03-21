@@ -77,7 +77,7 @@ namespace DOL.GS.Commands
 
             foreach ( string sentence in attrib[0].Usage )
             {
-                string[] words = sentence.Split( new char[] { ' ' }, 2 );
+                string[] words = sentence.Split( new char[] { ' ' }, 3 );
 
                 if ( words.Length >= 2 && words[1].Equals( subcommand ) )
                 {
@@ -101,7 +101,7 @@ namespace DOL.GS.Commands
 
             foreach ( string sentence in attrib[0].Usage )
             {
-                string[] words = sentence.Split( new char[] { ' ' }, 3 );
+                string[] words = sentence.Split( new char[] { ' ' }, 4 );
 
                 if ( words.Length >= 3 && words[1].Equals( subcommand1 ) && words[2].Equals( subcommand2 ) )
                 {
