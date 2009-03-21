@@ -36,7 +36,7 @@ AdminCommands.Account.CharNotFromValidRealm:		The character is not from a valid 
 AdminCommands.Account.Description:			Account modification command
 AdminCommands.Account.InvalidAccountName:		Invalid account name. 
 AdminCommands.Account.InvalidAccountNameOrPassword:	Account name and password must be at least 4 letters. 
-AdminCommands.Account.Usage.AccountName:		/account getaccountname <CharacterName> 
+AdminCommands.Account.Usage.AccountName:		/account accountname <CharacterName> 
 AdminCommands.Account.Usage.ChangePassword:		/account changepassword <AccountName> <NewPassword>
 AdminCommands.Account.Usage.Create:			/account create <AccountName> <Password>
 AdminCommands.Account.Usage.Delete:			/account delete <AccountName>

@@ -34,7 +34,7 @@ AdminCommands.Account.Usage.DeleteChar:				/account deletecharacter <NomePersona
 AdminCommands.Account.Usage.MoveChar:				/account movecharacter <NomePersonaggio> <NuovoNomeAcconto>
 AdminCommands.Account.Usage.Status:					/account status <NomeAcconto> <Livello>
 AdminCommands.Account.Usage.UnBan:					/account unban <NomeAcconto>
-AdminCommands.Account.Usage.AccountName:			/account getaccountname <NomePersonaggio>
+AdminCommands.Account.Usage.AccountName:			/account accountname <NomePersonaggio>
 AdminCommands.Account.AccountNotFound:				Acconto {0} non trovato!
 AdminCommands.Account.AccountDeleted:				Acconto {0} cancellato!
 AdminCommands.Account.CharacterNotFound:			Personaggio {0} non trovato!

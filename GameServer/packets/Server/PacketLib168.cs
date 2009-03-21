@@ -2384,7 +2384,7 @@ namespace DOL.GS.PacketHandler
 			bool needBreak = false;
 			while (iter.MoveNext())
 			{
-				string str = (string)iter.Current;
+				string str = iter.Current as string;
 				if (str == null) continue;
 				if (pak.Position + 4 > maxPacketLength) // line + pascalstringline(1) + trailingZero
 					return;

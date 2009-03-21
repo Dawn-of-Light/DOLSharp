@@ -475,25 +475,27 @@ namespace DOL.GS.Commands
                     #region Name
                     case "name":
                         {
+							string name = args[2];
                             int slot = (int)eInventorySlot.LastBackpack;
-                            if (args.Length >= 4)
-                            {
-                                try
-                                {
-                                    slot = Convert.ToInt32(args[3]);
-                                }
-                                catch
-                                {
-                                    slot = (int)eInventorySlot.LastBackpack;
-                                }
-                            }
+
+							if ( int.TryParse( args[args.Length - 1], out slot ) )
+							{
+								name = string.Join( " ", args, 2, args.Length - 3 );
+							}
+							else
+							{
+								name = string.Join( " ", args, 2, args.Length - 2 );
+								slot = (int)eInventorySlot.LastBackpack;
+							}
+
                             InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
                             if (item == null)
                             {
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 return;
                             }
-                            item.Name = args[2];
+
+                            item.Name = name;
                             client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
                             break;
                         }
