@@ -106,7 +106,8 @@ namespace DOL.GS.Spells
         public override void OnEffectPulse(GameSpellEffect effect)
         {
             GameLiving t = effect.Owner;
-            if (m_caster.Mana < Spell.PulsePower)
+
+            if ( m_caster.Mana < Spell.PulsePower || m_caster.IsBeingInterrupted || m_caster.IsSitting )
             {
                 RemoveEffect();
 				return;
