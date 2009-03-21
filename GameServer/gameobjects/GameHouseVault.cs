@@ -113,7 +113,7 @@ namespace DOL.GS
 		/// <summary>
 		/// First slot in the DB.
 		/// </summary>
-		public int FirstSlot
+		public virtual int FirstSlot
 		{
 			get { return (int)(eInventorySlot.HouseVault_First) + Size * Index; }
 		}
@@ -121,7 +121,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Last slot in the DB.
 		/// </summary>
-		public int LastSlot
+		public virtual int LastSlot
 		{
 			get { return (int)(eInventorySlot.HouseVault_First) + Size * (Index + 1) - 1; }
 		}
@@ -129,7 +129,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Inventory for this vault.
 		/// </summary>
-		public Dictionary<int, InventoryItem> Inventory
+		public virtual Dictionary<int, InventoryItem> Inventory
 		{
 			get
 			{
@@ -168,7 +168,7 @@ namespace DOL.GS
 		/// <param name="fromSlot"></param>
 		/// <param name="toSlot"></param>
 		/// <returns></returns>
-		public void MoveItem(IGameInventory playerInventory, eInventorySlot fromSlot, eInventorySlot toSlot)
+		public virtual void MoveItem( IGameInventory playerInventory, eInventorySlot fromSlot, eInventorySlot toSlot )
 		{
 			if (fromSlot == toSlot)
 				return;
@@ -198,7 +198,7 @@ namespace DOL.GS
 		/// <param name="fromSlot"></param>
 		/// <param name="toSlot"></param>
 		/// <returns></returns>
-		protected IDictionary<int, InventoryItem> MoveItemFromVault(IGameInventory playerInventory,
+		protected virtual IDictionary<int, InventoryItem> MoveItemFromVault( IGameInventory playerInventory,
 			eInventorySlot fromSlot, eInventorySlot toSlot)
 		{
 			// We will only allow moving to the backpack.
@@ -219,7 +219,9 @@ namespace DOL.GS
 			{
 				playerInventory.RemoveItem(toItem);
 				toItem.SlotPosition = fromItem.SlotPosition;
-				GameServer.Database.AddNewObject(toItem);
+				toItem.OwnerID = HouseMgr.GetOwner( CurrentHouse.DatabaseItem );
+				toItem.AutoSave = true;
+				GameServer.Database.AddNewObject( toItem );
 			}
 
 			GameServer.Database.DeleteObject(fromItem);
@@ -235,7 +237,7 @@ namespace DOL.GS
 		/// <param name="fromSlot"></param>
 		/// <param name="toSlot"></param>
 		/// <returns></returns>
-		protected IDictionary<int, InventoryItem> MoveItemToVault(IGameInventory playerInventory, 
+		protected virtual IDictionary<int, InventoryItem> MoveItemToVault( IGameInventory playerInventory, 
 			eInventorySlot fromSlot, eInventorySlot toSlot)
 		{
 			// We will only allow moving from the backpack.
@@ -276,7 +278,7 @@ namespace DOL.GS
 		/// <param name="fromSlot"></param>
 		/// <param name="toSlot"></param>
 		/// <returns></returns>
-		protected IDictionary<int, InventoryItem> MoveItemInsideVault(eInventorySlot fromSlot,
+		protected virtual IDictionary<int, InventoryItem> MoveItemInsideVault( eInventorySlot fromSlot,
 			eInventorySlot toSlot)
 		{
 			IDictionary<int, InventoryItem> inventory = Inventory;
@@ -311,7 +313,7 @@ namespace DOL.GS
 		/// players that are too far away will be considered inactive.
 		/// </summary>
 		/// <param name="updateItems"></param>
-		protected void NotifyObservers(IDictionary<int, InventoryItem> updateItems)
+		protected virtual void NotifyObservers( IDictionary<int, InventoryItem> updateItems )
 		{
 			IList<String> inactiveList = new List<String>();
 			foreach (GamePlayer observer in m_observers.Values)
