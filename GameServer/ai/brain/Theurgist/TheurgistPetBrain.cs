@@ -32,24 +32,18 @@ namespace DOL.AI.Brain
 {
 	public class TheurgistPetBrain : StandardMobBrain, IControlledBrain
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		private GameLiving m_owner;
 		private GameLiving m_target;
 		private bool m_melee = false;
-        private bool m_active = true;
+		private bool m_active = true;
 
 		public TheurgistPetBrain(GameLiving owner)
 		{
 			if (owner != null)
 			{
 				m_owner = owner;
-                //m_target = (GameLiving)Body.TempProperties.getObjectProperty("target", null);
-				/*if (owner.TargetObject as GameLiving != null)
-					m_target = m_owner.TargetObject as GameLiving;*/
 			}
 			AggroLevel = 100;
 			IsMainPet = false;
@@ -63,58 +57,53 @@ namespace DOL.AI.Brain
 
 		public override void Notify(DOLEvent e, object sender, EventArgs args)
 		{
-            //log.Error("notify ! " + (e!=null?e.ToString():"") + "\n\n" + (args != null?args.ToString():""));
-            if (!IsActive || m_melee || !m_active) return;
+			if (!IsActive || m_melee || !m_active) return;
 
-			//if (e == GameLivingEvent.AttackedByEnemy || e == GameLivingEvent.)
-            if(args as AttackFinishedEventArgs != null)
+			if (args as AttackFinishedEventArgs != null)
 			{
-                m_melee = true;
-                //log.Error("melee=true");
-				GameLiving target = m_target; //CalculateNextAttackTarget();
+				m_melee = true;
+				GameLiving target = m_target;
 				if (target != null) Body.StartAttack(target);
 				return;
 			}
-            if (e == GameLivingEvent.CastFailed)
+			if (e == GameLivingEvent.CastFailed)
 			{
-				//switch ((args as CastFailedEventArgs).Reason)
-				{
-					//case CastFailedEventArgs.Reasons.TargetTooFarAway:
-						GameLiving target = m_target; //CalculateNextAttackTarget();
-						if (target != null) Body.StartAttack(target);
-						return;
-				}
+
+				GameLiving target = m_target;
+				if (target != null) Body.StartAttack(target);
+				return;
+
 			}
 		}
 
 		protected override void AttackMostWanted()
 		{
-			if (!IsActive/* || m_target == null*/ || !m_active) return;
-            if (m_target == null) m_target = (GameLiving)Body.TempProperties.getObjectProperty("target", null);
-            if (m_target == null) return;
+			if (!IsActive || !m_active) return;
+			if (m_target == null) m_target = (GameLiving)Body.TempProperties.getObjectProperty("target", null);
+			if (m_target == null) return;
 			GameLiving target = m_target;
-            if (target != null && target.IsAlive)
-            {
-                if (!CheckSpells(eCheckSpellType.Offensive))
-                    Body.StartAttack(target);
-            }
-            else
-            {
-                m_target = null;
-                m_active = false;
-                Body.StopMoving();
-                Body.MaxSpeedBase = 0;
-            }
+			if (target != null && target.IsAlive)
+			{
+				if (!CheckSpells(eCheckSpellType.Offensive))
+					Body.StartAttack(target);
+			}
+			else
+			{
+				m_target = null;
+				m_active = false;
+				Body.StopMoving();
+				Body.MaxSpeedBase = 0;
+			}
 		}
-		
+
 		public override bool CheckSpells(eCheckSpellType type)
 		{
 			if (Body == null || Body.Spells == null || Body.Spells.Count < 1 || m_melee)
 				return false;
-				
+
 			if (Body.IsCasting)
 				return true;
-				
+
 			bool casted = false;
 			if (type == eCheckSpellType.Defensive)
 			{
