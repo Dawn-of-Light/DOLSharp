@@ -8,7 +8,7 @@ namespace DOL.GS.RealmAbilities
 	public class MasteryOfPain : RAPropertyEnhancer
 	{
 		public MasteryOfPain(DBAbility dba, int level)
-			: base(dba, level, new eProperty[] { eProperty.CriticalMeleeHitChance, eProperty.CriticalSpellHitChance })
+			: base(dba, level, new eProperty[] { eProperty.CriticalMeleeHitChance })
 		{
 		}
 
