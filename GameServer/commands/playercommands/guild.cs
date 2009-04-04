@@ -736,8 +736,8 @@ namespace DOL.GS.Commands
 
                                 foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers())
                                 {
-                                    client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BuffActivated", client.Player.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-                                    client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BuffMPActivated"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                                    ply.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BuffActivated", client.Player.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                                    ply.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BuffMPActivated"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                                 }
                                 client.Player.Guild.UpdateGuildWindow();
                                 return;
@@ -749,12 +749,12 @@ namespace DOL.GS.Commands
                                 client.Player.Guild.theGuildDB.BuffTime = DateTime.Now;
                                 GameServer.Database.SaveObject(client.Player.Guild.theGuildDB);
 
-                                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BuffRealmPoints"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage( LanguageMgr.GetTranslation( client, "Scripts.Player.Guild.BuffBountyPoints" ), eChatType.CT_Guild, eChatLoc.CL_SystemWindow );
 
                                 foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers())
                                 {
-                                    client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BuffActivated"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-                                    client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BuffBPActivated"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                                    ply.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BuffActivated", client.Player.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                                    ply.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BuffBPActivated"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                                 }
                                 client.Player.Guild.UpdateGuildWindow();
                                 return;

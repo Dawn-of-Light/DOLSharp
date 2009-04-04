@@ -46,8 +46,14 @@ namespace DOL.GS
 		/// <returns>value in properties or default value if not found</returns>
 		public bool getProperty(string key, bool def)
 		{
-			object val = m_props[key];
-			return (val is bool) ? (bool) val : def;
+			object property;
+
+			lock ( m_props.SyncRoot )
+			{
+				property = m_props[key];
+			}
+
+			return ( property is bool ) ? (bool)property : def;
 		}
 
 		/// <summary>
@@ -58,7 +64,13 @@ namespace DOL.GS
 		/// <returns>value in properties or default value if not found</returns>
 		public int getIntProperty(string key, int def)
 		{
-			object val = m_props[key];
+			object val;
+
+			lock ( m_props.SyncRoot )
+			{
+				val = m_props[key];
+			}
+
 			if (val == null)
 				return def;
 			if (val is int)
@@ -76,7 +88,13 @@ namespace DOL.GS
 		/// <returns>value in properties or default value if not found</returns>
 		public long getLongProperty(string key, long def)
 		{
-			object val = m_props[key];
+			object val;
+
+			lock ( m_props.SyncRoot )
+			{
+				val = m_props[key];
+			}
+
 			if (val == null)
 				return def;
 			if (val is long)
@@ -94,20 +112,31 @@ namespace DOL.GS
 		/// <returns>value in properties or default value if not found</returns>
 		public string getProperty(string key, string def)
 		{
-			object val = m_props[key];
+			object val;
+
+			lock ( m_props.SyncRoot )
+			{
+				val = m_props[key];
+			}
+
 			return (val is string) ? (string) val : def;
 		}
 
 		//Eden
 		public string[] GetAllProperties()
 		{
-			string[] temp=new string[m_props.Count];
-            int i=0;
-            foreach(string key in m_props.Keys)
-            {
-                temp[i]=key;
-                i++;
-            }
+			string[] temp = new string[m_props.Count];
+			
+			lock ( m_props.SyncRoot )
+			{
+				int i = 0;
+				foreach ( string key in m_props.Keys )
+				{
+					temp[i] = key;
+					i++;
+				}
+			}
+
             return temp;
 		}
 
@@ -119,7 +148,13 @@ namespace DOL.GS
 		/// <returns>value in properties or default value if not found</returns>
 		public object getObjectProperty(string key, object def)
 		{
-			object val = m_props[key];
+			object val;
+
+			lock ( m_props.SyncRoot )
+			{
+				val = m_props[key];
+			}
+
 			return (val != null) ? val : def;
 		}
 
@@ -131,7 +166,13 @@ namespace DOL.GS
 		/// <returns>value in properties or default value if not found</returns>
 		public object getObjectProperty(object key, object def)
 		{
-			object val = m_props[key];
+			object val;
+
+			lock ( m_props.SyncRoot )
+			{
+				val = m_props[key];
+			}
+
 			return (val != null) ? val : def;
 		}
 
@@ -143,12 +184,19 @@ namespace DOL.GS
 		/// <returns>value in properties or default value if not found</returns>
 		public bool getRequiredProperty(string key, bool def)
 		{
-			object val = m_props[key];
+			object val;
+
+			lock ( m_props.SyncRoot )
+			{
+				val = m_props[key];
+			}
+
 			if (val == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Property '" + key + "' is required but not found, default value '" + def + "' is used.");
 			}
+
 			return (val is bool) ? (bool) val : def;
 		}
 
@@ -160,12 +208,19 @@ namespace DOL.GS
 		/// <returns>value in properties or default value if not found</returns>
 		public int getRequiredProperty(string key, int def)
 		{
-			object val = m_props[key];
+			object val;
+
+			lock ( m_props.SyncRoot )
+			{
+				val = m_props[key];
+			}
+
 			if (val == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Property '" + key + "' is required but not found, default value '" + def + "' is used.");
 			}
+
 			return (val is int) ? (int) val : def;
 		}
 
@@ -177,12 +232,19 @@ namespace DOL.GS
 		/// <returns>value in properties or default value if not found</returns>
 		public string getRequiredProperty(string key, string def)
 		{
-			object val = m_props[key];
+			object val;
+
+			lock ( m_props.SyncRoot )
+			{
+				val = m_props[key];
+			}
+
 			if (val == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Property '" + key + "' is required but not found, default value '" + def + "' is used.");
 			}
+
 			return (val is string) ? (string) val : def;
 		}
 
@@ -194,13 +256,20 @@ namespace DOL.GS
 		/// <returns>value in properties or default value if not found</returns>
 		public object getRequiredProperty(string key, object def)
 		{
-			object val = m_props[key];
+			object val;
+
+			lock ( m_props.SyncRoot )
+			{
+				val = m_props[key];
+			}
+
 			if (val == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Property '" + key + "' is required but not found, default value '" + def + "' is used.");
 				return def;
 			}
+
 			return val;
 		}
 
@@ -211,13 +280,16 @@ namespace DOL.GS
 		/// <param name="val">value</param>
 		public void setProperty(object key, object val)
 		{
-			if (val == null)
+			lock ( m_props.SyncRoot )
 			{
-				m_props.Remove(key);
-			}
-			else
-			{
-				m_props[key] = val;
+				if ( val == null )
+				{
+					m_props.Remove( key );
+				}
+				else
+				{
+					m_props[key] = val;
+				}
 			}
 		}
 
@@ -227,7 +299,10 @@ namespace DOL.GS
 		/// <param name="key">key</param>
 		public void removeProperty(object key)
 		{
-			m_props.Remove(key);
+			lock ( m_props.SyncRoot )
+			{
+				m_props.Remove( key );
+			}
 		}
 
 		/// <summary>
@@ -235,7 +310,10 @@ namespace DOL.GS
 		/// </summary>
 		public void RemoveAll()
 		{
-			m_props.Clear();
+			lock ( m_props.SyncRoot )
+			{
+				m_props.Clear();
+			}
 		}
 	}
 }
