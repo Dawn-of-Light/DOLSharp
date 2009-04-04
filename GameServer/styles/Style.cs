@@ -322,5 +322,11 @@ namespace DOL.GS.Styles
 					return spec.Name;
 			}
 		}
+
+
+		public override Skill Clone()
+		{
+			return (Style)MemberwiseClone();
+		}
 	}
 }
