@@ -24,7 +24,7 @@
  * Characters recieve 1 respec upon creation, and 2 more at 20th and 40th levels.  Respecs are currently cumulative due to the high
  *		demand.
  * Respec stones have been added to default item template to prevent confustion with item databases.  They can be created via the /item command
- *		by typing /item create respec_stone.
+ *		by typing /item create respec_full | respec_single | respec_realm.
  * Respec stones may be turned in to trainers for respecs.
  * 
  * TODO: include autotrains in the formula

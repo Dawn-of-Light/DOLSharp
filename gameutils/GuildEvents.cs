@@ -342,7 +342,7 @@ namespace DOL.Regiment
 					player.Guild.theGuildDB.RealmPoints += (long)Math.Ceiling(rpsArgs.RealmPoints * BUFF_RPS / 100);
 					GameServer.Database.SaveObject(player.Guild.theGuildDB);
 
-					player.Out.SendMessage("You get an additional " + (long)Math.Ceiling(rpsArgs.RealmPoints * BUFF_RPS / 100) + " Realm Points due to your Guilds Buff!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage("You get an additional " + (long)Math.Ceiling(rpsArgs.RealmPoints * BUFF_RPS / 100) + " Realm Points due to your Guild's Buff!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				}
 				#endregion
 
@@ -400,7 +400,7 @@ namespace DOL.Regiment
 					player.Guild.theGuildDB.BountyPoints += (long)Math.Ceiling(bpsArgs.BountyPoints * BUFF_BPS / 100);
 					GameServer.Database.SaveObject(player.Guild.theGuildDB);
 
-					player.Out.SendMessage("You get an additional " + (long)Math.Ceiling(bpsArgs.BountyPoints * BUFF_BPS / 100) + " Bounty Points due to your Guilds Buff!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage("You get an additional " + (long)Math.Ceiling(bpsArgs.BountyPoints * BUFF_BPS / 100) + " Bounty Points due to your Guild's Buff!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				}
 			}
 			#endregion
