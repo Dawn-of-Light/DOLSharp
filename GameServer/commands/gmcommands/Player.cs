@@ -283,17 +283,6 @@ namespace DOL.GS.Commands
 
                             switch (args[2])
                             {
-                                case "change":
-                                    {
-                                        ushort modelid = Convert.ToUInt16(args[3]);
-                                        player.Model = modelid;
-                                        client.Out.SendMessage("You successfully changed " + player.Name + "'s form! (ID:#" + modelid + ")", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                                        player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has changed your form! (ID:#" + modelid + ")", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                                        player.Out.SendUpdatePlayer();
-                                        player.SaveIntoDatabase();
-                                    }
-                                    break;
-
                                 case "reset":
                                     {
                                         player.Model = (ushort)player.Client.Account.Characters[player.Client.ActiveCharIndex].CreationModel;
@@ -306,18 +295,29 @@ namespace DOL.GS.Commands
 
                                 default:
                                     {
-                                        ushort modelid = Convert.ToUInt16(args[2]);
-                                        player.Model = modelid;
-                                        client.Out.SendMessage("You successfully changed " + player.Name + "'s form! (ID:#" + modelid + ")", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                                        player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has changed your form! (ID:#" + modelid + ")", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+										ushort modelID = 0;
+										int modelIndex = 0;
+
+										if ( args[2] == "change" )
+											modelIndex = 3;
+										else
+											modelIndex = 2;
+
+										if ( ushort.TryParse( args[modelIndex], out modelID ) == false )
+										{
+											DisplaySyntax( client, args[1] );
+											return;
+										}
+
+                                        player.Model = modelID;
+                                        client.Out.SendMessage("You successfully changed " + player.Name + "'s form! (ID:#" + modelID + ")", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                                        player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has changed your form! (ID:#" + modelID + ")", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                                         player.Out.SendUpdatePlayer();
                                         player.SaveIntoDatabase();
                                     }
                                     break;
                             }
                         }
-
-
                         catch (Exception)
                         {
                             DisplaySyntax(client);

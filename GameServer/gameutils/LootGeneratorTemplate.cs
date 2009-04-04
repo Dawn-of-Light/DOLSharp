@@ -223,7 +223,7 @@ namespace DOL.GS
 			{
 				foreach (DBLootTemplate lootTemplate in lootTemplates)
 				{
-					if (lootTemplate.ItemTemplate.Realm == 0 || lootTemplate.ItemTemplate.Realm == (int)killer.Realm)
+					if (lootTemplate.ItemTemplate.Realm == 0 || lootTemplate.ItemTemplate.Realm == (int)killer.Realm || ServerProperties.Properties.ALLOW_CROSS_REALM_ITEMS)
 						loot.AddRandom(lootTemplate.Chance, lootTemplate.ItemTemplate);
 				}
 			}
@@ -239,27 +239,31 @@ namespace DOL.GS
 		/// <param name="mobXLootTemplate">Entry in MobXLoot.</param>
 		/// <param name="lootTemplates">List of templates for random drops.</param>
 		/// <param name="loot">List to hold loot.</param>
-		private void GenerateLootFromTemplate(DBMobXLootTemplate mobXLootTemplate,
-		  ArrayList lootTemplates, LootList loot, GameObject killer)
+		private void GenerateLootFromTemplate(DBMobXLootTemplate mobXLootTemplate, ArrayList lootTemplates, LootList loot, GameObject killer)
 		{
 			if (mobXLootTemplate == null) return;
 
 			IList templateList = (IList)m_LootTemplates[mobXLootTemplate.LootTemplateName.ToLower()];
+
 			if (templateList != null)
 			{
 				GamePlayer player = null;
+
 				if (killer is GamePlayer)
 					player = killer as GamePlayer;
 				else if (killer is GameNPC && (killer as GameNPC).Brain is IControlledBrain)
 					player = ((killer as GameNPC).Brain as ControlledNpc).GetPlayerOwner();
+
 				foreach (DBLootTemplate lootTemplate in templateList)
 				{
-					if (player != null
-					    && (eRealm)lootTemplate.ItemTemplate.Realm != player.Realm
-					    && (lootTemplate.ItemTemplate.Realm == 1 || lootTemplate.ItemTemplate.Realm == 2 || lootTemplate.ItemTemplate.Realm == 3)
-					    )
+					// if the item template has a realm set and it is different from the player's realm, don't drop the item unless
+					// the ServerProperty ALLOW_CROSS_REALM_ITEMS has been set to true
+					if ( player != null && (eRealm)lootTemplate.ItemTemplate.Realm != player.Realm &&
+						( lootTemplate.ItemTemplate.Realm == 1 || lootTemplate.ItemTemplate.Realm == 2 || lootTemplate.ItemTemplate.Realm == 3 ) &&
+						( ServerProperties.Properties.ALLOW_CROSS_REALM_ITEMS == false ) )
 						continue;
-					if (lootTemplate.Chance == 100)
+
+					if ( lootTemplate.Chance == 100 )
 						loot.AddFixed(lootTemplate.ItemTemplate, mobXLootTemplate.DropCount);
 					else
 					{

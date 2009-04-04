@@ -452,6 +452,9 @@ namespace DOL.GS.ServerProperties
         [ServerProperty("turret_area_cap_radius", "Sets the Radius which is checked for the turretareacap", 1000)]
         public static readonly int TURRET_AREA_CAP_RADIUS;
 
+		[ServerProperty("theurgist_pet_cap", "Sets the maximum number of pets a Theurgist can summon", 16)]
+		public static readonly int THEURGIST_PET_CAP;
+
         /// <summary>
         /// This specifies the max amount of people in one battlegroup.
         /// </summary>

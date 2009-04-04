@@ -663,8 +663,8 @@ Scripts.Player.Guild.BannerSummoned:			You have summoned your guild banner.
 Scripts.Player.Guild.BannerUnsummoned:			You have unsummoned your guild banner.	
 Scripts.Player.Guild.BuffActivated:			[Guild Buff] {0} has spent 1000 Guild Merit Points and activated a Guild Buff!	
 Scripts.Player.Guild.BuffBountyPoints:			Your guild will now gain 5% bonus to bounty points for 24 hours!	
-Scripts.Player.Guild.BuffBPActivated:			[Guild Buff] Your guild will now get bonus to bounty points for 24 hours!	
-Scripts.Player.Guild.BuffMPActivated:			[Guild Buff] Your guild will now get bonus to merit points for 24 hours!	
+Scripts.Player.Guild.BuffBPActivated:			[Guild Buff] Your guild will now get a bonus to bounty points for 24 hours!	
+Scripts.Player.Guild.BuffMPActivated:			[Guild Buff] Your guild will now get a bonus to merit points for 24 hours!	
 Scripts.Player.Guild.BuffRealmPoints:			Your guild will now gain 5% bonus to realm points for 24 hours!	
 Scripts.Player.Guild.ClaimNotNear:			You must be near a keep to claim it.	
 Scripts.Player.Guild.ConfirmLeave:			Do you really want to leave {0}?	
