@@ -978,7 +978,8 @@ namespace DOL.GS.Spells
 		}
 
 		/// <summary>
-		/// Calculates the enduance cost of the spell
+		/// Calculates the endurance cost of the spell
+        /// Obsolete since 1.8x
 		/// </summary>
 		/// <returns></returns>
 		public virtual int CalculateEnduranceCost()
