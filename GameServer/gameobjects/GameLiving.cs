@@ -3945,7 +3945,7 @@ namespace DOL.GS
 			{
 				IList attackers;
 				lock (m_attackers.SyncRoot) { attackers = (IList)m_attackers.Clone(); }
-				EnemyHealedEventArgs args = new EnemyHealedEventArgs(this, changeSource, healthChangeType, changeAmount);
+				EnemyHealedEventArgs args = new EnemyHealedEventArgs(this, changeSource, healthChangeType, healthChanged);
 				foreach (GameObject attacker in attackers)
 				{
 					if (attacker is GameLiving && attacker != TargetObject)
