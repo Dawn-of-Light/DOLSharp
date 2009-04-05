@@ -229,7 +229,7 @@ namespace DOL.GS
 					default:
 						return false;
 				}
-			}
+			} 
 		}
 
 		/// <summary>

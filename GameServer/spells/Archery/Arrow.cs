@@ -39,7 +39,7 @@ namespace DOL.GS.Spells
 		/// <param name="target"></param>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= CalculateNeededPower(target);
+            m_caster.Endurance -= CalculateEnduranceCost();
 			if ((target is Keeps.GameKeepDoor || target is Keeps.GameKeepComponent) && Spell.SpellType!="SiegeArrow")
 			{
 				MessageToCaster("Your spell has no effect on the keep component!", eChatType.CT_SpellResisted);
