@@ -374,7 +374,9 @@ namespace DOL.AI.Brain
 					thisLiving = brain.GetPlayerOwner();
 				}
 				
-				if (thisLiving != null)
+				if (thisLiving != null 
+                    && !(Body.Brain is DOL.AI.Brain.KeepGuardBrain) 
+                    && !(Body.Brain is DOL.AI.Brain.LordBrain))
 				{
 					thisLiving.Out.SendCheckLOS (Body, living, new CheckLOSResponse(CheckAggroLOS));
 					if (!m_AggroLOS) return;
