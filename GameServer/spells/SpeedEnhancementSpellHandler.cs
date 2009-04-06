@@ -62,8 +62,8 @@ namespace DOL.GS.Spells
 			if (target is GamePlayer && (target as GamePlayer).IsRiding)
 				return;
 
-			// Graveen: in combat remove all speed except those listed previously
-			if (/*(Spell.Pulse != 0 || Spell.CastTime != 0) &&*/ target.InCombat)
+			// Graveen: archery speed shot
+			if ((Spell.Pulse != 0 || Spell.CastTime != 0) && target.InCombat)
 			{
 				MessageToLiving(target, "You've been in combat recently, the spell has no effect on you!", eChatType.CT_SpellResisted);
 				return;
