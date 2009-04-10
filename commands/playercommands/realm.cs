@@ -84,21 +84,7 @@ namespace DOL.GS.Commands
             string keepRealm;
             foreach (AbstractGameKeep keep in KeepMgr.GetNFKeeps())
             {
-            	switch (keep.Realm)
-            	{
-            		case eRealm.Albion:
-            			keepRealm = "Albion";
-            			break;
-            		case eRealm.Midgard:
-            			keepRealm = "Midgard";
-            			break;
-            		case eRealm.Hibernia:
-            			keepRealm = "Hibernia";
-            			break;
-            		default:
-            			keepRealm = "Unknow";
-            			break;
-            	}
+            	keepRealm = GlobalConstants.RealmToName (keep.Realm);
             	
                 #region Reformat Albion Keeps '[KeepName]: [OwnerRealm] ([Guild])'
                 for (int i = 0; i < tmpAlbKeeps.Length; i++)
