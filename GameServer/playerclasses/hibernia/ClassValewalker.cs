@@ -72,7 +72,8 @@ namespace DOL.GS.PlayerClass
 
 			// Spell lines
 			player.AddSpellLine(SkillBase.GetSpellLine("Valewalker Arb Path Spec"));
-
+			player.AddSpellLine(SkillBase.GetSpellLine("Valewalker Arborial Path Base ")); //immolation spells
+			
 			if (player.Level >= 5)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
