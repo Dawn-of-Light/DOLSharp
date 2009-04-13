@@ -65,29 +65,51 @@ namespace DOL.AI.Brain
         /// </summary>
         private void CheckForEnemies()
         {
-            GamePlayer player = PickPlayerInRadius();
+            GamePlayer player = CheckNearbyPlayers();
 
             if (player != null)
-            {
-                Aggression.Raise(player, InternalAggression.Min);
-
-                // TODO: If player is grouped, add remaining players
-                //       from the group as well.
-            }
+                Aggression.Raise(player, InternalAggression.Initial);
         }
 
         public ushort AggroLevel { get; set; }
+        public ushort AggroRange { get; set; }
 
-        protected virtual ushort AggroRange
+        /// <summary>
+        /// Chance to aggro on nearby enemies, evaluated every
+        /// Think() tick. This should depend on level difference
+        /// and distance, but for simplicity's sake let's use
+        /// AggroLevel value for the time being.
+        /// </summary>
+        protected virtual int AggroChance
         {
-            get { return 500; }
+            get
+            {
+                return AggroLevel;
+            }
         }
 
-        private GamePlayer PickPlayerInRadius()
+        /// <summary>
+        /// Check for players in range to aggro on.
+        /// </summary>
+        /// <returns></returns>
+        private GamePlayer CheckNearbyPlayers()
         {
             foreach (GamePlayer player in Body.GetPlayersInRadius(AggroRange))
-                if (Util.Chance(AggroLevel))
+                if (Util.Chance(AggroChance))
                     return player;
+
+            return null;
+        }
+
+        /// <summary>
+        /// Check for NPCs in range to aggro on.
+        /// </summary>
+        /// <returns></returns>
+        private GameNPC CheckNearbyNpcs()
+        {
+            foreach (GameNPC npc in Body.GetNPCsInRadius(AggroRange))
+                if (Util.Chance(AggroChance))
+                    return npc;
 
             return null;
         }
@@ -179,7 +201,7 @@ namespace DOL.AI.Brain
                 return;
 
             if (source is GameLiving)
-                Aggression.Raise(source as GameLiving, InternalAggression.Min);
+                Aggression.Raise(source as GameLiving, InternalAggression.Minimum);
 
             // TODO: Track the source of the heal, e.g. if the heal originated
             //       from an object, find out who the owner is.
@@ -305,9 +327,18 @@ namespace DOL.AI.Brain
             }
 
             /// <summary>
-            /// The minimum amount of aggression possible.
+            /// The amount of aggression gained from initially
+            /// pulling an NPC; it takes some time to "outaggro"
+            /// the puller.
             /// </summary>
-            public const int Min = 100;
+            public const int Initial = 500;
+
+            /// <summary>
+            /// The minimum amount of aggression possible; no matter
+            /// how much detaunting you do, the mob will still hate you
+            /// till the end.
+            /// </summary>
+            public const int Minimum = 100;
 
             /// <summary>
             /// Raise aggression by the given amount.
@@ -324,7 +355,21 @@ namespace DOL.AI.Brain
                     if (m_aggression.ContainsKey(living))
                         m_aggression[living] += amount;
                     else
-                        m_aggression.Add(living, (amount < Min) ? Min : amount);
+                    {
+                        m_aggression.Add(living, (amount < Initial) ? Initial : amount);
+
+                        if (living is GamePlayer)
+                        {
+                            Group group = (living as GamePlayer).Group;
+
+                            if (group != null)
+                                foreach (GamePlayer player in group.GetPlayersInTheGroup())
+                                    if (!m_aggression.ContainsKey(player))
+                                        m_aggression.Add(player, Minimum);
+
+                            // TODO: Pets.
+                        }
+                    }
 
                     if (living is GamePlayer)
                     {
@@ -349,7 +394,7 @@ namespace DOL.AI.Brain
                     if (m_aggression.ContainsKey(living))
                     {
                         long current = m_aggression[living];
-                        m_aggression[living] = (current >= amount + Min) ? current - amount : Min;
+                        m_aggression[living] = (current >= amount + Minimum) ? current - amount : Minimum;
                     }
                 }
             }
