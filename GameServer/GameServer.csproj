@@ -125,7 +125,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ai\brain\DragonBrain.cs" />
-    <Compile Include="ai\brain\Npcs\GameNpcBrain.cs" />
+    <Compile Include="ai\brain\Npcs\AggressiveBrain.cs" />
     <Compile Include="ai\brain\GuardBrain.cs">
       <SubType>Code</SubType>
     </Compile>

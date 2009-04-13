@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Text;
 using DOL.GS;
 using DOL.Events;
+using DOL.GS.PacketHandler;
 
 namespace DOL.AI.Brain
 {
     /// <summary>
-    /// Standard NPC brain implementation (complete rewrite).
+    /// A brain that can aggro on other GameLiving objects.
     /// We derive from APlayerVicinityBrain to save CPU in case there
     /// aren't any players around anyway.
     /// </summary>
     /// <author>Aredhel</author>
-    public class GameNpcBrain : APlayerVicinityBrain, IAggressiveBrain
+    public class AggressiveBrain : APlayerVicinityBrain
     {
         /// <summary>
         /// Mobs will all use a 1000ms think interval; aggro level is a chance
@@ -63,7 +64,7 @@ namespace DOL.AI.Brain
                 {
                     EnemyHealedEventArgs healed = args as EnemyHealedEventArgs;
                     
-                    if (HateList.IsEnemy(healed.Enemy))
+                    if (IsEnemy(healed.Enemy))
                         OnEnemyHealed(healed.HealSource, healed.HealAmount);
                 }
 
@@ -76,7 +77,7 @@ namespace DOL.AI.Brain
                 {
                     EnemyKilledEventArgs killed = args as EnemyKilledEventArgs;
 
-                    if (HateList.IsEnemy(killed.Target))
+                    if (IsEnemy(killed.Target))
                         OnEnemyKilled(killed.Target);
                 }
             }
@@ -92,7 +93,7 @@ namespace DOL.AI.Brain
             if (attackData == null)
                 return;
 
-            OnTaunted(attackData.Attacker, HateList.InitialAggro);
+            OnRaiseAggression(attackData.Attacker, attackData.Damage);
 
             // TODO: Process attack data and change the amount of aggro
             //       accordingly.
@@ -109,7 +110,7 @@ namespace DOL.AI.Brain
                 return;
 
             if (source is GameLiving)
-                OnTaunted(source as GameLiving, HateList.InitialAggro);
+                OnRaiseAggression(source as GameLiving, Aggression.Min);
 
             // TODO: Track the source of the heal, e.g. if the heal originated
             //       from an object, find out who the owner is.
@@ -125,34 +126,34 @@ namespace DOL.AI.Brain
             if (living == null)
                 return;
 
-            HateList.Release(living);
+            Aggression.ClearTarget(living);
         }
 
         /// <summary>
-        /// Move living up in the hate list.
+        /// Raise aggression for this living by the given amount.
         /// </summary>
         /// <param name="living"></param>
         /// <param name="amount"></param>
-        protected void OnTaunted(GameLiving living, long amount)
+        protected void OnRaiseAggression(GameLiving living, long amount)
         {
-            HateList.OnTaunted(living, amount);
+            Aggression.Raise(living, amount);
 
-            GameLiving primaryTarget = HateList.PrimaryTarget;
+            GameLiving primaryTarget = Aggression.PrimaryTarget;
 
             if (primaryTarget != Body.TargetObject)
                 SwitchTarget(primaryTarget);
         }
 
         /// <summary>
-        /// Move living down in the hate list.
+        /// Lower aggression for this living by the given amount.
         /// </summary>
         /// <param name="living"></param>
         /// <param name="amount"></param>
-        protected void OnDetaunted(GameLiving living, long amount)
+        protected void OnLowerAggression(GameLiving living, long amount)
         {
-            HateList.OnDetaunted(living, amount);
+            Aggression.Lower(living, amount);
 
-            GameLiving primaryTarget = HateList.PrimaryTarget;
+            GameLiving primaryTarget = Aggression.PrimaryTarget;
 
             if (primaryTarget != Body.TargetObject)
                 SwitchTarget(primaryTarget);
@@ -168,84 +169,139 @@ namespace DOL.AI.Brain
 
         #endregion
 
-        #region Hate list.
+        #region Aggression management
 
-        /// <summary>
-        /// The initial aggro amount when this NPC is pulled, regardless of 
-        /// how much damage has been inflicted.
-        /// </summary>
-
-        private InternalHateList m_hateList;
+        private InternalAggression m_aggression;
         
         /// <summary>
-        /// This brain's hate list.
+        /// This brain's aggression towards various targets.
         /// </summary>
-        private InternalHateList HateList
+        private InternalAggression Aggression
         {
             get
             {
-                if (m_hateList == null)
-                    m_hateList = new InternalHateList();
+                if (m_aggression == null)
+                    m_aggression = new InternalAggression();
 
-                return m_hateList;
+                return m_aggression;
             }
+        }
+
+        /// <summary>
+        /// Returns true if this brain has at least one target.
+        /// </summary>
+        private bool IsEngaged
+        {
+            get
+            {
+                return (m_aggression == null)
+                    ? false
+                    : (Aggression.Targets.Count > 0);
+            }
+        }
+
+        /// <summary>
+        /// Check whether or not this living is an enemy.
+        /// </summary>
+        /// <param name="living"></param>
+        /// <returns></returns>
+        public bool IsEnemy(GameLiving living)
+        {
+            return (living == null)
+                ? false
+                : (Aggression.GetAmountForLiving(living) > 0);
         }
 
         /// <summary>
         /// Encapsulated in order to achieve thread safety.
         /// </summary>
-        private class InternalHateList
+        private class InternalAggression
         {
-            private IDictionary<GameLiving, long> m_amount = new Dictionary<GameLiving, long>();
+            private IDictionary<GameLiving, long> m_aggression = new Dictionary<GameLiving, long>();
             private object m_syncObject = new object();
 
             /// <summary>
-            /// The initial amount of aggro generated without actually
-            /// inflicting damage on an NPC. No matter how much detaunting
-            /// is done, you can never drop below this value (unless you die,
-            /// that is).
+            /// Get current amount of aggression for this living.
             /// </summary>
-            public long InitialAggro
+            /// <param name="living"></param>
+            /// <returns></returns>
+            public long GetAmountForLiving(GameLiving living)
+            {
+                lock (m_syncObject)
+                {
+                    return m_aggression.ContainsKey(living)
+                        ? m_aggression[living]
+                        : 0;
+                }
+            }
+
+            /// <summary>
+            /// List of targets.
+            /// </summary>
+            public IList<GameLiving> Targets
+            {
+                get
+                {
+                    lock (m_syncObject)
+                    {
+                        IList<GameLiving> targets = new List<GameLiving>(m_aggression.Count);
+                        foreach (GameLiving target in m_aggression.Keys)
+                            targets.Add(target);
+
+                        return targets;
+                    }
+                }
+            }
+
+            /// <summary>
+            /// The minimum amount of aggression possible.
+            /// </summary>
+            public long Min
             {
                 get { return 100; }
             }
 
             /// <summary>
-            /// Increase hate by the given amount.
+            /// Raise aggression by the given amount.
             /// </summary>
             /// <param name="living"></param>
             /// <param name="amount"></param>
-            public void OnTaunted(GameLiving living, long amount)
+            public void Raise(GameLiving living, long amount)
             {
                 if (living == null || amount <= 0)
                     return;
 
                 lock (m_syncObject)
                 {
-                    if (m_amount.ContainsKey(living))
-                        m_amount[living] += amount;
+                    if (m_aggression.ContainsKey(living))
+                        m_aggression[living] += amount;
                     else
-                        m_amount.Add(living, amount);
+                        m_aggression.Add(living, amount);
+
+                    if (living is GamePlayer)
+                    {
+                        (living as GamePlayer).Out.SendMessage(String.Format("Aggression = {0}", m_aggression[living]),
+                            eChatType.CT_Alliance, eChatLoc.CL_SystemWindow);
+                    }
                 }
             }
 
             /// <summary>
-            /// Lower hate by the given amount, but not past the initial
-            /// aggro cap.
+            /// Lower aggression by the given amount, but not past the minimum.
             /// </summary>
             /// <param name="living"></param>
             /// <param name="amount"></param>
-            public void OnDetaunted(GameLiving living, long amount)
+            public void Lower(GameLiving living, long amount)
             {
                 if (living == null || amount <= 0)
                     return;
 
                 lock (m_syncObject)
                 {
-                    if (m_amount.ContainsKey(living))
+                    if (m_aggression.ContainsKey(living))
                     {
-                        long current = m_amount[living];
-                        m_amount[living] = (current >= amount + InitialAggro) ? current - amount : InitialAggro;
+                        long current = m_aggression[living];
+                        m_aggression[living] = (current >= amount + Min) ? current - amount : Min;
                     }
                 }
             }
@@ -254,17 +310,17 @@ namespace DOL.AI.Brain
             /// Remove a living from the list.
             /// </summary>
             /// <param name="living"></param>
-            public void Release(GameLiving living)
+            public void ClearTarget(GameLiving living)
             {
                 lock (m_syncObject)
                 {
-                    if (living != null && m_amount.ContainsKey(living))
-                        m_amount.Remove(living);
+                    if (living != null && m_aggression.ContainsKey(living))
+                        m_aggression.Remove(living);
                 }
             }
 
             /// <summary>
-            /// The living that has accumulated the most hate.
+            /// The living that has accumulated the highest amount of aggression.
             /// </summary>
             public GameLiving PrimaryTarget
             {
@@ -275,33 +331,17 @@ namespace DOL.AI.Brain
 
                     lock (m_syncObject)
                     {
-                        foreach (GameLiving living in m_amount.Keys)
+                        foreach (GameLiving living in m_aggression.Keys)
                         {
-                            if (m_amount[living] > maxAmount)
+                            if (m_aggression[living] > maxAmount)
                             {
-                                maxAmount = m_amount[living];
+                                maxAmount = m_aggression[living];
                                 primaryTarget = living;
                             }
                         }
                     }
 
                     return primaryTarget;
-                }
-            }
-
-            /// <summary>
-            /// Check whether or not this living is an enemy.
-            /// </summary>
-            /// <param name="living"></param>
-            /// <returns></returns>
-            public bool IsEnemy(GameLiving living)
-            {
-                if (living == null)
-                    return false;
-
-                lock (m_syncObject)
-                {
-                    return m_amount.ContainsKey(living);
                 }
             }
         }
