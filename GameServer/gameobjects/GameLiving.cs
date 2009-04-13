@@ -1156,11 +1156,25 @@ namespace DOL.GS
 			get { return m_attackState; }
 		}
 
-		/// <summary>
-		/// Whether the living is actually attacking something.
-		/// </summary>
-		public virtual bool IsAttacking
-		{
+        /// <summary>
+        /// Whether or not the living can be attacked.
+        /// </summary>
+        public virtual bool IsAttackable
+        {
+            get
+            {
+                return (IsAlive && 
+                    !IsStealthed &&
+                    EffectList.GetOfType(typeof(NecromancerShadeEffect)) == null &&
+                    ObjectState == GameObject.eObjectState.Active);
+            }
+        }
+
+        /// <summary>
+        /// Whether the living is actually attacking something.
+        /// </summary>
+        public virtual bool IsAttacking
+        {
 			get { return (m_attackState && (m_attackAction != null) && m_attackAction.IsAlive); }
 		}
 
