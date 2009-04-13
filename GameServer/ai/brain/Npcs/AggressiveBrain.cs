@@ -4,6 +4,7 @@ using System.Text;
 using DOL.GS;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.GS.Spells;
 
 namespace DOL.AI.Brain
 {
@@ -32,7 +33,28 @@ namespace DOL.AI.Brain
             if (Body.IsIncapacitated || Body.IsReturningHome)
                 return;
 
+            if (IsEngaged)
+                CheckTarget();
+        }
 
+        /// <summary>
+        /// Check which target to go for.
+        /// </summary>
+        private void CheckTarget()
+        {
+            GameLiving primaryTarget = Aggression.PrimaryTarget;
+
+            if (primaryTarget != Body.TargetObject)
+                SwitchTarget(primaryTarget);
+        }
+
+        /// <summary>
+        /// Switch the target.
+        /// </summary>
+        /// <param name="living"></param>
+        protected void SwitchTarget(GameLiving living)
+        {
+            Body.StartAttack(living);
         }
 
         #region Notify handlers.
@@ -93,7 +115,18 @@ namespace DOL.AI.Brain
             if (attackData == null)
                 return;
 
-            OnRaiseAggression(attackData.Attacker, attackData.Damage);
+            if (!attackData.IsMeleeAttack)
+            {
+                ISpellHandler spellhandler = attackData.SpellHandler;
+
+                if (spellhandler != null && spellhandler is TauntSpellHandler)
+                {
+                    OnTaunted(attackData);
+                    return;
+                }
+            }
+
+            Aggression.Raise(attackData.Attacker, attackData.Damage);
 
             // TODO: Process attack data and change the amount of aggro
             //       accordingly.
@@ -110,7 +143,7 @@ namespace DOL.AI.Brain
                 return;
 
             if (source is GameLiving)
-                OnRaiseAggression(source as GameLiving, Aggression.Min);
+                Aggression.Raise(source as GameLiving, InternalAggression.Min);
 
             // TODO: Track the source of the heal, e.g. if the heal originated
             //       from an object, find out who the owner is.
@@ -126,45 +159,27 @@ namespace DOL.AI.Brain
             if (living == null)
                 return;
 
-            Aggression.ClearTarget(living);
+            Aggression.Clear(living);
         }
 
-        /// <summary>
-        /// Raise aggression for this living by the given amount.
-        /// </summary>
-        /// <param name="living"></param>
-        /// <param name="amount"></param>
-        protected void OnRaiseAggression(GameLiving living, long amount)
-        {
-            Aggression.Raise(living, amount);
-
-            GameLiving primaryTarget = Aggression.PrimaryTarget;
-
-            if (primaryTarget != Body.TargetObject)
-                SwitchTarget(primaryTarget);
-        }
+        private const int TauntAggressionAmount = 1000;
 
         /// <summary>
-        /// Lower aggression for this living by the given amount.
+        /// The NPC has been taunted (spell).
         /// </summary>
-        /// <param name="living"></param>
-        /// <param name="amount"></param>
-        protected void OnLowerAggression(GameLiving living, long amount)
+        /// <param name="attackData"></param>
+        protected virtual void OnTaunted(AttackData attackData)
         {
-            Aggression.Lower(living, amount);
+            GamePlayer player = attackData.Attacker as GamePlayer;
 
-            GameLiving primaryTarget = Aggression.PrimaryTarget;
+            if (player != null)
+            {
+                player.Out.SendMessage(String.Format("Taunted{0}", attackData.IsSpellResisted
+                    ? ", but taunt was resisted!" : ""), eChatType.CT_Broadcast, eChatLoc.CL_SystemWindow);
+            }
 
-            if (primaryTarget != Body.TargetObject)
-                SwitchTarget(primaryTarget);
-        }
-
-        /// <summary>
-        /// Switch the target.
-        /// </summary>
-        /// <param name="living"></param>
-        protected void SwitchTarget(GameLiving living)
-        {
+            Aggression.Raise(attackData.Attacker, attackData.IsSpellResisted
+                ? 0 : TauntAggressionAmount);
         }
 
         #endregion
@@ -256,10 +271,7 @@ namespace DOL.AI.Brain
             /// <summary>
             /// The minimum amount of aggression possible.
             /// </summary>
-            public long Min
-            {
-                get { return 100; }
-            }
+            public const int Min = 100;
 
             /// <summary>
             /// Raise aggression by the given amount.
@@ -268,7 +280,7 @@ namespace DOL.AI.Brain
             /// <param name="amount"></param>
             public void Raise(GameLiving living, long amount)
             {
-                if (living == null || amount <= 0)
+                if (living == null || amount < 0)
                     return;
 
                 lock (m_syncObject)
@@ -276,7 +288,7 @@ namespace DOL.AI.Brain
                     if (m_aggression.ContainsKey(living))
                         m_aggression[living] += amount;
                     else
-                        m_aggression.Add(living, amount);
+                        m_aggression.Add(living, (amount < Min) ? Min : amount);
 
                     if (living is GamePlayer)
                     {
@@ -310,7 +322,7 @@ namespace DOL.AI.Brain
             /// Remove a living from the list.
             /// </summary>
             /// <param name="living"></param>
-            public void ClearTarget(GameLiving living)
+            public void Clear(GameLiving living)
             {
                 lock (m_syncObject)
                 {
