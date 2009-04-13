@@ -55,22 +55,13 @@ namespace DOL.GS.Spells
 			
 			SendEffectAnimation(target, 0, false, 1);
 
-			// calc damage
+			// Create attack data.
 			AttackData ad = CalculateDamageToTarget(target, effectiveness);
-			//DamageTarget(ad, true);
-			SendDamageMessages(ad);
+			DamageTarget(ad, true);     
 		
 			// Interrupt only if target is actually casting
 			if (target.IsCasting && Spell.Target.ToLower()!="cone")
 				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
-				
-			if (target is GameNPC)
-			{
-				GameNPC npc = (GameNPC)target;
-				IOldAggressiveBrain aggroBrain = npc.Brain as IOldAggressiveBrain;
-				if (aggroBrain != null)
-					aggroBrain.AddToAggroList(Caster, (int)Spell.Value);
-			}
 		}
 
 		/// <summary>
