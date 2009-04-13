@@ -57,7 +57,7 @@ namespace DOL.GS.Spells
 
 			// Create attack data.
 			AttackData ad = CalculateDamageToTarget(target, effectiveness);
-			DamageTarget(ad, true);     
+			DamageTarget(ad, false);     
 		
 			// Interrupt only if target is actually casting
 			if (target.IsCasting && Spell.Target.ToLower()!="cone")

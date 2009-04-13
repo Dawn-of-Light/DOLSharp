@@ -34,13 +34,15 @@ namespace DOL.AI.Brain
                 return;
 
             if (IsEngaged)
-                CheckTarget();
+                PickTarget();
+            else
+                CheckForEnemies();
         }
 
         /// <summary>
-        /// Check which target to go for.
+        /// Pick the next target.
         /// </summary>
-        private void CheckTarget()
+        private void PickTarget()
         {
             GameLiving primaryTarget = Aggression.PrimaryTarget;
 
@@ -52,10 +54,44 @@ namespace DOL.AI.Brain
         /// Switch the target.
         /// </summary>
         /// <param name="living"></param>
-        protected void SwitchTarget(GameLiving living)
+        private void SwitchTarget(GameLiving living)
         {
             Body.StartAttack(living);
         }
+
+        /// <summary>
+        /// Check for living objects within a certain radius to 
+        /// aggro on.
+        /// </summary>
+        private void CheckForEnemies()
+        {
+            GamePlayer player = PickPlayerInRadius();
+
+            if (player != null)
+            {
+                Aggression.Raise(player, InternalAggression.Min);
+
+                // TODO: If player is grouped, add remaining players
+                //       from the group as well.
+            }
+        }
+
+        public ushort AggroLevel { get; set; }
+
+        protected virtual ushort AggroRange
+        {
+            get { return 500; }
+        }
+
+        private GamePlayer PickPlayerInRadius()
+        {
+            foreach (GamePlayer player in Body.GetPlayersInRadius(AggroRange))
+                if (Util.Chance(AggroLevel))
+                    return player;
+
+            return null;
+        }
+
 
         #region Notify handlers.
 
@@ -345,7 +381,7 @@ namespace DOL.AI.Brain
                     {
                         foreach (GameLiving living in m_aggression.Keys)
                         {
-                            if (m_aggression[living] > maxAmount)
+                            if (living.IsAttackable && m_aggression[living] > maxAmount)
                             {
                                 maxAmount = m_aggression[living];
                                 primaryTarget = living;
