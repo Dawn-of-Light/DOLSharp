@@ -36,7 +36,7 @@ namespace DOL.AI.Brain
             if (IsEngaged)
                 PickTarget();
             else
-                CheckForEnemies();
+                OnIdle();
         }
 
         /// <summary>
@@ -44,10 +44,19 @@ namespace DOL.AI.Brain
         /// </summary>
         private void PickTarget()
         {
-            GameLiving primaryTarget = Aggression.PrimaryTarget;
+            GameLiving target = Aggression.PrimaryTarget;
 
-            if (primaryTarget != Body.TargetObject)
-                SwitchTarget(primaryTarget);
+            if (target == null)
+            {
+                Body.StopAttack();
+                Aggression.Clear();
+                Body.WalkToSpawn();
+            }
+            else
+            {
+                if (target != Body.TargetObject)
+                    SwitchTarget(target);
+            }
         }
 
         /// <summary>
@@ -58,62 +67,6 @@ namespace DOL.AI.Brain
         {
             Body.StartAttack(living);
         }
-
-        /// <summary>
-        /// Check for living objects within a certain radius to 
-        /// aggro on.
-        /// </summary>
-        private void CheckForEnemies()
-        {
-            GamePlayer player = CheckNearbyPlayers();
-
-            if (player != null)
-                Aggression.Raise(player, InternalAggression.Initial);
-        }
-
-        public ushort AggroLevel { get; set; }
-        public ushort AggroRange { get; set; }
-
-        /// <summary>
-        /// Chance to aggro on nearby enemies, evaluated every
-        /// Think() tick. This should depend on level difference
-        /// and distance, but for simplicity's sake let's use
-        /// AggroLevel value for the time being.
-        /// </summary>
-        protected virtual int AggroChance
-        {
-            get
-            {
-                return AggroLevel;
-            }
-        }
-
-        /// <summary>
-        /// Check for players in range to aggro on.
-        /// </summary>
-        /// <returns></returns>
-        private GamePlayer CheckNearbyPlayers()
-        {
-            foreach (GamePlayer player in Body.GetPlayersInRadius(AggroRange))
-                if (Util.Chance(AggroChance))
-                    return player;
-
-            return null;
-        }
-
-        /// <summary>
-        /// Check for NPCs in range to aggro on.
-        /// </summary>
-        /// <returns></returns>
-        private GameNPC CheckNearbyNpcs()
-        {
-            foreach (GameNPC npc in Body.GetNPCsInRadius(AggroRange))
-                if (Util.Chance(AggroChance))
-                    return npc;
-
-            return null;
-        }
-
 
         #region Notify handlers.
 
@@ -173,6 +126,9 @@ namespace DOL.AI.Brain
             if (attackData == null)
                 return;
 
+            if (Body.IsReturningHome)
+                Body.CancelWalkToSpawn();
+
             if (!attackData.IsMeleeAttack)
             {
                 ISpellHandler spellhandler = attackData.SpellHandler;
@@ -217,7 +173,16 @@ namespace DOL.AI.Brain
             if (living == null)
                 return;
 
-            Aggression.Clear(living);
+            Aggression.Remove(living);
+        }
+
+        /// <summary>
+        /// The NPC has nothing to do.
+        /// </summary>
+        protected virtual void OnIdle()
+        {
+            // TODO: This is where an agressive brain looks
+            // for targets to aggro on.
         }
 
         private const int TauntAggressionAmount = 1000;
@@ -257,6 +222,11 @@ namespace DOL.AI.Brain
                     m_aggression = new InternalAggression();
 
                 return m_aggression;
+            }
+
+            set
+            {
+                m_aggression = value;
             }
         }
 
@@ -403,13 +373,22 @@ namespace DOL.AI.Brain
             /// Remove a living from the list.
             /// </summary>
             /// <param name="living"></param>
-            public void Clear(GameLiving living)
+            public void Remove(GameLiving living)
             {
                 lock (m_syncObject)
                 {
                     if (living != null && m_aggression.ContainsKey(living))
                         m_aggression.Remove(living);
                 }
+            }
+
+            /// <summary>
+            /// Clear all targets.
+            /// </summary>
+            public void Clear()
+            {
+                lock (m_syncObject)
+                    m_aggression.Clear();
             }
 
             /// <summary>
