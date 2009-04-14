@@ -3342,14 +3342,33 @@ namespace DOL.GS
 				int m_RR = PlayerCharacter.RealmLevel / 10;
 				return REALM_RANK_NAMES[(int)Realm - 1, PlayerCharacter.Gender, m_RR];
 			}
-		}
+        }
+
+        /// <summary>
+        /// Called when this living gains realm points
+        /// </summary>
+        /// <param name="amount">The amount of realm points gained</param>
+        public override void GainRealmPoints(long amount)
+        {
+            GainRealmPoints(amount, true, true);
+        }
+
+        /// <summary>
+        /// Called when this living gains realm points
+        /// </summary>
+        /// <param name="amount">The amount of realm points gained</param>
+        public void GainRealmPoints(long amount, bool modify)
+        {
+            GainRealmPoints(amount, modify, true);
+        }
 
 		/// <summary>
 		/// Called when this living gains realm points
 		/// </summary>
 		/// <param name="amount">The amount of realm points gained</param>
 		/// <param name="modify">Should we apply the rp modifer</param>
-		public void GainRealmPoints(long amount, bool modify)
+        /// <param name="sendMessage">Wether to send a message like "You have gained N realmpoints"</param>
+		public void GainRealmPoints(long amount, bool modify, bool sendMessage)
 		{
 			if (!GainRP)
 				return;
@@ -3367,10 +3386,9 @@ namespace DOL.GS
 			if (m_guild != null && Client.Account.PrivLevel == 1)
 				m_guild.GainRealmPoints(amount);
 
-			if (amount > 0)
+            if (sendMessage == true && amount > 0)
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.YouGet", amount.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-			//"You earn 4 extra realm points!"
-
+			
 			while (RealmPoints >= CalculateRPsFromRealmLevel(RealmLevel + 1) && RealmLevel < 120)
 			{
 				RealmLevel++;
@@ -3395,7 +3413,7 @@ namespace DOL.GS
 					string newsmessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.GainRealmPoints.ReachedRank", Name, RealmLevel + 10, LastPositionUpdateZone.Description);
 					NewsMgr.CreateNews(newsmessage, this.Realm, eNewsType.RvRLocal, true);
 				}
-				if (GameServer.ServerRules.CanGenerateNews(this) && RealmPoints >= 1000000 && RealmPoints - amount < 1000000)
+                if (GameServer.ServerRules.CanGenerateNews(this) && RealmPoints >= 1000000 && RealmPoints - amount < 1000000)
 				{
 					string message = LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.Earned", Name, LastPositionUpdateZone.Description);
 					string newsmessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.GainRealmPoints.Earned", Name, LastPositionUpdateZone.Description);
@@ -3403,16 +3421,7 @@ namespace DOL.GS
 				}
 			}
 			Out.SendUpdatePoints();
-		}
-
-		/// <summary>
-		/// Called when this living gains realm points
-		/// </summary>
-		/// <param name="amount">The amount of realm points gained</param>
-		public override void GainRealmPoints(long amount)
-		{
-			GainRealmPoints(amount, true);
-		}
+        }
 
 		/// <summary>
 		/// Called when this living buy something with realm points
@@ -3456,17 +3465,27 @@ namespace DOL.GS
 		/// <param name="amount">The amount of bounty points</param>
 		public override void GainBountyPoints(long amount)
 		{
-			GainBountyPoints(amount, true);
-		}
+			GainBountyPoints(amount, true, true);
+        }
+
+        /// <summary>
+        /// Player gains bounty points
+        /// </summary>
+        /// <param name="amount">The amount of bounty points</param>
+        public void GainBountyPoints(long amount, bool modify)
+        {
+            GainBountyPoints(amount, modify, true);
+        }
 
 		/// <summary>
 		/// Called when this living gains bounty points
 		/// </summary>
 		/// <param name="amount">The amount of bounty points gained</param>
-		/// <param name="multiply">Should this amount be multiplied by the BP Rate</param>
-		public void GainBountyPoints(long amount, bool multiply)
+        /// <param name="multiply">Should this amount be multiplied by the BP Rate</param>
+        /// <param name="sendMessage">Wether to send a message like "You have gained N bountypoints"</param>
+        public void GainBountyPoints(long amount, bool modify, bool sendMessage)
 		{
-			if (multiply)
+            if (modify)
 			{
 				//bp rate modifier
 				double modifier = ServerProperties.Properties.BP_RATE;
@@ -3478,8 +3497,11 @@ namespace DOL.GS
 			BountyPoints += amount;
 			if (m_guild != null && Client.Account.PrivLevel == 1)
 				m_guild.GainBountyPoints(amount);
-			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainBountyPoints.YouGet", amount.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-			Out.SendUpdatePoints();
+
+            if(sendMessage == true)
+			    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainBountyPoints.YouGet", amount.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			
+            Out.SendUpdatePoints();
 		}
 
 		/// <summary>

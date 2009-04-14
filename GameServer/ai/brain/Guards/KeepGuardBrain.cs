@@ -141,5 +141,10 @@ namespace DOL.AI.Brain
 				return AggroLevel;
 			return 0;
 		}
+		
+		public override bool AggroLOS
+		{
+			get { return true; }
+		}
 	}
 }
