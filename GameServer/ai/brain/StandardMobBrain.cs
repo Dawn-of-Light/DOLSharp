@@ -231,7 +231,7 @@ namespace DOL.AI.Brain
 
 				if (CalculateAggroLevelToTarget(player) > 0)
 				{
-					AddToAggroList(player, player.EffectiveLevel << 1);
+					AddToAggroList(player, player.EffectiveLevel << 1, true);
 				}
 			}
 		}
@@ -335,15 +335,21 @@ namespace DOL.AI.Brain
 			}
 		}
 
-		// LOS Check before aggroing:: walls, pits, trees...
-		private bool m_AggroLOS;
+		// LOS Check on natural aggro (aggrorange & aggrolevel)
+		// This part is here due to los check constraints;
+		// Otherwise, it should be in CheckPlayerAggro() method.
+		private bool m_AggroLOS;		
+		public virtual bool AggroLOS
+		{
+			get { return m_AggroLOS; }
+			set { m_AggroLOS = value; }
+		}
 		private void CheckAggroLOS(GamePlayer player, ushort response, ushort targetOID)
 		{
 			if ((response & 0x100) == 0x100)
-				m_AggroLOS=true;
+				AggroLOS=true;
 			else
-				m_AggroLOS=false;
-			//log.Debug (" LOS: " + m_AggroLOS + " for " + player.Name);
+				AggroLOS=false;
 		}
 		
 		/// <summary>
@@ -354,6 +360,11 @@ namespace DOL.AI.Brain
 		/// <param name="aggroamount"></param>
 		public virtual void AddToAggroList(GameLiving living, int aggroamount)
 		{
+			AddToAggroList(living, aggroamount, false);
+		}
+		
+		public virtual void AddToAggroList(GameLiving living, int aggroamount, bool NaturalAggro)
+		{		
 			if (m_body.IsConfused) return;
 
 			// tolakram - duration spell effects will attempt to add to aggro after npc is dead
@@ -362,7 +373,8 @@ namespace DOL.AI.Brain
 			if (living == null) return;
 			
 			// Check LOS (walls, pits, etc...) before  attacking, player + pet
-			if (DOL.GS.ServerProperties.Properties.ALWAYS_CHECK_LOS)
+			// Be sure the aggrocheck is triggered by the brain on Think() method
+			if (DOL.GS.ServerProperties.Properties.ALWAYS_CHECK_LOS && NaturalAggro)
 			{
 				GamePlayer thisLiving = null;
 				if (living is GamePlayer)
@@ -374,12 +386,10 @@ namespace DOL.AI.Brain
 					thisLiving = brain.GetPlayerOwner();
 				}
 				
-				if (thisLiving != null 
-                    && !(Body.Brain is DOL.AI.Brain.KeepGuardBrain) 
-                    && !(Body.Brain is DOL.AI.Brain.LordBrain))
+				if (thisLiving != null)
 				{
 					thisLiving.Out.SendCheckLOS (Body, living, new CheckLOSResponse(CheckAggroLOS));
-					if (!m_AggroLOS) return;
+					if (!AggroLOS) return;
 				}
 			}
 	
