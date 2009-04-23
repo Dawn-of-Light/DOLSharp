@@ -190,7 +190,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 							if (GameServer.Instance.Configuration.AutoAccountCreation)
 							{
 								// autocreate account
-
+                                if (password == null || password == "")
+                                {
+                                    client.Out.SendLoginDenied(eLoginError.AccountInvalid);
+                                    GameServer.Instance.Disconnect(client); 
+                                    if (log.IsInfoEnabled)
+                                        log.Info("Account creation failed, no password set for Account: " + userName);
+                                    return 1;
+                                }
 
 								playerAccount = new Account();
 								playerAccount.Name = userName;
@@ -200,19 +207,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 								playerAccount.LastLogin = DateTime.Now;
 								playerAccount.LastLoginIP = ipAddress;
 								playerAccount.Language = ServerProperties.Properties.SERV_LANGUAGE;
-
-								if (GameServer.Database.GetObjectCount(typeof(Account)) == 0)
-								{
-									playerAccount.PrivLevel = 3;
-									if (log.IsInfoEnabled)
-										log.Info("New admin account created: " + userName);
-								}
-								else
-								{
-									playerAccount.PrivLevel = 1;
-									if (log.IsInfoEnabled)
-										log.Info("New account created: " + userName);
-								}
+								playerAccount.PrivLevel = 1;
+								if (log.IsInfoEnabled)
+									log.Info("New account created: " + userName);
 
 								GameServer.Database.AddNewObject(playerAccount);
 							}
