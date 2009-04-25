@@ -85,10 +85,7 @@ namespace DOL.GS.Commands
 
                         GamePlayer player = client.Player.TargetObject as GamePlayer;
                         if (player == null)
-                        {
-                            DisplayMessage(client, "You need a valid target!");
-                            return;
-                        }
+                            	player = client.Player;
 
                         ArtifactMgr.GrantArtifactCredit(player, args[2]);
                         break;
@@ -104,11 +101,10 @@ namespace DOL.GS.Commands
                             DisplaySyntax(client);
                             return;
                         }
+                        
                         if (player == null)
-                        {
-                            DisplayMessage(client, "You need a valid target!");
-                            return;
-                        }
+                           	player = client.Player;
+                            
                         player.Name = args[2];
                         player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has changed your name to " + player.Name + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                         client.Out.SendMessage("You successfully changed this players name to " + player.Name + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -125,11 +121,10 @@ namespace DOL.GS.Commands
                             DisplaySyntax(client);
                             return;
                         }
+                        
                         if (player == null)
-                        {
-                            DisplayMessage(client, "You need a valid target!");
-                            return;
-                        }
+                           	player = client.Player;
+                            
                         switch (args[2])
                         {
                             case "change":
@@ -166,11 +161,10 @@ namespace DOL.GS.Commands
                                 DisplaySyntax(client);
                                 return;
                             }
+                            
                             if (player == null)
-                            {
-                                client.Out.SendMessage("You need a valid target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return;
-                            }
+                            	player = client.Player;
+                            
                             if (newLevel <= 0 || newLevel > 255)
                             {
                                 client.Out.SendMessage(player.Name + "'s level can only be set to a number 1 to 255!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -234,10 +228,7 @@ namespace DOL.GS.Commands
                             }
 
                             if (player == null)
-                            {
-                                client.Out.SendMessage("You need a valid target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return;
-                            }
+                            	player = client.Player;
 
                             if (newRealm < 0 || newRealm > 3)
                             {
@@ -276,10 +267,8 @@ namespace DOL.GS.Commands
                             }
 
                             if (player == null)
-                            {
-                                client.Out.SendMessage("You need a valid target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return;
-                            }
+                            	player = client.Player;
+
 
                             switch (args[2])
                             {
@@ -340,10 +329,7 @@ namespace DOL.GS.Commands
                             }
 
                             if (player == null)
-                            {
-                                client.Out.SendMessage("You need a valid target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return;
-                            }
+                            	player = client.Player;
 
                             switch (args[2])
                             {
@@ -423,10 +409,8 @@ namespace DOL.GS.Commands
                             }
 
                             if (player == null)
-                            {
-                                client.Out.SendMessage("You need a valid target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return;
-                            }
+                            	player = client.Player;
+                            
                             long amount = long.Parse(args[2]);
                             player.GainRealmPoints(amount, false);
                             client.Out.SendMessage("You gave " + player.Name + " " + amount + " realmpoints succesfully!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -456,10 +440,8 @@ namespace DOL.GS.Commands
                             }
 
                             if (player == null)
-                            {
-                                client.Out.SendMessage("You need a valid target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return;
-                            }
+                            	player = client.Player;
+                            
                             long amount = long.Parse(args[2]);
                             player.GainExperience(amount, false);
                             client.Out.SendMessage("You gave " + player.Name + " " + amount + " experience succesfully!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -487,10 +469,8 @@ namespace DOL.GS.Commands
                             }
 
                             if (player == null)
-                            {
-                                client.Out.SendMessage("You need a valid target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return;
-                            }
+                            	player = client.Player;
+                            
                             long amount = long.Parse(args[2]);
                             player.GainChampionExperience(amount);
                             client.Out.SendMessage("You gave " + player.Name + " " + amount + " Champion experience succesfully!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -518,10 +498,8 @@ namespace DOL.GS.Commands
                             }
 
                             if (player == null)
-                            {
-                                client.Out.SendMessage("You need a valid target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return;
-                            }
+                            	player = client.Player;
+                            
                             long amount = long.Parse(args[2]);
 							player.GainBountyPoints(amount, false);
                             client.Out.SendMessage("You gave " + player.Name + " " + amount + " bountypoints succesfully!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -553,18 +531,7 @@ namespace DOL.GS.Commands
                             }
 
                             if (player == null)
-                            {
-                                client.Out.SendMessage("You need a valid target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return;
-                            }
-
-                            // Graveen: /player stat is adding the value to stats. Allow it negative values
-                            // coherent positive/non-zero value is checked in gameplayer::changebasestat
-                            /*if (value < 0)
-                            {
-                                client.Out.SendMessage("Please use a positive integer.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return;
-                            }*/
+                            	player = client.Player;
 
                             switch (args[2])
                             {
@@ -775,10 +742,7 @@ namespace DOL.GS.Commands
                         }
 
                         if (player == null)
-                        {
-                            client.Out.SendMessage("You need a valid target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return;
-                        }
+                           	player = client.Player;
 
 						int amount = 1;
 						if (args.Length == 4)
@@ -1446,10 +1410,8 @@ namespace DOL.GS.Commands
                         }
 
                         if (player == null)
-                        {
-                            client.Out.SendMessage("You need a valid target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return;
-                        }
+                            player = client.Player;
+                        
                         player.Out.SendUpdatePlayer();
                         player.Out.SendCharStatsUpdate();
                         player.Out.SendUpdatePoints();
@@ -1472,10 +1434,8 @@ namespace DOL.GS.Commands
                         }
 
                         if (player == null)
-                        {
-                            client.Out.SendMessage("You need a valid target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return;
-                        }
+                            player = client.Player;
+                        
                         Show_Info(player, client);
 
                     }

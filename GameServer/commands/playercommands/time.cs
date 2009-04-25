@@ -34,27 +34,27 @@ namespace DOL.GS.Commands
 			// /time speed time
 			if (client.Account.PrivLevel > 1)
 			{
-				if (args.Length == 3)
+				try
 				{
-					uint speed = 0;
-					uint time = 0;
-					try
+					if (args.Length == 3)
 					{
+						uint speed = 0;
+						uint time = 0;
+	
 						speed = Convert.ToUInt32(args[1]);
 						time = Convert.ToUInt32(args[2]);
-					}
-					catch
-					{
-						client.Out.SendMessage(
-							"Usage: /time <speed> <time>",
-							eChatType.CT_System, eChatLoc.CL_SystemWindow);
+	
+						WorldMgr.StartDay(speed, time * (77760000 / 1000));
 						return;
 					}
-					WorldMgr.StartDay(speed, time * (77760000 / 1000));
+					else throw new Exception ();
+				}
+				catch
+				{
+					client.Out.SendMessage(
+					"Usage: /time <speed> <time>",
+					eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
-					//78643200 > 
-					//77929920 >
-					//myTimer = new Timer(77760000/timeadd);
 				}
 			}
 			//1000/60/54 to be like 77760 = 54*60*24

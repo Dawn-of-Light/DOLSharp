@@ -500,17 +500,29 @@ namespace DOL.GS.Housing
             return house.OwnerIDs;
         }
 
-		public static long GetRentByModel(int Model)
-		{
-			if ((Model == 1) || (Model == 5) || (Model == 9))
-				return 20 * 10000;
-			if ((Model == 2) || (Model == 6) || (Model == 10))
-				return 200 * 10000;
-			if ((Model == 3) || (Model == 7) || (Model == 11))
-				return 800 * 10000;
-			//if ((Model == 4) || (Model == 8) || (Model == 12))
-			return 2000 * 10000;
-		}
+        //public static long GetRentByModel(int Model)
+        //{
+        //    if ((Model == 1) || (Model == 5) || (Model == 9))
+        //        return 20 * 10000;
+        //    if ((Model == 2) || (Model == 6) || (Model == 10))
+        //        return 35 * 10000;
+        //    if ((Model == 3) || (Model == 7) || (Model == 11))
+        //        return 60 * 10000;
+        //    //if ((Model == 4) || (Model == 8) || (Model == 12))
+        //    return 100 * 10000;
+        //}
+
+        public static long GetRentByModel(int Model)
+        {
+            switch (Model % 4)
+            {
+                case 0: return 100 * 10000;
+                case 1: return 20 * 10000;
+                case 2: return 35 * 10000;
+                case 3: return 60 * 10000;
+                default: return 0;   // Unreachable code, but compiler wants it.
+            }
+        }
 
 		public static void CheckRents(object state)
 		{
