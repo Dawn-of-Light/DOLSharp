@@ -392,4 +392,37 @@ namespace DOL.GS.Spells
         // constructor
         public DefensiveProcSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
+    
+       [SpellHandler( "OffensiveProcPvE" )]
+       public class OffensiveProcPvESpellHandler : OffensiveProcSpellHandler
+       {
+          /// <summary>
+          /// The event type to hook on
+          /// </summary>
+          protected override DOLEvent EventType
+          {
+             get { return GameLivingEvent.AttackFinished; }
+          }
+
+
+          /// <summary>
+          /// Handler fired whenever effect target is attacked
+          /// </summary>
+          /// <param name="e"></param>
+          /// <param name="sender"></param>
+          /// <param name="arguments"></param>
+          protected override void EventHandler( DOLEvent e, object sender, EventArgs arguments )
+          {
+             AttackFinishedEventArgs args = arguments as AttackFinishedEventArgs;
+             if ( args == null || args.AttackData == null )
+             {
+                return;
+             }
+
+             if( args.AttackData.Target.Realm == eRealm.None )
+                base.EventHandler( e, sender, arguments );
+          }
+
+          public OffensiveProcPvESpellHandler( GameLiving caster, Spell spell, SpellLine line ) : base( caster, spell, line ) { }
+       }
 }

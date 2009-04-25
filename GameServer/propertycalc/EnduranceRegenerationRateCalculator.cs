@@ -51,15 +51,19 @@ namespace DOL.GS.PropertyCalc
 				 living.BaseBuffBonusCategory[(int)property]
 				+living.ItemBonus[(int)property];
 
-			if (regen == 0 && living is GamePlayer && ((GamePlayer)living).HasAbility(Abilities.Tireless))
-			{
+			if (regen == 0 && living is GamePlayer) //&& ((GamePlayer)living).HasAbility(Abilities.Tireless))
 				regen++;
-			}
 
-			if (!living.IsMoving && !living.InCombat)
-			{
-				regen += living.IsSitting ? 4 : 1;
-			}
+			/*    Patch 1.87 - COMBAT AND REGENERATION CHANGES
+    			- The bonus to regeneration while standing out of combat has been greatly increased. The amount of ticks 
+				  a player receives while standing has been doubled and it will now match the bonus to regeneration while sitting.
+ 				  Players will no longer need to sit to regenerate faster.
+			    - Fatigue now regenerates at the standing rate while moving.
+			*/
+			if (!living.InCombat)
+			   //&& !living.IsMoving)
+				//regen += living.IsSitting ? 4 : 1;
+				regen += 4;
 
 			regen -= debuff;
 

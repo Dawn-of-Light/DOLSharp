@@ -96,20 +96,20 @@ namespace DOL.GS.Housing
 		{
 			//lot marker
 			CheckItemTemplate("Albion cottage deed", "alb_cottage_deed", 498, 0, 10000000, 0, 0, 0, 0, 1);
-            CheckItemTemplate("Albion house deed", "alb_house_deed", 498, 0, 100000000, 0, 0, 0, 0, 1);
-            CheckItemTemplate("Albion villa deed", "alb_villa_deed", 498, 0, 400000000, 0, 0, 0, 0, 1);
-            CheckItemTemplate("Albion mansion deed", "alb_mansion_deed", 498, 0, 1000000000, 0, 0, 0, 0, 1);
+            CheckItemTemplate("Albion house deed", "alb_house_deed", 498, 0, 50000000, 0, 0, 0, 0, 1);
+            CheckItemTemplate("Albion villa deed", "alb_villa_deed", 498, 0, 100000000, 0, 0, 0, 0, 1);
+            CheckItemTemplate("Albion mansion deed", "alb_mansion_deed", 498, 0, 250000000, 0, 0, 0, 0, 1);
             CheckItemTemplate("Midgard cottage deed", "mid_cottage_deed", 498, 0, 10000000, 0, 0, 0, 0, 2);
-            CheckItemTemplate("Midgard house deed", "mid_house_deed", 498, 0, 100000000, 0, 0, 0, 0, 2);
-            CheckItemTemplate("Midgard villa deed", "mid_villa_deed", 498, 0, 400000000, 0, 0, 0, 0, 2);
-            CheckItemTemplate("Midgard mansion deed", "mid_mansion_deed", 498, 0, 1000000000, 0, 0, 0, 0, 2);
+            CheckItemTemplate("Midgard house deed", "mid_house_deed", 498, 0, 50000000, 0, 0, 0, 0, 2);
+            CheckItemTemplate("Midgard villa deed", "mid_villa_deed", 498, 0, 100000000, 0, 0, 0, 0, 2);
+            CheckItemTemplate("Midgard mansion deed", "mid_mansion_deed", 498, 0, 250000000, 0, 0, 0, 0, 2);
             CheckItemTemplate("Hibernia cottage deed", "hib_cottage_deed", 498, 0, 10000000, 0, 0, 0, 0, 3);
-            CheckItemTemplate("Hibernia house deed", "hib_house_deed", 498, 0, 100000000, 0, 0, 0, 0, 3);
-            CheckItemTemplate("Hibernia villa deed", "hib_villa_deed", 498, 0, 400000000, 0, 0, 0, 0, 3);
-            CheckItemTemplate("Hibernia mansion deed", "hib_mansion_deed", 498, 0, 1000000000, 0, 0, 0, 0, 3);
+            CheckItemTemplate("Hibernia house deed", "hib_house_deed", 498, 0, 50000000, 0, 0, 0, 0, 3);
+            CheckItemTemplate("Hibernia villa deed", "hib_villa_deed", 498, 0, 100000000, 0, 0, 0, 0, 3);
+            CheckItemTemplate("Hibernia mansion deed", "hib_mansion_deed", 498, 0, 250000000, 0, 0, 0, 0, 3);
             CheckItemTemplate("Porch deed", "porch_deed", 498, 0, 5000000, 0, 0, 0, 0, 0);
-            CheckItemTemplate("Porch remove deed", "porch_remove_deed", 498, 0, 100, 0, 0, 0, 0, 0);
-            CheckItemTemplate("deed of guild transfer", "deed_of_guild_transfer", 498, 0, 50000000, 0, 0, 0, 0, 0);
+            CheckItemTemplate("Porch remove deed", "porch_remove_deed", 498, 0, 500000, 0, 0, 0, 0, 0);
+            CheckItemTemplate("deed of guild transfer", "deed_of_guild_transfer", 498, 0, 500000, 0, 0, 0, 0, 0);
             CheckItemTemplate("House removal deed", "house_removal_deed", 498, 0, 50000000, 0, 0, 0, 0, 0);
 
 			//indoor npc
