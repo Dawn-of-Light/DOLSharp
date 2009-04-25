@@ -41,6 +41,16 @@ namespace DOL.GS.PropertyCalc
 			{
 				regen += ((living.Level-15) * 0.05);
 			}
+			
+			/* PATCH 1.87 COMBAT AND REGENERATION
+			  - While in combat, health and power regeneration ticks will happen twice as often.
+    		  - Each tick of health and power is now twice as effective.
+              - All health and power regeneration aids are now twice as effective.
+             */
+            if (living.InCombat)
+				regen +=2;
+            else
+            	regen +=4;
 
 			if (regen != 0 && ServerProperties.Properties.MANA_REGEN_RATE != 1)
 				regen *= ServerProperties.Properties.MANA_REGEN_RATE;
