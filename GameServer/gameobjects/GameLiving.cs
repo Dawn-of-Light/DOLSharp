@@ -3217,6 +3217,9 @@ namespace DOL.GS
 
 				if (evadeChance > 0 && !ad.Target.IsStunned && !ad.Target.IsSitting)
 				{
+					if (m_attackers.Count > 1)
+						evadeChance -= (m_attackers.Count - 1) * 0.03;
+
 					evadeChance *= 0.001;
 					evadeChance += 0.01 * attackerConLevel; // 1% per con level distance multiplied by evade level
 
@@ -3225,18 +3228,15 @@ namespace DOL.GS
 						evadeChance += lastAD.Style.BonusToDefense * 0.01;
 					}
 
-					if (m_attackers.Count > 1)
-						evadeChance -= (m_attackers.Count - 1) * 0.03;
+					if (ad.AttackType == AttackData.eAttackType.Ranged)
+						evadeChance /= 5.0;
 
 					if (evadeChance < 0.01)
 						evadeChance = 0.01;
-					else if (evadeChance > 0.5 && ad.Attacker is GamePlayer && ad.Target is GamePlayer)
-						evadeChance = 0.5; //50% evade cap RvR only; http://www.camelotherald.com/more/664.shtml
-					else if (evadeChance > 1.0)
-						evadeChance = 1.0;
-
-					if (ad.AttackType == AttackData.eAttackType.Ranged)
-						evadeChance /= 5.0;
+					else if (evadeChance > 0.50 && ad.Attacker is GamePlayer && ad.Target is GamePlayer)
+						evadeChance = 0.50; //50% evade cap RvR only; http://www.camelotherald.com/more/664.shtml
+					else if (evadeChance > 0.995)
+						evadeChance = 0.995;
 
 					if (Util.ChanceDouble(evadeChance))
 						return eAttackResult.Evaded;
@@ -3288,11 +3288,18 @@ namespace DOL.GS
                     }
 					else if (parryChance > 0 && !ad.Target.IsStunned && !ad.Target.IsSitting)
 					{
+						if (m_attackers.Count > 1) parryChance /= m_attackers.Count / 2;
+						
 						parryChance *= 0.001;
 						parryChance += 0.05 * attackerConLevel;
-						if (parryChance < 0.01) parryChance = 0.01;
-						if (parryChance > 0.99) parryChance = 0.99;
-						if (m_attackers.Count > 1) parryChance /= m_attackers.Count / 2;
+						
+						if (parryChance < 0.01)
+							parryChance = 0.01;
+						else if (parryChance > 0.50 && ad.Attacker is GamePlayer && ad.Target is GamePlayer)
+							parryChance = 0.50;
+						else if (parryChance > 0.995 )
+							parryChance = 0.995;
+						
 						if (Util.ChanceDouble(parryChance))
 							return eAttackResult.Parried;
 					}
@@ -3336,20 +3343,25 @@ namespace DOL.GS
 				}
 				if (blockChance > 0 && IsObjectInFront(ad.Attacker, 120) && !ad.Target.IsStunned && !ad.Target.IsSitting)
 				{
-					blockChance *= 0.001;
-					// no chance bonus with ranged attacks?
-					//					if (ad.Attacker.ActiveWeaponSlot == GameLiving.eActiveWeaponSlot.Distance)
-					//						blockChance += 0.25;
-					blockChance += attackerConLevel * 0.05;
-					if (blockChance > 0.99) blockChance = 0.99;
-					if (blockChance < 0.01) blockChance = 0.01;
-
 					// Reduce block chance if the shield used is too small (valable only for player because npc inventory does not store the shield size but only the model of item)
 					int shieldSize = 0;
 					if (lefthand != null)
 						shieldSize = lefthand.Type_Damage;
 					if (player != null && m_attackers.Count > shieldSize)
 						blockChance /= (m_attackers.Count - shieldSize + 1);
+
+					blockChance *= 0.001;
+					// no chance bonus with ranged attacks?
+					//					if (ad.Attacker.ActiveWeaponSlot == GameLiving.eActiveWeaponSlot.Distance)
+					//						blockChance += 0.25;
+					blockChance += attackerConLevel * 0.05;
+					
+					if( blockChance < 0.01 )
+						blockChance = 0.01;
+					else if( blockChance > 0.60 && ad.Attacker is GamePlayer && ad.Target is GamePlayer )
+						blockChance = 0.60;
+					else if( blockChance > 0.995 )
+						blockChance = 0.995;
 
 					// Engage raised block change to 85% if attacker is engageTarget and player is in attackstate
 					if (engage != null && AttackState && engage.EngageTarget == ad.Attacker)
