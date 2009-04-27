@@ -5004,22 +5004,11 @@ namespace DOL.GS
 			}
 		}
 
-		/// <summary>
-		/// Gets/sets the maximum amount of health
-		/// </summary>
 		public override int MaxHealth
 		{
 			get {	return GetModified(eProperty.MaxHealth); }
-			//			set
-			//			{
-			//				m_maxHealth = value;
-			//				Health = Health; //cut extra hit points if there are any or start regeneration
-			//			}
 		}
 
-		/// <summary>
-		/// Gets/sets the object mana
-		/// </summary>
 		public virtual int Mana
 		{
 			get { return m_mana; }
@@ -5029,36 +5018,22 @@ namespace DOL.GS
 				m_mana = Math.Min(value, maxmana);
 				m_mana = Math.Max(m_mana, 0);
 
-				//if (IsAlive && m_mana < maxmana)
 				if (IsAlive && (m_mana < maxmana || (this is GamePlayer && ((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Vampiir)
 					   || (this is GamePlayer && ((GamePlayer)this).CharacterClass.ID > 59 && ((GamePlayer)this).CharacterClass.ID < 63)))
-				// || (this is GamePlayer && ((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Mauler_Hib)
-				// || (this is GamePlayer && ((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Mauler_Mid)))
 				{
 					StartPowerRegeneration();
 				}
 			}
 		}
 
-		/// <summary>
-		/// Gets/sets the maximum amount of mana
-		/// </summary>
 		public virtual int MaxMana
 		{
 			get
 			{
 				return GetModified(eProperty.MaxMana);
 			}
-			//			set
-			//			{
-			//				m_maxMana = value;
-			//				Mana=Mana; //cut extra mana points if there are any or start regeneration
-			//			}
 		}
 
-		/// <summary>
-		/// Gets the Mana in percent 0..100
-		/// </summary>
 		public virtual byte ManaPercent
 		{
 			get
@@ -5283,9 +5258,6 @@ namespace DOL.GS
 				m_targetObjectWeakReference.Target = value;
 			}
 		}
-		/// <summary>
-		/// Gets the current sit state
-		/// </summary>
 		public virtual bool IsSitting
 		{
 			get { return false; }
