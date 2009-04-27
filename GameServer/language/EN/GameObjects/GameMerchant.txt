@@ -19,4 +19,5 @@ GameMerchant.OnPlayerSell.CantBeSold:			This item can't be sold.
 GameMerchant.OnPlayerSell.GivesYou:			{0} gives you {1} for {2}.
 GameMerchant.OnPlayerSell.IsntInterested:		{0} isn't interested in {1}.
 GameMerchant.OnPlayerSell.TooFarAway:			{0} is too far away!
+GameMerchant.OnPlayerWithdraw:		You withdraw {0} from your merchant.
 

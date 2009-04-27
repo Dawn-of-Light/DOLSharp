@@ -1037,11 +1037,14 @@ namespace DOL.GS
             ArrayList returnObjs = new ArrayList();
             for (int i = 0; i < objs.Length; i++)
             {
-                GameNPC obj = (GameNPC)objs[i];
-                if (obj != null)
-                    returnObjs.Add(obj);
+                if (objs[i] is GameNPC)
+                {
+                    GameNPC obj = (GameNPC)objs[i];
+                    if (obj != null)
+                        returnObjs.Add(obj);
+                }
             }
-            return (GameNPC[])returnObjs.ToArray(typeof(GameNPC[]));
+            return (GameNPC[])returnObjs.ToArray(typeof(GameNPC));
         }
 
 		/// <summary>
