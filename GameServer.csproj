@@ -1,7 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{ACB92917-3D42-4F40-97F9-EA904A41DE36}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -662,6 +662,7 @@
     <Compile Include="gameobjects\craft master\TailoringMaster.cs" />
     <Compile Include="gameobjects\craft master\WeaponCraftingMaster.cs" />
     <Compile Include="gameobjects\CustomNPC\Blacksmith.cs" />
+    <Compile Include="gameobjects\CustomNPC\ConsignmentMerchant.cs" />
     <Compile Include="gameobjects\CustomNPC\EmblemNPC.cs" />
     <Compile Include="gameobjects\CustomNPC\Enchanter.cs" />
     <Compile Include="gameobjects\CustomNPC\FaceCustomiser.cs" />
@@ -669,6 +670,7 @@
     <Compile Include="gameobjects\CustomNPC\Hastener.cs" />
     <Compile Include="gameobjects\CustomNPC\Healer.cs" />
     <Compile Include="gameobjects\CustomNPC\HousingHastener.cs" />
+    <Compile Include="gameobjects\CustomNPC\MarketExplorer.cs" />
     <Compile Include="gameobjects\CustomNPC\NameRegistrar.cs" />
     <Compile Include="gameobjects\CustomNPC\Recharger.cs" />
     <Compile Include="gameobjects\CustomNPC\TaskMaster.cs" />
@@ -847,6 +849,7 @@
     <Compile Include="packets\Client\168\MinotaurRelicWindowHandler.cs" />
     <Compile Include="packets\Client\168\PlayerMarketSearchRequestHandler.cs" />
     <Compile Include="packets\Client\168\PlayerSetMarketPrice.cs" />
+    <Compile Include="packets\Client\168\PlayerWithdrawMerchantMoney.cs" />
     <Compile Include="packets\Client\168\QuestRewardChosenHandler.cs" />
     <Compile Include="packets\Client\168\ShipHookpointInteract.cs" />
     <Compile Include="packets\Client\168\CryptKeyRequestHandler.cs" />

@@ -276,6 +276,15 @@ namespace DOL.GS.Housing
 		{
 			get { return m_houseAccess; }
 		}
+
+        private Consignment m_consignment;
+
+        public Consignment ConsignmentMerchant
+        {
+            get { return m_consignment; }
+            set { m_consignment = value; }
+        }
+
 		#endregion
 
 		/****************** AREDHEL ACCESS HANDLING START **********************/
@@ -364,15 +373,189 @@ namespace DOL.GS.Housing
 			}
 		}
 
-		public bool EditPorch(bool add_porch)
-		{
-			if (Porch == add_porch) //we cannot remove if removed, or add if added
-				return false;
-			Porch = add_porch;
-			this.SendUpdate();
-			this.SaveIntoDatabase();
-			return true;
-		}
+        public bool EditPorch(bool add_porch)
+        {
+            if (Porch == add_porch) //we cannot remove if removed, or add if added
+                return false;
+            if (add_porch == false)
+                RemoveConsignment();
+            Porch = add_porch;
+            this.SendUpdate();
+            this.SaveIntoDatabase();
+
+            return true;
+        }
+
+
+        public bool AddConsignment(int startValue)
+        {
+            DataObject obj = GameServer.Database.SelectObject(typeof(Mob), "HouseNumber = '" + this.HouseNumber + "'");
+            if (obj != null)
+                return false;
+            DBHouseMerchant merchant = (DBHouseMerchant)GameServer.Database.SelectObject(typeof(DBHouseMerchant), "HouseNumber = '" + this.HouseNumber + "'");
+            if (merchant != null)
+                return false;
+            DBHouseMerchant newM = new DBHouseMerchant();
+            newM.HouseNumber = this.HouseNumber;
+            newM.Quantity = startValue;
+            GameServer.Database.AddNewObject(newM);
+            #region positioning
+            double multi = 0;
+            int range = 0;
+            int zaddition = 0;
+            int realm = 0;
+            switch (Model)
+            {
+                case 1:
+                    {
+                        multi = 0.55;
+                        range = 630;
+                        zaddition = 40;
+                        realm = 1;
+                        break;
+                    }
+                case 2:
+                    {
+                        multi = 0.55;
+                        range = 630;
+                        zaddition = 40;
+                        realm = 1;
+                        break;
+                    }
+                case 3:
+                    {
+                        multi = -0.55;
+                        range = 613;
+                        zaddition = 100;
+                        realm = 1;
+                        break;
+                    }
+                case 4:
+                    {
+                        multi = 0.53;
+                        range = 620;
+                        zaddition = 100;
+                        realm = 1;
+                        break;
+                    }
+                case 5:
+                    {
+                        multi = -0.47;
+                        range = 755;
+                        zaddition = 40;
+                        realm = 2;
+                        break;
+                    }
+                case 6:
+                    {
+
+                        multi = -0.5;
+                        range = 630;
+                        zaddition = 40;
+                        realm = 2;
+                        break;
+                    }
+                case 7:
+                    {
+                        multi = 0.48;
+                        range = 695;
+                        zaddition = 100;
+                        realm = 2;
+                        break;
+                    }
+                case 8:
+                    {
+                        multi = -0.505;
+                        range = 680;
+                        zaddition = 100;
+                        realm = 2;
+                        break;
+                    }
+                case 9:
+                    {
+                        multi = 0.475;
+                        range = 693;
+                        zaddition = 40;
+                        realm = 3;
+                        break;
+                    }
+                case 10:
+                    {
+                        multi = 0.47;
+                        range = 688;
+                        zaddition = 40;
+                        realm = 3;
+                        break;
+                    }
+                case 11:
+                    {
+                        multi = -0.65;
+                        range = 603;
+                        zaddition = 100;
+                        realm = 3;
+                        break;
+                    }
+                case 12:
+                    {
+                        multi = -0.58;
+                        range = 638;
+                        zaddition = 100;
+                        realm = 3;
+                        break;
+                    }
+            }
+            #endregion
+            double angle = Heading * ((Math.PI * 2) / 360); // angle*2pi/360;
+            ushort heading = (ushort)((Heading < 180 ? Heading + 180 : Heading - 180) / 0.08789);
+            int tX = (int)((X + (500 * Math.Sin(angle))) - Math.Sin(angle - multi) * range);
+            int tY = (int)((Y - (500 * Math.Cos(angle))) + Math.Cos(angle - multi) * range);
+            Consignment con = new Consignment();
+            con.CurrentRegionID = RegionID;
+            con.X = tX;
+            con.Y = tY;
+            if (this.DatabaseItem.GuildHouse)
+                con.GuildName = this.DatabaseItem.GuildName;
+            con.Z = Z + zaddition;
+            con.Level = 50;
+            con.Realm = (eRealm)realm;
+            con.HouseNumber = HouseNumber;
+            con.Name = "Consignment Merchant";
+            con.Heading = heading;
+            con.Model = 144;
+            con.Flags |= (uint)GameNPC.eFlags.PEACE;
+            con.LoadedFromScript = false;
+            con.RoamingRange = 0;
+            con.AddToWorld();
+            con.SaveIntoDatabase();
+            this.DatabaseItem.HasConsignment = true;
+            this.SaveIntoDatabase();
+            return true;
+        }
+
+        public void RemoveConsignment()
+        {
+            Mob npcmob = (Mob)GameServer.Database.SelectObject(typeof(Mob), "HouseNumber = '" + this.HouseNumber + "'");
+            if (npcmob != null)
+            {
+                GameNPC[] npc = WorldMgr.GetNPCsByNameFromRegion(npcmob.Name, npcmob.Region, (eRealm)npcmob.Realm);
+                foreach (GameNPC hnpc in npc)
+                {
+                    if (hnpc.HouseNumber == HouseNumber)
+                    {
+                        hnpc.DeleteFromDatabase();
+                        hnpc.Delete();
+                    }
+                }
+            }
+            DBHouseMerchant merchant = (DBHouseMerchant)GameServer.Database.SelectObject(typeof(DBHouseMerchant), "HouseNumber = '" + this.HouseNumber + "'");
+            if (merchant != null)
+            {
+                GameServer.Database.DeleteObject(merchant);
+            }
+            this.m_consignment = null;
+            this.DatabaseItem.HasConsignment = false;
+            this.SaveIntoDatabase();
+        }  
 
 		public bool IsInPerm(string name, ePermsTypes type, int lvl)
 		{

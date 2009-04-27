@@ -1,4 +1,4 @@
-/*
+﻿/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  * 
  * This program is free software; you can redistribute it and/or
@@ -21,46 +21,56 @@ using System.Reflection;
 using DOL.Database;
 using DOL.GS.Housing;
 using log4net;
+using DOL.Language;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-    [PacketHandler(PacketHandlerType.TCP, 0x1A, "Set market price")]
-    public class PlayerSetMarketPriceHandler : IPacketHandler
+    [PacketHandler(PacketHandlerType.TCP, 0x1C, "Withdraw Consignment Merchant Money")]
+    public class PlayerWithdrawMerchantMoney : IPacketHandler
     {
         /// <summary>
         /// Defines a logger for this class.
         /// </summary>
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        public const string NEW_PRICE = "newPrice";
+
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
             if (client.Player == null)
                 return 0;
-
-            int slot = packet.ReadByte();
-            int unk1 = packet.ReadByte();
-            ushort unk2 = packet.ReadShort();
-            uint price = packet.ReadInt();
             Consignment con = client.Player.ActiveConMerchant;
+
+            if (con == null)
+                return 0;
             House house = HouseMgr.GetHouse(con.HouseNumber);
+
             if (house == null)
                 return 0;
+
             if (!house.HasOwnerPermissions(client.Player))
+            {
+                client.Player.Out.SendMessage("You don't have permission to withdraw money from this merchant!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
                 return 0;
-            int dbSlot = (int)eInventorySlot.Consignment_First + slot;
-            InventoryItem item = (InventoryItem)GameServer.Database.SelectObject(typeof(InventoryItem), "OwnerID = '" + client.Player.PlayerCharacter.ObjectId + "' AND SlotPosition = '" + dbSlot.ToString() + "'");
-            if (item != null)
-            {
-                item.SellPrice = (int)price;
-                GameServer.Database.SaveObject(item);
-            }
-            else
-            {
-                client.Player.TempProperties.setProperty(NEW_PRICE, (int)price);
             }
 
-            // another update required here,currently the player needs to reopen the window to see the price, thats why we msg him
-            client.Out.SendMessage("New price set! (open the merchant window again to see the price)", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            DBHouseMerchant merchant = (DBHouseMerchant)GameServer.Database.SelectObject(typeof(DBHouseMerchant), "HouseNumber = '" + con.HouseNumber + "'");
+
+            if (merchant.Quantity > 0)
+            {
+                if (ConsignmentMoney.UseBP)
+                {
+                    client.Player.Out.SendMessage("You withdraw " + merchant.Quantity.ToString() + " BountyPoints from your Merchant.", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
+                    client.Player.BountyPoints += merchant.Quantity;
+                    client.Player.Out.SendUpdatePoints();
+                }
+                else
+                {
+                    string message = LanguageMgr.GetTranslation(client, "GameMerchant.OnPlayerWithdraw", Money.GetString((long)merchant.Quantity));
+                    client.Player.AddMoney((long)merchant.Quantity, message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+                }
+                merchant.Quantity = 0;
+                GameServer.Database.SaveObject(merchant);
+            }
+
             return 1;
         }
     }

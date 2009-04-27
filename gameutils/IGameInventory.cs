@@ -70,6 +70,8 @@ namespace DOL.GS
 		Consignment_First = 1500,
 		Consignment_Last = 1599,
 
+        MarketExplorerFirst = 1000,
+
 		//FirstFixLoot      = 256, //You can define drops that will ALWAYS occur (eg quest drops etc.)
 		//LastFixLoot       = 356, //100 drops should be enough ... if not, just raise this var, we have thousands free
 		//LootPagesStart    = 500, //Let's say each loot page is 100 slots in size, lots of space for random drops

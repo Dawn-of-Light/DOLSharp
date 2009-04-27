@@ -7186,6 +7186,7 @@ namespace DOL.GS
 		#region Vault/Money/Items/Trading/UseSlot/ApplyPoison
 
 		private GameHouseVault m_activeVault;
+        private Consignment m_activeConMerchant;
 
 		/// <summary>
 		/// The currently active house vault.
@@ -7195,6 +7196,15 @@ namespace DOL.GS
 			get { return m_activeVault; }
 			set { m_activeVault = value; }
 		}
+
+        /// <summary>
+        /// The currently active Consignment Merchant
+        /// </summary>
+        public Consignment ActiveConMerchant
+        {
+            get { return m_activeConMerchant; }
+            set { m_activeConMerchant = value; }
+        }
 
 		/// <summary>
 		/// Property that holds tick when charged item was used last time
