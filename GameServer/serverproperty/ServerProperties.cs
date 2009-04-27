@@ -619,6 +619,12 @@ namespace DOL.GS.ServerProperties
         /// </summary>
         [ServerProperty("always_check_los", "Perform a LoS check before aggroing. This can involve a huge lag, handle with care!", false)]
         public static bool ALWAYS_CHECK_LOS;
+		
+        /// <summary>
+		/// Account bombing prevention
+		/// </summary>
+		[ServerProperty("time_between_account_creation", "The time in minutes between 2 accounts creation. This avoid account bombing with dynamic ip. 0 to disable", 2)]
+		public static readonly int TIME_BETWEEN_ACCOUNT_CREATION;
         
         /// <summary>
 		/// This method loads the property from the database and returns
