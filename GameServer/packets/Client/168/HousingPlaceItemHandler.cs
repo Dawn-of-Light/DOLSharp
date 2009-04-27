@@ -250,7 +250,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			if (orgitem.Object_Type == 49) // Garden items 
 				method = 1;
-			else if (orgitem.Id_nb == "porch_deed" || orgitem.Id_nb == "porch_remove_deed")
+            else if (orgitem.Id_nb == "porch_deed" || orgitem.Id_nb == "porch_remove_deed" || orgitem.Id_nb == "consignment_deed")
 				method = 4;			
 			else if (orgitem.Object_Type >= 59 && orgitem.Object_Type <= 64) // Outdoor Roof/Wall/Door/Porch/Wood/Shutter/awning Material item type
 			{
@@ -423,6 +423,23 @@ namespace DOL.GS.PacketHandler.Client.v168
                                     client.Out.SendInventorySlotsUpdate(new int[] { slot });
                                 }
                                 return 1;
+                            case "consignment_deed":
+                                {
+                                    if (!house.Porch)
+                                    {
+                                        client.Player.Out.SendMessage("Your House needs a Porch first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                        client.Out.SendInventorySlotsUpdate(new int[] { slot });
+                                        return 1;
+                                    }
+                                    if (house.AddConsignment(0))
+                                        client.Player.Inventory.RemoveItem(orgitem);
+                                    else
+                                    {
+                                        client.Player.Out.SendMessage("You can not add a Consignment Merchant here.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                        client.Out.SendInventorySlotsUpdate(new int[] { slot });
+                                    }
+                                    return 1;
+                                }
                             default:
                                 client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.PorchNotItem"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 client.Out.SendInventorySlotsUpdate(new int[] { slot });

@@ -1710,8 +1710,13 @@ namespace DOL.GS.PacketHandler
 					string name = item.Name;
 					if (item.Count > 1)
 						name = item.Count + " " + name;
-					if (item.SellPrice > 0)
-						name += "[" + Money.GetString(item.SellPrice) + "]";
+                    if (item.SellPrice > 0)
+                    {
+                        if (ConsignmentMoney.UseBP)
+                            name += "[" + item.SellPrice.ToString() + " BP]";
+                        else
+                            name += "[" + Money.GetString(item.SellPrice) + "]";
+                    }
 					pak.WritePascalString(name);
 				}
 			}
@@ -3384,8 +3389,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendMarketExplorerWindow(List<InventoryItem> items, byte page, byte maxpage)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut((byte)ePackets.MarketExplorerWindow);
-
+			GSTCPPacketOut pak = new GSTCPPacketOut((byte)ePackets.MarketExplorerWindow);            
 			pak.WriteByte((byte)items.Count);
 			pak.WriteByte(page);
 			pak.WriteByte(maxpage);
@@ -3441,12 +3445,26 @@ namespace DOL.GS.PacketHandler
 				else
 					pak.WriteShort((ushort)item.Color);
 				pak.WriteShort((byte)item.Effect);
-				pak.WriteShort((ushort)items.IndexOf(item));//lot
+				pak.WriteShort(item.OwnerLot);//lot
 				pak.WriteInt((uint)item.SellPrice);
-				if (item.PackSize > 1)
-					pak.WritePascalString(item.PackSize + " " + item.Name);
-				else
-					pak.WritePascalString(item.Name);
+
+                if (ConsignmentMoney.UseBP)
+                {
+                    string bpPrice = "";
+                    if (item.SellPrice > 0)
+                        bpPrice = "[" + item.SellPrice.ToString() + " BP";
+                    if (item.PackSize > 1)
+                        pak.WritePascalString(item.PackSize + " " + item.Name + bpPrice);
+                    else
+                        pak.WritePascalString(item.Name + bpPrice);
+                }
+                else
+                {
+                    if (item.PackSize > 1)
+                        pak.WritePascalString(item.PackSize + " " + item.Name);
+                    else
+                        pak.WritePascalString(item.Name);
+                }
 			}
 
 			SendTCP(pak);

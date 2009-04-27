@@ -55,6 +55,7 @@ namespace DOL.Database
 		static bool m_autoSave;
         protected string m_internalID;
 		protected int m_sellPrice;
+        protected ushort m_ownerLot;
 
 		public InventoryItem()
 			: base()
@@ -169,6 +170,20 @@ namespace DOL.Database
 				m_sellPrice = value;
 			}
 		}
+
+        [DataElement(AllowDbNull = true)]
+        public ushort OwnerLot
+        {
+            get
+            {
+                return m_ownerLot;
+            }
+            set
+            {
+                Dirty = true;
+                m_ownerLot = value;
+            }
+        }
 
 		[DataElement(AllowDbNull = true)]
 		public string CrafterName

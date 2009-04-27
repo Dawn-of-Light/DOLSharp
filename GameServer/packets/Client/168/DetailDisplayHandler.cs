@@ -63,21 +63,41 @@ namespace DOL.GS.PacketHandler.Client.v168
 				#region Inventory Item
 				case 1: //Display Infos on inventory item
 				case 10: // market search
-					{
-						InventoryItem item = null;
-						if (objectType == 1)
-						{
-							item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
-							if (item == null)
-								return 1;
-						}
-						else
-						{
-							List<InventoryItem> list = client.Player.TempProperties.getObjectProperty("TempSearchKey", null) as List<InventoryItem>;
-							if (objectID >= list.Count || objectID < 0)
-								return 1;
-							item = list[objectID];
-						}
+                    {
+                        InventoryItem item = null;
+                        if (objectType == 1)
+                        {
+                            item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
+                            if (item == null)
+                            {
+                                if (client.Player.ActiveConMerchant != null)
+                                {
+                                    Consignment con = client.Player.ActiveConMerchant;
+                                    item = con.ConInventory[objectID];
+                                    if (item == null)
+                                        return 1;
+                                }
+                                else
+                                    return 1;
+                            }
+
+                        }
+                        else if (objectType == 10)
+                        {
+                            List<InventoryItem> list = client.Player.TempProperties.getObjectProperty(DOL.GS.PacketHandler.Client.v168.PlayerMarketSearchRequestHandler.EXPLORER_LIST, null) as List<InventoryItem>;
+                            if (list == null)
+                                return 1;
+                            item = list[objectID];
+                            if (item == null)
+                                return 1;
+                        }
+                        else
+                        {
+                            List<InventoryItem> list = client.Player.TempProperties.getObjectProperty("TempSearchKey", null) as List<InventoryItem>;
+                            item = list[objectID];
+                            if (item == null)
+                                return 1;
+                        }
 
 						caption = item.Name;
 
