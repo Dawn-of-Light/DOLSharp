@@ -102,6 +102,9 @@ namespace DOL.GS
 				return false;
 			}
 
+            if (player.ActiveConMerchant != null)
+                player.ActiveConMerchant = null;
+
 			if (!m_observers.ContainsKey(player.Name))
 				m_observers.Add(player.Name, player);
 
@@ -361,6 +364,19 @@ namespace DOL.GS
 
 			return ((GetPlayerPermissions(player) & (byte)(Permissions.View)) > 0);
 		}
+
+        /// <summary>
+        /// Whether or not this player can move items inside the vault
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        public bool CanMove(GamePlayer player)
+        {
+            if (CurrentHouse.IsOwner(player) || player.Client.Account.PrivLevel > 1)
+                return true;
+
+            return ((GetPlayerPermissions(player) & (byte)(Permissions.Remove)) > 0);
+        }
 
 		/// <summary>
 		/// Get permissions this player has for this vault.

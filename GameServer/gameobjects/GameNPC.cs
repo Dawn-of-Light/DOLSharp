@@ -2619,7 +2619,7 @@ namespace DOL.GS
 				}
 			}
 
-			if (m_houseNumber > 0)
+            if (m_houseNumber > 0 && !(this is Consignment))
 			{
 				log.Info("NPC '" + Name + "' added to house N�" + m_houseNumber);
 				CurrentHouse = HouseMgr.GetHouse(m_houseNumber);

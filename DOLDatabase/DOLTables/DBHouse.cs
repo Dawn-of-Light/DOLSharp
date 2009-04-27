@@ -61,6 +61,7 @@ namespace DOL
 			private bool m_nopurge;
             private bool m_guildHouse;
             private string m_guildName;
+            private bool m_hasConsignment;
 
 			static bool m_autoSave;
 
@@ -489,7 +490,23 @@ namespace DOL
                     Dirty = true;
                     m_guildName = value;
                 }
-            }			//[Relation(LocalField = "HouseNumber", RemoteField = "HouseNumber", AutoLoad = true, AutoDelete=true)]
+            }
+
+            [DataElement(AllowDbNull = true)]
+            public bool HasConsignment
+            {
+                get
+                {
+                    return m_hasConsignment;
+                }
+                set
+                {
+                    Dirty = true;
+                    m_hasConsignment = value;
+                }
+            }
+            
+            //[Relation(LocalField = "HouseNumber", RemoteField = "HouseNumber", AutoLoad = true, AutoDelete=true)]
 			//public DBHouseIndoorItem[] IndoorItems;
 
 			//[Relation(LocalField = "HouseNumber", RemoteField = "HouseNumber", AutoLoad = true, AutoDelete=true)]

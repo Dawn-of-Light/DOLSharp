@@ -238,8 +238,13 @@ namespace DOL.GS.PacketHandler
 					string name = item.Name;
 					if (item.Count > 1)
 						name = item.Count + " " + name;
-					if (item.SellPrice > 0)
-						name += "[" + Money.GetString(item.SellPrice) + "]";
+                    if (item.SellPrice > 0)
+                    {
+                        if (ConsignmentMoney.UseBP)
+                            name += "[" + item.SellPrice.ToString() + " BP]";
+                        else
+                            name += "[" + Money.GetString(item.SellPrice) + "]";
+                    }
 					pak.WritePascalString(name);
 				}
 			}

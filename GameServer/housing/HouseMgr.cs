@@ -139,6 +139,18 @@ namespace DOL.GS.Housing
 			return null;
 		}
 
+        public static Consignment GetConsignmentByHouseNumber(int housenumber)
+        {
+            foreach (Hashtable hash in m_houselists.Values)
+                if (hash.ContainsKey(housenumber))
+                {
+                    House h = (House)hash[housenumber];
+                    if (h.ConsignmentMerchant != null)
+                        return h.ConsignmentMerchant;
+                }
+            return null;
+        }
+
 		public static void AddHouse(House house)
 		{
 			Hashtable hash = (Hashtable)m_houselists[house.RegionID];
@@ -229,6 +241,15 @@ namespace DOL.GS.Housing
             house.Model = newmodel;
             house.SaveIntoDatabase();
             house.SendUpdate();
+            #region consignment merchant
+            DBHouseMerchant merchant = (DBHouseMerchant)GameServer.Database.SelectObject(typeof(DBHouseMerchant), "HouseNumber = '" + house.HouseNumber + "'");
+            if (merchant != null)
+            {
+                int oldValue = merchant.Quantity;
+                house.RemoveConsignment();
+                house.AddConsignment(oldValue);
+            }
+            #endregion
         }
 
 		public static void RemoveHouse(House house)
@@ -301,7 +322,7 @@ namespace DOL.GS.Housing
                 foreach (DataObject item in objs)
                     GameServer.Database.DeleteObject(item);
             #endregion
-
+            house.RemoveConsignment();
             house.SaveIntoDatabase();
 			hash.Remove(house.HouseNumber);
 			GameLotMarker.SpawnLotMarker(house.DatabaseItem);
