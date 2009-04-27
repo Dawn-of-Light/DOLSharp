@@ -38,7 +38,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		private readonly Dictionary<string, LockCount> m_locks = new Dictionary<string, LockCount>();
-
+		private static DateTime? last_Account_Creation;
+		
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			string ipAddress = client.TcpEndpoint;
@@ -198,7 +199,46 @@ namespace DOL.GS.PacketHandler.Client.v168
                                         log.Info("Account creation failed, no password set for Account: " + userName);
                                     return 1;
                                 }
+                                
+                                // check for account bombing
+                                TimeSpan ts;
+                                // per ip - 3 accounts allowed before checking if 10 minutes between creation
+    							Account[] allAccByIp = (Account[])GameServer.Database.SelectObjects(typeof(Account), "LastLoginIP = '" + ipAddress + "'");
+                                int totalacc = 0;
+                                foreach (Account ac in allAccByIp)
+                                {
+                                    ts = DateTime.Now - ac.CreationDate;
+                                    if (ts.Minutes < 10 && totalacc > 2)
+                                    {
+                                    	log.Warn("Account creation: too many time between creation - " + userName);
+                                        client.Out.SendLoginDenied(eLoginError.AccountNoAccessThisGame);
+                                        GameServer.Instance.Disconnect(client);
+                                    }
+                                    totalacc++;
+                                }
+                                if (totalacc >= 20)
+  {
+                                    log.Warn("Account creation: too many accounts created from same ip - " + userName);
+                                    client.Out.SendLoginDenied(eLoginError.AccountNoAccessThisGame);
+                                    GameServer.Instance.Disconnect(client);
+                                }
+                                
+                                // per timeslice - for preventing account bombing via different ip
+                                if (ServerProperties.Properties.TIME_BETWEEN_ACCOUNT_CREATION > 0)
+	                                if (!last_Account_Creation.HasValue)
+	                                	last_Account_Creation = DateTime.Now;
+	                                else
+	                                {
+	                                	ts = DateTime.Now - last_Account_Creation.Value;
+	                                	if (ts.Minutes > ServerProperties.Properties.TIME_BETWEEN_ACCOUNT_CREATION)
+	                                	{
+	                                		log.Warn("Account creation: timeslice between creation not matched - " + userName);
+	                                		client.Out.SendLoginDenied(eLoginError.AccountNoAccessThisGame);
+                                    		GameServer.Instance.Disconnect(client);
+	                                	}
+	                                }
 
+                                // seems ok, effective account creation
 								playerAccount = new Account();
 								playerAccount.Name = userName;
 								playerAccount.Password = CryptPassword(password);
