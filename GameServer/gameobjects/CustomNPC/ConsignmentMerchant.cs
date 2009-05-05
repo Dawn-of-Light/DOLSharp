@@ -372,7 +372,7 @@ namespace DOL.GS
                     continue;
                 }
 
-                if (!WorldMgr.CheckDistance(observer, this, WorldMgr.INTERACT_DISTANCE))
+                if (observer.IsWithinRadius(this, WorldMgr.INTERACT_DISTANCE ))
                 {
                     if (observer.Client.Account.PrivLevel > 1)
                         observer.Out.SendMessage("You are to far away from the Consignment Merchant and will no longer receive updates.", eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
