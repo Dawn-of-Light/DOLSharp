@@ -958,6 +958,24 @@ namespace DOL.GS
 				}
 			}
 		}
+		
+		/// <summary>
+		/// Check if this region is a housing zone
+		/// </summary>
+		/// <returns>True, if region is a housing zone, else false</returns>
+		public bool IsHousing
+		{
+			get
+			{
+				switch (this.ID)
+				{
+					case 2: return true; 	// Housing alb
+					case 102: return true; 	// Housing mid
+					case 202: return true; 	// Housing hib
+					default: return false;
+				}
+			}
+		}
 		#endregion
 
 		#region Area
