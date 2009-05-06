@@ -524,8 +524,8 @@ namespace DOL.GS.PacketHandler
 					break;
 			}
 			pak.WriteByte((byte)RealmKeeps);
-			pak.WriteByte((byte)0); // Relics = CountPowerRelics << 4 | CountStrenghtRelics;
-			pak.WriteByte((byte)OwnerDF); // Relics = CountPowerRelics << 4 | CountStrenghtRelics;
+			pak.WriteByte((byte)(((byte)RelicMgr.GetRelicCount(m_gameClient.Player.Realm, eRelicType.Magic)) << 4 | (byte)RelicMgr.GetRelicCount(m_gameClient.Player.Realm, eRelicType.Strength)));
+			pak.WriteByte((byte)OwnerDF);
 			pak.WriteByte((byte)RealmTowers);
 			pak.WriteByte((byte)OwnerDFTowers);
 			SendTCP(pak);
