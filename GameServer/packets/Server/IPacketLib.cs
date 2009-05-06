@@ -392,6 +392,12 @@ namespace DOL.GS.PacketHandler
 		WarmapWindowMidgard = 0x32,
 		QuestSuscribe = 0x64,
 	}
+	public enum eRealmWarmapKeepFlags : byte
+	{
+		Claimed = 0x04,
+		UnderSiege = 0x08,
+		Teleportable = 0x10,
+	}
 
 
 	public interface IPacketLib

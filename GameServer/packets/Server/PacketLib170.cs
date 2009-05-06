@@ -296,9 +296,54 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort(0);
 			pak.WriteByte((byte)KeepCount);
 			pak.WriteByte((byte)TowerCount);
-			pak.WriteShort(0); // ?
-			pak.WriteShort(0); // ?
-			pak.WriteShort(0); // ?
+			byte albStr=0;
+			byte hibStr=0;
+			byte midStr=0;
+			byte albMagic=0;
+			byte hibMagic=0;
+			byte midMagic=0;
+			foreach (GameRelic relic in RelicMgr.getNFRelics())
+			{
+				switch (relic.OriginalRealm)
+                {
+                    case eRealm.Albion:
+						if(relic.RelicType==eRelicType.Strength)
+						{
+							albStr=(byte)relic.Realm;
+						}
+						if(relic.RelicType==eRelicType.Magic)
+						{
+							albMagic=(byte)relic.Realm;
+						}
+						break;
+					case eRealm.Hibernia:
+						if(relic.RelicType==eRelicType.Strength)
+						{
+							hibStr=(byte)relic.Realm;
+						}
+						if(relic.RelicType==eRelicType.Magic)
+						{
+							hibMagic=(byte)relic.Realm;
+						}
+						break;
+					case eRealm.Midgard:
+						if(relic.RelicType==eRelicType.Strength)
+						{
+							midStr=(byte)relic.Realm;
+						}
+						if(relic.RelicType==eRelicType.Magic)
+						{
+							midMagic=(byte)relic.Realm;
+						}
+						break;
+				}
+			}
+			pak.WriteByte(albStr);
+			pak.WriteByte(midStr);
+			pak.WriteByte(hibStr);
+			pak.WriteByte(albMagic);
+			pak.WriteByte(midMagic);
+			pak.WriteByte(hibMagic);
 			foreach (AbstractGameKeep keep in list)
 			{
 				int id = keep.KeepID & 0xFF;
@@ -311,39 +356,29 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte((byte)((map << 6) | (index << 3) | tower));
 				if (guild != null)
 				{
-					flag |= 0x04; // claimed
+					flag |= (byte)eRealmWarmapKeepFlags.Claimed;
 					name = guild.Name;
 				}
 				//Teleport
 				//gms with debug mode on can see every keep
 				if (m_gameClient.Account.PrivLevel > 1 && m_gameClient.Player.TempProperties.getObjectProperty(GamePlayer.DEBUG_MODE_PROPERTY, null) != null)
-					flag |= 0x10;
+					flag |= (byte)eRealmWarmapKeepFlags.Teleportable;
 				else
 				{
-					//lets let players only teleport from the stones
 					if (m_gameClient.Player.Realm == keep.Realm)
 					{
-						bool good = true;
 						GameKeep theKeep = keep as GameKeep;
-						if (theKeep == null)
+						if (theKeep != null)
 						{
-							good = false;
+							if (theKeep.OwnsAllTowers && !theKeep.InCombat)
+							{
+								flag |= (byte)eRealmWarmapKeepFlags.Teleportable;
+							}
 						}
-						else
-						{
-							good = theKeep.OwnsAllTowers;
-							if (good)
-								good = !theKeep.InCombat;
-						}
-
-						if (good)
-						{
-							flag |= 0x10;
-						}
-					}
-					if (keep.InCombat)
-						flag |= 0x08;
+					}	
 				}
+				if (keep.InCombat)
+					flag |= (byte)eRealmWarmapKeepFlags.UnderSiege;
 				pak.WriteByte((byte)flag);
 				pak.WritePascalString(name);
 			}
