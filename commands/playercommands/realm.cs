@@ -18,135 +18,104 @@
 */
 using DOL.GS.PacketHandler;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.Language;
 using DOL.GS.Keeps;
 using DOL.GS.ServerRules;
 
 namespace DOL.GS.Commands
 {
-   [CmdAttribute(
-      "&realm",
-      ePrivLevel.Player,
-        "Displays the current realm status.", "/realm")]
-   public class RealmCommandHandler : AbstractCommandHandler, ICommandHandler
-   {
-        /*          Realm status
-         *
-         * Albion Keeps:
-         * Caer Benowyc: OwnerRealm (Guild)
-         * Caer Berkstead: OwnerRealm (Guild)
-         * Caer Erasleigh: OwnerRealm (Guild)
-         * Caer Boldiam: OwnerRealm (Guild)
-         * Caer Sursbrooke: OwnerRealm (Guild)
-         * Caer Hurbury: OwnerRealm (Guild)
-         * Caer Renaris: OwnerRealm (Guild)
-         *
-         * Midgard Keeps:
-         * Bledmeer Faste: OwnerRealm (Guild)
-         * Notmoor Faste: OwnerRealm (Guild)
-         * Hlidskialf Faste: OwnerRealm (Guild)
-         * Blendrake Faste: OwnerRealm (Guild)
-         * Glenlock Faste: OwnerRealm (Guild)
-         * Fensalir Faste: OwnerRealm (Guild)
-         * Arvakr Faste: OwnerRealm (Guild)
-         *
-         * Hibernia Keeps:
-         * Dun Chrauchon: OwnerRealm (Guild)
-         * Dun Crimthainn: OwnerRealm (Guild)
-         * Dun Bolg: OwnerRealm (Guild)
-         * Dun na nGed: OwnerRealm (Guild)
-         * Dun da Behnn: OwnerRealm (Guild)
-         * Dun Scathaig: OwnerRealm (Guild)
-         * Dun Ailinne: OwnerRealm (Guild)
-         *
-         * Darkness Falls: DFOwnerRealm
-         *
-         * Type '/relic' to display the relic status.
-         */
+	[CmdAttribute(
+	   "&realm",
+	   ePrivLevel.Player,
+		 "Displays the current realm status.", "/realm")]
+	public class RealmCommandHandler : AbstractCommandHandler, ICommandHandler
+	{
+		/*          Realm status
+		 *
+		 * Albion Keeps:
+		 * Caer Benowyc: OwnerRealm (Guild)
+		 * Caer Berkstead: OwnerRealm (Guild)
+		 * Caer Erasleigh: OwnerRealm (Guild)
+		 * Caer Boldiam: OwnerRealm (Guild)
+		 * Caer Sursbrooke: OwnerRealm (Guild)
+		 * Caer Hurbury: OwnerRealm (Guild)
+		 * Caer Renaris: OwnerRealm (Guild)
+		 *
+		 * Midgard Keeps:
+		 * Bledmeer Faste: OwnerRealm (Guild)
+		 * Notmoor Faste: OwnerRealm (Guild)
+		 * Hlidskialf Faste: OwnerRealm (Guild)
+		 * Blendrake Faste: OwnerRealm (Guild)
+		 * Glenlock Faste: OwnerRealm (Guild)
+		 * Fensalir Faste: OwnerRealm (Guild)
+		 * Arvakr Faste: OwnerRealm (Guild)
+		 *
+		 * Hibernia Keeps:
+		 * Dun Chrauchon: OwnerRealm (Guild)
+		 * Dun Crimthainn: OwnerRealm (Guild)
+		 * Dun Bolg: OwnerRealm (Guild)
+		 * Dun na nGed: OwnerRealm (Guild)
+		 * Dun da Behnn: OwnerRealm (Guild)
+		 * Dun Scathaig: OwnerRealm (Guild)
+		 * Dun Ailinne: OwnerRealm (Guild)
+		 *
+		 * Darkness Falls: DFOwnerRealm
+		 *
+		 * Type '/relic' to display the relic status.
+		 */
 
-        private string[] albKeeps = { "Caer Benowyc", "Caer Berkstead", "Caer Erasleigh", "Caer Boldiam",
-                                      "Caer Sursbrooke", "Caer Hurbury", "Caer Renaris" };
-        private string[] midKeeps = { "Bledmeer Faste", "Nottmoor Faste", "Hlidskialf Faste", "Blendrake Faste",
-                                      "Glenlock Faste", "Fensalir Faste", "Arvakr Faste"};
-        private string[] hibKeeps = { "Dun Crauchon", "Dun Crimthainn", "Dun Bolg", "Dun nGed",
-                                      "Dun da Behnn", "Dun Scathaig", "Dun Ailinne"};
+		
 
-        public void OnCommand(GameClient client, string[] args)
-        {
-            ArrayList realmInfo = new ArrayList();
-            string[] tmpAlbKeeps = new string[albKeeps.Length];
-            albKeeps.CopyTo(tmpAlbKeeps, 0);
-            string[] tmpMidKeeps = new string[midKeeps.Length];
-            midKeeps.CopyTo(tmpMidKeeps, 0);
-            string[] tmpHibKeeps = new string[hibKeeps.Length];
-            hibKeeps.CopyTo(tmpHibKeeps, 0);
+		public void OnCommand(GameClient client, string[] args)
+		{
+			string albKeeps = "";
+			string midKeeps = "";
+			string hibKeeps = "";
+			ICollection<AbstractGameKeep> keepList = KeepMgr.GetNFKeeps();
+			foreach (AbstractGameKeep keep in keepList)
+			{
+				if (keep is GameKeep)
+				{
+					switch (keep.OriginalRealm)
+					{
+						case eRealm.Albion:
+							albKeeps += KeepStringBuilder(keep);
+							break;
+						case eRealm.Hibernia:
+							hibKeeps += KeepStringBuilder(keep);
+							break;
+						case eRealm.Midgard:
+							midKeeps += KeepStringBuilder(keep);
+							break;
+					}
+				}
+			}
+			ArrayList realmInfo = new ArrayList();
+			realmInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.AlbKeeps") + ":");
+			realmInfo.Add(albKeeps);
+			realmInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.MidKeeps") + ":");
+			realmInfo.Add(midKeeps);
+			realmInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.HibKeeps") + ":");
+			realmInfo.Add(hibKeeps);
+			realmInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.DarknessFalls") + ": " + DFEnterJumpPoint.DarknessFallOwner);
+			realmInfo.Add(" ");
+			realmInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.UseRelicCommand"));
+			client.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.Title"), realmInfo);
+		}
 
-            string keepRealm;
-            foreach (AbstractGameKeep keep in KeepMgr.GetNFKeeps())
-            {
-            	keepRealm = GlobalConstants.RealmToName (keep.Realm);
-            	
-                #region Reformat Albion Keeps '[KeepName]: [OwnerRealm] ([Guild])'
-                for (int i = 0; i < tmpAlbKeeps.Length; i++)
-                {
-                    if (keep.Name == tmpAlbKeeps[i])
-                    {
-                    	tmpAlbKeeps[i]= string.Format ("{0}: {1}", tmpAlbKeeps[i],keepRealm);
-                        if (keep.Guild != null)
-                        	tmpAlbKeeps[i]= string.Format ("{0} ({1})",tmpAlbKeeps[i], keep.Guild.Name);
-                    }
-                }
-                #endregion
-
-                #region Reformat Midgard Keeps '[KeepName]: [OwnerRealm] ([Guild])'
-                for (int i = 0; i < tmpMidKeeps.Length; i++)
-                {
-                    if (keep.Name == tmpMidKeeps[i])
-                    {
-                    	tmpMidKeeps[i]= string.Format ("{0}: {1}", tmpMidKeeps[i],keepRealm);
-                        if (keep.Guild != null)
-                        	tmpMidKeeps[i]= string.Format ("{0} ({1})",tmpMidKeeps[i], keep.Guild.Name);
-                    }
-                }
-                #endregion
-
-                #region Reformat Hibernia Keeps '[KeepName]: [OwnerRealm] ([Guild])'
-                for (int i = 0; i < tmpHibKeeps.Length; i++)
-                {
-                    if (keep.Name == tmpHibKeeps[i])
-                    {
-                    	tmpHibKeeps[i]= string.Format ("{0}: {1}", tmpHibKeeps[i],keepRealm);
-                        if (keep.Guild != null)
-                        	tmpHibKeeps[i]= string.Format ("{0} ({1})",tmpHibKeeps[i], keep.Guild.Name);
-                    }
-                }
-                #endregion
-            }
-
-            realmInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.AlbKeeps") + ":");
-            realmInfo.Add(AddKeeps(tmpAlbKeeps));
-            realmInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.MidKeeps") + ":");
-            realmInfo.Add(AddKeeps(tmpMidKeeps));
-            realmInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.HibKeeps") + ":");
-            realmInfo.Add(AddKeeps(tmpHibKeeps));
-            realmInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.DarknessFalls") + ": " + DFEnterJumpPoint.DarknessFallOwner);
-            realmInfo.Add(" ");
-            realmInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.UseRelicCommand"));
+		private string KeepStringBuilder(AbstractGameKeep keep)
+		{
+			string buffer = "";
+			buffer += keep.Name + ": " + GlobalConstants.RealmToName(keep.Realm);
+			if (keep.Guild != null)
+			{
+				buffer += " (" + keep.Guild.Name + ")";
+			}
+			buffer += "\n";
+			return buffer;
+		}
 
 
-            client.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.Title"), realmInfo);
-        }
-
-        private string AddKeeps(string[] keeps)
-        {
-            string keepString = "";
-
-            foreach (string keep in keeps)
-            {
-                keepString += keep + "\n";
-            }
-
-            return keepString;
-        }
-   }
+	}
 }
