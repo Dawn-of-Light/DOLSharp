@@ -18,46 +18,76 @@
  */
 using System;
 using DOL.GS.PacketHandler;
+using DOL.Database;
+using DOL.GS.Spells;
 
 namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&morph", //command to handle
 		ePrivLevel.GM, //minimum privelege level
-		"Changes the players model", //command description
-		"'/morph <modelID>' to change into <modelID>",
-		"'/morph reset' to change back to normal")] //usage
+		"Temporarily changes the target player's model", //command description
+		"'/morph <modelID> [time]' to change into <modelID> for [time] minutes (default=10)")] //usage
 	public class MorphCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length == 1)
 			{
-				client.Out.SendMessage("Usage: /morph modelid",
-									   eChatType.CT_System,
-									   eChatLoc.CL_SystemWindow);
+				DisplaySyntax( client );
 				return;
 			}
-			if (args[1] == "reset")
+
+			GamePlayer player = client.Player.TargetObject as GamePlayer;
+
+			if ( player == null )
 			{
-				client.Player.Model = (ushort)client.Account.Characters[client.ActiveCharIndex].CreationModel;
-				client.Out.SendMessage("You change back to your normal form!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage( client, "You must have a player targeted." );
 				return;
 			}
+
 			ushort model;
-			try
+
+			if ( ushort.TryParse( args[1], out model ) == false )
 			{
-				model = Convert.ToUInt16(args[1]);
-			}
-			catch (Exception)
-			{
-				client.Out.SendMessage("Usage: /morph modelid",
-									   eChatType.CT_System,
-									   eChatLoc.CL_SystemWindow);
+				DisplaySyntax( client );
 				return;
 			}
-			client.Player.Model = model;
-			client.Out.SendMessage("You change into a new form!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+			int duration = 10;
+
+			if ( args.Length > 2 )
+			{
+				if ( int.TryParse( args[2], out duration ) == false )
+					duration = 10;
+			}
+
+			DBSpell dbSpell = new DBSpell();
+			dbSpell.Name = "GM Morph";
+			dbSpell.Description = "Target has been shapechanged.";
+			dbSpell.ClientEffect = 8000;
+			dbSpell.Icon = 805;
+			dbSpell.Target = "Realm";
+			dbSpell.Range = 4000;
+			dbSpell.Power = 0;
+			dbSpell.CastTime = 0;
+			dbSpell.Type = "Morph";
+			dbSpell.Duration = duration * 60;
+			dbSpell.LifeDrainReturn = model;
+
+			Spell morphSpell = new Spell( dbSpell, 0 );
+			SpellLine gmLine = new SpellLine( "GMSpell", "GM Spell", "none", false );
+
+			ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler( client.Player, morphSpell, gmLine );
+
+			if ( spellHandler == null )
+			{
+				DisplayMessage( client, "Unable to create spell handler." );
+			}
+			else
+			{
+				spellHandler.StartSpell( player );
+			}
 		}
 	}
 }

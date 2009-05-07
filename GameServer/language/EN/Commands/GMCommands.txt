@@ -202,6 +202,8 @@ GMCommands.Jump.Usage.PlayerNameToXYZRegID:	/jump <PlayerName> to <x> <y> <z> [<
 GMCommands.Jump.Usage.PlayerNToPlayerN:		/jump <PlayerName> to <PlayerName>
 GMCommands.Jump.Usage.ToGT:					/jump to GT
 GMCommands.Jump.Usage.RelXYZ:				/jump rel <x> <y> <z>
+GMCommands.Jump.Usage.Push:					/jump push - push current location to the stack
+GMCommands.Jump.Usage.Pop:					/jump pop - pop previous location & jump to it
 GMCommands.Jump.CannotBeFound:				{0} cannot be found.
 GMCommands.Jump.JumpToX:					/Jump to {0}.
 GMCommands.Jump.CannotBeFoundInRealm:		{0} cannot be found in realm {1}.
@@ -209,6 +211,10 @@ GMCommands.Jump.CannotJumpToInsideHouse:	Cannot jump to someone inside a house.
 GMCommands.Jump.PlayerIsNotInGame:			{0} is not in the game.
 GMCommands.Jump.CheckExpansion.CannotJump:	{0} cannot jump to Destination region ({1}) because it is not supported by his/her client type.
 GMCommands.Jump.CheckExpansion.ClientNoSup:	{0} tried to jump you to Destination region ({1}) but it is not supported by your client type.
+GMCommands.Jump.Pushed:						Current location pushed
+GMCommands.Jump.PushedTotal:				({0} total)
+GMCommands.Jump.PopInstructions:			type '/jump pop' to return to it.
+GMCommands.Jump.NothingPushed:				No locations in stack - you need to use '/jump push' first.
 		
 # /keep Command
 GMCommands.Keep.Description:				Various keep creation commands!
