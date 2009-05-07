@@ -19,6 +19,7 @@
 using System;
 using DOL.GS.PacketHandler;
 using DOL.Language;
+using System.Collections.Generic;
 
 namespace DOL.GS.Commands
 {
@@ -33,9 +34,14 @@ namespace DOL.GS.Commands
 		"GMCommands.Jump.Usage.PlayerNameToXYZRegID",
 		"GMCommands.Jump.Usage.PlayerNToPlayerN",
 		"GMCommands.Jump.Usage.ToGT",
-		"GMCommands.Jump.Usage.RelXYZ")]
+		"GMCommands.Jump.Usage.RelXYZ",
+		"GMCommands.Jump.Usage.Push",
+		"GMCommands.Jump.Usage.Pop"
+		)]
 	public class JumpCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
+		private const string TEMP_KEY_JUMP = "JumpLocStack";
+
 		public void OnCommand(GameClient client, string[] args)
 		{
 			#region Jump to GT
@@ -204,10 +210,57 @@ namespace DOL.GS.Commands
 				}
 			}
 			#endregion Jump PlayerName to PlayerCible
+
+			#region push/pop
+			else if ( args.Length > 1 && args[1] == "push" )
+			{
+				Stack<GameLocation> locations;
+
+				locations = client.Player.TempProperties.getObjectProperty( TEMP_KEY_JUMP, null ) as Stack<GameLocation>;
+
+				if ( locations == null )
+				{
+					locations = new Stack<GameLocation>( 3 );
+					client.Player.TempProperties.setProperty( TEMP_KEY_JUMP, locations );
+				}
+
+				locations.Push( new GameLocation( "temploc", client.Player.CurrentRegionID, client.Player.X, client.Player.Y, client.Player.Z, client.Player.Heading ) );
+
+				string message = LanguageMgr.GetTranslation( client, "GMCommands.Jump.Pushed" );
+
+				if ( locations.Count > 1 )
+					message += " " + LanguageMgr.GetTranslation( client, "GMCommands.Jump.PushedTotal", locations.Count );
+
+				message += " - " + LanguageMgr.GetTranslation( client, "GMCommands.Jump.PopInstructions" );
+
+				client.Out.SendMessage( message, eChatType.CT_System, eChatLoc.CL_SystemWindow );
+			}
+			else if ( args.Length > 1 && args[1] == "pop" )
+			{
+				Stack<GameLocation> locations;
+
+				locations = client.Player.TempProperties.getObjectProperty( TEMP_KEY_JUMP, null ) as Stack<GameLocation>;
+
+				if ( locations == null || locations.Count < 1 )
+				{
+					client.Out.SendMessage( LanguageMgr.GetTranslation( client, "GMCommands.Jump.NothingPushed" ), eChatType.CT_System, eChatLoc.CL_SystemWindow );
+					return;
+				}
+
+				GameLocation jumploc = locations.Pop();
+
+				// slight abuse of the stack principle, but convenient to always have your last popped loc jumpable
+				if ( locations.Count < 1 )
+					locations.Push( jumploc );
+
+				client.Player.MoveTo( jumploc.RegionID, jumploc.X, jumploc.Y, jumploc.Z, jumploc.Heading );
+			}
+			#endregion push/pop
+
 			#region DisplaySyntax
 			else
 			{
-				DisplaySyntax(client);
+				DisplaySyntax( client );
 				return;
 			}
 			#endregion DisplaySyntax
