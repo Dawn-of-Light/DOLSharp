@@ -39,22 +39,6 @@ namespace DOL.GS.Keeps
 		private static readonly Hashtable m_keeps = new Hashtable();
 		private static readonly List<Battleground> m_battlegrounds = new List<Battleground>();
 
-        private static int[] oldKeeps = { 1, 2, 3, 5, 50, 51, 52, 53, 54, 55, 56, 75, 76, 77,
-                                            78, 79, 80, 81, 100, 101, 102, 103, 104, 105, 106,
-                                            125, 126, 127, 128, 129, 130, 131, 132, 134, 306,
-                                            307, 308, 309, 310, 311, 312, 331, 332, 333, 334,
-                                            335, 336, 337, 356, 357, 358, 359, 360, 361, 362,
-                                            381, 382, 383, 384, 385, 386, 387, 388, 390, 562,
-                                            563, 564, 565, 566, 567, 568, 587, 588, 589, 590,
-                                            591, 592, 593, 612, 613, 614, 615, 616, 617, 618,
-                                            637, 638, 639, 640, 641, 642, 643, 644, 646, 818,
-                                            819, 820, 821, 822, 823, 824, 843, 844, 845, 846,
-                                            847, 848, 849, 868, 869, 870, 871, 872, 873, 874,
-                                            893, 894, 895, 896, 897, 898, 899, 900, 902, 1074,
-                                            1075, 1076, 1077, 1078, 1079, 1080, 1099, 1100, 1101,
-                                            1102, 1103, 1104, 1105, 1124, 1125, 1126, 1127, 1128,
-                                            1129, 1130, 1156, 1158, 1412, 1414, 1668, 1670 };
-
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
@@ -80,13 +64,44 @@ namespace DOL.GS.Keeps
 				{
 					if (WorldMgr.GetRegion((ushort)datakeep.Region) == null)
 						continue;
-                    if (datakeep.KeepID > 5) //KeepIDs below 5 belong to Cathal Valley and are always loaded
+
+                    //Dinberg - checking whether the keep is old or new.
+                    //The only way to do this is to examine the database entries for hookpoints and thus determine
+                    //in this manner whether the keep is old, new or 'both'. A keep will be 'both' if it is found to
+                    //have components of both sets, which is possible.
+
+                    //'town' keeps have no components, and can always be loaded.
+                    bool isOld = false;
+                    bool isNew = false;
+
+                    //I don't want to touch the loading order of hookpoints, as i think they may depend on the
+                    //assumption keeps and towers are linked before population. So we will settle for a second
+                    //query. It's on server start, so it wont impact running performance.
+
+                    DBKeepComponent[] currentKeepComponents = (DBKeepComponent[])GameServer.Database.SelectObjects(typeof(DBKeepComponent), "`KeepID` = '" + datakeep.KeepID + "'");
+				
+                    //Pass through, and depending on the outcome of the components, determine the 'age' of the keep.
+                    foreach (DBKeepComponent dum in currentKeepComponents)
                     {
-                        if (ServerProperties.Properties.USE_NEW_KEEPS && Array.BinarySearch(oldKeeps, datakeep.KeepID) >= 0)
-                            continue;
-                        else if (!ServerProperties.Properties.USE_NEW_KEEPS && Array.BinarySearch(oldKeeps, datakeep.KeepID) < 0)
-                            continue;
+                        if (dum.Skin >= 0 && dum.Skin <= 20) //these are the min/max ids for old keeps.
+                            isOld = true;
+                        if (dum.Skin > 20) //any skinID greater than this are ids for new keeps.
+                            isNew = true;
                     }
+
+                    //Now, consult server properties to decide our plan!
+
+                    //Quote: ServerProperties.cs
+                    //"use_new_keeps", "Keeps to load. 0 for Old Keeps, 1 for new keeps, 2 for both.", 2
+
+                    if (ServerProperties.Properties.USE_NEW_KEEPS == 0 && isNew)
+                        continue;
+
+                    if (ServerProperties.Properties.USE_NEW_KEEPS == 1 && isOld)
+                        continue;
+
+                    //If we've got this far, we are permitted to load as per normal!
+
 					AbstractGameKeep keep;
 					if ((datakeep.KeepID >> 8) != 0)
 						keep = new GameKeepTower();
@@ -105,7 +120,7 @@ namespace DOL.GS.Keeps
 						mykeep.AddTower(tower);
 					tower.Keep = mykeep;
 				}
-				//get with one command is more quick even if we look for keep in hashtable
+
 				DBKeepComponent[] keepcomponents = (DBKeepComponent[])GameServer.Database.SelectAllObjects(typeof(DBKeepComponent));
 				foreach (DBKeepComponent component in keepcomponents)
 				{
@@ -113,7 +128,7 @@ namespace DOL.GS.Keeps
 					if (keep == null)
 					{
 						if (Logger.IsWarnEnabled)
-							Logger.WarnFormat("No keep with ID {0} for component ID {1}", component.KeepID, component.ID);
+							Logger.WarnFormat("Keep with ID {0} not loaded, possibly old/new keeptype; see server proporties (component ID {1})", component.KeepID, component.ID);
 						continue;
 					}
 					GameKeepComponent gamecomponent = new GameKeepComponent();
