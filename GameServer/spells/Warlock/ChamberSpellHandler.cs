@@ -110,6 +110,7 @@ namespace DOL.GS.Spells
 		public override bool CastSpell()
 		{
             GamePlayer player = (GamePlayer)m_caster;
+            GameLiving target = player.TargetObject as GameLiving;
             long ChamberUseTick = player.TempProperties.getLongProperty(CHAMBER_USE_TICK, 0L);
             long changeTime = player.CurrentRegion.Time - ChamberUseTick;
             if (changeTime < 3000)
@@ -134,23 +135,41 @@ namespace DOL.GS.Spells
                 ISpellHandler spellhandler2 = null;
 				ChamberSpellHandler chamber = (ChamberSpellHandler)effect.SpellHandler;
 				spellhandler = ScriptMgr.CreateSpellHandler(m_caster, chamber.PrimarySpell, chamber.PrimarySpellLine);
-                if (player.IsMoving || player.IsStrafing)
+                if (player.IsMoving || player.IsStrafing || player.IsSitting)
                 {
                     MessageToCaster("You must be standing still to cast this spell!", eChatType.CT_System);
                     return false;
                 }
-				if(m_caster.TargetObject==null)
-				{
-					MessageToCaster("You must have a target!", eChatType.CT_SpellResisted);
-					return false;
-				}
-
+                if (m_caster.TargetObject == null)
+                {
+                    MessageToCaster("You must have a target!", eChatType.CT_SpellResisted);
+                    return false;
+                }
+                if (!m_caster.IsAlive)
+                {
+                    MessageToCaster("You cannot cast this on the dead!", eChatType.CT_SpellResisted);
+                    return false;
+                }
+                if (m_caster.IsMezzed || m_caster.IsStunned || m_caster.IsSilenced)
+                {
+                    MessageToCaster("You can't use that in your state.", eChatType.CT_System);
+                    return false;
+                }
+                if (!m_caster.TargetInView)
+                {
+                    MessageToCaster("Your target is not in view!", eChatType.CT_System);
+                    return false;
+                }
+                if (player.IsPvPInvulnerability)
+                {
+                    MessageToCaster("Your invunerable at the momment and cannot use that spell!", eChatType.CT_System);
+                    return false;
+                }
                 if ( !m_caster.IsWithinRadius( m_caster.TargetObject, ( (SpellHandler)spellhandler ).CalculateSpellRange() ) )
 				{
 					MessageToCaster("That target is too far away!", eChatType.CT_SpellResisted);
 					return false;
 				}
-
 				spellhandler.CastSpell();
 
 				if(chamber.SecondarySpell != null)
