@@ -213,6 +213,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                                     	log.Warn("Account creation: too many time between creation - " + userName);
                                         client.Out.SendLoginDenied(eLoginError.AccountNoAccessThisGame);
                                         GameServer.Instance.Disconnect(client);
+                                        return 1;
                                     }
                                     totalacc++;
                                 }
@@ -221,6 +222,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                                     log.Warn("Account creation: too many accounts created from same ip - " + userName);
                                     client.Out.SendLoginDenied(eLoginError.AccountNoAccessThisGame);
                                     GameServer.Instance.Disconnect(client);
+                                    return 1;
                                 }
                                 
                                 // per timeslice - for preventing account bombing via different ip
@@ -235,6 +237,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	                                		log.Warn("Account creation: timeslice between creation not matched - " + userName);
 	                                		client.Out.SendLoginDenied(eLoginError.AccountNoAccessThisGame);
                                     		GameServer.Instance.Disconnect(client);
+                                            return 1;
 	                                	}
 	                                }
 
