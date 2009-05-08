@@ -43,6 +43,8 @@ namespace DOL.GS.Spells
   			if(RangeSpell != null) { MessageToCaster("You already preparing a Range spell", eChatType.CT_System); return false; }
             GameSpellEffect UninterruptableSpell = SpellHandler.FindEffectOnTarget(Caster, "Uninterruptable");
   			if(UninterruptableSpell != null) { MessageToCaster("You already preparing a Uninterruptable spell", eChatType.CT_System); return false; }
+            GameSpellEffect PowerlessSpell = SpellHandler.FindEffectOnTarget(Caster, "Powerless");
+            if (PowerlessSpell != null) { MessageToCaster("You must finish casting Powerless before you can cast it again", eChatType.CT_System); return false; }
             return true;
 		}
 		

@@ -106,8 +106,8 @@ namespace DOL.GS.Spells
         public override void OnEffectPulse(GameSpellEffect effect)
         {
             GameLiving t = effect.Owner;
-
-            if ( m_caster.Mana < Spell.PulsePower || m_caster.IsBeingInterrupted || m_caster.IsSitting )
+            GameLiving target = t.TargetObject as GameLiving;
+            if (m_caster.Mana < Spell.PulsePower)
             {
                 RemoveEffect();
 				return;
@@ -118,7 +118,11 @@ namespace DOL.GS.Spells
 				RemoveEffect();
 				return;
 			}
-
+            if (!m_caster.TargetInView)
+            {
+                RemoveEffect();
+                return;
+            }
             base.OnEffectPulse(effect);
 
             SendEffectAnimation(effect.Owner, 0, false, 1);
