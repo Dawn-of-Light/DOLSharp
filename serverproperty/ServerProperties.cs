@@ -611,8 +611,8 @@ namespace DOL.GS.ServerProperties
         /// <summary>
         /// Use new Keeps
         /// </summary>
-        [ServerProperty("use_new_keeps", "Use the new Keeps(v 1.90)", false)]
-        public static readonly bool USE_NEW_KEEPS;
+        [ServerProperty("use_new_keeps", "Keeps to load. 0 for Old Keeps, 1 for new keeps, 2 for both.", 2)]
+        public static readonly int USE_NEW_KEEPS;
 
         /// <summary>
         /// Perform checklos on client with each mob
