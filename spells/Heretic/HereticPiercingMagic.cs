@@ -50,12 +50,11 @@ namespace DOL.GS.Spells
         }
         protected virtual void BeginEffect()
         {
-        //    GameEventMgr.AddHandler(m_target, GameLivingEvent.Dying, new DOLEventHandler(EventAction));
             GameEventMgr.AddHandler(m_caster, GamePlayerEvent.AttackFinished, new DOLEventHandler(EventAction));
             GameEventMgr.AddHandler(m_caster, GamePlayerEvent.CastSpell, new DOLEventHandler(EventAction));
             GameEventMgr.AddHandler(m_caster, GamePlayerEvent.Moving, new DOLEventHandler(EventAction));
             GameEventMgr.AddHandler(m_caster, GamePlayerEvent.Dying, new DOLEventHandler(EventAction));
-
+            GameEventMgr.AddHandler(m_caster, GamePlayerEvent.AttackedByEnemy, new DOLEventHandler(EventAction));
         }
         public void EventAction(DOLEvent e, object sender, EventArgs args)
         {
@@ -87,7 +86,7 @@ namespace DOL.GS.Spells
             GameEventMgr.RemoveHandler(m_caster, GamePlayerEvent.CastSpell, new DOLEventHandler(EventAction));
             GameEventMgr.RemoveHandler(m_caster, GamePlayerEvent.Moving, new DOLEventHandler(EventAction));
             GameEventMgr.RemoveHandler(m_caster, GamePlayerEvent.Dying, new DOLEventHandler(EventAction));
-     //       GameEventMgr.RemoveHandler(m_target, GameLivingEvent.Dying, new DOLEventHandler(EventAction));
+            GameEventMgr.RemoveHandler(m_caster, GamePlayerEvent.AttackedByEnemy, new DOLEventHandler(EventAction));
             foreach (GamePlayer player in m_caster.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
             {
                 player.Out.SendInterruptAnimation(m_caster);

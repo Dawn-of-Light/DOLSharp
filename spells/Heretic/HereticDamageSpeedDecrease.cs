@@ -104,11 +104,16 @@ namespace DOL.GS.Spells
         public override void OnEffectPulse(GameSpellEffect effect)
         {
             GameLiving t = effect.Owner;
+            GameLiving target = t.TargetObject as GameLiving;
             if (m_caster.Mana < Spell.PulsePower)
             {
                 RemoveEffect();
             }
-
+            if (!m_caster.TargetInView)
+            {
+                RemoveEffect();
+                return;
+            }
             if ( !m_caster.IsAlive || !effect.Owner.IsAlive || m_caster.Mana < Spell.PulsePower || !m_caster.IsWithinRadius( effect.Owner, Spell.Range ) || m_caster.IsMezzed || m_caster.IsStunned || ( m_caster.TargetObject is GameLiving ? effect.Owner != m_caster.TargetObject as GameLiving : true ) )
             {
                 RemoveEffect();
