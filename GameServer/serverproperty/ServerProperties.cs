@@ -627,6 +627,24 @@ namespace DOL.GS.ServerProperties
 		public static readonly int TIME_BETWEEN_ACCOUNT_CREATION;
         
         /// <summary>
+        /// PvP Immunity Timer - Killed by Player
+        /// </summary>
+        [ServerProperty("Timer_Killed_By_Player", "Immunity Timer When player killed in PvP, in seconds", 120)] //2 min default
+        public static readonly int Timer_Killed_By_Player;
+
+        /// <summary>
+        /// PvP Immunity Timer - Killed by Mobs
+        /// </summary>
+        [ServerProperty("Timer_Killed_By_Mob", "Immunity Timer When player killed in PvP, in seconds", 30)] //30 seconds default
+        public static readonly int Timer_Killed_By_Mob;
+
+        /// <summary>
+        /// PvP Immunity Timer - Region Changed (Enter World Timer Divided by 3 of this)
+        /// </summary>
+        [ServerProperty("Timer_Region_Changed", "Immunity Timer when player changes regions, in seconds", 30)] //30 seconds default
+        public static readonly int Timer_Region_Changed;
+
+        /// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
 		/// type of the default value
