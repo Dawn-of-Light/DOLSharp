@@ -68,47 +68,47 @@ namespace DOL.GS.ServerRules
 		/// </summary>
 		protected int m_safetyLevel = 10;
 
-		/// <summary>
-		/// Called when player enters the game for first time
-		/// </summary>
-		/// <param name="e">event</param>
-		/// <param name="sender">GamePlayer object that has entered the game</param>
-		/// <param name="args"></param>
-		public virtual void OnGameEntered(DOLEvent e, object sender, EventArgs args)
-		{
-			SetImmunity((GamePlayer)sender, 10 * 1000); //10sec immunity
-		}
+        /// <summary>
+        /// Called when player enters the game for first time
+        /// </summary>
+        /// <param name="e">event</param>
+        /// <param name="sender">GamePlayer object that has entered the game</param>
+        /// <param name="args"></param>
+        public virtual void OnGameEntered(DOLEvent e, object sender, EventArgs args)
+        {
+            SetImmunity((GamePlayer)sender, (ServerProperties.Properties.Timer_Region_Changed / 3)*1000); //Timer when a player enters game.
+        }
 
-		/// <summary>
-		/// Called when player has changed the region
-		/// </summary>
-		/// <param name="e">event</param>
-		/// <param name="sender">GamePlayer object that has changed the region</param>
-		/// <param name="args"></param>
-		public virtual void OnRegionChanged(DOLEvent e, object sender, EventArgs args)
-		{
-			SetImmunity((GamePlayer)sender, 30 * 1000); //30sec immunity
-		}
+        /// <summary>
+        /// Called when player has changed the region
+        /// </summary>
+        /// <param name="e">event</param>
+        /// <param name="sender">GamePlayer object that has changed the region</param>
+        /// <param name="args"></param>
+        public virtual void OnRegionChanged(DOLEvent e, object sender, EventArgs args)
+        {
+            SetImmunity((GamePlayer)sender, ServerProperties.Properties.Timer_Region_Changed*1000);//When a player changes Regions
+        }
 
-		/// <summary>
-		/// Called after player has released
-		/// </summary>
-		/// <param name="e">event</param>
-		/// <param name="sender">GamePlayer that has released</param>
-		/// <param name="args"></param>
-		public virtual void OnReleased(DOLEvent e, object sender, EventArgs args)
-		{
-			GamePlayer player = (GamePlayer)sender;
-			if (player.TempProperties.getObjectProperty(KILLED_BY_PLAYER_PROP, null) != null)
-			{
-				player.TempProperties.removeProperty(KILLED_BY_PLAYER_PROP);
-				SetImmunity(player, 2 * 60 * 1000); //2min immunity if killed by a player
-			}
-			else
-			{
-				SetImmunity(player, 30 * 1000); //30sec immunity if killed by a mob
-			}
-		}
+        /// <summary>
+        /// Called after player has released
+        /// </summary>
+        /// <param name="e">event</param>
+        /// <param name="sender">GamePlayer that has released</param>
+        /// <param name="args"></param>
+        public virtual void OnReleased(DOLEvent e, object sender, EventArgs args)
+        {
+            GamePlayer player = (GamePlayer)sender;
+            if (player.TempProperties.getObjectProperty(KILLED_BY_PLAYER_PROP, null) != null)
+            {
+                player.TempProperties.removeProperty(KILLED_BY_PLAYER_PROP);
+                SetImmunity(player, ServerProperties.Properties.Timer_Killed_By_Player*1000);//When Killed by a Player
+            }
+            else
+            {
+                SetImmunity(player, ServerProperties.Properties.Timer_Killed_By_Mob*1000);//When Killed by a Mob
+            }
+        }
 
 		/// <summary>
 		/// Sets PvP immunity for a player and starts the timer if needed
