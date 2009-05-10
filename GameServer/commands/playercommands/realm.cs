@@ -98,7 +98,7 @@ namespace DOL.GS.Commands
 			realmInfo.Add(midKeeps);
 			realmInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.HibKeeps") + ":");
 			realmInfo.Add(hibKeeps);
-			realmInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.DarknessFalls") + ": " + DFEnterJumpPoint.DarknessFallOwner);
+			realmInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.DarknessFalls") + ": " + GlobalConstants.RealmToName(DFEnterJumpPoint.DarknessFallOwner));
 			realmInfo.Add(" ");
 			realmInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.UseRelicCommand"));
 			client.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.Title"), realmInfo);
