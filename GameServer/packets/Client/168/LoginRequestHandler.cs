@@ -232,7 +232,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	                                else
 	                                {
 	                                	ts = DateTime.Now - last_Account_Creation.Value;
-	                                	if (ts.Minutes > ServerProperties.Properties.TIME_BETWEEN_ACCOUNT_CREATION)
+	                                	if (ts.Minutes < ServerProperties.Properties.TIME_BETWEEN_ACCOUNT_CREATION)
 	                                	{
 	                                		log.Warn("Account creation: timeslice between creation not matched - " + userName);
 	                                		client.Out.SendLoginDenied(eLoginError.AccountNoAccessThisGame);
