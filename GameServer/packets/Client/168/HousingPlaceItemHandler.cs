@@ -196,7 +196,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                     client.Player.Out.SendMessage("You do not own this house.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     return 1;
                 }
-                if (client.Player.Guild.GuildOwnsHouse())
+                if (client.Player.Guild.GuildOwnsHouse)
                 {
                     client.Out.SendInventorySlotsUpdate(new int[] { slot });
                     client.Player.Out.SendMessage("Your Guild already owns a house.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
