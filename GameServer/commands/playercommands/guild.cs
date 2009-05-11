@@ -573,9 +573,9 @@ namespace DOL.GS.Commands
                                                 return;
 
                                             int housenum;
-                                            if (client.Player.Guild.GuildOwnsHouse())
+                                            if (client.Player.Guild.GuildOwnsHouse)
                                             {
-                                                housenum = client.Player.Guild.GetGuildHouseNumber();
+                                                housenum = client.Player.Guild.GuildHouseNumber;
                                             }
                                             else
                                                 housenum = 0;
