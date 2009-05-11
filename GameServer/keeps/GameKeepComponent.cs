@@ -365,7 +365,8 @@ namespace DOL.GS.Keeps
 							//create the object
 							Assembly asm = Assembly.GetExecutingAssembly();
 							IKeepItem obj = (IKeepItem)asm.CreateInstance(position.ClassType, true);
-							obj.LoadFromPosition(position, this);
+							if (obj != null)
+								obj.LoadFromPosition(position, this);
 						}
 						else
 						{
