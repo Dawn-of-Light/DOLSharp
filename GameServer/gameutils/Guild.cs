@@ -194,10 +194,7 @@ namespace DOL.GS
 			}
 
 			donating.Out.SendMessage(LanguageMgr.GetTranslation(donating.Client, "Scripts.Player.Guild.DepositAmount", Money.GetString(long.Parse(amount.ToString()))), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			if (m_guildBank == 0)
-				m_guildBank = amount;
-			else
-				m_guildBank = m_guildBank + amount;
+			m_guildBank = m_guildBank + amount;
 
 			donating.Guild.UpdateGuildWindow();
 			m_DBguild.Bank = m_guildBank;
@@ -743,7 +740,11 @@ namespace DOL.GS
 		public long MeritPoints
 		{
 			get { return m_meritPoints; }
-			set { m_meritPoints = value; }
+			set 
+			{
+				m_meritPoints = value;
+				m_DBguild.MeritPoints = value;
+			}
 		}
 
 		/// <summary>
@@ -751,8 +752,18 @@ namespace DOL.GS
 		/// </summary>
 		public long GuildLevel
 		{
-			get { return m_GuildLevel; }
-			set { m_GuildLevel = value; }
+			get 
+			{
+				// added by Dunnerholl
+				// props to valmerwolf for formula
+				// checked with pendragon
+				return (long)(Math.Sqrt(m_DBguild.RealmPoints / 10000) + 1);
+			}
+			set 
+			{
+				m_GuildLevel = value;
+				m_DBguild.GuildLevel = value;
+			}
 		}
 
 		/// <summary>
@@ -781,7 +792,6 @@ namespace DOL.GS
 		public virtual void GainMeritPoints(long amount)
 		{
 			MeritPoints += amount;
-			m_DBguild.MeritPoints = MeritPoints;
 			UpdateGuildWindow();
 		}
 
@@ -789,25 +799,11 @@ namespace DOL.GS
 		/// Called when this guild loose bounty points
 		/// </summary>
 		/// <param name="amount">The amount of bounty points gained</param>
-		public virtual bool RemoveMeritPoints(long amount)
+		public virtual void RemoveMeritPoints(long amount)
 		{
 			if (amount > MeritPoints)
 				amount = MeritPoints;
-
 			MeritPoints -= amount;
-			m_DBguild.MeritPoints = MeritPoints;
-			UpdateGuildWindow();
-			return true;
-		}
-
-		/// <summary>
-		/// Called when this guild gains a level
-		/// </summary>
-		/// <param name="amount">The amount of bounty points gained</param>
-		public virtual void GainGuildLevel(int amount)
-		{
-			GuildLevel += amount;
-			m_DBguild.GuildLevel = GuildLevel;
 			UpdateGuildWindow();
 		}
 
@@ -907,65 +903,11 @@ namespace DOL.GS
 		{
 			lock (m_guildMembers)
 			{
-				long newgLevel;
-				if (GuildLevel < SocialEventHandler.REALMPOINTS_FOR_GUILDLEVEL.Length - 1)
-				{
-					newgLevel = CalculateGuildLevelFromRPs(RealmPoints);
-
-					if (newgLevel > 0 || newgLevel < 120)
-					{
-						if (newgLevel > GuildLevel)
-						{
-							GuildLevel = newgLevel;
-							foreach (GamePlayer player in ListOnlineMembers())
-							{
-								player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Guild.LevelUp", GuildLevel), eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
-							}
-						}
-					}
-					else if (newgLevel > 120)
-					{
-						GuildLevel = 120;
-					}
-				}
-
 				foreach (GamePlayer player in m_guildMembers.Values)
 				{
 					player.Guild.UpdateMember(player);
 				}
 			}
-		}
-
-		public virtual long CalculateRPsFromGuildLevel(long realmLevel)
-		{
-			if (realmLevel < SocialEventHandler.REALMPOINTS_FOR_GUILDLEVEL.Length)
-				return SocialEventHandler.REALMPOINTS_FOR_GUILDLEVEL[realmLevel];
-
-			// thanks to Linulo from http://daoc.foren.4players.de/viewtopic.php?t=40839&postdays=0&postorder=asc&start=0
-			return (long)(25.0 / 3.0 * (realmLevel * realmLevel * realmLevel) - 25.0 / 2.0 * (realmLevel * realmLevel) + 25.0 / 6.0 * realmLevel);
-		}
-
-		public virtual long CalculateGuildLevelFromRPs(long rps)
-		{
-			if (rps == 0)
-				return 0;
-
-			int i = SocialEventHandler.REALMPOINTS_FOR_GUILDLEVEL.Length - 1;
-			for (; i > 0; i--)
-			{
-				if (SocialEventHandler.REALMPOINTS_FOR_GUILDLEVEL[i] <= rps)
-					break;
-			}
-
-			if (i > 120)
-				return 120;
-			return i;
-
-
-			// thanks to Linulo from http://daoc.foren.4players.de/viewtopic.php?t=40839&postdays=0&postorder=asc&start=30
-			//			double z = Math.Pow(1620.0 * realmPoints + 15.0 * Math.Sqrt(-1875.0 + 11664.0 * realmPoints*realmPoints), 1.0/3.0);
-			//			double rr = z / 30.0 + 5.0 / 2.0 / z + 0.5;
-			//			return Math.Min(99, (int)rr);
 		}
 	}
 }
