@@ -30,9 +30,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
-	//-----------------------------------------------------------------------------------------------
-	// GuildEntry
-	//-----------------------------------------------------------------------------------------------
+	
 	public enum eGuildRank : int
 	{
 		Emblem,
@@ -57,14 +55,11 @@ namespace DOL.GS
 		Withdraw
 	}
 	/// <summary>
-	/// Summary description for a Guild inside the game.
+	/// Guild inside the game.
 	/// </summary>
 	/// 
 	public class Guild
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
@@ -76,7 +71,6 @@ namespace DOL.GS
 		/// This holds all players inside the guild
 		/// </summary>
 		protected Alliance m_alliance = null;
-
 
 		/// <summary>
 		/// This holds the DB instance of the guild
@@ -116,16 +110,27 @@ namespace DOL.GS
 		protected double m_guildBank;
 		protected bool guildDues;
 		protected long guildDuesPercent;
-		protected bool haveGuildHouse;
-		protected int GuildHouseNumber;
 
-		public int GetGuildHouseNumber()
+		public int GuildHouseNumber
 		{
-			return GuildHouseNumber;
+			get
+			{
+				return m_DBguild.GuildHouseNumber;
+			}
+			set
+			{
+				m_DBguild.GuildHouseNumber = value;
+				if (value != 0)
+					m_DBguild.HaveGuildHouse = true;
+			}
 		}
-		public bool GuildOwnsHouse()
+
+		public bool GuildOwnsHouse
 		{
-			return haveGuildHouse;
+			get
+			{
+				return m_DBguild.HaveGuildHouse;
+			}
 		}
 		public double GetGuildBank()
 		{
@@ -135,21 +140,12 @@ namespace DOL.GS
 		{
 			return guildDues;
 		}
+
 		public long GetGuildDuesPercent()
 		{
 			return guildDuesPercent;
 		}
 
-		public void SetGuildHouseNumber(int num)
-		{
-			GuildHouseNumber = num;
-			m_DBguild.GuildHouseNumber = GuildHouseNumber;
-		}
-		public void SetGuildHouse(bool owns)
-		{
-			haveGuildHouse = owns;
-			m_DBguild.HaveGuildHouse = haveGuildHouse;
-		}
 		public void SetGuildDues(bool dues)
 		{
 			if (dues == true)
@@ -747,9 +743,6 @@ namespace DOL.GS
 			}
 		}
 
-		/// <summary>
-		/// Gets or sets the guildlevel
-		/// </summary>
 		public long GuildLevel
 		{
 			get 
@@ -758,11 +751,6 @@ namespace DOL.GS
 				// props to valmerwolf for formula
 				// checked with pendragon
 				return (long)(Math.Sqrt(m_DBguild.RealmPoints / 10000) + 1);
-			}
-			set 
-			{
-				m_GuildLevel = value;
-				m_DBguild.GuildLevel = value;
 			}
 		}
 
@@ -832,20 +820,7 @@ namespace DOL.GS
 		/// </summary>
 		public void SaveIntoDatabase()
 		{
-			GameServer.Database.SaveObject(theGuildDB);
-		}
-		public GamePlayer GetGuildLeader(GamePlayer plr)
-		{
-			if (!m_guildMembers.ContainsKey(plr.Name))
-				return null;
-
-			foreach (GamePlayer player in m_guildMembers.Values)
-			{
-				if (player.Guild.GotAccess(player, eGuildRank.Leader) && player.IsAlive)
-					return player;
-			}
-
-			return null;
+			GameServer.Database.SaveObject(m_DBguild);
 		}
 
 		private string bannerStatus;
@@ -876,9 +851,9 @@ namespace DOL.GS
 			if (player.Guild != this)
 				return;
 			int housenum;
-			if (player.Guild.GuildOwnsHouse())
+			if (player.Guild.GuildOwnsHouse)
 			{
-				housenum = player.Guild.GetGuildHouseNumber();
+				housenum = player.Guild.GuildHouseNumber;
 			}
 			else
 				housenum = 0;

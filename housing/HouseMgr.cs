@@ -492,7 +492,7 @@ namespace DOL.GS.Housing
         }
         public static void HouseTransferToGuild(GamePlayer plr)
         {
-            if (plr.Guild != null && plr.Guild.GuildOwnsHouse())
+            if (plr.Guild != null && plr.Guild.GuildOwnsHouse)
                 return;
 
             plr.Out.SendCustomDialog(LanguageMgr.GetTranslation(plr.Client, "Scripts.Player.Housing.TransferToGuild", plr.Guild.Name), new CustomDialogResponse(MakeGuildLot));
@@ -503,8 +503,7 @@ namespace DOL.GS.Housing
             if (response != 0x01) return;
             House house = GetHouse((GetHouseNumberByPlayer(player)));
             house.DatabaseItem.OwnerIDs = player.Guild.GuildID;
-            player.Guild.SetGuildHouse(true);
-            player.Guild.SetGuildHouseNumber(house.HouseNumber);
+            player.Guild.GuildHouseNumber=house.HouseNumber;
             player.Guild.SendMessageToGuildMembers(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Housing.GuildNowOwns", player.Guild.Name, player.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
             HouseMgr.SetGuildHouse(house, true, player.GuildName);
             player.Guild.SaveIntoDatabase();
