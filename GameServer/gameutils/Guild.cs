@@ -263,12 +263,18 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets or sets the constant guild id
+		/// Gets or sets the guild id
 		/// </summary>
 		public string GuildID
 		{
-			get { return m_guildid; }
-			set { m_guildid = value; }
+			get 
+			{ 
+				return m_DBguild.GuildID; 
+			}
+			set 
+			{
+				m_DBguild.GuildID = value; 
+			}
 		}
 
 		/// <summary>
@@ -285,8 +291,14 @@ namespace DOL.GS
 		/// </summary>
 		public string Name
 		{
-			get { return m_name; }
-			set { m_name = value; }
+			get 
+			{ 
+				return m_DBguild.GuildName; 
+			}
+			set 
+			{
+				m_DBguild.GuildName = value; 
+			}
 		}
 
 		/// <summary>
