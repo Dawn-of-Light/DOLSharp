@@ -174,7 +174,6 @@ namespace DOL.GS
 				log.Debug("Create guild; guild name=\"" + guildName + "\"");
 			try
 			{
-				// Does guild exist, if so return null
 				if (DoesGuildExist(guildName) == true)
 				{
 					if (creator != null)
@@ -186,14 +185,11 @@ namespace DOL.GS
 				if (creator == null)
 					return null;
 
-
 				//create table of rank in guild
 				Guild newguild = new Guild();
 				newguild.theGuildDB = new DBGuild();
 				newguild.Name = guildName;
-				newguild.theGuildDB.GuildName = guildName;
-				newguild.GuildID = System.Guid.NewGuid().ToString(); //Assume this is unique, which I don't like, but it seems to be commonly used elsewhere in the code.
-				newguild.theGuildDB.GuildID = newguild.GuildID;
+				newguild.GuildID = System.Guid.NewGuid().ToString(); 
 				CreateRanks(newguild);
 				
 				AddGuild(newguild);				
