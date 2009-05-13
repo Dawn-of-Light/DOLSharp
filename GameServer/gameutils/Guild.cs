@@ -93,16 +93,6 @@ namespace DOL.GS
 		protected ushort m_id;
 
 		/// <summary>
-		/// Holds the guild realm points
-		/// </summary>
-		protected long m_realmPoints;
-
-		/// <summary>
-		/// Holds the guild bounty points
-		/// </summary>
-		protected long m_bountyPoints;
-
-		/// <summary>
 		/// Stores claimed keeps (unique)
 		/// </summary>
 		protected List<AbstractGameKeep> m_claimedKeeps = new List<AbstractGameKeep>();
@@ -301,20 +291,20 @@ namespace DOL.GS
 			}
 		}
 
-		/// <summary>
-		/// Gets or sets the guild realm points
-		/// </summary>
 		public long RealmPoints
 		{
-			get { return m_realmPoints; }
+			get 
+			{ 
+				return this.m_DBguild.RealmPoints; 
+			}
 		}
 
-		/// <summary>
-		/// Gets or sets the guild realm points
-		/// </summary>
 		public long BountyPoints
 		{
-			get { return m_bountyPoints; }
+			get 
+			{ 
+				return this.m_DBguild.BountyPoints; 
+			}
 		}
 
 		/// <summary>
@@ -689,8 +679,7 @@ namespace DOL.GS
 		/// <param name="amount">The amount of realm points gained</param>
 		public virtual void GainRealmPoints(long amount)
 		{
-			m_realmPoints += amount;
-			m_DBguild.RealmPoints = m_realmPoints;
+			this.m_DBguild.RealmPoints += amount;
 		}
 
 		/// <summary>
@@ -699,21 +688,21 @@ namespace DOL.GS
 		/// <param name="amount">The amount of bounty points gained</param>
 		public virtual void GainBountyPoints(long amount)
 		{
-			m_bountyPoints += amount;
-			m_DBguild.BountyPoints = m_bountyPoints;
+			this.m_DBguild.BountyPoints += amount;
 		}
 
 		/// <summary>
 		/// Called when this guild loose bounty points
+		/// returns true if BPs were reduced and false if BPs are smaller than param amount
+		/// if false is returned, no BPs were removed.
 		/// </summary>
-		/// <param name="amount">The amount of bounty points gained</param>
 		public virtual bool RemoveBountyPoints(long amount)
 		{
-			if (amount > m_bountyPoints)
-				amount = m_bountyPoints;
-
-			m_bountyPoints -= amount;
-			m_DBguild.BountyPoints = m_bountyPoints;
+			if (amount > this.m_DBguild.BountyPoints)
+			{
+				return false;
+			}
+			this.m_DBguild.BountyPoints -= amount;
 			return true;
 		}
 
@@ -729,8 +718,6 @@ namespace DOL.GS
 			m_DBguild = (DBGuild)obj;
 			m_guildid = m_DBguild.GuildID;
 			m_name = m_DBguild.GuildName;
-			m_realmPoints = m_DBguild.RealmPoints;
-			m_bountyPoints = m_DBguild.BountyPoints;
 			m_BuffTime = m_DBguild.BuffTime;
 			m_BuffType = m_DBguild.BuffType;
 			m_GuildLevel = m_DBguild.GuildLevel;
