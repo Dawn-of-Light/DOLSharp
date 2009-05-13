@@ -231,7 +231,7 @@ namespace DOL.GS
 				rank.RankLevel = (byte)i;
 				rank.Release = false;
 				rank.Remove = false;
-				rank.Title = "";
+				rank.Title = "Rank "+i.ToString();
 				rank.Upgrade = false;
 				rank.View = false;
                 rank.View = false;
@@ -272,6 +272,7 @@ namespace DOL.GS
                                                     rank.Alli = true;
                                                     rank.Dues = true;
                                                     rank.Withdraw = true;
+													rank.Title = "Guildmaster";
 													rank.Buff=true;
                                                 }
 
