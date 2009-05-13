@@ -1341,8 +1341,9 @@ namespace DOL.GS.Commands
 
 										//Finally lets send the list we made
 										IList<GuildMgr.SocialWindowMemeber> finalList = sortedList.Values;
-										
-										for (int i = 0; i < 10 && finalList.Count > i + (page - 1) * 10; i++)
+										int i = 0;
+										string[] buffer=new string[10];
+										for (i = 0; i < 10 && finalList.Count > i + (page - 1) * 10; i++)
 										{
 											GuildMgr.SocialWindowMemeber member;
 
@@ -1356,9 +1357,12 @@ namespace DOL.GS.Commands
 												//They want it in reverse
 												member = finalList[(finalList.Count - 1) - (i + (page - 1) * 10)];
 											}
-
-											client.Player.Out.SendMessage(member.ToString((i + 1) + (page - 1) * 10, finalList.Count), eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+											buffer[i]=member.ToString((i + 1) + (page - 1) * 10, finalList.Count);
 										}
+										client.Out.SendMessage("TE," + page.ToString() + ","+i.ToString()+"," + finalList.Count, eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+										foreach(string member in buffer)
+											client.Player.Out.SendMessage(member, eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+
                                     }
                                 }
                                 return;
