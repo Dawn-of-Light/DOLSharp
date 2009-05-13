@@ -423,12 +423,9 @@ namespace DOL.GS
 		{
 			if (addeePlayer == null)
 				return false;
+			
 			if (log.IsDebugEnabled)
 				log.Debug("Adding player to the guild, guild name=\"" + Name + "\"; player name=" + addeePlayer.Name);
-			
-			// guild name can't be null, it's set to "" if no guild
-			//if (addeePlayer.GuildName != null) // Hey this should have been tested by the guild script!
-			//	return false;
 
 			try
 			{
@@ -439,6 +436,9 @@ namespace DOL.GS
 				addeePlayer.Guild = this;
 				addeePlayer.SaveIntoDatabase();
 				GuildMgr.AddPlayerToSocialWindow(addeePlayer);
+				addeePlayer.Out.SendMessage("You have agreed to join " + this.Name + "!", eChatType.CT_Group, eChatLoc.CL_SystemWindow);
+				addeePlayer.Out.SendMessage("Your current rank is " + addeePlayer.GuildRank.Title + "!", eChatType.CT_Group, eChatLoc.CL_SystemWindow);
+				SendMessageToGuildMembers(addeePlayer.Name + " has joined the guild!", eChatType.CT_Group, eChatLoc.CL_SystemWindow);
 			}
 			catch (Exception e)
 			{
@@ -447,7 +447,6 @@ namespace DOL.GS
 				return false;
 			}
 
-			// No errors
 			return true;
 		}
 
