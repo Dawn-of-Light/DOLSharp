@@ -18,6 +18,7 @@ namespace DOL.GS.Keeps
 		public KeepArea(AbstractGameKeep keep)
 			: base(keep.Name, keep.X, keep.Y, 0, keep is GameKeep ? (keep.IsPortalKeep ? PK_RADIUS : KEEP_RADIUS) : TOWER_RADIUS)
 		{
+			Keep = keep;
 		}
 
 		public override void OnPlayerEnter(GamePlayer player)
