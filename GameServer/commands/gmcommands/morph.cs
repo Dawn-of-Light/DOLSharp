@@ -41,10 +41,7 @@ namespace DOL.GS.Commands
 			GamePlayer player = client.Player.TargetObject as GamePlayer;
 
 			if ( player == null )
-			{
-				DisplayMessage( client, "You must have a player targeted." );
-				return;
-			}
+				player = client.Player;
 
 			ushort model;
 
