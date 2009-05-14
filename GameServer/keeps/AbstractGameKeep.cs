@@ -427,6 +427,7 @@ namespace DOL.GS.Keeps
 				{
 					log.Debug("Found a DBArea entry for " + keep.Name + ", loading that instead of creating a new one.");
 					area = a as KeepArea;
+					area.Keep = this;
 					break;
 				}
 			}
