@@ -180,13 +180,13 @@ namespace DOL.GS
 						creator.Out.SendMessage(guildName + " already exists!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return null;
 				}
-				Guild newguild = new Guild();
-				newguild.theGuildDB = new DBGuild();
-				newguild.Name = guildName;
-				newguild.GuildID = System.Guid.NewGuid().ToString(); 
+				DBGuild dbGuild = new DBGuild();
+				dbGuild.GuildName = guildName;
+				dbGuild.GuildID = System.Guid.NewGuid().ToString(); 
+				Guild newguild = new Guild(dbGuild);
 				CreateRanks(newguild);
 				AddGuild(newguild);
-				GameServer.Database.AddNewObject( newguild.theGuildDB );
+				newguild.AddToDatabase();
 				return newguild;
 			}
 			catch (Exception e)
@@ -280,7 +280,7 @@ namespace DOL.GS
                 }
                 GameServer.Database.AddNewObject(rank);
 				GameServer.Database.SaveObject(rank);
-				newguild.theGuildDB.Ranks[i] = rank;
+				newguild.Ranks[i] = rank;
 			}
 		}
 
@@ -398,8 +398,7 @@ namespace DOL.GS
 			DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(DBGuild));
 			foreach (DataObject obj in objs)
 			{
-				Guild myguild = new Guild();
-				myguild.LoadFromDatabase(obj);
+				Guild myguild = new Guild((DBGuild)obj);
 				AddGuild(myguild);
 				if (((DBGuild)obj).Ranks.Length == 0)
 					CreateRanks(myguild);
@@ -484,7 +483,6 @@ namespace DOL.GS
 		public static void ChangeEmblem(GamePlayer player, int oldemblem, int newemblem)
 		{
 			player.Guild.Emblem = newemblem;
-			GameServer.Database.SaveObject(player.Guild.theGuildDB);
 			if (oldemblem != 0)
 			{
 				player.RemoveMoney(COST_RE_EMBLEM, null);

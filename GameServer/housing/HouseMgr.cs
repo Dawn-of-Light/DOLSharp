@@ -270,9 +270,7 @@ namespace DOL.GS.Housing
                 Guild guild = GuildMgr.GetGuildByName(house.DatabaseItem.GuildName);
                 if (guild != null)
                 {
-                    guild.theGuildDB.HaveGuildHouse = false;
-                    guild.theGuildDB.GuildHouseNumber = 0;
-                    GameServer.Database.SaveObject(guild.theGuildDB);
+                    guild.GuildHouseNumber = 0;
                 }
             }
 			foreach (GamePlayer player in house.GetAllPlayersInHouse())

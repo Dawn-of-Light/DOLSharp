@@ -65,7 +65,7 @@ namespace DOL.GS
 			{
 				myguild.alliance = this;
 				Guilds.Add(myguild);
-				myguild.theGuildDB.AllianceID = m_dballiance.ObjectId;
+				myguild.AllianceId = m_dballiance.ObjectId;
 				m_dballiance.DBguilds = null;
 				//sirru 23.12.06 Add the new object instead of trying to save it
 				GameServer.Database.AddNewObject(m_dballiance);
@@ -81,7 +81,7 @@ namespace DOL.GS
 			{
 				myguild.alliance = null;
 				Guilds.Remove(myguild);
-				myguild.theGuildDB.AllianceID = "";
+				myguild.AllianceId = "";
 				m_dballiance.DBguilds = null;
 				GameServer.Database.SaveObject(m_dballiance);
 				GameServer.Database.FillObjectRelations(m_dballiance);
@@ -97,7 +97,7 @@ namespace DOL.GS
 				foreach (Guild guild in Guilds)
 				{
 					guild.alliance = null;
-					guild.theGuildDB.AllianceID = "";
+					guild.AllianceId = "";
 					//sirru 23.12.06 save changes to db
 					guild.SaveIntoDatabase();
 				}
