@@ -118,7 +118,6 @@ namespace DOL.Regiment
 			{
 				int meritpoints = cea.Points - 600;
 				player.Guild.GainMeritPoints(meritpoints);
-				GameServer.Database.SaveObject(player.Guild.theGuildDB);
 				player.Out.SendMessage("You have earned "+meritpoints+" merit points for your guild!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 
@@ -151,7 +150,6 @@ namespace DOL.Regiment
 				{
 					int a = (int)Math.Pow((3 * (newRR - 1)), 2);
 					player.Guild.GainMeritPoints(a);
-					GameServer.Database.SaveObject(player.Guild.theGuildDB);
 					player.Out.SendMessage("Your guild is awarded " + (int)Math.Pow((3 * (newRR - 1)), 2) + " Merit Points!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				}
 			}
@@ -163,7 +161,6 @@ namespace DOL.Regiment
 				{
 					int a = (int)Math.Pow((3 * (RRHigh - 1)), 2);
 					player.Guild.GainMeritPoints(a);
-					GameServer.Database.SaveObject(player.Guild.theGuildDB);
 					player.Out.SendMessage("Your guild is awarded " + (int)Math.Pow((3 * (RRHigh - 1)), 2) + " Merit Points!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				}
 			}
@@ -176,7 +173,6 @@ namespace DOL.Regiment
 						int RRHigh = ((int)Math.Floor(player.RealmLevel * 0.1) + 1);
 						int a = (int)Math.Pow((3 * (RRHigh - 1)), 2);
 						player.Guild.GainMeritPoints(a);
-						GameServer.Database.SaveObject(player.Guild.theGuildDB);
 						player.Out.SendMessage("Your guild is awarded " + (int)Math.Pow((3 * (RRHigh - 1)), 2) + " Merit Points!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					}
 				}
@@ -199,32 +195,27 @@ namespace DOL.Regiment
 
 			if (player.Guild != null)
 			{
-				long OldRealmPoints = player.Guild.theGuildDB.RealmPoints;
+				long OldRealmPoints = player.Guild.RealmPoints;
 				long NewRealmPoints = rpsArgs.RealmPoints;
 
 				#region Buff Bonus to RPS
-				if (player.Guild.theGuildDB.BuffType == 1)
+				if (player.Guild.BuffType == 1)
 				{
 					player.RealmPoints += (long)Math.Ceiling(rpsArgs.RealmPoints * BUFF_RPS / 100);
 					player.SaveIntoDatabase();
-
-					player.Guild.theGuildDB.RealmPoints += (long)Math.Ceiling(rpsArgs.RealmPoints * BUFF_RPS / 100);
-					GameServer.Database.SaveObject(player.Guild.theGuildDB);
-
+					player.Guild.RealmPoints += (long)Math.Ceiling(rpsArgs.RealmPoints * BUFF_RPS / 100);
 					player.Out.SendMessage("You get an additional " + (long)Math.Ceiling(rpsArgs.RealmPoints * BUFF_RPS / 100) + " Realm Points due to your Guild's Buff!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				}
 				#endregion
 
 				long GuildLevel = player.Guild.GuildLevel;
 
-				if ((OldRealmPoints < 100000000) && (player.Guild.theGuildDB.RealmPoints > 100000000))
+				if ((OldRealmPoints < 100000000) && (player.Guild.RealmPoints > 100000000))
 				{
 					// Report to Newsmgr
-					string message = player.Guild.theGuildDB.GuildName + " [" + GlobalConstants.RealmToName((eRealm)player.Realm) + "] has reached 100,000,000 Realm Points!";
+					string message = player.Guild.Name + " [" + GlobalConstants.RealmToName((eRealm)player.Realm) + "] has reached 100,000,000 Realm Points!";
 					NewsMgr.CreateNews(message, player.Realm, eNewsType.RvRGlobal, false);
 				}
-				GameServer.Database.SaveObject(player.Guild.theGuildDB);
-
 				player.Guild.UpdateGuildWindow();
 			}
 		}
@@ -244,14 +235,11 @@ namespace DOL.Regiment
 			#region Buff Bonus to BPS
 			if (player.Guild != null)
 			{
-				if (player.Guild.theGuildDB.BuffType == 2)
+				if (player.Guild.BuffType == 2)
 				{
 					player.BountyPoints += (long)Math.Ceiling(bpsArgs.BountyPoints * BUFF_BPS / 100);
 					player.SaveIntoDatabase();
-
-					player.Guild.theGuildDB.BountyPoints += (long)Math.Ceiling(bpsArgs.BountyPoints * BUFF_BPS / 100);
-					GameServer.Database.SaveObject(player.Guild.theGuildDB);
-
+					player.Guild.BountyPoints += (long)Math.Ceiling(bpsArgs.BountyPoints * BUFF_BPS / 100);
 					player.Out.SendMessage("You get an additional " + (long)Math.Ceiling(bpsArgs.BountyPoints * BUFF_BPS / 100) + " Bounty Points due to your Guild's Buff!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				}
 			}
@@ -277,14 +265,14 @@ namespace DOL.Regiment
 
 			foreach (Guild checkGuild in GuildMgr.ListGuild())
 			{
-				if (checkGuild.theGuildDB.BuffType != 0)
+				if (checkGuild.BuffType != 0)
 				{
-					TimeSpan buffDate = DateTime.Now.Subtract(checkGuild.theGuildDB.BuffTime);
+					TimeSpan buffDate = DateTime.Now.Subtract(checkGuild.BuffTime);
 
 					//int TimeLeft;
 					if (buffDate.Days > 0)
 					{
-						checkGuild.theGuildDB.BuffType = 0;
+						checkGuild.BuffType = 0;
 
 						checkGuild.SaveIntoDatabase();
 
