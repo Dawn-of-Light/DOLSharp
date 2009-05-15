@@ -127,7 +127,6 @@ namespace DOL.GS.GameEvents
 				}
 				else
 				{
-					// can't change region on char creation, that is hardcoded in the client
 					ch.Xpos = loc.X;
 					ch.Ypos = loc.Y;
 					ch.Zpos = loc.Z;

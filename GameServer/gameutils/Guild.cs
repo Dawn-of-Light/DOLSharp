@@ -122,10 +122,12 @@ namespace DOL.GS
 				return m_DBguild.HaveGuildHouse;
 			}
 		}
+
 		public double GetGuildBank()
 		{
 			return m_guildBank;
 		}
+
 		public bool IsGuildDuesOn()
 		{
 			return guildDues;
@@ -148,6 +150,7 @@ namespace DOL.GS
 			}
 			m_DBguild.Dues = guildDues;
 		}
+
 		public void SetGuildDuesPercent(long dues)
 		{
 			if (IsGuildDuesOn() == true)
@@ -235,17 +238,42 @@ namespace DOL.GS
 			}
 		}
 
-		protected bool m_guildBanner;
-
 		public bool GuildBanner
 		{
-			get { return m_guildBanner; }
+			get 
+			{
+				return this.m_DBguild.GuildBanner;
+			}
 			set
 			{
-				m_guildBanner = value;
-				theGuildDB.GuildBanner = value;
+				this.m_DBguild.GuildBanner = value;
 			}
 		}
+
+		public string Omotd
+		{
+			get
+			{
+				return this.m_DBguild.oMotd;
+			}
+			set
+			{
+				this.m_DBguild.oMotd = value;
+			}
+		}
+
+		public string Motd
+		{
+			get
+			{
+				return this.m_DBguild.Motd;
+			}
+			set
+			{
+				this.m_DBguild.Motd = value;
+			}
+		}
+
 		/// <summary>
 		/// Gets or sets the guild db
 		/// </summary>
@@ -260,8 +288,14 @@ namespace DOL.GS
 		/// </summary>
 		public Alliance alliance
 		{
-			get { return m_alliance; }
-			set { m_alliance = value; }
+			get 
+			{ 
+				return m_alliance; 
+			}
+			set 
+			{ 
+				m_alliance = value; 
+			}
 		}
 
 		/// <summary>
@@ -284,8 +318,14 @@ namespace DOL.GS
 		/// </summary>
 		public ushort ID
 		{
-			get { return m_id; }
-			set { m_id = value; }
+			get 
+			{ 
+				return m_id; 
+			}
+			set 
+			{ 
+				m_id = value; 
+			}
 		}
 
 		/// <summary>
@@ -878,8 +918,8 @@ namespace DOL.GS
 			mes += ',' + housenum.ToString(); // Guild houseLot ?
 			mes += ',' + (player.Guild.MemberOnlineCount + 1).ToString(); // online Guild member ?
 			mes += ',' + player.Guild.GuildBannerStatus(player); //"Banner available for purchase", "Missing banner buying permissions"
-			mes += ",\"" + player.Guild.theGuildDB.Motd + '\"'; // Guild Motd
-			mes += ",\"" + player.Guild.theGuildDB.oMotd + '\"'; // Guild oMotd
+			mes += ",\"" + player.Guild.Motd + '\"'; // Guild Motd
+			mes += ",\"" + player.Guild.Omotd + '\"'; // Guild oMotd
 			player.Out.SendMessage(mes, eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
 			player.Guild.SaveIntoDatabase();
 		}

@@ -71,7 +71,7 @@ namespace DOL.GS.GameEvents
 		/// <param name="guildName">The guild name that is being checked</param>
 		private static void CheckGuild(string guildName)
 		{
-			if (GuildMgr.DoesGuildExist(guildName) == false)
+			if (!GuildMgr.DoesGuildExist(guildName))
 			{
 				//create table of rank in guild
 				Guild newguild = new Guild();
@@ -86,18 +86,18 @@ namespace DOL.GS.GameEvents
 				switch (ServerProperties.Properties.SERV_LANGUAGE)
 				{
 					case "EN":
-						newguild.theGuildDB.Motd = "Use /gu <text> to talk in this starter guild.";
-						newguild.theGuildDB.oMotd = "Type /gc quit to leave this starter guild.";
+						newguild.Motd = "Use /gu <text> to talk in this starter guild.";
+						newguild.Omotd = "Type /gc quit to leave this starter guild.";
 						newguild.theGuildDB.Ranks[8].Title = "Initiate";
 						break;
 					case "DE":
-						newguild.theGuildDB.Motd = "Gebt '/gu <text>' ein, um mit den Mitgliedern dieser Startgilde zu sprechen.";
-						newguild.theGuildDB.oMotd = "Gebt '/gc quit' ein, um die Startgilde zu verlassen.";
+						newguild.Motd = "Gebt '/gu <text>' ein, um mit den Mitgliedern dieser Startgilde zu sprechen.";
+						newguild.Omotd = "Gebt '/gc quit' ein, um die Startgilde zu verlassen.";
 						newguild.theGuildDB.Ranks[8].Title = "Abenteurer";
 						break;
 					default:
-						newguild.theGuildDB.Motd = "Use /gu <text> to talk in this starter guild.";
-						newguild.theGuildDB.oMotd = "Type /gc quit to leave this starter guild.";
+						newguild.Motd = "Use /gu <text> to talk in this starter guild.";
+						newguild.Omotd = "Type /gc quit to leave this starter guild.";
 						newguild.theGuildDB.Ranks[8].Title = "Initiate";
 						break;
 				}
