@@ -451,7 +451,7 @@ namespace DOL.GS.ServerRules
 				case eObjectType.GenericItem: return true;
 				case eObjectType.GenericArmor: return true;
 				case eObjectType.GenericWeapon: return true;
-				case eObjectType.Staff: twoHandCheck = new string[] { Abilities.Weapon_Staves, Abilities.Weapon_MaulerStaff }; break;
+				case eObjectType.Staff: twoHandCheck = new string[] { Abilities.Weapon_Staves }; break;
 				case eObjectType.Fired: otherCheck = new string[] { Abilities.Weapon_Shortbows }; break;
 
 				//generic
