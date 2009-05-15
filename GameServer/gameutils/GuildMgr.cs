@@ -174,23 +174,19 @@ namespace DOL.GS
 				log.Debug("Create guild; guild name=\"" + guildName + "\"");
 			try
 			{
-				if (DoesGuildExist(guildName) == true)
+				if (DoesGuildExist(guildName))
 				{
 					if (creator != null)
 						creator.Out.SendMessage(guildName + " already exists!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return null;
 				}
-
-				//create table of rank in guild
 				Guild newguild = new Guild();
 				newguild.theGuildDB = new DBGuild();
 				newguild.Name = guildName;
 				newguild.GuildID = System.Guid.NewGuid().ToString(); 
 				CreateRanks(newguild);
-				
 				AddGuild(newguild);
 				GameServer.Database.AddNewObject( newguild.theGuildDB );
-
 				return newguild;
 			}
 			catch (Exception e)
@@ -200,7 +196,6 @@ namespace DOL.GS
 				return null;
 			}
 		}
-
 
 		public static void CreateRanks(Guild newguild)
 		{
