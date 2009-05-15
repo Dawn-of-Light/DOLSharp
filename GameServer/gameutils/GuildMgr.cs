@@ -181,10 +181,6 @@ namespace DOL.GS
 					return null;
 				}
 
-				// Check if client exists
-				if (creator == null)
-					return null;
-
 				//create table of rank in guild
 				Guild newguild = new Guild();
 				newguild.theGuildDB = new DBGuild();
@@ -192,15 +188,9 @@ namespace DOL.GS
 				newguild.GuildID = System.Guid.NewGuid().ToString(); 
 				CreateRanks(newguild);
 				
-				AddGuild(newguild);				
-				try
-				{
-					GameServer.Database.AddNewObject(newguild.theGuildDB);
-				}
-				catch(Exception)
-				{
-					return null;
-				}
+				AddGuild(newguild);
+				GameServer.Database.AddNewObject( newguild.theGuildDB );
+
 				return newguild;
 			}
 			catch (Exception e)
@@ -210,6 +200,8 @@ namespace DOL.GS
 				return null;
 			}
 		}
+
+
 		public static void CreateRanks(Guild newguild)
 		{
 			DBRank rank;
