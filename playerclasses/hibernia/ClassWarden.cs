@@ -98,5 +98,10 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
+
+		public override ushort MaxPulsingSpells
+		{
+			get { return 2; }
+		}
 	}
 }

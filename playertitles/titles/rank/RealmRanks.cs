@@ -22,7 +22,7 @@ namespace DOL.GS.Scripts
 	public class AlbionRR6 : SimplePlayerTitle
 	{
 		public override string GetDescription(GamePlayer player) { return "Realm Rank"; }
-		public override string GetValue(GamePlayer player) { return "Pheonix Knight"; }
+		public override string GetValue(GamePlayer player) { return "Phoenix Knight"; }
 		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Albion&&player.RealmLevel>=50&&player.RealmLevel<60); }
 	}
 	public class AlbionRR7 : SimplePlayerTitle

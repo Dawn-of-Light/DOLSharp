@@ -146,10 +146,20 @@ namespace DOL.GS
 		{
 			get;
 		}
+
 		eClassType ClassType
 		{
 			get;
 		}
+
+		/// <summary>
+		/// The maximum number of pulsing spells the class can have active simultaneously
+		/// </summary>
+		ushort MaxPulsingSpells
+		{
+			get;
+		}
+
 		string GetTitle(int level);
 		void OnLevelUp(GamePlayer player);
 		void OnRealmLevelUp(GamePlayer player);
@@ -349,6 +359,14 @@ namespace DOL.GS
 		public int WeaponSkillRangedBase
 		{
 			get { return m_wsbaseRanged; }
+		}
+
+		/// <summary>
+		/// Maximum number of pulsing spells that can be active simultaneously
+		/// </summary>
+		public virtual ushort MaxPulsingSpells
+		{
+			get { return 1; }
 		}
 
 		public virtual string GetTitle(int level)
