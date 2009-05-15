@@ -424,7 +424,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort((ushort)player.ObjectID);
 			pak.WriteByte(0xC); // show Banner
 			pak.WriteByte((byte)((show) ? 0 : 1)); // 0-enable, 1-disable
-			int newEmblemBitMask = ((player.Guild.theGuildDB.Emblem & 0x010000) << 8) | (player.Guild.theGuildDB.Emblem & 0xFFFF);
+			int newEmblemBitMask = ((player.Guild.Emblem & 0x010000) << 8) | (player.Guild.Emblem & 0xFFFF);
 			pak.WriteInt((uint)newEmblemBitMask);
 			SendTCP(pak);
 		}

@@ -193,7 +193,7 @@ namespace DOL.GS
                     m_guildBanner.Level = 1;
                     m_guildBanner.MaxCharges = 1;
                     m_guildBanner.MaxCount = 1;
-                    m_guildBanner.Emblem = m_player.Guild.theGuildDB.Emblem;
+                    m_guildBanner.Emblem = m_player.Guild.Emblem;
                     /*
                        3223 Guild Banner Albion 
                        3224 Guild Banner Midgard 
