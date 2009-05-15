@@ -198,7 +198,6 @@ namespace DOL.GS.Commands
                                 return;
                             }
                             Guild myguild = GuildMgr.GetGuildByName(oldguildname);
-                            myguild.theGuildDB.GuildName = newguildname;
                             myguild.Name = newguildname;
                             GuildMgr.AddGuild(myguild);
                             foreach (GamePlayer ply in myguild.ListOnlineMembers())
@@ -695,7 +694,7 @@ namespace DOL.GS.Commands
                                 return;
                             }
 
-                            if (client.Player.Guild.theGuildDB.GuildLevel < 15)
+                            if (client.Player.Guild.GuildLevel < 15)
                             {
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.GuildLevelReq"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 return;
@@ -1488,7 +1487,7 @@ namespace DOL.GS.Commands
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 return;
                             }
-                            if (client.Player.Guild.theGuildDB.Emblem != 0)
+                            if (client.Player.Guild.Emblem != 0)
                             {
                                 if (client.Player.TargetObject is EmblemNPC == false)
                                 {

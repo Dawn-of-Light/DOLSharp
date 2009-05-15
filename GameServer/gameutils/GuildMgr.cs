@@ -473,7 +473,7 @@ namespace DOL.GS
 			{
 				foreach (Guild guild in m_guilds.Values)
 				{
-					if (guild.theGuildDB.Emblem == emblem)
+					if (guild.Emblem == emblem)
 						return true;
 				}
 			}
@@ -488,7 +488,7 @@ namespace DOL.GS
 		/// <param name="newemblem"></param>
 		public static void ChangeEmblem(GamePlayer player, int oldemblem, int newemblem)
 		{
-			player.Guild.theGuildDB.Emblem = newemblem;
+			player.Guild.Emblem = newemblem;
 			GameServer.Database.SaveObject(player.Guild.theGuildDB);
 			if (oldemblem != 0)
 			{

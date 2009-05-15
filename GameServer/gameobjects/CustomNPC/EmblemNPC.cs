@@ -59,7 +59,7 @@ namespace DOL.GS
 					t.Out.SendMessage("You have no guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
-				if (t.Guild.theGuildDB.Emblem == 0)
+				if (t.Guild.Emblem == 0)
 				{
 					t.Out.SendMessage("Your guild has no emblem.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
@@ -123,7 +123,7 @@ namespace DOL.GS
 				return;
 			}
 
-			item.Emblem = player.Guild.theGuildDB.Emblem;
+			item.Emblem = player.Guild.Emblem;
 			player.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
 			if (item.SlotPosition < (int) eInventorySlot.FirstBackpack)
 				player.UpdateEquipmentAppearance();

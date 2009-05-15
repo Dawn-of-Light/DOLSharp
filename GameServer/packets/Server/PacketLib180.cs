@@ -56,9 +56,9 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte(player.ActiveHorse.ID);
 				if (player.ActiveHorse.BardingColor == 0 && player.ActiveHorse.Barding != 0 && player.Guild != null)
 				{
-					int newGuildBitMask = (player.Guild.theGuildDB.Emblem & 0x010000) >> 9;
+					int newGuildBitMask = (player.Guild.Emblem & 0x010000) >> 9;
 					pak.WriteByte((byte)(player.ActiveHorse.Barding | newGuildBitMask));
-					pak.WriteShort((ushort)player.Guild.theGuildDB.Emblem);
+					pak.WriteShort((ushort)player.Guild.Emblem);
 				}
 				else
 				{
@@ -94,9 +94,9 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte(player.ActiveHorse.ID);
 				if (player.ActiveHorse.BardingColor == 0 && player.ActiveHorse.Barding != 0 && player.Guild != null)
 				{
-					int newGuildBitMask = (player.Guild.theGuildDB.Emblem & 0x010000) >> 9;
+					int newGuildBitMask = (player.Guild.Emblem & 0x010000) >> 9;
 					pak.WriteByte((byte)(player.ActiveHorse.Barding | newGuildBitMask));
-					pak.WriteShort((ushort)player.Guild.theGuildDB.Emblem);
+					pak.WriteShort((ushort)player.Guild.Emblem);
 				}
 				else
 				{
@@ -189,9 +189,9 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte(playerToCreate.ActiveHorse.ID);
 				if (playerToCreate.ActiveHorse.BardingColor == 0 && playerToCreate.ActiveHorse.Barding != 0 && playerToCreate.Guild != null)
 				{
-					int newGuildBitMask = (playerToCreate.Guild.theGuildDB.Emblem & 0x010000) >> 9;
+					int newGuildBitMask = (playerToCreate.Guild.Emblem & 0x010000) >> 9;
 					pak.WriteByte((byte)(playerToCreate.ActiveHorse.Barding | newGuildBitMask));
-					pak.WriteShortLowEndian((ushort)playerToCreate.Guild.theGuildDB.Emblem);
+					pak.WriteShortLowEndian((ushort)playerToCreate.Guild.Emblem);
 				}
 				else
 				{
@@ -207,30 +207,7 @@ namespace DOL.GS.PacketHandler
 			}
 
 			SendTCP(pak);
-
-			//if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
-				SendObjectGuildID(playerToCreate, playerToCreate.Guild); //used for nearest friendly/enemy object buttons and name colors on PvP server
-
-			/*
-			if (m_gameClient.Player != null && playerToCreate.CharacterClass.ID == (int)eCharacterClass.Warlock)
-			{
-				ChamberEffect ce = (ChamberEffect)playerToCreate.EffectList.GetOfType(typeof(ChamberEffect));
-				if (ce != null)
-				{
-					ce.SendChamber(m_gameClient.Player);
-				}
-			}
-			 */
-			//			if(ShowAllOnHorseWithBanners && playerToCreate.Guild != null)
-			//			{
-			//				pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
-			//				pak.WriteShort((ushort)playerToCreate.ObjectID);
-			//				pak.WriteByte(0xC); // show Banner
-			//				pak.WriteByte((byte)0); // 0-enable, 1-disable
-			//				pak.WriteInt(playerToCreate.Guild.theGuildDB.Emblem);
-			//				SendTCP(pak);
-			//			}
-
+			SendObjectGuildID(playerToCreate, playerToCreate.Guild); //used for nearest friendly/enemy object buttons and name colors on PvP server
 
 			if (playerToCreate.IsCarryingGuildBanner)
 			{
