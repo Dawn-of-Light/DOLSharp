@@ -151,7 +151,7 @@ namespace DOL.GS.PropertyCalc
         /// </summary>
         public static int HardCap
         {
-            get { return 76; }
+            get { return 70; }
         }
 	}
 	
@@ -190,6 +190,6 @@ namespace DOL.GS.PropertyCalc
         }
         public static int BuffBonusCap { get { return 25; } }
 
-        public static int HardCap { get { return 76; } }
+        public static int HardCap { get { return 70; } }
 	}
 }
