@@ -179,7 +179,7 @@ namespace DOL.GS.Keeps
 			int emblem = 0;
 			if (guild != null)
 			{
-				emblem = guild.theGuildDB.Emblem;
+				emblem = guild.Emblem;
 				this.AddToWorld();
 			}
 			else this.RemoveFromWorld();

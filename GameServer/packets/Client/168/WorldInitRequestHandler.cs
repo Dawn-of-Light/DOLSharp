@@ -68,7 +68,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						if (myitem != null && myitem.Emblem != 0)
 						{
-							if (playerGuild == null || myitem.Emblem != playerGuild.theGuildDB.Emblem )
+							if (playerGuild == null || myitem.Emblem != playerGuild.Emblem )
 							{
 								myitem.Emblem = 0;
 							}
