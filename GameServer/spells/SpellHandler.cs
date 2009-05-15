@@ -179,7 +179,8 @@ namespace DOL.GS.Spells
 		protected bool CheckInstrument()
 		{
 			InventoryItem instrument = Caster.AttackWeapon;
-			if (instrument == null || instrument.Object_Type != (int)eObjectType.Instrument || (instrument.DPS_AF != 4 && instrument.DPS_AF != m_spell.InstrumentRequirement))
+			// From patch 1.97:  Flutes, Lutes, and Drums will now be able to play any song type, and will no longer be limited to specific songs.
+			if (instrument == null || instrument.Object_Type != (int)eObjectType.Instrument ) // || (instrument.DPS_AF != 4 && instrument.DPS_AF != m_spell.InstrumentRequirement))
 			{
 				return false;
 			}
@@ -217,6 +218,10 @@ namespace DOL.GS.Spells
 		/// <param name="living"></param>
 		public static void CancelAllPulsingSpells(GameLiving living)
 		{
+			List<IConcentrationEffect> pulsingSpells = new List<IConcentrationEffect>();
+
+			GamePlayer player = living as GamePlayer;
+
 			lock (living.ConcentrationEffects)
 			{
 				for (int i = 0; i < living.ConcentrationEffects.Count; i++)
@@ -224,8 +229,27 @@ namespace DOL.GS.Spells
 					PulsingSpellEffect effect = living.ConcentrationEffects[i] as PulsingSpellEffect;
 					if (effect == null)
 						continue;
-					effect.Cancel(false);
+
+					if ( player != null && player.CharacterClass.MaxPulsingSpells > 1 )
+						pulsingSpells.Add( effect );
+					else
+						effect.Cancel(false);
 				}
+			}
+
+			// Non-concentration spells are grouped at the end of GameLiving.ConcentrationEffects.
+			// The first one is added at the very end; successive additions are inserted just before the last element
+			// which results in the following ordering:
+			// Assume pulsing spells A, B, C, and D were added in that order; X, Y, and Z represent other spells
+			// ConcentrationEffects = { X, Y, Z, ..., B, C, D, A }
+			// If there are only ever 2 or less pulsing spells active, then the oldest one will always be at the end.
+			// However, if an update or modification allows more than 2 to be active, the goofy ordering of the spells
+			// will prevent us from knowing which spell is the oldest and should be canceled - we can go ahead and simply
+			// cancel the last spell in the list (which will result in inconsistent behavior) or change the code that adds
+			// spells to ConcentrationEffects so that it enforces predictable ordering.
+			if ( pulsingSpells.Count > 1 )
+			{
+				pulsingSpells[pulsingSpells.Count - 1].Cancel( false );
 			}
 		}
 
@@ -978,8 +1002,7 @@ namespace DOL.GS.Spells
 		}
 
 		/// <summary>
-		/// Calculates the endurance cost of the spell
-        /// Obsolete since 1.8x
+		/// Calculates the enduance cost of the spell
 		/// </summary>
 		/// <returns></returns>
 		public virtual int CalculateEnduranceCost()
