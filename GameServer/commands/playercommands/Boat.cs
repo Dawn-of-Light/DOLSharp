@@ -87,8 +87,8 @@ namespace DOL.GS.Commands
 									playerBoat = BoatMgr.CreateBoat(client.Player, playerBoat);
 									if (client.Player.Guild != null)
 									{
-										if (client.Player.Guild.theGuildDB.Emblem != 0)
-											playerBoat.Emblem = (ushort)client.Player.Guild.theGuildDB.Emblem;
+										if (client.Player.Guild.Emblem != 0)
+											playerBoat.Emblem = (ushort)client.Player.Guild.Emblem;
 
 										playerBoat.GuildName = client.Player.Guild.Name;
 									}
@@ -118,8 +118,8 @@ namespace DOL.GS.Commands
 									playerBoat = BoatMgr.CreateBoat(client.Player, playerBoat);
 									if (client.Player.Guild != null)
 									{
-										if (client.Player.Guild.theGuildDB.Emblem != 0)
-											playerBoat.Emblem = (ushort)client.Player.Guild.theGuildDB.Emblem;
+										if (client.Player.Guild.Emblem != 0)
+											playerBoat.Emblem = (ushort)client.Player.Guild.Emblem;
 
 										playerBoat.GuildName = client.Player.Guild.Name;
 									}
@@ -149,8 +149,8 @@ namespace DOL.GS.Commands
 									playerBoat = BoatMgr.CreateBoat(client.Player, playerBoat);
 									if (client.Player.Guild != null)
 									{
-										if (client.Player.Guild.theGuildDB.Emblem != 0)
-											playerBoat.Emblem = (ushort)client.Player.Guild.theGuildDB.Emblem;
+										if (client.Player.Guild.Emblem != 0)
+											playerBoat.Emblem = (ushort)client.Player.Guild.Emblem;
 
 										playerBoat.GuildName = client.Player.Guild.Name;
 									}
@@ -180,8 +180,8 @@ namespace DOL.GS.Commands
 									playerBoat = BoatMgr.CreateBoat(client.Player, playerBoat);
 									if (client.Player.Guild != null)
 									{
-										if (client.Player.Guild.theGuildDB.Emblem != 0)
-											playerBoat.Emblem = (ushort)client.Player.Guild.theGuildDB.Emblem;
+										if (client.Player.Guild.Emblem != 0)
+											playerBoat.Emblem = (ushort)client.Player.Guild.Emblem;
 
 										playerBoat.GuildName = client.Player.Guild.Name;
 									}
@@ -211,8 +211,8 @@ namespace DOL.GS.Commands
 									playerBoat = BoatMgr.CreateBoat(client.Player, playerBoat);
 									if (client.Player.Guild != null)
 									{
-										if (client.Player.Guild.theGuildDB.Emblem != 0)
-											playerBoat.Emblem = (ushort)client.Player.Guild.theGuildDB.Emblem;
+										if (client.Player.Guild.Emblem != 0)
+											playerBoat.Emblem = (ushort)client.Player.Guild.Emblem;
 
 										playerBoat.GuildName = client.Player.Guild.Name;
 									}
@@ -242,8 +242,8 @@ namespace DOL.GS.Commands
 									playerBoat = BoatMgr.CreateBoat(client.Player, playerBoat);
 									if (client.Player.Guild != null)
 									{
-										if (client.Player.Guild.theGuildDB.Emblem != 0)
-											playerBoat.Emblem = (ushort)client.Player.Guild.theGuildDB.Emblem;
+										if (client.Player.Guild.Emblem != 0)
+											playerBoat.Emblem = (ushort)client.Player.Guild.Emblem;
 
 										playerBoat.GuildName = client.Player.Guild.Name;
 									}
@@ -273,8 +273,8 @@ namespace DOL.GS.Commands
 									playerBoat = BoatMgr.CreateBoat(client.Player, playerBoat);
 									if (client.Player.Guild != null)
 									{
-										if (client.Player.Guild.theGuildDB.Emblem != 0)
-											playerBoat.Emblem = (ushort)client.Player.Guild.theGuildDB.Emblem;
+										if (client.Player.Guild.Emblem != 0)
+											playerBoat.Emblem = (ushort)client.Player.Guild.Emblem;
 
 										playerBoat.GuildName = client.Player.Guild.Name;
 									}
@@ -304,8 +304,8 @@ namespace DOL.GS.Commands
 									playerBoat = BoatMgr.CreateBoat(client.Player, playerBoat);
 									if (client.Player.Guild != null)
 									{
-										if (client.Player.Guild.theGuildDB.Emblem != 0)
-											playerBoat.Emblem = (ushort)client.Player.Guild.theGuildDB.Emblem;
+										if (client.Player.Guild.Emblem != 0)
+											playerBoat.Emblem = (ushort)client.Player.Guild.Emblem;
 
 										playerBoat.GuildName = client.Player.Guild.Name;
 									}
@@ -335,8 +335,8 @@ namespace DOL.GS.Commands
 									playerBoat = BoatMgr.CreateBoat(client.Player, playerBoat);
 									if (client.Player.Guild != null)
 									{
-										if (client.Player.Guild.theGuildDB.Emblem != 0)
-											playerBoat.Emblem = (ushort)client.Player.Guild.theGuildDB.Emblem;
+										if (client.Player.Guild.Emblem != 0)
+											playerBoat.Emblem = (ushort)client.Player.Guild.Emblem;
 
 										playerBoat.GuildName = client.Player.Guild.Name;
 									}
@@ -355,8 +355,8 @@ namespace DOL.GS.Commands
 							{
 								if (client.Player.Guild != null)
 								{
-									if (client.Player.Guild.theGuildDB.Emblem != 0)
-										curBoat.Emblem = (ushort)client.Player.Guild.theGuildDB.Emblem;
+									if (client.Player.Guild.Emblem != 0)
+										curBoat.Emblem = (ushort)client.Player.Guild.Emblem;
 
 									curBoat.GuildName = client.Player.Guild.Name;
 								}

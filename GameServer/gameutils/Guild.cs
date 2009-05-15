@@ -223,6 +223,18 @@ namespace DOL.GS
 		{
 		}
 
+		public int Emblem
+		{
+			get
+			{
+				return this.m_DBguild.Emblem;
+			}
+			set
+			{
+				this.m_DBguild.Emblem = value;
+			}
+		}
+
 		protected bool m_guildBanner;
 
 		public bool GuildBanner

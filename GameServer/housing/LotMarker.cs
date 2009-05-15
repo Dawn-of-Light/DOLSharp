@@ -175,7 +175,7 @@ namespace DOL.GS.Housing
 
 			if (player.Guild != null)
 			{
-				DatabaseItem.Emblem = player.Guild.theGuildDB.Emblem;
+				DatabaseItem.Emblem = player.Guild.Emblem;
 			}
 
 			House house = new House(DatabaseItem);
