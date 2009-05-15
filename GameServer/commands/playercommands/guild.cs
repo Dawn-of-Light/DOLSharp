@@ -544,10 +544,10 @@ namespace DOL.GS.Commands
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InfoWebpage", client.Player.Guild.theGuildDB.Webpage), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InfoCEmail", client.Player.Guild.theGuildDB.Email), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 
-                                string motd = client.Player.Guild.theGuildDB.Motd;
+                                string motd = client.Player.Guild.Motd;
                                 if (!Util.IsEmpty(motd) && client.Player.GuildRank.GcHear)
                                     client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InfoMotd", motd), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-                                string omotd = client.Player.Guild.theGuildDB.oMotd;
+                                string omotd = client.Player.Guild.Omotd;
                                 if (!Util.IsEmpty(omotd) && client.Player.GuildRank.OcHear)
                                     client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InfoOMotd", omotd), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                                 if (client.Player.Guild.alliance != null)
@@ -589,8 +589,8 @@ namespace DOL.GS.Commands
                                             mes += ',' + housenum.ToString(); // Guild houseLot ?
                                             mes += ',' + (client.Player.Guild.MemberOnlineCount + 1).ToString(); // online Guild member ?
                                             mes += ',' + client.Player.Guild.GuildBannerStatus(client.Player); //"Banner available for purchase", "Missing banner buying permissions"
-                                            mes += ",\"" + client.Player.Guild.theGuildDB.Motd + '\"'; // Guild Motd
-                                            mes += ",\"" + client.Player.Guild.theGuildDB.oMotd + '\"'; // Guild oMotd
+                                            mes += ",\"" + client.Player.Guild.Motd + '\"'; // Guild Motd
+                                            mes += ",\"" + client.Player.Guild.Omotd + '\"'; // Guild oMotd
                                             client.Out.SendMessage(mes, eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
                                             break;
                                         }
@@ -1618,7 +1618,7 @@ namespace DOL.GS.Commands
                                 return;
                             }
                             message = String.Join(" ", args, 2, args.Length - 2);
-                            client.Player.Guild.theGuildDB.Motd = message;
+                            client.Player.Guild.Motd = message;
                             GameServer.Database.SaveObject(client.Player.Guild.theGuildDB);
                             client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.MotdSet"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                             client.Player.Guild.UpdateGuildWindow();
@@ -1666,7 +1666,7 @@ namespace DOL.GS.Commands
                                 return;
                             }
                             message = String.Join(" ", args, 2, args.Length - 2);
-                            client.Player.Guild.theGuildDB.oMotd = message;
+                            client.Player.Guild.Omotd = message;
                             GameServer.Database.SaveObject(client.Player.Guild.theGuildDB);
                             client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.OMotdSet"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                             client.Player.Guild.UpdateGuildWindow();

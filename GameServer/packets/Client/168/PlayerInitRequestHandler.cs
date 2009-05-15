@@ -168,18 +168,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				if (player.Guild != null)
 				{
-					if (player.GuildRank.GcHear && player.Guild.theGuildDB.Motd != "")
+					if (player.GuildRank.GcHear && player.Guild.Motd != "")
 					{
 						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.GuildMessage"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						player.Out.SendMessage(player.Guild.theGuildDB.Motd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(player.Guild.Motd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
-					if (player.GuildRank.OcHear && player.Guild.theGuildDB.oMotd != "")
+					if (player.GuildRank.OcHear && player.Guild.Omotd != "")
 					{
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.OfficerMessage", player.Guild.theGuildDB.oMotd), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.OfficerMessage", player.Guild.Omotd), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					if (player.Guild.alliance != null && player.GuildRank.AcHear && player.Guild.alliance.Dballiance.Motd != "")
 					{
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.AllianceMessage", player.Guild.theGuildDB.oMotd), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.AllianceMessage", player.Guild.alliance.Dballiance.Motd), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 				}
 
