@@ -73,37 +73,26 @@ namespace DOL.GS.GameEvents
 		{
 			if (!GuildMgr.DoesGuildExist(guildName))
 			{
-				//create table of rank in guild
-				Guild newguild = new Guild();
-				newguild.theGuildDB = new DBGuild();
-				newguild.Name = guildName;
-				newguild.GuildID = System.Guid.NewGuid().ToString(); //Assume this is unique, which I don't like, but it seems to be commonly used elsewhere in the code.				
-				newguild.theGuildDB.GuildID = newguild.GuildID;
-				newguild.theGuildDB.GuildName = guildName;
-				GuildMgr.CreateRanks(newguild);
-				newguild.theGuildDB.Ranks[8].OcHear = true;
-
+				Guild newguild = GuildMgr.CreateGuild(null, guildName);
+				newguild.Ranks[8].OcHear = true;
 				switch (ServerProperties.Properties.SERV_LANGUAGE)
 				{
 					case "EN":
 						newguild.Motd = "Use /gu <text> to talk in this starter guild.";
 						newguild.Omotd = "Type /gc quit to leave this starter guild.";
-						newguild.theGuildDB.Ranks[8].Title = "Initiate";
+						newguild.Ranks[8].Title = "Initiate";
 						break;
 					case "DE":
 						newguild.Motd = "Gebt '/gu <text>' ein, um mit den Mitgliedern dieser Startgilde zu sprechen.";
 						newguild.Omotd = "Gebt '/gc quit' ein, um die Startgilde zu verlassen.";
-						newguild.theGuildDB.Ranks[8].Title = "Abenteurer";
+						newguild.Ranks[8].Title = "Abenteurer";
 						break;
 					default:
 						newguild.Motd = "Use /gu <text> to talk in this starter guild.";
 						newguild.Omotd = "Type /gc quit to leave this starter guild.";
-						newguild.theGuildDB.Ranks[8].Title = "Initiate";
+						newguild.Ranks[8].Title = "Initiate";
 						break;
 				}
-
-				GuildMgr.AddGuild(newguild);
-				GameServer.Database.AddNewObject(newguild.theGuildDB);
 			}
 		}
 	}

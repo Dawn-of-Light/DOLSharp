@@ -693,7 +693,7 @@ namespace DOL.GS.Keeps
 				return 0;
 
 			int amount = CalculRP();
-			this.Guild.GainRealmPoints(amount);
+			this.Guild.RealmPoints+=amount;
 
 			return timer.Interval;
 		}

@@ -478,7 +478,7 @@ namespace DOL.Database
 				if (res == 0)
 				{
 					if(log.IsErrorEnabled)
-						log.Error("Error modifying object " + dataObject.TableName + " ID=" + dataObject.ObjectId + " --- keyvalue changed?");
+						log.Error("Error modifying object " + dataObject.TableName + " ID=" + dataObject.ObjectId + " --- keyvalue changed? "+sql);
 					return;
 				}
 

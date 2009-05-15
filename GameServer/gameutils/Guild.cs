@@ -78,16 +78,6 @@ namespace DOL.GS
 		protected DBGuild m_DBguild;
 
 		/// <summary>
-		/// unique id of the guild
-		/// </summary>
-		protected string m_guildid;
-
-		/// <summary>
-		/// the name of the guild
-		/// </summary>
-		protected string m_name;
-
-		/// <summary>
 		/// the runtime ID of the guild
 		/// </summary>
 		protected ushort m_id;
@@ -97,9 +87,29 @@ namespace DOL.GS
 		/// </summary>
 		protected List<AbstractGameKeep> m_claimedKeeps = new List<AbstractGameKeep>();
 
-		protected double m_guildBank;
-		protected bool guildDues;
-		protected long guildDuesPercent;
+		public string Webpage
+		{
+			get
+			{
+				return this.m_DBguild.Webpage;
+			}
+			set
+			{
+				this.m_DBguild.Webpage = value;
+			}
+		}
+
+		public DBRank[] Ranks
+		{
+			get
+			{
+				return this.m_DBguild.Ranks;
+			}
+			set
+			{
+				this.m_DBguild.Ranks = value;
+			}
+		}
 
 		public int GuildHouseNumber
 		{
@@ -110,10 +120,13 @@ namespace DOL.GS
 			set
 			{
 				m_DBguild.GuildHouseNumber = value;
-				if (value != 0)
-					m_DBguild.HaveGuildHouse = true;
+				if (value == 0)
+					this.m_DBguild.HaveGuildHouse = false;
+				m_DBguild.HaveGuildHouse = true;
 			}
 		}
+
+
 
 		public bool GuildOwnsHouse
 		{
@@ -125,43 +138,34 @@ namespace DOL.GS
 
 		public double GetGuildBank()
 		{
-			return m_guildBank;
+			return this.m_DBguild.Bank;
 		}
 
 		public bool IsGuildDuesOn()
 		{
-			return guildDues;
+			return m_DBguild.Dues;
 		}
 
 		public long GetGuildDuesPercent()
 		{
-			return guildDuesPercent;
+			return m_DBguild.DuesPercent;
 		}
 
 		public void SetGuildDues(bool dues)
 		{
-			if (dues == true)
-			{
-				guildDues = true;
-			}
-			else
-			{
-				guildDues = false;
-			}
-			m_DBguild.Dues = guildDues;
+			m_DBguild.Dues = dues;
 		}
 
 		public void SetGuildDuesPercent(long dues)
 		{
 			if (IsGuildDuesOn() == true)
 			{
-				guildDuesPercent = dues;
+				this.m_DBguild.DuesPercent = dues;
 			}
 			else
 			{
-				guildDuesPercent = 0;
+				this.m_DBguild.DuesPercent = 0;
 			}
-			m_DBguild.DuesPercent = guildDuesPercent;
 		}
 		/// <summary>
 		/// Set guild bank command 
@@ -183,10 +187,9 @@ namespace DOL.GS
 			}
 
 			donating.Out.SendMessage(LanguageMgr.GetTranslation(donating.Client, "Scripts.Player.Guild.DepositAmount", Money.GetString(long.Parse(amount.ToString()))), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			m_guildBank = m_guildBank + amount;
 
 			donating.Guild.UpdateGuildWindow();
-			m_DBguild.Bank = m_guildBank;
+			m_DBguild.Bank += amount;
 
             donating.RemoveMoney(long.Parse(amount.ToString()));
             donating.Out.SendUpdatePlayer();
@@ -208,9 +211,8 @@ namespace DOL.GS
 			}
 
             withdraw.Out.SendMessage(LanguageMgr.GetTranslation(withdraw.Client, "Scripts.Player.Guild.Withdrawamount", Money.GetString(long.Parse(amount.ToString()))), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			m_guildBank = m_guildBank - amount;
 			withdraw.Guild.UpdateGuildWindow();
-			m_DBguild.Bank = m_guildBank;
+			m_DBguild.Bank -= amount;
 
             withdraw.AddMoney(long.Parse(amount.ToString()));
             withdraw.Out.SendUpdatePlayer();
@@ -222,8 +224,10 @@ namespace DOL.GS
 		/// Creates an empty Guild. Don't use this, use
 		/// GuildMgr.CreateGuild() to create a guild
 		/// </summary>
-		public Guild()
+		public Guild(DBGuild dbGuild)
 		{
+			this.m_DBguild = dbGuild;
+			bannerStatus = "None";
 		}
 
 		public int Emblem
@@ -235,6 +239,7 @@ namespace DOL.GS
 			set
 			{
 				this.m_DBguild.Emblem = value;
+				this.SaveIntoDatabase();
 			}
 		}
 
@@ -247,6 +252,7 @@ namespace DOL.GS
 			set
 			{
 				this.m_DBguild.GuildBanner = value;
+				this.SaveIntoDatabase();
 			}
 		}
 
@@ -259,6 +265,7 @@ namespace DOL.GS
 			set
 			{
 				this.m_DBguild.oMotd = value;
+				this.SaveIntoDatabase();
 			}
 		}
 
@@ -271,16 +278,21 @@ namespace DOL.GS
 			set
 			{
 				this.m_DBguild.Motd = value;
+				this.SaveIntoDatabase();
 			}
 		}
 
-		/// <summary>
-		/// Gets or sets the guild db
-		/// </summary>
-		public DBGuild theGuildDB
+		public string AllianceId
 		{
-			get { return m_DBguild; }
-			set { m_DBguild = value; }
+			get
+			{
+				return this.m_DBguild.AllianceID;
+			}
+			set
+			{
+				this.m_DBguild.AllianceID = value;
+				this.SaveIntoDatabase();
+			}
 		}
 
 		/// <summary>
@@ -309,7 +321,8 @@ namespace DOL.GS
 			}
 			set 
 			{
-				m_DBguild.GuildID = value; 
+				m_DBguild.GuildID = value;
+				this.SaveIntoDatabase();
 			}
 		}
 
@@ -339,7 +352,8 @@ namespace DOL.GS
 			}
 			set 
 			{
-				m_DBguild.GuildName = value; 
+				m_DBguild.GuildName = value;
+				this.SaveIntoDatabase();
 			}
 		}
 
@@ -349,6 +363,11 @@ namespace DOL.GS
 			{ 
 				return this.m_DBguild.RealmPoints; 
 			}
+			set
+			{
+				this.m_DBguild.RealmPoints = value;
+				this.SaveIntoDatabase();
+			}
 		}
 
 		public long BountyPoints
@@ -356,6 +375,11 @@ namespace DOL.GS
 			get 
 			{ 
 				return this.m_DBguild.BountyPoints; 
+			}
+			set
+			{
+				this.m_DBguild.BountyPoints = value;
+				this.SaveIntoDatabase();
 			}
 		}
 
@@ -516,7 +540,7 @@ namespace DOL.GS
 				if (removername == member.Name)
 					member.Out.SendMessage("You leave the guild.", DOL.GS.PacketHandler.eChatType.CT_System, DOL.GS.PacketHandler.eChatLoc.CL_SystemWindow);
 				else
-					member.Out.SendMessage(removername + " removed you from " + theGuildDB.GuildName, PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
+					member.Out.SendMessage(removername + " removed you from " + this.Name, PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
 			}
 			catch (Exception e)
 			{
@@ -660,7 +684,7 @@ namespace DOL.GS
 		{
 			try
 			{
-				foreach (DBRank rank in theGuildDB.Ranks)
+				foreach (DBRank rank in this.Ranks)
 				{
 					if (rank.RankLevel == index)
 						return rank;
@@ -726,24 +750,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Called when this guild gains realm points
-		/// </summary>
-		/// <param name="amount">The amount of realm points gained</param>
-		public virtual void GainRealmPoints(long amount)
-		{
-			this.m_DBguild.RealmPoints += amount;
-		}
-
-		/// <summary>
-		/// Called when this guild gains bounty points
-		/// </summary>
-		/// <param name="amount">The amount of bounty points gained</param>
-		public virtual void GainBountyPoints(long amount)
-		{
-			this.m_DBguild.BountyPoints += amount;
-		}
-
-		/// <summary>
 		/// Called when this guild loose bounty points
 		/// returns true if BPs were reduced and false if BPs are smaller than param amount
 		/// if false is returned, no BPs were removed.
@@ -755,29 +761,8 @@ namespace DOL.GS
 				return false;
 			}
 			this.m_DBguild.BountyPoints -= amount;
+			this.SaveIntoDatabase();
 			return true;
-		}
-
-		/// <summary>
-		/// Loads this guild from a guild table
-		/// </summary>
-		/// <param name="obj"></param>
-		public void LoadFromDatabase(DataObject obj)
-		{
-			if (!(obj is DBGuild))
-				return;
-
-			m_DBguild = (DBGuild)obj;
-			m_guildid = m_DBguild.GuildID;
-			m_name = m_DBguild.GuildName;
-			m_BuffTime = m_DBguild.BuffTime;
-			m_BuffType = m_DBguild.BuffType;
-			m_GuildLevel = m_DBguild.GuildLevel;
-			guildDues = m_DBguild.Dues;
-			m_guildBank = m_DBguild.Bank;
-			m_meritPoints = m_DBguild.MeritPoints;
-			guildDuesPercent = m_DBguild.DuesPercent;
-			bannerStatus = "None";
 		}
 
 		/// <summary>
@@ -785,11 +770,14 @@ namespace DOL.GS
 		/// </summary>
 		public long MeritPoints
 		{
-			get { return m_meritPoints; }
+			get 
+			{
+				return this.m_DBguild.MeritPoints;
+			}
 			set 
 			{
-				m_meritPoints = value;
-				m_DBguild.MeritPoints = value;
+				this.m_DBguild.MeritPoints = value;
+				this.SaveIntoDatabase();
 			}
 		}
 
@@ -809,8 +797,15 @@ namespace DOL.GS
 		/// </summary>
 		public long BuffType
 		{
-			get { return m_BuffType; }
-			set { m_BuffType = value; }
+			get 
+			{ 
+				return this.m_DBguild.BuffType; 
+			}
+			set 
+			{
+				this.m_DBguild.BuffType = value;
+				this.SaveIntoDatabase();
+			}
 		}
 
 		//First time run this QRY -> update guild set BuffTime=NOW(); to set the bufftime properly
@@ -819,8 +814,28 @@ namespace DOL.GS
 		/// </summary>
 		public DateTime BuffTime
 		{
-			get { return m_BuffTime; }
-			set { m_BuffTime = value; }
+			get 
+			{ 
+				return this.m_DBguild.BuffTime; 
+			}
+			set 
+			{
+				this.m_DBguild.BuffTime = value;
+				this.SaveIntoDatabase();
+			}
+		}
+
+		public string Email
+		{
+			get
+			{
+				return this.m_DBguild.Email;
+			}
+			set
+			{
+				this.m_DBguild.Email = value;
+				this.SaveIntoDatabase();
+			}
 		}
 
 		/// <summary>
@@ -845,26 +860,10 @@ namespace DOL.GS
 			UpdateGuildWindow();
 		}
 
-		/// <summary>
-		/// Holds the guild merit points
-		/// </summary>
-		protected long m_meritPoints;
-
-		/// <summary>
-		/// Holds the guild level
-		/// </summary>
-		private long m_GuildLevel;
-
-		/// <summary>
-		/// Holds the guild buff type
-		/// </summary>
-		private long m_BuffType;
-
-		/// <summary>
-		/// Holds the guild buff time
-		/// </summary>
-		private DateTime m_BuffTime;
-
+		public void AddToDatabase()
+		{
+			GameServer.Database.AddNewObject(this.m_DBguild);
+		}
 		/// <summary>
 		/// Saves this guild to database
 		/// </summary>
