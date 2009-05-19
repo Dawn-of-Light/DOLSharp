@@ -61,9 +61,16 @@ namespace DOL.GS.PropertyCalc
 			    - Fatigue now regenerates at the standing rate while moving.
 			*/
 			if (!living.InCombat)
-			   //&& !living.IsMoving)
-				//regen += living.IsSitting ? 4 : 1;
-				regen += 4;
+			{
+				if (living is GamePlayer)
+				{
+					if (!((GamePlayer)living).IsSprinting)
+					{
+						regen += 4;
+					}
+				}
+			}
+				
 
 			regen -= debuff;
 
