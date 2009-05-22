@@ -5,6 +5,7 @@ using DOL.GS;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
+using System.Collections;
 
 namespace DOL.AI.Brain
 {
@@ -177,12 +178,49 @@ namespace DOL.AI.Brain
         }
 
         /// <summary>
+        /// Range at which this brain will aggro at all.
+        /// </summary>
+        public virtual ushort AggroRange { get; set; }
+
+        /// <summary>
+        /// Level of aggression.
+        /// </summary>
+        public virtual ushort AggroLevel
+        {
+            get { return 100; }
+        }
+
+        /// <summary>
+        /// Chance to aggro on this living; the default implementation
+        /// is a flat 100% chance if the living is attackable. A
+        /// custom implementation could make this dependent on the
+        /// distance, for example.
+        /// </summary>
+        /// <param name="living"></param>
+        /// <returns></returns>
+        protected virtual ushort GetChanceToAggro(GameLiving living)
+        {
+            return living.IsAttackable
+                ? AggroLevel
+                : (ushort)0;
+        }
+
+        /// <summary>
         /// The NPC has nothing to do.
         /// </summary>
         protected virtual void OnIdle()
         {
-            // TODO: This is where an agressive brain looks
-            // for targets to aggro on.
+            if (Body == null)
+                return;
+
+            foreach (GamePlayer player in Body.GetPlayersInRadius(AggroRange))
+            {
+                if (Util.Chance(GetChanceToAggro(player)))
+                {
+                    Aggression.Raise(player, InternalAggression.Initial);
+                    return;
+                }
+            }
         }
 
         private const int TauntAggressionAmount = 1000;
