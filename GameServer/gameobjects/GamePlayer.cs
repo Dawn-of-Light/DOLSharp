@@ -4687,7 +4687,7 @@ namespace DOL.GS
 		/// Starts a melee attack with this player
 		/// </summary>
 		/// <param name="attackTarget">the target to attack</param>
-		public override void StartAttack(GameObject attackTarget)
+		public override void StartMeleeAttack(GameObject attackTarget)
 		{
 			if (!IsAlive)
 			{
@@ -4850,7 +4850,7 @@ namespace DOL.GS
 				if (DreamweaverRR5 != null)
 					DreamweaverRR5.Cancel(false);
 			}
-			base.StartAttack(attackTarget);
+			base.StartMeleeAttack(attackTarget);
 
 			if (IsCasting && !m_runningSpellHandler.Spell.Uninterruptible)
 			{
@@ -7595,7 +7595,7 @@ namespace DOL.GS
 						else if (!AttackState)
 						{
                             StopCurrentSpellcast();
-							StartAttack(TargetObject);
+							StartMeleeAttack(TargetObject);
 							newAttack = true;
 						}
 

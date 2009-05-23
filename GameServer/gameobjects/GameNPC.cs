@@ -1392,6 +1392,10 @@ namespace DOL.GS
 			if (IsMoving)
 				CurrentSpeed = 0;
 		}
+
+        private const int StickMinimumRange = 90;
+        private const int StickMaximumRange = 5000;
+
 		/// <summary>
 		/// Follow given object
 		/// </summary>
@@ -1643,7 +1647,7 @@ namespace DOL.GS
 		public void MoveOnPath(int speed)
 		{
 			if (IsMovingOnPath)
-				StopMoveOnPath();
+				StopMovingOnPath();
 
 			if (CurrentWayPoint == null)
 			{
@@ -1675,14 +1679,14 @@ namespace DOL.GS
 			}
 			else
 			{
-				StopMoveOnPath();
+				StopMovingOnPath();
 			}
 		}
 
 		/// <summary>
 		/// Stop move on path
 		/// </summary>
-		public void StopMoveOnPath()
+		public void StopMovingOnPath()
 		{
 			if (!IsMovingOnPath)
 				return;
@@ -1709,7 +1713,7 @@ namespace DOL.GS
 				waitTimer.Start(Math.Max(1, CurrentWayPoint.WaitTime * 100));
 			}
 			else
-				StopMoveOnPath();
+				StopMovingOnPath();
 		}
 
 		/// <summary>
@@ -1775,7 +1779,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					npc.StopMoveOnPath();
+					npc.StopMovingOnPath();
 				}
 			}
 		}
@@ -2656,7 +2660,7 @@ namespace DOL.GS
 		public override bool RemoveFromWorld()
 		{
 			if (IsMovingOnPath)
-				StopMoveOnPath();
+				StopMovingOnPath();
 			if (MAX_PASSENGERS > 0)
 			{
 				foreach (GamePlayer player in CurrentRiders)
@@ -3107,6 +3111,7 @@ namespace DOL.GS
 			}
 		}
 		#endregion
+
 		#region Combat
 
 		/// <summary>
@@ -3122,52 +3127,61 @@ namespace DOL.GS
 		/// <summary>
 		/// Starts a melee attack on a target
 		/// </summary>
-		/// <param name="attackTarget">The object to attack</param>
-		public override void StartAttack(GameObject attackTarget)
+		/// <param name="target">The object to attack</param>
+		public override void StartMeleeAttack(GameObject target)
 		{
-			if (attackTarget == null)
+			if (target == null)
 				return;
 
 			if (IsMovingOnPath)
-				StopMoveOnPath();
+				StopMovingOnPath();
 
-			if (this.Brain is IControlledBrain)
+			if (Brain is IControlledBrain)
 			{
-				if ((this.Brain as IControlledBrain).AggressionState == eAggressionState.Passive)
+				if ((Brain as IControlledBrain).AggressionState == eAggressionState.Passive)
 					return;
-				GamePlayer playerowner = null;
-				if ((playerowner = ((IControlledBrain)Brain).GetPlayerOwner()) != null)
-					playerowner.Stealth(false);
+
+				GamePlayer owner = null;
+
+				if ((owner = ((IControlledBrain)Brain).GetPlayerOwner()) != null)
+					owner.Stealth(false);
 			}
 
-			TargetObject = attackTarget;
-			if (TargetObject.Realm == 0 || Realm == 0)
-				m_lastAttackTickPvE = m_CurrentRegion.Time;
-			else
-				m_lastAttackTickPvP = m_CurrentRegion.Time;
+			TargetObject = target;
 
-			//These checks are now handled in CheckSpells inside a spell action.  We need an attacking mob to have a SpellAction timer
-			if (m_attackers.Count == 0 /*&& this.Spells.Count > 0 && this.CurrentRegion.Time - LastAttackedByEnemyTick > 10 * 1000*/)
-			{
-				if (SpellTimer == null)
-					SpellTimer = new SpellAction(this);
-				if (!SpellTimer.IsAlive)
-					SpellTimer.Start(1);
-			}
-			base.StartAttack(attackTarget);
+            SetLastMeleeAttackTick();
+            StartMeleeAttackTimer();
+
+			base.StartMeleeAttack(target);
 
 			if (AttackState)
 			{
-				if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
-				{
-					if (IsMoving)
-						StopFollow();
-					//Follow(attackTarget, 1000, 5000);	// follow at archery range
-				}
+				if (ActiveWeaponSlot == eActiveWeaponSlot.Distance && IsMoving)
+					StopFollow();
 				else
-					Follow(attackTarget, 90, 5000);	// follow at stickrange
+					Follow(target, StickMinimumRange, StickMaximumRange);
 			}
 		}
+
+        private void SetLastMeleeAttackTick()
+        {
+            if (TargetObject.Realm == 0 || Realm == 0)
+                m_lastAttackTickPvE = m_CurrentRegion.Time;
+            else
+                m_lastAttackTickPvP = m_CurrentRegion.Time;
+        }
+
+        private void StartMeleeAttackTimer()
+        {
+            if (m_attackers.Count == 0)
+            {
+                if (SpellTimer == null)
+                    SpellTimer = new SpellAction(this);
+
+                if (!SpellTimer.IsAlive)
+                    SpellTimer.Start(1);
+            }
+        }
 
 		/// <summary>
 		/// Gets/sets the object health
@@ -3428,7 +3442,7 @@ namespace DOL.GS
 			else SwitchWeapon(eActiveWeaponSlot.Standard);
 			StopAttack();
 			StopMoving();
-			StartAttack(target);
+			StartMeleeAttack(target);
 		}
 
 		/// <summary>
@@ -3438,7 +3452,7 @@ namespace DOL.GS
 		public void SwitchToRanged(GameObject target)
 		{
 			SwitchWeapon(eActiveWeaponSlot.Distance);
-			StartAttack(target);
+			StartMeleeAttack(target);
 			StopFollow();
 		}
 
