@@ -4920,7 +4920,7 @@ namespace DOL.GS
 				ushort oldHeading = base.Heading;
 				base.Heading = value;
 				if (base.Heading != oldHeading)
-					RecalculatePostionAddition();
+					UpdateDisplacementPerTick();
 			}
 		}
 		/// <summary>
@@ -4935,7 +4935,7 @@ namespace DOL.GS
 			set
 			{
 				m_currentSpeed = value;
-				RecalculatePostionAddition();
+				UpdateDisplacementPerTick();
 			}
 		}
 
@@ -5081,7 +5081,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Recalculates position addition values of this living
 		/// </summary>
-		protected virtual void RecalculatePostionAddition()
+		protected virtual void UpdateDisplacementPerTick()
 		{
 			int speed = CurrentSpeed;
 			if (speed == 0)
