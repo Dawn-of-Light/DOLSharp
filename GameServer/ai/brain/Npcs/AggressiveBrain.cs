@@ -71,7 +71,7 @@ namespace DOL.AI.Brain
             if (Body == null)
                 return;
 
-            foreach (GamePlayer player in Body.GetPlayersInRadius(AggroRange))
+            foreach (GamePlayer player in Body.GetPlayersInRadius(AggressionRange))
             {
                 if (Util.Chance(GetChanceToAggro(player)))
                 {
@@ -84,7 +84,7 @@ namespace DOL.AI.Brain
         /// <summary>
         /// Range at which this brain will aggro at all.
         /// </summary>
-        public virtual ushort AggroRange
+        public virtual ushort AggressionRange
         {
             get { return 2000; }
         }
@@ -92,7 +92,7 @@ namespace DOL.AI.Brain
         /// <summary>
         /// Level of aggression.
         /// </summary>
-        public virtual ushort AggroLevel
+        public virtual ushort AggressionLevel
         {
             get { return 100; }
         }
@@ -107,7 +107,7 @@ namespace DOL.AI.Brain
         protected virtual ushort GetChanceToAggro(GameLiving living)
         {
             return living.IsAttackable
-                ? AggroLevel
+                ? AggressionLevel
                 : (ushort)0;
         }
 
@@ -318,7 +318,7 @@ namespace DOL.AI.Brain
         /// </summary>
         /// <param name="living"></param>
         /// <returns></returns>
-        public bool IsEnemy(GameLiving living)
+        protected bool IsEnemy(GameLiving living)
         {
             return (living == null)
                 ? false
