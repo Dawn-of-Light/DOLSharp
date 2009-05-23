@@ -91,7 +91,7 @@ namespace DOL.AI.Brain
 						continue;
 					if (Body is GuardStealther == false && player.IsStealthed)
 						continue;
-					Body.StartAttack(player);
+					Body.StartMeleeAttack(player);
 					AddToAggroList(player, player.EffectiveLevel << 1);
 					return;
 				}
@@ -121,7 +121,7 @@ namespace DOL.AI.Brain
 				{
 					if ((Body as GameKeepGuard).Component != null && !KeepMgr.IsEnemy(Body as GameKeepGuard, player, true))
 						continue;
-					Body.StartAttack(npc);
+					Body.StartMeleeAttack(npc);
 					AddToAggroList(npc, (npc.Level + 1) << 1);
 					return;
 				}
