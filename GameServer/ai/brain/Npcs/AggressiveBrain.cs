@@ -6,6 +6,8 @@ using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
 using System.Collections;
+using log4net;
+using System.Reflection;
 
 namespace DOL.AI.Brain
 {
@@ -17,6 +19,11 @@ namespace DOL.AI.Brain
     /// <author>Aredhel</author>
     public class AggressiveBrain : APlayerVicinityBrain
     {
+        /// <summary>
+        /// Defines a logger for this class.
+        /// </summary>
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// Mobs will all use a 1000ms think interval; aggro level is a chance
         /// to aggro on a living, it won't change the think interval anymore.
@@ -31,14 +38,82 @@ namespace DOL.AI.Brain
         /// </summary>
         public override void Think()
         {
-            if (Body.IsIncapacitated || Body.IsReturningHome)
+            log.Info(String.Format("{0} is thinking", Body.Name));
+
+            if (Body.IsIncapacitated)
+                log.Info(String.Format("{0} is incapacitated", Body.Name));
+
+            if (Body.IsReturningToSpawnPoint)
+                log.Info(String.Format("{0} is returning to spawn point", Body.Name));
+
+            if (Body.IsIncapacitated || Body.IsReturningToSpawnPoint)
                 return;
 
             if (IsEngaged)
+            {
+                log.Info(String.Format("{0} is engaged", Body.Name));
                 PickTarget();
+            }
             else
+            {
+                log.Info(String.Format("{0} is idle", Body.Name));
                 OnIdle();
+            }
         }
+
+        #region Idle handler.
+
+        /// <summary>
+        /// The NPC has nothing to do.
+        /// </summary>
+        protected virtual void OnIdle()
+        {
+            if (Body == null)
+                return;
+
+            foreach (GamePlayer player in Body.GetPlayersInRadius(AggroRange))
+            {
+                if (Util.Chance(GetChanceToAggro(player)))
+                {
+                    Aggression.Raise(player, InternalAggression.Initial);
+                    return;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Range at which this brain will aggro at all.
+        /// </summary>
+        public virtual ushort AggroRange
+        {
+            get { return 2000; }
+        }
+
+        /// <summary>
+        /// Level of aggression.
+        /// </summary>
+        public virtual ushort AggroLevel
+        {
+            get { return 100; }
+        }
+
+        /// <summary>
+        /// Chance to aggro on this living; the default implementation
+        /// is a flat chance if the living is attackable. A custom implementation 
+        /// could make this dependent on distance, faction, whatever.
+        /// </summary>
+        /// <param name="living"></param>
+        /// <returns></returns>
+        protected virtual ushort GetChanceToAggro(GameLiving living)
+        {
+            return living.IsAttackable
+                ? AggroLevel
+                : (ushort)0;
+        }
+
+        #endregion
+
+        #region Aggression handler.
 
         /// <summary>
         /// Pick the next target.
@@ -51,6 +126,7 @@ namespace DOL.AI.Brain
             {
                 Body.StopAttack();
                 Aggression.Clear();
+                Body.TargetObject = null;
                 Body.WalkToSpawn();
             }
             else
@@ -69,54 +145,6 @@ namespace DOL.AI.Brain
             Body.StartAttack(living);
         }
 
-        #region Notify handlers.
-
-        /// <summary>
-        /// Process messages coming from the body.
-        /// </summary>
-        /// <param name="e"></param>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        public override void Notify(DOLEvent e, object sender, EventArgs args)
-        {
-            base.Notify(e, sender, args);
-
-            if (e == GameLivingEvent.AttackedByEnemy)
-            {
-                if (args is AttackedByEnemyEventArgs)
-                {
-                    AttackData attackData = (args as AttackedByEnemyEventArgs).AttackData;
-                    OnAttacked(attackData);
-                }
-
-                return;
-            }
-
-            if (e == GameLivingEvent.EnemyHealed)
-            {
-                if (args is EnemyHealedEventArgs)
-                {
-                    EnemyHealedEventArgs healed = args as EnemyHealedEventArgs;
-                    
-                    if (IsEnemy(healed.Enemy))
-                        OnEnemyHealed(healed.HealSource, healed.HealAmount);
-                }
-
-                return;
-            }
-
-            if (e == GameLivingEvent.EnemyKilled)
-            {
-                if (args is EnemyKilledEventArgs)
-                {
-                    EnemyKilledEventArgs killed = args as EnemyKilledEventArgs;
-
-                    if (IsEnemy(killed.Target))
-                        OnEnemyKilled(killed.Target);
-                }
-            }
-        }
-
         /// <summary>
         /// Body has been attacked.
         /// </summary>
@@ -127,7 +155,7 @@ namespace DOL.AI.Brain
             if (attackData == null)
                 return;
 
-            if (Body.IsReturningHome)
+            if (Body.IsReturningToSpawnPoint)
                 Body.CancelWalkToSpawn();
 
             if (!attackData.IsMeleeAttack)
@@ -177,52 +205,6 @@ namespace DOL.AI.Brain
             Aggression.Remove(living);
         }
 
-        /// <summary>
-        /// Range at which this brain will aggro at all.
-        /// </summary>
-        public virtual ushort AggroRange { get; set; }
-
-        /// <summary>
-        /// Level of aggression.
-        /// </summary>
-        public virtual ushort AggroLevel
-        {
-            get { return 100; }
-        }
-
-        /// <summary>
-        /// Chance to aggro on this living; the default implementation
-        /// is a flat 100% chance if the living is attackable. A
-        /// custom implementation could make this dependent on the
-        /// distance, for example.
-        /// </summary>
-        /// <param name="living"></param>
-        /// <returns></returns>
-        protected virtual ushort GetChanceToAggro(GameLiving living)
-        {
-            return living.IsAttackable
-                ? AggroLevel
-                : (ushort)0;
-        }
-
-        /// <summary>
-        /// The NPC has nothing to do.
-        /// </summary>
-        protected virtual void OnIdle()
-        {
-            if (Body == null)
-                return;
-
-            foreach (GamePlayer player in Body.GetPlayersInRadius(AggroRange))
-            {
-                if (Util.Chance(GetChanceToAggro(player)))
-                {
-                    Aggression.Raise(player, InternalAggression.Initial);
-                    return;
-                }
-            }
-        }
-
         private const int TauntAggressionAmount = 1000;
 
         /// <summary>
@@ -241,6 +223,56 @@ namespace DOL.AI.Brain
 
             Aggression.Raise(attackData.Attacker, attackData.IsSpellResisted
                 ? 0 : TauntAggressionAmount);
+        }
+
+        #endregion
+
+        #region Notify handler.
+
+        /// <summary>
+        /// Process messages coming from the body.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        public override void Notify(DOLEvent e, object sender, EventArgs args)
+        {
+            base.Notify(e, sender, args);
+
+            if (e == GameLivingEvent.AttackedByEnemy)
+            {
+                if (args is AttackedByEnemyEventArgs)
+                {
+                    AttackData attackData = (args as AttackedByEnemyEventArgs).AttackData;
+                    OnAttacked(attackData);
+                }
+
+                return;
+            }
+
+            if (e == GameLivingEvent.EnemyHealed)
+            {
+                if (args is EnemyHealedEventArgs)
+                {
+                    EnemyHealedEventArgs healed = args as EnemyHealedEventArgs;
+                    
+                    if (IsEnemy(healed.Enemy))
+                        OnEnemyHealed(healed.HealSource, healed.HealAmount);
+                }
+
+                return;
+            }
+
+            if (e == GameLivingEvent.EnemyKilled)
+            {
+                if (args is EnemyKilledEventArgs)
+                {
+                    EnemyKilledEventArgs killed = args as EnemyKilledEventArgs;
+
+                    if (IsEnemy(killed.Target))
+                        OnEnemyKilled(killed.Target);
+                }
+            }
         }
 
         #endregion
