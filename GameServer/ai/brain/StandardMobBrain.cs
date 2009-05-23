@@ -1074,7 +1074,7 @@ namespace DOL.AI.Brain
 			if (Body.TargetObject != null)
 			{
 				if (Body.IsMoving && spell.CastTime > 0)
-					Body.StopFollow();
+					Body.StopFollowing();
 
 				if (Body.TargetObject != Body && spell.CastTime > 0)
 					Body.TurnTo(Body.TargetObject);
@@ -1101,7 +1101,7 @@ namespace DOL.AI.Brain
 			if (Body.TargetObject != null)
 			{
 				if (Body.IsMoving && spell.CastTime > 0)
-					Body.StopFollow();
+					Body.StopFollowing();
 
 				if (Body.TargetObject != Body && spell.CastTime > 0)
 					Body.TurnTo(Body.TargetObject);

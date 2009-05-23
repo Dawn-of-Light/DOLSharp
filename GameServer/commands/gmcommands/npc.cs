@@ -322,7 +322,7 @@ namespace DOL.GS.Commands
 							return;
 						}
 
-						npc.StopFollow();
+						npc.StopFollowing();
 						break;
 					}
 				case "target":

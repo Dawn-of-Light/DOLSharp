@@ -151,7 +151,7 @@ namespace DOL.GS.Effects
 
             if (targetPlayer == null || !targetPlayer.IsAlive)
             {
-                spirit.StopFollow();
+                spirit.StopFollowing();
                 timer.Stop();
                 timer = null;
                 return 0;

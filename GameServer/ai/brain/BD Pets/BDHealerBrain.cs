@@ -184,7 +184,7 @@ namespace DOL.AI.Brain
 			if (Body.TargetObject != null)
 			{
 				if (Body.IsMoving)
-					Body.StopFollow();
+					Body.StopFollowing();
 				Body.TurnTo(Body.TargetObject);
 				Body.CastSpell(spell, m_mobSpellLine);
 				Body.TargetObject = lastTarget;

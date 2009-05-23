@@ -292,7 +292,7 @@ namespace DOL.GS.Spells
             GameEventMgr.AddHandler(player, GamePlayerEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
 
             player.Out.SendMessage("You are picked up by a forceful zephyr!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-            npc.StopFollow();
+            npc.StopFollowing();
 
             if (Caster is GamePlayer)
             {
