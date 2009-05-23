@@ -1148,20 +1148,25 @@ namespace DOL.GS
               int targetX = npc.TargetX;
               int targetY = npc.TargetY;
               int targetZ = npc.TargetZ;
-              int speed = npc.CurrentSpeed;
-              ushort heading = (npc.IsReturningHome || npc.IsReturningToSpawnPoint)
-                  ? npc.SpawnHeading : npc.Heading;
-
-              npc.StopMoving();
-
+              
               if (Util.IsNearDistance(npc.X, npc.Y, npc.Z, targetX, targetY, targetZ, CONST_WALKTOTOLERANCE))
               {
-                  npc.MoveTo(npc.CurrentRegionID, targetX, targetY, targetZ, heading);
+                  if (npc.X != targetX || npc.Y != targetY || npc.Z != targetZ)
+                  {
+                      npc.X = targetX;
+                      npc.Y = targetY;
+                      npc.Z = targetZ;
+                  }
+
+                  npc.StopMoving();
                   npc.UpdateDisplacementPerTick();
                   npc.Notify(GameNPCEvent.ArriveAtTarget, npc);
               }
               else
               {
+                  int speed = npc.CurrentSpeed;
+
+                  npc.StopMoving();
                   npc.WalkTo(targetX, targetY, targetZ, speed);
               }
           }
@@ -1228,20 +1233,17 @@ namespace DOL.GS
 			
 			// Walking to the spot we're already at will only get us into trouble.
 
-            //if (Name == "Medusa")
-            //    log.Info(String.Format("Medusa at ({0}, {1}, {2}) is walking towards ({3}, {4}, {5})",
-            //        X, Y, Z, tx, ty, tz));
+            if (Name == "Medusa")
+                log.Info(String.Format("Medusa at ({0}, {1}, {2}) is walking towards ({3}, {4}, {5})",
+                    X, Y, Z, tx, ty, tz));
 
             if (Util.IsNearDistance(tx, ty, tz, X, Y, Z, CONST_WALKTOTOLERANCE)) // && !ignoreTolerance)
 		    {
-                //if (Name == "Medusa")
-                //    log.Info("Medusa is near her target");
-
                 IsReturningToSpawnPoint = false;
 				TurnTo(SpawnHeading);
 		  	    return;
 		    }
-			
+
 			if (speed <= 0 || maxSpeed <= 0)
 				return;
 
@@ -1320,7 +1322,6 @@ namespace DOL.GS
 		{
 			CancelWalkToTimer();
 			IsReturningHome = false;
-            IsReturningToSpawnPoint = false;
 		}
 
 		/// <summary>
@@ -1385,7 +1386,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void StopMoving()
 		{
-		  CancelWalkToSpawn();
+		    CancelWalkToSpawn();
 
 			// This broadcasts an update so check to see if we are moving before calling - tolakram
 			if (IsMoving)
@@ -4026,9 +4027,6 @@ namespace DOL.GS
 		/// <param name="args">The arguements</param>
 		public override void Notify(DOLEvent e, object sender, EventArgs args)
 		{
-            if (sender == this)
-                return;
-
 			base.Notify(e, sender, args);
 
 			ABrain brain = Brain;
@@ -4037,7 +4035,8 @@ namespace DOL.GS
 
             if (e == GameNPCEvent.ArriveAtTarget)
             {
-                //log.Info(String.Format("{0} has arrived at target", Name));
+                if (Name == "Medusa")
+                    log.Info(String.Format("{0} has arrived at target", Name));
 
                 if (IsReturningToSpawnPoint)
                 {
