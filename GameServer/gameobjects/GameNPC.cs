@@ -889,7 +889,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Recalculates position addition values of this living
 		/// </summary>
-		protected override void RecalculatePostionAddition()
+		protected override void UpdateDisplacementPerTick()
 		{
 			if (!IsMoving)
 			{
@@ -919,7 +919,7 @@ namespace DOL.GS
 			else
 			{
 				//				log.WarnFormat("{0} is moving but target is 0", Name);
-				base.RecalculatePostionAddition();
+				base.UpdateDisplacementPerTick();
 			}
 		}
 
@@ -1144,44 +1144,28 @@ namespace DOL.GS
           protected override void OnTick()
           {
               GameNPC npc = (GameNPC)m_actionSource;
-              //[Ganrod] Nidel: check if ArriveAtTarget distances with tolerance
-              int tx, ty, tz;
-              if (npc.IsReturningHome)
-              {
-                  tx = npc.SpawnPoint.X;
-                  ty = npc.SpawnPoint.Y;
-                  tz = npc.SpawnPoint.Z;
-              }
-              else
-              {
-                  tx = npc.TargetX;
-                  ty = npc.TargetY;
-                  tz = npc.TargetZ;
-              }
 
-              if (Util.IsNearDistance(npc.X, npc.Y, npc.Z, tx, ty, tz, CONST_WALKTOTOLERANCE))
-              {
-                  if (npc.IsReturningHome || npc.IsReturningToSpawnPoint)
-                      npc.MoveTo(npc.CurrentRegionID, tx, ty, tz, npc.SpawnHeading);
-                  else
-                      npc.MoveTo(npc.CurrentRegionID, tx, ty, tz, npc.Heading);
+              int targetX = npc.TargetX;
+              int targetY = npc.TargetY;
+              int targetZ = npc.TargetZ;
+              int speed = npc.CurrentSpeed;
+              ushort heading = (npc.IsReturningHome || npc.IsReturningToSpawnPoint)
+                  ? npc.SpawnHeading : npc.Heading;
 
+              npc.StopMoving();
+
+              if (Util.IsNearDistance(npc.X, npc.Y, npc.Z, targetX, targetY, targetZ, CONST_WALKTOTOLERANCE))
+              {
+                  npc.MoveTo(npc.CurrentRegionID, targetX, targetY, targetZ, heading);
+                  npc.UpdateDisplacementPerTick();
                   npc.Notify(GameNPCEvent.ArriveAtTarget, npc);
-                  npc.StopMoving();
-                  npc.RecalculatePostionAddition();
               }
               else
               {
-                  npc.X = npc.X;
-                  npc.Y = npc.Y;
-                  npc.Z = npc.Z;
-
-                  npc.StopMoving();
-                  npc.WalkTo(tx, ty, tz, npc.CurrentSpeed, false);
+                  npc.WalkTo(targetX, targetY, targetZ, speed);
               }
           }
         }
-
 
 		/// <summary>
 		/// Delayed action that fires an event when an NPC is 200ms away from its target
@@ -1223,10 +1207,10 @@ namespace DOL.GS
             }
 		}
 
-		public virtual void WalkTo(int tx, int ty, int tz, int speed)
-		{
-			WalkTo(tx, ty, tz, speed, false);
-		}
+        //public virtual void WalkTo(int tx, int ty, int tz, int speed)
+        //{
+        //    WalkTo(tx, ty, tz, speed, false);
+        //}
 
 		/// <summary>
 		/// This function is used to make the npc move towards
@@ -1238,7 +1222,7 @@ namespace DOL.GS
 		/// <param name="ty">target y</param>
 		/// <param name="tz">target z (or 0 to put the mob on the ground)</param>
 		/// <param name="speed">walk speed</param>
-		public virtual void WalkTo(int tx, int ty, int tz, int speed, bool ignoreTolerance)
+		public virtual void WalkTo(int tx, int ty, int tz, int speed/*, bool ignoreTolerance*/)
 		{
 			int maxSpeed = MaxSpeed;
 			
@@ -1248,7 +1232,7 @@ namespace DOL.GS
             //    log.Info(String.Format("Medusa at ({0}, {1}, {2}) is walking towards ({3}, {4}, {5})",
             //        X, Y, Z, tx, ty, tz));
 
-            if (Util.IsNearDistance(tx, ty, tz, X, Y, Z, CONST_WALKTOTOLERANCE) && !ignoreTolerance)
+            if (Util.IsNearDistance(tx, ty, tz, X, Y, Z, CONST_WALKTOTOLERANCE)) // && !ignoreTolerance)
 		    {
                 //if (Name == "Medusa")
                 //    log.Info("Medusa is near her target");
@@ -1279,7 +1263,7 @@ namespace DOL.GS
 			m_targetX = tx;
 			m_targetY = ty;
 			m_targetZ = tz;
-			RecalculatePostionAddition();
+			UpdateDisplacementPerTick();
 
 			//ARGHL!!!! the following took me 2 days to find out!
 			//The mobs in the database have a Z value set ... but normally when
@@ -1316,10 +1300,10 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="p"></param>
 		/// <param name="speed"></param>
-		public virtual void WalkTo(IPoint3D p, int speed, bool ignoreTolerance)
-		{
-			WalkTo(p.X, p.Y, p.Z, speed, ignoreTolerance);
-		}
+        //public virtual void WalkTo(IPoint3D p, int speed, bool ignoreTolerance)
+        //{
+        //    WalkTo(p.X, p.Y, p.Z, speed, ignoreTolerance);
+        //}
 
 		/// <summary>
 		/// Walk to the spawn point
@@ -1335,7 +1319,7 @@ namespace DOL.GS
 		public virtual void CancelWalkToSpawn()
 		{
 			CancelWalkToTimer();
-			m_isReturningHome = false;
+			IsReturningHome = false;
             IsReturningToSpawnPoint = false;
 		}
 
@@ -1357,7 +1341,7 @@ namespace DOL.GS
 				brain.ClearAggroList();
 			}
 
-			m_isReturningHome = true;
+			IsReturningHome = true;
             IsReturningToSpawnPoint = true;
             WalkTo( SpawnPoint.X, SpawnPoint.Y, SpawnPoint.Z, speed );
 		}
@@ -1384,7 +1368,7 @@ namespace DOL.GS
 			m_currentSpeed = speed;
 
 			MovementStartTick = Environment.TickCount;
-			RecalculatePostionAddition();
+			UpdateDisplacementPerTick();
 			BroadcastUpdate();
 		}
 
