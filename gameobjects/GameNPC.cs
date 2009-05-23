@@ -1141,36 +1141,46 @@ namespace DOL.GS
 		  /// This function is called when the Mob arrives at its target spot
 		  /// It fires the ArriveAtTarget event
 		  /// </summary>
-		  protected override void OnTick()
-		  {
-			GameNPC npc = (GameNPC)m_actionSource;
-			//[Ganrod] Nidel: check if ArriveAtTarget distances with tolerance
-			int tx, ty, tz;
-			if (npc.IsReturningHome)
-			{
-			  tx = npc.SpawnPoint.X;
-              ty = npc.SpawnPoint.Y;
-              tz = npc.SpawnPoint.Z;
-			}
-			else
-			{
-			  tx = npc.TargetX;
-			  ty = npc.TargetY;
-			  tz = npc.TargetZ;
-			}
+          protected override void OnTick()
+          {
+              GameNPC npc = (GameNPC)m_actionSource;
+              //[Ganrod] Nidel: check if ArriveAtTarget distances with tolerance
+              int tx, ty, tz;
+              if (npc.IsReturningHome)
+              {
+                  tx = npc.SpawnPoint.X;
+                  ty = npc.SpawnPoint.Y;
+                  tz = npc.SpawnPoint.Z;
+              }
+              else
+              {
+                  tx = npc.TargetX;
+                  ty = npc.TargetY;
+                  tz = npc.TargetZ;
+              }
 
-			if (Util.IsNearDistance(npc.X, npc.Y, npc.Z, tx, ty, tz, CONST_WALKTOTOLERANCE))
-			{
-			  npc.Notify(GameNPCEvent.ArriveAtTarget, npc);
-			  npc.StopMoving();
-			  npc.RecalculatePostionAddition();
-			}
-			else
-			{
-			  npc.WalkTo(tx, ty, tz, npc.CurrentSpeed, false);
-			}
-		  }
-		}
+              if (Util.IsNearDistance(npc.X, npc.Y, npc.Z, tx, ty, tz, CONST_WALKTOTOLERANCE))
+              {
+                  if (npc.IsReturningHome || npc.IsReturningToSpawnPoint)
+                      npc.MoveTo(npc.CurrentRegionID, tx, ty, tz, npc.SpawnHeading);
+                  else
+                      npc.MoveTo(npc.CurrentRegionID, tx, ty, tz, npc.Heading);
+
+                  npc.Notify(GameNPCEvent.ArriveAtTarget, npc);
+                  npc.StopMoving();
+                  npc.RecalculatePostionAddition();
+              }
+              else
+              {
+                  npc.X = npc.X;
+                  npc.Y = npc.Y;
+                  npc.Z = npc.Z;
+
+                  npc.StopMoving();
+                  npc.WalkTo(tx, ty, tz, npc.CurrentSpeed, false);
+              }
+          }
+        }
 
 
 		/// <summary>
@@ -1197,20 +1207,20 @@ namespace DOL.GS
 		  	npc.m_closeToTargetAction = null;
 		  	npc.Notify(GameNPCEvent.CloseToTarget, npc);
 		  }
-		}
+        }
 
-		public virtual void CancelWalkToTimer()
-		{
-		  if (m_arriveAtTargetAction != null)
-		  {
-			m_arriveAtTargetAction.Stop();
-			m_arriveAtTargetAction = null;
-		  }
-		  if (m_closeToTargetAction != null)
-		  {
-			m_closeToTargetAction.Stop();
-			m_closeToTargetAction = null;
-		  }
+        public virtual void CancelWalkToTimer()
+        {
+            if (m_arriveAtTargetAction != null)
+            {
+                m_arriveAtTargetAction.Stop();
+                m_arriveAtTargetAction = null;
+            }
+            if (m_closeToTargetAction != null)
+            {
+                m_closeToTargetAction.Stop();
+                m_closeToTargetAction = null;
+            }
 		}
 
 		public virtual void WalkTo(int tx, int ty, int tz, int speed)
@@ -1233,9 +1243,18 @@ namespace DOL.GS
 			int maxSpeed = MaxSpeed;
 			
 			// Walking to the spot we're already at will only get us into trouble.
+
+            //if (Name == "Medusa")
+            //    log.Info(String.Format("Medusa at ({0}, {1}, {2}) is walking towards ({3}, {4}, {5})",
+            //        X, Y, Z, tx, ty, tz));
+
             if (Util.IsNearDistance(tx, ty, tz, X, Y, Z, CONST_WALKTOTOLERANCE) && !ignoreTolerance)
 		    {
-				TurnTo(tx, ty);
+                //if (Name == "Medusa")
+                //    log.Info("Medusa is near her target");
+
+                IsReturningToSpawnPoint = false;
+				TurnTo(SpawnHeading);
 		  	    return;
 		    }
 			
@@ -1245,12 +1264,7 @@ namespace DOL.GS
 			if (IsTurningDisabled)
 				return; // can't walk when turning is disabled
 
-			// tolakram - changed, we don't want to stop, this creates the herky jerky motion
-			// instead we clear everything and set the new target
 			CancelWalkToTimer();
-			//m_isReturningHome = false;
-
-			//Slow mobs down when they are hurt!
 			
 			if (speed > maxSpeed)
 				speed = maxSpeed;
@@ -1322,6 +1336,7 @@ namespace DOL.GS
 		{
 			CancelWalkToTimer();
 			m_isReturningHome = false;
+            IsReturningToSpawnPoint = false;
 		}
 
 		/// <summary>
@@ -1341,7 +1356,9 @@ namespace DOL.GS
 			{
 				brain.ClearAggroList();
 			}
+
 			m_isReturningHome = true;
+            IsReturningToSpawnPoint = true;
             WalkTo( SpawnPoint.X, SpawnPoint.Y, SpawnPoint.Z, speed );
 		}
 
@@ -1602,6 +1619,14 @@ namespace DOL.GS
 		}
 
 		protected bool m_isReturningHome = false;
+
+        /// <summary>
+        /// Whether or not the NPC is on its way back to the spawn point.
+        /// [Aredhel: I decided to add this property in order not to mess
+        /// with SMB and IsReturningHome. Also, to prevent outside classes
+        /// from interfering the setter is now protected.]
+        /// </summary>
+        public bool IsReturningToSpawnPoint { get; protected set; }
 
         /// <summary>
         /// Whether this body can actually do anything.
@@ -2555,6 +2580,9 @@ namespace DOL.GS
 				player.CurrentUpdateArray[ObjectID - 1] = true;
 			}
 			m_lastUpdateTickCount = (uint)Environment.TickCount;
+
+            //if (Name == "Medusa")
+            //    log.Info(String.Format("Medusa ObjectUpdate, X = {0}, Y = {1}", X, Y));
 		}
 
 		/// <summary>
@@ -4014,11 +4042,25 @@ namespace DOL.GS
 		/// <param name="args">The arguements</param>
 		public override void Notify(DOLEvent e, object sender, EventArgs args)
 		{
+            if (sender == this)
+                return;
+
 			base.Notify(e, sender, args);
 
 			ABrain brain = Brain;
 			if (brain != null)
 				brain.Notify(e, sender, args);
+
+            if (e == GameNPCEvent.ArriveAtTarget)
+            {
+                //log.Info(String.Format("{0} has arrived at target", Name));
+
+                if (IsReturningToSpawnPoint)
+                {
+                    TurnTo(SpawnHeading);
+                    IsReturningToSpawnPoint = false;
+                }
+            }
 		}
 
 		#endregion
