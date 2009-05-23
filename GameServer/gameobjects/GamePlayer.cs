@@ -243,6 +243,17 @@ namespace DOL.GS
 			set { if (PlayerCharacter != null) PlayerCharacter.IsAnonymous = value; }
 		}
 
+        /// <summary>
+        /// Whether or not the player can be attacked.
+        /// </summary>
+        public override bool IsAttackable
+        {
+            get
+            {
+                return (Client.Account.PrivLevel > 2 && base.IsAttackable);
+            }
+        }
+
 		/// <summary>
 		/// Gets or sets the no help flag for this player
 		/// </summary>
