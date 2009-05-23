@@ -444,7 +444,7 @@ namespace DOL.GS.Commands
 						{
 							if (client.Player.Steed.BoatOwnerID == client.Player.InternalID)// needs to be player on own boat
 							{
-								client.Player.Steed.StopFollow();
+								client.Player.Steed.StopFollowing();
 								client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Boat.StopFollow"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 							}
 							else

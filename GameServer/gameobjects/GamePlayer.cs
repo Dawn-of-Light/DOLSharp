@@ -5086,9 +5086,9 @@ namespace DOL.GS
 			}
 
 			//This state is set when the player wants to fire!
-			if (RangeAttackState == eRangeAttackState.Fire
-			   || RangeAttackState == eRangeAttackState.AimFire
-			   || RangeAttackState == eRangeAttackState.AimFireReload)
+			if (RangedAttackState == eRangedAttackState.Fire
+			   || RangedAttackState == eRangedAttackState.AimFire
+			   || RangedAttackState == eRangedAttackState.AimFireReload)
 			{
 				RangeAttackTarget = null; // clean the RangeAttackTarget at the first shot try even if failed
 
@@ -5153,18 +5153,18 @@ namespace DOL.GS
 					return eCheckRangeAttackStateResult.Fire;
 				}
 
-				RangeAttackState = eRangeAttackState.ReadyToFire;
+				RangedAttackState = eRangedAttackState.ReadyToFire;
 				return eCheckRangeAttackStateResult.Hold;
 			}
 
 			//Player is aiming
-			if (RangeAttackState == eRangeAttackState.Aim)
+			if (RangedAttackState == eRangedAttackState.Aim)
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.ReadyToFire"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				RangeAttackState = eRangeAttackState.ReadyToFire;
+				RangedAttackState = eRangedAttackState.ReadyToFire;
 				return eCheckRangeAttackStateResult.Hold;
 			}
-			else if (RangeAttackState == eRangeAttackState.ReadyToFire)
+			else if (RangedAttackState == eRangedAttackState.ReadyToFire)
 			{
 				return eCheckRangeAttackStateResult.Hold; //Hold the shot
 			}
@@ -7603,18 +7603,18 @@ namespace DOL.GS
 						//anymore
 						if (!AttackState)
 						{
-							RangeAttackState = eRangeAttackState.None;
+							RangedAttackState = eRangedAttackState.None;
 							RangeAttackType = eRangeAttackType.Normal;
 						}
-						if (!newAttack && RangeAttackState != eRangeAttackState.None)
+						if (!newAttack && RangedAttackState != eRangedAttackState.None)
 						{
-							if (RangeAttackState == eRangeAttackState.ReadyToFire)
+							if (RangedAttackState == eRangedAttackState.ReadyToFire)
 							{
-								RangeAttackState = eRangeAttackState.Fire;
+								RangedAttackState = eRangedAttackState.Fire;
                                 StopCurrentSpellcast();
                                 m_attackAction.Start(1);
 							}
-							else if (RangeAttackState == eRangeAttackState.Aim)
+							else if (RangedAttackState == eRangedAttackState.Aim)
 							{
 								if (!TargetInView)
 								{
@@ -7629,18 +7629,18 @@ namespace DOL.GS
 										RangeAttackTarget = TargetObject;
 									}
 
-									RangeAttackState = eRangeAttackState.AimFire;
+									RangedAttackState = eRangedAttackState.AimFire;
 									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.AutoReleaseShot"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								}
 							}
-							else if (RangeAttackState == eRangeAttackState.AimFire)
+							else if (RangedAttackState == eRangedAttackState.AimFire)
 							{
-								RangeAttackState = eRangeAttackState.AimFireReload;
+								RangedAttackState = eRangedAttackState.AimFireReload;
 								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.AutoReleaseShotReload"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
-							else if (RangeAttackState == eRangeAttackState.AimFireReload)
+							else if (RangedAttackState == eRangedAttackState.AimFireReload)
 							{
-								RangeAttackState = eRangeAttackState.Aim;
+								RangedAttackState = eRangedAttackState.Aim;
 								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.NoAutoReleaseShotReload"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 						}

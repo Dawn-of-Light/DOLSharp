@@ -172,7 +172,7 @@ namespace DOL.GS.Keeps
 			if (guard.AttackState)
 				guard.StopAttack();
 			if (guard.IsMoving)
-				guard.StopFollow();
+				guard.StopFollowing();
 			guard.TurnTo(guard.TargetObject);
 			guard.CastSpell(castSpell, castLine);
 		}

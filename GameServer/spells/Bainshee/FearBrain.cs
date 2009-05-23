@@ -32,7 +32,7 @@ namespace DOL.AI.Brain
 			Body.Heading = TargetAngle;
 
             Point2D fleePoint = Body.GetPointFromHeading( Body.Heading, 300 );
-			Body.StopFollow();
+			Body.StopFollowing();
 			Body.StopAttack();
 			Body.WalkTo( fleePoint.X, fleePoint.Y, Body.Z, Body.MaxSpeed );
 		}
