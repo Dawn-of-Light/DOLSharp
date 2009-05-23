@@ -56,8 +56,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ushort objectID = packet.ReadShort();
 			string caption = "";
 			ArrayList objectInfo = new ArrayList();
-			//log.Debug("DetailDisplayHandler: type=" + objectType + " id=" + objectID);
-
+			/*
+Type    Description           Id
+1       Inventory item        Slot (ie. 0xC for 2 handed weapon)
+2       Spell                 spell level + spell line ID * 100 (starting from 0)
+3       ???
+4       Merchant item         Slot (divide by 30 to get page)
+5       Buff/effect           The buff id (each buff has a unique id)
+6       Style                 style list index = ID-100-abilities count
+7       Trade window          position in trade window (starting form 0)
+8       Ability               100+position in players abilities list (?)
+9       Trainers skill        position in trainers window list
+			*/
 			switch (objectType)
 			{
 				#region Inventory Item
@@ -140,84 +150,28 @@ namespace DOL.GS.PacketHandler.Client.v168
                             objectInfo.Add(" ");//empty line
 						}
 
-						//**********************************
-						//show info for all types of weapons
-						//**********************************
 						if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type <= (int)eObjectType._LastWeapon) ||
 							item.Object_Type == (int)eObjectType.Instrument)
 						{
 							WriteUsableClasses(objectInfo, item, client);
-							//						objectInfo.Add("Usable by:");
-							//						objectInfo.Add("- ");
-							//						objectInfo.Add(" ");
-
 							WriteMagicalBonuses(objectInfo, item, client, false);
-
 							WriteClassicWeaponInfos(objectInfo, item, client);
-
-							// Text for object witch can't be sell or trade
-							//				if(objectType == 1)
-							//				{
-							//						...
-							//						objectInfo.Add("This object can't be sold.");
-							//						...
-							//						objectInfo.Add("This object can't be traded.");
-							//						...
-							//				}
 						}
 
-						//*********************************
-						//shows info for all types of armor
-						//*********************************
 						if (item.Object_Type >= (int)eObjectType.Cloth && item.Object_Type <= (int)eObjectType.Scale)
 						{
-							//						objectInfo.Add("Usable by:");
-							//						objectInfo.Add("- ");
-							//						objectInfo.Add(" ");
 							WriteUsableClasses(objectInfo, item, client);
 							WriteMagicalBonuses(objectInfo, item, client, false);
-
 							WriteClassicArmorInfos(objectInfo, item, client);
-
-							// Text for object witch can't be sell or trade
-							//				if(objectType == 1)
-							//				{
-							//						...
-							//						objectInfo.Add("This object can't be sold.");
-							//						...
-							//						objectInfo.Add("This object can't be traded.");
-							//						...
-							//				}
-
 						}
 
-						//***********************************
-						//shows info for Shields			*
-						//***********************************
 						if (item.Object_Type == (int)eObjectType.Shield)
 						{
-							//						objectInfo.Add("Usable by:");
-							//						objectInfo.Add("- ");
-							//						objectInfo.Add(" ");
 							WriteUsableClasses(objectInfo, item, client);
 							WriteMagicalBonuses(objectInfo, item, client, false);
-
 							WriteClassicShieldInfos(objectInfo, item, client);
-
-							// Text for object witch can't be sell or trade
-							//				if(objectType == 1)
-							//				{
-							//						...
-							//						objectInfo.Add("This object can't be sold.");
-							//						...
-							//						objectInfo.Add("This object can't be traded.");
-							//						...
-							//				}
 						}
 
-						//***********************************
-						//shows info for Magic Items
-						//***********************************
 						if (item.Object_Type == (int)eObjectType.Magical || item.Object_Type == (int)eObjectType.AlchemyTincture || item.Object_Type == (int)eObjectType.SpellcraftGem)
 						{
 							WriteMagicalBonuses(objectInfo, item, client, false);
@@ -385,9 +339,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						caption = item.Name;
 
-						//**********************************
-						//show crafter name
-						//**********************************
 						if (item.Item_Type == (int)eInventorySlot.Horse)
 						{
 							WriteHorseInfo(objectInfo, item, client, "");
@@ -400,62 +351,33 @@ namespace DOL.GS.PacketHandler.Client.v168
 							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.ChampionLevel", item.Level));
 						}
 
-						//**********************************
-						//show info for all weapons
-						//**********************************
 						if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type <= (int)eObjectType.MaulerStaff) ||
 							item.Object_Type == (int)eObjectType.Instrument)
 						{
 							WriteUsableClasses(objectInfo, item, client);
-							//						objectInfo.Add("Usable by:");
-							//						objectInfo.Add("- ");
-
 							WriteMagicalBonuses(objectInfo, item, client, false);
-
 							WriteClassicWeaponInfos(objectInfo, item, client);
 						}
 
-						//*********************************
-						//shows info for all types of armor
-						//*********************************
 						if (item.Object_Type >= (int)eObjectType.Cloth && item.Object_Type <= (int)eObjectType.Scale)
 						{
-							//						objectInfo.Add("Usable by:");
-							//						objectInfo.Add("- ");
-							//						objectInfo.Add(" ");
 							WriteUsableClasses(objectInfo, item, client);
 							WriteMagicalBonuses(objectInfo, item, client, false);
-
 							WriteClassicArmorInfos(objectInfo, item, client);
-
 						}
 
-						//***********************************
-						//shows info for Shields			*
-						//***********************************
 						if (item.Object_Type == (int)eObjectType.Shield)
 						{
-							//						objectInfo.Add("Usable by:");
-							//						objectInfo.Add("- ");
-							//						objectInfo.Add(" ");
 							WriteUsableClasses(objectInfo, item, client);
 							WriteMagicalBonuses(objectInfo, item, client, false);
-
 							WriteClassicShieldInfos(objectInfo, item, client);
-
 						}
 
-						//***********************************
-						//shows info for Magic Items
-						//***********************************
 						if ((item.Item_Type != (int)eInventorySlot.Horse && item.Object_Type == (int)eObjectType.Magical) || item.Object_Type == (int)eObjectType.AlchemyTincture || item.Object_Type == (int)eObjectType.SpellcraftGem)
 						{
 							WriteMagicalBonuses(objectInfo, item, client, false);
 						}
 
-						//***********************************
-						//shows info for Poison Items
-						//***********************************
 						if (item.Object_Type == (int)eObjectType.Poison)
 						{
 							WritePoisonInfo(objectInfo, item, client);
@@ -504,13 +426,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 						Style style = null;
 						string temp;
 						int styleID = objectID - skillList.Count - 100;
-						//DOLConsole.WriteLine("style id="+styleID+"; skills count="+skillList.Count);
 
 						if (styleID < 0 || styleID >= styleList.Count) break;
 
 						style = styleList[styleID] as Style;
 						if (style == null) break;
-
 
 						caption = style.Name;
 						objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.WeaponType", style.GetRequiredWeaponName()));
@@ -722,9 +642,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						caption = item.Name;
 
-						//**********************************
-						//show crafter name
-						//**********************************
 						if (item.Item_Type == (int)eInventorySlot.Horse)
 						{
 							WriteHorseInfo(objectInfo, item, client, "");
@@ -736,82 +653,33 @@ namespace DOL.GS.PacketHandler.Client.v168
 							objectInfo.Add(" ");//empty line
 							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.ChampionLevel", item.Level));
 						}
-						//**********************************
-						//show info for all types of weapons
-						//**********************************
 						if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type <= (int)eObjectType.MaulerStaff) ||
 							item.Object_Type == (int)eObjectType.Instrument)
 						{
-
-							//						objectInfo.Add("Usable by:");
-							//						objectInfo.Add("- ");
-							//						objectInfo.Add(" ");
 							WriteUsableClasses(objectInfo, item, client);
 							WriteMagicalBonuses(objectInfo, item, client, false);
-
 							WriteClassicWeaponInfos(objectInfo, item, client);
-
-							// Text for object witch can't be sold
-							//				if(...)
-							//				{
-							//						...
-							//						objectInfo.Add("This object can't be sold.");
-							//				}
 						}
 
-						//*********************************
-						//shows info for all types of armor
-						//*********************************
 						if (item.Object_Type >= (int)eObjectType.Cloth && item.Object_Type <= (int)eObjectType.Scale)
 						{
-							//						objectInfo.Add("Usable by:");
-							//						objectInfo.Add("- ");
-							//						objectInfo.Add(" ");
 							WriteUsableClasses(objectInfo, item, client);
 							WriteMagicalBonuses(objectInfo, item, client, false);
-
 							WriteClassicArmorInfos(objectInfo, item, client);
-
-							// Text for object witch can't be sold
-							//				if(objectType == 1)
-							//				{
-							//						...
-							//						objectInfo.Add("This object can't be sold.");
-							//				}
-
 						}
 
-						//***********************************
-						//shows info for Shields			*
-						//***********************************
 						if (item.Object_Type == (int)eObjectType.Shield)
 						{
-							//						objectInfo.Add("Usable by:");
-							//						objectInfo.Add("- ");
-							//						objectInfo.Add(" ");
 							WriteUsableClasses(objectInfo, item, client);
 							WriteMagicalBonuses(objectInfo, item, client, false);
-
 							WriteClassicShieldInfos(objectInfo, item, client);
-
-							// Text for object witch can't be sold
-							//				if(objectType == 1)
-							//				{
-							//						...
-							//						objectInfo.Add("This object can't be sold.");
-							//				}
 						}
 
-						//***********************************
-						//shows info for Magic Items
-						//***********************************
 						if ((item.Item_Type != (int)eInventorySlot.Horse && item.Object_Type == (int)eObjectType.Magical) || item.Object_Type == (int)eObjectType.AlchemyTincture || item.Object_Type == (int)eObjectType.SpellcraftGem)
 						{
 							WriteMagicalBonuses(objectInfo, item, client, false);
 						}
-						//***********************************
-						//shows info for Poison Potions
-						//***********************************
+
 						if (item.Object_Type == (int)eObjectType.Poison)
 						{
 							WritePoisonInfo(objectInfo, item, client);
@@ -1112,19 +980,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			client.Out.SendCustomTextWindow(caption, objectInfo);
 
 			return 1;
-			//WorldMgr.GetObjectByIDFromRegion(client.Player.CurrentRegionID, objectid );
-			/*
-Type    Description           Id
-1       Inventory item        Slot (ie. 0xC for 2 handed weapon)
-2       Spell                 spell level + spell line ID * 100 (starting from 0)
-3       ???
-4       Merchant item         Slot (divide by 30 to get page)
-5       Buff/effect           The buff id (each buff has a unique id)
-6       Style                 style list index = ID-100-abilities count
-7       Trade window          position in trade window (starting form 0)
-8       Ability               100+position in players abilities list (?)
-9       Trainers skill        position in trainers window list
-			*/
 		}
 
 		public void WriteSpellInfo(ArrayList output, Spell spell, SpellLine spellLine, GameClient client)
@@ -1270,8 +1125,6 @@ Type    Description           Id
 			{
 				objectInfo.Add(" ");//empty line
 				objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.GetShortItemInfo.CrafterName", item.CrafterName));
-
-				//LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryStrange")
 			}
 			if (item.Object_Type == (int)eObjectType.Poison)
 			{
