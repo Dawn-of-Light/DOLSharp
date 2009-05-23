@@ -224,7 +224,7 @@ namespace DOL.AI.Brain
 			m_tempY = Body.Y;
 			m_tempZ = Body.Z;
 			WalkState = eWalkState.Stay;
-			Body.StopFollow();
+			Body.StopFollowing();
 		}
 
 		/// <summary>
@@ -236,7 +236,7 @@ namespace DOL.AI.Brain
 			m_tempY = Body.Y;
 			m_tempZ = Body.Z;
 			WalkState = eWalkState.ComeHere;
-			Body.StopFollow();
+			Body.StopFollowing();
 			Body.WalkTo(Owner, Body.MaxSpeed);
 		}
 
@@ -250,7 +250,7 @@ namespace DOL.AI.Brain
 			m_tempY = Body.Y;
 			m_tempZ = Body.Z;
 			WalkState = eWalkState.GoTarget;
-			Body.StopFollow();
+			Body.StopFollowing();
 			Body.WalkTo(target, Body.MaxSpeed);
 		}
 
@@ -583,7 +583,7 @@ namespace DOL.AI.Brain
 			if (Body.TargetObject != null)
 			{
 				if (Body.IsMoving)
-					Body.StopFollow();
+					Body.StopFollowing();
 
 				if (Body.TargetObject != Body && spell.CastTime > 0)
 					Body.TurnTo(Body.TargetObject);

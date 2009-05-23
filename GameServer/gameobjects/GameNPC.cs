@@ -1227,7 +1227,7 @@ namespace DOL.GS
 		/// <param name="ty">target y</param>
 		/// <param name="tz">target z (or 0 to put the mob on the ground)</param>
 		/// <param name="speed">walk speed</param>
-		public virtual void WalkTo(int tx, int ty, int tz, int speed/*, bool ignoreTolerance*/)
+		public virtual void WalkTo(int tx, int ty, int tz, int speed)
 		{
 			int maxSpeed = MaxSpeed;
 			
@@ -1237,7 +1237,7 @@ namespace DOL.GS
                 log.Info(String.Format("Medusa at ({0}, {1}, {2}) is walking towards ({3}, {4}, {5})",
                     X, Y, Z, tx, ty, tz));
 
-            if (Util.IsNearDistance(tx, ty, tz, X, Y, Z, CONST_WALKTOTOLERANCE)) // && !ignoreTolerance)
+            if (Util.IsNearDistance(tx, ty, tz, X, Y, Z, CONST_WALKTOTOLERANCE))
 		    {
                 IsReturningToSpawnPoint = false;
 				TurnTo(SpawnHeading);
@@ -1298,16 +1298,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Walk to a certain point with given speed
-		/// </summary>
-		/// <param name="p"></param>
-		/// <param name="speed"></param>
-        //public virtual void WalkTo(IPoint3D p, int speed, bool ignoreTolerance)
-        //{
-        //    WalkTo(p.X, p.Y, p.Z, speed, ignoreTolerance);
-        //}
-
-		/// <summary>
 		/// Walk to the spawn point
 		/// </summary>
 		public virtual void WalkToSpawn()
@@ -1330,7 +1320,7 @@ namespace DOL.GS
 		public virtual void WalkToSpawn(int speed)
 		{
 			StopAttack();
-			StopFollow();
+			StopFollowing();
 
 			StandardMobBrain brain = Brain as StandardMobBrain;
 			//[Ganrod] Nidel: Force to clear Aggro
@@ -1388,7 +1378,6 @@ namespace DOL.GS
 		{
 		    CancelWalkToSpawn();
 
-			// This broadcasts an update so check to see if we are moving before calling - tolakram
 			if (IsMoving)
 				CurrentSpeed = 0;
 		}
@@ -1399,40 +1388,35 @@ namespace DOL.GS
 		/// <summary>
 		/// Follow given object
 		/// </summary>
-		/// <param name="followTarget">target to follow</param>
-		/// <param name="minDistance">min distance to keep to the target</param>
-		/// <param name="maxDistance">max distance to keep following</param>
-		public virtual void Follow(GameObject followTarget, int minDistance, int maxDistance)
+		/// <param name="target">Target to follow</param>
+		/// <param name="minDistance">Min distance to keep to the target</param>
+		/// <param name="maxDistance">Max distance to keep following</param>
+		public virtual void Follow(GameObject target, int minDistance, int maxDistance)
 		{
-			//			string targName = followTarget==null ? "(null)" : followTarget.Name;
-			//			log.Debug(this.Name+": Follow("+targName+","+minDistance+","+maxDistance+")");
-			//First stop the active timer
-			//System.Diagnostics.StackTrace st = new System.Diagnostics.StackTrace();
-			//log.Debug(st);
 			if (m_followTimer.IsAlive)
 				m_followTimer.Stop();
-			if (followTarget == null || followTarget.ObjectState != eObjectState.Active) return;
-			//Set the new values
+
+			if (target == null || target.ObjectState != eObjectState.Active) 
+                return;
+
 			m_followMaxDist = maxDistance;
 			m_followMinDist = minDistance;
-			m_followTarget.Target = followTarget;
-			//Start the timer again
+			m_followTarget.Target = target;
 			m_followTimer.Start(1);
-			//TODO fire event OnFollow
 		}
 
 		/// <summary>
 		/// Stop following
 		/// </summary>
-		public virtual void StopFollow()
+		public virtual void StopFollowing()
 		{
 			lock (m_followTimer)
 			{
 				if (m_followTimer.IsAlive)
 					m_followTimer.Stop();
+
 				m_followTarget.Target = null;
 				StopMoving();
-				//TODO fire event OnStopFollow
 			}
 		}
 
@@ -1483,7 +1467,7 @@ namespace DOL.GS
              //Stop following if target living is dead
              if (followLiving != null && !followLiving.IsAlive)
              {
-                StopFollow();
+                StopFollowing();
                 Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
                 return 0;
              }
@@ -1491,7 +1475,7 @@ namespace DOL.GS
              //Stop following if we have no target
              if (followTarget == null || followTarget.ObjectState != eObjectState.Active || CurrentRegionID != followTarget.CurrentRegionID)
              {
-                StopFollow();
+                StopFollowing();
                 Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
                 return 0;
              }
@@ -1508,7 +1492,7 @@ namespace DOL.GS
              //if distance is greater then the max follow distance, stop following and return home
              if ((int)distance > m_followMaxDist)
              {
-                StopFollow();
+                StopFollowing();
                 Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
                 this.WalkToSpawn();
                 return 0;
@@ -1616,17 +1600,6 @@ namespace DOL.GS
         /// from interfering the setter is now protected.]
         /// </summary>
         public bool IsReturningToSpawnPoint { get; protected set; }
-
-        /// <summary>
-        /// Whether this body can actually do anything.
-        /// </summary>
-        public bool IsIncapacitated
-        {
-            get
-            {
-                return (!IsAlive || IsSilenced || IsStunned);
-            }
-        }
 
 		/// <summary>
 		/// Gets if npc moving on path
@@ -2752,7 +2725,7 @@ namespace DOL.GS
 				ABrain brain = Brain;
 				brain.Stop();
 			}
-			StopFollow();
+			StopFollowing();
 			TempProperties.removeProperty(CHARMED_TICK_PROP);
 			base.Delete();
 		}
@@ -3157,7 +3130,7 @@ namespace DOL.GS
 			if (AttackState)
 			{
 				if (ActiveWeaponSlot == eActiveWeaponSlot.Distance && IsMoving)
-					StopFollow();
+					StopFollowing();
 				else
 					Follow(target, StickMinimumRange, StickMaximumRange);
 			}
@@ -3291,7 +3264,7 @@ namespace DOL.GS
 				if (killer is GamePlayer)
 					((GamePlayer)killer).Out.SendMessage(GetName(0, true) + " dies!", eChatType.CT_PlayerDied, eChatLoc.CL_SystemWindow);
 			}
-			StopFollow();
+			StopFollowing();
 
 			if (Group != null)
 				Group.RemoveMember(this);
@@ -3453,7 +3426,7 @@ namespace DOL.GS
 		{
 			SwitchWeapon(eActiveWeaponSlot.Distance);
 			StartMeleeAttack(target);
-			StopFollow();
+			StopFollowing();
 		}
 
 		/// <summary>
@@ -3646,7 +3619,7 @@ namespace DOL.GS
 		{
 			if (m_attackAction != null)
 				m_attackAction.Stop();
-			StopFollow();
+			StopFollowing();
 		}
 
 		/// <summary>
@@ -3667,7 +3640,7 @@ namespace DOL.GS
 		public override void StopAttack()
 		{
 			base.StopAttack();
-			StopFollow();
+			StopFollowing();
 		}
 
 		/// <summary>
@@ -3952,7 +3925,7 @@ namespace DOL.GS
 				{
 					//If we aren't a distance NPC, lets make sure we are in range to attack the target!
 					if (owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance && !owner.IsWithinRadius( owner.TargetObject, 90 ) )
-						((GameNPC)owner).Follow(owner.TargetObject, 90, 5000);
+						((GameNPC)owner).Follow(owner.TargetObject, StickMinimumRange, StickMaximumRange);
 				}
 				Interval = 500;
 			}

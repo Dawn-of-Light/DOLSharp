@@ -142,7 +142,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The possible states for a ranged attack
 		/// </summary>
-		public enum eRangeAttackState : byte
+		public enum eRangedAttackState : byte
 		{
 			/// <summary>
 			/// No ranged attack active
@@ -321,7 +321,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The state of the ranged attack
 		/// </summary>
-		protected eRangeAttackState m_rangeAttackState;
+		protected eRangedAttackState m_rangeAttackState;
 		/// <summary>
 		/// The gtype of the ranged attack
 		/// </summary>
@@ -330,7 +330,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or Sets the state of a ranged attack
 		/// </summary>
-		public eRangeAttackState RangeAttackState
+		public eRangedAttackState RangedAttackState
 		{
 			get { return m_rangeAttackState; }
 			set { m_rangeAttackState = value; }
@@ -873,17 +873,11 @@ namespace DOL.GS
 		{
 			return eDamageType.Natural;
 		}
-		/// <summary>
-		/// Stores the attack state of this living
-		/// </summary>
-		protected bool m_attackState;
+
 		/// <summary>
 		/// Gets the attack-state of this living
 		/// </summary>
-		public virtual bool AttackState
-		{
-			get { return m_attackState; }
-		}
+		public virtual bool AttackState { get; private set; }
 
         /// <summary>
         /// Whether or not the living can be attacked.
@@ -904,7 +898,7 @@ namespace DOL.GS
         /// </summary>
         public virtual bool IsAttacking
         {
-			get { return (m_attackState && (m_attackAction != null) && m_attackAction.IsAlive); }
+			get { return (AttackState && (m_attackAction != null) && m_attackAction.IsAlive); }
 		}
 
 		/// <summary>
@@ -932,7 +926,19 @@ namespace DOL.GS
 		{
 			return 0;
 		}
-		/// <summary>
+
+        /// <summary>
+        /// Whether this living can actually do anything.
+        /// </summary>
+        public virtual bool IsIncapacitated
+        {
+            get
+            {
+                return (ObjectState != eObjectState.Active || !IsAlive || IsStunned || IsMezzed);
+            }
+        }
+        
+        /// <summary>
 		/// returns if this living is alive
 		/// </summary>
 		public virtual bool IsAlive
@@ -1883,7 +1889,9 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected virtual AttackAction CreateAttackAction()
 		{
-			return new AttackAction(this);
+			return (m_attackAction == null)
+                ? new AttackAction(this)
+                : m_attackAction;
 		}
 
 		/// <summary>
@@ -2119,9 +2127,9 @@ namespace DOL.GS
 				{
 					//Mobs always shot and reload
 					if (owner is GameNPC)
-						owner.RangeAttackState = eRangeAttackState.AimFireReload;
+						owner.RangedAttackState = eRangedAttackState.AimFireReload;
 
-					if (owner.RangeAttackState != eRangeAttackState.AimFireReload)
+					if (owner.RangedAttackState != eRangedAttackState.AimFireReload)
 					{
 						owner.StopAttack();
 						Stop();
@@ -2155,7 +2163,7 @@ namespace DOL.GS
 							}
 						}
 
-						owner.RangeAttackState = eRangeAttackState.Aim;
+						owner.RangedAttackState = eRangedAttackState.Aim;
 						if (owner is GamePlayer)
 						{
 							owner.TempProperties.setProperty(GamePlayer.RANGE_ATTACK_HOLD_START, 0L);
@@ -2611,9 +2619,9 @@ namespace DOL.GS
 			}
 		}
 
-		public void SetAttackState()
+		public void SetAttackState()    // Deprecated.
 		{
-			m_attackState = true;
+			AttackState = true;
 		}
 
 		/// <summary>
@@ -2622,64 +2630,57 @@ namespace DOL.GS
 		/// <param name="attackTarget">The object to attack</param>
 		public virtual void StartMeleeAttack(GameObject attackTarget)
 		{
-			if (!IsAlive || ObjectState != eObjectState.Active) return;
-			if (IsMezzed || IsStunned) return;
-			//			if (AttackState)
-			//				StopAttack(); // interrupts range attack animation
+            if (IsIncapacitated)
+                return;
 
-			m_attackState = true;
-
-			// cancel engage effect if exist
 			if (IsEngaging)
-			{
-				EngageEffect effect = (EngageEffect)EffectList.GetOfType(typeof(EngageEffect));
-				if (effect != null)
-				{
-					return;
-					//effect.Cancel(false);
-				}
-			}
+                CancelEngageEffect();
 
-			InventoryItem weapon = AttackWeapon;
-			int speed = AttackSpeed(weapon);
+            AttackState = true;
+
+			int speed = AttackSpeed(AttackWeapon);
+
 			if (speed > 0)
 			{
-				if (m_attackAction == null)
-					m_attackAction = CreateAttackAction();
+			    m_attackAction = CreateAttackAction();
+
 				if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 				{
-					RangeAttackState = eRangeAttackState.Aim;
-					byte attackSpeed = (byte)(speed / 100);
-					int model = (weapon == null ? 0 : weapon.Model);
-					foreach (GamePlayer p in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-					{
-						p.Out.SendCombatAnimation(this, null, (ushort)model, 0x00, p.Out.BowPrepare, attackSpeed, 0x00, 0x00);
-					}
+					RangedAttackState = eRangedAttackState.Aim;
+                    ushort model = (ushort)(AttackWeapon == null ? 0 : AttackWeapon.Model);
 
-					// From : http://www.camelotherald.com/more/888.shtml
-					// - When an Archer has this skill, at any time after halfway through their normal bow timer they can release the shot.
-					if (RangeAttackType == eRangeAttackType.RapidFire)
-					{
-						speed /= 2; // can start fire at the middle of the normal time
-					}
+					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+						player.Out.SendCombatAnimation(this, null, (ushort)model, 0x00, player.Out.BowPrepare,
+                            (byte)(speed / 100), 0x00, 0x00);
 
-					m_attackAction.Start(speed); //shooting a bow ALWAYS takes the speed time until ready!
+					m_attackAction.Start((RangeAttackType == eRangeAttackType.RapidFire)
+                        ? speed / 2 : speed); 
 				}
 				else
 				{
-					if (m_attackAction.TimeUntilElapsed < 500) // wait at least 500ms before attack
+					if (m_attackAction.TimeUntilElapsed < 500)
 						m_attackAction.Start(500);
 				}
 			}
 		}
 
+        private void CancelEngageEffect()
+        {
+            EngageEffect effect = (EngageEffect)EffectList.GetOfType(typeof(EngageEffect));
+
+            if (effect != null)
+                effect.Cancel(false);
+
+            IsEngaging = false;
+        }
+
 		/// <summary>
 		/// Interrupts a Range Attack
 		/// </summary>
-		protected virtual void InterruptRangeAttack()
+		protected virtual void InterruptRangedAttack()
 		{
 			//Clear variables
-			RangeAttackState = eRangeAttackState.None;
+			RangedAttackState = eRangedAttackState.None;
 			RangeAttackType = eRangeAttackType.Normal;
 
 			foreach (GamePlayer p in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
@@ -2691,19 +2692,12 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void StopAttack()
 		{
-			// cancel engage effect if exist
-			if (IsEngaging)
-			{
-				EngageEffect effect = (EngageEffect)EffectList.GetOfType(typeof(EngageEffect));
-				if (effect != null)
-					effect.Cancel(false);
-			}
+            CancelEngageEffect();
+			AttackState = false;
 
-			m_attackState = false;
 			if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
-				InterruptRangeAttack();
+				InterruptRangedAttack();
 		}
-
 
 		/// <summary>
 		/// Calculates melee critical damage of this player
@@ -4004,7 +3998,7 @@ namespace DOL.GS
 		{
 			//Clean up range attack variables, no matter to what
 			//weapon we switch
-			RangeAttackState = eRangeAttackState.None;
+			RangedAttackState = eRangedAttackState.None;
 			RangeAttackType = eRangeAttackType.Normal;
 
 			InventoryItem rightHandSlot = Inventory.GetItem(eInventorySlot.RightHandWeapon);
@@ -6021,7 +6015,7 @@ namespace DOL.GS
 			//Set all combat properties
 			m_activeWeaponSlot = eActiveWeaponSlot.Standard;
 			m_activeQuiverSlot = eActiveQuiverSlot.None;
-			m_rangeAttackState = eRangeAttackState.None;
+			m_rangeAttackState = eRangedAttackState.None;
 			m_rangeAttackType = eRangeAttackType.Normal;
 			m_healthRegenerationPeriod = 6000;
 			m_powerRegenerationPeriod = 6000;

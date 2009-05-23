@@ -1082,7 +1082,7 @@ namespace DOL.GS.Quests.Albion
 					{
 						trevian.SayTo(player, "Thank you so very much! I thought I would never see Lilybet again. She has been such a faithful companion to me considering I am an amateur Sorcerer; I could not bear the thought of [losing her]. Lilybet, go back to the Wharf for some much needed rest.");
 						quest.Step = 7;
-						quest.lilybet.StopFollow();
+						quest.lilybet.StopFollowing();
 						quest.lilybet.WalkTo(455433, 633010, 1736, quest.lilybet.MaxSpeed);
 					}
 					else if (quest.Step == 1) // resume talk with trevian 
