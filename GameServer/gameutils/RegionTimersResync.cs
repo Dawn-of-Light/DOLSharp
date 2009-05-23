@@ -180,7 +180,7 @@ namespace DOL.GS.GameEvents
                                         //npc.Brain.Stop();
 										if (npc.MaxSpeedBase > 0 && npc.PathID != null && npc.PathID != "" && npc.PathID != "NULL")
 										{
-											npc.StopMoveOnPath();
+											npc.StopMovingOnPath();
 											PathPoint path = MovementMgr.LoadPath(npc.PathID);
 											npc.CurrentWayPoint = path;
 											npc.MoveOnPath(path.MaxSpeed);

@@ -885,7 +885,7 @@ namespace DOL.AI.Brain
                 {
                     Body.TargetObject = Target;
                     Goto(Target);
-                    Body.StartAttack(Target);
+                    Body.StartMeleeAttack(Target);
                 }
                 else
                 {

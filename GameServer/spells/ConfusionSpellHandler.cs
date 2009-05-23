@@ -134,7 +134,7 @@ namespace DOL.GS.Spells
 					npc.StopCurrentSpellcast();
 
 					GameLiving target = targetList[Util.Random(targetList.Count - 1)] as GameLiving;
-					npc.StartAttack(target);
+					npc.StartMeleeAttack(target);
 				}
 			}
 		}
@@ -151,7 +151,7 @@ namespace DOL.GS.Spells
 
 				GameLiving target = targetList[Util.Random(targetList.Count - 1)] as GameLiving;
 
-				npc.StartAttack(target);
+				npc.StartMeleeAttack(target);
 			}
 		}
 
