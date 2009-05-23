@@ -806,7 +806,7 @@ namespace DOL.GS.Quests.Albion
 
 						if (quest.dragonflyHatchling != null)
 						{
-							quest.dragonflyHatchling.StopFollow();
+							quest.dragonflyHatchling.StopFollowing();
 							quest.deleteDragonflyHatchling();
 						}
 					}

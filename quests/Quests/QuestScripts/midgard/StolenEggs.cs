@@ -746,7 +746,7 @@ namespace DOL.GS.Quests.Midgard
 
 						if (quest.grifflet != null)
 						{
-							quest.grifflet.StopFollow();
+							quest.grifflet.StopFollowing();
 							quest.deleteGrifflet();
 						}
 					}

@@ -82,7 +82,7 @@ namespace DOL.AI.Brain
  
             if (CheckTether())
             {
-                Body.StopFollow();
+                Body.StopFollowing();
                 ClearAggroList();
                 Body.WalkToSpawn();
                 return;
