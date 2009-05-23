@@ -46,7 +46,7 @@ namespace DOL.AI.Brain
 			if (!IsActive || m_target == null) return;
 			GameLiving target = m_target;
 			if (target != null && target.IsAlive)
-				Body.StartAttack(target);
+				Body.StartMeleeAttack(target);
 			else
 			{
 				m_target = null;

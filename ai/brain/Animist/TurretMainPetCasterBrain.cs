@@ -45,7 +45,7 @@ namespace DOL.AI.Brain
 			}
 			m_orderAttackTarget = defender;
 			AttackMostWanted();
-			Body.StartAttack(m_orderAttackTarget);
+			Body.StartMeleeAttack(m_orderAttackTarget);
 			return;
 		}
 

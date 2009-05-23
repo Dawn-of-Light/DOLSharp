@@ -559,7 +559,7 @@ namespace DOL.AI.Brain
 				if (!Body.AttackState || target != Body.TargetObject)
 				{
 					if (!CheckSpells(eCheckSpellType.Offensive))
-						Body.StartAttack(target);
+						Body.StartMeleeAttack(target);
 				}
 			}
 		}
@@ -723,7 +723,7 @@ namespace DOL.AI.Brain
 					CastFailedEventArgs realArgs = args as CastFailedEventArgs;
 					if (realArgs == null || realArgs.Reason == CastFailedEventArgs.Reasons.AllReadyCasting || realArgs.Reason == CastFailedEventArgs.Reasons.CrowdControlled)
 						return;
-					Body.StartAttack(Body.TargetObject);
+					Body.StartMeleeAttack(Body.TargetObject);
 				}
 			}
 		}
@@ -750,7 +750,7 @@ namespace DOL.AI.Brain
 				&& Body.ObjectState == GameObject.eObjectState.Active
 				&& ad.IsHit)
 			{
-				Body.StartAttack(ad.Attacker);
+				Body.StartMeleeAttack(ad.Attacker);
 				BringFriends(ad);
 			}
 		}

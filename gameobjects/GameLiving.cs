@@ -2620,7 +2620,7 @@ namespace DOL.GS
 		/// Starts a melee attack on a target
 		/// </summary>
 		/// <param name="attackTarget">The object to attack</param>
-		public virtual void StartAttack(GameObject attackTarget)
+		public virtual void StartMeleeAttack(GameObject attackTarget)
 		{
 			if (!IsAlive || ObjectState != eObjectState.Active) return;
 			if (IsMezzed || IsStunned) return;
