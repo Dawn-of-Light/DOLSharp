@@ -11424,7 +11424,7 @@ namespace DOL.GS
 
 					if (detectRadius < 126) detectRadius = 126;
 
-                    double distanceToPlayer = npc.GetDistance( player );
+                    double distanceToPlayer = npc.GetDistanceTo( player );
 
                     if ( distanceToPlayer > detectRadius )
                         continue;

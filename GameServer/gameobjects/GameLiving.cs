@@ -2047,7 +2047,7 @@ namespace DOL.GS
 						}
 					}
 
-                    ticksToTarget = 1 + owner.GetDistance( attackTarget ) * 100 / 150; // 150 units per 1/10s
+                    ticksToTarget = 1 + owner.GetDistanceTo( attackTarget ) * 100 / 150; // 150 units per 1/10s
 				}
 				else
 				{

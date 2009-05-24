@@ -638,10 +638,7 @@ namespace DOL.GS
 		{
 			set
 			{
-				//Update the position before changing speed!
-				m_x = X;
-				m_y = Y;
-				m_z = Z;
+                SaveCurrentPosition();
 
 				if (base.CurrentSpeed != value)
 				{
@@ -650,16 +647,7 @@ namespace DOL.GS
 				}
 			}
 		}
-		/*
-		  /// <summary>
-		  /// Gets sets the currentwaypoint that npc has to wander to
-		  /// </summary>
-		  public PathPoint CurrentWayPoint
-		  {
-			  get { return m_currentWayPoint; }
-			  set { m_currentWayPoint = value; }
-		  }
-		*/
+
 		/// <summary>
 		/// Stores the currentwaypoint that npc has to wander to
 		/// </summary>
@@ -690,17 +678,17 @@ namespace DOL.GS
 				if (!IsMoving)
 					return base.X;
 
-				if (TargetX != 0 || TargetY != 0 || TargetZ != 0)
+				if (Target.X != 0 || Target.Y != 0 || Target.Z != 0)
 				{
-                    long expectedDistance = FastMath.Abs((long)TargetX - m_x);
+                    long expectedDistance = FastMath.Abs((long)Target.X - m_x);
 
                     if (expectedDistance == 0)
-                        return TargetX;
+                        return Target.X;
 
 					long actualDistance = FastMath.Abs((long)(MovementElapsedTicks * DeltaX));
 					
 					if (expectedDistance - actualDistance < 0)
-						return TargetX;
+						return Target.X;
 				}
 
 				return base.X;
@@ -719,17 +707,17 @@ namespace DOL.GS
 				if (!IsMoving)
 					return base.Y;
 
-				if (TargetX != 0 || TargetY != 0 || TargetZ != 0)
+				if (Target.X != 0 || Target.Y != 0 || Target.Z != 0)
 				{
-                    long expectedDistance = FastMath.Abs((long)TargetY - m_y);
+                    long expectedDistance = FastMath.Abs((long)Target.Y - m_y);
 
                     if (expectedDistance == 0)
-                        return TargetY;
+                        return Target.Y;
 
 					long actualDistance = FastMath.Abs((long)(MovementElapsedTicks * DeltaY));
 
 					if (expectedDistance - actualDistance < 0)
-						return TargetY;
+						return Target.Y;
 				}
 				return base.Y;
 			}
@@ -747,17 +735,17 @@ namespace DOL.GS
 				if (!IsMoving)
 					return base.Z;
 
-				if (TargetX != 0 || TargetY != 0 || TargetZ != 0)
+				if (Target.X != 0 || Target.Y != 0 || Target.Z != 0)
 				{
-                    long expectedDistance = FastMath.Abs((long)TargetZ - m_z);
+                    long expectedDistance = FastMath.Abs((long)Target.Z - m_z);
 
                     if (expectedDistance == 0) 
-                        return TargetZ;
+                        return Target.Z;
 
 					long actualDistance = FastMath.Abs((long)(MovementElapsedTicks * DeltaZ));
 
 					if (expectedDistance - actualDistance < 0)
-						return TargetZ;
+						return Target.Z;
 				}
 				return base.Z;
 			}
@@ -837,18 +825,6 @@ namespace DOL.GS
 		#endregion
 		#region Movement
 		/// <summary>
-		/// Target X coordinate to walk to
-		/// </summary>
-		protected int m_targetX;
-		/// <summary>
-		/// Target Y coordinate to walk to
-		/// </summary>
-		protected int m_targetY;
-		/// <summary>
-		/// Target Z coordinate to walk to
-		/// </summary>
-		protected int m_targetZ;
-		/// <summary>
 		/// Timer to be set if an OnArriveAtTarget
 		/// handler is set before calling the WalkTo function
 		/// </summary>
@@ -890,6 +866,11 @@ namespace DOL.GS
 			set { m_pathID = value; }
 		}
 
+        /// <summary>
+        /// The target position.
+        /// </summary>
+        public virtual IPoint3D Target { get; protected set; }
+
 		/// <summary>
 		/// Recalculates displacement per tick values of this living
         /// </summary>
@@ -901,9 +882,9 @@ namespace DOL.GS
                 return;
             }
 
-            if (TargetX != 0 || TargetY != 0 || TargetZ != 0)
+            if (Target.X != 0 || Target.Y != 0 || Target.Z != 0)
             {
-                double dist = this.GetDistance(new Point3D(TargetX, TargetY, TargetZ));
+                double dist = this.GetDistanceTo(new Point3D(Target.X, Target.Y, Target.Z));
 
                 if (dist <= 0)
                 {
@@ -911,12 +892,11 @@ namespace DOL.GS
                     return;
                 }
 
-                int speed = CurrentSpeed;
-                double dx = (double)(TargetX - m_x) / dist;
-                double dy = (double)(TargetY - m_y) / dist;
-                double dz = (double)(TargetZ - m_z) / dist;
+                double dx = (double)(Target.X - m_x) / dist;
+                double dy = (double)(Target.Y - m_y) / dist;
+                double dz = (double)(Target.Z - m_z) / dist;
 
-                SetDisplacementPerTick(dx, dy, dz, speed);
+                SetDisplacementPerTick(dx, dy, dz, CurrentSpeed);
                 return;
             }
 
@@ -924,43 +904,14 @@ namespace DOL.GS
         }
 
 		/// <summary>
-		/// Returns if the mob has arrived on its target
+		/// True if the mob is at its target position, else false.
 		/// </summary>
-		/// <returns>true if on target</returns>
-		public bool IsOnTarget()
+		public bool IsAtTargetPosition
 		{
-			if (X == TargetX && Y == TargetY && Z == TargetZ) return true;
-			return false;
-		}
-		/// <summary>
-		/// Gets or sets the TargetX
-		/// </summary>
-		public virtual int TargetX
-		{
-			get
-			{
-				return m_targetX;
-			}
-		}
-		/// <summary>
-		/// Gets or sets the TargetY
-		/// </summary>
-		public virtual int TargetY
-		{
-			get
-			{
-				return m_targetY;
-			}
-		}
-		/// <summary>
-		/// Gets or sets the TargetZ
-		/// </summary>
-		public virtual int TargetZ
-		{
-			get
-			{
-				return m_targetZ;
-			}
+            get
+            {
+                return (X == Target.X && Y == Target.Y && Z == Target.Z);
+            }
 		}
 
 		/// <summary>
@@ -1145,29 +1096,27 @@ namespace DOL.GS
           {
               GameNPC npc = (GameNPC)m_actionSource;
 
-              int targetX = npc.TargetX;
-              int targetY = npc.TargetY;
-              int targetZ = npc.TargetZ;
-              
-              if (Util.IsNearDistance(npc.X, npc.Y, npc.Z, targetX, targetY, targetZ, CONST_WALKTOTOLERANCE))
+              if (npc.IsWithinRadius(npc.Target, CONST_WALKTOTOLERANCE))
               {
-                  if (npc.X != targetX || npc.Y != targetY || npc.Z != targetZ)
-                  {
-                      npc.X = targetX;
-                      npc.Y = targetY;
-                      npc.Z = targetZ;
-                  }
+                  if (npc.IsReturningToSpawnPoint && !npc.IsAtTargetPosition)
+                      npc.StopMovingAt(npc.Target);
+                  else
+                      npc.StopMoving();
 
-                  npc.StopMoving();
-                  npc.UpdateDisplacementPerTick();
                   npc.Notify(GameNPCEvent.ArriveAtTarget, npc);
               }
               else
               {
-                  int speed = npc.CurrentSpeed;
+                  npc.SaveCurrentPosition();
 
-                  npc.StopMoving();
-                  npc.WalkTo(targetX, targetY, targetZ, speed);
+                  int estimatedTicks = npc.GetEstimatedTicksToArriveAt(npc.Target, npc.CurrentSpeed);
+
+                  Start((estimatedTicks > 1) ? estimatedTicks : 1);
+
+                  if (estimatedTicks > 200)
+                      npc.StartCloseToTargetAction(estimatedTicks);
+
+                  npc.MovementStartTick = Environment.TickCount;
               }
           }
         }
@@ -1212,90 +1161,108 @@ namespace DOL.GS
             }
 		}
 
-        //public virtual void WalkTo(int tx, int ty, int tz, int speed)
-        //{
-        //    WalkTo(tx, ty, tz, speed, false);
-        //}
+        /// <summary>
+        /// Ticks required to arrive at a given spot.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="speed"></param>
+        /// <returns></returns>
+        private int GetEstimatedTicksToArriveAt(IPoint3D target, int speed)
+        {
+            return GetDistanceTo(target) * 1000 / speed;
+        }
+
+        /// <summary>
+        /// Make the current (calculated) position permanent.
+        /// </summary>
+        private void SaveCurrentPosition()
+        {
+            SavePosition(this);
+        }
+
+        /// <summary>
+        /// Make the target position permanent.
+        /// </summary>
+        private void SavePosition(IPoint3D target)
+        {
+            X = target.X;
+            Y = target.Y;
+            Z = target.Z;
+        }
 
 		/// <summary>
-		/// This function is used to make the npc move towards
-		/// a certain target spot within this region. The target
-		/// spot should be in the same or an adjacent Zone of the
-		/// npc
+        /// Walk to a certain spot at a given speed.
 		/// </summary>
-		/// <param name="tx">target x</param>
-		/// <param name="ty">target y</param>
-		/// <param name="tz">target z (or 0 to put the mob on the ground)</param>
-		/// <param name="speed">walk speed</param>
-		public virtual void WalkTo(int tx, int ty, int tz, int speed)
+		/// <param name="tx"></param>
+		/// <param name="ty"></param>
+		/// <param name="tz"></param>
+		/// <param name="speed"></param>
+		public virtual void WalkTo(int targetX, int targetY, int targetZ, int speed)
 		{
-			int maxSpeed = MaxSpeed;
-			
-			// Walking to the spot we're already at will only get us into trouble.
-
-            if (Name == "Medusa")
-                log.Info(String.Format("Medusa at ({0}, {1}, {2}) is walking towards ({3}, {4}, {5})",
-                    X, Y, Z, tx, ty, tz));
-
-            if (Util.IsNearDistance(tx, ty, tz, X, Y, Z, CONST_WALKTOTOLERANCE))
-		    {
-                IsReturningToSpawnPoint = false;
-				TurnTo(SpawnHeading);
-		  	    return;
-		    }
-
-			if (speed <= 0 || maxSpeed <= 0)
-				return;
-
-			if (IsTurningDisabled)
-				return; // can't walk when turning is disabled
-
-			CancelWalkToTimer();
-			
-			if (speed > maxSpeed)
-				speed = maxSpeed;
-
-			Notify(GameNPCEvent.WalkTo, this, new WalkToEventArgs(tx, ty, tz, speed));
-			//Set our current position
-			m_x = X;
-			m_y = Y;
-			m_z = Z;
-            m_Heading = GetHeading( new Point2D( tx, ty ) );
-			m_currentSpeed = speed;
-			m_targetX = tx;
-			m_targetY = ty;
-			m_targetZ = tz;
-			UpdateDisplacementPerTick();
-
-			//ARGHL!!!! the following took me 2 days to find out!
-			//The mobs in the database have a Z value set ... but normally when
-			//we call WalkTo, we set TargetZ to Zero, this results in a HUGE
-			//distance bug, makeing the mobs move totally weird!
-			//So we have to test if our targetZ == 0
-			//duff answer : already test in get distance so do not need it!
-            double dist = this.GetDistance( new Point3D( m_targetX, m_targetY, m_targetZ ) );
-
-			int timeToTarget = timeToTarget = 300+(int) (dist*1000/speed);
-
-			m_arriveAtTargetAction = new ArriveAtTargetAction(this);
-			m_arriveAtTargetAction.Start((timeToTarget > 1) ? timeToTarget:1);
-
-			m_closeToTargetAction = new CloseToTargetAction(this);
-			m_closeToTargetAction.Start((timeToTarget > 200) ? (timeToTarget - 200):1); //200ms before target is close
-
-			MovementStartTick = Environment.TickCount;
-			BroadcastUpdate();
+            WalkTo(new Point3D(targetX, targetY, targetZ), speed);
 		}
 
 		/// <summary>
-		/// Walk to a certain point with given speed
+		/// Walk to a certain spot at a given speed.
 		/// </summary>
 		/// <param name="p"></param>
 		/// <param name="speed"></param>
-		public virtual void WalkTo(IPoint3D p, int speed)
+		public virtual void WalkTo(IPoint3D target, int speed)
 		{
-			WalkTo(p.X, p.Y, p.Z, speed);
+            if (IsTurningDisabled)
+                return;
+
+            if (speed > MaxSpeed)
+                speed = MaxSpeed;
+
+            if (speed <= 0)
+                return;
+
+            Target = target;
+
+            if (IsWithinRadius(Target, CONST_WALKTOTOLERANCE))
+            {
+                // No need to start walking.
+
+                if (IsReturningToSpawnPoint && !IsAtTargetPosition)
+                {
+                    SavePosition(Target);
+                    BroadcastUpdate();
+                }
+
+                Notify(GameNPCEvent.ArriveAtTarget, this);
+                return;
+            }
+
+            CancelWalkToTimer();
+            SaveCurrentPosition();
+
+            m_Heading = GetHeading(Target);
+            m_currentSpeed = speed; 
+
+            UpdateDisplacementPerTick();
+            Notify(GameNPCEvent.WalkTo, this, new WalkToEventArgs(Target, speed));
+
+            int estimatedTicks = GetEstimatedTicksToArriveAt(Target, speed);
+
+            StartArriveAtTargetAction(estimatedTicks);
+            StartCloseToTargetAction(estimatedTicks);
+
+            MovementStartTick = Environment.TickCount;
+            BroadcastUpdate();
 		}
+
+        private void StartArriveAtTargetAction(int estimatedTicks)
+        {
+            m_arriveAtTargetAction = new ArriveAtTargetAction(this);
+            m_arriveAtTargetAction.Start((estimatedTicks > 1) ? estimatedTicks : 1);
+        }
+
+        private void StartCloseToTargetAction(int estimatedTicks)
+        {
+            m_closeToTargetAction = new CloseToTargetAction(this);
+            m_closeToTargetAction.Start((estimatedTicks > 200) ? (estimatedTicks - 200) : 1);
+        }
 
 		/// <summary>
 		/// Walk to the spawn point
@@ -1334,7 +1301,7 @@ namespace DOL.GS
 
 			IsReturningHome = true;
             IsReturningToSpawnPoint = true;
-            WalkTo( SpawnPoint.X, SpawnPoint.Y, SpawnPoint.Z, speed );
+            WalkTo( SpawnPoint, speed );
 		}
 
 		/// <summary>
@@ -1348,13 +1315,8 @@ namespace DOL.GS
 			Notify(GameNPCEvent.Walk, this, new WalkEventArgs(speed));
 
 			CancelWalkToTimer();
-
-			m_x = X;
-			m_y = Y;
-			m_z = Z;
-			m_targetX = 0;
-			m_targetY = 0;
-			m_targetZ = 0;
+            SaveCurrentPosition();
+            Target.Clear();
 
 			m_currentSpeed = speed;
 
@@ -1372,7 +1334,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Stops the movement of the mob
+		/// Stops the movement of the mob.
 		/// </summary>
 		public virtual void StopMoving()
 		{
@@ -1381,6 +1343,24 @@ namespace DOL.GS
 			if (IsMoving)
 				CurrentSpeed = 0;
 		}
+
+        /// <summary>
+        /// Stops the movement of the mob and forcibly moves it to the
+        /// given target position.
+        /// </summary>
+        public virtual void StopMovingAt(IPoint3D target)
+        {
+            CancelWalkToSpawn();
+
+            if (IsMoving)
+            {
+                m_currentSpeed = 0;
+                UpdateDisplacementPerTick();
+            }
+
+            SavePosition(target);
+            BroadcastUpdate();
+        }
 
         private const int StickMinimumRange = 90;
         private const int StickMaximumRange = 5000;
@@ -2542,9 +2522,6 @@ namespace DOL.GS
 				player.CurrentUpdateArray[ObjectID - 1] = true;
 			}
 			m_lastUpdateTickCount = (uint)Environment.TickCount;
-
-            //if (Name == "Medusa")
-            //    log.Info(String.Format("Medusa ObjectUpdate, X = {0}, Y = {1}", X, Y));
 		}
 
 		/// <summary>
@@ -4022,9 +3999,6 @@ namespace DOL.GS
 
             if (e == GameNPCEvent.ArriveAtTarget)
             {
-                if (Name == "Medusa")
-                    log.Info(String.Format("{0} has arrived at target", Name));
-
                 if (IsReturningToSpawnPoint)
                 {
                     TurnTo(SpawnHeading);
@@ -4177,8 +4151,7 @@ namespace DOL.GS
 			m_followTarget = new WeakRef(null);
 
 			m_size = 50; //Default size
-			m_targetX = 0;
-			m_targetY = 0;
+            Target = new Point3D();
 			m_followMinDist = 100;
 			m_followMaxDist = 3000;
 			m_flags = 0;

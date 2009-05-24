@@ -141,7 +141,7 @@ namespace DOL.GS.PacketHandler
 			ushort speedZ = 0;
 			if (npc == null)
 				return;
-			if (!npc.IsOnTarget())
+			if (!npc.IsAtTargetPosition)
 			{
 				speed = npc.CurrentSpeed;
 				speedZ = (ushort)npc.DeltaZ;
