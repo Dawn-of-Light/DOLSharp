@@ -74,7 +74,7 @@ namespace DOL.GS.Behaviour.Requirements
 			bool result = true;
             GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
 
-            result = compare( player.GetDistance( N ), V, Comparator );
+            result = compare( player.GetDistanceTo( N ), V, Comparator );
 
 			return result;
 		}

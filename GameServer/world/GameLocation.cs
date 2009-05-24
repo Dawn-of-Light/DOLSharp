@@ -81,7 +81,7 @@ namespace DOL.GS
 		{
 			if (this.RegionID == location.RegionID)
 			{
-				return base.GetDistance( location );
+				return base.GetDistanceTo( location );
 			}
 			else
 			{

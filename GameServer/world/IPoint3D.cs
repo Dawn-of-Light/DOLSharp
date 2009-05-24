@@ -28,6 +28,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Height Position
 		/// </summary>
-		int Z { get; }
+        int Z { get; set; }
+        void Clear();
 	}
 }

@@ -106,18 +106,18 @@ namespace DOL.GS
 			return ((point.X == m_x) && (point.Y == m_y) && (point.Z == m_z));
 		}*/
 
-        [Obsolete( "Use instance method GetDistance" )]
+        [Obsolete( "Use instance method GetDistanceTo" )]
         public static int GetDistance( IPoint3D p1, IPoint3D p2 )
         {
             return p1.GetDistance( p2 );
         }
 
-        [Obsolete( "Use instance method GetDistance" )]
+        [Obsolete( "Use instance method GetDistanceTo" )]
         public static int GetDistance( int x1, int y1, int z1, int x2, int y2, int z2 )
         {
             Point3D pt1 = new Point3D( x1, y1, z1 );
             Point3D pt2 = new Point3D( x2, y2, z2 );
-            return pt1.GetDistance( pt2 );
+            return pt1.GetDistanceTo( pt2 );
         }
 
 
@@ -130,7 +130,7 @@ namespace DOL.GS
         /// </remarks>
         /// <param name="point">Target point</param>
         /// <returns>Distance to point</returns>
-        public virtual int GetDistance( IPoint3D point )
+        public virtual int GetDistanceTo( IPoint3D point )
         {
 			//SH: Removed Z checks when one of the two Z values is zero (on ground)
 			if ( m_z == 0 || point.Z == 0 )
@@ -151,7 +151,7 @@ namespace DOL.GS
         /// <param name="point">Target point</param>
         /// <param name="zfactor">Z-axis factor - use values between 0 and 1 to decrease influence of Z-axis</param>
         /// <returns>Adjusted distance to point</returns>
-        public virtual int GetDistance( IPoint3D point, double zfactor )
+        public virtual int GetDistanceTo( IPoint3D point, double zfactor )
         {
 			//SH: Removed Z checks when one of the two Z values is zero (on ground)
 			if ( m_z == 0 || point.Z == 0 )
@@ -176,7 +176,7 @@ namespace DOL.GS
         {
 			if ( radius > ushort.MaxValue )
 			{
-				return GetDistance( point ) <= radius;
+				return GetDistanceTo( point ) <= radius;
 			}
 
 			uint rsquared = (uint)radius * (uint)radius;
@@ -213,6 +213,12 @@ namespace DOL.GS
 			}
 
 			return true;
+        }
+
+        public void Clear()
+        {
+            base.Clear();
+            Z = 0;
         }
 	}
 }
