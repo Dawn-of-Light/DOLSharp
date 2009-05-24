@@ -714,17 +714,17 @@ namespace DOL.GS.PacketHandler
 				if ((npc.Flags & (uint)GameNPC.eFlags.FLYING) != 0)
 					flags |= 0x20;
 
-				if (npc.IsMoving && !npc.IsOnTarget())
+				if (npc.IsMoving && !npc.IsAtTargetPosition)
 				{
 					speed = npc.CurrentSpeed;
-					if (npc.TargetX != 0 || npc.TargetY != 0 || npc.TargetZ != 0)
+					if (npc.Target.X != 0 || npc.Target.Y != 0 || npc.Target.Z != 0)
 					{
-						Zone tz = npc.CurrentRegion.GetZone(npc.TargetX, npc.TargetY);
+						Zone tz = npc.CurrentRegion.GetZone(npc.Target.X, npc.Target.Y);
 						if (tz != null)
 						{
-							XOffsetInTargetZone = (ushort)(npc.TargetX - tz.XOffset);
-							YOffsetInTargetZone = (ushort)(npc.TargetY - tz.YOffset);
-							ZOffsetInTargetZone = (ushort)(npc.TargetZ);
+							XOffsetInTargetZone = (ushort)(npc.Target.X - tz.XOffset);
+							YOffsetInTargetZone = (ushort)(npc.Target.Y - tz.YOffset);
+							ZOffsetInTargetZone = (ushort)(npc.Target.Z);
                             //Dinberg:Instances - zoneSkinID for object positioning clientside.
 							targetZone = tz.ZoneSkinID;
 						}
@@ -909,7 +909,7 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.NPCCreate));
 			int speed = 0;
 			ushort speedZ = 0;
-			if (npc.IsMoving && !npc.IsOnTarget())
+			if (npc.IsMoving && !npc.IsAtTargetPosition)
 			{
 				speed = npc.CurrentSpeed;
 				speedZ = (ushort)npc.DeltaZ;

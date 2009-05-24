@@ -410,7 +410,7 @@ namespace DOL.GS
 		private int GetActionDelay(SiegeTimer.eAction action)
 		{
 			if (action == SiegeTimer.eAction.Fire && TargetObject != null)
-                return (int)( ActionDelay[(int)action] * 0.001 * this.GetDistance( TargetObject ) );
+                return (int)( ActionDelay[(int)action] * 0.001 * this.GetDistanceTo( TargetObject ) );
 			
 			int delay = ActionDelay[(int)action];
 			//TODO: better to use a property here - discuss to implement one? dunnow if siegespeed is used at another place.

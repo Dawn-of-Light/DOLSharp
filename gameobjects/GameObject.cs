@@ -94,22 +94,6 @@ namespace DOL.GS
 
 		#region Position
 
-        /*
-		/// <summary>
-		/// The Object's X inside the current Region
-		/// </summary>
-		protected int m_X;
-
-		/// <summary>
-		/// The Object's Y inside the current Region
-		/// </summary>
-		protected int m_Y;
-
-		/// <summary>
-		/// The Object's Z inside the current Region
-		/// </summary>
-		protected int m_Z;*/
-
 		/// <summary>
 		/// The Object's current Region
 		/// </summary>
@@ -244,33 +228,6 @@ namespace DOL.GS
 		}
 
         /// <summary>
-        /// Get distance to a GameObject
-        /// </summary>
-        /// <param name="obj">Target object</param>
-        /// <returns>The distance, or -1 if the target object is null or in a different region</returns>
-        /*public int GetDistance( GameObject obj )
-        {
-            if ( obj == null || this.CurrentRegionID != obj.CurrentRegionID )
-                return -1;
-            else
-                return GetDistance( (IPoint3D)obj );
-        }*/
-
-        /// <summary>
-        /// Get distance to a GameObject (with z-axis adjustment)
-        /// </summary>
-        /// <param name="obj">Target object</param>
-        /// <param name="zfactor">Z-axis factor - use values between 0 and 1 to decrease influence of Z-axis</param>
-        /// <returns>Adjusted distance, or -1 if the target object is null or in a different region</returns>
-        /*public int GetDistance( GameObject obj, double zfactor )
-        {
-            if ( obj == null || this.CurrentRegionID != obj.CurrentRegionID )
-                return -1;
-            else
-                return base.GetDistance( (IPoint3D)obj, zfactor );
-        }*/
-
-        /// <summary>
         /// Get distance to a point
         /// </summary>
         /// <remarks>
@@ -278,13 +235,13 @@ namespace DOL.GS
         /// </remarks>
         /// <param name="point">Target point</param>
         /// <returns>Distance</returns>
-        public override int GetDistance( IPoint3D point )
+        public override int GetDistanceTo( IPoint3D point )
         {
 			GameObject obj = point as GameObject;
 
 			if ( obj == null || this.CurrentRegionID == obj.CurrentRegionID )
 			{
-				return base.GetDistance( point );
+				return base.GetDistanceTo( point );
 			}
 			else
 			{
@@ -301,13 +258,13 @@ namespace DOL.GS
         /// <param name="point">Target point</param>
         /// <param name="zfactor">Z-axis factor - use values between 0 and 1 to decrease the influence of Z-axis</param>
         /// <returns>Adjusted distance</returns>
-        public override int GetDistance( IPoint3D point, double zfactor )
+        public override int GetDistanceTo( IPoint3D point, double zfactor )
         {
 			GameObject obj = point as GameObject;
 
 			if ( obj == null || this.CurrentRegionID == obj.CurrentRegionID )
 			{
-				return base.GetDistance( point, zfactor );
+				return base.GetDistanceTo( point, zfactor );
 			}
 			else
 			{

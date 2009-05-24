@@ -1851,7 +1851,7 @@ namespace DOL.GS.Spells
 				}
 				else if (Spell.Target.ToLower() == "area")
 				{
-					int dist = t.GetDistance( Caster.GroundTarget );
+					int dist = t.GetDistanceTo( Caster.GroundTarget );
 					if (dist >= 0)
 					{
 						ApplyEffectOnTarget(t, (effectiveness - CalculateAreaVariance(dist, Spell.Radius)));
@@ -1859,7 +1859,7 @@ namespace DOL.GS.Spells
 				}
 				else if (Spell.Target.ToLower() == "cone")
 				{
-					int dist = t.GetDistance(Caster);
+					int dist = t.GetDistanceTo(Caster);
 					if (dist >= 0)
 					{
 						//Cone spells use the range for their variance!
@@ -1868,7 +1868,7 @@ namespace DOL.GS.Spells
 				}
 				else
 				{
-					int dist = t.GetDistance(target);
+					int dist = t.GetDistanceTo(target);
 					if (dist >= 0)
 					{
 						ApplyEffectOnTarget(t, (effectiveness - CalculateAreaVariance(dist, Spell.Radius)));

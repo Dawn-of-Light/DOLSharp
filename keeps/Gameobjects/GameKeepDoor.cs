@@ -345,11 +345,11 @@ namespace DOL.GS.Keeps
 						{
 							if ((GameKeepComponent.eComponentSkin)c.Skin == GameKeepComponent.eComponentSkin.Keep)
 							{
-								keepdistance = GetDistance(c);
+								keepdistance = GetDistanceTo(c);
 							}
 							if ((GameKeepComponent.eComponentSkin)c.Skin == GameKeepComponent.eComponentSkin.Gate)
 							{
-								gatedistance = GetDistance(c);
+								gatedistance = GetDistanceTo(c);
 							}
 							//when these are filled we can stop the search
 							if (keepdistance != int.MaxValue && gatedistance != int.MaxValue)

@@ -98,7 +98,7 @@ namespace DOL.AI.Brain
 			// check for returning to home if to far away
 			if (Body.MaxDistance != 0 && !Body.IsReturningHome)
 			{
-                int distance = Body.GetDistance( Body.SpawnPoint );
+                int distance = Body.GetDistanceTo( Body.SpawnPoint );
 				int maxdistance = Body.MaxDistance > 0 ? Body.MaxDistance : -Body.MaxDistance * AggroRange / 100;
                 if (maxdistance > 0 && distance > maxdistance)
                 {
@@ -594,7 +594,7 @@ namespace DOL.AI.Brain
 						&& living.CurrentRegion == Body.CurrentRegion
 						&& living.ObjectState == GameObject.eObjectState.Active)
 					{
-                        int distance = Body.GetDistance( living );
+                        int distance = Body.GetDistanceTo( living );
 						if (distance < MAX_AGGRO_DISTANCE)
 						{
 							double aggro = amount * Math.Min(500.0 / distance, 1);
