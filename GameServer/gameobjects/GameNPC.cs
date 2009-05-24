@@ -692,15 +692,17 @@ namespace DOL.GS
 
 				if (TargetX != 0 || TargetY != 0 || TargetZ != 0)
 				{
-					long diffnow = (long)FastMath.Abs((Environment.TickCount - MovementStartTick) * m_xAddition);
-					long diffshould = FastMath.Abs((long)m_targetX - m_x);
-					if (diffshould == 0) return m_targetX;
+                    long expectedDistance = FastMath.Abs((long)TargetX - m_x);
 
-					if (diffshould - diffnow < 0)
-					{
+                    if (expectedDistance == 0)
+                        return TargetX;
+
+					long actualDistance = FastMath.Abs((long)(MovementElapsedTicks * DeltaX));
+					
+					if (expectedDistance - actualDistance < 0)
 						return TargetX;
-					}
 				}
+
 				return base.X;
 			}
 		}
@@ -719,14 +721,15 @@ namespace DOL.GS
 
 				if (TargetX != 0 || TargetY != 0 || TargetZ != 0)
 				{
-					long diffnow = (long)FastMath.Abs((Environment.TickCount - MovementStartTick) * m_yAddition);
-					long diffshould = FastMath.Abs((long)TargetY - m_y);
-					if (diffshould == 0) return TargetY;
+                    long expectedDistance = FastMath.Abs((long)TargetY - m_y);
 
-					if (diffshould - diffnow < 0)
-					{
+                    if (expectedDistance == 0)
+                        return TargetY;
+
+					long actualDistance = FastMath.Abs((long)(MovementElapsedTicks * DeltaY));
+
+					if (expectedDistance - actualDistance < 0)
 						return TargetY;
-					}
 				}
 				return base.Y;
 			}
@@ -746,14 +749,15 @@ namespace DOL.GS
 
 				if (TargetX != 0 || TargetY != 0 || TargetZ != 0)
 				{
-					long diffnow = (long)FastMath.Abs((Environment.TickCount - MovementStartTick) * m_zAddition);
-					long diffshould = FastMath.Abs((long)TargetZ - m_z);
-					if (diffshould == 0) return TargetZ;
+                    long expectedDistance = FastMath.Abs((long)TargetZ - m_z);
 
-					if (diffshould - diffnow < 0)
-					{
+                    if (expectedDistance == 0) 
+                        return TargetZ;
+
+					long actualDistance = FastMath.Abs((long)(MovementElapsedTicks * DeltaZ));
+
+					if (expectedDistance - actualDistance < 0)
 						return TargetZ;
-					}
 				}
 				return base.Z;
 			}
@@ -887,41 +891,37 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Recalculates position addition values of this living
-		/// </summary>
-		protected override void UpdateDisplacementPerTick()
-		{
-			if (!IsMoving)
-			{
-				//				log.ErrorFormat("{0} is not moving\n{1}", Name, Environment.StackTrace);
-				m_xAddition = m_yAddition = m_zAddition = 0f;
-				return;
-			}
+		/// Recalculates displacement per tick values of this living
+        /// </summary>
+        protected override void UpdateDisplacementPerTick()
+        {
+            if (!IsMoving)
+            {
+                SetDisplacementPerTick(0, 0, 0);
+                return;
+            }
 
-			if (TargetX != 0 || TargetY != 0 || TargetZ != 0)
-			{
-                float dist = this.GetDistance( new Point3D( m_targetX, m_targetY, m_targetZ ) );
+            if (TargetX != 0 || TargetY != 0 || TargetZ != 0)
+            {
+                double dist = this.GetDistance(new Point3D(TargetX, TargetY, TargetZ));
 
-				if (dist <= 0)
-				{
-					m_xAddition = m_yAddition = m_zAddition = 0f;
-					return;
-				}
-				float speed = CurrentSpeed;
-				float diffx = (long)TargetX - m_x;
-				float diffy = (long)TargetY - m_y;
-				float diffz = (long)TargetZ - m_z;
-				m_xAddition = (diffx * speed / dist) * 0.001f;
-				m_yAddition = (diffy * speed / dist) * 0.001f;
-				m_zAddition = (diffz * speed / dist) * 0.001f;
-				//				log.WarnFormat("{0} is moving to target, dist = {1}, add = ({2} {3} {4})", Name, dist, m_xAddition, m_yAddition, m_zAddition);
-			}
-			else
-			{
-				//				log.WarnFormat("{0} is moving but target is 0", Name);
-				base.UpdateDisplacementPerTick();
-			}
-		}
+                if (dist <= 0)
+                {
+                    SetDisplacementPerTick(0, 0, 0);
+                    return;
+                }
+
+                int speed = CurrentSpeed;
+                double dx = (double)(TargetX - m_x) / dist;
+                double dy = (double)(TargetY - m_y) / dist;
+                double dz = (double)(TargetZ - m_z) / dist;
+
+                SetDisplacementPerTick(dx, dy, dz, speed);
+                return;
+            }
+
+            base.UpdateDisplacementPerTick();
+        }
 
 		/// <summary>
 		/// Returns if the mob has arrived on its target
