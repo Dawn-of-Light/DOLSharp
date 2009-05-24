@@ -250,7 +250,7 @@ namespace DOL.GS
         {
             get
             {
-                return (Client.Account.PrivLevel > 2 && base.IsAttackable);
+                return (Client.Account.PrivLevel < 2 && base.IsAttackable);
             }
         }
 
