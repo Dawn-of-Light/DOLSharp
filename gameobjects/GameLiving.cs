@@ -5036,145 +5036,136 @@ namespace DOL.GS
 		/// <summary>
 		/// The X addition per coordinate of forward movement
 		/// </summary>
-		protected float m_xAddition;
+		//protected float m_deltaX;
 
 		/// <summary>
 		/// The Y addition per coordinate of forward movement
 		/// </summary>
-		protected float m_yAddition;
+		//protected float m_deltaY;
 
 		/// <summary>
 		/// The Z addition per coordinate of forward movement
 		/// </summary>
-		protected float m_zAddition;
+		//protected float m_deltaZ;
 
 		/// <summary>
 		/// Gets the X addition per coordinate of forward movement
 		/// </summary>
-		public float XAddition
-		{
-			get { return m_xAddition; }
-		}
+		public double DeltaX { get; protected set; }
 
 		/// <summary>
 		/// Gets the Y addition per coordinate of forward movement
 		/// </summary>
-		public float YAddition
-		{
-			get { return m_yAddition; }
-		}
+		public double DeltaY { get; protected set; }
 
 		/// <summary>
 		/// Gets the Z addition per coordinate of forward movement
 		/// </summary>
-		public float ZAddition
-		{
-			get { return m_zAddition; }
-		}
+		public double DeltaZ { get; protected set; }
 
 		/// <summary>
-		/// Recalculates position addition values of this living
+		/// Updates displacement per tick values of this living
 		/// </summary>
 		protected virtual void UpdateDisplacementPerTick()
 		{
 			int speed = CurrentSpeed;
-			if (speed == 0)
-			{
-				m_xAddition = m_yAddition = m_zAddition = 0f;
-			}
-			else
-			{
-				float h = (float)(Heading * HEADING_TO_RADIAN);
-				m_xAddition = (float)(-Math.Sin(h) * speed * 0.001);
-				m_yAddition = (float)(Math.Cos(h) * speed * 0.001);
-				m_zAddition = 0f;
-			}
-			//			log.WarnFormat("{0} living pos addition set to ({1} {2} {3})", Name, m_xAddition, m_yAddition, m_zAddition);
+
+            if (speed == 0)
+                SetDisplacementPerTick(0, 0, 0);
+            else
+            {
+                // Living will move in the direction it is currently heading.
+
+                double heading = Heading * HEADING_TO_RADIAN;
+                SetDisplacementPerTick(-Math.Sin(heading), Math.Cos(heading), 0, speed);
+            }
 		}
 
+        protected void SetDisplacementPerTick(double dx, double dy, double dz)
+        {
+            DeltaX = dx;
+            DeltaY = dy;
+            DeltaZ = dz;
+        }
+
+        protected void SetDisplacementPerTick(double dx, double dy, double dz, int speed)
+        {
+            DeltaX = dx * speed * 0.001;
+            DeltaY = dy * speed * 0.001;
+            DeltaZ = dz * speed * 0.001;
+        }
+
+
 		/// <summary>
-		/// Gets or sets the MovementStartTick
+		/// The tick at which the movement started.
 		/// </summary>
-		public int MovementStartTick
-		{
-			get
-			{
-				return m_movementStartTick;
-			}
-			set
-			{
-				m_movementStartTick = value;
-			}
-		}
+		public int MovementStartTick { get; set; }
+
+        /// <summary>
+        /// Elapsed ticks since movement started.
+        /// </summary>
+        protected int MovementElapsedTicks
+        {
+            get { return Environment.TickCount - MovementStartTick; }
+        }
+
 		/// <summary>
-		/// Returns if the npc is moving or not
+		/// True if the living is moving, else false.
 		/// </summary>
-		public virtual bool IsMoving
-		{
-			get
-			{
-				return m_currentSpeed != 0;
-			}
-		}
+		public virtual bool IsMoving 
+        {
+            get { return m_currentSpeed != 0; }
+        }
+
 		/// <summary>
-		/// Gets the current position of this living.
+		/// The current X position of this living.
 		/// </summary>
 		public override int X
 		{
 			get
 			{
-				if (!IsMoving)
-					return base.X;
-				return (int)(base.X + ((Environment.TickCount - MovementStartTick) * m_xAddition));
+                return (IsMoving)
+                    ? (int)(base.X + MovementElapsedTicks * DeltaX)
+                    : base.X;
 			}
 			set
 			{
 				base.X = value;
 			}
 		}
+
 		/// <summary>
-		/// Gets the current position of this living.
+		/// The current Y position of this living.
 		/// </summary>
 		public override int Y
 		{
 			get
 			{
-				if (!IsMoving)
-					return base.Y;
-				return (int)(base.Y + ((Environment.TickCount - MovementStartTick) * m_yAddition));
+                return (IsMoving)
+                    ? (int)(base.Y + MovementElapsedTicks * DeltaY)
+                    : base.Y;
 			}
 			set
 			{
 				base.Y = value;
 			}
 		}
+
 		/// <summary>
-		/// Gets the current position of this living.
+		/// The current Z position of this living.
 		/// </summary>
 		public override int Z
 		{
 			get
 			{
-				if (!IsMoving)
-					return base.Z;
-				return (int)(base.Z + ((Environment.TickCount - MovementStartTick) * m_zAddition));
+                return (IsMoving)
+                    ? (int)(base.Z + MovementElapsedTicks * DeltaZ)
+                    : base.Z;
 			}
 			set
 			{
 				base.Z = value;
 			}
-		}
-
-		/// <summary>
-		/// Gets the position this object will have in the future
-		/// </summary>
-		/// <param name="x">out future x</param>
-		/// <param name="y">out future y</param>
-		/// <param name="timeDiff">the difference between now and "the future" in ms</param>
-		public virtual void GetFuturePosition(out int x, out int y, int timeDiff)
-		{
-			x = (int)(X + (timeDiff * m_xAddition));
-			y = (int)(Y + (timeDiff * m_yAddition));
 		}
 
 		/// <summary>
