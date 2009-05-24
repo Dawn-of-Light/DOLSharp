@@ -146,7 +146,7 @@ namespace DOL.GS.RealmAbilities
 				ticktimer.Stop();
 				removeHandlers();
 			}
-			int dist = target.GetDistance( new Point3D( traparea.X, traparea.Y, traparea.Z ) );
+			int dist = target.GetDistanceTo( new Point3D( traparea.X, traparea.Y, traparea.Z ) );
 			double mod = 1;
 			if (dist > 0)
 				mod = 1 - ((double)dist / 350);

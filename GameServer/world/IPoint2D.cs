@@ -28,14 +28,15 @@ namespace DOL.GS
 		/// <summary>
 		/// X
 		/// </summary>
-		int X { get; }
+        int X { get; set; }
 		/// <summary>
 		/// Y
 		/// </summary>
-		int Y { get; }
+        int Y { get; set; }
 
         ushort GetHeading( IPoint2D point );
         Point2D GetPointFromHeading( ushort heading, int distance );
         int GetDistance( IPoint2D point );
+        void Clear();
 	}
 }
