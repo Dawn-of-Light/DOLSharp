@@ -837,7 +837,7 @@ namespace DOL.GS
 		/// Timer to be set if an OnCloseToTarget
 		/// handler is set before calling the WalkTo function
 		/// </summary>
-		protected CloseToTargetAction m_closeToTargetAction;
+		//protected CloseToTargetAction m_closeToTargetAction;
 		/// <summary>
 		/// Object that this npc is following as weakreference
 		/// </summary>
@@ -1087,7 +1087,6 @@ namespace DOL.GS
 		  {
 		  }
 
-
 		  /// <summary>
 		  /// This function is called when the Mob arrives at its target spot
 		  /// It fires the ArriveAtTarget event
@@ -1096,56 +1095,40 @@ namespace DOL.GS
           {
               GameNPC npc = (GameNPC)m_actionSource;
 
-              if (npc.IsWithinRadius(npc.Target, CONST_WALKTOTOLERANCE))
-              {
-                  if (npc.IsReturningToSpawnPoint && !npc.IsAtTargetPosition)
-                      npc.StopMovingAt(npc.Target);
-                  else
-                      npc.StopMoving();
-
-                  npc.Notify(GameNPCEvent.ArriveAtTarget, npc);
-              }
+              if (npc.IsReturningToSpawnPoint && !npc.IsAtTargetPosition)
+                  npc.StopMovingAt(npc.Target);
               else
-              {
-                  npc.SaveCurrentPosition();
+                  npc.StopMoving();
 
-                  int estimatedTicks = npc.GetEstimatedTicksToArriveAt(npc.Target, npc.CurrentSpeed);
-
-                  Start((estimatedTicks > 1) ? estimatedTicks : 1);
-
-                  if (estimatedTicks > 200)
-                      npc.StartCloseToTargetAction(estimatedTicks);
-
-                  npc.MovementStartTick = Environment.TickCount;
-              }
+              npc.Notify(GameNPCEvent.ArriveAtTarget, npc);
           }
         }
 
 		/// <summary>
 		/// Delayed action that fires an event when an NPC is 200ms away from its target
 		/// </summary>
-		protected class CloseToTargetAction : RegionAction
-		{
-		  /// <summary>
-		  /// Constructs a new CloseToTargetAction
-		  /// </summary>
-		  /// <param name="actionSource">The action source</param>
-		  public CloseToTargetAction(GameNPC actionSource)
-			: base(actionSource)
-		  {
-		  }
+        //protected class CloseToTargetAction : RegionAction
+        //{
+        //  /// <summary>
+        //  /// Constructs a new CloseToTargetAction
+        //  /// </summary>
+        //  /// <param name="actionSource">The action source</param>
+        //  public CloseToTargetAction(GameNPC actionSource)
+        //    : base(actionSource)
+        //  {
+        //  }
 
-		  /// <summary>
-		  /// This function is called when the npc is close to its target
-		  /// It will fire the CloseToTarget event
-		  /// </summary>
-		  protected override void OnTick()
-		  {
-		  	GameNPC npc = (GameNPC) m_actionSource;
-		  	npc.m_closeToTargetAction = null;
-		  	npc.Notify(GameNPCEvent.CloseToTarget, npc);
-		  }
-        }
+        //  /// <summary>
+        //  /// This function is called when the npc is close to its target
+        //  /// It will fire the CloseToTarget event
+        //  /// </summary>
+        //  protected override void OnTick()
+        //  {
+        //    GameNPC npc = (GameNPC) m_actionSource;
+        //    npc.m_closeToTargetAction = null;
+        //    npc.Notify(GameNPCEvent.CloseToTarget, npc);
+        //  }
+        //}
 
         public virtual void CancelWalkToTimer()
         {
@@ -1154,11 +1137,11 @@ namespace DOL.GS
                 m_arriveAtTargetAction.Stop();
                 m_arriveAtTargetAction = null;
             }
-            if (m_closeToTargetAction != null)
-            {
-                m_closeToTargetAction.Stop();
-                m_closeToTargetAction = null;
-            }
+            //if (m_closeToTargetAction != null)
+            //{
+            //    m_closeToTargetAction.Stop();
+            //    m_closeToTargetAction = null;
+            //}
 		}
 
         /// <summary>
@@ -1188,6 +1171,8 @@ namespace DOL.GS
             X = target.X;
             Y = target.Y;
             Z = target.Z;
+
+            MovementStartTick = Environment.TickCount;
         }
 
 		/// <summary>
@@ -1246,9 +1231,8 @@ namespace DOL.GS
             int estimatedTicks = GetEstimatedTicksToArriveAt(Target, speed);
 
             StartArriveAtTargetAction(estimatedTicks);
-            StartCloseToTargetAction(estimatedTicks);
+            //StartCloseToTargetAction(estimatedTicks);
 
-            MovementStartTick = Environment.TickCount;
             BroadcastUpdate();
 		}
 
@@ -1258,11 +1242,11 @@ namespace DOL.GS
             m_arriveAtTargetAction.Start((estimatedTicks > 1) ? estimatedTicks : 1);
         }
 
-        private void StartCloseToTargetAction(int estimatedTicks)
-        {
-            m_closeToTargetAction = new CloseToTargetAction(this);
-            m_closeToTargetAction.Start((estimatedTicks > 200) ? (estimatedTicks - 200) : 1);
-        }
+        //private void StartCloseToTargetAction(int estimatedTicks)
+        //{
+        //    m_closeToTargetAction = new CloseToTargetAction(this);
+        //    m_closeToTargetAction.Start((estimatedTicks > 200) ? (estimatedTicks - 200) : 1);
+        //}
 
 		/// <summary>
 		/// Walk to the spawn point
@@ -1612,6 +1596,7 @@ namespace DOL.GS
 
 			//if (Point3D.GetDistance(npc.CurrentWayPoint, npc)<100)
 			//not sure because here use point3D get distance but why??
+
             if( this.IsWithinRadius( CurrentWayPoint, 100 ) )
 			{
 				if (CurrentWayPoint.Type == ePathType.Path_Reverse && CurrentWayPoint.FiredFlag)
@@ -1625,7 +1610,7 @@ namespace DOL.GS
 			}
 			if (CurrentWayPoint != null)
 			{
-				GameEventMgr.AddHandler(this, GameNPCEvent.CloseToTarget, new DOLEventHandler(OnCloseToWaypoint));
+                GameEventMgr.AddHandler(this, GameNPCEvent.ArriveAtTarget, new DOLEventHandler(OnArriveAtWaypoint));
 				WalkTo(CurrentWayPoint, Math.Min(speed, CurrentWayPoint.MaxSpeed));
 				m_IsMovingOnPath = true;
 				Notify(GameNPCEvent.PathMoveStarts, this);
@@ -1637,37 +1622,37 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Stop move on path
+		/// Stop moving on path.
 		/// </summary>
 		public void StopMovingOnPath()
 		{
 			if (!IsMovingOnPath)
 				return;
 
-			GameEventMgr.RemoveHandler(this, GameNPCEvent.CloseToTarget, new DOLEventHandler(OnCloseToWaypoint));
+            GameEventMgr.RemoveHandler(this, GameNPCEvent.ArriveAtTarget, new DOLEventHandler(OnArriveAtWaypoint));
 			Notify(GameNPCEvent.PathMoveEnds, this);
 			m_IsMovingOnPath = false;
 		}
 
-		/// <summary>
-		/// decides what to do on reached waypoint in path
-		/// </summary>
-		/// <param name="e"></param>
-		/// <param name="n"></param>
-		/// <param name="args"></param>
-		protected void OnCloseToWaypoint(DOLEvent e, object n, EventArgs args)
-		{
-			if (!IsMovingOnPath || n != this)
-				return;
+        /// <summary>
+        /// decides what to do on reached waypoint in path
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="n"></param>
+        /// <param name="args"></param>
+        protected void OnArriveAtWaypoint(DOLEvent e, object n, EventArgs args)
+        {
+            if (!IsMovingOnPath || n != this)
+                return;
 
-			if (CurrentWayPoint != null)
-			{
-				WaypointDelayAction waitTimer = new WaypointDelayAction(this);
-				waitTimer.Start(Math.Max(1, CurrentWayPoint.WaitTime * 100));
-			}
-			else
-				StopMovingOnPath();
-		}
+            if (CurrentWayPoint != null)
+            {
+                WaypointDelayAction waitTimer = new WaypointDelayAction(this);
+                waitTimer.Start(Math.Max(1, CurrentWayPoint.WaitTime * 100));
+            }
+            else
+                StopMovingOnPath();
+        }
 
 		/// <summary>
 		/// Delays movement to the next waypoint
