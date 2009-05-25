@@ -866,10 +866,27 @@ namespace DOL.GS
 			set { m_pathID = value; }
 		}
 
+        private IPoint3D m_target = new Point3D(0, 0, 0);
+
         /// <summary>
         /// The target position.
         /// </summary>
-        public virtual IPoint3D Target { get; protected set; }
+        public virtual IPoint3D Target 
+        {
+            get
+            {
+                return m_target;
+            }
+
+            protected set
+            {
+                if (value != m_target)
+                {
+                    SaveCurrentPosition();
+                    m_target = value;
+                }
+            }
+        }
 
 		/// <summary>
 		/// Recalculates displacement per tick values of this living
