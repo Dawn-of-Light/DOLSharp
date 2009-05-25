@@ -3080,7 +3080,7 @@ namespace DOL.GS
 		/// Starts a melee attack on a target
 		/// </summary>
 		/// <param name="target">The object to attack</param>
-		public override void StartMeleeAttack(GameObject target)
+		public override void StartAttack(GameObject target)
 		{
 			if (target == null)
 				return;
@@ -3104,7 +3104,7 @@ namespace DOL.GS
             SetLastMeleeAttackTick();
             StartMeleeAttackTimer();
 
-			base.StartMeleeAttack(target);
+			base.StartAttack(target);
 
 			if (AttackState)
 			{
@@ -3394,7 +3394,7 @@ namespace DOL.GS
 			else SwitchWeapon(eActiveWeaponSlot.Standard);
 			StopAttack();
 			StopMoving();
-			StartMeleeAttack(target);
+			StartAttack(target);
 		}
 
 		/// <summary>
@@ -3404,7 +3404,7 @@ namespace DOL.GS
 		public void SwitchToRanged(GameObject target)
 		{
 			SwitchWeapon(eActiveWeaponSlot.Distance);
-			StartMeleeAttack(target);
+			StartAttack(target);
 			StopFollowing();
 		}
 

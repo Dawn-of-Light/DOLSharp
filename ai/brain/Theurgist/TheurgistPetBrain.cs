@@ -63,14 +63,14 @@ namespace DOL.AI.Brain
 			{
 				m_melee = true;
 				GameLiving target = m_target;
-				if (target != null) Body.StartMeleeAttack(target);
+				if (target != null) Body.StartAttack(target);
 				return;
 			}
 			if (e == GameLivingEvent.CastFailed)
 			{
 
 				GameLiving target = m_target;
-				if (target != null) Body.StartMeleeAttack(target);
+				if (target != null) Body.StartAttack(target);
 				return;
 
 			}
@@ -85,7 +85,7 @@ namespace DOL.AI.Brain
 			if (target != null && target.IsAlive)
 			{
 				if (!CheckSpells(eCheckSpellType.Offensive))
-					Body.StartMeleeAttack(target);
+					Body.StartAttack(target);
 			}
 			else
 			{

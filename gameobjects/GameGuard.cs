@@ -25,9 +25,9 @@ namespace DOL.GS
 			return list;
 		}
 
-		public override void StartMeleeAttack(GameObject attackTarget)
+		public override void StartAttack(GameObject attackTarget)
 		{
-			base.StartMeleeAttack(attackTarget);
+			base.StartAttack(attackTarget);
 
 			switch (Realm)
 			{

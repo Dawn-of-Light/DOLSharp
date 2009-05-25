@@ -49,7 +49,7 @@ namespace DOL.AI.Brain
 						{
 							Body.SpellTimer.Stop();
 						}
-						Body.StartMeleeAttack(Body.TargetObject);
+						Body.StartAttack(Body.TargetObject);
 					}
 					return;
 				}

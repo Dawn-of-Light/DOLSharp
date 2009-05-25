@@ -96,10 +96,10 @@ namespace DOL.GS
 		/// Necromancer can only attack when it's not a shade.
 		/// </summary>
 		/// <param name="attackTarget"></param>
-		public override void StartMeleeAttack(GameObject attackTarget)
+		public override void StartAttack(GameObject attackTarget)
 		{
 			if (!IsShade)
-				base.StartMeleeAttack(attackTarget);
+				base.StartAttack(attackTarget);
 			else
 				Out.SendMessage("You cannot enter combat while in shade form!",
 				    eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
