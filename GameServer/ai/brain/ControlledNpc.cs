@@ -697,7 +697,7 @@ namespace DOL.AI.Brain
 				if (!Body.IsAttacking || target != Body.TargetObject)
 				{
 					if (!CheckSpells(eCheckSpellType.Offensive))
-						Body.StartMeleeAttack(target);
+						Body.StartAttack(target);
 				}
 			}
 			else

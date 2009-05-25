@@ -832,7 +832,7 @@ namespace DOL.GS.Commands
             {
                 if ( player.Name == args[2] )
                 {
-                    targetMob.StartMeleeAttack( player );
+                    targetMob.StartAttack( player );
                     break;
                 }
             }

@@ -60,7 +60,7 @@ namespace DOL.GS.Effects
 			// other players will see attack mode after pos update packet is sent
 			if (!m_owner.AttackState)
 			{
-				m_owner.StartMeleeAttack(m_engageTarget);
+				m_owner.StartAttack(m_engageTarget);
 				if (m_owner is GamePlayer)
 					(m_owner as GamePlayer).Out.SendAttackMode(true);
 				//m_engageSource.Out.SendMessage("You enter combat mode to engage your target!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);

@@ -43,7 +43,7 @@ namespace DOL.GS
   		set { turretSpell = value; }
   	}
 
-	public override void StartMeleeAttack(GameObject attackTarget)
+	public override void StartAttack(GameObject attackTarget)
 	{
 	  if (attackTarget == null)
 		return;
@@ -73,7 +73,7 @@ namespace DOL.GS
 	
 	  if(Brain is TurretMainPetTankBrain)
 	  {
-		base.StartMeleeAttack(TargetObject);
+		base.StartAttack(TargetObject);
 	  }
 	}
 

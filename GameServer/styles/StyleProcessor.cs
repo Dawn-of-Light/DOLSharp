@@ -216,7 +216,7 @@ namespace DOL.GS.Styles
 				//Changing the attack state clears out the styles...
 				if (living.AttackState == false)
 				{
-					living.StartMeleeAttack(player.TargetObject);
+					living.StartAttack(player.TargetObject);
 				}
 
 				if (living.TargetObject == null)
