@@ -142,7 +142,7 @@ namespace DOL.AI.Brain
         /// <param name="living"></param>
         private void SwitchTarget(GameLiving living)
         {
-            Body.StartMeleeAttack(living);
+            Body.StartAttack(living);
         }
 
         /// <summary>

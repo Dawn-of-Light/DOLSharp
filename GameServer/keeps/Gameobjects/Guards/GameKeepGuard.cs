@@ -202,7 +202,7 @@ namespace DOL.GS.Keeps
 						{
                             if ( guard.IsWithinRadius( living, guard.AttackRange ) )
 							{
-								guard.StartMeleeAttack(living);
+								guard.StartAttack(living);
 								return;
 							}
 						}
@@ -248,11 +248,11 @@ namespace DOL.GS.Keeps
 		/// Override for StartAttack which chooses Ranged or Melee attack
 		/// </summary>
 		/// <param name="attackTarget"></param>
-		public override void StartMeleeAttack(GameObject attackTarget)
+		public override void StartAttack(GameObject attackTarget)
 		{
 			if (IsPortalKeepGuard)
 			{
-				base.StartMeleeAttack(attackTarget);
+				base.StartAttack(attackTarget);
 				return;
 			}
 
@@ -322,7 +322,7 @@ namespace DOL.GS.Keeps
 					}
 				}
 
-				base.StartMeleeAttack(TargetObject);
+				base.StartAttack(TargetObject);
 			}
 		}
 
@@ -412,7 +412,7 @@ namespace DOL.GS.Keeps
 						if ( this.IsWithinRadius( ad.Attacker, AttackRange ) )
 						{
 							//attack it
-							StartMeleeAttack(ad.Attacker);
+							StartAttack(ad.Attacker);
 						}
 					}
 				}
