@@ -69,7 +69,7 @@ namespace DOL.GS.SkillHandler
 				return;
 			}
 			player.RangeAttackType = GameLiving.eRangeAttackType.Critical;
-			player.StartMeleeAttack(player.TargetObject);
+			player.StartAttack(player.TargetObject);
 		}
 	}
 }
