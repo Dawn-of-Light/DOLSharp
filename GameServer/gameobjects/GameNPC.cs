@@ -3399,6 +3399,21 @@ namespace DOL.GS
 			return base.OnInterruptTick(attacker, attackType);
 		}
 
+        /// <summary>
+        /// The NPC is taking damage.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="damageType"></param>
+        /// <param name="damageAmount"></param>
+        /// <param name="criticalAmount"></param>
+        public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
+        {
+            base.TakeDamage(source, damageType, damageAmount, criticalAmount);
+
+            if (IsAlive && IsLowHealth)
+                Notify(GameLivingEvent.LowHealth, this, null);
+        }
+
 		/// <summary>
 		/// The time to wait before each mob respawn
 		/// </summary>
@@ -3439,7 +3454,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Is the mob alive
+		/// True if NPC is alive, else false.
 		/// </summary>
 		public override bool IsAlive
 		{
@@ -3453,7 +3468,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Is the mob respawning
+		/// True, if the mob is respawning, else false.
 		/// </summary>
 		public bool IsRespawning
 		{
