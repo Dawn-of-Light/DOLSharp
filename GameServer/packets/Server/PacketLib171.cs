@@ -144,7 +144,7 @@ namespace DOL.GS.PacketHandler
 			if (!npc.IsAtTargetPosition)
 			{
 				speed = npc.CurrentSpeed;
-				speedZ = (ushort)npc.DeltaZ;
+				speedZ = (ushort)npc.TickSpeedZ;
 			}
 			pak.WriteShort((ushort)npc.ObjectID);
 			pak.WriteShort((ushort)(speed));

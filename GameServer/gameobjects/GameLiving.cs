@@ -4914,7 +4914,7 @@ namespace DOL.GS
 				ushort oldHeading = base.Heading;
 				base.Heading = value;
 				if (base.Heading != oldHeading)
-					UpdateDisplacementPerTick();
+					UpdateTickSpeed();
 			}
 		}
 		/// <summary>
@@ -4929,7 +4929,7 @@ namespace DOL.GS
 			set
 			{
 				m_currentSpeed = value;
-				UpdateDisplacementPerTick();
+				UpdateTickSpeed();
 			}
 		}
 
@@ -5027,74 +5027,68 @@ namespace DOL.GS
 
 		#endregion
 		#region Movement
-		//Movement relevant variables
-		/// <summary>
-		/// Holds when the movement started
+		/// The tick when the movement started.
 		/// </summary>
 		private int m_movementStartTick;
 
 		/// <summary>
-		/// The X addition per coordinate of forward movement
+		/// The tick speed in X direction.
 		/// </summary>
-		//protected float m_deltaX;
+		public double TickSpeedX { get; protected set; }
 
 		/// <summary>
-		/// The Y addition per coordinate of forward movement
+        /// The tick speed in Y direction.
 		/// </summary>
-		//protected float m_deltaY;
+		public double TickSpeedY { get; protected set; }
 
 		/// <summary>
-		/// The Z addition per coordinate of forward movement
+        /// The tick speed in Z direction.
 		/// </summary>
-		//protected float m_deltaZ;
+		public double TickSpeedZ { get; protected set; }
 
 		/// <summary>
-		/// Gets the X addition per coordinate of forward movement
+		/// Updates tick speed for this living.
 		/// </summary>
-		public double DeltaX { get; protected set; }
-
-		/// <summary>
-		/// Gets the Y addition per coordinate of forward movement
-		/// </summary>
-		public double DeltaY { get; protected set; }
-
-		/// <summary>
-		/// Gets the Z addition per coordinate of forward movement
-		/// </summary>
-		public double DeltaZ { get; protected set; }
-
-		/// <summary>
-		/// Updates displacement per tick values of this living
-		/// </summary>
-		protected virtual void UpdateDisplacementPerTick()
+		protected virtual void UpdateTickSpeed()
 		{
 			int speed = CurrentSpeed;
 
             if (speed == 0)
-                SetDisplacementPerTick(0, 0, 0);
+                SetTickSpeed(0, 0, 0);
             else
             {
                 // Living will move in the direction it is currently heading.
 
                 double heading = Heading * HEADING_TO_RADIAN;
-                SetDisplacementPerTick(-Math.Sin(heading), Math.Cos(heading), 0, speed);
+                SetTickSpeed(-Math.Sin(heading), Math.Cos(heading), 0, speed);
             }
 		}
 
-        protected void SetDisplacementPerTick(double dx, double dy, double dz)
+        /// <summary>
+        /// Set the tick speed, that is the distance covered in one tick.
+        /// </summary>
+        /// <param name="dx"></param>
+        /// <param name="dy"></param>
+        /// <param name="dz"></param>
+        protected void SetTickSpeed(double dx, double dy, double dz)
         {
-            DeltaX = dx;
-            DeltaY = dy;
-            DeltaZ = dz;
+            TickSpeedX = dx;
+            TickSpeedY = dy;
+            TickSpeedZ = dz;
         }
 
-        protected void SetDisplacementPerTick(double dx, double dy, double dz, int speed)
+        /// <summary>
+        /// Set the tick speed, that is the distance covered in one tick.
+        /// </summary>
+        /// <param name="dx"></param>
+        /// <param name="dy"></param>
+        /// <param name="dz"></param>
+        /// <param name="speed"></param>
+        protected void SetTickSpeed(double dx, double dy, double dz, int speed)
         {
-            DeltaX = dx * speed * 0.001;
-            DeltaY = dy * speed * 0.001;
-            DeltaZ = dz * speed * 0.001;
+            double tickSpeed = speed * 0.001;
+            SetTickSpeed(dx * tickSpeed, dy * tickSpeed, dz * tickSpeed);
         }
-
 
 		/// <summary>
 		/// The tick at which the movement started.
@@ -5125,7 +5119,7 @@ namespace DOL.GS
 			get
 			{
                 return (IsMoving)
-                    ? (int)(base.X + MovementElapsedTicks * DeltaX)
+                    ? (int)(base.X + MovementElapsedTicks * TickSpeedX)
                     : base.X;
 			}
 			set
@@ -5142,7 +5136,7 @@ namespace DOL.GS
 			get
 			{
                 return (IsMoving)
-                    ? (int)(base.Y + MovementElapsedTicks * DeltaY)
+                    ? (int)(base.Y + MovementElapsedTicks * TickSpeedY)
                     : base.Y;
 			}
 			set
@@ -5159,7 +5153,7 @@ namespace DOL.GS
 			get
 			{
                 return (IsMoving)
-                    ? (int)(base.Z + MovementElapsedTicks * DeltaZ)
+                    ? (int)(base.Z + MovementElapsedTicks * TickSpeedZ)
                     : base.Z;
 			}
 			set
@@ -5181,9 +5175,8 @@ namespace DOL.GS
 		public override bool MoveTo(ushort regionID, int x, int y, int z, ushort heading)
 		{
 			if (regionID != CurrentRegionID)
-			{
 				CancelAllConcentrationEffects();
-			}
+
 			return base.MoveTo(regionID, x, y, z, heading);
 		}
 

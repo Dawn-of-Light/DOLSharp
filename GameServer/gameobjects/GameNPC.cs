@@ -685,7 +685,7 @@ namespace DOL.GS
                     if (expectedDistance == 0)
                         return Target.X;
 
-					long actualDistance = FastMath.Abs((long)(MovementElapsedTicks * DeltaX));
+					long actualDistance = FastMath.Abs((long)(MovementElapsedTicks * TickSpeedX));
 					
 					if (expectedDistance - actualDistance < 0)
 						return Target.X;
@@ -714,7 +714,7 @@ namespace DOL.GS
                     if (expectedDistance == 0)
                         return Target.Y;
 
-					long actualDistance = FastMath.Abs((long)(MovementElapsedTicks * DeltaY));
+					long actualDistance = FastMath.Abs((long)(MovementElapsedTicks * TickSpeedY));
 
 					if (expectedDistance - actualDistance < 0)
 						return Target.Y;
@@ -742,7 +742,7 @@ namespace DOL.GS
                     if (expectedDistance == 0) 
                         return Target.Z;
 
-					long actualDistance = FastMath.Abs((long)(MovementElapsedTicks * DeltaZ));
+					long actualDistance = FastMath.Abs((long)(MovementElapsedTicks * TickSpeedZ));
 
 					if (expectedDistance - actualDistance < 0)
 						return Target.Z;
@@ -889,13 +889,13 @@ namespace DOL.GS
         }
 
 		/// <summary>
-		/// Recalculates displacement per tick values of this living
+		/// Updates the tick speed for this living.
         /// </summary>
-        protected override void UpdateDisplacementPerTick()
+        protected override void UpdateTickSpeed()
         {
             if (!IsMoving)
             {
-                SetDisplacementPerTick(0, 0, 0);
+                SetTickSpeed(0, 0, 0);
                 return;
             }
 
@@ -905,7 +905,7 @@ namespace DOL.GS
 
                 if (dist <= 0)
                 {
-                    SetDisplacementPerTick(0, 0, 0);
+                    SetTickSpeed(0, 0, 0);
                     return;
                 }
 
@@ -913,11 +913,11 @@ namespace DOL.GS
                 double dy = (double)(Target.Y - m_y) / dist;
                 double dz = (double)(Target.Z - m_z) / dist;
 
-                SetDisplacementPerTick(dx, dy, dz, CurrentSpeed);
+                SetTickSpeed(dx, dy, dz, CurrentSpeed);
                 return;
             }
 
-            base.UpdateDisplacementPerTick();
+            base.UpdateTickSpeed();
         }
 
 		/// <summary>
@@ -1112,6 +1112,9 @@ namespace DOL.GS
           {
               GameNPC npc = (GameNPC)m_actionSource;
 
+              // Aredhel: Target check might not be necessary, but only affects 
+              // AggressiveBrain at the moment.
+
               if (npc.IsReturningToSpawnPoint && !npc.IsAtTargetPosition)
                   npc.StopMovingAt(npc.Target);
               else
@@ -1121,32 +1124,6 @@ namespace DOL.GS
           }
         }
 
-		/// <summary>
-		/// Delayed action that fires an event when an NPC is 200ms away from its target
-		/// </summary>
-        //protected class CloseToTargetAction : RegionAction
-        //{
-        //  /// <summary>
-        //  /// Constructs a new CloseToTargetAction
-        //  /// </summary>
-        //  /// <param name="actionSource">The action source</param>
-        //  public CloseToTargetAction(GameNPC actionSource)
-        //    : base(actionSource)
-        //  {
-        //  }
-
-        //  /// <summary>
-        //  /// This function is called when the npc is close to its target
-        //  /// It will fire the CloseToTarget event
-        //  /// </summary>
-        //  protected override void OnTick()
-        //  {
-        //    GameNPC npc = (GameNPC) m_actionSource;
-        //    npc.m_closeToTargetAction = null;
-        //    npc.Notify(GameNPCEvent.CloseToTarget, npc);
-        //  }
-        //}
-
         public virtual void CancelWalkToTimer()
         {
             if (m_arriveAtTargetAction != null)
@@ -1154,11 +1131,6 @@ namespace DOL.GS
                 m_arriveAtTargetAction.Stop();
                 m_arriveAtTargetAction = null;
             }
-            //if (m_closeToTargetAction != null)
-            //{
-            //    m_closeToTargetAction.Stop();
-            //    m_closeToTargetAction = null;
-            //}
 		}
 
         /// <summary>
@@ -1167,7 +1139,7 @@ namespace DOL.GS
         /// <param name="target"></param>
         /// <param name="speed"></param>
         /// <returns></returns>
-        private int GetEstimatedTicksToArriveAt(IPoint3D target, int speed)
+        private int GetTicksToArriveAt(IPoint3D target, int speed)
         {
             return GetDistanceTo(target) * 1000 / speed;
         }
@@ -1242,28 +1214,18 @@ namespace DOL.GS
             m_Heading = GetHeading(Target);
             m_currentSpeed = speed; 
 
-            UpdateDisplacementPerTick();
+            UpdateTickSpeed();
             Notify(GameNPCEvent.WalkTo, this, new WalkToEventArgs(Target, speed));
 
-            int estimatedTicks = GetEstimatedTicksToArriveAt(Target, speed);
-
-            StartArriveAtTargetAction(estimatedTicks);
-            //StartCloseToTargetAction(estimatedTicks);
-
+            StartArriveAtTargetAction(GetTicksToArriveAt(Target, speed));
             BroadcastUpdate();
 		}
 
-        private void StartArriveAtTargetAction(int estimatedTicks)
+        private void StartArriveAtTargetAction(int requiredTicks)
         {
             m_arriveAtTargetAction = new ArriveAtTargetAction(this);
-            m_arriveAtTargetAction.Start((estimatedTicks > 1) ? estimatedTicks : 1);
+            m_arriveAtTargetAction.Start((requiredTicks > 1) ? requiredTicks : 1);
         }
-
-        //private void StartCloseToTargetAction(int estimatedTicks)
-        //{
-        //    m_closeToTargetAction = new CloseToTargetAction(this);
-        //    m_closeToTargetAction.Start((estimatedTicks > 200) ? (estimatedTicks - 200) : 1);
-        //}
 
 		/// <summary>
 		/// Walk to the spawn point
@@ -1295,6 +1257,10 @@ namespace DOL.GS
             //Satyr: Actually this is not the right place to forget aggro but
             //for now we may stay at this until the whole logic is redesigned.
             //Correct would be: Forget Aggro as soon as arrived at spot
+            //
+            // Aredhel: Actually, this brain stuff doesn't belong here in the 
+            // first place, get rid of this asap.
+
 			if(brain != null && brain.IsAggroing)
 			{
 				brain.ClearAggroList();
@@ -1322,7 +1288,7 @@ namespace DOL.GS
 			m_currentSpeed = speed;
 
 			MovementStartTick = Environment.TickCount;
-			UpdateDisplacementPerTick();
+			UpdateTickSpeed();
 			BroadcastUpdate();
 		}
 
@@ -1356,7 +1322,7 @@ namespace DOL.GS
             if (IsMoving)
             {
                 m_currentSpeed = 0;
-                UpdateDisplacementPerTick();
+                UpdateTickSpeed();
             }
 
             SavePosition(target);
@@ -1424,6 +1390,9 @@ namespace DOL.GS
 				else m_lastAttackTickPvP = m_CurrentRegion.Time;
 				if (this.CurrentRegion.Time - LastAttackedByEnemyTick > 10 * 1000)
 				{
+                    // Aredhel: Erm, checking for spells in a follow method, what did we create
+                    // brain classes for again?
+
 					//Check for negatively casting spells
 					StandardMobBrain stanBrain = (StandardMobBrain)Brain;
 					if (stanBrain != null)
@@ -1609,10 +1578,8 @@ namespace DOL.GS
 					log.Warn("No path to travel on for " + Name);
 				return;
 			}
-			PathingNormalSpeed = speed;
 
-			//if (Point3D.GetDistance(npc.CurrentWayPoint, npc)<100)
-			//not sure because here use point3D get distance but why??
+			PathingNormalSpeed = speed;
 
             if( this.IsWithinRadius( CurrentWayPoint, 100 ) )
 			{
@@ -1620,10 +1587,9 @@ namespace DOL.GS
 					CurrentWayPoint = CurrentWayPoint.Prev;
 				else
 					CurrentWayPoint = CurrentWayPoint.Next;
+
 				if ((CurrentWayPoint.Type == ePathType.Loop) && (CurrentWayPoint.Next == null))
-				{
 					CurrentWayPoint = MovementMgr.FindFirstPathPoint(CurrentWayPoint);
-				}
 			}
 			if (CurrentWayPoint != null)
 			{
