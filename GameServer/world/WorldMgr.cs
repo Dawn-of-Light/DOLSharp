@@ -288,6 +288,10 @@ namespace DOL.GS
 		/// Zone height INI field
 		/// </summary>
 		private const string ENTRY_ZONE_HEIGHT = "height";
+        /// <summary>
+        /// Zone water level INI field
+        /// </summary>
+        private const string ENTRY_ZONE_WATER_LEVEL = "waterlevel";
 
 		/// <summary>
 		/// Relocation threads for relocation of zones
@@ -450,6 +454,7 @@ namespace DOL.GS
                 zoneData.Description = config[ENTRY_ZONE_DESC].GetString();
                 zoneData.RegionID = (ushort)config[ENTRY_ZONE_REGIONID].GetInt();
                 zoneData.ZoneID = (ushort)config[ENTRY_ZONE_ZONEID].GetInt();
+				zoneData.WaterLevel = (int)config[ENTRY_ZONE_WATER_LEVEL].GetInt(-1);
 
                 RegisterZone(zoneData, zoneData.ZoneID, zoneData.RegionID, zoneData.Description);
 
@@ -899,8 +904,11 @@ namespace DOL.GS
                 return;
             }
             
+            if (data.WaterLevel < 0)
+                data.WaterLevel = reg.WaterLevel;
+            
             Zone zone = new Zone(
-                reg, zoneID, zoneName, data.OffX * 8192, data.OffY * 8192, data.Width * 8192, data.Height * 8192, data.ZoneID);
+                reg, zoneID, zoneName, data.OffX * 8192, data.OffY * 8192, data.Width * 8192, data.Height * 8192, data.ZoneID, data.WaterLevel);
 
             //Dinberg:Instances
             //ZoneID will always be constant as last parameter, because ZoneSkinID will effectively be a bluff, to remember
