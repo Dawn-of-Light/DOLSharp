@@ -318,6 +318,40 @@ namespace DOL.GS
 
 		#endregion
 
+        /// <summary>
+        /// Chance to fumble an attack.
+        /// </summary>
+        public virtual double ChanceToFumble
+        {
+            get
+            {
+                double chanceToFumble = GetModified(eProperty.FumbleChance);
+                chanceToFumble *= 0.001;
+
+                if (chanceToFumble > 0.99) chanceToFumble = 0.99;
+                if (chanceToFumble < 0) chanceToFumble = 0;
+
+                return chanceToFumble;
+            }
+        }
+
+        /// <summary>
+        /// Chance to be missed by an attack.
+        /// </summary>
+        public virtual double ChanceToBeMissed
+        {
+            get
+            {
+                double chanceToBeMissed = GetModified(eProperty.MissHit);
+                chanceToBeMissed *= 0.001;
+
+                if (chanceToBeMissed > 0.99) chanceToBeMissed = 0.99;
+                if (chanceToBeMissed < 0) chanceToBeMissed = 0;
+
+                return chanceToBeMissed;
+            }
+        }
+
 		/// <summary>
 		/// The state of the ranged attack
 		/// </summary>
@@ -2733,6 +2767,14 @@ namespace DOL.GS
 			return 0;
 		}
 
+        private bool IsValidTarget
+        {
+            get
+            {
+                return EffectList.GetAllOfType(typeof(NecromancerShadeEffect)).Count > 0;
+            }
+        }
+
         // **************************************************************************
         // Aredhel: What the ... is this an attempt to write an even longer
         // method than DetailDisplayHandler???
@@ -2746,6 +2788,9 @@ namespace DOL.GS
 		/// <returns>the result of the attack</returns>
 		public virtual eAttackResult CalculateEnemyAttackResult(AttackData ad, InventoryItem weapon)
 		{
+            if (!IsValidTarget)
+                return eAttackResult.NoValidTarget;
+
 			//1.To-Hit modifiers on styles do not any effect on whether your opponent successfully Evades, Blocks, or Parries. – Grab Bag 2/27/03
 			//2.The correct Order of Resolution in combat is Intercept, Evade, Parry, Block (Shield), Guard, Hit/Miss, and then Bladeturn. – Grab Bag 2/27/03, Grab Bag 4/4/03
 			//3.For every person attacking a monster, a small bonus is applied to each player's chance to hit the enemy. Allowances are made for those who don't technically hit things when they are participating in the raid – for example, a healer gets credit for attacking a monster when he heals someone who is attacking the monster, because that's what he does in a battle. – Grab Bag 6/6/03
@@ -2758,9 +2803,7 @@ namespace DOL.GS
 			InterceptEffect intercept = null;
 			GameSpellEffect bladeturn = null;
 			EngageEffect engage = null;
-			NecromancerShadeEffect shade = null;
 			// ML effects
-			BodyguardEffect bodyguard = null;
 			GameSpellEffect phaseshift = null;
 			GameSpellEffect grapple = null;
 			GameSpellEffect briddleguard = null;
@@ -2805,21 +2848,6 @@ namespace DOL.GS
 						continue;
 					}
 
-					if (effect is NecromancerShadeEffect)
-					{
-						if (shade == null)
-							shade = (NecromancerShadeEffect)effect;
-						break;
-					}
-
-					// ML effects
-					if (effect is BodyguardEffect)
-					{
-						if (bodyguard == null && ((BodyguardEffect)effect).GuardTarget == this)
-							bodyguard = (BodyguardEffect)effect;
-						continue;
-					}
-
 					if (effect is GameSpellEffect)
 					{
 						switch ((effect as GameSpellEffect).Spell.SpellType)
@@ -2859,10 +2887,6 @@ namespace DOL.GS
 				}
 			}
 
-			// Necromancer Shade
-			if (shade != null)
-				return eAttackResult.NoValidTarget;
-
 			bool stealthStyle = false;
 			if (ad.Style != null && ad.Style.StealthRequirement && ad.Attacker is GamePlayer && StyleProcessor.CanUseStyle((GamePlayer)ad.Attacker, ad.Style, weapon))
 			{
@@ -2873,21 +2897,36 @@ namespace DOL.GS
 				briddleguard = null;
 			}
 
-			// Eden - real Bodyguard
-			if (bodyguard != null && ad.Attacker.ActiveWeaponSlot != eActiveWeaponSlot.Distance 
-				&& bodyguard.GuardSource.IsWithinRadius(bodyguard.GuardTarget, BodyguardAbilityHandler.BODYGUARD_DISTANCE) && !bodyguard.GuardSource.IsCasting
-			&& ((bodyguard.GuardTarget.TempProperties.getLongProperty("PLAYERPOSITION_LASTMOVEMENTTICK", 0L) + 3000) < bodyguard.GuardTarget.CurrentRegion.Time) && !bodyguard.GuardTarget.IsMoving)
-			{
-				if (ad.Attacker is GamePlayer || ad.Attacker is GamePet)
-				{
-					ad.Target = bodyguard.GuardSource;
-					bodyguard.GuardTarget.Out.SendMessage(string.Format("You were protected by {0} from the attack from {1}!", bodyguard.GuardSource.Name, ad.Attacker.Name), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
-					bodyguard.GuardSource.Out.SendMessage(string.Format("You have protected {0} from the attack from {1}!", bodyguard.GuardTarget.Name, ad.Attacker.Name), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
-					if (ad.Attacker is GamePlayer)
-						(ad.Attacker as GamePlayer).Out.SendMessage(string.Format("You attempt to attack {0}, {1} is bodyguarded by {2}!", bodyguard.GuardTarget.Name, bodyguard.GuardTarget.Name, bodyguard.GuardSource.Name), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-					return eAttackResult.Bodyguarded;
-				}
-			}
+            // Bodyguard - the Aredhel way. Alas, this is not perfect yet as clearly,
+            // this code belongs in GamePlayer, but it's a start to end this clutter.
+            // Temporarily saving the below information here.
+            // Defensive chances (evade/parry) are reduced by 20%, but target of bodyguard 
+            // can't be attacked in melee until bodyguard is killed or moves out of range.
+
+            if (this is GamePlayer && ad.Attacker is GamePlayer)
+            {
+                GamePlayer attacker = ad.Attacker as GamePlayer;
+
+                if (attacker.ActiveWeaponSlot != eActiveWeaponSlot.Distance)
+                {
+                    GamePlayer player = this as GamePlayer;
+                    GamePlayer bodyguard = player.Bodyguard;
+
+                    if (bodyguard != null)
+                    {
+                        player.Out.SendMessage(String.Format("You were protected by {0} from the attack from {1}!", bodyguard.Name, attacker.Name),
+                            eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+
+                        bodyguard.Out.SendMessage(String.Format("You have protected {0} from the attack from {1}!", player.Name, attacker.Name),
+                            eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+
+                        attacker.Out.SendMessage(string.Format("You attempt to attack {0}, {1} is bodyguarded by {2}!",
+                            player.Name, player.Name, bodyguard.Name), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+
+                        return eAttackResult.Bodyguarded;
+                    }
+                }
+            }
 
 			// PhaseShift
 			if (phaseshift != null)
@@ -3385,36 +3424,11 @@ namespace DOL.GS
 				return eAttackResult.Missed;
 			}
 
+            if (ad.IsRandomFumble)
+                return eAttackResult.Fumbled;
 
-			// Fumble
-			if (ad.IsMeleeAttack)
-			{
-				double fumbleChance = ad.Attacker.GetModified(eProperty.FumbleChance);
-				fumbleChance *= 0.001;
-
-				if (fumbleChance > 0.99) fumbleChance = 0.99;
-				if (fumbleChance < 0) fumbleChance = 0;
-
-				if (Util.ChanceDouble(fumbleChance))
-				{
-					return eAttackResult.Fumbled;
-				}
-			}
-
-			//Misschance
-			if (ad.IsMeleeAttack)
-			{
-				double missChance = ad.Target.GetModified(eProperty.MissHit);
-				missChance *= 0.001;
-
-				if (missChance > 0.99) missChance = 0.99;
-				if (missChance < 0) missChance = 0;
-
-				if (Util.ChanceDouble(missChance))
-				{
-					return eAttackResult.Missed;
-				}
-			}
+            if (ad.IsRandomMiss)
+                return eAttackResult.Missed;
 
 
 			// Bladeturn
@@ -3467,7 +3481,7 @@ namespace DOL.GS
 			return eAttackResult.HitUnstyled;
 		}
 
-		/// <summary>
+        /// <summary>
 		/// This method is called whenever this living
 		/// should take damage from some source
 		/// </summary>
