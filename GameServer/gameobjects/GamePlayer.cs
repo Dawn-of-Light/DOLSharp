@@ -13095,7 +13095,7 @@ namespace DOL.GS
 		}
 
 		protected bool m_isOnHorse;
-		public bool IsOnHorse
+		virtual public bool IsOnHorse
 		{
 			get { return m_isOnHorse; }
 			set
