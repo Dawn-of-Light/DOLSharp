@@ -143,8 +143,11 @@ namespace DOL.Events
 		/// </summary>
 		public static readonly GameLivingEvent PetReleased = new GameLivingEvent("GameLiving.PetReleased");
 		/// <summary>
-		/// The RegionChanging event is called when a living is changing regions
+		/// The RegionChanging event is fired when a living is changing regions
 		/// </summary>
 		public static readonly GameLivingEvent RegionChanging = new GameLivingEvent("GameLiving.RegionChanging");
+        /// The LowHealth event is fired when a living's health drops below a certain threshold
+        /// </summary>
+        public static readonly GameLivingEvent LowHealth = new GameLivingEvent("GameLiving.LowHealth");
 	}
 }

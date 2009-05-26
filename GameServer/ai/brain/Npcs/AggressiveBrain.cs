@@ -1,6 +1,23 @@
-﻿using System;
+﻿/*
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
+using System;
 using System.Collections.Generic;
-using System.Text;
 using DOL.GS;
 using DOL.Events;
 using DOL.GS.PacketHandler;
@@ -38,27 +55,13 @@ namespace DOL.AI.Brain
         /// </summary>
         public override void Think()
         {
-            log.Info(String.Format("{0} is thinking", Body.Name));
-
-            if (Body.IsIncapacitated)
-                log.Info(String.Format("{0} is incapacitated", Body.Name));
-
-            if (Body.IsReturningToSpawnPoint)
-                log.Info(String.Format("{0} is returning to spawn point", Body.Name));
-
             if (Body.IsIncapacitated || Body.IsReturningToSpawnPoint)
                 return;
 
             if (IsEngaged)
-            {
-                log.Info(String.Format("{0} is engaged", Body.Name));
                 PickTarget();
-            }
             else
-            {
-                log.Info(String.Format("{0} is idle", Body.Name));
                 OnIdle();
-            }
         }
 
         #region Idle handler.
@@ -140,9 +143,9 @@ namespace DOL.AI.Brain
         /// Switch the target.
         /// </summary>
         /// <param name="living"></param>
-        private void SwitchTarget(GameLiving living)
+        private void SwitchTarget(GameLiving target)
         {
-            Body.StartAttack(living);
+            Body.StartAttack(target);
         }
 
         /// <summary>
@@ -155,24 +158,41 @@ namespace DOL.AI.Brain
             if (attackData == null)
                 return;
 
-            if (Body.IsReturningToSpawnPoint)
-                Body.CancelWalkToSpawn();
-
-            if (!attackData.IsMeleeAttack)
+            if (attackData.Target == Body)
             {
-                ISpellHandler spellhandler = attackData.SpellHandler;
+                if (Body.IsReturningToSpawnPoint)
+                    Body.CancelWalkToSpawn();
 
-                if (spellhandler != null && spellhandler is TauntSpellHandler)
+                if (!attackData.IsMeleeAttack)
                 {
-                    OnTaunted(attackData);
-                    return;
+                    ISpellHandler spellhandler = attackData.SpellHandler;
+
+                    if (spellhandler != null && spellhandler is TauntSpellHandler)
+                    {
+                        OnTaunted(attackData);
+                        return;
+                    }
                 }
+
+                Aggression.Raise(attackData.Attacker, attackData.Damage);
+
+                // TODO: Process attack data and change the amount of aggro
+                //       accordingly.
             }
+            else
+            {
+                OnLivingAttacked(attackData.Target, attackData.Attacker);
+            }
+        }
 
-            Aggression.Raise(attackData.Attacker, attackData.Damage);
-
-            // TODO: Process attack data and change the amount of aggro
-            //       accordingly.
+        /// <summary>
+        /// Another living has been attacked; this is were you hook
+        /// BAF (Bring-A-Friend) in.
+        /// </summary>
+        /// <param name="living"></param>
+        /// <param name="attacker"></param>
+        protected virtual void OnLivingAttacked(GameLiving target, GameLiving attacker)
+        {
         }
 
         /// <summary>
@@ -213,16 +233,17 @@ namespace DOL.AI.Brain
         /// <param name="attackData"></param>
         protected virtual void OnTaunted(AttackData attackData)
         {
-            GamePlayer player = attackData.Attacker as GamePlayer;
+            GameLiving attacker = attackData.Attacker;
 
-            if (player != null)
+            if (attackData.Target == Body)
             {
-                player.Out.SendMessage(String.Format("Taunted{0}", attackData.IsSpellResisted
-                    ? ", but taunt was resisted!" : ""), eChatType.CT_Broadcast, eChatLoc.CL_SystemWindow);
+                Aggression.Raise(attackData.Attacker, attackData.IsSpellResisted
+                    ? 0 : TauntAggressionAmount);
             }
-
-            Aggression.Raise(attackData.Attacker, attackData.IsSpellResisted
-                ? 0 : TauntAggressionAmount);
+            else
+            {
+                OnLivingAttacked(attackData.Target, attacker);
+            }
         }
 
         #endregion
@@ -230,7 +251,7 @@ namespace DOL.AI.Brain
         #region Notify handler.
 
         /// <summary>
-        /// Process messages coming from the body.
+        /// Process game events.
         /// </summary>
         /// <param name="e"></param>
         /// <param name="sender"></param>
@@ -272,7 +293,29 @@ namespace DOL.AI.Brain
                     if (IsEnemy(killed.Target))
                         OnEnemyKilled(killed.Target);
                 }
+
+                return;
             }
+
+            if (e == GameLivingEvent.LowHealth)
+            {
+                OnLowHealth(sender as GameLiving);
+                return;
+            }
+        }
+
+        #endregion
+
+        #region Other handlers
+
+        /// <summary>
+        /// Living is low on health. This could be the body (decide to
+        /// heal self, run away, go berserk...) or any other living in the
+        /// game (heal if in radius and friendly etc.)
+        /// </summary>
+        /// <param name="living"></param>
+        protected virtual void OnLowHealth(GameLiving living)
+        {
         }
 
         #endregion
@@ -301,6 +344,16 @@ namespace DOL.AI.Brain
         }
 
         /// <summary>
+        /// Engage on the living.
+        /// </summary>
+        /// <param name="living"></param>
+        protected void EngageOn(GameLiving living)
+        {
+            if (!IsEnemy(living))
+                Aggression.Raise(living, InternalAggression.Initial);
+        }
+
+        /// <summary>
         /// Returns true if this brain has at least one target.
         /// </summary>
         private bool IsEngaged
@@ -322,7 +375,7 @@ namespace DOL.AI.Brain
         {
             return (living == null)
                 ? false
-                : (Aggression.GetAmountForLiving(living) > 0);
+                : (Aggression.IsEnemy(living));
         }
 
         /// <summary>
@@ -338,14 +391,10 @@ namespace DOL.AI.Brain
             /// </summary>
             /// <param name="living"></param>
             /// <returns></returns>
-            public long GetAmountForLiving(GameLiving living)
+            public bool IsEnemy(GameLiving living)
             {
                 lock (m_syncObject)
-                {
-                    return m_aggression.ContainsKey(living)
-                        ? m_aggression[living]
-                        : 0;
-                }
+                    return m_aggression.ContainsKey(living);
             }
 
             /// <summary>
