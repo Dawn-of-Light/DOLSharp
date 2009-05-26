@@ -13960,7 +13960,7 @@ namespace DOL.GS
                     return false;
 
                 long lastMovementTick = TempProperties.getLongProperty("PLAYERPOSITION_LASTMOVEMENTTICK", 0L);
-                return (CurrentRegion.Time - lastMovementTick < 3000);
+                return (CurrentRegion.Time - lastMovementTick > 3000);
             }
         }
 
