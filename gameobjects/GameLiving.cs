@@ -2919,33 +2919,36 @@ namespace DOL.GS
             // Defensive chances (evade/parry) are reduced by 20%, but target of bodyguard 
             // can't be attacked in melee until bodyguard is killed or moves out of range.
 
-            GamePlayer playerAttacker = GetPlayerAttacker(ad.Attacker);
-
-            if (playerAttacker != null)
+            if (this is GamePlayer)
             {
-                GameLiving attacker = ad.Attacker;
+                GamePlayer playerAttacker = GetPlayerAttacker(ad.Attacker);
 
-                if (attacker.ActiveWeaponSlot != eActiveWeaponSlot.Distance)
+                if (playerAttacker != null)
                 {
-                    GamePlayer target = this as GamePlayer;
-                    GamePlayer bodyguard = target.Bodyguard;
+                    GameLiving attacker = ad.Attacker;
 
-                    if (bodyguard != null)
+                    if (attacker.ActiveWeaponSlot != eActiveWeaponSlot.Distance)
                     {
-                        target.Out.SendMessage(String.Format("You were protected by {0} from the attack from {1}!", bodyguard.Name, attacker.Name),
-                            eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+                        GamePlayer target = this as GamePlayer;
+                        GamePlayer bodyguard = target.Bodyguard;
 
-                        bodyguard.Out.SendMessage(String.Format("You have protected {0} from the attack from {1}!", target.Name, attacker.Name),
-                            eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+                        if (bodyguard != null)
+                        {
+                            target.Out.SendMessage(String.Format("You were protected by {0} from the attack from {1}!", bodyguard.Name, attacker.Name),
+                                eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 
-                        if (attacker == playerAttacker)
-                            playerAttacker.Out.SendMessage(string.Format("You attempt to attack {0}, {1} is bodyguarded by {2}!",
-                                target.Name, target.Name, bodyguard.Name), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-                        else
-                            playerAttacker.Out.SendMessage(string.Format("Your pet attempts to attack {0}, {1} is bodyguarded by {2}!",
-                                target.Name, target.Name, bodyguard.Name), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+                            bodyguard.Out.SendMessage(String.Format("You have protected {0} from the attack from {1}!", target.Name, attacker.Name),
+                                eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 
-                        return eAttackResult.Bodyguarded;
+                            if (attacker == playerAttacker)
+                                playerAttacker.Out.SendMessage(string.Format("You attempt to attack {0}, {1} is bodyguarded by {2}!",
+                                    target.Name, target.Name, bodyguard.Name), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+                            else
+                                playerAttacker.Out.SendMessage(string.Format("Your pet attempts to attack {0}, {1} is bodyguarded by {2}!",
+                                    target.Name, target.Name, bodyguard.Name), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+
+                            return eAttackResult.Bodyguarded;
+                        }
                     }
                 }
             }
