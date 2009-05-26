@@ -13947,5 +13947,48 @@ namespace DOL.GS
 			
 			return Math.Round(parryChance*10000)/100;
 		}
-	}
+
+        /// <summary>
+        /// True, if the player has been standing still for at least 3 seconds,
+        /// else false.
+        /// </summary>
+        private bool IsStandingStill
+        {
+            get
+            {
+                if (IsMoving)
+                    return false;
+
+                long lastMovementTick = TempProperties.getLongProperty("PLAYERPOSITION_LASTMOVEMENTTICK", 0L);
+                return (CurrentRegion.Time - lastMovementTick < 3000);
+            }
+        }
+
+        /// <summary>
+        /// This player's bodyguard (ML ability) or null, if there is none.
+        /// </summary>
+        public GamePlayer Bodyguard
+        {
+            get
+            {
+                IList bodyguardEffects = EffectList.GetAllOfType(typeof(BodyguardEffect));
+
+                if (bodyguardEffects.Count <= 0)
+                    return null;
+
+                BodyguardEffect bodyguardEffect = bodyguardEffects[0] as BodyguardEffect;
+
+                if (bodyguardEffect == null || bodyguardEffect.GuardTarget != this)
+                    return null;
+
+                GamePlayer guard = bodyguardEffect.GuardSource;
+                GamePlayer guardee = this;
+
+                return (guard.IsAlive && guard.IsWithinRadius(guardee, BodyguardAbilityHandler.BODYGUARD_DISTANCE) &&
+                    !guard.IsCasting && guardee.IsStandingStill)
+                    ? guard
+                    : null;
+            }
+        }
+    }
 }
