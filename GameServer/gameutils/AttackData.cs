@@ -292,6 +292,25 @@ namespace DOL.GS
 				}
 			}
 		}
-	}
 
+        public bool IsRandomFumble
+        {
+            get
+            {
+                return (IsMeleeAttack) 
+                    ? Util.ChanceDouble(Attacker.ChanceToFumble) 
+                    : false;
+            }
+        }
+
+        public bool IsRandomMiss
+        {
+            get
+            {
+                return (IsMeleeAttack)
+                    ? Util.ChanceDouble(Target.ChanceToBeMissed)
+                    : false;
+            }
+        }
+	}
 }
