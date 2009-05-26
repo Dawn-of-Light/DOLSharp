@@ -3054,7 +3054,9 @@ namespace DOL.GS
 			if (IsMovingOnPath)
 				StopMovingOnPath();
 
-			if (Brain is IControlledBrain)
+            // Aredhel: More brain code that doesn't belong here. If the pet is put on
+            // passive, why fire StartAttack at all?
+			if (Brain is IControlledBrain)  
 			{
 				if ((Brain as IControlledBrain).AggressionState == eAggressionState.Passive)
 					return;

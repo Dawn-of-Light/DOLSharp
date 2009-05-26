@@ -173,7 +173,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The type of range attack
 		/// </summary>
-		public enum eRangeAttackType : byte
+		public enum eRangedAttackType : byte
 		{
 			/// <summary>
 			/// A normal ranged attack
@@ -325,7 +325,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The gtype of the ranged attack
 		/// </summary>
-		protected eRangeAttackType m_rangeAttackType;
+		protected eRangedAttackType m_rangeAttackType;
 
 		/// <summary>
 		/// Gets or Sets the state of a ranged attack
@@ -339,7 +339,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or Sets the type of a ranged attack
 		/// </summary>
-		public eRangeAttackType RangeAttackType
+		public eRangedAttackType RangedAttackType
 		{
 			get { return m_rangeAttackType; }
 			set { m_rangeAttackType = value; }
@@ -1360,9 +1360,9 @@ namespace DOL.GS
 				return ad;
 			}
 
-			if (RangeAttackType == eRangeAttackType.Long)
+			if (RangedAttackType == eRangedAttackType.Long)
 			{
-				RangeAttackType = eRangeAttackType.Normal;
+				RangedAttackType = eRangedAttackType.Normal;
 			}
 
 			if (!GameServer.ServerRules.IsAllowedToAttack(ad.Attacker, ad.Target, false))
@@ -1488,7 +1488,7 @@ namespace DOL.GS
 			if (ad.AttackResult == eAttackResult.HitUnstyled
 				|| ad.AttackResult == eAttackResult.HitStyle)
 			{
-				ad.CriticalDamage = CalculateCriticalDamage(ad, weapon);
+				ad.CriticalDamage = GetMeleeCriticalDamage(ad, weapon);
 			}
 
 			string message = "";
@@ -1812,7 +1812,7 @@ namespace DOL.GS
 		{
 			if (AttackState && ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 			{
-				if (RangeAttackType == eRangeAttackType.SureShot)
+				if (RangedAttackType == eRangedAttackType.SureShot)
 				{
 					if (attackType != AttackData.eAttackType.MeleeOneHand
 					&& attackType != AttackData.eAttackType.MeleeTwoHand
@@ -1979,9 +1979,9 @@ namespace DOL.GS
 
 					interruptDuration = owner.AttackSpeed(attackWeapon);
 
-					switch (owner.RangeAttackType)
+					switch (owner.RangedAttackType)
 					{
-						case eRangeAttackType.Critical:
+						case eRangedAttackType.Critical:
 							{
 								effectiveness = 2 - 0.3 * owner.GetConLevel(attackTarget);
 								if (effectiveness > 2)
@@ -1991,13 +1991,13 @@ namespace DOL.GS
 							}
 							break;
 
-						case eRangeAttackType.SureShot:
+						case eRangedAttackType.SureShot:
 							{
 								effectiveness = 0.5;
 							}
 							break;
 
-						case eRangeAttackType.RapidFire:
+						case eRangedAttackType.RapidFire:
 							{
 								// Source : http://www.camelotherald.com/more/888.shtml
 								// - (About Rapid Fire) If you release the shot 75% through the normal timer, the shot (if it hits) does 75% of its normal damage. If you
@@ -2024,7 +2024,7 @@ namespace DOL.GS
 					if (attackTarget is GameLiving)
 					{
 						int PALevel = owner.GetAbilityLevel(Abilities.PenetratingArrow);
-						if ((PALevel > 0) && (owner.RangeAttackType != eRangeAttackType.Long))
+						if ((PALevel > 0) && (owner.RangedAttackType != eRangedAttackType.Long))
 						{
 							GameSpellEffect bladeturn = null;
 							lock (((GameLiving)attackTarget).EffectList)
@@ -2137,26 +2137,26 @@ namespace DOL.GS
 					}
 					else
 					{
-						if (!(owner is GamePlayer) || (owner.RangeAttackType != eRangeAttackType.Long))
+						if (!(owner is GamePlayer) || (owner.RangedAttackType != eRangedAttackType.Long))
 						{
-							owner.RangeAttackType = eRangeAttackType.Normal;
+							owner.RangedAttackType = eRangedAttackType.Normal;
 							lock (owner.EffectList)
 							{
 								foreach (IGameEffect effect in owner.EffectList) // switch to the correct range attack type
 								{
 									if (effect is SureShotEffect)
 									{
-										owner.RangeAttackType = eRangeAttackType.SureShot;
+										owner.RangedAttackType = eRangedAttackType.SureShot;
 										break;
 									}
 									else if (effect is RapidFireEffect)
 									{
-										owner.RangeAttackType = eRangeAttackType.RapidFire;
+										owner.RangedAttackType = eRangedAttackType.RapidFire;
 										break;
 									}
 									else if (effect is TrueshotEffect)
 									{
-										owner.RangeAttackType = eRangeAttackType.Long;
+										owner.RangedAttackType = eRangedAttackType.Long;
 										break;
 									}
 								}
@@ -2177,7 +2177,7 @@ namespace DOL.GS
 							player.Out.SendCombatAnimation(owner, null, (ushort)model, 0x00, player.Out.BowPrepare, attackSpeed, 0x00, 0x00);
 						}
 
-						if (owner.RangeAttackType == eRangeAttackType.RapidFire)
+						if (owner.RangedAttackType == eRangedAttackType.RapidFire)
 						{
 							speed /= 2; // can start fire at the middle of the normal time
 						}
@@ -2625,11 +2625,13 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Starts a melee attack on a target
+		/// Starts a melee or ranged attack on a given target.
 		/// </summary>
-		/// <param name="attackTarget">The object to attack</param>
+		/// <param name="attackTarget">The object to attack.</param>
 		public virtual void StartAttack(GameObject attackTarget)
 		{
+            // Aredhel: Let the brain handle this, no need to call StartAttack
+            // if the body can't do anything anyway.
             if (IsIncapacitated)
                 return;
 
@@ -2647,13 +2649,12 @@ namespace DOL.GS
 				if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 				{
 					RangedAttackState = eRangedAttackState.Aim;
-                    ushort model = (ushort)(AttackWeapon == null ? 0 : AttackWeapon.Model);
 
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-						player.Out.SendCombatAnimation(this, null, (ushort)model, 0x00, player.Out.BowPrepare,
-                            (byte)(speed / 100), 0x00, 0x00);
+                        player.Out.SendCombatAnimation(this, null, (ushort)(AttackWeapon == null ? 0 : AttackWeapon.Model), 
+                            0x00, player.Out.BowPrepare, (byte)(speed / 100), 0x00, 0x00);
 
-					m_attackAction.Start((RangeAttackType == eRangeAttackType.RapidFire)
+					m_attackAction.Start((RangedAttackType == eRangedAttackType.RapidFire)
                         ? speed / 2 : speed); 
 				}
 				else
@@ -2664,6 +2665,9 @@ namespace DOL.GS
 			}
 		}
 
+        /// <summary>
+        /// Remove engage effect on this living if it is present.
+        /// </summary>
         private void CancelEngageEffect()
         {
             EngageEffect effect = (EngageEffect)EffectList.GetOfType(typeof(EngageEffect));
@@ -2675,20 +2679,19 @@ namespace DOL.GS
         }
 
 		/// <summary>
-		/// Interrupts a Range Attack
+		/// Interrupts a ranged attack.
 		/// </summary>
 		protected virtual void InterruptRangedAttack()
 		{
-			//Clear variables
 			RangedAttackState = eRangedAttackState.None;
-			RangeAttackType = eRangeAttackType.Normal;
+			RangedAttackType = eRangedAttackType.Normal;
 
-			foreach (GamePlayer p in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-				p.Out.SendInterruptAnimation(this);
+			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				player.Out.SendInterruptAnimation(this);
 		}
 
 		/// <summary>
-		/// Stops all attacks this gameliving is currently making
+		/// Stops all attacks this GameLiving is currently making.
 		/// </summary>
 		public virtual void StopAttack()
 		{
@@ -2699,29 +2702,40 @@ namespace DOL.GS
 				InterruptRangedAttack();
 		}
 
+        /// <summary>
+        /// Minimum melee critical damage as a percentage of the
+        /// raw damage.
+        /// </summary>
+        protected virtual float MinMeleeCriticalDamage
+        {
+            get { return 0.1f; }
+        }
+
 		/// <summary>
-		/// Calculates melee critical damage of this player
+		/// Calculates melee critical damage of this living.
 		/// </summary>
-		/// <param name="ad">The attack data</param>
-		/// <param name="weapon">The weapon used</param>
-		/// <returns>The amount of critical damage</returns>
-		public virtual int CalculateCriticalDamage(AttackData ad, InventoryItem weapon)
+		/// <param name="ad">The attack data.</param>
+		/// <param name="weapon">The weapon used.</param>
+		/// <returns>The amount of critical damage.</returns>
+		public virtual int GetMeleeCriticalDamage(AttackData attackData, InventoryItem weapon)
 		{
 			if (Util.Chance(AttackCriticalChance(weapon)))
 			{
-				int critMax;
-				// Critical damage to players is 50%, low limit should be around 20% but not sure
-				// zerkers in Berserk do up to 99%
-				if (ad.Target is GamePlayer)
-					critMax = ad.Damage >> 1;
-				else
-					critMax = ad.Damage;
+                int maxCriticalDamage = (attackData.Target is GamePlayer)
+                    ? attackData.Damage >> 1
+                    : attackData.Damage;
 
-				//think min crit dmage is 10% of damage
-				return Util.Random(ad.Damage / 10, critMax);
+                int minCriticalDamage = (int)(attackData.Damage * MinMeleeCriticalDamage);
+
+                return Util.Random(minCriticalDamage, maxCriticalDamage);
 			}
+
 			return 0;
 		}
+
+        // **************************************************************************
+        // Aredhel: What the ... is this an attempt to write an even longer
+        // method than DetailDisplayHandler???
 
 		/// <summary>
 		/// Returns the result of an enemy attack,
@@ -3423,7 +3437,7 @@ namespace DOL.GS
 				if (stealthStyle)
 					penetrate = true;
 
-				if (ad.Attacker.RangeAttackType == eRangeAttackType.Long // stealth styles pierce bladeturn
+				if (ad.Attacker.RangedAttackType == eRangedAttackType.Long // stealth styles pierce bladeturn
 				|| (ad.AttackType == AttackData.eAttackType.Ranged && ad.Target != bladeturn.SpellHandler.Caster && ad.Attacker is GamePlayer && ((GamePlayer)ad.Attacker).HasAbility(Abilities.PenetratingArrow)))  // penetrating arrow attack pierce bladeturn
 					penetrate = true;
 
@@ -3999,7 +4013,7 @@ namespace DOL.GS
 			//Clean up range attack variables, no matter to what
 			//weapon we switch
 			RangedAttackState = eRangedAttackState.None;
-			RangeAttackType = eRangeAttackType.Normal;
+			RangedAttackType = eRangedAttackType.Normal;
 
 			InventoryItem rightHandSlot = Inventory.GetItem(eInventorySlot.RightHandWeapon);
 			InventoryItem leftHandSlot = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
@@ -6000,7 +6014,7 @@ namespace DOL.GS
 			m_activeWeaponSlot = eActiveWeaponSlot.Standard;
 			m_activeQuiverSlot = eActiveQuiverSlot.None;
 			m_rangeAttackState = eRangedAttackState.None;
-			m_rangeAttackType = eRangeAttackType.Normal;
+			m_rangeAttackType = eRangedAttackType.Normal;
 			m_healthRegenerationPeriod = 6000;
 			m_powerRegenerationPeriod = 6000;
 			m_enduRegenerationPeriod = 1000;
