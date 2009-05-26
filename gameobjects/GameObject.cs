@@ -331,7 +331,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				if (CurrentRegion == null)
+				if (CurrentRegion == null || CurrentZone == null)
 					return false;
 				// Special land areas below the waterlevel in NF
 				if (CurrentRegion.ID == 163)
@@ -364,7 +364,8 @@ namespace DOL.GS
 					if ((Y > 408000) && (Y < 421000) && (X > 671000) && (X < 693000)) return false;
 					if ((Y > 364000) && (Y < 394000) && (X > 674000) && (X < 716000)) return false;
 				}
-				return Z < CurrentRegion.WaterLevel;
+
+				return Z < CurrentZone.Waterlevel;
 			}
 		}
 

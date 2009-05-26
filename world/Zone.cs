@@ -188,6 +188,11 @@ namespace DOL.GS
 		private readonly int m_Height;
 
 		/// <summary>
+        /// The waterlevel of this zone
+        /// </summary>
+        private readonly int m_waterlevel;
+
+		/// <summary>
 		/// already initialized?
 		/// </summary>
 		private bool m_initialized = false;
@@ -207,7 +212,7 @@ namespace DOL.GS
 		/// <param name="width">the Width of this zone</param>
 		/// <param name="height">the Height of this zone</param>
         /// <param name="zoneskinID">For clientside positioning in instances: The 'fake' zoneid we send to clients.</param>
-		public Zone(Region region, ushort id, string desc, int xoff, int yoff, int width, int height, ushort zoneskinID)
+		public Zone(Region region, ushort id, string desc, int xoff, int yoff, int width, int height, ushort zoneskinID, int waterlevel)
 		{
 			m_Region = region;
 			m_ID = id;
@@ -217,6 +222,7 @@ namespace DOL.GS
 			m_Width = width;
 			m_Height = height;
             m_zoneSkinID = zoneskinID;
+			m_waterlevel = waterlevel;
 
 			// initialise subzone objects and counters
 			m_subZoneElements = new SubNodeElement[SUBZONE_NBR][];
@@ -451,6 +457,11 @@ namespace DOL.GS
 		{
 			get { return m_Height; }
 		}
+
+        public int Waterlevel
+        {
+            get { return m_waterlevel; }
+        }
 
 		/// <summary>
 		/// Returns the total number of objects held in the zone

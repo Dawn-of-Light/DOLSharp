@@ -50,8 +50,12 @@ namespace DOL.GS
         public string Description
         { get { return m_description; } set { m_description = value; } }
 
+        public int WaterLevel
+        { get { return m_waterLevel; } set { m_waterLevel = value; } }
+
         private byte m_OffX, m_OffY, m_Height, m_Width;
         private ushort m_ZoneID, m_RegionID;
         private string m_description;
+        private int m_waterLevel;
     }
 }
