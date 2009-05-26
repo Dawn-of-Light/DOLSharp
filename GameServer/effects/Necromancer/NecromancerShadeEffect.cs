@@ -27,7 +27,7 @@ namespace DOL.GS.Effects
 	/// attack).
 	/// </summary>
 	/// <author>Aredhel</author>
-	class NecromancerShadeEffect : ShadeEffect
+	public class NecromancerShadeEffect : ShadeEffect
 	{
 		/// <summary>
 		/// Creates a new shade effect.
