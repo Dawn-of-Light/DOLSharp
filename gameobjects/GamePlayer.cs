@@ -4674,9 +4674,9 @@ namespace DOL.GS
 					{
 						Inventory.RemoveCountFromStack((InventoryItem)ammoTemplate, 1);
 					}
-					if (RangeAttackType == eRangeAttackType.Critical)
+					if (RangedAttackType == eRangedAttackType.Critical)
 						Endurance -= CRITICAL_SHOT_ENDURANCE;
-					else if (RangeAttackType == eRangeAttackType.RapidFire && GetAbilityLevel(Abilities.RapidFire) == 1)
+					else if (RangedAttackType == eRangedAttackType.RapidFire && GetAbilityLevel(Abilities.RapidFire) == 1)
 						Endurance -= 2 * RANGE_ATTACK_ENDURANCE;
 					else Endurance -= RANGE_ATTACK_ENDURANCE;
 					break;
@@ -4784,25 +4784,25 @@ namespace DOL.GS
 					{
 						if (effect is SureShotEffect)
 						{
-							RangeAttackType = eRangeAttackType.SureShot;
+							RangedAttackType = eRangedAttackType.SureShot;
 							break;
 						}
 
 						if (effect is RapidFireEffect)
 						{
-							RangeAttackType = eRangeAttackType.RapidFire;
+							RangedAttackType = eRangedAttackType.RapidFire;
 							break;
 						}
 
 						if (effect is TrueshotEffect)
 						{
-							RangeAttackType = eRangeAttackType.Long;
+							RangedAttackType = eRangedAttackType.Long;
 							break;
 						}
 					}
 				}
 
-				if (RangeAttackType == eRangeAttackType.Critical && Endurance < CRITICAL_SHOT_ENDURANCE)
+				if (RangedAttackType == eRangedAttackType.Critical && Endurance < CRITICAL_SHOT_ENDURANCE)
 				{
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.TiredShot"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 					return;
@@ -4822,7 +4822,7 @@ namespace DOL.GS
 					 */
 					int stealthSpec = GetModifiedSpecLevel(Specs.Stealth);
 					int stayStealthed = stealthSpec * 100 / Level;
-					if (RangeAttackType == eRangeAttackType.Critical)
+					if (RangedAttackType == eRangedAttackType.Critical)
 						stayStealthed -= 20;
 
 					if (!Util.Chance(stayStealthed))
@@ -5120,7 +5120,7 @@ namespace DOL.GS
 				else if (GameServer.ServerRules.IsAllowedToAttack(this, (GameLiving)target, false))
 				{
 					GameLiving living = target as GameLiving;
-					if (RangeAttackType == eRangeAttackType.Critical && living != null
+					if (RangedAttackType == eRangedAttackType.Critical && living != null
 					   && (living.CurrentSpeed > 90 //walk speed == 85, hope that's what they mean
 						   || (living.AttackState && living.InCombat) //maybe not 100% correct
 						   || SpellHandler.FindEffectOnTarget(living, "Mesmerize") != null
@@ -5148,7 +5148,7 @@ namespace DOL.GS
 
 						// TODO: more checks?
 						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.CantCritical"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						RangeAttackType = eRangeAttackType.Normal;
+						RangedAttackType = eRangedAttackType.Normal;
 					}
 					return eCheckRangeAttackStateResult.Fire;
 				}
@@ -5412,7 +5412,7 @@ namespace DOL.GS
 		/// <param name="ad">The attack data</param>
 		/// <param name="weapon">The weapon used</param>
 		/// <returns>The amount of critical damage</returns>
-		public override int CalculateCriticalDamage(AttackData ad, InventoryItem weapon)
+		public override int GetMeleeCriticalDamage(AttackData ad, InventoryItem weapon)
 		{
 			if (Util.Chance(AttackCriticalChance(weapon)))
 			{
@@ -6077,7 +6077,7 @@ namespace DOL.GS
 		/// <param name="weapon">attack weapon</param>
 		public override int AttackCriticalChance(InventoryItem weapon)
 		{
-			if (weapon != null && weapon.Item_Type == Slot.RANGED && RangeAttackType == eRangeAttackType.Critical)
+			if (weapon != null && weapon.Item_Type == Slot.RANGED && RangedAttackType == eRangedAttackType.Critical)
 				return 0; // no crit damage for crit shots
 
 			// check for melee attack
@@ -6237,7 +6237,7 @@ namespace DOL.GS
 
 				//For now use the standard weapon formula, later add ranger haste etc.
 				speed *= (1.0 - (qui - 60) * 0.002) * 0.01 * GetModified(eProperty.ArcherySpeed);
-				if (RangeAttackType == eRangeAttackType.Critical)
+				if (RangedAttackType == eRangedAttackType.Critical)
 					speed = speed * 2 - (GetAbilityLevel(Abilities.Critical_Shot) - 1) * speed / 10;
 			}
 			else
@@ -7604,7 +7604,7 @@ namespace DOL.GS
 						if (!AttackState)
 						{
 							RangedAttackState = eRangedAttackState.None;
-							RangeAttackType = eRangeAttackType.Normal;
+							RangedAttackType = eRangedAttackType.Normal;
 						}
 						if (!newAttack && RangedAttackState != eRangedAttackState.None)
 						{

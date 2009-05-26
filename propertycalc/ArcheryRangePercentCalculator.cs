@@ -48,7 +48,7 @@ namespace DOL.GS.PropertyCalc
 				+ Math.Min(10, living.ItemBonus[(int)property]));// http://www.camelotherald.com/more/1325.shtml
 
 			int ra = 0;
-			if (living.RangeAttackType == GameLiving.eRangeAttackType.Long)
+			if (living.RangedAttackType == GameLiving.eRangedAttackType.Long)
 			{
 				ra = 50;
 				IGameEffect effect = living.EffectList.GetOfType(typeof(TrueshotEffect));
