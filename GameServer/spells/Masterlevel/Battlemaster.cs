@@ -490,7 +490,7 @@ namespace DOL.GS.Spells
                 ad.Damage = Math.Min(ad.Damage, (int)(player.UnstyledDamageCap(weapon) * effectiveness));
                 ad.Damage = (int)((double)ad.Damage * ServerProperties.Properties.PVP_DAMAGE);
                 if (ad.Damage == 0) ad.AttackResult = DOL.GS.GameLiving.eAttackResult.Missed;
-                ad.CriticalDamage = player.CalculateCriticalDamage(ad, weapon);
+                ad.CriticalDamage = player.GetMeleeCriticalDamage(ad, weapon);
             }
             else
             {
