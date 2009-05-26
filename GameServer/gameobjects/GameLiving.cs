@@ -980,6 +980,17 @@ namespace DOL.GS
 			get { return Health > 0; }
 		}
 
+        /// <summary>
+        /// True if living is low on health, else false.
+        /// </summary>
+        public virtual bool IsLowHealth
+        {
+            get
+            {
+                return (Health < 0.1 * MaxHealth);
+            }
+        }
+
 		protected bool m_isMuted = false;
 		/// <summary>
 		/// returns if this living is muted
@@ -3570,19 +3581,17 @@ namespace DOL.GS
 				AddXPGainer(source, (float)damageAmount + criticalAmount);
 			}
 
-			bool oldAlive = IsAlive;
+			bool wasAlive = IsAlive;
 			Health -= damageAmount + criticalAmount;
-			if (!IsAlive)
-			{
-				if (oldAlive) // check if living was already dead
-				{
-					Die(source);
-				}
-				lock (m_xpGainers.SyncRoot)
-				{
-					m_xpGainers.Clear();
-				}
-			}
+
+            if (!IsAlive)
+            {
+                if (wasAlive)
+                    Die(source);
+
+                lock (m_xpGainers.SyncRoot)
+                    m_xpGainers.Clear();
+            }
 		}
 
 		/// <summary>

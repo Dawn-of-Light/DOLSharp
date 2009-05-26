@@ -139,6 +139,7 @@
     <Compile Include="ai\brain\IControlledBrain.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ai\brain\Npcs\SocialBrain.cs" />
     <Compile Include="ai\brain\ProcPetBrain.cs" />
     <Compile Include="ai\brain\RetrieverMobBrain.cs" />
     <Compile Include="ai\brain\RoundsBrain.cs">
