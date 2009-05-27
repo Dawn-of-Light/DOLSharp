@@ -146,8 +146,17 @@ namespace DOL.Events
 		/// The RegionChanging event is fired when a living is changing regions
 		/// </summary>
 		public static readonly GameLivingEvent RegionChanging = new GameLivingEvent("GameLiving.RegionChanging");
+        /// <summary>
         /// The LowHealth event is fired when a living's health drops below a certain threshold
         /// </summary>
         public static readonly GameLivingEvent LowHealth = new GameLivingEvent("GameLiving.LowHealth");
+        /// <summary>
+        /// The CrowdControlled event is fired when a living is stunned
+        /// </summary>
+        public static readonly GameLivingEvent CrowdControlled = new GameLivingEvent("GameLiving.CrowdControlled");
+        /// <summary>
+        /// The CrowdControlExpired event is fired when a living's crowd control effect expires.
+        /// </summary>
+        public static readonly GameLivingEvent CrowdControlExpired = new GameLivingEvent("GameLiving.CrowdControlExpired");
 	}
 }
