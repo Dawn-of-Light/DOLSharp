@@ -2782,7 +2782,7 @@ namespace DOL.GS
         {
             get
             {
-                return EffectList.GetAllOfType(typeof(NecromancerShadeEffect)).Count > 0;
+                return EffectList.GetAllOfType(typeof(NecromancerShadeEffect)).Count <= 0;
             }
         }
 
