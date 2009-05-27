@@ -31,6 +31,7 @@ namespace DOL.GS.Commands
 		"'/cmdhelp <cmd>' displays the usage for cmd")]
 	public class CmdHelpCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
+		private static string[] cmds; 
 		public void OnCommand(GameClient client, string[] args)
 		{
 			ePrivLevel plvl = (ePrivLevel)client.Account.PrivLevel;
@@ -50,7 +51,12 @@ namespace DOL.GS.Commands
 
 			if (iscmd)
 			{
-				string[] cmds = ScriptMgr.GetCommandList(plvl, true);
+				if (cmds == null)
+				{
+					cmds = ScriptMgr.GetCommandList(plvl, true);
+					Array.Sort(cmds);
+				}
+				
 				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Cmdhelp.PlvlCommands", plvl.ToString()));
 
 				foreach (string s in cmds)
