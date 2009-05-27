@@ -45,7 +45,7 @@ namespace DOL.GS.Spells
 			} 
 			if (target.EffectList.GetOfType(typeof(ChargeEffect)) != null || target.TempProperties.getProperty("Charging", false))
 			{
-				MessageToCaster(target.Name + " is moving to fast for this spell to have any effect!", eChatType.CT_SpellResisted);
+				MessageToCaster(target.Name + " is moving too fast for this spell to have any effect!", eChatType.CT_SpellResisted);
 				return;
 			}
 
@@ -76,6 +76,8 @@ namespace DOL.GS.Spells
 			{
 				effect.Owner.StopAttack();
 			}
+
+            effect.Owner.Notify(GameLivingEvent.CrowdControlled, effect.Owner);
 		}
 
 		/// <summary>
@@ -109,12 +111,10 @@ namespace DOL.GS.Spells
 						aggroBrain.AddToAggroList(Caster, 1);
 				}
 			}
-			
-			// Theurgist Pet Stun doesn't povide imunity
-			if (effect.Name == "Pet Stun")
-				return 0;
-				
-			return 60000;
+
+            effect.Owner.Notify(GameLivingEvent.CrowdControlExpired, effect.Owner);
+
+			return (effect.Name == "Pet Stun") ? 0 : 60000;
 		}
 
 		protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
