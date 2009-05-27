@@ -89,7 +89,7 @@ namespace DOL.AI.Brain
         /// </summary>
         public virtual ushort AggressionRange
         {
-            get { return 2000; }
+            get { return 1000; }
         }
 
         /// <summary>
@@ -297,9 +297,37 @@ namespace DOL.AI.Brain
                 return;
             }
 
+            if (e == GameLivingEvent.CrowdControlled && sender == Body)
+            {
+                Body.TargetObject = null;
+                return;
+            }
+
+            if (e == GameLivingEvent.CrowdControlExpired && sender == Body)
+            {
+                PickTarget();
+                return;
+            }
+
             if (e == GameLivingEvent.LowHealth)
             {
                 OnLowHealth(sender as GameLiving);
+                return;
+            }
+
+            if (e == GameLivingEvent.Dying)
+            {
+                if (sender == Body)
+                    Aggression.Clear();
+
+                // Aredhel: Although GameLivingEvent.Dying clearly is a GameLiving
+                // event, DyingEventArgs.Killer is a mere GameObject. It might make
+                // sense to send this event for GameObjects if, for example, the
+                // GameObjects belonged to this brain's body and could be re-summoned.
+
+                if (args is DyingEventArgs)
+                    OnDying(sender as GameObject, (args as DyingEventArgs).Killer);
+
                 return;
             }
         }
@@ -315,6 +343,18 @@ namespace DOL.AI.Brain
         /// </summary>
         /// <param name="living"></param>
         protected virtual void OnLowHealth(GameLiving living)
+        {
+            // This is just a bogus implementation for testing purposes.
+
+            if (living == Body)
+            {
+                foreach (GamePlayer player in Body.GetPlayersInRadius(500))
+                    player.Out.SendMessage(String.Format("{0} is low on health!",
+                        Body.Name), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+            }
+        }
+
+        protected virtual void OnDying(GameObject victim, GameObject killer)
         {
         }
 
