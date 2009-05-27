@@ -3541,6 +3541,10 @@ namespace DOL.GS
 			GamePlayer attackerPlayer = source as GamePlayer;
 			if (attackerPlayer != null && attackerPlayer != this)
 			{
+                // Aredhel: Ugh. Really, this isn't the place to modify damage,
+                // when we arrive here the damage is final, hence the name
+                // TakeDamage. Refactor asap.
+
 				// Apply Mauler RA5L
 				GiftOfPerizorEffect GiftOfPerizor = (GiftOfPerizorEffect)this.EffectList.GetOfType(typeof(GiftOfPerizorEffect));
 				if (GiftOfPerizor == null)
@@ -3591,6 +3595,11 @@ namespace DOL.GS
 
                 lock (m_xpGainers.SyncRoot)
                     m_xpGainers.Clear();
+            }
+            else
+            {
+                if (IsLowHealth)
+                    Notify(GameLivingEvent.LowHealth, this, null);
             }
 		}
 
