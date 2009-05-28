@@ -149,7 +149,7 @@ namespace DOL.AI.Brain
         }
 
         /// <summary>
-        /// Body has been attacked.
+        /// Body or another living has been attacked.
         /// </summary>
         /// <param name="living"></param>
         /// <param name="attackData"></param>
@@ -205,8 +205,8 @@ namespace DOL.AI.Brain
             if (source == null)
                 return;
 
-            if (source is GameLiving)
-                Aggression.Raise(source as GameLiving, InternalAggression.Minimum);
+            if (source is GameLiving && amount > 1)
+                Aggression.Raise(source as GameLiving, amount / 2);
 
             // TODO: Track the source of the heal, e.g. if the heal originated
             //       from an object, find out who the owner is.
@@ -260,6 +260,31 @@ namespace DOL.AI.Brain
         {
             base.Notify(e, sender, args);
 
+            // Process body only related events first.
+
+            if (sender == Body)
+            {
+                if (e == GameNPCEvent.ArriveAtSpawnPoint)
+                {
+                    Body.TurnTo(Body.SpawnHeading);
+                    return;
+                }
+
+                if (e == GameLivingEvent.CrowdControlled)
+                {
+                    Body.TargetObject = null;
+                    return;
+                }
+
+                if (e == GameLivingEvent.CrowdControlExpired)
+                {
+                    if (!Body.IsIncapacitated)
+                        PickTarget();
+
+                    return;
+                }
+            }
+
             if (e == GameLivingEvent.AttackedByEnemy)
             {
                 if (args is AttackedByEnemyEventArgs)
@@ -294,18 +319,6 @@ namespace DOL.AI.Brain
                         OnEnemyKilled(killed.Target);
                 }
 
-                return;
-            }
-
-            if (e == GameLivingEvent.CrowdControlled && sender == Body)
-            {
-                Body.TargetObject = null;
-                return;
-            }
-
-            if (e == GameLivingEvent.CrowdControlExpired && sender == Body)
-            {
-                PickTarget();
                 return;
             }
 
