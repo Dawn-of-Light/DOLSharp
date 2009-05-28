@@ -55,12 +55,17 @@ namespace DOL.Events
 		/// </summary>
 		public static readonly GameNPCEvent TurnToHeading = new GameNPCEvent("GameNPC.TurnToHeading");
 		/// <summary>
-		/// The ArriveAtTarget event is fired whenever the npc arrives at it's WalkTo target
+		/// The ArriveAtTarget event is fired whenever the npc arrives at its WalkTo target
 		/// <see cref="DOL.GS.GameNPC.WalkTo(int, int, int, int)"/>
 		/// </summary>
 		public static readonly GameNPCEvent ArriveAtTarget = new GameNPCEvent("GameNPC.ArriveAtTarget");
+        /// <summary>
+        /// The ArriveAtSpawnPoint event is fired whenever the npc arrives at its spawn point
+        /// <see cref="DOL.GS.GameNPC.WalkTo(int, int, int, int)"/>
+        /// </summary>
+        public static readonly GameNPCEvent ArriveAtSpawnPoint = new GameNPCEvent("GameNPC.ArriveAtSpawnPoint");
 		/// <summary>
-		/// The CloseToTarget event is fired whenever the npc is close to it's WalkTo target
+		/// The CloseToTarget event is fired whenever the npc is close to its WalkTo target
 		/// <see cref="DOL.GS.GameNPC.WalkTo(int, int, int, int)"/>
 		/// </summary>
 		public static readonly GameNPCEvent CloseToTarget = new GameNPCEvent("GameNPC.CloseToTarget");

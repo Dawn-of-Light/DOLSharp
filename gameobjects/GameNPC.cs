@@ -949,35 +949,42 @@ namespace DOL.GS
 		/// <param name="ty">Target Y</param>
 		public virtual void TurnTo(int tx, int ty, bool sendUpdate)
 		{
-			if (this.IsStunned || this.IsMezzed) return;
+			if (IsStunned || IsMezzed) return;
+
 			Notify(GameNPCEvent.TurnTo, this, new TurnToEventArgs(tx, ty));
-            if ( sendUpdate )
-                Heading = this.GetHeading( new Point2D( tx, ty ) );
+
+            if (sendUpdate)
+                Heading = GetHeading(new Point2D(tx, ty));
             else
-                base.Heading = this.GetHeading( new Point2D( tx, ty ) );
+                base.Heading = GetHeading(new Point2D(tx, ty));
 		}
+
 		/// <summary>
 		/// Turns the npc towards a specific heading
 		/// </summary>
 		/// <param name="newHeading">the new heading</param>
-		public virtual void TurnTo(ushort newHeading)
+		public virtual void TurnTo(ushort heading)
 		{
-			TurnTo(newHeading, true);
+			TurnTo(heading, true);
 		}
+
 		/// <summary>
 		/// Turns the npc towards a specific heading
 		/// optionally sends update to client
 		/// </summary>
 		/// <param name="newHeading">the new heading</param>
-		public virtual void TurnTo(ushort newHeading, bool sendUpdate)
+		public virtual void TurnTo(ushort heading, bool sendUpdate)
 		{
-			if (this.IsStunned || this.IsMezzed) return;
-			Notify(GameNPCEvent.TurnToHeading, this, new TurnToHeadingEventArgs(newHeading));
+			if (IsStunned || IsMezzed) return;
+
+			Notify(GameNPCEvent.TurnToHeading, this, new TurnToHeadingEventArgs(heading));
+
 			if (sendUpdate)
-				if(Heading != newHeading) Heading=newHeading;
+				if (Heading != heading) Heading = heading;
 			else
-				if(base.Heading != newHeading) base.Heading=newHeading;
+				if (base.Heading != heading) base.Heading = heading;
 		}
+
 		/// <summary>
 		/// Turns the NPC towards a specific gameObject
 		/// which can be anything ... a player, item, mob, npc ...
@@ -996,8 +1003,9 @@ namespace DOL.GS
 		/// <param name="target">GameObject to turn towards</param>
 		public virtual void TurnTo(GameObject target, bool sendUpdate)
 		{
-			if (target == null) return;
-			if (target.CurrentRegion != CurrentRegion) return;
+            if (target == null || target.CurrentRegion != CurrentRegion)
+                return;
+
 			TurnTo(target.X, target.Y, sendUpdate);
 		}
 
@@ -1010,15 +1018,19 @@ namespace DOL.GS
 		/// <param name="duration">restore heading after this duration</param>
 		public virtual void TurnTo(GameObject target, int duration)
 		{
-			if (target == null) return;
-			if (target.CurrentRegion != CurrentRegion) return;
-			// store original heading if not set already
+			if (target == null || target.CurrentRegion != CurrentRegion) 
+                return;
+
+			// Store original heading if not set already.
+
 			RestoreHeadingAction restore = (RestoreHeadingAction)TempProperties.getObjectProperty(RESTORE_HEADING_ACTION_PROP, null);
+
 			if (restore == null)
 			{
 				restore = new RestoreHeadingAction(this);
 				TempProperties.setProperty(RESTORE_HEADING_ACTION_PROP, restore);
 			}
+
 			TurnTo(target);
 			restore.Start(duration);
 		}
@@ -1112,15 +1124,13 @@ namespace DOL.GS
           {
               GameNPC npc = (GameNPC)m_actionSource;
 
-              // Aredhel: Target check might not be necessary, but only affects 
-              // AggressiveBrain at the moment.
+              bool arriveAtSpawnPoint = npc.IsReturningToSpawnPoint;
 
-              if (npc.IsReturningToSpawnPoint && !npc.IsAtTargetPosition)
-                  npc.StopMovingAt(npc.Target);
-              else
-                  npc.StopMoving();
-
+              npc.StopMoving();
               npc.Notify(GameNPCEvent.ArriveAtTarget, npc);
+
+              if (arriveAtSpawnPoint)
+                  npc.Notify(GameNPCEvent.ArriveAtSpawnPoint, npc);
           }
         }
 
@@ -1197,12 +1207,6 @@ namespace DOL.GS
             if (IsWithinRadius(Target, CONST_WALKTOTOLERANCE))
             {
                 // No need to start walking.
-
-                if (IsReturningToSpawnPoint && !IsAtTargetPosition)
-                {
-                    SavePosition(Target);
-                    BroadcastUpdate();
-                }
 
                 Notify(GameNPCEvent.ArriveAtTarget, this);
                 return;
