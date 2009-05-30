@@ -3768,7 +3768,7 @@ namespace DOL.GS
 				EnemyHealedEventArgs args = new EnemyHealedEventArgs(this, changeSource, healthChangeType, healthChanged);
 				foreach (GameObject attacker in attackers)
 				{
-					if (attacker is GameLiving && attacker != TargetObject)
+					if (attacker is GameLiving)
 					{
 						(attacker as GameLiving).Notify(GameLivingEvent.EnemyHealed, (GameLiving)attacker, args);
 						(attacker as GameLiving).AddXPGainer(changeSource, healthChanged);
