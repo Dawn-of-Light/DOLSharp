@@ -54,7 +54,7 @@ namespace DOL.AI.Brain
             get { return 1000; }
         }
 
-        private IAttackBehaviour m_attackBehaviour = new StayPutBehaviour();
+        private IAttackBehaviour m_attackBehaviour = new PassiveBehaviour();
 
         /// <summary>
         /// The way attacks are carried out.
@@ -147,6 +147,9 @@ namespace DOL.AI.Brain
         /// </summary>
         private void PickTarget()
         {
+            if (Body.IsIncapacitated)
+                return;
+
             GameLiving target = Aggression.PrimaryTarget;
 
             if (target == null)
@@ -154,16 +157,19 @@ namespace DOL.AI.Brain
                 AttackBehaviour.Retreat();
                 Aggression.Clear();
                 Body.TargetObject = null;
+                AttackBehaviour = new PassiveBehaviour();
                 Body.WalkToSpawn();
             }
             else
             {
-                AttackBehaviour = (Body.CanCastHarmfulSpells)
-                    ? (IAttackBehaviour)new CastingBehaviour(Body)
-                    : (IAttackBehaviour)new MeleeBehaviour(Body);
+                if (AttackBehaviour is PassiveBehaviour)
+                {
+                    AttackBehaviour = (Body.CanCastHarmfulSpells)
+                        ? (IAttackBehaviour)new CastingBehaviour(Body)
+                        : (IAttackBehaviour)new MeleeBehaviour(Body);
+                }
 
-                if (target != Body.TargetObject)
-                    AttackBehaviour.Attack(target);
+                AttackBehaviour.Attack(target);
             }
         }
 
@@ -292,6 +298,13 @@ namespace DOL.AI.Brain
                 if (e == GameLivingEvent.Interrupted || e == GameLivingEvent.CastFailed)
                 {
                     AttackBehaviour = new MeleeBehaviour(Body);
+                    PickTarget();
+                    return;
+                }
+
+                if (e == GameLivingEvent.CastFinished || e == GameLivingEvent.CrowdControlExpired)
+                {
+                    PickTarget();
                     return;
                 }
 
@@ -300,20 +313,13 @@ namespace DOL.AI.Brain
                     if (Util.Chance(25))
                         AttackBehaviour = new CastingBehaviour(Body);
 
+                    PickTarget();
                     return;
                 }
 
                 if (e == GameLivingEvent.CrowdControlled)
                 {
                     Body.TargetObject = null;
-                    return;
-                }
-
-                if (e == GameLivingEvent.CrowdControlExpired)
-                {
-                    if (!Body.IsIncapacitated)
-                        PickTarget();
-
                     return;
                 }
             }

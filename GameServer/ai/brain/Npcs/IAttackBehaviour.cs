@@ -7,7 +7,7 @@ namespace DOL.AI.Brain
 {
     public interface IAttackBehaviour
     {
-        bool Attack(GameObject target);
+        void Attack(GameObject target);
         void Retreat();
     }
 }

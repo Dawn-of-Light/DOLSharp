@@ -721,7 +721,7 @@ namespace DOL.AI.Brain
 				else if (e == GameLivingEvent.CastFailed)
 				{
 					CastFailedEventArgs realArgs = args as CastFailedEventArgs;
-					if (realArgs == null || realArgs.Reason == CastFailedEventArgs.Reasons.AllReadyCasting || realArgs.Reason == CastFailedEventArgs.Reasons.CrowdControlled)
+					if (realArgs == null || realArgs.Reason == CastFailedEventArgs.Reasons.AlreadyCasting || realArgs.Reason == CastFailedEventArgs.Reasons.CrowdControlled)
 						return;
 					Body.StartAttack(Body.TargetObject);
 				}

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using DOL.GS;
+using DOL.Events;
 
 namespace DOL.AI.Brain
 {
@@ -24,7 +25,7 @@ namespace DOL.AI.Brain
 
         #region IAttackBehaviour Members
 
-        public bool Attack(GameObject target)
+        public void Attack(GameObject target)
         {
             foreach (Spell spell in Body.HarmfulSpells)
             {
@@ -34,10 +35,10 @@ namespace DOL.AI.Brain
                 Body.TargetObject = target;
                 Body.TurnTo(target);
                 Body.CastSpell(spell, SpellLine);
-                return true;
+                return;
             }
 
-            return false;
+            Body.Notify(GameLivingEvent.CastFailed, Body);
         }
 
         public void Retreat()
