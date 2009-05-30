@@ -5913,7 +5913,7 @@ namespace DOL.GS
 
 			if ((m_runningSpellHandler != null && spell.CastTime > 0))
 			{
-				Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.AllReadyCasting));
+				Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.AlreadyCasting));
 				return;
 			}
 
