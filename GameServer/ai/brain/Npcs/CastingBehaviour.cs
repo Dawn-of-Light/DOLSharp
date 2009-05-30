@@ -11,6 +11,7 @@ namespace DOL.AI.Brain
         public CastingBehaviour(GameNPC body)
         {
             Body = body;
+            Body.TargetObject = null;
         }
 
         protected GameNPC Body { get; set; }

@@ -168,6 +168,12 @@ namespace DOL.AI.Brain
                         ? (IAttackBehaviour)new CastingBehaviour(Body)
                         : (IAttackBehaviour)new MeleeBehaviour(Body);
                 }
+                else
+                {
+                    if (AttackBehaviour is MeleeBehaviour)
+                        if (Body.CanCastHarmfulSpells && Util.Chance(25))
+                            AttackBehaviour = new CastingBehaviour(Body);
+                }
 
                 AttackBehaviour.Attack(target);
             }
@@ -295,24 +301,18 @@ namespace DOL.AI.Brain
                     return;
                 }
 
-                if (e == GameLivingEvent.Interrupted || e == GameLivingEvent.CastFailed)
+                if (e == GameLivingEvent.Interrupted || e == GameLivingEvent.CastFailed ||
+                    e == GameNPCEvent.CastFailed)
                 {
                     AttackBehaviour = new MeleeBehaviour(Body);
                     PickTarget();
                     return;
                 }
 
-                if (e == GameLivingEvent.CastFinished || e == GameLivingEvent.CrowdControlExpired)
+                if (e == GameLivingEvent.CastFinished || e == GameNPCEvent.CastFinished || 
+                    e == GameLivingEvent.CrowdControlExpired ||
+                    e == GameLivingEvent.InterruptExpired)
                 {
-                    PickTarget();
-                    return;
-                }
-
-                if (e == GameLivingEvent.InterruptExpired)
-                {
-                    if (Util.Chance(25))
-                        AttackBehaviour = new CastingBehaviour(Body);
-
                     PickTarget();
                     return;
                 }
